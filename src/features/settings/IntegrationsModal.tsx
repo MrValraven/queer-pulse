@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FiCheck, FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
-import { AVAILABLE_INTEGRATIONS } from "./integrations.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { buildAvailableIntegrations } from "./integrations.data";
 import styles from "./SettingsModal.module.css";
 
 /**
@@ -10,6 +12,11 @@ import styles from "./SettingsModal.module.css";
  * to a connected state in local set — no real endpoints involved.
  */
 export function IntegrationsModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const availableIntegrations = useMemo(
+    () => buildAvailableIntegrations(t),
+    [t],
+  );
   const [connected, setConnected] = useState<Set<string>>(new Set());
   useScrollLock();
 
@@ -28,49 +35,53 @@ export function IntegrationsModal({ onClose }: { onClose: () => void }) {
         className={`${styles.modal} ${styles.modalWide}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Available integrations"
+        aria-label={t("settings:integrationsModal.ariaLabel")}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("settings:modals.common.close")}
         >
           ×
         </button>
-        <div className={styles.eye}>Connect another</div>
-        <div className={styles.title}>
-          Available <em>integrations.</em>
+        <div className={styles.eye}>
+          {t("settings:integrationsModal.eyebrow")}
         </div>
-        <p className={styles.desc}>
-          Each integration is scoped narrowly — none can read your DMs, drafts,
-          billing, or community memberships.
-        </p>
+        <div className={styles.title}>
+          <Translation
+            i18nKey="settings:integrationsModal.title"
+            components={{ em: <em /> }}
+          />
+        </div>
+        <p className={styles.desc}>{t("settings:integrationsModal.desc")}</p>
         <div className={styles.grid}>
-          {AVAILABLE_INTEGRATIONS.map((int) => {
-            const isConnected = connected.has(int.id);
+          {availableIntegrations.map((integration) => {
+            const isConnected = connected.has(integration.id);
             return (
-              <div key={int.id} className={styles.intCard}>
+              <div key={integration.id} className={styles.intCard}>
                 <div className={styles.intTop}>
-                  <div className={styles.intLogo}>{int.glyph}</div>
-                  <div className={styles.intName}>{int.name}</div>
+                  <div className={styles.intLogo}>{integration.glyph}</div>
+                  <div className={styles.intName}>{integration.name}</div>
                 </div>
-                <p className={styles.intDesc}>{int.desc}</p>
+                <p className={styles.intDesc}>{integration.desc}</p>
                 {isConnected ? (
                   <span className={styles.connectedTag}>
-                    <FiCheck size={15} /> Connected
+                    <FiCheck size={15} />{" "}
+                    {t("settings:integrationsModal.connectedTag")}
                   </span>
                 ) : (
                   <Button
                     variant="ghost"
-                    onClick={() => connect(int.id)}
+                    onClick={() => connect(integration.id)}
                     style={{
                       fontSize: "13px",
                       padding: "8px 16px",
                       alignSelf: "flex-start",
                     }}
                   >
-                    <FiPlus size={14} /> Connect
+                    <FiPlus size={14} />{" "}
+                    {t("settings:integrationsModal.connectCta")}
                   </Button>
                 )}
               </div>

@@ -9,6 +9,8 @@ import {
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { SAFETY_EMAIL } from "./feed.data";
 import { useCreateReport } from "../safety/api/useCreateReport";
@@ -30,6 +32,7 @@ interface MoreMenuProps {
 
 /** Keyboard-accessible three-dot moderation menu (Report / Mute / Block). */
 export function MoreMenu({ authorName, slug, onReport }: MoreMenuProps) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { isMuted, toggleMute, isBlocked, toggleBlock } = useSocial();
   const muted = isMuted(slug);
@@ -56,14 +59,19 @@ export function MoreMenu({ authorName, slug, onReport }: MoreMenuProps) {
   }, [open]);
 
   const items: { label: string; icon: React.ReactNode; run: () => void }[] = [
-    { label: "Report post", icon: <FiFlag />, run: onReport },
+    { label: t("feed:moderation.reportPost"), icon: <FiFlag />, run: onReport },
     {
-      label: muted ? `Unmute ${authorName}` : `Mute ${authorName}`,
+      label: t(muted ? "feed:moderation.unmute" : "feed:moderation.mute", {
+        name: authorName,
+      }),
       icon: <FiVolumeX />,
       run: () => {
         const now = toggleMute(slug);
         showToast(
-          now ? `Muted ${authorName}` : `Unmuted ${authorName}`,
+          t(
+            now ? "feed:moderation.mutedToast" : "feed:moderation.unmutedToast",
+            { name: authorName },
+          ),
           now ? "success" : "info",
         );
       },
@@ -71,12 +79,17 @@ export function MoreMenu({ authorName, slug, onReport }: MoreMenuProps) {
     {
       // Block is a mutual, destructive severance → confirm first. Unblocking is
       // low-stakes and reversible, so it toggles straight away.
-      label: blocked ? `Unblock ${authorName}` : `Block ${authorName}`,
+      label: t(blocked ? "feed:moderation.unblock" : "feed:moderation.block", {
+        name: authorName,
+      }),
       icon: <FiSlash />,
       run: () => {
         if (blocked) {
           toggleBlock(slug);
-          showToast(`Unblocked ${authorName}`, "info");
+          showToast(
+            t("feed:moderation.unblockedToast", { name: authorName }),
+            "info",
+          );
         } else {
           setConfirming(true);
         }
@@ -91,7 +104,7 @@ export function MoreMenu({ authorName, slug, onReport }: MoreMenuProps) {
         className={styles.moreBtn}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Post options"
+        aria-label={t("feed:moderation.postOptionsAria")}
         onClick={() => setOpen((o) => !o)}
       >
         <FiMoreHorizontal />
@@ -139,6 +152,7 @@ export function BlockConfirmModal({
   slug,
   onClose,
 }: BlockConfirmModalProps) {
+  const { t } = useTranslation();
   useScrollLock();
   const { toggleBlock } = useSocial();
   const [alsoReport, setAlsoReport] = useState(false);
@@ -169,16 +183,22 @@ export function BlockConfirmModal({
               <FiCheck />
             </span>
             <h2 id="block-title" className={styles.confirmTitle}>
-              You blocked <em>{authorName}</em>
+              <Translation
+                i18nKey="feed:moderation.blockConfirm.title"
+                components={{ em: <em /> }}
+                values={{ name: authorName }}
+              />
             </h2>
             <p className={styles.confirmBody}>
-              They can no longer message you, see your profile, or find you here
-              {alsoReport ? ", and our safety team has your report" : ""}. You
-              can undo this anytime from your connections.
+              {t("feed:moderation.blockConfirm.body", {
+                reportNote: alsoReport
+                  ? t("feed:moderation.blockConfirm.alsoReported")
+                  : "",
+              })}
             </p>
             <div className={styles.confirmActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("feed:action.done")}
               </Button>
             </div>
           </div>
@@ -191,12 +211,10 @@ export function BlockConfirmModal({
             }}
           >
             <h2 id="block-title" className={styles.dialogTitle}>
-              Block {authorName}?
+              {t("feed:moderation.blockDialog.title", { name: authorName })}
             </h2>
             <p className={styles.dialogSub}>
-              They won't be able to message you, see your profile, or find you —
-              and any connection between you will be removed. This works both
-              ways.
+              {t("feed:moderation.blockDialog.sub")}
             </p>
             <div className={styles.reasons}>
               <label className={styles.reasonRow}>
@@ -205,15 +223,19 @@ export function BlockConfirmModal({
                   checked={alsoReport}
                   onChange={(e) => setAlsoReport(e.target.checked)}
                 />
-                Also report {authorName} to our safety team
+                {t("feed:moderation.blockDialog.alsoReportLabel", {
+                  name: authorName,
+                })}
               </label>
             </div>
             <div className={styles.dialogActions}>
               <Button variant="ghost" type="button" onClick={onClose}>
-                Cancel
+                {t("feed:action.cancel")}
               </Button>
               <Button variant="primary" type="submit">
-                Block {authorName}
+                {t("feed:moderation.blockDialog.submitCta", {
+                  name: authorName,
+                })}
               </Button>
             </div>
           </form>
@@ -239,6 +261,7 @@ export function ReportModal({
   subjectType = "post",
   onClose,
 }: ReportModalProps) {
+  const { t } = useTranslation();
   useScrollLock();
   const [reason, setReason] = useState<ReasonCode | "">("");
   const [detail, setDetail] = useState("");
@@ -287,27 +310,30 @@ export function ReportModal({
               <FiCheck />
             </span>
             <h2 id="report-title" className={styles.confirmTitle}>
-              Thank you — <em>we're on it</em>
+              <Translation
+                i18nKey="feed:moderation.reportConfirm.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.confirmBody}>
-              Our moderation team will review this post about {authorName}. For
-              anything urgent, reach us directly at{" "}
-              <strong>{SAFETY_EMAIL}</strong>.
+              {t("feed:moderation.reportConfirm.body", {
+                name: authorName,
+                email: SAFETY_EMAIL,
+              })}
             </p>
             <div className={styles.confirmActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("feed:action.done")}
               </Button>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <h2 id="report-title" className={styles.dialogTitle}>
-              Report this post
+              {t("feed:moderation.reportDialog.title")}
             </h2>
             <p className={styles.dialogSub}>
-              Tell us what's wrong. Reports are confidential and reviewed by our
-              safety team.
+              {t("feed:moderation.reportDialog.sub")}
             </p>
             <div className={styles.reasons}>
               {reasons.map((r) => (
@@ -325,21 +351,23 @@ export function ReportModal({
             </div>
             <textarea
               className={styles.detail}
-              placeholder="Add any details (optional)"
+              placeholder={t("feed:moderation.reportDialog.detailPlaceholder")}
               value={detail}
               onChange={(e) => setDetail(e.target.value)}
               rows={3}
             />
             <div className={styles.dialogActions}>
               <Button variant="ghost" type="button" onClick={onClose}>
-                Cancel
+                {t("feed:action.cancel")}
               </Button>
               <Button
                 variant="primary"
                 type="submit"
                 disabled={!reason || createReport.isPending}
               >
-                {createReport.isPending ? "Sending…" : "Submit report"}
+                {createReport.isPending
+                  ? t("feed:moderation.sending")
+                  : t("feed:moderation.reportDialog.submitCta")}
               </Button>
             </div>
           </form>

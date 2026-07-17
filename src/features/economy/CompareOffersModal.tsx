@@ -1,5 +1,7 @@
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
 import type { Application } from "./applicationStatus.data";
 import { COMPARE_ROWS } from "./compareOffers.data";
@@ -15,16 +17,17 @@ export function CompareOffersModal({
   onClose: () => void;
   onRespond: (appId: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <ModalShell onClose={onClose} wide>
-      <div className={styles.eyebrow}>Your offers</div>
+      <div className={styles.eyebrow}>{t("economy:compare.eyebrow")}</div>
       <h2 className={styles.title}>
-        Two offers, <em>side by side.</em>
+        <Translation
+          i18nKey="economy:compare.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sub}>
-        A calm view of what's on the table. Compare the numbers, then respond
-        when you're ready.
-      </p>
+      <p className={styles.sub}>{t("economy:compare.sub")}</p>
 
       <div className={styles.scroll}>
         <table className={styles.table}>
@@ -41,8 +44,8 @@ export function CompareOffersModal({
           </thead>
           <tbody>
             {COMPARE_ROWS.map((row) => (
-              <tr key={row.label}>
-                <th className={styles.rowHead}>{row.label}</th>
+              <tr key={row.labelKey}>
+                <th className={styles.rowHead}>{t(row.labelKey)}</th>
                 {offers.map((a) => (
                   <td key={a.id} className={styles.cell}>
                     {row.get(a)}
@@ -51,18 +54,20 @@ export function CompareOffersModal({
               </tr>
             ))}
             <tr>
-              <th className={styles.rowHead}>What's included</th>
+              <th className={styles.rowHead}>
+                {t("economy:compare.whatsIncluded")}
+              </th>
               {offers.map((a) => (
                 <td key={a.id} className={styles.cell}>
                   <ul className={styles.terms}>
-                    {a.offer?.terms.map((t) => (
-                      <li key={t}>
+                    {a.offer?.terms.map((term) => (
+                      <li key={term}>
                         <FiCheck
                           className={styles.tick}
                           size={14}
                           aria-hidden
                         />{" "}
-                        {t}
+                        {term}
                       </li>
                     ))}
                   </ul>
@@ -78,7 +83,7 @@ export function CompareOffersModal({
                     variant="primary"
                     onClick={() => onRespond(a.id)}
                   >
-                    Respond →
+                    {t("economy:compare.respondCta")}
                   </Button>
                 </td>
               ))}
@@ -89,7 +94,7 @@ export function CompareOffersModal({
 
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>
-          ← Close
+          {t("economy:compare.close")}
         </button>
       </div>
     </ModalShell>

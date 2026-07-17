@@ -2,6 +2,8 @@ import { useState, type RefCallback } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useReduceMotion } from "../../app/providers/accessibilityContext";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Pane } from "./SettingsControls";
 import { ThemeStudio } from "./ThemeStudio";
 import {
@@ -20,14 +22,16 @@ import a11yStyles from "./AccessibilityPreferencesPage.module.css";
 const noRef: RefCallback<HTMLElement> = () => {};
 
 export function ProfileThemePane({ onChange }: { onChange: () => void }) {
+  const { t } = useTranslation();
   return (
     <Pane
       title={
-        <>
-          Profile <em>theme.</em>
-        </>
+        <Translation
+          i18nKey="settings:personalisation.theme.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Personalise how your profile and directory card look. Pick a pride flag, cover style, and pattern — and choose what shows up next to your name."
+      sub={t("settings:personalisation.theme.sub")}
     >
       <ThemeStudio onChange={onChange} />
     </Pane>
@@ -35,6 +39,7 @@ export function ProfileThemePane({ onChange }: { onChange: () => void }) {
 }
 
 export function AccessibilityPane({ onChange }: { onChange: () => void }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   // Reduce motion is the one live, persisted preference; the rest are unbacked.
   const { reduceMotion, setReduceMotion } = useReduceMotion();
@@ -53,17 +58,18 @@ export function AccessibilityPane({ onChange }: { onChange: () => void }) {
   function resetAll() {
     setPrefs(DEFAULT_PREFS);
     setReduceMotion(false);
-    showToast("All preferences reset", "info");
+    showToast(t("settings:personalisation.accessibility.resetToast"), "info");
   }
 
   return (
     <Pane
       title={
-        <>
-          Accessibility <em>preferences.</em>
-        </>
+        <Translation
+          i18nKey="settings:personalisation.accessibility.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Tune display, motion, reading, and interaction to suit you. These settings apply across the whole platform."
+      sub={t("settings:personalisation.accessibility.sub")}
     >
       <A11yDisplaySection
         prefs={merged}
@@ -97,14 +103,13 @@ export function AccessibilityPane({ onChange }: { onChange: () => void }) {
             onClick={resetAll}
             style={{ margin: "0 auto" }}
           >
-            Reset all preferences
+            {t("settings:personalisation.accessibility.resetAll")}
           </Button>
           <div className={a11yStyles.resetNote}>
-            This returns all display settings to their defaults. Your profile
-            data is unaffected.
+            {t("settings:personalisation.accessibility.resetNote")}
           </div>
           <div className={a11yStyles.deviceNote}>
-            Your preferences are saved locally to this device.
+            {t("settings:personalisation.accessibility.deviceNote")}
           </div>
         </div>
       </div>

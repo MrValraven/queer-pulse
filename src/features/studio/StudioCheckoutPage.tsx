@@ -4,18 +4,32 @@ import { FiCheck } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { PLAN, REASSURE } from "./studioCheckout.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  PLAN_PRICE,
+  PLAN_LINES,
+  PLAN_ARTIST_SHARE_PERCENT,
+  PLAN_PLATFORM_SHARE_PERCENT,
+  REASSURE_KEYS,
+} from "./studioCheckout.data";
 import ss from "./studio.module.css";
 import s from "./studioPages.module.css";
 
 export function StudioCheckoutPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [done, setDone] = useState(false);
+
+  const priceLabel = fmt.currency(PLAN_PRICE);
+  const cadenceLabel = t("studio:checkout.cadenceMonthly");
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setDone(true);
-    showToast("You're sustaining the studio — welcome in.");
+    showToast(t("studio:checkout.doneToast"));
   }
 
   if (done) {
@@ -26,19 +40,18 @@ export function StudioCheckoutPage() {
             <FiCheck />
           </div>
           <h1>
-            You're <em>sustaining</em> it now.
+            <Translation
+              i18nKey="studio:checkout.doneTitle"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p>
-            Welcome in. Every track you play from here pays the artist who made
-            it. Your first payment of {PLAN.price} is done — the rest is just
-            listening.
-          </p>
+          <p>{t("studio:checkout.doneBody", { amount: priceLabel })}</p>
           <div className={s.doneActions}>
             <Link to={routes.studio} className={ss.btP}>
-              Start listening →
+              {t("studio:checkout.startListeningCta")}
             </Link>
             <Link to={routes.studioLibrary} className={ss.bt}>
-              Go to your library
+              {t("studio:checkout.goToLibraryCta")}
             </Link>
           </div>
         </div>
@@ -49,33 +62,33 @@ export function StudioCheckoutPage() {
   return (
     <StudioShell>
       <div className={s.pageH}>
-        <div className={s.eb}>Checkout</div>
+        <div className={s.eb}>{t("studio:checkout.eyebrow")}</div>
         <h1>
-          Sustain the <em>studio.</em>
+          <Translation
+            i18nKey="studio:checkout.title"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <div className={s.dek}>
-          Seven euros a month keeps a fair-pay music platform alive — and pays
-          the artists you actually listen to, on every play.
-        </div>
+        <div className={s.dek}>{t("studio:checkout.dek")}</div>
       </div>
 
       <div className={s.coGrid}>
         <form onSubmit={handleSubmit}>
           <div className={s.coField}>
             <label className={s.coLabel} htmlFor="co-name">
-              Name on card
+              {t("studio:checkout.nameLabel")}
             </label>
             <input
               id="co-name"
               className={s.coInput}
               type="text"
-              placeholder="Your name"
+              placeholder={t("studio:checkout.namePlaceholder")}
               required
             />
           </div>
           <div className={s.coField}>
             <label className={s.coLabel} htmlFor="co-card">
-              Card number
+              {t("studio:checkout.cardLabel")}
             </label>
             <input
               id="co-card"
@@ -88,7 +101,7 @@ export function StudioCheckoutPage() {
           <div className={s.coRow}>
             <div className={s.coField}>
               <label className={s.coLabel} htmlFor="co-exp">
-                Expiry
+                {t("studio:checkout.expiryLabel")}
               </label>
               <input
                 id="co-exp"
@@ -99,7 +112,7 @@ export function StudioCheckoutPage() {
             </div>
             <div className={s.coField}>
               <label className={s.coLabel} htmlFor="co-cvc">
-                CVC
+                {t("studio:checkout.cvcLabel")}
               </label>
               <input
                 id="co-cvc"
@@ -115,32 +128,45 @@ export function StudioCheckoutPage() {
             className={ss.btP}
             style={{ width: "100%", marginTop: 8 }}
           >
-            Pay {PLAN.price}
-            {PLAN.cadence} →
+            {t("studio:checkout.payCta", {
+              amount: priceLabel,
+              cadence: cadenceLabel,
+            })}
           </button>
-          <p className={s.sumNote}>
-            This is a prototype — no card is charged and nothing is stored.
-          </p>
+          <p className={s.sumNote}>{t("studio:checkout.prototypeNote")}</p>
         </form>
 
         <aside className={s.summary}>
           <div className={s.sumH}>
-            {PLAN.name} <em>membership</em>
+            <Translation
+              i18nKey="studio:checkout.membershipLabel"
+              components={{ em: <em /> }}
+              values={{ name: t("studio:checkout.planName") }}
+            />
           </div>
-          {PLAN.lines.map((line) => (
-            <div key={line.label} className={s.sumLine}>
-              <span>{line.label}</span>
-              <span>{line.value}</span>
+          {PLAN_LINES.map((line) => (
+            <div key={line.labelKey} className={s.sumLine}>
+              <span>{t(line.labelKey)}</span>
+              <span>
+                {line.valueKey
+                  ? t(line.valueKey)
+                  : line.labelKey === "studio:checkout.lines.artistShare"
+                    ? `${PLAN_ARTIST_SHARE_PERCENT}%`
+                    : `${PLAN_PLATFORM_SHARE_PERCENT}%`}
+              </span>
             </div>
           ))}
           <div className={s.sumTotal}>
-            <span>Due today</span>
-            <span>{PLAN.price}</span>
+            <span>{t("studio:checkout.dueTodayLabel")}</span>
+            <span>{priceLabel}</span>
           </div>
           <p className={s.sumNote}>
-            {REASSURE.map((line) => (
-              <span key={line} style={{ display: "block", marginBottom: 6 }}>
-                · {line}
+            {REASSURE_KEYS.map((key) => (
+              <span key={key} style={{ display: "block", marginBottom: 6 }}>
+                ·{" "}
+                {key === "studio:checkout.reassure.share"
+                  ? t(key, { percent: PLAN_ARTIST_SHARE_PERCENT })
+                  : t(key)}
               </span>
             ))}
           </p>

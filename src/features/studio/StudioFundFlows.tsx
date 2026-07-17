@@ -1,13 +1,25 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { IN, OUT } from "./studioSolidarityFund.data";
 import s from "./funding.module.css";
 
 export function StudioFundFlows() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <section className={s.sec}>
       <h2>
-        Where it <em>comes from</em>, where it <em>goes</em>
+        <Translation
+          i18nKey="studio:fund.flows.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={s.secDek}>
+        {/* Not swept — the "never the artist's 80%, never your tips" clause is
+            a trust commitment (§6 of the i18n sweep brief), left for a native
+            pt-PT reviewer. Renders in English via the fallback chain. */}
         No new fee funds this. It's the overflow of a system designed to
         overflow toward people —{" "}
         <em>never the artist's 80%, never your tips</em>.
@@ -15,34 +27,44 @@ export function StudioFundFlows() {
       <div className={s.flow2}>
         <div className={s.flowCol}>
           <h3>
-            <span style={{ color: "var(--jade-light)" }}>▼</span> Money in ·
-            this quarter
+            <span style={{ color: "var(--jade-light)" }}>▼</span>{" "}
+            {t("studio:fund.flows.inHeading")}
           </h3>
           {IN.map((f, i) => (
             <div key={i} className={s.flowItem}>
               <div>
-                <div className={s.k}>{f.k}</div>
-                <div className={s.d}>{f.d}</div>
+                <div className={s.k}>
+                  <Translation
+                    i18nKey={f.labelKey}
+                    components={{ em: <em /> }}
+                  />
+                </div>
+                <div className={s.d}>{t(f.descKey)}</div>
               </div>
               <div className={`${s.amt} ${s.amtIn}`}>
-                €<em>{f.v}</em>
+                <em>{fmt.currency(f.amount)}</em>
               </div>
             </div>
           ))}
         </div>
         <div className={s.flowCol}>
           <h3>
-            <span style={{ color: "var(--accent)" }}>▲</span> Money out · this
-            quarter
+            <span style={{ color: "var(--accent)" }}>▲</span>{" "}
+            {t("studio:fund.flows.outHeading")}
           </h3>
           {OUT.map((f, i) => (
             <div key={i} className={s.flowItem}>
               <div>
-                <div className={s.k}>{f.k}</div>
-                <div className={s.d}>{f.d}</div>
+                <div className={s.k}>
+                  <Translation
+                    i18nKey={f.labelKey}
+                    components={{ em: <em /> }}
+                  />
+                </div>
+                <div className={s.d}>{t(f.descKey)}</div>
               </div>
               <div className={`${s.amt} ${s.amtOut}`}>
-                €<em>{f.v}</em>
+                <em>{fmt.currency(f.amount)}</em>
               </div>
             </div>
           ))}

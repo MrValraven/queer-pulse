@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CoopHero,
   CoopPhases,
@@ -12,6 +13,7 @@ import { JoinCoopModal } from "./JoinCoopModal";
 import type { FormingCoop } from "./housingCoop.data";
 
 export function HousingCoopPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [joining, setJoining] = useState<FormingCoop | null>(null);
 
@@ -19,9 +21,12 @@ export function HousingCoopPage() {
     if (coop.cta.kind === "join") {
       setJoining(coop);
     } else if (coop.cta.kind === "updates") {
-      showToast(`You'll get ${coop.name}'s updates in your feed.`, "success");
+      showToast(
+        t("economy:housingCoop.toast.updates", { name: coop.name }),
+        "success",
+      );
     } else {
-      showToast("Mentoring request sent to Casa Sambizanga.", "success");
+      showToast(t("economy:housingCoop.toast.mentoring"), "success");
     }
   };
 
@@ -31,19 +36,18 @@ export function HousingCoopPage() {
       <CoopPhases />
       <CoopGrid
         onCta={onCta}
-        onSeeAll={() => showToast("The full co-op directory is coming soon.")}
+        onSeeAll={() => showToast(t("economy:housingCoop.toast.seeAll"))}
       />
       <CoopTemplates
-        onDownload={(name) => showToast(`Preparing “${name}” for download…`)}
+        onDownload={(name) =>
+          showToast(t("economy:housingCoop.toast.preparingDownload", { name }))
+        }
       />
       <CoopStartCta
         onPost={() =>
-          showToast(
-            "We'll help you find your people — check your inbox.",
-            "success",
-          )
+          showToast(t("economy:housingCoop.toast.postHelp"), "success")
         }
-        onStory={() => showToast("Casa Sambizanga's story is coming soon.")}
+        onStory={() => showToast(t("economy:housingCoop.toast.story"))}
       />
 
       {joining && (

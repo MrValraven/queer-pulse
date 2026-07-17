@@ -1,4 +1,6 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
@@ -8,6 +10,7 @@ const BROWSE = linkToPath("QueerPulse Gathering.html");
 
 /** "Your year so far" plum stats panel beneath the calendar. */
 export function InsightsCard() {
+  const { t } = useTranslation();
   const { events } = useMyEvents();
   const { attended, hosted, streak, topCircle } = yearInsights(events);
 
@@ -15,49 +18,54 @@ export function InsightsCard() {
   if (attended === 0) {
     return (
       <div className={sx("insights")}>
-        <div className={sx("ins-eyebrow")}>Your year so far</div>
+        <div className={sx("ins-eyebrow")}>
+          {t("myevents:insights.eyebrow")}
+        </div>
         <div className={sx("ins-stat")}>
-          Your year <em>starts</em> here
+          <Translation
+            i18nKey="myevents:insights.emptyStat"
+            components={{ em: <em /> }}
+          />
         </div>
-        <div className={sx("ins-sub")}>
-          Once you go to your first gathering, it'll gather here — a quiet count
-          of where you've been this year.
-        </div>
+        <div className={sx("ins-sub")}>{t("myevents:insights.emptySub")}</div>
         <div className={sx("ins-empty-cta")}>
           <Button variant="ghost-dark" to={BROWSE}>
-            Find your first one
+            {t("myevents:insights.emptyCta")}
           </Button>
         </div>
       </div>
     );
   }
 
-  const gatheringWord = attended === 1 ? "gathering" : "gatherings";
   return (
     <div className={sx("insights")}>
-      <div className={sx("ins-eyebrow")}>Your year so far</div>
+      <div className={sx("ins-eyebrow")}>{t("myevents:insights.eyebrow")}</div>
       <div className={sx("ins-stat")}>
-        <em>{attended}</em> {gatheringWord}
+        <Translation
+          i18nKey="myevents:insights.stat"
+          components={{ em: <em /> }}
+          values={{ count: attended }}
+        />
       </div>
-      <div className={sx("ins-sub")}>
-        Every gathering you've shown up for this year.
-      </div>
+      <div className={sx("ins-sub")}>{t("myevents:insights.sub")}</div>
       <div className={sx("ins-row")}>
         <div className={sx("ins-item")}>
           <div className={sx("ins-n")}>{streak}</div>
           <div className={sx("ins-l")}>
-            {streak === 1 ? "month" : "months"} in a row
+            {t("myevents:insights.streak", { count: streak })}
           </div>
         </div>
         {topCircle && (
           <div className={sx("ins-item")}>
             <div className={sx("ins-n")}>{topCircle}</div>
-            <div className={sx("ins-l")}>your top circle</div>
+            <div className={sx("ins-l")}>
+              {t("myevents:insights.topCircle")}
+            </div>
           </div>
         )}
         <div className={sx("ins-item")}>
           <div className={sx("ins-n")}>{hosted}</div>
-          <div className={sx("ins-l")}>you hosted</div>
+          <div className={sx("ins-l")}>{t("myevents:insights.hosted")}</div>
         </div>
       </div>
     </div>

@@ -1,28 +1,38 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { INTRO, PIECES } from "./qtipocArchive.data";
+import { PIECES } from "./qtipocArchive.data";
 import styles from "./resources.module.css";
 
 export function QtipocArchivePage() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Queer POC · Archive"
+        eyebrow={t("resources:qtipocArchive.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Kept by us, <em>for us.</em>
-          </>
+          <Translation
+            i18nKey="resources:qtipocArchive.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="A living archive of QTIPOC life in Lisbon — photo essays, writing, recordings, documents. Contributed, credited, and held with care. Credit all labour, especially the emotional kind."
+        lead={t("resources:qtipocArchive.hero.lead")}
         anchors={[
-          { label: "About the archive", href: "#about" },
-          { label: "The collection", href: "#collection" },
+          {
+            label: t("resources:qtipocArchive.hero.anchor.about"),
+            href: "#about",
+          },
+          {
+            label: t("resources:qtipocArchive.hero.anchor.collection"),
+            href: "#collection",
+          },
         ]}
       />
 
@@ -32,18 +42,14 @@ export function QtipocArchivePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            About the <em>archive</em>
+            <Translation
+              i18nKey="resources:qtipocArchive.about.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
-          {INTRO.map((p) => (
-            <Reveal
-              as="p"
-              key={p}
-              className={styles.leadP}
-              style={{ maxWidth: "64ch" }}
-            >
-              {p}
-            </Reveal>
-          ))}
+          <Reveal as="p" className={styles.leadP} style={{ maxWidth: "64ch" }}>
+            {t("resources:qtipocArchive.about.body")}
+          </Reveal>
         </div>
       </section>
 
@@ -53,10 +59,13 @@ export function QtipocArchivePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            The <em>collection</em>
+            <Translation
+              i18nKey="resources:qtipocArchive.collection.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Most recent first. Tap any piece for the full set.
+            {t("resources:qtipocArchive.collection.lead")}
           </Reveal>
           <div className={styles.archiveGrid}>
             {PIECES.map((p, i) => (
@@ -80,17 +89,15 @@ export function QtipocArchivePage() {
             className={`${styles.card} ${styles.cardDashed}`}
             style={{ marginTop: 24 }}
           >
-            Have something to add — a photo, a piece, a recording?
+            {t("resources:qtipocArchive.contribute.prompt")}
             <Button
               variant="ghost"
               style={{ marginTop: 12 }}
               onClick={() =>
-                showToast(
-                  "Thank you — a mod will reach out about adding it, with full credit and your terms.",
-                )
+                showToast(t("resources:qtipocArchive.contribute.toast"))
               }
             >
-              Contribute to the archive
+              {t("resources:qtipocArchive.contribute.cta")}
             </Button>
           </div>
         </div>
@@ -98,14 +105,15 @@ export function QtipocArchivePage() {
 
       <Outro
         title={
-          <>
-            Nothing here is <em>extracted.</em>
-          </>
+          <Translation
+            i18nKey="resources:qtipocArchive.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Everything is given, on the contributor's terms. Bring yours when you're ready."
+        sub={t("resources:qtipocArchive.outro.sub")}
       >
         <Button to={routes.forum} variant="primary" size="lg">
-          Talk to the group
+          {t("resources:qtipocArchive.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

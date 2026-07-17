@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./StoryTomasPage.module.css";
 import { memberName } from "../members/data/members";
 
@@ -19,6 +21,8 @@ function QA({ q, a }: { q: string; a: string }) {
 }
 
 export function StoryTomasArticle() {
+  const { t } = useTranslation();
+
   return (
     <>
       <div className={styles.articleWrap}>
@@ -152,14 +156,17 @@ export function StoryTomasArticle() {
                 film about Lisbon's disappearing tascas.
               </div>
               <Link to={routes.members} className={styles.authorLink}>
-                View her profile →
+                {t("magazine:story.viewProfileCta")}
               </Link>
             </div>
           </div>
 
           <div className={styles.more}>
             <h2>
-              More from <em>the community</em>
+              <Translation
+                i18nKey="magazine:story.moreHeading"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.moreGrid}>
               <Link to={routes.story} className={styles.moreCard}>

@@ -2,8 +2,8 @@ import { type ReactNode } from "react";
 
 export interface ProcessStep {
   n: string;
-  title: string;
-  body: ReactNode;
+  titleKey: string;
+  bodyKey: string;
 }
 
 export interface Partner {
@@ -16,71 +16,46 @@ export interface Partner {
   desc: string;
 }
 
-export const NOT_DO: ReactNode[] = [
-  <>
-    <b>Pride-month campaigns.</b> Not in June, not ever. Members would (rightly)
-    leave.
-  </>,
-  <>
-    <b>Sell our member list.</b> No targeting, no segmentation, no warm intros
-    for a fee.
-  </>,
-  <>
-    <b>"Sponsored posts" or branded content</b> in the magazine, feed, or
-    podcast.
-  </>,
-  <>
-    <b>Rainbow logos.</b> We don't add yours and we don't loan ours.
-  </>,
-  <>
-    <b>Recruit on your behalf.</b> Companies post jobs through Jobs like
-    everyone else.
-  </>,
+/**
+ * i18n Pattern A. Each entry is a catalog key whose value carries a `<b>`
+ * emphasis run, resolved by the consumer via `<Translation>`.
+ */
+export const NOT_DO_KEYS: string[] = [
+  "marketing:forOrgs.notDo.prideCampaigns",
+  "marketing:forOrgs.notDo.sellList",
+  "marketing:forOrgs.notDo.sponsoredPosts",
+  "marketing:forOrgs.notDo.rainbowLogos",
+  "marketing:forOrgs.notDo.recruit",
 ];
 
 export const PROCESS: ProcessStep[] = [
   {
     n: "01",
-    title: "Email or a call",
-    body: (
-      <>
-        Tell us what you do, what you'd like, what's not negotiable on your
-        side. <em>30 min, no commitment.</em>
-      </>
-    ),
+    titleKey: "marketing:forOrgs.process.step1.title",
+    bodyKey: "marketing:forOrgs.process.step1.body",
   },
   {
     n: "02",
-    title: "An in-person meeting",
-    body: (
-      <>
-        Coffee in Lisbon if you're here, or video. We talk through how the seam
-        would work — operationally, not theoretically.
-      </>
-    ),
+    titleKey: "marketing:forOrgs.process.step2.title",
+    bodyKey: "marketing:forOrgs.process.step2.body",
   },
   {
     n: "03",
-    title: "Two-page proposal",
-    body: (
-      <>
-        One of us drafts it; both sides edit. Includes <b>exit conditions</b>,
-        public-disagreement clauses, and money flow.
-      </>
-    ),
+    titleKey: "marketing:forOrgs.process.step3.title",
+    bodyKey: "marketing:forOrgs.process.step3.body",
   },
   {
     n: "04",
-    title: "Assembly sign-off",
-    body: (
-      <>
-        Operational partnerships go to the monthly Assembly. The Sustainer
-        membership weighs in. <em>~10% of partnerships are vetoed.</em>
-      </>
-    ),
+    titleKey: "marketing:forOrgs.process.step4.title",
+    bodyKey: "marketing:forOrgs.process.step4.body",
   },
 ];
 
+/**
+ * These four partner records are each org's own content (name, tenure,
+ * description) — left English, same precedent as the Partners listing page
+ * (`partnerDetails.dataA/B.tsx`). Not part of the i18n sweep.
+ */
 export const PARTNERS: Partner[] = [
   {
     slug: "ilga-portugal",

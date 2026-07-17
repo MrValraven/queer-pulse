@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Submission } from "./studioProgram.data";
 import s from "./StudioProgramPage.module.css";
 
@@ -18,28 +20,35 @@ export function StudioProgramInbox({
   onPass,
   onListen,
 }: InboxProps) {
+  const { t } = useTranslation();
   return (
     <aside className={s.inbox}>
       <div className={s.inboxHead}>
         <h2>
-          Submissions · <em>47 new</em>
+          <Translation
+            i18nKey="studio:program.inbox.heading"
+            components={{ em: <em /> }}
+            values={{ count: inbox.length }}
+          />
         </h2>
         <Link to={routes.studioTriage} className={s.triageLink}>
-          Triage →
+          {t("studio:program.inbox.triageCta")}
         </Link>
       </div>
       <p className={s.inboxTip}>
-        Drag any submission left into a slot.{" "}
-        <em>The pass-with-reason flow is in triage.</em>
+        <Translation
+          i18nKey="studio:program.inbox.tip"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={s.subCards}>
-        {inbox.map((sub) => (
-          <div key={sub.id} className={s.subCard}>
+        {inbox.map((submission) => (
+          <div key={submission.id} className={s.subCard}>
             <div className={s.subCardTop}>
               <span className={s.subCov}>
                 <ImageSlot
-                  src={sub.image}
-                  tint={sub.tint}
+                  src={submission.image}
+                  tint={submission.tint}
                   width={48}
                   height={48}
                   radius={8}
@@ -48,30 +57,30 @@ export function StudioProgramInbox({
               </span>
               <div className={s.subMeta}>
                 <div className={s.subTitle}>
-                  {sub.titlePre}
-                  {sub.titleEm && <em>{sub.titleEm}</em>}
+                  {submission.titlePre}
+                  {submission.titleEm && <em>{submission.titleEm}</em>}
                 </div>
-                <div className={s.subWho}>{sub.who}</div>
+                <div className={s.subWho}>{submission.who}</div>
               </div>
             </div>
-            <p className={s.subQuote}>{sub.quote}</p>
+            <p className={s.subQuote}>{submission.quote}</p>
             <div className={s.subActions}>
               <button type="button" className={s.subBtn} onClick={onListen}>
-                Listen
+                {t("studio:program.inbox.listenCta")}
               </button>
               <button
                 type="button"
                 className={`${s.subBtn} ${s.subBtnAdd}`}
-                onClick={() => onSlate(sub)}
+                onClick={() => onSlate(submission)}
               >
-                + Slate
+                {t("studio:program.inbox.slateCta")}
               </button>
               <button
                 type="button"
                 className={s.subBtn}
-                onClick={() => onPass(sub.id)}
+                onClick={() => onPass(submission.id)}
               >
-                Pass
+                {t("studio:program.inbox.passCta")}
               </button>
             </div>
           </div>

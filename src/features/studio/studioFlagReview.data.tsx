@@ -17,6 +17,14 @@ export interface Flag {
   image?: string;
 }
 
+/** Maps the stable `verb` id stored on resolve to its catalog key — never
+ * render the raw id, it isn't the display label (§5.1 stored-value trap). */
+export const RESOLUTION_LABEL_KEYS: Record<string, string> = {
+  dismissed: "studio:flagReview.resolution.dismissed",
+  corrected: "studio:flagReview.resolution.corrected",
+  held: "studio:flagReview.resolution.held",
+};
+
 export const resolvedFlagImage =
   "https://plus.unsplash.com/premium_photo-1757392183531-16c1990f7b43?q=80&w=400&auto=format&fit=crop";
 

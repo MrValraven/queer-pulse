@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminChip, AdminToggle } from "./ui";
 import {
   shortName,
-  visLabel,
+  visLabelKey,
   type Community,
   type Moderator,
 } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
 export function SettingsPane({ community }: { community: Community }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [mods, setMods] = useState<Moderator[]>(community.mods);
   const [secondVouch, setSecondVouch] = useState(community.join.includes("2"));
@@ -18,26 +20,35 @@ export function SettingsPane({ community }: { community: Community }) {
 
   function removeMod(m: Moderator) {
     setMods((prev) => prev.filter((x) => x.name !== m.name));
-    showToast(`Removed ${m.name} as moderator`, "success", undefined, {
-      label: "Undo",
-      onClick: () =>
-        setMods((prev) =>
-          prev.some((x) => x.name === m.name) ? prev : [...prev, m],
-        ),
-    });
+    showToast(
+      t("admin:communities.settings.modRemovedToast", { name: m.name }),
+      "success",
+      undefined,
+      {
+        label: t("admin:common.undo"),
+        onClick: () =>
+          setMods((prev) =>
+            prev.some((x) => x.name === m.name) ? prev : [...prev, m],
+          ),
+      },
+    );
   }
 
   return (
     <div className={styles.pane}>
       <div className={styles.setRow}>
         <div className={styles.setTop}>
-          <div className={styles.setLabel}>Who can join</div>
+          <div className={styles.setLabel}>
+            {t("admin:communities.settings.whoCanJoin")}
+          </div>
           <AdminChip tone="plum">{community.join}</AdminChip>
         </div>
       </div>
 
       <div className={styles.setRow}>
-        <div className={styles.setLabel}>Moderators</div>
+        <div className={styles.setLabel}>
+          {t("admin:communities.settings.moderators")}
+        </div>
         <div className={styles.modChips}>
           {mods.map((m) => (
             <span key={m.name} className={styles.modChip}>
@@ -45,7 +56,9 @@ export function SettingsPane({ community }: { community: Community }) {
               <button
                 type="button"
                 className={styles.modChipX}
-                aria-label={`Remove ${m.name}`}
+                aria-label={t("admin:communities.settings.removeModAriaLabel", {
+                  name: m.name,
+                })}
                 onClick={() => removeMod(m)}
               >
                 <FiX />
@@ -56,38 +69,42 @@ export function SettingsPane({ community }: { community: Community }) {
             type="button"
             className={styles.addBtn}
             onClick={() =>
-              showToast("Search members to add as moderator", "info")
+              showToast(t("admin:communities.settings.addModToast"), "info")
             }
           >
-            + Add
+            {t("admin:communities.settings.addModCta")}
           </button>
         </div>
       </div>
 
       <ToggleRow
-        title="Require a second vouch to join"
-        sub="Slows growth, raises trust. Recommended for support spaces."
+        title={t("admin:communities.settings.secondVouch.title")}
+        sub={t("admin:communities.settings.secondVouch.sub")}
         checked={secondVouch}
         onChange={(v) => {
           setSecondVouch(v);
           showToast(
-            v
-              ? "Second vouch now required to join"
-              : "Second vouch no longer required",
+            t(
+              v
+                ? "admin:communities.settings.secondVouch.onToast"
+                : "admin:communities.settings.secondVouch.offToast",
+            ),
             "info",
           );
         }}
       />
       <ToggleRow
-        title="Auto-freeze new accounts on a doxxing report"
-        sub="Buys time for a human to review before harm spreads."
+        title={t("admin:communities.settings.autoFreeze.title")}
+        sub={t("admin:communities.settings.autoFreeze.sub")}
         checked={autoFreeze}
         onChange={(v) => {
           setAutoFreeze(v);
           showToast(
-            v
-              ? "Auto-freeze on doxxing reports enabled"
-              : "Auto-freeze disabled",
+            t(
+              v
+                ? "admin:communities.settings.autoFreeze.onToast"
+                : "admin:communities.settings.autoFreeze.offToast",
+            ),
             "info",
           );
         }}
@@ -95,15 +112,17 @@ export function SettingsPane({ community }: { community: Community }) {
 
       <div className={styles.setRow}>
         <div className={styles.setTop}>
-          <div className={styles.setLabel}>Code of care</div>
+          <div className={styles.setLabel}>
+            {t("admin:communities.settings.codeOfCare")}
+          </div>
           <button
             type="button"
             className={styles.linkBtn}
             onClick={() =>
-              showToast("The code of care would open here", "info")
+              showToast(t("admin:communities.settings.codeToast"), "info")
             }
           >
-            View
+            {t("admin:communities.settings.viewCta")}
           </button>
         </div>
         <div className={styles.setDetail}>{community.code}</div>
@@ -111,9 +130,11 @@ export function SettingsPane({ community }: { community: Community }) {
 
       <div className={styles.setRow}>
         <div className={styles.setTop}>
-          <div className={styles.setLabel}>Visibility</div>
+          <div className={styles.setLabel}>
+            {t("admin:communities.settings.visibility")}
+          </div>
           <AdminChip tone={community.vis === "public" ? "jade" : "violet"}>
-            {visLabel(community.vis)}
+            {t(`admin:${visLabelKey(community.vis)}`)}
           </AdminChip>
         </div>
       </div>

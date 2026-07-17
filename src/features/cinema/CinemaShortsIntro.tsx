@@ -14,7 +14,9 @@ export function CuratorNote() {
     <div className={styles.curatorNote}>
       <div className={styles.cnAv}>JR</div>
       <div>
-        <div className={styles.cnEb}>From the programmer · week 27</div>
+        <div className={styles.cnEb}>
+          {t("cinema:shorts.curatorNote.eyebrow", { week: 27 })}
+        </div>
         <p className={styles.cnBody}>
           This week is about <em>staying</em> — films where nobody leaves the
           room, or wishes they hadn't. Start with <em>The first Sunday</em> if

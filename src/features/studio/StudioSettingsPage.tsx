@@ -1,4 +1,5 @@
 import { StudioShell } from "./StudioShell";
+import { Translation } from "../../shared/i18n/Translation";
 import {
   AudioSection,
   PrivacySection,
@@ -12,14 +13,20 @@ export function StudioSettingsPage() {
   return (
     <StudioShell>
       <div className={s.pageH}>
-        <div className={s.eb}>Your room · settings</div>
+        <div className={s.eb}>
+          <Translation i18nKey="studio:settings.eyebrow" />
+        </div>
         <h1>
-          How the room <em>treats</em> you.
+          <Translation
+            i18nKey="studio:settings.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={s.dek}>
-          Audio, privacy, captions, tipping. Nothing here is on unless you turn
-          it on — and anything you turn on, you can erase in{" "}
-          <em>one tap, no confirmation modal</em>.
+          <Translation
+            i18nKey="studio:settings.dek"
+            components={{ em: <em /> }}
+          />
         </p>
       </div>
 

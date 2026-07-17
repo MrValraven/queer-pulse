@@ -3,12 +3,15 @@ import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useProfile } from "../../app/providers/ProfileProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EditProfilePane, type ProfileSection } from "./EditProfilePane";
 import { EditProfileSidebar } from "./EditProfileSidebar";
-import { SECTION_LABELS } from "./editProfileNav.data";
+import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
 import styles from "./EditProfilePage.module.css";
 
 export function EditProfilePage() {
+  const { t } = useTranslation();
   const [changed, setChanged] = useState<Set<ProfileSection>>(new Set());
   const [savedSections, setSavedSections] = useState<ProfileSection[] | null>(
     null,
@@ -67,17 +70,18 @@ export function EditProfilePage() {
             <FiCheck />
           </span>
           <span className={styles.savedText}>
-            Saved.{" "}
             {savedSections.length > 0 ? (
-              <>
-                Updated{" "}
-                <strong>
-                  {savedSections.map((s) => SECTION_LABELS[s] ?? s).join(", ")}
-                </strong>
-                .
-              </>
+              <Translation
+                i18nKey="settings:editProfile.savedBar.updated"
+                components={{ strong: <strong /> }}
+                values={{
+                  sections: savedSections
+                    .map((section) => t(SECTION_LABEL_KEYS[section] ?? section))
+                    .join(", "),
+                }}
+              />
             ) : (
-              "Your profile is up to date."
+              t("settings:editProfile.savedBar.upToDate")
             )}
           </span>
         </div>
@@ -86,16 +90,21 @@ export function EditProfilePage() {
       {unsaved && (
         <div className={styles.saveBar}>
           <span className={styles.unsavedLabel}>
-            Unsaved changes in{" "}
-            {[...changed].map((s) => SECTION_LABELS[s] ?? s).join(", ")}
+            {t("settings:editProfile.saveBar.unsavedLabel", {
+              sections: [...changed]
+                .map((section) => t(SECTION_LABEL_KEYS[section] ?? section))
+                .join(", "),
+            })}
           </span>
           <div className={styles.saveActions}>
             {saveError && <span className={styles.saveError}>{saveError}</span>}
             <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>
-              Discard
+              {t("settings:editProfile.saveBar.discard")}
             </Button>
             <Button variant="primary" onClick={handleSave} disabled={isSaving}>
-              {isSaving ? "Saving…" : "Save profile"}
+              {isSaving
+                ? t("settings:editProfile.saveBar.saving")
+                : t("settings:editProfile.saveBar.save")}
             </Button>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { OfflineBanner } from "./OfflineBanner";
@@ -20,6 +21,7 @@ import { BulkBar } from "./BulkBar";
 
 /** The full dashboard layout (inside the provider so it can read state). */
 export function MyEventsBody() {
+  const { t } = useTranslation();
   const c = useMyEvents();
   const layoutCls = sx(
     `ev-layout view-${c.mobileView}${c.density === "compact" ? " compact" : ""}${c.selectMode ? " selecting" : ""}`,
@@ -49,21 +51,21 @@ export function MyEventsBody() {
       <ModalShell
         open={c.details.open}
         onClose={c.closeDetails}
-        label="Your RSVP details"
+        label={t("myevents:modal.rsvpDetailsLabel")}
       >
         <RsvpDetailsModal key={c.details.evId ?? "none"} />
       </ModalShell>
       <ModalShell
         open={c.settingsOpen}
         onClose={c.closeSettings}
-        label="Event preferences"
+        label={t("myevents:modal.preferencesLabel")}
       >
         <EventSettingsModal key={c.settingsOpen ? "on" : "off"} />
       </ModalShell>
       <ModalShell
         open={c.scope.open}
         onClose={c.closeScope}
-        label="Cancel RSVP"
+        label={t("myevents:modal.cancelRsvpLabel")}
         narrow
       >
         <SeriesScopeModal />
@@ -71,14 +73,14 @@ export function MyEventsBody() {
       <ModalShell
         open={c.report.open}
         onClose={c.closeReport}
-        label="Report this event"
+        label={t("myevents:modal.reportLabel")}
       >
         <ReportEventModal key={c.report.evId ?? "none"} />
       </ModalShell>
       <ModalShell
         open={c.block.open}
         onClose={c.closeBlock}
-        label="Block this host"
+        label={t("myevents:modal.blockLabel")}
         narrow
       >
         <BlockHostConfirm key={c.block.evId ?? "none"} />

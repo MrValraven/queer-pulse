@@ -1,3 +1,8 @@
+// NOTE (i18n sweep — scope rule): `name` (provider/app brand) and `detail`
+// (mock account values standing in for fetched fields: linked email,
+// last-used, sync timestamps — this page has no live adapter yet) stay
+// English per this catalog's file-header policy. `badgeKey` is a small fixed
+// enum of UI states (never fetched/stored), so it routes through i18n.
 export interface SignInMethod {
   id: string;
   name: string;
@@ -5,7 +10,9 @@ export interface SignInMethod {
   linked: boolean;
   alwaysOn?: boolean;
   defaultDisabled?: boolean;
-  badgeText: string;
+  badgeKey: string;
+  /** Only set for the "{count} device(s)" badge — plural, not baked text. */
+  badgeCount?: number;
   canUnlink?: boolean;
   canLink?: boolean;
   canManage?: boolean;
@@ -17,7 +24,7 @@ export const SIGN_IN_METHODS: SignInMethod[] = [
     name: "Google",
     detail: "Linked as tomas@example.com · last used 12 days ago",
     linked: true,
-    badgeText: "Linked",
+    badgeKey: "settings:linkedAccounts.badge.linked",
     canUnlink: true,
   },
   {
@@ -25,7 +32,7 @@ export const SIGN_IN_METHODS: SignInMethod[] = [
     name: "Apple",
     detail: "Not linked · sign in once and we'll link automatically",
     linked: false,
-    badgeText: "Not linked",
+    badgeKey: "settings:linkedAccounts.badge.notLinked",
     canLink: true,
   },
   {
@@ -35,14 +42,15 @@ export const SIGN_IN_METHODS: SignInMethod[] = [
     linked: true,
     alwaysOn: true,
     defaultDisabled: true,
-    badgeText: "Always on",
+    badgeKey: "settings:linkedAccounts.badge.alwaysOn",
   },
   {
     id: "passkey",
     name: "Passkey · device biometric",
     detail: "Use FaceID / TouchID instead of a password · stored on this Mac",
     linked: true,
-    badgeText: "2 devices",
+    badgeKey: "settings:linkedAccounts.badge.devices",
+    badgeCount: 2,
     canManage: true,
   },
 ];
@@ -51,7 +59,7 @@ export interface ConnectedApp {
   id: string;
   name: string;
   detail: string;
-  badgeText: string;
+  badgeKey: string;
   canRevoke?: boolean;
   canCopy?: boolean;
 }
@@ -62,7 +70,7 @@ export const CONNECTED_APPS: ConnectedApp[] = [
     name: "Discord",
     detail:
       "Linked for community chat sync · can read your member roles · can't post on your behalf",
-    badgeText: "Linked",
+    badgeKey: "settings:linkedAccounts.badge.linked",
     canRevoke: true,
   },
   {
@@ -70,14 +78,14 @@ export const CONNECTED_APPS: ConnectedApp[] = [
     name: "Bluesky",
     detail:
       "Cross-post your public articles · posts only · no follower list access",
-    badgeText: "Linked",
+    badgeKey: "settings:linkedAccounts.badge.linked",
     canRevoke: true,
   },
   {
     id: "arena",
     name: "Are.na",
     detail: "Save QP articles to your channels · last sync 3 days ago",
-    badgeText: "Linked",
+    badgeKey: "settings:linkedAccounts.badge.linked",
     canRevoke: true,
   },
   {
@@ -85,7 +93,7 @@ export const CONNECTED_APPS: ConnectedApp[] = [
     name: "Calendar (Google / Apple / Outlook)",
     detail:
       "Add RSVP'd gatherings to your calendar · subscription URL, no further access",
-    badgeText: "Subscribed",
+    badgeKey: "settings:linkedAccounts.badge.subscribed",
     canCopy: true,
   },
 ];

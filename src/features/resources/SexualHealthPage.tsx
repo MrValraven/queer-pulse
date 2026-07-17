@@ -1,31 +1,40 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Tabs } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { TABS, type TabId } from "./sexualHealth.data";
 import { GuidesTab, HivTab, PrepTab, TestingTab } from "./SexualHealthTabs";
 import styles from "./SexualHealthPage.module.css";
 
 export function SexualHealthPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<TabId>("testing");
+  const tabs = useMemo(
+    () =>
+      TABS.map((tabItem) => ({ id: tabItem.id, label: t(tabItem.labelKey) })),
+    [t],
+  );
 
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Sexual health</div>
+          <div className={styles.cat}>
+            {t("resources:sexualHealth.hero.cat")}
+          </div>
           <h1>
-            Your health, on your <em>own terms.</em>
+            <Translation
+              i18nKey="resources:sexualHealth.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lead}>
-            Direct, queer-specific, non-judgmental. Testing, PrEP, HIV
-            resources, and a community-reviewed provider directory — all in one
-            place.
-          </p>
+          <p className={styles.lead}>{t("resources:sexualHealth.hero.lead")}</p>
           <Tabs
             variant="underline"
             tint="dark"
-            tabs={TABS}
+            tabs={tabs}
             active={tab}
             onChange={(id) => setTab(id as TabId)}
           />
@@ -43,17 +52,18 @@ export function SexualHealthPage() {
 
       <Outro
         title={
-          <>
-            Your health <em>matters.</em>
-          </>
+          <Translation
+            i18nKey="resources:sexualHealth.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Questions, concerns, or just not sure where to start — the community is here."
+        sub={t("resources:sexualHealth.outro.sub")}
       >
         <Button to={routes.wellbeing} variant="primary" size="lg">
-          Wellbeing resources
+          {t("resources:sexualHealth.outro.wellbeingCta")}
         </Button>
         <Button to={routes.communities} variant="ghost-dark" size="lg">
-          Find peer support
+          {t("resources:sexualHealth.outro.peerSupportCta")}
         </Button>
       </Outro>
     </PageShell>

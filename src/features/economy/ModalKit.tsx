@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { FiCheck, FiFile } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
 
 // Consolidated into the shared UI/hooks layer — re-exported here so existing
@@ -29,6 +30,7 @@ export function ModalShell({
   ariaLabel?: string;
   children: ReactNode;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -58,7 +60,7 @@ export function ModalShell({
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("economy:modalKit.closeAriaLabel")}
         >
           ×
         </button>
@@ -74,7 +76,7 @@ export function SuccessPanel({
   em,
   children,
   onClose,
-  closeLabel = "Close",
+  closeLabel,
   footer,
 }: {
   title: string;
@@ -85,6 +87,7 @@ export function SuccessPanel({
   /** Optional extra content below the primary action — e.g. an undo affordance. */
   footer?: ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.success}>
       <div className={styles.successIcon}>
@@ -96,7 +99,7 @@ export function SuccessPanel({
       <p>{children}</p>
       <div className={styles.successBtn}>
         <Button size="lg" variant="ghost-dark" onClick={onClose}>
-          {closeLabel}
+          {closeLabel ?? t("economy:modalKit.close")}
         </Button>
       </div>
       {footer}

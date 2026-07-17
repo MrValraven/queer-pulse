@@ -1,9 +1,11 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SKILL_SUGGESTIONS } from "./postJob.data";
 import type { PostJobForm } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
 
 export function PostJobSkills({ form }: { form: PostJobForm }) {
+  const { t } = useTranslation();
   const { state, toggleIn } = form;
   const [value, setValue] = useState("");
   const [hl, setHl] = useState(-1);
@@ -22,8 +24,8 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
   );
 
   function add(v: string) {
-    const t = v.trim();
-    if (t && !state.tags.includes(t)) toggleIn("tags", t);
+    const trimmed = v.trim();
+    if (trimmed && !state.tags.includes(trimmed)) toggleIn("tags", trimmed);
     setValue("");
     setHl(-1);
   }
@@ -46,11 +48,10 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
 
   return (
     <div className={styles.card}>
-      <div className={styles.cardTitle}>Skills</div>
-      <div className={styles.cardSub}>
-        Add from the shared list so members can match &amp; filter — free text
-        works too.
+      <div className={styles.cardTitle}>
+        {t("economy:postJob.skills.title")}
       </div>
+      <div className={styles.cardSub}>{t("economy:postJob.skills.sub")}</div>
 
       <div className={styles.tagInputRow}>
         <input
@@ -63,7 +64,7 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
             setHl(-1);
           }}
           onKeyDown={onKey}
-          placeholder="Start typing a skill…"
+          placeholder={t("economy:postJob.skills.placeholder")}
         />
         <button
           type="button"
@@ -71,7 +72,7 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
           onClick={() => add(value)}
           style={{ whiteSpace: "nowrap" }}
         >
-          Add
+          {t("economy:postJob.skills.addCta")}
         </button>
         {matches.length > 0 && (
           <div className={styles.suggestPop}>
@@ -98,13 +99,15 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
 
       {state.tags.length > 0 && (
         <div className={styles.tagsDisplay}>
-          {state.tags.map((t) => (
-            <span key={t} className={styles.formTag}>
-              {t}
+          {state.tags.map((tag) => (
+            <span key={tag} className={styles.formTag}>
+              {tag}
               <button
                 type="button"
-                aria-label={`Remove ${t}`}
-                onClick={() => toggleIn("tags", t)}
+                aria-label={t("economy:postJob.skills.removeAria", {
+                  skill: tag,
+                })}
+                onClick={() => toggleIn("tags", tag)}
               >
                 ×
               </button>
@@ -115,7 +118,9 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
 
       {popular.length > 0 && (
         <div className={styles.chipSuggest}>
-          <span className={styles.csLbl}>Popular in this community</span>
+          <span className={styles.csLbl}>
+            {t("economy:postJob.skills.popular")}
+          </span>
           {popular.map((s) => (
             <button
               key={s}

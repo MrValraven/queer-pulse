@@ -3,6 +3,8 @@ import { PageShell } from "../../shared/components/layout";
 import { FiHeart } from "react-icons/fi";
 import { Button, EmptyState, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useWorkshops } from "../../app/providers/WorkshopsProvider";
@@ -14,6 +16,7 @@ import { AddWorkshopModal } from "./AddWorkshopModal";
 import styles from "./SkillsPage.module.css";
 
 export function SkillsPage() {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { workshops } = useWorkshops();
   const loading = useSimulatedLoad();
@@ -42,15 +45,14 @@ export function SkillsPage() {
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Skills &amp; learning</div>
+          <div className={styles.cat}>{t("economy:skills.hero.eyebrow")}</div>
           <h1>
-            Learn from your <em>community.</em>
+            <Translation
+              i18nKey="economy:skills.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p>
-            No course fees, no algorithms, no performative expertise. Just
-            members who are good at things and willing to share what they know —
-            and members who want to get better.
-          </p>
+          <p>{t("economy:skills.hero.lead")}</p>
         </div>
       </header>
 
@@ -58,7 +60,9 @@ export function SkillsPage() {
         <div className={styles.filterBar}>
           <div className="wrap">
             <div className={styles.filterInner}>
-              <span className={styles.filterLabel}>Browse by:</span>
+              <span className={styles.filterLabel}>
+                {t("economy:skills.filter.browseBy")}
+              </span>
               {SKILL_FILTERS.map((filter) => (
                 <button
                   type="button"
@@ -71,7 +75,7 @@ export function SkillsPage() {
                     .join(" ")}
                   onClick={() => setActive(filter.value)}
                 >
-                  {filter.label}
+                  {t(filter.labelKey)}
                 </button>
               ))}
             </div>
@@ -82,11 +86,7 @@ export function SkillsPage() {
       <div className={styles.content}>
         <div className="wrap">
           {!boardEmpty && (
-            <p className={styles.intro}>
-              Everything here is offered and requested by members. If you want
-              to learn something, post an Ask on the board. If you want to teach
-              something, post an Offer.
-            </p>
+            <p className={styles.intro}>{t("economy:skills.intro")}</p>
           )}
 
           {loading ? (
@@ -101,13 +101,16 @@ export function SkillsPage() {
             <EmptyState
               className={styles.empty}
               icon={<FiHeart />}
-              title="No one's shared a skill here yet"
-              description="When members offer to teach what they're good at — or ask to learn something new — it'll show up here. Be the first: list a workshop, or post what you can teach on the board."
+              title={t("economy:skills.empty.title")}
+              description={t("economy:skills.empty.description")}
               action={{
-                label: "List a workshop",
+                label: t("economy:skills.empty.listWorkshopCta"),
                 onClick: () => setListingWorkshop(true),
               }}
-              secondaryAction={{ label: "Post on the board", href: "/#board" }}
+              secondaryAction={{
+                label: t("economy:skills.empty.postBoardCta"),
+                href: "/#board",
+              }}
             />
           ) : (
             <>
@@ -121,13 +124,14 @@ export function SkillsPage() {
                 (source.length > 0 && active !== "all")) && (
                 <SkillsSection
                   title={
-                    <>
-                      Members <em>offering</em> to teach
-                    </>
+                    <Translation
+                      i18nKey="economy:skills.section.offeringTitle"
+                      components={{ em: <em /> }}
+                    />
                   }
                   dotColor="var(--jade)"
                   skills={offering}
-                  emptyDescription="No one's offered to teach in this category yet. Clear the filter to see everything members are sharing."
+                  emptyDescription={t("economy:skills.section.offeringEmpty")}
                   onClearFilters={() => setActive("all")}
                 />
               )}
@@ -136,13 +140,14 @@ export function SkillsPage() {
                 (source.length > 0 && active !== "all")) && (
                 <SkillsSection
                   title={
-                    <>
-                      Members <em>wanting</em> to learn
-                    </>
+                    <Translation
+                      i18nKey="economy:skills.section.lookingTitle"
+                      components={{ em: <em /> }}
+                    />
                   }
                   dotColor="var(--accent)"
                   skills={looking}
-                  emptyDescription="No one's asked to learn in this category yet. Clear the filter to see what the rest of the community is hoping to pick up."
+                  emptyDescription={t("economy:skills.section.lookingEmpty")}
                   onClearFilters={() => setActive("all")}
                 />
               )}
@@ -152,15 +157,15 @@ export function SkillsPage() {
           <div className={styles.offerStrip}>
             <div>
               <h3>
-                Have something <em>to teach?</em>
+                <Translation
+                  i18nKey="economy:skills.offerStrip.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
-              <p>
-                Post a skill offer on the board — what you can teach, how, and
-                who it's for. The community will find you.
-              </p>
+              <p>{t("economy:skills.offerStrip.body")}</p>
             </div>
             <Button href="/#board" size="lg">
-              Post on the board
+              {t("economy:skills.offerStrip.cta")}
             </Button>
           </div>
         </div>
@@ -168,15 +173,15 @@ export function SkillsPage() {
 
       <Outro
         title={
-          <>
-            The best way to get better is to{" "}
-            <em>know someone further along.</em>
-          </>
+          <Translation
+            i18nKey="economy:skills.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Join the network and find the people who can help you grow — and the people you can help in return."
+        sub={t("economy:skills.outro.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Request an invite
+          {t("economy:skills.outro.cta")}
         </Button>
       </Outro>
 

@@ -52,25 +52,35 @@ export const CHAPTERS: Chapter[] = [
 /** Sleep-timer presets, in minutes. */
 export const SLEEP_PRESETS = [15, 30, 45, 60];
 
-/** Fake nearby devices for the cast / AirPlay picker. */
+/** Fake nearby devices for the cast / AirPlay picker. `kindKey` is a chrome
+ * catalog key (protocol + device-type description); `name` is the specific
+ * fictional device name, left as-is. */
 export interface CastTarget {
   id: string;
   name: string;
-  kind: string;
+  kindKey: string;
 }
 
 export const CAST_TARGETS: CastTarget[] = [
-  { id: "living", name: "Living Room HomePod", kind: "AirPlay · speaker" },
-  { id: "kitchen", name: "Kitchen display", kind: "Cast · screen" },
+  {
+    id: "living",
+    name: "Living Room HomePod",
+    kindKey: "magazine:audio.cast.kind.airplaySpeaker",
+  },
+  {
+    id: "kitchen",
+    name: "Kitchen display",
+    kindKey: "magazine:audio.cast.kind.castScreen",
+  },
   {
     id: "studio",
     name: "Atelier Pulso monitors",
-    kind: "AirPlay · 2 speakers",
+    kindKey: "magazine:audio.cast.kind.airplayTwoSpeakers",
   },
   {
     id: "headphones",
     name: "Catarina's AirPods Pro",
-    kind: "Bluetooth · headphones",
+    kindKey: "magazine:audio.cast.kind.bluetoothHeadphones",
   },
 ];
 

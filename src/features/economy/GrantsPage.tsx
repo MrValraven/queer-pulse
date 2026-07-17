@@ -10,6 +10,8 @@ import {
 import { useScrollReveal } from "../../shared/hooks/useScrollReveal";
 import { useCountUp } from "../../shared/hooks/useCountUp";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GRANTS, FILTERS } from "./grants.data";
 import { GrantsResults, GrantsGuide } from "./GrantsSections";
 import { GrantsSidebar } from "./GrantsSidebar";
@@ -27,6 +29,7 @@ function HeroStat({ target, label }: { target: number; label: string }) {
 }
 
 export function GrantsPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
   const filtered = useMemo(
@@ -40,22 +43,26 @@ export function GrantsPage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.eye}>
-            Grants &amp; Funding
+            {t("economy:grants.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            Money for <em>queer work.</em>
+            <Translation
+              i18nKey="economy:grants.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.heroSub} delay={120}>
-            Community-curated guide to grants, fellowships, and funding for
-            LGBTQ+ individuals and organisations — in Portugal and across
-            Europe. Maintained by members who've successfully applied.
+            {t("economy:grants.hero.lead")}
           </Reveal>
           <div className={styles.stats}>
-            <HeroStat target={38} label="opportunities tracked" />
-            <HeroStat target={9} label="currently open" />
+            <HeroStat
+              target={38}
+              label={t("economy:grants.hero.stat.tracked")}
+            />
+            <HeroStat target={9} label={t("economy:grants.hero.stat.open")} />
             <div className={styles.stat}>
-              <b>Community</b>
-              <span>maintained</span>
+              <b>{t("economy:grants.hero.stat.communityLabel")}</b>
+              <span>{t("economy:grants.hero.stat.maintained")}</span>
             </div>
           </div>
         </div>
@@ -76,7 +83,7 @@ export function GrantsPage() {
                   .join(" ")}
                 onClick={() => setFilter(f.value)}
               >
-                {f.label}
+                {t(f.labelKey)}
               </button>
             ))}
           </div>
@@ -102,24 +109,25 @@ export function GrantsPage() {
 
       <Outro
         title={
-          <>
-            Your project <em>deserves support.</em>
-          </>
+          <Translation
+            i18nKey="economy:grants.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Found something that fits? Apply with confidence — and if you land it, pay it forward by adding the opportunity for the next member."
+        sub={t("economy:grants.outro.sub")}
       >
         <Button to={routes.grants} size="lg">
-          See open grants
+          {t("economy:grants.outro.cta")}
         </Button>
       </Outro>
 
       <SubpageIndex
-        title="Also in grants"
+        title={t("economy:grants.subpages.title")}
         items={[
           {
-            label: "Micro Grants",
+            label: t("economy:grants.subpages.microGrants.label"),
             to: routes.microGrants,
-            blurb: "Small, fast community grants — apply in minutes.",
+            blurb: t("economy:grants.subpages.microGrants.blurb"),
           },
         ]}
       />

@@ -4,39 +4,59 @@ import { FiBookmark } from "react-icons/fi";
 import { ImageSlot, FadeIn, EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { StudioShell } from "./StudioShell";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
 import { LIBRARY, TABS } from "./studioLibrary.data";
 import ss from "./studio.module.css";
 import s from "./studioPages.module.css";
 
+/** Mock lifetime paid-to-artists total for this signed-in listener — a
+ * demo number, not authored copy; kept as data, formatted via useFormat(). */
+const LIFETIME_PAID_AMOUNT = 312;
+const LIFETIME_ARTIST_COUNT = 47;
+
 export function StudioLibraryPage() {
-  const [tab, setTab] = useState<string>("Albums");
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("Albums");
+  const activeTab = TABS.find((option) => option.id === tab) ?? TABS[0];
   const items = LIBRARY[tab] ?? [];
   const loading = useSimulatedLoad();
 
   return (
     <StudioShell>
       <div className={s.pageH}>
-        <div className={s.eb}>Your library</div>
+        <div className={s.eb}>{t("studio:library.eyebrow")}</div>
         <h1>
-          Everything you've <em>kept.</em>
+          <Translation
+            i18nKey="studio:library.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <div className={s.dek}>
-          Saved albums, sets, and tracks — and the <em>€312</em> you've paid 47
-          artists this year by listening here.
+          <Translation
+            i18nKey="studio:library.dek"
+            components={{ em: <em /> }}
+            values={{
+              amount: fmt.currency(LIFETIME_PAID_AMOUNT),
+              artistCount: LIFETIME_ARTIST_COUNT,
+            }}
+          />
         </div>
       </div>
 
       <div className={s.tabs}>
         {TABS.map((option) => (
           <button
-            key={option}
+            key={option.id}
             type="button"
-            className={`${s.tab} ${tab === option ? s.tabOn : ""}`}
-            onClick={() => setTab(option)}
+            className={`${s.tab} ${tab === option.id ? s.tabOn : ""}`}
+            onClick={() => setTab(option.id)}
           >
-            {option}
+            {t(option.labelKey)}
           </button>
         ))}
       </div>
@@ -47,25 +67,29 @@ export function StudioLibraryPage() {
         ) : items.length === 0 ? (
           <EmptyState
             icon={<FiBookmark />}
-            title="Your library's empty here"
+            title={t("studio:library.empty.title")}
             description={
-              <>
-                Nothing in <em>{tab.toLowerCase()}</em> yet. Wander the studio,
-                and anything you save lands right here — yours to come back to.
-              </>
+              <Translation
+                i18nKey="studio:library.empty.description"
+                components={{ em: <em /> }}
+                values={{ category: t(activeTab.categoryKey) }}
+              />
             }
-            action={{ label: "Browse the studio", to: routes.studio }}
+            action={{
+              label: t("studio:library.empty.browseCta"),
+              to: routes.studio,
+            }}
             secondaryAction={{
-              label: "Search the catalogue",
+              label: t("studio:library.empty.searchCta"),
               to: routes.studioSearch,
             }}
           />
         ) : (
           <div className={ss.rowGrid}>
-            {items.map((item, i) => (
+            {items.map((item, itemIndex) => (
               <FadeIn
                 key={item.pre + item.meta}
-                delay={Math.min(i, 8) * 60}
+                delay={Math.min(itemIndex, 8) * 60}
                 as={Link}
                 to={item.to}
                 className={ss.card}

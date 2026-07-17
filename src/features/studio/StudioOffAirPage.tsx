@@ -2,6 +2,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { StudioShell } from "./StudioShell";
 import { StudioOffAirHero } from "./StudioOffAirHero";
 import { StudioOffAirShelves } from "./StudioOffAirShelves";
+import { Translation } from "../../shared/i18n/Translation";
 import styles from "./StudioOffAirPage.module.css";
 
 export function StudioOffAirPage() {
@@ -12,8 +13,10 @@ export function StudioOffAirPage() {
       <StudioOffAirHero />
 
       <p className={styles.browseNote}>
-        The doors are shut, but the shelves are open.{" "}
-        <em>Browse anything below</em> — it all still plays.
+        <Translation
+          i18nKey="studio:offAir.page.browseNote"
+          components={{ em: <em /> }}
+        />
       </p>
 
       <StudioOffAirShelves loading={loading} />

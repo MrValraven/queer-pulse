@@ -1,73 +1,68 @@
 export interface Spot {
   name: string;
-  finds: string;
-  origin: string;
-  hours: string;
+  findsKey: string;
+  originKey: string;
+  hoursKey: string;
 }
 
 export interface MapArea {
-  hood: string;
+  hoodKey: string;
+  anchorId: string;
   spots: Spot[];
 }
 
-export const INTRO = [
-  "Thirty-four spots, fourteen countries, all crowd-sourced by the group. This map exists because home is partly a taste, and finding it in a new city is its own kind of belonging. Spot something missing? It is never too late to add yours.",
-];
-
 export const AREAS: MapArea[] = [
   {
-    hood: "Mouraria & Intendente",
+    hoodKey: "resources:ingredientsMap.hood.mourariaIntendente",
+    anchorId: "mouraria",
     spots: [
       {
         name: "Mercearia Sol Nascente",
-        finds:
-          "Cape Verdean staples — cachupa corn, fresh coriander, palm oil.",
-        origin: "Cape Verde",
-        hours: "Mon–Sat, mornings best",
+        findsKey: "resources:ingredientsMap.spot.mercearia.finds",
+        originKey: "resources:ingredientsMap.spot.mercearia.origin",
+        hoursKey: "resources:ingredientsMap.spot.mercearia.hours",
       },
       {
         name: "Loja Bengali",
-        finds:
-          "South Asian spices by weight, dals, mustard oil, fresh paneer on weekends.",
-        origin: "Bangladesh · India",
-        hours: "Daily until late",
+        findsKey: "resources:ingredientsMap.spot.lojaBengali.finds",
+        originKey: "resources:ingredientsMap.spot.lojaBengali.origin",
+        hoursKey: "resources:ingredientsMap.spot.lojaBengali.hours",
       },
       {
         name: "Tropical Martim Moniz",
-        finds:
-          "Plantain, yam, scotch bonnet, dried fish across West African kitchens.",
-        origin: "Nigeria · Ghana",
-        hours: "Mon–Sat",
+        findsKey: "resources:ingredientsMap.spot.tropical.finds",
+        originKey: "resources:ingredientsMap.spot.tropical.origin",
+        hoursKey: "resources:ingredientsMap.spot.tropical.hours",
       },
     ],
   },
   {
-    hood: "Anjos & Arroios",
+    hoodKey: "resources:ingredientsMap.hood.anjosArroios",
+    anchorId: "anjos",
     spots: [
       {
         name: "Padaria Cabo-Verdiana",
-        finds: "Cape Verdean bakery — open Saturday mornings, sells out fast.",
-        origin: "Cape Verde",
-        hours: "Sat mornings",
+        findsKey: "resources:ingredientsMap.spot.padaria.finds",
+        originKey: "resources:ingredientsMap.spot.padaria.origin",
+        hoursKey: "resources:ingredientsMap.spot.padaria.hours",
       },
       {
         name: "Mercado de Arroios stalls",
-        finds:
-          "Brazilian produce — mandioca, açaí, guaraná, fresh tropical fruit.",
-        origin: "Brazil",
-        hours: "Tue–Sun",
+        findsKey: "resources:ingredientsMap.spot.mercado.finds",
+        originKey: "resources:ingredientsMap.spot.mercado.origin",
+        hoursKey: "resources:ingredientsMap.spot.mercado.hours",
       },
     ],
   },
   {
-    hood: "Marvila & Beato",
+    hoodKey: "resources:ingredientsMap.hood.marvilaBeato",
+    anchorId: "marvila",
     spots: [
       {
         name: "Asia Market Marvila",
-        finds:
-          "East and Southeast Asian — rice flours, fresh herbs, tofu, kimchi.",
-        origin: "Vietnam · Korea · China",
-        hours: "Daily",
+        findsKey: "resources:ingredientsMap.spot.asiaMarket.finds",
+        originKey: "resources:ingredientsMap.spot.asiaMarket.origin",
+        hoursKey: "resources:ingredientsMap.spot.asiaMarket.hours",
       },
     ],
   },

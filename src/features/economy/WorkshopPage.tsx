@@ -7,6 +7,7 @@ import {
   ImageSlot,
   Reveal,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useWorkshops } from "../../app/providers/WorkshopsProvider";
 import {
@@ -19,6 +20,7 @@ import { WorkshopSidebar } from "./WorkshopSidebar";
 import styles from "./WorkshopPage.module.css";
 
 export function WorkshopPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { getWorkshop } = useWorkshops();
   const workshop = id ? getWorkshop(id) : undefined;
@@ -28,9 +30,12 @@ export function WorkshopPage() {
       <PageShell>
         <div className={styles.page}>
           <EmptyState
-            title="Workshop not found"
-            description="This workshop may have wrapped up or been taken down. Browse what's running now over on Skills & learning."
-            action={{ label: "Back to Skills", to: routes.skills }}
+            title={t("economy:workshopPage.notFound.title")}
+            description={t("economy:workshopPage.notFound.description")}
+            action={{
+              label: t("economy:workshopPage.notFound.backCta"),
+              to: routes.skills,
+            }}
           />
         </div>
       </PageShell>
@@ -41,7 +46,7 @@ export function WorkshopPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={routes.skills} className={styles.back}>
-          <FiArrowLeft aria-hidden /> Skills &amp; learning
+          <FiArrowLeft aria-hidden /> {t("economy:workshopPage.backToSkills")}
         </Link>
 
         <header className={styles.head}>
@@ -50,7 +55,11 @@ export function WorkshopPage() {
               <span>{workshop.format}</span>
               <span className={styles.sep}>·</span>
               <span className={styles.mode}>{workshop.mode}</span>
-              {workshop.added && <span className={styles.newBadge}>New</span>}
+              {workshop.added && (
+                <span className={styles.newBadge}>
+                  {t("economy:workshopPage.newBadge")}
+                </span>
+              )}
             </div>
             <h1 className={styles.h1}>
               {workshop.title} <em>{workshop.titleEm}</em>
@@ -85,7 +94,7 @@ export function WorkshopPage() {
 
         <div style={{ marginTop: 24 }}>
           <Button to={routes.skills} variant="ghost">
-            ← All workshops &amp; skills
+            {t("economy:workshopPage.footerBackCta")}
           </Button>
         </div>
       </div>

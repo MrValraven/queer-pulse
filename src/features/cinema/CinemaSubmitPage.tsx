@@ -7,6 +7,9 @@ import {
   SuccessPanel,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import { CinemaShell } from "./CinemaShell";
 import { PROMISE_ROWS, SUBMIT_STEPS } from "./cinemaSubmit.data";
@@ -25,30 +28,31 @@ import styles from "./CinemaSubmitPage.module.css";
 
 type Phase = "form" | "sending" | "success";
 
-const NEXT_LABELS = [
-  "Next: Accessibility →",
-  "Next: Rights →",
-  "Next: Revenue →",
-  "Review your film →",
-  "Submit your film →",
+const NEXT_LABEL_KEYS = [
+  "cinema:submit.nav.next.accessibility",
+  "cinema:submit.nav.next.rights",
+  "cinema:submit.nav.next.revenue",
+  "cinema:submit.nav.next.review",
+  "cinema:submit.nav.next.submit",
 ];
 
 /** Per-step gate: what must be filled before advancing. */
-function blocker(step: number, d: SubmitDraft): string | null {
+function blocker(step: number, d: SubmitDraft, t: TFunction): string | null {
   if (step === 0) {
-    if (!d.title.trim()) return "Add your film's title first.";
-    if (!d.synopsis.trim()) return "A short synopsis, in your own words.";
-    if (!d.screener.trim()) return "Paste a screener link so we can watch it.";
+    if (!d.title.trim()) return t("cinema:submit.blocker.title");
+    if (!d.synopsis.trim()) return t("cinema:submit.blocker.synopsis");
+    if (!d.screener.trim()) return t("cinema:submit.blocker.screener");
   }
   if (step === 2 && !d.rightsConfirmed)
-    return "Please confirm you hold the rights.";
-  if (step === 4 && !d.agreed) return "Agree to the co-op terms to submit.";
+    return t("cinema:submit.blocker.rights");
+  if (step === 4 && !d.agreed) return t("cinema:submit.blocker.agree");
   return null;
 }
 
 export function CinemaSubmitPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const form = useSubmitForm();
   const { draft } = form;
 
@@ -72,7 +76,7 @@ export function CinemaSubmitPage() {
   };
 
   const next = () => {
-    const block = blocker(step, draft);
+    const block = blocker(step, draft, t);
     if (block) {
       showToast(block, "info");
       return;
@@ -85,7 +89,7 @@ export function CinemaSubmitPage() {
     scrollUp();
     timer.current = setTimeout(() => {
       setPhase("success");
-      showToast("Your film is with the programming team", "success");
+      showToast(t("cinema:submit.toast.submitted"), "success");
       scrollUp();
     }, 1600);
   };
@@ -102,33 +106,41 @@ export function CinemaSubmitPage() {
           <div className={`wrap ${styles.shInner}`}>
             <div>
               <div className={styles.shEb}>
-                For filmmakers · open submission
+                {t("cinema:submit.header.eyebrow")}
               </div>
               <h1 className={styles.shTitle}>
-                Submit <em>your</em> film.
+                <Translation
+                  i18nKey="cinema:submit.header.title"
+                  components={{ em: <em /> }}
+                />
               </h1>
-              <p className={styles.shSub}>
-                The cinema is open to any queer filmmaker — community member or
-                not. Five steps, 20 minutes. You choose your revenue model. The
-                split is the same for everyone: 80% of every rent or buy comes
-                to you.
-              </p>
+              <p className={styles.shSub}>{t("cinema:submit.header.sub")}</p>
             </div>
             <div className={styles.promise}>
-              <div className={styles.spHead}>The promise, in numbers</div>
+              <div className={styles.spHead}>
+                {t("cinema:submit.promise.heading")}
+              </div>
               {PROMISE_ROWS.map((r) => (
-                <div key={r.k} className={styles.spRow}>
-                  <span className="k">{r.k}</span>
+                <div key={r.labelKey} className={styles.spRow}>
+                  <span className="k">{t(r.labelKey)}</span>
                   <span className="v">
-                    {r.pre}
-                    <em>{r.em}</em>
-                    {r.post}
+                    {r.valueKey ? (
+                      <Translation
+                        i18nKey={r.valueKey}
+                        components={{ em: <em /> }}
+                      />
+                    ) : (
+                      <>
+                        {r.pre}
+                        <em>{r.em}</em>
+                        {r.post}
+                      </>
+                    )}
                   </span>
                 </div>
               ))}
               <div className={styles.spNote}>
-                Non-exclusive means you can still show elsewhere — festivals,
-                your own site, other platforms. We hold no lock-in.
+                {t("cinema:submit.promise.note")}
               </div>
             </div>
           </div>
@@ -159,7 +171,7 @@ export function CinemaSubmitPage() {
                       color: "var(--plum)",
                     }}
                   >
-                    Sending your film to the programming team…
+                    {t("cinema:submit.sending.text")}
                   </p>
                 </div>
               </div>
@@ -180,8 +192,10 @@ export function CinemaSubmitPage() {
                   )}
                   <div className={styles.formNav}>
                     <span className={styles.hint}>
-                      Step {step + 1} of {SUBMIT_STEPS.length} · Progress saves
-                      automatically
+                      {t("cinema:submit.nav.hint", {
+                        step: step + 1,
+                        total: SUBMIT_STEPS.length,
+                      })}
                     </span>
                     <div className={styles.navBtns}>
                       <Button
@@ -190,15 +204,19 @@ export function CinemaSubmitPage() {
                           step === 0
                             ? () =>
                                 showToast(
-                                  "Draft saved to this device",
+                                  t("cinema:submit.toast.draftSaved"),
                                   "success",
                                 )
                             : back
                         }
                       >
-                        {step === 0 ? "Save draft" : "← Back"}
+                        {step === 0
+                          ? t("cinema:submit.nav.saveDraft")
+                          : t("cinema:submit.nav.back")}
                       </Button>
-                      <Button onClick={next}>{NEXT_LABELS[step]}</Button>
+                      <Button onClick={next}>
+                        {t(NEXT_LABEL_KEYS[step]!)}
+                      </Button>
                     </div>
                   </div>
                 </FadeIn>
@@ -215,27 +233,26 @@ export function CinemaSubmitPage() {
 
 function SubmitDone({ onAnother }: { onAnother: () => void }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <div style={{ gridColumn: "1 / -1" }}>
       <SuccessPanel
-        title="Your film is"
-        em="in the queue."
+        title={t("cinema:submit.success.title")}
+        em={t("cinema:submit.success.em")}
         onClose={() => navigate(routes.cinema)}
-        closeLabel="Back to the cinema"
+        closeLabel={t("cinema:submit.success.closeLabel")}
         steps={[
-          "A human watches it within 10–14 days — every submission, no exceptions.",
-          "We write back either way, with specific notes if it's a no.",
-          "If it's a yes, you're paid within 7 days of every rent, buy, and tip.",
+          t("cinema:submit.success.step1"),
+          t("cinema:submit.success.step2"),
+          t("cinema:submit.success.step3"),
         ]}
         footer={
           <Button variant="ghost-dark" onClick={onAnother}>
-            Submit another film
+            {t("cinema:submit.success.anotherCta")}
           </Button>
         }
       >
-        Thank you for trusting us with it. Non-exclusive means nothing changes
-        for you elsewhere — keep showing it wherever you like while we take a
-        look.
+        {t("cinema:submit.success.body")}
       </SuccessPanel>
     </div>
   );

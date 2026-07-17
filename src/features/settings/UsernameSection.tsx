@@ -5,23 +5,26 @@ import { normalizeHandle } from "../../shared/handles";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { UsernameField } from "./UsernameField";
 import { updateUsername } from "./api/handles.api";
 import type { HandleAvailability } from "./api/useHandleAvailability";
 import styles from "./EditProfilePage.module.css";
 
 /** Read the server's rejection reason off an ApiError for a 409/422 username save. */
-function messageForError(err: unknown): string {
+function messageForError(err: unknown, t: TFunction): string {
   if (err instanceof ApiError) {
     const reason = (err.data as { reason?: string } | undefined)?.reason;
     if (err.status === 409 || reason === "taken")
-      return "Someone already goes by that — try another one.";
+      return t("settings:editProfile.username.error.taken");
     if (reason === "reserved")
-      return "That word's kept for the platform — try another.";
+      return t("settings:editProfile.username.error.reserved");
     if (err.status === 422 || reason === "invalid")
-      return "That username isn't allowed — check the format and try again.";
+      return t("settings:editProfile.username.error.invalid");
   }
-  return "We couldn't update your username just now — try again.";
+  return t("settings:editProfile.username.error.generic");
 }
 
 /**
@@ -33,6 +36,7 @@ function messageForError(err: unknown): string {
  * until the handle is confirmed available.
  */
 export function UsernameSection() {
+  const { t } = useTranslation();
   const { profile } = useProfile();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
@@ -65,9 +69,9 @@ export function UsernameSection() {
         await updateUsername(normalized);
       }
       setSavedName(normalized);
-      showToast("Username updated.", "success");
+      showToast(t("settings:editProfile.username.toast.updated"), "success");
     } catch (err) {
-      showToast(messageForError(err), "error");
+      showToast(messageForError(err, t), "error");
     } finally {
       setSaving(false);
     }
@@ -76,29 +80,36 @@ export function UsernameSection() {
   return (
     <div className={styles.section} id="username">
       <h2 className={styles.sectionTitle}>
-        Your <em>username</em>
+        <Translation
+          i18nKey="settings:editProfile.username.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sectionSub}>
-        This is your handle across QueerPulse — how people find your profile.
-        Choose one that's yours; you can change it later, though old links won't
-        point here anymore.
+        {t("settings:editProfile.username.sub")}
       </p>
 
       <UsernameField
         value={value}
         onChange={setValue}
         currentName={savedName}
-        label="Username"
-        hint="Lowercase letters, numbers and hyphens — 3 to 30 characters."
+        label={t("settings:editProfile.username.fieldLabel")}
+        hint={t("settings:editProfile.username.fieldHint")}
         onStatusChange={setAvailability}
       />
 
       <div className={styles.usernameActions}>
         <Button variant="primary" onClick={save} disabled={!canSave}>
-          {saving ? "Saving…" : "Save username"}
+          {saving
+            ? t("settings:editProfile.username.saving")
+            : t("settings:editProfile.username.save")}
         </Button>
         <span className={styles.usernamePreview}>
-          Your profile lives at <strong>/members/{normalized || "…"}</strong>
+          <Translation
+            i18nKey="settings:editProfile.username.previewPrefix"
+            components={{ strong: <strong /> }}
+            values={{ handle: normalized || "…" }}
+          />
         </span>
       </div>
     </div>

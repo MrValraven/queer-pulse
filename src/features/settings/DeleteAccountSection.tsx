@@ -1,13 +1,21 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+} from "react";
 import { FiPause } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { logError } from "../../shared/observability/logger";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DELETE_CONTENT, type DeleteOption } from "./deleteAccount.data";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
-import { DESTRUCTIVE_FLOW } from "./destructiveFlows.data";
+import { buildDestructiveFlow } from "./destructiveFlows.data";
 import {
   DeleteOptionCards,
   DeletePendingBanner,
@@ -23,6 +31,7 @@ import {
 import styles from "./DeleteAccountPage.module.css";
 
 export function DeleteAccountSection() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { signOut } = useAuth();
   const reauth = useReauth();
@@ -38,8 +47,10 @@ export function DeleteAccountSection() {
   const [cancelling, setCancelling] = useState(false);
 
   const content = DELETE_CONTENT[opt];
-  const phraseMatch = content.phrase ? phrase === content.phrase : true;
+  const confirmPhrase = content.phraseKey ? t(content.phraseKey) : null;
+  const phraseMatch = confirmPhrase ? phrase === confirmPhrase : true;
   const canSubmit = phraseMatch;
+  const destructiveFlow = useMemo(() => buildDestructiveFlow(t), [t]);
 
   // On mount, surface any already-pending deletion request instead of the form.
   useEffect(() => {
@@ -82,10 +93,10 @@ export function DeleteAccountSection() {
     try {
       await cancelDeletion();
       setPending(null);
-      showToast("Deletion cancelled — welcome back.", "success");
+      showToast(t("settings:deleteAccount.toast.cancelled"), "success");
     } catch (err) {
       logError(err, { where: "DeleteAccountSection.cancel" });
-      showToast("We couldn't cancel that just now. Try again.", "error");
+      showToast(t("settings:deleteAccount.toast.cancelError"), "error");
     } finally {
       setCancelling(false);
     }
@@ -95,10 +106,13 @@ export function DeleteAccountSection() {
     return (
       <>
         <h1 className={styles.pageTitle}>
-          Deletion <em>scheduled.</em>
+          <Translation
+            i18nKey="settings:deleteAccount.pending.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.pageSub}>
-          You asked us to delete your account. Here's where that stands.
+          {t("settings:deleteAccount.pending.sub")}
         </p>
         <DeletePendingBanner
           request={pending}
@@ -112,12 +126,12 @@ export function DeleteAccountSection() {
   return (
     <>
       <h1 className={styles.pageTitle}>
-        Leaving <em>QueerPulse?</em>
+        <Translation
+          i18nKey="settings:deleteAccount.page.title"
+          components={{ em: <em /> }}
+        />
       </h1>
-      <p className={styles.pageSub}>
-        We're sorry to see you go. Before you decide, choose the option that
-        fits your situation.
-      </p>
+      <p className={styles.pageSub}>{t("settings:deleteAccount.page.sub")}</p>
 
       <DeleteOptionCards opt={opt} setOpt={setOpt} />
 
@@ -129,46 +143,58 @@ export function DeleteAccountSection() {
           </svg>
           <div>
             <p className={styles.pauseStripText}>
-              Not sure? Consider <strong>pausing notifications</strong> for a
-              month instead. You stay a member without the noise.
+              <Translation
+                i18nKey="settings:deleteAccount.pauseStrip.text"
+                components={{ strong: <strong /> }}
+              />
             </p>
             <Button
               variant="ghost"
               onClick={() =>
                 showToast(
-                  "All email notifications paused for 30 days.",
+                  t("settings:deleteAccount.toast.pausedEmails"),
                   "success",
                 )
               }
               style={{ marginTop: 12 }}
             >
-              <FiPause aria-hidden="true" /> Turn off all emails and digests
+              <FiPause aria-hidden="true" />{" "}
+              {t("settings:deleteAccount.pauseStrip.cta")}
             </Button>
           </div>
         </div>
       )}
 
       <div className={styles.whatHappens}>
-        <div className={styles.whTitle}>What happens when you {opt}</div>
+        <div className={styles.whTitle}>
+          {t(`settings:deleteAccount.whatHappens.title.${opt}`)}
+        </div>
         <div className={styles.whList}>
           {content.wh.map((item, i) => (
             <div key={i} className={styles.whRow}>
               <div className={styles.whDot} style={{ background: item.col }} />
-              <div className={styles.whText}>{item.text}</div>
+              <div className={styles.whText}>
+                <Translation
+                  i18nKey={item.textKey}
+                  components={{ strong: <strong /> }}
+                />
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       <form className={styles.confirmForm} onSubmit={handleSubmit}>
-        {content.phrase && (
+        {content.phraseKey && (
           <div>
             <div className={styles.cfLabel}>
-              Type{" "}
-              <strong className={styles.confirmPhrase}>
-                "{content.phrase}"
-              </strong>{" "}
-              to confirm
+              <Translation
+                i18nKey="settings:deleteAccount.confirm.typeLabel"
+                components={{
+                  strong: <strong className={styles.confirmPhrase} />,
+                }}
+                values={{ phrase: confirmPhrase ?? "" }}
+              />
             </div>
             <input
               className={[
@@ -181,7 +207,7 @@ export function DeleteAccountSection() {
               value={phrase}
               onChange={(e) => setPhrase(e.target.value)}
             />
-            <div className={styles.cfHint}>{content.confirmHint}</div>
+            <div className={styles.cfHint}>{t(content.confirmHintKey)}</div>
           </div>
         )}
         <div className={styles.formActions}>
@@ -191,17 +217,17 @@ export function DeleteAccountSection() {
             disabled={!canSubmit}
             className={content.isDanger ? styles.btnDanger : undefined}
           >
-            {content.btnLabel}
+            {t(content.btnLabelKey)}
           </Button>
           <Button variant="ghost" to={routes.settings}>
-            Cancel
+            {t("settings:deleteAccount.confirm.cancelBtn")}
           </Button>
         </div>
       </form>
 
       {flowOpen && (
         <DestructiveActionFlow
-          content={DESTRUCTIVE_FLOW[opt]}
+          content={destructiveFlow[opt]}
           action={runAction}
           onDone={signOut}
           onClose={() => setFlowOpen(false)}

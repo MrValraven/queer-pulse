@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { TFunction } from "../../../shared/i18n/types";
 import { logError } from "../../../shared/observability/logger";
 import { currentUser, currentUserEmail } from "../../members/data/members";
 import {
@@ -16,7 +18,11 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  * DEMO mode, so the "Download" actually yields a file (no backend). Live mode
  * gets a real signed `.zip` from the worker instead.
  */
-function buildDemoArchive(categories: string[], format: ExportFormat): string {
+function buildDemoArchive(
+  categories: string[],
+  format: ExportFormat,
+  t: TFunction,
+): string {
   const now = new Date().toISOString();
   const archive: Record<string, unknown> = {
     manifest: {
@@ -24,20 +30,20 @@ function buildDemoArchive(categories: string[], format: ExportFormat): string {
       schemaVersion: "1.0",
       format,
       categories,
-      note: "Demo export generated in-browser — no personal data left this device.",
+      note: t("settings:dataExport.demoArchiveNote"),
     },
-    profile: categories.includes("Profile & identity")
+    profile: categories.includes("profile")
       ? {
           name: `${currentUser.first} ${currentUser.last}`,
           pronouns: currentUser.pronouns,
           email: currentUserEmail,
         }
       : undefined,
-    messages: categories.includes("Messages") ? [] : undefined,
-    posts: categories.includes("Forum posts") ? [] : undefined,
-    events: categories.includes("Events") ? [] : undefined,
-    connections: categories.includes("Connections") ? [] : undefined,
-    activity: categories.includes("Activity log") ? [] : undefined,
+    messages: categories.includes("messages") ? [] : undefined,
+    posts: categories.includes("forumPosts") ? [] : undefined,
+    events: categories.includes("events") ? [] : undefined,
+    connections: categories.includes("connections") ? [] : undefined,
+    activity: categories.includes("activityLog") ? [] : undefined,
   };
   const blob = new Blob([JSON.stringify(archive, null, 2)], {
     type: "application/json",
@@ -59,6 +65,7 @@ type StartArgs = {
  */
 export function useExportFlow() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const [job, setJob] = useState<ExportJob | null>(null);
   const pollRef = useRef<number | null>(null);
   const blobRef = useRef<string | null>(null);
@@ -94,7 +101,7 @@ export function useExportFlow() {
         );
         window.setTimeout(() => {
           if (blobRef.current) URL.revokeObjectURL(blobRef.current);
-          const url = buildDemoArchive(categories, format);
+          const url = buildDemoArchive(categories, format, t);
           blobRef.current = url;
           setJob({
             jobId: "demo-export",
@@ -142,7 +149,7 @@ export function useExportFlow() {
         });
       }
     },
-    [demoMode, stopPoll],
+    [demoMode, stopPoll, t],
   );
 
   const reset = useCallback(() => {

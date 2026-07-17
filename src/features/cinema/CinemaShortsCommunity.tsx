@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   transparencyNums,
@@ -12,25 +15,27 @@ import styles from "./CinemaShortsPage.module.css";
 
 /** Recurring watch-party calendar with RSVP. */
 export function WatchParties({ notify }: { notify: (m: string) => void }) {
+  const { t } = useTranslation();
   const [rsvped, setRsvped] = useState<Set<number>>(new Set());
 
   const rsvp = (i: number, title: string) => {
     if (rsvped.has(i)) return;
     setRsvped((prev) => new Set(prev).add(i));
-    notify(`You're going · ${title}`);
+    notify(t("cinema:shorts.watchParties.rsvpToast", { title }));
   };
 
   return (
     <>
       <SecDiv
         title={
-          <>
-            Watch <em>together</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.watchParties.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Live rooms where the whole set plays at once — makers in the chat"
+        sub={t("cinema:shorts.watchParties.sub")}
         actionTo={routes.studioCalls}
-        actionLabel="Host one →"
+        actionLabel={t("cinema:shorts.watchParties.hostCta")}
       />
       <div className={styles.wpCal}>
         {watchParties.map((w, i) => {
@@ -52,7 +57,7 @@ export function WatchParties({ notify }: { notify: (m: string) => void }) {
                 {w.next && (
                   <div className={styles.wcBadge}>
                     <span className={styles.live} aria-hidden />
-                    Next up
+                    {t("cinema:shorts.watchParties.nextBadge")}
                   </div>
                 )}
                 <div className={styles.wcTitle}>
@@ -63,19 +68,22 @@ export function WatchParties({ notify }: { notify: (m: string) => void }) {
                 <div className={styles.wcSub}>{w.sub}</div>
               </div>
               <div className={styles.wcCta}>
-                <span className={styles.wcGoing}>{going} going</span>
+                <span className={styles.wcGoing}>
+                  {t("cinema:shorts.watchParties.goingCount", { count: going })}
+                </span>
                 <Button
                   variant={w.next ? "primary" : "ghost"}
                   onClick={() => rsvp(i, title)}
                 >
                   {rsvped.has(i) ? (
                     <>
-                      <FiCheck aria-hidden /> Going
+                      <FiCheck aria-hidden />{" "}
+                      {t("cinema:shorts.watchParties.goingCta")}
                     </>
                   ) : w.next ? (
-                    "RSVP · free"
+                    t("cinema:shorts.watchParties.rsvpFreeCta")
                   ) : (
-                    "RSVP"
+                    t("cinema:live.rsvpCta")
                   )}
                 </Button>
               </div>
@@ -89,19 +97,23 @@ export function WatchParties({ notify }: { notify: (m: string) => void }) {
 
 /** Members vote on next month's programme theme; results reveal on vote. */
 export function CommunityVote({ notify }: { notify: (m: string) => void }) {
+  const { t } = useTranslation();
   const [voted, setVoted] = useState<string | null>(null);
 
   const vote = (id: string) => {
     if (voted) return;
     setVoted(id);
-    notify("Vote counted — thank you");
+    notify(t("cinema:shorts.vote.countedToast"));
   };
 
   return (
     <div className={styles.voteCard}>
       <div className={styles.voteHead}>
         <h3>
-          Programme the <em>next set</em>
+          <Translation
+            i18nKey="cinema:shorts.vote.title"
+            components={{ em: <em /> }}
+          />
         </h3>
         <span className={styles.vhSub}>
           Members choose August's theme · voting closes 20 Jul
@@ -139,12 +151,13 @@ export function CommunityVote({ notify }: { notify: (m: string) => void }) {
                 <span className={styles.voCta}>
                   {isVoted ? (
                     <>
-                      <FiCheck aria-hidden /> Your pick
+                      <FiCheck aria-hidden />{" "}
+                      {t("cinema:shorts.vote.yourPickLabel")}
                     </>
                   ) : voted ? (
                     ""
                   ) : (
-                    "Vote"
+                    t("cinema:shorts.vote.voteCta")
                   )}
                 </span>
               </span>
@@ -158,10 +171,13 @@ export function CommunityVote({ notify }: { notify: (m: string) => void }) {
 
 /** "Where the money went" plum transparency panel. */
 export function Transparency() {
+  const { t } = useTranslation();
   return (
     <div className={styles.transp}>
       <div className={styles.trText}>
-        <div className={styles.trEb}>Where the money went · June</div>
+        <div className={styles.trEb}>
+          {t("cinema:shorts.transparency.heading")}
+        </div>
         <div className={styles.trNums}>
           {transparencyNums.map((n) => (
             <div key={n.k} className={styles.trNum}>
@@ -175,7 +191,7 @@ export function Transparency() {
       </div>
       <div className={styles.trCta}>
         <Button variant="ghost-dark" to={routes.governance}>
-          See the open ledger
+          {t("cinema:shorts.transparency.ledgerCta")}
         </Button>
       </div>
     </div>
@@ -184,23 +200,30 @@ export function Transparency() {
 
 /** Closing "submit your film" plum CTA. */
 export function SubmitCta() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.submitCta}>
       <div className={styles.sctText}>
-        <div className={styles.sctEb}>Your film could be here</div>
+        <div className={styles.sctEb}>
+          {t("cinema:shorts.submitCta.eyebrow")}
+        </div>
         <div className={styles.sctTitle}>
-          Made something? <em>Submit it.</em>
+          <Translation
+            i18nKey="cinema:shorts.submitCta.title"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.sctSub}>
-          Any QueerPulse member can submit to the Made Here track. Free to list,
-          free to watch. You keep your rights. Tips go 100% to you. There's also
-          a €2,500 commission closing 21 June.
+          {t("cinema:shorts.submitCta.body", { amount: fmt.currency(2500) })}
         </div>
       </div>
       <div className={styles.sctActions}>
-        <Button to={routes.cinemaSubmit}>Submit your film</Button>
+        <Button to={routes.cinemaSubmit}>
+          {t("cinema:shorts.submitCta.cta")}
+        </Button>
         <Button variant="ghost-dark" to={routes.studioCalls}>
-          See open grants
+          {t("cinema:shorts.submitCta.seeGrantsCta")}
         </Button>
       </div>
     </div>

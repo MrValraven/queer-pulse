@@ -30,7 +30,8 @@ export const DEFAULT_PROFILE_THEME: ProfileThemeSettings = {
   pattern: "none",
   showBadges: true,
   showLevel: true,
-  badge: BADGE_OPTIONS[0]!,
+  // Stable id, never the translated label (see profileTheme.data.ts).
+  badge: BADGE_OPTIONS[0]!.id,
 };
 
 interface ProfileThemeContextValue {

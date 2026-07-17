@@ -1,5 +1,6 @@
 import { FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ScopeState } from "./scope.data";
 import styles from "./ScopeGeneratorPage.module.css";
 
@@ -23,6 +24,7 @@ function EditableList({
   addLabel,
   onChange,
 }: EditableListProps) {
+  const { t } = useTranslation();
   const patch = (i: number, value: string) =>
     onChange(items.map((it, idx) => (idx === i ? value : it)));
   const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i));
@@ -36,7 +38,7 @@ function EditableList({
       {items.map((value, i) => (
         <div key={`${idPrefix}-${i}`} className={styles.listRow}>
           <label className={styles.srOnly} htmlFor={`${idPrefix}-${i}`}>
-            {legend} item {i + 1}
+            {t("economy:scopeTool.itemAriaLabel", { legend, index: i + 1 })}
           </label>
           <input
             id={`${idPrefix}-${i}`}
@@ -51,7 +53,10 @@ function EditableList({
             className={styles.rowRemove}
             onClick={() => remove(i)}
             disabled={items.length === 1}
-            aria-label={`Remove ${legend.toLowerCase()} item ${i + 1}`}
+            aria-label={t("economy:scopeTool.removeItemAriaLabel", {
+              legend,
+              index: i + 1,
+            })}
           >
             <FiX aria-hidden />
           </button>
@@ -78,17 +83,18 @@ interface ScopeFormProps {
 
 /** The input column for the scope generator. */
 export function ScopeForm({ scope, onChange }: ScopeFormProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.form}>
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="scope-project">
-          Project
+          {t("economy:scopeTool.projectLabel")}
         </label>
         <input
           id="scope-project"
           className={styles.rcInput}
           type="text"
-          placeholder="e.g. Brand & website refresh"
+          placeholder={t("economy:scopeTool.projectPlaceholder")}
           value={scope.project}
           onChange={(e) => onChange({ project: e.target.value })}
         />
@@ -96,47 +102,47 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="scope-client">
-          Client name
+          {t("economy:scopeTool.clientLabel")}
         </label>
         <input
           id="scope-client"
           className={styles.rcInput}
           type="text"
-          placeholder="Who this is for"
+          placeholder={t("economy:scopeTool.clientPlaceholder")}
           value={scope.clientName}
           onChange={(e) => onChange({ clientName: e.target.value })}
         />
       </div>
 
       <EditableList
-        legend="What's included"
-        hint="The deliverables you commit to."
+        legend={t("economy:scopeTool.includedLegend")}
+        hint={t("economy:scopeTool.includedHint")}
         items={scope.deliverables}
         idPrefix="deliverable"
-        placeholder="A deliverable"
-        addLabel="Add deliverable"
+        placeholder={t("economy:scopeTool.includedPlaceholder")}
+        addLabel={t("economy:scopeTool.includedAdd")}
         onChange={(deliverables) => onChange({ deliverables })}
       />
 
       <EditableList
-        legend="Not included"
-        hint="Naming exclusions up front prevents most disputes."
+        legend={t("economy:scopeTool.excludedLegend")}
+        hint={t("economy:scopeTool.excludedHint")}
         items={scope.outOfScope}
         idPrefix="exclusion"
-        placeholder="Something out of scope"
-        addLabel="Add exclusion"
+        placeholder={t("economy:scopeTool.excludedPlaceholder")}
+        addLabel={t("economy:scopeTool.excludedAdd")}
         onChange={(outOfScope) => onChange({ outOfScope })}
       />
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="scope-revisions">
-          Revisions
+          {t("economy:scopeTool.revisionsLabel")}
         </label>
         <input
           id="scope-revisions"
           className={styles.rcInput}
           type="text"
-          placeholder="e.g. 2 rounds per deliverable"
+          placeholder={t("economy:scopeTool.revisionsPlaceholder")}
           value={scope.revisions}
           onChange={(e) => onChange({ revisions: e.target.value })}
         />
@@ -144,12 +150,12 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="scope-milestones">
-          Milestones &amp; terms
+          {t("economy:scopeTool.milestonesLabel")}
         </label>
         <textarea
           id="scope-milestones"
           className={styles.rcTextarea}
-          placeholder="Payment schedule, timeline, conditions…"
+          placeholder={t("economy:scopeTool.milestonesPlaceholder")}
           value={scope.milestones}
           onChange={(e) => onChange({ milestones: e.target.value })}
         />
@@ -158,7 +164,7 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="scope-price">
-            Price (optional)
+            {t("economy:scopeTool.priceLabel")}
           </label>
           <input
             id="scope-price"
@@ -166,7 +172,7 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
             type="number"
             min={0}
             step="any"
-            placeholder="Leave empty for scope only"
+            placeholder={t("economy:scopeTool.pricePlaceholder")}
             value={scope.price}
             onChange={(e) => onChange({ price: e.target.value })}
           />
@@ -174,7 +180,7 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
 
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="scope-valid">
-            Valid until
+            {t("economy:scopeTool.validUntilLabel")}
           </label>
           <input
             id="scope-valid"

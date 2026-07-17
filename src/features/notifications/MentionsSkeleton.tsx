@@ -1,4 +1,5 @@
 import { SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./MentionsPage.module.css";
 
 /** Mirrors a mention row: head (avatar + who + when) + content + where. */
@@ -22,9 +23,10 @@ function MentionRowSkeleton() {
 }
 
 export function MentionsListSkeleton({ count = 3 }: { count?: number }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <div className={styles.day}>Today</div>
+      <div className={styles.day}>{t("notifications:mentions.day.today")}</div>
       <div className={styles.list}>
         {Array.from({ length: count }).map((_, i) => (
           <MentionRowSkeleton key={i} />

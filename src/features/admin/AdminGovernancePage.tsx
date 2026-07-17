@@ -2,49 +2,56 @@ import { useState } from "react";
 import { FadeIn, Button } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminGovernanceFinances } from "./AdminGovernanceFinances";
 import { AdminGovernancePolicy } from "./AdminGovernancePolicy";
 import { AdminGovernanceAudit } from "./AdminGovernanceAudit";
-
-const TABS: AdminTab[] = [
-  { id: "finances", label: "Finances" },
-  { id: "policy", label: "Policy & versions" },
-  { id: "audit", label: "Audit log", count: 14206 },
-];
+import { AUDIT_TOTAL } from "./adminGovernance.data";
 
 export function AdminGovernancePage() {
+  const { t } = useTranslation();
   const [active, setActive] = useState("finances");
   const { showToast } = useToast();
+
+  const TABS: AdminTab[] = [
+    { id: "finances", label: t("admin:governance.tabs.finances") },
+    { id: "policy", label: t("admin:governance.tabs.policy") },
+    {
+      id: "audit",
+      label: t("admin:governance.tabs.audit"),
+      count: AUDIT_TOTAL,
+    },
+  ];
 
   return (
     <AdminShell
       title={
-        <>
-          Governance · <em>accountability</em>
-        </>
+        <Translation
+          i18nKey="admin:governance.title"
+          components={{ em: <em /> }}
+        />
       }
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow="Governance & transparency"
+          eyebrow={t("admin:governance.header.eyebrow")}
           title={
-            <>
-              Nothing here is <em>hidden</em>.
-            </>
+            <Translation
+              i18nKey="admin:governance.header.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="Where the money comes from, where it goes, every rule change, and every action a moderator has ever taken — all open to the members who fund us."
+          sub={t("admin:governance.header.sub")}
           actions={
             <Button
               variant="ghost"
               onClick={() =>
-                showToast(
-                  "Transparency report queued — members will be notified when it publishes.",
-                  "success",
-                )
+                showToast(t("admin:governance.header.publishToast"), "success")
               }
             >
-              Publish report
+              {t("admin:governance.header.publishCta")}
             </Button>
           }
         />

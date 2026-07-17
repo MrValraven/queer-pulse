@@ -1,5 +1,6 @@
 import { FiCheck } from "react-icons/fi";
 import { ChipSelect, FormField } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   AD_OPTIONS,
   CAPTION_LANGS,
@@ -15,72 +16,80 @@ import styles from "./CinemaSubmitPage.module.css";
 
 /** Step 2 — captions, audio description, sign-language tracks. */
 export function CinemaSubmitStep2({ form }: { form: SubmitForm }) {
+  const { t } = useTranslation();
   const { draft, set, toggle } = form;
   return (
     <div className={styles.formBlock}>
       <FbHead
         num={2}
-        title="Accessibility"
-        em="assets"
-        sub="Captions, audio description, sign-language tracks. We help if you're stuck — nobody's turned away over cost."
+        heading={t("cinema:submit.form.step2.heading")}
+        sub={t("cinema:submit.form.step2.sub")}
       />
 
       <FormField
         label={
-          <FieldLabel why="We caption every film before it goes live. If you don't have captions, our access fund can make them for you.">
-            Do you have captions?
+          <FieldLabel why={t("cinema:submit.form.step2.captions.why")}>
+            {t("cinema:submit.form.step2.captions.label")}
           </FieldLabel>
         }
       >
         <RadioGrid
           options={CAPTION_OPTIONS}
           value={draft.captions}
-          onChange={(v) => set("captions", v)}
-          ariaLabel="Captions"
+          onChange={(value) => set("captions", value)}
+          ariaLabel={t("cinema:submit.form.step2.captions.ariaLabel")}
         />
       </FormField>
 
-      <FormField label="Caption languages you can provide">
+      <FormField label={t("cinema:submit.form.step2.captionLangs.label")}>
         <ChipSelect
-          options={CAPTION_LANGS}
+          options={CAPTION_LANGS.map((captionLang) => ({
+            value: captionLang.value,
+            label: t(captionLang.labelKey),
+          }))}
           selected={new Set(draft.captionLangs)}
-          onToggle={(v) => toggle("captionLangs", v)}
+          onToggle={(value) => toggle("captionLangs", value)}
           tone="jade"
         />
       </FormField>
 
       <FormField
         label={
-          <FieldLabel why="A described track or a script we can voice. Optional, but it opens your film to blind and low-vision viewers.">
-            Audio description
+          <FieldLabel why={t("cinema:submit.form.step2.ad.why")}>
+            {t("cinema:submit.form.step2.ad.label")}
           </FieldLabel>
         }
       >
         <RadioGrid
           options={AD_OPTIONS}
           value={draft.ad}
-          onChange={(v) => set("ad", v)}
-          ariaLabel="Audio description"
+          onChange={(value) => set("ad", value)}
+          ariaLabel={t("cinema:submit.form.step2.ad.ariaLabel")}
         />
       </FormField>
 
-      <FormField label="Sign-language tracks available">
+      <FormField label={t("cinema:submit.form.step2.signTracks.label")}>
         <ChipSelect
-          options={SIGN_TRACKS}
+          options={SIGN_TRACKS.map((signTrack) => ({
+            value: signTrack.value,
+            label: t(signTrack.labelKey),
+          }))}
           selected={new Set(draft.signTracks)}
-          onToggle={(v) => toggle("signTracks", v)}
+          onToggle={(value) => toggle("signTracks", value)}
           tone="jade"
         />
       </FormField>
 
       <FormField
         label={
-          <FieldLabel opt="(optional)">Anything else we should know</FieldLabel>
+          <FieldLabel opt={t("cinema:submit.form.step2.notes.opt")}>
+            {t("cinema:submit.form.step2.notes.label")}
+          </FieldLabel>
         }
       >
         <textarea
           rows={3}
-          placeholder="Flashing imagery timecodes, sensory notes, or access needs of your own we should plan around…"
+          placeholder={t("cinema:submit.form.step2.notes.placeholder")}
           value={draft.accessNotes}
           onChange={(e) => set("accessNotes", e.target.value)}
         />
@@ -91,46 +100,53 @@ export function CinemaSubmitStep2({ form }: { form: SubmitForm }) {
 
 /** Step 3 — territory, term, rights confirmation. */
 export function CinemaSubmitStep3({ form }: { form: SubmitForm }) {
+  const { t } = useTranslation();
   const { draft, set } = form;
   return (
     <div className={styles.formBlock}>
       <FbHead
         num={3}
-        title="Rights"
-        titlePost="you're granting"
-        sub="Non-exclusive, always. You keep every other right and can show the film anywhere else, anytime."
+        heading={t("cinema:submit.form.step3.heading")}
+        sub={t("cinema:submit.form.step3.sub")}
       />
 
       <FormField
         label={
-          <FieldLabel why="Where we can stream it. Worldwide reaches the most people, but a local-only première is completely fine.">
-            Territory
+          <FieldLabel why={t("cinema:submit.form.step3.territory.why")}>
+            {t("cinema:submit.form.step3.territory.label")}
           </FieldLabel>
         }
       >
         <RadioGrid
           options={TERRITORY_OPTIONS}
           value={draft.territory}
-          onChange={(v) => set("territory", v)}
-          ariaLabel="Territory"
+          onChange={(value) => set("territory", value)}
+          ariaLabel={t("cinema:submit.form.step3.territory.ariaLabel")}
         />
       </FormField>
 
       <FormField
         label={
-          <FieldLabel why="How long the film stays in the catalogue. You can pull it earlier at any time, no penalty.">
-            Term
+          <FieldLabel why={t("cinema:submit.form.step3.term.why")}>
+            {t("cinema:submit.form.step3.term.label")}
           </FieldLabel>
         }
       >
         <RadioGrid
           options={TERM_OPTIONS}
           value={draft.term}
-          onChange={(v) => set("term", v)}
-          ariaLabel="Term"
+          onChange={(value) => set("term", value)}
+          ariaLabel={t("cinema:submit.form.step3.term.ariaLabel")}
         />
       </FormField>
 
+      {/* i18n sweep: this checkbox is a binding legal representation ("I
+          hold the rights to distribute this film…"). Left English —
+          deliberately NOT routed through t() — per the sweep brief §6/§7:
+          a subtly-off pt-PT rendering would change what a filmmaker is
+          agreeing to. Same reasoning the Cinema Rights-page contract FAQ
+          was left English for. Flagged in the sweep report; do not
+          translate without a native pt-PT + legal review. */}
       <FormField>
         <button
           type="button"
@@ -156,25 +172,27 @@ export function CinemaSubmitStep3({ form }: { form: SubmitForm }) {
 
 /** Step 4 — revenue model, with optional pricing. */
 export function CinemaSubmitStep4({ form }: { form: SubmitForm }) {
+  const { t } = useTranslation();
   const { draft, set } = form;
-  const model = REVENUE_MODELS.find((m) => m.value === draft.revenue);
+  const model = REVENUE_MODELS.find(
+    (revenueModel) => revenueModel.value === draft.revenue,
+  );
   return (
     <div className={styles.formBlock}>
       <FbHead
         num={4}
-        title="How you want"
-        em="to sell"
-        sub="You choose. You can change this after submission, once per year."
+        heading={t("cinema:submit.form.step4.heading")}
+        sub={t("cinema:submit.form.step4.sub")}
       />
 
       <div className={styles.revCards}>
-        {REVENUE_MODELS.map((m) => {
-          const on = m.value === draft.revenue;
+        {REVENUE_MODELS.map((revenueModel) => {
+          const on = revenueModel.value === draft.revenue;
           return (
             <button
-              key={m.value}
+              key={revenueModel.value}
               type="button"
-              onClick={() => set("revenue", m.value)}
+              onClick={() => set("revenue", revenueModel.value)}
               aria-pressed={on}
               className={[styles.revCard, on && styles.revCardOn]
                 .filter(Boolean)
@@ -182,18 +200,22 @@ export function CinemaSubmitStep4({ form }: { form: SubmitForm }) {
             >
               <div className={styles.rcHead}>
                 <span className={styles.rDot} aria-hidden />
-                <span className={styles.rcLabel}>{m.label}</span>
+                <span className={styles.rcLabel}>
+                  {t(revenueModel.labelKey)}
+                </span>
                 <span
                   className={[
                     styles.rcTag,
-                    m.tagKind === "free" ? styles.rcTagFree : styles.rcTagPaid,
+                    revenueModel.tagKind === "free"
+                      ? styles.rcTagFree
+                      : styles.rcTagPaid,
                   ].join(" ")}
                 >
-                  {m.tag}
+                  {t(revenueModel.tagKey)}
                 </span>
               </div>
-              <div className={styles.rcDesc}>{m.desc}</div>
-              <div className={styles.rcSplit}>{m.split}</div>
+              <div className={styles.rcDesc}>{t(revenueModel.descKey)}</div>
+              <div className={styles.rcSplit}>{t(revenueModel.splitKey)}</div>
             </button>
           );
         })}
@@ -201,7 +223,7 @@ export function CinemaSubmitStep4({ form }: { form: SubmitForm }) {
 
       {model?.priced && (
         <div className={styles.priceRow}>
-          <FormField label="Rental price (€2–8)">
+          <FormField label={t("cinema:submit.form.step4.rentPrice.label")}>
             <input
               type="number"
               placeholder="3"
@@ -210,7 +232,7 @@ export function CinemaSubmitStep4({ form }: { form: SubmitForm }) {
             />
           </FormField>
           {model.priced === "rentbuy" && (
-            <FormField label="Buy price (min 2× rental)">
+            <FormField label={t("cinema:submit.form.step4.buyPrice.label")}>
               <input
                 type="number"
                 placeholder="12"

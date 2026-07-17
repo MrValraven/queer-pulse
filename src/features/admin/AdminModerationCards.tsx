@@ -8,6 +8,7 @@ import {
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminChip, AdminCat } from "./ui";
 import {
   SEVERITY,
@@ -52,7 +53,9 @@ export function ReportCard({
         <span
           role="checkbox"
           aria-checked={!!selected}
-          aria-label={`Select report: ${report.title}`}
+          aria-label={t("admin:moderation.selectReportAriaLabel", {
+            title: report.title,
+          })}
           tabIndex={0}
           className={[styles.selectBox, selected && styles.selectBoxOn]
             .filter(Boolean)
@@ -96,13 +99,15 @@ export function ReportCard({
 
         <span className={styles.reportMeta}>
           <span>
-            Reported by <strong>{report.reporterName}</strong>
+            {t("admin:moderation.reportedByLabel")}{" "}
+            <strong>{report.reporterName}</strong>
           </span>
           <span aria-hidden className={styles.metaDot}>
             ·
           </span>
           <span>
-            About <strong>{report.reportedName}</strong>
+            {t("admin:moderation.aboutLabel")}{" "}
+            <strong>{report.reportedName}</strong>
           </span>
           {report.priorReports && (
             <span className={styles.priorFlag}>
@@ -137,21 +142,28 @@ export function BulkBar({
   onReassign: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <div className={styles.bulkBar} role="region" aria-label="Bulk actions">
-      <span className={styles.bulkCount}>{count} selected</span>
+    <div
+      className={styles.bulkBar}
+      role="region"
+      aria-label={t("admin:moderation.bulk.ariaLabel")}
+    >
+      <span className={styles.bulkCount}>
+        {t("admin:moderation.bulk.selectedCount", { count })}
+      </span>
       <div className={styles.bulkActions}>
         <Button variant="ghost" onClick={onDismiss}>
-          Dismiss
+          {t("admin:moderation.bulk.dismissCta")}
         </Button>
         <Button variant="ghost" onClick={onSpam}>
-          Remove as spam
+          {t("admin:moderation.bulk.spamCta")}
         </Button>
         <Button variant="ghost" onClick={onReassign}>
-          Reassign…
+          {t("admin:moderation.bulk.reassignCta")}
         </Button>
         <Button variant="ghost-dark" onClick={onCancel}>
-          Cancel
+          {t("admin:moderation.bulk.cancelCta")}
         </Button>
       </div>
     </div>
@@ -169,14 +181,18 @@ export function EmergencyBand({
   count: number;
   sub: ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
-    <section className={styles.emergBand} aria-label="Safety emergencies">
+    <section
+      className={styles.emergBand}
+      aria-label={t("admin:moderation.emergency.ariaLabel")}
+    >
       <div className={styles.emergHead}>
         <span className={styles.emergIco} aria-hidden>
           <FiAlertTriangle />
         </span>
         <h2 className={styles.emergTitle}>
-          {count} safety {count === 1 ? "emergency" : "emergencies"}
+          {t("admin:moderation.emergency.count", { count })}
           <span className={styles.emergTitleSub}> {sub}</span>
         </h2>
       </div>
@@ -198,27 +214,27 @@ export function CaughtUpPanel({
   onBack: () => void;
   onReplay: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.caughtUp}>
       <span className={styles.caughtIco} aria-hidden>
         <FiCheck />
       </span>
       <h2 className={styles.caughtTitle}>
-        You&rsquo;re <em>caught up</em>.
+        <Translation
+          i18nKey="admin:moderation.caughtUp.titleLine1"
+          components={{ em: <em /> }}
+        />
         <br />
-        Nothing needs you right now.
+        {t("admin:moderation.caughtUp.titleLine2")}
       </h2>
-      <p className={styles.caughtSub}>
-        Every open report has a human decision attached to it, and every
-        affected member has been told what happened and why. Go rest — the
-        network is safe in your hands.
-      </p>
+      <p className={styles.caughtSub}>{t("admin:moderation.caughtUp.sub")}</p>
       <div className={styles.caughtActions}>
         <Button variant="ghost-dark" onClick={onBack}>
-          Back to overview
+          {t("admin:moderation.caughtUp.backCta")}
         </Button>
         <Button variant="jade" onClick={onReplay}>
-          Replay the queue
+          {t("admin:moderation.caughtUp.replayCta")}
         </Button>
       </div>
     </div>
@@ -268,13 +284,14 @@ export function AppealCard({
 
         <div className={styles.reportMeta}>
           <span>
-            Appeal by <strong>{appeal.appealBy}</strong>
+            {t("admin:moderation.appeal.by")} <strong>{appeal.appealBy}</strong>
           </span>
           <span aria-hidden className={styles.metaDot}>
             ·
           </span>
           <span>
-            Decided by <strong>{appeal.original.by}</strong>
+            {t("admin:moderation.appeal.decidedBy")}{" "}
+            <strong>{appeal.original.by}</strong>
           </span>
           {appeal.community && (
             <>
@@ -286,7 +303,10 @@ export function AppealCard({
           )}
           {appeal.supporters.length > 0 && (
             <span className={styles.supportFlag}>
-              <FiUsers aria-hidden /> {appeal.supporters.length} backing them
+              <FiUsers aria-hidden />{" "}
+              {t("admin:moderation.appeal.supportersFlag", {
+                count: appeal.supporters.length,
+              })}
             </span>
           )}
         </div>

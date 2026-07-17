@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Button, Sending } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 export function PanelSignupModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [why, setWhy] = useState("");
@@ -20,57 +23,64 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
 
   return (
     <ResourceModal
-      title={phase === "done" ? "" : "Join the review panel"}
+      title={
+        phase === "done" ? "" : t("resources:microGrants.panel.modalTitle")
+      }
       onClose={onClose}
     >
       {phase === "done" ? (
         <PlumSuccess
           title={
-            <>
-              You're on the <em>list.</em>
-            </>
+            <Translation
+              i18nKey="resources:microGrants.panel.success.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="Thank you. The panel coordinator reviews new volunteers ahead of each quarter and will be in touch before the Q3 round opens. Panels rotate so the work stays shared."
+          sub={t("resources:microGrants.panel.success.sub")}
           onClose={onClose}
         />
       ) : (
         <>
           <div className={styles.body}>
             <p className={styles.sub}>
-              The panel reads applications and decides grants together. We keep
-              it small, rotating, and deliberately mixed — no professional
-              gatekeepers.
+              {t("resources:microGrants.panel.intro")}
             </p>
 
-            <span className={styles.label}>Name</span>
+            <span className={styles.label}>
+              {t("resources:microGrants.panel.nameLabel")}
+            </span>
             <input
               className={styles.input}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
+              placeholder={t("resources:microGrants.panel.namePlaceholder")}
             />
 
-            <span className={styles.label}>Email</span>
+            <span className={styles.label}>
+              {t("resources:microGrants.panel.emailLabel")}
+            </span>
             <input
               className={styles.input}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t("resources:microGrants.panel.emailPlaceholder")}
             />
 
-            <span className={styles.label}>Why you'd like to help review</span>
+            <span className={styles.label}>
+              {t("resources:microGrants.panel.whyLabel")}
+            </span>
             <textarea
               className={styles.textarea}
               value={why}
               onChange={(e) => setWhy(e.target.value)}
-              placeholder="A sentence or two — lived experience, the kind of projects you care about, time you can give."
+              placeholder={t("resources:microGrants.panel.whyPlaceholder")}
             />
           </div>
 
           <div className={styles.footer}>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t("resources:microGrants.panel.cancelCta")}
             </Button>
             <Button
               type="button"
@@ -79,9 +89,9 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
               disabled={!valid || phase === "loading"}
             >
               {phase === "loading" ? (
-                <Sending label="Sending…" />
+                <Sending label={t("resources:suggestEdit.sendingLabel")} />
               ) : (
-                "Add me to the panel"
+                t("resources:microGrants.panel.submitCta")
               )}
             </Button>
           </div>

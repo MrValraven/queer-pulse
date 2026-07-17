@@ -1,8 +1,15 @@
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILE, WF } from "./studioTriage.data";
 import s from "./council.module.css";
 
+/** This specific submission's artist name — content, interpolated into the
+ * translated decision copy below. */
+const CURRENT_SUBMISSION_ARTIST_NAME = "Renato";
+
 export function StudioTriageDetail() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   return (
@@ -23,7 +30,11 @@ export function StudioTriageDetail() {
           ))}
         </div>
         <div className={s.pmCtrl}>
-          <button type="button" className={s.pmPlay} aria-label="Play">
+          <button
+            type="button"
+            className={s.pmPlay}
+            aria-label={t("studio:triage.detail.playAria")}
+          >
             <svg viewBox="0 0 12 14" fill="currentColor">
               <path d="M1 1l10 6-10 6z" />
             </svg>
@@ -46,19 +57,19 @@ export function StudioTriageDetail() {
       </div>
 
       <div className={s.detailBlock}>
-        <h4>The file</h4>
+        <h4>{t("studio:triage.detail.fileHeading")}</h4>
         <div className={s.dGrid}>
-          {FILE.map(([k, v], i) => (
-            <span key={i} style={{ display: "contents" }}>
-              <span className={s.k}>{k}</span>
-              <span className={s.v}>{v}</span>
+          {FILE.map(([labelKey, value], fileRowIndex) => (
+            <span key={fileRowIndex} style={{ display: "contents" }}>
+              <span className={s.k}>{t(labelKey)}</span>
+              <span className={s.v}>{value}</span>
             </span>
           ))}
         </div>
       </div>
 
       <div className={s.detailBlock}>
-        <h4>What other curators flagged (3)</h4>
+        <h4>{t("studio:triage.detail.flaggedHeading", { count: 3 })}</h4>
         <p style={{ fontStyle: "italic", color: "rgba(247,243,238,.6)" }}>
           D. Okoye: "the bridge at 2:14 is the thing." · João R.: "PT feels
           regional — Porto, not Lisbon." · Yara R.: "i'd put this on the
@@ -67,13 +78,20 @@ export function StudioTriageDetail() {
       </div>
 
       <h3 className={s.shortlistH}>
-        Your <em>answer</em>
+        <Translation
+          i18nKey="studio:triage.detail.answerHeading"
+          components={{ em: <em /> }}
+        />
       </h3>
       <div className={s.decision}>
         <h4>
-          If you pass — write one sentence. This goes to Renato as the answer.
+          {t("studio:triage.detail.decision.heading", {
+            artistName: CURRENT_SUBMISSION_ARTIST_NAME,
+          })}
         </h4>
-        <textarea placeholder="A small sentence that explains the no. We never send a form letter, ever." />
+        <textarea
+          placeholder={t("studio:triage.detail.decision.placeholder")}
+        />
         <div
           className="hint"
           style={{
@@ -84,8 +102,10 @@ export function StudioTriageDetail() {
             marginTop: 8,
           }}
         >
-          Required for pass.{" "}
-          <em style={{ color: "var(--accent)" }}>Not required</em> for slate.
+          <Translation
+            i18nKey="studio:triage.detail.decision.hint"
+            components={{ em: <em style={{ color: "var(--accent)" }} /> }}
+          />
         </div>
         <div
           className="actions"
@@ -99,25 +119,34 @@ export function StudioTriageDetail() {
           <button
             type="button"
             className={s.bt}
-            onClick={() => showToast("Held for a second read", "info")}
+            onClick={() =>
+              showToast(t("studio:triage.detail.toast.held"), "info")
+            }
           >
-            Hold &amp; second-read
+            {t("studio:triage.detail.holdCta")}
           </button>
           <button
             type="button"
             className={s.bt}
             onClick={() =>
-              showToast("Passed with your sentence — sent to Renato", "success")
+              showToast(
+                t("studio:triage.detail.toast.passed", {
+                  artistName: CURRENT_SUBMISSION_ARTIST_NAME,
+                }),
+                "success",
+              )
             }
           >
-            Pass · with the sentence
+            {t("studio:triage.detail.passCta")}
           </button>
           <button
             type="button"
             className={`${s.bt} ${s.btP}`}
-            onClick={() => showToast("Added to the next slate", "success")}
+            onClick={() =>
+              showToast(t("studio:triage.detail.toast.addedToSlate"), "success")
+            }
           >
-            ＋ Add to next slate
+            {t("studio:triage.detail.addToSlateCta")}
           </button>
         </div>
       </div>

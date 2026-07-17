@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import type { Workshop } from "./workshops.data";
 import styles from "./ApplicationModals.module.css";
@@ -11,6 +13,7 @@ export function WorkshopReserveModal({
   workshop: Workshop;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [tier, setTier] = useState(workshop.tiers[0]?.label ?? "");
@@ -18,90 +21,108 @@ export function WorkshopReserveModal({
   const { sending, done, submit } = useSubmitFlow();
   const title = `${workshop.title} ${workshop.titleEm}`;
   const valid = name.trim().length > 1 && /.+@.+\..+/.test(email) && !!tier;
-  const chosen = workshop.tiers.find((t) => t.label === tier);
+  const chosen = workshop.tiers.find((tierOption) => tierOption.label === tier);
 
   return (
     <ModalShell
       onClose={onClose}
       success={done}
-      ariaLabel={`Reserve a spot in ${title}`}
+      ariaLabel={t("economy:workshopReserve.ariaLabel", { title })}
     >
       {done ? (
         <SuccessPanel
-          title="Seat"
-          em="held."
+          title={t("economy:workshopReserve.success.title")}
+          em={t("economy:workshopReserve.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:workshopReserve.success.closeLabel")}
         >
-          Your spot in <strong>{title}</strong> is held for 48 hours. We've
-          emailed {name.split(" ")[0]} a payment link at the{" "}
-          <strong>{chosen?.amount}</strong> rate — pay whenever you're ready, no
-          rush. See you {workshop.startDate}.
+          <Translation
+            i18nKey="economy:workshopReserve.success.body"
+            values={{
+              title,
+              firstName: name.split(" ")[0] ?? name,
+              amount: chosen?.amount ?? "",
+              date: workshop.startDate,
+            }}
+            components={{ strong: <strong /> }}
+          />
         </SuccessPanel>
       ) : (
         <>
           <div className={styles.eyebrow}>{workshop.format}</div>
           <h2 className={styles.title}>
-            Reserve a spot in <em>{title}</em>
+            <Translation
+              i18nKey="economy:workshopReserve.title"
+              values={{ title }}
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.sub}>
-            {workshop.spotsTotal - workshop.spotsFilled} of{" "}
-            {workshop.spotsTotal} seats left. Reserving holds your place — no
-            payment yet.
+            {t("economy:workshopReserve.sub", {
+              seatsLeft: workshop.spotsTotal - workshop.spotsFilled,
+              seatsTotal: workshop.spotsTotal,
+            })}
           </p>
 
           <div className={styles.field}>
-            <label htmlFor="wr-name">Your name *</label>
+            <label htmlFor="wr-name">
+              {t("economy:workshopReserve.nameLabel")}
+            </label>
             <input
               id="wr-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="What should we call you?"
+              placeholder={t("economy:workshopReserve.namePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="wr-email">Email *</label>
+            <label htmlFor="wr-email">
+              {t("economy:workshopReserve.emailLabel")}
+            </label>
             <input
               id="wr-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Where we send the payment link"
+              placeholder={t("economy:workshopReserve.emailPlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="wr-tier">What you'll pay *</label>
+            <label htmlFor="wr-tier">
+              {t("economy:workshopReserve.tierLabel")}
+            </label>
             <select
               id="wr-tier"
               value={tier}
               onChange={(e) => setTier(e.target.value)}
             >
-              {workshop.tiers.map((t) => (
-                <option key={t.label} value={t.label}>
-                  {t.label} — {t.amount}
+              {workshop.tiers.map((tierOption) => (
+                <option key={tierOption.label} value={tierOption.label}>
+                  {tierOption.label} — {tierOption.amount}
                 </option>
               ))}
             </select>
           </div>
           <div className={styles.field}>
-            <label htmlFor="wr-note">Anything the tutor should know</label>
+            <label htmlFor="wr-note">
+              {t("economy:workshopReserve.noteLabel")}
+            </label>
             <textarea
               id="wr-note"
               rows={3}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Access needs, experience level, a question…"
+              placeholder={t("economy:workshopReserve.notePlaceholder")}
             />
           </div>
           <p className={styles.note}>
-            Pick whichever rate is right for you. No proof, no questions — the
-            sliding scale is how this stays open to everyone.
+            {t("economy:workshopReserve.slidingNote")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:workshopReserve.cancel")}
             </button>
             <Button
               variant="primary"
@@ -109,7 +130,11 @@ export function WorkshopReserveModal({
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Holding…" /> : "Hold my spot"}
+              {sending ? (
+                <Sending label={t("economy:workshopReserve.holdingLabel")} />
+              ) : (
+                t("economy:workshopReserve.submitCta")
+              )}
             </Button>
           </div>
         </>

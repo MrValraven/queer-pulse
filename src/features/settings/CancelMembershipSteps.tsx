@@ -1,12 +1,21 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { FiHeart, FiPause, FiArrowDown } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { currentUserEmail } from "../members/data/members";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import {
-  REASONS,
-  ENDS,
-  STAYS,
+  buildReasons,
+  buildEnds,
+  buildStays,
+  RENEWED_DATE,
+  NEXT_CHARGE_DATE,
+  PAUSED_RENEWAL_DATE,
+  SUSTAINER_ANNUAL,
+  MEMBER_ANNUAL,
+  SOLIDARITY_ANNUAL,
   type Alt,
   type Step,
 } from "./cancelMembership.data";
@@ -19,10 +28,15 @@ export function CancelStepper({
   step: Step;
   stepNum: number;
 }) {
+  const { t } = useTranslation();
+  const labels = [
+    t("settings:cancelMembership.stepper.options"),
+    t("settings:cancelMembership.stepper.tellUsWhy"),
+    t("settings:cancelMembership.stepper.confirm"),
+  ];
   return (
     <div className={styles.stepper}>
       {[1, 2, 3].map((n, i) => {
-        const labels = ["Options", "Tell us why", "Confirm"];
         const isActive = step !== "done" && stepNum === n;
         const isDone = step === "done" ? true : stepNum > n;
         return (
@@ -51,33 +65,57 @@ export function CancelStepOptions({
   onPickAlt,
   onContinue,
 }: {
-  onPickAlt: (a: Alt) => void;
+  onPickAlt: (alt: Alt) => void;
   onContinue: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const memberAmount = fmt.currency(MEMBER_ANNUAL);
+  const solidarityAmount = fmt.currency(SOLIDARITY_ANNUAL);
+
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="1">
       <h2>
-        Your current <em>membership</em>
+        <Translation
+          i18nKey="settings:cancelMembership.options.currentTitle"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={styles.curr}>
         <div className={styles.currBadge}>S</div>
         <div>
           <div className={styles.currTier}>
-            Sustainer · <em>annual</em>
+            <Translation
+              i18nKey="settings:cancelMembership.options.currentTierLabel"
+              components={{ em: <em /> }}
+            />
           </div>
           <div className={styles.currMeta}>
-            Renewed <b>6 Jun 2026</b> · next charge <b>6 Jun 2027</b>
+            <Translation
+              i18nKey="settings:cancelMembership.options.currentMeta"
+              values={{
+                renewedDate: fmt.date(RENEWED_DATE),
+                nextChargeDate: fmt.date(NEXT_CHARGE_DATE),
+              }}
+              components={{ b: <b /> }}
+            />
           </div>
         </div>
         <div className={styles.currPrice}>
-          €96<span className={styles.currCy}>/ year</span>
+          {fmt.currency(SUSTAINER_ANNUAL)}
+          <span className={styles.currCy}>
+            {t("settings:cancelMembership.options.perYear")}
+          </span>
         </div>
       </div>
       <h2 style={{ marginTop: 14 }}>
-        Before you go — <em>three softer options</em>
+        <Translation
+          i18nKey="settings:cancelMembership.options.beforeYouGoTitle"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.paneSub}>
-        Each takes 30 seconds. You can always come back to cancel.
+        {t("settings:cancelMembership.options.sub")}
       </p>
       <div className={styles.altList}>
         <button
@@ -87,10 +125,11 @@ export function CancelStepOptions({
         >
           <div className={styles.altIc}>⏸</div>
           <div className={styles.altText}>
-            <div className={styles.altT}>Pause for 3 months</div>
+            <div className={styles.altT}>
+              {t("settings:cancelMembership.options.pauseTitle")}
+            </div>
             <div className={styles.altD}>
-              We freeze your renewal. You keep access. We don't charge until you
-              resume.
+              {t("settings:cancelMembership.options.pauseDesc")}
             </div>
           </div>
           <div className={styles.altArrow}>→</div>
@@ -110,10 +149,13 @@ export function CancelStepOptions({
             ↓
           </div>
           <div className={styles.altText}>
-            <div className={styles.altT}>Downshift to Member (€36/year)</div>
+            <div className={styles.altT}>
+              {t("settings:cancelMembership.options.downshiftTitle", {
+                amount: memberAmount,
+              })}
+            </div>
             <div className={styles.altD}>
-              Keep all community access. Drop Sustainer-only perks (open studio,
-              ILGA consult, magazine).
+              {t("settings:cancelMembership.options.downshiftDesc")}
             </div>
           </div>
           <div className={styles.altArrow}>→</div>
@@ -133,10 +175,15 @@ export function CancelStepOptions({
             <FiHeart />
           </div>
           <div className={styles.altText}>
-            <div className={styles.altT}>Drop to solidarity rate</div>
+            <div className={styles.altT}>
+              {t("settings:cancelMembership.options.solidarityTitle")}
+            </div>
             <div className={styles.altD}>
-              €12/year, no questions asked. The fund covers the difference.{" "}
-              <b>Genuinely.</b>
+              <Translation
+                i18nKey="settings:cancelMembership.options.solidarityDesc"
+                values={{ amount: solidarityAmount }}
+                components={{ b: <b /> }}
+              />
             </div>
           </div>
           <div className={styles.altArrow}>→</div>
@@ -144,10 +191,10 @@ export function CancelStepOptions({
       </div>
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onContinue}>
-          Continue cancelling →
+          {t("settings:cancelMembership.options.continueCancellingCta")}
         </Button>
         <Button variant="ghost" to={routes.membership}>
-          Keep my Sustainer
+          {t("settings:cancelMembership.keepSustainerCta")}
         </Button>
       </div>
     </div>
@@ -165,33 +212,39 @@ export function CancelStepReasons({
   onBack: () => void;
   onContinue: () => void;
 }) {
+  const { t } = useTranslation();
+  const reasons = useMemo(() => buildReasons(), []);
+
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="2">
       <h2>
-        Help us <em>understand.</em>
+        <Translation
+          i18nKey="settings:cancelMembership.reasons.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.paneSub}>
-        Optional, but useful. We read every response. Pick what fits.
+        {t("settings:cancelMembership.reasons.sub")}
       </p>
       <div className={styles.reasonList}>
-        {REASONS.map((r) => (
+        {reasons.map((reason) => (
           <label
-            key={r.id}
-            className={`${styles.reason} ${checked.has(r.id) ? styles.reasonChecked : ""}`}
+            key={reason.id}
+            className={`${styles.reason} ${checked.has(reason.id) ? styles.reasonChecked : ""}`}
           >
             <input
               type="checkbox"
-              checked={checked.has(r.id)}
+              checked={checked.has(reason.id)}
               onChange={(e) =>
                 setChecked((prev) => {
-                  const n = new Set(prev);
-                  if (e.target.checked) n.add(r.id);
-                  else n.delete(r.id);
-                  return n;
+                  const next = new Set(prev);
+                  if (e.target.checked) next.add(reason.id);
+                  else next.delete(reason.id);
+                  return next;
                 })
               }
             />
-            <div className={styles.reasonText}>{r.label}</div>
+            <div className={styles.reasonText}>{reason.label}</div>
           </label>
         ))}
       </div>
@@ -205,18 +258,18 @@ export function CancelStepReasons({
           marginTop: 8,
         }}
       >
-        Anything you'd like to add? (optional)
+        {t("settings:cancelMembership.reasons.addNote")}
       </p>
       <textarea
         className={styles.reasonTextarea}
-        placeholder="A sentence or two helps us notice patterns. Nothing's shown to other members."
+        placeholder={t("settings:cancelMembership.reasons.placeholder")}
       />
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onBack}>
-          ← Back
+          {t("settings:cancelMembership.backCta")}
         </Button>
         <Button variant="ghost" onClick={onContinue}>
-          Continue →
+          {t("settings:cancelMembership.continueCta")}
         </Button>
       </div>
     </div>
@@ -230,33 +283,46 @@ export function CancelStepConfirm({
   onCancel,
 }: {
   confirmed: boolean;
-  setConfirmed: (v: boolean) => void;
+  setConfirmed: (value: boolean) => void;
   onBack: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const ends = useMemo(() => buildEnds(t), [t]);
+  const stays = useMemo(() => buildStays(t), [t]);
+  const nextChargeDate = fmt.date(NEXT_CHARGE_DATE);
+
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="3">
       <h2>
-        One last <em>check.</em>
+        <Translation
+          i18nKey="settings:cancelMembership.confirm.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.paneSub}>
-        Here's what changes when you cancel — and what doesn't.
+        {t("settings:cancelMembership.confirm.sub")}
       </p>
-      <div className={styles.secLabel}>What ends</div>
+      <div className={styles.secLabel}>
+        {t("settings:cancelMembership.confirm.whatEnds")}
+      </div>
       <div className={styles.loseGrid}>
-        {ENDS.map((e) => (
-          <div key={e.t} className={styles.lose}>
-            <b>{e.t}</b>
-            <span>{e.d}</span>
+        {ends.map((end) => (
+          <div key={end.t} className={styles.lose}>
+            <b>{end.t}</b>
+            <span>{end.d}</span>
           </div>
         ))}
       </div>
-      <div className={styles.secLabel}>What stays — free, forever</div>
+      <div className={styles.secLabel}>
+        {t("settings:cancelMembership.confirm.whatStays")}
+      </div>
       <div className={styles.loseGrid}>
-        {STAYS.map((s) => (
-          <div key={s.t} className={`${styles.lose} ${styles.keep}`}>
-            <b>{s.t}</b>
-            <span>{s.d}</span>
+        {stays.map((stay) => (
+          <div key={stay.t} className={`${styles.lose} ${styles.keep}`}>
+            <b>{stay.t}</b>
+            <span>{stay.d}</span>
           </div>
         ))}
       </div>
@@ -268,9 +334,11 @@ export function CancelStepConfirm({
           marginBottom: 8,
         }}
       >
-        Your access continues until{" "}
-        <b style={{ color: "var(--plum)" }}>6 Jun 2027</b>. No refund — but no
-        further charges.
+        <Translation
+          i18nKey="settings:cancelMembership.confirm.accessContinuesNote"
+          values={{ date: nextChargeDate }}
+          components={{ b: <b style={{ color: "var(--plum)" }} /> }}
+        />
       </p>
       <p
         style={{
@@ -280,18 +348,21 @@ export function CancelStepConfirm({
           marginBottom: 18,
         }}
       >
-        If something feels off, write to{" "}
-        <a
-          href="mailto:cancel@queerpulse.app"
-          style={{
-            color: "var(--plum)",
-            fontWeight: 600,
-            textDecoration: "none",
+        <Translation
+          i18nKey="settings:cancelMembership.confirm.writeToUs"
+          components={{
+            a: (
+              <a
+                href="mailto:cancel@queerpulse.app"
+                style={{
+                  color: "var(--plum)",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                }}
+              />
+            ),
           }}
-        >
-          cancel@queerpulse.app
-        </a>{" "}
-        — a real person reads it.
+        />
       </p>
       <div className={styles.confirmRow}>
         <input
@@ -301,20 +372,23 @@ export function CancelStepConfirm({
           onChange={(e) => setConfirmed(e.target.checked)}
         />
         <label htmlFor="confirm-check">
-          I understand my Sustainer membership will not renew, and{" "}
-          <b>my access ends 6 Jun 2027</b>. I can come back any time.
+          <Translation
+            i18nKey="settings:cancelMembership.confirm.checkboxLabel"
+            values={{ date: nextChargeDate }}
+            components={{ b: <b /> }}
+          />
         </label>
       </div>
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onBack}>
-          ← Back
+          {t("settings:cancelMembership.backCta")}
         </Button>
         <div className={styles.actionRight}>
           <Button variant="primary" to={routes.membership}>
-            Keep my Sustainer
+            {t("settings:cancelMembership.keepSustainerCta")}
           </Button>
           <Button variant="ghost" disabled={!confirmed} onClick={onCancel}>
-            Cancel my membership
+            {t("settings:cancelMembership.confirm.cancelMyMembershipCta")}
           </Button>
         </div>
       </div>
@@ -323,6 +397,8 @@ export function CancelStepConfirm({
 }
 
 export function CancelDone() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="done">
       <div className={styles.farewell}>
@@ -335,7 +411,10 @@ export function CancelDone() {
           className={styles.h1}
           style={{ margin: "0 auto 10px", fontSize: 36 }}
         >
-          Until <em>next time.</em>
+          <Translation
+            i18nKey="settings:cancelMembership.done.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p
           style={{
@@ -346,8 +425,13 @@ export function CancelDone() {
             margin: "0 auto 8px",
           }}
         >
-          Your Sustainer membership won't renew. Access continues through{" "}
-          <b style={{ color: "var(--plum)", fontWeight: 700 }}>6 Jun 2027</b>.
+          <Translation
+            i18nKey="settings:cancelMembership.done.accessNote"
+            values={{ date: fmt.date(NEXT_CHARGE_DATE) }}
+            components={{
+              b: <b style={{ color: "var(--plum)", fontWeight: 700 }} />,
+            }}
+          />
         </p>
         <p
           style={{
@@ -358,20 +442,21 @@ export function CancelDone() {
             margin: "0 auto 8px",
           }}
         >
-          We sent a confirmation to{" "}
-          <b style={{ color: "var(--plum)" }}>{currentUserEmail}</b> with
-          everything written down.
+          <Translation
+            i18nKey="settings:cancelMembership.done.emailNote"
+            values={{ email: currentUserEmail }}
+            components={{ b: <b style={{ color: "var(--plum)" }} /> }}
+          />
         </p>
         <p style={{ fontSize: 13, color: "var(--ink-40)", marginTop: 12 }}>
-          If this was a mistake, you can resubscribe one-tap from the email or
-          your account settings — no penalty.
+          {t("settings:cancelMembership.done.mistakeNote")}
         </p>
         <div className={styles.farewellBtns}>
           <Button variant="primary" to={routes.homepage}>
-            Back to home
+            {t("settings:cancelMembership.backToHomeCta")}
           </Button>
           <Button variant="ghost" to={routes.membership}>
-            Resubscribe
+            {t("settings:cancelMembership.resubscribeCta")}
           </Button>
         </div>
       </div>
@@ -380,6 +465,8 @@ export function CancelDone() {
 }
 
 export function CancelPaused({ onUndo }: { onUndo: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="paused">
       <div className={styles.farewell}>
@@ -390,27 +477,36 @@ export function CancelPaused({ onUndo }: { onUndo: () => void }) {
           className={styles.h1}
           style={{ margin: "0 auto 10px", fontSize: 36 }}
         >
-          Paused — <em>see you soon.</em>
+          <Translation
+            i18nKey="settings:cancelMembership.paused.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.fwLead}>
-          We've frozen your Sustainer renewal for <b>3 months</b>. You keep full
-          access the whole time — and we won't charge you a cent until you
-          resume.
+          <Translation
+            i18nKey="settings:cancelMembership.paused.lead1"
+            components={{ b: <b /> }}
+          />
         </p>
         <p className={styles.fwLead}>
-          Your renewal moves to <b>6 Sep 2027</b>. We sent the details to{" "}
-          <b>{currentUserEmail}</b>.
+          <Translation
+            i18nKey="settings:cancelMembership.paused.lead2"
+            values={{
+              date: fmt.date(PAUSED_RENEWAL_DATE),
+              email: currentUserEmail,
+            }}
+            components={{ b: <b /> }}
+          />
         </p>
         <p className={styles.fwNote}>
-          Changed your mind? You can resume any time — it picks up right where
-          you left off, no penalty.
+          {t("settings:cancelMembership.paused.note")}
         </p>
         <div className={styles.farewellBtns}>
           <Button variant="primary" to={routes.membership}>
-            Back to membership
+            {t("settings:cancelMembership.backToMembershipCta")}
           </Button>
           <Button variant="ghost" onClick={onUndo}>
-            Undo pause
+            {t("settings:cancelMembership.paused.undoCta")}
           </Button>
         </div>
       </div>
@@ -419,6 +515,9 @@ export function CancelPaused({ onUndo }: { onUndo: () => void }) {
 }
 
 export function CancelDownshifted({ onUndo }: { onUndo: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const amount = fmt.currency(MEMBER_ANNUAL);
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="downshifted">
       <div className={styles.farewell}>
@@ -429,27 +528,38 @@ export function CancelDownshifted({ onUndo }: { onUndo: () => void }) {
           className={styles.h1}
           style={{ margin: "0 auto 10px", fontSize: 36 }}
         >
-          Welcome to <em>Member.</em>
+          <Translation
+            i18nKey="settings:cancelMembership.downshifted.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.fwLead}>
-          You're on the <b>Member</b> plan now — <b>€36/year</b>. All your
-          community access stays exactly as it was.
+          <Translation
+            i18nKey="settings:cancelMembership.downshifted.lead1"
+            values={{ amount }}
+            components={{ b: <b /> }}
+          />
         </p>
         <p className={styles.fwLead}>
-          Your Sustainer-only perks (Open Studio, ILGA consult, the print
-          magazine) wind down at the end of your current term. Your next charge
-          is <b>€36 on 6 Jun 2027</b>.
+          <Translation
+            i18nKey="settings:cancelMembership.downshifted.lead2"
+            values={{ amount, date: fmt.date(NEXT_CHARGE_DATE) }}
+            components={{ b: <b /> }}
+          />
         </p>
         <p className={styles.fwNote}>
-          Confirmation is on its way to <b>{currentUserEmail}</b>. You can
-          upgrade back to Sustainer any time.
+          <Translation
+            i18nKey="settings:cancelMembership.downshifted.note"
+            values={{ email: currentUserEmail }}
+            components={{ b: <b /> }}
+          />
         </p>
         <div className={styles.farewellBtns}>
           <Button variant="primary" to={routes.membership}>
-            Back to membership
+            {t("settings:cancelMembership.backToMembershipCta")}
           </Button>
           <Button variant="ghost" onClick={onUndo}>
-            Undo — keep Sustainer
+            {t("settings:cancelMembership.downshifted.undoCta")}
           </Button>
         </div>
       </div>
@@ -458,6 +568,9 @@ export function CancelDownshifted({ onUndo }: { onUndo: () => void }) {
 }
 
 export function CancelSolidarity({ onUndo }: { onUndo: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const amount = fmt.currency(SOLIDARITY_ANNUAL);
   return (
     <div className={`${styles.pane} ${styles.screenIn}`} key="solidarity">
       <div className={styles.farewell}>
@@ -468,27 +581,34 @@ export function CancelSolidarity({ onUndo }: { onUndo: () => void }) {
           className={styles.h1}
           style={{ margin: "0 auto 10px", fontSize: 36 }}
         >
-          You're on the <em>solidarity rate.</em>
+          <Translation
+            i18nKey="settings:cancelMembership.solidarity.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.fwLead}>
-          From your next renewal you'll pay <b>€12/year</b> — and you keep{" "}
-          <b>every Sustainer perk</b> exactly as it is now. The community fund
-          covers the rest.
+          <Translation
+            i18nKey="settings:cancelMembership.solidarity.lead1"
+            values={{ amount }}
+            components={{ b: <b /> }}
+          />
         </p>
         <p className={styles.fwLead}>
-          Your next charge is <b>€12 on 6 Jun 2027</b>. We sent the details to{" "}
-          <b>{currentUserEmail}</b>.
+          <Translation
+            i18nKey="settings:cancelMembership.solidarity.lead2"
+            values={{ amount, date: fmt.date(NEXT_CHARGE_DATE) }}
+            components={{ b: <b /> }}
+          />
         </p>
         <p className={styles.fwNote}>
-          When things ease up, you can move back to the full rate any time — no
-          pressure, no reminder.
+          {t("settings:cancelMembership.solidarity.note")}
         </p>
         <div className={styles.farewellBtns}>
           <Button variant="primary" to={routes.membership}>
-            Back to membership
+            {t("settings:cancelMembership.backToMembershipCta")}
           </Button>
           <Button variant="ghost" onClick={onUndo}>
-            Undo
+            {t("settings:cancelMembership.solidarity.undoCta")}
           </Button>
         </div>
       </div>

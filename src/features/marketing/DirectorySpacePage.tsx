@@ -1,5 +1,6 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { getPlace, type Tint } from "./directoryPlaces";
 import { routes } from "../../app/routeMap";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
@@ -13,6 +14,7 @@ const GCELL: Record<Tint, string> = {
 };
 
 export function DirectorySpacePage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const place = getPlace(slug);
   if (!place) return <Navigate to={routes.directory} replace />;
@@ -22,7 +24,7 @@ export function DirectorySpacePage() {
       <div className={s.cover}>
         <div className={s.coverInner}>
           <Link to={routes.directory} className={s.back}>
-            ← Directory
+            {t("marketing:directory.detail.backCta")}
           </Link>
           <div className={s.gallery}>
             {place.gallery.map((cap, i) => (

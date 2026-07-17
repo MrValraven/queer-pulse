@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { resolveAvatarSrc } from "../../lib/avatarUrl";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./ImageSlot.module.css";
 
 export type ImageSlotTint = "default" | "coral" | "jade" | "plum";
@@ -34,11 +35,12 @@ export function ImageSlot({
   radius = 16,
   width = "100%",
   height = 200,
-  placeholder = "Image",
+  placeholder,
   initials,
   className,
   style,
 }: ImageSlotProps) {
+  const { t } = useTranslation();
   const borderRadius = shape === "circle" ? "50%" : radius;
   // Only Google/OAuth avatar URLs are rewritten (for a crisp 2× crop); every
   // other src — Unsplash covers, magazine art — passes through unchanged.
@@ -64,7 +66,9 @@ export function ImageSlot({
           {initials}
         </span>
       ) : (
-        <span className={styles.caption}>{placeholder}</span>
+        <span className={styles.caption}>
+          {placeholder ?? t("shared:imageSlot.placeholder")}
+        </span>
       )}
     </div>
   );

@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import type { LivingCommunity } from "../communities/community.model";
 import { photoOf } from "../communities/communityPeople";
@@ -22,6 +23,7 @@ import styles from "./ModPanel.module.css";
 /* -------------------------------------------------------------------------- */
 
 export function RequestsTab({ living }: { living: LivingCommunity }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { approveRequest } = useCommunityMembership();
   // Intentional: snapshot the prop into local state once, then mutate locally as
@@ -37,9 +39,12 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
     setRequests((prev) => prev.filter((r) => r.id !== id));
     if (approved) approveRequest(living.slug);
     showToast(
-      approved
-        ? `${name} approved — welcome them in.`
-        : `${name}'s request wasn't approved this time.`,
+      t(
+        approved
+          ? "admin:modPanel.requests.approvedToast"
+          : "admin:modPanel.requests.declinedToast",
+        { name },
+      ),
       approved ? "success" : "info",
     );
   };
@@ -48,7 +53,9 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
     requests.forEach(() => approveRequest(living.slug));
     setRequests([]);
     showToast(
-      `All ${requests.length} requests approved — the community grows.`,
+      t("admin:modPanel.requests.approvedAllToast", {
+        count: requests.length,
+      }),
       "success",
     );
   };
@@ -59,7 +66,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
         <FiSearch className={styles.searchIcon} aria-hidden />
         <input
           className={styles.search}
-          placeholder="Search by name…"
+          placeholder={t("admin:modPanel.requests.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -67,12 +74,15 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
       {requests.length > 1 && (
         <div className={styles.bulkRow}>
           <Button variant="jade" onClick={approveAll}>
-            <FiCheck aria-hidden /> Approve all ({requests.length})
+            <FiCheck aria-hidden />{" "}
+            {t("admin:modPanel.requests.approveAllCta", {
+              count: requests.length,
+            })}
           </Button>
         </div>
       )}
       <div className={styles.secLbl}>
-        Requests{" "}
+        {t("admin:modPanel.requests.sectionLabel")}{" "}
         {requests.length > 0 && (
           <span className={styles.tabCount}>{requests.length}</span>
         )}
@@ -80,8 +90,8 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
       {filtered.length === 0 ? (
         <EmptyState
           compact
-          title="No requests waiting"
-          description="You're all caught up — new requests will appear here."
+          title={t("admin:modPanel.requests.emptyTitle")}
+          description={t("admin:modPanel.requests.emptyDesc")}
         />
       ) : (
         filtered.map((r) => (
@@ -96,14 +106,17 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
             <div className={styles.modMain}>
               <div className={styles.modName}>{r.person.name}</div>
               {r.note && <div className={styles.modNote}>"{r.note}"</div>}
-              <div className={styles.modMeta}>Requested {r.time} ago</div>
+              <div className={styles.modMeta}>
+                {t("admin:modPanel.requests.requestedAgo", { time: r.time })}
+              </div>
             </div>
             <div className={styles.modActions}>
               <Button
                 variant="jade"
                 onClick={() => resolveRequest(r.id, r.person.name, true)}
               >
-                <FiCheck aria-hidden /> Approve
+                <FiCheck aria-hidden />{" "}
+                {t("admin:modPanel.requests.approveCta")}
               </Button>
               <span
                 role="button"
@@ -117,7 +130,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
                   }
                 }}
               >
-                <FiX aria-hidden /> Decline
+                <FiX aria-hidden /> {t("admin:modPanel.requests.declineCta")}
               </span>
             </div>
           </div>
@@ -132,6 +145,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
 /* -------------------------------------------------------------------------- */
 
 export function ReportsTab({ living }: { living: LivingCommunity }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   // Intentional: snapshot the prop into local state once, then mutate locally as
   // the moderator resolves/dismisses. Not a live sync with the source list.
@@ -139,28 +153,28 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
 
   const removeReport = (id: string) => {
     setReports((prev) => prev.filter((r) => r.id !== id));
-    showToast("Post removed. The author has been notified.", "success");
+    showToast(t("admin:modPanel.reports.removedToast"), "success");
   };
   const warnAuthor = (id: string, authorName: string) => {
     setReports((prev) => prev.filter((r) => r.id !== id));
-    showToast(`A warning has been sent to ${authorName}.`, "info");
+    showToast(
+      t("admin:modPanel.reports.warnedToast", { name: authorName }),
+      "info",
+    );
   };
   const dismissReport = (id: string) => {
     setReports((prev) => prev.filter((r) => r.id !== id));
-    showToast("Report dismissed.", "info");
+    showToast(t("admin:modPanel.reports.dismissedToast"), "info");
   };
   const escalate = (id: string) => {
     setReports((prev) => prev.filter((r) => r.id !== id));
-    showToast(
-      "Escalated to the QueerPulse team — it's now in the platform queue.",
-      "info",
-    );
+    showToast(t("admin:modPanel.reports.escalatedToast"), "info");
   };
 
   return (
     <div>
       <div className={styles.secLbl}>
-        Reported posts{" "}
+        {t("admin:modPanel.reports.sectionLabel")}{" "}
         {reports.length > 0 && (
           <span className={styles.tabCount}>{reports.length}</span>
         )}
@@ -168,8 +182,8 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
       {reports.length === 0 ? (
         <EmptyState
           compact
-          title="All clear"
-          description="Nothing has been flagged — the community looks after each other."
+          title={t("admin:modPanel.reports.emptyTitle")}
+          description={t("admin:modPanel.reports.emptyDesc")}
         />
       ) : (
         reports.map((rep) => (
@@ -179,24 +193,28 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
             </div>
             <p className={styles.reportExcerpt}>"{rep.postExcerpt}"</p>
             <div className={styles.modMeta}>
-              From {rep.author.name} · flagged by {rep.reporter.name} ·{" "}
-              {rep.time} ago
+              {t("admin:modPanel.reports.metaLine", {
+                author: rep.author.name,
+                reporter: rep.reporter.name,
+                time: rep.time,
+              })}
             </div>
             <div className={styles.modActions} style={{ marginTop: 12 }}>
               <Button variant="primary" onClick={() => removeReport(rep.id)}>
-                Remove post
+                {t("admin:modPanel.reports.removeCta")}
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => warnAuthor(rep.id, rep.author.name)}
               >
-                Warn author
+                {t("admin:modPanel.reports.warnCta")}
               </Button>
               <Button variant="ghost" onClick={() => dismissReport(rep.id)}>
-                Dismiss
+                {t("admin:modPanel.reports.dismissCta")}
               </Button>
               <Button variant="ghost" onClick={() => escalate(rep.id)}>
-                <FiAlertTriangle aria-hidden /> Escalate to staff
+                <FiAlertTriangle aria-hidden />{" "}
+                {t("admin:modPanel.reports.escalateCta")}
               </Button>
             </div>
           </div>
@@ -210,13 +228,14 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
 /* MembersTab                                                                   */
 /* -------------------------------------------------------------------------- */
 
-const ROLE_FILTERS = [
-  ["all", "All"],
-  ["mod", "Mods"],
-  ["member", "Members"],
+const ROLE_FILTER_KEYS = [
+  ["all", "modPanel.members.roleFilter.all"],
+  ["mod", "modPanel.members.roleFilter.mod"],
+  ["member", "modPanel.members.roleFilter.member"],
 ] as const;
 
 export function MembersTab({ living }: { living: LivingCommunity }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { promoteToMod } = useCommunityMembership();
   const [promoted, setPromoted] = useState<string[]>([]);
@@ -230,16 +249,16 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
     const key = memberKey(slug, name);
     setPromoted((p) => [...p, key]);
     promoteToMod(living.slug, key);
-    showToast(`${name} is now a mod.`, "success");
+    showToast(t("admin:modPanel.members.promotedToast", { name }), "success");
   };
   const demote = (slug: string | undefined, name: string) => {
     const key = memberKey(slug, name);
     setPromoted((p) => p.filter((k) => k !== key));
-    showToast(`${name} is no longer a mod.`, "info");
+    showToast(t("admin:modPanel.members.demotedToast", { name }), "info");
   };
   const removeMember = (slug: string | undefined, name: string) => {
     setRemoved((p) => [...p, memberKey(slug, name)]);
-    showToast(`${name} has been removed from the community.`, "info");
+    showToast(t("admin:modPanel.members.removedToast", { name }), "info");
   };
 
   const manageable = living.roster
@@ -262,13 +281,13 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
         <FiSearch className={styles.searchIcon} aria-hidden />
         <input
           className={styles.search}
-          placeholder="Search members…"
+          placeholder={t("admin:modPanel.members.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       <div className={styles.chips}>
-        {ROLE_FILTERS.map(([val, label]) => (
+        {ROLE_FILTER_KEYS.map(([val, labelKey]) => (
           <button
             key={val}
             type="button"
@@ -277,12 +296,13 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
               .join(" ")}
             onClick={() => setRoleFilter(val)}
           >
-            {label}
+            {t(`admin:${labelKey}`)}
           </button>
         ))}
       </div>
       <div className={styles.secLbl}>
-        Members <span className={styles.tabCount}>{manageable.length}</span>
+        {t("admin:modPanel.members.sectionLabel")}{" "}
+        <span className={styles.tabCount}>{manageable.length}</span>
       </div>
       {manageable.map((m) => {
         const key = memberKey(m.slug, m.name);
@@ -317,7 +337,8 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
                     }
                   }}
                 >
-                  <FiUserPlus aria-hidden /> Make mod
+                  <FiUserPlus aria-hidden />{" "}
+                  {t("admin:modPanel.members.makeModCta")}
                 </span>
               )}
               {isPromotedMod && (
@@ -333,7 +354,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
                     }
                   }}
                 >
-                  <FiX aria-hidden /> Remove mod
+                  <FiX aria-hidden /> {t("admin:modPanel.members.removeModCta")}
                 </span>
               )}
               {m.role !== "owner" && (
@@ -349,12 +370,13 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
                     }
                   }}
                 >
-                  <FiX aria-hidden /> Remove
+                  <FiX aria-hidden /> {t("admin:modPanel.members.removeCta")}
                 </span>
               )}
               {m.role === "owner" && (
                 <span className={styles.ownerTag}>
-                  <FiShield aria-hidden /> Owner
+                  <FiShield aria-hidden />{" "}
+                  {t("admin:modPanel.members.ownerTag")}
                 </span>
               )}
             </div>
@@ -370,6 +392,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
 /* -------------------------------------------------------------------------- */
 
 export function SettingsTab({ living }: { living: LivingCommunity }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const init = defaultSettings(living);
   const [name, setName] = useState(init.name);
@@ -377,32 +400,29 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
   const [mode, setMode] = useState(init.membershipMode);
   const [rules, setRules] = useState(init.rules);
 
-  const MODES = [
-    ["open", "Open"],
-    ["request", "Request to join"],
-    ["invite", "Invite only"],
+  const MODE_KEYS = [
+    ["open", "modPanel.settings.mode.open"],
+    ["request", "modPanel.settings.mode.request"],
+    ["invite", "modPanel.settings.mode.invite"],
   ] as const;
 
   const save = () => {
-    showToast("Community settings saved.", "success");
+    showToast(t("admin:modPanel.settings.savedToast"), "success");
   };
 
   const archive = () => {
-    showToast("Community archived. Members have been notified.", "info");
+    showToast(t("admin:modPanel.settings.archive.toast"), "info");
   };
 
   const transfer = () => {
-    showToast(
-      "Ownership transfer initiated — the new owner will receive an invite.",
-      "info",
-    );
+    showToast(t("admin:modPanel.settings.transfer.toast"), "info");
   };
 
   return (
     <div>
       <div className={styles.settingsField}>
         <label className={styles.settingsLabel} htmlFor="mod-name">
-          Community name
+          {t("admin:modPanel.settings.nameLabel")}
         </label>
         <input
           id="mod-name"
@@ -413,20 +433,22 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
       </div>
       <div className={styles.settingsField}>
         <label className={styles.settingsLabel} htmlFor="mod-desc">
-          Description
+          {t("admin:modPanel.settings.descLabel")}
         </label>
         <input
           id="mod-desc"
           className={styles.settingsInput}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Briefly describe what this community is about…"
+          placeholder={t("admin:modPanel.settings.descPlaceholder")}
         />
       </div>
       <div className={styles.settingsField}>
-        <label className={styles.settingsLabel}>Membership mode</label>
+        <label className={styles.settingsLabel}>
+          {t("admin:modPanel.settings.modeLabel")}
+        </label>
         <div className={styles.modeRow}>
-          {MODES.map(([val, label]) => (
+          {MODE_KEYS.map(([val, labelKey]) => (
             <button
               key={val}
               type="button"
@@ -438,53 +460,60 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
                 .join(" ")}
               onClick={() => setMode(val)}
             >
-              {label}
+              {t(`admin:${labelKey}`)}
             </button>
           ))}
         </div>
       </div>
       <div className={styles.settingsField}>
         <label className={styles.settingsLabel} htmlFor="mod-rules">
-          Community rules
+          {t("admin:modPanel.settings.rulesLabel")}
         </label>
         <textarea
           id="mod-rules"
           className={styles.rulesArea}
           value={rules}
           onChange={(e) => setRules(e.target.value)}
-          placeholder="Enter rules, one per line…"
+          placeholder={t("admin:modPanel.settings.rulesPlaceholder")}
         />
       </div>
       <div className={styles.saveRow}>
         <Button variant="primary" onClick={save}>
-          Save settings
+          {t("admin:modPanel.settings.saveCta")}
         </Button>
       </div>
 
-      <div className={styles.secLbl}>Danger zone</div>
+      <div className={styles.secLbl}>
+        {t("admin:modPanel.settings.dangerZone")}
+      </div>
       <div className={styles.dangerZone}>
-        <div className={styles.danger}>Irreversible actions</div>
+        <div className={styles.danger}>
+          {t("admin:modPanel.settings.irreversible")}
+        </div>
         <div className={styles.dangerRow}>
           <div className={styles.dangerInfo}>
-            <div className={styles.dangerTitle}>Archive community</div>
+            <div className={styles.dangerTitle}>
+              {t("admin:modPanel.settings.archive.title")}
+            </div>
             <div className={styles.dangerDesc}>
-              Members keep their history but new posts are disabled.
+              {t("admin:modPanel.settings.archive.desc")}
             </div>
           </div>
           <Button variant="ghost" onClick={archive}>
-            Archive
+            {t("admin:modPanel.settings.archive.cta")}
           </Button>
         </div>
         <div className={styles.dangerRow}>
           <div className={styles.dangerInfo}>
-            <div className={styles.dangerTitle}>Transfer ownership</div>
+            <div className={styles.dangerTitle}>
+              {t("admin:modPanel.settings.transfer.title")}
+            </div>
             <div className={styles.dangerDesc}>
-              Hand the community to another member. You'll lose owner
-              permissions.
+              {t("admin:modPanel.settings.transfer.desc")}
             </div>
           </div>
           <Button variant="ghost" onClick={transfer}>
-            Transfer
+            {t("admin:modPanel.settings.transfer.cta")}
           </Button>
         </div>
       </div>

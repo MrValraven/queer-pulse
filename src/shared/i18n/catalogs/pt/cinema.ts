@@ -246,7 +246,7 @@ export const cinema: Catalog = {
   "film.share.copyErrorToast": "Não foi possível copiar o link",
 
   "film.body.filmWords.title": "As <em>palavras</em> do próprio filme",
-  "film.body.cast.title": "Elenco &amp; <em>equipa</em>",
+  "film.body.cast.title": "Elenco & <em>equipa</em>",
   "film.body.tag.member": "Pessoa da QueerPulse",
   "film.body.filmmaker.stat.films_one": "<em>{count}</em> filme no Cinema",
   "film.body.filmmaker.stat.films_other": "<em>{count}</em> filmes no Cinema",
@@ -465,8 +465,15 @@ export const cinema: Catalog = {
   "shorts.vote.yourPickLabel": "A tua escolha",
   "shorts.vote.voteCta": "Votar",
   "shorts.vote.countedToast": "Voto contabilizado — obrigado",
+  "shorts.transparency.heading": "Para onde foi o dinheiro · junho",
   "shorts.transparency.ledgerCta": "Ver o registo aberto",
+  "shorts.submitCta.eyebrow": "O teu filme podia estar aqui",
+  "shorts.submitCta.title": "Fizeste alguma coisa? <em>Submete-a.</em>",
+  "shorts.submitCta.body":
+    "Qualquer pessoa da QueerPulse pode submeter ao Feito aqui. Grátis para listar, grátis para ver. Ficas com os teus direitos. As gorjetas vão 100% para ti. Há também uma encomenda de {amount} que fecha a 21 de junho.",
+  "shorts.submitCta.cta": "Submeter o teu filme",
   "shorts.submitCta.seeGrantsCta": "Ver bolsas abertas",
+  "shorts.curatorNote.eyebrow": "Da programação · semana {week}",
   "shorts.filterCat.runtime": "Duração",
   "shorts.filterCat.type": "Tipo",
   "shorts.filterCat.access": "Acesso",
@@ -572,4 +579,543 @@ export const cinema: Catalog = {
   "about.outro.sub":
     "{price}/mês. Cancela quando quiseres. Cada sustentador mantém a porta aberta.",
   "about.outro.cta": "Torna-te sustentador",
+
+  // ── Direitos (CinemaRightsPage.tsx, RightsHero/SideNav/ContractCard.tsx) —
+  // só o chrome (hero, tabela-resumo, navegação lateral, rótulos de secção,
+  // cartão do contrato). As perguntas/respostas da FAQ (RightsFaqParts.tsx) e
+  // o título/corpo do bloco de contacto citam cláusulas contratuais precisas
+  // e ficam deliberadamente em inglês — ver o relatório do sweep de i18n.  ──
+  "rights.hero.eyebrow": "Para cineastas · os teus direitos",
+  "rights.hero.title": "O teu filme <em>continua teu</em>.",
+  "rights.hero.sub":
+    "Tudo sobre como a cooperativa trata o teu trabalho — a divisão, o contrato, o que podemos e não podemos fazer, como sais se quiseres. <em>Linguagem simples, sem asteriscos.</em>",
+  "rights.hero.shortVersionHeading": "A versão resumida",
+  "rights.shortVersion.revenueSplit.label": "Divisão de receita",
+  "rights.shortVersion.revenueSplit.value": "<em>80</em>% para ti",
+  "rights.shortVersion.tips.label": "Gorjetas",
+  "rights.shortVersion.tips.value": "<em>100</em>% para ti",
+  "rights.shortVersion.contractType.label": "Tipo de contrato",
+  "rights.shortVersion.contractType.value": "Não-<em>exclusivo</em>",
+  "rights.shortVersion.territory.label": "Território",
+  "rights.shortVersion.territory.value": "Tu <em>escolhes</em>",
+  "rights.shortVersion.exitNotice.label": "Aviso de saída",
+  "rights.shortVersion.exitNotice.value": "<em>30</em> dias",
+  "rights.shortVersion.rightsRetained.label": "Direitos que mantêns",
+  "rights.shortVersion.rightsRetained.value": "<em>Todos</em>",
+  "rights.sideNav.ariaLabel": "Nesta página",
+  "rights.section.contract.label": "O contrato",
+  "rights.section.contract.title": "O <em>contrato</em>",
+  "rights.section.revenue.label": "Receita e pagamento",
+  "rights.section.revenue.title": "Receita <em>e pagamento</em>",
+  "rights.section.territory.label": "Território e exclusividade",
+  "rights.section.territory.title": "Território <em>e exclusividade</em>",
+  "rights.section.content.label": "O teu conteúdo",
+  "rights.section.content.title": "O teu <em>conteúdo</em>",
+  "rights.section.exit.label": "Rescisão e saída",
+  "rights.section.exit.title": "Rescisão <em>e saída</em>",
+  "rights.section.access.label": "Acessibilidade",
+  "rights.section.access.title": "<em>Acessibilidade</em>",
+  "rights.contractCard.eyebrow": "O contrato, em linguagem simples",
+  "rights.contractCard.title":
+    "Aquilo a que te comprometes — e aquilo a que <em>nós</em> nos comprometemos.",
+  "rights.contractCard.point.pay": "Pagamos-te 80% de cada transação",
+  "rights.contractCard.point.tips": "100% das gorjetas vão para ti, sem taxas",
+  "rights.contractCard.point.nonExclusive":
+    "Não-exclusivo — mostra-o noutros sítios também",
+  "rights.contractCard.point.territory":
+    "Escolhes os territórios onde servimos o filme",
+  "rights.contractCard.point.consent":
+    "Nunca alteramos o teu filme sem consentimento por escrito",
+  "rights.contractCard.point.withdraw":
+    "Podes sair com um aviso escrito de 30 dias",
+  "rights.contractCard.downloadToast":
+    "O contrato completo em PDF está a chegar em breve.",
+  "rights.contractCard.downloadCta": "Descarregar o contrato completo (PDF)",
+  "rights.contact.contactTeamCta": "Contactar a equipa de direitos",
+  "rights.contact.submitCta": "Submeter um filme",
+
+  // ── Chamadas abertas (CinemaOpenCallsPage.tsx + Hero/HowItWorks/Body.tsx) —
+  // só o chrome. O corpo, os detalhes, os montantes, os prazos e o número de
+  // candidaturas de cada encomenda/residência são conteúdo dessa chamada e
+  // ficam em inglês, tal como o precedente dos dados fictícios no resto deste
+  // ficheiro. ─────────────────────────────────────────────────────────────
+  "openCalls.hero.sub":
+    "Encomendas, residências e mentorias — financiadas por sustentadores, pagas pela cooperativa, distribuídas através do Cinema. <em>Só para cineastas queer. Qualquer pessoa pode candidatar-se.</em>",
+  "openCalls.hero.seasonLabel": "Temporada 3 · primavera/verão 2026",
+  "openCalls.hero.sidebarNote":
+    "Financiado pelas subscrições de sustentadores. O fundo cresce todos os meses — cada novo sustentador acrescenta ~{amount} ao fundo da próxima temporada.",
+  "openCalls.hero.stat.totalAvailable": "Total disponível",
+  "openCalls.hero.stat.activeCalls": "Chamadas ativas",
+  "openCalls.hero.stat.applicationsSoFar": "Candidaturas até agora",
+  "openCalls.hero.stat.filmsFunded": "Filmes financiados até à data",
+  "openCalls.how.title": "Como funciona o <em>fundo</em>",
+  "openCalls.how.step1.title": "Sustentadores <em>financiam-no</em>",
+  "openCalls.how.step1.body":
+    "Cada sustentador, com {price}/mês, contribui com ~{poolShare} por mês para o fundo de encomendas. O total do fundo é público.",
+  "openCalls.how.step2.title": "A curadoria <em>define as chamadas</em>",
+  "openCalls.how.step2.body":
+    "Em cada temporada, o conselho de curadoria escreve os termos — abertos, específicos, enraizados nos filmes que querem ver existir.",
+  "openCalls.how.step3.title": "Cineastas <em>candidatam-se</em>",
+  "openCalls.how.step3.body":
+    "As candidaturas são avaliadas pelo conselho de curadoria. Decisões em 14 dias. Feedback por escrito, aceite ou não.",
+  "openCalls.how.step4.title": "Os filmes <em>estreiam aqui</em>",
+  "openCalls.how.step4.body":
+    "O trabalho encomendado estreia primeiro no QueerPulse Cinema, sendo depois distribuído livremente ou com uma divisão de receita à escolha de quem fez o filme.",
+  "openCalls.body.commissionsTitle": "Encomendas <em>e bolsas</em>",
+  "openCalls.body.openCount": "{count} em aberto",
+  "openCalls.body.residenciesTitle": "Residências <em>e mentorias</em>",
+  "openCalls.body.gotMadeTitle": "O que <em>se fez</em>",
+  "openCalls.body.allFundedCta": "Todos os filmes financiados →",
+  "openCalls.card.deadlineLabel": "Prazo",
+  "openCalls.card.applyNowCta": "Candidatar-te agora",
+  "openCalls.card.downloadBriefCta": "Descarregar termos (PDF)",
+  "openCalls.card.downloadToast":
+    "Os termos em PDF estão a ser descarregados — verifica os teus ficheiros.",
+  "openCalls.card.applyCta": "Candidatar-te",
+  "openCalls.card.comingSoonToast": "{label} — brevemente.",
+  "openCalls.outro.title": "Financia a <em>próxima</em> chamada.",
+  "openCalls.outro.sub":
+    "Os sustentadores financiam as encomendas. Cada novo sustentador faz crescer o fundo da próxima temporada.",
+  "openCalls.outro.cta": "Torna-te sustentador → {price}/mês",
+
+  // ── Adesão (CinemaMembershipPage.tsx + Pays.tsx) — página de preços/planos.
+  // Nomes de escalão, descrições e pontos de funcionalidades são copy de
+  // marketing da própria plataforma (nunca vinda da API), por isso, ao
+  // contrário da maior parte deste ficheiro, tudo aqui é traduzido. ────────
+  "membership.hero.eyebrow": "QueerPulse Cinema · adesão de sustentador",
+  "membership.hero.title":
+    "A sala <em>continua aberta</em> porque tu estás nela.",
+  "membership.hero.sub":
+    "Os sustentadores financiam os filmes, as encomendas, as legendas e a curadoria. Em troca: tudo. Sem algoritmo, sem aprisionamento, sem padrões enganosos. Cancela quando quiseres.",
+  "membership.tier.free.tag": "Grátis · sempre",
+  "membership.tier.free.name": "A <em>porta</em>",
+  "membership.tier.free.desc":
+    "A porta está aberta. Filmes da comunidade, curtas do Feito aqui, e filmes selecionados no escalão gratuito — sem conta necessária. Sem limite de tempo.",
+  "membership.tier.free.feature1":
+    "Todos os filmes do escalão gratuito (40+ no catálogo)",
+  "membership.tier.free.feature2": "Todas as curtas do Feito aqui",
+  "membership.tier.free.feature3": "Eventos ao vivo e Q&As gratuitos",
+  "membership.tier.free.feature4": "Legendas e audiodescrição",
+  "membership.tier.free.feature5": "Biblioteca de sustentadores (100+ filmes)",
+  "membership.tier.free.feature6": "Downloads offline",
+  "membership.tier.free.feature7": "Votos nas chamadas abertas",
+  "membership.tier.free.cta": "Explorar filmes gratuitos",
+  "membership.tier.sustainer.tag": "Sustentador · mensal",
+  "membership.tier.sustainer.name": "A <em>sala</em>",
+  "membership.tier.sustainer.desc":
+    "Tudo no Cinema, e ainda os teus {price} financiam diretamente o fundo de encomendas, o fundo de legendagem e o estipêndio da curadoria. O número é transparente.",
+  "membership.tier.sustainer.feature1": "Tudo no escalão Grátis",
+  "membership.tier.sustainer.feature2":
+    "Biblioteca completa de sustentadores — 142 filmes",
+  "membership.tier.sustainer.feature3":
+    "Downloads offline (títulos de sustentador)",
+  "membership.tier.sustainer.feature4":
+    "Sessões em grupo com outros sustentadores",
+  "membership.tier.sustainer.feature5":
+    "Vota nas chamadas abertas e encomendas",
+  "membership.tier.sustainer.feature6":
+    "Bloco de notas da curadoria — ensaios completos",
+  "membership.tier.sustainer.feature7":
+    "Acesso a cópias de festival (screeners)",
+  "membership.tier.sustainer.cta": "Torna-te sustentador · {price}/mês",
+  "membership.tier.sustainer.note":
+    "Cancela quando quiseres. Sem aprisionamento. Sem padrões enganosos.",
+  "membership.tier.sustainer.badge": "A escolha da maioria dos sustentadores",
+  "membership.tier.patron.tag": "Patrono · mensal",
+  "membership.tier.patron.name": "O <em>patrono</em>",
+  "membership.tier.patron.desc":
+    "Tudo no escalão Sustentador, e ainda o teu nome no mural público de patronos e uma contribuição maior para o fundo de encomendas (~{poolShare}/mês após custos).",
+  "membership.tier.patron.feature1": "Tudo no escalão Sustentador",
+  "membership.tier.patron.feature2": "Nome no mural de patronos (opcional)",
+  "membership.tier.patron.feature3":
+    "Contributo direto nas próximas chamadas abertas",
+  "membership.tier.patron.feature4":
+    "Convite para a assembleia anual da cooperativa",
+  "membership.tier.patron.feature5": "~{poolShare}/mês → fundo de encomendas",
+  "membership.tier.patron.feature6":
+    "Cópias antecipadas antes do público em geral",
+  "membership.tier.patron.feature7": "Dois convites de convidado por ano",
+  "membership.tier.patron.cta": "Torna-te patrono · {price}/mês",
+  "membership.tier.patron.note": "Cancela quando quiseres.",
+  "membership.pays.title": "Para onde o dinheiro <em>vai mesmo</em>",
+  "membership.pays.sub":
+    "Publicamos o detalhe completo trimestralmente. Aqui está a versão resumida — números honestos, atualizados mensalmente.",
+  "membership.pays.filmmakers.title": "Pago a <em>cineastas</em>",
+  "membership.pays.filmmakers.body":
+    "80% de cada aluguer ou compra vai diretamente para quem fez o filme. As gorjetas são 100% deles. O fundo de sustentadores é distribuído mensalmente por minuto visto.",
+  "membership.pays.filmmakers.numSub": "Este mês · para cineastas",
+  "membership.pays.commissioning.title": "Fundo de <em>encomendas</em>",
+  "membership.pays.commissioning.body":
+    "~20% das subscrições de sustentadores entra no fundo de encomendas — chamadas abertas, residências e apoio à legendagem para cineastas da comunidade.",
+  "membership.pays.commissioning.numSub": "Disponível esta temporada",
+  "membership.pays.curators.title": "Curadoria e <em>legendas</em>",
+  "membership.pays.curators.body":
+    "O conselho de curadoria recebe um estipêndio trimestral votado pelos patronos. Um fundo de legendagem separado apoia cineastas que não podem pagar a legendagem.",
+  "membership.pays.curators.numSub": "Pessoas na curadoria",
+  "membership.ledger.label": "Registo público · {month} · atualizado à segunda",
+  "membership.ledger.sustainers.label": "Sustentadores",
+  "membership.ledger.sustainers.note": "Mais 38 este mês",
+  "membership.ledger.paidToFilmmakers.note": "Este mês, todas as transações",
+  "membership.ledger.filmsInCatalogue.note": "9 novos este mês",
+  "membership.ledger.commissionPool.label": "Fundo de encomendas",
+  "membership.ledger.commissionPool.note": "Temporada 3 · 4 chamadas abertas",
+  "membership.ledger.fullAccountsCta": "Contas públicas completas →",
+
+  // ── Wizard de submissão (CinemaSubmitPage.tsx, CinemaSubmitStepper.tsx,
+  // CinemaSubmitAside.tsx) — cabeçalho, stepper, navegação, validação, painel
+  // de sucesso e barra lateral de reforço — mais (abaixo, "submit.form.*"/
+  // "submit.option.*"/"submit.widgets.*"/"submit.review.*") os campos do
+  // formulário (Step1/Steps234/Review — rótulos, placeholders, listas de
+  // opções), agora varridos. As duas caixas de consentimento legal ("I hold
+  // the rights…" no Passo 3, "I agree to the co-op distribution terms…" na
+  // Revisão) ficam deliberadamente em inglês, fixas no código — NÃO passam
+  // pelo catálogo — porque uma tradução ligeiramente incorreta mudaria o que
+  // a pessoa cineasta está a declarar/aceitar; ver o relatório do sweep. O
+  // bloco de chamada aberta na barra lateral é conteúdo dessa chamada e fica
+  // em inglês. ─────────────────────────────────────────────────────────────
+  "submit.header.eyebrow": "Para cineastas · submissão aberta",
+  "submit.header.title": "Submete <em>o teu</em> filme.",
+  "submit.header.sub":
+    "O Cinema está aberto a qualquer cineasta queer — pessoa da comunidade ou não. Cinco passos, 20 minutos. Escolhes o teu modelo de receita. A divisão é igual para todos: 80% de cada aluguer ou compra vem para ti.",
+  "submit.promise.heading": "A promessa, em números",
+  "submit.promise.note":
+    "Não-exclusivo significa que podes continuar a mostrar noutros sítios — festivais, o teu próprio site, outras plataformas. Não impomos aprisionamento.",
+  "submit.promise.row.yourShareRent": "A tua parte de cada aluguer",
+  "submit.promise.row.yourShareBuy": "A tua parte de cada compra",
+  "submit.promise.row.yourShareTip": "A tua parte de cada gorjeta",
+  "submit.promise.row.paidToYou": "Pago a ti",
+  "submit.promise.row.contractType": "Tipo de contrato",
+  "submit.promise.value.weekly": "<em>Semanal</em>",
+  "submit.promise.value.nonExclusive": "Não-<em>exclusivo</em>",
+  "submit.stepper.ariaLabel": "Passos da submissão",
+  "submit.step.theFilm.label": "O filme",
+  "submit.step.theFilm.sub": "Informação básica",
+  "submit.step.accessibility.label": "Acessibilidade",
+  "submit.step.accessibility.sub": "Legendas e AD",
+  "submit.step.rights.label": "Direitos",
+  "submit.step.rights.sub": "Território e prazo",
+  "submit.step.revenue.label": "Receita",
+  "submit.step.revenue.sub": "Como queres vender",
+  "submit.step.review.label": "Rever",
+  "submit.step.review.sub": "e submeter",
+  "submit.nav.next.accessibility": "Seguinte: Acessibilidade →",
+  "submit.nav.next.rights": "Seguinte: Direitos →",
+  "submit.nav.next.revenue": "Seguinte: Receita →",
+  "submit.nav.next.review": "Rever o teu filme →",
+  "submit.nav.next.submit": "Submeter o teu filme →",
+  "submit.nav.saveDraft": "Guardar rascunho",
+  "submit.nav.back": "← Voltar",
+  "submit.nav.hint":
+    "Passo {step} de {total} · O progresso é guardado automaticamente",
+  "submit.blocker.title": "Adiciona primeiro o título do teu filme.",
+  "submit.blocker.synopsis": "Uma sinopse curta, nas tuas próprias palavras.",
+  "submit.blocker.screener":
+    "Cola um link de visionamento para podermos ver o filme.",
+  "submit.blocker.rights": "Confirma que detens os direitos, por favor.",
+  "submit.blocker.agree":
+    "Aceita os termos da cooperativa para submeteres o filme.",
+  "submit.toast.draftSaved": "Rascunho guardado neste dispositivo",
+  "submit.sending.text": "A enviar o teu filme para a equipa de programação…",
+  "submit.toast.submitted": "O teu filme está com a equipa de programação",
+  "submit.success.title": "O teu filme está",
+  "submit.success.em": "na fila.",
+  "submit.success.closeLabel": "Voltar ao Cinema",
+  "submit.success.step1":
+    "Uma pessoa vê-o em 10–14 dias — todas as submissões, sem exceções.",
+  "submit.success.step2":
+    "Respondemos sempre, com notas específicas se for uma recusa.",
+  "submit.success.step3":
+    "Se for um sim, és pago em 7 dias de cada aluguer, compra e gorjeta.",
+  "submit.success.body":
+    "Obrigade por nos confiares o teu filme. Não-exclusivo significa que nada muda para ti noutros sítios — continua a mostrá-lo onde quiseres enquanto o vemos.",
+  "submit.success.anotherCta": "Submeter outro filme",
+  "submit.aside.nextHeading": "O que acontece a seguir",
+  "submit.aside.accessHeading": "Norma de acessibilidade",
+  "submit.aside.accessBody":
+    "Pedimos legendas — mas também ajudamos a consegui-las. Se não puderes pagar a legendagem, contacta-nos. Temos um pequeno fundo de legendagem para cineastas da comunidade.",
+  "submit.aside.accessCta": "A nossa norma de acesso →",
+  "submit.aside.openCallHeading": "Chamada aberta ativa",
+  "submit.aside.applyCta": "Candidatar-te à encomenda →",
+  "submit.aside.next.point1.strong": "Vemo-lo.",
+  "submit.aside.next.point1.rest":
+    "Todas as submissões são vistas por uma pessoa, em 10–14 dias.",
+  "submit.aside.next.point2.strong": "Respondemos sempre.",
+  "submit.aside.next.point2.rest":
+    "Se não aceitarmos, dizemos porquê especificamente — nunca uma recusa genérica.",
+  "submit.aside.next.point3.strong": "Contrato não-exclusivo.",
+  "submit.aside.next.point3.rest":
+    "Mantens todos os teus outros direitos. Podes continuar a mostrar o filme noutros sítios.",
+  "submit.aside.next.point4.strong": "Pago em 7 dias",
+  "submit.aside.next.point4.rest":
+    "de cada transação, para o teu IBAN ou conta Stripe.",
+
+  // ── Formulário do wizard de submissão (CinemaSubmitStep1.tsx,
+  // CinemaSubmitSteps234.tsx, CinemaSubmitReview.tsx, CinemaSubmitParts.tsx,
+  // CinemaSubmitWidgets.tsx). "submit.form.*" — cabeçalhos/rótulos/
+  // placeholders/texto de ajuda de cada passo.
+  "submit.form.step1.heading": "Conta-nos sobre <em>o teu filme</em>",
+  "submit.form.step1.sub":
+    "Informação básica — visível na página pública do filme",
+  "submit.form.step1.title.label": "Título do filme",
+  "submit.form.step1.title.placeholder": "ex.: A luz entre os quartos",
+  "submit.form.step1.originalTitle.label": "Título original",
+  "submit.form.step1.originalTitle.opt": "(se for diferente)",
+  "submit.form.step1.originalTitle.placeholder": "Título na língua original",
+  "submit.form.step1.year.label": "Ano de produção",
+  "submit.form.step1.runtime.label": "Duração (minutos)",
+  "submit.form.step1.country.label": "País de origem",
+  "submit.form.step1.language.label": "Língua original",
+  "submit.form.step1.format.label": "Formato",
+  "submit.form.step1.format.ariaLabel": "Formato",
+  "submit.form.step1.synopsis.label": "Sinopse",
+  "submit.form.step1.synopsis.why":
+    "Escrita por ti, com a tua própria voz. 80–200 palavras. Não é um pitch — descreve o filme como se estivesses a escrever a alguém que ainda não o viu.",
+  "submit.form.step1.synopsis.placeholder":
+    "Um filme paciente e generoso sobre pessoas queer idosas da classe trabalhadora de Lisboa, feito ao longo de três anos nas cozinhas que as criaram…",
+  "submit.form.step1.statement.label": "Nota de realização",
+  "submit.form.step1.statement.opt":
+    "(opcional, mas aparece na página do filme)",
+  "submit.form.step1.statement.why":
+    "Porque o fizeste, e o que queres que as pessoas tragam a ele. 60–120 palavras.",
+  "submit.form.step1.statement.placeholder":
+    "Faço filmes sobre pessoas a quem nunca perguntaram se queriam ser documentadas…",
+  "submit.form.step1.identityTags.label":
+    "Etiquetas de identidade para ti como cineasta",
+  "submit.form.step1.identityTags.why":
+    "Só de autoidentificação. Ajudam quem vê a encontrar mais trabalho das tuas comunidades. Nunca obrigatório. Marca o que quiseres mostrar.",
+  "submit.form.step1.contentNotes.label": "Notas de conteúdo",
+  "submit.form.step1.contentNotes.why":
+    "Mostramo-las em destaque, com códigos de tempo se conseguires indicá-los. Pensa nelas como informação, não avisos — ajudam quem vê a decidir se esta é a noite certa para o teu filme.",
+  "submit.form.step1.poster.label": "Carregar cartaz / imagem principal",
+  "submit.form.step1.poster.why":
+    "Proporção 3:4 preferida. Mínimo 1800px de altura. Usado na página do teu filme e na grelha do catálogo.",
+  "submit.form.step1.screener.label": "Link do screener",
+  "submit.form.step1.screener.why":
+    "Aceitamos links protegidos por palavra-passe do Vimeo, Frame.io ou WeTransfer. Vemos todos os filmes antes de aceitar. Prazo de resposta: 10–14 dias.",
+  "submit.form.step1.screener.placeholder":
+    "https://vimeo.com/… ou cola um link do WeTransfer",
+
+  "submit.form.step2.heading": "Materiais de <em>acessibilidade</em>",
+  "submit.form.step2.sub":
+    "Legendas, audiodescrição, línguas gestuais. Ajudamos se estiveres com dificuldades — ninguém fica de fora por causa do custo.",
+  "submit.form.step2.captions.label": "Já tens legendas?",
+  "submit.form.step2.captions.why":
+    "Legendamos todos os filmes antes de ficarem disponíveis. Se não tiveres legendas, o nosso fundo de acessibilidade pode fazê-las por ti.",
+  "submit.form.step2.captions.ariaLabel": "Legendas",
+  "submit.form.step2.captionLangs.label":
+    "Línguas de legendagem que consegues fornecer",
+  "submit.form.step2.ad.label": "Audiodescrição",
+  "submit.form.step2.ad.why":
+    "Uma faixa descrita ou um guião que possamos narrar. Opcional, mas abre o teu filme a pessoas cegas ou com baixa visão.",
+  "submit.form.step2.ad.ariaLabel": "Audiodescrição",
+  "submit.form.step2.signTracks.label": "Faixas em língua gestual disponíveis",
+  "submit.form.step2.notes.label": "Mais alguma coisa que devamos saber",
+  "submit.form.step2.notes.opt": "(opcional)",
+  "submit.form.step2.notes.placeholder":
+    "Códigos de tempo de imagens com luzes intermitentes, notas sensoriais, ou necessidades de acesso tuas que devamos ter em conta…",
+
+  "submit.form.step3.heading": "Os direitos que estás a conceder",
+  "submit.form.step3.sub":
+    "Sempre não-exclusivo. Manténs todos os outros direitos e podes mostrar o filme onde e quando quiseres.",
+  "submit.form.step3.territory.label": "Território",
+  "submit.form.step3.territory.why":
+    "Onde podemos transmiti-lo. Mundial alcança mais pessoas, mas uma estreia só local é perfeitamente válida.",
+  "submit.form.step3.territory.ariaLabel": "Território",
+  "submit.form.step3.term.label": "Prazo",
+  "submit.form.step3.term.why":
+    "Quanto tempo o filme fica no catálogo. Podes retirá-lo mais cedo a qualquer momento, sem penalização.",
+  "submit.form.step3.term.ariaLabel": "Prazo",
+
+  "submit.form.step4.heading": "Como queres <em>vender</em>",
+  "submit.form.step4.sub":
+    "Tu escolhes. Podes alterar isto depois de submeteres, uma vez por ano.",
+  "submit.form.step4.rentPrice.label": "Preço de aluguer (2–8 €)",
+  "submit.form.step4.buyPrice.label": "Preço de compra (mín. 2× o aluguer)",
+
+  "submit.form.review.heading": "Rever e submeter",
+  "submit.form.review.sub":
+    "Uma última vista de olhos. Podes editar qualquer resposta, ou enviar já à equipa.",
+
+  // "submit.option.*" — as próprias listas de opções (Pattern A: `value`
+  // canónico em cinemaSubmit.data.ts, `labelKey`/`subKey` resolvidos aqui).
+  "submit.option.format.documentary.label": "Documentário",
+  "submit.option.format.documentary.sub": "Não-ficção",
+  "submit.option.format.narrative.label": "Longa-metragem de ficção",
+  "submit.option.format.narrative.sub": "Ficção",
+  "submit.option.format.short.label": "Curta-metragem",
+  "submit.option.format.short.sub": "Até 40 min",
+  "submit.option.format.series.label": "Série",
+  "submit.option.format.series.sub": "Episódica",
+  "submit.option.format.experimental.label": "Experimental",
+  "submit.option.format.experimental.sub": "Ensaio / híbrido",
+  "submit.option.format.animation.label": "Animação",
+
+  "submit.option.country.pt": "Portugal",
+  "submit.option.country.br": "Brasil",
+  "submit.option.country.fr": "França",
+  "submit.option.country.es": "Espanha",
+  "submit.option.country.other": "Outro",
+
+  "submit.option.language.pt": "Português",
+  "submit.option.language.en": "Inglês",
+  "submit.option.language.fr": "Francês",
+  "submit.option.language.es": "Espanhol",
+  "submit.option.language.other": "Outra",
+
+  // Termos de autoidentificação (etiquetas da própria pessoa cineasta) — ver
+  // a tabela de terminologia queer em docs/i18n/glossary-pt.md; sinalizado
+  // no relatório do sweep para atenção extra de revisão nativa.
+  "submit.option.identity.lesbian": "Lésbica",
+  "submit.option.identity.gay": "Gay",
+  "submit.option.identity.bi": "Bi",
+  "submit.option.identity.transWoman": "Mulher trans",
+  "submit.option.identity.transMan": "Homem trans",
+  "submit.option.identity.nonBinary": "Não-binárie",
+  "submit.option.identity.queer": "Queer",
+  "submit.option.identity.intersex": "Intersexo",
+  "submit.option.identity.asexual": "Assexual",
+
+  "submit.option.captions.have.label": "Já as tenho",
+  "submit.option.captions.have.sub": "SRT / VTT prontos",
+  "submit.option.captions.help.label": "Preciso de ajuda",
+  "submit.option.captions.help.sub": "Usar o fundo",
+  "submit.option.captions.none.label": "Ainda não",
+  "submit.option.captions.none.sub": "Vamos conversar",
+
+  // Línguas de legendagem que a pessoa cineasta consegue fornecer, incl.
+  // "Português do Brasil" para um ficheiro de legendas pt-BR já existente —
+  // distinto do chrome pt-PT-only da própria plataforma; ver o comentário
+  // de CAPTION_LANGS em cinemaSubmit.data.ts.
+  "submit.option.captionLang.pt": "Português",
+  "submit.option.captionLang.en": "Inglês",
+  "submit.option.captionLang.es": "Espanhol",
+  "submit.option.captionLang.fr": "Francês",
+  "submit.option.captionLang.ptBr": "Português do Brasil",
+
+  "submit.option.ad.have.label": "Audiodescrição pronta",
+  "submit.option.ad.have.sub": "Faixa ou guião",
+  "submit.option.ad.help.label": "Gostava de ajuda a criar uma",
+  "submit.option.ad.help.sub": "Fundo de acessibilidade",
+  "submit.option.ad.none.label": "Não desta vez",
+
+  "submit.option.signTrack.lgp": "LGP",
+  "submit.option.signTrack.asl": "ASL",
+  "submit.option.signTrack.bsl": "BSL",
+  "submit.option.signTrack.none": "Ainda não",
+
+  "submit.option.territory.worldwide.label": "Mundial",
+  "submit.option.territory.worldwide.sub": "Alcança mais pessoas",
+  "submit.option.territory.europe.label": "Só Europa",
+  "submit.option.territory.europe.sub": "UE + Reino Unido",
+  "submit.option.territory.portugal.label": "Só Portugal",
+  "submit.option.territory.portugal.sub": "Estreia local",
+
+  "submit.option.term.oneYear.label": "Um ano",
+  "submit.option.term.oneYear.sub":
+    "Renova automaticamente, cancela quando quiseres",
+  "submit.option.term.twoYear.label": "Dois anos",
+  "submit.option.term.twoYear.sub": "Um pouco mais de estabilidade",
+  "submit.option.term.rolling.label": "Contínuo",
+  "submit.option.term.rolling.sub": "Até o retirares",
+
+  "submit.option.revenue.free.label": "Grátis para ver",
+  "submit.option.revenue.free.tag": "Grátis",
+  "submit.option.revenue.free.desc":
+    "Qualquer pessoa pode ver. Ganhas uma parte por visualização do fundo comunitário, financiado pelos sustentadores. Bom para curtas e trabalho ativista.",
+  "submit.option.revenue.free.split": "~0,03–0,12 € por visualização",
+  "submit.option.revenue.sustainer.label": "Biblioteca de sustentadores",
+  "submit.option.revenue.sustainer.tag": "Sustentador",
+  "submit.option.revenue.sustainer.desc":
+    "Incluído no acesso de sustentador. Ganhas uma parte por minuto visto. Previsível, cresce mais devagar.",
+  "submit.option.revenue.sustainer.split": "~0,008 €/min visto · 80% para ti",
+  "submit.option.revenue.rent.label": "Aluguer · tu defines o preço",
+  "submit.option.revenue.rent.tag": "€",
+  "submit.option.revenue.rent.desc":
+    "Defines o preço de aluguer (mín. 2 €, máx. 8 €). 80% é para ti. Janela de aluguer de 48 horas.",
+  "submit.option.revenue.rent.split": "80% para ti · pago semanalmente",
+  "submit.option.revenue.rentbuy.label": "Aluguer + Compra",
+  "submit.option.revenue.rentbuy.tag": "€€",
+  "submit.option.revenue.rentbuy.desc":
+    "Define um preço de aluguer e um preço de compra (mín. 2× o aluguer). 80% de ambos é para ti. As gorjetas são sempre 100%.",
+  "submit.option.revenue.rentbuy.split": "80% aluguer + compra · 100% gorjeta",
+
+  // "submit.widgets.*" — ContentNotesBuilder + PosterUpload (CinemaSubmitWidgets.tsx).
+  "submit.widgets.contentNotes.head":
+    "Adiciona uma linha por tema — com o máximo de detalhe possível",
+  "submit.widgets.contentNotes.topicPlaceholder": "ex.: Luto",
+  "submit.widgets.contentNotes.detailPlaceholder":
+    "ex.: Discussão sobre luto e a morte de uma pessoa querida",
+  "submit.widgets.contentNotes.timecodePlaceholder": "Código de tempo (opc.)",
+  "submit.widgets.contentNotes.topicAriaLabel":
+    "Tema da nota de conteúdo {index}",
+  "submit.widgets.contentNotes.detailAriaLabel":
+    "Detalhe da nota de conteúdo {index}",
+  "submit.widgets.contentNotes.timecodeAriaLabel":
+    "Código de tempo da nota de conteúdo {index}",
+  "submit.widgets.contentNotes.removeAriaLabel":
+    "Remover nota de conteúdo {index}",
+  "submit.widgets.contentNotes.addCta": "Adicionar outra nota de conteúdo",
+  "submit.widgets.poster.attached": "{filename} anexado",
+  "submit.widgets.poster.dropTitle": "Larga o teu cartaz aqui",
+  "submit.widgets.poster.replaceHint": "Clica para substituir",
+  "submit.widgets.poster.browseHint":
+    "Ou clica para procurar · JPG, PNG, TIFF · Máx. 50 MB",
+  "submit.widgets.poster.note":
+    "Não vamos cortar nem aplicar filtros ao teu cartaz sem perguntar primeiro.",
+
+  // "submit.review.*" — linhas de leitura de CinemaSubmitReview.tsx.
+  "submit.review.editCta": "Editar",
+  "submit.review.value.notAddedYet": "Ainda não adicionado",
+  "submit.review.value.runtimeMinutes": "{minutes} min",
+  "submit.review.value.notesAdded_one": "{count} adicionada",
+  "submit.review.value.notesAdded_other": "{count} adicionadas",
+  "submit.review.value.yes": "Sim",
+  "submit.review.field.title": "Título",
+  "submit.review.field.yearRuntime": "Ano · duração",
+  "submit.review.field.format": "Formato",
+  "submit.review.field.origin": "Origem",
+  "submit.review.field.contentNotes": "Notas de conteúdo",
+  "submit.review.field.poster": "Cartaz",
+  "submit.review.field.screener": "Screener",
+  "submit.review.field.captions": "Legendas",
+  "submit.review.field.rightsConfirmed": "Direitos confirmados",
+  "submit.review.field.revenueModel": "Modelo de receita",
+
+  // ── Reprodutor (WatchPage.tsx, WatchPageSections.tsx) — só o chrome do
+  // leitor. O título/meta/citação da curadoria do filme, as suas notas de
+  // conteúdo e o chat da Lobby/Live Q&A são conteúdo desse filme e ficam em
+  // inglês. A armadilha de valor guardado do `WatchTab` já está corrigida —
+  // o estado/comparação da faixa de separadores usa os ids canónicos em
+  // watchPage.data.ts (`"film-info" | "lobby" | "live-qna"`); "watch.tab.*"
+  // abaixo são só os rótulos visíveis. ──────────────────────────────────────
+  "watch.nav.backToFilm": "← Informação do filme",
+  "watch.nav.cinemaHome": "Página inicial do Cinema",
+  "watch.nav.watchingAs": "A ver como <strong>{name}</strong>",
+  "watch.nav.signInCta": "Inicia sessão para guardar o progresso",
+  "watch.overlay.ariaLabel": "Notas de conteúdo antes de veres",
+  "watch.overlay.heading": "Antes de <em>veres</em>",
+  "watch.overlay.sub_one":
+    "Este filme tem {count} nota de conteúdo. Faz uma pausa — depois decide quando estiveres pronto.",
+  "watch.overlay.sub_other":
+    "Este filme tem {count} notas de conteúdo. Faz uma pausa — depois decide quando estiveres pronto.",
+  "watch.overlay.readyCta": "Estou pronto · reproduzir o filme",
+  "watch.overlay.backCta": "Voltar à página do filme",
+  "watch.tab.filmInfo": "Informação do filme",
+  "watch.tab.lobby": "Lobby",
+  "watch.tab.liveQna": "Q&A ao vivo",
+  "watch.facts.director": "Realização",
+  "watch.facts.runtime": "Duração",
+  "watch.facts.year": "Ano",
+  "watch.controls.subtitleLang.pt": "Legendas PT",
+  "watch.controls.subtitleLang.en": "Legendas EN",
+  "watch.controls.subtitleLang.es": "Legendas ES",
+  "watch.controls.subtitleLang.none": "Sem legendas",
+  "watch.sidePanel.lobbyPlaceholder": "Diz algo à lobby…",
+  "watch.sidePanel.qnaPlaceholder": "Faz uma pergunta a {name}…",
+  "watch.sidePanel.sendCta": "Enviar",
+  "watch.below.nextUpTitle": "A <em>seguir</em>",
+  "watch.below.splitHeading": "A tua visualização · para onde vai o dinheiro",
+  "watch.below.splitLegend.filmmaker": "Quem fez o filme",
+  "watch.below.splitLegend.payments": "Pagamentos",
+  "watch.below.splitLegend.hosting": "Alojamento",
 };

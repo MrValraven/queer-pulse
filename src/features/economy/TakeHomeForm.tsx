@@ -8,6 +8,7 @@ import {
   type StartupYear,
   type WorkerStatus,
 } from "./takeHome.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./TakeHomeCalculatorPage.module.css";
 
 export interface TakeHomeFormProps {
@@ -36,11 +37,12 @@ export function TakeHomeForm({
   status,
   onChange,
 }: TakeHomeFormProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.form}>
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="th-gross">
-          Annual gross income (€)
+          {t("economy:takeHome.grossLabel")}
         </label>
         <input
           id="th-gross"
@@ -49,7 +51,7 @@ export function TakeHomeForm({
           inputMode="decimal"
           min={0}
           step="any"
-          placeholder="e.g. 30000"
+          placeholder={t("economy:takeHome.grossPlaceholder")}
           value={gross}
           onChange={(e) => onChange({ gross: e.target.value })}
         />
@@ -57,7 +59,7 @@ export function TakeHomeForm({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="th-activity">
-          Activity type
+          {t("economy:takeHome.activityLabel")}
         </label>
         <select
           id="th-activity"
@@ -69,7 +71,7 @@ export function TakeHomeForm({
         >
           {ACTIVITY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(o.labelKey)}
             </option>
           ))}
         </select>
@@ -77,7 +79,7 @@ export function TakeHomeForm({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="th-status">
-          Worker status
+          {t("economy:takeHome.statusLabel")}
         </label>
         <select
           id="th-status"
@@ -87,7 +89,7 @@ export function TakeHomeForm({
         >
           {STATUS_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(o.labelKey)}
             </option>
           ))}
         </select>
@@ -96,7 +98,7 @@ export function TakeHomeForm({
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="th-year">
-            Tax year
+            {t("economy:takeHome.yearLabel")}
           </label>
           <select
             id="th-year"
@@ -116,7 +118,7 @@ export function TakeHomeForm({
 
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="th-startup">
-            Start of activity
+            {t("economy:takeHome.startupLabel")}
           </label>
           <select
             id="th-startup"
@@ -128,7 +130,7 @@ export function TakeHomeForm({
           >
             {STARTUP_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>

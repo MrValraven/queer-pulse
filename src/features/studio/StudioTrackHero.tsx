@@ -2,10 +2,24 @@ import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { TRACK, coverImage } from "./studioTrack.data";
 import ss from "./studio.module.css";
 
+// Content — this track's position/duration/earnings are per-instance mock
+// figures; the artist name is content. Only the surrounding chrome sentences
+// are translated (§1).
+const TRACK_POSITION = { current: 6, total: 11 };
+const ARTIST_NAME = "Mariana Sol";
+const MONTH_EARNINGS = 2140;
+const QUICK_TIP_AMOUNT = 2;
+const PER_LISTEN_AMOUNT = 0.05;
+
 export function StudioTrackHero({ onTip }: { onTip: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
   const saved = isSaved(TRACK.id);
@@ -26,18 +40,26 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
         </div>
         <div className={ss.heroInfo}>
           <div className={ss.eb}>
-            <span className={ss.live} /> Track 6 of 11 · playing now in the set
+            <span className={ss.live} />{" "}
+            {t("studio:track.hero.eyebrow", {
+              current: TRACK_POSITION.current,
+              total: TRACK_POSITION.total,
+            })}
           </div>
           <h1>
             Carta para a <em>santa</em>
           </h1>
           <div className={ss.by}>
-            by <strong>Mariana Sol</strong> · from <em>Cidade dos santos</em> ·
-            2026
+            by <strong>{ARTIST_NAME}</strong> · from <em>Cidade dos santos</em>{" "}
+            · 2026
           </div>
           <div className={ss.stats}>
             <span>
-              <em>312</em> listening
+              <Translation
+                i18nKey="studio:room.hero.listening"
+                components={{ em: <em /> }}
+                values={{ count: 312 }}
+              />
             </span>
             <span className={ss.dot} />
             <span>4:18</span>
@@ -45,11 +67,22 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
             <span>Flac · 24/48</span>
             <span className={ss.dot} />
             <span>
-              <em>€2,140</em> to Mariana this month
+              <Translation
+                i18nKey="studio:track.hero.payMonth"
+                components={{ em: <em /> }}
+                values={{
+                  amount: fmt.currency(MONTH_EARNINGS),
+                  artist: ARTIST_NAME,
+                }}
+              />
             </span>
           </div>
           <div className={ss.heroActions}>
-            <button type="button" className={ss.playBig} aria-label="Play">
+            <button
+              type="button"
+              className={ss.playBig}
+              aria-label={t("studio:player.play")}
+            >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
@@ -60,24 +93,27 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
                 const now = toggleSave(TRACK);
                 showToast(
                   now
-                    ? "Track saved to your library"
-                    : "Removed from your library",
+                    ? t("studio:room.hero.addedToast")
+                    : t("studio:room.hero.removedToast"),
                   now ? "success" : "info",
                 );
               }}
             >
               {saved ? (
                 <>
-                  <FiCheck /> In library
+                  <FiCheck /> {t("studio:room.hero.inLibrary")}
                 </>
               ) : (
                 <>
-                  <FiPlus /> Library
+                  <FiPlus /> {t("studio:room.hero.addLibrary")}
                 </>
               )}
             </button>
             <button type="button" className={ss.tip} onClick={onTip}>
-              <FiHeart /> Tip €2
+              <FiHeart />{" "}
+              {t("studio:player.tipCta", {
+                amount: fmt.currency(QUICK_TIP_AMOUNT),
+              })}
             </button>
           </div>
           <div className={ss.payPill}>
@@ -90,8 +126,15 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
             </svg>
             <span>
-              This listen pays Mariana <em>€0.05</em>.{" "}
-              <span className={ss.small}>Tip on top? 100% to her.</span>
+              <Translation
+                i18nKey="studio:room.hero.payNote"
+                components={{ em: <em /> }}
+                values={{
+                  artist: ARTIST_NAME,
+                  amount: fmt.currency(PER_LISTEN_AMOUNT),
+                }}
+              />{" "}
+              <span className={ss.small}>{t("studio:room.hero.tipOnTop")}</span>
             </span>
           </div>
         </div>

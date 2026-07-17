@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { FormingCoop } from "./housingCoop.data";
 import styles from "./ApplicationModals.module.css";
 
-const HOUSEHOLD_SIZES = [
-  "Just me",
-  "Me + partner(s)",
-  "A household of 3–4",
-  "A household of 5+",
+/** i18n Pattern A — labelKey resolved via t() below. */
+const HOUSEHOLD_SIZES: { value: string; labelKey: string }[] = [
+  { value: "Just me", labelKey: "economy:joinCoop.household.justMe" },
+  {
+    value: "Me + partner(s)",
+    labelKey: "economy:joinCoop.household.mePlusPartners",
+  },
+  { value: "A household of 3–4", labelKey: "economy:joinCoop.household.small" },
+  { value: "A household of 5+", labelKey: "economy:joinCoop.household.large" },
 ];
 
 export function JoinCoopModal({
@@ -18,6 +24,7 @@ export function JoinCoopModal({
   coop: FormingCoop;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [household, setHousehold] = useState("");
   const [note, setNote] = useState("");
@@ -29,73 +36,77 @@ export function JoinCoopModal({
     <ModalShell
       onClose={onClose}
       success={done}
-      ariaLabel={`Ask to join ${coopName}`}
+      ariaLabel={t("economy:joinCoop.askToJoinAriaLabel", { name: coopName })}
     >
       {done ? (
         <SuccessPanel
-          title="Request"
-          em="sent."
+          title={t("economy:joinCoop.success.title")}
+          em={t("economy:joinCoop.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:joinCoop.success.closeLabel")}
         >
-          The organisers of <strong>{coopName}</strong> will see your interest
-          and reach out to arrange a first conversation. No commitment yet — the
-          early chats are about whether the fit is right, both ways.
+          <Translation
+            i18nKey="economy:joinCoop.success.body"
+            components={{ strong: <strong /> }}
+            values={{ name: coopName }}
+          />
         </SuccessPanel>
       ) : (
         <>
           <div className={styles.eyebrow}>{coop.phaseLabel}</div>
           <h2 className={styles.title}>
-            Ask to join <em>{coopName}.</em>
+            <Translation
+              i18nKey="economy:joinCoop.title"
+              components={{ em: <em /> }}
+              values={{ name: coopName }}
+            />
           </h2>
           <p className={styles.sub}>
-            {coop.location}. Tell them a little about who's joining — they'll
-            follow up to set up a first conversation.
+            {t("economy:joinCoop.sub", { location: coop.location })}
           </p>
 
           <div className={styles.field}>
-            <label htmlFor="jc-name">Your name *</label>
+            <label htmlFor="jc-name">{t("economy:joinCoop.nameLabel")}</label>
             <input
               id="jc-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="What should we call you?"
+              placeholder={t("economy:joinCoop.namePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="jc-household">Who's joining *</label>
+            <label htmlFor="jc-household">
+              {t("economy:joinCoop.householdLabel")}
+            </label>
             <select
               id="jc-household"
               value={household}
               onChange={(e) => setHousehold(e.target.value)}
             >
-              <option value="">Choose one…</option>
+              <option value="">{t("economy:joinCoop.chooseOne")}</option>
               {HOUSEHOLD_SIZES.map((h) => (
-                <option key={h} value={h}>
-                  {h}
+                <option key={h.value} value={h.value}>
+                  {t(h.labelKey)}
                 </option>
               ))}
             </select>
           </div>
           <div className={styles.field}>
-            <label htmlFor="jc-note">Anything you'd like them to know</label>
+            <label htmlFor="jc-note">{t("economy:joinCoop.noteLabel")}</label>
             <textarea
               id="jc-note"
               rows={3}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="What draws you to this co-op? Your situation, timeline, hopes…"
+              placeholder={t("economy:joinCoop.notePlaceholder")}
             />
           </div>
-          <p className={styles.note}>
-            Your request is shared only with this co-op's organisers. Joining a
-            co-op is a long conversation, not a click — take your time.
-          </p>
+          <p className={styles.note}>{t("economy:joinCoop.disclaimer")}</p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:joinCoop.cancel")}
             </button>
             <Button
               variant="primary"
@@ -103,7 +114,11 @@ export function JoinCoopModal({
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Sending…" /> : "Send request"}
+              {sending ? (
+                <Sending label={t("economy:joinCoop.sending")} />
+              ) : (
+                t("economy:joinCoop.sendCta")
+              )}
             </Button>
           </div>
         </>

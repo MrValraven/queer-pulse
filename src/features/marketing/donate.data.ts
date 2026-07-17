@@ -1,50 +1,61 @@
 import type { IconType } from "react-icons";
 import { FiBarChart2, FiSlash, FiCheckSquare } from "react-icons/fi";
 
-export const AMOUNTS = [
-  { value: "€5", note: "a coffee" },
-  { value: "€15", note: "most chosen", featured: true },
-  { value: "€40", note: "sustains a member" },
-  { value: "€100", note: "funds a gathering" },
+/**
+ * i18n Pattern A. `value` is the plain euro amount (formatted with
+ * `useFormat().currency()` at render, never baked into a string) and
+ * `noteKey` resolves the small descriptive tag through `t()`.
+ */
+export interface DonationAmount {
+  value: number;
+  noteKey: string;
+  featured?: boolean;
+}
+
+export const AMOUNTS: DonationAmount[] = [
+  { value: 5, noteKey: "marketing:donate.amounts.coffee" },
+  { value: 15, noteKey: "marketing:donate.amounts.mostChosen", featured: true },
+  { value: 40, noteKey: "marketing:donate.amounts.sustainsMember" },
+  { value: 100, noteKey: "marketing:donate.amounts.fundsGathering" },
 ];
 
 export const ALLOCATION = [
   {
     pct: "52%",
-    label: "Direct mutual aid",
-    body: "Emergency housing, crisis support, and micro-grants paid straight to members in need.",
+    labelKey: "marketing:donate.allocation.mutualAid.label",
+    bodyKey: "marketing:donate.allocation.mutualAid.body",
   },
   {
     pct: "24%",
-    label: "Gatherings & spaces",
-    body: "Venue hire, sliding-scale tickets, and the newcomer events that keep the door open.",
+    labelKey: "marketing:donate.allocation.gatherings.label",
+    bodyKey: "marketing:donate.allocation.gatherings.body",
   },
   {
     pct: "16%",
-    label: "Platform & safety",
-    body: "Moderation, the crisis chat line, and keeping the lights on — no ads, no data sold.",
+    labelKey: "marketing:donate.allocation.platform.label",
+    bodyKey: "marketing:donate.allocation.platform.body",
   },
   {
     pct: "8%",
-    label: "The magazine & studio",
-    body: "Paying queer writers, artists, and musicians fairly for the work they make here.",
+    labelKey: "marketing:donate.allocation.magazine.label",
+    bodyKey: "marketing:donate.allocation.magazine.body",
   },
 ];
 
-export const TRUST: { icon: IconType; title: string; body: string }[] = [
+export const TRUST: { icon: IconType; titleKey: string; bodyKey: string }[] = [
   {
     icon: FiBarChart2,
-    title: "Every euro is reported",
-    body: "Quarterly figures published in the open — see exactly where it went.",
+    titleKey: "marketing:donate.trust.reported.title",
+    bodyKey: "marketing:donate.trust.reported.body",
   },
   {
     icon: FiSlash,
-    title: "No ads, no data sold",
-    body: "We are funded by members, not advertisers. Your support is the whole model.",
+    titleKey: "marketing:donate.trust.noAds.title",
+    bodyKey: "marketing:donate.trust.noAds.body",
   },
   {
     icon: FiCheckSquare,
-    title: "Members decide",
-    body: "The community council votes on how the solidarity fund is spent each quarter.",
+    titleKey: "marketing:donate.trust.membersDecide.title",
+    bodyKey: "marketing:donate.trust.membersDecide.body",
   },
 ];

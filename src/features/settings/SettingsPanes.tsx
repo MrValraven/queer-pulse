@@ -14,7 +14,7 @@ import { TERMS } from "./settings.data";
 import { SIM_GROUPS, type SimFlow } from "./simulations.data";
 import { SimulationPreviewModal } from "./SimulationPreviewModal";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
-import { DESTRUCTIVE_FLOW } from "./destructiveFlows.data";
+import { buildDestructiveFlow } from "./destructiveFlows.data";
 import {
   DataCard,
   Pane,
@@ -343,6 +343,7 @@ export function DataPane({
       ),
     [t, user?.email, profile],
   );
+  const destructiveFlow = useMemo(() => buildDestructiveFlow(t), [t]);
   return (
     <Pane
       title={
@@ -478,7 +479,7 @@ export function DataPane({
       )}
       {deactivateOpen && (
         <DestructiveActionFlow
-          content={DESTRUCTIVE_FLOW.deactivate}
+          content={destructiveFlow.deactivate}
           onClose={() => setDeactivateOpen(false)}
         />
       )}

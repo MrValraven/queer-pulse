@@ -44,7 +44,7 @@ export const community: Catalog = {
     "You will. Everyone does. <em>The repair is what matters.</em> A small script and a slow apology, written by people who've done both badly and well.",
   "caregivers.lesson.wrongThing.readTime": "5 min read",
   "caregivers.lesson.wrongThing.langs": "PT + EN",
-  "caregivers.lesson.pronouns.title": "Pronouns &amp; <em>names</em>, simply",
+  "caregivers.lesson.pronouns.title": "Pronouns & <em>names</em>, simply",
   "caregivers.lesson.pronouns.body":
     "What to do, what not to do, what to do when you slip. <em>Not a politics piece — a practice one.</em> Written by Yara R.",
   "caregivers.lesson.pronouns.readTime": "3 min read",
@@ -93,7 +93,7 @@ export const community: Catalog = {
   "caregivers.room.partnersOfTrans.sub":
     "Bi-weekly Thursday 20:00 · facilitated · EN",
   "caregivers.room.partnersOfTrans.meta": "12 partners in the room",
-  "caregivers.room.siblings.title": "Siblings &amp; <em>chosen siblings</em>",
+  "caregivers.room.siblings.title": "Siblings & <em>chosen siblings</em>",
   "caregivers.room.siblings.sub": "Monthly Sunday 18:00 · informal · PT + EN",
   "caregivers.room.siblings.meta": "22 siblings · last month",
   "caregivers.room.youthWorkers.title": "Working with <em>young people</em>",
@@ -456,9 +456,9 @@ export const community: Catalog = {
     "If your partner already has a child, you can adopt as a second parent. This is often faster than joint adoption of an unrelated child. Legal parenthood is also now possible at birth without adoption (see Legal Parenthood tab).",
   "family.tab.adoption.noteLabel": "From the community:",
   "family.tab.adoption.reviewHead":
-    "Community-reviewed <em>social workers &amp; agencies</em>",
+    "Community-reviewed <em>social workers & agencies</em>",
 
-  "family.tab.ivf.headTitle": "IVF &amp; <em>Assisted Reproduction</em>",
+  "family.tab.ivf.headTitle": "IVF & <em>Assisted Reproduction</em>",
   "family.tab.ivf.headText":
     "Portugal has some of the most progressive assisted reproduction laws in Europe. Since 2016, IVF and IUI are available to all women — including single women and female same-sex couples — through both the public SNS and private clinics.",
   "family.tab.ivf.card.public.eyebrow": "Public (SNS)",
@@ -583,6 +583,7 @@ export const community: Catalog = {
     "Consider a will and guardianship document",
   "family.tab.legal.step.willGuardianship.text":
     "Even with full legal parenthood, it's worth having a will specifying guardianship in case of death. A family lawyer can draft this in a few hours.",
+  "family.review.starsAriaLabel": "{stars} out of 5",
 
   "family.talk.heading": "Talk to someone who's <em>been there.</em>",
   "family.talk.body":

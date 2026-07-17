@@ -2,6 +2,8 @@ import { FiCopy, FiExternalLink, FiRss } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PLATFORMS, RSS_URL } from "./podcastShow.data";
 import styles from "./AudioPlayerModals.module.css";
 
@@ -10,12 +12,13 @@ import styles from "./AudioPlayerModals.module.css";
  * styled in-app destination; the RSS link is real and copyable to the clipboard.
  */
 export function PodcastListenModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   useScrollLock();
 
   const copyRss = () => {
     if (navigator.clipboard) navigator.clipboard.writeText(RSS_URL);
-    showToast("RSS link copied", "success");
+    showToast(t("magazine:podcast.modal.rssCopiedToast"), "success");
   };
 
   return (
@@ -30,18 +33,22 @@ export function PodcastListenModal({ onClose }: { onClose: () => void }) {
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("magazine:podcast.modal.closeAria")}
         >
           ×
         </button>
 
-        <div className={styles.eye}>Subscribe</div>
+        <div className={styles.eye}>
+          {t("magazine:podcast.hero.subscribeCta")}
+        </div>
         <h3 className={styles.title}>
-          Listen to <em>The Back Room</em>
+          <Translation
+            i18nKey="magazine:podcast.modal.listenToTitle"
+            values={{ show: "The Back Room" }}
+            components={{ em: <em /> }}
+          />
         </h3>
-        <p className={styles.sub}>
-          Open the show in your podcast app, or grab the raw feed.
-        </p>
+        <p className={styles.sub}>{t("magazine:podcast.modal.sub")}</p>
 
         <div className={styles.list}>
           {PLATFORMS.map((p) => (
@@ -55,7 +62,7 @@ export function PodcastListenModal({ onClose }: { onClose: () => void }) {
               <span className={styles.swatch} style={{ background: p.color }} />
               <span className={styles.rowMain}>
                 <span className={styles.rowName}>{p.name}</span>
-                <span className={styles.rowKind}>{p.kind}</span>
+                <span className={styles.rowKind}>{t(p.kindKey)}</span>
               </span>
               <span className={styles.platformLinks}>
                 <FiExternalLink />
@@ -69,7 +76,7 @@ export function PodcastListenModal({ onClose }: { onClose: () => void }) {
           <span className={styles.rssUrl}>{RSS_URL}</span>
           <Button variant="ghost-dark" onClick={copyRss}>
             <FiCopy style={{ verticalAlign: "-2px", marginRight: 6 }} />
-            Copy
+            {t("magazine:podcast.modal.copyCta")}
           </Button>
         </div>
       </div>

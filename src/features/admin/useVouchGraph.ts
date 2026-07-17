@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   EDGES,
   PEOPLE,
@@ -24,6 +25,7 @@ const REPLAY_STEP_MS = 130;
  * the re-centre breadcrumb trail. Derives the visible node/edge sets.
  */
 export function useVouchGraph(initialFocus: string) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   const [focus, setFocus] = useState(initialFocus);
@@ -91,7 +93,7 @@ export function useVouchGraph(initialFocus: string) {
   const recenter = useCallback(
     (id: string) => {
       if (personById[id]?.private) {
-        showToast("This member keeps their network private", "info");
+        showToast(t("admin:vouchGraph.modal.privateToast"), "info");
         return;
       }
       setCrumbs((c) => [...c, focus]);
@@ -99,7 +101,7 @@ export function useVouchGraph(initialFocus: string) {
       setExpanded(new Set());
       setSel(id);
     },
-    [focus, showToast],
+    [focus, showToast, t],
   );
 
   const gotoCrumb = useCallback((index: number) => {

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   commissions,
@@ -14,6 +16,7 @@ import styles from "./CinemaOpenCalls.module.css";
 
 function CommissionCard({ call }: { call: Commission }) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   return (
     <article className={styles.card}>
       <div className={styles.cardMain}>
@@ -53,20 +56,22 @@ function CommissionCard({ call }: { call: Commission }) {
           </div>
         </div>
         <div className={styles.deadline}>
-          <div className={styles.dlLabel}>Deadline</div>
+          <div className={styles.dlLabel}>
+            {t("cinema:openCalls.card.deadlineLabel")}
+          </div>
           <div className={styles.dlDate}>{call.deadline}</div>
           <div className={styles.dlRemain}>{call.remaining}</div>
         </div>
         <div className={styles.applied}>{call.applied}</div>
         <div className={styles.sideActions}>
-          <Button to={routes.cinemaSubmit}>Apply now</Button>
+          <Button to={routes.cinemaSubmit}>
+            {t("cinema:openCalls.card.applyNowCta")}
+          </Button>
           <Button
             variant="ghost"
-            onClick={() =>
-              showToast("Brief PDF is downloading — check your files.")
-            }
+            onClick={() => showToast(t("cinema:openCalls.card.downloadToast"))}
           >
-            Download brief PDF
+            {t("cinema:openCalls.card.downloadBriefCta")}
           </Button>
         </div>
       </div>
@@ -76,6 +81,7 @@ function CommissionCard({ call }: { call: Commission }) {
 
 function SmallCallCard({ call }: { call: SmallCall }) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   return (
     <article className={styles.sc}>
       <div className={styles.scKicker}>{call.kicker}</div>
@@ -94,10 +100,18 @@ function SmallCallCard({ call }: { call: SmallCall }) {
         ))}
       </div>
       <div className={styles.scActions}>
-        <Button to={routes.cinemaSubmit}>Apply</Button>
+        <Button to={routes.cinemaSubmit}>
+          {t("cinema:openCalls.card.applyCta")}
+        </Button>
         <Button
           variant="ghost"
-          onClick={() => showToast(`${call.secondaryLabel} — coming soon.`)}
+          onClick={() =>
+            showToast(
+              t("cinema:openCalls.card.comingSoonToast", {
+                label: call.secondaryLabel,
+              }),
+            )
+          }
         >
           {call.secondaryLabel}
         </Button>
@@ -131,15 +145,23 @@ function PastFilmCard({ film }: { film: PastFilm }) {
 }
 
 export function CinemaOpenCallsBody() {
+  const { t } = useTranslation();
   return (
     <section className={styles.body}>
       <div className="wrap">
         <div className={styles.section}>
           <div className={styles.secHead}>
             <h2>
-              Commissions <em>&amp; grants</em>
+              <Translation
+                i18nKey="cinema:openCalls.body.commissionsTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <span className={styles.count}>2 open</span>
+            <span className={styles.count}>
+              {t("cinema:openCalls.body.openCount", {
+                count: commissions.length,
+              })}
+            </span>
           </div>
           {commissions.map((call) => (
             <CommissionCard key={call.id} call={call} />
@@ -149,9 +171,16 @@ export function CinemaOpenCallsBody() {
         <div className={styles.section}>
           <div className={styles.secHead}>
             <h2>
-              Residencies <em>&amp; mentorships</em>
+              <Translation
+                i18nKey="cinema:openCalls.body.residenciesTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <span className={styles.count}>2 open</span>
+            <span className={styles.count}>
+              {t("cinema:openCalls.body.openCount", {
+                count: smallCalls.length,
+              })}
+            </span>
           </div>
           <div className={styles.smallCalls}>
             {smallCalls.map((call) => (
@@ -163,10 +192,13 @@ export function CinemaOpenCallsBody() {
         <div className={styles.section}>
           <div className={styles.secHead}>
             <h2>
-              What <em>got made</em>
+              <Translation
+                i18nKey="cinema:openCalls.body.gotMadeTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <Link to={routes.cinemaBrowse} className={styles.allLink}>
-              All funded films →
+              {t("cinema:openCalls.body.allFundedCta")}
             </Link>
           </div>
           <div className={styles.pastGrid}>

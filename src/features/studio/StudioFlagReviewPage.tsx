@@ -5,6 +5,8 @@ import { StudioShell } from "./StudioShell";
 import { StudioLine } from "./StudioSkeletons";
 import { StudioFlagCard } from "./StudioFlagCard";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FLAGS, resolvedFlagImage } from "./studioFlagReview.data";
 import s from "./council.module.css";
 
@@ -34,6 +36,7 @@ function FlagCardSkeleton() {
 }
 
 export function StudioFlagReviewPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [resolved, setResolved] = useState<Record<string, string>>({});
   const loading = useSimulatedLoad();
@@ -47,35 +50,40 @@ export function StudioFlagReviewPage() {
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.pageH}>
-          <div className={`${s.eb} ${s.ebJade}`}>Council · flag review</div>
+          <div className={`${s.eb} ${s.ebJade}`}>
+            {t("studio:flagReview.header.eyebrow")}
+          </div>
           <h1>
-            When the room <em>flags</em> something.
+            <Translation
+              i18nKey="studio:flagReview.header.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>
-            Listeners can flag a release for uncleared samples, missing credits,
-            or misattribution. A curator claims each one, the named artist gets
-            to respond, and <em>every decision is logged with a reason</em>.
-            Nothing is taken down silently.
+            <Translation
+              i18nKey="studio:flagReview.header.dek"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
         <div className={s.flags}>
           {loading &&
-            Array.from({ length: 3 }).map((_, i) => (
-              <FlagCardSkeleton key={i} />
+            Array.from({ length: 3 }).map((_, skeletonIndex) => (
+              <FlagCardSkeleton key={skeletonIndex} />
             ))}
           {!loading &&
-            FLAGS.map((f, idx) => {
-              const done = resolved[f.id];
+            FLAGS.map((flag, flagIndex) => {
+              const done = resolved[flag.id];
               return (
                 <FadeIn
-                  key={f.id}
-                  delay={Math.min(idx, 8) * 60}
+                  key={flag.id}
+                  delay={Math.min(flagIndex, 8) * 60}
                   className={[s.flag, done && s.flagResolved]
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  <StudioFlagCard flag={f} done={done} onResolve={resolve} />
+                  <StudioFlagCard flag={flag} done={done} onResolve={resolve} />
                 </FadeIn>
               );
             })}
@@ -103,7 +111,9 @@ export function StudioFlagReviewPage() {
                   </h3>
                   <div className="who">João Ribeiro · resolved 6 Jun</div>
                 </div>
-                <span className={s.flagResolvedTag}>Dismissed · cleared</span>
+                <span className={s.flagResolvedTag}>
+                  {t("studio:flagReview.dismissedClearedTag")}
+                </span>
               </div>
               <div className={s.flagClaim} style={{ marginTop: 14 }}>
                 <span className="av">SM</span>

@@ -5,7 +5,8 @@ import {
   IVA_EXEMPT_NOTE,
   RETENTION_DISPENSA_NOTE,
 } from "./tax.constants";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { type LineItem, type InvoiceClient, lineTotal } from "./invoice.data";
 import styles from "./InvoiceGeneratorPage.module.css";
 
@@ -25,20 +26,10 @@ export interface InvoicePreviewProps {
   total: number;
 }
 
-const fmtDate = (iso: string) => {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime())
-    ? iso
-    : d.toLocaleDateString("pt-PT", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-};
-
 /** A branded, printable fatura-recibo rendered inside the DocPreview sheet. */
 export function InvoicePreview(props: InvoicePreviewProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const {
     issuer,
     client,
@@ -57,11 +48,21 @@ export function InvoicePreview(props: InvoicePreviewProps) {
 
   const effectiveIva = exempt53 ? 0 : ivaRate;
 
+  const fmtDate = (iso: string) => {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime())
+      ? iso
+      : fmt.date(d, { day: "2-digit", month: "2-digit", year: "numeric" });
+  };
+
   return (
     <DocPreview>
       <header className={styles.docHead}>
         <div>
-          <div className={styles.docBiz}>{issuer.name || "Your name"}</div>
+          <div className={styles.docBiz}>
+            {issuer.name || t("economy:invoiceTool.preview.yourNameFallback")}
+          </div>
           {issuer.address && (
             <div className={styles.docMeta}>{issuer.address}</div>
           )}
@@ -69,16 +70,26 @@ export function InvoicePreview(props: InvoicePreviewProps) {
           {issuer.email && <div className={styles.docMeta}>{issuer.email}</div>}
         </div>
         <div className={styles.docHeadRight}>
-          <div className={styles.docLabel}>Fatura-Recibo</div>
+          <div className={styles.docLabel}>
+            {t("economy:invoiceTool.preview.docLabel")}
+          </div>
           <div className={styles.docNo}>{invoiceNumber || "—"}</div>
-          <div className={styles.docMeta}>Issued {fmtDate(issueDate)}</div>
-          <div className={styles.docMeta}>Due {fmtDate(dueDate)}</div>
+          <div className={styles.docMeta}>
+            {t("economy:invoiceTool.preview.issued", {
+              date: fmtDate(issueDate),
+            })}
+          </div>
+          <div className={styles.docMeta}>
+            {t("economy:invoiceTool.preview.due", { date: fmtDate(dueDate) })}
+          </div>
         </div>
       </header>
 
       <section className={styles.docParties}>
         <div>
-          <div className={styles.docPartyLabel}>Billed to</div>
+          <div className={styles.docPartyLabel}>
+            {t("economy:invoiceTool.preview.billedTo")}
+          </div>
           <div className={styles.docPartyName}>{client.name || "—"}</div>
           {client.nif && <div className={styles.docMeta}>NIF {client.nif}</div>}
           {client.address && (
@@ -90,10 +101,18 @@ export function InvoicePreview(props: InvoicePreviewProps) {
       <table className={styles.docTable}>
         <thead>
           <tr>
-            <th className={styles.docTh}>Description</th>
-            <th className={`${styles.docTh} ${styles.docNumCol}`}>Qty</th>
-            <th className={`${styles.docTh} ${styles.docNumCol}`}>Unit</th>
-            <th className={`${styles.docTh} ${styles.docNumCol}`}>Total</th>
+            <th className={styles.docTh}>
+              {t("economy:invoiceTool.lines.description")}
+            </th>
+            <th className={`${styles.docTh} ${styles.docNumCol}`}>
+              {t("economy:invoiceTool.lines.qty")}
+            </th>
+            <th className={`${styles.docTh} ${styles.docNumCol}`}>
+              {t("economy:invoiceTool.lines.unit")}
+            </th>
+            <th className={`${styles.docTh} ${styles.docNumCol}`}>
+              {t("economy:invoiceTool.lines.total")}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -104,10 +123,10 @@ export function InvoicePreview(props: InvoicePreviewProps) {
                 {Number.isFinite(l.qty) ? l.qty : 0}
               </td>
               <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                {euro(l.unit || 0)}
+                {fmt.currency(l.unit || 0)}
               </td>
               <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                {euro(lineTotal(l))}
+                {fmt.currency(lineTotal(l))}
               </td>
             </tr>
           ))}
@@ -116,16 +135,18 @@ export function InvoicePreview(props: InvoicePreviewProps) {
 
       <div className={styles.docTotals}>
         <div className={styles.docTotalRow}>
-          <span>Subtotal</span>
-          <span>{euro(subtotal)}</span>
+          <span>{t("economy:invoiceTool.preview.subtotal")}</span>
+          <span>{fmt.currency(subtotal)}</span>
         </div>
         <div className={styles.docTotalRow}>
-          <span>IVA ({effectiveIva}%)</span>
-          <span>{euro(ivaAmount)}</span>
+          <span>
+            {t("economy:invoiceTool.preview.ivaLabel", { rate: effectiveIva })}
+          </span>
+          <span>{fmt.currency(ivaAmount)}</span>
         </div>
         <div className={`${styles.docTotalRow} ${styles.docGrand}`}>
-          <span>Total</span>
-          <span>{euro(total)}</span>
+          <span>{t("economy:invoiceTool.preview.total")}</span>
+          <span>{fmt.currency(total)}</span>
         </div>
       </div>
 
@@ -138,7 +159,9 @@ export function InvoicePreview(props: InvoicePreviewProps) {
 
       {notes && (
         <div className={styles.docNotes}>
-          <div className={styles.docPartyLabel}>Notes</div>
+          <div className={styles.docPartyLabel}>
+            {t("economy:invoiceTool.preview.notesTitle")}
+          </div>
           <p>{notes}</p>
         </div>
       )}

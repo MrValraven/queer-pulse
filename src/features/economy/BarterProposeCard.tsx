@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { BarterQuestionModal } from "./BarterQuestionModal";
 import styles from "./BarterDetailPage.module.css";
 
@@ -11,31 +13,37 @@ export function BarterProposeCard({
   name: string;
   firstName: string;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [asking, setAsking] = useState(false);
 
   function send() {
     if (!message.trim()) {
-      showToast("Add a line about what you’d trade.", "error");
+      showToast(t("economy:barterDetail.propose.errorEmpty"), "error");
       return;
     }
     setMessage("");
-    showToast(`Swap proposed to ${name}.`, "success");
+    showToast(t("economy:barterDetail.propose.toastSent", { name }), "success");
   }
 
   return (
     <div className={`${styles.sideCard} ${styles.proposeCard}`}>
       <div className={styles.proposeHead}>
-        <h4>Propose a swap</h4>
+        <h4>{t("economy:barterDetail.propose.title")}</h4>
         <div className={styles.lead}>
-          No money — <em>just a trade.</em>
+          <Translation
+            i18nKey="economy:barterDetail.propose.lead"
+            components={{ em: <em /> }}
+          />
         </div>
       </div>
       <div className={styles.proposeBody}>
         <textarea
           className={styles.proposeTextarea}
-          placeholder={`Tell ${firstName} what you’d offer in return, and why this swap works for you.`}
+          placeholder={t("economy:barterDetail.propose.placeholder", {
+            firstName,
+          })}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
@@ -45,19 +53,18 @@ export function BarterProposeCard({
             onClick={send}
             style={{ width: "100%", justifyContent: "center" }}
           >
-            Send proposal →
+            {t("economy:barterDetail.propose.sendCta")}
           </Button>
           <Button
             variant="ghost"
             onClick={() => setAsking(true)}
             style={{ width: "100%", justifyContent: "center" }}
           >
-            Ask a question first
+            {t("economy:barterDetail.propose.askFirst")}
           </Button>
         </div>
         <p className={styles.proposeFoot}>
-          Nothing is agreed until you both say yes. Swaps are between members —
-          QueerPulse never takes a cut.
+          {t("economy:barterDetail.propose.footNote")}
         </p>
       </div>
 

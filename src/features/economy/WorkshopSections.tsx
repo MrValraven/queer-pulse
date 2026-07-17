@@ -1,4 +1,6 @@
 import { ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Workshop } from "./workshops.data";
 import styles from "./WorkshopPage.module.css";
 
@@ -7,7 +9,10 @@ export function WorkshopAbout({ workshop }: { workshop: Workshop }) {
   return (
     <section className={styles.sec}>
       <h2>
-        What you'll <em>actually do</em>
+        <Translation
+          i18nKey="economy:workshopSections.about.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       {workshop.about.map((para, i) => (
         <p key={i}>{para}</p>
@@ -21,7 +26,11 @@ export function WorkshopSessions({ workshop }: { workshop: Workshop }) {
   return (
     <section className={styles.sec}>
       <h2>
-        The <em>{workshop.sessions.length} sessions</em>
+        <Translation
+          i18nKey="economy:workshopSections.sessions.title"
+          values={{ count: workshop.sessions.length }}
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={styles.sessTable}>
         {workshop.sessions.map((s) => (
@@ -55,7 +64,10 @@ export function WorkshopNeeds({ workshop }: { workshop: Workshop }) {
   return (
     <section className={styles.sec}>
       <h2>
-        What's <em>included</em>, what to bring
+        <Translation
+          i18nKey="economy:workshopSections.needs.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={styles.needGrid}>
         {workshop.needs.map((need) => (
@@ -78,13 +90,17 @@ export function WorkshopNeeds({ workshop }: { workshop: Workshop }) {
 
 /** Past cohort work — placeholder image strip. */
 export function WorkshopPastWork({ workshop }: { workshop: Workshop }) {
+  const { t } = useTranslation();
   if (workshop.pastWork.length === 0) return null;
   return (
     <section className={styles.sec}>
       <h2>
-        What previous folks <em>made</em>
+        <Translation
+          i18nKey="economy:workshopSections.pastWork.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p>A few pieces from the last cohort:</p>
+      <p>{t("economy:workshopSections.pastWork.intro")}</p>
       <div className={styles.pastGrid}>
         {workshop.pastWork.map((caption, i) => (
           <ImageSlot

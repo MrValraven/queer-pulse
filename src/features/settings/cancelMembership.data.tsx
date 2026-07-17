@@ -1,152 +1,144 @@
 import { type ReactNode } from "react";
 import { FiHeart, FiPause, FiArrowDown } from "react-icons/fi";
+import type { TFunction } from "../../shared/i18n/types";
+import type { Formatters } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 
 export type Step = 1 | 2 | 3 | "done" | "paused" | "downshifted" | "solidarity";
 export type Alt = "pause" | "downshift" | "solidarity";
 
-export const ALT_CONFIRM = {
-  pause: {
-    eyebrow: "Pause · Sustainer",
-    title: (
-      <>
-        Pause for <em>3 months?</em>
-      </>
-    ),
-    body: (
-      <>
-        We'll freeze your renewal for <b>3 months</b>. You keep full access the
-        whole time, and we won't charge you until you resume — you can undo it
-        any time.
-      </>
-    ),
-    confirmLabel: "Yes, pause it",
-    icon: <FiPause />,
-    tone: "jade",
-    next: "paused",
-  },
-  downshift: {
-    eyebrow: "Downshift to Member",
-    title: (
-      <>
-        Switch to <em>Member?</em>
-      </>
-    ),
-    body: (
-      <>
-        You'll move to <b>Member · €36/year</b>. You keep all community access,
-        but Sustainer-only perks (Open Studio, ILGA consult, magazine) wind down
-        at the end of your term. Upgrade back any time.
-      </>
-    ),
-    confirmLabel: "Yes, switch to Member",
-    icon: <FiArrowDown />,
-    tone: "accent",
-    next: "downshifted",
-  },
-  solidarity: {
-    eyebrow: "Solidarity rate",
-    title: (
-      <>
-        Drop to the <em>solidarity rate?</em>
-      </>
-    ),
-    body: (
-      <>
-        You'll pay <b>€12/year</b>, no questions asked — the community fund
-        covers the difference, genuinely. You keep <b>every Sustainer perk</b>{" "}
-        exactly as it is now.
-      </>
-    ),
-    confirmLabel: "Yes, drop to €12/year",
-    icon: <FiHeart />,
-    tone: "plum",
-    next: "solidarity",
-  },
-} as const;
+/** Shared mock dates/amounts for the cancellation funnel — every "renewed",
+ * "next charge" and "access ends" surface reads from these so they can't
+ * drift against each other. Real values would come from the billing API. */
+export const RENEWED_DATE = new Date(2026, 5, 6); // 6 Jun 2026
+export const NEXT_CHARGE_DATE = new Date(2027, 5, 6); // 6 Jun 2027
+export const PAUSED_RENEWAL_DATE = new Date(2027, 8, 6); // 6 Sep 2027
+export const SUSTAINER_ANNUAL = 96;
+export const MEMBER_ANNUAL = 36;
+export const SOLIDARITY_ANNUAL = 12;
 
-export const REASONS = [
-  {
-    id: "r1",
-    label: (
-      <>
-        <b>Money is tight.</b> The price isn't right for me right now.
-      </>
-    ),
-  },
-  {
-    id: "r2",
-    label: (
-      <>
-        <b>I'm not using it enough.</b> Logging in less than I'd like.
-      </>
-    ),
-  },
-  {
-    id: "r3",
-    label: (
-      <>
-        <b>I'm leaving Lisbon</b> or no longer based here.
-      </>
-    ),
-  },
-  {
-    id: "r4",
-    label: (
-      <>
-        <b>Something happened on the platform</b> that I want to flag.
-      </>
-    ),
-  },
-  {
-    id: "r5",
-    label: (
-      <>
-        <b>I don't see the value</b> in the perks I'm paying for.
-      </>
-    ),
-  },
-  {
-    id: "r6",
-    label: (
-      <>
-        <b>Other / prefer not to say.</b>
-      </>
-    ),
-  },
-];
+export function buildAltConfirm(t: TFunction, fmt: Formatters) {
+  const memberAmount = fmt.currency(MEMBER_ANNUAL);
+  const solidarityAmount = fmt.currency(SOLIDARITY_ANNUAL);
+  return {
+    pause: {
+      eyebrow: t("settings:cancelMembership.alt.pause.eyebrow"),
+      title: (
+        <Translation
+          i18nKey="settings:cancelMembership.alt.pause.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="settings:cancelMembership.alt.pause.body"
+          components={{ b: <b /> }}
+        />
+      ),
+      confirmLabel: t("settings:cancelMembership.alt.pause.confirmLabel"),
+      icon: <FiPause />,
+      tone: "jade" as const,
+      next: "paused" as const,
+    },
+    downshift: {
+      eyebrow: t("settings:cancelMembership.alt.downshift.eyebrow"),
+      title: (
+        <Translation
+          i18nKey="settings:cancelMembership.alt.downshift.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="settings:cancelMembership.alt.downshift.body"
+          values={{ amount: memberAmount }}
+          components={{ b: <b /> }}
+        />
+      ),
+      confirmLabel: t("settings:cancelMembership.alt.downshift.confirmLabel"),
+      icon: <FiArrowDown />,
+      tone: "accent" as const,
+      next: "downshifted" as const,
+    },
+    solidarity: {
+      eyebrow: t("settings:cancelMembership.alt.solidarity.eyebrow"),
+      title: (
+        <Translation
+          i18nKey="settings:cancelMembership.alt.solidarity.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="settings:cancelMembership.alt.solidarity.body"
+          values={{ amount: solidarityAmount }}
+          components={{ b: <b /> }}
+        />
+      ),
+      confirmLabel: t("settings:cancelMembership.alt.solidarity.confirmLabel", {
+        amount: solidarityAmount,
+      }),
+      icon: <FiHeart />,
+      tone: "plum" as const,
+      next: "solidarity" as const,
+    },
+  };
+}
 
-export const ENDS: { t: string; d: ReactNode }[] = [
-  {
-    t: "Sustainer-only Open Studio",
-    d: "You'll lose your standing invite to the monthly sessions.",
-  },
-  {
-    t: "Magazine subscription",
-    d: "Quarterly print magazine stops shipping after the next issue.",
-  },
-  {
-    t: "Free ILGA legal consult",
-    d: "Your unused consult for this year expires when membership ends.",
-  },
-  {
-    t: "Sustainer badge",
-    d: (
-      <>
-        The little <FiHeart /> on your profile goes away.
-      </>
+export function buildReasons() {
+  return ["r1", "r2", "r3", "r4", "r5", "r6"].map((id) => ({
+    id,
+    label: (
+      <Translation
+        i18nKey={`settings:cancelMembership.reason.${id}`}
+        components={{ b: <b /> }}
+      />
     ),
-  },
-];
+  }));
+}
 
-export const STAYS = [
-  {
-    t: "Your account & connections",
-    d: "Profile, messages, connections, communities — all stay.",
-  },
-  { t: "Gatherings & communities", d: "You can still RSVP, attend, and host." },
-  {
-    t: "Wellbeing resources",
-    d: "Crisis chat, directory, vetted therapists — open to everyone.",
-  },
-  { t: "Safe-spaces network", d: "The whole point of QueerPulse stays free." },
-];
+export function buildEnds(t: TFunction): { t: string; d: ReactNode }[] {
+  return [
+    {
+      t: t("settings:cancelMembership.ends.openStudio.title"),
+      d: t("settings:cancelMembership.ends.openStudio.desc"),
+    },
+    {
+      t: t("settings:cancelMembership.ends.magazine.title"),
+      d: t("settings:cancelMembership.ends.magazine.desc"),
+    },
+    {
+      t: t("settings:cancelMembership.ends.legalConsult.title"),
+      d: t("settings:cancelMembership.ends.legalConsult.desc"),
+    },
+    {
+      t: t("settings:cancelMembership.ends.badge.title"),
+      d: (
+        <>
+          {t("settings:cancelMembership.ends.badge.desc")} <FiHeart />
+        </>
+      ),
+    },
+  ];
+}
+
+export function buildStays(t: TFunction) {
+  return [
+    {
+      t: t("settings:cancelMembership.stays.account.title"),
+      d: t("settings:cancelMembership.stays.account.desc"),
+    },
+    {
+      t: t("settings:cancelMembership.stays.gatherings.title"),
+      d: t("settings:cancelMembership.stays.gatherings.desc"),
+    },
+    {
+      t: t("settings:cancelMembership.stays.wellbeing.title"),
+      d: t("settings:cancelMembership.stays.wellbeing.desc"),
+    },
+    {
+      t: t("settings:cancelMembership.stays.safeSpaces.title"),
+      d: t("settings:cancelMembership.stays.safeSpaces.desc"),
+    },
+  ];
+}

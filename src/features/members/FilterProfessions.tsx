@@ -17,7 +17,11 @@ function toggle(arr: string[], value: string): string[] {
 }
 
 /** The "What they do" (field) + "Profession" filter cards. Owns the free-text
- *  search that widens the profession pool to every matching profession. */
+ *  search that widens the profession pool to every matching profession.
+ *  Chips carry a stable `id` (compared/stored) alongside a `t()`-resolved
+ *  display label — see the i18n sweep note on `memberDirectoryFilter.data.ts`
+ *  for why the two were split. The free-text search matches against the
+ *  *resolved* label so it works in whichever language is active. */
 export function FilterProfessions({
   filters,
   onChange,
@@ -34,20 +38,20 @@ export function FilterProfessions({
       q
         ? DISCIPLINES.filter(
             (d) =>
-              d.label.toLowerCase().includes(q) ||
-              (PROFESSIONS_BY_FIELD[d.label] ?? []).some((p) =>
-                p.toLowerCase().includes(q),
+              t(d.labelKey).toLowerCase().includes(q) ||
+              (PROFESSIONS_BY_FIELD[d.id] ?? []).some((p) =>
+                t(p.labelKey).toLowerCase().includes(q),
               ),
           )
         : DISCIPLINES,
-    [q],
+    [q, t],
   );
   const professionPool = useMemo(
     () =>
       q
-        ? ALL_PROFESSIONS.filter((p) => p.toLowerCase().includes(q))
+        ? ALL_PROFESSIONS.filter((p) => t(p.labelKey).toLowerCase().includes(q))
         : professionsForFields(filters.disciplines),
-    [q, filters.disciplines],
+    [q, filters.disciplines, t],
   );
 
   // Toggling a profession on also selects its parent field, so the choice
@@ -81,7 +85,10 @@ export function FilterProfessions({
         />
         {disciplineOptions.length > 0 ? (
           <ChipSelect
-            options={disciplineOptions.map((o) => o.label)}
+            options={disciplineOptions.map((o) => ({
+              value: o.id,
+              label: t(o.labelKey),
+            }))}
             selected={new Set(filters.disciplines)}
             onToggle={(value) =>
               onChange({
@@ -101,7 +108,10 @@ export function FilterProfessions({
         <h4>{t("members:directory.filter.professionTitle")}</h4>
         {professionPool.length > 0 ? (
           <ChipSelect
-            options={professionPool}
+            options={professionPool.map((o) => ({
+              value: o.id,
+              label: t(o.labelKey),
+            }))}
             selected={new Set(filters.professions)}
             onToggle={toggleProfession}
           />

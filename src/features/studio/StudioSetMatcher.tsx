@@ -1,8 +1,13 @@
 import { FiCheck } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TRACKS, PASTE } from "./studioSetSubmission.data";
 import s from "./funding.module.css";
+
+const PER_PLAY_RATE = 0.05;
 
 interface StudioSetMatcherProps {
   ran: boolean;
@@ -15,6 +20,8 @@ export function StudioSetMatcher({
   running,
   onRun,
 }: StudioSetMatcherProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   return (
     <div>
@@ -37,16 +44,20 @@ export function StudioSetMatcher({
             2h 08m · 24-bit / 48kHz · 1.4 GB · loudness −9.2 LUFS <FiCheck />
           </p>
         </div>
-        <span className={s.ok}>Uploaded</span>
+        <span className={s.ok}>
+          {t("studio:setSubmission.matcher.uploadedBadge")}
+        </span>
       </div>
 
       <div className={s.secLbl}>
-        Paste your tracklist · timecode — artist — title
+        {t("studio:setSubmission.matcher.tracklistLabel")}
       </div>
       <textarea className={s.paste} defaultValue={PASTE} />
       <div className={s.pasteHint}>
-        One line per track. We accept most formats. <em>Re-run the matcher</em>{" "}
-        whenever you edit.
+        <Translation
+          i18nKey="studio:setSubmission.matcher.pasteHint"
+          components={{ em: <em /> }}
+        />
       </div>
       <button
         type="button"
@@ -55,27 +66,31 @@ export function StudioSetMatcher({
         onClick={onRun}
         disabled={running}
       >
-        {running ? "Matching…" : "▸ Run the matcher"}
+        {running
+          ? t("studio:setSubmission.matcher.matchingCta")
+          : t("studio:setSubmission.matcher.runCta")}
       </button>
 
       {ran && (
         <>
           <div className={s.secLbl} style={{ marginTop: 22 }}>
-            Matcher results ·{" "}
-            <em>resolved against the catalogue + PRO database</em>
+            <Translation
+              i18nKey="studio:setSubmission.matcher.resultsLabel"
+              components={{ em: <em /> }}
+            />
           </div>
           <div className={s.matcher}>
-            {TRACKS.map((t, i) => (
+            {TRACKS.map((track, i) => (
               <FadeIn
-                key={t.tc}
+                key={track.tc}
                 delay={Math.min(i, 8) * 60}
                 className={s.mtRow}
               >
-                <span className={s.tc}>{t.tc}</span>
+                <span className={s.tc}>{track.tc}</span>
                 <span className={s.cv}>
                   <ImageSlot
-                    src={t.image}
-                    tint={t.tint}
+                    src={track.image}
+                    tint={track.tint}
                     width={36}
                     height={36}
                     radius={6}
@@ -83,18 +98,24 @@ export function StudioSetMatcher({
                   />
                 </span>
                 <div>
-                  <h5>{t.m ? <em>{t.title}</em> : t.title}</h5>
+                  <h5>{track.m ? <em>{track.title}</em> : track.title}</h5>
                   <p>
-                    {t.m ? (
-                      <>
-                        {t.who} · <em>€0.05/play to {t.who.split(" ")[0]}</em>
-                      </>
+                    {track.m ? (
+                      <Translation
+                        i18nKey="studio:setSubmission.matcher.payLine"
+                        components={{ em: <em /> }}
+                        values={{
+                          who: track.who,
+                          amount: fmt.currency(PER_PLAY_RATE),
+                          firstName: track.who.split(" ")[0] ?? track.who,
+                        }}
+                      />
                     ) : (
-                      "no source found · payout held"
+                      t("studio:setSubmission.matcher.noSourceFound")
                     )}
                   </p>
                 </div>
-                {t.m ? (
+                {track.m ? (
                   <span className={`${s.st} ${s.stMatched}`}>
                     <svg
                       viewBox="0 0 24 24"
@@ -104,7 +125,7 @@ export function StudioSetMatcher({
                     >
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
-                    Matched
+                    {t("studio:setSubmission.matcher.matchedBadge")}
                   </span>
                 ) : (
                   <span className={s.st}>
@@ -112,12 +133,12 @@ export function StudioSetMatcher({
                       className={s.resolve}
                       onClick={() =>
                         showToast(
-                          "Search opened to identify this track",
+                          t("studio:setSubmission.matcher.identifyToast"),
                           "info",
                         )
                       }
                     >
-                      Identify
+                      {t("studio:setSubmission.matcher.identifyCta")}
                     </span>
                   </span>
                 )}

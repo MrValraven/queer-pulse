@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiInfo, FiMapPin, FiStar } from "react-icons/fi";
 import { Button, EmptyState, FilterChips } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   CLINICS,
@@ -17,6 +19,7 @@ import {
 import styles from "./SexualHealthPage.module.css";
 
 export function TestingTab() {
+  const { t } = useTranslation();
   const [clinicFilter, setClinicFilter] = useState<ClinicType | "all">("all");
   const [openClinic, setOpenClinic] = useState<string | null>(null);
   const [nomination, setNomination] = useState("");
@@ -24,16 +27,20 @@ export function TestingTab() {
   const clinics = CLINICS.filter(
     (c) => clinicFilter === "all" || c.type === clinicFilter,
   );
+  const clinicFilterOptions = useMemo(
+    () => CLINIC_FILTERS.map((f) => ({ value: f.id, label: t(f.labelKey) })),
+    [t],
+  );
 
   return (
     <>
       <h2 className={styles.h}>
-        Where to get <em>tested</em> in Lisbon.
+        <Translation
+          i18nKey="resources:sexualHealth.testing.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sub}>
-        Community-reviewed clinics and services. Last updated by members June
-        2025.
-      </p>
+      <p className={styles.sub}>{t("resources:sexualHealth.testing.lead")}</p>
       <div className={styles.infoGrid}>
         {TESTING_INFO.map((c) => (
           <div
@@ -54,7 +61,7 @@ export function TestingTab() {
 
       <FilterChips
         className={styles.clinicFilters}
-        options={CLINIC_FILTERS.map((f) => ({ value: f.id, label: f.label }))}
+        options={clinicFilterOptions}
         value={clinicFilter}
         onChange={(v) => setClinicFilter(v as ClinicType | "all")}
       />
@@ -64,10 +71,10 @@ export function TestingTab() {
           <EmptyState
             compact
             icon={<FiMapPin />}
-            title="No clinics of that type listed yet"
-            description="There are still plenty of welcoming places to get tested. Clear the filter to see every community-reviewed option."
+            title={t("resources:sexualHealth.testing.empty.title")}
+            description={t("resources:sexualHealth.testing.empty.description")}
             action={{
-              label: "Clear filters",
+              label: t("resources:sexualHealth.testing.empty.clearCta"),
               onClick: () => setClinicFilter("all"),
             }}
           />
@@ -95,7 +102,10 @@ export function TestingTab() {
               <div className={styles.ccRight}>
                 {c.verified && (
                   <div className={styles.ccBadge}>
-                    Community verified <FiCheck />
+                    {t(
+                      "resources:sexualHealth.testing.clinicCard.verifiedBadge",
+                    )}{" "}
+                    <FiCheck />
                   </div>
                 )}
                 <button
@@ -106,7 +116,13 @@ export function TestingTab() {
                   onClick={() => setOpenClinic(isOpen ? null : c.name)}
                   aria-expanded={isOpen}
                 >
-                  {isOpen ? "Hide details" : c.btn}
+                  {isOpen
+                    ? t(
+                        "resources:sexualHealth.testing.clinicCard.hideDetailsCta",
+                      )
+                    : t(
+                        "resources:sexualHealth.testing.clinicCard.viewDetailsCta",
+                      )}
                 </button>
                 {c.review && (
                   <div className={styles.ccReview}>
@@ -117,19 +133,33 @@ export function TestingTab() {
               {isOpen && (
                 <div className={styles.ccDetails}>
                   <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>What they test</div>
+                    <div className={styles.ccDetailLabel}>
+                      {t(
+                        "resources:sexualHealth.testing.clinicCard.testsLabel",
+                      )}
+                    </div>
                     <div className={styles.ccDetailVal}>{c.details.tests}</div>
                   </div>
                   <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>What to bring</div>
+                    <div className={styles.ccDetailLabel}>
+                      {t(
+                        "resources:sexualHealth.testing.clinicCard.bringLabel",
+                      )}
+                    </div>
                     <div className={styles.ccDetailVal}>{c.details.bring}</div>
                   </div>
                   <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>Access</div>
+                    <div className={styles.ccDetailLabel}>
+                      {t(
+                        "resources:sexualHealth.testing.clinicCard.accessLabel",
+                      )}
+                    </div>
                     <div className={styles.ccDetailVal}>{c.details.access}</div>
                   </div>
                   <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>Good to know</div>
+                    <div className={styles.ccDetailLabel}>
+                      {t("resources:sexualHealth.testing.clinicCard.noteLabel")}
+                    </div>
                     <div className={styles.ccDetailVal}>{c.details.note}</div>
                   </div>
                 </div>
@@ -146,30 +176,30 @@ export function TestingTab() {
               <FiCheck />
             </span>
             <div className={styles.anonDoneTitle}>
-              Thank you — <em>noted.</em>
+              <Translation
+                i18nKey="resources:sexualHealth.testing.nominate.doneTitle"
+                components={{ em: <em /> }}
+              />
             </div>
             <p className={styles.anonDoneBody}>
-              We'll check it out and review it with the community before it goes
-              live. The board stays trustworthy because members like you keep it
-              current.
+              {t("resources:sexualHealth.testing.nominate.doneBody")}
             </p>
             <Button variant="ghost-dark" onClick={() => setNominated(false)}>
-              Nominate another
+              {t("resources:sexualHealth.testing.nominate.anotherCta")}
             </Button>
           </div>
         ) : (
           <>
-            <h3>Know a service we should add?</h3>
-            <p>
-              Nominate a clinic or service for community review. We verify every
-              listing before it goes live.
-            </p>
+            <h3>{t("resources:sexualHealth.testing.nominate.title")}</h3>
+            <p>{t("resources:sexualHealth.testing.nominate.body")}</p>
             <textarea
               className={styles.anonInput}
               style={{ minHeight: 52 }}
               value={nomination}
               onChange={(e) => setNomination(e.target.value)}
-              placeholder="Clinic name, location, and why you'd recommend it…"
+              placeholder={t(
+                "resources:sexualHealth.testing.nominate.placeholder",
+              )}
             />
             <div style={{ marginTop: 12 }}>
               <Button
@@ -180,7 +210,7 @@ export function TestingTab() {
                   setNominated(true);
                 }}
               >
-                Submit nomination
+                {t("resources:sexualHealth.testing.nominate.submitCta")}
               </Button>
             </div>
           </>
@@ -195,7 +225,10 @@ export function PrepTab() {
   return (
     <>
       <h2 className={styles.h}>
-        PrEP in <em>Portugal.</em>
+        <Translation
+          i18nKey="resources:sexualHealth.prep.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sub}>
         PrEP (pre-exposure prophylaxis) is available free through the SNS for
@@ -228,7 +261,10 @@ export function PrepTab() {
         ))}
       </div>
       <h3 className={styles.subHead}>
-        Common <em>questions.</em>
+        <Translation
+          i18nKey="resources:sexualHealth.prep.faqTitle"
+          components={{ em: <em /> }}
+        />
       </h3>
       <div className={styles.faq}>
         {PREP_FAQ.map((f, i) => (
@@ -255,10 +291,14 @@ export function PrepTab() {
 }
 
 export function HivTab() {
+  const { t } = useTranslation();
   return (
     <>
       <h2 className={styles.h}>
-        HIV — what you need to <em>know.</em>
+        <Translation
+          i18nKey="resources:sexualHealth.hiv.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sub}>
         Honest, current information. HIV is a manageable condition. With
@@ -301,7 +341,7 @@ export function HivTab() {
         </div>
         <div className={styles.hivBtns}>
           <Button to={routes.communities} variant="primary">
-            Find HIV support services
+            {t("resources:sexualHealth.hiv.findServicesCta")}
           </Button>
         </div>
       </div>
@@ -331,17 +371,18 @@ export function HivTab() {
 }
 
 export function GuidesTab() {
+  const { t } = useTranslation();
   const [question, setQuestion] = useState("");
   const [asked, setAsked] = useState(false);
   return (
     <>
       <h2 className={styles.h}>
-        Guides &amp; <em>questions.</em>
+        <Translation
+          i18nKey="resources:sexualHealth.guides.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sub}>
-        Short guides and a place to ask anything anonymously. Answered by
-        community members with relevant experience — not bots.
-      </p>
+      <p className={styles.sub}>{t("resources:sexualHealth.guides.lead")}</p>
       <div className={styles.infoGrid}>
         {GUIDES.map((g) => (
           <div className={styles.infoCard} key={g.title}>
@@ -368,33 +409,31 @@ export function GuidesTab() {
               <FiCheck />
             </span>
             <div className={styles.anonDoneTitle}>
-              Your question is <em>in.</em>
+              <Translation
+                i18nKey="resources:sexualHealth.guides.ask.doneTitle"
+                components={{ em: <em /> }}
+              />
             </div>
             <p className={styles.anonDoneBody}>
-              A member with relevant experience will answer it — no name, no
-              account, nothing linked back to you. Check back here in a day or
-              two.
+              {t("resources:sexualHealth.guides.ask.doneBody")}
             </p>
             <Button variant="ghost-dark" onClick={() => setAsked(false)}>
-              Ask another
+              {t("resources:sexualHealth.guides.ask.anotherCta")}
             </Button>
           </div>
         ) : (
           <>
-            <h3>Ask anything — anonymously.</h3>
-            <p>
-              Submit a question to the community. Answered by members with
-              relevant knowledge. Nothing is shared or linked to your account.
-            </p>
+            <h3>{t("resources:sexualHealth.guides.ask.title")}</h3>
+            <p>{t("resources:sexualHealth.guides.ask.body")}</p>
             <textarea
               className={styles.anonInput}
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Your question — no detail is too small or too embarrassing…"
+              placeholder={t("resources:sexualHealth.guides.ask.placeholder")}
             />
             <div className={styles.anonFoot}>
               <span className={styles.anonNote}>
-                Completely anonymous. No account required.
+                {t("resources:sexualHealth.guides.ask.anonymousNote")}
               </span>
               <Button
                 variant="primary"
@@ -404,7 +443,7 @@ export function GuidesTab() {
                   setAsked(true);
                 }}
               >
-                Submit question
+                {t("resources:sexualHealth.guides.ask.submitCta")}
               </Button>
             </div>
           </>

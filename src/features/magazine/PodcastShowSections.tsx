@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiPlay } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PodcastListenModal } from "./PodcastShowModals";
 import {
   EPISODES,
@@ -25,12 +27,17 @@ const PlayIcon = () => (
 const OLDER_BATCH = 4;
 
 export function PodcastHero() {
+  const { t } = useTranslation();
   return (
     <div className={styles.hero}>
       <div className={styles.heroInner}>
+        {/* Content: show name/cover, hosts and cadence are the show's own
+            editorial fields — kept in English. */}
         <div className={styles.cover}>The Back Room · cover art</div>
         <div>
-          <div className={styles.eyebrow}>QueerPulse Audio · podcast</div>
+          <div className={styles.eyebrow}>
+            {t("magazine:podcast.hero.eyebrow")}
+          </div>
           <h1 className={styles.h1}>
             The Back <em>Room.</em>
           </h1>
@@ -54,10 +61,10 @@ export function PodcastHero() {
           <div className={styles.actions}>
             <Button to={EPISODE_PATH} variant="primary">
               <FiPlay style={{ verticalAlign: "-2px", marginRight: 8 }} />
-              Play latest
+              {t("magazine:podcast.hero.playLatestCta")}
             </Button>
             <Button to={NEWSLETTER_PATH} variant="ghost-dark">
-              Subscribe
+              {t("magazine:podcast.hero.subscribeCta")}
             </Button>
           </div>
         </div>
@@ -67,11 +74,14 @@ export function PodcastHero() {
 }
 
 export function PodcastListenRow() {
+  const { t } = useTranslation();
   const [listenOpen, setListenOpen] = useState(false);
   return (
     <div className={styles.listenRow}>
       <div className={styles.listenInner}>
-        <span className={styles.listenLabel}>Listen on</span>
+        <span className={styles.listenLabel}>
+          {t("magazine:podcast.listenOnLabel")}
+        </span>
         {PLATFORMS.map((p) => (
           <button
             key={p.name}
@@ -92,6 +102,7 @@ export function PodcastListenRow() {
 }
 
 function EpisodeRow({ e }: { e: Episode }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.epRow}>
       <div className={styles.epNum}>
@@ -106,7 +117,11 @@ function EpisodeRow({ e }: { e: Episode }) {
         <div className={styles.emMeta}>{e.meta}</div>
       </div>
       <div className={styles.epActions}>
-        <Link to={EPISODE_PATH} className={styles.play} title="Play episode">
+        <Link
+          to={EPISODE_PATH}
+          className={styles.play}
+          title={t("magazine:podcast.playEpisodeAria")}
+        >
           <PlayIcon />
         </Link>
         <span className={styles.epDuration}>{e.duration}</span>
@@ -116,6 +131,7 @@ function EpisodeRow({ e }: { e: Episode }) {
 }
 
 export function PodcastEpisodes() {
+  const { t } = useTranslation();
   const [shown, setShown] = useState(0);
   const remaining = OLDER_EPISODES.length - shown;
   const visibleOlder = OLDER_EPISODES.slice(0, shown);
@@ -124,9 +140,13 @@ export function PodcastEpisodes() {
     <main>
       <div className={styles.epH}>
         <h2>
-          About the <em>show</em>
+          <Translation
+            i18nKey="magazine:podcast.aboutShowHeading"
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
+      {/* Content: the show's own about-copy — kept in English. */}
       <p className={styles.aboutP}>
         Slow conversations between queer people doing the work of building
         community in Lisbon. Activists, clinicians, organisers, artists — one
@@ -139,12 +159,11 @@ export function PodcastEpisodes() {
       </p>
 
       <div className={styles.epH}>
-        <h2>
-          Episodes · <em>34</em>
-        </h2>
-        <span className={styles.meta}>Newest first</span>
+        <h2>{t("magazine:podcast.episodesHeading", { count: 34 })}</h2>
+        <span className={styles.meta}>{t("magazine:podcast.newestFirst")}</span>
       </div>
 
+      {/* Content: the featured episode's own kicker/title/description. */}
       <div className={styles.epFeat}>
         <div className={styles.epFeatKicker}>Latest · 5 days ago · 52 min</div>
         <h3>
@@ -160,12 +179,12 @@ export function PodcastEpisodes() {
           <Link
             to={EPISODE_PATH}
             className={`${styles.play} ${styles.playLg}`}
-            title="Play episode 34"
+            title={t("magazine:podcast.playEpisodeNumberAria", { number: 34 })}
           >
             <PlayIcon />
           </Link>
           <Link to={EPISODE_PATH} className={styles.epFeatNotes}>
-            View episode notes →
+            {t("magazine:podcast.viewEpisodeNotesCta")}
           </Link>
         </div>
       </div>
@@ -188,7 +207,9 @@ export function PodcastEpisodes() {
                 )
               }
             >
-              Show {Math.min(OLDER_BATCH, remaining)} older episodes
+              {t("magazine:podcast.showOlderEpisodes", {
+                count: Math.min(OLDER_BATCH, remaining),
+              })}
             </Button>
           </div>
         )}
@@ -198,10 +219,12 @@ export function PodcastEpisodes() {
 }
 
 export function PodcastSidebar() {
+  const { t } = useTranslation();
   return (
     <aside className={styles.side}>
       <div className={styles.sideCard}>
-        <h4>Hosts</h4>
+        <h4>{t("magazine:podcast.sidebar.hostsHeading")}</h4>
+        {/* Content: host names/pronouns/roles are the show's own credits. */}
         <div className={styles.hostRow}>
           <div className={styles.hostAv}>CV</div>
           <div>
@@ -231,31 +254,30 @@ export function PodcastSidebar() {
       </div>
 
       <div className={styles.sideCard}>
-        <h4>About the show</h4>
-        {SHOW_INFO.map(([k, v]) => (
-          <div className={styles.infoRow} key={k}>
-            <span>{k}</span>
-            <b>{v}</b>
+        <h4>{t("magazine:podcast.sidebar.aboutShowHeading")}</h4>
+        {/* labelKey is chrome (translated); value describes this specific
+            show and is content — left in English. */}
+        {SHOW_INFO.map((row) => (
+          <div className={styles.infoRow} key={row.labelKey}>
+            <span>{t(row.labelKey)}</span>
+            <b>{row.value}</b>
           </div>
         ))}
         <div className={styles.infoRow}>
-          <span>Sponsored</span>
+          <span>{t("magazine:podcast.sidebar.sponsoredLabel")}</span>
           <b style={{ color: "var(--jade)" }}>No · ever</b>
         </div>
       </div>
 
       <div className={`${styles.sideCard} ${styles.guestCard}`}>
-        <h4>Want to be a guest?</h4>
-        <p>
-          We get this often. We don't typically take pitches, but if you're
-          doing something genuinely worth an hour, tell us.
-        </p>
+        <h4>{t("magazine:podcast.sidebar.guestHeading")}</h4>
+        <p>{t("magazine:podcast.sidebar.guestBody")}</p>
         <Button
           to={CONTACT_PATH}
           variant="ghost-dark"
           className={styles.guestBtn}
         >
-          Write to the team
+          {t("magazine:podcast.sidebar.writeToTeamCta")}
         </Button>
       </div>
     </aside>

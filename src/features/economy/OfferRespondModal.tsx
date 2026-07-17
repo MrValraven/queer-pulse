@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import {
   type Application,
@@ -20,6 +22,7 @@ export function OfferRespondModal({
   onClose: () => void;
   onPatch: (id: string, patch: Partial<Application>) => void;
 }) {
+  const { t } = useTranslation();
   const UNDO_SECONDS = 8;
   const o = app.offer;
   const [outcome, setOutcome] = useState<null | "accept" | "decline">(null);
@@ -68,33 +71,43 @@ export function OfferRespondModal({
     return (
       <ModalShell onClose={onClose} success>
         <SuccessPanel
-          title="Offer"
-          em={accepted ? "accepted." : "declined."}
+          title={t("economy:offer.success.title")}
+          em={
+            accepted
+              ? t("economy:offer.success.emAccepted")
+              : t("economy:offer.success.emDeclined")
+          }
           onClose={onClose}
           footer={
             <div className={styles.undoBar}>
               {canUndo ? (
                 <>
                   <span className={styles.undoText}>
-                    Changed your mind? You can undo for {left}s.
+                    {t("economy:offer.undo.changedMind", { seconds: left })}
                   </span>
                   <button
                     type="button"
                     className={styles.undoBtn}
                     onClick={undo}
                   >
-                    Undo
+                    {t("economy:offer.undo.button")}
                   </button>
                 </>
               ) : (
-                <span className={styles.undoText}>This is now confirmed.</span>
+                <span className={styles.undoText}>
+                  {t("economy:offer.undo.confirmed")}
+                </span>
               )}
             </div>
           }
         >
           {accepted
-            ? `Congratulations — ${app.companyName} will send your contract within two working days.`
-            : `We've thanked ${app.companyName} warmly on your behalf. The door stays open for the future.`}
+            ? t("economy:offer.success.acceptedBody", {
+                company: app.companyName,
+              })
+            : t("economy:offer.success.declinedBody", {
+                company: app.companyName,
+              })}
         </SuccessPanel>
       </ModalShell>
     );
@@ -103,34 +116,36 @@ export function OfferRespondModal({
   return (
     <ModalShell onClose={onClose}>
       <div className={styles.eyebrow}>
-        Your offer · respond by {o?.respondBy}
+        {t("economy:offer.respondByEyebrow", { date: o?.respondBy })}
       </div>
       <h2 className={styles.title}>
-        {app.companyName} <em>said yes.</em>
+        <Translation
+          i18nKey="economy:offer.saidYes"
+          values={{ company: app.companyName }}
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sub}>
-        Here's everything on the table. Take your time — then choose.
-      </p>
+      <p className={styles.sub}>{t("economy:offer.sub")}</p>
       <div className={styles.panel}>
         <div className={styles.rows}>
           <div className={styles.row}>
-            <span className={styles.rowK}>Salary</span>
+            <span className={styles.rowK}>{t("economy:offer.salary")}</span>
             <span className={styles.rowV}>{o?.salary}</span>
           </div>
           <div className={styles.row}>
-            <span className={styles.rowK}>Holiday</span>
+            <span className={styles.rowK}>{t("economy:offer.holiday")}</span>
             <span className={styles.rowV}>{o?.holiday}</span>
           </div>
           <div className={styles.row}>
-            <span className={styles.rowK}>Start</span>
+            <span className={styles.rowK}>{t("economy:offer.start")}</span>
             <span className={styles.rowV}>{o?.start}</span>
           </div>
         </div>
       </div>
       <ul className={styles.list} style={{ marginBottom: 24 }}>
-        {o?.terms.map((t) => (
-          <li key={t} className={styles.listItem}>
-            <FiCheck className={styles.tick} size={16} aria-hidden /> {t}
+        {o?.terms.map((term) => (
+          <li key={term} className={styles.listItem}>
+            <FiCheck className={styles.tick} size={16} aria-hidden /> {term}
           </li>
         ))}
       </ul>
@@ -142,9 +157,9 @@ export function OfferRespondModal({
           onClick={() => choose("decline")}
         >
           {pending === "decline" ? (
-            <Sending label="Declining…" />
+            <Sending label={t("economy:offer.decliningLabel")} />
           ) : (
-            "Decline politely"
+            t("economy:offer.declinePolitely")
           )}
         </button>
         <Button
@@ -154,9 +169,9 @@ export function OfferRespondModal({
           onClick={() => choose("accept")}
         >
           {pending === "accept" ? (
-            <Sending label="Accepting…" />
+            <Sending label={t("economy:offer.acceptingLabel")} />
           ) : (
-            "Accept offer →"
+            t("economy:offer.acceptCta")
           )}
         </Button>
       </div>

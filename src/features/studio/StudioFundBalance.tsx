@@ -1,6 +1,15 @@
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./funding.module.css";
 
+const FUND_BALANCE = 24180;
+const FUND_PAID_THIS_QUARTER = 6240;
+const FUND_PEOPLE_PAID_THIS_YEAR = 148;
+
 export function StudioFundBalance() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <div className={s.bal}>
       <div className={s.balMain}>
@@ -14,7 +23,7 @@ export function StudioFundBalance() {
             color: "rgba(247,243,238,.4)",
           }}
         >
-          Fund balance · today
+          {t("studio:fund.balance.label")}
         </div>
         <div
           className="v"
@@ -28,9 +37,8 @@ export function StudioFundBalance() {
             margin: "8px 0",
           }}
         >
-          €
           <em style={{ fontStyle: "normal", color: "var(--jade-light)" }}>
-            24,180
+            {fmt.currency(FUND_BALANCE)}
           </em>
         </div>
         <div
@@ -42,6 +50,9 @@ export function StudioFundBalance() {
             maxWidth: "52ch",
           }}
         >
+          {/* Not swept — describes the fund's runway/quarterly-rollover rule,
+              a governance commitment (§6 of the i18n sweep brief). Renders in
+              English via the fallback chain. Flagged in the sweep report. */}
           Healthy: roughly four months of current disbursement. Anything above
           six months' runway rolls into the next quarterly grant round by
           council vote.
@@ -58,16 +69,15 @@ export function StudioFundBalance() {
               color: "var(--cream)",
             }}
           >
-            €
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
-              6,240
+              {fmt.currency(FUND_PAID_THIS_QUARTER)}
             </em>
           </div>
           <div
             className="l"
             style={{ fontSize: 11.5, color: "rgba(247,243,238,.4)" }}
           >
-            paid out this quarter
+            {t("studio:fund.balance.paidThisQuarterLabel")}
           </div>
         </div>
         <div className={s.mini}>
@@ -80,13 +90,17 @@ export function StudioFundBalance() {
               color: "var(--cream)",
             }}
           >
-            <em style={{ fontStyle: "normal", color: "var(--accent)" }}>148</em>
+            <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
+              {fmt.number(FUND_PEOPLE_PAID_THIS_YEAR)}
+            </em>
           </div>
           <div
             className="l"
             style={{ fontSize: 11.5, color: "rgba(247,243,238,.4)" }}
           >
-            people paid from it this year
+            {t("studio:fund.balance.peoplePaidLabel", {
+              count: FUND_PEOPLE_PAID_THIS_YEAR,
+            })}
           </div>
         </div>
       </div>

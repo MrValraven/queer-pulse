@@ -1,10 +1,14 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { FiBell } from "react-icons/fi";
 import { Button, EmptyState } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 import {
-  NEWSLETTERS,
+  buildNewsletters,
+  buildPronounVisibility,
   PRONOUN_OPTIONS,
-  PRONOUN_VISIBILITY,
   type JobAlert,
 } from "./subscriptions.data";
 import { type AlertDraft } from "./AlertBuilderModal";
@@ -24,10 +28,17 @@ export function NewsletterSection({
   nlOn: Record<string, boolean>;
   setNlOn: Dispatch<SetStateAction<Record<string, boolean>>>;
 }) {
+  const { t } = useTranslation();
+  const newsletters = useMemo(() => buildNewsletters(t), [t]);
+
   return (
     <>
-      <div className={styles.sectionH}>Newsletter streams · 3 available</div>
-      {NEWSLETTERS.map((nl) => (
+      <div className={styles.sectionH}>
+        {t("settings:subscriptions.newsletter.sectionHeading", {
+          count: newsletters.length,
+        })}
+      </div>
+      {newsletters.map((nl) => (
         <div
           key={nl.id}
           className={`${styles.nlCard} ${nlOn[nl.id] ? styles.nlCardSub : ""}`}
@@ -64,19 +75,27 @@ export function JobAlertsSection({
   onCreate,
 }: {
   visibleAlerts: JobAlert[];
-  onEdit: (a: JobAlert) => void;
+  onEdit: (alert: JobAlert) => void;
   onRemove: (id: string) => void;
   onCreate: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   return (
     <>
-      <div className={styles.sectionH}>Saved searches &amp; job alerts</div>
+      <div className={styles.sectionH}>
+        {t("settings:subscriptions.jobAlerts.sectionHeading")}
+      </div>
       {visibleAlerts.length === 0 && (
         <EmptyState
           icon={<FiBell />}
-          title="No alerts yet"
-          description="Save a search and we'll quietly let you know when something matching it comes up — no inbox noise, only what you asked for."
-          action={{ label: "Set one up", onClick: onCreate }}
+          title={t("settings:subscriptions.jobAlerts.empty.title")}
+          description={t("settings:subscriptions.jobAlerts.empty.desc")}
+          action={{
+            label: t("settings:subscriptions.jobAlerts.empty.cta"),
+            onClick: onCreate,
+          }}
         />
       )}
       {visibleAlerts.map((alert) => (
@@ -93,40 +112,58 @@ export function JobAlertsSection({
                 className={styles.alertAction}
                 onClick={() => onEdit(alert)}
               >
-                Edit
+                {t("settings:subscriptions.jobAlerts.edit")}
               </Button>
               <Button
                 variant="ghost"
                 className={`${styles.alertAction} ${styles.alertActionDanger}`}
                 onClick={() => onRemove(alert.id)}
               >
-                Delete
+                {t("settings:subscriptions.jobAlerts.delete")}
               </Button>
             </div>
           </div>
           <div className={styles.alertCriteria}>
-            {alert.criteria.map((c, i) => (
-              <span key={i} className={styles.critChip}>
-                {c.label}
+            {alert.criteria.map((criterion, index) => (
+              <span key={index} className={styles.critChip}>
+                {criterion.label}
               </span>
             ))}
           </div>
           <div className={styles.alertRow}>
-            <span>Status</span>
-            <span className={styles.live}>{alert.status}</span>
+            <span>{t("settings:subscriptions.jobAlerts.statusLabel")}</span>
+            <span className={styles.live}>
+              {t("settings:subscriptions.jobAlerts.statusLive", {
+                frequency: t(
+                  `settings:subscriptions.alertBuilder.frequency.${alert.frequencyId}`,
+                ),
+              })}
+            </span>
           </div>
           <div className={styles.alertRow}>
-            <span>Matches in last week</span>
-            <b>{alert.matches}</b>
+            <span>{t("settings:subscriptions.jobAlerts.matchesLabel")}</span>
+            <b>
+              {alert.matches === null
+                ? t("settings:subscriptions.jobAlerts.matchesNew_other", {
+                    count: 0,
+                  })
+                : t("settings:subscriptions.jobAlerts.matchesNew", {
+                    count: alert.matches,
+                  })}
+            </b>
           </div>
           <div className={styles.alertRow}>
-            <span>Last sent</span>
-            <b>{alert.lastSent}</b>
+            <span>{t("settings:subscriptions.jobAlerts.lastSentLabel")}</span>
+            <b>
+              {alert.lastSent
+                ? `${fmt.date(alert.lastSent, { weekday: "short", day: "numeric", month: "short" })} · ${fmt.time(alert.lastSent)}`
+                : t("settings:subscriptions.jobAlerts.lastSentNotSentYet")}
+            </b>
           </div>
         </div>
       ))}
       <Button variant="ghost" className={styles.addCard} onClick={onCreate}>
-        + Create a new alert
+        {t("settings:subscriptions.jobAlerts.createCta")}
       </Button>
     </>
   );
@@ -139,23 +176,25 @@ export function PronounSection({
   setPronVis,
 }: {
   selectedPronouns: Set<string>;
-  togglePronoun: (p: string) => void;
+  togglePronoun: (pronoun: string) => void;
   pronVis: Record<string, boolean>;
   setPronVis: Dispatch<SetStateAction<Record<string, boolean>>>;
 }) {
+  const { t } = useTranslation();
+  const pronounVisibility = useMemo(() => buildPronounVisibility(t), [t]);
+
   return (
     <>
       <div className={styles.sectionH}>
-        Pronouns · how you appear across QueerPulse
+        {t("settings:subscriptions.pronouns.sectionHeading")}
       </div>
       <div className={styles.pronCard}>
         <div className={styles.pronCurrent}>
-          Currently using{" "}
-          <b>
-            he<em>/</em>him
-          </b>{" "}
-          on your profile · shown next to your name in all member-facing
-          surfaces
+          <Translation
+            i18nKey="settings:subscriptions.pronouns.currentlyUsing"
+            values={{ pronoun: "he/him" }}
+            components={{ b: <b /> }}
+          />
         </div>
         <h4
           style={{
@@ -165,32 +204,32 @@ export function PronounSection({
             marginBottom: 10,
           }}
         >
-          Pick one or more
+          {t("settings:subscriptions.pronouns.pickOneOrMore")}
         </h4>
         <div className={styles.pronGrid}>
-          {PRONOUN_OPTIONS.map((p) => (
+          {PRONOUN_OPTIONS.map((pronoun) => (
             <div
-              key={p}
-              className={`${styles.pronChip} ${selectedPronouns.has(p) ? styles.pronChipSelected : ""}`}
+              key={pronoun}
+              className={`${styles.pronChip} ${selectedPronouns.has(pronoun) ? styles.pronChipSelected : ""}`}
               role="button"
               tabIndex={0}
-              aria-pressed={selectedPronouns.has(p)}
-              onClick={() => togglePronoun(p)}
+              aria-pressed={selectedPronouns.has(pronoun)}
+              onClick={() => togglePronoun(pronoun)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  togglePronoun(p);
+                  togglePronoun(pronoun);
                 }
               }}
             >
-              {p.includes("/") ? (
+              {pronoun.includes("/") ? (
                 <>
-                  {p.split("/")[0]}
+                  {pronoun.split("/")[0]}
                   <em>/</em>
-                  {p.split("/")[1]}
+                  {pronoun.split("/")[1]}
                 </>
               ) : (
-                p
+                pronoun
               )}
             </div>
           ))}
@@ -199,7 +238,7 @@ export function PronounSection({
           <input
             className={styles.pronInput}
             type="text"
-            placeholder="Or write your own · e.g. xe/xem · zie/hir"
+            placeholder={t("settings:subscriptions.pronouns.customPlaceholder")}
           />
         </div>
         <p
@@ -210,8 +249,10 @@ export function PronounSection({
             lineHeight: 1.55,
           }}
         >
-          Use commas to add multiple, separated by season or context if you'd
-          like. <em>e.g. he/him (formal), they/them (close friends)</em>.
+          <Translation
+            i18nKey="settings:subscriptions.pronouns.customHint"
+            components={{ em: <em /> }}
+          />
         </p>
       </div>
 
@@ -224,30 +265,30 @@ export function PronounSection({
             marginBottom: 14,
           }}
         >
-          Where they show
+          {t("settings:subscriptions.pronouns.whereTheyShow")}
         </h4>
-        {PRONOUN_VISIBILITY.map((pv) => (
-          <div key={pv.id} className={styles.pronVisRow}>
+        {pronounVisibility.map((visibilityOption) => (
+          <div key={visibilityOption.id} className={styles.pronVisRow}>
             <div className="lbl">
-              <b>{pv.label}</b>
-              <span>{pv.desc}</span>
+              <b>{visibilityOption.label}</b>
+              <span>{visibilityOption.desc}</span>
             </div>
             <label className={styles.toggleSw}>
               <input
                 type="checkbox"
-                checked={pronVis[pv.id]}
-                disabled={pv.disabled}
+                checked={pronVis[visibilityOption.id]}
+                disabled={visibilityOption.disabled}
                 onChange={(e) =>
                   setPronVis((prev) => ({
                     ...prev,
-                    [pv.id]: e.target.checked,
+                    [visibilityOption.id]: e.target.checked,
                   }))
                 }
               />
               <div
                 className={styles.toggleTrack}
                 style={
-                  pv.disabled
+                  visibilityOption.disabled
                     ? { opacity: 0.5, cursor: "not-allowed" }
                     : undefined
                 }
@@ -262,53 +303,71 @@ export function PronounSection({
 }
 
 /** Build a JobAlert card record from a saved-search draft. */
-export function alertFromDraft(d: AlertDraft): JobAlert {
+export function alertFromDraft(draft: AlertDraft, t: TFunction): JobAlert {
   return {
-    id: d.id,
-    ic: (d.title.trim()[0] ?? "A").toUpperCase(),
-    title: d.title,
-    desc: <>Matching jobs sent · {d.frequency.toLowerCase()}</>,
+    id: draft.id,
+    ic: (draft.title.trim()[0] ?? "A").toUpperCase(),
+    title: draft.title,
+    desc: (
+      <>
+        {t("settings:subscriptions.jobAlerts.statusLive", {
+          frequency: t(
+            `settings:subscriptions.alertBuilder.frequency.${draft.frequencyId}`,
+          ),
+        })}
+      </>
+    ),
     criteria: [
       {
         label: (
-          <>
-            Title: <b>{d.keywords}</b>
-          </>
+          <Translation
+            i18nKey="settings:subscriptions.jobAlerts.criteria.title"
+            values={{ value: draft.keywords }}
+            components={{ b: <b /> }}
+          />
         ),
       },
       {
         label: (
-          <>
-            Location: <b>{d.location}</b>
-          </>
+          <Translation
+            i18nKey="settings:subscriptions.jobAlerts.criteria.location"
+            values={{
+              value: t(
+                `settings:subscriptions.alertBuilder.location.${draft.location}`,
+              ),
+            }}
+            components={{ b: <b /> }}
+          />
         ),
       },
-      ...(d.minSalary
+      ...(draft.minSalary
         ? [
             {
               label: (
-                <>
-                  Min salary: <b>{d.minSalary}</b>
-                </>
+                <Translation
+                  i18nKey="settings:subscriptions.jobAlerts.criteria.minSalary"
+                  values={{ value: draft.minSalary }}
+                  components={{ b: <b /> }}
+                />
               ),
             },
           ]
         : []),
     ],
-    status: `Live · ${d.frequency.toLowerCase()}`,
-    matches: "New",
-    lastSent: "Not sent yet",
+    frequencyId: draft.frequencyId,
+    matches: null,
+    lastSent: null,
   };
 }
 
 /** Reverse a JobAlert card into an editable draft (best-effort, mock data). */
-export function draftFromAlert(a: JobAlert): AlertDraft {
+export function draftFromAlert(alert: JobAlert): AlertDraft {
   return {
-    id: a.id,
-    title: a.title,
+    id: alert.id,
+    title: alert.title,
     keywords: "",
-    location: "Lisbon",
+    location: "lisbon",
     minSalary: "",
-    frequency: "Weekly digest",
+    frequencyId: alert.frequencyId,
   };
 }

@@ -1,9 +1,7 @@
 import { useCallback, useState } from "react";
+import type { TFunction } from "../../shared/i18n/types";
 import type { CreatePartnerApplicationDto, Region } from "./api/partners.api";
-import {
-  DEFAULT_LABELS,
-  DEFAULT_REGION_LABEL,
-} from "./submitPartnerApplication.data";
+import { DEFAULT_REGION_LABEL_KEY } from "./submitPartnerApplication.data";
 
 export interface SubmitPartnerState {
   name: string;
@@ -21,20 +19,28 @@ export interface SubmitPartnerState {
   handle: string;
 }
 
-const EMPTY: SubmitPartnerState = {
-  name: "",
-  logo: "",
-  region: "pt",
-  regionLabel: DEFAULT_REGION_LABEL.pt,
-  city: "",
-  desc: "",
-  tags: "",
-  tier: "",
-  since: "Applying · 2026",
-  eyebrow: "",
-  tagline: "",
-  handle: "",
-};
+/** The fictional "current" year the demo/live app renders as — matches the
+ * rest of the prototype's dated content. */
+const CURRENT_YEAR = 2026;
+
+function buildEmptyState(t: TFunction): SubmitPartnerState {
+  return {
+    name: "",
+    logo: "",
+    region: "pt",
+    regionLabel: t(DEFAULT_REGION_LABEL_KEY.pt),
+    city: "",
+    desc: "",
+    tags: "",
+    tier: "",
+    since: t("marketing:submitPartner.form.sinceDefault", {
+      year: CURRENT_YEAR,
+    }),
+    eyebrow: "",
+    tagline: "",
+    handle: "",
+  };
+}
 
 const splitCommas = (s: string) =>
   s
@@ -71,9 +77,16 @@ const REQUIRED: RequiredField[] = [
  * focused form collects, validates the required ones, and maps the whole thing
  * onto the backend's `CreatePartnerApplicationDto` (the long rich arrays are
  * omitted here — an admin fleshes them out, or the org supplies them later).
+ *
+ * Takes `t` so the region-label and "since" defaults prefill in the active
+ * language — `t` is referentially stable per language (i18n extraction
+ * brief §2), so this only recomputes the initializer if the hook itself
+ * remounts, not on every render.
  */
-export function useSubmitPartnerForm() {
-  const [state, setState] = useState<SubmitPartnerState>(EMPTY);
+export function useSubmitPartnerForm(t: TFunction) {
+  const [state, setState] = useState<SubmitPartnerState>(() =>
+    buildEmptyState(t),
+  );
   const [touched, setTouched] = useState(false);
 
   const set = useCallback(
@@ -85,26 +98,35 @@ export function useSubmitPartnerForm() {
   );
 
   /** Changing region prefills the human label — unless the user customised it. */
-  const setRegion = useCallback((region: Region) => {
-    setState((s) => {
-      const untouchedLabel =
-        !s.regionLabel.trim() || DEFAULT_LABELS.includes(s.regionLabel.trim());
-      return {
-        ...s,
-        region,
-        regionLabel: untouchedLabel
-          ? DEFAULT_REGION_LABEL[region]
-          : s.regionLabel,
-      };
-    });
-  }, []);
+  const setRegion = useCallback(
+    (region: Region) => {
+      setState((s) => {
+        const defaultLabelsInActiveLanguage = Object.values(
+          DEFAULT_REGION_LABEL_KEY,
+        ).map((labelKey) => t(labelKey));
+        const untouchedLabel =
+          !s.regionLabel.trim() ||
+          defaultLabelsInActiveLanguage.includes(s.regionLabel.trim());
+        return {
+          ...s,
+          region,
+          regionLabel: untouchedLabel
+            ? t(DEFAULT_REGION_LABEL_KEY[region])
+            : s.regionLabel,
+        };
+      });
+    },
+    [t],
+  );
 
   const missing = REQUIRED.filter((f) => !String(state[f]).trim());
   const valid = missing.length === 0;
 
   const errorFor = (f: RequiredField): string | null => {
     if (!touched) return null;
-    return missing.includes(f) ? "This field is required." : null;
+    return missing.includes(f)
+      ? t("marketing:submitPartner.fields.requiredError")
+      : null;
   };
 
   const toDto = (): CreatePartnerApplicationDto => {

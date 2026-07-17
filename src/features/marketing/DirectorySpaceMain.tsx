@@ -1,6 +1,8 @@
 import { FiStar } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, hoursRows, type Tint } from "./directoryPlaces";
-import { CAT_LABEL, STAR_SLOTS } from "./directorySpace.data";
+import { CAT_LABEL_KEYS, STAR_SLOTS } from "./directorySpace.data";
 import s from "./DirectorySpacePage.module.css";
 
 const TINT: Record<Tint, string> = {
@@ -33,6 +35,7 @@ interface Props {
 }
 
 export function DirectorySpaceMain({ place }: Props) {
+  const { t } = useTranslation();
   const words = place.name.split(" ");
   const last = words.pop();
   const lead = words.join(" ");
@@ -43,7 +46,7 @@ export function DirectorySpaceMain({ place }: Props) {
     <main>
       <header className={s.head}>
         <div className={s.eyebrow}>
-          {CAT_LABEL[place.cat]} · {place.hood} · Lisbon
+          {t(CAT_LABEL_KEYS[place.cat]!)} · {place.hood} · Lisbon
         </div>
         <h1 className={s.h1}>
           {lead && `${lead} `}
@@ -56,7 +59,11 @@ export function DirectorySpaceMain({ place }: Props) {
               " ",
             )}
           >
-            {place.owned ? "Verified queer-owned" : "LGBTQ+ friendly"}
+            {t(
+              place.owned
+                ? "marketing:directory.detail.badge.verifiedOwned"
+                : "marketing:directory.detail.badge.friendly",
+            )}
           </span>
           {place.pills.map((p) => (
             <span key={p} className={s.pill}>
@@ -71,44 +78,58 @@ export function DirectorySpaceMain({ place }: Props) {
               className={s.stars}
             />
             <b>{place.rating.score}</b>
-            <span>· {place.rating.count} reviews</span>
+            <span>
+              {t("marketing:directory.detail.reviewsCount", {
+                count: place.rating.count,
+              })}
+            </span>
           </div>
         </div>
       </header>
 
       <section className={s.sec}>
         <h2>
-          What it <em>actually is.</em>
+          <Translation
+            i18nKey="marketing:directory.detail.whatItIsTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
-        {place.whatItIs.map((p, i) => (
-          <p key={i}>{p}</p>
+        {place.whatItIs.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
         ))}
       </section>
 
       <section className={s.sec}>
         <h2>
-          What members say it's <em>good for</em>
+          <Translation
+            i18nKey="marketing:directory.detail.goodForTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={s.subLine}>
-          Aggregated from {place.rating.count} reviews.
+          {t("marketing:directory.detail.goodForSub", {
+            count: place.rating.count,
+          })}
         </p>
         <div className={s.features}>
-          {place.goodFor.map((f) => (
+          {place.goodFor.map((feature) => (
             <div
-              key={f.label}
-              className={[s.feature, !f.yes && s.featureMaybe]
+              key={feature.label}
+              className={[s.feature, !feature.yes && s.featureMaybe]
                 .filter(Boolean)
                 .join(" ")}
             >
-              <div className={s.featureIc}>{f.yes ? <Check /> : <Dash />}</div>
-              {f.label}
+              <div className={s.featureIc}>
+                {feature.yes ? <Check /> : <Dash />}
+              </div>
+              {feature.label}
             </div>
           ))}
         </div>
       </section>
 
       <section className={s.sec}>
-        <h2>Hours</h2>
+        <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
         <p className={s.subLine}>{place.hoursNote}</p>
         {place.hoursType === "appointment" ? (
           <div className={s.apptNote}>
@@ -122,22 +143,28 @@ export function DirectorySpaceMain({ place }: Props) {
           </div>
         ) : (
           <div className={s.hoursTable}>
-            {rows.map((r, i) => (
+            {rows.map((row, index) => (
               <div
-                key={r.day}
+                key={row.dayKey}
                 className={[
                   s.hoursRow,
-                  i === todayIdx && s.hoursToday,
-                  r.closed && s.hoursClosed,
+                  index === todayIdx && s.hoursToday,
+                  row.closed && s.hoursClosed,
                 ]
                   .filter(Boolean)
                   .join(" ")}
               >
                 <span className={s.hoursDay}>
-                  {r.day}
-                  {i === todayIdx && <span className={s.todayTag}>Today</span>}
+                  {t(`marketing:directory.days.${row.dayKey}`)}
+                  {index === todayIdx && (
+                    <span className={s.todayTag}>
+                      {t("marketing:directory.detail.today")}
+                    </span>
+                  )}
                 </span>
-                <span>{r.val}</span>
+                <span>
+                  {row.val ?? t("marketing:directory.detail.hoursClosed")}
+                </span>
               </div>
             ))}
           </div>
@@ -146,24 +173,34 @@ export function DirectorySpaceMain({ place }: Props) {
 
       <section className={s.sec}>
         <h2>
-          Member reviews · <em>{place.rating.count}</em>
+          <Translation
+            i18nKey="marketing:directory.detail.reviewsTitle"
+            components={{ em: <em /> }}
+            values={{ count: place.rating.count }}
+          />
         </h2>
-        <p className={s.subLine}>Sorted by most helpful.</p>
-        {place.reviews.map((rev) => (
-          <div key={rev.name} className={s.rev}>
+        <p className={s.subLine}>
+          {t("marketing:directory.detail.reviewsSub")}
+        </p>
+        {place.reviews.map((review) => (
+          <div key={review.name} className={s.rev}>
             <div className={s.revHead}>
-              <div className={[s.revAv, TINT[rev.tint]].join(" ")}>
-                {rev.initials}
+              <div className={[s.revAv, TINT[review.tint]].join(" ")}>
+                {review.initials}
               </div>
               <div>
-                <div className={s.revName}>{rev.name}</div>
-                <div className={s.revByline}>{rev.byline}</div>
+                <div className={s.revName}>{review.name}</div>
+                <div className={s.revByline}>{review.byline}</div>
               </div>
-              <Stars score={rev.stars} className={s.revStars} />
+              <Stars score={review.stars} className={s.revStars} />
             </div>
-            <div className={s.revText}>{rev.text}</div>
+            <div className={s.revText}>{review.text}</div>
             <div className={s.revHelpful}>
-              <b>{rev.helpful}</b> members found this helpful
+              <Translation
+                i18nKey="marketing:directory.detail.helpful"
+                components={{ b: <b /> }}
+                values={{ count: review.helpful }}
+              />
             </div>
           </div>
         ))}

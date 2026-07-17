@@ -6,9 +6,11 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SECTIONS,
-  STATUS_LABEL,
+  STATUS_LABEL_KEY,
   STEPS,
   type Grant,
   type Status,
@@ -52,6 +54,7 @@ function GrantSkeleton() {
 }
 
 function GrantCard({ grant, delay }: { grant: Grant; delay: number }) {
+  const { t } = useTranslation();
   return (
     <FadeIn as="div" delay={delay} className={styles.gc}>
       <div className={styles.gcTop}>
@@ -72,10 +75,10 @@ function GrantCard({ grant, delay }: { grant: Grant; delay: number }) {
         </div>
         <div className={styles.gcRight}>
           <span className={`${styles.gcStatus} ${STATUS_CLASS[grant.status]}`}>
-            {STATUS_LABEL[grant.status]}
+            {t(STATUS_LABEL_KEY[grant.status])}
           </span>
           <Link to={grant.to} className={styles.gcLink}>
-            Learn more
+            {t("economy:grants.card.learnMore")}
           </Link>
         </div>
       </div>
@@ -92,6 +95,7 @@ export function GrantsResults({
   filtered: Grant[];
   onClearFilter: () => void;
 }) {
+  const { t } = useTranslation();
   if (loading) {
     return (
       <div className={styles.section}>
@@ -108,9 +112,12 @@ export function GrantsResults({
     return (
       <EmptyState
         icon={<FiDollarSign />}
-        title="Nothing matches your filter"
-        description="No opportunities fit that category right now. Clear the filter to browse every grant and fellowship members are tracking."
-        action={{ label: "Clear filters", onClick: onClearFilter }}
+        title={t("economy:grants.empty.title")}
+        description={t("economy:grants.empty.description")}
+        action={{
+          label: t("economy:grants.empty.clearFilters"),
+          onClick: onClearFilter,
+        }}
       />
     );
   }
@@ -122,7 +129,12 @@ export function GrantsResults({
         if (items.length === 0) return null;
         return (
           <div key={section.id} className={styles.section}>
-            <div className={styles.secHead}>{section.label}</div>
+            <div className={styles.secHead}>
+              <Translation
+                i18nKey={section.labelKey}
+                components={{ em: <em /> }}
+              />
+            </div>
             <div className={styles.grid}>
               {items.map((grant, i) => (
                 <GrantCard
@@ -140,22 +152,25 @@ export function GrantsResults({
 }
 
 export function GrantsGuide() {
+  const { t } = useTranslation();
   return (
     <section className={styles.guide}>
       <div className="wrap">
         <Reveal as="h2">
-          Writing a <em>strong application</em>
+          <Translation
+            i18nKey="economy:grants.guide.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.guideSub} delay={60}>
-          Advice from community members who've successfully secured grants —
-          from micro to major.
+          {t("economy:grants.guide.sub")}
         </Reveal>
         <div className={styles.stepsGrid}>
           {STEPS.map((step) => (
             <div key={step.n} className={styles.stepItem}>
               <div className={styles.stepN}>{step.n}</div>
-              <div className={styles.stepTitle}>{step.title}</div>
-              <div className={styles.stepBody}>{step.body}</div>
+              <div className={styles.stepTitle}>{t(step.titleKey)}</div>
+              <div className={styles.stepBody}>{t(step.bodyKey)}</div>
             </div>
           ))}
         </div>

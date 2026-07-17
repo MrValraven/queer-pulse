@@ -30,8 +30,8 @@ function tabParam(tab: FeedTab): string | undefined {
 /** GET /feed?tab=&cursor= — a cursor page of aggregated feed items. */
 export async function getFeed(tab: FeedTab, cursor?: string) {
   const q = new URLSearchParams();
-  const t = tabParam(tab);
-  if (t) q.set("tab", t);
+  const tabQueryValue = tabParam(tab);
+  if (tabQueryValue) q.set("tab", tabQueryValue);
   if (cursor) q.set("cursor", cursor);
   const qs = q.toString();
   const res = await apiGet<FeedItem[] | Paginated<FeedItem>>(

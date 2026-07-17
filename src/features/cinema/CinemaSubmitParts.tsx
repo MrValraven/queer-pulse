@@ -1,29 +1,28 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RadioOption } from "./cinemaSubmit.data";
 import styles from "./CinemaSubmitPage.module.css";
 
-/** Numbered form-block header (circle + serif title + sub). */
+/** Numbered form-block header (circle + serif title + sub). `heading` is
+ * built by the caller — via <Translation> when it carries a coral <em> run,
+ * or a plain `t()` string otherwise — rather than assembled here from
+ * separate title/em parts: word order (and where the emphasis lands)
+ * differs in pt-PT, so the whole heading must resolve as one catalog
+ * string, never be concatenated from fragments (see the sweep brief §5.8). */
 export function FbHead({
   num,
-  title,
-  em,
-  titlePost,
+  heading,
   sub,
 }: {
   num: number;
-  title: string;
-  em?: string;
-  titlePost?: string;
+  heading: ReactNode;
   sub: string;
 }) {
   return (
     <div className={styles.fbHead}>
       <div className={styles.fbNum}>{num}</div>
       <div>
-        <div className={styles.fbTitle}>
-          {title} {em && <em>{em}</em>}
-          {titlePost}
-        </div>
+        <div className={styles.fbTitle}>{heading}</div>
         <div className={styles.fbSub}>{sub}</div>
       </div>
     </div>
@@ -42,25 +41,28 @@ export function RadioGrid({
   onChange: (v: string) => void;
   ariaLabel: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.radioGrid} role="radiogroup" aria-label={ariaLabel}>
-      {options.map((o) => {
-        const on = o.value === value;
+      {options.map((option) => {
+        const on = option.value === value;
         return (
           <button
-            key={o.value}
+            key={option.value}
             type="button"
             role="radio"
             aria-checked={on}
-            onClick={() => onChange(o.value)}
+            onClick={() => onChange(option.value)}
             className={[styles.rOpt, on && styles.rOptOn]
               .filter(Boolean)
               .join(" ")}
           >
             <span className={styles.rDot} aria-hidden />
             <span className={styles.rText}>
-              {o.label}
-              {o.sub && <span className={styles.rSub}>{o.sub}</span>}
+              {t(option.labelKey)}
+              {option.subKey && (
+                <span className={styles.rSub}>{t(option.subKey)}</span>
+              )}
             </span>
           </button>
         );

@@ -5,10 +5,12 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ThemeStudio } from "./ThemeStudio";
 import styles from "./ProfileThemePage.module.css";
 
 export function ProfileThemePage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
 
@@ -46,16 +48,16 @@ export function ProfileThemePage() {
             fontWeight: 600,
           }}
         >
-          ← My profile
+          {t("settings:themeStudio.backToProfile")}
         </Link>
         <Button
           variant="primary"
           onClick={() => {
             commitTheme();
-            showToast("Theme saved", "success");
+            showToast(t("settings:themeStudio.toast.saved"), "success");
           }}
         >
-          Save theme
+          {t("settings:themeStudio.saveTheme")}
         </Button>
       </div>
     </AppShell>

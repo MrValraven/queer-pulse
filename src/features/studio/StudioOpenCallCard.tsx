@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Call } from "./studioOpenCalls.data";
 import s from "./funding.module.css";
 
@@ -9,6 +12,8 @@ interface Props {
 }
 
 export function StudioOpenCallCard({ call: c }: Props) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState(0);
@@ -57,9 +62,8 @@ export function StudioOpenCallCard({ call: c }: Props) {
               color: "var(--cream)",
             }}
           >
-            €
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
-              {c.amt}
+              {fmt.currency(c.amount)}
             </em>
           </div>
           <div
@@ -86,22 +90,22 @@ export function StudioOpenCallCard({ call: c }: Props) {
           <button
             type="button"
             className={s.bt}
-            onClick={() => showToast("Brief saved to your dashboard", "info")}
+            onClick={() => showToast(t("studio:calls.card.saveToast"), "info")}
           >
-            Save
+            {t("studio:calls.card.saveCta")}
           </button>
           <button
             type="button"
             className={`${s.bt} ${s.btP}`}
             onClick={() => setOpen((v) => !v)}
           >
-            Apply →
+            {t("studio:calls.card.applyCta")}
           </button>
         </div>
       </div>
       {open && c.tracks && (
         <div className={s.attach}>
-          <div className={s.al}>Attach one track from your catalogue</div>
+          <div className={s.al}>{t("studio:calls.card.attachLabel")}</div>
           <div className={s.picker}>
             {c.tracks.map((tr, i) => (
               <div
@@ -146,24 +150,23 @@ export function StudioOpenCallCard({ call: c }: Props) {
               className={`${s.bt} ${s.btP}`}
               onClick={() => {
                 setOpen(false);
-                showToast(
-                  "Application submitted — the council reviews in Monday triage",
-                  "success",
-                );
+                showToast(t("studio:calls.card.submittedToast"), "success");
               }}
             >
-              Submit application
+              {t("studio:calls.card.submitCta")}
             </button>
             <button
               type="button"
               className={s.bt}
               onClick={() => setOpen(false)}
             >
-              Cancel
+              {t("studio:calls.card.cancelCta")}
             </button>
             <span className={s.singleNote}>
-              <em>One track only</em> — the council wants your sharpest, not
-              your folder.
+              <Translation
+                i18nKey="studio:calls.card.singleTrackNote"
+                components={{ em: <em /> }}
+              />
             </span>
           </div>
         </div>

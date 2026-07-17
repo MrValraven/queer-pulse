@@ -1,20 +1,24 @@
-import type { ReactNode } from "react";
-
 export type DeleteOption = "deactivate" | "delete";
 
+// i18n note: `text` used to hold a raw ReactNode with the `<strong>` emphasis
+// baked in. It's now a catalog key resolved via `<Translation>` at render
+// (Pattern A) so the rich text can be translated at all.
 interface WhatItem {
   col: string;
-  text: ReactNode;
+  textKey: string;
 }
 
 export const DELETE_CONTENT: Record<
   DeleteOption,
   {
     wh: WhatItem[];
-    phrase: string | null;
+    /** Catalog key for the typed-confirmation phrase, or `null` for none.
+     * Client-only match target (never sent to an API) — safe to fully
+     * translate since display and comparison both resolve from this key. */
+    phraseKey: string | null;
     /** Sits under the typed-confirmation box. Must match what actually happens. */
-    confirmHint: string;
-    btnLabel: string;
+    confirmHintKey: string;
+    btnLabelKey: string;
     isDanger: boolean;
   }
 > = {
@@ -22,111 +26,59 @@ export const DELETE_CONTENT: Record<
     wh: [
       {
         col: "rgba(45,27,61,.3)",
-        text: (
-          <>
-            Your <strong>profile is hidden</strong> immediately — no other
-            member can find or view it.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.deactivate.profileHidden",
       },
       {
         col: "var(--jade)",
-        text: (
-          <>
-            Your <strong>data is fully preserved</strong>: messages, posts,
-            history remain intact.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.deactivate.dataPreserved",
       },
       {
         col: "var(--jade)",
-        text: (
-          <>
-            <strong>Reactivate instantly</strong> by signing back in with
-            Google.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.deactivate.reactivateInstantly",
       },
       {
         col: "rgba(45,27,61,.3)",
-        text: (
-          <>
-            Your <strong>name is removed</strong> from member lists and search
-            results.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.deactivate.nameRemoved",
       },
       {
         col: "rgba(45,27,61,.3)",
-        text: (
-          <>
-            Event RSVPs and forum contributions are{" "}
-            <strong>attributed to [deactivated member]</strong>.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.deactivate.attributedDeactivated",
       },
     ],
     // Typed confirmation is the real gate on both paths now. It used to be a
     // password box, but auth is OAuth-only and the backend never checked it, so
     // deactivate had no confirmation step at all once that box was removed.
-    phrase: "deactivate my account",
-    confirmHint: "You can undo this at any time by signing back in.",
-    btnLabel: "Deactivate my account",
+    phraseKey: "settings:deleteAccount.phrase.deactivate",
+    confirmHintKey: "settings:deleteAccount.confirmHint.deactivate",
+    btnLabelKey: "settings:deleteAccount.btnLabel.deactivate",
     isDanger: false,
   },
   delete: {
     wh: [
       {
         col: "var(--accent-ink)",
-        text: (
-          <>
-            <strong>All your data is queued for deletion</strong> and
-            permanently erased within 30 days.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.delete.queuedForDeletion",
       },
       {
         col: "var(--accent-ink)",
-        text: (
-          <>
-            Messages you sent{" "}
-            <strong>are deleted from all conversations</strong> — recipients
-            lose them too.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.delete.messagesDeleted",
       },
       {
         col: "var(--accent-ink)",
-        text: (
-          <>
-            Your forum posts are <strong>permanently removed</strong> — not
-            anonymised, deleted.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.delete.postsRemoved",
       },
       {
         col: "rgba(45,27,61,.3)",
-        text: (
-          <>
-            Your email address is <strong>added to a suppression list</strong>{" "}
-            so we don't accidentally re-create your account.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.delete.emailSuppressed",
       },
       {
         col: "rgba(45,27,61,.3)",
-        text: (
-          <>
-            You can request a <strong>data archive before deleting</strong> — do
-            that first.
-          </>
-        ),
+        textKey: "settings:deleteAccount.wh.delete.exportFirst",
       },
     ],
-    phrase: "delete my account",
-    confirmHint:
-      "You'll have 30 days to change your mind. After that it can't be reversed.",
-    btnLabel: "Permanently delete my account",
+    phraseKey: "settings:deleteAccount.phrase.delete",
+    confirmHintKey: "settings:deleteAccount.confirmHint.delete",
+    btnLabelKey: "settings:deleteAccount.btnLabel.delete",
     isDanger: true,
   },
 };

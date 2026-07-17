@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import type { TaxYear } from "./tax.calc";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   ACTIVITY_OPTIONS,
   YEAR_OPTIONS,
@@ -24,13 +25,6 @@ interface SetAsideFormProps {
   onRemove: (id: string) => void;
 }
 
-const fmtDate = (iso: string) =>
-  new Date(iso + "T00:00:00").toLocaleDateString("pt-PT", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-
 export function SetAsideForm({
   gross,
   activity,
@@ -43,6 +37,14 @@ export function SetAsideForm({
   onAdd,
   onRemove,
 }: SetAsideFormProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const fmtDate = (iso: string) =>
+    fmt.date(new Date(iso + "T00:00:00"), {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(today);
   const parsedAmount = Number(amount);
@@ -58,11 +60,14 @@ export function SetAsideForm({
   return (
     <div className={styles.form}>
       <section className={styles.fieldset}>
-        <h2 className={styles.legend}>Your year</h2>
+        <h2 className={styles.legend}>
+          {t("economy:setAside.yourYearLegend")}
+        </h2>
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="sa-gross">
-            Expected annual gross <span className={styles.req}>*</span>
+            {t("economy:setAside.grossLabel")}{" "}
+            <span className={styles.req}>*</span>
           </label>
           <input
             id="sa-gross"
@@ -73,17 +78,15 @@ export function SetAsideForm({
             className={styles.input}
             value={gross || ""}
             onChange={(e) => onGross(Math.max(0, Number(e.target.value)))}
-            placeholder="30000"
+            placeholder={t("economy:setAside.grossPlaceholder")}
           />
-          <p className={styles.hint}>
-            Everything you expect to invoice this year, before tax.
-          </p>
+          <p className={styles.hint}>{t("economy:setAside.grossHint")}</p>
         </div>
 
         <div className={styles.row}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sa-activity">
-              Activity
+              {t("economy:setAside.activityLabel")}
             </label>
             <select
               id="sa-activity"
@@ -93,7 +96,7 @@ export function SetAsideForm({
             >
               {ACTIVITY_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
-                  {o.label}
+                  {t(o.labelKey)}
                 </option>
               ))}
             </select>
@@ -101,7 +104,7 @@ export function SetAsideForm({
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sa-year">
-              Tax year
+              {t("economy:setAside.yearLabel")}
             </label>
             <select
               id="sa-year"
@@ -120,15 +123,16 @@ export function SetAsideForm({
       </section>
 
       <section className={styles.fieldset}>
-        <h2 className={styles.legend}>Log an invoice</h2>
-        <p className={styles.hint}>
-          Add each payment as it lands. We total what you should have parked.
-        </p>
+        <h2 className={styles.legend}>
+          {t("economy:setAside.logInvoiceLegend")}
+        </h2>
+        <p className={styles.hint}>{t("economy:setAside.logInvoiceHint")}</p>
 
         <div className={styles.row}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sa-amount">
-              Amount received <span className={styles.req}>*</span>
+              {t("economy:setAside.amountLabel")}{" "}
+              <span className={styles.req}>*</span>
             </label>
             <input
               id="sa-amount"
@@ -140,12 +144,12 @@ export function SetAsideForm({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              placeholder="1200"
+              placeholder={t("economy:setAside.amountPlaceholder")}
             />
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sa-date">
-              Date
+              {t("economy:setAside.dateLabel")}
             </label>
             <input
               id="sa-date"
@@ -159,20 +163,24 @@ export function SetAsideForm({
         </div>
 
         <Button variant="primary" onClick={handleAdd} disabled={!canAdd}>
-          <FiPlus aria-hidden /> Add to pot
+          <FiPlus aria-hidden /> {t("economy:setAside.addCta")}
         </Button>
 
         {pot.length > 0 && (
           <ul className={styles.list}>
             {pot.map((e) => (
               <li key={e.id} className={styles.item}>
-                <span className={styles.itemAmount}>{euro(e.amount)}</span>
+                <span className={styles.itemAmount}>
+                  {fmt.currency(e.amount)}
+                </span>
                 <span className={styles.itemDate}>{fmtDate(e.date)}</span>
                 <button
                   type="button"
                   className={styles.remove}
                   onClick={() => onRemove(e.id)}
-                  aria-label={`Remove ${euro(e.amount)} invoice`}
+                  aria-label={t("economy:setAside.removeAriaLabel", {
+                    amount: fmt.currency(e.amount),
+                  })}
                 >
                   <FiX aria-hidden />
                 </button>

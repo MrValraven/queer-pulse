@@ -1,8 +1,11 @@
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { FORUM, LEGAL, MENTORSHIP, TALK_CARDS } from "./family.data";
 import styles from "./FamilyPage.module.css";
 
 export function FamilyTalkSection() {
+  const { t } = useTranslation();
   return (
     <>
       <section className={styles.talk}>
@@ -10,20 +13,18 @@ export function FamilyTalkSection() {
           <div className={styles.talkInner}>
             <div className={styles.talkLeft}>
               <h2>
-                Talk to someone who's <em>been there.</em>
+                <Translation
+                  i18nKey="community:family.talk.heading"
+                  components={{ em: <em /> }}
+                />
               </h2>
-              <p>
-                The Queer Parent Network connects people who are building
-                families with members who've already been through it — same
-                routes, similar situations. Not professionals. Just people
-                who've done it and want to help.
-              </p>
+              <p>{t("community:family.talk.body")}</p>
               <div className={styles.talkBtns}>
                 <Button to={MENTORSHIP} variant="primary" size="lg">
-                  Find a peer mentor
+                  {t("community:family.talk.findMentorCta")}
                 </Button>
                 <Button to={FORUM} variant="ghost-dark" size="lg">
-                  Queer Parent Network →
+                  {t("community:family.talk.networkCta")}
                 </Button>
               </div>
             </div>
@@ -53,20 +54,19 @@ export function FamilyTalkSection() {
           <div className={styles.forumCtaInner}>
             <div className={styles.forumCtaText}>
               <h3>
-                Questions the page <em>doesn't answer?</em>
+                <Translation
+                  i18nKey="community:family.talk.forumCta.heading"
+                  components={{ em: <em /> }}
+                />
               </h3>
-              <p>
-                The Family Building forum thread is where members share current
-                experience, ask questions, and support each other through a
-                process that no guide can fully capture.
-              </p>
+              <p>{t("community:family.talk.forumCta.body")}</p>
             </div>
             <div className={styles.forumCtaBtns}>
               <Button to={FORUM} variant="primary">
-                Open the forum thread
+                {t("community:family.talk.forumCta.openForumCta")}
               </Button>
               <Button to={LEGAL} variant="ghost">
-                Legal resources →
+                {t("community:family.talk.forumCta.legalResourcesCta")}
               </Button>
             </div>
           </div>

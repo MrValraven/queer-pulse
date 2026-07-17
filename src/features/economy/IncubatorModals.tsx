@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
 
 /* ── Apply for cohort 3 ─────────────────────────────────────────────── */
 export function CohortApplyModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pitch, setPitch] = useState("");
@@ -13,44 +16,52 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
     name.trim().length > 1 &&
     /.+@.+\..+/.test(email) &&
     pitch.trim().length >= 30;
+  const charsLeft = 30 - pitch.trim().length;
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Application"
-          em="received."
+          title={t("economy:incubatorApply.success.title")}
+          em={t("economy:incubatorApply.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:contactRequest.done")}
         >
-          Thanks, <strong>{name.split(" ")[0]}</strong>. Cohort 3 applications
-          are read by the programme team after the 30 July deadline — you'll
-          hear back within three weeks, whatever we decide.
+          <Translation
+            i18nKey="economy:incubatorApply.success.body"
+            components={{ strong: <strong /> }}
+            values={{ name: name.split(" ")[0] ?? "" }}
+          />
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Incubator · Cohort 3</div>
+          <div className={styles.eyebrow}>
+            {t("economy:incubatorApply.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            Apply to <em>build your thing.</em>
+            <Translation
+              i18nKey="economy:incubatorApply.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Six months of mentorship, peer accountability, and warm intros. No
-            pitch deck required — just tell us what you're making and where
-            you're at.
-          </p>
+          <p className={styles.sub}>{t("economy:incubatorApply.sub")}</p>
 
           <div className={styles.field}>
-            <label htmlFor="ca-name">Your name *</label>
+            <label htmlFor="ca-name">
+              {t("economy:incubatorApply.nameLabel")}
+            </label>
             <input
               id="ca-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="First and last"
+              placeholder={t("economy:incubatorApply.namePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="ca-email">Email *</label>
+            <label htmlFor="ca-email">
+              {t("economy:incubatorApply.emailLabel")}
+            </label>
             <input
               id="ca-email"
               type="email"
@@ -60,23 +71,25 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="ca-pitch">What are you building? *</label>
+            <label htmlFor="ca-pitch">
+              {t("economy:incubatorApply.pitchLabel")}
+            </label>
             <textarea
               id="ca-pitch"
               value={pitch}
               onChange={(e) => setPitch(e.target.value)}
-              placeholder="A couple of sentences on your idea, where you are, and what you most need help with."
+              placeholder={t("economy:incubatorApply.pitchPlaceholder")}
             />
           </div>
           <p className={styles.note}>
-            {pitch.trim().length < 30
-              ? `${30 - pitch.trim().length} more characters in your pitch to submit.`
-              : "Looks good. Decisions go out within three weeks of the deadline."}
+            {charsLeft > 0
+              ? t("economy:incubatorApply.charsNeeded", { count: charsLeft })
+              : t("economy:incubatorApply.looksGood")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:contactRequest.cancel")}
             </button>
             <Button
               variant="primary"
@@ -84,7 +97,11 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Submitting…" /> : "Submit application"}
+              {sending ? (
+                <Sending label={t("economy:resume.submittingLabel")} />
+              ) : (
+                t("economy:incubatorApply.submitCta")
+              )}
             </Button>
           </div>
         </>
@@ -95,6 +112,7 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
 
 /* ── Become a mentor ────────────────────────────────────────────────── */
 export function MentorSignupModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [expertise, setExpertise] = useState("");
@@ -105,44 +123,52 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
     /.+@.+\..+/.test(email) &&
     expertise.trim().length > 1 &&
     why.trim().length >= 30;
+  const charsLeft = 30 - why.trim().length;
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="You're on the"
-          em="list."
+          title={t("economy:mentorSignup.success.title")}
+          em={t("economy:mentorSignup.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:contactRequest.done")}
         >
-          Thank you, <strong>{name.split(" ")[0]}</strong>. The mentorship team
-          will reach out to match you with a founder whose sector and stage fit
-          what you offer. Mentors meet their match fortnightly across the
-          cohort.
+          <Translation
+            i18nKey="economy:mentorSignup.success.body"
+            components={{ strong: <strong /> }}
+            values={{ name: name.split(" ")[0] ?? "" }}
+          />
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Incubator · Mentorship</div>
+          <div className={styles.eyebrow}>
+            {t("economy:mentorSignup.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            Become a <em>mentor.</em>
+            <Translation
+              i18nKey="economy:mentorSignup.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Give a few hours a month to a queer founder finding their feet. We
-            match on sector, stage, and the things you actually know.
-          </p>
+          <p className={styles.sub}>{t("economy:mentorSignup.sub")}</p>
 
           <div className={styles.field}>
-            <label htmlFor="ms-name">Your name *</label>
+            <label htmlFor="ms-name">
+              {t("economy:mentorSignup.nameLabel")}
+            </label>
             <input
               id="ms-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="First and last"
+              placeholder={t("economy:mentorSignup.namePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="ms-email">Email *</label>
+            <label htmlFor="ms-email">
+              {t("economy:mentorSignup.emailLabel")}
+            </label>
             <input
               id="ms-email"
               type="email"
@@ -152,33 +178,35 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="ms-exp">Where can you help? *</label>
+            <label htmlFor="ms-exp">
+              {t("economy:mentorSignup.expertiseLabel")}
+            </label>
             <input
               id="ms-exp"
               type="text"
               value={expertise}
               onChange={(e) => setExpertise(e.target.value)}
-              placeholder="e.g. Product, fundraising, legal, hiring"
+              placeholder={t("economy:mentorSignup.expertisePlaceholder")}
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="ms-why">Why mentor? *</label>
+            <label htmlFor="ms-why">{t("economy:mentorSignup.whyLabel")}</label>
             <textarea
               id="ms-why"
               value={why}
               onChange={(e) => setWhy(e.target.value)}
-              placeholder="A sentence or two on what you'd bring and who you'd most like to support."
+              placeholder={t("economy:mentorSignup.whyPlaceholder")}
             />
           </div>
           <p className={styles.note}>
-            {why.trim().length < 30
-              ? `${30 - why.trim().length} more characters to submit.`
-              : "We review every mentor before matching — expect to hear from us soon."}
+            {charsLeft > 0
+              ? t("economy:mentorSignup.charsNeeded", { count: charsLeft })
+              : t("economy:mentorSignup.looksGood")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:contactRequest.cancel")}
             </button>
             <Button
               variant="primary"
@@ -186,7 +214,11 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Submitting…" /> : "Sign up to mentor"}
+              {sending ? (
+                <Sending label={t("economy:resume.submittingLabel")} />
+              ) : (
+                t("economy:mentorSignup.submitCta")
+              )}
             </Button>
           </div>
         </>
@@ -205,66 +237,77 @@ export function RequestSessionModal({
   mentorRole: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [when, setWhen] = useState("");
   const [message, setMessage] = useState("");
   const { sending, done, submit } = useSubmitFlow();
   const valid = when.trim().length > 1 && message.trim().length >= 20;
+  const charsLeft = 20 - message.trim().length;
+  const mentorFirstName = mentorName.split(" ")[0] ?? mentorName;
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Session"
-          em="requested."
+          title={t("economy:requestSession.success.title")}
+          em={t("economy:requestSession.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:contactRequest.done")}
         >
-          Your request reached <strong>{mentorName.split(" ")[0]}</strong>.
-          Mentors reply within a few days to confirm a time — keep an eye on
-          your email, and the intro will come from there.
+          <Translation
+            i18nKey="economy:requestSession.success.body"
+            components={{ strong: <strong /> }}
+            values={{ name: mentorFirstName }}
+          />
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Incubator · {mentorRole}</div>
+          <div className={styles.eyebrow}>
+            {t("economy:requestSession.eyebrow", { role: mentorRole })}
+          </div>
           <h2 className={styles.title}>
-            Request a session with <em>{mentorName}.</em>
+            <Translation
+              i18nKey="economy:requestSession.title"
+              components={{ em: <em /> }}
+              values={{ name: mentorName }}
+            />
           </h2>
           <p className={styles.sub}>
-            A short note goes a long way. Say what you're working on and when
-            you'd like to meet —{mentorName.split(" ")[0]} will reply to set it
-            up.
+            {t("economy:requestSession.sub", { firstName: mentorFirstName })}
           </p>
 
           <div className={styles.field}>
-            <label htmlFor="rs-when">Preferred time *</label>
+            <label htmlFor="rs-when">
+              {t("economy:requestSession.whenLabel")}
+            </label>
             <input
               id="rs-when"
               type="text"
               value={when}
               onChange={(e) => setWhen(e.target.value)}
-              placeholder="e.g. Weekday evenings, or Tue/Thu afternoons"
+              placeholder={t("economy:requestSession.whenPlaceholder")}
             />
           </div>
           <div className={styles.field}>
             <label htmlFor="rs-msg">
-              What would you like to talk through? *
+              {t("economy:requestSession.messageLabel")}
             </label>
             <textarea
               id="rs-msg"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="A couple of sentences on where you are and what you'd most like help with."
+              placeholder={t("economy:requestSession.messagePlaceholder")}
             />
           </div>
           <p className={styles.note}>
-            {message.trim().length < 20
-              ? `${20 - message.trim().length} more characters so they have context.`
-              : "Looks good. Mentors usually reply within a few days."}
+            {charsLeft > 0
+              ? t("economy:contactRequest.charsNeeded", { count: charsLeft })
+              : t("economy:requestSession.looksGood")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:contactRequest.cancel")}
             </button>
             <Button
               variant="primary"
@@ -272,7 +315,11 @@ export function RequestSessionModal({
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Sending…" /> : "Send request"}
+              {sending ? (
+                <Sending label={t("economy:negotiate.sendingLabel")} />
+              ) : (
+                t("economy:requestSession.sendCta")
+              )}
             </Button>
           </div>
         </>

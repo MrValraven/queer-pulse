@@ -1,32 +1,48 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
 /** Confirm step before blocking a host — destructive, so never one-tap. */
 export function BlockHostConfirm() {
+  const { t } = useTranslation();
   const { block, confirmBlock, closeBlock } = useMyEvents();
-  const who = block.host ? `everyone from ${block.host}` : "this host";
 
   return (
     <>
       <div className={sx("modal-head")}>
-        <div className={sx("modal-eyebrow")}>Block</div>
+        <div className={sx("modal-eyebrow")}>
+          {t("myevents:blockModal.eyebrow")}
+        </div>
         <h2 className={sx("modal-title")}>
-          Block <em>{block.host || "this host"}?</em>
+          {block.host ? (
+            <Translation
+              i18nKey="myevents:blockModal.titleNamed"
+              components={{ em: <em /> }}
+              values={{ host: block.host }}
+            />
+          ) : (
+            <Translation
+              i18nKey="myevents:blockModal.titleFallback"
+              components={{ em: <em /> }}
+            />
+          )}
         </h2>
       </div>
       <div className={sx("modal-body")}>
         <p className={sx("modal-evname")}>
-          You won’t see events from {who} again, and they won’t be able to
-          invite you. You can undo this any time in your settings.
+          {block.host
+            ? t("myevents:blockModal.bodyNamed", { host: block.host })
+            : t("myevents:blockModal.bodyFallback")}
         </p>
       </div>
       <div className={sx("modal-foot")}>
         <Button variant="ghost" onClick={closeBlock}>
-          Cancel
+          {t("myevents:blockModal.cancelCta")}
         </Button>
         <Button variant="danger" onClick={confirmBlock}>
-          Block
+          {t("myevents:blockModal.confirmCta")}
         </Button>
       </div>
     </>

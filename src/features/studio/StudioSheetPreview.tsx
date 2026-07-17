@@ -1,8 +1,19 @@
 import { ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./sheet.module.css";
-import { SPECS, scoreCoverImage } from "./studioSheetStore.data";
+import {
+  SPECS,
+  scoreCoverImage,
+  SHEET_TITLE,
+  SHEET_COMPOSER,
+  SHEET_ALBUM,
+  SHEET_TRANSCRIBER,
+} from "./studioSheetStore.data";
 
 export function StudioSheetPreview() {
+  const { t } = useTranslation();
+
   return (
     <div>
       <div className={s.sheetHead}>
@@ -18,13 +29,14 @@ export function StudioSheetPreview() {
           />
         </div>
         <div className={s.sheetHi}>
-          <div className={s.eb}>Lead sheet · transcription</div>
-          <h1>
-            Carta para a <em>santa</em>
-          </h1>
+          <div className={s.eb}>{t("studio:sheet.preview.eyebrow")}</div>
+          <h1>{SHEET_TITLE}</h1>
           <div className={s.sheetBy}>
-            music &amp; lyrics by <strong>Mariana Sol</strong> · from{" "}
-            <em>Cidade dos santos</em>
+            <Translation
+              i18nKey="studio:sheet.preview.byLine"
+              components={{ strong: <strong />, em: <em /> }}
+              values={{ composer: SHEET_COMPOSER, album: SHEET_ALBUM }}
+            />
           </div>
           <div className={s.specs}>
             {SPECS.map((sp) => (
@@ -37,13 +49,17 @@ export function StudioSheetPreview() {
       </div>
 
       <div className={s.previewLbl}>
-        Free preview · <em>page 1 of 4</em>
+        <Translation
+          i18nKey="studio:sheet.preview.freePreview"
+          components={{ em: <em /> }}
+          values={{ page: 1, total: 4 }}
+        />
       </div>
       <div className={s.pdf}>
-        <div className={s.watermark}>QUEERPULSE · PREVIEW</div>
-        <div className={s.pdfTitle}>Carta para a santa</div>
+        <div className={s.watermark}>{t("studio:sheet.preview.watermark")}</div>
+        <div className={s.pdfTitle}>{SHEET_TITLE}</div>
         <div className={s.pdfSub}>
-          Mariana Sol · voice &amp; piano · D minor
+          {SHEET_COMPOSER} · voice &amp; piano · D minor
         </div>
         {[0, 1, 2].map((g) => (
           <div key={g}>
@@ -77,7 +93,10 @@ export function StudioSheetPreview() {
               <rect x={3} y={11} width={18} height={11} rx={2} />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            Pages 2–4 unlock on purchase
+            <Translation
+              i18nKey="studio:sheet.preview.lockedPages"
+              values={{ from: 2, to: 4 }}
+            />
           </span>
         </div>
       </div>
@@ -103,11 +122,18 @@ export function StudioSheetPreview() {
         </span>
         <div>
           <h5>
-            Transcribed by <em>Teresa Rocha</em>
+            <Translation
+              i18nKey="studio:sheet.preview.transcribedBy"
+              components={{ em: <em /> }}
+              values={{ name: SHEET_TRANSCRIBER }}
+            />
           </h5>
           <p>
-            Community transcriber ·{" "}
-            <em>paid from your purchase, not the fund, when you buy</em>
+            {t("studio:sheet.preview.transcriberRole")} ·{" "}
+            <Translation
+              i18nKey="studio:sheet.preview.transcriberNote"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
       </div>

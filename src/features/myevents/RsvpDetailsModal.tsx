@@ -1,36 +1,59 @@
 import { useState } from "react";
 import { Button, SegmentedControl, Toggle } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
-const VIS = ["Everyone", "Connections", "Just me"];
-const VIS_DEFAULT = "Connections";
+/** Stable canonical ids — never the translated label itself (i18n sweep
+ * §5.1). `SegmentedControl` only knows display strings, so `vis` state stores
+ * the id and is mapped to/from the current-language label at the edges. */
+type Visibility = "everyone" | "connections" | "justMe";
+const VIS_IDS: Visibility[] = ["everyone", "connections", "justMe"];
+const VIS_DEFAULT: Visibility = "connections";
 
 /** "Anything we should know?" RSVP details editor. */
 export function RsvpDetailsModal() {
+  const { t } = useTranslation();
   const { details, closeDetails, byId, toast } = useMyEvents();
   const [guest, setGuest] = useState(false);
-  const [vis, setVis] = useState(VIS_DEFAULT);
+  const [vis, setVis] = useState<Visibility>(VIS_DEFAULT);
   const [quiet, setQuiet] = useState(false);
   const ev = details.evId ? byId(details.evId) : undefined;
 
+  const visLabel: Record<Visibility, string> = {
+    everyone: t("myevents:rsvpModal.visibility.everyone"),
+    connections: t("myevents:rsvpModal.visibility.connections"),
+    justMe: t("myevents:rsvpModal.visibility.justMe"),
+  };
+  const visOptions = VIS_IDS.map((id) => visLabel[id]);
+  const labelToVisId = (label: string): Visibility =>
+    VIS_IDS.find((id) => visLabel[id] === label) ?? VIS_DEFAULT;
+
   const save = () => {
     closeDetails();
-    toast("Saved — only the host can see this", "success");
+    toast(t("myevents:rsvpModal.savedToast"), "success");
   };
 
   return (
     <>
       <div className={sx("modal-head")}>
-        <div className={sx("modal-eyebrow")}>Your RSVP</div>
+        <div className={sx("modal-eyebrow")}>
+          {t("myevents:rsvpModal.eyebrow")}
+        </div>
         <h2 className={sx("modal-title")}>
-          Anything we should <em>know?</em>
+          <Translation
+            i18nKey="myevents:rsvpModal.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={sx("modal-evname")}>{ev?.title}</p>
       </div>
       <div className={sx("modal-body")}>
         <div className={sx("field")}>
-          <label className={sx("field-label")}>Who's coming</label>
+          <label className={sx("field-label")}>
+            {t("myevents:rsvpModal.whosComing")}
+          </label>
           <button
             type="button"
             className={sx("guest-row")}
@@ -45,13 +68,16 @@ export function RsvpDetailsModal() {
               </svg>
             </span>
             <span className={sx("guest-txt")}>
-              Bringing a +1
-              <span>Add a name so the host can welcome them too</span>
+              {t("myevents:rsvpModal.bringingGuest")}
+              <span>{t("myevents:rsvpModal.guestHint")}</span>
             </span>
           </button>
           <div className={`${sx("collapse")} ${guest ? sx("show") : ""}`}>
             <div className={sx("guest-name-field")}>
-              <input type="text" placeholder="Your guest's name (optional)" />
+              <input
+                type="text"
+                placeholder={t("myevents:rsvpModal.guestNamePlaceholder")}
+              />
             </div>
           </div>
         </div>
@@ -59,74 +85,84 @@ export function RsvpDetailsModal() {
         {ev?.sliding && (
           <div className={sx("field")}>
             <label className={sx("field-label")} htmlFor="rsvp-contribution">
-              Your contribution
+              {t("myevents:rsvpModal.contributionLabel")}
             </label>
             <div className={sx("field-hint")}>
-              This one's pay-what-you-can — choose what works for you, no
-              questions asked.
+              {t("myevents:rsvpModal.slidingHint")}
             </div>
             <select id="rsvp-contribution" defaultValue="10">
-              <option value="0">€0 — I need this to be free right now</option>
-              <option value="5">€5 — supported rate</option>
-              <option value="10">€10 — standard</option>
-              <option value="15">€15 — pay it forward</option>
+              <option value="0">
+                {t("myevents:rsvpModal.contribution.free")}
+              </option>
+              <option value="5">
+                {t("myevents:rsvpModal.contribution.supported")}
+              </option>
+              <option value="10">
+                {t("myevents:rsvpModal.contribution.standard")}
+              </option>
+              <option value="15">
+                {t("myevents:rsvpModal.contribution.payItForward")}
+              </option>
             </select>
           </div>
         )}
 
         <div className={sx("field")}>
           <label className={sx("field-label")} htmlFor="rsvp-access">
-            Access needs
+            {t("myevents:rsvpModal.accessNeeds")}
           </label>
           <textarea
             id="rsvp-access"
-            placeholder="Step-free route, a quiet spot, BSL, anything that helps you be there comfortably…"
+            placeholder={t("myevents:rsvpModal.accessPlaceholder")}
           />
         </div>
         <div className={sx("field")}>
           <label className={sx("field-label")} htmlFor="rsvp-dietary">
-            Dietary needs
+            {t("myevents:rsvpModal.dietaryNeeds")}
           </label>
           <textarea
             id="rsvp-dietary"
-            placeholder="Allergies, vegan, halal, kosher — for events where food is shared…"
+            placeholder={t("myevents:rsvpModal.dietaryPlaceholder")}
           />
         </div>
         <div className={sx("field")}>
-          <label className={sx("field-label")}>Who can see you're going?</label>
+          <label className={sx("field-label")}>
+            {t("myevents:rsvpModal.whoSees")}
+          </label>
           <SegmentedControl
             fullWidth
-            options={VIS}
-            value={vis}
-            onChange={setVis}
+            options={visOptions}
+            value={visLabel[vis]}
+            onChange={(label) => setVis(labelToVisId(label))}
           />
         </div>
         <div className={sx("field")}>
           <div className={sx("set-row flush")}>
             <div className={sx("set-info")}>
-              <div className={sx("set-t")}>Attend quietly</div>
+              <div className={sx("set-t")}>
+                {t("myevents:rsvpModal.attendQuietly")}
+              </div>
               <div className={sx("set-d")}>
-                Come along without your name showing on the guest list.
+                {t("myevents:rsvpModal.attendQuietlyDesc")}
               </div>
             </div>
             <Toggle
               checked={quiet}
               onChange={setQuiet}
-              label="Attend quietly"
+              label={t("myevents:rsvpModal.attendQuietly")}
             />
           </div>
         </div>
       </div>
       <div className={sx("modal-foot")}>
         <div className={sx("modal-privacy")}>
-          Only the host sees your access &amp; dietary notes. You can change all
-          of this any time.
+          {t("myevents:rsvpModal.privacyNote")}
         </div>
         <Button variant="ghost" onClick={closeDetails}>
-          Cancel
+          {t("myevents:rsvpModal.cancelCta")}
         </Button>
         <Button variant="jade" onClick={save}>
-          Save
+          {t("myevents:rsvpModal.saveCta")}
         </Button>
       </div>
     </>

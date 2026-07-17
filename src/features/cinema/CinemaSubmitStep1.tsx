@@ -1,4 +1,6 @@
 import { ChipSelect, FormField } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COUNTRIES,
   FORMATS,
@@ -10,23 +12,39 @@ import { FbHead, FieldLabel } from "./CinemaSubmitParts";
 import { ContentNotesBuilder, PosterUpload } from "./CinemaSubmitWidgets";
 import styles from "./CinemaSubmitPage.module.css";
 
-/** Step 1 — basic information, shown on the film's public page. */
+/** Step 1 — basic information, shown on the film's public page. Split into
+ * two sub-components (per the repo's <200-line-per-component convention):
+ * the identifying-details fields, then the longer creative-copy fields. */
 export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
-  const { draft, set, toggle } = form;
-  const identities = new Set(draft.identities);
+  const { t } = useTranslation();
   return (
     <div className={styles.formBlock}>
       <FbHead
         num={1}
-        title="Tell us about"
-        em="your film"
-        sub="Basic information — visible on the film's public page"
+        heading={
+          <Translation
+            i18nKey="cinema:submit.form.step1.heading"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("cinema:submit.form.step1.sub")}
       />
+      <Step1FilmDetails form={form} />
+      <Step1CreativeFields form={form} />
+    </div>
+  );
+}
 
-      <FormField label="Film title" required>
+/** Title, original title, year, runtime, country, language, format. */
+function Step1FilmDetails({ form }: { form: SubmitForm }) {
+  const { t } = useTranslation();
+  const { draft, set } = form;
+  return (
+    <>
+      <FormField label={t("cinema:submit.form.step1.title.label")} required>
         <input
           type="text"
-          placeholder="e.g. The light between rooms"
+          placeholder={t("cinema:submit.form.step1.title.placeholder")}
           value={draft.title}
           onChange={(e) => set("title", e.target.value)}
         />
@@ -34,16 +52,22 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
 
       <div className={styles.fieldRow}>
         <FormField
-          label={<FieldLabel opt="(if different)">Original title</FieldLabel>}
+          label={
+            <FieldLabel opt={t("cinema:submit.form.step1.originalTitle.opt")}>
+              {t("cinema:submit.form.step1.originalTitle.label")}
+            </FieldLabel>
+          }
         >
           <input
             type="text"
-            placeholder="Title in original language"
+            placeholder={t(
+              "cinema:submit.form.step1.originalTitle.placeholder",
+            )}
             value={draft.originalTitle}
             onChange={(e) => set("originalTitle", e.target.value)}
           />
         </FormField>
-        <FormField label="Year of production">
+        <FormField label={t("cinema:submit.form.step1.year.label")}>
           <input
             type="number"
             placeholder="2026"
@@ -54,7 +78,7 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
       </div>
 
       <div className={styles.fieldRow3}>
-        <FormField label="Runtime (minutes)">
+        <FormField label={t("cinema:submit.form.step1.runtime.label")}>
           <input
             type="number"
             placeholder="92"
@@ -62,65 +86,88 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
             onChange={(e) => set("runtime", e.target.value)}
           />
         </FormField>
-        <FormField label="Country of origin">
+        <FormField label={t("cinema:submit.form.step1.country.label")}>
           <select
             value={draft.country}
             onChange={(e) => set("country", e.target.value)}
           >
-            {COUNTRIES.map((c) => (
-              <option key={c}>{c}</option>
+            {COUNTRIES.map((country) => (
+              <option key={country.value} value={country.value}>
+                {t(country.labelKey)}
+              </option>
             ))}
           </select>
         </FormField>
-        <FormField label="Original language">
+        <FormField label={t("cinema:submit.form.step1.language.label")}>
           <select
             value={draft.language}
             onChange={(e) => set("language", e.target.value)}
           >
-            {LANGUAGES.map((l) => (
-              <option key={l}>{l}</option>
+            {LANGUAGES.map((language) => (
+              <option key={language.value} value={language.value}>
+                {t(language.labelKey)}
+              </option>
             ))}
           </select>
         </FormField>
       </div>
 
-      <FormField label="Format">
-        <div className={styles.radioGrid} role="radiogroup" aria-label="Format">
-          {FORMATS.map((f) => {
-            const on = f.value === draft.format;
+      <FormField label={t("cinema:submit.form.step1.format.label")}>
+        <div
+          className={styles.radioGrid}
+          role="radiogroup"
+          aria-label={t("cinema:submit.form.step1.format.ariaLabel")}
+        >
+          {FORMATS.map((formatOption) => {
+            const on = formatOption.value === draft.format;
             return (
               <button
-                key={f.value}
+                key={formatOption.value}
                 type="button"
                 role="radio"
                 aria-checked={on}
-                onClick={() => set("format", f.value)}
+                onClick={() => set("format", formatOption.value)}
                 className={[styles.rOpt, on && styles.rOptOn]
                   .filter(Boolean)
                   .join(" ")}
               >
                 <span className={styles.rDot} aria-hidden />
                 <span className={styles.rText}>
-                  {f.label}
-                  {f.sub && <span className={styles.rSub}>{f.sub}</span>}
+                  {t(formatOption.labelKey)}
+                  {formatOption.subKey && (
+                    <span className={styles.rSub}>
+                      {t(formatOption.subKey)}
+                    </span>
+                  )}
                 </span>
               </button>
             );
           })}
         </div>
       </FormField>
+    </>
+  );
+}
 
+/** Synopsis, director's statement, identity tags, content notes, poster,
+ * screener link. */
+function Step1CreativeFields({ form }: { form: SubmitForm }) {
+  const { t } = useTranslation();
+  const { draft, set, toggle } = form;
+  const identities = new Set(draft.identities);
+  return (
+    <>
       <FormField
         label={
-          <FieldLabel why="Written by you, in your own voice. 80–200 words. Not a pitch — describe the film as if you're writing to a friend who hasn't seen it.">
-            Synopsis
+          <FieldLabel why={t("cinema:submit.form.step1.synopsis.why")}>
+            {t("cinema:submit.form.step1.synopsis.label")}
           </FieldLabel>
         }
         required
       >
         <textarea
           rows={5}
-          placeholder="A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them…"
+          placeholder={t("cinema:submit.form.step1.synopsis.placeholder")}
           value={draft.synopsis}
           onChange={(e) => set("synopsis", e.target.value)}
         />
@@ -129,16 +176,16 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
       <FormField
         label={
           <FieldLabel
-            opt="(optional, but shown on the film page)"
-            why="Why you made it, and what you want people to bring to it. 60–120 words."
+            opt={t("cinema:submit.form.step1.statement.opt")}
+            why={t("cinema:submit.form.step1.statement.why")}
           >
-            Director's statement
+            {t("cinema:submit.form.step1.statement.label")}
           </FieldLabel>
         }
       >
         <textarea
           rows={4}
-          placeholder="I make films about people who were never asked whether they wanted to be documented…"
+          placeholder={t("cinema:submit.form.step1.statement.placeholder")}
           value={draft.statement}
           onChange={(e) => set("statement", e.target.value)}
         />
@@ -146,22 +193,25 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
 
       <FormField
         label={
-          <FieldLabel why="Self-disclosed only. These let viewers find more work by their communities. Never required. Tick what you want shown.">
-            Identity tags for yourself as filmmaker
+          <FieldLabel why={t("cinema:submit.form.step1.identityTags.why")}>
+            {t("cinema:submit.form.step1.identityTags.label")}
           </FieldLabel>
         }
       >
         <ChipSelect
-          options={IDENTITY_TAGS}
+          options={IDENTITY_TAGS.map((tag) => ({
+            value: tag.value,
+            label: t(tag.labelKey),
+          }))}
           selected={identities}
-          onToggle={(v) => toggle("identities", v)}
+          onToggle={(value) => toggle("identities", value)}
         />
       </FormField>
 
       <FormField
         label={
-          <FieldLabel why="We surface these prominently, with timecodes if you can provide them. Think of them as information, not warnings — they help viewers decide whether tonight's the night for your film.">
-            Content notes
+          <FieldLabel why={t("cinema:submit.form.step1.contentNotes.why")}>
+            {t("cinema:submit.form.step1.contentNotes.label")}
           </FieldLabel>
         }
       >
@@ -170,8 +220,8 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
 
       <FormField
         label={
-          <FieldLabel why="3:4 ratio preferred. Min 1800px tall. Used on your film's page and in the catalogue grid.">
-            Upload poster / key art
+          <FieldLabel why={t("cinema:submit.form.step1.poster.why")}>
+            {t("cinema:submit.form.step1.poster.label")}
           </FieldLabel>
         }
       >
@@ -180,19 +230,19 @@ export function CinemaSubmitStep1({ form }: { form: SubmitForm }) {
 
       <FormField
         label={
-          <FieldLabel why="Password-protected Vimeo, Frame.io, or WeTransfer links work. We view every film before accepting it. Turnaround: 10–14 days.">
-            Screener link
+          <FieldLabel why={t("cinema:submit.form.step1.screener.why")}>
+            {t("cinema:submit.form.step1.screener.label")}
           </FieldLabel>
         }
         required
       >
         <input
           type="url"
-          placeholder="https://vimeo.com/… or paste a WeTransfer link"
+          placeholder={t("cinema:submit.form.step1.screener.placeholder")}
           value={draft.screener}
           onChange={(e) => set("screener", e.target.value)}
         />
       </FormField>
-    </div>
+    </>
   );
 }

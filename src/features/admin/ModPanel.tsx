@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { EmptyState } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LIVING } from "../communities/livingCommunities.data";
 import {
   RequestsTab,
@@ -9,22 +10,23 @@ import {
 } from "./ModPanelTabs";
 import styles from "./ModPanel.module.css";
 
-const TABS = [
-  ["requests", "Requests"],
-  ["reports", "Reports"],
-  ["members", "Members"],
-  ["settings", "Settings"],
+const TAB_KEYS = [
+  ["requests", "modPanel.tabs.requests"],
+  ["reports", "modPanel.tabs.reports"],
+  ["members", "modPanel.tabs.members"],
+  ["settings", "modPanel.tabs.settings"],
 ] as const;
 
 export function ModPanel({ slug }: { slug: string }) {
+  const { t } = useTranslation();
   const living = LIVING[slug];
-  const [tab, setTab] = useState<(typeof TABS)[number][0]>("requests");
+  const [tab, setTab] = useState<(typeof TAB_KEYS)[number][0]>("requests");
 
   if (!living) {
     return (
       <EmptyState
-        title="Community not found"
-        description="We couldn't find that community. It may have been archived."
+        title={t("admin:modPanel.notFound.title")}
+        description={t("admin:modPanel.notFound.description")}
       />
     );
   }
@@ -32,7 +34,7 @@ export function ModPanel({ slug }: { slug: string }) {
   return (
     <div>
       <div className={styles.tabs}>
-        {TABS.map(([id, label]) => (
+        {TAB_KEYS.map(([id, labelKey]) => (
           <button
             key={id}
             type="button"
@@ -41,7 +43,7 @@ export function ModPanel({ slug }: { slug: string }) {
               .join(" ")}
             onClick={() => setTab(id)}
           >
-            {label}
+            {t(`admin:${labelKey}`)}
           </button>
         ))}
       </div>

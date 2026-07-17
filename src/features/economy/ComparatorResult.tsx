@@ -1,5 +1,7 @@
 import { FiAlertCircle, FiBriefcase, FiCheck, FiUser } from "react-icons/fi";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import {
   estimateSalariedNet,
   estimateTakeHome,
@@ -36,6 +38,8 @@ interface ColumnProps {
 }
 
 function ResultColumn({ label, icon, result, highlight }: ColumnProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={`${styles.col} ${highlight ? styles.colHi : ""}`}>
       <p className={styles.colLabel}>
@@ -44,21 +48,22 @@ function ResultColumn({ label, icon, result, highlight }: ColumnProps) {
         </span>
         {label}
       </p>
-      <p className={styles.colNet}>{euro(result.net)}</p>
+      <p className={styles.colNet}>{fmt.currency(result.net)}</p>
       <p className={styles.colMonthly}>
-        ≈ <strong>{euro(result.net / 12)}</strong> / month
+        ≈ <strong>{fmt.currency(result.net / 12)}</strong>{" "}
+        {t("economy:comparator.result.perMonth")}
       </p>
       <dl className={styles.colBreakdown}>
         <div className={styles.colRow}>
-          <dt>− Segurança Social</dt>
-          <dd>−{euro(result.ss)}</dd>
+          <dt>{t("economy:comparator.result.segurancaSocial")}</dt>
+          <dd>−{fmt.currency(result.ss)}</dd>
         </div>
         <div className={styles.colRow}>
-          <dt>− IRS</dt>
-          <dd>−{euro(result.irs)}</dd>
+          <dt>{t("economy:comparator.result.irs")}</dt>
+          <dd>−{fmt.currency(result.irs)}</dd>
         </div>
         <div className={styles.colRow}>
-          <dt>Effective rate</dt>
+          <dt>{t("economy:comparator.result.effectiveRate")}</dt>
           <dd>{ratePct(result)}%</dd>
         </div>
       </dl>
@@ -73,6 +78,8 @@ export function ComparatorResult({
   year,
   startupYear,
 }: ComparatorResultProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const grossNum = safeNumber(gross);
 
   const freelance = estimateTakeHome({
@@ -92,13 +99,13 @@ export function ComparatorResult({
     <div className={styles.result}>
       <div className={styles.cols}>
         <ResultColumn
-          label="Freelance"
+          label={t("economy:comparator.result.freelanceLabel")}
           icon={<FiUser />}
           result={freelance}
           highlight={freelanceMore}
         />
         <ResultColumn
-          label="Salaried"
+          label={t("economy:comparator.result.salariedLabel")}
           icon={<FiBriefcase />}
           result={salaried}
           highlight={!freelanceMore}
@@ -109,32 +116,50 @@ export function ComparatorResult({
         <span className={styles.diffIcon} aria-hidden>
           <FiCheck />
         </span>
-        <p className={styles.diffLabel}>The bottom line</p>
+        <p className={styles.diffLabel}>
+          {t("economy:comparator.result.bottomLine")}
+        </p>
         <p className={styles.diffValue}>
-          As a freelancer you&rsquo;d keep <em>{euro(diffAbs)}</em>{" "}
-          {freelanceMore ? "more" : "less"} per year
+          <Translation
+            i18nKey={
+              freelanceMore
+                ? "economy:comparator.result.summaryMore"
+                : "economy:comparator.result.summaryLess"
+            }
+            components={{ em: <em /> }}
+            values={{ amount: fmt.currency(diffAbs) }}
+          />
         </p>
         <p className={styles.diffSub}>
-          at {euro(grossNum)} gross — that&rsquo;s about {euro(diffAbs / 12)} a
-          month {freelanceMore ? "extra in your pocket" : "you’d give up"},
-          before the costs below.
+          {t(
+            freelanceMore
+              ? "economy:comparator.result.subMore"
+              : "economy:comparator.result.subLess",
+            {
+              gross: fmt.currency(grossNum),
+              monthly: fmt.currency(diffAbs / 12),
+            },
+          )}
         </p>
       </div>
 
       <div className={styles.costs}>
         <h3 className={styles.costsTitle}>
-          What the <em>payslip</em> doesn&rsquo;t show
+          <Translation
+            i18nKey="economy:comparator.result.costsTitle"
+            components={{ em: <em /> }}
+          />
         </h3>
         <ul className={styles.costsList}>
           {HIDDEN_COSTS.map((c) => (
             <li
-              key={c.text}
+              key={c.textKey}
               className={c.positive ? styles.costPos : styles.costNeg}
             >
               <span className={styles.costIcon} aria-hidden>
                 {c.positive ? <FiCheck /> : <FiAlertCircle />}
               </span>
-              {c.text}
+              {t(c.textKey)}
             </li>
           ))}
         </ul>

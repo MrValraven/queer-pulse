@@ -1,5 +1,7 @@
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminPageHeader, AdminAvatar } from "./ui";
 import {
   COMMUNITIES,
@@ -15,32 +17,33 @@ export function AdminCommunityGrid({
   onOpen: (c: Community) => void;
   onHealth: (c: Community) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   return (
     <>
       <FadeIn>
         <AdminPageHeader
-          eyebrow="Communities"
+          eyebrow={t("admin:communities.grid.eyebrow")}
           title={
             <>
-              Eight spaces,
+              {t("admin:communities.grid.titleLine1")}
               <br />
-              each <em>tended to</em>.
+              <Translation
+                i18nKey="admin:communities.grid.titleLine2"
+                components={{ em: <em /> }}
+              />
             </>
           }
-          sub="Every community has a moderator who knows it by name. Health is how steady each one feels — reports answered, members held, no one slipping through."
+          sub={t("admin:communities.grid.sub")}
           actions={
             <Button
               variant="ghost"
               onClick={() =>
-                showToast(
-                  "Creating a new community would open a guided setup",
-                  "info",
-                )
+                showToast(t("admin:communities.grid.newToast"), "info")
               }
             >
-              + New community
+              {t("admin:communities.grid.newCta")}
             </Button>
           }
         />
@@ -70,6 +73,7 @@ function HealthCard({
   onOpen: () => void;
   onHealth: () => void;
 }) {
+  const { t } = useTranslation();
   const color = healthColor(c.health);
 
   return (
@@ -81,7 +85,10 @@ function HealthCard({
           <div className={styles.cardTag}>
             {c.tag}
             {c.support && (
-              <span className={styles.cardTagWarn}> · needs a hand</span>
+              <span className={styles.cardTagWarn}>
+                {" "}
+                {t("admin:communities.grid.needsHand")}
+              </span>
             )}
           </div>
         </div>
@@ -90,7 +97,9 @@ function HealthCard({
           tabIndex={0}
           className={styles.scoreBtn}
           style={{ color }}
-          aria-label={`Health ${c.health}, see breakdown`}
+          aria-label={t("admin:communities.grid.healthAriaLabel", {
+            score: c.health,
+          })}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -111,10 +120,16 @@ function HealthCard({
       <Sparkline points={c.spark} color={color} />
 
       <div className={styles.cardStats}>
-        <Stat label="Members" value={c.members} />
-        <Stat label="Activity" value={c.activity} />
         <Stat
-          label="Open reports"
+          label={t("admin:communities.grid.stat.members")}
+          value={c.members}
+        />
+        <Stat
+          label={t("admin:communities.grid.stat.activity")}
+          value={c.activity}
+        />
+        <Stat
+          label={t("admin:communities.grid.stat.openReports")}
           value={String(c.reports)}
           tone={c.reports > 0 ? "coral" : "jade"}
         />
@@ -156,6 +171,7 @@ const SH = 48;
 const SPAD = 4;
 
 function Sparkline({ points, color }: { points: number[]; color: string }) {
+  const { t } = useTranslation();
   const min = Math.min(...points);
   const max = Math.max(...points);
   const span = max - min || 1;
@@ -178,7 +194,9 @@ function Sparkline({ points, color }: { points: number[]; color: string }) {
       height={SH}
       preserveAspectRatio="none"
       role="img"
-      aria-label={`Health trend, latest ${points[n - 1]}`}
+      aria-label={t("admin:communities.grid.sparklineAriaLabel", {
+        value: points[n - 1] ?? 0,
+      })}
     >
       <path d={area} fill={color} opacity={0.1} />
       <path

@@ -1,5 +1,3 @@
-import { type ReactNode } from "react";
-
 export type Section = "qp" | "pt" | "eu";
 export type Status = "open" | "rolling" | "closed";
 
@@ -118,66 +116,45 @@ export const GRANTS: Grant[] = [
 ];
 
 export const FILTERS = [
-  { value: "all", label: "All" },
-  { value: "individual", label: "For individuals" },
-  { value: "org", label: "For organisations" },
-  { value: "arts", label: "Arts & culture" },
-  { value: "community", label: "Community projects" },
-  { value: "eu", label: "EU / International" },
+  { value: "all", labelKey: "economy:grants.filter.all" },
+  { value: "individual", labelKey: "economy:grants.filter.individual" },
+  { value: "org", labelKey: "economy:grants.filter.org" },
+  { value: "arts", labelKey: "economy:grants.filter.arts" },
+  { value: "community", labelKey: "economy:grants.filter.community" },
+  { value: "eu", labelKey: "economy:grants.filter.eu" },
 ];
 
-export const SECTIONS: { id: Section; label: ReactNode }[] = [
-  {
-    id: "qp",
-    label: (
-      <>
-        From <em>QueerPulse</em>
-      </>
-    ),
-  },
-  {
-    id: "pt",
-    label: (
-      <>
-        <em>Portugal</em> — national programmes
-      </>
-    ),
-  },
-  {
-    id: "eu",
-    label: (
-      <>
-        <em>EU &amp; International</em>
-      </>
-    ),
-  },
+export const SECTIONS: { id: Section; labelKey: string }[] = [
+  { id: "qp", labelKey: "economy:grants.section.qp" },
+  { id: "pt", labelKey: "economy:grants.section.pt" },
+  { id: "eu", labelKey: "economy:grants.section.eu" },
 ];
 
-export const STATUS_LABEL: Record<Status, string> = {
-  open: "Open now",
-  rolling: "Rolling",
-  closed: "Closed",
+export const STATUS_LABEL_KEY: Record<Status, string> = {
+  open: "economy:grants.status.open",
+  rolling: "economy:grants.status.rolling",
+  closed: "economy:grants.status.closed",
 };
 
 export const STEPS = [
   {
     n: "01",
-    title: "Read the criteria twice",
-    body: "Most rejections are from applications that technically fit but don't mirror the funder's language. Map your project onto their specific wording.",
+    titleKey: "economy:grants.guide.step.criteria.title",
+    bodyKey: "economy:grants.guide.step.criteria.body",
   },
   {
     n: "02",
-    title: "Tell a specific story",
-    body: "Funders read hundreds of applications. A single specific, human story of impact will land better than broad claims.",
+    titleKey: "economy:grants.guide.step.story.title",
+    bodyKey: "economy:grants.guide.step.story.body",
   },
   {
     n: "03",
-    title: "Show your community",
-    body: "Queer-focused funders want to see the community embedded — not as beneficiaries but as participants and decision-makers.",
+    titleKey: "economy:grants.guide.step.community.title",
+    bodyKey: "economy:grants.guide.step.community.body",
   },
   {
     n: "04",
-    title: "Ask for a review",
-    body: "Before submitting, ask someone not involved to read your application. Fresh eyes catch the assumptions you've stopped seeing.",
+    titleKey: "economy:grants.guide.step.review.title",
+    bodyKey: "economy:grants.guide.step.review.body",
   },
 ];

@@ -46,8 +46,10 @@ const INITIAL: SubmitDraft = {
   originalTitle: "",
   year: "",
   runtime: "",
-  country: "Portugal",
-  language: "Portuguese",
+  // Canonical ISO codes, not display labels — see cinemaSubmit.data.ts's
+  // OptionKeyDef comment for why (i18n stored-value trap).
+  country: "pt",
+  language: "pt",
   format: "documentary",
   synopsis: "",
   statement: "",

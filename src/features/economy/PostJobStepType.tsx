@@ -1,10 +1,13 @@
 import { FiAlertCircle } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CATEGORIES,
   COMMITMENTS,
   FORMATS,
   SENIORITY,
   TIMEZONES,
+  type Option,
 } from "./postJob.data";
 import type { PostJobForm } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
@@ -18,23 +21,30 @@ function Select({
 }: {
   label: string;
   value: string;
-  options: string[];
+  options: Option[];
   onChange: (v: string) => void;
   optional?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.field}>
       <div className={styles.label}>
         {label}
-        {optional && <span className={styles.opt}>optional</span>}
+        {optional && (
+          <span className={styles.opt}>
+            {t("economy:postJob.field.optional")}
+          </span>
+        )}
       </div>
       <select
         className={styles.select}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
-        {options.map((o) => (
-          <option key={o}>{o}</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {t(option.labelKey)}
+          </option>
         ))}
       </select>
     </div>
@@ -48,36 +58,41 @@ export function PostJobStepType({
   form: PostJobForm;
   showErrors: boolean;
 }) {
+  const { t } = useTranslation();
   const { state, patch, needsCity, showsTimezone } = form;
   const cityMissing = showErrors && needsCity && !state.city.trim();
 
   return (
     <>
       <div className={styles.stepHead}>
-        <div className={styles.eyebrow}>Step 1 of 5</div>
+        <div className={styles.eyebrow}>
+          {t("economy:postJob.step1.eyebrow")}
+        </div>
         <h1 className={styles.stepTitle}>
-          The <em>role</em>
+          <Translation
+            i18nKey="economy:postJob.step1.title"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.stepSub}>
-          How the work is structured. These become the main filters members
-          search the board by.
-        </p>
+        <p className={styles.stepSub}>{t("economy:postJob.step1.sub")}</p>
       </div>
 
       <div className={styles.card}>
-        <div className={styles.cardTitle}>Arrangement</div>
+        <div className={styles.cardTitle}>
+          {t("economy:postJob.step1.arrangementTitle")}
+        </div>
         <div className={styles.cardSub}>
-          The shape of the role — pick the closest fit.
+          {t("economy:postJob.step1.arrangementSub")}
         </div>
         <div className={styles.fieldRow}>
           <Select
-            label="Category"
+            label={t("economy:postJob.field.category")}
             value={state.category}
             options={CATEGORIES}
             onChange={(v) => patch({ category: v })}
           />
           <Select
-            label="Commitment"
+            label={t("economy:postJob.field.commitment")}
             value={state.commitment}
             options={COMMITMENTS}
             onChange={(v) => patch({ commitment: v })}
@@ -85,14 +100,14 @@ export function PostJobStepType({
         </div>
         <div className={styles.fieldRow}>
           <Select
-            label="Experience level"
+            label={t("economy:postJob.field.experienceLevel")}
             value={state.seniority}
             options={SENIORITY}
             onChange={(v) => patch({ seniority: v })}
             optional
           />
           <Select
-            label="Format"
+            label={t("economy:postJob.field.format")}
             value={state.format}
             options={FORMATS}
             onChange={(v) => patch({ format: v })}
@@ -106,24 +121,26 @@ export function PostJobStepType({
               .join(" ")}
           >
             <div className={styles.label}>
-              Location <span className={styles.req}>*</span>
+              {t("economy:postJob.field.location")}{" "}
+              <span className={styles.req}>*</span>
             </div>
             <input
               className={styles.input}
               type="text"
               value={state.city}
               onChange={(e) => patch({ city: e.target.value })}
-              placeholder="e.g. Arroios, Lisbon — or a neighbourhood / district"
+              placeholder={t("economy:postJob.step1.locationPlaceholder")}
             />
             <div className={styles.error}>
-              <FiAlertCircle size={13} aria-hidden /> Add where this is based.
+              <FiAlertCircle size={13} aria-hidden />{" "}
+              {t("economy:postJob.step1.locationError")}
             </div>
           </div>
         )}
 
         {showsTimezone && (
           <Select
-            label="Timezone"
+            label={t("economy:postJob.field.timezone")}
             value={state.timezone}
             options={TIMEZONES}
             onChange={(v) => patch({ timezone: v })}

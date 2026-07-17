@@ -300,7 +300,7 @@ function CatalogStatus({
       )}
       {hasFilters && (
         <button type="button" className={styles.clearAll} onClick={onClear}>
-          Clear all
+          {t("cinema:browse.filters.clearAll")}
         </button>
       )}
     </div>

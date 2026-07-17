@@ -1,5 +1,6 @@
 import { FiCheck } from "react-icons/fi";
-import { STEP_LABELS } from "./usePostJobForm";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { STEP_LABEL_KEYS } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
 
 export function PostJobStepper({
@@ -10,13 +11,14 @@ export function PostJobStepper({
   /** Jump to a step (only allowed backwards / to visited steps by the caller). */
   onGo: (i: number) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.stepper}>
-      {STEP_LABELS.map((label, i) => {
+      {STEP_LABEL_KEYS.map((labelKey, i) => {
         const done = i < step;
         const active = i === step;
         return (
-          <div key={label} style={{ display: "contents" }}>
+          <div key={labelKey} style={{ display: "contents" }}>
             <button
               type="button"
               className={[
@@ -32,9 +34,9 @@ export function PostJobStepper({
               <span className={styles.stepDot}>
                 {done ? <FiCheck aria-hidden /> : i + 1}
               </span>
-              <span className={styles.stepName}>{label}</span>
+              <span className={styles.stepName}>{t(labelKey)}</span>
             </button>
-            {i < STEP_LABELS.length - 1 && (
+            {i < STEP_LABEL_KEYS.length - 1 && (
               <span
                 className={[styles.stepLine, done && styles.stepLineDone]
                   .filter(Boolean)

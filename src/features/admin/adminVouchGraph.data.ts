@@ -12,7 +12,13 @@ export type SceneKey =
 export type Standing = "trusted" | "warned" | "new" | "flagged";
 
 export interface Scene {
-  label: string;
+  /** Real community/scene name (content) — undefined for the one chrome
+   *  exception ("ring"), which sets `labelKey` instead. */
+  label?: string;
+  /** Set only for the "ring" entry: a system-generated category, not a real
+   *  community name, so it resolves through the catalog like the same label
+   *  in the "Safety" legend (`vouchGraph.legend.safety.ring`). */
+  labelKey?: string;
   /** token-backed series colour for the "Scenes" overlay + legend */
   color: string;
 }
@@ -23,7 +29,10 @@ export const SCENES: Record<SceneKey, Scene> = {
   nightlife: { label: "Nightlife", color: "var(--accent)" },
   newly: { label: "Newly Arrived", color: "var(--amber)" },
   elders: { label: "Elders & Memory", color: "var(--plum)" },
-  ring: { label: "Suspected ring", color: "var(--danger)" },
+  ring: {
+    labelKey: "admin:vouchGraph.legend.safety.ring",
+    color: "var(--danger)",
+  },
 };
 
 /**
@@ -507,24 +516,10 @@ export function shortestPath(a: string, b: string): string[] | null {
   return null;
 }
 
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-export function fmtMonth(date: string): string {
+/** 'YYYY-MM' → the first of that month as a real `Date`, for `fmt.date()`. */
+export function monthDate(date: string): Date {
   const [y, m] = date.split("-");
-  return `${MONTHS[parseInt(m!, 10) - 1]} ${y}`;
+  return new Date(parseInt(y!, 10), parseInt(m!, 10) - 1, 1);
 }
 
 export function monthStr(value: number): string {
@@ -533,8 +528,9 @@ export function monthStr(value: number): string {
   return `${y}-${m < 10 ? "0" : ""}${m}`;
 }
 
-export function monthLabel(value: number): string {
-  return fmtMonth(monthStr(value));
+/** months-since-epoch number → a real `Date`, for `fmt.date()`. */
+export function monthDateFromValue(value: number): Date {
+  return monthDate(monthStr(value));
 }
 
 /** node radius: focus is largest, ring accounts smallest */

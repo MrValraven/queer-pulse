@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../hooks";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./Modal.module.css";
 
 const FOCUSABLE =
@@ -92,6 +93,7 @@ export function Modal({
   className,
   children,
 }: ModalProps) {
+  const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   return (
     <div className={styles.scrim} onClick={onClose}>
@@ -115,7 +117,7 @@ export function Modal({
             type="button"
             className={styles.modalX}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("shared:modal.close")}
           >
             <FiX />
           </button>
@@ -151,6 +153,7 @@ export function ModalSheet({
   className,
   children,
 }: ModalSheetProps) {
+  const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   return (
     <div
@@ -179,7 +182,7 @@ export function ModalSheet({
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("shared:modal.close")}
           >
             <FiX />
           </button>

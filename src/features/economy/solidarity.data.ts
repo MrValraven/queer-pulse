@@ -213,33 +213,33 @@ export const TINT_FG: Record<Tint, string> = {
   plum: "var(--plum)",
 };
 
-export const HOW: { n: string; title: string; body: string }[] = [
+export const HOW: { n: string; titleKey: string; bodyKey: string }[] = [
   {
     n: "01",
-    title: "Find your practitioner",
-    body: "Filter by profession, neighbourhood, or language. Every listing includes how their sliding scale works — no surprises.",
+    titleKey: "economy:solidarity.how.step1.title",
+    bodyKey: "economy:solidarity.how.step1.body",
   },
   {
     n: "02",
-    title: "Contact them directly",
-    body: "Reach out via the platform or email. You set the conversation — you do not have to explain your financial situation to anyone else first.",
+    titleKey: "economy:solidarity.how.step2.title",
+    bodyKey: "economy:solidarity.how.step2.body",
   },
   {
     n: "03",
-    title: "Pay what you can",
-    body: "Each practitioner sets their own range and approach. Some use income-based scales, others name-your-price. The listing tells you how.",
+    titleKey: "economy:solidarity.how.step3.title",
+    bodyKey: "economy:solidarity.how.step3.body",
   },
 ];
 
-export const FILTERS: { id: Cat | "all"; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "therapy", label: "Therapy" },
-  { id: "legal", label: "Legal" },
-  { id: "medical", label: "Medical" },
-  { id: "dental", label: "Dental" },
-  { id: "vet", label: "Vet" },
-  { id: "finance", label: "Accountancy" },
-  { id: "body", label: "Bodywork" },
+export const FILTERS: { id: Cat | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "economy:solidarity.filter.all" },
+  { id: "therapy", labelKey: "economy:solidarity.filter.therapy" },
+  { id: "legal", labelKey: "economy:solidarity.filter.legal" },
+  { id: "medical", labelKey: "economy:solidarity.filter.medical" },
+  { id: "dental", labelKey: "economy:solidarity.filter.dental" },
+  { id: "vet", labelKey: "economy:solidarity.filter.vet" },
+  { id: "finance", labelKey: "economy:solidarity.filter.finance" },
+  { id: "body", labelKey: "economy:solidarity.filter.body" },
 ];
 
 export function initials(name: string) {

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { StudioTrackHero } from "./StudioTrackHero";
 import { StudioTrackLyrics } from "./StudioTrackLyrics";
@@ -9,33 +11,48 @@ import { StudioTrackSidebar } from "./StudioTrackSidebar";
 import { StudioTipModal } from "./StudioTipModal";
 import { MORE } from "./studioTrack.data";
 import ss from "./studio.module.css";
-import t from "./track.module.css";
+import trackStyles from "./track.module.css";
+
+// Content — this track's title, artist name and album title come from the
+// API in live mode and are never translated (§1).
+const ARTIST_NAME = "Mariana Sol";
+const ALBUM_TITLE = "Cidade dos santos";
+const TRACK_NUMBER = 6;
 
 export function StudioTrackPage() {
+  const { t } = useTranslation();
   const [tipOpen, setTipOpen] = useState(false);
 
   return (
     <StudioShell>
-      <div className={t.crumb}>
-        <Link to={routes.studioArtist}>Mariana Sol</Link>
+      <div className={trackStyles.crumb}>
+        <Link to={routes.studioArtist}>{ARTIST_NAME}</Link>
         <span>›</span>
-        <Link to={routes.studioAlbum}>Cidade dos santos</Link>
+        <Link to={routes.studioAlbum}>{ALBUM_TITLE}</Link>
         <span>›</span>
-        <em>track 6</em>
+        <em>track {TRACK_NUMBER}</em>
       </div>
 
       <StudioTrackHero onTip={() => setTipOpen(true)} />
 
-      <div className={t.inSet}>
-        <span className={t.live} />
+      <div className={trackStyles.inSet}>
+        <span className={trackStyles.live} />
         <span>
-          You're listening with <b>312 people</b> in the <em>Wednesday set</em>,
-          programmed by Sara Marques. Track 7 starts in <b>2:36</b>.
+          <Translation
+            i18nKey="studio:track.inSet.status"
+            components={{ b: <b />, em: <em /> }}
+            values={{
+              count: 312,
+              curator: "Sara Marques",
+              next: 7,
+              countdown: "2:36",
+            }}
+          />
         </span>
-        <Link to={routes.studioLive}>Join the room →</Link>
+        <Link to={routes.studioLive}>{t("studio:track.inSet.joinCta")} →</Link>
       </div>
 
-      <div className={t.body}>
+      <div className={trackStyles.body}>
         <StudioTrackLyrics />
         <StudioTrackSidebar />
       </div>
@@ -43,10 +60,14 @@ export function StudioTrackPage() {
       <section className={ss.row}>
         <div className={ss.rowH}>
           <h2>
-            More from <em>Cidade dos santos</em>
+            <Translation
+              i18nKey="studio:album.more.heading"
+              values={{ artist: ALBUM_TITLE }}
+              components={{ em: <em /> }}
+            />
           </h2>
           <Link to={routes.studioAlbum} className={ss.all}>
-            Full album →
+            {t("studio:track.more.fullAlbumCta")} →
           </Link>
         </div>
         <div className={ss.rowGrid}>

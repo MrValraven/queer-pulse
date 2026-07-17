@@ -283,8 +283,14 @@ export const CHAT: Msg[] = [
   },
 ];
 
+// `id` is the stable stored tab value — never translate it directly;
+// `labelKey` resolves via t().
 export const TABS = [
-  { label: "Chat", ct: "312" },
-  { label: "Tips", ct: "87" },
-  { label: "Listeners", ct: "" },
+  { id: "chat", labelKey: "studio:liveChat.tabs.chat.label", ct: "312" },
+  { id: "tips", labelKey: "studio:liveChat.tabs.tips.label", ct: "87" },
+  {
+    id: "listeners",
+    labelKey: "studio:liveChat.tabs.listeners.label",
+    ct: "",
+  },
 ];

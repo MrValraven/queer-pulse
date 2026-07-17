@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import {
   CONNECTION,
@@ -49,13 +52,14 @@ function MemberMini({
 
 function Composer({
   initials,
-  placeholder,
+  replyToName,
   onSend,
 }: {
   initials: string;
-  placeholder: string;
+  replyToName: string;
   onSend: (body: string) => void;
 }) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   function submit() {
     const body = value.trim();
@@ -69,7 +73,9 @@ function Composer({
       <textarea
         className={styles.rcInput}
         rows={1}
-        placeholder={placeholder}
+        placeholder={t("notifications:deepLink.composer.placeholder", {
+          name: replyToName,
+        })}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {
@@ -80,7 +86,7 @@ function Composer({
         }}
       />
       <button type="button" className={styles.rcSend} onClick={submit}>
-        Send
+        {t("notifications:deepLink.composer.send")}
       </button>
     </div>
   );
@@ -88,21 +94,26 @@ function Composer({
 
 /** Renders the replies the user has sent this session, in the same bubble style. */
 function SentReplies({ replies }: { replies: SentReply[] }) {
+  const { t } = useTranslation();
   if (replies.length === 0) return null;
   return (
     <>
-      {replies.map((r) => (
+      {replies.map((reply) => (
         <div
-          key={r.id}
+          key={reply.id}
           className={styles.replyBubble}
           style={{ marginTop: 12 }}
         >
           <div className={styles.rbHeader}>
             <div className={styles.rbAv}>YO</div>
-            <div className={styles.rbName}>You</div>
-            <div className={styles.rbTime}>Just now</div>
+            <div className={styles.rbName}>
+              {t("notifications:deepLink.sentReply.you")}
+            </div>
+            <div className={styles.rbTime}>
+              {t("notifications:deepLink.sentReply.justNow")}
+            </div>
           </div>
-          <div className={styles.rbText}>{r.body}</div>
+          <div className={styles.rbText}>{reply.body}</div>
         </div>
       ))}
     </>
@@ -110,20 +121,27 @@ function SentReplies({ replies }: { replies: SentReply[] }) {
 }
 
 export function ConnectionCard() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const c = CONNECTION;
+  const firstName = c.name.split(" ")[0];
   const [status, setStatus] = useState<"pending" | "accepted" | "declined">(
     "pending",
   );
 
   function accept() {
     setStatus("accepted");
-    showToast("Connected with Sofia", "success");
+    showToast(
+      t("notifications:deepLink.connection.toastConnected", {
+        name: firstName,
+      }),
+      "success",
+    );
   }
   function decline() {
     setStatus("declined");
-    showToast("Request declined", "info");
+    showToast(t("notifications:deepLink.connection.toastDeclined"), "info");
   }
 
   // Decline collapses the card away.
@@ -142,18 +160,22 @@ export function ConnectionCard() {
           <FiCheck aria-hidden />
         </div>
         <div className={styles.connDoneTitle}>
-          You're <em>connected</em>
+          <Translation
+            i18nKey="notifications:deepLink.connection.connectedTitle"
+            components={{ em: <em /> }}
+          />
         </div>
         <p className={styles.connDoneBody}>
-          {c.name.split(" ")[0]} is now part of your network. Messaging and
-          tagged updates are open between you.
+          {t("notifications:deepLink.connection.connectedBody", {
+            name: firstName,
+          })}
         </p>
         <div className={styles.connDoneActions}>
           <Button
             variant="ghost-dark"
             onClick={() => navigate(routes.connections)}
           >
-            View your connections
+            {t("notifications:deepLink.connection.viewConnections")}
           </Button>
         </div>
       </div>
@@ -169,9 +191,15 @@ export function ConnectionCard() {
         meta={c.meta}
       />
       <div className={styles.connHead}>
-        Sofia wants to <em>connect</em>
+        <Translation
+          i18nKey="notifications:deepLink.connection.wantsToConnect"
+          components={{ em: <em /> }}
+          values={{ name: firstName }}
+        />
       </div>
-      <p className={styles.connIntro}>She sent you a note with her request:</p>
+      <p className={styles.connIntro}>
+        {t("notifications:deepLink.connection.noteIntro")}
+      </p>
       <div className={styles.connNote}>{c.note}</div>
       <button
         type="button"
@@ -188,34 +216,46 @@ export function ConnectionCard() {
             </div>
           ))}
         </div>
-        <div className={styles.mutualLabel}>{c.mutualLabel}</div>
+        <div className={styles.mutualLabel}>
+          {t("notifications:deepLink.connection.mutualConnections", {
+            count: c.mutualCount,
+          })}
+        </div>
       </button>
       <div className={styles.btnRow}>
         <Button variant="primary" onClick={accept}>
-          Accept
+          {t("notifications:deepLink.connection.accept")}
         </Button>
         <Button variant="ghost" onClick={decline}>
-          Decline
+          {t("notifications:deepLink.connection.decline")}
         </Button>
       </div>
       <button
         type="button"
         className={styles.notNow}
-        onClick={() => showToast("We'll remind you later", "info")}
+        onClick={() =>
+          showToast(
+            t("notifications:deepLink.connection.remindLaterToast"),
+            "info",
+          )
+        }
       >
-        Not now — decide later
+        {t("notifications:deepLink.connection.notNow")}
       </button>
     </div>
   );
 }
 
 export function GatheringCard() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const g = GATHERING;
   return (
     <div className={styles.card}>
       <div className={styles.evCover}>
-        <div className={styles.evBadge}>{g.badge}</div>
+        <div className={styles.evBadge}>
+          {t("notifications:deepLink.gathering.badge")}
+        </div>
       </div>
       <div className={styles.cardPad}>
         <div className={styles.evTitle}>{g.title}</div>
@@ -225,22 +265,30 @@ export function GatheringCard() {
           ))}
         </div>
         <div className={styles.evConfirm}>
-          <strong>You're on the guest list.</strong> {g.confirm}
+          <strong>
+            {t("notifications:deepLink.gathering.guestListConfirmed")}
+          </strong>{" "}
+          {t("notifications:deepLink.gathering.confirmedByHost")}
         </div>
         <div className={styles.evActions}>
           <Button
             variant="primary"
-            onClick={() => showToast("Added to your calendar", "success")}
+            onClick={() =>
+              showToast(
+                t("notifications:deepLink.gathering.addedToastCalendar"),
+                "success",
+              )
+            }
             style={{ flex: 1 }}
           >
-            Add to calendar
+            {t("notifications:deepLink.gathering.addToCalendar")}
           </Button>
           <Button
             variant="ghost"
             to={routes.gathering}
             style={{ flex: 1, justifyContent: "center" }}
           >
-            View event details
+            {t("notifications:deepLink.gathering.viewDetails")}
           </Button>
         </div>
       </div>
@@ -249,37 +297,46 @@ export function GatheringCard() {
 }
 
 export function ReplyCard() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const r = REPLY;
   const [replies, setReplies] = useState<SentReply[]>([]);
   function addReply(body: string) {
     setReplies((prev) => [...prev, { id: `r-${Date.now()}`, body }]);
   }
+  const repliedWhen = fmt.relativeTime(-r.repliedMinutesAgo, "minute");
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
       <MemberMini
         initials={r.initials}
         tint={r.tint}
         name={r.name}
-        meta={r.meta}
+        meta={t("notifications:deepLink.reply.meta", { when: repliedWhen })}
       />
-      <div className={styles.label}>Your post</div>
+      <div className={styles.label}>
+        {t("notifications:deepLink.reply.yourPost")}
+      </div>
       <div className={styles.postExcerpt}>{r.postExcerpt}</div>
-      <div className={`${styles.label} ${styles.labelGap}`}>Anika's reply</div>
+      <div className={`${styles.label} ${styles.labelGap}`}>
+        {t("notifications:deepLink.reply.theirReply", { name: r.name })}
+      </div>
       <div className={styles.replyBubble}>
         <div className={styles.rbHeader}>
           <div className={styles.rbAv}>{r.initials}</div>
           <div className={styles.rbName}>{r.name}</div>
-          <div className={styles.rbTime}>{r.replyTime}</div>
+          <div className={styles.rbTime}>{repliedWhen}</div>
         </div>
         <div className={styles.rbText}>{r.replyText}</div>
       </div>
       <SentReplies replies={replies} />
-      <Composer initials="YO" placeholder="Reply to Anika…" onSend={addReply} />
+      <Composer initials="YO" replyToName={r.name} onSend={addReply} />
     </div>
   );
 }
 
 export function MentionCard() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const m = MENTION;
   const [replies, setReplies] = useState<SentReply[]>([]);
   function addReply(body: string) {
@@ -291,9 +348,13 @@ export function MentionCard() {
         initials={m.initials}
         tint={m.tint}
         name={m.name}
-        meta={m.meta}
+        meta={t("notifications:deepLink.mention.meta", {
+          when: fmt.relativeTime(-m.mentionedHoursAgo, "hour"),
+        })}
       />
-      <div className={styles.label}>Jordan's post</div>
+      <div className={styles.label}>
+        {t("notifications:deepLink.mention.theirPost", { name: m.name })}
+      </div>
       <div className={styles.mentionPost}>
         Really loved the panel discussion at last week's meetup. Shoutout to{" "}
         <span className={styles.mentionHighlight}>@you</span> for the point
@@ -301,16 +362,14 @@ export function MentionCard() {
         team and we're now rethinking how we do Gathering descriptions.
       </div>
       <SentReplies replies={replies} />
-      <Composer
-        initials="YO"
-        placeholder="Reply to Jordan…"
-        onSend={addReply}
-      />
+      <Composer initials="YO" replyToName={m.name} onSend={addReply} />
     </div>
   );
 }
 
 export function ModerationCard() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={`${styles.card} ${styles.cardPad}`}>
       <div className={styles.modIcon}>
@@ -330,10 +389,22 @@ export function ModerationCard() {
           />
         </svg>
       </div>
-      <div className={styles.modHead}>An update on your account</div>
+      <div className={styles.modHead}>
+        {t("notifications:deepLink.moderation.heading")}
+      </div>
       <div className={styles.modRef}>
-        Reference <span className={styles.modRefN}>{MODERATION.ref}</span> ·{" "}
-        {MODERATION.updated}
+        <Translation
+          i18nKey="notifications:deepLink.moderation.reference"
+          components={{ refNum: <span className={styles.modRefN} /> }}
+          values={{
+            ref: MODERATION.ref,
+            updated: fmt.date(MODERATION.updatedAt, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          }}
+        />
       </div>
       <div className={styles.modBody}>{MODERATION.body}</div>
       <div className={styles.modActions}>
@@ -342,14 +413,14 @@ export function ModerationCard() {
           to={routes.appealOutcome}
           style={{ justifyContent: "center" }}
         >
-          View appeal outcome
+          {t("notifications:deepLink.moderation.viewOutcome")}
         </Button>
         <Button
           variant="ghost"
           to={routes.governance}
           style={{ justifyContent: "center" }}
         >
-          How moderation works
+          {t("notifications:deepLink.moderation.howItWorks")}
         </Button>
       </div>
     </div>

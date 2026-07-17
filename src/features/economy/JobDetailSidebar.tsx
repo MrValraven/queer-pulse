@@ -43,23 +43,33 @@ export function JobDetailSidebar({
         )}
 
         <div className={styles.detailRow}>
-          <span className={styles.dl}>Salary</span>
+          <span className={styles.dl}>
+            {t("economy:jobDetail.sidebar.salary")}
+          </span>
           <span className={`${styles.dv} ${styles.salary}`}>{job.salary}</span>
         </div>
         <div className={styles.detailRow}>
-          <span className={styles.dl}>Type</span>
+          <span className={styles.dl}>
+            {t("economy:jobDetail.sidebar.type")}
+          </span>
           <span className={styles.dv}>{job.type}</span>
         </div>
         <div className={styles.detailRow}>
-          <span className={styles.dl}>Location</span>
+          <span className={styles.dl}>
+            {t("economy:jobDetail.sidebar.location")}
+          </span>
           <span className={styles.dv}>{job.location}</span>
         </div>
         <div className={styles.detailRow}>
-          <span className={styles.dl}>Category</span>
+          <span className={styles.dl}>
+            {t("economy:jobDetail.sidebar.category")}
+          </span>
           <span className={styles.dv}>{d.category}</span>
         </div>
         <div className={styles.detailRow}>
-          <span className={styles.dl}>Deadline</span>
+          <span className={styles.dl}>
+            {t("economy:jobDetail.sidebar.deadline")}
+          </span>
           <span className={styles.dv}>{deadlineFull}</span>
         </div>
         <div className={styles.posted}>{postedText(d.posted, t, fmt)}</div>
@@ -70,7 +80,7 @@ export function JobDetailSidebar({
             to={`${routes.jobs}/${job.slug}/apply`}
             style={{ width: "100%", justifyContent: "center" }}
           >
-            Apply now →
+            {t("economy:jobDetail.sidebar.applyCta")}
           </Button>
         </div>
       </div>

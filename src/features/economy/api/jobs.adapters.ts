@@ -1,5 +1,5 @@
 import { memberRefToPerson, type Person } from "../../../shared/api/refs";
-import type { Formatters } from "../../../shared/i18n/format";
+import { createFormatters, type Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { CompanyProfile } from "../companies.data";
 import type { Job } from "../jobs.data";
@@ -17,6 +17,10 @@ import type { PostJobState } from "../usePostJobForm";
 const LOGO_BG = "rgba(var(--accent-rgb),.14)";
 const LOGO_TEXT = "var(--accent-ink)";
 
+// Fallback for callers that haven't threaded `fmt` through yet — see
+// `jobCardToJob`'s doc comment.
+const FALLBACK_FORMATTERS: Formatters = createFormatters("en");
+
 /** Two-letter logo mark from a company name ("Atelier Pulso" → "AP"). */
 export function logoFromName(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
@@ -26,15 +30,36 @@ export function logoFromName(name: string): string {
   return (words[0] ?? "").slice(0, 2).toUpperCase() || "?";
 }
 
+// Prototype-only: the poster picks a currency *symbol* (see `CURRENCIES` in
+// postJob.data.ts), but `Intl.NumberFormat`/`useFormat().currency()` needs an
+// ISO 4217 code. Falls back to EUR for anything unrecognised.
+const CURRENCY_CODES: Record<string, string> = {
+  "€": "EUR",
+  "£": "GBP",
+  $: "USD",
+};
+
+// `pay.ratePer` stores the stable English id from `RATE_PER` (postJob.data.ts)
+// as the canonical value (§5.1) — only the display suffix is translated here.
+const RATE_PER_SUFFIX_KEYS: Record<string, string> = {
+  Hour: "economy:jobs.pay.perHour",
+  Day: "economy:jobs.pay.perDay",
+  Project: "economy:jobs.pay.perProject",
+  Month: "economy:jobs.pay.perMonth",
+  Year: "economy:jobs.pay.perYear",
+};
+
 /**
  * Render a pay object to the prototype's single salary string.
  *
  * i18n: the phrases here are chrome composed in source code, which is exactly
  * what proves they're translatable — so this takes `t` and resolves catalog
- * keys rather than emitting English. `pay.salary` is the poster's own free-text
- * pay string and passes through untranslated (it's fetched in live mode).
+ * keys rather than emitting English, and `fmt` so the number/currency renders
+ * per locale (pt-PT suffixes the symbol with a space: "2 200 €", never a
+ * hand-rolled `€` prefix). `pay.salary` is the poster's own free-text pay
+ * string and passes through untranslated (it's fetched in live mode).
  */
-export function formatPay(pay: JobPay, t: TFunction): string {
+export function formatPay(pay: JobPay, t: TFunction, fmt: Formatters): string {
   if (pay.hidePay) {
     return t(
       pay.barter
@@ -50,15 +75,13 @@ export function formatPay(pay: JobPay, t: TFunction): string {
         : "economy:jobs.pay.toDiscuss",
     );
   }
-  const cur = pay.currency ?? "€";
-  const per =
-    pay.ratePer && pay.ratePer !== "To discuss"
-      ? `/${pay.ratePer.toLowerCase()}`
-      : "";
+  const currencyCode = CURRENCY_CODES[pay.currency ?? "€"] ?? "EUR";
+  const suffixKey = pay.ratePer ? RATE_PER_SUFFIX_KEYS[pay.ratePer] : undefined;
+  const per = suffixKey ? t(suffixKey) : "";
   const range =
     pay.rateMax != null
-      ? `${cur}${pay.rateMin}–${cur}${pay.rateMax}`
-      : `${cur}${pay.rateMin}`;
+      ? `${fmt.currency(pay.rateMin ?? 0, currencyCode)}–${fmt.currency(pay.rateMax, currencyCode)}`
+      : fmt.currency(pay.rateMin ?? 0, currencyCode);
   return `${range}${per ? ` ${per}` : ""}`.trim();
 }
 
@@ -116,8 +139,20 @@ function catSlug(category: string): string {
  * Map a job card DTO to the prototype's `Job`, defaulting the rich `detail`
  * body (only the full GET /jobs/:slug response carries it). Reused verbatim for
  * both the jobs list AND a company's `openRoles`.
+ *
+ * i18n: `fmt` is optional so existing 2-arg call sites keep compiling; pass it
+ * explicitly wherever available so `formatPay`'s currency rendering is locale
+ * correct (see the module-level formatPay doc comment). Falls back to an
+ * English-locale formatter, matching this function's pre-fmt behaviour, for
+ * any caller that hasn't been threaded yet. All in-repo call sites now pass
+ * `fmt` (`useJobs.ts`, `PostedJobsProvider.tsx`) — the default only guards
+ * against a future untouched caller.
  */
-export function jobCardToJob(dto: JobCardDTO, t: TFunction): Job {
+export function jobCardToJob(
+  dto: JobCardDTO,
+  t: TFunction,
+  fmt: Formatters = FALLBACK_FORMATTERS,
+): Job {
   const org = dto.company?.nameText ?? "";
   return {
     slug: dto.slug,
@@ -139,7 +174,7 @@ export function jobCardToJob(dto: JobCardDTO, t: TFunction): Job {
     title: dto.title,
     type: dto.commitment,
     location: dto.location,
-    salary: formatPay(dto.pay, t),
+    salary: formatPay(dto.pay, t, fmt),
     deadline: parseDeadline(dto.deadline),
     desc: dto.desc,
     tags: dto.tags,
@@ -158,8 +193,12 @@ export function jobCardToJob(dto: JobCardDTO, t: TFunction): Job {
 }
 
 /** Layer the full detail body over the card mapping for GET /jobs/:slug. */
-export function jobDetailToJob(dto: JobDetailDTO, t: TFunction): Job {
-  const base = jobCardToJob(dto, t);
+export function jobDetailToJob(
+  dto: JobDetailDTO,
+  t: TFunction,
+  fmt: Formatters = FALLBACK_FORMATTERS,
+): Job {
+  const base = jobCardToJob(dto, t, fmt);
   return {
     ...base,
     detail: {

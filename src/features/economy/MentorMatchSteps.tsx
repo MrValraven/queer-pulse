@@ -2,33 +2,43 @@ import { useState } from "react";
 import { LuSprout, LuTreeDeciduous } from "react-icons/lu";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { MENTEE_AREAS, MENTOR_AREAS, type Mode } from "./mentorship.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  MENTEE_AREAS,
+  MENTOR_AREAS,
+  type MatchArea,
+  type Mode,
+} from "./mentorship.data";
 import styles from "./MentorshipPage.module.css";
 
-function CheckGrid({ options }: { options: string[] }) {
+function CheckGrid({ options }: { options: MatchArea[] }) {
+  const { t } = useTranslation();
   const [checked, setChecked] = useState<Set<string>>(new Set());
   return (
     <div className={styles.mmCheckGrid}>
-      {options.map((o) => (
+      {options.map((option) => (
         <label
-          key={o}
-          className={[styles.mmCheck, checked.has(o) && styles.mmCheckActive]
+          key={option.id}
+          className={[
+            styles.mmCheck,
+            checked.has(option.id) && styles.mmCheckActive,
+          ]
             .filter(Boolean)
             .join(" ")}
         >
           <input
             type="checkbox"
-            checked={checked.has(o)}
+            checked={checked.has(option.id)}
             onChange={() =>
               setChecked((prev) => {
-                const n = new Set(prev);
-                if (n.has(o)) n.delete(o);
-                else n.add(o);
-                return n;
+                const next = new Set(prev);
+                if (next.has(option.id)) next.delete(option.id);
+                else next.add(option.id);
+                return next;
               })
             }
           />
-          {o}
+          {t(option.labelKey)}
         </label>
       ))}
     </div>
@@ -42,21 +52,24 @@ export function MentorMatchSuccess({
   mode: Mode;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.mmSuccess}>
       <div className={styles.mmSuccessIcon}>
         {mode === "mentee" ? <LuSprout /> : <LuTreeDeciduous />}
       </div>
       <div className={styles.mmTitle} style={{ fontSize: 24 }}>
-        {mode === "mentee" ? "Request received." : "Thank you."}
+        {mode === "mentee"
+          ? t("economy:mentorship.match.success.mentee.title")
+          : t("economy:mentorship.match.success.mentor.title")}
       </div>
       <p className={styles.mmDesc}>
         {mode === "mentee"
-          ? "We'll review your request and send you a match suggestion within 2 weeks. The introduction will come by email."
-          : "We'll add you to the mentor pool and reach out when we have a good match for you. It means a lot."}
+          ? t("economy:mentorship.match.success.mentee.body")
+          : t("economy:mentorship.match.success.mentor.body")}
       </p>
       <Button type="button" variant="ghost" onClick={onClose}>
-        Done
+        {t("economy:mentorship.match.success.done")}
       </Button>
     </div>
   );
@@ -69,16 +82,20 @@ export function MenteeSteps({
   step: number;
   setStep: (s: number) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   return (
     <>
       {step === 1 && (
         <>
-          <div className={styles.mmEye}>Finding you a mentor</div>
-          <div className={styles.mmTitle}>What do you need help with?</div>
+          <div className={styles.mmEye}>
+            {t("economy:mentorship.mentee.step1.eyebrow")}
+          </div>
+          <div className={styles.mmTitle}>
+            {t("economy:mentorship.mentee.step1.title")}
+          </div>
           <p className={styles.mmDesc}>
-            Pick the areas where you'd most benefit from guidance. We'll match
-            you with someone who has direct experience there.
+            {t("economy:mentorship.mentee.step1.sub")}
           </p>
           <CheckGrid options={MENTEE_AREAS} />
           <div className={styles.mmNav}>
@@ -89,36 +106,48 @@ export function MenteeSteps({
               className={styles.mmContinue}
               onClick={() => setStep(2)}
             >
-              Continue →
+              {t("economy:mentorship.nav.continue")}
             </Button>
           </div>
         </>
       )}
       {step === 2 && (
         <>
-          <div className={styles.mmEye}>About you</div>
-          <div className={styles.mmTitle}>What should your mentor know?</div>
+          <div className={styles.mmEye}>
+            {t("economy:mentorship.mentee.step2.eyebrow")}
+          </div>
+          <div className={styles.mmTitle}>
+            {t("economy:mentorship.mentee.step2.title")}
+          </div>
           <div className={styles.mmFields}>
             <input
               className={styles.mmInput}
               type="text"
-              placeholder="Your name"
+              placeholder={t("economy:mentorship.mentee.step2.namePlaceholder")}
             />
             <input
               className={styles.mmInput}
               type="text"
-              placeholder="Your role or practice"
+              placeholder={t("economy:mentorship.mentee.step2.rolePlaceholder")}
             />
             <select className={styles.mmSelect} defaultValue="">
-              <option value="">How often would you like to meet?</option>
-              <option>Once a month</option>
-              <option>Twice a month</option>
-              <option>As needed</option>
+              <option value="">
+                {t("economy:mentorship.mentee.step2.frequencyPlaceholder")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentee.step2.frequency.monthly")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentee.step2.frequency.twiceMonthly")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentee.step2.frequency.asNeeded")}
+              </option>
             </select>
             <textarea
               className={styles.mmTextarea}
               rows={3}
-              placeholder="A sentence about what's going on and what kind of support would help…"
+              placeholder={t("economy:mentorship.mentee.step2.notePlaceholder")}
             />
           </div>
           <div className={styles.mmNav}>
@@ -127,7 +156,7 @@ export function MenteeSteps({
               className={styles.mmBack}
               onClick={() => setStep(1)}
             >
-              ← Back
+              {t("economy:mentorship.nav.back")}
             </button>
             <Button
               type="button"
@@ -135,25 +164,30 @@ export function MenteeSteps({
               className={styles.mmContinue}
               onClick={() => setStep(3)}
             >
-              Continue →
+              {t("economy:mentorship.nav.continue")}
             </Button>
           </div>
         </>
       )}
       {step === 3 && (
         <>
-          <div className={styles.mmEye}>Almost done</div>
-          <div className={styles.mmTitle}>How do we reach you?</div>
+          <div className={styles.mmEye}>
+            {t("economy:mentorship.mentee.step3.eyebrow")}
+          </div>
+          <div className={styles.mmTitle}>
+            {t("economy:mentorship.mentee.step3.title")}
+          </div>
           <div className={styles.mmFields}>
             <input
               className={styles.mmInput}
               type="email"
-              placeholder="Your email address"
+              placeholder={t(
+                "economy:mentorship.mentee.step3.emailPlaceholder",
+              )}
             />
           </div>
           <p className={styles.mmDesc}>
-            We'll review your request and suggest a match within 2 weeks. You'll
-            get an email introduction and can take it from there.
+            {t("economy:mentorship.mentee.step3.sub")}
           </p>
           <div className={styles.mmNav}>
             <button
@@ -161,7 +195,7 @@ export function MenteeSteps({
               className={styles.mmBack}
               onClick={() => setStep(2)}
             >
-              ← Back
+              {t("economy:mentorship.nav.back")}
             </button>
             <Button
               type="button"
@@ -169,10 +203,13 @@ export function MenteeSteps({
               className={styles.mmContinue}
               onClick={() => {
                 setStep(4);
-                showToast("Match request received", "success");
+                showToast(
+                  t("economy:mentorship.mentee.toastSubmitted"),
+                  "success",
+                );
               }}
             >
-              Submit →
+              {t("economy:mentorship.nav.submit")}
             </Button>
           </div>
         </>
@@ -188,16 +225,20 @@ export function MentorSteps({
   step: number;
   setStep: (s: number) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   return (
     <>
       {step === 1 && (
         <>
-          <div className={styles.mmEye}>Becoming a mentor</div>
-          <div className={styles.mmTitle}>What can you offer?</div>
+          <div className={styles.mmEye}>
+            {t("economy:mentorship.mentor.step1.eyebrow")}
+          </div>
+          <div className={styles.mmTitle}>
+            {t("economy:mentorship.mentor.step1.title")}
+          </div>
           <p className={styles.mmDesc}>
-            You don't need to be an expert. You need to have navigated something
-            that someone else is currently navigating.
+            {t("economy:mentorship.mentor.step1.sub")}
           </p>
           <CheckGrid options={MENTOR_AREAS} />
           <div className={styles.mmNav}>
@@ -208,37 +249,59 @@ export function MentorSteps({
               className={styles.mmContinue}
               onClick={() => setStep(2)}
             >
-              Continue →
+              {t("economy:mentorship.nav.continue")}
             </Button>
           </div>
         </>
       )}
       {step === 2 && (
         <>
-          <div className={styles.mmEye}>Your capacity</div>
-          <div className={styles.mmTitle}>How much time can you give?</div>
+          <div className={styles.mmEye}>
+            {t("economy:mentorship.mentor.step2.eyebrow")}
+          </div>
+          <div className={styles.mmTitle}>
+            {t("economy:mentorship.mentor.step2.title")}
+          </div>
           <div className={styles.mmFields}>
             <input
               className={styles.mmInput}
               type="text"
-              placeholder="Your name and role"
+              placeholder={t("economy:mentorship.mentor.step2.namePlaceholder")}
             />
             <select className={styles.mmSelect} defaultValue="">
-              <option value="">How many mentees per quarter?</option>
-              <option>1 mentee</option>
-              <option>2 mentees</option>
-              <option>3 mentees</option>
+              <option value="">
+                {t("economy:mentorship.mentor.step2.menteesPlaceholder")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentor.step2.mentees.one")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentor.step2.mentees.two")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentor.step2.mentees.three")}
+              </option>
             </select>
             <select className={styles.mmSelect} defaultValue="">
-              <option value="">Preferred meeting format</option>
-              <option>In-person in Lisbon</option>
-              <option>Video call</option>
-              <option>Either works</option>
+              <option value="">
+                {t("economy:mentorship.mentor.step2.formatPlaceholder")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentor.step2.format.inPersonLisbon")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentor.step2.format.video")}
+              </option>
+              <option>
+                {t("economy:mentorship.mentor.step2.format.either")}
+              </option>
             </select>
             <input
               className={styles.mmInput}
               type="email"
-              placeholder="Your email address"
+              placeholder={t(
+                "economy:mentorship.mentor.step2.emailPlaceholder",
+              )}
             />
           </div>
           <div className={styles.mmNav}>
@@ -247,7 +310,7 @@ export function MentorSteps({
               className={styles.mmBack}
               onClick={() => setStep(1)}
             >
-              ← Back
+              {t("economy:mentorship.nav.back")}
             </button>
             <Button
               type="button"
@@ -255,10 +318,13 @@ export function MentorSteps({
               className={styles.mmContinue}
               onClick={() => {
                 setStep(3);
-                showToast("Added to the mentor pool", "success");
+                showToast(
+                  t("economy:mentorship.mentor.toastSubmitted"),
+                  "success",
+                );
               }}
             >
-              Submit →
+              {t("economy:mentorship.nav.submit")}
             </Button>
           </div>
         </>

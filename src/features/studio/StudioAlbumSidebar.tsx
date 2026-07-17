@@ -1,30 +1,40 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { ALBUM_BUY, ALBUM_LEDGER } from "./studioAlbum.data";
 import styles from "./studio.module.css";
 
+const ARTIST_NAME = "Mariana Sol";
+
 export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.sideCol}>
       <div className={styles.buyCard}>
-        <div className={styles.eb}>The room is open to you</div>
+        <div className={styles.eb}>{t("studio:album.sidebar.buyEyebrow")}</div>
         <div className={styles.price}>
-          €<em>8</em>
+          €<em>{ALBUM_BUY.price}</em>
         </div>
-        <div className={styles.sub}>
-          Buy the album · keep it offline · FLAC + AAC.
-        </div>
+        <div className={styles.sub}>{t("studio:album.sidebar.buySub")}</div>
         <div className={styles.buyActions}>
           <Link
             to={routes.studioCheckout}
             className={`${styles.bt} ${styles.btP}`}
           >
-            Buy · €8
+            {t("studio:album.sidebar.buyCta", {
+              amount: fmt.currency(ALBUM_BUY.price),
+            })}
           </Link>
           <button type="button" className={styles.bt} onClick={onTip}>
-            Pay what you can · €1 min
+            {t("studio:album.sidebar.payWhatYouCanCta", {
+              amount: fmt.currency(ALBUM_BUY.payWhatYouCanMin),
+            })}
           </button>
           <Link to={routes.cinemaMembership} className={styles.bt}>
-            Streaming included with Sustain
+            {t("studio:album.sidebar.streamingIncludedCta")}
           </Link>
         </div>
         <div className={styles.splitHint}>
@@ -35,26 +45,39 @@ export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
 
       <div className={styles.ledgerCard}>
         <div className={styles.head}>
-          Public ledger for <em>this release</em>
+          <Translation
+            i18nKey="studio:album.sidebar.ledgerHeading"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Paid to Mariana, lifetime</span>
+          <span className={styles.k}>
+            {t("studio:album.sidebar.paidToArtistLifetime", {
+              artist: ARTIST_NAME,
+            })}
+          </span>
           <span className={styles.v}>
-            €<em>8,940</em>
+            {fmt.currency(ALBUM_LEDGER.paidToArtistLifetime)}
           </span>
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Paid to collaborators</span>
+          <span className={styles.k}>
+            {t("studio:album.sidebar.paidToCollaborators")}
+          </span>
           <span className={styles.v}>
-            €<em>1,420</em>
+            {fmt.currency(ALBUM_LEDGER.paidToCollaborators)}
           </span>
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Plays this month</span>
-          <span className={styles.v}>42,840</span>
+          <span className={styles.k}>
+            {t("studio:album.sidebar.playsThisMonth")}
+          </span>
+          <span className={styles.v}>
+            {fmt.number(ALBUM_LEDGER.playsThisMonth)}
+          </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          Full ledger →
+          {t("studio:detail.fullLedgerCta")} →
         </Link>
       </div>
     </div>

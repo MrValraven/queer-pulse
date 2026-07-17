@@ -1,14 +1,16 @@
 import { useState } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioShell } from "./StudioShell";
 import { StudioTipModal } from "./StudioTipModal";
 import { StudioArtistHero } from "./StudioArtistHero";
 import { StudioArtistMain } from "./StudioArtistMain";
 import { StudioArtistSidebar } from "./StudioArtistSidebar";
-import { TABS } from "./studioArtist.data";
+import { TABS, type ArtistTabId } from "./studioArtist.data";
 import styles from "./studio.module.css";
 
 export function StudioArtistPage() {
-  const [tab, setTab] = useState<(typeof TABS)[number]>("Music");
+  const { t } = useTranslation();
+  const [tab, setTab] = useState<ArtistTabId>("music");
   const [tipOpen, setTipOpen] = useState(false);
 
   return (
@@ -16,16 +18,16 @@ export function StudioArtistPage() {
       <StudioArtistHero onTip={() => setTipOpen(true)} />
 
       <div className={styles.tabs}>
-        {TABS.map((t) => (
+        {TABS.map((tabItem) => (
           <button
             type="button"
-            key={t}
-            className={[styles.tab, tab === t && styles.tabOn]
+            key={tabItem.id}
+            className={[styles.tab, tab === tabItem.id && styles.tabOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setTab(t)}
+            onClick={() => setTab(tabItem.id)}
           >
-            {t}
+            {t(tabItem.labelKey)}
           </button>
         ))}
       </div>

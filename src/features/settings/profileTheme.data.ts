@@ -1,33 +1,37 @@
 export type CoverStyle = "stripe";
 export type PatternKey = "none" | "stripe" | "dots" | "grid";
 
-export const COVER_STYLES: { key: CoverStyle; label: string }[] = [
-  { key: "stripe", label: "Bold stripe" },
+export const COVER_STYLES: { key: CoverStyle; labelKey: string }[] = [
+  { key: "stripe", labelKey: "settings:themeStudio.cover.stripe" },
 ];
 
 export const PATTERNS: {
   key: PatternKey;
   background: string;
-  title: string;
+  titleKey: string;
 }[] = [
-  { key: "none", background: "var(--plum)", title: "Solid" },
+  {
+    key: "none",
+    background: "var(--plum)",
+    titleKey: "settings:themeStudio.pattern.none",
+  },
   {
     key: "stripe",
     background:
       "repeating-linear-gradient(45deg,rgba(255,255,255,.15) 0,rgba(255,255,255,.15) 2px,transparent 2px,transparent 10px),var(--plum)",
-    title: "Diagonal stripes",
+    titleKey: "settings:themeStudio.pattern.stripe",
   },
   {
     key: "dots",
     background:
       "radial-gradient(circle,rgba(255,255,255,.2) 1px,transparent 1px) 0 0/6px 6px,var(--plum)",
-    title: "Dot grid",
+    titleKey: "settings:themeStudio.pattern.dots",
   },
   {
     key: "grid",
     background:
       "repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 1px,transparent 1px,transparent 8px),repeating-linear-gradient(rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 1px,transparent 1px,transparent 8px),var(--plum)",
-    title: "Grid",
+    titleKey: "settings:themeStudio.pattern.grid",
   },
 ];
 
@@ -104,10 +108,20 @@ export const FLAG_SWATCHES: {
   },
 ];
 
-export const BADGE_OPTIONS = [
-  "Founding Member (Legendary)",
-  "Event Host (Legendary)",
-  "Sustainer (Rare)",
-  "Regular (Rare)",
-  "Vouch (Rare)",
+export interface BadgeOption {
+  id: string;
+  labelKey: string;
+}
+
+// The <select>'s persisted `badge` value is this stable `id` (never the
+// translated label) — see ThemeStudio.tsx.
+export const BADGE_OPTIONS: BadgeOption[] = [
+  {
+    id: "foundingMember",
+    labelKey: "settings:themeStudio.badge.foundingMember",
+  },
+  { id: "eventHost", labelKey: "settings:themeStudio.badge.eventHost" },
+  { id: "sustainer", labelKey: "settings:themeStudio.badge.sustainer" },
+  { id: "regular", labelKey: "settings:themeStudio.badge.regular" },
+  { id: "vouch", labelKey: "settings:themeStudio.badge.vouch" },
 ];

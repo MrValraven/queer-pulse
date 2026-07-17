@@ -2,6 +2,8 @@ import { type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import { Button, ComingSoon } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_CHIPS, VIS_FIELDS } from "./editProfile.data";
 import styles from "./EditProfilePage.module.css";
 
@@ -27,6 +29,7 @@ export function IdentitySection({
   onUseGooglePhoto,
   onRemove,
 }: IdentitySectionProps) {
+  const { t } = useTranslation();
   const initials = displayName
     .split(" ")
     .map((w) => w[0])
@@ -37,10 +40,13 @@ export function IdentitySection({
   return (
     <div className={styles.section} id="identity">
       <h2 className={styles.sectionTitle}>
-        Identity <em>&amp; photo</em>
+        <Translation
+          i18nKey="settings:editProfile.identity.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sectionSub}>
-        This is how you appear to other members.
+        {t("settings:editProfile.identity.sub")}
       </p>
       <div className={styles.photoRow}>
         <div
@@ -66,7 +72,7 @@ export function IdentitySection({
                 disabled
                 style={{ fontSize: "13.5px", padding: "9px 18px" }}
               >
-                Upload new photo
+                {t("settings:editProfile.identity.uploadPhoto")}
               </Button>
               <ComingSoon />
             </span>
@@ -80,7 +86,7 @@ export function IdentitySection({
                   color: "var(--ink-40)",
                 }}
               >
-                Remove photo
+                {t("settings:editProfile.identity.removePhoto")}
               </Button>
             ) : googlePhoto ? (
               <Button
@@ -88,21 +94,23 @@ export function IdentitySection({
                 onClick={onUseGooglePhoto}
                 style={{ fontSize: "13.5px", padding: "9px 18px" }}
               >
-                Use your Google photo
+                {t("settings:editProfile.identity.useGooglePhoto")}
               </Button>
             ) : null}
           </div>
           <div className={styles.photoHint}>
             {photo
-              ? "JPG or PNG · max 5 MB · square works best"
+              ? t("settings:editProfile.identity.photoHint.default")
               : googlePhoto
-                ? "We can bring back the photo from the account you signed in with."
-                : "JPG or PNG · max 5 MB · square works best"}
+                ? t("settings:editProfile.identity.photoHint.google")
+                : t("settings:editProfile.identity.photoHint.default")}
           </div>
         </div>
       </div>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Display name</div>
+        <div className={styles.fieldLabel}>
+          {t("settings:editProfile.identity.displayNameLabel")}
+        </div>
         <input
           className={styles.fieldInput}
           type="text"
@@ -110,24 +118,25 @@ export function IdentitySection({
           onChange={(e) => onNameChange(e.target.value)}
         />
         <div className={styles.fieldHint}>
-          Your display name is what people read; your username below is your
-          handle.
+          {t("settings:editProfile.identity.displayNameHint")}
         </div>
       </div>
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Location in Lisbon{" "}
-          <span className={styles.fieldOptional}>optional</span>
+          {t("settings:editProfile.identity.locationLabel")}{" "}
+          <span className={styles.fieldOptional}>
+            {t("settings:editProfile.identity.locationOptional")}
+          </span>
         </div>
         <input
           className={styles.fieldInput}
           type="text"
-          placeholder="e.g. Mouraria, Intendente…"
+          placeholder={t("settings:editProfile.identity.locationPlaceholder")}
           value={location}
           onChange={(e) => onLocationChange(e.target.value)}
         />
         <div className={styles.fieldHint}>
-          Neighbourhood-level only — never exact address.
+          {t("settings:editProfile.identity.locationHint")}
         </div>
       </div>
     </div>
@@ -140,18 +149,25 @@ interface PronounsSectionProps {
 }
 
 export function PronounsSection({ selected, onToggle }: PronounsSectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="pronouns">
       <h2 className={styles.sectionTitle}>
-        Pronouns <em>&amp; name</em>
+        <Translation
+          i18nKey="settings:editProfile.pronouns.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sectionSub}>
-        Your chosen name and pronouns appear everywhere on the platform. See the{" "}
-        <Link to={routes.pronounsGuide}>pronouns guide</Link> if you're updating
-        a legal name across the platform.
+        <Translation
+          i18nKey="settings:editProfile.pronouns.sub"
+          components={{ a: <Link to={routes.pronounsGuide} /> }}
+        />
       </p>
       <div className={styles.field} style={{ marginBottom: "14px" }}>
-        <div className={styles.fieldLabel}>Pronouns</div>
+        <div className={styles.fieldLabel}>
+          {t("settings:editProfile.pronouns.label")}
+        </div>
         <div className={styles.pronounChips}>
           {PRONOUN_CHIPS.map((p) => (
             <button
@@ -170,34 +186,33 @@ export function PronounsSection({ selected, onToggle }: PronounsSectionProps) {
           ))}
         </div>
         <div className={styles.fieldLabel} style={{ marginTop: "10px" }}>
-          Write your own <ComingSoon />
+          {t("settings:editProfile.pronouns.writeOwnLabel")} <ComingSoon />
         </div>
         <input
           className={styles.fieldInput}
           type="text"
-          placeholder="Or write your own…"
+          placeholder={t("settings:editProfile.pronouns.writeOwnPlaceholder")}
           disabled
         />
         <div className={styles.fieldHint}>
-          You can select multiple chips above. Pronouns are shown on your
-          profile only — not in meta tags or URLs.
+          {t("settings:editProfile.pronouns.hint")}
         </div>
       </div>
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Chosen name <ComingSoon />{" "}
+          {t("settings:editProfile.pronouns.chosenNameLabel")} <ComingSoon />{" "}
           <span className={styles.fieldOptional}>
-            if different from display name
+            {t("settings:editProfile.pronouns.chosenNameOptional")}
           </span>
         </div>
         <input
           className={styles.fieldInput}
           type="text"
-          placeholder="Name to use in all communications"
+          placeholder={t("settings:editProfile.pronouns.chosenNamePlaceholder")}
           disabled
         />
         <div className={styles.fieldHint}>
-          Used in emails from us and in any platform communications.
+          {t("settings:editProfile.pronouns.chosenNameHint")}
         </div>
       </div>
     </div>
@@ -219,18 +234,20 @@ export function BioSection({
   onBioChange,
   onOccupationChange,
 }: BioSectionProps) {
+  const { t } = useTranslation();
   const overLimit = bioText.length > BIO_MAX * 0.9;
   return (
     <div className={styles.section} id="bio">
       <h2 className={styles.sectionTitle}>
-        Bio <em>&amp; occupation</em>
+        <Translation
+          i18nKey="settings:editProfile.bio.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sectionSub}>
-        Tell the community who you are. No CV language required.
-      </p>
+      <p className={styles.sectionSub}>{t("settings:editProfile.bio.sub")}</p>
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
-          Bio{" "}
+          {t("settings:editProfile.bio.label")}{" "}
           <span
             className={[styles.charCount, overLimit && styles.charCountWarn]
               .filter(Boolean)
@@ -243,12 +260,14 @@ export function BioSection({
           className={styles.fieldTextarea}
           value={bioText}
           onChange={(e) => onBioChange(e.target.value)}
-          placeholder="A few sentences about you…"
+          placeholder={t("settings:editProfile.bio.placeholder")}
         />
       </div>
       <div className={styles.fieldRow}>
         <div className={styles.field}>
-          <div className={styles.fieldLabel}>Occupation</div>
+          <div className={styles.fieldLabel}>
+            {t("settings:editProfile.bio.occupationLabel")}
+          </div>
           <input
             className={styles.fieldInput}
             type="text"
@@ -258,13 +277,15 @@ export function BioSection({
         </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
-            Organisation <ComingSoon />{" "}
-            <span className={styles.fieldOptional}>optional</span>
+            {t("settings:editProfile.bio.organisationLabel")} <ComingSoon />{" "}
+            <span className={styles.fieldOptional}>
+              {t("settings:editProfile.bio.organisationOptional")}
+            </span>
           </div>
           <input
             className={styles.fieldInput}
             type="text"
-            placeholder="Where you work or study"
+            placeholder={t("settings:editProfile.bio.organisationPlaceholder")}
             disabled
           />
         </div>
@@ -299,22 +320,27 @@ export function SkillsSection({
   onRemove,
   onKeyDown,
 }: SkillsSectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="skills">
       <h2 className={styles.sectionTitle}>
-        Skills <em>&amp; interests</em>
+        <Translation
+          i18nKey="settings:editProfile.skills.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.sectionSub}>
-        Used for matching in the skills exchange and connecting with members who
-        share your interests.
+        {t("settings:editProfile.skills.sub")}
       </p>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Skills you can offer</div>
+        <div className={styles.fieldLabel}>
+          {t("settings:editProfile.skills.offerLabel")}
+        </div>
         <div className={styles.skillInputRow}>
           <input
             className={styles.fieldInput}
             type="text"
-            placeholder="e.g. Legal advice, Graphic design…"
+            placeholder={t("settings:editProfile.skills.offerPlaceholder")}
             value={skillInput}
             onChange={(e) => onSkillInputChange(e.target.value)}
             onKeyDown={(e) => onKeyDown(e, "skills")}
@@ -324,7 +350,7 @@ export function SkillsSection({
             onClick={() => onAdd("skills", skillInput)}
             style={{ whiteSpace: "nowrap" }}
           >
-            Add
+            {t("settings:editProfile.skills.add")}
           </Button>
         </div>
         <div className={styles.skillsDisplay}>
@@ -343,12 +369,14 @@ export function SkillsSection({
         </div>
       </div>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>Interests</div>
+        <div className={styles.fieldLabel}>
+          {t("settings:editProfile.skills.interestsLabel")}
+        </div>
         <div className={styles.skillInputRow}>
           <input
             className={styles.fieldInput}
             type="text"
-            placeholder="e.g. Housing policy, Film, Cooking…"
+            placeholder={t("settings:editProfile.skills.interestsPlaceholder")}
             value={interestInput}
             onChange={(e) => onInterestInputChange(e.target.value)}
             onKeyDown={(e) => onKeyDown(e, "interests")}
@@ -358,7 +386,7 @@ export function SkillsSection({
             onClick={() => onAdd("interests", interestInput)}
             style={{ whiteSpace: "nowrap" }}
           >
-            Add
+            {t("settings:editProfile.skills.add")}
           </Button>
         </div>
         <div className={styles.skillsDisplay}>
@@ -381,33 +409,45 @@ export function SkillsSection({
 }
 
 export function VisibilitySection() {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="visibility">
       <h2 className={styles.sectionTitle}>
-        Field <em>visibility</em> <ComingSoon />
+        <Translation
+          i18nKey="settings:editProfile.visibility.title"
+          components={{ em: <em /> }}
+        />{" "}
+        <ComingSoon />
       </h2>
       <p className={styles.sectionSub}>
-        Per-field visibility is coming soon. For now, use the Visibility tab to
-        set who can see your whole profile.
+        {t("settings:editProfile.visibility.sub")}
       </p>
       <div className={styles.visPanel}>
         {VIS_FIELDS.map((f) => (
-          <div key={f.name} className={styles.visRow}>
+          <div key={f.nameKey} className={styles.visRow}>
             <div>
-              <div className={styles.visFieldName}>{f.name}</div>
-              <div className={styles.visFieldDesc}>{f.desc}</div>
+              <div className={styles.visFieldName}>{t(f.nameKey)}</div>
+              <div className={styles.visFieldDesc}>{t(f.descKey)}</div>
             </div>
             {f.locked ? (
-              <span className={styles.visAlwaysOn}>Always on</span>
+              <span className={styles.visAlwaysOn}>
+                {t("settings:editProfile.visibility.alwaysOn")}
+              </span>
             ) : (
               <select
                 className={styles.visSelect}
                 defaultValue={f.defaultVal}
                 disabled
               >
-                <option>Members</option>
-                <option>Connections only</option>
-                <option>Hidden</option>
+                <option value="members">
+                  {t("settings:editProfile.visibility.optionMembers")}
+                </option>
+                <option value="connectionsOnly">
+                  {t("settings:editProfile.visibility.optionConnectionsOnly")}
+                </option>
+                <option value="hidden">
+                  {t("settings:editProfile.visibility.optionHidden")}
+                </option>
               </select>
             )}
           </div>

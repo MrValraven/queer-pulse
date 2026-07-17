@@ -18,35 +18,37 @@ export interface BudgetRow {
   amount: string;
 }
 
+/** i18n Pattern A — `n` is the stable display number; `titleKey`/`bodyKey` resolve via `t()`. */
 export const HOW = [
   {
     n: "01",
-    title: "Members contribute",
-    body: "Members who can afford to contribute add to the quarterly pot — any amount, from €5 upwards. No pressure, no minimum.",
+    titleKey: "resources:microGrants.how.01.title",
+    bodyKey: "resources:microGrants.how.01.body",
   },
   {
     n: "02",
-    title: "Projects apply",
-    body: "Any QueerPulse member can apply for a grant. One page: what the project is, how much you need, what it will do.",
+    titleKey: "resources:microGrants.how.02.title",
+    bodyKey: "resources:microGrants.how.02.body",
   },
   {
     n: "03",
-    title: "Community decides",
-    body: "A rotating panel of 5 members reviews applications. Decisions published in full with reasoning. No appeals — but the next round is always open.",
+    titleKey: "resources:microGrants.how.03.title",
+    bodyKey: "resources:microGrants.how.03.body",
   },
   {
     n: "04",
-    title: "Projects report back",
-    body: "Recipients share a short update at 3 months. What happened, what changed, what they spent. Everything published in the magazine.",
+    titleKey: "resources:microGrants.how.04.title",
+    bodyKey: "resources:microGrants.how.04.body",
   },
 ];
 
-export const CRITERIA = [
-  "You are a QueerPulse member in good standing",
-  "The project benefits the queer community in Lisbon — not just you personally",
-  "You can deliver it within 3 months of receiving the grant",
-  "You are willing to share a brief public update on what happened",
-  "The money will genuinely change what is possible — not just make it faster",
+/** i18n Pattern A — each entry is a catalog key, resolved via `t()` at render. */
+export const CRITERIA_KEYS = [
+  "resources:microGrants.criteria.member",
+  "resources:microGrants.criteria.benefit",
+  "resources:microGrants.criteria.timeline",
+  "resources:microGrants.criteria.update",
+  "resources:microGrants.criteria.impact",
 ];
 
 export const CURRENT: Grant[] = [
@@ -111,26 +113,27 @@ export const PAST: Grant[] = [
   },
 ];
 
+/** i18n Pattern A — `titleKey`/`bodyKey` resolve via `t()`. */
 export const RULES = [
   {
-    title: "One grant per member",
-    body: "Per calendar year. Collaborative projects can apply as a group.",
+    titleKey: "resources:microGrants.rule.oneGrant.title",
+    bodyKey: "resources:microGrants.rule.oneGrant.body",
   },
   {
-    title: "Maximum €2,000",
-    body: "For larger projects, we encourage applying across multiple rounds or pairing with the Barter exchange.",
+    titleKey: "resources:microGrants.rule.maximum.title",
+    bodyKey: "resources:microGrants.rule.maximum.body",
   },
   {
-    title: "Community benefit required",
-    body: "Must benefit queer people in Lisbon beyond the applicant. Personal projects are not eligible.",
+    titleKey: "resources:microGrants.rule.benefit.title",
+    bodyKey: "resources:microGrants.rule.benefit.body",
   },
   {
-    title: "Public reporting",
-    body: "A brief update at 3 months — published here and in the magazine. No repayment, but accountability matters.",
+    titleKey: "resources:microGrants.rule.reporting.title",
+    bodyKey: "resources:microGrants.rule.reporting.body",
   },
   {
-    title: "No political campaigns",
-    body: "We fund community projects, not election or party-political activity.",
+    titleKey: "resources:microGrants.rule.noPolitics.title",
+    bodyKey: "resources:microGrants.rule.noPolitics.body",
   },
 ];
 
@@ -144,38 +147,54 @@ export const PANEL = [
   },
 ];
 
-export const CATEGORIES: { icon: IconType; name: string; sub: string }[] = [
-  {
-    icon: FiPenTool,
-    name: "Creative & art",
-    sub: "Exhibitions, prints, performances",
-  },
-  {
-    icon: FiBook,
-    name: "Education & knowledge",
-    sub: "Workshops, guides, resources",
-  },
-  {
-    icon: FiHeart,
-    name: "Health & wellbeing",
-    sub: "Mental health, harm reduction",
-  },
-  { icon: LuScale, name: "Legal & advocacy", sub: "Rights, accompaniment" },
-  { icon: FiUsers, name: "Community & space", sub: "Gatherings, mutual aid" },
-  { icon: FiSun, name: "Other", sub: "Something that doesn't fit neatly" },
+/** i18n Pattern A — `nameKey`/`subKey` resolve via `t()`. */
+export const CATEGORIES: { icon: IconType; nameKey: string; subKey: string }[] =
+  [
+    {
+      icon: FiPenTool,
+      nameKey: "resources:microGrants.apply.category.creative.name",
+      subKey: "resources:microGrants.apply.category.creative.sub",
+    },
+    {
+      icon: FiBook,
+      nameKey: "resources:microGrants.apply.category.education.name",
+      subKey: "resources:microGrants.apply.category.education.sub",
+    },
+    {
+      icon: FiHeart,
+      nameKey: "resources:microGrants.apply.category.health.name",
+      subKey: "resources:microGrants.apply.category.health.sub",
+    },
+    {
+      icon: LuScale,
+      nameKey: "resources:microGrants.apply.category.legal.name",
+      subKey: "resources:microGrants.apply.category.legal.sub",
+    },
+    {
+      icon: FiUsers,
+      nameKey: "resources:microGrants.apply.category.community.name",
+      subKey: "resources:microGrants.apply.category.community.sub",
+    },
+    {
+      icon: FiSun,
+      nameKey: "resources:microGrants.apply.category.other.name",
+      subKey: "resources:microGrants.apply.category.other.sub",
+    },
+  ];
+
+/** i18n Pattern A — each entry is a catalog key, resolved via `t()` at render. */
+export const COMMITMENT_KEYS = [
+  "resources:microGrants.apply.commitment.update",
+  "resources:microGrants.apply.commitment.benefit",
+  "resources:microGrants.apply.commitment.timeline",
 ];
 
-export const COMMITMENTS = [
-  "I will share a brief public update at 3 months — what happened, what was spent, what changed.",
-  "This project genuinely benefits the queer community in Lisbon, not just me personally.",
-  "I can deliver this within 3 months of receiving the grant.",
-];
-
-export const STEP_LABELS = [
-  "Choose a category",
-  "Project details",
-  "Budget breakdown",
-  "About you",
-  "Review & submit",
+/** i18n Pattern A — each entry is a catalog key, resolved via `t()` at render. */
+export const STEP_LABEL_KEYS = [
+  "resources:microGrants.apply.stepLabel.category",
+  "resources:microGrants.apply.stepLabel.project",
+  "resources:microGrants.apply.stepLabel.budget",
+  "resources:microGrants.apply.stepLabel.about",
+  "resources:microGrants.apply.stepLabel.review",
 ];
 export const TOTAL_STEPS = 5;

@@ -3,11 +3,19 @@ import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { heroImage, ARTIST_ID } from "./studioArtist.data";
 import { routes } from "../../app/routeMap";
 import styles from "./studio.module.css";
 
+const ARTIST_NAME = "Mariana Sol";
+const SUBSCRIBE_AMOUNT = 3;
+
 export function StudioArtistHero({ onTip }: { onTip: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { isFollowing, toggleFollow } = useSocial();
   const { showToast } = useToast();
   const following = isFollowing(ARTIST_ID);
@@ -16,8 +24,8 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
     const url =
       typeof window !== "undefined" ? window.location.href : "/studio/artist";
     navigator.clipboard?.writeText(url).then(
-      () => showToast("Link copied to clipboard", "success"),
-      () => showToast("Could not copy link", "info"),
+      () => showToast(t("studio:detail.linkCopiedToast"), "success"),
+      () => showToast(t("studio:detail.copyFailedToast"), "info"),
     );
   }
 
@@ -48,7 +56,7 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
           <Link
             to={routes.studioAlbum}
             className={styles.playBig}
-            aria-label="Play"
+            aria-label={t("studio:player.play")}
           >
             <svg viewBox="0 0 12 14" fill="currentColor">
               <path d="M1 1l10 6-10 6z" />
@@ -59,26 +67,33 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
             onClick={() => {
               const now = toggleFollow(ARTIST_ID);
               showToast(
-                now ? "Following Mariana Sol" : "Unfollowed Mariana Sol",
+                now
+                  ? t("studio:artist.hero.followedToast", {
+                      artist: ARTIST_NAME,
+                    })
+                  : t("studio:artist.hero.unfollowedToast", {
+                      artist: ARTIST_NAME,
+                    }),
                 now ? "success" : "info",
               );
             }}
           >
             {following ? (
               <>
-                <FiCheck /> Following
+                <FiCheck /> {t("studio:artist.hero.followingCta")}
               </>
             ) : (
               <>
-                <FiPlus /> Follow
+                <FiPlus /> {t("studio:artist.hero.followCta")}
               </>
             )}
           </button>
           <button type="button" className={styles.tip} onClick={onTip}>
-            <FiHeart /> Tip Mariana
+            <FiHeart />{" "}
+            {t("studio:detail.tipArtistCta", { artist: ARTIST_NAME })}
           </button>
           <button type="button" onClick={share}>
-            Share
+            {t("studio:detail.shareCta")}
           </button>
         </div>
         <div className={styles.payPill}>
@@ -91,8 +106,17 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
           </svg>
           <span>
-            Subscribe at <em>€3/mo</em>, direct to Mariana, no platform cut.{" "}
-            <span className={styles.small}>Or tip on top of streaming.</span>
+            <Translation
+              i18nKey="studio:artist.hero.subscribeNote"
+              components={{ em: <em /> }}
+              values={{
+                amount: fmt.currency(SUBSCRIBE_AMOUNT),
+                artist: ARTIST_NAME,
+              }}
+            />{" "}
+            <span className={styles.small}>
+              {t("studio:artist.hero.tipOnTopNote")}
+            </span>
           </span>
         </div>
       </div>

@@ -3,6 +3,8 @@
 // share the exact same shape as the seeded ones.
 
 import type { ImageSlotTint } from "../../shared/components/ui";
+import type { Formatters } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
 import type {
   Workshop,
   WorkshopSession,
@@ -50,40 +52,72 @@ function paragraphs(text: string): string[] {
   return parts.length > 0 ? parts : [text.trim()];
 }
 
-function tiersFrom(price: number): WorkshopTier[] {
+function tiersFrom(
+  price: number,
+  t: TFunction,
+  fmt: Formatters,
+): WorkshopTier[] {
   if (price <= 0) {
-    return [{ label: "Free · pay what you can", amount: "Free" }];
+    return [
+      {
+        label: t("economy:addWorkshop.build.freeTier"),
+        amount: t("economy:addWorkshop.build.free"),
+      },
+    ];
   }
   const reduced = Math.round((price * 0.66) / 5) * 5;
   const solidarity = Math.round((price * 0.33) / 5) * 5;
   return [
-    { label: "Standard rate", amount: `€${price}` },
-    { label: "Reduced", amount: `€${reduced}`, sliding: true },
-    { label: "Solidarity · 1 slot", amount: `€${solidarity}`, sliding: true },
+    {
+      label: t("economy:addWorkshop.build.standardRate"),
+      amount: fmt.currency(price, "EUR"),
+    },
+    {
+      label: t("economy:addWorkshop.build.reduced"),
+      amount: fmt.currency(reduced, "EUR"),
+      sliding: true,
+    },
+    {
+      label: t("economy:addWorkshop.build.solidaritySlot"),
+      amount: fmt.currency(solidarity, "EUR"),
+      sliding: true,
+    },
   ];
 }
 
-function placeholderSessions(weeks: number): WorkshopSession[] {
+function placeholderSessions(weeks: number, t: TFunction): WorkshopSession[] {
   return Array.from({ length: weeks }, (_, i) => {
     const n = i + 1;
     return {
       n: n < 10 ? `0${n}` : `${n}`,
-      title: `Week ${n} · to be planned`,
-      desc: "Add what this session covers from your workshop page.",
-      date: "TBA",
-      length: "3 hr",
+      title: t("economy:addWorkshop.build.sessionTitle", { n }),
+      desc: t("economy:addWorkshop.build.sessionDesc"),
+      date: t("economy:addWorkshop.build.sessionDateTba"),
+      length: t("economy:addWorkshop.build.sessionLength"),
     };
   });
 }
 
+/**
+ * i18n: workshops have no live backend yet (see WorkshopsProvider), so this
+ * builder's boilerplate defaults are chrome composed client-side, in both demo
+ * and live — hence `t`/`fmt` rather than English literals. `draft.title` /
+ * `blurb` / `about` / `venue` are the poster's own words and pass through
+ * untranslated, same treatment as a job's free-text salary.
+ */
 export function buildWorkshop(
   draft: WorkshopDraft,
   tutor: WorkshopTutor,
+  t: TFunction,
+  fmt: Formatters,
 ): Workshop {
   const weeks = Math.max(1, Math.min(52, Number(draft.weeks) || 1));
   const size = Math.max(2, Math.min(40, Number(draft.size) || 2));
   const price = Math.max(0, Number(draft.price) || 0);
-  const priceLabel = price <= 0 ? "Free" : `€${price}`;
+  const priceLabel =
+    price <= 0
+      ? t("economy:addWorkshop.build.free")
+      : fmt.currency(price, "EUR");
   seq += 1;
   const id = `${slugify(draft.title)}-${seq.toString(36)}`;
 
@@ -91,47 +125,54 @@ export function buildWorkshop(
     ? draft.venue.split("·").map((p) => p.trim())
     : [draft.venue.trim(), ""];
 
+  const weeksPhrase = t("economy:addWorkshop.build.weeks", { count: weeks });
+
   return {
     id,
     cat: draft.cat,
     title: draft.title.trim(),
     titleEm: "",
-    format: `Workshop · ${weeks} ${weeks === 1 ? "week" : "weeks"} · group of ${size}`,
+    format: t("economy:addWorkshop.build.format", {
+      weeks: weeksPhrase,
+      size,
+    }),
     mode: draft.mode,
     blurb: draft.blurb.trim(),
-    heroPlaceholder: `${draft.title.trim()} · workshop`,
+    heroPlaceholder: t("economy:addWorkshop.build.heroPlaceholder", {
+      title: draft.title.trim(),
+    }),
     heroTint: toImageTint(tutor.tint),
     spotsFilled: 0,
     spotsTotal: size,
     price: priceLabel,
-    priceSub: `${weeks} ${weeks === 1 ? "week" : "weeks"} · sliding scale available`,
-    startDate: "To be announced",
-    cancellation: "Full refund · before it starts",
-    tiers: tiersFrom(price),
+    priceSub: t("economy:addWorkshop.build.priceSub", { weeks: weeksPhrase }),
+    startDate: t("economy:addWorkshop.build.startDateTba"),
+    cancellation: t("economy:addWorkshop.build.cancellation"),
+    tiers: tiersFrom(price, t, fmt),
     about: paragraphs(draft.about),
-    sessions: placeholderSessions(weeks),
+    sessions: placeholderSessions(weeks, t),
     needs: [
       {
-        label: "Materials",
-        detail:
-          "The tutor will confirm what's provided before the first session.",
+        label: t("economy:addWorkshop.build.needsMaterialsLabel"),
+        detail: t("economy:addWorkshop.build.needsMaterialsDetail"),
         included: true,
-        tag: "included",
+        tag: t("economy:addWorkshop.build.needsIncludedTag"),
       },
       {
-        label: "Yourself",
-        detail: "Come curious. The rest gets sorted with your cohort.",
+        label: t("economy:addWorkshop.build.needsYourselfLabel"),
+        detail: t("economy:addWorkshop.build.needsYourselfDetail"),
       },
     ],
     pastWork: [],
     tutor,
     location: {
-      name: venueName || "Venue to be confirmed",
-      address: venueHood ? `${venueHood} · Lisboa` : "Shared once you reserve",
-      access:
-        "The tutor will share access details — step-free routes, bathrooms, transit — before you commit.",
+      name: venueName || t("economy:addWorkshop.build.venueTba"),
+      address: venueHood
+        ? `${venueHood} · Lisboa`
+        : t("economy:addWorkshop.build.venueSharedOnReserve"),
+      access: t("economy:addWorkshop.build.accessNote"),
     },
-    tags: [draft.mode, `${weeks} weeks`],
+    tags: [draft.mode, weeksPhrase],
     added: true,
   };
 }

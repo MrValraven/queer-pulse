@@ -1,26 +1,32 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
 /** The notifications dropdown list. */
 export function NotifPanel() {
+  const { t } = useTranslation();
   const { notifs, unreadCount, markAllRead, notifGo } = useMyEvents();
   return (
-    <div className={sx("notif-panel")} role="dialog" aria-label="Notifications">
+    <div
+      className={sx("notif-panel")}
+      role="dialog"
+      aria-label={t("myevents:notif.panelAria")}
+    >
       <div className={sx("notif-head")}>
-        <span className={sx("notif-h-title")}>What’s changed</span>
+        <span className={sx("notif-h-title")}>{t("myevents:notif.title")}</span>
         {unreadCount > 0 && (
           <button
             type="button"
             className={sx("notif-clear")}
             onClick={markAllRead}
           >
-            Mark all read
+            {t("myevents:notif.markAllRead")}
           </button>
         )}
       </div>
       <div className={sx("notif-list")}>
         {notifs.length === 0 ? (
-          <div className={sx("notif-empty")}>You’re all caught up.</div>
+          <div className={sx("notif-empty")}>{t("myevents:notif.empty")}</div>
         ) : (
           notifs.map((n, i) => (
             <button

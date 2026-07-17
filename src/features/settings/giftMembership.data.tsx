@@ -1,4 +1,7 @@
 import type { ReactNode } from "react";
+import type { TFunction } from "../../shared/i18n/types";
+import type { Formatters } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 
 export type ModeIcon = "gift" | "heart";
 
@@ -12,54 +15,65 @@ export interface GiftMode {
   priceSub: string;
 }
 
-export const GIFT_MODES: GiftMode[] = [
-  {
-    id: "gift",
-    icon: "gift",
-    title: (
-      <>
-        Gift it · <em>to someone you know</em>
-      </>
-    ),
-    body: (
-      <>
-        For: a partner. A friend. The colleague who keeps asking how to join.{" "}
-        <b>They get an invitation by name</b>, with a personal note from you.
-        They sign up using a single-use link. If they decline, you get refunded.
-      </>
-    ),
-    price: (
-      <>
-        €<em>96</em>
-      </>
-    ),
-    priceSub: "/ year · Sustainer · same as your own",
-  },
-  {
-    id: "sponsor",
-    icon: "heart",
-    jade: true,
-    title: (
-      <>
-        Sponsor · <em>anonymously, for whoever needs it</em>
-      </>
-    ),
-    body: (
-      <>
-        For: paying forward. Your gift sits in the <b>solidarity pool</b>.
-        Members who can't afford the €96 apply with a sentence — we approve, no
-        proof asked. <em>13 members are in the pool right now.</em> Your gift
-        gets matched within days.
-      </>
-    ),
-    price: (
-      <>
-        €<em>96</em> / €48 / €24
-      </>
-    ),
-    priceSub: "give any amount · matched by name or anonymously",
-  },
-];
+export const GIFT_ANNUAL = 96;
+export const SPONSOR_MATCH_AMOUNTS = [96, 48, 24];
+export const ACTIVATE_BY_DATE = new Date(2026, 8, 9); // 9 Sep 2026
+const SPONSOR_POOL_SIZE = 13;
+
+export function buildGiftModes(t: TFunction, fmt: Formatters): GiftMode[] {
+  return [
+    {
+      id: "gift",
+      icon: "gift",
+      title: (
+        <Translation
+          i18nKey="settings:giftMembership.mode.gift.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="settings:giftMembership.mode.gift.body"
+          components={{ b: <b /> }}
+        />
+      ),
+      price: <em>{fmt.currency(GIFT_ANNUAL)}</em>,
+      priceSub: t("settings:giftMembership.mode.gift.priceSub"),
+    },
+    {
+      id: "sponsor",
+      icon: "heart",
+      jade: true,
+      title: (
+        <Translation
+          i18nKey="settings:giftMembership.mode.sponsor.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="settings:giftMembership.mode.sponsor.body"
+          values={{
+            amount: fmt.currency(GIFT_ANNUAL),
+            count: SPONSOR_POOL_SIZE,
+          }}
+          components={{ b: <b />, em: <em /> }}
+        />
+      ),
+      price: (
+        <>
+          {SPONSOR_MATCH_AMOUNTS.map((amount, index) => (
+            <span key={amount}>
+              {index > 0 ? " / " : ""}
+              <em>{fmt.currency(amount)}</em>
+            </span>
+          ))}
+        </>
+      ),
+      priceSub: t("settings:giftMembership.mode.sponsor.priceSub"),
+    },
+  ];
+}
 
 export interface DeliveryOption {
   id: "now" | "schedule" | "print";
@@ -68,29 +82,43 @@ export interface DeliveryOption {
   note: string;
 }
 
-export const DELIVERY_OPTIONS: DeliveryOption[] = [
-  {
-    id: "now",
-    label: "Now",
-    desc: "Sent in the next minute · email arrives instantly",
-    note: "delivered immediately",
-  },
-  {
-    id: "schedule",
-    label: "Schedule",
-    desc: "Pick a date · we send at 09:00 in their timezone",
-    note: "scheduled · pick a date next step",
-  },
-  {
-    id: "print",
-    label: "Print & post",
-    desc: "+ €4 postage · risograph card · arrives in 5–7 days",
-    note: "printed + posted · +€4",
-  },
-];
+const PRINT_POSTAGE = 4;
 
-export const ANON_OPTIONS = [
-  { value: "no", label: "No — show my name to the recipient" },
-  { value: "yes", label: "Yes — anonymous to recipient" },
-  { value: "initials", label: "Just my initials" },
-];
+export function buildDeliveryOptions(
+  t: TFunction,
+  fmt: Formatters,
+): DeliveryOption[] {
+  const postage = fmt.currency(PRINT_POSTAGE);
+  return [
+    {
+      id: "now",
+      label: t("settings:giftMembership.delivery.now.label"),
+      desc: t("settings:giftMembership.delivery.now.desc"),
+      note: t("settings:giftMembership.delivery.now.note"),
+    },
+    {
+      id: "schedule",
+      label: t("settings:giftMembership.delivery.schedule.label"),
+      desc: t("settings:giftMembership.delivery.schedule.desc"),
+      note: t("settings:giftMembership.delivery.schedule.note"),
+    },
+    {
+      id: "print",
+      label: t("settings:giftMembership.delivery.print.label"),
+      desc: t("settings:giftMembership.delivery.print.desc", {
+        amount: postage,
+      }),
+      note: t("settings:giftMembership.delivery.print.note", {
+        amount: postage,
+      }),
+    },
+  ];
+}
+
+export function buildAnonOptions(t: TFunction) {
+  return [
+    { value: "no", label: t("settings:giftMembership.anon.no") },
+    { value: "yes", label: t("settings:giftMembership.anon.yes") },
+    { value: "initials", label: t("settings:giftMembership.anon.initials") },
+  ];
+}

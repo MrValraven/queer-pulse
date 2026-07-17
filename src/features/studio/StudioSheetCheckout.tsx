@@ -1,45 +1,69 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./sheet.module.css";
-import { SPLIT, PAY_METHODS } from "./studioSheetStore.data";
+import {
+  SPLIT,
+  PAY_METHODS,
+  SHEET_TITLE,
+  SHEET_SPEC,
+  SHEET_PRICE,
+  SHEET_PROCESSING_FEE,
+  SHEET_SPLIT_RATIO,
+  SHEET_SPLIT_SHARES,
+  SHEET_TRANSCRIBER,
+  SHEET_COMPOSER,
+} from "./studioSheetStore.data";
 
 export function StudioSheetCheckout() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [pm, setPm] = useState(0);
   const [bought, setBought] = useState(false);
 
+  const total = SHEET_PRICE + SHEET_PROCESSING_FEE;
+
   return (
     <div className={s.checkout}>
       <h2>
-        Your <em>download</em>
+        <Translation
+          i18nKey="studio:sheet.checkout.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <div className={s.chSub}>
-        One sheet · clean PDF · yours to keep &amp; print
+      <div className={s.chSub}>{t("studio:sheet.checkout.subtitle")}</div>
+      <div className={s.line}>
+        <span className="k">
+          Lead sheet — {SHEET_TITLE}
+          <small>{SHEET_SPEC}</small>
+        </span>
+        <span className={s.v}>{fmt.currency(SHEET_PRICE)}</span>
       </div>
       <div className={s.line}>
         <span className="k">
-          Lead sheet — Carta para a santa
-          <small>voice + piano · 4 pages</small>
+          {t("studio:sheet.checkout.processingLabel")}
+          <small>{t("studio:sheet.checkout.processingSub")}</small>
         </span>
-        <span className={s.v}>€1.00</span>
-      </div>
-      <div className={s.line}>
-        <span className="k">
-          Processing
-          <small>co-op SEPA rate</small>
-        </span>
-        <span className={s.v}>€0.04</span>
+        <span className={s.v}>{fmt.currency(SHEET_PROCESSING_FEE)}</span>
       </div>
       <div className={`${s.line} ${s.lineTotal}`}>
-        <span className="k">Total</span>
+        <span className="k">{t("studio:sheet.checkout.totalLabel")}</span>
         <span className={s.v}>
-          €<em>1.04</em>
+          <em>{fmt.currency(total)}</em>
         </span>
       </div>
 
       <div className={s.splitViz}>
-        <div className={s.sl}>Where your €1 goes · 90 / 10</div>
+        <div className={s.sl}>
+          {t("studio:sheet.checkout.splitHeading", {
+            amount: fmt.currency(SHEET_PRICE),
+            splitRatio: SHEET_SPLIT_RATIO,
+          })}
+        </div>
         <div className={s.splitBar}>
           <div className={s.a} style={{ width: "55%" }} />
           <div className={s.b} style={{ width: "35%" }} />
@@ -47,17 +71,26 @@ export function StudioSheetCheckout() {
         </div>
         {SPLIT.map((r, i) => (
           <div key={i} className={s.splitR}>
-            <span className={s.sw} style={{ background: r.c }} />
-            <span className={s.sn}>{r.nm}</span>
+            <span className={s.sw} style={{ background: r.color }} />
+            <span className={s.sn}>
+              {r.name ? (
+                <>
+                  {r.name} · <em>{r.roleKey ? t(r.roleKey) : ""}</em>
+                </>
+              ) : (
+                t("studio:sheet.checkout.role.coop")
+              )}
+            </span>
             <span className={s.sv}>
-              <b>{r.v}</b>
+              <b>{fmt.currency(r.amount)}</b>
             </span>
           </div>
         ))}
         <div className={s.splitFoot}>
-          Sheets pay <em>90%</em> to the makers — more generous than the 80%
-          streaming split, because the work is one-off and hosting a PDF costs
-          near zero. <em>Voted in at the 9 June assembly.</em>
+          <Translation
+            i18nKey="studio:sheet.checkout.splitFoot"
+            components={{ em: <em /> }}
+          />
         </div>
       </div>
 
@@ -69,17 +102,18 @@ export function StudioSheetCheckout() {
             role="button"
             tabIndex={0}
             onClick={() => setPm(i)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
                 setPm(i);
               }
             }}
           >
             <span className={s.pmDot} />
             <span className={s.pn}>
-              {m.nm}
-              <small>{m.sub}</small>
+              {t(m.labelKey)}
+              {m.detail ? ` · ${m.detail}` : ""}
+              <small>{t(m.subKey)}</small>
             </span>
           </div>
         ))}
@@ -92,22 +126,30 @@ export function StudioSheetCheckout() {
         onClick={() => {
           setBought(true);
           showToast(
-            "Downloaded — €0.90 paid to Teresa & Mariana tonight",
+            t("studio:sheet.checkout.downloadedToast", {
+              amount: fmt.currency(
+                SHEET_SPLIT_SHARES.transcriber + SHEET_SPLIT_SHARES.composer,
+              ),
+              names: `${SHEET_TRANSCRIBER} & ${SHEET_COMPOSER.split(" ")[0]}`,
+            }),
             "success",
           );
         }}
       >
         {bought ? (
           <>
-            Paid <FiCheck /> · downloading PDF…
+            {t("studio:sheet.checkout.paidLabel")} <FiCheck /> ·{" "}
+            {t("studio:sheet.checkout.downloadingLabel")}
           </>
         ) : (
-          "Pay €1.04 & download →"
+          t("studio:sheet.checkout.payCta", { amount: fmt.currency(total) })
         )}
       </button>
       <div className={s.chNote}>
-        Instant download · re-download any time from your library ·{" "}
-        <em>the makers are paid tonight</em>.
+        <Translation
+          i18nKey="studio:sheet.checkout.note"
+          components={{ em: <em /> }}
+        />
       </div>
     </div>
   );

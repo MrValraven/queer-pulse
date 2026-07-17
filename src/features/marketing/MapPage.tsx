@@ -3,7 +3,9 @@ import { FiX } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, FilterChips, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { TYPES, VENUES, VIBES, type Venue } from "./map.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { TYPES, VENUES, VIBES, VIBE_LABEL_KEYS, type Venue } from "./map.data";
 import { LisbonMapSvg } from "./LisbonMapSvg";
 import { MapVenueCard } from "./MapVenueCard";
 import s from "./MapPage.module.css";
@@ -37,6 +39,7 @@ function VenueCardSkeleton() {
 }
 
 export function MapPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [bairro, setBairro] = useState<string | null>(null);
   const [type, setType] = useState("all");
@@ -108,26 +111,26 @@ export function MapPage() {
     <PageShell>
       <header className={s.hero}>
         <div className="wrap">
-          <div className={s.eye}>Lisbon · Community guide</div>
+          <div className={s.eye}>{t("marketing:map.hero.eyebrow")}</div>
           <h1>
-            The queer <em>city guide</em>
+            <Translation
+              i18nKey="marketing:map.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p>
-            Bars, clubs, cafés, clinics, bookshops, saunas and community spaces
-            — mapped by people who've actually been there.
-          </p>
+          <p>{t("marketing:map.hero.sub")}</p>
           <div className={s.stats}>
             <div className={s.stat}>
               <b>23</b>
-              <span>venues listed</span>
+              <span>{t("marketing:map.stats.venuesListed")}</span>
             </div>
             <div className={s.stat}>
               <b>8</b>
-              <span>neighbourhoods</span>
+              <span>{t("marketing:map.stats.neighbourhoods")}</span>
             </div>
             <div className={s.stat}>
-              <b>Community</b>
-              <span>maintained</span>
+              <b>{t("marketing:map.stats.communityLabel")}</b>
+              <span>{t("marketing:map.stats.maintained")}</span>
             </div>
           </div>
         </div>
@@ -136,27 +139,34 @@ export function MapPage() {
       <div className={s.filterBar}>
         <div className="wrap">
           <div className={s.fbInner}>
-            <span className={s.fbLabel}>Type</span>
+            <span className={s.fbLabel}>
+              {t("marketing:map.filterBar.typeLabel")}
+            </span>
             <FilterChips
-              options={TYPES.map((t) => ({ value: t.t, label: t.label }))}
+              options={TYPES.map((typeOption) => ({
+                value: typeOption.t,
+                label: t(typeOption.labelKey),
+              }))}
               value={type}
-              onChange={(v) => {
-                setType(v);
+              onChange={(value) => {
+                setType(value);
                 setExpanded(null);
               }}
             />
             <span className={s.fbSep} />
-            <span className={s.fbLabel}>Vibe</span>
-            {VIBES.map((v) => (
+            <span className={s.fbLabel}>
+              {t("marketing:map.filterBar.vibeLabel")}
+            </span>
+            {VIBES.map((vibe) => (
               <button
                 type="button"
-                key={v}
-                className={[s.chip, s.vibe, vibes.includes(v) && s.chipOn]
+                key={vibe}
+                className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => toggleVibe(v)}
+                onClick={() => toggleVibe(vibe)}
               >
-                {v}
+                {t(VIBE_LABEL_KEYS[vibe]!)}
               </button>
             ))}
           </div>
@@ -174,9 +184,15 @@ export function MapPage() {
           <aside className={s.sidebar}>
             <div className={s.sbTop}>
               <div>
-                <div className={s.sbHeading}>{bairro ?? "All venues"}</div>
+                <div className={s.sbHeading}>
+                  {bairro ?? t("marketing:map.sidebar.allVenues")}
+                </div>
                 <div className={s.sbCount}>
-                  <b>{items.length}</b> venue{items.length !== 1 ? "s" : ""}
+                  <Translation
+                    i18nKey="marketing:map.sidebar.venueCount"
+                    values={{ count: items.length }}
+                    components={{ b: <b /> }}
+                  />
                 </div>
               </div>
               {bairro && (
@@ -185,13 +201,13 @@ export function MapPage() {
                   className={s.clear}
                   onClick={() => selectBairro(null)}
                 >
-                  <FiX /> Clear
+                  <FiX /> {t("marketing:map.sidebar.clear")}
                 </button>
               )}
             </div>
 
             {!loading && items.length === 0 && (
-              <div className={s.empty}>No venues match these filters.</div>
+              <div className={s.empty}>{t("marketing:map.sidebar.empty")}</div>
             )}
 
             {loading

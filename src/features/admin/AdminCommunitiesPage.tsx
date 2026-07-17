@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminCommunityGrid } from "./AdminCommunityGrid";
 import { AdminCommunityDetail } from "./AdminCommunityDetail";
 import { AdminHealthModal } from "./AdminHealthModal";
@@ -24,9 +25,10 @@ export function AdminCommunitiesPage() {
   return (
     <AdminShell
       title={
-        <>
-          Communities · <em>all spaces</em>
-        </>
+        <Translation
+          i18nKey="admin:communities.title"
+          components={{ em: <em /> }}
+        />
       }
     >
       {selected ? (

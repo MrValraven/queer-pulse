@@ -5,6 +5,8 @@ import { useConnect } from "../../app/providers/ConnectProvider";
 import styles from "./OfferPage.module.css";
 import { Button } from "../../shared/components/ui";
 import { MEMBERS, memberName } from "../members/data/members";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 
 type Kind = "looking" | "offering";
 type Tint = "coral" | "jade" | "plum";
@@ -74,6 +76,7 @@ const OTHERS: { slug: string; kind: Kind; title: string; by: string }[] = [
 ];
 
 export function OfferPage() {
+  const { t } = useTranslation();
   const o = MAIN;
   const owner = o.owner;
   const { openConnect } = useConnect();
@@ -85,7 +88,7 @@ export function OfferPage() {
       <div className={styles.page}>
         <div className="wrap">
           <div className={styles.backLink}>
-            <a href="/#board">← Asks &amp; Offers</a>
+            <a href="/#board">{t("economy:offerBoard.backLink")}</a>
           </div>
           <div className={styles.grid}>
             <div>
@@ -95,7 +98,9 @@ export function OfferPage() {
                   o.kind === "looking" ? styles.looking : styles.offering,
                 ].join(" ")}
               >
-                {o.kind === "looking" ? "Looking for" : "Offering"}
+                {o.kind === "looking"
+                  ? t("economy:offerBoard.pill.looking")
+                  : t("economy:offerBoard.pill.offering")}
               </span>
               <h1 className={styles.title}>{o.title}</h1>
               <p className={styles.body}>{o.body}</p>
@@ -105,15 +110,17 @@ export function OfferPage() {
                   variant="primary"
                   size="lg"
                 >
-                  Respond to {owner.first} →
+                  {t("economy:offerBoard.respondCta", { name: owner.first })}
                 </Button>
                 <Button to={profile} variant="ghost" size="lg">
-                  See their profile
+                  {t("economy:offerBoard.seeProfileCta")}
                 </Button>
               </div>
             </div>
             <aside className={styles.sidebar}>
-              <div className={styles.sh}>Posted by</div>
+              <div className={styles.sh}>
+                {t("economy:offerBoard.postedBy")}
+              </div>
               <div className={styles.posterRow}>
                 <div
                   className={styles.posterAv}
@@ -136,23 +143,29 @@ export function OfferPage() {
                 </div>
               </div>
               <div className={styles.sidebarNote}>
-                {owner.first} is a member in good standing
-                {owner.verified ? " and has been verified by the team" : ""}.
-                Every member is vouched for by someone already in the room.
+                {t(
+                  owner.verified
+                    ? "economy:offerBoard.sidebarNoteVerified"
+                    : "economy:offerBoard.sidebarNote",
+                  { name: owner.first },
+                )}
               </div>
               <Button
                 onClick={() => openConnect("ines")}
                 variant="primary"
                 className={styles.sidebarBtn}
               >
-                Say hello to {owner.first}
+                {t("economy:offerBoard.sayHelloCta", { name: owner.first })}
               </Button>
             </aside>
           </div>
 
           <div className={styles.other}>
             <h2>
-              More from <em>the board</em>
+              <Translation
+                i18nKey="economy:offerBoard.moreFromBoard"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.offerList}>
               {OTHERS.map((other) => (
@@ -165,7 +178,9 @@ export function OfferPage() {
                         : styles.okOffering,
                     ].join(" ")}
                   >
-                    {other.kind === "looking" ? "Looking for" : "Offering"}
+                    {other.kind === "looking"
+                      ? t("economy:offerBoard.pill.looking")
+                      : t("economy:offerBoard.pill.offering")}
                   </span>
                   <h3>{other.title}</h3>
                   <div className={styles.by}>{other.by}</div>

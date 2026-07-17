@@ -9,6 +9,8 @@ import { COMPANY_PROFILES } from "./companies.data";
 import { useCompanies } from "./api/useCompanies";
 import { useCreateCompany } from "./api/useCompanyMutations";
 import { AFFILIATION_ROLES } from "./postJob.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PostJobPage.module.css";
 
 interface PickerCompany {
@@ -36,6 +38,7 @@ function AddCompanyBlock({
   draft: NewCompany;
   setDraft: (patch: Partial<NewCompany>) => void;
 }) {
+  const { t } = useTranslation();
   if (!adding) {
     return (
       <button
@@ -48,8 +51,12 @@ function AddCompanyBlock({
           <FiPlus />
         </span>
         <span>
-          <span className={styles.affName}>My company isn&apos;t listed</span>
-          <span className={styles.affMeta}>Add it to the directory</span>
+          <span className={styles.affName}>
+            {t("economy:affiliateCompanyModal.notListed.name")}
+          </span>
+          <span className={styles.affMeta}>
+            {t("economy:affiliateCompanyModal.notListed.meta")}
+          </span>
         </span>
       </button>
     );
@@ -57,33 +64,45 @@ function AddCompanyBlock({
   return (
     <>
       <div className={styles.field} style={{ marginTop: 16 }}>
-        <div className={styles.label}>Company name</div>
+        <div className={styles.label}>
+          {t("economy:affiliateCompanyModal.addCompany.nameLabel")}
+        </div>
         <input
           className={styles.input}
           type="text"
           value={draft.name}
           onChange={(e) => setDraft({ name: e.target.value })}
-          placeholder="e.g. Atelier Pulso"
+          placeholder={t(
+            "economy:affiliateCompanyModal.addCompany.namePlaceholder",
+          )}
         />
       </div>
       <div className={styles.field}>
-        <div className={styles.label}>One-line tagline</div>
+        <div className={styles.label}>
+          {t("economy:affiliateCompanyModal.addCompany.taglineLabel")}
+        </div>
         <input
           className={styles.input}
           type="text"
           value={draft.tagline}
           onChange={(e) => setDraft({ tagline: e.target.value })}
-          placeholder="What the company does, in a sentence."
+          placeholder={t(
+            "economy:affiliateCompanyModal.addCompany.taglinePlaceholder",
+          )}
         />
       </div>
       <div className={styles.field}>
-        <div className={styles.label}>About</div>
+        <div className={styles.label}>
+          {t("economy:affiliateCompanyModal.addCompany.aboutLabel")}
+        </div>
         <textarea
           className={styles.textarea}
           rows={3}
           value={draft.about}
           onChange={(e) => setDraft({ about: e.target.value })}
-          placeholder="A short description of the company and how it works."
+          placeholder={t(
+            "economy:affiliateCompanyModal.addCompany.aboutPlaceholder",
+          )}
         />
       </div>
       <button
@@ -91,7 +110,7 @@ function AddCompanyBlock({
         className={styles.back}
         onClick={() => setAdding(false)}
       >
-        ← Pick an existing company
+        {t("economy:affiliateCompanyModal.addCompany.pickExisting")}
       </button>
     </>
   );
@@ -106,6 +125,7 @@ export function AffiliateCompanyModal({
   onClose: () => void;
   onAffiliated: () => void;
 }) {
+  const { t } = useTranslation();
   const { affiliate } = useEmployerAffiliation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
@@ -135,7 +155,7 @@ export function AffiliateCompanyModal({
       : "",
   );
   const [role, setRole] = useState<string>(
-    AFFILIATION_ROLES[0] ?? "Team member",
+    AFFILIATION_ROLES[0]?.value ?? "Team member",
   );
   const [verifying, setVerifying] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -165,10 +185,7 @@ export function AffiliateCompanyModal({
           onAffiliated();
         }
       } catch {
-        showToast(
-          "We couldn't create that company. Please try again.",
-          "error",
-        );
+        showToast(t("economy:affiliateCompanyModal.createErrorToast"), "error");
       }
       return;
     }
@@ -182,16 +199,20 @@ export function AffiliateCompanyModal({
   }
 
   return (
-    <ModalShell onClose={onClose} ariaLabel="Affiliate your company">
-      <div className={styles.eyebrow}>Employer access</div>
+    <ModalShell
+      onClose={onClose}
+      ariaLabel={t("economy:affiliateCompanyModal.ariaLabel")}
+    >
+      <div className={styles.eyebrow}>
+        {t("economy:affiliateCompanyModal.eyebrow")}
+      </div>
       <h2 className={styles.mlTitle} style={{ fontSize: 24 }}>
-        Which company are you{" "}
-        <em style={{ color: "var(--accent)" }}>posting for?</em>
+        <Translation
+          i18nKey="economy:affiliateCompanyModal.title"
+          components={{ em: <em style={{ color: "var(--accent)" }} /> }}
+        />
       </h2>
-      <p className={styles.cardSub}>
-        Pick the organisation you&apos;re authorised to hire for. We confirm
-        employer affiliations to keep the board trustworthy.
-      </p>
+      <p className={styles.cardSub}>{t("economy:affiliateCompanyModal.sub")}</p>
 
       {!adding && (
         <div className={styles.affList}>
@@ -228,21 +249,25 @@ export function AffiliateCompanyModal({
       )}
 
       <div className={styles.field} style={{ marginTop: 16 }}>
-        <div className={styles.label}>Your role there</div>
+        <div className={styles.label}>
+          {t("economy:affiliateCompanyModal.roleLabel")}
+        </div>
         <select
           className={styles.select}
           value={role}
           onChange={(e) => setRole(e.target.value)}
         >
           {AFFILIATION_ROLES.map((r) => (
-            <option key={r}>{r}</option>
+            <option key={r.value} value={r.value}>
+              {t(r.labelKey)}
+            </option>
           ))}
         </select>
       </div>
 
       <div className={styles.stepNav}>
         <button type="button" className={styles.back} onClick={onClose}>
-          Cancel
+          {t("economy:affiliateCompanyModal.cancel")}
         </button>
         <span className={styles.spacerFlex} />
         <Button
@@ -252,11 +277,17 @@ export function AffiliateCompanyModal({
           onClick={confirm}
         >
           {busy ? (
-            <Sending label={adding ? "Creating…" : "Verifying…"} />
+            <Sending
+              label={
+                adding
+                  ? t("economy:affiliateCompanyModal.creating")
+                  : t("economy:affiliateCompanyModal.verifying")
+              }
+            />
           ) : adding ? (
-            "Create & continue"
+            t("economy:affiliateCompanyModal.createCta")
           ) : (
-            "Confirm & continue"
+            t("economy:affiliateCompanyModal.confirmCta")
           )}
         </Button>
       </div>

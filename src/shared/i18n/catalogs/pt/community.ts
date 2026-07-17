@@ -49,7 +49,7 @@ export const community: Catalog = {
   "caregivers.lesson.wrongThing.readTime": "5 min de leitura",
   "caregivers.lesson.wrongThing.langs": "PT + EN",
   "caregivers.lesson.pronouns.title":
-    "Pronomes &amp; <em>nomes</em>, de forma simples",
+    "Pronomes & <em>nomes</em>, de forma simples",
   "caregivers.lesson.pronouns.body":
     "O que fazer, o que não fazer, o que fazer quando te enganas. <em>Não é um texto político — é um texto prático.</em> Escrito por Yara R.",
   "caregivers.lesson.pronouns.readTime": "3 min de leitura",
@@ -99,7 +99,7 @@ export const community: Catalog = {
     "Quinzenal às quintas 20:00 · com facilitação · EN",
   "caregivers.room.partnersOfTrans.meta": "12 pares na sala",
   "caregivers.room.siblings.title":
-    "Irmãos, irmãs &amp; <em>família escolhida</em>",
+    "Irmãos, irmãs & <em>família escolhida</em>",
   "caregivers.room.siblings.sub":
     "Mensal ao domingo 18:00 · informal · PT + EN",
   "caregivers.room.siblings.meta": "22 pessoas · no mês passado",
@@ -613,6 +613,7 @@ export const community: Catalog = {
     "Considera um testamento e um documento de tutela",
   "family.tab.legal.step.willGuardianship.text":
     "Mesmo com parentalidade legal plena, vale a pena ter um testamento que especifique a tutela em caso de morte. Um ou uma advogada de família pode redigir isto em poucas horas.",
+  "family.review.starsAriaLabel": "{stars} em 5",
 
   "family.talk.heading": "Fala com quem já <em>passou por isto.</em>",
   "family.talk.body":

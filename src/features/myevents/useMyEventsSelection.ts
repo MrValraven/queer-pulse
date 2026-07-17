@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
+import type { TFunction } from "../../shared/i18n/types";
 import type { MyEvent } from "./myEvents.types";
 import { downloadICS } from "./myEvents.ics";
 
@@ -9,6 +10,7 @@ interface SelectionDeps {
   setEvents: Dispatch<SetStateAction<MyEvent[]>>;
   toast: (msg: string, type?: "success" | "info") => void;
   toastAction: (msg: string, action: ToastAction) => void;
+  t: TFunction;
 }
 
 export interface MyEventsSelection {
@@ -29,6 +31,7 @@ export function useMyEventsSelection({
   setEvents,
   toast,
   toastAction,
+  t,
 }: SelectionDeps): MyEventsSelection {
   const [selectMode, setSelectMode] = useState(false);
   const [selected, setSelected] = useState<Record<string, boolean>>({});
@@ -54,22 +57,26 @@ export function useMyEventsSelection({
     setSelected({});
   }, []);
   const bulkAddCal = useCallback(() => {
-    const n = selectedCount;
-    toast(`${n} event${n > 1 ? "s" : ""} added to your calendar`, "success");
-  }, [selectedCount, toast]);
+    toast(
+      t("myevents:bulk.addedToCalendarToast", { count: selectedCount }),
+      "success",
+    );
+  }, [selectedCount, t, toast]);
   const bulkExport = useCallback(() => {
     const chosen = events.filter((e) => selected[e.id]);
-    const n = chosen.length;
     downloadICS("queerpulse-events.ics", chosen);
-    toast(`${n} event${n > 1 ? "s" : ""} exported as .ics`, "success");
-  }, [events, selected, toast]);
+    toast(
+      t("myevents:bulk.exportedToast", { count: chosen.length }),
+      "success",
+    );
+  }, [events, selected, t, toast]);
   const bulkCancel = useCallback(() => {
     const ids = Object.keys(selected).filter((id) => {
       const e = events.find((x) => x.id === id);
       return e && (e.cat === "going" || e.cat === "waitlisted");
     });
     if (!ids.length) {
-      toast("Select events you’re going to or waitlisted for first", "info");
+      toast(t("myevents:bulk.needsCommittedToast"), "info");
       return;
     }
     const removed = ids
@@ -77,14 +84,11 @@ export function useMyEventsSelection({
       .filter(Boolean) as MyEvent[];
     setEvents((prev) => prev.filter((e) => !ids.includes(e.id)));
     setSelected({});
-    toastAction(
-      `Dropped ${removed.length} event${removed.length > 1 ? "s" : ""}`,
-      {
-        label: "Undo",
-        onClick: () => setEvents((prev) => [...prev, ...removed]),
-      },
-    );
-  }, [events, selected, setEvents, toast, toastAction]);
+    toastAction(t("myevents:bulk.droppedToast", { count: removed.length }), {
+      label: t("myevents:bulk.undoCta"),
+      onClick: () => setEvents((prev) => [...prev, ...removed]),
+    });
+  }, [events, selected, setEvents, t, toast, toastAction]);
 
   return {
     selectMode,

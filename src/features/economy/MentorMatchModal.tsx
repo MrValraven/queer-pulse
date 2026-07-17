@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Mode } from "./mentorship.data";
 import {
   MenteeSteps,
@@ -15,6 +16,7 @@ export function MentorMatchModal({
   mode: Mode;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -38,13 +40,17 @@ export function MentorMatchModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={mode === "mentee" ? "Find a mentor" : "Become a mentor"}
+        aria-label={
+          mode === "mentee"
+            ? t("economy:mentorship.match.findMentorAria")
+            : t("economy:mentorship.match.becomeMentorAria")
+        }
       >
         <button
           type="button"
           className={styles.modalClose}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("economy:mentorship.match.closeAria")}
         >
           ×
         </button>
@@ -55,7 +61,9 @@ export function MentorMatchModal({
           />
         </div>
         <div className={styles.mmLabel}>
-          {done ? "Done!" : `Step ${step} of ${total}`}
+          {done
+            ? t("economy:mentorship.match.done")
+            : t("economy:mentorship.match.stepOf", { step, total })}
         </div>
 
         {done ? (

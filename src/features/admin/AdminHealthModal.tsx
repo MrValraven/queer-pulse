@@ -1,10 +1,12 @@
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminModal } from "./ui";
 import {
   BREAKDOWN_META,
   breakdownColor,
-  breakdownNarrative,
+  breakdownNarrativeKey,
   type Community,
 } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
@@ -56,6 +58,7 @@ export function AdminHealthModal({
   onClose: () => void;
   onOfferSupport: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   const footer = (
@@ -64,13 +67,10 @@ export function AdminHealthModal({
         variant="ghost"
         size="md"
         onClick={() =>
-          showToast(
-            "Health is a weighted blend of four signals, recalculated nightly",
-            "info",
-          )
+          showToast(t("admin:communities.health.howCalculatedToast"), "info")
         }
       >
-        How it's calculated
+        {t("admin:communities.health.howCalculatedCta")}
       </Button>
       {community.support ? (
         <Button
@@ -81,11 +81,11 @@ export function AdminHealthModal({
             onOfferSupport();
           }}
         >
-          Offer support →
+          {t("admin:communities.health.offerSupportCta")} →
         </Button>
       ) : (
         <Button variant="primary" size="md" onClick={onClose}>
-          Close
+          {t("admin:communities.health.closeCta")}
         </Button>
       )}
     </>
@@ -94,26 +94,32 @@ export function AdminHealthModal({
   return (
     <AdminModal
       title={
-        <>
-          Why <em>{community.health}</em>?
-        </>
+        <Translation
+          i18nKey="admin:communities.health.modalTitle"
+          values={{ score: community.health }}
+          components={{ em: <em /> }}
+        />
       }
       onClose={onClose}
       footer={footer}
     >
       <p className={styles.modalIntro}>
-        Health is a blend of four signals, weighted by community size. It's a
-        thermometer, not a grade — {breakdownNarrative(community.health)}
+        {t("admin:communities.health.intro")}{" "}
+        {t(`admin:${breakdownNarrativeKey(community.health)}`)}
       </p>
       <div className={styles.bdList}>
         {BREAKDOWN_META.map((meta, i) => {
           const value = community.bd[i]!;
           return (
-            <div key={meta.name} className={styles.bdRow}>
+            <div key={meta.id} className={styles.bdRow}>
               <HealthRing value={value} />
               <div className={styles.bdText}>
-                <div className={styles.bdName}>{meta.name}</div>
-                <div className={styles.bdDesc}>{meta.desc}</div>
+                <div className={styles.bdName}>
+                  {t(`admin:${meta.nameKey}`)}
+                </div>
+                <div className={styles.bdDesc}>
+                  {t(`admin:${meta.descKey}`)}
+                </div>
               </div>
               <div
                 className={styles.bdScore}

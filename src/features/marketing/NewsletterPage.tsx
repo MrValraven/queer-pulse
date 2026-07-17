@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import styles from "./NewsletterPage.module.css";
@@ -10,105 +12,110 @@ const SETTINGS = routes.settings;
 
 interface Pref {
   id: string;
-  title: string;
-  sub: string;
-  freq: string;
+  titleKey: string;
+  subKey: string;
+  freqKey: string;
   checked: boolean;
   disabled?: boolean;
 }
 interface Section {
-  title: string;
+  id: string;
+  titleKey: string;
   prefs: Pref[];
 }
 
 const INITIAL: Section[] = [
   {
-    title: "Magazine",
+    id: "magazine",
+    titleKey: "marketing:newsletter.sections.magazine.title",
     prefs: [
       {
         id: "mag-issue",
-        title: "Monthly magazine issue",
-        sub: "A full issue email on the first of every month — cover story, links to all articles, letters from the editors.",
-        freq: "Monthly · 1st of the month",
+        titleKey: "marketing:newsletter.prefs.magIssue.title",
+        subKey: "marketing:newsletter.prefs.magIssue.sub",
+        freqKey: "marketing:newsletter.prefs.magIssue.freq",
         checked: true,
       },
       {
         id: "mag-picks",
-        title: "Editor's picks",
-        sub: "When an article gets a strong community response, we'll send it to you mid-month. No more than twice a month.",
-        freq: "Occasional · up to 2× per month",
+        titleKey: "marketing:newsletter.prefs.magPicks.title",
+        subKey: "marketing:newsletter.prefs.magPicks.sub",
+        freqKey: "marketing:newsletter.prefs.magPicks.freq",
         checked: true,
       },
     ],
   },
   {
-    title: "Events & gatherings",
+    id: "events",
+    titleKey: "marketing:newsletter.sections.events.title",
     prefs: [
       {
         id: "ev-confirm",
-        title: "Event confirmations & reminders",
-        sub: "Confirmation when you RSVP, plus a reminder 48 hours before each event you're attending.",
-        freq: "Transactional · per RSVP",
+        titleKey: "marketing:newsletter.prefs.evConfirm.title",
+        subKey: "marketing:newsletter.prefs.evConfirm.sub",
+        freqKey: "marketing:newsletter.prefs.evConfirm.freq",
         checked: true,
       },
       {
         id: "ev-near",
-        title: "New events near you",
-        sub: "A weekly digest of new events and gatherings listed in the past seven days. Only if you've saved location preferences.",
-        freq: "Weekly · Thursdays",
+        titleKey: "marketing:newsletter.prefs.evNear.title",
+        subKey: "marketing:newsletter.prefs.evNear.sub",
+        freqKey: "marketing:newsletter.prefs.evNear.freq",
         checked: false,
       },
       {
         id: "ev-reading",
-        title: "Reading group activity",
-        sub: "Updates from reading groups you're a member of — new sessions, books selected, messages from the group organiser.",
-        freq: "As activity happens",
+        titleKey: "marketing:newsletter.prefs.evReading.title",
+        subKey: "marketing:newsletter.prefs.evReading.sub",
+        freqKey: "marketing:newsletter.prefs.evReading.freq",
         checked: true,
       },
     ],
   },
   {
-    title: "Community & network",
+    id: "community",
+    titleKey: "marketing:newsletter.sections.community.title",
     prefs: [
       {
         id: "com-announce",
-        title: "Community announcements",
-        sub: "Major community news — new features, governance decisions, significant platform changes. Sent only when something important happens.",
-        freq: "Occasional · never more than weekly",
+        titleKey: "marketing:newsletter.prefs.comAnnounce.title",
+        subKey: "marketing:newsletter.prefs.comAnnounce.sub",
+        freqKey: "marketing:newsletter.prefs.comAnnounce.freq",
         checked: true,
       },
       {
         id: "com-connect",
-        title: "Connection requests & messages",
-        sub: "Email notifications when someone sends you a connection request or a message. Can also be managed via in-app notifications.",
-        freq: "Per event",
+        titleKey: "marketing:newsletter.prefs.comConnect.title",
+        subKey: "marketing:newsletter.prefs.comConnect.sub",
+        freqKey: "marketing:newsletter.prefs.comConnect.freq",
         checked: true,
       },
       {
         id: "com-forum",
-        title: "Forum mentions & replies",
-        sub: "When someone replies to your forum post or mentions you in a thread.",
-        freq: "Per event",
+        titleKey: "marketing:newsletter.prefs.comForum.title",
+        subKey: "marketing:newsletter.prefs.comForum.sub",
+        freqKey: "marketing:newsletter.prefs.comForum.freq",
         checked: false,
       },
     ],
   },
   {
-    title: "Safety & account",
+    id: "safety",
+    titleKey: "marketing:newsletter.sections.safety.title",
     prefs: [
       {
         id: "safe-alerts",
-        title: "Safety alerts",
-        sub: "Critical alerts about your account — password changes, unusual activity, or community safety notices. These cannot be turned off and we will only send them when genuinely necessary.",
-        freq: "Urgent · cannot be disabled",
+        titleKey: "marketing:newsletter.prefs.safeAlerts.title",
+        subKey: "marketing:newsletter.prefs.safeAlerts.sub",
+        freqKey: "marketing:newsletter.prefs.safeAlerts.freq",
         checked: true,
         disabled: true,
       },
       {
         id: "safe-report",
-        title: "Quarterly community report",
-        sub: "The community health and financial report published every quarter. Contains moderation statistics, platform finances, and governance updates.",
-        freq: "Quarterly",
+        titleKey: "marketing:newsletter.prefs.safeReport.title",
+        subKey: "marketing:newsletter.prefs.safeReport.sub",
+        freqKey: "marketing:newsletter.prefs.safeReport.freq",
         checked: true,
       },
     ],
@@ -116,32 +123,37 @@ const INITIAL: Section[] = [
 ];
 
 export function NewsletterPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [sections, setSections] = useState<Section[]>(INITIAL);
 
-  const toggle = (si: number, pi: number) => {
+  const toggle = (sectionIndex: number, prefIndex: number) => {
     setSections((prev) =>
-      prev.map((s, i) =>
-        i === si
+      prev.map((section, currentSectionIndex) =>
+        currentSectionIndex === sectionIndex
           ? {
-              ...s,
-              prefs: s.prefs.map((p, j) =>
-                j === pi ? { ...p, checked: !p.checked } : p,
+              ...section,
+              prefs: section.prefs.map((pref, currentPrefIndex) =>
+                currentPrefIndex === prefIndex
+                  ? { ...pref, checked: !pref.checked }
+                  : pref,
               ),
             }
-          : s,
+          : section,
       ),
     );
   };
 
   const unsubAll = () => {
     setSections((prev) =>
-      prev.map((s) => ({
-        ...s,
-        prefs: s.prefs.map((p) => (p.disabled ? p : { ...p, checked: false })),
+      prev.map((section) => ({
+        ...section,
+        prefs: section.prefs.map((pref) =>
+          pref.disabled ? pref : { ...pref, checked: false },
+        ),
       })),
     );
-    showToast("Unsubscribed from all optional emails", "success");
+    showToast(t("marketing:newsletter.unsub.toast"), "success");
   };
 
   return (
@@ -149,48 +161,51 @@ export function NewsletterPage() {
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
           <Link to={SETTINGS} className={styles.back}>
-            ← Settings
+            {t("marketing:newsletter.backToSettings")}
           </Link>
           <div className={styles.header}>
-            <div className={styles.eye}>Email preferences</div>
+            <div className={styles.eye}>
+              {t("marketing:newsletter.header.eyebrow")}
+            </div>
             <h1 className={styles.title}>
-              What we <em>send you,</em>
-              <br />
-              and when.
+              <Translation
+                i18nKey="marketing:newsletter.header.title"
+                components={{ em: <em /> }}
+              />
             </h1>
-            <p className={styles.sub}>
-              You control everything. Toggle off anything you don't want. Safety
-              alerts are the only emails we'll ever send regardless of your
-              settings — and only if something urgent affects your account.
-            </p>
+            <p className={styles.sub}>{t("marketing:newsletter.header.sub")}</p>
           </div>
 
           <div className={styles.account}>
             <div>
-              <div className={styles.accountLabel}>Sending to</div>
+              <div className={styles.accountLabel}>
+                {t("marketing:newsletter.account.sendingTo")}
+              </div>
               <div className={styles.email}>member@email.pt</div>
             </div>
             <Link to={SETTINGS} className={styles.edit}>
-              Change email →
+              {t("marketing:newsletter.account.changeEmail")}
             </Link>
           </div>
 
-          {sections.map((s, si) => (
-            <div className={styles.section} key={s.title}>
-              <div className={styles.sectionTitle}>{s.title}</div>
-              {s.prefs.map((p, pi) => (
-                <div className={styles.toggleRow} key={p.id}>
+          {sections.map((section, sectionIndex) => (
+            <div className={styles.section} key={section.id}>
+              <div className={styles.sectionTitle}>{t(section.titleKey)}</div>
+              {section.prefs.map((pref, prefIndex) => (
+                <div className={styles.toggleRow} key={pref.id}>
                   <div className={styles.trBody}>
-                    <div className={styles.trTitle}>{p.title}</div>
-                    <div className={styles.trSub}>{p.sub}</div>
-                    <div className={styles.trFreq}>{p.freq}</div>
+                    <div className={styles.trTitle}>{t(pref.titleKey)}</div>
+                    <div className={styles.trSub}>{t(pref.subKey)}</div>
+                    <div className={styles.trFreq}>{t(pref.freqKey)}</div>
                   </div>
                   <label className={styles.switch}>
                     <input
                       type="checkbox"
-                      checked={p.checked}
-                      disabled={p.disabled}
-                      onChange={() => !p.disabled && toggle(si, pi)}
+                      checked={pref.checked}
+                      disabled={pref.disabled}
+                      onChange={() =>
+                        !pref.disabled && toggle(sectionIndex, prefIndex)
+                      }
                     />
                     <div className={styles.track}>
                       <div className={styles.thumb} />
@@ -204,24 +219,26 @@ export function NewsletterPage() {
           <div className={styles.save}>
             <Button
               variant="primary"
-              onClick={() => showToast("Preferences saved", "success")}
+              onClick={() =>
+                showToast(t("marketing:newsletter.save.toast"), "success")
+              }
             >
-              Save preferences
+              {t("marketing:newsletter.save.cta")}
             </Button>
             <div className={styles.saveNote}>
-              Changes take effect immediately. You may still receive emails
-              already queued.
+              {t("marketing:newsletter.save.note")}
             </div>
           </div>
 
           <div className={styles.unsubStrip}>
-            <div className={styles.unsubTitle}>Unsubscribe from everything</div>
+            <div className={styles.unsubTitle}>
+              {t("marketing:newsletter.unsub.title")}
+            </div>
             <div className={styles.unsubText}>
-              This turns off all optional emails at once, except safety alerts.
-              You can re-enable individual categories above at any time.
+              {t("marketing:newsletter.unsub.text")}
             </div>
             <Button variant="ghost" onClick={unsubAll}>
-              Unsubscribe from all emails
+              {t("marketing:newsletter.unsub.cta")}
             </Button>
           </div>
         </div>

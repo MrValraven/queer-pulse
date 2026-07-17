@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 export interface ProfileNavItem {
   /** DOM id of the section this item scrolls to. */
   id: string;
-  label: string;
-  group: string;
+  labelKey: string;
+  groupKey: string;
   icon: ReactNode;
 }
 
@@ -16,8 +16,8 @@ export interface ProfileNavItem {
 export const PROFILE_NAV: ProfileNavItem[] = [
   {
     id: "identity",
-    label: "Identity & photo",
-    group: "Profile",
+    labelKey: "settings:editProfile.nav.identity.label",
+    groupKey: "settings:editProfile.nav.group.profile",
     icon: (
       <svg viewBox="0 0 16 16">
         <circle cx="8" cy="6" r="3" />
@@ -27,8 +27,8 @@ export const PROFILE_NAV: ProfileNavItem[] = [
   },
   {
     id: "pronouns",
-    label: "Pronouns & name",
-    group: "Profile",
+    labelKey: "settings:editProfile.nav.pronouns.label",
+    groupKey: "settings:editProfile.nav.group.profile",
     icon: (
       <svg viewBox="0 0 16 16">
         <path d="M4 4h8M8 4v8M5 11l3 2 3-2" />
@@ -37,8 +37,8 @@ export const PROFILE_NAV: ProfileNavItem[] = [
   },
   {
     id: "bio",
-    label: "Bio & occupation",
-    group: "Profile",
+    labelKey: "settings:editProfile.nav.bio.label",
+    groupKey: "settings:editProfile.nav.group.profile",
     icon: (
       <svg viewBox="0 0 16 16">
         <path d="M3 4h10M3 8h8M3 12h5" />
@@ -47,8 +47,8 @@ export const PROFILE_NAV: ProfileNavItem[] = [
   },
   {
     id: "links",
-    label: "Links & social",
-    group: "Profile",
+    labelKey: "settings:editProfile.nav.links.label",
+    groupKey: "settings:editProfile.nav.group.profile",
     icon: (
       <svg viewBox="0 0 16 16">
         <path d="M6.5 9.5a2.5 2.5 0 0 0 3.6.1l2-2a2.5 2.5 0 0 0-3.5-3.6l-1 1" />
@@ -58,8 +58,8 @@ export const PROFILE_NAV: ProfileNavItem[] = [
   },
   {
     id: "skills",
-    label: "Skills & interests",
-    group: "Profile",
+    labelKey: "settings:editProfile.nav.skills.label",
+    groupKey: "settings:editProfile.nav.group.profile",
     icon: (
       <svg viewBox="0 0 16 16">
         <polygon points="8,2 10.2,6 15,6.6 11.5,10 12.4,15 8,12.5 3.6,15 4.5,10 1,6.6 5.8,6" />
@@ -68,8 +68,8 @@ export const PROFILE_NAV: ProfileNavItem[] = [
   },
   {
     id: "visibility",
-    label: "Field visibility",
-    group: "Privacy",
+    labelKey: "settings:editProfile.nav.visibility.label",
+    groupKey: "settings:editProfile.nav.group.privacy",
     icon: (
       <svg viewBox="0 0 16 16">
         <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" />
@@ -79,7 +79,8 @@ export const PROFILE_NAV: ProfileNavItem[] = [
   },
 ];
 
-/** Human-readable label for each section id, used in the save confirmation. */
-export const SECTION_LABELS: Record<string, string> = Object.fromEntries(
-  PROFILE_NAV.map((n) => [n.id, n.label]),
+/** Catalog key for each section id's human-readable label, used in the save
+ * confirmation (`SECTION_LABELS[id]` resolved via `t()` by the consumer). */
+export const SECTION_LABEL_KEYS: Record<string, string> = Object.fromEntries(
+  PROFILE_NAV.map((n) => [n.id, n.labelKey]),
 );

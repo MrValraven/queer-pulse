@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useAuth } from "../../app/providers/authContext";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   BioSection,
   IdentitySection,
@@ -28,6 +29,7 @@ export function EditProfilePane({
 }: {
   onChange: (section: ProfileSection) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { draft, updateDraft } = useProfile();
   const { user } = useAuth();
@@ -40,14 +42,14 @@ export function EditProfilePane({
 
   function handleRemovePhoto() {
     updateDraft({ photo: undefined });
-    showToast("Photo removed.", "info");
+    showToast(t("settings:editProfile.toast.photoRemoved"), "info");
     onChange("identity");
   }
 
   function handleUseGooglePhoto() {
     if (!googlePhoto) return;
     updateDraft({ photo: googlePhoto });
-    showToast("Photo restored from Google.", "success");
+    showToast(t("settings:editProfile.toast.photoRestored"), "success");
     onChange("identity");
   }
 

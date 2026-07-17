@@ -1,9 +1,17 @@
 export interface FormStep {
   n: string;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
 }
 
+export interface Right {
+  badge: "protected" | "know" | "practical";
+  titleKey: string;
+  bodyKey: string;
+}
+
+// Attributed peer quotes (a member's own words) — stay English per the
+// scope rule, same precedent as therapist bios. Not routed through i18n.
 export interface Voice {
   text: string;
   who: string;
@@ -12,36 +20,36 @@ export interface Voice {
 export const ON_FORMS: FormStep[] = [
   {
     n: "01",
-    title: "Read the parent fields first",
-    body: 'Many Lisbon schools now use two unlabelled "encarregado de educação" fields with no gender specified — you can put both your names straight in. Where a form still says "mãe / pai", you are allowed to cross out and write what is true.',
+    titleKey: "resources:schoolFormsGuide.form1.title",
+    bodyKey: "resources:schoolFormsGuide.form1.body",
   },
   {
     n: "02",
-    title: "Ask before you assume the worst",
-    body: "Most administrative staff say yes without hesitation when asked to use both parents' names everywhere. Ask early, ask in writing, and you usually find the form is the only old-fashioned thing about the school.",
+    titleKey: "resources:schoolFormsGuide.form2.title",
+    bodyKey: "resources:schoolFormsGuide.form2.body",
   },
   {
     n: "03",
-    title: "Get the both-names agreement in writing",
-    body: "A short email confirming both parents are recorded and contacted equally saves you re-explaining at every pickup, trip slip, and parents' evening for years.",
+    titleKey: "resources:schoolFormsGuide.form3.title",
+    bodyKey: "resources:schoolFormsGuide.form3.body",
   },
 ];
 
-export const RIGHTS = [
+export const RIGHTS: Right[] = [
   {
     badge: "protected",
-    title: "Equal recognition",
-    body: 'Same-sex parents have full equal legal standing as parents in Portugal. A school cannot lawfully recognise only one of you, and both can be the official "encarregado de educação".',
+    titleKey: "resources:schoolFormsGuide.right1.title",
+    bodyKey: "resources:schoolFormsGuide.right1.body",
   },
   {
     badge: "know",
-    title: "Your child's name",
-    body: "Children of same-sex couples can carry both parents' surnames. Schools must use the name on the child's documents — including a chosen name where records have been updated.",
+    titleKey: "resources:schoolFormsGuide.right2.title",
+    bodyKey: "resources:schoolFormsGuide.right2.body",
   },
   {
     badge: "practical",
-    title: "If a school pushes back",
-    body: "It is rare, but if it happens, document it and raise it with the school's direction in writing. ILGA Portugal and the parents network can both help you escalate calmly.",
+    titleKey: "resources:schoolFormsGuide.right3.title",
+    bodyKey: "resources:schoolFormsGuide.right3.body",
   },
 ];
 

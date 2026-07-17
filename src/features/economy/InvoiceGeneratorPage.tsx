@@ -5,6 +5,8 @@ import { useIssuer } from "./tools/useIssuer";
 import { usePrintDocument } from "./tools/usePrintDocument";
 import { InvoiceForm } from "./InvoiceForm";
 import { InvoicePreview } from "./InvoicePreview";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   type LineItem,
   type InvoiceClient,
@@ -19,6 +21,7 @@ import {
 
 /** Client-side freelance invoice generator → print-to-PDF fatura-recibo. */
 export function InvoiceGeneratorPage() {
+  const { t } = useTranslation();
   const [issuer, updateIssuer] = useIssuer();
   const print = usePrintDocument();
 
@@ -54,13 +57,14 @@ export function InvoiceGeneratorPage() {
 
   return (
     <ToolPage
-      eyebrow="Freelance tools"
+      eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <>
-          Make an <em>invoice.</em>
-        </>
+        <Translation
+          i18nKey="economy:invoiceTool.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Fill in the details and watch your fatura-recibo build itself. When it looks right, save it straight to PDF — no account, no upload, nothing leaves your browser."
+      sub={t("economy:invoiceTool.sub")}
       form={
         <InvoiceForm
           issuer={issuer}
@@ -110,10 +114,10 @@ export function InvoiceGeneratorPage() {
             type="button"
             onClick={() => print(`fatura-${invoiceNumber}`)}
           >
-            Download PDF
+            {t("economy:toolPage.downloadPdf")}
           </Button>
           <Button variant="ghost" size="lg" type="button" onClick={reset}>
-            Reset
+            {t("economy:toolPage.reset")}
           </Button>
         </>
       }

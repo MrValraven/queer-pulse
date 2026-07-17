@@ -1,4 +1,5 @@
 import { type RefCallback } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type A11yPrefs } from "./accessibilityPreferences.data";
 import styles from "./AccessibilityPreferencesPage.module.css";
 
@@ -42,37 +43,40 @@ export function A11yDisplaySection({
   onSizeChange,
   sectionRef,
 }: SectionProps & { onSizeChange: (v: number) => void }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="display" ref={sectionRef}>
       <div className={styles.secHead}>
-        <em>Display</em>
+        <em>{t("settings:a11y.section.display.eyebrow")}</em>
       </div>
       <div className={styles.secDesc}>
-        These settings apply across the whole platform.
+        {t("settings:a11y.section.display.desc")}
       </div>
       <div className={styles.toggleList}>
         <TglRow
-          title="High contrast mode"
-          desc="Increases colour contrast for better readability. Affects text, borders, and focus rings."
+          title={t("settings:a11y.toggle.highContrast.title")}
+          desc={t("settings:a11y.toggle.highContrast.desc")}
           checked={prefs.highContrast}
           onChange={() => onToggle("highContrast")}
         />
         <TglRow
-          title="Increase text size"
-          desc="Makes body text slightly larger across all pages."
+          title={t("settings:a11y.toggle.largerText.title")}
+          desc={t("settings:a11y.toggle.largerText.desc")}
           checked={prefs.largerText}
           onChange={() => onToggle("largerText")}
         />
         <TglRow
-          title="Dyslexia-friendly font"
-          desc="Wider letter-spacing and increased line height for improved readability."
+          title={t("settings:a11y.toggle.dyslexia.title")}
+          desc={t("settings:a11y.toggle.dyslexia.desc")}
           checked={prefs.dyslexia}
           onChange={() => onToggle("dyslexia")}
         />
       </div>
       <div className={styles.sliderCard}>
         <div className={styles.sliderLabelRow}>
-          <div className={styles.sliderLabel}>Text size</div>
+          <div className={styles.sliderLabel}>
+            {t("settings:a11y.textSize.label")}
+          </div>
           <div className={styles.sliderVal}>{prefs.textSize}%</div>
         </div>
         <input
@@ -88,8 +92,7 @@ export function A11yDisplaySection({
           className={styles.previewText}
           style={{ fontSize: `${(prefs.textSize / 100) * 16}px` }}
         >
-          The quick brown fox crossed Príncipe Real and found a community
-          waiting on the other side.
+          {t("settings:a11y.textSize.preview")}
         </div>
       </div>
     </div>
@@ -101,30 +104,33 @@ export function A11yMotionSection({
   onToggle,
   sectionRef,
 }: SectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="motion" ref={sectionRef}>
       <div className={styles.secHead}>
-        <em>Motion</em>
+        <em>{t("settings:a11y.section.motion.eyebrow")}</em>
       </div>
       <div className={styles.secDesc}>
-        Control animations and transitions across the platform.
+        {t("settings:a11y.section.motion.desc")}
       </div>
       <div className={styles.toggleList}>
         <TglRow
-          title="Reduce motion"
-          desc="Disables animations, transitions, and pulse effects across the platform."
+          title={t("settings:a11y.toggle.reduceMotion.title")}
+          desc={t("settings:a11y.toggle.reduceMotion.desc")}
           checked={prefs.reduceMotion}
           onChange={() => onToggle("reduceMotion")}
         />
         <TglRow
-          title="Pause decorative animations"
-          desc="Stops background orbs, pulse dots, and loading spinners from animating."
+          title={t("settings:a11y.toggle.pauseDecorative.title")}
+          desc={t("settings:a11y.toggle.pauseDecorative.desc")}
           checked={prefs.pauseDecorative}
           onChange={() => onToggle("pauseDecorative")}
         />
       </div>
       <div className={styles.motionPreview}>
-        <div className={styles.mpLabel}>Live preview</div>
+        <div className={styles.mpLabel}>
+          {t("settings:a11y.preview.liveLabel")}
+        </div>
         <div className={styles.mpCard}>
           <div
             className={[
@@ -135,8 +141,7 @@ export function A11yMotionSection({
               .join(" ")}
           />
           <div className={styles.mpText}>
-            This card animates on load — toggle motion settings to see the
-            effect.
+            {t("settings:a11y.preview.cardText")}
           </div>
         </div>
       </div>
@@ -145,9 +150,21 @@ export function A11yMotionSection({
 }
 
 const SWATCH_OPTIONS = [
-  { theme: "default", cls: styles.swatchPlum, title: "Default" },
-  { theme: "softer", cls: styles.swatchInk, title: "Softer" },
-  { theme: "high-contrast", cls: styles.swatchBlack, title: "High contrast" },
+  {
+    theme: "default",
+    cls: styles.swatchPlum,
+    titleKey: "settings:a11y.colorTheme.default",
+  },
+  {
+    theme: "softer",
+    cls: styles.swatchInk,
+    titleKey: "settings:a11y.colorTheme.softer",
+  },
+  {
+    theme: "high-contrast",
+    cls: styles.swatchBlack,
+    titleKey: "settings:a11y.colorTheme.highContrast",
+  },
 ] as const;
 
 export function A11yReadingSection({
@@ -156,39 +173,44 @@ export function A11yReadingSection({
   onColorTheme,
   sectionRef,
 }: SectionProps & { onColorTheme: (t: string) => void }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="reading" ref={sectionRef}>
       <div className={styles.secHead}>
-        <em>Reading</em>
+        <em>{t("settings:a11y.section.reading.eyebrow")}</em>
       </div>
       <div className={styles.secDesc}>
-        Adjust how content is displayed for comfortable reading.
+        {t("settings:a11y.section.reading.desc")}
       </div>
       <div className={styles.toggleList}>
         <TglRow
-          title="Wider line spacing"
-          desc="Increases space between lines of text (line-height: 2.0)."
+          title={t("settings:a11y.toggle.wideSpacing.title")}
+          desc={t("settings:a11y.toggle.wideSpacing.desc")}
           checked={prefs.wideSpacing}
           onChange={() => onToggle("wideSpacing")}
         />
         <TglRow
-          title="Show focus indicators"
-          desc="Adds visible keyboard focus rings on all interactive elements."
+          title={t("settings:a11y.toggle.focusRings.title")}
+          desc={t("settings:a11y.toggle.focusRings.desc")}
           checked={prefs.focusRings}
           onChange={() => onToggle("focusRings")}
         />
       </div>
       <div className={styles.sliderCard}>
         <div className={styles.sliderLabelRow}>
-          <div className={styles.sliderLabel}>Colour theme</div>
+          <div className={styles.sliderLabel}>
+            {t("settings:a11y.colorTheme.label")}
+          </div>
         </div>
-        <div className={styles.colorThemeLabel}>Heading colour style</div>
+        <div className={styles.colorThemeLabel}>
+          {t("settings:a11y.colorTheme.headingLabel")}
+        </div>
         <div className={styles.colorSwatches}>
-          {SWATCH_OPTIONS.map(({ theme, cls, title }) => (
+          {SWATCH_OPTIONS.map(({ theme, cls, titleKey }) => (
             <button
               type="button"
               key={theme}
-              title={title}
+              title={t(titleKey)}
               aria-pressed={prefs.colorTheme === theme}
               className={[
                 styles.colorSwatch,
@@ -211,30 +233,31 @@ export function A11yInteractionSection({
   onToggle,
   sectionRef,
 }: SectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section} id="interaction" ref={sectionRef}>
       <div className={styles.secHead}>
-        <em>Interaction</em>
+        <em>{t("settings:a11y.section.interaction.eyebrow")}</em>
       </div>
       <div className={styles.secDesc}>
-        Adjust how you interact with the platform.
+        {t("settings:a11y.section.interaction.desc")}
       </div>
       <div className={styles.toggleList}>
         <TglRow
-          title="Larger tap targets"
-          desc="Increases minimum button and link size for easier touch interaction."
+          title={t("settings:a11y.toggle.largeTargets.title")}
+          desc={t("settings:a11y.toggle.largeTargets.desc")}
           checked={prefs.largeTargets}
           onChange={() => onToggle("largeTargets")}
         />
         <TglRow
-          title="Sticky navigation"
-          desc="Keeps the navigation bar always visible while scrolling."
+          title={t("settings:a11y.toggle.stickyNav.title")}
+          desc={t("settings:a11y.toggle.stickyNav.desc")}
           checked={prefs.stickyNav}
           onChange={() => onToggle("stickyNav")}
         />
         <TglRow
-          title="Skip to content link"
-          desc='Shows a "Skip to main content" link at the top when you press Tab.'
+          title={t("settings:a11y.toggle.skipLink.title")}
+          desc={t("settings:a11y.toggle.skipLink.desc")}
           checked={prefs.skipLink}
           onChange={() => onToggle("skipLink")}
         />

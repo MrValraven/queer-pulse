@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   DEVICES,
   INITIAL_CUES,
   INITIAL_TIPS,
   INCOMING_TIPS,
   TALKBACK,
+  CUE_BADGE_LABEL_KEYS,
   type Cue,
   type Tip,
 } from "./studioBroadcast.data";
@@ -55,24 +59,27 @@ function LevelMeter({ reduced }: { reduced: boolean }) {
 }
 
 export function AudioInColumn({ reduced }: { reduced: boolean }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState(DEVICES[0]!.id);
   return (
     <div className={s.col}>
       <div className={s.panel}>
-        <div className={s.panelLbl}>Audio in</div>
-        {DEVICES.map((d) => (
+        <div className={s.panelLbl}>
+          {t("studio:broadcast.audioIn.panelLabel")}
+        </div>
+        {DEVICES.map((device) => (
           <button
-            key={d.id}
+            key={device.id}
             type="button"
-            className={`${s.dev} ${selected === d.id ? s.on : ""}`}
-            onClick={() => setSelected(d.id)}
-            aria-pressed={selected === d.id}
+            className={`${s.dev} ${selected === device.id ? s.on : ""}`}
+            onClick={() => setSelected(device.id)}
+            aria-pressed={selected === device.id}
           >
             <div className={s.devTop}>
               <span className={s.radio} />
-              <span className={s.devName}>{d.name}</span>
+              <span className={s.devName}>{device.name}</span>
             </div>
-            <div className={s.devSub}>{d.sub}</div>
+            <div className={s.devSub}>{device.sub}</div>
           </button>
         ))}
         <div style={{ marginTop: 18 }}>
@@ -82,10 +89,11 @@ export function AudioInColumn({ reduced }: { reduced: boolean }) {
       <div className={s.panel}>
         <div className={s.camCard}>
           <div className={s.camText}>
-            <div className={s.camName}>Single-cam video</div>
+            <div className={s.camName}>
+              {t("studio:broadcast.audioIn.singleCamVideo")}
+            </div>
             <div className={s.camSub}>
-              Audio-only is the default for listening rooms. Camera ships in
-              Phase 5 — flagged off for now.
+              {t("studio:broadcast.audioIn.cameraNote")}
             </div>
           </div>
           <span className={s.toggle} aria-hidden="true" />
@@ -114,12 +122,13 @@ function Equaliser({ reduced }: { reduced: boolean }) {
 }
 
 export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
+  const { t } = useTranslation();
   const [cues, setCues] = useState<Cue[]>(INITIAL_CUES);
   const [draft, setDraft] = useState("");
   const nextId = useRef(100);
 
-  function addCue(e: React.FormEvent) {
-    e.preventDefault();
+  function addCue(event: React.FormEvent) {
+    event.preventDefault();
     const raw = draft.trim();
     if (!raw) return;
     const [title, whoRaw] = raw.split(/\s+[—-]\s+/);
@@ -128,22 +137,20 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
       time: cues[0]?.time ?? "00:00:00",
       pre: (title ?? raw) + " ",
       em: "",
-      who: whoRaw ?? "Just added",
-      meta: "live, your own",
+      who: whoRaw ?? t("studio:broadcast.nowPlaying.justAdded"),
+      meta: t("studio:broadcast.nowPlaying.liveYourOwn"),
       badge: "onair",
-      badgeLabel: "On air",
     };
     setCues((prev) => [
       cue,
-      ...prev.map((c, i) =>
-        i === 0 && c.badge === "onair"
+      ...prev.map((existingCue, cueIndex) =>
+        cueIndex === 0 && existingCue.badge === "onair"
           ? {
-              ...c,
+              ...existingCue,
               badge: "matched" as const,
-              badgeLabel: "€ matched",
               meta: "matched",
             }
-          : c,
+          : existingCue,
       ),
     ]);
     setDraft("");
@@ -154,7 +161,7 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
       <div className={s.nowCard}>
         <div className={s.nowEb}>
           <span className={`${s.liveDot} ${reduced ? s.staticDot : ""}`} />
-          On the air now
+          {t("studio:broadcast.nowPlaying.onAirNow")}
         </div>
         <div className={s.nowTitle}>
           Carta para a <em>santa</em>
@@ -164,45 +171,48 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
 
       <div>
         <div className={s.setLbl}>
-          Set list · <em>type as you play</em> — it becomes the cue sheet on
-          archive
+          <Translation
+            i18nKey="studio:broadcast.nowPlaying.setListLabel"
+            components={{ em: <em /> }}
+          />
         </div>
         <form className={s.setForm} onSubmit={addCue}>
           <input
             className={s.setInput}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="What did you just play? Artist — title…"
-            aria-label="Add a track to the set list"
+            placeholder={t("studio:broadcast.nowPlaying.inputPlaceholder")}
+            aria-label={t("studio:broadcast.nowPlaying.inputAria")}
           />
           <Button variant="jade" type="submit">
-            Add
+            {t("studio:broadcast.nowPlaying.addCta")}
           </Button>
         </form>
 
-        {cues.map((c) => (
-          <div key={c.id} className={s.cue}>
-            <span className={s.cueTime}>{c.time}</span>
+        {cues.map((cue) => (
+          <div key={cue.id} className={s.cue}>
+            <span className={s.cueTime}>{cue.time}</span>
             <div>
               <div className={s.cueTitle}>
-                {c.pre}
-                {c.em && <em>{c.em}</em>}
-                {c.post}
+                {cue.pre}
+                {cue.em && <em>{cue.em}</em>}
+                {cue.post}
               </div>
               <div className={s.cueWho}>
-                {c.who} · {c.meta}
+                {cue.who} · {cue.meta}
               </div>
             </div>
-            <span className={`${s.badge} ${badgeClass[c.badge]}`}>
-              {c.badgeLabel}
+            <span className={`${s.badge} ${badgeClass[cue.badge]}`}>
+              {t(CUE_BADGE_LABEL_KEYS[cue.badge])}
             </span>
           </div>
         ))}
 
         <div className={s.cueFoot}>
-          Matched tracks pay their artists automatically from this set's payout.{" "}
-          <em>Held tracks wait</em> until the council's matcher clears them —
-          nobody loses a cent in the meantime.
+          <Translation
+            i18nKey="studio:broadcast.nowPlaying.footer"
+            components={{ em: <em /> }}
+          />
         </div>
       </div>
     </div>
@@ -211,6 +221,7 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
 
 /* ---------- RIGHT: tips / talkback ---------- */
 export function AsideColumn({ reduced }: { reduced: boolean }) {
+  const fmt = useFormat();
   const [tab, setTab] = useState<"tips" | "talkback">("tips");
   const [tips, setTips] = useState<Tip[]>(INITIAL_TIPS);
   const nextId = useRef(1000);
@@ -228,7 +239,7 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
     return () => clearInterval(id);
   }, [reduced]);
 
-  const total = tips.reduce((sum, t) => sum + t.amount, 0);
+  const total = tips.reduce((sum, tip) => sum + tip.amount, 0);
 
   return (
     <div className={s.col}>
@@ -239,35 +250,45 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
             className={`${s.tab} ${tab === "tips" ? s.active : ""}`}
             onClick={() => setTab("tips")}
           >
-            Live tips <em>€{total}</em>
+            <Translation
+              i18nKey="studio:broadcast.aside.tipsTab"
+              components={{ em: <em /> }}
+              values={{ amount: fmt.currency(total) }}
+            />
           </button>
           <button
             type="button"
             className={`${s.tab} ${tab === "talkback" ? s.active : ""}`}
             onClick={() => setTab("talkback")}
           >
-            Talkback <em>{TALKBACK.length}</em>
+            <Translation
+              i18nKey="studio:broadcast.aside.talkbackTab"
+              components={{ em: <em /> }}
+              values={{ count: TALKBACK.length }}
+            />
           </button>
         </div>
 
         {tab === "tips" ? (
           <>
             <div className={s.tipList}>
-              {tips.map((t) => (
+              {tips.map((tip) => (
                 <div
-                  key={t.id}
+                  key={tip.id}
                   className={`${s.tip} ${reduced ? s.tipStatic : ""}`}
                 >
-                  <span className={s.tipAv}>{t.initials}</span>
+                  <span className={s.tipAv}>{tip.initials}</span>
                   <div className={s.tipBody}>
                     <div className={s.tipTop}>
-                      <span className={s.tipName}>{t.name}</span>
-                      <span className={s.tipAmount}>€{t.amount}</span>
+                      <span className={s.tipName}>{tip.name}</span>
+                      <span className={s.tipAmount}>
+                        {fmt.currency(tip.amount)}
+                      </span>
                     </div>
                     <div
-                      className={`${s.tipNote} ${t.privateTip ? s.priv : ""}`}
+                      className={`${s.tipNote} ${tip.privateTip ? s.priv : ""}`}
                     >
-                      {t.note}
+                      {tip.note}
                     </div>
                   </div>
                 </div>
@@ -275,9 +296,12 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
             </div>
             <div className={s.tipTotal}>
               <div className={s.tipTotalLbl}>
-                Tonight, so far · <em>100% to you</em>
+                <Translation
+                  i18nKey="studio:broadcast.aside.tipsTotalLabel"
+                  components={{ em: <em /> }}
+                />
               </div>
-              <div className={s.tipTotalV}>€{total}</div>
+              <div className={s.tipTotalV}>{fmt.currency(total)}</div>
             </div>
           </>
         ) : (
@@ -289,19 +313,23 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
 }
 
 function TalkbackPane() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [draft, setDraft] = useState("");
   return (
     <>
-      {TALKBACK.map((m) => (
-        <div key={m.id} className={`${s.tb} ${m.own ? s.tbOwn : ""}`}>
-          <span className={s.tbAv}>{m.initials}</span>
+      {TALKBACK.map((message) => (
+        <div
+          key={message.id}
+          className={`${s.tb} ${message.own ? s.tbOwn : ""}`}
+        >
+          <span className={s.tbAv}>{message.initials}</span>
           <div className={s.tbBody}>
             <div className={s.tbName}>
-              {m.name}
-              {m.role && <em> · {m.role}</em>}
+              {message.name}
+              {message.role && <em> · {message.role}</em>}
             </div>
-            <div className={s.tbText}>{m.text}</div>
+            <div className={s.tbText}>{message.text}</div>
           </div>
         </div>
       ))}
@@ -310,7 +338,7 @@ function TalkbackPane() {
         onSubmit={(e) => {
           e.preventDefault();
           if (!draft.trim()) return;
-          showToast("Sent to your mods", "success");
+          showToast(t("studio:broadcast.aside.talkback.sentToast"), "success");
           setDraft("");
         }}
       >
@@ -318,11 +346,11 @@ function TalkbackPane() {
           className={s.tbInput}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Talk back to your mods (listeners can't see this)…"
-          aria-label="Talk back to your mods"
+          placeholder={t("studio:broadcast.aside.talkback.placeholder")}
+          aria-label={t("studio:broadcast.aside.talkback.aria")}
         />
         <Button variant="ghost-dark" type="submit">
-          Send
+          {t("studio:broadcast.aside.talkback.sendCta")}
         </Button>
       </form>
     </>

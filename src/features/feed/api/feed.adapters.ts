@@ -1,4 +1,5 @@
 import { tintForSlug } from "../../../shared/api/refs";
+import type { Formatters } from "../../../shared/i18n/format";
 import type { FeedPost } from "../feed.data";
 import type { FeedItem } from "./feed.api";
 
@@ -9,20 +10,24 @@ import type { FeedItem } from "./feed.api";
 
 const AUTHOR_TINTS = ["jade", "coral", "plum"] as const;
 
-/** "2 hours ago" style relative label from an ISO timestamp. Exported so
- *  other feed cards (e.g. `NewMemberCard`'s live "Joined …" line) can reuse
- *  the same phrasing instead of re-deriving it. */
-export function relativeTime(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  const secs = Math.max(0, (Date.now() - d.getTime()) / 1000);
-  if (secs < 60) return "just now";
-  const mins = Math.floor(secs / 60);
-  if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hour${hrs === 1 ? "" : "s"} ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days} day${days === 1 ? "" : "s"} ago`;
+/**
+ * "2 hours ago" style relative label from an ISO timestamp, through
+ * `fmt.relativeTime` — previously a hand-rolled, English-only string (`"2
+ * hours ago"`, always, regardless of app language). Exported so other feed
+ * cards (e.g. `NewMemberCard`'s live "Joined …" line) can reuse the same
+ * phrasing instead of re-deriving it.
+ */
+export function relativeTime(iso: string, fmt: Formatters): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  const diffSeconds = Math.round((Date.now() - date.getTime()) / 1000);
+  if (diffSeconds < 60) return fmt.relativeTime(-diffSeconds, "second");
+  const diffMinutes = Math.round(diffSeconds / 60);
+  if (diffMinutes < 60) return fmt.relativeTime(-diffMinutes, "minute");
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) return fmt.relativeTime(-diffHours, "hour");
+  const diffDays = Math.round(diffHours / 24);
+  return fmt.relativeTime(-diffDays, "day");
 }
 
 /** Two-letter initials from a "First Last" display name. Exported for reuse
@@ -34,7 +39,7 @@ export function initials(name: string): string {
 }
 
 /** GET /feed item → the `FeedPost` a `PostCard` renders. */
-export function feedItemToPost(item: FeedItem): FeedPost {
+export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
   const actor = item.actor;
   const slug = actor?.handle ?? "";
   const name = actor?.displayName ?? "A member";
@@ -47,7 +52,7 @@ export function feedItemToPost(item: FeedItem): FeedPost {
     authorName: name,
     authorInitials: initials(name),
     authorTint: tint,
-    time: relativeTime(item.createdAt),
+    time: relativeTime(item.createdAt, fmt),
     context: item.title,
     body: item.summary,
     likeCount: 0,

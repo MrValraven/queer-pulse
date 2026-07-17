@@ -1,33 +1,41 @@
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioTrackRowSkeleton } from "./StudioSkeletons";
 import { memberName } from "../members/data/members";
-import { TRACKS, TABS } from "./studioAlbum.data";
+import { TRACKS, type AlbumTabId } from "./studioAlbum.data";
 import styles from "./studio.module.css";
 
-export function StudioAlbumMain({ tab }: { tab: (typeof TABS)[number] }) {
+const ARTIST_NAME = "Mariana Sol";
+const PER_PLAY_AMOUNT = 0.05;
+
+export function StudioAlbumMain({ tab }: { tab: AlbumTabId }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad();
 
   return (
     <div>
-      {tab === "Tracklist" && (
+      {tab === "tracklist" && (
         <div className={styles.setCard}>
           {loading
             ? Array.from({ length: 8 }).map((_, i) => (
                 <StudioTrackRowSkeleton key={i} />
               ))
-            : TRACKS.map((t, i) => (
+            : TRACKS.map((trackRow, i) => (
                 <FadeIn
-                  key={t.n}
+                  key={trackRow.n}
                   delay={Math.min(i, 8) * 60}
-                  className={[styles.setRow, t.now && styles.setRowNow]
+                  className={[styles.setRow, trackRow.now && styles.setRowNow]
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  <div className={styles.n}>{t.n}</div>
+                  <div className={styles.n}>{trackRow.n}</div>
                   <div className={styles.srCov}>
                     <ImageSlot
-                      src={t.image}
+                      src={trackRow.image}
                       tint="coral"
                       width={36}
                       height={36}
@@ -37,28 +45,35 @@ export function StudioAlbumMain({ tab }: { tab: (typeof TABS)[number] }) {
                   </div>
                   <div>
                     <h5>
-                      {t.pre}
-                      {t.em && <em>{t.em}</em>}
-                      {t.post}
+                      {trackRow.pre}
+                      {trackRow.em && <em>{trackRow.em}</em>}
+                      {trackRow.post}
                     </h5>
-                    <div className={styles.who}>{t.who}</div>
+                    <div className={styles.who}>{trackRow.who}</div>
                   </div>
                   <div className={styles.pay}>
-                    {t.now ? (
-                      <>
-                        <b>paying now</b>€0.05 to Mariana
-                      </>
+                    {trackRow.now ? (
+                      <Translation
+                        i18nKey="studio:player.payingLine"
+                        components={{ b: <b /> }}
+                        values={{
+                          amount: fmt.currency(PER_PLAY_AMOUNT),
+                          artist: ARTIST_NAME,
+                        }}
+                      />
                     ) : (
-                      "€0.05 / play"
+                      t("studio:album.main.perPlaySuffix", {
+                        amount: fmt.currency(PER_PLAY_AMOUNT),
+                      })
                     )}
                   </div>
-                  <div className={styles.tm}>{t.tm}</div>
+                  <div className={styles.tm}>{trackRow.tm}</div>
                 </FadeIn>
               ))}
         </div>
       )}
 
-      {tab === "Liner notes" && (
+      {tab === "linerNotes" && (
         <div className={styles.prose}>
           <p>
             This is a record I have been writing in pieces since I was nineteen.
@@ -85,7 +100,7 @@ export function StudioAlbumMain({ tab }: { tab: (typeof TABS)[number] }) {
         </div>
       )}
 
-      {tab === "Credits" && (
+      {tab === "credits" && (
         <div className={styles.prose}>
           <p>
             <strong style={{ color: "var(--text)" }}>Mariana Sol</strong> —

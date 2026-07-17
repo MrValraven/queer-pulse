@@ -1,7 +1,8 @@
 import { useId, useState, type FormEvent } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { newId, type IvaEntry } from "./ivaTracker.data";
 import styles from "./IvaTrackerPage.module.css";
 
@@ -17,6 +18,8 @@ function today(): string {
 
 /** Form to add an invoiced amount, plus the editable list of logged entries. */
 export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(today());
@@ -58,7 +61,8 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
       <form onSubmit={handleSubmit} noValidate>
         <div className={styles.field}>
           <label className={styles.label} htmlFor={labelId}>
-            What was it for <span className={styles.req}>*</span>
+            {t("economy:ivaTracker.form.whatForLabel")}{" "}
+            <span className={styles.req}>*</span>
           </label>
           <input
             id={labelId}
@@ -66,14 +70,15 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
             type="text"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="e.g. Logo design — Café Aurora"
+            placeholder={t("economy:ivaTracker.form.whatForPlaceholder")}
           />
         </div>
 
         <div className={styles.row}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor={amountId}>
-              Amount (€) <span className={styles.req}>*</span>
+              {t("economy:ivaTracker.form.amountLabel")}{" "}
+              <span className={styles.req}>*</span>
             </label>
             <input
               id={amountId}
@@ -89,7 +94,8 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
           </div>
           <div className={styles.field}>
             <label className={styles.label} htmlFor={dateId}>
-              Date <span className={styles.req}>*</span>
+              {t("economy:ivaTracker.form.dateLabel")}{" "}
+              <span className={styles.req}>*</span>
             </label>
             <input
               id={dateId}
@@ -107,18 +113,17 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
           disabled={!valid}
           className={styles.addBtn}
         >
-          <FiPlus aria-hidden /> Add invoice
+          <FiPlus aria-hidden /> {t("economy:ivaTracker.form.addCta")}
         </Button>
       </form>
 
       <div className={styles.listHead}>
-        Logged invoices <span className={styles.count}>{entries.length}</span>
+        {t("economy:ivaTracker.form.loggedHead")}{" "}
+        <span className={styles.count}>{entries.length}</span>
       </div>
 
       {entries.length === 0 ? (
-        <p className={styles.empty}>
-          Nothing logged yet. Add your first invoice above.
-        </p>
+        <p className={styles.empty}>{t("economy:ivaTracker.form.empty")}</p>
       ) : (
         <ul className={styles.list}>
           {sorted.map((entry) => (
@@ -127,12 +132,16 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
                 <span className={styles.itemLabel}>{entry.label}</span>
                 <span className={styles.itemDate}>{entry.date}</span>
               </div>
-              <span className={styles.itemAmount}>{euro(entry.amount)}</span>
+              <span className={styles.itemAmount}>
+                {fmt.currency(entry.amount)}
+              </span>
               <button
                 type="button"
                 className={styles.remove}
                 onClick={() => remove(entry.id)}
-                aria-label={`Remove ${entry.label}`}
+                aria-label={t("economy:ivaTracker.form.removeAriaLabel", {
+                  label: entry.label,
+                })}
               >
                 <FiX aria-hidden />
               </button>

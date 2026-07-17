@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 
 type SaveState = "idle" | "saving" | "saved";
 
@@ -9,9 +10,9 @@ type SaveState = "idle" | "saving" | "saved";
  * "Saved ✓" before reverting to idle. Replaces toast-only save feedback.
  */
 export function SaveButton({
-  label = "Save changes",
-  savingLabel = "Saving…",
-  savedLabel = "Saved",
+  label,
+  savingLabel,
+  savedLabel,
   onSave,
 }: {
   label?: string;
@@ -19,6 +20,7 @@ export function SaveButton({
   savedLabel?: string;
   onSave?: () => void;
 }) {
+  const { t } = useTranslation();
   const [state, setState] = useState<SaveState>("idle");
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -34,6 +36,11 @@ export function SaveButton({
     );
   }
 
+  const resolvedLabel = label ?? t("settings:saveButton.defaultLabel");
+  const resolvedSavingLabel =
+    savingLabel ?? t("settings:saveButton.savingLabel");
+  const resolvedSavedLabel = savedLabel ?? t("settings:saveButton.savedLabel");
+
   return (
     <Button
       variant={state === "saved" ? "jade" : "primary"}
@@ -43,12 +50,12 @@ export function SaveButton({
     >
       {state === "saved" ? (
         <>
-          <FiCheck aria-hidden="true" /> {savedLabel}
+          <FiCheck aria-hidden="true" /> {resolvedSavedLabel}
         </>
       ) : state === "saving" ? (
-        savingLabel
+        resolvedSavingLabel
       ) : (
-        label
+        resolvedLabel
       )}
     </Button>
   );

@@ -12,6 +12,8 @@ import {
 } from "./intersectionality.data";
 import { FadeIn, HubBackLink, Reveal } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   InfoCards,
   VoiceCard,
@@ -31,6 +33,7 @@ function scrollToSection(id: string) {
 
 export function IntersectionalityPage() {
   const loading = useSimulatedLoad();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
@@ -38,27 +41,26 @@ export function IntersectionalityPage() {
         <div className="wrap">
           <HubBackLink
             to={routes.resources}
-            label="Resource Library"
+            label={t("resources:intersectionality.hero.backLabel")}
             tone="dark"
           />
-          <div className={styles.cat}>Intersectionality</div>
+          <div className={styles.cat}>
+            {t("resources:intersectionality.hero.cat")}
+          </div>
           <h1>
-            More than one thing <em>at once.</em>
+            <Translation
+              i18nKey="resources:intersectionality.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.heroSub}>
-            Being queer and a person of colour, queer and religious, queer and
-            working class, queer and disabled — these identities don't stack
-            neatly. This page exists for members navigating multiple layers, and
-            for a community committed to holding all of them.
+            {t("resources:intersectionality.hero.sub")}
           </p>
           <div className={styles.opening}>
             <div className={styles.openingBar} />
             <p className={styles.openingText}>
-              <strong>This page is for everyone.</strong>
-              Not as an education exercise for people who don't have these
-              experiences. As a resource for members who do, and as a visible
-              commitment from QueerPulse that queerness doesn't mean a single
-              kind of person.
+              <strong>{t("resources:intersectionality.opening.strong")}</strong>{" "}
+              {t("resources:intersectionality.opening.text")}
             </p>
           </div>
         </div>
@@ -66,14 +68,14 @@ export function IntersectionalityPage() {
 
       <div className={styles.ixNav}>
         <div className={styles.ixNavInner}>
-          {NAV.map((n) => (
+          {NAV.map((navItem) => (
             <button
-              key={n.id}
+              key={navItem.id}
               type="button"
               className={styles.ixNavBtn}
-              onClick={() => scrollToSection(n.id)}
+              onClick={() => scrollToSection(navItem.id)}
             >
-              {n.label}
+              {t(navItem.labelKey)}
             </button>
           ))}
         </div>
@@ -83,15 +85,12 @@ export function IntersectionalityPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Race &amp; <em>ethnicity</em>
+              <Translation
+                i18nKey="resources:intersectionality.race.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Being a queer person of colour in Lisbon means navigating two
-              things at once that mainstream spaces rarely design for
-              simultaneously. Portugal's colonial history shapes this city in
-              ways that are visible if you're living them — and invisible if
-              you're not.
-            </p>
+            <p>{t("resources:intersectionality.race.intro")}</p>
           </div>
           <div className={styles.voiceGrid}>
             {loading
@@ -112,14 +111,12 @@ export function IntersectionalityPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Faith &amp; <em>religion</em>
+              <Translation
+                i18nKey="resources:intersectionality.faith.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Being queer and religious is not a contradiction — though plenty
-              of people will try to make you feel like it is. Portugal is
-              predominantly Catholic, and the relationship between the Church
-              and LGBTQ+ people is complicated, evolving, and deeply personal.
-            </p>
+            <p>{t("resources:intersectionality.faith.intro")}</p>
           </div>
           <div className={styles.voiceGrid}>
             {loading
@@ -140,24 +137,20 @@ export function IntersectionalityPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Class &amp; <em>economics</em>
+              <Translation
+                i18nKey="resources:intersectionality.class.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Queer community often has an unspoken class character — certain
-              bars, events, aesthetics, and social codes signal belonging in
-              ways that exclude people who can't or don't participate. Naming
-              this is the first step to doing something about it.
-            </p>
+            <p>{t("resources:intersectionality.class.intro")}</p>
           </div>
           <div className={styles.note}>
             <div className={styles.noteBar} />
             <div className={styles.noteText}>
-              <strong>QueerPulse's position:</strong> We try to make community
-              participation accessible regardless of income. Events have
-              sliding-scale options; the forum is free; this platform is free
-              for members who can't afford a contribution. If cost is a barrier
-              to anything here, contact us directly — it will be handled
-              discreetly.
+              <strong>
+                {t("resources:intersectionality.class.note.strong")}
+              </strong>{" "}
+              {t("resources:intersectionality.class.note.text")}
             </div>
           </div>
           <InfoCards cards={CLASS_INFO} loading={loading} animate={!loading} />
@@ -181,14 +174,12 @@ export function IntersectionalityPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Navigating <em>the community itself</em>
+              <Translation
+                i18nKey="resources:intersectionality.community.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Queer spaces aren't automatically safe for all queer people.
-              Racism, classism, transphobia, ableism, and other dynamics exist
-              within LGBTQ+ communities. This isn't a reason to leave — it's a
-              reason to name it.
-            </p>
+            <p>{t("resources:intersectionality.community.intro")}</p>
           </div>
           <InfoCards
             cards={COMMUNITY_INFO}

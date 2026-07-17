@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiDownload, FiCalendar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import { type Application } from "./applicationStatus.data";
 import styles from "./ApplicationModals.module.css";
@@ -52,6 +53,7 @@ export function CalendarModal({
   app: Application;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const i = app.interview;
   const [method, setMethod] = useState<null | "ics" | "google">(null);
   const { submit, sending, done } = useSubmitFlow();
@@ -59,29 +61,39 @@ export function CalendarModal({
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title="Saved to your" em="calendar." onClose={onClose}>
+        <SuccessPanel
+          title={t("economy:calendar.success.title")}
+          em={t("economy:calendar.success.em")}
+          onClose={onClose}
+        >
           {method === "google"
-            ? "We've opened Google Calendar — just hit save. We'll also remind you the morning of."
-            : "The invite (.ics) has downloaded — open it to add the event. We'll also remind you the morning of."}
+            ? t("economy:calendar.success.google")
+            : t("economy:calendar.success.ics")}
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Interview</div>
+          <div className={styles.eyebrow}>{t("economy:calendar.eyebrow")}</div>
           <h2 className={styles.title}>{i?.title}</h2>
           <p className={styles.sub}>{i?.notes}</p>
           <div className={styles.panel}>
             <div className={styles.rows}>
               <div className={styles.row}>
-                <span className={styles.rowK}>When</span>
+                <span className={styles.rowK}>
+                  {t("economy:calendar.when")}
+                </span>
                 <span className={styles.rowV}>{i?.when}</span>
               </div>
               <div className={styles.row}>
-                <span className={styles.rowK}>Where</span>
+                <span className={styles.rowK}>
+                  {t("economy:calendar.where")}
+                </span>
                 <span className={styles.rowV}>{i?.location}</span>
               </div>
               {i?.attendees.map((p) => (
                 <div key={p} className={styles.row}>
-                  <span className={styles.rowK}>With</span>
+                  <span className={styles.rowK}>
+                    {t("economy:calendar.with")}
+                  </span>
                   <span className={styles.rowV}>{p}</span>
                 </div>
               ))}
@@ -94,7 +106,7 @@ export function CalendarModal({
               onClick={onClose}
               disabled={sending}
             >
-              ← Close
+              {t("economy:calendar.close")}
             </button>
             <div className={styles.calBtns}>
               <Button
@@ -108,7 +120,7 @@ export function CalendarModal({
                 }}
               >
                 {sending && method === "ics" ? (
-                  <Sending label="Adding…" />
+                  <Sending label={t("economy:calendar.addingLabel")} />
                 ) : (
                   <>
                     <FiDownload
@@ -116,7 +128,7 @@ export function CalendarModal({
                       style={{ marginRight: 6 }}
                       aria-hidden
                     />{" "}
-                    .ics file
+                    {t("economy:calendar.icsLabel")}
                   </>
                 )}
               </Button>
@@ -134,7 +146,7 @@ export function CalendarModal({
                 }}
               >
                 {sending && method === "google" ? (
-                  <Sending label="Adding…" />
+                  <Sending label={t("economy:calendar.addingLabel")} />
                 ) : (
                   <>
                     <FiCalendar
@@ -142,7 +154,7 @@ export function CalendarModal({
                       style={{ marginRight: 6 }}
                       aria-hidden
                     />{" "}
-                    Google Calendar →
+                    {t("economy:calendar.googleLabel")}
                   </>
                 )}
               </Button>

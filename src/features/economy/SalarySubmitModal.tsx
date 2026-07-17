@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./EconomyPage.module.css";
 
 export function SalarySubmitModal({
@@ -9,6 +10,7 @@ export function SalarySubmitModal({
   onClose: () => void;
   onSubmit: () => void;
 }) {
+  const { t } = useTranslation();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -30,49 +32,64 @@ export function SalarySubmitModal({
       >
         <div className={styles.modalHead}>
           <div id="salary-submit-title" className={styles.modalTitle}>
-            Submit your salary
+            {t("economy:salary.submitLong")}
           </div>
           <button
             type="button"
             className={styles.modalClose}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("economy:modalKit.closeAriaLabel")}
           >
             ×
           </button>
         </div>
         <div className={styles.modalSub}>
-          Completely anonymous. Nothing that could identify you is stored.
+          {t("economy:salarySubmitModal.subtitle")}
         </div>
         <div className={styles.modalFields}>
           <input
             className={styles.modalInput}
             type="text"
-            placeholder="Job title / role"
+            placeholder={t("economy:salarySubmitModal.jobTitlePlaceholder")}
           />
           <input
             className={styles.modalInput}
             type="text"
-            placeholder="Sector (e.g. Tech, NGO, Design)"
+            placeholder={t("economy:salarySubmitModal.sectorPlaceholder")}
           />
           <div className={styles.modalRow2}>
             <input
               className={styles.modalInput}
               type="number"
-              placeholder="Annual salary (€)"
+              placeholder={t(
+                "economy:salarySubmitModal.annualSalaryPlaceholder",
+              )}
             />
             <input
               className={styles.modalInput}
               type="number"
-              placeholder="Years of experience"
+              placeholder={t("economy:salarySubmitModal.yearsExpPlaceholder")}
             />
           </div>
           <select className={styles.modalSelect} defaultValue="">
-            <option value="">Employment type</option>
-            <option>Full-time</option>
-            <option>Part-time</option>
-            <option>Freelance</option>
-            <option>Contract</option>
+            <option value="">
+              {t("economy:salarySubmitModal.employmentTypeLabel")}
+            </option>
+            {/* Stable English `value`s kept separate from the translated
+                label text — see i18n sweep §5.1 (never let a rendered label
+                double as the stored/submitted value). */}
+            <option value="Full-time">
+              {t("economy:salarySubmitModal.type.fullTime")}
+            </option>
+            <option value="Part-time">
+              {t("economy:salarySubmitModal.type.partTime")}
+            </option>
+            <option value="Freelance">
+              {t("economy:salarySubmitModal.type.freelance")}
+            </option>
+            <option value="Contract">
+              {t("economy:salarySubmitModal.type.contract")}
+            </option>
           </select>
         </div>
         <button
@@ -80,7 +97,7 @@ export function SalarySubmitModal({
           className={`${styles.primaryBtn} ${styles.modalSubmit}`}
           onClick={onSubmit}
         >
-          Submit anonymously
+          {t("economy:salarySubmitModal.submitCta")}
         </button>
       </div>
     </div>

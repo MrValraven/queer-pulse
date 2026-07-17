@@ -7,6 +7,7 @@ import {
   FadeIn,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
   YEARS,
@@ -46,6 +47,7 @@ function olderIssueCount(fromYear: number): number {
 }
 
 export function NewsletterArchiveList({ stream, onClearStream }: Props) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [shownYears, setShownYears] = useState(INITIAL_YEARS);
   const [swapping, setSwapping] = useState(false);
@@ -90,16 +92,14 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
         <EmptyState
           compact
           icon={<FiMail />}
-          title="No issues in this stream"
-          description={
-            <>
-              Nothing's gone out on this stream yet. Take a look across all
-              three — there's plenty in the archive.
-            </>
-          }
+          title={t("magazine:newsletterArchive.list.emptyTitle")}
+          description={t("magazine:newsletterArchive.list.emptyDescription")}
           action={
             onClearStream
-              ? { label: "Clear filters", onClick: onClearStream }
+              ? {
+                  label: t("magazine:newsletterArchive.list.clearFiltersCta"),
+                  onClick: onClearStream,
+                }
               : undefined
           }
         />
@@ -172,7 +172,9 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
             variant="ghost"
             onClick={() => setShownYears(YEARS.length)}
           >
-            Load {remaining} older issues
+            {t("magazine:newsletterArchive.list.loadOlder", {
+              count: remaining,
+            })}
           </Button>
         </div>
       )}

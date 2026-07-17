@@ -1,4 +1,5 @@
 import type { RadioOpt } from "./studioSettings.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./StudioSettingsPage.module.css";
 
 export function Toggle({
@@ -59,6 +60,7 @@ export function RadioCards({
   active: string;
   onChange: (k: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.rcards}>
       {opts.map((o) => (
@@ -78,10 +80,10 @@ export function RadioCards({
           <div className={s.rdot} />
           <div>
             <h5>
-              {o.label}
-              {o.badge && <span className={s.badge}>{o.badge}</span>}
+              {t(o.labelKey)}
+              {o.badgeKey && <span className={s.badge}>{t(o.badgeKey)}</span>}
             </h5>
-            <p>{o.sub}</p>
+            <p>{t(o.subKey)}</p>
           </div>
         </div>
       ))}

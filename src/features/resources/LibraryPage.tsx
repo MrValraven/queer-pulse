@@ -9,6 +9,8 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
@@ -34,6 +36,7 @@ function GuideSkeleton() {
 }
 
 export function LibraryPage() {
+  const { t } = useTranslation();
   const [cat, setCat] = useState<string>("all");
   const [query, setQuery] = useState("");
   const { guides, loading: dataLoading } = useLibraryData();
@@ -55,19 +58,26 @@ export function LibraryPage() {
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Guide Library"
+        eyebrow={t("resources:library.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"
         title={
-          <>
-            Every guide, <em>in one place.</em>
-          </>
+          <Translation
+            i18nKey="resources:library.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Housing, health, legal, finance, and trans-specific guides — written and vetted by the community, kept current, and free to share with anyone who needs them."
+        lead={t("resources:library.hero.lead")}
         anchors={[
-          { label: "Browse all", href: "#browse" },
-          { label: "Legal", href: "#browse" },
-          { label: "Health", href: "#browse" },
-          { label: "Housing", href: "#browse" },
+          {
+            label: t("resources:library.hero.anchor.browseAll"),
+            href: "#browse",
+          },
+          { label: t("resources:library.hero.anchor.legal"), href: "#browse" },
+          { label: t("resources:library.hero.anchor.health"), href: "#browse" },
+          {
+            label: t("resources:library.hero.anchor.housing"),
+            href: "#browse",
+          },
         ]}
       />
 
@@ -87,7 +97,7 @@ export function LibraryPage() {
               </svg>
               <input
                 type="search"
-                placeholder="Search guides — pronouns, PrEP, tenancy…"
+                placeholder={t("resources:library.search.placeholder")}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
@@ -99,7 +109,7 @@ export function LibraryPage() {
               className={s.chips}
               options={CATEGORIES.map((category) => ({
                 value: category.id,
-                label: category.label,
+                label: t(category.labelKey),
               }))}
               value={cat}
               onChange={setCat}
@@ -113,9 +123,7 @@ export function LibraryPage() {
               ))}
             </div>
           ) : results.length === 0 ? (
-            <p className={s.empty}>
-              No guides match that yet — try a different search.
-            </p>
+            <p className={s.empty}>{t("resources:library.empty")}</p>
           ) : (
             <div className={res.grid}>
               {results.map((guide, index) => (
@@ -132,7 +140,7 @@ export function LibraryPage() {
                   <div className={res.cardFoot}>
                     <span className={res.cardLoc}>{guide.meta}</span>
                     <Link to={guide.to} className={res.cardCta}>
-                      Read the guide →
+                      {t("resources:library.readGuideCta")}
                     </Link>
                   </div>
                 </FadeIn>
@@ -141,7 +149,7 @@ export function LibraryPage() {
           )}
 
           <Reveal className={s.popular} delay={120}>
-            <span>Most read:</span>
+            <span>{t("resources:library.popularLabel")}</span>
             {POPULAR.map((term) => (
               <button key={term} type="button" onClick={() => setQuery(term)}>
                 {term}
@@ -153,17 +161,18 @@ export function LibraryPage() {
 
       <Outro
         title={
-          <>
-            Can't find <em>what you need?</em>
-          </>
+          <Translation
+            i18nKey="resources:library.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Ask in the forum — someone has usually been through it. Or suggest a guide we should write next."
+        sub={t("resources:library.outro.sub")}
       >
         <Button to={routes.forum} variant="primary" size="lg">
-          Ask the community
+          {t("resources:library.outro.askCommunityCta")}
         </Button>
         <Button to={routes.contact} variant="ghost-dark" size="lg">
-          Suggest a guide
+          {t("resources:library.outro.suggestGuideCta")}
         </Button>
       </Outro>
     </PageShell>

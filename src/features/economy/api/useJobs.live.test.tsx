@@ -30,12 +30,18 @@ async function loadLive() {
   const { useJobs } = await import("./useJobs");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
+  // Imported after resetModules like the others: a statically-imported provider
+  // would hold a different I18nContext instance than the freshly-imported
+  // useJobs resolves, so useTranslation wouldn't find it.
+  const { I18nProvider } = await import("../../../app/providers/I18nProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
-      <DemoModeProvider>{children}</DemoModeProvider>
+      <I18nProvider>
+        <DemoModeProvider>{children}</DemoModeProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
   return { useJobs, wrapper };
@@ -61,6 +67,8 @@ describe("useJobs (live mode via MSW)", () => {
     expect(job.cat).toBe("arts");
     expect(job.logo).toBe("AP");
     expect(job.salary).toBe("€2,200/mo");
-    expect(job.deadline).toBe("30 Jun");
+    // `deadline` is a real Date now, not a pre-formatted string — the i18n sweep
+    // moved formatting to the render layer so it follows the active language.
+    expect(job.deadline).toEqual(new Date("2026-06-30"));
   });
 });

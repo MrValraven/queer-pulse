@@ -11,24 +11,25 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DIRECTORY_PLACES as BIZS, type Tint } from "./directoryPlaces";
+import { CAT_LABEL_KEYS } from "./directorySpace.data";
 import { routes } from "../../app/routeMap";
 import s from "./DirectoryPage.module.css";
 
+/** i18n Pattern A — `c` is the stable stored filter value; `labelKey` resolves via `t()`. */
 const CATS = [
-  { c: "all", label: "All" },
-  { c: "food", label: "Food & drink" },
-  { c: "design", label: "Design & craft" },
-  { c: "health", label: "Health & care" },
-  { c: "space", label: "Spaces" },
-  { c: "culture", label: "Culture" },
-  { c: "tech", label: "Tech" },
-  { c: "grooming", label: "Barbershop & Salon" },
-  { c: "fitness", label: "Gym & Fitness" },
+  { c: "all", labelKey: "marketing:directory.cat.all" },
+  { c: "food", labelKey: CAT_LABEL_KEYS.food! },
+  { c: "design", labelKey: CAT_LABEL_KEYS.design! },
+  { c: "health", labelKey: CAT_LABEL_KEYS.health! },
+  { c: "space", labelKey: CAT_LABEL_KEYS.space! },
+  { c: "culture", labelKey: CAT_LABEL_KEYS.culture! },
+  { c: "tech", labelKey: CAT_LABEL_KEYS.tech! },
+  { c: "grooming", labelKey: CAT_LABEL_KEYS.grooming! },
+  { c: "fitness", labelKey: CAT_LABEL_KEYS.fitness! },
 ];
-const CAT_LABEL: Record<string, string> = Object.fromEntries(
-  CATS.map((c) => [c.c, c.label]),
-);
 
 const tintBg: Record<Tint, string> = {
   coral: "rgba(232,119,90,.15)",
@@ -66,6 +67,7 @@ function DirectoryCardSkeleton() {
 }
 
 export function DirectoryPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
@@ -90,16 +92,17 @@ export function DirectoryPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Queer business directory"
+        eyebrow={t("marketing:directory.hero.eyebrow")}
         title={
-          <>
-            Find your <em>people's places.</em>
-          </>
+          <Translation
+            i18nKey="marketing:directory.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years."
+        sub={t("marketing:directory.hero.sub")}
       >
         <div className={s.heroNote}>
-          <span className={s.live} /> Community-verified · updated monthly
+          <span className={s.live} /> {t("marketing:directory.hero.note")}
         </div>
       </PageHero>
 
@@ -118,13 +121,13 @@ export function DirectoryPage() {
             </svg>
             <input
               type="text"
-              placeholder="Search by name, neighbourhood, or type…"
+              placeholder={t("marketing:directory.search.placeholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
           <FilterChips
-            options={CATS.map((c) => ({ value: c.c, label: c.label }))}
+            options={CATS.map((c) => ({ value: c.c, label: t(c.labelKey) }))}
             value={cat}
             onChange={setCat}
           />
@@ -135,63 +138,71 @@ export function DirectoryPage() {
         <div className="wrap">
           <Reveal className={s.count}>
             {loading ? (
-              <>Loading places…</>
+              <>{t("marketing:directory.loading")}</>
             ) : (
-              <>
-                Showing <b>{visible.length}</b> of {BIZS.length} places
-              </>
+              <Translation
+                i18nKey="marketing:directory.count"
+                components={{ b: <b /> }}
+                values={{ shown: visible.length, total: BIZS.length }}
+              />
             )}
           </Reveal>
           <div className={s.grid}>
             {loading &&
-              Array.from({ length: 6 }).map((_, i) => (
-                <DirectoryCardSkeleton key={i} />
+              Array.from({ length: 6 }).map((_, index) => (
+                <DirectoryCardSkeleton key={index} />
               ))}
             {!loading && visible.length === 0 && (
-              <div className={s.empty}>
-                No places match — try a broader filter.
-              </div>
+              <div className={s.empty}>{t("marketing:directory.empty")}</div>
             )}
             {!loading &&
-              visible.map((b, i) => (
+              visible.map((place, index) => (
                 <FadeIn
-                  key={b.name}
+                  key={place.name}
                   as={Link}
-                  delay={Math.min(i, 8) * 60}
-                  to={`${routes.directory}/${b.slug}`}
+                  delay={Math.min(index, 8) * 60}
+                  to={`${routes.directory}/${place.slug}`}
                   className={s.card}
                 >
                   <div className={s.top}>
                     <span
                       className={s.av}
                       style={{
-                        background: tintBg[b.tint],
-                        color: tintFg[b.tint],
+                        background: tintBg[place.tint],
+                        color: tintFg[place.tint],
                       }}
                     >
-                      {b.av}
+                      {place.av}
                     </span>
                     <span
-                      className={`${s.badge} ${b.owned ? s.owned : s.friendly}`}
+                      className={`${s.badge} ${place.owned ? s.owned : s.friendly}`}
                     >
-                      {b.owned ? "Queer-owned" : "LGBTQ+ friendly"}
+                      {t(
+                        place.owned
+                          ? "marketing:directory.badge.queerOwned"
+                          : "marketing:directory.badge.friendly",
+                      )}
                     </span>
                   </div>
                   <div>
-                    <div className={s.name}>{b.name}</div>
-                    <div className={s.cat}>{CAT_LABEL[b.cat]}</div>
+                    <div className={s.name}>{place.name}</div>
+                    <div className={s.cat}>{t(CAT_LABEL_KEYS[place.cat]!)}</div>
                     <div className={s.hood}>
-                      <FiMapPin /> {b.hood}
+                      <FiMapPin /> {place.hood}
                     </div>
                   </div>
-                  <div className={s.desc}>{b.desc}</div>
+                  <div className={s.desc}>{place.desc}</div>
                   <div className={s.foot}>
-                    {b.member ? (
-                      <span className={s.memberLink}>Member-run</span>
+                    {place.member ? (
+                      <span className={s.memberLink}>
+                        {t("marketing:directory.card.memberRun")}
+                      </span>
                     ) : (
                       <span />
                     )}
-                    <span className={s.visit}>View details →</span>
+                    <span className={s.visit}>
+                      {t("marketing:directory.card.viewDetails")}
+                    </span>
                   </div>
                 </FadeIn>
               ))}
@@ -200,16 +211,15 @@ export function DirectoryPage() {
           <Reveal className={s.submitStrip}>
             <div>
               <h3>
-                Know a place worth <em>adding?</em>
+                <Translation
+                  i18nKey="marketing:directory.submitStrip.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
-              <p>
-                If you run or know a queer-owned or queer-friendly business in
-                Lisbon that belongs in this directory, tell us. We review every
-                suggestion before it goes live.
-              </p>
+              <p>{t("marketing:directory.submitStrip.body")}</p>
             </div>
             <Button size="lg" to={routes.listBusiness}>
-              List your business
+              {t("marketing:directory.submitStrip.cta")}
             </Button>
           </Reveal>
         </div>
@@ -217,14 +227,15 @@ export function DirectoryPage() {
 
       <Outro
         title={
-          <>
-            New to Lisbon? <em>You're not starting from zero.</em>
-          </>
+          <Translation
+            i18nKey="marketing:directory.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Join the network and get access to the full directory, member recommendations, and a community that knows the city."
+        sub={t("marketing:directory.outro.sub")}
       >
         <Button size="lg" to={routes.requestInvite}>
-          Request an invite
+          {t("marketing:directory.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

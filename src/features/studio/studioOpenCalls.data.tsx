@@ -24,19 +24,25 @@ export interface Call {
   titleEm: string;
   titlePost?: string;
   brief: ReactNode;
-  amt: string;
+  amount: number;
   amtLabel: string;
   meta: string[];
   tracks?: TrackOption[];
   placeholder?: string;
 }
 
-export const FILTERS = [
-  "All open",
-  "Commissions",
-  "Grants",
-  "Residencies",
-  "Closing soon",
+/** Stable filter ids — never the translated label (§5.1 trap). */
+export interface CallFilter {
+  id: string;
+  labelKey: string;
+}
+
+export const FILTERS: CallFilter[] = [
+  { id: "all", labelKey: "studio:calls.filter.all" },
+  { id: "commissions", labelKey: "studio:calls.filter.commissions" },
+  { id: "grants", labelKey: "studio:calls.filter.grants" },
+  { id: "residencies", labelKey: "studio:calls.filter.residencies" },
+  { id: "closingSoon", labelKey: "studio:calls.filter.closingSoon" },
 ];
 
 export const CALLS: Call[] = [
@@ -59,7 +65,7 @@ export const CALLS: Call[] = [
         holds the room between speakers. Yours to keep and re-release.
       </>
     ),
-    amt: "800",
+    amount: 800,
     amtLabel: "flat · paid on accept",
     meta: ["Deadline 14 Jun", "1 track", "4 of 12 slots filled"],
     tracks: [
@@ -108,7 +114,7 @@ export const CALLS: Call[] = [
         fund the <em>practice</em>, not a product. Twelve grants this round.
       </>
     ),
-    amt: "1,200",
+    amount: 1200,
     amtLabel: "unrestricted",
     meta: ["Deadline 30 Jun", "1 release as evidence", "12 grants"],
     tracks: [
@@ -146,7 +152,7 @@ export const CALLS: Call[] = [
         covered. We're looking for someone who'll <em>use the space loudly</em>.
       </>
     ),
-    amt: "600",
+    amount: 600,
     amtLabel: "+ space & travel",
     meta: ["Deadline 20 Jul", "1 track + note", "1 residency"],
     tracks: [

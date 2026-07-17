@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminPageHeader } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
@@ -24,6 +26,7 @@ import styles from "./AdminPartnerApplicationsPage.module.css";
  * short leave animation so the decision reads instantly in either mode.
  */
 export function AdminPartnerApplicationsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { data, isLoading, isError, error } = usePartnerApplications();
   const triage = useTriagePartnerApplication();
@@ -48,14 +51,17 @@ export function AdminPartnerApplicationsPage() {
             next.delete(view.id);
             return next;
           });
-          showToast("Could not save that decision — please try again", "error");
+          showToast(t("admin:partners.errorToast"), "error");
         },
       },
     );
     showToast(
-      action === "approve"
-        ? `${view.name} is now a partner`
-        : `${view.name}'s application was set aside`,
+      t(
+        action === "approve"
+          ? "admin:partners.approvedToast"
+          : "admin:partners.rejectedToast",
+        { name: view.name },
+      ),
       action === "approve" ? "success" : "info",
     );
   }
@@ -66,21 +72,25 @@ export function AdminPartnerApplicationsPage() {
   return (
     <AdminShell
       title={
-        <>
-          Partner applications · <em>review</em>
-        </>
+        <Translation
+          i18nKey="admin:partners.title"
+          components={{ em: <em /> }}
+        />
       }
-      breadcrumb={[{ label: "Admin", to: routes.admin }]}
+      breadcrumb={[
+        { label: t("admin:common.adminBreadcrumb"), to: routes.admin },
+      ]}
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow="Partnerships"
+          eyebrow={t("admin:partners.header.eyebrow")}
           title={
-            <>
-              Who wants to <em>partner</em>.
-            </>
+            <Translation
+              i18nKey="admin:partners.header.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="Organisations that applied to partner with QueerPulse. Read what they do, then approve them onto the public partners page or set the application aside — with a note they'll read."
+          sub={t("admin:partners.header.sub")}
         />
       </FadeIn>
 
@@ -98,8 +108,8 @@ export function AdminPartnerApplicationsPage() {
         <div className={styles.notice}>
           <p className={styles.noticeText}>
             {forbidden
-              ? "This queue is for admins only."
-              : "The queue couldn't load right now — please try again."}
+              ? t("admin:partners.forbidden")
+              : t("admin:partners.loadError")}
           </p>
         </div>
       ) : (
@@ -128,21 +138,17 @@ function Queue({
   onApprove: (v: PartnerApplicationView) => void;
   onReject: (v: PartnerApplicationView, note?: string) => void;
 }) {
+  const { t } = useTranslation();
   if (views.length === 0) {
     return (
       <div className={styles.empty}>
-        <p className={styles.emptyText}>
-          Nothing waiting. Every application has had a decision.
-        </p>
+        <p className={styles.emptyText}>{t("admin:partners.emptyText")}</p>
       </div>
     );
   }
   return (
     <>
-      <p className={styles.intro}>
-        These organisations asked to partner with us. Approving one lists it on
-        the public partners page.
-      </p>
+      <p className={styles.intro}>{t("admin:partners.intro")}</p>
       <div className={styles.grid}>
         {views.map((view, i) => (
           <FadeIn key={view.id} delay={i * 60}>

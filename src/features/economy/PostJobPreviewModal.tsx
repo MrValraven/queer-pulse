@@ -1,6 +1,14 @@
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
+import {
+  CATEGORIES,
+  COMMITMENTS,
+  FORMATS,
+  TIMEZONES,
+  optionLabel,
+} from "./postJob.data";
 import type { CompanyProfile } from "./companies.data";
 import type { PostJobForm } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
@@ -16,27 +24,46 @@ export function PostJobPreviewModal({
   role: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { state, payLabel } = form;
 
   const meta: [string, string][] = [
-    ["Category", state.category],
-    ["Format", state.format],
-    ["Commitment", state.commitment],
+    [
+      t("economy:postJob.field.category"),
+      optionLabel(CATEGORIES, state.category, t),
+    ],
+    [t("economy:postJob.field.format"), optionLabel(FORMATS, state.format, t)],
+    [
+      t("economy:postJob.field.commitment"),
+      optionLabel(COMMITMENTS, state.commitment, t),
+    ],
   ];
-  if (state.seniority !== "Any level") meta.push(["Level", state.seniority]);
-  if (form.needsCity && state.city) meta.push(["Where", state.city]);
+  if (state.seniority !== "Any level")
+    meta.push([t("economy:postJob.field.level"), state.seniority]);
+  if (form.needsCity && state.city)
+    meta.push([t("economy:postJob.field.where"), state.city]);
   if (form.showsTimezone && state.timezone !== "No preference")
-    meta.push(["Timezone", state.timezone]);
-  if (payLabel) meta.push(["Pay", payLabel]);
-  if (state.startDate) meta.push(["Starts", state.startDate]);
+    meta.push([
+      t("economy:postJob.field.timezone"),
+      optionLabel(TIMEZONES, state.timezone, t),
+    ]);
+  if (payLabel) meta.push([t("economy:postJob.field.pay"), payLabel]);
+  if (state.startDate)
+    meta.push([t("economy:postJob.field.starts"), state.startDate]);
 
   const screening = state.screening.filter(Boolean);
   const contactTxt = state.contacts.join(", ") || "Platform message";
 
   return (
-    <ModalShell onClose={onClose} wide ariaLabel="Listing preview">
-      <div className={styles.mlType}>Hiring</div>
-      <h2 className={styles.mlTitle}>{state.title || "Untitled listing"}</h2>
+    <ModalShell
+      onClose={onClose}
+      wide
+      ariaLabel={t("economy:postJob.preview.ariaLabel")}
+    >
+      <div className={styles.mlType}>{t("economy:postJob.sidebar.hiring")}</div>
+      <h2 className={styles.mlTitle}>
+        {state.title || t("economy:postJob.preview.untitled")}
+      </h2>
       <div className={styles.mlPoster}>
         <span className={styles.affLogo}>{company.logo}</span>
         <div>
@@ -46,7 +73,9 @@ export function PostJobPreviewModal({
               <FiCheck aria-hidden />
             </span>
           </div>
-          <div className={styles.affMeta}>{role} · verified employer</div>
+          <div className={styles.affMeta}>
+            {role} · {t("economy:postJob.preview.verifiedEmployer")}
+          </div>
         </div>
       </div>
 
@@ -60,15 +89,15 @@ export function PostJobPreviewModal({
       </div>
 
       <div className={styles.mlSection}>
-        <h4>About this role</h4>
+        <h4>{t("economy:postJob.preview.aboutRole")}</h4>
         <div className={styles.mlDesc}>
-          {state.description || "No description yet."}
+          {state.description || t("economy:postJob.preview.noDescription")}
         </div>
       </div>
 
       {state.benefits.length > 0 && (
         <div className={styles.mlSection}>
-          <h4>Benefits &amp; perks</h4>
+          <h4>{t("economy:postJob.step3.benefitsTitle")}</h4>
           <div className={styles.mlChips}>
             {state.benefits.map((b) => (
               <span key={b} className={styles.mlChip}>
@@ -81,7 +110,7 @@ export function PostJobPreviewModal({
 
       {state.inclusivity.length > 0 && (
         <div className={styles.mlSection}>
-          <h4>This space is</h4>
+          <h4>{t("economy:postJob.preview.inclusivityTitle")}</h4>
           <div className={styles.mlChips}>
             {state.inclusivity.map((b) => (
               <span
@@ -97,11 +126,11 @@ export function PostJobPreviewModal({
 
       {state.tags.length > 0 && (
         <div className={styles.mlSection}>
-          <h4>Skills</h4>
+          <h4>{t("economy:postJob.skills.title")}</h4>
           <div className={styles.mlChips}>
-            {state.tags.map((t) => (
-              <span key={t} className={styles.mlChip}>
-                {t}
+            {state.tags.map((tag) => (
+              <span key={tag} className={styles.mlChip}>
+                {tag}
               </span>
             ))}
           </div>
@@ -110,7 +139,7 @@ export function PostJobPreviewModal({
 
       {screening.length > 0 && (
         <div className={styles.mlSection}>
-          <h4>You&apos;ll be asked</h4>
+          <h4>{t("economy:postJob.preview.youllBeAsked")}</h4>
           <ul className={styles.mlSq}>
             {screening.map((q, i) => (
               <li key={i}>{q}</li>
@@ -121,11 +150,12 @@ export function PostJobPreviewModal({
 
       <div className={styles.nudge} style={{ marginTop: 20 }}>
         <span>
-          Respond via <strong>{contactTxt}</strong>
+          {t("economy:postJob.preview.respondViaLabel")}{" "}
+          <strong>{contactTxt}</strong>
         </span>
         <span style={{ marginLeft: "auto" }}>
           <Button variant="primary" size="md" disabled>
-            Respond
+            {t("economy:postJob.preview.respondCta")}
           </Button>
         </span>
       </div>

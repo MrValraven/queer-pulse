@@ -1,4 +1,6 @@
 import { FiCheck, FiPlus, FiTrash2 } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { INCLUSIVITY } from "./postJob.data";
 import { CheckGrid } from "./PostJobControls";
 import { PostJobSkills } from "./PostJobSkills";
@@ -24,6 +26,7 @@ export function PostJobStepScreening({
   role: string;
   onSwitchCompany: () => void;
 }) {
+  const { t } = useTranslation();
   const { state, patch, toggleIn } = form;
 
   function setQuestion(i: number, v: string) {
@@ -40,24 +43,29 @@ export function PostJobStepScreening({
   return (
     <>
       <div className={styles.stepHead}>
-        <div className={styles.eyebrow}>Step 4 of 5</div>
+        <div className={styles.eyebrow}>
+          {t("economy:postJob.step4.eyebrow")}
+        </div>
         <h1 className={styles.stepTitle}>
-          Skills, <em>screening</em> &amp; who&apos;s posting
+          <Translation
+            i18nKey="economy:postJob.step4.title"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.stepSub}>
-          This is where QueerPulse listings do more than a generic job board.
-        </p>
+        <p className={styles.stepSub}>{t("economy:postJob.step4.sub")}</p>
       </div>
 
       <PostJobSkills form={form} />
 
       <div className={styles.card}>
         <div className={styles.cardTitle}>
-          Screening questions <span className={styles.muted}>· optional</span>
+          {t("economy:postJob.step4.screeningTitle")}{" "}
+          <span className={styles.muted}>
+            · {t("economy:postJob.field.optional")}
+          </span>
         </div>
         <div className={styles.cardSub}>
-          Ask up to 3 questions respondents must answer. Great for filtering
-          quickly.
+          {t("economy:postJob.step4.screeningSub")}
         </div>
         <div className={styles.sqList}>
           {state.screening.map((q, i) => (
@@ -67,12 +75,12 @@ export function PostJobStepScreening({
                 className={styles.input}
                 value={q}
                 onChange={(e) => setQuestion(i, e.target.value)}
-                placeholder="e.g. Are you based in Portugal?"
+                placeholder={t("economy:postJob.step4.questionPlaceholder")}
               />
               <button
                 type="button"
                 className={styles.sqDel}
-                aria-label="Remove question"
+                aria-label={t("economy:postJob.step4.removeQuestionAria")}
                 onClick={() => removeQuestion(i)}
               >
                 <FiTrash2 size={15} />
@@ -86,15 +94,17 @@ export function PostJobStepScreening({
           onClick={addQuestion}
           disabled={state.screening.length >= 3}
         >
-          <FiPlus size={14} aria-hidden /> Add a question
+          <FiPlus size={14} aria-hidden />{" "}
+          {t("economy:postJob.step4.addQuestion")}
         </button>
       </div>
 
       <div className={styles.card}>
-        <div className={styles.cardTitle}>This space is…</div>
+        <div className={styles.cardTitle}>
+          {t("economy:postJob.step4.spaceIsTitle")}
+        </div>
         <div className={styles.cardSub}>
-          Optional signals that tell members what to expect. Only tick
-          what&apos;s genuinely true.
+          {t("economy:postJob.step4.spaceIsSub")}
         </div>
         <CheckGrid
           options={INCLUSIVITY}
@@ -104,10 +114,11 @@ export function PostJobStepScreening({
       </div>
 
       <div className={styles.card}>
-        <div className={styles.cardTitle}>Who&apos;s posting</div>
+        <div className={styles.cardTitle}>
+          {t("economy:postJob.step4.whosPostingTitle")}
+        </div>
         <div className={styles.cardSub}>
-          Roles are posted as your verified company — this is what keeps the
-          board trustworthy.
+          {t("economy:postJob.step4.whosPostingSub")}
         </div>
         <div className={styles.identity}>
           <span className={styles.identityLogo}>{company.logo}</span>
@@ -116,7 +127,7 @@ export function PostJobStepScreening({
               {company.nameText}
               <span
                 className={styles.identityBadge}
-                aria-label="Verified employer"
+                aria-label={t("economy:postJob.step4.verifiedEmployerAria")}
               >
                 <FiCheck aria-hidden />
               </span>
@@ -130,7 +141,7 @@ export function PostJobStepScreening({
             className={styles.identitySwitch}
             onClick={onSwitchCompany}
           >
-            Not you?
+            {t("economy:postJob.step4.notYou")}
           </button>
         </div>
       </div>

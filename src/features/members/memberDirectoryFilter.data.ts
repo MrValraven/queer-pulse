@@ -81,103 +81,287 @@ export const NEIGHBOURHOODS: ChipOption[] = [
   { label: "All of Lisbon" },
 ];
 
-export const DISCIPLINES: ChipOption[] = [
-  { label: "Design", active: true },
-  { label: "Editorial" },
-  { label: "Healthcare" },
-  { label: "Legal" },
-  { label: "Education" },
-  { label: "Tech" },
-  { label: "Photo" },
-  { label: "Film" },
-  { label: "Performance" },
-  { label: "Music" },
-  { label: "Architecture" },
-  { label: "Community" },
-  { label: "Curation" },
-  { label: "Food" },
-  { label: "Craft" },
-  { label: "Science" },
+/** A "What they do" / "Profession" filter chip. The `id` is the stable,
+ *  canonical value stored in `FilterState` / `MemberCard.discipline` /
+ *  `MemberCard.profession` and never changes with language; `labelKey`
+ *  resolves via `t()` at render only. Splitting these was a deliberate fix —
+ *  see the i18n sweep §5.1 note on `memberDirectoryFilter.data.ts` for why a
+ *  plain translated `label` used to double as the compared/stored value. */
+export interface FilterOption {
+  id: string;
+  labelKey: string;
+  active?: boolean;
+}
+
+export const DISCIPLINES: FilterOption[] = [
+  {
+    id: "design",
+    labelKey: "members:directory.discipline.design",
+    active: true,
+  },
+  { id: "editorial", labelKey: "members:directory.discipline.editorial" },
+  { id: "healthcare", labelKey: "members:directory.discipline.healthcare" },
+  { id: "legal", labelKey: "members:directory.discipline.legal" },
+  { id: "education", labelKey: "members:directory.discipline.education" },
+  { id: "tech", labelKey: "members:directory.discipline.tech" },
+  { id: "photo", labelKey: "members:directory.discipline.photo" },
+  { id: "film", labelKey: "members:directory.discipline.film" },
+  { id: "performance", labelKey: "members:directory.discipline.performance" },
+  { id: "music", labelKey: "members:directory.discipline.music" },
+  { id: "architecture", labelKey: "members:directory.discipline.architecture" },
+  { id: "community", labelKey: "members:directory.discipline.community" },
+  { id: "curation", labelKey: "members:directory.discipline.curation" },
+  { id: "food", labelKey: "members:directory.discipline.food" },
+  { id: "craft", labelKey: "members:directory.discipline.craft" },
+  { id: "science", labelKey: "members:directory.discipline.science" },
 ];
 
-/** Specific professions grouped under each broad field (`discipline`).
+/** id → labelKey, for resolving a stored discipline id back to a display
+ *  label wherever the full `DISCIPLINES` list isn't at hand (e.g. `appliedChips`). */
+export const DISCIPLINE_LABEL_KEY: Record<string, string> = Object.fromEntries(
+  DISCIPLINES.map((d) => [d.id, d.labelKey]),
+);
+
+/** Specific professions grouped under each broad field (`discipline` id).
  *  The Profession filter narrows to these once a field is chosen. */
-export const PROFESSIONS_BY_FIELD: Record<string, string[]> = {
-  Design: ["Graphic Designer", "UX Designer", "Illustrator", "Art Director"],
-  Editorial: ["Editor", "Journalist", "Copywriter", "Translator", "Poet"],
-  Healthcare: [
-    "Therapist",
-    "Psychologist",
-    "Nurse",
-    "GP",
-    "Physiotherapist",
-    "Peer Counsellor",
-    "Community Health Worker",
+export const PROFESSIONS_BY_FIELD: Record<string, FilterOption[]> = {
+  design: [
+    {
+      id: "graphicDesigner",
+      labelKey: "members:directory.profession.graphicDesigner",
+    },
+    { id: "uxDesigner", labelKey: "members:directory.profession.uxDesigner" },
+    { id: "illustrator", labelKey: "members:directory.profession.illustrator" },
+    { id: "artDirector", labelKey: "members:directory.profession.artDirector" },
   ],
-  Legal: ["Immigration Lawyer", "Family Lawyer", "Paralegal", "Legal Advocate"],
-  Education: ["Teacher", "Workshop Facilitator", "Researcher", "Tutor"],
-  Tech: [
-    "Software Engineer",
-    "Backend Engineer",
-    "Data Scientist",
-    "Product Manager",
+  editorial: [
+    { id: "editor", labelKey: "members:directory.profession.editor" },
+    { id: "journalist", labelKey: "members:directory.profession.journalist" },
+    { id: "copywriter", labelKey: "members:directory.profession.copywriter" },
+    { id: "translator", labelKey: "members:directory.profession.translator" },
+    { id: "poet", labelKey: "members:directory.profession.poet" },
   ],
-  Photo: ["Portrait Photographer", "Photojournalist", "Retoucher"],
-  Film: [
-    "Documentary Filmmaker",
-    "Filmmaker",
-    "Cinematographer",
-    "Film Editor",
+  healthcare: [
+    { id: "therapist", labelKey: "members:directory.profession.therapist" },
+    {
+      id: "psychologist",
+      labelKey: "members:directory.profession.psychologist",
+    },
+    { id: "nurse", labelKey: "members:directory.profession.nurse" },
+    { id: "gp", labelKey: "members:directory.profession.gp" },
+    {
+      id: "physiotherapist",
+      labelKey: "members:directory.profession.physiotherapist",
+    },
+    {
+      id: "peerCounsellor",
+      labelKey: "members:directory.profession.peerCounsellor",
+    },
+    {
+      id: "communityHealthWorker",
+      labelKey: "members:directory.profession.communityHealthWorker",
+    },
   ],
-  Performance: [
-    "Choreographer",
-    "Dancer",
-    "Theatre Maker",
-    "Performance Artist",
+  legal: [
+    {
+      id: "immigrationLawyer",
+      labelKey: "members:directory.profession.immigrationLawyer",
+    },
+    {
+      id: "familyLawyer",
+      labelKey: "members:directory.profession.familyLawyer",
+    },
+    { id: "paralegal", labelKey: "members:directory.profession.paralegal" },
+    {
+      id: "legalAdvocate",
+      labelKey: "members:directory.profession.legalAdvocate",
+    },
   ],
-  Music: [
-    "Music Producer",
-    "DJ",
-    "Session Musician",
-    "Sound Designer",
-    "Music Industry A&R",
+  education: [
+    { id: "teacher", labelKey: "members:directory.profession.teacher" },
+    {
+      id: "workshopFacilitator",
+      labelKey: "members:directory.profession.workshopFacilitator",
+    },
+    { id: "researcher", labelKey: "members:directory.profession.researcher" },
+    { id: "tutor", labelKey: "members:directory.profession.tutor" },
   ],
-  Architecture: ["Architect", "Urban Designer", "Interior Architect"],
-  Community: [
-    "Community Organiser",
-    "Housing Organiser",
-    "Housing Advocate",
-    "Support Coordinator",
-    "Accessibility Advocate",
-    "Activist",
+  tech: [
+    {
+      id: "softwareEngineer",
+      labelKey: "members:directory.profession.softwareEngineer",
+    },
+    {
+      id: "backendEngineer",
+      labelKey: "members:directory.profession.backendEngineer",
+    },
+    {
+      id: "dataScientist",
+      labelKey: "members:directory.profession.dataScientist",
+    },
+    {
+      id: "productManager",
+      labelKey: "members:directory.profession.productManager",
+    },
   ],
-  Curation: ["Curator", "Archivist", "Gallery Director"],
-  Food: ["Chef", "Barista", "Baker", "Supper Club Host"],
-  Craft: ["Ceramicist", "Woodworker", "Textile Artist"],
-  Science: ["Biologist", "Ecologist", "Lab Researcher"],
+  photo: [
+    {
+      id: "portraitPhotographer",
+      labelKey: "members:directory.profession.portraitPhotographer",
+    },
+    {
+      id: "photojournalist",
+      labelKey: "members:directory.profession.photojournalist",
+    },
+    { id: "retoucher", labelKey: "members:directory.profession.retoucher" },
+  ],
+  film: [
+    {
+      id: "documentaryFilmmaker",
+      labelKey: "members:directory.profession.documentaryFilmmaker",
+    },
+    { id: "filmmaker", labelKey: "members:directory.profession.filmmaker" },
+    {
+      id: "cinematographer",
+      labelKey: "members:directory.profession.cinematographer",
+    },
+    { id: "filmEditor", labelKey: "members:directory.profession.filmEditor" },
+  ],
+  performance: [
+    {
+      id: "choreographer",
+      labelKey: "members:directory.profession.choreographer",
+    },
+    { id: "dancer", labelKey: "members:directory.profession.dancer" },
+    {
+      id: "theatreMaker",
+      labelKey: "members:directory.profession.theatreMaker",
+    },
+    {
+      id: "performanceArtist",
+      labelKey: "members:directory.profession.performanceArtist",
+    },
+  ],
+  music: [
+    {
+      id: "musicProducer",
+      labelKey: "members:directory.profession.musicProducer",
+    },
+    { id: "dj", labelKey: "members:directory.profession.dj" },
+    {
+      id: "sessionMusician",
+      labelKey: "members:directory.profession.sessionMusician",
+    },
+    {
+      id: "soundDesigner",
+      labelKey: "members:directory.profession.soundDesigner",
+    },
+    {
+      id: "musicIndustryAR",
+      labelKey: "members:directory.profession.musicIndustryAR",
+    },
+  ],
+  architecture: [
+    { id: "architect", labelKey: "members:directory.profession.architect" },
+    {
+      id: "urbanDesigner",
+      labelKey: "members:directory.profession.urbanDesigner",
+    },
+    {
+      id: "interiorArchitect",
+      labelKey: "members:directory.profession.interiorArchitect",
+    },
+  ],
+  community: [
+    {
+      id: "communityOrganiser",
+      labelKey: "members:directory.profession.communityOrganiser",
+    },
+    {
+      id: "housingOrganiser",
+      labelKey: "members:directory.profession.housingOrganiser",
+    },
+    {
+      id: "housingAdvocate",
+      labelKey: "members:directory.profession.housingAdvocate",
+    },
+    {
+      id: "supportCoordinator",
+      labelKey: "members:directory.profession.supportCoordinator",
+    },
+    {
+      id: "accessibilityAdvocate",
+      labelKey: "members:directory.profession.accessibilityAdvocate",
+    },
+    { id: "activist", labelKey: "members:directory.profession.activist" },
+  ],
+  curation: [
+    { id: "curator", labelKey: "members:directory.profession.curator" },
+    { id: "archivist", labelKey: "members:directory.profession.archivist" },
+    {
+      id: "galleryDirector",
+      labelKey: "members:directory.profession.galleryDirector",
+    },
+  ],
+  food: [
+    { id: "chef", labelKey: "members:directory.profession.chef" },
+    { id: "barista", labelKey: "members:directory.profession.barista" },
+    { id: "baker", labelKey: "members:directory.profession.baker" },
+    {
+      id: "supperClubHost",
+      labelKey: "members:directory.profession.supperClubHost",
+    },
+  ],
+  craft: [
+    { id: "ceramicist", labelKey: "members:directory.profession.ceramicist" },
+    { id: "woodworker", labelKey: "members:directory.profession.woodworker" },
+    {
+      id: "textileArtist",
+      labelKey: "members:directory.profession.textileArtist",
+    },
+  ],
+  science: [
+    { id: "biologist", labelKey: "members:directory.profession.biologist" },
+    { id: "ecologist", labelKey: "members:directory.profession.ecologist" },
+    {
+      id: "labResearcher",
+      labelKey: "members:directory.profession.labResearcher",
+    },
+  ],
 };
 
 /** Flat list of every profession across all fields. */
-export const ALL_PROFESSIONS: string[] =
+export const ALL_PROFESSIONS: FilterOption[] =
   Object.values(PROFESSIONS_BY_FIELD).flat();
 
-/** Reverse lookup: which field a profession belongs to. Used so that picking a
- *  profession from a free-text search also selects its parent field, keeping the
- *  profession ⊆ field invariant (see `reconcileProfessions`). */
+/** id → labelKey, for resolving a stored profession id back to a display
+ *  label wherever the full per-field list isn't at hand (e.g. `appliedChips`). */
+export const PROFESSION_LABEL_KEY: Record<string, string> = Object.fromEntries(
+  ALL_PROFESSIONS.map((p) => [p.id, p.labelKey]),
+);
+
+/** Reverse lookup: which field id a profession id belongs to. Used so that
+ *  picking a profession from a free-text search also selects its parent
+ *  field, keeping the profession ⊆ field invariant (see `reconcileProfessions`). */
 export const FIELD_BY_PROFESSION: Record<string, string> = Object.fromEntries(
   Object.entries(PROFESSIONS_BY_FIELD).flatMap(([field, profs]) =>
-    profs.map((p) => [p, field]),
+    profs.map((p) => [p.id, field]),
   ),
 );
 
-/** The professions available to pick given the selected fields.
+/** The professions available to pick given the selected field ids.
  *  No field selected → everything; otherwise the union of those fields' pools. */
-export function professionsForFields(disciplines: string[]): string[] {
-  if (!disciplines.length) return ALL_PROFESSIONS;
+export function professionsForFields(disciplineIds: string[]): FilterOption[] {
+  if (!disciplineIds.length) return ALL_PROFESSIONS;
   const seen = new Set<string>();
-  for (const d of disciplines)
-    for (const p of PROFESSIONS_BY_FIELD[d] ?? []) seen.add(p);
-  return Array.from(seen);
+  const out: FilterOption[] = [];
+  for (const disciplineId of disciplineIds)
+    for (const profession of PROFESSIONS_BY_FIELD[disciplineId] ?? [])
+      if (!seen.has(profession.id)) {
+        seen.add(profession.id);
+        out.push(profession);
+      }
+  return out;
 }
 
 /** Self-declared identity vocabulary — same contract as `OPEN_TO_OPTIONS`:
@@ -241,163 +425,163 @@ interface MemberFacet {
 }
 const SLUG_FACETS: Record<string, MemberFacet> = {
   ines: {
-    discipline: "Design",
-    profession: "Graphic Designer",
+    discipline: "design",
+    profession: "graphicDesigner",
     bio: "Designs brand identities and editorial systems for cultural orgs and small presses.",
   },
   rui: {
-    discipline: "Tech",
-    profession: "Backend Engineer",
+    discipline: "tech",
+    profession: "backendEngineer",
     bio: "Backend engineer building durable systems, open to mentoring and code review.",
   },
   sofia: {
-    discipline: "Film",
-    profession: "Documentary Filmmaker",
+    discipline: "film",
+    profession: "documentaryFilmmaker",
     bio: "Documentary filmmaker making slow, observational portraits shot around Lisbon.",
   },
   tomas: {
-    discipline: "Food",
-    profession: "Supper Club Host",
+    discipline: "food",
+    profession: "supperClubHost",
     bio: "Runs a twelve-seat supper club in Mouraria — no menu, lots of fermentation.",
   },
   mariana: {
-    discipline: "Healthcare",
-    profession: "Psychologist",
+    discipline: "healthcare",
+    profession: "psychologist",
     bio: "Clinical psychologist working with LGBTQ+ adults on identity and visibility.",
   },
   andre: {
-    discipline: "Photo",
-    profession: "Portrait Photographer",
+    discipline: "photo",
+    profession: "portraitPhotographer",
     bio: "Shoots film portraits, offering free sittings for trans & nonbinary members.",
   },
   carla: {
-    discipline: "Tech",
-    profession: "Product Manager",
+    discipline: "tech",
+    profession: "productManager",
     bio: "Product manager from fintech, thinking hard about how to build ethically.",
   },
   beatriz: {
-    discipline: "Craft",
-    profession: "Ceramicist",
+    discipline: "craft",
+    profession: "ceramicist",
     bio: "Makes functional ceramics in a Graça studio and teaches occasional workshops.",
   },
   diogo: {
-    discipline: "Music",
-    profession: "Music Producer",
+    discipline: "music",
+    profession: "musicProducer",
     bio: "Produces and mixes live sets for queer club nights and stranger projects.",
   },
   "sofia-rodrigues": {
-    discipline: "Design",
-    profession: "UX Designer",
+    discipline: "design",
+    profession: "uxDesigner",
     bio: "Designs public-service tools that don't make people feel stupid.",
   },
   "tomas-mendes": {
-    discipline: "Architecture",
-    profession: "Architect",
+    discipline: "architecture",
+    profession: "architect",
     bio: "Architect working on co-housing and who gets to stay in a neighbourhood.",
   },
   anika: {
-    discipline: "Editorial",
-    profession: "Poet",
+    discipline: "editorial",
+    profession: "poet",
     bio: "Translator and poet working between Slovene, English and Portuguese.",
   },
   jordan: {
-    discipline: "Community",
-    profession: "Community Organiser",
+    discipline: "community",
+    profession: "communityOrganiser",
     bio: "Community organiser facilitating hard conversations, mediation and trust.",
   },
   maria: {
-    discipline: "Healthcare",
-    profession: "Psychologist",
+    discipline: "healthcare",
+    profession: "psychologist",
     bio: "Clinical psychologist in Porto caring mostly for queer and trans clients.",
   },
   kai: {
-    discipline: "Film",
-    profession: "Filmmaker",
+    discipline: "film",
+    profession: "filmmaker",
     bio: "Filmmaker newly in Lisbon, making documentaries about disappearing places.",
   },
   monica: {
-    discipline: "Healthcare",
-    profession: "Physiotherapist",
+    discipline: "healthcare",
+    profession: "physiotherapist",
     bio: "Physiotherapist offering trans-affirming bodywork and post-surgical rehab.",
   },
   fatima: {
-    discipline: "Community",
-    profession: "Support Coordinator",
+    discipline: "community",
+    profession: "supportCoordinator",
     bio: "Coordinates peer support and crisis referral for queer migrants in Lisbon.",
   },
   "catarina-vaz": {
-    discipline: "Community",
-    profession: "Housing Organiser",
+    discipline: "community",
+    profession: "housingOrganiser",
     bio: "Housing organiser standing with tenants in Marvila and Graça against eviction.",
   },
   jonas: {
-    discipline: "Healthcare",
-    profession: "Community Health Worker",
+    discipline: "healthcare",
+    profession: "communityHealthWorker",
     bio: "Community health worker doing harm-reduction and PrEP outreach in Cais do Sodré.",
   },
   "raquel-baptista": {
-    discipline: "Legal",
-    profession: "Family Lawyer",
+    discipline: "legal",
+    profession: "familyLawyer",
     bio: "Pro-bono lawyer taking on queer family law and discrimination cases.",
   },
   rita: {
-    discipline: "Design",
-    profession: "Illustrator",
+    discipline: "design",
+    profession: "illustrator",
     bio: "Makes zines and queer comics on a temperamental shared-studio risograph.",
   },
   "sofia-castano": {
-    discipline: "Photo",
-    profession: "Photojournalist",
+    discipline: "photo",
+    profession: "photojournalist",
     bio: "Documentary photographer of queer nightlife, raised between Vigo and Lisbon.",
   },
   nuno: {
-    discipline: "Tech",
-    profession: "Software Engineer",
+    discipline: "tech",
+    profession: "softwareEngineer",
     bio: "Frontend engineer and accessibility advocate building sites that lock no one out.",
   },
   luisa: {
-    discipline: "Curation",
-    profession: "Curator",
+    discipline: "curation",
+    profession: "curator",
     bio: "Curator of contemporary shows, building a stubborn queer community archive.",
   },
   "mariana-costa": {
-    discipline: "Editorial",
-    profession: "Journalist",
+    discipline: "editorial",
+    profession: "journalist",
     bio: "Journalist reporting on the slow machinery of LGBTQ+ rights in Portugal.",
   },
   "rui-fernandes": {
-    discipline: "Community",
-    profession: "Activist",
+    discipline: "community",
+    profession: "activist",
     bio: "Trans-rights activist and essayist, organising in the gaps between meetings.",
   },
   "catarina-melo": {
-    discipline: "Community",
-    profession: "Housing Advocate",
+    discipline: "community",
+    profession: "housingAdvocate",
     bio: "Housing advocate fighting for queer tenants pushed out by a city for sale.",
   },
   "sara-pinheiro": {
-    discipline: "Community",
-    profession: "Accessibility Advocate",
+    discipline: "community",
+    profession: "accessibilityAdvocate",
     bio: "Disabled queer accessibility auditor working at the edge of disability justice.",
   },
   "bilal-kaya": {
-    discipline: "Music",
-    profession: "Sound Designer",
+    discipline: "music",
+    profession: "soundDesigner",
     bio: "Sound designer for film and theatre, tuning club rigs that hit your chest.",
   },
   "ines-fonseca": {
-    discipline: "Performance",
-    profession: "Choreographer",
+    discipline: "performance",
+    profession: "choreographer",
     bio: "Choreographer making tender, feral contemporary dance about queer bodies.",
   },
   "daniel-oliveira": {
-    discipline: "Healthcare",
-    profession: "Nurse",
+    discipline: "healthcare",
+    profession: "nurse",
     bio: "Nurse and harm-reduction worker caring for the clubs around Cais do Sodré.",
   },
   tiago: {
-    discipline: "Tech",
-    profession: "Software Engineer",
+    discipline: "tech",
+    profession: "softwareEngineer",
     bio: "Fullstack developer bringing useful — and sometimes silly — web ideas to life.",
   },
 };
@@ -439,11 +623,12 @@ function buildMembers(): MemberCard[] {
     const member = memberProfiles[slug];
     // The card describes the *real* member: bio + filter buckets come from the
     // facet table, with a graceful fallback for any slug not yet curated.
+    const fallbackDiscipline = pick(DISCIPLINE_POOL, r);
     const facet: MemberFacet = SLUG_FACETS[slug] ?? {
-      discipline: pick(DISCIPLINE_POOL, r),
+      discipline: fallbackDiscipline,
       profession:
-        pick(PROFESSIONS_BY_FIELD[pick(DISCIPLINE_POOL, r)] ?? [], r) ??
-        "Member",
+        pick(PROFESSIONS_BY_FIELD[fallbackDiscipline] ?? [], r)?.id ??
+        "unspecified",
       bio: member?.role ?? "",
     };
     const { discipline, profession, bio } = facet;
@@ -575,7 +760,9 @@ export const EMPTY_FILTERS: FilterState = {
  *  Keeps profession ⊆ field coherent after a field is removed. */
 export function reconcileProfessions(f: FilterState): FilterState {
   if (!f.disciplines.length) return f;
-  const allowed = new Set(professionsForFields(f.disciplines));
+  const allowed = new Set(
+    professionsForFields(f.disciplines).map((option) => option.id),
+  );
   const professions = f.professions.filter((p) => allowed.has(p));
   return professions.length === f.professions.length
     ? f
@@ -623,8 +810,15 @@ export function sortMembers(list: MemberCard[], sort: SortKey): MemberCard[] {
   }
 }
 
-/** Flatten the active filters into removable chips for the top-of-results row. */
-export function appliedChips(f: FilterState): AppliedChip[] {
+/** Flatten the active filters into removable chips for the top-of-results row.
+ *  `t` resolves the two id-backed groups (discipline/profession) to their
+ *  display label; the other groups' stored value still doubles as its own
+ *  label (unchanged, out of this pass's scope — see the i18n sweep notes on
+ *  this file for why openTo/hood/identity/language weren't split the same way). */
+export function appliedChips(
+  f: FilterState,
+  t: (key: string) => string,
+): AppliedChip[] {
   const chips: AppliedChip[] = [];
   f.openTo.forEach((value) =>
     chips.push({ label: value, group: "openTo", value }),
@@ -633,10 +827,22 @@ export function appliedChips(f: FilterState): AppliedChip[] {
     chips.push({ label: value, group: "hood", value }),
   );
   f.disciplines.forEach((value) =>
-    chips.push({ label: value, group: "discipline", value }),
+    chips.push({
+      label: DISCIPLINE_LABEL_KEY[value]
+        ? t(DISCIPLINE_LABEL_KEY[value]!)
+        : value,
+      group: "discipline",
+      value,
+    }),
   );
   f.professions.forEach((value) =>
-    chips.push({ label: value, group: "profession", value }),
+    chips.push({
+      label: PROFESSION_LABEL_KEY[value]
+        ? t(PROFESSION_LABEL_KEY[value]!)
+        : value,
+      group: "profession",
+      value,
+    }),
   );
   f.identities.forEach((value) =>
     chips.push({ label: value, group: "identity", value }),

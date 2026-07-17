@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { TIERS, LEDGER } from "./cinemaMembership.data";
+import { PATRON_POOL_SHARE, TIERS, LEDGER } from "./cinemaMembership.data";
 import styles from "./CinemaMembershipPage.module.css";
 
 function Check() {
@@ -35,53 +38,65 @@ function Cross() {
 }
 
 export function CinemaMembershipTiers() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={styles.tiers}>
       <div className="wrap">
         <div className={styles.tiersGrid}>
-          {TIERS.map((tier) => (
-            <div
-              key={tier.nameEm}
-              className={[styles.tier, tier.featured && styles.featured]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {tier.badge && (
-                <div className={styles.tierBadge}>{tier.badge}</div>
-              )}
-              <div className={styles.tierTag}>{tier.tag}</div>
-              <div className={styles.tierName}>
-                {tier.namePre}
-                <em>{tier.nameEm}</em>
-              </div>
-              <div className={styles.tierPrice}>
-                <span className={styles.amount}>{tier.amount}</span>
-                <span className={styles.per}>{tier.per}</span>
-              </div>
-              <div className={styles.tierDesc}>{tier.desc}</div>
-              <div className={styles.features}>
-                {tier.features.map((f) => (
-                  <div
-                    key={f.text}
-                    className={[styles.tf, f.yes ? styles.yes : styles.no].join(
-                      " ",
-                    )}
-                  >
-                    {f.yes ? <Check /> : <Cross />}
-                    <span>{f.text}</span>
-                  </div>
-                ))}
-              </div>
-              <div className={styles.tierAction}>
-                <Button variant={tier.ctaVariant} to={tier.ctaTo}>
-                  {tier.cta}
-                </Button>
-                {tier.note && (
-                  <div className={styles.tierNote}>{tier.note}</div>
+          {TIERS.map((tier) => {
+            const values = {
+              price:
+                tier.priceValue != null ? fmt.currency(tier.priceValue) : "",
+              poolShare: fmt.currency(PATRON_POOL_SHARE),
+            };
+            return (
+              <div
+                key={tier.nameKey}
+                className={[styles.tier, tier.featured && styles.featured]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {tier.badgeKey && (
+                  <div className={styles.tierBadge}>{t(tier.badgeKey)}</div>
                 )}
+                <div className={styles.tierTag}>{t(tier.tagKey)}</div>
+                <div className={styles.tierName}>
+                  <Translation
+                    i18nKey={tier.nameKey}
+                    components={{ em: <em /> }}
+                  />
+                </div>
+                <div className={styles.tierPrice}>
+                  <span className={styles.amount}>{tier.amount}</span>
+                  <span className={styles.per}>{tier.per}</span>
+                </div>
+                <div className={styles.tierDesc}>{t(tier.descKey, values)}</div>
+                <div className={styles.features}>
+                  {tier.features.map((f) => (
+                    <div
+                      key={f.textKey}
+                      className={[
+                        styles.tf,
+                        f.yes ? styles.yes : styles.no,
+                      ].join(" ")}
+                    >
+                      {f.yes ? <Check /> : <Cross />}
+                      <span>{t(f.textKey, values)}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.tierAction}>
+                  <Button variant={tier.ctaVariant} to={tier.ctaTo}>
+                    {t(tier.ctaKey, values)}
+                  </Button>
+                  {tier.noteKey && (
+                    <div className={styles.tierNote}>{t(tier.noteKey)}</div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -89,17 +104,18 @@ export function CinemaMembershipTiers() {
 }
 
 export function CinemaMembershipPays() {
+  const { t } = useTranslation();
   return (
     <section className={styles.pays}>
       <div className="wrap">
         <div className={styles.paysH}>
           <h2>
-            Where the money <em>actually</em> goes
+            <Translation
+              i18nKey="cinema:membership.pays.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className="sub">
-            We publish the full breakdown quarterly. Here's the headline version
-            — honest numbers, updated monthly.
-          </p>
+          <p className="sub">{t("cinema:membership.pays.sub")}</p>
         </div>
         <div className={styles.paysGrid}>
           <div className={styles.payCard}>
@@ -116,17 +132,20 @@ export function CinemaMembershipPays() {
               </svg>
             </div>
             <div className={styles.pcTitle}>
-              Paid to <em>filmmakers</em>
+              <Translation
+                i18nKey="cinema:membership.pays.filmmakers.title"
+                components={{ em: <em /> }}
+              />
             </div>
             <div className={styles.pcBody}>
-              80% of every rent or buy goes directly to the filmmaker. Tips are
-              100% theirs. The sustainer pool is distributed monthly by
-              per-minute-watched.
+              {t("cinema:membership.pays.filmmakers.body")}
             </div>
             <div className={styles.pcNum}>
               €<em>8,420</em>
             </div>
-            <div className={styles.pcNumSub}>This month · to filmmakers</div>
+            <div className={styles.pcNumSub}>
+              {t("cinema:membership.pays.filmmakers.numSub")}
+            </div>
           </div>
           <div className={styles.payCard}>
             <div className={`${styles.pcIcon} jade`}>
@@ -143,17 +162,20 @@ export function CinemaMembershipPays() {
               </svg>
             </div>
             <div className={styles.pcTitle}>
-              Commissioning <em>fund</em>
+              <Translation
+                i18nKey="cinema:membership.pays.commissioning.title"
+                components={{ em: <em /> }}
+              />
             </div>
             <div className={styles.pcBody}>
-              ~20% of sustainer subscriptions goes into the commissioning pool —
-              open calls, residencies, and captioning support for community
-              filmmakers.
+              {t("cinema:membership.pays.commissioning.body")}
             </div>
             <div className={styles.pcNum}>
               €<em>13.2k</em>
             </div>
-            <div className={styles.pcNumSub}>Available this season</div>
+            <div className={styles.pcNumSub}>
+              {t("cinema:membership.pays.commissioning.numSub")}
+            </div>
           </div>
           <div className={styles.payCard}>
             <div className={`${styles.pcIcon} plum`}>
@@ -170,17 +192,20 @@ export function CinemaMembershipPays() {
               </svg>
             </div>
             <div className={styles.pcTitle}>
-              Curators &amp; <em>captions</em>
+              <Translation
+                i18nKey="cinema:membership.pays.curators.title"
+                components={{ em: <em /> }}
+              />
             </div>
             <div className={styles.pcBody}>
-              The curators' council receives a quarterly stipend voted on by
-              patrons. A separate captioning fund supports filmmakers who can't
-              afford captioning.
+              {t("cinema:membership.pays.curators.body")}
             </div>
             <div className={styles.pcNum}>
               <em>6</em>
             </div>
-            <div className={styles.pcNumSub}>Curators on the council</div>
+            <div className={styles.pcNumSub}>
+              {t("cinema:membership.pays.curators.numSub")}
+            </div>
           </div>
         </div>
       </div>
@@ -189,16 +214,22 @@ export function CinemaMembershipPays() {
 }
 
 export function CinemaMembershipLedger() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const ledgerMonth = fmt.date(new Date(2026, 5, 1), {
+    month: "long",
+    year: "numeric",
+  });
   return (
     <section className={styles.ledger}>
       <div className="wrap">
         <div className={styles.ledgerLabel}>
-          Public ledger · June 2026 · updated Monday
+          {t("cinema:membership.ledger.label", { month: ledgerMonth })}
         </div>
         <div className={styles.ledgerInner}>
           {LEDGER.map((l) => (
-            <div key={l.k} className={styles.ls}>
-              <div className="k">{l.k}</div>
+            <div key={l.labelKey} className={styles.ls}>
+              <div className="k">{t(l.labelKey)}</div>
               <div className="v">
                 {l.v.includes("€") ? (
                   <>
@@ -208,12 +239,14 @@ export function CinemaMembershipLedger() {
                   <em>{l.v}</em>
                 )}
               </div>
-              <div className="note">{l.note}</div>
+              <div className="note">{t(l.noteKey)}</div>
             </div>
           ))}
         </div>
         <div className={styles.ledgerFoot}>
-          <Link to={routes.governance}>Full public accounts →</Link>
+          <Link to={routes.governance}>
+            {t("cinema:membership.ledger.fullAccountsCta")}
+          </Link>
         </div>
       </div>
     </section>

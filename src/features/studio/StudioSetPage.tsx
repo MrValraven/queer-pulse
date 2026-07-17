@@ -5,6 +5,9 @@ import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { StudioShell } from "./StudioShell";
 import { ROWS, SET, coverImage } from "./studioSet.data";
 import ss from "./studio.module.css";
@@ -41,7 +44,11 @@ const SET_ITEM = {
     "A late-night live set from the studio, captured in one continuous take.",
 };
 
+const PER_PLAY_AMOUNT = 0.05;
+
 export function StudioSetPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
   const saved = isSaved(SET_ITEM.id);
@@ -72,7 +79,11 @@ export function StudioSetPage() {
           </div>
           <div className={s.dek}>{SET.blurb}</div>
           <div className={s.collActions}>
-            <button type="button" className={ss.playBig} aria-label="Play set">
+            <button
+              type="button"
+              className={ss.playBig}
+              aria-label={t("studio:set.page.playAria")}
+            >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
@@ -83,24 +94,24 @@ export function StudioSetPage() {
                 const now = toggleSave(SET_ITEM);
                 showToast(
                   now
-                    ? "Set added to your library"
-                    : "Removed from your library",
+                    ? t("studio:detail.addedToast")
+                    : t("studio:detail.removedToast"),
                   now ? "success" : "info",
                 );
               }}
             >
               {saved ? (
                 <>
-                  <FiCheck /> In library
+                  <FiCheck /> {t("studio:room.hero.inLibrary")}
                 </>
               ) : (
                 <>
-                  <FiPlus /> Library
+                  <FiPlus /> {t("studio:room.hero.addLibrary")}
                 </>
               )}
             </button>
             <Link to={routes.studioLive} className={ss.bt}>
-              Join the live room →
+              {t("studio:set.page.joinLiveRoomCta")} →
             </Link>
           </div>
         </div>
@@ -109,9 +120,12 @@ export function StudioSetPage() {
       <section className={ss.row}>
         <div className={ss.rowH}>
           <h2>
-            The <em>tracklist</em>
+            <Translation
+              i18nKey="studio:set.page.tracklistHeading"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <span className={s.eb}>Every play pays the artist</span>
+          <span className={s.eb}>{t("studio:set.page.everyPlayPaysNote")}</span>
         </div>
         <div className={ss.setCard}>
           {loading
@@ -147,10 +161,13 @@ export function StudioSetPage() {
                     <div className={ss.pay}>
                       {row.now ? (
                         <>
-                          <b>paying now</b>€0.05
+                          <b>{t("studio:set.page.payingNowLabel")}</b>
+                          {fmt.currency(PER_PLAY_AMOUNT)}
                         </>
                       ) : (
-                        "€0.05 / play"
+                        t("studio:album.main.perPlaySuffix", {
+                          amount: fmt.currency(PER_PLAY_AMOUNT),
+                        })
                       )}
                     </div>
                     <div className={ss.tm}>{row.tm}</div>

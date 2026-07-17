@@ -155,16 +155,26 @@ export const GENRE_FG: Record<Genre, string> = {
   memoir: "var(--ink-60)",
 };
 
-export const GENRE_FILTERS: { id: Genre | "all"; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "fiction", label: "Fiction" },
-  { id: "nonfiction", label: "Non-fiction" },
-  { id: "theory", label: "Theory" },
-  { id: "poetry", label: "Poetry" },
-  { id: "memoir", label: "Memoir" },
+export const GENRE_FILTERS: { id: Genre | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "readingGroups.genre.all" },
+  { id: "fiction", labelKey: "readingGroups.genre.fiction" },
+  { id: "nonfiction", labelKey: "readingGroups.genre.nonfiction" },
+  { id: "theory", labelKey: "readingGroups.genre.theory" },
+  { id: "poetry", labelKey: "readingGroups.genre.poetry" },
+  { id: "memoir", labelKey: "readingGroups.genre.memoir" },
 ];
-export const FORMAT_FILTERS: { id: Format | "all"; label: string }[] = [
-  { id: "all", label: "Any" },
-  { id: "irl", label: "In-person" },
-  { id: "online", label: "Online" },
+export const FORMAT_FILTERS: { id: Format | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "readingGroups.format.filter.any" },
+  { id: "irl", labelKey: "readingGroups.format.filter.irl" },
+  { id: "online", labelKey: "readingGroups.format.filter.online" },
 ];
+
+/** `Genre` doubles as the filter-comparison value — never translated. Its
+ *  display chip resolves via `t(`community:readingGroups.genre.${genre}`)`. */
+export const GENRE_LABEL_KEY: Record<Genre, string> = {
+  fiction: "readingGroups.genre.fiction",
+  nonfiction: "readingGroups.genre.nonfiction",
+  theory: "readingGroups.genre.theory",
+  poetry: "readingGroups.genre.poetry",
+  memoir: "readingGroups.genre.memoir",
+};

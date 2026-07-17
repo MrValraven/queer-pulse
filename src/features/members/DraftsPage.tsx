@@ -7,6 +7,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useDrafts } from "../../app/providers/DraftsProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { DraftsHeader } from "./DraftsHeader";
@@ -58,12 +59,13 @@ function DraftRowSkeleton() {
 
 export function DraftsPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const loading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   const { drafts: userDrafts, addDraft, removeDraft } = useDrafts();
-  const keptMeta = useMemo(() => buildKeptMeta(t), [t]);
+  const keptMeta = useMemo(() => buildKeptMeta(t, fmt), [t, fmt]);
 
   const [category, setCategory] = useState<"all" | DraftCategory>("all");
   const [query, setQuery] = useState("");

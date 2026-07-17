@@ -4,25 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Avatar, Button, FadeIn, Tabs } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../app/routeMap";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { useNotifications } from "./api/useNotifications";
 import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
 import { useMarkAllRead } from "./api/useMarkAllRead";
 import { notificationTabs, type NotifType, type Notification } from "./data";
-import { MENTION_DAYS } from "./mentions.data";
+import { MENTION_UNREAD_IDS } from "./mentions.data";
 import styles from "./NotificationsPage.module.css";
 
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
 type NotificationId = Notification["id"];
 
 /** Unread @-mentions, from the same mock source the Mentions thread renders. */
-const unreadMentions = MENTION_DAYS.reduce(
-  (total, group) => total + group.items.filter((m) => m.unread).length,
-  0,
-);
+const unreadMentions = MENTION_UNREAD_IDS.length;
 
 export function NotificationsPage() {
+  const { t } = useTranslation();
   const { data: notifications = [], isLoading } = useNotifications();
   const markReadMutation = useMarkNotificationRead();
   const markAllReadMutation = useMarkAllRead();
@@ -132,7 +131,7 @@ export function NotificationsPage() {
         <div className={styles.inner}>
           <div className={styles.header}>
             <div className={styles.title}>
-              Notifications
+              {t("notifications:page.title")}
               {unreadCount > 0 && (
                 <span className={styles.badge}>{unreadCount}</span>
               )}
@@ -143,14 +142,14 @@ export function NotificationsPage() {
                 className={styles.markRead}
                 onClick={markAllRead}
               >
-                Mark all as read
+                {t("notifications:page.markAllRead")}
               </button>
               <Button
                 variant="ghost"
                 to={routes.newsletter}
                 style={{ padding: "8px 16px", fontSize: 13 }}
               >
-                Preferences
+                {t("notifications:page.preferences")}
               </Button>
             </div>
           </div>
@@ -161,16 +160,16 @@ export function NotificationsPage() {
             tabs={[
               ...notificationTabs.slice(0, 1).map((tab) => ({
                 id: tab.value,
-                label: tab.label,
+                label: t(tab.labelKey),
               })),
               {
                 id: "mentions",
-                label: "Mentions",
+                label: t("notifications:tabs.mentions"),
                 count: unreadMentions || undefined,
               },
               ...notificationTabs.slice(1).map((tab) => ({
                 id: tab.value,
-                label: tab.label,
+                label: t(tab.labelKey),
               })),
             ]}
             active={filter}
@@ -192,16 +191,24 @@ export function NotificationsPage() {
               <div style={{ fontSize: 40 }}>
                 <FiBell />
               </div>
-              <div className={styles.emptyTitle}>All caught up</div>
-              <div>No notifications in this category.</div>
+              <div className={styles.emptyTitle}>
+                {t("notifications:page.empty.title")}
+              </div>
+              <div>{t("notifications:page.empty.description")}</div>
             </div>
           ) : (
             <div className={styles.list}>
               {recent.length > 0 && (
-                <div className={styles.day}>Today &amp; recent</div>
+                <div className={styles.day}>
+                  {t("notifications:page.dayRecent")}
+                </div>
               )}
               {recent.map((n, i) => renderItem(n, i))}
-              {earlier.length > 0 && <div className={styles.day}>Earlier</div>}
+              {earlier.length > 0 && (
+                <div className={styles.day}>
+                  {t("notifications:page.dayEarlier")}
+                </div>
+              )}
               {earlier.map((n, i) => renderItem(n, recent.length + i))}
             </div>
           )}

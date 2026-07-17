@@ -1294,20 +1294,26 @@ export function getPlace(slug: string | undefined): DirectoryPlace | undefined {
   return slug ? DIRECTORY_PLACES.find((p) => p.slug === slug) : undefined;
 }
 
-/** Weekday hours templates. Index 0 = Monday … 6 = Sunday. */
+/**
+ * Weekday hours templates. Index 0 = Monday … 6 = Sunday. Returns stable
+ * English `dayKey` ids (i18n Pattern A) — the sole consumer,
+ * `DirectorySpaceMain.tsx`, resolves `marketing:directory.days.${dayKey}`
+ * via `t()`. `val` is `null` for a closed day so the consumer can render the
+ * translated "Closed" chrome instead of a baked-in English string.
+ */
 export function hoursRows(
   type: HoursType,
-): { day: string; val: string; closed: boolean }[] {
+): { dayKey: string; val: string | null; closed: boolean }[] {
   const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
   ];
-  const t: Record<HoursType, (string | null)[]> = {
+  const hoursByType: Record<HoursType, (string | null)[]> = {
     cafe: [
       null,
       "08:00 — 20:00",
@@ -1382,8 +1388,8 @@ export function hoursRows(
       null,
     ],
   };
-  return days.map((day, i) => {
-    const val = t[type][i];
-    return { day, val: val ?? "Closed", closed: val === null };
+  return days.map((dayKey, i) => {
+    const val = hoursByType[type][i] ?? null;
+    return { dayKey, val, closed: val === null };
   });
 }

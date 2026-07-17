@@ -18,32 +18,36 @@ export interface RateEntry {
   type: RateType;
 }
 
-export const EXPERIENCE_OPTIONS: { value: Experience; label: string }[] = [
-  { value: "junior", label: "Junior (0–2 yrs)" },
-  { value: "mid", label: "Mid (3–5 yrs)" },
-  { value: "senior", label: "Senior (6–9 yrs)" },
-  { value: "lead", label: "Lead (10+ yrs)" },
+/** i18n Pattern A — labelKey resolved via t() by RateBoardForm. */
+export const EXPERIENCE_OPTIONS: { value: Experience; labelKey: string }[] = [
+  { value: "junior", labelKey: "economy:rateBoard.experienceOption.junior" },
+  { value: "mid", labelKey: "economy:rateBoard.experienceOption.mid" },
+  { value: "senior", labelKey: "economy:rateBoard.experienceOption.senior" },
+  { value: "lead", labelKey: "economy:rateBoard.experienceOption.lead" },
 ];
 
-export const TYPE_OPTIONS: { value: RateType; label: string }[] = [
-  { value: "freelance", label: "Freelance" },
-  { value: "employed", label: "Employed (day equivalent)" },
+export const TYPE_OPTIONS: { value: RateType; labelKey: string }[] = [
+  { value: "freelance", labelKey: "economy:rateBoard.typeOption.freelance" },
+  { value: "employed", labelKey: "economy:rateBoard.typeOption.employed" },
 ];
 
-export const ROLE_OPTIONS: string[] = [
-  "Designer",
-  "Software Engineer",
-  "Writer",
-  "Photographer",
-  "Consultant",
-  "Other",
+export const ROLE_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Designer", labelKey: "economy:rateBoard.roleOption.designer" },
+  {
+    value: "Software Engineer",
+    labelKey: "economy:rateBoard.roleOption.softwareEngineer",
+  },
+  { value: "Writer", labelKey: "economy:rateBoard.roleOption.writer" },
+  {
+    value: "Photographer",
+    labelKey: "economy:rateBoard.roleOption.photographer",
+  },
+  { value: "Consultant", labelKey: "economy:rateBoard.roleOption.consultant" },
+  { value: "Other", labelKey: "economy:rateBoard.roleOption.other" },
 ];
 
 /** Shown wherever community-reported figures appear. Not verified, not advice. */
-export const RB_DISCLAIMER =
-  "Shared anonymously by community members and not verified — figures are " +
-  "self-reported and individual situations differ. Treat this as a starting " +
-  "point for the conversation, not a guarantee. Saved on this device only.";
+export const RB_DISCLAIMER_KEY = "economy:rateBoard.disclaimer";
 
 /** Collision-resistant enough for a local prototype. */
 export const newRateId = () =>

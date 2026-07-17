@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { MENTORS } from "./mentorship.data";
 import { MentorDetailSkeleton } from "./MentorDetailSkeleton";
@@ -14,6 +15,7 @@ import { MentorMatchModal } from "./MentorMatchModal";
 import styles from "./MentorDetailPage.module.css";
 
 export function MentorDetailPage() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const idx = MENTORS.findIndex((m) => m.slug === slug);
   const loading = useSimulatedLoad();
@@ -31,7 +33,7 @@ export function MentorDetailPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={base} className={styles.back}>
-          ← All mentors
+          {t("economy:mentorDetail.backToAll")}
         </Link>
 
         <MentorCycleNav

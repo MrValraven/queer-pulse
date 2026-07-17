@@ -1,5 +1,8 @@
+import type { TFunction } from "../../shared/i18n/types";
+
 export interface Integration {
   id: string;
+  /** Provider/app brand name — proper noun, never translated. */
   name: string;
   /** Single-letter glyph used in the tinted logo tile. */
   glyph: string;
@@ -9,76 +12,80 @@ export interface Integration {
 }
 
 /** Sign-in providers that can be linked via the simulated OAuth modal. */
-export const LINK_PROVIDERS: Record<string, Integration> = {
-  apple: {
-    id: "apple",
-    name: "Apple",
-    glyph: "",
-    desc: "Use Sign in with Apple as an alternative way into QueerPulse.",
-    scopes: [
-      "Confirm your Apple ID email (or a private relay address)",
-      "Tell Apple you have a QueerPulse account — nothing about what you do here",
-      "Never see your messages, posts, or community memberships",
-    ],
-  },
-};
+export function buildLinkProviders(t: TFunction): Record<string, Integration> {
+  return {
+    apple: {
+      id: "apple",
+      name: "Apple",
+      glyph: "",
+      desc: t("settings:integrations.apple.desc"),
+      scopes: [
+        t("settings:integrations.apple.scope1"),
+        t("settings:integrations.apple.scope2"),
+        t("settings:integrations.apple.scope3"),
+      ],
+    },
+  };
+}
 
 /** Available integrations shown in the "Browse" gallery modal. */
-export const AVAILABLE_INTEGRATIONS: Integration[] = [
-  {
-    id: "stripe",
-    name: "Stripe",
-    glyph: "S",
-    desc: "Sustainer billing and payouts for paid gatherings you host.",
-    scopes: [],
-  },
-  {
-    id: "mastodon",
-    name: "Mastodon",
-    glyph: "M",
-    desc: "Cross-post your public articles to your fediverse account. Posts only.",
-    scopes: [],
-  },
-  {
-    id: "spotify",
-    name: "Spotify",
-    glyph: "S",
-    desc: "Power Audio Rooms with shared listening. No library access.",
-    scopes: [],
-  },
-  {
-    id: "ical",
-    name: "iCal export",
-    glyph: "C",
-    desc: "Subscribe to your RSVP’d gatherings from any calendar app.",
-    scopes: [],
-  },
-  {
-    id: "notion",
-    name: "Notion",
-    glyph: "N",
-    desc: "Save articles and resources straight to a Notion database.",
-    scopes: [],
-  },
-  {
-    id: "readwise",
-    name: "Readwise",
-    glyph: "R",
-    desc: "Send your highlights from long-read editions to Readwise.",
-    scopes: [],
-  },
-  {
-    id: "matrix",
-    name: "Matrix",
-    glyph: "X",
-    desc: "Bridge community chat to an encrypted Matrix room.",
-    scopes: [],
-  },
-  {
-    id: "pinboard",
-    name: "Pinboard",
-    glyph: "P",
-    desc: "Bookmark resources and articles to your Pinboard account.",
-    scopes: [],
-  },
-];
+export function buildAvailableIntegrations(t: TFunction): Integration[] {
+  return [
+    {
+      id: "stripe",
+      name: "Stripe",
+      glyph: "S",
+      desc: t("settings:integrations.stripe.desc"),
+      scopes: [],
+    },
+    {
+      id: "mastodon",
+      name: "Mastodon",
+      glyph: "M",
+      desc: t("settings:integrations.mastodon.desc"),
+      scopes: [],
+    },
+    {
+      id: "spotify",
+      name: "Spotify",
+      glyph: "S",
+      desc: t("settings:integrations.spotify.desc"),
+      scopes: [],
+    },
+    {
+      id: "ical",
+      name: "iCal export",
+      glyph: "C",
+      desc: t("settings:integrations.ical.desc"),
+      scopes: [],
+    },
+    {
+      id: "notion",
+      name: "Notion",
+      glyph: "N",
+      desc: t("settings:integrations.notion.desc"),
+      scopes: [],
+    },
+    {
+      id: "readwise",
+      name: "Readwise",
+      glyph: "R",
+      desc: t("settings:integrations.readwise.desc"),
+      scopes: [],
+    },
+    {
+      id: "matrix",
+      name: "Matrix",
+      glyph: "X",
+      desc: t("settings:integrations.matrix.desc"),
+      scopes: [],
+    },
+    {
+      id: "pinboard",
+      name: "Pinboard",
+      glyph: "P",
+      desc: t("settings:integrations.pinboard.desc"),
+      scopes: [],
+    },
+  ];
+}

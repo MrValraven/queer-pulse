@@ -1,4 +1,5 @@
 import { ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COVER,
   COLLECTIONS,
@@ -23,15 +24,19 @@ export function StudioProgramSlate({
   onSwap,
   onEditNote,
 }: SlateProps) {
+  const { t } = useTranslation();
   const placed = singles.length;
-  const open = Math.max(0, 14 - placed);
+  const totalSlots = 14;
+  const open = Math.max(0, totalSlots - placed);
 
   return (
     <div className={s.slate}>
       <section className={s.group}>
         <div className={s.groupHead}>
-          <h2>Cover artist of the week</h2>
-          <span className={s.count}>1 of 1 · the room's headline</span>
+          <h2>{t("studio:program.slate.cover.heading")}</h2>
+          <span className={s.count}>
+            {t("studio:program.slate.cover.count")}
+          </span>
         </div>
         <div className={s.coverSlot}>
           <div className={s.coverArt}>
@@ -53,10 +58,10 @@ export function StudioProgramSlate({
             <blockquote className={s.coverNote}>{COVER.note}</blockquote>
             <div className={s.coverActions}>
               <button type="button" className={s.chip} onClick={onSwap}>
-                Swap
+                {t("studio:program.slate.cover.swapCta")}
               </button>
               <button type="button" className={s.chip} onClick={onEditNote}>
-                Edit note
+                {t("studio:program.slate.cover.editNoteCta")}
               </button>
             </div>
           </div>
@@ -65,24 +70,28 @@ export function StudioProgramSlate({
 
       <section className={s.group}>
         <div className={s.groupHead}>
-          <h2>This week's singles</h2>
+          <h2>{t("studio:program.slate.singles.heading")}</h2>
           <span className={s.count}>
-            {placed} of 14 placed · {open} slots open
+            {t("studio:program.slate.singles.count", {
+              placed,
+              total: totalSlots,
+              open,
+            })}
           </span>
         </div>
         <div className={s.tracks}>
-          {singles.map((t, i) => (
-            <div key={t.id} className={s.trackSlot}>
+          {singles.map((single, singleIndex) => (
+            <div key={single.id} className={s.trackSlot}>
               <span className={s.grip} aria-hidden>
                 <span className={s.gripDots}>≡</span>
                 <span className={s.gripNo}>
-                  {String(i + 1).padStart(2, "0")}
+                  {String(singleIndex + 1).padStart(2, "0")}
                 </span>
               </span>
               <span className={s.trackCov}>
                 <ImageSlot
-                  src={t.image}
-                  tint={t.tint}
+                  src={single.image}
+                  tint={single.tint}
                   width={44}
                   height={44}
                   radius={7}
@@ -91,51 +100,60 @@ export function StudioProgramSlate({
               </span>
               <div className={s.trackMeta}>
                 <div className={s.trackTitle}>
-                  {t.titlePre}
-                  <em>{t.titleEm}</em>
+                  {single.titlePre}
+                  <em>{single.titleEm}</em>
                 </div>
-                <div className={s.trackWho}>{t.who}</div>
+                <div className={s.trackWho}>{single.who}</div>
               </div>
               <input
                 className={s.noteField}
-                value={t.note}
-                placeholder="— write a one-line note · why this, why now —"
-                onChange={(e) => onNoteChange(t.id, e.target.value)}
-                aria-label={`Note for ${t.titlePre}${t.titleEm}`}
+                value={single.note}
+                placeholder={t("studio:program.slate.singles.notePlaceholder")}
+                onChange={(e) => onNoteChange(single.id, e.target.value)}
+                aria-label={t("studio:program.slate.singles.noteAria", {
+                  title: `${single.titlePre}${single.titleEm}`,
+                })}
               />
               <button
                 type="button"
                 className={s.remove}
-                onClick={() => onRemove(t.id)}
-                aria-label={`Remove ${t.titlePre}${t.titleEm}`}
+                onClick={() => onRemove(single.id)}
+                aria-label={t("studio:program.slate.singles.removeAria", {
+                  title: `${single.titlePre}${single.titleEm}`,
+                })}
               >
                 ×
               </button>
             </div>
           ))}
           <button type="button" className={s.emptySlot}>
-            ＋ drag a track from submissions, or click to add from catalogue
+            {t("studio:program.slate.singles.addSlotCta")}
           </button>
         </div>
       </section>
 
       <section className={s.group}>
         <div className={s.groupHead}>
-          <h2>Collection rotation</h2>
-          <span className={s.count}>3 of 3</span>
+          <h2>{t("studio:program.slate.collections.heading")}</h2>
+          <span className={s.count}>
+            {t("studio:program.slate.collections.count", {
+              placed: COLLECTIONS.length,
+              total: COLLECTIONS.length,
+            })}
+          </span>
         </div>
         <div className={s.colls}>
-          {COLLECTIONS.map((c) => (
-            <div key={c.id} className={s.collSlot}>
+          {COLLECTIONS.map((collection) => (
+            <div key={collection.id} className={s.collSlot}>
               <div className={s.collMeta}>
                 <div className={s.collTitle}>
-                  {c.titlePre}
-                  <em>{c.titleEm}</em>
+                  {collection.titlePre}
+                  <em>{collection.titleEm}</em>
                 </div>
-                <div className={s.collSub}>{c.meta}</div>
+                <div className={s.collSub}>{collection.meta}</div>
               </div>
-              <span className={`${s.collBadge} ${s[c.badgeTone]}`}>
-                {c.badge}
+              <span className={`${s.collBadge} ${s[collection.badgeTone]}`}>
+                {collection.badge}
               </span>
             </div>
           ))}
@@ -144,28 +162,33 @@ export function StudioProgramSlate({
 
       <section className={s.group}>
         <div className={s.groupHead}>
-          <h2>Live broadcasts this week</h2>
-          <span className={s.count}>2 scheduled · slot 3 open</span>
+          <h2>{t("studio:program.slate.broadcasts.heading")}</h2>
+          <span className={s.count}>
+            {t("studio:program.slate.broadcasts.count", {
+              scheduled: BROADCASTS.length,
+              slotNumber: BROADCASTS.length + 1,
+            })}
+          </span>
         </div>
         <div className={s.bcasts}>
-          {BROADCASTS.map((b) => (
-            <div key={b.id} className={s.bcast}>
+          {BROADCASTS.map((broadcast) => (
+            <div key={broadcast.id} className={s.bcast}>
               <div className={s.dateBox}>
-                <b>{b.day}</b>
-                <span>{b.weekday}</span>
+                <b>{broadcast.day}</b>
+                <span>{broadcast.weekday}</span>
               </div>
               <div className={s.bcastMeta}>
                 <div className={s.bcastTitle}>
-                  {b.titlePre}
-                  <em>{b.titleEm}</em>
+                  {broadcast.titlePre}
+                  <em>{broadcast.titleEm}</em>
                 </div>
-                <div className={s.bcastSub}>{b.meta}</div>
+                <div className={s.bcastSub}>{broadcast.meta}</div>
               </div>
-              <span className={s.timePill}>{b.time}</span>
+              <span className={s.timePill}>{broadcast.time}</span>
             </div>
           ))}
           <button type="button" className={s.emptySlot}>
-            ＋ schedule a third broadcast for Saturday late
+            {t("studio:program.slate.broadcasts.addSlotCta")}
           </button>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
@@ -35,6 +36,7 @@ export function PostJobComposer({
   onSwitchCompany: () => void;
   onPublished: (job: Job) => void;
 }) {
+  const { t } = useTranslation();
   const form = usePostJobForm();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -70,7 +72,7 @@ export function PostJobComposer({
   function next() {
     if (!form.stepValid(step)) {
       setShowErrors(true);
-      showToast("Please fill the highlighted fields.", "error");
+      showToast(t("economy:postJob.toast.fillHighlighted"), "error");
       return;
     }
     setShowErrors(false);
@@ -86,10 +88,7 @@ export function PostJobComposer({
   async function publish() {
     if (!form.canPublish) {
       setShowErrors(true);
-      showToast(
-        "Add a title, description, and agree to the Code of Care.",
-        "error",
-      );
+      showToast(t("economy:postJob.toast.agreeRequired"), "error");
       return;
     }
     const job = form.toJob(company, role);
@@ -112,14 +111,13 @@ export function PostJobComposer({
     } catch (err) {
       if (err instanceof ApiError && err.status === 403) {
         showToast(
-          `You're not authorised to post for ${company.nameText}. Switch to a company you're on the team of.`,
+          t("economy:postJob.toast.notAuthorised", {
+            company: company.nameText,
+          }),
           "error",
         );
       } else {
-        showToast(
-          "We couldn't publish your listing. Please try again.",
-          "error",
-        );
+        showToast(t("economy:postJob.toast.publishError"), "error");
       }
     }
   }
@@ -132,12 +130,14 @@ export function PostJobComposer({
           className={styles.back}
           onClick={() => navigate(routes.jobs)}
         >
-          <FiChevronLeft aria-hidden /> Jobs &amp; skills
+          <FiChevronLeft aria-hidden /> {t("economy:postJob.topbar.back")}
         </button>
         <span className={styles.spacerFlex} />
         <span className={styles.autosave}>
           <span className={styles.svDot} aria-hidden />
-          {form.justSaved ? "Saved just now" : "Draft autosaves as you type"}
+          {form.justSaved
+            ? t("economy:postJob.topbar.savedJustNow")
+            : t("economy:postJob.topbar.autosaves")}
         </span>
       </div>
 
@@ -167,30 +167,32 @@ export function PostJobComposer({
           <div className={styles.stepNav}>
             {step > 0 && (
               <Button variant="ghost" onClick={prev}>
-                ← Back
+                {t("economy:postJob.nav.back")}
               </Button>
             )}
             <span className={styles.spacerFlex} />
             {step < LAST ? (
               <Button variant="primary" onClick={next}>
-                Continue →
+                {t("economy:postJob.nav.continue")}
               </Button>
             ) : (
               <>
                 <Button
                   variant="ghost"
                   onClick={() =>
-                    showToast("Draft saved to your company.", "success")
+                    showToast(t("economy:postJob.toast.saveDraft"), "success")
                   }
                 >
-                  Save draft
+                  {t("economy:postJob.nav.saveDraft")}
                 </Button>
                 <Button
                   variant="primary"
                   disabled={!form.canPublish || createJob.isPending}
                   onClick={publish}
                 >
-                  {createJob.isPending ? "Publishing…" : "Publish listing"}
+                  {createJob.isPending
+                    ? t("economy:postJob.nav.publishing")
+                    : t("economy:postJob.nav.publish")}
                 </Button>
               </>
             )}

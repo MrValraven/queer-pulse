@@ -2,23 +2,39 @@ import { useState } from "react";
 import { FiBell, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import styles from "./SettingsModal.module.css";
+
+export type FrequencyId = "instant" | "daily" | "weekly";
+export type LocationId =
+  "lisbon" | "remotePt" | "anywhere" | "porto" | "berlin";
 
 export interface AlertDraft {
   id: string;
   title: string;
   keywords: string;
-  location: string;
+  location: LocationId;
   minSalary: string;
-  frequency: string;
+  frequencyId: FrequencyId;
 }
 
-const FREQUENCIES = ["Instant alerts", "Daily digest", "Weekly digest"];
-const LOCATIONS = ["Lisbon", "Remote (PT)", "Anywhere", "Porto", "Berlin"];
+const FREQUENCIES: FrequencyId[] = ["instant", "daily", "weekly"];
+const LOCATIONS: LocationId[] = [
+  "lisbon",
+  "remotePt",
+  "anywhere",
+  "porto",
+  "berlin",
+];
 
 /**
  * Create / edit a saved-search job alert. Pre-filled when `initial` is given.
  * Saving reports the draft back to the page; success shows a plum panel.
+ *
+ * `location`/`frequencyId` are stable English ids — never the translated
+ * label — so a language switch can't desync the `<select>`'s bound value
+ * from its rendered option text (§5.1).
  */
 export function AlertBuilderModal({
   initial,
@@ -29,17 +45,23 @@ export function AlertBuilderModal({
   onClose: () => void;
   onSave: (draft: AlertDraft) => void;
 }) {
+  const { t } = useTranslation();
   const editing = Boolean(initial);
   const [title, setTitle] = useState(initial?.title ?? "");
   const [keywords, setKeywords] = useState(initial?.keywords ?? "");
-  const [location, setLocation] = useState(initial?.location ?? LOCATIONS[0]!);
+  const [location, setLocation] = useState<LocationId>(
+    initial?.location ?? LOCATIONS[0]!,
+  );
   const [minSalary, setMinSalary] = useState(initial?.minSalary ?? "");
-  const [frequency, setFrequency] = useState(
-    initial?.frequency ?? FREQUENCIES[2]!,
+  const [frequencyId, setFrequencyId] = useState<FrequencyId>(
+    initial?.frequencyId ?? "weekly",
   );
   const [done, setDone] = useState(false);
   useScrollLock();
 
+  const frequencyLabel = t(
+    `settings:subscriptions.alertBuilder.frequency.${frequencyId}`,
+  );
   const valid = title.trim().length > 0 && keywords.trim().length > 0;
 
   function save() {
@@ -50,7 +72,7 @@ export function AlertBuilderModal({
       keywords: keywords.trim(),
       location,
       minSalary: minSalary.trim(),
-      frequency,
+      frequencyId,
     });
     setDone(true);
   }
@@ -66,13 +88,17 @@ export function AlertBuilderModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={editing ? "Edit alert" : "New saved search"}
+        aria-label={t(
+          editing
+            ? "settings:subscriptions.alertBuilder.ariaLabel.edit"
+            : "settings:subscriptions.alertBuilder.ariaLabel.new",
+        )}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("settings:modals.common.close")}
         >
           ×
         </button>
@@ -80,87 +106,134 @@ export function AlertBuilderModal({
         {!done ? (
           <>
             <div className={styles.eye}>
-              {editing ? "Edit alert" : "New saved search"}
+              {t(
+                editing
+                  ? "settings:subscriptions.alertBuilder.ariaLabel.edit"
+                  : "settings:subscriptions.alertBuilder.ariaLabel.new",
+              )}
             </div>
             <div className={styles.title}>
-              {editing ? "Tune your " : "Build a "}
-              <em>job alert.</em>
+              <Translation
+                i18nKey={
+                  editing
+                    ? "settings:subscriptions.alertBuilder.title.edit"
+                    : "settings:subscriptions.alertBuilder.title.new"
+                }
+                components={{ em: <em /> }}
+              />
             </div>
             <p className={styles.desc}>
-              We’ll match new listings against your criteria and send them on
-              your chosen cadence.
+              {t("settings:subscriptions.alertBuilder.desc")}
             </p>
             <div className={styles.fields}>
               <div className={styles.field}>
                 <label className={styles.label}>
-                  Alert name <span className={styles.req}>*</span>
+                  {t(
+                    "settings:subscriptions.alertBuilder.field.alertName.label",
+                  )}{" "}
+                  <span className={styles.req}>*</span>
                 </label>
                 <input
                   className={styles.input}
                   type="text"
-                  placeholder="e.g. Designer roles · Lisbon"
+                  placeholder={t(
+                    "settings:subscriptions.alertBuilder.field.alertName.placeholder",
+                  )}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
               <div className={styles.field}>
                 <label className={styles.label}>
-                  Title keywords <span className={styles.req}>*</span>
+                  {t(
+                    "settings:subscriptions.alertBuilder.field.titleKeywords.label",
+                  )}{" "}
+                  <span className={styles.req}>*</span>
                 </label>
                 <input
                   className={styles.input}
                   type="text"
-                  placeholder="e.g. Designer · senior · mid"
+                  placeholder={t(
+                    "settings:subscriptions.alertBuilder.field.titleKeywords.placeholder",
+                  )}
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                 />
                 <span className={styles.hint}>
-                  Comma-separated. Matches any of these.
+                  {t(
+                    "settings:subscriptions.alertBuilder.field.titleKeywords.hint",
+                  )}
                 </span>
               </div>
               <div className={styles.fieldRow}>
                 <div className={styles.field}>
-                  <label className={styles.label}>Location</label>
+                  <label className={styles.label}>
+                    {t(
+                      "settings:subscriptions.alertBuilder.field.location.label",
+                    )}
+                  </label>
                   <select
                     className={styles.select}
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={(e) => setLocation(e.target.value as LocationId)}
                   >
-                    {LOCATIONS.map((l) => (
-                      <option key={l}>{l}</option>
+                    {LOCATIONS.map((locationId) => (
+                      <option key={locationId} value={locationId}>
+                        {t(
+                          `settings:subscriptions.alertBuilder.location.${locationId}`,
+                        )}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <div className={styles.field}>
-                  <label className={styles.label}>Min salary</label>
+                  <label className={styles.label}>
+                    {t(
+                      "settings:subscriptions.alertBuilder.field.minSalary.label",
+                    )}
+                  </label>
                   <input
                     className={styles.input}
                     type="text"
-                    placeholder="e.g. €32k"
+                    placeholder={t(
+                      "settings:subscriptions.alertBuilder.field.minSalary.placeholder",
+                    )}
                     value={minSalary}
                     onChange={(e) => setMinSalary(e.target.value)}
                   />
                 </div>
               </div>
               <div className={styles.field}>
-                <label className={styles.label}>How often</label>
+                <label className={styles.label}>
+                  {t(
+                    "settings:subscriptions.alertBuilder.field.frequency.label",
+                  )}
+                </label>
                 <select
                   className={styles.select}
-                  value={frequency}
-                  onChange={(e) => setFrequency(e.target.value)}
+                  value={frequencyId}
+                  onChange={(e) =>
+                    setFrequencyId(e.target.value as FrequencyId)
+                  }
                 >
-                  {FREQUENCIES.map((f) => (
-                    <option key={f}>{f}</option>
+                  {FREQUENCIES.map((id) => (
+                    <option key={id} value={id}>
+                      {t(`settings:subscriptions.alertBuilder.frequency.${id}`)}
+                    </option>
                   ))}
                 </select>
               </div>
             </div>
             <div className={styles.actions}>
               <Button variant="primary" onClick={save} disabled={!valid}>
-                {editing ? "Save changes" : "Create alert"}
+                {t(
+                  editing
+                    ? "settings:subscriptions.alertBuilder.action.saveChanges"
+                    : "settings:subscriptions.alertBuilder.action.createAlert",
+                )}
               </Button>
               <Button variant="ghost" onClick={onClose}>
-                Cancel
+                {t("settings:subscriptions.alertBuilder.action.cancel")}
               </Button>
             </div>
           </>
@@ -170,23 +243,24 @@ export function AlertBuilderModal({
               {editing ? <FiCheck size={28} /> : <FiBell size={26} />}
             </div>
             <div className={styles.successTitle}>
-              {editing ? (
-                <>
-                  Alert <em>updated.</em>
-                </>
-              ) : (
-                <>
-                  Alert <em>created.</em>
-                </>
-              )}
+              <Translation
+                i18nKey={
+                  editing
+                    ? "settings:subscriptions.alertBuilder.success.updatedTitle"
+                    : "settings:subscriptions.alertBuilder.success.createdTitle"
+                }
+                components={{ em: <em /> }}
+              />
             </div>
             <p className={styles.successSub}>
-              “{title.trim()}” is live on a {frequency.toLowerCase()}. We’ll let
-              you know the moment a matching role appears.
+              {t("settings:subscriptions.alertBuilder.success.sub", {
+                title: title.trim(),
+                frequency: frequencyLabel.toLowerCase(),
+              })}
             </p>
             <div className={styles.successActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("settings:subscriptions.alertBuilder.success.done")}
               </Button>
             </div>
           </div>

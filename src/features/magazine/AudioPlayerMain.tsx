@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HOME, MEMBER, SHOW, secToTime } from "./audioPlayer.data";
 import { CastModal, SleepTimerModal } from "./AudioPlayerModals";
 import { PlayerTransport, PlayerSecondary } from "./AudioPlayerControls";
@@ -8,15 +9,16 @@ import type { AudioPlayer } from "./useAudioPlayer";
 import styles from "./AudioPlayerPage.module.css";
 
 function PlayerTopbar({ onCast }: { onCast: () => void }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const share = () => {
     if (navigator.clipboard) navigator.clipboard.writeText(location.href);
-    showToast("Link copied", "success");
+    showToast(t("magazine:audio.linkCopiedToast"), "success");
   };
   return (
     <div className={styles.topbar}>
       <Link to={SHOW} className={styles.back}>
-        ← Back to show
+        {t("magazine:audio.backToShow")}
       </Link>
       <Link to={HOME} className={styles.brand}>
         <span className={styles.brandDot} />
@@ -26,7 +28,7 @@ function PlayerTopbar({ onCast }: { onCast: () => void }) {
         <button
           type="button"
           className={styles.iconBtn}
-          title="Share"
+          title={t("magazine:audio.shareTitle")}
           onClick={share}
         >
           <svg viewBox="0 0 24 24">
@@ -40,7 +42,7 @@ function PlayerTopbar({ onCast }: { onCast: () => void }) {
         <button
           type="button"
           className={styles.iconBtn}
-          title="Cast / AirPlay"
+          title={t("magazine:audio.castTitle")}
           onClick={onCast}
         >
           <svg viewBox="0 0 24 24">
@@ -54,6 +56,7 @@ function PlayerTopbar({ onCast }: { onCast: () => void }) {
 }
 
 export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
+  const { t } = useTranslation();
   const [castOpen, setCastOpen] = useState(false);
   const [sleepOpen, setSleepOpen] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
@@ -94,7 +97,7 @@ export function AudioPlayerMain({ player }: { player: AudioPlayer }) {
               className={styles.bar}
               role="slider"
               tabIndex={0}
-              aria-label="Seek"
+              aria-label={t("magazine:audio.seekAriaLabel")}
               aria-valuemin={0}
               aria-valuemax={player.duration}
               aria-valuenow={Math.floor(player.currentTime)}

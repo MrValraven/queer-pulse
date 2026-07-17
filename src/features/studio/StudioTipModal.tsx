@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import styles from "./StudioTipModal.module.css";
 
 const PRESETS = [2, 5, 10];
@@ -21,6 +24,8 @@ export function StudioTipModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [phase, setPhase] = useState<Phase>("pick");
   const [amount, setAmount] = useState(2);
   const [custom, setCustom] = useState("");
@@ -52,13 +57,13 @@ export function StudioTipModal({
           .join(" ")}
         role="dialog"
         aria-modal="true"
-        aria-label={`Send a tip to ${recipient}`}
+        aria-label={t("studio:tipModal.dialogAria", { recipient })}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("studio:tipModal.closeAria")}
         >
           ×
         </button>
@@ -69,24 +74,29 @@ export function StudioTipModal({
               <FiCheck size={26} aria-hidden />
             </div>
             <h2>
-              Thank you — that's <em>€{value}</em> to {recipient}.
+              <Translation
+                i18nKey="studio:tipModal.success.title"
+                components={{ em: <em /> }}
+                values={{ amount: fmt.currency(value), recipient }}
+              />
             </h2>
-            <p>
-              100% of your tip reaches {recipient} directly. No platform cut, no
-              processing skimmed off the top.
-            </p>
+            <p>{t("studio:tipModal.success.body", { recipient })}</p>
             <Button variant="ghost-dark" size="lg" onClick={onClose}>
-              Back to the music
+              {t("studio:tipModal.success.backCta")}
             </Button>
           </div>
         ) : (
           <>
-            <div className={styles.eb}>Tip · 100% to the artist</div>
+            <div className={styles.eb}>{t("studio:tipModal.eyebrow")}</div>
             <div className={styles.title}>
-              Send a tip to <em>{recipient}</em>
+              <Translation
+                i18nKey="studio:tipModal.title"
+                components={{ em: <em /> }}
+                values={{ recipient }}
+              />
             </div>
             <div className={styles.sub}>
-              Tips pass through untouched — every cent lands with {recipient}.
+              {t("studio:tipModal.sub", { recipient })}
             </div>
 
             <div className={styles.amounts}>
@@ -105,7 +115,7 @@ export function StudioTipModal({
                     setCustom("");
                   }}
                 >
-                  €{p}
+                  {fmt.currency(p)}
                 </button>
               ))}
             </div>
@@ -116,7 +126,7 @@ export function StudioTipModal({
                 type="number"
                 min={1}
                 inputMode="decimal"
-                placeholder="Custom amount"
+                placeholder={t("studio:tipModal.customPlaceholder")}
                 value={custom}
                 onChange={(e) => setCustom(e.target.value)}
               />
@@ -131,15 +141,22 @@ export function StudioTipModal({
             >
               {phase === "sending" ? (
                 <>
-                  <span className={styles.spinner} aria-hidden /> Sending…
+                  <span className={styles.spinner} aria-hidden />{" "}
+                  {t("studio:tipModal.sendingCta")}
                 </>
               ) : (
-                <>Tip €{value || 0} →</>
+                t("studio:tipModal.sendCta", {
+                  amount: fmt.currency(value || 0),
+                })
               )}
             </Button>
 
             <div className={styles.note}>
-              Pays {recipient} on top of streaming · <em>nothing skimmed</em>
+              <Translation
+                i18nKey="studio:tipModal.note"
+                components={{ em: <em /> }}
+                values={{ recipient }}
+              />
             </div>
           </>
         )}

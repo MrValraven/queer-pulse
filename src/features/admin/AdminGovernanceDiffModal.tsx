@@ -1,5 +1,7 @@
 import { FiUsers } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminModal } from "./ui";
 import { routes } from "../../app/routeMap";
 import { CARE_DIFF, type DiffLine } from "./adminGovernance.data";
@@ -12,32 +14,36 @@ const SIGN: Record<DiffLine["kind"], string> = {
 };
 
 export function AdminGovernanceDiffModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   return (
     <AdminModal
       wide
-      eyebrow="Policy change"
+      eyebrow={t("admin:governance.diff.eyebrow")}
       title={
-        <>
-          v4.1 → <em>v4.2</em>
-        </>
+        <Translation
+          i18nKey="admin:governance.diff.title"
+          components={{ em: <em /> }}
+        />
       }
       onClose={onClose}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            Close
+            {t("admin:governance.diff.closeCta")}
           </Button>
           <Button variant="primary" to={routes.governance} onClick={onClose}>
-            Read full v4.2 →
+            {t("admin:governance.diff.readFullCta")} →
           </Button>
         </>
       }
     >
       <p className={styles.diffIntro}>
-        <strong>Section 3 — Harm we treat as urgent.</strong> Ratified 12 Jun
-        2026, 89% in favour.
+        <strong>{t("admin:governance.diff.introTitle")}</strong>{" "}
+        {t("admin:governance.diff.introDate")}
       </p>
 
+      {/* CARE_DIFF line text: versioned policy-change content, mirrors an
+          API-fetched diff in live mode — left in English per scope rule. */}
       <div className={styles.diff} role="list">
         {CARE_DIFF.map((line, i) => (
           <div
@@ -55,8 +61,7 @@ export function AdminGovernanceDiffModal({ onClose }: { onClose: () => void }) {
 
       <p className={styles.diffNote}>
         <FiUsers className={styles.diffNoteIco} aria-hidden />
-        Proposed by the Trans &amp; Friends moderators · voted on by the whole
-        community at the Annual Assembly.
+        {t("admin:governance.diff.note")}
       </p>
     </AdminModal>
   );

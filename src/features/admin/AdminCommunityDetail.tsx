@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminTabs, AdminAvatar, type AdminTab } from "./ui";
 import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
 import { SettingsPane } from "./AdminCommunitySettings";
@@ -17,25 +19,34 @@ export function AdminCommunityDetail({
   community: Community;
   onBack: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [active, setActive] = useState("queue");
   const [health, setHealth] = useState(false);
   const [support, setSupport] = useState(false);
 
   const tabs: AdminTab[] = [
-    { id: "queue", label: "Scoped queue", count: community.reports },
-    { id: "members", label: "Members" },
-    { id: "settings", label: "Settings" },
+    {
+      id: "queue",
+      label: t("admin:communities.detail.tabs.queue"),
+      count: community.reports,
+    },
+    { id: "members", label: t("admin:communities.detail.tabs.members") },
+    { id: "settings", label: t("admin:communities.detail.tabs.settings") },
   ];
 
   const words = community.name.split(/\s+/);
   const lead = words.slice(0, -1).join(" ");
   const lastWord = words[words.length - 1];
 
+  const healthLabel = t(
+    `admin:communities.detail.health.${labelFor(community.health)}`,
+  );
+
   return (
     <FadeIn>
       <button type="button" className={styles.backLink} onClick={onBack}>
-        <FiArrowLeft aria-hidden /> All communities
+        <FiArrowLeft aria-hidden /> {t("admin:communities.detail.backCta")}
       </button>
 
       <div className={styles.hero}>
@@ -50,9 +61,11 @@ export function AdminCommunityDetail({
             <em>{lastWord}</em>
           </h1>
           <p className={styles.heroDesc}>
-            {community.desc} Stewarded by {community.mods.length} moderator
-            {community.mods.length > 1 ? "s" : ""} · founded {community.founded}
-            .
+            {community.desc}{" "}
+            {t("admin:communities.detail.stewardedBy", {
+              count: community.mods.length,
+              founded: community.founded,
+            })}
           </p>
           <div className={styles.heroChips}>
             <button
@@ -61,16 +74,19 @@ export function AdminCommunityDetail({
               onClick={() => setHealth(true)}
             >
               <span className={styles.healthChipDot} aria-hidden />
-              Health {community.health} · {labelFor(community.health)}
+              {t("admin:communities.detail.healthChip", {
+                score: community.health,
+                label: healthLabel,
+              })}
             </button>
             <Button
               variant="ghost"
               size="md"
               onClick={() =>
-                showToast("Community settings would open here", "info")
+                showToast(t("admin:communities.detail.settingsToast"), "info")
               }
             >
-              Settings
+              {t("admin:communities.detail.settingsCta")}
             </Button>
           </div>
         </div>
@@ -80,31 +96,45 @@ export function AdminCommunityDetail({
         <div className={styles.supportBanner}>
           <div>
             <h3 className={styles.bannerTitle}>
-              This community could use <em>a hand</em>.
+              <Translation
+                i18nKey="admin:communities.detail.supportBanner.title"
+                components={{ em: <em /> }}
+              />
             </h3>
             <p className={styles.bannerText}>
-              A health score this low is a call for support, not a mark against
-              the mods. {firstName(community.mods[0]!.name)} is stewarding{" "}
-              {community.members} members{" "}
-              {community.mods.length < 2 ? "almost alone" : "with a thin team"}.
+              {t(
+                community.mods.length < 2
+                  ? "admin:communities.detail.supportBanner.textAlone"
+                  : "admin:communities.detail.supportBanner.textThin",
+                {
+                  name: firstName(community.mods[0]!.name),
+                  members: community.members,
+                },
+              )}
             </p>
           </div>
           <Button variant="primary" size="md" onClick={() => setSupport(true)}>
-            Offer support
+            {t("admin:communities.detail.supportBanner.offerCta")}
           </Button>
         </div>
       )}
 
       <div className={styles.statBar}>
-        <StatCell label="Members" value={community.members} />
-        <StatCell label="Active this week" value={`${community.activePct}%`} />
         <StatCell
-          label="Open reports"
+          label={t("admin:communities.detail.stat.members")}
+          value={community.members}
+        />
+        <StatCell
+          label={t("admin:communities.detail.stat.activeThisWeek")}
+          value={`${community.activePct}%`}
+        />
+        <StatCell
+          label={t("admin:communities.detail.stat.openReports")}
           value={String(community.reports)}
           color={community.reports > 0 ? "var(--accent-ink)" : "var(--jade)"}
         />
         <StatCell
-          label="Resolved on time"
+          label={t("admin:communities.detail.stat.resolvedOnTime")}
           value={`${community.resolvedPct}%`}
           color={community.resolvedPct >= 95 ? "var(--jade)" : "var(--amber)"}
         />
@@ -166,5 +196,5 @@ function healthTone(score: number): "jade" | "amber" | "coral" {
 function labelFor(score: number): string {
   if (score >= 90) return "thriving";
   if (score >= 78) return "steady";
-  return "needs a hand";
+  return "needsHand";
 }

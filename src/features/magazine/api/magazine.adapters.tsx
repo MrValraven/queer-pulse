@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import type { Formatters } from "../../../shared/i18n/format";
 import type { Author, AuthorArticle } from "../authorContent.data";
 import type { Article } from "../data/articles";
 import type { Pitch } from "../pitchTracker.data";
@@ -35,24 +36,30 @@ export function initialsFor(name: string): string {
   return initials || "QP";
 }
 
-/** ISO date/datetime -> "June 2026". */
-export function formatMonthYear(iso: string | null | undefined): string {
+/**
+ * ISO date/datetime -> "June 2026" (pt-PT: "junho de 2026"). Locale-bound via
+ * the caller's `fmt` (see `shared/i18n/format.ts`) instead of a hardcoded
+ * `toLocaleDateString("en-US", …)` — the two adapters this file used to hand-roll.
+ */
+export function formatMonthYear(
+  iso: string | null | undefined,
+  fmt: Formatters,
+): string {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return fmt.date(d, { month: "long", year: "numeric" });
 }
 
-/** ISO date -> "6 Jun 2026". */
-export function formatDayMonthYear(iso: string | null | undefined): string {
+/** ISO date -> "6 Jun 2026" (pt-PT: "6 jun. 2026"), locale-bound via `fmt`. */
+export function formatDayMonthYear(
+  iso: string | null | undefined,
+  fmt: Formatters,
+): string {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  return fmt.date(d, { day: "numeric", month: "short", year: "numeric" });
 }
 
 // ── Issues ───────────────────────────────────────────────────────────────
@@ -107,6 +114,7 @@ export function issueToTile(
   dto: IssueDTO,
   index: number,
   total: number,
+  fmt: Formatters,
 ): IssueTile {
   const d = new Date(dto.publishedOn);
   const season = Number.isNaN(d.getTime()) ? "" : SEASON_BY_MONTH[d.getMonth()];
@@ -129,7 +137,7 @@ export function issueToTile(
     dek: dto.dek,
     meta: {
       season: [season, year].filter(Boolean).join(" ") || dto.publishedOn,
-      detail: `Published ${formatDayMonthYear(dto.publishedOn)}`,
+      detail: `Published ${formatDayMonthYear(dto.publishedOn, fmt)}`,
     },
   };
 }
@@ -137,7 +145,10 @@ export function issueToTile(
 // ── Articles ─────────────────────────────────────────────────────────────
 
 /** A live article/related-list row adapted into the mock `Article` shape. */
-export function articleListItemToArticle(dto: ArticleListItemDTO): Article {
+export function articleListItemToArticle(
+  dto: ArticleListItemDTO,
+  fmt: Formatters,
+): Article {
   return {
     id: dto.slug,
     kicker: dto.issueNumber ? `Issue ${dto.issueNumber}` : "From the magazine",
@@ -145,7 +156,7 @@ export function articleListItemToArticle(dto: ArticleListItemDTO): Article {
     title: dto.title,
     byline: dto.author.displayName,
     role: null,
-    date: formatMonthYear(dto.publishedAt),
+    date: formatMonthYear(dto.publishedAt, fmt),
     readTime: `${dto.readMinutes} min`,
     initials: initialsFor(dto.author.displayName),
     tint: tintFor(dto.author.handle),
@@ -160,10 +171,11 @@ export function articleListItemToArticle(dto: ArticleListItemDTO): Article {
 /** Full article detail (with body) adapted into the mock `Article` shape. */
 export function articleResponseToArticle(
   dto: ArticleDTO,
+  fmt: Formatters,
   authorBio?: string | null,
 ): Article {
   return {
-    ...articleListItemToArticle(dto),
+    ...articleListItemToArticle(dto, fmt),
     authorBio: authorBio ?? "",
     body: dto.body
       .split(/\n{2,}/)
@@ -185,6 +197,7 @@ export function mergeAuthor(
   base: Author,
   dto: AuthorDTO,
   liveArticles: ArticleListItemDTO[],
+  fmt: Formatters,
 ): Author {
   const featured = liveArticles[0];
   return {
@@ -217,7 +230,7 @@ export function mergeAuthor(
           dek: a.dek,
           meta: a.issueNumber
             ? `Issue ${a.issueNumber}`
-            : formatMonthYear(a.publishedAt),
+            : formatMonthYear(a.publishedAt, fmt),
         }))
       : base.articles,
   };
@@ -234,16 +247,24 @@ const PITCH_STATUS: Record<SubmissionStatus, Pitch["status"]> = {
   rejected: "rejected",
 };
 
-const PITCH_STATUS_LABEL: Record<SubmissionStatus, string> = {
-  draft: "Draft",
-  submitted: "Submitted · awaiting review",
-  in_review: "In review",
-  accepted: "Accepted",
-  published: "Published",
-  rejected: "Not accepted this issue",
+// Catalog keys — label-key indirection, resolved via `t()` in
+// `PitchCard.tsx`/`PitchStages.tsx`. Shares the `pitchTracker.stage.*`
+// vocabulary with the mock `PITCHES` registry (pitchTracker.data.tsx).
+const PITCH_STATUS_LABEL_KEY: Record<SubmissionStatus, string> = {
+  draft: "magazine:pitchTracker.statusLabel.draft",
+  submitted: "magazine:pitchTracker.statusLabel.submitted",
+  in_review: "magazine:pitchTracker.statusLabel.inReview",
+  accepted: "magazine:pitchTracker.statusLabel.accepted",
+  published: "magazine:pitchTracker.statusLabel.published",
+  rejected: "magazine:pitchTracker.statusLabel.rejected",
 };
 
-const STAGE_LABELS = ["Pitched", "In review", "Accepted", "Published"];
+const STAGE_LABEL_KEYS = [
+  "magazine:pitchTracker.stage.pitched",
+  "magazine:pitchTracker.stage.inReview",
+  "magazine:pitchTracker.stage.accepted",
+  "magazine:pitchTracker.stage.published",
+];
 const STAGE_STATUS_ORDER: SubmissionStatus[] = [
   "submitted",
   "in_review",
@@ -254,17 +275,17 @@ const STAGE_STATUS_ORDER: SubmissionStatus[] = [
 function stagesFor(status: SubmissionStatus): Pitch["stages"] {
   if (status === "rejected") {
     return [
-      { label: "Pitched", state: "done" },
-      { label: "Reviewed", state: "rejected" },
-      { label: "Closed", state: "rejected" },
+      { labelKey: "magazine:pitchTracker.stage.pitched", state: "done" },
+      { labelKey: "magazine:pitchTracker.stage.reviewed", state: "rejected" },
+      { labelKey: "magazine:pitchTracker.stage.closed", state: "rejected" },
     ];
   }
   const at = STAGE_STATUS_ORDER.indexOf(
     status === "draft" ? "submitted" : status,
   );
-  return STAGE_LABELS.map((label, i) => ({
-    label,
-    state: i < at ? "done" : i === at ? "active" : "upcoming",
+  return STAGE_LABEL_KEYS.map((labelKey, stageIndex) => ({
+    labelKey,
+    state: stageIndex < at ? "done" : stageIndex === at ? "active" : "upcoming",
   }));
 }
 
@@ -275,16 +296,19 @@ function stagesFor(status: SubmissionStatus): Pitch["stages"] {
  * mock's editor notes/outline/messaging actions; those stay absent rather
  * than fabricated.
  */
-export function submissionToPitch(dto: StorySubmissionDTO): Pitch {
+export function submissionToPitch(
+  dto: StorySubmissionDTO,
+  fmt: Formatters,
+): Pitch {
   const pitchPreview =
     dto.pitch.length > 80 ? `${dto.pitch.slice(0, 77).trimEnd()}…` : dto.pitch;
   return {
     id: dto.id,
     title: dto.workingTitle,
     status: PITCH_STATUS[dto.status],
-    statusLabel: PITCH_STATUS_LABEL[dto.status],
+    statusLabelKey: PITCH_STATUS_LABEL_KEY[dto.status],
     type: dto.format,
-    meta: [pitchPreview, `Submitted ${formatDayMonthYear(dto.createdAt)}`],
+    meta: [pitchPreview, `Submitted ${formatDayMonthYear(dto.createdAt, fmt)}`],
     stages: stagesFor(dto.status),
     actions:
       dto.status === "rejected"

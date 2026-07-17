@@ -11,6 +11,8 @@ import {
 import { Avatar, EmptyState } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useSaved } from "../../app/providers/SavedProvider";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { memberAvatar } from "../members/data/members";
 import { gatheringPath } from "../gatherings/data";
 import { routes } from "../../app/routeMap";
@@ -23,6 +25,7 @@ import { initials, relativeTime } from "./api/feed.adapters";
 import styles from "./FeedPage.module.css";
 
 export function GatheringCard() {
+  const { t } = useTranslation();
   return (
     <Link
       to={gatheringPath("queer-book-club")}
@@ -32,7 +35,7 @@ export function GatheringCard() {
       <div className={styles.pad}>
         <div className={styles.eyebrow} style={{ color: "var(--jade)" }}>
           <span className={styles.dot} style={{ background: "var(--jade)" }} />
-          Upcoming · 5 days
+          {t("feed:card.gathering.upcomingIn", { count: 5 })}
         </div>
         <div className={styles.gcTitle}>Queer Book Club — July</div>
         <div className={styles.gcMeta}>
@@ -46,10 +49,12 @@ export function GatheringCard() {
               <Avatar initials="JP" tint="coral" size={24} />
               <Avatar initials="TM" tint="plum" size={24} />
             </div>
-            <span className={styles.attLabel}>+9 going</span>
+            <span className={styles.attLabel}>
+              {t("feed:card.gathering.goingCount", { count: 9 })}
+            </span>
           </div>
           <span className={styles.goingChip}>
-            <FiCheck /> You're going
+            <FiCheck /> {t("feed:card.gathering.youAreGoing")}
           </span>
         </div>
       </div>
@@ -66,15 +71,19 @@ export function GatheringCard() {
  * aggregate, so they're simply omitted for live items rather than guessed at.
  */
 export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { openConnect } = useConnect();
   const slug = item ? (item.actor?.handle ?? "") : "kai";
   const name = item?.title ?? "Kai Larsson";
   const bio =
     item?.summary ??
     "Filmmaker making a documentary about queer nightlife in southern Europe. Looking for interviewees and collaborators.";
-  const meta = item
-    ? `Joined ${relativeTime(item.createdAt)}`
-    : "they/them · Lisbon · Joined today";
+  const joinedWhen = item
+    ? relativeTime(item.createdAt, fmt)
+    : t("feed:card.newMember.today");
+  const joinedLine = t("feed:card.newMember.joined", { when: joinedWhen });
+  const meta = item ? joinedLine : `they/them · Lisbon · ${joinedLine}`;
   const profileLink = item?.link ?? "/profile/kai";
   const avatarSrc = item
     ? (item.actor?.avatarUrl ?? undefined)
@@ -85,7 +94,7 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
   return (
     <article className={`${styles.card} ${styles.pad}`}>
       <div className={styles.tag}>
-        <span className={styles.dot} /> New member
+        <span className={styles.dot} /> {t("feed:card.newMember.tag")}
       </div>
       <div className={styles.nmRow}>
         <Avatar
@@ -111,10 +120,10 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
               className={styles.btnOutline}
               onClick={() => openConnect(slug || undefined)}
             >
-              Connect
+              {t("feed:action.connect")}
             </button>
             <Link to={profileLink} className={styles.linkBtn}>
-              View profile →
+              {t("feed:action.viewProfile")}
             </Link>
           </div>
         </div>
@@ -130,6 +139,7 @@ function ReplyComposer({
   onSubmit: (body: string) => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   return (
     <form
@@ -143,12 +153,12 @@ function ReplyComposer({
       }}
     >
       <label htmlFor="reply-input" className={styles.srOnly}>
-        Write a reply
+        {t("feed:composer.srLabel")}
       </label>
       <textarea
         id="reply-input"
         className={styles.composerInput}
-        placeholder="Write a reply…"
+        placeholder={t("feed:composer.placeholder")}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         rows={2}
@@ -156,14 +166,14 @@ function ReplyComposer({
       />
       <div className={styles.composerRow}>
         <button type="button" className={styles.linkBtn} onClick={onCancel}>
-          Cancel
+          {t("feed:action.cancel")}
         </button>
         <button
           type="submit"
           className={styles.composerSend}
           disabled={!value.trim()}
         >
-          <FiSend /> Reply
+          <FiSend /> {t("feed:action.reply")}
         </button>
       </div>
     </form>
@@ -187,6 +197,7 @@ function PostActions({
   saved: boolean;
   onSave: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.postFooter}>
       <button
@@ -194,7 +205,7 @@ function PostActions({
         className={`${styles.postAction} ${liked ? styles.postActionOn : ""}`}
         onClick={onLike}
         aria-pressed={liked}
-        aria-label={liked ? "Unlike post" : "Like post"}
+        aria-label={t(liked ? "feed:post.unlikeAria" : "feed:post.likeAria")}
       >
         <FiHeart fill={liked ? "currentColor" : "none"} /> {likeCount}
       </button>
@@ -202,25 +213,26 @@ function PostActions({
         type="button"
         className={styles.postAction}
         onClick={onToggleReply}
-        aria-label="Reply to post"
+        aria-label={t("feed:post.replyAria")}
       >
-        <FiCornerUpLeft /> Reply · {replyCount}
+        <FiCornerUpLeft /> {t("feed:post.replyCount", { count: replyCount })}
       </button>
       <button
         type="button"
         className={`${styles.postAction} ${saved ? styles.postActionOn : ""}`}
         onClick={onSave}
         aria-pressed={saved}
-        aria-label={saved ? "Remove from saved" : "Save post"}
+        aria-label={t(saved ? "feed:post.unsaveAria" : "feed:post.saveAria")}
       >
         <FiBookmark fill={saved ? "currentColor" : "none"} />{" "}
-        {saved ? "Saved" : "Save"}
+        {t(saved ? "feed:action.saved" : "feed:action.save")}
       </button>
     </div>
   );
 }
 
 export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
+  const { t } = useTranslation();
   const { openConnect } = useConnect();
   const { isSaved, toggleSave } = useSaved();
   const likePost = useLikePost();
@@ -264,7 +276,7 @@ export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
             className={styles.btnOutline}
             onClick={() => openConnect(post.slug)}
           >
-            Connect
+            {t("feed:action.connect")}
           </button>
           <MoreMenu
             authorName={post.authorName}
@@ -306,9 +318,12 @@ export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
         <EmptyState
           compact
           icon={<FiMessageCircle />}
-          title="No replies yet"
-          description="Be the first to say something kind."
-          action={{ label: "Write a reply", onClick: () => setComposing(true) }}
+          title={t("feed:post.emptyReplies.title")}
+          description={t("feed:post.emptyReplies.description")}
+          action={{
+            label: t("feed:composer.srLabel"),
+            onClick: () => setComposing(true),
+          }}
         />
       )}
       {replies.length > 0 && (
@@ -334,9 +349,12 @@ export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
 }
 
 export function SavedArticleCard() {
+  const { t } = useTranslation();
   return (
     <article className={`${styles.card} ${styles.pad}`}>
-      <div className={styles.savedEyebrow}>From your saves</div>
+      <div className={styles.savedEyebrow}>
+        {t("feed:card.savedArticle.eyebrow")}
+      </div>
       <div className={styles.savedTitle}>
         The Quiet Politics of Chosen Family
       </div>
@@ -344,22 +362,23 @@ export function SavedArticleCard() {
         QueerPulse Magazine · Issue 17 · 6 min read
       </div>
       <Link className={styles.savedLink} to={routes.article}>
-        Continue reading →
+        {t("feed:action.continueReading")}
       </Link>
     </article>
   );
 }
 
 export function RecapCard() {
+  const { t } = useTranslation();
   return (
     <article className={`${styles.card} ${styles.pad}`}>
-      <div className={styles.recapEyebrow}>Gathering recap</div>
+      <div className={styles.recapEyebrow}>{t("feed:card.recap.eyebrow")}</div>
       <div className={styles.savedTitle}>Pride Brunch — June Edition</div>
       <div className={styles.savedSource}>
         You attended · 3 days ago · 38 people were there
       </div>
       <Link className={styles.savedLink} to={routes.gatheringRecap}>
-        Read the recap →
+        {t("feed:action.readRecap")}
       </Link>
     </article>
   );

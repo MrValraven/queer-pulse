@@ -26,7 +26,11 @@ function buildInviteDraft(
 ): Draft {
   const name = first.trim();
   const meta: DraftMeta[] = [
-    { label: t("auth:invite.draft.savedJustNow"), variant: "pulse" },
+    {
+      kind: "custom",
+      label: t("auth:invite.draft.savedJustNow"),
+      variant: "pulse",
+    },
   ];
   const actions: DraftAction[] = [
     { label: t("auth:common.resume"), variant: "primary" },

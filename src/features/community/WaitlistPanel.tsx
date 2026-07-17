@@ -1,4 +1,6 @@
 import { FiCheck } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { GROUPS } from "./readingGroups.data";
 import styles from "./ReadingGroupsPage.module.css";
 
@@ -11,6 +13,7 @@ export function WaitlistPanel({
 }: {
   waitlist: Record<string, number>;
 }) {
+  const { t } = useTranslation();
   if (Object.keys(waitlist).length === 0) return null;
 
   return (
@@ -18,12 +21,14 @@ export function WaitlistPanel({
       <div className={styles.wpHead}>
         <FiCheck aria-hidden />
         <h3>
-          You're on the <em>waitlist.</em>
+          <Translation
+            i18nKey="community:readingGroups.waitlist.heading"
+            components={{ em: <em /> }}
+          />
         </h3>
       </div>
       <p className={styles.wpSub}>
-        We'll email you the moment someone cancels — no need to keep checking
-        back.
+        {t("community:readingGroups.waitlist.sub")}
       </p>
       <ul className={styles.wpList}>
         {Object.entries(waitlist).map(([id, position]) => {
@@ -32,7 +37,9 @@ export function WaitlistPanel({
           return (
             <li key={id} className={styles.wpRow}>
               <span className={styles.wpName}>{group.name}</span>
-              <span className={styles.wpPos}>You're #{position}</span>
+              <span className={styles.wpPos}>
+                {t("community:readingGroups.waitlist.position", { position })}
+              </span>
             </li>
           );
         })}

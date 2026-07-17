@@ -722,6 +722,92 @@ export const studio: Catalog = {
   "album.more.heading": "Mais de <em>{artist}</em>",
   "album.more.artistPageCta": "Página do artista",
 
+  // ── Chrome partilhado de hero/livro-razão (Álbum/Set — nomes masculinos em
+  //    pt-PT; Faixa/Coleção reutilizam o room.hero.addedToast / removedToast
+  //    feminino acima, por concordância de género) ───────────────────────────
+  "detail.shareCta": "Partilhar",
+  "detail.linkCopiedToast": "Link copiado para a área de transferência",
+  "detail.copyFailedToast": "Não foi possível copiar o link",
+  "detail.tipArtistCta": "Dar gorjeta a {artist}",
+  "detail.fullLedgerCta": "Livro-razão completo",
+  "detail.addedToast": "Adicionado à tua biblioteca",
+  "detail.removedToast": "Removido da tua biblioteca",
+
+  // ── Página da faixa (StudioTrackPage + Hero + Sidebar + Lyrics) ───────────
+  "track.hero.eyebrow": "Faixa {current} de {total} · a tocar agora no set",
+  "track.hero.payMonth": "<em>{amount}</em> para {artist} este mês",
+  "track.inSet.status":
+    "Estás a ouvir com <b>{count}</b> pessoas no <em>set de quarta-feira</em>, programado por {curator}. A faixa {next} começa dentro de <b>{countdown}</b>.",
+  "track.inSet.joinCta": "Entrar na sala",
+  "track.more.fullAlbumCta": "Álbum completo",
+  "track.sidebar.curatorNoteLabel": "Nota de curadoria",
+  "track.sidebar.splitHeading": "Para onde vai 1 € quando ouves isto",
+  "track.sidebar.creditsHeading": "Créditos · divisão por faixa",
+  "track.sidebar.leadSheetLabel": "Partitura",
+  "track.sidebar.downloadCta": "Transferir",
+  "track.lyrics.heading": "Letra & <em>tradução</em>",
+  "track.lyrics.leadSheetChordsCta": "Partitura & acordes",
+
+  // ── Página do álbum (StudioAlbumPage + Hero + Main + Sidebar) ─────────────
+  "album.tabs.tracklist": "Faixas",
+  "album.tabs.linerNotes": "Notas de encarte",
+  "album.tabs.credits": "Créditos",
+  "album.main.perPlaySuffix": "{amount} / reprodução",
+  "album.sidebar.buyEyebrow": "A sala está aberta para ti",
+  "album.sidebar.buySub": "Compra o álbum · guarda-o offline · FLAC + AAC.",
+  "album.sidebar.buyCta": "Comprar · {amount}",
+  "album.sidebar.payWhatYouCanCta": "Paga o que puderes · mínimo {amount}",
+  "album.sidebar.streamingIncludedCta": "Streaming incluído se contribuíres",
+  "album.sidebar.ledgerHeading":
+    "Livro-razão público para <em>este lançamento</em>",
+  "album.sidebar.paidToArtistLifetime": "Pago a {artist}, no total",
+  "album.sidebar.paidToCollaborators": "Pago a colaboradores",
+  "album.sidebar.playsThisMonth": "Reproduções este mês",
+
+  // ── Perfil do artista (StudioArtistPage + Hero + Main + Sidebar) ──────────
+  "artist.tabs.music": "Música",
+  "artist.tabs.featuredIn": "Participações",
+  "artist.tabs.sheetMusic": "Partituras",
+  "artist.tabs.about": "Sobre",
+  "artist.hero.followCta": "Seguir",
+  "artist.hero.followingCta": "A seguir",
+  "artist.hero.followedToast": "A seguir {artist}",
+  "artist.hero.unfollowedToast": "Deixaste de seguir {artist}",
+  "artist.hero.subscribeNote":
+    "Subscreve por <em>{amount}/mês</em>, diretamente a {artist}, sem corte da plataforma.",
+  "artist.hero.tipOnTopNote": "Ou dá uma gorjeta além do streaming.",
+  "artist.main.releasesHeading": "Lançamentos",
+  "artist.main.singlesHeading": "Singles & <em>avulsos</em>",
+  "artist.sidebar.sustainEyebrow": "Contribui diretamente para {artist}",
+  "artist.sidebar.sustainSub":
+    "Diretamente para {artist}. Sem corte da plataforma. Quem subscreve tem acesso antecipado a faixas, a nota semanal e lugar em todas as transmissões ao vivo.",
+  "artist.sidebar.subscribeCta": "Subscrever · {amount}/mês",
+  "artist.sidebar.oneOffTipCta": "Gorjeta pontual",
+  "artist.sidebar.thisMonthHeading": "{artist} · este mês",
+  "artist.sidebar.plays": "Reproduções",
+  "artist.sidebar.earningsStreaming": "Receita (streaming)",
+  "artist.sidebar.tipsReceived": "Gorjetas recebidas",
+  "artist.sidebar.directSubscribers": "Subscrições diretas",
+  "artist.sidebar.upcomingHeading": "Em breve",
+  "artist.sidebar.premiereLabel": "Estreia",
+  "artist.sidebar.rsvpCta": "Confirmar presença",
+
+  // ── Página do set ao vivo (StudioSetPage) ─────────────────────────────────
+  "set.page.playAria": "Reproduzir o set",
+  "set.page.joinLiveRoomCta": "Entrar na sala ao vivo",
+  "set.page.tracklistHeading": "A <em>lista de faixas</em>",
+  "set.page.everyPlayPaysNote": "Cada reprodução paga o artista",
+  "set.page.payingNowLabel": "a pagar agora",
+
+  // ── Página da coleção (StudioCollectionPage) ──────────────────────────────
+  "collection.page.playAria": "Reproduzir a coleção",
+  "collection.page.shuffleCta": "Aleatório",
+  "collection.page.shufflingToast": "A reproduzir a coleção em modo aleatório",
+  "collection.page.allPlaysPaidNote": "pago aos artistas em cada audição",
+  "collection.page.inThisCollectionHeading": "Nesta <em>coleção</em>",
+  "collection.page.findMoreCta": "Encontrar mais",
+  "collection.page.relatedHeading": "Coleções <em>relacionadas</em>",
+
   // ── Prateleiras fora de antena (StudioOffAirShelves) ──────────────────────
   "offAir.carryOn.heading": "Continua onde <em>paraste</em>",
   "offAir.carryOn.sub":
@@ -779,4 +865,927 @@ export const studio: Catalog = {
   "council.notebookLabel": "Do caderno",
   "council.recentSlatesLabel": "Seleções recentes",
   "council.theirSlateCta": "Ver seleção",
+
+  // ── Definições (StudioSettingsPage + Controls + Sections) ─────────────────
+  "settings.eyebrow": "A tua sala · definições",
+  "settings.title": "Como a sala te <em>trata</em>.",
+  "settings.dek":
+    "Áudio, privacidade, legendas, gorjetas. Nada aqui está ativo a menos que o ligues — e o que ligares, podes apagar com <em>um toque, sem modal de confirmação</em>.",
+
+  "settings.audio.label": "Áudio",
+  "settings.audio.title": "Qualidade de <em>som</em>",
+  "settings.audio.dek":
+    "FLAC é sem perdas e maior; AAC pesa menos dados. Reprodução e transferências podem diferir — escolhe por contexto.",
+  "settings.audio.streamQuality.heading": "Qualidade de reprodução por defeito",
+  "settings.audio.streamQuality.body":
+    "Numa boa ligação, vamos tão alto quanto permitires. Nunca subimos a qualidade em dados móveis sem perguntar.",
+  "settings.audio.streamQuality.flac.label": "FLAC · 24/48",
+  "settings.audio.streamQuality.flac.badge": "sem perdas",
+  "settings.audio.streamQuality.flac.sub":
+    "O master, sem alterações. ~25 MB / faixa.",
+  "settings.audio.streamQuality.aac.label": "AAC · 256kbps",
+  "settings.audio.streamQuality.aac.sub":
+    "Transparente para a maioria dos ouvidos. ~7 MB / faixa.",
+  "settings.audio.downloadQuality.heading": "Qualidade de transferência",
+  "settings.audio.downloadQuality.body":
+    "O que guardamos quando gravas uma faixa offline (só sustentadores).",
+  "settings.audio.normalise.heading": "Normalizar o volume",
+  "settings.audio.normalise.body":
+    "Equilibra o volume entre faixas e sets. <em>Desliga</em> se quiseres a dinâmica original do artista.",
+  "settings.audio.crossfade.heading": "Fundido entre faixas num set",
+  "settings.audio.crossfade.body":
+    "Só se aplica dentro de sets de DJ e salas ao vivo, nunca na reprodução de álbuns.",
+
+  "settings.privacy.label": "Privacidade",
+  "settings.privacy.title": "O que a sala <em>guarda</em>",
+  "settings.privacy.dek":
+    "Em resumo: quase nada, por defeito. Nunca vendemos, partilhamos ou treinamos com o que ouves. As reproduções agregadas alimentam o livro-razão público — nada que te identifique.",
+  "settings.privacy.history.heading": "Histórico de audição",
+  "settings.privacy.history.body":
+    "Desligado por defeito — nada do que ouves sai do teu navegador. Liga para um registo privado e apagável que só tu vês.",
+  "settings.privacy.cloudSync.heading": "Sincronizar a biblioteca na nuvem",
+  "settings.privacy.cloudSync.body":
+    "As gravações e os seguimentos passam entre dispositivos. Sem isto, ficam só neste dispositivo.",
+  "settings.privacy.tipNotes.heading": "Notas de gorjeta — quem as vê",
+  "settings.privacy.tipNotes.body":
+    "A nota que escreves ao dar uma gorjeta. <em>Privado é a predefinição</em>: só tu e o artista a leem.",
+  "settings.privacy.tipNotes.private.label": "Privado",
+  "settings.privacy.tipNotes.private.badge": "predefinição",
+  "settings.privacy.tipNotes.private.sub":
+    "Só tu e o artista. Nunca aparece na página dele nem no teu recibo público.",
+  "settings.privacy.tipNotes.semi.label": "Semipúblico",
+  "settings.privacy.tipNotes.semi.sub":
+    "Visível para outros sustentadores desse artista, atribuído ao teu nome de utilizador.",
+  "settings.privacy.tipNotes.public.label": "Público",
+  "settings.privacy.tipNotes.public.sub":
+    "Qualquer pessoa pode ler na página do artista. Ainda podes ocultar qualquer nota depois.",
+  "settings.privacy.tipReceipts.heading": "Recibos de gorjeta públicos",
+  "settings.privacy.tipReceipts.body":
+    'Cada gorjeta gera um recibo com a divisão — sem dados pessoais. Ligado, pode ser partilhado como um cartão "olha o que a sala pagou a este artista".',
+
+  "settings.captions.label": "Legendas e letras",
+  "settings.captions.title": "Palavras no <em>ecrã</em>",
+  "settings.captions.dek":
+    "As salas ao vivo têm legendas (automáticas, com revisão humana nas transmissões do conselho). As letras avançam ao ritmo da faixa quando o artista as fornece.",
+  "settings.captions.showCaptions.heading":
+    "Mostrar legendas nas salas ao vivo",
+  "settings.captions.showCaptions.body":
+    "A conversa entre músicas, transcrita. <em>Ligado</em> por defeito em todas as transmissões.",
+  "settings.captions.captionSize.heading": "Tamanho das legendas",
+  "settings.captions.captionSize.body":
+    "Que tamanho têm as legendas e a linha de letra em avanço.",
+  "settings.captions.lyricLanguage.heading": "Idioma da letra",
+  "settings.captions.lyricLanguage.body":
+    "Mostra as letras no original, ou numa tradução da comunidade quando existir.",
+  "settings.captions.lyricLanguage.opt.original": "Original (como gravado)",
+  "settings.captions.lyricLanguage.opt.english": "Tradução em inglês",
+  "settings.captions.lyricLanguage.opt.portuguese": "Português",
+  "settings.captions.lyricLanguage.opt.spanish": "Español",
+  "settings.captions.lyricLanguage.opt.french": "Français",
+  "settings.captions.showBoth.heading": "Mostrar original e tradução",
+  "settings.captions.showBoth.body":
+    "Duas linhas ao mesmo tempo, o original por cima da tradução.",
+
+  "settings.tipping.label": "Gorjetas",
+  "settings.tipping.title": "A tua <em>gorjeta</em> por defeito",
+  "settings.tipping.dek":
+    "O que o botão de gorjeta rápida envia. 100% chega ao artista — nunca há corte da plataforma nas gorjetas.",
+  "settings.tipping.defaultAmount.heading": "Valor por defeito",
+  "settings.tipping.defaultAmount.body":
+    "Podes sempre escolher outro valor no momento de dar a gorjeta.",
+  "settings.tipping.roundUp.heading":
+    "Arredondar compras de álbuns para uma gorjeta",
+  "settings.tipping.roundUp.body":
+    "Um álbum de {albumPrice} passa a {roundedPrice}, e os {tipAmount} vão para o artista como gorjeta.",
+
+  "settings.erase.label": "Apagar e sair",
+  "settings.erase.title": "Um toque, <em>sem perguntas</em>",
+  "settings.erase.dek":
+    "Isto não pergunta duas vezes nem mostra um modal. Falamos a sério: sair devia ser tão fácil como entrar.",
+  "settings.erase.history.heading": "Apagar o meu histórico de audição",
+  "settings.erase.history.note":
+    "Apaga o registo privado deste dispositivo e da nuvem. <em>Feito na hora. Sem desfazer.</em>",
+  "settings.erase.history.cta": "Apagar histórico",
+  "settings.erase.history.toast":
+    "Histórico apagado — já não está neste dispositivo nem na nuvem.",
+  "settings.erase.export.heading": "Transferir tudo o que guardamos sobre ti",
+  "settings.erase.export.note":
+    "Um ficheiro JSON com as tuas gravações, gorjetas, recibos e definições — enviado por email dentro de uma hora.",
+  "settings.erase.export.cta": "Pedir exportação",
+  "settings.erase.export.toast":
+    "Vamos enviar-te a exportação dos teus dados dentro de uma hora.",
+  "settings.erase.closeAccount.heading": "Encerrar a minha conta Studio",
+  "settings.erase.closeAccount.note":
+    "Termina a tua contribuição de sustentador, remove a tua biblioteca. As gorjetas passadas continuam pagas aos artistas. <em>A parte bancária, se também és artista, não é afetada.</em>",
+  "settings.erase.closeAccount.cta": "Encerrar conta",
+  "settings.erase.closeAccount.toast":
+    "O encerramento da conta abre num fluxo à parte.",
+
+  // ── Notificações (StudioNotificationsPage) ────────────────────────────────
+  // Só chrome — os nomes/faixas/citações de cada notificação abaixo são
+  // conteúdo, vindo da API em modo real, e ficam em inglês nos dois modos (§1).
+  "notifications.eyebrow":
+    "A tua sala · o que aconteceu enquanto estiveste fora",
+  "notifications.title": "A sala esteve <em>ocupada</em>.",
+  "notifications.dek":
+    "Respostas a gorjetas de artistas, novos lançamentos de quem segues, salas ao vivo prestes a abrir. <em>Só as coisas que pediste para ouvir</em> — ajusta isso nas Definições.",
+  "notifications.filter.all": "Tudo",
+  "notifications.filter.reply": "Respostas",
+  "notifications.filter.release": "Lançamentos",
+  "notifications.filter.live": "Ao vivo",
+  "notifications.markAllReadCta": "Marcar tudo como lido",
+  "notifications.markAllReadToast": "Tudo em dia",
+  "notifications.empty":
+    "Nada <em>desse género</em> por agora. Quando acontecer, aparece aqui. O silêncio é permitido.",
+  "notifications.day.today": "Hoje",
+  "notifications.day.week": "Esta semana",
+  "notifications.action.joinRoom": "Juntar-te à sala",
+  "notifications.action.rsvp": "Confirmar presença",
+
+  // ── Modal de gorjeta (StudioTipModal — reutilizado em várias páginas) ─────
+  "tipModal.dialogAria": "Dar uma gorjeta a {recipient}",
+  "tipModal.closeAria": "Fechar",
+  "tipModal.eyebrow": "Gorjeta · 100% para o artista",
+  "tipModal.title": "Dar uma gorjeta a <em>{recipient}</em>",
+  "tipModal.sub":
+    "As gorjetas passam sem retenções — cada cêntimo chega a {recipient}.",
+  "tipModal.customPlaceholder": "Outro valor",
+  "tipModal.sendingCta": "A enviar…",
+  "tipModal.sendCta": "Dar {amount} →",
+  "tipModal.note":
+    "Paga a {recipient} para além da reprodução · <em>nada é retido</em>",
+  "tipModal.success.title":
+    "Obrigade — foram <em>{amount}</em> para {recipient}.",
+  "tipModal.success.body":
+    "100% da tua gorjeta chega a {recipient} diretamente. Sem corte da plataforma, sem processamento retido.",
+  "tipModal.success.backCta": "Voltar à música",
+
+  // ── Navegação do back-office de criação (StudioCreatorShell) ──────────────
+  "creator.nav.dashboard": "Painel",
+  "creator.nav.newRelease": "Novo lançamento",
+  "creator.nav.payouts": "Pagamentos",
+  "creator.product": "Criação",
+  "creator.viewPublicPageCta": "Ver página pública →",
+
+  // ── A tua biblioteca (StudioLibraryPage) ──────────────────────────────────
+  // Só chrome — os títulos de álbuns/sets/faixas/coleções e nomes de artistas
+  // na biblioteca fictícia abaixo são conteúdo e ficam em inglês nos dois
+  // modos (§1).
+  "library.eyebrow": "A tua biblioteca",
+  "library.title": "Tudo o que <em>guardaste.</em>",
+  "library.dek":
+    "Álbuns, sets e faixas guardados — e os <em>{amount}</em> que já pagaste a {artistCount} artistas este ano só por ouvires aqui.",
+  "library.tabs.albums": "Álbuns",
+  "library.tabs.sets": "Sets",
+  "library.tabs.collections": "Coleções",
+  "library.tabs.tracks": "Faixas",
+  "library.category.albums": "álbuns",
+  "library.category.sets": "sets",
+  "library.category.collections": "coleções",
+  "library.category.tracks": "faixas",
+  "library.empty.title": "A tua biblioteca está vazia aqui",
+  "library.empty.description":
+    "Ainda nada em <em>{category}</em>. Explora a Studio, e tudo o que guardares aparece aqui — para voltares quando quiseres.",
+  "library.empty.browseCta": "Explorar a Studio",
+  "library.empty.searchCta": "Pesquisar o catálogo",
+
+  // ── Pesquisa (StudioSearchPage) ────────────────────────────────────────────
+  // Só chrome — os títulos de resultados/nomes de artistas/termos de pesquisa
+  // recente abaixo são conteúdo (ou, no caso das pesquisas recentes, o
+  // histórico da própria pessoa em modo real) e ficam em inglês nos dois
+  // modos (§1).
+  "search.eyebrow": "Pesquisar o catálogo",
+  "search.title": "Encontra o <em>som.</em>",
+  "search.inputPlaceholder": "Artistas, álbuns, sets, partituras…",
+  "search.filter.everything": "Tudo",
+  "search.filter.artists": "Artistas",
+  "search.filter.albums": "Álbuns",
+  "search.filter.sets": "Sets",
+  "search.filter.collections": "Coleções",
+  "search.filter.sheetMusic": "Partituras",
+  "search.results.forQuery": "Resultados para <em>{query}</em>",
+  "search.results.featuredNow": "Em destaque <em>agora</em>",
+  "search.empty.title": "Nada correspondeu a isso",
+  "search.empty.description":
+    "Não encontrámos nada para <em>{term}</em>. Tenta outra palavra, ou alarga o filtro — o catálogo é maior do que parece.",
+  "search.empty.clearCta": "Limpar pesquisa",
+
+  // ── Painel de criação (StudioDashboardPage + Charts + Side) ───────────────
+  // Só chrome — o nome do artista, títulos de faixas, números por artista
+  // (STATS/CURATORS/CITIES/BARS em studioDashboard.data) e os planos
+  // concretos de sala ao vivo/pagamento abaixo são dados deste artista,
+  // vindos da API em modo real, e ficam em inglês nos dois modos (§1).
+  "dashboard.hero.eyebrow": "Studio · este mês",
+  "dashboard.hero.title": "Boa semana, <em>{name}</em>.",
+  "dashboard.hero.sub":
+    "<em>{trackTitle}</em> já tem dois meses e continua a subir — os curadores mantiveram-na na rotação.",
+
+  "dashboard.stats.playsThisMonth": "Reproduções · este mês",
+  "dashboard.stats.streamingEarnings": "Receita de reprodução",
+  "dashboard.stats.tipsReceived": "Gorjetas recebidas",
+  "dashboard.stats.nextPayout": "Próximo pagamento · {date}",
+
+  "dashboard.charts.dailyPlays.heading":
+    "Reproduções diárias · <em>últimos 14 dias</em>",
+  "dashboard.charts.curators.heading":
+    "Curadoria e <em>seleções</em> · o que deu visibilidade ao teu trabalho esta semana",
+  "dashboard.charts.geography.heading": "De onde <em>ouvem</em>",
+  "dashboard.charts.geography.hint":
+    "Só ao nível da cidade · nunca vemos a rua nem nada mais fino. <em>É o máximo que alguma vez te diremos sobre quem ouve.</em>",
+
+  "dashboard.side.quickActions.heading": "O que podes <em>fazer</em> daqui",
+  "dashboard.side.quickActions.upload.label": "Carregar um novo lançamento",
+  "dashboard.side.quickActions.upload.hint":
+    "WAV / FLAC · 3 passos · 8 minutos",
+  "dashboard.side.quickActions.goLive.label":
+    "Ficar ao vivo — organizar uma sala de audição",
+  "dashboard.side.quickActions.payouts.label":
+    "Ver pagamentos e dados bancários",
+  "dashboard.side.deal.eyebrow": "O acordo, sempre",
+  "dashboard.side.deal.heading": "80% para <em>ti.</em>",
+  "dashboard.side.deal.body":
+    "Cada reprodução, cada gorjeta, cada compra. A divisão é igual para um primeiro lançamento ou para quem vence um festival — e está impressa no livro-razão público.",
+  "dashboard.side.deal.perPlay.label": "Por reprodução",
+  "dashboard.side.deal.yourShare.label": "A tua parte",
+  "dashboard.side.deal.tips.label": "Gorjetas",
+  "dashboard.side.deal.tips.value": "100% para ti",
+
+  // ── Assistente de carregamento (StudioUploadPage + Sections) ──────────────
+  // Só chrome — os nomes dos ficheiros carregados, os detalhes de validação
+  // da imagem, o título/género deste lançamento e os nomes/funções dos
+  // colaboradores abaixo são dados deste lançamento do artista, vindos da
+  // API em modo real, e ficam em inglês nos dois modos (§1).
+  "upload.hero.eyebrow": "Novo lançamento · carregar",
+  "upload.hero.title": "Traz isto para <em>casa.</em>",
+  "upload.hero.sub":
+    "Larga os masters. Nós convertemos, tu ficas com os originais. Três passos, cerca de oito minutos.",
+
+  "upload.steps.files.nm": "Ficheiros",
+  "upload.steps.files.sub": "· WAV / FLAC · capa · letras",
+  "upload.steps.metadata.nm": "Metadados e créditos",
+  "upload.steps.metadata.sub": "· título · ano · divisões por faixa",
+  "upload.steps.licence.nm": "Licença e lançamento",
+  "upload.steps.licence.sub": "· CC / ARR · preço · data de publicação",
+
+  "upload.dropzone.title":
+    "Larga uma pasta de <em>WAVs</em>, ou clica para procurar.",
+  "upload.dropzone.body":
+    "Um EP, um álbum, um single — o mesmo fluxo. Descobrimos a ordem das faixas a partir dos nomes dos ficheiros.",
+  "upload.dropzone.accepts":
+    "aceita · <em>WAV · FLAC · AIFF</em> · máx. 96 kHz / 24 bit · até 24 faixas",
+
+  "upload.files.heading":
+    "Carregados <em>{readyCount} de {totalCount} prontos</em>",
+  "upload.files.okReady": "OK · pronto",
+  "upload.files.loudnessCheck": "Verificação de volume",
+  "upload.files.loudWarning.title": "A faixa {trackNumber} está alta.",
+  "upload.files.loudWarning.body":
+    "O master vem a {measuredLoudness} — o nosso limiar por defeito é {targetLoudness}. <em>Isto não é fatal:</em> podemos normalizar em tempo real por ouvinte. Se pretendias este pico, deixa como está.",
+  "upload.files.loudToggle.show": "O que fazemos com masters altos →",
+  "upload.files.loudToggle.hide": "O que fazemos com masters altos ↑",
+  "upload.files.loudExplainer":
+    "Guardamos o teu master <em>exatamente como foi entregue</em> e sem alterações. Na reprodução, aplicamos normalização de volume por ouvinte a cerca de −14 LUFS, para que a tua faixa fique num nível confortável ao lado de tudo o resto num set — <em>sem recodificar nem cortar o teu ficheiro</em>. Quem desliga a normalização nas definições ouve o teu pico original. Nada fica fixo; podes mudar o alvo ou desativar por lançamento a qualquer momento.",
+
+  "upload.coverArt.heading":
+    "Capa <em>{readyCount} de {totalCount} · validada</em>",
+
+  "upload.splits.heading":
+    "Divisões <em>por faixa</em> · 100% para ti por defeito",
+  "upload.splits.sub":
+    "Adiciona colaboradores e encaminhamos cada cêntimo diretamente para o banco deles.",
+  "upload.splits.table.collaborator": "Colaborador",
+  "upload.splits.table.roleTracks": "Função · faixas",
+  "upload.splits.table.share": "Parte",
+  "upload.splits.footer":
+    "A divisão por defeito soma {total} · ajustes por faixa sobrepõem-se",
+  "upload.splits.addCollaboratorCta": "Adicionar colaborador",
+  "upload.splits.handlePlaceholder": "Utilizador QP ou email",
+  "upload.splits.inviteCta": "Convidar",
+  "upload.splits.invitedToast": "{handle} convidade para as divisões",
+  "upload.splits.invitedSubLabel": "convidade · IBAN pendente",
+  "upload.splits.invitedRole": "colaborador · todas as faixas",
+
+  "upload.side.files.eyebrow": "O que fazemos com os teus ficheiros",
+  "upload.side.files.title": "Teus, <em>na mesma</em>.",
+  "upload.side.files.body":
+    "Tu largas os masters; nós convertemos e transmitimos. O teu WAV / FLAC original continua a ser teu — guardamos uma cópia <em>só</em> para entrega. A remoção apaga a cópia de reprodução em 14 dias. Não exclusivo, sempre.",
+  "upload.side.files.list.sourceKept.label": "Fonte guardada",
+  "upload.side.files.list.sourceKept.value": "o teu ficheiro, sem alterações",
+  "upload.side.files.list.listenerDelivery.label": "Entrega ao ouvinte",
+  "upload.side.files.list.listenerDelivery.value": "FLAC + AAC 256",
+  "upload.side.files.list.loudnessTarget.label": "Alvo de volume",
+  "upload.side.files.list.loudnessTarget.value": "−14 LUFS",
+  "upload.side.files.list.isrc.label": "Atribuição de ISRC",
+  "upload.side.files.list.isrc.value": "automática",
+
+  "upload.side.lyrics.eyebrow": "Letras e traduções",
+  "upload.side.lyrics.title": "Letras <em>obrigatórias</em>, traduções pagas.",
+  "upload.side.lyrics.body":
+    "Carrega as letras em qualquer idioma. Para uma tradução linha a linha, o fundo de solidariedade paga <em>€40 por música</em> a quem traduz na comunidade. Mantêm a assinatura; tu aprovas antes de publicar.",
+  "upload.side.lyrics.list.autoTranscribe.label": "Transcrição automática",
+  "upload.side.lyrics.list.autoTranscribe.value": "grátis · ~94%",
+  "upload.side.lyrics.list.communityTranslation.label":
+    "Tradução da comunidade",
+  "upload.side.lyrics.list.communityTranslation.value": "€40 → tradutor(a)",
+  "upload.side.lyrics.list.approval.label": "A tua aprovação",
+  "upload.side.lyrics.list.approval.value": "antes de publicar",
+
+  "upload.metadata.heading": "Metadados e <em>créditos</em>",
+  "upload.metadata.sub":
+    "Mais alguns detalhes e o teu lançamento segue para a fila de revisão do conselho.",
+  "upload.metadata.field.title": "Título do lançamento",
+  "upload.metadata.field.year": "Ano de lançamento",
+  "upload.metadata.field.genre": "Género principal",
+  "upload.metadata.genre.fado": "Fado / contemporâneo",
+  "upload.metadata.genre.electronic": "Eletrónica",
+  "upload.metadata.genre.folk": "Folk",
+  "upload.metadata.genre.experimental": "Experimental",
+  "upload.metadata.backCta": "← Voltar aos ficheiros",
+  "upload.metadata.submitCta": "Submeter para revisão →",
+
+  "upload.submitted.title": "Submetido para <em>revisão.</em>",
+  "upload.submitted.body":
+    "O teu lançamento está na fila do conselho. Uma pessoa curadora vai verificar os ficheiros, divisões e créditos — normalmente dentro de um ou dois dias — e vais receber um aviso assim que estiver disponível. Nada é publicado sem a tua confirmação final.",
+  "upload.submitted.viewPayoutsCta": "Ver os teus pagamentos →",
+  "upload.submitted.toast": "Lançamento submetido para revisão",
+
+  "upload.continueToMetadataCta": "Continuar para metadados →",
+
+  // ── Pagamentos (StudioPayoutsPage + Sections + Skeletons) ─────────────────
+  // Só chrome — os valores reais de pagamento deste artista, os dados de
+  // IBAN/fiscais/contacto e a discriminação por faixa abaixo são os dados
+  // financeiros dela, vindos da API em modo real, e ficam em inglês nos
+  // dois modos (§1).
+  "payouts.hero.eyebrow": "Pagamentos e dados bancários",
+  "payouts.hero.title": "<em>{amount}</em> chegam no dia {day}.",
+  "payouts.hero.sub":
+    "Pago mensalmente por transferência SEPA, com o teu recibo verde emitido automaticamente. Sem mínimos que não escolheste.",
+  "payouts.hero.breakdownEyebrow": "Pagamento de {month} · discriminação",
+
+  "payouts.summary.fromStreaming": "De reproduções",
+  "payouts.summary.fromTips": "De gorjetas",
+  "payouts.summary.fromAlbumBuys": "De compras de álbuns",
+  "payouts.summary.directSubs": "Subscrições diretas de €3/mês",
+  "payouts.summary.splitsRouted": "Divisões encaminhadas para outros",
+  "payouts.summary.toYourIban": "→ para o teu IBAN",
+
+  "payouts.list.heading": "Pagamentos <em>recentes</em>",
+  "payouts.list.exportCsv": "Exportar CSV →",
+  "payouts.list.status.pending": "Pendente",
+  "payouts.list.status.paid": "Pago",
+
+  "payouts.breakdown.heading": "Este mês, <em>faixa a faixa</em>",
+  "payouts.breakdown.rateNote":
+    "€0,05 por reprodução válida (≥30s, limitado a 1/ouvinte/faixa/dia). Atualizado todas as noites às 02:00 de Lisboa.",
+  "payouts.breakdown.subtotalLabel":
+    "Subtotal de reproduções · antes de divisões, gorjetas e compras",
+
+  "payouts.sidebar.methodEyebrow": "Método de pagamento · ativo",
+  "payouts.sidebar.methodHeading": "A enviar para <em>SEPA</em>",
+  "payouts.sidebar.method.sepa.label": "SEPA — IBAN",
+  "payouts.sidebar.method.sepa.badge": "Ativo",
+  "payouts.sidebar.method.stripe.label": "Stripe Connect",
+  "payouts.sidebar.method.stripe.hint": "ligado · reserva, não principal",
+  "payouts.sidebar.method.stripe.switchCta": "Mudar",
+  "payouts.sidebar.method.coopCredit.label": "Crédito da cooperativa",
+  "payouts.sidebar.method.coopCredit.hint":
+    "gasta na Casa do Comum, salas de ensaio · sem taxas",
+  "payouts.sidebar.method.coopCredit.addCta": "Adicionar",
+
+  "payouts.preferences.heading": "Preferências de <em>pagamento</em>",
+  "payouts.preferences.threshold.label": "Limiar mínimo",
+  "payouts.preferences.threshold.opt5": "€5 (por defeito · sai todos os meses)",
+  "payouts.preferences.threshold.opt20": "€20 (trimestral · poupa nas taxas)",
+  "payouts.preferences.threshold.opt100": "€100 (retido, libertado a pedido)",
+  "payouts.preferences.threshold.hint":
+    "Abaixo do limiar, transita para o mês seguinte.",
+  "payouts.preferences.taxResidency.label": "Residência fiscal",
+  "payouts.preferences.taxResidency.hint":
+    "Emitimos automaticamente o teu recibo verde de IRS para cada pagamento.",
+  "payouts.preferences.notificationEmail.label": "Email de notificação",
+
+  "payouts.export.headers.period": "Período",
+  "payouts.export.headers.date": "Data",
+  "payouts.export.headers.detail": "Detalhe",
+  "payouts.export.headers.amount": "Valor (EUR)",
+  "payouts.export.headers.status": "Estado",
+  "payouts.export.toast": "Histórico de pagamentos exportado como CSV",
+
+  // ── Programar a semana (StudioProgramPage + Inbox + Slate) ────────────────
+  // Só chrome — os títulos de submissões/faixas/coleções/transmissões,
+  // citações e notas da curadoria abaixo são conteúdo (a submissão de cada
+  // artista ou a nota desta pessoa curadora), vindo da API em modo real, e
+  // ficam em inglês nos dois modos (§1).
+  "program.header.eyebrow":
+    "A programar a sala · segunda-feira de manhã · arrasta o que quiseres abaixo",
+  "program.header.title": "Semana <em>{weekNumber}</em> · {dateRange}",
+  "program.header.sub":
+    "Constrói a seleção da semana: <em>uma capa, 12 — 16 faixas, 2 — 3 coleções, transmissões</em>. Publica ao meio-dia e a página inicial roda.",
+  "program.header.autosave": "Guardado automaticamente · {time} — a cada tecla",
+  "program.header.previewRoomCta": "Pré-visualizar a sala",
+
+  "program.publishBar.status":
+    "A seleção está <em>{percent}% completa</em> · publica {publishDate} · a página inicial roda automaticamente",
+  "program.publishBar.previewHomepageCta": "Pré-visualizar a página inicial",
+  "program.publishBar.saveDraftCta": "Guardar rascunho",
+  "program.publishBar.publishCta": "Publicar ao meio-dia",
+
+  "program.toast.addedToSlate": "Adicionado à seleção desta semana",
+  "program.toast.passed":
+    "Recusado — quem submeteu pode voltar a tentar depois",
+  "program.toast.playingPreview": "A reproduzir pré-visualização…",
+  "program.toast.openingRoomPreview": "A abrir a pré-visualização da sala…",
+  "program.toast.chooseNewCover": "Escolhe um novo artista de capa…",
+  "program.toast.editingCoverNote": "A editar a nota de capa…",
+  "program.toast.openingHomepagePreview":
+    "A abrir a pré-visualização da página inicial…",
+  "program.toast.draftSaved": "Rascunho guardado",
+  "program.toast.published":
+    "Seleção publicada — a página inicial roda ao meio-dia",
+
+  "program.inbox.heading": "Submissões · <em>{count} novas</em>",
+  "program.inbox.triageCta": "Triagem →",
+  "program.inbox.tip":
+    "Arrasta qualquer submissão para a esquerda, para um espaço. <em>O fluxo de recusa com motivo está na triagem.</em>",
+  "program.inbox.listenCta": "Ouvir",
+  "program.inbox.slateCta": "+ Selecionar",
+  "program.inbox.passCta": "Recusar",
+
+  "program.slate.cover.heading": "Artista de capa da semana",
+  "program.slate.cover.count": "1 de 1 · o destaque da sala",
+  "program.slate.cover.swapCta": "Trocar",
+  "program.slate.cover.editNoteCta": "Editar nota",
+  "program.slate.singles.heading": "Singles desta semana",
+  "program.slate.singles.count":
+    "{placed} de {total} colocados · {open} espaços em aberto",
+  "program.slate.singles.notePlaceholder":
+    "— escreve uma nota de uma linha · porquê isto, porquê agora —",
+  "program.slate.singles.noteAria": "Nota para {title}",
+  "program.slate.singles.removeAria": "Remover {title}",
+  "program.slate.singles.addSlotCta":
+    "＋ arrasta uma faixa das submissões, ou clica para adicionar do catálogo",
+  "program.slate.collections.heading": "Rotação de coleções",
+  "program.slate.collections.count": "{placed} de {total}",
+  "program.slate.broadcasts.heading": "Transmissões ao vivo esta semana",
+  "program.slate.broadcasts.count":
+    "{scheduled} agendadas · espaço {slotNumber} em aberto",
+  "program.slate.broadcasts.addSlotCta":
+    "＋ agendar uma terceira transmissão para sábado à noite",
+
+  // ── Triagem de submissões (StudioTriagePage + List + Detail) ──────────────
+  // Só chrome — os nomes/citações/faixas/etiquetas de quem submete e o
+  // ficheiro/forma de onda/notas da curadoria desta submissão específica
+  // abaixo são conteúdo, vindo da API em modo real, e ficam em inglês nos
+  // dois modos (§1). Os `id` dos separadores abaixo são valores de filtro
+  // estáveis — nunca usar a etiqueta traduzida como chave guardada (§5.1).
+  "triage.header.eyebrow":
+    "Triagem de submissões · o conselho responde a cada submissão em 14 dias",
+  "triage.header.title":
+    "Caixa de entrada · <em>{count}</em> novas esta semana.",
+  "triage.header.sub":
+    "Cada submissão é lida ou ouvida. <em>Recusar</em> exige uma frase — essa frase torna-se a resposta ao artista. Tempo médio de resposta esta época: {count} dias.",
+
+  "triage.kpi.newThisWeek": "novas esta semana",
+  "triage.kpi.youClaimed": "reclamaste",
+  "triage.kpi.medianReply": "resposta média",
+  "triage.kpi.atDeadline": "no prazo limite",
+
+  "triage.tabs.new.label": "Novas",
+  "triage.tabs.new.queue": "novas",
+  "triage.tabs.yours.label": "Tuas",
+  "triage.tabs.yours.queue": "tuas",
+  "triage.tabs.atDeadline.label": "No prazo",
+  "triage.tabs.atDeadline.queue": "no prazo",
+  "triage.tabs.shortlisted.label": "Pré-selecionadas",
+  "triage.tabs.shortlisted.queue": "pré-selecionadas",
+  "triage.tabs.answered.label": "Respondidas",
+  "triage.tabs.answered.queue": "respondidas",
+
+  "triage.list.empty.title": "Nada nesta fila",
+  "triage.list.empty.description":
+    "Não há submissões <em>{queue}</em> neste momento. Quando algo chegar, vais encontrá-lo aqui à espera.",
+  "triage.list.backToNewCta": "Voltar às novas",
+  "triage.list.dayOfTotal": "de 14 para responder",
+
+  "triage.detail.playAria": "Reproduzir",
+  "triage.detail.fileHeading": "O ficheiro",
+  "triage.detail.file.format": "Formato",
+  "triage.detail.file.loudness": "Volume",
+  "triage.detail.file.duration": "Duração",
+  "triage.detail.file.lyrics": "Letra",
+  "triage.detail.file.splits": "Divisões",
+  "triage.detail.flaggedHeading":
+    "O que outras pessoas da curadoria assinalaram ({count})",
+  "triage.detail.answerHeading": "A tua <em>resposta</em>",
+  "triage.detail.decision.heading":
+    "Se recusares — escreve uma frase. Isto vai para {artistName} como resposta.",
+  "triage.detail.decision.placeholder":
+    "Uma pequena frase que explique o não. Nunca enviamos uma carta-tipo.",
+  "triage.detail.decision.hint":
+    "Obrigatório para recusar. <em>Não obrigatório</em> para selecionar.",
+  "triage.detail.holdCta": "Reter e ouvir de novo",
+  "triage.detail.passCta": "Recusar · com a frase",
+  "triage.detail.addToSlateCta": "＋ Adicionar à próxima seleção",
+  "triage.detail.toast.held": "Retido para uma segunda audição",
+  "triage.detail.toast.passed":
+    "Recusado com a tua frase — enviado a {artistName}",
+  "triage.detail.toast.addedToSlate": "Adicionado à próxima seleção",
+
+  // ── Revisão de sinalizações (StudioFlagReviewPage + Card) ─────────────────
+  // Só chrome — os títulos dos lançamentos sinalizados, as citações de quem
+  // denuncia e os detalhes de reclamação/autoria abaixo são conteúdo, vindo
+  // da API em modo real, e ficam em inglês nos dois modos (§1). O `verb`
+  // guardado ao resolver é um id estável, não a etiqueta em português —
+  // resolve através de RESOLUTION_LABELS, nunca o mostres em bruto (§5.1).
+  "flagReview.header.eyebrow": "Conselho · revisão de sinalizações",
+  "flagReview.header.title": "Quando a sala <em>sinaliza</em> algo.",
+  "flagReview.header.dek":
+    "Quem ouve pode sinalizar um lançamento por amostras não autorizadas, créditos em falta ou atribuição incorreta. Uma pessoa da curadoria reclama cada caso, o artista identificado pode responder, e <em>cada decisão fica registada com um motivo</em>. Nada é removido em silêncio.",
+
+  "flagReview.resolvedTag": "Resolvido · {verb}",
+  "flagReview.dismissedClearedTag": "Recusado · esclarecido",
+  "flagReview.playAria": "Reproduzir",
+  "flagReview.claimReviewCta": "Reclamar e rever",
+  "flagReview.dismissCta": "Recusar",
+  "flagReview.correctLineupCta": "Corrigir a formação",
+  "flagReview.requestFixCta": "Pedir correção",
+  "flagReview.holdUntilFixedCta": "Reter até corrigir",
+
+  "flagReview.resolution.dismissed": "recusado",
+  "flagReview.resolution.corrected": "corrigido",
+  "flagReview.resolution.held": "retido",
+
+  "flagReview.toast.claimed": "Reclamado — é teu para rever",
+  "flagReview.toast.lineupConfirmed": "Formação confirmada como exata",
+  "flagReview.toast.lineupCorrected": "Formação corrigida",
+  "flagReview.toast.dismissedCreditsConfirmed":
+    "Sinalização recusada — créditos confirmados como corretos",
+  "flagReview.toast.correctionRequested": "Correção pedida ao artista",
+  "flagReview.toast.heldUntilCorrected": "Retido até corrigir",
+
+  // ── Sala ao vivo (StudioLivePage + LiveNow + LiveChat) ────────────────────
+  // Só chrome — o nome do programa/faixa/artista ao vivo, a transcrição do
+  // chat e as estatísticas por audição abaixo são conteúdo (o estado real da
+  // sala e o registo do chat), vindo da API em modo real, e ficam em inglês
+  // nos dois modos (§1). Os `id` dos separadores do chat são valores
+  // estáveis — nunca a etiqueta traduzida (§5.1).
+  "live.ribbon.onAirNow": "No ar agora",
+
+  "liveNow.saveTrackCta": "Guardar faixa",
+  "liveNow.savedCta": "Guardada",
+  "liveNow.savedToast": "Faixa guardada na tua biblioteca",
+  "liveNow.removedToast": "Removida da tua biblioteca",
+  "liveNow.lyricsNotesCta": "Letra e notas →",
+  "liveNow.listenersLabel":
+    "na sala contigo · {sustainers} sustentadores, {casual} ocasionais",
+  "liveNow.tippedLabel": "em gorjetas durante este set · 100% para os artistas",
+  "liveNow.perPlayLabel": "por reprodução válida · paga a {artist} agora mesmo",
+  "liveNow.setBuilding.heading": "O set · <em>a construir-se ao vivo</em>",
+  "liveNow.trackPosition": "Faixa {current} de {total} · saltou da fila",
+  "liveNow.tipArtistCta": "Dar {amount} a {artist}",
+
+  "liveChat.tabs.chat.label": "Chat",
+  "liveChat.tabs.tips.label": "Gorjetas",
+  "liveChat.tabs.listeners.label": "Ouvintes",
+  "liveChat.inputPlaceholder": "diz algo à sala…",
+  "liveChat.sendAria": "Enviar",
+  "liveChat.sentToast": "Enviado para a sala",
+  "liveChat.tipPresetCta": "Dar {amount}",
+  "liveChat.tipCustomCta": "Dar €__",
+
+  // ── Consola de transmissão ao vivo (StudioBroadcastPage + Console) ───────
+  // Só chrome — nomes de dispositivos, títulos de faixas na folha de cue,
+  // mensagens de gorjeta e o chat de apoio (talkback) abaixo são conteúdo,
+  // vindo da API em modo real, e ficam em inglês nos dois modos (§1).
+  "broadcast.status.onAir": "Estás <em>no ar</em>",
+  "broadcast.status.livePill": "ao vivo",
+  "broadcast.status.meta":
+    "<em>{count}</em> na sala · {sustainers} sustentadores · {cities} cidades",
+  "broadcast.status.pauseMicCta": "Pausar microfone",
+  "broadcast.status.endBroadcastCta": "Terminar transmissão",
+  "broadcast.status.toast.micPaused":
+    "Microfone em pausa — a sala ouve silêncio",
+  "broadcast.status.toast.ending":
+    "A transmissão termina em 5… a arquivar como reposição",
+
+  "broadcast.audioIn.panelLabel": "Entrada de áudio",
+  "broadcast.audioIn.singleCamVideo": "Vídeo de uma câmara",
+  "broadcast.audioIn.cameraNote":
+    "Só áudio é a predefinição para salas de audição. A câmara chega na Fase 5 — por agora está desativada.",
+
+  "broadcast.nowPlaying.onAirNow": "No ar agora",
+  "broadcast.nowPlaying.setListLabel":
+    "Lista do set · <em>escreve à medida que tocas</em> — torna-se a folha de cue no arquivo",
+  "broadcast.nowPlaying.inputPlaceholder":
+    "O que acabaste de tocar? Artista — título…",
+  "broadcast.nowPlaying.inputAria": "Adicionar uma faixa à lista do set",
+  "broadcast.nowPlaying.addCta": "Adicionar",
+  "broadcast.nowPlaying.justAdded": "Acabado de adicionar",
+  "broadcast.nowPlaying.liveYourOwn": "ao vivo, teu",
+  "broadcast.nowPlaying.badge.onAir": "No ar",
+  "broadcast.nowPlaying.badge.matched": "€ correspondido",
+  "broadcast.nowPlaying.badge.hold": "Em espera",
+  "broadcast.nowPlaying.footer":
+    "Faixas correspondidas pagam os artistas automaticamente a partir do pagamento deste set. <em>Faixas retidas esperam</em> até o sistema de correspondência do conselho as validar — ninguém perde um cêntimo entretanto.",
+
+  "broadcast.aside.tipsTab": "Gorjetas ao vivo <em>{amount}</em>",
+  "broadcast.aside.talkbackTab": "Apoio <em>{count}</em>",
+  "broadcast.aside.tipsTotalLabel":
+    "Esta noite, até agora · <em>100% para ti</em>",
+  "broadcast.aside.talkback.placeholder":
+    "Fala com a tua moderação (quem ouve não vê isto)…",
+  "broadcast.aside.talkback.aria": "Falar com a tua moderação",
+  "broadcast.aside.talkback.sendCta": "Enviar",
+  "broadcast.aside.talkback.sentToast": "Enviado à tua moderação",
+
+  // ── Loja de partituras (StudioSheetStorePage + Preview + Checkout + Also) ──
+  "sheet.store.eyebrow": "Arquivo de partituras e letras",
+  "sheet.store.title": "Compra a <em>partitura</em>, paga a quem a fez.",
+  "sheet.store.dek":
+    "Um micropagamento de {amount} desbloqueia um PDF limpo e imprimível — e reparte <em>{splitRatio}</em> por quem compôs e transcreveu. Ler é grátis; descarregar paga.",
+
+  "sheet.preview.eyebrow": "Partitura · transcrição",
+  "sheet.preview.byLine":
+    "música & letra de <strong>{composer}</strong> · de <em>{album}</em>",
+  "sheet.preview.freePreview":
+    "Pré-visualização gratuita · <em>página {page} de {total}</em>",
+  "sheet.preview.watermark": "QUEERPULSE · PRÉVIA",
+  "sheet.preview.lockedPages": "As páginas {from}–{to} desbloqueiam na compra",
+  "sheet.preview.transcribedBy": "Transcrito por <em>{name}</em>",
+  "sheet.preview.transcriberRole": "Transcrição da comunidade",
+  "sheet.preview.transcriberNote":
+    "<em>pago pela tua compra, não pelo fundo, quando compras</em>",
+
+  "sheet.checkout.title": "O teu <em>download</em>",
+  "sheet.checkout.subtitle":
+    "Uma partitura · PDF limpo · tua para guardar & imprimir",
+  "sheet.checkout.processingLabel": "Processamento",
+  "sheet.checkout.processingSub": "taxa SEPA da cooperativa",
+  "sheet.checkout.totalLabel": "Total",
+  "sheet.checkout.splitHeading":
+    "Para onde vão os teus {amount} · {splitRatio}",
+  "sheet.checkout.role.transcriber": "transcrição",
+  "sheet.checkout.role.composer": "composição",
+  "sheet.checkout.role.coop": "A cooperativa · alojamento & infraestrutura",
+  "sheet.checkout.splitFoot":
+    "As partituras pagam <em>90%</em> a quem as fez — mais generoso do que os 80% do streaming, porque o trabalho é único e alojar um PDF custa quase nada. <em>Aprovado na assembleia de 9 de junho.</em>",
+  "sheet.checkout.payMethod.card.label": "Cartão guardado",
+  "sheet.checkout.payMethod.card.sub": "um toque, sem reintroduzir dados",
+  "sheet.checkout.payMethod.sepa.label": "SEPA direto",
+  "sheet.checkout.payMethod.sepa.sub":
+    "taxa mais baixa, liquidação em 1–2 dias",
+  "sheet.checkout.paidLabel": "Pago",
+  "sheet.checkout.downloadingLabel": "a descarregar o PDF…",
+  "sheet.checkout.payCta": "Pagar {amount} & descarregar →",
+  "sheet.checkout.note":
+    "Download instantâneo · descarrega outra vez quando quiseres a partir da tua biblioteca · <em>quem fez isto é pago esta noite</em>.",
+  "sheet.checkout.downloadedToast":
+    "Descarregado — {amount} pagos a {names} esta noite",
+
+  "sheet.also.heading": "Da mesma <em>transcrição</em>",
+  "sheet.also.subtitle_one":
+    "{name} · {count} partitura · {amount} chega a quem transcreve por download",
+  "sheet.also.subtitle_other":
+    "{name} · {count} partituras · {amount} chega a quem transcreve por download",
+  "sheet.also.freeReadTag": "Leitura gratuita",
+
+  // ── Recibo de gorjeta (StudioReceiptPage) ──────────────────────────────────
+  "receipt.tipEyebrow": "Gorjeta · enquanto ouvias",
+  "receipt.byPrefix": "de",
+  "receipt.fromAlbum": "de <em>{album}</em>",
+  "receipt.thanksTitle": "{artist} recebeu <em>{amount}</em>.",
+  "receipt.thanksSub":
+    "Cada cêntimo. Sem corte da plataforma. <em>Foste tu que fizeste isso.</em>",
+  "receipt.splitHeading": "Para onde foi o <em>dinheiro</em>",
+  "receipt.splitNote": "100% direto, sem exceções, nas gorjetas.",
+  "receipt.split.artistSub_one": "Direto, SEPA · liquida em {count} dia",
+  "receipt.split.artistSub_other": "Direto, SEPA · liquida em {count} dias",
+  "receipt.split.platformName": "Plataforma · a sala",
+  "receipt.split.platformSub":
+    "Taxa de processamento da Stripe absorvida pela cooperativa nas gorjetas.",
+  "receipt.split.artistPct": "100%",
+  "receipt.split.platformPct": "0%",
+  "receipt.detail.receiptNo": "N.º do recibo",
+  "receipt.detail.dateTime": "Data & hora",
+  "receipt.detail.from": "De",
+  "receipt.detail.method": "Método",
+  "receipt.detail.postedToLedger": "Registado no livro-razão",
+  "receipt.detail.visibility": "Visibilidade",
+  "receipt.detail.sustainerSince": "a apoiar desde {date}",
+  "receipt.detail.chosenByDefault": "<em>escolhido por predefinição</em>",
+  "receipt.detail.visibilityValue":
+    "Pública · com o teu nome · <em>muda para anónimo</em>",
+  "receipt.note.label": "A tua nota para {artist}",
+  "receipt.note.repliedSuffix": "<em>respondeu</em>",
+  "receipt.note.replyWhen": "{relativeTime} · ainda no ar, duas faixas depois",
+  "receipt.footer.auditablePrefix": "Auditável no",
+  "receipt.footer.publicLedgerLink": "livro-razão público",
+  "receipt.footer.rowLabel": "linha {code}",
+  "receipt.footer.exportCta": "Exportar PDF",
+  "receipt.actions.share": "Partilhar — cartão pago",
+  "receipt.actions.tipAgain": "Dar gorjeta outra vez",
+  "receipt.actions.openArtistPage": "Abrir a página de {artist}",
+  "receipt.actions.emailCopy": "Enviar-me uma cópia por email",
+  "receipt.toast.shareCopied": "Cartão pago copiado — partilha onde quiseres.",
+  "receipt.toast.tipAgain": "Gorjeta para {artist} outra vez — a mesma faixa.",
+  "receipt.toast.emailCopy":
+    "Uma cópia está a caminho da tua caixa de entrada.",
+  "receipt.privacyNote":
+    "Por predefinição, as gorjetas são <em>públicas, com o teu nome</em>. Podes tornar esta anónima, ou definir todas as gorjetas futuras como anónimas, nas definições. <em>Não partilhamos dados de gorjetas com ninguém.</em> <a>Compromissos de privacidade →</a>",
+
+  // ── Checkout da contribuição (StudioCheckoutPage) ──────────────────────────
+  "checkout.doneToast": "Já estás a contribuir para o studio — bem-vinde.",
+  "checkout.doneTitle": "Já estás a <em>contribuir</em> para isto.",
+  "checkout.doneBody":
+    "Bem-vinde. Cada faixa que ouvires aqui paga a quem a fez. O teu primeiro pagamento de {amount} está feito — o resto é só ouvir.",
+  "checkout.startListeningCta": "Começar a ouvir →",
+  "checkout.goToLibraryCta": "Ir para a tua biblioteca",
+  "checkout.eyebrow": "Checkout",
+  "checkout.title": "Contribui para o <em>studio.</em>",
+  "checkout.dek":
+    "Sete euros por mês mantêm viva uma plataforma de música com pagamento justo — e pagam às pessoas artistas que realmente ouves, em cada reprodução.",
+  "checkout.nameLabel": "Nome no cartão",
+  "checkout.namePlaceholder": "O teu nome",
+  "checkout.cardLabel": "Número do cartão",
+  "checkout.expiryLabel": "Validade",
+  "checkout.cvcLabel": "CVC",
+  "checkout.payCta": "Pagar {amount}{cadence} →",
+  "checkout.cadenceMonthly": "/ mês",
+  "checkout.prototypeNote":
+    "Isto é um protótipo — nenhum cartão é cobrado e nada é guardado.",
+  "checkout.planName": "Contribuir",
+  "checkout.membershipLabel": "Adesão <em>{name}</em>",
+  "checkout.dueTodayLabel": "A pagar hoje",
+  "checkout.lines.unlimitedListening": "Audição ilimitada",
+  "checkout.lines.losslessAudio": "Áudio sem perdas · FLAC",
+  "checkout.lines.liveRooms": "Salas de transmissão ao vivo",
+  "checkout.lines.artistShare": "Vai para artistas",
+  "checkout.lines.platformShare": "Plataforma & alojamento",
+  "checkout.lines.included": "incluído",
+  "checkout.reassure.cancel":
+    "Cancela quando quiseres — um clique, sem email, sem chamada de retenção.",
+  "checkout.reassure.share":
+    "{percent}% de cada euro é pago diretamente às pessoas artistas que ouves.",
+  "checkout.reassure.noAds":
+    "Sem anúncios, nunca. Os teus dados de audição nunca são vendidos.",
+
+  // ── Fundo de solidariedade (StudioSolidarityFundPage + Balance + Flows + Log) ──
+  "fund.hero.liveLabel": "Público · atualizado às segundas ao meio-dia",
+  "fund.hero.title": "O fundo de <em>solidariedade</em>.",
+  "fund.hero.dek":
+    "Uma pequena reserva partilhada que paga a quem a taxa por reprodução não consegue alcançar — <em>quem transcreve, quem traduz, quem está a começar, e artistas num mês difícil</em>. De onde vem e para onde vai, por inteiro.",
+
+  "fund.balance.label": "Saldo do fundo · hoje",
+  "fund.balance.paidThisQuarterLabel": "pago este trimestre",
+  "fund.balance.peoplePaidLabel_one": "pessoa paga por ele este ano",
+  "fund.balance.peoplePaidLabel_other": "pessoas pagas por ele este ano",
+
+  "fund.flows.heading": "De onde <em>vem</em>, para onde <em>vai</em>",
+  "fund.flows.inHeading": "Entradas · este trimestre",
+  "fund.flows.outHeading": "Saídas · este trimestre",
+
+  "fund.flows.in.surplus.label": "Excedente de <em>subscrições</em>",
+  "fund.flows.in.surplus.desc":
+    "Quando a receita de quem sustenta supera o livro-razão de pagamentos, a diferença acumula-se aqui.",
+  "fund.flows.in.roundups.label": "Arredondamentos de <em>gorjetas</em>",
+  "fund.flows.in.roundups.desc":
+    "Os 5% opcionais que algumas pessoas acrescentam a uma gorjeta.",
+  "fund.flows.in.holds.label": "<em>Retenções</em> resolvidas",
+  "fund.flows.in.holds.desc":
+    "Pagamentos de sets não correspondidos que ficam por reclamar após um ano.",
+  "fund.flows.in.gifts.label": "<em>Doações</em> diretas",
+  "fund.flows.in.gifts.desc":
+    "Doações pontuais de pessoas membros e de uma fundação de Lisboa.",
+
+  "fund.flows.out.transcribers.label": "Transcrição & <em>tradução</em>",
+  "fund.flows.out.transcribers.desc":
+    "Partituras, traduções de letras — pagas por peça aceite.",
+  "fund.flows.out.grants.label": "Bolsas de <em>primeira edição</em>",
+  "fund.flows.out.grants.desc":
+    "1 200 € sem restrições para pessoas membros estreantes na leva da primavera.",
+  "fund.flows.out.emergency.label": "Apoio de <em>emergência</em> a artistas",
+  "fund.flows.out.emergency.desc":
+    "Apoio sem perguntas para quem está num mês difícil.",
+  "fund.flows.out.access.label": "Trabalho de <em>acessibilidade</em>",
+  "fund.flows.out.access.desc":
+    "Intérpretes de LGP, passagens de legendagem, a auditoria de leitores de ecrã.",
+
+  "fund.log.heading": "<em>Desembolsos</em> recentes",
+  "fund.log.dek":
+    "Cada pagamento do fundo fica aqui registado com um nome (quando há consentimento) e um motivo. <em>Sem caixa negra.</em>",
+  "fund.log.showingOf": "A mostrar {shown} de {total} este ano",
+  "fund.log.showLess": "mostrar menos",
+  "fund.log.fullLog": "registo completo",
+  "fund.log.exportCsv": "exportar CSV",
+  "fund.log.exportToast": "Registo de desembolsos exportado como CSV",
+  "fund.log.tag.transcriber": "Transcrição",
+  "fund.log.tag.emergency": "Emergência",
+  "fund.log.tag.grant": "Bolsa",
+  "fund.log.tag.access": "Acessibilidade",
+  "fund.log.tag.translator": "Tradução",
+  "fund.log.csv.date": "Data",
+  "fund.log.csv.category": "Categoria",
+  "fund.log.csv.recipient": "Quem recebeu",
+  "fund.log.csv.note": "Nota",
+  "fund.log.csv.amount": "Montante (EUR)",
+
+  "fund.apply.heading": "Precisas? <em>Pede.</em>",
+  "fund.apply.requestCta": "Pedir apoio de emergência",
+  "fund.apply.requestToast":
+    "O formulário de apoio de emergência abre num fluxo privado",
+  "fund.apply.seeGrantsCta": "Ver bolsas & chamadas abertas →",
+
+  // ── Chamadas abertas & comissões (StudioOpenCallsPage + Card + Skeleton) ──
+  "calls.hero.eyebrow": "Da parte do conselho",
+  "calls.hero.title": "Chamadas <em>abertas</em> & comissões.",
+  "calls.hero.dek":
+    "Propostas financiadas pelo conselho e pela cooperativa. Candidata-te diretamente — anexa <em>uma única faixa ou edição</em> do teu catálogo. Sem cartas de apresentação, sem portefólios; o trabalho fala por si.",
+
+  "calls.filter.all": "Tudo aberto",
+  "calls.filter.commissions": "Comissões",
+  "calls.filter.grants": "Bolsas",
+  "calls.filter.residencies": "Residências",
+  "calls.filter.closingSoon": "A fechar em breve",
+  "calls.filter.openCount":
+    "<em>{count}</em> abertas · já te candidataste a {applied}",
+
+  "calls.card.saveCta": "Guardar",
+  "calls.card.applyCta": "Candidatar →",
+  "calls.card.saveToast": "Proposta guardada no teu painel",
+  "calls.card.attachLabel": "Anexa uma faixa do teu catálogo",
+  "calls.card.submitCta": "Submeter candidatura",
+  "calls.card.cancelCta": "Cancelar",
+  "calls.card.singleTrackNote":
+    "<em>Só uma faixa</em> — o conselho quer o teu melhor, não a tua pasta inteira.",
+  "calls.card.submittedToast":
+    "Candidatura submetida — o conselho analisa na triagem de segunda-feira",
+
+  "calls.applied.statusPrefix": "Estado ·",
+  "calls.applied.decisionBy": "decisão até {date}",
+  "calls.applied.withdrawCta": "Retirar",
+  "calls.applied.withdrawnToast": "Candidatura retirada",
+  "calls.applied.flatLabel": "fixo",
+
+  // ── Submissão de set (StudioSetSubmissionPage + Matcher + Sidebar) ────────
+  "setSubmission.hero.eyebrow": "Nova submissão · set ou mix de DJ",
+  "setSubmission.hero.title": "Submete um <em>set</em>.",
+  "setSubmission.hero.dek":
+    "Carrega o ficheiro completo, cola a tua tracklist com marcas de tempo, e o nosso comparador encontra as fontes originais para que <em>cada faixa do set pague a quem a fez</em>. As faixas não correspondidas retêm o pagamento em segurança até serem confirmadas — ninguém perde um cêntimo.",
+
+  "setSubmission.steps.file": "Ficheiro",
+  "setSubmission.steps.tracklist": "Tracklist & comparador",
+  "setSubmission.steps.notes": "Notas & publicação",
+
+  "setSubmission.matcher.uploadedBadge": "Carregado",
+  "setSubmission.matcher.tracklistLabel":
+    "Cola a tua tracklist · marca de tempo — artista — título",
+  "setSubmission.matcher.pasteHint":
+    "Uma linha por faixa. Aceitamos a maioria dos formatos. <em>Volta a correr o comparador</em> sempre que editares.",
+  "setSubmission.matcher.runCta": "▸ Correr o comparador",
+  "setSubmission.matcher.matchingCta": "A comparar…",
+  "setSubmission.matcher.resultsLabel":
+    "Resultados do comparador · <em>resolvidos face ao catálogo + base de dados PRO</em>",
+  "setSubmission.matcher.payLine":
+    "{who} · <em>{amount}/reprodução para {firstName}</em>",
+  "setSubmission.matcher.noSourceFound":
+    "fonte não encontrada · pagamento retido",
+  "setSubmission.matcher.matchedBadge": "Correspondida",
+  "setSubmission.matcher.identifyCta": "Identificar",
+  "setSubmission.matcher.identifyToast":
+    "Pesquisa aberta para identificar esta faixa",
+  "setSubmission.matcher.matchedResultToast":
+    "{matched} de {total} correspondidas · {held} retidas para confirmação",
+
+  "setSubmission.sidebar.detailsHeading": "<em>Detalhes</em> do set",
+  "setSubmission.sidebar.titleLabel": "Título do set",
+  "setSubmission.sidebar.typeLabel": "Tipo",
+  "setSubmission.sidebar.type.liveDjSet": "Set de DJ ao vivo",
+  "setSubmission.sidebar.type.studioMix": "Mix de estúdio",
+  "setSubmission.sidebar.type.recordedBroadcast": "Transmissão gravada",
+  "setSubmission.sidebar.payoutPreviewHeading":
+    "Pré-visualização do <em>pagamento</em>",
+  "setSubmission.sidebar.tracksInSet": "Faixas no set",
+  "setSubmission.sidebar.matchedPaying": "Correspondidas & a pagar",
+  "setSubmission.sidebar.tracksCount_one": "{count} faixa",
+  "setSubmission.sidebar.tracksCount_other": "{count} faixas",
+  "setSubmission.sidebar.onHold": "Em espera (não correspondidas)",
+  "setSubmission.sidebar.payoutPool": "Bolsa de pagamento do set",
+  "setSubmission.sidebar.holdNote":
+    "As faixas não correspondidas <em>retêm a sua parte</em> até o comparador do conselho as confirmar. O set fica disponível já; o dinheiro retido é libertado assim que a fonte for confirmada.",
+  "setSubmission.sidebar.submitCta": "Submeter set →",
+  "setSubmission.sidebar.submittedToast":
+    "Set submetido — disponível já, partes retidas pendentes de confirmação",
+
+  // ── Fora do ar (StudioOffAirPage + Hero) ───────────────────────────────────
+  "offAir.page.browseNote":
+    "As portas estão fechadas, mas as prateleiras estão abertas. <em>Explora o que quiseres aqui em baixo</em> — continua tudo a tocar.",
+  "offAir.hero.statusLine": "Fora do ar · {time} em Lisboa",
+  "offAir.hero.roomDark": "a sala está às escuras",
+  "offAir.hero.title": "A sala está <em>fechada</em> por esta noite.",
+  "offAir.hero.untilDoors": "até abrir",
+  "offAir.hero.nextBroadcastLabel": "Próxima transmissão · {time} Lisboa",
+  "offAir.hero.nightcapEyebrow": "O acalanto de ontem à noite",
+  "offAir.hero.replayAria": "Repetir o acalanto",
+  "offAir.hero.replayingToast": "A repetir {title}",
+  "offAir.hero.paidOutSuffix": "{amount} pagos · repete quando quiseres",
 };

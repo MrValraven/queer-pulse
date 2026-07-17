@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
 import { routes } from "../../app/routeMap";
 import { MEMBERS_HERE } from "./directorySpace.data";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function DirectorySpaceAside({ place }: Props) {
+  const { t } = useTranslation();
   const igUrl = place.social.instagram
     ? `https://instagram.com/${place.social.instagram.replace(/^@/, "")}`
     : undefined;
@@ -109,7 +111,7 @@ export function DirectorySpaceAside({ place }: Props) {
               className={s.ctaBtn}
               href={`https://${place.social.website}`}
             >
-              Visit website →
+              {t("marketing:directory.detail.visitWebsite")}
             </Button>
           ) : place.social.email ? (
             <Button
@@ -117,17 +119,17 @@ export function DirectorySpaceAside({ place }: Props) {
               className={s.ctaBtn}
               href={`mailto:${place.social.email}`}
             >
-              Get in touch →
+              {t("marketing:directory.detail.getInTouch")}
             </Button>
           ) : null}
           <Button variant="ghost" className={s.ctaBtn} to={routes.directory}>
-            Back to directory
+            {t("marketing:directory.detail.backToDirectory")}
           </Button>
         </div>
       </div>
 
       <div className={s.sideCard}>
-        <h4>Who runs it</h4>
+        <h4>{t("marketing:directory.detail.whoRunsIt")}</h4>
         <div className={[s.ownerAv, TINT[place.owner.tint]].join(" ")}>
           {place.owner.initials}
         </div>
@@ -139,26 +141,32 @@ export function DirectorySpaceAside({ place }: Props) {
             place.owner.inQueerPulse ? s.qpChipYes : s.qpChipNo,
           ].join(" ")}
         >
-          {place.owner.inQueerPulse ? "On QueerPulse" : "Community-vouched"}
+          {t(
+            place.owner.inQueerPulse
+              ? "marketing:directory.detail.onQueerPulse"
+              : "marketing:directory.detail.communityVouched",
+          )}
         </span>
         <p className={s.ownerBio}>{place.owner.bio}</p>
         {place.owner.inQueerPulse && (
           <Button variant="ghost" className={s.ctaBtn} to={routes.members}>
-            View {place.owner.first}'s profile →
+            {t("marketing:directory.detail.viewProfile", {
+              name: place.owner.first,
+            })}
           </Button>
         )}
       </div>
 
       <div className={s.sideCard}>
-        <h4>Members here lately</h4>
+        <h4>{t("marketing:directory.detail.membersHereLately")}</h4>
         <div className={s.whoHere}>
-          {MEMBERS_HERE.map((m) => (
-            <div key={m.initials} className={s.whoRow}>
-              <span className={[s.whoAv, TINT[m.tint]].join(" ")}>
-                {m.initials}
+          {MEMBERS_HERE.map((member) => (
+            <div key={member.initials} className={s.whoRow}>
+              <span className={[s.whoAv, TINT[member.tint]].join(" ")}>
+                {member.initials}
               </span>
-              <Link to={routes.members}>{m.name}</Link>
-              <span className={s.whoWhen}>{m.when}</span>
+              <Link to={routes.members}>{member.name}</Link>
+              <span className={s.whoWhen}>{t(member.whenKey)}</span>
             </div>
           ))}
         </div>
@@ -166,12 +174,12 @@ export function DirectorySpaceAside({ place }: Props) {
 
       {place.upcoming && place.upcoming.length > 0 && (
         <div className={s.sideCard}>
-          <h4>Upcoming here</h4>
-          {place.upcoming.map((u) => (
-            <p key={u.title} className={s.upRow}>
-              <b>{u.when}</b>
+          <h4>{t("marketing:directory.detail.upcomingHere")}</h4>
+          {place.upcoming.map((upcomingEvent) => (
+            <p key={upcomingEvent.title} className={s.upRow}>
+              <b>{upcomingEvent.when}</b>
               <br />
-              {u.title}
+              {upcomingEvent.title}
             </p>
           ))}
         </div>

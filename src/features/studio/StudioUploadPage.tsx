@@ -1,16 +1,22 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioCreatorShell } from "./StudioCreatorShell";
 import { UPLOAD_STEPS } from "./studioUpload.data";
 import { UploadMainCol, UploadSidebar } from "./StudioUploadSections";
 import s from "./creator.module.css";
 
 export function StudioUploadPage() {
+  const { t } = useTranslation();
   return (
     <StudioCreatorShell>
       <section className={s.hero}>
         <div className={s.heroInner}>
-          <div className={s.eb}>New release · upload</div>
+          <div className={s.eb}>{t("studio:upload.hero.eyebrow")}</div>
           <h1>
-            Bring it <em>home.</em>
+            <Translation
+              i18nKey="studio:upload.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div
             className="sub"
@@ -22,22 +28,21 @@ export function StudioUploadPage() {
               marginTop: 14,
             }}
           >
-            Drop the masters. We transcode, you keep the originals. Three steps,
-            about eight minutes.
+            {t("studio:upload.hero.sub")}
           </div>
         </div>
       </section>
 
       <div className={s.stepper}>
-        {UPLOAD_STEPS.map((st) => (
+        {UPLOAD_STEPS.map((step) => (
           <div
-            key={st.num}
-            className={[s.step, st.on && s.stepOn].filter(Boolean).join(" ")}
+            key={step.num}
+            className={[s.step, step.on && s.stepOn].filter(Boolean).join(" ")}
           >
-            <span className={s.stepNum}>{st.num}</span>
+            <span className={s.stepNum}>{step.num}</span>
             <span className={s.stepNm}>
-              {st.nm}
-              <small>{st.sub}</small>
+              {t(step.nmKey)}
+              <small>{t(step.subKey)}</small>
             </span>
           </div>
         ))}

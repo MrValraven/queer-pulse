@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberName } from "../members/data/members";
 import styles from "./StoryPage.module.css";
 
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
+  const { t } = useTranslation();
+
   return (
     <>
       <div className={styles.articleWrap}>
@@ -148,14 +152,17 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
                 Príncipe Real since 2020.
               </div>
               <Link to={profilePath} className={styles.authorLink}>
-                View her profile →
+                {t("magazine:story.viewProfileCta")}
               </Link>
             </div>
           </div>
 
           <div className={styles.more}>
             <h2>
-              More from <em>the community</em>
+              <Translation
+                i18nKey="magazine:story.moreHeading"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.moreGrid}>
               <Link to={storyPath} className={styles.moreCard}>
@@ -185,14 +192,15 @@ export function StoryArticle({ profilePath, storyPath, invitePath }: Props) {
 
       <Outro
         title={
-          <>
-            Want to be part of what <em>gets written about next?</em>
-          </>
+          <Translation
+            i18nKey="magazine:story.outro.studio.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The stories are about the people in the room. Join us."
+        sub={t("magazine:story.outro.studio.sub")}
       >
         <Button to={invitePath} variant="primary" size="lg">
-          Request an invite
+          {t("common:cta.requestInvite")}
         </Button>
       </Outro>
     </>

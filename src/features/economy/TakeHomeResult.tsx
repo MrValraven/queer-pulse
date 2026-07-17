@@ -1,5 +1,7 @@
 import { FiCheck } from "react-icons/fi";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { estimateTakeHome, type TaxYear } from "./tax.calc";
 import {
   SIMPLIFIED_COEFFICIENTS,
@@ -31,6 +33,8 @@ export function TakeHomeResult({
   startupYear,
   status,
 }: TakeHomeResultProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const grossNum = safeNumber(gross);
   const ssRate = status === "eni" ? SS_RATE_ENI : SS_RATE_FREELANCER;
 
@@ -57,17 +61,20 @@ export function TakeHomeResult({
           <FiCheck />
         </span>
         <p className={styles.netLabel}>
-          You take home, after IRS &amp; Segurança Social
+          {t("economy:takeHome.result.netLabel")}
         </p>
-        <p className={styles.netValue}>{euro(result.net)}</p>
+        <p className={styles.netValue}>{fmt.currency(result.net)}</p>
         <p className={styles.netMonthly}>
-          ≈ <strong>{euro(result.net / 12)}</strong> a month
+          ≈ <strong>{fmt.currency(result.net / 12)}</strong>{" "}
+          {t("economy:takeHome.result.perMonth")}
         </p>
 
         <div
           className={styles.bar}
           role="img"
-          aria-label={`You keep ${Math.round(keptPct)}% of your gross income`}
+          aria-label={t("economy:takeHome.result.barAriaLabel", {
+            percent: Math.round(keptPct),
+          })}
         >
           <div
             className={styles.barKept}
@@ -75,31 +82,34 @@ export function TakeHomeResult({
           />
         </div>
         <p className={styles.barCaption}>
-          You keep <em>{Math.round(keptPct)}%</em> of every euro you bill.
-          Effective IRS + SS rate: {ratePct}%.
+          <Translation
+            i18nKey="economy:takeHome.result.keepCaption"
+            components={{ em: <em /> }}
+            values={{ percent: Math.round(keptPct), rate: ratePct }}
+          />
         </p>
       </div>
 
       <dl className={styles.breakdown}>
         <div className={styles.row}>
-          <dt>Annual gross</dt>
-          <dd>{euro(result.gross)}</dd>
+          <dt>{t("economy:takeHome.result.annualGross")}</dt>
+          <dd>{fmt.currency(result.gross)}</dd>
         </div>
         <div className={`${styles.row} ${styles.deduct}`}>
-          <dt>− Segurança Social</dt>
-          <dd>−{euro(result.ss)}</dd>
+          <dt>{t("economy:takeHome.result.segurancaSocial")}</dt>
+          <dd>−{fmt.currency(result.ss)}</dd>
         </div>
         <div className={`${styles.row} ${styles.subtotal}`}>
-          <dt>Taxable income</dt>
-          <dd>{euro(result.taxable)}</dd>
+          <dt>{t("economy:takeHome.result.taxableIncome")}</dt>
+          <dd>{fmt.currency(result.taxable)}</dd>
         </div>
         <div className={`${styles.row} ${styles.deduct}`}>
-          <dt>− IRS</dt>
-          <dd>−{euro(result.irs)}</dd>
+          <dt>{t("economy:takeHome.result.irs")}</dt>
+          <dd>−{fmt.currency(result.irs)}</dd>
         </div>
         <div className={`${styles.row} ${styles.total}`}>
-          <dt>Net take-home</dt>
-          <dd>{euro(result.net)}</dd>
+          <dt>{t("economy:takeHome.result.netTakeHome")}</dt>
+          <dd>{fmt.currency(result.net)}</dd>
         </div>
       </dl>
 

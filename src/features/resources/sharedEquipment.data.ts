@@ -1,50 +1,46 @@
 import type { ImageSlotTint } from "../../shared/components/ui";
 
 export interface Equipment {
-  name: string;
-  specs: string;
-  status: string;
+  nameKey: string;
+  specsKey: string;
+  statusKey: string;
   available: boolean;
   tint: ImageSlotTint;
 }
 
 export const EQUIPMENT: Equipment[] = [
   {
-    name: "Two-colour Risograph",
-    specs:
-      "Reconditioned RZ, A3, currently loaded coral + black. Lives at the atelier for collective use.",
-    status: "Free this week",
+    nameKey: "resources:sharedEquipment.item1.name",
+    specsKey: "resources:sharedEquipment.item1.specs",
+    statusKey: "resources:sharedEquipment.item1.status",
     available: true,
     tint: "coral",
   },
   {
-    name: "Electric kiln",
-    specs:
-      "Mid-size top-loader, cone 6. Firings are scheduled — add yours to the shared sheet a week ahead.",
-    status: "Next firing Sunday",
+    nameKey: "resources:sharedEquipment.item2.name",
+    specsKey: "resources:sharedEquipment.item2.specs",
+    statusKey: "resources:sharedEquipment.item2.status",
     available: true,
     tint: "jade",
   },
   {
-    name: "Projector + stand",
-    specs:
-      "1080p, long-throw, good for tracing and projection work. Portable with the soft case.",
-    status: "On loan until Fri",
+    nameKey: "resources:sharedEquipment.item3.name",
+    specsKey: "resources:sharedEquipment.item3.specs",
+    statusKey: "resources:sharedEquipment.item3.status",
     available: false,
     tint: "plum",
   },
   {
-    name: "Bookbinding kit",
-    specs:
-      "Awls, bone folders, waxed thread, board shears. For zines and small editions.",
-    status: "Free this week",
+    nameKey: "resources:sharedEquipment.item4.name",
+    specsKey: "resources:sharedEquipment.item4.specs",
+    statusKey: "resources:sharedEquipment.item4.status",
     available: true,
     tint: "plum",
   },
 ];
 
-export const CARE = [
-  "Book it, clean it, log it — the three rules that keep shared kit shared.",
-  "Leave it better than you found it. If something breaks, say so in the channel; nobody is in trouble, we just need to know.",
-  "Consumables (ink, thread, board) work on a top-up honesty box. Use a lot, chip in a little.",
+export const CARE_KEYS = [
+  "resources:sharedEquipment.care1",
+  "resources:sharedEquipment.care2",
+  "resources:sharedEquipment.care3",
 ];

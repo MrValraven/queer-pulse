@@ -1,4 +1,6 @@
 import { FiX } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { BudgetRow } from "./microGrants.data";
 import styles from "./MicroGrantsPage.module.css";
 
@@ -16,21 +18,26 @@ export function BudgetStep({
   removeRow: (id: number) => void;
   updateRow: (id: number, field: "item" | "amount", val: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.stepTitle}>
-        How will you <em>spend it?</em>
+        <Translation
+          i18nKey="resources:microGrants.apply.budget.stepTitle"
+          components={{ em: <em /> }}
+        />
       </div>
       <p className={styles.stepSub}>
-        Break your budget into line items. Be realistic — the panel prefers
-        honest estimates to optimistic ones. Maximum €2,000 this round.
+        {t("resources:microGrants.apply.budget.stepSub")}
       </p>
       <div className={styles.budgetItems}>
         {rows.map((r) => (
           <div className={styles.budgetRow} key={r.id}>
             <input
               className={styles.input}
-              placeholder="Line item (e.g. Print costs)"
+              placeholder={t(
+                "resources:microGrants.apply.budget.itemPlaceholder",
+              )}
               value={r.item}
               onChange={(e) => updateRow(r.id, "item", e.target.value)}
             />
@@ -54,10 +61,12 @@ export function BudgetStep({
         ))}
       </div>
       <button type="button" className={styles.addItem} onClick={addRow}>
-        + Add line item
+        {t("resources:microGrants.apply.budget.addItemCta")}
       </button>
       <div className={styles.totalRow}>
-        <span className={styles.totalLabel}>Total requested</span>
+        <span className={styles.totalLabel}>
+          {t("resources:microGrants.apply.budget.totalLabel")}
+        </span>
         <span
           className={[styles.totalVal, total > 2000 && styles.totalValOver]
             .filter(Boolean)
@@ -67,14 +76,17 @@ export function BudgetStep({
         </span>
       </div>
       <div className={styles.hint}>
-        If you're also contributing your own time or money, mention it below —
-        it strengthens the application.
+        {t("resources:microGrants.apply.budget.hint")}
       </div>
-      <label className={styles.label}>Other contributions (optional)</label>
+      <label className={styles.label}>
+        {t("resources:microGrants.apply.budget.otherContributionsLabel")}
+      </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="e.g. 20 hours of my own time, use of a friend's studio"
+        placeholder={t(
+          "resources:microGrants.apply.budget.otherContributionsPlaceholder",
+        )}
       />
     </>
   );

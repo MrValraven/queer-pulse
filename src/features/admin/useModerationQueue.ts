@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ModReport, Appeal } from "./adminModeration.data";
 import { useModReports } from "./api/useModReports";
 import { useModAction, useModBulkAction } from "./api/useModAction";
@@ -26,15 +27,23 @@ const ACTION_CODE: Record<string, ModActionCode> = {
   escalate: "escalate",
 };
 
+/** Canonical toast-verb id — never displayed directly. Resolve its label via
+ *  `t(`admin:moderation.queue.verb.${verb}`)`. */
+export type ResolveVerb = "resolved" | "escalated" | "actioned";
+
 export interface ResolveOpts {
-  /** Toast verb, e.g. "Resolved" / "Actioned" / "Escalated". */
-  verb?: string;
+  /** Toast verb id, e.g. "resolved" / "actioned" / "escalated". */
+  verb?: ResolveVerb;
   /** MOD_ACTIONS id chosen in the drawer (mapped to a server action code). */
   action?: string;
   reasonCode?: ReasonCode;
   /** The member-facing note — the reason the member reads. */
   note?: string;
 }
+
+/** Canonical bulk-verb id — never displayed directly. Resolve its label via
+ *  `t(`admin:moderation.queue.bulkVerb.${verb}`)`. */
+export type BulkVerb = "dismissed" | "removedAsSpam" | "reassigned";
 
 /**
  * All Moderation-page view-state (tab / filter / selection / multi-select /
@@ -44,6 +53,7 @@ export interface ResolveOpts {
  * PATCH mutations. Demo mode stays a pure local no-op with snapshot-restore Undo.
  */
 export function useModerationQueue() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const deepLink = searchParams.get("tab");
   const { data, isLoading } = useModReports();
@@ -124,7 +134,7 @@ export function useModerationQueue() {
 
   const undoToast = (message: string, restore: () => void, restored: string) =>
     showToast(message, "success", undefined, {
-      label: "Undo",
+      label: t("admin:common.undo"),
       onClick: () => {
         restore();
         showToast(restored, "info");
@@ -132,7 +142,7 @@ export function useModerationQueue() {
     });
 
   const resolveReport = (id: string, opts: ResolveOpts = {}) => {
-    const verb = opts.verb ?? "Resolved";
+    const verb = opts.verb ?? "resolved";
     const snapshot = open;
     removeReports([id]);
     // Live: fire the real PATCH. Backend writes the audit entry + notifies the
@@ -146,22 +156,24 @@ export function useModerationQueue() {
       },
       {
         onError: () =>
-          showToast("Couldn't reach the safety service — restored.", "error"),
+          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
       },
     );
     undoToast(
-      `${verb} · member notified`,
+      t("admin:moderation.queue.actionToast", {
+        verb: t(`admin:moderation.queue.verb.${verb}`),
+      }),
       () => {
         setLeaving(new Set());
         setOpen(snapshot);
       },
-      "Restored the report.",
+      t("admin:moderation.queue.restoredToast"),
     );
   };
 
   const openReport = (r: ModReport) => {
     if (!r.detail) {
-      resolveReport(r.id, { verb: "Actioned" });
+      resolveReport(r.id, { verb: "actioned" });
       return;
     }
     setSelected(r);
@@ -175,7 +187,7 @@ export function useModerationQueue() {
       return next;
     });
 
-  const bulkAct = (verb: string, action: ModActionCode = "dismiss") => {
+  const bulkAct = (verb: BulkVerb, action: ModActionCode = "dismiss") => {
     const ids = [...picked];
     if (ids.length === 0) return;
     const snapshot = open;
@@ -184,16 +196,19 @@ export function useModerationQueue() {
       { ids, action, reasonCode: "other" },
       {
         onError: () =>
-          showToast("Couldn't reach the safety service — restored.", "error"),
+          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
       },
     );
     undoToast(
-      `${ids.length} reports ${verb}`,
+      t("admin:moderation.queue.bulkToast", {
+        count: ids.length,
+        verb: t(`admin:moderation.queue.bulkVerb.${verb}`),
+      }),
       () => {
         setLeaving(new Set());
         setOpen(snapshot);
       },
-      "Restored the reports.",
+      t("admin:moderation.queue.bulkRestoredToast"),
     );
   };
 
@@ -213,17 +228,23 @@ export function useModerationQueue() {
       { id, decision, note },
       {
         onError: () =>
-          showToast("Couldn't reach the safety service — restored.", "error"),
+          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
       },
     );
-    const verb = decision === "uphold" ? "Upheld" : "Overturned";
+    const verbKey =
+      decision === "uphold"
+        ? "admin:moderation.queue.appealVerb.upheld"
+        : "admin:moderation.queue.appealVerb.overturned";
     undoToast(
-      `${verb} · ${a?.appealBy ?? "member"} notified`,
+      t("admin:moderation.queue.appealToast", {
+        verb: t(verbKey),
+        name: a?.appealBy ?? t("admin:moderation.appeal.fallbackName"),
+      }),
       () => {
         setLeaving(new Set());
         setAppeals(snapshot);
       },
-      "Restored the appeal.",
+      t("admin:moderation.queue.appealRestoredToast"),
     );
   };
 

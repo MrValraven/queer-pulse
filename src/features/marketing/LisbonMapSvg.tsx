@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { BAIRROS } from "./map.data";
 import s from "./MapPage.module.css";
 
@@ -18,6 +19,7 @@ export function LisbonMapSvg({
   counts: Record<string, number>;
   onSelectBairro: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.mapPanel}>
       <svg
@@ -83,7 +85,18 @@ export function LisbonMapSvg({
             <g
               key={b.name}
               className={cls}
+              role="button"
+              tabIndex={0}
+              aria-label={t("marketing:map.svg.filterByAria", {
+                bairro: b.name,
+              })}
               onClick={() => onSelectBairro(b.name)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onSelectBairro(b.name);
+                }
+              }}
             >
               <title>{b.name}</title>
               <path

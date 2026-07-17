@@ -1,5 +1,6 @@
 import { FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminModal, AdminChip, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import type { AuditEntry } from "./adminGovernance.data";
@@ -12,18 +13,22 @@ export function AdminGovernanceAuditModal({
   entry: AuditEntry;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <AdminModal
-      eyebrow="Audit entry"
+      eyebrow={t("admin:governance.audit.entryModal.eyebrow")}
       title={entry.action}
       onClose={onClose}
       footer={
         <>
           <Button variant="ghost" to={entry.link.to} onClick={onClose}>
-            Open {entry.link.label} →
+            {t("admin:governance.audit.entryModal.openLinkCta", {
+              label: entry.link.label,
+            })}{" "}
+            →
           </Button>
           <Button variant="primary" onClick={onClose}>
-            Close
+            {t("admin:common.close")}
           </Button>
         </>
       }
@@ -37,16 +42,24 @@ export function AdminGovernanceAuditModal({
         />
         <div className={styles.entryModTx}>
           <span className={styles.entryModName}>{entry.modName}</span>
-          <span className={styles.entryModWhen}>acted {entry.when}</span>
+          <span className={styles.entryModWhen}>
+            {t("admin:governance.audit.entryModal.actedWhen", {
+              when: entry.when,
+            })}
+          </span>
         </div>
         <AdminChip tone={entry.actionTone}>{entry.action}</AdminChip>
       </div>
 
       <dl className={styles.entryDl}>
-        <dt className={styles.entryDt}>Subject</dt>
+        <dt className={styles.entryDt}>
+          {t("admin:governance.audit.entryModal.subject")}
+        </dt>
         <dd className={styles.entryDd}>{entry.subject}</dd>
 
-        <dt className={styles.entryDt}>Reason given to the member</dt>
+        <dt className={styles.entryDt}>
+          {t("admin:governance.audit.entryModal.reasonGiven")}
+        </dt>
         <dd>
           <blockquote className={styles.entryQuote}>{entry.reason}</blockquote>
         </dd>
@@ -54,8 +67,7 @@ export function AdminGovernanceAuditModal({
 
       <p className={styles.entryNote}>
         <FiShield className={styles.entryNoteIco} aria-hidden />
-        The affected member was shown this reason and given the right to appeal.
-        This entry can never be edited or deleted.
+        {t("admin:governance.audit.entryModal.note")}
       </p>
     </AdminModal>
   );

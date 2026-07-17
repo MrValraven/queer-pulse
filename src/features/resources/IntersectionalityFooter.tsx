@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COMMITMENTS,
   COMMUNITIES,
@@ -11,6 +13,8 @@ import {
 import styles from "./IntersectionalityPage.module.css";
 
 export function IntersectionalityFooter() {
+  const { t } = useTranslation();
+
   return (
     <>
       <Reveal as="section" className={styles.commitSec}>
@@ -18,27 +22,31 @@ export function IntersectionalityFooter() {
           <div className={styles.commitInner}>
             <div className={styles.commitLeft}>
               <h2>
-                What QueerPulse <em>commits to.</em>
+                <Translation
+                  i18nKey="resources:intersectionality.commit.heading"
+                  components={{ em: <em /> }}
+                />
               </h2>
-              <p>
-                These are specific things, not aspirations. We're accountable to
-                them — if we're not doing them, say so.
-              </p>
+              <p>{t("resources:intersectionality.commit.sub")}</p>
               <div className={styles.commitBtns}>
                 <Button to={GOVERNANCE} variant="ghost-dark">
-                  How we're governed →
+                  {t("resources:intersectionality.commit.governanceCta")}
                 </Button>
                 <Button to={CONTACT} variant="ghost-dark">
-                  Hold us accountable →
+                  {t("resources:intersectionality.commit.accountableCta")}
                 </Button>
               </div>
             </div>
             <div className={styles.commitCards}>
-              {COMMITMENTS.map((c, i) => (
-                <Reveal key={c.title} delay={i * 70}>
+              {COMMITMENTS.map((commitment, i) => (
+                <Reveal key={commitment.titleKey} delay={i * 70}>
                   <div className={styles.commitCardD}>
-                    <div className={styles.ccdTitle}>{c.title}</div>
-                    <div className={styles.ccdText}>{c.text}</div>
+                    <div className={styles.ccdTitle}>
+                      {t(commitment.titleKey)}
+                    </div>
+                    <div className={styles.ccdText}>
+                      {t(commitment.textKey)}
+                    </div>
                   </div>
                 </Reveal>
               ))}
@@ -56,22 +64,22 @@ export function IntersectionalityFooter() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Organisations &amp; <em>resources</em>
+              <Translation
+                i18nKey="resources:intersectionality.orgs.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              External organisations relevant to the specific intersections on
-              this page.
-            </p>
+            <p>{t("resources:intersectionality.orgs.intro")}</p>
           </div>
           <div className={styles.orgsGrid}>
-            {ORGS.map((o, i) => (
-              <Reveal key={o.name} delay={Math.min(i, 8) * 60}>
+            {ORGS.map((org, i) => (
+              <Reveal key={org.name} delay={Math.min(i, 8) * 60}>
                 <div className={styles.orgCard}>
-                  <div className={styles.orgFocus}>{o.focus}</div>
-                  <div className={styles.orgName}>{o.name}</div>
-                  <div className={styles.orgText}>{o.text}</div>
-                  <Link to={o.link.href} className={styles.orgLink}>
-                    {o.link.label}
+                  <div className={styles.orgFocus}>{t(org.focusKey)}</div>
+                  <div className={styles.orgName}>{org.name}</div>
+                  <div className={styles.orgText}>{t(org.textKey)}</div>
+                  <Link to={org.link.href} className={styles.orgLink}>
+                    {t(org.link.labelKey)}
                   </Link>
                 </div>
               </Reveal>
@@ -82,17 +90,18 @@ export function IntersectionalityFooter() {
 
       <Outro
         title={
-          <>
-            All of you <em>belongs here.</em>
-          </>
+          <Translation
+            i18nKey="resources:intersectionality.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Not the parts that are easiest to hold. All of it."
+        sub={t("resources:intersectionality.outro.sub")}
       >
         <Button to={COMMUNITIES} variant="primary" size="lg">
-          Find your community group
+          {t("resources:intersectionality.outro.findCta")}
         </Button>
         <Button to={FORUM} variant="ghost-dark" size="lg">
-          Forum →
+          {t("resources:intersectionality.outro.forumCta")}
         </Button>
       </Outro>
     </>

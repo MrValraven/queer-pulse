@@ -1,14 +1,20 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { StorySafetyArticle } from "./StorySafetyArticle";
 import styles from "./StorySafetyPage.module.css";
 
 export function StorySafetyPage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
+          {/* Content: category tag, headline, byline, read time and date are
+              this piece's own editorial fields — kept in English. */}
           <div className={styles.cat}>On Building</div>
           <h1>
             Why we stayed <em>invite-only:</em> safety as a feature, not a gate.
@@ -27,14 +33,15 @@ export function StorySafetyPage() {
 
       <Outro
         title={
-          <>
-            Read it and think it sounds <em>right?</em>
-          </>
+          <Translation
+            i18nKey="magazine:story.outro.safety.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="We're not for everyone. But if this resonates, you might be for us."
+        sub={t("magazine:story.outro.safety.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Request an invite
+          {t("common:cta.requestInvite")}
         </Button>
       </Outro>
     </PageShell>

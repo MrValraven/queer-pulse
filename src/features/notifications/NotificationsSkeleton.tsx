@@ -1,4 +1,5 @@
 import { SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./NotificationsPage.module.css";
 
 /** Mirrors a notification row: avatar/icon block + text + meta. */
@@ -19,9 +20,10 @@ function NotificationSkeleton() {
 }
 
 export function NotificationsListSkeleton({ count = 7 }: { count?: number }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.list}>
-      <div className={styles.day}>Today &amp; recent</div>
+      <div className={styles.day}>{t("notifications:page.dayRecent")}</div>
       {Array.from({ length: count }).map((_, i) => (
         <NotificationSkeleton key={i} />
       ))}

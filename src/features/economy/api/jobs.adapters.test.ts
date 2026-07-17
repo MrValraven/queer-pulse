@@ -61,40 +61,48 @@ describe("logoFromName", () => {
 
 describe("formatPay", () => {
   it("hidePay + barter → barter/to discuss", () => {
-    expect(formatPay({ ...basePay, hidePay: true, barter: true }, t)).toBe(
+    expect(formatPay({ ...basePay, hidePay: true, barter: true }, t, fmt)).toBe(
       "Barter / to discuss",
     );
   });
   it("hidePay without barter → Competitive", () => {
-    expect(formatPay({ ...basePay, hidePay: true }, t)).toBe("Competitive");
+    expect(formatPay({ ...basePay, hidePay: true }, t, fmt)).toBe(
+      "Competitive",
+    );
   });
   it("explicit salary string wins", () => {
-    expect(formatPay({ ...basePay, salary: "€2,000/mo" }, t)).toBe("€2,000/mo");
+    expect(formatPay({ ...basePay, salary: "€2,000/mo" }, t, fmt)).toBe(
+      "€2,000/mo",
+    );
   });
   it("no rates + barter → Open to barter", () => {
-    expect(formatPay({ ...basePay, barter: true }, t)).toBe("Open to barter");
+    expect(formatPay({ ...basePay, barter: true }, t, fmt)).toBe(
+      "Open to barter",
+    );
   });
   it("no rates, no barter → To discuss", () => {
-    expect(formatPay(basePay, t)).toBe("To discuss");
+    expect(formatPay(basePay, t, fmt)).toBe("To discuss");
   });
-  it("a min/max range with currency and period", () => {
-    expect(
-      formatPay(
-        {
-          ...basePay,
-          rateMin: 20,
-          rateMax: 40,
-          currency: "£",
-          ratePer: "Hour",
-        },
-        t,
-      ),
-    ).toContain("£20–£40");
+  it("a min/max range renders each bound through fmt.currency (never a hand-rolled € prefix) plus the translated period suffix", () => {
+    const result = formatPay(
+      {
+        ...basePay,
+        rateMin: 20,
+        rateMax: 40,
+        currency: "£",
+        ratePer: "Hour",
+      },
+      t,
+      fmt,
+    );
+    expect(result).toBe(
+      `${fmt.currency(20, "GBP")}–${fmt.currency(40, "GBP")} /hr`,
+    );
   });
   it("a single min rate with a To-discuss period drops the period", () => {
     expect(
-      formatPay({ ...basePay, rateMin: 500, ratePer: "To discuss" }, t),
-    ).toBe("€500");
+      formatPay({ ...basePay, rateMin: 500, ratePer: "To discuss" }, t, fmt),
+    ).toBe(fmt.currency(500, "EUR"));
   });
 });
 

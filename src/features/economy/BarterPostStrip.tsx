@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Barter } from "./barter.data";
 import styles from "./BarterPage.module.css";
 
@@ -10,6 +12,7 @@ export function BarterPostStrip({
 }: {
   onPost: (barter: Barter) => void;
 }) {
+  const { t } = useTranslation();
   const [offerText, setOfferText] = useState("");
   const [wantText, setWantText] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -20,19 +23,23 @@ export function BarterPostStrip({
     if (!canPost) return;
     const offer = offerText.trim();
     const want = wantText.trim();
+    const detail = t("economy:barter.postStrip.detailPlaceholder");
     onPost({
       id: `posted-${Date.now()}`,
-      name: "You",
+      name: t("economy:barter.postStrip.namePlaceholder"),
       initials: "Y",
       tint: "coral",
-      hood: "Your post",
+      hood: t("economy:barter.postStrip.hoodPlaceholder"),
       cat: "all",
       mode: "both",
       offer,
       want,
-      offerDetail: "Posted just now — message to start the exchange.",
-      wantDetail: "Posted just now — message to start the exchange.",
-      tags: ["new", "your post"],
+      offerDetail: detail,
+      wantDetail: detail,
+      tags: [
+        t("economy:barter.postStrip.tagNew"),
+        t("economy:barter.postStrip.tagYourPost"),
+      ],
       days: 1,
     });
     setSubmitted(true);
@@ -52,26 +59,26 @@ export function BarterPostStrip({
             <FiCheck size={24} aria-hidden />
           </div>
           <h3>
-            It's <em>on the table.</em>
+            <Translation
+              i18nKey="economy:barter.postStrip.success.title"
+              components={{ em: <em /> }}
+            />
           </h3>
-          <p>
-            Your swap is live at the top of the board. We'll let you know when
-            someone proposes an exchange.
-          </p>
+          <p>{t("economy:barter.postStrip.success.body")}</p>
           <Button variant="ghost-dark" onClick={postAnother}>
-            Post another →
+            {t("economy:barter.postStrip.success.postAnother")}
           </Button>
         </div>
       ) : (
         <>
           <div>
             <h3>
-              Put something <em>on the table.</em>
+              <Translation
+                i18nKey="economy:barter.postStrip.title"
+                components={{ em: <em /> }}
+              />
             </h3>
-            <p>
-              Every exchange starts with a post. Tell the community what you can
-              offer and what you're hoping for in return.
-            </p>
+            <p>{t("economy:barter.postStrip.body")}</p>
           </div>
           <form
             className={styles.psForm}
@@ -82,18 +89,18 @@ export function BarterPostStrip({
           >
             <input
               className={styles.psInput}
-              placeholder="I can offer — e.g. Portuguese lessons, logo design…"
+              placeholder={t("economy:barter.postStrip.offerPlaceholder")}
               value={offerText}
               onChange={(e) => setOfferText(e.target.value)}
             />
             <input
               className={styles.psInput}
-              placeholder="I'm looking for — e.g. tax advice, moving help…"
+              placeholder={t("economy:barter.postStrip.wantPlaceholder")}
               value={wantText}
               onChange={(e) => setWantText(e.target.value)}
             />
             <Button type="submit" disabled={!canPost}>
-              Post to the exchange →
+              {t("economy:barter.postStrip.submitCta")}
             </Button>
           </form>
         </>

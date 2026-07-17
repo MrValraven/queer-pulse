@@ -1,49 +1,57 @@
 import { FiDownload } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { invoicePeriodLabel, type InvoiceRecord } from "./membership.data";
 import styles from "./SettingsModal.module.css";
-
-export interface InvoiceData {
-  period: string;
-  amount: string;
-}
-
-const VAT_NOTE = "VAT reverse-charged · €0.00";
 
 /**
  * Invoice preview with a working download. The download generates a real text
  * invoice Blob and triggers a browser download via a temporary <a download>.
+ *
+ * `invoice.id` (e.g. "2026-05") — not the localized period label — is what
+ * builds the invoice number, so switching language never changes a document's
+ * identifier (§5.1: a display string must not double as a stored value).
  */
 export function InvoicePreviewModal({
   invoice,
   onClose,
   onDownloaded,
 }: {
-  invoice: InvoiceData;
+  invoice: InvoiceRecord;
   onClose: () => void;
   onDownloaded?: () => void;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
+  const fmt = useFormat();
 
-  const number = `QP-${invoice.period.replace(/\s+/g, "-").toUpperCase()}`;
+  const number = `QP-${invoice.id}`;
+  const period = invoicePeriodLabel(invoice, fmt);
+  const amount = fmt.currency(invoice.amount);
+  const vatNote = t("settings:membership.invoice.vatNote", {
+    amount: fmt.currency(0),
+  });
 
   function buildInvoiceText() {
     return [
-      "QueerPulse — Membership invoice",
+      t("settings:membership.invoice.docTitle"),
       "================================",
       ``,
-      `Invoice number:  ${number}`,
-      `Billing period:  ${invoice.period}`,
-      `Issued to:       tomas@example.com`,
+      `${t("settings:membership.invoice.invoiceNumberLabel")}  ${number}`,
+      `${t("settings:membership.invoice.billingPeriodLabel")}  ${period}`,
+      `${t("settings:membership.invoice.issuedToLabel")}       tomas@example.com`,
       ``,
-      "Line items",
+      t("settings:membership.invoice.lineItemsHeading"),
       "--------------------------------",
-      `Sustaining membership · ${invoice.period}        ${invoice.amount}`,
-      `${VAT_NOTE}`,
+      `${t("settings:membership.invoice.lineItemLabel")} · ${period}        ${amount}`,
+      vatNote,
       "--------------------------------",
-      `Total                                  ${invoice.amount}`,
+      `${t("settings:membership.invoice.totalRow")}                                  ${amount}`,
       ``,
-      "Paid in full. Thank you for sustaining the community.",
+      t("settings:membership.invoice.paidInFullLong"),
       "QueerPulse · Lisbon · queerpulse.app",
     ].join("\n");
   }
@@ -53,15 +61,17 @@ export function InvoicePreviewModal({
       type: "text/plain;charset=utf-8",
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${number}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${number}.txt`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
     onDownloaded?.();
   }
+
+  const eyebrowText = t("settings:membership.invoice.eyebrow", { period });
 
   return (
     <div
@@ -74,19 +84,22 @@ export function InvoicePreviewModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={`Invoice · ${invoice.period}`}
+        aria-label={eyebrowText}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("settings:modals.common.close")}
         >
           ×
         </button>
-        <div className={styles.eye}>Invoice · {invoice.period}</div>
+        <div className={styles.eye}>{eyebrowText}</div>
         <div className={styles.title}>
-          Your <em>invoice.</em>
+          <Translation
+            i18nKey="settings:membership.invoice.title"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.invSheet}>
           <div className={styles.invHeader}>
@@ -94,32 +107,33 @@ export function InvoicePreviewModal({
             <div className={styles.invMeta}>
               {number}
               <br />
-              {invoice.period}
+              {period}
               <br />
-              Paid in full
+              {t("settings:membership.invoice.paidInFullShort")}
             </div>
           </div>
           <div className={styles.invLine}>
             <span>
-              Sustaining membership · <b>{invoice.period}</b>
+              {t("settings:membership.invoice.lineItemLabel")} · <b>{period}</b>
             </span>
-            <b>{invoice.amount}</b>
+            <b>{amount}</b>
           </div>
           <div className={styles.invLine}>
-            <span>{VAT_NOTE}</span>
-            <span>€0.00</span>
+            <span>{vatNote}</span>
+            <span>{fmt.currency(0)}</span>
           </div>
           <div className={styles.invTotal}>
-            <span>Total</span>
-            <span>{invoice.amount}</span>
+            <span>{t("settings:membership.invoice.totalLabel")}</span>
+            <span>{amount}</span>
           </div>
         </div>
         <div className={styles.actions}>
           <Button variant="primary" onClick={download}>
-            <FiDownload size={15} /> Download invoice
+            <FiDownload size={15} />{" "}
+            {t("settings:membership.invoice.downloadCta")}
           </Button>
           <Button variant="ghost" onClick={onClose}>
-            Close
+            {t("settings:modals.common.close")}
           </Button>
         </div>
       </div>

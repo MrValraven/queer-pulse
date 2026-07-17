@@ -2,13 +2,15 @@ import { useState } from "react";
 import { FiCheck, FiCopy, FiTrendingUp } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import {
   type Application,
   type NegotiationAngle,
   negotiationAngles,
   NEGOTIATION_LEVERS,
-  NEGOTIATION_PRINCIPLES,
+  NEGOTIATION_PRINCIPLE_KEYS,
 } from "./applicationStatus.data";
 import styles from "./ApplicationModals.module.css";
 
@@ -22,6 +24,7 @@ function AngleCard({
   selected: boolean;
   onSelect: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -33,8 +36,8 @@ function AngleCard({
     >
       <span className={styles.angleRadio} aria-hidden />
       <span className={styles.angleText}>
-        <span className={styles.angleName}>{angle.name}</span>
-        <span className={styles.angleBlurb}>{angle.blurb}</span>
+        <span className={styles.angleName}>{t(angle.nameKey)}</span>
+        <span className={styles.angleBlurb}>{t(angle.blurbKey)}</span>
       </span>
     </button>
   );
@@ -48,29 +51,35 @@ export function NegotiationPlanner({
   app: Application;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const o = app.offer;
   const angles = negotiationAngles(app);
   const [angleId, setAngleId] = useState(angles[0]!.id);
   const [draft, setDraft] = useState(angles[0]!.draft);
-  const [levers, setLevers] = useState<string[]>(["Base salary"]);
+  const [levers, setLevers] = useState<string[]>(["base-salary"]);
   const { submit, sending, done } = useSubmitFlow();
 
   const pickAngle = (a: NegotiationAngle) => {
     setAngleId(a.id);
     setDraft(a.draft);
   };
-  const toggleLever = (l: string) =>
+  const toggleLever = (leverId: string) =>
     setLevers((prev) =>
-      prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l],
+      prev.includes(leverId)
+        ? prev.filter((x) => x !== leverId)
+        : [...prev, leverId],
     );
 
   if (done) {
     return (
       <ModalShell onClose={onClose} success wide>
-        <SuccessPanel title="Counter" em="sent." onClose={onClose}>
-          Your reply is on its way to {app.companyName}. Asking is normal and
-          expected — you've done this exactly right.
+        <SuccessPanel
+          title={t("economy:negotiate.success.title")}
+          em={t("economy:negotiate.success.em")}
+          onClose={onClose}
+        >
+          {t("economy:negotiate.success.body", { company: app.companyName })}
         </SuccessPanel>
       </ModalShell>
     );
@@ -78,25 +87,29 @@ export function NegotiationPlanner({
 
   return (
     <ModalShell onClose={onClose} wide>
-      <div className={styles.eyebrow}>Offer negotiation</div>
+      <div className={styles.eyebrow}>{t("economy:negotiate.eyebrow")}</div>
       <h2 className={styles.title}>
-        Ask for what it's <em>worth.</em>
+        <Translation
+          i18nKey="economy:negotiate.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.sub}>
-        Negotiating is expected — most offers have room. Here's your leverage,
-        your levers, and five ways to make the ask.
-      </p>
+      <p className={styles.sub}>{t("economy:negotiate.sub")}</p>
 
       {o && (
         <>
           <div className={styles.panel}>
             <div className={styles.rows}>
               <div className={styles.row}>
-                <span className={styles.rowK}>On the table</span>
+                <span className={styles.rowK}>
+                  {t("economy:negotiate.onTheTable")}
+                </span>
                 <span className={styles.rowV}>{o.salary}</span>
               </div>
               <div className={styles.row}>
-                <span className={styles.rowK}>Holiday</span>
+                <span className={styles.rowK}>
+                  {t("economy:negotiate.holiday")}
+                </span>
                 <span className={styles.rowV}>{o.holiday}</span>
               </div>
             </div>
@@ -108,32 +121,38 @@ export function NegotiationPlanner({
         </>
       )}
 
-      <div className={styles.eyebrow}>What matters most to you</div>
+      <div className={styles.eyebrow}>
+        {t("economy:negotiate.whatMattersMost")}
+      </div>
       <div className={styles.levers}>
-        {NEGOTIATION_LEVERS.map((l) => (
+        {NEGOTIATION_LEVERS.map((lever) => (
           <button
-            key={l}
+            key={lever.id}
             type="button"
-            className={[styles.lever, levers.includes(l) && styles.leverOn]
+            className={[
+              styles.lever,
+              levers.includes(lever.id) && styles.leverOn,
+            ]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => toggleLever(l)}
-            aria-pressed={levers.includes(l)}
+            onClick={() => toggleLever(lever.id)}
+            aria-pressed={levers.includes(lever.id)}
           >
-            {l}
+            {t(lever.labelKey)}
           </button>
         ))}
       </div>
 
       <ul className={styles.list} style={{ marginBottom: 24 }}>
-        {NEGOTIATION_PRINCIPLES.map((t) => (
-          <li key={t} className={styles.listItem}>
-            <FiCheck className={styles.tick} size={16} aria-hidden /> {t}
+        {NEGOTIATION_PRINCIPLE_KEYS.map((principleKey) => (
+          <li key={principleKey} className={styles.listItem}>
+            <FiCheck className={styles.tick} size={16} aria-hidden />{" "}
+            {t(principleKey)}
           </li>
         ))}
       </ul>
 
-      <div className={styles.eyebrow}>Pick your angle</div>
+      <div className={styles.eyebrow}>{t("economy:negotiate.pickAngle")}</div>
       <div className={styles.angles}>
         {angles.map((a) => (
           <AngleCard
@@ -146,9 +165,7 @@ export function NegotiationPlanner({
       </div>
 
       <div className={styles.field}>
-        <label htmlFor="neg-draft">
-          Your draft reply — edit it to sound like you
-        </label>
+        <label htmlFor="neg-draft">{t("economy:negotiate.draftLabel")}</label>
         <textarea
           id="neg-draft"
           value={draft}
@@ -164,7 +181,7 @@ export function NegotiationPlanner({
           disabled={sending}
           onClick={() => {
             navigator.clipboard?.writeText(draft);
-            showToast("Draft copied to clipboard", "success");
+            showToast(t("economy:negotiate.copiedToast"), "success");
           }}
         >
           <FiCopy
@@ -172,14 +189,18 @@ export function NegotiationPlanner({
             style={{ marginRight: 5, verticalAlign: "-2px" }}
             aria-hidden
           />{" "}
-          Copy draft
+          {t("economy:negotiate.copyDraft")}
         </button>
         <Button
           size="lg"
           disabled={sending || !draft.trim()}
           onClick={() => submit()}
         >
-          {sending ? <Sending label="Sending…" /> : "Send reply →"}
+          {sending ? (
+            <Sending label={t("economy:negotiate.sendingLabel")} />
+          ) : (
+            t("economy:negotiate.sendCta")
+          )}
         </Button>
       </div>
     </ModalShell>

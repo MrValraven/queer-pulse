@@ -1,11 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Footer } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { logError } from "../../shared/observability/logger";
 import { DestructiveActionFlow } from "../settings/DestructiveActionFlow";
-import { DESTRUCTIVE_FLOW } from "../settings/destructiveFlows.data";
+import { buildDestructiveFlow } from "../settings/destructiveFlows.data";
 import {
   useDeactivate,
   useReauth,
@@ -32,6 +32,7 @@ export function LeavePage() {
   const [state, setState] = useState<LeaveState>("considering");
   const [dur, setDur] = useState<PauseDurationId>("oneMonth");
   const [flowOpen, setFlowOpen] = useState(false);
+  const destructiveFlow = useMemo(() => buildDestructiveFlow(t), [t]);
 
   const runDeletion = useCallback(async () => {
     const { reauthToken } = await reauth();
@@ -77,7 +78,7 @@ export function LeavePage() {
 
       {flowOpen && (
         <DestructiveActionFlow
-          content={DESTRUCTIVE_FLOW.delete}
+          content={destructiveFlow.delete}
           action={runDeletion}
           onDone={signOut}
           onClose={() => setFlowOpen(false)}

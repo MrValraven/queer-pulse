@@ -10,6 +10,7 @@ export const ACCESSIBILITY = routes.accessibility;
 export const GOVERNANCE = routes.governance;
 export const CONTACT = routes.contact;
 
+/** Attributed member quotes — content, stays English (wellbeing/soberPage VOICES precedent). */
 export interface Voice {
   initials: string;
   bg: string;
@@ -19,10 +20,10 @@ export interface Voice {
   quote: string;
 }
 export interface InfoCard {
-  eyebrow: string;
-  title: string;
-  body: string;
-  link?: { label: string; href: string };
+  eyebrowKey: string;
+  titleKey: string;
+  bodyKey: string;
+  link?: { labelKey: string; href: string };
 }
 
 export const RACE_VOICES: Voice[] = [
@@ -56,21 +57,27 @@ export const RACE_VOICES: Voice[] = [
 ];
 export const RACE_INFO: InfoCard[] = [
   {
-    eyebrow: "Navigating queer spaces",
-    title: "When queer isn't enough",
-    body: "Queer spaces in Lisbon, like most cities, can replicate the racial dynamics of the wider world. Fetishisation, exclusion, and micro-aggressions don't disappear because a space is queer. The community's guidelines explicitly address this — and the forum has threads for discussing specific situations.",
-    link: { label: "Community guidelines →", href: GUIDELINES },
+    eyebrowKey: "resources:intersectionality.race.info1.eyebrow",
+    titleKey: "resources:intersectionality.race.info1.title",
+    bodyKey: "resources:intersectionality.race.info1.body",
+    link: {
+      labelKey: "resources:intersectionality.race.info1.link",
+      href: GUIDELINES,
+    },
   },
   {
-    eyebrow: "Portugal's colonial history",
-    title: "What to know arriving here",
-    body: "Portugal has a specific and often unprocessed relationship with its colonial history. Afro-Portuguese, Brazilian, Cape Verdean, and Angolan communities are significant and complex. Arriving as a person of colour from outside this history means learning a new set of dynamics. This takes time and the community can help.",
+    eyebrowKey: "resources:intersectionality.race.info2.eyebrow",
+    titleKey: "resources:intersectionality.race.info2.title",
+    bodyKey: "resources:intersectionality.race.info2.body",
   },
   {
-    eyebrow: "Community groups",
-    title: "Spaces for QTIPOC members",
-    body: "QueerPulse has a closed community group for QTIPOC (queer, trans, and intersex people of colour) members — a space for the conversations that the broader community isn't always the right container for. Join via the Communities page.",
-    link: { label: "QTIPOC community group →", href: COMMUNITIES },
+    eyebrowKey: "resources:intersectionality.race.info3.eyebrow",
+    titleKey: "resources:intersectionality.race.info3.title",
+    bodyKey: "resources:intersectionality.race.info3.body",
+    link: {
+      labelKey: "resources:intersectionality.race.info3.link",
+      href: COMMUNITIES,
+    },
   },
 ];
 
@@ -96,40 +103,49 @@ export const FAITH_VOICES: Voice[] = [
 ];
 export const FAITH_INFO: InfoCard[] = [
   {
-    eyebrow: "Catholic context",
-    title: "A changing church",
-    body: "The Portuguese Catholic Church is conservative institutionally but increasingly varied in practice. Some parishes are actively welcoming; others are not. There are priests in Lisbon who are known to be affirming — the community knows who they are. Ask in the forum.",
+    eyebrowKey: "resources:intersectionality.faith.info1.eyebrow",
+    titleKey: "resources:intersectionality.faith.info1.title",
+    bodyKey: "resources:intersectionality.faith.info1.body",
   },
   {
-    eyebrow: "Other traditions",
-    title: "Islam, Judaism, evangelical, and others",
-    body: "Lisbon has growing Muslim and Jewish communities, and a range of Protestant and evangelical churches. The relationship between each community and its LGBTQ+ members varies enormously. The forum has threads for navigating faith questions in each of these contexts.",
-    link: { label: "Forum: faith & queerness →", href: FORUM },
+    eyebrowKey: "resources:intersectionality.faith.info2.eyebrow",
+    titleKey: "resources:intersectionality.faith.info2.title",
+    bodyKey: "resources:intersectionality.faith.info2.body",
+    link: {
+      labelKey: "resources:intersectionality.faith.info2.link",
+      href: FORUM,
+    },
   },
   {
-    eyebrow: "Not religious",
-    title: "Secularism is also valid",
-    body: "Portugal is increasingly secular, especially among younger generations. If your relationship with religion is complicated, hostile, or nonexistent — that's also completely valid here. The community doesn't require or assume any particular relationship with faith.",
+    eyebrowKey: "resources:intersectionality.faith.info3.eyebrow",
+    titleKey: "resources:intersectionality.faith.info3.title",
+    bodyKey: "resources:intersectionality.faith.info3.body",
   },
 ];
 
 export const CLASS_INFO: InfoCard[] = [
   {
-    eyebrow: "Lisbon's cost shift",
-    title: "What gentrification means here",
-    body: "Lisbon has become significantly more expensive in the last decade, partly driven by international migration including the queer expat community. This is worth holding honestly — the queer community is part of a pattern that has displaced local working-class residents. This tension is real and the community tries to engage with it rather than look away.",
+    eyebrowKey: "resources:intersectionality.class.info1.eyebrow",
+    titleKey: "resources:intersectionality.class.info1.title",
+    bodyKey: "resources:intersectionality.class.info1.body",
   },
   {
-    eyebrow: "Queer social life",
-    title: "The cost of belonging",
-    body: "Bar and club culture as the default queer social form excludes people who don't drink, can't afford cover charges, or find late-night environments difficult. QueerPulse deliberately runs social events that are free or low-cost, daytime or early evening, and alcohol-optional.",
-    link: { label: "Sober community →", href: SOBER },
+    eyebrowKey: "resources:intersectionality.class.info2.eyebrow",
+    titleKey: "resources:intersectionality.class.info2.title",
+    bodyKey: "resources:intersectionality.class.info2.body",
+    link: {
+      labelKey: "resources:intersectionality.class.info2.link",
+      href: SOBER,
+    },
   },
   {
-    eyebrow: "Economic support",
-    title: "Community resources",
-    body: "The Economy page has resources on emergency financial support, benefit navigation, and community mutual aid. The Skills Exchange is a non-monetary community tool. Both are available to all members.",
-    link: { label: "Economy resources →", href: routes.economy },
+    eyebrowKey: "resources:intersectionality.class.info3.eyebrow",
+    titleKey: "resources:intersectionality.class.info3.title",
+    bodyKey: "resources:intersectionality.class.info3.body",
+    link: {
+      labelKey: "resources:intersectionality.class.info3.link",
+      href: routes.economy,
+    },
   },
 ];
 export const CLASS_VOICE: Voice = {
@@ -144,75 +160,100 @@ export const CLASS_VOICE: Voice = {
 
 export const COMMUNITY_INFO: InfoCard[] = [
   {
-    eyebrow: "Reporting & accountability",
-    title: "If something happens in a community space",
-    body: "QueerPulse has a report function for behaviour that violates the community guidelines — including racism, discrimination, and harassment. Reports are handled by the moderation team. If you're not sure whether something is reportable, the Contact page reaches the team directly.",
-    link: { label: "Report something →", href: REPORT },
+    eyebrowKey: "resources:intersectionality.community.info1.eyebrow",
+    titleKey: "resources:intersectionality.community.info1.title",
+    bodyKey: "resources:intersectionality.community.info1.body",
+    link: {
+      labelKey: "resources:intersectionality.community.info1.link",
+      href: REPORT,
+    },
   },
   {
-    eyebrow: "Community groups",
-    title: "Finding your specific community",
-    body: "Beyond the main community, QueerPulse has closed groups for QTIPOC members, disabled and chronically ill members, queer parents, and sober members. These exist so that people can have the conversations that the broader space isn't always suited for.",
-    link: { label: "Browse community groups →", href: COMMUNITIES },
+    eyebrowKey: "resources:intersectionality.community.info2.eyebrow",
+    titleKey: "resources:intersectionality.community.info2.title",
+    bodyKey: "resources:intersectionality.community.info2.body",
+    link: {
+      labelKey: "resources:intersectionality.community.info2.link",
+      href: COMMUNITIES,
+    },
   },
   {
-    eyebrow: "The forum",
-    title: "Where harder conversations happen",
-    body: "The forum's Intersectionality thread is one of the more active on the platform. It's where members raise specific experiences, share resources, challenge each other, and support each other. It's moderated but not sanitised.",
-    link: { label: "Forum: intersectionality →", href: FORUM },
-  },
-];
-
-export const COMMITMENTS = [
-  {
-    title: "Active moderation",
-    text: "The platform is actively moderated for racism, transphobia, classism, and ableism — not just homophobia. Reports are taken seriously and followed up.",
-  },
-  {
-    title: "Intersectional community groups",
-    text: "Closed spaces for QTIPOC, disabled, sober, and other communities within the community are maintained as a genuine resource, not a token gesture.",
-  },
-  {
-    title: "Economic accessibility",
-    text: "No member is excluded from community events or resources due to cost. Sliding-scale and free options are available for everything we run.",
-  },
-  {
-    title: "Not a monolith",
-    text: "QueerPulse doesn't speak with one voice on political questions. The community contains multitudes. The forum is a place to have the arguments, not to have them resolved from above.",
+    eyebrowKey: "resources:intersectionality.community.info3.eyebrow",
+    titleKey: "resources:intersectionality.community.info3.title",
+    bodyKey: "resources:intersectionality.community.info3.body",
+    link: {
+      labelKey: "resources:intersectionality.community.info3.link",
+      href: FORUM,
+    },
   },
 ];
 
-export const ORGS = [
+export interface Commitment {
+  titleKey: string;
+  textKey: string;
+}
+
+export const COMMITMENTS: Commitment[] = [
   {
-    focus: "QTIPOC",
+    titleKey: "resources:intersectionality.commitment1.title",
+    textKey: "resources:intersectionality.commitment1.text",
+  },
+  {
+    titleKey: "resources:intersectionality.commitment2.title",
+    textKey: "resources:intersectionality.commitment2.text",
+  },
+  {
+    titleKey: "resources:intersectionality.commitment3.title",
+    textKey: "resources:intersectionality.commitment3.text",
+  },
+  {
+    titleKey: "resources:intersectionality.commitment4.title",
+    textKey: "resources:intersectionality.commitment4.text",
+  },
+];
+
+export interface Org {
+  focusKey: string;
+  /** Real-world organisation name — proper noun, kept identical in both languages. */
+  name: string;
+  textKey: string;
+  link: { labelKey: string; href: string };
+}
+
+export const ORGS: Org[] = [
+  {
+    focusKey: "resources:intersectionality.org1.focus",
     name: "Opus Diversidades",
-    text: "Portuguese organisation working on LGBTQ+ rights with an explicit focus on the intersection of race, migration, and queerness in Portugal.",
-    link: { label: "Discussion thread →", href: FORUM },
+    textKey: "resources:intersectionality.org1.text",
+    link: { labelKey: "resources:intersectionality.org1.link", href: FORUM },
   },
   {
-    focus: "Faith",
+    focusKey: "resources:intersectionality.org2.focus",
     name: "Comunidade Cristã LGBTQ+",
-    text: "Queer-affirming Christian community based in Lisbon. Open to all denominations and traditions, focused on reconciling faith and queer identity.",
-    link: { label: "Forum: faith thread →", href: FORUM },
+    textKey: "resources:intersectionality.org2.text",
+    link: { labelKey: "resources:intersectionality.org2.link", href: FORUM },
   },
   {
-    focus: "Race & migration",
+    focusKey: "resources:intersectionality.org3.focus",
     name: "ILGA Portugal",
-    text: "Portugal's main LGBTQ+ rights organisation. Works explicitly on the intersection of LGBTQ+ rights and migration/race. Legal support and advocacy.",
-    link: { label: "Legal resources →", href: LEGAL },
+    textKey: "resources:intersectionality.org3.text",
+    link: { labelKey: "resources:intersectionality.org3.link", href: LEGAL },
   },
   {
-    focus: "Disability",
+    focusKey: "resources:intersectionality.org4.focus",
     name: "Accessibility resources",
-    text: "See the QueerPulse Accessibility page for disability-specific resources for queer and disabled members in Lisbon.",
-    link: { label: "Accessibility page →", href: ACCESSIBILITY },
+    textKey: "resources:intersectionality.org4.text",
+    link: {
+      labelKey: "resources:intersectionality.org4.link",
+      href: ACCESSIBILITY,
+    },
   },
 ];
 
 export const NAV = [
-  { id: "race", label: "Race & ethnicity" },
-  { id: "faith", label: "Faith & religion" },
-  { id: "class", label: "Class & economics" },
-  { id: "community", label: "Within the community" },
-  { id: "orgs", label: "Organisations & resources" },
+  { id: "race", labelKey: "resources:intersectionality.nav.race" },
+  { id: "faith", labelKey: "resources:intersectionality.nav.faith" },
+  { id: "class", labelKey: "resources:intersectionality.nav.class" },
+  { id: "community", labelKey: "resources:intersectionality.nav.community" },
+  { id: "orgs", labelKey: "resources:intersectionality.nav.orgs" },
 ];

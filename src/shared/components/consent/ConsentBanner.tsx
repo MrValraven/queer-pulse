@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui";
+import { Translation } from "../../i18n/Translation";
+import { useTranslation } from "../../i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useConsent } from "../../../app/providers/ConsentProvider";
 import styles from "./Consent.module.css";
@@ -11,6 +13,7 @@ import styles from "./Consent.module.css";
  * no choice has been made under the current policy version.
  */
 export function ConsentBanner() {
+  const { t } = useTranslation();
   const { status, prefsOpen, acceptAll, rejectAll, openPreferences } =
     useConsent();
   // Hide the banner while the preference center is open, so the bottom sheet
@@ -21,32 +24,34 @@ export function ConsentBanner() {
     <div
       className={styles.banner}
       role="region"
-      aria-label="Cookie and privacy choices"
+      aria-label={t("shared:consent.banner.ariaLabel")}
     >
       <div className={styles.bannerInner}>
         <div className={styles.bannerText}>
           <h2 className={styles.bannerTitle}>
-            A quiet word about <em>cookies.</em>
+            <Translation
+              i18nKey="shared:consent.banner.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.bannerBody}>
-            We only store what keeps you logged in and safe by default.
-            Analytics and error reporting stay off unless you say yes — no ads,
-            no profiling, ever. Change your mind any time in settings.{" "}
-            <Link to={routes.privacy} className={styles.bannerLink}>
-              Read the policy
-            </Link>
-            .
+            <Translation
+              i18nKey="shared:consent.banner.body"
+              components={{
+                a: <Link to={routes.privacy} className={styles.bannerLink} />,
+              }}
+            />
           </p>
         </div>
         <div className={styles.bannerActions}>
           <Button variant="ghost" onClick={() => rejectAll("banner")}>
-            Reject non-essential
+            {t("shared:consent.actions.rejectNonEssential")}
           </Button>
           <Button variant="ghost" onClick={openPreferences}>
-            Choose
+            {t("shared:consent.actions.choose")}
           </Button>
           <Button variant="primary" onClick={() => acceptAll("banner")}>
-            Accept
+            {t("shared:consent.actions.accept")}
           </Button>
         </div>
       </div>

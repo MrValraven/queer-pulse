@@ -35,8 +35,15 @@ export interface Cue {
   who: string;
   meta: string;
   badge: CueBadge;
-  badgeLabel: string;
 }
+
+/** The badge's display label is derived from `badge` (a stable id) via this
+ * map at render time — never store the translated label itself (§5.1). */
+export const CUE_BADGE_LABEL_KEYS: Record<CueBadge, string> = {
+  onair: "studio:broadcast.nowPlaying.badge.onAir",
+  matched: "studio:broadcast.nowPlaying.badge.matched",
+  hold: "studio:broadcast.nowPlaying.badge.hold",
+};
 
 export const INITIAL_CUES: Cue[] = [
   {
@@ -47,7 +54,6 @@ export const INITIAL_CUES: Cue[] = [
     who: "Mariana Sol",
     meta: "live, your own",
     badge: "onair",
-    badgeLabel: "On air",
   },
   {
     id: 2,
@@ -57,7 +63,6 @@ export const INITIAL_CUES: Cue[] = [
     who: "Akin Diallo",
     meta: "matched in catalogue",
     badge: "matched",
-    badgeLabel: "€ matched",
   },
   {
     id: 3,
@@ -67,7 +72,6 @@ export const INITIAL_CUES: Cue[] = [
     who: "Unmatched",
     meta: "payout held until cleared",
     badge: "hold",
-    badgeLabel: "Hold",
   },
   {
     id: 4,
@@ -77,7 +81,6 @@ export const INITIAL_CUES: Cue[] = [
     who: "Coro de Outubro",
     meta: "matched",
     badge: "matched",
-    badgeLabel: "€ matched",
   },
   {
     id: 5,
@@ -87,7 +90,6 @@ export const INITIAL_CUES: Cue[] = [
     who: "Yara Reis",
     meta: "matched",
     badge: "matched",
-    badgeLabel: "€ matched",
   },
 ];
 

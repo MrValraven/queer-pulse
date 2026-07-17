@@ -57,5 +57,23 @@ export const LOBBY: LobbyMessage[] = [
   },
 ];
 
-export const TABS = ["Film info", "Lobby", "Live Q&A"] as const;
-export type WatchTab = (typeof TABS)[number];
+/**
+ * i18n stored-value trap (docs/i18n/sweep-agent-brief.md §5.1): `TABS` used
+ * to be a bare display-string tuple (`"Film info" | "Lobby" | "Live Q&A"`)
+ * doubling as the `WatchSidePanel` tab-state value, compared with `===`.
+ * Translating the label in place would have broken the active-tab
+ * comparison in pt mode. Each entry now carries a stable canonical `id`
+ * (never translated) plus a `labelKey` resolved via `t()` only at render.
+ */
+export interface WatchTabDef {
+  id: "film-info" | "lobby" | "live-qna";
+  labelKey: string;
+}
+
+export const TABS: WatchTabDef[] = [
+  { id: "film-info", labelKey: "cinema:watch.tab.filmInfo" },
+  { id: "lobby", labelKey: "cinema:watch.tab.lobby" },
+  { id: "live-qna", labelKey: "cinema:watch.tab.liveQna" },
+];
+
+export type WatchTab = WatchTabDef["id"];

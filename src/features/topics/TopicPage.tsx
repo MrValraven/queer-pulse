@@ -3,6 +3,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PageShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useTopic } from "./api/useTopic";
 import { getTopic } from "./topics.data";
 import { TopicHeader } from "./TopicHeader";
@@ -52,11 +53,12 @@ function TopicSkeleton() {
 
 export function TopicPage() {
   const { tag = "" } = useParams();
+  const { t } = useTranslation();
   const simLoading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   // Detail source: demo returns the scripted mock; live fetches meta + posts.
   const topicQuery = useTopic(tag);
-  const topic = topicQuery.data ?? getTopic(tag);
+  const topic = topicQuery.data ?? getTopic(tag, t);
   const loading = demoMode ? simLoading : topicQuery.isLoading;
 
   return (

@@ -2,8 +2,14 @@ import type { SyntheticEvent } from "react";
 import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { type Barter, BADGE, getMemberInfo } from "./barter.data";
+import {
+  type Barter,
+  BADGE_KEY,
+  getMemberInfo,
+  postedDaysText,
+} from "./barter.data";
 import styles from "./BarterPage.module.css";
 
 interface Props {
@@ -11,13 +17,17 @@ interface Props {
 }
 
 export function BarterCard({ barter: b }: Props) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const info = getMemberInfo(b);
 
   function propose(e: SyntheticEvent) {
     e.preventDefault();
     e.stopPropagation();
-    showToast(`Message sent to ${info.name}`, "success");
+    showToast(
+      t("economy:barter.toast.messageSent", { name: info.name }),
+      "success",
+    );
   }
 
   return (
@@ -29,19 +39,23 @@ export function BarterCard({ barter: b }: Props) {
           <div className={styles.bcHood}>{info.hood}</div>
         </div>
         <span className={`${styles.bcBadge} ${styles[b.mode]}`}>
-          {BADGE[b.mode]}
+          {t(BADGE_KEY[b.mode])}
         </span>
       </div>
       {b.offer && (
         <div className={`${styles.bcBlock} ${styles.bcOffer}`}>
-          <div className={styles.bcLabel}>Offering</div>
+          <div className={styles.bcLabel}>
+            {t("economy:barter.card.offeringLabel")}
+          </div>
           <div className={styles.bcSkill}>{b.offer}</div>
           <div className={styles.bcDesc}>{b.offerDetail}</div>
         </div>
       )}
       {b.want && (
         <div className={`${styles.bcBlock} ${styles.bcWant}`}>
-          <div className={styles.bcLabel}>Looking for</div>
+          <div className={styles.bcLabel}>
+            {t("economy:barter.card.wantLabel")}
+          </div>
           <div className={styles.bcSkill}>{b.want}</div>
           <div className={styles.bcDesc}>{b.wantDetail}</div>
         </div>
@@ -54,9 +68,7 @@ export function BarterCard({ barter: b }: Props) {
         ))}
       </div>
       <div className={styles.bcFoot}>
-        <span className={styles.bcDays}>
-          {b.days === 1 ? "Today" : `${b.days} days ago`}
-        </span>
+        <span className={styles.bcDays}>{postedDaysText(b.days, t)}</span>
         <span
           role="button"
           tabIndex={0}
@@ -66,7 +78,7 @@ export function BarterCard({ barter: b }: Props) {
             if (e.key === "Enter" || e.key === " ") propose(e);
           }}
         >
-          Propose a swap →
+          {t("economy:barter.card.proposeCta")}
         </span>
       </div>
     </Link>

@@ -10,6 +10,7 @@ import {
 import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import {
   EMPTY_FILTERS,
@@ -65,6 +66,7 @@ function MemberHeaderSkeleton() {
 
 export function MemberDirectoryFilterPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
@@ -94,7 +96,7 @@ export function MemberDirectoryFilterPage() {
     return sortMembers(matched, sort);
   }, [sourceMembers, filters, sort]);
 
-  const chips = useMemo(() => appliedChips(filters), [filters]);
+  const chips = useMemo(() => appliedChips(filters, t), [filters, t]);
   // Distinguish a genuinely empty directory (nothing to show, e.g. live mode
   // against a fresh backend) from filters that happen to exclude everyone. The
   // age range carries no chip, so fold it in alongside the chip count.
@@ -128,10 +130,10 @@ export function MemberDirectoryFilterPage() {
                 <span
                   className={styles.tally}
                   style={{
-                    minWidth: `${totalMembers.toLocaleString().length}ch`,
+                    minWidth: `${fmt.number(totalMembers).length}ch`,
                   }}
                 >
-                  {countedTotal.toLocaleString()}
+                  {fmt.number(countedTotal)}
                 </span>{" "}
                 {t("members:directory.memberCountSuffix", {
                   count: totalMembers,
@@ -165,10 +167,9 @@ export function MemberDirectoryFilterPage() {
               <div className={styles.count}>
                 {t("members:directory.showingPrefix")}{" "}
                 <b>
-                  <em>{filtered.length.toLocaleString()}</em>
+                  <em>{fmt.number(filtered.length)}</em>
                 </b>{" "}
-                {t("members:directory.showingOf")}{" "}
-                {totalMembers.toLocaleString()}{" "}
+                {t("members:directory.showingOf")} {fmt.number(totalMembers)}{" "}
                 {t("members:directory.memberCountLabel", {
                   count: totalMembers,
                 })}

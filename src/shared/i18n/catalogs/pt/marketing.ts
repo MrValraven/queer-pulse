@@ -1645,7 +1645,7 @@ export const marketing: Catalog = {
   "listBusiness.success.listAnother": "Anunciar outro lugar",
   "listBusiness.success.withdraw": "Retirar",
   "listBusiness.success.reference":
-    "Referência · <b>{ref}</b> &nbsp;·&nbsp; guarda-a algures",
+    "Referência · <b>{ref}</b>  ·  guarda-a algures",
   "listBusiness.success.demoFlip":
     "Protótipo · pré-visualizar estados de revisão:",
   // Etiquetas dos chips de "o que falta"
@@ -2280,4 +2280,1082 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.becomeBody":
     "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto — escreve-nos.",
   "partnerDetail.sidebar.becomeCta": "Entra em contacto →",
+
+  // ── Donate — chrome da página. Tudo escrito pela própria plataforma (os
+  //    valores/alocação/confiança são números fixos da QueerPulse, não
+  //    conteúdo vindo de terceiros).
+  "donate.hero.eyebrow": "Apoia a QueerPulse",
+  "donate.hero.title": "As pessoas mantêm isto <em>vivo.</em>",
+  "donate.hero.lead":
+    "Sem anúncios, sem investidores, sem venda de dados. A QueerPulse funciona graças a quem a usa — e cada euro volta para a ajuda mútua, os encontros e para pagar de forma justa as pessoas criativas queer da comunidade.",
+  "donate.toggle.monthly": "Mensal",
+  "donate.toggle.oneOff": "Pontual",
+  "donate.amounts.coffee": "um café",
+  "donate.amounts.mostChosen": "mais escolhido",
+  "donate.amounts.sustainsMember": "sustenta uma pessoa",
+  "donate.amounts.fundsGathering": "financia um encontro",
+  "donate.giveCta.monthly": "Dar {amount} / mês →",
+  "donate.giveCta.oneOff": "Dar {amount} →",
+  "donate.allocation.title": "Para onde <em>vai mesmo.</em>",
+  "donate.allocation.lead":
+    "Nada de despesas gerais e salários para pessoas que nunca vais conhecer. Aqui está a divisão real.",
+  "donate.allocation.mutualAid.label": "Ajuda mútua direta",
+  "donate.allocation.mutualAid.body":
+    "Alojamento de emergência, apoio em crise, e microapoios pagos diretamente a quem precisa.",
+  "donate.allocation.gatherings.label": "Encontros e espaços",
+  "donate.allocation.gatherings.body":
+    "Aluguer de espaços, bilhetes em escala solidária, e os encontros de boas-vindas que mantêm a porta aberta.",
+  "donate.allocation.platform.label": "Plataforma e segurança",
+  "donate.allocation.platform.body":
+    "Moderação, a linha de chat de crise, e manter tudo a funcionar — sem anúncios, sem venda de dados.",
+  "donate.allocation.magazine.label": "A revista e o Studio",
+  "donate.allocation.magazine.body":
+    "Pagar de forma justa a quem escreve, cria e faz música aqui.",
+  "donate.trust.title": "Podes <em>confiar nos números.</em>",
+  "donate.trust.lead": "Transparência aqui não é um extra — é o acordo.",
+  "donate.trust.reported.title": "Cada euro é reportado",
+  "donate.trust.reported.body":
+    "Números trimestrais publicados em aberto — vê exatamente para onde foram.",
+  "donate.trust.noAds.title": "Sem anúncios, sem venda de dados",
+  "donate.trust.noAds.body":
+    "Somos financiados por quem usa a plataforma, não por anunciantes. O teu apoio é todo o modelo.",
+  "donate.trust.membersDecide.title": "Quem está cá decide",
+  "donate.trust.membersDecide.body":
+    "O conselho da comunidade vota como o fundo de solidariedade é gasto a cada trimestre.",
+  "donate.outro.title": "Ou dá o teu <em>tempo, em vez disso.</em>",
+  "donate.outro.sub":
+    "O dinheiro é uma forma de ajudar. Ser voluntária ou voluntário, acolher encontros, e aparecer contam tanto quanto isso.",
+  "donate.outro.volunteerCta": "Faz voluntariado connosco",
+  "donate.outro.readFiguresCta": "Ver os números",
+
+  // ── Modal de doação — chrome do formulário de pagamento (protótipo, sem
+  //    cobrança real).
+  "donateModal.title": "Confirma a tua <em>doação.</em>",
+  "donateModal.sub":
+    "Sem anúncios, sem investidores — só pessoas a manter isto vivo.",
+  "donateModal.row.monthlyGift": "Doação mensal",
+  "donateModal.row.oneOffGift": "Doação pontual",
+  "donateModal.row.feeCovered": "Taxa de processamento coberta",
+  "donateModal.row.chargedToday": "Cobrado hoje",
+  "donateModal.amount.monthly": "{amount} / mês",
+  "donateModal.checkLabel": "Cobrir a taxa de processamento de {pct}%",
+  "donateModal.checkHint":
+    "Para que 100% dos teus {amount} cheguem à comunidade.",
+  "donateModal.field.nameOnCard": "Nome no cartão",
+  "donateModal.field.namePlaceholder": "Ana Silva",
+  "donateModal.field.emailReceipt": "Email para o recibo",
+  "donateModal.field.cardNumber": "Número do cartão",
+  "donateModal.field.expiry": "Validade",
+  "donateModal.field.cvc": "CVC",
+  "donateModal.processing": "A processar…",
+  "donateModal.submitCta.monthly": "Doar {amount} / mês",
+  "donateModal.submitCta.oneOff": "Doar {amount}",
+  "donateModal.secure":
+    "Encriptado e seguro. Isto é um protótipo — não é feita nenhuma cobrança real.",
+  "donateModal.success.title": "Já estás dentro.",
+  "donateModal.success.emMonthly": "Até para o mês.",
+  "donateModal.success.emOneOff": "Obrigade.",
+  "donateModal.success.closeLabel": "Concluído",
+  "donateModal.success.bodyMonthly":
+    "Os teus {amount} / mês vão diretamente para a ajuda mútua, os encontros, e para pagar de forma justa as pessoas criativas queer da comunidade. Cancela quando quiseres a partir da tua conta — sem perguntas.",
+  "donateModal.success.bodyOneOff":
+    "Os teus {amount} vão diretamente para a ajuda mútua, os encontros, e para pagar de forma justa as pessoas criativas queer da comunidade. Enviamos o recibo por email em breve.",
+
+  // ── Contacto — chrome da página. Todo o conteúdo é escrito pela plataforma
+  //    (formulário/vias de contacto).
+  "contact.eyebrow": "Lemos tudo",
+  "contact.hero.title": "Fala <em>connosco.</em>",
+  "contact.hero.body":
+    "Somos uma equipa pequena e respondemos às mensagens nós próprios. Não é um sistema automático, nem uma fila de suporte. Escolhe a via que faz mais sentido para o que precisas de dizer.",
+  "contact.routes.general.title": "Contacto geral",
+  "contact.routes.general.desc":
+    "Tudo o que não encaixa noutro lado — perguntas, feedback, apresentações, ideias que achas que devíamos ouvir.",
+  "contact.routes.safety.title": "Preocupação de segurança",
+  "contact.routes.safety.desc":
+    "Se alguma coisa na rede te fez sentir insegurança ou desconforto. Tratamos com total discrição. Respondemos dentro de 24 horas.",
+  "contact.routes.press.title": "Imprensa e media",
+  "contact.routes.press.desc":
+    "Jornalistas, equipas de investigação, documentaristas. Temos todo o gosto em falar sobre o que estamos a construir e porquê. Pedimos que partilhes o teu rascunho antes da publicação.",
+  "contact.routes.partnerships.title": "Parcerias",
+  "contact.routes.partnerships.desc":
+    "Organizações, espaços e comunidades que querem trabalhar com a QueerPulse. Somos seletivos, mas genuinamente interessados nas colaborações certas.",
+  "contact.sent.title": "Mensagem <em>recebida.</em>",
+  "contact.sent.body":
+    "Vamos lê-la e responder, normalmente dentro de um ou dois dias. Se for uma preocupação de segurança, entramos em contacto dentro de 24 horas.",
+  "contact.sent.backCta": "Voltar à QueerPulse",
+  "contact.form.title": "Escreve-<em>nos.</em>",
+  "contact.form.sub":
+    "Se preferires um formulário a um email, usa este. Lemos da mesma forma.",
+  "contact.form.nameLabel": "O teu nome",
+  "contact.form.namePlaceholder": "Como preferes que te tratemos",
+  "contact.form.emailLabel": "Email",
+  "contact.form.emailPlaceholder": "Para podermos responder",
+  "contact.form.topicLabel": "Sobre o que é?",
+  "contact.form.topicPick": "Escolhe um tema",
+  "contact.form.topic.general": "Pergunta geral ou feedback",
+  "contact.form.topic.safety": "Preocupação de segurança",
+  "contact.form.topic.press": "Pedido de imprensa ou investigação",
+  "contact.form.topic.partnership": "Proposta de parceria",
+  "contact.form.topic.other": "Outra coisa",
+  "contact.form.messageLabel": "A tua mensagem",
+  "contact.form.messagePlaceholder":
+    "Escreve com naturalidade. Não há modelo nem limite de palavras.",
+  "contact.form.sendCta": "Enviar →",
+  "contact.outro.title": "Construído em Lisboa, <em>com cuidado.</em>",
+  "contact.outro.sub":
+    "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
+  "contact.outro.backCta": "Voltar à sala",
+
+  // ── Newsletter — chrome da página de preferências de email. Todo o
+  //    conteúdo é escrito pela plataforma.
+  "newsletter.backToSettings": "← Definições",
+  "newsletter.header.eyebrow": "Preferências de email",
+  "newsletter.header.title": "O que te <em>enviamos,</em> e quando.",
+  "newsletter.header.sub":
+    "Controlas tudo. Desativa o que não quiseres. Os alertas de segurança são os únicos emails que enviamos sempre, independentemente das tuas definições — e só se algo urgente afetar a tua conta.",
+  "newsletter.account.sendingTo": "A enviar para",
+  "newsletter.account.changeEmail": "Alterar email →",
+  "newsletter.sections.magazine.title": "Revista",
+  "newsletter.prefs.magIssue.title": "Edição mensal da revista",
+  "newsletter.prefs.magIssue.sub":
+    "Um email com a edição completa no primeiro dia de cada mês — artigo de capa, links para todos os artigos, cartas da equipa editorial.",
+  "newsletter.prefs.magIssue.freq": "Mensal · dia 1 de cada mês",
+  "newsletter.prefs.magPicks.title": "Escolhas da equipa editorial",
+  "newsletter.prefs.magPicks.sub":
+    "Quando um artigo tem uma resposta forte da comunidade, enviamos a meio do mês. No máximo duas vezes por mês.",
+  "newsletter.prefs.magPicks.freq": "Ocasional · até 2×/mês",
+  "newsletter.sections.events.title": "Eventos e encontros",
+  "newsletter.prefs.evConfirm.title": "Confirmações e lembretes de eventos",
+  "newsletter.prefs.evConfirm.sub":
+    "Confirmação quando confirmas presença, mais um lembrete 48 horas antes de cada evento em que participas.",
+  "newsletter.prefs.evConfirm.freq": "Transacional · por confirmação",
+  "newsletter.prefs.evNear.title": "Novos eventos perto de ti",
+  "newsletter.prefs.evNear.sub":
+    "Um resumo semanal dos novos eventos e encontros publicados nos últimos sete dias. Só se tiveres guardado preferências de localização.",
+  "newsletter.prefs.evNear.freq": "Semanal · às quintas-feiras",
+  "newsletter.prefs.evReading.title": "Atividade dos clubes de leitura",
+  "newsletter.prefs.evReading.sub":
+    "Atualizações dos clubes de leitura de que fazes parte — novas sessões, livros escolhidos, mensagens de quem organiza o grupo.",
+  "newsletter.prefs.evReading.freq": "Conforme a atividade acontece",
+  "newsletter.sections.community.title": "Comunidade e rede",
+  "newsletter.prefs.comAnnounce.title": "Anúncios da comunidade",
+  "newsletter.prefs.comAnnounce.sub":
+    "Notícias importantes da comunidade — novas funcionalidades, decisões de governação, alterações significativas na plataforma. Só enviado quando acontece algo importante.",
+  "newsletter.prefs.comAnnounce.freq": "Ocasional · nunca mais do que semanal",
+  "newsletter.prefs.comConnect.title": "Pedidos de ligação e mensagens",
+  "newsletter.prefs.comConnect.sub":
+    "Notificações por email quando alguém te envia um pedido de ligação ou uma mensagem. Também podes gerir isto pelas notificações na aplicação.",
+  "newsletter.prefs.comConnect.freq": "Por evento",
+  "newsletter.prefs.comForum.title": "Menções e respostas no fórum",
+  "newsletter.prefs.comForum.sub":
+    "Quando alguém responde à tua publicação no fórum ou te menciona num tópico.",
+  "newsletter.prefs.comForum.freq": "Por evento",
+  "newsletter.sections.safety.title": "Segurança e conta",
+  "newsletter.prefs.safeAlerts.title": "Alertas de segurança",
+  "newsletter.prefs.safeAlerts.sub":
+    "Alertas críticos sobre a tua conta — alterações de palavra-passe, atividade invulgar, ou avisos de segurança da comunidade. Estes não podem ser desativados e só os enviamos quando é genuinamente necessário.",
+  "newsletter.prefs.safeAlerts.freq": "Urgente · não pode ser desativado",
+  "newsletter.prefs.safeReport.title": "Relatório trimestral da comunidade",
+  "newsletter.prefs.safeReport.sub":
+    "O relatório de saúde comunitária e financeiro publicado a cada trimestre. Contém estatísticas de moderação, finanças da plataforma, e atualizações de governação.",
+  "newsletter.prefs.safeReport.freq": "Trimestral",
+  "newsletter.save.cta": "Guardar preferências",
+  "newsletter.save.note":
+    "As alterações têm efeito imediato. Podes continuar a receber emails já agendados.",
+  "newsletter.save.toast": "Preferências guardadas",
+  "newsletter.unsub.title": "Cancelar subscrição de tudo",
+  "newsletter.unsub.text":
+    "Isto desativa todos os emails opcionais de uma vez, exceto os alertas de segurança. Podes reativar categorias individuais acima a qualquer momento.",
+  "newsletter.unsub.cta": "Cancelar subscrição de todos os emails",
+  "newsletter.unsub.toast": "Subscrição de emails opcionais cancelada",
+
+  // ── Get the App — chrome da landing page. Tudo escrito pela plataforma.
+  "getTheApp.hero.eyebrow": "Móvel · iOS e Android",
+  "getTheApp.hero.title": "Leva-a contigo, <em>de qualquer forma.</em>",
+  "getTheApp.hero.lead":
+    "A aplicação faz o que precisas mesmo no telemóvel: <b>saída rápida, chat de crise, confirmações de presença, o teu mapa de espaços seguros, e o bilhete QR à porta.</b> Tudo o resto fica melhor na web.",
+  "getTheApp.store.ios.line1": "Transferir na",
+  "getTheApp.store.ios.line2": "App Store",
+  "getTheApp.store.android.line1": "Disponível no",
+  "getTheApp.store.android.line2": "Google Play",
+  "getTheApp.sendPhone.title": "Não queres as <em>lojas de aplicações?</em>",
+  "getTheApp.sendPhone.body":
+    "Deixa o teu número e enviamos-te um link de instalação de utilização única. Não te inscreve em mais nada.",
+  "getTheApp.sendPhone.placeholder": "+351 91·••··••··",
+  "getTheApp.sendPhone.cta": "Enviar-me o link por SMS",
+  "getTheApp.sendPhone.toast": "Link enviado — verifica as tuas mensagens",
+  "getTheApp.qr.label": "Digitaliza com <em>o teu telemóvel</em>",
+  "getTheApp.qr.sub":
+    "A câmara deve detetá-lo automaticamente · encaminha para a loja certa",
+  "getTheApp.what.title": "Para que <em>serve</em> a aplicação",
+  "getTheApp.what.sub": "Uma lista curta. Não vamos pôr tudo num ecrã pequeno.",
+  "getTheApp.features.quickExit.title": "Saída rápida",
+  "getTheApp.features.quickExit.desc":
+    "Vive na navegação. Um toque fecha a aplicação e muda para um ecrã inicial neutro. Sempre disponível.",
+  "getTheApp.features.crisisChat.title": "Chat de crise",
+  "getTheApp.features.crisisChat.desc":
+    "Um toque, de qualquer lado. Pessoas de apoio entre pares respondem em menos de 90 segundos, 24 horas por dia. Funciona com sinal fraco.",
+  "getTheApp.features.gatherings.title": "Encontros e confirmações",
+  "getTheApp.features.gatherings.desc":
+    "Confirma presença em dois toques. Os bilhetes aparecem como códigos QR à porta. Exportação de calendário para o que usares.",
+  "getTheApp.features.safeMap.title": "Mapa de espaços seguros · offline",
+  "getTheApp.features.safeMap.desc":
+    "Mapa de espaços verificados em Lisboa, guardado em cache para funcionar sem sinal. Cada marcador verificado nos últimos 90 dias.",
+  "getTheApp.features.quietNotifs.title": "Notificações discretas",
+  "getTheApp.features.quietNotifs.desc":
+    "Respostas, confirmações, mensagens. Sem iscos de interação, sem sequências. Horas de silêncio configuráveis por categoria.",
+  "getTheApp.features.onTheGo.title": "Sempre contigo",
+  "getTheApp.features.onTheGo.desc":
+    "As tuas mensagens, os teus guardados, o teu perfil. Tema claro + um preto verdadeiro para usar de noite.",
+  "getTheApp.what.notIn":
+    "<b>Fora da aplicação, de propósito:</b> a revista completa, o arquivo de artigos, o Fórum, os perfis longos, os documentos de governação, as ferramentas de organização. <em>Estas ficam melhor numa secretária.</em> A web continua a ser a casa de tudo o que exige tempo.",
+  "getTheApp.share.eyebrow": "Passa a palavra",
+  "getTheApp.share.title": "Tens alguém que <em>ia gostar disto?</em>",
+  "getTheApp.share.body":
+    'Mostra-lhe este QR — é a mesma página de instalação, só que a tua. Se a pessoa instalar, vão aparecer nesse resumo de "já nos conhecemos pessoalmente" no próximo encontro em que estiverem juntas.',
+  "getTheApp.share.copyLinkCta": "Copiar link",
+  "getTheApp.share.shareAppsCta": "Partilhar com aplicações",
+  "getTheApp.share.copyToast": "Link copiado",
+  "getTheApp.share.notMemberCta": "Ainda não fazes parte? Pede um convite →",
+
+  // ── Get the App — modal de aviso de lançamento (App Store / Google Play
+  //    ainda não disponíveis).
+  "appNotify.ariaLabel": "Recebe um aviso no lançamento",
+  "appNotify.close": "Fechar",
+  "appNotify.success.title": "Vamos avisar-<em>te.</em>",
+  "appNotify.success.body":
+    "Estás na lista para o lançamento em {platform}. Vamos enviar um email para <b>{email}</b> no dia em que estiver disponível — e mais nada.",
+  "appNotify.eyebrow": "{store} · brevemente",
+  "appNotify.title": "A QueerPulse está a chegar ao <em>{platform}.</em>",
+  "appNotify.lead":
+    "A aplicação ainda não está na loja. Deixa o teu email e avisamos-te assim que a versão para {platform} estiver disponível. Sem marketing, sem listas que não pediste.",
+  "appNotify.emailLabel": "O teu email",
+  "appNotify.emailHint": "Só vamos usar isto para o aviso de lançamento.",
+  "appNotify.maybeLaterCta": "← Talvez mais tarde",
+  "appNotify.notifyCta": "Avisa-me →",
+
+  // ── Para Organizações — chrome da página de parcerias. Os quatro registos
+  //    de PARTNERS (nome/tempo de parceria/descrição) e o testemunho de
+  //    Filipa Mendes são conteúdo próprio de cada organização — ficam em
+  //    inglês, o mesmo precedente da página de listagem de Parceiros.
+  "forOrgs.hero.eyebrow": "Para organizações · parcerias",
+  "forOrgs.hero.title": "Trabalha <em>connosco,</em> não <em>sobre nós.</em>",
+  "forOrgs.hero.dek":
+    "As parcerias da QueerPulse são <b>operacionais, não promocionais</b>. Não vendemos acesso, não fazemos conteúdo patrocinado, nem co-branding pelo simples efeito. <em>Construímos ligações entre organizações que já fazem este trabalho.</em> Abaixo: como são essas ligações na prática, com quem já trabalhamos, e como começar uma conversa.",
+  "forOrgs.hero.notDoTitle": "O que não fazemos",
+  "forOrgs.notDo.prideCampaigns":
+    "<b>Campanhas no mês do Orgulho.</b> Nem em junho, nem nunca. As pessoas da comunidade sairiam — e com razão.",
+  "forOrgs.notDo.sellList":
+    "<b>Vender a nossa lista de pessoas.</b> Sem segmentação, sem apresentações pagas.",
+  "forOrgs.notDo.sponsoredPosts":
+    '<b>"Publicações patrocinadas" ou conteúdo de marca</b> na revista, no feed, ou no podcast.',
+  "forOrgs.notDo.rainbowLogos":
+    "<b>Logótipos arco-íris.</b> Não adicionamos o teu e não emprestamos o nosso.",
+  "forOrgs.notDo.recruit":
+    "<b>Recrutar em teu nome.</b> As empresas publicam vagas no quadro de Vagas como toda a gente.",
+  "forOrgs.process.title": "Como é que as parcerias <em>realmente começam</em>",
+  "forOrgs.process.sub":
+    "Devagar. Conversado. Muitas vezes por telefone antes de uma proposta escrita. Todo o processo demora normalmente 6 a 10 semanas.",
+  "forOrgs.process.step1.title": "Email ou uma chamada",
+  "forOrgs.process.step1.body":
+    "Diz-nos o que fazes, o que gostarias, o que não é negociável do teu lado. <em>30 minutos, sem compromisso.</em>",
+  "forOrgs.process.step2.title": "Uma reunião presencial",
+  "forOrgs.process.step2.body":
+    "Café em Lisboa se estiveres cá, ou vídeo. Falamos sobre como a ligação funcionaria — operacionalmente, não em teoria.",
+  "forOrgs.process.step3.title": "Proposta de duas páginas",
+  "forOrgs.process.step3.body":
+    "Um de nós faz o rascunho; ambos os lados editam. Inclui <b>condições de saída</b>, cláusulas de discordância pública, e o fluxo de dinheiro.",
+  "forOrgs.process.step4.title": "Aprovação da Assembleia",
+  "forOrgs.process.step4.body":
+    "As parcerias operacionais vão à Assembleia mensal. A adesão de Sustentadores pronuncia-se. <em>~10% das parcerias são vetadas.</em>",
+  "forOrgs.proof.title": "Já a trabalhar <em>connosco</em>",
+  "forOrgs.proof.sub":
+    "Quatro parceiros representativos, cada um num nível diferente. A lista completa está em Parceiros.",
+  "forOrgs.proof.viewCta": "Ver parceiro →",
+  "forOrgs.tiers.title": "O que <em>oferecemos</em>",
+  "forOrgs.tiers.sub":
+    "Três níveis, cada um um tipo diferente de relação. Todos incluem o essencial: revisão prévia à publicação, divulgação transparente do financiamento, e a possibilidade de qualquer um dos lados discordar publicamente.",
+  "forOrgs.tiers.employer.name": "Empregador verificado",
+  "forOrgs.tiers.employer.pricePeriod": "/ ano · publica vagas ilimitadas",
+  "forOrgs.tiers.employer.dek":
+    'Para empregadores que querem publicar no nosso quadro de Vagas com o selo "verificado queer-friendly". Requer um compromisso de 12 meses e uma avaliação conduzida por uma pessoa da comunidade.',
+  "forOrgs.tiers.employer.list1": "Vagas ilimitadas · <b>publicadas em 24h</b>",
+  "forOrgs.tiers.employer.list2":
+    "Selo de empregador verificado no perfil da empresa",
+  "forOrgs.tiers.employer.list3":
+    "Uma avaliação anual de cultura conduzida por uma pessoa da comunidade (anónima)",
+  "forOrgs.tiers.employer.list4": "Presença nas Avaliações de Empregadores",
+  "forOrgs.tiers.employer.list5":
+    "Horário de atendimento trimestral sobre contratação com dois elementos da equipa",
+  "forOrgs.tiers.employer.footnote":
+    "Para: organizações com mais de 20 pessoas a contratar ativamente talento queer. Escala progressiva para equipas com menos de 50 pessoas.",
+  "forOrgs.tiers.employer.reviewCta": "Iniciar a avaliação",
+  "forOrgs.tiers.employer.reviewToast": "A abrir o formulário de avaliação…",
+  "forOrgs.tiers.employer.exampleCta": "Ver um exemplo de perfil de empresa →",
+  "forOrgs.tiers.partner.name": "Parceiro <em>operacional</em>",
+  "forOrgs.tiers.partner.price": "Por <em>acordo</em>",
+  "forOrgs.tiers.partner.pricePeriod": "recíproco · normalmente não pago",
+  "forOrgs.tiers.partner.dek":
+    "Para organizações que deviam estar operacionalmente ligadas à QueerPulse — ILGA, Trans Hub, serviços cívicos, associações aliadas. Construímos infraestrutura em conjunto, não co-marketing.",
+  "forOrgs.tiers.partner.list1":
+    "<b>Ligação operacional:</b> ponte de casos, encaminhamento da linha de apoio, protocolo conjunto",
+  "forOrgs.tiers.partner.list2":
+    "Canal de moderação partilhado quando apropriado",
+  "forOrgs.tiers.partner.list3":
+    "Trabalho de advocacia coassinado · qualquer lado pode discordar publicamente",
+  "forOrgs.tiers.partner.list4":
+    "Listado em Parceiros com uma página de caso dedicada",
+  "forOrgs.tiers.partner.list5":
+    "<b>Pagamento por caso</b> para serviços prestados pelo parceiro (ex.: 45 €/consulta jurídica)",
+  "forOrgs.tiers.partner.footnote":
+    "Para: organizações cívicas, de advocacia, de saúde, e alinhadas com a missão. A seleção é lenta e rara. <b>No máximo dois novos parceiros operacionais por ano.</b>",
+  "forOrgs.tiers.partner.proposeCta": "Propor uma parceria",
+  "forOrgs.tiers.funder.name": "Financiador de programa",
+  "forOrgs.tiers.funder.pricePeriod": "/ ano · programa específico",
+  "forOrgs.tiers.funder.dek":
+    "Para fundações, entidades públicas, e organizações financiadoras a apoiar um programa específico — o fundo de microapoios, a revista, os espaços seguros, o acesso a cuidados de saúde trans.",
+  "forOrgs.tiers.funder.list1":
+    "Relatórios específicos do programa · trimestrais",
+  "forOrgs.tiers.funder.list2":
+    "Crédito na página do programa em texto simples",
+  "forOrgs.tiers.funder.list3":
+    "Sem presença em toda a plataforma, sem co-branding",
+  "forOrgs.tiers.funder.list4": "Auditoria independente anual incluída",
+  "forOrgs.tiers.funder.list5":
+    "Discriminação pública no relatório de transparência",
+  "forOrgs.tiers.funder.footnote":
+    "Para: organizações do nível da Fundação Calouste Gulbenkian e programas da UE. Já recusámos mais de 60 mil euros quando as condições não encaixavam.",
+  "forOrgs.tiers.funder.discussCta": "Discutir um financiamento",
+  "forOrgs.tiers.funder.discussToast":
+    "A abrir a conversa sobre financiamento…",
+  "forOrgs.cta.title": "Começa uma <em>conversa.</em>",
+  "forOrgs.cta.body":
+    'Conta-nos sobre a tua organização num parágrafo. Lemos todas as mensagens no prazo de 5 dias úteis e respondemos pessoalmente — mesmo que a resposta seja "isto não é para nós, para já".',
+  "forOrgs.cta.list1": "Para parcerias, normalmente ligamos antes de escrever",
+  "forOrgs.cta.list2":
+    "Candidaturas a financiamento: inclui uma página de resumo",
+  "forOrgs.cta.pressInquiry": "Pedidos de imprensa → <a>Kit de Imprensa</a>",
+  "forOrgs.cta.partnerQuestion":
+    "Já és parceiro e tens uma pergunta → <a>Contacto</a>",
+  "forOrgs.form.nameLabel": "O teu nome",
+  "forOrgs.form.namePlaceholder": "Filipa Mendes",
+  "forOrgs.form.orgLabel": "Organização",
+  "forOrgs.form.orgPlaceholder": "ILGA Portugal",
+  "forOrgs.form.emailLabel": "Email",
+  "forOrgs.form.emailPlaceholder": "tu@organizacao.exemplo",
+  "forOrgs.form.interestLabel": "Área de interesse",
+  "forOrgs.form.interest.operational": "Parceria operacional",
+  "forOrgs.form.interest.employer": "Empregador verificado",
+  "forOrgs.form.interest.funding": "Financiamento de programa",
+  "forOrgs.form.interest.other": "Outra coisa (explica na nota)",
+  "forOrgs.form.messageLabel": "O que gostarias de construir, num parágrafo",
+  "forOrgs.form.messagePlaceholder": "Temos uma linha de apoio LGBTQ+ e…",
+  "forOrgs.form.submitCta": "Enviar à equipa de parcerias",
+  "forOrgs.form.small":
+    "Vai diretamente para a Marta e o André. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
+  "forOrgs.form.toast":
+    "Enviado à Marta e ao André — vão responder no prazo de 5 dias úteis",
+
+  // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
+  //    registos de locais (`directoryPlaces.ts`: nomes, taglines,
+  //    avaliações, biografias dos donos) são conteúdo próprio de cada
+  //    negócio — ficam em inglês, o mesmo precedente das biografias/
+  //    avaliações fictícias de pessoas noutras páginas.
+  "directory.hero.eyebrow": "Diretório de negócios queer",
+  "directory.hero.title": "Encontra <em>os lugares da tua gente.</em>",
+  "directory.hero.sub":
+    "Negócios queer e profissionais queer-friendly em Lisboa. Avaliados pela comunidade, mantidos pela comunidade. Quer tenhas acabado de chegar, quer já cá estejas há anos.",
+  "directory.hero.note": "Verificado pela comunidade · atualizado mensalmente",
+  "directory.search.placeholder": "Pesquisa por nome, bairro, ou tipo…",
+  "directory.cat.all": "Tudo",
+  "directory.cat.food": "Comida e bebida",
+  "directory.cat.design": "Design e artesanato",
+  "directory.cat.health": "Saúde e cuidados",
+  "directory.cat.space": "Espaços",
+  "directory.cat.culture": "Cultura",
+  "directory.cat.tech": "Tecnologia",
+  "directory.cat.grooming": "Barbearia e Salão",
+  "directory.cat.fitness": "Ginásio e Fitness",
+  "directory.loading": "A carregar lugares…",
+  "directory.count": "A mostrar <b>{shown}</b> de {total} lugares",
+  "directory.empty": "Nenhum lugar corresponde — tenta um filtro mais amplo.",
+  "directory.badge.queerOwned": "Negócio queer",
+  "directory.badge.friendly": "LGBTQ+ friendly",
+  "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
+  "directory.card.viewDetails": "Ver detalhes →",
+  "directory.submitStrip.title":
+    "Conheces um lugar que devia estar <em>aqui?</em>",
+  "directory.submitStrip.body":
+    "Se tens ou conheces um negócio queer ou queer-friendly em Lisboa que pertence a este diretório, conta-nos. Revemos todas as sugestões antes de as publicar.",
+  "directory.submitStrip.cta": "Regista o teu negócio",
+  "directory.outro.title":
+    "Acabaste de chegar a Lisboa? <em>Não estás a começar do zero.</em>",
+  "directory.outro.sub":
+    "Junta-te à rede e tem acesso ao diretório completo, recomendações da comunidade, e a uma comunidade que conhece a cidade.",
+  "directory.outro.cta": "Pedir um convite",
+  "directory.detail.backCta": "← Diretório",
+  "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
+  "directory.detail.badge.friendly": "LGBTQ+ friendly",
+  "directory.detail.reviewsCount": "· {count} avaliações",
+  "directory.detail.whatItIsTitle": "O que <em>é, na prática.</em>",
+  "directory.detail.goodForTitle":
+    "Para que é que a comunidade diz que é <em>bom</em>",
+  "directory.detail.goodForSub": "Com base em {count} avaliações.",
+  "directory.detail.hoursTitle": "Horário",
+  "directory.detail.today": "Hoje",
+  "directory.detail.hoursClosed": "Encerrado",
+  "directory.detail.reviewsTitle":
+    "Avaliações da comunidade · <em>{count}</em>",
+  "directory.detail.reviewsSub": "Ordenado por mais úteis.",
+  "directory.detail.helpful": "<b>{count}</b> pessoas acharam isto útil",
+  "directory.detail.visitWebsite": "Visitar o site →",
+  "directory.detail.getInTouch": "Entrar em contacto →",
+  "directory.detail.backToDirectory": "Voltar ao diretório",
+  "directory.detail.whoRunsIt": "Quem gere isto",
+  "directory.detail.onQueerPulse": "Na QueerPulse",
+  "directory.detail.communityVouched": "Avalizado pela comunidade",
+  "directory.detail.viewProfile": "Ver o perfil de {name} →",
+  "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
+  "directory.detail.upcomingHere": "Próximos eventos aqui",
+  "directory.relative.yesterday": "Ontem",
+  "directory.relative.twoDaysAgo": "há 2 dias",
+  "directory.relative.threeDaysAgo": "há 3 dias",
+  "directory.relative.lastWeek": "na semana passada",
+  "directory.days.monday": "Segunda-feira",
+  "directory.days.tuesday": "Terça-feira",
+  "directory.days.wednesday": "Quarta-feira",
+  "directory.days.thursday": "Quinta-feira",
+  "directory.days.friday": "Sexta-feira",
+  "directory.days.saturday": "Sábado",
+  "directory.days.sunday": "Domingo",
+
+  // ── Arriving (guia para quem chega a Lisboa) — apenas chrome da página e
+  //    das secções. As descrições de bairros, organizações e comunidades
+  //    (`arrivingPage.data.ts`, `arrivingPageCards.data.ts`) são conteúdo de
+  //    guia da cidade — ficam em inglês, o mesmo precedente das descrições
+  //    por cidade da página Cities.
+  "arriving.hero.eyebrow": "Acabaste de chegar a Lisboa",
+  "arriving.hero.title":
+    "Queer e acabaste de chegar a Lisboa? <em>Bem-vinde.</em>",
+  "arriving.hero.body":
+    "Esta cidade tem muito para nós — uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer um trabalho sério, e pessoas que vão genuinamente ajudar-te a instalares-te. Aqui está o que precisas de saber primeiro.",
+  "arriving.neighbourhoods.eyebrow": "Os bairros de Lisboa",
+  "arriving.neighbourhoods.title": "Onde é que a vida queer <em>acontece.</em>",
+  "arriving.neighbourhoods.intro":
+    "Lisboa não tem um único bairro queer — tem vários bolsões, cada um com o seu próprio caráter. Aqui vai um guia honesto sobre onde está a comunidade.",
+  "arriving.health.eyebrow": "Saúde",
+  "arriving.health.title":
+    "Cuidados de saúde em Lisboa — <em>o que precisas de saber.</em>",
+  "arriving.health.intro":
+    "Portugal tem um serviço nacional de saúde (SNS) no qual te podes inscrever. Os cuidados afirmativos para pessoas trans melhoraram muito — mas é preciso saber onde procurar.",
+  "arriving.housing.eyebrow": "Habitação",
+  "arriving.housing.title":
+    "Encontrar um lugar para viver — <em>com honestidade.</em>",
+  "arriving.housing.intro":
+    "O mercado de habitação em Lisboa é caro e competitivo. Aqui vai um retrato honesto do que esperar, e onde procurar ajuda.",
+  "arriving.orgs.eyebrow": "Organizações",
+  "arriving.orgs.title": "Conhece estas <em>três primeiro.</em>",
+  "arriving.orgs.intro":
+    "Estas são as organizações mais úteis nas tuas primeiras semanas em Lisboa — para apoio jurídico, saúde mental, ou simplesmente para te ligares à comunidade.",
+  "arriving.firstStep.eyebrow": "O teu primeiro passo",
+  "arriving.firstStep.title": "Vem a algo <em>presencialmente.</em>",
+  "arriving.firstStep.intro":
+    "Tudo nesta página é útil. Mas a melhor coisa que podes fazer é aparecer num encontro. O próximo já aí vem:",
+  "arriving.firstStep.rsvpCta": "Vou estar lá →",
+  "arriving.commQuick.eyebrow": "Por onde começar",
+  "arriving.commQuick.title":
+    "Três comunidades para <em>quem chega agora.</em>",
+  "arriving.commQuick.intro":
+    "Não sabes por onde começar? Estas três comunidades são particularmente acolhedoras para quem é novo em Lisboa.",
+  "arriving.commQuick.browseCta": "Ver todas as comunidades →",
+  "arriving.outro.title": "Vamos conhecer <em>a comunidade?</em>",
+  "arriving.outro.sub":
+    "Pede um convite para a QueerPulse e ganha acesso à rede completa — pessoas, encontros, o quadro, e tudo o resto nesta página.",
+  "arriving.outro.cta": "Pedir um convite →",
+
+  // ── Vistos & Residência — conteúdo jurídico/imigração. Traduzido com o
+  //    cuidado extra do §6 do brief de i18n: termos oficiais portugueses
+  //    (NIF, NISS, AIMA, SNS, Certificado de Registo, união de facto,
+  //    Autorização de Residência, IFICI, trabalhador independente, recibos
+  //    verdes, Finanças, Segurança Social, Centro de Saúde, Conservatória,
+  //    CAPLE/CIPLE) mantidos exatamente como no original — nunca traduzidos
+  //    nem adaptados. "Cônjuge" (invariável) usado para "spouse"; "pessoa
+  //    parceira" como reformulação neutra para "partner" (prioridade 1 da
+  //    ordem de formas inclusivas). As citações de "Community note"
+  //    atribuídas a pessoas (nomeadas ou anónimas) e os testemunhos dos
+  //    advogados/advogadas avaliados pela comunidade ficam em inglês — são
+  //    conteúdo/testemunho, mesmo precedente de `directoryPlaces.ts`.
+  "visas.hero.eyebrow": "Vistos & Residência · Portugal",
+  "visas.hero.title":
+    "Portugal, legalmente. <em>O teu caminho para a residência.</em>",
+  "visas.hero.sub":
+    "Informação prática sobre vistos, residência e cidadania em Portugal — e aquilo que os casais e famílias queer precisam de saber que a informação oficial nem sempre esclarece.",
+  "visas.hero.note":
+    "Informação da comunidade, não aconselhamento jurídico. A lei da imigração muda — confirma sempre com uma pessoa especialista.",
+  "visas.routePicker.label": "De onde estás a <em>partir?</em>",
+  "visas.routePicker.euCitizen.name": "Cidadania da UE / EEE",
+  "visas.routePicker.euCitizen.desc":
+    "Aplica-se a livre circulação. O registo é simples, mas obrigatório.",
+  "visas.routePicker.euCitizen.cta": "Cidadania da UE →",
+  "visas.routePicker.remoteWorker.name": "Trabalho remoto / rendimento passivo",
+  "visas.routePicker.remoteWorker.desc":
+    "A viver de poupanças, rendimento de arrendamento, trabalho independente ou emprego remoto.",
+  "visas.routePicker.remoteWorker.cta": "Visto D7 →",
+  "visas.routePicker.digitalNomad.name": "Nómada digital",
+  "visas.routePicker.digitalNomad.desc":
+    "A trabalhar remotamente para uma entidade empregadora não portuguesa, com rendimento mais elevado.",
+  "visas.routePicker.digitalNomad.cta": "Nómada Digital (D8) →",
+  "visas.routePicker.jobOffer.name": "Proposta de emprego em Portugal",
+  "visas.routePicker.jobOffer.desc":
+    "Tens ou estás à procura de emprego junto de uma entidade portuguesa.",
+  "visas.routePicker.jobOffer.cta": "Vistos de Trabalho →",
+  "visas.routePicker.partner.name": "A juntar-te a uma pessoa parceira aqui",
+  "visas.routePicker.partner.desc":
+    "A tua pessoa parceira já está em Portugal ou muda-se contigo.",
+  "visas.routePicker.partner.cta": "Trazer uma Pessoa Parceira →",
+
+  "visas.tabs.eu.label": "Cidadania da UE",
+  "visas.tabs.eu.headTitle": "Pessoas cidadãs da <em>UE e do EEE</em>",
+  "visas.tabs.eu.headText":
+    "Pessoas cidadãs da UE e do EEE têm o direito de viver e trabalhar em Portugal sem visto. Ainda assim precisas de te registar — e, para casais queer, há questões específicas a conhecer sobre trazer uma pessoa parceira de fora da UE.",
+  "visas.tabs.eu.card1.eyebrow": "Registo",
+  "visas.tabs.eu.card1.title": "Certificado de Registo",
+  "visas.tabs.eu.card1.body":
+    "Pessoas cidadãs da UE que fiquem mais de 3 meses têm de se registar na Câmara Municipal da sua área. Vais precisar do passaporte, comprovativo de morada e comprovativo de rendimento ou de emprego. O certificado é normalmente emitido no próprio dia. Custo: 15 €.",
+  "visas.tabs.eu.card1.tag": "Simples, baixo custo",
+  "visas.tabs.eu.card2.eyebrow": "Os teus direitos",
+  "visas.tabs.eu.card2.title": "O que a residência na UE te dá",
+  "visas.tabs.eu.card2.body":
+    "Acesso total ao SNS (com NISS), o direito de trabalhar sem restrições, o direito de votar em eleições locais e europeias, e o direito de trazer familiares. Após 5 anos de residência legal contínua, podes candidatar-te à residência permanente ou à cidadania.",
+  "visas.tabs.eu.card3.eyebrow": "Pessoa parceira de fora da UE",
+  "visas.tabs.eu.card3.title":
+    "Reunificação familiar para casais do mesmo sexo",
+  "visas.tabs.eu.card3.body":
+    "Se és cidadã ou cidadão da UE e a tua pessoa parceira não é, ela pode juntar-se a ti em Portugal ao abrigo das regras de livre circulação da UE — incluindo cônjuges do mesmo sexo e uniões de facto registadas. O Tribunal de Justiça da União Europeia (acórdão Coman, 2018) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo para efeitos de livre circulação, mesmo que não tenham casamento entre pessoas do mesmo sexo a nível interno.",
+  "visas.tabs.eu.card3.tag": "Direitos plenos de parceria",
+  "visas.tabs.eu.card3.link": "Detalhes do visto para pessoa parceira →",
+
+  "visas.tabs.d7.label": "D7 — Rendimento Passivo",
+  "visas.tabs.d7.headTitle": "D7 — <em>Visto de Rendimento Passivo</em>",
+  "visas.tabs.d7.headText":
+    'O D7 é o visto de "rendimento passivo" ou de "reforma" de Portugal. Apesar do nome, é usado por qualquer pessoa com rendimento estável de trabalho remoto, trabalho independente, pensões, rendas ou investimentos. Uma das vias mais populares para pessoas queer que se mudam para Portugal.',
+  "visas.tabs.d7.card1.eyebrow": "Para quem é",
+  "visas.tabs.d7.card1.title": "Elegibilidade",
+  "visas.tabs.d7.card1.body":
+    "Pessoas de fora da UE que consigam demonstrar um rendimento passivo ou remoto estável. O limiar mínimo de rendimento ronda os 820 €/mês (o salário mínimo português), mas alguns consulados pedem bastante mais. Os pedidos são feitos no consulado português do teu país de origem, antes de chegares.",
+  "visas.tabs.d7.card1.tag": "Pede antes de chegar",
+  "visas.tabs.d7.card2.eyebrow": "O que obténs",
+  "visas.tabs.d7.card2.title": "Condições do visto",
+  "visas.tabs.d7.card2.body":
+    "Visto inicial válido por 4 meses; é trocado por uma autorização de residência de 2 anos (Autorização de Residência) à chegada a Portugal. Renovável por 3 anos, seguida de residência permanente. Tens de passar pelo menos 6 meses por ano em Portugal para a manter. Pessoas parceiras e filhos a cargo podem ser incluídos.",
+  "visas.tabs.d7.card3.eyebrow": "Impostos",
+  "visas.tabs.d7.card3.title": "Regime fiscal do IFICI",
+  "visas.tabs.d7.card3.body":
+    "Portugal substituiu o regime do NHR no final de 2023 pelo regime do IFICI (informalmente chamado NHR 2.0). Está agora direcionado a profissões elegíveis (tecnologia, investigação, artes). Quem tem apenas o D7 deixou de qualificar automaticamente. O teu rendimento será tributado como o de qualquer pessoa residente comum. Procura aconselhamento fiscal antes de te mudares.",
+  "visas.tabs.d7.card3.link": "Contactos de aconselhamento fiscal →",
+  "visas.tabs.d7.step1.title": "Pede no consulado português do teu país",
+  "visas.tabs.d7.step1.text":
+    "Submete comprovativo de rendimento, registo criminal limpo, seguro de saúde e comprovativo de alojamento em Portugal.",
+  "visas.tabs.d7.step1.note": "Processamento de 2–8 semanas",
+  "visas.tabs.d7.step2.title": "Chega a Portugal com o teu visto",
+  "visas.tabs.d7.step2.text":
+    "Tens 4 meses para marcar a tua marcação na AIMA e trocar o visto por uma autorização de residência.",
+  "visas.tabs.d7.step3.title": "Marcação na AIMA",
+  "visas.tabs.d7.step3.text":
+    "A AIMA (que substituiu o SEF em 2023) trata das autorizações de residência. Marca com antecedência — as esperas podem ser longas. Leva todos os documentos originais.",
+  "visas.tabs.d7.step3.note": "Marca online em aima.gov.pt",
+  "visas.tabs.d7.step4.title": "Recebe o teu cartão AR",
+  "visas.tabs.d7.step4.text":
+    "O teu cartão de Autorização de Residência é o comprovativo da tua residência legal. Guarda-o bem — é usado para tudo.",
+
+  "visas.tabs.d8.label": "Nómada Digital (D8)",
+  "visas.tabs.d8.headTitle": "Visto de <em>Nómada Digital (D8)</em>",
+  "visas.tabs.d8.headText":
+    "O visto D8 de Portugal, introduzido em 2022, foi pensado para pessoas que trabalham remotamente para, ou prestam serviços a, empresas fora de Portugal. Tem um limiar de rendimento mais alto do que o D7, mas é cada vez mais popular.",
+  "visas.tabs.d8.card1.eyebrow": "Requisitos",
+  "visas.tabs.d8.card1.title": "O que precisas para te qualificares",
+  "visas.tabs.d8.card1.body":
+    "Comprovativo de emprego remoto ou contratos com clientes não portugueses. O requisito de rendimento é normalmente 4× o salário mínimo português (cerca de 3 280 €/mês). Seguro de saúde com cobertura em Portugal. Registo criminal limpo. NIF português (nalguns casos pode ser obtido antes do visto).",
+  "visas.tabs.d8.card1.tag": "Limiar de rendimento mais alto do que o D7",
+  "visas.tabs.d8.card2.eyebrow": "Processo",
+  "visas.tabs.d8.card2.title": "Como pedir",
+  "visas.tabs.d8.card2.body":
+    "Tal como o D7, os pedidos são feitos no consulado português antes da chegada. À chegada, trocas por uma autorização de residência de 2 anos. Familiares (incluindo pessoas parceiras do mesmo sexo) podem ser incluídos no pedido ou pedir reunificação familiar depois de receberes a tua autorização.",
+  "visas.tabs.d8.card3.eyebrow": "IFICI / Impostos",
+  "visas.tabs.d8.card3.title": "Tratamento fiscal",
+  "visas.tabs.d8.card3.body":
+    "Quem tem D8 e trabalha em funções elegíveis de tecnologia ou investigação pode qualificar-se para o regime IFICI (taxa fixa de 20% de IRS durante até 10 anos). Não é automático — tens de te candidatar e a tua profissão tem de ser elegível. Confirma com uma pessoa especialista fiscal antes de assumir que vais beneficiar.",
+  "visas.tabs.d8.card3.link": "Aconselhamento fiscal →",
+
+  "visas.tabs.work.label": "Vistos de Trabalho",
+  "visas.tabs.work.headTitle": "Vistos de <em>trabalho</em>",
+  "visas.tabs.work.headText":
+    "Se tens uma proposta de emprego de uma entidade empregadora portuguesa, ou estás à procura de uma, há vias de visto específicas. Estas são geralmente mais diretas do que os vistos de rendimento passivo, mas exigem o envolvimento da entidade empregadora.",
+  "visas.tabs.work.card1.eyebrow": "Visto D1",
+  "visas.tabs.work.card1.title": "Visto de trabalho",
+  "visas.tabs.work.card1.body":
+    "A via habitual para pessoas de fora da UE com uma proposta de emprego de uma entidade portuguesa. A entidade empregadora normalmente precisa de mostrar que não conseguiu preencher a vaga com uma pessoa cidadã da UE, embora este requisito seja muitas vezes dispensado na prática para funções qualificadas. Pede no consulado com o teu contrato de trabalho.",
+  "visas.tabs.work.card2.eyebrow": "À procura de emprego",
+  "visas.tabs.work.card2.title": "Visto de Procura de Emprego",
+  "visas.tabs.work.card2.body":
+    "Visto de 180 dias que te permite vir a Portugal à procura de trabalho. Exige comprovativo de fundos suficientes e qualificações. Assim que encontrares emprego, podes converter para um visto de trabalho D1 sem sair do país. Útil se quiseres chegar antes de garantir emprego.",
+  "visas.tabs.work.card2.tag": "180 dias para encontrar trabalho",
+  "visas.tabs.work.card3.eyebrow": "Trabalho independente",
+  "visas.tabs.work.card3.title": "Trabalhador independente (D2)",
+  "visas.tabs.work.card3.body":
+    "Para freelancers e profissionais independentes que já identificaram clientes ou oportunidades em Portugal. Vais precisar de um plano de negócio e prova de rendimento previsto. Registares-te como trabalhador independente (recibos verdes) é a estrutura fiscal que a maioria das pessoas residentes por conta própria utiliza.",
+
+  "visas.tabs.partner.label": "Trazer uma Pessoa Parceira",
+  "visas.tabs.partner.headTitle": "Trazer uma <em>pessoa parceira</em>",
+  "visas.tabs.partner.headText":
+    "Portugal reconhece o casamento entre pessoas do mesmo sexo, a união de facto e a coabitação de longo prazo. O que isto significa para a residência depende das vossas nacionalidades e da via de visto que estás a usar — mas as notícias da comunidade são, de um modo geral, boas.",
+  "visas.tabs.partner.card1.eyebrow": "Casamento entre pessoas do mesmo sexo",
+  "visas.tabs.partner.card1.title":
+    "Portugal reconhece plenamente o teu casamento",
+  "visas.tabs.partner.card1.body":
+    "Portugal reconhece o casamento entre pessoas do mesmo sexo desde 2010. Um casamento legal celebrado em qualquer parte do mundo é reconhecido para efeitos de residência em Portugal. O teu cônjuge tem direito a juntar-se a ti através de reunificação familiar — independentemente da sua nacionalidade ou do país onde casaram.",
+  "visas.tabs.partner.card1.tag": "Reconhecimento legal pleno",
+  "visas.tabs.partner.card2.eyebrow": "Sem casamento",
+  "visas.tabs.partner.card2.title": "Pessoas parceiras sem estatuto formal",
+  "visas.tabs.partner.card2.body":
+    "Sem casamento, a coabitação de longo prazo (união de facto, normalmente 2 ou mais anos) é reconhecida para efeitos de reunificação familiar. Vais precisar de documentar a relação — contas partilhadas, contas conjuntas, correspondência. Casar ou constituir união de facto primeiro é muitas vezes administrativamente mais simples.",
+  "visas.tabs.partner.card3.eyebrow":
+    "Pessoa cidadã da UE + pessoa parceira de fora da UE",
+  "visas.tabs.partner.card3.title": "O acórdão Coman",
+  "visas.tabs.partner.card3.body":
+    "O acórdão do Tribunal de Justiça da União Europeia de 2018 (Coman v. Roménia) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo de pessoas cidadãs da UE para efeitos de livre circulação — mesmo em países que não têm casamento entre pessoas do mesmo sexo. Isto significa que uma pessoa cidadã da UE pode trazer o seu cônjuge do mesmo sexo para Portugal, independentemente da posição do seu país de origem.",
+  "visas.tabs.partner.card3.tag": "Proteção do tribunal da UE",
+  "visas.tabs.partner.card3.link":
+    "Fala com um advogado ou advogada de imigração →",
+  "visas.tabs.partner.card4.eyebrow": "Reunificação familiar",
+  "visas.tabs.partner.card4.title": "O processo para pessoas parceiras",
+  "visas.tabs.partner.card4.body":
+    "Depois de teres a tua própria autorização de residência, a tua pessoa parceira pede reunificação familiar na AIMA. Vai precisar do teu cartão AR, comprovativo da relação, comprovativo de alojamento e prova de rendimento. O processamento demora 60 a 90 dias. Durante este período, pode normalmente permanecer em Portugal com um visto de curta duração.",
+
+  "visas.tabs.citizenship.label": "Cidadania",
+  "visas.tabs.citizenship.headTitle":
+    "Cidadania & <em>residência permanente</em>",
+  "visas.tabs.citizenship.headText":
+    "Portugal oferece um dos caminhos mais claros para a cidadania na Europa. Após 5 anos de residência legal, podes candidatar-te à residência permanente ou à naturalização como cidadã ou cidadão português.",
+  "visas.tabs.citizenship.card1.eyebrow": "Prazo",
+  "visas.tabs.citizenship.card1.title": "5 anos até à cidadania",
+  "visas.tabs.citizenship.card1.body":
+    "Após 5 anos de residência legal contínua, tens direito a candidatar-te à cidadania portuguesa. Requisitos: português básico (nível A2), registo criminal limpo, prova de ligação a Portugal, e nenhuma ausência superior a 6 meses consecutivos ou 8 meses no total durante os 5 anos.",
+  "visas.tabs.citizenship.card1.tag": "Inclui passaporte da UE",
+  "visas.tabs.citizenship.card2.eyebrow": "Residência permanente",
+  "visas.tabs.citizenship.card2.title": "Alternativa à cidadania",
+  "visas.tabs.citizenship.card2.body":
+    "Também podes candidatar-te à residência permanente (Autorização de Residência Permanente) após 5 anos. Isto dá-te o direito indefinido de permanecer, sem os requisitos de língua e de cidadania. Algumas pessoas preferem esta via, mantendo a sua nacionalidade original.",
+  "visas.tabs.citizenship.card3.eyebrow": "Língua portuguesa",
+  "visas.tabs.citizenship.card3.title": "Requisito de A2",
+  "visas.tabs.citizenship.card3.body":
+    "O requisito de língua portuguesa para a cidadania é o nível A2 (básico) — conversacional, não fluente. Podes comprová-lo através de um teste CAPLE ou CIPLE aprovado, ou mostrando escolaridade em português. O fórum da comunidade tem recomendações de professoras e professores de português queer-friendly.",
+  "visas.tabs.citizenship.card3.link": "Recursos de aprendizagem da língua →",
+
+  "visas.ground.title": "No <em>terreno</em>",
+  "visas.ground.sub":
+    "Primeiros passos práticos, seja qual for a tua via de visto.",
+  "visas.ground.nif.label": "Primeiro",
+  "visas.ground.nif.title": "NIF — Número de contribuinte",
+  "visas.ground.nif.body":
+    "Precisas de um Número de Identificação Fiscal para quase tudo: abrir uma conta bancária, assinar um contrato de arrendamento, comprar um plano de telemóvel. Consegue-o nas Finanças com o teu passaporte. Pessoas cidadãs da UE: leva o passaporte. Fora da UE: leva o passaporte + comprovativo de morada. Também podes usar um serviço de representante fiscal se ainda não estiveres em Portugal.",
+  "visas.ground.niss.label": "Segundo",
+  "visas.ground.niss.title": "NISS — Segurança social",
+  "visas.ground.niss.body":
+    "O teu Número de Identificação de Segurança Social dá-te acesso aos cuidados de saúde do SNS e regista as tuas contribuições. Regista-te no Centro de Emprego e Formação Profissional ou na Segurança Social da tua área. Necessário antes de poderes aceder a consultas do SNS.",
+  "visas.ground.aima.label": "Local-chave",
+  "visas.ground.aima.title": "AIMA",
+  "visas.ground.aima.body":
+    "A AIMA (Agência para a Integração, Migrações e Asilo) substituiu o SEF em outubro de 2023. Trata de todas as autorizações de residência, renovações e reunificação familiar. Marca consultas online em aima.gov.pt — as esperas são longas, marca assim que chegares.",
+  "visas.ground.sns.label": "Saúde",
+  "visas.ground.sns.title": "Acesso ao SNS",
+  "visas.ground.sns.body":
+    "Regista-te num médico de família (Centro de Saúde) da tua área, usando o teu cartão AR ou o certificado de registo da UE, mais o NISS. Os tempos de espera são longos — muitas pessoas da comunidade usam seguro de saúde privado a par do acesso ao SNS. Consulta a página de Bem-estar para prestadores de cuidados de saúde queer-friendly.",
+
+  "visas.lawyers.title":
+    "Advocacia de imigração <em>avaliada pela comunidade</em>",
+  "visas.lawyers.forumCta": "Pergunta no tópico do fórum sobre vistos →",
+
+  "visas.outro.title": "Estás a construir uma vida <em>aqui.</em>",
+  "visas.outro.sub": "A papelada é temporária. A comunidade é permanente.",
+  "visas.outro.settlingCta": "Guia de instalação →",
+  "visas.outro.askCta": "Pergunta à comunidade",
+
+  // ── Mapa (guia da cidade queer de Lisboa) — chrome de página/filtros/
+  //    barra lateral. Nomes/moradas/horários/notas de espaços
+  //    (`map.data.ts`) são conteúdo de diretório de negócios — ficam em
+  //    inglês, mesmo precedente de `directoryPlaces.ts`. Nomes de bairros
+  //    são nomes próprios de Lisboa — mantidos iguais. Os ids de `type`/
+  //    `vibe` mantêm-se como strings canónicas em inglês (valores
+  //    guardados/de filtro); só os rótulos apresentados abaixo são
+  //    traduzidos.
+  "map.hero.eyebrow": "Lisboa · Guia da comunidade",
+  "map.hero.title": "O <em>guia queer</em> da cidade",
+  "map.hero.sub":
+    "Bares, discotecas, cafés, clínicas, livrarias, saunas e espaços comunitários — mapeados por quem já lá esteve.",
+  "map.stats.venuesListed": "espaços listados",
+  "map.stats.neighbourhoods": "bairros",
+  "map.stats.communityLabel": "Comunidade",
+  "map.stats.maintained": "mantido",
+  "map.filterBar.typeLabel": "Tipo",
+  "map.filterBar.vibeLabel": "Ambiente",
+  "map.filter.type.all": "Todos",
+  "map.filter.type.bar": "Bar",
+  "map.filter.type.club": "Discoteca",
+  "map.filter.type.cafe": "Café",
+  "map.filter.type.clinic": "Clínica",
+  "map.filter.type.bookshop": "Livraria",
+  "map.filter.type.sauna": "Sauna",
+  "map.filter.type.communitySpace": "Comunidade",
+  "map.filter.type.barbershop": "Barbearia / Cabeleireiro",
+  "map.filter.type.gym": "Ginásio",
+  "map.filter.vibe.mixed": "misto",
+  "map.filter.vibe.mascLeaning": "tendência masc",
+  "map.filter.vibe.femmeLeaning": "tendência femme",
+  "map.filter.vibe.transCentred": "centrado em pessoas trans",
+  "map.filter.vibe.soberFriendly": "acolhedor para sóbries",
+  "map.sidebar.allVenues": "Todos os espaços",
+  "map.sidebar.venueCount_one": "<b>{count}</b> espaço",
+  "map.sidebar.venueCount_other": "<b>{count}</b> espaços",
+  "map.sidebar.clear": "Limpar",
+  "map.sidebar.empty": "Nenhum espaço corresponde a estes filtros.",
+  "map.venueCard.beenCount_one": "<b>{count}</b> pessoa já esteve aqui",
+  "map.venueCard.beenCount_other": "<b>{count}</b> pessoas já estiveram aqui",
+  "map.venueCard.beenThere": "Já estiveste aqui",
+  "map.venueCard.markBeen": "Já estive aqui",
+  "map.svg.filterByAria": "Filtrar o mapa por {bairro}",
+
+  // ── Constituição — texto de governação constitucional. Literal e preciso;
+  //    números, percentagens e referências a artigos mantidos exatos.
+  //    "Associação QueerPulse", "NIPC" e "ILGA Portugal" são nomes próprios,
+  //    mantidos iguais. "Pessoa-membro"/"pessoas-membro" (nunca "Membro/s")
+  //    por indicação do glossário. `hero.title`/`hero.meta` são uma
+  //    ADAPTAÇÃO de conteúdo deliberada, não uma tradução literal: a versão
+  //    inglesa apresenta-se como "a tradução inglesa" de um original em
+  //    português — uma moldura que só faz sentido para quem está a ler a
+  //    versão inglesa. Na versão pt-PT essa moldura deixa de fazer sentido
+  //    (quem lê já está a ler em português), por isso a referência
+  //    "esta é a tradução inglesa" foi omitida em vez de traduzida à letra —
+  //    assinalado no relatório da sweep.
+  "constitution.artNumLabel": "Artigo",
+  "constitution.hero.eyebrow":
+    "Constituição · v1.4 · ratificada a 14 nov. 2025",
+  "constitution.hero.title": "As regras, <em>em português claro.</em>",
+  "constitution.hero.dek1":
+    "O documento organizativo formal da <b>Associação QueerPulse</b>, a associação sem fins lucrativos que gere a plataforma. Escrito pelas oito pessoas fundadoras. Ratificado na primeira assembleia. <em>Emendado quatro vezes desde então.</em>",
+  "constitution.hero.dek2":
+    "É intencionalmente curto. Doze artigos, linguagem simples, sem subcláusulas aninhadas. Tudo o que exige mais detalhe está no Código de Conduta, nos estatutos, ou nas resoluções da Assembleia Anual.",
+  "constitution.hero.meta":
+    "<b>Registada:</b> Associação QueerPulse · NIPC 517 426 884 · Lisboa · <b>Texto:</b> português, juridicamente vinculativo.",
+
+  "constitution.art1.toc": "I · Objeto",
+  "constitution.art1.title": "Objeto",
+  "constitution.art1.clause1":
+    "A QueerPulse existe para prestar <strong>apoio profissional, social, cultural e material</strong> a pessoas LGBTQ+ na cidade de Lisboa, e (nos termos do Artigo X) noutras cidades, uma vez cumpridas condições específicas.",
+  "constitution.art1.clause2":
+    "A organização é uma <strong>não-lucrativa associação</strong> — uma associação sem fins lucrativos. Não detém capital próprio, não distribui lucros, e só pode ser dissolvida nos termos do Artigo XI.",
+  "constitution.art1.clause3":
+    "Sempre que esta Constituição entre em conflito com o Manifesto, prevalece este documento. O Manifesto define valores; este define o funcionamento.",
+
+  "constitution.art2.toc": "II · Pessoas-membro",
+  "constitution.art2.title": "Pessoas-membro",
+  "constitution.art2.clause1":
+    "É <strong>pessoa-membro</strong> qualquer indivíduo avalizado por uma pessoa-membro existente, que tenha concluído uma breve conversa de admissão com a equipa de moderação, e aceite o Código de Conduta.",
+  "constitution.art2.clause2":
+    "As pessoas-membro podem estar num de três escalões: <em>Solidariedade</em> (gratuito), <em>Membro</em> (36 €/ano), ou <em>Sustentador/a</em> (96 €/ano). Todos os escalões têm direitos de voto iguais.",
+  "constitution.art2.clause3":
+    "Nenhum estatuto de uma pessoa-membro — incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade — afeta os seus direitos de voto ou o tratamento em moderação.",
+
+  "constitution.art3.toc": "III · Aval",
+  "constitution.art3.title": "Aval",
+  "constitution.art3.clause1":
+    "Cada pessoa-membro existente pode avalizar até <strong>duas</strong> novas pessoas-membro por ano civil. O aval associa o nome de quem avaliza ao registo da nova pessoa-membro, permanentemente.",
+  "constitution.art3.clause2":
+    "O limite de avales pode ser temporariamente elevado por voto da Assembleia até um máximo de quatro por pessoa-membro, durante um ano civil, em casos de lacunas identificadas na rede.",
+  "constitution.art3.clause3":
+    "Uma pessoa-membro cujos três avales mais recentes tenham sido todos removidos ao abrigo do Artigo VIII perde o direito de avalizar durante doze meses.",
+
+  "constitution.art4.toc": "IV · Assembleia",
+  "constitution.art4.title": "A <em>Assembleia</em> Anual",
+  "constitution.art4.clause1":
+    "A Assembleia reúne uma vez por ano, em novembro, durante pelo menos um dia inteiro. É o órgão de decisão máximo da associação.",
+  "constitution.art4.clause2":
+    "Cada pessoa-membro tem direito a um voto por resolução, exercido presencialmente, online, ou de forma assíncrona até ao encerramento da votação.",
+  "constitution.art4.clause3":
+    "O quórum é de <strong>10% das pessoas-membro ativas</strong>, ou 100 pessoas-membro, o que for maior. As resoluções são aprovadas por maioria simples, salvo indicação em contrário deste documento ou do Código de Conduta.",
+  "constitution.art4.clause4":
+    "A agenda é publicada com 30 dias de antecedência e está aberta a emendas escritas de qualquer grupo de 10 pessoas-membro até 7 dias antes da reunião.",
+  "constitution.art4.quote":
+    '"Esta Assembleia é o chão sobre o qual tudo o resto assenta. <em>Perde-la, e ficas só com uma aplicação.</em>"',
+
+  "constitution.art5.toc": "V · Círculos",
+  "constitution.art5.title": "Círculos <em>rotativos</em>",
+  "constitution.art5.clause1":
+    "As decisões operacionais são tomadas por <strong>círculos rotativos</strong>: pequenas comissões permanentes de 3 a 7 pessoas-membro cada, com mandatos de 12 meses no máximo.",
+  "constitution.art5.clause2":
+    "Círculos ativos na v1.4: <em>moderação, subsídios, finanças, acolhimento, editorial, técnico.</em> A Assembleia pode criar ou dissolver círculos por maioria simples.",
+  "constitution.art5.clause3":
+    "Nenhuma pessoa-membro pode servir em mais de dois círculos em simultâneo, e nenhum círculo pode ter mais de metade das suas pessoas-membro provenientes de uma mesma geração de admissão anual.",
+
+  "constitution.art6.toc": "VI · Dinheiro",
+  "constitution.art6.title": "Dinheiro",
+  "constitution.art6.clause1":
+    "<strong>Pelo menos 90% de cada euro recebido</strong> tem de ser gasto em programas comunitários, equipa e infraestrutura — não em custos indiretos. A meta é 96% e tem sido cumprida todos os anos desde 2024.",
+  "constitution.art6.clause2":
+    "O orçamento anual é aprovado pela Assembleia. O círculo de finanças pode reequilibrar entre categorias ao longo do ano sem nova aprovação, até 10% por categoria.",
+  "constitution.art6.clause3":
+    "As contas anuais são <strong>auditadas por uma entidade terceira independente</strong> sem qualquer relação financeira com a associação, e publicadas na íntegra como parte do Relatório de Transparência.",
+  "constitution.art6.clause4":
+    "A associação não pode contrair dívidas superiores a 10 000 € sem aprovação explícita da Assembleia.",
+
+  "constitution.art7.toc": "VII · Expressão",
+  "constitution.art7.title": "Expressão & <em>moderação</em>",
+  "constitution.art7.clause1":
+    "A comunidade é moderada de acordo com o Código de Conduta, ratificado em separado e alterável por maioria qualificada da Assembleia (60%).",
+  "constitution.art7.clause2":
+    "<strong>A associação não modera críticas a si própria.</strong> Publicações críticas da associação, das suas decisões, ou dos seus dirigentes não podem ser removidas ao abrigo de nenhuma cláusula do Código de Conduta.",
+  "constitution.art7.clause3":
+    "As decisões de moderação são recorríveis junto de um painel de recurso permanente composto por três pessoas-membro que não pertençam ao círculo que decidiu. Os recursos revertem decisões em cerca de 11% dos casos (valor de 2025).",
+
+  "constitution.art8.toc": "VIII · Remoção",
+  "constitution.art8.title": "Remoção",
+  "constitution.art8.clause1":
+    "As pessoas-membro só podem ser removidas através da escala de moderação especificada no §04 do Código de Conduta, e apenas por decisão do círculo de moderação, ratificada por mais uma pessoa moderadora independente.",
+  "constitution.art8.clause2":
+    "A remoção é recorrível <strong>uma vez</strong>, junto do painel de recurso, no prazo de 14 dias a contar da data de efeito.",
+  "constitution.art8.clause3":
+    "Os dados de uma pessoa-membro removida são eliminados ou anonimizados nos termos da Política de Privacidade no prazo de 30 dias. Os registos do caso são conservados durante 36 meses, para eventual necessidade legal.",
+
+  "constitution.art9.toc": "IX · Parceiros",
+  "constitution.art9.title": "Parceiros",
+  "constitution.art9.clause1":
+    "A associação pode celebrar <strong>parcerias operacionais</strong> com outras organizações, em termos aprovados pela Assembleia. Novas parcerias operacionais estão limitadas a duas por ano.",
+  "constitution.art9.clause2":
+    "Nenhuma parceria pode conceder a uma organização parceira acesso a dados de pessoas-membro para além do operacionalmente necessário, e apenas com o consentimento explícito da pessoa-membro em causa.",
+  "constitution.art9.clause3":
+    "Qualquer uma das partes de uma parceria pode discordar publicamente das posições da outra. <em>Coligação não é consenso.</em>",
+
+  "constitution.art10.toc": "X · Expansão",
+  "constitution.art10.title": "Expansão",
+  "constitution.art10.clause1":
+    "A associação só pode abrir em cidades além de Lisboa quando todas estas condições se verificarem: (a) pelo menos uma pessoa moderadora está no país; (b) uma parceira operacional local está firmada; (c) uma revisão jurídica local está concluída; (d) entre oito e doze pessoas-membro fundadoras se comprometeram com o lançamento-piloto.",
+  "constitution.art10.clause2":
+    "Cada nova cidade ratifica o seu próprio círculo local e opera ao abrigo desta Constituição, com estatutos específicos da cidade conforme necessário.",
+
+  "constitution.art11.toc": "XI · Dissolução",
+  "constitution.art11.title": "Dissolução",
+  "constitution.art11.clause1":
+    "A associação só pode ser dissolvida por resolução da Assembleia que exija uma <strong>maioria qualificada de 75%</strong> de todas as pessoas-membro ativas, e não apenas das que votam.",
+  "constitution.art11.clause2":
+    "Em caso de dissolução, todos os ativos remanescentes têm de ser transferidos para a ILGA Portugal, ou para uma organização LGBTQ+ sucessora escolhida pela Assembleia dissolvente. Nenhum ativo pode ser distribuído a indivíduos.",
+
+  "constitution.art12.toc": "XII · Emendas",
+  "constitution.art12.title": "Emendas",
+  "constitution.art12.clause1":
+    "Esta Constituição só pode ser emendada por resolução da Assembleia que exija uma maioria qualificada de 60% dos votos expressos.",
+  "constitution.art12.clause2":
+    "As emendas têm de ser circuladas para comentário escrito junto de todas as pessoas-membro, pelo menos 30 dias antes da votação.",
+  "constitution.art12.clause3":
+    "O versionamento é sequencial (v1.0, v1.1…). O texto integral da versão em vigor é publicado em permanência.",
+
+  "constitution.footer.version":
+    "<b>Constituição v1.4</b> · ratificada a 14 nov. 2025 · em vigor desde 1 jan. 2026 ·",
+  "constitution.footer.downloadPdf": "Descarregar PDF",
+  "constitution.footer.seeAssembly": "Ver a Assembleia",
+  "constitution.footer.readCodeOfConduct": "Ler o Código de Conduta",
+
+  // ── Biblioteca de Recursos — chrome de página/filtros/cartão. Os registos
+  //    de `RESOURCES` (nome/descrição/etiquetas — organizações externas e
+  //    ferramentas da QueerPulse com curadoria) são conteúdo de diretório,
+  //    mesmo precedente de `directoryPlaces.ts` / da página Plataformas
+  //    abaixo — ficam em inglês. `LIBRARY_SUBPAGES` (rótulo/descrição) é
+  //    chrome curto de apresentação, escrito pela plataforma — traduzido.
+  "resourceLibrary.meta.title": "Biblioteca de Recursos — QueerPulse",
+  "resourceLibrary.meta.description":
+    "Coisas que realmente ajudam — uma biblioteca com curadoria de recursos gratuitos e de escala variável de saúde, apoio jurídico, habitação, dinheiro, identidade e segurança para a Lisboa queer.",
+  "resourceLibrary.hero.eyebrow": "Biblioteca de Recursos",
+  "resourceLibrary.hero.title": "Coisas que <em>realmente ajudam.</em>",
+  "resourceLibrary.hero.sub":
+    "Guias mantidos pela comunidade, organizações, contactos e ferramentas da QueerPulse — tudo num só lugar pesquisável.",
+  "resourceLibrary.stats.resources": "recursos",
+  "resourceLibrary.stats.categories": "categorias",
+  "resourceLibrary.stats.communityLabel": "Comunidade",
+  "resourceLibrary.stats.maintained": "mantida",
+  "resourceLibrary.search.placeholder": "Pesquisar recursos…",
+  "resourceLibrary.category.all": "Todos",
+  "resourceLibrary.category.health": "Saúde",
+  "resourceLibrary.category.legal": "Jurídico",
+  "resourceLibrary.category.housing": "Habitação",
+  "resourceLibrary.category.money": "Dinheiro",
+  "resourceLibrary.category.identity": "Identidade",
+  "resourceLibrary.category.safety": "Segurança",
+  "resourceLibrary.category.community": "Comunidade",
+  "resourceLibrary.results_one": "{count} resultado",
+  "resourceLibrary.results_other": "{count} resultados",
+  "resourceLibrary.empty":
+    "Nenhum recurso corresponde — tenta um filtro mais amplo.",
+  "resourceLibrary.cost.free": "Gratuito",
+  "resourceLibrary.cost.sliding": "Escala variável",
+  "resourceLibrary.card.openGuide": "Abrir guia →",
+  "resourceLibrary.card.visitSite": "Visitar site ↗",
+  "resourceLibrary.outro.title": "Sabes de algo que <em>falta?</em>",
+  "resourceLibrary.outro.sub":
+    "Todos os recursos aqui foram adicionados por uma pessoa da comunidade. Se algo te ajudou e não está listado, conta-nos.",
+  "resourceLibrary.outro.cta": "Sugerir um recurso",
+  "resourceLibrary.subpages.eyebrow": "Aprender & pertencer",
+  "resourceLibrary.subpages.title": "Começa pelo básico",
+  "resourceLibrary.subpages.queer101.label": "Queer 101",
+  "resourceLibrary.subpages.queer101.blurb":
+    "Acabaste de chegar? Começa pelo básico — identidades, linguagem e comunidade.",
+  "resourceLibrary.subpages.glossary.label": "Glossário",
+  "resourceLibrary.subpages.glossary.blurb":
+    "Definições em linguagem simples para as palavras que a comunidade usa.",
+  "resourceLibrary.subpages.intersectionality.label": "Interseccionalidade",
+  "resourceLibrary.subpages.intersectionality.blurb":
+    "Como as identidades sobrepostas moldam as nossas experiências — e a nossa organização coletiva.",
+
+  // ── Plataformas (a rede queer mais alargada) — chrome de página/filtros.
+  //    Os registos de `PLATFORMS` (nome/descrição — apps/organizações
+  //    externas nomeadas) são conteúdo de diretório, mesmo precedente da
+  //    Biblioteca de Recursos acima — ficam em inglês.
+  "platforms.hero.eyebrow": "Plataformas queer",
+  "platforms.hero.title": "A rede <em>queer</em> mais alargada.",
+  "platforms.hero.sub":
+    "Aplicações, media, redes profissionais e organizações de defesa de direitos genuinamente úteis para pessoas queer — para além da própria QueerPulse.",
+  "platforms.filter.all": "Todas",
+  "platforms.filter.dating": "Namoro & Social",
+  "platforms.filter.media": "Notícias & Media",
+  "platforms.filter.professional": "Redes Profissionais",
+  "platforms.filter.advocacy": "Defesa de Direitos",
+  "platforms.filter.health": "Saúde & Bem-estar",
+  "platforms.filter.portugal": "Portugal & Lisboa",
+  "platforms.note.body":
+    "<b>Uma nota sobre esta lista:</b> Incluímos plataformas que consideramos genuinamente úteis para pessoas queer. Isto não é um aval às práticas de nenhuma empresa. Faz sempre as tuas próprias escolhas informadas sobre dados, segurança e privacidade — especialmente em aplicações de namoro e sociais.",
+  "platforms.outro.title": "Falta alguma coisa? <em>Diz-nos.</em>",
+  "platforms.outro.sub":
+    "Conheces uma plataforma, recurso ou comunidade que devia estar aqui? Sugere-a e nós adicionamo-la ao diretório.",
+  "platforms.outro.cta": "Sugerir uma plataforma →",
+
+  // ── Candidatura a Parceiro — chrome do formulário "Candidata-te a
+  //    parceria". Todo o texto é escrito pela plataforma (formulário/
+  //    validação). `REGION_OPTIONS`/`DEFAULT_REGION_LABEL` mantêm o id
+  //    canónico de `Region` ("pt"/"eu"/"int") como valor guardado; só o
+  //    rótulo apresentado é traduzido (i18n brief §5.1).
+  "submitPartner.hero.eyebrow": "Parceiros · Candidatura",
+  "submitPartner.hero.title": "Candidata-te a <em>parceria.</em>",
+  "submitPartner.hero.sub":
+    "As parcerias da QueerPulse são operacionais, não promocionais. Conta-nos quem és e o que fazes — com honestidade — e vamos ler cada palavra.",
+  "submitPartner.success.title": "Candidatura",
+  "submitPartner.success.em": "recebida.",
+  "submitPartner.success.closeLabel": "Voltar a parceiros →",
+  "submitPartner.success.step1":
+    "Está pendente de revisão pela equipa de parcerias",
+  "submitPartner.success.step2":
+    "Lemos todas as candidaturas, não só as mais arrumadas",
+  "submitPartner.success.step3":
+    "Entraremos em contacto — um sim, um ainda não, ou uma pergunta",
+  "submitPartner.success.body":
+    "Obrigade por nos contactares. A tua candidatura está feita — nada fica público até termos falado contigo sobre ela.",
+  "submitPartner.actions.sending": "A enviar…",
+  "submitPartner.actions.submit": "Submeter candidatura →",
+  "submitPartner.actions.cancel": "Cancelar",
+  "submitPartner.error.toast":
+    "Não foi possível enviar a tua candidatura — tenta novamente.",
+
+  "submitPartner.fields.sectionOrg": "A tua organização",
+  "submitPartner.fields.name.label": "Nome da organização",
+  "submitPartner.fields.name.placeholder": "ex.: Casa Arco",
+  "submitPartner.fields.logo.label": "Marca do logótipo",
+  "submitPartner.fields.logo.helper":
+    "Uma palavra curta ou iniciais mostradas no distintivo (ex.: “ILGA”, “CA”).",
+  "submitPartner.fields.logo.placeholder": "ex.: CA",
+  "submitPartner.fields.city.label": "Cidade / base",
+  "submitPartner.fields.city.placeholder": "ex.: Porto",
+  "submitPartner.fields.region.label": "Região",
+  "submitPartner.fields.regionLabel.label": "Rótulo da região",
+  "submitPartner.fields.regionLabel.helper":
+    "Mostrado no cartão — substitui o padrão se preferires.",
+  "submitPartner.fields.regionLabel.placeholder": "ex.: Portugal",
+  "submitPartner.fields.sectionPitch": "A apresentação",
+  "submitPartner.fields.eyebrow.label": "Linha de abertura",
+  "submitPartner.fields.eyebrow.helper":
+    "Uma linha curta do tipo de parceria, ex.: “Parceiro · Apoio comunitário”.",
+  "submitPartner.fields.eyebrow.placeholder":
+    "ex.: Parceiro · Organização de defesa de direitos",
+  "submitPartner.fields.tagline.label": "Frase-síntese",
+  "submitPartner.fields.tagline.helper":
+    "A frase única que resume o que fazem.",
+  "submitPartner.fields.tagline.placeholder":
+    "Uma cozinha comunitária que decidiu que ninguém deveria passar frio ou fome à espera de uma cama segura.",
+  "submitPartner.fields.desc.label": "Descrição breve",
+  "submitPartner.fields.desc.helper":
+    "Uma ou duas frases mostradas no cartão de listagem.",
+  "submitPartner.fields.desc.placeholder":
+    "O que a tua organização faz, em linguagem simples, e a quem serve.",
+  "submitPartner.fields.tags.label": "Etiquetas",
+  "submitPartner.fields.tags.helper":
+    "Separadas por vírgulas — mostradas como chips no cartão.",
+  "submitPartner.fields.tags.placeholder":
+    "Habitação, Alimentação, Apoio direto",
+  "submitPartner.fields.sectionPartnering": "Como seria a parceria",
+  "submitPartner.fields.tier.label": "Nível de parceria",
+  "submitPartner.fields.tier.helper": "Como descreverias a relação.",
+  "submitPartner.fields.tier.placeholder": "ex.: Parceiro comunitário",
+  "submitPartner.fields.since.label": "Desde / estado",
+  "submitPartner.fields.since.helper":
+    "Uma linha de estado curta para o cartão.",
+  "submitPartner.fields.since.placeholder": "ex.: A candidatar · 2026",
+  "submitPartner.fields.requiredError": "Este campo é obrigatório.",
+  "submitPartner.form.sinceDefault": "A candidatar · {year}",
+
+  "submitPartner.region.pt": "Portugal",
+  "submitPartner.region.eu": "Europa",
+  "submitPartner.region.int": "Internacional",
+
+  "submitPartner.tips.readEvery.title": "Lemos todas as candidaturas",
+  "submitPartner.tips.readEvery.body":
+    "As parcerias aqui são operacionais, não promocionais. Conta-nos o que a tua organização realmente faz e a quem serve — não uma declaração de missão.",
+  "submitPartner.tips.sharedValues.title":
+    "Valores partilhados, não alinhamento de marca",
+  "submitPartner.tips.sharedValues.body":
+    "Damos prioridade a organizações que colocam no centro as identidades marginalizadas dentro dos espaços queer, e também fora deles. Diz-nos onde se situa o teu trabalho.",
+  "submitPartner.tips.whatNext.title": "O que acontece a seguir",
+  "submitPartner.tips.whatNext.body":
+    "A tua candidatura chega como pendente. Uma pessoa da equipa revê-a, e entraremos em contacto — seja um sim, um ainda não, ou uma pergunta.",
+
+  // ── Cidades (CitiesPage + Sections + LiveCards) ───────────────────────────
+  "cities.hero.eyebrow": "Cidades · presença da rede · seletor",
+  "cities.hero.title": "Uma cidade de cada <em>vez.</em>",
+  "cities.hero.dek":
+    "A QueerPulse está enraizada em Lisboa. Só abrimos numa nova cidade quando há <b>pelo menos uma pessoa moderadora no país</b>, uma organização parceira alinhada, e uma necessidade local clara. <em>Isso torna a expansão lenta de propósito.</em> Abaixo: onde estamos agora, onde estamos a construir, e como podes puxar-nos para a tua cidade.",
+  "cities.hero.browsingAs": "Estás a navegar como",
+  "cities.hero.changeCta": "Mudar",
+  "cities.hero.changeToast":
+    "Detetado pelo IP. Podes mudar a partir de qualquer cartão de cidade abaixo.",
+
+  "cities.live.heading": "Ativas · <em>totalmente operacionais</em>",
+  "cities.live.meta": "Comunidade ativa, moderação, organizações parceiras",
+
+  "cities.groundwork.heading": "Em <em>preparação</em>",
+  "cities.groundwork.meta":
+    "Pessoa moderadora local identificada · negociações com parceiros em curso",
+
+  "cities.waitlist.heading":
+    "Cidades <em>que as pessoas membras estão a pedir</em>",
+  "cities.waitlist.meta":
+    "Lista de espera pública · pessoas membras podem votar · 1 voto por pessoa",
+  "cities.waitlist.intro":
+    "Os votos são <em>sinais para nós sobre onde está a comunidade</em>, não promessas de construir. Abrimos uma cidade de cada vez. Adicionar o teu voto demora 1 clique.",
+  "cities.waitlist.membersAsking": "Pessoas a pedir",
+  "cities.waitlist.pctToThreshold": "{pct}% até ao limiar",
+  "cities.waitlist.votedCta": "Votaste",
+  "cities.waitlist.voteCta": "+ Adicionar o meu voto",
+  "cities.waitlist.voteToast":
+    "Voto registado · lemos estes sinais todos os meses",
+  "cities.waitlist.footNote":
+    "Não vês a tua cidade? <a>Escreve-nos</a> a dizer o que construirias lá.",
+
+  "cities.how.kicker": "O livro de regras",
+  "cities.how.title": "Como <em>realmente abrimos</em> uma nova cidade.",
+  "cities.how.intro": "Quatro condições, todas obrigatórias. Sem atalhos.",
 };

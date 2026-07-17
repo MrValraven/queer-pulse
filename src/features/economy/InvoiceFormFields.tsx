@@ -5,6 +5,7 @@ import {
   RETENTION_DISPENSA_NOTE,
 } from "./tax.constants";
 import { type InvoiceClient } from "./invoice.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvoiceGeneratorPage.module.css";
 
 export function InvoiceIssuerFields({
@@ -14,13 +15,16 @@ export function InvoiceIssuerFields({
   issuer: Issuer;
   updateIssuer: (patch: Partial<Issuer>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <fieldset className={styles.block}>
-      <legend className={styles.legend}>Your details</legend>
+      <legend className={styles.legend}>
+        {t("economy:invoiceTool.issuer.legend")}
+      </legend>
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="iss-name">
-          Name / business
+          {t("economy:invoiceTool.issuer.nameLabel")}
         </label>
         <input
           id="iss-name"
@@ -28,14 +32,14 @@ export function InvoiceIssuerFields({
           type="text"
           value={issuer.name}
           onChange={(e) => updateIssuer({ name: e.target.value })}
-          placeholder="Your name or studio"
+          placeholder={t("economy:invoiceTool.issuer.namePlaceholder")}
         />
       </div>
 
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="iss-nif">
-            NIF
+            {t("economy:invoiceTool.issuer.nifLabel")}
           </label>
           <input
             id="iss-nif"
@@ -49,7 +53,7 @@ export function InvoiceIssuerFields({
         </div>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="iss-email">
-            Email
+            {t("economy:invoiceTool.issuer.emailLabel")}
           </label>
           <input
             id="iss-email"
@@ -64,7 +68,7 @@ export function InvoiceIssuerFields({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="iss-address">
-          Address
+          {t("economy:invoiceTool.issuer.addressLabel")}
         </label>
         <input
           id="iss-address"
@@ -72,13 +76,13 @@ export function InvoiceIssuerFields({
           type="text"
           value={issuer.address}
           onChange={(e) => updateIssuer({ address: e.target.value })}
-          placeholder="Street, postcode, city"
+          placeholder={t("economy:invoiceTool.issuer.addressPlaceholder")}
         />
       </div>
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="iss-iban">
-          IBAN
+          {t("economy:invoiceTool.issuer.ibanLabel")}
         </label>
         <input
           id="iss-iban"
@@ -100,13 +104,16 @@ export function InvoiceClientFields({
   client: InvoiceClient;
   setClient: (patch: Partial<InvoiceClient>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <fieldset className={styles.block}>
-      <legend className={styles.legend}>Client</legend>
+      <legend className={styles.legend}>
+        {t("economy:invoiceTool.client.legend")}
+      </legend>
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="cl-name">
-          Client name
+          {t("economy:invoiceTool.client.nameLabel")}
         </label>
         <input
           id="cl-name"
@@ -114,14 +121,14 @@ export function InvoiceClientFields({
           type="text"
           value={client.name}
           onChange={(e) => setClient({ name: e.target.value })}
-          placeholder="Who you're billing"
+          placeholder={t("economy:invoiceTool.client.namePlaceholder")}
         />
       </div>
 
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="cl-nif">
-            Client NIF
+            {t("economy:invoiceTool.client.nifLabel")}
           </label>
           <input
             id="cl-nif"
@@ -130,12 +137,12 @@ export function InvoiceClientFields({
             inputMode="numeric"
             value={client.nif}
             onChange={(e) => setClient({ nif: e.target.value })}
-            placeholder="Optional"
+            placeholder={t("economy:invoiceTool.optional")}
           />
         </div>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="cl-address">
-            Client address
+            {t("economy:invoiceTool.client.addressLabel")}
           </label>
           <input
             id="cl-address"
@@ -143,7 +150,7 @@ export function InvoiceClientFields({
             type="text"
             value={client.address}
             onChange={(e) => setClient({ address: e.target.value })}
-            placeholder="Optional"
+            placeholder={t("economy:invoiceTool.optional")}
           />
         </div>
       </div>
@@ -180,13 +187,16 @@ export function InvoiceMetaFields({
   dispensaRetention,
   setDispensaRetention,
 }: InvoiceMetaFieldsProps) {
+  const { t } = useTranslation();
   return (
     <fieldset className={styles.block}>
-      <legend className={styles.legend}>Invoice</legend>
+      <legend className={styles.legend}>
+        {t("economy:invoiceTool.meta.legend")}
+      </legend>
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="inv-no">
-          Invoice number
+          {t("economy:invoiceTool.meta.numberLabel")}
         </label>
         <input
           id="inv-no"
@@ -201,7 +211,7 @@ export function InvoiceMetaFields({
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="inv-issue">
-            Issue date
+            {t("economy:invoiceTool.meta.issueDateLabel")}
           </label>
           <input
             id="inv-issue"
@@ -213,7 +223,7 @@ export function InvoiceMetaFields({
         </div>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="inv-due">
-            Due date
+            {t("economy:invoiceTool.meta.dueDateLabel")}
           </label>
           <input
             id="inv-due"
@@ -227,7 +237,7 @@ export function InvoiceMetaFields({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="inv-iva">
-          IVA rate
+          {t("economy:invoiceTool.meta.ivaRateLabel")}
         </label>
         <select
           id="inv-iva"
@@ -238,7 +248,7 @@ export function InvoiceMetaFields({
         >
           {IVA_RATES.map((r) => (
             <option key={r.value} value={r.value}>
-              {r.label}
+              {t(r.labelKey)}
             </option>
           ))}
         </select>

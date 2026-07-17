@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { ImageSlot, FadeIn, EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioShell } from "./StudioShell";
 import { FILTERS, RECENT, RESULTS } from "./studioSearch.data";
 import ss from "./studio.module.css";
@@ -22,6 +24,7 @@ function SearchResultSkeleton() {
 }
 
 export function StudioSearchPage() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("Everything");
   const loading = useSimulatedLoad();
@@ -42,9 +45,12 @@ export function StudioSearchPage() {
   return (
     <StudioShell>
       <div className={s.pageH}>
-        <div className={s.eb}>Search the catalogue</div>
+        <div className={s.eb}>{t("studio:search.eyebrow")}</div>
         <h1>
-          Find the <em>sound.</em>
+          <Translation
+            i18nKey="studio:search.title"
+            components={{ em: <em /> }}
+          />
         </h1>
       </div>
 
@@ -61,7 +67,7 @@ export function StudioSearchPage() {
         </svg>
         <input
           type="search"
-          placeholder="Artists, albums, sets, sheet music…"
+          placeholder={t("studio:search.inputPlaceholder")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           autoFocus
@@ -71,12 +77,12 @@ export function StudioSearchPage() {
       <div className={s.chips}>
         {FILTERS.map((option) => (
           <button
-            key={option}
+            key={option.id}
             type="button"
-            className={`${s.chip} ${filter === option ? s.chipOn : ""}`}
-            onClick={() => setFilter(option)}
+            className={`${s.chip} ${filter === option.id ? s.chipOn : ""}`}
+            onClick={() => setFilter(option.id)}
           >
-            {option}
+            {t(option.labelKey)}
           </button>
         ))}
       </div>
@@ -100,35 +106,45 @@ export function StudioSearchPage() {
         <div className={ss.rowH}>
           <h2>
             {query ? (
-              <>
-                Results for <em>{query}</em>
-              </>
+              <Translation
+                i18nKey="studio:search.results.forQuery"
+                components={{ em: <em /> }}
+                values={{ query }}
+              />
             ) : (
-              <>
-                Featured <em>now</em>
-              </>
+              <Translation
+                i18nKey="studio:search.results.featuredNow"
+                components={{ em: <em /> }}
+              />
             )}
           </h2>
         </div>
         {loading ? (
           <div className={ss.rowGrid}>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <SearchResultSkeleton key={i} />
+            {Array.from({ length: 8 }).map((_, skeletonIndex) => (
+              <SearchResultSkeleton key={skeletonIndex} />
             ))}
           </div>
         ) : results.length === 0 ? (
           <EmptyState
             icon={<FiSearch />}
-            title="Nothing matched that"
+            title={t("studio:search.empty.title")}
             description={
-              <>
-                We couldn't find anything for <em>{query || filter}</em>. Try a
-                different word, or loosen the filter — the catalogue is bigger
-                than it looks.
-              </>
+              <Translation
+                i18nKey="studio:search.empty.description"
+                components={{ em: <em /> }}
+                values={{
+                  term:
+                    query ||
+                    t(
+                      FILTERS.find((option) => option.id === filter)
+                        ?.labelKey ?? "studio:search.filter.everything",
+                    ),
+                }}
+              />
             }
             action={{
-              label: "Clear search",
+              label: t("studio:search.empty.clearCta"),
               onClick: () => {
                 setQuery("");
                 setFilter("Everything");
@@ -137,10 +153,10 @@ export function StudioSearchPage() {
           />
         ) : (
           <div className={ss.rowGrid}>
-            {results.map((result, i) => (
+            {results.map((result, resultIndex) => (
               <FadeIn
                 key={result.pre + result.meta}
-                delay={Math.min(i, 8) * 60}
+                delay={Math.min(resultIndex, 8) * 60}
               >
                 <Link to={result.to} className={ss.card}>
                   <div className={ss.cardCov}>

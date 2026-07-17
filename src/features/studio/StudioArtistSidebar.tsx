@@ -1,69 +1,95 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import styles from "./studio.module.css";
 
+const ARTIST_NAME = "Mariana Sol";
+const SUBSCRIBE_AMOUNT = 3;
+const SIDEBAR_STATS = {
+  plays: 36400,
+  earningsStreaming: 1820,
+  tipsReceived: 448,
+  directSubscribers: 612,
+};
+
 export function StudioArtistSidebar({ onTip }: { onTip: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.sideCol}>
       <div className={styles.buyCard}>
-        <div className={styles.eb}>Sustain Mariana directly</div>
+        <div className={styles.eb}>
+          {t("studio:artist.sidebar.sustainEyebrow", { artist: ARTIST_NAME })}
+        </div>
         <div className={styles.price}>
-          €<em>3</em>
+          €<em>{SUBSCRIBE_AMOUNT}</em>
           <span style={{ fontSize: 14, color: "var(--text40)" }}>/month</span>
         </div>
         <div className={styles.sub}>
-          Direct to Mariana. No platform cut. Subscribers get early-access
-          tracks, the weekly note, and seats at every live broadcast.
+          {t("studio:artist.sidebar.sustainSub", { artist: ARTIST_NAME })}
         </div>
         <div className={styles.buyActions}>
           <Link
             to={routes.studioCheckout}
             className={`${styles.bt} ${styles.btP}`}
           >
-            Subscribe · €3/mo
+            {t("studio:artist.sidebar.subscribeCta", {
+              amount: fmt.currency(SUBSCRIBE_AMOUNT),
+            })}
           </Link>
           <button type="button" className={styles.bt} onClick={onTip}>
-            One-off tip
+            {t("studio:artist.sidebar.oneOffTipCta")}
           </button>
         </div>
       </div>
 
       <div className={styles.ledgerCard}>
-        <div className={styles.head}>Mariana · this month</div>
+        <div className={styles.head}>
+          {t("studio:artist.sidebar.thisMonthHeading", {
+            artist: ARTIST_NAME,
+          })}
+        </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Plays</span>
+          <span className={styles.k}>{t("studio:artist.sidebar.plays")}</span>
+          <span className={styles.v}>{fmt.number(SIDEBAR_STATS.plays)}</span>
+        </div>
+        <div className={styles.lrow}>
+          <span className={styles.k}>
+            {t("studio:artist.sidebar.earningsStreaming")}
+          </span>
           <span className={styles.v}>
-            36,<em>400</em>
+            {fmt.currency(SIDEBAR_STATS.earningsStreaming)}
           </span>
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Earnings (streaming)</span>
+          <span className={styles.k}>
+            {t("studio:artist.sidebar.tipsReceived")}
+          </span>
           <span className={styles.v}>
-            €<em>1,820</em>
+            {fmt.currency(SIDEBAR_STATS.tipsReceived)}
           </span>
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>Tips received</span>
-          <span className={styles.v}>
-            €<em>448</em>
+          <span className={styles.k}>
+            {t("studio:artist.sidebar.directSubscribers")}
           </span>
-        </div>
-        <div className={styles.lrow}>
-          <span className={styles.k}>Direct subscribers</span>
           <span className={styles.v}>
-            €<em>612</em>
+            {fmt.currency(SIDEBAR_STATS.directSubscribers)}
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          Full ledger →
+          {t("studio:detail.fullLedgerCta")} →
         </Link>
       </div>
 
       <div className={styles.sideCard}>
-        <div className={styles.eb}>Upcoming</div>
+        <div className={styles.eb}>
+          {t("studio:artist.sidebar.upcomingHeading")}
+        </div>
         <div className={styles.lrow} style={{ marginTop: 10 }}>
           <span className={styles.k}>
-            Premiere ·{" "}
+            {t("studio:artist.sidebar.premiereLabel")} ·{" "}
             <em style={{ color: "var(--text)", fontStyle: "italic" }}>
               Cidade dos santos
             </em>
@@ -75,7 +101,7 @@ export function StudioArtistSidebar({ onTip }: { onTip: () => void }) {
             className={styles.cta}
             style={{ marginTop: 0 }}
           >
-            RSVP
+            {t("studio:artist.sidebar.rsvpCta")}
           </Link>
         </div>
       </div>

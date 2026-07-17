@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import type { AvatarTint } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 
 /** The badge shown top-right of a post card. */
@@ -870,24 +872,30 @@ export function splitForTitle(tag: string): ReactNode {
 /**
  * Resolve a topic by tag. Curated topics return their full data; anything else
  * gets a coherent generic feed so related-topic links never dead-end.
+ *
+ * The generic fallback's single starter post is platform-authored prompt copy
+ * (never fetched — no live tag with zero posts synthesizes an equivalent row,
+ * see `api/topics.adapters.tsx`), so it's a function of `t` like any other
+ * empty/starter state (Pattern B).
  */
-export function getTopic(rawTag: string): Topic {
+export function getTopic(rawTag: string, t: TFunction): Topic {
   const tag = rawTag.replace(/^#/, "").toLowerCase();
   if (TOPICS[tag]) return TOPICS[tag];
 
   const related = Object.values(TOPICS)
-    .filter((t) => t.tag !== tag)
-    .map((t) => ({ tag: t.tag, count: t.totalPosts }));
+    .filter((topic) => topic.tag !== tag)
+    .map((topic) => ({ tag: topic.tag, count: topic.totalPosts }));
 
   return {
     tag,
     eyebrowKey: "topics:common.eyebrow",
     title: splitForTitle(tag),
     sub: (
-      <>
-        Posts, questions, and recommendations tagged <strong>#{tag}</strong>{" "}
-        from across the QueerPulse community.
-      </>
+      <Translation
+        i18nKey="topics:fallback.sub"
+        components={{ strong: <strong /> }}
+        values={{ tag }}
+      />
     ),
     stats: [
       { value: "—", em: true, labelKey: "topics:stats.posts" },
@@ -905,19 +913,22 @@ export function getTopic(rawTag: string): Topic {
         author: "QueerPulse",
         initials: "QP",
         tone: "plum",
-        meta: "Be the first here",
+        meta: t("topics:fallback.postMeta"),
         kind: "asking",
         category: "thread",
         title: (
-          <>
-            Nothing tagged <em>#{tag}</em> yet — want to start the thread?
-          </>
+          <Translation
+            i18nKey="topics:fallback.postTitle"
+            components={{ em: <em /> }}
+            values={{ tag }}
+          />
         ),
-        body: `Topics grow when someone goes first. Post a question, a recommendation, or a resource with #${tag} and it will show up right here.`,
+        body: t("topics:fallback.postBody", { tag }),
         stats: (
-          <>
-            <b>0</b> posts · waiting for you
-          </>
+          <Translation
+            i18nKey="topics:fallback.postStats"
+            components={{ b: <b /> }}
+          />
         ),
         tags: [tag],
         href: routes.forum,

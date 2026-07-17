@@ -1,5 +1,7 @@
 import { FiZap, FiSettings } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SUMMARY, PAYOUTS, BREAKDOWN } from "./studioPayouts.data";
 import {
   PayoutRowSkeleton,
@@ -8,6 +10,7 @@ import {
 import s from "./creator.module.css";
 
 export function PayoutsHero() {
+  const { t } = useTranslation();
   return (
     <section className={s.hero}>
       <div
@@ -20,9 +23,13 @@ export function PayoutsHero() {
         }}
       >
         <div>
-          <div className={s.eb}>Payouts &amp; banking</div>
+          <div className={s.eb}>{t("studio:payouts.hero.eyebrow")}</div>
           <h1>
-            <em>€2,140</em> lands on the 5th.
+            <Translation
+              i18nKey="studio:payouts.hero.title"
+              components={{ em: <em /> }}
+              values={{ amount: "€2,140", day: 5 }}
+            />
           </h1>
           <div
             className="sub"
@@ -34,28 +41,29 @@ export function PayoutsHero() {
               marginTop: 14,
             }}
           >
-            Paid monthly by SEPA transfer, with your recibo verde issued
-            automatically. No minimums you didn't choose.
+            {t("studio:payouts.hero.sub")}
           </div>
         </div>
         <div className={s.sideCard} style={{ minWidth: 0 }}>
-          <div className={s.sideEb}>July payout · breakdown</div>
-          {SUMMARY.map((l) => (
-            <div key={l.k} className={s.ln}>
-              <span>{l.k}</span>
+          <div className={s.sideEb}>
+            {t("studio:payouts.hero.breakdownEyebrow", { month: "July" })}
+          </div>
+          {SUMMARY.map((line) => (
+            <div key={line.labelKey} className={s.ln}>
+              <span>{t(line.labelKey)}</span>
               <span
                 className="v2"
                 style={{ fontFamily: "var(--serif)", color: "var(--text)" }}
               >
                 €
                 <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
-                  {l.v}
+                  {line.v}
                 </em>
               </span>
             </div>
           ))}
           <div className={s.ln}>
-            <span>Splits routed to others</span>
+            <span>{t("studio:payouts.summary.splitsRouted")}</span>
             <span
               className="v2"
               style={{ fontFamily: "var(--serif)", color: "var(--text40)" }}
@@ -65,7 +73,7 @@ export function PayoutsHero() {
           </div>
           <div className={s.ln}>
             <span style={{ fontWeight: 600, color: "var(--text)" }}>
-              → to your IBAN
+              {t("studio:payouts.summary.toYourIban")}
             </span>
             <span
               className="v2"
@@ -90,12 +98,16 @@ export function PayoutsList({
   loading: boolean;
   onExport: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.col}>
       <div className={s.card}>
         <div className={s.cardH}>
           <h3>
-            Recent <em>payouts</em>
+            <Translation
+              i18nKey="studio:payouts.list.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
           <a
             href="#"
@@ -105,15 +117,15 @@ export function PayoutsList({
               onExport();
             }}
           >
-            Export CSV →
+            {t("studio:payouts.list.exportCsv")}
           </a>
         </div>
         {loading
-          ? Array.from({ length: PAYOUTS.length }).map((_, i) => (
-              <PayoutRowSkeleton key={i} />
+          ? Array.from({ length: PAYOUTS.length }).map((_, skeletonIndex) => (
+              <PayoutRowSkeleton key={skeletonIndex} />
             ))
-          : PAYOUTS.map((p, i) => (
-              <FadeIn key={p.m} delay={Math.min(i, 8) * 60}>
+          : PAYOUTS.map((payout, payoutIndex) => (
+              <FadeIn key={payout.m} delay={Math.min(payoutIndex, 8) * 60}>
                 <div className={s.payRow}>
                   <div className={s.payDate}>
                     <div
@@ -126,7 +138,7 @@ export function PayoutsList({
                         lineHeight: 1,
                       }}
                     >
-                      {p.d}
+                      {payout.d}
                     </div>
                     <div
                       className="m"
@@ -138,20 +150,22 @@ export function PayoutsList({
                         color: "var(--accent)",
                       }}
                     >
-                      {p.m}
+                      {payout.m}
                     </div>
                   </div>
                   <div>
-                    <h5>{p.title}</h5>
-                    <div className={s.payMeta}>{p.meta}</div>
+                    <h5>{payout.title}</h5>
+                    <div className={s.payMeta}>{payout.meta}</div>
                   </div>
                   <div className={s.payAmt}>
-                    €<em>{p.amt}</em>
+                    €<em>{payout.amt}</em>
                   </div>
                   <span
-                    className={`${s.payStatus} ${p.status === "pending" ? s.statusPending : s.statusPaid}`}
+                    className={`${s.payStatus} ${payout.status === "pending" ? s.statusPending : s.statusPaid}`}
                   >
-                    {p.status === "pending" ? "Pending" : "Paid"}
+                    {payout.status === "pending"
+                      ? t("studio:payouts.list.status.pending")
+                      : t("studio:payouts.list.status.paid")}
                   </span>
                 </div>
               </FadeIn>
@@ -161,7 +175,10 @@ export function PayoutsList({
       <div className={s.card}>
         <div className={s.cardH}>
           <h3>
-            This month, <em>track-by-track</em>
+            <Translation
+              i18nKey="studio:payouts.breakdown.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div
             className="sub"
@@ -171,16 +188,18 @@ export function PayoutsList({
               width: "100%",
             }}
           >
-            €0.05 per qualifying play (≥30s, capped 1/listener/track/day).
-            Updates nightly at 02:00 Lisbon.
+            {t("studio:payouts.breakdown.rateNote")}
           </div>
         </div>
         {loading
-          ? Array.from({ length: BREAKDOWN.length }).map((_, i) => (
-              <BreakdownRowSkeleton key={i} />
+          ? Array.from({ length: BREAKDOWN.length }).map((_, skeletonIndex) => (
+              <BreakdownRowSkeleton key={skeletonIndex} />
             ))
-          : BREAKDOWN.map((b, i) => (
-              <FadeIn key={i} delay={Math.min(i, 8) * 60}>
+          : BREAKDOWN.map((breakdownRow, breakdownIndex) => (
+              <FadeIn
+                key={breakdownIndex}
+                delay={Math.min(breakdownIndex, 8) * 60}
+              >
                 <div className={s.bdRow}>
                   <span
                     className="n"
@@ -190,7 +209,7 @@ export function PayoutsList({
                       fontSize: 12,
                     }}
                   >
-                    {b.n}
+                    {breakdownRow.n}
                   </span>
                   <span
                     className="nm"
@@ -200,13 +219,13 @@ export function PayoutsList({
                       fontSize: 14,
                     }}
                   >
-                    {b.nm}
+                    {breakdownRow.nm}
                   </span>
                   <span
                     className="plays"
                     style={{ color: "var(--text60)", whiteSpace: "nowrap" }}
                   >
-                    {b.plays}
+                    {breakdownRow.plays}
                   </span>
                   <span
                     className="rate"
@@ -229,14 +248,14 @@ export function PayoutsList({
                         color: "var(--accent)",
                       }}
                     >
-                      {b.total}
+                      {breakdownRow.total}
                     </em>
                   </span>
                 </div>
               </FadeIn>
             ))}
         <div className={s.bdFoot}>
-          <span>Streaming subtotal · before splits + tips + buys</span>
+          <span>{t("studio:payouts.breakdown.subtotalLabel")}</span>
           <span
             className="v"
             style={{
@@ -257,69 +276,86 @@ export function PayoutsList({
 }
 
 export function PayoutsSidebar() {
+  const { t } = useTranslation();
   return (
     <div className={s.col}>
       <div className={s.sideCard}>
-        <div className={s.sideEb}>Payout method · active</div>
+        <div className={s.sideEb}>
+          {t("studio:payouts.sidebar.methodEyebrow")}
+        </div>
         <h4>
-          Sending to <em>SEPA</em>
+          <Translation
+            i18nKey="studio:payouts.sidebar.methodHeading"
+            components={{ em: <em /> }}
+          />
         </h4>
         <div className={s.method}>
           <span className={s.methodIc}>€</span>
           <span className={s.methodNm}>
-            SEPA — IBAN
+            {t("studio:payouts.sidebar.method.sepa.label")}
             <small>LU 82 0019 … 1844 3700</small>
           </span>
-          <span className={s.methodBadge}>Active</span>
+          <span className={s.methodBadge}>
+            {t("studio:payouts.sidebar.method.sepa.badge")}
+          </span>
         </div>
         <div className={s.method}>
           <span className={`${s.methodIc} ${s.methodIcAlt}`}>
             <FiZap />
           </span>
           <span className={s.methodNm}>
-            Stripe Connect
-            <small>connected · backup, not primary</small>
+            {t("studio:payouts.sidebar.method.stripe.label")}
+            <small>{t("studio:payouts.sidebar.method.stripe.hint")}</small>
           </span>
-          <span className={s.methodSwitch}>Switch</span>
+          <span className={s.methodSwitch}>
+            {t("studio:payouts.sidebar.method.stripe.switchCta")}
+          </span>
         </div>
         <div className={s.method}>
           <span className={`${s.methodIc} ${s.methodIcAlt}`}>
             <FiSettings />
           </span>
           <span className={s.methodNm}>
-            Co-op credit
-            <small>spend at Casa do Comum, rehearsal rooms · €0 fees</small>
+            {t("studio:payouts.sidebar.method.coopCredit.label")}
+            <small>{t("studio:payouts.sidebar.method.coopCredit.hint")}</small>
           </span>
-          <span className={s.methodSwitch}>Add</span>
+          <span className={s.methodSwitch}>
+            {t("studio:payouts.sidebar.method.coopCredit.addCta")}
+          </span>
         </div>
       </div>
 
       <div className={s.sideCard}>
         <div className={s.cardH}>
           <h3>
-            Payout <em>preferences</em>
+            <Translation
+              i18nKey="studio:payouts.preferences.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
         </div>
         <div className={s.field}>
-          <label>Minimum threshold</label>
-          <select defaultValue="€5 (default · ships every month)">
-            <option>€5 (default · ships every month)</option>
-            <option>€20 (quarterly · save on fees)</option>
-            <option>€100 (hold &amp; release on request)</option>
+          <label>{t("studio:payouts.preferences.threshold.label")}</label>
+          <select defaultValue={t("studio:payouts.preferences.threshold.opt5")}>
+            <option>{t("studio:payouts.preferences.threshold.opt5")}</option>
+            <option>{t("studio:payouts.preferences.threshold.opt20")}</option>
+            <option>{t("studio:payouts.preferences.threshold.opt100")}</option>
           </select>
           <span className={s.fhint}>
-            Below threshold rolls over to next month.
+            {t("studio:payouts.preferences.threshold.hint")}
           </span>
         </div>
         <div className={s.field}>
-          <label>Tax residency</label>
+          <label>{t("studio:payouts.preferences.taxResidency.label")}</label>
           <input type="text" defaultValue="Portugal · NIF on file" />
           <span className={s.fhint}>
-            We auto-issue your IRS recibo verde for each payout.
+            {t("studio:payouts.preferences.taxResidency.hint")}
           </span>
         </div>
         <div className={s.field}>
-          <label>Notification email</label>
+          <label>
+            {t("studio:payouts.preferences.notificationEmail.label")}
+          </label>
           <input type="email" defaultValue="mariana@queerpulse.org" />
         </div>
       </div>

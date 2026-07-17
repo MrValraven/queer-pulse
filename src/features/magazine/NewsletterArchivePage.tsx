@@ -1,6 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, HubBackLink } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import {
@@ -15,6 +17,7 @@ import { NewsletterSubscribe } from "./NewsletterSubscribe";
 import styles from "./NewsletterArchivePage.module.css";
 
 export function NewsletterArchivePage() {
+  const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const stream = streamFromSlug(params.get("stream"));
   const latest = LATEST[stream];
@@ -32,19 +35,20 @@ export function NewsletterArchivePage() {
           <div className={styles.heroInner}>
             <HubBackLink
               to={routes.magazine}
-              label="the Magazine"
+              label={t("magazine:coverGallery.backLink")}
               tone="light"
             />
             <div className={styles.eyebrow}>
-              Newsletter archive · since 2024
+              {t("magazine:newsletterArchive.hero.eyebrow")}
             </div>
             <h1 className={styles.h1}>
-              Every email we've <em>sent.</em>
+              <Translation
+                i18nKey="magazine:newsletterArchive.hero.h1"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.dek}>
-              Three newsletters: a fortnightly community dispatch, a monthly
-              long-read companion, and a Trans Hub bulletin. All free. Read any
-              of them here — or subscribe and we'll send them straight.
+              {t("magazine:newsletterArchive.hero.dek")}
             </p>
             <NewsletterSubscribe stream={stream} />
             <div className={styles.stats}>
@@ -52,19 +56,23 @@ export function NewsletterArchivePage() {
                 <b>
                   <em>78</em>
                 </b>
-                Issues in the archive
+                {t("magazine:newsletterArchive.hero.stats.issuesInArchive")}
               </span>
               <span>
-                <b>3</b>Active newsletter streams
+                <b>3</b>
+                {t("magazine:newsletterArchive.hero.stats.activeStreams")}
               </span>
               <span>
-                <b>8,420</b>Subscribers across all streams
+                <b>8,420</b>
+                {t(
+                  "magazine:newsletterArchive.hero.stats.subscribersAllStreams",
+                )}
               </span>
               <span>
                 <b>
                   <em>2</em>
                 </b>
-                Languages · EN &amp; PT
+                {t("magazine:newsletterArchive.hero.stats.languages")}
               </span>
             </div>
           </div>
@@ -73,7 +81,7 @@ export function NewsletterArchivePage() {
         <div
           className={styles.tabs}
           role="tablist"
-          aria-label="Newsletter streams"
+          aria-label={t("magazine:newsletterArchive.tabsAriaLabel")}
         >
           {TABS.map((t) => (
             <button
@@ -110,7 +118,7 @@ export function NewsletterArchivePage() {
                 variant="primary"
                 to={`${routes.newsletterArchive}/${latest.num}`}
               >
-                Read in browser →
+                {t("magazine:newsletterArchive.readInBrowserCta")}
               </Button>
             </div>
           </div>

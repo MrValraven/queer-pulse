@@ -1,94 +1,119 @@
 export interface Feature {
   yes: boolean;
-  text: string;
+  /** Catalog key — Pattern A, resolved via t() in the consumer. */
+  textKey: string;
 }
 
 export interface Tier {
-  tag: string;
-  namePre: string;
-  nameEm: string;
+  tagKey: string;
+  nameKey: string;
   amount: string;
   per: string;
-  desc: string;
+  /** Numeric monthly price, for `{price}` interpolation in desc/cta (via
+   * `useFormat().currency()`) — kept separate from the display-only `amount`. */
+  priceValue?: number;
+  descKey: string;
   features: Feature[];
-  cta: string;
+  ctaKey: string;
   ctaVariant: "primary" | "ghost";
   ctaTo: string;
-  note?: string;
+  noteKey?: string;
   featured?: boolean;
-  badge?: string;
+  badgeKey?: string;
 }
 
+/** Patron tier's share of their fee that flows to the commissioning pool,
+ * for `{poolShare}` interpolation. */
+export const PATRON_POOL_SHARE = 4.8;
+
+/** i18n Pattern A — every tier's copy is platform pricing chrome; the
+ * consumer resolves each key via t()/<Translation> and formats `amount` via
+ * `useFormat().currency()`. */
 export const TIERS: Tier[] = [
   {
-    tag: "Free · always",
-    namePre: "The ",
-    nameEm: "door",
+    tagKey: "cinema:membership.tier.free.tag",
+    nameKey: "cinema:membership.tier.free.name",
     amount: "€0",
     per: "/ forever",
-    desc: "The door is open. Community films, made-here shorts, and selected free-tier films — no account needed. No time limit.",
+    descKey: "cinema:membership.tier.free.desc",
     features: [
-      { yes: true, text: "All free-tier films (40+ in catalogue)" },
-      { yes: true, text: "All made-here community shorts" },
-      { yes: true, text: "Free live events & Q&As" },
-      { yes: true, text: "Captions & audio description" },
-      { yes: false, text: "Sustainer library (100+ films)" },
-      { yes: false, text: "Offline downloads" },
-      { yes: false, text: "Votes on open calls" },
+      { yes: true, textKey: "cinema:membership.tier.free.feature1" },
+      { yes: true, textKey: "cinema:membership.tier.free.feature2" },
+      { yes: true, textKey: "cinema:membership.tier.free.feature3" },
+      { yes: true, textKey: "cinema:membership.tier.free.feature4" },
+      { yes: false, textKey: "cinema:membership.tier.free.feature5" },
+      { yes: false, textKey: "cinema:membership.tier.free.feature6" },
+      { yes: false, textKey: "cinema:membership.tier.free.feature7" },
     ],
-    cta: "Browse free films",
+    ctaKey: "cinema:membership.tier.free.cta",
     ctaVariant: "ghost",
     ctaTo: "/cinema/browse",
   },
   {
-    tag: "Sustainer · monthly",
-    namePre: "The ",
-    nameEm: "room",
+    tagKey: "cinema:membership.tier.sustainer.tag",
+    nameKey: "cinema:membership.tier.sustainer.name",
     amount: "€7",
     per: "/ month",
-    desc: "Everything in the cinema, plus your €7 directly funds the commissioning pool, the captioning fund, and the curators' stipend. The number is transparent.",
+    priceValue: 7,
+    descKey: "cinema:membership.tier.sustainer.desc",
     features: [
-      { yes: true, text: "Everything in Free" },
-      { yes: true, text: "Full sustainer library — 142 films" },
-      { yes: true, text: "Offline downloads (sustainer titles)" },
-      { yes: true, text: "Watch parties with other sustainers" },
-      { yes: true, text: "Vote on open calls & commissions" },
-      { yes: true, text: "Curator's notebook — full essays" },
-      { yes: true, text: "Screener access (festival films)" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature1" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature2" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature3" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature4" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature5" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature6" },
+      { yes: true, textKey: "cinema:membership.tier.sustainer.feature7" },
     ],
-    cta: "Become a sustainer · €7/mo",
+    ctaKey: "cinema:membership.tier.sustainer.cta",
     ctaVariant: "primary",
     ctaTo: "/checkout",
-    note: "Cancel any time. No lock-in. No dark patterns.",
+    noteKey: "cinema:membership.tier.sustainer.note",
     featured: true,
-    badge: "Most sustainers choose this",
+    badgeKey: "cinema:membership.tier.sustainer.badge",
   },
   {
-    tag: "Patron · monthly",
-    namePre: "The ",
-    nameEm: "patron",
+    tagKey: "cinema:membership.tier.patron.tag",
+    nameKey: "cinema:membership.tier.patron.name",
     amount: "€20",
     per: "/ month",
-    desc: "Everything in Sustainer, plus your name on the public patron wall and a larger contribution to the commissioning pool (~€4.80/mo after costs).",
+    priceValue: 20,
+    descKey: "cinema:membership.tier.patron.desc",
     features: [
-      { yes: true, text: "Everything in Sustainer" },
-      { yes: true, text: "Name on the patron wall (opt-in)" },
-      { yes: true, text: "Direct input on future open calls" },
-      { yes: true, text: "Invite to annual co-op assembly" },
-      { yes: true, text: "~€4.80/mo → commissioning pool" },
-      { yes: true, text: "Advance screeners before public" },
-      { yes: true, text: "Two guest passes per year" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature1" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature2" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature3" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature4" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature5" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature6" },
+      { yes: true, textKey: "cinema:membership.tier.patron.feature7" },
     ],
-    cta: "Become a patron · €20/mo",
+    ctaKey: "cinema:membership.tier.patron.cta",
     ctaVariant: "ghost",
     ctaTo: "/checkout",
-    note: "Cancel any time.",
+    noteKey: "cinema:membership.tier.patron.note",
   },
 ];
 
-export const LEDGER: { k: string; v: string; note: string }[] = [
-  { k: "Sustainers", v: "1,240", note: "Up 38 this month" },
-  { k: "Paid to filmmakers", v: "€8.4k", note: "This month, all transactions" },
-  { k: "Films in catalogue", v: "142", note: "9 new this month" },
-  { k: "Commission pool", v: "€13.2k", note: "Season 3 · 4 calls open" },
+export const LEDGER: { labelKey: string; v: string; noteKey: string }[] = [
+  {
+    labelKey: "cinema:membership.ledger.sustainers.label",
+    v: "1,240",
+    noteKey: "cinema:membership.ledger.sustainers.note",
+  },
+  {
+    labelKey: "cinema:ledger.card.paidToFilmmakers",
+    v: "€8.4k",
+    noteKey: "cinema:membership.ledger.paidToFilmmakers.note",
+  },
+  {
+    labelKey: "cinema:about.gov.ledger.filmsInCatalogue",
+    v: "142",
+    noteKey: "cinema:membership.ledger.filmsInCatalogue.note",
+  },
+  {
+    labelKey: "cinema:membership.ledger.commissionPool.label",
+    v: "€13.2k",
+    noteKey: "cinema:membership.ledger.commissionPool.note",
+  },
 ];

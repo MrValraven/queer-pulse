@@ -1,4 +1,5 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import type { TFunction } from "../../shared/i18n/types";
 import { memberProfiles } from "../members/data/memberProfiles";
 
 export type Mode = "offering" | "seeking" | "both";
@@ -249,26 +250,26 @@ export const BARTERS: Barter[] = [
   },
 ];
 
-export const MODES: { value: "all" | Mode; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "offering", label: "Offering" },
-  { value: "seeking", label: "Seeking" },
+export const MODES: { value: "all" | Mode; labelKey: string }[] = [
+  { value: "all", labelKey: "economy:barter.mode.all" },
+  { value: "offering", labelKey: "economy:barter.mode.offering" },
+  { value: "seeking", labelKey: "economy:barter.mode.seeking" },
 ];
 
 export const CATS = [
-  { value: "all", label: "All categories" },
-  { value: "creative", label: "Creative" },
-  { value: "tech", label: "Tech" },
-  { value: "legal", label: "Legal & admin" },
-  { value: "care", label: "Care & health" },
-  { value: "food", label: "Food & hosting" },
-  { value: "body", label: "Body & movement" },
+  { value: "all", labelKey: "economy:barter.cat.all" },
+  { value: "creative", labelKey: "economy:barter.cat.creative" },
+  { value: "tech", labelKey: "economy:barter.cat.tech" },
+  { value: "legal", labelKey: "economy:barter.cat.legal" },
+  { value: "care", labelKey: "economy:barter.cat.care" },
+  { value: "food", labelKey: "economy:barter.cat.food" },
+  { value: "body", labelKey: "economy:barter.cat.body" },
 ];
 
-export const BADGE: Record<Mode, string> = {
-  offering: "Offering",
-  seeking: "Seeking",
-  both: "Offering & seeking",
+export const BADGE_KEY: Record<Mode, string> = {
+  offering: "economy:barter.badge.offering",
+  seeking: "economy:barter.badge.seeking",
+  both: "economy:barter.badge.both",
 };
 
 export function getMemberInfo(b: Barter): {
@@ -296,15 +297,24 @@ export function getMemberInfo(b: Barter): {
 
 export const PRINCIPLES = [
   {
-    title: "No money",
-    body: "Every exchange is peer-to-peer. Value is set by the people involved, not the platform.",
+    id: "noMoney",
+    titleKey: "economy:barter.principle.noMoney.title",
+    bodyKey: "economy:barter.principle.noMoney.body",
   },
   {
-    title: "Reputation-backed",
-    body: "Offers come from verified members. Your community vouch is your credit history.",
+    id: "reputation",
+    titleKey: "economy:barter.principle.reputation.title",
+    bodyKey: "economy:barter.principle.reputation.body",
   },
   {
-    title: "What you want matters",
-    body: "Post what you're looking for, not just what you can give. Needs are as welcome as offers.",
+    id: "wants",
+    titleKey: "economy:barter.principle.wants.title",
+    bodyKey: "economy:barter.principle.wants.body",
   },
 ];
+
+/** "Today" for a same-day post, else a pluralized "{count} day(s) ago" — mirrors gatherings' spotsText idiom of a datum + resolver. */
+export function postedDaysText(days: number, t: TFunction): string {
+  if (days === 1) return t("economy:barter.postedToday");
+  return t("economy:barter.postedDaysAgo", { count: days });
+}

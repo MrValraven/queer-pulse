@@ -1,4 +1,6 @@
 import { PageShell } from "../../shared/components/layout";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CinemaMembershipTiers,
   CinemaMembershipPays,
@@ -7,21 +9,21 @@ import {
 import styles from "./CinemaMembershipPage.module.css";
 
 export function CinemaMembershipPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className="wrap">
           <div className={styles.eb}>
-            <span className="live" /> QueerPulse Cinema · sustainer membership
+            <span className="live" /> {t("cinema:membership.hero.eyebrow")}
           </div>
           <h1 className={styles.title}>
-            The room <em>stays open</em> because you're in it.
+            <Translation
+              i18nKey="cinema:membership.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.sub}>
-            Sustainers fund the films, the commissions, the captions, and the
-            curators. In return: everything. No algorithm, no lock-in, no dark
-            patterns. Cancel any time.
-          </p>
+          <p className={styles.sub}>{t("cinema:membership.hero.sub")}</p>
         </div>
       </section>
 

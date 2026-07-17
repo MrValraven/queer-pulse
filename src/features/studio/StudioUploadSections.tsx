@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FiPlus, FiCheck } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   UPLOAD_FILES,
   UPLOAD_SPLITS,
-  UPLOAD_SIDE_INFO,
+  buildUploadSideInfo,
 } from "./studioUpload.data";
 import { routes } from "../../app/routeMap";
 import s from "./creator.module.css";
@@ -40,6 +42,7 @@ const Warn = () => (
 );
 
 export function DropZone() {
+  const { t } = useTranslation();
   return (
     <div className={s.dropzone}>
       <div className={s.uploadIcon}>
@@ -54,75 +57,87 @@ export function DropZone() {
         </svg>
       </div>
       <h3>
-        Drop a folder of <em>WAVs</em>, or click to browse.
+        <Translation
+          i18nKey="studio:upload.dropzone.title"
+          components={{ em: <em /> }}
+        />
       </h3>
-      <p>
-        An EP, an album, a single — same flow. We'll figure out track order from
-        filenames.
-      </p>
+      <p>{t("studio:upload.dropzone.body")}</p>
       <p className={s.uploadTypes}>
-        accepts ·{" "}
-        <em style={{ color: "var(--jade-light)" }}>WAV · FLAC · AIFF</em> · max
-        96 kHz / 24 bit · up to 24 tracks
+        <Translation
+          i18nKey="studio:upload.dropzone.accepts"
+          components={{ em: <em style={{ color: "var(--jade-light)" }} /> }}
+        />
       </p>
     </div>
   );
 }
 
 export function FileList() {
+  const { t } = useTranslation();
   const [showLoud, setShowLoud] = useState(false);
+  const readyCount = UPLOAD_FILES.filter((file) => file.ok).length;
   return (
     <div className={s.uploaded}>
       <h4>
-        Uploaded <em>5 of 5 ready</em>
+        <Translation
+          i18nKey="studio:upload.files.heading"
+          components={{ em: <em /> }}
+          values={{ readyCount, totalCount: UPLOAD_FILES.length }}
+        />
       </h4>
-      {UPLOAD_FILES.map((f) => (
-        <div key={f.name} className={s.fileRow}>
+      {UPLOAD_FILES.map((file) => (
+        <div key={file.name} className={s.fileRow}>
           <span
-            className={[s.fileIc, !f.ok && s.fileIcWarn]
+            className={[s.fileIc, !file.ok && s.fileIcWarn]
               .filter(Boolean)
               .join(" ")}
           >
-            {f.ok ? <WaveIcon /> : <Warn />}
+            {file.ok ? <WaveIcon /> : <Warn />}
           </span>
           <div>
-            <h5>{f.name}</h5>
-            <div className={s.fileMeta}>{f.meta}</div>
+            <h5>{file.name}</h5>
+            <div className={s.fileMeta}>{file.meta}</div>
           </div>
           <span
-            className={[s.fileCheck, !f.ok && s.fileCheckWarn]
+            className={[s.fileCheck, !file.ok && s.fileCheckWarn]
               .filter(Boolean)
               .join(" ")}
           >
-            {f.ok ? <Check /> : <Warn />}
-            {f.ok ? "OK · ready" : "Loudness check"}
+            {file.ok ? <Check /> : <Warn />}
+            {file.ok
+              ? t("studio:upload.files.okReady")
+              : t("studio:upload.files.loudnessCheck")}
           </span>
         </div>
       ))}
       <div className={s.warnCard}>
         <Warn />
         <div>
-          <strong>Track 4 is loud.</strong> Master comes in at −7.8 LUFS — our
-          floor is −14 default. <em>This isn't fatal:</em> we can normalise on
-          the fly per listener. If you intended this peak, leave it.{" "}
+          <strong>
+            {t("studio:upload.files.loudWarning.title", { trackNumber: 4 })}
+          </strong>{" "}
+          <Translation
+            i18nKey="studio:upload.files.loudWarning.body"
+            components={{ em: <em /> }}
+            values={{ measuredLoudness: "−7.8 LUFS", targetLoudness: "−14" }}
+          />{" "}
           <button
             type="button"
             className={s.loudToggle}
             aria-expanded={showLoud}
             onClick={() => setShowLoud((v) => !v)}
           >
-            What we do with loud masters {showLoud ? "↑" : "→"}
+            {showLoud
+              ? t("studio:upload.files.loudToggle.hide")
+              : t("studio:upload.files.loudToggle.show")}
           </button>
           {showLoud && (
             <div className={s.loudExplainer}>
-              We keep your master <em>exactly as delivered</em> and store it
-              untouched. For playback we apply per-listener loudness
-              normalisation to roughly −14 LUFS, so your track sits at a
-              comfortable level next to everything else in a set —{" "}
-              <em>without re-encoding or clipping your file</em>. Listeners who
-              turn normalisation off in their settings hear your original peak.
-              Nothing is baked in; you can change the target or opt out per
-              release at any time.
+              <Translation
+                i18nKey="studio:upload.files.loudExplainer"
+                components={{ em: <em /> }}
+              />
             </div>
           )}
         </div>
@@ -132,10 +147,15 @@ export function FileList() {
 }
 
 export function CoverArt() {
+  const { t } = useTranslation();
   return (
     <div className={s.uploaded}>
       <h4>
-        Cover art <em>1 of 1 · linted</em>
+        <Translation
+          i18nKey="studio:upload.coverArt.heading"
+          components={{ em: <em /> }}
+          values={{ readyCount: 1, totalCount: 1 }}
+        />
       </h4>
       <div className={s.fileRow}>
         <span
@@ -165,7 +185,7 @@ export function CoverArt() {
         </div>
         <span className={s.fileCheck}>
           <Check />
-          OK · ready
+          {t("studio:upload.files.okReady")}
         </span>
       </div>
     </div>
@@ -179,6 +199,7 @@ export function SplitsTable({
   collaborators: Collaborator[];
   onAdd: (handle: string) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [adding, setAdding] = useState(false);
   const [handle, setHandle] = useState("");
@@ -187,7 +208,10 @@ export function SplitsTable({
     const trimmed = handle.trim();
     if (!trimmed) return;
     onAdd(trimmed);
-    showToast(`Invited ${trimmed} to the splits`, "success");
+    showToast(
+      t("studio:upload.splits.invitedToast", { handle: trimmed }),
+      "success",
+    );
     setHandle("");
     setAdding(false);
   }
@@ -198,29 +222,30 @@ export function SplitsTable({
     <div className={s.card}>
       <div className={s.cardH}>
         <h3>
-          Per-track <em>splits</em> · default 100% to you
+          <Translation
+            i18nKey="studio:upload.splits.heading"
+            components={{ em: <em /> }}
+          />
         </h3>
-        <div className={s.cardSub}>
-          Add collaborators and we route each cent directly to their bank.
-        </div>
+        <div className={s.cardSub}>{t("studio:upload.splits.sub")}</div>
       </div>
       <table className={s.splitTable}>
         <thead>
           <tr>
-            <th>Collaborator</th>
-            <th>Role · tracks</th>
-            <th>Share</th>
+            <th>{t("studio:upload.splits.table.collaborator")}</th>
+            <th>{t("studio:upload.splits.table.roleTracks")}</th>
+            <th>{t("studio:upload.splits.table.share")}</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((sp) => (
-            <tr key={sp.nm}>
+          {rows.map((row) => (
+            <tr key={row.nm}>
               <td>
                 <div className={s.splitWho}>
                   <span
                     className={s.av}
                     style={
-                      sp.tone === "jade"
+                      row.tone === "jade"
                         ? {
                             background: "rgba(var(--jade-rgb),.18)",
                             color: "var(--jade-light)",
@@ -228,22 +253,22 @@ export function SplitsTable({
                         : undefined
                     }
                   >
-                    {sp.av}
+                    {row.av}
                   </span>
                   <span className={s.nm}>
-                    {sp.nm}
-                    <small>{sp.sub}</small>
+                    {row.nm}
+                    <small>{row.sub}</small>
                   </span>
                 </div>
               </td>
               <td style={{ fontStyle: "italic", fontFamily: "var(--serif)" }}>
-                {sp.role}
+                {row.role}
               </td>
               <td>
                 <span className={s.splitPct}>
-                  <em>{sp.pct}</em>%
+                  <em>{row.pct}</em>%
                 </span>
-                {sp.onTrack && (
+                {row.onTrack && (
                   <small
                     style={{
                       display: "block",
@@ -253,7 +278,7 @@ export function SplitsTable({
                       color: "var(--text40)",
                     }}
                   >
-                    {sp.onTrack}
+                    {row.onTrack}
                   </small>
                 )}
               </td>
@@ -263,19 +288,19 @@ export function SplitsTable({
       </table>
       <div className={s.splitFoot}>
         <span className={s.splitTotal}>
-          Default split sums to{" "}
-          <em style={{ color: "var(--jade-light)", fontWeight: 600 }}>100%</em>{" "}
-          · per-track adjustments override
+          {t("studio:upload.splits.footer", {
+            total: "100%",
+          })}
         </span>
         <Button variant="ghost" onClick={() => setAdding((v) => !v)}>
-          <FiPlus /> Add collaborator
+          <FiPlus /> {t("studio:upload.splits.addCollaboratorCta")}
         </Button>
       </div>
       {adding && (
         <div className={s.collabForm}>
           <input
             autoFocus
-            placeholder="QP handle or email"
+            placeholder={t("studio:upload.splits.handlePlaceholder")}
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
             onKeyDown={(e) => {
@@ -283,7 +308,7 @@ export function SplitsTable({
             }}
           />
           <Button onClick={submit} disabled={!handle.trim()}>
-            Invite
+            {t("studio:upload.splits.inviteCta")}
           </Button>
         </div>
       )}
@@ -292,9 +317,11 @@ export function SplitsTable({
 }
 
 export function UploadSidebar() {
+  const { t } = useTranslation();
+  const sideInfo = useMemo(() => buildUploadSideInfo(t), [t]);
   return (
     <div className={s.col}>
-      {UPLOAD_SIDE_INFO.map((info) => (
+      {sideInfo.map((info) => (
         <div key={info.eyebrow} className={s.sideCard}>
           <div className={s.sideEb}>{info.eyebrow}</div>
           <h4>{info.title}</h4>
@@ -320,66 +347,71 @@ function MetadataStep({
   onBack: () => void;
   onSubmit: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={s.card}>
       <div className={s.cardH}>
         <h3>
-          Metadata &amp; <em>credits</em>
+          <Translation
+            i18nKey="studio:upload.metadata.heading"
+            components={{ em: <em /> }}
+          />
         </h3>
-        <div className={s.cardSub}>
-          A few last details and your release goes to the council queue for
-          review.
-        </div>
+        <div className={s.cardSub}>{t("studio:upload.metadata.sub")}</div>
       </div>
       <div className={s.field}>
-        <label>Release title</label>
+        <label>{t("studio:upload.metadata.field.title")}</label>
+        {/* Defaults below prefill this artist's own release — content. */}
         <input type="text" defaultValue="Cidade dos santos" />
       </div>
       <div className={s.field}>
-        <label>Release year</label>
+        <label>{t("studio:upload.metadata.field.year")}</label>
         <input type="text" defaultValue="2026" />
       </div>
       <div className={s.field}>
-        <label>Primary genre</label>
-        <select defaultValue="Fado / contemporary">
-          <option>Fado / contemporary</option>
-          <option>Electronic</option>
-          <option>Folk</option>
-          <option>Experimental</option>
+        <label>{t("studio:upload.metadata.field.genre")}</label>
+        <select defaultValue={t("studio:upload.metadata.genre.fado")}>
+          <option>{t("studio:upload.metadata.genre.fado")}</option>
+          <option>{t("studio:upload.metadata.genre.electronic")}</option>
+          <option>{t("studio:upload.metadata.genre.folk")}</option>
+          <option>{t("studio:upload.metadata.genre.experimental")}</option>
         </select>
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
         <Button variant="ghost" onClick={onBack}>
-          ← Back to files
+          {t("studio:upload.metadata.backCta")}
         </Button>
-        <Button onClick={onSubmit}>Submit for review →</Button>
+        <Button onClick={onSubmit}>
+          {t("studio:upload.metadata.submitCta")}
+        </Button>
       </div>
     </div>
   );
 }
 
 function SubmittedPanel() {
+  const { t } = useTranslation();
   return (
     <div className={s.submitted}>
       <div className={s.submittedIcon}>
         <FiCheck size={26} aria-hidden />
       </div>
       <h2>
-        Submitted for <em>review.</em>
+        <Translation
+          i18nKey="studio:upload.submitted.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p>
-        Your release is in the council queue. A curator will check the files,
-        splits and credits — usually within a day or two — and you'll get a note
-        the moment it's live. Nothing publishes without your final yes.
-      </p>
+      <p>{t("studio:upload.submitted.body")}</p>
       <Button variant="ghost-dark" to={routes.studioPayouts}>
-        View your payouts →
+        {t("studio:upload.submitted.viewPayoutsCta")}
       </Button>
     </div>
   );
 }
 
 export function UploadMainCol() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [step, setStep] = useState<"files" | "metadata" | "done">("files");
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
@@ -395,8 +427,8 @@ export function UploadMainCol() {
       {
         av: initials,
         nm: handle,
-        sub: "invited · IBAN pending",
-        role: "collaborator · all tracks",
+        sub: t("studio:upload.splits.invitedSubLabel"),
+        role: t("studio:upload.splits.invitedRole"),
         pct: "0",
         tone: "jade",
       },
@@ -418,7 +450,7 @@ export function UploadMainCol() {
           onBack={() => setStep("files")}
           onSubmit={() => {
             setStep("done");
-            showToast("Release submitted for review", "success");
+            showToast(t("studio:upload.submitted.toast"), "success");
           }}
         />
       </div>
@@ -433,7 +465,7 @@ export function UploadMainCol() {
       <SplitsTable collaborators={collaborators} onAdd={addCollaborator} />
       <div style={{ display: "flex", gap: 10 }}>
         <Button onClick={() => setStep("metadata")}>
-          Continue to metadata →
+          {t("studio:upload.continueToMetadataCta")}
         </Button>
       </div>
     </div>

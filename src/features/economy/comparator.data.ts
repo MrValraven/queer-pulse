@@ -11,55 +11,52 @@ export type StartupYear = 0 | 1 | 2;
 
 export interface SelectOption<T> {
   value: T;
-  label: string;
+  labelKey: string;
 }
 
-/** Regime-simplificado coefficient by activity type (Art. 31.º CIRS). */
+/** i18n Pattern A — labelKey resolved via t() by ComparatorForm.
+ *  Regime-simplificado coefficient by activity type (Art. 31.º CIRS). */
 export const ACTIVITY_OPTIONS: SelectOption<ActivityKey>[] = [
-  { value: "services", label: "Liberal profession (0.75)" },
-  { value: "otherServices", label: "Other services (0.35)" },
-  { value: "goods", label: "Sale of goods / hospitality (0.15)" },
-  { value: "ipCapital", label: "IP / capital (0.95)" },
+  { value: "services", labelKey: "economy:comparator.activityOption.services" },
+  {
+    value: "otherServices",
+    labelKey: "economy:comparator.activityOption.otherServices",
+  },
+  { value: "goods", labelKey: "economy:comparator.activityOption.goods" },
+  {
+    value: "ipCapital",
+    labelKey: "economy:comparator.activityOption.ipCapital",
+  },
 ];
 
-export const YEAR_OPTIONS: SelectOption<TaxYear>[] = [
+/** Bare years — not translated (a year number reads the same in every locale). */
+export const YEAR_OPTIONS: { value: TaxYear; label: string }[] = [
   { value: 2025, label: "2025" },
   { value: 2026, label: "2026" },
 ];
 
 /** Start-of-activity reduction tier (Art. 31.º n.º 10). */
 export const STARTUP_OPTIONS: SelectOption<StartupYear>[] = [
-  { value: 0, label: "Not in first 2 years" },
-  { value: 1, label: "First year (×0.5 coefficient)" },
-  { value: 2, label: "Second year (×0.75 coefficient)" },
+  { value: 0, labelKey: "economy:comparator.startupOption.none" },
+  { value: 1, labelKey: "economy:comparator.startupOption.year1" },
+  { value: 2, labelKey: "economy:comparator.startupOption.year2" },
 ];
 
 /**
  * The things a salaried employee gets that a freelancer funds themselves. The
  * last item is the upside — flagged positive in the UI.
+ * i18n Pattern A — `textKey` resolved via t() by ComparatorResult.
  */
 export interface HiddenCost {
-  text: string;
+  textKey: string;
   positive: boolean;
 }
 
 export const HIDDEN_COSTS: HiddenCost[] = [
-  { text: "No paid holiday — you fund your own time off.", positive: false },
-  {
-    text: "No subsídio de férias or de Natal (the two extra months salaried workers get).",
-    positive: false,
-  },
-  {
-    text: "No paid sick leave or guaranteed unemployment cover.",
-    positive: false,
-  },
-  { text: "You pay your own Segurança Social, quarterly.", positive: false },
-  {
-    text: "Income is lumpy — feast or famine month to month.",
-    positive: false,
-  },
-  {
-    text: "But: deductible expenses, autonomy, and you can charge more.",
-    positive: true,
-  },
+  { textKey: "economy:comparator.hiddenCost.noHoliday", positive: false },
+  { textKey: "economy:comparator.hiddenCost.noSubsidio", positive: false },
+  { textKey: "economy:comparator.hiddenCost.noSickLeave", positive: false },
+  { textKey: "economy:comparator.hiddenCost.ownSS", positive: false },
+  { textKey: "economy:comparator.hiddenCost.lumpyIncome", positive: false },
+  { textKey: "economy:comparator.hiddenCost.upside", positive: true },
 ];

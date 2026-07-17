@@ -12,6 +12,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   revokeOtherSessions,
   revokeSession,
@@ -47,6 +49,7 @@ function SessionCard({
   session: Session;
   onSignOut: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   const isCurrent = session.variant === "current";
   const isSuspect = session.variant === "suspect";
   const cardCls = [
@@ -74,12 +77,12 @@ function SessionCard({
           <span className={styles.name}>{session.device}</span>
           {isCurrent && (
             <span className={`${styles.badge} ${styles.badgeThis}`}>
-              This session
+              {t("settings:sessions.card.badgeThis")}
             </span>
           )}
           {isSuspect && (
             <span className={`${styles.badge} ${styles.badgeSuspect}`}>
-              Review
+              {t("settings:sessions.card.badgeReview")}
             </span>
           )}
         </div>
@@ -92,14 +95,22 @@ function SessionCard({
             </>
           )}
           <span>
-            Signed in <b>{session.signedIn}</b>
+            <Translation
+              i18nKey="settings:sessions.card.signedIn"
+              components={{ strong: <b /> }}
+              values={{ when: session.signedIn }}
+            />
           </span>
         </div>
         {(session.lastActivity || session.extra) && (
           <div className={styles.row}>
             {session.lastActivity && (
               <span>
-                Last activity <b>{session.lastActivity}</b>
+                <Translation
+                  i18nKey="settings:sessions.card.lastActivity"
+                  components={{ strong: <b /> }}
+                  values={{ when: session.lastActivity }}
+                />
               </span>
             )}
             {session.lastActivity && session.extra && (
@@ -114,7 +125,7 @@ function SessionCard({
           className={`${styles.action} ${styles.actionCurrent}`}
           aria-hidden="true"
         >
-          Current
+          {t("settings:sessions.card.current")}
         </span>
       ) : (
         <Button
@@ -122,7 +133,7 @@ function SessionCard({
           className={`${styles.action} ${isSuspect ? styles.actionSuspect : ""}`}
           onClick={() => onSignOut(session.id)}
         >
-          Sign out
+          {t("settings:sessions.card.signOut")}
         </Button>
       )}
     </div>
@@ -152,21 +163,23 @@ function BulkRow({
   others: number;
   onSignOutAll: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.bulkRow}>
       <p>
         {others === 0 ? (
-          <>This is the only device you're signed in on.</>
+          t("settings:sessions.bulk.onlyDevice")
         ) : (
-          <>
-            You're signed in on <b>{others + 1} devices</b>. Anything you don't
-            recognise, sign it out.
-          </>
+          <Translation
+            i18nKey="settings:sessions.bulk.multi"
+            components={{ strong: <b /> }}
+            values={{ count: others + 1 }}
+          />
         )}
       </p>
       {others > 0 && (
         <Button variant="primary" onClick={onSignOutAll}>
-          Sign out all other sessions
+          {t("settings:sessions.bulk.signOutAll")}
         </Button>
       )}
     </div>
@@ -174,6 +187,7 @@ function BulkRow({
 }
 
 export function SessionsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const { sessions, loading: fetching, failed, refetch } = useSessions();
@@ -187,10 +201,7 @@ export function SessionsPage() {
     setSignedOut((prev) => new Set(prev).add(id));
     try {
       await simulateOr(demoMode, undefined, () => revokeSession(id));
-      showToast(
-        "Session ended. If we didn't recognise that device, we'll email the address on file.",
-        "success",
-      );
+      showToast(t("settings:sessions.toast.signedOut"), "success");
       refetch();
     } catch (err) {
       logError(err, { where: "SessionsPage.signOut" });
@@ -199,7 +210,7 @@ export function SessionsPage() {
         next.delete(id);
         return next;
       });
-      showToast("We couldn't sign that session out. Try again.", "error");
+      showToast(t("settings:sessions.toast.signedOutError"), "error");
     }
   }
 
@@ -210,12 +221,12 @@ export function SessionsPage() {
     setSignedOut(new Set(ids));
     try {
       await simulateOr(demoMode, undefined, revokeOtherSessions);
-      showToast("All other sessions signed out", "success");
+      showToast(t("settings:sessions.toast.signedOutAll"), "success");
       refetch();
     } catch (err) {
       logError(err, { where: "SessionsPage.signOutAll" });
       setSignedOut(new Set());
-      showToast("We couldn't sign the others out. Try again.", "error");
+      showToast(t("settings:sessions.toast.signedOutAllError"), "error");
     }
   }
 
@@ -226,24 +237,30 @@ export function SessionsPage() {
     <AppShell>
       <div className={styles.page}>
         <Link to={routes.security} className={styles.back}>
-          ← Security
+          {t("settings:sessions.backToSecurity")}
         </Link>
 
-        <div className={styles.eyebrow}>Security · Active sessions</div>
+        <div className={styles.eyebrow}>{t("settings:sessions.eyebrow")}</div>
         <h1 className={styles.h1}>
-          Where you're <em>signed in</em> right now.
+          <Translation
+            i18nKey="settings:sessions.h1"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          Every device with an active session. If something here looks
-          unfamiliar, sign it out — and read{" "}
-          <Link to={routes.accountLocked}>what to do next</Link>.
+          <Translation
+            i18nKey="settings:sessions.lead"
+            components={{ a: <Link to={routes.accountLocked} /> }}
+          />
         </p>
 
         {!loading && !failed && (
           <BulkRow others={others} onSignOutAll={handleSignOutAll} />
         )}
 
-        <div className={styles.sectionH}>Active now</div>
+        <div className={styles.sectionH}>
+          {t("settings:sessions.sectionActiveNow")}
+        </div>
         <div className={styles.list}>
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => <SessionSkeleton key={i} />)
@@ -251,15 +268,15 @@ export function SessionsPage() {
             <EmptyState
               compact
               icon={<FiMonitor />}
-              title="We couldn't load your sessions"
-              description="Rather than show you a list we can't stand behind, we've shown you nothing. Try again in a moment."
+              title={t("settings:sessions.empty.error.title")}
+              description={t("settings:sessions.empty.error.desc")}
             />
           ) : activeSessions.length === 0 ? (
             <EmptyState
               compact
               icon={<FiMonitor />}
-              title="No active sessions"
-              description="Nothing is signed in right now — not even this device, which usually means your session is about to be refreshed."
+              title={t("settings:sessions.empty.none.title")}
+              description={t("settings:sessions.empty.none.desc")}
             />
           ) : (
             activeSessions.map((s, i) => (
@@ -271,11 +288,13 @@ export function SessionsPage() {
         </div>
 
         <div className={styles.footNote}>
-          <b>Something looks wrong?</b> Sign out anything you don't recognise,
-          then <Link to={routes.accountLocked}>tell us what happened</Link> —
-          we'll help you lock things down. When you sign an unrecognised session
-          out, we email the address on file so there's an out-of-band record of
-          what happened.
+          <Translation
+            i18nKey="settings:sessions.footNote"
+            components={{
+              strong: <b />,
+              a: <Link to={routes.accountLocked} />,
+            }}
+          />
         </div>
       </div>
     </AppShell>

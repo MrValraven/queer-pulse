@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   WatchOverlay,
   WatchPlayState,
@@ -13,6 +15,7 @@ import styles from "./WatchPage.module.css";
 import { routes } from "../../app/routeMap";
 
 export function WatchPage() {
+  const { t } = useTranslation();
   const [showOverlay, setShowOverlay] = useState(true);
   const [cc, setCc] = useState(true);
   const [ad, setAd] = useState(false);
@@ -26,19 +29,23 @@ export function WatchPage() {
           <span className={styles.cin}>Cinema</span>
         </Link>
         <div className={styles.navLinks}>
-          <Link to={routes.film}>← Film info</Link>
-          <Link to={routes.cinema}>Cinema home</Link>
+          <Link to={routes.film}>{t("cinema:watch.nav.backToFilm")}</Link>
+          <Link to={routes.cinema}>{t("cinema:watch.nav.cinemaHome")}</Link>
         </div>
         <div className={styles.navRight}>
           <span>
-            Watching as <strong>Anon</strong>
+            <Translation
+              i18nKey="cinema:watch.nav.watchingAs"
+              values={{ name: "Anon" }}
+              components={{ strong: <strong /> }}
+            />
           </span>
           <Button
             variant="ghost-dark"
             to={routes.signIn}
             style={{ padding: "8px 16px" }}
           >
-            Sign in to save progress
+            {t("cinema:watch.nav.signInCta")}
           </Button>
         </div>
       </nav>

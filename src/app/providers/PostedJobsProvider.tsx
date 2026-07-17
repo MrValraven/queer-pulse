@@ -16,6 +16,7 @@ import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 
 interface PostedJobsContextValue {
   /** Member-posted jobs, newest first. Merged into the board + company pages. */
@@ -54,6 +55,7 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
   const { loggedIn } = useAuth();
   const queryClient = useQueryClient();
   const { t, language } = useTranslation();
+  const fmt = useFormat();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -72,7 +74,7 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
     enabled: !demoMode && loggedIn,
     queryFn: async () => {
       const res = await getMyJobs();
-      return res.items.map((dto) => jobCardToJob(dto, t));
+      return res.items.map((dto) => jobCardToJob(dto, t, fmt));
     },
   });
 

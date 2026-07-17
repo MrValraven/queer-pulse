@@ -7,13 +7,15 @@ import { routes } from "../../app/routeMap";
 import { useSubmitPartnerForm } from "./useSubmitPartnerForm";
 import { useSubmitPartnerApplication } from "./api/useSubmitPartnerApplication";
 import { SubmitPartnerFields } from "./SubmitPartnerFields";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { APPLY_TIPS } from "./submitPartnerApplication.data";
 import styles from "./SubmitPartnerApplicationPage.module.css";
 
 export function SubmitPartnerApplicationPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const form = useSubmitPartnerForm();
+  const form = useSubmitPartnerForm(t);
   const submitApp = useSubmitPartnerApplication();
 
   const onSubmit = (e: FormEvent) => {
@@ -91,9 +93,9 @@ export function SubmitPartnerApplicationPage() {
 
               <aside className={styles.sidebar}>
                 {APPLY_TIPS.map((tip) => (
-                  <div className={styles.tipCard} key={tip.title}>
-                    <div className={styles.tipTitle}>{tip.title}</div>
-                    <div className={styles.tipBody}>{tip.body}</div>
+                  <div className={styles.tipCard} key={tip.titleKey}>
+                    <div className={styles.tipTitle}>{t(tip.titleKey)}</div>
+                    <div className={styles.tipBody}>{t(tip.bodyKey)}</div>
                   </div>
                 ))}
               </aside>

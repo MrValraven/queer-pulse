@@ -1,23 +1,33 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
 import { SHOWS } from "./groupShowArchive.data";
 import styles from "./resources.module.css";
 
 export function GroupShowArchivePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Rainbow Arts · Archive"
+        eyebrow={t("resources:groupShowArchive.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Everything we've <em>hung.</em>
-          </>
+          <Translation
+            i18nKey="resources:groupShowArchive.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="The collective documents every show before we strike it. Here's the archive — tag yourself, grab anything with your work in it, and see what the room has made together."
-        anchors={[{ label: "The shows", href: "#shows" }]}
+        lead={t("resources:groupShowArchive.hero.lead")}
+        anchors={[
+          {
+            label: t("resources:groupShowArchive.hero.anchor.shows"),
+            href: "#shows",
+          },
+        ]}
       />
 
       <section
@@ -26,10 +36,13 @@ export function GroupShowArchivePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            The <em>shows</em>
+            <Translation
+              i18nKey="resources:groupShowArchive.shows.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Most recent first. Full photo sets live in each album.
+            {t("resources:groupShowArchive.shows.lead")}
           </Reveal>
           <div className={styles.archiveGrid}>
             {SHOWS.map((show, i) => (
@@ -58,14 +71,15 @@ export function GroupShowArchivePage() {
 
       <Outro
         title={
-          <>
-            Documented <em>generously,</em> credited always.
-          </>
+          <Translation
+            i18nKey="resources:groupShowArchive.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Shot the last show? Add your set to the archive so nobody's work disappears when the walls come down."
+        sub={t("resources:groupShowArchive.outro.sub")}
       >
         <Button to={routes.gatherings} variant="primary" size="lg">
-          See upcoming shows
+          {t("resources:groupShowArchive.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

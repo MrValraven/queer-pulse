@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ToolPage } from "./tools/ToolPage";
 import { ComparatorForm } from "./ComparatorForm";
 import { ComparatorResult } from "./ComparatorResult";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ActivityKey, StartupYear } from "./comparator.data";
 import type { TaxYear } from "./tax.calc";
 
@@ -10,6 +12,7 @@ import type { TaxYear } from "./tax.calc";
  * Live client-side calc — no actions, the preview recomputes on every change.
  */
 export function ComparatorPage() {
+  const { t } = useTranslation();
   const [gross, setGross] = useState("30000");
   const [activity, setActivity] = useState<ActivityKey>("services");
   const [year, setYear] = useState<TaxYear>(2026);
@@ -31,13 +34,14 @@ export function ComparatorPage() {
 
   return (
     <ToolPage
-      eyebrow="Freelance tools"
+      eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <>
-          Freelance or <em>salaried?</em>
-        </>
+        <Translation
+          i18nKey="economy:comparator.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Compare what you'd actually take home either way at the same gross income — and weigh the costs that don't show up on a payslip."
+      sub={t("economy:comparator.sub")}
       form={
         <ComparatorForm
           gross={gross}

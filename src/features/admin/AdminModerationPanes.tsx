@@ -1,4 +1,6 @@
 import { FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import {
   ReportCard,
   BulkBar,
@@ -14,10 +16,8 @@ import type { useModerationQueue } from "./useModerationQueue";
 
 type Queue = ReturnType<typeof useModerationQueue>;
 
-const EMERGENCY_SUB =
-  "· outing & doxxing are treated as urgent harm, on a 1-hour clock. Handle these before anything else.";
-
 export function OpenPane({ q }: { q: Queue }) {
+  const { t } = useTranslation();
   const { open, visible, emergencies, others, picked, leaving, oldest } = q;
 
   const renderReport = (r: (typeof open)[number], i: number) => (
@@ -42,7 +42,7 @@ export function OpenPane({ q }: { q: Queue }) {
       <div className={styles.pane}>
         <FadeIn>
           <CaughtUpPanel
-            onBack={() => q.showToast("Heading back to the overview.", "info")}
+            onBack={() => q.showToast(t("admin:moderation.backToast"), "info")}
             onReplay={q.replayOpen}
           />
         </FadeIn>
@@ -56,7 +56,7 @@ export function OpenPane({ q }: { q: Queue }) {
         <BulkBar
           count={picked.size}
           onDismiss={() => q.bulkAct("dismissed", "dismiss")}
-          onSpam={() => q.bulkAct("removed as spam", "remove_content")}
+          onSpam={() => q.bulkAct("removedAsSpam", "remove_content")}
           onReassign={() => q.bulkAct("reassigned", "escalate")}
           onCancel={q.clearPicked}
         />
@@ -64,7 +64,10 @@ export function OpenPane({ q }: { q: Queue }) {
 
       {emergencies.length > 0 && (
         <FadeIn>
-          <EmergencyBand count={emergencies.length} sub={EMERGENCY_SUB}>
+          <EmergencyBand
+            count={emergencies.length}
+            sub={t("admin:moderation.emergency.sub")}
+          >
             {emergencies.map((r, i) => renderReport(r, i))}
           </EmergencyBand>
         </FadeIn>
@@ -72,11 +75,13 @@ export function OpenPane({ q }: { q: Queue }) {
 
       {others.length > 0 && (
         <>
-          <SectionLabel>Everything else</SectionLabel>
+          <SectionLabel>{t("admin:moderation.everythingElse")}</SectionLabel>
           {oldest && (
             <p className={styles.countNote}>
-              Showing {visible.length} open{" "}
-              {visible.length === 1 ? "report" : "reports"} · oldest {oldest}
+              {t("admin:moderation.countNote", {
+                count: visible.length,
+                oldest,
+              })}
             </p>
           )}
           <div className={styles.list}>
@@ -87,7 +92,7 @@ export function OpenPane({ q }: { q: Queue }) {
 
       {visible.length === 0 && (
         <p className={styles.filterEmpty}>
-          No open reports match this filter. Try “All severities”.
+          {t("admin:moderation.filterEmpty")}
         </p>
       )}
     </div>
@@ -95,6 +100,7 @@ export function OpenPane({ q }: { q: Queue }) {
 }
 
 export function AppealsPane({ q }: { q: Queue }) {
+  const { t } = useTranslation();
   const { appeals, leaving } = q;
 
   if (appeals.length === 0) {
@@ -102,7 +108,7 @@ export function AppealsPane({ q }: { q: Queue }) {
       <div className={styles.pane}>
         <FadeIn>
           <CaughtUpPanel
-            onBack={() => q.showToast("Heading back to the overview.", "info")}
+            onBack={() => q.showToast(t("admin:moderation.backToast"), "info")}
             onReplay={q.resetAppeals}
           />
         </FadeIn>
@@ -113,10 +119,10 @@ export function AppealsPane({ q }: { q: Queue }) {
   return (
     <div className={styles.pane}>
       <p className={styles.appealsIntro}>
-        An appeal is a member asking you to look again. Read the original
-        decision, hear them out, then <em>uphold or overturn</em> — with a
-        reason of your own. Overturning a colleague&rsquo;s call is normal and
-        healthy.
+        <Translation
+          i18nKey="admin:moderation.appealsIntro"
+          components={{ em: <em /> }}
+        />
       </p>
       <div className={styles.list}>
         {appeals.map((a, i) => (
@@ -134,9 +140,10 @@ export function AppealsPane({ q }: { q: Queue }) {
 }
 
 export function ResolvedPane() {
+  const { t } = useTranslation();
   return (
     <div className={styles.pane}>
-      <SectionLabel>Recently resolved</SectionLabel>
+      <SectionLabel>{t("admin:moderation.resolvedSection")}</SectionLabel>
       <div className={styles.list}>
         {RESOLVED.map((item, i) => (
           <FadeIn key={item.id} delay={Math.min(i, 6) * 55}>

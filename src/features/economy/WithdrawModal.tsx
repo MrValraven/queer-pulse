@@ -1,5 +1,7 @@
 import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import { type Application, withdrawnPatch } from "./applicationStatus.data";
 import { WITHDRAW_REASONS } from "./applicationModals.data";
@@ -15,14 +17,18 @@ export function WithdrawModal({
   onClose: () => void;
   onPatch: (id: string, patch: Partial<Application>) => void;
 }) {
+  const { t } = useTranslation();
   const { submit, sending, done } = useSubmitFlow();
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title="Application" em="withdrawn." onClose={onClose}>
-          We've let {app.companyName} know politely. This role has moved to your
-          Closed tab.
+        <SuccessPanel
+          title={t("economy:withdraw.success.title")}
+          em={t("economy:withdraw.success.em")}
+          onClose={onClose}
+        >
+          {t("economy:withdraw.success.body", { company: app.companyName })}
         </SuccessPanel>
       ) : (
         <form
@@ -31,21 +37,33 @@ export function WithdrawModal({
             submit(() => onPatch(app.id, withdrawnPatch()));
           }}
         >
-          <div className={styles.eyebrow}>Withdraw</div>
+          <div className={styles.eyebrow}>{t("economy:withdraw.eyebrow")}</div>
           <h2 className={styles.title}>
-            Step back from <em>{app.companyName}?</em>
+            <Translation
+              i18nKey="economy:withdraw.title"
+              values={{ company: app.companyName }}
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.sub}>
-            This removes you from consideration for <b>{app.title}</b>. We'll
-            send a brief, polite note on your behalf — you don't have to write
-            anything.
+            <Translation
+              i18nKey="economy:withdraw.sub"
+              values={{ title: app.title }}
+              components={{ b: <b /> }}
+            />
           </p>
           <div className={styles.field}>
-            <label htmlFor="wd-reason">Reason (only you see this)</label>
+            <label htmlFor="wd-reason">
+              {t("economy:withdraw.reasonLabel")}
+            </label>
             <select id="wd-reason" defaultValue="">
-              <option value="">Pick a reason, or leave it open</option>
+              <option value="">
+                {t("economy:withdraw.reasonPlaceholder")}
+              </option>
               {WITHDRAW_REASONS.map((r) => (
-                <option key={r}>{r}</option>
+                <option key={r.value} value={r.value}>
+                  {t(r.labelKey)}
+                </option>
               ))}
             </select>
           </div>
@@ -55,7 +73,7 @@ export function WithdrawModal({
               style={{ marginRight: 5, verticalAlign: "-2px" }}
               aria-hidden
             />
-            This can't be undone — you'd need to re-apply.
+            {t("economy:withdraw.cantUndo")}
           </div>
           <div className={styles.foot}>
             <button
@@ -64,13 +82,13 @@ export function WithdrawModal({
               onClick={onClose}
               disabled={sending}
             >
-              ← Keep it
+              {t("economy:withdraw.keepIt")}
             </button>
             <Button size="lg" type="submit" disabled={sending}>
               {sending ? (
-                <Sending label="Withdrawing…" />
+                <Sending label={t("economy:withdraw.sendingLabel")} />
               ) : (
-                "Withdraw application"
+                t("economy:withdraw.submitCta")
               )}
             </Button>
           </div>

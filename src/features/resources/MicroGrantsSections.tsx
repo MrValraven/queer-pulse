@@ -1,44 +1,54 @@
 import { useState } from "react";
 import { Button, HubBackLink } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./MicroGrantsPage.module.css";
 
 const INVITE = routes.requestInvite;
-const CONTRIBUTE_AMOUNTS = ["€5", "€10", "€20", "€50", "Other"];
+// The last entry ("Other") is chrome and resolves via t(); the currency
+// amounts are locale-invariant values, not translated words.
+const CONTRIBUTE_AMOUNTS = ["€5", "€10", "€20", "€50"];
 
 export function MicroGrantsHero() {
+  const { t } = useTranslation();
   return (
     <header className={styles.hero}>
       <div className="wrap">
-        <HubBackLink to={routes.grants} label="Grants" tone="dark" />
-        <div className={styles.eye}>Community fund</div>
+        <HubBackLink
+          to={routes.grants}
+          label={t("resources:microGrants.hero.backLink")}
+          tone="dark"
+        />
+        <div className={styles.eye}>
+          {t("resources:microGrants.hero.eyebrow")}
+        </div>
         <h1 className={styles.title}>
-          Small money.
+          {t("resources:microGrants.hero.title.line1")}
           <br />
-          <em>Real impact.</em>
+          <Translation
+            i18nKey="resources:microGrants.hero.title.line2"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.sub}>
-          Micro-grants of €200–2000 for queer community projects in Lisbon.
-          Funded by members, allocated by members, reported back to members. No
-          gatekeepers.
-        </p>
+        <p className={styles.sub}>{t("resources:microGrants.hero.lead")}</p>
         <div className={styles.fund}>
           <div className={styles.fundItem}>
             <b>€14,800</b>
-            <span>awarded to date</span>
+            <span>{t("resources:microGrants.hero.stat.awarded.label")}</span>
           </div>
           <div className={styles.fundItem}>
             <b>18</b>
-            <span>projects funded</span>
+            <span>{t("resources:microGrants.hero.stat.projects.label")}</span>
           </div>
           <div className={styles.fundItem}>
             <b>€3,200</b>
-            <span>in this quarter's pot</span>
+            <span>{t("resources:microGrants.hero.stat.pot.label")}</span>
           </div>
         </div>
         <div className={styles.fundBarWrap}>
           <div className={styles.fundBarLabel}>
-            <span>Q2 2026 funding round</span>
+            <span>{t("resources:microGrants.hero.fundBar.roundLabel")}</span>
             <span>€3,200 / €4,000 goal</span>
           </div>
           <div className={styles.fundBar}>
@@ -51,18 +61,19 @@ export function MicroGrantsHero() {
 }
 
 export function ContributeStrip() {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState("€20");
   return (
     <div className={styles.contributeStrip}>
       <div className={styles.csInner}>
         <div className={styles.csText}>
           <h3>
-            Add to the <em>pot.</em>
+            <Translation
+              i18nKey="resources:microGrants.contribute.title"
+              components={{ em: <em /> }}
+            />
           </h3>
-          <p>
-            The fund is sustained by members who contribute what they can. There
-            is no minimum. Every amount makes the next round possible.
-          </p>
+          <p>{t("resources:microGrants.contribute.body")}</p>
           <div className={styles.csAmounts}>
             {CONTRIBUTE_AMOUNTS.map((a) => (
               <button
@@ -79,15 +90,26 @@ export function ContributeStrip() {
                 {a}
               </button>
             ))}
+            <button
+              type="button"
+              className={[
+                styles.csAmount,
+                amount === "Other" && styles.csAmountSelected,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setAmount("Other")}
+            >
+              {t("resources:microGrants.contribute.otherAmount")}
+            </button>
           </div>
         </div>
         <div className={styles.csRight}>
           <Button to={INVITE} variant="primary" size="lg">
-            Contribute to the fund
+            {t("resources:microGrants.contribute.cta")}
           </Button>
           <span className={styles.csNote}>
-            Contributions are voluntary. Members only. Not tax-deductible under
-            current Portuguese law.
+            {t("resources:microGrants.contribute.note")}
           </span>
         </div>
       </div>

@@ -363,6 +363,11 @@ export const economy: Catalog = {
   "jobs.pay.competitive": "Competitive",
   "jobs.pay.openToBarter": "Open to barter",
   "jobs.pay.toDiscuss": "To discuss",
+  "jobs.pay.perHour": "/hr",
+  "jobs.pay.perDay": "/day",
+  "jobs.pay.perProject": "/project",
+  "jobs.pay.perMonth": "/mo",
+  "jobs.pay.perYear": "/yr",
   "jobs.posted.on": "Posted {date}",
   "jobs.posted.recently": "Posted recently",
   "jobs.qrLabel.inclusive": "Inclusive",
@@ -589,6 +594,10 @@ export const economy: Catalog = {
   "landlordPage.intro.successBody":
     "We've passed your note to <strong>{firstName}</strong>. If they have something that fits, they'll reach out here — no pressure either way.",
   "landlordPage.intro.sendLabel": "Request introduction",
+
+  // ── ModalKit (shared modal shell + success panel used across Economy) ──
+  "modalKit.closeAriaLabel": "Close",
+  "modalKit.close": "Close",
 
   // ── FlatmatesBoard / FlatmatesFilterBar / FlatmateCard ─────────────────
   // Scope note: neighbourhood names, lifestyle tags, and per-profile fields
@@ -864,6 +873,7 @@ export const economy: Catalog = {
   "grants.empty.title": "Nothing matches your filter",
   "grants.empty.description":
     "No opportunities fit that category right now. Clear the filter to browse every grant and fellowship members are tracking.",
+  "grants.empty.clearFilters": "Clear filters",
 
   "grants.guide.title": "Writing a <em>strong application</em>",
   "grants.guide.sub":
@@ -997,4 +1007,1630 @@ export const economy: Catalog = {
     "Most teams here reply to every application within 10 days.",
   "jobApply.tip.fixedComp":
     "Compensation is fixed as posted, but title and start date are often open.",
+
+  // ── BarterPage (+ Card / PostStrip) ─────────────────────────────────────
+  // Scope note: barter listing content (offer/want summaries, detail text,
+  // tags, posters' names) in barter.data.ts is mock member content — in live
+  // mode a fetched listing. Only the surrounding chrome is translated below.
+  "barter.hero.eyebrow": "Queer skill exchange",
+  "barter.hero.title": "Trade what you <em>know.</em>",
+  "barter.hero.lead":
+    "A structured barter board — skills for skills, expertise for expertise. No money, no platform fees. Post what you can offer and what you're hoping for in return.",
+  "barter.principle.noMoney.title": "No money",
+  "barter.principle.noMoney.body":
+    "Every exchange is peer-to-peer. Value is set by the people involved, not the platform.",
+  "barter.principle.reputation.title": "Reputation-backed",
+  "barter.principle.reputation.body":
+    "Offers come from verified members. Your community vouch is your credit history.",
+  "barter.principle.wants.title": "What you want matters",
+  "barter.principle.wants.body":
+    "Post what you're looking for, not just what you can give. Needs are as welcome as offers.",
+
+  "barter.search.placeholder": "Search the exchange…",
+  "barter.mode.all": "All",
+  "barter.mode.offering": "Offering",
+  "barter.mode.seeking": "Seeking",
+  "barter.count_one": "<b>{count}</b> post",
+  "barter.count_other": "<b>{count}</b> posts",
+
+  "barter.cat.all": "All categories",
+  "barter.cat.creative": "Creative",
+  "barter.cat.tech": "Tech",
+  "barter.cat.legal": "Legal & admin",
+  "barter.cat.care": "Care & health",
+  "barter.cat.food": "Food & hosting",
+  "barter.cat.body": "Body & movement",
+  "barter.cat.fallback": "Skill swap",
+
+  "barter.badge.offering": "Offering",
+  "barter.badge.seeking": "Seeking",
+  "barter.badge.both": "Offering & seeking",
+
+  "barter.card.offeringLabel": "Offering",
+  "barter.card.wantLabel": "Looking for",
+  "barter.card.proposeCta": "Propose a swap →",
+  "barter.toast.messageSent": "Message sent to {name}",
+  "barter.postedToday": "Today",
+  "barter.postedDaysAgo_one": "{count} day ago",
+  "barter.postedDaysAgo_other": "{count} days ago",
+
+  "barter.empty.title": "Nothing matches your filters",
+  "barter.empty.description":
+    "No swaps fit that combination just yet. Try broadening your search — or post what you're offering and let the right trade find you.",
+  "barter.empty.clearFilters": "Clear filters",
+
+  "barter.postStrip.success.title": "It's <em>on the table.</em>",
+  "barter.postStrip.success.body":
+    "Your swap is live at the top of the board. We'll let you know when someone proposes an exchange.",
+  "barter.postStrip.success.postAnother": "Post another →",
+  "barter.postStrip.title": "Put something <em>on the table.</em>",
+  "barter.postStrip.body":
+    "Every exchange starts with a post. Tell the community what you can offer and what you're hoping for in return.",
+  "barter.postStrip.offerPlaceholder":
+    "I can offer — e.g. Portuguese lessons, logo design…",
+  "barter.postStrip.wantPlaceholder":
+    "I'm looking for — e.g. tax advice, moving help…",
+  "barter.postStrip.submitCta": "Post to the exchange →",
+  "barter.postStrip.namePlaceholder": "You",
+  "barter.postStrip.hoodPlaceholder": "Your post",
+  "barter.postStrip.detailPlaceholder":
+    "Posted just now — message to start the exchange.",
+  "barter.postStrip.tagNew": "new",
+  "barter.postStrip.tagYourPost": "your post",
+
+  "barter.outro.title": "Skills are <em>the currency.</em>",
+  "barter.outro.sub":
+    "QueerPulse Barter is open to all members. The more you offer, the more you can ask for.",
+  "barter.outro.cta": "Join the network",
+
+  // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
+  "barterDetail.back": "← Skill exchange",
+  "barterDetail.sub.offering":
+    "On offer to the community — swap it for something they need.",
+  "barterDetail.sub.seeking":
+    "Looking for this — and offering something in return.",
+  "barterDetail.sub.both":
+    "Offering one thing, looking for another. Propose a swap that works for you both.",
+  "barterDetail.locationWithHood": "{hood} · Lisbon",
+  "barterDetail.locationLisbon": "Lisbon",
+  "barterDetail.repliesFast": "Usually replies fast",
+  "barterDetail.messageCta": "Message {firstName} →",
+  "barterDetail.section.offering": "What they're <em>offering</em>",
+  "barterDetail.section.lookingFor": "What they're <em>looking for</em>",
+  "barterDetail.section.howItWorks": "How a <em>swap works</em>",
+
+  "barterDetail.steps.propose.title": "Propose",
+  "barterDetail.steps.propose.text":
+    "Send a message saying what you'd trade and why the swap works for you.",
+  "barterDetail.steps.agree.title": "Agree",
+  "barterDetail.steps.agree.text":
+    "You shape the swap together — scope, timing, format. No money changes hands.",
+  "barterDetail.steps.exchange.title": "Exchange",
+  "barterDetail.steps.exchange.text":
+    "You each deliver. Meet up in Lisbon or go remote, whatever suits.",
+  "barterDetail.steps.vouch.title": "Vouch",
+  "barterDetail.steps.vouch.text":
+    "Afterwards, leave a vouch so the next person knows it went well.",
+
+  "barterDetail.sidebar.quickFacts": "Quick facts",
+  "barterDetail.sidebar.type": "Type",
+  "barterDetail.sidebar.category": "Category",
+  "barterDetail.sidebar.posted": "Posted",
+  "barterDetail.sidebar.area": "Area",
+  "barterDetail.sidebar.tagged": "What it's tagged",
+
+  "barterDetail.propose.title": "Propose a swap",
+  "barterDetail.propose.lead": "No money — <em>just a trade.</em>",
+  "barterDetail.propose.placeholder":
+    "Tell {firstName} what you'd offer in return, and why this swap works for you.",
+  "barterDetail.propose.sendCta": "Send proposal →",
+  "barterDetail.propose.askFirst": "Ask a question first",
+  "barterDetail.propose.footNote":
+    "Nothing is agreed until you both say yes. Swaps are between members — QueerPulse never takes a cut.",
+  "barterDetail.propose.errorEmpty": "Add a line about what you'd trade.",
+  "barterDetail.propose.toastSent": "Swap proposed to {name}.",
+
+  "barterQuestion.eyebrow": "Before you propose",
+  "barterQuestion.title": "Ask <em>{firstName}</em> a question.",
+  "barterQuestion.sub":
+    "Not ready to propose a swap yet? Ask what you need to know first — timing, what they're after, how it'd work. Friendly and low-pressure.",
+  "barterQuestion.fieldLabel": "Your question *",
+  "barterQuestion.placeholder":
+    "Hi {firstName} — quick question before I propose a swap…",
+  "barterQuestion.charsRemaining_one": "{count} more character to send.",
+  "barterQuestion.charsRemaining_other": "{count} more characters to send.",
+  "barterQuestion.keepOnPlatform":
+    "Keep it on QueerPulse until you both agree to take it further.",
+  "barterQuestion.cancel": "Cancel",
+  "barterQuestion.sendCta": "Send question",
+  "barterQuestion.sendingLabel": "Sending…",
+  "barterQuestion.success.title": "Question",
+  "barterQuestion.success.em": "sent.",
+  "barterQuestion.success.closeLabel": "Done",
+  "barterQuestion.success.body":
+    "Your question is on its way to <strong>{name}</strong>. No swap is agreed until you both say yes — this is just a chat to see if it could work. You'll get a notification here when they reply.",
+
+  // ── PostJobPage (gate + composer + steps + sidebar + preview + confirmation) ──
+  // Scope note: option values chosen for category/commitment/seniority/format/
+  // timezone/rate-per are kept as a stable canonical English `value` (used to
+  // build the posted job's content fields and matched by needsCity/showsTimezone
+  // regexes) — only the picker's displayed label is translated. Benefits,
+  // inclusivity signals, contact methods, and skill suggestions become tags/
+  // content on the posted listing itself (like a real job's tags) and are left
+  // in English throughout, matching how job listing content stays English
+  // elsewhere in this namespace.
+  "postJob.gate.title": "Posting a role is for <em>verified employers</em>",
+  "postJob.gate.sub":
+    "To keep the job board trustworthy, only members affiliated with a company can post roles. Affiliate yours to continue — it takes a moment.",
+  "postJob.gate.affiliateCta": "Affiliate your company",
+  "postJob.gate.backCta": "Back to the board",
+  "postJob.gate.point1":
+    "We confirm employers are genuinely queer-inclusive, not rainbow-washing.",
+  "postJob.gate.point2":
+    "Roles post as your verified company, with its logo and badge.",
+  "postJob.gate.point3":
+    "No placement fees — this is a community board, not a marketplace.",
+
+  "postJob.stepLabels.type": "Type & role",
+  "postJob.stepLabels.details": "Details",
+  "postJob.stepLabels.pay": "Pay & perks",
+  "postJob.stepLabels.screening": "Screening",
+  "postJob.stepLabels.review": "Review",
+
+  "postJob.topbar.back": "Jobs & skills",
+  "postJob.topbar.savedJustNow": "Saved just now",
+  "postJob.topbar.autosaves": "Draft autosaves as you type",
+  "postJob.nav.back": "← Back",
+  "postJob.nav.continue": "Continue →",
+  "postJob.nav.saveDraft": "Save draft",
+  "postJob.nav.publish": "Publish listing",
+  "postJob.nav.publishing": "Publishing…",
+  "postJob.toast.saveDraft": "Draft saved to your company.",
+  "postJob.toast.fillHighlighted": "Please fill the highlighted fields.",
+  "postJob.toast.agreeRequired":
+    "Add a title, description, and agree to the Code of Care.",
+  "postJob.toast.notAuthorised":
+    "You're not authorised to post for {company}. Switch to a company you're on the team of.",
+  "postJob.toast.publishError":
+    "We couldn't publish your listing. Please try again.",
+
+  "postJob.field.optional": "optional",
+  "postJob.field.category": "Category",
+  "postJob.field.commitment": "Commitment",
+  "postJob.field.experienceLevel": "Experience level",
+  "postJob.field.format": "Format",
+  "postJob.field.timezone": "Timezone",
+  "postJob.field.location": "Location",
+  "postJob.field.level": "Level",
+  "postJob.field.where": "Where",
+  "postJob.field.pay": "Pay",
+  "postJob.field.starts": "Starts",
+  "postJob.field.arrangement": "Arrangement",
+  "postJob.field.title": "Title",
+  "postJob.field.description": "Description",
+  "postJob.field.perks": "Perks",
+  "postJob.field.thisSpaceIs": "This space is",
+  "postJob.field.skills": "Skills",
+  "postJob.field.screening": "Screening",
+  "postJob.field.postingAs": "Posting as",
+  "postJob.field.respondVia": "Respond via",
+
+  "postJob.option.category.legalAdmin": "Legal & admin",
+  "postJob.option.category.designCreative": "Design & creative",
+  "postJob.option.category.techEngineering": "Tech & engineering",
+  "postJob.option.category.writingEditing": "Writing & editing",
+  "postJob.option.category.translation": "Translation",
+  "postJob.option.category.teachingTutoring": "Teaching & tutoring",
+  "postJob.option.category.healthWellbeing": "Health & wellbeing",
+  "postJob.option.category.practicalHelp": "Practical help",
+  "postJob.option.category.other": "Other",
+
+  "postJob.option.commitment.fullTime": "Full-time",
+  "postJob.option.commitment.partTime": "Part-time",
+  "postJob.option.commitment.contract": "Contract",
+  "postJob.option.commitment.freelanceGig": "Freelance / gig",
+  "postJob.option.commitment.volunteer": "Volunteer",
+  "postJob.option.commitment.internship": "Internship",
+
+  "postJob.option.seniority.anyLevel": "Any level",
+  "postJob.option.seniority.entry": "Entry",
+  "postJob.option.seniority.mid": "Mid",
+  "postJob.option.seniority.senior": "Senior",
+  "postJob.option.seniority.leadPrincipal": "Lead / Principal",
+
+  "postJob.option.format.remote": "Remote",
+  "postJob.option.format.inPersonLisbon": "In-person (Lisbon)",
+  "postJob.option.format.hybrid": "Hybrid",
+  "postJob.option.format.either": "Either",
+
+  "postJob.option.timezone.noPreference": "No preference",
+  "postJob.option.timezone.wetLisbon": "WET / Lisbon (UTC+0)",
+  "postJob.option.timezone.cet": "CET (UTC+1)",
+  "postJob.option.timezone.threeHoursOfLisbon": "±3h of Lisbon",
+  "postJob.option.timezone.anyOverlap": "Any overlap",
+
+  "postJob.option.ratePer.hour": "Hour",
+  "postJob.option.ratePer.day": "Day",
+  "postJob.option.ratePer.project": "Project",
+  "postJob.option.ratePer.month": "Month",
+  "postJob.option.ratePer.year": "Year",
+  "postJob.option.ratePer.toDiscuss": "To discuss",
+
+  "postJob.step1.eyebrow": "Step 1 of 5",
+  "postJob.step1.title": "The <em>role</em>",
+  "postJob.step1.sub":
+    "How the work is structured. These become the main filters members search the board by.",
+  "postJob.step1.arrangementTitle": "Arrangement",
+  "postJob.step1.arrangementSub":
+    "The shape of the role — pick the closest fit.",
+  "postJob.step1.locationPlaceholder":
+    "e.g. Arroios, Lisbon — or a neighbourhood / district",
+  "postJob.step1.locationError": "Add where this is based.",
+
+  "postJob.step2.eyebrow": "Step 2 of 5",
+  "postJob.step2.title": "The <em>details</em>",
+  "postJob.step2.sub":
+    "A clear title and an honest description get far more useful responses.",
+  "postJob.step2.titlePlaceholder":
+    'e.g. "Junior graphic designer, editorial focus"',
+  "postJob.step2.titleError": "Give your listing a title.",
+  "postJob.step2.titleCounter": "{used}/{max}",
+  "postJob.step2.lookingForLabel": "What you're looking for",
+  "postJob.step2.descriptionPlaceholder":
+    "Describe the work, who it's for, and what success looks like — write as you'd explain it to a member at an event.",
+  "postJob.step2.descriptionError": "Add a description.",
+  "postJob.step2.charsCount_one": "{count} char",
+  "postJob.step2.charsCount_other": "{count} chars",
+  "postJob.step2.timelineTitle": "Timeline",
+  "postJob.step2.applyBy": "Apply by",
+  "postJob.step2.startDate": "Start date",
+  "postJob.step2.startDatePlaceholder": "e.g. ASAP, June, flexible",
+
+  "postJob.step3.eyebrow": "Step 3 of 5",
+  "postJob.step3.title": "Pay <em>& perks</em>",
+  "postJob.step3.sub": "Transparency is a community value here — and it works.",
+  "postJob.step3.rateTitle": "Rate",
+  "postJob.step3.currency": "Currency",
+  "postJob.step3.min": "Min",
+  "postJob.step3.max": "Max",
+  "postJob.step3.optAbbrev": "opt.",
+  "postJob.step3.per": "Per",
+  "postJob.step3.hidePay.name": "Hide exact figures",
+  "postJob.step3.hidePay.desc":
+    'Show "Competitive" instead of a number. Still worth sharing a range in the description.',
+  "postJob.step3.barter.name": "Open to skills exchange or barter",
+  "postJob.step3.barter.desc":
+    "Trade skills instead of (or alongside) money — a first-class option on QueerPulse.",
+  "postJob.step3.nudge":
+    "<strong>Listings with a rate get ~2× more responses.</strong> Members appreciate not having to ask.",
+  "postJob.step3.benefitsTitle": "Benefits & perks",
+  "postJob.step3.benefitsSub":
+    "Pick anything that applies. These show as tags on your listing.",
+
+  "postJob.step4.eyebrow": "Step 4 of 5",
+  "postJob.step4.title": "Skills, <em>screening</em> & who's posting",
+  "postJob.step4.sub":
+    "This is where QueerPulse listings do more than a generic job board.",
+  "postJob.step4.screeningTitle": "Screening questions",
+  "postJob.step4.screeningSub":
+    "Ask up to 3 questions respondents must answer. Great for filtering quickly.",
+  "postJob.step4.questionPlaceholder": "e.g. Are you based in Portugal?",
+  "postJob.step4.removeQuestionAria": "Remove question",
+  "postJob.step4.addQuestion": "Add a question",
+  "postJob.step4.spaceIsTitle": "This space is…",
+  "postJob.step4.spaceIsSub":
+    "Optional signals that tell members what to expect. Only tick what's genuinely true.",
+  "postJob.step4.whosPostingTitle": "Who's posting",
+  "postJob.step4.whosPostingSub":
+    "Roles are posted as your verified company — this is what keeps the board trustworthy.",
+  "postJob.step4.verifiedEmployerAria": "Verified employer",
+  "postJob.step4.notYou": "Not you?",
+
+  "postJob.skills.title": "Skills",
+  "postJob.skills.sub":
+    "Add from the shared list so members can match & filter — free text works too.",
+  "postJob.skills.placeholder": "Start typing a skill…",
+  "postJob.skills.addCta": "Add",
+  "postJob.skills.removeAria": "Remove {skill}",
+  "postJob.skills.popular": "Popular in this community",
+
+  "postJob.step5.eyebrow": "Step 5 of 5",
+  "postJob.step5.title": "Respond & <em>review</em>",
+  "postJob.step5.sub":
+    "Choose how people reach you, then give it one last look.",
+  "postJob.step5.respondTitle": "How to respond",
+  "postJob.step5.respondSub":
+    "Pick one or more. Selected methods reveal their own field.",
+  "postJob.step5.emailLabel": "Email address",
+  "postJob.step5.emailPlaceholder": "you@example.com",
+  "postJob.step5.linkLabel": "External link",
+  "postJob.step5.linkPlaceholder": "https://…",
+  "postJob.step5.summaryTitle": "Summary",
+  "postJob.step5.dash": "—",
+  "postJob.step5.notSpecified": "Not specified",
+  "postJob.step5.questionCount_one": "{count} question",
+  "postJob.step5.questionCount_other": "{count} questions",
+  "postJob.step5.editCta": "Edit",
+  "postJob.step5.agreement":
+    "I confirm this listing follows the <link>Code of Care</link> — no discrimination on identity, and pay that's fair. <strong>QueerPulse is a solidarity space, not an exploitation channel.</strong>",
+
+  "postJob.sidebar.livePreview": "Live preview",
+  "postJob.sidebar.fullView": "Full view",
+  "postJob.sidebar.hiring": "Hiring",
+  "postJob.sidebar.titlePlaceholder": "Your title will appear here",
+  "postJob.sidebar.descPlaceholder": "Add a description…",
+  "postJob.sidebar.viewFullCta": "See full listing →",
+  "postJob.sidebar.howThisWorks": "How this works",
+  "postJob.sidebar.point1":
+    "Listings are <strong>visible to members</strong>, never public.",
+  "postJob.sidebar.point2":
+    "Listings <strong>expire after 60 days</strong> — reminder at 45.",
+  "postJob.sidebar.point3":
+    "<strong>No placement fees.</strong> A community board, not a marketplace.",
+  "postJob.sidebar.point4":
+    "<strong>Edit or close</strong> any time from your company profile.",
+
+  "postJob.preview.ariaLabel": "Listing preview",
+  "postJob.preview.untitled": "Untitled listing",
+  "postJob.preview.verifiedEmployer": "verified employer",
+  "postJob.preview.aboutRole": "About this role",
+  "postJob.preview.noDescription": "No description yet.",
+  "postJob.preview.inclusivityTitle": "This space is",
+  "postJob.preview.youllBeAsked": "You'll be asked",
+  "postJob.preview.respondViaLabel": "Respond via",
+  "postJob.preview.respondCta": "Respond",
+
+  "postJob.confirm.title": "“{title}” is <em>live</em>",
+  "postJob.confirm.sub":
+    "Members can see it now. We'll notify you the moment someone responds, and nudge you before it expires in 60 days.",
+  "postJob.confirm.viewListing": "View listing",
+  "postJob.confirm.postAnother": "Post another",
+  "postJob.confirm.performance.title": "Performance",
+  "postJob.confirm.performance.body":
+    "Track views, saves, and responses over the life of your listing.",
+  "postJob.confirm.performance.views": "Views",
+  "postJob.confirm.performance.saves": "Saves",
+  "postJob.confirm.performance.replies": "Replies",
+  "postJob.confirm.responses.title": "Responses",
+  "postJob.confirm.responses.body":
+    "Replies land in one place — review, message, or mark as filled from your listing manager.",
+  "postJob.confirm.responses.openManager": "Open listing manager",
+  "postJob.confirm.share.title": "Share it",
+  "postJob.confirm.share.body": "Boost reach inside the community.",
+  "postJob.confirm.share.postToFeed": "Post to Feed",
+  "postJob.confirm.share.copyLink": "Copy link",
+  "postJob.confirm.share.toastFeed": "Shared to your feed",
+  "postJob.confirm.share.toastLink": "Link copied",
+  "postJob.confirm.whatsNext.title": "What's next",
+  "postJob.confirm.whatsNext.body":
+    "Your role now shows on the board and on your company profile. New listings carry a “not yet reviewed” note until the community vets them.",
+
+  // ── MentorshipPage (+ match modal/steps) ────────────────────────────────
+  // Scope note: individual mentor profiles in mentorship.data.ts (bio, quote,
+  // process steps, side rows) and the whole standalone mentorProfile.data.tsx
+  // spotlight (a single content-rich profile) are mock member content — left
+  // in English throughout, like other member profiles in this namespace. Only
+  // page chrome (headings, CTAs, the match-request wizard, validation, toasts)
+  // is translated below.
+  "mentorship.hero.eyebrow": "Mentorship",
+  "mentorship.hero.title":
+    "Someone ahead of you on the path <em>wants to help.</em>",
+  "mentorship.hero.lead":
+    "Formal one-to-one mentorship matching between queer professionals in Lisbon. If you're finding it hard, someone in the network has been there. If you've made it through, you can give that back.",
+  "mentorship.stat.activeMentors": "Active mentors in the network",
+  "mentorship.stat.matchesMade": "Matches made so far",
+  "mentorship.stat.areasOfFocus": "Areas of focus",
+
+  "mentorship.choose.title": "What brings you <em>here?</em>",
+  "mentorship.choose.mentee.title": "I'm looking for a mentor",
+  "mentorship.choose.mentee.desc":
+    "You're navigating something — a career transition, a creative block, coming out professionally, a difficult workplace, a new city. You'd benefit from talking to someone who's been through it.",
+  "mentorship.choose.mentee.for":
+    "For: anyone at any stage who could use some guidance →",
+  "mentorship.choose.mentor.title": "I can be a mentor",
+  "mentorship.choose.mentor.desc":
+    "You've been through enough to have something to offer. You don't need to be an expert — you just need to have navigated something that someone else is currently navigating.",
+  "mentorship.choose.mentor.for":
+    "For: members with experience they're willing to share →",
+
+  "mentorship.strip.title": "Current mentors in <em>the network</em>",
+  "mentorship.strip.sub":
+    "These members have opened themselves up to mentoring. You can request a match through the form above.",
+
+  "mentorship.outro.title": "Have something <em>to give?</em>",
+  "mentorship.outro.sub":
+    "Mentorship is one way. Browse volunteer opportunities to find other ways to contribute to the community around you.",
+  "mentorship.outro.cta": "See volunteer roles →",
+
+  "mentorship.matchArea.careerDirection": "Career direction",
+  "mentorship.matchArea.comingOutProfessionally": "Coming out professionally",
+  "mentorship.matchArea.creativePractice": "Creative practice",
+  "mentorship.matchArea.startingBusiness": "Starting a business",
+  "mentorship.matchArea.difficultWorkplace": "Navigating a difficult workplace",
+  "mentorship.matchArea.newToLisbon": "New to Lisbon",
+  "mentorship.matchArea.settlingInLisbon": "Settling in Lisbon",
+  "mentorship.matchArea.mentalHealthAtWork": "Mental health at work",
+  "mentorship.matchArea.legalRightsIssues": "Legal or rights issues",
+  "mentorship.matchArea.legalRightsNavigation": "Legal or rights navigation",
+
+  "mentorship.match.findMentorAria": "Find a mentor",
+  "mentorship.match.becomeMentorAria": "Become a mentor",
+  "mentorship.match.closeAria": "Close",
+  "mentorship.match.done": "Done!",
+  "mentorship.match.stepOf": "Step {step} of {total}",
+
+  "mentorship.match.success.mentee.title": "Request received.",
+  "mentorship.match.success.mentor.title": "Thank you.",
+  "mentorship.match.success.mentee.body":
+    "We'll review your request and send you a match suggestion within 2 weeks. The introduction will come by email.",
+  "mentorship.match.success.mentor.body":
+    "We'll add you to the mentor pool and reach out when we have a good match for you. It means a lot.",
+  "mentorship.match.success.done": "Done",
+
+  "mentorship.mentee.step1.eyebrow": "Finding you a mentor",
+  "mentorship.mentee.step1.title": "What do you need help with?",
+  "mentorship.mentee.step1.sub":
+    "Pick the areas where you'd most benefit from guidance. We'll match you with someone who has direct experience there.",
+  "mentorship.mentee.step2.eyebrow": "About you",
+  "mentorship.mentee.step2.title": "What should your mentor know?",
+  "mentorship.mentee.step2.namePlaceholder": "Your name",
+  "mentorship.mentee.step2.rolePlaceholder": "Your role or practice",
+  "mentorship.mentee.step2.frequencyPlaceholder":
+    "How often would you like to meet?",
+  "mentorship.mentee.step2.frequency.monthly": "Once a month",
+  "mentorship.mentee.step2.frequency.twiceMonthly": "Twice a month",
+  "mentorship.mentee.step2.frequency.asNeeded": "As needed",
+  "mentorship.mentee.step2.notePlaceholder":
+    "A sentence about what's going on and what kind of support would help…",
+  "mentorship.mentee.step3.eyebrow": "Almost done",
+  "mentorship.mentee.step3.title": "How do we reach you?",
+  "mentorship.mentee.step3.emailPlaceholder": "Your email address",
+  "mentorship.mentee.step3.sub":
+    "We'll review your request and suggest a match within 2 weeks. You'll get an email introduction and can take it from there.",
+  "mentorship.mentee.toastSubmitted": "Match request received",
+
+  "mentorship.mentor.step1.eyebrow": "Becoming a mentor",
+  "mentorship.mentor.step1.title": "What can you offer?",
+  "mentorship.mentor.step1.sub":
+    "You don't need to be an expert. You need to have navigated something that someone else is currently navigating.",
+  "mentorship.mentor.step2.eyebrow": "Your capacity",
+  "mentorship.mentor.step2.title": "How much time can you give?",
+  "mentorship.mentor.step2.namePlaceholder": "Your name and role",
+  "mentorship.mentor.step2.menteesPlaceholder": "How many mentees per quarter?",
+  "mentorship.mentor.step2.mentees.one": "1 mentee",
+  "mentorship.mentor.step2.mentees.two": "2 mentees",
+  "mentorship.mentor.step2.mentees.three": "3 mentees",
+  "mentorship.mentor.step2.formatPlaceholder": "Preferred meeting format",
+  "mentorship.mentor.step2.format.inPersonLisbon": "In-person in Lisbon",
+  "mentorship.mentor.step2.format.video": "Video call",
+  "mentorship.mentor.step2.format.either": "Either works",
+  "mentorship.mentor.step2.emailPlaceholder": "Your email address",
+  "mentorship.mentor.toastSubmitted": "Added to the mentor pool",
+
+  "mentorship.nav.continue": "Continue →",
+  "mentorship.nav.back": "← Back",
+  "mentorship.nav.submit": "Submit →",
+  "mentorship.cta.requestMatch": "Request a match",
+  "mentorship.cta.joinWaitlist": "Join waitlist",
+
+  // ── MentorDetailPage (+ header / sections / sidebar / cycle nav) ───────
+  "mentorDetail.backToAll": "← All mentors",
+  "mentorDetail.messageCta": "Message {firstName}",
+  "mentorDetail.cyclePrevious": "← Previous",
+  "mentorDetail.cycleNext": "Next →",
+  "mentorDetail.cyclePosition": "{position} of {total}",
+  "mentorDetail.section.howTheyMentor": "How {firstName} <em>mentors</em>",
+  "mentorDetail.section.fitFor": "Who you'd <em>be a fit for</em>",
+  "mentorDetail.fit.benefitIf": "You'd benefit if…",
+  "mentorDetail.fit.andIdeally": "And ideally…",
+  "mentorDetail.fit.andMaybe": "And maybe…",
+  "mentorDetail.fit.notRightCall": "Not the right call if…",
+  "mentorDetail.section.process": "The <em>process</em>, step by step",
+  "mentorDetail.sidebar.workWith": "Work with {firstName}",
+  "mentorDetail.sidebar.noUpfrontCost":
+    "No upfront cost. Mentorship here is member-to-member — you can always ask a question before committing.",
+  "mentorDetail.sidebar.notSureYet": "Not sure yet?",
+  "mentorDetail.sidebar.askQuestion": "→ Message {firstName} a question",
+  "mentorDetail.sidebar.browseAll": "→ Browse all mentors",
+
+  // ── MentorProfilePage (+ sidebar / apply modal) — Catarina Vaz spotlight ──
+  "mentorProfile.backToAll": "← All mentors",
+  "mentorProfile.sendQuestionCta": "Send a question first",
+  "mentorProfile.section.howIMentor": "How I <em>mentor</em>",
+  "mentorProfile.section.fitFor": "Who you'd <em>be a fit for</em>",
+  "mentorProfile.section.process": "The <em>process</em>, step by step",
+  "mentorProfile.section.pastMentees": "Past mentees · <em>published with</em>",
+  "mentorProfile.sidebar.applyTitle": "Apply for the '26 cohort",
+  "mentorProfile.sidebar.noUpfrontCost":
+    "no upfront cost · solidarity rate available",
+  "mentorProfile.sidebar.openApplication": "Open application",
+  "mentorProfile.sidebar.freeSustainer":
+    "All mentees get a free QueerPulse Sustainer membership for the year.",
+  "mentorProfile.sidebar.moreFrom": "More from {firstName}",
+  "mentorApply.eyebrow": "Apply to mentor with",
+  "mentorApply.title": "Request a session with <em>{firstName}.</em>",
+  "mentorApply.sub":
+    "Tell her where you'd like to focus and a little about your work. There's no upfront cost — mentees get a free Sustainer membership for the year.",
+  "mentorApply.focusAreaLabel": "Focus area *",
+  "mentorApply.noteLabel": "A note to {firstName} *",
+  "mentorApply.notePlaceholder":
+    "What are you working on, and what would make this mentorship worth her time and yours?",
+  "mentorApply.charsRemaining_one": "{count} more character to send.",
+  "mentorApply.charsRemaining_other": "{count} more characters to send.",
+  "mentorApply.polishedHint":
+    "Specific beats polished. She mentors people with a concrete thing to make.",
+  "mentorApply.cancel": "Cancel",
+  "mentorApply.sendingLabel": "Sending request…",
+  "mentorApply.sendCta": "Send request",
+  "mentorApply.success.title": "Request",
+  "mentorApply.success.em": "sent.",
+  "mentorApply.success.closeLabel": "Done",
+  "mentorApply.success.body":
+    "Your request to work with <strong>{mentorName}</strong> on <strong>{focus}</strong> is on its way. She reviews applications for the '26 cohort personally and usually replies within a week. You'll get a notification here.",
+
+  // ── ApplicationStatusPage (+ header/list/card, listing-manager modals) ──
+  // Scope note: application content in applicationStatus.data.tsx /
+  // .patches.tsx (job titles, company names, stage hints, status blurbs,
+  // thread messages, offers, notes) is this member's own tracked-application
+  // history — in live mode fetched from the API — left in English. Only
+  // reusable page/modal chrome is translated below. Negotiation "angle" draft
+  // text is left English too (flagged in the sweep report — persuasive
+  // composed copy too nuanced to sweep safely); the lever/principle labels and
+  // angle names/blurbs around it, which are generic and reusable, are
+  // translated.
+  "applicationStatus.header.eyebrow": "Your jobs",
+  "applicationStatus.header.title": "Where everything <em>stands.</em>",
+  "applicationStatus.header.sub":
+    "Track every application, see how long companies have sat on yours, and know when to follow up.",
+  "applicationStatus.header.counterSent": "/ {count} sent",
+  "applicationStatus.header.activeLabel": "Active applications",
+
+  "applicationStatus.tab.all": "All",
+  "applicationStatus.tab.active": "Active",
+  "applicationStatus.tab.offer": "Offers",
+  "applicationStatus.tab.closed": "Closed",
+  "applicationStatus.tab.draft": "Drafts",
+
+  "applicationStatus.legend.key": "Tracker key",
+  "applicationStatus.legend.done": "Done — this step is complete",
+  "applicationStatus.legend.active": "You are here — current step",
+  "applicationStatus.legend.upcoming": "Upcoming — not started yet",
+  "applicationStatus.legend.closed": "Closed — ended or withdrawn",
+
+  "applicationStatus.group.offers.title": "Offers — your decision",
+  "applicationStatus.group.inProgress.title": "In progress",
+  "applicationStatus.group.drafts.title": "Drafts",
+  "applicationStatus.group.drafts.hint":
+    "Unfinished — wrap these up before they close.",
+  "applicationStatus.group.closedWithdrawn.title": "Closed & withdrawn",
+  "applicationStatus.group.closedWithdrawn.hint":
+    "No action needed — kept for your records.",
+  "applicationStatus.compareOffersCta": "Compare offers",
+
+  "applicationStatus.empty.title": "No applications yet",
+  "applicationStatus.empty.description":
+    "When you apply to a job, grant, or opportunity, you'll be able to track every one — and compare offers side by side — right here.",
+  "applicationStatus.empty.browseCta": "Browse jobs",
+
+  "applicationStatus.card.stepOf": "Step {step} of {total}",
+  "applicationStatus.card.whatThisMeans": "What this means",
+
+  "applicationStatus.close": "Close",
+  "applicationStatus.submission.eyebrow": "Your submission",
+  "applicationStatus.submission.attachments": "Attachments",
+  "applicationStatus.company.eyebrow": "The company",
+  "applicationStatus.company.statPeople": "People",
+  "applicationStatus.company.statVerified": "Verified by members",
+  "applicationStatus.company.statWeekPilot": "Week pilot",
+  "applicationStatus.company.sector": "Sector",
+  "applicationStatus.company.based": "Based",
+  "applicationStatus.company.viewDirectory": "View in directory →",
+  "applicationStatus.note.from": "A note from {company}",
+
+  "msg.message.title": "Message the",
+  "msg.message.em": "recruiter.",
+  "msg.message.sub":
+    "Goes straight to their inbox — no read receipts, no algorithm in between.",
+  "msg.followup.title": "Send a",
+  "msg.followup.em": "follow-up.",
+  "msg.followup.sub":
+    "A gentle nudge. We've drafted something warm — edit it however you like.",
+  "msg.followup.preset":
+    "Hi — just a friendly note to check in on my application. I'm still very keen on the role and happy to share anything else that would help. No rush at all, and thank you for your time.",
+  "msg.conversation.title": "Open the",
+  "msg.conversation.em": "conversation.",
+  "msg.conversation.sub": "Pick up the thread with them directly.",
+  "msg.recipientHiringTeam": "Hiring team",
+  "msg.historyWith":
+    "The full history with {firstName} — every message and milestone, in order.",
+  "msg.you": "You",
+  "msg.yourReply": "Your reply",
+  "msg.replyPlaceholder": "Write a reply…",
+  "msg.sendingLabel": "Sending…",
+  "msg.sendCta": "Send →",
+  "msg.yourMessageLabel": "Your message",
+  "msg.messagePlaceholder": "Write naturally.",
+  "msg.cancel": "← Cancel",
+  "msg.success.title": "Message",
+  "msg.success.em": "sent.",
+  "msg.success.body":
+    "Your message to {firstName} is on its way. They'll reply straight to your inbox.",
+
+  "calendar.eyebrow": "Interview",
+  "calendar.close": "← Close",
+  "calendar.icsLabel": ".ics file",
+  "calendar.googleLabel": "Google Calendar →",
+  "calendar.addingLabel": "Adding…",
+  "calendar.success.title": "Saved to your",
+  "calendar.success.em": "calendar.",
+  "calendar.success.google":
+    "We've opened Google Calendar — just hit save. We'll also remind you the morning of.",
+  "calendar.success.ics":
+    "The invite (.ics) has downloaded — open it to add the event. We'll also remind you the morning of.",
+  "calendar.when": "When",
+  "calendar.where": "Where",
+  "calendar.with": "With",
+
+  "withdraw.eyebrow": "Withdraw",
+  "withdraw.title": "Step back from <em>{company}?</em>",
+  "withdraw.sub":
+    "This removes you from consideration for <b>{title}</b>. We'll send a brief, polite note on your behalf — you don't have to write anything.",
+  "withdraw.reasonLabel": "Reason (only you see this)",
+  "withdraw.reasonPlaceholder": "Pick a reason, or leave it open",
+  "withdraw.cantUndo": "This can't be undone — you'd need to re-apply.",
+  "withdraw.keepIt": "← Keep it",
+  "withdraw.sendingLabel": "Withdrawing…",
+  "withdraw.submitCta": "Withdraw application",
+  "withdraw.success.title": "Application",
+  "withdraw.success.em": "withdrawn.",
+  "withdraw.success.body":
+    "We've let {company} know politely. This role has moved to your Closed tab.",
+  "withdrawReason.acceptedAnother": "Accepted another role",
+  "withdrawReason.noLongerFit": "No longer a fit",
+  "withdrawReason.payDidntWork": "Pay or terms didn't work",
+  "withdrawReason.tookTooLong": "Process took too long",
+  "withdrawReason.preferNotToSay": "Prefer not to say",
+
+  "negotiate.eyebrow": "Offer negotiation",
+  "negotiate.title": "Ask for what it's <em>worth.</em>",
+  "negotiate.sub":
+    "Negotiating is expected — most offers have room. Here's your leverage, your levers, and five ways to make the ask.",
+  "negotiate.onTheTable": "On the table",
+  "negotiate.holiday": "Holiday",
+  "negotiate.whatMattersMost": "What matters most to you",
+  "negotiate.pickAngle": "Pick your angle",
+  "negotiate.draftLabel": "Your draft reply — edit it to sound like you",
+  "negotiate.copyDraft": "Copy draft",
+  "negotiate.copiedToast": "Draft copied to clipboard",
+  "negotiate.sendingLabel": "Sending…",
+  "negotiate.sendCta": "Send reply →",
+  "negotiate.success.title": "Counter",
+  "negotiate.success.em": "sent.",
+  "negotiate.success.body":
+    "Your reply is on its way to {company}. Asking is normal and expected — you've done this exactly right.",
+  "lever.baseSalary": "Base salary",
+  "lever.holidayDays": "Holiday days",
+  "lever.remoteDays": "Remote days",
+  "lever.learningBudget": "Learning budget",
+  "lever.startDate": "Start date",
+  "lever.titleScope": "Title & scope",
+  "principle.anchor": "Anchor on the value you bring, never on what you need.",
+  "principle.nameNumber":
+    "Name one clear number, then go quiet — let them respond.",
+  "principle.trade":
+    "If base won't move, trade: days, budget, title, flexibility.",
+  "principle.stayWarm": "Stay warm. This is a relationship, not a transaction.",
+  "negotiate.angle.collaborative.name": "The collaborative ask",
+  "negotiate.angle.collaborative.blurb":
+    "Warm, partnership-first. Best when you already click with them.",
+  "negotiate.angle.market.name": "The market case",
+  "negotiate.angle.market.blurb":
+    "Data-led and confident. Best with the benchmarks on your side.",
+  "negotiate.angle.bundle.name": "The bundle",
+  "negotiate.angle.bundle.blurb":
+    "Trade across levers. Best when the salary ceiling is firm.",
+  "negotiate.angle.enthusiastic.name": "Lead with a yes",
+  "negotiate.angle.enthusiastic.blurb":
+    "Excitement first, number second. Disarming and effective.",
+  "negotiate.angle.time.name": "Ask for time",
+  "negotiate.angle.time.blurb":
+    "Buy space to decide — calmly, without pressure.",
+
+  "offer.respondByEyebrow": "Your offer · respond by {date}",
+  "offer.saidYes": "{company} <em>said yes.</em>",
+  "offer.sub": "Here's everything on the table. Take your time — then choose.",
+  "offer.salary": "Salary",
+  "offer.holiday": "Holiday",
+  "offer.start": "Start",
+  "offer.declinePolitely": "Decline politely",
+  "offer.decliningLabel": "Declining…",
+  "offer.acceptCta": "Accept offer →",
+  "offer.acceptingLabel": "Accepting…",
+  "offer.success.title": "Offer",
+  "offer.success.emAccepted": "accepted.",
+  "offer.success.emDeclined": "declined.",
+  "offer.undo.changedMind": "Changed your mind? You can undo for {seconds}s.",
+  "offer.undo.button": "Undo",
+  "offer.undo.confirmed": "This is now confirmed.",
+  "offer.success.acceptedBody":
+    "Congratulations — {company} will send your contract within two working days.",
+  "offer.success.declinedBody":
+    "We've thanked {company} warmly on your behalf. The door stays open for the future.",
+
+  "resume.eyebrowPrefix": "Resume draft · {deadline}",
+  "resume.title": "Finish your <em>application.</em>",
+  "resume.progress_one": "{percent}% done · {count} thing left",
+  "resume.progress_other": "{percent}% done · {count} things left",
+  "resume.coverLetterLabel": "Cover letter",
+  "resume.coverLetterPlaceholder": "A few honest lines on why this role.",
+  "resume.availabilityLabel": "Availability",
+  "resume.availabilityPlaceholder": "e.g. Two weeks' notice",
+  "resume.saveClose": "← Save & close",
+  "resume.submittingLabel": "Submitting…",
+  "resume.submitCta": "Submit application →",
+  "resume.success.title": "Application",
+  "resume.success.em": "sent.",
+  "resume.success.body":
+    "Nicely done — your application to {company} is in. It's now in your Active tab.",
+
+  "compare.eyebrow": "Your offers",
+  "compare.title": "Two offers, <em>side by side.</em>",
+  "compare.sub":
+    "A calm view of what's on the table. Compare the numbers, then respond when you're ready.",
+  "compare.whatsIncluded": "What's included",
+  "compare.respondCta": "Respond →",
+  "compare.close": "← Close",
+  "compareRow.salary": "Salary",
+  "compareRow.holiday": "Holiday",
+  "compareRow.startDate": "Start date",
+  "compareRow.respondBy": "Respond by",
+  "compareRow.howItPays": "How it pays",
+
+  // ── WorkshopsSection / WorkshopPage (+ sidebar / reserve / add modals) ──
+  // Scope note: individual workshop content in workshops.data.ts /
+  // addWorkshop.build.ts (title, blurb, sessions, needs, tutor, location,
+  // tier labels, mode/category values) is member-authored course content —
+  // in live mode fetched — left in English throughout. Only page/modal chrome
+  // is translated. The Category/Format pickers in AddWorkshopModal feed
+  // directly into that same stored content (like the pre-seeded workshops'
+  // own English mode/category values), so their option lists are left
+  // untranslated too, for consistency with the content they produce.
+  "workshopsSection.newBadge": "New · yours",
+  "workshopsSection.withTutor": "with <b>{name}</b>",
+  "workshopsSection.seatsLeft_one": "<b>{count}</b> seat left",
+  "workshopsSection.seatsLeft_other": "<b>{count}</b> seats left",
+  "workshopsSection.cohortFull": "Cohort full",
+  "workshopsSection.viewCta": "View workshop →",
+  "workshopsSection.heading": "Advanced <em>workshops</em>",
+  "workshopsSection.blurb":
+    "Structured, multi-week courses led by members who go deep on one craft. Small cohorts, sliding-scale pricing, and you make something real by the end. Running a course yourself? List it here.",
+  "workshopsSection.listCta": "List a workshop",
+
+  "workshopPage.notFound.title": "Workshop not found",
+  "workshopPage.notFound.description":
+    "This workshop may have wrapped up or been taken down. Browse what's running now over on Skills & learning.",
+  "workshopPage.notFound.backCta": "Back to Skills",
+  "workshopPage.backToSkills": "Skills & learning",
+  "workshopPage.footerBackCta": "← All workshops & skills",
+  "workshopPage.newBadge": "New",
+
+  "workshopSections.about.title": "What you'll <em>actually do</em>",
+  "workshopSections.sessions.title_one": "The <em>{count} session</em>",
+  "workshopSections.sessions.title_other": "The <em>{count} sessions</em>",
+  "workshopSections.needs.title": "What's <em>included</em>, what to bring",
+  "workshopSections.pastWork.title": "What previous folks <em>made</em>",
+  "workshopSections.pastWork.intro": "A few pieces from the last cohort:",
+
+  "workshopSidebar.reserveTitle": "Reserve a seat",
+  "workshopSidebar.spotsFilled": "Spots filled",
+  "workshopSidebar.startDate": "Start date",
+  "workshopSidebar.cancellation": "Cancellation",
+  "workshopSidebar.cohortFull": "Cohort is full",
+  "workshopSidebar.reserveCta": "Reserve a spot →",
+  "workshopSidebar.askQuestion": "Ask a question",
+  "workshopSidebar.askQuestionToast":
+    "We'll pass your question to {firstName}.",
+  "workshopSidebar.footNote":
+    "Solidarity rate · just say so on the form, no proof of anything. No one sees which rate you picked.",
+  "workshopSidebar.taughtBy": "Taught by",
+  "workshopSidebar.where": "Where",
+
+  "workshopReserve.ariaLabel": "Reserve a spot in {title}",
+  "workshopReserve.success.title": "Seat",
+  "workshopReserve.success.em": "held.",
+  "workshopReserve.success.closeLabel": "Done",
+  "workshopReserve.success.body":
+    "Your spot in <strong>{title}</strong> is held for 48 hours. We've emailed {firstName} a payment link at the <strong>{amount}</strong> rate — pay whenever you're ready, no rush. See you {date}.",
+  "workshopReserve.title": "Reserve a spot in <em>{title}</em>",
+  "workshopReserve.sub":
+    "{seatsLeft} of {seatsTotal} seats left. Reserving holds your place — no payment yet.",
+  "workshopReserve.nameLabel": "Your name *",
+  "workshopReserve.namePlaceholder": "What should we call you?",
+  "workshopReserve.emailLabel": "Email *",
+  "workshopReserve.emailPlaceholder": "Where we send the payment link",
+  "workshopReserve.tierLabel": "What you'll pay *",
+  "workshopReserve.noteLabel": "Anything the tutor should know",
+  "workshopReserve.notePlaceholder":
+    "Access needs, experience level, a question…",
+  "workshopReserve.slidingNote":
+    "Pick whichever rate is right for you. No proof, no questions — the sliding scale is how this stays open to everyone.",
+  "workshopReserve.cancel": "Cancel",
+  "workshopReserve.holdingLabel": "Holding…",
+  "workshopReserve.submitCta": "Hold my spot",
+
+  "addWorkshop.ariaLabel": "List a workshop",
+  "addWorkshop.eyebrow": "Skills & learning",
+  "addWorkshop.title": "List an <em>advanced workshop.</em>",
+  "addWorkshop.sub":
+    "Share a multi-week course you're running. Keep it honest about the level and the pace — people are trusting you with real time.",
+  "addWorkshop.titleLabel": "Workshop title *",
+  "addWorkshop.titlePlaceholder":
+    "e.g. Letterpress, from setting type to a printed page",
+  "addWorkshop.blurbLabel": "One-line summary *",
+  "addWorkshop.blurbPlaceholder":
+    "Who it's for and what they'll walk away with",
+  "addWorkshop.aboutLabel": "What you'll actually do *",
+  "addWorkshop.aboutPlaceholder":
+    "The shape of the sessions, the level assumed, what people make. One idea per line.",
+  "addWorkshop.categoryLabel": "Category *",
+  "addWorkshop.formatLabel": "Format *",
+  "addWorkshop.weeksLabel": "Length (weeks) *",
+  "addWorkshop.sizeLabel": "Cohort size *",
+  "addWorkshop.priceLabel": "Standard price (€) *",
+  "addWorkshop.venueLabel": "Where (venue · neighbourhood)",
+  "addWorkshop.venuePlaceholder": "e.g. Estúdio Graça · Graça",
+  "addWorkshop.note":
+    "We'll set up a reduced and a solidarity rate automatically from your standard price — you can tune them later. Sessions start empty; add the week-by-week plan from your workshop page.",
+  "addWorkshop.cancel": "Cancel",
+  "addWorkshop.publishingLabel": "Publishing…",
+  "addWorkshop.publishCta": "Publish workshop",
+  "addWorkshop.listed.title": "Workshop",
+  "addWorkshop.listed.em": "listed.",
+  "addWorkshop.listed.closeLabel": "Done",
+  "addWorkshop.listed.viewCta": "View your workshop →",
+  "addWorkshop.listed.body":
+    "<strong>{title}</strong> is live on Skills & learning. Members can browse it, read the plan, and reserve a seat. Edit the details or add sessions any time from your workshop page.",
+
+  "addWorkshop.cat.creative": "Creative",
+  "addWorkshop.cat.craft": "Craft",
+  "addWorkshop.cat.design": "Design",
+  "addWorkshop.cat.tech": "Tech",
+  "addWorkshop.cat.business": "Business",
+  "addWorkshop.cat.care": "Care",
+  "addWorkshop.mode.inPerson": "In-person",
+  "addWorkshop.mode.online": "Online",
+  "addWorkshop.mode.hybrid": "Hybrid",
+  "addWorkshop.build.tutorRole":
+    "QueerPulse member · running this for the first time",
+
+  // ── addWorkshop.build.ts (chrome defaults for a member-listed workshop) ──
+  // Workshops have no live backend yet (see WorkshopsProvider) — this builder
+  // always runs client-side, so its boilerplate defaults are chrome, not
+  // fetched content. `draft.title`/`blurb`/`about`/`venue` are the poster's own
+  // words and stay untranslated, same treatment as a job's free-text salary.
+  "addWorkshop.build.freeTier": "Free · pay what you can",
+  "addWorkshop.build.free": "Free",
+  "addWorkshop.build.standardRate": "Standard rate",
+  "addWorkshop.build.reduced": "Reduced",
+  "addWorkshop.build.solidaritySlot": "Solidarity · 1 slot",
+  "addWorkshop.build.weeks_one": "{count} week",
+  "addWorkshop.build.weeks_other": "{count} weeks",
+  "addWorkshop.build.format": "Workshop · {weeks} · group of {size}",
+  "addWorkshop.build.priceSub": "{weeks} · sliding scale available",
+  "addWorkshop.build.heroPlaceholder": "{title} · workshop",
+  "addWorkshop.build.startDateTba": "To be announced",
+  "addWorkshop.build.cancellation": "Full refund · before it starts",
+  "addWorkshop.build.sessionTitle": "Week {n} · to be planned",
+  "addWorkshop.build.sessionDesc":
+    "Add what this session covers from your workshop page.",
+  "addWorkshop.build.sessionDateTba": "TBA",
+  "addWorkshop.build.sessionLength": "3 hr",
+  "addWorkshop.build.needsMaterialsLabel": "Materials",
+  "addWorkshop.build.needsMaterialsDetail":
+    "The tutor will confirm what's provided before the first session.",
+  "addWorkshop.build.needsIncludedTag": "included",
+  "addWorkshop.build.needsYourselfLabel": "Yourself",
+  "addWorkshop.build.needsYourselfDetail":
+    "Come curious. The rest gets sorted with your cohort.",
+  "addWorkshop.build.venueTba": "Venue to be confirmed",
+  "addWorkshop.build.venueSharedOnReserve": "Shared once you reserve",
+  "addWorkshop.build.accessNote":
+    "The tutor will share access details — step-free routes, bathrooms, transit — before you commit.",
+
+  // ── SkillsPage (+ section / card) ───────────────────────────────────────
+  // Scope note: skills.data.ts skill offers/asks are member-authored posts —
+  // in live mode fetched — left in English. Only page chrome is translated.
+  "skills.hero.eyebrow": "Skills & learning",
+  "skills.hero.title": "Learn from your <em>community.</em>",
+  "skills.hero.lead":
+    "No course fees, no algorithms, no performative expertise. Just members who are good at things and willing to share what they know — and members who want to get better.",
+  "skills.filter.browseBy": "Browse by:",
+  "skills.filter.all": "All skills",
+  "skills.filter.design": "Design",
+  "skills.filter.tech": "Tech",
+  "skills.filter.business": "Business",
+  "skills.filter.craft": "Craft",
+  "skills.filter.care": "Care",
+  "skills.filter.creative": "Creative",
+  "skills.intro":
+    "Everything here is offered and requested by members. If you want to learn something, post an Ask on the board. If you want to teach something, post an Offer.",
+  "skills.empty.title": "No one's shared a skill here yet",
+  "skills.empty.description":
+    "When members offer to teach what they're good at — or ask to learn something new — it'll show up here. Be the first: list a workshop, or post what you can teach on the board.",
+  "skills.empty.listWorkshopCta": "List a workshop",
+  "skills.empty.postBoardCta": "Post on the board",
+  "skills.section.offeringTitle": "Members <em>offering</em> to teach",
+  "skills.section.offeringEmpty":
+    "No one's offered to teach in this category yet. Clear the filter to see everything members are sharing.",
+  "skills.section.lookingTitle": "Members <em>wanting</em> to learn",
+  "skills.section.lookingEmpty":
+    "No one's asked to learn in this category yet. Clear the filter to see what the rest of the community is hoping to pick up.",
+  "skills.section.nothingMatches": "Nothing matches your filter",
+  "skills.section.clearFilters": "Clear filters",
+  "skills.offerStrip.title": "Have something <em>to teach?</em>",
+  "skills.offerStrip.body":
+    "Post a skill offer on the board — what you can teach, how, and who it's for. The community will find you.",
+  "skills.offerStrip.cta": "Post on the board",
+  "skills.outro.title":
+    "The best way to get better is to <em>know someone further along.</em>",
+  "skills.outro.sub":
+    "Join the network and find the people who can help you grow — and the people you can help in return.",
+  "skills.outro.cta": "Request an invite",
+  "skills.card.teaching": "Teaching",
+  "skills.card.learning": "Learning",
+  "skills.card.reachOut": "Reach out →",
+
+  // ── SolidarityPage (+ directory) ────────────────────────────────────────
+  // Scope note: solidarity.data.ts practitioner listings (bio, pricing notes,
+  // tags) are directory content — in live mode fetched — left in English.
+  "solidarity.hero.eyebrow": "Community care",
+  "solidarity.hero.titleLine1": "Pay what",
+  "solidarity.hero.titleEm": "you can.",
+  "solidarity.hero.sub":
+    "Professionals from the QueerPulse community who offer sliding-scale fees — because access to good care shouldn't depend on what you earn.",
+  "solidarity.hero.note":
+    "All practitioners have been verified by at least two community members.",
+  "solidarity.how.step1.title": "Find your practitioner",
+  "solidarity.how.step1.body":
+    "Filter by profession, neighbourhood, or language. Every listing includes how their sliding scale works — no surprises.",
+  "solidarity.how.step2.title": "Contact them directly",
+  "solidarity.how.step2.body":
+    "Reach out via the platform or email. You set the conversation — you do not have to explain your financial situation to anyone else first.",
+  "solidarity.how.step3.title": "Pay what you can",
+  "solidarity.how.step3.body":
+    "Each practitioner sets their own range and approach. Some use income-based scales, others name-your-price. The listing tells you how.",
+  "solidarity.outro.title": "Care is a <em>collective act.</em>",
+  "solidarity.outro.sub":
+    "QueerPulse connects the community to professionals who believe in access as much as you do.",
+  "solidarity.outro.cta": "Join the network",
+
+  "solidarity.filter.all": "All",
+  "solidarity.filter.therapy": "Therapy",
+  "solidarity.filter.legal": "Legal",
+  "solidarity.filter.medical": "Medical",
+  "solidarity.filter.dental": "Dental",
+  "solidarity.filter.vet": "Vet",
+  "solidarity.filter.finance": "Accountancy",
+  "solidarity.filter.body": "Bodywork",
+
+  "solidarityDirectory.professionLabel": "Profession",
+  "solidarityDirectory.searchPlaceholder": "Search by name, area…",
+  "solidarityDirectory.count_one": "<b>{count}</b> practitioner",
+  "solidarityDirectory.count_other": "<b>{count}</b> practitioners",
+  "solidarityDirectory.badgeMember": "Member",
+  "solidarityDirectory.badgeVerified": "Verified",
+  "solidarityDirectory.slidingScaleLabel": "Sliding scale",
+  "solidarityDirectory.contactCta": "Contact →",
+  "solidarityDirectory.empty.title": "No practitioners match",
+  "solidarityDirectory.empty.description":
+    "No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care.",
+  "solidarityDirectory.empty.clearFilters": "Clear filters",
+  "solidarityDirectory.register.titleLine1": "Do you offer",
+  "solidarityDirectory.register.titleEm": "solidarity pricing?",
+  "solidarityDirectory.register.body":
+    "If you are a professional in the community and already offer sliding-scale fees, add yourself to this list. It takes ten minutes and helps people find you.",
+  "solidarityDirectory.register.cta": "Register your practice",
+  "solidarityDirectory.register.questionsLink": "Questions first? Get in touch",
+
+  // ── tools/ToolPage (shared document-generator shell, all freelance tools) ──
+  "toolPage.backToEconomy": "Back to Economy",
+  "toolPage.eyebrowFreelance": "Freelance tools",
+  "toolPage.eyebrowCommunity": "Community",
+  "toolPage.downloadPdf": "Download PDF",
+  "toolPage.copyText": "Copy text",
+  "toolPage.copiedToast": "Copied to clipboard",
+  "toolPage.reset": "Reset",
+
+  // ── tax.constants.ts — IVA rate dropdown labels (InvoiceFormFields, DayRateCalculatorPage) ──
+  "tax.ivaRate.0": "0% (exempt)",
+  "tax.ivaRate.6": "6% (reduced)",
+  "tax.ivaRate.13": "13% (intermediate)",
+  "tax.ivaRate.23": "23% (standard)",
+
+  // ── IvaTrackerForm / IvaTrackerPage / IvaTrackerStatus ─────────────────
+  "ivaTracker.title": "Stay under the <em>threshold.</em>",
+  "ivaTracker.sub":
+    "Track your invoiced income toward the €15,000 IVA-exemption limit (art. 53.º). Saved on this device only.",
+  "ivaTracker.form.whatForLabel": "What was it for",
+  "ivaTracker.form.whatForPlaceholder": "e.g. Logo design — Café Aurora",
+  "ivaTracker.form.amountLabel": "Amount (€)",
+  "ivaTracker.form.dateLabel": "Date",
+  "ivaTracker.form.addCta": "Add invoice",
+  "ivaTracker.form.loggedHead": "Logged invoices",
+  "ivaTracker.form.empty": "Nothing logged yet. Add your first invoice above.",
+  "ivaTracker.form.removeAriaLabel": "Remove {label}",
+  "ivaTracker.status.eyebrow": "Toward the €15,000 limit",
+  "ivaTracker.status.barAriaLabel":
+    "Invoiced income toward the IVA exemption threshold",
+  "ivaTracker.status.invoiced": "Invoiced",
+  "ivaTracker.status.headroomLeft": "Headroom left",
+  "ivaTracker.status.overBy": "Over by",
+  "ivaTracker.status.thresholdUsed": "Threshold used",
+  "ivaTracker.status.safeNote":
+    "Comfortably under the limit. Keep logging invoices and you'll see your headroom shrink in real time.",
+  "ivaTracker.status.nearNote":
+    "Getting close — only {remaining} of headroom left. Plan the rest of your year carefully before you cross {threshold}.",
+  "ivaTracker.status.overNote":
+    "You've passed the {threshold} exemption limit. You can finish the year exempt, but next year you'll charge IVA — and crossing {overrun} (25% over) forces you out immediately.",
+  "ivaTracker.status.overrunTitle": "You must leave the <em>exemption.</em>",
+  "ivaTracker.status.overrunBody":
+    "You're past {overrun} — more than 25% over the threshold — so the art. 53.º exemption ends in-year. You'll need to start charging IVA and drop the exemption note from your invoices.",
+  "ivaTracker.status.overrunNote": "Until now your faturas carried: {note}",
+
+  // ── InvoiceForm / InvoiceFormFields / InvoiceLineItems / InvoicePreview / InvoiceGeneratorPage ──
+  "invoiceTool.title": "Make an <em>invoice.</em>",
+  "invoiceTool.sub":
+    "Fill in the details and watch your fatura-recibo build itself. When it looks right, save it straight to PDF — no account, no upload, nothing leaves your browser.",
+  "invoiceTool.issuer.legend": "Your details",
+  "invoiceTool.issuer.nameLabel": "Name / business",
+  "invoiceTool.issuer.namePlaceholder": "Your name or studio",
+  "invoiceTool.issuer.nifLabel": "NIF",
+  "invoiceTool.issuer.emailLabel": "Email",
+  "invoiceTool.issuer.addressLabel": "Address",
+  "invoiceTool.issuer.addressPlaceholder": "Street, postcode, city",
+  "invoiceTool.issuer.ibanLabel": "IBAN",
+  "invoiceTool.client.legend": "Client",
+  "invoiceTool.client.nameLabel": "Client name",
+  "invoiceTool.client.namePlaceholder": "Who you're billing",
+  "invoiceTool.client.nifLabel": "Client NIF",
+  "invoiceTool.client.addressLabel": "Client address",
+  "invoiceTool.optional": "Optional",
+  "invoiceTool.meta.legend": "Invoice",
+  "invoiceTool.meta.numberLabel": "Invoice number",
+  "invoiceTool.meta.issueDateLabel": "Issue date",
+  "invoiceTool.meta.dueDateLabel": "Due date",
+  "invoiceTool.meta.ivaRateLabel": "IVA rate",
+  "invoiceTool.lines.legend": "Line items",
+  "invoiceTool.lines.description": "Description",
+  "invoiceTool.lines.qty": "Qty",
+  "invoiceTool.lines.unit": "Unit (€)",
+  "invoiceTool.lines.total": "Total",
+  "invoiceTool.lines.descAriaLabel": "Description for line {index}",
+  "invoiceTool.lines.qtyAriaLabel": "Quantity for line {index}",
+  "invoiceTool.lines.unitAriaLabel": "Unit price for line {index}",
+  "invoiceTool.lines.descPlaceholder": "What you delivered",
+  "invoiceTool.lines.removeAriaLabel": "Remove line {index}",
+  "invoiceTool.lines.addCta": "Add line",
+  "invoiceTool.notes.legend": "Notes",
+  "invoiceTool.notes.placeholder":
+    "Payment terms, thanks, anything the client should know.",
+  "invoiceTool.preview.yourNameFallback": "Your name",
+  "invoiceTool.preview.docLabel": "Fatura-Recibo",
+  "invoiceTool.preview.issued": "Issued {date}",
+  "invoiceTool.preview.due": "Due {date}",
+  "invoiceTool.preview.billedTo": "Billed to",
+  "invoiceTool.preview.subtotal": "Subtotal",
+  "invoiceTool.preview.ivaLabel": "IVA ({rate}%)",
+  "invoiceTool.preview.total": "Total",
+  "invoiceTool.preview.notesTitle": "Notes",
+
+  // ── ScopeForm / ScopePreview / ScopeGeneratorPage ──────────────────────
+  "scopeTool.title": "Define the <em>scope.</em>",
+  "scopeTool.sub":
+    "A clear scope (and what's out of it) prevents most disputes. Build one, send a PDF.",
+  "scopeTool.projectLabel": "Project",
+  "scopeTool.projectPlaceholder": "e.g. Brand & website refresh",
+  "scopeTool.clientLabel": "Client name",
+  "scopeTool.clientPlaceholder": "Who this is for",
+  "scopeTool.includedLegend": "What's included",
+  "scopeTool.includedHint": "The deliverables you commit to.",
+  "scopeTool.includedPlaceholder": "A deliverable",
+  "scopeTool.includedAdd": "Add deliverable",
+  "scopeTool.excludedLegend": "Not included",
+  "scopeTool.excludedHint":
+    "Naming exclusions up front prevents most disputes.",
+  "scopeTool.excludedPlaceholder": "Something out of scope",
+  "scopeTool.excludedAdd": "Add exclusion",
+  "scopeTool.itemAriaLabel": "{legend} item {index}",
+  "scopeTool.removeItemAriaLabel": "Remove {legend} item {index}",
+  "scopeTool.revisionsLabel": "Revisions",
+  "scopeTool.revisionsPlaceholder": "e.g. 2 rounds per deliverable",
+  "scopeTool.milestonesLabel": "Milestones & terms",
+  "scopeTool.milestonesPlaceholder": "Payment schedule, timeline, conditions…",
+  "scopeTool.priceLabel": "Price (optional)",
+  "scopeTool.pricePlaceholder": "Leave empty for scope only",
+  "scopeTool.validUntilLabel": "Valid until",
+  "scopeTool.preview.yourNameFallback": "Your name",
+  "scopeTool.preview.quote": "Quote",
+  "scopeTool.preview.scopeOfWork": "Scope of Work",
+  "scopeTool.preview.untitledProject": "Untitled project",
+  "scopeTool.preview.forClient": "For {client}",
+  "scopeTool.preview.forYourClient": "For your client",
+  "scopeTool.preview.included": "What's included",
+  "scopeTool.preview.addDeliverable": "Add at least one deliverable.",
+  "scopeTool.preview.notIncluded": "Not included",
+  "scopeTool.preview.revisions": "Revisions",
+  "scopeTool.preview.milestones": "Milestones & terms",
+  "scopeTool.preview.total": "Total",
+  "scopeTool.preview.validUntil": "Valid until {date}",
+  "scopeTool.disclaimer":
+    "This document is a working scope, not a binding contract. Anything not listed under “What's included” is out of scope and quoted separately.",
+  "scopeTool.plainText.quote": "QUOTE",
+  "scopeTool.plainText.scopeOfWork": "SCOPE OF WORK",
+  "scopeTool.plainText.from": "From: {name}",
+  "scopeTool.plainText.for": "For: {name}",
+  "scopeTool.plainText.project": "Project: {name}",
+  "scopeTool.plainText.included": "What's included",
+  "scopeTool.plainText.notIncluded": "Not included",
+  "scopeTool.plainText.revisions": "Revisions: {value}",
+  "scopeTool.plainText.terms": "Terms: {value}",
+  "scopeTool.plainText.total": "Total: {value}",
+  "scopeTool.plainText.validUntil": "Valid until: {date}",
+
+  // ── ContractForm / ContractClauses / ContractPreview / ContractGeneratorPage ──
+  // Scope note: CLAUSES/DOC_STRINGS in contract.data.ts are the CONTRACT
+  // DOCUMENT's own output-language toggle (English/Português, chosen by the
+  // member for the generated legal document) — orthogonal to the app's UI
+  // language and already bilingual by design. Left untouched. Only the
+  // surrounding app chrome (this section) follows the app locale.
+  "contractTool.title": "Build a <em>contract.</em>",
+  "contractTool.sub":
+    "A clear service agreement, ready in minutes. Fill in the work, pick the clauses that protect you, and export a real PDF — all in your browser.",
+  "contractTool.docLanguageLegend": "Document language",
+  "contractTool.docLanguageAriaLabel": "Document language",
+  "contractTool.providerLegend": "You (the Provider)",
+  "contractTool.clientLegend": "Your client",
+  "contractTool.nameLabel": "Name",
+  "contractTool.nifLabel": "NIF / VAT",
+  "contractTool.providerNamePlaceholder": "Your name or studio",
+  "contractTool.providerNifPlaceholder": "123 456 789",
+  "contractTool.clientNamePlaceholder": "Client or company name",
+  "contractTool.clientNifPlaceholder": "987 654 321",
+  "contractTool.projectTitleLabel": "Project title",
+  "contractTool.projectTitlePlaceholder": "e.g. Brand identity for Casa Aurora",
+  "contractTool.scopeLabel": "Scope of work",
+  "contractTool.scopePlaceholder":
+    "What you'll deliver, and what's out of scope.",
+  "contractTool.feeLabel": "Fee",
+  "contractTool.feePlaceholder": "e.g. €2,400 + IVA",
+  "contractTool.timelineLabel": "Timeline",
+  "contractTool.timelinePlaceholder": "e.g. 6 weeks from signing",
+  "contractTool.paymentTermsLabel": "Payment terms",
+  "contractTool.paymentTermsPlaceholder":
+    "e.g. 50% on signing, 50% on delivery",
+  "contractTool.governingLawLabel": "Governing law",
+  "contractTool.governingLawPlaceholder": "Portugal",
+
+  // ── ComparatorForm / ComparatorResult / ComparatorPage ─────────────────
+  "comparator.title": "Freelance or <em>salaried?</em>",
+  "comparator.sub":
+    "Compare what you'd actually take home either way at the same gross income — and weigh the costs that don't show up on a payslip.",
+  "comparator.form.grossLabel": "Annual gross income (€)",
+  "comparator.form.grossPlaceholder": "e.g. 30000",
+  "comparator.form.activityLabel": "Freelance activity type",
+  "comparator.form.yearLabel": "Tax year",
+  "comparator.form.startupLabel": "Start of activity",
+  "comparator.activityOption.services": "Liberal profession (0.75)",
+  "comparator.activityOption.otherServices": "Other services (0.35)",
+  "comparator.activityOption.goods": "Sale of goods / hospitality (0.15)",
+  "comparator.activityOption.ipCapital": "IP / capital (0.95)",
+  "comparator.startupOption.none": "Not in first 2 years",
+  "comparator.startupOption.year1": "First year (×0.5 coefficient)",
+  "comparator.startupOption.year2": "Second year (×0.75 coefficient)",
+  "comparator.result.freelanceLabel": "Freelance",
+  "comparator.result.salariedLabel": "Salaried",
+  "comparator.result.perMonth": "/ month",
+  "comparator.result.segurancaSocial": "− Segurança Social",
+  "comparator.result.irs": "− IRS",
+  "comparator.result.effectiveRate": "Effective rate",
+  "comparator.result.bottomLine": "The bottom line",
+  "comparator.result.summaryMore":
+    "As a freelancer you'd keep <em>{amount}</em> more per year",
+  "comparator.result.summaryLess":
+    "As a freelancer you'd keep <em>{amount}</em> less per year",
+  "comparator.result.subMore":
+    "at {gross} gross — that's about {monthly} a month extra in your pocket, before the costs below.",
+  "comparator.result.subLess":
+    "at {gross} gross — that's about {monthly} a month you'd give up, before the costs below.",
+  "comparator.result.costsTitle": "What the <em>payslip</em> doesn't show",
+  "comparator.hiddenCost.noHoliday":
+    "No paid holiday — you fund your own time off.",
+  "comparator.hiddenCost.noSubsidio":
+    "No subsídio de férias or de Natal (the two extra months salaried workers get).",
+  "comparator.hiddenCost.noSickLeave":
+    "No paid sick leave or guaranteed unemployment cover.",
+  "comparator.hiddenCost.ownSS":
+    "You pay your own Segurança Social, quarterly.",
+  "comparator.hiddenCost.lumpyIncome":
+    "Income is lumpy — feast or famine month to month.",
+  "comparator.hiddenCost.upside":
+    "But: deductible expenses, autonomy, and you can charge more.",
+
+  // ── RateBoardForm / RateBoardStats / RateBoardPage ─────────────────────
+  "rateBoard.title": "What we actually <em>charge.</em>",
+  "rateBoard.sub":
+    "Anonymous day rates shared by the community, so nobody has to guess. Add yours, see where you stand. Saved on this device.",
+  "rateBoard.form.title": "Add your rate",
+  "rateBoard.form.hint":
+    "No name, no email — just the numbers. It stays on this device until you export it.",
+  "rateBoard.form.roleLabel": "Role",
+  "rateBoard.form.experienceLabel": "Experience",
+  "rateBoard.form.dayRateLabel": "Day rate (€)",
+  "rateBoard.form.dayRatePlaceholder": "e.g. 350",
+  "rateBoard.form.typeLabel": "Type",
+  "rateBoard.form.addCta": "Add to the board",
+  "rateBoard.form.compareLabel": "See where you stand",
+  "rateBoard.form.comparePlaceholder": "Your day rate (€)",
+  "rateBoard.form.compareHint":
+    "We'll show your percentile against everyone here — nothing's added to the board.",
+  "rateBoard.form.addedToast": "Added anonymously",
+  "rateBoard.experienceOption.junior": "Junior (0–2 yrs)",
+  "rateBoard.experienceOption.mid": "Mid (3–5 yrs)",
+  "rateBoard.experienceOption.senior": "Senior (6–9 yrs)",
+  "rateBoard.experienceOption.lead": "Lead (10+ yrs)",
+  "rateBoard.typeOption.freelance": "Freelance",
+  "rateBoard.typeOption.employed": "Employed (day equivalent)",
+  "rateBoard.roleOption.designer": "Designer",
+  "rateBoard.roleOption.softwareEngineer": "Software Engineer",
+  "rateBoard.roleOption.writer": "Writer",
+  "rateBoard.roleOption.photographer": "Photographer",
+  "rateBoard.roleOption.consultant": "Consultant",
+  "rateBoard.roleOption.other": "Other",
+  "rateBoard.stats.emptyTitle": "Nothing here <em>yet.</em>",
+  "rateBoard.stats.emptyBody":
+    "Be the first to add a rate, or import a JSON file someone shared with you. The distribution shows up here as soon as there's data.",
+  "rateBoard.stats.communityMedian": "Community median day rate",
+  "rateBoard.stats.across": "across",
+  "rateBoard.stats.rateCount_one": "{count} rate",
+  "rateBoard.stats.rateCount_other": "{count} rates",
+  "rateBoard.stats.roleCount_one": "{count} role",
+  "rateBoard.stats.roleCount_other": "{count} roles",
+  "rateBoard.stats.yourRateSits": "Your rate of {rate} sits at the",
+  "rateBoard.stats.percentileValue": "{percentile}th percentile",
+  "rateBoard.stats.aboveMost": "Above {percent}% of rates shared here.",
+  "rateBoard.stats.belowMost":
+    "Below most rates here — you may be leaving money on the table.",
+  "rateBoard.disclaimer":
+    "Shared anonymously by community members and not verified — figures are self-reported and individual situations differ. Treat this as a starting point for the conversation, not a guarantee. Saved on this device only.",
+  "rateBoard.export": "Export JSON",
+  "rateBoard.import": "Import JSON",
+  "rateBoard.importAriaLabel": "Import a rate-board JSON file",
+  "rateBoard.exportedToast": "Exported",
+  "rateBoard.invalidFileToast":
+    "That file isn't a rate board — expected a JSON array.",
+  "rateBoard.noValidEntriesToast": "No valid entries found in that file.",
+  "rateBoard.importedToast_one": "Imported {count} entry",
+  "rateBoard.importedToast_other": "Imported {count} entries",
+  "rateBoard.readErrorToast": "Couldn't read that file — is it valid JSON?",
+  "rateBoard.readErrorGenericToast": "Couldn't read that file.",
+
+  // ── SetAsideForm / SetAsideResult / SetAsidePlannerPage ────────────────
+  "setAside.title": "Set aside the <em>tax bill.</em>",
+  "setAside.sub":
+    "Work out how much of every invoice to park now, so the IRS and Segurança Social bills don't sting later.",
+  "setAside.yourYearLegend": "Your year",
+  "setAside.grossLabel": "Expected annual gross",
+  "setAside.grossPlaceholder": "30000",
+  "setAside.grossHint":
+    "Everything you expect to invoice this year, before tax.",
+  "setAside.activityLabel": "Activity",
+  "setAside.yearLabel": "Tax year",
+  "setAside.activityOption.services":
+    "Services (liberal professions, art. 151.º)",
+  "setAside.activityOption.otherServices":
+    "Other services (not in the 0.75 set)",
+  "setAside.activityOption.goods": "Sale of goods / hospitality",
+  "setAside.logInvoiceLegend": "Log an invoice",
+  "setAside.logInvoiceHint":
+    "Add each payment as it lands. We total what you should have parked.",
+  "setAside.amountLabel": "Amount received",
+  "setAside.amountPlaceholder": "1200",
+  "setAside.dateLabel": "Date",
+  "setAside.addCta": "Add to pot",
+  "setAside.removeAriaLabel": "Remove {amount} invoice",
+  "setAside.result.parkKicker": "For every invoice, park",
+  "setAside.result.title":
+    "Set aside <em>{percent}%</em> of every euro you invoice.",
+  "setAside.result.body":
+    "On your expected {gross}, that's about {monthly} a month you keep aside for the IRS and Segurança Social — and don't spend.",
+  "setAside.result.parkPerMonth": "Park per month",
+  "setAside.result.parkThisYear": "Park this year",
+  "setAside.result.potLabel": "Your set-aside pot",
+  "setAside.result.potCount_one": "{count} invoice logged",
+  "setAside.result.potCount_other": "{count} invoices logged",
+  "setAside.result.potEmpty": "Log your first invoice to start the pot.",
+  "setAside.result.potSub":
+    "{percent}% of the {logged} you've logged so far. Keep this much untouched.",
+
+  // ── TakeHomeForm / TakeHomeResult / TakeHomeCalculatorPage ─────────────
+  "takeHome.title": "What you actually <em>take home.</em>",
+  "takeHome.sub":
+    "Punch in your yearly gross and we'll estimate what's left after IRS and Segurança Social on the regime simplificado — recalculated live as you go.",
+  "takeHome.grossLabel": "Annual gross income (€)",
+  "takeHome.grossPlaceholder": "e.g. 30000",
+  "takeHome.activityLabel": "Activity type",
+  "takeHome.statusLabel": "Worker status",
+  "takeHome.yearLabel": "Tax year",
+  "takeHome.startupLabel": "Start of activity",
+  "takeHome.activityOption.services": "Liberal profession (0.75)",
+  "takeHome.activityOption.otherServices": "Other services (0.35)",
+  "takeHome.activityOption.goods": "Sale of goods / hospitality (0.15)",
+  "takeHome.activityOption.ipCapital": "IP / capital (0.95)",
+  "takeHome.startupOption.none": "Not in first 2 years",
+  "takeHome.startupOption.year1": "Year 1 (×0.5 coefficient)",
+  "takeHome.startupOption.year2": "Year 2 (×0.75 coefficient)",
+  "takeHome.statusOption.freelancer": "Freelancer (21.4% SS)",
+  "takeHome.statusOption.eni": "ENI — empresário em nome individual (25.2% SS)",
+  "takeHome.result.netLabel": "You take home, after IRS & Segurança Social",
+  "takeHome.result.perMonth": "a month",
+  "takeHome.result.keepCaption":
+    "You keep <em>{percent}%</em> of every euro you bill. Effective IRS + SS rate: {rate}%.",
+  "takeHome.result.barAriaLabel": "You keep {percent}% of your gross income",
+  "takeHome.result.annualGross": "Annual gross",
+  "takeHome.result.segurancaSocial": "− Segurança Social",
+  "takeHome.result.taxableIncome": "Taxable income",
+  "takeHome.result.irs": "− IRS",
+  "takeHome.result.netTakeHome": "Net take-home",
+
+  // ── DayRateCalculatorPage / DayRateResult ──────────────────────────────
+  "dayRate.title": "Price your <em>day.</em>",
+  "dayRate.sub":
+    "Work back from the income you need to a day rate that actually sustains you — overhead, unpaid days, and IVA included.",
+  "dayRate.annualLabel": "Target annual income (€)",
+  "dayRate.daysLabel": "Billable days per year",
+  "dayRate.overheadLabel": "Overhead & expenses (% of income)",
+  "dayRate.hoursLabel": "Hours per billable day",
+  "dayRate.ivaLabel": "IVA rate",
+  "dayRate.result.heading": "Your day rate",
+  "dayRate.result.minLabel": "Minimum day rate (excl. IVA)",
+  "dayRate.result.withIvaLabel": "Including IVA",
+  "dayRate.result.hourlyLabel": "Hourly (excl. IVA)",
+  "dayRate.result.note":
+    "A starting point — adjust for your sector and market.",
+
+  // ── SlidingScaleForm / SlidingScalePreview / SlidingScalePage ──────────
+  "slidingScale.title": "Price with <em>solidarity.</em>",
+  "slidingScale.sub":
+    "Publish a sliding scale so people pay what fits their means — and you still get paid fairly. Export a card to share.",
+  "slidingScale.yourNameLabel": "Your name",
+  "slidingScale.yourNamePlaceholder": "The name people will see",
+  "slidingScale.serviceLabel": "Service / offering",
+  "slidingScale.servicePlaceholder": "e.g. 1:1 coaching session",
+  "slidingScale.introLabel": "Intro line",
+  "slidingScale.introPlaceholder": "A warm line that frames the scale.",
+  "slidingScale.tierLegend": "Tier {index}",
+  "slidingScale.tierNameLabel": "Tier name",
+  "slidingScale.tierNamePlaceholder": "e.g. Supported",
+  "slidingScale.tierPriceLabel": "Price",
+  "slidingScale.tierPricePlaceholder": "e.g. €60",
+  "slidingScale.tierForWhomLabel": "Who it's for",
+  "slidingScale.tierForWhomPlaceholder":
+    "The honest guidance that helps people self-select.",
+  "slidingScale.preview.kind": "Sliding scale",
+  "slidingScale.preview.yourNameFallback": "Your name",
+  "slidingScale.preview.offeringFallback": "Your offering",
+  "slidingScale.preview.tierFallback": "Tier",
+  "slidingScale.preview.priceFallback": "—",
+  "slidingScale.preview.outro":
+    "Pay the tier that's honest for you. Choosing higher keeps this work open to everyone.",
+  "slidingScale.disclaimer":
+    "These tiers are this maker's own pricing — a sliding scale offered in good faith, not a fixed market rate or a means test.",
+
+  // ── ReciboVerdeGuidePage (page chrome only — see report re: GUIDE_SECTIONS) ──
+  // Scope note: the guide's own section titles/bodies (reciboVerdeGuide.data.tsx
+  // GUIDE_SECTIONS) are dense, article-citing pt-PT tax/legal explanations —
+  // flagged and deliberately left English rather than risk a subtly wrong tax
+  // instruction. Only this page's surrounding chrome is translated.
+  "reciboGuide.heroTitle": "The recibos verdes <em>guide.</em>",
+  "reciboGuide.heroLead":
+    "Going freelance in Portugal shouldn't mean drowning in jargon. Here's the whole recibos verdes system in plain, warm language — how to register, what you'll owe, and the handful of dates that actually matter. Take it one section at a time.",
+  "reciboGuide.ctaTitle": "Ready to <em>send one?</em>",
+  "reciboGuide.ctaText":
+    "The invoice tool turns everything above into a finished fatura-recibo — right coefficients, right notes, right maths.",
+  "reciboGuide.makeInvoiceCta": "Make an invoice",
+  "reciboGuide.backToEconomy": "Back to Economy",
+  "reciboGuide.disclaimerTitle": "Not <em>tax advice.</em>",
+
+  // ── HousingCoopPage (+ Sections) ────────────────────────────────────────
+  // Scope note: housingCoop.data.ts's FORMING_COOPS (specific co-ops, member
+  // counts, financials) is a directory of real-world entries — in live mode
+  // this would be fetched. Left in English, same as the grants directory.
+  // COOP_STATS/COOP_PHASES/COOP_TEMPLATES/COOP_RESOURCES are also left as-is
+  // for now (out of time budget this pass) — flagged in the sweep report.
+  "housingCoop.backLabel": "Housing",
+  "housingCoop.hero.eyebrow":
+    "Housing co-op formation · Portugal-first, expandable",
+  "housingCoop.hero.title": "Build a co-op <em>together</em>.",
+  "housingCoop.hero.sub":
+    "A toolkit for forming a queer housing co-operative in Portugal — from finding the people, through the legal incorporation, the financing, the property, the daily governance. <em>Five phases, real templates, members already in each one.</em>",
+  "housingCoop.hero.statsHead": "Co-ops forming now",
+  "housingCoop.phases.title": "Five <em>phases</em> from idea to keys",
+  "housingCoop.phases.sub":
+    "Realistic timeline: 14–28 months. Each phase has templates, real examples from existing co-ops, and a mentor you can reach when stuck.",
+  "housingCoop.grid.title": "Co-ops <em>forming now</em>",
+  "housingCoop.grid.seeAll": "All 8 →",
+  "housingCoop.templates.title": "Templates & <em>tools</em>",
+  "housingCoop.templates.sub":
+    "Every document we wish someone had given us. Drafted with QueerPulse legal, translated PT & EN, stress-tested by Casa Sambizanga's first two years.",
+  "housingCoop.templates.download": "Download →",
+  "housingCoop.startCta.eyebrow": "Start a co-op",
+  "housingCoop.startCta.title": "Don't have <em>your people yet</em>?",
+  "housingCoop.startCta.body":
+    "Post that you're starting and we'll match you with other members in your city looking for the same thing. Most co-ops start with 2–3 people and grow to 6+ over the first 6 months. <em>Casa Sambizanga started with three.</em>",
+  "housingCoop.startCta.postCta": "Post that you're starting",
+  "housingCoop.startCta.storyCta": "Read Casa Sambizanga's story",
+  "housingCoop.startCta.resourcesHead": "Resources & mentors",
+  "housingCoop.toast.updates": "You'll get {name}'s updates in your feed.",
+  "housingCoop.toast.mentoring": "Mentoring request sent to Casa Sambizanga.",
+  "housingCoop.toast.seeAll": "The full co-op directory is coming soon.",
+  "housingCoop.toast.preparingDownload": "Preparing “{name}” for download…",
+  "housingCoop.toast.postHelp":
+    "We'll help you find your people — check your inbox.",
+  "housingCoop.toast.story": "Casa Sambizanga's story is coming soon.",
+
+  // ── JoinCoopModal ────────────────────────────────────────────────────────
+  "joinCoop.askToJoinAriaLabel": "Ask to join {name}",
+  "joinCoop.success.title": "Request",
+  "joinCoop.success.em": "sent.",
+  "joinCoop.success.closeLabel": "Done",
+  "joinCoop.success.body":
+    "The organisers of <strong>{name}</strong> will see your interest and reach out to arrange a first conversation. No commitment yet — the early chats are about whether the fit is right, both ways.",
+  "joinCoop.title": "Ask to join <em>{name}.</em>",
+  "joinCoop.sub":
+    "{location}. Tell them a little about who's joining — they'll follow up to set up a first conversation.",
+  "joinCoop.nameLabel": "Your name *",
+  "joinCoop.namePlaceholder": "What should we call you?",
+  "joinCoop.householdLabel": "Who's joining *",
+  "joinCoop.chooseOne": "Choose one…",
+  "joinCoop.noteLabel": "Anything you'd like them to know",
+  "joinCoop.notePlaceholder":
+    "What draws you to this co-op? Your situation, timeline, hopes…",
+  "joinCoop.disclaimer":
+    "Your request is shared only with this co-op's organisers. Joining a co-op is a long conversation, not a click — take your time.",
+  "joinCoop.cancel": "Cancel",
+  "joinCoop.sending": "Sending…",
+  "joinCoop.sendCta": "Send request",
+  "joinCoop.household.justMe": "Just me",
+  "joinCoop.household.mePlusPartners": "Me + partner(s)",
+  "joinCoop.household.small": "A household of 3–4",
+  "joinCoop.household.large": "A household of 5+",
+
+  // ── OfferPage (Asks & Offers board detail) ─────────────────────────────
+  // Scope note: MAIN/OTHERS in OfferPage.tsx (the zine-collab ask, the free
+  // portraits/mentoring/sublet offers, poster names/roles/bios) are
+  // member-authored marketplace posts — in live mode fetched from the board.
+  // Left in English. Only the surrounding chrome below is translated.
+  "offerBoard.backLink": "← Asks & Offers",
+  "offerBoard.pill.looking": "Looking for",
+  "offerBoard.pill.offering": "Offering",
+  "offerBoard.respondCta": "Respond to {name} →",
+  "offerBoard.seeProfileCta": "See their profile",
+  "offerBoard.postedBy": "Posted by",
+  "offerBoard.sidebarNote":
+    "{name} is a member in good standing. Every member is vouched for by someone already in the room.",
+  "offerBoard.sidebarNoteVerified":
+    "{name} is a member in good standing and has been verified by the team. Every member is vouched for by someone already in the room.",
+  "offerBoard.sayHelloCta": "Say hello to {name}",
+  "offerBoard.moreFromBoard": "More from <em>the board</em>",
+
+  // ── SalarySubmitModal ────────────────────────────────────────────────────
+  "salarySubmitModal.subtitle":
+    "Completely anonymous. Nothing that could identify you is stored.",
+  "salarySubmitModal.jobTitlePlaceholder": "Job title / role",
+  "salarySubmitModal.sectorPlaceholder": "Sector (e.g. Tech, NGO, Design)",
+  "salarySubmitModal.annualSalaryPlaceholder": "Annual salary (€)",
+  "salarySubmitModal.yearsExpPlaceholder": "Years of experience",
+  "salarySubmitModal.employmentTypeLabel": "Employment type",
+  "salarySubmitModal.type.fullTime": "Full-time",
+  "salarySubmitModal.type.partTime": "Part-time",
+  "salarySubmitModal.type.freelance": "Freelance",
+  "salarySubmitModal.type.contract": "Contract",
+  "salarySubmitModal.submitCta": "Submit anonymously",
+
+  // ── AffiliateCompanyModal ────────────────────────────────────────────────
+  "affiliateRole.founder": "Founder / owner",
+  "affiliateRole.hiringLead": "Hiring lead",
+  "affiliateRole.teamMember": "Team member",
+  "affiliateRole.recruiter": "Recruiter",
+  "affiliateRole.volunteerCoordinator": "Volunteer coordinator",
+  "affiliateCompanyModal.ariaLabel": "Affiliate your company",
+  "affiliateCompanyModal.eyebrow": "Employer access",
+  "affiliateCompanyModal.title": "Which company are you <em>posting for?</em>",
+  "affiliateCompanyModal.sub":
+    "Pick the organisation you're authorised to hire for. We confirm employer affiliations to keep the board trustworthy.",
+  "affiliateCompanyModal.notListed.name": "My company isn't listed",
+  "affiliateCompanyModal.notListed.meta": "Add it to the directory",
+  "affiliateCompanyModal.addCompany.nameLabel": "Company name",
+  "affiliateCompanyModal.addCompany.namePlaceholder": "e.g. Atelier Pulso",
+  "affiliateCompanyModal.addCompany.taglineLabel": "One-line tagline",
+  "affiliateCompanyModal.addCompany.taglinePlaceholder":
+    "What the company does, in a sentence.",
+  "affiliateCompanyModal.addCompany.aboutLabel": "About",
+  "affiliateCompanyModal.addCompany.aboutPlaceholder":
+    "A short description of the company and how it works.",
+  "affiliateCompanyModal.addCompany.pickExisting": "← Pick an existing company",
+  "affiliateCompanyModal.roleLabel": "Your role there",
+  "affiliateCompanyModal.cancel": "Cancel",
+  "affiliateCompanyModal.creating": "Creating…",
+  "affiliateCompanyModal.verifying": "Verifying…",
+  "affiliateCompanyModal.createCta": "Create & continue",
+  "affiliateCompanyModal.confirmCta": "Confirm & continue",
+  "affiliateCompanyModal.createErrorToast":
+    "We couldn't create that company. Please try again.",
+
+  // ── IncubatorModals: CohortApplyModal ────────────────────────────────────
+  "incubatorApply.success.title": "Application",
+  "incubatorApply.success.em": "received.",
+  "incubatorApply.success.body":
+    "Thanks, <strong>{name}</strong>. Cohort 3 applications are read by the programme team after the 30 July deadline — you'll hear back within three weeks, whatever we decide.",
+  "incubatorApply.eyebrow": "Incubator · Cohort 3",
+  "incubatorApply.title": "Apply to <em>build your thing.</em>",
+  "incubatorApply.sub":
+    "Six months of mentorship, peer accountability, and warm intros. No pitch deck required — just tell us what you're making and where you're at.",
+  "incubatorApply.nameLabel": "Your name *",
+  "incubatorApply.namePlaceholder": "First and last",
+  "incubatorApply.emailLabel": "Email *",
+  "incubatorApply.pitchLabel": "What are you building? *",
+  "incubatorApply.pitchPlaceholder":
+    "A couple of sentences on your idea, where you are, and what you most need help with.",
+  "incubatorApply.charsNeeded_one":
+    "{count} more character in your pitch to submit.",
+  "incubatorApply.charsNeeded_other":
+    "{count} more characters in your pitch to submit.",
+  "incubatorApply.looksGood":
+    "Looks good. Decisions go out within three weeks of the deadline.",
+  "incubatorApply.submitCta": "Submit application",
+
+  // ── IncubatorModals: MentorSignupModal ───────────────────────────────────
+  "mentorSignup.success.title": "You're on the",
+  "mentorSignup.success.em": "list.",
+  "mentorSignup.success.body":
+    "Thank you, <strong>{name}</strong>. The mentorship team will reach out to match you with a founder whose sector and stage fit what you offer. Mentors meet their match fortnightly across the cohort.",
+  "mentorSignup.eyebrow": "Incubator · Mentorship",
+  "mentorSignup.title": "Become a <em>mentor.</em>",
+  "mentorSignup.sub":
+    "Give a few hours a month to a queer founder finding their feet. We match on sector, stage, and the things you actually know.",
+  "mentorSignup.nameLabel": "Your name *",
+  "mentorSignup.namePlaceholder": "First and last",
+  "mentorSignup.emailLabel": "Email *",
+  "mentorSignup.expertiseLabel": "Where can you help? *",
+  "mentorSignup.expertisePlaceholder":
+    "e.g. Product, fundraising, legal, hiring",
+  "mentorSignup.whyLabel": "Why mentor? *",
+  "mentorSignup.whyPlaceholder":
+    "A sentence or two on what you'd bring and who you'd most like to support.",
+  "mentorSignup.charsNeeded_one": "{count} more character to submit.",
+  "mentorSignup.charsNeeded_other": "{count} more characters to submit.",
+  "mentorSignup.looksGood":
+    "We review every mentor before matching — expect to hear from us soon.",
+  "mentorSignup.submitCta": "Sign up to mentor",
+
+  // ── IncubatorModals: RequestSessionModal ─────────────────────────────────
+  "requestSession.success.title": "Session",
+  "requestSession.success.em": "requested.",
+  "requestSession.success.body":
+    "Your request reached <strong>{name}</strong>. Mentors reply within a few days to confirm a time — keep an eye on your email, and the intro will come from there.",
+  "requestSession.eyebrow": "Incubator · {role}",
+  "requestSession.title": "Request a session with <em>{name}.</em>",
+  "requestSession.sub":
+    "A short note goes a long way. Say what you're working on and when you'd like to meet — {firstName} will reply to set it up.",
+  "requestSession.whenLabel": "Preferred time *",
+  "requestSession.whenPlaceholder":
+    "e.g. Weekday evenings, or Tue/Thu afternoons",
+  "requestSession.messageLabel": "What would you like to talk through? *",
+  "requestSession.messagePlaceholder":
+    "A couple of sentences on where you are and what you'd most like help with.",
+  "requestSession.looksGood":
+    "Looks good. Mentors usually reply within a few days.",
+  "requestSession.sendCta": "Send request",
 };

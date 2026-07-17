@@ -2,6 +2,8 @@ import { useState } from "react";
 import { ToolPage } from "./tools/ToolPage";
 import { TakeHomeForm } from "./TakeHomeForm";
 import { TakeHomeResult } from "./TakeHomeResult";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TaxYear } from "./tax.calc";
 import type { ActivityKey, StartupYear, WorkerStatus } from "./takeHome.data";
 
@@ -27,19 +29,21 @@ const INITIAL: TakeHomeState = {
  * `estimateTakeHome` and the constants in `tax.constants.ts`.
  */
 export function TakeHomeCalculatorPage() {
+  const { t } = useTranslation();
   const [state, setState] = useState<TakeHomeState>(INITIAL);
   const patch = (next: Partial<TakeHomeState>) =>
     setState((s) => ({ ...s, ...next }));
 
   return (
     <ToolPage
-      eyebrow="Freelance tools"
+      eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <>
-          What you actually <em>take home.</em>
-        </>
+        <Translation
+          i18nKey="economy:takeHome.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Punch in your yearly gross and we'll estimate what's left after IRS and Segurança Social on the regime simplificado — recalculated live as you go."
+      sub={t("economy:takeHome.sub")}
       form={
         <TakeHomeForm
           gross={state.gross}

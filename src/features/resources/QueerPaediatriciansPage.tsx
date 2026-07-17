@@ -2,39 +2,51 @@ import { FiCheckCircle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { PROVIDERS, HOW_IT_WORKS } from "./queerPaediatricians.data";
+import { PROVIDERS } from "./queerPaediatricians.data";
 import styles from "./resources.module.css";
 
 export function QueerPaediatriciansPage() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Queer Parents"
+        eyebrow={t("resources:queerPaediatricians.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Doctors who <em>don't blink.</em>
-          </>
+          <Translation
+            i18nKey="resources:queerPaediatricians.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Paediatricians in Lisbon that families in the network actually trust — ones who won't pause at two mums on the intake form and who talk to both of you equally. Peer-verified, dated, honest."
+        lead={t("resources:queerPaediatricians.hero.lead")}
         anchors={[
-          { label: "The list", href: "#list" },
-          { label: "How it works", href: "#how" },
+          {
+            label: t("resources:queerPaediatricians.hero.anchor.list"),
+            href: "#list",
+          },
+          {
+            label: t("resources:queerPaediatricians.hero.anchor.how"),
+            href: "#how",
+          },
         ]}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`} id="list">
         <div className="wrap">
           <Reveal as="h2">
-            The <em>list</em>
+            <Translation
+              i18nKey="resources:queerPaediatricians.list.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Every entry added by a parent who sees them. Dates show the last
-            peer check.
+            {t("resources:queerPaediatricians.list.lead")}
           </Reveal>
           <div className={styles.grid}>
             {PROVIDERS.map((p, i) => (
@@ -50,26 +62,24 @@ export function QueerPaediatriciansPage() {
                 </div>
                 <div className={styles.cardSpec}>{p.notedFor}</div>
                 <div className={styles.tags}>
-                  {p.tags.map((t) => (
-                    <span key={t} className={styles.tag}>
-                      {t}
+                  {p.tags.map((tag) => (
+                    <span key={tag} className={styles.tag}>
+                      {tag}
                     </span>
                   ))}
                 </div>
               </Reveal>
             ))}
             <div className={`${styles.card} ${styles.cardDashed}`}>
-              Know a paediatrician the community should have?
+              {t("resources:queerPaediatricians.suggest.prompt")}
               <Button
                 variant="ghost"
                 style={{ marginTop: 12 }}
                 onClick={() =>
-                  showToast(
-                    "Thanks — a parent mod will follow up to add and verify them.",
-                  )
+                  showToast(t("resources:queerPaediatricians.suggest.toast"))
                 }
               >
-                Suggest a provider
+                {t("resources:queerPaediatricians.suggest.cta")}
               </Button>
             </div>
           </div>
@@ -79,31 +89,31 @@ export function QueerPaediatriciansPage() {
       <section className={`${styles.section} ${styles.sectionCream}`} id="how">
         <div className="wrap">
           <Reveal as="h2">
-            How the list <em>works</em>
+            <Translation
+              i18nKey="resources:queerPaediatricians.how.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
-          {HOW_IT_WORKS.map((p) => (
-            <Reveal
-              as="p"
-              key={p}
-              className={styles.leadP}
-              style={{ maxWidth: "64ch" }}
-            >
-              {p}
-            </Reveal>
-          ))}
+          <Reveal as="p" className={styles.leadP} style={{ maxWidth: "64ch" }}>
+            {t("resources:queerPaediatricians.how1")}
+          </Reveal>
+          <Reveal as="p" className={styles.leadP} style={{ maxWidth: "64ch" }}>
+            {t("resources:queerPaediatricians.how2")}
+          </Reveal>
         </div>
       </section>
 
       <Outro
         title={
-          <>
-            Ask the <em>network.</em>
-          </>
+          <Translation
+            i18nKey="resources:queerPaediatricians.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Looking for something specific — a dentist, a therapist for a teen? The parents forum is the fastest way to a trusted name."
+        sub={t("resources:queerPaediatricians.outro.sub")}
       >
         <Button to={routes.forum} variant="primary" size="lg">
-          Ask in the forum
+          {t("resources:queerPaediatricians.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

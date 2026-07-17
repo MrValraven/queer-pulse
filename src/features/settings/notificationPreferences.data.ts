@@ -1,6 +1,7 @@
 export interface MatrixRow {
-  label: string;
-  sub: string;
+  id: string;
+  labelKey: string;
+  subKey: string;
   app: boolean;
   email: boolean;
   push: boolean;
@@ -8,74 +9,85 @@ export interface MatrixRow {
 
 export const MATRIX_ROWS: MatrixRow[] = [
   {
-    label: "Direct message received",
-    sub: "Someone sends you a DM",
+    id: "dm",
+    labelKey: "settings:notifPrefs.row.dm.label",
+    subKey: "settings:notifPrefs.row.dm.sub",
     app: true,
     email: true,
     push: true,
   },
   {
-    label: "Forum reply to your post",
-    sub: "Someone replies to a thread you started",
+    id: "forumReply",
+    labelKey: "settings:notifPrefs.row.forumReply.label",
+    subKey: "settings:notifPrefs.row.forumReply.sub",
     app: true,
     email: false,
     push: true,
   },
   {
-    label: "Forum mention",
-    sub: "Someone uses @yourname in a post",
+    id: "forumMention",
+    labelKey: "settings:notifPrefs.row.forumMention.label",
+    subKey: "settings:notifPrefs.row.forumMention.sub",
     app: true,
     email: false,
     push: true,
   },
   {
-    label: "Event RSVP reminder",
-    sub: "24h before an event you've signed up for",
+    id: "rsvpReminder",
+    labelKey: "settings:notifPrefs.row.rsvpReminder.label",
+    subKey: "settings:notifPrefs.row.rsvpReminder.sub",
     app: true,
     email: true,
     push: false,
   },
   {
-    label: "New event in your area",
-    sub: "Events matching your interests",
+    id: "newEvent",
+    labelKey: "settings:notifPrefs.row.newEvent.label",
+    subKey: "settings:notifPrefs.row.newEvent.sub",
     app: true,
     email: false,
     push: false,
   },
   {
-    label: "Magazine new issue",
-    sub: "When the monthly issue goes live",
+    id: "magazineIssue",
+    labelKey: "settings:notifPrefs.row.magazineIssue.label",
+    subKey: "settings:notifPrefs.row.magazineIssue.sub",
     app: false,
     email: true,
     push: false,
   },
   {
-    label: "Connection request",
-    sub: "A member wants to connect with you",
+    id: "connectionRequest",
+    labelKey: "settings:notifPrefs.row.connectionRequest.label",
+    subKey: "settings:notifPrefs.row.connectionRequest.sub",
     app: true,
     email: false,
     push: false,
   },
   {
-    label: "Mental health fund update",
-    sub: "If you're using the fund, status changes",
+    id: "mentalHealthFund",
+    labelKey: "settings:notifPrefs.row.mentalHealthFund.label",
+    subKey: "settings:notifPrefs.row.mentalHealthFund.sub",
     app: true,
     email: true,
     push: false,
   },
 ];
 
-export const ALWAYS_ON: { title: string; desc: string }[] = [
+export const ALWAYS_ON: { id: string; titleKey: string; descKey: string }[] = [
   {
-    title: "Security alerts",
-    desc: "New sign-in from an unrecognised device or location.",
+    id: "securityAlerts",
+    titleKey: "settings:notifPrefs.alwaysOn.securityAlerts.title",
+    descKey: "settings:notifPrefs.alwaysOn.securityAlerts.desc",
   },
   {
-    title: "Data export ready",
-    desc: "When your data archive is available to download.",
+    id: "dataExportReady",
+    titleKey: "settings:notifPrefs.alwaysOn.dataExportReady.title",
+    descKey: "settings:notifPrefs.alwaysOn.dataExportReady.desc",
   },
   {
-    title: "Moderation decisions",
-    desc: "If a moderator acts on content you posted.",
+    id: "moderationDecisions",
+    titleKey: "settings:notifPrefs.alwaysOn.moderationDecisions.title",
+    descKey: "settings:notifPrefs.alwaysOn.moderationDecisions.desc",
   },
 ];

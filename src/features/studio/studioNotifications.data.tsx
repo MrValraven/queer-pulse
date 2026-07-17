@@ -28,7 +28,7 @@ export type NotifIcon =
   | { kind: "sys"; node: ReactNode }
   | { kind: "live"; node: ReactNode };
 
-export type NotifAction = { label: string };
+export type NotifAction = { labelKey: string };
 
 export type NotifItem = {
   id: string;
@@ -76,7 +76,7 @@ export const NOTIFICATIONS: NotifItem[] = [
       </>
     ),
     meta: <>312 in the room · contains 3 artists you follow</>,
-    action: { label: "Join the room" },
+    action: { labelKey: "studio:notifications.action.joinRoom" },
   },
   {
     id: "akin-single",
@@ -158,7 +158,7 @@ export const NOTIFICATIONS: NotifItem[] = [
       </>
     ),
     meta: <>10 Jun · 21:00 Lisbon · listening room · you'll be reminded</>,
-    action: { label: "RSVP" },
+    action: { labelKey: "studio:notifications.action.rsvp" },
   },
   {
     id: "solidarity-fund",
@@ -180,9 +180,9 @@ export const NOTIFICATIONS: NotifItem[] = [
 
 export type Filter = "all" | NotifType;
 
-export const FILTERS: { key: Filter; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "reply", label: "Replies" },
-  { key: "release", label: "Releases" },
-  { key: "live", label: "Live" },
+export const FILTERS: { key: Filter; labelKey: string }[] = [
+  { key: "all", labelKey: "studio:notifications.filter.all" },
+  { key: "reply", labelKey: "studio:notifications.filter.reply" },
+  { key: "release", labelKey: "studio:notifications.filter.release" },
+  { key: "live", labelKey: "studio:notifications.filter.live" },
 ];

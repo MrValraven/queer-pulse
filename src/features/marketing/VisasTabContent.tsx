@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import type { Tab } from "./visas.data";
 import styles from "./VisasPage.module.css";
 
@@ -9,19 +11,25 @@ export function VisasTabContent({
   tab: Tab;
   onPartnerLink: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.tabContent}>
       <div className="wrap">
         <div className={styles.tabHead}>
-          <h2>{tab.headTitle}</h2>
-          <p>{tab.headText}</p>
+          <h2>
+            <Translation
+              i18nKey={tab.headTitleKey}
+              components={{ em: <em /> }}
+            />
+          </h2>
+          <p>{t(tab.headTextKey)}</p>
         </div>
         <div className={styles.infoGrid}>
           {tab.cards.map((card) => (
-            <div className={styles.infoCard} key={card.title}>
-              <div className={styles.icEyebrow}>{card.eyebrow}</div>
-              <div className={styles.icTitle}>{card.title}</div>
-              <div className={styles.icBody}>{card.body}</div>
+            <div className={styles.infoCard} key={card.titleKey}>
+              <div className={styles.icEyebrow}>{t(card.eyebrowKey)}</div>
+              <div className={styles.icTitle}>{t(card.titleKey)}</div>
+              <div className={styles.icBody}>{t(card.bodyKey)}</div>
               {card.tag && (
                 <span
                   className={[
@@ -31,7 +39,7 @@ export function VisasTabContent({
                       : styles.tagAccent,
                   ].join(" ")}
                 >
-                  {card.tag.label}
+                  {t(card.tag.labelKey)}
                 </span>
               )}
               {card.link && (
@@ -50,10 +58,10 @@ export function VisasTabContent({
                         textDecoration: "underline",
                       }}
                     >
-                      {card.link.label}
+                      {t(card.link.labelKey)}
                     </button>
                   ) : (
-                    <Link to={card.link.href}>{card.link.label}</Link>
+                    <Link to={card.link.href}>{t(card.link.labelKey)}</Link>
                   )}
                 </div>
               )}
@@ -63,14 +71,14 @@ export function VisasTabContent({
 
         {tab.steps && (
           <div className={styles.steps}>
-            {tab.steps.map((step, i) => (
-              <div className={styles.step} key={step.title}>
-                <div className={styles.stepNum}>{i + 1}</div>
+            {tab.steps.map((step, index) => (
+              <div className={styles.step} key={step.titleKey}>
+                <div className={styles.stepNum}>{index + 1}</div>
                 <div className={styles.stepInfo}>
-                  <div className={styles.stepTitle}>{step.title}</div>
-                  <div className={styles.stepText}>{step.text}</div>
-                  {step.note && (
-                    <div className={styles.stepNote}>{step.note}</div>
+                  <div className={styles.stepTitle}>{t(step.titleKey)}</div>
+                  <div className={styles.stepText}>{t(step.textKey)}</div>
+                  {step.noteKey && (
+                    <div className={styles.stepNote}>{t(step.noteKey)}</div>
                   )}
                 </div>
               </div>

@@ -1,6 +1,8 @@
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminChip, AdminCat, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { type Community, type QueueItem } from "./adminCommunities.data";
@@ -11,6 +13,7 @@ const SHOWN = 2;
 // ── Scoped queue pane ───────────────────────────────────────────────────────
 
 export function ScopedQueuePane({ community }: { community: Community }) {
+  const { t } = useTranslation();
   const { queue, resolvedPct } = community;
 
   if (queue.length === 0) {
@@ -21,11 +24,13 @@ export function ScopedQueuePane({ community }: { community: Community }) {
             <FiCheck />
           </span>
           <h3 className={styles.calmTitle}>
-            Nothing open, <em>nothing owed</em>.
+            <Translation
+              i18nKey="admin:communities.queue.emptyTitle"
+              components={{ em: <em /> }}
+            />
           </h3>
           <p className={styles.calmText}>
-            This community resolves everything itself — a {resolvedPct}% on-time
-            record. Its moderators rarely need you.
+            {t("admin:communities.queue.emptyText", { pct: resolvedPct })}
           </p>
         </div>
       </div>
@@ -42,7 +47,7 @@ export function ScopedQueuePane({ community }: { community: Community }) {
       ))}
       {extra > 0 && (
         <div className={styles.queueMore}>
-          + {extra} more being handled by the community's own moderators
+          {t("admin:communities.queue.moreHandled", { count: extra })}
         </div>
       )}
     </div>
@@ -50,6 +55,7 @@ export function ScopedQueuePane({ community }: { community: Community }) {
 }
 
 function ReportRow({ item }: { item: QueueItem }) {
+  const { t } = useTranslation();
   const catTone =
     item.catTone === "danger"
       ? "danger"
@@ -63,12 +69,14 @@ function ReportRow({ item }: { item: QueueItem }) {
         aria-hidden
       />
       <div className={styles.reportBody}>
+        {/* item.catLabel/title/meta: report content, mirrors API-fetched
+            report text in live mode — left in English per the scope rule. */}
         <AdminCat tone={catTone}>{item.catLabel}</AdminCat>
         <div className={styles.reportTitle}>{item.title}</div>
         <div className={styles.reportMeta}>{item.meta}</div>
       </div>
       <Button variant="primary" to={routes.adminModeration}>
-        Review →
+        {t("admin:communities.queue.reviewCta")} →
       </Button>
     </div>
   );
@@ -77,6 +85,7 @@ function ReportRow({ item }: { item: QueueItem }) {
 // ── Members pane ────────────────────────────────────────────────────────────
 
 export function MembersPane({ community }: { community: Community }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.pane}>
       {community.mods.map((m) => (
@@ -96,12 +105,17 @@ export function MembersPane({ community }: { community: Community }) {
             </div>
             <div className={styles.memberDetail}>{m.role}</div>
           </div>
-          <AdminChip tone="jade">Moderator</AdminChip>
+          <AdminChip tone="jade">
+            {t("admin:communities.members.moderatorChip")}
+          </AdminChip>
         </div>
       ))}
 
       <Button variant="ghost" to={routes.adminMembers}>
-        See all {community.members} members →
+        {t("admin:communities.members.seeAllCta", {
+          total: community.members,
+        })}{" "}
+        →
       </Button>
     </div>
   );

@@ -1,13 +1,15 @@
 import type { ImageSlotTint } from "../../shared/components/ui";
 
+// `id` is the stable filter value matched against `Result.kind` and stored in
+// component state — never translate it directly; `labelKey` resolves via t().
 export const FILTERS = [
-  "Everything",
-  "Artists",
-  "Albums",
-  "Sets",
-  "Collections",
-  "Sheet music",
-];
+  { id: "Everything", labelKey: "studio:search.filter.everything" },
+  { id: "Artists", labelKey: "studio:search.filter.artists" },
+  { id: "Albums", labelKey: "studio:search.filter.albums" },
+  { id: "Sets", labelKey: "studio:search.filter.sets" },
+  { id: "Collections", labelKey: "studio:search.filter.collections" },
+  { id: "Sheet music", labelKey: "studio:search.filter.sheetMusic" },
+] as const;
 
 export interface Result {
   pre: string;

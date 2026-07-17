@@ -1,3 +1,5 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Mentor } from "./mentorship.data";
 import styles from "./MentorDetailPage.module.css";
 
@@ -9,18 +11,23 @@ export function MentorDetailSections({
   m: Mentor;
   first: string;
 }) {
+  const { t } = useTranslation();
   const fit = [
-    { label: "You'd benefit if…", text: m.fitFor[0] },
-    { label: "And ideally…", text: m.fitFor[1] },
-    { label: "And maybe…", text: m.fitFor[2] },
-    { label: "Not the right call if…", text: m.fitNot[0] },
+    { labelKey: "economy:mentorDetail.fit.benefitIf", text: m.fitFor[0] },
+    { labelKey: "economy:mentorDetail.fit.andIdeally", text: m.fitFor[1] },
+    { labelKey: "economy:mentorDetail.fit.andMaybe", text: m.fitFor[2] },
+    { labelKey: "economy:mentorDetail.fit.notRightCall", text: m.fitNot[0] },
   ].filter((x) => x.text);
 
   return (
     <main>
       <section className={styles.sec}>
         <h2>
-          How {first} <em>mentors</em>
+          <Translation
+            i18nKey="economy:mentorDetail.section.howTheyMentor"
+            values={{ firstName: first }}
+            components={{ em: <em /> }}
+          />
         </h2>
         {m.howParas.map((para, i) => (
           <p key={i}>{para}</p>
@@ -29,12 +36,15 @@ export function MentorDetailSections({
 
       <section className={styles.sec}>
         <h2>
-          Who you'd <em>be a fit for</em>
+          <Translation
+            i18nKey="economy:mentorDetail.section.fitFor"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.whatGrid}>
           {fit.map((item) => (
-            <div key={item.label} className={styles.what}>
-              <b>{item.label}</b>
+            <div key={item.labelKey} className={styles.what}>
+              <b>{t(item.labelKey)}</b>
               <span>{item.text}</span>
             </div>
           ))}
@@ -43,7 +53,10 @@ export function MentorDetailSections({
 
       <section className={styles.sec}>
         <h2>
-          The <em>process</em>, step by step
+          <Translation
+            i18nKey="economy:mentorDetail.section.process"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div>
           {m.process.map((step) => (

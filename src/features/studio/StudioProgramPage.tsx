@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioShell } from "./StudioShell";
 import { StudioProgramSlate } from "./StudioProgramSlate";
 import { StudioProgramInbox } from "./StudioProgramInbox";
@@ -13,6 +15,7 @@ import {
 import s from "./StudioProgramPage.module.css";
 
 export function StudioProgramPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [singles, setSingles] = useState<Single[]>(SINGLES);
   const [inbox, setInbox] = useState<Submission[]>(INBOX);
@@ -31,49 +34,57 @@ export function StudioProgramPage() {
         note: "",
       },
     ]);
-    showToast("Added to this week's slate", "success");
+    showToast(t("studio:program.toast.addedToSlate"), "success");
   };
 
   const handlePass = (id: string) => {
     setInbox((prev) => prev.filter((i) => i.id !== id));
-    showToast("Passed — the writer can resubmit later", "info");
+    showToast(t("studio:program.toast.passed"), "info");
   };
 
-  const handleListen = () => showToast("Playing preview…", "info");
+  const handleListen = () =>
+    showToast(t("studio:program.toast.playingPreview"), "info");
 
   const handleNoteChange = (id: string, note: string) =>
-    setSingles((prev) => prev.map((t) => (t.id === id ? { ...t, note } : t)));
+    setSingles((prev) =>
+      prev.map((single) => (single.id === id ? { ...single, note } : single)),
+    );
 
   const handleRemoveSingle = (id: string) =>
-    setSingles((prev) => prev.filter((t) => t.id !== id));
+    setSingles((prev) => prev.filter((single) => single.id !== id));
 
   return (
     <StudioShell>
       <div className={s.wrap}>
         <header className={s.prH}>
           <div className={s.prHMain}>
-            <div className={s.eb}>
-              Programming the room · Monday morning · drag anything below
-            </div>
+            <div className={s.eb}>{t("studio:program.header.eyebrow")}</div>
             <h1>
-              Week <em>24</em> · 15 — 21 June
+              <Translation
+                i18nKey="studio:program.header.title"
+                components={{ em: <em /> }}
+                values={{ weekNumber: 24, dateRange: "15 — 21 June" }}
+              />
             </h1>
             <div className={s.sub}>
-              Build the slate of the week:{" "}
-              <em>one cover, 12 — 16 tracks, 2 — 3 collections, broadcasts</em>.
-              Press publish at noon and the homepage rotates.
+              <Translation
+                i18nKey="studio:program.header.sub"
+                components={{ em: <em /> }}
+              />
             </div>
           </div>
           <div className={s.prHSide}>
             <div className={s.autosave}>
               <span className={s.pulseDot} aria-hidden />
-              Auto-saved · 11:42 — every keystroke
+              {t("studio:program.header.autosave", { time: "11:42" })}
             </div>
             <Button
               variant="ghost-dark"
-              onClick={() => showToast("Opening the room preview…", "info")}
+              onClick={() =>
+                showToast(t("studio:program.toast.openingRoomPreview"), "info")
+              }
             >
-              Preview the room
+              {t("studio:program.header.previewRoomCta")}
             </Button>
           </div>
         </header>
@@ -83,8 +94,12 @@ export function StudioProgramPage() {
             singles={singles}
             onNoteChange={handleNoteChange}
             onRemove={handleRemoveSingle}
-            onSwap={() => showToast("Choose a new cover artist…", "info")}
-            onEditNote={() => showToast("Editing the cover note…", "info")}
+            onSwap={() =>
+              showToast(t("studio:program.toast.chooseNewCover"), "info")
+            }
+            onEditNote={() =>
+              showToast(t("studio:program.toast.editingCoverNote"), "info")
+            }
           />
           <StudioProgramInbox
             inbox={inbox}
@@ -96,32 +111,39 @@ export function StudioProgramPage() {
 
         <div className={s.publishBar}>
           <div className={s.publishStatus}>
-            Slate is <em>87% complete</em> · publishes{" "}
-            <span>Mon 15 Jun, 12:00 Lisbon</span> · auto-rotates the homepage
+            <Translation
+              i18nKey="studio:program.publishBar.status"
+              components={{ em: <em /> }}
+              values={{ percent: 87, publishDate: "Mon 15 Jun, 12:00 Lisbon" }}
+            />
           </div>
           <div className={s.publishActions}>
             <Button
               variant="ghost-dark"
-              onClick={() => showToast("Opening homepage preview…", "info")}
+              onClick={() =>
+                showToast(
+                  t("studio:program.toast.openingHomepagePreview"),
+                  "info",
+                )
+              }
             >
-              Preview homepage
+              {t("studio:program.publishBar.previewHomepageCta")}
             </Button>
             <Button
               variant="ghost-dark"
-              onClick={() => showToast("Draft saved", "success")}
+              onClick={() =>
+                showToast(t("studio:program.toast.draftSaved"), "success")
+              }
             >
-              Save draft
+              {t("studio:program.publishBar.saveDraftCta")}
             </Button>
             <Button
               variant="primary"
               onClick={() =>
-                showToast(
-                  "Slate published — homepage rotates at noon",
-                  "success",
-                )
+                showToast(t("studio:program.toast.published"), "success")
               }
             >
-              Publish at noon
+              {t("studio:program.publishBar.publishCta")}
             </Button>
           </div>
         </div>

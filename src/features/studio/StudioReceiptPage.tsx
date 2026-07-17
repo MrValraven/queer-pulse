@@ -1,12 +1,24 @@
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioShell } from "./StudioShell";
 import { routes } from "../../app/routeMap";
 import {
   RECEIPT_COVER,
-  SPLIT_ROWS,
-  DETAIL_ROWS,
+  RECEIPT_TRACK_TITLE,
+  RECEIPT_ARTIST,
+  RECEIPT_ALBUM,
+  RECEIPT_TIPPER,
+  TIP_AMOUNT,
+  ARTIST_SETTLE_DAYS,
+  RECEIPT_NUMBER,
+  RECEIPT_LEDGER_ROW,
+  RECEIPT_TIP_DATE,
+  RECEIPT_LEDGER_DATE,
+  RECEIPT_SUSTAINER_SINCE,
   NOTE,
 } from "./studioReceipt.data";
 import s from "./StudioReceiptPage.module.css";
@@ -31,6 +43,21 @@ function ThankIcon() {
 
 /** The near-black receipt card: head, split, detail grid, note, footer. */
 function ReceiptCard() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
+  const dateTimeLabel = `${fmt.date(RECEIPT_TIP_DATE, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })} · ${fmt.time(RECEIPT_TIP_DATE)} Lisbon`;
+  const ledgerDateLabel = `${fmt.date(RECEIPT_LEDGER_DATE, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  })} · ${fmt.time(RECEIPT_LEDGER_DATE)} Lisbon`;
+
   return (
     <div className={s.card}>
       <div className={s.head}>
@@ -42,90 +69,162 @@ function ReceiptCard() {
             height={64}
             radius={10}
             placeholder=""
-            alt="Carta para a santa cover"
+            alt={`${RECEIPT_TRACK_TITLE} cover`}
           />
         </div>
         <div className={s.info}>
-          <div className={s.eb}>Tip · while listening</div>
-          <h2>
-            Carta para a <em>santa</em>
-          </h2>
+          <div className={s.eb}>{t("studio:receipt.tipEyebrow")}</div>
+          <h2>{RECEIPT_TRACK_TITLE}</h2>
           <div className={s.by}>
-            by <Link to={routes.studioArtist}>Mariana Sol</Link> · from{" "}
-            <em>Cidade dos santos</em>
+            {t("studio:receipt.byPrefix")}{" "}
+            <Link to={routes.studioArtist}>{RECEIPT_ARTIST}</Link> ·{" "}
+            <Translation
+              i18nKey="studio:receipt.fromAlbum"
+              components={{ em: <em /> }}
+              values={{ album: RECEIPT_ALBUM }}
+            />
           </div>
         </div>
         <div className={s.amount}>
-          €<em>2</em>
+          <em>{fmt.currency(TIP_AMOUNT)}</em>
         </div>
       </div>
 
       <div className={s.split}>
         <div className={s.splitH}>
           <h3>
-            Where the <em>money</em> went
+            <Translation
+              i18nKey="studio:receipt.splitHeading"
+              components={{ em: <em /> }}
+            />
           </h3>
-          <span className={s.small}>
-            100% pass-through on tips, no exceptions.
-          </span>
+          <span className={s.small}>{t("studio:receipt.splitNote")}</span>
         </div>
         <div className={s.bar}>
           <span style={{ width: "100%", background: "var(--jade)" }} />
         </div>
         <div className={s.rows}>
-          {SPLIT_ROWS.map((r, i) => (
-            <div key={i} className={s.rcr}>
-              <span
-                className={`${s.dot} ${r.dot === "jade" ? s.jade : s.muted}`}
-              />
-              <span className={`${s.k} ${r.muted ? s.muted : ""}`}>
-                {r.name}
-                <small>{r.sub}</small>
-              </span>
-              <span
-                className={`${s.v} ${r.tip ? s.tip : ""} ${r.muted ? s.muted : ""}`}
-              >
-                {r.value}
-              </span>
-              <span className={s.pct}>{r.pct}</span>
-            </div>
-          ))}
+          <div className={s.rcr}>
+            <span className={`${s.dot} ${s.jade}`} />
+            <span className={s.k}>
+              {RECEIPT_ARTIST}
+              <small>
+                {t("studio:receipt.split.artistSub", {
+                  count: ARTIST_SETTLE_DAYS,
+                })}
+              </small>
+            </span>
+            <span className={`${s.v} ${s.tip}`}>
+              {fmt.currency(TIP_AMOUNT)}
+            </span>
+            <span className={s.pct}>{t("studio:receipt.split.artistPct")}</span>
+          </div>
+          <div className={s.rcr}>
+            <span className={`${s.dot} ${s.muted}`} />
+            <span className={`${s.k} ${s.muted}`}>
+              {t("studio:receipt.split.platformName")}
+              <small>{t("studio:receipt.split.platformSub")}</small>
+            </span>
+            <span className={`${s.v} ${s.muted}`}>{fmt.currency(0)}</span>
+            <span className={s.pct}>
+              {t("studio:receipt.split.platformPct")}
+            </span>
+          </div>
         </div>
       </div>
 
       <div className={s.detail}>
-        {DETAIL_ROWS.map((d) => (
-          <div key={d.eb} className={s.rcd}>
-            <div className={s.eb}>{d.eb}</div>
-            <div className={s.v}>{d.value}</div>
+        <div className={s.rcd}>
+          <div className={s.eb}>{t("studio:receipt.detail.receiptNo")}</div>
+          <div className={s.v}>
+            <code>{RECEIPT_NUMBER}</code>
           </div>
-        ))}
+        </div>
+        <div className={s.rcd}>
+          <div className={s.eb}>{t("studio:receipt.detail.dateTime")}</div>
+          <div className={s.v}>{dateTimeLabel}</div>
+        </div>
+        <div className={s.rcd}>
+          <div className={s.eb}>{t("studio:receipt.detail.from")}</div>
+          <div className={s.v}>
+            {RECEIPT_TIPPER} ·{" "}
+            {t("studio:receipt.detail.sustainerSince", {
+              date: fmt.date(RECEIPT_SUSTAINER_SINCE, {
+                month: "short",
+                year: "numeric",
+              }),
+            })}
+          </div>
+        </div>
+        <div className={s.rcd}>
+          <div className={s.eb}>{t("studio:receipt.detail.method")}</div>
+          <div className={s.v}>
+            Saved card · ending 4242 ·{" "}
+            <Translation
+              i18nKey="studio:receipt.detail.chosenByDefault"
+              components={{ em: <em /> }}
+            />
+          </div>
+        </div>
+        <div className={s.rcd}>
+          <div className={s.eb}>
+            {t("studio:receipt.detail.postedToLedger")}
+          </div>
+          <div className={s.v}>{ledgerDateLabel}</div>
+        </div>
+        <div className={s.rcd}>
+          <div className={s.eb}>{t("studio:receipt.detail.visibility")}</div>
+          <div className={s.v}>
+            <Translation
+              i18nKey="studio:receipt.detail.visibilityValue"
+              components={{ em: <em /> }}
+            />
+          </div>
+        </div>
       </div>
 
       <div className={s.note}>
-        <div className={s.label}>Your note to Mariana</div>
+        <div className={s.label}>
+          {t("studio:receipt.note.label", { artist: RECEIPT_ARTIST })}
+        </div>
         <div className={s.quote}>{NOTE.quote}</div>
         <div className={s.reply}>
           <div className={s.av}>{NOTE.reply.avatar}</div>
           <div className={s.replyBody}>
-            <div className={s.who}>{NOTE.reply.who}</div>
+            <div className={s.who}>
+              {RECEIPT_ARTIST} ·{" "}
+              <Translation
+                i18nKey="studio:receipt.note.repliedSuffix"
+                components={{ em: <em /> }}
+              />
+            </div>
             <div className={s.replyText}>{NOTE.reply.body}</div>
-            <div className={s.when}>{NOTE.reply.when}</div>
+            <div className={s.when}>
+              {t("studio:receipt.note.replyWhen", {
+                relativeTime: fmt.relativeTime(
+                  -NOTE.reply.minutesAgo,
+                  "minute",
+                ),
+              })}
+            </div>
           </div>
         </div>
       </div>
 
       <div className={s.foot}>
         <span>
-          Auditable on the <Link to={routes.governance}>public ledger</Link> ·
-          row <code>#26-06-T4af7</code>
+          {t("studio:receipt.footer.auditablePrefix")}{" "}
+          <Link to={routes.governance}>
+            {t("studio:receipt.footer.publicLedgerLink")}
+          </Link>{" "}
+          · {t("studio:receipt.footer.rowLabel", { code: RECEIPT_LEDGER_ROW })}
         </span>
         <button
           type="button"
           className={s.exportBtn}
           onClick={() => window.print()}
         >
-          Export PDF
+          {t("studio:receipt.footer.exportCta")}
         </button>
       </div>
     </div>
@@ -133,6 +232,8 @@ function ReceiptCard() {
 }
 
 export function StudioReceiptPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   return (
     <StudioShell>
@@ -142,10 +243,20 @@ export function StudioReceiptPage() {
             <ThankIcon />
           </div>
           <h1>
-            Mariana got <em>€2</em>.
+            <Translation
+              i18nKey="studio:receipt.thanksTitle"
+              components={{ em: <em /> }}
+              values={{
+                artist: RECEIPT_ARTIST,
+                amount: fmt.currency(TIP_AMOUNT),
+              }}
+            />
           </h1>
           <p className={s.sub}>
-            Every cent. No platform cut. <em>You did that.</em>
+            <Translation
+              i18nKey="studio:receipt.thanksSub"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
 
@@ -155,35 +266,42 @@ export function StudioReceiptPage() {
           <Button
             variant="primary"
             onClick={() =>
-              showToast("Paid card copied — share it anywhere.", "success")
+              showToast(t("studio:receipt.toast.shareCopied"), "success")
             }
           >
-            Share — paid card
-          </Button>
-          <Button
-            variant="ghost-dark"
-            onClick={() => showToast("Tip Mariana again — same track.", "info")}
-          >
-            Tip again
-          </Button>
-          <Button variant="ghost-dark" to={routes.studioArtist}>
-            Open Mariana&apos;s page
+            {t("studio:receipt.actions.share")}
           </Button>
           <Button
             variant="ghost-dark"
             onClick={() =>
-              showToast("A copy is on its way to your inbox.", "success")
+              showToast(
+                t("studio:receipt.toast.tipAgain", { artist: RECEIPT_ARTIST }),
+                "info",
+              )
             }
           >
-            Email me a copy
+            {t("studio:receipt.actions.tipAgain")}
+          </Button>
+          <Button variant="ghost-dark" to={routes.studioArtist}>
+            {t("studio:receipt.actions.openArtistPage", {
+              artist: RECEIPT_ARTIST,
+            })}
+          </Button>
+          <Button
+            variant="ghost-dark"
+            onClick={() =>
+              showToast(t("studio:receipt.toast.emailCopy"), "success")
+            }
+          >
+            {t("studio:receipt.actions.emailCopy")}
           </Button>
         </div>
 
         <p className={s.privNote}>
-          By default tips are <em>public, with your name</em>. You can make this
-          one anonymous, or set every future tip to anonymous, in settings.{" "}
-          <em>We don&apos;t share tip data with anyone.</em>{" "}
-          <a href="#privacy">Privacy commitments →</a>
+          <Translation
+            i18nKey="studio:receipt.privacyNote"
+            components={{ em: <em />, a: <a href="#privacy" /> }}
+          />
         </p>
       </div>
     </StudioShell>

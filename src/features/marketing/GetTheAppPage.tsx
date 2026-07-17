@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./GetTheAppPage.module.css";
 import { Button } from "../../shared/components/ui";
@@ -78,8 +80,8 @@ function QrCode({ size = 21, seed = 7 }: { size?: number; seed?: number }) {
 const FEATURES = [
   {
     cls: "cardJade",
-    title: "Quick exit",
-    desc: "Lives in the nav. One tap closes the app and switches to a neutral home screen. Always available.",
+    titleKey: "marketing:getTheApp.features.quickExit.title",
+    descKey: "marketing:getTheApp.features.quickExit.desc",
     icon: (
       <>
         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
@@ -90,16 +92,16 @@ const FEATURES = [
   },
   {
     cls: "",
-    title: "Crisis chat",
-    desc: "One tap from anywhere. Trained peer operators reply in < 90 seconds, 24/7. Works on patchy signal.",
+    titleKey: "marketing:getTheApp.features.crisisChat.title",
+    descKey: "marketing:getTheApp.features.crisisChat.desc",
     icon: (
       <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
     ),
   },
   {
     cls: "cardPlum",
-    title: "Gatherings & RSVPs",
-    desc: "RSVP in two taps. Tickets show as QR codes at the door. Calendar export to whatever you use.",
+    titleKey: "marketing:getTheApp.features.gatherings.title",
+    descKey: "marketing:getTheApp.features.gatherings.desc",
     icon: (
       <>
         <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -111,8 +113,8 @@ const FEATURES = [
   },
   {
     cls: "cardPlum",
-    title: "Safe-spaces map · offline",
-    desc: "Map of vetted venues across Lisbon, cached so it works without signal. Verified within 90 days, every pin.",
+    titleKey: "marketing:getTheApp.features.safeMap.title",
+    descKey: "marketing:getTheApp.features.safeMap.desc",
     icon: (
       <>
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -122,8 +124,8 @@ const FEATURES = [
   },
   {
     cls: "",
-    title: "Quiet notifications",
-    desc: "Replies, RSVPs, messages. No engagement bait, no streaks. Granular quiet hours by category.",
+    titleKey: "marketing:getTheApp.features.quietNotifs.title",
+    descKey: "marketing:getTheApp.features.quietNotifs.desc",
     icon: (
       <>
         <circle cx="12" cy="12" r="3" />
@@ -133,8 +135,8 @@ const FEATURES = [
   },
   {
     cls: "cardJade",
-    title: "Member-on-the-go",
-    desc: "Your DMs, your saves, your profile. Light theme + a true black for night use.",
+    titleKey: "marketing:getTheApp.features.onTheGo.title",
+    descKey: "marketing:getTheApp.features.onTheGo.desc",
     icon: (
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     ),
@@ -142,13 +144,14 @@ const FEATURES = [
 ];
 
 export function GetTheAppPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [notify, setNotify] = useState<AppPlatform | null>(null);
 
   const copyLink = () => {
     if (navigator.clipboard)
       navigator.clipboard.writeText("https://queerpulse.app/get");
-    showToast("Link copied", "success");
+    showToast(t("marketing:getTheApp.share.copyToast"), "success");
   };
   const shareNative = () => {
     if (navigator.share)
@@ -164,17 +167,20 @@ export function GetTheAppPage() {
       <section className={styles.heroSection}>
         <div className={styles.heroInner}>
           <div>
-            <div className={styles.eyebrow}>Mobile · iOS &amp; Android</div>
+            <div className={styles.eyebrow}>
+              {t("marketing:getTheApp.hero.eyebrow")}
+            </div>
             <h1 className={styles.h1}>
-              Take it with you <em>anyway.</em>
+              <Translation
+                i18nKey="marketing:getTheApp.hero.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.lead}>
-              The app does the things you actually need on a phone:{" "}
-              <b>
-                quick exit, crisis chat, RSVPs, your safe-spaces map, and the QR
-                ticket at the door.
-              </b>{" "}
-              Everything else stays better on the web.
+              <Translation
+                i18nKey="marketing:getTheApp.hero.lead"
+                components={{ b: <b /> }}
+              />
             </p>
 
             <div className={styles.storeRow}>
@@ -189,8 +195,12 @@ export function GetTheAppPage() {
                   </svg>
                 </span>
                 <span>
-                  <span className={styles.l}>Download on the</span>
-                  <span className={styles.b}>App Store</span>
+                  <span className={styles.l}>
+                    {t("marketing:getTheApp.store.ios.line1")}
+                  </span>
+                  <span className={styles.b}>
+                    {t("marketing:getTheApp.store.ios.line2")}
+                  </span>
                 </span>
               </button>
               <button
@@ -204,30 +214,40 @@ export function GetTheAppPage() {
                   </svg>
                 </span>
                 <span>
-                  <span className={styles.l}>Get it on</span>
-                  <span className={styles.b}>Google Play</span>
+                  <span className={styles.l}>
+                    {t("marketing:getTheApp.store.android.line1")}
+                  </span>
+                  <span className={styles.b}>
+                    {t("marketing:getTheApp.store.android.line2")}
+                  </span>
                 </span>
               </button>
             </div>
 
             <div className={styles.sendPhone}>
               <h4>
-                Don't want the <em>app stores?</em>
+                <Translation
+                  i18nKey="marketing:getTheApp.sendPhone.title"
+                  components={{ em: <em /> }}
+                />
               </h4>
-              <p>
-                Pop your number in and we'll text you a one-time install link.
-                Doesn't add you to anything.
-              </p>
+              <p>{t("marketing:getTheApp.sendPhone.body")}</p>
               <form
                 className={styles.sendForm}
                 onSubmit={(e) => {
                   e.preventDefault();
-                  showToast("Link sent — check your messages", "success");
+                  showToast(
+                    t("marketing:getTheApp.sendPhone.toast"),
+                    "success",
+                  );
                 }}
               >
-                <input type="tel" placeholder="+351 91·••··••··" />
+                <input
+                  type="tel"
+                  placeholder={t("marketing:getTheApp.sendPhone.placeholder")}
+                />
                 <Button type="submit" variant="primary">
-                  Text me the link
+                  {t("marketing:getTheApp.sendPhone.cta")}
                 </Button>
               </form>
             </div>
@@ -238,11 +258,12 @@ export function GetTheAppPage() {
               <QrCode size={21} seed={11} />
             </div>
             <div className={styles.qrLabel}>
-              Scan with <em>your phone</em>
+              <Translation
+                i18nKey="marketing:getTheApp.qr.label"
+                components={{ em: <em /> }}
+              />
             </div>
-            <p className={styles.qrSub}>
-              Camera app should detect it · routes to the right store
-            </p>
+            <p className={styles.qrSub}>{t("marketing:getTheApp.qr.sub")}</p>
           </div>
         </div>
       </section>
@@ -250,32 +271,33 @@ export function GetTheAppPage() {
       <section className={styles.whatSection}>
         <div className={styles.whatInner}>
           <h2 className={styles.whatH}>
-            What the app is <em>for</em>
+            <Translation
+              i18nKey="marketing:getTheApp.what.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.whatSub}>
-            A short list. We won't put everything on a small screen.
-          </p>
+          <p className={styles.whatSub}>{t("marketing:getTheApp.what.sub")}</p>
           <div className={styles.whatGrid}>
             {FEATURES.map((f) => (
               <div
                 className={[styles.whatCard, f.cls && styles[f.cls]]
                   .filter(Boolean)
                   .join(" ")}
-                key={f.title}
+                key={f.titleKey}
               >
                 <div className={styles.ic}>
                   <svg viewBox="0 0 24 24">{f.icon}</svg>
                 </div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
+                <h3>{t(f.titleKey)}</h3>
+                <p>{t(f.descKey)}</p>
               </div>
             ))}
           </div>
           <div className={styles.notIn}>
-            <b>Not in the app, on purpose:</b> the full Magazine, the article
-            archive, the Forum, the long-form profiles, governance documents,
-            hosting tools. <em>These are better at a desk.</em> Web stays the
-            canonical home for everything that takes time.
+            <Translation
+              i18nKey="marketing:getTheApp.what.notIn"
+              components={{ b: <b />, em: <em /> }}
+            />
           </div>
         </div>
       </section>
@@ -284,25 +306,26 @@ export function GetTheAppPage() {
         <div className={styles.shareInner}>
           <div className={styles.shareCard}>
             <div>
-              <div className={styles.shareEyebrow}>Pass it along</div>
+              <div className={styles.shareEyebrow}>
+                {t("marketing:getTheApp.share.eyebrow")}
+              </div>
               <h2>
-                Got a friend who'd <em>use this?</em>
+                <Translation
+                  i18nKey="marketing:getTheApp.share.title"
+                  components={{ em: <em /> }}
+                />
               </h2>
-              <p>
-                Show them this QR — it's the same install page, just yours. If
-                they install, you'll both see each other in the "we've met in
-                person" recap when you're next at a gathering together.
-              </p>
+              <p>{t("marketing:getTheApp.share.body")}</p>
               <div className={styles.shareActions}>
                 <Button type="button" variant="primary" onClick={copyLink}>
-                  Copy link
+                  {t("marketing:getTheApp.share.copyLinkCta")}
                 </Button>
                 <Button
                   type="button"
                   variant="ghost-dark"
                   onClick={shareNative}
                 >
-                  Share to apps
+                  {t("marketing:getTheApp.share.shareAppsCta")}
                 </Button>
               </div>
             </div>
@@ -312,7 +335,7 @@ export function GetTheAppPage() {
           </div>
           <div style={{ textAlign: "center", marginTop: 32 }}>
             <Button to={INVITE} variant="ghost">
-              Not a member yet? Request an invite →
+              {t("marketing:getTheApp.share.notMemberCta")}
             </Button>
           </div>
         </div>

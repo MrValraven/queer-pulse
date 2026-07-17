@@ -1,9 +1,12 @@
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { GiftMembershipForm } from "./GiftMembershipForm";
-import { GIFT_MODES, type ModeIcon } from "./giftMembership.data";
+import { buildGiftModes, type ModeIcon } from "./giftMembership.data";
 import styles from "./GiftMembershipPage.module.css";
 
 const modeIcons: Record<ModeIcon, ReactNode> = {
@@ -24,24 +27,29 @@ const modeIcons: Record<ModeIcon, ReactNode> = {
 };
 
 export function GiftMembershipPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const giftModes = useMemo(() => buildGiftModes(t, fmt), [t, fmt]);
   const [mode, setMode] = useState<"gift" | "sponsor">("gift");
 
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <div className={styles.eyebrow}>Sustainer · gift &amp; sponsor</div>
+          <div className={styles.eyebrow}>
+            {t("settings:giftMembership.hero.eyebrow")}
+          </div>
           <h1 className={styles.h1}>
-            Give somebody else <em>a seat.</em>
+            <Translation
+              i18nKey="settings:giftMembership.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            Two ways to do this. <b>Gift</b> someone you know directly — a
-            friend, a partner, the person who introduced you to all this. Or{" "}
-            <b>sponsor anonymously</b> — your gift goes into a pool a member
-            applies to, no questions asked, when they need it.{" "}
-            <em>
-              Both keep someone here who might otherwise have stepped back.
-            </em>
+            <Translation
+              i18nKey="settings:giftMembership.hero.dek"
+              components={{ b: <b />, em: <em /> }}
+            />
           </p>
         </div>
       </section>
@@ -49,23 +57,26 @@ export function GiftMembershipPage() {
       <section className={styles.modes}>
         <div className={styles.modesH}>
           <h2>
-            Which <em>gift</em> are you making?
+            <Translation
+              i18nKey="settings:giftMembership.modes.title"
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         <div className={styles.modeGrid}>
-          {GIFT_MODES.map((m) => (
+          {giftModes.map((giftMode) => (
             <button
-              key={m.id}
+              key={giftMode.id}
               type="button"
-              className={`${styles.modeCard} ${m.jade ? styles.jade : ""} ${mode === m.id ? styles.selected : ""}`}
-              onClick={() => setMode(m.id)}
+              className={`${styles.modeCard} ${giftMode.jade ? styles.jade : ""} ${mode === giftMode.id ? styles.selected : ""}`}
+              onClick={() => setMode(giftMode.id)}
             >
-              <div className={styles.modeIc}>{modeIcons[m.icon]}</div>
-              <h3>{m.title}</h3>
-              <p>{m.body}</p>
+              <div className={styles.modeIc}>{modeIcons[giftMode.icon]}</div>
+              <h3>{giftMode.title}</h3>
+              <p>{giftMode.body}</p>
               <div className={styles.price}>
-                {m.price}
-                <span className={styles.priceSub}>{m.priceSub}</span>
+                {giftMode.price}
+                <span className={styles.priceSub}>{giftMode.priceSub}</span>
               </div>
             </button>
           ))}
@@ -75,11 +86,13 @@ export function GiftMembershipPage() {
       <section className={styles.formSection}>
         <div className={styles.formInner}>
           <h2 className={styles.formH}>
-            Gift details · <em>tell us who's it for</em>
+            <Translation
+              i18nKey="settings:giftMembership.form.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.formSub}>
-            All editable until they accept. You can also schedule the delivery —
-            for a birthday, a coming-out anniversary, the day they need it most.
+            {t("settings:giftMembership.form.sub")}
           </p>
           <GiftMembershipForm />
         </div>
@@ -87,15 +100,19 @@ export function GiftMembershipPage() {
 
       <section className={styles.sponsorFoot}>
         <h3>
-          Or skip the form · <em>sponsor anonymously</em>
+          <Translation
+            i18nKey="settings:giftMembership.sponsorFoot.title"
+            components={{ em: <em /> }}
+          />
         </h3>
         <p>
-          If you'd rather not name a recipient,{" "}
-          <Link to={routes.solidarity}>
-            drop your gift into the solidarity-membership pool
-          </Link>
-          . We match it with a member who applied — usually within 48 hours.{" "}
-          <em>You get a thank-you and a count; not a name.</em>
+          <Translation
+            i18nKey="settings:giftMembership.sponsorFoot.body"
+            components={{
+              a: <Link to={routes.solidarity} />,
+              em: <em />,
+            }}
+          />
         </p>
       </section>
     </PageShell>

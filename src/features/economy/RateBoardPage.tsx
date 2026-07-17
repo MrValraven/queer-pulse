@@ -6,6 +6,8 @@ import { ToolPage } from "./tools/ToolPage";
 import { useLocalStorage } from "./tools/useLocalStorage";
 import { RateBoardForm } from "./RateBoardForm";
 import { RateBoardStats } from "./RateBoardStats";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SEED,
   type Experience,
@@ -50,6 +52,7 @@ function coerceEntry(raw: unknown): RateEntry | null {
 }
 
 export function RateBoardPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [entries, setEntries] = useLocalStorage<RateEntry[]>(STORAGE_KEY, SEED);
   const [compareRate, setCompareRate] = useState(0);
@@ -71,22 +74,19 @@ export function RateBoardPage() {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-    showToast("Exported", "success");
+    showToast(t("economy:rateBoard.exportedToast"), "success");
   }
 
   function mergeImported(parsed: unknown) {
     if (!Array.isArray(parsed)) {
-      showToast(
-        "That file isn't a rate board — expected a JSON array.",
-        "error",
-      );
+      showToast(t("economy:rateBoard.invalidFileToast"), "error");
       return;
     }
     const valid = parsed
       .map(coerceEntry)
       .filter((e): e is RateEntry => e !== null);
     if (valid.length === 0) {
-      showToast("No valid entries found in that file.", "error");
+      showToast(t("economy:rateBoard.noValidEntriesToast"), "error");
       return;
     }
     setEntries((prev) => {
@@ -95,7 +95,7 @@ export function RateBoardPage() {
       return [...fresh, ...prev];
     });
     showToast(
-      `Imported ${valid.length} ${valid.length === 1 ? "entry" : "entries"}`,
+      t("economy:rateBoard.importedToast", { count: valid.length }),
       "success",
     );
   }
@@ -109,20 +109,21 @@ export function RateBoardPage() {
       try {
         mergeImported(JSON.parse(String(reader.result)));
       } catch {
-        showToast("Couldn't read that file — is it valid JSON?", "error");
+        showToast(t("economy:rateBoard.readErrorToast"), "error");
       }
     };
-    reader.onerror = () => showToast("Couldn't read that file.", "error");
+    reader.onerror = () =>
+      showToast(t("economy:rateBoard.readErrorGenericToast"), "error");
     reader.readAsText(file);
   }
 
   const actions = (
     <>
       <Button variant="ghost" onClick={handleExport}>
-        <FiDownload aria-hidden /> Export JSON
+        <FiDownload aria-hidden /> {t("economy:rateBoard.export")}
       </Button>
       <Button variant="ghost" onClick={() => fileRef.current?.click()}>
-        <FiUpload aria-hidden /> Import JSON
+        <FiUpload aria-hidden /> {t("economy:rateBoard.import")}
       </Button>
       <input
         ref={fileRef}
@@ -130,20 +131,21 @@ export function RateBoardPage() {
         accept="application/json"
         className={styles.fileInput}
         onChange={handleFile}
-        aria-label="Import a rate-board JSON file"
+        aria-label={t("economy:rateBoard.importAriaLabel")}
       />
     </>
   );
 
   return (
     <ToolPage
-      eyebrow="Community"
+      eyebrow={t("economy:toolPage.eyebrowCommunity")}
       title={
-        <>
-          What we actually <em>charge.</em>
-        </>
+        <Translation
+          i18nKey="economy:rateBoard.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Anonymous day rates shared by the community, so nobody has to guess. Add yours, see where you stand. Saved on this device."
+      sub={t("economy:rateBoard.sub")}
       form={
         <RateBoardForm
           onAdd={handleAdd}

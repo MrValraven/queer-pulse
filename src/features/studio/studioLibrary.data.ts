@@ -10,7 +10,30 @@ export interface LibItem {
   image?: string;
 }
 
-export const TABS = ["Albums", "Sets", "Collections", "Tracks"] as const;
+// `id` is the stable lookup key into LIBRARY and stored UI-selection value —
+// never translate it directly; `labelKey`/`categoryKey` resolve via t().
+export const TABS = [
+  {
+    id: "Albums",
+    labelKey: "studio:library.tabs.albums",
+    categoryKey: "studio:library.category.albums",
+  },
+  {
+    id: "Sets",
+    labelKey: "studio:library.tabs.sets",
+    categoryKey: "studio:library.category.sets",
+  },
+  {
+    id: "Collections",
+    labelKey: "studio:library.tabs.collections",
+    categoryKey: "studio:library.category.collections",
+  },
+  {
+    id: "Tracks",
+    labelKey: "studio:library.tabs.tracks",
+    categoryKey: "studio:library.category.tracks",
+  },
+] as const;
 
 export const LIBRARY: Record<string, LibItem[]> = {
   Albums: [

@@ -1,11 +1,24 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { DELIVERY_OPTIONS, ANON_OPTIONS } from "./giftMembership.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import {
+  buildDeliveryOptions,
+  buildAnonOptions,
+  GIFT_ANNUAL,
+  ACTIVATE_BY_DATE,
+} from "./giftMembership.data";
 import styles from "./GiftMembershipPage.module.css";
 
 export function GiftMembershipForm() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
+  const deliveryOptions = useMemo(() => buildDeliveryOptions(t, fmt), [t, fmt]);
+  const anonOptions = useMemo(() => buildAnonOptions(t), [t]);
+  const giftAmount = fmt.currency(GIFT_ANNUAL);
   const [rName, setRName] = useState("Rita Vasquez");
   const [rContact, setRContact] = useState("rita@example.com");
   const [sName, setSName] = useState("Tomás Mendes");
@@ -23,26 +36,36 @@ export function GiftMembershipForm() {
       sName
         .trim()
         .split(" ")
-        .map((p) => p[0])
+        .map((part) => part[0])
         .join("") + ".";
   }
   const deliveryNote =
-    DELIVERY_OPTIONS.find((d) => d.id === delivery)?.note ??
-    "delivered immediately";
+    deliveryOptions.find((option) => option.id === delivery)?.note ??
+    t("settings:giftMembership.delivery.now.note");
 
   function submit(e: FormEvent) {
     e.preventDefault();
-    showToast(`Charged €96 · invitation sent to ${firstName}`, "success");
+    showToast(
+      t("settings:giftMembership.form.toast.charged", {
+        amount: giftAmount,
+        name: firstName,
+      }),
+      "success",
+    );
   }
 
   return (
     <form onSubmit={submit}>
-      <div className={styles.formSectionH}>Recipient</div>
+      <div className={styles.formSectionH}>
+        {t("settings:giftMembership.form.sectionRecipient")}
+      </div>
       <div className={styles.fieldRow}>
         <div className={styles.field}>
           <label>
-            Their name{" "}
-            <span className={styles.opt}>— how they'll be addressed</span>
+            {t("settings:giftMembership.form.recipientNameLabel")}{" "}
+            <span className={styles.opt}>
+              {t("settings:giftMembership.form.recipientNameHint")}
+            </span>
           </label>
           <input
             type="text"
@@ -52,23 +75,26 @@ export function GiftMembershipForm() {
           />
         </div>
         <div className={styles.field}>
-          <label>Their email · or phone</label>
+          <label>
+            {t("settings:giftMembership.form.recipientContactLabel")}
+          </label>
           <input
             type="text"
             value={rContact}
             onChange={(e) => setRContact(e.target.value)}
           />
           <div className={styles.fieldHint}>
-            We use it once · to send the invitation. They control what happens
-            after.
+            {t("settings:giftMembership.form.recipientContactHint")}
           </div>
         </div>
       </div>
 
-      <div className={styles.formSectionH}>From you</div>
+      <div className={styles.formSectionH}>
+        {t("settings:giftMembership.form.sectionFromYou")}
+      </div>
       <div className={styles.fieldRow}>
         <div className={styles.field}>
-          <label>How you'd like to be named</label>
+          <label>{t("settings:giftMembership.form.senderNameLabel")}</label>
           <input
             type="text"
             value={sName}
@@ -77,12 +103,15 @@ export function GiftMembershipForm() {
         </div>
         <div className={styles.field}>
           <label>
-            Anonymous? · <span className={styles.opt}>just to them</span>
+            {t("settings:giftMembership.form.anonLabel")}{" "}
+            <span className={styles.opt}>
+              {t("settings:giftMembership.form.anonHint")}
+            </span>
           </label>
           <select value={anon} onChange={(e) => setAnon(e.target.value)}>
-            {ANON_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+            {anonOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
@@ -91,9 +120,9 @@ export function GiftMembershipForm() {
 
       <div className={styles.field}>
         <label>
-          A short note{" "}
+          {t("settings:giftMembership.form.noteLabel")}{" "}
           <span className={styles.opt}>
-            — optional · plain text · printed on the card
+            {t("settings:giftMembership.form.noteHint")}
           </span>
         </label>
         <textarea
@@ -102,50 +131,71 @@ export function GiftMembershipForm() {
           onChange={(e) => setNote(e.target.value)}
           placeholder="For everything you do at the Thursday clinic. From all of us, but mostly from me."
         />
-        <div className={styles.fieldHint}>{note.length} / 280 characters</div>
+        <div className={styles.fieldHint}>
+          {t("settings:giftMembership.form.charCount", { count: note.length })}
+        </div>
       </div>
 
-      <div className={styles.formSectionH}>Delivery</div>
-      <p className={styles.deliveryIntro}>When should the invitation arrive?</p>
+      <div className={styles.formSectionH}>
+        {t("settings:giftMembership.form.sectionDelivery")}
+      </div>
+      <p className={styles.deliveryIntro}>
+        {t("settings:giftMembership.form.deliveryIntro")}
+      </p>
       <div className={styles.deliveryGrid}>
-        {DELIVERY_OPTIONS.map((d) => (
+        {deliveryOptions.map((option) => (
           <button
-            key={d.id}
+            key={option.id}
             type="button"
-            className={`${styles.delivery} ${delivery === d.id ? styles.selected : ""}`}
-            onClick={() => setDelivery(d.id)}
+            className={`${styles.delivery} ${delivery === option.id ? styles.selected : ""}`}
+            onClick={() => setDelivery(option.id)}
           >
-            <b>{d.label}</b>
-            <span>{d.desc}</span>
+            <b>{option.label}</b>
+            <span>{option.desc}</span>
           </button>
         ))}
       </div>
 
-      <div className={styles.previewH}>Preview · what they'll see</div>
+      <div className={styles.previewH}>
+        {t("settings:giftMembership.form.previewHeading")}
+      </div>
       <div className={styles.previewCard}>
-        <span className={styles.previewStamp}>From a friend</span>
+        <span className={styles.previewStamp}>
+          {t("settings:giftMembership.form.previewStamp")}
+        </span>
         <h2>
-          {firstName} — someone got <em>your back.</em>
+          <Translation
+            i18nKey="settings:giftMembership.form.previewTitle"
+            values={{ name: firstName }}
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.previewNote}>
           {note.trim() ? `"${note.trim()}"` : ""}
         </p>
         <div className={styles.previewSender}>
-          — <b>{sender}</b> · with a year of Sustainer membership · €96 ·
-          activate any time before <b>9 Sep 2026</b>
+          <Translation
+            i18nKey="settings:giftMembership.form.previewSender"
+            values={{
+              sender,
+              amount: giftAmount,
+              date: fmt.date(ACTIVATE_BY_DATE),
+            }}
+            components={{ b: <b /> }}
+          />
         </div>
       </div>
 
       <div className={styles.actions}>
         <div className={styles.summary}>
-          One Sustainer gift ·{" "}
-          <b>
-            €<em>96</em>
-          </b>{" "}
-          · <span>{deliveryNote}</span>
+          <Translation
+            i18nKey="settings:giftMembership.form.summary"
+            values={{ amount: giftAmount, deliveryNote }}
+            components={{ b: <b /> }}
+          />
         </div>
         <Button variant="primary" type="submit">
-          Pay · gift {firstName} →
+          {t("settings:giftMembership.form.payCta", { name: firstName })}
         </Button>
       </div>
     </form>

@@ -1,83 +1,143 @@
 export interface DataType {
-  label: string;
-  sub: string;
+  id: string;
+  labelKey: string;
+  subKey: string;
   defaultChecked: boolean;
 }
 
 export const DATA_TYPES: DataType[] = [
   {
-    label: "Profile & identity",
-    sub: "Name, pronouns, bio, photo",
+    id: "profile",
+    labelKey: "settings:dataExport.type.profile.label",
+    subKey: "settings:dataExport.type.profile.sub",
     defaultChecked: true,
   },
   {
-    label: "Messages",
-    sub: "All direct & group conversations",
+    id: "messages",
+    labelKey: "settings:dataExport.type.messages.label",
+    subKey: "settings:dataExport.type.messages.sub",
     defaultChecked: true,
   },
   {
-    label: "Forum posts",
-    sub: "All posts, replies, reactions",
+    id: "forumPosts",
+    labelKey: "settings:dataExport.type.forumPosts.label",
+    subKey: "settings:dataExport.type.forumPosts.sub",
     defaultChecked: true,
   },
-  { label: "Events", sub: "RSVPs, attendance history", defaultChecked: true },
   {
-    label: "Connections",
-    sub: "Members you follow or are connected to",
+    id: "events",
+    labelKey: "settings:dataExport.type.events.label",
+    subKey: "settings:dataExport.type.events.sub",
+    defaultChecked: true,
+  },
+  {
+    id: "connections",
+    labelKey: "settings:dataExport.type.connections.label",
+    subKey: "settings:dataExport.type.connections.sub",
     defaultChecked: false,
   },
   {
-    label: "Activity log",
-    sub: "Login history, device sessions",
+    id: "activityLog",
+    labelKey: "settings:dataExport.type.activityLog.label",
+    subKey: "settings:dataExport.type.activityLog.sub",
     defaultChecked: false,
   },
 ];
 
 export interface AccordionItem {
-  title: string;
-  body: string;
-  tags: string[];
+  id: string;
+  titleKey: string;
+  bodyKey: string;
+  tagKeys: string[];
 }
 
 export const ACCORDION_ITEMS: AccordionItem[] = [
   {
-    title: "Profile & identity",
-    body: "Your display name, username, pronouns, bio, occupation, profile photo, and any links you've added to your profile.",
-    tags: ["name", "pronouns", "bio", "photo", "occupation", "links"],
+    id: "profile",
+    titleKey: "settings:dataExport.accordion.profile.title",
+    bodyKey: "settings:dataExport.accordion.profile.body",
+    tagKeys: [
+      "settings:dataExport.tag.name",
+      "settings:dataExport.tag.pronouns",
+      "settings:dataExport.tag.bio",
+      "settings:dataExport.tag.photo",
+      "settings:dataExport.tag.occupation",
+      "settings:dataExport.tag.links",
+    ],
   },
   {
-    title: "Messages",
-    body: "All direct messages and group conversations you participated in. Includes message content, timestamps, and read receipts. Messages from members who have deleted their accounts are anonymised.",
-    tags: ["content", "timestamps", "read receipts", "attachments"],
+    id: "messages",
+    titleKey: "settings:dataExport.accordion.messages.title",
+    bodyKey: "settings:dataExport.accordion.messages.body",
+    tagKeys: [
+      "settings:dataExport.tag.content",
+      "settings:dataExport.tag.timestamps",
+      "settings:dataExport.tag.readReceipts",
+      "settings:dataExport.tag.attachments",
+    ],
   },
   {
-    title: "Forum posts & replies",
-    body: "Every post and reply you made in the forum, including the thread it belongs to, any edits, and reactions you gave or received.",
-    tags: ["posts", "replies", "edits", "reactions", "timestamps"],
+    id: "forumPosts",
+    titleKey: "settings:dataExport.accordion.forumPosts.title",
+    bodyKey: "settings:dataExport.accordion.forumPosts.body",
+    tagKeys: [
+      "settings:dataExport.tag.posts",
+      "settings:dataExport.tag.replies",
+      "settings:dataExport.tag.edits",
+      "settings:dataExport.tag.reactions",
+      "settings:dataExport.tag.timestamps",
+    ],
   },
   {
-    title: "Events",
-    body: "Events you RSVPd to, events you marked as interested, attendance confirmation where applicable, and any event-related messages.",
-    tags: ["RSVPs", "attendance", "interest"],
+    id: "events",
+    titleKey: "settings:dataExport.accordion.events.title",
+    bodyKey: "settings:dataExport.accordion.events.body",
+    tagKeys: [
+      "settings:dataExport.tag.rsvps",
+      "settings:dataExport.tag.attendance",
+      "settings:dataExport.tag.interest",
+    ],
   },
   {
-    title: "Connections",
-    body: "A list of members you follow, members who follow you, and any explicit connection relationships. Does not include the contact details of other members.",
-    tags: ["follows", "connections", "blocked list"],
+    id: "connections",
+    titleKey: "settings:dataExport.accordion.connections.title",
+    bodyKey: "settings:dataExport.accordion.connections.body",
+    tagKeys: [
+      "settings:dataExport.tag.follows",
+      "settings:dataExport.tag.connections",
+      "settings:dataExport.tag.blockedList",
+    ],
   },
   {
-    title: "Activity & sessions",
-    body: "Login timestamps, device types (browser/OS), IP addresses (last 90 days only), and active session information. We do not log browsing history within the platform.",
-    tags: ["logins", "device types", "IP addresses", "sessions"],
+    id: "activitySessions",
+    titleKey: "settings:dataExport.accordion.activitySessions.title",
+    bodyKey: "settings:dataExport.accordion.activitySessions.body",
+    tagKeys: [
+      "settings:dataExport.tag.logins",
+      "settings:dataExport.tag.deviceTypes",
+      "settings:dataExport.tag.ipAddresses",
+      "settings:dataExport.tag.sessions",
+    ],
   },
   {
-    title: "Preferences & settings",
-    body: "Your notification preferences, privacy settings, language selection, and any other account configuration you've set.",
-    tags: ["notifications", "privacy", "language", "appearance"],
+    id: "preferences",
+    titleKey: "settings:dataExport.accordion.preferences.title",
+    bodyKey: "settings:dataExport.accordion.preferences.body",
+    tagKeys: [
+      "settings:dataExport.tag.notifications",
+      "settings:dataExport.tag.privacy",
+      "settings:dataExport.tag.language",
+      "settings:dataExport.tag.appearance",
+    ],
   },
   {
-    title: "Payments (if applicable)",
-    body: "If you have contributed to any paid events or the community fund, a record of transaction dates and amounts. No card details are stored — payments are processed by Stripe.",
-    tags: ["transactions", "amounts", "dates"],
+    id: "payments",
+    titleKey: "settings:dataExport.accordion.payments.title",
+    bodyKey: "settings:dataExport.accordion.payments.body",
+    tagKeys: [
+      "settings:dataExport.tag.transactions",
+      "settings:dataExport.tag.amounts",
+      "settings:dataExport.tag.dates",
+    ],
   },
 ];

@@ -1,11 +1,15 @@
 import { FiMapPin, FiCheck } from "react-icons/fi";
 import { FaWheelchair } from "react-icons/fa6";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import {
   TYPE_BG,
   TYPE_FG,
   TYPE_ICON,
+  TYPE_LABEL_KEYS,
   VIBE_BG,
   VIBE_FG,
+  VIBE_LABEL_KEYS,
   type Venue,
 } from "./map.data";
 import s from "./MapPage.module.css";
@@ -25,6 +29,7 @@ export function MapVenueCard({
   onToggle: () => void;
   onMarkBeen: () => void;
 }) {
+  const { t } = useTranslation();
   const TypeIcon = TYPE_ICON[v.type];
   return (
     <div
@@ -56,7 +61,7 @@ export function MapVenueCard({
             className={s.vcTypeTag}
             style={{ background: TYPE_BG[v.type], color: TYPE_FG[v.type] }}
           >
-            {v.type}
+            {t(TYPE_LABEL_KEYS[v.type]!)}
           </span>
           {v.accessible && (
             <span className={s.vcAccess}>
@@ -66,13 +71,13 @@ export function MapVenueCard({
         </div>
       </div>
       <div className={s.vcVibes}>
-        {v.vibe.map((t) => (
+        {v.vibe.map((vibe) => (
           <span
-            key={t}
+            key={vibe}
             className={s.vt}
-            style={{ background: VIBE_BG[t], color: VIBE_FG[t] }}
+            style={{ background: VIBE_BG[vibe], color: VIBE_FG[vibe] }}
           >
-            {t}
+            {t(VIBE_LABEL_KEYS[vibe]!)}
           </span>
         ))}
       </div>
@@ -91,7 +96,11 @@ export function MapVenueCard({
           <div className={s.vcNote}>{v.note}</div>
           <div className={s.vcBeenRow}>
             <div className={s.beenCount}>
-              <b>{beenCount}</b> people been here
+              <Translation
+                i18nKey="marketing:map.venueCard.beenCount"
+                values={{ count: beenCount }}
+                components={{ b: <b /> }}
+              />
             </div>
             <button
               type="button"
@@ -105,10 +114,10 @@ export function MapVenueCard({
             >
               {marked ? (
                 <>
-                  <FiCheck /> Been there
+                  <FiCheck /> {t("marketing:map.venueCard.beenThere")}
                 </>
               ) : (
-                "I've been here"
+                t("marketing:map.venueCard.markBeen")
               )}
             </button>
           </div>

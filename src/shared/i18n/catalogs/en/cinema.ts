@@ -204,7 +204,7 @@ export const cinema: Catalog = {
   "film.split.breakdownHeading": "{price} rent · where it goes",
   "film.split.amountTo": "{amount} to {name}",
   "film.split.explainer":
-    "When you rent at {rentPrice}, <strong>{filmmakerShare} goes to {name}.</strong> {paymentFee} covers payment processing. {hostingFee} covers hosting &amp; captions. The split is the same for every filmmaker.",
+    "When you rent at {rentPrice}, <strong>{filmmakerShare} goes to {name}.</strong> {paymentFee} covers payment processing. {hostingFee} covers hosting & captions. The split is the same for every filmmaker.",
   "film.split.readDeedCta": "Read the deed →",
   "film.related.title": "More from the <em>programme</em>",
   "film.related.sub": "Films sharing a curator, a country, or a question.",
@@ -240,7 +240,7 @@ export const cinema: Catalog = {
   "film.share.copyErrorToast": "Could not copy link",
 
   "film.body.filmWords.title": "The film's own <em>words</em>",
-  "film.body.cast.title": "Cast &amp; <em>crew</em>",
+  "film.body.cast.title": "Cast & <em>crew</em>",
   "film.body.tag.member": "QueerPulse member",
   "film.body.filmmaker.stat.films_one": "<em>{count}</em> film on the cinema",
   "film.body.filmmaker.stat.films_other":
@@ -454,8 +454,15 @@ export const cinema: Catalog = {
   "shorts.vote.yourPickLabel": "Your pick",
   "shorts.vote.voteCta": "Vote",
   "shorts.vote.countedToast": "Vote counted — thank you",
+  "shorts.transparency.heading": "Where the money went · June",
   "shorts.transparency.ledgerCta": "See the open ledger",
+  "shorts.submitCta.eyebrow": "Your film could be here",
+  "shorts.submitCta.title": "Made something? <em>Submit it.</em>",
+  "shorts.submitCta.body":
+    "Any QueerPulse member can submit to the Made Here track. Free to list, free to watch. You keep your rights. Tips go 100% to you. There's also a {amount} commission closing 21 June.",
+  "shorts.submitCta.cta": "Submit your film",
   "shorts.submitCta.seeGrantsCta": "See open grants",
+  "shorts.curatorNote.eyebrow": "From the programmer · week {week}",
   "shorts.filterCat.runtime": "Runtime",
   "shorts.filterCat.type": "Type",
   "shorts.filterCat.access": "Access",
@@ -559,4 +566,518 @@ export const cinema: Catalog = {
   "about.outro.sub":
     "{price}/mo. Cancel any time. Every sustainer keeps the door open.",
   "about.outro.cta": "Become a sustainer",
+
+  // ── Rights (CinemaRightsPage.tsx, RightsHero/SideNav/ContractCard.tsx) —
+  // hero, short-version summary table, side-nav + section labels, and the
+  // contract-card chrome are platform-authored and translated. The FAQ
+  // question/answer pairs (RightsFaqParts.tsx) and the contact block's own
+  // title/body quote precise contract clauses and are deliberately left
+  // English — see the i18n sweep report for why (flagged, not translated). ─
+  "rights.hero.eyebrow": "For filmmakers · your rights",
+  "rights.hero.title": "Your film <em>stays yours</em>.",
+  "rights.hero.sub":
+    "Everything about how the co-op treats your work — the split, the contract, what we can and can't do, how you leave if you want to. <em>Plain language, no asterisks.</em>",
+  "rights.hero.shortVersionHeading": "The short version",
+  "rights.shortVersion.revenueSplit.label": "Revenue split",
+  "rights.shortVersion.revenueSplit.value": "<em>80</em>% to you",
+  "rights.shortVersion.tips.label": "Tips",
+  "rights.shortVersion.tips.value": "<em>100</em>% to you",
+  "rights.shortVersion.contractType.label": "Contract type",
+  "rights.shortVersion.contractType.value": "Non-<em>exclusive</em>",
+  "rights.shortVersion.territory.label": "Territory",
+  "rights.shortVersion.territory.value": "You <em>choose</em>",
+  "rights.shortVersion.exitNotice.label": "Exit notice",
+  "rights.shortVersion.exitNotice.value": "<em>30</em> days",
+  "rights.shortVersion.rightsRetained.label": "Your rights retained",
+  "rights.shortVersion.rightsRetained.value": "<em>All</em>",
+  "rights.sideNav.ariaLabel": "On this page",
+  "rights.section.contract.label": "The contract",
+  "rights.section.contract.title": "The <em>contract</em>",
+  "rights.section.revenue.label": "Revenue & payment",
+  "rights.section.revenue.title": "Revenue <em>& payment</em>",
+  "rights.section.territory.label": "Territory & exclusivity",
+  "rights.section.territory.title": "Territory <em>& exclusivity</em>",
+  "rights.section.content.label": "Your content",
+  "rights.section.content.title": "Your <em>content</em>",
+  "rights.section.exit.label": "Termination & exit",
+  "rights.section.exit.title": "Termination <em>& exit</em>",
+  "rights.section.access.label": "Accessibility",
+  "rights.section.access.title": "<em>Accessibility</em>",
+  "rights.contractCard.eyebrow": "The contract, in plain language",
+  "rights.contractCard.title":
+    "What you agree to — and what <em>we</em> agree to.",
+  "rights.contractCard.point.pay": "We pay 80% of every transaction to you",
+  "rights.contractCard.point.tips": "100% of tips goes to you, no fees skimmed",
+  "rights.contractCard.point.nonExclusive":
+    "Non-exclusive — show it anywhere else too",
+  "rights.contractCard.point.territory":
+    "You choose which territories we serve",
+  "rights.contractCard.point.consent":
+    "We never alter your film without written consent",
+  "rights.contractCard.point.withdraw":
+    "You can withdraw with 30 days' written notice",
+  "rights.contractCard.downloadToast": "The full contract PDF is coming soon.",
+  "rights.contractCard.downloadCta": "Download the full contract (PDF)",
+  "rights.contact.contactTeamCta": "Contact the rights team",
+  "rights.contact.submitCta": "Submit a film",
+
+  // ── Open calls (CinemaOpenCallsPage.tsx + Hero/HowItWorks/Body.tsx) — page
+  // chrome only. Each commission/residency's own body, details, amounts,
+  // deadlines and applicant counts are that call's own instance content and
+  // stay English, matching the mock-data precedent elsewhere in this file. ──
+  "openCalls.hero.sub":
+    "Commissions, residencies, and mentorships — funded by sustainers, paid by the co-op, distributed through the cinema. <em>Queer filmmakers only. Anyone can apply.</em>",
+  "openCalls.hero.seasonLabel": "Season 3 · spring/summer 2026",
+  "openCalls.hero.sidebarNote":
+    "Funded by sustainers' subscriptions. Pool grows each month — every new sustainer adds ~{amount} to the next season's fund.",
+  "openCalls.hero.stat.totalAvailable": "Total available",
+  "openCalls.hero.stat.activeCalls": "Active calls",
+  "openCalls.hero.stat.applicationsSoFar": "Applications so far",
+  "openCalls.hero.stat.filmsFunded": "Films funded to date",
+  "openCalls.how.title": "How the <em>fund</em> works",
+  "openCalls.how.step1.title": "Sustainers <em>fund it</em>",
+  "openCalls.how.step1.body":
+    "Every sustainer's {price}/mo contributes ~{poolShare} per month to the commissioning pool. The pool total is public.",
+  "openCalls.how.step2.title": "Curators <em>define calls</em>",
+  "openCalls.how.step2.body":
+    "Each season, the curators' council writes the briefs — open, specific, grounded in the films they want to see exist.",
+  "openCalls.how.step3.title": "Filmmakers <em>apply</em>",
+  "openCalls.how.step3.body":
+    "Applications reviewed by the curators' council. Decisions within 14 days. Written feedback whether you're accepted or not.",
+  "openCalls.how.step4.title": "Films <em>premiere here</em>",
+  "openCalls.how.step4.body":
+    "Commissioned work premieres on QueerPulse Cinema first, then is distributed freely or with a revenue split the filmmaker chooses.",
+  "openCalls.body.commissionsTitle": "Commissions <em>& grants</em>",
+  "openCalls.body.openCount": "{count} open",
+  "openCalls.body.residenciesTitle": "Residencies <em>& mentorships</em>",
+  "openCalls.body.gotMadeTitle": "What <em>got made</em>",
+  "openCalls.body.allFundedCta": "All funded films →",
+  "openCalls.card.deadlineLabel": "Deadline",
+  "openCalls.card.applyNowCta": "Apply now",
+  "openCalls.card.downloadBriefCta": "Download brief PDF",
+  "openCalls.card.downloadToast":
+    "Brief PDF is downloading — check your files.",
+  "openCalls.card.applyCta": "Apply",
+  "openCalls.card.comingSoonToast": "{label} — coming soon.",
+  "openCalls.outro.title": "Fund the <em>next</em> call.",
+  "openCalls.outro.sub":
+    "Sustainers fund the commissions. Every new sustainer grows the next season's pool.",
+  "openCalls.outro.cta": "Become a sustainer → {price}/mo",
+
+  // ── Membership (CinemaMembershipPage.tsx + Pays.tsx) — pricing/plans page
+  // chrome. Tier names/descriptions/feature bullets are platform-authored
+  // marketing copy (never fetched), so unlike most of this file every string
+  // here is translated, not left as content. ───────────────────────────────
+  "membership.hero.eyebrow": "QueerPulse Cinema · sustainer membership",
+  "membership.hero.title": "The room <em>stays open</em> because you're in it.",
+  "membership.hero.sub":
+    "Sustainers fund the films, the commissions, the captions, and the curators. In return: everything. No algorithm, no lock-in, no dark patterns. Cancel any time.",
+  "membership.tier.free.tag": "Free · always",
+  "membership.tier.free.name": "The <em>door</em>",
+  "membership.tier.free.desc":
+    "The door is open. Community films, made-here shorts, and selected free-tier films — no account needed. No time limit.",
+  "membership.tier.free.feature1": "All free-tier films (40+ in catalogue)",
+  "membership.tier.free.feature2": "All made-here community shorts",
+  "membership.tier.free.feature3": "Free live events & Q&As",
+  "membership.tier.free.feature4": "Captions & audio description",
+  "membership.tier.free.feature5": "Sustainer library (100+ films)",
+  "membership.tier.free.feature6": "Offline downloads",
+  "membership.tier.free.feature7": "Votes on open calls",
+  "membership.tier.free.cta": "Browse free films",
+  "membership.tier.sustainer.tag": "Sustainer · monthly",
+  "membership.tier.sustainer.name": "The <em>room</em>",
+  "membership.tier.sustainer.desc":
+    "Everything in the cinema, plus your {price} directly funds the commissioning pool, the captioning fund, and the curators' stipend. The number is transparent.",
+  "membership.tier.sustainer.feature1": "Everything in Free",
+  "membership.tier.sustainer.feature2": "Full sustainer library — 142 films",
+  "membership.tier.sustainer.feature3": "Offline downloads (sustainer titles)",
+  "membership.tier.sustainer.feature4": "Watch parties with other sustainers",
+  "membership.tier.sustainer.feature5": "Vote on open calls & commissions",
+  "membership.tier.sustainer.feature6": "Curator's notebook — full essays",
+  "membership.tier.sustainer.feature7": "Screener access (festival films)",
+  "membership.tier.sustainer.cta": "Become a sustainer · {price}/mo",
+  "membership.tier.sustainer.note":
+    "Cancel any time. No lock-in. No dark patterns.",
+  "membership.tier.sustainer.badge": "Most sustainers choose this",
+  "membership.tier.patron.tag": "Patron · monthly",
+  "membership.tier.patron.name": "The <em>patron</em>",
+  "membership.tier.patron.desc":
+    "Everything in Sustainer, plus your name on the public patron wall and a larger contribution to the commissioning pool (~{poolShare}/mo after costs).",
+  "membership.tier.patron.feature1": "Everything in Sustainer",
+  "membership.tier.patron.feature2": "Name on the patron wall (opt-in)",
+  "membership.tier.patron.feature3": "Direct input on future open calls",
+  "membership.tier.patron.feature4": "Invite to annual co-op assembly",
+  "membership.tier.patron.feature5": "~{poolShare}/mo → commissioning pool",
+  "membership.tier.patron.feature6": "Advance screeners before public",
+  "membership.tier.patron.feature7": "Two guest passes per year",
+  "membership.tier.patron.cta": "Become a patron · {price}/mo",
+  "membership.tier.patron.note": "Cancel any time.",
+  "membership.pays.title": "Where the money <em>actually</em> goes",
+  "membership.pays.sub":
+    "We publish the full breakdown quarterly. Here's the headline version — honest numbers, updated monthly.",
+  "membership.pays.filmmakers.title": "Paid to <em>filmmakers</em>",
+  "membership.pays.filmmakers.body":
+    "80% of every rent or buy goes directly to the filmmaker. Tips are 100% theirs. The sustainer pool is distributed monthly by per-minute-watched.",
+  "membership.pays.filmmakers.numSub": "This month · to filmmakers",
+  "membership.pays.commissioning.title": "Commissioning <em>fund</em>",
+  "membership.pays.commissioning.body":
+    "~20% of sustainer subscriptions goes into the commissioning pool — open calls, residencies, and captioning support for community filmmakers.",
+  "membership.pays.commissioning.numSub": "Available this season",
+  "membership.pays.curators.title": "Curators & <em>captions</em>",
+  "membership.pays.curators.body":
+    "The curators' council receives a quarterly stipend voted on by patrons. A separate captioning fund supports filmmakers who can't afford captioning.",
+  "membership.pays.curators.numSub": "Curators on the council",
+  "membership.ledger.label": "Public ledger · {month} · updated Monday",
+  "membership.ledger.sustainers.label": "Sustainers",
+  "membership.ledger.sustainers.note": "Up 38 this month",
+  "membership.ledger.paidToFilmmakers.note": "This month, all transactions",
+  "membership.ledger.filmsInCatalogue.note": "9 new this month",
+  "membership.ledger.commissionPool.label": "Commission pool",
+  "membership.ledger.commissionPool.note": "Season 3 · 4 calls open",
+  "membership.ledger.fullAccountsCta": "Full public accounts →",
+
+  // ── Submit wizard shell (CinemaSubmitPage.tsx, CinemaSubmitStepper.tsx,
+  // CinemaSubmitAside.tsx) — header, stepper, nav, validation, success panel
+  // and reassurance sidebar — plus (below, "submit.form.*"/"submit.option.*"/
+  // "submit.widgets.*"/"submit.review.*") the step-by-step form fields
+  // (Step1/Steps234/Review — labels, placeholders, option lists), now swept.
+  // The two legal-consent checkboxes ("I hold the rights…" in Step 3, "I
+  // agree to the co-op distribution terms…" in Review) are deliberately left
+  // hardcoded English, NOT routed through the catalog at all — a subtly-off
+  // pt-PT rendering would change what a filmmaker is representing/agreeing
+  // to; see the sweep report. The aside's live open-call block is that
+  // call's own instance content and stays English. ─────────────────────────
+  "submit.header.eyebrow": "For filmmakers · open submission",
+  "submit.header.title": "Submit <em>your</em> film.",
+  "submit.header.sub":
+    "The cinema is open to any queer filmmaker — community member or not. Five steps, 20 minutes. You choose your revenue model. The split is the same for everyone: 80% of every rent or buy comes to you.",
+  "submit.promise.heading": "The promise, in numbers",
+  "submit.promise.note":
+    "Non-exclusive means you can still show elsewhere — festivals, your own site, other platforms. We hold no lock-in.",
+  "submit.promise.row.yourShareRent": "Your share of every rent",
+  "submit.promise.row.yourShareBuy": "Your share of every buy",
+  "submit.promise.row.yourShareTip": "Your share of every tip",
+  "submit.promise.row.paidToYou": "Paid to you",
+  "submit.promise.row.contractType": "Contract type",
+  "submit.promise.value.weekly": "<em>Weekly</em>",
+  "submit.promise.value.nonExclusive": "Non-<em>exclusive</em>",
+  "submit.stepper.ariaLabel": "Submission steps",
+  "submit.step.theFilm.label": "The film",
+  "submit.step.theFilm.sub": "Basic info",
+  "submit.step.accessibility.label": "Accessibility",
+  "submit.step.accessibility.sub": "Captions & AD",
+  "submit.step.rights.label": "Rights",
+  "submit.step.rights.sub": "Territory & term",
+  "submit.step.revenue.label": "Revenue",
+  "submit.step.revenue.sub": "How you want to sell",
+  "submit.step.review.label": "Review",
+  "submit.step.review.sub": "& submit",
+  "submit.nav.next.accessibility": "Next: Accessibility →",
+  "submit.nav.next.rights": "Next: Rights →",
+  "submit.nav.next.revenue": "Next: Revenue →",
+  "submit.nav.next.review": "Review your film →",
+  "submit.nav.next.submit": "Submit your film →",
+  "submit.nav.saveDraft": "Save draft",
+  "submit.nav.back": "← Back",
+  "submit.nav.hint": "Step {step} of {total} · Progress saves automatically",
+  "submit.blocker.title": "Add your film's title first.",
+  "submit.blocker.synopsis": "A short synopsis, in your own words.",
+  "submit.blocker.screener": "Paste a screener link so we can watch it.",
+  "submit.blocker.rights": "Please confirm you hold the rights.",
+  "submit.blocker.agree": "Agree to the co-op terms to submit.",
+  "submit.toast.draftSaved": "Draft saved to this device",
+  "submit.sending.text": "Sending your film to the programming team…",
+  "submit.toast.submitted": "Your film is with the programming team",
+  "submit.success.title": "Your film is",
+  "submit.success.em": "in the queue.",
+  "submit.success.closeLabel": "Back to the cinema",
+  "submit.success.step1":
+    "A human watches it within 10–14 days — every submission, no exceptions.",
+  "submit.success.step2":
+    "We write back either way, with specific notes if it's a no.",
+  "submit.success.step3":
+    "If it's a yes, you're paid within 7 days of every rent, buy, and tip.",
+  "submit.success.body":
+    "Thank you for trusting us with it. Non-exclusive means nothing changes for you elsewhere — keep showing it wherever you like while we take a look.",
+  "submit.success.anotherCta": "Submit another film",
+  "submit.aside.nextHeading": "What happens next",
+  "submit.aside.accessHeading": "Accessibility standard",
+  "submit.aside.accessBody":
+    "We ask for captions — but we also help source them. If you can't afford captioning, contact us. We have a small captioning fund for community filmmakers.",
+  "submit.aside.accessCta": "Our access standard →",
+  "submit.aside.openCallHeading": "Open call active",
+  "submit.aside.applyCta": "Apply for the commission →",
+  "submit.aside.next.point1.strong": "We watch it.",
+  "submit.aside.next.point1.rest":
+    "Every submission is screened by a human, within 10–14 days.",
+  "submit.aside.next.point2.strong": "We write back either way.",
+  "submit.aside.next.point2.rest":
+    "If we don't accept it, we say why specifically — not a form rejection.",
+  "submit.aside.next.point3.strong": "Non-exclusive contract.",
+  "submit.aside.next.point3.rest":
+    "You keep all your other rights. You can still show the film anywhere.",
+  "submit.aside.next.point4.strong": "Paid within 7 days",
+  "submit.aside.next.point4.rest":
+    "of each transaction, to your IBAN or Stripe account.",
+
+  // ── Submit wizard form (CinemaSubmitStep1.tsx, CinemaSubmitSteps234.tsx,
+  // CinemaSubmitReview.tsx, CinemaSubmitParts.tsx, CinemaSubmitWidgets.tsx).
+  // "submit.form.*" — per-step headings/labels/placeholders/help text.
+  "submit.form.step1.heading": "Tell us about <em>your film</em>",
+  "submit.form.step1.sub":
+    "Basic information — visible on the film's public page",
+  "submit.form.step1.title.label": "Film title",
+  "submit.form.step1.title.placeholder": "e.g. The light between rooms",
+  "submit.form.step1.originalTitle.label": "Original title",
+  "submit.form.step1.originalTitle.opt": "(if different)",
+  "submit.form.step1.originalTitle.placeholder": "Title in original language",
+  "submit.form.step1.year.label": "Year of production",
+  "submit.form.step1.runtime.label": "Runtime (minutes)",
+  "submit.form.step1.country.label": "Country of origin",
+  "submit.form.step1.language.label": "Original language",
+  "submit.form.step1.format.label": "Format",
+  "submit.form.step1.format.ariaLabel": "Format",
+  "submit.form.step1.synopsis.label": "Synopsis",
+  "submit.form.step1.synopsis.why":
+    "Written by you, in your own voice. 80–200 words. Not a pitch — describe the film as if you're writing to a friend who hasn't seen it.",
+  "submit.form.step1.synopsis.placeholder":
+    "A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them…",
+  "submit.form.step1.statement.label": "Director's statement",
+  "submit.form.step1.statement.opt": "(optional, but shown on the film page)",
+  "submit.form.step1.statement.why":
+    "Why you made it, and what you want people to bring to it. 60–120 words.",
+  "submit.form.step1.statement.placeholder":
+    "I make films about people who were never asked whether they wanted to be documented…",
+  "submit.form.step1.identityTags.label":
+    "Identity tags for yourself as filmmaker",
+  "submit.form.step1.identityTags.why":
+    "Self-disclosed only. These let viewers find more work by their communities. Never required. Tick what you want shown.",
+  "submit.form.step1.contentNotes.label": "Content notes",
+  "submit.form.step1.contentNotes.why":
+    "We surface these prominently, with timecodes if you can provide them. Think of them as information, not warnings — they help viewers decide whether tonight's the night for your film.",
+  "submit.form.step1.poster.label": "Upload poster / key art",
+  "submit.form.step1.poster.why":
+    "3:4 ratio preferred. Min 1800px tall. Used on your film's page and in the catalogue grid.",
+  "submit.form.step1.screener.label": "Screener link",
+  "submit.form.step1.screener.why":
+    "Password-protected Vimeo, Frame.io, or WeTransfer links work. We view every film before accepting it. Turnaround: 10–14 days.",
+  "submit.form.step1.screener.placeholder":
+    "https://vimeo.com/… or paste a WeTransfer link",
+
+  "submit.form.step2.heading": "Accessibility <em>assets</em>",
+  "submit.form.step2.sub":
+    "Captions, audio description, sign-language tracks. We help if you're stuck — nobody's turned away over cost.",
+  "submit.form.step2.captions.label": "Do you have captions?",
+  "submit.form.step2.captions.why":
+    "We caption every film before it goes live. If you don't have captions, our access fund can make them for you.",
+  "submit.form.step2.captions.ariaLabel": "Captions",
+  "submit.form.step2.captionLangs.label": "Caption languages you can provide",
+  "submit.form.step2.ad.label": "Audio description",
+  "submit.form.step2.ad.why":
+    "A described track or a script we can voice. Optional, but it opens your film to blind and low-vision viewers.",
+  "submit.form.step2.ad.ariaLabel": "Audio description",
+  "submit.form.step2.signTracks.label": "Sign-language tracks available",
+  "submit.form.step2.notes.label": "Anything else we should know",
+  "submit.form.step2.notes.opt": "(optional)",
+  "submit.form.step2.notes.placeholder":
+    "Flashing imagery timecodes, sensory notes, or access needs of your own we should plan around…",
+
+  "submit.form.step3.heading": "Rights you're granting",
+  "submit.form.step3.sub":
+    "Non-exclusive, always. You keep every other right and can show the film anywhere else, anytime.",
+  "submit.form.step3.territory.label": "Territory",
+  "submit.form.step3.territory.why":
+    "Where we can stream it. Worldwide reaches the most people, but a local-only première is completely fine.",
+  "submit.form.step3.territory.ariaLabel": "Territory",
+  "submit.form.step3.term.label": "Term",
+  "submit.form.step3.term.why":
+    "How long the film stays in the catalogue. You can pull it earlier at any time, no penalty.",
+  "submit.form.step3.term.ariaLabel": "Term",
+
+  "submit.form.step4.heading": "How you want <em>to sell</em>",
+  "submit.form.step4.sub":
+    "You choose. You can change this after submission, once per year.",
+  "submit.form.step4.rentPrice.label": "Rental price (€2–8)",
+  "submit.form.step4.buyPrice.label": "Buy price (min 2× rental)",
+
+  "submit.form.review.heading": "Review & submit",
+  "submit.form.review.sub":
+    "One last look. You can edit any answer, or send it to the team now.",
+
+  // "submit.option.*" — the option lists themselves (Pattern A: canonical
+  // `value` in cinemaSubmit.data.ts, `labelKey`/`subKey` resolved here).
+  "submit.option.format.documentary.label": "Documentary",
+  "submit.option.format.documentary.sub": "Non-fiction",
+  "submit.option.format.narrative.label": "Narrative feature",
+  "submit.option.format.narrative.sub": "Fiction",
+  "submit.option.format.short.label": "Short",
+  "submit.option.format.short.sub": "Under 40 min",
+  "submit.option.format.series.label": "Series",
+  "submit.option.format.series.sub": "Episodic",
+  "submit.option.format.experimental.label": "Experimental",
+  "submit.option.format.experimental.sub": "Essay / hybrid",
+  "submit.option.format.animation.label": "Animation",
+
+  "submit.option.country.pt": "Portugal",
+  "submit.option.country.br": "Brazil",
+  "submit.option.country.fr": "France",
+  "submit.option.country.es": "Spain",
+  "submit.option.country.other": "Other",
+
+  "submit.option.language.pt": "Portuguese",
+  "submit.option.language.en": "English",
+  "submit.option.language.fr": "French",
+  "submit.option.language.es": "Spanish",
+  "submit.option.language.other": "Other",
+
+  // Self-identification terms (filmmaker's own tags) — see
+  // docs/i18n/glossary-pt.md's queer-terminology table for the pt-PT side;
+  // flagged for extra native-reviewer attention in the sweep report.
+  "submit.option.identity.lesbian": "Lesbian",
+  "submit.option.identity.gay": "Gay",
+  "submit.option.identity.bi": "Bi",
+  "submit.option.identity.transWoman": "Trans woman",
+  "submit.option.identity.transMan": "Trans man",
+  "submit.option.identity.nonBinary": "Non-binary",
+  "submit.option.identity.queer": "Queer",
+  "submit.option.identity.intersex": "Intersex",
+  "submit.option.identity.asexual": "Asexual",
+
+  "submit.option.captions.have.label": "I have them",
+  "submit.option.captions.have.sub": "SRT / VTT ready",
+  "submit.option.captions.help.label": "I need help",
+  "submit.option.captions.help.sub": "Use the fund",
+  "submit.option.captions.none.label": "None yet",
+  "submit.option.captions.none.sub": "We'll talk",
+
+  // Caption *track* languages the filmmaker can supply, incl. "Brazilian
+  // PT" for an existing pt-BR caption file — distinct from the platform's
+  // own pt-PT-only chrome; see cinemaSubmit.data.ts's CAPTION_LANGS comment.
+  "submit.option.captionLang.pt": "Portuguese",
+  "submit.option.captionLang.en": "English",
+  "submit.option.captionLang.es": "Spanish",
+  "submit.option.captionLang.fr": "French",
+  "submit.option.captionLang.ptBr": "Brazilian PT",
+
+  "submit.option.ad.have.label": "Audio description ready",
+  "submit.option.ad.have.sub": "Track or script",
+  "submit.option.ad.help.label": "I'd like help making one",
+  "submit.option.ad.help.sub": "Access fund",
+  "submit.option.ad.none.label": "Not this time",
+
+  "submit.option.signTrack.lgp": "LGP",
+  "submit.option.signTrack.asl": "ASL",
+  "submit.option.signTrack.bsl": "BSL",
+  "submit.option.signTrack.none": "None yet",
+
+  "submit.option.territory.worldwide.label": "Worldwide",
+  "submit.option.territory.worldwide.sub": "Reaches the most people",
+  "submit.option.territory.europe.label": "Europe only",
+  "submit.option.territory.europe.sub": "EU + UK",
+  "submit.option.territory.portugal.label": "Portugal only",
+  "submit.option.territory.portugal.sub": "Local première",
+
+  "submit.option.term.oneYear.label": "One year",
+  "submit.option.term.oneYear.sub": "Auto-renews, cancel anytime",
+  "submit.option.term.twoYear.label": "Two years",
+  "submit.option.term.twoYear.sub": "A little more stability",
+  "submit.option.term.rolling.label": "Rolling",
+  "submit.option.term.rolling.sub": "Until you pull it",
+
+  "submit.option.revenue.free.label": "Free to watch",
+  "submit.option.revenue.free.tag": "Free",
+  "submit.option.revenue.free.desc":
+    "Anyone can watch. You earn a per-watch share of the community pool, funded by sustainers. Good for shorts and activist work.",
+  "submit.option.revenue.free.split": "~€0.03–0.12 per watch",
+  "submit.option.revenue.sustainer.label": "Sustainer library",
+  "submit.option.revenue.sustainer.tag": "Member",
+  "submit.option.revenue.sustainer.desc":
+    "Included in sustainer access. You earn a per-minute-watched share. Predictable, slower to grow.",
+  "submit.option.revenue.sustainer.split": "~€0.008/min watched · 80% to you",
+  "submit.option.revenue.rent.label": "Rent · you set the price",
+  "submit.option.revenue.rent.tag": "€",
+  "submit.option.revenue.rent.desc":
+    "You set the rental price (min €2, max €8). 80% comes to you. 48-hour rental window.",
+  "submit.option.revenue.rent.split": "80% to you · paid weekly",
+  "submit.option.revenue.rentbuy.label": "Rent + Buy",
+  "submit.option.revenue.rentbuy.tag": "€€",
+  "submit.option.revenue.rentbuy.desc":
+    "Set a rental price and a buy price (min 2× rental). 80% of both comes to you. Tips always 100%.",
+  "submit.option.revenue.rentbuy.split": "80% rent + buy · 100% tip",
+
+  // "submit.widgets.*" — ContentNotesBuilder + PosterUpload (CinemaSubmitWidgets.tsx).
+  "submit.widgets.contentNotes.head": "Add one row per topic — be specific",
+  "submit.widgets.contentNotes.topicPlaceholder": "e.g. Grief",
+  "submit.widgets.contentNotes.detailPlaceholder":
+    "e.g. Discussion of bereavement and a partner's death",
+  "submit.widgets.contentNotes.timecodePlaceholder": "Timecode (opt.)",
+  "submit.widgets.contentNotes.topicAriaLabel": "Content note {index} topic",
+  "submit.widgets.contentNotes.detailAriaLabel": "Content note {index} detail",
+  "submit.widgets.contentNotes.timecodeAriaLabel":
+    "Content note {index} timecode",
+  "submit.widgets.contentNotes.removeAriaLabel": "Remove content note {index}",
+  "submit.widgets.contentNotes.addCta": "Add another content note",
+  "submit.widgets.poster.attached": "{filename} attached",
+  "submit.widgets.poster.dropTitle": "Drop your poster here",
+  "submit.widgets.poster.replaceHint": "Click to replace",
+  "submit.widgets.poster.browseHint":
+    "Or click to browse · JPG, PNG, TIFF · Max 50 MB",
+  "submit.widgets.poster.note":
+    "We will not crop or filter your poster without asking.",
+
+  // "submit.review.*" — CinemaSubmitReview.tsx's read-back rows.
+  "submit.review.editCta": "Edit",
+  "submit.review.value.notAddedYet": "Not added yet",
+  "submit.review.value.runtimeMinutes": "{minutes} min",
+  "submit.review.value.notesAdded_one": "{count} added",
+  "submit.review.value.notesAdded_other": "{count} added",
+  "submit.review.value.yes": "Yes",
+  "submit.review.field.title": "Title",
+  "submit.review.field.yearRuntime": "Year · runtime",
+  "submit.review.field.format": "Format",
+  "submit.review.field.origin": "Origin",
+  "submit.review.field.contentNotes": "Content notes",
+  "submit.review.field.poster": "Poster",
+  "submit.review.field.screener": "Screener",
+  "submit.review.field.captions": "Captions",
+  "submit.review.field.rightsConfirmed": "Rights confirmed",
+  "submit.review.field.revenueModel": "Revenue model",
+
+  // ── Watch player (WatchPage.tsx, WatchPageSections.tsx) — player chrome
+  // only. The film's own title/meta/curator quote, its content notes, and
+  // the Lobby/Live Q&A chat feed are that film's own instance content and
+  // stay English. The `WatchTab` stored-value trap is now fixed — the tab
+  // strip's state/comparison uses the canonical ids in watchPage.data.ts
+  // (`"film-info" | "lobby" | "live-qna"`); "watch.tab.*" below are only the
+  // display labels. ──────────────────────────────────────────────────────
+  "watch.nav.backToFilm": "← Film info",
+  "watch.nav.cinemaHome": "Cinema home",
+  "watch.nav.watchingAs": "Watching as <strong>{name}</strong>",
+  "watch.nav.signInCta": "Sign in to save progress",
+  "watch.overlay.ariaLabel": "Content notes before watching",
+  "watch.overlay.heading": "Before you <em>watch</em>",
+  "watch.overlay.sub_one":
+    "This film has {count} content note. Take a moment — then decide when you're ready.",
+  "watch.overlay.sub_other":
+    "This film has {count} content notes. Take a moment — then decide when you're ready.",
+  "watch.overlay.readyCta": "I'm ready · play the film",
+  "watch.overlay.backCta": "Go back to film page",
+  "watch.tab.filmInfo": "Film info",
+  "watch.tab.lobby": "Lobby",
+  "watch.tab.liveQna": "Live Q&A",
+  "watch.facts.director": "Director",
+  "watch.facts.runtime": "Runtime",
+  "watch.facts.year": "Year",
+  "watch.controls.subtitleLang.pt": "PT subs",
+  "watch.controls.subtitleLang.en": "EN subs",
+  "watch.controls.subtitleLang.es": "ES subs",
+  "watch.controls.subtitleLang.none": "No subs",
+  "watch.sidePanel.lobbyPlaceholder": "Say something to the lobby…",
+  "watch.sidePanel.qnaPlaceholder": "Ask {name} a question…",
+  "watch.sidePanel.sendCta": "Send",
+  "watch.below.nextUpTitle": "Next <em>up</em>",
+  "watch.below.splitHeading": "Your watch · where the money goes",
+  "watch.below.splitLegend.filmmaker": "Filmmaker",
+  "watch.below.splitLegend.payments": "Payments",
+  "watch.below.splitLegend.hosting": "Hosting",
 };

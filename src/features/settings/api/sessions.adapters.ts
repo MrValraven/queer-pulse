@@ -1,3 +1,5 @@
+import type { TFunction } from "../../../shared/i18n/types";
+import type { Formatters } from "../../../shared/i18n/format";
 import type { DeviceType, Session } from "../sessions.data";
 import type { SessionResponse } from "./account.api";
 
@@ -74,26 +76,35 @@ const DAY = 24 * HOUR;
  * "4 hours ago" / "8 days ago" from an ISO timestamp, relative to `now`
  * (injectable so the unit test isn't clock-dependent). Deliberately coarse —
  * this is a "when did this device sign in" hint, not an audit log.
+ *
+ * i18n note: the numeric distance goes through `fmt.relativeTime` (locale's
+ * own `Intl.RelativeTimeFormat`, e.g. pt-PT's "há 4 horas"), never a
+ * hand-rolled `${n} ${n === 1 ? "hour" : "hours"} ago` — that hard-codes
+ * English pluralization rules and previously left this page permanently
+ * English regardless of the active language. The two non-numeric idioms
+ * ("just now" / "unknown", not something `Intl.RelativeTimeFormat` expresses)
+ * still resolve through the catalog via `t`.
  */
-export function signedInAgo(iso: string, now: number = Date.now()): string {
+export function signedInAgo(
+  iso: string,
+  t: TFunction,
+  fmt: Formatters,
+  now: number = Date.now(),
+): string {
   const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "unknown";
+  if (Number.isNaN(then)) return t("settings:sessions.ago.unknown");
   const delta = Math.max(0, now - then);
-  if (delta < MINUTE) return "just now";
-  if (delta < HOUR) {
-    const mins = Math.floor(delta / MINUTE);
-    return `${mins} ${mins === 1 ? "minute" : "minutes"} ago`;
-  }
-  if (delta < DAY) {
-    const hours = Math.floor(delta / HOUR);
-    return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-  }
-  const days = Math.floor(delta / DAY);
-  return `${days} ${days === 1 ? "day" : "days"} ago`;
+  if (delta < MINUTE) return t("settings:sessions.ago.justNow");
+  if (delta < HOUR)
+    return fmt.relativeTime(-Math.floor(delta / MINUTE), "minute");
+  if (delta < DAY) return fmt.relativeTime(-Math.floor(delta / HOUR), "hour");
+  return fmt.relativeTime(-Math.floor(delta / DAY), "day");
 }
 
 export function sessionResponseToSession(
   dto: SessionResponse,
+  t: TFunction,
+  fmt: Formatters,
   now?: number,
 ): Session {
   return {
@@ -101,6 +112,6 @@ export function sessionResponseToSession(
     device: deviceLabelFor(dto),
     variant: dto.current ? "current" : "normal",
     deviceType: deviceTypeFromUserAgent(dto.userAgent ?? ""),
-    signedIn: signedInAgo(dto.createdAt, now),
+    signedIn: signedInAgo(dto.createdAt, t, fmt, now),
   };
 }

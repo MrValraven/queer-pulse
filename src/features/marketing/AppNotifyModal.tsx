@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./MarketingModal.module.css";
 
 export type AppPlatform = "iOS" | "Android";
@@ -12,11 +14,13 @@ export function AppNotifyModal({
   platform: AppPlatform;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   useScrollLock();
 
   const valid = /.+@.+\..+/.test(email);
+  const store = platform === "iOS" ? "App Store" : "Google Play";
 
   return (
     <div
@@ -29,13 +33,13 @@ export function AppNotifyModal({
         className={`${styles.modal} ${sent ? styles.modalSuccess : ""}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Get notified at launch"
+        aria-label={t("marketing:appNotify.ariaLabel")}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("marketing:appNotify.close")}
         >
           ×
         </button>
@@ -48,14 +52,20 @@ export function AppNotifyModal({
               </svg>
             </div>
             <h2>
-              We'll let you <em>know.</em>
+              <Translation
+                i18nKey="marketing:appNotify.success.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p>
-              You're on the list for the {platform} launch. We'll email{" "}
-              <b>{email}</b> the day it lands — and nothing else.
+              <Translation
+                i18nKey="marketing:appNotify.success.body"
+                components={{ b: <b /> }}
+                values={{ platform, email }}
+              />
             </p>
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
-              Close
+              {t("marketing:appNotify.close")}
             </Button>
           </div>
         ) : (
@@ -66,19 +76,22 @@ export function AppNotifyModal({
             }}
           >
             <div className={styles.eye}>
-              {platform === "iOS" ? "App Store" : "Google Play"} · coming soon
+              {t("marketing:appNotify.eyebrow", { store })}
             </div>
             <h2 className={styles.title}>
-              QueerPulse is coming to <em>{platform}.</em>
+              <Translation
+                i18nKey="marketing:appNotify.title"
+                components={{ em: <em /> }}
+                values={{ platform }}
+              />
             </h2>
             <p className={styles.lead}>
-              The app isn't in the store yet. Drop your email and we'll let you
-              know the moment the {platform} build is live. No marketing, no
-              lists you didn't ask for.
+              {t("marketing:appNotify.lead", { platform })}
             </p>
             <div className={styles.field}>
               <label htmlFor="notify-email">
-                Your email <span className={styles.req}>*</span>
+                {t("marketing:appNotify.emailLabel")}{" "}
+                <span className={styles.req}>*</span>
               </label>
               <input
                 id="notify-email"
@@ -89,15 +102,15 @@ export function AppNotifyModal({
                 autoFocus
               />
               <span className={styles.hint}>
-                We'll only use this for the launch heads-up.
+                {t("marketing:appNotify.emailHint")}
               </span>
             </div>
             <div className={styles.foot}>
               <button type="button" className={styles.back} onClick={onClose}>
-                ← Maybe later
+                {t("marketing:appNotify.maybeLaterCta")}
               </button>
               <Button size="lg" type="submit" disabled={!valid}>
-                Notify me →
+                {t("marketing:appNotify.notifyCta")}
               </Button>
             </div>
           </form>

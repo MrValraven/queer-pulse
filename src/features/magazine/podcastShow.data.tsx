@@ -13,7 +13,8 @@ export interface Platform {
   color: string;
   /** Where the "Open" affordance points (fictional product → in-app/external). */
   url: string;
-  kind: string;
+  /** Catalog key — chrome category label, resolved via `t()`. */
+  kindKey: string;
 }
 
 export const PLATFORMS: Platform[] = [
@@ -21,31 +22,31 @@ export const PLATFORMS: Platform[] = [
     name: "Spotify",
     color: "#1DB954",
     url: "https://open.spotify.com",
-    kind: "Streaming",
+    kindKey: "magazine:podcast.platformKind.streaming",
   },
   {
     name: "Apple Podcasts",
     color: "#A050F6",
     url: "https://podcasts.apple.com",
-    kind: "Streaming",
+    kindKey: "magazine:podcast.platformKind.streaming",
   },
   {
     name: "Overcast",
     color: "#FF6600",
     url: "https://overcast.fm",
-    kind: "App",
+    kindKey: "magazine:podcast.platformKind.app",
   },
   {
     name: "Pocket Casts",
     color: "#FFCB14",
     url: "https://pocketcasts.com",
-    kind: "App",
+    kindKey: "magazine:podcast.platformKind.app",
   },
   {
     name: "RSS feed",
     color: "linear-gradient(135deg,#5856d6,#ff6b6b)",
     url: RSS_URL,
-    kind: "Raw feed",
+    kindKey: "magazine:podcast.platformKind.rawFeed",
   },
 ];
 
@@ -353,11 +354,30 @@ export const OLDER_EPISODES: Episode[] = [
   },
 ];
 
-export const SHOW_INFO: [string, string][] = [
-  ["Format", "Long-form interview"],
-  ["Schedule", "Bi-weekly · Thursdays"],
-  ["Length", "~45 min · range 30–90"],
-  ["Languages", "PT · EN · sometimes both"],
-  ["Transcripts", "Always"],
-  ["Music", "By Tó Cunha"],
+/** `labelKey` is chrome (generic field label, translated); `value` describes
+ * this specific show and is content — left in English. */
+export interface ShowInfoRow {
+  labelKey: string;
+  value: string;
+}
+
+export const SHOW_INFO: ShowInfoRow[] = [
+  {
+    labelKey: "magazine:podcast.showInfo.format",
+    value: "Long-form interview",
+  },
+  {
+    labelKey: "magazine:podcast.showInfo.schedule",
+    value: "Bi-weekly · Thursdays",
+  },
+  {
+    labelKey: "magazine:podcast.showInfo.length",
+    value: "~45 min · range 30–90",
+  },
+  {
+    labelKey: "magazine:podcast.showInfo.languages",
+    value: "PT · EN · sometimes both",
+  },
+  { labelKey: "magazine:podcast.showInfo.transcripts", value: "Always" },
+  { labelKey: "magazine:podcast.showInfo.music", value: "By Tó Cunha" },
 ];

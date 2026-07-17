@@ -1,37 +1,41 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./ForOrganisationsPage.module.css";
-import { NOT_DO, PROCESS, PARTNERS } from "./forOrganisationsPage.data";
+import { NOT_DO_KEYS, PROCESS, PARTNERS } from "./forOrganisationsPage.data";
 import { TiersSection, PartnerContactForm } from "./ForOrganisationsSections";
 
 export function ForOrganisationsPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <Reveal as="div" className={styles.eyebrow}>
-            For organisations · partnerships
+            {t("marketing:forOrgs.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" className={styles.h1} delay={60}>
-            Work <em>with us,</em> not <em>at us.</em>
+            <Translation
+              i18nKey="marketing:forOrgs.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.dek} delay={120}>
-            QueerPulse partnerships are <b>operational, not promotional</b>. We
-            don't sell access, run sponsored content, or do co-branding for its
-            own sake.{" "}
-            <em>
-              We build seams between organisations that already do the work.
-            </em>{" "}
-            Below: what those seams look like, who we already work with, and how
-            to start a conversation.
+            <Translation
+              i18nKey="marketing:forOrgs.hero.dek"
+              components={{ b: <b />, em: <em /> }}
+            />
           </Reveal>
           <Reveal className={styles.notRow} delay={180}>
-            <h4>What we don't do</h4>
+            <h4>{t("marketing:forOrgs.hero.notDoTitle")}</h4>
             <ul>
-              {NOT_DO.map((n, i) => (
-                <li key={i}>{n}</li>
+              {NOT_DO_KEYS.map((notDoKey) => (
+                <li key={notDoKey}>
+                  <Translation i18nKey={notDoKey} components={{ b: <b /> }} />
+                </li>
               ))}
             </ul>
           </Reveal>
@@ -42,21 +46,28 @@ export function ForOrganisationsPage() {
 
       <section className={styles.process}>
         <Reveal as="h2" className={styles.doH2}>
-          How partnerships <em>actually start</em>
+          <Translation
+            i18nKey="marketing:forOrgs.process.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.doSub} delay={60}>
-          Slow. Conversational. Often via a phone call before a written
-          proposal. The whole process usually takes 6–10 weeks.
+          {t("marketing:forOrgs.process.sub")}
         </Reveal>
         <div className={styles.processGrid}>
-          {PROCESS.map((p, i) => (
-            <Reveal className={styles.proc} key={p.n} delay={i * 60}>
+          {PROCESS.map((step, index) => (
+            <Reveal className={styles.proc} key={step.n} delay={index * 60}>
               <div className={styles.procN}>
-                {p.n[0]}
-                <em>{p.n[1]}</em>
+                {step.n[0]}
+                <em>{step.n[1]}</em>
               </div>
-              <h4>{p.title}</h4>
-              <p>{p.body}</p>
+              <h4>{t(step.titleKey)}</h4>
+              <p>
+                <Translation
+                  i18nKey={step.bodyKey}
+                  components={{ b: <b />, em: <em /> }}
+                />
+              </p>
             </Reveal>
           ))}
         </div>
@@ -65,36 +76,40 @@ export function ForOrganisationsPage() {
       <section className={styles.proof}>
         <div className={styles.proofInner}>
           <Reveal as="h2">
-            Already working <em>with us</em>
+            <Translation
+              i18nKey="marketing:forOrgs.proof.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.proofSub} delay={60}>
-            Four representative partners, each at a different tier. Full list
-            lives on Partners.
+            {t("marketing:forOrgs.proof.sub")}
           </Reveal>
           <div className={styles.partnerRow}>
-            {PARTNERS.map((p, i) => (
+            {PARTNERS.map((partner, index) => (
               <Reveal
-                key={i}
+                key={partner.slug}
                 as={Link}
-                to={`${routes.partner}/${p.slug}`}
+                to={`${routes.partner}/${partner.slug}`}
                 className={styles.partnerCard}
-                delay={i * 60}
+                delay={index * 60}
               >
                 <div
                   className={[
                     styles.partnerLogo,
-                    p.logoCls && styles[p.logoCls],
+                    partner.logoCls && styles[partner.logoCls],
                   ]
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  {p.logo}
+                  {partner.logo}
                 </div>
-                <div className={styles.partnerType}>{p.type}</div>
-                <div className={styles.partnerName}>{p.name}</div>
-                <div className={styles.partnerSince}>{p.since}</div>
-                <p>{p.desc}</p>
-                <span className={styles.arrow}>View partner →</span>
+                <div className={styles.partnerType}>{partner.type}</div>
+                <div className={styles.partnerName}>{partner.name}</div>
+                <div className={styles.partnerSince}>{partner.since}</div>
+                <p>{partner.desc}</p>
+                <span className={styles.arrow}>
+                  {t("marketing:forOrgs.proof.viewCta")}
+                </span>
               </Reveal>
             ))}
           </div>

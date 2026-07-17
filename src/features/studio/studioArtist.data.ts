@@ -5,7 +5,15 @@ export const heroImage =
 
 export const ARTIST_ID = "mariana-sol";
 
-export const TABS = ["Music", "Featured in", "Sheet music", "About"] as const;
+// Stable canonical ids — the tab's *stored* value never changes with
+// language; only `labelKey` resolves via t() at render (i18n §5.1).
+export const TABS = [
+  { id: "music", labelKey: "studio:artist.tabs.music" },
+  { id: "featuredIn", labelKey: "studio:artist.tabs.featuredIn" },
+  { id: "sheetMusic", labelKey: "studio:artist.tabs.sheetMusic" },
+  { id: "about", labelKey: "studio:artist.tabs.about" },
+] as const;
+export type ArtistTabId = (typeof TABS)[number]["id"];
 
 export interface ArtistRelease {
   pre: string;

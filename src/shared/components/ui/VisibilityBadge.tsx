@@ -1,12 +1,13 @@
 import type { HTMLAttributes } from "react";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./VisibilityBadge.module.css";
 
 export type VisibilityMode = "open" | "network" | "private";
 
-const labels: Record<VisibilityMode, string> = {
-  open: "Open to connect",
-  network: "Network only",
-  private: "Private",
+const LABEL_KEY: Record<VisibilityMode, string> = {
+  open: "shared:visibilityBadge.open",
+  network: "shared:visibilityBadge.network",
+  private: "shared:visibilityBadge.private",
 };
 
 interface VisibilityBadgeProps extends HTMLAttributes<HTMLDivElement> {
@@ -18,16 +19,18 @@ export function VisibilityBadge({
   className,
   ...rest
 }: VisibilityBadgeProps) {
+  const { t } = useTranslation();
+  const label = t(LABEL_KEY[mode]);
   return (
     <div
       className={[styles.badge, styles[mode], className]
         .filter(Boolean)
         .join(" ")}
-      title={`Visibility: ${labels[mode]}`}
+      title={t("shared:visibilityBadge.titleTemplate", { label })}
       {...rest}
     >
       <span className={styles.dot} aria-hidden />
-      {labels[mode]}
+      {label}
     </div>
   );
 }

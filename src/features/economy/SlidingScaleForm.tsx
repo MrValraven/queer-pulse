@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SlidingScale, Tier } from "./slidingScale.data";
 import styles from "./SlidingScalePage.module.css";
 
@@ -9,20 +10,23 @@ interface TierFieldsProps {
 
 /** The editable inputs for a single tier (name, price, who-it's-for). */
 function TierFields({ tier, index, onChange }: TierFieldsProps) {
+  const { t } = useTranslation();
   return (
     <fieldset className={styles.fieldset}>
-      <legend className={styles.legend}>Tier {index + 1}</legend>
+      <legend className={styles.legend}>
+        {t("economy:slidingScale.tierLegend", { index: index + 1 })}
+      </legend>
 
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor={`tier-name-${tier.id}`}>
-            Tier name
+            {t("economy:slidingScale.tierNameLabel")}
           </label>
           <input
             id={`tier-name-${tier.id}`}
             className={styles.rcInput}
             type="text"
-            placeholder="e.g. Supported"
+            placeholder={t("economy:slidingScale.tierNamePlaceholder")}
             value={tier.name}
             onChange={(e) => onChange({ name: e.target.value })}
           />
@@ -30,14 +34,14 @@ function TierFields({ tier, index, onChange }: TierFieldsProps) {
 
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor={`tier-price-${tier.id}`}>
-            Price
+            {t("economy:slidingScale.tierPriceLabel")}
           </label>
           <input
             id={`tier-price-${tier.id}`}
             className={styles.rcInput}
             type="text"
             inputMode="text"
-            placeholder="e.g. €60"
+            placeholder={t("economy:slidingScale.tierPricePlaceholder")}
             value={tier.price}
             onChange={(e) => onChange({ price: e.target.value })}
           />
@@ -46,12 +50,12 @@ function TierFields({ tier, index, onChange }: TierFieldsProps) {
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor={`tier-for-${tier.id}`}>
-          Who it&apos;s for
+          {t("economy:slidingScale.tierForWhomLabel")}
         </label>
         <textarea
           id={`tier-for-${tier.id}`}
           className={styles.rcTextarea}
-          placeholder="The honest guidance that helps people self-select."
+          placeholder={t("economy:slidingScale.tierForWhomPlaceholder")}
           value={tier.forWhom}
           onChange={(e) => onChange({ forWhom: e.target.value })}
         />
@@ -74,22 +78,25 @@ export function SlidingScaleForm({
   makerName,
   onMakerNameChange,
 }: SlidingScaleFormProps) {
+  const { t } = useTranslation();
   const patchTier = (id: string, patch: Partial<Tier>) =>
     onChange({
-      tiers: scale.tiers.map((t) => (t.id === id ? { ...t, ...patch } : t)),
+      tiers: scale.tiers.map((tier) =>
+        tier.id === id ? { ...tier, ...patch } : tier,
+      ),
     });
 
   return (
     <div className={styles.form}>
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="ss-maker">
-          Your name
+          {t("economy:slidingScale.yourNameLabel")}
         </label>
         <input
           id="ss-maker"
           className={styles.rcInput}
           type="text"
-          placeholder="The name people will see"
+          placeholder={t("economy:slidingScale.yourNamePlaceholder")}
           value={makerName}
           onChange={(e) => onMakerNameChange(e.target.value)}
         />
@@ -97,13 +104,13 @@ export function SlidingScaleForm({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="ss-service">
-          Service / offering
+          {t("economy:slidingScale.serviceLabel")}
         </label>
         <input
           id="ss-service"
           className={styles.rcInput}
           type="text"
-          placeholder="e.g. 1:1 coaching session"
+          placeholder={t("economy:slidingScale.servicePlaceholder")}
           value={scale.service}
           onChange={(e) => onChange({ service: e.target.value })}
         />
@@ -111,12 +118,12 @@ export function SlidingScaleForm({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="ss-intro">
-          Intro line
+          {t("economy:slidingScale.introLabel")}
         </label>
         <textarea
           id="ss-intro"
           className={styles.rcTextarea}
-          placeholder="A warm line that frames the scale."
+          placeholder={t("economy:slidingScale.introPlaceholder")}
           value={scale.intro}
           onChange={(e) => onChange({ intro: e.target.value })}
         />

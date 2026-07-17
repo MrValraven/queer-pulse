@@ -1,9 +1,17 @@
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { nightcapImage } from "./studioOffAir.data";
 import styles from "./StudioOffAirPage.module.css";
 
+const NIGHTCAP_TITLE = "Vespertina, vol. iv";
+const NIGHTCAP_PAID_OUT = 8.2;
+
 export function StudioOffAirHero() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   return (
     <section className={styles.offairHero}>
@@ -17,13 +25,16 @@ export function StudioOffAirHero() {
           >
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
           </svg>
-          Off air · 03:14 in Lisbon
+          {t("studio:offAir.hero.statusLine", { time: "03:14" })}
           <span className={styles.sep} aria-hidden />
-          the room is dark
+          {t("studio:offAir.hero.roomDark")}
         </div>
 
         <h1>
-          The room is <em>closed</em> for the night.
+          <Translation
+            i18nKey="studio:offAir.hero.title"
+            components={{ em: <em /> }}
+          />
         </h1>
 
         <p className={styles.signoff}>
@@ -40,11 +51,15 @@ export function StudioOffAirHero() {
             <div className={styles.clockTime}>
               <em>04</em>:46
             </div>
-            <div className={styles.clockLabel}>until doors</div>
+            <div className={styles.clockLabel}>
+              {t("studio:offAir.hero.untilDoors")}
+            </div>
           </div>
           <div className={styles.vr} aria-hidden />
           <div className={styles.nsInfo}>
-            <div className={styles.nsEb}>Next broadcast · 08:00 Lisbon</div>
+            <div className={styles.nsEb}>
+              {t("studio:offAir.hero.nextBroadcastLabel", { time: "08:00" })}
+            </div>
             <h3>
               Morning pages with <em>D. Okoye</em>
             </h3>
@@ -65,21 +80,30 @@ export function StudioOffAirHero() {
             />
           </div>
           <div className={styles.ncInfo}>
-            <div className={styles.ncEb}>Last night's night-cap</div>
+            <div className={styles.ncEb}>
+              {t("studio:offAir.hero.nightcapEyebrow")}
+            </div>
             <h3>
               Vespertina, <em>vol. iv</em>
             </h3>
             <p>
-              Sara Marques · 1h 42m · 12 tracks · €8.20 paid out · replay any
-              time
+              Sara Marques · 1h 42m · 12 tracks ·{" "}
+              {t("studio:offAir.hero.paidOutSuffix", {
+                amount: fmt.currency(NIGHTCAP_PAID_OUT),
+              })}
             </p>
           </div>
           <button
             type="button"
             className={styles.playBig}
-            aria-label="Replay the night-cap"
+            aria-label={t("studio:offAir.hero.replayAria")}
             onClick={() =>
-              showToast("Replaying Vespertina, vol. iv", "success")
+              showToast(
+                t("studio:offAir.hero.replayingToast", {
+                  title: NIGHTCAP_TITLE,
+                }),
+                "success",
+              )
             }
           >
             <svg viewBox="0 0 12 14" fill="currentColor" aria-hidden>

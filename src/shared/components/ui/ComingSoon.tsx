@@ -1,3 +1,4 @@
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./ComingSoon.module.css";
 
 /**
@@ -5,10 +6,11 @@ import styles from "./ComingSoon.module.css";
  * backend behind it). Purely presentational — the consumer is responsible for
  * disabling the control it annotates.
  */
-export function ComingSoon({ label = "Coming soon" }: { label?: string }) {
+export function ComingSoon({ label }: { label?: string }) {
+  const { t } = useTranslation();
   return (
     <span className={styles.badge} role="note">
-      {label}
+      {label ?? t("shared:comingSoon.label")}
     </span>
   );
 }

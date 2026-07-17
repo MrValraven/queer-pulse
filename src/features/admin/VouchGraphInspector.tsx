@@ -1,9 +1,11 @@
 import { FiLock, FiUser } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   EDGES,
   TONE,
-  fmtMonth,
+  monthDate,
   isIsolated,
   personById,
   type VouchEdge,
@@ -68,11 +70,14 @@ function VouchList({
   selId: string;
   onGo: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.insSec}>
       <div className={styles.insT}>{title}</div>
       {edges.length === 0 ? (
-        <div className={styles.insNone}>None yet.</div>
+        <div className={styles.insNone}>
+          {t("admin:vouchGraph.inspector.none")}
+        </div>
       ) : (
         edges.map((e) => {
           const otherId = e.from === selId ? e.to : e.from;
@@ -92,7 +97,11 @@ function VouchList({
               <span className={styles.insRowTx}>
                 <span className={styles.rn}>
                   {o.name}
-                  {e.mutual && <span className={styles.mut}>mutual</span>}
+                  {e.mutual && (
+                    <span className={styles.mut}>
+                      {t("admin:vouchGraph.inspector.mutualTag")}
+                    </span>
+                  )}
                   {e.tag && <span className={styles.tag}>{e.tag}</span>}
                 </span>
                 {e.reason && <span className={styles.rr}>“{e.reason}”</span>}
@@ -113,6 +122,9 @@ export function VouchGraphInspector({
   onExpand,
   onCite,
 }: Props) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+
   if (!sel) {
     return (
       <aside className={styles.inspector}>
@@ -120,11 +132,8 @@ export function VouchGraphInspector({
           <span className={styles.insEmptyIc}>
             <FiUser aria-hidden />
           </span>
-          <h4>Pick anyone</h4>
-          <p>
-            Click a node to read who trusts them and what that trust is built
-            on. Double-click to walk the network from there.
-          </p>
+          <h4>{t("admin:vouchGraph.inspector.emptyTitle")}</h4>
+          <p>{t("admin:vouchGraph.inspector.emptyBody")}</p>
         </div>
       </aside>
     );
@@ -159,75 +168,85 @@ export function VouchGraphInspector({
       </div>
 
       <div className={styles.sealed}>
-        <FiLock aria-hidden /> Legacy identity sealed — chosen name only
+        <FiLock aria-hidden /> {t("admin:vouchGraph.inspector.sealed")}
       </div>
 
       {p.scene === "ring" && (
         <Banner
           kind="danger"
-          title="Part of a suspected vouch ring"
-          body="Five accounts created within an hour, vouching only for each other — a closed loop with no outside trust."
+          title={t("admin:vouchGraph.inspector.ringBanner.title")}
+          body={t("admin:vouchGraph.inspector.ringBanner.body")}
         />
       )}
       {iso && (
         <Banner
           kind="amber"
-          title="Trust isolation"
-          body="Every vouch this member holds comes from new or flagged accounts. Verify with extra care."
+          title={t("admin:vouchGraph.inspector.isolationBanner.title")}
+          body={t("admin:vouchGraph.inspector.isolationBanner.body")}
         />
       )}
       {!!p.reports && (
         <Banner
           kind="coral"
-          title={`${p.reports} report${p.reports > 1 ? "s" : ""} on record`}
-          body="Open the member’s moderation history before acting."
+          title={t("admin:vouchGraph.inspector.reportsBanner.title", {
+            count: p.reports,
+          })}
+          body={t("admin:vouchGraph.inspector.reportsBanner.body")}
         />
       )}
       {p.private && (
         <Banner
           kind="plum"
-          title="Network kept private"
-          body="This member has chosen to hide their vouch graph. Respect it — don’t work around it."
+          title={t("admin:vouchGraph.inspector.privateBanner.title")}
+          body={t("admin:vouchGraph.inspector.privateBanner.body")}
         />
       )}
       {p.anon && (
         <Banner
           kind="plum"
-          title="Identity shielded"
-          body="An anonymous voucher. Their identity is protected and cannot be revealed."
+          title={t("admin:vouchGraph.inspector.anonBanner.title")}
+          body={t("admin:vouchGraph.inspector.anonBanner.body")}
         />
       )}
 
       <div className={styles.insStats}>
         <div className={styles.stat}>
           <div className={styles.statV}>{vouchedBy.length}</div>
-          <div className={styles.statL}>vouches in</div>
+          <div className={styles.statL}>
+            {t("admin:vouchGraph.inspector.vouchesIn")}
+          </div>
         </div>
         <div className={styles.stat}>
           <div className={styles.statV}>{vouchedFor.length}</div>
-          <div className={styles.statL}>vouches out</div>
+          <div className={styles.statL}>
+            {t("admin:vouchGraph.inspector.vouchesOut")}
+          </div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statV}>{fmtMonth(p.joined)}</div>
-          <div className={styles.statL}>joined</div>
+          <div className={styles.statV}>
+            {fmt.date(monthDate(p.joined), { month: "short", year: "numeric" })}
+          </div>
+          <div className={styles.statL}>
+            {t("admin:vouchGraph.inspector.joined")}
+          </div>
         </div>
       </div>
 
       <VouchList
-        title="Vouched for by"
+        title={t("admin:vouchGraph.inspector.vouchedForBy")}
         edges={vouchedBy}
         selId={sel}
         onGo={onGo}
       />
       <VouchList
-        title="Has vouched for"
+        title={t("admin:vouchGraph.inspector.hasVouchedFor")}
         edges={vouchedFor}
         selId={sel}
         onGo={onGo}
       />
       {withdrawn.length > 0 && (
         <VouchList
-          title="Withdrawn"
+          title={t("admin:vouchGraph.inspector.withdrawn")}
           edges={withdrawn}
           selId={sel}
           onGo={onGo}
@@ -236,16 +255,18 @@ export function VouchGraphInspector({
 
       {!p.private && (
         <div className={styles.affected}>
-          <div className={styles.insT}>If you removed {first}</div>
+          <div className={styles.insT}>
+            {t("admin:vouchGraph.inspector.affectedTitle", { name: first })}
+          </div>
           <p>
-            <b>{vouchedFor.length}</b> member
-            {vouchedFor.length !== 1 ? "s" : ""} would lose a vouch from them
-            {pendingAffected
-              ? " — including pending members who rely on it"
-              : ""}
-            . Their own {vouchedBy.length} vouch
-            {vouchedBy.length !== 1 ? "es" : ""} stay valid. Weigh the human
-            cost before acting.
+            {t("admin:vouchGraph.inspector.affectedCount", {
+              count: vouchedFor.length,
+            })}
+            {pendingAffected &&
+              t("admin:vouchGraph.inspector.affectedPendingNote")}{" "}
+            {t("admin:vouchGraph.inspector.ownVouchesStay", {
+              count: vouchedBy.length,
+            })}
           </p>
         </div>
       )}
@@ -253,14 +274,16 @@ export function VouchGraphInspector({
       <div className={styles.insActions}>
         {!p.private && (
           <Button variant="jade" size="md" onClick={() => onVerify(sel)}>
-            Use as verification basis
+            {t("admin:vouchGraph.inspector.useAsVerificationCta")}
           </Button>
         )}
         <Button variant="ghost" size="md" onClick={() => onExpand(sel)}>
-          {expanded ? "Collapse network" : "Expand network"}
+          {expanded
+            ? t("admin:vouchGraph.inspector.collapseCta")
+            : t("admin:vouchGraph.inspector.expandCta")}
         </Button>
         <Button variant="ghost" size="md" onClick={() => onCite(sel)}>
-          Cite in audit log
+          {t("admin:vouchGraph.inspector.citeCta")}
         </Button>
       </div>
     </aside>

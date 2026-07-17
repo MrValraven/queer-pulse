@@ -84,15 +84,16 @@ export function JobDetailBody({ job }: { job: Job }) {
 
       {safetyFor(job.org) && (
         <div className={styles.section}>
-          <h2 className={styles.secTitle}>Safety</h2>
+          <h2 className={styles.secTitle}>
+            {t("economy:jobDetail.section.safety")}
+          </h2>
           <p className={styles.text}>
-            How {job.org} is rated by the community on the things that matter to
-            queer professionals.
+            {t("economy:jobDetail.section.safetyBody", { company: job.org })}
           </p>
           <div className={styles.safetyBlock}>
             <SafetyBadges signals={safetyFor(job.org)} />
             <Button variant="ghost" to={routes.employerReviews}>
-              See safety reviews →
+              {t("economy:jobDetail.section.safetyReviews")}
             </Button>
           </div>
         </div>

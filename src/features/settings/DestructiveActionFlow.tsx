@@ -4,6 +4,8 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { logError } from "../../shared/observability/logger";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./DestructiveActionFlow.module.css";
 
 type Phase = "confirm" | "loading" | "done" | "error";
@@ -42,6 +44,7 @@ export function DestructiveActionFlow({
   onDone?: () => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("confirm");
   useScrollLock();
 
@@ -96,7 +99,7 @@ export function DestructiveActionFlow({
               to={routes.homepage}
               onClick={() => onDone?.()}
             >
-              Back to QueerPulse
+              {t("settings:destructiveFlow.backToHome")}
             </Button>
           </div>
         </div>
@@ -120,18 +123,20 @@ export function DestructiveActionFlow({
               </div>
               <div className={styles.eyebrow}>{content.eyebrow}</div>
               <h3 className={styles.title}>
-                That didn't <em>go through.</em>
+                <Translation
+                  i18nKey="settings:destructiveFlow.error.title"
+                  components={{ em: <em /> }}
+                />
               </h3>
               <p className={styles.body}>
-                We couldn't complete this just now — nothing was changed. Check
-                your connection and try again, or come back in a moment.
+                {t("settings:destructiveFlow.error.body")}
               </p>
               <div className={styles.btns}>
                 <Button variant="ghost" onClick={onClose}>
-                  Close
+                  {t("settings:destructiveFlow.error.close")}
                 </Button>
                 <Button variant="primary" onClick={run}>
-                  Try again
+                  {t("settings:destructiveFlow.error.tryAgain")}
                 </Button>
               </div>
             </>
@@ -147,7 +152,7 @@ export function DestructiveActionFlow({
               <p className={styles.body}>{content.body}</p>
               <div className={styles.btns}>
                 <Button variant="ghost" onClick={onClose}>
-                  Not now
+                  {t("settings:destructiveFlow.confirm.notNow")}
                 </Button>
                 <Button variant="primary" onClick={run}>
                   {content.confirmLabel}

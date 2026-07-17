@@ -5,12 +5,14 @@ import {
   Tag,
   TagRow,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { memberProfiles } from "../members/data/memberProfiles";
 import type { Skill } from "./skills.data";
 import styles from "./SkillsPage.module.css";
 
 export function SkillCard({ skill }: { skill: Skill }) {
+  const { t } = useTranslation();
   const member = memberProfiles[skill.member]!;
   const { openConnect } = useConnect();
   return (
@@ -18,7 +20,9 @@ export function SkillCard({ skill }: { skill: Skill }) {
       <div className={styles.cardTop}>
         <Avatar initials={member.initials} tint={member.tint} size={40} />
         <span className={[styles.skType, styles[skill.type]].join(" ")}>
-          {skill.type === "offering" ? "Teaching" : "Learning"}
+          {skill.type === "offering"
+            ? t("economy:skills.card.teaching")
+            : t("economy:skills.card.learning")}
         </span>
       </div>
       <div>

@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HOODS, ORGS, COMM_QUICK } from "./arrivingPage.data";
 import { HEALTH, HOUSING, type InfoCard } from "./arrivingPageCards.data";
@@ -47,19 +49,21 @@ export function InfoCards({ cards }: { cards: InfoCard[] }) {
 }
 
 export function NeighbourhoodsSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.alt}`}>
       <div className="wrap">
         <Reveal as="div" className={styles.eye}>
-          Lisbon's neighbourhoods
+          {t("marketing:arriving.neighbourhoods.eyebrow")}
         </Reveal>
         <Reveal as="h2" className={styles.h} delay={60}>
-          Where queer life <em>happens.</em>
+          <Translation
+            i18nKey="marketing:arriving.neighbourhoods.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.intro} delay={120}>
-          Lisbon doesn't have one queer neighbourhood — it has several pockets,
-          each with its own character. Here's an honest guide to where the
-          community is.
+          {t("marketing:arriving.neighbourhoods.intro")}
         </Reveal>
         <div className={styles.hoodGrid}>
           {HOODS.map((h, i) => (
@@ -87,19 +91,21 @@ export function NeighbourhoodsSection() {
 }
 
 export function HealthSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.paper}`}>
       <div className="wrap">
         <Reveal as="div" className={styles.eye}>
-          Health
+          {t("marketing:arriving.health.eyebrow")}
         </Reveal>
         <Reveal as="h2" className={styles.h} delay={60}>
-          Healthcare in Lisbon — <em>what you need to know.</em>
+          <Translation
+            i18nKey="marketing:arriving.health.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.intro} delay={120}>
-          Portugal has a national health service (SNS) that you can register
-          with. Trans-affirming care has improved significantly — but it takes
-          knowing where to go.
+          {t("marketing:arriving.health.intro")}
         </Reveal>
         <InfoCards cards={HEALTH} />
       </div>
@@ -108,18 +114,21 @@ export function HealthSection() {
 }
 
 export function HousingSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.alt}`}>
       <div className="wrap">
         <Reveal as="div" className={styles.eye}>
-          Housing
+          {t("marketing:arriving.housing.eyebrow")}
         </Reveal>
         <Reveal as="h2" className={styles.h} delay={60}>
-          Finding a place to live — <em>honestly.</em>
+          <Translation
+            i18nKey="marketing:arriving.housing.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.intro} delay={120}>
-          Lisbon's housing market is expensive and competitive. Here's an honest
-          picture of what to expect, and where to get help.
+          {t("marketing:arriving.housing.intro")}
         </Reveal>
         <InfoCards cards={HOUSING} />
       </div>
@@ -128,19 +137,21 @@ export function HousingSection() {
 }
 
 export function OrgsSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.paper}`}>
       <div className="wrap">
         <Reveal as="div" className={styles.eye}>
-          Organisations
+          {t("marketing:arriving.orgs.eyebrow")}
         </Reveal>
         <Reveal as="h2" className={styles.h} delay={60}>
-          Know these <em>three first.</em>
+          <Translation
+            i18nKey="marketing:arriving.orgs.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.intro} delay={120}>
-          These are the organisations most likely to be useful within your first
-          weeks in Lisbon — for legal support, mental health, or simply
-          connecting to the community.
+          {t("marketing:arriving.orgs.intro")}
         </Reveal>
         <div className={styles.orgList}>
           {ORGS.map((o, i) => (
@@ -171,18 +182,21 @@ export function OrgsSection() {
 }
 
 export function FirstStepSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.dark}`}>
       <div className="wrap">
         <Reveal as="div" className={styles.eye}>
-          Your first step
+          {t("marketing:arriving.firstStep.eyebrow")}
         </Reveal>
         <Reveal as="h2" className={styles.h} delay={60}>
-          Come to something <em>in person.</em>
+          <Translation
+            i18nKey="marketing:arriving.firstStep.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.intro} delay={120}>
-          Everything on this page is useful. But the best thing you can do is
-          show up to a gathering. Next one coming up:
+          {t("marketing:arriving.firstStep.intro")}
         </Reveal>
         <Reveal as="div" className={styles.firstGather} delay={160}>
           <div className={styles.fgDate}>
@@ -198,7 +212,7 @@ export function FirstStepSection() {
             </p>
           </div>
           <Button to={routes.gathering} variant="ghost-dark">
-            I'll be there →
+            {t("marketing:arriving.firstStep.rsvpCta")}
           </Button>
         </Reveal>
       </div>
@@ -207,18 +221,21 @@ export function FirstStepSection() {
 }
 
 export function CommQuickSection() {
+  const { t } = useTranslation();
   return (
     <section className={`${styles.section} ${styles.alt}`}>
       <div className="wrap">
         <Reveal as="div" className={styles.eye}>
-          Where to start
+          {t("marketing:arriving.commQuick.eyebrow")}
         </Reveal>
         <Reveal as="h2" className={styles.h} delay={60}>
-          Three communities for <em>new arrivals.</em>
+          <Translation
+            i18nKey="marketing:arriving.commQuick.title"
+            components={{ em: <em /> }}
+          />
         </Reveal>
         <Reveal as="p" className={styles.intro} delay={120}>
-          Not sure where to begin? These three communities are particularly
-          welcoming to people who are new to Lisbon.
+          {t("marketing:arriving.commQuick.intro")}
         </Reveal>
         <div className={styles.commQuick}>
           {COMM_QUICK.map((c, i) => (
@@ -242,7 +259,7 @@ export function CommQuickSection() {
         </div>
         <Reveal as="div" className={styles.commCta} delay={120}>
           <Button to={COMMUNITIES} variant="ghost">
-            Browse all communities →
+            {t("marketing:arriving.commQuick.browseCta")}
           </Button>
         </Reveal>
       </div>

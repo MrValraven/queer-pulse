@@ -1,37 +1,52 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { TIERS, CURRENT_PLAN, type TierKey } from "./membership.data";
+import {
+  buildTiers,
+  buildCurrentPlan,
+  NEXT_BILLING_DATE,
+  type TierKey,
+} from "./membership.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import styles from "./MembershipPage.module.css";
 
 export function PlanPanel() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
+  const tiers = useMemo(() => buildTiers(t, fmt), [t, fmt]);
+  const currentPlan = useMemo(() => buildCurrentPlan(t, fmt), [t, fmt]);
   const [tierKey, setTierKey] = useState<TierKey>("sustaining");
-  const [amount, setAmount] = useState<string>("20");
+  const [amount, setAmount] = useState<number | "other">(20);
   const [saving, setSaving] = useState(false);
   const [pauseOpen, setPauseOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
 
-  const tier = TIERS.find((t) => t.key === tierKey)!;
+  const tier = tiers.find((candidate) => candidate.key === tierKey)!;
+  const renewalDate = fmt.date(NEXT_BILLING_DATE);
 
   function pickTier(next: TierKey) {
     setTierKey(next);
-    const t = TIERS.find((x) => x.key === next)!;
-    if (t.defaultAmt) setAmount(t.defaultAmt);
+    const nextTier = tiers.find((candidate) => candidate.key === next)!;
+    if (nextTier.defaultAmt !== undefined) setAmount(nextTier.defaultAmt);
   }
 
   function savePlan() {
     setSaving(true);
     setTimeout(() => {
       setSaving(false);
-      showToast("Plan updated. Changes take effect on 5 June.", "success");
+      showToast(
+        t("settings:membership.plan.toast.updated", { date: renewalDate }),
+        "success",
+      );
     }, 1400);
   }
 
   function confirmPause() {
     setPauseOpen(false);
     showToast(
-      "Membership paused from 5 June. Resume anytime from this page.",
+      t("settings:membership.plan.toast.paused", { date: renewalDate }),
       "success",
     );
   }
@@ -39,7 +54,7 @@ export function PlanPanel() {
   function confirmCancel() {
     setCancelOpen(false);
     showToast(
-      "Membership cancelled. Your access continues until 5 June.",
+      t("settings:membership.plan.toast.cancelled", { date: renewalDate }),
       "info",
     );
   }
@@ -47,29 +62,33 @@ export function PlanPanel() {
   return (
     <div className={styles.panel}>
       <div className={styles.current}>
-        <div className={styles.currEye}>Current plan</div>
-        <div className={styles.currTier}>{CURRENT_PLAN.tier}</div>
-        <div className={styles.currAmt}>
-          {CURRENT_PLAN.amount} <span>{CURRENT_PLAN.cadence}</span>
+        <div className={styles.currEye}>
+          {t("settings:membership.current.eyebrow")}
         </div>
-        <div className={styles.currMeta}>{CURRENT_PLAN.since}</div>
+        <div className={styles.currTier}>{currentPlan.tier}</div>
+        <div className={styles.currAmt}>
+          {currentPlan.amount} <span>{currentPlan.cadence}</span>
+        </div>
+        <div className={styles.currMeta}>{currentPlan.since}</div>
         <div className={styles.currPill}>
           <span className={styles.cpillDot} />
-          Active
+          {t("settings:membership.current.activeBadge")}
         </div>
       </div>
 
-      <div className={styles.sec}>Switch tier</div>
+      <div className={styles.sec}>
+        {t("settings:membership.plan.switchTier")}
+      </div>
       <div className={styles.tierGrid}>
-        {TIERS.map((t) => (
+        {tiers.map((candidate) => (
           <button
             type="button"
-            key={t.key}
-            className={`${styles.tierBtn} ${tierKey === t.key ? styles.sel : ""}`}
-            onClick={() => pickTier(t.key)}
+            key={candidate.key}
+            className={`${styles.tierBtn} ${tierKey === candidate.key ? styles.sel : ""}`}
+            onClick={() => pickTier(candidate.key)}
           >
-            {t.name}
-            <small>{t.sub}</small>
+            {candidate.name}
+            <small>{candidate.sub}</small>
           </button>
         ))}
       </div>
@@ -78,15 +97,21 @@ export function PlanPanel() {
       {tier.amounts && (
         <div>
           <div className={styles.amtGrid}>
-            {tier.amounts.map((a) => (
+            {tier.amounts.map((candidateAmount) => (
               <button
                 type="button"
-                key={a}
-                className={`${styles.amtBtn} ${amount === a ? styles.sel : ""}`}
-                onClick={() => setAmount(a)}
+                key={candidateAmount}
+                className={`${styles.amtBtn} ${amount === candidateAmount ? styles.sel : ""}`}
+                onClick={() => setAmount(candidateAmount)}
               >
-                {a === "other" ? "Other" : `€${a}`}
-                <small>{a === "other" ? "amount" : "/ mo"}</small>
+                {candidateAmount === "other"
+                  ? t("settings:membership.tier.amount.other")
+                  : fmt.currency(candidateAmount)}
+                <small>
+                  {candidateAmount === "other"
+                    ? t("settings:membership.tier.amount.otherSub")
+                    : t("settings:membership.current.cadence")}
+                </small>
               </button>
             ))}
           </div>
@@ -94,7 +119,12 @@ export function PlanPanel() {
             <input
               className={styles.customIn}
               type="text"
-              placeholder="e.g. €35 / month"
+              placeholder={t(
+                "settings:membership.tier.customAmountPlaceholder",
+                {
+                  amount: fmt.currency(35),
+                },
+              )}
               autoFocus
             />
           )}
@@ -102,43 +132,44 @@ export function PlanPanel() {
       )}
 
       <p className={styles.fineprint}>
-        Changes take effect at the next billing date. You'll never be locked out
-        mid-cycle.
+        {t("settings:membership.plan.fineprint")}
       </p>
       <Button variant="primary" onClick={savePlan} disabled={saving}>
-        {saving ? "Saving…" : "Save changes →"}
+        {saving
+          ? t("settings:membership.plan.saving")
+          : t("settings:membership.plan.saveCta")}
       </Button>
 
       <div className={styles.danger}>
         <button
           type="button"
           className={styles.dngBtn}
-          onClick={() => setPauseOpen((v) => !v)}
+          onClick={() => setPauseOpen((open) => !open)}
         >
-          Pause for 1 month
+          {t("settings:membership.plan.pauseCta")}
         </button>
         <button
           type="button"
           className={styles.dngBtn}
-          onClick={() => setCancelOpen((v) => !v)}
+          onClick={() => setCancelOpen((open) => !open)}
         >
-          Cancel membership
+          {t("settings:membership.plan.cancelCta")}
         </button>
       </div>
 
       {pauseOpen && (
         <div className={styles.confirmBox}>
           <p className={styles.confirmText}>
-            Pausing means your access continues until 5 June, then suspends for
-            30 days. You can unpause at any time. Your position in the community
-            is never affected.
+            {t("settings:membership.plan.pauseConfirmText", {
+              date: renewalDate,
+            })}
           </p>
           <div className={styles.confirmRow}>
             <Button variant="ghost" onClick={confirmPause}>
-              Confirm pause
+              {t("settings:membership.plan.confirmPause")}
             </Button>
             <Button variant="ghost" onClick={() => setPauseOpen(false)}>
-              Keep active
+              {t("settings:membership.plan.keepActive")}
             </Button>
           </div>
         </div>
@@ -146,19 +177,18 @@ export function PlanPanel() {
 
       {cancelOpen && (
         <div className={styles.confirmBox}>
-          <p className={styles.confirmHead}>Before you go</p>
+          <p className={styles.confirmHead}>
+            {t("settings:membership.plan.beforeYouGo")}
+          </p>
           <p className={styles.confirmText}>
-            If it's financial, there's a hardship waiver — you stay in the
-            community at no cost. If you're taking a break, the pause option
-            keeps your account warm. If we've done something wrong, we want to
-            know.
+            {t("settings:membership.plan.cancelConfirmText")}
           </p>
           <div className={styles.confirmRow}>
             <Button variant="ghost" onClick={confirmCancel}>
-              Cancel membership
+              {t("settings:membership.plan.cancelCta")}
             </Button>
             <Button variant="primary" onClick={() => setCancelOpen(false)}>
-              Keep membership
+              {t("settings:membership.plan.keepMembership")}
             </Button>
           </div>
         </div>

@@ -83,11 +83,11 @@ export const SKILLS: Skill[] = [
 ];
 
 export const SKILL_FILTERS = [
-  { value: "all", label: "All skills" },
-  { value: "design", label: "Design" },
-  { value: "tech", label: "Tech" },
-  { value: "business", label: "Business" },
-  { value: "craft", label: "Craft" },
-  { value: "care", label: "Care" },
-  { value: "creative", label: "Creative" },
+  { value: "all", labelKey: "economy:skills.filter.all" },
+  { value: "design", labelKey: "economy:skills.filter.design" },
+  { value: "tech", labelKey: "economy:skills.filter.tech" },
+  { value: "business", labelKey: "economy:skills.filter.business" },
+  { value: "craft", labelKey: "economy:skills.filter.craft" },
+  { value: "care", labelKey: "economy:skills.filter.care" },
+  { value: "creative", labelKey: "economy:skills.filter.creative" },
 ];

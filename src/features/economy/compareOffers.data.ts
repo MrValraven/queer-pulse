@@ -2,12 +2,24 @@ import type { Application } from "./applicationStatus.data";
 
 /** Each scalar field compared across offers, in display order. */
 export const COMPARE_ROWS: {
-  label: string;
+  labelKey: string;
   get: (a: Application) => string;
 }[] = [
-  { label: "Salary", get: (a) => a.offer?.salary ?? "—" },
-  { label: "Holiday", get: (a) => a.offer?.holiday ?? "—" },
-  { label: "Start date", get: (a) => a.offer?.start ?? "—" },
-  { label: "Respond by", get: (a) => a.offer?.respondBy ?? "—" },
-  { label: "How it pays", get: (a) => a.offer?.market ?? "—" },
+  { labelKey: "economy:compareRow.salary", get: (a) => a.offer?.salary ?? "—" },
+  {
+    labelKey: "economy:compareRow.holiday",
+    get: (a) => a.offer?.holiday ?? "—",
+  },
+  {
+    labelKey: "economy:compareRow.startDate",
+    get: (a) => a.offer?.start ?? "—",
+  },
+  {
+    labelKey: "economy:compareRow.respondBy",
+    get: (a) => a.offer?.respondBy ?? "—",
+  },
+  {
+    labelKey: "economy:compareRow.howItPays",
+    get: (a) => a.offer?.market ?? "—",
+  },
 ];

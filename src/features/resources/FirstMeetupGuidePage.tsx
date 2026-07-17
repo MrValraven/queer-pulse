@@ -1,26 +1,40 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { EXPECT, VALUES, FAQS } from "./firstMeetupGuide.data";
+import { EXPECT, VALUE_KEYS, FAQS } from "./firstMeetupGuide.data";
 import styles from "./resources.module.css";
 
 export function FirstMeetupGuidePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Queer Social"
+        eyebrow={t("resources:firstMeetupGuide.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Your first meetup, <em>no pressure.</em>
-          </>
+          <Translation
+            i18nKey="resources:firstMeetupGuide.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="What to expect, what 'no agenda' actually means, and answers to the things you're too nervous to ask. Come alone, come anxious — you'll be looked after."
+        lead={t("resources:firstMeetupGuide.hero.lead")}
         anchors={[
-          { label: "What to expect", href: "#expect" },
-          { label: "Our values", href: "#values" },
-          { label: "Nervous questions", href: "#faq" },
+          {
+            label: t("resources:firstMeetupGuide.hero.anchor.expect"),
+            href: "#expect",
+          },
+          {
+            label: t("resources:firstMeetupGuide.hero.anchor.values"),
+            href: "#values",
+          },
+          {
+            label: t("resources:firstMeetupGuide.hero.anchor.faq"),
+            href: "#faq",
+          },
         ]}
       />
 
@@ -30,18 +44,21 @@ export function FirstMeetupGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            What to <em>expect</em>
+            <Translation
+              i18nKey="resources:firstMeetupGuide.expect.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            The whole format, so none of it is a surprise.
+            {t("resources:firstMeetupGuide.expect.lead")}
           </Reveal>
           <div className={styles.grid}>
             {EXPECT.map((e, i) => (
-              <Reveal key={e.title} className={styles.card} delay={i * 55}>
+              <Reveal key={e.titleKey} className={styles.card} delay={i * 55}>
                 <div className={styles.cardName} style={{ fontSize: 19 }}>
-                  {e.title}
+                  {t(e.titleKey)}
                 </div>
-                <div className={styles.cardSpec}>{e.body}</div>
+                <div className={styles.cardSpec}>{t(e.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -54,14 +71,17 @@ export function FirstMeetupGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            What "no agenda" <em>means</em>
+            <Translation
+              i18nKey="resources:firstMeetupGuide.values.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Four things we hold to, so the room stays easy for everyone in it.
+            {t("resources:firstMeetupGuide.values.lead")}
           </Reveal>
           <div className={styles.stepList}>
-            {VALUES.map((v, i) => (
-              <Reveal key={v} className={styles.step}>
+            {VALUE_KEYS.map((valueKey, i) => (
+              <Reveal key={valueKey} className={styles.step}>
                 <div className={styles.stepN}>
                   {String(i + 1).padStart(2, "0")}
                 </div>
@@ -69,7 +89,7 @@ export function FirstMeetupGuidePage() {
                   className={styles.stepBody}
                   style={{ alignSelf: "center" }}
                 >
-                  {v}
+                  {t(valueKey)}
                 </div>
               </Reveal>
             ))}
@@ -80,13 +100,16 @@ export function FirstMeetupGuidePage() {
       <section className={`${styles.section} ${styles.sectionPaper}`} id="faq">
         <div className="wrap">
           <Reveal as="h2">
-            The nervous <em>questions</em>
+            <Translation
+              i18nKey="resources:firstMeetupGuide.faq.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div>
             {FAQS.map((f) => (
-              <Reveal key={f.q} className={styles.qaItem}>
-                <div className={styles.qaQ}>{f.q}</div>
-                <div className={styles.qaA}>{f.a}</div>
+              <Reveal key={f.qKey} className={styles.qaItem}>
+                <div className={styles.qaQ}>{t(f.qKey)}</div>
+                <div className={styles.qaA}>{t(f.aKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -95,14 +118,15 @@ export function FirstMeetupGuidePage() {
 
       <Outro
         title={
-          <>
-            Just <em>show up.</em>
-          </>
+          <Translation
+            i18nKey="resources:firstMeetupGuide.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="That's the whole entry requirement. The next meetup is on the board."
+        sub={t("resources:firstMeetupGuide.outro.sub")}
       >
         <Button to={routes.gatherings} variant="primary" size="lg">
-          Find the next meetup
+          {t("resources:firstMeetupGuide.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

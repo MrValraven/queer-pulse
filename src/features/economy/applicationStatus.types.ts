@@ -120,7 +120,7 @@ export interface Application {
 
 export interface NegotiationAngle {
   id: string;
-  name: string;
-  blurb: string;
+  nameKey: string;
+  blurbKey: string;
   draft: string;
 }

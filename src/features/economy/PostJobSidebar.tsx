@@ -1,3 +1,12 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  CATEGORIES,
+  COMMITMENTS,
+  FORMATS,
+  SENIORITY,
+  optionLabel,
+} from "./postJob.data";
 import type { CompanyProfile } from "./companies.data";
 import type { PostJobForm } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
@@ -11,9 +20,15 @@ export function PostJobSidebar({
   company: CompanyProfile;
   onOpenFull: () => void;
 }) {
+  const { t } = useTranslation();
   const { state, payLabel } = form;
-  const chips = [state.category, state.format, state.commitment];
-  if (state.seniority !== "Any level") chips.push(state.seniority);
+  const chips = [
+    optionLabel(CATEGORIES, state.category, t),
+    optionLabel(FORMATS, state.format, t),
+    optionLabel(COMMITMENTS, state.commitment, t),
+  ];
+  if (state.seniority !== "Any level")
+    chips.push(optionLabel(SENIORITY, state.seniority, t));
   const desc = state.description
     ? state.description.slice(0, 150) +
       (state.description.length > 150 ? "…" : "")
@@ -23,18 +38,20 @@ export function PostJobSidebar({
     <aside>
       <div className={styles.sideCard}>
         <h3 className={styles.sideH}>
-          Live preview
+          {t("economy:postJob.sidebar.livePreview")}
           <button type="button" className={styles.expand} onClick={onOpenFull}>
-            Full view
+            {t("economy:postJob.sidebar.fullView")}
           </button>
         </h3>
         <div className={styles.previewCard}>
           <div className={styles.pvTop}>
-            <span className={styles.pvType}>Hiring</span>
+            <span className={styles.pvType}>
+              {t("economy:postJob.sidebar.hiring")}
+            </span>
             {payLabel && <span className={styles.pvComp}>{payLabel}</span>}
           </div>
           <div className={styles.previewTitle}>
-            {state.title || "Your title will appear here"}
+            {state.title || t("economy:postJob.sidebar.titlePlaceholder")}
           </div>
           <div className={styles.pvPoster}>
             <span className={styles.pvAv}>{company.logo}</span>
@@ -45,7 +62,7 @@ export function PostJobSidebar({
               .filter(Boolean)
               .join(" ")}
           >
-            {desc || "Add a description…"}
+            {desc || t("economy:postJob.sidebar.descPlaceholder")}
           </div>
           <div className={styles.previewMeta}>
             {chips.map((c) => (
@@ -69,37 +86,50 @@ export function PostJobSidebar({
             className={styles.viewFull}
             onClick={onOpenFull}
           >
-            See full listing →
+            {t("economy:postJob.sidebar.viewFullCta")}
           </button>
         </div>
       </div>
 
       <div className={styles.sideCard}>
-        <h3 className={styles.sideH}>How this works</h3>
+        <h3 className={styles.sideH}>
+          {t("economy:postJob.sidebar.howThisWorks")}
+        </h3>
         <div className={styles.sideList}>
           <div className={styles.sideItem}>
             <span className={styles.sideDot} aria-hidden />
             <span className={styles.sideText}>
-              Listings are <strong>visible to members</strong>, never public.
+              <Translation
+                i18nKey="economy:postJob.sidebar.point1"
+                components={{ strong: <strong /> }}
+              />
             </span>
           </div>
           <div className={styles.sideItem}>
             <span className={styles.sideDot} aria-hidden />
             <span className={styles.sideText}>
-              Listings <strong>expire after 60 days</strong> — reminder at 45.
+              <Translation
+                i18nKey="economy:postJob.sidebar.point2"
+                components={{ strong: <strong /> }}
+              />
             </span>
           </div>
           <div className={styles.sideItem}>
             <span className={styles.sideDot} aria-hidden />
             <span className={styles.sideText}>
-              <strong>No placement fees.</strong> A community board, not a
-              marketplace.
+              <Translation
+                i18nKey="economy:postJob.sidebar.point3"
+                components={{ strong: <strong /> }}
+              />
             </span>
           </div>
           <div className={styles.sideItem}>
             <span className={styles.sideDot} aria-hidden />
             <span className={styles.sideText}>
-              <strong>Edit or close</strong> any time from your company profile.
+              <Translation
+                i18nKey="economy:postJob.sidebar.point4"
+                components={{ strong: <strong /> }}
+              />
             </span>
           </div>
         </div>

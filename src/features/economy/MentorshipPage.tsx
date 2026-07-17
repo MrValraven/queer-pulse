@@ -10,8 +10,16 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { MENTORS, STATS, VOLUNTEER, type Mode } from "./mentorship.data";
+import {
+  MENTORS,
+  STATS,
+  VOLUNTEER,
+  isWaitlisted,
+  type Mode,
+} from "./mentorship.data";
 import { MentorMatchModal } from "./MentorMatchModal";
 import styles from "./MentorshipPage.module.css";
 
@@ -40,6 +48,7 @@ function MentorSkeleton() {
 }
 
 export function MentorshipPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [mode, setMode] = useState<Mode | null>(null);
 
@@ -47,20 +56,21 @@ export function MentorshipPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Mentorship</div>
+          <div className={styles.cat}>
+            {t("economy:mentorship.hero.eyebrow")}
+          </div>
           <h1>
-            Someone ahead of you on the path <em>wants to help.</em>
+            <Translation
+              i18nKey="economy:mentorship.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p>
-            Formal one-to-one mentorship matching between queer professionals in
-            Lisbon. If you're finding it hard, someone in the network has been
-            there. If you've made it through, you can give that back.
-          </p>
+          <p>{t("economy:mentorship.hero.lead")}</p>
           <div className={styles.stats}>
             {STATS.map((s) => (
-              <div key={s.l}>
+              <div key={s.labelKey}>
                 <div className={styles.msN}>{s.n}</div>
-                <div className={styles.msL}>{s.l}</div>
+                <div className={styles.msL}>{t(s.labelKey)}</div>
               </div>
             ))}
           </div>
@@ -71,7 +81,10 @@ export function MentorshipPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              What brings you <em>here?</em>
+              <Translation
+                i18nKey="economy:mentorship.choose.title"
+                components={{ em: <em /> }}
+              />
             </h2>
           </div>
           <div className={styles.chooseGrid}>
@@ -83,15 +96,14 @@ export function MentorshipPage() {
               <div className={styles.ccIcon}>
                 <LuSprout />
               </div>
-              <div className={styles.ccTitle}>I'm looking for a mentor</div>
+              <div className={styles.ccTitle}>
+                {t("economy:mentorship.choose.mentee.title")}
+              </div>
               <p className={styles.ccDesc}>
-                You're navigating something — a career transition, a creative
-                block, coming out professionally, a difficult workplace, a new
-                city. You'd benefit from talking to someone who's been through
-                it.
+                {t("economy:mentorship.choose.mentee.desc")}
               </p>
               <div className={styles.ccFor}>
-                For: anyone at any stage who could use some guidance →
+                {t("economy:mentorship.choose.mentee.for")}
               </div>
             </button>
             <button
@@ -102,14 +114,14 @@ export function MentorshipPage() {
               <div className={styles.ccIcon}>
                 <LuTreeDeciduous />
               </div>
-              <div className={styles.ccTitle}>I can be a mentor</div>
+              <div className={styles.ccTitle}>
+                {t("economy:mentorship.choose.mentor.title")}
+              </div>
               <p className={styles.ccDesc}>
-                You've been through enough to have something to offer. You don't
-                need to be an expert — you just need to have navigated something
-                that someone else is currently navigating.
+                {t("economy:mentorship.choose.mentor.desc")}
               </p>
               <div className={styles.ccFor}>
-                For: members with experience they're willing to share →
+                {t("economy:mentorship.choose.mentor.for")}
               </div>
             </button>
           </div>
@@ -120,11 +132,13 @@ export function MentorshipPage() {
         <div className="wrap">
           <div className={styles.secHead}>
             <h2>
-              Current mentors in <em>the network</em>
+              <Translation
+                i18nKey="economy:mentorship.strip.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.sub}>
-              These members have opened themselves up to mentoring. You can
-              request a match through the form above.
+              {t("economy:mentorship.strip.sub")}
             </div>
           </div>
           <div className={styles.mentorGrid}>
@@ -158,7 +172,7 @@ export function MentorshipPage() {
                         ))}
                       </div>
                       <div
-                        className={`${styles.mcCap} ${m.btn === "Join waitlist" ? styles.mcCapWait : ""}`}
+                        className={`${styles.mcCap} ${isWaitlisted(m) ? styles.mcCapWait : ""}`}
                       >
                         {m.cap}
                       </div>
@@ -179,7 +193,9 @@ export function MentorshipPage() {
                           }
                         }}
                       >
-                        {m.btn}
+                        {isWaitlisted(m)
+                          ? t("economy:mentorship.cta.joinWaitlist")
+                          : t("economy:mentorship.cta.requestMatch")}
                       </span>
                     </Link>
                   </FadeIn>
@@ -190,14 +206,15 @@ export function MentorshipPage() {
 
       <Outro
         title={
-          <>
-            Have something <em>to give?</em>
-          </>
+          <Translation
+            i18nKey="economy:mentorship.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Mentorship is one way. Browse volunteer opportunities to find other ways to contribute to the community around you."
+        sub={t("economy:mentorship.outro.sub")}
       >
         <Button to={VOLUNTEER} variant="primary" size="lg">
-          See volunteer roles →
+          {t("economy:mentorship.outro.cta")}
         </Button>
       </Outro>
 

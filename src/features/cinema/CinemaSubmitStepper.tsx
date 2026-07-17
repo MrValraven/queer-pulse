@@ -1,4 +1,5 @@
 import { FiCheck } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SUBMIT_STEPS } from "./cinemaSubmit.data";
 import styles from "./CinemaSubmitPage.module.css";
 
@@ -12,11 +13,12 @@ interface StepperProps {
 /** Five-stage progress stepper. Done steps get a jade tick and jump back;
  * future steps are disabled until reached. */
 export function CinemaSubmitStepper({ step, reached, onGo }: StepperProps) {
+  const { t } = useTranslation();
   return (
     <div
       className={styles.stepper}
       role="tablist"
-      aria-label="Submission steps"
+      aria-label={t("cinema:submit.stepper.ariaLabel")}
     >
       {SUBMIT_STEPS.map((s, i) => {
         const active = i === step;
@@ -24,7 +26,7 @@ export function CinemaSubmitStepper({ step, reached, onGo }: StepperProps) {
         const reachable = i <= reached;
         return (
           <button
-            key={s.label}
+            key={s.labelKey}
             type="button"
             role="tab"
             aria-selected={active}
@@ -42,8 +44,8 @@ export function CinemaSubmitStepper({ step, reached, onGo }: StepperProps) {
               {done ? <FiCheck size={14} aria-hidden /> : i + 1}
             </span>
             <span>
-              <span className={styles.stepLabel}>{s.label}</span>
-              <span className={styles.stepSub}>{s.sub}</span>
+              <span className={styles.stepLabel}>{t(s.labelKey)}</span>
+              <span className={styles.stepSub}>{t(s.subKey)}</span>
             </span>
           </button>
         );

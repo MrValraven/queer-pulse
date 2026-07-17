@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { Toggle, Seg, RadioCards } from "./StudioSettingsControls";
 import {
   STREAM_QUALITY_OPTS,
@@ -11,6 +14,7 @@ import {
 import s from "./StudioSettingsPage.module.css";
 
 export function AudioSection() {
+  const { t } = useTranslation();
   const [streamQ, setStreamQ] = useState("flac");
   const [dlQ, setDlQ] = useState("FLAC");
   const [normalise, setNormalise] = useState(true);
@@ -18,21 +22,18 @@ export function AudioSection() {
 
   return (
     <section className={s.sec}>
-      <div className={s.secLbl}>Audio</div>
+      <div className={s.secLbl}>{t("studio:settings.audio.label")}</div>
       <h2>
-        Sound <em>quality</em>
+        <Translation
+          i18nKey="studio:settings.audio.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={s.secDek}>
-        FLAC is lossless and bigger; AAC is lighter on data. Streaming and
-        downloads can differ — pick per context.
-      </p>
+      <p className={s.secDek}>{t("studio:settings.audio.dek")}</p>
       <div className={`${s.opt} ${s.optBlock}`}>
         <div className={s.ot} style={{ marginBottom: 12 }}>
-          <h4>Default streaming quality</h4>
-          <p>
-            On a good connection we'll go as high as you allow. We never
-            auto-upgrade on cellular without asking.
-          </p>
+          <h4>{t("studio:settings.audio.streamQuality.heading")}</h4>
+          <p>{t("studio:settings.audio.streamQuality.body")}</p>
         </div>
         <RadioCards
           opts={STREAM_QUALITY_OPTS}
@@ -42,29 +43,27 @@ export function AudioSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Download quality</h4>
-          <p>
-            What we cache when you save a track for offline (sustainers only).
-          </p>
+          <h4>{t("studio:settings.audio.downloadQuality.heading")}</h4>
+          <p>{t("studio:settings.audio.downloadQuality.body")}</p>
         </div>
         <Seg opts={DOWNLOAD_QUALITY_OPTS} active={dlQ} onChange={setDlQ} />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Normalise loudness</h4>
+          <h4>{t("studio:settings.audio.normalise.heading")}</h4>
           <p>
-            Even out volume across tracks and sets. <em>Off</em> if you want the
-            artist's intended dynamics.
+            <Translation
+              i18nKey="studio:settings.audio.normalise.body"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <Toggle on={normalise} onToggle={() => setNormalise((v) => !v)} />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Crossfade between tracks in a set</h4>
-          <p>
-            Only applies inside DJ sets and live rooms, never on album playback.
-          </p>
+          <h4>{t("studio:settings.audio.crossfade.heading")}</h4>
+          <p>{t("studio:settings.audio.crossfade.body")}</p>
         </div>
         <Toggle on={crossfade} onToggle={() => setCrossfade((v) => !v)} />
       </div>
@@ -73,6 +72,7 @@ export function AudioSection() {
 }
 
 export function PrivacySection() {
+  const { t } = useTranslation();
   const [history, setHistory] = useState(false);
   const [cloudSync, setCloudSync] = useState(true);
   const [tipPrivacy, setTipPrivacy] = useState("private");
@@ -80,41 +80,36 @@ export function PrivacySection() {
 
   return (
     <section className={s.sec}>
-      <div className={s.secLbl}>Privacy</div>
+      <div className={s.secLbl}>{t("studio:settings.privacy.label")}</div>
       <h2>
-        What the room <em>remembers</em>
+        <Translation
+          i18nKey="studio:settings.privacy.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={s.secDek}>
-        The short version: almost nothing, by default. We never sell, share, or
-        train on what you play. Aggregate plays feed the public ledger — nothing
-        that identifies you.
-      </p>
+      <p className={s.secDek}>{t("studio:settings.privacy.dek")}</p>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Listening history</h4>
-          <p>
-            Off by default — nothing about what you played leaves your browser.
-            Turn on for a private, deletable record only you can see.
-          </p>
+          <h4>{t("studio:settings.privacy.history.heading")}</h4>
+          <p>{t("studio:settings.privacy.history.body")}</p>
         </div>
         <Toggle on={history} onToggle={() => setHistory((v) => !v)} />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Cloud-sync my library</h4>
-          <p>
-            Saves and follows move between devices. Without this they live on
-            this device only.
-          </p>
+          <h4>{t("studio:settings.privacy.cloudSync.heading")}</h4>
+          <p>{t("studio:settings.privacy.cloudSync.body")}</p>
         </div>
         <Toggle on={cloudSync} onToggle={() => setCloudSync((v) => !v)} />
       </div>
       <div className={`${s.opt} ${s.optBlock}`}>
         <div className={s.ot} style={{ marginBottom: 12 }}>
-          <h4>Tip notes — who sees them</h4>
+          <h4>{t("studio:settings.privacy.tipNotes.heading")}</h4>
           <p>
-            The note you write when you tip. <em>Private is the default</em>:
-            only you and the artist ever read it.
+            <Translation
+              i18nKey="studio:settings.privacy.tipNotes.body"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <RadioCards
@@ -125,11 +120,8 @@ export function PrivacySection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Public tip receipts</h4>
-          <p>
-            Each tip mints a receipt showing the split — no personal data. On,
-            it can be shared as a "look what the room paid this artist" card.
-          </p>
+          <h4>{t("studio:settings.privacy.tipReceipts.heading")}</h4>
+          <p>{t("studio:settings.privacy.tipReceipts.body")}</p>
         </div>
         <Toggle on={receipts} onToggle={() => setReceipts((v) => !v)} />
       </div>
@@ -138,35 +130,37 @@ export function PrivacySection() {
 }
 
 export function CaptionsSection() {
+  const { t } = useTranslation();
   const [captions, setCaptions] = useState(true);
   const [captionSize, setCaptionSize] = useState("M");
   const [showBoth, setShowBoth] = useState(false);
 
   return (
     <section className={s.sec}>
-      <div className={s.secLbl}>Captions &amp; lyrics</div>
+      <div className={s.secLbl}>{t("studio:settings.captions.label")}</div>
       <h2>
-        Words on the <em>screen</em>
+        <Translation
+          i18nKey="studio:settings.captions.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={s.secDek}>
-        Live rooms are captioned (auto, with a human pass on council
-        broadcasts). Lyrics scroll in time with the track where the artist
-        supplied them.
-      </p>
+      <p className={s.secDek}>{t("studio:settings.captions.dek")}</p>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Show captions in live rooms</h4>
+          <h4>{t("studio:settings.captions.showCaptions.heading")}</h4>
           <p>
-            The talk between songs, transcribed. <em>On</em> by default for
-            every broadcast.
+            <Translation
+              i18nKey="studio:settings.captions.showCaptions.body"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <Toggle on={captions} onToggle={() => setCaptions((v) => !v)} />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Caption size</h4>
-          <p>How large captions and the scrolling lyric line appear.</p>
+          <h4>{t("studio:settings.captions.captionSize.heading")}</h4>
+          <p>{t("studio:settings.captions.captionSize.body")}</p>
         </div>
         <Seg
           opts={CAPTION_SIZE_OPTS}
@@ -176,24 +170,31 @@ export function CaptionsSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Lyric language</h4>
-          <p>
-            Show lyrics in the original, or a community translation where one
-            exists.
-          </p>
+          <h4>{t("studio:settings.captions.lyricLanguage.heading")}</h4>
+          <p>{t("studio:settings.captions.lyricLanguage.body")}</p>
         </div>
         <select className={s.selectMini}>
-          <option>Original (as recorded)</option>
-          <option>English translation</option>
-          <option>Português</option>
-          <option>Español</option>
-          <option>Français</option>
+          <option>
+            {t("studio:settings.captions.lyricLanguage.opt.original")}
+          </option>
+          <option>
+            {t("studio:settings.captions.lyricLanguage.opt.english")}
+          </option>
+          <option>
+            {t("studio:settings.captions.lyricLanguage.opt.portuguese")}
+          </option>
+          <option>
+            {t("studio:settings.captions.lyricLanguage.opt.spanish")}
+          </option>
+          <option>
+            {t("studio:settings.captions.lyricLanguage.opt.french")}
+          </option>
         </select>
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Show both original &amp; translation</h4>
-          <p>Two lines at once, original above the translation.</p>
+          <h4>{t("studio:settings.captions.showBoth.heading")}</h4>
+          <p>{t("studio:settings.captions.showBoth.body")}</p>
         </div>
         <Toggle on={showBoth} onToggle={() => setShowBoth((v) => !v)} />
       </div>
@@ -202,49 +203,55 @@ export function CaptionsSection() {
 }
 
 export function TippingSection() {
-  const [tipAmt, setTipAmt] = useState("€2");
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const [tipAmt, setTipAmt] = useState(2);
   const [roundUp, setRoundUp] = useState(false);
 
   return (
     <section className={s.sec}>
-      <div className={s.secLbl}>Tipping</div>
+      <div className={s.secLbl}>{t("studio:settings.tipping.label")}</div>
       <h2>
-        Your default <em>tip</em>
+        <Translation
+          i18nKey="studio:settings.tipping.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={s.secDek}>
-        What the one-tap tip pill sends. 100% reaches the artist — there is no
-        platform cut on tips, ever.
-      </p>
+      <p className={s.secDek}>{t("studio:settings.tipping.dek")}</p>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Default amount</h4>
-          <p>You can always pick a different figure at tip time.</p>
+          <h4>{t("studio:settings.tipping.defaultAmount.heading")}</h4>
+          <p>{t("studio:settings.tipping.defaultAmount.body")}</p>
         </div>
         <div className={s.chips}>
-          {TIP_AMOUNTS.map((a) => (
+          {TIP_AMOUNTS.map((amount) => (
             <div
-              key={a}
-              className={`${s.chip} ${tipAmt === a ? s.chipOn : ""}`}
+              key={amount}
+              className={`${s.chip} ${tipAmt === amount ? s.chipOn : ""}`}
               role="button"
               tabIndex={0}
-              onClick={() => setTipAmt(a)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setTipAmt(a);
+              onClick={() => setTipAmt(amount)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setTipAmt(amount);
                 }
               }}
             >
-              {a}
+              {fmt.currency(amount)}
             </div>
           ))}
         </div>
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>Round up album buys into a tip</h4>
+          <h4>{t("studio:settings.tipping.roundUp.heading")}</h4>
           <p>
-            A €3.40 album becomes €4, the €0.60 going to the artist as a tip.
+            {t("studio:settings.tipping.roundUp.body", {
+              albumPrice: fmt.currency(3.4),
+              roundedPrice: fmt.currency(4),
+              tipAmount: fmt.currency(0.6),
+            })}
           </p>
         </div>
         <Toggle on={roundUp} onToggle={() => setRoundUp((v) => !v)} />
@@ -254,75 +261,77 @@ export function TippingSection() {
 }
 
 export function EraseSection() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   return (
     <section className={s.sec}>
-      <div className={`${s.secLbl} ${s.secLblDanger}`}>Erase &amp; exit</div>
+      <div className={`${s.secLbl} ${s.secLblDanger}`}>
+        {t("studio:settings.erase.label")}
+      </div>
       <h2>
-        One tap, <em>no questions</em>
+        <Translation
+          i18nKey="studio:settings.erase.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={s.secDek}>
-        These don't ask twice and don't show a modal. We mean it: leaving should
-        be as easy as arriving.
-      </p>
+      <p className={s.secDek}>{t("studio:settings.erase.dek")}</p>
       <div className={s.danger}>
         <div className={s.opt}>
           <div className={s.ot}>
-            <h4>Erase my listening history</h4>
+            <h4>{t("studio:settings.erase.history.heading")}</h4>
             <p className={s.eraseNote}>
-              Wipes the private record from this device and the cloud.{" "}
-              <em>Done instantly. No undo.</em>
+              <Translation
+                i18nKey="studio:settings.erase.history.note"
+                components={{ em: <em /> }}
+              />
             </p>
           </div>
           <button
             type="button"
             className={s.btDanger}
             onClick={() =>
-              showToast(
-                "History erased — gone from this device and the cloud.",
-                "success",
-              )
+              showToast(t("studio:settings.erase.history.toast"), "success")
             }
           >
-            Erase history
+            {t("studio:settings.erase.history.cta")}
           </button>
         </div>
         <div className={s.opt}>
           <div className={s.ot}>
-            <h4>Download everything we hold on you</h4>
+            <h4>{t("studio:settings.erase.export.heading")}</h4>
             <p className={s.eraseNote}>
-              A JSON of your saves, tips, receipts and settings — emailed within
-              the hour.
+              {t("studio:settings.erase.export.note")}
             </p>
           </div>
           <button
             type="button"
             className={s.bt}
             onClick={() =>
-              showToast("We'll email your data export within the hour.", "info")
+              showToast(t("studio:settings.erase.export.toast"), "info")
             }
           >
-            Request export
+            {t("studio:settings.erase.export.cta")}
           </button>
         </div>
         <div className={s.opt}>
           <div className={s.ot}>
-            <h4>Close my Studio account</h4>
+            <h4>{t("studio:settings.erase.closeAccount.heading")}</h4>
             <p className={s.eraseNote}>
-              Stops your sustainer fee, removes your library. Past tips stay
-              paid to artists.{" "}
-              <em>Banking, if you're also an artist, is untouched.</em>
+              <Translation
+                i18nKey="studio:settings.erase.closeAccount.note"
+                components={{ em: <em /> }}
+              />
             </p>
           </div>
           <button
             type="button"
             className={s.btDanger}
             onClick={() =>
-              showToast("Account closure opens in a separate flow.", "info")
+              showToast(t("studio:settings.erase.closeAccount.toast"), "info")
             }
           >
-            Close account
+            {t("studio:settings.erase.closeAccount.cta")}
           </button>
         </div>
       </div>

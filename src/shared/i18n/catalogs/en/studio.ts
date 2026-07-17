@@ -707,6 +707,98 @@ export const studio: Catalog = {
   "album.more.heading": "More from <em>{artist}</em>",
   "album.more.artistPageCta": "Artist page",
 
+  // ── Shared detail-page hero/ledger chrome (Album/Set — masculine nouns in
+  //    pt-PT; Track/Collection reuse the feminine room.hero.addedToast /
+  //    removedToast above instead, per grammatical gender agreement) ────────
+  "detail.shareCta": "Share",
+  "detail.linkCopiedToast": "Link copied to clipboard",
+  "detail.copyFailedToast": "Could not copy link",
+  "detail.tipArtistCta": "Tip {artist}",
+  "detail.fullLedgerCta": "Full ledger",
+  "detail.addedToast": "Added to your library",
+  "detail.removedToast": "Removed from your library",
+
+  // ── Track detail page (StudioTrackPage + Hero + Sidebar + Lyrics) ─────────
+  // Scope note: track title, artist name, curator quote, lyrics, and the
+  // per-track split/credits breakdown are content — left English (§1).
+  "track.hero.eyebrow": "Track {current} of {total} · playing now in the set",
+  "track.hero.payMonth": "<em>{amount}</em> to {artist} this month",
+  "track.inSet.status":
+    "You're listening with <b>{count}</b> people in the <em>Wednesday set</em>, programmed by {curator}. Track {next} starts in <b>{countdown}</b>.",
+  "track.inSet.joinCta": "Join the room",
+  "track.more.fullAlbumCta": "Full album",
+  "track.sidebar.curatorNoteLabel": "Curator's note",
+  "track.sidebar.splitHeading": "Where €1 goes when you play this",
+  "track.sidebar.creditsHeading": "Credits · per-track splits",
+  "track.sidebar.leadSheetLabel": "Lead sheet",
+  "track.sidebar.downloadCta": "Download",
+  "track.lyrics.heading": "Lyrics & <em>translation</em>",
+  "track.lyrics.leadSheetChordsCta": "Lead sheet & chords",
+
+  // ── Album detail page (StudioAlbumPage + Hero + Main + Sidebar) ───────────
+  // Scope note: album title, artist name, liner notes and credits prose are
+  // content — left English (§1).
+  "album.tabs.tracklist": "Tracklist",
+  "album.tabs.linerNotes": "Liner notes",
+  "album.tabs.credits": "Credits",
+  "album.main.perPlaySuffix": "{amount} / play",
+  "album.sidebar.buyEyebrow": "The room is open to you",
+  "album.sidebar.buySub": "Buy the album · keep it offline · FLAC + AAC.",
+  "album.sidebar.buyCta": "Buy · {amount}",
+  "album.sidebar.payWhatYouCanCta": "Pay what you can · {amount} min",
+  "album.sidebar.streamingIncludedCta": "Streaming included with Sustain",
+  "album.sidebar.ledgerHeading": "Public ledger for <em>this release</em>",
+  "album.sidebar.paidToArtistLifetime": "Paid to {artist}, lifetime",
+  "album.sidebar.paidToCollaborators": "Paid to collaborators",
+  "album.sidebar.playsThisMonth": "Plays this month",
+
+  // ── Artist profile page (StudioArtistPage + Hero + Main + Sidebar) ────────
+  // Scope note: artist bio prose is content — left English (§1).
+  "artist.tabs.music": "Music",
+  "artist.tabs.featuredIn": "Featured in",
+  "artist.tabs.sheetMusic": "Sheet music",
+  "artist.tabs.about": "About",
+  "artist.hero.followCta": "Follow",
+  "artist.hero.followingCta": "Following",
+  "artist.hero.followedToast": "Following {artist}",
+  "artist.hero.unfollowedToast": "Unfollowed {artist}",
+  "artist.hero.subscribeNote":
+    "Subscribe at <em>{amount}/mo</em>, direct to {artist}, no platform cut.",
+  "artist.hero.tipOnTopNote": "Or tip on top of streaming.",
+  "artist.main.releasesHeading": "Releases",
+  "artist.main.singlesHeading": "Singles & <em>standalones</em>",
+  "artist.sidebar.sustainEyebrow": "Sustain {artist} directly",
+  "artist.sidebar.sustainSub":
+    "Direct to {artist}. No platform cut. Subscribers get early-access tracks, the weekly note, and seats at every live broadcast.",
+  "artist.sidebar.subscribeCta": "Subscribe · {amount}/mo",
+  "artist.sidebar.oneOffTipCta": "One-off tip",
+  "artist.sidebar.thisMonthHeading": "{artist} · this month",
+  "artist.sidebar.plays": "Plays",
+  "artist.sidebar.earningsStreaming": "Earnings (streaming)",
+  "artist.sidebar.tipsReceived": "Tips received",
+  "artist.sidebar.directSubscribers": "Direct subscribers",
+  "artist.sidebar.upcomingHeading": "Upcoming",
+  "artist.sidebar.premiereLabel": "Premiere",
+  "artist.sidebar.rsvpCta": "RSVP",
+
+  // ── Live set detail page (StudioSetPage) ──────────────────────────────────
+  // Scope note: set title, curator name and blurb are content — left English.
+  "set.page.playAria": "Play set",
+  "set.page.joinLiveRoomCta": "Join the live room",
+  "set.page.tracklistHeading": "The <em>tracklist</em>",
+  "set.page.everyPlayPaysNote": "Every play pays the artist",
+  "set.page.payingNowLabel": "paying now",
+
+  // ── Collection detail page (StudioCollectionPage) ─────────────────────────
+  // Scope note: collection title, curator name and track titles are content.
+  "collection.page.playAria": "Play collection",
+  "collection.page.shuffleCta": "Shuffle",
+  "collection.page.shufflingToast": "Shuffling the collection",
+  "collection.page.allPlaysPaidNote": "paid to artists on every listen",
+  "collection.page.inThisCollectionHeading": "In this <em>collection</em>",
+  "collection.page.findMoreCta": "Find more",
+  "collection.page.relatedHeading": "Related <em>collections</em>",
+
   // ── Off-air shelves (StudioOffAirShelves) ─────────────────────────────────
   "offAir.carryOn.heading": "Carry on where you <em>left off</em>",
   "offAir.carryOn.sub": "From your library · plays on, broadcast or not",
@@ -762,4 +854,921 @@ export const studio: Catalog = {
   "council.notebookLabel": "From the notebook",
   "council.recentSlatesLabel": "Recent slates",
   "council.theirSlateCta": "Their slate",
+
+  // ── Settings (StudioSettingsPage + Controls + Sections) ───────────────────
+  "settings.eyebrow": "Your room · settings",
+  "settings.title": "How the room <em>treats</em> you.",
+  "settings.dek":
+    "Audio, privacy, captions, tipping. Nothing here is on unless you turn it on — and anything you turn on, you can erase in <em>one tap, no confirmation modal</em>.",
+
+  "settings.audio.label": "Audio",
+  "settings.audio.title": "Sound <em>quality</em>",
+  "settings.audio.dek":
+    "FLAC is lossless and bigger; AAC is lighter on data. Streaming and downloads can differ — pick per context.",
+  "settings.audio.streamQuality.heading": "Default streaming quality",
+  "settings.audio.streamQuality.body":
+    "On a good connection we'll go as high as you allow. We never auto-upgrade on cellular without asking.",
+  "settings.audio.streamQuality.flac.label": "FLAC · 24/48",
+  "settings.audio.streamQuality.flac.badge": "lossless",
+  "settings.audio.streamQuality.flac.sub":
+    "The master, untouched. ~25 MB / track.",
+  "settings.audio.streamQuality.aac.label": "AAC · 256kbps",
+  "settings.audio.streamQuality.aac.sub":
+    "Transparent for most ears. ~7 MB / track.",
+  "settings.audio.downloadQuality.heading": "Download quality",
+  "settings.audio.downloadQuality.body":
+    "What we cache when you save a track for offline (sustainers only).",
+  "settings.audio.normalise.heading": "Normalise loudness",
+  "settings.audio.normalise.body":
+    "Even out volume across tracks and sets. <em>Off</em> if you want the artist's intended dynamics.",
+  "settings.audio.crossfade.heading": "Crossfade between tracks in a set",
+  "settings.audio.crossfade.body":
+    "Only applies inside DJ sets and live rooms, never on album playback.",
+
+  "settings.privacy.label": "Privacy",
+  "settings.privacy.title": "What the room <em>remembers</em>",
+  "settings.privacy.dek":
+    "The short version: almost nothing, by default. We never sell, share, or train on what you play. Aggregate plays feed the public ledger — nothing that identifies you.",
+  "settings.privacy.history.heading": "Listening history",
+  "settings.privacy.history.body":
+    "Off by default — nothing about what you played leaves your browser. Turn on for a private, deletable record only you can see.",
+  "settings.privacy.cloudSync.heading": "Cloud-sync my library",
+  "settings.privacy.cloudSync.body":
+    "Saves and follows move between devices. Without this they live on this device only.",
+  "settings.privacy.tipNotes.heading": "Tip notes — who sees them",
+  "settings.privacy.tipNotes.body":
+    "The note you write when you tip. <em>Private is the default</em>: only you and the artist ever read it.",
+  "settings.privacy.tipNotes.private.label": "Private",
+  "settings.privacy.tipNotes.private.badge": "default",
+  "settings.privacy.tipNotes.private.sub":
+    "Just you and the artist. Never shown on their page or your public receipt.",
+  "settings.privacy.tipNotes.semi.label": "Semi-public",
+  "settings.privacy.tipNotes.semi.sub":
+    "Visible to other sustainers of that artist, attributed to your handle.",
+  "settings.privacy.tipNotes.public.label": "Public",
+  "settings.privacy.tipNotes.public.sub":
+    "Anyone can read it on the artist's page. You can still hide any single note later.",
+  "settings.privacy.tipReceipts.heading": "Public tip receipts",
+  "settings.privacy.tipReceipts.body":
+    'Each tip mints a receipt showing the split — no personal data. On, it can be shared as a "look what the room paid this artist" card.',
+
+  "settings.captions.label": "Captions & lyrics",
+  "settings.captions.title": "Words on the <em>screen</em>",
+  "settings.captions.dek":
+    "Live rooms are captioned (auto, with a human pass on council broadcasts). Lyrics scroll in time with the track where the artist supplied them.",
+  "settings.captions.showCaptions.heading": "Show captions in live rooms",
+  "settings.captions.showCaptions.body":
+    "The talk between songs, transcribed. <em>On</em> by default for every broadcast.",
+  "settings.captions.captionSize.heading": "Caption size",
+  "settings.captions.captionSize.body":
+    "How large captions and the scrolling lyric line appear.",
+  "settings.captions.lyricLanguage.heading": "Lyric language",
+  "settings.captions.lyricLanguage.body":
+    "Show lyrics in the original, or a community translation where one exists.",
+  "settings.captions.lyricLanguage.opt.original": "Original (as recorded)",
+  "settings.captions.lyricLanguage.opt.english": "English translation",
+  "settings.captions.lyricLanguage.opt.portuguese": "Português",
+  "settings.captions.lyricLanguage.opt.spanish": "Español",
+  "settings.captions.lyricLanguage.opt.french": "Français",
+  "settings.captions.showBoth.heading": "Show both original & translation",
+  "settings.captions.showBoth.body":
+    "Two lines at once, original above the translation.",
+
+  "settings.tipping.label": "Tipping",
+  "settings.tipping.title": "Your default <em>tip</em>",
+  "settings.tipping.dek":
+    "What the one-tap tip pill sends. 100% reaches the artist — there is no platform cut on tips, ever.",
+  "settings.tipping.defaultAmount.heading": "Default amount",
+  "settings.tipping.defaultAmount.body":
+    "You can always pick a different figure at tip time.",
+  "settings.tipping.roundUp.heading": "Round up album buys into a tip",
+  "settings.tipping.roundUp.body":
+    "A {albumPrice} album becomes {roundedPrice}, the {tipAmount} going to the artist as a tip.",
+
+  "settings.erase.label": "Erase & exit",
+  "settings.erase.title": "One tap, <em>no questions</em>",
+  "settings.erase.dek":
+    "These don't ask twice and don't show a modal. We mean it: leaving should be as easy as arriving.",
+  "settings.erase.history.heading": "Erase my listening history",
+  "settings.erase.history.note":
+    "Wipes the private record from this device and the cloud. <em>Done instantly. No undo.</em>",
+  "settings.erase.history.cta": "Erase history",
+  "settings.erase.history.toast":
+    "History erased — gone from this device and the cloud.",
+  "settings.erase.export.heading": "Download everything we hold on you",
+  "settings.erase.export.note":
+    "A JSON of your saves, tips, receipts and settings — emailed within the hour.",
+  "settings.erase.export.cta": "Request export",
+  "settings.erase.export.toast":
+    "We'll email your data export within the hour.",
+  "settings.erase.closeAccount.heading": "Close my Studio account",
+  "settings.erase.closeAccount.note":
+    "Stops your sustainer fee, removes your library. Past tips stay paid to artists. <em>Banking, if you're also an artist, is untouched.</em>",
+  "settings.erase.closeAccount.cta": "Close account",
+  "settings.erase.closeAccount.toast":
+    "Account closure opens in a separate flow.",
+
+  // ── Notifications (StudioNotificationsPage) ───────────────────────────────
+  // Chrome only — each notification's names/tracks/quotes below are content,
+  // API-sourced in live mode, and stay English in both modes (§1).
+  "notifications.eyebrow": "Your room · what happened while you were out",
+  "notifications.title": "The room's been <em>busy</em>.",
+  "notifications.dek":
+    "Tip replies from artists, new releases from people you follow, live rooms about to open. <em>Only the things you asked to hear about</em> — tune it in Settings.",
+  "notifications.filter.all": "All",
+  "notifications.filter.reply": "Replies",
+  "notifications.filter.release": "Releases",
+  "notifications.filter.live": "Live",
+  "notifications.markAllReadCta": "Mark all read",
+  "notifications.markAllReadToast": "All caught up",
+  "notifications.empty":
+    "Nothing of <em>that kind</em> right now. When it happens, it'll land here. Quiet is allowed.",
+  "notifications.day.today": "Today",
+  "notifications.day.week": "This week",
+  "notifications.action.joinRoom": "Join the room",
+  "notifications.action.rsvp": "RSVP",
+
+  // ── Tip modal (StudioTipModal — reused across Studio pages) ───────────────
+  "tipModal.dialogAria": "Send a tip to {recipient}",
+  "tipModal.closeAria": "Close",
+  "tipModal.eyebrow": "Tip · 100% to the artist",
+  "tipModal.title": "Send a tip to <em>{recipient}</em>",
+  "tipModal.sub":
+    "Tips pass through untouched — every cent lands with {recipient}.",
+  "tipModal.customPlaceholder": "Custom amount",
+  "tipModal.sendingCta": "Sending…",
+  "tipModal.sendCta": "Tip {amount} →",
+  "tipModal.note":
+    "Pays {recipient} on top of streaming · <em>nothing skimmed</em>",
+  "tipModal.success.title":
+    "Thank you — that's <em>{amount}</em> to {recipient}.",
+  "tipModal.success.body":
+    "100% of your tip reaches {recipient} directly. No platform cut, no processing skimmed off the top.",
+  "tipModal.success.backCta": "Back to the music",
+
+  // ── Creator back-office nav (StudioCreatorShell) ───────────────────────────
+  "creator.nav.dashboard": "Dashboard",
+  "creator.nav.newRelease": "New release",
+  "creator.nav.payouts": "Payouts",
+  "creator.product": "Creator",
+  "creator.viewPublicPageCta": "View public page →",
+
+  // ── Your library (StudioLibraryPage) ───────────────────────────────────────
+  // Chrome only — album/set/track/collection titles and artist names in the
+  // mock library below are content and stay English in both modes (§1).
+  "library.eyebrow": "Your library",
+  "library.title": "Everything you've <em>kept.</em>",
+  "library.dek":
+    "Saved albums, sets, and tracks — and the <em>{amount}</em> you've paid {artistCount} artists this year by listening here.",
+  "library.tabs.albums": "Albums",
+  "library.tabs.sets": "Sets",
+  "library.tabs.collections": "Collections",
+  "library.tabs.tracks": "Tracks",
+  "library.category.albums": "albums",
+  "library.category.sets": "sets",
+  "library.category.collections": "collections",
+  "library.category.tracks": "tracks",
+  "library.empty.title": "Your library's empty here",
+  "library.empty.description":
+    "Nothing in <em>{category}</em> yet. Wander the studio, and anything you save lands right here — yours to come back to.",
+  "library.empty.browseCta": "Browse the studio",
+  "library.empty.searchCta": "Search the catalogue",
+
+  // ── Search (StudioSearchPage) ──────────────────────────────────────────────
+  // Chrome only — result titles/artist names/recent-search terms below are
+  // content (or, for recent searches, the listener's own history in live
+  // mode) and stay English in both modes (§1).
+  "search.eyebrow": "Search the catalogue",
+  "search.title": "Find the <em>sound.</em>",
+  "search.inputPlaceholder": "Artists, albums, sets, sheet music…",
+  "search.filter.everything": "Everything",
+  "search.filter.artists": "Artists",
+  "search.filter.albums": "Albums",
+  "search.filter.sets": "Sets",
+  "search.filter.collections": "Collections",
+  "search.filter.sheetMusic": "Sheet music",
+  "search.results.forQuery": "Results for <em>{query}</em>",
+  "search.results.featuredNow": "Featured <em>now</em>",
+  "search.empty.title": "Nothing matched that",
+  "search.empty.description":
+    "We couldn't find anything for <em>{term}</em>. Try a different word, or loosen the filter — the catalogue is bigger than it looks.",
+  "search.empty.clearCta": "Clear search",
+
+  // ── Creator dashboard (StudioDashboardPage + Charts + Side) ────────────────
+  // Chrome only — the artist's name, track titles, per-artist figures
+  // (STATS/CURATORS/CITIES/BARS in studioDashboard.data), and the specific
+  // live-room/payout plans below are this artist's own data, API-sourced in
+  // live mode, and stay English in both modes (§1).
+  "dashboard.hero.eyebrow": "Studio · this month",
+  "dashboard.hero.title": "Good week, <em>{name}</em>.",
+  "dashboard.hero.sub":
+    "<em>{trackTitle}</em> is two months old and still climbing — the curators kept it in rotation.",
+
+  "dashboard.stats.playsThisMonth": "Plays · this month",
+  "dashboard.stats.streamingEarnings": "Streaming earnings",
+  "dashboard.stats.tipsReceived": "Tips received",
+  "dashboard.stats.nextPayout": "Next payout · {date}",
+
+  "dashboard.charts.dailyPlays.heading": "Daily plays · <em>last 14 days</em>",
+  "dashboard.charts.curators.heading":
+    "Curators & <em>placements</em> · what landed your work this week",
+  "dashboard.charts.geography.heading": "Where they're <em>listening</em> from",
+  "dashboard.charts.geography.hint":
+    "City-level only · we never see street or finer. <em>This is the most we'll ever tell you about a listener.</em>",
+
+  "dashboard.side.quickActions.heading": "Things you can <em>do</em> from here",
+  "dashboard.side.quickActions.upload.label": "Upload a new release",
+  "dashboard.side.quickActions.upload.hint": "WAV / FLAC · 3 steps · 8 minutes",
+  "dashboard.side.quickActions.goLive.label": "Go live — host a listening room",
+  "dashboard.side.quickActions.payouts.label": "Review payouts & banking",
+  "dashboard.side.deal.eyebrow": "The deal, always",
+  "dashboard.side.deal.heading": "80% to <em>you.</em>",
+  "dashboard.side.deal.body":
+    "Every play, every tip, every buy. The split is the same for a first release as for a festival winner — and it's printed on the public ledger.",
+  "dashboard.side.deal.perPlay.label": "Per play",
+  "dashboard.side.deal.yourShare.label": "Your share",
+  "dashboard.side.deal.tips.label": "Tips",
+  "dashboard.side.deal.tips.value": "100% to you",
+
+  // ── Upload wizard (StudioUploadPage + Sections) ────────────────────────────
+  // Chrome only — uploaded file names, image validation detail, this
+  // release's title/genre, and collaborator names/roles below are this
+  // artist's own release data, API-sourced in live mode, and stay English
+  // in both modes (§1).
+  "upload.hero.eyebrow": "New release · upload",
+  "upload.hero.title": "Bring it <em>home.</em>",
+  "upload.hero.sub":
+    "Drop the masters. We transcode, you keep the originals. Three steps, about eight minutes.",
+
+  "upload.steps.files.nm": "Files",
+  "upload.steps.files.sub": "· WAV / FLAC · cover art · lyrics",
+  "upload.steps.metadata.nm": "Metadata & credits",
+  "upload.steps.metadata.sub": "· title · year · per-track splits",
+  "upload.steps.licence.nm": "Licence & release",
+  "upload.steps.licence.sub": "· CC / ARR · pricing · publish date",
+
+  "upload.dropzone.title":
+    "Drop a folder of <em>WAVs</em>, or click to browse.",
+  "upload.dropzone.body":
+    "An EP, an album, a single — same flow. We'll figure out track order from filenames.",
+  "upload.dropzone.accepts":
+    "accepts · <em>WAV · FLAC · AIFF</em> · max 96 kHz / 24 bit · up to 24 tracks",
+
+  "upload.files.heading":
+    "Uploaded <em>{readyCount} of {totalCount} ready</em>",
+  "upload.files.okReady": "OK · ready",
+  "upload.files.loudnessCheck": "Loudness check",
+  "upload.files.loudWarning.title": "Track {trackNumber} is loud.",
+  "upload.files.loudWarning.body":
+    "Master comes in at {measuredLoudness} — our floor is {targetLoudness} default. <em>This isn't fatal:</em> we can normalise on the fly per listener. If you intended this peak, leave it.",
+  "upload.files.loudToggle.show": "What we do with loud masters →",
+  "upload.files.loudToggle.hide": "What we do with loud masters ↑",
+  "upload.files.loudExplainer":
+    "We keep your master <em>exactly as delivered</em> and store it untouched. For playback we apply per-listener loudness normalisation to roughly −14 LUFS, so your track sits at a comfortable level next to everything else in a set — <em>without re-encoding or clipping your file</em>. Listeners who turn normalisation off in their settings hear your original peak. Nothing is baked in; you can change the target or opt out per release at any time.",
+
+  "upload.coverArt.heading":
+    "Cover art <em>{readyCount} of {totalCount} · linted</em>",
+
+  "upload.splits.heading": "Per-track <em>splits</em> · default 100% to you",
+  "upload.splits.sub":
+    "Add collaborators and we route each cent directly to their bank.",
+  "upload.splits.table.collaborator": "Collaborator",
+  "upload.splits.table.roleTracks": "Role · tracks",
+  "upload.splits.table.share": "Share",
+  "upload.splits.footer":
+    "Default split sums to {total} · per-track adjustments override",
+  "upload.splits.addCollaboratorCta": "Add collaborator",
+  "upload.splits.handlePlaceholder": "QP handle or email",
+  "upload.splits.inviteCta": "Invite",
+  "upload.splits.invitedToast": "Invited {handle} to the splits",
+  "upload.splits.invitedSubLabel": "invited · IBAN pending",
+  "upload.splits.invitedRole": "collaborator · all tracks",
+
+  "upload.side.files.eyebrow": "What we do with your files",
+  "upload.side.files.title": "Yours, <em>still</em>.",
+  "upload.side.files.body":
+    "You drop the masters; we transcode and stream. Your original WAV / FLAC stays your property — we hold a copy <em>only</em> for delivery. Takedown removes the listening copy in 14 days. Non-exclusive, always.",
+  "upload.side.files.list.sourceKept.label": "Source kept",
+  "upload.side.files.list.sourceKept.value": "your file, untouched",
+  "upload.side.files.list.listenerDelivery.label": "Listener delivery",
+  "upload.side.files.list.listenerDelivery.value": "FLAC + AAC 256",
+  "upload.side.files.list.loudnessTarget.label": "Loudness target",
+  "upload.side.files.list.loudnessTarget.value": "−14 LUFS",
+  "upload.side.files.list.isrc.label": "ISRC assignment",
+  "upload.side.files.list.isrc.value": "automatic",
+
+  "upload.side.lyrics.eyebrow": "Lyrics & translations",
+  "upload.side.lyrics.title": "Lyrics <em>required</em>, translations paid.",
+  "upload.side.lyrics.body":
+    "Upload lyrics in any language. For a line-by-line translation, the solidarity fund pays a community translator <em>€40 per song</em>. They keep their byline; you approve before publish.",
+  "upload.side.lyrics.list.autoTranscribe.label": "Auto-transcribe",
+  "upload.side.lyrics.list.autoTranscribe.value": "free · ~94%",
+  "upload.side.lyrics.list.communityTranslation.label": "Community translation",
+  "upload.side.lyrics.list.communityTranslation.value": "€40 → translator",
+  "upload.side.lyrics.list.approval.label": "Your approval",
+  "upload.side.lyrics.list.approval.value": "before publish",
+
+  "upload.metadata.heading": "Metadata & <em>credits</em>",
+  "upload.metadata.sub":
+    "A few last details and your release goes to the council queue for review.",
+  "upload.metadata.field.title": "Release title",
+  "upload.metadata.field.year": "Release year",
+  "upload.metadata.field.genre": "Primary genre",
+  "upload.metadata.genre.fado": "Fado / contemporary",
+  "upload.metadata.genre.electronic": "Electronic",
+  "upload.metadata.genre.folk": "Folk",
+  "upload.metadata.genre.experimental": "Experimental",
+  "upload.metadata.backCta": "← Back to files",
+  "upload.metadata.submitCta": "Submit for review →",
+
+  "upload.submitted.title": "Submitted for <em>review.</em>",
+  "upload.submitted.body":
+    "Your release is in the council queue. A curator will check the files, splits and credits — usually within a day or two — and you'll get a note the moment it's live. Nothing publishes without your final yes.",
+  "upload.submitted.viewPayoutsCta": "View your payouts →",
+  "upload.submitted.toast": "Release submitted for review",
+
+  "upload.continueToMetadataCta": "Continue to metadata →",
+
+  // ── Payouts (StudioPayoutsPage + Sections + Skeletons) ─────────────────────
+  // Chrome only — this artist's actual payout figures, IBAN/tax/contact
+  // details, and per-track breakdown below are her own financial data,
+  // API-sourced in live mode, and stay English in both modes (§1).
+  "payouts.hero.eyebrow": "Payouts & banking",
+  "payouts.hero.title": "<em>{amount}</em> lands on day {day}.",
+  "payouts.hero.sub":
+    "Paid monthly by SEPA transfer, with your recibo verde issued automatically. No minimums you didn't choose.",
+  "payouts.hero.breakdownEyebrow": "{month} payout · breakdown",
+
+  "payouts.summary.fromStreaming": "From streaming",
+  "payouts.summary.fromTips": "From tips",
+  "payouts.summary.fromAlbumBuys": "From album buys",
+  "payouts.summary.directSubs": "Direct €3/mo subs",
+  "payouts.summary.splitsRouted": "Splits routed to others",
+  "payouts.summary.toYourIban": "→ to your IBAN",
+
+  "payouts.list.heading": "Recent <em>payouts</em>",
+  "payouts.list.exportCsv": "Export CSV →",
+  "payouts.list.status.pending": "Pending",
+  "payouts.list.status.paid": "Paid",
+
+  "payouts.breakdown.heading": "This month, <em>track-by-track</em>",
+  "payouts.breakdown.rateNote":
+    "€0.05 per qualifying play (≥30s, capped 1/listener/track/day). Updates nightly at 02:00 Lisbon.",
+  "payouts.breakdown.subtotalLabel":
+    "Streaming subtotal · before splits + tips + buys",
+
+  "payouts.sidebar.methodEyebrow": "Payout method · active",
+  "payouts.sidebar.methodHeading": "Sending to <em>SEPA</em>",
+  "payouts.sidebar.method.sepa.label": "SEPA — IBAN",
+  "payouts.sidebar.method.sepa.badge": "Active",
+  "payouts.sidebar.method.stripe.label": "Stripe Connect",
+  "payouts.sidebar.method.stripe.hint": "connected · backup, not primary",
+  "payouts.sidebar.method.stripe.switchCta": "Switch",
+  "payouts.sidebar.method.coopCredit.label": "Co-op credit",
+  "payouts.sidebar.method.coopCredit.hint":
+    "spend at Casa do Comum, rehearsal rooms · €0 fees",
+  "payouts.sidebar.method.coopCredit.addCta": "Add",
+
+  "payouts.preferences.heading": "Payout <em>preferences</em>",
+  "payouts.preferences.threshold.label": "Minimum threshold",
+  "payouts.preferences.threshold.opt5": "€5 (default · ships every month)",
+  "payouts.preferences.threshold.opt20": "€20 (quarterly · save on fees)",
+  "payouts.preferences.threshold.opt100": "€100 (hold & release on request)",
+  "payouts.preferences.threshold.hint":
+    "Below threshold rolls over to next month.",
+  "payouts.preferences.taxResidency.label": "Tax residency",
+  "payouts.preferences.taxResidency.hint":
+    "We auto-issue your IRS recibo verde for each payout.",
+  "payouts.preferences.notificationEmail.label": "Notification email",
+
+  "payouts.export.headers.period": "Period",
+  "payouts.export.headers.date": "Date",
+  "payouts.export.headers.detail": "Detail",
+  "payouts.export.headers.amount": "Amount (EUR)",
+  "payouts.export.headers.status": "Status",
+  "payouts.export.toast": "Payout history exported as CSV",
+
+  // ── Programme the week (StudioProgramPage + Inbox + Slate) ────────────────
+  // Chrome only — submission/track/collection/broadcast titles, quotes, and
+  // curator notes below are content (each writer/artist's own submission or
+  // this curator's own note), API-sourced in live mode, and stay English
+  // in both modes (§1).
+  "program.header.eyebrow":
+    "Programming the room · Monday morning · drag anything below",
+  "program.header.title": "Week <em>{weekNumber}</em> · {dateRange}",
+  "program.header.sub":
+    "Build the slate of the week: <em>one cover, 12 — 16 tracks, 2 — 3 collections, broadcasts</em>. Press publish at noon and the homepage rotates.",
+  "program.header.autosave": "Auto-saved · {time} — every keystroke",
+  "program.header.previewRoomCta": "Preview the room",
+
+  "program.publishBar.status":
+    "Slate is <em>{percent}% complete</em> · publishes {publishDate} · auto-rotates the homepage",
+  "program.publishBar.previewHomepageCta": "Preview homepage",
+  "program.publishBar.saveDraftCta": "Save draft",
+  "program.publishBar.publishCta": "Publish at noon",
+
+  "program.toast.addedToSlate": "Added to this week's slate",
+  "program.toast.passed": "Passed — the writer can resubmit later",
+  "program.toast.playingPreview": "Playing preview…",
+  "program.toast.openingRoomPreview": "Opening the room preview…",
+  "program.toast.chooseNewCover": "Choose a new cover artist…",
+  "program.toast.editingCoverNote": "Editing the cover note…",
+  "program.toast.openingHomepagePreview": "Opening homepage preview…",
+  "program.toast.draftSaved": "Draft saved",
+  "program.toast.published": "Slate published — homepage rotates at noon",
+
+  "program.inbox.heading": "Submissions · <em>{count} new</em>",
+  "program.inbox.triageCta": "Triage →",
+  "program.inbox.tip":
+    "Drag any submission left into a slot. <em>The pass-with-reason flow is in triage.</em>",
+  "program.inbox.listenCta": "Listen",
+  "program.inbox.slateCta": "+ Slate",
+  "program.inbox.passCta": "Pass",
+
+  "program.slate.cover.heading": "Cover artist of the week",
+  "program.slate.cover.count": "1 of 1 · the room's headline",
+  "program.slate.cover.swapCta": "Swap",
+  "program.slate.cover.editNoteCta": "Edit note",
+  "program.slate.singles.heading": "This week's singles",
+  "program.slate.singles.count":
+    "{placed} of {total} placed · {open} slots open",
+  "program.slate.singles.notePlaceholder":
+    "— write a one-line note · why this, why now —",
+  "program.slate.singles.noteAria": "Note for {title}",
+  "program.slate.singles.removeAria": "Remove {title}",
+  "program.slate.singles.addSlotCta":
+    "＋ drag a track from submissions, or click to add from catalogue",
+  "program.slate.collections.heading": "Collection rotation",
+  "program.slate.collections.count": "{placed} of {total}",
+  "program.slate.broadcasts.heading": "Live broadcasts this week",
+  "program.slate.broadcasts.count":
+    "{scheduled} scheduled · slot {slotNumber} open",
+  "program.slate.broadcasts.addSlotCta":
+    "＋ schedule a third broadcast for Saturday late",
+
+  // ── Submission triage (StudioTriagePage + List + Detail) ───────────────────
+  // Chrome only — submitters' names/quotes/tracks/badges and this specific
+  // submission's file/waveform/curator notes below are content, API-sourced
+  // in live mode, and stay English in both modes (§1). The tab `id`s below
+  // are stable filter values — never render the English label as a stored
+  // key (§5.1 trap).
+  "triage.header.eyebrow":
+    "Submission triage · the council answers every submission in 14 days",
+  "triage.header.title": "Inbox · <em>{count}</em> new this week.",
+  "triage.header.sub":
+    "Every submission gets read or listened to. <em>Pass</em> takes a sentence — that sentence becomes the artist's answer. Median reply time this season: {count} days.",
+
+  "triage.kpi.newThisWeek": "new this week",
+  "triage.kpi.youClaimed": "you claimed",
+  "triage.kpi.medianReply": "median reply",
+  "triage.kpi.atDeadline": "at deadline",
+
+  "triage.tabs.new.label": "New",
+  "triage.tabs.new.queue": "new",
+  "triage.tabs.yours.label": "Yours",
+  "triage.tabs.yours.queue": "yours",
+  "triage.tabs.atDeadline.label": "At deadline",
+  "triage.tabs.atDeadline.queue": "at deadline",
+  "triage.tabs.shortlisted.label": "Shortlisted",
+  "triage.tabs.shortlisted.queue": "shortlisted",
+  "triage.tabs.answered.label": "Answered",
+  "triage.tabs.answered.queue": "answered",
+
+  "triage.list.empty.title": "Nothing in this queue",
+  "triage.list.empty.description":
+    "No submissions sit in <em>{queue}</em> right now. When something lands, you'll find it waiting here.",
+  "triage.list.backToNewCta": "Back to new",
+  "triage.list.dayOfTotal": "of 14 to answer",
+
+  "triage.detail.playAria": "Play",
+  "triage.detail.fileHeading": "The file",
+  "triage.detail.file.format": "Format",
+  "triage.detail.file.loudness": "Loudness",
+  "triage.detail.file.duration": "Duration",
+  "triage.detail.file.lyrics": "Lyrics",
+  "triage.detail.file.splits": "Splits",
+  "triage.detail.flaggedHeading": "What other curators flagged ({count})",
+  "triage.detail.answerHeading": "Your <em>answer</em>",
+  "triage.detail.decision.heading":
+    "If you pass — write one sentence. This goes to {artistName} as the answer.",
+  "triage.detail.decision.placeholder":
+    "A small sentence that explains the no. We never send a form letter, ever.",
+  "triage.detail.decision.hint":
+    "Required for pass. <em>Not required</em> for slate.",
+  "triage.detail.holdCta": "Hold & second-read",
+  "triage.detail.passCta": "Pass · with the sentence",
+  "triage.detail.addToSlateCta": "＋ Add to next slate",
+  "triage.detail.toast.held": "Held for a second read",
+  "triage.detail.toast.passed":
+    "Passed with your sentence — sent to {artistName}",
+  "triage.detail.toast.addedToSlate": "Added to the next slate",
+
+  // ── Flag review (StudioFlagReviewPage + Card) ──────────────────────────────
+  // Chrome only — flagged-release titles, reporter quotes, and claim/who
+  // details below are content, API-sourced in live mode, and stay English
+  // in both modes (§1). `verb` stored on resolve is a stable id, not the
+  // English label — resolve via RESOLUTION_LABELS, never render it raw
+  // (§5.1 trap).
+  "flagReview.header.eyebrow": "Council · flag review",
+  "flagReview.header.title": "When the room <em>flags</em> something.",
+  "flagReview.header.dek":
+    "Listeners can flag a release for uncleared samples, missing credits, or misattribution. A curator claims each one, the named artist gets to respond, and <em>every decision is logged with a reason</em>. Nothing is taken down silently.",
+
+  "flagReview.resolvedTag": "Resolved · {verb}",
+  "flagReview.dismissedClearedTag": "Dismissed · cleared",
+  "flagReview.playAria": "Play",
+  "flagReview.claimReviewCta": "Claim & review",
+  "flagReview.dismissCta": "Dismiss",
+  "flagReview.correctLineupCta": "Correct lineup",
+  "flagReview.requestFixCta": "Request fix",
+  "flagReview.holdUntilFixedCta": "Hold until fixed",
+
+  "flagReview.resolution.dismissed": "dismissed",
+  "flagReview.resolution.corrected": "corrected",
+  "flagReview.resolution.held": "held",
+
+  "flagReview.toast.claimed": "Claimed — it's yours to review",
+  "flagReview.toast.lineupConfirmed": "Lineup confirmed accurate",
+  "flagReview.toast.lineupCorrected": "Lineup corrected",
+  "flagReview.toast.dismissedCreditsConfirmed":
+    "Flag dismissed — credits confirmed correct",
+  "flagReview.toast.correctionRequested":
+    "Correction requested from the artist",
+  "flagReview.toast.heldUntilCorrected": "Held until corrected",
+
+  // ── Live room (StudioLivePage + LiveNow + LiveChat) ────────────────────────
+  // Chrome only — the live show/track/artist names, the chat transcript, and
+  // per-listen stats below are content (the room's actual live state and
+  // chat log), API-sourced in live mode, and stay English in both modes
+  // (§1). Chat-tab `id`s are stable values — never the translated label
+  // (§5.1 trap).
+  "live.ribbon.onAirNow": "On the air now",
+
+  "liveNow.saveTrackCta": "Save track",
+  "liveNow.savedCta": "Saved",
+  "liveNow.savedToast": "Track saved to your library",
+  "liveNow.removedToast": "Removed from your library",
+  "liveNow.lyricsNotesCta": "Lyrics & notes →",
+  "liveNow.listenersLabel":
+    "in the room with you · {sustainers} sustainers, {casual} casual",
+  "liveNow.tippedLabel": "tipped during this set · 100% to artists",
+  "liveNow.perPlayLabel": "per qualifying play · pays {artist} right now",
+  "liveNow.setBuilding.heading": "The set · <em>building live</em>",
+  "liveNow.trackPosition": "Track {current} of {total} · jumped from queue",
+  "liveNow.tipArtistCta": "Tip {artist} · {amount}",
+
+  "liveChat.tabs.chat.label": "Chat",
+  "liveChat.tabs.tips.label": "Tips",
+  "liveChat.tabs.listeners.label": "Listeners",
+  "liveChat.inputPlaceholder": "say something to the room…",
+  "liveChat.sendAria": "Send",
+  "liveChat.sentToast": "Sent to the room",
+  "liveChat.tipPresetCta": "Tip {amount}",
+  "liveChat.tipCustomCta": "Tip €__",
+
+  // ── Go live / broadcaster console (StudioBroadcastPage + Console) ─────────
+  // Chrome only — device names, cue-sheet track titles, tip messages, and
+  // talkback chat below are content, API-sourced in live mode, and stay
+  // English in both modes (§1).
+  "broadcast.status.onAir": "You're <em>on the air</em>",
+  "broadcast.status.livePill": "live",
+  "broadcast.status.meta":
+    "<em>{count}</em> in the room · {sustainers} sustainers · {cities} cities",
+  "broadcast.status.pauseMicCta": "Pause mic",
+  "broadcast.status.endBroadcastCta": "End broadcast",
+  "broadcast.status.toast.micPaused": "Mic paused — the room hears silence",
+  "broadcast.status.toast.ending": "Broadcast ends in 5… archiving to a replay",
+
+  "broadcast.audioIn.panelLabel": "Audio in",
+  "broadcast.audioIn.singleCamVideo": "Single-cam video",
+  "broadcast.audioIn.cameraNote":
+    "Audio-only is the default for listening rooms. Camera ships in Phase 5 — flagged off for now.",
+
+  "broadcast.nowPlaying.onAirNow": "On the air now",
+  "broadcast.nowPlaying.setListLabel":
+    "Set list · <em>type as you play</em> — it becomes the cue sheet on archive",
+  "broadcast.nowPlaying.inputPlaceholder":
+    "What did you just play? Artist — title…",
+  "broadcast.nowPlaying.inputAria": "Add a track to the set list",
+  "broadcast.nowPlaying.addCta": "Add",
+  "broadcast.nowPlaying.justAdded": "Just added",
+  "broadcast.nowPlaying.liveYourOwn": "live, your own",
+  "broadcast.nowPlaying.badge.onAir": "On air",
+  "broadcast.nowPlaying.badge.matched": "€ matched",
+  "broadcast.nowPlaying.badge.hold": "Hold",
+  "broadcast.nowPlaying.footer":
+    "Matched tracks pay their artists automatically from this set's payout. <em>Held tracks wait</em> until the council's matcher clears them — nobody loses a cent in the meantime.",
+
+  "broadcast.aside.tipsTab": "Live tips <em>{amount}</em>",
+  "broadcast.aside.talkbackTab": "Talkback <em>{count}</em>",
+  "broadcast.aside.tipsTotalLabel": "Tonight, so far · <em>100% to you</em>",
+  "broadcast.aside.talkback.placeholder":
+    "Talk back to your mods (listeners can't see this)…",
+  "broadcast.aside.talkback.aria": "Talk back to your mods",
+  "broadcast.aside.talkback.sendCta": "Send",
+  "broadcast.aside.talkback.sentToast": "Sent to your mods",
+
+  // ── Sheet music store (StudioSheetStorePage + Preview + Checkout + Also) ──
+  // Chrome only — track/album/composer/transcriber names below are content,
+  // API-sourced in live mode, and stay English in both modes (§1). Amounts
+  // route through useFormat().currency() at render — see SHEET_PRICE etc. in
+  // studioSheetStore.data.ts.
+  "sheet.store.eyebrow": "Sheet music & lyrics archive",
+  "sheet.store.title": "Buy the <em>score</em>, pay the people.",
+  "sheet.store.dek":
+    "A {amount} micropayment unlocks a clean, printable PDF — and splits <em>{splitRatio}</em> to the people who made and transcribed it. Reading is free; downloading pays.",
+
+  "sheet.preview.eyebrow": "Lead sheet · transcription",
+  "sheet.preview.byLine":
+    "music & lyrics by <strong>{composer}</strong> · from <em>{album}</em>",
+  "sheet.preview.freePreview": "Free preview · <em>page {page} of {total}</em>",
+  "sheet.preview.watermark": "QUEERPULSE · PREVIEW",
+  "sheet.preview.lockedPages": "Pages {from}–{to} unlock on purchase",
+  "sheet.preview.transcribedBy": "Transcribed by <em>{name}</em>",
+  "sheet.preview.transcriberRole": "Community transcriber",
+  "sheet.preview.transcriberNote":
+    "<em>paid from your purchase, not the fund, when you buy</em>",
+
+  "sheet.checkout.title": "Your <em>download</em>",
+  "sheet.checkout.subtitle": "One sheet · clean PDF · yours to keep & print",
+  "sheet.checkout.processingLabel": "Processing",
+  "sheet.checkout.processingSub": "co-op SEPA rate",
+  "sheet.checkout.totalLabel": "Total",
+  "sheet.checkout.splitHeading": "Where your {amount} goes · {splitRatio}",
+  "sheet.checkout.role.transcriber": "transcriber",
+  "sheet.checkout.role.composer": "composer",
+  "sheet.checkout.role.coop": "The co-op · hosting & infra",
+  "sheet.checkout.splitFoot":
+    "Sheets pay <em>90%</em> to the makers — more generous than the 80% streaming split, because the work is one-off and hosting a PDF costs near zero. <em>Voted in at the 9 June assembly.</em>",
+  "sheet.checkout.payMethod.card.label": "Saved card",
+  "sheet.checkout.payMethod.card.sub": "one-tap, no re-entry",
+  "sheet.checkout.payMethod.sepa.label": "SEPA direct",
+  "sheet.checkout.payMethod.sepa.sub": "lower fee, 1–2 day settle",
+  "sheet.checkout.paidLabel": "Paid",
+  "sheet.checkout.downloadingLabel": "downloading PDF…",
+  "sheet.checkout.payCta": "Pay {amount} & download →",
+  "sheet.checkout.note":
+    "Instant download · re-download any time from your library · <em>the makers are paid tonight</em>.",
+  "sheet.checkout.downloadedToast":
+    "Downloaded — {amount} paid to {names} tonight",
+
+  "sheet.also.heading": "From the same <em>transcriber</em>",
+  "sheet.also.subtitle_one":
+    "{name} · {count} sheet · {amount} reaches the transcriber per download",
+  "sheet.also.subtitle_other":
+    "{name} · {count} sheets · {amount} reaches the transcriber per download",
+  "sheet.also.freeReadTag": "Free read",
+
+  // ── Tip receipt (StudioReceiptPage) ────────────────────────────────────────
+  // Chrome only — track/artist/album names and the tip note quote below are
+  // content and stay English in both modes (§1).
+  "receipt.tipEyebrow": "Tip · while listening",
+  "receipt.byPrefix": "by",
+  "receipt.fromAlbum": "from <em>{album}</em>",
+  "receipt.thanksTitle": "{artist} got <em>{amount}</em>.",
+  "receipt.thanksSub": "Every cent. No platform cut. <em>You did that.</em>",
+  "receipt.splitHeading": "Where the <em>money</em> went",
+  "receipt.splitNote": "100% pass-through on tips, no exceptions.",
+  "receipt.split.artistSub_one": "Direct, SEPA · settles in {count} day",
+  "receipt.split.artistSub_other": "Direct, SEPA · settles in {count} days",
+  "receipt.split.platformName": "Platform · the room",
+  "receipt.split.platformSub":
+    "Stripe processing fee absorbed by the co-op on tips.",
+  "receipt.split.artistPct": "100%",
+  "receipt.split.platformPct": "0%",
+  "receipt.detail.receiptNo": "Receipt no.",
+  "receipt.detail.dateTime": "Date & time",
+  "receipt.detail.from": "From",
+  "receipt.detail.method": "Method",
+  "receipt.detail.postedToLedger": "Posted to ledger",
+  "receipt.detail.visibility": "Visibility",
+  "receipt.detail.sustainerSince": "sustainer since {date}",
+  "receipt.detail.chosenByDefault": "<em>chosen by default</em>",
+  "receipt.detail.visibilityValue":
+    "Public · with your name · <em>change to anonymous</em>",
+  "receipt.note.label": "Your note to {artist}",
+  "receipt.note.repliedSuffix": "<em>replied</em>",
+  "receipt.note.replyWhen": "{relativeTime} · still on air, two tracks later",
+  "receipt.footer.auditablePrefix": "Auditable on the",
+  "receipt.footer.publicLedgerLink": "public ledger",
+  "receipt.footer.rowLabel": "row {code}",
+  "receipt.footer.exportCta": "Export PDF",
+  "receipt.actions.share": "Share — paid card",
+  "receipt.actions.tipAgain": "Tip again",
+  "receipt.actions.openArtistPage": "Open {artist}'s page",
+  "receipt.actions.emailCopy": "Email me a copy",
+  "receipt.toast.shareCopied": "Paid card copied — share it anywhere.",
+  "receipt.toast.tipAgain": "Tip {artist} again — same track.",
+  "receipt.toast.emailCopy": "A copy is on its way to your inbox.",
+  "receipt.privacyNote":
+    "By default tips are <em>public, with your name</em>. You can make this one anonymous, or set every future tip to anonymous, in settings. <em>We don't share tip data with anyone.</em> <a>Privacy commitments →</a>",
+
+  // ── Sustain-membership checkout (StudioCheckoutPage) ──────────────────────
+  "checkout.doneToast": "You're sustaining the studio — welcome in.",
+  "checkout.doneTitle": "You're <em>sustaining</em> it now.",
+  "checkout.doneBody":
+    "Welcome in. Every track you play from here pays the artist who made it. Your first payment of {amount} is done — the rest is just listening.",
+  "checkout.startListeningCta": "Start listening →",
+  "checkout.goToLibraryCta": "Go to your library",
+  "checkout.eyebrow": "Checkout",
+  "checkout.title": "Sustain the <em>studio.</em>",
+  "checkout.dek":
+    "Seven euros a month keeps a fair-pay music platform alive — and pays the artists you actually listen to, on every play.",
+  "checkout.nameLabel": "Name on card",
+  "checkout.namePlaceholder": "Your name",
+  "checkout.cardLabel": "Card number",
+  "checkout.expiryLabel": "Expiry",
+  "checkout.cvcLabel": "CVC",
+  "checkout.payCta": "Pay {amount}{cadence} →",
+  "checkout.cadenceMonthly": "/ month",
+  "checkout.prototypeNote":
+    "This is a prototype — no card is charged and nothing is stored.",
+  "checkout.planName": "Sustain",
+  "checkout.membershipLabel": "{name} <em>membership</em>",
+  "checkout.dueTodayLabel": "Due today",
+  "checkout.lines.unlimitedListening": "Unlimited listening",
+  "checkout.lines.losslessAudio": "Lossless audio · FLAC",
+  "checkout.lines.liveRooms": "Live broadcast rooms",
+  "checkout.lines.artistShare": "Goes to artists",
+  "checkout.lines.platformShare": "Platform & hosting",
+  "checkout.lines.included": "included",
+  "checkout.reassure.cancel":
+    "Cancel any time — one click, no email, no retention call.",
+  "checkout.reassure.share":
+    "{percent}% of every euro is paid straight to the artists you listen to.",
+  "checkout.reassure.noAds": "No ads, ever. Your listening data is never sold.",
+
+  // ── Solidarity fund (StudioSolidarityFundPage + Balance + Flows + Log) ────
+  // Chrome only. Two paragraphs deliberately NOT swept — flagged in the sweep
+  // report as eligibility/commitment copy (§6): the "apply" section's
+  // no-means-test promise, and the fund-balance runway/rollover rule, and the
+  // flows dek's "never the artist's 80%, never your tips" guarantee. They
+  // render in English via the fallback chain until reviewed. Disbursement
+  // log recipient names/notes are content — API-sourced ledger rows in live
+  // mode — and stay English in both modes (§1).
+  "fund.hero.liveLabel": "Public · updated Mondays at noon",
+  "fund.hero.title": "The <em>solidarity</em> fund.",
+  "fund.hero.dek":
+    "A small pooled reserve that pays the people the per-stream rate can't reach — <em>transcribers, translators, first-timers, and artists in a hard month</em>. Where it comes from and where it goes, in full.",
+
+  "fund.balance.label": "Fund balance · today",
+  "fund.balance.paidThisQuarterLabel": "paid out this quarter",
+  "fund.balance.peoplePaidLabel_one": "person paid from it this year",
+  "fund.balance.peoplePaidLabel_other": "people paid from it this year",
+
+  "fund.flows.heading": "Where it <em>comes from</em>, where it <em>goes</em>",
+  "fund.flows.inHeading": "Money in · this quarter",
+  "fund.flows.outHeading": "Money out · this quarter",
+
+  "fund.flows.in.surplus.label": "Subscription <em>surplus</em>",
+  "fund.flows.in.surplus.desc":
+    "When sustainer revenue beats the payout ledger, the difference pools here.",
+  "fund.flows.in.roundups.label": "Tip <em>round-ups</em>",
+  "fund.flows.in.roundups.desc":
+    "The optional 5% some listeners add on top of a tip.",
+  "fund.flows.in.holds.label": "Cleared <em>holds</em>",
+  "fund.flows.in.holds.desc":
+    "Unmatched DJ-set payouts that stay unclaimed after a year.",
+  "fund.flows.in.gifts.label": "Direct <em>gifts</em>",
+  "fund.flows.in.gifts.desc":
+    "One-off donations from members and a Lisbon foundation.",
+
+  "fund.flows.out.transcribers.label": "Transcribers & <em>translators</em>",
+  "fund.flows.out.transcribers.desc":
+    "Sheet music, lyric translations — paid per accepted piece.",
+  "fund.flows.out.grants.label": "First-release <em>grants</em>",
+  "fund.flows.out.grants.desc":
+    "€1,200 unrestricted to first-time members on the spring strand.",
+  "fund.flows.out.emergency.label": "Emergency <em>artist support</em>",
+  "fund.flows.out.emergency.desc":
+    "No-questions help for a member in a hard month.",
+  "fund.flows.out.access.label": "Access <em>work</em>",
+  "fund.flows.out.access.desc":
+    "LGP interpreters, captioning passes, the screen-reader audit.",
+
+  "fund.log.heading": "Recent <em>disbursements</em>",
+  "fund.log.dek":
+    "Every payment from the fund is logged here with a name (where consent is given) and a reason. <em>No black box.</em>",
+  "fund.log.showingOf": "Showing {shown} of {total} this year",
+  "fund.log.showLess": "show less",
+  "fund.log.fullLog": "full log",
+  "fund.log.exportCsv": "export CSV",
+  "fund.log.exportToast": "Disbursement log exported as CSV",
+  "fund.log.tag.transcriber": "Transcriber",
+  "fund.log.tag.emergency": "Emergency",
+  "fund.log.tag.grant": "Grant",
+  "fund.log.tag.access": "Access",
+  "fund.log.tag.translator": "Translator",
+  "fund.log.csv.date": "Date",
+  "fund.log.csv.category": "Category",
+  "fund.log.csv.recipient": "Recipient",
+  "fund.log.csv.note": "Note",
+  "fund.log.csv.amount": "Amount (EUR)",
+
+  "fund.apply.heading": "Need it? <em>Ask.</em>",
+  "fund.apply.requestCta": "Request emergency support",
+  "fund.apply.requestToast": "Emergency support form opens in a private flow",
+  "fund.apply.seeGrantsCta": "See open grants & calls →",
+
+  // ── Open calls & commissions (StudioOpenCallsPage + Card + Skeleton) ──────
+  // Chrome only — each call's title/brief/tags/meta/deadline and the amount
+  // context below are content, API-sourced listings in live mode, and stay
+  // English in both modes (§1). Filter `id`s are stable values — never the
+  // translated label (§5.1 trap).
+  "calls.hero.eyebrow": "From the council",
+  "calls.hero.title": "Open <em>calls</em> & commissions.",
+  "calls.hero.dek":
+    "Briefs the council and co-op have funded. Apply inline — attach a <em>single track or release</em> from your catalogue. No cover letters, no portfolios; the work speaks.",
+
+  "calls.filter.all": "All open",
+  "calls.filter.commissions": "Commissions",
+  "calls.filter.grants": "Grants",
+  "calls.filter.residencies": "Residencies",
+  "calls.filter.closingSoon": "Closing soon",
+  "calls.filter.openCount":
+    "<em>{count}</em> open · you've applied to {applied}",
+
+  "calls.card.saveCta": "Save",
+  "calls.card.applyCta": "Apply →",
+  "calls.card.saveToast": "Brief saved to your dashboard",
+  "calls.card.attachLabel": "Attach one track from your catalogue",
+  "calls.card.submitCta": "Submit application",
+  "calls.card.cancelCta": "Cancel",
+  "calls.card.singleTrackNote":
+    "<em>One track only</em> — the council wants your sharpest, not your folder.",
+  "calls.card.submittedToast":
+    "Application submitted — the council reviews in Monday triage",
+
+  "calls.applied.statusPrefix": "Status ·",
+  "calls.applied.decisionBy": "decision by {date}",
+  "calls.applied.withdrawCta": "Withdraw",
+  "calls.applied.withdrawnToast": "Application withdrawn",
+  "calls.applied.flatLabel": "flat",
+
+  // ── Set submission (StudioSetSubmissionPage + Matcher + Sidebar) ──────────
+  // Chrome only — the uploaded filename, track/artist names, and tracklist
+  // paste below are content and stay English in both modes (§1). The set
+  // `type` <select> below had no stable `value=` — the option label WAS the
+  // stored value (§5.1 trap) — fixed with stable ids.
+  "setSubmission.hero.eyebrow": "New submission · DJ set or mix",
+  "setSubmission.hero.title": "Submit a <em>set</em>.",
+  "setSubmission.hero.dek":
+    "Upload the long-form file, paste your tracklist with timecodes, and our matcher finds the source artists so <em>every track in the set pays its maker</em>. Unmatched tracks hold their payout safely until cleared — nobody loses a cent.",
+
+  "setSubmission.steps.file": "File",
+  "setSubmission.steps.tracklist": "Tracklist & matcher",
+  "setSubmission.steps.notes": "Notes & publish",
+
+  "setSubmission.matcher.uploadedBadge": "Uploaded",
+  "setSubmission.matcher.tracklistLabel":
+    "Paste your tracklist · timecode — artist — title",
+  "setSubmission.matcher.pasteHint":
+    "One line per track. We accept most formats. <em>Re-run the matcher</em> whenever you edit.",
+  "setSubmission.matcher.runCta": "▸ Run the matcher",
+  "setSubmission.matcher.matchingCta": "Matching…",
+  "setSubmission.matcher.resultsLabel":
+    "Matcher results · <em>resolved against the catalogue + PRO database</em>",
+  "setSubmission.matcher.payLine":
+    "{who} · <em>{amount}/play to {firstName}</em>",
+  "setSubmission.matcher.noSourceFound": "no source found · payout held",
+  "setSubmission.matcher.matchedBadge": "Matched",
+  "setSubmission.matcher.identifyCta": "Identify",
+  "setSubmission.matcher.identifyToast": "Search opened to identify this track",
+  "setSubmission.matcher.matchedResultToast":
+    "{matched} of {total} matched · {held} held for clearance",
+
+  "setSubmission.sidebar.detailsHeading": "Set <em>details</em>",
+  "setSubmission.sidebar.titleLabel": "Set title",
+  "setSubmission.sidebar.typeLabel": "Type",
+  "setSubmission.sidebar.type.liveDjSet": "Live DJ set",
+  "setSubmission.sidebar.type.studioMix": "Studio mix",
+  "setSubmission.sidebar.type.recordedBroadcast": "Recorded broadcast",
+  "setSubmission.sidebar.payoutPreviewHeading": "Payout <em>preview</em>",
+  "setSubmission.sidebar.tracksInSet": "Tracks in set",
+  "setSubmission.sidebar.matchedPaying": "Matched & paying",
+  "setSubmission.sidebar.tracksCount_one": "{count} track",
+  "setSubmission.sidebar.tracksCount_other": "{count} tracks",
+  "setSubmission.sidebar.onHold": "On hold (unmatched)",
+  "setSubmission.sidebar.payoutPool": "Set payout pool",
+  "setSubmission.sidebar.holdNote":
+    "Unmatched tracks <em>hold their share</em> until the council's matcher clears them. The set goes live now; held money releases the moment a source is confirmed.",
+  "setSubmission.sidebar.submitCta": "Submit set →",
+  "setSubmission.sidebar.submittedToast":
+    "Set submitted — live now, held shares pending clearance",
+
+  // ── Off-air landing (StudioOffAirPage + Hero) ─────────────────────────────
+  // Chrome only — the curator's signoff quote, next-broadcast title, and
+  // night-cap set/curator names below are content and stay English in both
+  // modes (§1). StudioOffAirShelves is already swept — match its pattern.
+  "offAir.page.browseNote":
+    "The doors are shut, but the shelves are open. <em>Browse anything below</em> — it all still plays.",
+  "offAir.hero.statusLine": "Off air · {time} in Lisbon",
+  "offAir.hero.roomDark": "the room is dark",
+  "offAir.hero.title": "The room is <em>closed</em> for the night.",
+  "offAir.hero.untilDoors": "until doors",
+  "offAir.hero.nextBroadcastLabel": "Next broadcast · {time} Lisbon",
+  "offAir.hero.nightcapEyebrow": "Last night's night-cap",
+  "offAir.hero.replayAria": "Replay the night-cap",
+  "offAir.hero.replayingToast": "Replaying {title}",
+  "offAir.hero.paidOutSuffix": "{amount} paid out · replay any time",
 };

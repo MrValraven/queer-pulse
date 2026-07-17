@@ -12,30 +12,41 @@ export type WorkerStatus = "freelancer" | "eni";
 
 export interface SelectOption<T> {
   value: T;
-  label: string;
+  labelKey: string;
 }
 
-/** Regime-simplificado coefficient by activity type (Art. 31.º CIRS). */
+/** i18n Pattern A — labelKey resolved via t() by TakeHomeForm.
+ *  Regime-simplificado coefficient by activity type (Art. 31.º CIRS). */
 export const ACTIVITY_OPTIONS: SelectOption<ActivityKey>[] = [
-  { value: "services", label: "Liberal profession (0.75)" },
-  { value: "otherServices", label: "Other services (0.35)" },
-  { value: "goods", label: "Sale of goods / hospitality (0.15)" },
-  { value: "ipCapital", label: "IP / capital (0.95)" },
+  { value: "services", labelKey: "economy:takeHome.activityOption.services" },
+  {
+    value: "otherServices",
+    labelKey: "economy:takeHome.activityOption.otherServices",
+  },
+  { value: "goods", labelKey: "economy:takeHome.activityOption.goods" },
+  {
+    value: "ipCapital",
+    labelKey: "economy:takeHome.activityOption.ipCapital",
+  },
 ];
 
-export const YEAR_OPTIONS: SelectOption<TaxYear>[] = [
+/** Bare years — not translated (a year number reads the same in every locale). */
+export const YEAR_OPTIONS: { value: TaxYear; label: string }[] = [
   { value: 2025, label: "2025" },
   { value: 2026, label: "2026" },
 ];
 
 /** Start-of-activity reduction tier (Art. 31.º n.º 10). */
 export const STARTUP_OPTIONS: SelectOption<StartupYear>[] = [
-  { value: 0, label: "Not in first 2 years" },
-  { value: 1, label: "Year 1 (×0.5 coefficient)" },
-  { value: 2, label: "Year 2 (×0.75 coefficient)" },
+  { value: 0, labelKey: "economy:takeHome.startupOption.none" },
+  { value: 1, labelKey: "economy:takeHome.startupOption.year1" },
+  { value: 2, labelKey: "economy:takeHome.startupOption.year2" },
 ];
 
 export const STATUS_OPTIONS: SelectOption<WorkerStatus>[] = [
-  { value: "freelancer", label: "Freelancer (21.4% SS)" },
-  { value: "eni", label: "ENI — empresário em nome individual (25.2% SS)" },
+  {
+    value: "freelancer",
+    labelKey: "economy:takeHome.statusOption.freelancer",
+  },
+  { value: "eni", labelKey: "economy:takeHome.statusOption.eni" },
 ];

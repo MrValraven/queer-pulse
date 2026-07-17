@@ -5,7 +5,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AuthContext } from "./authContext";
+import { AuthContext, type AuthErrorCode } from "./authContext";
 import { AUTH_STORAGE_KEY as STORAGE_KEY } from "../../features/marketing/cookies.data";
 import { useDemoMode } from "./DemoModeProvider";
 import { ApiError, setOnAuthLost } from "../../shared/api/client";
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [checking, setChecking] = useState<boolean>(() => !demoMode);
   const [preparing, setPreparing] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<AuthErrorCode | null>(null);
 
   // Demo mode: mirror the prototype's localStorage-driven mock session. The
   // session is known synchronously, so there's nothing to "check".
@@ -99,9 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!isSignedOut) {
           const status = err instanceof ApiError ? err.status : null;
           setAuthError(
-            status
-              ? `We couldn't load your account — QueerPulse's server hit an error (${status}). It's on us, not you. Try again in a moment.`
-              : "We couldn't reach QueerPulse to load your account. Check your connection and try again in a moment.",
+            status ? { kind: "server", status } : { kind: "network" },
           );
         }
       })

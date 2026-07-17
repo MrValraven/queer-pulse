@@ -474,66 +474,66 @@ export type ActionKind = "neutral" | "protect" | "destruct";
 
 export interface ModAction {
   id: string;
-  label: string;
-  desc: string;
+  labelKey: string;
+  descKey: string;
   kind: ActionKind;
-  /** Past-tense phrase used in the confirmation toast. */
-  done: string;
+  /** Past-tense phrase catalog key, used in the confirmation toast. */
+  doneKey: string;
 }
 
 export const MOD_ACTIONS: ModAction[] = [
   {
     id: "hide",
-    label: "Hide content",
-    desc: "Remove from view, keep for records",
+    labelKey: "admin:moderation.actions.hide.label",
+    descKey: "admin:moderation.actions.hide.desc",
     kind: "protect",
-    done: "hidden",
+    doneKey: "admin:moderation.actions.hide.done",
   },
   {
     id: "shield",
-    label: "Shield member",
-    desc: "Protect the person reported about",
+    labelKey: "admin:moderation.actions.shield.label",
+    descKey: "admin:moderation.actions.shield.desc",
     kind: "protect",
-    done: "shielded",
+    doneKey: "admin:moderation.actions.shield.done",
   },
   {
     id: "warn",
-    label: "Warn",
-    desc: "Send a formal warning",
+    labelKey: "admin:moderation.actions.warn.label",
+    descKey: "admin:moderation.actions.warn.desc",
     kind: "neutral",
-    done: "warned",
+    doneKey: "admin:moderation.actions.warn.done",
   },
   {
     id: "restrict",
-    label: "Restrict",
-    desc: "Limit posting for a period",
+    labelKey: "admin:moderation.actions.restrict.label",
+    descKey: "admin:moderation.actions.restrict.desc",
     kind: "neutral",
-    done: "restricted",
+    doneKey: "admin:moderation.actions.restrict.done",
   },
   {
     id: "remove",
-    label: "Remove",
-    desc: "Delete the content permanently",
+    labelKey: "admin:moderation.actions.remove.label",
+    descKey: "admin:moderation.actions.remove.desc",
     kind: "destruct",
-    done: "removed",
+    doneKey: "admin:moderation.actions.remove.done",
   },
   {
     id: "ban",
-    label: "Ban",
-    desc: "Remove the member from the network",
+    labelKey: "admin:moderation.actions.ban.label",
+    descKey: "admin:moderation.actions.ban.desc",
     kind: "destruct",
-    done: "banned",
+    doneKey: "admin:moderation.actions.ban.done",
   },
 ];
 
 export interface ModReason {
   id: string;
-  label: string;
+  labelKey: string;
 }
 
 export const MOD_REASONS: ModReason[] = [
-  { id: "outing", label: "Outing / sharing private identity without consent" },
-  { id: "doxxing", label: "Sharing personal or location data (doxxing)" },
-  { id: "harassment", label: "Targeted harassment of a member" },
-  { id: "other", label: "Other — explain below" },
+  { id: "outing", labelKey: "admin:moderation.reasons.outing" },
+  { id: "doxxing", labelKey: "admin:moderation.reasons.doxxing" },
+  { id: "harassment", labelKey: "admin:moderation.reasons.harassment" },
+  { id: "other", labelKey: "admin:moderation.reasons.other" },
 ];

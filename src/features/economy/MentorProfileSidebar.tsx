@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { BOOK_ROWS, MENTOR, MORE_FROM } from "./mentorProfile.data";
 import { MentorApplyModal } from "./MentorApplyModal";
 import styles from "./MentorProfilePage.module.css";
 
 export function MentorProfileSidebar() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const mentorName = `${MENTOR.firstName} ${MENTOR.lastName}`;
 
@@ -12,12 +14,12 @@ export function MentorProfileSidebar() {
     <aside className={styles.side}>
       <div className={styles.sideCard} id="apply">
         <div className={styles.bookHead}>
-          <h4>Apply for the '26 cohort</h4>
+          <h4>{t("economy:mentorProfile.sidebar.applyTitle")}</h4>
           <div className={styles.bookPrice}>
             €<em>0</em> + €<em>20</em>/mo
           </div>
           <div className={styles.bookPriceSub}>
-            no upfront cost · solidarity rate available
+            {t("economy:mentorProfile.sidebar.noUpfrontCost")}
           </div>
         </div>
         {BOOK_ROWS.map((row) => (
@@ -34,16 +36,20 @@ export function MentorProfileSidebar() {
         ))}
         <div className={styles.sideBtnWrap}>
           <Button variant="primary" onClick={() => setOpen(true)}>
-            Open application
+            {t("economy:mentorProfile.sidebar.openApplication")}
           </Button>
         </div>
         <p className={styles.sideFoot}>
-          All mentees get a free QueerPulse Sustainer membership for the year.
+          {t("economy:mentorProfile.sidebar.freeSustainer")}
         </p>
       </div>
 
       <div className={styles.sideCard}>
-        <h4 className={styles.moreTitle}>More from Catarina</h4>
+        <h4 className={styles.moreTitle}>
+          {t("economy:mentorProfile.sidebar.moreFrom", {
+            firstName: MENTOR.firstName,
+          })}
+        </h4>
         <div className={styles.moreLinks}>
           {MORE_FROM.map((link) => (
             <a key={link} href="#apply">

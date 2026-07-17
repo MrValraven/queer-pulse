@@ -8,11 +8,13 @@ import {
   type RefObject,
 } from "react";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useFormat, type Formatters } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useVouchSimulation } from "./useVouchSimulation";
 import type { TipData } from "./VouchGraphTooltip";
 import {
   EDGES,
-  fmtMonth,
+  monthDate,
   nodeRadius,
   personById,
   type VouchEdge,
@@ -36,7 +38,12 @@ function trimEdge(
   return [ax + ux * rA, ay + uy * rA, bx - ux * rB, by - uy * rB];
 }
 
-function nodeTip(id: string): TipData {
+const MONTH_YEAR: Intl.DateTimeFormatOptions = {
+  month: "short",
+  year: "numeric",
+};
+
+function nodeTip(id: string, fmt: Formatters): TipData {
   const p = personById[id]!;
   const vin = EDGES.filter((e) => e.to === id && !e.withdrawn).length;
   const vout = EDGES.filter((e) => e.from === id && !e.withdrawn).length;
@@ -47,18 +54,18 @@ function nodeTip(id: string): TipData {
     role: p.role,
     vouchesIn: vin,
     vouchesOut: vout,
-    joined: fmtMonth(p.joined),
+    joined: fmt.date(monthDate(p.joined), MONTH_YEAR),
   };
 }
 
-function edgeTip(e: VouchEdge): TipData {
-  const label = `${personById[e.from]!.initials} → ${personById[e.to]!.initials}${e.mutual ? " · mutual" : ""}`;
+function edgeTip(e: VouchEdge, fmt: Formatters, mutualLabel: string): TipData {
+  const label = `${personById[e.from]!.initials} → ${personById[e.to]!.initials}${e.mutual ? ` · ${mutualLabel}` : ""}`;
   return {
     kind: "edge",
     label,
     tag: e.tag,
     reason: e.reason,
-    date: fmtMonth(e.date),
+    date: fmt.date(monthDate(e.date), MONTH_YEAR),
     withdrawn: e.withdrawn,
   };
 }
@@ -94,6 +101,9 @@ export function useVouchCanvas({
   onRecenter,
   onPickPath,
 }: Args) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const mutualLabel = t("admin:vouchGraph.inspector.mutualTag");
   const reduced = usePrefersReducedMotion();
   const { getPos, setPos, clearPositions, run, stop } =
     useVouchSimulation(reduced);
@@ -330,7 +340,7 @@ export function useVouchCanvas({
     onPointerEnter: (e: ReactPointerEvent<SVGGElement>) => {
       if (dragRef.current) return;
       setHoverId(id);
-      setTip({ data: nodeTip(id), ...tipXY(e.clientX, e.clientY) });
+      setTip({ data: nodeTip(id, fmt), ...tipXY(e.clientX, e.clientY) });
     },
     onPointerLeave: onNodeLeave,
     onDoubleClick: (e: ReactMouseEvent<SVGGElement>) => {
@@ -342,7 +352,10 @@ export function useVouchCanvas({
   const edgeHandlers = (edge: VouchEdge) => ({
     onPointerEnter: (e: ReactPointerEvent<SVGPathElement>) => {
       if (dragRef.current || (!edge.reason && !edge.tag)) return;
-      setTip({ data: edgeTip(edge), ...tipXY(e.clientX, e.clientY) });
+      setTip({
+        data: edgeTip(edge, fmt, mutualLabel),
+        ...tipXY(e.clientX, e.clientY),
+      });
     },
     onPointerLeave: onNodeLeave,
   });

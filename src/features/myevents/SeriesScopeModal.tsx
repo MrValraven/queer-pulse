@@ -1,16 +1,24 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
 /** Asks whether to drop one date or leave a whole recurring series. */
 export function SeriesScopeModal() {
+  const { t } = useTranslation();
   const { scope, scopeChoice, closeScope } = useMyEvents();
   return (
     <>
       <div className={sx("modal-head")}>
-        <div className={sx("modal-eyebrow")}>Stepping out</div>
+        <div className={sx("modal-eyebrow")}>
+          {t("myevents:seriesModal.eyebrow")}
+        </div>
         <h2 className={sx("modal-title")}>
-          Just this one, or the <em>whole series?</em>
+          <Translation
+            i18nKey="myevents:seriesModal.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={sx("modal-evname")}>{scope.title}</p>
       </div>
@@ -21,8 +29,8 @@ export function SeriesScopeModal() {
           onClick={() => scopeChoice("one")}
         >
           <span className={sx("slr-t")}>
-            Just this date
-            <span>You'll stay in the series for future dates</span>
+            {t("myevents:seriesModal.justThisDate")}
+            <span>{t("myevents:seriesModal.justThisDateSub")}</span>
           </span>
           <span className={sx("slr-arrow")}>→</span>
         </button>
@@ -32,7 +40,8 @@ export function SeriesScopeModal() {
           onClick={() => scopeChoice("all")}
         >
           <span className={sx("slr-t")}>
-            Leave the whole series<span>Drop out of every upcoming date</span>
+            {t("myevents:seriesModal.leaveWholeSeries")}
+            <span>{t("myevents:seriesModal.leaveWholeSeriesSub")}</span>
           </span>
           <span className={sx("slr-arrow")}>→</span>
         </button>
@@ -40,7 +49,7 @@ export function SeriesScopeModal() {
       <div className={sx("modal-foot")}>
         <div className={sx("modal-privacy")} />
         <Button variant="ghost" onClick={closeScope}>
-          Never mind
+          {t("myevents:seriesModal.neverMindCta")}
         </Button>
       </div>
     </>

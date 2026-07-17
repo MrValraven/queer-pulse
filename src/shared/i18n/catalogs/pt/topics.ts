@@ -37,4 +37,13 @@ export const topics: Catalog = {
   "sidebar.topVoicesTitle": "Vozes em destaque aqui",
   "sidebar.crisis.body": "Em crise? Não esperes por uma resposta no fórum.",
   "sidebar.crisis.cta": "Abrir chat de crise",
+
+  "fallback.sub":
+    "Publicações, perguntas e recomendações com a etiqueta <strong>#{tag}</strong> de toda a comunidade QueerPulse.",
+  "fallback.postMeta": "Sê quem começa",
+  "fallback.postTitle":
+    "Ainda ninguém publicou com <em>#{tag}</em> — queres começar a conversa?",
+  "fallback.postBody":
+    "Os tópicos crescem quando alguém dá o primeiro passo. Publica uma pergunta, uma recomendação ou um recurso com #{tag} e aparece aqui mesmo.",
+  "fallback.postStats": "<b>0</b> publicações · à tua espera",
 };

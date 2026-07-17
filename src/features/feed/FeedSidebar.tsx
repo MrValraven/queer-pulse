@@ -6,6 +6,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { NEW_THIS_WEEK } from "./feed.data";
@@ -61,17 +62,20 @@ export function FeedSidebar({
   loading?: boolean;
   populated?: boolean;
 }) {
+  const { t } = useTranslation();
   const { openConnect } = useConnect();
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
-        <div className={styles.sbTitle}>Upcoming</div>
+        <div className={styles.sbTitle}>
+          {t("feed:sidebar.upcomingHeading")}
+        </div>
         {loading ? (
           Array.from({ length: 2 }).map((_, i) => (
             <UpcomingRowSkeleton key={i} />
           ))
         ) : !populated ? (
-          <p className={styles.sbEmpty}>No gatherings on your calendar yet.</p>
+          <p className={styles.sbEmpty}>{t("feed:sidebar.upcomingEmpty")}</p>
         ) : (
           <>
             <Link
@@ -98,16 +102,18 @@ export function FeedSidebar({
           </>
         )}
         <Link to={routes.calendar} className={styles.sbLink}>
-          See full calendar →
+          {t("feed:sidebar.seeCalendar")}
         </Link>
       </div>
 
       <div className={styles.sbCard}>
-        <div className={styles.sbTitle}>New this week</div>
+        <div className={styles.sbTitle}>
+          {t("feed:sidebar.newThisWeekHeading")}
+        </div>
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => <MemberRowSkeleton key={i} />)
         ) : !populated ? (
-          <p className={styles.sbEmpty}>No new members to show yet.</p>
+          <p className={styles.sbEmpty}>{t("feed:sidebar.newMembersEmpty")}</p>
         ) : (
           NEW_THIS_WEEK.map((person, i) => (
             <div
@@ -132,24 +138,24 @@ export function FeedSidebar({
                 className={styles.linkBtn}
                 onClick={() => openConnect(person.slug)}
               >
-                Connect
+                {t("feed:action.connect")}
               </button>
             </div>
           ))
         )}
         <Link to={routes.members} className={styles.sbLink}>
-          Browse all members →
+          {t("feed:sidebar.browseMembers")}
         </Link>
       </div>
 
       <div className={styles.sbCard}>
-        <div className={styles.sbTitle}>Your connections</div>
+        <div className={styles.sbTitle}>
+          {t("feed:sidebar.connectionsHeading")}
+        </div>
         {loading ? (
           <ConnectionsSkeleton />
         ) : !populated ? (
-          <p className={styles.sbEmpty}>
-            You haven&rsquo;t connected with anyone yet.
-          </p>
+          <p className={styles.sbEmpty}>{t("feed:sidebar.connectionsEmpty")}</p>
         ) : (
           <div className={`${styles.connWidget} ${styles.revealRow}`}>
             <AvatarStack
@@ -164,7 +170,9 @@ export function FeedSidebar({
               ]}
             />
             <div>
-              <div className={styles.connCount}>42 connections</div>
+              <div className={styles.connCount}>
+                {t("feed:sidebar.connectionsCount", { count: 42 })}
+              </div>
               <Link
                 to={routes.connections}
                 style={{
@@ -173,7 +181,7 @@ export function FeedSidebar({
                   fontWeight: 600,
                 }}
               >
-                Manage →
+                {t("feed:sidebar.manage")}
               </Link>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
@@ -27,6 +28,7 @@ interface OpenModal {
 }
 
 export function ApplicationStatusPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   // The tracked applications are demo-only fiction; live mode starts empty until
@@ -48,12 +50,32 @@ export function ApplicationStatusPage() {
   const activeCount = count("active");
   const sentCount = apps.filter((a) => a.cat !== "draft").length;
 
-  const tabs: { id: Cat | "all"; label: string; count: number }[] = [
-    { id: "all", label: "All", count: apps.length },
-    { id: "active", label: "Active", count: activeCount },
-    { id: "offer", label: "Offers", count: count("offer") },
-    { id: "closed", label: "Closed", count: count("closed") },
-    { id: "draft", label: "Drafts", count: count("draft") },
+  const tabs: { id: Cat | "all"; labelKey: string; count: number }[] = [
+    {
+      id: "all",
+      labelKey: "economy:applicationStatus.tab.all",
+      count: apps.length,
+    },
+    {
+      id: "active",
+      labelKey: "economy:applicationStatus.tab.active",
+      count: activeCount,
+    },
+    {
+      id: "offer",
+      labelKey: "economy:applicationStatus.tab.offer",
+      count: count("offer"),
+    },
+    {
+      id: "closed",
+      labelKey: "economy:applicationStatus.tab.closed",
+      count: count("closed"),
+    },
+    {
+      id: "draft",
+      labelKey: "economy:applicationStatus.tab.draft",
+      count: count("draft"),
+    },
   ];
 
   // On "All", group so the ongoing, important work sits above drafts and closed.
@@ -62,22 +84,26 @@ export function ApplicationStatusPage() {
       ? [
           {
             id: "offer",
-            title: "Offers — your decision",
+            title: t("economy:applicationStatus.group.offers.title"),
             compare: true,
             items: byCat("offer"),
           },
-          { id: "active", title: "In progress", items: byCat("active") },
+          {
+            id: "active",
+            title: t("economy:applicationStatus.group.inProgress.title"),
+            items: byCat("active"),
+          },
           {
             id: "draft",
-            title: "Drafts",
-            hint: "Unfinished — wrap these up before they close.",
+            title: t("economy:applicationStatus.group.drafts.title"),
+            hint: t("economy:applicationStatus.group.drafts.hint"),
             muted: true,
             items: byCat("draft"),
           },
           {
             id: "closed",
-            title: "Closed & withdrawn",
-            hint: "No action needed — kept for your records.",
+            title: t("economy:applicationStatus.group.closedWithdrawn.title"),
+            hint: t("economy:applicationStatus.group.closedWithdrawn.hint"),
             muted: true,
             items: byCat("closed"),
           },
@@ -106,9 +132,12 @@ export function ApplicationStatusPage() {
         {!loading && apps.length === 0 ? (
           <EmptyState
             icon={<FiFileText />}
-            title="No applications yet"
-            description="When you apply to a job, grant, or opportunity, you'll be able to track every one — and compare offers side by side — right here."
-            action={{ label: "Browse jobs", to: routes.jobs }}
+            title={t("economy:applicationStatus.empty.title")}
+            description={t("economy:applicationStatus.empty.description")}
+            action={{
+              label: t("economy:applicationStatus.empty.browseCta"),
+              to: routes.jobs,
+            }}
           />
         ) : (
           <>

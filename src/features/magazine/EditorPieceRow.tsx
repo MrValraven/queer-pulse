@@ -13,6 +13,7 @@ import {
   type Editor,
   type Stage,
 } from "./editorDashboard.data";
+import { wordsText } from "./magazineFormat";
 import styles from "./EditorDashboardPage.module.css";
 
 const cx = (...c: (string | false | undefined)[]) =>
@@ -96,7 +97,7 @@ export function EditorPieceRow({
       <div>
         <div className={styles.pieceTitle}>{renderEm(p.title)}</div>
         <div className={styles.pieceBy}>
-          {p.author} · {p.words.toLocaleString()} words · {p.section}
+          {p.author} · {wordsText(p.words, t)} · {p.section}
           {p.newVoice && (
             <span className={styles.nv}>
               {" "}

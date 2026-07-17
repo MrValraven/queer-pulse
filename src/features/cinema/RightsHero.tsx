@@ -1,27 +1,41 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CinemaRightsPage.module.css";
-import { shortVersion } from "./cinemaRights.data";
+import { shortVersionRows } from "./cinemaRights.data";
 
 export function RightsHero() {
+  const { t } = useTranslation();
   return (
     <section className={styles.header}>
       <div className={`wrap ${styles.headInner}`}>
         <div>
-          <div className={styles.headEb}>For filmmakers · your rights</div>
+          <div className={styles.headEb}>{t("cinema:rights.hero.eyebrow")}</div>
           <h1 className={styles.headTitle}>
-            Your film <em>stays yours</em>.
+            <Translation
+              i18nKey="cinema:rights.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.headSub}>
-            Everything about how the co-op treats your work — the split, the
-            contract, what we can and can't do, how you leave if you want to.{" "}
-            <em>Plain language, no asterisks.</em>
+            <Translation
+              i18nKey="cinema:rights.hero.sub"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <div className={styles.shortCard}>
-          <div className={styles.shortHead}>The short version</div>
-          {shortVersion.map((row) => (
-            <div key={row.k} className={styles.shortRow}>
-              <span className={styles.shortK}>{row.k}</span>
-              <span className={styles.shortV}>{row.v}</span>
+          <div className={styles.shortHead}>
+            {t("cinema:rights.hero.shortVersionHeading")}
+          </div>
+          {shortVersionRows.map((row) => (
+            <div key={row.labelKey} className={styles.shortRow}>
+              <span className={styles.shortK}>{t(row.labelKey)}</span>
+              <span className={styles.shortV}>
+                <Translation
+                  i18nKey={row.valueKey}
+                  components={{ em: <em /> }}
+                />
+              </span>
             </div>
           ))}
         </div>

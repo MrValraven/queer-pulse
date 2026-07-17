@@ -3,6 +3,9 @@ import { FiChevronLeft, FiChevronRight, FiInbox } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { AdminChip, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import {
@@ -18,10 +21,9 @@ import { AdminGovernanceAuditModal } from "./AdminGovernanceAuditModal";
 import styles from "./AdminGovernancePage.module.css";
 
 function matches(e: AuditEntry, f: AuditFilterState): boolean {
-  if (f.moderator !== "All moderators" && e.modName !== f.moderator)
-    return false;
-  if (f.action !== "All actions" && e.type !== f.action) return false;
-  if (f.range !== "All time" && e.range !== f.range) return false;
+  if (f.moderator !== "all" && e.modName !== f.moderator) return false;
+  if (f.action !== "all" && e.type !== f.action) return false;
+  if (f.range !== "all" && e.range !== f.range) return false;
   if (f.query.trim()) {
     const q = f.query.trim().toLowerCase();
     if (!`${e.reason} ${e.subject}`.toLowerCase().includes(q)) return false;
@@ -30,6 +32,8 @@ function matches(e: AuditEntry, f: AuditFilterState): boolean {
 }
 
 export function AdminGovernanceAudit() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad(1100);
   const { showToast } = useToast();
   const [filters, setFilters] = useState<AuditFilterState>(
@@ -52,16 +56,23 @@ export function AdminGovernanceAudit() {
     setPage(1);
   };
 
+  const totalDisplay = fmt.number(AUDIT_TOTAL);
   const metaLabel =
     filtered.length === 0
-      ? `0 of ${AUDIT_TOTAL.toLocaleString("en-US")} entries`
-      : `${filtered.length} match · ${AUDIT_TOTAL.toLocaleString("en-US")} total`;
+      ? t("admin:governance.audit.metaZero", { total: totalDisplay })
+      : t("admin:governance.audit.metaMatch", {
+          count: filtered.length,
+          total: totalDisplay,
+        });
 
   return (
     <FadeIn>
       <div className={styles.auditHead}>
         <h2 className={styles.cardTitle}>
-          Every action, <em>on the record</em>
+          <Translation
+            i18nKey="admin:governance.audit.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <span className={styles.auditMeta}>{metaLabel}</span>
       </div>
@@ -71,7 +82,7 @@ export function AdminGovernanceAudit() {
         onChange={changeFilters}
         onExport={() =>
           showToast(
-            `Exported ${AUDIT_TOTAL.toLocaleString("en-US")} entries as CSV`,
+            t("admin:governance.audit.exportToast", { total: totalDisplay }),
             "success",
           )
         }
@@ -80,11 +91,21 @@ export function AdminGovernanceAudit() {
       <div className={styles.auditCard}>
         <div className={styles.auditTable} role="table">
           <div className={styles.auditRowHead} role="row">
-            <span role="columnheader">Moderator</span>
-            <span role="columnheader">Action</span>
-            <span role="columnheader">Subject</span>
-            <span role="columnheader">Reason</span>
-            <span role="columnheader">When</span>
+            <span role="columnheader">
+              {t("admin:governance.audit.columns.moderator")}
+            </span>
+            <span role="columnheader">
+              {t("admin:governance.audit.columns.action")}
+            </span>
+            <span role="columnheader">
+              {t("admin:governance.audit.columns.subject")}
+            </span>
+            <span role="columnheader">
+              {t("admin:governance.audit.columns.reason")}
+            </span>
+            <span role="columnheader">
+              {t("admin:governance.audit.columns.when")}
+            </span>
           </div>
 
           {loading ? (
@@ -181,11 +202,18 @@ function Pager({
   total: number;
   onPage: (p: number) => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.pager}>
       <span className={styles.pagerMeta}>
-        Showing {start}–{end} of {AUDIT_TOTAL.toLocaleString("en-US")} entries
-        {total !== AUDIT_TOTAL && ` (${total} match)`}
+        {t("admin:governance.audit.pagerMeta", {
+          start,
+          end,
+          total: fmt.number(AUDIT_TOTAL),
+        })}
+        {total !== AUDIT_TOTAL &&
+          t("admin:governance.audit.pagerMatch", { count: total })}
       </span>
       <div className={styles.pagerNav}>
         <button
@@ -193,7 +221,7 @@ function Pager({
           className={styles.pagerBtn}
           disabled={page === 1}
           onClick={() => onPage(page - 1)}
-          aria-label="Previous page"
+          aria-label={t("admin:governance.audit.prevPage")}
         >
           <FiChevronLeft />
         </button>
@@ -215,7 +243,7 @@ function Pager({
           className={styles.pagerBtn}
           disabled={page === pageCount}
           onClick={() => onPage(page + 1)}
-          aria-label="Next page"
+          aria-label={t("admin:governance.audit.nextPage")}
         >
           <FiChevronRight />
         </button>
@@ -225,15 +253,20 @@ function Pager({
 }
 
 function EmptyState() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={styles.auditEmpty}>
       <span className={styles.auditEmptyIco} aria-hidden>
         <FiInbox />
       </span>
-      <h3 className={styles.auditEmptyTitle}>No entries match</h3>
+      <h3 className={styles.auditEmptyTitle}>
+        {t("admin:governance.audit.emptyTitle")}
+      </h3>
       <p className={styles.auditEmptyText}>
-        Try widening your filters — the full log holds 14,206 actions going back
-        to 2023.
+        {t("admin:governance.audit.emptyText", {
+          total: fmt.number(AUDIT_TOTAL),
+        })}
       </p>
     </div>
   );

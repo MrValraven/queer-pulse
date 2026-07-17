@@ -8,90 +8,97 @@ export const FORUM = routes.forum;
 export const ARRIVING = routes.arriving;
 
 export interface InfoCard {
-  eyebrow: string;
-  title: string;
-  body: string;
-  tag?: { label: string; kind: "jade" | "accent" };
-  link?: { label: string; href: string };
+  eyebrowKey: string;
+  titleKey: string;
+  bodyKey: string;
+  tag?: { labelKey: string; kind: "jade" | "accent" };
+  link?: { labelKey: string; href: string };
 }
 export interface Step {
-  title: string;
-  text: string;
-  note?: string;
+  titleKey: string;
+  textKey: string;
+  noteKey?: string;
 }
 export interface Tab {
   id: TabId;
-  label: string;
-  headTitle: ReactNode;
-  headText: string;
+  labelKey: string;
+  headTitleKey: string;
+  headTextKey: string;
   cards: InfoCard[];
   steps?: Step[];
+  /** Anonymised "Community note" quote attributed to a member — testimonial
+   * content, left English per the i18n sweep's directoryPlaces precedent. */
   note?: ReactNode;
 }
 
-export const ROUTES: { name: string; desc: string; to: string; tab: TabId }[] =
-  [
-    {
-      name: "EU / EEA citizen",
-      desc: "Free movement applies. Registration is simple but required.",
-      to: "EU Citizens →",
-      tab: "eu",
-    },
-    {
-      name: "Remote worker / passive income",
-      desc: "Living on savings, rental income, freelance, or remote employment.",
-      to: "D7 Visa →",
-      tab: "d7",
-    },
-    {
-      name: "Digital nomad",
-      desc: "Working remotely for a non-Portuguese employer, higher income.",
-      to: "Digital Nomad (D8) →",
-      tab: "d8",
-    },
-    {
-      name: "Job offer in Portugal",
-      desc: "You have or are seeking employment with a Portuguese entity.",
-      to: "Work Visas →",
-      tab: "work",
-    },
-    {
-      name: "Joining a partner here",
-      desc: "Your partner is in Portugal already or moving with you.",
-      to: "Bringing a Partner →",
-      tab: "partner",
-    },
-  ];
+export const ROUTES: {
+  nameKey: string;
+  descKey: string;
+  ctaKey: string;
+  to: string;
+  tab: TabId;
+}[] = [
+  {
+    nameKey: "marketing:visas.routePicker.euCitizen.name",
+    descKey: "marketing:visas.routePicker.euCitizen.desc",
+    ctaKey: "marketing:visas.routePicker.euCitizen.cta",
+    to: "EU Citizens →",
+    tab: "eu",
+  },
+  {
+    nameKey: "marketing:visas.routePicker.remoteWorker.name",
+    descKey: "marketing:visas.routePicker.remoteWorker.desc",
+    ctaKey: "marketing:visas.routePicker.remoteWorker.cta",
+    to: "D7 Visa →",
+    tab: "d7",
+  },
+  {
+    nameKey: "marketing:visas.routePicker.digitalNomad.name",
+    descKey: "marketing:visas.routePicker.digitalNomad.desc",
+    ctaKey: "marketing:visas.routePicker.digitalNomad.cta",
+    to: "Digital Nomad (D8) →",
+    tab: "d8",
+  },
+  {
+    nameKey: "marketing:visas.routePicker.jobOffer.name",
+    descKey: "marketing:visas.routePicker.jobOffer.desc",
+    ctaKey: "marketing:visas.routePicker.jobOffer.cta",
+    to: "Work Visas →",
+    tab: "work",
+  },
+  {
+    nameKey: "marketing:visas.routePicker.partner.name",
+    descKey: "marketing:visas.routePicker.partner.desc",
+    ctaKey: "marketing:visas.routePicker.partner.cta",
+    to: "Bringing a Partner →",
+    tab: "partner",
+  },
+];
 
 export const TABS: Tab[] = [
   {
     id: "eu",
-    label: "EU Citizens",
-    headTitle: (
-      <>
-        EU &amp; EEA <em>citizens</em>
-      </>
-    ),
-    headText:
-      "EU and EEA citizens have the right to live and work in Portugal without a visa. You still need to register — and for queer couples, there are specific things to know about bringing a non-EU partner.",
+    labelKey: "marketing:visas.tabs.eu.label",
+    headTitleKey: "marketing:visas.tabs.eu.headTitle",
+    headTextKey: "marketing:visas.tabs.eu.headText",
     cards: [
       {
-        eyebrow: "Registration",
-        title: "Certificado de Registo",
-        body: "EU citizens staying more than 3 months must register at their local Câmara Municipal. You'll need your passport, proof of address, and proof of income or employment. The certificate is usually issued the same day. Cost: €15.",
-        tag: { label: "Simple, low cost", kind: "jade" },
+        eyebrowKey: "marketing:visas.tabs.eu.card1.eyebrow",
+        titleKey: "marketing:visas.tabs.eu.card1.title",
+        bodyKey: "marketing:visas.tabs.eu.card1.body",
+        tag: { labelKey: "marketing:visas.tabs.eu.card1.tag", kind: "jade" },
       },
       {
-        eyebrow: "Your rights",
-        title: "What EU residency gives you",
-        body: "Full access to the SNS health system (with NISS), the right to work without restriction, the right to vote in local and European elections, and the right to bring family members. After 5 years of continuous legal residence, you can apply for permanent residency or citizenship.",
+        eyebrowKey: "marketing:visas.tabs.eu.card2.eyebrow",
+        titleKey: "marketing:visas.tabs.eu.card2.title",
+        bodyKey: "marketing:visas.tabs.eu.card2.body",
       },
       {
-        eyebrow: "Non-EU partner",
-        title: "Family reunification for same-sex partners",
-        body: "If you're an EU citizen and your partner is not, they can join you in Portugal under EU free movement rules — including same-sex spouses and registered partners. The EU Court of Justice (Coman ruling, 2018) established that EU member states must recognise same-sex spouses for free movement purposes even if they don't have same-sex marriage domestically.",
-        tag: { label: "Full partner rights", kind: "jade" },
-        link: { label: "Partner visa details →", href: "#" },
+        eyebrowKey: "marketing:visas.tabs.eu.card3.eyebrow",
+        titleKey: "marketing:visas.tabs.eu.card3.title",
+        bodyKey: "marketing:visas.tabs.eu.card3.body",
+        tag: { labelKey: "marketing:visas.tabs.eu.card3.tag", kind: "jade" },
+        link: { labelKey: "marketing:visas.tabs.eu.card3.link", href: "#" },
       },
     ],
     note: (
@@ -105,51 +112,46 @@ export const TABS: Tab[] = [
   },
   {
     id: "d7",
-    label: "D7 — Passive Income",
-    headTitle: (
-      <>
-        D7 — <em>Passive Income Visa</em>
-      </>
-    ),
-    headText:
-      'The D7 is Portugal\'s "passive income" or "retirement" visa. Despite the name, it\'s used by anyone with a stable income from remote work, freelancing, pensions, rental income, or investments. One of the most popular routes for queer people relocating to Portugal.',
+    labelKey: "marketing:visas.tabs.d7.label",
+    headTitleKey: "marketing:visas.tabs.d7.headTitle",
+    headTextKey: "marketing:visas.tabs.d7.headText",
     cards: [
       {
-        eyebrow: "Who it's for",
-        title: "Eligibility",
-        body: "Non-EU citizens who can demonstrate a stable passive or remote income. The minimum income threshold is roughly €820/month (the Portuguese minimum wage), but some consulates want to see significantly more. Applications are made at the Portuguese consulate in your home country before arriving.",
-        tag: { label: "Apply before arriving", kind: "accent" },
+        eyebrowKey: "marketing:visas.tabs.d7.card1.eyebrow",
+        titleKey: "marketing:visas.tabs.d7.card1.title",
+        bodyKey: "marketing:visas.tabs.d7.card1.body",
+        tag: { labelKey: "marketing:visas.tabs.d7.card1.tag", kind: "accent" },
       },
       {
-        eyebrow: "What you get",
-        title: "Visa conditions",
-        body: "Initial visa valid for 4 months; exchange for a 2-year residency permit (Autorização de Residência) on arrival in Portugal. Renewable for 3 years, then permanent residency. You must spend at least 6 months per year in Portugal to maintain it. Partners and dependent children can be included.",
+        eyebrowKey: "marketing:visas.tabs.d7.card2.eyebrow",
+        titleKey: "marketing:visas.tabs.d7.card2.title",
+        bodyKey: "marketing:visas.tabs.d7.card2.body",
       },
       {
-        eyebrow: "Tax",
-        title: "IFICI tax regime",
-        body: "Portugal replaced the NHR scheme at the end of 2023 with the IFICI regime (informally called NHR 2.0). It's now targeted at qualifying professions (tech, research, arts). General D7 holders no longer qualify automatically. Your income will be taxed as a standard resident. Get tax advice before moving.",
-        link: { label: "Tax advice contacts →", href: LEGAL },
+        eyebrowKey: "marketing:visas.tabs.d7.card3.eyebrow",
+        titleKey: "marketing:visas.tabs.d7.card3.title",
+        bodyKey: "marketing:visas.tabs.d7.card3.body",
+        link: { labelKey: "marketing:visas.tabs.d7.card3.link", href: LEGAL },
       },
     ],
     steps: [
       {
-        title: "Apply at the Portuguese consulate in your country",
-        text: "Submit proof of income, clean criminal record, health insurance, and proof of accommodation in Portugal.",
-        note: "2–8 weeks processing",
+        titleKey: "marketing:visas.tabs.d7.step1.title",
+        textKey: "marketing:visas.tabs.d7.step1.text",
+        noteKey: "marketing:visas.tabs.d7.step1.note",
       },
       {
-        title: "Arrive in Portugal with your visa",
-        text: "You have 4 months to book your AIMA appointment and exchange your visa for a residency permit.",
+        titleKey: "marketing:visas.tabs.d7.step2.title",
+        textKey: "marketing:visas.tabs.d7.step2.text",
       },
       {
-        title: "AIMA appointment",
-        text: "AIMA (replaced SEF in 2023) handles residency permits. Book early — waits can be long. Bring all original documents.",
-        note: "Book online at aima.gov.pt",
+        titleKey: "marketing:visas.tabs.d7.step3.title",
+        textKey: "marketing:visas.tabs.d7.step3.text",
+        noteKey: "marketing:visas.tabs.d7.step3.note",
       },
       {
-        title: "Receive your AR card",
-        text: "Your Autorização de Residência card is your proof of legal residency. Keep it safe — it's used for everything.",
+        titleKey: "marketing:visas.tabs.d7.step4.title",
+        textKey: "marketing:visas.tabs.d7.step4.text",
       },
     ],
     note: (
@@ -163,31 +165,26 @@ export const TABS: Tab[] = [
   },
   {
     id: "d8",
-    label: "Digital Nomad (D8)",
-    headTitle: (
-      <>
-        Digital Nomad <em>Visa (D8)</em>
-      </>
-    ),
-    headText:
-      "Portugal's D8 visa, introduced in 2022, is designed for remote workers employed by or providing services to companies outside Portugal. Higher income threshold than D7 but increasingly popular.",
+    labelKey: "marketing:visas.tabs.d8.label",
+    headTitleKey: "marketing:visas.tabs.d8.headTitle",
+    headTextKey: "marketing:visas.tabs.d8.headText",
     cards: [
       {
-        eyebrow: "Requirements",
-        title: "What you need to qualify",
-        body: "Proof of remote employment or contracts with non-Portuguese clients. Income requirement is typically 4× the Portuguese minimum wage (roughly €3,280/month). Health insurance with Portugal coverage. Clean criminal record. Portuguese NIF (can be obtained before the visa in some cases).",
-        tag: { label: "Higher income bar than D7", kind: "accent" },
+        eyebrowKey: "marketing:visas.tabs.d8.card1.eyebrow",
+        titleKey: "marketing:visas.tabs.d8.card1.title",
+        bodyKey: "marketing:visas.tabs.d8.card1.body",
+        tag: { labelKey: "marketing:visas.tabs.d8.card1.tag", kind: "accent" },
       },
       {
-        eyebrow: "Process",
-        title: "How to apply",
-        body: "Like the D7, applications are made at the Portuguese consulate before arrival. On arrival, you exchange for a 2-year residency permit. Family members (including same-sex partners) can be included on the application or apply for family reunification after you receive your permit.",
+        eyebrowKey: "marketing:visas.tabs.d8.card2.eyebrow",
+        titleKey: "marketing:visas.tabs.d8.card2.title",
+        bodyKey: "marketing:visas.tabs.d8.card2.body",
       },
       {
-        eyebrow: "IFICI / Tax",
-        title: "Tax treatment",
-        body: "D8 holders working in qualifying tech or research roles may qualify for the IFICI regime (20% flat income tax for up to 10 years). This is not automatic — you must apply and your profession must qualify. Check with a tax specialist before assuming you'll benefit.",
-        link: { label: "Tax advice →", href: LEGAL },
+        eyebrowKey: "marketing:visas.tabs.d8.card3.eyebrow",
+        titleKey: "marketing:visas.tabs.d8.card3.title",
+        bodyKey: "marketing:visas.tabs.d8.card3.body",
+        link: { labelKey: "marketing:visas.tabs.d8.card3.link", href: LEGAL },
       },
     ],
     note: (
@@ -201,66 +198,65 @@ export const TABS: Tab[] = [
   },
   {
     id: "work",
-    label: "Work Visas",
-    headTitle: (
-      <>
-        Work <em>visas</em>
-      </>
-    ),
-    headText:
-      "If you have a job offer from a Portuguese employer, or are seeking one, there are specific visa routes. These are generally more straightforward than passive income visas but require employer involvement.",
+    labelKey: "marketing:visas.tabs.work.label",
+    headTitleKey: "marketing:visas.tabs.work.headTitle",
+    headTextKey: "marketing:visas.tabs.work.headText",
     cards: [
       {
-        eyebrow: "D1 visa",
-        title: "Employment visa",
-        body: "The standard route for non-EU workers with a job offer from a Portuguese employer. Your employer usually needs to show they couldn't fill the role with an EU citizen first, though this requirement is often waived in practice for skilled roles. Apply at the consulate with your employment contract.",
+        eyebrowKey: "marketing:visas.tabs.work.card1.eyebrow",
+        titleKey: "marketing:visas.tabs.work.card1.title",
+        bodyKey: "marketing:visas.tabs.work.card1.body",
       },
       {
-        eyebrow: "Job seeker",
-        title: "Job Seeker Visa",
-        body: "180-day visa allowing you to come to Portugal to find work. Requires proof of sufficient funds and qualifications. Once you find a job, you can convert to a D1 work visa without leaving the country. Useful if you want to arrive before securing employment.",
-        tag: { label: "180 days to find work", kind: "jade" },
+        eyebrowKey: "marketing:visas.tabs.work.card2.eyebrow",
+        titleKey: "marketing:visas.tabs.work.card2.title",
+        bodyKey: "marketing:visas.tabs.work.card2.body",
+        tag: { labelKey: "marketing:visas.tabs.work.card2.tag", kind: "jade" },
       },
       {
-        eyebrow: "Self-employed",
-        title: "Independent worker (D2)",
-        body: "For freelancers and independent professionals who have identified clients or opportunities in Portugal. You'll need a business plan and evidence of prospective income. Registering as a trabalhador independente (recibos verdes) is the tax structure most self-employed residents use.",
+        eyebrowKey: "marketing:visas.tabs.work.card3.eyebrow",
+        titleKey: "marketing:visas.tabs.work.card3.title",
+        bodyKey: "marketing:visas.tabs.work.card3.body",
       },
     ],
   },
   {
     id: "partner",
-    label: "Bringing a Partner",
-    headTitle: (
-      <>
-        Bringing a <em>partner</em>
-      </>
-    ),
-    headText:
-      "Portugal recognises same-sex marriage, civil partnership, and long-term cohabitation. What this means for residency depends on your nationalities and which visa route you're using — but the community news is broadly good.",
+    labelKey: "marketing:visas.tabs.partner.label",
+    headTitleKey: "marketing:visas.tabs.partner.headTitle",
+    headTextKey: "marketing:visas.tabs.partner.headText",
     cards: [
       {
-        eyebrow: "Same-sex marriage",
-        title: "Portugal fully recognises your marriage",
-        body: "Portugal has recognised same-sex marriage since 2010. A legal marriage anywhere in the world is recognised for residency purposes in Portugal. Your spouse is entitled to join you under family reunification — regardless of their nationality or the country where you married.",
-        tag: { label: "Full legal recognition", kind: "jade" },
+        eyebrowKey: "marketing:visas.tabs.partner.card1.eyebrow",
+        titleKey: "marketing:visas.tabs.partner.card1.title",
+        bodyKey: "marketing:visas.tabs.partner.card1.body",
+        tag: {
+          labelKey: "marketing:visas.tabs.partner.card1.tag",
+          kind: "jade",
+        },
       },
       {
-        eyebrow: "Not married",
-        title: "Partners without formal status",
-        body: "If you're not married, long-term cohabitation (união de facto, typically 2+ years) is recognised for family reunification purposes. You'll need to document your relationship — shared bills, joint accounts, correspondence. Getting married or entering a civil partnership first is often simpler administratively.",
+        eyebrowKey: "marketing:visas.tabs.partner.card2.eyebrow",
+        titleKey: "marketing:visas.tabs.partner.card2.title",
+        bodyKey: "marketing:visas.tabs.partner.card2.body",
       },
       {
-        eyebrow: "EU citizen + non-EU partner",
-        title: "The Coman ruling",
-        body: "The 2018 EU Court of Justice ruling (Coman v. Romania) established that EU member states must recognise same-sex spouses of EU citizens for the purposes of free movement — even countries that don't have same-sex marriage. This means an EU citizen can bring their same-sex spouse to Portugal regardless of their home country's stance.",
-        tag: { label: "EU court protection", kind: "jade" },
-        link: { label: "Talk to an immigration lawyer →", href: LEGAL },
+        eyebrowKey: "marketing:visas.tabs.partner.card3.eyebrow",
+        titleKey: "marketing:visas.tabs.partner.card3.title",
+        bodyKey: "marketing:visas.tabs.partner.card3.body",
+        tag: {
+          labelKey: "marketing:visas.tabs.partner.card3.tag",
+          kind: "jade",
+        },
+        link: {
+          labelKey: "marketing:visas.tabs.partner.card3.link",
+          href: LEGAL,
+        },
       },
       {
-        eyebrow: "Family reunification",
-        title: "The process for partners",
-        body: "Once you have your own residency permit, your partner applies for family reunification at AIMA. They'll need your AR card, proof of the relationship, proof of accommodation, and income evidence. Processing takes 60–90 days. During this time they can usually remain in Portugal on a short-stay visa.",
+        eyebrowKey: "marketing:visas.tabs.partner.card4.eyebrow",
+        titleKey: "marketing:visas.tabs.partner.card4.title",
+        bodyKey: "marketing:visas.tabs.partner.card4.body",
       },
     ],
     note: (
@@ -274,59 +270,63 @@ export const TABS: Tab[] = [
   },
   {
     id: "citizenship",
-    label: "Citizenship",
-    headTitle: (
-      <>
-        Citizenship &amp; <em>permanent residency</em>
-      </>
-    ),
-    headText:
-      "Portugal offers one of the clearer paths to citizenship in Europe. After 5 years of legal residency, you can apply for either permanent residency or naturalisation as a Portuguese citizen.",
+    labelKey: "marketing:visas.tabs.citizenship.label",
+    headTitleKey: "marketing:visas.tabs.citizenship.headTitle",
+    headTextKey: "marketing:visas.tabs.citizenship.headText",
     cards: [
       {
-        eyebrow: "Timeline",
-        title: "5 years to citizenship",
-        body: "After 5 years of continuous legal residency, you're eligible to apply for Portuguese citizenship. Requirements: basic Portuguese language (A2 level), clean criminal record, proof of ties to Portugal, and no absence of more than 6 consecutive months or 8 months total during the 5 years.",
-        tag: { label: "EU passport included", kind: "jade" },
+        eyebrowKey: "marketing:visas.tabs.citizenship.card1.eyebrow",
+        titleKey: "marketing:visas.tabs.citizenship.card1.title",
+        bodyKey: "marketing:visas.tabs.citizenship.card1.body",
+        tag: {
+          labelKey: "marketing:visas.tabs.citizenship.card1.tag",
+          kind: "jade",
+        },
       },
       {
-        eyebrow: "Permanent residency",
-        title: "Alternative to citizenship",
-        body: "You can also apply for permanent residency (Autorização de Residência Permanente) after 5 years. This gives you indefinite right to remain without the language and citizenship requirements. Some people prefer this route while maintaining their original nationality.",
+        eyebrowKey: "marketing:visas.tabs.citizenship.card2.eyebrow",
+        titleKey: "marketing:visas.tabs.citizenship.card2.title",
+        bodyKey: "marketing:visas.tabs.citizenship.card2.body",
       },
       {
-        eyebrow: "Portuguese language",
-        title: "A2 requirement",
-        body: "The Portuguese language requirement for citizenship is A2 (basic) — conversational rather than fluent. You can demonstrate this via an approved CAPLE or CIPLE test, or by showing Portuguese-medium education. The community forum has recommendations for Portuguese teachers who are queer-friendly.",
-        link: { label: "Language learning resources →", href: FORUM },
+        eyebrowKey: "marketing:visas.tabs.citizenship.card3.eyebrow",
+        titleKey: "marketing:visas.tabs.citizenship.card3.title",
+        bodyKey: "marketing:visas.tabs.citizenship.card3.body",
+        link: {
+          labelKey: "marketing:visas.tabs.citizenship.card3.link",
+          href: FORUM,
+        },
       },
     ],
   },
 ];
 
-export const GROUND: { label: string; title: string; body: string }[] = [
-  {
-    label: "First",
-    title: "NIF — Tax number",
-    body: "You need a Número de Identificação Fiscal for almost everything: opening a bank account, signing a lease, buying a phone plan. Get it at the Finanças office with your passport. EU citizens: bring passport. Non-EU: bring passport + address proof. Can also use a fiscal representative service if you're not yet in Portugal.",
-  },
-  {
-    label: "Second",
-    title: "NISS — Social security",
-    body: "Your Número de Identificação de Segurança Social gives you access to SNS healthcare and records contributions. Register at your local Centro de Emprego e Formação Profissional or Segurança Social office. Required before you can access NHS appointments.",
-  },
-  {
-    label: "Key office",
-    title: "AIMA",
-    body: "AIMA (Agência para a Integração, Migrações e Asilo) replaced SEF in October 2023. It handles all residency permits, renewals, and family reunification. Book appointments online at aima.gov.pt — waits are long, book immediately on arrival.",
-  },
-  {
-    label: "Healthcare",
-    title: "SNS access",
-    body: "Register with a GP (Centro de Saúde) in your area using your AR card or EU registration certificate plus NISS. Wait times are long — many community members use private health insurance alongside SNS access. See the Wellbeing page for queer-friendly healthcare providers.",
-  },
-];
+export const GROUND: { labelKey: string; titleKey: string; bodyKey: string }[] =
+  [
+    {
+      labelKey: "marketing:visas.ground.nif.label",
+      titleKey: "marketing:visas.ground.nif.title",
+      bodyKey: "marketing:visas.ground.nif.body",
+    },
+    {
+      labelKey: "marketing:visas.ground.niss.label",
+      titleKey: "marketing:visas.ground.niss.title",
+      bodyKey: "marketing:visas.ground.niss.body",
+    },
+    {
+      labelKey: "marketing:visas.ground.aima.label",
+      titleKey: "marketing:visas.ground.aima.title",
+      bodyKey: "marketing:visas.ground.aima.body",
+    },
+    {
+      labelKey: "marketing:visas.ground.sns.label",
+      titleKey: "marketing:visas.ground.sns.title",
+      bodyKey: "marketing:visas.ground.sns.body",
+    },
+  ];
 
+// Named reviewed lawyers with attributed quotes/testimonials — content, left
+// English per the i18n sweep's directoryPlaces/testimonials precedent.
 export const LAWYERS: {
   initials: string;
   bg: string;

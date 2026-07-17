@@ -1,25 +1,27 @@
 import { useState } from "react";
 import { FiLock } from "react-icons/fi";
 import { Button, Modal, Toggle } from "../ui";
+import { Translation } from "../../i18n/Translation";
+import { useTranslation } from "../../i18n/useTranslation";
 import type { ConsentCategories } from "../../api/consent.api";
 import styles from "./Consent.module.css";
 
 interface Row {
   key: "analytics" | "monitoring";
-  title: string;
-  desc: string;
+  titleKey: string;
+  descKey: string;
 }
 
 const ROWS: Row[] = [
   {
     key: "analytics",
-    title: "Analytics & usage",
-    desc: "Anonymous, aggregate patterns — which pages help, which fall flat. No individual tracking, no ad networks. Off unless you turn it on.",
+    titleKey: "shared:consent.preferences.rows.analytics.title",
+    descKey: "shared:consent.preferences.rows.analytics.desc",
   },
   {
     key: "monitoring",
-    title: "Error & crash reporting",
-    desc: "Automatic diagnostics when something breaks, so we can fix it faster. Carries no advertising or profiling data.",
+    titleKey: "shared:consent.preferences.rows.monitoring.title",
+    descKey: "shared:consent.preferences.rows.monitoring.desc",
   },
 ];
 
@@ -37,6 +39,7 @@ export function ConsentPreferences({
   onSave: (next: { analytics: boolean; monitoring: boolean }) => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [state, setState] = useState({
     analytics: consent.analytics,
     monitoring: consent.monitoring,
@@ -44,13 +47,14 @@ export function ConsentPreferences({
 
   return (
     <Modal
-      eyebrow="Privacy"
+      eyebrow={t("shared:consent.preferences.eyebrow")}
       title={
-        <>
-          Your <em>choices.</em>
-        </>
+        <Translation
+          i18nKey="shared:consent.preferences.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Necessary cookies keep you logged in and safe — they're always on. Everything else is up to you, and you can change it any time."
+      sub={t("shared:consent.preferences.sub")}
       onClose={onClose}
       footer={
         <div className={styles.prefsFoot}>
@@ -58,10 +62,10 @@ export function ConsentPreferences({
             variant="ghost"
             onClick={() => setState({ analytics: false, monitoring: false })}
           >
-            Reject non-essential
+            {t("shared:consent.actions.rejectNonEssential")}
           </Button>
           <Button variant="primary" onClick={() => onSave(state)}>
-            Save choices
+            {t("shared:consent.actions.saveChoices")}
           </Button>
         </div>
       }
@@ -69,14 +73,17 @@ export function ConsentPreferences({
       <div className={styles.prefsList}>
         <div className={`${styles.prefRow} ${styles.prefRowLocked}`}>
           <div className={styles.prefText}>
-            <div className={styles.prefTitle}>Strictly necessary</div>
+            <div className={styles.prefTitle}>
+              {t("shared:consent.preferences.necessary.title")}
+            </div>
             <div className={styles.prefDesc}>
-              Your session and CSRF cookies, plus theme and language stored on
-              your device. Required to run the platform — never used to track
-              you.
+              {t("shared:consent.preferences.necessary.desc")}
             </div>
           </div>
-          <span className={styles.prefLock} aria-label="Always on">
+          <span
+            className={styles.prefLock}
+            aria-label={t("shared:consent.preferences.necessary.alwaysOnAria")}
+          >
             <FiLock aria-hidden />
           </span>
         </div>
@@ -84,12 +91,12 @@ export function ConsentPreferences({
         {ROWS.map((r) => (
           <div key={r.key} className={styles.prefRow}>
             <div className={styles.prefText}>
-              <div className={styles.prefTitle}>{r.title}</div>
-              <div className={styles.prefDesc}>{r.desc}</div>
+              <div className={styles.prefTitle}>{t(r.titleKey)}</div>
+              <div className={styles.prefDesc}>{t(r.descKey)}</div>
             </div>
             <Toggle
               tone="coral"
-              label={r.title}
+              label={t(r.titleKey)}
               checked={state[r.key]}
               onChange={(v) => setState((s) => ({ ...s, [r.key]: v }))}
             />

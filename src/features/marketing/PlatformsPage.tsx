@@ -7,6 +7,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import s from "./PlatformsPage.module.css";
 
@@ -20,6 +22,8 @@ interface Platform {
   url: string;
 }
 
+// Canonical (English, stored/filter) category ids — never translate the id
+// itself, only `CAT_LABEL_KEYS`' resolved value.
 const CAT_ORDER = [
   "Dating",
   "Media",
@@ -28,13 +32,13 @@ const CAT_ORDER = [
   "Health",
   "Portugal",
 ];
-const CAT_LABELS: Record<string, string> = {
-  Dating: "Dating & Social",
-  Media: "News & Media",
-  Professional: "Professional Networks",
-  Advocacy: "Advocacy & Rights",
-  Health: "Health & Wellbeing",
-  Portugal: "Portugal & Lisbon",
+const CAT_LABEL_KEYS: Record<string, string> = {
+  Dating: "marketing:platforms.filter.dating",
+  Media: "marketing:platforms.filter.media",
+  Professional: "marketing:platforms.filter.professional",
+  Advocacy: "marketing:platforms.filter.advocacy",
+  Health: "marketing:platforms.filter.health",
+  Portugal: "marketing:platforms.filter.portugal",
 };
 
 const PLATFORMS: Platform[] = [
@@ -234,6 +238,7 @@ function PlatformCardSkeleton() {
 }
 
 export function PlatformsPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
   const cats = filter === "all" ? CAT_ORDER : [filter];
@@ -241,26 +246,29 @@ export function PlatformsPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Queer platforms"
+        eyebrow={t("marketing:platforms.hero.eyebrow")}
         title={
-          <>
-            The wider <em>queer web.</em>
-          </>
+          <Translation
+            i18nKey="marketing:platforms.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Apps, media, professional networks, and advocacy organisations that are genuinely useful for queer people — beyond QueerPulse itself."
+        sub={t("marketing:platforms.hero.sub")}
       >
         <div className={s.bar}>
           <div className={s.filters}>
-            {FILTERS.map((f) => (
+            {FILTERS.map((filterId) => (
               <button
                 type="button"
-                key={f}
-                className={[s.chip, filter === f && s.chipOn]
+                key={filterId}
+                className={[s.chip, filter === filterId && s.chipOn]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => setFilter(f)}
+                onClick={() => setFilter(filterId)}
               >
-                {f === "all" ? "All" : CAT_LABELS[f]}
+                {filterId === "all"
+                  ? t("marketing:platforms.filter.all")
+                  : t(CAT_LABEL_KEYS[filterId]!)}
               </button>
             ))}
           </div>
@@ -272,11 +280,10 @@ export function PlatformsPage() {
           <div className={s.note}>
             <span className={s.pnDot} />
             <p>
-              <b>A note on this list:</b> We include platforms we think are
-              genuinely useful for queer people. This is not an endorsement of
-              any company's practices. Always make your own informed choices
-              about data, safety, and privacy — especially on dating and social
-              apps.
+              <Translation
+                i18nKey="marketing:platforms.note.body"
+                components={{ b: <b /> }}
+              />
             </p>
           </div>
 
@@ -286,31 +293,33 @@ export function PlatformsPage() {
                 <SkeletonLine width={180} height={26} />
               </h2>
               <div className={s.grid}>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <PlatformCardSkeleton key={i} />
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <PlatformCardSkeleton key={index} />
                 ))}
               </div>
             </div>
           ) : (
             (() => {
-              let n = -1;
+              let cardPosition = -1;
               return cats.map((cat) => {
-                const items = PLATFORMS.filter((p) => p.cat === cat);
+                const items = PLATFORMS.filter(
+                  (platform) => platform.cat === cat,
+                );
                 if (!items.length) return null;
                 return (
                   <div key={cat}>
-                    <h2 className={s.secTitle}>{CAT_LABELS[cat]}</h2>
+                    <h2 className={s.secTitle}>{t(CAT_LABEL_KEYS[cat]!)}</h2>
                     <div className={s.grid}>
-                      {items.map((p) => {
-                        n += 1;
+                      {items.map((platform) => {
+                        cardPosition += 1;
                         return (
                           <FadeIn
-                            key={p.name}
-                            delay={Math.min(n, 8) * 60}
+                            key={platform.name}
+                            delay={Math.min(cardPosition, 8) * 60}
                             style={{ height: "100%" }}
                           >
                             <a
-                              href={`https://${p.url}`}
+                              href={`https://${platform.url}`}
                               target="_blank"
                               rel="noreferrer"
                               className={s.card}
@@ -318,17 +327,20 @@ export function PlatformsPage() {
                             >
                               <span
                                 className={s.icon}
-                                style={{ background: p.ic, color: p.it }}
+                                style={{
+                                  background: platform.ic,
+                                  color: platform.it,
+                                }}
                               >
-                                {p.icon}
+                                {platform.icon}
                               </span>
                               <div>
                                 <div className={s.pCat}>
-                                  {CAT_LABELS[p.cat]}
+                                  {t(CAT_LABEL_KEYS[platform.cat]!)}
                                 </div>
-                                <div className={s.pName}>{p.name}</div>
-                                <p className={s.pDesc}>{p.desc}</p>
-                                <div className={s.pUrl}>↗ {p.url}</div>
+                                <div className={s.pName}>{platform.name}</div>
+                                <p className={s.pDesc}>{platform.desc}</p>
+                                <div className={s.pUrl}>↗ {platform.url}</div>
                               </div>
                             </a>
                           </FadeIn>
@@ -345,14 +357,15 @@ export function PlatformsPage() {
 
       <Outro
         title={
-          <>
-            Something missing? <em>Tell us.</em>
-          </>
+          <Translation
+            i18nKey="marketing:platforms.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Know a platform, resource, or community that should be here? Suggest it and we'll add it to the directory."
+        sub={t("marketing:platforms.outro.sub")}
       >
         <Button size="lg" to={routes.forum}>
-          Suggest a platform →
+          {t("marketing:platforms.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

@@ -3,55 +3,60 @@ import type { Application, NegotiationAngle } from "./applicationStatus.types";
 /* ── Negotiation planner ─────────────────────────────────────────────────── */
 
 /** Levers you can pull in a negotiation — selectable in the planner. */
-export const NEGOTIATION_LEVERS = [
-  "Base salary",
-  "Holiday days",
-  "Remote days",
-  "Learning budget",
-  "Start date",
-  "Title & scope",
+export const NEGOTIATION_LEVERS: { id: string; labelKey: string }[] = [
+  { id: "base-salary", labelKey: "economy:lever.baseSalary" },
+  { id: "holiday-days", labelKey: "economy:lever.holidayDays" },
+  { id: "remote-days", labelKey: "economy:lever.remoteDays" },
+  { id: "learning-budget", labelKey: "economy:lever.learningBudget" },
+  { id: "start-date", labelKey: "economy:lever.startDate" },
+  { id: "title-scope", labelKey: "economy:lever.titleScope" },
 ];
 
-export const NEGOTIATION_PRINCIPLES = [
-  "Anchor on the value you bring, never on what you need.",
-  "Name one clear number, then go quiet — let them respond.",
-  "If base won't move, trade: days, budget, title, flexibility.",
-  "Stay warm. This is a relationship, not a transaction.",
+export const NEGOTIATION_PRINCIPLE_KEYS = [
+  "economy:principle.anchor",
+  "economy:principle.nameNumber",
+  "economy:principle.trade",
+  "economy:principle.stayWarm",
 ];
 
-/** Several ready-to-send counter-offers, each with a distinct strategy. */
+/** Several ready-to-send counter-offers, each with a distinct strategy.
+ *  Scope note: `nameKey`/`blurbKey` are generic, reusable strategy labels —
+ *  translated. `draft` is a persuasive, composed message seeded with the
+ *  recruiter/company name; it is deliberately left in English (flagged in the
+ *  sweep report) — this kind of nuanced persuasive copy is too easy to get
+ *  subtly wrong in translation, and the member edits it before sending anyway. */
 export function negotiationAngles(app: Application): NegotiationAngle[] {
   const co = app.companyName;
   const recruiter = app.recruiter?.name.split(" ")[0] ?? "there";
   return [
     {
       id: "collaborative",
-      name: "The collaborative ask",
-      blurb: "Warm, partnership-first. Best when you already click with them.",
+      nameKey: "economy:negotiate.angle.collaborative.name",
+      blurbKey: "economy:negotiate.angle.collaborative.blurb",
       draft: `Hi ${recruiter} — thank you, I'm genuinely thrilled about ${co} and the scope you've described. I'd love to find a package I can fully commit to, and I was hoping we could bring the base nearer €47k. I'm flexible on how we get there and happy to talk it through — I want this to feel right for both of us.`,
     },
     {
       id: "market",
-      name: "The market case",
-      blurb: "Data-led and confident. Best with the benchmarks on your side.",
+      nameKey: "economy:negotiate.angle.market.name",
+      blurbKey: "economy:negotiate.angle.market.blurb",
       draft: `Hi ${recruiter} — thank you for the offer; I'm excited about the role. Looking at comparable roles in Lisbon, the mid-point sits noticeably higher, so I'd like to align the base to around €47–48k given the responsibility this position carries. I'm confident in the value I'll bring and happy to walk through my reasoning.`,
     },
     {
       id: "bundle",
-      name: "The bundle",
-      blurb: "Trade across levers. Best when the salary ceiling is firm.",
+      nameKey: "economy:negotiate.angle.bundle.name",
+      blurbKey: "economy:negotiate.angle.bundle.blurb",
       draft: `Hi ${recruiter} — I'd really like to make this work. If there's limited room on base, could we look at the whole package — a few extra holiday days, a larger learning budget, or the four-day week protected in writing? I'm flexible, and I'd love to find the combination that gets us both to yes.`,
     },
     {
       id: "enthusiastic",
-      name: "Lead with a yes",
-      blurb: "Excitement first, number second. Disarming and effective.",
+      nameKey: "economy:negotiate.angle.enthusiastic.name",
+      blurbKey: "economy:negotiate.angle.enthusiastic.blurb",
       draft: `Hi ${recruiter} — my honest answer is yes, I want to join ${co}. The one thing I'd love to revisit is the base: could we get to €47k? Everything else looks great, and if we can land that, I'm ready to sign and get started.`,
     },
     {
       id: "time",
-      name: "Ask for time",
-      blurb: "Buy space to decide — calmly, without pressure.",
+      nameKey: "economy:negotiate.angle.time.name",
+      blurbKey: "economy:negotiate.angle.time.blurb",
       draft: `Hi ${recruiter} — thank you so much for this, it means a lot. It's an important decision and I'd like to give it the consideration it deserves; could I take until the end of the week to come back to you properly? I'm very enthusiastic and want to respond thoughtfully rather than quickly.`,
     },
   ];

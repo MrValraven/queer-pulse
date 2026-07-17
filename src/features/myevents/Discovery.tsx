@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { RECOMMENDATIONS } from "./myEvents.data";
 
 /** "You might like" recommendations strip, shown under the upcoming agenda. */
 export function Discovery() {
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   const [hidden, setHidden] = useState<Record<string, boolean>>({});
   const recs = RECOMMENDATIONS.filter((r) => !hidden[r.id]);
@@ -17,7 +20,10 @@ export function Discovery() {
     <div className={sx("disco")}>
       <div className={sx("disco-head")}>
         <div className={sx("disco-title")}>
-          You might <em>like</em>
+          <Translation
+            i18nKey="myevents:discovery.title"
+            components={{ em: <em /> }}
+          />
         </div>
       </div>
       <div className={sx("disco-grid")}>
@@ -37,23 +43,23 @@ export function Discovery() {
               <Button
                 variant="jade"
                 onClick={() => {
-                  toast("You’re going — added to your events", "success");
+                  toast(t("myevents:discovery.imGoingToast"), "success");
                   hide(r.id);
                 }}
               >
-                I’m going
+                {t("myevents:discovery.imGoingCta")}
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => {
-                  toast("Saved for later", "success");
+                  toast(t("myevents:discovery.saveToast"), "success");
                   hide(r.id);
                 }}
               >
-                Save
+                {t("myevents:discovery.saveCta")}
               </Button>
               <Button variant="ghost" onClick={() => hide(r.id)}>
-                Hide
+                {t("myevents:discovery.hideCta")}
               </Button>
             </div>
           </div>

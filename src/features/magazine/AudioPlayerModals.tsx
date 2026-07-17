@@ -79,7 +79,9 @@ export function CastModal({ onClose }: { onClose: () => void }) {
             />
           </h3>
           <p className={styles.sub}>
-            {t("magazine:audio.cast.playingOnDevice", { kind: device.kind })}
+            {t("magazine:audio.cast.playingOnDevice", {
+              kind: t(device.kindKey),
+            })}
           </p>
           <div className={styles.actions} style={{ justifyContent: "center" }}>
             <Button variant="ghost-dark" onClick={() => setConnected(null)}>
@@ -110,7 +112,7 @@ export function CastModal({ onClose }: { onClose: () => void }) {
                 </span>
                 <span className={styles.rowMain}>
                   <span className={styles.rowName}>{d.name}</span>
-                  <span className={styles.rowKind}>{d.kind}</span>
+                  <span className={styles.rowKind}>{t(d.kindKey)}</span>
                 </span>
               </button>
             ))}

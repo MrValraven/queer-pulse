@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Pitch, PitchStatus } from "./pitchTracker.data";
 import { PitchStages } from "./PitchStages";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PitchTrackerPage.module.css";
 
 const STATUS_CLASS: Record<PitchStatus, string> = {
@@ -20,6 +21,8 @@ export function PitchCard({
   onWithdraw: (p: Pitch) => void;
   onStub: (label: string) => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div
       className={[styles.card, pitch.dimmed && styles.cardDimmed]
@@ -35,7 +38,7 @@ export function PitchCard({
           )}
         </div>
         <span className={[styles.status, STATUS_CLASS[pitch.status]].join(" ")}>
-          {pitch.statusLabel}
+          {t(pitch.statusLabelKey)}
         </span>
       </div>
 

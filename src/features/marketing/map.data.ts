@@ -397,18 +397,25 @@ export const VENUES: Venue[] = [
   },
 ];
 
+// `t` is the canonical (English, stored/filter) type id — never translate the
+// id itself, only `labelKey`'s resolved value (i18n brief §5.1: enum/filter
+// values must stay stable across a language switch).
 export const TYPES = [
-  { t: "all", label: "All" },
-  { t: "bar", label: "Bar" },
-  { t: "club", label: "Club" },
-  { t: "café", label: "Café" },
-  { t: "clinic", label: "Clinic" },
-  { t: "bookshop", label: "Bookshop" },
-  { t: "sauna", label: "Sauna" },
-  { t: "community space", label: "Community" },
-  { t: "barbershop", label: "Barbershop / Salon" },
-  { t: "gym", label: "Gym / Fitness" },
+  { t: "all", labelKey: "marketing:map.filter.type.all" },
+  { t: "bar", labelKey: "marketing:map.filter.type.bar" },
+  { t: "club", labelKey: "marketing:map.filter.type.club" },
+  { t: "café", labelKey: "marketing:map.filter.type.cafe" },
+  { t: "clinic", labelKey: "marketing:map.filter.type.clinic" },
+  { t: "bookshop", labelKey: "marketing:map.filter.type.bookshop" },
+  { t: "sauna", labelKey: "marketing:map.filter.type.sauna" },
+  {
+    t: "community space",
+    labelKey: "marketing:map.filter.type.communitySpace",
+  },
+  { t: "barbershop", labelKey: "marketing:map.filter.type.barbershop" },
+  { t: "gym", labelKey: "marketing:map.filter.type.gym" },
 ];
+/** Canonical (English, stored) vibe ids — same stored-value rule as `TYPES`. */
 export const VIBES = [
   "mixed",
   "masc-leaning",
@@ -416,6 +423,21 @@ export const VIBES = [
   "trans-centred",
   "sober-friendly",
 ];
+/** Display label key for each canonical vibe id. */
+export const VIBE_LABEL_KEYS: Record<string, string> = {
+  mixed: "marketing:map.filter.vibe.mixed",
+  "masc-leaning": "marketing:map.filter.vibe.mascLeaning",
+  "femme-leaning": "marketing:map.filter.vibe.femmeLeaning",
+  "trans-centred": "marketing:map.filter.vibe.transCentred",
+  "sober-friendly": "marketing:map.filter.vibe.soberFriendly",
+};
+/** Display label key for each canonical venue-type id (mirrors `TYPES`, minus "all"). */
+export const TYPE_LABEL_KEYS: Record<string, string> = Object.fromEntries(
+  TYPES.filter((type) => type.t !== "all").map((type) => [
+    type.t,
+    type.labelKey,
+  ]),
+);
 
 export const TYPE_BG: Record<string, string> = {
   bar: "rgba(232,119,90,.14)",

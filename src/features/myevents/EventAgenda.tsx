@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { FadeIn } from "../../shared/components/ui";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { buildAgenda } from "./myEvents.agenda";
@@ -27,20 +28,25 @@ function AgendaSkeleton({ n = 4 }: { n?: number }) {
 
 /** The left-hand agenda column: grouped event cards, empty states, discovery. */
 export function EventAgenda() {
+  const { t } = useTranslation();
   const c = useMyEvents();
   const result = useMemo(
     () =>
-      buildAgenda(c.events, {
-        pill: c.pill,
-        selectedDate: c.selectedDate,
-        searchTerm: c.searchTerm,
-        activeFilters: c.activeFilters,
-        sortBy: c.sortBy,
-        viewM: c.viewM,
-        viewY: c.viewY,
-        pastShown: c.pastShown,
-        hasSecondary: c.hasSecondary,
-      }),
+      buildAgenda(
+        c.events,
+        {
+          pill: c.pill,
+          selectedDate: c.selectedDate,
+          searchTerm: c.searchTerm,
+          activeFilters: c.activeFilters,
+          sortBy: c.sortBy,
+          viewM: c.viewM,
+          viewY: c.viewY,
+          pastShown: c.pastShown,
+          hasSecondary: c.hasSecondary,
+        },
+        t,
+      ),
     [
       c.events,
       c.pill,
@@ -52,6 +58,7 @@ export function EventAgenda() {
       c.viewY,
       c.pastShown,
       c.hasSecondary,
+      t,
     ],
   );
 
@@ -89,7 +96,7 @@ export function EventAgenda() {
       {result.loadMoreCount > 0 && (
         <div className={sx("load-more")}>
           <Button variant="ghost" onClick={c.loadMorePast}>
-            Show {result.loadMoreCount} more
+            {t("myevents:agenda.showMore", { count: result.loadMoreCount })}
           </Button>
         </div>
       )}

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentorProfileSkeleton } from "./MentorProfileSkeleton";
 import { routes } from "../../app/routeMap";
 import { MentorProfileSidebar } from "./MentorProfileSidebar";
@@ -22,13 +24,14 @@ const avTintClass: Record<"jade" | "coral" | "plum", string | undefined> = {
 };
 
 export function MentorProfilePage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
 
   return (
     <PageShell>
       <div className={styles.page}>
         <Link to={routes.mentorship} className={styles.back}>
-          ← All mentors
+          {t("economy:mentorProfile.backToAll")}
         </Link>
 
         {loading ? (
@@ -59,7 +62,7 @@ export function MentorProfilePage() {
                     Apply · application closes 14 Jun
                   </Button>
                   <Button variant="ghost" to={routes.messages}>
-                    Send a question first
+                    {t("economy:mentorProfile.sendQuestionCta")}
                   </Button>
                 </div>
               </div>
@@ -69,7 +72,10 @@ export function MentorProfilePage() {
               <main>
                 <section className={styles.sec}>
                   <h2>
-                    How I <em>mentor</em>
+                    <Translation
+                      i18nKey="economy:mentorProfile.section.howIMentor"
+                      components={{ em: <em /> }}
+                    />
                   </h2>
                   {HOW_PARAS.map((para, i) => (
                     <p key={i}>{para}</p>
@@ -78,7 +84,10 @@ export function MentorProfilePage() {
 
                 <section className={styles.sec}>
                   <h2>
-                    Who you'd <em>be a fit for</em>
+                    <Translation
+                      i18nKey="economy:mentorProfile.section.fitFor"
+                      components={{ em: <em /> }}
+                    />
                   </h2>
                   <div className={styles.whatGrid}>
                     {FIT_ITEMS.map((item) => (
@@ -92,7 +101,10 @@ export function MentorProfilePage() {
 
                 <section className={styles.sec}>
                   <h2>
-                    The <em>process</em>, step by step
+                    <Translation
+                      i18nKey="economy:mentorProfile.section.process"
+                      components={{ em: <em /> }}
+                    />
                   </h2>
                   <div>
                     {PROCESS_STEPS.map((step) => (
@@ -112,7 +124,10 @@ export function MentorProfilePage() {
 
                 <section className={styles.sec}>
                   <h2>
-                    Past mentees · <em>published with</em>
+                    <Translation
+                      i18nKey="economy:mentorProfile.section.pastMentees"
+                      components={{ em: <em /> }}
+                    />
                   </h2>
                   <div className={styles.menteesRow}>
                     {MENTEES.map((mentee) => (

@@ -3,47 +3,50 @@ import type { IconType } from "react-icons";
 import { FiMail, FiShield, FiFileText, FiUsers } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import s from "./ContactPage.module.css";
 
 const ROUTES: {
   icon: IconType;
   bg: string;
-  title: string;
-  desc: string;
+  titleKey: string;
+  descKey: string;
   email: string;
 }[] = [
   {
     icon: FiMail,
     bg: "rgba(232,119,90,.12)",
-    title: "General hello",
-    desc: "Anything that doesn't fit elsewhere — questions, feedback, introductions, ideas you think we should hear about.",
+    titleKey: "marketing:contact.routes.general.title",
+    descKey: "marketing:contact.routes.general.desc",
     email: "hello@queerpulse.pt",
   },
   {
     icon: FiShield,
     bg: "rgba(74,140,111,.12)",
-    title: "Safety concern",
-    desc: "If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. We respond within 24 hours.",
+    titleKey: "marketing:contact.routes.safety.title",
+    descKey: "marketing:contact.routes.safety.desc",
     email: "safe@queerpulse.pt",
   },
   {
     icon: FiFileText,
     bg: "rgba(45,27,61,.08)",
-    title: "Press & media",
-    desc: "Journalists, researchers, documentary makers. We're happy to talk about what we're building and why. We ask that you share your draft before publication.",
+    titleKey: "marketing:contact.routes.press.title",
+    descKey: "marketing:contact.routes.press.desc",
     email: "press@queerpulse.pt",
   },
   {
     icon: FiUsers,
     bg: "rgba(232,119,90,.1)",
-    title: "Partnerships",
-    desc: "Organisations, spaces, and communities who want to work with QueerPulse. We're selective but we're genuinely interested in the right collaborations.",
+    titleKey: "marketing:contact.routes.partnerships.title",
+    descKey: "marketing:contact.routes.partnerships.desc",
     email: "partners@queerpulse.pt",
   },
 ];
 
 export function ContactPage() {
+  const { t } = useTranslation();
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", topic: "", msg: "" });
   const valid =
@@ -58,16 +61,15 @@ export function ContactPage() {
         <div className={s.grid}>
           <Reveal className={s.intro}>
             <div className={s.eyebrow}>
-              <span className={s.live} /> We read everything
+              <span className={s.live} /> {t("marketing:contact.eyebrow")}
             </div>
             <h1>
-              Get in <em>touch.</em>
+              <Translation
+                i18nKey="marketing:contact.hero.title"
+                components={{ em: <em /> }}
+              />
             </h1>
-            <p>
-              We're a small team and we respond to messages ourselves. Not an
-              automated system, not a support ticket queue. Pick the route that
-              makes the most sense for what you need to say.
-            </p>
+            <p>{t("marketing:contact.hero.body")}</p>
             <div className={s.routes}>
               {ROUTES.map((r) => (
                 <a key={r.email} className={s.route} href={`mailto:${r.email}`}>
@@ -75,8 +77,8 @@ export function ContactPage() {
                     <r.icon />
                   </span>
                   <div>
-                    <h3>{r.title}</h3>
-                    <p>{r.desc}</p>
+                    <h3>{t(r.titleKey)}</h3>
+                    <p>{t(r.descKey)}</p>
                     <span className={s.rLink}>{r.email} →</span>
                   </div>
                 </a>
@@ -99,14 +101,14 @@ export function ContactPage() {
                   </svg>
                 </div>
                 <h2>
-                  Message <em>received.</em>
+                  <Translation
+                    i18nKey="marketing:contact.sent.title"
+                    components={{ em: <em /> }}
+                  />
                 </h2>
-                <p>
-                  We'll read it and write back, usually within a day or two. If
-                  it's a safety concern, we'll be in touch within 24 hours.
-                </p>
+                <p>{t("marketing:contact.sent.body")}</p>
                 <Button variant="ghost" to={routes.homepage}>
-                  Back to QueerPulse
+                  {t("marketing:contact.sent.backCta")}
                 </Button>
               </div>
             ) : (
@@ -117,48 +119,60 @@ export function ContactPage() {
                 }}
               >
                 <h2>
-                  Write to <em>us.</em>
+                  <Translation
+                    i18nKey="marketing:contact.form.title"
+                    components={{ em: <em /> }}
+                  />
                 </h2>
-                <p className={s.sub}>
-                  If you prefer a form to an email, use this. We read it the
-                  same way.
-                </p>
-                <FormField label="Your name">
+                <p className={s.sub}>{t("marketing:contact.form.sub")}</p>
+                <FormField label={t("marketing:contact.form.nameLabel")}>
                   <input
                     type="text"
-                    placeholder="How you'd like to be addressed"
+                    placeholder={t("marketing:contact.form.namePlaceholder")}
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                   />
                 </FormField>
-                <FormField label="Email">
+                <FormField label={t("marketing:contact.form.emailLabel")}>
                   <input
                     type="email"
-                    placeholder="So we can write back"
+                    placeholder={t("marketing:contact.form.emailPlaceholder")}
                     value={form.email}
                     onChange={(e) =>
                       setForm({ ...form, email: e.target.value })
                     }
                   />
                 </FormField>
-                <FormField label="What's this about?">
+                <FormField label={t("marketing:contact.form.topicLabel")}>
                   <select
                     value={form.topic}
                     onChange={(e) =>
                       setForm({ ...form, topic: e.target.value })
                     }
                   >
-                    <option value="">Pick a topic</option>
-                    <option>General question or feedback</option>
-                    <option>Safety concern</option>
-                    <option>Press or research inquiry</option>
-                    <option>Partnership proposal</option>
-                    <option>Something else</option>
+                    <option value="">
+                      {t("marketing:contact.form.topicPick")}
+                    </option>
+                    <option value="general">
+                      {t("marketing:contact.form.topic.general")}
+                    </option>
+                    <option value="safety">
+                      {t("marketing:contact.form.topic.safety")}
+                    </option>
+                    <option value="press">
+                      {t("marketing:contact.form.topic.press")}
+                    </option>
+                    <option value="partnership">
+                      {t("marketing:contact.form.topic.partnership")}
+                    </option>
+                    <option value="other">
+                      {t("marketing:contact.form.topic.other")}
+                    </option>
                   </select>
                 </FormField>
-                <FormField label="Your message">
+                <FormField label={t("marketing:contact.form.messageLabel")}>
                   <textarea
-                    placeholder="Write naturally. There's no template and no word count."
+                    placeholder={t("marketing:contact.form.messagePlaceholder")}
                     value={form.msg}
                     onChange={(e) => setForm({ ...form, msg: e.target.value })}
                   />
@@ -169,7 +183,7 @@ export function ContactPage() {
                   disabled={!valid}
                   style={{ width: "100%", justifyContent: "center" }}
                 >
-                  Send →
+                  {t("marketing:contact.form.sendCta")}
                 </Button>
               </form>
             )}
@@ -179,14 +193,15 @@ export function ContactPage() {
 
       <Outro
         title={
-          <>
-            Built in Lisbon, <em>with care.</em>
-          </>
+          <Translation
+            i18nKey="marketing:contact.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse is a small, member-supported network. Your feedback helps keep it good."
+        sub={t("marketing:contact.outro.sub")}
       >
         <Button to={routes.homepage} size="lg">
-          Back to the room
+          {t("marketing:contact.outro.backCta")}
         </Button>
       </Outro>
     </PageShell>

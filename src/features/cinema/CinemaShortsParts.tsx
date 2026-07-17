@@ -2,12 +2,9 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { FadeIn, ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import {
-  fmtWatch,
-  type ShortFilm,
-  type ShortsShelf,
-} from "./cinemaShorts.data";
+import { type ShortFilm, type ShortsShelf } from "./cinemaShorts.data";
 import styles from "./CinemaShortsPage.module.css";
 
 /** Renders a split title with the coral italic emphasis word. */
@@ -31,6 +28,7 @@ export function ShortCard({
   shelf: ShortsShelf;
   flash?: boolean;
 }) {
+  const { t } = useTranslation();
   const isSaved = shelf.saved.includes(film.id);
   const isSeen = shelf.seen.includes(film.id);
   const cls = [styles.shortCard, isSeen && styles.seen, flash && styles.flash]
@@ -57,7 +55,7 @@ export function ShortCard({
           placeholder="poster"
           style={{ position: "absolute", inset: 0 }}
         />
-        <span className={styles.scFree}>Free</span>
+        <span className={styles.scFree}>{t("cinema:access.free")}</span>
         <span className={styles.scRuntime}>{film.runtime} min</span>
         <span className={styles.scCc}>
           <span>CC</span>
@@ -67,7 +65,11 @@ export function ShortCard({
           role="button"
           tabIndex={0}
           className={`${styles.scSave} ${isSaved ? styles.saved : ""}`}
-          aria-label={isSaved ? "Remove from watchlist" : "Save to watchlist"}
+          aria-label={t(
+            isSaved
+              ? "cinema:film.watchlist.remove"
+              : "cinema:shorts.card.saveAriaLabel",
+          )}
           aria-pressed={isSaved}
           onClick={toggleSave}
           onKeyDown={(e) => {
@@ -103,19 +105,21 @@ export function ShortCard({
           <span className={styles.heart}>
             <FiHeart aria-hidden />
           </span>
-          {fmtWatch(film.watches)} watches
+          {t("cinema:shorts.card.watches", { count: film.watches })}
         </span>
         {film.cn ? (
           <span className={styles.scCnWrap}>
-            <span className={styles.scCn}>content note</span>
+            <span className={styles.scCn}>
+              {t("cinema:shorts.card.contentNoteLabel")}
+            </span>
             <span className={styles.cnPop}>
-              <b>Content note</b>
+              <b>{t("cinema:shorts.card.contentNoteHeading")}</b>
               {film.cn}
             </span>
           </span>
         ) : (
           <span className={`${styles.scCn} ${styles.scCnNone}`}>
-            no content notes
+            {t("cinema:shorts.card.noContentNotes")}
           </span>
         )}
       </div>

@@ -1,20 +1,44 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
-import { MENTION_TABS, MENTION_DAYS, type Mention } from "./mentions.data";
+import {
+  MENTION_TAB_DEFS,
+  MENTION_UNREAD_IDS,
+  buildMentionDays,
+  type Mention,
+  type MentionActionType,
+} from "./mentions.data";
 import { MentionsListSkeleton } from "./MentionsSkeleton";
 import styles from "./MentionsPage.module.css";
+import type { TFunction } from "../../shared/i18n/types";
 
 const avClass: Record<Mention["tint"], string | undefined> = {
   coral: styles.avCoral,
   jade: styles.avJade,
   plum: styles.avPlum,
 };
+
+/** Action-type → display label, resolved via `t` at render (never the stored
+ * `type`, which stays a stable English enum — i18n sweep §5.1). */
+function actionLabel(type: MentionActionType, t: TFunction): string {
+  const key: Record<MentionActionType, string> = {
+    reply: "notifications:mentions.actions.reply",
+    openThread: "notifications:mentions.actions.openThread",
+    markRead: "notifications:mentions.actions.markRead",
+    openArticle: "notifications:mentions.actions.openArticle",
+    rsvp: "notifications:mentions.actions.rsvp",
+    openPost: "notifications:mentions.actions.openPost",
+  };
+  return t(key[type]);
+}
 
 function ReplyComposer({
   name,
@@ -23,6 +47,7 @@ function ReplyComposer({
   name: string;
   onSend: (body: string) => void;
 }) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
   return (
     <form
@@ -38,13 +63,15 @@ function ReplyComposer({
       <textarea
         className={styles.rcInput}
         rows={1}
-        placeholder={`Reply to ${name.split(" ")[0]}…`}
+        placeholder={t("notifications:mentions.composer.placeholder", {
+          name: name.split(" ")[0],
+        })}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         autoFocus
       />
       <button className={styles.rcSend} type="submit" disabled={!value.trim()}>
-        Reply
+        {t("notifications:mentions.actions.reply")}
       </button>
     </form>
   );
@@ -59,30 +86,43 @@ function MentionRow({
   unread: boolean;
   onRead: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [going, setGoing] = useState(false);
   const [composing, setComposing] = useState(false);
   const [replies, setReplies] = useState<string[]>([]);
 
-  function runAction(label: string) {
-    if (label === "Reply") {
+  function runAction(type: MentionActionType) {
+    if (type === "reply") {
       setComposing((c) => !c);
-    } else if (label === "RSVP") {
+    } else if (type === "rsvp") {
       setGoing((g) => {
         const next = !g;
         showToast(
-          next ? `You're going · ${m.name}'s invite` : "RSVP withdrawn",
+          next
+            ? t("notifications:mentions.row.rsvpGoingToast", { name: m.name })
+            : t("notifications:mentions.row.rsvpWithdrawnToast"),
           next ? "success" : "info",
         );
         return next;
       });
-    } else if (label === "Mark read") {
+    } else if (type === "markRead") {
       onRead();
-    } else if (label.startsWith("Open")) {
+    } else if (
+      type === "openThread" ||
+      type === "openArticle" ||
+      type === "openPost"
+    ) {
       navigate(m.whereTo ?? routes.forum);
     } else {
-      showToast(`${label} · ${m.name}`, "info");
+      showToast(
+        t("notifications:mentions.row.genericToast", {
+          label: actionLabel(type, t),
+          name: m.name,
+        }),
+        "info",
+      );
     }
   }
 
@@ -106,47 +146,54 @@ function MentionRow({
       </div>
       <div className={styles.content}>{m.content}</div>
       <div className={styles.where}>
-        In{" "}
+        {t("notifications:mentions.where.prefix")}{" "}
         {m.whereTo ? (
           <Link to={m.whereTo}>{m.whereText}</Link>
         ) : (
           <span>{m.whereText}</span>
         )}
       </div>
-      {replies.map((body, i) => (
-        <div key={i} className={styles.sentReply}>
-          <span className={styles.srAuthor}>You</span>
+      {replies.map((body, replyIndex) => (
+        <div key={replyIndex} className={styles.sentReply}>
+          <span className={styles.srAuthor}>
+            {t("notifications:deepLink.sentReply.you")}
+          </span>
           {body}
         </div>
       ))}
       {m.actions.length > 0 && (
         <div className={styles.actions}>
-          {m.actions.map((a) => {
-            const isGoing = a.label === "RSVP" && going;
+          {m.actions.map((action) => {
+            const isGoing = action.type === "rsvp" && going;
             return (
               <button
                 type="button"
-                key={a.label}
+                key={action.type}
                 className={[
                   styles.action,
-                  a.primary && styles.primary,
+                  action.primary && styles.primary,
                   isGoing && styles.going,
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => runAction(a.label)}
+                onClick={() => runAction(action.type)}
               >
                 {isGoing ? (
                   <>
-                    <FiCheck aria-hidden /> Going
+                    <FiCheck aria-hidden />{" "}
+                    {t("notifications:mentions.row.going")}
                   </>
                 ) : (
-                  a.label
+                  actionLabel(action.type, t)
                 )}
               </button>
             );
           })}
-          {!unread && m.unread && <span className={styles.when}>Read</span>}
+          {!unread && m.unread && (
+            <span className={styles.when}>
+              {t("notifications:mentions.row.read")}
+            </span>
+          )}
         </div>
       )}
       {composing && <ReplyComposer name={m.name} onSend={addReply} />}
@@ -154,78 +201,77 @@ function MentionRow({
   );
 }
 
-/** Whether a mention belongs to the currently selected tab. */
-function matchesTab(m: Mention, tabIndex: number, isUnread: boolean): boolean {
-  const ctx = m.context.toLowerCase();
-  switch (MENTION_TABS[tabIndex]?.label) {
-    case "Unread":
-      return isUnread;
-    case "In posts":
-      return (
-        ctx.includes("post") || ctx.includes("reply") || ctx.includes("thread")
-      );
-    case "In articles":
-      return ctx.includes("article");
-    case "In events":
-      return ctx.includes("event") || ctx.includes("invite");
-    default:
-      return true;
-  }
-}
-
-/** IDs of mentions that start unread. */
-const INITIAL_UNREAD = MENTION_DAYS.flatMap((g) => g.items)
-  .filter((m) => m.unread)
-  .map((m) => m.id);
-
 export function MentionsPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [tab, setTab] = useState(0);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   let rowIndex = 0;
 
-  const unreadCount = INITIAL_UNREAD.filter((id) => !readIds.has(id)).length;
+  const mentionDays = useMemo(() => buildMentionDays(t, fmt), [t, fmt]);
+  const unreadCount = MENTION_UNREAD_IDS.filter(
+    (id) => !readIds.has(id),
+  ).length;
 
   function markRead(id: string) {
     setReadIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   }
   function markAllRead() {
     if (unreadCount === 0) return;
-    setReadIds(new Set(INITIAL_UNREAD));
-    showToast("All marked as read", "success");
+    setReadIds(new Set(MENTION_UNREAD_IDS));
+    showToast(t("notifications:mentions.markAllReadToast"), "success");
   }
 
-  const filteredDays = MENTION_DAYS.map((group) => ({
-    ...group,
-    items: group.items.filter((m) =>
-      matchesTab(m, tab, !!m.unread && !readIds.has(m.id)),
-    ),
-  })).filter((group) => group.items.length > 0);
+  const activeTabId = MENTION_TAB_DEFS[tab]?.id ?? "all";
+  const filteredDays = mentionDays
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((m) => {
+        const isUnread = !!m.unread && !readIds.has(m.id);
+        switch (activeTabId) {
+          case "unread":
+            return isUnread;
+          case "posts":
+            return m.category === "post";
+          case "articles":
+            return m.category === "article";
+          case "events":
+            return m.category === "event";
+          default:
+            return true;
+        }
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
 
   return (
     <AppShell unreadCount={unreadCount}>
       <div className={styles.page}>
         <header className={styles.head}>
-          <div className={styles.eyebrow}>Mentions · @tomas-mendes</div>
+          <div className={styles.eyebrow}>
+            {t("notifications:mentions.eyebrow", { handle: "@tomas-mendes" })}
+          </div>
           <h1 className={styles.h1}>
-            When somebody <em>tagged you in.</em>
+            <Translation
+              i18nKey="notifications:mentions.heading"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.lead}>
-            Posts, replies, and articles that @-mention you. Distinct from
-            Notifications — this is just the mentions thread.
-          </p>
+          <p className={styles.lead}>{t("notifications:mentions.lead")}</p>
         </header>
 
         <div className={styles.tabs}>
-          {MENTION_TABS.map((t, i) => (
+          {MENTION_TAB_DEFS.map((tabDef, index) => (
             <button
               type="button"
-              key={t.label}
-              className={`${styles.tab} ${tab === i ? styles.active : ""}`}
-              onClick={() => setTab(i)}
+              key={tabDef.id}
+              className={`${styles.tab} ${tab === index ? styles.active : ""}`}
+              onClick={() => setTab(index)}
             >
-              {t.label} <span className={styles.tabCount}>{t.count}</span>
+              {t(tabDef.labelKey)}{" "}
+              <span className={styles.tabCount}>{tabDef.count}</span>
             </button>
           ))}
         </div>
@@ -234,10 +280,17 @@ export function MentionsPage() {
           <p>
             {unreadCount > 0 ? (
               <>
-                <b>{unreadCount} unread</b> · oldest from 14 hours ago
+                <b>
+                  {t("notifications:mentions.unreadSummary", {
+                    count: unreadCount,
+                  })}
+                </b>{" "}
+                {t("notifications:mentions.oldestFrom", {
+                  when: fmt.relativeTime(-14, "hour"),
+                })}
               </>
             ) : (
-              <b>All caught up</b>
+              <b>{t("notifications:mentions.allCaughtUp")}</b>
             )}
           </p>
           <button
@@ -246,7 +299,7 @@ export function MentionsPage() {
             onClick={markAllRead}
             disabled={unreadCount === 0}
           >
-            Mark all read
+            {t("notifications:mentions.markAllRead")}
           </button>
         </div>
 
@@ -256,8 +309,8 @@ export function MentionsPage() {
           <EmptyState
             compact
             icon={<FiAtSign />}
-            title="No mentions here"
-            description="Nothing in this view right now. When someone tags you, it’ll show up here — no need to go looking."
+            title={t("notifications:mentions.empty.title")}
+            description={t("notifications:mentions.empty.description")}
           />
         ) : (
           filteredDays.map((group) => (

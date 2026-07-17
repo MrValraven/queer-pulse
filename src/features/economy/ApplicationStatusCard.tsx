@@ -1,5 +1,6 @@
 import { FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   BADGE_CLASS,
   STAGE_CLASS,
@@ -19,6 +20,7 @@ export function AppCard({
   muted?: boolean;
   onAction: (kind: ActionKind) => void;
 }) {
+  const { t } = useTranslation();
   const activeIdx = a.stages.findIndex((s) => s.state === "active");
   const activeStage = activeIdx >= 0 ? a.stages[activeIdx] : undefined;
   return (
@@ -64,7 +66,10 @@ export function AppCard({
         </div>
         {activeIdx >= 0 && (
           <div className={styles.stageStep}>
-            Step {activeIdx + 1} of {a.stages.length}
+            {t("economy:applicationStatus.card.stepOf", {
+              step: activeIdx + 1,
+              total: a.stages.length,
+            })}
             <span className={styles.stageStepLabel}>
               {" "}
               · {activeStage?.label}
@@ -91,7 +96,9 @@ export function AppCard({
         )}
         {activeStage?.hint && (
           <p className={styles.stageHint}>
-            <span className={styles.stageHintK}>What this means</span>
+            <span className={styles.stageHintK}>
+              {t("economy:applicationStatus.card.whatThisMeans")}
+            </span>
             {activeStage.hint}
           </p>
         )}

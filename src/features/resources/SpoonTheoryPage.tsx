@@ -1,58 +1,66 @@
 import { GiSpoon } from "react-icons/gi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { WHAT, USES, RSVP_TIPS } from "./spoonTheory.data";
+import { WHAT_KEYS, USES, RSVP_TIP_KEYS } from "./spoonTheory.data";
 import styles from "./resources.module.css";
 
 const SPOONS = [false, false, false, false, true, true]; // last two spent
 
 export function SpoonTheoryPage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Disabled Queers"
+        eyebrow={t("resources:spoonTheory.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"
         title={
-          <>
-            What we mean by <em>spoons.</em>
-          </>
+          <Translation
+            i18nKey="resources:spoonTheory.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="A shared shorthand for limited energy — what spoon theory is, how this community runs on it, and how to use it when you RSVP. No essay required: 'I'm low on spoons today' is a full sentence here."
+        lead={t("resources:spoonTheory.hero.lead")}
         anchors={[
-          { label: "What it is", href: "#what" },
-          { label: "How we use it", href: "#uses" },
-          { label: "When you RSVP", href: "#rsvp" },
+          { label: t("resources:spoonTheory.hero.anchor.what"), href: "#what" },
+          { label: t("resources:spoonTheory.hero.anchor.uses"), href: "#uses" },
+          { label: t("resources:spoonTheory.hero.anchor.rsvp"), href: "#rsvp" },
         ]}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`} id="what">
         <div className="wrap">
           <Reveal as="h2">
-            What it <em>is</em>
+            <Translation
+              i18nKey="resources:spoonTheory.what.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal>
             <div className={styles.spoonRow} aria-hidden>
-              {SPOONS.map((spent, i) => (
+              {SPOONS.map((spent, spoonIndex) => (
                 <GiSpoon
-                  key={i}
+                  key={spoonIndex}
                   className={`${styles.spoon} ${spent ? styles.spoonSpent : ""}`}
                 />
               ))}
             </div>
             <div className={styles.archiveMeta} style={{ marginBottom: 24 }}>
-              Four spoons left of six — a normal afternoon.
+              {t("resources:spoonTheory.what.spoonsCaption")}
             </div>
           </Reveal>
-          {WHAT.map((p) => (
+          {WHAT_KEYS.map((whatKey) => (
             <Reveal
               as="p"
-              key={p}
+              key={whatKey}
               className={styles.leadP}
               style={{ maxWidth: "64ch" }}
             >
-              {p}
+              {t(whatKey)}
             </Reveal>
           ))}
         </div>
@@ -61,15 +69,18 @@ export function SpoonTheoryPage() {
       <section className={`${styles.section} ${styles.sectionCream}`} id="uses">
         <div className="wrap">
           <Reveal as="h2">
-            How we <em>use it</em>
+            <Translation
+              i18nKey="resources:spoonTheory.uses.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div className={styles.grid}>
-            {USES.map((u, i) => (
-              <Reveal key={u.title} className={styles.card} delay={i * 55}>
+            {USES.map((use, i) => (
+              <Reveal key={use.titleKey} className={styles.card} delay={i * 55}>
                 <div className={styles.cardName} style={{ fontSize: 18 }}>
-                  {u.title}
+                  {t(use.titleKey)}
                 </div>
-                <div className={styles.cardSpec}>{u.body}</div>
+                <div className={styles.cardSpec}>{t(use.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -79,17 +90,20 @@ export function SpoonTheoryPage() {
       <section className={`${styles.section} ${styles.sectionPaper}`} id="rsvp">
         <div className="wrap">
           <Reveal as="h2">
-            When you <em>RSVP</em>
+            <Translation
+              i18nKey="resources:spoonTheory.rsvp.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div className={styles.checklist}>
-            {RSVP_TIPS.map((t) => (
+            {RSVP_TIP_KEYS.map((tipKey) => (
               <Reveal
-                key={t}
+                key={tipKey}
                 className={styles.checkItem}
                 style={{ gridTemplateColumns: "1fr" }}
               >
                 <div className={styles.cardSpec} style={{ flex: "none" }}>
-                  {t}
+                  {t(tipKey)}
                 </div>
               </Reveal>
             ))}
@@ -99,14 +113,15 @@ export function SpoonTheoryPage() {
 
       <Outro
         title={
-          <>
-            Come in whatever <em>state you're in.</em>
-          </>
+          <Translation
+            i18nKey="resources:spoonTheory.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="We're not measuring. Every gathering is hybrid, drop-in, and built for real bodies."
+        sub={t("resources:spoonTheory.outro.sub")}
       >
         <Button to={routes.gatherings} variant="primary" size="lg">
-          Find a low-sensory hangout
+          {t("resources:spoonTheory.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

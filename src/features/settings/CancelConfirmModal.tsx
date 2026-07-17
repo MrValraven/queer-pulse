@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CancelConfirmModal.module.css";
 
 export function CancelConfirmModal({
@@ -23,6 +24,7 @@ export function CancelConfirmModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -51,7 +53,7 @@ export function CancelConfirmModal({
         <p className={styles.body}>{body}</p>
         <div className={styles.btns}>
           <Button variant="ghost" onClick={onClose}>
-            Not now
+            {t("settings:destructiveFlow.confirm.notNow")}
           </Button>
           <Button variant="primary" onClick={onConfirm}>
             {confirmLabel}

@@ -1600,7 +1600,7 @@ export const marketing: Catalog = {
   "listBusiness.success.listAnother": "List another place",
   "listBusiness.success.withdraw": "Withdraw",
   "listBusiness.success.reference":
-    "Reference · <b>{ref}</b> &nbsp;·&nbsp; keep it somewhere",
+    "Reference · <b>{ref}</b>  ·  keep it somewhere",
   "listBusiness.success.demoFlip": "Prototype · preview review states:",
   // "What's still needed" chip labels
   "listBusiness.missing.path": "how you know the place",
@@ -1662,7 +1662,7 @@ export const marketing: Catalog = {
   "annualAssembly.hero.title": "Two days, eleven <em>resolutions.</em>",
   "annualAssembly.hero.dek":
     "QueerPulse's binding annual gathering. Where the manifesto gets revised, the budget gets approved, and any decision that can't be made by a circle goes to a member vote. <em>You can attend in person, online, or just read the minutes after</em> — but your vote counts the same.",
-  "annualAssembly.hero.meta.datesLabel": "Two days · Sat &amp; Sun",
+  "annualAssembly.hero.meta.datesLabel": "Two days · Sat & Sun",
   "annualAssembly.hero.meta.videoLink": "+ video link",
   "annualAssembly.hero.meta.eligibleLabel": "Members eligible to vote",
   "annualAssembly.hero.meta.quorumLabel": "Quorum · met",
@@ -1687,7 +1687,7 @@ export const marketing: Catalog = {
   "annualAssembly.vote.sub":
     "Everyone votes — whether you're attending or not. Cast your vote any time; you can change it until the close. <em>One vote per member, per resolution.</em>",
   "annualAssembly.vote.quorumStrip":
-    "<b>Quorum:</b> 184 votes required to validate a resolution. <em>Currently at 312 votes cast</em> — quorum met. <b>Yes/no thresholds:</b> simple majority for budget items; 60% supermajority for Code of Conduct &amp; manifesto changes.",
+    "<b>Quorum:</b> 184 votes required to validate a resolution. <em>Currently at 312 votes cast</em> — quorum met. <b>Yes/no thresholds:</b> simple majority for budget items; 60% supermajority for Code of Conduct & manifesto changes.",
   "annualAssembly.vote.noCta": "No · reject",
   "annualAssembly.vote.abstainCta": "Abstain",
   "annualAssembly.vote.showMore": "Show {count} more resolutions →",
@@ -1741,8 +1741,8 @@ export const marketing: Catalog = {
     "{inPerson} in person · {online} online · {votes} votes",
   "assemblyMinutes.summary.title": "Summary of <em>proceedings</em>",
   "assemblyMinutes.agenda.title": "<em>Agenda</em> as taken",
-  "assemblyMinutes.resolutions.title": "Resolutions &amp; <em>outcomes</em>",
-  "assemblyMinutes.actions.title": "Actions &amp; <em>next steps</em>",
+  "assemblyMinutes.resolutions.title": "Resolutions & <em>outcomes</em>",
+  "assemblyMinutes.actions.title": "Actions & <em>next steps</em>",
   "assemblyMinutes.signoff":
     "Minutes recorded by {secretary} · ratified at the close of the {year} Annual Assembly. This is the public record.",
   "assemblyMinutes.outcome.passed": "Passed",
@@ -1759,7 +1759,7 @@ export const marketing: Catalog = {
   "openLetter.hero.addressed": "Addressed to <b>{to}</b> · {date}",
   "openLetter.hero.countGoalSuffix": "/ {goal} signatures",
   "openLetter.hero.countLabel":
-    "Members of QP &amp; partner orgs · last signed <b>{at}</b> by {by}",
+    "Members of QP & partner orgs · last signed <b>{at}</b> by {by}",
   "openLetter.hero.pctLabel": "<b>{pct}%</b> · {note}",
   "openLetter.toast.signatureAdded": "Signature added · {total} total",
   "openLetter.body.addressee":
@@ -1858,7 +1858,7 @@ export const marketing: Catalog = {
   "transparency.moderation.breakdown":
     "Action breakdown: <b>96 posts/comments removed</b>, <b>52 warnings issued</b>, <b>23 temporary suspensions</b> (median 7 days), <b>9 permanent bans</b>, <b>4 cases referred to ILGA</b> for legal handling.",
   "transparency.requests.title":
-    "Government &amp; legal <em>requests</em> for member data.",
+    "Government & legal <em>requests</em> for member data.",
   "transparency.requests.sub":
     "Every request we received from any government or legal entity in 2025. We comply with valid Portuguese court orders. <em>We do not comply with informal asks.</em>",
   "transparency.mistakes.title": "Things we got <em>wrong</em> in 2025.",
@@ -2001,10 +2001,10 @@ export const marketing: Catalog = {
   "volunteer.filter.low": "Low commitment",
   "volunteer.filter.medium": "Medium commitment",
   "volunteer.filter.rights": "LGBTQ+ Rights",
-  "volunteer.filter.health": "Health &amp; Wellbeing",
+  "volunteer.filter.health": "Health & Wellbeing",
   "volunteer.filter.youth": "Youth",
   "volunteer.filter.housing": "Housing",
-  "volunteer.filter.arts": "Arts &amp; Culture",
+  "volunteer.filter.arts": "Arts & Culture",
   "volunteer.hero.eyebrow": "Volunteer",
   "volunteer.hero.title":
     "Give your time to the <em>community</em> around you.",
@@ -2078,10 +2078,10 @@ export const marketing: Catalog = {
   "postOpportunity.tip3.body":
     "Your role appears on the volunteer board immediately. Interested members sign up from the detail page, and you'll see the roster there.",
   "postOpportunity.cause.rights": "LGBTQ+ Rights",
-  "postOpportunity.cause.health": "Health &amp; Wellbeing",
+  "postOpportunity.cause.health": "Health & Wellbeing",
   "postOpportunity.cause.youth": "Youth",
   "postOpportunity.cause.housing": "Housing",
-  "postOpportunity.cause.arts": "Arts &amp; Culture",
+  "postOpportunity.cause.arts": "Arts & Culture",
   "postOpportunity.commit.low.label": "Low commitment",
   "postOpportunity.commit.low.hint":
     "A couple of flexible hours a week, no fixed term.",
@@ -2095,7 +2095,7 @@ export const marketing: Catalog = {
   "postOpportunity.core.rolePlaceholder": "e.g. Community Outreach Volunteer",
   "postOpportunity.core.causeLabel": "Cause",
   "postOpportunity.core.commitLabel": "Commitment level",
-  "postOpportunity.core.timePlaceHeading": "Time &amp; place",
+  "postOpportunity.core.timePlaceHeading": "Time & place",
   "postOpportunity.core.timeLabel": "Time commitment",
   "postOpportunity.core.timePlaceholder": "e.g. 2–4 hrs/week",
   "postOpportunity.core.locationLabel": "Location",
@@ -2140,7 +2140,7 @@ export const marketing: Catalog = {
     "e.g. Two evenings before you start · required",
   "postOpportunity.rich.commitRemoveAria": "Remove commitment {index}",
   "postOpportunity.rich.addCommitment": "Add a commitment",
-  "postOpportunity.rich.teamHeading": "Team &amp; contact",
+  "postOpportunity.rich.teamHeading": "Team & contact",
   "postOpportunity.rich.teamIntroLabel": "Intro to the team",
   "postOpportunity.rich.teamIntroPlaceholder":
     "e.g. 18 outreach volunteers active this quarter.",
@@ -2219,4 +2219,1059 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.becomeBody":
     "Are you an org that ought to be operationally connected to QueerPulse? We're small and slow about this — write to us.",
   "partnerDetail.sidebar.becomeCta": "Get in touch →",
+
+  // ── Donate — page chrome. All platform-authored (amounts/allocation/trust
+  //    copy are QueerPulse's own fixed figures, not fetched user content).
+  "donate.hero.eyebrow": "Support QueerPulse",
+  "donate.hero.title": "Members keep this <em>alive.</em>",
+  "donate.hero.lead":
+    "No ads, no investors, no data sold. QueerPulse runs on the people who use it — and every euro goes back into mutual aid, gatherings, and paying queer creatives fairly.",
+  "donate.toggle.monthly": "Monthly",
+  "donate.toggle.oneOff": "One-off",
+  "donate.amounts.coffee": "a coffee",
+  "donate.amounts.mostChosen": "most chosen",
+  "donate.amounts.sustainsMember": "sustains a member",
+  "donate.amounts.fundsGathering": "funds a gathering",
+  "donate.giveCta.monthly": "Give {amount} / month →",
+  "donate.giveCta.oneOff": "Give {amount} →",
+  "donate.allocation.title": "Where it <em>actually goes.</em>",
+  "donate.allocation.lead":
+    "Not overheads and salaries for people you'll never meet. Here's the real split.",
+  "donate.allocation.mutualAid.label": "Direct mutual aid",
+  "donate.allocation.mutualAid.body":
+    "Emergency housing, crisis support, and micro-grants paid straight to members in need.",
+  "donate.allocation.gatherings.label": "Gatherings & spaces",
+  "donate.allocation.gatherings.body":
+    "Venue hire, sliding-scale tickets, and the newcomer events that keep the door open.",
+  "donate.allocation.platform.label": "Platform & safety",
+  "donate.allocation.platform.body":
+    "Moderation, the crisis chat line, and keeping the lights on — no ads, no data sold.",
+  "donate.allocation.magazine.label": "The magazine & studio",
+  "donate.allocation.magazine.body":
+    "Paying queer writers, artists, and musicians fairly for the work they make here.",
+  "donate.trust.title": "You can <em>trust the numbers.</em>",
+  "donate.trust.lead":
+    "Transparency isn't a nice-to-have here — it's the deal.",
+  "donate.trust.reported.title": "Every euro is reported",
+  "donate.trust.reported.body":
+    "Quarterly figures published in the open — see exactly where it went.",
+  "donate.trust.noAds.title": "No ads, no data sold",
+  "donate.trust.noAds.body":
+    "We are funded by members, not advertisers. Your support is the whole model.",
+  "donate.trust.membersDecide.title": "Members decide",
+  "donate.trust.membersDecide.body":
+    "The community council votes on how the solidarity fund is spent each quarter.",
+  "donate.outro.title": "Or give your <em>time instead.</em>",
+  "donate.outro.sub":
+    "Money is one way in. Volunteering, hosting, and showing up are just as much the point.",
+  "donate.outro.volunteerCta": "Volunteer with us",
+  "donate.outro.readFiguresCta": "Read the figures",
+
+  // ── Donate modal — payment form chrome (prototype, no real charge).
+  "donateModal.title": "Confirm your <em>gift.</em>",
+  "donateModal.sub": "No ads, no investors — just members keeping this alive.",
+  "donateModal.row.monthlyGift": "Monthly gift",
+  "donateModal.row.oneOffGift": "One-off gift",
+  "donateModal.row.feeCovered": "Processing fee covered",
+  "donateModal.row.chargedToday": "Charged today",
+  "donateModal.amount.monthly": "{amount} / month",
+  "donateModal.checkLabel": "Cover the {pct}% processing fee",
+  "donateModal.checkHint": "So 100% of your {amount} reaches the community.",
+  "donateModal.field.nameOnCard": "Name on card",
+  "donateModal.field.namePlaceholder": "Alex Rivera",
+  "donateModal.field.emailReceipt": "Email for receipt",
+  "donateModal.field.cardNumber": "Card number",
+  "donateModal.field.expiry": "Expiry",
+  "donateModal.field.cvc": "CVC",
+  "donateModal.processing": "Processing…",
+  "donateModal.submitCta.monthly": "Donate {amount} / month",
+  "donateModal.submitCta.oneOff": "Donate {amount}",
+  "donateModal.secure":
+    "Encrypted & secure. This is a prototype — no real charge is made.",
+  "donateModal.success.title": "You're in.",
+  "donateModal.success.emMonthly": "See you next month.",
+  "donateModal.success.emOneOff": "Thank you.",
+  "donateModal.success.closeLabel": "Done",
+  "donateModal.success.bodyMonthly":
+    "Your {amount} / month goes straight to mutual aid, gatherings, and paying queer creatives fairly. Cancel anytime from your account — no questions asked.",
+  "donateModal.success.bodyOneOff":
+    "Your {amount} goes straight to mutual aid, gatherings, and paying queer creatives fairly. We'll email your receipt shortly.",
+
+  // ── Contact — page chrome. All platform-authored form/routing copy.
+  "contact.eyebrow": "We read everything",
+  "contact.hero.title": "Get in <em>touch.</em>",
+  "contact.hero.body":
+    "We're a small team and we respond to messages ourselves. Not an automated system, not a support ticket queue. Pick the route that makes the most sense for what you need to say.",
+  "contact.routes.general.title": "General hello",
+  "contact.routes.general.desc":
+    "Anything that doesn't fit elsewhere — questions, feedback, introductions, ideas you think we should hear about.",
+  "contact.routes.safety.title": "Safety concern",
+  "contact.routes.safety.desc":
+    "If something in the network has made you feel unsafe or uncomfortable. Handled with full discretion. We respond within 24 hours.",
+  "contact.routes.press.title": "Press & media",
+  "contact.routes.press.desc":
+    "Journalists, researchers, documentary makers. We're happy to talk about what we're building and why. We ask that you share your draft before publication.",
+  "contact.routes.partnerships.title": "Partnerships",
+  "contact.routes.partnerships.desc":
+    "Organisations, spaces, and communities who want to work with QueerPulse. We're selective but we're genuinely interested in the right collaborations.",
+  "contact.sent.title": "Message <em>received.</em>",
+  "contact.sent.body":
+    "We'll read it and write back, usually within a day or two. If it's a safety concern, we'll be in touch within 24 hours.",
+  "contact.sent.backCta": "Back to QueerPulse",
+  "contact.form.title": "Write to <em>us.</em>",
+  "contact.form.sub":
+    "If you prefer a form to an email, use this. We read it the same way.",
+  "contact.form.nameLabel": "Your name",
+  "contact.form.namePlaceholder": "How you'd like to be addressed",
+  "contact.form.emailLabel": "Email",
+  "contact.form.emailPlaceholder": "So we can write back",
+  "contact.form.topicLabel": "What's this about?",
+  "contact.form.topicPick": "Pick a topic",
+  "contact.form.topic.general": "General question or feedback",
+  "contact.form.topic.safety": "Safety concern",
+  "contact.form.topic.press": "Press or research inquiry",
+  "contact.form.topic.partnership": "Partnership proposal",
+  "contact.form.topic.other": "Something else",
+  "contact.form.messageLabel": "Your message",
+  "contact.form.messagePlaceholder":
+    "Write naturally. There's no template and no word count.",
+  "contact.form.sendCta": "Send →",
+  "contact.outro.title": "Built in Lisbon, <em>with care.</em>",
+  "contact.outro.sub":
+    "QueerPulse is a small, member-supported network. Your feedback helps keep it good.",
+  "contact.outro.backCta": "Back to the room",
+
+  // ── Newsletter — email-preferences page chrome. All platform-authored
+  //    preference names/descriptions.
+  "newsletter.backToSettings": "← Settings",
+  "newsletter.header.eyebrow": "Email preferences",
+  "newsletter.header.title": "What we <em>send you,</em> and when.",
+  "newsletter.header.sub":
+    "You control everything. Toggle off anything you don't want. Safety alerts are the only emails we'll ever send regardless of your settings — and only if something urgent affects your account.",
+  "newsletter.account.sendingTo": "Sending to",
+  "newsletter.account.changeEmail": "Change email →",
+  "newsletter.sections.magazine.title": "Magazine",
+  "newsletter.prefs.magIssue.title": "Monthly magazine issue",
+  "newsletter.prefs.magIssue.sub":
+    "A full issue email on the first of every month — cover story, links to all articles, letters from the editors.",
+  "newsletter.prefs.magIssue.freq": "Monthly · 1st of the month",
+  "newsletter.prefs.magPicks.title": "Editor's picks",
+  "newsletter.prefs.magPicks.sub":
+    "When an article gets a strong community response, we'll send it to you mid-month. No more than twice a month.",
+  "newsletter.prefs.magPicks.freq": "Occasional · up to 2× per month",
+  "newsletter.sections.events.title": "Events & gatherings",
+  "newsletter.prefs.evConfirm.title": "Event confirmations & reminders",
+  "newsletter.prefs.evConfirm.sub":
+    "Confirmation when you RSVP, plus a reminder 48 hours before each event you're attending.",
+  "newsletter.prefs.evConfirm.freq": "Transactional · per RSVP",
+  "newsletter.prefs.evNear.title": "New events near you",
+  "newsletter.prefs.evNear.sub":
+    "A weekly digest of new events and gatherings listed in the past seven days. Only if you've saved location preferences.",
+  "newsletter.prefs.evNear.freq": "Weekly · Thursdays",
+  "newsletter.prefs.evReading.title": "Reading group activity",
+  "newsletter.prefs.evReading.sub":
+    "Updates from reading groups you're a member of — new sessions, books selected, messages from the group organiser.",
+  "newsletter.prefs.evReading.freq": "As activity happens",
+  "newsletter.sections.community.title": "Community & network",
+  "newsletter.prefs.comAnnounce.title": "Community announcements",
+  "newsletter.prefs.comAnnounce.sub":
+    "Major community news — new features, governance decisions, significant platform changes. Sent only when something important happens.",
+  "newsletter.prefs.comAnnounce.freq": "Occasional · never more than weekly",
+  "newsletter.prefs.comConnect.title": "Connection requests & messages",
+  "newsletter.prefs.comConnect.sub":
+    "Email notifications when someone sends you a connection request or a message. Can also be managed via in-app notifications.",
+  "newsletter.prefs.comConnect.freq": "Per event",
+  "newsletter.prefs.comForum.title": "Forum mentions & replies",
+  "newsletter.prefs.comForum.sub":
+    "When someone replies to your forum post or mentions you in a thread.",
+  "newsletter.prefs.comForum.freq": "Per event",
+  "newsletter.sections.safety.title": "Safety & account",
+  "newsletter.prefs.safeAlerts.title": "Safety alerts",
+  "newsletter.prefs.safeAlerts.sub":
+    "Critical alerts about your account — password changes, unusual activity, or community safety notices. These cannot be turned off and we will only send them when genuinely necessary.",
+  "newsletter.prefs.safeAlerts.freq": "Urgent · cannot be disabled",
+  "newsletter.prefs.safeReport.title": "Quarterly community report",
+  "newsletter.prefs.safeReport.sub":
+    "The community health and financial report published every quarter. Contains moderation statistics, platform finances, and governance updates.",
+  "newsletter.prefs.safeReport.freq": "Quarterly",
+  "newsletter.save.cta": "Save preferences",
+  "newsletter.save.note":
+    "Changes take effect immediately. You may still receive emails already queued.",
+  "newsletter.save.toast": "Preferences saved",
+  "newsletter.unsub.title": "Unsubscribe from everything",
+  "newsletter.unsub.text":
+    "This turns off all optional emails at once, except safety alerts. You can re-enable individual categories above at any time.",
+  "newsletter.unsub.cta": "Unsubscribe from all emails",
+  "newsletter.unsub.toast": "Unsubscribed from all optional emails",
+
+  // ── Get the App — landing page chrome. All platform-authored.
+  "getTheApp.hero.eyebrow": "Mobile · iOS & Android",
+  "getTheApp.hero.title": "Take it with you <em>anyway.</em>",
+  "getTheApp.hero.lead":
+    "The app does the things you actually need on a phone: <b>quick exit, crisis chat, RSVPs, your safe-spaces map, and the QR ticket at the door.</b> Everything else stays better on the web.",
+  "getTheApp.store.ios.line1": "Download on the",
+  "getTheApp.store.ios.line2": "App Store",
+  "getTheApp.store.android.line1": "Get it on",
+  "getTheApp.store.android.line2": "Google Play",
+  "getTheApp.sendPhone.title": "Don't want the <em>app stores?</em>",
+  "getTheApp.sendPhone.body":
+    "Pop your number in and we'll text you a one-time install link. Doesn't add you to anything.",
+  "getTheApp.sendPhone.placeholder": "+351 91·••··••··",
+  "getTheApp.sendPhone.cta": "Text me the link",
+  "getTheApp.sendPhone.toast": "Link sent — check your messages",
+  "getTheApp.qr.label": "Scan with <em>your phone</em>",
+  "getTheApp.qr.sub": "Camera app should detect it · routes to the right store",
+  "getTheApp.what.title": "What the app is <em>for</em>",
+  "getTheApp.what.sub":
+    "A short list. We won't put everything on a small screen.",
+  "getTheApp.features.quickExit.title": "Quick exit",
+  "getTheApp.features.quickExit.desc":
+    "Lives in the nav. One tap closes the app and switches to a neutral home screen. Always available.",
+  "getTheApp.features.crisisChat.title": "Crisis chat",
+  "getTheApp.features.crisisChat.desc":
+    "One tap from anywhere. Trained peer operators reply in < 90 seconds, 24/7. Works on patchy signal.",
+  "getTheApp.features.gatherings.title": "Gatherings & RSVPs",
+  "getTheApp.features.gatherings.desc":
+    "RSVP in two taps. Tickets show as QR codes at the door. Calendar export to whatever you use.",
+  "getTheApp.features.safeMap.title": "Safe-spaces map · offline",
+  "getTheApp.features.safeMap.desc":
+    "Map of vetted venues across Lisbon, cached so it works without signal. Verified within 90 days, every pin.",
+  "getTheApp.features.quietNotifs.title": "Quiet notifications",
+  "getTheApp.features.quietNotifs.desc":
+    "Replies, RSVPs, messages. No engagement bait, no streaks. Granular quiet hours by category.",
+  "getTheApp.features.onTheGo.title": "Member-on-the-go",
+  "getTheApp.features.onTheGo.desc":
+    "Your DMs, your saves, your profile. Light theme + a true black for night use.",
+  "getTheApp.what.notIn":
+    "<b>Not in the app, on purpose:</b> the full Magazine, the article archive, the Forum, the long-form profiles, governance documents, hosting tools. <em>These are better at a desk.</em> Web stays the canonical home for everything that takes time.",
+  "getTheApp.share.eyebrow": "Pass it along",
+  "getTheApp.share.title": "Got a friend who'd <em>use this?</em>",
+  "getTheApp.share.body":
+    "Show them this QR — it's the same install page, just yours. If they install, you'll both see each other in the \"we've met in person\" recap when you're next at a gathering together.",
+  "getTheApp.share.copyLinkCta": "Copy link",
+  "getTheApp.share.shareAppsCta": "Share to apps",
+  "getTheApp.share.copyToast": "Link copied",
+  "getTheApp.share.notMemberCta": "Not a member yet? Request an invite →",
+
+  // ── Get the App — notify-me modal (App Store / Google Play not live yet).
+  "appNotify.ariaLabel": "Get notified at launch",
+  "appNotify.close": "Close",
+  "appNotify.success.title": "We'll let you <em>know.</em>",
+  "appNotify.success.body":
+    "You're on the list for the {platform} launch. We'll email <b>{email}</b> the day it lands — and nothing else.",
+  "appNotify.eyebrow": "{store} · coming soon",
+  "appNotify.title": "QueerPulse is coming to <em>{platform}.</em>",
+  "appNotify.lead":
+    "The app isn't in the store yet. Drop your email and we'll let you know the moment the {platform} build is live. No marketing, no lists you didn't ask for.",
+  "appNotify.emailLabel": "Your email",
+  "appNotify.emailHint": "We'll only use this for the launch heads-up.",
+  "appNotify.maybeLaterCta": "← Maybe later",
+  "appNotify.notifyCta": "Notify me →",
+
+  // ── For Organisations — partnerships landing page chrome. The four
+  //    PARTNERS records (name/tenure/description) and the Filipa Mendes
+  //    testimonial are each org's own content — left English, same
+  //    precedent as the Partners listing page.
+  "forOrgs.hero.eyebrow": "For organisations · partnerships",
+  "forOrgs.hero.title": "Work <em>with us,</em> not <em>at us.</em>",
+  "forOrgs.hero.dek":
+    "QueerPulse partnerships are <b>operational, not promotional</b>. We don't sell access, run sponsored content, or do co-branding for its own sake. <em>We build seams between organisations that already do the work.</em> Below: what those seams look like, who we already work with, and how to start a conversation.",
+  "forOrgs.hero.notDoTitle": "What we don't do",
+  "forOrgs.notDo.prideCampaigns":
+    "<b>Pride-month campaigns.</b> Not in June, not ever. Members would (rightly) leave.",
+  "forOrgs.notDo.sellList":
+    "<b>Sell our member list.</b> No targeting, no segmentation, no warm intros for a fee.",
+  "forOrgs.notDo.sponsoredPosts":
+    '<b>"Sponsored posts" or branded content</b> in the magazine, feed, or podcast.',
+  "forOrgs.notDo.rainbowLogos":
+    "<b>Rainbow logos.</b> We don't add yours and we don't loan ours.",
+  "forOrgs.notDo.recruit":
+    "<b>Recruit on your behalf.</b> Companies post jobs through Jobs like everyone else.",
+  "forOrgs.process.title": "How partnerships <em>actually start</em>",
+  "forOrgs.process.sub":
+    "Slow. Conversational. Often via a phone call before a written proposal. The whole process usually takes 6–10 weeks.",
+  "forOrgs.process.step1.title": "Email or a call",
+  "forOrgs.process.step1.body":
+    "Tell us what you do, what you'd like, what's not negotiable on your side. <em>30 min, no commitment.</em>",
+  "forOrgs.process.step2.title": "An in-person meeting",
+  "forOrgs.process.step2.body":
+    "Coffee in Lisbon if you're here, or video. We talk through how the seam would work — operationally, not theoretically.",
+  "forOrgs.process.step3.title": "Two-page proposal",
+  "forOrgs.process.step3.body":
+    "One of us drafts it; both sides edit. Includes <b>exit conditions</b>, public-disagreement clauses, and money flow.",
+  "forOrgs.process.step4.title": "Assembly sign-off",
+  "forOrgs.process.step4.body":
+    "Operational partnerships go to the monthly Assembly. The Sustainer membership weighs in. <em>~10% of partnerships are vetoed.</em>",
+  "forOrgs.proof.title": "Already working <em>with us</em>",
+  "forOrgs.proof.sub":
+    "Four representative partners, each at a different tier. Full list lives on Partners.",
+  "forOrgs.proof.viewCta": "View partner →",
+  "forOrgs.tiers.title": "What we <em>do offer</em>",
+  "forOrgs.tiers.sub":
+    "Three tiers, each a different kind of relationship. All include the basics: pre-listing review, transparent funding disclosure, and the ability for either side to disagree publicly.",
+  "forOrgs.tiers.employer.name": "Verified employer",
+  "forOrgs.tiers.employer.pricePeriod": "/ year · post unlimited jobs",
+  "forOrgs.tiers.employer.dek":
+    'For employers who want to post on our Jobs board with the "verified queer-friendly" badge. Requires a 12-month engagement and one member-conducted review.',
+  "forOrgs.tiers.employer.list1":
+    "Unlimited job listings · <b>posted within 24h</b>",
+  "forOrgs.tiers.employer.list2":
+    "Verified-employer badge on the company profile",
+  "forOrgs.tiers.employer.list3":
+    "One annual member-conducted culture review (anonymous)",
+  "forOrgs.tiers.employer.list4": "Listing in Employer Reviews",
+  "forOrgs.tiers.employer.list5":
+    "Quarterly hiring office-hours with two team members",
+  "forOrgs.tiers.employer.footnote":
+    "For: 20+ person organisations actively hiring queer talent. Sliding scale for under-50-person teams.",
+  "forOrgs.tiers.employer.reviewCta": "Start the review",
+  "forOrgs.tiers.employer.reviewToast": "Opening the review form…",
+  "forOrgs.tiers.employer.exampleCta": "See an example company profile →",
+  "forOrgs.tiers.partner.name": "Operational <em>partner</em>",
+  "forOrgs.tiers.partner.price": "By <em>arrangement</em>",
+  "forOrgs.tiers.partner.pricePeriod": "reciprocal · usually unpaid",
+  "forOrgs.tiers.partner.dek":
+    "For organisations that should be operationally connected to QueerPulse — ILGA, Trans Hub, civic-service agencies, allied associations. We build infrastructure together, not co-marketing.",
+  "forOrgs.tiers.partner.list1":
+    "<b>Operational seam:</b> case bridge, helpline handoff, joint protocol",
+  "forOrgs.tiers.partner.list2": "Shared moderation channel where appropriate",
+  "forOrgs.tiers.partner.list3":
+    "Co-signed advocacy work · each side can dissent publicly",
+  "forOrgs.tiers.partner.list4":
+    "Listed on Partners with a dedicated case page",
+  "forOrgs.tiers.partner.list5":
+    "<b>Per-case payment</b> for partner-provided services (e.g. €45/legal-consult)",
+  "forOrgs.tiers.partner.footnote":
+    "For: civic, advocacy, healthcare, and mission-aligned orgs. Selection is slow and rare. <b>Two new operational partners per year, max.</b>",
+  "forOrgs.tiers.partner.proposeCta": "Propose a partnership",
+  "forOrgs.tiers.funder.name": "Programme funder",
+  "forOrgs.tiers.funder.pricePeriod": "/ year · specific programme",
+  "forOrgs.tiers.funder.dek":
+    "For foundations, public agencies, and grant-making organisations funding a specific programme — micro-grants, the magazine, safe spaces, trans-health access.",
+  "forOrgs.tiers.funder.list1": "Programme-specific reporting · quarterly",
+  "forOrgs.tiers.funder.list2": "Credit on the programme page in plain text",
+  "forOrgs.tiers.funder.list3": "No platform-wide placement, no co-branding",
+  "forOrgs.tiers.funder.list4": "Annual independent audit included",
+  "forOrgs.tiers.funder.list5": "Public itemisation in the transparency report",
+  "forOrgs.tiers.funder.footnote":
+    "For: Fundação Calouste Gulbenkian-tier orgs and EU programmes. We've turned down €60k+ when the strings didn't fit.",
+  "forOrgs.tiers.funder.discussCta": "Discuss a grant",
+  "forOrgs.tiers.funder.discussToast": "Opening grant discussion…",
+  "forOrgs.cta.title": "Start a <em>conversation.</em>",
+  "forOrgs.cta.body":
+    'Tell us about your organisation in a paragraph. We read every message within 5 working days and reply personally — even if the answer is "this isn\'t right for us right now."',
+  "forOrgs.cta.list1": "For partnerships, we usually call before we write",
+  "forOrgs.cta.list2": "Grant applications: include a one-pager",
+  "forOrgs.cta.pressInquiry": "Press inquiries → <a>Press Kit</a>",
+  "forOrgs.cta.partnerQuestion":
+    "Already a partner with a question → <a>Contact</a>",
+  "forOrgs.form.nameLabel": "Your name",
+  "forOrgs.form.namePlaceholder": "Filipa Mendes",
+  "forOrgs.form.orgLabel": "Organisation",
+  "forOrgs.form.orgPlaceholder": "ILGA Portugal",
+  "forOrgs.form.emailLabel": "Email",
+  "forOrgs.form.emailPlaceholder": "you@org.example",
+  "forOrgs.form.interestLabel": "Interested in",
+  "forOrgs.form.interest.operational": "Operational partnership",
+  "forOrgs.form.interest.employer": "Verified employer",
+  "forOrgs.form.interest.funding": "Programme funding",
+  "forOrgs.form.interest.other": "Something else (tell us in the note)",
+  "forOrgs.form.messageLabel": "What you'd like to build, in a paragraph",
+  "forOrgs.form.messagePlaceholder": "We run an LGBTQ+ helpline and…",
+  "forOrgs.form.submitCta": "Send to partnerships team",
+  "forOrgs.form.small":
+    "Goes directly to Marta and André. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
+  "forOrgs.form.toast":
+    "Sent to Marta and André — they'll reply within 5 working days",
+
+  // ── Directory — business directory + detail page chrome. Place records
+  //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
+  //    business's own content — left English, same precedent as mock member
+  //    bios/reviews elsewhere.
+  "directory.hero.eyebrow": "Queer business directory",
+  "directory.hero.title": "Find your <em>people's places.</em>",
+  "directory.hero.sub":
+    "Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years.",
+  "directory.hero.note": "Community-verified · updated monthly",
+  "directory.search.placeholder": "Search by name, neighbourhood, or type…",
+  "directory.cat.all": "All",
+  "directory.cat.food": "Food & drink",
+  "directory.cat.design": "Design & craft",
+  "directory.cat.health": "Health & care",
+  "directory.cat.space": "Spaces",
+  "directory.cat.culture": "Culture",
+  "directory.cat.tech": "Tech",
+  "directory.cat.grooming": "Barbershop & Salon",
+  "directory.cat.fitness": "Gym & Fitness",
+  "directory.loading": "Loading places…",
+  "directory.count": "Showing <b>{shown}</b> of {total} places",
+  "directory.empty": "No places match — try a broader filter.",
+  "directory.badge.queerOwned": "Queer-owned",
+  "directory.badge.friendly": "LGBTQ+ friendly",
+  "directory.card.memberRun": "Member-run",
+  "directory.card.viewDetails": "View details →",
+  "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
+  "directory.submitStrip.body":
+    "If you run or know a queer-owned or queer-friendly business in Lisbon that belongs in this directory, tell us. We review every suggestion before it goes live.",
+  "directory.submitStrip.cta": "List your business",
+  "directory.outro.title":
+    "New to Lisbon? <em>You're not starting from zero.</em>",
+  "directory.outro.sub":
+    "Join the network and get access to the full directory, member recommendations, and a community that knows the city.",
+  "directory.outro.cta": "Request an invite",
+  "directory.detail.backCta": "← Directory",
+  "directory.detail.badge.verifiedOwned": "Verified queer-owned",
+  "directory.detail.badge.friendly": "LGBTQ+ friendly",
+  "directory.detail.reviewsCount": "· {count} reviews",
+  "directory.detail.whatItIsTitle": "What it <em>actually is.</em>",
+  "directory.detail.goodForTitle": "What members say it's <em>good for</em>",
+  "directory.detail.goodForSub": "Aggregated from {count} reviews.",
+  "directory.detail.hoursTitle": "Hours",
+  "directory.detail.today": "Today",
+  "directory.detail.hoursClosed": "Closed",
+  "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
+  "directory.detail.reviewsSub": "Sorted by most helpful.",
+  "directory.detail.helpful": "<b>{count}</b> members found this helpful",
+  "directory.detail.visitWebsite": "Visit website →",
+  "directory.detail.getInTouch": "Get in touch →",
+  "directory.detail.backToDirectory": "Back to directory",
+  "directory.detail.whoRunsIt": "Who runs it",
+  "directory.detail.onQueerPulse": "On QueerPulse",
+  "directory.detail.communityVouched": "Community-vouched",
+  "directory.detail.viewProfile": "View {name}'s profile →",
+  "directory.detail.membersHereLately": "Members here lately",
+  "directory.detail.upcomingHere": "Upcoming here",
+  "directory.relative.yesterday": "Yesterday",
+  "directory.relative.twoDaysAgo": "2 days ago",
+  "directory.relative.threeDaysAgo": "3 days ago",
+  "directory.relative.lastWeek": "last week",
+  "directory.days.monday": "Monday",
+  "directory.days.tuesday": "Tuesday",
+  "directory.days.wednesday": "Wednesday",
+  "directory.days.thursday": "Thursday",
+  "directory.days.friday": "Friday",
+  "directory.days.saturday": "Saturday",
+  "directory.days.sunday": "Sunday",
+
+  // ── Arriving (new-to-Lisbon guide) — page/section chrome only. Neighbourhood
+  //    blurbs, org descriptions, community-group blurbs (`arrivingPage.data.ts`,
+  //    `arrivingPageCards.data.ts`) are Lisbon city-guide content — left
+  //    English, same precedent as the Cities page's per-city blurbs.
+  "arriving.hero.eyebrow": "New to Lisbon",
+  "arriving.hero.title": "Queer and new to Lisbon? <em>Welcome.</em>",
+  "arriving.hero.body":
+    "This city has a lot for us — a real, rooted queer community, welcoming neighbourhoods, organisations doing serious work, and people who will genuinely help you settle in. Here's what to know first.",
+  "arriving.neighbourhoods.eyebrow": "Lisbon's neighbourhoods",
+  "arriving.neighbourhoods.title": "Where queer life <em>happens.</em>",
+  "arriving.neighbourhoods.intro":
+    "Lisbon doesn't have one queer neighbourhood — it has several pockets, each with its own character. Here's an honest guide to where the community is.",
+  "arriving.health.eyebrow": "Health",
+  "arriving.health.title":
+    "Healthcare in Lisbon — <em>what you need to know.</em>",
+  "arriving.health.intro":
+    "Portugal has a national health service (SNS) that you can register with. Trans-affirming care has improved significantly — but it takes knowing where to go.",
+  "arriving.housing.eyebrow": "Housing",
+  "arriving.housing.title": "Finding a place to live — <em>honestly.</em>",
+  "arriving.housing.intro":
+    "Lisbon's housing market is expensive and competitive. Here's an honest picture of what to expect, and where to get help.",
+  "arriving.orgs.eyebrow": "Organisations",
+  "arriving.orgs.title": "Know these <em>three first.</em>",
+  "arriving.orgs.intro":
+    "These are the organisations most likely to be useful within your first weeks in Lisbon — for legal support, mental health, or simply connecting to the community.",
+  "arriving.firstStep.eyebrow": "Your first step",
+  "arriving.firstStep.title": "Come to something <em>in person.</em>",
+  "arriving.firstStep.intro":
+    "Everything on this page is useful. But the best thing you can do is show up to a gathering. Next one coming up:",
+  "arriving.firstStep.rsvpCta": "I'll be there →",
+  "arriving.commQuick.eyebrow": "Where to start",
+  "arriving.commQuick.title": "Three communities for <em>new arrivals.</em>",
+  "arriving.commQuick.intro":
+    "Not sure where to begin? These three communities are particularly welcoming to people who are new to Lisbon.",
+  "arriving.commQuick.browseCta": "Browse all communities →",
+  "arriving.outro.title": "Ready to meet <em>the community?</em>",
+  "arriving.outro.sub":
+    "Request an invite to QueerPulse and get access to the full network — members, gatherings, board, and everything else on this page.",
+  "arriving.outro.cta": "Request an invite →",
+
+  // ── Visas & Residency — page/section chrome + the visa/legal guidance
+  //    itself (platform-authored, ships in the bundle, no `api/` fetch —
+  //    same status as the Constitution). Handled with extra care per the
+  //    i18n brief §6: official Portuguese terms (NIF, NISS, AIMA, SNS,
+  //    Certificado de Registo, União de Facto, Autorização de Residência,
+  //    IFICI, recibos verdes, Conservatória) are already Portuguese and are
+  //    kept byte-identical in both catalogs. The "Community note" quotes
+  //    attributed to named/anonymous members, and the reviewed-lawyers'
+  //    names/quotes, are testimonial content — left English, same precedent
+  //    as `directoryPlaces.ts` reviews.
+  "visas.hero.eyebrow": "Visas & Residency · Portugal",
+  "visas.hero.title": "Portugal, legally. <em>Your path to residency.</em>",
+  "visas.hero.sub":
+    "Practical information about visas, residency, and citizenship in Portugal — and what queer couples and families need to know that the official guidance doesn't always say clearly.",
+  "visas.hero.note":
+    "Community information, not legal advice. Immigration law changes — always verify with a specialist.",
+  "visas.routePicker.label": "Where are you <em>starting from?</em>",
+  "visas.routePicker.euCitizen.name": "EU / EEA citizen",
+  "visas.routePicker.euCitizen.desc":
+    "Free movement applies. Registration is simple but required.",
+  "visas.routePicker.euCitizen.cta": "EU Citizens →",
+  "visas.routePicker.remoteWorker.name": "Remote worker / passive income",
+  "visas.routePicker.remoteWorker.desc":
+    "Living on savings, rental income, freelance, or remote employment.",
+  "visas.routePicker.remoteWorker.cta": "D7 Visa →",
+  "visas.routePicker.digitalNomad.name": "Digital nomad",
+  "visas.routePicker.digitalNomad.desc":
+    "Working remotely for a non-Portuguese employer, higher income.",
+  "visas.routePicker.digitalNomad.cta": "Digital Nomad (D8) →",
+  "visas.routePicker.jobOffer.name": "Job offer in Portugal",
+  "visas.routePicker.jobOffer.desc":
+    "You have or are seeking employment with a Portuguese entity.",
+  "visas.routePicker.jobOffer.cta": "Work Visas →",
+  "visas.routePicker.partner.name": "Joining a partner here",
+  "visas.routePicker.partner.desc":
+    "Your partner is in Portugal already or moving with you.",
+  "visas.routePicker.partner.cta": "Bringing a Partner →",
+
+  "visas.tabs.eu.label": "EU Citizens",
+  "visas.tabs.eu.headTitle": "EU & EEA <em>citizens</em>",
+  "visas.tabs.eu.headText":
+    "EU and EEA citizens have the right to live and work in Portugal without a visa. You still need to register — and for queer couples, there are specific things to know about bringing a non-EU partner.",
+  "visas.tabs.eu.card1.eyebrow": "Registration",
+  "visas.tabs.eu.card1.title": "Certificado de Registo",
+  "visas.tabs.eu.card1.body":
+    "EU citizens staying more than 3 months must register at their local Câmara Municipal. You'll need your passport, proof of address, and proof of income or employment. The certificate is usually issued the same day. Cost: €15.",
+  "visas.tabs.eu.card1.tag": "Simple, low cost",
+  "visas.tabs.eu.card2.eyebrow": "Your rights",
+  "visas.tabs.eu.card2.title": "What EU residency gives you",
+  "visas.tabs.eu.card2.body":
+    "Full access to the SNS health system (with NISS), the right to work without restriction, the right to vote in local and European elections, and the right to bring family members. After 5 years of continuous legal residence, you can apply for permanent residency or citizenship.",
+  "visas.tabs.eu.card3.eyebrow": "Non-EU partner",
+  "visas.tabs.eu.card3.title": "Family reunification for same-sex partners",
+  "visas.tabs.eu.card3.body":
+    "If you're an EU citizen and your partner is not, they can join you in Portugal under EU free movement rules — including same-sex spouses and registered partners. The EU Court of Justice (Coman ruling, 2018) established that EU member states must recognise same-sex spouses for free movement purposes even if they don't have same-sex marriage domestically.",
+  "visas.tabs.eu.card3.tag": "Full partner rights",
+  "visas.tabs.eu.card3.link": "Partner visa details →",
+
+  "visas.tabs.d7.label": "D7 — Passive Income",
+  "visas.tabs.d7.headTitle": "D7 — <em>Passive Income Visa</em>",
+  "visas.tabs.d7.headText":
+    'The D7 is Portugal\'s "passive income" or "retirement" visa. Despite the name, it\'s used by anyone with a stable income from remote work, freelancing, pensions, rental income, or investments. One of the most popular routes for queer people relocating to Portugal.',
+  "visas.tabs.d7.card1.eyebrow": "Who it's for",
+  "visas.tabs.d7.card1.title": "Eligibility",
+  "visas.tabs.d7.card1.body":
+    "Non-EU citizens who can demonstrate a stable passive or remote income. The minimum income threshold is roughly €820/month (the Portuguese minimum wage), but some consulates want to see significantly more. Applications are made at the Portuguese consulate in your home country before arriving.",
+  "visas.tabs.d7.card1.tag": "Apply before arriving",
+  "visas.tabs.d7.card2.eyebrow": "What you get",
+  "visas.tabs.d7.card2.title": "Visa conditions",
+  "visas.tabs.d7.card2.body":
+    "Initial visa valid for 4 months; exchange for a 2-year residency permit (Autorização de Residência) on arrival in Portugal. Renewable for 3 years, then permanent residency. You must spend at least 6 months per year in Portugal to maintain it. Partners and dependent children can be included.",
+  "visas.tabs.d7.card3.eyebrow": "Tax",
+  "visas.tabs.d7.card3.title": "IFICI tax regime",
+  "visas.tabs.d7.card3.body":
+    "Portugal replaced the NHR scheme at the end of 2023 with the IFICI regime (informally called NHR 2.0). It's now targeted at qualifying professions (tech, research, arts). General D7 holders no longer qualify automatically. Your income will be taxed as a standard resident. Get tax advice before moving.",
+  "visas.tabs.d7.card3.link": "Tax advice contacts →",
+  "visas.tabs.d7.step1.title":
+    "Apply at the Portuguese consulate in your country",
+  "visas.tabs.d7.step1.text":
+    "Submit proof of income, clean criminal record, health insurance, and proof of accommodation in Portugal.",
+  "visas.tabs.d7.step1.note": "2–8 weeks processing",
+  "visas.tabs.d7.step2.title": "Arrive in Portugal with your visa",
+  "visas.tabs.d7.step2.text":
+    "You have 4 months to book your AIMA appointment and exchange your visa for a residency permit.",
+  "visas.tabs.d7.step3.title": "AIMA appointment",
+  "visas.tabs.d7.step3.text":
+    "AIMA (replaced SEF in 2023) handles residency permits. Book early — waits can be long. Bring all original documents.",
+  "visas.tabs.d7.step3.note": "Book online at aima.gov.pt",
+  "visas.tabs.d7.step4.title": "Receive your AR card",
+  "visas.tabs.d7.step4.text":
+    "Your Autorização de Residência card is your proof of legal residency. Keep it safe — it's used for everything.",
+
+  "visas.tabs.d8.label": "Digital Nomad (D8)",
+  "visas.tabs.d8.headTitle": "Digital Nomad <em>Visa (D8)</em>",
+  "visas.tabs.d8.headText":
+    "Portugal's D8 visa, introduced in 2022, is designed for remote workers employed by or providing services to companies outside Portugal. Higher income threshold than D7 but increasingly popular.",
+  "visas.tabs.d8.card1.eyebrow": "Requirements",
+  "visas.tabs.d8.card1.title": "What you need to qualify",
+  "visas.tabs.d8.card1.body":
+    "Proof of remote employment or contracts with non-Portuguese clients. Income requirement is typically 4× the Portuguese minimum wage (roughly €3,280/month). Health insurance with Portugal coverage. Clean criminal record. Portuguese NIF (can be obtained before the visa in some cases).",
+  "visas.tabs.d8.card1.tag": "Higher income bar than D7",
+  "visas.tabs.d8.card2.eyebrow": "Process",
+  "visas.tabs.d8.card2.title": "How to apply",
+  "visas.tabs.d8.card2.body":
+    "Like the D7, applications are made at the Portuguese consulate before arrival. On arrival, you exchange for a 2-year residency permit. Family members (including same-sex partners) can be included on the application or apply for family reunification after you receive your permit.",
+  "visas.tabs.d8.card3.eyebrow": "IFICI / Tax",
+  "visas.tabs.d8.card3.title": "Tax treatment",
+  "visas.tabs.d8.card3.body":
+    "D8 holders working in qualifying tech or research roles may qualify for the IFICI regime (20% flat income tax for up to 10 years). This is not automatic — you must apply and your profession must qualify. Check with a tax specialist before assuming you'll benefit.",
+  "visas.tabs.d8.card3.link": "Tax advice →",
+
+  "visas.tabs.work.label": "Work Visas",
+  "visas.tabs.work.headTitle": "Work <em>visas</em>",
+  "visas.tabs.work.headText":
+    "If you have a job offer from a Portuguese employer, or are seeking one, there are specific visa routes. These are generally more straightforward than passive income visas but require employer involvement.",
+  "visas.tabs.work.card1.eyebrow": "D1 visa",
+  "visas.tabs.work.card1.title": "Employment visa",
+  "visas.tabs.work.card1.body":
+    "The standard route for non-EU workers with a job offer from a Portuguese employer. Your employer usually needs to show they couldn't fill the role with an EU citizen first, though this requirement is often waived in practice for skilled roles. Apply at the consulate with your employment contract.",
+  "visas.tabs.work.card2.eyebrow": "Job seeker",
+  "visas.tabs.work.card2.title": "Job Seeker Visa",
+  "visas.tabs.work.card2.body":
+    "180-day visa allowing you to come to Portugal to find work. Requires proof of sufficient funds and qualifications. Once you find a job, you can convert to a D1 work visa without leaving the country. Useful if you want to arrive before securing employment.",
+  "visas.tabs.work.card2.tag": "180 days to find work",
+  "visas.tabs.work.card3.eyebrow": "Self-employed",
+  "visas.tabs.work.card3.title": "Independent worker (D2)",
+  "visas.tabs.work.card3.body":
+    "For freelancers and independent professionals who have identified clients or opportunities in Portugal. You'll need a business plan and evidence of prospective income. Registering as a trabalhador independente (recibos verdes) is the tax structure most self-employed residents use.",
+
+  "visas.tabs.partner.label": "Bringing a Partner",
+  "visas.tabs.partner.headTitle": "Bringing a <em>partner</em>",
+  "visas.tabs.partner.headText":
+    "Portugal recognises same-sex marriage, civil partnership, and long-term cohabitation. What this means for residency depends on your nationalities and which visa route you're using — but the community news is broadly good.",
+  "visas.tabs.partner.card1.eyebrow": "Same-sex marriage",
+  "visas.tabs.partner.card1.title": "Portugal fully recognises your marriage",
+  "visas.tabs.partner.card1.body":
+    "Portugal has recognised same-sex marriage since 2010. A legal marriage anywhere in the world is recognised for residency purposes in Portugal. Your spouse is entitled to join you under family reunification — regardless of their nationality or the country where you married.",
+  "visas.tabs.partner.card1.tag": "Full legal recognition",
+  "visas.tabs.partner.card2.eyebrow": "Not married",
+  "visas.tabs.partner.card2.title": "Partners without formal status",
+  "visas.tabs.partner.card2.body":
+    "If you're not married, long-term cohabitation (união de facto, typically 2+ years) is recognised for family reunification purposes. You'll need to document your relationship — shared bills, joint accounts, correspondence. Getting married or entering a civil partnership first is often simpler administratively.",
+  "visas.tabs.partner.card3.eyebrow": "EU citizen + non-EU partner",
+  "visas.tabs.partner.card3.title": "The Coman ruling",
+  "visas.tabs.partner.card3.body":
+    "The 2018 EU Court of Justice ruling (Coman v. Romania) established that EU member states must recognise same-sex spouses of EU citizens for the purposes of free movement — even countries that don't have same-sex marriage. This means an EU citizen can bring their same-sex spouse to Portugal regardless of their home country's stance.",
+  "visas.tabs.partner.card3.tag": "EU court protection",
+  "visas.tabs.partner.card3.link": "Talk to an immigration lawyer →",
+  "visas.tabs.partner.card4.eyebrow": "Family reunification",
+  "visas.tabs.partner.card4.title": "The process for partners",
+  "visas.tabs.partner.card4.body":
+    "Once you have your own residency permit, your partner applies for family reunification at AIMA. They'll need your AR card, proof of the relationship, proof of accommodation, and income evidence. Processing takes 60–90 days. During this time they can usually remain in Portugal on a short-stay visa.",
+
+  "visas.tabs.citizenship.label": "Citizenship",
+  "visas.tabs.citizenship.headTitle":
+    "Citizenship & <em>permanent residency</em>",
+  "visas.tabs.citizenship.headText":
+    "Portugal offers one of the clearer paths to citizenship in Europe. After 5 years of legal residency, you can apply for either permanent residency or naturalisation as a Portuguese citizen.",
+  "visas.tabs.citizenship.card1.eyebrow": "Timeline",
+  "visas.tabs.citizenship.card1.title": "5 years to citizenship",
+  "visas.tabs.citizenship.card1.body":
+    "After 5 years of continuous legal residency, you're eligible to apply for Portuguese citizenship. Requirements: basic Portuguese language (A2 level), clean criminal record, proof of ties to Portugal, and no absence of more than 6 consecutive months or 8 months total during the 5 years.",
+  "visas.tabs.citizenship.card1.tag": "EU passport included",
+  "visas.tabs.citizenship.card2.eyebrow": "Permanent residency",
+  "visas.tabs.citizenship.card2.title": "Alternative to citizenship",
+  "visas.tabs.citizenship.card2.body":
+    "You can also apply for permanent residency (Autorização de Residência Permanente) after 5 years. This gives you indefinite right to remain without the language and citizenship requirements. Some people prefer this route while maintaining their original nationality.",
+  "visas.tabs.citizenship.card3.eyebrow": "Portuguese language",
+  "visas.tabs.citizenship.card3.title": "A2 requirement",
+  "visas.tabs.citizenship.card3.body":
+    "The Portuguese language requirement for citizenship is A2 (basic) — conversational rather than fluent. You can demonstrate this via an approved CAPLE or CIPLE test, or by showing Portuguese-medium education. The community forum has recommendations for Portuguese teachers who are queer-friendly.",
+  "visas.tabs.citizenship.card3.link": "Language learning resources →",
+
+  "visas.ground.title": "On the <em>ground</em>",
+  "visas.ground.sub": "Practical first steps regardless of your visa route.",
+  "visas.ground.nif.label": "First",
+  "visas.ground.nif.title": "NIF — Tax number",
+  "visas.ground.nif.body":
+    "You need a Número de Identificação Fiscal for almost everything: opening a bank account, signing a lease, buying a phone plan. Get it at the Finanças office with your passport. EU citizens: bring passport. Non-EU: bring passport + address proof. Can also use a fiscal representative service if you're not yet in Portugal.",
+  "visas.ground.niss.label": "Second",
+  "visas.ground.niss.title": "NISS — Social security",
+  "visas.ground.niss.body":
+    "Your Número de Identificação de Segurança Social gives you access to SNS healthcare and records contributions. Register at your local Centro de Emprego e Formação Profissional or Segurança Social office. Required before you can access SNS appointments.",
+  // Note: the source component (`visas.data.tsx`) said "NHS appointments"
+  // here — the UK's health service, not Portugal's. Corrected to SNS per the
+  // i18n brief's "flag/fix an English-source bug, don't faithfully translate
+  // it" rule; flagged in the sweep report.
+  "visas.ground.aima.label": "Key office",
+  "visas.ground.aima.title": "AIMA",
+  "visas.ground.aima.body":
+    "AIMA (Agência para a Integração, Migrações e Asilo) replaced SEF in October 2023. It handles all residency permits, renewals, and family reunification. Book appointments online at aima.gov.pt — waits are long, book immediately on arrival.",
+  "visas.ground.sns.label": "Healthcare",
+  "visas.ground.sns.title": "SNS access",
+  "visas.ground.sns.body":
+    "Register with a GP (Centro de Saúde) in your area using your AR card or EU registration certificate plus NISS. Wait times are long — many community members use private health insurance alongside SNS access. See the Wellbeing page for queer-friendly healthcare providers.",
+
+  "visas.lawyers.title": "Community-reviewed <em>immigration lawyers</em>",
+  "visas.lawyers.forumCta": "Ask the visa forum thread →",
+
+  "visas.outro.title": "You're building a life <em>here.</em>",
+  "visas.outro.sub": "The paperwork is temporary. The community is permanent.",
+  "visas.outro.settlingCta": "Settling in guide →",
+  "visas.outro.askCta": "Ask the community",
+
+  // ── Map (queer Lisbon city guide) — page/filter/sidebar chrome. Venue
+  //    names/addresses/hours/notes (`map.data.ts`) are business-directory
+  //    content — left English, same precedent as `directoryPlaces.ts`.
+  //    Bairro (neighbourhood) names are Lisbon proper nouns — kept identical.
+  //    Filter `type`/`vibe` ids stay canonical English strings (stored/filter
+  //    values); only their display labels below are translated.
+  "map.hero.eyebrow": "Lisbon · Community guide",
+  "map.hero.title": "The queer <em>city guide</em>",
+  "map.hero.sub":
+    "Bars, clubs, cafés, clinics, bookshops, saunas and community spaces — mapped by people who've actually been there.",
+  "map.stats.venuesListed": "venues listed",
+  "map.stats.neighbourhoods": "neighbourhoods",
+  "map.stats.communityLabel": "Community",
+  "map.stats.maintained": "maintained",
+  "map.filterBar.typeLabel": "Type",
+  "map.filterBar.vibeLabel": "Vibe",
+  "map.filter.type.all": "All",
+  "map.filter.type.bar": "Bar",
+  "map.filter.type.club": "Club",
+  "map.filter.type.cafe": "Café",
+  "map.filter.type.clinic": "Clinic",
+  "map.filter.type.bookshop": "Bookshop",
+  "map.filter.type.sauna": "Sauna",
+  "map.filter.type.communitySpace": "Community",
+  "map.filter.type.barbershop": "Barbershop / Salon",
+  "map.filter.type.gym": "Gym / Fitness",
+  "map.filter.vibe.mixed": "mixed",
+  "map.filter.vibe.mascLeaning": "masc-leaning",
+  "map.filter.vibe.femmeLeaning": "femme-leaning",
+  "map.filter.vibe.transCentred": "trans-centred",
+  "map.filter.vibe.soberFriendly": "sober-friendly",
+  "map.sidebar.allVenues": "All venues",
+  "map.sidebar.venueCount_one": "<b>{count}</b> venue",
+  "map.sidebar.venueCount_other": "<b>{count}</b> venues",
+  "map.sidebar.clear": "Clear",
+  "map.sidebar.empty": "No venues match these filters.",
+  "map.venueCard.beenCount_one": "<b>{count}</b> person been here",
+  "map.venueCard.beenCount_other": "<b>{count}</b> people been here",
+  "map.venueCard.beenThere": "Been there",
+  "map.venueCard.markBeen": "I've been here",
+  // Bairro is a Lisbon proper noun — identical in both catalogs, only the
+  // surrounding phrase is translated.
+  "map.svg.filterByAria": "Filter the map by {bairro}",
+
+  // ── Constitution — governance/constitutional copy (`ConstitutionPage.tsx`,
+  //    `constitution.data.tsx`). Platform-authored, ships in the bundle, no
+  //    `api/` fetch. Precise and literal per the i18n brief §6 — numbers,
+  //    percentages, and clause references are kept exact; nothing
+  //    editorialised. "Associação QueerPulse", "NIPC", and "ILGA Portugal"
+  //    are proper nouns, kept identical in both catalogs.
+  //    `hero.dek3` / `hero.meta` are a deliberate content *adaptation*, not a
+  //    literal translation: the English page frames itself as "the English
+  //    translation" of a Portuguese-original document, which is a joke/frame
+  //    that only makes sense when the reader is looking at the English
+  //    version. In the pt-PT rendering that framing is nonsensical (the
+  //    reader is already reading Portuguese), so the pt-PT copy drops the
+  //    "this is the English translation" meta-reference rather than
+  //    faithfully mistranslating it — flagged in the sweep report.
+  "constitution.artNumLabel": "Article",
+  "constitution.hero.eyebrow": "Constitution · v1.4 · ratified 14 Nov 2025",
+  "constitution.hero.title":
+    "The <em>rulebook,</em> in plain Portuguese-flavoured English.",
+  "constitution.hero.dek1":
+    "The formal organising document of <b>Associação QueerPulse</b>, the not-for-profit that operates the platform. Written by the founding eight. Ratified at the first assembly. <em>Amended four times since.</em>",
+  "constitution.hero.dek2":
+    "It is intentionally short. Twelve articles, plain language, no nested sub-clauses. Anything more elaborate lives in the Code of Conduct, the bylaws, or the resolutions of the Annual Assembly.",
+  "constitution.hero.meta":
+    "<b>Registered:</b> Associação QueerPulse · NIPC 517 426 884 · Lisbon · <b>Original:</b> Portuguese (legally binding) · this is the English translation.",
+
+  "constitution.art1.toc": "I · Purpose",
+  "constitution.art1.title": "Purpose",
+  "constitution.art1.clause1":
+    "QueerPulse exists to provide <strong>professional, social, cultural and material support</strong> to LGBTQ+ people in the city of Lisbon, and (per Article X) in other cities once specific conditions are met.",
+  "constitution.art1.clause2":
+    "The organisation is a <strong>não-lucrativa associação</strong> — a not-for-profit association. It owns no equity, distributes no profits, and may only be dissolved per Article XI.",
+  "constitution.art1.clause3":
+    "Where this Constitution conflicts with the Manifesto, this document prevails. The Manifesto sets values; this sets operations.",
+
+  "constitution.art2.toc": "II · Members",
+  "constitution.art2.title": "Members",
+  "constitution.art2.clause1":
+    "A <strong>member</strong> is any individual who has been vouched for by an existing member, completed a brief check-in with the moderation team, and accepted the Code of Conduct.",
+  "constitution.art2.clause2":
+    "Members may be on any of three tiers: <em>Solidarity</em> (free), <em>Member</em> (€36/year), or <em>Sustainer</em> (€96/year). All tiers carry equal voting rights.",
+  "constitution.art2.clause3":
+    "No member's status — including age, nationality, language, identity, occupation, or visibility — affects their voting rights or treatment in moderation.",
+
+  "constitution.art3.toc": "III · Vouching",
+  "constitution.art3.title": "Vouching",
+  "constitution.art3.clause1":
+    "Each existing member may vouch for up to <strong>two</strong> new members per calendar year. Vouches attach the voucher's name to the new member's record, permanently.",
+  "constitution.art3.clause2":
+    "The invite cap may be temporarily raised by Assembly vote to a maximum of four per member, for one calendar year, in cases of identified network gaps.",
+  "constitution.art3.clause3":
+    "A member whose three most recent vouches have all been removed under Article VIII forfeits the right to vouch for twelve months.",
+
+  "constitution.art4.toc": "IV · Assembly",
+  "constitution.art4.title": "The Annual <em>Assembly</em>",
+  "constitution.art4.clause1":
+    "The Assembly convenes once per year, in November, for at least one full day. It is the highest decision-making body of the association.",
+  "constitution.art4.clause2":
+    "Every member is entitled to one vote per resolution, cast in person, online, or asynchronously up to the close of voting.",
+  "constitution.art4.clause3":
+    "Quorum is <strong>10% of active members</strong>, or 100 members, whichever is greater. Resolutions pass by simple majority unless this document or the Code of Conduct specifies otherwise.",
+  "constitution.art4.clause4":
+    "The agenda is published 30 days in advance and is open to written amendment by any 10 members until 7 days before convening.",
+  "constitution.art4.quote":
+    '"This Assembly is the floor on which everything else stands. <em>Lose it, and you have only an app.</em>"',
+
+  "constitution.art5.toc": "V · Circles",
+  "constitution.art5.title": "Rotating <em>circles</em>",
+  "constitution.art5.clause1":
+    "Operational decisions are made by <strong>rotating circles</strong>: small standing committees of 3–7 members each, with 12-month maximum terms.",
+  "constitution.art5.clause2":
+    "Active circles as of v1.4: <em>moderation, grants, finance, hosting, editorial, technical.</em> The Assembly may add or dissolve circles by simple majority.",
+  "constitution.art5.clause3":
+    "No member may serve on more than two circles simultaneously, and no circle may have more than half its members from any single calendar-year cohort.",
+
+  "constitution.art6.toc": "VI · Money",
+  "constitution.art6.title": "Money",
+  "constitution.art6.clause1":
+    "<strong>At least 90% of every euro received</strong> must be spent on community programmes, staff, and infrastructure — not on overheads. The target is 96% and has been met every year since 2024.",
+  "constitution.art6.clause2":
+    "The annual budget is approved by the Assembly. The finance circle may rebalance within categories during the year without re-approval, up to 10% per category.",
+  "constitution.art6.clause3":
+    "Annual accounts are <strong>audited by an independent third party</strong> with no financial relationship to the association, and published in full as part of the Transparency Report.",
+  "constitution.art6.clause4":
+    "The association may not enter into debt arrangements above €10,000 without explicit Assembly approval.",
+
+  "constitution.art7.toc": "VII · Speech",
+  "constitution.art7.title": "Speech & <em>moderation</em>",
+  "constitution.art7.clause1":
+    "The community is moderated according to the Code of Conduct, ratified separately and amendable by Assembly supermajority (60%).",
+  "constitution.art7.clause2":
+    "<strong>The association does not moderate criticism of itself.</strong> Posts critical of the association, its decisions, or its officers may not be removed under any clause of the Code of Conduct.",
+  "constitution.art7.clause3":
+    "Moderation decisions are appealable to a standing appeals panel composed of three members not from the deciding circle. Appeals overturn decisions in approximately 11% of cases (2025 figure).",
+
+  "constitution.art8.toc": "VIII · Removal",
+  "constitution.art8.title": "Removal",
+  "constitution.art8.clause1":
+    "Members may be removed only through the moderation ladder specified in §04 of the Code of Conduct, and only by decision of the moderation circle, ratified by one additional independent moderator.",
+  "constitution.art8.clause2":
+    "Removal is appealable <strong>once</strong>, to the appeals panel, within 14 days of effective date.",
+  "constitution.art8.clause3":
+    "A removed member's data is deleted or anonymised per the Privacy Policy within 30 days. Case records are kept for 36 months in case of legal need.",
+
+  "constitution.art9.toc": "IX · Partners",
+  "constitution.art9.title": "Partners",
+  "constitution.art9.clause1":
+    "The association may enter into <strong>operational partnerships</strong> with other organisations under terms approved by the Assembly. New operational partnerships are capped at two per year.",
+  "constitution.art9.clause2":
+    "No partnership may grant a partner organisation access to member data beyond what is operationally necessary, and only with the affected member's explicit consent.",
+  "constitution.art9.clause3":
+    "Either side of any partnership may publicly dissent from the other's positions. <em>Coalition is not consensus.</em>",
+
+  "constitution.art10.toc": "X · Expansion",
+  "constitution.art10.title": "Expansion",
+  "constitution.art10.clause1":
+    "The association may open in cities other than Lisbon only when all of these are true: (a) at least one moderator is in-country; (b) an operational local partner is signed; (c) a local legal review is complete; (d) eight to twelve founding members have committed to the soft-launch.",
+  "constitution.art10.clause2":
+    "Each new city ratifies its own local circle and operates under this Constitution, with city-specific bylaws as needed.",
+
+  "constitution.art11.toc": "XI · Dissolution",
+  "constitution.art11.title": "Dissolution",
+  "constitution.art11.clause1":
+    "The association may be dissolved only by Assembly resolution requiring a <strong>75% supermajority</strong> of all active members, not merely of those voting.",
+  "constitution.art11.clause2":
+    "On dissolution, all remaining assets must be transferred to ILGA Portugal, or to a successor LGBTQ+ organisation chosen by the dissolving Assembly. No assets may be distributed to individuals.",
+
+  "constitution.art12.toc": "XII · Amendments",
+  "constitution.art12.title": "Amendments",
+  "constitution.art12.clause1":
+    "This Constitution may be amended only by Assembly resolution requiring a 60% supermajority of votes cast.",
+  "constitution.art12.clause2":
+    "Amendments must be circulated for written comment to all members at least 30 days before the vote.",
+  "constitution.art12.clause3":
+    "Versioning is sequential (v1.0, v1.1…). The current version's full text is published at all times.",
+
+  "constitution.footer.version":
+    "<b>Constitution v1.4</b> · ratified 14 Nov 2025 · in force since 1 Jan 2026 ·",
+  "constitution.footer.downloadPdf": "Download PDF",
+  "constitution.footer.seeAssembly": "See the Assembly",
+  "constitution.footer.readCodeOfConduct": "Read the Code of Conduct",
+
+  // ── Resource Library — page/filter/card chrome. `RESOURCES` entries
+  //    (name/desc/tags — curated external orgs and QueerPulse tools) are
+  //    directory-style content, same precedent as `directoryPlaces.ts` /
+  //    the Platforms page below — left English. `LIBRARY_SUBPAGES`
+  //    label/blurb are short platform-authored teaser chrome — translated.
+  "resourceLibrary.meta.title": "Resource Library — QueerPulse",
+  "resourceLibrary.meta.description":
+    "Things that actually help — a curated library of free and sliding-scale health, legal, housing, money, identity and safety resources for queer Lisbon.",
+  "resourceLibrary.hero.eyebrow": "Resource Library",
+  "resourceLibrary.hero.title": "Things that <em>actually help.</em>",
+  "resourceLibrary.hero.sub":
+    "Community-maintained guides, organisations, contacts, and QueerPulse tools — in one searchable place.",
+  "resourceLibrary.stats.resources": "resources",
+  "resourceLibrary.stats.categories": "categories",
+  "resourceLibrary.stats.communityLabel": "Community",
+  "resourceLibrary.stats.maintained": "maintained",
+  "resourceLibrary.search.placeholder": "Search resources…",
+  "resourceLibrary.category.all": "All",
+  "resourceLibrary.category.health": "Health",
+  "resourceLibrary.category.legal": "Legal",
+  "resourceLibrary.category.housing": "Housing",
+  "resourceLibrary.category.money": "Money",
+  "resourceLibrary.category.identity": "Identity",
+  "resourceLibrary.category.safety": "Safety",
+  "resourceLibrary.category.community": "Community",
+  "resourceLibrary.results_one": "{count} result",
+  "resourceLibrary.results_other": "{count} results",
+  "resourceLibrary.empty": "No resources match — try a broader filter.",
+  "resourceLibrary.cost.free": "Free",
+  "resourceLibrary.cost.sliding": "Sliding scale",
+  "resourceLibrary.card.openGuide": "Open guide →",
+  "resourceLibrary.card.visitSite": "Visit site ↗",
+  "resourceLibrary.outro.title": "Know something <em>missing?</em>",
+  "resourceLibrary.outro.sub":
+    "Every resource here was added by a community member. If something helped you and isn't listed, tell us.",
+  "resourceLibrary.outro.cta": "Suggest a resource",
+  "resourceLibrary.subpages.eyebrow": "Learn & belong",
+  "resourceLibrary.subpages.title": "Start with the basics",
+  "resourceLibrary.subpages.queer101.label": "Queer 101",
+  "resourceLibrary.subpages.queer101.blurb":
+    "New here? Start with the basics — identities, language, and community.",
+  "resourceLibrary.subpages.glossary.label": "Glossary",
+  "resourceLibrary.subpages.glossary.blurb":
+    "Plain-language definitions for the words the community uses.",
+  "resourceLibrary.subpages.intersectionality.label": "Intersectionality",
+  "resourceLibrary.subpages.intersectionality.blurb":
+    "How overlapping identities shape our experiences — and our organising.",
+
+  // ── Platforms (the wider queer web) — page/filter chrome. `PLATFORMS`
+  //    entries (name/desc — named third-party apps/orgs) are directory-style
+  //    content, same precedent as Resource Library above — left English.
+  "platforms.hero.eyebrow": "Queer platforms",
+  "platforms.hero.title": "The wider <em>queer web.</em>",
+  "platforms.hero.sub":
+    "Apps, media, professional networks, and advocacy organisations that are genuinely useful for queer people — beyond QueerPulse itself.",
+  "platforms.filter.all": "All",
+  "platforms.filter.dating": "Dating & Social",
+  "platforms.filter.media": "News & Media",
+  "platforms.filter.professional": "Professional Networks",
+  "platforms.filter.advocacy": "Advocacy & Rights",
+  "platforms.filter.health": "Health & Wellbeing",
+  "platforms.filter.portugal": "Portugal & Lisbon",
+  "platforms.note.body":
+    "<b>A note on this list:</b> We include platforms we think are genuinely useful for queer people. This is not an endorsement of any company's practices. Always make your own informed choices about data, safety, and privacy — especially on dating and social apps.",
+  "platforms.outro.title": "Something missing? <em>Tell us.</em>",
+  "platforms.outro.sub":
+    "Know a platform, resource, or community that should be here? Suggest it and we'll add it to the directory.",
+  "platforms.outro.cta": "Suggest a platform →",
+
+  // ── Submit Partner Application — "Apply to partner" form chrome
+  //    (`SubmitPartnerApplicationPage.tsx`, `SubmitPartnerFields.tsx`,
+  //    `submitPartnerApplication.data.ts`, `useSubmitPartnerForm.ts`). All
+  //    platform-authored form/validation copy. `REGION_OPTIONS`/
+  //    `DEFAULT_REGION_LABEL` keep the canonical `Region` id ("pt"/"eu"/
+  //    "int") as the stored value; only the displayed label is translated
+  //    (i18n brief §5.1).
+  "submitPartner.hero.eyebrow": "Partners · Apply",
+  "submitPartner.hero.title": "Apply to <em>partner.</em>",
+  "submitPartner.hero.sub":
+    "QueerPulse partnerships are operational, not promotional. Tell us who you are and what you do — honestly — and we'll read every word.",
+  "submitPartner.success.title": "Application",
+  "submitPartner.success.em": "received.",
+  "submitPartner.success.closeLabel": "Back to partners →",
+  "submitPartner.success.step1":
+    "It's pending review with the partnerships team",
+  "submitPartner.success.step2":
+    "We read every application, not just the tidy ones",
+  "submitPartner.success.step3":
+    "We'll be in touch — a yes, a not-yet, or a question",
+  "submitPartner.success.body":
+    "Thank you for reaching out. Your application is in — nothing goes live until we've talked it through with you.",
+  "submitPartner.actions.sending": "Sending…",
+  "submitPartner.actions.submit": "Submit application →",
+  "submitPartner.actions.cancel": "Cancel",
+  "submitPartner.error.toast":
+    "Couldn't send your application — please try again.",
+
+  "submitPartner.fields.sectionOrg": "Your organisation",
+  "submitPartner.fields.name.label": "Organisation name",
+  "submitPartner.fields.name.placeholder": "e.g. Casa Arco",
+  "submitPartner.fields.logo.label": "Logo mark",
+  "submitPartner.fields.logo.helper":
+    "A short word or initials shown as the badge (e.g. “ILGA”, “CA”).",
+  "submitPartner.fields.logo.placeholder": "e.g. CA",
+  "submitPartner.fields.city.label": "City / base",
+  "submitPartner.fields.city.placeholder": "e.g. Porto",
+  "submitPartner.fields.region.label": "Region",
+  "submitPartner.fields.regionLabel.label": "Region label",
+  "submitPartner.fields.regionLabel.helper":
+    "Shown on the card — override the default if you like.",
+  "submitPartner.fields.regionLabel.placeholder": "e.g. Portugal",
+  "submitPartner.fields.sectionPitch": "The pitch",
+  "submitPartner.fields.eyebrow.label": "Eyebrow",
+  "submitPartner.fields.eyebrow.helper":
+    "A short kind-of-partner line, e.g. “Partner · Community drop-in”.",
+  "submitPartner.fields.eyebrow.placeholder":
+    "e.g. Partner · Advocacy organisation",
+  "submitPartner.fields.tagline.label": "One-line tagline",
+  "submitPartner.fields.tagline.helper":
+    "The single sentence that captures what you do.",
+  "submitPartner.fields.tagline.placeholder":
+    "A community kitchen that decided nobody should be cold or hungry while they wait for a safe bed.",
+  "submitPartner.fields.desc.label": "Short description",
+  "submitPartner.fields.desc.helper":
+    "One or two sentences shown on the listing card.",
+  "submitPartner.fields.desc.placeholder":
+    "What your organisation does, in plain language, and who it serves.",
+  "submitPartner.fields.tags.label": "Tags",
+  "submitPartner.fields.tags.helper":
+    "Comma-separated — shown as chips on the card.",
+  "submitPartner.fields.tags.placeholder": "Housing, Food, Drop-in",
+  "submitPartner.fields.sectionPartnering": "How you'd partner",
+  "submitPartner.fields.tier.label": "Partner tier",
+  "submitPartner.fields.tier.helper": "How you'd describe the relationship.",
+  "submitPartner.fields.tier.placeholder": "e.g. Community partner",
+  "submitPartner.fields.since.label": "Since / status",
+  "submitPartner.fields.since.helper": "A short status line for the card.",
+  "submitPartner.fields.since.placeholder": "e.g. Applying · 2026",
+  "submitPartner.fields.requiredError": "This field is required.",
+  "submitPartner.form.sinceDefault": "Applying · {year}",
+
+  "submitPartner.region.pt": "Portugal",
+  "submitPartner.region.eu": "Europe",
+  "submitPartner.region.int": "International",
+
+  "submitPartner.tips.readEvery.title": "We read every application",
+  "submitPartner.tips.readEvery.body":
+    "Partnerships here are operational, not promotional. Tell us what your organisation actually does and who it serves — not a mission statement.",
+  "submitPartner.tips.sharedValues.title": "Shared values, not brand alignment",
+  "submitPartner.tips.sharedValues.body":
+    "We prioritise organisations that centre the identities marginalised within queer spaces as well as outside them. Say where your work sits.",
+  "submitPartner.tips.whatNext.title": "What happens next",
+  "submitPartner.tips.whatNext.body":
+    "Your application arrives as pending. A member of the team reviews it, and we'll be in touch — whether it's a yes, a not-yet, or a question.",
+
+  // ── Cities (CitiesPage + Sections + LiveCards) — chrome only. Per-city
+  //    descriptions, coordinator credits, and vote counts (`cities.data.tsx`,
+  //    the Lisbon/Porto card bodies) are content — a previous agent's
+  //    deliberate call, not re-litigated here. Country-flag emoji in this
+  //    feature are the lint rule's one exemption — left as-is.
+  "cities.hero.eyebrow": "Cities · network footprint · selector",
+  "cities.hero.title": "One city at a <em>time.</em>",
+  "cities.hero.dek":
+    "QueerPulse is rooted in Lisbon. We will only open in a new city when there is <b>at least one moderator in-country</b>, a partner organisation aligned, and a clear local need. <em>That makes expansion slow on purpose.</em> Below: where we are now, where we're building, and how you can pull us toward your city.",
+  "cities.hero.browsingAs": "You're browsing as",
+  "cities.hero.changeCta": "Change",
+  "cities.hero.changeToast":
+    "Detected from IP. You can switch from any city card below.",
+
+  "cities.live.heading": "Live · <em>fully operational</em>",
+  "cities.live.meta": "Active community, moderators, partner orgs",
+
+  "cities.groundwork.heading": "In <em>groundwork</em>",
+  "cities.groundwork.meta":
+    "Local moderator identified · partner negotiations underway",
+
+  "cities.waitlist.heading": "Cities <em>members are asking for</em>",
+  "cities.waitlist.meta":
+    "Public waitlist · members can vote · 1 vote per member",
+  "cities.waitlist.intro":
+    "Votes are <em>signals to us about where the community is</em>, not promises to build. We open one city at a time. Adding your vote takes 1 click.",
+  "cities.waitlist.membersAsking": "Members asking",
+  "cities.waitlist.pctToThreshold": "{pct}% to threshold",
+  "cities.waitlist.votedCta": "You voted",
+  "cities.waitlist.voteCta": "+ Add my vote",
+  "cities.waitlist.voteToast": "Vote recorded · we read these signals monthly",
+  "cities.waitlist.footNote":
+    "Don't see your city? <a>Write to us</a> with what you'd build there.",
+
+  "cities.how.kicker": "The rule book",
+  "cities.how.title": "How we <em>actually open</em> a new city.",
+  "cities.how.intro": "Four conditions, all required. No shortcuts.",
 };

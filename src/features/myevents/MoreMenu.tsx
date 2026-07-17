@@ -1,5 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { Icons } from "./MyEventsIcons";
@@ -19,8 +21,9 @@ function buildItems(
   ev: MyEvent,
   c: ReturnType<typeof useMyEvents>,
   nav: (path: string) => void,
+  translate: TFunction,
 ): (Item | "sep")[] {
-  const t =
+  const closeAndToast =
     (msg: string, type: "success" | "info" = "info") =>
     () => {
       c.closeMore();
@@ -37,32 +40,37 @@ function buildItems(
       (ev.slug ? gatheringPath(ev.slug) : routes.gathering);
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(url).then(
-        () => c.toast("Event link copied — share it anywhere", "success"),
-        () => c.toast("Couldn’t copy the link — try again", "info"),
+        () => c.toast(translate("myevents:moreMenu.shareToast"), "success"),
+        () =>
+          c.toast(translate("myevents:moreMenu.shareCopyFailToast"), "info"),
       );
     } else {
-      c.toast("Event link copied — share it anywhere", "success");
+      c.toast(translate("myevents:moreMenu.shareToast"), "success");
     }
   };
   const items: (Item | "sep")[] = [
-    { icon: Icons.share, label: "Share this event", onClick: share },
+    {
+      icon: Icons.share,
+      label: translate("myevents:moreMenu.share"),
+      onClick: share,
+    },
   ];
   if (ev.cat === "going" || ev.cat === "saved" || ev.cat === "hosting")
     items.push({
       icon: Icons.invite,
-      label: "Invite a friend",
+      label: translate("myevents:moreMenu.inviteFriend"),
       onClick: go(routes.invite),
     });
   if (ev.cat !== "past" && ev.cat !== "hosting" && ev.cat !== "sent")
     items.push({
       icon: Icons.msg,
-      label: "Message the host",
+      label: translate("myevents:moreMenu.messageHost"),
       onClick: go(routes.messages),
     });
   if (COMMITTED[ev.cat])
     items.push({
       icon: Icons.chat,
-      label: "Open group chat",
+      label: translate("myevents:moreMenu.openGroupChat"),
       onClick: go(routes.messages),
     });
   if (ev.cat === "going" && !ev.cancelled) {
@@ -70,12 +78,12 @@ function buildItems(
       ev.maybe
         ? {
             icon: Icons.maybe,
-            label: "Change to going",
+            label: translate("myevents:moreMenu.changeToGoing"),
             onClick: () => c.setGoing(ev.id),
           }
         : {
             icon: Icons.maybe,
-            label: "Mark as maybe",
+            label: translate("myevents:moreMenu.markAsMaybe"),
             onClick: () => c.setMaybe(ev.id),
           },
     );
@@ -83,37 +91,45 @@ function buildItems(
   if (ev.ticket) {
     items.push({
       icon: Icons.ticket,
-      label: "Transfer ticket",
-      onClick: t("Choose who to transfer your ticket to…"),
+      label: translate("myevents:moreMenu.transferTicket"),
+      onClick: closeAndToast(translate("myevents:moreMenu.transferToast")),
     });
     items.push({
       icon: Icons.refund,
-      label: "Request a refund",
-      onClick: t("Refund requested — 3–5 days back to your card", "success"),
+      label: translate("myevents:moreMenu.requestRefund"),
+      onClick: closeAndToast(
+        translate("myevents:moreMenu.refundToast"),
+        "success",
+      ),
     });
     items.push({
       icon: Icons.wallet,
-      label: "Add to Apple Wallet",
-      onClick: t("Added to Apple Wallet", "success"),
+      label: translate("myevents:moreMenu.addToWallet"),
+      onClick: closeAndToast(
+        translate("myevents:moreMenu.walletToast"),
+        "success",
+      ),
     });
   }
   if (ev.cat === "past" && ev.connect)
     items.push({
       icon: Icons.connect,
-      label: "Connect with who you met",
-      onClick: t("Showing people you met here…"),
+      label: translate("myevents:moreMenu.connectWithMet"),
+      onClick: closeAndToast(
+        translate("myevents:moreMenu.connectWithMetToast"),
+      ),
     });
   if (ev.cat !== "hosting" && ev.cat !== "sent") {
     items.push("sep");
     items.push({
       icon: Icons.report,
-      label: "Report this event",
+      label: translate("myevents:moreMenu.reportEvent"),
       onClick: () => c.openReport(ev.id),
       danger: true,
     });
     items.push({
       icon: Icons.block,
-      label: "Block the host",
+      label: translate("myevents:moreMenu.blockHost"),
       onClick: () => c.openBlock(ev.id),
       danger: true,
     });
@@ -123,6 +139,7 @@ function buildItems(
 
 /** Fixed-position overflow menu for an event card. */
 export function MoreMenu() {
+  const { t } = useTranslation();
   const c = useMyEvents();
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
@@ -160,7 +177,7 @@ export function MoreMenu() {
     >
       {open &&
         ev &&
-        buildItems(ev, c, navigate).map((it, i) =>
+        buildItems(ev, c, navigate, t).map((it, i) =>
           it === "sep" ? (
             <div key={`s${i}`} className={sx("mm-sep")} />
           ) : (

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { AppShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MATRIX_ROWS } from "./notificationPreferences.data";
 import { SaveButton } from "./SaveButton";
 import {
@@ -13,6 +15,7 @@ import {
 import styles from "./NotificationPreferencesPage.module.css";
 
 export function NotificationPreferencesPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [quietEnabled, setQuietEnabled] = useState(true);
   const [matrix, setMatrix] = useState(MATRIX_ROWS.map((r) => ({ ...r })));
@@ -30,12 +33,12 @@ export function NotificationPreferencesPage() {
 
         <main className={styles.main}>
           <h1 className={styles.paneTitle}>
-            Notification <em>preferences</em>
+            <Translation
+              i18nKey="settings:notifPrefs.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.paneSub}>
-            Control exactly what QueerPulse sends you, and when. We default to
-            less — you can always turn more on.
-          </p>
+          <p className={styles.paneSub}>{t("settings:notifPrefs.sub")}</p>
 
           <DigestSection />
           <ChannelMatrix matrix={matrix} toggleMatrix={toggleMatrix} />
@@ -47,12 +50,12 @@ export function NotificationPreferencesPage() {
 
           <div className={styles.saveBar}>
             <p className={styles.saveBarNote}>
-              Changes are saved automatically.
+              {t("settings:notifPrefs.saveBar.note")}
             </p>
             <SaveButton
-              label="Save preferences"
+              label={t("settings:notifPrefs.saveBar.label")}
               onSave={() =>
-                showToast("Notification preferences saved.", "success")
+                showToast(t("settings:notifPrefs.toast.saved"), "success")
               }
             />
           </div>

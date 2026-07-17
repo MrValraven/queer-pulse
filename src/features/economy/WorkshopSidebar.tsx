@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { Workshop } from "./workshops.data";
@@ -9,6 +10,7 @@ import { WorkshopReserveModal } from "./WorkshopReserveModal";
 import styles from "./WorkshopPage.module.css";
 
 export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
+  const { t } = useTranslation();
   const [reserving, setReserving] = useState(false);
   const { showToast } = useToast();
   const filledPct = Math.round(
@@ -20,7 +22,7 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
     <aside className={styles.side}>
       <div className={styles.card}>
         <div className={styles.bookHead}>
-          <h4>Reserve a seat</h4>
+          <h4>{t("economy:workshopSidebar.reserveTitle")}</h4>
           <div className={styles.price}>
             €<em>{workshop.price.replace(/[^0-9]/g, "")}</em>
           </div>
@@ -28,7 +30,7 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
         </div>
 
         <div className={styles.row}>
-          <span>Spots filled</span>
+          <span>{t("economy:workshopSidebar.spotsFilled")}</span>
           <b>
             {workshop.spotsFilled} / {workshop.spotsTotal}
           </b>
@@ -47,11 +49,11 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
           </div>
         ))}
         <div className={styles.row}>
-          <span>Start date</span>
+          <span>{t("economy:workshopSidebar.startDate")}</span>
           <b>{workshop.startDate}</b>
         </div>
         <div className={styles.row}>
-          <span>Cancellation</span>
+          <span>{t("economy:workshopSidebar.cancellation")}</span>
           <b>{workshop.cancellation}</b>
         </div>
 
@@ -61,28 +63,34 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
             disabled={full}
             onClick={() => setReserving(true)}
           >
-            {full ? "Cohort is full" : "Reserve a spot →"}
+            {full
+              ? t("economy:workshopSidebar.cohortFull")
+              : t("economy:workshopSidebar.reserveCta")}
           </Button>
           <Button
             variant="ghost"
             onClick={() =>
               showToast(
-                `We'll pass your question to ${workshop.tutor.name.split(" ")[0]}.`,
+                t("economy:workshopSidebar.askQuestionToast", {
+                  firstName:
+                    workshop.tutor.name.split(" ")[0] ?? workshop.tutor.name,
+                }),
                 "success",
               )
             }
           >
-            <FiMail aria-hidden /> Ask a question
+            <FiMail aria-hidden /> {t("economy:workshopSidebar.askQuestion")}
           </Button>
         </div>
         <p className={styles.footNote}>
-          Solidarity rate · just say so on the form, no proof of anything. No
-          one sees which rate you picked.
+          {t("economy:workshopSidebar.footNote")}
         </p>
       </div>
 
       <div className={styles.card}>
-        <h4 className={styles.cardLabel}>Taught by</h4>
+        <h4 className={styles.cardLabel}>
+          {t("economy:workshopSidebar.taughtBy")}
+        </h4>
         <div className={styles.tutorRow}>
           <Avatar
             initials={workshop.tutor.initials}
@@ -105,7 +113,9 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
       </div>
 
       <div className={styles.card}>
-        <h4 className={styles.cardLabel}>Where</h4>
+        <h4 className={styles.cardLabel}>
+          {t("economy:workshopSidebar.where")}
+        </h4>
         <p className={styles.whereAddr}>
           <b className={styles.whereName}>{workshop.location.name}</b>
           {workshop.location.address}

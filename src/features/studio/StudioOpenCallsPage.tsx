@@ -3,28 +3,39 @@ import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS, CALLS } from "./studioOpenCalls.data";
 import { StudioOpenCallCard } from "./StudioOpenCallCard";
 import { StudioOpenCallSkeleton } from "./StudioOpenCallSkeleton";
 import s from "./funding.module.css";
 
 export function StudioOpenCallsPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
-  const [filter, setFilter] = useState("All open");
+  const [filter, setFilter] = useState(FILTERS[0]!.id);
   const loading = useSimulatedLoad();
 
   return (
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.hero}>
-          <div className={`${s.eb} ${s.ebAccent}`}>From the council</div>
+          <div className={`${s.eb} ${s.ebAccent}`}>
+            {t("studio:calls.hero.eyebrow")}
+          </div>
           <h1>
-            Open <em>calls</em> &amp; commissions.
+            <Translation
+              i18nKey="studio:calls.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>
-            Briefs the council and co-op have funded. Apply inline — attach a{" "}
-            <em>single track or release</em> from your catalogue. No cover
-            letters, no portfolios; the work speaks.
+            <Translation
+              i18nKey="studio:calls.hero.dek"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
@@ -32,17 +43,21 @@ export function StudioOpenCallsPage() {
           {FILTERS.map((f) => (
             <button
               type="button"
-              key={f}
-              className={[s.chip, filter === f && s.chipOn]
+              key={f.id}
+              className={[s.chip, filter === f.id && s.chipOn]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setFilter(f)}
+              onClick={() => setFilter(f.id)}
             >
-              {f}
+              {t(f.labelKey)}
             </button>
           ))}
           <span className={s.filterCount}>
-            <em>7</em> open · you've applied to 2
+            <Translation
+              i18nKey="studio:calls.filter.openCount"
+              components={{ em: <em /> }}
+              values={{ count: 7, applied: 2 }}
+            />
           </span>
         </div>
 
@@ -98,41 +113,48 @@ export function StudioOpenCallsPage() {
                           color: "var(--cream)",
                         }}
                       >
-                        €
                         <em
                           style={{
                             fontStyle: "normal",
                             color: "var(--accent)",
                           }}
                         >
-                          500
+                          {fmt.currency(500)}
                         </em>
                       </div>
                       <div
                         className="l"
                         style={{ fontSize: 11, color: "rgba(247,243,238,.4)" }}
                       >
-                        flat
+                        {t("studio:calls.applied.flatLabel")}
                       </div>
                     </div>
                   </div>
                   <div className={s.callFoot}>
                     <div className={s.callMeta}>
                       <span>
-                        Status · <em>in review with Sara</em>
+                        {t("studio:calls.applied.statusPrefix")}{" "}
+                        <em>in review with Sara</em>
                       </span>
                       <span className={s.dot} />
-                      <span>decision by 18 Jun</span>
+                      <span>
+                        {t("studio:calls.applied.decisionBy", {
+                          date: "18 Jun",
+                        })}
+                      </span>
                     </div>
                     <div className={s.callActions}>
                       <button
                         type="button"
                         className={s.bt}
                         onClick={() =>
-                          showToast("Application withdrawn", "info")
+                          showToast(
+                            t("studio:calls.applied.withdrawnToast"),
+                            "info",
+                          )
                         }
                       >
-                        Withdraw
+                        {t("studio:calls.applied.withdrawCta")}
                       </button>
                     </div>
                   </div>

@@ -3,6 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DATA_TYPES } from "./dataExport.data";
 import {
   DataExportForm,
@@ -24,6 +25,7 @@ const FORMAT_MAP: Record<Format, ExportFormat> = {
 };
 
 export function DataExportPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { job, start, reset } = useExportFlow();
   const [checked, setChecked] = useState<boolean[]>(
@@ -37,11 +39,12 @@ export function DataExportPage() {
   }
 
   function handleSubmit() {
-    const categories = DATA_TYPES.filter((_, i) => checked[i]).map(
-      (d) => d.label,
-    );
+    // Stable ids, never the translated label — this array is sent to the
+    // live `POST /account/export` endpoint as well as matched locally in
+    // `buildDemoArchive`; it must not change with the active language.
+    const categories = DATA_TYPES.filter((_, i) => checked[i]).map((d) => d.id);
     if (categories.length === 0) {
-      showToast("Select at least one data type.", "error");
+      showToast(t("settings:dataExport.toast.selectType"), "error");
       return;
     }
     void start({ categories, format: FORMAT_MAP[format] });
@@ -59,17 +62,15 @@ export function DataExportPage() {
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.eye}>Your data · GDPR Art. 20</div>
+          <div className={styles.eye}>
+            {t("settings:dataExport.hero.eyebrow")}
+          </div>
           <h1 className={styles.heading}>
-            Your data.
+            {t("settings:dataExport.hero.titleLine1")}
             <br />
-            <em>Yours to take.</em>
+            <em>{t("settings:dataExport.hero.titleLine2")}</em>
           </h1>
-          <p className={styles.sub}>
-            Under GDPR, you have the right to receive a copy of all personal
-            data we hold about you, in a machine-readable format. This page is
-            how you request it. No forms. No waiting rooms. Just your data.
-          </p>
+          <p className={styles.sub}>{t("settings:dataExport.hero.sub")}</p>
         </div>
       </header>
 
@@ -101,15 +102,15 @@ export function DataExportPage() {
       <Outro
         title={
           <>
-            Questions about
+            {t("settings:dataExport.outro.titleLine1")}
             <br />
-            <em>your data?</em>
+            <em>{t("settings:dataExport.outro.titleLine2")}</em>
           </>
         }
-        sub="Write to our data team. We respond to all requests within 5 working days."
+        sub={t("settings:dataExport.outro.sub")}
       >
         <Button variant="primary" size="lg" to={routes.contact}>
-          Contact us
+          {t("settings:dataExport.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

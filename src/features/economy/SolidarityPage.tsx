@@ -1,30 +1,28 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HOW } from "./solidarity.data";
 import { SolidarityDirectory } from "./SolidarityDirectory";
 import styles from "./SolidarityPage.module.css";
 
 export function SolidarityPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.eye}>Community care</div>
-          <h1 className={styles.title}>
-            Pay what
-            <br />
-            <em>you can.</em>
-          </h1>
-          <p className={styles.sub}>
-            Professionals from the QueerPulse community who offer sliding-scale
-            fees — because access to good care shouldn't depend on what you
-            earn.
-          </p>
-          <div className={styles.note}>
-            All practitioners have been verified by at least two community
-            members.
+          <div className={styles.eye}>
+            {t("economy:solidarity.hero.eyebrow")}
           </div>
+          <h1 className={styles.title}>
+            {t("economy:solidarity.hero.titleLine1")}
+            <br />
+            <em>{t("economy:solidarity.hero.titleEm")}</em>
+          </h1>
+          <p className={styles.sub}>{t("economy:solidarity.hero.sub")}</p>
+          <div className={styles.note}>{t("economy:solidarity.hero.note")}</div>
         </div>
       </header>
 
@@ -38,8 +36,8 @@ export function SolidarityPage() {
                 delay={Math.min(i, 8) * 80}
               >
                 <div className={styles.howN}>{h.n}</div>
-                <div className={styles.howTitle}>{h.title}</div>
-                <div className={styles.howBody}>{h.body}</div>
+                <div className={styles.howTitle}>{t(h.titleKey)}</div>
+                <div className={styles.howBody}>{t(h.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -50,14 +48,15 @@ export function SolidarityPage() {
 
       <Outro
         title={
-          <>
-            Care is a <em>collective act.</em>
-          </>
+          <Translation
+            i18nKey="economy:solidarity.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse connects the community to professionals who believe in access as much as you do."
+        sub={t("economy:solidarity.outro.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Join the network
+          {t("economy:solidarity.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

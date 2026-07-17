@@ -6,6 +6,8 @@ import { usePrintDocument } from "./tools/usePrintDocument";
 import { useIssuer } from "./tools/useIssuer";
 import { SlidingScaleForm } from "./SlidingScaleForm";
 import { SlidingScalePreview } from "./SlidingScalePreview";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DEFAULT_SCALE, type SlidingScale } from "./slidingScale.data";
 
 /**
@@ -14,6 +16,7 @@ import { DEFAULT_SCALE, type SlidingScale } from "./slidingScale.data";
  * printable card via the browser's print-to-PDF.
  */
 export function SlidingScalePage() {
+  const { t } = useTranslation();
   const [scale, setScale] = useState<SlidingScale>(DEFAULT_SCALE);
   const [issuer, updateIssuer] = useIssuer();
   const print = usePrintDocument();
@@ -28,19 +31,20 @@ export function SlidingScalePage() {
       type="button"
       onClick={() => print(`sliding-scale-${scale.service || "card"}`)}
     >
-      <FiDownload aria-hidden /> Download PDF
+      <FiDownload aria-hidden /> {t("economy:toolPage.downloadPdf")}
     </Button>
   );
 
   return (
     <ToolPage
-      eyebrow="Community"
+      eyebrow={t("economy:toolPage.eyebrowCommunity")}
       title={
-        <>
-          Price with <em>solidarity.</em>
-        </>
+        <Translation
+          i18nKey="economy:slidingScale.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Publish a sliding scale so people pay what fits their means — and you still get paid fairly. Export a card to share."
+      sub={t("economy:slidingScale.sub")}
       form={
         <SlidingScaleForm
           scale={scale}

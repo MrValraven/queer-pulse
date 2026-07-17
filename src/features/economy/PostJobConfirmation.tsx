@@ -2,6 +2,8 @@ import { FiCheck, FiEye, FiShare2, FiUsers } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
 import styles from "./PostJobPage.module.css";
@@ -13,6 +15,7 @@ export function PostJobConfirmation({
   job: Job;
   onPostAnother: () => void;
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -27,22 +30,23 @@ export function PostJobConfirmation({
         {job.org}
       </div>
       <h1 className={styles.confirmTitle}>
-        “{job.title}” is <em>live</em>
+        <Translation
+          i18nKey="economy:postJob.confirm.title"
+          values={{ title: job.title }}
+          components={{ em: <em /> }}
+        />
       </h1>
-      <p className={styles.confirmSub}>
-        Members can see it now. We&apos;ll notify you the moment someone
-        responds, and nudge you before it expires in 60 days.
-      </p>
+      <p className={styles.confirmSub}>{t("economy:postJob.confirm.sub")}</p>
       <div className={styles.confirmActions}>
         <Button
           variant="primary"
           size="lg"
           onClick={() => navigate(`${routes.jobs}/${job.slug}`)}
         >
-          View listing
+          {t("economy:postJob.confirm.viewListing")}
         </Button>
         <Button variant="ghost" size="lg" onClick={onPostAnother}>
-          Post another
+          {t("economy:postJob.confirm.postAnother")}
         </Button>
       </div>
 
@@ -52,23 +56,31 @@ export function PostJobConfirmation({
             <span className={styles.cpanelIc} aria-hidden>
               <FiEye size={15} />
             </span>
-            <span className={styles.cpanelTitle}>Performance</span>
+            <span className={styles.cpanelTitle}>
+              {t("economy:postJob.confirm.performance.title")}
+            </span>
           </div>
           <div className={styles.cpanelBody}>
-            Track views, saves, and responses over the life of your listing.
+            {t("economy:postJob.confirm.performance.body")}
           </div>
           <div className={styles.cstatRow}>
             <div>
               <div className={styles.cstatN}>0</div>
-              <div className={styles.cstatL}>Views</div>
+              <div className={styles.cstatL}>
+                {t("economy:postJob.confirm.performance.views")}
+              </div>
             </div>
             <div>
               <div className={styles.cstatN}>0</div>
-              <div className={styles.cstatL}>Saves</div>
+              <div className={styles.cstatL}>
+                {t("economy:postJob.confirm.performance.saves")}
+              </div>
             </div>
             <div>
               <div className={styles.cstatN}>0</div>
-              <div className={styles.cstatL}>Replies</div>
+              <div className={styles.cstatL}>
+                {t("economy:postJob.confirm.performance.replies")}
+              </div>
             </div>
           </div>
         </div>
@@ -78,11 +90,12 @@ export function PostJobConfirmation({
             <span className={styles.cpanelIc} aria-hidden>
               <FiUsers size={15} />
             </span>
-            <span className={styles.cpanelTitle}>Responses</span>
+            <span className={styles.cpanelTitle}>
+              {t("economy:postJob.confirm.responses.title")}
+            </span>
           </div>
           <div className={styles.cpanelBody}>
-            Replies land in one place — review, message, or mark as filled from
-            your listing manager.
+            {t("economy:postJob.confirm.responses.body")}
           </div>
           <div style={{ marginTop: 14 }}>
             <Button
@@ -90,7 +103,7 @@ export function PostJobConfirmation({
               size="md"
               onClick={() => navigate(routes.applicationStatus)}
             >
-              Open listing manager
+              {t("economy:postJob.confirm.responses.openManager")}
             </Button>
           </div>
         </div>
@@ -100,25 +113,37 @@ export function PostJobConfirmation({
             <span className={styles.cpanelIc} aria-hidden>
               <FiShare2 size={15} />
             </span>
-            <span className={styles.cpanelTitle}>Share it</span>
+            <span className={styles.cpanelTitle}>
+              {t("economy:postJob.confirm.share.title")}
+            </span>
           </div>
           <div className={styles.cpanelBody}>
-            Boost reach inside the community.
+            {t("economy:postJob.confirm.share.body")}
           </div>
           <div className={styles.shareRow}>
             <button
               type="button"
               className={styles.shareBtn}
-              onClick={() => showToast("Shared to your feed", "success")}
+              onClick={() =>
+                showToast(
+                  t("economy:postJob.confirm.share.toastFeed"),
+                  "success",
+                )
+              }
             >
-              Post to Feed
+              {t("economy:postJob.confirm.share.postToFeed")}
             </button>
             <button
               type="button"
               className={styles.shareBtn}
-              onClick={() => showToast("Link copied", "success")}
+              onClick={() =>
+                showToast(
+                  t("economy:postJob.confirm.share.toastLink"),
+                  "success",
+                )
+              }
             >
-              Copy link
+              {t("economy:postJob.confirm.share.copyLink")}
             </button>
           </div>
         </div>
@@ -128,12 +153,12 @@ export function PostJobConfirmation({
             <span className={styles.cpanelIc} aria-hidden>
               <FiCheck size={15} />
             </span>
-            <span className={styles.cpanelTitle}>What&apos;s next</span>
+            <span className={styles.cpanelTitle}>
+              {t("economy:postJob.confirm.whatsNext.title")}
+            </span>
           </div>
           <div className={styles.cpanelBody}>
-            Your role now shows on the board and on your company profile. New
-            listings carry a “not yet reviewed” note until the community vets
-            them.
+            {t("economy:postJob.confirm.whatsNext.body")}
           </div>
         </div>
       </div>

@@ -1,68 +1,55 @@
 import type { ReactNode } from "react";
 
+/**
+ * i18n note: the short-version table, side-nav/section labels, and contract
+ * card below are platform-authored chrome and are translated via Pattern B
+ * builders (`buildShortVersion`/`buildSectionMeta`/`buildContractPoints`).
+ * The FAQ question/answer pairs and the contact block's own title/body in
+ * `sections`/`contact` below quote precise contract clauses — per the i18n
+ * sweep brief's "stop and flag" rule for legal copy, they are deliberately
+ * left in English rather than risk a mistranslated contractual term.
+ */
 export interface ShortRow {
-  k: string;
-  v: ReactNode;
+  labelKey: string;
+  valueKey: string;
 }
 
-export const shortVersion: ShortRow[] = [
+/** Pattern A — labels/values are catalog keys; component resolves via <Translation>. */
+export const shortVersionRows: ShortRow[] = [
   {
-    k: "Revenue split",
-    v: (
-      <>
-        <em>80</em>% to you
-      </>
-    ),
+    labelKey: "cinema:rights.shortVersion.revenueSplit.label",
+    valueKey: "cinema:rights.shortVersion.revenueSplit.value",
   },
   {
-    k: "Tips",
-    v: (
-      <>
-        <em>100</em>% to you
-      </>
-    ),
+    labelKey: "cinema:rights.shortVersion.tips.label",
+    valueKey: "cinema:rights.shortVersion.tips.value",
   },
   {
-    k: "Contract type",
-    v: (
-      <>
-        Non-<em>exclusive</em>
-      </>
-    ),
+    labelKey: "cinema:rights.shortVersion.contractType.label",
+    valueKey: "cinema:rights.shortVersion.contractType.value",
   },
   {
-    k: "Territory",
-    v: (
-      <>
-        You <em>choose</em>
-      </>
-    ),
+    labelKey: "cinema:rights.shortVersion.territory.label",
+    valueKey: "cinema:rights.shortVersion.territory.value",
   },
   {
-    k: "Exit notice",
-    v: (
-      <>
-        <em>30</em> days
-      </>
-    ),
+    labelKey: "cinema:rights.shortVersion.exitNotice.label",
+    valueKey: "cinema:rights.shortVersion.exitNotice.value",
   },
   {
-    k: "Your rights retained",
-    v: (
-      <>
-        <em>All</em>
-      </>
-    ),
+    labelKey: "cinema:rights.shortVersion.rightsRetained.label",
+    valueKey: "cinema:rights.shortVersion.rightsRetained.value",
   },
 ];
 
-export const contractPoints: string[] = [
-  "We pay 80% of every transaction to you",
-  "100% of tips goes to you, no fees skimmed",
-  "Non-exclusive — show it anywhere else too",
-  "You choose which territories we serve",
-  "We never alter your film without written consent",
-  "You can withdraw with 30 days' written notice",
+/** Pattern A — sole consumer resolves each key via `t()`. */
+export const contractPointKeys: string[] = [
+  "cinema:rights.contractCard.point.pay",
+  "cinema:rights.contractCard.point.tips",
+  "cinema:rights.contractCard.point.nonExclusive",
+  "cinema:rights.contractCard.point.territory",
+  "cinema:rights.contractCard.point.consent",
+  "cinema:rights.contractCard.point.withdraw",
 ];
 
 export interface FaqItem {
@@ -72,20 +59,18 @@ export interface FaqItem {
 
 export interface RightsSection {
   id: string;
-  label: string;
-  title: ReactNode;
+  /** Catalog key for the short side-nav label (e.g. "The contract"). */
+  labelKey: string;
+  /** Catalog key for the section's <em>-emphasis heading, via <Translation>. */
+  titleKey: string;
   items: FaqItem[];
 }
 
 export const sections: RightsSection[] = [
   {
     id: "contract",
-    label: "The contract",
-    title: (
-      <>
-        The <em>contract</em>
-      </>
-    ),
+    labelKey: "cinema:rights.section.contract.label",
+    titleKey: "cinema:rights.section.contract.title",
     items: [
       {
         q: "Is the contract really non-exclusive?",
@@ -146,12 +131,8 @@ export const sections: RightsSection[] = [
   },
   {
     id: "revenue",
-    label: "Revenue & payment",
-    title: (
-      <>
-        Revenue <em>&amp; payment</em>
-      </>
-    ),
+    labelKey: "cinema:rights.section.revenue.label",
+    titleKey: "cinema:rights.section.revenue.title",
     items: [
       {
         q: "When do I get paid?",
@@ -205,12 +186,8 @@ export const sections: RightsSection[] = [
   },
   {
     id: "territory",
-    label: "Territory & exclusivity",
-    title: (
-      <>
-        Territory <em>&amp; exclusivity</em>
-      </>
-    ),
+    labelKey: "cinema:rights.section.territory.label",
+    titleKey: "cinema:rights.section.territory.title",
     items: [
       {
         q: "Can I restrict which countries my film is available in?",
@@ -240,12 +217,8 @@ export const sections: RightsSection[] = [
   },
   {
     id: "content",
-    label: "Your content",
-    title: (
-      <>
-        Your <em>content</em>
-      </>
-    ),
+    labelKey: "cinema:rights.section.content.label",
+    titleKey: "cinema:rights.section.content.title",
     items: [
       {
         q: "Can the co-op edit or re-cut my film?",
@@ -303,12 +276,8 @@ export const sections: RightsSection[] = [
   },
   {
     id: "exit",
-    label: "Termination & exit",
-    title: (
-      <>
-        Termination <em>&amp; exit</em>
-      </>
-    ),
+    labelKey: "cinema:rights.section.exit.label",
+    titleKey: "cinema:rights.section.exit.title",
     items: [
       {
         q: "How do I withdraw my film?",
@@ -359,12 +328,8 @@ export const sections: RightsSection[] = [
   },
   {
     id: "access",
-    label: "Accessibility",
-    title: (
-      <>
-        <em>Accessibility</em>
-      </>
-    ),
+    labelKey: "cinema:rights.section.access.label",
+    titleKey: "cinema:rights.section.access.title",
     items: [
       {
         q: "Do I have to pay for captions?",
@@ -419,7 +384,8 @@ export const sections: RightsSection[] = [
 
 export const contact = {
   id: "contact",
-  label: "Contact",
+  /** Reuses the already-translated "Contact" heading from the curator aside. */
+  labelKey: "cinema:curator.aside.contactHeading",
   title: (
     <>
       Have a question <em>not answered here</em>?
@@ -434,7 +400,7 @@ export const contact = {
   ),
 };
 
-export const navItems: { id: string; label: string }[] = [
-  ...sections.map((s) => ({ id: s.id, label: s.label })),
-  { id: contact.id, label: contact.label },
+export const navItems: { id: string; labelKey: string }[] = [
+  ...sections.map((s) => ({ id: s.id, labelKey: s.labelKey })),
+  { id: contact.id, labelKey: contact.labelKey },
 ];

@@ -20,10 +20,14 @@ export const makeEntryId = (): string =>
 /** Activity types we let the planner model — keyed to SIMPLIFIED_COEFFICIENTS. */
 export type Activity = "services" | "otherServices" | "goods";
 
-export const ACTIVITY_OPTIONS: { value: Activity; label: string }[] = [
-  { value: "services", label: "Services (liberal professions, art. 151.º)" },
-  { value: "otherServices", label: "Other services (not in the 0.75 set)" },
-  { value: "goods", label: "Sale of goods / hospitality" },
+/** i18n Pattern A — labelKey resolved via t() by SetAsideForm. */
+export const ACTIVITY_OPTIONS: { value: Activity; labelKey: string }[] = [
+  { value: "services", labelKey: "economy:setAside.activityOption.services" },
+  {
+    value: "otherServices",
+    labelKey: "economy:setAside.activityOption.otherServices",
+  },
+  { value: "goods", labelKey: "economy:setAside.activityOption.goods" },
 ];
 
 /** Coefficient lookup, narrowed to the activities this tool exposes. */

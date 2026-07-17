@@ -5,6 +5,8 @@ import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
 import {
@@ -26,6 +28,7 @@ const COLLECTION_ITEM = {
 };
 
 export function StudioCollectionPage() {
+  const { t } = useTranslation();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
   const saved = isSaved(COLLECTION_ITEM.id);
@@ -54,15 +57,15 @@ export function StudioCollectionPage() {
             <em>{COLLECTION.em}</em>
           </h1>
           <div className={s.collMeta}>
-            <strong>{COLLECTION.count}</strong> · {COLLECTION.hours} · 100% paid
-            to artists on every listen
+            <strong>{COLLECTION.count}</strong> · {COLLECTION.hours} · 100%{" "}
+            {t("studio:collection.page.allPlaysPaidNote")}
           </div>
           <div className={s.dek}>{COLLECTION.blurb}</div>
           <div className={s.collActions}>
             <button
               type="button"
               className={ss.playBig}
-              aria-label="Play collection"
+              aria-label={t("studio:collection.page.playAria")}
             >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
@@ -74,27 +77,29 @@ export function StudioCollectionPage() {
                 const now = toggleSave(COLLECTION_ITEM);
                 showToast(
                   now
-                    ? "Collection added to your library"
-                    : "Removed from your library",
+                    ? t("studio:room.hero.addedToast")
+                    : t("studio:room.hero.removedToast"),
                   now ? "success" : "info",
                 );
               }}
             >
               {saved ? (
                 <>
-                  <FiCheck /> In library
+                  <FiCheck /> {t("studio:room.hero.inLibrary")}
                 </>
               ) : (
                 <>
-                  <FiPlus /> Library
+                  <FiPlus /> {t("studio:room.hero.addLibrary")}
                 </>
               )}
             </button>
             <button
               type="button"
-              onClick={() => showToast("Shuffling the collection", "info")}
+              onClick={() =>
+                showToast(t("studio:collection.page.shufflingToast"), "info")
+              }
             >
-              Shuffle
+              {t("studio:collection.page.shuffleCta")}
             </button>
           </div>
         </div>
@@ -103,10 +108,13 @@ export function StudioCollectionPage() {
       <section className={ss.row}>
         <div className={ss.rowH}>
           <h2>
-            In this <em>collection</em>
+            <Translation
+              i18nKey="studio:collection.page.inThisCollectionHeading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <Link to={routes.studioSearch} className={ss.all}>
-            Find more →
+            {t("studio:collection.page.findMoreCta")} →
           </Link>
         </div>
         {loading ? (
@@ -147,7 +155,10 @@ export function StudioCollectionPage() {
       <section className={ss.row}>
         <div className={ss.rowH}>
           <h2>
-            Related <em>collections</em>
+            <Translation
+              i18nKey="studio:collection.page.relatedHeading"
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         {loading ? (

@@ -2,12 +2,17 @@ import type { ReactNode } from "react";
 
 export interface TriageKpi {
   v: ReactNode;
-  l: string;
+  labelKey: string;
   jade?: boolean;
 }
 
+// `id` is the stable filter value (used in switch/filter logic and stored in
+// component state) — never translate it directly; `labelKey`/`queueKey`
+// resolve via t().
 export interface TriageTab {
-  label: string;
+  id: string;
+  labelKey: string;
+  queueKey: string;
   ct: string;
   warn?: boolean;
 }
@@ -32,7 +37,7 @@ export const KPIS: TriageKpi[] = [
         <em>47</em>
       </>
     ),
-    l: "new this week",
+    labelKey: "studio:triage.kpi.newThisWeek",
   },
   {
     v: (
@@ -40,7 +45,7 @@ export const KPIS: TriageKpi[] = [
         <em>9</em>
       </>
     ),
-    l: "you claimed",
+    labelKey: "studio:triage.kpi.youClaimed",
   },
   {
     v: (
@@ -48,7 +53,7 @@ export const KPIS: TriageKpi[] = [
         <em>9.4</em>d
       </>
     ),
-    l: "median reply",
+    labelKey: "studio:triage.kpi.medianReply",
     jade: true,
   },
   {
@@ -57,16 +62,42 @@ export const KPIS: TriageKpi[] = [
         <em>3</em>
       </>
     ),
-    l: "at deadline",
+    labelKey: "studio:triage.kpi.atDeadline",
   },
 ];
 
 export const TABS: TriageTab[] = [
-  { label: "New", ct: "47" },
-  { label: "Yours", ct: "9" },
-  { label: "At deadline", ct: "3", warn: true },
-  { label: "Shortlisted", ct: "14" },
-  { label: "Answered", ct: "128" },
+  {
+    id: "new",
+    labelKey: "studio:triage.tabs.new.label",
+    queueKey: "studio:triage.tabs.new.queue",
+    ct: "47",
+  },
+  {
+    id: "yours",
+    labelKey: "studio:triage.tabs.yours.label",
+    queueKey: "studio:triage.tabs.yours.queue",
+    ct: "9",
+  },
+  {
+    id: "atDeadline",
+    labelKey: "studio:triage.tabs.atDeadline.label",
+    queueKey: "studio:triage.tabs.atDeadline.queue",
+    ct: "3",
+    warn: true,
+  },
+  {
+    id: "shortlisted",
+    labelKey: "studio:triage.tabs.shortlisted.label",
+    queueKey: "studio:triage.tabs.shortlisted.queue",
+    ct: "14",
+  },
+  {
+    id: "answered",
+    labelKey: "studio:triage.tabs.answered.label",
+    queueKey: "studio:triage.tabs.answered.queue",
+    ct: "128",
+  },
 ];
 
 export const SUBS: Sub[] = [
@@ -179,17 +210,19 @@ export const SUBS: Sub[] = [
   },
 ];
 
+// First element of each tuple is a catalog key (a stable, generic file-field
+// label reused across any submission) — not a raw display string.
 export const FILE: [string, ReactNode][] = [
-  ["Format", <>FLAC · 24 bit / 48 kHz</>],
+  ["studio:triage.detail.file.format", <>FLAC · 24 bit / 48 kHz</>],
   [
-    "Loudness",
+    "studio:triage.detail.file.loudness",
     <>
       <em>−14.1 LUFS</em> · within bounds
     </>,
   ],
-  ["Duration", <>4:40</>],
-  ["Lyrics", <>PT · EN translation requested</>],
-  ["Splits", <>100% Renato V. · no collabs</>],
+  ["studio:triage.detail.file.duration", <>4:40</>],
+  ["studio:triage.detail.file.lyrics", <>PT · EN translation requested</>],
+  ["studio:triage.detail.file.splits", <>100% Renato V. · no collabs</>],
 ];
 
 export const WF = [

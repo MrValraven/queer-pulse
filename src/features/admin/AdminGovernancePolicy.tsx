@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { FiCheck, FiInfo } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminChip } from "./ui";
 import {
   CARE_VERSIONS,
-  PRINCIPLES,
+  PRINCIPLE_KEYS,
   type CareVersion,
 } from "./adminGovernance.data";
 import { AdminGovernanceDiffModal } from "./AdminGovernanceDiffModal";
@@ -30,14 +32,18 @@ export function AdminGovernancePolicy() {
 }
 
 function VersionTimeline({ onSeeDiff }: { onSeeDiff: () => void }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.ledgerCard}>
       <div className={styles.cardHead}>
         <h2 className={styles.cardTitle}>
-          Code of Care <em>versions</em>
+          <Translation
+            i18nKey="admin:governance.policy.versionsTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.cardSub}>
-          Every change to how we keep each other safe, dated and open.
+          {t("admin:governance.policy.versionsSub")}
         </p>
       </div>
       <ol className={styles.timeline}>
@@ -56,6 +62,7 @@ function TimelineItem({
   v: CareVersion;
   onSeeDiff: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <li
       className={[styles.tlItem, v.current && styles.tlItemOn]
@@ -71,6 +78,8 @@ function TimelineItem({
       <div className={styles.tlBody}>
         <div className={styles.tlHead}>
           <span className={styles.tlVersion}>{v.version}</span>
+          {/* v.badge/date/note: versioned policy-changelog content, mirrors
+              API-fetched history in live mode — left in English per scope rule. */}
           {v.badge && <AdminChip tone={v.badgeTone}>{v.badge}</AdminChip>}
           <span className={styles.tlDate}>{v.date}</span>
         </div>
@@ -81,7 +90,7 @@ function TimelineItem({
             className={styles.tlDiffLink}
             onClick={onSeeDiff}
           >
-            See what changed →
+            {t("admin:governance.policy.seeDiffCta")} →
           </button>
         )}
       </div>
@@ -90,20 +99,24 @@ function TimelineItem({
 }
 
 function PrinciplesCard() {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <div className={styles.cardHead}>
         <h2 className={styles.cardTitle}>
-          Our <em>principles</em>
+          <Translation
+            i18nKey="admin:governance.policy.principlesTitle"
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
       <ul className={styles.principles}>
-        {PRINCIPLES.map((p) => (
-          <li key={p} className={styles.principle}>
+        {PRINCIPLE_KEYS.map((key) => (
+          <li key={key} className={styles.principle}>
             <span className={styles.principleIco} aria-hidden>
               <FiCheck />
             </span>
-            {p}
+            {t(`admin:${key}`)}
           </li>
         ))}
       </ul>
@@ -112,13 +125,12 @@ function PrinciplesCard() {
 }
 
 function TransparencyNote() {
+  const { t } = useTranslation();
   return (
     <div className={styles.transpCard}>
       <FiInfo className={styles.transpIco} aria-hidden />
       <p className={styles.transpText}>
-        Policy changes are proposed in the open and ratified at the community
-        assembly. Anyone can read the full edit history &mdash; nothing here is
-        decided behind closed doors.
+        {t("admin:governance.policy.transparencyNote")}
       </p>
     </div>
   );

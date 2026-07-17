@@ -7,19 +7,13 @@ import {
   Sending,
   useSubmitFlow,
 } from "../economy/ModalKit";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import modal from "../economy/ApplicationModals.module.css";
 import styles from "./DonateModal.module.css";
 
 const FEE_RATE = 0.03;
-
-/** Pull the numeric value out of a "€15" style label. */
-function parseAmount(label: string) {
-  return Number(label.replace(/[^0-9.]/g, "")) || 0;
-}
-
-function money(n: number) {
-  return `€${n % 1 === 0 ? n : n.toFixed(2)}`;
-}
 
 function formatCard(raw: string) {
   return raw
@@ -41,10 +35,12 @@ export function DonateModal({
   monthly,
   onClose,
 }: {
-  amount: string;
+  amount: number;
   monthly: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { submit, sending, done } = useSubmitFlow();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,10 +49,8 @@ export function DonateModal({
   const [cvc, setCvc] = useState("");
   const [coverFee, setCoverFee] = useState(true);
 
-  const base = parseAmount(amount);
-  const fee = coverFee ? Math.round(base * FEE_RATE * 100) / 100 : 0;
-  const total = base + fee;
-  const cadence = monthly ? " / month" : "";
+  const fee = coverFee ? Math.round(amount * FEE_RATE * 100) / 100 : 0;
+  const total = amount + fee;
 
   const ready =
     name.trim().length > 1 &&
@@ -65,8 +59,8 @@ export function DonateModal({
     expiry.replace(/\D/g, "").length === 4 &&
     cvc.length >= 3;
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     if (!ready || sending) return;
     submit(undefined, 1100);
   }
@@ -75,50 +69,71 @@ export function DonateModal({
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="You're in."
-          em={monthly ? "See you next month." : "Thank you."}
+          title={t("marketing:donateModal.success.title")}
+          em={t(
+            monthly
+              ? "marketing:donateModal.success.emMonthly"
+              : "marketing:donateModal.success.emOneOff",
+          )}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("marketing:donateModal.success.closeLabel")}
         >
-          Your {money(total)}
-          {cadence} goes straight to mutual aid, gatherings, and paying queer
-          creatives fairly.{" "}
-          {monthly
-            ? "Cancel anytime from your account — no questions asked."
-            : "We'll email your receipt shortly."}
+          {t(
+            monthly
+              ? "marketing:donateModal.success.bodyMonthly"
+              : "marketing:donateModal.success.bodyOneOff",
+            { amount: fmt.currency(total) },
+          )}
         </SuccessPanel>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div className={modal.eyebrow}>Support QueerPulse</div>
+          <div className={modal.eyebrow}>
+            {t("marketing:donate.hero.eyebrow")}
+          </div>
           <h2 className={modal.title}>
-            Confirm your <em>gift.</em>
+            <Translation
+              i18nKey="marketing:donateModal.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={modal.sub}>
-            No ads, no investors — just members keeping this alive.
-          </p>
+          <p className={modal.sub}>{t("marketing:donateModal.sub")}</p>
 
           <div className={modal.panel}>
             <div className={modal.rows}>
               <div className={modal.row}>
                 <span className={modal.rowK}>
-                  {monthly ? "Monthly gift" : "One-off gift"}
+                  {t(
+                    monthly
+                      ? "marketing:donateModal.row.monthlyGift"
+                      : "marketing:donateModal.row.oneOffGift",
+                  )}
                 </span>
                 <span className={modal.rowV}>
-                  {money(base)}
-                  {cadence}
+                  {monthly
+                    ? t("marketing:donateModal.amount.monthly", {
+                        amount: fmt.currency(amount),
+                      })
+                    : fmt.currency(amount)}
                 </span>
               </div>
               {coverFee && (
                 <div className={modal.row}>
-                  <span className={modal.rowK}>Processing fee covered</span>
-                  <span className={modal.rowV}>{money(fee)}</span>
+                  <span className={modal.rowK}>
+                    {t("marketing:donateModal.row.feeCovered")}
+                  </span>
+                  <span className={modal.rowV}>{fmt.currency(fee)}</span>
                 </div>
               )}
               <div className={modal.row}>
-                <span className={modal.rowK}>Charged today</span>
+                <span className={modal.rowK}>
+                  {t("marketing:donateModal.row.chargedToday")}
+                </span>
                 <span className={modal.rowV}>
-                  {money(total)}
-                  {cadence}
+                  {monthly
+                    ? t("marketing:donateModal.amount.monthly", {
+                        amount: fmt.currency(total),
+                      })
+                    : fmt.currency(total)}
                 </span>
               </div>
             </div>
@@ -135,26 +150,34 @@ export function DonateModal({
             </span>
             <span className={modal.checkText}>
               <span className={modal.checkLabel}>
-                Cover the {Math.round(FEE_RATE * 100)}% processing fee
+                {t("marketing:donateModal.checkLabel", {
+                  pct: Math.round(FEE_RATE * 100),
+                })}
               </span>
               <span className={modal.checkHint}>
-                So 100% of your {money(base)} reaches the community.
+                {t("marketing:donateModal.checkHint", {
+                  amount: fmt.currency(amount),
+                })}
               </span>
             </span>
           </button>
 
           <div className={modal.field}>
-            <label htmlFor="dn-name">Name on card</label>
+            <label htmlFor="dn-name">
+              {t("marketing:donateModal.field.nameOnCard")}
+            </label>
             <input
               id="dn-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Alex Rivera"
+              placeholder={t("marketing:donateModal.field.namePlaceholder")}
               autoComplete="cc-name"
             />
           </div>
           <div className={modal.field}>
-            <label htmlFor="dn-email">Email for receipt</label>
+            <label htmlFor="dn-email">
+              {t("marketing:donateModal.field.emailReceipt")}
+            </label>
             <input
               id="dn-email"
               type="email"
@@ -165,7 +188,9 @@ export function DonateModal({
             />
           </div>
           <div className={modal.field}>
-            <label htmlFor="dn-card">Card number</label>
+            <label htmlFor="dn-card">
+              {t("marketing:donateModal.field.cardNumber")}
+            </label>
             <input
               id="dn-card"
               inputMode="numeric"
@@ -177,7 +202,9 @@ export function DonateModal({
           </div>
           <div className={modal.fieldRow}>
             <div className={modal.field}>
-              <label htmlFor="dn-exp">Expiry</label>
+              <label htmlFor="dn-exp">
+                {t("marketing:donateModal.field.expiry")}
+              </label>
               <input
                 id="dn-exp"
                 value={expiry}
@@ -187,7 +214,9 @@ export function DonateModal({
               />
             </div>
             <div className={modal.field}>
-              <label htmlFor="dn-cvc">CVC</label>
+              <label htmlFor="dn-cvc">
+                {t("marketing:donateModal.field.cvc")}
+              </label>
               <input
                 id="dn-cvc"
                 inputMode="numeric"
@@ -209,17 +238,18 @@ export function DonateModal({
             style={{ width: "100%" }}
           >
             {sending ? (
-              <Sending label="Processing…" />
+              <Sending label={t("marketing:donateModal.processing")} />
             ) : (
-              <>
-                Donate {money(total)}
-                {cadence}
-              </>
+              t(
+                monthly
+                  ? "marketing:donateModal.submitCta.monthly"
+                  : "marketing:donateModal.submitCta.oneOff",
+                { amount: fmt.currency(total) },
+              )
             )}
           </Button>
           <p className={styles.secure}>
-            <FiLock size={12} aria-hidden /> Encrypted &amp; secure. This is a
-            prototype — no real charge is made.
+            <FiLock size={12} aria-hidden /> {t("marketing:donateModal.secure")}
           </p>
         </form>
       )}

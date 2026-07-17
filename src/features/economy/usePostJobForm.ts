@@ -29,12 +29,12 @@ export interface PostJobState {
   agreed: boolean;
 }
 
-export const STEP_LABELS = [
-  "Type & role",
-  "Details",
-  "Pay & perks",
-  "Screening",
-  "Review",
+export const STEP_LABEL_KEYS = [
+  "economy:postJob.stepLabels.type",
+  "economy:postJob.stepLabels.details",
+  "economy:postJob.stepLabels.pay",
+  "economy:postJob.stepLabels.screening",
+  "economy:postJob.stepLabels.review",
 ];
 
 const DRAFT_KEY = "qp-postjob-draft";

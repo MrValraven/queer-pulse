@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
+import type { TFunction } from "../../shared/i18n/types";
 import type { MyEvent } from "./myEvents.types";
 
 interface SafetyDeps {
   byId: (id: string) => MyEvent | undefined;
   toast: (msg: string, type?: "success" | "info") => void;
   closeMore: () => void;
+  t: TFunction;
 }
 
 export interface MyEventsSafety {
@@ -23,6 +25,7 @@ export function useMyEventsSafety({
   byId,
   toast,
   closeMore,
+  t,
 }: SafetyDeps): MyEventsSafety {
   const [report, setReport] = useState<{ open: boolean; evId: string | null }>({
     open: false,
@@ -47,8 +50,8 @@ export function useMyEventsSafety({
   );
   const submitReport = useCallback(() => {
     setReport((r) => ({ ...r, open: false }));
-    toast("Report sent — our safety team takes it from here", "success");
-  }, [toast]);
+    toast(t("myevents:reportModal.sentToast"), "success");
+  }, [t, toast]);
   const openBlock = useCallback(
     (evId: string) => {
       const ev = byId(evId);
@@ -63,8 +66,8 @@ export function useMyEventsSafety({
   );
   const confirmBlock = useCallback(() => {
     setBlock((b) => ({ ...b, open: false }));
-    toast("Blocked — you won’t see their events again", "success");
-  }, [toast]);
+    toast(t("myevents:blockModal.blockedToast"), "success");
+  }, [t, toast]);
 
   return {
     report,

@@ -6,6 +6,7 @@ import {
   type ActivityKey,
   type StartupYear,
 } from "./comparator.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ComparatorPage.module.css";
 
 export interface ComparatorFormProps {
@@ -31,11 +32,12 @@ export function ComparatorForm({
   startupYear,
   onChange,
 }: ComparatorFormProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.form}>
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="cmp-gross">
-          Annual gross income (€)
+          {t("economy:comparator.form.grossLabel")}
         </label>
         <input
           id="cmp-gross"
@@ -44,7 +46,7 @@ export function ComparatorForm({
           inputMode="decimal"
           min={0}
           step="any"
-          placeholder="e.g. 30000"
+          placeholder={t("economy:comparator.form.grossPlaceholder")}
           value={gross}
           onChange={(e) => onChange({ gross: e.target.value })}
         />
@@ -52,7 +54,7 @@ export function ComparatorForm({
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="cmp-activity">
-          Freelance activity type
+          {t("economy:comparator.form.activityLabel")}
         </label>
         <select
           id="cmp-activity"
@@ -64,7 +66,7 @@ export function ComparatorForm({
         >
           {ACTIVITY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(o.labelKey)}
             </option>
           ))}
         </select>
@@ -73,7 +75,7 @@ export function ComparatorForm({
       <div className={styles.rcRow}>
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="cmp-year">
-            Tax year
+            {t("economy:comparator.form.yearLabel")}
           </label>
           <select
             id="cmp-year"
@@ -93,7 +95,7 @@ export function ComparatorForm({
 
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="cmp-startup">
-            Start of activity
+            {t("economy:comparator.form.startupLabel")}
           </label>
           <select
             id="cmp-startup"
@@ -105,7 +107,7 @@ export function ComparatorForm({
           >
             {STARTUP_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FiCheck, FiLoader, FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import type { Integration } from "./integrations.data";
 import styles from "./SettingsModal.module.css";
 
@@ -21,6 +23,7 @@ export function LinkProviderModal({
   onClose: () => void;
   onLinked: () => void;
 }) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("consent");
   useScrollLock();
 
@@ -43,39 +46,45 @@ export function LinkProviderModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={`Authorize ${provider.name}`}
+        aria-label={t("settings:linkProvider.ariaLabel", {
+          provider: provider.name,
+        })}
       >
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t("settings:modals.common.close")}
         >
           ×
         </button>
 
         {phase !== "done" ? (
           <>
-            <div className={styles.eye}>Authorize · {provider.name}</div>
+            <div className={styles.eye}>
+              {t("settings:linkProvider.eyebrow", { provider: provider.name })}
+            </div>
             <div className={styles.providerHead}>
               <div className={styles.providerLogo}>
                 {provider.glyph || provider.name[0]}
               </div>
               <div>
                 <div className={styles.providerName}>
-                  Continue with {provider.name}
+                  {t("settings:linkProvider.continueWith", {
+                    provider: provider.name,
+                  })}
                 </div>
                 <div className={styles.providerMeta}>
-                  QueerPulse is requesting access
+                  {t("settings:linkProvider.requestingAccess")}
                 </div>
               </div>
             </div>
             <p className={styles.desc}>{provider.desc}</p>
             <ul className={styles.scopeList}>
-              {provider.scopes.map((s) => (
-                <li key={s} className={styles.scopeItem}>
+              {provider.scopes.map((scope) => (
+                <li key={scope} className={styles.scopeItem}>
                   <FiShield size={16} />
-                  <span>{s}</span>
+                  <span>{scope}</span>
                 </li>
               ))}
             </ul>
@@ -90,10 +99,12 @@ export function LinkProviderModal({
                     <span className={styles.spin}>
                       <FiLoader size={16} />
                     </span>{" "}
-                    Authorizing…
+                    {t("settings:linkProvider.authorizing")}
                   </>
                 ) : (
-                  `Authorize ${provider.name}`
+                  t("settings:linkProvider.authorizeCta", {
+                    provider: provider.name,
+                  })
                 )}
               </Button>
               <Button
@@ -101,7 +112,7 @@ export function LinkProviderModal({
                 onClick={onClose}
                 disabled={phase === "authorizing"}
               >
-                Cancel
+                {t("settings:linkProvider.cancel")}
               </Button>
             </div>
           </>
@@ -111,16 +122,20 @@ export function LinkProviderModal({
               <FiCheck size={28} />
             </div>
             <div className={styles.successTitle}>
-              {provider.name} <em>linked.</em>
+              <Translation
+                i18nKey="settings:linkProvider.linkedTitle"
+                values={{ provider: provider.name }}
+                components={{ em: <em /> }}
+              />
             </div>
             <p className={styles.successSub}>
-              You can now sign in to QueerPulse with {provider.name}. Revoke it
-              any time from this page — your messages and memberships were never
-              shared.
+              {t("settings:linkProvider.linkedSub", {
+                provider: provider.name,
+              })}
             </p>
             <div className={styles.successActions}>
               <Button variant="ghost-dark" onClick={onClose}>
-                Done
+                {t("settings:linkProvider.done")}
               </Button>
             </div>
           </div>

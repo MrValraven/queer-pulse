@@ -1,71 +1,90 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { EQUIPMENT, CARE } from "./sharedEquipment.data";
+import { EQUIPMENT, CARE_KEYS } from "./sharedEquipment.data";
 import styles from "./resources.module.css";
 
 export function SharedEquipmentPage() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Rainbow Arts"
+        eyebrow={t("resources:sharedEquipment.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Shared kit, <em>shared care.</em>
-          </>
+          <Translation
+            i18nKey="resources:sharedEquipment.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="The riso, the kiln, the projector — everything the collective owns together, what it's for, and how to book it. The deal is simple: book it, clean it, log it."
+        lead={t("resources:sharedEquipment.hero.lead")}
         anchors={[
-          { label: "The kit", href: "#kit" },
-          { label: "How we care for it", href: "#care" },
+          {
+            label: t("resources:sharedEquipment.hero.anchor.kit"),
+            href: "#kit",
+          },
+          {
+            label: t("resources:sharedEquipment.hero.anchor.care"),
+            href: "#care",
+          },
         ]}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`} id="kit">
         <div className="wrap">
           <Reveal as="h2">
-            The <em>kit</em>
+            <Translation
+              i18nKey="resources:sharedEquipment.kit.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            All of it lives at the atelier. Tap request and a mod confirms your
-            slot.
+            {t("resources:sharedEquipment.kit.lead")}
           </Reveal>
           <div className={styles.grid}>
-            {EQUIPMENT.map((item, i) => (
-              <Reveal key={item.name} className={styles.card} delay={i * 55}>
-                <ImageSlot
-                  tint={item.tint}
-                  placeholder={item.name}
-                  height={160}
-                />
-                <div
-                  className={styles.cardName}
-                  style={{ fontSize: 19, marginTop: 4 }}
+            {EQUIPMENT.map((item, i) => {
+              const name = t(item.nameKey);
+              return (
+                <Reveal
+                  key={item.nameKey}
+                  className={styles.card}
+                  delay={i * 55}
                 >
-                  {item.name}
-                </div>
-                <div className={styles.cardSpec}>{item.specs}</div>
-                <div className={styles.cardFoot}>
-                  <span className={styles.cardLoc}>{item.status}</span>
-                  <Button
-                    variant={item.available ? "jade" : "ghost"}
-                    disabled={!item.available}
-                    onClick={() =>
-                      showToast(
-                        `Request sent for the ${item.name} — a mod will confirm your slot.`,
-                      )
-                    }
+                  <ImageSlot tint={item.tint} placeholder={name} height={160} />
+                  <div
+                    className={styles.cardName}
+                    style={{ fontSize: 19, marginTop: 4 }}
                   >
-                    {item.available ? "Request slot" : "On loan"}
-                  </Button>
-                </div>
-              </Reveal>
-            ))}
+                    {name}
+                  </div>
+                  <div className={styles.cardSpec}>{t(item.specsKey)}</div>
+                  <div className={styles.cardFoot}>
+                    <span className={styles.cardLoc}>{t(item.statusKey)}</span>
+                    <Button
+                      variant={item.available ? "jade" : "ghost"}
+                      disabled={!item.available}
+                      onClick={() =>
+                        showToast(
+                          t("resources:sharedEquipment.requestToast", {
+                            name,
+                          }),
+                        )
+                      }
+                    >
+                      {item.available
+                        ? t("resources:sharedEquipment.requestSlotCta")
+                        : t("resources:sharedEquipment.onLoanCta")}
+                    </Button>
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -73,17 +92,20 @@ export function SharedEquipmentPage() {
       <section className={`${styles.section} ${styles.sectionCream}`} id="care">
         <div className="wrap">
           <Reveal as="h2">
-            How we <em>care for it</em>
+            <Translation
+              i18nKey="resources:sharedEquipment.care.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div className={styles.checklist}>
-            {CARE.map((c) => (
+            {CARE_KEYS.map((careKey) => (
               <Reveal
-                key={c}
+                key={careKey}
                 className={styles.checkItem}
                 style={{ gridTemplateColumns: "1fr" }}
               >
                 <div className={styles.cardSpec} style={{ flex: "none" }}>
-                  {c}
+                  {t(careKey)}
                 </div>
               </Reveal>
             ))}
@@ -93,14 +115,15 @@ export function SharedEquipmentPage() {
 
       <Outro
         title={
-          <>
-            Make <em>something.</em>
-          </>
+          <Translation
+            i18nKey="resources:sharedEquipment.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The kit is here so the work can happen. Come to a print day and put it to use."
+        sub={t("resources:sharedEquipment.outro.sub")}
       >
         <Button to={routes.gatherings} variant="primary" size="lg">
-          Find a print day
+          {t("resources:sharedEquipment.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

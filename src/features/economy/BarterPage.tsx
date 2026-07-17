@@ -12,6 +12,8 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   BARTERS,
   MODES,
@@ -58,6 +60,7 @@ function BarterSkeleton() {
 }
 
 export function BarterPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [mode, setMode] = useState<"all" | Mode>("all");
   const [cat, setCat] = useState("all");
@@ -91,25 +94,26 @@ export function BarterPage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            Queer skill exchange
+            {t("economy:barter.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            Trade what you <em>know.</em>
+            <Translation
+              i18nKey="economy:barter.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" delay={120}>
-            A structured barter board — skills for skills, expertise for
-            expertise. No money, no platform fees. Post what you can offer and
-            what you're hoping for in return.
+            {t("economy:barter.hero.lead")}
           </Reveal>
           <div className={styles.principle}>
             {PRINCIPLES.map((p, index) => (
               <Reveal
-                key={p.title}
+                key={p.id}
                 className={styles.principleItem}
                 delay={180 + index * 70}
               >
-                <strong>{p.title}</strong>
-                <span>{p.body}</span>
+                <strong>{t(p.titleKey)}</strong>
+                <span>{t(p.bodyKey)}</span>
               </Reveal>
             ))}
           </div>
@@ -122,7 +126,7 @@ export function BarterPage() {
             <input
               className={styles.search}
               type="text"
-              placeholder="Search the exchange…"
+              placeholder={t("economy:barter.search.placeholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -139,12 +143,16 @@ export function BarterPage() {
                     .join(" ")}
                   onClick={() => setMode(m.value)}
                 >
-                  {m.label}
+                  {t(m.labelKey)}
                 </button>
               ))}
             </div>
             <span className={styles.count}>
-              <b>{items.length}</b> post{items.length !== 1 ? "s" : ""}
+              <Translation
+                i18nKey="economy:barter.count"
+                values={{ count: items.length }}
+                components={{ b: <b /> }}
+              />
             </span>
           </div>
           <div className={styles.cats}>
@@ -157,7 +165,7 @@ export function BarterPage() {
                   .join(" ")}
                 onClick={() => setCat(c.value)}
               >
-                {c.label}
+                {t(c.labelKey)}
               </button>
             ))}
           </div>
@@ -176,10 +184,10 @@ export function BarterPage() {
                 {items.length === 0 && (
                   <EmptyState
                     icon={<FiRepeat />}
-                    title="Nothing matches your filters"
-                    description="No swaps fit that combination just yet. Try broadening your search — or post what you're offering and let the right trade find you."
+                    title={t("economy:barter.empty.title")}
+                    description={t("economy:barter.empty.description")}
                     action={{
-                      label: "Clear filters",
+                      label: t("economy:barter.empty.clearFilters"),
                       onClick: () => {
                         setMode("all");
                         setCat("all");
@@ -203,14 +211,15 @@ export function BarterPage() {
 
       <Outro
         title={
-          <>
-            Skills are <em>the currency.</em>
-          </>
+          <Translation
+            i18nKey="economy:barter.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse Barter is open to all members. The more you offer, the more you can ask for."
+        sub={t("economy:barter.outro.sub")}
       >
         <Button to={routes.requestInvite} size="lg">
-          Join the network
+          {t("economy:barter.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import { APPLY_FOCUS_AREAS } from "./mentorProfile.data";
 import styles from "./ApplicationModals.module.css";
+
+const MIN_MESSAGE_LENGTH = 30;
 
 export function MentorApplyModal({
   mentorName,
@@ -11,10 +15,13 @@ export function MentorApplyModal({
   mentorName: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [focus, setFocus] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const { sending, done, submit } = useSubmitFlow();
-  const valid = !!focus && message.trim().length >= 30;
+  const valid = !!focus && message.trim().length >= MIN_MESSAGE_LENGTH;
+  const remaining = MIN_MESSAGE_LENGTH - message.trim().length;
+  const firstName = mentorName.split(" ")[0] ?? mentorName;
 
   const toggle = (area: string) =>
     setFocus((cur) => (cur === area ? null : area));
@@ -23,30 +30,33 @@ export function MentorApplyModal({
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Request"
-          em="sent."
+          title={t("economy:mentorApply.success.title")}
+          em={t("economy:mentorApply.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:mentorApply.success.closeLabel")}
         >
-          Your request to work with <strong>{mentorName}</strong> on{" "}
-          <strong>{focus}</strong> is on its way. She reviews applications for
-          the '26 cohort personally and usually replies within a week. You'll
-          get a notification here.
+          <Translation
+            i18nKey="economy:mentorApply.success.body"
+            values={{ mentorName, focus: focus ?? "" }}
+            components={{ strong: <strong /> }}
+          />
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Apply to mentor with</div>
+          <div className={styles.eyebrow}>
+            {t("economy:mentorApply.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            Request a session with <em>{mentorName.split(" ")[0]}.</em>
+            <Translation
+              i18nKey="economy:mentorApply.title"
+              values={{ firstName }}
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Tell her where you'd like to focus and a little about your work.
-            There's no upfront cost — mentees get a free Sustainer membership
-            for the year.
-          </p>
+          <p className={styles.sub}>{t("economy:mentorApply.sub")}</p>
 
           <div className={styles.field}>
-            <label>Focus area *</label>
+            <label>{t("economy:mentorApply.focusAreaLabel")}</label>
             <div className={styles.levers}>
               {APPLY_FOCUS_AREAS.map((area) => (
                 <button
@@ -66,24 +76,24 @@ export function MentorApplyModal({
 
           <div className={styles.field}>
             <label htmlFor="ma-msg">
-              A note to {mentorName.split(" ")[0]} *
+              {t("economy:mentorApply.noteLabel", { firstName })}
             </label>
             <textarea
               id="ma-msg"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="What are you working on, and what would make this mentorship worth her time and yours?"
+              placeholder={t("economy:mentorApply.notePlaceholder")}
             />
           </div>
           <p className={styles.note}>
-            {message.trim().length < 30
-              ? `${30 - message.trim().length} more characters to send.`
-              : "Specific beats polished. She mentors people with a concrete thing to make."}
+            {remaining > 0
+              ? t("economy:mentorApply.charsRemaining", { count: remaining })
+              : t("economy:mentorApply.polishedHint")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:mentorApply.cancel")}
             </button>
             <Button
               variant="primary"
@@ -91,7 +101,11 @@ export function MentorApplyModal({
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Sending request…" /> : "Send request"}
+              {sending ? (
+                <Sending label={t("economy:mentorApply.sendingLabel")} />
+              ) : (
+                t("economy:mentorApply.sendCta")
+              )}
             </Button>
           </div>
         </>

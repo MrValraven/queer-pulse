@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { FiArrowLeft, FiMail } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { NewsletterIssueBody } from "./NewsletterIssueBody";
@@ -9,6 +10,7 @@ import { getIssue } from "./newsletterArchiveIssue.data";
 import styles from "./NewsletterArchiveIssuePage.module.css";
 
 export function NewsletterArchiveIssuePage() {
+  const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const issue = getIssue(slug);
 
@@ -23,7 +25,8 @@ export function NewsletterArchiveIssuePage() {
             to={routes.newsletterArchive}
             className={styles.back}
           >
-            <FiArrowLeft aria-hidden /> Back to the archive
+            <FiArrowLeft aria-hidden />{" "}
+            {t("magazine:newsletterArchive.issue.backToArchive")}
           </Button>
 
           <header className={styles.head}>
@@ -59,10 +62,10 @@ export function NewsletterArchiveIssuePage() {
               <p className={styles.signoffNote}>{issue.signoff.note}</p>
               <div className={styles.signoffActions}>
                 <Button variant="ghost-dark" to={routes.newsletterArchive}>
-                  Browse the full archive
+                  {t("magazine:newsletterArchive.issue.browseFullArchive")}
                 </Button>
                 <Button variant="ghost-dark" to={routes.newsletter}>
-                  Subscribe to this newsletter
+                  {t("magazine:newsletterArchive.issue.subscribeToThis")}
                 </Button>
               </div>
             </div>

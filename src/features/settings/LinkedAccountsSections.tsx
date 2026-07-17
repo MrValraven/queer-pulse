@@ -1,6 +1,7 @@
 import { type NavigateFunction } from "react-router-dom";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SIGN_IN_METHODS, CONNECTED_APPS } from "./linkedAccounts.data";
 import styles from "./LinkedAccountsPage.module.css";
 
@@ -47,6 +48,7 @@ export function SignInMethodsList({
   onLink: (id: string) => void;
   navigate: NavigateFunction;
 }) {
+  const { t } = useTranslation();
   if (loading)
     return (
       <>
@@ -60,6 +62,11 @@ export function SignInMethodsList({
       {SIGN_IN_METHODS.map((m, i) => {
         const revoked = revokedIds.has(m.id);
         const linked = linkedIds.has(m.id);
+        const badgeLabel = revoked
+          ? t("settings:linkedAccounts.badge.unlinked")
+          : linked
+            ? t("settings:linkedAccounts.badge.linked")
+            : t(m.badgeKey, { count: m.badgeCount });
         return (
           <FadeIn key={m.id} delay={Math.min(i, 8) * 60} className={styles.row}>
             <div className={`${styles.icon} ${iconClass[m.id] ?? ""}`}>
@@ -73,7 +80,7 @@ export function SignInMethodsList({
               <span
                 className={`${styles.badge} ${m.linked || linked ? styles.badgeLinked : styles.badgeUnlinked}`}
               >
-                {revoked ? "Unlinked" : linked ? "Linked" : m.badgeText}
+                {badgeLabel}
               </span>
               {m.canUnlink && !revoked && (
                 <Button
@@ -81,7 +88,7 @@ export function SignInMethodsList({
                   className={`${styles.rowBtn} ${styles.rowBtnUnlink}`}
                   onClick={() => onUnlink(m.id)}
                 >
-                  Unlink
+                  {t("settings:linkedAccounts.action.unlink")}
                 </Button>
               )}
               {m.canLink && !linked && (
@@ -90,7 +97,7 @@ export function SignInMethodsList({
                   className={`${styles.rowBtn} ${styles.rowBtnConnect}`}
                   onClick={() => onLink(m.id)}
                 >
-                  Link
+                  {t("settings:linkedAccounts.action.link")}
                 </Button>
               )}
               {m.defaultDisabled && (
@@ -99,7 +106,7 @@ export function SignInMethodsList({
                   className={`${styles.rowBtn} ${styles.rowBtnDisabled}`}
                   disabled
                 >
-                  Default
+                  {t("settings:linkedAccounts.action.default")}
                 </Button>
               )}
               {m.canManage && (
@@ -108,7 +115,7 @@ export function SignInMethodsList({
                   className={styles.rowBtn}
                   onClick={() => navigate(routes.sessions)}
                 >
-                  Manage
+                  {t("settings:linkedAccounts.action.manage")}
                 </Button>
               )}
             </div>
@@ -130,6 +137,7 @@ export function ConnectedAppsList({
   onUnlink: (id: string) => void;
   onCopyCalendar: () => void;
 }) {
+  const { t } = useTranslation();
   if (loading)
     return (
       <>
@@ -157,7 +165,9 @@ export function ConnectedAppsList({
             </div>
             <div className={styles.state}>
               <span className={`${styles.badge} ${styles.badgeLinked}`}>
-                {revoked ? "Revoked" : app.badgeText}
+                {revoked
+                  ? t("settings:linkedAccounts.badge.revoked")
+                  : t(app.badgeKey)}
               </span>
               {app.canRevoke && !revoked && (
                 <Button
@@ -165,7 +175,7 @@ export function ConnectedAppsList({
                   className={`${styles.rowBtn} ${styles.rowBtnUnlink}`}
                   onClick={() => onUnlink(app.id)}
                 >
-                  Revoke
+                  {t("settings:linkedAccounts.action.revoke")}
                 </Button>
               )}
               {app.canCopy && (
@@ -174,7 +184,7 @@ export function ConnectedAppsList({
                   className={styles.rowBtn}
                   onClick={onCopyCalendar}
                 >
-                  Copy URL
+                  {t("settings:linkedAccounts.action.copyUrl")}
                 </Button>
               )}
             </div>

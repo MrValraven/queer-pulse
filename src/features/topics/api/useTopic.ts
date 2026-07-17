@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { getTopic as getMockTopic, type Topic } from "../topics.data";
 import { topicDetailToTopic } from "./topics.adapters";
 import { getTopicDetail, getTopicPosts } from "./topics.api";
@@ -22,15 +24,17 @@ import { getTopicDetail, getTopicPosts } from "./topics.api";
  */
 export function useTopic(tag: string) {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
   return useQuery<Topic>({
-    queryKey: ["topic", demoMode, tag],
+    queryKey: ["topic", demoMode, tag, language],
     queryFn: async () => {
-      if (demoMode) return getMockTopic(tag);
+      if (demoMode) return getMockTopic(tag, t);
       const [detail, posts] = await Promise.all([
         getTopicDetail(tag),
         getTopicPosts(tag),
       ]);
-      return topicDetailToTopic(detail, posts.data);
+      return topicDetailToTopic(detail, posts.data, fmt);
     },
   });
 }

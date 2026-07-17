@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   EXPERIENCE_OPTIONS,
   ROLE_OPTIONS,
@@ -25,6 +26,7 @@ export function RateBoardForm({
   compareRate,
   onCompareChange,
 }: RateBoardFormProps) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const ids = {
     role: useId(),
@@ -34,7 +36,7 @@ export function RateBoardForm({
     compare: useId(),
   };
 
-  const [role, setRole] = useState<string>(ROLE_OPTIONS[0]!);
+  const [role, setRole] = useState<string>(ROLE_OPTIONS[0]!.value);
   const [experience, setExperience] = useState<Experience>("mid");
   const [type, setType] = useState<RateType>("freelance");
   const [dayRate, setDayRate] = useState("");
@@ -52,21 +54,18 @@ export function RateBoardForm({
       type,
     });
     setDayRate("");
-    showToast("Added anonymously", "success");
+    showToast(t("economy:rateBoard.form.addedToast"), "success");
   }
 
   return (
     <div className={styles.form}>
-      <h2 className={styles.formTitle}>Add your rate</h2>
-      <p className={styles.formHint}>
-        No name, no email — just the numbers. It stays on this device until you
-        export it.
-      </p>
+      <h2 className={styles.formTitle}>{t("economy:rateBoard.form.title")}</h2>
+      <p className={styles.formHint}>{t("economy:rateBoard.form.hint")}</p>
 
       <div className={styles.row}>
         <div className={styles.field}>
           <label className={styles.label} htmlFor={ids.role}>
-            Role
+            {t("economy:rateBoard.form.roleLabel")}
           </label>
           <select
             id={ids.role}
@@ -75,8 +74,8 @@ export function RateBoardForm({
             onChange={(e) => setRole(e.target.value)}
           >
             {ROLE_OPTIONS.map((r) => (
-              <option key={r} value={r}>
-                {r}
+              <option key={r.value} value={r.value}>
+                {t(r.labelKey)}
               </option>
             ))}
           </select>
@@ -84,7 +83,7 @@ export function RateBoardForm({
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor={ids.exp}>
-            Experience
+            {t("economy:rateBoard.form.experienceLabel")}
           </label>
           <select
             id={ids.exp}
@@ -94,7 +93,7 @@ export function RateBoardForm({
           >
             {EXPERIENCE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>
@@ -104,7 +103,8 @@ export function RateBoardForm({
       <div className={styles.row}>
         <div className={styles.field}>
           <label className={styles.label} htmlFor={ids.rate}>
-            Day rate (€) <span className={styles.req}>*</span>
+            {t("economy:rateBoard.form.dayRateLabel")}{" "}
+            <span className={styles.req}>*</span>
           </label>
           <input
             id={ids.rate}
@@ -112,7 +112,7 @@ export function RateBoardForm({
             type="number"
             min={0}
             inputMode="numeric"
-            placeholder="e.g. 350"
+            placeholder={t("economy:rateBoard.form.dayRatePlaceholder")}
             value={dayRate}
             onChange={(e) => setDayRate(e.target.value)}
           />
@@ -120,7 +120,7 @@ export function RateBoardForm({
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor={ids.type}>
-            Type
+            {t("economy:rateBoard.form.typeLabel")}
           </label>
           <select
             id={ids.type}
@@ -130,7 +130,7 @@ export function RateBoardForm({
           >
             {TYPE_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.labelKey)}
               </option>
             ))}
           </select>
@@ -138,12 +138,12 @@ export function RateBoardForm({
       </div>
 
       <Button variant="primary" onClick={handleAdd} disabled={!valid}>
-        Add to the board
+        {t("economy:rateBoard.form.addCta")}
       </Button>
 
       <div className={styles.compare}>
         <label className={styles.label} htmlFor={ids.compare}>
-          See where you stand
+          {t("economy:rateBoard.form.compareLabel")}
         </label>
         <input
           id={ids.compare}
@@ -151,15 +151,14 @@ export function RateBoardForm({
           type="number"
           min={0}
           inputMode="numeric"
-          placeholder="Your day rate (€)"
+          placeholder={t("economy:rateBoard.form.comparePlaceholder")}
           value={compareRate > 0 ? String(compareRate) : ""}
           onChange={(e) =>
             onCompareChange(Math.max(0, Number(e.target.value) || 0))
           }
         />
         <p className={styles.compareHint}>
-          We'll show your percentile against everyone here — nothing's added to
-          the board.
+          {t("economy:rateBoard.form.compareHint")}
         </p>
       </div>
     </div>

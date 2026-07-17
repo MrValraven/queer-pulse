@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { getJob } from "./jobs.api";
 import { jobDetailToJob } from "./jobs.adapters";
 import { JOBS, type Job } from "../jobs.data";
@@ -16,13 +17,14 @@ import { JOBS, type Job } from "../jobs.data";
 export function useJob(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
+  const fmt = useFormat();
   return useQuery<Job | null>({
     queryKey: ["job", slug, demoMode, language],
     enabled: Boolean(slug),
     queryFn: async () => {
       if (!slug) return null;
       if (demoMode) return JOBS.find((j) => j.slug === slug) ?? null;
-      return jobDetailToJob(await getJob(slug), t);
+      return jobDetailToJob(await getJob(slug), t, fmt);
     },
   });
 }

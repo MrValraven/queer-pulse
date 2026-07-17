@@ -8,6 +8,8 @@ import {
   FadeIn,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ALL_ITEMS, CHIPS, PAGE_SIZE } from "./tag.data";
 import styles from "./TagPage.module.css";
 
@@ -36,6 +38,7 @@ export function TagPageList({
   activeChip: number;
   onResetChip: () => void;
 }) {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [loadingMore, setLoadingMore] = useState(false);
 
@@ -68,22 +71,23 @@ export function TagPageList({
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<FiFileText />}
-          title="No long reads in this category yet"
+          title={t("magazine:tag.list.emptyTitle")}
           description={
-            <>
-              Nothing filed under <em>{CHIPS[activeChip]}</em> in long reads so
-              far. Browse every piece, or get the next one by email.
-            </>
+            <Translation
+              i18nKey="magazine:tag.list.emptyDescription"
+              values={{ topic: CHIPS[activeChip] }}
+              components={{ em: <em /> }}
+            />
           }
           action={{
-            label: "Show all long reads",
+            label: t("magazine:tag.list.showAllCta"),
             onClick: () => {
               onResetChip();
               setVisible(PAGE_SIZE);
             },
           }}
           secondaryAction={{
-            label: "Get long reads by email →",
+            label: t("magazine:tag.hero.getLongReadsCta"),
             to: NEWSLETTER,
           }}
         />
@@ -122,8 +126,10 @@ export function TagPageList({
             aria-busy={loadingMore}
           >
             {loadingMore
-              ? "Loading older long reads…"
-              : `Load ${Math.min(PAGE_SIZE, remaining)} older long reads`}
+              ? t("magazine:tag.list.loadingMore")
+              : t("magazine:tag.list.loadOlder", {
+                  count: Math.min(PAGE_SIZE, remaining),
+                })}
           </Button>
         </div>
       )}

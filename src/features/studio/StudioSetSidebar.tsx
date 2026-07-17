@@ -1,6 +1,23 @@
+import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TRACKS } from "./studioSetSubmission.data";
 import s from "./funding.module.css";
+
+const SET_PAYOUT_POOL = 11.4;
+
+/** Stable ids — never the translated label (§5.1 trap: this `<select>` had
+ * no `value=`, so the option label WAS the stored value). */
+const SET_TYPES = [
+  { id: "liveDjSet", labelKey: "studio:setSubmission.sidebar.type.liveDjSet" },
+  { id: "studioMix", labelKey: "studio:setSubmission.sidebar.type.studioMix" },
+  {
+    id: "recordedBroadcast",
+    labelKey: "studio:setSubmission.sidebar.type.recordedBroadcast",
+  },
+];
 
 interface StudioSetSidebarProps {
   matched: number;
@@ -8,33 +25,48 @@ interface StudioSetSidebarProps {
 }
 
 export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
+  const [setType, setSetType] = useState(SET_TYPES[0]!.id);
+
   return (
     <div className={s.djSide}>
       <div className={s.djCard}>
         <h3>
-          Set <em>details</em>
+          <Translation
+            i18nKey="studio:setSubmission.sidebar.detailsHeading"
+            components={{ em: <em /> }}
+          />
         </h3>
         <div className={s.field}>
-          <label>Set title</label>
+          <label>{t("studio:setSubmission.sidebar.titleLabel")}</label>
           <input type="text" defaultValue="House for the tired" />
         </div>
         <div className={s.field}>
-          <label>Type</label>
-          <select defaultValue="Live DJ set">
-            <option>Live DJ set</option>
-            <option>Studio mix</option>
-            <option>Recorded broadcast</option>
+          <label>{t("studio:setSubmission.sidebar.typeLabel")}</label>
+          <select
+            value={setType}
+            onChange={(event) => setSetType(event.target.value)}
+          >
+            {SET_TYPES.map((type) => (
+              <option key={type.id} value={type.id}>
+                {t(type.labelKey)}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
       <div className={s.djCard}>
         <h3>
-          Payout <em>preview</em>
+          <Translation
+            i18nKey="studio:setSubmission.sidebar.payoutPreviewHeading"
+            components={{ em: <em /> }}
+          />
         </h3>
         <div className={s.djRow}>
-          <span>Tracks in set</span>
+          <span>{t("studio:setSubmission.sidebar.tracksInSet")}</span>
           <span
             className="v"
             style={{ fontFamily: "var(--serif)", color: "var(--cream)" }}
@@ -43,7 +75,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           </span>
         </div>
         <div className={s.djRow}>
-          <span>Matched &amp; paying</span>
+          <span>{t("studio:setSubmission.sidebar.matchedPaying")}</span>
           <span
             className={`${s.v} jade`}
             style={{
@@ -51,27 +83,26 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
               color: "var(--jade-light)",
             }}
           >
-            {matched} tracks
+            {t("studio:setSubmission.sidebar.tracksCount", { count: matched })}
           </span>
         </div>
         <div className={s.djRow}>
-          <span>On hold (unmatched)</span>
+          <span>{t("studio:setSubmission.sidebar.onHold")}</span>
           <span
             className={`${s.v} warn`}
             style={{ fontFamily: "var(--serif)", color: "var(--accent)" }}
           >
-            {held} tracks
+            {t("studio:setSubmission.sidebar.tracksCount", { count: held })}
           </span>
         </div>
         <div className={s.djRow}>
-          <span>Set payout pool</span>
+          <span>{t("studio:setSubmission.sidebar.payoutPool")}</span>
           <span
             className="v"
             style={{ fontFamily: "var(--serif)", color: "var(--cream)" }}
           >
-            €
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
-              11.40
+              {fmt.currency(SET_PAYOUT_POOL)}
             </em>
           </span>
         </div>
@@ -86,9 +117,10 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
           <span>
-            Unmatched tracks <em>hold their share</em> until the council's
-            matcher clears them. The set goes live now; held money releases the
-            moment a source is confirmed.
+            <Translation
+              i18nKey="studio:setSubmission.sidebar.holdNote"
+              components={{ em: <em /> }}
+            />
           </span>
         </div>
       </div>
@@ -97,13 +129,10 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
         type="button"
         className={`${s.bt} ${s.btJade} ${s.btLg}`}
         onClick={() =>
-          showToast(
-            "Set submitted — live now, held shares pending clearance",
-            "success",
-          )
+          showToast(t("studio:setSubmission.sidebar.submittedToast"), "success")
         }
       >
-        Submit set →
+        {t("studio:setSubmission.sidebar.submitCta")}
       </button>
     </div>
   );

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useConnect } from "../../app/providers/ConnectProvider";
@@ -17,6 +19,7 @@ import { SolidaritySkeleton } from "./SolidaritySkeleton";
 import styles from "./SolidarityPage.module.css";
 
 export function SolidarityDirectory() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState<Cat | "all">("all");
   const [query, setQuery] = useState("");
@@ -37,30 +40,36 @@ export function SolidarityDirectory() {
     <>
       <div className={styles.filterBar}>
         <div className={styles.fbInner}>
-          <span className={styles.fbLabel}>Profession</span>
-          {FILTERS.map((f) => (
+          <span className={styles.fbLabel}>
+            {t("economy:solidarityDirectory.professionLabel")}
+          </span>
+          {FILTERS.map((filter) => (
             <button
-              key={f.id}
+              key={filter.id}
               type="button"
-              className={[styles.chip, cat === f.id && styles.chipActive]
+              className={[styles.chip, cat === filter.id && styles.chipActive]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setCat(f.id)}
+              onClick={() => setCat(filter.id)}
             >
-              {f.label}
+              {t(filter.labelKey)}
             </button>
           ))}
           <div className={styles.fbSep} />
           <div className={styles.cbSearch}>
             <input
               type="text"
-              placeholder="Search by name, area…"
+              placeholder={t("economy:solidarityDirectory.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
           <div className={styles.count}>
-            <b>{items.length}</b> practitioner{items.length !== 1 ? "s" : ""}
+            <Translation
+              i18nKey="economy:solidarityDirectory.count"
+              components={{ b: <b /> }}
+              values={{ count: items.length }}
+            />
           </div>
         </div>
       </div>
@@ -75,10 +84,10 @@ export function SolidarityDirectory() {
             {!loading && items.length === 0 && (
               <EmptyState
                 icon={<FiHeart />}
-                title="No practitioners match"
-                description="No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care."
+                title={t("economy:solidarityDirectory.empty.title")}
+                description={t("economy:solidarityDirectory.empty.description")}
                 action={{
-                  label: "Clear filters",
+                  label: t("economy:solidarityDirectory.empty.clearFilters"),
                   onClick: () => {
                     setCat("all");
                     setQuery("");
@@ -116,19 +125,23 @@ export function SolidarityDirectory() {
                         p.isMember ? styles.badgeMember : styles.badgeVerified,
                       ].join(" ")}
                     >
-                      {p.isMember ? "Member" : "Verified"}
+                      {p.isMember
+                        ? t("economy:solidarityDirectory.badgeMember")
+                        : t("economy:solidarityDirectory.badgeVerified")}
                     </span>
                   </div>
                   <div className={styles.pcPricing}>
-                    <div className={styles.pcPriceLabel}>Sliding scale</div>
+                    <div className={styles.pcPriceLabel}>
+                      {t("economy:solidarityDirectory.slidingScaleLabel")}
+                    </div>
                     <div className={styles.pcPriceRange}>{p.range}</div>
                     <div className={styles.pcPriceNote}>{p.scaleNote}</div>
                   </div>
                   <div className={styles.pcDesc}>{p.desc}</div>
                   <div className={styles.pcTags}>
-                    {p.tags.map((t) => (
-                      <span key={t} className={styles.ptag}>
-                        {t}
+                    {p.tags.map((tag) => (
+                      <span key={tag} className={styles.ptag}>
+                        {tag}
                       </span>
                     ))}
                   </div>
@@ -139,7 +152,7 @@ export function SolidarityDirectory() {
                       className={styles.pcContact}
                       onClick={() => openConnect(p.id)}
                     >
-                      Contact →
+                      {t("economy:solidarityDirectory.contactCta")}
                     </button>
                   </div>
                 </FadeIn>
@@ -149,22 +162,18 @@ export function SolidarityDirectory() {
           <div className={styles.regStrip}>
             <div className={styles.rsText}>
               <h3>
-                Do you offer
+                {t("economy:solidarityDirectory.register.titleLine1")}
                 <br />
-                <em>solidarity pricing?</em>
+                <em>{t("economy:solidarityDirectory.register.titleEm")}</em>
               </h3>
-              <p>
-                If you are a professional in the community and already offer
-                sliding-scale fees, add yourself to this list. It takes ten
-                minutes and helps people find you.
-              </p>
+              <p>{t("economy:solidarityDirectory.register.body")}</p>
             </div>
             <div className={styles.rsCta}>
               <Button to={routes.requestInvite} variant="primary" size="lg">
-                Register your practice
+                {t("economy:solidarityDirectory.register.cta")}
               </Button>
               <Link to={routes.contact} className={styles.rsCtaLink}>
-                Questions first? Get in touch
+                {t("economy:solidarityDirectory.register.questionsLink")}
               </Link>
             </div>
           </div>

@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
-const REASONS = [
-  "Hate speech or harassment",
-  "Unsafe or threatening behaviour",
-  "Spam, scam, or misleading",
-  "This event shouldn’t be here",
-  "Something else",
+const REASON_KEYS = [
+  "myevents:reportModal.reason.hate",
+  "myevents:reportModal.reason.unsafe",
+  "myevents:reportModal.reason.spam",
+  "myevents:reportModal.reason.shouldntBeHere",
+  "myevents:reportModal.reason.somethingElse",
 ];
 
 /** Report-an-event flow — pick a reason, add context, send to the safety team. */
 export function ReportEventModal() {
+  const { t } = useTranslation();
   const { report, byId, submitReport, closeReport } = useMyEvents();
   const [reason, setReason] = useState<number | null>(null);
   const [note, setNote] = useState("");
@@ -21,25 +24,30 @@ export function ReportEventModal() {
   return (
     <>
       <div className={sx("modal-head")}>
-        <div className={sx("modal-eyebrow")}>Report</div>
+        <div className={sx("modal-eyebrow")}>
+          {t("myevents:reportModal.eyebrow")}
+        </div>
         <h2 className={sx("modal-title")}>
-          What’s <em>wrong?</em>
+          <Translation
+            i18nKey="myevents:reportModal.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={sx("modal-evname")}>{ev?.title}</p>
       </div>
       <div className={sx("modal-body")}>
         <div className={sx("field")}>
           <label className={sx("field-label")} id="report-reason-label">
-            Why are you reporting this?
+            {t("myevents:reportModal.whyReporting")}
           </label>
           <div
             className={sx("report-reasons")}
             role="radiogroup"
             aria-labelledby="report-reason-label"
           >
-            {REASONS.map((r, i) => (
+            {REASON_KEYS.map((key, i) => (
               <button
-                key={r}
+                key={key}
                 type="button"
                 role="radio"
                 aria-checked={reason === i}
@@ -47,37 +55,39 @@ export function ReportEventModal() {
                 onClick={() => setReason(i)}
               >
                 <span className={sx("report-radio")} aria-hidden="true" />
-                <span>{r}</span>
+                <span>{t(key)}</span>
               </button>
             ))}
           </div>
         </div>
         <div className={sx("field")}>
           <label className={sx("field-label")} htmlFor="report-note">
-            Anything we should know?{" "}
-            <span className={sx("field-opt")}>(optional)</span>
+            {t("myevents:reportModal.noteLabel")}{" "}
+            <span className={sx("field-opt")}>
+              {t("myevents:reportModal.noteOptional")}
+            </span>
           </label>
           <textarea
             id="report-note"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Share what happened in your own words — only the safety team sees this."
+            placeholder={t("myevents:reportModal.notePlaceholder")}
           />
         </div>
       </div>
       <div className={sx("modal-foot")}>
         <div className={sx("modal-privacy")}>
-          Reports are confidential. The host is never told who reported them.
+          {t("myevents:reportModal.privacyNote")}
         </div>
         <Button variant="ghost" onClick={closeReport}>
-          Cancel
+          {t("myevents:reportModal.cancelCta")}
         </Button>
         <Button
           variant="primary"
           disabled={reason === null}
           onClick={submitReport}
         >
-          Send report
+          {t("myevents:reportModal.sendCta")}
         </Button>
       </div>
     </>

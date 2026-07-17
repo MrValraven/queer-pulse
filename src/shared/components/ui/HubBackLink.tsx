@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./HubBackLink.module.css";
 
 /**
@@ -20,11 +21,12 @@ export function HubBackLink({
   label: string;
   tone?: "light" | "dark";
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.bar}>
       <Link to={to} className={styles.link} data-tone={tone}>
         <FiArrowLeft aria-hidden />
-        Back to {label}
+        {t("shared:hubBackLink.backTo", { label })}
       </Link>
     </div>
   );

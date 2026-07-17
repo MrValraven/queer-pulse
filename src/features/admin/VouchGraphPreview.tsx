@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { portrait } from "./adminPeople.data";
 import { TONE, findEdge, neighbors, personById } from "./adminVouchGraph.data";
 import styles from "./AdminMembersPage.module.css";
@@ -18,6 +19,7 @@ const MAX = 10;
  * verified ticks, curved connectors). Signals what "Explore network" opens.
  */
 export function VouchGraphPreview({ focusId }: { focusId: string }) {
+  const { t } = useTranslation();
   const focus = personById[focusId]!;
   const nbrs = neighbors(focusId, true).slice(0, MAX);
   const n = nbrs.length;
@@ -31,7 +33,10 @@ export function VouchGraphPreview({ focusId }: { focusId: string }) {
       viewBox={`0 0 ${W} ${H}`}
       className={styles.previewSvg}
       role="img"
-      aria-label={`Trust network for ${focus.name}: ${n} direct vouch connection${n === 1 ? "" : "s"}`}
+      aria-label={t("admin:vouchGraph.preview.ariaLabel", {
+        name: focus.name,
+        count: n,
+      })}
     >
       <defs>
         <clipPath id="pvClipC">

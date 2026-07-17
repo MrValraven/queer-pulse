@@ -1,6 +1,7 @@
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { type Flag } from "./studioFlagReview.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { RESOLUTION_LABEL_KEYS, type Flag } from "./studioFlagReview.data";
 import s from "./council.module.css";
 
 interface StudioFlagCardProps {
@@ -10,6 +11,7 @@ interface StudioFlagCardProps {
 }
 
 export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   return (
     <>
@@ -33,9 +35,17 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
           <div className="who">{flag.who}</div>
         </div>
         {done ? (
-          <span className={s.flagResolvedTag}>Resolved · {done}</span>
+          <span className={s.flagResolvedTag}>
+            {t("studio:flagReview.resolvedTag", {
+              verb: t(RESOLUTION_LABEL_KEYS[done] ?? done),
+            })}
+          </span>
         ) : (
-          <button type="button" className={s.flagPlay} aria-label="Play">
+          <button
+            type="button"
+            className={s.flagPlay}
+            aria-label={t("studio:flagReview.playAria")}
+          >
             <svg viewBox="0 0 12 14" fill="currentColor">
               <path d="M1 1l10 6-10 6z" />
             </svg>
@@ -74,29 +84,37 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
                   type="button"
                   className={`${s.bt} ${s.btP}`}
                   onClick={() =>
-                    showToast("Claimed — it's yours to review", "success")
+                    showToast(t("studio:flagReview.toast.claimed"), "success")
                   }
                 >
-                  Claim &amp; review
+                  {t("studio:flagReview.claimReviewCta")}
                 </button>
                 <span className={s.grow} />
                 <button
                   type="button"
                   className={`${s.bt} ${s.btDismiss}`}
                   onClick={() =>
-                    onResolve(flag.id, "dismissed", "Lineup confirmed accurate")
+                    onResolve(
+                      flag.id,
+                      "dismissed",
+                      t("studio:flagReview.toast.lineupConfirmed"),
+                    )
                   }
                 >
-                  Dismiss
+                  {t("studio:flagReview.dismissCta")}
                 </button>
                 <button
                   type="button"
                   className={`${s.bt} ${s.btUphold}`}
                   onClick={() =>
-                    onResolve(flag.id, "corrected", "Lineup corrected")
+                    onResolve(
+                      flag.id,
+                      "corrected",
+                      t("studio:flagReview.toast.lineupCorrected"),
+                    )
                   }
                 >
-                  Correct lineup
+                  {t("studio:flagReview.correctLineupCta")}
                 </button>
               </>
             ) : (
@@ -108,30 +126,37 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
                     onResolve(
                       flag.id,
                       "dismissed",
-                      "Flag dismissed — credits confirmed correct",
+                      t("studio:flagReview.toast.dismissedCreditsConfirmed"),
                     )
                   }
                 >
-                  Dismiss
+                  {t("studio:flagReview.dismissCta")}
                 </button>
                 <button
                   type="button"
                   className={s.bt}
                   onClick={() =>
-                    showToast("Correction requested from the artist", "info")
+                    showToast(
+                      t("studio:flagReview.toast.correctionRequested"),
+                      "info",
+                    )
                   }
                 >
-                  Request fix
+                  {t("studio:flagReview.requestFixCta")}
                 </button>
                 <span className={s.grow} />
                 <button
                   type="button"
                   className={`${s.bt} ${s.btUphold}`}
                   onClick={() =>
-                    onResolve(flag.id, "held", "Held until corrected")
+                    onResolve(
+                      flag.id,
+                      "held",
+                      t("studio:flagReview.toast.heldUntilCorrected"),
+                    )
                   }
                 >
-                  Hold until fixed
+                  {t("studio:flagReview.holdUntilFixedCta")}
                 </button>
               </>
             )}

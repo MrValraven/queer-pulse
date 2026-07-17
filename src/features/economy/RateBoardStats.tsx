@@ -1,5 +1,7 @@
-import { euro } from "./economy.data";
-import { RB_DISCLAIMER, type RateEntry } from "./rateBoard.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
+import { RB_DISCLAIMER_KEY, type RateEntry } from "./rateBoard.data";
 import styles from "./RateBoardPage.module.css";
 
 /* ── pure helpers ───────────────────────────────────────────────────────── */
@@ -64,6 +66,8 @@ interface RateBoardStatsProps {
 }
 
 export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const allRates = entries.map((e) => e.dayRate);
   const overallMedian = median(allRates);
   const roleStats = groupByRole(entries);
@@ -75,11 +79,13 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
     return (
       <div className={styles.statsEmpty}>
         <h3 className={styles.emptyTitle}>
-          Nothing here <em>yet.</em>
+          <Translation
+            i18nKey="economy:rateBoard.stats.emptyTitle"
+            components={{ em: <em /> }}
+          />
         </h3>
         <p className={styles.emptyBody}>
-          Be the first to add a rate, or import a JSON file someone shared with
-          you. The distribution shows up here as soon as there's data.
+          {t("economy:rateBoard.stats.emptyBody")}
         </p>
       </div>
     );
@@ -88,24 +94,31 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
   return (
     <div className={styles.stats}>
       <div className={styles.overall}>
-        <span className={styles.overallLabel}>Community median day rate</span>
-        <span className={styles.overallVal}>{euro(overallMedian)}</span>
+        <span className={styles.overallLabel}>
+          {t("economy:rateBoard.stats.communityMedian")}
+        </span>
+        <span className={styles.overallVal}>{fmt.currency(overallMedian)}</span>
         <span className={styles.overallMeta}>
-          across {entries.length} {entries.length === 1 ? "rate" : "rates"} ·{" "}
-          {roleStats.length} {roleStats.length === 1 ? "role" : "roles"}
+          {t("economy:rateBoard.stats.across")}{" "}
+          {t("economy:rateBoard.stats.rateCount", { count: entries.length })} ·{" "}
+          {t("economy:rateBoard.stats.roleCount", { count: roleStats.length })}
         </span>
       </div>
 
       {showCompare && (
         <div className={styles.percentile}>
           <span className={styles.pctLabel}>
-            Your rate of {euro(compareRate)} sits at the
+            {t("economy:rateBoard.stats.yourRateSits", {
+              rate: fmt.currency(compareRate),
+            })}
           </span>
-          <span className={styles.pctVal}>{pct}th percentile</span>
+          <span className={styles.pctVal}>
+            {t("economy:rateBoard.stats.percentileValue", { percentile: pct })}
+          </span>
           <span className={styles.pctMeta}>
             {pct >= 50
-              ? `Above ${pct}% of rates shared here.`
-              : `Below most rates here — you may be leaving money on the table.`}
+              ? t("economy:rateBoard.stats.aboveMost", { percent: pct })
+              : t("economy:rateBoard.stats.belowMost")}
           </span>
         </div>
       )}
@@ -117,7 +130,7 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
             <li key={r.role} className={styles.barRow}>
               <div className={styles.barTop}>
                 <span className={styles.barRole}>{r.role}</span>
-                <span className={styles.barMed}>{euro(r.med)}</span>
+                <span className={styles.barMed}>{fmt.currency(r.med)}</span>
               </div>
               <div className={styles.barTrack}>
                 <div
@@ -127,10 +140,10 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
               </div>
               <div className={styles.barMeta}>
                 <span>
-                  {r.count} {r.count === 1 ? "rate" : "rates"}
+                  {t("economy:rateBoard.stats.rateCount", { count: r.count })}
                 </span>
                 <span>
-                  {euro(r.lo)} – {euro(r.hi)}
+                  {fmt.currency(r.lo)} – {fmt.currency(r.hi)}
                 </span>
               </div>
             </li>
@@ -138,7 +151,7 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
         })}
       </ul>
 
-      <p className={styles.disclaimer}>{RB_DISCLAIMER}</p>
+      <p className={styles.disclaimer}>{t(RB_DISCLAIMER_KEY)}</p>
     </div>
   );
 }

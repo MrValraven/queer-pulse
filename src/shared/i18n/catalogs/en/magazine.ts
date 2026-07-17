@@ -62,6 +62,7 @@ export const magazine: Catalog = {
   "cover.coverPlaceholder": "Cover portrait — full bleed, dramatic lighting",
   "cover.coverImageLabel": "Cover · June 2026",
   "cover.kicker": "Cover story · Feature",
+  "cover.byline": "By",
   "cover.photographyBy": "Photography by",
   "cover.readFullFeatureCta": "Read the full feature",
 
@@ -237,6 +238,11 @@ export const magazine: Catalog = {
   "audio.cast.nearbyDevicesTitle": "Nearby devices",
   "audio.cast.pickDeviceSub":
     "Pick a speaker or screen to stream this episode to.",
+  // CAST_TARGETS.kindKey (audioPlayer.data.ts) — device protocol/type chrome.
+  "audio.cast.kind.airplaySpeaker": "AirPlay · speaker",
+  "audio.cast.kind.castScreen": "Cast · screen",
+  "audio.cast.kind.airplayTwoSpeakers": "AirPlay · 2 speakers",
+  "audio.cast.kind.bluetoothHeadphones": "Bluetooth · headphones",
   "audio.sleep.eyebrow": "Sleep timer",
   "audio.sleep.title": "Stop playing after…",
   "audio.sleep.sub":
@@ -625,15 +631,17 @@ export const magazine: Catalog = {
   "submitStory.issue.deadline": "Submission deadline: {date}",
 
   // ══════════════════ Pitch Tracker ═════════════════════════════════════════
-  // PitchCard/PitchStages per-pitch fields (statusLabel, stage labels, action
-  // labels) are populated by BOTH the mock `PITCHES` array and the live
-  // `submissionToPitch` adapter (magazine.adapters.tsx) as already-resolved
-  // English strings computed outside the render tree (inside `useQuery`'s
-  // queryFn) — not reactive to a language switch. Correctly localizing them
-  // needs the `Pitch`/`PitchStage`/`PitchAction` types reshaped to carry
-  // stable keys (label-key indirection) the components resolve via `t()`,
-  // with the adapter updated to emit those keys instead of English text.
-  // Left unswept this pass; only the container chrome below is translated.
+  // PitchCard/PitchStages statusLabel/stage labels: RESOLVED this pass —
+  // `Pitch`/`PitchStage` were reshaped to carry `statusLabelKey`/`labelKey`
+  // (label-key indirection), and both the mock `PITCHES` array and the live
+  // `submissionToPitch` adapter (magazine.adapters.tsx) now emit stable
+  // catalog keys instead of pre-resolved English strings; components resolve
+  // via `t()`. `pitchTracker.stage.*` is shared vocabulary between mock and
+  // live; `pitchTracker.pitch.<id>.statusLabel` is mock-only (pitch-specific
+  // demo copy); `pitchTracker.statusLabel.*` is the live adapter's generic
+  // per-`SubmissionStatus` set. PitchAction `actions[].label` (e.g. "Message
+  // Marta", "14 comments") remains unswept — content/chrome-mixed and
+  // name/count-fused, not a clean label-key case.
 
   // ── PitchTrackerHeader ─────────────────────────────────────────────────
   "pitchTracker.header.eyebrow": "Magazine · your pitches",
@@ -657,6 +665,37 @@ export const magazine: Catalog = {
   "pitchTracker.page.withdrawnToast": "Pitch withdrawn",
   "pitchTracker.page.undoCta": "Undo",
   "pitchTracker.page.stubToast": "{label} — coming soon in this prototype",
+
+  // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
+  "pitchTracker.stage.pitched": "Pitched",
+  "pitchTracker.stage.accepted": "Accepted",
+  "pitchTracker.stage.firstDraft": "First draft",
+  "pitchTracker.stage.firstEdit": "First edit",
+  "pitchTracker.stage.layOut": "Lay out",
+  "pitchTracker.stage.published": "Published",
+  "pitchTracker.stage.inReview": "In review",
+  "pitchTracker.stage.decision": "Decision",
+  "pitchTracker.stage.draft": "Draft",
+  "pitchTracker.stage.edit": "Edit",
+  "pitchTracker.stage.out": "Out",
+  "pitchTracker.stage.reviewed": "Reviewed",
+  "pitchTracker.stage.closed": "Closed",
+
+  // ── Live submissionToPitch adapter's generic per-status labels ──────────
+  "pitchTracker.statusLabel.draft": "Draft",
+  "pitchTracker.statusLabel.submitted": "Submitted · awaiting review",
+  "pitchTracker.statusLabel.inReview": "In review",
+  "pitchTracker.statusLabel.accepted": "Accepted",
+  "pitchTracker.statusLabel.published": "Published",
+  "pitchTracker.statusLabel.rejected": "Not accepted this issue",
+
+  // ── Mock PITCHES per-pitch statusLabel (demo-only, pitch-specific copy) ──
+  "pitchTracker.pitch.pharmacist.statusLabel": "In edit · w/ Marta",
+  "pitchTracker.pitch.fourDayWeek.statusLabel": "In review",
+  "pitchTracker.pitch.commissionedMap.statusLabel": "Commissioned",
+  "pitchTracker.pitch.hostingBadly.statusLabel": "Published",
+  "pitchTracker.pitch.risoPrinting.statusLabel": "Published",
+  "pitchTracker.pitch.oweOurExes.statusLabel": "Not this issue · close fit",
 
   // ══════════════════ NewsletterSubscribe ═══════════════════════════════════
   "newsletter.subscribe.streamLabel.all": "all three newsletters",
@@ -714,4 +753,120 @@ export const magazine: Catalog = {
   "coverGallery.madeWithHeading": "Made <em>with</em>",
   "coverGallery.madeWithSub":
     "Cover artists, in cover order. Most are members; two we commissioned externally.",
+
+  // ══════════════════ Story showcase pages ══════════════════════════════════
+  // StoryPage/StoryTomasPage/StorySafetyPage + their *Article components are
+  // full standalone magazine features (headline, byline name, category tag,
+  // read time, article body, quotes, author bios) — editorial content, same
+  // treatment as `data/articles.tsx`. Only the connecting byline word, the
+  // shared "more from the community" heading, the profile-link CTA and the
+  // closing Outro CTAs are platform chrome, translated below.
+  "story.wordsBy": "Words by",
+  "story.moreHeading": "More from <em>the community</em>",
+  "story.viewProfileCta": "View profile →",
+  "story.outro.studio.title":
+    "Want to be part of what <em>gets written about next?</em>",
+  "story.outro.studio.sub":
+    "The stories are about the people in the room. Join us.",
+  "story.outro.tomas.title":
+    "Want to join Tomás's table? <em>Join the room first.</em>",
+  "story.outro.tomas.sub":
+    "The supper club, the network, the gatherings — it all starts with an invitation from someone who knows you.",
+  "story.outro.safety.title": "Read it and think it sounds <em>right?</em>",
+  "story.outro.safety.sub":
+    "We're not for everyone. But if this resonates, you might be for us.",
+
+  // ══════════════════ TagPage (Long reads section) ═══════════════════════════
+  // Per-piece kicker/title/dek/byline (TagPageHero featured + TagPageList
+  // items, tag.data.tsx) are editorial content, left in English. CHIPS topic
+  // labels double as the stored filter value matched against each item's
+  // `topics` — never route those through the catalog (would break the pt-mode
+  // filter). Only the section chrome below is translated.
+  "tag.hero.eyebrow": "Magazine · category",
+  "tag.hero.h1": "Long <em>reads.</em>",
+  "tag.hero.dek":
+    "<b>Twenty-minute pieces and up.</b> Reported essays, multi-source profiles, and the kind of long-form work that asks something of the reader. Slow journalism on purpose. New piece every other Thursday.",
+  "tag.hero.filterLabel": "Filter",
+  "tag.hero.stats.piecesInSection": "Pieces in this section",
+  "tag.hero.stats.minAverageRead": "Min average read",
+  "tag.hero.stats.issuesRepresented": "Issues represented",
+  "tag.hero.stats.contributors": "Contributors",
+  "tag.hero.curatorEyebrow": "Editor's note",
+  "tag.hero.getLongReadsCta": "Get long reads by email →",
+  "tag.list.emptyTitle": "No long reads in this category yet",
+  "tag.list.emptyDescription":
+    "Nothing filed under <em>{topic}</em> in long reads so far. Browse every piece, or get the next one by email.",
+  "tag.list.showAllCta": "Show all long reads",
+  "tag.list.loadingMore": "Loading older long reads…",
+  "tag.list.loadOlder_one": "Load {count} older long read",
+  "tag.list.loadOlder_other": "Load {count} older long reads",
+
+  // ══════════════════ Newsletter archive ══════════════════════════════════
+  // Per-issue title/dek/meta (newsletterArchive.data.tsx YEARS/LATEST, and the
+  // full sent-issue bodies in newsletterArchiveIssue.data.tsx) are the actual
+  // sent newsletter's own content — left in English throughout, like an
+  // article body. Only the archive's page chrome is translated below.
+  "newsletterArchive.hero.eyebrow": "Newsletter archive · since 2024",
+  "newsletterArchive.hero.h1": "Every email we've <em>sent.</em>",
+  "newsletterArchive.hero.dek":
+    "Three newsletters: a fortnightly community dispatch, a monthly long-read companion, and a Trans Hub bulletin. All free. Read any of them here — or subscribe and we'll send them straight.",
+  "newsletterArchive.hero.stats.issuesInArchive": "Issues in the archive",
+  "newsletterArchive.hero.stats.activeStreams": "Active newsletter streams",
+  "newsletterArchive.hero.stats.subscribersAllStreams":
+    "Subscribers across all streams",
+  "newsletterArchive.hero.stats.languages": "Languages · EN & PT",
+  "newsletterArchive.tabsAriaLabel": "Newsletter streams",
+  "newsletterArchive.readInBrowserCta": "Read in browser →",
+  "newsletterArchive.list.emptyTitle": "No issues in this stream",
+  "newsletterArchive.list.emptyDescription":
+    "Nothing's gone out on this stream yet. Take a look across all three — there's plenty in the archive.",
+  "newsletterArchive.list.clearFiltersCta": "Clear filters",
+  "newsletterArchive.list.loadOlder_one": "Load {count} older issue",
+  "newsletterArchive.list.loadOlder_other": "Load {count} older issues",
+  "newsletterArchive.issue.backToArchive": "Back to the archive",
+  "newsletterArchive.issue.browseFullArchive": "Browse the full archive",
+  "newsletterArchive.issue.subscribeToThis": "Subscribe to this newsletter",
+
+  // ══════════════════ Podcast show (The Back Room) ═══════════════════════════
+  // Episode titles/descriptions/guest names/dates (podcastShow.data.tsx) are
+  // the show's own editorial content — left in English, like an article body.
+  // Only the surrounding show-page chrome is translated below.
+  "podcast.hero.eyebrow": "QueerPulse Audio · podcast",
+  "podcast.hero.playLatestCta": "Play latest",
+  "podcast.hero.subscribeCta": "Subscribe",
+  "podcast.listenOnLabel": "Listen on",
+  "podcast.aboutShowHeading": "About the <em>show</em>",
+  "podcast.episodesHeading": "Episodes · {count}",
+  "podcast.newestFirst": "Newest first",
+  "podcast.viewEpisodeNotesCta": "View episode notes →",
+  "podcast.playEpisodeAria": "Play episode",
+  "podcast.playEpisodeNumberAria": "Play episode {number}",
+  "podcast.showOlderEpisodes_one": "Show {count} older episode",
+  "podcast.showOlderEpisodes_other": "Show {count} older episodes",
+  "podcast.sidebar.hostsHeading": "Hosts",
+  "podcast.sidebar.aboutShowHeading": "About the show",
+  "podcast.sidebar.sponsoredLabel": "Sponsored",
+  "podcast.sidebar.guestHeading": "Want to be a guest?",
+  "podcast.sidebar.guestBody":
+    "We get this often. We don't typically take pitches, but if you're doing something genuinely worth an hour, tell us.",
+  "podcast.sidebar.writeToTeamCta": "Write to the team",
+  "podcast.modal.listenToTitle": "Listen to <em>{show}</em>",
+  "podcast.modal.sub":
+    "Open the show in your podcast app, or grab the raw feed.",
+  "podcast.modal.copyCta": "Copy",
+  "podcast.modal.closeAria": "Close",
+  "podcast.modal.rssCopiedToast": "RSS link copied",
+
+  // ── PLATFORMS.kindKey (PodcastShowModals.tsx category label) ────────────
+  "podcast.platformKind.streaming": "Streaming",
+  "podcast.platformKind.app": "App",
+  "podcast.platformKind.rawFeed": "Raw feed",
+
+  // ── SHOW_INFO.labelKey (PodcastShowSections.tsx sidebar facts) ──────────
+  "podcast.showInfo.format": "Format",
+  "podcast.showInfo.schedule": "Schedule",
+  "podcast.showInfo.length": "Length",
+  "podcast.showInfo.languages": "Languages",
+  "podcast.showInfo.transcripts": "Transcripts",
+  "podcast.showInfo.music": "Music",
 };

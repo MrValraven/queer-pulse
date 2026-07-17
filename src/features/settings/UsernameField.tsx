@@ -1,16 +1,17 @@
 import { useEffect, useId, type ReactNode } from "react";
 import { FiAlertCircle, FiCheck, FiLoader } from "react-icons/fi";
 import { normalizeHandle } from "../../shared/handles";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   useHandleAvailability,
   type HandleAvailability,
   type HandleStatus,
 } from "./api/useHandleAvailability";
 import {
-  USERNAME_CHECKING,
-  USERNAME_FREE,
-  USERNAME_REASON_COPY,
-  USERNAME_YOURS,
+  USERNAME_CHECKING_KEY,
+  USERNAME_FREE_KEY,
+  USERNAME_REASON_KEYS,
+  USERNAME_YOURS_KEY,
 } from "./usernameField.data";
 import styles from "./UsernameField.module.css";
 
@@ -43,10 +44,11 @@ export function UsernameField({
   value,
   onChange,
   currentName,
-  label = "Username",
+  label,
   hint,
   onStatusChange,
 }: UsernameFieldProps) {
+  const { t } = useTranslation();
   const inputId = useId();
   const statusId = useId();
   const availability = useHandleAvailability(value, { currentName });
@@ -64,18 +66,19 @@ export function UsernameField({
     normalizeHandle(value) === normalizeHandle(currentName);
 
   let message: string | null = null;
-  if (status === "checking") message = USERNAME_CHECKING;
+  if (status === "checking") message = t(USERNAME_CHECKING_KEY);
   else if (status === "available")
-    message = isSelf ? USERNAME_YOURS : USERNAME_FREE;
+    message = t(isSelf ? USERNAME_YOURS_KEY : USERNAME_FREE_KEY);
   else if (status === "unavailable" && reason)
-    message = USERNAME_REASON_COPY[reason];
+    message = t(USERNAME_REASON_KEYS[reason]);
 
+  const resolvedLabel = label ?? t("settings:usernameField.defaultLabel");
   const invalid = status === "unavailable";
 
   return (
     <div className={styles.field}>
       <label className={styles.label} htmlFor={inputId}>
-        {label}
+        {resolvedLabel}
       </label>
       <div className={styles.inputWrap} data-state={status}>
         <span className={styles.at} aria-hidden>
@@ -89,7 +92,7 @@ export function UsernameField({
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          placeholder="yourname"
+          placeholder={t("settings:usernameField.placeholder")}
           value={value}
           onChange={(e) => onChange(e.target.value.toLowerCase())}
           aria-invalid={invalid || undefined}

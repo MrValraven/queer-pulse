@@ -7,6 +7,8 @@ import { usePrintDocument } from "./tools/usePrintDocument";
 import { useIssuer } from "./tools/useIssuer";
 import { ContractForm } from "./ContractForm";
 import { ContractPreview, contractToText } from "./ContractPreview";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CLAUSES,
   DEFAULT_CTX,
@@ -20,6 +22,7 @@ import {
  * full text to the clipboard. All client-side — no backend, no PDF library.
  */
 export function ContractGeneratorPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const print = usePrintDocument();
   const [issuer, setIssuer] = useIssuer();
@@ -55,18 +58,19 @@ export function ContractGeneratorPage() {
 
   const copyText = useCallback(() => {
     navigator.clipboard?.writeText(contractToText(ctx, selected, lang));
-    showToast("Copied to clipboard", "success");
-  }, [ctx, selected, lang, showToast]);
+    showToast(t("economy:toolPage.copiedToast"), "success");
+  }, [ctx, selected, lang, showToast, t]);
 
   return (
     <ToolPage
-      eyebrow="Freelance tools"
+      eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <>
-          Build a <em>contract.</em>
-        </>
+        <Translation
+          i18nKey="economy:contractTool.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="A clear service agreement, ready in minutes. Fill in the work, pick the clauses that protect you, and export a real PDF — all in your browser."
+      sub={t("economy:contractTool.sub")}
       form={
         <ContractForm
           ctx={ctx}
@@ -89,14 +93,14 @@ export function ContractGeneratorPage() {
               aria-hidden
               style={{ marginRight: 7, verticalAlign: "-2px" }}
             />
-            Download PDF
+            {t("economy:toolPage.downloadPdf")}
           </Button>
           <Button variant="ghost" size="lg" onClick={copyText}>
             <FiCopy
               aria-hidden
               style={{ marginRight: 7, verticalAlign: "-2px" }}
             />
-            Copy text
+            {t("economy:toolPage.copyText")}
           </Button>
         </>
       }

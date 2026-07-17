@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useCreateReadingGroupProposal } from "./api/useCreateReadingGroupProposal";
 import type { ReadingGroupProposalFormat } from "./api/community.api";
 import { type Format, type Group } from "./readingGroups.data";
@@ -19,6 +21,7 @@ export function ListGroupStrip({
 }: {
   onListed: (group: Group) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [bookField, setBookField] = useState("");
   const [whyField, setWhyField] = useState("");
@@ -50,26 +53,35 @@ export function ListGroupStrip({
             genre: "fiction",
             format: groupFormat,
             book: titlePart?.trim() || book,
-            author: authorPart?.trim() || "You",
+            author:
+              authorPart?.trim() ||
+              t("community:readingGroups.listGroup.defaultAuthor"),
             spine: (titlePart?.trim() || book).charAt(0).toUpperCase(),
             spineColor: "var(--violet)",
-            name: "Your new group",
+            name: t("community:readingGroups.listGroup.defaultName"),
             desc:
               whyField.trim() ||
-              "A new reading group, just listed. Members will be matched soon.",
-            where: groupFormat === "online" ? "Online" : "Lisbon (TBC)",
-            frequency: "Monthly",
+              t("community:readingGroups.listGroup.newGroupDesc"),
+            where: t(
+              groupFormat === "online"
+                ? "community:readingGroups.listGroup.defaultWhereOnline"
+                : "community:readingGroups.listGroup.defaultWhereIrl",
+            ),
+            frequency: t("community:readingGroups.listGroup.defaultFrequency"),
             spots: Math.max(1, parseInt(maxField, 10) - 1),
-            lang: "EN / PT",
+            lang: t("community:readingGroups.listGroup.defaultLang"),
           };
           onListed(newGroup);
           setListedGroup(newGroup);
           setBookField("");
           setWhyField("");
-          showToast("Group listed — we'll find your readers", "success");
+          showToast(
+            t("community:readingGroups.listGroup.successToast"),
+            "success",
+          );
         },
         onError: () =>
-          showToast("Couldn't list your group — please try again.", "error"),
+          showToast(t("community:readingGroups.listGroup.errorToast"), "error"),
       },
     );
   }
@@ -78,13 +90,12 @@ export function ListGroupStrip({
     <div className={styles.startStrip}>
       <div className={styles.ssText}>
         <h3>
-          Start your <em>own group.</em>
+          <Translation
+            i18nKey="community:readingGroups.listGroup.heading"
+            components={{ em: <em /> }}
+          />
         </h3>
-        <p>
-          Pick a book. Say how many people you want. Say where and when. We will
-          list it here and match you with members who want to read the same
-          thing.
-        </p>
+        <p>{t("community:readingGroups.listGroup.lead")}</p>
       </div>
       {listedGroup ? (
         <div className={styles.ssSuccess}>
@@ -92,32 +103,39 @@ export function ListGroupStrip({
             <FiCheck />
           </span>
           <div className={styles.ssSuccessTitle}>
-            Your group is <em>listed.</em>
+            <Translation
+              i18nKey="community:readingGroups.listGroup.successHeading"
+              components={{ em: <em /> }}
+            />
           </div>
           <p className={styles.ssSuccessBody}>
-            <strong>{listedGroup.book}</strong> is live at the top of the
-            directory. We'll start matching you with members who want to read
-            the same thing.
+            <Translation
+              i18nKey="community:readingGroups.listGroup.successBody"
+              components={{ strong: <strong /> }}
+              values={{ book: listedGroup.book }}
+            />
           </p>
           <button
             type="button"
             className={styles.ssSubmit}
             onClick={() => setListedGroup(null)}
           >
-            List another group
+            {t("community:readingGroups.listGroup.listAnotherCta")}
           </button>
         </div>
       ) : (
         <form className={styles.ssForm} onSubmit={listGroup}>
           <div className={styles.ssRow}>
             <label className={styles.ssLabel} htmlFor="ss-book">
-              Book title &amp; author
+              {t("community:readingGroups.listGroup.bookLabel")}
             </label>
             <input
               id="ss-book"
               className={styles.ssInput}
               type="text"
-              placeholder="e.g. Giovanni's Room — James Baldwin"
+              placeholder={t(
+                "community:readingGroups.listGroup.bookPlaceholder",
+              )}
               value={bookField}
               onChange={(e) => setBookField(e.target.value)}
               required
@@ -125,13 +143,15 @@ export function ListGroupStrip({
           </div>
           <div className={styles.ssRow}>
             <label className={styles.ssLabel} htmlFor="ss-why">
-              Why this book?
+              {t("community:readingGroups.listGroup.whyLabel")}
             </label>
             <input
               id="ss-why"
               className={styles.ssInput}
               type="text"
-              placeholder="One sentence — what made you choose it?"
+              placeholder={t(
+                "community:readingGroups.listGroup.whyPlaceholder",
+              )}
               value={whyField}
               onChange={(e) => setWhyField(e.target.value)}
             />
@@ -139,7 +159,7 @@ export function ListGroupStrip({
           <div className={styles.ssRow2}>
             <div className={styles.ssRow}>
               <label className={styles.ssLabel} htmlFor="ss-format">
-                Format
+                {t("community:readingGroups.listGroup.formatLabel")}
               </label>
               <select
                 id="ss-format"
@@ -147,14 +167,23 @@ export function ListGroupStrip({
                 value={formatField}
                 onChange={(e) => setFormatField(e.target.value)}
               >
-                <option>In-person</option>
-                <option>Online</option>
-                <option>Either</option>
+                {/* option value stays canonical English — it's compared
+                    (`formatField === "Online"`) and sent to the API; only the
+                    visible label is translated. */}
+                <option value="In-person">
+                  {t("community:readingGroups.listGroup.formatOption.inPerson")}
+                </option>
+                <option value="Online">
+                  {t("community:readingGroups.listGroup.formatOption.online")}
+                </option>
+                <option value="Either">
+                  {t("community:readingGroups.listGroup.formatOption.either")}
+                </option>
               </select>
             </div>
             <div className={styles.ssRow}>
               <label className={styles.ssLabel} htmlFor="ss-max">
-                Max people
+                {t("community:readingGroups.listGroup.maxLabel")}
               </label>
               <select
                 id="ss-max"
@@ -173,7 +202,9 @@ export function ListGroupStrip({
             className={styles.ssSubmit}
             disabled={!bookField.trim() || mutation.isPending}
           >
-            {mutation.isPending ? "Listing…" : "List my group"}
+            {mutation.isPending
+              ? t("community:readingGroups.listGroup.submitPending")
+              : t("community:readingGroups.listGroup.submitCta")}
           </button>
         </form>
       )}

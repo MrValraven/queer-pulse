@@ -3,6 +3,7 @@ import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useReduceMotion } from "../../app/providers/accessibilityContext";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AccessibilityPreferencesPage.module.css";
 import {
   A11yDisplaySection,
@@ -26,7 +27,19 @@ const SECTIONS = [
 ] as const;
 type SectionId = (typeof SECTIONS)[number];
 
+// Stable ids used only to scroll-spy + as React keys — never rendered
+// directly (an English id capitalised is not a translation). The label
+// resolves through this lookup instead.
+const SECTION_LABEL_KEYS: Record<SectionId, string> = {
+  display: "settings:a11y.sidebar.display",
+  motion: "settings:a11y.sidebar.motion",
+  reading: "settings:a11y.sidebar.reading",
+  interaction: "settings:a11y.sidebar.interaction",
+  reset: "settings:a11y.sidebar.reset",
+};
+
 export function AccessibilityPreferencesPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   // Reduce motion and skip-link are the live, persisted preferences — each is
   // read by real render code (the global CSS kill-switch and the shells'
@@ -68,7 +81,7 @@ export function AccessibilityPreferencesPage() {
     setPrefs(DEFAULT_PREFS);
     setReduceMotion(false);
     setSkipLinkPref(DEFAULT_PREFS.skipLink);
-    showToast("All preferences reset", "info");
+    showToast(t("settings:personalisation.accessibility.resetToast"), "info");
   }
 
   return (
@@ -76,7 +89,9 @@ export function AccessibilityPreferencesPage() {
       <div className={`wrap ${styles.page}`}>
         <div className={styles.layout}>
           <div className={styles.sidebar}>
-            <div className={styles.sbHead}>Preferences</div>
+            <div className={styles.sbHead}>
+              {t("settings:a11y.sidebar.preferences")}
+            </div>
             <div className={styles.sbNav}>
               {SECTIONS.map((id) => (
                 <button
@@ -90,7 +105,7 @@ export function AccessibilityPreferencesPage() {
                     .join(" ")}
                   onClick={() => scrollToSection(id)}
                 >
-                  {id.charAt(0).toUpperCase() + id.slice(1)}
+                  {t(SECTION_LABEL_KEYS[id])}
                 </button>
               ))}
             </div>
@@ -143,14 +158,13 @@ export function AccessibilityPreferencesPage() {
                   onClick={resetAll}
                   style={{ margin: "0 auto" }}
                 >
-                  Reset all preferences
+                  {t("settings:personalisation.accessibility.resetAll")}
                 </Button>
                 <div className={styles.resetNote}>
-                  This returns all display settings to their defaults. Your
-                  profile data is unaffected.
+                  {t("settings:personalisation.accessibility.resetNote")}
                 </div>
                 <div className={styles.deviceNote}>
-                  Your preferences are saved locally to this device.
+                  {t("settings:personalisation.accessibility.deviceNote")}
                 </div>
               </div>
             </div>

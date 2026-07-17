@@ -1,5 +1,8 @@
 import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { ACCORDION_ITEMS, DATA_TYPES } from "./dataExport.data";
 import type { ExportJob } from "./api/account.api";
 import styles from "./DataExportPage.module.css";
@@ -10,6 +13,7 @@ type Format = "JSON" | "CSV" | "Both";
 export type ExportPhase = "form" | "building" | "ready";
 
 export function DataExportSteps({ phase }: { phase: ExportPhase }) {
+  const { t } = useTranslation();
   const state = (n: number): "" | "active" | "done" => {
     if (phase === "form") return n === 1 ? "active" : "";
     if (phase === "building") {
@@ -37,9 +41,11 @@ export function DataExportSteps({ phase }: { phase: ExportPhase }) {
           {state(1) === "done" ? <FiCheck /> : "1"}
         </div>
         <div>
-          <div className={styles.stepLabel}>Choose what to export</div>
+          <div className={styles.stepLabel}>
+            {t("settings:dataExport.steps.step1.label")}
+          </div>
           <div className={styles.stepDesc}>
-            Select the data types you want included in your archive.
+            {t("settings:dataExport.steps.step1.desc")}
           </div>
         </div>
       </div>
@@ -48,18 +54,22 @@ export function DataExportSteps({ phase }: { phase: ExportPhase }) {
           {state(2) === "done" ? <FiCheck /> : "2"}
         </div>
         <div>
-          <div className={styles.stepLabel}>Confirm your identity</div>
+          <div className={styles.stepLabel}>
+            {t("settings:dataExport.steps.step2.label")}
+          </div>
           <div className={styles.stepDesc}>
-            We email a verification link to your registered address.
+            {t("settings:dataExport.steps.step2.desc")}
           </div>
         </div>
       </div>
       <div className={cls(3)}>
         <div className={styles.stepNum}>3</div>
         <div>
-          <div className={styles.stepLabel}>Download your archive</div>
+          <div className={styles.stepLabel}>
+            {t("settings:dataExport.steps.step3.label")}
+          </div>
           <div className={styles.stepDesc}>
-            A single-use link, available for 7 days.
+            {t("settings:dataExport.steps.step3.desc")}
           </div>
         </div>
       </div>
@@ -82,22 +92,24 @@ export function DataExportForm({
   onSubmit: () => void;
   submitting: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.card}>
       <h2 className={styles.cardTitle}>
-        Request your <em>data archive</em>
+        <Translation
+          i18nKey="settings:dataExport.form.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.cardSub}>
-        Select the categories you want included. You can request a full export
-        or only specific data types. We'll email you a secure link the moment
-        your archive is ready.
-      </p>
+      <p className={styles.cardSub}>{t("settings:dataExport.form.sub")}</p>
 
-      <div className={styles.fieldLabel}>What to include</div>
+      <div className={styles.fieldLabel}>
+        {t("settings:dataExport.form.includeLabel")}
+      </div>
       <div className={styles.dataTypes}>
         {DATA_TYPES.map((dt, i) => (
           <div
-            key={dt.label}
+            key={dt.id}
             className={[styles.dtItem, checked[i] && styles.dtItemChecked]
               .filter(Boolean)
               .join(" ")}
@@ -118,14 +130,16 @@ export function DataExportForm({
               </svg>
             </div>
             <div>
-              <div className={styles.dtLabel}>{dt.label}</div>
-              <div className={styles.dtSub}>{dt.sub}</div>
+              <div className={styles.dtLabel}>{t(dt.labelKey)}</div>
+              <div className={styles.dtSub}>{t(dt.subKey)}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className={styles.fieldLabel}>File format</div>
+      <div className={styles.fieldLabel}>
+        {t("settings:dataExport.form.formatLabel")}
+      </div>
       <div className={styles.fmtRow}>
         {(["JSON", "CSV", "Both"] as Format[]).map((f) => (
           <button
@@ -136,7 +150,7 @@ export function DataExportForm({
               .join(" ")}
             onClick={() => setFormat(f)}
           >
-            {f}
+            {f === "Both" ? t("settings:dataExport.format.both") : f}
           </button>
         ))}
       </div>
@@ -155,9 +169,10 @@ export function DataExportForm({
           <circle cx="9" cy="12" r=".5" fill="currentColor" />
         </svg>
         <p className={styles.legalNoteText}>
-          Under <strong>GDPR Article 20</strong>, we provide your data within{" "}
-          <strong>30 days</strong> of a verified request. The archive is
-          encrypted in transit and the download link is single-use.
+          <Translation
+            i18nKey="settings:dataExport.form.legalNote"
+            components={{ strong: <strong /> }}
+          />
         </p>
       </div>
 
@@ -168,7 +183,9 @@ export function DataExportForm({
         disabled={submitting}
         style={{ width: "100%", justifyContent: "center" }}
       >
-        {submitting ? "Requesting…" : "Request my data archive"}
+        {submitting
+          ? t("settings:dataExport.form.submitting")
+          : t("settings:dataExport.form.submit")}
       </Button>
     </div>
   );
@@ -184,12 +201,11 @@ export function DataExportStatus({
   filename: string;
   onRetry: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const expiry =
     job.expiresAt &&
-    new Date(job.expiresAt).toLocaleDateString(undefined, {
-      day: "numeric",
-      month: "long",
-    });
+    fmt.date(new Date(job.expiresAt), { day: "numeric", month: "long" });
 
   if (job.status === "ready" && job.downloadUrl) {
     return (
@@ -199,21 +215,23 @@ export function DataExportStatus({
         <div className={styles.confirmIcon}>
           <FiCheck size={24} color="var(--jade)" aria-hidden="true" />
         </div>
-        <h2 className={styles.confirmTitle}>Your archive is ready</h2>
+        <h2 className={styles.confirmTitle}>
+          {t("settings:dataExport.status.ready.title")}
+        </h2>
         <p className={styles.confirmBody}>
-          We've also emailed this link to your registered address. It's
-          single-use
           {expiry ? (
-            <>
-              {" "}
-              and expires on <strong>{expiry}</strong>
-            </>
-          ) : null}
-          .
+            <Translation
+              i18nKey="settings:dataExport.status.ready.bodyWithExpiry"
+              components={{ strong: <strong /> }}
+              values={{ date: expiry }}
+            />
+          ) : (
+            t("settings:dataExport.status.ready.body")
+          )}
         </p>
         <Button variant="jade" href={job.downloadUrl} download={filename}>
           <FiDownload style={{ verticalAlign: "-2px", marginRight: 8 }} />
-          Download {filename}
+          {t("settings:dataExport.status.download", { filename })}
         </Button>
       </div>
     );
@@ -226,16 +244,16 @@ export function DataExportStatus({
       >
         <h2 className={styles.confirmTitle}>
           {job.status === "expired"
-            ? "That link has expired"
-            : "That didn't work"}
+            ? t("settings:dataExport.status.expired.title")
+            : t("settings:dataExport.status.failed.title")}
         </h2>
         <p className={styles.confirmBody}>
           {job.status === "expired"
-            ? "For your safety, export links expire after 7 days. Request a fresh archive and we'll build it again."
-            : "We couldn't build your archive just now — nothing left your account. Try again in a moment."}
+            ? t("settings:dataExport.status.expired.body")
+            : t("settings:dataExport.status.failed.body")}
         </p>
         <Button variant="primary" onClick={onRetry}>
-          Request again
+          {t("settings:dataExport.status.retry")}
         </Button>
       </div>
     );
@@ -247,11 +265,11 @@ export function DataExportStatus({
       <div className={styles.confirmIcon}>
         <FiLoader size={24} className={styles.spin} aria-hidden="true" />
       </div>
-      <h2 className={styles.confirmTitle}>Building your archive</h2>
+      <h2 className={styles.confirmTitle}>
+        {t("settings:dataExport.status.building.title")}
+      </h2>
       <p className={styles.confirmBody}>
-        We're gathering your data and packaging it up. This can take a little
-        while — we'll email you the moment it's ready, so you can close this
-        page.
+        {t("settings:dataExport.status.building.body")}
       </p>
     </div>
   );
@@ -264,16 +282,18 @@ export function DataExportIncluded({
   openAcc: number | null;
   setOpenAcc: (n: number | null) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.includedSection}>
       <h2 className={styles.incTitle}>
-        What's <em>included</em>
+        <Translation
+          i18nKey="settings:dataExport.included.title"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.incSub}>
-        A breakdown of every data category we hold and what each contains.
-      </p>
+      <p className={styles.incSub}>{t("settings:dataExport.included.sub")}</p>
       {ACCORDION_ITEMS.map((item, i) => (
-        <div key={item.title} className={styles.accItem}>
+        <div key={item.id} className={styles.accItem}>
           <div
             className={styles.accHeader}
             role="button"
@@ -287,7 +307,7 @@ export function DataExportIncluded({
               }
             }}
           >
-            <span className={styles.accName}>{item.title}</span>
+            <span className={styles.accName}>{t(item.titleKey)}</span>
             <span
               className={[styles.accArrow, openAcc === i && styles.accArrowOpen]
                 .filter(Boolean)
@@ -298,11 +318,11 @@ export function DataExportIncluded({
           </div>
           {openAcc === i && (
             <div className={styles.accBody}>
-              {item.body}
+              {t(item.bodyKey)}
               <div className={styles.accTags}>
-                {item.tags.map((t) => (
-                  <span key={t} className={styles.accTag}>
-                    {t}
+                {item.tagKeys.map((tagKey) => (
+                  <span key={tagKey} className={styles.accTag}>
+                    {t(tagKey)}
                   </span>
                 ))}
               </div>

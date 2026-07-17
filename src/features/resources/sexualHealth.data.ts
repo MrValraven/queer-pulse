@@ -16,11 +16,12 @@ import { routes } from "../../app/routeMap";
 export type TabId = "testing" | "prep" | "hiv" | "guides";
 export type ClinicType = "public" | "ngo" | "private" | "pharmacy";
 
-export const TABS: { id: TabId; label: string }[] = [
-  { id: "testing", label: "Testing & screening" },
-  { id: "prep", label: "PrEP in Portugal" },
-  { id: "hiv", label: "HIV resources" },
-  { id: "guides", label: "Guides & Q&A" },
+/** i18n Pattern A — `id` is the stored tab value; `labelKey` resolves via `t()`. */
+export const TABS: { id: TabId; labelKey: string }[] = [
+  { id: "testing", labelKey: "resources:sexualHealth.tab.testing" },
+  { id: "prep", labelKey: "resources:sexualHealth.tab.prep" },
+  { id: "hiv", labelKey: "resources:sexualHealth.tab.hiv" },
+  { id: "guides", labelKey: "resources:sexualHealth.tab.guides" },
 ];
 
 export interface ClinicMeta {
@@ -157,12 +158,16 @@ export const TYPE_CLASS: Record<ClinicType, string> = {
   private: "typePrivate",
   pharmacy: "typePharmacy",
 };
-export const CLINIC_FILTERS: { id: ClinicType | "all"; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "public", label: "Free / SNS" },
-  { id: "ngo", label: "NGO" },
-  { id: "pharmacy", label: "Pharmacy" },
-  { id: "private", label: "Private" },
+/** i18n Pattern A — `id` is the stored filter value; `labelKey` resolves via `t()`. */
+export const CLINIC_FILTERS: { id: ClinicType | "all"; labelKey: string }[] = [
+  { id: "all", labelKey: "resources:sexualHealth.testing.filter.all" },
+  { id: "public", labelKey: "resources:sexualHealth.testing.filter.public" },
+  { id: "ngo", labelKey: "resources:sexualHealth.testing.filter.ngo" },
+  {
+    id: "pharmacy",
+    labelKey: "resources:sexualHealth.testing.filter.pharmacy",
+  },
+  { id: "private", labelKey: "resources:sexualHealth.testing.filter.private" },
 ];
 
 export const TESTING_INFO: {

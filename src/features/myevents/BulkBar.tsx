@@ -1,8 +1,10 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
 /** Floating action bar shown while selecting events. */
 export function BulkBar() {
+  const { t } = useTranslation();
   const {
     selectMode,
     selectedCount,
@@ -14,22 +16,24 @@ export function BulkBar() {
   const show = selectMode && selectedCount > 0;
   return (
     <div className={`${sx("bulkbar")} ${show ? sx("show") : ""}`}>
-      <span className={sx("bulk-count")}>{selectedCount} selected</span>
+      <span className={sx("bulk-count")}>
+        {t("myevents:bulk.selected", { count: selectedCount })}
+      </span>
       <div className={sx("bulk-actions")}>
         <button type="button" className={sx("bulk-act")} onClick={bulkAddCal}>
-          Add to calendar
+          {t("myevents:bulk.addToCalendar")}
         </button>
         <button type="button" className={sx("bulk-act")} onClick={bulkExport}>
-          Export
+          {t("myevents:bulk.export")}
         </button>
         <button type="button" className={sx("bulk-act")} onClick={bulkCancel}>
-          Cancel RSVPs
+          {t("myevents:bulk.cancelRsvps")}
         </button>
       </div>
       <button
         type="button"
         className={sx("bulk-close")}
-        aria-label="Done selecting"
+        aria-label={t("myevents:bulk.doneAria")}
         onClick={closeBulk}
       >
         ×

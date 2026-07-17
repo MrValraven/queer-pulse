@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export interface PayoutSummaryRow {
-  k: string;
+  labelKey: string;
   v: string;
 }
 
@@ -24,10 +24,10 @@ export interface PayoutBreakdownRow {
 }
 
 export const SUMMARY: PayoutSummaryRow[] = [
-  { k: "From streaming", v: "1,712" },
-  { k: "From tips", v: "312" },
-  { k: "From album buys", v: "76" },
-  { k: "Direct €3/mo subs", v: "40" },
+  { labelKey: "studio:payouts.summary.fromStreaming", v: "1,712" },
+  { labelKey: "studio:payouts.summary.fromTips", v: "312" },
+  { labelKey: "studio:payouts.summary.fromAlbumBuys", v: "76" },
+  { labelKey: "studio:payouts.summary.directSubs", v: "40" },
 ];
 
 export const PAYOUTS: PayoutRow[] = [

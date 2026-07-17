@@ -40,7 +40,8 @@ export function MagazineCover() {
             <em>Did we?</em>
           </h1>
           <div className={styles.csByline}>
-            By <AuthorLink name={memberName("sofia")} /> ·{" "}
+            {t("magazine:cover.byline")}{" "}
+            <AuthorLink name={memberName("sofia")} /> ·{" "}
             {t("magazine:cover.photographyBy")} {memberName("andre")}
           </div>
           {/* Content: the cover story's own standfirst. */}

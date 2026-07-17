@@ -1,6 +1,7 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useFormat } from "../../../shared/i18n/format";
 import { FEED_POST, type FeedPost, type FeedTab } from "../feed.data";
 import { getFeed, type FeedItem } from "./feed.api";
 import { feedItemToPost } from "./feed.adapters";
@@ -21,6 +22,7 @@ interface FeedPage {
  */
 export function useFeed(tab: FeedTab) {
   const { demoMode } = useDemoMode();
+  const fmt = useFormat();
 
   const query = useInfiniteQuery<FeedPage>({
     queryKey: ["feed", tab, demoMode],
@@ -46,8 +48,8 @@ export function useFeed(tab: FeedTab) {
     if (demoMode) return [FEED_POST];
     return items
       .filter((it) => it.type === "community_post")
-      .map(feedItemToPost);
-  }, [demoMode, items]);
+      .map((item) => feedItemToPost(item, fmt));
+  }, [demoMode, items, fmt]);
 
   // Recently-joined members ("People" tab, also folded into "All") — rendered
   // by `NewMemberCard` directly off the raw `FeedItem`, not adapted to

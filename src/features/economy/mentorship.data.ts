@@ -6,9 +6,9 @@ export type Mode = "mentee" | "mentor";
 export const VOLUNTEER = routes.volunteer;
 
 export const STATS = [
-  { n: "24", l: "Active mentors in the network" },
-  { n: "38", l: "Matches made so far" },
-  { n: "8", l: "Areas of focus" },
+  { n: "24", labelKey: "economy:mentorship.stat.activeMentors" },
+  { n: "38", labelKey: "economy:mentorship.stat.matchesMade" },
+  { n: "8", labelKey: "economy:mentorship.stat.areasOfFocus" },
 ];
 
 export interface SideRow {
@@ -61,6 +61,14 @@ export interface Mentor {
   price: { main: string; sub: string };
   /** Sidebar fact rows. */
   sideRows: SideRow[];
+}
+
+/** A mentor is full/waitlisted when their capacity blurb mentions a waitlist —
+ *  the CTA label is derived from this boolean rather than string-comparing
+ *  `btn`'s (English, content) value, so translating the button never breaks
+ *  the open/waitlisted styling. */
+export function isWaitlisted(mentor: Mentor): boolean {
+  return mentor.cap.toLowerCase().includes("waitlist");
 }
 
 export const MENTORS: Mentor[] = [
@@ -486,23 +494,73 @@ export const MENTORS: Mentor[] = [
   },
 ];
 
-export const MENTEE_AREAS = [
-  "Career direction",
-  "Coming out professionally",
-  "Creative practice",
-  "Starting a business",
-  "Navigating a difficult workplace",
-  "New to Lisbon",
-  "Mental health at work",
-  "Legal or rights issues",
+export interface MatchArea {
+  id: string;
+  labelKey: string;
+}
+
+export const MENTEE_AREAS: MatchArea[] = [
+  {
+    id: "career-direction",
+    labelKey: "economy:mentorship.matchArea.careerDirection",
+  },
+  {
+    id: "coming-out-professionally",
+    labelKey: "economy:mentorship.matchArea.comingOutProfessionally",
+  },
+  {
+    id: "creative-practice",
+    labelKey: "economy:mentorship.matchArea.creativePractice",
+  },
+  {
+    id: "starting-business",
+    labelKey: "economy:mentorship.matchArea.startingBusiness",
+  },
+  {
+    id: "difficult-workplace",
+    labelKey: "economy:mentorship.matchArea.difficultWorkplace",
+  },
+  { id: "new-to-lisbon", labelKey: "economy:mentorship.matchArea.newToLisbon" },
+  {
+    id: "mental-health-at-work",
+    labelKey: "economy:mentorship.matchArea.mentalHealthAtWork",
+  },
+  {
+    id: "legal-rights-issues",
+    labelKey: "economy:mentorship.matchArea.legalRightsIssues",
+  },
 ];
-export const MENTOR_AREAS = [
-  "Career direction",
-  "Coming out professionally",
-  "Creative practice",
-  "Starting a business",
-  "Navigating a difficult workplace",
-  "Settling in Lisbon",
-  "Mental health at work",
-  "Legal or rights navigation",
+export const MENTOR_AREAS: MatchArea[] = [
+  {
+    id: "career-direction",
+    labelKey: "economy:mentorship.matchArea.careerDirection",
+  },
+  {
+    id: "coming-out-professionally",
+    labelKey: "economy:mentorship.matchArea.comingOutProfessionally",
+  },
+  {
+    id: "creative-practice",
+    labelKey: "economy:mentorship.matchArea.creativePractice",
+  },
+  {
+    id: "starting-business",
+    labelKey: "economy:mentorship.matchArea.startingBusiness",
+  },
+  {
+    id: "difficult-workplace",
+    labelKey: "economy:mentorship.matchArea.difficultWorkplace",
+  },
+  {
+    id: "settling-in-lisbon",
+    labelKey: "economy:mentorship.matchArea.settlingInLisbon",
+  },
+  {
+    id: "mental-health-at-work",
+    labelKey: "economy:mentorship.matchArea.mentalHealthAtWork",
+  },
+  {
+    id: "legal-rights-navigation",
+    labelKey: "economy:mentorship.matchArea.legalRightsNavigation",
+  },
 ];

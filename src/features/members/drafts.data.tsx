@@ -1,6 +1,22 @@
 import type { ReactNode } from "react";
 import type { TFunction } from "../../shared/i18n/types";
+import type { Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
+
+/**
+ * Relative "time ago" from a minute count, through `fmt.relativeTime` —
+ * previously every draft hand-baked its own "2 days ago" text, which never
+ * localized for pt-PT (the fused-mock-string trap; mirrors
+ * `features/topics/api/topics.adapters.tsx`'s `relative()`).
+ */
+export function relativeAgo(minutesAgo: number, fmt: Formatters): string {
+  if (minutesAgo < 1) return fmt.relativeTime(0, "second");
+  if (minutesAgo < 60) return fmt.relativeTime(-minutesAgo, "minute");
+  const hours = Math.round(minutesAgo / 60);
+  if (hours < 24) return fmt.relativeTime(-hours, "hour");
+  const days = Math.round(hours / 24);
+  return fmt.relativeTime(-days, "day");
+}
 
 export type DraftCategory = "posts" | "articles" | "applications" | "grants";
 export type DraftStatus = "draft" | "ready" | "stale" | "atrisk";
@@ -86,10 +102,22 @@ export const CREATE_ITEMS: {
 ];
 
 export type MetaVariant = "deadline" | "pulse" | "stale" | "warn";
-export interface DraftMeta {
-  label: ReactNode;
-  variant?: MetaVariant;
-}
+
+/**
+ * A draft-row meta line. The relative-time/deadline kinds carry only the
+ * numeric datum (or nothing, reading `Draft.editedMinutes`/`createdMinutes`/
+ * `deadlineDays` instead) — `DraftRow.tsx` resolves the phrase via `t()` +
+ * `fmt.relativeTime()`/`fmt.date()` at render, so it localizes correctly.
+ * `custom` is the escape hatch for a handful of one-off resolved lines
+ * (`buildKeptMeta`).
+ */
+export type DraftMeta =
+  | { kind: "startedAgo"; variant?: MetaVariant }
+  | { kind: "lastEditedAgo"; variant?: MetaVariant }
+  | { kind: "savedAgo"; variant?: MetaVariant }
+  | { kind: "closesOn"; date: Date; variant?: MetaVariant }
+  | { kind: "deletesIn"; variant?: MetaVariant }
+  | { kind: "custom"; label: ReactNode; variant?: MetaVariant };
 
 export interface DraftAction {
   label: string;
@@ -118,6 +146,8 @@ export interface Draft {
   href?: string;
   /** Minutes since last edit (sort: recently edited — smaller is newer). */
   editedMinutes?: number;
+  /** Minutes since the draft was first created — feeds a `startedAgo` meta line. */
+  createdMinutes?: number;
   /** Days until the deadline / 90-day deletion (sort: closest deadline). */
   deadlineDays?: number | null;
   /** Plain-text title for alphabetical sort. */
@@ -126,23 +156,24 @@ export interface Draft {
   searchText?: string;
 }
 
+const KEPT_DRAFT_CREATED_MINUTES = 87 * 24 * 60; // 87 days
+
 /**
- * Meta shown after a draft has been kept 30 more days. A function of `t`
- * (Pattern B) rather than a plain export: the second line is fixed platform
- * chrome that needs translating, while the first keeps the same demo-data
- * shape as the per-draft `meta` entries below (content, left in English).
- * Memoize with `useMemo(() => buildKeptMeta(t), [t])` in the consumer.
+ * Meta shown after a draft has been kept 30 more days. A function of `t`/`fmt`
+ * (Pattern B): both lines are platform chrome, resolved eagerly since this
+ * replaces a kept draft's own `meta` wholesale (losing its original
+ * `createdMinutes` — pre-existing behaviour, not introduced by this sweep).
+ * Memoize with `useMemo(() => buildKeptMeta(t, fmt), [t, fmt])` in the consumer.
  */
-export function buildKeptMeta(t: TFunction): DraftMeta[] {
+export function buildKeptMeta(t: TFunction, fmt: Formatters): DraftMeta[] {
   return [
     {
-      label: (
-        <>
-          Started <b>87 days ago</b>
-        </>
-      ),
+      kind: "custom",
+      label: t("members:drafts.meta.startedAgo", {
+        time: relativeAgo(KEPT_DRAFT_CREATED_MINUTES, fmt),
+      }),
     },
-    { label: t("members:drafts.keptMeta.resetNote") },
+    { kind: "custom", label: t("members:drafts.keptMeta.resetNote") },
   ];
 }
 
@@ -155,6 +186,7 @@ export const DRAFTS: Draft[] = [
     status: "draft",
     href: routes.jobs,
     editedMinutes: 300,
+    createdMinutes: 2880,
     deadlineDays: 9,
     sortTitle: "Application · Communications Manager",
     searchText:
@@ -170,21 +202,9 @@ export const DRAFTS: Draft[] = [
       </>
     ),
     meta: [
-      {
-        label: (
-          <>
-            Started <b>2 days ago</b>
-          </>
-        ),
-      },
-      {
-        label: (
-          <>
-            Last edited <b>this morning</b>
-          </>
-        ),
-      },
-      { label: "Closes 18 Jun · 9 days", variant: "deadline" },
+      { kind: "startedAgo" },
+      { kind: "lastEditedAgo" },
+      { kind: "closesOn", date: new Date(2026, 5, 18), variant: "deadline" },
     ],
     progress: 60,
     actions: [
@@ -200,6 +220,7 @@ export const DRAFTS: Draft[] = [
     status: "draft",
     href: routes.submitStory,
     editedMinutes: 2,
+    createdMinutes: 10080,
     deadlineDays: null,
     sortTitle: "Pitch · The pharmacist who fills every prescription",
     searchText:
@@ -210,16 +231,7 @@ export const DRAFTS: Draft[] = [
       </>
     ),
     desc: "For QueerPulse Magazine · Issue 10 · 1,200-word profile · talked with Rui yesterday",
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>last week</b>
-          </>
-        ),
-      },
-      { label: "Saved 2 min ago", variant: "pulse" },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 85,
     actions: [
       { label: "Resume", variant: "primary" },
@@ -234,27 +246,13 @@ export const DRAFTS: Draft[] = [
     status: "ready",
     href: routes.grants,
     editedMinutes: 1440,
+    createdMinutes: 4320,
     deadlineDays: null,
     sortTitle: "Grant application · €150",
     searchText: "grant application 150 replacement t prescription",
     title: <>Grant application · €150</>,
     desc: "Replacement T prescription · drafted earlier this week",
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>3 days ago</b>
-          </>
-        ),
-      },
-      {
-        label: (
-          <>
-            Last edited <b>yesterday</b>
-          </>
-        ),
-      },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 100,
     ready: true,
     actions: [{ label: "Send", variant: "primary" }, { label: "Review" }],
@@ -267,6 +265,7 @@ export const DRAFTS: Draft[] = [
     status: "draft",
     href: routes.communitiesHome,
     editedMinutes: 2880,
+    createdMinutes: 5760,
     deadlineDays: null,
     sortTitle: "Post in Creatives",
     searchText: "post creatives portfolio night café beirão wednesday",
@@ -276,22 +275,7 @@ export const DRAFTS: Draft[] = [
       </>
     ),
     desc: '"Hosting a portfolio night the first Wednesday of every month, at Café Beirão. 12 spots, drop a link…"',
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>4 days ago</b>
-          </>
-        ),
-      },
-      {
-        label: (
-          <>
-            Last edited <b>2 days ago</b>
-          </>
-        ),
-      },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 78,
     actions: [
       { label: "Resume", variant: "primary" },
@@ -306,6 +290,7 @@ export const DRAFTS: Draft[] = [
     status: "draft",
     href: routes.forum,
     editedMinutes: 0,
+    createdMinutes: 120,
     deadlineDays: null,
     sortTitle: "Reply to Anika Kovač's post about queer-friendly GPs",
     searchText:
@@ -316,16 +301,7 @@ export const DRAFTS: Draft[] = [
       </>
     ),
     desc: '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch — go. Worth knowing that her phone is the one on the door, not the website…"',
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>2 hours ago</b>
-          </>
-        ),
-      },
-      { label: "Saved just now", variant: "pulse" },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 92,
     actions: [{ label: "Send reply", variant: "primary" }, { label: "Edit" }],
   },
@@ -337,6 +313,7 @@ export const DRAFTS: Draft[] = [
     status: "stale",
     href: routes.communitiesHome,
     editedMinutes: 18720,
+    createdMinutes: 20160,
     deadlineDays: null,
     sortTitle: "Post in Trans Hub",
     searchText:
@@ -347,22 +324,7 @@ export const DRAFTS: Draft[] = [
       </>
     ),
     desc: '"Question for the group: anyone navigated SNS continuity-of-care when moving between Lisbon and Porto…"',
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>14 days ago</b>
-          </>
-        ),
-      },
-      {
-        label: (
-          <>
-            Last edited <b>13 days ago</b>
-          </>
-        ),
-      },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 42,
     actions: [
       { label: "Resume", variant: "primary" },
@@ -377,6 +339,7 @@ export const DRAFTS: Draft[] = [
     status: "atrisk",
     href: routes.submitStory,
     editedMinutes: 125280,
+    createdMinutes: 125280,
     deadlineDays: 3,
     sortTitle: "Pitch · Six months on a four-day week — the sequel",
     searchText:
@@ -387,16 +350,7 @@ export const DRAFTS: Draft[] = [
       </>
     ),
     desc: "Follow-up to my Issue 05 piece · sent to editorial in March, never finished revision",
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>87 days ago</b>
-          </>
-        ),
-      },
-      { label: "Deletes in 3 days · 90-day rule", variant: "warn" },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "deletesIn", variant: "warn" }],
     progress: 34,
     actions: [
       { label: "Resume", variant: "primary" },
@@ -412,6 +366,7 @@ export const DRAFTS: Draft[] = [
     status: "draft",
     href: routes.jobs,
     editedMinutes: 7200,
+    createdMinutes: 7200,
     deadlineDays: null,
     sortTitle: "Application · Editorial Lead, Magazine",
     searchText: "application editorial lead magazine equip editions",
@@ -426,22 +381,7 @@ export const DRAFTS: Draft[] = [
         <em>Probably delete.</em>
       </>
     ),
-    meta: [
-      {
-        label: (
-          <>
-            Started <b>5 days ago</b>
-          </>
-        ),
-      },
-      {
-        label: (
-          <>
-            Last edited <b>5 days ago</b>
-          </>
-        ),
-      },
-    ],
+    meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 8,
     actions: [
       { label: "Resume", variant: "primary" },

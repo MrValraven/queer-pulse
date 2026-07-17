@@ -1,11 +1,15 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   DRAFT_ACTION_LABEL_KEY,
   STATUS_LABEL_KEY,
   draftStatus,
+  relativeAgo,
   type Draft,
   type DraftAction,
+  type DraftMeta,
   type DraftStatus,
   type MetaVariant,
 } from "./drafts.data";
@@ -32,6 +36,49 @@ const metaClass: Record<MetaVariant, string> = {
   warn: styles.metaWarn!,
 };
 
+/** Resolve one `DraftMeta` line to a rendered node, given the owning draft
+ * for the numeric fields (`createdMinutes`/`editedMinutes`/`deadlineDays`)
+ * that the relative-time/deadline kinds read instead of storing their own
+ * copy (§5.1 — never bake a formatted phrase next to the number it derives from). */
+function renderMetaLabel(
+  meta: DraftMeta,
+  draft: Draft,
+  t: ReturnType<typeof useTranslation>["t"],
+  fmt: ReturnType<typeof useFormat>,
+): ReactNode {
+  switch (meta.kind) {
+    case "startedAgo":
+      return t("members:drafts.meta.startedAgo", {
+        time: relativeAgo(draft.createdMinutes ?? 0, fmt),
+      });
+    case "lastEditedAgo":
+      return t("members:drafts.meta.lastEditedAgo", {
+        time: relativeAgo(draft.editedMinutes ?? 0, fmt),
+      });
+    case "savedAgo":
+      return t("members:drafts.meta.savedAgo", {
+        time: relativeAgo(draft.editedMinutes ?? 0, fmt),
+      });
+    case "closesOn": {
+      const days = draft.deadlineDays ?? 0;
+      const daysPhrase = t("members:drafts.meta.daysLeft", { count: days });
+      return t("members:drafts.meta.closesOn", {
+        date: fmt.date(meta.date, { day: "numeric", month: "short" }),
+        daysPhrase,
+      });
+    }
+    case "deletesIn": {
+      const days = draft.deadlineDays ?? 0;
+      const daysPhrase = t("members:drafts.meta.daysLeft", { count: days });
+      return t("members:drafts.meta.deletesIn", { daysPhrase });
+    }
+    case "custom":
+      return meta.label;
+    default:
+      return null;
+  }
+}
+
 export function DraftRow({
   draft,
   selected,
@@ -46,6 +93,7 @@ export function DraftRow({
   onAction: (draft: Draft, action: DraftAction) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const status = draftStatus(draft);
   const rowClass = [
     styles.row,
@@ -88,7 +136,7 @@ export function DraftRow({
               key={i}
               className={m.variant ? metaClass[m.variant] : undefined}
             >
-              {m.label}
+              {renderMetaLabel(m, draft, t, fmt)}
             </span>
           ))}
         </div>

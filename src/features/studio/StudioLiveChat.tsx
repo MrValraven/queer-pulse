@@ -1,25 +1,30 @@
 import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import s from "./live.module.css";
 import { CHAT, TABS } from "./studioLive.data";
 
 export function StudioLiveChat({ onTip }: { onTip: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
-  const [tab, setTab] = useState("Chat");
+  const [tab, setTab] = useState("chat");
 
   return (
     <aside className={s.chat}>
       <div className={s.chatTabs}>
-        {TABS.map((tb) => (
+        {TABS.map((tabOption) => (
           <button
             type="button"
-            key={tb.label}
-            className={[s.chatTab, tab === tb.label && s.chatTabOn]
+            key={tabOption.id}
+            className={[s.chatTab, tab === tabOption.id && s.chatTabOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setTab(tb.label)}
+            onClick={() => setTab(tabOption.id)}
           >
-            {tb.label} {tb.ct && <span className={s.ct}>{tb.ct}</span>}
+            {t(tabOption.labelKey)}{" "}
+            {tabOption.ct && <span className={s.ct}>{tabOption.ct}</span>}
           </button>
         ))}
       </div>
@@ -76,11 +81,11 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
       </div>
       <div className={s.chatFoot}>
         <div className={s.chatInput}>
-          <input placeholder="say something to the room…" />
+          <input placeholder={t("studio:liveChat.inputPlaceholder")} />
           <button
             type="button"
-            title="Send"
-            onClick={() => showToast("Sent to the room", "success")}
+            title={t("studio:liveChat.sendAria")}
+            onClick={() => showToast(t("studio:liveChat.sentToast"), "success")}
           >
             <svg
               viewBox="0 0 24 24"
@@ -96,13 +101,13 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
         </div>
         <div className={s.chatActions}>
           <button type="button" onClick={onTip}>
-            Tip €2
+            {t("studio:liveChat.tipPresetCta", { amount: fmt.currency(2) })}
           </button>
           <button type="button" onClick={onTip}>
-            Tip €5
+            {t("studio:liveChat.tipPresetCta", { amount: fmt.currency(5) })}
           </button>
           <button type="button" onClick={onTip}>
-            Tip €__
+            {t("studio:liveChat.tipCustomCta")}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { FiColumns } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AppCardSkeleton } from "./ApplicationStatusSkeleton";
 import { AppCard } from "./ApplicationStatusCard";
 import type { Application, ActionKind } from "./applicationStatus.data";
@@ -27,6 +28,7 @@ export function ApplicationStatusList({
   onCompare: () => void;
   onAction: (appId: string, kind: ActionKind) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.list} aria-busy={loading}>
       {loading ? (
@@ -61,7 +63,7 @@ export function ApplicationStatusList({
                       aria-hidden
                       style={{ marginRight: 6 }}
                     />{" "}
-                    Compare offers
+                    {t("economy:applicationStatus.compareOffersCta")}
                   </Button>
                 )}
               </div>

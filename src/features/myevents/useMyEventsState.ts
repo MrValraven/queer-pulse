@@ -91,6 +91,7 @@ export function useMyEventsState(): MyEventsValue {
     setEvents,
     toast,
     toastAction,
+    t,
   });
 
   // notifications + modals + menu
@@ -385,7 +386,7 @@ export function useMyEventsState(): MyEventsValue {
   );
 
   // ── safety flows (report + block live in a focused sub-hook) ──
-  const safety = useMyEventsSafety({ byId, toast, closeMore });
+  const safety = useMyEventsSafety({ byId, toast, closeMore, t });
 
   return {
     events,

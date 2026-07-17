@@ -5,6 +5,9 @@ import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/SavedProvider";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { StudioLine } from "./StudioSkeletons";
 import s from "./live.module.css";
 import { WF, PLAYED, SET, coverImage } from "./studioLive.data";
@@ -41,6 +44,8 @@ function LiveSetRowSkeleton() {
 }
 
 export function StudioLiveNow({ onTip }: { onTip: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { isSaved, toggleSave } = useSaved();
   const saved = isSaved(LIVE_TRACK.id);
@@ -65,7 +70,9 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
             </span>
           </div>
           <div className={s.nowInfo}>
-            <div className={s.eb}>Track 6 of 12 · jumped from queue</div>
+            <div className={s.eb}>
+              {t("studio:liveNow.trackPosition", { current: 6, total: 12 })}
+            </div>
             <h2>
               Carta para a <em>santa</em>
             </h2>
@@ -97,7 +104,10 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 className={`${s.bt} ${s.btP}`}
                 onClick={onTip}
               >
-                Tip Mariana · €2
+                {t("studio:liveNow.tipArtistCta", {
+                  artist: "Mariana",
+                  amount: fmt.currency(2),
+                })}
               </button>
               <button
                 type="button"
@@ -105,25 +115,27 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 onClick={() => {
                   const now = toggleSave(LIVE_TRACK);
                   showToast(
-                    now
-                      ? "Track saved to your library"
-                      : "Removed from your library",
+                    t(
+                      now
+                        ? "studio:liveNow.savedToast"
+                        : "studio:liveNow.removedToast",
+                    ),
                     now ? "success" : "info",
                   );
                 }}
               >
                 {saved ? (
                   <>
-                    <FiCheck /> Saved
+                    <FiCheck /> {t("studio:liveNow.savedCta")}
                   </>
                 ) : (
                   <>
-                    <FiPlus /> Save track
+                    <FiPlus /> {t("studio:liveNow.saveTrackCta")}
                   </>
                 )}
               </button>
               <Link to={routes.studioTrack} className={s.bt}>
-                Lyrics &amp; notes →
+                {t("studio:liveNow.lyricsNotesCta")}
               </Link>
             </div>
           </div>
@@ -134,23 +146,24 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
               <em>312</em>
             </div>
             <div className={s.lsL}>
-              in the room with you · 89 sustainers, 223 casual
+              {t("studio:liveNow.listenersLabel", {
+                sustainers: 89,
+                casual: 223,
+              })}
             </div>
           </div>
           <div>
             <div className={`${s.lsV} ${s.jade}`}>
               €<em>448</em>
             </div>
-            <div className={s.lsL}>
-              tipped during this set · 100% to artists
-            </div>
+            <div className={s.lsL}>{t("studio:liveNow.tippedLabel")}</div>
           </div>
           <div>
             <div className={s.lsV}>
               €<em>0.05</em>
             </div>
             <div className={s.lsL}>
-              per qualifying play · pays Mariana right now
+              {t("studio:liveNow.perPlayLabel", { artist: "Mariana" })}
             </div>
           </div>
         </div>
@@ -158,7 +171,10 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
 
       <div className={s.tlH}>
         <h3>
-          The set · <em>building live</em>
+          <Translation
+            i18nKey="studio:liveNow.setBuilding.heading"
+            components={{ em: <em /> }}
+          />
         </h3>
         <div className="meta">
           Sara typed the up-next track <em>2 sec ago</em>
@@ -166,20 +182,20 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
       </div>
       <div className={s.setCard}>
         {loading
-          ? Array.from({ length: 8 }).map((_, i) => (
-              <LiveSetRowSkeleton key={i} />
+          ? Array.from({ length: 8 }).map((_, skeletonIndex) => (
+              <LiveSetRowSkeleton key={skeletonIndex} />
             ))
-          : SET.map((r, i) => (
+          : SET.map((setRow, setRowIndex) => (
               <FadeIn
-                key={r.n}
-                delay={Math.min(i, 8) * 60}
-                className={`${s.setRow} ${stateClass[r.state]}`}
+                key={setRow.n}
+                delay={Math.min(setRowIndex, 8) * 60}
+                className={`${s.setRow} ${stateClass[setRow.state]}`}
               >
-                <span className={s.srN}>{r.n}</span>
+                <span className={s.srN}>{setRow.n}</span>
                 <span className={s.srCov}>
                   <ImageSlot
-                    src={r.image}
-                    tint={r.tint as "coral" | "jade" | "plum"}
+                    src={setRow.image}
+                    tint={setRow.tint as "coral" | "jade" | "plum"}
                     width={34}
                     height={34}
                     radius={5}
@@ -188,30 +204,30 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 </span>
                 <div className={s.srInfo}>
                   <h5>
-                    {r.pre}
-                    {r.em && <em>{r.em}</em>}
-                    {r.post}
+                    {setRow.pre}
+                    {setRow.em && <em>{setRow.em}</em>}
+                    {setRow.post}
                   </h5>
-                  <div className={s.srWho}>{r.who}</div>
+                  <div className={s.srWho}>{setRow.who}</div>
                 </div>
                 <div className={s.srPay}>
-                  {r.payNote && (
-                    <b style={{ color: "var(--accent)" }}>{r.payNote}</b>
+                  {setRow.payNote && (
+                    <b style={{ color: "var(--accent)" }}>{setRow.payNote}</b>
                   )}
-                  {r.payEm ? (
+                  {setRow.payEm ? (
                     <em
                       style={{
                         color: "var(--accent)",
                         fontStyle: "italic",
                       }}
                     >
-                      {r.payEm}
+                      {setRow.payEm}
                     </em>
                   ) : (
-                    r.pay
+                    setRow.pay
                   )}
                 </div>
-                <span className={s.srTm}>{r.tm}</span>
+                <span className={s.srTm}>{setRow.tm}</span>
               </FadeIn>
             ))}
       </div>

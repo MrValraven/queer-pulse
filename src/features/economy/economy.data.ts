@@ -274,9 +274,3 @@ export const SAL_FILTERS: { id: Sector | "all"; labelKey: string }[] = [
   { id: "ngo", labelKey: "economy:salary.filter.ngo" },
   { id: "law", labelKey: "economy:salary.filter.law" },
 ];
-
-/**
- * @deprecated unused formatting helper — callers should use `useFormat().currency()`
- * instead so pt-PT gets its `1 234,56 €` suffix form rather than a hardcoded `€` prefix.
- */
-export const euro = (n: number) => "€" + Math.round(n).toLocaleString("pt-PT");

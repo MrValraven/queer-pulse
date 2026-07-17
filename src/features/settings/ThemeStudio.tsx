@@ -8,6 +8,7 @@ import {
 } from "./profileTheme.data";
 import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
 import { currentUser, fullName } from "../members/data/members";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ProfileThemePage.module.css";
 
 function buildCoverBg(
@@ -36,6 +37,7 @@ function buildCoverBg(
  * to be notified when the host should surface unsaved changes.
  */
 export function ThemeStudio({ onChange }: { onChange?: () => void }) {
+  const { t } = useTranslation();
   const { draft, updateDraft } = useProfileTheme();
   const {
     flag: selectedFlag,
@@ -57,12 +59,14 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
   return (
     <div className={styles.layout}>
       <div className={styles.sidebar}>
-        <div className={styles.pkHead}>Profile theme</div>
-        <div className={styles.pkSub}>
-          Shown on your public profile and in the member directory.
+        <div className={styles.pkHead}>
+          {t("settings:themeStudio.sectionLabel")}
         </div>
+        <div className={styles.pkSub}>{t("settings:themeStudio.sub")}</div>
 
-        <div className={styles.pkLabel}>Pride themes</div>
+        <div className={styles.pkLabel}>
+          {t("settings:themeStudio.prideThemesLabel")}
+        </div>
         <div className={styles.flagGrid}>
           {FLAG_SWATCHES.map((f, i) => (
             <div
@@ -75,7 +79,9 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
           ))}
         </div>
 
-        <div className={styles.pkLabel}>Cover style</div>
+        <div className={styles.pkLabel}>
+          {t("settings:themeStudio.coverStyleLabel")}
+        </div>
         <div className={styles.coverStyleOpts}>
           {COVER_STYLES.map((cs) => (
             <div
@@ -86,28 +92,34 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
               <div className={styles.csRadio}>
                 <div className={styles.csDot} />
               </div>
-              <div className={styles.csLabel}>{cs.label}</div>
+              <div className={styles.csLabel}>{t(cs.labelKey)}</div>
             </div>
           ))}
         </div>
 
-        <div className={styles.pkLabel}>Cover pattern</div>
+        <div className={styles.pkLabel}>
+          {t("settings:themeStudio.coverPatternLabel")}
+        </div>
         <div className={styles.patternGrid}>
           {PATTERNS.map((p) => (
             <div
               key={p.key}
               className={`${styles.patSwatch} ${pattern === p.key ? styles.patSwatchSelected : ""}`}
               style={{ background: p.background }}
-              title={p.title}
+              title={t(p.titleKey)}
               onClick={() => edit({ pattern: p.key })}
             />
           ))}
         </div>
 
-        <div className={styles.pkLabel}>Badge display</div>
+        <div className={styles.pkLabel}>
+          {t("settings:themeStudio.badgeDisplayLabel")}
+        </div>
         <div className={styles.tglRows}>
           <div className={styles.tglRow}>
-            <div className={styles.tglTitle}>Show badges on profile</div>
+            <div className={styles.tglTitle}>
+              {t("settings:themeStudio.showBadgesToggle")}
+            </div>
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
@@ -119,7 +131,9 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             </label>
           </div>
           <div className={styles.tglRow}>
-            <div className={styles.tglTitle}>Show level on profile</div>
+            <div className={styles.tglTitle}>
+              {t("settings:themeStudio.showLevelToggle")}
+            </div>
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
@@ -137,21 +151,25 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
           onChange={(e) => edit({ badge: e.target.value })}
         >
           {BADGE_OPTIONS.map((o) => (
-            <option key={o}>{o}</option>
+            <option key={o.id} value={o.id}>
+              {t(o.labelKey)}
+            </option>
           ))}
         </select>
       </div>
 
       <div>
         <div className={styles.previewLabel} style={{ marginBottom: 6 }}>
-          Preview
+          {t("settings:themeStudio.previewLabel")}
         </div>
         <div style={{ fontSize: 13, color: "var(--ink-40)", marginBottom: 20 }}>
-          Updates live as you pick a theme.
+          {t("settings:themeStudio.previewHintTop")}
         </div>
         <div className={styles.previewCards}>
           <div>
-            <div className={styles.previewLabel}>Profile card</div>
+            <div className={styles.previewLabel}>
+              {t("settings:themeStudio.profileCardLabel")}
+            </div>
             <div className={styles.profileCard}>
               <div
                 className={styles.pclCover}
@@ -177,20 +195,24 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
                 <div className={styles.pclName}>{fullName(currentUser)}</div>
                 <div className={styles.pclPronouns}>he/they</div>
                 <div className={styles.pclLoc}>
-                  Lisbon · Member since {currentUser.since}
+                  {t("settings:themeStudio.memberSince", {
+                    year: currentUser.since,
+                  })}
                 </div>
                 <div className={styles.pclBio}>{currentUser.bio}</div>
                 <div
                   className={styles.pclLevel}
                   style={{ opacity: showLevel ? 1 : 0 }}
                 >
-                  Lv.4 · Familiar
+                  {t("settings:themeStudio.levelPreview")}
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <div className={styles.previewLabel}>Directory card</div>
+            <div className={styles.previewLabel}>
+              {t("settings:themeStudio.directoryCardLabel")}
+            </div>
             <div className={styles.dirCard}>
               <div className={styles.dcCover} style={{ background: coverBg }} />
               <div className={styles.dcAvWrap}>
@@ -203,8 +225,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
               </div>
             </div>
             <div className={styles.previewHint}>
-              This is how your profile appears in search results and the member
-              directory.
+              {t("settings:themeStudio.directoryHint")}
             </div>
           </div>
         </div>

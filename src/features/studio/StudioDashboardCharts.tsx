@@ -1,4 +1,5 @@
 import { FadeIn } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioLine } from "./StudioSkeletons";
 import { BARS, CURATORS, CITIES } from "./studioDashboard.data";
 import s from "./creator.module.css";
@@ -38,30 +39,33 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
       <div className={s.card}>
         <div className={s.cardH}>
           <h3>
-            Daily plays · <em>last 14 days</em>
+            <Translation
+              i18nKey="studio:dashboard.charts.dailyPlays.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div className={s.range}>
-            {["7d", "14d", "30d", "1y"].map((r) => (
+            {["7d", "14d", "30d", "1y"].map((range) => (
               <button
-                key={r}
+                key={range}
                 type="button"
-                className={[s.rangeBtn, r === "14d" && s.rangeBtnOn]
+                className={[s.rangeBtn, range === "14d" && s.rangeBtnOn]
                   .filter(Boolean)
                   .join(" ")}
               >
-                {r}
+                {range}
               </button>
             ))}
           </div>
         </div>
         <div className={s.chart}>
-          {BARS.map((h, i) => (
+          {BARS.map((barHeight, barIndex) => (
             <div
-              key={i}
-              className={[s.bar, i === BARS.length - 1 && s.barToday]
+              key={barIndex}
+              className={[s.bar, barIndex === BARS.length - 1 && s.barToday]
                 .filter(Boolean)
                 .join(" ")}
-              style={{ height: `${h}%` }}
+              style={{ height: `${barHeight}%` }}
             />
           ))}
         </div>
@@ -78,17 +82,26 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
       <div className={s.card}>
         <div className={s.cardH}>
           <h3>
-            Curators &amp; <em>placements</em> · what landed your work this week
+            <Translation
+              i18nKey="studio:dashboard.charts.curators.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
         </div>
         {loading
-          ? Array.from({ length: 4 }).map((_, i) => <DashRowSkeleton key={i} />)
-          : CURATORS.map((c, i) => (
-              <FadeIn key={i} delay={Math.min(i, 8) * 60} className={s.row}>
+          ? Array.from({ length: 4 }).map((_, skeletonIndex) => (
+              <DashRowSkeleton key={skeletonIndex} />
+            ))
+          : CURATORS.map((curator, curatorIndex) => (
+              <FadeIn
+                key={curatorIndex}
+                delay={Math.min(curatorIndex, 8) * 60}
+                className={s.row}
+              >
                 <span
                   className={s.rowAv}
                   style={
-                    c.tone === "jade"
+                    curator.tone === "jade"
                       ? {
                           background: "rgba(74,140,111,.2)",
                           color: "var(--jade-light)",
@@ -96,13 +109,13 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
                       : undefined
                   }
                 >
-                  {c.av}
+                  {curator.av}
                 </span>
                 <div>
-                  <div className={s.rowWhat}>{c.what}</div>
-                  <div className={s.rowWho}>{c.who}</div>
+                  <div className={s.rowWhat}>{curator.what}</div>
+                  <div className={s.rowWho}>{curator.who}</div>
                 </div>
-                <div className={s.rowWhen}>{c.when}</div>
+                <div className={s.rowWhen}>{curator.when}</div>
               </FadeIn>
             ))}
       </div>
@@ -110,27 +123,37 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
       <div className={s.card}>
         <div className={s.cardH}>
           <h3>
-            Where they're <em>listening</em> from
+            <Translation
+              i18nKey="studio:dashboard.charts.geography.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
         </div>
         <div className={s.hint}>
-          City-level only · we never see street or finer.{" "}
-          <em>This is the most we'll ever tell you about a listener.</em>
+          <Translation
+            i18nKey="studio:dashboard.charts.geography.hint"
+            components={{ em: <em /> }}
+          />
         </div>
         {loading
-          ? Array.from({ length: 4 }).map((_, i) => <CityRowSkeleton key={i} />)
-          : CITIES.map((c, i) => (
+          ? Array.from({ length: 4 }).map((_, skeletonIndex) => (
+              <CityRowSkeleton key={skeletonIndex} />
+            ))
+          : CITIES.map((city, cityIndex) => (
               <FadeIn
-                key={c.nm}
-                delay={Math.min(i, 8) * 60}
+                key={city.nm}
+                delay={Math.min(cityIndex, 8) * 60}
                 className={s.cityRow}
               >
-                <span className={s.cityNm}>{c.nm}</span>
+                <span className={s.cityNm}>{city.nm}</span>
                 <div className={s.barWrap}>
                   <div className={s.barBg}>
-                    <div className={s.barFl} style={{ width: `${c.pct}%` }} />
+                    <div
+                      className={s.barFl}
+                      style={{ width: `${city.pct}%` }}
+                    />
                   </div>
-                  <span className={s.pct}>{c.pct}%</span>
+                  <span className={s.pct}>{city.pct}%</span>
                 </div>
               </FadeIn>
             ))}

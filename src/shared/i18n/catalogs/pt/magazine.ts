@@ -66,6 +66,7 @@ export const magazine: Catalog = {
   "cover.coverPlaceholder": "Retrato de capa — a toda a largura, luz dramática",
   "cover.coverImageLabel": "Capa · junho de 2026",
   "cover.kicker": "Reportagem de capa · Reportagem",
+  "cover.byline": "Por",
   "cover.photographyBy": "Fotografia de",
   "cover.readFullFeatureCta": "Ler a reportagem completa",
 
@@ -244,6 +245,11 @@ export const magazine: Catalog = {
   "audio.cast.nearbyDevicesTitle": "Dispositivos por perto",
   "audio.cast.pickDeviceSub":
     "Escolhe um altifalante ou ecrã para transmitir este episódio.",
+  // CAST_TARGETS.kindKey (audioPlayer.data.ts) — device protocol/type chrome.
+  "audio.cast.kind.airplaySpeaker": "AirPlay · altifalante",
+  "audio.cast.kind.castScreen": "Cast · ecrã",
+  "audio.cast.kind.airplayTwoSpeakers": "AirPlay · 2 altifalantes",
+  "audio.cast.kind.bluetoothHeadphones": "Bluetooth · auscultadores",
   "audio.sleep.eyebrow": "Temporizador de suspensão",
   "audio.sleep.title": "Parar de reproduzir depois de…",
   "audio.sleep.sub":
@@ -643,10 +649,9 @@ export const magazine: Catalog = {
   "submitStory.issue.deadline": "Prazo de submissão: {date}",
 
   // ══════════════════ Pitch Tracker ═════════════════════════════════════════
-  // Ver a nota em en/magazine.ts: os campos por proposta em PitchCard/
-  // PitchStages não são reativos a uma mudança de idioma (vêm de dados mock +
-  // do adaptador live fora da árvore de renderização) — ficam por traduzir
-  // nesta ronda. Só o chrome do contentor abaixo está traduzido.
+  // Ver a nota em en/magazine.ts: statusLabel/stage labels foram resolvidos
+  // nesta ronda via label-key indirection. actions[].label continua por
+  // traduzir (conteúdo/chrome misturado, com nomes/contagens embutidos).
 
   // ── PitchTrackerHeader ─────────────────────────────────────────────────
   "pitchTracker.header.eyebrow": "Revista · as tuas propostas",
@@ -670,6 +675,38 @@ export const magazine: Catalog = {
   "pitchTracker.page.withdrawnToast": "Proposta retirada",
   "pitchTracker.page.undoCta": "Desfazer",
   "pitchTracker.page.stubToast": "{label} — brevemente neste protótipo",
+
+  // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
+  "pitchTracker.stage.pitched": "Proposta enviada",
+  "pitchTracker.stage.accepted": "Aceite",
+  "pitchTracker.stage.firstDraft": "Primeiro rascunho",
+  "pitchTracker.stage.firstEdit": "Primeira edição",
+  "pitchTracker.stage.layOut": "Paginação",
+  "pitchTracker.stage.published": "Publicado",
+  "pitchTracker.stage.inReview": "Em revisão",
+  "pitchTracker.stage.decision": "Decisão",
+  "pitchTracker.stage.draft": "Rascunho",
+  "pitchTracker.stage.edit": "Edição",
+  "pitchTracker.stage.out": "No ar",
+  "pitchTracker.stage.reviewed": "Revista",
+  "pitchTracker.stage.closed": "Encerrada",
+
+  // ── Live submissionToPitch adapter's generic per-status labels ──────────
+  "pitchTracker.statusLabel.draft": "Rascunho",
+  "pitchTracker.statusLabel.submitted": "Enviada · a aguardar revisão",
+  "pitchTracker.statusLabel.inReview": "Em revisão",
+  "pitchTracker.statusLabel.accepted": "Aceite",
+  "pitchTracker.statusLabel.published": "Publicada",
+  "pitchTracker.statusLabel.rejected": "Não aceite nesta edição",
+
+  // ── Mock PITCHES per-pitch statusLabel (demo-only, pitch-specific copy) ──
+  "pitchTracker.pitch.pharmacist.statusLabel": "Em edição · c/ Marta",
+  "pitchTracker.pitch.fourDayWeek.statusLabel": "Em revisão",
+  "pitchTracker.pitch.commissionedMap.statusLabel": "Encomendada",
+  "pitchTracker.pitch.hostingBadly.statusLabel": "Publicada",
+  "pitchTracker.pitch.risoPrinting.statusLabel": "Publicada",
+  "pitchTracker.pitch.oweOurExes.statusLabel":
+    "Não entra nesta edição · muito próxima",
 
   // ══════════════════ NewsletterSubscribe ═══════════════════════════════════
   "newsletter.subscribe.streamLabel.all": "as três newsletters",
@@ -728,4 +765,122 @@ export const magazine: Catalog = {
   "coverGallery.madeWithHeading": "Feitas <em>com</em>",
   "coverGallery.madeWithSub":
     "Pessoas artistas de capa, por ordem de capa. A maioria são pessoas da comunidade; duas foram encomendadas externamente.",
+
+  // ══════════════════ Páginas de reportagem (Story showcase) ═════════════════
+  // StoryPage/StoryTomasPage/StorySafetyPage e os respetivos *Article são
+  // peças completas da revista (título, nome de autoria, categoria, tempo de
+  // leitura, corpo do texto, citações, biografias) — conteúdo editorial, o
+  // mesmo tratamento de `data/articles.tsx`. Só a palavra de ligação da
+  // assinatura, o título partilhado "mais da comunidade", o CTA de perfil e
+  // os CTAs finais do Outro são chrome, traduzidos abaixo.
+  "story.wordsBy": "Texto de",
+  "story.moreHeading": "Mais <em>da comunidade</em>",
+  "story.viewProfileCta": "Ver perfil →",
+  "story.outro.studio.title":
+    "Queres fazer parte do que <em>vai ser escrito a seguir?</em>",
+  "story.outro.studio.sub":
+    "As histórias são sobre as pessoas na sala. Junta-te a nós.",
+  "story.outro.tomas.title":
+    "Queres juntar-te à mesa do Tomás? <em>Junta-te à sala primeiro.</em>",
+  "story.outro.tomas.sub":
+    "O jantar, a rede, os encontros — tudo começa com um convite de alguém que te conhece.",
+  "story.outro.safety.title": "Leste e parece-te <em>certo?</em>",
+  "story.outro.safety.sub":
+    "Não somos para todas as pessoas. Mas se isto faz sentido para ti, talvez sejas para nós.",
+
+  // ══════════════════ TagPage (secção Reportagens longas) ═══════════════════
+  // O kicker/título/dek/assinatura de cada peça (TagPageHero destacada +
+  // TagPageList, tag.data.tsx) é conteúdo editorial, deixado em inglês. Os
+  // rótulos CHIPS de tópico funcionam também como o valor de filtro guardado,
+  // comparado com `topics` de cada peça — nunca passar isso pelo catálogo
+  // (partiria o filtro em modo pt). Só o chrome da secção é traduzido abaixo.
+  "tag.hero.eyebrow": "Revista · categoria",
+  "tag.hero.h1": "Reportagens <em>longas.</em>",
+  "tag.hero.dek":
+    "<b>Peças de vinte minutos ou mais.</b> Ensaios reportados, perfis com múltiplas fontes, e o tipo de trabalho longo que pede algo a quem lê. Jornalismo lento, de propósito. Peça nova a cada duas quintas-feiras.",
+  "tag.hero.filterLabel": "Filtrar",
+  "tag.hero.stats.piecesInSection": "Peças nesta secção",
+  "tag.hero.stats.minAverageRead": "Min. de leitura em média",
+  "tag.hero.stats.issuesRepresented": "Edições representadas",
+  "tag.hero.stats.contributors": "Pessoas colaboradoras",
+  "tag.hero.curatorEyebrow": "Nota editorial",
+  "tag.hero.getLongReadsCta": "Recebe as reportagens longas por email →",
+  "tag.list.emptyTitle": "Ainda não há reportagens longas nesta categoria",
+  "tag.list.emptyDescription":
+    "Ainda não há nada arquivado em <em>{topic}</em> nas reportagens longas. Explora todas as peças, ou recebe a próxima por email.",
+  "tag.list.showAllCta": "Mostrar todas as reportagens longas",
+  "tag.list.loadingMore": "A carregar reportagens longas mais antigas…",
+  "tag.list.loadOlder_one": "Carregar {count} reportagem longa mais antiga",
+  "tag.list.loadOlder_other":
+    "Carregar {count} reportagens longas mais antigas",
+
+  // ══════════════════ Arquivo da newsletter ═══════════════════════════════
+  // O título/dek/meta de cada edição (newsletterArchive.data.tsx YEARS/LATEST,
+  // e o corpo completo das edições enviadas em newsletterArchiveIssue.data.tsx)
+  // é o conteúdo real da newsletter enviada — fica em inglês, como o corpo de
+  // um artigo. Só o chrome da página do arquivo é traduzido abaixo.
+  "newsletterArchive.hero.eyebrow": "Arquivo da newsletter · desde 2024",
+  "newsletterArchive.hero.h1": "Todos os emails que já <em>enviámos.</em>",
+  "newsletterArchive.hero.dek":
+    "Três newsletters: um resumo comunitário quinzenal, um complemento mensal de reportagens longas e um boletim do Trans Hub. Todas gratuitas. Lê qualquer uma delas aqui — ou subscreve e enviamo-las diretamente.",
+  "newsletterArchive.hero.stats.issuesInArchive": "Edições no arquivo",
+  "newsletterArchive.hero.stats.activeStreams": "Newsletters ativas",
+  "newsletterArchive.hero.stats.subscribersAllStreams":
+    "Pessoas subscritoras em todas as newsletters",
+  "newsletterArchive.hero.stats.languages": "Idiomas · EN & PT",
+  "newsletterArchive.tabsAriaLabel": "Newsletters",
+  "newsletterArchive.readInBrowserCta": "Ler no navegador →",
+  "newsletterArchive.list.emptyTitle": "Ainda não há edições nesta newsletter",
+  "newsletterArchive.list.emptyDescription":
+    "Ainda não foi enviado nada nesta newsletter. Explora as três — há bastante no arquivo.",
+  "newsletterArchive.list.clearFiltersCta": "Limpar filtros",
+  "newsletterArchive.list.loadOlder_one": "Carregar {count} edição mais antiga",
+  "newsletterArchive.list.loadOlder_other":
+    "Carregar {count} edições mais antigas",
+  "newsletterArchive.issue.backToArchive": "Voltar ao arquivo",
+  "newsletterArchive.issue.browseFullArchive": "Explorar o arquivo completo",
+  "newsletterArchive.issue.subscribeToThis": "Subscrever esta newsletter",
+
+  // ══════════════════ Podcast (The Back Room) ═════════════════════════════
+  // Os títulos/descrições/nomes de convidados/datas de cada episódio
+  // (podcastShow.data.tsx) são o conteúdo editorial do programa — ficam em
+  // inglês, como o corpo de um artigo. Só o chrome à volta é traduzido abaixo.
+  "podcast.hero.eyebrow": "QueerPulse Audio · podcast",
+  "podcast.hero.playLatestCta": "Reproduzir o mais recente",
+  "podcast.hero.subscribeCta": "Subscrever",
+  "podcast.listenOnLabel": "Ouve em",
+  "podcast.aboutShowHeading": "Sobre o <em>programa</em>",
+  "podcast.episodesHeading": "Episódios · {count}",
+  "podcast.newestFirst": "Mais recentes primeiro",
+  "podcast.viewEpisodeNotesCta": "Ver notas do episódio →",
+  "podcast.playEpisodeAria": "Reproduzir episódio",
+  "podcast.playEpisodeNumberAria": "Reproduzir episódio {number}",
+  "podcast.showOlderEpisodes_one": "Mostrar {count} episódio mais antigo",
+  "podcast.showOlderEpisodes_other": "Mostrar {count} episódios mais antigos",
+  "podcast.sidebar.hostsHeading": "Apresentação",
+  "podcast.sidebar.aboutShowHeading": "Sobre o programa",
+  "podcast.sidebar.sponsoredLabel": "Patrocinado",
+  "podcast.sidebar.guestHeading": "Queres ser convidade?",
+  "podcast.sidebar.guestBody":
+    "Isto acontece com frequência. Normalmente não aceitamos propostas diretas, mas se estás a fazer algo que vale mesmo a pena, conta-nos.",
+  "podcast.sidebar.writeToTeamCta": "Escrever à equipa",
+  "podcast.modal.listenToTitle": "Ouve <em>{show}</em>",
+  "podcast.modal.sub":
+    "Abre o programa na tua aplicação de podcasts, ou copia o feed.",
+  "podcast.modal.copyCta": "Copiar",
+  "podcast.modal.closeAria": "Fechar",
+  "podcast.modal.rssCopiedToast": "Link do RSS copiado",
+
+  // ── PLATFORMS.kindKey (PodcastShowModals.tsx category label) ────────────
+  "podcast.platformKind.streaming": "Streaming",
+  "podcast.platformKind.app": "Aplicação",
+  "podcast.platformKind.rawFeed": "Feed direto",
+
+  // ── SHOW_INFO.labelKey (PodcastShowSections.tsx sidebar facts) ──────────
+  "podcast.showInfo.format": "Formato",
+  "podcast.showInfo.schedule": "Periodicidade",
+  "podcast.showInfo.length": "Duração",
+  "podcast.showInfo.languages": "Idiomas",
+  "podcast.showInfo.transcripts": "Transcrições",
+  "podcast.showInfo.music": "Música",
 };

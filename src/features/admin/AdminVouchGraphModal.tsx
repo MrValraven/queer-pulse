@@ -2,6 +2,8 @@ import { Fragment, useEffect } from "react";
 import { FiLock, FiPlay, FiSearch, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { VouchGraphCanvas } from "./VouchGraphCanvas";
 import { VouchGraphInspector } from "./VouchGraphInspector";
 import { useVouchGraph, type VouchMode } from "./useVouchGraph";
@@ -9,16 +11,17 @@ import {
   SCENES,
   T_MAX,
   T_MIN,
-  monthLabel,
+  monthDateFromValue,
   personById,
   shortestPath,
 } from "./adminVouchGraph.data";
 import styles from "./AdminVouchGraph.module.css";
 
-const MODES: { key: VouchMode; label: string }[] = [
-  { key: "plain", label: "Network" },
-  { key: "clusters", label: "Scenes" },
-  { key: "safety", label: "Safety" },
+/** `admin:vouchGraph.modes.*` catalog keys, resolved with `t()`. */
+const MODE_KEYS: { key: VouchMode; labelKey: string }[] = [
+  { key: "plain", labelKey: "vouchGraph.modes.network" },
+  { key: "clusters", labelKey: "vouchGraph.modes.scenes" },
+  { key: "safety", labelKey: "vouchGraph.modes.safety" },
 ];
 
 function PathBar({
@@ -30,26 +33,30 @@ function PathBar({
   pathB: string | null;
   onClear: () => void;
 }) {
+  const { t } = useTranslation();
   if (!pathA) return null;
   let content;
   if (pathA && pathB) {
     const path = shortestPath(pathA, pathB);
     content = path ? (
       <span>
-        <b>{path.length}-step trust path:</b>{" "}
+        <b>{t("admin:vouchGraph.pathbar.stepPath", { count: path.length })}</b>{" "}
         {path.map((id) => personById[id]!.initials).join(" → ")}
       </span>
     ) : (
       <span>
-        <b>No trust path</b> between {personById[pathA]!.initials} and{" "}
-        {personById[pathB]!.initials}
+        {t("admin:vouchGraph.pathbar.noPath", {
+          a: personById[pathA]!.initials,
+          b: personById[pathB]!.initials,
+        })}
       </span>
     );
   } else {
     content = (
       <span>
-        Path from <b>{personById[pathA]!.initials}</b> — shift-click a second
-        person
+        {t("admin:vouchGraph.pathbar.fromHint", {
+          name: personById[pathA]!.initials,
+        })}
       </span>
     );
   }
@@ -57,20 +64,21 @@ function PathBar({
     <div className={styles.pathbar}>
       {content}
       <button type="button" onClick={onClear}>
-        clear
+        {t("admin:vouchGraph.pathbar.clear")}
       </button>
     </div>
   );
 }
 
 function Legend({ mode }: { mode: VouchMode }) {
+  const { t } = useTranslation();
   if (mode === "clusters") {
     return (
       <div className={styles.legend}>
         {Object.values(SCENES).map((s) => (
-          <span key={s.label} className={styles.leg}>
+          <span key={s.label ?? s.labelKey} className={styles.leg}>
             <span className={styles.legDot} style={{ background: s.color }} />
-            {s.label}
+            {s.labelKey ? t(s.labelKey) : s.label}
           </span>
         ))}
       </div>
@@ -84,25 +92,25 @@ function Legend({ mode }: { mode: VouchMode }) {
             className={styles.legDot}
             style={{ background: "var(--danger)" }}
           />
-          Suspected ring
+          {t("admin:vouchGraph.legend.safety.ring")}
         </span>
         <span className={styles.leg}>
           <span
             className={styles.legDot}
             style={{ background: "var(--amber)" }}
           />
-          Trust-isolated
+          {t("admin:vouchGraph.legend.safety.isolated")}
         </span>
         <span className={styles.leg}>
           <span
             className={styles.legDot}
             style={{ background: "var(--accent-ink)" }}
           />
-          Has reports
+          {t("admin:vouchGraph.legend.safety.reported")}
         </span>
         <span className={styles.leg}>
           <span className={styles.legDash} />
-          Withdrawn vouch
+          {t("admin:vouchGraph.legend.safety.withdrawn")}
         </span>
       </div>
     );
@@ -111,22 +119,22 @@ function Legend({ mode }: { mode: VouchMode }) {
     <div className={styles.legend}>
       <span className={styles.leg}>
         <span className={styles.legDot} style={{ background: "var(--jade)" }} />
-        Trusted
+        {t("admin:vouchGraph.legend.plain.trusted")}
       </span>
       <span className={styles.leg}>
         <span className={styles.legRing} />
-        Verified
+        {t("admin:vouchGraph.legend.plain.verified")}
       </span>
       <span className={styles.leg}>
         <span className={styles.legBond} />
-        Mutual vouch
+        {t("admin:vouchGraph.legend.plain.mutual")}
       </span>
       <span className={styles.leg}>
         <span className={styles.legHatch} />
-        Anonymous
+        {t("admin:vouchGraph.legend.plain.anonymous")}
       </span>
       <span className={styles.leg}>
-        <FiLock aria-hidden /> Private network
+        <FiLock aria-hidden /> {t("admin:vouchGraph.legend.plain.private")}
       </span>
     </div>
   );
@@ -139,6 +147,8 @@ export function AdminVouchGraphModal({
   focusId: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   useScrollLock();
   const { showToast } = useToast();
   const g = useVouchGraph(focusId);
@@ -156,12 +166,14 @@ export function AdminVouchGraphModal({
         className={styles.shell}
         role="dialog"
         aria-modal="true"
-        aria-label="Trust network"
+        aria-label={t("admin:vouchGraph.modal.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
       >
         <header className={styles.top}>
           <div className={styles.titleBlock}>
-            <span className={styles.eyebrow}>Trust network</span>
+            <span className={styles.eyebrow}>
+              {t("admin:vouchGraph.modal.eyebrow")}
+            </span>
             <div className={styles.h}>
               {focusPerson.name}{" "}
               <span className={styles.pron}>{focusPerson.pronoun}</span>
@@ -191,20 +203,20 @@ export function AdminVouchGraphModal({
             <input
               value={g.search}
               onChange={(e) => g.setSearch(e.target.value)}
-              placeholder="Find a member…"
-              aria-label="Find a member"
+              placeholder={t("admin:vouchGraph.modal.searchPlaceholder")}
+              aria-label={t("admin:vouchGraph.modal.searchAriaLabel")}
             />
           </div>
 
           <div className={styles.modes}>
-            {MODES.map((m) => (
+            {MODE_KEYS.map((m) => (
               <button
                 key={m.key}
                 type="button"
                 className={`${styles.mode}${g.mode === m.key ? ` ${styles.modeOn}` : ""}`}
                 onClick={() => g.changeMode(m.key)}
               >
-                {m.label}
+                {t(`admin:${m.labelKey}`)}
               </button>
             ))}
           </div>
@@ -213,7 +225,7 @@ export function AdminVouchGraphModal({
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t("admin:common.close")}
           >
             <FiX />
           </button>
@@ -241,14 +253,11 @@ export function AdminVouchGraphModal({
             expanded={g.sel ? g.expanded.has(g.sel) : false}
             onGo={g.select}
             onVerify={() =>
-              showToast(
-                "Trust basis attached — opening verification",
-                "success",
-              )
+              showToast(t("admin:vouchGraph.modal.verifyToast"), "success")
             }
             onExpand={g.toggleExpand}
             onCite={() =>
-              showToast("Trust path cited in the audit log", "success")
+              showToast(t("admin:vouchGraph.modal.citeToast"), "success")
             }
           />
         </div>
@@ -262,7 +271,7 @@ export function AdminVouchGraphModal({
               onClick={g.replay}
               disabled={g.replaying}
             >
-              <FiPlay aria-hidden /> Replay
+              <FiPlay aria-hidden /> {t("admin:vouchGraph.modal.replayCta")}
             </button>
             <input
               type="range"
@@ -270,9 +279,14 @@ export function AdminVouchGraphModal({
               max={T_MAX}
               value={g.timeCut}
               onChange={(e) => g.setTime(Number(e.target.value))}
-              aria-label="Time cut-off"
+              aria-label={t("admin:vouchGraph.modal.timeCutAriaLabel")}
             />
-            <span className={styles.timeLbl}>{monthLabel(g.timeCut)}</span>
+            <span className={styles.timeLbl}>
+              {fmt.date(monthDateFromValue(g.timeCut), {
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
           </div>
         </footer>
       </div>

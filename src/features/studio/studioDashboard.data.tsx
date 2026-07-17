@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 
 export interface DashStat {
-  lbl: string;
+  labelKey: string;
+  /** Interpolation values for `labelKey` (e.g. the payout date) — content,
+   * not chrome, but slotted into the translated template via {token}. */
+  labelValues?: Record<string, string | number>;
   v: ReactNode;
   trend: ReactNode;
   payout?: boolean;
@@ -22,7 +25,7 @@ export interface DashCity {
 
 export const STATS: DashStat[] = [
   {
-    lbl: "Plays · this month",
+    labelKey: "studio:dashboard.stats.playsThisMonth",
     v: (
       <>
         36,<em>400</em>
@@ -35,7 +38,7 @@ export const STATS: DashStat[] = [
     ),
   },
   {
-    lbl: "Streaming earnings",
+    labelKey: "studio:dashboard.stats.streamingEarnings",
     v: (
       <>
         €<em>1,820</em>
@@ -48,7 +51,7 @@ export const STATS: DashStat[] = [
     ),
   },
   {
-    lbl: "Tips received",
+    labelKey: "studio:dashboard.stats.tipsReceived",
     v: (
       <>
         €<em>448</em>
@@ -62,7 +65,8 @@ export const STATS: DashStat[] = [
     ),
   },
   {
-    lbl: "Next payout · 5 Jul",
+    labelKey: "studio:dashboard.stats.nextPayout",
+    labelValues: { date: "5 Jul" },
     v: (
       <>
         €<em>2,140</em>

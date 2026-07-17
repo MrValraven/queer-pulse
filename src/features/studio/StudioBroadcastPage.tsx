@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioShell } from "./StudioShell";
 import {
   AudioInColumn,
@@ -19,6 +21,7 @@ function fmt(total: number): string {
 }
 
 function StatusBar({ reduced }: { reduced: boolean }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [elapsed, setElapsed] = useState(START);
 
@@ -32,31 +35,38 @@ function StatusBar({ reduced }: { reduced: boolean }) {
     <div className={s.head}>
       <span className={`${s.liveDot} ${reduced ? s.staticDot : ""}`} />
       <span className={s.onAir}>
-        You're <em>on the air</em>
+        <Translation
+          i18nKey="studio:broadcast.status.onAir"
+          components={{ em: <em /> }}
+        />
       </span>
-      <span className={s.pill}>live</span>
+      <span className={s.pill}>{t("studio:broadcast.status.livePill")}</span>
       <span className={s.clock}>{fmt(elapsed)}</span>
       <span className={s.headMeta}>
-        <em>418</em> in the room · 89 sustainers · 31 cities
+        <Translation
+          i18nKey="studio:broadcast.status.meta"
+          components={{ em: <em /> }}
+          values={{ count: 418, sustainers: 89, cities: 31 }}
+        />
       </span>
       <div className={s.headRight}>
         <button
           type="button"
           className={s.pauseBtn}
           onClick={() =>
-            showToast("Mic paused — the room hears silence", "info")
+            showToast(t("studio:broadcast.status.toast.micPaused"), "info")
           }
         >
-          Pause mic
+          {t("studio:broadcast.status.pauseMicCta")}
         </button>
         <button
           type="button"
           className={s.endBtn}
           onClick={() =>
-            showToast("Broadcast ends in 5… archiving to a replay", "info")
+            showToast(t("studio:broadcast.status.toast.ending"), "info")
           }
         >
-          End broadcast
+          {t("studio:broadcast.status.endBroadcastCta")}
         </button>
       </div>
     </div>

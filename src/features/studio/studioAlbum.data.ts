@@ -124,7 +124,27 @@ export const TRACKS: {
   },
 ];
 
-export const TABS = ["Tracklist", "Liner notes", "Credits"] as const;
+// Stable canonical ids — the tab's *stored* value never changes with
+// language; only `labelKey` resolves via t() at render (i18n §5.1).
+export const TABS = [
+  { id: "tracklist", labelKey: "studio:album.tabs.tracklist" },
+  { id: "linerNotes", labelKey: "studio:album.tabs.linerNotes" },
+  { id: "credits", labelKey: "studio:album.tabs.credits" },
+] as const;
+export type AlbumTabId = (typeof TABS)[number]["id"];
+
+// Mock ledger + buy figures — per-instance analytics, run through
+// useFormat() at the call site rather than hardcoded as display strings.
+export const ALBUM_BUY = {
+  price: 8,
+  payWhatYouCanMin: 1,
+};
+
+export const ALBUM_LEDGER = {
+  paidToArtistLifetime: 8940,
+  paidToCollaborators: 1420,
+  playsThisMonth: 42840,
+};
 
 export const MORE: {
   pre: string;

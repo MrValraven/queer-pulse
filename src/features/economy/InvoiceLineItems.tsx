@@ -1,6 +1,7 @@
 import { FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { type LineItem, lineTotal, emptyLine } from "./invoice.data";
 import styles from "./InvoiceGeneratorPage.module.css";
 
@@ -11,6 +12,8 @@ interface InvoiceLineItemsProps {
 
 /** Editable invoice line rows: description / qty / unit, with add + remove. */
 export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const patch = (id: string, change: Partial<LineItem>) =>
     onChange(items.map((l) => (l.id === id ? { ...l, ...change } : l)));
 
@@ -25,32 +28,34 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
 
   return (
     <fieldset className={styles.lines}>
-      <legend className={styles.legend}>Line items</legend>
+      <legend className={styles.legend}>
+        {t("economy:invoiceTool.lines.legend")}
+      </legend>
 
       <div className={styles.lineHead} aria-hidden>
-        <span>Description</span>
-        <span>Qty</span>
-        <span>Unit (€)</span>
-        <span>Total</span>
+        <span>{t("economy:invoiceTool.lines.description")}</span>
+        <span>{t("economy:invoiceTool.lines.qty")}</span>
+        <span>{t("economy:invoiceTool.lines.unit")}</span>
+        <span>{t("economy:invoiceTool.lines.total")}</span>
         <span />
       </div>
 
       {items.map((l, i) => (
         <div key={l.id} className={styles.lineRow}>
           <label className={styles.srOnly} htmlFor={`desc-${l.id}`}>
-            Description for line {i + 1}
+            {t("economy:invoiceTool.lines.descAriaLabel", { index: i + 1 })}
           </label>
           <input
             id={`desc-${l.id}`}
             className={styles.rcInput}
             type="text"
-            placeholder="What you delivered"
+            placeholder={t("economy:invoiceTool.lines.descPlaceholder")}
             value={l.desc}
             onChange={(e) => patch(l.id, { desc: e.target.value })}
           />
 
           <label className={styles.srOnly} htmlFor={`qty-${l.id}`}>
-            Quantity for line {i + 1}
+            {t("economy:invoiceTool.lines.qtyAriaLabel", { index: i + 1 })}
           </label>
           <input
             id={`qty-${l.id}`}
@@ -63,7 +68,7 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
           />
 
           <label className={styles.srOnly} htmlFor={`unit-${l.id}`}>
-            Unit price for line {i + 1}
+            {t("economy:invoiceTool.lines.unitAriaLabel", { index: i + 1 })}
           </label>
           <input
             id={`unit-${l.id}`}
@@ -75,14 +80,16 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
             onChange={(e) => patch(l.id, { unit: num(e.target.value) })}
           />
 
-          <span className={styles.lineTotal}>{euro(lineTotal(l))}</span>
+          <span className={styles.lineTotal}>{fmt.currency(lineTotal(l))}</span>
 
           <button
             type="button"
             className={styles.lineRemove}
             onClick={() => remove(l.id)}
             disabled={items.length === 1}
-            aria-label={`Remove line ${i + 1}`}
+            aria-label={t("economy:invoiceTool.lines.removeAriaLabel", {
+              index: i + 1,
+            })}
           >
             <FiX aria-hidden />
           </button>
@@ -96,7 +103,7 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
         onClick={add}
         className={styles.addLine}
       >
-        <FiPlus aria-hidden /> Add line
+        <FiPlus aria-hidden /> {t("economy:invoiceTool.lines.addCta")}
       </Button>
     </fieldset>
   );

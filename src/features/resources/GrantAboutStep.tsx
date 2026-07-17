@@ -1,5 +1,7 @@
 import { FiCheck } from "react-icons/fi";
-import { COMMITMENTS } from "./microGrants.data";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { COMMITMENT_KEYS } from "./microGrants.data";
 import styles from "./MicroGrantsPage.module.css";
 
 /* Step 4 — about you */
@@ -14,47 +16,62 @@ export function AboutStep({
   checks: Set<number>;
   toggleCheck: (n: number) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <div className={styles.stepTitle}>
-        About <em>you.</em>
+        <Translation
+          i18nKey="resources:microGrants.apply.about.stepTitle"
+          components={{ em: <em /> }}
+        />
       </div>
       <p className={styles.stepSub}>
-        We know who you are as a member, but tell us a little about your
-        relationship to this project and the community it serves.
+        {t("resources:microGrants.apply.about.stepSub")}
       </p>
       <label className={styles.label}>
-        Your name (as you'd like it on the grant record)
+        {t("resources:microGrants.apply.about.nameLabel")}
       </label>
       <input
         className={styles.input}
         type="text"
-        placeholder="Chosen name or full name — your call"
+        placeholder={t("resources:microGrants.apply.about.namePlaceholder")}
         value={appName}
         onChange={(e) => setAppName(e.target.value)}
       />
-      <label className={styles.label}>Your connection to this project</label>
+      <label className={styles.label}>
+        {t("resources:microGrants.apply.about.connectionLabel")}
+      </label>
       <textarea
         className={styles.textarea}
-        placeholder="Why are you the right person to do this? What is your relationship to the community it serves?"
+        placeholder={t(
+          "resources:microGrants.apply.about.connectionPlaceholder",
+        )}
         style={{ minHeight: 90 }}
       />
       <label className={styles.label}>
-        Have you received a QueerPulse grant before?
+        {t("resources:microGrants.apply.about.priorGrantLabel")}
       </label>
       <select className={styles.select} defaultValue="">
-        <option value="">Select…</option>
-        <option>No, this is my first application</option>
-        <option>Yes — and I submitted a report</option>
-        <option>Yes — report is pending (within 3 months)</option>
+        <option value="">
+          {t("resources:microGrants.apply.about.priorGrant.select")}
+        </option>
+        <option>
+          {t("resources:microGrants.apply.about.priorGrant.first")}
+        </option>
+        <option>
+          {t("resources:microGrants.apply.about.priorGrant.reported")}
+        </option>
+        <option>
+          {t("resources:microGrants.apply.about.priorGrant.pending")}
+        </option>
       </select>
       <div className={styles.label} style={{ marginBottom: 10 }}>
-        Commitments
+        {t("resources:microGrants.apply.about.commitmentsLabel")}
       </div>
-      {COMMITMENTS.map((txt, i) => (
+      {COMMITMENT_KEYS.map((commitmentKey, i) => (
         <div
           className={styles.checkRow}
-          key={i}
+          key={commitmentKey}
           role="button"
           tabIndex={0}
           onClick={() => toggleCheck(i)}
@@ -72,7 +89,7 @@ export function AboutStep({
           >
             {checks.has(i) ? <FiCheck /> : ""}
           </div>
-          <span className={styles.checkText}>{txt}</span>
+          <span className={styles.checkText}>{t(commitmentKey)}</span>
         </div>
       ))}
     </>

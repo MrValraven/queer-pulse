@@ -376,7 +376,7 @@ export const myevents: Catalog = {
   "rsvpModal.attendQuietlyDesc":
     "Come along without your name showing on the guest list.",
   "rsvpModal.privacyNote":
-    "Only the host sees your access &amp; dietary notes. You can change all of this any time.",
+    "Only the host sees your access & dietary notes. You can change all of this any time.",
   "rsvpModal.cancelCta": "Cancel",
   "rsvpModal.saveCta": "Save",
   "rsvpModal.savedToast": "Saved — only the host can see this",
@@ -398,10 +398,10 @@ export const myevents: Catalog = {
   "settingsModal.push": "Push notifications",
   "settingsModal.pushDesc": "On your phone, for time-sensitive changes.",
   "settingsModal.pushToggleLabel": "Push notifications",
-  "settingsModal.syncTickets": "Sync &amp; tickets",
+  "settingsModal.syncTickets": "Sync & tickets",
   "settingsModal.connectCalendar": "Connect your calendar",
   "settingsModal.connectCalendarSub": "Two-way sync with Google or Apple",
-  "settingsModal.ticketsReceipts": "Tickets &amp; receipts",
+  "settingsModal.ticketsReceipts": "Tickets & receipts",
   "settingsModal.ticketsReceiptsSub": "All your tickets and payment records",
   "settingsModal.privacyNote":
     "QueerPulse never sells your data. Visibility is always your choice.",

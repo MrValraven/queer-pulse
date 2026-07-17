@@ -1,19 +1,51 @@
 import type { ReactNode } from "react";
+import { Translation } from "../../shared/i18n/Translation";
+import type { Formatters } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
 
-export const MENTION_TABS: { label: string; count: number }[] = [
-  { label: "All", count: 8 },
-  { label: "Unread", count: 3 },
-  { label: "In posts", count: 4 },
-  { label: "In articles", count: 2 },
-  { label: "In events", count: 2 },
+export type MentionTabId = "all" | "unread" | "posts" | "articles" | "events";
+
+/** Stable `id` is what the page's tab-matching switches on — the display
+ * `labelKey` translates but must never be the lookup value itself (i18n sweep
+ * §5.1: a translated label doubling as a stored/matched key breaks filtering
+ * in pt mode only). */
+export const MENTION_TAB_DEFS: {
+  id: MentionTabId;
+  labelKey: string;
+  count: number;
+}[] = [
+  { id: "all", labelKey: "notifications:mentions.tabs.all", count: 8 },
+  { id: "unread", labelKey: "notifications:mentions.tabs.unread", count: 3 },
+  { id: "posts", labelKey: "notifications:mentions.tabs.posts", count: 4 },
+  {
+    id: "articles",
+    labelKey: "notifications:mentions.tabs.articles",
+    count: 2,
+  },
+  { id: "events", labelKey: "notifications:mentions.tabs.events", count: 2 },
 ];
+
+/** What a mention row is "about", for tab filtering — kept separate from the
+ * translated `context` display string so a language switch never breaks
+ * filtering (the previous version matched substrings of the English label). */
+export type MentionCategory = "post" | "article" | "event" | "other";
+
+export type MentionActionType =
+  "reply" | "openThread" | "markRead" | "openArticle" | "rsvp" | "openPost";
+
+export interface MentionAction {
+  type: MentionActionType;
+  primary?: boolean;
+}
 
 export interface Mention {
   id: string;
   initials: string;
   tint: "coral" | "jade" | "plum";
   name: string;
-  context: string;
+  category: MentionCategory;
+  /** Translated "in a reply" / "in an article comment" / … descriptor. */
+  context: ReactNode;
   when: string;
   fresh?: boolean;
   unread?: boolean;
@@ -21,166 +53,244 @@ export interface Mention {
   whereText: string;
   /** Route to the source; omitted for private/no-link sources. */
   whereTo?: string;
-  actions: { label: string; primary?: boolean }[];
+  actions: MentionAction[];
 }
 
-export const MENTION_DAYS: { day: string; items: Mention[] }[] = [
+interface MentionSeed {
+  id: string;
+  initials: string;
+  tint: Mention["tint"];
+  name: string;
+  category: MentionCategory;
+  context: (t: TFunction) => ReactNode;
+  when: (fmt: Formatters) => string;
+  fresh?: boolean;
+  unread?: boolean;
+  content: ReactNode;
+  whereText: string;
+  whereTo?: string;
+  actions: MentionAction[];
+  day: "today" | "yesterday" | "thisWeek";
+}
+
+const MENTION_SEEDS: MentionSeed[] = [
   {
-    day: "Today",
-    items: [
-      {
-        id: "m1",
-        initials: "AK",
-        tint: "coral",
-        name: "Anika Kovač",
-        context: "in a reply",
-        when: "14m ago",
-        fresh: true,
-        unread: true,
-        content: (
-          <>
-            "Thanks <mark>@tomás</mark> — Inês's mobile was the right answer.
-            Got the slot. <em>Calling tomorrow morning to confirm.</em>"
-          </>
-        ),
-        whereText:
-          '"Anyone have recommendations for a queer-friendly GP in Lisbon?"',
-        actions: [
-          { label: "Reply", primary: true },
-          { label: "Open thread" },
-          { label: "Mark read" },
-        ],
-      },
-      {
-        id: "m2",
-        initials: "SP",
-        tint: "jade",
-        name: "Sara Pinheiro",
-        context: "in an article comment",
-        when: "3h ago",
-        fresh: true,
-        unread: true,
-        content: (
-          <>
-            "<mark>@tomás</mark>, your Issue 5 piece on the four-day week comes
-            up here too — particularly the section about clinic schedules. Worth
-            re-reading."
-          </>
-        ),
-        whereText:
-          '"Five things I learned navigating Lisbon\'s trans health system"',
-        actions: [{ label: "Reply", primary: true }, { label: "Open article" }],
-      },
-      {
-        id: "m3",
-        initials: "MR",
-        tint: "plum",
-        name: "Marta Reis",
-        context: "in Open Studio invite",
-        when: "6h ago",
-        fresh: true,
-        unread: true,
-        content: (
-          <>
-            "<mark>@tomás</mark> — bringing the Issue 10 spreads for live edit
-            on Thu 26 Jun. Hope you can make it. <em>Bring a red pen.</em>"
-          </>
-        ),
-        whereText: "Open Studio · 26 Jun · Atelier Pulso",
-        actions: [{ label: "RSVP", primary: true }, { label: "Reply" }],
-      },
+    id: "m1",
+    initials: "AK",
+    tint: "coral",
+    name: "Anika Kovač",
+    category: "post",
+    context: (t) => t("notifications:mentions.context.reply"),
+    when: (fmt) => fmt.relativeTime(-14, "minute"),
+    fresh: true,
+    unread: true,
+    content: (
+      <>
+        "Thanks <mark>@tomás</mark> — Inês's mobile was the right answer. Got
+        the slot. <em>Calling tomorrow morning to confirm.</em>"
+      </>
+    ),
+    whereText:
+      '"Anyone have recommendations for a queer-friendly GP in Lisbon?"',
+    actions: [
+      { type: "reply", primary: true },
+      { type: "openThread" },
+      { type: "markRead" },
     ],
+    day: "today",
   },
   {
-    day: "Yesterday",
-    items: [
-      {
-        id: "m4",
-        initials: "LG",
-        tint: "coral",
-        name: "Luísa Gomes",
-        context: "in a Creatives post",
-        when: "Yesterday",
-        content: (
-          <>
-            "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed —
-            bring three pieces, not five, and at least one that you think is
-            bad."
-          </>
-        ),
-        whereText: "Creatives community",
-        actions: [{ label: "Open post" }],
-      },
-      {
-        id: "m5",
-        initials: "FL",
-        tint: "jade",
-        name: "Filipa Lopes",
-        context: "in a thread",
-        when: "Yesterday",
-        content: (
-          <>
-            "<mark>@tomás</mark> ran a great session at the riso night —
-            recommend if you're new to the medium."
-          </>
-        ),
-        whereText: '"What\'s a Lisbon workshop worth the money?"',
-        actions: [],
-      },
-    ],
+    id: "m2",
+    initials: "SP",
+    tint: "jade",
+    name: "Sara Pinheiro",
+    category: "article",
+    context: (t) => t("notifications:mentions.context.articleComment"),
+    when: (fmt) => fmt.relativeTime(-3, "hour"),
+    fresh: true,
+    unread: true,
+    content: (
+      <>
+        "<mark>@tomás</mark>, your Issue 5 piece on the four-day week comes up
+        here too — particularly the section about clinic schedules. Worth
+        re-reading."
+      </>
+    ),
+    whereText:
+      '"Five things I learned navigating Lisbon\'s trans health system"',
+    actions: [{ type: "reply", primary: true }, { type: "openArticle" }],
+    day: "today",
   },
   {
-    day: "This week",
-    items: [
-      {
-        id: "m6",
-        initials: "CV",
-        tint: "plum",
-        name: "Catarina Vaz",
-        context: "in an event invite",
-        when: "Mon",
-        content: (
-          <>
-            "Inviting <mark>@tomás</mark>, <mark>@luísa</mark>, and{" "}
-            <mark>@filipa</mark> to a small post-Pride dinner at my place.{" "}
-            <em>Bring something to grill.</em>"
-          </>
-        ),
-        whereText: "a private invite · 6 people",
-        actions: [],
-      },
-      {
-        id: "m7",
-        initials: "TC",
-        tint: "coral",
-        name: "Tó Cunha",
-        context: "in a reply",
-        when: "Sat",
-        content: (
-          <>
-            "<mark>@tomás</mark> — your Issue 5 long-read is the piece that got
-            me into riso. Full circle."
-          </>
-        ),
-        whereText: "Riso workshop · feedback thread",
-        actions: [],
-      },
-      {
-        id: "m8",
-        initials: "RV",
-        tint: "jade",
-        name: "Rita Vasquez",
-        context: "in a Wellbeing reply",
-        when: "Fri",
-        content: (
-          <>
-            "<mark>@tomás</mark> — could you message me about the post-march
-            decompression event? Want to co-host."
-          </>
-        ),
-        whereText: "Wellbeing community",
-        actions: [],
-      },
-    ],
+    id: "m3",
+    initials: "MR",
+    tint: "plum",
+    name: "Marta Reis",
+    category: "event",
+    context: (_t) => (
+      <Translation
+        i18nKey="notifications:mentions.context.namedInvite"
+        values={{ name: "Open Studio" }}
+      />
+    ),
+    when: (fmt) => fmt.relativeTime(-6, "hour"),
+    fresh: true,
+    unread: true,
+    content: (
+      <>
+        "<mark>@tomás</mark> — bringing the Issue 10 spreads for live edit on
+        Thu 26 Jun. Hope you can make it. <em>Bring a red pen.</em>"
+      </>
+    ),
+    whereText: "Open Studio · 26 Jun · Atelier Pulso",
+    actions: [{ type: "rsvp", primary: true }, { type: "reply" }],
+    day: "today",
+  },
+  {
+    id: "m4",
+    initials: "LG",
+    tint: "coral",
+    name: "Luísa Gomes",
+    category: "post",
+    context: (_t) => (
+      <Translation
+        i18nKey="notifications:mentions.context.communityPost"
+        values={{ community: "Creatives" }}
+      />
+    ),
+    when: (fmt) => fmt.relativeTime(-1, "day"),
+    content: (
+      <>
+        "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed —
+        bring three pieces, not five, and at least one that you think is bad."
+      </>
+    ),
+    whereText: "Creatives community",
+    actions: [{ type: "openPost" }],
+    day: "yesterday",
+  },
+  {
+    id: "m5",
+    initials: "FL",
+    tint: "jade",
+    name: "Filipa Lopes",
+    category: "post",
+    context: (t) => t("notifications:mentions.context.thread"),
+    when: (fmt) => fmt.relativeTime(-1, "day"),
+    content: (
+      <>
+        "<mark>@tomás</mark> ran a great session at the riso night — recommend
+        if you're new to the medium."
+      </>
+    ),
+    whereText: '"What\'s a Lisbon workshop worth the money?"',
+    actions: [],
+    day: "yesterday",
+  },
+  {
+    id: "m6",
+    initials: "CV",
+    tint: "plum",
+    name: "Catarina Vaz",
+    category: "event",
+    context: (t) => t("notifications:mentions.context.eventInvite"),
+    when: (fmt) => fmt.date(new Date(2026, 5, 15), { weekday: "short" }),
+    content: (
+      <>
+        "Inviting <mark>@tomás</mark>, <mark>@luísa</mark>, and{" "}
+        <mark>@filipa</mark> to a small post-Pride dinner at my place.{" "}
+        <em>Bring something to grill.</em>"
+      </>
+    ),
+    whereText: "a private invite · 6 people",
+    actions: [],
+    day: "thisWeek",
+  },
+  {
+    id: "m7",
+    initials: "TC",
+    tint: "coral",
+    name: "Tó Cunha",
+    category: "post",
+    context: (t) => t("notifications:mentions.context.reply"),
+    when: (fmt) => fmt.date(new Date(2026, 5, 13), { weekday: "short" }),
+    content: (
+      <>
+        "<mark>@tomás</mark> — your Issue 5 long-read is the piece that got me
+        into riso. Full circle."
+      </>
+    ),
+    whereText: "Riso workshop · feedback thread",
+    actions: [],
+    day: "thisWeek",
+  },
+  {
+    id: "m8",
+    initials: "RV",
+    tint: "jade",
+    name: "Rita Vasquez",
+    category: "post",
+    context: (_t) => (
+      <Translation
+        i18nKey="notifications:mentions.context.communityReply"
+        values={{ community: "Wellbeing" }}
+      />
+    ),
+    when: (fmt) => fmt.date(new Date(2026, 5, 12), { weekday: "short" }),
+    content: (
+      <>
+        "<mark>@tomás</mark> — could you message me about the post-march
+        decompression event? Want to co-host."
+      </>
+    ),
+    whereText: "Wellbeing community",
+    actions: [],
+    day: "thisWeek",
   },
 ];
+
+/** Ids of mentions that start unread — exported so callers (the bell badge on
+ * `NotificationsPage`) can count without needing `t`/`fmt`. */
+export const MENTION_UNREAD_IDS = MENTION_SEEDS.filter((m) => m.unread).map(
+  (m) => m.id,
+);
+
+/**
+ * Build the day-grouped mention list. A function of `t` + `fmt` (Pattern B):
+ * `context` carries a translated phrase (some with an embedded proper noun
+ * token) and `when` is computed through `fmt.relativeTime`/`fmt.date` rather
+ * than a hand-rolled string.
+ */
+export function buildMentionDays(
+  t: TFunction,
+  fmt: Formatters,
+): { day: string; items: Mention[] }[] {
+  const dayLabel: Record<MentionSeed["day"], string> = {
+    today: t("notifications:mentions.day.today"),
+    yesterday: t("notifications:mentions.day.yesterday"),
+    thisWeek: t("notifications:mentions.day.thisWeek"),
+  };
+  const groups = new Map<string, Mention[]>();
+  for (const seed of MENTION_SEEDS) {
+    const label = dayLabel[seed.day];
+    const mention: Mention = {
+      id: seed.id,
+      initials: seed.initials,
+      tint: seed.tint,
+      name: seed.name,
+      category: seed.category,
+      context: seed.context(t),
+      when: seed.when(fmt),
+      fresh: seed.fresh,
+      unread: seed.unread,
+      content: seed.content,
+      whereText: seed.whereText,
+      whereTo: seed.whereTo,
+      actions: seed.actions,
+    };
+    const existing = groups.get(label);
+    if (existing) existing.push(mention);
+    else groups.set(label, [mention]);
+  }
+  return Array.from(groups, ([day, items]) => ({ day, items }));
+}

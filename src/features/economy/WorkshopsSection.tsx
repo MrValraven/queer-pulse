@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { Avatar, Button, FadeIn } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useWorkshops } from "../../app/providers/WorkshopsProvider";
 import type { Workshop } from "./workshops.data";
@@ -9,6 +11,7 @@ import { AddWorkshopModal } from "./AddWorkshopModal";
 import styles from "./WorkshopsSection.module.css";
 
 function WorkshopCard({ workshop }: { workshop: Workshop }) {
+  const { t } = useTranslation();
   const seatsLeft = workshop.spotsTotal - workshop.spotsFilled;
   return (
     <Link to={`${routes.skills}/${workshop.id}`} className={styles.card}>
@@ -18,7 +21,9 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
             .filter(Boolean)
             .join(" ")}
         >
-          {workshop.added ? "New · yours" : workshop.mode}
+          {workshop.added
+            ? t("economy:workshopsSection.newBadge")
+            : workshop.mode}
         </span>
         <span className={styles.price}>{workshop.price}</span>
       </div>
@@ -36,26 +41,35 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
           size={26}
         />
         <span>
-          with <b>{workshop.tutor.name}</b>
+          <Translation
+            i18nKey="economy:workshopsSection.withTutor"
+            values={{ name: workshop.tutor.name }}
+            components={{ b: <b /> }}
+          />
         </span>
       </div>
       <div className={styles.foot}>
         <span className={styles.spots}>
           {seatsLeft > 0 ? (
-            <>
-              <b>{seatsLeft}</b> {seatsLeft === 1 ? "seat" : "seats"} left
-            </>
+            <Translation
+              i18nKey="economy:workshopsSection.seatsLeft"
+              values={{ count: seatsLeft }}
+              components={{ b: <b /> }}
+            />
           ) : (
-            "Cohort full"
+            t("economy:workshopsSection.cohortFull")
           )}
         </span>
-        <span className={styles.view}>View workshop →</span>
+        <span className={styles.view}>
+          {t("economy:workshopsSection.viewCta")}
+        </span>
       </div>
     </Link>
   );
 }
 
 export function WorkshopsSection({ active = "all" }: { active?: string }) {
+  const { t } = useTranslation();
   const { workshops } = useWorkshops();
   const [adding, setAdding] = useState(false);
   const filtered =
@@ -71,18 +85,17 @@ export function WorkshopsSection({ active = "all" }: { active?: string }) {
         <div className={styles.headText}>
           <h2>
             <span className={styles.dot} />
-            Advanced <em>workshops</em>
+            <Translation
+              i18nKey="economy:workshopsSection.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         <Button variant="ghost" onClick={() => setAdding(true)}>
-          <FiPlus aria-hidden /> List a workshop
+          <FiPlus aria-hidden /> {t("economy:workshopsSection.listCta")}
         </Button>
       </div>
-      <p className={styles.blurb}>
-        Structured, multi-week courses led by members who go deep on one craft.
-        Small cohorts, sliding-scale pricing, and you make something real by the
-        end. Running a course yourself? List it here.
-      </p>
+      <p className={styles.blurb}>{t("economy:workshopsSection.blurb")}</p>
 
       <div className={styles.grid}>
         {filtered.map((workshop, index) => (

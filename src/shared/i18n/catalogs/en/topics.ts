@@ -53,4 +53,16 @@ export const topics: Catalog = {
   "sidebar.topVoicesTitle": "Top voices here",
   "sidebar.crisis.body": "In crisis? Don't wait for the thread.",
   "sidebar.crisis.cta": "Open crisis chat",
+
+  // Generic fallback for an uncurated/unknown tag (`getTopic()`'s fallback
+  // branch) — platform-authored prompt copy, not fetched content, so it
+  // translates like any other empty/starter state.
+  "fallback.sub":
+    "Posts, questions, and recommendations tagged <strong>#{tag}</strong> from across the QueerPulse community.",
+  "fallback.postMeta": "Be the first here",
+  "fallback.postTitle":
+    "Nothing tagged <em>#{tag}</em> yet — want to start the thread?",
+  "fallback.postBody":
+    "Topics grow when someone goes first. Post a question, a recommendation, or a resource with #{tag} and it will show up right here.",
+  "fallback.postStats": "<b>0</b> posts · waiting for you",
 };

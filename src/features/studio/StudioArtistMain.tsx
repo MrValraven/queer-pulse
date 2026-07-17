@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
-import { TABS, RELEASES, SINGLES } from "./studioArtist.data";
+import { RELEASES, SINGLES, type ArtistTabId } from "./studioArtist.data";
 import { routes } from "../../app/routeMap";
 import styles from "./studio.module.css";
 
 const tagClass = { free: styles.tagFree, mem: styles.tagMem };
 
-export function StudioArtistMain({ tab }: { tab: (typeof TABS)[number] }) {
+export function StudioArtistMain({ tab }: { tab: ArtistTabId }) {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
 
-  if (tab === "About") {
+  if (tab === "about") {
     return (
       <div className={styles.prose}>
         <p>
@@ -32,7 +35,7 @@ export function StudioArtistMain({ tab }: { tab: (typeof TABS)[number] }) {
   return (
     <>
       <div className={styles.rowH} style={{ marginBottom: 14 }}>
-        <h2>Releases</h2>
+        <h2>{t("studio:artist.main.releasesHeading")}</h2>
       </div>
       {loading ? (
         <StudioCardGridSkeleton
@@ -64,7 +67,7 @@ export function StudioArtistMain({ tab }: { tab: (typeof TABS)[number] }) {
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span className={`${styles.tag} ${styles.tagMem}`}>
-                  Sustainer
+                  {t("studio:tag.sustainer")}
                 </span>
               </div>
               <h4>
@@ -83,7 +86,10 @@ export function StudioArtistMain({ tab }: { tab: (typeof TABS)[number] }) {
 
       <div className={styles.rowH} style={{ margin: "32px 0 14px" }}>
         <h2>
-          Singles &amp; <em>standalones</em>
+          <Translation
+            i18nKey="studio:artist.main.singlesHeading"
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
       {loading ? (
@@ -116,7 +122,9 @@ export function StudioArtistMain({ tab }: { tab: (typeof TABS)[number] }) {
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span className={`${styles.tag} ${tagClass[s.tag]}`}>
-                  {s.tag === "mem" ? "Sustainer" : "Free"}
+                  {s.tag === "mem"
+                    ? t("studio:tag.sustainer")
+                    : t("studio:tag.free")}
                 </span>
               </div>
               <h4>

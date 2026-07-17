@@ -1,27 +1,47 @@
 import { Link } from "react-router-dom";
 import { FiStar } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import type { Tab } from "./family.data";
 import styles from "./FamilyPage.module.css";
 
 export function FamilyTabContent({ tab }: { tab: Tab }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.tabContent}>
       <div className="wrap">
         <div className={styles.tabHead}>
-          <h2>{tab.headTitle}</h2>
-          <p>{tab.headText}</p>
+          <h2>
+            <Translation
+              i18nKey={`community:${tab.headTitleKey}`}
+              components={{ em: <em /> }}
+            />
+          </h2>
+          <p>{t(`community:${tab.headTextKey}`)}</p>
         </div>
 
         <div className={styles.infoGrid}>
           {tab.cards.map((card) => (
-            <div className={styles.infoCard} key={card.title}>
-              <div className={styles.icEyebrow}>{card.eyebrow}</div>
-              <div className={styles.icTitle}>{card.title}</div>
-              <div className={styles.icBody}>{card.body}</div>
-              {card.note && <div className={styles.icNote}>{card.note}</div>}
+            <div className={styles.infoCard} key={card.titleKey}>
+              <div className={styles.icEyebrow}>
+                {t(`community:${card.eyebrowKey}`)}
+              </div>
+              <div className={styles.icTitle}>
+                {t(`community:${card.titleKey}`)}
+              </div>
+              <div className={styles.icBody}>
+                {t(`community:${card.bodyKey}`)}
+              </div>
+              {card.noteKey && (
+                <div className={styles.icNote}>
+                  {t(`community:${card.noteKey}`)}
+                </div>
+              )}
               {card.link && (
                 <div className={styles.icLink}>
-                  <Link to={card.link.href}>{card.link.label}</Link>
+                  <Link to={card.link.href}>
+                    {t(`community:${card.link.labelKey}`)}
+                  </Link>
                 </div>
               )}
             </div>
@@ -31,12 +51,22 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
         {tab.note && (
           <div className={styles.communityNote}>
             <div className={styles.cnBar} />
-            <div className={styles.cnBody}>{tab.note}</div>
+            <div className={styles.cnBody}>
+              {tab.noteLabelKey && (
+                <strong>{t(`community:${tab.noteLabelKey}`)} </strong>
+              )}
+              {tab.note.quote} — <strong>{tab.note.attribution}</strong>
+            </div>
           </div>
         )}
 
-        {tab.reviewHead && (
-          <h2 className={styles.reviewHead}>{tab.reviewHead}</h2>
+        {tab.reviewHeadKey && (
+          <h2 className={styles.reviewHead}>
+            <Translation
+              i18nKey={`community:${tab.reviewHeadKey}`}
+              components={{ em: <em /> }}
+            />
+          </h2>
         )}
         {tab.reviews && (
           <div className={styles.reviewGrid}>
@@ -56,7 +86,9 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
                 </div>
                 <div
                   className={styles.rvStars}
-                  aria-label={`${r.stars} out of 5`}
+                  aria-label={t("community:family.review.starsAriaLabel", {
+                    stars: r.stars,
+                  })}
                 >
                   {Array.from({ length: 5 }, (_, i) => (
                     <FiStar
@@ -74,13 +106,19 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
         {tab.steps && (
           <div className={styles.processSteps}>
             {tab.steps.map((step, i) => (
-              <div className={styles.psStep} key={step.title}>
+              <div className={styles.psStep} key={step.titleKey}>
                 <div className={styles.psNum}>{i + 1}</div>
                 <div className={styles.psInfo}>
-                  <div className={styles.psTitle}>{step.title}</div>
-                  <div className={styles.psText}>{step.text}</div>
-                  {step.time && (
-                    <div className={styles.psTime}>{step.time}</div>
+                  <div className={styles.psTitle}>
+                    {t(`community:${step.titleKey}`)}
+                  </div>
+                  <div className={styles.psText}>
+                    {t(`community:${step.textKey}`)}
+                  </div>
+                  {step.timeKey && (
+                    <div className={styles.psTime}>
+                      {t(`community:${step.timeKey}`)}
+                    </div>
                   )}
                 </div>
               </div>

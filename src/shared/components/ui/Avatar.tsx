@@ -1,5 +1,6 @@
 import { useState, type CSSProperties, type HTMLAttributes } from "react";
 import { resolveAvatarSrc } from "../../lib/avatarUrl";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./Avatar.module.css";
 
 export type AvatarTint = "default" | "coral" | "jade" | "plum" | "auth";
@@ -24,6 +25,7 @@ export function Avatar({
   className,
   ...rest
 }: AvatarProps) {
+  const { t } = useTranslation();
   const [imgFailed, setImgFailed] = useState(false);
   const circleStyle: CSSProperties = {
     width: size,
@@ -69,7 +71,10 @@ export function Avatar({
         )}
       </div>
       {verified && (
-        <span className={styles.verifiedBadge} title="Verified member">
+        <span
+          className={styles.verifiedBadge}
+          title={t("shared:avatar.verified")}
+        >
           <svg width={9} height={9} viewBox="0 0 24 24" fill="none" aria-hidden>
             <polyline
               points="20 6 9 17 4 12"

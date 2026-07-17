@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import type { Mentor } from "./mentorship.data";
+import { isWaitlisted, type Mentor } from "./mentorship.data";
 import styles from "./MentorDetailPage.module.css";
 
 /** Sticky booking-style facts card + secondary "not sure yet" links. */
@@ -14,11 +15,14 @@ export function MentorDetailSidebar({
   first: string;
   onRequest: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <aside className={styles.side}>
       <div className={styles.sideCard}>
         <div className={styles.bookHead}>
-          <h4>Work with {first}</h4>
+          <h4>
+            {t("economy:mentorDetail.sidebar.workWith", { firstName: first })}
+          </h4>
           <div className={styles.bookPrice}>{m.price.main}</div>
           <div className={styles.bookPriceSub}>{m.price.sub}</div>
         </div>
@@ -40,20 +44,29 @@ export function MentorDetailSidebar({
             className={styles.sideBtn}
             onClick={onRequest}
           >
-            {m.btn}
+            {isWaitlisted(m)
+              ? t("economy:mentorship.cta.joinWaitlist")
+              : t("economy:mentorship.cta.requestMatch")}
           </Button>
         </div>
         <p className={styles.sideFoot}>
-          No upfront cost. Mentorship here is member-to-member — you can always
-          ask a question before committing.
+          {t("economy:mentorDetail.sidebar.noUpfrontCost")}
         </p>
       </div>
 
       <div className={styles.sideCard}>
-        <h4 className={styles.moreTitle}>Not sure yet?</h4>
+        <h4 className={styles.moreTitle}>
+          {t("economy:mentorDetail.sidebar.notSureYet")}
+        </h4>
         <div className={styles.moreLinks}>
-          <Link to={routes.messages}>→ Message {first} a question</Link>
-          <Link to={routes.mentorship}>→ Browse all mentors</Link>
+          <Link to={routes.messages}>
+            {t("economy:mentorDetail.sidebar.askQuestion", {
+              firstName: first,
+            })}
+          </Link>
+          <Link to={routes.mentorship}>
+            {t("economy:mentorDetail.sidebar.browseAll")}
+          </Link>
         </div>
       </div>
     </aside>

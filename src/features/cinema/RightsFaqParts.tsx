@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { FaqItem as FaqItemT, RightsSection } from "./cinemaRights.data";
 import { contact } from "./cinemaRights.data";
@@ -29,7 +31,9 @@ export function FaqItem({ item }: { item: FaqItemT }) {
 export function FaqSection({ section }: { section: RightsSection }) {
   return (
     <section id={section.id} className={styles.faqSection}>
-      <div className={styles.faqHead}>{section.title}</div>
+      <div className={styles.faqHead}>
+        <Translation i18nKey={section.titleKey} components={{ em: <em /> }} />
+      </div>
       {section.items.map((item) => (
         <FaqItem key={item.q} item={item} />
       ))}
@@ -38,14 +42,17 @@ export function FaqSection({ section }: { section: RightsSection }) {
 }
 
 export function ContactBlock() {
+  const { t } = useTranslation();
   return (
     <section id={contact.id} className={styles.contactCard}>
       <div className={styles.contactTitle}>{contact.title}</div>
       <div className={styles.contactBody}>{contact.body}</div>
       <div className={styles.contactActions}>
-        <Button to={routes.contact}>Contact the rights team</Button>
+        <Button to={routes.contact}>
+          {t("cinema:rights.contact.contactTeamCta")}
+        </Button>
         <Button variant="ghost-dark" to={routes.cinemaSubmit}>
-          Submit a film
+          {t("cinema:rights.contact.submitCta")}
         </Button>
       </div>
     </section>

@@ -1,5 +1,7 @@
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { AdminPageHeader, AdminTabs } from "./ui";
 import { AdminReportDrawer } from "./AdminReportDrawer";
 import { AdminAppealDrawer } from "./AdminAppealDrawer";
@@ -11,42 +13,57 @@ import {
 } from "./useModerationQueue";
 import styles from "./AdminModerationPage.module.css";
 
-const FILTERS: { id: FilterId; label: string }[] = [
-  { id: "all", label: "All severities" },
-  { id: "emergencies", label: "Emergencies" },
-  { id: "mine", label: "Assigned to me" },
-];
-
 export function AdminModerationPage() {
+  const { t } = useTranslation();
   const q = useModerationQueue();
   const { tab, filter } = q;
+
+  const FILTERS: { id: FilterId; labelKey: string }[] = [
+    { id: "all", labelKey: "admin:moderation.filters.all" },
+    { id: "emergencies", labelKey: "admin:moderation.filters.emergencies" },
+    { id: "mine", labelKey: "admin:moderation.filters.mine" },
+  ];
 
   return (
     <AdminShell
       title={
-        <>
-          Moderation · <em>triage</em>
-        </>
+        <Translation
+          i18nKey="admin:moderation.title"
+          components={{ em: <em /> }}
+        />
       }
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow="Moderation queue"
+          eyebrow={t("admin:moderation.header.eyebrow")}
           title={
-            <>
-              Two need you <em>first</em>.
-            </>
+            <Translation
+              i18nKey="admin:moderation.header.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="Reports are ordered by who's most at risk — not by what arrived first. Outing and doxxing always rise to the top, with a tighter 1-hour clock. Every action records a reason the member will read."
+          sub={t("admin:moderation.header.sub")}
         />
       </FadeIn>
 
       <div className={styles.toolbar}>
         <AdminTabs
           tabs={[
-            { id: "open", label: "Open", count: q.counts.open },
-            { id: "appeals", label: "Appeals", count: q.counts.appeals },
-            { id: "resolved", label: "Resolved", count: q.counts.resolved },
+            {
+              id: "open",
+              label: t("admin:moderation.tabs.open"),
+              count: q.counts.open,
+            },
+            {
+              id: "appeals",
+              label: t("admin:moderation.tabs.appeals"),
+              count: q.counts.appeals,
+            },
+            {
+              id: "resolved",
+              label: t("admin:moderation.tabs.resolved"),
+              count: q.counts.resolved,
+            },
           ]}
           active={tab}
           onChange={(id) => q.setTab(id as TabId)}
@@ -55,7 +72,7 @@ export function AdminModerationPage() {
           <div
             className={styles.filters}
             role="group"
-            aria-label="Filter reports"
+            aria-label={t("admin:moderation.filterAriaLabel")}
           >
             {FILTERS.map((f) => (
               <button
@@ -67,7 +84,7 @@ export function AdminModerationPage() {
                   .join(" ")}
                 onClick={() => q.setFilter(f.id)}
               >
-                {f.label}
+                {t(f.labelKey)}
               </button>
             ))}
           </div>

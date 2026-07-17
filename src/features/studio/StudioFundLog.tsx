@@ -2,6 +2,9 @@ import { useState } from "react";
 import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DISB, DISB_MORE } from "./studioSolidarityFund.data";
 import s from "./funding.module.css";
 
@@ -52,6 +55,8 @@ function downloadCsv(filename: string, rows: string[][]) {
 }
 
 export function StudioFundLog() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [showFull, setShowFull] = useState(false);
   const rows = showFull ? [...DISB, ...DISB_MORE] : DISB;
@@ -59,27 +64,38 @@ export function StudioFundLog() {
 
   function exportCsv() {
     const data: string[][] = [
-      ["Date", "Category", "Recipient", "Note", "Amount (EUR)"],
+      [
+        t("studio:fund.log.csv.date"),
+        t("studio:fund.log.csv.category"),
+        t("studio:fund.log.csv.recipient"),
+        t("studio:fund.log.csv.note"),
+        t("studio:fund.log.csv.amount"),
+      ],
       ...[...DISB, ...DISB_MORE].map((r) => [
         `${r.d} ${r.m}`,
-        r.tag,
+        t(r.tagKey),
         r.csvName,
         r.note,
-        r.amt.replace(/,/g, ""),
+        String(r.amount),
       ]),
     ];
     downloadCsv("solidarity-fund-disbursements.csv", data);
-    showToast("Disbursement log exported as CSV", "success");
+    showToast(t("studio:fund.log.exportToast"), "success");
   }
 
   return (
     <section className={s.sec}>
       <h2>
-        Recent <em>disbursements</em>
+        <Translation
+          i18nKey="studio:fund.log.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={s.secDek}>
-        Every payment from the fund is logged here with a name (where consent is
-        given) and a reason. <em>No black box.</em>
+        <Translation
+          i18nKey="studio:fund.log.dek"
+          components={{ em: <em /> }}
+        />
       </div>
       {loading
         ? Array.from({ length: rows.length }).map((_, i) => (
@@ -87,7 +103,7 @@ export function StudioFundLog() {
           ))
         : rows.map((r, i) => (
             <FadeIn
-              key={`${r.csvName}-${r.d}${r.m}-${r.amt}`}
+              key={`${r.csvName}-${r.d}${r.m}-${r.amount}`}
               delay={Math.min(i, 8) * 60}
             >
               <div className={s.disbRow}>
@@ -98,26 +114,32 @@ export function StudioFundLog() {
                 <div className={s.di}>
                   <h5>
                     <span className={`${s.tag2} ${tagClass[r.tagClass]}`}>
-                      {r.tag}
+                      {t(r.tagKey)}
                     </span>
                     {r.name}
                   </h5>
                   <p>{r.note}</p>
                 </div>
                 <div className={s.disbAmt}>
-                  €<em>{r.amt}</em>
+                  <em>{fmt.currency(r.amount)}</em>
                 </div>
               </div>
             </FadeIn>
           ))}
       <div className={s.logNote}>
-        Showing {rows.length} of 148 this year ·{" "}
+        {t("studio:fund.log.showingOf", {
+          shown: rows.length,
+          total: 148,
+        })}{" "}
+        ·{" "}
         <button type="button" onClick={() => setShowFull((v) => !v)}>
-          {showFull ? "show less" : "full log"}
+          {showFull
+            ? t("studio:fund.log.showLess")
+            : t("studio:fund.log.fullLog")}
         </button>{" "}
         ·{" "}
         <button type="button" onClick={exportCsv}>
-          export CSV
+          {t("studio:fund.log.exportCsv")}
         </button>
       </div>
     </section>

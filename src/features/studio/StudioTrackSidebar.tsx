@@ -1,18 +1,26 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SPLIT, CREDITS } from "./studioTrack.data";
-import t from "./track.module.css";
+import trackStyles from "./track.module.css";
+
+// Content — the curator's quote, the per-track split/credits breakdown and
+// the track/artist names are content, left English in both locales (§1).
+const TRACK_TITLE = "Carta para a santa";
 
 export function StudioTrackSidebar() {
+  const { t } = useTranslation();
   return (
-    <div className={t.rSide}>
-      <div className={t.sCard}>
-        <div className={t.sEb}>Curator's note</div>
-        <div className={t.noteHead}>
-          <div className={t.noteAv}>SM</div>
+    <div className={trackStyles.rSide}>
+      <div className={trackStyles.sCard}>
+        <div className={trackStyles.sEb}>
+          {t("studio:track.sidebar.curatorNoteLabel")}
+        </div>
+        <div className={trackStyles.noteHead}>
+          <div className={trackStyles.noteAv}>SM</div>
           <div>
-            <div className={t.noteName}>Sara Marques</div>
-            <div className={t.noteRole}>
+            <div className={trackStyles.noteName}>Sara Marques</div>
+            <div className={trackStyles.noteRole}>
               programming lead · the Wednesday set
             </div>
           </div>
@@ -25,12 +33,14 @@ export function StudioTrackSidebar() {
         </p>
       </div>
 
-      <div className={t.sCard}>
-        <div className={t.sEb}>Where €1 goes when you play this</div>
-        <div className={t.splitLead}>
+      <div className={trackStyles.sCard}>
+        <div className={trackStyles.sEb}>
+          {t("studio:track.sidebar.splitHeading")}
+        </div>
+        <div className={trackStyles.splitLead}>
           €<em>0.80</em> to Mariana. €<em>0.20</em> keeps the room open.
         </div>
-        <div className={t.splitBar}>
+        <div className={trackStyles.splitBar}>
           <span style={{ width: "80%", background: "var(--accent)" }} />
           <span style={{ width: "8%", background: "var(--jade)" }} />
           <span style={{ width: "8%", background: "var(--plum)" }} />
@@ -38,29 +48,34 @@ export function StudioTrackSidebar() {
         </div>
         <div>
           {SPLIT.map((r) => (
-            <div key={r.k} className={t.splRow}>
-              <span className={t.splDot} style={{ background: r.c }} />
-              <span className={t.splK}>
+            <div key={r.k} className={trackStyles.splRow}>
+              <span
+                className={trackStyles.splDot}
+                style={{ background: r.c }}
+              />
+              <span className={trackStyles.splK}>
                 <b>{r.k}</b>
                 {r.sub}
               </span>
-              <span className={t.splV}>{r.v}</span>
+              <span className={trackStyles.splV}>{r.v}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className={t.sCard}>
-        <div className={t.sEb}>Credits · per-track splits</div>
+      <div className={trackStyles.sCard}>
+        <div className={trackStyles.sEb}>
+          {t("studio:track.sidebar.creditsHeading")}
+        </div>
         {CREDITS.map((c) => (
-          <div key={c.who} className={t.credRow}>
+          <div key={c.who} className={trackStyles.credRow}>
             <span className="who">{c.who}</span>
             <span className="role">{c.role}</span>
           </div>
         ))}
       </div>
 
-      <div className={t.sheetMini}>
+      <div className={trackStyles.sheetMini}>
         <span className="icon">
           <svg
             viewBox="0 0 24 24"
@@ -74,11 +89,13 @@ export function StudioTrackSidebar() {
         </span>
         <div className="nm">
           <b>
-            Lead sheet · <em>Carta para a santa</em>
+            {t("studio:track.sidebar.leadSheetLabel")} · <em>{TRACK_TITLE}</em>
           </b>
           <small>6 pages · piano + voice · CC-BY-NC · Mariana Sol</small>
         </div>
-        <Link to={routes.studioSheetStore}>Download →</Link>
+        <Link to={routes.studioSheetStore}>
+          {t("studio:track.sidebar.downloadCta")} →
+        </Link>
       </div>
     </div>
   );

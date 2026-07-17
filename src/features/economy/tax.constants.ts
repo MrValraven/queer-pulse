@@ -15,11 +15,12 @@ export const TAX_DISCLAIMER =
   "situations differ — confirm with a contabilista certificado before relying on this.";
 
 /* ── IVA (VAT) — Continente. Source: Art. 18.º CIVA. ───────────────────── */
-export const IVA_RATES: { value: number; label: string }[] = [
-  { value: 0, label: "0% (isento / exempt)" },
-  { value: 6, label: "6% (reduzida)" },
-  { value: 13, label: "13% (intermédia)" },
-  { value: 23, label: "23% (normal)" },
+/** i18n Pattern A — `labelKey` resolved via t() by InvoiceFormFields / DayRateCalculatorPage. */
+export const IVA_RATES: { value: number; labelKey: string }[] = [
+  { value: 0, labelKey: "economy:tax.ivaRate.0" },
+  { value: 6, labelKey: "economy:tax.ivaRate.6" },
+  { value: 13, labelKey: "economy:tax.ivaRate.13" },
+  { value: 23, labelKey: "economy:tax.ivaRate.23" },
 ];
 
 /**

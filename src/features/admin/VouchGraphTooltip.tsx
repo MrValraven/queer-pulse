@@ -1,3 +1,4 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AdminVouchGraph.module.css";
 
 export type TipData =
@@ -27,6 +28,7 @@ interface Props {
 
 /** Floating, cursor-following tooltip for nodes and edges. Pointer-events: none. */
 export function VouchGraphTooltip({ tip, x, y }: Props) {
+  const { t } = useTranslation();
   return (
     <div className={styles.tip} style={{ left: x, top: y }} role="tooltip">
       {tip.kind === "node" ? (
@@ -36,11 +38,17 @@ export function VouchGraphTooltip({ tip, x, y }: Props) {
           </div>
           <div className={styles.tipRole}>{tip.role}</div>
           <div className={styles.tipMeta}>
-            <b>{tip.vouchesIn}</b> vouch{tip.vouchesIn !== 1 ? "es" : ""} in ·{" "}
-            <b>{tip.vouchesOut}</b> out · joined {tip.joined}
+            {t("admin:vouchGraph.tooltip.vouchesIn", {
+              count: tip.vouchesIn,
+            })}{" "}
+            ·{" "}
+            {t("admin:vouchGraph.tooltip.vouchesOut", {
+              count: tip.vouchesOut,
+            })}{" "}
+            · {t("admin:vouchGraph.tooltip.joinedPrefix", { when: tip.joined })}
           </div>
           <div className={styles.tipHint}>
-            click to inspect · double-click to re-centre
+            {t("admin:vouchGraph.tooltip.hint")}
           </div>
         </>
       ) : (
@@ -49,7 +57,9 @@ export function VouchGraphTooltip({ tip, x, y }: Props) {
           {tip.tag && <div className={styles.tipTag}>{tip.tag}</div>}
           {tip.reason && <div className={styles.tipRole}>“{tip.reason}”</div>}
           <div className={tip.withdrawn ? styles.tipMetaWd : styles.tipMeta}>
-            {tip.withdrawn ? `withdrawn ${tip.date}` : tip.date}
+            {tip.withdrawn
+              ? t("admin:vouchGraph.tooltip.withdrawn", { date: tip.date })
+              : tip.date}
           </div>
         </>
       )}

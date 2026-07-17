@@ -5,42 +5,50 @@ import { FadeIn } from "../../shared/components/ui";
 import { PlanPanel, BillingPanel, AccessPanel } from "./MembershipPanels";
 import { routes } from "../../app/routeMap";
 import { MembershipSidebar } from "./MembershipSidebar";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import styles from "./MembershipPage.module.css";
 
 type Tab = "plan" | "billing" | "access";
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: "plan", label: "Plan" },
-  { key: "billing", label: "Billing" },
-  { key: "access", label: "Access" },
-];
-
 export function MembershipPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("plan");
+
+  const TABS: { key: Tab; label: string }[] = [
+    { key: "plan", label: t("settings:membership.tabs.plan") },
+    { key: "billing", label: t("settings:membership.tabs.billing") },
+    { key: "access", label: t("settings:membership.tabs.access") },
+  ];
 
   return (
     <AppShell>
       <div className={styles.page}>
         <div className={styles.bc}>
-          <Link to={routes.homepage}>Account</Link>
+          <Link to={routes.homepage}>{t("settings:nav.item.account")}</Link>
           <span className={styles.bcSep}>›</span>
-          <span className={styles.bcCurrent}>Membership</span>
+          <span className={styles.bcCurrent}>
+            {t("settings:membership.breadcrumb.current")}
+          </span>
         </div>
         <h1 className={styles.title}>
-          Your <em>membership</em>
+          <Translation
+            i18nKey="settings:membership.page.title"
+            components={{ em: <em /> }}
+          />
         </h1>
 
         <div className={styles.layout}>
           <div>
             <div className={styles.tabs}>
-              {TABS.map((t) => (
+              {TABS.map((tabDef) => (
                 <button
                   type="button"
-                  key={t.key}
-                  className={`${styles.tab} ${tab === t.key ? styles.active : ""}`}
-                  onClick={() => setTab(t.key)}
+                  key={tabDef.key}
+                  className={`${styles.tab} ${tab === tabDef.key ? styles.active : ""}`}
+                  onClick={() => setTab(tabDef.key)}
                 >
-                  {t.label}
+                  {tabDef.label}
                 </button>
               ))}
             </div>

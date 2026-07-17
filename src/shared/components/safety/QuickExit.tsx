@@ -4,6 +4,8 @@ import { useQuickExit } from "../../hooks/useQuickExit";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import { useToast } from "../feedback/useToast";
+import { Translation } from "../../i18n/Translation";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./QuickExit.module.css";
 
 const SEEN_KEY = "qp.safety.quickExit.seen.v1";
@@ -17,6 +19,7 @@ const SEEN_KEY = "qp.safety.quickExit.seen.v1";
  * wiped by any web app.
  */
 export function QuickExit() {
+  const { t } = useTranslation();
   const { enabled, keyTrigger, triggerExit, setEnabled } = useQuickExit();
   const prefersReduced = usePrefersReducedMotion();
   const { showToast } = useToast();
@@ -32,11 +35,8 @@ export function QuickExit() {
 
   const onHide = useCallback(() => {
     setEnabled(false); // unmounts the widget (enabled gate below)
-    showToast(
-      "Quick exit hidden. Turn it back on in Settings → Safety.",
-      "info",
-    );
-  }, [setEnabled, showToast]);
+    showToast(t("shared:quickExit.toastHidden"), "info");
+  }, [setEnabled, showToast, t]);
 
   if (!enabled) return null;
 
@@ -47,15 +47,20 @@ export function QuickExit() {
       {showTip && (
         <div className={styles.tooltip} role="status">
           <p className={styles.tooltipText}>
-            <strong>Need to leave fast?</strong> This button
-            {keyTrigger ? " — or tapping Shift twice — " : " "}
-            sends you to a weather page.
+            <Translation
+              i18nKey={
+                keyTrigger
+                  ? "shared:quickExit.tooltip.withShortcut"
+                  : "shared:quickExit.tooltip.noShortcut"
+              }
+              components={{ strong: <strong /> }}
+            />
           </p>
           <button
             type="button"
             className={styles.tooltipClose}
             onClick={dismissTip}
-            aria-label="Dismiss Quick exit tip"
+            aria-label={t("shared:quickExit.tooltip.dismissAria")}
           >
             <FiX aria-hidden="true" />
           </button>
@@ -66,18 +71,14 @@ export function QuickExit() {
         <div
           className={styles.about}
           role="dialog"
-          aria-label="About Quick exit"
+          aria-label={t("shared:quickExit.about.aria")}
         >
-          <p className={styles.aboutText}>
-            Quick exit sends this tab to a weather page and reopens QueerPulse
-            in a separate tab. It’s a fast screen-clear, not anonymity: it can’t
-            wipe your earlier browser history, bookmarks, or address-bar
-            suggestions. For real safety, also use a private window and clear
-            your history.
-          </p>
+          <p className={styles.aboutText}>{t("shared:quickExit.about.body")}</p>
           <p className={styles.aboutNote}>
-            Don’t need it? You can hide this button and turn it back on any time
-            in <strong>Settings → Safety</strong>.
+            <Translation
+              i18nKey="shared:quickExit.about.note"
+              components={{ strong: <strong /> }}
+            />
           </p>
           <div className={styles.aboutActions}>
             <button
@@ -85,10 +86,10 @@ export function QuickExit() {
               className={styles.aboutClose}
               onClick={() => setShowAbout(false)}
             >
-              Got it
+              {t("shared:quickExit.about.gotIt")}
             </button>
             <button type="button" className={styles.aboutHide} onClick={onHide}>
-              Hide Quick exit
+              {t("shared:quickExit.about.hide")}
             </button>
           </div>
         </div>
@@ -99,14 +100,16 @@ export function QuickExit() {
           type="button"
           className={styles.button}
           onClick={onExit}
-          aria-label="Quick exit — leave this site now"
+          aria-label={t("shared:quickExit.button.aria")}
           aria-keyshortcuts={keyTrigger ? "Shift Shift" : undefined}
         >
           <FiLogOut aria-hidden="true" className={styles.icon} />
-          <span className={styles.label}>Quick exit</span>
+          <span className={styles.label}>
+            {t("shared:quickExit.button.label")}
+          </span>
           {keyTrigger && (
             <span className={styles.visuallyHidden}>
-              Shortcut: press Shift twice
+              {t("shared:quickExit.button.shortcutHint")}
             </span>
           )}
         </button>
@@ -115,7 +118,7 @@ export function QuickExit() {
           className={styles.info}
           onClick={() => setShowAbout((v) => !v)}
           aria-expanded={showAbout}
-          aria-label="About Quick exit and its limits"
+          aria-label={t("shared:quickExit.about.limitsAria")}
         >
           <span aria-hidden="true">?</span>
         </button>

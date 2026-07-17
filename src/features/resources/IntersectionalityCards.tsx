@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import type { InfoCard, Voice } from "./intersectionality.data";
 import {
@@ -5,6 +6,7 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./IntersectionalityPage.module.css";
 
 /** Skeleton placeholder that mirrors VoiceCard shape — same border-radius, padding, gap. */
@@ -67,37 +69,33 @@ interface InfoCardsProps {
 }
 
 export function InfoCards({ cards, loading, animate }: InfoCardsProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.infoGrid}>
       {loading
         ? cards.map((_, i) => <InfoCardSkeleton key={i} />)
-        : cards.map((c, i) =>
-            animate ? (
-              <FadeIn key={c.title} delay={Math.min(i, 8) * 60}>
-                <div className={styles.infoCard}>
-                  <div className={styles.icEyebrow}>{c.eyebrow}</div>
-                  <div className={styles.icTitle}>{c.title}</div>
-                  <div className={styles.icBody}>{c.body}</div>
-                  {c.link && (
-                    <div className={styles.icLink}>
-                      <Link to={c.link.href}>{c.link.label}</Link>
-                    </div>
-                  )}
-                </div>
-              </FadeIn>
-            ) : (
-              <div className={styles.infoCard} key={c.title}>
-                <div className={styles.icEyebrow}>{c.eyebrow}</div>
-                <div className={styles.icTitle}>{c.title}</div>
-                <div className={styles.icBody}>{c.body}</div>
-                {c.link && (
+        : cards.map((card, i) => {
+            const cardBody = (
+              <div className={styles.infoCard}>
+                <div className={styles.icEyebrow}>{t(card.eyebrowKey)}</div>
+                <div className={styles.icTitle}>{t(card.titleKey)}</div>
+                <div className={styles.icBody}>{t(card.bodyKey)}</div>
+                {card.link && (
                   <div className={styles.icLink}>
-                    <Link to={c.link.href}>{c.link.label}</Link>
+                    <Link to={card.link.href}>{t(card.link.labelKey)}</Link>
                   </div>
                 )}
               </div>
-            ),
-          )}
+            );
+            return animate ? (
+              <FadeIn key={card.titleKey} delay={Math.min(i, 8) * 60}>
+                {cardBody}
+              </FadeIn>
+            ) : (
+              <Fragment key={card.titleKey}>{cardBody}</Fragment>
+            );
+          })}
     </div>
   );
 }

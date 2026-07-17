@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import { FiBell, FiCalendar, FiMessageCircle, FiUsers } from "react-icons/fi";
 import type { TFunction } from "../../../shared/i18n/types";
+import type { Formatters } from "../../../shared/i18n/format";
 import type { Notification, NotifType } from "../notifications.types";
 import { formatNotification } from "./formatNotification";
 import type { NotificationDTO } from "./notifications.api";
@@ -32,6 +33,7 @@ const KIND_ICON_BG: Record<NotifType, string> = {
 export function notificationDtoToView(
   dto: NotificationDTO,
   t: TFunction,
+  fmt: Formatters,
 ): Notification {
   const { text, meta, category } = formatNotification(dto.type, dto.payload, t);
   return {
@@ -45,17 +47,20 @@ export function notificationDtoToView(
     icon: { Glyph: KIND_ICONS[category] ?? FiBell, bg: KIND_ICON_BG[category] },
     text,
     meta,
-    time: formatTime(dto.createdAt),
+    time: formatTime(dto.createdAt, fmt),
   };
 }
 
-/** Format an ISO timestamp to a short relative-ish label; "" when absent. */
-function formatTime(iso?: string): string {
+/**
+ * Format an ISO timestamp to a short date label; "" when absent. Goes through
+ * `useFormat()`'s locale-bound `Intl.DateTimeFormat` (via the `fmt` passed
+ * in) rather than `toLocaleDateString(undefined, …)` — the previous version
+ * always rendered in the browser's system locale, ignoring the member's
+ * chosen app language entirely.
+ */
+function formatTime(iso: string | undefined, fmt: Formatters): string {
   if (!iso) return "";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-  });
+  return fmt.date(date, { month: "short", day: "numeric" });
 }

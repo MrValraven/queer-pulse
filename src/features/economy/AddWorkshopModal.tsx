@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { useWorkshops } from "../../app/providers/WorkshopsProvider";
 import { currentUser, currentUserSlug } from "../members/data/members";
@@ -7,15 +10,21 @@ import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import { buildWorkshop, type WorkshopDraft } from "./addWorkshop.build";
 import styles from "./ApplicationModals.module.css";
 
+// Stable English ids (§5.1) — stored on the draft/workshop record; only the
+// option label resolves through the catalog at render.
 const CATS = [
-  { value: "creative", label: "Creative" },
-  { value: "craft", label: "Craft" },
-  { value: "design", label: "Design" },
-  { value: "tech", label: "Tech" },
-  { value: "business", label: "Business" },
-  { value: "care", label: "Care" },
+  { value: "creative", labelKey: "economy:addWorkshop.cat.creative" },
+  { value: "craft", labelKey: "economy:addWorkshop.cat.craft" },
+  { value: "design", labelKey: "economy:addWorkshop.cat.design" },
+  { value: "tech", labelKey: "economy:addWorkshop.cat.tech" },
+  { value: "business", labelKey: "economy:addWorkshop.cat.business" },
+  { value: "care", labelKey: "economy:addWorkshop.cat.care" },
 ];
-const MODES = ["In-person", "Online", "Hybrid"];
+const MODES = [
+  { value: "In-person", labelKey: "economy:addWorkshop.mode.inPerson" },
+  { value: "Online", labelKey: "economy:addWorkshop.mode.online" },
+  { value: "Hybrid", labelKey: "economy:addWorkshop.mode.hybrid" },
+];
 
 /** Plum-panel confirmation shown once the workshop is live. */
 function ListedPanel({
@@ -27,30 +36,35 @@ function ListedPanel({
   newId: string | null;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <SuccessPanel
-      title="Workshop"
-      em="listed."
+      title={t("economy:addWorkshop.listed.title")}
+      em={t("economy:addWorkshop.listed.em")}
       onClose={onClose}
-      closeLabel="Done"
+      closeLabel={t("economy:addWorkshop.listed.closeLabel")}
       footer={
         newId && (
           <div className={styles.successBtn} style={{ marginTop: 10 }}>
             <Button variant="ghost-dark" to={`${routes.skills}/${newId}`}>
-              View your workshop →
+              {t("economy:addWorkshop.listed.viewCta")}
             </Button>
           </div>
         )
       }
     >
-      <strong>{title}</strong> is live on Skills &amp; learning. Members can
-      browse it, read the plan, and reserve a seat. Edit the details or add
-      sessions any time from your workshop page.
+      <Translation
+        i18nKey="economy:addWorkshop.listed.body"
+        values={{ title }}
+        components={{ strong: <strong /> }}
+      />
     </SuccessPanel>
   );
 }
 
 export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { addWorkshop } = useWorkshops();
   const [draft, setDraft] = useState<WorkshopDraft>({
     title: "",
@@ -79,13 +93,18 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
 
   const onSubmit = () => {
     if (!valid) return;
-    const workshop = buildWorkshop(draft, {
-      name: `${currentUser.first} ${currentUser.last}`,
-      initials: currentUser.initials,
-      tint: currentUser.tint,
-      role: "QueerPulse member · running this for the first time",
-      memberSlug: currentUserSlug,
-    });
+    const workshop = buildWorkshop(
+      draft,
+      {
+        name: `${currentUser.first} ${currentUser.last}`,
+        initials: currentUser.initials,
+        tint: currentUser.tint,
+        role: t("economy:addWorkshop.build.tutorRole"),
+        memberSlug: currentUserSlug,
+      },
+      t,
+      fmt,
+    );
     setNewId(workshop.id);
     submit(() => addWorkshop(workshop));
   };
@@ -95,57 +114,67 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
       onClose={onClose}
       success={done}
       wide
-      ariaLabel="List a workshop"
+      ariaLabel={t("economy:addWorkshop.ariaLabel")}
     >
       {done ? (
         <ListedPanel title={draft.title} newId={newId} onClose={onClose} />
       ) : (
         <>
-          <div className={styles.eyebrow}>Skills &amp; learning</div>
+          <div className={styles.eyebrow}>
+            {t("economy:addWorkshop.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            List an <em>advanced workshop.</em>
+            <Translation
+              i18nKey="economy:addWorkshop.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Share a multi-week course you're running. Keep it honest about the
-            level and the pace — people are trusting you with real time.
-          </p>
+          <p className={styles.sub}>{t("economy:addWorkshop.sub")}</p>
 
           <div className={styles.field}>
-            <label htmlFor="aw-title">Workshop title *</label>
+            <label htmlFor="aw-title">
+              {t("economy:addWorkshop.titleLabel")}
+            </label>
             <input
               id="aw-title"
               type="text"
               value={draft.title}
               onChange={(e) => set({ title: e.target.value })}
-              placeholder="e.g. Letterpress, from setting type to a printed page"
+              placeholder={t("economy:addWorkshop.titlePlaceholder")}
             />
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="aw-blurb">One-line summary *</label>
+            <label htmlFor="aw-blurb">
+              {t("economy:addWorkshop.blurbLabel")}
+            </label>
             <input
               id="aw-blurb"
               type="text"
               value={draft.blurb}
               onChange={(e) => set({ blurb: e.target.value })}
-              placeholder="Who it's for and what they'll walk away with"
+              placeholder={t("economy:addWorkshop.blurbPlaceholder")}
             />
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="aw-about">What you'll actually do *</label>
+            <label htmlFor="aw-about">
+              {t("economy:addWorkshop.aboutLabel")}
+            </label>
             <textarea
               id="aw-about"
               rows={4}
               value={draft.about}
               onChange={(e) => set({ about: e.target.value })}
-              placeholder="The shape of the sessions, the level assumed, what people make. One idea per line."
+              placeholder={t("economy:addWorkshop.aboutPlaceholder")}
             />
           </div>
 
           <div className={styles.fieldRow}>
             <div className={styles.field}>
-              <label htmlFor="aw-cat">Category *</label>
+              <label htmlFor="aw-cat">
+                {t("economy:addWorkshop.categoryLabel")}
+              </label>
               <select
                 id="aw-cat"
                 value={draft.cat}
@@ -153,21 +182,23 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
               >
                 {CATS.map((c) => (
                   <option key={c.value} value={c.value}>
-                    {c.label}
+                    {t(c.labelKey)}
                   </option>
                 ))}
               </select>
             </div>
             <div className={styles.field}>
-              <label htmlFor="aw-mode">Format *</label>
+              <label htmlFor="aw-mode">
+                {t("economy:addWorkshop.formatLabel")}
+              </label>
               <select
                 id="aw-mode"
                 value={draft.mode}
                 onChange={(e) => set({ mode: e.target.value })}
               >
                 {MODES.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
+                  <option key={m.value} value={m.value}>
+                    {t(m.labelKey)}
                   </option>
                 ))}
               </select>
@@ -176,7 +207,9 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
 
           <div className={styles.fieldRow}>
             <div className={styles.field}>
-              <label htmlFor="aw-weeks">Length (weeks) *</label>
+              <label htmlFor="aw-weeks">
+                {t("economy:addWorkshop.weeksLabel")}
+              </label>
               <input
                 id="aw-weeks"
                 type="number"
@@ -187,7 +220,9 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor="aw-size">Cohort size *</label>
+              <label htmlFor="aw-size">
+                {t("economy:addWorkshop.sizeLabel")}
+              </label>
               <input
                 id="aw-size"
                 type="number"
@@ -198,7 +233,9 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor="aw-price">Standard price (€) *</label>
+              <label htmlFor="aw-price">
+                {t("economy:addWorkshop.priceLabel")}
+              </label>
               <input
                 id="aw-price"
                 type="number"
@@ -210,25 +247,23 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="aw-venue">Where (venue · neighbourhood)</label>
+            <label htmlFor="aw-venue">
+              {t("economy:addWorkshop.venueLabel")}
+            </label>
             <input
               id="aw-venue"
               type="text"
               value={draft.venue}
               onChange={(e) => set({ venue: e.target.value })}
-              placeholder="e.g. Estúdio Graça · Graça"
+              placeholder={t("economy:addWorkshop.venuePlaceholder")}
             />
           </div>
 
-          <p className={styles.note}>
-            We'll set up a reduced and a solidarity rate automatically from your
-            standard price — you can tune them later. Sessions start empty; add
-            the week-by-week plan from your workshop page.
-          </p>
+          <p className={styles.note}>{t("economy:addWorkshop.note")}</p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:addWorkshop.cancel")}
             </button>
             <Button
               variant="primary"
@@ -236,7 +271,11 @@ export function AddWorkshopModal({ onClose }: { onClose: () => void }) {
               disabled={!valid || sending}
               onClick={onSubmit}
             >
-              {sending ? <Sending label="Publishing…" /> : "Publish workshop"}
+              {sending ? (
+                <Sending label={t("economy:addWorkshop.publishingLabel")} />
+              ) : (
+                t("economy:addWorkshop.publishCta")
+              )}
             </Button>
           </div>
         </>

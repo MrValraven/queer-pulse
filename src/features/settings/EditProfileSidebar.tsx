@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PROFILE_NAV } from "./editProfileNav.data";
 import styles from "./EditProfilePage.module.css";
 
@@ -9,6 +10,7 @@ import styles from "./EditProfilePage.module.css";
 const SCROLL_OFFSET = 100;
 
 export function EditProfileSidebar() {
+  const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const [active, setActive] = useState(PROFILE_NAV[0]!.id);
 
@@ -41,11 +43,11 @@ export function EditProfileSidebar() {
       <div className={styles.navInner}>
         {PROFILE_NAV.map((item, i) => {
           const firstInGroup =
-            i === 0 || PROFILE_NAV[i - 1]!.group !== item.group;
+            i === 0 || PROFILE_NAV[i - 1]!.groupKey !== item.groupKey;
           return (
             <Fragment key={item.id}>
               {firstInGroup && (
-                <div className={styles.navSection}>{item.group}</div>
+                <div className={styles.navSection}>{t(item.groupKey)}</div>
               )}
               <button
                 type="button"
@@ -59,18 +61,20 @@ export function EditProfileSidebar() {
                 onClick={() => goTo(item.id)}
               >
                 <span className={styles.navIcon}>{item.icon}</span>
-                {item.label}
+                {t(item.labelKey)}
               </button>
             </Fragment>
           );
         })}
-        <div className={styles.navSection}>More</div>
+        <div className={styles.navSection}>
+          {t("settings:editProfile.nav.more")}
+        </div>
         <Link to={routes.pronounsGuide} className={styles.navItem}>
           <svg className={styles.navIcon} viewBox="0 0 16 16">
             <circle cx="8" cy="8" r="6.5" />
             <path d="M8 5v0M8 8v4" />
           </svg>
-          Pronouns guide
+          {t("settings:editProfile.nav.pronounsGuideLink")}
         </Link>
       </div>
     </aside>

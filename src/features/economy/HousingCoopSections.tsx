@@ -1,5 +1,7 @@
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COOP_STATS,
   COOP_PHASES,
@@ -18,27 +20,37 @@ const FACE_TINT: Record<string, string | undefined> = {
 
 /** Hero: headline + live formation stats card. */
 export function CoopHero() {
+  const { t } = useTranslation();
   return (
     <section className={styles.hero}>
       <div className="wrap">
-        <HubBackLink to={routes.housing} label="Housing" tone="light" />
+        <HubBackLink
+          to={routes.housing}
+          label={t("economy:housingCoop.backLabel")}
+          tone="light"
+        />
         <div className={styles.heroInner}>
           <div>
             <Reveal as="div" className={styles.eyebrow}>
-              Housing co-op formation · Portugal-first, expandable
+              {t("economy:housingCoop.hero.eyebrow")}
             </Reveal>
             <Reveal as="h1" className={styles.title} delay={60}>
-              Build a co-op <em>together</em>.
+              <Translation
+                i18nKey="economy:housingCoop.hero.title"
+                components={{ em: <em /> }}
+              />
             </Reveal>
             <Reveal as="p" className={styles.sub} delay={120}>
-              A toolkit for forming a queer housing co-operative in Portugal —
-              from finding the people, through the legal incorporation, the
-              financing, the property, the daily governance.{" "}
-              <em>Five phases, real templates, members already in each one.</em>
+              <Translation
+                i18nKey="economy:housingCoop.hero.sub"
+                components={{ em: <em /> }}
+              />
             </Reveal>
           </div>
           <Reveal className={styles.statsCard} delay={160}>
-            <div className={styles.statsHead}>Co-ops forming now</div>
+            <div className={styles.statsHead}>
+              {t("economy:housingCoop.hero.statsHead")}
+            </div>
             {COOP_STATS.map((s) => (
               <div className={styles.statRow} key={s.label}>
                 <span className="k">{s.label}</span>
@@ -57,18 +69,18 @@ export function CoopHero() {
 
 /** The five-phase formation timeline. */
 export function CoopPhases() {
+  const { t } = useTranslation();
   return (
     <section className={styles.phases}>
       <div className="wrap">
         <Reveal className={styles.sectionHead}>
           <h2>
-            Five <em>phases</em> from idea to keys
+            <Translation
+              i18nKey="economy:housingCoop.phases.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Realistic timeline: 14–28 months. Each phase has templates, real
-            examples from existing co-ops, and a mentor you can reach when
-            stuck.
-          </p>
+          <p>{t("economy:housingCoop.phases.sub")}</p>
         </Reveal>
         <div className={styles.phaseRail}>
           {COOP_PHASES.map((p, i) => (
@@ -165,15 +177,19 @@ export function CoopGrid({
   onCta: (coop: FormingCoop) => void;
   onSeeAll: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.active}>
       <div className="wrap">
         <div className={styles.actHead}>
           <h2>
-            Co-ops <em>forming now</em>
+            <Translation
+              i18nKey="economy:housingCoop.grid.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <button type="button" className={styles.all} onClick={onSeeAll}>
-            All 8 →
+            {t("economy:housingCoop.grid.seeAll")}
           </button>
         </div>
         <div className={styles.coopGrid}>
@@ -192,33 +208,35 @@ export function CoopTemplates({
 }: {
   onDownload: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.templates}>
       <div className="wrap">
         <div className={styles.sectionHead}>
           <h2>
-            Templates &amp; <em>tools</em>
+            <Translation
+              i18nKey="economy:housingCoop.templates.title"
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p>
-            Every document we wish someone had given us. Drafted with QueerPulse
-            legal, translated PT &amp; EN, stress-tested by Casa Sambizanga's
-            first two years.
-          </p>
+          <p>{t("economy:housingCoop.templates.sub")}</p>
         </div>
         <div className={styles.tpGrid}>
-          {COOP_TEMPLATES.map((t) => (
+          {COOP_TEMPLATES.map((template) => (
             <button
               type="button"
               className={styles.tpCard}
-              key={`${t.name} ${t.nameEm}`}
-              onClick={() => onDownload(`${t.name} ${t.nameEm}`)}
+              key={`${template.name} ${template.nameEm}`}
+              onClick={() => onDownload(`${template.name} ${template.nameEm}`)}
             >
-              <div className={styles.tpTag}>{t.tag}</div>
+              <div className={styles.tpTag}>{template.tag}</div>
               <div className={styles.tpName}>
-                {t.name} <em>{t.nameEm}</em>
+                {template.name} <em>{template.nameEm}</em>
               </div>
-              <div className={styles.tpMeta}>{t.meta}</div>
-              <div className={styles.tpCta}>Download →</div>
+              <div className={styles.tpMeta}>{template.meta}</div>
+              <div className={styles.tpCta}>
+                {t("economy:housingCoop.templates.download")}
+              </div>
             </button>
           ))}
         </div>
@@ -235,32 +253,40 @@ export function CoopStartCta({
   onPost: () => void;
   onStory: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.startCta}>
       <div className="wrap">
         <div className={styles.scInner}>
           <div className={styles.scText}>
-            <div className={styles.scEyebrow}>Start a co-op</div>
+            <div className={styles.scEyebrow}>
+              {t("economy:housingCoop.startCta.eyebrow")}
+            </div>
             <h2>
-              Don't have <em>your people yet</em>?
+              <Translation
+                i18nKey="economy:housingCoop.startCta.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p>
-              Post that you're starting and we'll match you with other members
-              in your city looking for the same thing. Most co-ops start with
-              2–3 people and grow to 6+ over the first 6 months.{" "}
-              <em>Casa Sambizanga started with three.</em>
+              <Translation
+                i18nKey="economy:housingCoop.startCta.body"
+                components={{ em: <em /> }}
+              />
             </p>
             <div className={styles.scActs}>
               <Button variant="primary" onClick={onPost}>
-                Post that you're starting
+                {t("economy:housingCoop.startCta.postCta")}
               </Button>
               <Button variant="ghost-dark" onClick={onStory}>
-                Read Casa Sambizanga's story
+                {t("economy:housingCoop.startCta.storyCta")}
               </Button>
             </div>
           </div>
           <div className={styles.scResources}>
-            <div className={styles.srHead}>Resources &amp; mentors</div>
+            <div className={styles.srHead}>
+              {t("economy:housingCoop.startCta.resourcesHead")}
+            </div>
             {COOP_RESOURCES.map((r, i) => (
               <div className={styles.srRow} key={i}>
                 <span className={styles.srLabel}>

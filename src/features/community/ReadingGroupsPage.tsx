@@ -11,6 +11,8 @@ import {
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import {
   FORMAT_FILTERS,
@@ -58,6 +60,7 @@ function ReadingGroupCardSkeleton() {
 }
 
 export function ReadingGroupsPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [genre, setGenre] = useState<Genre | "all">("all");
@@ -80,7 +83,10 @@ export function ReadingGroupsPage() {
       if (prev[id]) return prev;
       // Deterministic-but-plausible position for this prototype.
       const position = 2 + (id.charCodeAt(id.length - 1) % 5);
-      showToast(`You're #${position} on the waitlist for ${name}`, "success");
+      showToast(
+        t("community:readingGroups.joinedWaitlistToast", { position, name }),
+        "success",
+      );
       return { ...prev, [id]: position };
     });
   }
@@ -89,37 +95,30 @@ export function ReadingGroupsPage() {
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <div className={styles.eye}>Community · Reading</div>
+          <div className={styles.eye}>
+            {t("community:readingGroups.hero.eye")}
+          </div>
           <h1 className={styles.title}>
-            Read together.
+            {t("community:readingGroups.hero.titleLine1")}
             <br />
-            <em>Trust faster.</em>
+            <Translation
+              i18nKey="community:readingGroups.hero.titleLine2"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.sub}>
-            Small groups, one book, one month. No homework anxiety, no
-            gatekeeping. The best way to find your people in a new city is to
-            argue about a book with them.
-          </p>
+          <p className={styles.sub}>{t("community:readingGroups.hero.sub")}</p>
           <div className={styles.why}>
             <div className={styles.w}>
-              <strong>Queer-curated books</strong>
-              <span>
-                Every group chooses its own reading. We do not tell you what
-                matters.
-              </span>
+              <strong>{t("community:readingGroups.why.curated.title")}</strong>
+              <span>{t("community:readingGroups.why.curated.desc")}</span>
             </div>
             <div className={styles.w}>
-              <strong>Small by design</strong>
-              <span>
-                Groups cap at 6–8 people. Real conversations, not lectures.
-              </span>
+              <strong>{t("community:readingGroups.why.small.title")}</strong>
+              <span>{t("community:readingGroups.why.small.desc")}</span>
             </div>
             <div className={styles.w}>
-              <strong>Mixed formats</strong>
-              <span>
-                In-person in cafés and homes. Online for those outside Lisbon or
-                with access needs.
-              </span>
+              <strong>{t("community:readingGroups.why.mixed.title")}</strong>
+              <span>{t("community:readingGroups.why.mixed.desc")}</span>
             </div>
           </div>
         </div>
@@ -127,28 +126,34 @@ export function ReadingGroupsPage() {
 
       <div className={styles.filterBar}>
         <div className={styles.fbInner}>
-          <span className={styles.fbLabel}>Genre</span>
+          <span className={styles.fbLabel}>
+            {t("community:readingGroups.filterBar.genreLabel")}
+          </span>
           <FilterChips
             options={GENRE_FILTERS.map((f) => ({
               value: f.id,
-              label: f.label,
+              label: t(`community:${f.labelKey}`),
             }))}
             value={genre}
             onChange={(v) => setGenre(v as Genre | "all")}
           />
           <div className={styles.fbSep} />
-          <span className={styles.fbLabel}>Format</span>
+          <span className={styles.fbLabel}>
+            {t("community:readingGroups.filterBar.formatLabel")}
+          </span>
           <FilterChips
             options={FORMAT_FILTERS.map((f) => ({
               value: f.id,
-              label: f.label,
+              label: t(`community:${f.labelKey}`),
             }))}
             value={format}
             onChange={(v) => setFormat(v as Format | "all")}
           />
           <div className={styles.fbSep} />
           <div className={styles.count}>
-            <b>{items.length}</b> group{items.length !== 1 ? "s" : ""}
+            {t("community:readingGroups.filterBar.count", {
+              count: items.length,
+            })}
           </div>
         </div>
       </div>
@@ -164,10 +169,10 @@ export function ReadingGroupsPage() {
               <EmptyState
                 className={styles.empty}
                 icon={<FiBookOpen />}
-                title="No groups match those filters"
-                description="Nothing fits this genre and format combination yet — try widening your filters, or start a group around the book you want to read."
+                title={t("community:readingGroups.empty.title")}
+                description={t("community:readingGroups.empty.description")}
                 action={{
-                  label: "Clear filters",
+                  label: t("community:readingGroups.empty.clearFiltersCta"),
                   onClick: () => {
                     setGenre("all");
                     setFormat("all");
@@ -198,14 +203,15 @@ export function ReadingGroupsPage() {
 
       <Outro
         title={
-          <>
-            Books build <em>community.</em>
-          </>
+          <Translation
+            i18nKey="community:readingGroups.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="QueerPulse reading groups have been running since 2024. Some have turned into friendships, some into collaborations, two into bands."
+        sub={t("community:readingGroups.outro.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Join the network
+          {t("community:readingGroups.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

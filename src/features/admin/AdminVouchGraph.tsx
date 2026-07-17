@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { VouchAvatar } from "./adminMembers.data";
 import type { AvatarTone } from "./ui";
 import styles from "./AdminMembersPage.module.css";
@@ -38,6 +39,7 @@ const CENTER_R = 26;
 const NODE_R = 16;
 
 export function AdminVouchGraph({ center, nodes }: Props) {
+  const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const count = nodes.length;
 
@@ -56,7 +58,10 @@ export function AdminVouchGraph({ center, nodes }: Props) {
       viewBox={`0 0 ${W} ${H}`}
       className={styles.graphSvg}
       role="img"
-      aria-label={`Vouch network: ${count} people connected to ${center.initials}`}
+      aria-label={t("admin:vouchGraph.graph.ariaLabel", {
+        count,
+        initials: center.initials,
+      })}
     >
       {/* connector lines first */}
       <g>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiMapPin, FiAward } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminAvatar, type AvatarTone } from "./ui";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import type { PartnerApplicationView } from "../marketing/api/usePartnerApplications";
@@ -28,6 +29,7 @@ export function AdminPartnerApplicationCard({
   onApprove: () => void;
   onReject: (note?: string) => void;
 }) {
+  const { t } = useTranslation();
   const [declining, setDeclining] = useState(false);
   const [note, setNote] = useState("");
 
@@ -71,7 +73,7 @@ export function AdminPartnerApplicationCard({
       {declining ? (
         <div className={styles.declineBox}>
           <label className={styles.declineLabel} htmlFor={`note-${view.id}`}>
-            A note for {view.name} <span>(optional)</span>
+            {t("admin:partners.card.noteLabel", { name: view.name })}
           </label>
           <textarea
             id={`note-${view.id}`}
@@ -79,7 +81,7 @@ export function AdminPartnerApplicationCard({
             rows={3}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="What would help them re-apply, or why this isn't a fit right now."
+            placeholder={t("admin:partners.card.notePlaceholder")}
           />
           <div className={styles.actions}>
             <Button
@@ -87,24 +89,24 @@ export function AdminPartnerApplicationCard({
               size="md"
               onClick={() => setDeclining(false)}
             >
-              Back
+              {t("admin:partners.card.backCta")}
             </Button>
             <Button
               variant="primary"
               size="md"
               onClick={() => onReject(note.trim() || undefined)}
             >
-              Set aside
+              {t("admin:partners.card.setAsideCta")}
             </Button>
           </div>
         </div>
       ) : (
         <div className={styles.actions}>
           <Button variant="ghost" size="md" onClick={() => setDeclining(true)}>
-            Set aside
+            {t("admin:partners.card.setAsideCta")}
           </Button>
           <Button variant="jade" size="md" onClick={onApprove}>
-            Approve as partner
+            {t("admin:partners.card.approveCta")}
           </Button>
         </div>
       )}

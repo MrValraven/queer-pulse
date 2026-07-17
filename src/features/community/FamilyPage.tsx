@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { FiCompass } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { INVITE, SITUATIONS, TABS, type TabId } from "./family.data";
 import { FamilyTabContent } from "./FamilyTabContent";
 import { FamilyTalkSection } from "./FamilyTalkSection";
@@ -9,6 +11,7 @@ import { ParentNetwork } from "./ParentNetwork";
 import styles from "./FamilyPage.module.css";
 
 export function FamilyPage() {
+  const { t } = useTranslation();
   const [active, setActive] = useState<TabId>("adoption");
   const [selectedSit, setSelectedSit] = useState<number | null>(null);
   // Low-pressure entry: this is a sensitive topic, so picking a situation is
@@ -44,19 +47,17 @@ export function FamilyPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>Family Building · Portugal</div>
+          <div className={styles.cat}>{t("community:family.hero.cat")}</div>
           <h1>
-            Building your family, <em>your way.</em>
+            <Translation
+              i18nKey="community:family.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
-          <p className={styles.heroSub}>
-            Practical, honest information about adoption, assisted reproduction,
-            co-parenting, and legal parenthood in Portugal — from the community,
-            for the community.
-          </p>
+          <p className={styles.heroSub}>{t("community:family.hero.sub")}</p>
           <div className={styles.legalNote}>
             <span className={styles.legalDot} />
-            Community information, not legal advice. Laws change — always verify
-            with a specialist.
+            {t("community:family.hero.legalNote")}
           </div>
         </div>
       </div>
@@ -65,26 +66,30 @@ export function FamilyPage() {
         <div className="wrap">
           <div className={styles.sitLabelRow}>
             <h2>
-              Where are you <em>starting from?</em>
+              <Translation
+                i18nKey="community:family.situations.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
-            <p>
-              Optional — pick a situation to highlight what's most relevant, or
-              just browse everything below. No need to decide anything to read.
-            </p>
+            <p>{t("community:family.situations.lead")}</p>
           </div>
           <div className={styles.sitGrid}>
             {SITUATIONS.map((s, i) => (
               <button
-                key={s.name}
+                key={s.nameKey}
                 type="button"
                 className={[styles.sitCard, selectedSit === i && styles.sitSel]
                   .filter(Boolean)
                   .join(" ")}
                 onClick={() => selectSituation(i, s.tab)}
               >
-                <div className={styles.sitName}>{s.name}</div>
-                <div className={styles.sitDesc}>{s.desc}</div>
-                <div className={styles.sitTo}>{s.to}</div>
+                <div className={styles.sitName}>
+                  {t(`community:${s.nameKey}`)}
+                </div>
+                <div className={styles.sitDesc}>
+                  {t(`community:${s.descKey}`)}
+                </div>
+                <div className={styles.sitTo}>{t(`community:${s.toKey}`)}</div>
               </button>
             ))}
           </div>
@@ -97,7 +102,7 @@ export function FamilyPage() {
               onClick={browseFreely}
             >
               <FiCompass aria-hidden />
-              I'm just exploring — show me everything
+              {t("community:family.browseFreely.cta")}
             </button>
           </div>
         </div>
@@ -105,16 +110,19 @@ export function FamilyPage() {
 
       <div className={styles.tabNav} ref={tabNavRef}>
         <div className={styles.tabNavInner}>
-          {TABS.map((t) => (
+          {TABS.map((tabOption) => (
             <button
-              key={t.id}
+              key={tabOption.id}
               type="button"
-              className={[styles.tabBtn, active === t.id && styles.tabBtnActive]
+              className={[
+                styles.tabBtn,
+                active === tabOption.id && styles.tabBtnActive,
+              ]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setActive(t.id)}
+              onClick={() => setActive(tabOption.id)}
             >
-              {t.label}
+              {t(`community:${tabOption.labelKey}`)}
             </button>
           ))}
         </div>
@@ -130,14 +138,15 @@ export function FamilyPage() {
 
       <Outro
         title={
-          <>
-            Your family is <em>real.</em>
-          </>
+          <Translation
+            i18nKey="community:family.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Whatever route you take, whatever shape it takes. The community is here."
+        sub={t("community:family.outro.sub")}
       >
         <Button to={INVITE} variant="primary" size="lg">
-          Join QueerPulse
+          {t("community:family.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

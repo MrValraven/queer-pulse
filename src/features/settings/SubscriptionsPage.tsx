@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import {
-  NEWSLETTERS,
-  JOB_ALERTS,
-  PRONOUN_VISIBILITY,
+  buildNewsletters,
+  buildJobAlerts,
+  buildPronounVisibility,
   type JobAlert,
 } from "./subscriptions.data";
 import { AlertBuilderModal, type AlertDraft } from "./AlertBuilderModal";
@@ -20,44 +23,51 @@ import {
 } from "./SubscriptionsSections";
 import styles from "./SubscriptionsPage.module.css";
 
+const LAST_SAVED_DATE = new Date(2026, 4, 14); // 14 May 2026
+
 export function SubscriptionsPage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
+  const newsletters = useMemo(() => buildNewsletters(t), [t]);
+  const jobAlerts = useMemo(() => buildJobAlerts(), []);
+  const pronounVisibility = useMemo(() => buildPronounVisibility(t), [t]);
   const [nlOn, setNlOn] = useState<Record<string, boolean>>(
-    Object.fromEntries(NEWSLETTERS.map((n) => [n.id, n.defaultOn])),
+    Object.fromEntries(newsletters.map((nl) => [nl.id, nl.defaultOn])),
   );
   const [removedAlerts, setRemovedAlerts] = useState<Set<string>>(new Set());
-  const [alerts, setAlerts] = useState<JobAlert[]>(JOB_ALERTS);
+  const [alerts, setAlerts] = useState<JobAlert[]>(jobAlerts);
   const [builderOpen, setBuilderOpen] = useState(false);
   const [editingAlert, setEditingAlert] = useState<AlertDraft | null>(null);
   const [selectedPronouns, setSelectedPronouns] = useState<Set<string>>(
     new Set(["he/him"]),
   );
   const [pronVis, setPronVis] = useState<Record<string, boolean>>(
-    Object.fromEntries(PRONOUN_VISIBILITY.map((p) => [p.id, p.defaultOn])),
+    Object.fromEntries(pronounVisibility.map((p) => [p.id, p.defaultOn])),
   );
 
   function removeAlert(id: string) {
     setRemovedAlerts((prev) => new Set(prev).add(id));
-    showToast("Alert removed", "info");
+    showToast(t("settings:subscriptions.alert.removedToast"), "info");
   }
 
   function saveAlert(draft: AlertDraft) {
     setAlerts((prev) => {
-      const exists = prev.some((a) => a.id === draft.id);
-      const next = alertFromDraft(draft);
+      const exists = prev.some((alert) => alert.id === draft.id);
+      const next = alertFromDraft(draft, t);
       return exists
-        ? prev.map((a) => (a.id === draft.id ? next : a))
+        ? prev.map((alert) => (alert.id === draft.id ? next : alert))
         : [...prev, next];
     });
   }
 
-  const visibleAlerts = alerts.filter((a) => !removedAlerts.has(a.id));
+  const visibleAlerts = alerts.filter((alert) => !removedAlerts.has(alert.id));
 
-  function togglePronoun(p: string) {
+  function togglePronoun(pronoun: string) {
     setSelectedPronouns((prev) => {
       const next = new Set(prev);
-      if (next.has(p)) next.delete(p);
-      else next.add(p);
+      if (next.has(pronoun)) next.delete(pronoun);
+      else next.add(pronoun);
       return next;
     });
   }
@@ -66,18 +76,22 @@ export function SubscriptionsPage() {
     <AppShell>
       <div className={styles.page}>
         <Link to={routes.settings} className={styles.back}>
-          ← Settings
+          {t("settings:subscriptions.page.backLink")}
         </Link>
         <div className={styles.eyebrow}>
-          Settings · subscriptions, alerts &amp; pronouns
+          {t("settings:subscriptions.page.eyebrow")}
         </div>
         <h1 className={styles.h1}>
-          What we send · <em>how you appear.</em>
+          <Translation
+            i18nKey="settings:subscriptions.page.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>
-          Three small, surgical controls. <em>Each opt-in is real</em> — turning
-          off a newsletter means we never send it, not "less of it". Pronouns
-          are the same: visible exactly where you choose, never inferred.
+          <Translation
+            i18nKey="settings:subscriptions.page.lead"
+            components={{ em: <em /> }}
+          />
         </p>
 
         <NewsletterSection nlOn={nlOn} setNlOn={setNlOn} />
@@ -98,17 +112,31 @@ export function SubscriptionsPage() {
 
         <div className={styles.saveRow}>
           <span className={styles.saveInfo}>
-            Last saved <b>14 May 2026</b> · all changes saved automatically
+            <Translation
+              i18nKey="settings:subscriptions.page.lastSaved"
+              values={{ date: fmt.date(LAST_SAVED_DATE) }}
+              components={{ b: <b /> }}
+            />
           </span>
-          <SaveButton onSave={() => showToast("Settings saved", "success")} />
+          <SaveButton
+            onSave={() =>
+              showToast(t("settings:subscriptions.page.savedToast"), "success")
+            }
+          />
         </div>
 
         <div className={styles.pitchNote}>
-          <b>Want to write for the podcast or magazine?</b> Pitches are read by
-          the editorial team, not auto-filtered.{" "}
-          <Link to={routes.submitStory}>Pitch a story →</Link>
+          <Translation
+            i18nKey="settings:subscriptions.page.pitchNote"
+            components={{ b: <b /> }}
+          />{" "}
+          <Link to={routes.submitStory}>
+            {t("settings:subscriptions.page.pitchStory")}
+          </Link>
           {" · "}
-          <Link to={routes.contact}>Pitch yourself for The Back Room →</Link>
+          <Link to={routes.contact}>
+            {t("settings:subscriptions.page.pitchBackRoom")}
+          </Link>
         </div>
       </div>
 

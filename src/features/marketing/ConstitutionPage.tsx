@@ -1,73 +1,99 @@
 import { PageShell } from "../../shared/components/layout";
 import { HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { ARTICLES } from "./constitution.data";
 import styles from "./ConstitutionPage.module.css";
 
 const N = ({ n }: { n: string }) => <span className={styles.num}>{n}</span>;
 
 export function ConstitutionPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <HubBackLink to={routes.governance} label="Governance" />
+          <HubBackLink
+            to={routes.governance}
+            label={t("marketing:hub.governanceLabel")}
+          />
           <div className={styles.eyebrow}>
-            Constitution · v1.4 · ratified 14 Nov 2025
+            {t("marketing:constitution.hero.eyebrow")}
           </div>
           <h1 className={styles.h1}>
-            The <em>rulebook,</em> in plain Portuguese-flavoured English.
+            <Translation
+              i18nKey="marketing:constitution.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            The formal organising document of <b>Associação QueerPulse</b>, the
-            not-for-profit that operates the platform. Written by the founding
-            eight. Ratified at the first assembly.{" "}
-            <em>Amended four times since.</em>
+            <Translation
+              i18nKey="marketing:constitution.hero.dek1"
+              components={{ b: <b />, em: <em /> }}
+            />
           </p>
-          <p className={styles.dek}>
-            It is intentionally short. Twelve articles, plain language, no
-            nested sub-clauses. Anything more elaborate lives in the Code of
-            Conduct, the bylaws, or the resolutions of the Annual Assembly.
-          </p>
+          <p className={styles.dek}>{t("marketing:constitution.hero.dek2")}</p>
           <p className={styles.meta}>
-            <b>Registered:</b> Associação QueerPulse · NIPC 517 426 884 · Lisbon
-            · <b>Original:</b> Portuguese (legally binding) · this is the
-            English translation.
+            <Translation
+              i18nKey="marketing:constitution.hero.meta"
+              components={{ b: <b /> }}
+            />
           </p>
         </div>
       </section>
 
       <nav className={styles.toc}>
         <div className={styles.tocInner}>
-          {ARTICLES.map((a) => (
-            <a key={a.id} href={`#${a.id}`}>
-              {a.toc}
+          {ARTICLES.map((article) => (
+            <a key={article.id} href={`#${article.id}`}>
+              {t(article.tocKey)}
             </a>
           ))}
         </div>
       </nav>
 
       <article className={styles.body}>
-        {ARTICLES.map((a) => (
-          <section className={styles.art} id={a.id} key={a.id}>
+        {ARTICLES.map((article, articleIndex) => (
+          <section className={styles.art} id={article.id} key={article.id}>
             <div className={styles.artNum}>
-              Article <em>{a.roman}</em>
+              {t("marketing:constitution.artNumLabel")} <em>{article.roman}</em>
             </div>
-            <h2>{a.title}</h2>
-            {a.clauses.map((c) => (
-              <p className={styles.clause} key={c.n}>
-                <N n={c.n} />
-                {c.body}
+            <h2>
+              <Translation
+                i18nKey={article.titleKey}
+                components={{ em: <em /> }}
+              />
+            </h2>
+            {article.clauseKeys.map((clauseKey, clauseIndex) => (
+              <p className={styles.clause} key={clauseKey}>
+                <N n={`§${articleIndex + 1}·${clauseIndex + 1}`} />
+                <Translation
+                  i18nKey={clauseKey}
+                  components={{ strong: <strong />, em: <em /> }}
+                />
               </p>
             ))}
-            {a.quote && <p className={styles.quote}>{a.quote}</p>}
+            {article.quoteKey && (
+              <p className={styles.quote}>
+                <Translation
+                  i18nKey={article.quoteKey}
+                  components={{ em: <em /> }}
+                />
+              </p>
+            )}
           </section>
         ))}
       </article>
 
       <div className={styles.version}>
-        <b>Constitution v1.4</b> · ratified 14 Nov 2025 · in force since 1 Jan
-        2026 · <a>Download PDF</a> · See the Assembly · Read the Code of Conduct
+        <Translation
+          i18nKey="marketing:constitution.footer.version"
+          components={{ b: <b /> }}
+        />{" "}
+        <a>{t("marketing:constitution.footer.downloadPdf")}</a> ·{" "}
+        {t("marketing:constitution.footer.seeAssembly")} ·{" "}
+        {t("marketing:constitution.footer.readCodeOfConduct")}
       </div>
     </PageShell>
   );

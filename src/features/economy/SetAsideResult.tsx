@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import { FiShield } from "react-icons/fi";
 import { TAX_DISCLAIMER } from "./tax.constants";
-import { euro } from "./economy.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import type { PotEntry } from "./setAside.data";
 import styles from "./SetAsidePlannerPage.module.css";
 
@@ -16,6 +18,8 @@ export function SetAsideResult({
   setAsidePct,
   pot,
 }: SetAsideResultProps) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const frac = setAsidePct / 100;
   const annualPark = gross * frac;
   const monthlyPark = annualPark / 12;
@@ -29,41 +33,57 @@ export function SetAsideResult({
     <div className={styles.result}>
       <div className={styles.panel}>
         <FiShield className={styles.panelIcon} aria-hidden />
-        <p className={styles.panelKicker}>For every invoice, park</p>
+        <p className={styles.panelKicker}>
+          {t("economy:setAside.result.parkKicker")}
+        </p>
         <p className={styles.bigPct}>{setAsidePct}%</p>
         <h2 className={styles.panelTitle}>
-          Set aside <em>{setAsidePct}%</em> of every euro you invoice.
+          <Translation
+            i18nKey="economy:setAside.result.title"
+            components={{ em: <em /> }}
+            values={{ percent: setAsidePct }}
+          />
         </h2>
         <p className={styles.panelBody}>
-          On your expected {euro(gross)}, that's about {euro(monthlyPark)} a
-          month you keep aside for the IRS and Segurança Social — and don't
-          spend.
+          {t("economy:setAside.result.body", {
+            gross: fmt.currency(gross),
+            monthly: fmt.currency(monthlyPark),
+          })}
         </p>
       </div>
 
       <div className={styles.statRow}>
         <div className={styles.stat}>
-          <span className={styles.statLabel}>Park per month</span>
-          <span className={styles.statVal}>{euro(monthlyPark)}</span>
+          <span className={styles.statLabel}>
+            {t("economy:setAside.result.parkPerMonth")}
+          </span>
+          <span className={styles.statVal}>{fmt.currency(monthlyPark)}</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statLabel}>Park this year</span>
-          <span className={styles.statVal}>{euro(annualPark)}</span>
+          <span className={styles.statLabel}>
+            {t("economy:setAside.result.parkThisYear")}
+          </span>
+          <span className={styles.statVal}>{fmt.currency(annualPark)}</span>
         </div>
       </div>
 
       <div className={styles.potCard}>
         <div className={styles.potHead}>
-          <span className={styles.potLabel}>Your set-aside pot</span>
+          <span className={styles.potLabel}>
+            {t("economy:setAside.result.potLabel")}
+          </span>
           <span className={styles.potCount}>
-            {pot.length} invoice{pot.length === 1 ? "" : "s"} logged
+            {t("economy:setAside.result.potCount", { count: pot.length })}
           </span>
         </div>
-        <p className={styles.potTotal}>{euro(potOwed)}</p>
+        <p className={styles.potTotal}>{fmt.currency(potOwed)}</p>
         <p className={styles.potSub}>
           {pot.length === 0
-            ? "Log your first invoice to start the pot."
-            : `${setAsidePct}% of the ${euro(logged)} you've logged so far. Keep this much untouched.`}
+            ? t("economy:setAside.result.potEmpty")
+            : t("economy:setAside.result.potSub", {
+                percent: setAsidePct,
+                logged: fmt.currency(logged),
+              })}
         </p>
       </div>
 

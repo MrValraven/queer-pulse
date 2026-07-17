@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { FiHeart } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Skill } from "./skills.data";
 import { SkillCard } from "./SkillCard";
 import styles from "./SkillsPage.module.css";
@@ -26,6 +27,7 @@ export function SkillsSection({
   emptyDescription,
   onClearFilters,
 }: SkillsSectionProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.section}>
       <div className={styles.sectionHead}>
@@ -47,9 +49,12 @@ export function SkillsSection({
           <EmptyState
             compact
             icon={<FiHeart />}
-            title="Nothing matches your filter"
+            title={t("economy:skills.section.nothingMatches")}
             description={emptyDescription}
-            action={{ label: "Clear filters", onClick: onClearFilters }}
+            action={{
+              label: t("economy:skills.section.clearFilters"),
+              onClick: onClearFilters,
+            }}
           />
         )}
       </div>

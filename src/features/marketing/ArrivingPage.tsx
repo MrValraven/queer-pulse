@@ -1,6 +1,8 @@
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   NeighbourhoodsSection,
   HealthSection,
@@ -12,21 +14,22 @@ import {
 import styles from "./ArrivingPage.module.css";
 
 export function ArrivingPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
-            New to Lisbon
+            {t("marketing:arriving.hero.eyebrow")}
           </Reveal>
           <Reveal as="h1" delay={60}>
-            Queer and new to Lisbon? <em>Welcome.</em>
+            <Translation
+              i18nKey="marketing:arriving.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" delay={120}>
-            This city has a lot for us — a real, rooted queer community,
-            welcoming neighbourhoods, organisations doing serious work, and
-            people who will genuinely help you settle in. Here's what to know
-            first.
+            {t("marketing:arriving.hero.body")}
           </Reveal>
         </div>
       </div>
@@ -40,14 +43,15 @@ export function ArrivingPage() {
 
       <Outro
         title={
-          <>
-            Ready to meet <em>the community?</em>
-          </>
+          <Translation
+            i18nKey="marketing:arriving.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Request an invite to QueerPulse and get access to the full network — members, gatherings, board, and everything else on this page."
+        sub={t("marketing:arriving.outro.sub")}
       >
         <Button to={routes.requestInvite} variant="primary" size="lg">
-          Request an invite →
+          {t("marketing:arriving.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

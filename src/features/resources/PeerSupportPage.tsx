@@ -1,41 +1,48 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { WHAT_IT_IS, STEPS } from "./peerSupport.data";
+import { WHAT_IT_IS_KEYS, STEPS } from "./peerSupport.data";
 import styles from "./resources.module.css";
 
 export function PeerSupportPage() {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Trans Hub · Peer Support"
+        eyebrow={t("resources:peerSupport.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Someone who <em>gets it.</em>
-          </>
+          <Translation
+            i18nKey="resources:peerSupport.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Peer support in the Hub, in plain terms: what it is, what it isn't, how to ask for it, and how to become a peer yourself when you're ready."
+        lead={t("resources:peerSupport.hero.lead")}
         anchors={[
-          { label: "What it is", href: "#what" },
-          { label: "How it works", href: "#how" },
+          { label: t("resources:peerSupport.hero.anchor.what"), href: "#what" },
+          { label: t("resources:peerSupport.hero.anchor.how"), href: "#how" },
         ]}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`} id="what">
         <div className="wrap">
           <Reveal as="h2">
-            What peer support <em>is</em>
+            <Translation
+              i18nKey="resources:peerSupport.what.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
-          {WHAT_IT_IS.map((p) => (
+          {WHAT_IT_IS_KEYS.map((whatKey) => (
             <Reveal
               as="p"
-              key={p}
+              key={whatKey}
               className={styles.leadP}
               style={{ maxWidth: "64ch" }}
             >
-              {p}
+              {t(whatKey)}
             </Reveal>
           ))}
         </div>
@@ -44,18 +51,21 @@ export function PeerSupportPage() {
       <section className={`${styles.section} ${styles.sectionCream}`} id="how">
         <div className="wrap">
           <Reveal as="h2">
-            How it <em>works</em>
+            <Translation
+              i18nKey="resources:peerSupport.how.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Four steps, none of them binding. You stay in control of every one.
+            {t("resources:peerSupport.how.lead")}
           </Reveal>
           <div className={styles.stepList}>
             {STEPS.map((s) => (
               <Reveal key={s.n} className={styles.step}>
                 <div className={styles.stepN}>{s.n}</div>
                 <div>
-                  <div className={styles.stepTitle}>{s.title}</div>
-                  <div className={styles.stepBody}>{s.body}</div>
+                  <div className={styles.stepTitle}>{t(s.titleKey)}</div>
+                  <div className={styles.stepBody}>{t(s.bodyKey)}</div>
                 </div>
               </Reveal>
             ))}
@@ -65,17 +75,18 @@ export function PeerSupportPage() {
 
       <Outro
         title={
-          <>
-            You don't have to carry it <em>alone.</em>
-          </>
+          <Translation
+            i18nKey="resources:peerSupport.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The Hub is here, and so is the wider community forum."
+        sub={t("resources:peerSupport.outro.sub")}
       >
         <Button to={routes.transHub} variant="primary" size="lg">
-          Go to the Trans Hub
+          {t("resources:peerSupport.outro.hubCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          Open the forum
+          {t("resources:peerSupport.outro.forumCta")}
         </Button>
       </Outro>
     </PageShell>

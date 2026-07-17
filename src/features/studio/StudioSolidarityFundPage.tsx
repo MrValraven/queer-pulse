@@ -4,10 +4,13 @@ import { StudioFundBalance } from "./StudioFundBalance";
 import { StudioFundFlows } from "./StudioFundFlows";
 import { StudioFundLog } from "./StudioFundLog";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import s from "./funding.module.css";
 
 export function StudioSolidarityFundPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
 
   return (
@@ -15,19 +18,19 @@ export function StudioSolidarityFundPage() {
       <div className={s.wrap}>
         <div className={s.hero}>
           <div className={s.eb}>
-            <span className={s.live} /> Public · updated Mondays at noon
+            <span className={s.live} /> {t("studio:fund.hero.liveLabel")}
           </div>
           <h1>
-            The <em>solidarity</em> fund.
+            <Translation
+              i18nKey="studio:fund.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>
-            A small pooled reserve that pays the people the per-stream rate
-            can't reach —{" "}
-            <em>
-              transcribers, translators, first-timers, and artists in a hard
-              month
-            </em>
-            . Where it comes from and where it goes, in full.
+            <Translation
+              i18nKey="studio:fund.hero.dek"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
@@ -38,8 +41,15 @@ export function StudioSolidarityFundPage() {
         <div className={s.apply}>
           <div>
             <h2>
-              Need it? <em>Ask.</em>
+              <Translation
+                i18nKey="studio:fund.apply.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
+            {/* Not swept — eligibility/commitment copy (§6 of the i18n sweep
+                brief): the no-means-test promise below needs a native pt-PT
+                reviewer's precision, not a guess. Renders in English via the
+                fallback chain. Flagged in the sweep report. */}
             <p>
               If you're a member having a hard month, the emergency strand is a
               short form and a fast yes —{" "}
@@ -52,16 +62,13 @@ export function StudioSolidarityFundPage() {
               type="button"
               className={`${s.bt} ${s.btJade} ${s.btLg}`}
               onClick={() =>
-                showToast(
-                  "Emergency support form opens in a private flow",
-                  "info",
-                )
+                showToast(t("studio:fund.apply.requestToast"), "info")
               }
             >
-              Request emergency support
+              {t("studio:fund.apply.requestCta")}
             </button>
             <Link to={routes.studioCalls} className={`${s.bt} ${s.btLg}`}>
-              See open grants &amp; calls →
+              {t("studio:fund.apply.seeGrantsCta")}
             </Link>
           </div>
         </div>

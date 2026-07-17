@@ -1,98 +1,121 @@
 export interface Place {
   name: string;
-  detail: string;
-  flags: string[];
+  detailKey: string;
+  flagKeys: string[];
 }
 
 export interface PlaceGroup {
   id: string;
-  label: string;
-  intro: string;
+  labelKey: string;
+  introKey: string;
   places: Place[];
 }
 
 export const GROUPS: PlaceGroup[] = [
   {
     id: "routes",
-    label: "Step-free running routes",
-    intro:
-      "Loops the running group has checked on foot — flat, even surfaces, no stairs or kerbs you have to lift over.",
+    labelKey: "accessibleLisbon.group.routes.label",
+    introKey: "accessibleLisbon.group.routes.intro",
     places: [
       {
         name: "Parque das Nações riverside",
-        detail:
-          "7 km, completely flat, wide tarmac the whole way. The easiest first loop and step-free from the east lift.",
-        flags: ["7 km", "Tarmac", "Step-free"],
+        detailKey: "accessibleLisbon.place.parqueNacoes.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.7km",
+          "accessibleLisbon.flag.tarmac",
+          "accessibleLisbon.flag.stepFree",
+        ],
       },
       {
         name: "Belém to Algés waterfront",
-        detail:
-          "5 km out-and-back along the river. Smooth, open, and you can turn back at any point.",
-        flags: ["5 km", "Flat", "Turn back anywhere"],
+        detailKey: "accessibleLisbon.place.belemAlges.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.5km",
+          "accessibleLisbon.flag.flat",
+          "accessibleLisbon.flag.turnBackAnywhere",
+        ],
       },
       {
         name: "Alameda to Gulbenkian gardens",
-        detail:
-          "4 km through gardens and wide pavements. One gentle slope, otherwise level.",
-        flags: ["4 km", "Mostly level"],
+        detailKey: "accessibleLisbon.place.alamedaGulbenkian.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.4km",
+          "accessibleLisbon.flag.mostlyLevel",
+        ],
       },
     ],
   },
   {
     id: "venues",
-    label: "Social venues",
-    intro:
-      "Cafés and restaurants members have been to themselves. Only places someone has actually checked make the list.",
+    labelKey: "accessibleLisbon.group.venues.label",
+    introKey: "accessibleLisbon.group.venues.intro",
     places: [
       {
         name: "Arquivo, Príncipe Real",
-        detail:
-          "Library-café, genuinely quiet, level entrance from the square. Good for low-noise meets.",
-        flags: ["Step-free", "Low noise", "Seated"],
+        detailKey: "accessibleLisbon.place.arquivo.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.stepFree",
+          "accessibleLisbon.flag.lowNoise",
+          "accessibleLisbon.flag.seated",
+        ],
       },
       {
         name: "Maria Caxuxa, Intendente",
-        detail:
-          "Step-free entrance, hearing loop, accessible toilet, and staff who know what they are doing.",
-        flags: ["Step-free", "Hearing loop", "Accessible WC"],
+        detailKey: "accessibleLisbon.place.mariaCaxuxa.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.stepFree",
+          "accessibleLisbon.flag.hearingLoop",
+          "accessibleLisbon.flag.accessibleWc",
+        ],
       },
       {
         name: "Heim, Arroios",
-        detail:
-          "Seated, low music, good coffee. One small step at the door — staff bring a ramp if you ask.",
-        flags: ["Ramp on request", "Low music"],
+        detailKey: "accessibleLisbon.place.heim.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.rampOnRequest",
+          "accessibleLisbon.flag.lowMusic",
+        ],
       },
       {
         name: "Cervejaria Trindade, Chiado",
-        detail:
-          "Accessible via the Chiado entrance; the quieter back room has excellent acoustics for a group.",
-        flags: ["Step-free entrance", "Quiet back room"],
+        detailKey: "accessibleLisbon.place.trindade.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.stepFreeEntrance",
+          "accessibleLisbon.flag.quietBackRoom",
+        ],
       },
     ],
   },
   {
     id: "family",
-    label: "Family-friendly spots",
-    intro:
-      "Parks and venues that work with buggies, small kids, and the occasional meltdown — picked by the parents group.",
+    labelKey: "accessibleLisbon.group.family.label",
+    introKey: "accessibleLisbon.group.family.intro",
     places: [
       {
         name: "Jardim da Estrela",
-        detail:
-          "Fenced playground, step-free paths, café and toilets on site. The picnic patch near the fountain is reserved-able.",
-        flags: ["Playground", "Step-free", "Toilets"],
+        detailKey: "accessibleLisbon.place.jardimEstrela.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.playground",
+          "accessibleLisbon.flag.stepFree",
+          "accessibleLisbon.flag.toilets",
+        ],
       },
       {
         name: "Parque Eduardo VII (lower lawns)",
-        detail:
-          "Wide flat lawns at the bottom, easy buggy access from Marquês. Avoid the steep top in summer.",
-        flags: ["Buggy-friendly", "Open space"],
+        detailKey: "accessibleLisbon.place.eduardoVii.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.buggyFriendly",
+          "accessibleLisbon.flag.openSpace",
+        ],
       },
       {
         name: "Gulbenkian gardens",
-        detail:
-          "Shade, ponds, ducks, and smooth paths throughout. Calm and rarely crowded on weekday mornings.",
-        flags: ["Shaded", "Smooth paths", "Calm"],
+        detailKey: "accessibleLisbon.place.gulbenkianGardens.detail",
+        flagKeys: [
+          "accessibleLisbon.flag.shaded",
+          "accessibleLisbon.flag.smoothPaths",
+          "accessibleLisbon.flag.calm",
+        ],
       },
     ],
   },

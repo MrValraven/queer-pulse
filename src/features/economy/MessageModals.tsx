@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import {
   type Application,
@@ -11,39 +12,36 @@ import styles from "./ApplicationModals.module.css";
 
 export type MsgVariant = "message" | "followup" | "conversation";
 
-function recipientOf(app: Application): Recruiter {
+function recipientOf(app: Application, hiringTeamLabel: string): Recruiter {
   return (
     app.recruiter ?? {
       name: app.companyName,
-      role: "Hiring team",
+      role: hiringTeamLabel,
       initials: app.logo,
       tint: "coral",
     }
   );
 }
 
-const MSG_COPY: Record<
+const MSG_COPY_KEYS: Record<
   MsgVariant,
-  { title: string; em: string; sub: string; preset: string }
+  { titleKey: string; emKey: string; subKey: string; presetKey?: string }
 > = {
   message: {
-    title: "Message the",
-    em: "recruiter.",
-    sub: "Goes straight to their inbox — no read receipts, no algorithm in between.",
-    preset: "",
+    titleKey: "economy:msg.message.title",
+    emKey: "economy:msg.message.em",
+    subKey: "economy:msg.message.sub",
   },
   followup: {
-    title: "Send a",
-    em: "follow-up.",
-    sub: "A gentle nudge. We've drafted something warm — edit it however you like.",
-    preset:
-      "Hi — just a friendly note to check in on my application. I'm still very keen on the role and happy to share anything else that would help. No rush at all, and thank you for your time.",
+    titleKey: "economy:msg.followup.title",
+    emKey: "economy:msg.followup.em",
+    subKey: "economy:msg.followup.sub",
+    presetKey: "economy:msg.followup.preset",
   },
   conversation: {
-    title: "Open the",
-    em: "conversation.",
-    sub: "Pick up the thread with them directly.",
-    preset: "",
+    titleKey: "economy:msg.conversation.title",
+    emKey: "economy:msg.conversation.em",
+    subKey: "economy:msg.conversation.sub",
   },
 };
 
@@ -55,6 +53,7 @@ function ThreadView({
   entries: ThreadEntry[];
   fromIndex: number;
 }) {
+  const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
@@ -78,7 +77,7 @@ function ThreadView({
               .join(" ")}
           >
             <div className={styles.msgMeta}>
-              {e.from === "you" ? "You" : e.name} · {e.when}
+              {e.from === "you" ? t("economy:msg.you") : e.name} · {e.when}
             </div>
             <div className={styles.bubble}>{e.text}</div>
           </div>
@@ -114,12 +113,13 @@ function ConversationModal({
   onClose: () => void;
   onPatch: (id: string, patch: Partial<Application>) => void;
 }) {
-  const to = recipientOf(app);
-  const copy = MSG_COPY[variant];
+  const { t } = useTranslation();
+  const to = recipientOf(app, t("economy:msg.recipientHiringTeam"));
+  const copy = MSG_COPY_KEYS[variant];
   const originalLen = app.thread?.length ?? 0;
   const [entries, setEntries] = useState<ThreadEntry[]>(app.thread ?? []);
   const [msg, setMsg] = useState(
-    variant === "followup" ? MSG_COPY.followup.preset : "",
+    variant === "followup" ? t("economy:msg.followup.preset") : "",
   );
   const [sending, setSending] = useState(false);
   const timer = useRef<number | undefined>(undefined);
@@ -151,26 +151,31 @@ function ConversationModal({
         </div>
       </div>
       <h2 className={styles.title}>
-        {copy.title} <em>{copy.em}</em>
+        {t(copy.titleKey)} <em>{t(copy.emKey)}</em>
       </h2>
       <p className={styles.sub}>
-        The full history with {to.name.split(" ")[0]} — every message and
-        milestone, in order.
+        {t("economy:msg.historyWith", {
+          firstName: to.name.split(" ")[0] ?? to.name,
+        })}
       </p>
       <ThreadView entries={entries} fromIndex={originalLen} />
       <div className={styles.field}>
-        <label htmlFor="conv-body">Your reply</label>
+        <label htmlFor="conv-body">{t("economy:msg.yourReply")}</label>
         <textarea
           id="conv-body"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
-          placeholder="Write a reply…"
+          placeholder={t("economy:msg.replyPlaceholder")}
           style={{ minHeight: 90 }}
         />
       </div>
       <div className={`${styles.foot} ${styles.footEnd}`}>
         <Button size="lg" disabled={sending || !msg.trim()} onClick={send}>
-          {sending ? <Sending label="Sending…" /> : "Send →"}
+          {sending ? (
+            <Sending label={t("economy:msg.sendingLabel")} />
+          ) : (
+            t("economy:msg.sendCta")
+          )}
         </Button>
       </div>
     </ModalShell>
@@ -189,17 +194,23 @@ function ColdMessageModal({
   onClose: () => void;
   onPatch: (id: string, patch: Partial<Application>) => void;
 }) {
-  const to = recipientOf(app);
-  const copy = MSG_COPY[variant];
-  const [msg, setMsg] = useState(copy.preset);
+  const { t } = useTranslation();
+  const to = recipientOf(app, t("economy:msg.recipientHiringTeam"));
+  const copy = MSG_COPY_KEYS[variant];
+  const [msg, setMsg] = useState(copy.presetKey ? t(copy.presetKey) : "");
   const { submit, sending, done } = useSubmitFlow();
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title="Message" em="sent." onClose={onClose}>
-          Your message to {to.name.split(" ")[0]} is on its way. They'll reply
-          straight to your inbox.
+        <SuccessPanel
+          title={t("economy:msg.success.title")}
+          em={t("economy:msg.success.em")}
+          onClose={onClose}
+        >
+          {t("economy:msg.success.body", {
+            firstName: to.name.split(" ")[0] ?? to.name,
+          })}
         </SuccessPanel>
       ) : (
         <form
@@ -218,16 +229,18 @@ function ColdMessageModal({
             </div>
           </div>
           <h2 className={styles.title}>
-            {copy.title} <em>{copy.em}</em>
+            {t(copy.titleKey)} <em>{t(copy.emKey)}</em>
           </h2>
-          <p className={styles.sub}>{copy.sub}</p>
+          <p className={styles.sub}>{t(copy.subKey)}</p>
           <div className={styles.field}>
-            <label htmlFor="msg-body">Your message</label>
+            <label htmlFor="msg-body">
+              {t("economy:msg.yourMessageLabel")}
+            </label>
             <textarea
               id="msg-body"
               value={msg}
               onChange={(e) => setMsg(e.target.value)}
-              placeholder="Write naturally."
+              placeholder={t("economy:msg.messagePlaceholder")}
             />
           </div>
           <div className={styles.foot}>
@@ -237,10 +250,14 @@ function ColdMessageModal({
               onClick={onClose}
               disabled={sending}
             >
-              ← Cancel
+              {t("economy:msg.cancel")}
             </button>
             <Button size="lg" type="submit" disabled={sending || !msg.trim()}>
-              {sending ? <Sending label="Sending…" /> : "Send →"}
+              {sending ? (
+                <Sending label={t("economy:msg.sendingLabel")} />
+              ) : (
+                t("economy:msg.sendCta")
+              )}
             </Button>
           </div>
         </form>

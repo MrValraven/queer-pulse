@@ -1,4 +1,5 @@
 import { FiSearch, FiX } from "react-icons/fi";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./SearchInput.module.css";
 
 interface SearchInputProps {
@@ -16,11 +17,12 @@ interface SearchInputProps {
 export function SearchInput({
   value,
   onChange,
-  placeholder = "Search…",
-  ariaLabel = "Search",
+  placeholder,
+  ariaLabel,
   clearable = true,
   className,
 }: SearchInputProps) {
+  const { t } = useTranslation();
   return (
     <div className={[styles.wrap, className].filter(Boolean).join(" ")}>
       <span className={styles.icon} aria-hidden>
@@ -30,8 +32,8 @@ export function SearchInput({
         type="search"
         className={styles.input}
         value={value}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
+        placeholder={placeholder ?? t("shared:searchInput.placeholder")}
+        aria-label={ariaLabel ?? t("common:cta.search")}
         onChange={(e) => onChange(e.target.value)}
       />
       {clearable && value && (
@@ -39,7 +41,7 @@ export function SearchInput({
           type="button"
           className={styles.clear}
           onClick={() => onChange("")}
-          aria-label="Clear search"
+          aria-label={t("shared:searchInput.clearAria")}
         >
           <FiX />
         </button>

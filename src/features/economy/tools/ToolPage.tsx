@@ -4,6 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../../shared/components/layout";
 import { Eyebrow } from "../../../shared/components/ui";
 import { routes } from "../../../app/routeMap";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./ToolPage.module.css";
 
 interface ToolPageProps {
@@ -31,12 +32,13 @@ export function ToolPage({
   preview,
   actions,
 }: ToolPageProps) {
+  const { t } = useTranslation();
   return (
     <PageShell>
       <div className={styles.page}>
         <div className="wrap">
           <Link to={routes.economy} className={styles.back}>
-            <FiArrowLeft aria-hidden /> Back to Economy
+            <FiArrowLeft aria-hidden /> {t("economy:toolPage.backToEconomy")}
           </Link>
           <header className={styles.head}>
             <Eyebrow>{eyebrow}</Eyebrow>

@@ -5,6 +5,8 @@ import { ToolPage } from "./tools/ToolPage";
 import { useLocalStorage } from "./tools/useLocalStorage";
 import { SetAsideForm } from "./SetAsideForm";
 import { SetAsideResult } from "./SetAsideResult";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COEFFICIENT_FOR,
   POT_STORAGE_KEY,
@@ -21,6 +23,7 @@ import {
  * TAX_DISCLAIMER in the result column.
  */
 export function SetAsidePlannerPage() {
+  const { t } = useTranslation();
   const [gross, setGross] = useState(30000);
   const [activity, setActivity] = useState<Activity>("services");
   const [year, setYear] = useState<TaxYear>(2026);
@@ -45,13 +48,14 @@ export function SetAsidePlannerPage() {
 
   return (
     <ToolPage
-      eyebrow="Freelance tools"
+      eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <>
-          Set aside the <em>tax bill.</em>
-        </>
+        <Translation
+          i18nKey="economy:setAside.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Work out how much of every invoice to park now, so the IRS and Segurança Social bills don't sting later."
+      sub={t("economy:setAside.sub")}
       form={
         <SetAsideForm
           gross={gross}

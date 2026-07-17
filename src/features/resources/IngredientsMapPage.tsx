@@ -1,52 +1,53 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { INTRO, AREAS } from "./ingredientsMap.data";
+import { AREAS } from "./ingredientsMap.data";
 import styles from "./resources.module.css";
 
 export function IngredientsMapPage() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Queer POC"
+        eyebrow={t("resources:ingredientsMap.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Ingredients from <em>home.</em>
-          </>
+          <Translation
+            i18nKey="resources:ingredientsMap.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="A living map of where to find the tastes of home in Lisbon — crowd-sourced by the group, organised by neighbourhood. Home is partly a flavour, and this is where to find it."
+        lead={t("resources:ingredientsMap.hero.lead")}
         anchors={AREAS.map((a) => ({
-          label: a.hood,
-          href: `#${a.hood.split(" ")[0]!.toLowerCase()}`,
+          label: t(a.hoodKey),
+          href: `#${a.anchorId}`,
         }))}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`}>
         <div className="wrap">
-          {INTRO.map((p) => (
-            <Reveal
-              as="p"
-              key={p}
-              className={styles.leadP}
-              style={{ maxWidth: "64ch", marginBottom: 48 }}
-            >
-              {p}
-            </Reveal>
-          ))}
+          <Reveal
+            as="p"
+            className={styles.leadP}
+            style={{ maxWidth: "64ch", marginBottom: 48 }}
+          >
+            {t("resources:ingredientsMap.intro")}
+          </Reveal>
 
           {AREAS.map((area) => (
             <div
-              key={area.hood}
+              key={area.anchorId}
               className={styles.mapGroup}
-              id={area.hood.split(" ")[0]!.toLowerCase()}
+              id={area.anchorId}
             >
               <Reveal as="div" className={styles.mapGroupLabel}>
-                {area.hood}
+                {t(area.hoodKey)}
               </Reveal>
               <div className={styles.grid}>
                 {area.spots.map((s, i) => (
@@ -54,10 +55,10 @@ export function IngredientsMapPage() {
                     <div className={styles.cardName} style={{ fontSize: 18 }}>
                       {s.name}
                     </div>
-                    <div className={styles.cardSpec}>{s.finds}</div>
+                    <div className={styles.cardSpec}>{t(s.findsKey)}</div>
                     <div className={styles.tags}>
-                      <span className={styles.tag}>{s.origin}</span>
-                      <span className={styles.tag}>{s.hours}</span>
+                      <span className={styles.tag}>{t(s.originKey)}</span>
+                      <span className={styles.tag}>{t(s.hoursKey)}</span>
                     </div>
                   </Reveal>
                 ))}
@@ -69,17 +70,15 @@ export function IngredientsMapPage() {
             className={`${styles.card} ${styles.cardDashed}`}
             style={{ marginTop: 32 }}
           >
-            Know a spot we're missing?
+            {t("resources:ingredientsMap.missing.prompt")}
             <Button
               variant="ghost"
               style={{ marginTop: 12 }}
               onClick={() =>
-                showToast(
-                  "Added to the queue — a mod will pop it on the map. Obrigada!",
-                )
+                showToast(t("resources:ingredientsMap.missing.toast"))
               }
             >
-              Add your spot
+              {t("resources:ingredientsMap.missing.cta")}
             </Button>
           </div>
         </div>
@@ -87,14 +86,15 @@ export function IngredientsMapPage() {
 
       <Outro
         title={
-          <>
-            Joy is as <em>political</em> as solidarity.
-          </>
+          <Translation
+            i18nKey="resources:ingredientsMap.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="The map is one of the best things we've made together. Bring the rest of yourself to the group too."
+        sub={t("resources:ingredientsMap.outro.sub")}
       >
         <Button to={routes.forum} variant="primary" size="lg">
-          Join the conversation
+          {t("resources:ingredientsMap.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

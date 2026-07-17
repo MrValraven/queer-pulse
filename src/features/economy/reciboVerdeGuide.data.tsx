@@ -18,10 +18,17 @@ export interface GuideSection {
 }
 
 /* Numbers are interpolated from tax.constants.ts so the guide can never drift
-   out of sync with the figures the tools use. */
-const euro = (n: number) => `€${n.toLocaleString("pt-PT")}`;
+   out of sync with the figures the tools use. This guide's own prose
+   (GUIDE_SECTIONS below) is deliberately left in English regardless of the
+   active app language — see the sweep report: dense, article-citing pt-PT tax
+   prose was flagged rather than risk a subtly wrong tax instruction. Because
+   the surrounding sentences never translate, the numbers inside them are
+   formatted with a fixed English locale (not the hardcoded "pt-PT" this used
+   to carry, which mismatched the English prose) rather than `useFormat()` —
+   there is no active-language branch for this content to follow. */
+const euro = (n: number) => `€${n.toLocaleString("en-GB")}`;
 const pct = (fraction: number) =>
-  `${(fraction * 100).toLocaleString("pt-PT")}%`;
+  `${(fraction * 100).toLocaleString("en-GB")}%`;
 
 const defaultRetention =
   RETENTION_RATES.find((r) => r.value === 23)?.value ?? 23;

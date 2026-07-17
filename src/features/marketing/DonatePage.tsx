@@ -1,28 +1,38 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { DonateModal } from "./DonateModal";
 import { ALLOCATION, AMOUNTS, TRUST } from "./donate.data";
 import styles from "./DonatePage.module.css";
 
 export function DonatePage() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const [monthly, setMonthly] = useState(true);
   const [selected, setSelected] = useState(1);
   const [giving, setGiving] = useState(false);
+
+  const selectedAmount = AMOUNTS[selected]!.value;
 
   return (
     <PageShell>
       <header className={styles.hero}>
         <div className="wrap">
-          <Reveal className={styles.eyebrow}>Support QueerPulse</Reveal>
+          <Reveal className={styles.eyebrow}>
+            {t("marketing:donate.hero.eyebrow")}
+          </Reveal>
           <Reveal as="h1" className={styles.title} delay={60}>
-            Members keep this <em>alive.</em>
+            <Translation
+              i18nKey="marketing:donate.hero.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.lead} delay={120}>
-            No ads, no investors, no data sold. QueerPulse runs on the people
-            who use it — and every euro goes back into mutual aid, gatherings,
-            and paying queer creatives fairly.
+            {t("marketing:donate.hero.lead")}
           </Reveal>
 
           <Reveal className={styles.card} delay={160}>
@@ -32,14 +42,14 @@ export function DonatePage() {
                 className={`${styles.toggleBtn} ${monthly ? styles.toggleOn : ""}`}
                 onClick={() => setMonthly(true)}
               >
-                Monthly
+                {t("marketing:donate.toggle.monthly")}
               </button>
               <button
                 type="button"
                 className={`${styles.toggleBtn} ${!monthly ? styles.toggleOn : ""}`}
                 onClick={() => setMonthly(false)}
               >
-                One-off
+                {t("marketing:donate.toggle.oneOff")}
               </button>
             </div>
             <div className={styles.amounts}>
@@ -51,11 +61,13 @@ export function DonatePage() {
                   onClick={() => setSelected(index)}
                 >
                   {amount.featured && (
-                    <span className={styles.ribbon}>{amount.note}</span>
+                    <span className={styles.ribbon}>{t(amount.noteKey)}</span>
                   )}
-                  <div className={styles.amountVal}>{amount.value}</div>
+                  <div className={styles.amountVal}>
+                    {fmt.currency(amount.value)}
+                  </div>
                   {!amount.featured && (
-                    <div className={styles.amountNote}>{amount.note}</div>
+                    <div className={styles.amountNote}>{t(amount.noteKey)}</div>
                   )}
                 </button>
               ))}
@@ -66,8 +78,13 @@ export function DonatePage() {
               onClick={() => setGiving(true)}
               style={{ width: "100%" }}
             >
-              Give {AMOUNTS[selected]!.value}
-              {monthly ? " / month" : ""} →
+              {monthly
+                ? t("marketing:donate.giveCta.monthly", {
+                    amount: fmt.currency(selectedAmount),
+                  })
+                : t("marketing:donate.giveCta.oneOff", {
+                    amount: fmt.currency(selectedAmount),
+                  })}
             </Button>
           </Reveal>
         </div>
@@ -76,23 +93,25 @@ export function DonatePage() {
       <section className={styles.section}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            Where it <em>actually goes.</em>
+            <Translation
+              i18nKey="marketing:donate.allocation.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Not overheads and salaries for people you'll never meet. Here's the
-            real split.
+            {t("marketing:donate.allocation.lead")}
           </Reveal>
           <div className={styles.alloc}>
             {ALLOCATION.map((row, index) => (
               <Reveal
-                key={row.label}
+                key={row.labelKey}
                 className={styles.allocRow}
                 delay={index * 50}
               >
                 <div className={styles.allocPct}>{row.pct}</div>
                 <div>
-                  <div className={styles.allocLabel}>{row.label}</div>
-                  <div className={styles.allocBody}>{row.body}</div>
+                  <div className={styles.allocLabel}>{t(row.labelKey)}</div>
+                  <div className={styles.allocBody}>{t(row.bodyKey)}</div>
                 </div>
               </Reveal>
             ))}
@@ -103,23 +122,26 @@ export function DonatePage() {
       <section className={`${styles.section} ${styles.sectionPaper}`}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            You can <em>trust the numbers.</em>
+            <Translation
+              i18nKey="marketing:donate.trust.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Transparency isn't a nice-to-have here — it's the deal.
+            {t("marketing:donate.trust.lead")}
           </Reveal>
           <div className={styles.trust}>
             {TRUST.map((item, index) => (
               <Reveal
-                key={item.title}
+                key={item.titleKey}
                 className={styles.trustCard}
                 delay={index * 55}
               >
                 <div className={styles.trustIcon}>
                   <item.icon />
                 </div>
-                <div className={styles.trustTitle}>{item.title}</div>
-                <div className={styles.trustBody}>{item.body}</div>
+                <div className={styles.trustTitle}>{t(item.titleKey)}</div>
+                <div className={styles.trustBody}>{t(item.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -128,17 +150,18 @@ export function DonatePage() {
 
       <Outro
         title={
-          <>
-            Or give your <em>time instead.</em>
-          </>
+          <Translation
+            i18nKey="marketing:donate.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Money is one way in. Volunteering, hosting, and showing up are just as much the point."
+        sub={t("marketing:donate.outro.sub")}
       >
         <Button to={routes.volunteer} variant="primary" size="lg">
-          Volunteer with us
+          {t("marketing:donate.outro.volunteerCta")}
         </Button>
         <Button to={routes.transparencyReport} variant="ghost-dark" size="lg">
-          Read the figures
+          {t("marketing:donate.outro.readFiguresCta")}
         </Button>
       </Outro>
 

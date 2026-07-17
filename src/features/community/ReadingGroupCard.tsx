@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import { GENRE_BG, GENRE_FG, type Group } from "./readingGroups.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  GENRE_BG,
+  GENRE_FG,
+  GENRE_LABEL_KEY,
+  type Group,
+} from "./readingGroups.data";
 import styles from "./ReadingGroupsPage.module.css";
 
 export function ReadingGroupCard({
@@ -14,6 +20,7 @@ export function ReadingGroupCard({
   /** The user's position on this group's waitlist, if they've joined. */
   waitlistPosition?: number;
 }) {
+  const { t } = useTranslation();
   const spotsClass =
     g.spots === 0
       ? styles.spotsFull
@@ -21,7 +28,9 @@ export function ReadingGroupCard({
         ? styles.spotsAlmost
         : styles.spotsOpen;
   const spotsText =
-    g.spots === 0 ? "Full" : `${g.spots} spot${g.spots !== 1 ? "s" : ""} left`;
+    g.spots === 0
+      ? t("community:readingGroups.card.spots.full")
+      : t("community:readingGroups.card.spots.left", { count: g.spots });
 
   return (
     <article className={styles.gc}>
@@ -36,7 +45,7 @@ export function ReadingGroupCard({
             className={styles.gcGenre}
             style={{ background: GENRE_BG[g.genre], color: GENRE_FG[g.genre] }}
           >
-            {g.genre}
+            {t(`community:${GENRE_LABEL_KEY[g.genre]}`)}
           </span>
         </div>
       </div>
@@ -50,7 +59,11 @@ export function ReadingGroupCard({
               g.format === "irl" ? styles.gmIrl : styles.gmOnline,
             ].join(" ")}
           >
-            {g.format === "irl" ? "In person · " : "Online · "}
+            {t(
+              g.format === "irl"
+                ? "community:readingGroups.card.formatPrefix.irl"
+                : "community:readingGroups.card.formatPrefix.online",
+            )}
             {g.where}
           </span>
           <span className={styles.gm}>{g.frequency}</span>
@@ -65,7 +78,9 @@ export function ReadingGroupCard({
               className={`${styles.gcJoin} ${styles.gcJoinDisabled}`}
               aria-disabled="true"
             >
-              On waitlist · #{waitlistPosition}
+              {t("community:readingGroups.card.onWaitlist", {
+                position: waitlistPosition,
+              })}
             </span>
           ) : (
             <button
@@ -73,12 +88,12 @@ export function ReadingGroupCard({
               className={styles.gcJoin}
               onClick={onWaitlist}
             >
-              Join waitlist
+              {t("community:readingGroups.card.joinWaitlistCta")}
             </button>
           )
         ) : (
           <Link to={messagesPath} className={styles.gcJoin}>
-            Request to join
+            {t("community:readingGroups.card.requestToJoinCta")}
           </Link>
         )}
       </div>

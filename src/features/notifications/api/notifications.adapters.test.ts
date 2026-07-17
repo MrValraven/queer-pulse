@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { TFunction } from "../../../shared/i18n/types";
+import { createFormatters } from "../../../shared/i18n/format";
 import { notificationDtoToView } from "./notifications.adapters";
 import type { NotificationDTO } from "./notifications.api";
 
 /** Echoes the key back, so assertions here are about mapping, not copy. */
 const t: TFunction = (key) => key;
+/** Real `Intl`-backed formatters bound to English, exercising the actual
+ * date-formatting path rather than a stub. */
+const fmt = createFormatters("en");
 
 /** A notification shaped exactly as the backend entity serves it. */
 function dto(overrides: Partial<NotificationDTO> = {}): NotificationDTO {
@@ -22,11 +26,15 @@ function dto(overrides: Partial<NotificationDTO> = {}): NotificationDTO {
 describe("notificationDtoToView", () => {
   describe("read → unread", () => {
     it("treats read: false as unread", () => {
-      expect(notificationDtoToView(dto({ read: false }), t).unread).toBe(true);
+      expect(notificationDtoToView(dto({ read: false }), t, fmt).unread).toBe(
+        true,
+      );
     });
 
     it("treats read: true as already read", () => {
-      expect(notificationDtoToView(dto({ read: true }), t).unread).toBe(false);
+      expect(notificationDtoToView(dto({ read: true }), t, fmt).unread).toBe(
+        false,
+      );
     });
 
     it("defaults a missing `read` to unread rather than swallowing the row", () => {
@@ -35,50 +43,52 @@ describe("notificationDtoToView", () => {
       // never mean "already read".
       const missing = dto();
       delete (missing as Partial<NotificationDTO>).read;
-      expect(notificationDtoToView(missing, t).unread).toBe(true);
+      expect(notificationDtoToView(missing, t, fmt).unread).toBe(true);
     });
   });
 
   it("preserves the uuid id verbatim", () => {
-    const view = notificationDtoToView(dto(), t);
+    const view = notificationDtoToView(dto(), t, fmt);
     // Number(uuid) would be NaN — duplicate React keys and un-markable rows.
     expect(view.id).toBe("3f1c8a52-9b0e-4d6a-8f21-7c5e2b9a1d04");
     expect(Number.isNaN(view.id as number)).toBe(false);
   });
 
   it("derives the tab category from the backend type", () => {
-    expect(notificationDtoToView(dto({ type: "new_message" }), t).type).toBe(
-      "messages",
-    );
-    expect(notificationDtoToView(dto({ type: "event_invite" }), t).type).toBe(
-      "events",
-    );
     expect(
-      notificationDtoToView(dto({ type: "connection_request" }), t).type,
+      notificationDtoToView(dto({ type: "new_message" }), t, fmt).type,
+    ).toBe("messages");
+    expect(
+      notificationDtoToView(dto({ type: "event_invite" }), t, fmt).type,
+    ).toBe("events");
+    expect(
+      notificationDtoToView(dto({ type: "connection_request" }), t, fmt).type,
     ).toBe("community");
   });
 
   it("renders text + meta through i18n keys, never blank", () => {
-    const view = notificationDtoToView(dto(), t);
+    const view = notificationDtoToView(dto(), t, fmt);
     expect(view.text).toBe("notifications:type.new_message.text");
     expect(view.meta).toBe("notifications:type.new_message.meta");
   });
 
   it("falls back safely for an unknown type", () => {
-    const view = notificationDtoToView(dto({ type: "invented_later" }), t);
+    const view = notificationDtoToView(dto({ type: "invented_later" }), t, fmt);
     expect(view.text).toBe("notifications:type.unknown.text");
     expect(view.type).toBe("platform");
     expect(view.icon).toBeDefined();
   });
 
   it("always attaches an icon", () => {
-    expect(notificationDtoToView(dto(), t).icon?.Glyph).toBeTypeOf("function");
+    expect(notificationDtoToView(dto(), t, fmt).icon?.Glyph).toBeTypeOf(
+      "function",
+    );
   });
 
   it("formats createdAt into a short label and tolerates a bad one", () => {
-    expect(notificationDtoToView(dto(), t).time).not.toBe("");
-    expect(notificationDtoToView(dto({ createdAt: "nonsense" }), t).time).toBe(
-      "",
-    );
+    expect(notificationDtoToView(dto(), t, fmt).time).not.toBe("");
+    expect(
+      notificationDtoToView(dto({ createdAt: "nonsense" }), t, fmt).time,
+    ).toBe("");
   });
 });

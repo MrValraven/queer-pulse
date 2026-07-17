@@ -5,6 +5,15 @@ import type {
   MemberStatus,
 } from "../../features/auth/api/auth.api";
 
+/**
+ * A session-load failure, as a stable code + data rather than a pre-rendered
+ * message — `AuthProvider` sits above `I18nProvider` in the provider tree, so
+ * it cannot call `t()` itself. `AuthErrorToast` (below `I18nProvider`)
+ * resolves this into the active language via `shared:auth.error.*`.
+ */
+export type AuthErrorCode =
+  { kind: "server"; status: number } | { kind: "network" };
+
 export interface AuthContextValue {
   loggedIn: boolean;
   /**
@@ -25,7 +34,7 @@ export interface AuthContextValue {
    * (5xx / network) rather than the member simply being signed out (401). The
    * UI surfaces this so a backend fault isn't silently mistaken for logged-out.
    */
-  authError: string | null;
+  authError: AuthErrorCode | null;
   /**
    * Begin sign-in. In live mode this hands off to Google OAuth; pass
    * `redirectTo` to land there after login (the in-app `navigate` that follows

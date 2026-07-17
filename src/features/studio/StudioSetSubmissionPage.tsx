@@ -4,15 +4,18 @@ import { StudioShell } from "./StudioShell";
 import { StudioSetMatcher } from "./StudioSetMatcher";
 import { StudioSetSidebar } from "./StudioSetSidebar";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TRACKS } from "./studioSetSubmission.data";
 import s from "./funding.module.css";
 
 export function StudioSetSubmissionPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [ran, setRan] = useState(true);
   const [running, setRunning] = useState(false);
   const timer = useRef<number | undefined>(undefined);
-  const matched = TRACKS.filter((t) => t.m).length;
+  const matched = TRACKS.filter((track) => track.m).length;
   const held = TRACKS.length - matched;
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
@@ -25,7 +28,11 @@ export function StudioSetSubmissionPage() {
       setRunning(false);
       setRan(true);
       showToast(
-        `${matched} of ${TRACKS.length} matched · ${held} held for clearance`,
+        t("studio:setSubmission.matcher.matchedResultToast", {
+          matched,
+          total: TRACKS.length,
+          held,
+        }),
         "success",
       );
     }, 900);
@@ -36,16 +43,19 @@ export function StudioSetSubmissionPage() {
       <div className={s.wrap}>
         <div className={s.hero}>
           <div className={`${s.eb} ${s.ebAccent}`}>
-            New submission · DJ set or mix
+            {t("studio:setSubmission.hero.eyebrow")}
           </div>
           <h1>
-            Submit a <em>set</em>.
+            <Translation
+              i18nKey="studio:setSubmission.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>
-            Upload the long-form file, paste your tracklist with timecodes, and
-            our matcher finds the source artists so{" "}
-            <em>every track in the set pays its maker</em>. Unmatched tracks
-            hold their payout safely until cleared — nobody loses a cent.
+            <Translation
+              i18nKey="studio:setSubmission.hero.dek"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
@@ -54,15 +64,17 @@ export function StudioSetSubmissionPage() {
             <span className={s.num}>
               <FiCheck />
             </span>
-            File
+            {t("studio:setSubmission.steps.file")}
           </div>
           <span className={s.djBar} />
           <div className={`${s.djStep} ${s.djStepOn}`}>
-            <span className={s.num}>2</span>Tracklist &amp; matcher
+            <span className={s.num}>2</span>
+            {t("studio:setSubmission.steps.tracklist")}
           </div>
           <span className={s.djBar} />
           <div className={s.djStep}>
-            <span className={s.num}>3</span>Notes &amp; publish
+            <span className={s.num}>3</span>
+            {t("studio:setSubmission.steps.notes")}
           </div>
         </div>
 

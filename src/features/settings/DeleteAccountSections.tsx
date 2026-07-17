@@ -1,5 +1,8 @@
 import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import type { DeleteOption } from "./deleteAccount.data";
 import type { DeletionRequest } from "./api/account.api";
 import styles from "./DeleteAccountPage.module.css";
@@ -12,6 +15,7 @@ export function DeleteOptionCards({
   opt: DeleteOption;
   setOpt: (o: DeleteOption) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.optionGrid}>
       <div
@@ -45,12 +49,15 @@ export function DeleteOptionCards({
             <line x1="7" y1="10" x2="13" y2="10" />
           </svg>
         </div>
-        <div className={styles.optTitle}>Deactivate</div>
-        <div className={styles.optDesc}>
-          Your profile becomes invisible. Your data is preserved. You can
-          reactivate any time by signing back in.
+        <div className={styles.optTitle}>
+          {t("settings:deleteAccount.options.deactivate.title")}
         </div>
-        <div className={`${styles.optTag} ${styles.optTagRev}`}>Reversible</div>
+        <div className={styles.optDesc}>
+          {t("settings:deleteAccount.options.deactivate.desc")}
+        </div>
+        <div className={`${styles.optTag} ${styles.optTagRev}`}>
+          {t("settings:deleteAccount.options.deactivate.tag")}
+        </div>
       </div>
       <div
         className={[
@@ -85,13 +92,14 @@ export function DeleteOptionCards({
           </svg>
         </div>
         <div className={`${styles.optTitle} ${styles.optTitleDanger}`}>
-          Delete account
+          {t("settings:deleteAccount.options.delete.title")}
         </div>
         <div className={styles.optDesc}>
-          Permanently erases your account and all associated data within 30
-          days. This cannot be undone.
+          {t("settings:deleteAccount.options.delete.desc")}
         </div>
-        <div className={`${styles.optTag} ${styles.optTagPerm}`}>Permanent</div>
+        <div className={`${styles.optTag} ${styles.optTagPerm}`}>
+          {t("settings:deleteAccount.options.delete.tag")}
+        </div>
       </div>
     </div>
   );
@@ -110,23 +118,23 @@ export function DeletePendingBanner({
   onCancel: () => void;
   cancelling: boolean;
 }) {
-  const when = new Date(request.scheduledErasureAt).toLocaleDateString(
-    undefined,
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  );
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const when = fmt.date(new Date(request.scheduledErasureAt), {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
   return (
     <div className={styles.pauseStrip}>
       <FiAlertCircle className={styles.pauseStripIcon} aria-hidden="true" />
       <div>
         <p className={styles.pauseStripText}>
-          <strong>Your account is scheduled for deletion.</strong> Everything is
-          hidden now and will be permanently erased on <strong>{when}</strong>.
-          Changed your mind? You can still cancel and pick up where you left
-          off.
+          <Translation
+            i18nKey="settings:deleteAccount.pending.banner"
+            components={{ strong: <strong /> }}
+            values={{ date: when }}
+          />
         </p>
         <Button
           variant="primary"
@@ -134,7 +142,9 @@ export function DeletePendingBanner({
           disabled={cancelling}
           style={{ marginTop: 12 }}
         >
-          {cancelling ? "Cancelling…" : "Cancel deletion"}
+          {cancelling
+            ? t("settings:deleteAccount.pending.cancelling")
+            : t("settings:deleteAccount.pending.cancelBtn")}
         </Button>
       </div>
     </div>

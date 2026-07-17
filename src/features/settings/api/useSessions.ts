@@ -1,10 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { ACTIVE_SESSIONS, type Session } from "../sessions.data";
 import { getSessions } from "./account.api";
 import { sessionResponseToSession } from "./sessions.adapters";
 
-export const SESSIONS_QUERY_KEY = ["account", "sessions"] as const;
+/** `language` is joined in — the adapted `signedIn` string is locale-dependent
+ * (`fmt.relativeTime`), so a language switch must invalidate the cached
+ * result rather than keep showing the previous language's phrasing. */
+export function sessionsQueryKey(language: string) {
+  return ["account", "sessions", language] as const;
+}
 
 export interface SessionsResult {
   sessions: Session[];
@@ -34,13 +41,15 @@ const EMPTY_SESSIONS: Session[] = [];
  */
 export function useSessions(): SessionsResult {
   const { demoMode } = useDemoMode();
+  const { language, t } = useTranslation();
+  const fmt = useFormat();
 
   const query = useQuery<Session[]>({
-    queryKey: SESSIONS_QUERY_KEY,
+    queryKey: sessionsQueryKey(language),
     enabled: !demoMode,
     queryFn: async () => {
       const rows = await getSessions();
-      return rows.map((row) => sessionResponseToSession(row));
+      return rows.map((row) => sessionResponseToSession(row, t, fmt));
     },
   });
 

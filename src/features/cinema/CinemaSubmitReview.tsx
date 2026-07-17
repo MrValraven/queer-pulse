@@ -1,32 +1,53 @@
 import { FiCheck } from "react-icons/fi";
 import { FormField } from "../../shared/components/ui";
-import { FORMATS, REVENUE_MODELS } from "./cinemaSubmit.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
+import {
+  CAPTION_LANGS,
+  COUNTRIES,
+  FORMATS,
+  LANGUAGES,
+  REVENUE_MODELS,
+  type OptionKeyDef,
+} from "./cinemaSubmit.data";
 import type { SubmitForm } from "./useSubmitForm";
 import { FbHead } from "./CinemaSubmitParts";
 import styles from "./CinemaSubmitPage.module.css";
 
+/** Resolve a stored canonical value (e.g. `"pt"`) back to its translated
+ * label for display — never render the raw stored value itself. */
+function resolveOptionLabel(
+  options: OptionKeyDef[],
+  value: string,
+  t: TFunction,
+): string {
+  const match = options.find((option) => option.value === value);
+  return match ? t(match.labelKey) : "";
+}
+
 function Row({
-  k,
+  fieldLabel,
   value,
   onEdit,
 }: {
-  k: string;
+  fieldLabel: string;
   value: string;
   onEdit: () => void;
 }) {
+  const { t } = useTranslation();
   const empty = !value.trim();
   return (
     <div className={styles.reviewRow}>
-      <span className={styles.rvK}>{k}</span>
+      <span className={styles.rvK}>{fieldLabel}</span>
       <span
         className={[styles.rvV, empty && styles.rvEmpty]
           .filter(Boolean)
           .join(" ")}
       >
-        {empty ? "Not added yet" : value}
+        {empty ? t("cinema:submit.review.value.notAddedYet") : value}
       </span>
       <button type="button" className={styles.rvEdit} onClick={onEdit}>
-        Edit
+        {t("cinema:submit.review.editCta")}
       </button>
     </div>
   );
@@ -40,56 +61,98 @@ export function CinemaSubmitReview({
   form: SubmitForm;
   onEdit: (step: number) => void;
 }) {
+  const { t } = useTranslation();
   const { draft, set } = form;
-  const format = FORMATS.find((f) => f.value === draft.format)?.label ?? "";
-  const revenue =
-    REVENUE_MODELS.find((m) => m.value === draft.revenue)?.label ?? "";
-  const notes = draft.notes.filter((n) => n.topic.trim()).length;
+  const format = resolveOptionLabel(FORMATS, draft.format, t);
+  const revenue = resolveOptionLabel(REVENUE_MODELS, draft.revenue, t);
+  const country = resolveOptionLabel(COUNTRIES, draft.country, t);
+  const language = resolveOptionLabel(LANGUAGES, draft.language, t);
+  const captionLangs = draft.captionLangs
+    .map((captionLangValue) =>
+      resolveOptionLabel(CAPTION_LANGS, captionLangValue, t),
+    )
+    .join(", ");
+  const notesAddedCount = draft.notes.filter((note) =>
+    note.topic.trim(),
+  ).length;
+  const runtimeLabel = draft.runtime
+    ? t("cinema:submit.review.value.runtimeMinutes", {
+        minutes: draft.runtime,
+      })
+    : "";
 
   return (
     <div className={styles.formBlock}>
       <FbHead
         num={5}
-        title="Review"
-        titlePost="& submit"
-        sub="One last look. You can edit any answer, or send it to the team now."
+        heading={t("cinema:submit.form.review.heading")}
+        sub={t("cinema:submit.form.review.sub")}
       />
 
       <div className={styles.reviewList}>
-        <Row k="Title" value={draft.title} onEdit={() => onEdit(0)} />
         <Row
-          k="Year · runtime"
-          value={[draft.year, draft.runtime && `${draft.runtime} min`]
-            .filter(Boolean)
-            .join(" · ")}
-          onEdit={() => onEdit(0)}
-        />
-        <Row k="Format" value={format} onEdit={() => onEdit(0)} />
-        <Row
-          k="Origin"
-          value={[draft.country, draft.language].filter(Boolean).join(" · ")}
+          fieldLabel={t("cinema:submit.review.field.title")}
+          value={draft.title}
           onEdit={() => onEdit(0)}
         />
         <Row
-          k="Content notes"
-          value={notes ? `${notes} added` : ""}
+          fieldLabel={t("cinema:submit.review.field.yearRuntime")}
+          value={[draft.year, runtimeLabel].filter(Boolean).join(" · ")}
           onEdit={() => onEdit(0)}
         />
-        <Row k="Poster" value={draft.poster ?? ""} onEdit={() => onEdit(0)} />
-        <Row k="Screener" value={draft.screener} onEdit={() => onEdit(0)} />
         <Row
-          k="Captions"
-          value={draft.captionLangs.join(", ")}
+          fieldLabel={t("cinema:submit.review.field.format")}
+          value={format}
+          onEdit={() => onEdit(0)}
+        />
+        <Row
+          fieldLabel={t("cinema:submit.review.field.origin")}
+          value={[country, language].filter(Boolean).join(" · ")}
+          onEdit={() => onEdit(0)}
+        />
+        <Row
+          fieldLabel={t("cinema:submit.review.field.contentNotes")}
+          value={
+            notesAddedCount
+              ? t("cinema:submit.review.value.notesAdded", {
+                  count: notesAddedCount,
+                })
+              : ""
+          }
+          onEdit={() => onEdit(0)}
+        />
+        <Row
+          fieldLabel={t("cinema:submit.review.field.poster")}
+          value={draft.poster ?? ""}
+          onEdit={() => onEdit(0)}
+        />
+        <Row
+          fieldLabel={t("cinema:submit.review.field.screener")}
+          value={draft.screener}
+          onEdit={() => onEdit(0)}
+        />
+        <Row
+          fieldLabel={t("cinema:submit.review.field.captions")}
+          value={captionLangs}
           onEdit={() => onEdit(1)}
         />
         <Row
-          k="Rights confirmed"
-          value={draft.rightsConfirmed ? "Yes" : ""}
+          fieldLabel={t("cinema:submit.review.field.rightsConfirmed")}
+          value={
+            draft.rightsConfirmed ? t("cinema:submit.review.value.yes") : ""
+          }
           onEdit={() => onEdit(2)}
         />
-        <Row k="Revenue model" value={revenue} onEdit={() => onEdit(3)} />
+        <Row
+          fieldLabel={t("cinema:submit.review.field.revenueModel")}
+          value={revenue}
+          onEdit={() => onEdit(3)}
+        />
       </div>
 
+      {/* i18n sweep: binding legal representation, same reasoning as the
+          Step 3 rights checkbox — deliberately left English, not routed
+          through t(). Flagged in the sweep report. */}
       <FormField className={styles.agreeField}>
         <button
           type="button"

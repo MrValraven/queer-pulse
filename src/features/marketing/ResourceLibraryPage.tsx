@@ -10,6 +10,8 @@ import {
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { PageMeta } from "../../shared/seo";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath, routes } from "../../app/routeMap";
 import s from "./ResourceLibraryPage.module.css";
 
@@ -23,21 +25,55 @@ interface Resource {
   tags: string[];
 }
 
+// `c` is the canonical (English, stored/filter) category id — never
+// translate the id itself, only `labelKey`'s resolved value.
 const CATS = [
-  { c: "all", label: "All", dot: "var(--plum)" },
-  { c: "health", label: "Health", dot: "var(--jade)" },
-  { c: "legal", label: "Legal", dot: "var(--accent-ink)" },
-  { c: "housing", label: "Housing", dot: "var(--plum)" },
-  { c: "money", label: "Money", dot: "var(--jade)" },
-  { c: "identity", label: "Identity", dot: "var(--violet)" },
-  { c: "safety", label: "Safety", dot: "var(--accent-ink)" },
-  { c: "community", label: "Community", dot: "var(--jade)" },
+  {
+    c: "all",
+    labelKey: "marketing:resourceLibrary.category.all",
+    dot: "var(--plum)",
+  },
+  {
+    c: "health",
+    labelKey: "marketing:resourceLibrary.category.health",
+    dot: "var(--jade)",
+  },
+  {
+    c: "legal",
+    labelKey: "marketing:resourceLibrary.category.legal",
+    dot: "var(--accent-ink)",
+  },
+  {
+    c: "housing",
+    labelKey: "marketing:resourceLibrary.category.housing",
+    dot: "var(--plum)",
+  },
+  {
+    c: "money",
+    labelKey: "marketing:resourceLibrary.category.money",
+    dot: "var(--jade)",
+  },
+  {
+    c: "identity",
+    labelKey: "marketing:resourceLibrary.category.identity",
+    dot: "var(--violet)",
+  },
+  {
+    c: "safety",
+    labelKey: "marketing:resourceLibrary.category.safety",
+    dot: "var(--accent-ink)",
+  },
+  {
+    c: "community",
+    labelKey: "marketing:resourceLibrary.category.community",
+    dot: "var(--jade)",
+  },
 ];
-const CAT_META: Record<string, { label: string; dot: string }> =
+const CAT_META: Record<string, { labelKey: string; dot: string }> =
   Object.fromEntries(
-    CATS.filter((c) => c.c !== "all").map((c) => [
-      c.c,
-      { label: c.label, dot: c.dot },
+    CATS.filter((cat) => cat.c !== "all").map((cat) => [
+      cat.c,
+      { labelKey: cat.labelKey, dot: cat.dot },
     ]),
   );
 
@@ -271,21 +307,19 @@ const RESOURCES: Resource[] = [
 
 const LIBRARY_SUBPAGES = [
   {
-    label: "Queer 101",
+    labelKey: "marketing:resourceLibrary.subpages.queer101.label",
     to: routes.queer101,
-    blurb:
-      "New here? Start with the basics — identities, language, and community.",
+    blurbKey: "marketing:resourceLibrary.subpages.queer101.blurb",
   },
   {
-    label: "Glossary",
+    labelKey: "marketing:resourceLibrary.subpages.glossary.label",
     to: routes.glossary,
-    blurb: "Plain-language definitions for the words the community uses.",
+    blurbKey: "marketing:resourceLibrary.subpages.glossary.blurb",
   },
   {
-    label: "Intersectionality",
+    labelKey: "marketing:resourceLibrary.subpages.intersectionality.label",
     to: routes.intersectionality,
-    blurb:
-      "How overlapping identities shape our experiences — and our organising.",
+    blurbKey: "marketing:resourceLibrary.subpages.intersectionality.blurb",
   },
 ];
 
@@ -314,6 +348,7 @@ function ResourceCardSkeleton() {
 }
 
 export function ResourceLibraryPage() {
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
@@ -338,30 +373,31 @@ export function ResourceLibraryPage() {
   return (
     <PageShell>
       <PageMeta
-        title="Resource Library — QueerPulse"
-        description="Things that actually help — a curated library of free and sliding-scale health, legal, housing, money, identity and safety resources for queer Lisbon."
+        title={t("marketing:resourceLibrary.meta.title")}
+        description={t("marketing:resourceLibrary.meta.description")}
       />
       <PageHero
-        eyebrow="Resource Library"
+        eyebrow={t("marketing:resourceLibrary.hero.eyebrow")}
         title={
-          <>
-            Things that <em>actually help.</em>
-          </>
+          <Translation
+            i18nKey="marketing:resourceLibrary.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Community-maintained guides, organisations, contacts, and QueerPulse tools — in one searchable place."
+        sub={t("marketing:resourceLibrary.hero.sub")}
       >
         <div className={s.stats}>
           <div className={s.stat}>
             <b>{RESOURCES.length}</b>
-            <span>resources</span>
+            <span>{t("marketing:resourceLibrary.stats.resources")}</span>
           </div>
           <div className={s.stat}>
             <b>7</b>
-            <span>categories</span>
+            <span>{t("marketing:resourceLibrary.stats.categories")}</span>
           </div>
           <div className={s.stat}>
-            <b>Community</b>
-            <span>maintained</span>
+            <b>{t("marketing:resourceLibrary.stats.communityLabel")}</b>
+            <span>{t("marketing:resourceLibrary.stats.maintained")}</span>
           </div>
         </div>
       </PageHero>
@@ -382,24 +418,28 @@ export function ResourceLibraryPage() {
               </svg>
               <input
                 type="text"
-                placeholder="Search resources…"
+                placeholder={t("marketing:resourceLibrary.search.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
-            {CATS.map((c) => (
+            {CATS.map((cat_) => (
               <button
                 type="button"
-                key={c.c}
-                className={[s.chip, cat === c.c && s.chipOn]
+                key={cat_.c}
+                className={[s.chip, cat === cat_.c && s.chipOn]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => setCat(c.c)}
+                onClick={() => setCat(cat_.c)}
               >
-                {c.label}
+                {t(cat_.labelKey)}
               </button>
             ))}
-            <div className={s.count}>{visible.length} results</div>
+            <div className={s.count}>
+              {t("marketing:resourceLibrary.results", {
+                count: visible.length,
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -408,17 +448,17 @@ export function ResourceLibraryPage() {
         <div className="wrap">
           <div className={s.grid}>
             {loading &&
-              Array.from({ length: 9 }).map((_, i) => (
-                <ResourceCardSkeleton key={i} />
+              Array.from({ length: 9 }).map((_, index) => (
+                <ResourceCardSkeleton key={index} />
               ))}
             {!loading && visible.length === 0 && (
               <div className={s.empty}>
-                No resources match — try a broader filter.
+                {t("marketing:resourceLibrary.empty")}
               </div>
             )}
             {!loading &&
-              visible.map((r, i) => {
-                const meta = CAT_META[r.cat]!;
+              visible.map((resource, index) => {
+                const meta = CAT_META[resource.cat]!;
                 const inner = (
                   <>
                     <div className={s.cardTop}>
@@ -427,41 +467,45 @@ export function ResourceLibraryPage() {
                           className={s.dot}
                           style={{ background: meta.dot }}
                         />
-                        {meta.label}
+                        {t(meta.labelKey)}
                       </span>
                       <span
-                        className={`${s.cost} ${r.cost === "free" ? s.costFree : s.costSliding}`}
+                        className={`${s.cost} ${resource.cost === "free" ? s.costFree : s.costSliding}`}
                       >
-                        {r.cost === "free" ? "Free" : "Sliding scale"}
+                        {resource.cost === "free"
+                          ? t("marketing:resourceLibrary.cost.free")
+                          : t("marketing:resourceLibrary.cost.sliding")}
                       </span>
                     </div>
-                    <div className={s.name}>{r.name}</div>
-                    <div className={s.desc}>{r.desc}</div>
+                    <div className={s.name}>{resource.name}</div>
+                    <div className={s.desc}>{resource.desc}</div>
                     <div className={s.tags}>
-                      {r.tags.map((t) => (
-                        <span key={t} className={s.tag}>
-                          #{t}
+                      {resource.tags.map((tag) => (
+                        <span key={tag} className={s.tag}>
+                          #{tag}
                         </span>
                       ))}
                     </div>
                     <div className={s.cardFoot}>
-                      {r.internal ? (
-                        "Open guide →"
+                      {resource.internal ? (
+                        t("marketing:resourceLibrary.card.openGuide")
                       ) : (
-                        <span className={s.ext}>Visit site ↗</span>
+                        <span className={s.ext}>
+                          {t("marketing:resourceLibrary.card.visitSite")}
+                        </span>
                       )}
                     </div>
                   </>
                 );
                 return (
                   <FadeIn
-                    key={r.name}
-                    delay={Math.min(i, 8) * 60}
+                    key={resource.name}
+                    delay={Math.min(index, 8) * 60}
                     style={{ height: "100%" }}
                   >
-                    {r.internal ? (
+                    {resource.internal ? (
                       <Link
-                        to={linkToPath(r.link)}
+                        to={linkToPath(resource.link)}
                         className={s.card}
                         style={{ height: "100%" }}
                       >
@@ -469,7 +513,7 @@ export function ResourceLibraryPage() {
                       </Link>
                     ) : (
                       <a
-                        href={r.link}
+                        href={resource.link}
                         className={s.card}
                         target="_blank"
                         rel="noreferrer"
@@ -487,24 +531,29 @@ export function ResourceLibraryPage() {
 
       <Outro
         title={
-          <>
-            Know something <em>missing?</em>
-          </>
+          <Translation
+            i18nKey="marketing:resourceLibrary.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Every resource here was added by a community member. If something helped you and isn't listed, tell us."
+        sub={t("marketing:resourceLibrary.outro.sub")}
       >
         <Button
           size="lg"
           href="mailto:hello@queerpulse.pt?subject=Resource suggestion"
         >
-          Suggest a resource
+          {t("marketing:resourceLibrary.outro.cta")}
         </Button>
       </Outro>
 
       <SubpageIndex
-        eyebrow="Learn & belong"
-        title="Start with the basics"
-        items={LIBRARY_SUBPAGES}
+        eyebrow={t("marketing:resourceLibrary.subpages.eyebrow")}
+        title={t("marketing:resourceLibrary.subpages.title")}
+        items={LIBRARY_SUBPAGES.map((subpage) => ({
+          label: t(subpage.labelKey),
+          to: subpage.to,
+          blurb: t(subpage.blurbKey),
+        }))}
       />
     </PageShell>
   );

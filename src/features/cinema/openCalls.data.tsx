@@ -1,19 +1,23 @@
 import type { ReactNode } from "react";
 import type { ImageSlotTint } from "../../shared/components/ui/ImageSlot";
 
-/** Season stats shown in the hero sidebar. */
-export const heroStats: { k: string; v: ReactNode }[] = [
+/** Season stats shown in the hero sidebar. Labels are catalog keys (Pattern A);
+ * values are this season's own figures and are not translatable text. */
+export const heroStats: { labelKey: string; v: ReactNode }[] = [
   {
-    k: "Total available",
+    labelKey: "cinema:openCalls.hero.stat.totalAvailable",
     v: (
       <>
         €<em>13.2k</em>
       </>
     ),
   },
-  { k: "Active calls", v: <em>4</em> },
-  { k: "Applications so far", v: <em>28</em> },
-  { k: "Films funded to date", v: <em>12</em> },
+  { labelKey: "cinema:openCalls.hero.stat.activeCalls", v: <em>4</em> },
+  {
+    labelKey: "cinema:openCalls.hero.stat.applicationsSoFar",
+    v: <em>28</em>,
+  },
+  { labelKey: "cinema:openCalls.hero.stat.filmsFunded", v: <em>12</em> },
 ];
 
 export type CallStatus = "closing" | "open";
@@ -264,34 +268,33 @@ export const pastFunded: PastFilm[] = [
 
 export interface FundStep {
   num: string;
-  titlePre: string;
-  titleEm: string;
-  body: string;
+  /** Catalog key with an embedded <em>-emphasis run, via <Translation>. */
+  titleKey: string;
+  /** Catalog key; step 1's body also needs `price`/`poolShare` interpolation. */
+  bodyKey: string;
 }
 
+/** i18n Pattern A — this evergreen "how it works" copy is platform chrome,
+ * translated via titleKey/bodyKey; the consumer resolves via t()/<Translation>. */
 export const fundSteps: FundStep[] = [
   {
     num: "01",
-    titlePre: "Sustainers ",
-    titleEm: "fund it",
-    body: "Every sustainer's €7/mo contributes ~€1.40 per month to the commissioning pool. The pool total is public.",
+    titleKey: "cinema:openCalls.how.step1.title",
+    bodyKey: "cinema:openCalls.how.step1.body",
   },
   {
     num: "02",
-    titlePre: "Curators ",
-    titleEm: "define calls",
-    body: "Each season, the curators' council writes the briefs — open, specific, grounded in the films they want to see exist.",
+    titleKey: "cinema:openCalls.how.step2.title",
+    bodyKey: "cinema:openCalls.how.step2.body",
   },
   {
     num: "03",
-    titlePre: "Filmmakers ",
-    titleEm: "apply",
-    body: "Applications reviewed by the curators' council. Decisions within 14 days. Written feedback whether you're accepted or not.",
+    titleKey: "cinema:openCalls.how.step3.title",
+    bodyKey: "cinema:openCalls.how.step3.body",
   },
   {
     num: "04",
-    titlePre: "Films ",
-    titleEm: "premiere here",
-    body: "Commissioned work premieres on QueerPulse Cinema first, then is distributed freely or with a revenue split the filmmaker chooses.",
+    titleKey: "cinema:openCalls.how.step4.title",
+    bodyKey: "cinema:openCalls.how.step4.body",
   },
 ];

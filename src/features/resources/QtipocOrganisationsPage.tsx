@@ -1,33 +1,47 @@
 import { FiArrowUpRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { ORGS, VERIFY_NOTE } from "./qtipocOrganisations.data";
+import { ORGS } from "./qtipocOrganisations.data";
 import styles from "./resources.module.css";
 
 export function QtipocOrganisationsPage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Queer POC"
+        eyebrow={t("resources:qtipocOrganisations.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Organisations that <em>hold all of it.</em>
-          </>
+          <Translation
+            i18nKey="resources:qtipocOrganisations.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Groups across Portugal working where race and queerness meet — neither treated as a footnote of the other. What they do, what they offer, and how to reach them."
+        lead={t("resources:qtipocOrganisations.hero.lead")}
         anchors={[
-          { label: "The organisations", href: "#orgs" },
-          { label: "Before you engage", href: "#verify" },
+          {
+            label: t("resources:qtipocOrganisations.hero.anchor.orgs"),
+            href: "#orgs",
+          },
+          {
+            label: t("resources:qtipocOrganisations.hero.anchor.verify"),
+            href: "#verify",
+          },
         ]}
       />
 
       <section className={`${styles.section} ${styles.sectionPaper}`} id="orgs">
         <div className="wrap">
           <Reveal as="h2">
-            The <em>organisations</em>
+            <Translation
+              i18nKey="resources:qtipocOrganisations.orgs.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div className={styles.grid}>
             {ORGS.map((o, i) => (
@@ -49,9 +63,9 @@ export function QtipocOrganisationsPage() {
                 <div className={styles.cardSpec}>{o.mission}</div>
                 <div className={styles.archiveMeta}>{o.offers}</div>
                 <div className={styles.tags}>
-                  {o.tags.map((t) => (
-                    <span key={t} className={styles.tag}>
-                      {t}
+                  {o.tags.map((tag) => (
+                    <span key={tag} className={styles.tag}>
+                      {tag}
                     </span>
                   ))}
                 </div>
@@ -67,31 +81,28 @@ export function QtipocOrganisationsPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Before you <em>engage</em>
+            <Translation
+              i18nKey="resources:qtipocOrganisations.verify.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
-          {VERIFY_NOTE.map((p) => (
-            <Reveal
-              as="p"
-              key={p}
-              className={styles.leadP}
-              style={{ maxWidth: "64ch" }}
-            >
-              {p}
-            </Reveal>
-          ))}
+          <Reveal as="p" className={styles.leadP} style={{ maxWidth: "64ch" }}>
+            {t("resources:qtipocOrganisations.verify.body")}
+          </Reveal>
         </div>
       </section>
 
       <Outro
         title={
-          <>
-            Know one we've <em>missed?</em>
-          </>
+          <Translation
+            i18nKey="resources:qtipocOrganisations.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="This directory grows by word of mouth. Bring the ones that helped you."
+        sub={t("resources:qtipocOrganisations.outro.sub")}
       >
         <Button to={routes.forum} variant="primary" size="lg">
-          Add an organisation
+          {t("resources:qtipocOrganisations.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

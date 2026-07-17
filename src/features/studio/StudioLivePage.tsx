@@ -3,9 +3,11 @@ import { StudioShell } from "./StudioShell";
 import { StudioTipModal } from "./StudioTipModal";
 import { StudioLiveNow } from "./StudioLiveNow";
 import { StudioLiveChat } from "./StudioLiveChat";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./live.module.css";
 
 export function StudioLivePage() {
+  const { t } = useTranslation();
   const [tipOpen, setTipOpen] = useState(false);
   const openTip = () => setTipOpen(true);
 
@@ -13,7 +15,7 @@ export function StudioLivePage() {
     <StudioShell>
       <div className={s.ribbon}>
         <span className={s.live} />
-        On the air now
+        {t("studio:live.ribbon.onAirNow")}
         <span className={s.show}>
           "Vespertina, vol. iv" · programmed &amp; hosted by Sara Marques
         </span>

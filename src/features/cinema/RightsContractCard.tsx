@@ -1,7 +1,9 @@
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { contractPoints } from "./cinemaRights.data";
+import { contractPointKeys } from "./cinemaRights.data";
 import styles from "./CinemaRightsPage.module.css";
 
 function Check() {
@@ -21,31 +23,37 @@ function Check() {
 
 export function RightsContractCard() {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   return (
     <div className={styles.contractCard}>
       <div className={styles.ccInner}>
-        <div className={styles.ccEb}>The contract, in plain language</div>
+        <div className={styles.ccEb}>
+          {t("cinema:rights.contractCard.eyebrow")}
+        </div>
         <div className={styles.ccTitle}>
-          What you agree to — and what <em>we</em> agree to.
+          <Translation
+            i18nKey="cinema:rights.contractCard.title"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.ccPoints}>
-          {contractPoints.map((p) => (
-            <div key={p} className={styles.ccPoint}>
+          {contractPointKeys.map((key) => (
+            <div key={key} className={styles.ccPoint}>
               <Check />
-              {p}
+              {t(key)}
             </div>
           ))}
         </div>
         <div className={styles.ccActions}>
           <Button
             onClick={() =>
-              showToast("The full contract PDF is coming soon.", "info")
+              showToast(t("cinema:rights.contractCard.downloadToast"), "info")
             }
           >
-            Download the full contract (PDF)
+            {t("cinema:rights.contractCard.downloadCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.cinemaSubmit}>
-            Submit your film
+            {t("cinema:shorts.submitCta.cta")}
           </Button>
         </div>
       </div>

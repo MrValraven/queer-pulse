@@ -1,4 +1,5 @@
 import type { MyEvent, Pill, SortBy, FilterKey } from "./myEvents.types";
+import type { TFunction } from "../../shared/i18n/types";
 import { parseDate, dayDiff, inPill, isOnline } from "./myEvents.helpers";
 
 export interface AgendaGroup {
@@ -55,8 +56,14 @@ function applySecondary(list: MyEvent[], st: AgendaState): MyEvent[] {
 const byDateAsc = (a: MyEvent, b: MyEvent) =>
   +parseDate(a.date) - +parseDate(b.date);
 
-/** Build the grouped agenda for the current state (pure). */
-export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
+/** Build the grouped agenda for the current state. Chrome group labels
+ * ("Today", "Recently attended", …) resolve through `t`; a community name
+ * used as a sort-by-community group label is content and stays as-is. */
+export function buildAgenda(
+  events: MyEvent[],
+  st: AgendaState,
+  t: TFunction,
+): AgendaResult {
   const base = st.selectedDate
     ? events.filter((e) => e.date === st.selectedDate)
     : events.filter((e) => inPill(e, st.pill));
@@ -89,7 +96,7 @@ export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
     const shown = sorted.slice(0, st.pastShown);
     return {
       ...empty,
-      groups: [{ label: "Recently attended", events: shown }],
+      groups: [{ label: t("myevents:agenda.recentlyAttended"), events: shown }],
       loadMoreCount:
         sorted.length > st.pastShown
           ? Math.min(5, sorted.length - st.pastShown)
@@ -100,15 +107,15 @@ export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
   if (st.pill === "saved") {
     const groups: AgendaGroup[] = [
       {
-        label: "Invites waiting on you",
+        label: t("myevents:agenda.invitesWaiting"),
         events: list.filter((e) => e.cat === "invite"),
       },
       {
-        label: "Saved for later",
+        label: t("myevents:agenda.savedForLater"),
         events: list.filter((e) => e.cat === "saved"),
       },
       {
-        label: "Invites you’ve sent",
+        label: t("myevents:agenda.invitesSent"),
         events: list.filter((e) => e.cat === "sent"),
       },
     ].filter((g) => g.events.length);
@@ -120,7 +127,7 @@ export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
   if (st.sortBy === "community") {
     const byc: Record<string, MyEvent[]> = {};
     list.forEach((e) => {
-      const c = e.community || "Other";
+      const c = e.community || t("myevents:agenda.otherCommunity");
       (byc[c] = byc[c] || []).push(e);
     });
     groups = Object.keys(byc)
@@ -128,9 +135,9 @@ export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
       .map((c) => ({ label: c, events: byc[c]!.sort(byDateAsc) }));
   } else if (st.sortBy === "status") {
     const labels: Record<string, string> = {
-      hosting: "Hosting",
-      going: "Going",
-      waitlisted: "Waitlisted",
+      hosting: t("myevents:agenda.hosting"),
+      going: t("myevents:agenda.going"),
+      waitlisted: t("myevents:agenda.waitlisted"),
     };
     groups = (["hosting", "going", "waitlisted"] as const).map((cat) => ({
       label: labels[cat]!,
@@ -148,9 +155,9 @@ export function buildAgenda(events: MyEvent[], st: AgendaState): AgendaResult {
       else later.push(e);
     });
     groups = [
-      { label: "Today", events: today },
-      { label: "This week", events: week },
-      { label: "Later", events: later },
+      { label: t("myevents:agenda.today"), events: today },
+      { label: t("myevents:agenda.thisWeek"), events: week },
+      { label: t("myevents:agenda.later"), events: later },
     ];
   }
   groups = groups.filter((g) => g.events.length);

@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./creator.module.css";
 
 export function StudioDashboardSide() {
+  const { t } = useTranslation();
   return (
     <div className={s.col}>
       <div className={s.card}>
         <div className={s.cardH}>
           <h3>
-            Things you can <em>do</em> from here
+            <Translation
+              i18nKey="studio:dashboard.side.quickActions.heading"
+              components={{ em: <em /> }}
+            />
           </h3>
         </div>
         <div className={s.quickList}>
@@ -24,8 +30,10 @@ export function StudioDashboardSide() {
               </svg>
             </span>
             <span className={s.quickNm}>
-              Upload a new release
-              <small>WAV / FLAC · 3 steps · 8 minutes</small>
+              {t("studio:dashboard.side.quickActions.upload.label")}
+              <small>
+                {t("studio:dashboard.side.quickActions.upload.hint")}
+              </small>
             </span>
             <span className={s.quickArr}>→</span>
           </Link>
@@ -42,7 +50,7 @@ export function StudioDashboardSide() {
               </svg>
             </span>
             <span className={s.quickNm}>
-              Go live — host a listening room
+              {t("studio:dashboard.side.quickActions.goLive.label")}
               <small>Plan: Wed 10 Jun · premiere of Cidade dos santos</small>
             </span>
             <span className={s.quickArr}>→</span>
@@ -59,7 +67,7 @@ export function StudioDashboardSide() {
               </svg>
             </span>
             <span className={s.quickNm}>
-              Review payouts &amp; banking
+              {t("studio:dashboard.side.quickActions.payouts.label")}
               <small>Next: €2,140 on 5 Jul · SEPA</small>
             </span>
             <span className={s.quickArr}>→</span>
@@ -68,27 +76,28 @@ export function StudioDashboardSide() {
       </div>
 
       <div className={s.sideCard}>
-        <div className={s.sideEb}>The deal, always</div>
+        <div className={s.sideEb}>
+          {t("studio:dashboard.side.deal.eyebrow")}
+        </div>
         <h4>
-          80% to <em>you.</em>
+          <Translation
+            i18nKey="studio:dashboard.side.deal.heading"
+            components={{ em: <em /> }}
+          />
         </h4>
-        <p>
-          Every play, every tip, every buy. The split is the same for a first
-          release as for a festival winner — and it's printed on the public
-          ledger.
-        </p>
+        <p>{t("studio:dashboard.side.deal.body")}</p>
         <ul className={s.sideList}>
           <li>
-            <span>Per play</span>
+            <span>{t("studio:dashboard.side.deal.perPlay.label")}</span>
             <em>€0.05</em>
           </li>
           <li>
-            <span>Your share</span>
+            <span>{t("studio:dashboard.side.deal.yourShare.label")}</span>
             <em>80%+</em>
           </li>
           <li>
-            <span>Tips</span>
-            <em>100% to you</em>
+            <span>{t("studio:dashboard.side.deal.tips.label")}</span>
+            <em>{t("studio:dashboard.side.deal.tips.value")}</em>
           </li>
         </ul>
       </div>

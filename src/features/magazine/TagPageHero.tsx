@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, HubBackLink } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AuthorLink } from "./AuthorLink";
 import { CHIPS } from "./tag.data";
@@ -15,35 +17,48 @@ export function TagPageHero({
   activeChip: number;
   onChip: (i: number) => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <HubBackLink to={routes.magazine} label="the Magazine" tone="light" />
-          <div className={styles.eyebrow}>Magazine · category</div>
+          <HubBackLink
+            to={routes.magazine}
+            label={t("magazine:coverGallery.backLink")}
+            tone="light"
+          />
+          <div className={styles.eyebrow}>{t("magazine:tag.hero.eyebrow")}</div>
           <h1 className={styles.h1}>
-            Long <em>reads.</em>
+            <Translation
+              i18nKey="magazine:tag.hero.h1"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            <b>Twenty-minute pieces and up.</b> Reported essays, multi-source
-            profiles, and the kind of long-form work that asks something of the
-            reader. Slow journalism on purpose. New piece every other Thursday.
+            <Translation
+              i18nKey="magazine:tag.hero.dek"
+              components={{ b: <b /> }}
+            />
           </p>
           <div className={styles.stats}>
             <span>
               <b>
                 <em>42</em>
               </b>
-              Pieces in this section
+              {t("magazine:tag.hero.stats.piecesInSection")}
             </span>
             <span>
-              <b>14</b>Min average read
+              <b>14</b>
+              {t("magazine:tag.hero.stats.minAverageRead")}
             </span>
             <span>
-              <b>9</b>Issues represented
+              <b>9</b>
+              {t("magazine:tag.hero.stats.issuesRepresented")}
             </span>
             <span>
-              <b>18</b>Contributors
+              <b>18</b>
+              {t("magazine:tag.hero.stats.contributors")}
             </span>
           </div>
         </div>
@@ -51,7 +66,9 @@ export function TagPageHero({
 
       <div className={styles.chipsRow}>
         <div className={styles.chipsInner}>
-          <span className={styles.chipsLabel}>Filter</span>
+          <span className={styles.chipsLabel}>
+            {t("magazine:tag.hero.filterLabel")}
+          </span>
           {CHIPS.map((c, i) => (
             <button
               key={c}
@@ -100,7 +117,10 @@ export function TagPageHero({
       <div className={styles.curator}>
         <div className={styles.curatorCard}>
           <div>
-            <div className={styles.curatorEyebrow}>Editor's note</div>
+            <div className={styles.curatorEyebrow}>
+              {t("magazine:tag.hero.curatorEyebrow")}
+            </div>
+            {/* Content: the editor's own note text and byline. */}
             <p className={styles.curatorText}>
               Long reads are how we earn permission to ask{" "}
               <em>uncomfortable questions.</em> If you only have time for one
@@ -111,7 +131,7 @@ export function TagPageHero({
             </p>
           </div>
           <Button to={NEWSLETTER} variant="ghost-dark">
-            Get long reads by email →
+            {t("magazine:tag.hero.getLongReadsCta")}
           </Button>
         </div>
       </div>

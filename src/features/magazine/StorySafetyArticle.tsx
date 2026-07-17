@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { Translation } from "../../shared/i18n/Translation";
 import styles from "./StorySafetyPage.module.css";
 import { memberName } from "../members/data/members";
 
@@ -171,7 +172,10 @@ export function StorySafetyArticle() {
 
         <div className={styles.more}>
           <h2>
-            More from <em>the community</em>
+            <Translation
+              i18nKey="magazine:story.moreHeading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <div className={styles.moreGrid}>
             <Link to={routes.story} className={styles.moreCard}>

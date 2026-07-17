@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiSun, FiX } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useScrollLock } from "../../shared/hooks";
-import { STEP_LABELS, TOTAL_STEPS, type BudgetRow } from "./microGrants.data";
+import {
+  STEP_LABEL_KEYS,
+  TOTAL_STEPS,
+  type BudgetRow,
+} from "./microGrants.data";
 import {
   AboutStep,
   BudgetStep,
@@ -12,6 +18,7 @@ import {
 import styles from "./MicroGrantsPage.module.css";
 
 export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   useScrollLock();
   const [step, setStep] = useState(1);
   const [cat, setCat] = useState<number | null>(null);
@@ -72,10 +79,12 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
         className={styles.sheet}
         role="dialog"
         aria-modal="true"
-        aria-label="Apply — Q2 2026 round"
+        aria-label={t("resources:microGrants.apply.modalAriaLabel")}
       >
         <div className={styles.sheetHead}>
-          <div className={styles.sheetTitle}>Apply — Q2 2026 round</div>
+          <div className={styles.sheetTitle}>
+            {t("resources:microGrants.apply.modalTitle")}
+          </div>
           <button type="button" className={styles.close} onClick={onClose}>
             <FiX />
           </button>
@@ -98,7 +107,11 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
               ))}
             </div>
             <div className={styles.stepLabel}>
-              Step {step} of {TOTAL_STEPS} — {STEP_LABELS[step - 1]}
+              {t("resources:microGrants.apply.stepIndicator", {
+                step,
+                total: TOTAL_STEPS,
+                stepLabel: t(STEP_LABEL_KEYS[step - 1]!),
+              })}
             </div>
           </div>
         )}
@@ -146,15 +159,16 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
                 <FiSun />
               </div>
               <div className={styles.successTitle}>
-                Application <em>submitted.</em>
+                <Translation
+                  i18nKey="resources:microGrants.apply.success.title"
+                  components={{ em: <em /> }}
+                />
               </div>
               <p className={styles.successSub}>
-                We'll confirm receipt by email within 24 hours. The review panel
-                meets in mid-July. You'll hear back before 31 July regardless of
-                outcome.
+                {t("resources:microGrants.apply.success.sub")}
               </p>
               <button type="button" className={styles.next} onClick={onClose}>
-                Close
+                {t("resources:microGrants.apply.success.closeCta")}
               </button>
             </div>
           )}
@@ -163,10 +177,14 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
         {step <= TOTAL_STEPS && (
           <div className={styles.footer}>
             <button type="button" className={styles.back} onClick={back}>
-              {step === 1 ? "Cancel" : "← Back"}
+              {step === 1
+                ? t("resources:microGrants.apply.cancelCta")
+                : t("resources:microGrants.apply.backCta")}
             </button>
             <button type="button" className={styles.next} onClick={next}>
-              {step === TOTAL_STEPS ? "Submit application →" : "Continue →"}
+              {step === TOTAL_STEPS
+                ? t("resources:microGrants.apply.submitCta")
+                : t("resources:microGrants.apply.continueCta")}
             </button>
           </div>
         )}

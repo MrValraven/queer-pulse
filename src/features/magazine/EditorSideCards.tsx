@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
@@ -25,6 +26,7 @@ function editorDot(ed: Editor): string | undefined {
 /** Issue N progress: pieces ready, word count, time to close. */
 export function ProgressCard({ pieces }: { pieces: Piece[] }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const p = issueProgress(pieces);
   return (
     <div className={styles.sideCard}>
@@ -46,7 +48,7 @@ export function ProgressCard({ pieces }: { pieces: Piece[] }) {
         <div className={styles.issueBarRow} style={{ marginTop: 8 }}>
           <span>{t("magazine:editor.sideCards.wordCount")}</span>
           <b>
-            {p.words.toLocaleString()} / {WORD_TARGET.toLocaleString()}
+            {fmt.number(p.words)} / {fmt.number(WORD_TARGET)}
           </b>
         </div>
         <div className={styles.bar}>
@@ -73,6 +75,7 @@ export function EditorLoadCard({
   me: Editor;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const rows = editorLoad(pieces, me);
   const max = Math.max(1, ...rows.map((r) => r.words));
   const gap = loadGap(pieces);
@@ -80,12 +83,12 @@ export function EditorLoadCard({
     gap > 0
       ? t("magazine:editor.sideCards.loadHintOtherMore", {
           editor: "Sara",
-          amount: gap.toLocaleString(),
+          amount: fmt.number(gap),
         })
       : gap < 0
         ? t("magazine:editor.sideCards.loadHintOtherMore", {
             editor: "Marta",
-            amount: (-gap).toLocaleString(),
+            amount: fmt.number(-gap),
           })
         : t("magazine:editor.sideCards.loadHintBalanced");
 
@@ -103,7 +106,7 @@ export function EditorLoadCard({
             <span>
               {t("magazine:editor.sideCards.piecesWords", {
                 count: r.count,
-                words: r.words.toLocaleString(),
+                words: fmt.number(r.words),
               })}
               {r.late > 0 && (
                 <em className={styles.ll}>

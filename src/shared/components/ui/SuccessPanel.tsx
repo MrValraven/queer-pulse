@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "./Button";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./SuccessPanel.module.css";
 
 interface SuccessPanelProps {
@@ -28,11 +29,12 @@ export function SuccessPanel({
   em,
   children,
   onClose,
-  closeLabel = "Done",
+  closeLabel,
   steps,
   footer,
   icon,
 }: SuccessPanelProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.panel}>
       <div className={styles.icon}>
@@ -54,7 +56,7 @@ export function SuccessPanel({
       )}
       <div className={styles.actions}>
         <Button size="lg" variant="ghost-dark" onClick={onClose}>
-          {closeLabel}
+          {closeLabel ?? t("shared:successPanel.done")}
         </Button>
       </div>
       {footer && <div className={styles.footer}>{footer}</div>}

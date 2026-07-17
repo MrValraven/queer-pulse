@@ -1,25 +1,36 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
 import { STEPS, TIPS } from "./disabilityHealthcare.data";
 import styles from "./resources.module.css";
 
 export function DisabilityHealthcarePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Disabled Queers"
+        eyebrow={t("resources:disabilityHealthcare.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"
         title={
-          <>
-            The system, <em>navigated.</em>
-          </>
+          <Translation
+            i18nKey="resources:disabilityHealthcare.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Getting through Portuguese healthcare with a disability or chronic condition — accommodations, referrals, accessibility-aware GPs, and the insurance maze — without it becoming an appointment about your identity."
+        lead={t("resources:disabilityHealthcare.hero.lead")}
         anchors={[
-          { label: "Step by step", href: "#steps" },
-          { label: "Peer tips", href: "#tips" },
+          {
+            label: t("resources:disabilityHealthcare.hero.anchor.steps"),
+            href: "#steps",
+          },
+          {
+            label: t("resources:disabilityHealthcare.hero.anchor.tips"),
+            href: "#tips",
+          },
         ]}
       />
 
@@ -29,19 +40,21 @@ export function DisabilityHealthcarePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Step by <em>step</em>
+            <Translation
+              i18nKey="resources:disabilityHealthcare.steps.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Never ask anyone here what their diagnosis is — and expect the same
-            care from the system.
+            {t("resources:disabilityHealthcare.steps.lead")}
           </Reveal>
           <div className={styles.stepList}>
             {STEPS.map((s) => (
               <Reveal key={s.n} className={styles.step}>
                 <div className={styles.stepN}>{s.n}</div>
                 <div>
-                  <div className={styles.stepTitle}>{s.title}</div>
-                  <div className={styles.stepBody}>{s.body}</div>
+                  <div className={styles.stepTitle}>{t(s.titleKey)}</div>
+                  <div className={styles.stepBody}>{t(s.bodyKey)}</div>
                 </div>
               </Reveal>
             ))}
@@ -52,18 +65,21 @@ export function DisabilityHealthcarePage() {
       <section className={`${styles.section} ${styles.sectionCream}`} id="tips">
         <div className="wrap">
           <Reveal as="h2">
-            Peer <em>tips</em>
+            <Translation
+              i18nKey="resources:disabilityHealthcare.tips.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div>
-            {TIPS.map((t) => (
-              <Reveal key={t.who} className={styles.qaItem}>
+            {TIPS.map((t2) => (
+              <Reveal key={t2.who} className={styles.qaItem}>
                 <div
                   className={styles.qaQ}
                   style={{ fontStyle: "italic", fontWeight: 400 }}
                 >
-                  "{t.text}"
+                  "{t2.text}"
                 </div>
-                <div className={styles.archiveMeta}>{t.who}</div>
+                <div className={styles.archiveMeta}>{t2.who}</div>
               </Reveal>
             ))}
           </div>
@@ -72,17 +88,18 @@ export function DisabilityHealthcarePage() {
 
       <Outro
         title={
-          <>
-            You set the <em>terms.</em>
-          </>
+          <Translation
+            i18nKey="resources:disabilityHealthcare.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Know your rights, and never navigate it alone. The legal page and the group are both here."
+        sub={t("resources:disabilityHealthcare.outro.sub")}
       >
         <Button to={routes.legal} variant="primary" size="lg">
-          Know your rights
+          {t("resources:disabilityHealthcare.outro.rightsCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          Ask the group
+          {t("resources:disabilityHealthcare.outro.askCta")}
         </Button>
       </Outro>
     </PageShell>

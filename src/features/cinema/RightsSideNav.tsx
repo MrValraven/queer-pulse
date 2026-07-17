@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { navItems } from "./cinemaRights.data";
 import { usePrefersReducedMotion } from "../../shared/hooks/usePrefersReducedMotion";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CinemaRightsPage.module.css";
 
 export function RightsSideNav() {
   const [active, setActive] = useState(navItems[0]?.id ?? "");
   const prefersReduced = usePrefersReducedMotion();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const els = navItems
@@ -37,7 +39,10 @@ export function RightsSideNav() {
   };
 
   return (
-    <nav className={styles.sideNav} aria-label="On this page">
+    <nav
+      className={styles.sideNav}
+      aria-label={t("cinema:rights.sideNav.ariaLabel")}
+    >
       {navItems.map((item) => {
         const isActive = active === item.id;
         return (
@@ -50,7 +55,7 @@ export function RightsSideNav() {
             aria-current={isActive ? "true" : undefined}
             onClick={() => go(item.id)}
           >
-            {item.label}
+            {t(item.labelKey)}
           </button>
         );
       })}

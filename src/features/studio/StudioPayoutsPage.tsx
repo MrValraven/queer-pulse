@@ -1,6 +1,7 @@
 import { useSimulatedLoad } from "../../shared/hooks";
 import { StudioCreatorShell } from "./StudioCreatorShell";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PAYOUTS } from "./studioPayouts.data";
 import {
   PayoutsHero,
@@ -24,22 +25,29 @@ function downloadCsv(filename: string, rows: string[][]) {
 }
 
 export function StudioPayoutsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
 
   function exportCsv() {
     const data: string[][] = [
-      ["Period", "Date", "Detail", "Amount (EUR)", "Status"],
-      ...PAYOUTS.map((p) => [
-        p.period,
-        `${p.d} ${p.m}`,
-        p.csvMeta,
-        p.amt.replace(/,/g, ""),
-        p.status,
+      [
+        t("studio:payouts.export.headers.period"),
+        t("studio:payouts.export.headers.date"),
+        t("studio:payouts.export.headers.detail"),
+        t("studio:payouts.export.headers.amount"),
+        t("studio:payouts.export.headers.status"),
+      ],
+      ...PAYOUTS.map((payout) => [
+        payout.period,
+        `${payout.d} ${payout.m}`,
+        payout.csvMeta,
+        payout.amt.replace(/,/g, ""),
+        payout.status,
       ]),
     ];
     downloadCsv("studio-payout-history.csv", data);
-    showToast("Payout history exported as CSV", "success");
+    showToast(t("studio:payouts.export.toast"), "success");
   }
 
   return (

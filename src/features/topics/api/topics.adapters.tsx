@@ -1,4 +1,5 @@
 import type { AvatarTint } from "../../../shared/components/ui";
+import type { Formatters } from "../../../shared/i18n/format";
 import { routes } from "../../../app/routeMap";
 import {
   splitForTitle,
@@ -30,21 +31,24 @@ function compactCount(n: number): string {
   return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)}k`;
 }
 
-/** Relative "time ago" from an ISO timestamp — a local copy of the same tiny
- * helper `forum/api/forum.adapters.ts#relative` defines, per this repo's
- * convention of feature adapters keeping their own copies (see
- * `shared/api/refs.ts`'s note on `tintForSlug`). */
-function relative(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  const mins = Math.max(0, Math.floor((Date.now() - d.getTime()) / 60000));
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  if (days < 30) return `${days}d ago`;
-  return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+/**
+ * Relative "time ago" from an ISO timestamp, through `fmt.relativeTime` —
+ * previously a hand-rolled `"3h ago"` string that never localized for pt-PT
+ * (a legacy `Intl` site flagged for this sweep). Beyond 30 days it falls back
+ * to a short absolute date, also through `fmt`, never `toLocaleDateString`.
+ */
+function relative(iso: string, fmt: Formatters): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  const diffSeconds = Math.round((Date.now() - date.getTime()) / 1000);
+  if (diffSeconds < 60) return fmt.relativeTime(-diffSeconds, "second");
+  const diffMinutes = Math.round(diffSeconds / 60);
+  if (diffMinutes < 60) return fmt.relativeTime(-diffMinutes, "minute");
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) return fmt.relativeTime(-diffHours, "hour");
+  const diffDays = Math.round(diffHours / 24);
+  if (diffDays < 30) return fmt.relativeTime(-diffDays, "day");
+  return fmt.date(date, { day: "numeric", month: "short" });
 }
 
 /** `TopicPostResponse` → the mock's `TopicPost`, re-composing the flattened
@@ -52,14 +56,15 @@ function relative(iso: string): string {
  * `ReactNode`s `TopicPostCard` renders. */
 export function topicPostResponseToTopicPost(
   dto: TopicPostResponse,
+  fmt: Formatters,
 ): TopicPost {
   return {
     author: dto.author,
     initials: dto.authorInitials,
     tone: dto.authorTone as AvatarTint,
     meta: dto.contextLabel
-      ? `${relative(dto.createdAt)} · ${dto.contextLabel}`
-      : relative(dto.createdAt),
+      ? `${relative(dto.createdAt, fmt)} · ${dto.contextLabel}`
+      : relative(dto.createdAt, fmt),
     kind: dto.kind as PostKind,
     category: dto.category as PostCategory,
     title: dto.title,
@@ -87,6 +92,7 @@ export function topicPostResponseToTopicPost(
 export function topicDetailToTopic(
   detail: TopicDetailResponse,
   posts: TopicPostResponse[],
+  fmt: Formatters,
 ): Topic {
   return {
     tag: detail.tag,
@@ -109,7 +115,7 @@ export function topicDetailToTopic(
       },
     ],
     writeHref: routes.forum,
-    posts: posts.map(topicPostResponseToTopicPost),
+    posts: posts.map((dto) => topicPostResponseToTopicPost(dto, fmt)),
     relatedTopics: detail.relatedTopics,
     topVoices: [],
     crisisCard: detail.crisisCard,

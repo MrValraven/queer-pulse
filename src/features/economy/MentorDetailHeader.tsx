@@ -1,6 +1,7 @@
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import type { Mentor } from "./mentorship.data";
+import { isWaitlisted, type Mentor } from "./mentorship.data";
 import styles from "./MentorDetailPage.module.css";
 
 /** Portrait + name + status pills + primary CTA for a mentor profile. */
@@ -13,8 +14,9 @@ export function MentorDetailHeader({
   first: string;
   onRequest: () => void;
 }) {
+  const { t } = useTranslation();
   const lastName = m.name.split(" ").slice(1).join(" ");
-  const waitlist = m.cap.toLowerCase().includes("waitlist");
+  const waitlist = isWaitlisted(m);
   const pills = [
     { label: m.cap, accept: !waitlist },
     { label: m.languages },
@@ -59,10 +61,12 @@ export function MentorDetailHeader({
         </div>
         <div className={styles.cta}>
           <Button variant="primary" onClick={onRequest}>
-            {m.btn}
+            {waitlist
+              ? t("economy:mentorship.cta.joinWaitlist")
+              : t("economy:mentorship.cta.requestMatch")}
           </Button>
           <Button variant="ghost" to={routes.messages}>
-            Message {first}
+            {t("economy:mentorDetail.messageCta", { firstName: first })}
           </Button>
         </div>
       </div>

@@ -1,14 +1,19 @@
 export const UPLOAD_STEPS = [
-  { num: 1, nm: "Files", sub: "· WAV / FLAC · cover art · lyrics", on: true },
+  {
+    num: 1,
+    nmKey: "studio:upload.steps.files.nm",
+    subKey: "studio:upload.steps.files.sub",
+    on: true,
+  },
   {
     num: 2,
-    nm: "Metadata & credits",
-    sub: "· title · year · per-track splits",
+    nmKey: "studio:upload.steps.metadata.nm",
+    subKey: "studio:upload.steps.metadata.sub",
   },
   {
     num: 3,
-    nm: "Licence & release",
-    sub: "· CC / ARR · pricing · publish date",
+    nmKey: "studio:upload.steps.licence.nm",
+    subKey: "studio:upload.steps.licence.sub",
   },
 ];
 
@@ -76,46 +81,81 @@ export const UPLOAD_SPLITS = [
   },
 ];
 
-export const UPLOAD_SIDE_INFO = [
-  {
-    eyebrow: "What we do with your files",
-    title: (
-      <>
-        Yours, <em>still</em>.
-      </>
-    ),
-    body: (
-      <>
-        You drop the masters; we transcode and stream. Your original WAV / FLAC
-        stays your property — we hold a copy <em>only</em> for delivery.
-        Takedown removes the listening copy in 14 days. Non-exclusive, always.
-      </>
-    ),
-    list: [
-      { label: "Source kept", value: "your file, untouched", em: true },
-      { label: "Listener delivery", value: "FLAC + AAC 256", em: false },
-      { label: "Loudness target", value: "−14 LUFS", em: false },
-      { label: "ISRC assignment", value: "automatic", em: true },
-    ],
-  },
-  {
-    eyebrow: "Lyrics & translations",
-    title: (
-      <>
-        Lyrics <em>required</em>, translations paid.
-      </>
-    ),
-    body: (
-      <>
-        Upload lyrics in any language. For a line-by-line translation, the
-        solidarity fund pays a community translator <em>€40 per song</em>. They
-        keep their byline; you approve before publish.
-      </>
-    ),
-    list: [
-      { label: "Auto-transcribe", value: "free · ~94%", em: true },
-      { label: "Community translation", value: "€40 → translator", em: false },
-      { label: "Your approval", value: "before publish", em: false },
-    ],
-  },
-];
+import type { TFunction } from "../../shared/i18n/types";
+import { Translation } from "../../shared/i18n/Translation";
+
+/** Pattern B: side-info cards carry a coral <em> emphasis, so they're built
+ * from `t` rather than exported as plain-string data (§ extraction-brief 2). */
+export function buildUploadSideInfo(t: TFunction) {
+  return [
+    {
+      eyebrow: t("studio:upload.side.files.eyebrow"),
+      title: (
+        <Translation
+          i18nKey="studio:upload.side.files.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:upload.side.files.body"
+          components={{ em: <em /> }}
+        />
+      ),
+      list: [
+        {
+          label: t("studio:upload.side.files.list.sourceKept.label"),
+          value: t("studio:upload.side.files.list.sourceKept.value"),
+          em: true,
+        },
+        {
+          label: t("studio:upload.side.files.list.listenerDelivery.label"),
+          value: t("studio:upload.side.files.list.listenerDelivery.value"),
+          em: false,
+        },
+        {
+          label: t("studio:upload.side.files.list.loudnessTarget.label"),
+          value: t("studio:upload.side.files.list.loudnessTarget.value"),
+          em: false,
+        },
+        {
+          label: t("studio:upload.side.files.list.isrc.label"),
+          value: t("studio:upload.side.files.list.isrc.value"),
+          em: true,
+        },
+      ],
+    },
+    {
+      eyebrow: t("studio:upload.side.lyrics.eyebrow"),
+      title: (
+        <Translation
+          i18nKey="studio:upload.side.lyrics.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:upload.side.lyrics.body"
+          components={{ em: <em /> }}
+        />
+      ),
+      list: [
+        {
+          label: t("studio:upload.side.lyrics.list.autoTranscribe.label"),
+          value: t("studio:upload.side.lyrics.list.autoTranscribe.value"),
+          em: true,
+        },
+        {
+          label: t("studio:upload.side.lyrics.list.communityTranslation.label"),
+          value: t("studio:upload.side.lyrics.list.communityTranslation.value"),
+          em: false,
+        },
+        {
+          label: t("studio:upload.side.lyrics.list.approval.label"),
+          value: t("studio:upload.side.lyrics.list.approval.value"),
+          em: false,
+        },
+      ],
+    },
+  ];
+}

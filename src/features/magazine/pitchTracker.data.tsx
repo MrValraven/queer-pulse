@@ -5,7 +5,10 @@ export type PitchStatus =
   "review" | "editing" | "commissioned" | "published" | "rejected";
 
 export type StageState = "done" | "active" | "upcoming" | "rejected";
-export type PitchStage = { label: string; state: StageState };
+/** `labelKey` — catalog key, resolved via `t()` in `PitchStages.tsx`. Shared
+ * vocabulary (see `magazine:pitchTracker.stage.*`) so both the mock `PITCHES`
+ * and the live `submissionToPitch` adapter emit the same stable keys. */
+export type PitchStage = { labelKey: string; state: StageState };
 
 export type PitchAction = {
   label: string;
@@ -18,7 +21,8 @@ export type Pitch = {
   id: string;
   title: ReactNode;
   status: PitchStatus;
-  statusLabel: string;
+  /** Catalog key — resolved via `t()` in `PitchCard.tsx`. */
+  statusLabelKey: string;
   type: string;
   meta: string[];
   stages: PitchStage[];
@@ -36,10 +40,33 @@ export type PitchTab = {
   match: (p: Pitch) => boolean;
 };
 
-// Shorthand stage builders keep the data terse and consistent.
-const done = (label: string): PitchStage => ({ label, state: "done" });
-const active = (label: string): PitchStage => ({ label, state: "active" });
-const next = (label: string): PitchStage => ({ label, state: "upcoming" });
+// Shorthand stage builders keep the data terse and consistent. `labelKey`
+// is a `magazine:pitchTracker.stage.*` catalog key (label-key indirection).
+const done = (labelKey: string): PitchStage => ({ labelKey, state: "done" });
+const active = (labelKey: string): PitchStage => ({
+  labelKey,
+  state: "active",
+});
+const next = (labelKey: string): PitchStage => ({
+  labelKey,
+  state: "upcoming",
+});
+
+const STAGE = {
+  pitched: "magazine:pitchTracker.stage.pitched",
+  accepted: "magazine:pitchTracker.stage.accepted",
+  firstDraft: "magazine:pitchTracker.stage.firstDraft",
+  firstEdit: "magazine:pitchTracker.stage.firstEdit",
+  layOut: "magazine:pitchTracker.stage.layOut",
+  published: "magazine:pitchTracker.stage.published",
+  inReview: "magazine:pitchTracker.stage.inReview",
+  decision: "magazine:pitchTracker.stage.decision",
+  draft: "magazine:pitchTracker.stage.draft",
+  edit: "magazine:pitchTracker.stage.edit",
+  out: "magazine:pitchTracker.stage.out",
+  reviewed: "magazine:pitchTracker.stage.reviewed",
+  closed: "magazine:pitchTracker.stage.closed",
+} as const;
 
 export const PITCHES: Pitch[] = [
   {
@@ -50,16 +77,16 @@ export const PITCHES: Pitch[] = [
       </>
     ),
     status: "editing",
-    statusLabel: "In edit · w/ Marta",
+    statusLabelKey: "magazine:pitchTracker.pitch.pharmacist.statusLabel",
     type: "Profile",
     meta: ["1,200 words", "Issue 10 · On Care", "Due 22 Jun"],
     stages: [
-      done("Pitched"),
-      done("Accepted"),
-      done("First draft"),
-      active("First edit"),
-      next("Lay out"),
-      next("Published"),
+      done(STAGE.pitched),
+      done(STAGE.accepted),
+      done(STAGE.firstDraft),
+      active(STAGE.firstEdit),
+      next(STAGE.layOut),
+      next(STAGE.published),
     ],
     note: {
       author: "Marta",
@@ -85,16 +112,16 @@ export const PITCHES: Pitch[] = [
       </>
     ),
     status: "review",
-    statusLabel: "In review",
+    statusLabelKey: "magazine:pitchTracker.pitch.fourDayWeek.statusLabel",
     type: "Long read",
     meta: ["~ 2,500 words", "For Issue 11", "Sent 11 days ago"],
     stages: [
-      done("Pitched"),
-      active("In review"),
-      next("Decision"),
-      next("Draft"),
-      next("Edit"),
-      next("Out"),
+      done(STAGE.pitched),
+      active(STAGE.inReview),
+      next(STAGE.decision),
+      next(STAGE.draft),
+      next(STAGE.edit),
+      next(STAGE.out),
     ],
     outline: (
       <>
@@ -118,16 +145,16 @@ export const PITCHES: Pitch[] = [
       </>
     ),
     status: "commissioned",
-    statusLabel: "Commissioned",
+    statusLabelKey: "magazine:pitchTracker.pitch.commissionedMap.statusLabel",
     type: "Service",
     meta: ["~ 1,600 words", "Issue 11 · On Place", "Draft due 4 Aug"],
     stages: [
-      done("Pitched"),
-      done("Accepted"),
-      active("Draft"),
-      next("Edit"),
-      next("Lay out"),
-      next("Published"),
+      done(STAGE.pitched),
+      done(STAGE.accepted),
+      active(STAGE.draft),
+      next(STAGE.edit),
+      next(STAGE.layOut),
+      next(STAGE.published),
     ],
     note: {
       author: "Marta",
@@ -151,17 +178,17 @@ export const PITCHES: Pitch[] = [
       </>
     ),
     status: "published",
-    statusLabel: "Published",
+    statusLabelKey: "magazine:pitchTracker.pitch.hostingBadly.statusLabel",
     type: "Essay",
     href: routes.article,
     meta: ["1,800 words", "Issue 03 · Dec 2024", "312 reads all-time"],
     stages: [
-      done("Pitched"),
-      done("Accepted"),
-      done("Draft"),
-      done("Edit"),
-      done("Lay out"),
-      done("Published"),
+      done(STAGE.pitched),
+      done(STAGE.accepted),
+      done(STAGE.draft),
+      done(STAGE.edit),
+      done(STAGE.layOut),
+      done(STAGE.published),
     ],
     actions: [
       { label: "Read live", primary: true, to: routes.article },
@@ -173,7 +200,7 @@ export const PITCHES: Pitch[] = [
     id: "riso-printing",
     title: <>&ldquo;A guide to riso printing in Lisbon&rdquo;</>,
     status: "published",
-    statusLabel: "Published",
+    statusLabelKey: "magazine:pitchTracker.pitch.risoPrinting.statusLabel",
     type: "Service",
     href: routes.article,
     meta: [
@@ -182,12 +209,12 @@ export const PITCHES: Pitch[] = [
       "584 reads · most-saved Issue 01 piece",
     ],
     stages: [
-      done("Pitched"),
-      done("Accepted"),
-      done("Draft"),
-      done("Edit"),
-      done("Lay out"),
-      done("Published"),
+      done(STAGE.pitched),
+      done(STAGE.accepted),
+      done(STAGE.draft),
+      done(STAGE.edit),
+      done(STAGE.layOut),
+      done(STAGE.published),
     ],
     actions: [
       { label: "Read live", primary: true, to: routes.article },
@@ -198,14 +225,14 @@ export const PITCHES: Pitch[] = [
     id: "owe-our-exes",
     title: <>&ldquo;What we owe our exes&rdquo;</>,
     status: "rejected",
-    statusLabel: "Not this issue · close fit",
+    statusLabelKey: "magazine:pitchTracker.pitch.oweOurExes.statusLabel",
     type: "Essay",
     dimmed: true,
     meta: ["1,500 words", "Pitched Aug 2025 · rejected with note"],
     stages: [
-      done("Pitched"),
-      { label: "Reviewed", state: "rejected" },
-      { label: "Closed", state: "rejected" },
+      done(STAGE.pitched),
+      { labelKey: STAGE.reviewed, state: "rejected" },
+      { labelKey: STAGE.closed, state: "rejected" },
     ],
     note: {
       author: "Marta",

@@ -19,29 +19,39 @@ export function breakdownColor(score: number): string {
   return "var(--accent-ink)";
 }
 
-export function breakdownNarrative(score: number): string {
-  if (score >= 90)
-    return "A strong, balanced score. Nothing here needs your attention — keep doing what works.";
-  if (score >= 78)
-    return "Healthy overall, with one or two areas worth a gentle eye.";
-  return "Sentiment and safety load are dragging the score down. This is exactly where a little staff support goes a long way.";
+/** Returns an `admin:communities.health.narrative.*` catalog key — resolve with `t()`. */
+export function breakdownNarrativeKey(score: number): string {
+  if (score >= 90) return "communities.health.narrative.strong";
+  if (score >= 78) return "communities.health.narrative.healthy";
+  return "communities.health.narrative.dragging";
 }
 
-/** The four health signals, in bd[] order, with name + description. */
-export const BREAKDOWN_META: { name: string; desc: string }[] = [
+/** The four health signals, in bd[] order, with name/desc catalog keys — resolve with `t()`. */
+export const BREAKDOWN_META: {
+  id: string;
+  nameKey: string;
+  descKey: string;
+}[] = [
   {
-    name: "Member activity",
-    desc: "How alive the space feels — posts, replies, attendance",
+    id: "memberActivity",
+    nameKey: "communities.health.breakdown.memberActivity.name",
+    descKey: "communities.health.breakdown.memberActivity.desc",
   },
   {
-    name: "Report resolution",
-    desc: "Share of reports resolved within the SLA",
+    id: "reportResolution",
+    nameKey: "communities.health.breakdown.reportResolution.name",
+    descKey: "communities.health.breakdown.reportResolution.desc",
   },
   {
-    name: "Member sentiment",
-    desc: "Quiet pulse-check surveys and reaction signals",
+    id: "memberSentiment",
+    nameKey: "communities.health.breakdown.memberSentiment.name",
+    descKey: "communities.health.breakdown.memberSentiment.desc",
   },
-  { name: "Safety load", desc: "Inverse of harm reports relative to size" },
+  {
+    id: "safetyLoad",
+    nameKey: "communities.health.breakdown.safetyLoad.name",
+    descKey: "communities.health.breakdown.safetyLoad.desc",
+  },
 ];
 
 export type Severity = "danger" | "coral" | "amber" | "jade";
@@ -88,13 +98,14 @@ export interface Community {
   queue: QueueItem[];
 }
 
-const VIS_LABEL: Record<Visibility, string> = {
-  private: "Private",
-  public: "Public",
-  network: "Network-only",
+const VIS_LABEL_KEY: Record<Visibility, string> = {
+  private: "communities.settings.visibility.private",
+  public: "communities.settings.visibility.public",
+  network: "communities.settings.visibility.network",
 };
-export function visLabel(v: Visibility): string {
-  return VIS_LABEL[v];
+/** Returns an `admin:communities.settings.visibility.*` catalog key — resolve with `t()`. */
+export function visLabelKey(v: Visibility): string {
+  return VIS_LABEL_KEY[v];
 }
 
 /** "Inês Martins" → "Inês M." */

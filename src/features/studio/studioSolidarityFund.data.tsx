@@ -1,97 +1,65 @@
 import type { ReactNode } from "react";
 
 export interface FundFlowRow {
-  k: ReactNode;
-  d: string;
-  v: string;
+  labelKey: string;
+  descKey: string;
+  amount: number;
 }
 
 export interface DisbursementRow {
   d: string;
   m: string;
-  tag: string;
+  tagKey: string;
   tagClass: string;
   name: ReactNode;
   csvName: string;
   note: string;
-  amt: string;
+  amount: number;
 }
 
 export const IN: FundFlowRow[] = [
   {
-    k: (
-      <>
-        Subscription <em>surplus</em>
-      </>
-    ),
-    d: "When sustainer revenue beats the payout ledger, the difference pools here.",
-    v: "4,100",
+    labelKey: "studio:fund.flows.in.surplus.label",
+    descKey: "studio:fund.flows.in.surplus.desc",
+    amount: 4100,
   },
   {
-    k: (
-      <>
-        Tip <em>round-ups</em>
-      </>
-    ),
-    d: "The optional 5% some listeners add on top of a tip.",
-    v: "1,860",
+    labelKey: "studio:fund.flows.in.roundups.label",
+    descKey: "studio:fund.flows.in.roundups.desc",
+    amount: 1860,
   },
   {
-    k: (
-      <>
-        Cleared <em>holds</em>
-      </>
-    ),
-    d: "Unmatched DJ-set payouts that stay unclaimed after a year.",
-    v: "720",
+    labelKey: "studio:fund.flows.in.holds.label",
+    descKey: "studio:fund.flows.in.holds.desc",
+    amount: 720,
   },
   {
-    k: (
-      <>
-        Direct <em>gifts</em>
-      </>
-    ),
-    d: "One-off donations from members and a Lisbon foundation.",
-    v: "2,400",
+    labelKey: "studio:fund.flows.in.gifts.label",
+    descKey: "studio:fund.flows.in.gifts.desc",
+    amount: 2400,
   },
 ];
 
 export const OUT: FundFlowRow[] = [
   {
-    k: (
-      <>
-        Transcribers &amp; <em>translators</em>
-      </>
-    ),
-    d: "Sheet music, lyric translations — paid per accepted piece.",
-    v: "2,180",
+    labelKey: "studio:fund.flows.out.transcribers.label",
+    descKey: "studio:fund.flows.out.transcribers.desc",
+    amount: 2180,
   },
   {
-    k: (
-      <>
-        First-release <em>grants</em>
-      </>
-    ),
-    d: "€1,200 unrestricted to first-time members on the spring strand.",
-    v: "2,400",
+    labelKey: "studio:fund.flows.out.grants.label",
+    descKey: "studio:fund.flows.out.grants.desc",
+    amount: 2400,
   },
   {
-    k: (
-      <>
-        Emergency <em>artist support</em>
-      </>
-    ),
-    d: "No-questions help for a member in a hard month.",
-    v: "1,200",
+    labelKey: "studio:fund.flows.out.emergency.label",
+    descKey: "studio:fund.flows.out.emergency.desc",
+    amount: 1200,
   },
   {
-    k: (
-      <>
-        Access <em>work</em>
-      </>
-    ),
-    d: "LGP interpreters, captioning passes, the screen-reader audit.",
-    v: "460",
+    labelKey: "studio:fund.flows.out.access.label",
+    descKey: "studio:fund.flows.out.access.desc",
+    amount: 460,
   },
 ];
 
@@ -99,7 +67,7 @@ export const DISB: DisbursementRow[] = [
   {
     d: "8",
     m: "Jun",
-    tag: "Transcriber",
+    tagKey: "studio:fund.log.tag.transcriber",
     tagClass: "trans",
     name: (
       <>
@@ -108,12 +76,12 @@ export const DISB: DisbursementRow[] = [
     ),
     csvName: "Teresa Rocha",
     note: "14 lead sheets accepted into the archive this fortnight",
-    amt: "210",
+    amount: 210,
   },
   {
     d: "6",
     m: "Jun",
-    tag: "Emergency",
+    tagKey: "studio:fund.log.tag.emergency",
     tagClass: "emerg",
     name: (
       <>
@@ -122,12 +90,12 @@ export const DISB: DisbursementRow[] = [
     ),
     csvName: "Withheld by request",
     note: "One month's rent for a member between tours — confidential",
-    amt: "600",
+    amount: 600,
   },
   {
     d: "5",
     m: "Jun",
-    tag: "Grant",
+    tagKey: "studio:fund.log.tag.grant",
     tagClass: "grant",
     name: (
       <>
@@ -136,12 +104,12 @@ export const DISB: DisbursementRow[] = [
     ),
     csvName: "Helena Pinto & 6 others",
     note: "Spring first-release strand · €1,200 unrestricted each",
-    amt: "1,400",
+    amount: 1400,
   },
   {
     d: "2",
     m: "Jun",
-    tag: "Access",
+    tagKey: "studio:fund.log.tag.access",
     tagClass: "access",
     name: (
       <>
@@ -150,12 +118,12 @@ export const DISB: DisbursementRow[] = [
     ),
     csvName: "LGP interpreter",
     note: "Signed the Marsha P. Johnson broadcast · 90 minutes",
-    amt: "240",
+    amount: 240,
   },
   {
     d: "29",
     m: "May",
-    tag: "Translator",
+    tagKey: "studio:fund.log.tag.translator",
     tagClass: "trans",
     name: (
       <>
@@ -164,12 +132,12 @@ export const DISB: DisbursementRow[] = [
     ),
     csvName: "Community pool · 9 people",
     note: "Lyric translations: PT→EN, PT→ES, FR→PT across 22 tracks",
-    amt: "380",
+    amount: 380,
   },
   {
     d: "24",
     m: "May",
-    tag: "Emergency",
+    tagKey: "studio:fund.log.tag.emergency",
     tagClass: "emerg",
     name: (
       <>
@@ -178,7 +146,7 @@ export const DISB: DisbursementRow[] = [
     ),
     csvName: "Instrument replacement",
     note: "A stolen accordion, replaced within a week — no application form",
-    amt: "900",
+    amount: 900,
   },
 ];
 
@@ -186,7 +154,7 @@ export const DISB_MORE: DisbursementRow[] = [
   {
     d: "20",
     m: "May",
-    tag: "Grant",
+    tagKey: "studio:fund.log.tag.grant",
     tagClass: "grant",
     name: (
       <>
@@ -195,12 +163,12 @@ export const DISB_MORE: DisbursementRow[] = [
     ),
     csvName: "Mateus Faria",
     note: "First-release grant · debut EP mastering and artwork",
-    amt: "1,200",
+    amount: 1200,
   },
   {
     d: "17",
     m: "May",
-    tag: "Access",
+    tagKey: "studio:fund.log.tag.access",
     tagClass: "access",
     name: (
       <>
@@ -209,12 +177,12 @@ export const DISB_MORE: DisbursementRow[] = [
     ),
     csvName: "Captioning pass · 6 broadcasts",
     note: "Live captions across the May live-room season",
-    amt: "320",
+    amount: 320,
   },
   {
     d: "11",
     m: "May",
-    tag: "Translator",
+    tagKey: "studio:fund.log.tag.translator",
     tagClass: "trans",
     name: (
       <>
@@ -223,12 +191,12 @@ export const DISB_MORE: DisbursementRow[] = [
     ),
     csvName: "Pedro Lima",
     note: "PT→EN lyric translation across 8 tracks",
-    amt: "160",
+    amount: 160,
   },
   {
     d: "4",
     m: "May",
-    tag: "Emergency",
+    tagKey: "studio:fund.log.tag.emergency",
     tagClass: "emerg",
     name: (
       <>
@@ -237,12 +205,12 @@ export const DISB_MORE: DisbursementRow[] = [
     ),
     csvName: "Withheld by request",
     note: "Medical costs for a member — confidential",
-    amt: "750",
+    amount: 750,
   },
   {
     d: "28",
     m: "Apr",
-    tag: "Transcriber",
+    tagKey: "studio:fund.log.tag.transcriber",
     tagClass: "trans",
     name: (
       <>
@@ -251,12 +219,12 @@ export const DISB_MORE: DisbursementRow[] = [
     ),
     csvName: "Sofia Neves",
     note: "9 lead sheets accepted into the archive",
-    amt: "135",
+    amount: 135,
   },
   {
     d: "21",
     m: "Apr",
-    tag: "Grant",
+    tagKey: "studio:fund.log.tag.grant",
     tagClass: "grant",
     name: (
       <>
@@ -265,6 +233,6 @@ export const DISB_MORE: DisbursementRow[] = [
     ),
     csvName: "Spring strand · 4 artists",
     note: "First-release grants · €1,200 unrestricted each",
-    amt: "4,800",
+    amount: 4800,
   },
 ];

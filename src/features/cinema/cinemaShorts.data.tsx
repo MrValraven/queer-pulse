@@ -871,13 +871,6 @@ export const sortOptions = [
   { value: "staffPicks", labelKey: "cinema:shorts.sort.staffPicks" },
 ];
 
-/** Formats a raw watch count like the design's fmtWatch. */
-export function fmtWatch(n: number): string {
-  if (n < 1000) return String(n);
-  const val = (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(".0", "");
-  return `${val}k`;
-}
-
 export const filterByKey = new Map(shortFilters.map((f) => [f.key, f]));
 
 export interface CatalogState {

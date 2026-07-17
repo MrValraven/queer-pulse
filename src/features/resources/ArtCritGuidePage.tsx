@@ -1,26 +1,40 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
-import { PRINCIPLE, FLOW, EXAMPLES } from "./artCritGuide.data";
+import { PRINCIPLE_KEY, FLOW, EXAMPLES } from "./artCritGuide.data";
 import styles from "./resources.module.css";
 
 export function ArtCritGuidePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Rainbow Arts"
+        eyebrow={t("resources:artCritGuide.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            How our crits <em>work.</em>
-          </>
+          <Translation
+            i18nKey="resources:artCritGuide.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="Honest, kind, specific — in that order. Here's the whole method, so your first open crit feels less like a test and more like the room being on your side."
+        lead={t("resources:artCritGuide.hero.lead")}
         anchors={[
-          { label: "The principle", href: "#principle" },
-          { label: "How a session runs", href: "#flow" },
-          { label: "What to say", href: "#examples" },
+          {
+            label: t("resources:artCritGuide.hero.anchor.principle"),
+            href: "#principle",
+          },
+          {
+            label: t("resources:artCritGuide.hero.anchor.flow"),
+            href: "#flow",
+          },
+          {
+            label: t("resources:artCritGuide.hero.anchor.examples"),
+            href: "#examples",
+          },
         ]}
       />
 
@@ -30,36 +44,35 @@ export function ArtCritGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            The <em>principle</em>
+            <Translation
+              i18nKey="resources:artCritGuide.principle.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
-          {PRINCIPLE.map((p) => (
-            <Reveal
-              as="p"
-              key={p}
-              className={styles.leadP}
-              style={{ maxWidth: "62ch" }}
-            >
-              {p}
-            </Reveal>
-          ))}
+          <Reveal as="p" className={styles.leadP} style={{ maxWidth: "62ch" }}>
+            {t(PRINCIPLE_KEY)}
+          </Reveal>
         </div>
       </section>
 
       <section className={`${styles.section} ${styles.sectionCream}`} id="flow">
         <div className="wrap">
           <Reveal as="h2">
-            How a session <em>runs</em>
+            <Translation
+              i18nKey="resources:artCritGuide.flow.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Arrival to coffee, in four moves.
+            {t("resources:artCritGuide.flow.lead")}
           </Reveal>
           <div className={styles.stepList}>
             {FLOW.map((s) => (
               <Reveal key={s.n} className={styles.step}>
                 <div className={styles.stepN}>{s.n}</div>
                 <div>
-                  <div className={styles.stepTitle}>{s.title}</div>
-                  <div className={styles.stepBody}>{s.body}</div>
+                  <div className={styles.stepTitle}>{t(s.titleKey)}</div>
+                  <div className={styles.stepBody}>{t(s.bodyKey)}</div>
                 </div>
               </Reveal>
             ))}
@@ -73,28 +86,31 @@ export function ArtCritGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            What to <em>say</em>
+            <Translation
+              i18nKey="resources:artCritGuide.examples.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Specific beats nice. Here's the difference, in the room's own words.
+            {t("resources:artCritGuide.examples.lead")}
           </Reveal>
           <div className={styles.grid}>
             {EXAMPLES.map((ex, i) => (
-              <Reveal key={ex.good} className={styles.card} delay={i * 55}>
+              <Reveal key={ex.goodKey} className={styles.card} delay={i * 55}>
                 <span className={`${styles.badge} ${styles.badgeProtected}`}>
-                  Try this
+                  {t("resources:artCritGuide.examples.tryThis")}
                 </span>
                 <div className={styles.cardSpec} style={{ flex: "none" }}>
-                  {ex.good}
+                  {t(ex.goodKey)}
                 </div>
                 <span
                   className={`${styles.badge} ${styles.badgeKnow}`}
                   style={{ marginTop: 8 }}
                 >
-                  Avoid
+                  {t("resources:artCritGuide.examples.avoid")}
                 </span>
                 <div className={styles.cardSpec} style={{ flex: "none" }}>
-                  {ex.avoid}
+                  {t(ex.avoidKey)}
                 </div>
               </Reveal>
             ))}
@@ -104,14 +120,15 @@ export function ArtCritGuidePage() {
 
       <Outro
         title={
-          <>
-            Bring <em>one work.</em>
-          </>
+          <Translation
+            i18nKey="resources:artCritGuide.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Finished or not — half-finished is exactly what a crit is for. Find the next open crit on the board."
+        sub={t("resources:artCritGuide.outro.sub")}
       >
         <Button to={routes.gatherings} variant="primary" size="lg">
-          Find the next crit
+          {t("resources:artCritGuide.outro.cta")}
         </Button>
       </Outro>
     </PageShell>

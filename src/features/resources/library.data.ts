@@ -9,13 +9,42 @@ export interface Guide {
   to: string;
 }
 
+/**
+ * i18n Pattern A — `id` is the stored filter value; `labelKey` resolves via
+ * `t()` for the filter chips. `label` is kept as a plain-English fallback
+ * used only by `resources.adapters.ts` to derive a live-mode guide's
+ * `catLabel` badge text outside a component (no `t()` there) — a documented
+ * gap: that badge doesn't localize in live mode yet, matching the demo
+ * `GUIDES` mock's own English `catLabel` values (see the scope rule: those
+ * mirror the live-fetched `Resource.category`, so they're content).
+ */
 export const CATEGORIES = [
-  { id: "all", label: "All guides" },
-  { id: "housing", label: "Housing" },
-  { id: "health", label: "Health" },
-  { id: "legal", label: "Legal" },
-  { id: "finance", label: "Finance" },
-  { id: "trans", label: "Trans life" },
+  {
+    id: "all",
+    label: "All guides",
+    labelKey: "resources:library.category.all",
+  },
+  {
+    id: "housing",
+    label: "Housing",
+    labelKey: "resources:library.category.housing",
+  },
+  {
+    id: "health",
+    label: "Health",
+    labelKey: "resources:library.category.health",
+  },
+  { id: "legal", label: "Legal", labelKey: "resources:library.category.legal" },
+  {
+    id: "finance",
+    label: "Finance",
+    labelKey: "resources:library.category.finance",
+  },
+  {
+    id: "trans",
+    label: "Trans life",
+    labelKey: "resources:library.category.trans",
+  },
 ] as const;
 
 export const GUIDES: Guide[] = [

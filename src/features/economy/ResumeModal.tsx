@@ -1,4 +1,6 @@
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import {
   type Application,
@@ -16,15 +18,19 @@ export function ResumeModal({
   onClose: () => void;
   onPatch: (id: string, patch: Partial<Application>) => void;
 }) {
+  const { t } = useTranslation();
   const d = app.draft;
   const { submit, sending, done } = useSubmitFlow();
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
-        <SuccessPanel title="Application" em="sent." onClose={onClose}>
-          Nicely done — your application to {app.companyName} is in. It's now in
-          your Active tab.
+        <SuccessPanel
+          title={t("economy:resume.success.title")}
+          em={t("economy:resume.success.em")}
+          onClose={onClose}
+        >
+          {t("economy:resume.success.body", { company: app.companyName })}
         </SuccessPanel>
       ) : (
         <form
@@ -33,9 +39,14 @@ export function ResumeModal({
             submit(() => onPatch(app.id, submittedDraftPatch()));
           }}
         >
-          <div className={styles.eyebrow}>Resume draft · {d?.deadline}</div>
+          <div className={styles.eyebrow}>
+            {t("economy:resume.eyebrowPrefix", { deadline: d?.deadline })}
+          </div>
           <h2 className={styles.title}>
-            Finish your <em>application.</em>
+            <Translation
+              i18nKey="economy:resume.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <div className={styles.progress}>
             <div
@@ -44,22 +55,29 @@ export function ResumeModal({
             />
           </div>
           <p className={styles.progressL}>
-            {d?.percent}% done · {d?.remaining.length} things left
+            {t("economy:resume.progress", {
+              percent: d?.percent ?? 0,
+              count: d?.remaining.length ?? 0,
+            })}
           </p>
           <div className={styles.field}>
-            <label htmlFor="rs-cover">Cover letter</label>
+            <label htmlFor="rs-cover">
+              {t("economy:resume.coverLetterLabel")}
+            </label>
             <textarea
               id="rs-cover"
-              placeholder="A few honest lines on why this role."
+              placeholder={t("economy:resume.coverLetterPlaceholder")}
               required
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="rs-avail">Availability</label>
+            <label htmlFor="rs-avail">
+              {t("economy:resume.availabilityLabel")}
+            </label>
             <input
               id="rs-avail"
               type="text"
-              placeholder="e.g. Two weeks' notice"
+              placeholder={t("economy:resume.availabilityPlaceholder")}
               required
             />
           </div>
@@ -70,13 +88,13 @@ export function ResumeModal({
               onClick={onClose}
               disabled={sending}
             >
-              ← Save &amp; close
+              {t("economy:resume.saveClose")}
             </button>
             <Button size="lg" type="submit" disabled={sending}>
               {sending ? (
-                <Sending label="Submitting…" />
+                <Sending label={t("economy:resume.submittingLabel")} />
               ) : (
-                "Submit application →"
+                t("economy:resume.submitCta")
               )}
             </Button>
           </div>

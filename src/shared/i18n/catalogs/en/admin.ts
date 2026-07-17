@@ -15,6 +15,9 @@ export const admin: Catalog = {
   "common.close": "Close",
   "common.back": "Back",
   "common.undo": "Undo",
+  // Breadcrumb root for the top-level admin panel (used by pages nested one
+  // level below /admin, e.g. the partner-applications queue).
+  "common.adminBreadcrumb": "Admin",
 
   // ── Dashboard ──────────────────────────────────────────────────────────────
   "dashboard.title": "Overview · <em>good morning, {name}</em>",
@@ -247,6 +250,7 @@ export const admin: Catalog = {
   "moderation.appeal.decidedBy": "Decided by",
   "moderation.appeal.supportersFlag_one": "{count} backing them",
   "moderation.appeal.supportersFlag_other": "{count} backing them",
+  "moderation.appeal.fallbackName": "member",
   "moderation.resolvedSection": "Recently resolved",
 
   "moderation.reportDrawer.label": "Report — {title}",
@@ -272,6 +276,8 @@ export const admin: Catalog = {
     "{name} will be told exactly what was actioned and why, with a link to appeal. Nothing happens silently.",
   "moderation.reportDrawer.pickActionToast":
     "Pick an action before confirming.",
+  "moderation.reportDrawer.escalatedToast":
+    "Escalated to the safety team. They will take it from here.",
   "moderation.reportDrawer.confirmedToast":
     "{name} {verb}. The member has been notified.",
 
@@ -433,7 +439,7 @@ export const admin: Catalog = {
     "+ {count} more being handled by the community's own moderators",
   "communities.queue.reviewCta": "Review",
   "communities.members.moderatorChip": "Moderator",
-  "communities.members.seeAllCta": "See all {count} members",
+  "communities.members.seeAllCta": "See all {total} members",
 
   "communities.settings.whoCanJoin": "Who can join",
   "communities.settings.moderators": "Moderators",
@@ -665,6 +671,8 @@ export const admin: Catalog = {
   "partners.card.approveCta": "Approve as partner",
 
   // ── Mod panel (/mod/:slug) ─────────────────────────────────────────────────
+  "modPanel.pageTitle": "Mod tools",
+  "modPanel.adminPageTitle": "Mod panel",
   "modPanel.tabs.requests": "Requests",
   "modPanel.tabs.reports": "Reports",
   "modPanel.tabs.members": "Members",
@@ -823,6 +831,8 @@ export const admin: Catalog = {
 
   "vouchGraph.tooltip.vouchesIn_one": "{count} vouch in",
   "vouchGraph.tooltip.vouchesIn_other": "{count} vouches in",
+  "vouchGraph.tooltip.vouchesOut_one": "{count} out",
+  "vouchGraph.tooltip.vouchesOut_other": "{count} out",
   "vouchGraph.tooltip.joinedPrefix": "joined {when}",
   "vouchGraph.tooltip.hint": "click to inspect · double-click to re-centre",
   "vouchGraph.tooltip.withdrawn": "withdrawn {date}",

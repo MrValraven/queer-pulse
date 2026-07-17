@@ -6,6 +6,7 @@ import {
   InvoiceClientFields,
   InvoiceMetaFields,
 } from "./InvoiceFormFields";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvoiceGeneratorPage.module.css";
 
 export interface InvoiceFormProps {
@@ -55,6 +56,7 @@ export function InvoiceForm(props: InvoiceFormProps) {
     notes,
     setNotes,
   } = props;
+  const { t } = useTranslation();
 
   return (
     <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
@@ -80,10 +82,12 @@ export function InvoiceForm(props: InvoiceFormProps) {
       <InvoiceLineItems items={lineItems} onChange={setLineItems} />
 
       <fieldset className={styles.block}>
-        <legend className={styles.legend}>Notes</legend>
+        <legend className={styles.legend}>
+          {t("economy:invoiceTool.notes.legend")}
+        </legend>
         <div className={styles.field}>
           <label className={styles.srOnly} htmlFor="inv-notes">
-            Notes
+            {t("economy:invoiceTool.notes.legend")}
           </label>
           <textarea
             id="inv-notes"
@@ -91,7 +95,7 @@ export function InvoiceForm(props: InvoiceFormProps) {
             rows={3}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Payment terms, thanks, anything the client should know."
+            placeholder={t("economy:invoiceTool.notes.placeholder")}
           />
         </div>
       </fieldset>

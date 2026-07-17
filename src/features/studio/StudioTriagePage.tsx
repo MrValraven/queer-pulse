@@ -2,24 +2,28 @@ import { useState } from "react";
 import { StudioShell } from "./StudioShell";
 import { StudioTriageList } from "./StudioTriageList";
 import { StudioTriageDetail } from "./StudioTriageDetail";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KPIS, TABS } from "./studioTriage.data";
 import s from "./council.module.css";
 
 export function StudioTriagePage() {
-  const [tab, setTab] = useState("New");
+  const { t } = useTranslation();
+  const [tab, setTab] = useState("new");
 
   return (
     <StudioShell>
       <div className={s.wrap}>
         <section className={s.trH}>
           <div>
-            <div className={s.eb}>
-              Submission triage · the council answers every submission in 14
-              days
-            </div>
+            <div className={s.eb}>{t("studio:triage.header.eyebrow")}</div>
             <div className={s.pageH} style={{ padding: 0 }}>
               <h1>
-                Inbox · <em>47</em> new this week.
+                <Translation
+                  i18nKey="studio:triage.header.title"
+                  components={{ em: <em /> }}
+                  values={{ count: 47 }}
+                />
               </h1>
             </div>
             <div
@@ -32,48 +36,52 @@ export function StudioTriagePage() {
                 marginTop: 10,
               }}
             >
-              Every submission gets read or listened to.{" "}
-              <em style={{ color: "var(--jade-light)" }}>Pass</em> takes a
-              sentence — that sentence becomes the artist's answer. Median reply
-              time this season: 9.4 days.
+              <Translation
+                i18nKey="studio:triage.header.sub"
+                components={{
+                  em: <em style={{ color: "var(--jade-light)" }} />,
+                }}
+                values={{ days: "9.4" }}
+              />
             </div>
           </div>
           <div className={s.kpiStrip}>
-            {KPIS.map((k, i) => (
-              <div key={i} className={s.kpiMini}>
+            {KPIS.map((kpi, kpiIndex) => (
+              <div key={kpiIndex} className={s.kpiMini}>
                 <div
-                  className={`${s.v} ${k.jade ? "jade" : ""}`}
-                  style={k.jade ? { color: "var(--jade-light)" } : undefined}
+                  className={`${s.v} ${kpi.jade ? "jade" : ""}`}
+                  style={kpi.jade ? { color: "var(--jade-light)" } : undefined}
                 >
-                  {k.v}
+                  {kpi.v}
                 </div>
-                <div className={s.l}>{k.l}</div>
+                <div className={s.l}>{t(kpi.labelKey)}</div>
               </div>
             ))}
           </div>
         </section>
 
         <div className={s.trTabs}>
-          {TABS.map((t) => (
+          {TABS.map((tabOption) => (
             <button
               type="button"
-              key={t.label}
+              key={tabOption.id}
               className={[
                 s.trTab,
-                tab === t.label && s.trTabOn,
-                t.warn && s.trTabWarn,
+                tab === tabOption.id && s.trTabOn,
+                tabOption.warn && s.trTabWarn,
               ]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setTab(t.label)}
+              onClick={() => setTab(tabOption.id)}
             >
-              {t.label} <span className={s.ctNum}>{t.ct}</span>
+              {t(tabOption.labelKey)}{" "}
+              <span className={s.ctNum}>{tabOption.ct}</span>
             </button>
           ))}
         </div>
 
         <div className={s.trBody}>
-          <StudioTriageList tab={tab} onBackToNew={() => setTab("New")} />
+          <StudioTriageList tab={tab} onBackToNew={() => setTab("new")} />
           <StudioTriageDetail />
         </div>
       </div>

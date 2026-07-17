@@ -21,6 +21,9 @@ export const admin: Catalog = {
   "common.close": "Fechar",
   "common.back": "Voltar",
   "common.undo": "Desfazer",
+  // Raiz do breadcrumb do painel de administração (usado por páginas um nível
+  // abaixo de /admin, p. ex. a fila de candidaturas a parceiro).
+  "common.adminBreadcrumb": "Administração",
 
   // ── Painel principal ──────────────────────────────────────────────────────
   "dashboard.title": "Resumo · <em>bom dia, {name}</em>",
@@ -262,6 +265,7 @@ export const admin: Catalog = {
   "moderation.appeal.decidedBy": "Decidido por",
   "moderation.appeal.supportersFlag_one": "{count} pessoa a apoiar",
   "moderation.appeal.supportersFlag_other": "{count} pessoas a apoiar",
+  "moderation.appeal.fallbackName": "pessoa",
   "moderation.resolvedSection": "Resolvidas recentemente",
 
   "moderation.reportDrawer.label": "Denúncia — {title}",
@@ -288,6 +292,8 @@ export const admin: Catalog = {
     "Vamos dizer a {name} exatamente o que foi feito e porquê, com uma ligação para recorrer. Nada acontece em silêncio.",
   "moderation.reportDrawer.pickActionToast":
     "Escolhe uma ação antes de confirmar.",
+  "moderation.reportDrawer.escalatedToast":
+    "Escalado para a equipa de segurança. A partir daqui fica com ela.",
   "moderation.reportDrawer.confirmedToast":
     "{name}: {verb}. A pessoa foi notificada.",
 
@@ -452,7 +458,7 @@ export const admin: Catalog = {
     "+ {count} a serem tratadas pelas próprias pessoas moderadoras da comunidade",
   "communities.queue.reviewCta": "Rever",
   "communities.members.moderatorChip": "Pessoa moderadora",
-  "communities.members.seeAllCta": "Ver as {count} pessoas",
+  "communities.members.seeAllCta": "Ver as {total} pessoas",
 
   "communities.settings.whoCanJoin": "Quem pode entrar",
   "communities.settings.moderators": "Pessoas moderadoras",
@@ -693,6 +699,8 @@ export const admin: Catalog = {
   "partners.card.approveCta": "Aprovar como parceira",
 
   // ── Painel de moderação (/mod/:slug) ───────────────────────────────────────
+  "modPanel.pageTitle": "Ferramentas de moderação",
+  "modPanel.adminPageTitle": "Painel de moderação",
   "modPanel.tabs.requests": "Pedidos",
   "modPanel.tabs.reports": "Denúncias",
   "modPanel.tabs.members": "Pessoas",
@@ -856,6 +864,8 @@ export const admin: Catalog = {
 
   "vouchGraph.tooltip.vouchesIn_one": "{count} aval recebido",
   "vouchGraph.tooltip.vouchesIn_other": "{count} avais recebidos",
+  "vouchGraph.tooltip.vouchesOut_one": "{count} dado",
+  "vouchGraph.tooltip.vouchesOut_other": "{count} dados",
   "vouchGraph.tooltip.joinedPrefix": "entrou em {when}",
   "vouchGraph.tooltip.hint":
     "clica para inspecionar · duplo clique para recentrar",

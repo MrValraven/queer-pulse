@@ -3,6 +3,7 @@ import { FiAlertTriangle, FiShield, FiInfo, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import {
@@ -25,7 +26,9 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
   return (
     <>
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Reported content</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.reportDrawer.contentTitle")}
+        </h3>
         <p className={styles.dContentAuthor}>{detail.contentAuthor}</p>
         <blockquote className={styles.dExcerpt}>{detail.excerpt}</blockquote>
         {detail.redactionNote && (
@@ -36,7 +39,9 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
       </section>
 
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Surrounding thread</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.reportDrawer.threadTitle")}
+        </h3>
         <div className={styles.dThread}>
           {detail.thread.map((m, i) => (
             <div
@@ -57,7 +62,8 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
                   <span className={styles.dMsgTime}>{m.time}</span>
                   {m.flagged && (
                     <span className={styles.dMsgFlagTag}>
-                      <FiAlertTriangle aria-hidden /> Flagged
+                      <FiAlertTriangle aria-hidden />{" "}
+                      {t("admin:moderation.reportDrawer.flaggedTag")}
                     </span>
                   )}
                 </div>
@@ -69,7 +75,9 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
       </section>
 
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>People involved</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.reportDrawer.peopleTitle")}
+        </h3>
         <div className={styles.dPeople}>
           {detail.people.map((p) => (
             <div key={p.role} className={styles.dPerson}>
@@ -108,10 +116,14 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
 
 /** Read-only immutable action history for a report (spec 04 audit trail). */
 function ReportAudit({ reportId }: { reportId: string }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { data: entries } = useReportAudit(reportId);
   return (
     <section className={styles.dSec}>
-      <h3 className={styles.dSecLabel}>Action history</h3>
+      <h3 className={styles.dSecLabel}>
+        {t("admin:moderation.reportDrawer.auditTitle")}
+      </h3>
       {entries && entries.length > 0 ? (
         <ul className={styles.dAudit}>
           {entries.map((e) => (
@@ -121,13 +133,13 @@ function ReportAudit({ reportId }: { reportId: string }) {
                 <strong>{e.actorName}</strong> · {e.action.replace(/_/g, " ")}
                 {e.note ? ` — ${e.note}` : ""}
               </span>
-              <time>{new Date(e.at).toLocaleString()}</time>
+              <time>{fmt.date(new Date(e.at))}</time>
             </li>
           ))}
         </ul>
       ) : (
         <p className={styles.dTransparency}>
-          No actions recorded yet. Every decision you make is logged here.
+          {t("admin:moderation.reportDrawer.auditEmpty")}
         </p>
       )}
     </section>
@@ -155,18 +167,23 @@ export function AdminReportDrawer({
 
   const handleConfirm = () => {
     if (!action) {
-      showToast("Pick an action before confirming.", "error");
+      showToast(t("admin:moderation.reportDrawer.pickActionToast"), "error");
       return;
     }
     const chosen = MOD_ACTIONS.find((a) => a.id === action);
     onResolve(report.id, {
-      verb: "Resolved",
+      verb: "resolved",
       action,
       reasonCode: reason ?? "other",
       note,
     });
     showToast(
-      `${report.reportedName} ${chosen?.done ?? "actioned"}. The member has been notified.`,
+      t("admin:moderation.reportDrawer.confirmedToast", {
+        name: report.reportedName,
+        verb: chosen
+          ? t(chosen.doneKey)
+          : t("admin:moderation.actions.actionedFallback"),
+      }),
       "success",
     );
     onClose();
@@ -174,21 +191,18 @@ export function AdminReportDrawer({
 
   const handleEscalate = () => {
     onResolve(report.id, {
-      verb: "Escalated",
+      verb: "escalated",
       action: "escalate",
       reasonCode: reason ?? "other",
       note,
     });
-    showToast(
-      "Escalated to the safety team. They will take it from here.",
-      "success",
-    );
+    showToast(t("admin:moderation.reportDrawer.escalatedToast"), "success");
     onClose();
   };
 
   return (
     <AdminDrawer
-      label={`Report — ${report.title}`}
+      label={t("admin:moderation.reportDrawer.label", { title: report.title })}
       onClose={onClose}
       head={
         <>
@@ -200,19 +214,21 @@ export function AdminReportDrawer({
               </AdminChip>
             ))}
           </div>
-          <h2 className={styles.dTitle}>A private trans status was outed</h2>
+          <h2 className={styles.dTitle}>
+            {t("admin:moderation.reportDrawer.title")}
+          </h2>
         </>
       }
       foot={
         <div className={styles.dFoot}>
           <Button variant="ghost" onClick={onClose}>
-            Cancel
+            {t("admin:moderation.reportDrawer.cancelCta")}
           </Button>
           <Button variant="jade" onClick={handleEscalate}>
-            Escalate to safety team
+            {t("admin:moderation.reportDrawer.escalateCta")}
           </Button>
           <Button variant="primary" onClick={handleConfirm}>
-            Confirm &amp; notify member
+            {t("admin:moderation.reportDrawer.confirmCta")}
           </Button>
         </div>
       }
@@ -221,7 +237,9 @@ export function AdminReportDrawer({
 
       {/* Action grid */}
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Take a decision — protective first</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.reportDrawer.decisionTitle")}
+        </h3>
         <div className={styles.dActions}>
           {MOD_ACTIONS.map((a) => (
             <button
@@ -237,8 +255,8 @@ export function AdminReportDrawer({
                 .join(" ")}
               onClick={() => setAction(a.id)}
             >
-              <span className={styles.dActionLabel}>{a.label}</span>
-              <span className={styles.dActionDesc}>{a.desc}</span>
+              <span className={styles.dActionLabel}>{t(a.labelKey)}</span>
+              <span className={styles.dActionDesc}>{t(a.descKey)}</span>
             </button>
           ))}
         </div>
@@ -247,9 +265,13 @@ export function AdminReportDrawer({
       {/* Reason + note */}
       <section className={styles.dSec}>
         <h3 className={styles.dSecLabel}>
-          Reason — required, shown to the member
+          {t("admin:moderation.reportDrawer.reasonTitle")}
         </h3>
-        <div className={styles.dReasons} role="radiogroup" aria-label="Reason">
+        <div
+          className={styles.dReasons}
+          role="radiogroup"
+          aria-label={t("admin:moderation.reportDrawer.reasonAriaLabel")}
+        >
           {MOD_REASONS.map((r) => (
             <label key={r.id} className={styles.dReason}>
               <input
@@ -259,22 +281,24 @@ export function AdminReportDrawer({
                 checked={reason === r.id}
                 onChange={() => setReason(r.id as ReasonCode)}
               />
-              <span>{r.label}</span>
+              <span>{t(r.labelKey)}</span>
             </label>
           ))}
         </div>
 
         <textarea
-          aria-label="Note to the member"
+          aria-label={t("admin:moderation.reportDrawer.noteAriaLabel")}
           className={styles.dNote}
           rows={3}
-          placeholder="Add a human note. The member will read this — write it the way you’d want to be spoken to."
+          placeholder={t("admin:moderation.reportDrawer.notePlaceholder")}
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />
         <p className={styles.dTransparency}>
-          <FiInfo aria-hidden /> {report.reportedName} will be told exactly what
-          was actioned and why, with a link to appeal. Nothing happens silently.
+          <FiInfo aria-hidden />{" "}
+          {t("admin:moderation.reportDrawer.transparency", {
+            name: report.reportedName,
+          })}
         </p>
       </section>
 

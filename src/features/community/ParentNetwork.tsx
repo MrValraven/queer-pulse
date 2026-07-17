@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { Reveal } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { MEETUPS, OFFERS, RESOURCES, STATS } from "./parents.data";
 import styles from "./ParentNetwork.module.css";
 
@@ -9,42 +11,49 @@ import styles from "./ParentNetwork.module.css";
  * /parents route redirects here.
  */
 export function ParentNetwork() {
+  const { t } = useTranslation();
   return (
     <>
       <section className={styles.section}>
         <div className="wrap">
           <Reveal className={styles.eyebrow}>
-            Queer Parent Network · Already a parent?
+            {t("community:parentNetwork.eyebrow")}
           </Reveal>
           <Reveal as="h2" className={styles.h2} delay={60}>
-            For the families <em>often overlooked</em> in queer spaces.
+            <Translation
+              i18nKey="community:parentNetwork.heading"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={120}>
-            LGBTQ+ parents, co-parents, and people navigating parenthood —
-            biological, adoptive, chosen, and everything in between. Less a
-            forum, more a standing arrangement between families who help each
-            other through the practical and the heavy alike.
+            {t("community:parentNetwork.lead")}
           </Reveal>
           <Reveal className={styles.stats} delay={160}>
             {STATS.map((stat) => (
-              <div key={stat.label}>
+              <div key={stat.labelKey}>
                 <div className={styles.statN}>{stat.n}</div>
-                <div className={styles.statL}>{stat.label}</div>
+                <div className={styles.statL}>
+                  {t(`community:${stat.labelKey}`)}
+                </div>
               </div>
             ))}
           </Reveal>
           <div className={styles.grid} style={{ marginTop: 40 }}>
             {OFFERS.map((offer, index) => (
               <Reveal
-                key={offer.title}
+                key={offer.titleKey}
                 className={styles.card}
                 delay={index * 55}
               >
                 <div className={styles.cardIcon}>
                   <offer.icon />
                 </div>
-                <div className={styles.cardTitle}>{offer.title}</div>
-                <div className={styles.cardBody}>{offer.body}</div>
+                <div className={styles.cardTitle}>
+                  {t(`community:${offer.titleKey}`)}
+                </div>
+                <div className={styles.cardBody}>
+                  {t(`community:${offer.bodyKey}`)}
+                </div>
               </Reveal>
             ))}
           </div>
@@ -54,11 +63,13 @@ export function ParentNetwork() {
       <section className={`${styles.section} ${styles.sectionPaper}`}>
         <div className="wrap">
           <Reveal as="h2" className={styles.h2}>
-            Coming up <em>soon.</em>
+            <Translation
+              i18nKey="community:parentNetwork.comingUp.heading"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP} delay={60}>
-            Most months bring a daytime playdate and an evening for the
-            grown-ups. Kids welcome unless we say otherwise.
+            {t("community:parentNetwork.comingUp.lead")}
           </Reveal>
           <div className={styles.meetups}>
             {MEETUPS.map((meetup, index) => (
@@ -75,7 +86,9 @@ export function ParentNetwork() {
                   <div className={styles.meetupTitle}>{meetup.title}</div>
                   <div className={styles.meetupMeta}>{meetup.meta}</div>
                 </div>
-                <span className={styles.meetupTag}>{meetup.tag}</span>
+                <span className={styles.meetupTag}>
+                  {t(`community:${meetup.tagKey}`)}
+                </span>
               </Reveal>
             ))}
           </div>
@@ -87,7 +100,7 @@ export function ParentNetwork() {
                 to={resource.to}
                 className={styles.resLink}
               >
-                {resource.title}
+                {t(`community:${resource.titleKey}`)}
               </Link>
             ))}
           </Reveal>

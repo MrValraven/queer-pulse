@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
 import { ON_FORMS, RIGHTS, VOICES } from "./schoolFormsGuide.data";
@@ -10,28 +12,40 @@ const badgeClass: Record<string, string> = {
   know: styles.badgeKnow!,
   practical: styles.badgeKnow!,
 };
-const badgeLabel: Record<string, string> = {
-  protected: "Protected right",
-  know: "Know this",
-  practical: "Practical",
+const badgeLabelKey: Record<string, string> = {
+  protected: "resources:schoolFormsGuide.badge.protected",
+  know: "resources:schoolFormsGuide.badge.know",
+  practical: "resources:schoolFormsGuide.badge.practical",
 };
 
 export function SchoolFormsGuidePage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Queer Parents"
+        eyebrow={t("resources:schoolFormsGuide.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"
         title={
-          <>
-            Two parents, <em>one form.</em>
-          </>
+          <Translation
+            i18nKey="resources:schoolFormsGuide.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="School intake forms, navigated: what to expect on the fields, how to ask for both your names everywhere, and your rights when a form hasn't caught up with your family."
+        lead={t("resources:schoolFormsGuide.hero.lead")}
         anchors={[
-          { label: "On the forms", href: "#forms" },
-          { label: "Your rights", href: "#rights" },
-          { label: "What others did", href: "#voices" },
+          {
+            label: t("resources:schoolFormsGuide.hero.anchor.forms"),
+            href: "#forms",
+          },
+          {
+            label: t("resources:schoolFormsGuide.hero.anchor.rights"),
+            href: "#rights",
+          },
+          {
+            label: t("resources:schoolFormsGuide.hero.anchor.voices"),
+            href: "#voices",
+          },
         ]}
       />
 
@@ -41,18 +55,21 @@ export function SchoolFormsGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            On the <em>forms</em>
+            <Translation
+              i18nKey="resources:schoolFormsGuide.forms.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Three moves that handle most of it.
+            {t("resources:schoolFormsGuide.forms.lead")}
           </Reveal>
           <div className={styles.stepList}>
             {ON_FORMS.map((s) => (
               <Reveal key={s.n} className={styles.step}>
                 <div className={styles.stepN}>{s.n}</div>
                 <div>
-                  <div className={styles.stepTitle}>{s.title}</div>
-                  <div className={styles.stepBody}>{s.body}</div>
+                  <div className={styles.stepTitle}>{t(s.titleKey)}</div>
+                  <div className={styles.stepBody}>{t(s.bodyKey)}</div>
                 </div>
               </Reveal>
             ))}
@@ -66,20 +83,26 @@ export function SchoolFormsGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Your <em>rights</em>
+            <Translation
+              i18nKey="resources:schoolFormsGuide.rights.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Plain-language summary. For the full legal picture, the legal aid
-            page goes deeper.
+            {t("resources:schoolFormsGuide.rights.lead")}
           </Reveal>
           <div className={styles.grid}>
             {RIGHTS.map((r, i) => (
-              <Reveal key={r.title} className={styles.rightCard} delay={i * 55}>
+              <Reveal
+                key={r.titleKey}
+                className={styles.rightCard}
+                delay={i * 55}
+              >
                 <span className={`${styles.badge} ${badgeClass[r.badge]}`}>
-                  {badgeLabel[r.badge]}
+                  {t(badgeLabelKey[r.badge]!)}
                 </span>
-                <div className={styles.rightTitle}>{r.title}</div>
-                <div className={styles.rightBody}>{r.body}</div>
+                <div className={styles.rightTitle}>{t(r.titleKey)}</div>
+                <div className={styles.rightBody}>{t(r.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -92,7 +115,10 @@ export function SchoolFormsGuidePage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            What others <em>did</em>
+            <Translation
+              i18nKey="resources:schoolFormsGuide.voices.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div>
             {VOICES.map((v) => (
@@ -112,17 +138,18 @@ export function SchoolFormsGuidePage() {
 
       <Outro
         title={
-          <>
-            You don't have to <em>explain your family.</em>
-          </>
+          <Translation
+            i18nKey="resources:schoolFormsGuide.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Know your rights, then lean on the network. The legal aid page has the templates."
+        sub={t("resources:schoolFormsGuide.outro.sub")}
       >
         <Button to={routes.legal} variant="primary" size="lg">
-          Read the legal guide
+          {t("resources:schoolFormsGuide.outro.legalCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          Ask the parents forum
+          {t("resources:schoolFormsGuide.outro.forumCta")}
         </Button>
       </Outro>
     </PageShell>

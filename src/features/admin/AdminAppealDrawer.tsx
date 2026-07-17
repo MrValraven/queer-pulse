@@ -28,11 +28,14 @@ export function AdminAppealDrawer({
 
   const handleRecord = () => {
     if (!decision) {
-      showToast("Choose uphold or overturn", "error");
+      showToast(t("admin:moderation.appealDrawer.chooseToast"), "error");
       return;
     }
     if (!reason.trim()) {
-      showToast("A reason is required — the member will read it", "error");
+      showToast(
+        t("admin:moderation.appealDrawer.reasonRequiredToast"),
+        "error",
+      );
       return;
     }
     onResolve(appeal.id, decision, reason.trim());
@@ -41,7 +44,9 @@ export function AdminAppealDrawer({
 
   return (
     <AdminDrawer
-      label={`Appeal — ${appeal.appealBy}`}
+      label={t("admin:moderation.appealDrawer.label", {
+        name: appeal.appealBy,
+      })}
       onClose={onClose}
       head={
         <>
@@ -75,42 +80,52 @@ export function AdminAppealDrawer({
       foot={
         <div className={styles.dFoot}>
           <Button variant="ghost" onClick={onClose}>
-            Cancel
+            {t("admin:moderation.appealDrawer.cancelCta")}
           </Button>
           <Button variant="primary" onClick={handleRecord}>
-            Record decision
+            {t("admin:moderation.appealDrawer.recordCta")}
           </Button>
         </div>
       }
     >
       {/* Original decision */}
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>The original decision</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.appealDrawer.originalTitle")}
+        </h3>
         <div className={styles.appealOrig}>
           <div className={styles.appealOrigTop}>
             <AdminCat tone={appeal.original.cat}>
               {appeal.original.action}
             </AdminCat>
             <span className={styles.appealOrigBy}>
-              Decided by {appeal.original.by} · {appeal.original.when}
+              {t("admin:moderation.appealDrawer.decidedByLine", {
+                name: appeal.original.by,
+                when: appeal.original.when,
+              })}
             </span>
           </div>
           <p className={styles.appealOrigReason}>{appeal.original.reason}</p>
           <Link className={styles.appealOrigLink} to={routes.adminModeration}>
-            View the original report &amp; thread <FiArrowRight aria-hidden />
+            {t("admin:moderation.appealDrawer.viewOriginalCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       </section>
 
       {/* Member argument */}
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Their argument</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.appealDrawer.argumentTitle")}
+        </h3>
         <blockquote className={styles.appealArg}>{appeal.argument}</blockquote>
       </section>
 
       {/* Supporters */}
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Who&rsquo;s backing them</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.appealDrawer.supportersTitle")}
+        </h3>
         {appeal.supporters.length > 0 ? (
           <div className={styles.appealSupporters}>
             {appeal.supporters.map((s) => (
@@ -127,19 +142,20 @@ export function AdminAppealDrawer({
           </div>
         ) : (
           <p className={styles.appealNoSupport}>
-            No other members have weighed in. That&rsquo;s neither for nor
-            against — many appeals stand alone.
+            {t("admin:moderation.appealDrawer.noSupport")}
           </p>
         )}
       </section>
 
       {/* Decision */}
       <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>Your decision</h3>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.appealDrawer.decisionTitle")}
+        </h3>
         <div
           className={styles.appealDecision}
           role="radiogroup"
-          aria-label="Decision"
+          aria-label={t("admin:moderation.appealDrawer.decisionAriaLabel")}
         >
           <button
             type="button"
@@ -156,9 +172,11 @@ export function AdminAppealDrawer({
               <FiCheck />
             </span>
             <span className={styles.decTx}>
-              <span className={styles.decTitle}>Uphold</span>
+              <span className={styles.decTitle}>
+                {t("admin:moderation.appealDrawer.uphold")}
+              </span>
               <span className={styles.decSub}>
-                The original decision stands
+                {t("admin:moderation.appealDrawer.upholdSub")}
               </span>
             </span>
           </button>
@@ -177,26 +195,29 @@ export function AdminAppealDrawer({
               <FiRotateCcw />
             </span>
             <span className={styles.decTx}>
-              <span className={styles.decTitle}>Overturn</span>
+              <span className={styles.decTitle}>
+                {t("admin:moderation.appealDrawer.overturn")}
+              </span>
               <span className={styles.decSub}>
-                Lift it &amp; restore the member
+                {t("admin:moderation.appealDrawer.overturnSub")}
               </span>
             </span>
           </button>
         </div>
 
         <textarea
-          aria-label="Reason for your decision"
+          aria-label={t("admin:moderation.appealDrawer.reasonAriaLabel")}
           className={styles.dNote}
           rows={3}
-          placeholder="Explain your decision in your own words — the member will read this."
+          placeholder={t("admin:moderation.appealDrawer.reasonPlaceholder")}
           value={reason}
           onChange={(e) => setReason(e.target.value)}
         />
         <p className={styles.dTransparency}>
-          <FiInfo aria-hidden /> Appeals are logged like any decision. If you
-          overturn, {appeal.original.by} is told privately and kindly — not
-          blamed.
+          <FiInfo aria-hidden />{" "}
+          {t("admin:moderation.appealDrawer.transparency", {
+            name: appeal.original.by,
+          })}
         </p>
       </section>
     </AdminDrawer>

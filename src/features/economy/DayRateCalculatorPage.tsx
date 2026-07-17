@@ -3,6 +3,8 @@ import { ToolPage } from "./tools/ToolPage";
 import { DayRateResult } from "./DayRateResult";
 import { DAY_RATE_DEFAULTS } from "./dayRate.data";
 import { IVA_RATES } from "./tax.constants";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./DayRateCalculatorPage.module.css";
 
 /** Parse a controlled-input string to a non-negative number, NaN → fallback. */
@@ -12,6 +14,7 @@ const num = (s: string, fallback = 0) => {
 };
 
 export function DayRateCalculatorPage() {
+  const { t } = useTranslation();
   const [annual, setAnnual] = useState<string>(DAY_RATE_DEFAULTS.annual);
   const [days, setDays] = useState<string>(DAY_RATE_DEFAULTS.days);
   const [overhead, setOverhead] = useState<string>(DAY_RATE_DEFAULTS.overhead);
@@ -31,7 +34,9 @@ export function DayRateCalculatorPage() {
     <div className={styles.form}>
       <div className={styles.row}>
         <label className={styles.field}>
-          <span className={styles.label}>Target annual income (€)</span>
+          <span className={styles.label}>
+            {t("economy:dayRate.annualLabel")}
+          </span>
           <input
             className={styles.input}
             type="number"
@@ -42,7 +47,7 @@ export function DayRateCalculatorPage() {
           />
         </label>
         <label className={styles.field}>
-          <span className={styles.label}>Billable days per year</span>
+          <span className={styles.label}>{t("economy:dayRate.daysLabel")}</span>
           <input
             className={styles.input}
             type="number"
@@ -57,7 +62,7 @@ export function DayRateCalculatorPage() {
       <div className={styles.row}>
         <label className={styles.field}>
           <span className={styles.label}>
-            Overhead &amp; expenses (% of income)
+            {t("economy:dayRate.overheadLabel")}
           </span>
           <input
             className={styles.input}
@@ -70,7 +75,9 @@ export function DayRateCalculatorPage() {
           />
         </label>
         <label className={styles.field}>
-          <span className={styles.label}>Hours per billable day</span>
+          <span className={styles.label}>
+            {t("economy:dayRate.hoursLabel")}
+          </span>
           <input
             className={styles.input}
             type="number"
@@ -84,7 +91,7 @@ export function DayRateCalculatorPage() {
       </div>
 
       <label className={styles.field}>
-        <span className={styles.label}>IVA rate</span>
+        <span className={styles.label}>{t("economy:dayRate.ivaLabel")}</span>
         <select
           className={styles.select}
           value={iva}
@@ -92,7 +99,7 @@ export function DayRateCalculatorPage() {
         >
           {IVA_RATES.map((r) => (
             <option key={r.value} value={String(r.value)}>
-              {r.label}
+              {t(r.labelKey)}
             </option>
           ))}
         </select>
@@ -102,13 +109,14 @@ export function DayRateCalculatorPage() {
 
   return (
     <ToolPage
-      eyebrow="Freelance tools"
+      eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <>
-          Price your <em>day.</em>
-        </>
+        <Translation
+          i18nKey="economy:dayRate.title"
+          components={{ em: <em /> }}
+        />
       }
-      sub="Work back from the income you need to a day rate that actually sustains you — overhead, unpaid days, and IVA included."
+      sub={t("economy:dayRate.sub")}
       form={form}
       preview={<DayRateResult base={base} withIva={withIva} hourly={hourly} />}
     />

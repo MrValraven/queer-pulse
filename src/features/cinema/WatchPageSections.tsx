@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { films } from "./data";
 import {
   CONTENT_NOTES,
@@ -15,14 +17,24 @@ import { routes } from "../../app/routeMap";
 
 const nextUp = films.filter((f) => f.id !== "cascais").slice(0, 3);
 
+/** Maps FACTS's plain-English keys (data.ts tuple labels) to catalog keys —
+ * chrome field labels, resolved via t() in WatchSidePanel. */
+const FACTS_LABEL_KEYS: Record<string, string> = {
+  Director: "cinema:watch.facts.director",
+  Runtime: "cinema:watch.facts.runtime",
+  Year: "cinema:watch.facts.year",
+  Captions: "cinema:film.facts.captions",
+};
+
 export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.overlay}>
       <div
         className={styles.overlayCard}
         role="dialog"
         aria-modal="true"
-        aria-label="Content notes before watching"
+        aria-label={t("cinema:watch.overlay.ariaLabel")}
       >
         <div className={styles.overlayIcon}>
           <svg
@@ -38,11 +50,13 @@ export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
           </svg>
         </div>
         <div className={styles.overlayHead}>
-          Before you <em>watch</em>
+          <Translation
+            i18nKey="cinema:watch.overlay.heading"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.overlaySub}>
-          This film has 3 content notes. Take a moment — then decide when you're
-          ready.
+          {t("cinema:watch.overlay.sub", { count: CONTENT_NOTES.length })}
         </div>
         <div className={styles.overlayNotes}>
           {CONTENT_NOTES.map((n) => (
@@ -55,10 +69,10 @@ export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
         </div>
         <div className={styles.overlayActions}>
           <Button size="lg" onClick={onDismiss}>
-            I'm ready · play the film
+            {t("cinema:watch.overlay.readyCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.film}>
-            Go back to film page
+            {t("cinema:watch.overlay.backCta")}
           </Button>
         </div>
       </div>
@@ -93,6 +107,7 @@ export function WatchControls({
   onCcToggle: () => void;
   onAdToggle: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.controls}>
       <div className={styles.progress}>
@@ -157,11 +172,19 @@ export function WatchControls({
         >
           AD
         </span>
-        <select className={styles.ctrlLang} defaultValue="EN subs">
-          <option>PT subs</option>
-          <option>EN subs</option>
-          <option>ES subs</option>
-          <option>No subs</option>
+        <select className={styles.ctrlLang} defaultValue="en">
+          <option value="pt">
+            {t("cinema:watch.controls.subtitleLang.pt")}
+          </option>
+          <option value="en">
+            {t("cinema:watch.controls.subtitleLang.en")}
+          </option>
+          <option value="es">
+            {t("cinema:watch.controls.subtitleLang.es")}
+          </option>
+          <option value="none">
+            {t("cinema:watch.controls.subtitleLang.none")}
+          </option>
         </select>
       </div>
     </div>
@@ -180,7 +203,7 @@ interface ChatLine {
 const SEED_CHAT: ChatLine[] = LOBBY.map((m, i) => ({ id: `seed-${i}`, ...m }));
 
 export function WatchSidePanel() {
-  const [tab, setTab] = useState<WatchTab>("Film info");
+  const [tab, setTab] = useState<WatchTab>("film-info");
   const [messages, setMessages] = useState<ChatLine[]>(SEED_CHAT);
   const [draft, setDraft] = useState("");
 
@@ -201,24 +224,25 @@ export function WatchSidePanel() {
     setDraft("");
   }
 
+  const { t } = useTranslation();
   return (
     <aside className={styles.sidePanel}>
       <div className={styles.spTabs}>
-        {TABS.map((t) => (
+        {TABS.map((tabDef) => (
           <div
-            key={t}
-            className={[styles.spTab, tab === t && styles.spTabActive]
+            key={tabDef.id}
+            className={[styles.spTab, tab === tabDef.id && styles.spTabActive]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setTab(t)}
+            onClick={() => setTab(tabDef.id)}
           >
-            {t}
-            {t === "Live Q&A" && <span className={styles.spDot} />}
+            {t(tabDef.labelKey)}
+            {tabDef.id === "live-qna" && <span className={styles.spDot} />}
           </div>
         ))}
       </div>
 
-      {tab === "Film info" && (
+      {tab === "film-info" && (
         <div className={styles.spBody}>
           <div className={styles.spTitle}>
             The light <em>between</em> rooms
@@ -234,7 +258,7 @@ export function WatchSidePanel() {
           <div className={styles.spFacts}>
             {FACTS.map(([k, v]) => (
               <div key={k} className={styles.spFact}>
-                <span className="k">{k}</span>
+                <span className="k">{t(FACTS_LABEL_KEYS[k] ?? k)}</span>
                 <span className="v">{v}</span>
               </div>
             ))}
@@ -242,7 +266,7 @@ export function WatchSidePanel() {
         </div>
       )}
 
-      {(tab === "Lobby" || tab === "Live Q&A") && (
+      {(tab === "lobby" || tab === "live-qna") && (
         <>
           <div className={styles.spBody}>
             {messages.map((m) => (
@@ -267,9 +291,11 @@ export function WatchSidePanel() {
                 }
               }}
               placeholder={
-                tab === "Live Q&A"
-                  ? "Ask Maria a question…"
-                  : "Say something to the lobby…"
+                tab === "live-qna"
+                  ? t("cinema:watch.sidePanel.qnaPlaceholder", {
+                      name: "Maria",
+                    })
+                  : t("cinema:watch.sidePanel.lobbyPlaceholder")
               }
             />
             <Button
@@ -277,7 +303,7 @@ export function WatchSidePanel() {
               onClick={send}
               disabled={!draft.trim()}
             >
-              Send
+              {t("cinema:watch.sidePanel.sendCta")}
             </Button>
           </div>
         </>
@@ -287,12 +313,16 @@ export function WatchSidePanel() {
 }
 
 export function WatchBelow() {
+  const { t } = useTranslation();
   return (
     <section className={styles.below}>
       <div className={`wrap ${styles.belowGrid}`}>
         <div>
           <h2>
-            Next <em>up</em>
+            <Translation
+              i18nKey="cinema:watch.below.nextUpTitle"
+              components={{ em: <em /> }}
+            />
           </h2>
           <div className={styles.nextGrid}>
             {nextUp.map((film) => (
@@ -321,7 +351,7 @@ export function WatchBelow() {
 
         <div className={styles.split}>
           <div className={styles.splitHead}>
-            Your watch · where the money goes
+            {t("cinema:watch.below.splitHeading")}
           </div>
           <div className={styles.splitBar}>
             <div className={`${styles.splitSeg} ${styles.fm}`} />
@@ -333,15 +363,15 @@ export function WatchBelow() {
               <span className="v">
                 <em>80%</em>
               </span>
-              Filmmaker
+              {t("cinema:watch.below.splitLegend.filmmaker")}
             </div>
             <div>
               <span className="v">12%</span>
-              Payments
+              {t("cinema:watch.below.splitLegend.payments")}
             </div>
             <div>
               <span className="v">8%</span>
-              Hosting
+              {t("cinema:watch.below.splitLegend.hosting")}
             </div>
           </div>
         </div>

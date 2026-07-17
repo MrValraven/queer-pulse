@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { getNotifications } from "./notifications.api";
 import { notificationDtoToView } from "./notifications.adapters";
-import { notifications as mockNotifications } from "../notificationsList.data";
+import { buildNotifications } from "../notificationsList.data";
 import type { Notification } from "../notifications.types";
 
 /**
@@ -19,16 +20,16 @@ import type { Notification } from "../notifications.types";
 export function useNotifications(unreadOnly = false) {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
+  const fmt = useFormat();
   return useQuery<Notification[]>({
     queryKey: ["notifications", demoMode, unreadOnly, language],
     queryFn: async () => {
       if (demoMode) {
-        return unreadOnly
-          ? mockNotifications.filter((n) => n.unread)
-          : mockNotifications;
+        const list = buildNotifications(t, fmt);
+        return unreadOnly ? list.filter((n) => n.unread) : list;
       }
       const res = await getNotifications(unreadOnly);
-      return res.map((dto) => notificationDtoToView(dto, t));
+      return res.map((dto) => notificationDtoToView(dto, t, fmt));
     },
   });
 }

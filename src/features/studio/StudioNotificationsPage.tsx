@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   NOTIFICATIONS,
   FILTERS,
@@ -11,6 +13,7 @@ import {
 import s from "./StudioNotificationsPage.module.css";
 
 function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
+  const { t } = useTranslation();
   const { icon } = item;
   return (
     <Link
@@ -51,7 +54,7 @@ function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
                 }
               }}
             >
-              {item.action.label}
+              {t(item.action.labelKey)}
             </span>
           </div>
         )}
@@ -62,6 +65,7 @@ function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
 }
 
 export function StudioNotificationsPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [filter, setFilter] = useState<Filter>("all");
   const [readAll, setReadAll] = useState(false);
@@ -94,17 +98,18 @@ export function StudioNotificationsPage() {
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.pageH}>
-          <div className={s.eb}>
-            Your room · what happened while you were out
-          </div>
+          <div className={s.eb}>{t("studio:notifications.eyebrow")}</div>
           <h1>
-            The room's been <em>busy</em>.
+            <Translation
+              i18nKey="studio:notifications.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>
-            Tip replies from artists, new releases from people you follow, live
-            rooms about to open.{" "}
-            <em>Only the things you asked to hear about</em> — tune it in
-            Settings.
+            <Translation
+              i18nKey="studio:notifications.dek"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
@@ -118,7 +123,7 @@ export function StudioNotificationsPage() {
                 onClick={() => setFilter(f.key)}
                 aria-pressed={filter === f.key}
               >
-                {f.label} {counts[f.key]}
+                {t(f.labelKey)} {counts[f.key]}
               </button>
             ))}
             <button
@@ -126,25 +131,38 @@ export function StudioNotificationsPage() {
               className={s.ntRead}
               onClick={() => {
                 setReadAll(true);
-                showToast("All caught up", "success");
+                showToast(
+                  t("studio:notifications.markAllReadToast"),
+                  "success",
+                );
               }}
             >
-              Mark all read
+              {t("studio:notifications.markAllReadCta")}
             </button>
           </div>
 
           {visible.length === 0 ? (
             <div className={s.empty}>
-              Nothing of <em>that kind</em> right now. When it happens, it'll
-              land here. Quiet is allowed.
+              <Translation
+                i18nKey="studio:notifications.empty"
+                components={{ em: <em /> }}
+              />
             </div>
           ) : grouped ? (
             <>
-              {today.length > 0 && <div className={s.ntDay}>Today</div>}
+              {today.length > 0 && (
+                <div className={s.ntDay}>
+                  {t("studio:notifications.day.today")}
+                </div>
+              )}
               {today.map((n) => (
                 <NotifRow key={n.id} item={n} unread={isUnread(n)} />
               ))}
-              {week.length > 0 && <div className={s.ntDay}>This week</div>}
+              {week.length > 0 && (
+                <div className={s.ntDay}>
+                  {t("studio:notifications.day.week")}
+                </div>
+              )}
               {week.map((n) => (
                 <NotifRow key={n.id} item={n} unread={isUnread(n)} />
               ))}

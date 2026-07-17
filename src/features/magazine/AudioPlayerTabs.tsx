@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ARTICLE, CHAPTERS, TRANSCRIPT } from "./audioPlayer.data";
 import { TranscriptDownloadModal } from "./AudioPlayerModals";
 import type { AudioPlayer } from "./useAudioPlayer";
@@ -48,6 +49,7 @@ export function NotesTab() {
 }
 
 export function ChaptersTab({ player }: { player: AudioPlayer }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.chapters}>
       {CHAPTERS.map((c, i) => {
@@ -64,7 +66,9 @@ export function ChaptersTab({ player }: { player: AudioPlayer }) {
             <div className={styles.chTime}>{c.time}</div>
             <div className={styles.chTitle}>{c.title}</div>
             {current ? (
-              <div className={styles.chNow}>Now</div>
+              <div className={styles.chNow}>
+                {t("magazine:audio.tabs.nowPlaying")}
+              </div>
             ) : (
               <div className={styles.chArrow}>→</div>
             )}
@@ -76,6 +80,7 @@ export function ChaptersTab({ player }: { player: AudioPlayer }) {
 }
 
 export function TranscriptTab({ player }: { player: AudioPlayer }) {
+  const { t } = useTranslation();
   const [autoScroll, setAutoScroll] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
   const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -107,7 +112,10 @@ export function TranscriptTab({ player }: { player: AudioPlayer }) {
             <circle cx="11" cy="11" r="7" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <input type="text" placeholder="Search transcript" />
+          <input
+            type="text"
+            placeholder={t("magazine:audio.tabs.searchPlaceholder")}
+          />
         </div>
         <button
           type="button"
@@ -121,7 +129,9 @@ export function TranscriptTab({ player }: { player: AudioPlayer }) {
             <line x1="12" y1="5" x2="12" y2="19" />
             <polyline points="19 12 12 19 5 12" />
           </svg>
-          Auto-scroll{autoScroll ? " · on" : ""}
+          {autoScroll
+            ? t("magazine:audio.tabs.autoScrollOn")
+            : t("magazine:audio.tabs.autoScroll")}
         </button>
         <button
           type="button"
@@ -133,7 +143,7 @@ export function TranscriptTab({ player }: { player: AudioPlayer }) {
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
-          Download
+          {t("magazine:audio.tabs.downloadCta")}
         </button>
       </div>
       <div className={styles.transcript}>

@@ -1,37 +1,48 @@
+import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { heroStats } from "./openCalls.data";
 import styles from "./CinemaOpenCalls.module.css";
 
 export function CinemaOpenCallsHero() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
         <div>
           <div className={styles.heroEb}>
-            <span className={styles.live} aria-hidden />4 calls open now
+            <span className={styles.live} aria-hidden />
+            {t("cinema:openCallsStrip.eyebrow", { count: 4 })}
           </div>
           <h1 className={styles.heroTitle}>
-            Make the <em>next</em> one.
+            <Translation
+              i18nKey="cinema:openCallsStrip.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.heroSub}>
-            Commissions, residencies, and mentorships — funded by sustainers,
-            paid by the co-op, distributed through the cinema.{" "}
-            <em>Queer filmmakers only. Anyone can apply.</em>
+            <Translation
+              i18nKey="cinema:openCalls.hero.sub"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <aside className={styles.sidebar}>
           <div className={styles.sidebarHead}>
             <span className={styles.live} aria-hidden />
-            Season 3 · spring/summer 2026
+            {t("cinema:openCalls.hero.seasonLabel")}
           </div>
           {heroStats.map((row) => (
-            <div key={row.k} className={styles.sidebarRow}>
-              <span className="k">{row.k}</span>
+            <div key={row.labelKey} className={styles.sidebarRow}>
+              <span className="k">{t(row.labelKey)}</span>
               <span className="v">{row.v}</span>
             </div>
           ))}
           <p className={styles.sidebarNote}>
-            Funded by sustainers' subscriptions. Pool grows each month — every
-            new sustainer adds ~€1.40 to the next season's fund.
+            {t("cinema:openCalls.hero.sidebarNote", {
+              amount: fmt.currency(1.4),
+            })}
           </p>
         </aside>
       </div>

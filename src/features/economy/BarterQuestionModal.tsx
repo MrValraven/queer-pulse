@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
 import styles from "./ApplicationModals.module.css";
+
+const MIN_QUESTION_LENGTH = 10;
 
 export function BarterQuestionModal({
   name,
@@ -12,53 +16,65 @@ export function BarterQuestionModal({
   firstName: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [question, setQuestion] = useState("");
   const { sending, done, submit } = useSubmitFlow();
-  const valid = question.trim().length >= 10;
+  const valid = question.trim().length >= MIN_QUESTION_LENGTH;
+  const remaining = MIN_QUESTION_LENGTH - question.trim().length;
 
   return (
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title="Question"
-          em="sent."
+          title={t("economy:barterQuestion.success.title")}
+          em={t("economy:barterQuestion.success.em")}
           onClose={onClose}
-          closeLabel="Done"
+          closeLabel={t("economy:barterQuestion.success.closeLabel")}
         >
-          Your question is on its way to <strong>{name}</strong>. No swap is
-          agreed until you both say yes — this is just a chat to see if it could
-          work. You'll get a notification here when they reply.
+          <Translation
+            i18nKey="economy:barterQuestion.success.body"
+            values={{ name }}
+            components={{ strong: <strong /> }}
+          />
         </SuccessPanel>
       ) : (
         <>
-          <div className={styles.eyebrow}>Before you propose</div>
+          <div className={styles.eyebrow}>
+            {t("economy:barterQuestion.eyebrow")}
+          </div>
           <h2 className={styles.title}>
-            Ask <em>{firstName}</em> a question.
+            <Translation
+              i18nKey="economy:barterQuestion.title"
+              values={{ firstName }}
+              components={{ em: <em /> }}
+            />
           </h2>
-          <p className={styles.sub}>
-            Not ready to propose a swap yet? Ask what you need to know first —
-            timing, what they're after, how it'd work. Friendly and
-            low-pressure.
-          </p>
+          <p className={styles.sub}>{t("economy:barterQuestion.sub")}</p>
 
           <div className={styles.field}>
-            <label htmlFor="bq-msg">Your question *</label>
+            <label htmlFor="bq-msg">
+              {t("economy:barterQuestion.fieldLabel")}
+            </label>
             <textarea
               id="bq-msg"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder={`Hi ${firstName} — quick question before I propose a swap…`}
+              placeholder={t("economy:barterQuestion.placeholder", {
+                firstName,
+              })}
             />
           </div>
           <p className={styles.note}>
-            {question.trim().length < 10
-              ? `${10 - question.trim().length} more characters to send.`
-              : "Keep it on QueerPulse until you both agree to take it further."}
+            {remaining > 0
+              ? t("economy:barterQuestion.charsRemaining", {
+                  count: remaining,
+                })
+              : t("economy:barterQuestion.keepOnPlatform")}
           </p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
-              Cancel
+              {t("economy:barterQuestion.cancel")}
             </button>
             <Button
               variant="primary"
@@ -66,7 +82,11 @@ export function BarterQuestionModal({
               disabled={!valid || sending}
               onClick={() => valid && submit()}
             >
-              {sending ? <Sending label="Sending…" /> : "Send question"}
+              {sending ? (
+                <Sending label={t("economy:barterQuestion.sendingLabel")} />
+              ) : (
+                t("economy:barterQuestion.sendCta")
+              )}
             </Button>
           </div>
         </>

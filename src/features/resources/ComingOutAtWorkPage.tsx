@@ -1,5 +1,7 @@
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ResourceHero } from "./ResourceHero";
 import {
@@ -12,22 +14,37 @@ import {
 import styles from "./resources.module.css";
 
 export function ComingOutAtWorkPage() {
+  const { t } = useTranslation();
+
   return (
     <PageShell>
       <ResourceHero
-        eyebrow="Coming Out · At Work"
+        eyebrow={t("resources:comingOutAtWork.hero.eyebrow")}
         eyebrowDotColor="var(--violet)"
         title={
-          <>
-            Coming out <em>at work.</em>
-          </>
+          <Translation
+            i18nKey="resources:comingOutAtWork.hero.title"
+            components={{ em: <em /> }}
+          />
         }
-        lead="There's no single right way and no deadline. This is a practical guide to reading your workplace, having the conversation on your terms, and knowing your rights if it goes badly."
+        lead={t("resources:comingOutAtWork.hero.lead")}
         anchors={[
-          { label: "Is there a right time?", href: "#timing" },
-          { label: "Reading your workplace", href: "#signals" },
-          { label: "The conversation", href: "#scripts" },
-          { label: "If it goes badly", href: "#bad" },
+          {
+            label: t("resources:comingOutAtWork.hero.anchor.timing"),
+            href: "#timing",
+          },
+          {
+            label: t("resources:comingOutAtWork.hero.anchor.signals"),
+            href: "#signals",
+          },
+          {
+            label: t("resources:comingOutAtWork.hero.anchor.scripts"),
+            href: "#scripts",
+          },
+          {
+            label: t("resources:comingOutAtWork.hero.anchor.bad"),
+            href: "#bad",
+          },
         ]}
       />
 
@@ -37,18 +54,25 @@ export function ComingOutAtWorkPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Is there a <em>right time?</em>
+            <Translation
+              i18nKey="resources:comingOutAtWork.timing.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Short answer: only yours.
+            {t("resources:comingOutAtWork.timing.lead")}
           </Reveal>
           <div className={styles.grid}>
-            {TIMING.map((t, i) => (
-              <Reveal key={t.title} className={styles.card} delay={i * 55}>
+            {TIMING.map((item, i) => (
+              <Reveal
+                key={item.titleKey}
+                className={styles.card}
+                delay={i * 55}
+              >
                 <div className={styles.cardName} style={{ fontSize: 19 }}>
-                  {t.title}
+                  {t(item.titleKey)}
                 </div>
-                <div className={styles.cardSpec}>{t.body}</div>
+                <div className={styles.cardSpec}>{t(item.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -61,21 +85,29 @@ export function ComingOutAtWorkPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Reading your <em>workplace</em>
+            <Translation
+              i18nKey="resources:comingOutAtWork.signals.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            None of these is decisive on its own — but together they tell you a
-            lot.
+            {t("resources:comingOutAtWork.signals.lead")}
           </Reveal>
           <div className={styles.grid}>
             {SIGNALS.map((s, i) => (
-              <Reveal key={s.text} className={styles.rightCard} delay={i * 45}>
+              <Reveal
+                key={s.textKey}
+                className={styles.rightCard}
+                delay={i * 45}
+              >
                 <span
                   className={`${styles.badge} ${s.badge === "good" ? styles.badgeProtected : styles.badgeKnow}`}
                 >
-                  {s.badge === "good" ? "Green flag" : "Caution"}
+                  {s.badge === "good"
+                    ? t("resources:comingOutAtWork.signals.goodBadge")
+                    : t("resources:comingOutAtWork.signals.cautionBadge")}
                 </span>
-                <div className={styles.rightBody}>{s.text}</div>
+                <div className={styles.rightBody}>{t(s.textKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -88,17 +120,20 @@ export function ComingOutAtWorkPage() {
       >
         <div className="wrap">
           <Reveal as="h2">
-            Having the <em>conversation</em>
+            <Translation
+              i18nKey="resources:comingOutAtWork.scripts.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <Reveal as="p" className={styles.leadP}>
-            Words you can borrow. Adjust until they sound like you.
+            {t("resources:comingOutAtWork.scripts.lead")}
           </Reveal>
           <div>
             {SCRIPTS.map((s) => (
-              <Reveal key={s.context} className={styles.qaItem}>
-                <div className={styles.qaQ}>{s.context}</div>
+              <Reveal key={s.contextKey} className={styles.qaItem}>
+                <div className={styles.qaQ}>{t(s.contextKey)}</div>
                 <div className={styles.qaA} style={{ fontStyle: "italic" }}>
-                  {s.line}
+                  {t(s.lineKey)}
                 </div>
               </Reveal>
             ))}
@@ -109,15 +144,18 @@ export function ComingOutAtWorkPage() {
       <section className={`${styles.section} ${styles.sectionCream}`} id="bad">
         <div className="wrap">
           <Reveal as="h2">
-            If it goes <em>badly</em>
+            <Translation
+              i18nKey="resources:comingOutAtWork.bad.title"
+              components={{ em: <em /> }}
+            />
           </Reveal>
           <div className={styles.grid}>
             {IF_BAD.map((b, i) => (
-              <Reveal key={b.title} className={styles.card} delay={i * 55}>
+              <Reveal key={b.titleKey} className={styles.card} delay={i * 55}>
                 <div className={styles.cardName} style={{ fontSize: 19 }}>
-                  {b.title}
+                  {t(b.titleKey)}
                 </div>
-                <div className={styles.cardSpec}>{b.body}</div>
+                <div className={styles.cardSpec}>{t(b.bodyKey)}</div>
               </Reveal>
             ))}
           </div>
@@ -139,17 +177,18 @@ export function ComingOutAtWorkPage() {
 
       <Outro
         title={
-          <>
-            Your timeline is <em>yours.</em>
-          </>
+          <Translation
+            i18nKey="resources:comingOutAtWork.outro.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Know your rights before you need them, and lean on the people who've done it."
+        sub={t("resources:comingOutAtWork.outro.sub")}
       >
         <Button to={routes.legal} variant="primary" size="lg">
-          Know your workplace rights
+          {t("resources:comingOutAtWork.outro.rightsCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          Talk it through
+          {t("resources:comingOutAtWork.outro.talkCta")}
         </Button>
       </Outro>
     </PageShell>

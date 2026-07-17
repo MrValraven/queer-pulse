@@ -1,6 +1,8 @@
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad, useCountUp } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   GroundworkSection,
   HowSection,
@@ -10,6 +12,7 @@ import { CitiesLiveGrid } from "./CitiesLiveCards";
 import styles from "./CitiesPage.module.css";
 
 export function CitiesPage() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
 
@@ -41,17 +44,19 @@ export function CitiesPage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>
-            Cities · network footprint · selector
+            {t("marketing:cities.hero.eyebrow")}
           </div>
           <h1 className={styles.h1}>
-            One city at a <em>time.</em>
+            <Translation
+              i18nKey="marketing:cities.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
-            QueerPulse is rooted in Lisbon. We will only open in a new city when
-            there is <b>at least one moderator in-country</b>, a partner
-            organisation aligned, and a clear local need.{" "}
-            <em>That makes expansion slow on purpose.</em> Below: where we are
-            now, where we're building, and how you can pull us toward your city.
+            <Translation
+              i18nKey="marketing:cities.hero.dek"
+              components={{ b: <b />, em: <em /> }}
+            />
           </p>
           <div className={styles.current}>
             <div className={styles.currentIc}>
@@ -61,20 +66,17 @@ export function CitiesPage() {
               </svg>
             </div>
             <div className={styles.currentText}>
-              <b>You're browsing as</b>
+              <b>{t("marketing:cities.hero.browsingAs")}</b>
               <span>Lisbon, Portugal</span>
             </div>
             <button
               type="button"
               className={styles.currentBtn}
               onClick={() =>
-                showToast(
-                  "Detected from IP. You can switch from any city card below.",
-                  "info",
-                )
+                showToast(t("marketing:cities.hero.changeToast"), "info")
               }
             >
-              Change
+              {t("marketing:cities.hero.changeCta")}
             </button>
           </div>
         </div>
@@ -84,10 +86,13 @@ export function CitiesPage() {
         <section>
           <div className={styles.secH}>
             <h2>
-              Live · <em>fully operational</em>
+              <Translation
+                i18nKey="marketing:cities.live.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
             <span className={styles.meta}>
-              Active community, moderators, partner orgs
+              {t("marketing:cities.live.meta")}
             </span>
           </div>
           <CitiesLiveGrid

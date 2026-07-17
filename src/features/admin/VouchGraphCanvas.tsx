@@ -1,5 +1,6 @@
 import { useRef, type ReactNode } from "react";
 import { FiRotateCcw } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useVouchCanvas } from "./useVouchCanvas";
 import { VouchGraphNode } from "./VouchGraphNode";
 import { VouchGraphTooltip } from "./VouchGraphTooltip";
@@ -30,13 +31,11 @@ const SCENE_TONE: Record<SceneKey, VouchTone> = {
   ring: "danger",
 };
 
-const HINTS: Record<VouchMode, string> = {
-  plain:
-    "Drag to move · scroll to zoom · double-click to walk · shift-click two for a path",
-  clusters:
-    "Scenes view: nodes coloured by the community each member belongs to.",
-  safety:
-    "Safety view: rings, isolation and reports are surfaced. Red clusters are closed vouch loops.",
+/** `admin:vouchGraph.canvas.hint.*` catalog keys, resolved with `t()`. */
+const HINT_KEYS: Record<VouchMode, string> = {
+  plain: "vouchGraph.canvas.hint.plain",
+  clusters: "vouchGraph.canvas.hint.clusters",
+  safety: "vouchGraph.canvas.hint.safety",
 };
 
 interface CanvasProps {
@@ -68,6 +67,7 @@ export function VouchGraphCanvas({
   onPickPath,
   children,
 }: CanvasProps) {
+  const { t } = useTranslation();
   const stageRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const viewportRef = useRef<SVGGElement>(null);
@@ -207,31 +207,35 @@ export function VouchGraphCanvas({
         <button
           type="button"
           onClick={() => c.zoomCenter(1.25)}
-          aria-label="Zoom in"
+          aria-label={t("admin:vouchGraph.canvas.zoomIn")}
         >
           +
         </button>
         <button
           type="button"
           onClick={() => c.zoomCenter(0.8)}
-          aria-label="Zoom out"
+          aria-label={t("admin:vouchGraph.canvas.zoomOut")}
         >
           −
         </button>
-        <button type="button" onClick={c.fit} aria-label="Fit to view">
+        <button
+          type="button"
+          onClick={c.fit}
+          aria-label={t("admin:vouchGraph.canvas.fitToView")}
+        >
           ⊡
         </button>
         <button
           type="button"
           onClick={c.reset}
           className={c.hasPins ? styles.zoomActive : undefined}
-          aria-label="Reset layout"
-          title="Reset layout"
+          aria-label={t("admin:vouchGraph.canvas.resetLayout")}
+          title={t("admin:vouchGraph.canvas.resetLayout")}
         >
           <FiRotateCcw aria-hidden />
         </button>
       </div>
-      <p className={styles.hint}>{HINTS[mode]}</p>
+      <p className={styles.hint}>{t(`admin:${HINT_KEYS[mode]}`)}</p>
     </div>
   );
 }

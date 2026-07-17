@@ -1,6 +1,10 @@
 import { FiAlertCircle } from "react-icons/fi";
+import { Translation } from "../../shared/i18n/Translation";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PostJobForm } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
+
+const TITLE_MAX = 80;
 
 export function PostJobStepDetails({
   form,
@@ -9,6 +13,7 @@ export function PostJobStepDetails({
   form: PostJobForm;
   showErrors: boolean;
 }) {
+  const { t } = useTranslation();
   const { state, patch } = form;
   const titleMissing = showErrors && !state.title.trim();
   const descMissing = showErrors && !state.description.trim();
@@ -16,13 +21,16 @@ export function PostJobStepDetails({
   return (
     <>
       <div className={styles.stepHead}>
-        <div className={styles.eyebrow}>Step 2 of 5</div>
+        <div className={styles.eyebrow}>
+          {t("economy:postJob.step2.eyebrow")}
+        </div>
         <h1 className={styles.stepTitle}>
-          The <em>details</em>
+          <Translation
+            i18nKey="economy:postJob.step2.title"
+            components={{ em: <em /> }}
+          />
         </h1>
-        <p className={styles.stepSub}>
-          A clear title and an honest description get far more useful responses.
-        </p>
+        <p className={styles.stepSub}>{t("economy:postJob.step2.sub")}</p>
       </div>
 
       <div className={styles.card}>
@@ -32,16 +40,20 @@ export function PostJobStepDetails({
             .join(" ")}
         >
           <div className={styles.label}>
-            Title <span className={styles.req}>*</span>
+            {t("economy:postJob.field.title")}{" "}
+            <span className={styles.req}>*</span>
             <span
               className={[
                 styles.counter,
-                state.title.length > 80 && styles.counterOver,
+                state.title.length > TITLE_MAX && styles.counterOver,
               ]
                 .filter(Boolean)
                 .join(" ")}
             >
-              {state.title.length}/80
+              {t("economy:postJob.step2.titleCounter", {
+                used: state.title.length,
+                max: TITLE_MAX,
+              })}
             </span>
           </div>
           <input
@@ -50,10 +62,11 @@ export function PostJobStepDetails({
             maxLength={90}
             value={state.title}
             onChange={(e) => patch({ title: e.target.value })}
-            placeholder='e.g. "Junior graphic designer, editorial focus"'
+            placeholder={t("economy:postJob.step2.titlePlaceholder")}
           />
           <div className={styles.error}>
-            <FiAlertCircle size={13} aria-hidden /> Give your listing a title.
+            <FiAlertCircle size={13} aria-hidden />{" "}
+            {t("economy:postJob.step2.titleError")}
           </div>
         </div>
 
@@ -63,30 +76,39 @@ export function PostJobStepDetails({
             .join(" ")}
         >
           <div className={styles.label}>
-            What you&apos;re looking for <span className={styles.req}>*</span>
+            {t("economy:postJob.step2.lookingForLabel")}{" "}
+            <span className={styles.req}>*</span>
             <span className={styles.counter}>
-              {state.description.length} chars
+              {t("economy:postJob.step2.charsCount", {
+                count: state.description.length,
+              })}
             </span>
           </div>
           <textarea
             className={styles.textarea}
             value={state.description}
             onChange={(e) => patch({ description: e.target.value })}
-            placeholder="Describe the work, who it's for, and what success looks like — write as you'd explain it to a member at an event."
+            placeholder={t("economy:postJob.step2.descriptionPlaceholder")}
           />
           <div className={styles.error}>
-            <FiAlertCircle size={13} aria-hidden /> Add a description.
+            <FiAlertCircle size={13} aria-hidden />{" "}
+            {t("economy:postJob.step2.descriptionError")}
           </div>
         </div>
       </div>
 
       <div className={styles.card}>
         <div className={styles.cardTitle}>
-          Timeline <span className={styles.muted}>· optional</span>
+          {t("economy:postJob.step2.timelineTitle")}{" "}
+          <span className={styles.muted}>
+            · {t("economy:postJob.field.optional")}
+          </span>
         </div>
         <div className={styles.fieldRow} style={{ marginTop: 12 }}>
           <div className={styles.field}>
-            <div className={styles.label}>Apply by</div>
+            <div className={styles.label}>
+              {t("economy:postJob.step2.applyBy")}
+            </div>
             <input
               className={styles.input}
               type="date"
@@ -95,13 +117,15 @@ export function PostJobStepDetails({
             />
           </div>
           <div className={styles.field}>
-            <div className={styles.label}>Start date</div>
+            <div className={styles.label}>
+              {t("economy:postJob.step2.startDate")}
+            </div>
             <input
               className={styles.input}
               type="text"
               value={state.startDate}
               onChange={(e) => patch({ startDate: e.target.value })}
-              placeholder="e.g. ASAP, June, flexible"
+              placeholder={t("economy:postJob.step2.startDatePlaceholder")}
             />
           </div>
         </div>

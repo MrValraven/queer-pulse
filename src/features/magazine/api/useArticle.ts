@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useFormat } from "../../../shared/i18n/format";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { articles, type Article } from "../data/articles";
 import {
   articleListItemToArticle,
@@ -20,11 +22,16 @@ export interface ArticleData {
  * /magazine/articles?tag=<firstTag> for the related rail (the same
  * ListArticlesQuery filter the backend already exposes), excluding the
  * current slug.
+ *
+ * i18n: `language` joins the query key because the adapters locale-format
+ * each article's `date` via `fmt` — switching language must re-derive it.
  */
 export function useArticle(id: string) {
   const { demoMode } = useDemoMode();
+  const fmt = useFormat();
+  const { language } = useTranslation();
   return useQuery<ArticleData>({
-    queryKey: ["magazine-article", demoMode, id],
+    queryKey: ["magazine-article", demoMode, language, id],
     queryFn: async () => {
       if (demoMode) {
         const article = articles[id] ?? null;
@@ -40,7 +47,7 @@ export function useArticle(id: string) {
       if (!dto) return { article: null, related: [] };
 
       const authorDetail = await getAuthor(dto.author.handle).catch(() => null);
-      const article = articleResponseToArticle(dto, authorDetail?.bio);
+      const article = articleResponseToArticle(dto, fmt, authorDetail?.bio);
 
       const tag = dto.tags[0];
       const relatedPage = tag
@@ -49,7 +56,7 @@ export function useArticle(id: string) {
       const related = (relatedPage?.items ?? [])
         .filter((item) => item.slug !== dto.slug)
         .slice(0, 3)
-        .map(articleListItemToArticle);
+        .map((dtoItem) => articleListItemToArticle(dtoItem, fmt));
 
       return { article, related };
     },

@@ -1,18 +1,26 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { CONTRIBUTION, STATUS } from "./membership.data";
+import { buildContribution, buildStatus } from "./membership.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import styles from "./MembershipPage.module.css";
 
 export function MembershipSidebar() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const contribution = useMemo(() => buildContribution(t, fmt), [t, fmt]);
+  const status = useMemo(() => buildStatus(t, fmt), [t, fmt]);
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sb}>
         <div className={styles.contribNum}>
-          <em>{CONTRIBUTION.total}</em>
+          <em>{contribution.total}</em>
         </div>
-        <div className={styles.contribLbl}>{CONTRIBUTION.label}</div>
-        <div className={styles.contribSince}>{CONTRIBUTION.since}</div>
-        {CONTRIBUTION.impacts.map((impact) => (
+        <div className={styles.contribLbl}>{contribution.label}</div>
+        <div className={styles.contribSince}>{contribution.since}</div>
+        {contribution.impacts.map((impact) => (
           <div key={impact} className={styles.impact}>
             <div className={styles.impactDot} />
             <span>{impact}</span>
@@ -23,13 +31,13 @@ export function MembershipSidebar() {
       <div className={styles.sb}>
         <div className={styles.statusPill}>
           <span className={styles.spillDot} />
-          Active member
+          {t("settings:membership.sidebar.activeMember")}
         </div>
-        <div className={styles.sbTierName}>{STATUS.tier}</div>
-        <div className={styles.nextRenewal}>{STATUS.renewal}</div>
+        <div className={styles.sbTierName}>{status.tier}</div>
+        <div className={styles.nextRenewal}>{status.renewal}</div>
         <div className={styles.sbDivider} />
         <Link to={routes.solidarity} className={styles.sbLink}>
-          About solidarity pricing →
+          {t("settings:membership.sidebar.solidarityLink")}
         </Link>
       </div>
     </aside>
