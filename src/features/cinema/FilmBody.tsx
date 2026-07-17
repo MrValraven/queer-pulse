@@ -110,7 +110,9 @@ export function FilmBody() {
                       {person.tags.map((tag) => (
                         <span
                           key={tag}
-                          className={tag === "member" ? styles.member : undefined}
+                          className={
+                            tag === "member" ? styles.member : undefined
+                          }
                         >
                           {tag === "member"
                             ? t("cinema:film.body.tag.member")

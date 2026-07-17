@@ -24,21 +24,37 @@ export function StudioAboutPage() {
         <AboutSection
           num={about.sectionNum.whatItIs}
           delay={60}
-          heading={<Translation i18nKey="studio:about.sec.whatItIs.heading" components={{ em: <em /> }} />}
+          heading={
+            <Translation
+              i18nKey="studio:about.sec.whatItIs.heading"
+              components={{ em: <em /> }}
+            />
+          }
         >
           <p>
-            <Translation i18nKey="studio:about.sec.whatItIs.p1" components={{ strong: <strong /> }} />
+            <Translation
+              i18nKey="studio:about.sec.whatItIs.p1"
+              components={{ strong: <strong /> }}
+            />
           </p>
           <p>{t("studio:about.sec.whatItIs.p2")}</p>
           <div className={s.pull}>
-            <Translation i18nKey="studio:about.sec.whatItIs.pull" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:about.sec.whatItIs.pull"
+              components={{ em: <em /> }}
+            />
           </div>
         </AboutSection>
 
         <AboutSection
           num={about.sectionNum.rate}
           delay={80}
-          heading={<Translation i18nKey="studio:about.sec.rate.heading" components={{ em: <em /> }} />}
+          heading={
+            <Translation
+              i18nKey="studio:about.sec.rate.heading"
+              components={{ em: <em /> }}
+            />
+          }
         >
           <p>
             <Translation
@@ -53,7 +69,12 @@ export function StudioAboutPage() {
         <AboutSection
           num={about.sectionNum.ceiling}
           delay={80}
-          heading={<Translation i18nKey="studio:about.sec.ceiling.heading" components={{ em: <em /> }} />}
+          heading={
+            <Translation
+              i18nKey="studio:about.sec.ceiling.heading"
+              components={{ em: <em /> }}
+            />
+          }
         >
           <p>{t("studio:about.sec.ceiling.p1")}</p>
           <Tiers />
@@ -62,7 +83,12 @@ export function StudioAboutPage() {
         <AboutSection
           num={about.sectionNum.governance}
           delay={80}
-          heading={<Translation i18nKey="studio:about.sec.governance.heading" components={{ em: <em /> }} />}
+          heading={
+            <Translation
+              i18nKey="studio:about.sec.governance.heading"
+              components={{ em: <em /> }}
+            />
+          }
         >
           <p>
             <Translation
@@ -71,14 +97,22 @@ export function StudioAboutPage() {
             />
           </p>
           <p>
-            <Translation i18nKey="studio:about.sec.governance.p2" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:about.sec.governance.p2"
+              components={{ em: <em /> }}
+            />
           </p>
         </AboutSection>
 
         <AboutSection
           num={about.sectionNum.hardQuestions}
           delay={80}
-          heading={<Translation i18nKey="studio:about.sec.hardQuestions.heading" components={{ em: <em /> }} />}
+          heading={
+            <Translation
+              i18nKey="studio:about.sec.hardQuestions.heading"
+              components={{ em: <em /> }}
+            />
+          }
         >
           <Skeptics />
         </AboutSection>

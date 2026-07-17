@@ -57,11 +57,17 @@ export function StudioTakedownModal({
         </h3>
         <div className={s.modalMeta}>{meta}</div>
         <p className={s.modalBody}>
-          <Translation i18nKey="studio:rights.modal.body" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:rights.modal.body"
+            components={{ em: <em /> }}
+          />
         </p>
         <div className={s.keep}>
           <p>
-            <Translation i18nKey="studio:rights.modal.keepEarned" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:rights.modal.keepEarned"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <div className={s.modalActions}>

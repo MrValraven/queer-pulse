@@ -64,15 +64,21 @@ export function IncubatorTab() {
         <div className={styles.incStats}>
           <div className={styles.incStat}>
             <div className={styles.n}>24</div>
-            <div className={styles.l}>{t("economy:incubator.stats.founders")}</div>
+            <div className={styles.l}>
+              {t("economy:incubator.stats.founders")}
+            </div>
           </div>
           <div className={styles.incStat}>
             <div className={styles.n}>18</div>
-            <div className={styles.l}>{t("economy:incubator.stats.mentors")}</div>
+            <div className={styles.l}>
+              {t("economy:incubator.stats.mentors")}
+            </div>
           </div>
           <div className={styles.incStat}>
             <div className={styles.n}>€2.4M</div>
-            <div className={styles.l}>{t("economy:incubator.stats.raised")}</div>
+            <div className={styles.l}>
+              {t("economy:incubator.stats.raised")}
+            </div>
           </div>
         </div>
       </div>
@@ -279,9 +285,15 @@ export function SalaryTab() {
       </div>
       <div className={styles.salTable}>
         <div className={styles.salHeader}>
-          <div className={styles.salHcell}>{t("economy:salary.table.role")}</div>
-          <div className={styles.salHcell}>{t("economy:salary.table.annual")}</div>
-          <div className={styles.salHcell}>{t("economy:salary.table.experience")}</div>
+          <div className={styles.salHcell}>
+            {t("economy:salary.table.role")}
+          </div>
+          <div className={styles.salHcell}>
+            {t("economy:salary.table.annual")}
+          </div>
+          <div className={styles.salHcell}>
+            {t("economy:salary.table.experience")}
+          </div>
           <div className={`${styles.salHcell} ${styles.salTypeCol}`}>
             {t("economy:salary.table.type")}
           </div>

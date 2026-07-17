@@ -48,9 +48,12 @@ export function TherapistProfileModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={t("resources:mentalHealth.therapistModal.profileAriaLabel", {
-          name: therapist.name,
-        })}
+        aria-label={t(
+          "resources:mentalHealth.therapistModal.profileAriaLabel",
+          {
+            name: therapist.name,
+          },
+        )}
       >
         <button
           type="button"

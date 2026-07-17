@@ -36,12 +36,36 @@ export interface Principle {
 }
 
 const PRINCIPLE_KEYS = [
-  { num: "01", titleKey: "cinema:about.principles.p1.title", bodyKey: "cinema:about.principles.p1.body" },
-  { num: "02", titleKey: "cinema:about.principles.p2.title", bodyKey: "cinema:about.principles.p2.body" },
-  { num: "03", titleKey: "cinema:about.principles.p3.title", bodyKey: "cinema:about.principles.p3.body" },
-  { num: "04", titleKey: "cinema:about.principles.p4.title", bodyKey: "cinema:about.principles.p4.body" },
-  { num: "05", titleKey: "cinema:about.principles.p5.title", bodyKey: "cinema:about.principles.p5.body" },
-  { num: "06", titleKey: "cinema:about.principles.p6.title", bodyKey: "cinema:about.principles.p6.body" },
+  {
+    num: "01",
+    titleKey: "cinema:about.principles.p1.title",
+    bodyKey: "cinema:about.principles.p1.body",
+  },
+  {
+    num: "02",
+    titleKey: "cinema:about.principles.p2.title",
+    bodyKey: "cinema:about.principles.p2.body",
+  },
+  {
+    num: "03",
+    titleKey: "cinema:about.principles.p3.title",
+    bodyKey: "cinema:about.principles.p3.body",
+  },
+  {
+    num: "04",
+    titleKey: "cinema:about.principles.p4.title",
+    bodyKey: "cinema:about.principles.p4.body",
+  },
+  {
+    num: "05",
+    titleKey: "cinema:about.principles.p5.title",
+    bodyKey: "cinema:about.principles.p5.body",
+  },
+  {
+    num: "06",
+    titleKey: "cinema:about.principles.p6.title",
+    bodyKey: "cinema:about.principles.p6.body",
+  },
 ];
 
 /**

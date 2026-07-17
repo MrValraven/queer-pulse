@@ -83,21 +83,38 @@ const MOOD_BY_ID: Record<string, string[]> = {
 };
 
 /** Country names shown in the sidebar, with the film code(s) they match. */
-export const COUNTRY_OPTIONS: { value: string; labelKey: string; codes: string[] }[] =
-  [
-    { value: "Portugal", labelKey: "cinema:browse.country.portugal", codes: ["PT"] },
-    { value: "Brazil", labelKey: "cinema:browse.country.brazil", codes: ["BR"] },
-    { value: "France", labelKey: "cinema:browse.country.france", codes: ["FR"] },
-    { value: "Japan", labelKey: "cinema:browse.country.japan", codes: ["JP"] },
-    { value: "UK", labelKey: "cinema:browse.country.uk", codes: ["UK"] },
-    { value: "Senegal", labelKey: "cinema:browse.country.senegal", codes: ["SN"] },
-    { value: "Egypt", labelKey: "cinema:browse.country.egypt", codes: ["EG"] },
-  ];
+export const COUNTRY_OPTIONS: {
+  value: string;
+  labelKey: string;
+  codes: string[];
+}[] = [
+  {
+    value: "Portugal",
+    labelKey: "cinema:browse.country.portugal",
+    codes: ["PT"],
+  },
+  { value: "Brazil", labelKey: "cinema:browse.country.brazil", codes: ["BR"] },
+  { value: "France", labelKey: "cinema:browse.country.france", codes: ["FR"] },
+  { value: "Japan", labelKey: "cinema:browse.country.japan", codes: ["JP"] },
+  { value: "UK", labelKey: "cinema:browse.country.uk", codes: ["UK"] },
+  {
+    value: "Senegal",
+    labelKey: "cinema:browse.country.senegal",
+    codes: ["SN"],
+  },
+  { value: "Egypt", labelKey: "cinema:browse.country.egypt", codes: ["EG"] },
+];
 export const COUNTRIES = COUNTRY_OPTIONS.map((c) => c.value);
 
 export const ACCESSIBILITY_OPTIONS: { value: string; labelKey: string }[] = [
-  { value: "PT subtitles", labelKey: "cinema:browse.accessibility.ptSubtitles" },
-  { value: "EN subtitles", labelKey: "cinema:browse.accessibility.enSubtitles" },
+  {
+    value: "PT subtitles",
+    labelKey: "cinema:browse.accessibility.ptSubtitles",
+  },
+  {
+    value: "EN subtitles",
+    labelKey: "cinema:browse.accessibility.enSubtitles",
+  },
   {
     value: "Audio description",
     labelKey: "cinema:browse.accessibility.audioDescription",

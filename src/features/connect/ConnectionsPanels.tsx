@@ -45,7 +45,10 @@ export function IncomingPanel({
           icon={<FiInbox />}
           title={t("connect:panels.requestsEmptyTitle")}
           description={t("connect:panels.incomingEmptyDescription")}
-          action={{ label: t("connect:allTab.findMembers"), to: routes.members }}
+          action={{
+            label: t("connect:allTab.findMembers"),
+            to: routes.members,
+          }}
         />
       )}
     </div>
@@ -76,7 +79,10 @@ export function SentPanel({
           icon={<FiSend />}
           title={t("connect:panels.requestsEmptyTitle")}
           description={t("connect:panels.sentEmptyDescription")}
-          action={{ label: t("connect:allTab.findMembers"), to: routes.members }}
+          action={{
+            label: t("connect:allTab.findMembers"),
+            to: routes.members,
+          }}
         />
       )}
     </div>

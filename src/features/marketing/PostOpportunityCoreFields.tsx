@@ -46,7 +46,10 @@ export function PostOpportunityCoreFields({
       </FormField>
 
       <div className={styles.row}>
-        <FormField label={t("marketing:postOpportunity.core.causeLabel")} required>
+        <FormField
+          label={t("marketing:postOpportunity.core.causeLabel")}
+          required
+        >
           <select
             value={state.cause}
             onChange={(e) => set("cause", e.target.value as Cause)}
@@ -63,8 +66,7 @@ export function PostOpportunityCoreFields({
           label={t("marketing:postOpportunity.core.commitLabel")}
           required
           helper={t(
-            COMMIT_OPTIONS.find((c) => c.value === state.commit)?.hintKey ??
-              "",
+            COMMIT_OPTIONS.find((c) => c.value === state.commit)?.hintKey ?? "",
           )}
         >
           <select

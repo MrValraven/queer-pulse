@@ -151,7 +151,8 @@ export const settings: Catalog = {
   "interests.life.ageLabel": "Your age range",
   "interests.life.ageNote": "(optional — never shown to other members)",
   "interests.reading.heading": "What do you like reading?",
-  "interests.reading.frequencyHeading": "How often do you want to hear from us?",
+  "interests.reading.frequencyHeading":
+    "How often do you want to hear from us?",
   "interests.content.heading": "Content settings",
   "interests.content.helper":
     "Turning these off never affects your community access — only your feed.",
@@ -171,21 +172,18 @@ export const settings: Catalog = {
   "interests.freq.weekly.title": "Weekly roundup",
   "interests.freq.weekly.desc": "A curated weekly summary of what matters",
   "interests.freq.important.title": "Only important",
-  "interests.freq.important.desc":
-    "Just notifications that need your action",
+  "interests.freq.important.desc": "Just notifications that need your action",
 
   // ── interests.data.ts — reading preferences (UI-only toggles, no
   // persisted value beyond local component state) ─────────────────────────
   "interests.readingPref.longform": "Long-form articles & essays",
   "interests.readingPref.memberStories": "Member stories & personal essays",
   "interests.readingPref.resourcesGuides": "Resources & guides",
-  "interests.readingPref.communityThreads":
-    "Community threads & discussions",
+  "interests.readingPref.communityThreads": "Community threads & discussions",
 
   // ── interests.data.ts — content settings (same: UI-only toggles) ────────
   "interests.contentSetting.dating": "Dating & relationship content",
-  "interests.contentSetting.mentalHealth":
-    "Mental health & wellbeing content",
+  "interests.contentSetting.mentalHealth": "Mental health & wellbeing content",
   "interests.contentSetting.sexualityIdentity":
     "Sexuality & identity exploration content",
 
@@ -223,8 +221,7 @@ export const settings: Catalog = {
   "notifications.messages.connectionRequest.desc":
     "When someone asks to connect with you",
   "notifications.messages.sayHello.title": '"Say hello" received',
-  "notifications.messages.sayHello.desc":
-    "When someone waves at your profile",
+  "notifications.messages.sayHello.desc": "When someone waves at your profile",
   "notifications.communities.newPost.title": "New post in my communities",
   "notifications.communities.newPost.desc":
     "Activity in communities you've joined",
@@ -328,8 +325,7 @@ export const settings: Catalog = {
   "visibility.open.desc":
     "Anyone in the network can see your profile and say hello",
   "visibility.network.title": "Network only",
-  "visibility.network.desc":
-    "Visible to people within two connections of you",
+  "visibility.network.desc": "Visible to people within two connections of you",
   "visibility.private.title": "Keep it quiet for now",
   "visibility.private.desc":
     "I'll reach out when I'm ready. Profile not visible in search.",
@@ -337,8 +333,7 @@ export const settings: Catalog = {
   "visibility.newArrivals.title": 'Show me in "New arrivals"',
   "visibility.newArrivals.desc":
     "Let the community know you've recently joined",
-  "visibility.suggestedConnections.title":
-    "Appear in suggested connections",
+  "visibility.suggestedConnections.title": "Appear in suggested connections",
   "visibility.suggestedConnections.desc":
     "Allow the platform to suggest you to members with shared interests",
   "visibility.activityStatus.title": "Show activity status",
@@ -350,8 +345,7 @@ export const settings: Catalog = {
   "account.sub": "Login and security preferences.",
   "account.section.account": "Account",
   "account.emailAddress.title": "Email address",
-  "account.emailAddress.desc":
-    "The address tied to your account and sign-in.",
+  "account.emailAddress.desc": "The address tied to your account and sign-in.",
   "account.section.security": "Security",
   "account.twoFactor.title": "Two-factor authentication",
   "account.twoFactor.desc":

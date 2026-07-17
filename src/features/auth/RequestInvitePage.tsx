@@ -21,7 +21,10 @@ export function RequestInvitePage() {
     <AuthLayout wide>
       <div className={styles.eyebrow}>{t("auth:requestInvite.eyebrow")}</div>
       <h1>
-        <Translation i18nKey="auth:requestInvite.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="auth:requestInvite.title"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.sub}>{t("auth:requestInvite.sub")}</p>
 

@@ -100,7 +100,10 @@ export function ThreadReplies({
           icon={<FiMessageSquare />}
           title={t("forum:replies.emptyTitle")}
           description={t("forum:replies.emptyDescription")}
-          action={{ label: t("forum:replies.emptyAction"), onClick: onFocusComposer }}
+          action={{
+            label: t("forum:replies.emptyAction"),
+            onClick: onFocusComposer,
+          }}
         />
       )}
       {!loading &&

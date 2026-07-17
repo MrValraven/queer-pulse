@@ -45,7 +45,9 @@ export function CohostManager({ slug }: { slug: string }) {
   return (
     <div className={styles.panel}>
       <div className={styles.panelHead}>
-        <div className={styles.panelTitle}>{t("gatherings:cohost.panelTitle")}</div>
+        <div className={styles.panelTitle}>
+          {t("gatherings:cohost.panelTitle")}
+        </div>
         <Button variant="ghost" onClick={() => setAddOpen(true)}>
           {t("gatherings:cohost.addCta")}
         </Button>
@@ -84,7 +86,9 @@ export function CohostManager({ slug }: { slug: string }) {
                 <Button
                   variant="ghost"
                   onClick={() => setConfirming(c.slug)}
-                  aria-label={t("gatherings:cohost.removeAria", { name: c.name })}
+                  aria-label={t("gatherings:cohost.removeAria", {
+                    name: c.name,
+                  })}
                 >
                   {t("gatherings:cohost.removeCta")}
                 </Button>

@@ -39,7 +39,10 @@ export function PublishChecklist({
   return (
     <div className={styles.card} role="status" aria-live="polite">
       <h3 className={styles.title}>
-        <Translation i18nKey="subprofiles:checklist.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="subprofiles:checklist.title"
+          components={{ em: <em /> }}
+        />
       </h3>
       <p className={styles.lede}>
         {unknown
@@ -70,7 +73,9 @@ export function PublishChecklist({
               </span>
               <span className={styles.text}>
                 <span className={styles.rowTitle}>{t(req.titleKey)}</span>
-                <span className={styles.rowHelp}>{detailKey && t(detailKey)}</span>
+                <span className={styles.rowHelp}>
+                  {detailKey && t(detailKey)}
+                </span>
               </span>
               <span className={styles.srOnly}>{t(STATE_LABEL_KEY[state])}</span>
             </li>

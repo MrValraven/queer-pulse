@@ -80,11 +80,17 @@ export function SustainerPaymentModal({
   let head: ReactNode;
   if (receipt) {
     head = (
-      <Translation i18nKey="support:modal.head.done" components={{ em: <em /> }} />
+      <Translation
+        i18nKey="support:modal.head.done"
+        components={{ em: <em /> }}
+      />
     );
   } else if (store.gift) {
     head = (
-      <Translation i18nKey="support:modal.head.gift" components={{ em: <em /> }} />
+      <Translation
+        i18nKey="support:modal.head.gift"
+        components={{ em: <em /> }}
+      />
     );
   } else if (store.selectedName === "Custom") {
     head = (

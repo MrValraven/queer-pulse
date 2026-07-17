@@ -52,10 +52,16 @@ export function StudioTermsPage() {
         <div className={s.hero}>
           <div className={s.eb}>{t("studio:terms.hero.eyebrow")}</div>
           <h1>
-            <Translation i18nKey="studio:terms.hero.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:terms.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={s.lede}>
-            <Translation i18nKey="studio:terms.hero.lede" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:terms.hero.lede"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
 
@@ -72,7 +78,10 @@ export function StudioTermsPage() {
         <section className={s.sec}>
           <div className={s.num}>{t("studio:terms.sec.deed.num")}</div>
           <h2>
-            <Translation i18nKey="studio:terms.sec.deed.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:terms.sec.deed.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p>{t("studio:terms.sec.deed.p1")}</p>
           <p>
@@ -93,7 +102,10 @@ export function StudioTermsPage() {
         <section className={s.sec}>
           <div className={s.num}>{t("studio:terms.sec.licences.num")}</div>
           <h2>
-            <Translation i18nKey="studio:terms.sec.licences.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:terms.sec.licences.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p>{t("studio:terms.sec.licences.p1")}</p>
           <div className={s.licGrid}>
@@ -113,14 +125,20 @@ export function StudioTermsPage() {
             ))}
           </div>
           <p className={s.muted}>
-            <Translation i18nKey="studio:terms.sec.licences.footnote" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:terms.sec.licences.footnote"
+              components={{ em: <em /> }}
+            />
           </p>
         </section>
 
         <section className={s.sec}>
           <div className={s.num}>{t("studio:terms.sec.privacy.num")}</div>
           <h2>
-            <Translation i18nKey="studio:terms.sec.privacy.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:terms.sec.privacy.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p>
             <Translation
@@ -143,7 +161,9 @@ export function StudioTermsPage() {
           </div>
           <Button
             variant="ghost-dark"
-            onClick={() => showToast(t("studio:terms.readFullTermsToast"), "info")}
+            onClick={() =>
+              showToast(t("studio:terms.readFullTermsToast"), "info")
+            }
           >
             {t("studio:terms.readFullTermsCta")}
           </Button>

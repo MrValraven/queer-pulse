@@ -106,9 +106,9 @@ function FeaturedEssay() {
         </div>
         <p className={styles.feExcerpt}>
           Coming out implies a before and an after. A door, a room, a
-          revelation. What if it was never that clean? What if you just
-          quietly became yourself and one day looked around and noticed
-          everyone already knew?
+          revelation. What if it was never that clean? What if you just quietly
+          became yourself and one day looked around and noticed everyone already
+          knew?
         </p>
         <Link className={styles.feRead} to={`${routes.article}?id=i-arrived`}>
           {t("magazine:sections.readEssayCta")} <span>→</span>
@@ -152,7 +152,11 @@ function ArchiveSection() {
       />
       <div className={styles.archiveRow}>
         {ARCHIVE.map((issue) => (
-          <Link key={issue.title} to={routes.issue} className={styles.archiveIssue}>
+          <Link
+            key={issue.title}
+            to={routes.issue}
+            className={styles.archiveIssue}
+          >
             <div className={styles.aiCover} style={{ background: issue.bg }}>
               {/* Content: the issue's own cover title. */}
               <div className={styles.aiCoverTitle}>{issue.title}</div>

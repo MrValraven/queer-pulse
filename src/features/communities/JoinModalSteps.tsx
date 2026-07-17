@@ -113,7 +113,9 @@ export function JoinStepInvolvement({
   const { t } = useTranslation();
   return (
     <div>
-      <div className={styles.eye}>{t("communities:join.involvement.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("communities:join.involvement.eyebrow")}
+      </div>
       <div className={styles.title}>
         {t("communities:join.involvement.title")}
       </div>

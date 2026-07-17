@@ -21,7 +21,9 @@ export function HealthSection() {
   const { t } = useTranslation();
   return (
     <Reveal as="section" className={styles.section} id="health">
-      <div className={styles.eye}>{t("governance:sections.health.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("governance:sections.health.eyebrow")}
+      </div>
       <h2 className={styles.secH}>
         <Translation
           i18nKey="governance:sections.health.title"
@@ -56,7 +58,9 @@ export function ModerationSection() {
   const { t } = useTranslation();
   return (
     <Reveal as="section" className={styles.section} id="moderation">
-      <div className={styles.eye}>{t("governance:sections.moderation.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("governance:sections.moderation.eyebrow")}
+      </div>
       <h2 className={styles.secH}>
         <Translation
           i18nKey="governance:sections.moderation.title"
@@ -79,7 +83,9 @@ export function ModerationSection() {
       </div>
       <div className={styles.prose} style={{ marginTop: 16 }}>
         <p>
-          <strong>{t("governance:sections.moderation.wontTolerate.label")}</strong>{" "}
+          <strong>
+            {t("governance:sections.moderation.wontTolerate.label")}
+          </strong>{" "}
           {t("governance:sections.moderation.wontTolerate.text")}
         </p>
       </div>
@@ -91,7 +97,9 @@ export function CouncilSection() {
   const { t } = useTranslation();
   return (
     <Reveal as="section" className={styles.section} id="council">
-      <div className={styles.eye}>{t("governance:sections.council.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("governance:sections.council.eyebrow")}
+      </div>
       <h2 className={styles.secH}>
         <Translation
           i18nKey="governance:sections.council.title"
@@ -125,7 +133,9 @@ export function PrinciplesSection() {
   const { t } = useTranslation();
   return (
     <Reveal as="section" className={styles.section} id="principles">
-      <div className={styles.eye}>{t("governance:sections.principles.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("governance:sections.principles.eyebrow")}
+      </div>
       <h2 className={styles.secH}>
         <Translation
           i18nKey="governance:sections.principles.title"
@@ -159,7 +169,9 @@ export function FinancesSection() {
 
   return (
     <Reveal as="section" className={styles.section} id="finances">
-      <div className={styles.eye}>{t("governance:sections.finances.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("governance:sections.finances.eyebrow")}
+      </div>
       <h2 className={styles.secH}>
         <Translation
           i18nKey="governance:sections.finances.title"
@@ -290,7 +302,9 @@ export function DecisionsSection() {
   const { t } = useTranslation();
   return (
     <Reveal as="section" className={styles.section} id="decisions">
-      <div className={styles.eye}>{t("governance:sections.decisions.eyebrow")}</div>
+      <div className={styles.eye}>
+        {t("governance:sections.decisions.eyebrow")}
+      </div>
       <h2 className={styles.secH}>
         <Translation
           i18nKey="governance:sections.decisions.title"
@@ -356,7 +370,9 @@ export function RaiseSection() {
             type="email"
             placeholder={t("governance:sections.raise.emailPlaceholder")}
           />
-          <Button type="submit">{t("governance:sections.raise.submitCta")}</Button>
+          <Button type="submit">
+            {t("governance:sections.raise.submitCta")}
+          </Button>
         </form>
       </div>
     </Reveal>

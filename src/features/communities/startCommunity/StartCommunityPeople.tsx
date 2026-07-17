@@ -18,7 +18,9 @@ export function StepPeople({ form }: { form: CommunityForm }) {
     <div>
       <div className={styles.field}>
         <label>{t("communities:start.people.label")}</label>
-        <span className={styles.hint}>{t("communities:start.people.hint")}</span>
+        <span className={styles.hint}>
+          {t("communities:start.people.hint")}
+        </span>
         <div className={styles.inviteList}>
           {INVITE_CANDIDATES.map((c) => {
             const on = draft.invites.includes(c.key);
@@ -46,7 +48,9 @@ export function StepPeople({ form }: { form: CommunityForm }) {
           })}
         </div>
       </div>
-      <p className={styles.seedNote}>{t("communities:start.people.seedNote")}</p>
+      <p className={styles.seedNote}>
+        {t("communities:start.people.seedNote")}
+      </p>
     </div>
   );
 }

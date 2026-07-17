@@ -180,7 +180,8 @@ export const magazine: Catalog = {
 
   // ── AuthorPage ───────────────────────────────────────────────────────────
   "author.notFoundTitle": "We couldn't find that writer.",
-  "author.notFoundBody": "They may have moved on, or the link may be incomplete.",
+  "author.notFoundBody":
+    "They may have moved on, or the link may be incomplete.",
   "author.notFoundCta": "Back to the magazine",
 
   // ── AuthorHeader ─────────────────────────────────────────────────────────
@@ -234,7 +235,8 @@ export const magazine: Catalog = {
   "audio.cast.doneCta": "Done",
   "audio.cast.eyebrow": "Cast · AirPlay",
   "audio.cast.nearbyDevicesTitle": "Nearby devices",
-  "audio.cast.pickDeviceSub": "Pick a speaker or screen to stream this episode to.",
+  "audio.cast.pickDeviceSub":
+    "Pick a speaker or screen to stream this episode to.",
   "audio.sleep.eyebrow": "Sleep timer",
   "audio.sleep.title": "Stop playing after…",
   "audio.sleep.sub":
@@ -452,15 +454,13 @@ export const magazine: Catalog = {
   "editor.sideCards.sendPitchDecisions": "→ Send pitch decisions in bulk",
   "editor.sideCards.emailContributorsWaiting": "→ Email contributors waiting",
   "editor.sideCards.previewIssueLayout": "→ Preview issue layout",
-  "editor.sideCards.exportContributorList":
-    "→ Export contributor list (CSV)",
+  "editor.sideCards.exportContributorList": "→ Export contributor list (CSV)",
 
   // ── EditorDashboardPage ────────────────────────────────────────────────
   "editor.page.emptyTitle": "The desk is clear",
   "editor.page.emptyDescription":
     "No pieces in flight and no pitches waiting. When writers pitch or you commission a piece, it'll show up here to triage and edit.",
-  "editor.page.everyPitchLoaded":
-    "That’s every pitch loaded in this prototype",
+  "editor.page.everyPitchLoaded": "That’s every pitch loaded in this prototype",
 
   // ── useEditorDashboard / useEditorKeyboard toasts ──────────────────────
   "editor.toast.stageChanged": "“{title}” → {stage}",
@@ -480,7 +480,8 @@ export const magazine: Catalog = {
   "editor.toast.nudgeSent": "Nudge sent to {name}",
   "editor.toast.briefDuplicated": "Brief duplicated to drafts",
   "editor.toast.openingBulkTriage": "Opening bulk pitch triage",
-  "editor.toast.draftingReminders": "Drafting reminders to {count} contributors",
+  "editor.toast.draftingReminders":
+    "Drafting reminders to {count} contributors",
   "editor.toast.contributorListExported": "Contributor list exported (CSV)",
 
   // ══════════════════ Submit Story wizard ══════════════════════════════════
@@ -594,7 +595,8 @@ export const magazine: Catalog = {
 
   // ── SubmitStoryEditor ──────────────────────────────────────────────────
   "submitStory.editor.draftSaved": "Draft saved.",
-  "submitStory.editor.chooseSectionError": "Choose a section for your piece first.",
+  "submitStory.editor.chooseSectionError":
+    "Choose a section for your piece first.",
   "submitStory.editor.needHeadlineError":
     "Your story needs a headline before it goes to editors.",
   "submitStory.editor.minWordsError":
@@ -661,7 +663,8 @@ export const magazine: Catalog = {
   "newsletter.subscribe.streamLabel.dispatch": "the Community dispatch",
   "newsletter.subscribe.streamLabel.long": "the Long reads monthly",
   "newsletter.subscribe.streamLabel.trans": "the Trans Hub bulletin",
-  "newsletter.subscribe.confirmToast": "Almost there — check your inbox to confirm",
+  "newsletter.subscribe.confirmToast":
+    "Almost there — check your inbox to confirm",
   "newsletter.subscribe.doneTitle": "One more <em>step.</em>",
   "newsletter.subscribe.doneBody":
     "We'll send <strong>{stream}</strong> to <strong>{email}</strong>.",
@@ -693,7 +696,8 @@ export const magazine: Catalog = {
   "printOrder.fewerCopiesAria": "Fewer copies",
   "printOrder.moreCopiesAria": "More copies",
   "printOrder.emailFieldLabel": "Email for shipping updates",
-  "printOrder.emailFieldHelper": "We only use this to tell you when your copy ships.",
+  "printOrder.emailFieldHelper":
+    "We only use this to tell you when your copy ships.",
   "printOrder.emailPlaceholder": "you@example.com",
   "printOrder.cancelCta": "← Cancel",
   "printOrder.placingCta": "Placing your order…",

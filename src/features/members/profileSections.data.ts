@@ -3,7 +3,10 @@ import { FiBook, FiMusic, FiPlay, FiStar } from "react-icons/fi";
 
 /** Icon + catalog key for each "What shaped me" slot. Resolve `labelKey` with
  *  `t()` — the label text itself is platform chrome, not a fetched value. */
-export const SHAPING_META: Record<string, { labelKey: string; icon: IconType }> = {
+export const SHAPING_META: Record<
+  string,
+  { labelKey: string; icon: IconType }
+> = {
   film: { labelKey: "members:shaping.film", icon: FiPlay },
   book: { labelKey: "members:shaping.book", icon: FiBook },
   song: { labelKey: "members:shaping.song", icon: FiMusic },

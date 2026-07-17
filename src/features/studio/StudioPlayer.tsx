@@ -48,7 +48,11 @@ export function StudioPlayer() {
                 <path d="M2 1v12M13 1L4 7l9 6V1z" />
               </svg>
             </button>
-            <button type="button" className={styles.play} aria-label={t("studio:player.play")}>
+            <button
+              type="button"
+              className={styles.play}
+              aria-label={t("studio:player.play")}
+            >
               <svg viewBox="0 0 12 14" fill="currentColor">
                 <path d="M1 1l10 6-10 6z" />
               </svg>
@@ -72,7 +76,10 @@ export function StudioPlayer() {
             <Translation
               i18nKey="studio:player.payingLine"
               components={{ b: <b /> }}
-              values={{ amount: fmt.currency(PER_PLAY_AMOUNT), artist: NOW_PLAYING_ARTIST }}
+              values={{
+                amount: fmt.currency(PER_PLAY_AMOUNT),
+                artist: NOW_PLAYING_ARTIST,
+              }}
             />
           </div>
           <button

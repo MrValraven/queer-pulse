@@ -68,7 +68,8 @@ export function SubprofileItemEditor({
             <FiArrowDown size={15} aria-hidden />
           </button>
           <button type="button" className={styles.removeBtn} onClick={onRemove}>
-            <FiTrash2 size={14} aria-hidden /> {t("subprofiles:itemEditor.remove")}
+            <FiTrash2 size={14} aria-hidden />{" "}
+            {t("subprofiles:itemEditor.remove")}
           </button>
         </div>
       </div>

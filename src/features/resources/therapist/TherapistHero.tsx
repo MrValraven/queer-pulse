@@ -45,7 +45,8 @@ export function TherapistHero({
   return (
     <>
       <Link className={styles.back} to={routes.mentalHealth}>
-        <FiArrowLeft aria-hidden /> {t("resources:therapistProfilePage.backLink")}
+        <FiArrowLeft aria-hidden />{" "}
+        {t("resources:therapistProfilePage.backLink")}
       </Link>
 
       <div className={styles.verified}>
@@ -59,7 +60,10 @@ export function TherapistHero({
               b: <b />,
               a: <Link to={`${routes.wellbeing}#vetting`} />,
             }}
-            values={{ vettedOn: profile.vettedOn, count: profile.vouches.length }}
+            values={{
+              vettedOn: profile.vettedOn,
+              count: profile.vouches.length,
+            }}
           />
         </p>
       </div>

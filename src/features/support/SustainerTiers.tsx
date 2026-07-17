@@ -21,7 +21,11 @@ const FREQ_ADVERB_KEY: Record<SustainerStore["freq"], string> = {
 };
 
 /** Helper line under the custom-amount field, framing the equivalent figure. */
-function customHelp(t: TFunction, store: SustainerStore, amount: number): string {
+function customHelp(
+  t: TFunction,
+  store: SustainerStore,
+  amount: number,
+): string {
   if (store.freq === "monthly")
     return t("support:tiers.customHelp.perYear", {
       amount: store.money(amount * 12),
@@ -102,7 +106,9 @@ export const SustainerTiers = forwardRef<
           />
         </div>
         <div className={styles.customText}>
-          {t("support:tiers.customText", { freq: t(FREQ_ADVERB_KEY[store.freq]) })}
+          {t("support:tiers.customText", {
+            freq: t(FREQ_ADVERB_KEY[store.freq]),
+          })}
         </div>
       </div>
       {store.selType === "custom" && store.custom ? (

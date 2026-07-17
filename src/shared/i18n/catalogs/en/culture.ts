@@ -91,7 +91,8 @@ export const culture: Catalog = {
 
   // ── Suggest a pick modal ───────────────────────────────────────────────
   "suggestPick.title": "Suggest a <em>pick</em>",
-  "suggestPick.sub": "Nominate something for the community to vote on this month.",
+  "suggestPick.sub":
+    "Nominate something for the community to vote on this month.",
   "suggestPick.formatLabel": "Format",
   "suggestPick.titleLabel": "Title",
   "suggestPick.titlePlaceholder": "e.g. Detransition, Baby",
@@ -150,7 +151,8 @@ export const culture: Catalog = {
   // ── Submit a playlist modal ─────────────────────────────────────────────
   "submitPlaylist.eyebrow": "Community Radio",
   "submitPlaylist.title": "Submit a <em>playlist</em>",
-  "submitPlaylist.sub": "Pitch a set for a guest DJ slot. No ads, no algorithm.",
+  "submitPlaylist.sub":
+    "Pitch a set for a guest DJ slot. No ads, no algorithm.",
   "submitPlaylist.nameLabel": "Playlist name",
   "submitPlaylist.namePlaceholder": "e.g. A noite que ficou em Lisboa",
   "submitPlaylist.linkLabel": "Link to the set",
@@ -169,7 +171,8 @@ export const culture: Catalog = {
     "If it's a fit, we'll book you a slot and email you by <strong>{date}</strong>.",
 
   // ── Commission interest modal ───────────────────────────────────────────
-  "commissionInterest.errorToast": "Couldn't send your interest — please try again.",
+  "commissionInterest.errorToast":
+    "Couldn't send your interest — please try again.",
   "commissionInterest.eyebrow": "Express interest",
   "commissionInterest.title": "Reach out to <em>{name}</em>",
   "commissionInterest.sub":

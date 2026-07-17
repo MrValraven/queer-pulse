@@ -136,7 +136,10 @@ export function ConnectionsAllTab({
                 icon={<FiUsers />}
                 title={t("connect:allTab.emptyTitle")}
                 description={t("connect:allTab.emptyDescription")}
-                action={{ label: t("connect:allTab.findMembers"), to: routes.members }}
+                action={{
+                  label: t("connect:allTab.findMembers"),
+                  to: routes.members,
+                }}
               />
             ) : (
               <EmptyState

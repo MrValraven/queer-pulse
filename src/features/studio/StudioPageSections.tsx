@@ -86,15 +86,17 @@ export function StudioHero() {
         <div className={styles.heroInfo}>
           <div className={styles.eb}>
             <span className={styles.live} />
-            {t("studio:room.hero.onAirEyebrow", { track: HERO_STATS.onAirTrack })}
+            {t("studio:room.hero.onAirEyebrow", {
+              track: HERO_STATS.onAirTrack,
+            })}
           </div>
           <h1>
             {HERO_TRACK.titlePre}
             <em>{HERO_TRACK.titleEm}</em>
           </h1>
           <div className={styles.by}>
-            by <strong>{HERO_TRACK.artist}</strong> · from <em>{HERO_TRACK.album}</em> ·{" "}
-            {HERO_TRACK.year} · {HERO_TRACK.place}
+            by <strong>{HERO_TRACK.artist}</strong> · from{" "}
+            <em>{HERO_TRACK.album}</em> · {HERO_TRACK.year} · {HERO_TRACK.place}
           </div>
           <div className={styles.stats}>
             <span>
@@ -152,7 +154,10 @@ export function StudioHero() {
               className={styles.tip}
               onClick={() => setTipOpen(true)}
             >
-              <FiHeart /> {t("studio:player.tipCta", { amount: fmt.currency(HERO_STATS.perPlayAmount) })}
+              <FiHeart />{" "}
+              {t("studio:player.tipCta", {
+                amount: fmt.currency(HERO_STATS.perPlayAmount),
+              })}
             </button>
           </div>
           <div className={styles.payPill}>
@@ -173,7 +178,9 @@ export function StudioHero() {
                   amount: fmt.currency(HERO_STATS.perPlayAmount),
                 }}
               />{" "}
-              <span className={styles.small}>{t("studio:room.hero.tipOnTop")}</span>
+              <span className={styles.small}>
+                {t("studio:room.hero.tipOnTop")}
+              </span>
             </span>
           </div>
         </div>
@@ -194,7 +201,10 @@ export function StudioSetSection() {
     <section className={styles.row}>
       <div className={styles.rowH}>
         <h2>
-          <Translation i18nKey="studio:room.set.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:room.set.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.sub}>
           {t("studio:room.set.subtitle", {
@@ -291,15 +301,21 @@ function StudioSideCol() {
       <div className={styles.ledgerCard}>
         <div className={styles.head}>{t("studio:room.set.ledgerHead")}</div>
         <div className={styles.lrow}>
-          <span className={styles.k}>{t("studio:room.set.ledgerPaidArtists")}</span>
-          <span className={styles.v}>{fmt.currency(WEDNESDAY_SET.ledgerPaidArtists)}</span>
+          <span className={styles.k}>
+            {t("studio:room.set.ledgerPaidArtists")}
+          </span>
+          <span className={styles.v}>
+            {fmt.currency(WEDNESDAY_SET.ledgerPaidArtists)}
+          </span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>{t("studio:room.set.ledgerPlays")}</span>
           <span className={styles.v}>{WEDNESDAY_SET.ledgerPlays}</span>
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>{t("studio:room.set.ledgerArtistShare")}</span>
+          <span className={styles.k}>
+            {t("studio:room.set.ledgerArtistShare")}
+          </span>
           <span className={styles.v}>
             {fmt.number(WEDNESDAY_SET.ledgerArtistShare, {
               style: "percent",
@@ -309,7 +325,9 @@ function StudioSideCol() {
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>{t("studio:room.set.ledgerPerPlay")}</span>
-          <span className={styles.v}>{fmt.currency(WEDNESDAY_SET.ledgerPerPlay)}</span>
+          <span className={styles.v}>
+            {fmt.currency(WEDNESDAY_SET.ledgerPerPlay)}
+          </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
           {t("studio:room.set.readPlanCta")} →
@@ -326,7 +344,10 @@ export function StudioTracksSection() {
     <section className={styles.row}>
       <div className={styles.rowH}>
         <h2>
-          <Translation i18nKey="studio:room.tracks.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:room.tracks.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.sub}>{t("studio:room.tracks.subtitle")}</div>
         <Link to={routes.studioAlbum} className={styles.all}>

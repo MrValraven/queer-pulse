@@ -21,68 +21,69 @@ export const FAQ: { qKey: string; aKey: string }[] = [
  * reference (chrome), resolved via `t()`. `keywords` stays as English search
  * tokens — it's a filter key, not rendered text.
  */
-export const GLOSSARY: { termKey: string; keywords: string; defKey: string }[] = [
-  {
-    termKey: "resources:queer101.glossary.term.queer",
-    keywords: "queer",
-    defKey: "resources:queer101.glossary.def.queer",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.lgbtq",
-    keywords: "lgbtq",
-    defKey: "resources:queer101.glossary.def.lgbtq",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.genderIdentity",
-    keywords: "gender identity",
-    defKey: "resources:queer101.glossary.def.genderIdentity",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.sexualOrientation",
-    keywords: "sexual orientation",
-    defKey: "resources:queer101.glossary.def.sexualOrientation",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.nonBinary",
-    keywords: "non-binary nonbinary",
-    defKey: "resources:queer101.glossary.def.nonBinary",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.trans",
-    keywords: "trans transgender",
-    defKey: "resources:queer101.glossary.def.trans",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.bisexual",
-    keywords: "bisexual bi",
-    defKey: "resources:queer101.glossary.def.bisexual",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.pansexual",
-    keywords: "pansexual pan",
-    defKey: "resources:queer101.glossary.def.pansexual",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.asexualAromantic",
-    keywords: "asexual ace aromantic aro",
-    defKey: "resources:queer101.glossary.def.asexualAromantic",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.intersex",
-    keywords: "intersex",
-    defKey: "resources:queer101.glossary.def.intersex",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.pronouns",
-    keywords: "pronouns they them she her he him",
-    defKey: "resources:queer101.glossary.def.pronouns",
-  },
-  {
-    termKey: "resources:queer101.glossary.term.comingOut",
-    keywords: "coming out closet",
-    defKey: "resources:queer101.glossary.def.comingOut",
-  },
-];
+export const GLOSSARY: { termKey: string; keywords: string; defKey: string }[] =
+  [
+    {
+      termKey: "resources:queer101.glossary.term.queer",
+      keywords: "queer",
+      defKey: "resources:queer101.glossary.def.queer",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.lgbtq",
+      keywords: "lgbtq",
+      defKey: "resources:queer101.glossary.def.lgbtq",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.genderIdentity",
+      keywords: "gender identity",
+      defKey: "resources:queer101.glossary.def.genderIdentity",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.sexualOrientation",
+      keywords: "sexual orientation",
+      defKey: "resources:queer101.glossary.def.sexualOrientation",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.nonBinary",
+      keywords: "non-binary nonbinary",
+      defKey: "resources:queer101.glossary.def.nonBinary",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.trans",
+      keywords: "trans transgender",
+      defKey: "resources:queer101.glossary.def.trans",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.bisexual",
+      keywords: "bisexual bi",
+      defKey: "resources:queer101.glossary.def.bisexual",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.pansexual",
+      keywords: "pansexual pan",
+      defKey: "resources:queer101.glossary.def.pansexual",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.asexualAromantic",
+      keywords: "asexual ace aromantic aro",
+      defKey: "resources:queer101.glossary.def.asexualAromantic",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.intersex",
+      keywords: "intersex",
+      defKey: "resources:queer101.glossary.def.intersex",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.pronouns",
+      keywords: "pronouns they them she her he him",
+      defKey: "resources:queer101.glossary.def.pronouns",
+    },
+    {
+      termKey: "resources:queer101.glossary.term.comingOut",
+      keywords: "coming out closet",
+      defKey: "resources:queer101.glossary.def.comingOut",
+    },
+  ];
 
 export type ResType = "Book" | "Film" | "Podcast" | "Guide";
 
@@ -159,12 +160,18 @@ export const TALK: {
   {
     titleKey: "resources:queer101.talk.peerSupport.title",
     descKey: "resources:queer101.talk.peerSupport.desc",
-    link: { labelKey: "resources:queer101.talk.peerSupport.cta", href: COMMUNITIES },
+    link: {
+      labelKey: "resources:queer101.talk.peerSupport.cta",
+      href: COMMUNITIES,
+    },
   },
   {
     titleKey: "resources:queer101.talk.oneToOne.title",
     descKey: "resources:queer101.talk.oneToOne.desc",
-    link: { labelKey: "resources:queer101.talk.oneToOne.cta", href: MENTORSHIP },
+    link: {
+      labelKey: "resources:queer101.talk.oneToOne.cta",
+      href: MENTORSHIP,
+    },
   },
   {
     titleKey: "resources:queer101.talk.therapy.title",

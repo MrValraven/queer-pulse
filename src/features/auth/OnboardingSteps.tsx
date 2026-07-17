@@ -41,7 +41,8 @@ function SkipLink({ onSkip, label }: { onSkip: () => void; label?: string }) {
   const { t } = useTranslation();
   return (
     <button type="button" className={styles.skip} onClick={onSkip}>
-      {label ?? t("auth:onboarding.stepPhoto.skip")} <FiArrowRight aria-hidden />
+      {label ?? t("auth:onboarding.stepPhoto.skip")}{" "}
+      <FiArrowRight aria-hidden />
     </button>
   );
 }
@@ -228,7 +229,9 @@ export function StepPhoto({ stepLabel, onNext, onBack }: StepProps) {
         <p className={styles.photoCaption}>{caption}</p>
       </div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>{t("auth:onboarding.stepPhoto.continue")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:onboarding.stepPhoto.continue")}
+        </Button>
         <SkipLink onSkip={onNext} />
         <button type="button" className={styles.back} onClick={onBack}>
           {t("auth:onboarding.stepPhoto.back")}
@@ -334,7 +337,9 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
           components={{ em: <em /> }}
         />
       </div>
-      <div className={styles.chipHint}>{t("auth:onboarding.stepIntents.hint")}</div>
+      <div className={styles.chipHint}>
+        {t("auth:onboarding.stepIntents.hint")}
+      </div>
       <ChipSelect
         className={styles.chips}
         options={INTENTS.map((intent) => ({
@@ -412,7 +417,9 @@ export function StepCommunities({ stepLabel, onNext, onBack }: StepProps) {
         })}
       </div>
       <div className={styles.nav}>
-        <Button onClick={onNext}>{t("auth:onboarding.stepCommunities.continue")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:onboarding.stepCommunities.continue")}
+        </Button>
         <SkipLink
           onSkip={onNext}
           label={t("auth:onboarding.stepCommunities.skip")}
@@ -445,7 +452,9 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
             </span>
             <div className={styles.qsBody}>
               <div className={styles.qsTitle}>{t(qs.titleKey)}</div>
-              <div className={styles.qsDesc}>{t(qs.descKey, qs.descValues)}</div>
+              <div className={styles.qsDesc}>
+                {t(qs.descKey, qs.descValues)}
+              </div>
             </div>
             <span className={styles.qsArrow}>→</span>
           </Link>

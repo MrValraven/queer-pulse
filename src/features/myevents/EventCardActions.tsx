@@ -91,7 +91,9 @@ export function EventSide({ ev }: { ev: MyEvent }) {
           {ev.soldOut ? (
             <Button
               variant="ghost"
-              onClick={() => toast(t("myevents:side.joinWaitlistToast"), "success")}
+              onClick={() =>
+                toast(t("myevents:side.joinWaitlistToast"), "success")
+              }
             >
               {t("myevents:side.joinWaitlistCta")}
             </Button>
@@ -182,7 +184,9 @@ export function EventTools({
   );
   const Cal = (
     <ToolBtn
-      onClick={() => c.toast(t("myevents:tools.addedToCalendarToast"), "success")}
+      onClick={() =>
+        c.toast(t("myevents:tools.addedToCalendarToast"), "success")
+      }
     >
       {Icons.cal}
       {t("myevents:tools.addToCalendar")}
@@ -322,7 +326,9 @@ export function EventTools({
         </ToolBtn>
         <ToolBtn
           danger
-          onClick={() => c.softRemove(ev.id, t("myevents:tools.withdrawnToast"))}
+          onClick={() =>
+            c.softRemove(ev.id, t("myevents:tools.withdrawnToast"))
+          }
         >
           {Icons.x}
           {t("myevents:tools.withdraw")}

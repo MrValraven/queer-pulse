@@ -138,7 +138,10 @@ export function StudioEndCardPage() {
           </div>
 
           <div className={styles.tagline}>
-            <Translation i18nKey="studio:endCard.tagline" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:endCard.tagline"
+              components={{ em: <em /> }}
+            />
           </div>
 
           <div className={styles.ledger}>

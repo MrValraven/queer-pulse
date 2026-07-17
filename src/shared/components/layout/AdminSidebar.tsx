@@ -17,7 +17,10 @@ export function AdminSidebar() {
       <Link to={routes.admin} className={styles.brand}>
         <span className={styles.brandDot} aria-hidden />
         <span className={styles.brandName}>
-          <Translation i18nKey="shared:brand.wordmark" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
         </span>
         <span className={styles.brandBadge}>
           {t("shared:adminSidebar.badge")}
@@ -27,7 +30,9 @@ export function AdminSidebar() {
       <AdminRoleSwitcher />
 
       <nav className={styles.nav}>
-        <div className={styles.navHead}>{t("shared:adminSidebar.oversight")}</div>
+        <div className={styles.navHead}>
+          {t("shared:adminSidebar.oversight")}
+        </div>
         {ADMIN_NAV.map(({ labelKey, to, icon: Icon, end, count, tone }) => (
           <NavLink
             key={to}

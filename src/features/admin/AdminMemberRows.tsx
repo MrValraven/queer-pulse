@@ -98,7 +98,9 @@ function VouchStrip({
         ))}
         {more > 0 && <span className={styles.stackMore}>+{more}</span>}
       </div>
-      <span className={styles.vouchLabel}>{t("admin:members.vouchedLabel")}</span>
+      <span className={styles.vouchLabel}>
+        {t("admin:members.vouchedLabel")}
+      </span>
     </div>
   );
 }

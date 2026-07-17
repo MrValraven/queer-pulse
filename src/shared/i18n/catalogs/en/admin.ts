@@ -55,8 +55,7 @@ export const admin: Catalog = {
 
   "dashboard.charts.reportsByType.title": "Reports by type",
   "dashboard.charts.reportsByType.sub": "Last 8 weeks · weekly volume",
-  "dashboard.charts.reportsByType.ariaLabel":
-    "Stacked weekly reports by type",
+  "dashboard.charts.reportsByType.ariaLabel": "Stacked weekly reports by type",
   "dashboard.charts.series.outing": "Outing/doxxing",
   "dashboard.charts.series.harassment": "Harassment",
   "dashboard.charts.series.spam": "Spam",
@@ -69,8 +68,7 @@ export const admin: Catalog = {
   "dashboard.charts.legend.churned": "Churned",
   "dashboard.charts.responseTime.title": "Response time",
   "dashboard.charts.responseTime.sub": "Distribution · this month",
-  "dashboard.charts.responseTime.ariaLabel":
-    "Moderation response distribution",
+  "dashboard.charts.responseTime.ariaLabel": "Moderation response distribution",
   "dashboard.charts.responseTime.slaLabel": "{hours} SLA",
   "dashboard.charts.legend.withinSla": "Within SLA",
   "dashboard.charts.legend.overSla": "Over {hours}",
@@ -169,8 +167,7 @@ export const admin: Catalog = {
   "members.restrict.scopeLabel": "Scope",
   "members.restrict.reasonLabel": "Reason",
   "members.restrict.applyCta": "Apply restriction",
-  "members.restrict.notePlaceholder":
-    "A note for {name} (they will see it)…",
+  "members.restrict.notePlaceholder": "A note for {name} (they will see it)…",
   "members.restrict.transparency":
     "{name} keeps full access to support and appeals. A restriction limits posting — it never cuts someone off from help.",
   "members.restrict.duration.24h": "24h",
@@ -179,8 +176,7 @@ export const admin: Catalog = {
   "members.restrict.duration.permanent": "Permanent",
   "members.restrict.scope.community": "This community",
   "members.restrict.scope.platform": "Platform-wide",
-  "members.restrict.reason.harassment":
-    "Repeated harassment after a warning",
+  "members.restrict.reason.harassment": "Repeated harassment after a warning",
   "members.restrict.reason.misgendering": "Misgendering / deadnaming",
   "members.restrict.reason.hostile": "Hostile or abusive conduct",
   "members.restrict.reason.other": "Other — explain below",
@@ -274,7 +270,8 @@ export const admin: Catalog = {
   "moderation.reportDrawer.noteAriaLabel": "Note to the member",
   "moderation.reportDrawer.transparency":
     "{name} will be told exactly what was actioned and why, with a link to appeal. Nothing happens silently.",
-  "moderation.reportDrawer.pickActionToast": "Pick an action before confirming.",
+  "moderation.reportDrawer.pickActionToast":
+    "Pick an action before confirming.",
   "moderation.reportDrawer.confirmedToast":
     "{name} {verb}. The member has been notified.",
 
@@ -331,8 +328,7 @@ export const admin: Catalog = {
 
   "moderation.reasons.outing":
     "Outing / sharing private identity without consent",
-  "moderation.reasons.doxxing":
-    "Sharing personal or location data (doxxing)",
+  "moderation.reasons.doxxing": "Sharing personal or location data (doxxing)",
   "moderation.reasons.harassment": "Targeted harassment of a member",
   "moderation.reasons.other": "Other — explain below",
 
@@ -351,6 +347,8 @@ export const admin: Catalog = {
   "moderation.chip.vouchAbuse": "Vouch-abuse",
   "moderation.chip.spam": "Spam",
   "moderation.chip.offTopic": "Off-topic",
+  "moderation.chip.appeal": "Appeal",
+  "moderation.chip.identityShielded": "Identity shielded",
   "moderation.chip.appealRestriction": "Appeal · restriction",
   "moderation.chip.appealRemoval": "Appeal · removal",
   "moderation.chip.appealWarning": "Appeal · warning",
@@ -443,8 +441,7 @@ export const admin: Catalog = {
   "communities.settings.addModCta": "+ Add",
   "communities.settings.addModToast": "Search members to add as moderator",
   "communities.settings.modRemovedToast": "Removed {name} as moderator",
-  "communities.settings.secondVouch.title":
-    "Require a second vouch to join",
+  "communities.settings.secondVouch.title": "Require a second vouch to join",
   "communities.settings.secondVouch.sub":
     "Slows growth, raises trust. Recommended for support spaces.",
   "communities.settings.secondVouch.onToast":
@@ -506,12 +503,10 @@ export const admin: Catalog = {
   "communities.support.option.message.title": "Message the moderators",
   "communities.support.option.message.sub":
     "A warm check-in to {names} — how can we help?",
-  "communities.support.option.buddy.title":
-    "Assign a staff buddy for 2 weeks",
+  "communities.support.option.buddy.title": "Assign a staff buddy for 2 weeks",
   "communities.support.option.buddy.sub":
     "A Trust & Safety teammate co-moderates to take the load off.",
-  "communities.support.option.toolkit.title":
-    "Share the de-escalation toolkit",
+  "communities.support.option.toolkit.title": "Share the de-escalation toolkit",
   "communities.support.option.toolkit.sub":
     "Templates and guides for handling heated public threads.",
   "communities.support.option.recruit.title": "Recruit another moderator",
@@ -535,12 +530,10 @@ export const admin: Catalog = {
   "governance.finances.stat.totalIncome": "Total monthly income",
   "governance.finances.stat.surplus": "Monthly surplus",
   "governance.finances.stat.solidarity": "On solidarity access",
-  "governance.finances.foot.sustainersCount":
-    "{count} members chip in monthly",
+  "governance.finances.foot.sustainersCount": "{count} members chip in monthly",
   "governance.finances.foot.sources": "Sustainers, grants & one-offs",
   "governance.finances.foot.reserve": "Held in the community reserve",
-  "governance.finances.foot.solidarityRate":
-    "Members on free or reduced rate",
+  "governance.finances.foot.solidarityRate": "Members on free or reduced rate",
 
   "governance.ledger.moderatorHonoraria": "Moderator honoraria",
   "governance.ledger.platformTools": "Platform & tools",
@@ -552,8 +545,7 @@ export const admin: Catalog = {
   "governance.ledger.gatheringTickets": "Gathering tickets",
 
   "governance.income.title": "Where it <em>comes from</em>",
-  "governance.income.sub":
-    "{amount} / month, in from three honest places.",
+  "governance.income.sub": "{amount} / month, in from three honest places.",
   "governance.income.note":
     "No advertising. No data sales. No venture money. <strong>Two-thirds comes straight from members.</strong>",
   "governance.spend.title": "Where it <em>goes</em>",
@@ -561,7 +553,8 @@ export const admin: Catalog = {
     "{amount} / month — every euro accounted for, line by line.",
 
   "governance.chart.title": "Income vs spending <em>by quarter</em>",
-  "governance.chart.sub": "The gap is surplus — it goes straight to the reserve.",
+  "governance.chart.sub":
+    "The gap is surplus — it goes straight to the reserve.",
   "governance.chart.ariaLabel":
     "Grouped bar chart of income versus spending per quarter, in thousands of euros",
   "governance.chart.legend.income": "Income",
@@ -656,12 +649,12 @@ export const admin: Catalog = {
   "partners.header.sub":
     "Organisations that applied to partner with QueerPulse. Read what they do, then approve them onto the public partners page or set the application aside — with a note they'll read.",
   "partners.forbidden": "This queue is for admins only.",
-  "partners.loadError":
-    "The queue couldn't load right now — please try again.",
+  "partners.loadError": "The queue couldn't load right now — please try again.",
   "partners.errorToast": "Could not save that decision — please try again",
   "partners.approvedToast": "{name} is now a partner",
   "partners.rejectedToast": "{name}'s application was set aside",
-  "partners.emptyText": "Nothing waiting. Every application has had a decision.",
+  "partners.emptyText":
+    "Nothing waiting. Every application has had a decision.",
   "partners.intro":
     "These organisations asked to partner with us. Approving one lists it on the public partners page.",
   "partners.card.noteLabel": "A note for {name} (optional)",
@@ -699,12 +692,14 @@ export const admin: Catalog = {
   "modPanel.reports.emptyTitle": "All clear",
   "modPanel.reports.emptyDesc":
     "Nothing has been flagged — the community looks after each other.",
-  "modPanel.reports.metaLine": "From {author} · flagged by {reporter} · {time} ago",
+  "modPanel.reports.metaLine":
+    "From {author} · flagged by {reporter} · {time} ago",
   "modPanel.reports.removeCta": "Remove post",
   "modPanel.reports.warnCta": "Warn author",
   "modPanel.reports.dismissCta": "Dismiss",
   "modPanel.reports.escalateCta": "Escalate to staff",
-  "modPanel.reports.removedToast": "Post removed. The author has been notified.",
+  "modPanel.reports.removedToast":
+    "Post removed. The author has been notified.",
   "modPanel.reports.warnedToast": "A warning has been sent to {name}.",
   "modPanel.reports.dismissedToast": "Report dismissed.",
   "modPanel.reports.escalatedToast":
@@ -778,8 +773,7 @@ export const admin: Catalog = {
   "vouchGraph.modal.searchAriaLabel": "Find a member",
   "vouchGraph.modal.replayCta": "Replay",
   "vouchGraph.modal.timeCutAriaLabel": "Time cut-off",
-  "vouchGraph.modal.verifyToast":
-    "Trust basis attached — opening verification",
+  "vouchGraph.modal.verifyToast": "Trust basis attached — opening verification",
   "vouchGraph.modal.citeToast": "Trust path cited in the audit log",
   "vouchGraph.modal.privateToast": "This member keeps their network private",
 
@@ -787,16 +781,14 @@ export const admin: Catalog = {
   "vouchGraph.inspector.emptyBody":
     "Click a node to read who trusts them and what that trust is built on. Double-click to walk the network from there.",
   "vouchGraph.inspector.sealed": "Legacy identity sealed — chosen name only",
-  "vouchGraph.inspector.ringBanner.title":
-    "Part of a suspected vouch ring",
+  "vouchGraph.inspector.ringBanner.title": "Part of a suspected vouch ring",
   "vouchGraph.inspector.ringBanner.body":
     "Five accounts created within an hour, vouching only for each other — a closed loop with no outside trust.",
   "vouchGraph.inspector.isolationBanner.title": "Trust isolation",
   "vouchGraph.inspector.isolationBanner.body":
     "Every vouch this member holds comes from new or flagged accounts. Verify with extra care.",
   "vouchGraph.inspector.reportsBanner.title_one": "{count} report on record",
-  "vouchGraph.inspector.reportsBanner.title_other":
-    "{count} reports on record",
+  "vouchGraph.inspector.reportsBanner.title_other": "{count} reports on record",
   "vouchGraph.inspector.reportsBanner.body":
     "Open the member's moderation history before acting.",
   "vouchGraph.inspector.privateBanner.title": "Network kept private",

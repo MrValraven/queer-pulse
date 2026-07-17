@@ -26,7 +26,10 @@ export function CinemaFilmmakerPage() {
             icon={<FiFilm />}
             title={t("cinema:filmmaker.notFound.title")}
             description={t("cinema:filmmaker.notFound.description")}
-            action={{ label: t("cinema:curator.notFound.backCta"), to: routes.cinema }}
+            action={{
+              label: t("cinema:curator.notFound.backCta"),
+              to: routes.cinema,
+            }}
           />
         </div>
       </PageShell>

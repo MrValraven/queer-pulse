@@ -181,7 +181,9 @@ export function AboutStrip() {
   return (
     <div className={styles.aboutStrip}>
       <div className={styles.aboutStripText}>
-        <div className={styles.aboutStripEb}>{t("cinema:aboutStrip.eyebrow")}</div>
+        <div className={styles.aboutStripEb}>
+          {t("cinema:aboutStrip.eyebrow")}
+        </div>
         <h2>
           <Translation
             i18nKey="cinema:aboutStrip.title"
@@ -203,10 +205,7 @@ export function CinemaOutro() {
   return (
     <Outro
       title={
-        <Translation
-          i18nKey="cinema:outro.title"
-          components={{ em: <em /> }}
-        />
+        <Translation i18nKey="cinema:outro.title" components={{ em: <em /> }} />
       }
       sub={t("cinema:outro.sub")}
     >

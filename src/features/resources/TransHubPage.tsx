@@ -23,10 +23,19 @@ export function TransHubPage() {
         }
         lead={t("resources:transHub.hero.lead")}
         anchors={[
-          { label: t("resources:transHub.hero.anchor.healthcare"), href: "#healthcare" },
+          {
+            label: t("resources:transHub.hero.anchor.healthcare"),
+            href: "#healthcare",
+          },
           { label: t("resources:transHub.hero.anchor.legal"), href: "#legal" },
-          { label: t("resources:transHub.hero.anchor.resources"), href: "#resources" },
-          { label: t("resources:transHub.hero.anchor.community"), href: "#community" },
+          {
+            label: t("resources:transHub.hero.anchor.resources"),
+            href: "#resources",
+          },
+          {
+            label: t("resources:transHub.hero.anchor.community"),
+            href: "#community",
+          },
         ]}
       />
 
@@ -54,7 +63,9 @@ export function TransHubPage() {
                     <Translation
                       i18nKey={step.bodyKey}
                       components={
-                        step.linkTo ? { a: <Link to={step.linkTo} /> } : undefined
+                        step.linkTo
+                          ? { a: <Link to={step.linkTo} /> }
+                          : undefined
                       }
                     />
                   </div>

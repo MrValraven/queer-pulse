@@ -30,7 +30,9 @@ export function NotificationsPage() {
   const { showToast } = useToast();
   const [filter, setFilter] = useState<"all" | NotifType>("all");
   const [readIds, setReadIds] = useState<Set<NotificationId>>(new Set());
-  const [resolvedIds, setResolvedIds] = useState<Set<NotificationId>>(new Set());
+  const [resolvedIds, setResolvedIds] = useState<Set<NotificationId>>(
+    new Set(),
+  );
 
   const visible = useMemo(
     () =>

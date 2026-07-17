@@ -35,7 +35,8 @@ export function PostVolunteerOpportunityPage() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
       },
-      onError: () => showToast(t("marketing:postOpportunity.toast.error"), "error"),
+      onError: () =>
+        showToast(t("marketing:postOpportunity.toast.error"), "error"),
     });
   };
 

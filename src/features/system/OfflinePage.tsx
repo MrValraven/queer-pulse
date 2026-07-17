@@ -156,7 +156,9 @@ export function OfflinePage() {
         </p>
 
         <div className={styles.cached}>
-          <h3 className={styles.cachedTitle}>{t("system:offline.cachedTitle")}</h3>
+          <h3 className={styles.cachedTitle}>
+            {t("system:offline.cachedTitle")}
+          </h3>
           <div className={styles.cachedList}>
             {cached.map((item) => (
               <Link key={item.to} to={item.to} className={styles.cachedRow}>

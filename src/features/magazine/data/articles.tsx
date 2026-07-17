@@ -49,7 +49,8 @@ export function relationReason(
   candidate: Article,
   t: TFunction,
 ): string {
-  if (candidate.byline === current.byline) return t("magazine:relation.sameAuthor");
+  if (candidate.byline === current.byline)
+    return t("magazine:relation.sameAuthor");
   const sharedTag = candidate.tags.find((tag) => current.tags.includes(tag));
   if (sharedTag) return t("magazine:relation.sameTag", { tag: sharedTag });
   if (candidate.section === current.section)

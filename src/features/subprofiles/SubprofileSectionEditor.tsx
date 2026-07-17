@@ -93,7 +93,10 @@ export function SubprofileSectionEditor({
         items: itemsToInputDto(rows),
       });
       setDirty(false);
-      showToast(t("subprofiles:sectionEditor.toastSaved", { section: label }), "success");
+      showToast(
+        t("subprofiles:sectionEditor.toastSaved", { section: label }),
+        "success",
+      );
     } catch {
       showToast(t("subprofiles:sectionEditor.toastError"), "error");
     }
@@ -109,7 +112,9 @@ export function SubprofileSectionEditor({
       </div>
 
       {rows.length === 0 && (
-        <p className={styles.emptySection}>{t("subprofiles:sectionEditor.empty")}</p>
+        <p className={styles.emptySection}>
+          {t("subprofiles:sectionEditor.empty")}
+        </p>
       )}
 
       <div className={styles.itemsWrap}>
@@ -137,10 +142,14 @@ export function SubprofileSectionEditor({
             disabled={atMax}
           >
             <FiPlus size={18} aria-hidden />{" "}
-            {t("subprofiles:sectionEditor.addTo", { section: label.toLowerCase() })}
+            {t("subprofiles:sectionEditor.addTo", {
+              section: label.toLowerCase(),
+            })}
           </button>
           {atMax && (
-            <p className={styles.capHint}>{t("subprofiles:sectionEditor.capHint")}</p>
+            <p className={styles.capHint}>
+              {t("subprofiles:sectionEditor.capHint")}
+            </p>
           )}
         </div>
         <Button variant="primary" onClick={save} disabled={saving || !dirty}>

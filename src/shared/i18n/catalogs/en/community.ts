@@ -108,19 +108,19 @@ export const community: Catalog = {
     "A few of the things we wish people had been told. Not exhaustive, not a script — just a few opening moves that help.",
   "caregivers.dontDoSay.dontHeading": "Don't <em>say</em>",
   "caregivers.dontDoSay.doHeading": "Do <em>say</em>",
-  "caregivers.dontSay.1": "\"Are you sure?\"",
-  "caregivers.dontSay.2": "\"How do you know?\"",
-  "caregivers.dontSay.3": "\"Don't tell your grandmother.\"",
-  "caregivers.dontSay.4": "\"It's just a phase.\"",
-  "caregivers.dontSay.5": "\"You don't look queer.\"",
-  "caregivers.dontSay.6": "\"I love you but I don't agree.\"",
-  "caregivers.dontSay.7": "\"What did I do wrong?\"",
-  "caregivers.doSay.1": "\"Thank you for telling me.\"",
-  "caregivers.doSay.2": "\"What do you need from me right now?\"",
-  "caregivers.doSay.3": "\"I want to get this right. <em>I might mess up.</em>\"",
-  "caregivers.doSay.4": "\"Tell me what name and pronouns to use.\"",
-  "caregivers.doSay.5": "\"Who else have you told? Who shouldn't I tell?\"",
-  "caregivers.doSay.6": "\"I love you. The rest we'll figure out.\"",
+  "caregivers.dontSay.1": '"Are you sure?"',
+  "caregivers.dontSay.2": '"How do you know?"',
+  "caregivers.dontSay.3": '"Don\'t tell your grandmother."',
+  "caregivers.dontSay.4": '"It\'s just a phase."',
+  "caregivers.dontSay.5": '"You don\'t look queer."',
+  "caregivers.dontSay.6": '"I love you but I don\'t agree."',
+  "caregivers.dontSay.7": '"What did I do wrong?"',
+  "caregivers.doSay.1": '"Thank you for telling me."',
+  "caregivers.doSay.2": '"What do you need from me right now?"',
+  "caregivers.doSay.3": '"I want to get this right. <em>I might mess up.</em>"',
+  "caregivers.doSay.4": '"Tell me what name and pronouns to use."',
+  "caregivers.doSay.5": '"Who else have you told? Who shouldn\'t I tell?"',
+  "caregivers.doSay.6": '"I love you. The rest we\'ll figure out."',
   "caregivers.doSay.7":
     "\"I'll do my own learning so you don't have to teach me.\"",
 
@@ -169,7 +169,7 @@ export const community: Catalog = {
   "comingOut.hero.eyebrow": "Coming-Out Support · Private space",
   "comingOut.hero.title": "A place to say it <em>before you say it.</em>",
   "comingOut.hero.lead":
-    "A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. There's no pressure to be \"out\" to join, and nothing here is visible from your public profile.",
+    'A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. There\'s no pressure to be "out" to join, and nothing here is visible from your public profile.',
   "comingOut.privacy.heading": "Built for <em>privacy</em>, first.",
   "comingOut.privacy.lead":
     "This space carries additional controls beyond the rest of QueerPulse. They exist so you can be here without it costing you anything elsewhere.",
@@ -182,7 +182,7 @@ export const community: Catalog = {
   "comingOut.privacy.confidentiality.title": "Confidentiality first",
   "comingOut.privacy.confidentiality.body":
     "Stricter moderation, no screenshots, no outside sharing. The first rule and the last.",
-  "comingOut.privacy.noPressure.title": "No pressure to be \"out\"",
+  "comingOut.privacy.noPressure.title": 'No pressure to be "out"',
   "comingOut.privacy.noPressure.body":
     "Join at any stage — including not-yet and not-sure. You can leave the moment you're ready.",
   "comingOut.stages.heading": "However you <em>need to use it.</em>",
@@ -262,7 +262,7 @@ export const community: Catalog = {
   "dating.app.grindr.tag2": "High volume",
   "dating.app.grindr.tag3": "Variable culture",
   "dating.app.grindr.quote":
-    "\"Works fine for what it is. Set your preferences clearly and you'll find your people. The community tends to cluster in Príncipe Real and Mouraria.\"",
+    '"Works fine for what it is. Set your preferences clearly and you\'ll find your people. The community tends to cluster in Príncipe Real and Mouraria."',
   "dating.app.scruff.audience": "Gay & bi men · Bears · Masc-leaning",
   "dating.app.scruff.body":
     "More conversational than Grindr. Better for people who want to talk first. Has events and group features that the queer community uses actively in Lisbon.",
@@ -270,7 +270,7 @@ export const community: Catalog = {
   "dating.app.scruff.tag2": "More chat-first",
   "dating.app.scruff.tag3": "Bears & masc",
   "dating.app.scruff.quote":
-    "\"The Lisbon pool is smaller but the vibe is better. More likely to result in an actual conversation.\"",
+    '"The Lisbon pool is smaller but the vibe is better. More likely to result in an actual conversation."',
   "dating.app.her.audience": "Queer women · Non-binary",
   "dating.app.her.body":
     "The main app for queer women and non-binary people in Lisbon. Smaller pool but genuinely community-oriented — has event listings and groups beyond just dating.",
@@ -278,7 +278,7 @@ export const community: Catalog = {
   "dating.app.her.tag2": "Events & groups",
   "dating.app.her.tag3": "All relationships",
   "dating.app.her.quote":
-    "\"Not huge in Lisbon but the quality of connections is better. Worth having alongside Tinder.\"",
+    '"Not huge in Lisbon but the quality of connections is better. Worth having alongside Tinder."',
   "dating.app.feeld.audience": "All genders · ENM · Kink-adjacent",
   "dating.app.feeld.body":
     "The go-to for ethical non-monogamy, open relationships, and kink in Lisbon. Very identity-inclusive. Growing fast in the community — well-used at events and socials too.",
@@ -295,7 +295,7 @@ export const community: Catalog = {
   "dating.app.hornet.tag2": "Local news",
   "dating.app.hornet.tag3": "More than hookups",
   "dating.app.hornet.quote":
-    "\"Used this to find events and community spots before I had a social network. Underrated.\"",
+    '"Used this to find events and community spots before I had a social network. Underrated."',
   "dating.app.okcupid.audience": "All genders · Relationships",
   "dating.app.okcupid.body":
     "Best identity and pronoun options of any mainstream app. Question-matching means you arrive at conversations already knowing you have something in common. Slower pace, better for relationships over hookups.",
@@ -303,7 +303,7 @@ export const community: Catalog = {
   "dating.app.okcupid.tag2": "Relationship-focused",
   "dating.app.okcupid.tag3": "Slower pace",
   "dating.app.okcupid.quote":
-    "\"If you care about someone's politics and values before their photos, OkCupid is the one.\"",
+    '"If you care about someone\'s politics and values before their photos, OkCupid is the one."',
 
   "dating.culture.heading": "Dating culture <em>in Lisbon</em>",
   "dating.culture.lead":
@@ -331,7 +331,7 @@ export const community: Catalog = {
   "dating.structure.enm.label": "Ethical non-monogamy",
   "dating.structure.enm.title": "Open relationships",
   "dating.structure.enm.text":
-    "ENM covers a broad range from \"open but together\" to fully independent relationships with multiple people. Feeld and the community's own social events are the best entry points. The forum has an active ENM thread with local meetups.",
+    'ENM covers a broad range from "open but together" to fully independent relationships with multiple people. Feeld and the community\'s own social events are the best entry points. The forum has an active ENM thread with local meetups.',
   "dating.structure.polyamory.label": "Polyamory",
   "dating.structure.polyamory.title": "Multiple loving relationships",
   "dating.structure.polyamory.text":
@@ -347,7 +347,7 @@ export const community: Catalog = {
   "dating.structure.soloPolyamory.label": "Solo polyamory",
   "dating.structure.soloPolyamory.title": "Your own anchor",
   "dating.structure.soloPolyamory.text":
-    "Multiple connections without a primary partner or \"escalator\" trajectory. Common among people who moved to Lisbon independently and value their autonomy. Works well with the city's social rhythm — events and community without cohabitation pressure.",
+    'Multiple connections without a primary partner or "escalator" trajectory. Common among people who moved to Lisbon independently and value their autonomy. Works well with the city\'s social rhythm — events and community without cohabitation pressure.',
 
   "dating.recognition.heading": "Legal <em>recognition in Portugal</em>",
   "dating.recognition.sameSexMarriage.title": "Same-sex marriage",
@@ -559,8 +559,7 @@ export const community: Catalog = {
     "Gender recognition and parenthood",
   "family.tab.legal.card.transParents.body":
     "A trans man who gives birth is legally the father if his legal gender has been changed to male. A trans woman whose partner carries the child can be registered as the mother. Portuguese law has accommodated these situations, though administrative practice varies — document everything.",
-  "family.tab.legal.card.transParents.linkLabel":
-    "Trans Hub legal resources →",
+  "family.tab.legal.card.transParents.linkLabel": "Trans Hub legal resources →",
   "family.tab.legal.card.secondParentAdoption.eyebrow":
     "Second-parent adoption",
   "family.tab.legal.card.secondParentAdoption.title": "Still a valid route",

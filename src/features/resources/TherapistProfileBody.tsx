@@ -70,7 +70,9 @@ export function TherapistProfileBody({
             <span className={styles.statusDot} />
             {therapist.acceptingNew
               ? t("resources:mentalHealth.therapistProfile.status.acceptingNew")
-              : t("resources:mentalHealth.therapistProfile.status.waitlistOnly")}
+              : t(
+                  "resources:mentalHealth.therapistProfile.status.waitlistOnly",
+                )}
           </span>
         </div>
       </div>

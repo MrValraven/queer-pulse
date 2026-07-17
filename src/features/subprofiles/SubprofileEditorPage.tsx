@@ -42,7 +42,10 @@ export function SubprofileEditorPage() {
             <EmptyState
               title={t("subprofiles:editor.notFoundTitle")}
               description={t("subprofiles:editor.notFoundDescription")}
-              action={{ label: t("subprofiles:editor.notFoundAction"), to: DASHBOARD }}
+              action={{
+                label: t("subprofiles:editor.notFoundAction"),
+                to: DASHBOARD,
+              }}
             />
           </div>
         </div>
@@ -57,7 +60,8 @@ export function SubprofileEditorPage() {
       <div className={styles.page}>
         <div className={styles.container}>
           <Link to={DASHBOARD} className={styles.backLink}>
-            <FiArrowLeft size={16} aria-hidden /> {t("subprofiles:editor.backLink")}
+            <FiArrowLeft size={16} aria-hidden />{" "}
+            {t("subprofiles:editor.backLink")}
           </Link>
 
           <div className={styles.header}>

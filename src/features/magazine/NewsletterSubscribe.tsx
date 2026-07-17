@@ -46,7 +46,10 @@ export function NewsletterSubscribe({ stream }: Props) {
             <Translation
               i18nKey="magazine:newsletter.subscribe.doneBody"
               components={{ strong: <strong /> }}
-              values={{ stream: t(STREAM_LABEL_KEY[done.stream]), email: done.email }}
+              values={{
+                stream: t(STREAM_LABEL_KEY[done.stream]),
+                email: done.email,
+              }}
             />
           </p>
           <p className={styles.subDoneNext}>

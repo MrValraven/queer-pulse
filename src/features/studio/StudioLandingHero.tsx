@@ -38,21 +38,28 @@ export function StudioLandingHero() {
             </span>
           </div>
           <h1>
-            <Translation i18nKey="studio:landing.hero.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:landing.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.dek}>
             <Translation
               i18nKey="studio:landing.hero.dek"
               components={{ em: <em /> }}
               values={{
-                sharePercent: fmt.number(HERO_SHARE_PERCENT, { style: "percent" }),
+                sharePercent: fmt.number(HERO_SHARE_PERCENT, {
+                  style: "percent",
+                }),
                 tipPercent: fmt.number(HERO_TIP_PERCENT, { style: "percent" }),
               }}
             />
           </p>
           <div className={styles.actions}>
             <Button variant="primary" size="lg" to={routes.sustainer}>
-              {t("studio:landing.hero.sustainCta", { price: fmt.currency(SUSTAIN_PRICE) })}
+              {t("studio:landing.hero.sustainCta", {
+                price: fmt.currency(SUSTAIN_PRICE),
+              })}
             </Button>
             <Button variant="ghost-dark" size="lg" href="#demo">
               {t("studio:landing.hero.demoCta")}
@@ -68,7 +75,12 @@ export function StudioLandingHero() {
 
 /** Demo set + track content — mock, kept in English regardless of language. */
 const DEMO_SET = { titlePre: "Vespertina, ", titleEm: "vol. iv" };
-const DEMO_META = { curator: "Sara Marques", duration: "1h 42m", trackCount: 12, listening: 312 };
+const DEMO_META = {
+  curator: "Sara Marques",
+  duration: "1h 42m",
+  trackCount: 12,
+  listening: 312,
+};
 const DEMO_TRACK = { number: 6, titlePre: "Carta para a ", titleEm: "santa" };
 const DEMO_ARTIST = { name: "Mariana Sol", album: "Cidade dos santos" };
 const DEMO_PER_PLAY_AMOUNT = 0.05;
@@ -147,7 +159,9 @@ function DemoCard() {
               </button>
               <div className={styles.demoInfo}>
                 <div className={styles.t}>
-                  {t("studio:landing.demo.trackPrefix", { n: DEMO_TRACK.number })}{" "}
+                  {t("studio:landing.demo.trackPrefix", {
+                    n: DEMO_TRACK.number,
+                  })}{" "}
                   {DEMO_TRACK.titlePre}
                   <em>{DEMO_TRACK.titleEm}</em>
                 </div>
@@ -168,7 +182,10 @@ function DemoCard() {
             <Translation
               i18nKey="studio:landing.demo.payNote"
               components={{ em: <em /> }}
-              values={{ artist: DEMO_ARTIST.name, amount: fmt.currency(DEMO_PER_PLAY_AMOUNT) }}
+              values={{
+                artist: DEMO_ARTIST.name,
+                amount: fmt.currency(DEMO_PER_PLAY_AMOUNT),
+              }}
             />
           </span>
         </div>

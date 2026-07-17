@@ -72,7 +72,9 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
           </div>
         ) : (
           <>
-            <div className={styles.eye}>{t("system:interestsEditor.eyebrow")}</div>
+            <div className={styles.eye}>
+              {t("system:interestsEditor.eyebrow")}
+            </div>
             <h2 id="interests-title" className={styles.title}>
               <Translation
                 i18nKey="system:interestsEditor.title"

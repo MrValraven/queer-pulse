@@ -65,7 +65,10 @@ export function SubprofilePage() {
             className={styles.stateEmpty}
             title={t(NOT_FOUND.titleKey)}
             description={t(NOT_FOUND.descriptionKey)}
-            action={{ label: t(NOT_FOUND.actionLabelKey), to: NOT_FOUND.actionTo }}
+            action={{
+              label: t(NOT_FOUND.actionLabelKey),
+              to: NOT_FOUND.actionTo,
+            }}
             secondaryAction={{
               label: <>← {t(NOT_FOUND.backLabelKey)}</>,
               onClick: () => navigate(-1),
@@ -95,7 +98,9 @@ export function SubprofilePage() {
               className={styles.avatar}
             />
             <div className={styles.heroText}>
-              <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[data.kind])}</span>
+              <span className={styles.kindBadge}>
+                {t(KIND_LABEL_KEYS[data.kind])}
+              </span>
               <h1 className={styles.name}>{data.displayName}</h1>
               {data.tagline && <p className={styles.tagline}>{data.tagline}</p>}
               {linkedToOwner && (

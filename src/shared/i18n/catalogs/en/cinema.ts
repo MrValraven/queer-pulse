@@ -197,7 +197,8 @@ export const cinema: Catalog = {
   // content and stay English ─────────────────────────────────────────────────
   "film.crumb.backCta": "← Back to slate",
   "film.split.eyebrow": "The split",
-  "film.split.title": "Eighty percent of every rent goes to <em>the filmmaker.</em>",
+  "film.split.title":
+    "Eighty percent of every rent goes to <em>the filmmaker.</em>",
   "film.split.body":
     "No exceptions, no tiers, no negotiated rates. The same deal for the first-time maker as for the festival winner. The ledger is public; the deed is binding.",
   "film.split.breakdownHeading": "{price} rent · where it goes",
@@ -217,8 +218,10 @@ export const cinema: Catalog = {
   "film.poster.trailerCta": "Press play · trailer {duration}",
   "film.tipjar.heading": "↳ tip the filmmaker",
   "film.tipjar.note": "100% goes to {name}. No fees skimmed.",
-  "film.tipjar.footnote_one": "<strong>{count} member</strong> has tipped this week.",
-  "film.tipjar.footnote_other": "<strong>{count} members</strong> have tipped this week.",
+  "film.tipjar.footnote_one":
+    "<strong>{count} member</strong> has tipped this week.",
+  "film.tipjar.footnote_other":
+    "<strong>{count} members</strong> have tipped this week.",
   "film.tipjar.tippedToast": "Tipped {amount} to {name}",
 
   "film.watchTabs.watch.label": "Watch",
@@ -240,7 +243,8 @@ export const cinema: Catalog = {
   "film.body.cast.title": "Cast &amp; <em>crew</em>",
   "film.body.tag.member": "QueerPulse member",
   "film.body.filmmaker.stat.films_one": "<em>{count}</em> film on the cinema",
-  "film.body.filmmaker.stat.films_other": "<em>{count}</em> films on the cinema",
+  "film.body.filmmaker.stat.films_other":
+    "<em>{count}</em> films on the cinema",
   "film.body.filmmaker.stat.earned": "earned here",
   "film.body.filmmaker.viewProfileCta": "View profile",
   "film.body.filmmaker.followCta": "Follow filmmaker",
@@ -280,10 +284,14 @@ export const cinema: Catalog = {
   "collectionsIndex.filter.new": "New",
   "collectionsIndex.filter.shortCollections": "Short collections",
   "collectionsIndex.filterLabel": "Filter:",
-  "collectionsIndex.summary_one": "{count} collection · {filmTotal} films total",
-  "collectionsIndex.summary_other": "{count} collections · {filmTotal} films total",
-  "collectionsIndex.empty.title": "<em>Still</em> no collections in this filter.",
-  "collectionsIndex.empty.body": "The council is always building. Try another lens.",
+  "collectionsIndex.summary_one":
+    "{count} collection · {filmTotal} films total",
+  "collectionsIndex.summary_other":
+    "{count} collections · {filmTotal} films total",
+  "collectionsIndex.empty.title":
+    "<em>Still</em> no collections in this filter.",
+  "collectionsIndex.empty.body":
+    "The council is always building. Try another lens.",
   "collectionsIndex.empty.resetCta": "Show all collections",
   "collectionsIndex.outro.title": "Start <em>wandering</em>.",
   "collectionsIndex.outro.sub":
@@ -347,8 +355,10 @@ export const cinema: Catalog = {
     "100% goes to {name} — the co-op takes nothing off a tip. Tipping keeps them making things.",
   "filmmaker.aside.sendCta": "Send {amount}",
   "filmmaker.aside.tippedToast": "{amount} on its way to {name} — thank you",
-  "filmmaker.aside.tippedNote_one": "<strong>{count} member</strong> has tipped {name} this month.",
-  "filmmaker.aside.tippedNote_other": "<strong>{count} members</strong> have tipped {name} this month.",
+  "filmmaker.aside.tippedNote_one":
+    "<strong>{count} member</strong> has tipped {name} this month.",
+  "filmmaker.aside.tippedNote_other":
+    "<strong>{count} members</strong> have tipped {name} this month.",
   "filmmaker.aside.splitHeading": "The co-op split",
   "filmmaker.aside.splitBody":
     "When you rent any of {name}'s films, <strong>80%</strong> goes to them. When you buy, the same. Tips are 100%. The split is the same for every filmmaker on the cinema.",
@@ -362,7 +372,8 @@ export const cinema: Catalog = {
   "shorts.toast.savedToWatchlist": "Saved to your watchlist",
   "shorts.toast.linkCopiedShare": "Link copied — share “{label}”",
   "shorts.outro.title": "Tip a <em>filmmaker</em>.",
-  "shorts.outro.sub": "100% goes to them. No fees. No minimum. Watch first, then decide.",
+  "shorts.outro.sub":
+    "100% goes to them. No fees. No minimum. Watch first, then decide.",
   "shorts.outro.browseCta": "Browse all community films",
   "shorts.header.eyebrow": "Community films · all free to watch",
   "shorts.header.sub":
@@ -375,16 +386,20 @@ export const cinema: Catalog = {
   "shorts.spotlight.watchNowCta": "Watch now · free",
   "shorts.spotlight.becomeSustainerCta": "Become one →",
   "shorts.shelf.newThisWeek.title": "New <em>this week</em>",
-  "shorts.shelf.newThisWeek.sub": "Films submitted and approved in the last 7 days",
+  "shorts.shelf.newThisWeek.sub":
+    "Films submitted and approved in the last 7 days",
   "shorts.shelf.newThisWeek.cta": "All new →",
-  "shorts.shelf.becauseYouTipped.title": "Because you tipped <em>{filmTitle}</em>",
-  "shorts.shelf.becauseYouTipped.sub": "More from {maker}, and films in the same key",
+  "shorts.shelf.becauseYouTipped.title":
+    "Because you tipped <em>{filmTitle}</em>",
+  "shorts.shelf.becauseYouTipped.sub":
+    "More from {maker}, and films in the same key",
   "shorts.shelf.becauseYouTipped.cta": "{maker}'s page →",
   "shorts.shelf.firstFilm.title": "Someone's <em>first film</em>",
   "shorts.shelf.firstFilm.sub": "Debuts deserve a first audience — be theirs",
   "shorts.shelf.firstFilm.cta": "All debuts →",
   "shorts.shelf.mostTipped.title": "Most <em>tipped</em>",
-  "shorts.shelf.mostTipped.sub": "Films where members have been generous this month",
+  "shorts.shelf.mostTipped.sub":
+    "Films where members have been generous this month",
   "shorts.shelf.mostTipped.cta": "All films →",
   "shorts.shelf.continueWatching.title": "Continue <em>watching</em>",
   "shorts.shelf.continueWatching.sub": "Pick up where you left off",
@@ -396,10 +411,12 @@ export const cinema: Catalog = {
   "shorts.shelf.programmes.cta": "All programmes →",
   "shorts.shelf.programmes.shareAriaLabel": "Share programme",
   "shorts.shelf.meetMakers.title": "Meet the <em>makers</em>",
-  "shorts.shelf.meetMakers.sub": "Every film here has a person behind it — say hello",
+  "shorts.shelf.meetMakers.sub":
+    "Every film here has a person behind it — say hello",
   "shorts.shelf.meetMakers.cta": "All filmmakers →",
   "shorts.catalog.title": "Browse the <em>full catalogue</em>",
-  "shorts.catalog.sub": "Every community film — filter, sort, and search your way in",
+  "shorts.catalog.sub":
+    "Every community film — filter, sort, and search your way in",
   "shorts.catalog.cta": "Open in Browse →",
   "shorts.catalog.searchPlaceholder": "Search films, makers, or themes…",
   "shorts.catalog.searchAriaLabel": "Search films",
@@ -408,10 +425,12 @@ export const cinema: Catalog = {
   "shorts.catalog.sortLabel": "Sort",
   "shorts.catalog.sortAriaLabel": "Sort films",
   "shorts.catalog.surpriseCta": "Surprise me",
+  "shorts.catalog.surpriseToast": "Try this one → {title}",
   "shorts.catalog.allFilmsChip": "All films",
   "shorts.catalog.empty.title": "Nothing matches — yet",
   "shorts.catalog.empty.body":
     "No films fit that combination. Loosen a filter, or tell us what you wish existed — we commission from member requests.",
+  "shorts.catalog.empty.clearCta": "Clear filters",
   "shorts.catalog.empty.suggestCta": "Suggest a film",
   "shorts.catalog.count_one": "<em>{count}</em> film · all free to watch",
   "shorts.catalog.count_other": "<em>{count}</em> films · all free to watch",
@@ -537,6 +556,7 @@ export const cinema: Catalog = {
   "about.gov.decision.auditValue": "<em>Quarterly</em>",
   "about.gov.rightsCta": "Filmmaker rights →",
   "about.outro.title": "Sustain <em>the room</em>.",
-  "about.outro.sub": "{price}/mo. Cancel any time. Every sustainer keeps the door open.",
+  "about.outro.sub":
+    "{price}/mo. Cancel any time. Every sustainer keeps the door open.",
   "about.outro.cta": "Become a sustainer",
 };

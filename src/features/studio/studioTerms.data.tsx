@@ -64,23 +64,63 @@ export function buildDeals(): Deal[] {
   return [
     {
       icon: coinIcon,
-      title: <Translation i18nKey="studio:terms.deal.artists.title" components={{ em: <em /> }} />,
-      body: <Translation i18nKey="studio:terms.deal.artists.body" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.deal.artists.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:terms.deal.artists.body"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       icon: checkCircleIcon,
-      title: <Translation i18nKey="studio:terms.deal.tips.title" components={{ em: <em /> }} />,
-      body: <Translation i18nKey="studio:terms.deal.tips.body" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.deal.tips.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:terms.deal.tips.body"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       icon: lockIcon,
-      title: <Translation i18nKey="studio:terms.deal.data.title" components={{ em: <em /> }} />,
-      body: <Translation i18nKey="studio:terms.deal.data.body" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.deal.data.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:terms.deal.data.body"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       icon: exitIcon,
-      title: <Translation i18nKey="studio:terms.deal.leaving.title" components={{ em: <em /> }} />,
-      body: <Translation i18nKey="studio:terms.deal.leaving.body" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.deal.leaving.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:terms.deal.leaving.body"
+          components={{ em: <em /> }}
+        />
+      ),
     },
   ];
 }
@@ -96,7 +136,12 @@ export function buildLicences(t: TFunction): Licence[] {
   return [
     {
       code: "ARR",
-      title: <Translation i18nKey="studio:terms.licence.arr.title" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.licence.arr.title"
+          components={{ em: <em /> }}
+        />
+      ),
       rows: [
         { ok: true, label: t("studio:terms.licence.arr.row1") },
         { ok: true, label: t("studio:terms.licence.arr.row2") },
@@ -105,11 +150,21 @@ export function buildLicences(t: TFunction): Licence[] {
     },
     {
       code: "CC-BY-NC",
-      title: <Translation i18nKey="studio:terms.licence.ccByNc.title" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.licence.ccByNc.title"
+          components={{ em: <em /> }}
+        />
+      ),
       rows: [
         {
           ok: true,
-          label: <Translation i18nKey="studio:terms.licence.ccByNc.row1" components={{ em: <em /> }} />,
+          label: (
+            <Translation
+              i18nKey="studio:terms.licence.ccByNc.row1"
+              components={{ em: <em /> }}
+            />
+          ),
         },
         { ok: true, label: t("studio:terms.licence.ccByNc.row2") },
         { ok: false, label: t("studio:terms.licence.ccByNc.row3") },
@@ -117,13 +172,23 @@ export function buildLicences(t: TFunction): Licence[] {
     },
     {
       code: "CC-BY-SA",
-      title: <Translation i18nKey="studio:terms.licence.ccBySa.title" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:terms.licence.ccBySa.title"
+          components={{ em: <em /> }}
+        />
+      ),
       rows: [
         { ok: true, label: t("studio:terms.licence.ccBySa.row1") },
         { ok: true, label: t("studio:terms.licence.ccBySa.row2") },
         {
           ok: true,
-          label: <Translation i18nKey="studio:terms.licence.ccBySa.row3" components={{ em: <em /> }} />,
+          label: (
+            <Translation
+              i18nKey="studio:terms.licence.ccBySa.row3"
+              components={{ em: <em /> }}
+            />
+          ),
         },
       ],
     },

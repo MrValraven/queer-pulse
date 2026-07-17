@@ -108,7 +108,10 @@ export function AnnualAssemblyPage() {
               type="button"
               variant="ghost-dark"
               onClick={() =>
-                showToast(t("marketing:annualAssembly.toast.openingZoom"), "info")
+                showToast(
+                  t("marketing:annualAssembly.toast.openingZoom"),
+                  "info",
+                )
               }
             >
               {t("marketing:annualAssembly.hero.joinOnlineCta")}

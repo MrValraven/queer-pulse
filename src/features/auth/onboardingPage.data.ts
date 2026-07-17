@@ -56,18 +56,27 @@ export const NORMS = [
  */
 export const INTENTS: { value: string; labelKey: string }[] = [
   { value: "Community", labelKey: "auth:onboarding.intent.community" },
-  { value: "Gatherings & events", labelKey: "auth:onboarding.intent.gatherings" },
+  {
+    value: "Gatherings & events",
+    labelKey: "auth:onboarding.intent.gatherings",
+  },
   {
     value: "Professional connections",
     labelKey: "auth:onboarding.intent.professional",
   },
   { value: "Dating", labelKey: "auth:onboarding.intent.dating" },
-  { value: "Resources & support", labelKey: "auth:onboarding.intent.resources" },
+  {
+    value: "Resources & support",
+    labelKey: "auth:onboarding.intent.resources",
+  },
   { value: "Contributing", labelKey: "auth:onboarding.intent.contributing" },
   { value: "Housing", labelKey: "auth:onboarding.intent.housing" },
   { value: "Finding flatmates", labelKey: "auth:onboarding.intent.flatmates" },
   { value: "Activism", labelKey: "auth:onboarding.intent.activism" },
-  { value: "Creative collaboration", labelKey: "auth:onboarding.intent.creative" },
+  {
+    value: "Creative collaboration",
+    labelKey: "auth:onboarding.intent.creative",
+  },
 ];
 
 export const COMMUNITIES_LIST = [

@@ -45,10 +45,16 @@ function StepFollow({
   return (
     <div className={s.stepCard}>
       <h2>
-        <Translation i18nKey="studio:welcome.step1.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:welcome.step1.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={s.scDek}>
-        <Translation i18nKey="studio:welcome.step1.dek" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:welcome.step1.dek"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.artGrid}>
         {WELCOME_ARTISTS.map((a) => {
@@ -113,10 +119,16 @@ function StepTip({
   return (
     <div className={s.stepCard}>
       <h2>
-        <Translation i18nKey="studio:welcome.step2.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:welcome.step2.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={s.scDek}>
-        <Translation i18nKey="studio:welcome.step2.dek" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:welcome.step2.dek"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.tipChips}>
         {TIP_CHIPS.map((c) => (
@@ -160,10 +172,16 @@ function StepPrivacy({
   return (
     <div className={s.stepCard}>
       <h2>
-        <Translation i18nKey="studio:welcome.step3.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:welcome.step3.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <div className={s.scDek}>
-        <Translation i18nKey="studio:welcome.step3.dek" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:welcome.step3.dek"
+          components={{ em: <em /> }}
+        />
       </div>
       {TOGGLE_ROWS.map((r) => {
         const on = toggles[r.id];
@@ -242,7 +260,10 @@ export function StudioWelcomePage() {
 
       <div className={s.inner}>
         <div className={s.eyebrow}>
-          <Translation i18nKey="studio:welcome.eyebrow" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:welcome.eyebrow"
+            components={{ em: <em /> }}
+          />
         </div>
         <h1>
           <Translation
@@ -252,7 +273,10 @@ export function StudioWelcomePage() {
           />
         </h1>
         <p className={s.sub}>
-          <Translation i18nKey="studio:welcome.sub" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:welcome.sub"
+            components={{ em: <em /> }}
+          />
         </p>
 
         <div className={s.steps}>

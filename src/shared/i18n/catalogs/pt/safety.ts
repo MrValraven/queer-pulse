@@ -376,7 +376,7 @@ export const safety: Catalog = {
 
   "emergency.common.viewProfileCta": "Ver perfil →",
   "emergency.common.moreInfoCta": "Mais informação →",
-  "emergency.common.joinNetworkCta": "Juntar-te à rede →",
+  "emergency.common.joinNetworkCta": "Junta-te à rede →",
   "emergency.common.housingResourcesCta": "Recursos de habitação →",
 
   "emergency.section.mentalHealth.title": "Apoio de saúde mental",

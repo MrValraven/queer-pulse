@@ -45,9 +45,7 @@ export function TierSelect() {
                   {fmt.currency(tierOption.price)}
                 </span>
               </span>
-              <span className={s["co-tier-desc"]}>
-                {t(tierOption.descKey)}
-              </span>
+              <span className={s["co-tier-desc"]}>{t(tierOption.descKey)}</span>
             </span>
           </label>
         );

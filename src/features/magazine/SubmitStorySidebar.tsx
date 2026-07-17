@@ -33,7 +33,10 @@ export function SubmitStorySidebar() {
             <div key={key} className={styles.sideItem}>
               <span className={`${styles.sideDot} ${styles.sideDotJade}`} />
               <span className={styles.sideText}>
-                <Translation i18nKey={key} components={{ strong: <strong /> }} />
+                <Translation
+                  i18nKey={key}
+                  components={{ strong: <strong /> }}
+                />
               </span>
             </div>
           ))}

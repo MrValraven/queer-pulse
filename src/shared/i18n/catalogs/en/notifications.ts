@@ -44,7 +44,8 @@ export const notifications: Catalog = {
   "type.waitlist_promoted.text": "A spot opened up — you're off the waitlist.",
   "type.waitlist_promoted.meta": "Gathering waitlist",
 
-  "type.event_cancelled.text": "A gathering you're going to has been cancelled.",
+  "type.event_cancelled.text":
+    "A gathering you're going to has been cancelled.",
   "type.event_cancelled.meta": "Gathering update",
 
   "type.unknown.text": "You have a new notification.",

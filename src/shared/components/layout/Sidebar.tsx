@@ -73,7 +73,10 @@ export function Sidebar({ unreadCount }: { unreadCount?: number }) {
         </div>
       )}
 
-      <nav className={styles.groups} aria-label={t("shared:sidebar.ariaSections")}>
+      <nav
+        className={styles.groups}
+        aria-label={t("shared:sidebar.ariaSections")}
+      >
         {menus.map((menu) => (
           <SidebarGroup
             key={menu.key}

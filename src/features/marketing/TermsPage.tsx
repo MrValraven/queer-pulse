@@ -173,7 +173,11 @@ export function TermsPage() {
   const { t } = useTranslation();
   const sections = useMemo(() => buildTermsSections(t), [t]);
   const toc = useMemo(
-    () => TERMS_TOC.map((item) => ({ id: item.id, label: t(`marketing:${item.titleKey}`) })),
+    () =>
+      TERMS_TOC.map((item) => ({
+        id: item.id,
+        label: t(`marketing:${item.titleKey}`),
+      })),
     [t],
   );
 

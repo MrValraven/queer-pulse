@@ -2,7 +2,12 @@ import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminModal, AdminSeg, AdminCheckLine, type AdminSegOption } from "./ui";
+import {
+  AdminModal,
+  AdminSeg,
+  AdminCheckLine,
+  type AdminSegOption,
+} from "./ui";
 import { ADMIN_PROFILE } from "../../shared/components/layout/adminNav.data";
 import styles from "./AdminMembersPage.module.css";
 
@@ -167,12 +172,20 @@ export function RestrictModal({
       <label className={styles.fieldLabel}>
         {t("admin:members.restrict.durationLabel")}
       </label>
-      <AdminSeg options={durationOptions} value={dur} onChange={(v) => setDur(v as DurationId)} />
+      <AdminSeg
+        options={durationOptions}
+        value={dur}
+        onChange={(v) => setDur(v as DurationId)}
+      />
 
       <label className={styles.fieldLabel}>
         {t("admin:members.restrict.scopeLabel")}
       </label>
-      <AdminSeg options={scopeOptions} value={scope} onChange={(v) => setScope(v as ScopeId)} />
+      <AdminSeg
+        options={scopeOptions}
+        value={scope}
+        onChange={(v) => setScope(v as ScopeId)}
+      />
 
       <label className={styles.fieldLabel}>
         {t("admin:members.restrict.reasonLabel")}
@@ -192,7 +205,9 @@ export function RestrictModal({
         className={styles.textarea}
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder={t("admin:members.restrict.notePlaceholder", { name: first })}
+        placeholder={t("admin:members.restrict.notePlaceholder", {
+          name: first,
+        })}
         rows={3}
       />
 

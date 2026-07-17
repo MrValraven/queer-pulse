@@ -25,7 +25,9 @@ export function IdentitySection() {
           components={{ em: <em /> }}
         />
       </h2>
-      <p className={styles.sectionSub}>{t("economy:workProfile.identity.sub")}</p>
+      <p className={styles.sectionSub}>
+        {t("economy:workProfile.identity.sub")}
+      </p>
 
       <div className={styles.fieldRow}>
         <div className={styles.field}>
@@ -190,7 +192,9 @@ export function ShowUpAtWorkSection({
                   <span className={styles.toggleKnob} />
                 </span>
                 <span className={styles.toggleText}>
-                  <span className={styles.toggleLabel}>{t(option.labelKey)}</span>
+                  <span className={styles.toggleLabel}>
+                    {t(option.labelKey)}
+                  </span>
                   <span className={styles.toggleDesc}>{t(option.descKey)}</span>
                 </span>
               </button>

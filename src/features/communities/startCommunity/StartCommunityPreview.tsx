@@ -51,7 +51,8 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
   return (
     <aside className={styles.previewCol}>
       <div className={styles.pvHead}>
-        <span className={styles.pvDot} /> {t("communities:start.preview.liveLabel")}
+        <span className={styles.pvDot} />{" "}
+        {t("communities:start.preview.liveLabel")}
       </div>
 
       {!draft.name.trim() ? (

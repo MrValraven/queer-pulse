@@ -144,10 +144,7 @@ export function PostProfileForm({
               <button
                 key={tag}
                 type="button"
-                className={[
-                  styles.lfOpt,
-                  modalTags.has(tag) && styles.lfOptOn,
-                ]
+                className={[styles.lfOpt, modalTags.has(tag) && styles.lfOptOn]
                   .filter(Boolean)
                   .join(" ")}
                 onClick={() => toggleTag(tag)}

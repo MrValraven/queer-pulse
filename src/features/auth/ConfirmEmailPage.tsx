@@ -120,7 +120,10 @@ export function ConfirmEmailPage() {
       </div>
 
       <h1>
-        <Translation i18nKey="auth:confirmEmail.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="auth:confirmEmail.title"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.sub} style={{ marginBottom: 0 }}>
         <Translation

@@ -57,7 +57,9 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
             )
           }
         >
-          {t("cinema:filmmaker.aside.sendCta", { amount: fmt.currency(amount) })}
+          {t("cinema:filmmaker.aside.sendCta", {
+            amount: fmt.currency(amount),
+          })}
         </Button>
         <div className={styles.tjNote}>
           <Translation

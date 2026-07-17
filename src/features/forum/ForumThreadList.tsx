@@ -101,10 +101,7 @@ export function ForumThreadList({
             <FadeIn key={thread.id} delay={Math.min(idx, 8) * 60}>
               <Link
                 to={threadPath(thread.id)}
-                className={[
-                  styles.thread,
-                  thread.pinned && styles.threadPinned,
-                ]
+                className={[styles.thread, thread.pinned && styles.threadPinned]
                   .filter(Boolean)
                   .join(" ")}
               >
@@ -183,9 +180,7 @@ export function ForumThreadList({
                           name: thread.author.n,
                         }}
                       />
-                      <span className={styles.tmAuthor}>
-                        {thread.author.n}
-                      </span>
+                      <span className={styles.tmAuthor}>{thread.author.n}</span>
                       {thread.author.official && <OfficialBadge />}
                     </ProfileSpanLink>
                     <span className={styles.tmDot} />

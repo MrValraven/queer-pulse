@@ -700,7 +700,7 @@ export const community: Catalog = {
   "readingGroups.outro.title": "Os livros constroem <em>comunidade.</em>",
   "readingGroups.outro.sub":
     "Os grupos de leitura da QueerPulse existem desde 2024. Alguns tornaram-se amizades, outros colaborações, dois tornaram-se bandas.",
-  "readingGroups.outro.cta": "Juntar-te à rede",
+  "readingGroups.outro.cta": "Junta-te à rede",
   "readingGroups.joinedWaitlistToast":
     "Estás em #{position} na lista de espera para {name}",
 

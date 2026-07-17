@@ -91,12 +91,19 @@ export function EditDetailsModal({
           >
             <FiX />
           </button>
-          <div className={styles.eye}>{t("gatherings:manage.editModal.eyebrow")}</div>
-          <div className={styles.title}>{t("gatherings:manage.editModal.title")}</div>
+          <div className={styles.eye}>
+            {t("gatherings:manage.editModal.eyebrow")}
+          </div>
+          <div className={styles.title}>
+            {t("gatherings:manage.editModal.title")}
+          </div>
           <p className={styles.sub}>{t("gatherings:manage.editModal.sub")}</p>
 
           <div className={styles.fields}>
-            <FormField label={t("gatherings:manage.editModal.fieldTitle")} required>
+            <FormField
+              label={t("gatherings:manage.editModal.fieldTitle")}
+              required
+            >
               <input
                 type="text"
                 value={draft.title}
@@ -123,7 +130,9 @@ export function EditDetailsModal({
                 onChange={(e) => set("location", e.target.value)}
               />
             </FormField>
-            <FormField label={t("gatherings:manage.editModal.fieldDescription")}>
+            <FormField
+              label={t("gatherings:manage.editModal.fieldDescription")}
+            >
               <textarea
                 value={draft.description}
                 onChange={(e) => set("description", e.target.value)}

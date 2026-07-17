@@ -132,7 +132,10 @@ export function GuidelinesPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const clauses = useMemo(() => buildClauses(t), [t]);
-  const revisedDate = fmt.date(REVISED_DATE, { month: "long", year: "numeric" });
+  const revisedDate = fmt.date(REVISED_DATE, {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <PageShell>

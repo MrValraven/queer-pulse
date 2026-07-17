@@ -109,7 +109,9 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
                   textAnchor="middle"
                   className={recent ? styles.chLabelStrong : styles.chLabel}
                 >
-                  {WEEK_LABEL_KEYS[wk.week] ? t(WEEK_LABEL_KEYS[wk.week]!) : wk.week}
+                  {WEEK_LABEL_KEYS[wk.week]
+                    ? t(WEEK_LABEL_KEYS[wk.week]!)
+                    : wk.week}
                 </text>
               </g>
             );

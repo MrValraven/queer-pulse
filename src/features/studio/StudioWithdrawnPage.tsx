@@ -98,16 +98,25 @@ export function StudioWithdrawnPage() {
           </div>
           <div className={s.eb}>{t("studio:withdrawn.hero.eyebrow")}</div>
           <h1>
-            <Translation i18nKey="studio:withdrawn.hero.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:withdrawn.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={s.sub}>
-            <Translation i18nKey="studio:withdrawn.hero.sub" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:withdrawn.hero.sub"
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
 
         <div className={s.card}>
           <h3>
-            <Translation i18nKey="studio:withdrawn.card.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:withdrawn.card.title"
+              components={{ em: <em /> }}
+            />
           </h3>
           <p>{t("studio:withdrawn.card.body")}</p>
           <div className={s.jadeLine}>
@@ -123,7 +132,10 @@ export function StudioWithdrawnPage() {
               <path d="M22 4 12 14.01l-3-3" />
             </svg>
             <span>
-              <Translation i18nKey="studio:withdrawn.card.jadeLine" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="studio:withdrawn.card.jadeLine"
+                components={{ em: <em /> }}
+              />
             </span>
           </div>
         </div>
@@ -140,7 +152,10 @@ export function StudioWithdrawnPage() {
         <div className={s.still}>
           <div className={s.rowH}>
             <h2>
-              <Translation i18nKey="studio:withdrawn.still.heading" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="studio:withdrawn.still.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={s.subLine}>{t("studio:withdrawn.still.sub")}</div>
           </div>

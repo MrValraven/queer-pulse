@@ -67,7 +67,9 @@ export function MySubprofilesPage() {
             )}
           </header>
 
-          {atCap && <p className={styles.count}>{t("subprofiles:mine.atCap")}</p>}
+          {atCap && (
+            <p className={styles.count}>{t("subprofiles:mine.atCap")}</p>
+          )}
 
           {isLoading ? (
             <div role="status" aria-live="polite">

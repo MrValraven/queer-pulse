@@ -226,9 +226,9 @@ export const studio: Catalog = {
     "Já és pessoa da QueerPulse? A Studio custa <em>mais {addOnPrice}/mês</em>.",
   "landing.cta.secondaryLink": "Entra para a adicionar",
 
-  // ── Entrar / Juntar-te (StudioSignInPage) ─────────────────────────────────
+  // ── Entrar / Junta-te (StudioSignInPage) ─────────────────────────────────
   "signin.tabs.signIn": "Entrar",
-  "signin.tabs.join": "Juntar-te",
+  "signin.tabs.join": "Junta-te",
   "signin.aside.onAirNow": "No ar agora · {count} na sala",
   "signin.aside.title":
     "Uma cooperativa de streaming que <em>paga</em> a quem fez a música.",
@@ -247,7 +247,7 @@ export const studio: Catalog = {
   "signin.googleContinue": "Continuar com o Google",
   "signin.googleLoading": "A entrar…",
   "signin.in.newHere": "Ainda não tens conta?",
-  "signin.in.joinCta": "Juntar-te à sala",
+  "signin.in.joinCta": "Junta-te à sala",
   "signin.in.freePrompt": "Só queres ouvir?",
   "signin.in.freeCta": "Ouve um set grátis, sem conta",
   "signin.in.signedInToast": "Sessão iniciada — bem-vinde de volta",
@@ -395,7 +395,7 @@ export const studio: Catalog = {
   "about.cta.title": "A sala é pequena, e <em>paga</em>.",
   "about.cta.body":
     "Ouve um set grátis, sem conta. Se for para ti, sustenta-a pelo preço de dois cafés.",
-  "about.cta.join": "Juntar-te à sala",
+  "about.cta.join": "Junta-te à sala",
   "about.cta.ledger": "Ler o livro-razão público →",
 
   // ── Acessibilidade (StudioAccessibilityPage) ──────────────────────────────

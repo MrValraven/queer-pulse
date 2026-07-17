@@ -24,9 +24,17 @@ export interface PublicContributions {
 
 export const CURRENT_USER_PUBLIC: PublicContributions = {
   stats: [
-    { value: "4", em: true, labelKey: "members:publicProfile.stat.poemsPublished" },
+    {
+      value: "4",
+      em: true,
+      labelKey: "members:publicProfile.stat.poemsPublished",
+    },
     { value: "9", labelKey: "members:publicProfile.stat.eventsHosted" },
-    { value: "1", em: true, labelKey: "members:publicProfile.stat.yearsOnPlatform" },
+    {
+      value: "1",
+      em: true,
+      labelKey: "members:publicProfile.stat.yearsOnPlatform",
+    },
     { value: "320", labelKey: "members:publicProfile.stat.membersReached" },
   ],
   writing: [

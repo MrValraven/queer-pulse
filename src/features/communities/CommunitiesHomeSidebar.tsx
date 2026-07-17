@@ -60,7 +60,8 @@ export function CommunitiesHomeSidebar({
           </Link>
         ))}
         <Link to={routes.communities} className={styles.sbFootLink}>
-          {t("communities:hub.sidebar.discoverMore")} <FiArrowRight aria-hidden />
+          {t("communities:hub.sidebar.discoverMore")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
 

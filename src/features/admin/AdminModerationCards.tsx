@@ -7,9 +7,13 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminChip, AdminCat } from "./ui";
 import {
   SEVERITY,
+  chipKey,
+  chipLabel,
+  priorReportsText,
   type ModReport,
   type Appeal,
   type ResolvedItem,
@@ -31,6 +35,7 @@ export function ReportCard({
   onToggle?: (id: string) => void;
   onOpen: (r: ModReport) => void;
 }) {
+  const { t } = useTranslation();
   const sev = SEVERITY[report.severity];
   return (
     <article
@@ -75,10 +80,10 @@ export function ReportCard({
         onClick={() => onOpen(report)}
       >
         <span className={styles.reportTop}>
-          <AdminCat tone={sev.cat}>{sev.label}</AdminCat>
-          {report.chips.map((c) => (
-            <AdminChip key={c.label} tone={c.tone} dot={c.dot}>
-              {c.label}
+          <AdminCat tone={sev.cat}>{t(sev.labelKey)}</AdminCat>
+          {report.chips.map((chip) => (
+            <AdminChip key={chipKey(chip)} tone={chip.tone} dot={chip.dot}>
+              {chipLabel(chip, t)}
             </AdminChip>
           ))}
         </span>
@@ -101,7 +106,7 @@ export function ReportCard({
           </span>
           {report.priorReports && (
             <span className={styles.priorFlag}>
-              <FiFlag aria-hidden /> {report.priorReports}
+              <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
             </span>
           )}
         </span>
@@ -111,7 +116,7 @@ export function ReportCard({
         <span className={styles.reportAge}>
           <FiClock aria-hidden /> {report.age}
         </span>
-        <AdminChip tone={report.risk.tone}>{report.risk.label}</AdminChip>
+        <AdminChip tone={report.risk.tone}>{t(report.risk.key)}</AdminChip>
       </div>
     </article>
   );
@@ -231,6 +236,7 @@ export function AppealCard({
   leaving?: boolean;
   onOpen: (a: Appeal) => void;
 }) {
+  const { t } = useTranslation();
   const sev = SEVERITY[appeal.severity];
   return (
     <article
@@ -250,9 +256,9 @@ export function AppealCard({
     >
       <div className={styles.reportMain}>
         <div className={styles.reportTop}>
-          {appeal.chips.map((c) => (
-            <AdminChip key={c.label} tone={c.tone}>
-              {c.label}
+          {appeal.chips.map((chip) => (
+            <AdminChip key={chipKey(chip)} tone={chip.tone}>
+              {chipLabel(chip, t)}
             </AdminChip>
           ))}
         </div>
@@ -290,7 +296,7 @@ export function AppealCard({
         <span className={styles.reportAge}>
           <FiClock aria-hidden /> {appeal.age}
         </span>
-        <AdminChip tone={appeal.status.tone}>{appeal.status.label}</AdminChip>
+        <AdminChip tone={appeal.status.tone}>{t(appeal.status.key)}</AdminChip>
       </div>
     </article>
   );
@@ -299,6 +305,7 @@ export function AppealCard({
 /* ── Resolved list ──────────────────────────────────────────────────────── */
 
 export function ResolvedRow({ item }: { item: ResolvedItem }) {
+  const { t } = useTranslation();
   const sev = SEVERITY[item.severity];
   return (
     <article
@@ -307,9 +314,9 @@ export function ResolvedRow({ item }: { item: ResolvedItem }) {
     >
       <div className={styles.reportMain}>
         <div className={styles.reportTop}>
-          {item.chips.map((c) => (
-            <AdminChip key={c.label} tone={c.tone}>
-              {c.label}
+          {item.chips.map((chip) => (
+            <AdminChip key={chipKey(chip)} tone={chip.tone}>
+              {chipLabel(chip, t)}
             </AdminChip>
           ))}
           <AdminCat tone={item.outcomeTone}>{item.outcome}</AdminCat>
@@ -330,7 +337,7 @@ export function ResolvedRow({ item }: { item: ResolvedItem }) {
       </div>
 
       <div className={styles.reportSide}>
-        <AdminChip tone={item.status.tone}>{item.status.label}</AdminChip>
+        <AdminChip tone={item.status.tone}>{t(item.status.key)}</AdminChip>
       </div>
     </article>
   );

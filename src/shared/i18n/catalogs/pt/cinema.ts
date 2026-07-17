@@ -212,7 +212,8 @@ export const cinema: Catalog = {
     "Quando alugas por {rentPrice}, <strong>{filmmakerShare} vai para {name}.</strong> {paymentFee} cobre o processamento de pagamentos. {hostingFee} cobre alojamento e legendagem. A divisão é igual para todas as pessoas cineastas.",
   "film.split.readDeedCta": "Lê a escritura →",
   "film.related.title": "Mais da <em>programação</em>",
-  "film.related.sub": "Filmes que partilham uma curadoria, um país ou uma pergunta.",
+  "film.related.sub":
+    "Filmes que partilham uma curadoria, um país ou uma pergunta.",
 
   "film.hero.coverWeek": "Filme de capa · semana {week}",
   "film.hero.programmedBy": "Com curadoria de",
@@ -223,8 +224,10 @@ export const cinema: Catalog = {
   "film.poster.trailerCta": "Reproduzir · trailer {duration}",
   "film.tipjar.heading": "↳ dar gorjeta a quem fez o filme",
   "film.tipjar.note": "100% vai para {name}. Sem taxas.",
-  "film.tipjar.footnote_one": "<strong>{count} pessoa</strong> deu gorjeta esta semana.",
-  "film.tipjar.footnote_other": "<strong>{count} pessoas</strong> deram gorjeta esta semana.",
+  "film.tipjar.footnote_one":
+    "<strong>{count} pessoa</strong> deu gorjeta esta semana.",
+  "film.tipjar.footnote_other":
+    "<strong>{count} pessoas</strong> deram gorjeta esta semana.",
   "film.tipjar.tippedToast": "Gorjeta de {amount} enviada a {name}",
 
   "film.watchTabs.watch.label": "Ver",
@@ -259,7 +262,8 @@ export const cinema: Catalog = {
   // coleção são conteúdo dessa coleção e ficam em inglês (vêm de
   // GET /cinema/collections/:slug em modo live) ──────────────────────────────
   "collection.notFound.eyebrow": "Coleção não encontrada",
-  "collection.notFound.title": "Não conseguimos encontrar <em>essa coleção</em>",
+  "collection.notFound.title":
+    "Não conseguimos encontrar <em>essa coleção</em>",
   "collection.notFound.body":
     "Pode ter sido renomeada ou retirada. Explora o catálogo completo para veres para onde foram os filmes.",
   "collection.notFound.browseCta": "Ver todos os filmes",
@@ -286,10 +290,14 @@ export const cinema: Catalog = {
   "collectionsIndex.filter.new": "Novo",
   "collectionsIndex.filter.shortCollections": "Coleções curtas",
   "collectionsIndex.filterLabel": "Filtrar:",
-  "collectionsIndex.summary_one": "{count} coleção · {filmTotal} filmes no total",
-  "collectionsIndex.summary_other": "{count} coleções · {filmTotal} filmes no total",
-  "collectionsIndex.empty.title": "<em>Ainda</em> não há coleções neste filtro.",
-  "collectionsIndex.empty.body": "O conselho está sempre a construir. Tenta outra lente.",
+  "collectionsIndex.summary_one":
+    "{count} coleção · {filmTotal} filmes no total",
+  "collectionsIndex.summary_other":
+    "{count} coleções · {filmTotal} filmes no total",
+  "collectionsIndex.empty.title":
+    "<em>Ainda</em> não há coleções neste filtro.",
+  "collectionsIndex.empty.body":
+    "O conselho está sempre a construir. Tenta outra lente.",
   "collectionsIndex.empty.resetCta": "Mostrar todas as coleções",
   "collectionsIndex.outro.title": "Começa a <em>vaguear</em>.",
   "collectionsIndex.outro.sub":
@@ -340,7 +348,8 @@ export const cinema: Catalog = {
   "filmmaker.outro.title": "Faz algo. <em>Recebe por isso.</em>",
   "filmmaker.outro.sub":
     "Submete o teu filme ao Cinema. A divisão é igual para todas as pessoas.",
-  "filmmaker.hero.tipCta": "↳ Dar gorjeta a {name} · 100% vai diretamente para essa pessoa",
+  "filmmaker.hero.tipCta":
+    "↳ Dar gorjeta a {name} · 100% vai diretamente para essa pessoa",
   "filmmaker.hero.requestScreeningCta": "Pedir uma exibição",
   "filmmaker.hero.connectCta": "Ligar-te na QueerPulse",
   "filmmaker.main.filmographyTitle": "Filmografia <em>no Cinema</em>",
@@ -353,8 +362,10 @@ export const cinema: Catalog = {
     "100% vai para {name} — a cooperativa não retém nada de uma gorjeta. As gorjetas ajudam a continuar a fazer trabalho.",
   "filmmaker.aside.sendCta": "Enviar {amount}",
   "filmmaker.aside.tippedToast": "{amount} a caminho de {name} — obrigado",
-  "filmmaker.aside.tippedNote_one": "<strong>{count} pessoa</strong> deu gorjeta a {name} este mês.",
-  "filmmaker.aside.tippedNote_other": "<strong>{count} pessoas</strong> deram gorjeta a {name} este mês.",
+  "filmmaker.aside.tippedNote_one":
+    "<strong>{count} pessoa</strong> deu gorjeta a {name} este mês.",
+  "filmmaker.aside.tippedNote_other":
+    "<strong>{count} pessoas</strong> deram gorjeta a {name} este mês.",
   "filmmaker.aside.splitHeading": "A divisão da cooperativa",
   "filmmaker.aside.splitBody":
     "Quando alugas qualquer filme de {name}, <strong>80%</strong> vai para essa pessoa. Quando compras, o mesmo. As gorjetas são 100%. A divisão é igual para todas as pessoas cineastas no Cinema.",
@@ -369,7 +380,8 @@ export const cinema: Catalog = {
   "shorts.toast.savedToWatchlist": "Adicionado à tua lista para ver",
   "shorts.toast.linkCopiedShare": "Link copiado — partilha “{label}”",
   "shorts.outro.title": "Dá uma gorjeta a <em>quem fez o filme</em>.",
-  "shorts.outro.sub": "100% vai para essa pessoa. Sem taxas. Sem mínimo. Vê primeiro, decide depois.",
+  "shorts.outro.sub":
+    "100% vai para essa pessoa. Sem taxas. Sem mínimo. Vê primeiro, decide depois.",
   "shorts.outro.browseCta": "Ver todos os filmes da comunidade",
   "shorts.header.eyebrow": "Filmes da comunidade · todos grátis para ver",
   "shorts.header.sub":
@@ -378,35 +390,43 @@ export const cinema: Catalog = {
   "shorts.accessNote.body":
     "<strong>Todos os filmes têm legendas.</strong> As notas de conteúdo aparecem em cada filme, e os trabalhos com audiodescrição estão marcados com <em>AD</em>. Filtra pelas tuas necessidades de acesso abaixo.",
   "shorts.spotlight.mostWatchedBadge": "Mais visto esta semana",
-  "shorts.spotlight.communityPickKicker": "Escolha da comunidade · semana {week}",
+  "shorts.spotlight.communityPickKicker":
+    "Escolha da comunidade · semana {week}",
   "shorts.spotlight.watchNowCta": "Ver agora · grátis",
   "shorts.spotlight.becomeSustainerCta": "Torna-te um →",
   "shorts.shelf.newThisWeek.title": "Novo <em>esta semana</em>",
-  "shorts.shelf.newThisWeek.sub": "Filmes submetidos e aprovados nos últimos 7 dias",
+  "shorts.shelf.newThisWeek.sub":
+    "Filmes submetidos e aprovados nos últimos 7 dias",
   "shorts.shelf.newThisWeek.cta": "Ver todos os novos →",
-  "shorts.shelf.becauseYouTipped.title": "Porque deste gorjeta a <em>{filmTitle}</em>",
+  "shorts.shelf.becauseYouTipped.title":
+    "Porque deste gorjeta a <em>{filmTitle}</em>",
   "shorts.shelf.becauseYouTipped.sub": "Mais de {maker}, e filmes no mesmo tom",
   "shorts.shelf.becauseYouTipped.cta": "Página de {maker} →",
   "shorts.shelf.firstFilm.title": "O primeiro <em>filme de alguém</em>",
-  "shorts.shelf.firstFilm.sub": "As estreias merecem uma primeira audiência — sê tu essa pessoa",
+  "shorts.shelf.firstFilm.sub":
+    "As estreias merecem uma primeira audiência — sê tu essa pessoa",
   "shorts.shelf.firstFilm.cta": "Ver todas as estreias →",
   "shorts.shelf.mostTipped.title": "Mais <em>gorjetas</em>",
-  "shorts.shelf.mostTipped.sub": "Filmes com quem as pessoas foram generosas este mês",
+  "shorts.shelf.mostTipped.sub":
+    "Filmes com quem as pessoas foram generosas este mês",
   "shorts.shelf.mostTipped.cta": "Ver todos os filmes →",
   "shorts.shelf.continueWatching.title": "Continuar <em>a ver</em>",
   "shorts.shelf.continueWatching.sub": "Retoma onde ficaste",
   "shorts.shelf.continueWatching.cta": "A tua biblioteca →",
-  "shorts.shelf.continueWatching.minutesLeft": "{minutes} min restantes · {maker}",
+  "shorts.shelf.continueWatching.minutesLeft":
+    "{minutes} min restantes · {maker}",
   "shorts.shelf.programmes.title": "Ver por <em>programação</em>",
   "shorts.shelf.programmes.sub":
     "Conjuntos de curtas com curadoria de membros — uma forma de começar quando não sabes por onde ir",
   "shorts.shelf.programmes.cta": "Todas as programações →",
   "shorts.shelf.programmes.shareAriaLabel": "Partilhar programação",
   "shorts.shelf.meetMakers.title": "Conhece quem <em>faz os filmes</em>",
-  "shorts.shelf.meetMakers.sub": "Todos os filmes aqui têm uma pessoa por trás — diz olá",
+  "shorts.shelf.meetMakers.sub":
+    "Todos os filmes aqui têm uma pessoa por trás — diz olá",
   "shorts.shelf.meetMakers.cta": "Todas as pessoas cineastas →",
   "shorts.catalog.title": "Explora o <em>catálogo completo</em>",
-  "shorts.catalog.sub": "Todos os filmes da comunidade — filtra, ordena e pesquisa à tua maneira",
+  "shorts.catalog.sub":
+    "Todos os filmes da comunidade — filtra, ordena e pesquisa à tua maneira",
   "shorts.catalog.cta": "Abrir em Explorar →",
   "shorts.catalog.searchPlaceholder": "Pesquisar filmes, pessoas ou temas…",
   "shorts.catalog.searchAriaLabel": "Pesquisar filmes",
@@ -415,13 +435,16 @@ export const cinema: Catalog = {
   "shorts.catalog.sortLabel": "Ordenar",
   "shorts.catalog.sortAriaLabel": "Ordenar filmes",
   "shorts.catalog.surpriseCta": "Surpreende-me",
+  "shorts.catalog.surpriseToast": "Experimenta este → {title}",
   "shorts.catalog.allFilmsChip": "Todos os filmes",
   "shorts.catalog.empty.title": "Nada corresponde — ainda",
   "shorts.catalog.empty.body":
     "Nenhum filme corresponde a essa combinação. Alivia um filtro, ou diz-nos o que gostavas que existisse — encomendamos a partir de pedidos de membros.",
+  "shorts.catalog.empty.clearCta": "Limpar filtros",
   "shorts.catalog.empty.suggestCta": "Sugerir um filme",
   "shorts.catalog.count_one": "<em>{count}</em> filme · todos grátis para ver",
-  "shorts.catalog.count_other": "<em>{count}</em> filmes · todos grátis para ver",
+  "shorts.catalog.count_other":
+    "<em>{count}</em> filmes · todos grátis para ver",
   "shorts.card.saveAriaLabel": "Guardar na lista para ver",
   "shorts.card.watches_one": "{count} visualização",
   "shorts.card.watches_other": "{count} visualizações",
@@ -517,7 +540,8 @@ export const cinema: Catalog = {
   "about.split.legend.filmmaker": "Quem fez o filme (80%)",
   "about.split.legend.paymentFees": "Taxas de pagamento (12%)",
   "about.split.legend.hosting": "Alojamento (8%)",
-  "about.split.tipsNote": "As gorjetas são 100% para quem fez o filme. Sem dedução.",
+  "about.split.tipsNote":
+    "As gorjetas são 100% para quem fez o filme. Sem dedução.",
   "about.council.title": "O conselho de <em>curadoria</em>",
   "about.council.sub":
     "Seis pessoas que programam o cinema. Alternam todos os anos — nomeadas pela comunidade, confirmadas por voto de sustentadores. Cada uma traz uma geografia, um foco e um olhar diferentes.",
@@ -526,7 +550,8 @@ export const cinema: Catalog = {
   "about.gov.ledger.paidToFilmmakers": "Pago a cineastas este mês",
   "about.gov.ledger.filmsStreamed": "Filmes em streaming este mês",
   "about.gov.ledger.averageShare": "Percentagem média para cineastas",
-  "about.gov.ledger.commissioningPool": "Fundo de encomendas (temporada {season})",
+  "about.gov.ledger.commissioningPool":
+    "Fundo de encomendas (temporada {season})",
   "about.gov.ledger.filmsInCatalogue": "Filmes no catálogo",
   "about.gov.fullAccountsCta": "Contas completas →",
   "about.gov.decisionsTitle": "Como se <em>tomam as decisões</em>",

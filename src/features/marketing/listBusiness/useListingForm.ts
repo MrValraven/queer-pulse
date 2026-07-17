@@ -194,7 +194,8 @@ export function useListingForm(initial?: ListingDraft) {
       add(s1, "marketing:listBusiness.missing.name", ANCHOR.name);
     if (!draft.cats.length)
       add(s1, "marketing:listBusiness.missing.cats", ANCHOR.cats);
-    if (!draft.hood) add(s1, "marketing:listBusiness.missing.hood", ANCHOR.hood);
+    if (!draft.hood)
+      add(s1, "marketing:listBusiness.missing.hood", ANCHOR.hood);
     if (!draft.badge)
       add(s1, "marketing:listBusiness.missing.badge", ANCHOR.badge);
     if (!draft.price)
@@ -223,7 +224,11 @@ export function useListingForm(initial?: ListingDraft) {
     if (!draft.ownerRole.trim())
       add(s4, "marketing:listBusiness.missing.ownerRole", ANCHOR.ownerRole);
     if (!emailValid(draft.contactEmail))
-      add(s4, "marketing:listBusiness.missing.contactEmail", ANCHOR.contactEmail);
+      add(
+        s4,
+        "marketing:listBusiness.missing.contactEmail",
+        ANCHOR.contactEmail,
+      );
 
     const s5: MissingField[] = [];
     if (!draft.consentOuting || !draft.consentGuide)

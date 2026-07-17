@@ -68,7 +68,9 @@ export function WorkProfilePage() {
     <PageShell>
       <div className={styles.page}>
         <header className={styles.head}>
-          <div className={styles.eyebrow}>{t("economy:workProfile.eyebrow")}</div>
+          <div className={styles.eyebrow}>
+            {t("economy:workProfile.eyebrow")}
+          </div>
           <h1 className={styles.h1}>
             <Translation
               i18nKey="economy:workProfile.title"

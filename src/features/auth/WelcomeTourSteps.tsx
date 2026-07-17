@@ -27,7 +27,10 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
     <>
       <div className={styles.eye}>{t("auth:tour.welcome.eyebrow")}</div>
       <h1 className={styles.h}>
-        <Translation i18nKey="auth:tour.welcome.heading" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="auth:tour.welcome.heading"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.p}>{t("auth:tour.welcome.body")}</p>
       <div className={styles.vouchCard}>
@@ -39,7 +42,9 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
         </div>
       </div>
       <div className={styles.q101}>
-        <span className={styles.q101Label}>{t("auth:tour.welcome.q101Label")}</span>
+        <span className={styles.q101Label}>
+          {t("auth:tour.welcome.q101Label")}
+        </span>
         <Translation
           i18nKey="auth:tour.welcome.q101Body"
           components={{
@@ -62,7 +67,10 @@ export function TourProfile({ onNext, onBack }: StepProps) {
     <>
       <div className={styles.eye}>{t("auth:tour.profile.eyebrow")}</div>
       <h2 className={styles.h}>
-        <Translation i18nKey="auth:tour.profile.heading" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="auth:tour.profile.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p className={styles.p}>{t("auth:tour.profile.body")}</p>
       <div className={styles.fields}>
@@ -84,13 +92,17 @@ export function TourProfile({ onNext, onBack }: StepProps) {
           placeholder={t("auth:tour.profile.rolePlaceholder")}
         />
         <select className={styles.select} defaultValue="">
-          <option value="">{t("auth:tour.profile.neighbourhoodDefault")}</option>
+          <option value="">
+            {t("auth:tour.profile.neighbourhoodDefault")}
+          </option>
           {NEIGHBOURHOOD_KEYS.map((hoodKey) => (
             <option key={hoodKey}>{t(hoodKey)}</option>
           ))}
         </select>
       </div>
-      <div className={styles.fieldLabel}>{t("auth:tour.profile.visibilityLabel")}</div>
+      <div className={styles.fieldLabel}>
+        {t("auth:tour.profile.visibilityLabel")}
+      </div>
       <div className={styles.visOpts}>
         {VISIBILITY_OPTIONS.map((opt) => (
           <label key={opt.value} className={styles.visOpt}>

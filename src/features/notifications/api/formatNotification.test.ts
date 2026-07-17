@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { catalogs } from "../../../shared/i18n/catalogs";
 import { parseKey, resolveEntry } from "../../../shared/i18n/translate";
-import type { Language, TFunction, TranslateOptions } from "../../../shared/i18n/types";
+import type {
+  Language,
+  TFunction,
+  TranslateOptions,
+} from "../../../shared/i18n/types";
 import {
   formatNotification,
   type NotificationKind,
@@ -65,7 +69,9 @@ describe("formatNotification", () => {
   it("maps kinds onto the right tab category", () => {
     expect(formatNotification("new_message", {}, t).category).toBe("messages");
     expect(formatNotification("event_invite", {}, t).category).toBe("events");
-    expect(formatNotification("event_cancelled", {}, t).category).toBe("events");
+    expect(formatNotification("event_cancelled", {}, t).category).toBe(
+      "events",
+    );
     expect(formatNotification("vouch_received", {}, t).category).toBe(
       "community",
     );

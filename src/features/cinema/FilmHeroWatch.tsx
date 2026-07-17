@@ -74,11 +74,15 @@ export function FilmHeroWatch() {
             .filter(Boolean)
             .join(" ")}
           title={t(
-            onWatchlist ? "cinema:film.watchlist.remove" : "cinema:film.watchlist.add",
+            onWatchlist
+              ? "cinema:film.watchlist.remove"
+              : "cinema:film.watchlist.add",
           )}
           aria-pressed={onWatchlist}
           aria-label={t(
-            onWatchlist ? "cinema:film.watchlist.remove" : "cinema:film.watchlist.add",
+            onWatchlist
+              ? "cinema:film.watchlist.remove"
+              : "cinema:film.watchlist.add",
           )}
           onClick={toggleWatchlist}
           onKeyDown={(e) => {

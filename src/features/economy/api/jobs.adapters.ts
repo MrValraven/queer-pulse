@@ -37,13 +37,17 @@ export function logoFromName(name: string): string {
 export function formatPay(pay: JobPay, t: TFunction): string {
   if (pay.hidePay) {
     return t(
-      pay.barter ? "economy:jobs.pay.barterOrDiscuss" : "economy:jobs.pay.competitive",
+      pay.barter
+        ? "economy:jobs.pay.barterOrDiscuss"
+        : "economy:jobs.pay.competitive",
     );
   }
   if (pay.salary) return pay.salary;
   if (pay.rateMin == null && pay.rateMax == null) {
     return t(
-      pay.barter ? "economy:jobs.pay.openToBarter" : "economy:jobs.pay.toDiscuss",
+      pay.barter
+        ? "economy:jobs.pay.openToBarter"
+        : "economy:jobs.pay.toDiscuss",
     );
   }
   const cur = pay.currency ?? "€";

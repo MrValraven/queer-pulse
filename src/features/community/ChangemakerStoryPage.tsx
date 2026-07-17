@@ -129,7 +129,9 @@ export function ChangemakerStoryPage() {
         sub={t("community:changemakerStory.outro.sub")}
       >
         <Button variant="primary" onClick={() => openConnect()}>
-          {t("community:changemakerStory.outro.connectCta", { name: firstName })}
+          {t("community:changemakerStory.outro.connectCta", {
+            name: firstName,
+          })}
         </Button>
         <Button variant="ghost-dark" to={routes.changemakers}>
           {t("community:changemakerStory.outro.moreCta")}

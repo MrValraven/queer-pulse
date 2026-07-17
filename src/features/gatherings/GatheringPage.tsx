@@ -50,7 +50,9 @@ export function GatheringPage() {
               <div className={styles.typeRow}>
                 <span className={styles.type}>{gathering.type}</span>
                 <Tag
-                  className={kind === "event" ? styles.badgeEvent : styles.badgeGathering}
+                  className={
+                    kind === "event" ? styles.badgeEvent : styles.badgeGathering
+                  }
                 >
                   {t(
                     kind === "event"
@@ -63,7 +65,11 @@ export function GatheringPage() {
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
-                  {fmt.date(gathering.date, { day: "numeric", month: "long", year: "numeric" })}
+                  {fmt.date(gathering.date, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
                 </span>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
@@ -76,7 +82,10 @@ export function GatheringPage() {
               </div>
               <p className={styles.body}>{gathering.body}</p>
               <div className={styles.cta}>
-                <Button size="lg" onClick={() => openConnect(gathering.hostSlug)}>
+                <Button
+                  size="lg"
+                  onClick={() => openConnect(gathering.hostSlug)}
+                >
                   {t(gathering.ctaKey)} →
                 </Button>
                 <Button size="lg" variant="ghost" to={routes.calendar}>
@@ -95,7 +104,10 @@ export function GatheringPage() {
                   {fmt.date(gathering.date, { day: "2-digit" })}
                 </div>
                 <div className={styles.dm}>
-                  {fmt.date(gathering.date, { month: "short", year: "numeric" })}
+                  {fmt.date(gathering.date, {
+                    month: "short",
+                    year: "numeric",
+                  })}
                 </div>
               </div>
 
@@ -177,7 +189,10 @@ export function GatheringPage() {
 
           <div className={styles.other}>
             <h2>
-              <Translation i18nKey="gatherings:gathering.moreTitle" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="gatherings:gathering.moreTitle"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.cards}>
               {others.map((other) => (
@@ -187,8 +202,12 @@ export function GatheringPage() {
                   className={styles.card}
                 >
                   <div className={styles.dateMini}>
-                    <div className={styles.gd}>{fmt.date(other.date, { day: "2-digit" })}</div>
-                    <div className={styles.gm}>{fmt.date(other.date, { month: "short" })}</div>
+                    <div className={styles.gd}>
+                      {fmt.date(other.date, { day: "2-digit" })}
+                    </div>
+                    <div className={styles.gm}>
+                      {fmt.date(other.date, { month: "short" })}
+                    </div>
                   </div>
                   <div>
                     <div className={styles.cardType}>{other.type}</div>

@@ -134,7 +134,10 @@ export function usePaymentForm() {
       setProcessing(false);
       if (declined) {
         setPayError(t("gatherings:checkout.validation.declinedError"));
-        showToast(t("gatherings:checkout.validation.paymentDeclinedToast"), "error");
+        showToast(
+          t("gatherings:checkout.validation.paymentDeclinedToast"),
+          "error",
+        );
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }

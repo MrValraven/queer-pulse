@@ -47,7 +47,10 @@ export function CinemaShortsPage() {
           return has ? prev.filter((x) => x !== id) : [...prev, id];
         }),
       onShare: (label) =>
-        showToast(t("cinema:shorts.toast.linkCopiedShare", { label }), "success"),
+        showToast(
+          t("cinema:shorts.toast.linkCopiedShare", { label }),
+          "success",
+        ),
       notify: (message) => showToast(message, "success"),
     }),
     [saved, showToast, t],

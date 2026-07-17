@@ -42,7 +42,9 @@ export function PerksPage() {
           <div className={styles.phStatusRow}>
             <span className={styles.levelChip}>
               <StarIcon />
-              {t("members:profile.hero.levelLabel", { number: level.level })}{" "}
+              {t("members:profile.hero.levelLabel", {
+                number: level.level,
+              })}{" "}
               · {level.name}
             </span>
             <span className={styles.perksAvail}>

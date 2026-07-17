@@ -92,7 +92,9 @@ export function SubprofileMetaForm({
         <span className={styles.cardIcon}>
           <FiUser size={20} aria-hidden />
         </span>
-        <h2 className={styles.cardTitle}>{t("subprofiles:metaForm.sectionTitle")}</h2>
+        <h2 className={styles.cardTitle}>
+          {t("subprofiles:metaForm.sectionTitle")}
+        </h2>
       </div>
 
       <FormField label={t("subprofiles:metaForm.avatarLabel")}>
@@ -109,7 +111,9 @@ export function SubprofileMetaForm({
       <FormField
         label={t("subprofiles:metaForm.displayNameLabel")}
         required
-        error={nameMissing ? t("subprofiles:metaForm.displayNameError") : undefined}
+        error={
+          nameMissing ? t("subprofiles:metaForm.displayNameError") : undefined
+        }
       >
         <input
           value={displayName}

@@ -110,9 +110,7 @@ export function QrScannerPage() {
         <span>{t("members:qrScanner.cantScan")}</span>
         <button
           type="button"
-          onClick={() =>
-            showToast(t("members:qrScanner.manualToast"), "info")
-          }
+          onClick={() => showToast(t("members:qrScanner.manualToast"), "info")}
         >
           {t("members:qrScanner.enterCodeCta")}
         </button>

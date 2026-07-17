@@ -11,43 +11,44 @@ export const TYPE_CLASS: Record<Category, string> = {
   Arts: "typeArts",
 };
 
-export const CRITERIA: { icon: IconType; leadKey: string; restKey: string }[] = [
-  {
-    icon: FiCheck,
-    leadKey: "safety:spaces.criteria.genderNeutral.lead",
-    restKey: "safety:spaces.criteria.genderNeutral.rest",
-  },
-  {
-    icon: FiCheck,
-    leadKey: "safety:spaces.criteria.staffIntervene.lead",
-    restKey: "safety:spaces.criteria.staffIntervene.rest",
-  },
-  {
-    icon: FiCheck,
-    leadKey: "safety:spaces.criteria.noIncidents.lead",
-    restKey: "safety:spaces.criteria.noIncidents.rest",
-  },
-  {
-    icon: FiCheck,
-    leadKey: "safety:spaces.criteria.transWelcome.lead",
-    restKey: "safety:spaces.criteria.transWelcome.rest",
-  },
-  {
-    icon: FiCheck,
-    leadKey: "safety:spaces.criteria.accessible.lead",
-    restKey: "safety:spaces.criteria.accessible.rest",
-  },
-  {
-    icon: FiCheck,
-    leadKey: "safety:spaces.criteria.reviews.lead",
-    restKey: "safety:spaces.criteria.reviews.rest",
-  },
-  {
-    icon: FiRotateCcw,
-    leadKey: "safety:spaces.criteria.annualReview.lead",
-    restKey: "safety:spaces.criteria.annualReview.rest",
-  },
-];
+export const CRITERIA: { icon: IconType; leadKey: string; restKey: string }[] =
+  [
+    {
+      icon: FiCheck,
+      leadKey: "safety:spaces.criteria.genderNeutral.lead",
+      restKey: "safety:spaces.criteria.genderNeutral.rest",
+    },
+    {
+      icon: FiCheck,
+      leadKey: "safety:spaces.criteria.staffIntervene.lead",
+      restKey: "safety:spaces.criteria.staffIntervene.rest",
+    },
+    {
+      icon: FiCheck,
+      leadKey: "safety:spaces.criteria.noIncidents.lead",
+      restKey: "safety:spaces.criteria.noIncidents.rest",
+    },
+    {
+      icon: FiCheck,
+      leadKey: "safety:spaces.criteria.transWelcome.lead",
+      restKey: "safety:spaces.criteria.transWelcome.rest",
+    },
+    {
+      icon: FiCheck,
+      leadKey: "safety:spaces.criteria.accessible.lead",
+      restKey: "safety:spaces.criteria.accessible.rest",
+    },
+    {
+      icon: FiCheck,
+      leadKey: "safety:spaces.criteria.reviews.lead",
+      restKey: "safety:spaces.criteria.reviews.rest",
+    },
+    {
+      icon: FiRotateCcw,
+      leadKey: "safety:spaces.criteria.annualReview.lead",
+      restKey: "safety:spaces.criteria.annualReview.rest",
+    },
+  ];
 
 export const HOW: { num: string; titleKey: string; descKey: string }[] = [
   {

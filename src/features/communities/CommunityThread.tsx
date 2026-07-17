@@ -64,7 +64,9 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             <span>{data.time}</span>
             <span className={styles.thReplies}>
               <FiMessageCircle />{" "}
-              {t("communities:detail.thread.replies", { count: data.replyCount })}
+              {t("communities:detail.thread.replies", {
+                count: data.replyCount,
+              })}
             </span>
           </div>
         </div>

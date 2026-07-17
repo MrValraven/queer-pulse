@@ -191,7 +191,8 @@ export function StartCommunityPage() {
                       }
                       onNext={next}
                       nextLabel={t(
-                        NEXT_LABEL_KEYS[step] ?? "communities:start.next.fallback",
+                        NEXT_LABEL_KEYS[step] ??
+                          "communities:start.next.fallback",
                       )}
                       missing={form.missing[step] ?? []}
                       flush={step === 0}

@@ -59,7 +59,10 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
     const key = memberKey(slug, name);
     setPromoted((p) => [...p, key]);
     promoteToMod(living.slug, key);
-    showToast(t("communities:detail.modtools.toast.promoted", { name }), "success");
+    showToast(
+      t("communities:detail.modtools.toast.promoted", { name }),
+      "success",
+    );
   };
   const remove = (slug: string | undefined, name: string) => {
     setRemoved((p) => [...p, memberKey(slug, name)]);

@@ -68,9 +68,7 @@ export function Media() {
                 {t("homepage:media.cinema.chip.submit")}
               </span>
             </div>
-            <span className={styles.cta}>
-              {t("homepage:media.cinema.cta")}
-            </span>
+            <span className={styles.cta}>{t("homepage:media.cinema.cta")}</span>
           </Link>
 
           <Link
@@ -101,9 +99,7 @@ export function Media() {
                 {t("homepage:media.studio.chip.liveSessions")}
               </span>
             </div>
-            <span className={styles.cta}>
-              {t("homepage:media.studio.cta")}
-            </span>
+            <span className={styles.cta}>{t("homepage:media.studio.cta")}</span>
           </Link>
         </Reveal>
       </div>

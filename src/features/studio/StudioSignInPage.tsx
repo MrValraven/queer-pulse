@@ -41,7 +41,10 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
   return (
     <div className={styles.pane}>
       <h1>
-        <Translation i18nKey="studio:signin.in.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:signin.in.title"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.lede}>{t("studio:signin.in.lede")}</p>
 
@@ -100,7 +103,9 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
             />
           </svg>
         )}
-        {googleLoading ? t("studio:signin.googleLoading") : t("studio:signin.googleContinue")}
+        {googleLoading
+          ? t("studio:signin.googleLoading")
+          : t("studio:signin.googleContinue")}
       </button>
 
       <div className={styles.foot}>
@@ -140,7 +145,10 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
   return (
     <div className={styles.pane}>
       <h1>
-        <Translation i18nKey="studio:signin.join.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:signin.join.title"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.lede}>{t("studio:signin.join.lede")}</p>
 
@@ -181,7 +189,10 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
           <div className={styles.tierInfo}>
             <div className={styles.tierTop}>
               <h4>
-                <Translation i18nKey="studio:signin.join.tier.studio.title" components={{ em: <em /> }} />
+                <Translation
+                  i18nKey="studio:signin.join.tier.studio.title"
+                  components={{ em: <em /> }}
+                />
               </h4>
               <div className={styles.tierPrice}>
                 €<em>{STUDIO_TIER_PRICE}</em>
@@ -199,7 +210,9 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
                 <path d="M20 6L9 17l-5-5" />
               </svg>
               {t("studio:signin.join.tier.studio.incl", {
-                sharePercent: fmt.number(STUDIO_SHARE_PERCENT, { style: "percent" }),
+                sharePercent: fmt.number(STUDIO_SHARE_PERCENT, {
+                  style: "percent",
+                }),
               })}
             </div>
           </div>
@@ -221,11 +234,16 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
           }}
         >
           <div className={styles.tierDot} />
-          <div className={styles.tierRec}>{t("studio:signin.join.tier.coop.badge")}</div>
+          <div className={styles.tierRec}>
+            {t("studio:signin.join.tier.coop.badge")}
+          </div>
           <div className={styles.tierInfo}>
             <div className={styles.tierTop}>
               <h4>
-                <Translation i18nKey="studio:signin.join.tier.coop.title" components={{ em: <em /> }} />
+                <Translation
+                  i18nKey="studio:signin.join.tier.coop.title"
+                  components={{ em: <em /> }}
+                />
               </h4>
               <div className={styles.tierPrice}>
                 €<em>{COOP_TIER_PRICE}</em>
@@ -233,7 +251,10 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
               </div>
             </div>
             <p>
-              <Translation i18nKey="studio:signin.join.tier.coop.body" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="studio:signin.join.tier.coop.body"
+                components={{ em: <em /> }}
+              />
             </p>
             <div className={styles.tierIncl}>
               <svg
@@ -272,7 +293,9 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
         </a>
         <span className={styles.free}>
           {t("studio:signin.join.notReady")}{" "}
-          <Link to={routes.studioLanding}>{t("studio:signin.join.freeCta")}</Link>
+          <Link to={routes.studioLanding}>
+            {t("studio:signin.join.freeCta")}
+          </Link>
         </span>
       </div>
     </div>
@@ -301,23 +324,35 @@ export function StudioSignInPage() {
         <div className={styles.asideBrand}>
           <span className={styles.pulseDot} />
           <span className={styles.wordmark}>
-            <Translation i18nKey="studio:brand.lockup" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:brand.lockup"
+              components={{ em: <em /> }}
+            />
           </span>
-          <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
+          <span className={styles.product}>
+            {t("studio:brand.studioLabel")}
+          </span>
         </div>
         <div className={styles.asideBody}>
           <div className={styles.asideEb}>
             <span className={styles.live} />
-            {t("studio:signin.aside.onAirNow", { count: ASIDE_NOW_PLAYING.listening })}
+            {t("studio:signin.aside.onAirNow", {
+              count: ASIDE_NOW_PLAYING.listening,
+            })}
           </div>
           <h2>
-            <Translation i18nKey="studio:signin.aside.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:signin.aside.title"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.asideSub}>
             <Translation
               i18nKey="studio:signin.aside.body"
               components={{ em: <em /> }}
-              values={{ tipPercent: fmt.number(ASIDE_TIP_PERCENT, { style: "percent" }) }}
+              values={{
+                tipPercent: fmt.number(ASIDE_TIP_PERCENT, { style: "percent" }),
+              }}
             />
           </p>
           <div className={styles.nowPlaying}>
@@ -353,9 +388,14 @@ export function StudioSignInPage() {
           <div className={styles.mobrand}>
             <span className={styles.pulseDot} />
             <span className={styles.wordmark}>
-              <Translation i18nKey="studio:brand.lockup" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="studio:brand.lockup"
+                components={{ em: <em /> }}
+              />
             </span>
-            <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
+            <span className={styles.product}>
+              {t("studio:brand.studioLabel")}
+            </span>
           </div>
 
           <div className={styles.segTabs}>

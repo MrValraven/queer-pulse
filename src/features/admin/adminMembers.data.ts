@@ -46,7 +46,8 @@ export interface FlaggedMember {
   tone: AvatarTone;
   /** left category chip: a fixed reason id ("doxxing"/"spam") or a real
    *  per-member report count (`{ count }`), never a baked English string. */
-  category: { kind: "doxxing" | "spam" } | { kind: "reportsCount"; count: number };
+  category:
+    { kind: "doxxing" | "spam" } | { kind: "reportsCount"; count: number };
   catTone: "danger" | "amber" | "violet" | "coral";
   meta: string;
   statusId: FlaggedStatusId;
@@ -295,7 +296,10 @@ export function detailFor(member: AdminMember): MemberDetail {
   return {
     id: member.id,
     glance: [
-      { labelKey: "admin:members.glance.vouches", value: String(member.vouchCount) },
+      {
+        labelKey: "admin:members.glance.vouches",
+        value: String(member.vouchCount),
+      },
       {
         labelKey: "admin:members.glance.memberFor",
         value: member.newThisWeek ? "new" : "1yr+",

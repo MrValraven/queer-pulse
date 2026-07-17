@@ -97,7 +97,9 @@ class RealtimeClient {
     // Cache patching. Invalidation (rather than hand-merging into cursor pages)
     // keeps HTTP authoritative and avoids drift.
     socket.on("message:new", ({ conversationId }) => {
-      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
+      void this.qc.invalidateQueries({
+        queryKey: ["messages", conversationId],
+      });
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
     });
     socket.on("read", () => {

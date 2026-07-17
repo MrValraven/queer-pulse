@@ -39,7 +39,8 @@ export function HousingListingPage() {
     );
   }
 
-  const first = listing.poster.fullName.split(" ")[0] ?? listing.poster.fullName;
+  const first =
+    listing.poster.fullName.split(" ")[0] ?? listing.poster.fullName;
   const typeLabel = t(
     FILTERS.find((filterOption) => filterOption.value === listing.type)
       ?.labelKey ?? "economy:housing.filter.all",

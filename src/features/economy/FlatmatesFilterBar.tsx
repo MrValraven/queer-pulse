@@ -36,15 +36,14 @@ export function FlatmatesFilterBar({
     <div className={styles.filterBar}>
       <div className="wrap">
         <div className={styles.filterRow}>
-          <span className={styles.fLabel}>{t("economy:flatmates.filter.show")}</span>
+          <span className={styles.fLabel}>
+            {t("economy:flatmates.filter.show")}
+          </span>
           {(["all", "seeking", "offering"] as const).map((typeOption) => (
             <button
               key={typeOption}
               type="button"
-              className={[
-                styles.typeChip,
-                type === typeOption && styles.typeOn,
-              ]
+              className={[styles.typeChip, type === typeOption && styles.typeOn]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => setType(typeOption)}
@@ -76,7 +75,9 @@ export function FlatmatesFilterBar({
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
           >
-            <option value="all">{t("economy:flatmates.filter.anyBudget")}</option>
+            <option value="all">
+              {t("economy:flatmates.filter.anyBudget")}
+            </option>
             <option value="600">
               {t("economy:flatmates.filter.budget.upTo700")}
             </option>
@@ -95,10 +96,18 @@ export function FlatmatesFilterBar({
             value={movein}
             onChange={(e) => setMovein(e.target.value)}
           >
-            <option value="all">{t("economy:flatmates.filter.anyMoveIn")}</option>
-            <option value="now">{t("economy:flatmates.filter.moveIn.now")}</option>
-            <option value="jul">{t("economy:flatmates.filter.moveIn.jul")}</option>
-            <option value="aug">{t("economy:flatmates.filter.moveIn.aug")}</option>
+            <option value="all">
+              {t("economy:flatmates.filter.anyMoveIn")}
+            </option>
+            <option value="now">
+              {t("economy:flatmates.filter.moveIn.now")}
+            </option>
+            <option value="jul">
+              {t("economy:flatmates.filter.moveIn.jul")}
+            </option>
+            <option value="aug">
+              {t("economy:flatmates.filter.moveIn.aug")}
+            </option>
             <option value="flex">
               {t("economy:flatmates.filter.moveIn.flex")}
             </option>

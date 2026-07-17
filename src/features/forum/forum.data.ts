@@ -699,10 +699,12 @@ export const MOD_ROLE_KEY: Record<string, string> = {
  * state holds and compares against (never translated); `labelKey` is the only
  * thing that changes with language.
  */
-export const REPLY_SORTS: { id: "oldest" | "newest" | "mostHelpful"; labelKey: string }[] =
-  [
-    { id: "oldest", labelKey: "forum:replySort.oldest" },
-    { id: "newest", labelKey: "forum:replySort.newest" },
-    { id: "mostHelpful", labelKey: "forum:replySort.mostHelpful" },
-  ];
+export const REPLY_SORTS: {
+  id: "oldest" | "newest" | "mostHelpful";
+  labelKey: string;
+}[] = [
+  { id: "oldest", labelKey: "forum:replySort.oldest" },
+  { id: "newest", labelKey: "forum:replySort.newest" },
+  { id: "mostHelpful", labelKey: "forum:replySort.mostHelpful" },
+];
 export type ReplySortId = (typeof REPLY_SORTS)[number]["id"];

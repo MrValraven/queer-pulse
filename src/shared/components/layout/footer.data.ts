@@ -38,7 +38,10 @@ export const COLUMNS: FooterColumn[] = [
   {
     headingKey: "shared:footerData.col.lisbonLife.head",
     links: [
-      { labelKey: "shared:megaNav.lisbon.col.discover.spacesMap", href: routes.map },
+      {
+        labelKey: "shared:megaNav.lisbon.col.discover.spacesMap",
+        href: routes.map,
+      },
       {
         labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
         href: routes.directory,
@@ -47,7 +50,10 @@ export const COLUMNS: FooterColumn[] = [
         labelKey: "shared:footerData.col.lisbonLife.housingBoard",
         href: routes.housing,
       },
-      { labelKey: "shared:megaNav.work.col.career.jobBoard", href: routes.jobs },
+      {
+        labelKey: "shared:megaNav.work.col.career.jobBoard",
+        href: routes.jobs,
+      },
       { labelKey: "nav:arriving", href: routes.arriving },
       {
         labelKey: "shared:megaNav.work.col.economy.skillsExchange",
@@ -66,12 +72,18 @@ export const COLUMNS: FooterColumn[] = [
         labelKey: "shared:footerData.col.support.therapistDirectory",
         href: `${routes.wellbeing}#therapists`,
       },
-      { labelKey: "shared:footerData.col.support.legalAid", href: routes.legal },
+      {
+        labelKey: "shared:footerData.col.support.legalAid",
+        href: routes.legal,
+      },
       {
         labelKey: "shared:megaNav.resources.col.learn.transNbHub",
         href: routes.transHub,
       },
-      { labelKey: "shared:megaNav.work.col.economy.grants", href: routes.grants },
+      {
+        labelKey: "shared:megaNav.work.col.economy.grants",
+        href: routes.grants,
+      },
       {
         labelKey: "shared:footerData.col.support.reportSafety",
         href: routes.report,

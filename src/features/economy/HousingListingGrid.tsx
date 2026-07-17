@@ -106,8 +106,9 @@ export function HousingListingGrid({
                 }}
               >
                 {t(
-                  FILTERS.find((filterOption) => filterOption.value === listing.type)
-                    ?.labelKey ?? "economy:housing.filter.all",
+                  FILTERS.find(
+                    (filterOption) => filterOption.value === listing.type,
+                  )?.labelKey ?? "economy:housing.filter.all",
                 )}
               </span>
               <div className={styles.cardTitle}>{listing.title}</div>

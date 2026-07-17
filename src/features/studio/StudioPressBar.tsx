@@ -41,7 +41,9 @@ export function StudioPressBar() {
         </Button>
         <Button
           variant="primary"
-          onClick={() => showToast(t("studio:press.bar.preparingToast"), "success")}
+          onClick={() =>
+            showToast(t("studio:press.bar.preparingToast"), "success")
+          }
         >
           {t("studio:press.bar.downloadAssetsCta")}
         </Button>

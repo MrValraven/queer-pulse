@@ -108,7 +108,8 @@ export function EditorLoadCard({
               {r.late > 0 && (
                 <em className={styles.ll}>
                   {" "}
-                  · {t("magazine:editor.sideCards.lateCount", { count: r.late })}
+                  ·{" "}
+                  {t("magazine:editor.sideCards.lateCount", { count: r.late })}
                 </em>
               )}
             </span>
@@ -161,7 +162,9 @@ export function SectionBudgetCard() {
               {gap > 0 ? (
                 t("magazine:editor.sideCards.needCount", { count: gap })
               ) : (
-                <FiCheck aria-label={t("magazine:editor.sideCards.filledAria")} />
+                <FiCheck
+                  aria-label={t("magazine:editor.sideCards.filledAria")}
+                />
               )}
             </span>
           </div>
@@ -244,7 +247,9 @@ export function ContributorMixCard({
       {q && (
         <div className={styles.contribMatch}>
           {match.length
-            ? t("magazine:editor.sideCards.matching", { names: match.join(", ") })
+            ? t("magazine:editor.sideCards.matching", {
+                names: match.join(", "),
+              })
             : t("magazine:editor.sideCards.noContributorMatch")}
         </div>
       )}

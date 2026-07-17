@@ -13,7 +13,12 @@ import {
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { REASON_KEYS, EVENTS, TYPE_CLASS, TYPE_LABEL_KEY } from "./soberPage.data";
+import {
+  REASON_KEYS,
+  EVENTS,
+  TYPE_CLASS,
+  TYPE_LABEL_KEY,
+} from "./soberPage.data";
 import {
   SoberHonestSection,
   SoberVenuesSection,
@@ -70,7 +75,9 @@ export function SoberPage() {
             label={t("resources:sober.hero.backLink")}
             tone="light"
           />
-          <div className={styles.label}>{t("resources:sober.hero.eyebrow")}</div>
+          <div className={styles.label}>
+            {t("resources:sober.hero.eyebrow")}
+          </div>
           <h1>
             <Translation
               i18nKey="resources:sober.hero.title"

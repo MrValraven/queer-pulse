@@ -73,17 +73,18 @@ const TAB_ICONS: Record<FeedTabIcon, React.ReactElement> = {
 
 /** Greeting + formatted date from the user's local machine clock. */
 function useNowGreeting() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const now = new Date();
   const hour = now.getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-  const weekday = now.toLocaleDateString("en-GB", { weekday: "long" });
-  const day = now.getDate();
-  const month = now.toLocaleDateString("en-GB", { month: "long" });
-  const year = now.getFullYear();
+  const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   return {
-    greeting,
-    dateLine: `${weekday} · Lisbon · ${day} ${month} ${year}`,
+    greeting: t(`feed:greeting.${timeOfDay}`),
+    dateLine: t("feed:greeting.dateLine", {
+      weekday: fmt.date(now, { weekday: "long" }),
+      city: t("feed:greeting.city"),
+      date: fmt.date(now),
+    }),
   };
 }
 
@@ -144,6 +145,7 @@ function FeedTabs({
   activeTab: FeedTab;
   onSelect: (tab: FeedTab) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.tabs}>
       {FEED_TABS.map((tab) => (
@@ -155,7 +157,7 @@ function FeedTabs({
             .join(" ")}
           onClick={() => onSelect(tab)}
         >
-          {tab}
+          {t(FEED_TAB_LABEL_KEY[tab])}
         </button>
       ))}
     </div>
@@ -163,6 +165,7 @@ function FeedTabs({
 }
 
 export function FeedPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<FeedTab>("All");
   const [hasSwitchedTab, setHasSwitchedTab] = useState(false);
   const { demoMode } = useDemoMode();
@@ -261,13 +264,21 @@ export function FeedPage() {
     <div className={styles.cardReveal}>
       <EmptyState
         icon={TAB_ICONS[tabCopy.icon]}
-        title={tabCopy.empty.title}
-        description={tabCopy.empty.description}
-        action={tabCopy.empty.action}
+        title={t(tabCopy.empty.titleKey)}
+        description={t(tabCopy.empty.descriptionKey)}
+        action={
+          tabCopy.empty.action && {
+            label: t(tabCopy.empty.action.labelKey),
+            to: tabCopy.empty.action.to,
+          }
+        }
         secondaryAction={
           activeTab === "All"
             ? undefined
-            : { label: "View everything", onClick: () => selectTab("All") }
+            : {
+                label: t("feed:common.viewEverything"),
+                onClick: () => selectTab("All"),
+              }
         }
       />
     </div>
@@ -304,10 +315,10 @@ export function FeedPage() {
                   feed.isError ? (
                     <EmptyState
                       icon={TAB_ICONS[tabCopy.icon]}
-                      title={tabCopy.error.title}
-                      description={tabCopy.error.description}
+                      title={t(tabCopy.error.titleKey)}
+                      description={t(tabCopy.error.descriptionKey)}
                       action={{
-                        label: "Try again",
+                        label: t("feed:common.tryAgain"),
                         onClick: () => void feed.refetch(),
                       }}
                     />

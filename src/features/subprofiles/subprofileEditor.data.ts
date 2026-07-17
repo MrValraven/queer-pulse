@@ -37,7 +37,10 @@ export const VISIBILITY_OPTIONS: {
 
 /** Segmented-control values for the link-visibility choice — canonical ids;
  *  the component renders their translated labels via `LINK_TO_LABEL_KEY`. */
-export const LINK_OPTIONS = ["linked", "unlinked"] as const satisfies readonly LinkVisibility[];
+export const LINK_OPTIONS = [
+  "linked",
+  "unlinked",
+] as const satisfies readonly LinkVisibility[];
 
 export const LINK_TO_LABEL_KEY: Record<LinkVisibility, string> = {
   linked: "subprofiles:link.linked",

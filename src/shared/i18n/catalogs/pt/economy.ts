@@ -146,7 +146,8 @@ export const economy: Catalog = {
   "workHub.section.needsYou": "O que precisa de ti",
   "workHub.section.whereThingsStand": "Como estão as coisas",
   "workHub.section.profile": "O teu perfil de trabalho",
-  "workHub.emptyLive.title": "O teu espaço de trabalho está pronto quando quiseres",
+  "workHub.emptyLive.title":
+    "O teu espaço de trabalho está pronto quando quiseres",
   "workHub.emptyLive.description":
     "Candidata-te a uma vaga, encontra uma pessoa mentora ou guarda uma vaga e tudo se vai juntar aqui — candidaturas, subsídios, saberes e avaliações numa só vista.",
   "workHub.emptyLive.cta": "Ver vagas",
@@ -162,14 +163,17 @@ export const economy: Catalog = {
   "workHub.next.offer.context": "Estão à espera da tua decisão.",
   "workHub.next.offer.urgency": "Fecha em {days} dias",
   "workHub.next.offer.cta": "Rever proposta",
-  "workHub.next.mentor.label": "{name} respondeu sobre o teu emparelhamento de mentoria",
-  "workHub.next.mentor.context": "Uma primeira chamada de apresentação está em cima da mesa.",
+  "workHub.next.mentor.label":
+    "{name} respondeu sobre o teu emparelhamento de mentoria",
+  "workHub.next.mentor.context":
+    "Uma primeira chamada de apresentação está em cima da mesa.",
   "workHub.next.mentor.cta": "Ler resposta",
   "workHub.next.grant.label": "Prazo do micro-subsídio esta sexta-feira",
   "workHub.next.grant.context": "{fund} · até {amount}.",
   "workHub.next.grant.urgency": "Prazo sex.",
   "workHub.next.grant.cta": "Ver subsídio",
-  "workHub.next.profile.label": "O teu perfil de trabalho está {percent}% completo",
+  "workHub.next.profile.label":
+    "O teu perfil de trabalho está {percent}% completo",
   "workHub.next.profile.context":
     "Acrescenta a tua preferência de visibilidade no trabalho para seres emparelhada em segurança.",
   "workHub.next.profile.cta": "Concluir perfil",
@@ -194,7 +198,8 @@ export const economy: Catalog = {
   "workHub.card.reviews.next": "1 rascunho por terminar",
 
   // ── WorkProfilePage / WorkProfileCard / WorkProfileSections ────────────
-  "workProfile.success.title": "O teu perfil de trabalho está <em>definido.</em>",
+  "workProfile.success.title":
+    "O teu perfil de trabalho está <em>definido.</em>",
   "workProfile.success.sub":
     "Apareces às empresas exatamente como escolheres — e nunca de outra forma.",
   "workProfile.success.backCta": "Voltar ao teu espaço de trabalho",
@@ -293,7 +298,8 @@ export const economy: Catalog = {
   "workProfile.focus.comingOut": "Assumir-se profissionalmente",
   "workProfile.focus.creativePractice": "Prática criativa",
   "workProfile.focus.startingBusiness": "Começar um negócio",
-  "workProfile.focus.difficultWorkplace": "Navegar um ambiente de trabalho difícil",
+  "workProfile.focus.difficultWorkplace":
+    "Navegar um ambiente de trabalho difícil",
   "workProfile.focus.mentalHealth": "Saúde mental no trabalho",
 
   // ── JobsPage (quadro de vagas) ─────────────────────────────────────────
@@ -353,7 +359,7 @@ export const economy: Catalog = {
     "Prática documentada de inclusão trans: cuidados de saúde de afirmação de género no plano, um processo de mudança de nome e pronomes, e instalações neutras quanto ao género — confirmado por avaliações de quem lá trabalha.",
   "safetyBadge.out.label": "Seguro para te assumires",
   "safetyBadge.out.blurb":
-    "A comunidade avalia esta empresa com 8+/10 em \"seguro para te assumires no trabalho\" — ser aberte sobre quem és aqui é um não-acontecimento, não um risco.",
+    'A comunidade avalia esta empresa com 8+/10 em "seguro para te assumires no trabalho" — ser aberte sobre quem és aqui é um não-acontecimento, não um risco.',
   "safetyBadge.affiliation.run.label": "Gerida por pessoas queer",
   "safetyBadge.affiliation.run.blurb":
     "Liderada ou detida por pessoas queer — decisões, cultura e dinheiro ficam dentro da comunidade. Verificado durante a validação, não auto-declarado.",
@@ -432,7 +438,8 @@ export const economy: Catalog = {
     "A comunidade já confirmou que estas pessoas proprietárias são queer-friendly, de confiança e justas. Não é uma garantia — faz sempre a tua própria verificação.",
   "housing.landlords.endorsedBadge": "Aval da comunidade",
 
-  "housing.tipsHeading": "Habitação em Lisboa — <em>o que precisas de saber</em>",
+  "housing.tipsHeading":
+    "Habitação em Lisboa — <em>o que precisas de saber</em>",
   "housing.tip.budget.title": "Orça para um mercado competitivo",
   "housing.tip.budget.text":
     "Quartos em bairros centrais custam entre 700 e 1000 €/mês. Estúdios entre 900 e 1400 €. As coisas movem-se depressa. Tem os documentos prontos: NIF, comprovativo de rendimentos ou fiador, e uma mensagem de apresentação.",
@@ -448,7 +455,8 @@ export const economy: Catalog = {
   "housing.tip.gut.title": "Confia no teu instinto nas visitas",
   "housing.tip.gut.text":
     "Conhece a pessoa proprietária antes de assinar. Pergunta sobre quem mais vive lá. Uma má sensação vale mais do que um bom preço.",
-  "housing.tip.emergency.title": "Em caso de emergência, pede ajuda à comunidade",
+  "housing.tip.emergency.title":
+    "Em caso de emergência, pede ajuda à comunidade",
   "housing.tip.emergency.text":
     "Se ficares subitamente sem casa ou numa situação de habitação perigosa, publica no quadro. A comunidade responde depressa a uma necessidade genuína.",
 
@@ -493,7 +501,8 @@ export const economy: Catalog = {
   "housingModal.recommend.ratingLabel": "A tua avaliação",
   "housingModal.recommend.starAriaLabel_one": "{count} estrela",
   "housingModal.recommend.starAriaLabel_other": "{count} estrelas",
-  "housingModal.recommend.whatShouldKnow": "O que devem saber as outras pessoas?",
+  "housingModal.recommend.whatShouldKnow":
+    "O que devem saber as outras pessoas?",
   "housingModal.recommend.placeholder":
     "Como foram as reparações, os contratos, os depósitos? Foi respeitada a tua privacidade e as tuas relações? Os pormenores ajudam.",
   "housingModal.recommend.note":
@@ -514,7 +523,8 @@ export const economy: Catalog = {
   "listSpace.sub":
     "Abre o teu espaço a uma pessoa verificada da comunidade. Só precisas de alguns detalhes agora — podes acrescentar fotos assim que for aprovado.",
   "listSpace.titleLabel": "Título do anúncio *",
-  "listSpace.titlePlaceholder": "ex.: Quarto soalheiro numa casa partilhada queer",
+  "listSpace.titlePlaceholder":
+    "ex.: Quarto soalheiro numa casa partilhada queer",
   "listSpace.areaLabel": "Bairro / zona *",
   "listSpace.areaPlaceholder": "ex.: Arroios, Lisboa",
   "listSpace.rentLabel": "Renda mensal (€) *",
@@ -783,7 +793,8 @@ export const economy: Catalog = {
   "employerReviews.recent.title": "Avaliações <em>recentes</em>",
   "employerReviews.recent.sub":
     "Escritas por pessoas membro · anónimas · atualizadas continuamente",
-  "employerReviews.recent.browseCta": "Ver vagas inclusivas para pessoas queer →",
+  "employerReviews.recent.browseCta":
+    "Ver vagas inclusivas para pessoas queer →",
   "employerReviews.recent.writeCta": "Escrever uma avaliação →",
 
   "employerReviews.verify.title": "Como funciona a <em>verificação</em>",
@@ -844,6 +855,80 @@ export const economy: Catalog = {
     "Logótipo do Orgulho sem acompanhamento real, RH que não sabia como ajudar…",
   "writeReviewModal.success.body":
     "Obrigade — a tua avaliação anónima de {company} já está publicada. O teu nome nunca é guardado com ela, e a {company} não pode editar nem remover o que escreveste.",
+
+  // ── GrantsPage (+ guia / barra lateral) ────────────────────────────────
+  // Nota de âmbito: os anúncios de bolsas em grants.data.tsx (nomes, entidades,
+  // montantes, descrições) são um diretório curado de programas de financiamento
+  // externos reais — conteúdo informativo, não interface da plataforma. Em modo
+  // live viriam de um diretório mantido/obtido da API. Ficam em inglês.
+  "grants.hero.eyebrow": "Bolsas e financiamento",
+  "grants.hero.title": "Dinheiro para <em>trabalho queer.</em>",
+  "grants.hero.lead":
+    "Guia feito pela comunidade sobre bolsas, residências e financiamento para pessoas e organizações LGBTQ+ — em Portugal e por toda a Europa. Mantido por quem já se candidatou com sucesso.",
+  "grants.hero.stat.tracked": "oportunidades acompanhadas",
+  "grants.hero.stat.open": "abertas neste momento",
+  "grants.hero.stat.communityLabel": "Comunidade",
+  "grants.hero.stat.maintained": "mantido por",
+
+  "grants.filter.all": "Tudo",
+  "grants.filter.individual": "Para pessoas",
+  "grants.filter.org": "Para organizações",
+  "grants.filter.arts": "Artes e cultura",
+  "grants.filter.community": "Projetos comunitários",
+  "grants.filter.eu": "UE / Internacional",
+
+  "grants.section.qp": "Da <em>QueerPulse</em>",
+  "grants.section.pt": "<em>Portugal</em> — programas nacionais",
+  "grants.section.eu": "<em>UE e Internacional</em>",
+
+  "grants.status.open": "Aberta agora",
+  "grants.status.rolling": "Em contínuo",
+  "grants.status.closed": "Fechada",
+
+  "grants.card.learnMore": "Saber mais",
+
+  "grants.empty.title": "Nada corresponde ao teu filtro",
+  "grants.empty.description":
+    "Não há oportunidades nessa categoria neste momento. Limpa o filtro para ver todas as bolsas e residências que a comunidade está a acompanhar.",
+
+  "grants.guide.title": "Escrever uma <em>candidatura forte</em>",
+  "grants.guide.sub":
+    "Conselhos de pessoas da comunidade que já conseguiram financiamento — de micro a grande.",
+  "grants.guide.step.criteria.title": "Lê os critérios duas vezes",
+  "grants.guide.step.criteria.body":
+    "A maioria das recusas vem de candidaturas que encaixam tecnicamente mas não espelham a linguagem de quem financia. Mapeia o teu projeto sobre as palavras concretas que usam.",
+  "grants.guide.step.story.title": "Conta uma história concreta",
+  "grants.guide.step.story.body":
+    "Quem financia lê centenas de candidaturas. Uma única história concreta e humana de impacto fica melhor do que afirmações genéricas.",
+  "grants.guide.step.community.title": "Mostra a tua comunidade",
+  "grants.guide.step.community.body":
+    "Quem financia trabalho queer quer ver a comunidade lá dentro — não como beneficiária, mas a participar e a decidir.",
+  "grants.guide.step.review.title": "Pede uma leitura",
+  "grants.guide.step.review.body":
+    "Antes de submeteres, pede a alguém de fora do projeto que leia a tua candidatura. Um olhar novo apanha os pressupostos que já deixaste de ver.",
+
+  "grants.outro.title": "O teu projeto <em>merece apoio.</em>",
+  "grants.outro.sub":
+    "Encontraste algo que encaixa? Candidata-te com confiança — e se conseguires, retribui: acrescenta a oportunidade para a próxima pessoa.",
+  "grants.outro.cta": "Ver bolsas abertas",
+
+  "grants.subpages.title": "Também em bolsas",
+  "grants.subpages.microGrants.label": "Micro Bolsas",
+  "grants.subpages.microGrants.blurb":
+    "Bolsas pequenas e rápidas da comunidade — candidata-te em minutos.",
+
+  "grants.sidebar.microGrants.title": "As nossas <em>Micro Bolsas</em>",
+  "grants.sidebar.microGrants.body":
+    "A QueerPulse tem o seu próprio programa de micro bolsas (200 €–2 000 €) para projetos comunitários em Lisboa. Mais rápido e mais simples do que a maioria das bolsas externas.",
+  "grants.sidebar.microGrants.cta": "Candidata-te →",
+  "grants.sidebar.skillsExchange.title": "Troca de competências",
+  "grants.sidebar.skillsExchange.body":
+    "Se precisas de apoio mas as bolsas te parecem formais demais, o quadro de trocas liga pessoas que trocam competências entre si — sem dinheiro pelo meio.",
+  "grants.sidebar.skillsExchange.cta": "Explorar as trocas →",
+  "grants.sidebar.appHelp.title": "Ajuda com a <em>candidatura</em>",
+  "grants.sidebar.appHelp.body":
+    "Pessoas da comunidade com experiência em candidaturas dão workshops e apoio individual através da troca de competências.",
+  "grants.sidebar.appHelp.cta": "Encontrar mentoria →",
 
   // ── JobApplyPage (+ cabeçalho / formulário / barra lateral) ────────────
   "jobApply.backToJob": "← Voltar à vaga",
@@ -917,7 +1002,8 @@ export const economy: Catalog = {
     "Enviada à {org} para a vaga de {title}. Não há mais nada a fazer por agora — a bola está do lado delas.",
 
   "jobApply.toast.draftSaved": "Rascunho guardado — retomas quando quiseres.",
-  "jobApply.error.missingFields": "Adiciona o teu nome e email antes de enviar.",
+  "jobApply.error.missingFields":
+    "Adiciona o teu nome e email antes de enviar.",
   "jobApply.error.alreadyApplied":
     "Já te candidataste a esta vaga — consulta as tuas candidaturas.",
   "jobApply.error.generic":

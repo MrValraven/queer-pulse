@@ -52,7 +52,8 @@ export const magazine: Catalog = {
   "landing.nav.archive": "Arquivo",
   "landing.subpageIndexTitle": "Mais da Revista",
   "landing.subpages.covers.label": "Galeria de capas",
-  "landing.subpages.covers.blurb": "Todas as capas que já publicámos, num só lugar.",
+  "landing.subpages.covers.blurb":
+    "Todas as capas que já publicámos, num só lugar.",
   "landing.subpages.longreads.label": "Reportagens longas",
   "landing.subpages.longreads.blurb":
     "As nossas reportagens e ensaios mais longos e aprofundados.",
@@ -346,7 +347,8 @@ export const magazine: Catalog = {
   "editor.piecesTable.emptyNoneBody":
     "Não há peças no pipeline neste momento. Aceita uma proposta abaixo ou encomenda uma peça, e ela aparece aqui para editares.",
   "editor.piecesTable.emptyFilteredTitle": "Nenhuma peça corresponde",
-  "editor.piecesTable.emptyFilteredBody": "Tenta limpar a pesquisa ou os filtros.",
+  "editor.piecesTable.emptyFilteredBody":
+    "Tenta limpar a pesquisa ou os filtros.",
   "editor.piecesTable.clearFiltersCta": "Limpar filtros",
 
   // ── EditorPieceRow ─────────────────────────────────────────────────────
@@ -455,15 +457,18 @@ export const magazine: Catalog = {
   "editor.sideCards.awaiting": "por confirmar",
   "editor.sideCards.toInvoice": "por faturar",
   "editor.sideCards.matching": "A corresponder: {names}",
-  "editor.sideCards.noContributorMatch": "Nenhuma pessoa colaboradora corresponde",
+  "editor.sideCards.noContributorMatch":
+    "Nenhuma pessoa colaboradora corresponde",
   "editor.sideCards.seeContributorProfiles":
     "Ver perfis de pessoas colaboradoras →",
   "editor.sideCards.recentActivity": "Atividade recente",
   "editor.sideCards.quickActions": "Ações rápidas",
-  "editor.sideCards.sendPitchDecisions": "→ Enviar decisões de propostas em lote",
+  "editor.sideCards.sendPitchDecisions":
+    "→ Enviar decisões de propostas em lote",
   "editor.sideCards.emailContributorsWaiting":
     "→ Enviar email às pessoas colaboradoras em espera",
-  "editor.sideCards.previewIssueLayout": "→ Pré-visualizar a paginação da edição",
+  "editor.sideCards.previewIssueLayout":
+    "→ Pré-visualizar a paginação da edição",
   "editor.sideCards.exportContributorList":
     "→ Exportar lista de pessoas colaboradoras (CSV)",
 
@@ -506,8 +511,7 @@ export const magazine: Catalog = {
   "submitStory.intro.title": "Tens algo que <em>vale a pena contar?</em>",
   "submitStory.intro.lead":
     "A revista da QueerPulse é escrita pela comunidade. Não precisas de uma assinatura habitual nem de um agente — só de uma história que importa e de uma forma honesta de a contar.",
-  "submitStory.intro.lookingFor.specific.title":
-    "O específico em vez do geral",
+  "submitStory.intro.lookingFor.specific.title": "O específico em vez do geral",
   "submitStory.intro.lookingFor.specific.body":
     "Um clube de jantares, uma rua, uma tarde. Confiamos que a história pequena carrega a grande.",
   "submitStory.intro.lookingFor.beyond.title": "Lisboa e para além dela",
@@ -515,7 +519,7 @@ export const magazine: Catalog = {
     "Enraizados aqui, mas publicamos também vozes da diáspora e de quem nos visita. O lugar importa; as fronteiras, menos.",
   "submitStory.intro.lookingFor.pay.title": "Pagamos, sempre",
   "submitStory.intro.lookingFor.pay.body":
-    "Todas as peças publicadas são pagas de forma justa — valores partilhados à partida, nunca em troca de \"visibilidade\".",
+    'Todas as peças publicadas são pagas de forma justa — valores partilhados à partida, nunca em troca de "visibilidade".',
   "submitStory.intro.stepsHeading": "O que acontece a seguir",
   "submitStory.intro.step.reply":
     "Uma resposta em duas semanas — sim, não, ou vamos falar.",
@@ -529,7 +533,8 @@ export const magazine: Catalog = {
   "submitStory.sidebar.guideline.length.term": "800–2500 palavras",
   "submitStory.sidebar.guideline.length.detail":
     "para a maioria das secções. Reportagens longas até 4000.",
-  "submitStory.sidebar.guideline.experience.term": "Escreve a partir da experiência.",
+  "submitStory.sidebar.guideline.experience.term":
+    "Escreve a partir da experiência.",
   "submitStory.sidebar.guideline.experience.detail":
     "Em primeira pessoa ou com reportagem próxima. Não é opinião de comentador.",
   "submitStory.sidebar.guideline.noPromo.term": "Sem conteúdo promocional.",
@@ -681,8 +686,7 @@ export const magazine: Catalog = {
   "newsletter.subscribe.anotherCta": "Subscrever outro email",
   "newsletter.subscribe.emailPlaceholder": "tu@exemplo.com",
   "newsletter.subscribe.submitCta": "Subscrever →",
-  "newsletter.subscribe.footAll":
-    "Escolhe que newsletters queres no passo 2. ",
+  "newsletter.subscribe.footAll": "Escolhe que newsletters queres no passo 2. ",
   "newsletter.subscribe.footOne":
     "Vais receber <strong>{stream}</strong> — ajusta no passo 2. ",
   "newsletter.subscribe.footShared":

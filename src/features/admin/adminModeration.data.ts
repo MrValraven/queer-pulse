@@ -1,3 +1,4 @@
+import type { TFunction } from "../../shared/i18n/types";
 import type { AdminTone } from "./ui";
 
 export type Severity = "emergency" | "high" | "medium" | "low";
@@ -49,6 +50,24 @@ export type ReportChip =
     }
   | { tone: AdminTone; text: string; dot?: boolean };
 
+/** Renders a chip's label: verbatim content chips pass through, chrome chips
+ *  resolve through the catalog. Narrows the `ReportChip` union for consumers. */
+export function chipLabel(chip: ReportChip, t: TFunction): string {
+  return "text" in chip ? chip.text : t(chip.labelKey, chip.values);
+}
+
+/** Stable React `key` for a chip — the catalog key, or the verbatim text. */
+export function chipKey(chip: ReportChip): string {
+  return "text" in chip ? chip.text : chip.labelKey;
+}
+
+/** Real counts resolved at render, so the plural form follows the language. */
+export function priorReportsText(prior: PriorReports, t: TFunction): string {
+  return prior.kind === "count"
+    ? t("admin:moderation.priorReports.count", { count: prior.count })
+    : t("admin:moderation.priorReports.newAccount", { vouches: prior.vouches });
+}
+
 export interface ThreadMsg {
   author: string;
   initials: string;
@@ -84,8 +103,7 @@ export interface ReportDetail {
 /** Real per-member counts, resolved via `admin:moderation.priorReports.*` at
  *  render — never a baked "N prior reports" string. */
 export type PriorReports =
-  | { kind: "count"; count: number }
-  | { kind: "newAccount"; vouches: number };
+  { kind: "count"; count: number } | { kind: "newAccount"; vouches: number };
 
 export interface ModReport {
   id: string;
@@ -167,7 +185,9 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     id: "r-emerg-1",
     severity: "emergency",
     category: "Emergency",
-    chips: [{ tone: "danger", labelKey: "admin:moderation.chip.outingDoxxing" }],
+    chips: [
+      { tone: "danger", labelKey: "admin:moderation.chip.outingDoxxing" },
+    ],
     title: "A member's",
     titleEm: "private trans status",
     titleAfter: "was posted in a public thread",
@@ -175,7 +195,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
       '"Everyone should know that [name] used to go by…" — reported as deliberate outing in the Lisbon Queers open forum.',
     reporterName: "anonymous",
     reportedName: "@reblanco",
-    priorReports: "1 prior report",
+    priorReports: { kind: "count", count: 1 },
     age: "26m",
     risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
     detail: {
@@ -216,7 +236,12 @@ export const EMERGENCY_REPORTS: ModReport[] = [
           tone: "anon",
           anon: true,
           meta: "Reporting is anonymous by design. Their identity is protected from you and from the reported member.",
-          chips: [{ tone: "ghost", labelKey: "admin:moderation.chip.identityShielded" }],
+          chips: [
+            {
+              tone: "ghost",
+              labelKey: "admin:moderation.chip.identityShielded",
+            },
+          ],
         },
         {
           role: "Reported",
@@ -241,13 +266,15 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     id: "r-emerg-2",
     severity: "emergency",
     category: "Emergency",
-    chips: [{ tone: "danger", labelKey: "admin:moderation.chip.outingDoxxing" }],
+    chips: [
+      { tone: "danger", labelKey: "admin:moderation.chip.outingDoxxing" },
+    ],
     title: "Home address shared in a DM screenshot",
     preview:
       'A throwaway account posted what appears to be a member’s home address with a threat to "show up." Reporter fears for physical safety.',
     reporterName: "Mara L.",
     reportedName: "@anon_4471",
-    priorReports: "New account · 0 vouches",
+    priorReports: { kind: "newAccount", vouches: 0 },
     age: "1h",
     risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
   },
@@ -264,7 +291,7 @@ export const OTHER_REPORTS: ModReport[] = [
       "Member reports 14 messages in 2 days from the same person despite blocking. Pattern of escalation.",
     reporterName: "Tomás R.",
     reportedName: "@nightowl",
-    priorReports: "4 prior reports",
+    priorReports: { kind: "count", count: 4 },
     age: "3h",
     risk: { tone: "coral", key: "admin:moderation.risk.high" },
   },
@@ -317,7 +344,9 @@ export const APPEALS: Appeal[] = [
   {
     id: "a-1",
     severity: "medium",
-    chips: [{ tone: "amber", labelKey: "admin:moderation.chip.appealRestriction" }],
+    chips: [
+      { tone: "amber", labelKey: "admin:moderation.chip.appealRestriction" },
+    ],
     title: '"I was muted for a joke my friends were in on"',
     preview:
       "Member restricted for 7 days asks for a second look, says context was missed. Two members have written in support.",

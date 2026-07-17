@@ -25,9 +25,21 @@ export const FILM_SAVED = {
  * `fmt.currency()`, matching `cinema:access.rent`'s `{price}` token).
  */
 export const WATCH_TABS = [
-  { labelKey: "cinema:film.watchTabs.watch.label", subKey: "cinema:film.watchTabs.watch.sub" },
-  { labelKey: "cinema:access.rent", price: 3, subKey: "cinema:film.watchTabs.rent.sub", hours: 48 },
-  { labelKey: "cinema:film.watchTabs.buy.label", price: 8, subKey: "cinema:film.watchTabs.buy.sub" },
+  {
+    labelKey: "cinema:film.watchTabs.watch.label",
+    subKey: "cinema:film.watchTabs.watch.sub",
+  },
+  {
+    labelKey: "cinema:access.rent",
+    price: 3,
+    subKey: "cinema:film.watchTabs.rent.sub",
+    hours: 48,
+  },
+  {
+    labelKey: "cinema:film.watchTabs.buy.label",
+    price: 8,
+    subKey: "cinema:film.watchTabs.buy.sub",
+  },
 ];
 
 /** `labelKey` is chrome (the fact's name); `v` is this film's own data and
@@ -35,8 +47,16 @@ export const WATCH_TABS = [
 export const FACTS = [
   { labelKey: "cinema:film.facts.language", v: "Portuguese", ok: false },
   { labelKey: "cinema:film.facts.captions", v: "EN · PT", ok: true },
-  { labelKey: "cinema:browse.accessibility.audioDescription", v: "EN · PT", ok: true },
-  { labelKey: "cinema:browse.accessibility.signLanguage", v: "LGP track", ok: true },
+  {
+    labelKey: "cinema:browse.accessibility.audioDescription",
+    v: "EN · PT",
+    ok: true,
+  },
+  {
+    labelKey: "cinema:browse.accessibility.signLanguage",
+    v: "LGP track",
+    ok: true,
+  },
 ];
 
 export const CREW = [

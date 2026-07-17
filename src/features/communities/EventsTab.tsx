@@ -29,7 +29,8 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
       {ev.past ? (
         ev.recapHref && (
           <Link to={routes.gathering} className={styles.recapLink}>
-            {t("communities:detail.events.recapCta")} <FiArrowRight aria-hidden />
+            {t("communities:detail.events.recapCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         )
       ) : (
@@ -47,7 +48,9 @@ export function EventsTab({ events }: { events: CommunityEvent[] }) {
   const past = events.filter((e) => e.past);
   return (
     <div>
-      <div className={detail.secLbl}>{t("communities:detail.events.upcoming")}</div>
+      <div className={detail.secLbl}>
+        {t("communities:detail.events.upcoming")}
+      </div>
       {upcoming.map((ev) => (
         <EventRow key={ev.id} ev={ev} />
       ))}

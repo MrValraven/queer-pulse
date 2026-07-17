@@ -891,7 +891,11 @@ export function getTopic(rawTag: string): Topic {
     ),
     stats: [
       { value: "—", em: true, labelKey: "topics:stats.posts" },
-      { value: "New", valueKey: "topics:stats.newValue", labelKey: "topics:common.eyebrow" },
+      {
+        value: "New",
+        valueKey: "topics:stats.newValue",
+        labelKey: "topics:common.eyebrow",
+      },
       { value: "0", labelKey: "topics:stats.thisWeek" },
     ],
     writeHref: routes.forum,

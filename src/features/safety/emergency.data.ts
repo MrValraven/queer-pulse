@@ -86,7 +86,8 @@ export const SECTIONS: Section[] = [
     items: [
       {
         name: "Opus Diversus",
-        detailKey: "safety:emergency.section.mentalHealth.item.opusDiversus.detail",
+        detailKey:
+          "safety:emergency.section.mentalHealth.item.opusDiversus.detail",
         link: {
           label: "↗ opusdiversus.org",
           href: "https://opusdiversus.org",
@@ -95,7 +96,8 @@ export const SECTIONS: Section[] = [
       },
       {
         name: `${memberName("mariana")} (QueerPulse)`,
-        detailKey: "safety:emergency.section.mentalHealth.item.clinician.detail",
+        detailKey:
+          "safety:emergency.section.mentalHealth.item.clinician.detail",
         link: {
           labelKey: "safety:emergency.common.viewProfileCta",
           href: routes.members,

@@ -126,19 +126,26 @@ function PreviewSection() {
           <button
             type="button"
             className={styles.dl}
-            onClick={() => showToast(t("studio:press.fullPromoRequestedToast"), "success")}
+            onClick={() =>
+              showToast(t("studio:press.fullPromoRequestedToast"), "success")
+            }
           >
             {t("studio:press.requestFullPromoCta")}
           </button>
         }
       >
-        <Translation i18nKey="studio:press.section.preview" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.section.preview"
+          components={{ em: <em /> }}
+        />
       </SectionHead>
       <div className={styles.track}>
         <button
           type="button"
           className={styles.playBig}
-          aria-label={t(playing ? "studio:press.pauseAria" : "studio:press.playAria")}
+          aria-label={t(
+            playing ? "studio:press.pauseAria" : "studio:press.playAria",
+          )}
           aria-pressed={playing}
           onClick={() => setPlaying((p) => !p)}
         >
@@ -166,10 +173,15 @@ function PreviewSection() {
             ))}
           </div>
         </div>
-        <span className={styles.wmBadge}>{t("studio:press.watermarkedBadge")}</span>
+        <span className={styles.wmBadge}>
+          {t("studio:press.watermarkedBadge")}
+        </span>
       </div>
       <div className={styles.trackNote}>
-        <Translation i18nKey="studio:press.previewNote" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.previewNote"
+          components={{ em: <em /> }}
+        />
       </div>
     </section>
   );
@@ -186,7 +198,10 @@ function BioSection({ onCopyBoth }: { onCopyBoth: () => void }) {
           </button>
         }
       >
-        <Translation i18nKey="studio:press.section.bio" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.section.bio"
+          components={{ em: <em /> }}
+        />
       </SectionHead>
       <div className={styles.bio}>
         <div className={`${styles.col} ${styles.short}`}>
@@ -219,7 +234,10 @@ function PhotosSection({
           </button>
         }
       >
-        <Translation i18nKey="studio:press.section.photos" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.section.photos"
+          components={{ em: <em /> }}
+        />
       </SectionHead>
       <div className={styles.photos}>
         {PRESS_PHOTOS.map((p) => (
@@ -238,7 +256,9 @@ function PhotosSection({
               placeholder={p.caption}
               style={{ position: "absolute", inset: 0 }}
             />
-            <span className={styles.photoHint}>{t("studio:press.downloadOneHint")}</span>
+            <span className={styles.photoHint}>
+              {t("studio:press.downloadOneHint")}
+            </span>
           </button>
         ))}
       </div>
@@ -251,7 +271,10 @@ function ReleaseSection() {
   return (
     <section className={styles.sec}>
       <SectionHead>
-        <Translation i18nKey="studio:press.section.release" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.section.release"
+          components={{ em: <em /> }}
+        />
       </SectionHead>
       <Link to={routes.studioAlbum} className={styles.track}>
         <div className={styles.cv}>
@@ -273,7 +296,9 @@ function ReleaseSection() {
             Album · 11 tracks · released 14 Mar 2026 · CC-BY-NC
           </div>
         </div>
-        <span className={`${styles.wmBadge} ${styles.jade}`}>{t("studio:press.outNowBadge")}</span>
+        <span className={`${styles.wmBadge} ${styles.jade}`}>
+          {t("studio:press.outNowBadge")}
+        </span>
       </Link>
     </section>
   );
@@ -283,7 +308,10 @@ function QuotesSection() {
   return (
     <section className={styles.sec}>
       <SectionHead>
-        <Translation i18nKey="studio:press.section.press" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.section.press"
+          components={{ em: <em /> }}
+        />
       </SectionHead>
       <div className={styles.quotes}>
         {PRESS_QUOTES.map((q) => (
@@ -302,7 +330,10 @@ function BoilerplateSection({ onCopy }: { onCopy: (text: string) => void }) {
   return (
     <section className={styles.sec}>
       <SectionHead>
-        <Translation i18nKey="studio:press.section.boilerplate" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:press.section.boilerplate"
+          components={{ em: <em /> }}
+        />
       </SectionHead>
       <div className={styles.boiler}>
         {BOILERPLATE.map((row) => (
@@ -330,7 +361,10 @@ function ContactSection({ onRequest }: { onRequest: () => void }) {
       <div className={styles.contact}>
         <div className={styles.ci}>
           <h3>
-            <Translation i18nKey="studio:press.section.contactHeading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:press.section.contactHeading"
+              components={{ em: <em /> }}
+            />
           </h3>
           <p>
             Mariana handles her own press — no gatekeepers.{" "}

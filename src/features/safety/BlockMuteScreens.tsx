@@ -123,9 +123,7 @@ export function BlockMuteChoose({
             {t("safety:blockMute.choose.blockTitle", { name })}
           </span>
         </div>
-        <div className={s.ocDesc}>
-          {t("safety:blockMute.choose.blockDesc")}
-        </div>
+        <div className={s.ocDesc}>{t("safety:blockMute.choose.blockDesc")}</div>
         {chosen === "block" && (
           <div className={s.subOpts}>
             <div className={s.warnBox}>
@@ -237,9 +235,7 @@ export function BlockMuteBlocked({ onUndo }: { onUndo: () => void }) {
           components={{ em: <em /> }}
         />
       </div>
-      <div className={s.sub}>
-        {t("safety:blockMute.blocked.sub", { name })}
-      </div>
+      <div className={s.sub}>{t("safety:blockMute.blocked.sub", { name })}</div>
       <div className={s.summary}>
         <div className={s.csRow}>
           <span className={s.csLabel}>

@@ -86,7 +86,10 @@ export function ConnectionsPage() {
 
   function onAccept(v: ConnectionView) {
     void acceptRequest({ slug: v.slug, id: v.meta.id });
-    showToast(t("connect:toast.connected", { name: v.name.split(" ")[0]! }), "success");
+    showToast(
+      t("connect:toast.connected", { name: v.name.split(" ")[0]! }),
+      "success",
+    );
   }
   function onDecline(v: ConnectionView) {
     void declineRequest({ slug: v.slug, id: v.meta.id });
@@ -98,7 +101,10 @@ export function ConnectionsPage() {
   }
   function onUnblock(v: ConnectionView) {
     void unblockAction({ slug: v.slug, id: v.meta.id });
-    showToast(t("connect:toast.unblocked", { name: v.name.split(" ")[0]! }), "success");
+    showToast(
+      t("connect:toast.unblocked", { name: v.name.split(" ")[0]! }),
+      "success",
+    );
   }
 
   return (
@@ -128,7 +134,10 @@ export function ConnectionsPage() {
             <FiInfo />
           </span>
           <span>
-            <Translation i18nKey="connect:page.note" components={{ b: <b /> }} />
+            <Translation
+              i18nKey="connect:page.note"
+              components={{ b: <b /> }}
+            />
           </span>
         </div>
 

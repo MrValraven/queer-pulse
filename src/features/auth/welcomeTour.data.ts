@@ -77,20 +77,45 @@ export const VISIBILITY_OPTIONS = [
   },
 ];
 
-export const INTERESTS: { icon: IconType; value: string; labelKey: string }[] = [
-  { icon: FiPenTool, value: "Design", labelKey: "auth:tour.interest.design" },
-  { icon: FiMonitor, value: "Tech", labelKey: "auth:tour.interest.tech" },
-  { icon: FiFilm, value: "Film", labelKey: "auth:tour.interest.film" },
-  { icon: FiMusic, value: "Music", labelKey: "auth:tour.interest.music" },
-  { icon: FaHandFist, value: "Activism", labelKey: "auth:tour.interest.activism" },
-  { icon: FaLeaf, value: "Wellbeing", labelKey: "auth:tour.interest.wellbeing" },
-  { icon: FaUtensils, value: "Food", labelKey: "auth:tour.interest.food" },
-  { icon: FiActivity, value: "Sports", labelKey: "auth:tour.interest.sports" },
-  { icon: FiBookOpen, value: "Writing", labelKey: "auth:tour.interest.writing" },
-  { icon: FiTool, value: "Craft", labelKey: "auth:tour.interest.craft" },
-  { icon: FaLandmark, value: "Policy", labelKey: "auth:tour.interest.policy" },
-  { icon: FiGlobe, value: "Community", labelKey: "auth:tour.interest.community" },
-];
+export const INTERESTS: { icon: IconType; value: string; labelKey: string }[] =
+  [
+    { icon: FiPenTool, value: "Design", labelKey: "auth:tour.interest.design" },
+    { icon: FiMonitor, value: "Tech", labelKey: "auth:tour.interest.tech" },
+    { icon: FiFilm, value: "Film", labelKey: "auth:tour.interest.film" },
+    { icon: FiMusic, value: "Music", labelKey: "auth:tour.interest.music" },
+    {
+      icon: FaHandFist,
+      value: "Activism",
+      labelKey: "auth:tour.interest.activism",
+    },
+    {
+      icon: FaLeaf,
+      value: "Wellbeing",
+      labelKey: "auth:tour.interest.wellbeing",
+    },
+    { icon: FaUtensils, value: "Food", labelKey: "auth:tour.interest.food" },
+    {
+      icon: FiActivity,
+      value: "Sports",
+      labelKey: "auth:tour.interest.sports",
+    },
+    {
+      icon: FiBookOpen,
+      value: "Writing",
+      labelKey: "auth:tour.interest.writing",
+    },
+    { icon: FiTool, value: "Craft", labelKey: "auth:tour.interest.craft" },
+    {
+      icon: FaLandmark,
+      value: "Policy",
+      labelKey: "auth:tour.interest.policy",
+    },
+    {
+      icon: FiGlobe,
+      value: "Community",
+      labelKey: "auth:tour.interest.community",
+    },
+  ];
 
 export const TOUR_COMMUNITIES = [
   {

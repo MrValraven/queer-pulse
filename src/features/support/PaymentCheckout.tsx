@@ -131,7 +131,9 @@ export function PaymentCheckout({
             value={fields.gift}
             onChange={(e) => set("gift", e.target.value)}
           />
-          <div className={styles.fieldErr}>{t("support:checkout.emailErr")}</div>
+          <div className={styles.fieldErr}>
+            {t("support:checkout.emailErr")}
+          </div>
         </div>
       )}
 
@@ -149,7 +151,9 @@ export function PaymentCheckout({
               value={fields.iban}
               onChange={(e) => set("iban", e.target.value.toUpperCase())}
             />
-            <div className={styles.fieldErr}>{t("support:checkout.ibanErr")}</div>
+            <div className={styles.fieldErr}>
+              {t("support:checkout.ibanErr")}
+            </div>
           </div>
           <div className={err("acc")}>
             <label htmlFor="acc">
@@ -300,7 +304,9 @@ function CardFields({
         </div>
       </div>
       <div className={err("name")}>
-        <label htmlFor="cardName">{t("support:checkout.nameOnCardLabel")}</label>
+        <label htmlFor="cardName">
+          {t("support:checkout.nameOnCardLabel")}
+        </label>
         <input
           id="cardName"
           autoComplete="cc-name"

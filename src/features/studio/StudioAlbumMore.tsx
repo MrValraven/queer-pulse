@@ -18,7 +18,11 @@ export function StudioAlbumMore() {
     <section className={styles.row} style={{ paddingBottom: 60 }}>
       <div className={styles.rowH}>
         <h2>
-          <Translation i18nKey="studio:album.more.heading" values={{ artist: "Mariana Sol" }} components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:album.more.heading"
+            values={{ artist: "Mariana Sol" }}
+            components={{ em: <em /> }}
+          />
         </h2>
         <Link to={routes.studioArtist} className={styles.all}>
           {t("studio:album.more.artistPageCta")} →

@@ -23,7 +23,11 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     labelKey: "magazine:masthead.nav.current",
     href: routes.magazine,
   },
-  { key: "issues", labelKey: "magazine:masthead.nav.issues", href: routes.issues },
+  {
+    key: "issues",
+    labelKey: "magazine:masthead.nav.issues",
+    href: routes.issues,
+  },
   {
     key: "covers",
     labelKey: "magazine:masthead.nav.covers",
@@ -34,7 +38,11 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     labelKey: "magazine:masthead.nav.longreads",
     href: routes.tag,
   },
-  { key: "stories", labelKey: "magazine:masthead.nav.stories", href: routes.story },
+  {
+    key: "stories",
+    labelKey: "magazine:masthead.nav.stories",
+    href: routes.story,
+  },
   {
     key: "newsletter",
     labelKey: "magazine:masthead.nav.newsletter",

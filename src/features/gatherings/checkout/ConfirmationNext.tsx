@@ -245,7 +245,10 @@ function NextActions() {
           className={s["co-back-btn"]}
           type="button"
           onClick={() =>
-            showToast(t("gatherings:checkout.confirm.transferSentToast"), "info")
+            showToast(
+              t("gatherings:checkout.confirm.transferSentToast"),
+              "info",
+            )
           }
           style={{ color: "var(--ink-60)" }}
         >
@@ -256,7 +259,10 @@ function NextActions() {
           className={s["co-back-btn"]}
           type="button"
           onClick={() =>
-            showToast(t("gatherings:checkout.confirm.addGuestSentToast"), "info")
+            showToast(
+              t("gatherings:checkout.confirm.addGuestSentToast"),
+              "info",
+            )
           }
           style={{ color: "var(--ink-60)" }}
         >

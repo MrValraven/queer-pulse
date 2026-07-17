@@ -245,7 +245,9 @@ export function PerksLadder() {
         ))}
       </div>
       <div className={styles.redeemWrap}>
-        <Button to={routes.perks}>{t("members:profile.hero.perksArrow")}</Button>
+        <Button to={routes.perks}>
+          {t("members:profile.hero.perksArrow")}
+        </Button>
       </div>
     </section>
   );

@@ -104,9 +104,15 @@ export const pillars: Pillar[] = [
     nameKey: "homepage:pillars.wellbeing.name",
     descKey: "homepage:pillars.wellbeing.desc",
     tags: [
-      { labelKey: "homepage:pillars.tag.mentalHealth", to: routes.mentalHealth },
+      {
+        labelKey: "homepage:pillars.tag.mentalHealth",
+        to: routes.mentalHealth,
+      },
       { labelKey: "homepage:pillars.tag.transHub", to: routes.transHub },
-      { labelKey: "homepage:pillars.tag.sexualHealth", to: routes.sexualHealth },
+      {
+        labelKey: "homepage:pillars.tag.sexualHealth",
+        to: routes.sexualHealth,
+      },
     ],
     to: routes.wellbeing,
     accent: "var(--amber)",
@@ -134,7 +140,10 @@ export const pillars: Pillar[] = [
     nameKey: "homepage:pillars.activism.name",
     descKey: "homepage:pillars.activism.desc",
     tags: [
-      { labelKey: "homepage:pillars.tag.changemakers", to: routes.changemakers },
+      {
+        labelKey: "homepage:pillars.tag.changemakers",
+        to: routes.changemakers,
+      },
       { labelKey: "homepage:pillars.tag.volunteer", to: routes.volunteer },
       { labelKey: "homepage:pillars.tag.governance", to: routes.governance },
     ],

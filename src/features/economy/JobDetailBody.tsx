@@ -14,7 +14,9 @@ export function JobDetailBody({ job }: { job: Job }) {
   return (
     <div>
       <div className={styles.section}>
-        <h2 className={styles.secTitle}>{t("economy:jobDetail.section.about")}</h2>
+        <h2 className={styles.secTitle}>
+          {t("economy:jobDetail.section.about")}
+        </h2>
         {d.about.map((p, i) => (
           <p key={i} className={styles.text}>
             {p}

@@ -28,7 +28,9 @@ export function InviteExpiredPage() {
           </svg>
         </div>
 
-        <div className={styles.eyebrow}>{t("system:inviteExpired.eyebrow")}</div>
+        <div className={styles.eyebrow}>
+          {t("system:inviteExpired.eyebrow")}
+        </div>
         <h1 className={styles.heading}>
           <Translation
             i18nKey="system:inviteExpired.heading"

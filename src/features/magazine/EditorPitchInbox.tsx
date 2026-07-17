@@ -57,7 +57,9 @@ export function EditorPitchInbox({
             values={{ total: PITCH_TOTAL }}
           />
         </span>
-        <span className={styles.ct}>{t("magazine:editor.pitchInbox.subhead")}</span>
+        <span className={styles.ct}>
+          {t("magazine:editor.pitchInbox.subhead")}
+        </span>
       </h2>
       <div className={styles.pieces}>
         {pitches.length === 0 ? (
@@ -118,7 +120,9 @@ function PitchRow({
         className={styles.pitchCheck}
         checked={selected}
         onChange={() => onToggleSelect(p.id)}
-        aria-label={t("magazine:editor.pitchInbox.selectAria", { name: p.name })}
+        aria-label={t("magazine:editor.pitchInbox.selectAria", {
+          name: p.name,
+        })}
       />
       <span className={cx(styles.pitchAv, TINT_CLASS[p.tint])}>
         {initials(p.name)}
@@ -127,7 +131,10 @@ function PitchRow({
         <b>
           {p.name} · {p.title}
           {p.newVoice && (
-            <span className={styles.nv}> {t("magazine:editor.pieceRow.newVoice")}</span>
+            <span className={styles.nv}>
+              {" "}
+              {t("magazine:editor.pieceRow.newVoice")}
+            </span>
           )}
         </b>
         <span>

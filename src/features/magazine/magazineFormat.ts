@@ -36,7 +36,10 @@ export function wordsText(words: number, t: TFunction): string {
  * opaque `reads` token rather than pluralized (hence not `count`, which
  * drives CLDR plural-category selection and is typed `number`-only).
  */
-export function readsThisWeekText(reads: string | number, t: TFunction): string {
+export function readsThisWeekText(
+  reads: string | number,
+  t: TFunction,
+): string {
   return t("magazine:format.readsThisWeek", { reads });
 }
 

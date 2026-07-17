@@ -25,7 +25,8 @@ export function EventPills() {
           className={sx(`pill${pill === p.key ? " active" : ""}`)}
           onClick={() => setPill(p.key)}
         >
-          {t(p.labelKey)} <span className={sx("pc")}>{counts[p.key] || ""}</span>
+          {t(p.labelKey)}{" "}
+          <span className={sx("pc")}>{counts[p.key] || ""}</span>
         </button>
       ))}
     </div>

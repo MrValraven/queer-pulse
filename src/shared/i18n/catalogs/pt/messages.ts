@@ -19,7 +19,8 @@ export const messages: Catalog = {
   "thread.newMessage": "Nova mensagem",
 
   // Painel da conversa (ConversationPanel)
-  "conversation.officialMeta": "Oficial · Não é possível responder nesta conversa",
+  "conversation.officialMeta":
+    "Oficial · Não é possível responder nesta conversa",
   "conversation.connectedSinceSuffix": " · Ligação desde {date}",
   "conversation.viewProfile": "Ver perfil",
   "conversation.officialNotice":

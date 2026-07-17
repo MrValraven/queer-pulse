@@ -30,7 +30,10 @@ export function TopicHeader({ topic }: { topic: Topic }) {
         <Button
           variant="primary"
           onClick={() =>
-            showToast(t("topics:header.followToast", { tag: topic.tag }), "success")
+            showToast(
+              t("topics:header.followToast", { tag: topic.tag }),
+              "success",
+            )
           }
         >
           {t("topics:header.followCta")}

@@ -27,7 +27,9 @@ function Countdown() {
 
   return (
     <div className={styles.countdown}>
-      <div className={styles.cdLabel}>{t("system:serverError.countdown.label")}</div>
+      <div className={styles.cdLabel}>
+        {t("system:serverError.countdown.label")}
+      </div>
       <div className={styles.cdNum}>{display}</div>
     </div>
   );

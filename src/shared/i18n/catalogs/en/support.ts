@@ -96,7 +96,8 @@ export const support: Catalog = {
   "tiers.yourAmount": "your amount",
   "tiers.continueCta": "Continue with {name}",
   "tiers.chargeNote": "There's no charge until you review and confirm.",
-  "tiers.solidOpt.title": "Add <amt>{amount}</amt> to sponsor a free membership",
+  "tiers.solidOpt.title":
+    "Add <amt>{amount}</amt> to sponsor a free membership",
   "tiers.solidOpt.detail":
     "Pay it forward for someone in the community who can't contribute right now.",
   "tiers.giftOpt.title": "Make this a gift",
@@ -130,7 +131,8 @@ export const support: Catalog = {
   // ── Impact framing (below the amount picker, per contribution level) ──
   "impact.msg.high":
     "funds nearly a full day of the team keeping this place running and cared for.",
-  "impact.msg.mid": "covers a month of hosting and email for dozens of members.",
+  "impact.msg.mid":
+    "covers a month of hosting and email for dozens of members.",
   "impact.msg.low": "keeps the forum and the moderation tools running.",
 
   // ── Impact stats (sidebar) ────────────────────────────────────────────
@@ -255,7 +257,8 @@ export const support: Catalog = {
   "success.share.story": "your story",
   "success.share.link": "a copied link",
   "success.share.feed": "your feed",
-  "success.share.toast": "Shared to {channel}. Thank you for spreading the word!",
+  "success.share.toast":
+    "Shared to {channel}. Thank you for spreading the word!",
   "success.receipt.membership": "Membership",
   "success.receipt.billing": "Billing",
   "success.receipt.sponsoredMembership": "Sponsored membership",

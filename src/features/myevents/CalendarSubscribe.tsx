@@ -19,7 +19,10 @@ export function CalendarSubscribe() {
       .date(new Date(viewY, viewM, 1), { month: "long" })
       .toLowerCase();
     downloadICS(`queerpulse-${monthSlug}.ics`, monthEvents);
-    toast(t("myevents:calSubscribe.exportToast", { month: monthLong }), "success");
+    toast(
+      t("myevents:calSubscribe.exportToast", { month: monthLong }),
+      "success",
+    );
   };
   return (
     <div className={sx("cal-sub")}>

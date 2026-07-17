@@ -85,7 +85,8 @@ export const subprofiles: Catalog = {
 
   // Visibility options (SubprofileMetaForm) — persisted `visibility` field.
   "visibility.open.label": "Open to everyone",
-  "visibility.open.help": "Anyone in the community can find and view this persona.",
+  "visibility.open.help":
+    "Anyone in the community can find and view this persona.",
   "visibility.network.label": "Your network",
   "visibility.network.help": "Only people you're connected with can see it.",
   "visibility.private.label": "Just you",
@@ -121,8 +122,10 @@ export const subprofiles: Catalog = {
     "This is where people will find you — queerpulse.app/p/your-handle.",
   "checklist.reqHandleFailInvalid":
     "Handles are 3–30 characters: lowercase letters, numbers and hyphens.",
-  "checklist.reqHandleFailTaken": "Someone already has that handle — try another.",
-  "checklist.reqHandleFailReserved": "That handle is reserved. Pick a different one.",
+  "checklist.reqHandleFailTaken":
+    "Someone already has that handle — try another.",
+  "checklist.reqHandleFailReserved":
+    "That handle is reserved. Pick a different one.",
   "checklist.reqAvatarTitle": "A photo or image",
   "checklist.reqAvatarMet": "Your avatar helps people recognise this persona.",
   "checklist.reqAvatarFail":
@@ -167,7 +170,8 @@ export const subprofiles: Catalog = {
   // Editor page (SubprofileEditorPage)
   "editor.loading": "Loading your persona…",
   "editor.notFoundTitle": "We couldn't find that persona",
-  "editor.notFoundDescription": "It may have been removed, or the link isn't quite right.",
+  "editor.notFoundDescription":
+    "It may have been removed, or the link isn't quite right.",
   "editor.notFoundAction": "Back to your subprofiles",
   "editor.backLink": "Your subprofiles",
 
@@ -180,9 +184,11 @@ export const subprofiles: Catalog = {
   "metaForm.displayNamePlaceholder": "How this persona is known",
   "metaForm.taglineLabel": "Tagline",
   "metaForm.taglineHelper": "One line on what you make.",
-  "metaForm.taglinePlaceholder": "e.g. After-hours electronics for queer dancefloors",
+  "metaForm.taglinePlaceholder":
+    "e.g. After-hours electronics for queer dancefloors",
   "metaForm.bioLabel": "Bio",
-  "metaForm.bioHelper": "At least 80 characters to publish a standalone persona.",
+  "metaForm.bioHelper":
+    "At least 80 characters to publish a standalone persona.",
   "metaForm.bioPlaceholder": "A few sentences in your own words.",
   "metaForm.linkLabel": "Link to your main profile",
   "metaForm.addressLabel": "Profile address",
@@ -219,7 +225,8 @@ export const subprofiles: Catalog = {
     "This persona now shows on your main profile as another side of you.",
   "publishPanel.successUnlinked":
     "This persona stands on its own now — people can find it by its handle and in the directory.",
-  "publishPanel.copyPublished": "This persona is live. Your edits save as you go.",
+  "publishPanel.copyPublished":
+    "This persona is live. Your edits save as you go.",
   "publishPanel.copyLinkedUnpublished":
     "Publish to show this persona on your main profile.",
   "publishPanel.copyUnlinkedUnpublished":
@@ -237,7 +244,8 @@ export const subprofiles: Catalog = {
 
   // New subprofile modal (NewSubprofileModal)
   "newModal.title": "Start a new <em>persona</em>",
-  "newModal.sub": "Each one is a professional side of you — pick what it's for.",
+  "newModal.sub":
+    "Each one is a professional side of you — pick what it's for.",
   "newModal.cancel": "Cancel",
   "newModal.create": "Create draft",
   "newModal.creating": "Creating…",

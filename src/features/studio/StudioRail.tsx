@@ -48,7 +48,10 @@ export function StudioRail() {
       <div className={styles.brandRow}>
         <span className={styles.pulseDot} aria-hidden />
         <Link to={routes.homepage} className={styles.brand}>
-          <Translation i18nKey="studio:brand.lockup" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:brand.lockup"
+            components={{ em: <em /> }}
+          />
         </Link>
         <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
       </div>
@@ -105,7 +108,12 @@ export function StudioRail() {
         <Translation
           i18nKey="studio:rail.foot.sustainedSince"
           components={{ em: <em /> }}
-          values={{ date: fmt.date(SUSTAINER_SINCE_DATE, { month: "long", year: "numeric" }) }}
+          values={{
+            date: fmt.date(SUSTAINER_SINCE_DATE, {
+              month: "long",
+              year: "numeric",
+            }),
+          }}
         />
         <span className={styles.pay}>
           <Translation

@@ -105,7 +105,9 @@ export function InviteMembersModal({
           >
             <FiX />
           </button>
-          <div className={modal.eye}>{t("gatherings:manage.invite.eyebrow")}</div>
+          <div className={modal.eye}>
+            {t("gatherings:manage.invite.eyebrow")}
+          </div>
           <div className={modal.title}>
             <Translation
               i18nKey="gatherings:manage.invite.title"
@@ -155,7 +157,9 @@ export function InviteMembersModal({
             >
               {selected.length === 0
                 ? t("gatherings:manage.invite.sendDefaultCta")
-                : t("gatherings:manage.invite.sendCta", { count: selected.length })}
+                : t("gatherings:manage.invite.sendCta", {
+                    count: selected.length,
+                  })}
             </Button>
             <Button variant="ghost" onClick={onClose}>
               {t("gatherings:manage.cancelCta")}

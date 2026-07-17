@@ -85,7 +85,9 @@ export function AdminShell({
             <button
               type="button"
               className={styles.iconBtn}
-              onClick={() => showToast(t("shared:adminShell.toastNoAlerts"), "info")}
+              onClick={() =>
+                showToast(t("shared:adminShell.toastNoAlerts"), "info")
+              }
               title={t("shared:adminShell.alerts")}
               aria-label={t("shared:adminShell.alerts")}
             >

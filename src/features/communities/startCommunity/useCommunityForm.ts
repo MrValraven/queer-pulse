@@ -125,8 +125,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
     };
     // 1 · why
     if (!draft.name.trim()) s[1]!.push("communities:start.missing.name");
-    if (!draft.purpose.trim())
-      s[1]!.push("communities:start.missing.purpose");
+    if (!draft.purpose.trim()) s[1]!.push("communities:start.missing.purpose");
     if (!draft.type) s[1]!.push("communities:start.missing.category");
     // 2 · who
     if (!draft.whoFor.trim()) s[2]!.push("communities:start.missing.whoFor");
@@ -135,8 +134,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
     // 5 · tone
     if (!draft.rules.length) s[5]!.push("communities:start.missing.rules");
     // 6 · feeling
-    if (!draft.tagline.trim())
-      s[6]!.push("communities:start.missing.tagline");
+    if (!draft.tagline.trim()) s[6]!.push("communities:start.missing.tagline");
     // 8 · confirm
     if (!draft.handle.trim()) s[8]!.push("communities:start.missing.handle");
     if (!draft.consent) s[8]!.push("communities:start.missing.consent");

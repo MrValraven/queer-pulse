@@ -12,7 +12,11 @@ export function DayFilterChip() {
   const { selectedDate, clearDay } = useMyEvents();
   if (!selectedDate) return null;
   const dt = parseDate(selectedDate);
-  const label = fmt.date(dt, { weekday: "long", day: "numeric", month: "long" });
+  const label = fmt.date(dt, {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
   return (
     <div className={`${sx("dayfilter")} ${sx("show")}`}>
       <span className={sx("dayfilter-label")}>

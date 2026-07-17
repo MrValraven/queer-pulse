@@ -51,7 +51,9 @@ export function ServicesGrid() {
   const loading = useSimulatedLoad();
   return (
     <section className="wrap" style={{ paddingBottom: 60 }}>
-      <p className={styles.sectionEye}>{t("system:status.services.sectionEye")}</p>
+      <p className={styles.sectionEye}>
+        {t("system:status.services.sectionEye")}
+      </p>
       <div className={styles.svcGrid} aria-busy={loading}>
         {loading
           ? Array.from({ length: SERVICES.length }).map((_, i) => (
@@ -82,7 +84,9 @@ export function UptimeSection() {
   const fmt = useFormat();
   return (
     <section className="wrap" style={{ padding: "60px 0" }}>
-      <p className={styles.sectionEye}>{t("system:status.uptime.sectionEye")}</p>
+      <p className={styles.sectionEye}>
+        {t("system:status.uptime.sectionEye")}
+      </p>
       {UPTIME_SERVICE_IDS.map((id) => {
         const service = SERVICES.find((svc) => svc.id === id);
         if (!service) return null;

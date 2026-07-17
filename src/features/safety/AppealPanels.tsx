@@ -53,7 +53,13 @@ export function AppealPendingPanel() {
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
       <div className={s.icon} style={{ background: "rgba(232,119,90,.1)" }}>
         <svg width={26} height={26} viewBox="0 0 26 26" fill="none">
-          <circle cx={13} cy={13} r={9} stroke="var(--accent)" strokeWidth={2} />
+          <circle
+            cx={13}
+            cy={13}
+            r={9}
+            stroke="var(--accent)"
+            strokeWidth={2}
+          />
           <path
             d="M13 8v5.5l3 2"
             stroke="var(--accent)"
@@ -64,7 +70,10 @@ export function AppealPendingPanel() {
         </svg>
       </div>
       <div className={s.title}>
-        <Translation i18nKey="safety:appeal.pending.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="safety:appeal.pending.title"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.sub}>{t("safety:appeal.pending.sub")}</div>
       <div className={s.refBox}>
@@ -174,7 +183,10 @@ export function AppealUpheldPanel() {
         </svg>
       </div>
       <div className={s.title}>
-        <Translation i18nKey="safety:appeal.upheld.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="safety:appeal.upheld.title"
+          components={{ em: <em /> }}
+        />
       </div>
       <div className={s.sub}>{t("safety:appeal.upheld.sub")}</div>
       <div className={s.refBox}>
@@ -183,7 +195,9 @@ export function AppealUpheldPanel() {
           <span className={s.refVal}>{APPEAL_REFERENCE}</span>
         </div>
         <div className={s.csRow}>
-          <span className={s.csLabel}>{t("safety:appeal.upheld.outcomeLabel")}</span>
+          <span className={s.csLabel}>
+            {t("safety:appeal.upheld.outcomeLabel")}
+          </span>
           <span className={s.refVal}>
             {t("safety:appeal.upheld.outcomeValue")}
           </span>

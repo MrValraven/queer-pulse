@@ -120,9 +120,7 @@ function TocSection() {
                         </div>
                         <div className={styles.entryTitle}>{entry.title}</div>
                         <div className={styles.entryDek}>{entry.dek}</div>
-                        <div className={styles.entryByline}>
-                          {entry.byline}
-                        </div>
+                        <div className={styles.entryByline}>{entry.byline}</div>
                       </div>
                       <div className={styles.metaR}>
                         {entry.page}

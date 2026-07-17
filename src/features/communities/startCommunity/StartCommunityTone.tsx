@@ -2,10 +2,7 @@ import { useState } from "react";
 import { FiCheck, FiPlus } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  ENFORCEMENT_LADDER,
-  RULE_PRESET_KEYS,
-} from "./startCommunity.data";
+import { ENFORCEMENT_LADDER, RULE_PRESET_KEYS } from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
 

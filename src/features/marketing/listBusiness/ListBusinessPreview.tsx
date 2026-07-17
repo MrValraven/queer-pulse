@@ -69,10 +69,7 @@ export function ListBusinessPreview({
             </div>
             <div className={styles.dirMeta}>
               {draft.cats.length || draft.hood
-                ? [
-                    draft.cats.map((c) => catLabel(t, c)).join(", "),
-                    draft.hood,
-                  ]
+                ? [draft.cats.map((c) => catLabel(t, c)).join(", "), draft.hood]
                     .filter(Boolean)
                     .join(" · ")
                 : t("marketing:listBusiness.preview.placeholderMeta")}
@@ -105,8 +102,7 @@ export function ListBusinessPreview({
             .filter(Boolean)
             .join(" ")}
         >
-          {draft.blurb ||
-            t("marketing:listBusiness.preview.placeholderBlurb")}
+          {draft.blurb || t("marketing:listBusiness.preview.placeholderBlurb")}
         </div>
 
         {draft.tags.length > 0 && (

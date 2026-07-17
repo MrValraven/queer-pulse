@@ -53,9 +53,18 @@ const VISIBILITY_OPTIONS: {
 // translated label. Only "immediately"/"dailyDigest"/"weeklyDigest"/"never"
 // are ids here; nothing is persisted since the control is disabled.
 const EMAIL_DELIVERY_OPTIONS = [
-  { value: "immediately", key: "settings:notifications.delivery.email.immediately" },
-  { value: "dailyDigest", key: "settings:notifications.delivery.email.dailyDigest" },
-  { value: "weeklyDigest", key: "settings:notifications.delivery.email.weeklyDigest" },
+  {
+    value: "immediately",
+    key: "settings:notifications.delivery.email.immediately",
+  },
+  {
+    value: "dailyDigest",
+    key: "settings:notifications.delivery.email.dailyDigest",
+  },
+  {
+    value: "weeklyDigest",
+    key: "settings:notifications.delivery.email.weeklyDigest",
+  },
   { value: "never", key: "settings:notifications.delivery.email.never" },
 ];
 
@@ -109,9 +118,7 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             onChange={onChange}
           />
           <ToggleRow
-            title={t(
-              "settings:notifications.messages.connectionRequest.title",
-            )}
+            title={t("settings:notifications.messages.connectionRequest.title")}
             desc={t("settings:notifications.messages.connectionRequest.desc")}
             defaultChecked
             comingSoon
@@ -339,7 +346,10 @@ export function DataPane({
   return (
     <Pane
       title={
-        <Translation i18nKey="settings:data.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="settings:data.title"
+          components={{ em: <em /> }}
+        />
       }
       sub={t("settings:data.sub")}
     >

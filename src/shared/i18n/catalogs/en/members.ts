@@ -28,7 +28,8 @@ export const members: Catalog = {
     "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
   "upload.error.tooLarge":
     "That image is too large — keep it under {maxLabel}.",
-  "upload.error.decodeFailed": "We couldn't read that image. Try a different file.",
+  "upload.error.decodeFailed":
+    "We couldn't read that image. Try a different file.",
   "upload.error.tooSmall":
     "This image is too small — it needs to be at least {minWidth} × {minHeight}px.",
   "upload.error.retry": "We couldn't upload that image. Please try again.",
@@ -112,7 +113,8 @@ export const members: Catalog = {
   "content.groups.title": "Groups & circles",
   "content.groups.subtitle": "Where {first} shows up in the community",
   "content.shapings.title": "What shaped me",
-  "content.shapings.subtitle": "Not interests. Formative texts, films, moments.",
+  "content.shapings.subtitle":
+    "Not interests. Formative texts, films, moments.",
   "content.activity.title": "Recent activity",
   "content.activity.subtitle": "Public moments from around the platform",
   "content.related.title": "Also in the room",
@@ -168,7 +170,8 @@ export const members: Catalog = {
   "profileEdit.bar.saving": "Saving…",
   "profileEdit.bar.tryAgain": "Try again",
   "profileEdit.bar.save": "Save profile",
-  "profileEdit.bar.savedBanner": "Saved. <strong>Your profile is live.</strong>",
+  "profileEdit.bar.savedBanner":
+    "Saved. <strong>Your profile is live.</strong>",
 
   // ── Social links (SocialLinksRow, SocialLinksEditor) ───────────────────────
   "social.addLinks": "Add links",
@@ -611,7 +614,8 @@ export const members: Catalog = {
   "qrScanner.closeAriaLabel": "Close",
   "qrScanner.title": "Scan a <em>QueerPulse</em> code",
   "qrScanner.flashAriaLabel": "Flash",
-  "qrScanner.privacyNote": "Camera stays on this device · we never upload frames",
+  "qrScanner.privacyNote":
+    "Camera stays on this device · we never upload frames",
   "qrScanner.hintSuffix":
     "Safe-space window stickers · gathering tickets · profile sharing codes",
   "qrScanner.cantScan": "Can't scan?",
@@ -642,7 +646,8 @@ export const members: Catalog = {
   "perks.page.availableToRedeem_one": "{count} perk available to redeem",
   "perks.page.availableToRedeem_other": "{count} perks available to redeem",
   "perks.sidebar.yourLevelTitle": "Your level",
-  "perks.sidebar.xpSummary": "{xp} / {xpMax} XP · {xpToNext} to Level {nextLevel}",
+  "perks.sidebar.xpSummary":
+    "{xp} / {xpMax} XP · {xpToNext} to Level {nextLevel}",
   "perks.sidebar.nextUnlockNote":
     "Next perks unlock at <strong>Level {nextLevel} · {nextName}</strong> — host without approval & an increased invite quota.",
   "perks.sidebar.seeAllBadgesCta": "See all badges & levels →",

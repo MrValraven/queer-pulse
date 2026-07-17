@@ -62,7 +62,9 @@ export function PaymentSuccess({
       <div className={styles.psText}>{receipt.text}</div>
 
       <div className={styles.psShare}>
-        <div className={styles.psShareLabel}>{t("support:success.shareLabel")}</div>
+        <div className={styles.psShareLabel}>
+          {t("support:success.shareLabel")}
+        </div>
         <div className={styles.psShareRow}>
           <button
             type="button"
@@ -119,7 +121,9 @@ export function PaymentSuccess({
       <div className={styles.psActions}>
         <Button
           variant="primary"
-          onClick={() => showToast(t("support:success.downloadToast"), "success")}
+          onClick={() =>
+            showToast(t("support:success.downloadToast"), "success")
+          }
         >
           {t("support:success.downloadCta")}
         </Button>

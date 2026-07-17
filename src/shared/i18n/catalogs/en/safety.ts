@@ -67,8 +67,7 @@ export const safety: Catalog = {
     "Anonymous reports are accepted. If you leave an email, we'll follow up with you directly.",
 
   "report.principles.eyebrow": "Our principles",
-  "report.principles.believeReporter.strong":
-    "We believe the reporter first.",
+  "report.principles.believeReporter.strong": "We believe the reporter first.",
   "report.principles.believeReporter.rest":
     "Our default is to take reports seriously and investigate, not to demand the reporter prove themselves.",
   "report.principles.noVagueWarnings.strong": "No vague warnings.",
@@ -99,8 +98,7 @@ export const safety: Catalog = {
   "report.modLog.viewReportCta": "View full report →",
 
   "report.toast.chooseCategory": "Choose what you're reporting first.",
-  "report.toast.received":
-    "Report received — we'll follow up within 24 hours.",
+  "report.toast.received": "Report received — we'll follow up within 24 hours.",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -147,7 +145,8 @@ export const safety: Catalog = {
   // ── BlockMutePage.tsx / BlockMuteScreens.tsx / blockMute.data.ts ──────
   "common.no": "No",
   "blockMute.choose.title": "Privacy <em>controls</em>",
-  "blockMute.choose.sub": "These actions are private. {name} will not be notified.",
+  "blockMute.choose.sub":
+    "These actions are private. {name} will not be notified.",
   "blockMute.choose.muteTitle": "Mute {name}",
   "blockMute.choose.muteDesc":
     "You won't see her posts or activity. She won't know she's been muted. You can unmute at any time.",
@@ -645,14 +644,15 @@ export const safety: Catalog = {
   "spaces.badge.visualNameLine2": "Verified",
   "spaces.badge.caption":
     "The badge venues can display — earned, not purchased",
-  "spaces.badge.title": "What <em>\"verified\"</em> actually means.",
+  "spaces.badge.title": 'What <em>"verified"</em> actually means.',
   "spaces.badge.body":
     "Any venue can put a rainbow flag in the window during Pride. Verification means something different — it means community members have been there, assessed it against a clear set of criteria, and agreed it meets the standard. And it can be revoked.",
   "spaces.how.title": "How <em>verification</em> works.",
   "spaces.removed.title": "When a space <em>loses</em> its badge.",
   "spaces.removed.lead":
     "Verification can be revoked — and is. A listing isn't a reward a venue keeps forever; it's a standard they keep meeting. When they stop, we say so, and we say why. We removed {count} spaces this year.",
-  "spaces.removed.step1": "<span>3 flags</span> suspend the badge instantly, pending review.",
+  "spaces.removed.step1":
+    "<span>3 flags</span> suspend the badge instantly, pending review.",
   "spaces.removed.step2":
     "<span>Panel review</span> reads every report against the criteria.",
   "spaces.removed.step3":

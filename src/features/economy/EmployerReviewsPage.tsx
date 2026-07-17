@@ -55,7 +55,9 @@ export function EmployerReviewsPage() {
               components={{ em: <em /> }}
             />
           </h1>
-          <p className={styles.lead}>{t("economy:employerReviews.hero.lead")}</p>
+          <p className={styles.lead}>
+            {t("economy:employerReviews.hero.lead")}
+          </p>
         </div>
       </header>
 

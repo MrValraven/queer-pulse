@@ -151,7 +151,9 @@ export function SplitVisual() {
               </div>
             ))}
           </div>
-          <div className={styles.svvNote}>{t("cinema:about.split.tipsNote")}</div>
+          <div className={styles.svvNote}>
+            {t("cinema:about.split.tipsNote")}
+          </div>
         </div>
       </div>
     </section>

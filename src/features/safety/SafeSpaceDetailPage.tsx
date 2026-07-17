@@ -171,12 +171,16 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
                   components={{ strong: <strong /> }}
                 />
               </p>
-              <Link to={SAFETY}>{t("safety:spaces.detail.emergencyGuideCta")}</Link>
+              <Link to={SAFETY}>
+                {t("safety:spaces.detail.emergencyGuideCta")}
+              </Link>
             </div>
             <div className={[styles.incident, styles.incidentPlum].join(" ")}>
               <h3>{t("safety:spaces.detail.offTitle")}</h3>
               <p>{t("safety:spaces.detail.offBody")}</p>
-              <Link to={SAFETY}>{t("safety:spaces.detail.quietReportCta")}</Link>
+              <Link to={SAFETY}>
+                {t("safety:spaces.detail.quietReportCta")}
+              </Link>
             </div>
           </section>
         </main>

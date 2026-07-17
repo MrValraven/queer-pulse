@@ -44,7 +44,10 @@ export function ConfirmationStep() {
           {t("gatherings:checkout.confirm.subtitle", {
             count: qty,
             email: email || t("gatherings:checkout.confirm.inboxFallback"),
-            date: fmt.date(EVENT_ARRIVAL_DATE, { day: "numeric", month: "long" }),
+            date: fmt.date(EVENT_ARRIVAL_DATE, {
+              day: "numeric",
+              month: "long",
+            }),
           })}
         </p>
         <div className={s["co-ref"]}>

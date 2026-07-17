@@ -22,6 +22,9 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
   const [identitiesSkipped, setIdentitiesSkipped] = useState(false);
   const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
   const [freq, setFreq] = useState(DEFAULT_FREQ);
+  // The slider clamps to AGE_LABELS' bounds, so this is always a hit; the
+  // fallback only satisfies noUncheckedIndexedAccess.
+  const activeAgeLabel = AGE_LABELS[ageIndex] ?? AGE_LABELS[0];
 
   return (
     <Pane
@@ -145,7 +148,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             ))}
           </div>
           <div className={styles.ageVal}>
-            {t(AGE_LABELS[ageIndex].labelKey)}
+            {activeAgeLabel ? t(activeAgeLabel.labelKey) : null}
           </div>
         </div>
       </div>

@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheck, FiRotateCcw, FiInfo } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
-import type { Appeal } from "./adminModeration.data";
+import { chipKey, chipLabel, type Appeal } from "./adminModeration.data";
 import styles from "./AdminModerationPage.module.css";
 
 type Decision = "uphold" | "overturn";
@@ -20,6 +21,7 @@ export function AdminAppealDrawer({
   onClose: () => void;
   onResolve: (id: string, decision: Decision, note?: string) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [decision, setDecision] = useState<Decision | null>(null);
   const [reason, setReason] = useState("");
@@ -44,9 +46,9 @@ export function AdminAppealDrawer({
       head={
         <>
           <div className={styles.dHeadChips}>
-            {appeal.chips.map((c) => (
-              <AdminChip key={c.label} tone={c.tone}>
-                {c.label}
+            {appeal.chips.map((chip) => (
+              <AdminChip key={chipKey(chip)} tone={chip.tone}>
+                {chipLabel(chip, t)}
               </AdminChip>
             ))}
           </div>

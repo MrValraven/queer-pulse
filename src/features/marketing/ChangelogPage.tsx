@@ -220,7 +220,10 @@ export function ChangelogPage() {
 
           <FilterChips
             className={styles.filter}
-            options={FILTERS.map((f) => ({ value: f.id, label: t(f.labelKey) }))}
+            options={FILTERS.map((f) => ({
+              value: f.id,
+              label: t(f.labelKey),
+            }))}
             value={filter}
             onChange={(v) => setFilter(v as Type | "all")}
           />

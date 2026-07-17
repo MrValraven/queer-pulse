@@ -22,7 +22,10 @@ const TINT: Record<Tint, string | undefined> = {
 const Stars = ({ count }: { count: number }) => (
   <>
     {Array.from({ length: 5 }, (_, starIndex) => (
-      <FiStar key={starIndex} className={starIndex < count ? s.starOn : undefined} />
+      <FiStar
+        key={starIndex}
+        className={starIndex < count ? s.starOn : undefined}
+      />
     ))}
   </>
 );
@@ -73,7 +76,9 @@ export function LandlordPage() {
               height={160}
             />
             <div>
-              <div className={s.eyebrow}>{t("economy:landlordPage.eyebrow")}</div>
+              <div className={s.eyebrow}>
+                {t("economy:landlordPage.eyebrow")}
+              </div>
               <h1 className={s.name}>{landlord.name}</h1>
               <div className={s.metaLine}>
                 <span className={s.stars}>
@@ -85,7 +90,9 @@ export function LandlordPage() {
             </div>
             <div className={s.heroAction}>
               <Button variant="primary" onClick={() => setRecommending(true)}>
-                {t("economy:landlordPage.recommendCta", { name: landlord.name })}
+                {t("economy:landlordPage.recommendCta", {
+                  name: landlord.name,
+                })}
               </Button>
               <span className={s.recCount}>
                 {t("economy:landlordPage.recommendCount", {

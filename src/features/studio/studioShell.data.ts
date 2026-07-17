@@ -12,15 +12,29 @@ export interface RailLink {
 }
 
 export const RAIL_MAIN: RailLink[] = [
-  { label: "Home", labelKey: "studio:rail.main.home", to: routes.studio, end: true },
+  {
+    label: "Home",
+    labelKey: "studio:rail.main.home",
+    to: routes.studio,
+    end: true,
+  },
   {
     label: "The Wednesday set",
     labelKey: "studio:rail.main.wednesdaySet",
     to: routes.studio,
     end: true,
   },
-  { label: "Browse", labelKey: "studio:rail.main.browse", to: routes.studio, end: true },
-  { label: "Sheet music", labelKey: "studio:rail.main.sheetMusic", to: "/studio/sheet-store" },
+  {
+    label: "Browse",
+    labelKey: "studio:rail.main.browse",
+    to: routes.studio,
+    end: true,
+  },
+  {
+    label: "Sheet music",
+    labelKey: "studio:rail.main.sheetMusic",
+    to: "/studio/sheet-store",
+  },
   {
     label: "Live broadcasts",
     labelKey: "studio:rail.main.liveBroadcasts",
@@ -39,8 +53,16 @@ export const CONTRIBUTE: RailLink[] = [
     labelKey: "studio:rail.contribute.submitSet",
     to: routes.studioSetSubmission,
   },
-  { label: "Go live", labelKey: "studio:rail.contribute.goLive", to: routes.studioBroadcast },
-  { label: "Open calls", labelKey: "studio:rail.contribute.openCalls", to: routes.studioCalls },
+  {
+    label: "Go live",
+    labelKey: "studio:rail.contribute.goLive",
+    to: routes.studioBroadcast,
+  },
+  {
+    label: "Open calls",
+    labelKey: "studio:rail.contribute.openCalls",
+    to: routes.studioCalls,
+  },
   {
     label: "Rights & takedown",
     labelKey: "studio:rail.contribute.rightsTakedown",
@@ -77,14 +99,26 @@ export const GOVERNANCE: RailLink[] = [
 ];
 
 export const UTILITY: RailLink[] = [
-  { label: "About the co-op", labelKey: "studio:rail.utility.about", to: routes.studioAbout },
-  { label: "Help & FAQ", labelKey: "studio:rail.utility.help", to: routes.studioHelp },
+  {
+    label: "About the co-op",
+    labelKey: "studio:rail.utility.about",
+    to: routes.studioAbout,
+  },
+  {
+    label: "Help & FAQ",
+    labelKey: "studio:rail.utility.help",
+    to: routes.studioHelp,
+  },
   {
     label: "Accessibility",
     labelKey: "studio:rail.utility.accessibility",
     to: routes.studioAccessibility,
   },
-  { label: "Trust & terms", labelKey: "studio:rail.utility.trustTerms", to: routes.studioTerms },
+  {
+    label: "Trust & terms",
+    labelKey: "studio:rail.utility.trustTerms",
+    to: routes.studioTerms,
+  },
 ];
 
 export const PLAYER_ART =

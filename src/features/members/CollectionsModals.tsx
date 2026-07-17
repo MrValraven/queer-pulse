@@ -7,7 +7,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import type { SavedItem } from "../../app/providers/SavedProvider";
-import { privacyLabel, type Collection, type Privacy } from "./collections.data";
+import {
+  privacyLabel,
+  type Collection,
+  type Privacy,
+} from "./collections.data";
 import styles from "./CollectionsModals.module.css";
 
 /** Shared frame: backdrop click-to-close, close button, scroll lock. */
@@ -58,9 +62,18 @@ function Modal({
 }
 
 const PRIVACY_OPTION_KEYS: { value: Privacy; labelKey: string }[] = [
-  { value: "private", labelKey: "members:collections.modal.privacyOption.private" },
-  { value: "shared", labelKey: "members:collections.modal.privacyOption.shared" },
-  { value: "public", labelKey: "members:collections.modal.privacyOption.public" },
+  {
+    value: "private",
+    labelKey: "members:collections.modal.privacyOption.private",
+  },
+  {
+    value: "shared",
+    labelKey: "members:collections.modal.privacyOption.shared",
+  },
+  {
+    value: "public",
+    labelKey: "members:collections.modal.privacyOption.public",
+  },
 ];
 
 /** Name a new collection and pick its privacy. */
@@ -252,7 +265,10 @@ export function AddToCollectionModal({
   }
 
   return (
-    <Modal onClose={onClose} label={t("members:collections.modal.add.dialogLabel")}>
+    <Modal
+      onClose={onClose}
+      label={t("members:collections.modal.add.dialogLabel")}
+    >
       <div className={styles.eyebrow}>
         {t("members:collections.modal.add.eyebrow")}
       </div>

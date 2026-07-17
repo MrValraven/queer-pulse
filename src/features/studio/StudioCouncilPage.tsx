@@ -49,16 +49,25 @@ export function StudioCouncilPage() {
         <div className={s.pageH}>
           <div className={s.eb}>{t("studio:council.hero.eyebrow")}</div>
           <h1>
-            <Translation i18nKey="studio:council.hero.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:council.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>
-            <Translation i18nKey="studio:council.hero.dek" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:council.hero.dek"
+              components={{ em: <em /> }}
+            />
           </div>
         </div>
 
         <div className={s.intro}>
           <div className={s.lede}>
-            <Translation i18nKey="studio:council.intro.lede" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:council.intro.lede"
+              components={{ em: <em /> }}
+            />
           </div>
           <div className={s.facts}>
             {facts.map((f, i) => (
@@ -126,7 +135,8 @@ export function StudioCouncilPage() {
                   </div>
                   <div>
                     <div className={s.slLbl}>
-                      {t("studio:council.recentSlatesLabel")} · {mem.slatesCount}
+                      {t("studio:council.recentSlatesLabel")} ·{" "}
+                      {mem.slatesCount}
                     </div>
                     {mem.slates.map((sl) => (
                       <div key={sl.pre} className={s.slRow}>

@@ -63,7 +63,9 @@ export function SubmitStoryMeta({
         value={values.section}
         onChange={(e) => set({ section: e.target.value })}
       >
-        <option value="">{t("magazine:submitStory.meta.sectionPlaceholder")}</option>
+        <option value="">
+          {t("magazine:submitStory.meta.sectionPlaceholder")}
+        </option>
         {SECTION_OPTIONS.map((option) => (
           <option key={option.id} value={option.id}>
             {t(option.labelKey)}

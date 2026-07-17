@@ -84,7 +84,9 @@ export function ArticlePage() {
         <div className={`${styles.notFound} wrap`}>
           <h2>{t("magazine:article.notFoundTitle")}</h2>
           <p>{t("magazine:article.notFoundBody")}</p>
-          <Button to={routes.magazine}>{t("magazine:article.notFoundCta")}</Button>
+          <Button to={routes.magazine}>
+            {t("magazine:article.notFoundCta")}
+          </Button>
         </div>
       </PageShell>
     );

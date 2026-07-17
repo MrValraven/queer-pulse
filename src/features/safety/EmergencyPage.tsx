@@ -23,7 +23,9 @@ export function EmergencyPage() {
 
       <div className={styles.hero}>
         <div className="wrap">
-          <div className={styles.cat}>{t("safety:emergency.hero.category")}</div>
+          <div className={styles.cat}>
+            {t("safety:emergency.hero.category")}
+          </div>
           <h1>
             <Translation
               i18nKey="safety:emergency.hero.title"

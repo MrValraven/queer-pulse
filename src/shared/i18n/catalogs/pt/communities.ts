@@ -47,8 +47,8 @@ export const communities: Catalog = {
   "discover.outro.cta": "Ver o quadro",
 
   // ── Cartão de comunidade / textos do botão de entrada ─────────────────────
-  "card.join.public": "Juntar-te",
-  "card.join.invite": "Juntar-te com convite",
+  "card.join.public": "Junta-te",
+  "card.join.invite": "Junta-te com convite",
   "card.join.request": "Pedir para entrar",
   "card.joined": "Já és membro",
   "card.view": "Ver",
@@ -98,8 +98,8 @@ export const communities: Catalog = {
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "← Comunidades",
-  "detail.join.invite": "Juntar-te com convite",
-  "detail.join.public": "Juntar-te à comunidade",
+  "detail.join.invite": "Junta-te com convite",
+  "detail.join.public": "Junta-te à comunidade",
   "detail.join.request": "Pedir para entrar",
   "detail.joined": "Já és membro",
   "detail.requested": "Pedido enviado",
@@ -236,10 +236,10 @@ export const communities: Catalog = {
   // ── Modal de adesão ────────────────────────────────────────────────────────
   "join.close": "Fechar",
   "join.progress": "Passo {step} de {total}",
-  "join.ariaLabel": "Juntar-te a {name}",
+  "join.ariaLabel": "Junta-te a {name}",
   "join.intro.eyebrow.request": "A pedir para entrar",
   "join.intro.eyebrow.invite": "A entrar com um convite",
-  "join.intro.eyebrow.public": "A juntar-te",
+  "join.intro.eyebrow.public": "A Junta-te",
   "join.intro.invitePlaceholder": "Introduz o teu código de convite",
   "join.intro.verifyCta": "Verificar e continuar",
   "join.intro.continueCta": "Continuar",
@@ -255,7 +255,7 @@ export const communities: Catalog = {
   "join.involvement.emailPlaceholder": "O teu endereço de email",
   "join.involvement.levelLabel": "Nível de envolvimento",
   "join.involvement.sendRequestCta": "Enviar pedido",
-  "join.involvement.joinCta": "Juntar-te à comunidade",
+  "join.involvement.joinCta": "Junta-te à comunidade",
   "join.involvement.updates.label": "Só quero saber das novidades",
   "join.involvement.updates.desc":
     "Só notícias e eventos — sem qualquer compromisso",

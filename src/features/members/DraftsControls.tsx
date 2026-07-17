@@ -53,7 +53,9 @@ export function DraftsControls({
       </div>
 
       <div className={styles.sort}>
-        <label htmlFor="draftSort">{t("members:drafts.controls.sortLabel")}</label>
+        <label htmlFor="draftSort">
+          {t("members:drafts.controls.sortLabel")}
+        </label>
         <select
           id="draftSort"
           value={sort}

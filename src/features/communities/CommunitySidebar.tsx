@@ -41,7 +41,9 @@ export function CommunitySidebar({
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbC}>
-        <div className={styles.sbLbl}>{t("communities:detail.sidebar.organiser")}</div>
+        <div className={styles.sbLbl}>
+          {t("communities:detail.sidebar.organiser")}
+        </div>
         <div className={styles.sbOrgAv}>
           {org.slug ? (
             <Link to={`/members/${org.slug}`} title={org.name}>

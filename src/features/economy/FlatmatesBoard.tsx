@@ -46,7 +46,9 @@ export function FlatmatesBoard() {
 
   const toggleTag = (tag: string) =>
     setTags((prev) =>
-      prev.includes(tag) ? prev.filter((existing) => existing !== tag) : [...prev, tag],
+      prev.includes(tag)
+        ? prev.filter((existing) => existing !== tag)
+        : [...prev, tag],
     );
 
   const clearFilters = () => {

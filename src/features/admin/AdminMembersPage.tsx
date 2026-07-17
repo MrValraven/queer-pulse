@@ -36,7 +36,11 @@ export function AdminMembersPage() {
       label: t("admin:members.tabs.pending"),
       count: VERIFY_PENDING_COUNT,
     },
-    { id: "flagged", label: t("admin:members.tabs.flagged"), count: FLAGGED.length },
+    {
+      id: "flagged",
+      label: t("admin:members.tabs.flagged"),
+      count: FLAGGED.length,
+    },
   ];
 
   const FILTERS: { id: StatusFilter; label: string }[] = [

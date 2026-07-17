@@ -188,7 +188,11 @@ export function SnsSection({
         </Reveal>
         <div className={styles.snsGrid}>
           {SNS.map((step, index) => (
-            <Reveal className={styles.snsCard} key={step.num} delay={index * 60}>
+            <Reveal
+              className={styles.snsCard}
+              key={step.num}
+              delay={index * 60}
+            >
               <div className={styles.snsNum}>{step.num}</div>
               <div className={styles.snsTitle}>{t(step.titleKey)}</div>
               <div className={styles.snsText}>{t(step.textKey)}</div>

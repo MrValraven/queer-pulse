@@ -234,28 +234,33 @@ export const resources: Catalog = {
   "queer101.hero.lead":
     "For people newly exploring their identity — or just looking for language that fits. You don't need to have anything figured out. This is not a test.",
   "queer101.hero.reassure.noAccount": "No account required to read any of this",
-  "queer101.hero.reassure.private": "Nothing you read here is shared with anyone",
+  "queer101.hero.reassure.private":
+    "Nothing you read here is shared with anyone",
   "queer101.hero.reassure.leaveReturn":
     "You can leave and come back whenever you want",
 
   "queer101.faq.title": "Common <em>questions.</em>",
-  "queer101.faq.sub": "Honest answers, without assumptions about where you are right now.",
+  "queer101.faq.sub":
+    "Honest answers, without assumptions about where you are right now.",
   "queer101.faq.q1": "How do I know if I'm queer?",
   "queer101.faq.a1":
     'There\'s no test and no threshold. Some people feel certain early; others figure it out over years, or never settle on a label at all — and all of that is fine. A useful question isn\'t "am I queer?" but "what feels true to me right now?" You don\'t owe anyone an answer, including yourself.',
   "queer101.faq.q2": "Do I need a label?",
   "queer101.faq.a2":
     'No. Labels can be useful — they give you language, community, and a way to explain yourself when you want to. But they can also feel like a cage if they don\'t quite fit. Many people use "queer" as a broad, flexible umbrella. Others prefer specificity. Others use nothing. All of it is valid, and it can change.',
-  "queer101.faq.q3": "What's the difference between gender identity and sexual orientation?",
+  "queer101.faq.q3":
+    "What's the difference between gender identity and sexual orientation?",
   "queer101.faq.a3":
     "Gender identity is about who you are — your internal sense of yourself as a man, woman, non-binary person, or something else. Sexual orientation is about who you're attracted to — romantically, sexually, or both. They're independent: a trans woman can be straight, lesbian, bisexual, or anything else. One doesn't determine the other.",
-  "queer101.faq.q4": "I've only ever had relationships with one gender. Does that make me straight?",
+  "queer101.faq.q4":
+    "I've only ever had relationships with one gender. Does that make me straight?",
   "queer101.faq.a4":
     "Not necessarily. Identity and experience aren't the same thing. Many bisexual and queer people have only dated one gender for long stretches of their lives — circumstances, preference, or chance all play a role. What matters is how you feel, not a list of your past relationships.",
   "queer101.faq.q5": "Is it okay to be questioning? What if I'm never sure?",
   "queer101.faq.a5":
     '"Questioning" is a valid identity in its own right — not just a waiting room. Some people find clarity; others find that the question itself stops mattering over time. There\'s no deadline. You are not broken for not knowing.',
-  "queer101.faq.q6": "I came to Lisbon as an adult and I'm only exploring this now. Is that unusual?",
+  "queer101.faq.q6":
+    "I came to Lisbon as an adult and I'm only exploring this now. Is that unusual?",
   "queer101.faq.a6":
     "Not at all. Many people find that moving somewhere new — a city with visible queer life, or away from the environment they grew up in — creates the space to explore things that felt impossible before. There's no correct age. Some of the most vibrant people in this community found themselves in their 40s, 50s, or later.",
   "queer101.faq.q7": "What if I explore and decide I'm not queer after all?",
@@ -413,24 +418,29 @@ export const resources: Catalog = {
     "If you've found your deadname somewhere on the platform, or something isn't updating correctly, contact us directly.",
   "pronounsGuide.sidebar.wrong.cta": "Contact us",
 
-  "pronounsGuide.outro.title": "Questions about <em>your identity settings?</em>",
-  "pronounsGuide.outro.sub": "Write to us. We'll respond within two working days.",
+  "pronounsGuide.outro.title":
+    "Questions about <em>your identity settings?</em>",
+  "pronounsGuide.outro.sub":
+    "Write to us. We'll respond within two working days.",
   "pronounsGuide.outro.cta": "Contact us",
 
   "pronounsGuide.table.head.field": "Field",
   "pronounsGuide.table.head.use": "What it's used for",
   "pronounsGuide.table.head.who": "Who sees it",
   "pronounsGuide.table.displayName.field": "Display name",
-  "pronounsGuide.table.displayName.use": "Your name on posts, profile, messages",
+  "pronounsGuide.table.displayName.use":
+    "Your name on posts, profile, messages",
   "pronounsGuide.table.displayName.who": "All members",
   "pronounsGuide.table.chosenName.field": "Chosen name",
-  "pronounsGuide.table.chosenName.use": "Emails from QueerPulse, internal comms",
+  "pronounsGuide.table.chosenName.use":
+    "Emails from QueerPulse, internal comms",
   "pronounsGuide.table.chosenName.who": "Only you",
   "pronounsGuide.table.username.field": "Username",
   "pronounsGuide.table.username.use": "URL handle (queerpulse.pt/@username)",
   "pronounsGuide.table.username.who": "Changeable once/year",
   "pronounsGuide.table.legalName.field": "Legal name",
-  "pronounsGuide.table.legalName.use": "Only if you've provided it for ticketing",
+  "pronounsGuide.table.legalName.use":
+    "Only if you've provided it for ticketing",
   "pronounsGuide.table.legalName.who": "Only admins + you",
 
   "pronounsGuide.where.profile.title": "Your profile",
@@ -486,10 +496,12 @@ export const resources: Catalog = {
   "mentalHealth.crisisLine.samaritans.note": "Email · English · 24h response",
 
   "mentalHealth.outro.title": "Asking for help is <em>not small.</em>",
-  "mentalHealth.outro.sub": "It's one of the harder things. The community is here.",
+  "mentalHealth.outro.sub":
+    "It's one of the harder things. The community is here.",
   "mentalHealth.outro.cta": "Talk to someone",
 
-  "mentalHealth.therapists.title": "Queer-affirming <em>therapists in Lisbon</em>",
+  "mentalHealth.therapists.title":
+    "Queer-affirming <em>therapists in Lisbon</em>",
   "mentalHealth.therapists.lead":
     'Reviewed and recommended by community members. Every therapist here has been verified as genuinely queer-affirming — not just "welcoming" but experienced with queer lives, identities, and the specific pressures of being queer and an expat in Lisbon.',
   "mentalHealth.therapists.filterLabel": "Filter",
@@ -502,10 +514,12 @@ export const resources: Catalog = {
   "mentalHealth.experiences.title": "Things the community <em>has felt</em>",
   "mentalHealth.experiences.lead":
     "Being a queer expat in Lisbon comes with specific pressures. Naming them isn't complaining — it's the start of dealing with them.",
-  "mentalHealth.experience.newCommunity.title": "Starting over in a new community",
+  "mentalHealth.experience.newCommunity.title":
+    "Starting over in a new community",
   "mentalHealth.experience.newCommunity.text":
     "Losing your queer social network when you move is a genuine grief. Building a new one takes time and feels unnatural at first. The people who've been here longest remember it — it does get easier, but the early months are hard and it's okay to say so.",
-  "mentalHealth.experience.visibility.title": "Navigating visibility in a new culture",
+  "mentalHealth.experience.visibility.title":
+    "Navigating visibility in a new culture",
   "mentalHealth.experience.visibility.text":
     "Lisbon is broadly safe but queer visibility works differently here. Some members feel more visible than at home; others feel less. Reading social situations in a second language or culture is exhausting and disorienting in ways that are hard to explain to people who haven't experienced it.",
   "mentalHealth.experience.admin.title": "The administrative grind",
@@ -670,8 +684,7 @@ export const resources: Catalog = {
     "Before you book — <em>good to know</em>",
 
   "therapistProfilePage.sidebar.bookHeadingAccepting": "Book — next 4 weeks",
-  "therapistProfilePage.sidebar.bookHeadingWaitlist":
-    "Availability — waitlist",
+  "therapistProfilePage.sidebar.bookHeadingWaitlist": "Availability — waitlist",
   "therapistProfilePage.sidebar.legendAvailable": "Available",
   "therapistProfilePage.sidebar.legendBooked": "Booked",
   "therapistProfilePage.sidebar.heldAccepting":
@@ -707,7 +720,8 @@ export const resources: Catalog = {
     "How should we describe you? (optional)",
   "therapistProfilePage.vouch.form.bylineHelper":
     "Shown instead of your name — keep it as vague as you like.",
-  "therapistProfilePage.vouch.form.bylinePlaceholder": "e.g. Member · couple work",
+  "therapistProfilePage.vouch.form.bylinePlaceholder":
+    "e.g. Member · couple work",
   "therapistProfilePage.vouch.submitCta": "Add my vouch",
 
   // ── TransHubPage ─────────────────────────────────────────────────────────
@@ -830,7 +844,8 @@ export const resources: Catalog = {
     "ILGA Portugal offers free legal accompaniment for trans people navigating the SNS system. You do not have to do this alone — call them before your first appointment.",
   "transHealthcare.sidebar.relatedTitle": "Related on QueerPulse",
   "transHealthcare.sidebar.solidarityCta": "Solidarity Pricing Registry →",
-  "transHealthcare.sidebar.solidarityRole": "Trans-affirming GPs, psychiatrists",
+  "transHealthcare.sidebar.solidarityRole":
+    "Trans-affirming GPs, psychiatrists",
   "transHealthcare.sidebar.legalCta": "Legal Resources →",
   "transHealthcare.sidebar.legalRole": "Name change documents",
   "transHealthcare.sidebar.mentalHealthCta": "Mental Health →",

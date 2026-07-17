@@ -127,8 +127,7 @@ export function GatheringCancelledPage() {
             <h2>{t("gatherings:cancelled.stampTitle")}</h2>
             <p>
               {CANCELLATION_REASON}
-              <b>{cancelledAgo}</b>.{" "}
-              {t("gatherings:cancelled.stampBody")}
+              <b>{cancelledAgo}</b>. {t("gatherings:cancelled.stampBody")}
             </p>
           </div>
         </div>
@@ -136,8 +135,12 @@ export function GatheringCancelledPage() {
         <div className={styles.eventCard}>
           <div className={styles.eventH}>
             <div className={styles.eventDate}>
-              <div className="d">{fmt.date(EVENT_START, { day: "2-digit" })}</div>
-              <div className="m">{fmt.date(EVENT_START, { month: "short" })}</div>
+              <div className="d">
+                {fmt.date(EVENT_START, { day: "2-digit" })}
+              </div>
+              <div className="m">
+                {fmt.date(EVENT_START, { month: "short" })}
+              </div>
             </div>
             <div className={styles.eventInfo}>
               <h2>
@@ -183,14 +186,21 @@ export function GatheringCancelledPage() {
 
         <div className={styles.info}>
           <h3>
-            <Translation i18nKey="gatherings:cancelled.infoTitle" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="gatherings:cancelled.infoTitle"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div className={styles.infoRow}>
             <div className={styles.infoIc}>
               <Tick />
             </div>
             <div>
-              <b>{t("gatherings:cancelled.refundTitle", { price: fmt.currency(REFUND_PRICE_EUR) })}</b>
+              <b>
+                {t("gatherings:cancelled.refundTitle", {
+                  price: fmt.currency(REFUND_PRICE_EUR),
+                })}
+              </b>
               <span>{REFUND_NOTE}</span>
             </div>
           </div>
@@ -208,12 +218,19 @@ export function GatheringCancelledPage() {
               <Tick />
             </div>
             <div>
-              <b>{t("gatherings:cancelled.rescheduleTitle", { date: fmt.date(RESCHEDULE_DATE, { month: "long" }) })}</b>
+              <b>
+                {t("gatherings:cancelled.rescheduleTitle", {
+                  date: fmt.date(RESCHEDULE_DATE, { month: "long" }),
+                })}
+              </b>
               <span>
                 <Translation
                   i18nKey="gatherings:cancelled.rescheduleBody"
                   values={{
-                    date: fmt.date(RESCHEDULE_DATE, { day: "numeric", month: "long" }),
+                    date: fmt.date(RESCHEDULE_DATE, {
+                      day: "numeric",
+                      month: "long",
+                    }),
                     host: HOST_NAME,
                   }}
                   components={{ a: <a href="#july" /> }}
@@ -235,11 +252,11 @@ export function GatheringCancelledPage() {
         </div>
 
         <div className={styles.noteCard}>
-          <div className={styles.noteEyebrow}>{t("gatherings:cancelled.noteEyebrow", { host: HOST_NAME })}</div>
+          <div className={styles.noteEyebrow}>
+            {t("gatherings:cancelled.noteEyebrow", { host: HOST_NAME })}
+          </div>
           <h3>
-            {NOTE_QUOTE_P1}
-            {" "}
-            <em>{NOTE_QUOTE_EM}</em>
+            {NOTE_QUOTE_P1} <em>{NOTE_QUOTE_EM}</em>
             {'"'}
           </h3>
           <p>{NOTE_P1}</p>
@@ -250,7 +267,9 @@ export function GatheringCancelledPage() {
           </div>
         </div>
 
-        <div className={styles.altH} id="july">{t("gatherings:cancelled.altHeading")}</div>
+        <div className={styles.altH} id="july">
+          {t("gatherings:cancelled.altHeading")}
+        </div>
         <div className={styles.altGrid}>
           {ALTS.map((alt, index) => (
             <Link
@@ -261,8 +280,12 @@ export function GatheringCancelledPage() {
               key={index}
             >
               <div className={styles.altDate}>
-                <div className="d">{fmt.date(alt.date, { day: "2-digit" })}</div>
-                <div className="m">{fmt.date(alt.date, { month: "short" })}</div>
+                <div className="d">
+                  {fmt.date(alt.date, { day: "2-digit" })}
+                </div>
+                <div className="m">
+                  {fmt.date(alt.date, { month: "short" })}
+                </div>
               </div>
               <div>
                 <div className={styles.altTitle}>{alt.title}</div>
@@ -282,7 +305,12 @@ export function GatheringCancelledPage() {
             {t("gatherings:cancelled.calendarCta")}
           </Button>
           <Button variant="primary" to={GATHERING}>
-            {t("gatherings:cancelled.rsvpCta", { date: fmt.date(RESCHEDULE_DATE, { day: "numeric", month: "short" }) })}{" "}
+            {t("gatherings:cancelled.rsvpCta", {
+              date: fmt.date(RESCHEDULE_DATE, {
+                day: "numeric",
+                month: "short",
+              }),
+            })}{" "}
             →
           </Button>
         </div>

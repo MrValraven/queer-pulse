@@ -84,8 +84,8 @@ function GatheringPhotosHero() {
         </p>
         <div className={styles.meta}>
           <span>
-            {t("gatherings:photos.hostedBy")} <b>{PHOTOS_HOST_MEMBER}</b>{" "}
-            &amp; <b>{PHOTOS_HOST_ORG}</b>
+            {t("gatherings:photos.hostedBy")} <b>{PHOTOS_HOST_MEMBER}</b> &amp;{" "}
+            <b>{PHOTOS_HOST_ORG}</b>
           </span>
           <span>
             {t("gatherings:photos.photosByLabel")}{" "}

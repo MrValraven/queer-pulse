@@ -219,7 +219,7 @@ export const homepage: Catalog = {
   "wellbeing.peerSupport.title": "Círculos de apoio entre pares",
   "wellbeing.peerSupport.description":
     "Grupos com facilitação, onde não precisas de explicar o básico primeiro.",
-  "wellbeing.peerSupport.cta": "Juntar-te a um círculo",
+  "wellbeing.peerSupport.cta": "Junta-te a um círculo",
   "wellbeing.crisis.title": "Linhas de crise",
   "wellbeing.crisis.description":
     "Alguém para ligares, de dia ou de noite, quando as coisas pesam.",
@@ -239,7 +239,8 @@ export const homepage: Catalog = {
 
   // ── Communities (variante G — destaque + índice) ───────────────────────────
   "communities.eyebrow": "Comunidades · Lisboa",
-  "communities.title": "Entra, <em>sala a sala.</em>",
+  "communities.title":
+    "A comunidade é mais forte <em>quando se constroem juntas</em>",
   "communities.sub":
     "Pesquisa ou filtra a lista e depois abre qualquer comunidade para veres a sala toda — o que é, o que faz, quem está lá dentro, e o que desbloqueias ao entrar.",
   "communities.browseAllCta": "Ver todas as comunidades",
@@ -290,7 +291,7 @@ export const homepage: Catalog = {
   "communities.spotlight.keptBy": "Mantida por <b>{name}</b> e {extra}",
   "communities.spotlight.sinceLabel": "Desde {year}",
   "communities.spotlight.peekInsideCta": "Espreitar lá dentro",
-  "communities.spotlight.joinCta": "Juntar-te",
+  "communities.spotlight.joinCta": "Junta-te",
 
   "communities.room.pulse": "o feed ao vivo",
   "communities.room.discussions": "conversas",
@@ -356,7 +357,7 @@ export const homepage: Catalog = {
 
   // ── Partners ───────────────────────────────────────────────────────────────
   "partners.title":
-    "A comunidade é mais forte quando <em>as comunidades se ligam.</em>",
+    "A comunidade é mais forte <em>quando se constroem juntas</em>",
   "partners.subtitle":
     "Trabalhamos com organizações que partilham os nossos valores — em Portugal e além.",
   "partners.seeAllLabel": "Ver todas as parcerias",

@@ -140,7 +140,9 @@ export function CoHostInvitePage() {
         </Link>
 
         <div className={styles.hero}>
-          <span className={styles.eyebrow}>{t("gatherings:cohostInvite.eyebrow")}</span>
+          <span className={styles.eyebrow}>
+            {t("gatherings:cohostInvite.eyebrow")}
+          </span>
           <h1 className={styles.h1}>
             <Translation
               i18nKey="gatherings:cohostInvite.title"
@@ -149,7 +151,8 @@ export function CoHostInvitePage() {
             />
           </h1>
           <p className={styles.sub}>
-            {INVITE_SUB_TEXT} <em>{t("gatherings:cohostInvite.readThroughHint")}</em>
+            {INVITE_SUB_TEXT}{" "}
+            <em>{t("gatherings:cohostInvite.readThroughHint")}</em>
           </p>
         </div>
 
@@ -176,15 +179,21 @@ export function CoHostInvitePage() {
               time: fmt.relativeTime(-INVITED_HOURS_AGO, "hour"),
             })}
             <br />
-            {t("gatherings:cohostInvite.replyBy", { date: fmt.date(REPLY_BY_DATE, { day: "numeric", month: "short" }) })}
+            {t("gatherings:cohostInvite.replyBy", {
+              date: fmt.date(REPLY_BY_DATE, { day: "numeric", month: "short" }),
+            })}
           </div>
         </div>
 
         <div className={styles.eventCard}>
           <div className={styles.eventH}>
             <div className={styles.eventDate}>
-              <div className="d">{fmt.date(EVENT_START, { day: "2-digit" })}</div>
-              <div className="m">{fmt.date(EVENT_START, { month: "short" })}</div>
+              <div className="d">
+                {fmt.date(EVENT_START, { day: "2-digit" })}
+              </div>
+              <div className="m">
+                {fmt.date(EVENT_START, { month: "short" })}
+              </div>
             </div>
             <div className={styles.eventInfo}>
               <h2>
@@ -201,7 +210,10 @@ export function CoHostInvitePage() {
                 {EVENT_HOOD_SUFFIX}
                 <span className={styles.dot} />
                 <span>
-                  {t("gatherings:cohostInvite.rsvpsAndWaitlist", { rsvps: 22, waitlist: 14 })}
+                  {t("gatherings:cohostInvite.rsvpsAndWaitlist", {
+                    rsvps: 22,
+                    waitlist: 14,
+                  })}
                 </span>
               </div>
             </div>
@@ -215,7 +227,10 @@ export function CoHostInvitePage() {
 
         <div className={styles.roleCard}>
           <h3>
-            <Translation i18nKey="gatherings:cohostInvite.rolesTitle" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="gatherings:cohostInvite.rolesTitle"
+              components={{ em: <em /> }}
+            />
           </h3>
           <div>
             {ROLES.map((r) => (
@@ -235,9 +250,14 @@ export function CoHostInvitePage() {
 
         <div className={styles.commitCard}>
           <h3>
-            <Translation i18nKey="gatherings:cohostInvite.commitTitle" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="gatherings:cohostInvite.commitTitle"
+              components={{ em: <em /> }}
+            />
           </h3>
-          <p className={styles.commitSub}>{t("gatherings:cohostInvite.commitSub")}</p>
+          <p className={styles.commitSub}>
+            {t("gatherings:cohostInvite.commitSub")}
+          </p>
           <div className={styles.commitGrid}>
             {COMMITMENTS.map((c) => (
               <div className={styles.commit} key={c.b}>

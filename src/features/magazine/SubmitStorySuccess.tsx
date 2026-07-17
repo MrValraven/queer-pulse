@@ -39,7 +39,9 @@ export function SubmitStorySuccess({ working }: { working: string }) {
             <div className={styles.timeline}>
               <div className={styles.timelineRow}>
                 <span className={styles.timelineDot} />
-                <span>{t("magazine:submitStory.success.timeline.readsEvery")}</span>
+                <span>
+                  {t("magazine:submitStory.success.timeline.readsEvery")}
+                </span>
               </div>
               <div className={styles.timelineRow}>
                 <span

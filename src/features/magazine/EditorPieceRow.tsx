@@ -98,7 +98,10 @@ export function EditorPieceRow({
         <div className={styles.pieceBy}>
           {p.author} · {p.words.toLocaleString()} words · {p.section}
           {p.newVoice && (
-            <span className={styles.nv}> · {t("magazine:editor.pieceRow.newVoice")}</span>
+            <span className={styles.nv}>
+              {" "}
+              · {t("magazine:editor.pieceRow.newVoice")}
+            </span>
           )}
         </div>
         <div className={styles.pcChips}>
@@ -110,7 +113,9 @@ export function EditorPieceRow({
                 onClick={toggle}
               >
                 <span className={cx(styles.chipDot, editorDot(p.editor))} />
-                {t("magazine:editor.pieceRow.withEditor", { editor: p.editor })}{" "}
+                {t("magazine:editor.pieceRow.withEditor", {
+                  editor: p.editor,
+                })}{" "}
                 <FiChevronDown size={12} aria-hidden />
               </button>
             )}
@@ -165,7 +170,8 @@ export function EditorPieceRow({
 
       <div className={styles.pcAct}>
         <Link to={routes.issue} className={styles.pieceAction}>
-          {t("magazine:editor.pieceRow.open")} <FiArrowRight size={12} aria-hidden />
+          {t("magazine:editor.pieceRow.open")}{" "}
+          <FiArrowRight size={12} aria-hidden />
         </Link>
         <Popover
           align="right"

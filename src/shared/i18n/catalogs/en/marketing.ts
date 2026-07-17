@@ -161,13 +161,16 @@ export const marketing: Catalog = {
   "accessibility.peer.body":
     "Disabled members supporting each other — pairing newer members with someone who's navigated the same systems.",
   "accessibility.peer.joinCta": "Join as a mentee",
-  "accessibility.peer.joiningToast": "You're on the list — we'll match you soon.",
+  "accessibility.peer.joiningToast":
+    "You're on the list — we'll match you soon.",
   "accessibility.peer.mentorCta": "Become a mentor",
   "accessibility.outro.title": "Access is a <em>practice,</em> not a policy.",
-  "accessibility.outro.sub": "Tell us where we're falling short. We'd rather know.",
+  "accessibility.outro.sub":
+    "Tell us where we're falling short. We'd rather know.",
   "accessibility.outro.cta": "Request an invite",
   "accessibility.venue.reviewedBy_one": "Reviewed by {count} disabled member",
-  "accessibility.venue.reviewedBy_other": "Reviewed by {count} disabled members",
+  "accessibility.venue.reviewedBy_other":
+    "Reviewed by {count} disabled members",
   "accessibility.venue.operatedBadge": "QueerPulse-operated space",
   "accessibility.venue.flagCta": "Flag an issue",
   "accessibility.flagIssues.stepFree": "Step-free access",
@@ -229,11 +232,14 @@ export const marketing: Catalog = {
   "activism.nav.orgs": "Partner orgs",
   "activism.nav.volunteer": "Volunteer",
   "activism.conviction.local.word": "Local.",
-  "activism.conviction.local.rest": "Change starts in the room you're already in.",
+  "activism.conviction.local.rest":
+    "Change starts in the room you're already in.",
   "activism.conviction.real.word": "Real.",
-  "activism.conviction.real.rest": "Not a repost. Something that costs you something.",
+  "activism.conviction.real.rest":
+    "Not a repost. Something that costs you something.",
   "activism.conviction.yours.word": "Yours.",
-  "activism.conviction.yours.rest": "Pick the form that fits your life right now.",
+  "activism.conviction.yours.rest":
+    "Pick the form that fits your life right now.",
   "activism.start.title": "Where to <em>start</em>",
   "activism.start.p1":
     "You don't need to quit your job or join a party. Activism scales down to an afternoon.",
@@ -439,7 +445,8 @@ export const marketing: Catalog = {
   "coc.changelog.v10.lead": "v1.0 · {date}",
   "coc.changelog.v10.rest":
     "First published version, ratified by the founding circle.",
-  "coc.changes.seeChangelog": "See the full <changelogLink>changelog</changelogLink>.",
+  "coc.changes.seeChangelog":
+    "See the full <changelogLink>changelog</changelogLink>.",
   "coc.version.label": "Version 2.1",
   "coc.version.ratifiedMeta": "Ratified {date}",
   "coc.version.downloadCta": "download as text",
@@ -510,7 +517,8 @@ export const marketing: Catalog = {
     "This request is handled under Articles 15–21 of the <b>GDPR</b>.",
   "dsar.rightLabel": "Which right do you want to exercise?",
   "dsar.rights.access.label": "Right of <em>access</em>",
-  "dsar.rights.access.desc": "Get a copy of everything QueerPulse holds about you.",
+  "dsar.rights.access.desc":
+    "Get a copy of everything QueerPulse holds about you.",
   "dsar.rights.access.formTitle": "Request a copy of your data",
   "dsar.rights.access.formSub":
     "We'll compile everything tied to your account and send it to you.",
@@ -530,7 +538,8 @@ export const marketing: Catalog = {
   "dsar.rights.objection.desc":
     "Object to a specific way we're using your data, such as analytics.",
   "dsar.rights.objection.formTitle": "Object to a use of your data",
-  "dsar.rights.objection.formSub": "Tell us which processing you're objecting to.",
+  "dsar.rights.objection.formSub":
+    "Tell us which processing you're objecting to.",
   "dsar.artPrefix": "Article {number}",
   "dsar.toast.showingForm": "Showing the form for Article {article}",
   "dsar.requestLabel": "Request:",
@@ -730,7 +739,8 @@ export const marketing: Catalog = {
   "help.qa.somethingBroken.a":
     "Try refreshing first. If it persists, <contactLink>let us know</contactLink> with as much detail as you can.",
   "help.stillStuck.title": "Still stuck?",
-  "help.stillStuck.body": "A real person reads every message that comes through here.",
+  "help.stillStuck.body":
+    "A real person reads every message that comes through here.",
   "help.stillStuck.cta": "Contact us",
   "help.subpageIndex.title": "Related",
   "help.subpageIndex.accessibility.label": "Accessibility",
@@ -771,7 +781,8 @@ export const marketing: Catalog = {
   "partners.interstitial.body":
     "Every organisation below has been reviewed for alignment with our values before appearing here.",
   "partners.section.title": "Our <em>partners</em>",
-  "partners.section.sub": "Filter isn't available yet — here's the full roster.",
+  "partners.section.sub":
+    "Filter isn't available yet — here's the full roster.",
   "partners.card.viewCta": "View profile →",
   "partners.why.title": "Why we <em>partner</em>",
   "partners.why.p1":
@@ -786,8 +797,7 @@ export const marketing: Catalog = {
     "If your organisation does aligned work in or around Lisbon, we'd like to hear from you.",
   "partners.become.applyCta": "Apply to partner",
   "partners.outro.title": "Know an org that <em>should be here?</em>",
-  "partners.outro.sub":
-    "Tell us — we're always looking for aligned partners.",
+  "partners.outro.sub": "Tell us — we're always looking for aligned partners.",
 
   // ── Press Kit ──────────────────────────────────────────────────────────
   "pressKit.hero.eyebrow": "Press",
@@ -802,7 +812,8 @@ export const marketing: Catalog = {
   "pressKit.contact.languagesLabel": "<b>EN / PT</b>",
   "pressKit.footerNote.licence":
     "All assets here are released under a <a>CC BY 4.0</a> licence for editorial use.",
-  "pressKit.footerNote.commercial": "For commercial use, <a>get in touch</a> first.",
+  "pressKit.footerNote.commercial":
+    "For commercial use, <a>get in touch</a> first.",
   "pressKit.outro.title": "Still need <em>something specific?</em>",
   "pressKit.outro.sub":
     "Ask the press desk directly — most requests get a same-day reply.",
@@ -824,7 +835,8 @@ export const marketing: Catalog = {
   "pressKit.modal.closeCta": "Close",
   "pressKit.modal.cancelCta": "Cancel",
   "pressKit.readme.heading": "QUEERPULSE PRESS KIT",
-  "pressKit.readme.updated": "Updated regularly — see queerpulse.app/press for the latest.",
+  "pressKit.readme.updated":
+    "Updated regularly — see queerpulse.app/press for the latest.",
   "pressKit.readme.licenceHeading": "LICENCE",
   "pressKit.readme.licenceBody":
     "All assets are released under CC BY 4.0 for editorial use. Contact press@queerpulse.app for commercial licensing.",
@@ -914,7 +926,8 @@ export const marketing: Catalog = {
   "privacy.howWeUse.item4":
     "Keep the platform safe — investigating reports, enforcing the Code of Conduct",
   "privacy.howWeUse.item5": "Send you notifications you've opted into",
-  "privacy.howWeUse.item6": "Understand aggregate usage, to improve the product",
+  "privacy.howWeUse.item6":
+    "Understand aggregate usage, to improve the product",
   "privacy.howWeUse.p1":
     "We never use your data to train third-party AI models or sell it to advertisers.",
   "privacy.whoSees.title": "Who sees your data",
@@ -927,7 +940,8 @@ export const marketing: Catalog = {
   "privacy.whoSees.p4":
     "<strong>Nobody else.</strong> We don't sell or rent your data to any third party, ever.",
   "privacy.retention.title": "How long we keep it",
-  "privacy.retention.p1": "Account data is kept for as long as your account is active.",
+  "privacy.retention.p1":
+    "Account data is kept for as long as your account is active.",
   "privacy.retention.p2":
     "If you delete your account, most personal data is removed within 30 days, except where we're legally required to retain it (e.g. billing records).",
   "privacy.retention.p3":
@@ -936,8 +950,10 @@ export const marketing: Catalog = {
   "privacy.yourRights.intro": "Under GDPR, you have the right to:",
   "privacy.yourRights.item1":
     "<strong>Access</strong> — get a copy of everything we hold about you",
-  "privacy.yourRights.item2": "<strong>Rectification</strong> — correct anything that's wrong",
-  "privacy.yourRights.item3": "<strong>Erasure</strong> — ask us to delete your data",
+  "privacy.yourRights.item2":
+    "<strong>Rectification</strong> — correct anything that's wrong",
+  "privacy.yourRights.item3":
+    "<strong>Erasure</strong> — ask us to delete your data",
   "privacy.yourRights.item4":
     "<strong>Objection</strong> — object to a specific use of your data",
   "privacy.yourRights.item5":
@@ -958,7 +974,8 @@ export const marketing: Catalog = {
   "privacy.thirdParties.title": "Third parties",
   "privacy.thirdParties.intro":
     "We work with a small number of service providers, each bound by contract to use your data only for the service they provide:",
-  "privacy.thirdParties.item1": "<strong>Hosting</strong> — where the platform runs",
+  "privacy.thirdParties.item1":
+    "<strong>Hosting</strong> — where the platform runs",
   "privacy.thirdParties.item2":
     "<strong>Email delivery</strong> — for notifications and account emails",
   "privacy.thirdParties.item3":
@@ -987,7 +1004,8 @@ export const marketing: Catalog = {
   "terms.meta.version": "Version {version}",
   "terms.plain.text":
     "Be who you are, treat each other well, and don't use QueerPulse to harm anyone. The full terms are below.",
-  "terms.contactCta": "Questions about these terms? <strong>Reach out any time.</strong>",
+  "terms.contactCta":
+    "Questions about these terms? <strong>Reach out any time.</strong>",
   "terms.eligibility.title": "Eligibility",
   "terms.eligibility.p1":
     "QueerPulse is open to anyone 18 or older who is invited or vouched into the community.",
@@ -1005,10 +1023,13 @@ export const marketing: Catalog = {
   "terms.conduct.title": "Conduct",
   "terms.conduct.intro": "By using QueerPulse, you agree not to:",
   "terms.conduct.item1": "Harass, threaten, or intimidate other members",
-  "terms.conduct.item2": "Share someone's private information without their consent",
+  "terms.conduct.item2":
+    "Share someone's private information without their consent",
   "terms.conduct.item3": "Impersonate another person or organisation",
-  "terms.conduct.item4": "Use the platform for unsolicited commercial promotion",
-  "terms.conduct.item5": "Attempt to circumvent our security or access controls",
+  "terms.conduct.item4":
+    "Use the platform for unsolicited commercial promotion",
+  "terms.conduct.item5":
+    "Attempt to circumvent our security or access controls",
   "terms.conduct.item6": "Violate the Code of Conduct in any other way",
   "terms.conduct.highlight":
     "Violations may result in a warning, suspension, or removal, per the enforcement ladder in our Code of Conduct.",
@@ -1039,7 +1060,8 @@ export const marketing: Catalog = {
   "terms.termination.item3": "Engage in behaviour that endangers other members",
   "terms.termination.p1":
     "Where possible, we'll notify you of the reason and give you a chance to appeal, per our Code of Conduct's appeals process.",
-  "terms.termination.p2": "You may also close your account voluntarily at any time.",
+  "terms.termination.p2":
+    "You may also close your account voluntarily at any time.",
   "terms.liability.title": "Liability",
   "terms.liability.p1":
     "QueerPulse is provided “as is”. We work hard to keep it running smoothly but can't guarantee it will always be available or error-free.",
@@ -1075,7 +1097,8 @@ export const marketing: Catalog = {
     "Membership is by invitation, and every invitation is signed by a name. If you are here, someone you have actually met said you should be. If you stay, you'll eventually do the same for someone else. This is not exclusivity. It is <em>accountability</em>.",
   "manifesto.stanza02.p2":
     "“Verified” is a corporate word. It assumes a centre that can decide who you are. We don't. The community decides — together, slowly, and with the receipts of in-person time.",
-  "manifesto.pull1": "We do not put rainbow logos on anything. <em>The work speaks.</em>",
+  "manifesto.pull1":
+    "We do not put rainbow logos on anything. <em>The work speaks.</em>",
   "manifesto.stanza03.title": "Safety is <em>infrastructure.</em>",
   "manifesto.stanza03.p1":
     "A queer professional network without a hate-crime bridge to ILGA is a logo, not a network. So is one without therapists vetted by the community, a safe-spaces map that is actually maintained, and an open clinic night that meets every month at Café Beirão. <strong>If we cannot operationally protect each other, we are not a network.</strong>",
@@ -1105,8 +1128,10 @@ export const marketing: Catalog = {
     "This document is wrong about something. We don't know what. The 2025 revision changed eleven sentences. The 2026 revision will change more. Manifestos that don't update are gravestones. <em>This one updates.</em>",
   "manifesto.stanza07.p2":
     "If you are reading this and something feels off, write to <a>manifesto@queerpulse.app</a>. A real person reads every one. We discuss them at the assembly.",
-  "manifesto.signers.title_one": "Signed by <em>{formatted} member</em> · so far",
-  "manifesto.signers.title_other": "Signed by <em>{formatted} members</em> · so far",
+  "manifesto.signers.title_one":
+    "Signed by <em>{formatted} member</em> · so far",
+  "manifesto.signers.title_other":
+    "Signed by <em>{formatted} members</em> · so far",
   "manifesto.signers.sub":
     "Members sign by clicking once. There's no obligation — many haven't, and that's also fine. These are some of the people who have.",
   "manifesto.signers.addCta": "Add my name",
@@ -1128,15 +1153,18 @@ export const marketing: Catalog = {
   "pressKit.boiler.copiedCta": "Copied",
   "pressKit.boiler.short.label": "25 words · for headers, intros",
   "pressKit.boiler.med.label": "60 words · for press releases, capsule bios",
-  "pressKit.boiler.long.label": "130 words · for longer features, “about” sections",
+  "pressKit.boiler.long.label":
+    "130 words · for longer features, “about” sections",
   "pressKit.boiler.long.wc": "130 words",
   "pressKit.boiler.long.text":
     "QueerPulse is a Lisbon-based queer professional network, founded in 2024 by eight community members in the back room of Café Beirão. It is operated by Associação QueerPulse, a not-for-profit registered in Portugal (NIPC 517 426 884), and supported by Sustainer memberships, one-off donations, and three programme grants. Membership is by vouched invitation. The platform supports a magazine, a podcast (The Back Room), a verified safe-spaces network across Lisbon, a micro-grants fund disbursed within 14 days by a rotating community circle, and an operational partnership with ILGA Portugal for legal aid and helpline handoffs. Annual transparency reports are independently audited and published publicly.",
   "pressKit.mark.section.title": "The <em>mark</em> and how to use it",
   "pressKit.mark.section.lead":
     "Three approved variations. The wordmark always carries the coral pulse dot — except in the inverse “coral” variant, where the dot becomes plum. Don't recolour the dot to anything else.",
-  "pressKit.mark.logo.light.meta": "<b>Primary · light</b> · for cream/white backgrounds",
-  "pressKit.mark.logo.plum.meta": "<b>Inverse · plum</b> · for dark backgrounds",
+  "pressKit.mark.logo.light.meta":
+    "<b>Primary · light</b> · for cream/white backgrounds",
+  "pressKit.mark.logo.plum.meta":
+    "<b>Inverse · plum</b> · for dark backgrounds",
   "pressKit.mark.logo.coral.meta":
     "<b>Coral · solidarity</b> · use sparingly · pride contexts",
   "pressKit.mark.downloadLinkLabel": "SVG · PNG",
@@ -1225,21 +1253,24 @@ export const marketing: Catalog = {
   // rewrites already-entered data.
   "listBusiness.hero.backCta": "Back to the directory",
   "listBusiness.hero.eyebrow": "The directory · add a place",
-  "listBusiness.hero.title": "Add your place to <em>the people's directory.</em>",
+  "listBusiness.hero.title":
+    "Add your place to <em>the people's directory.</em>",
   "listBusiness.hero.lead":
     "Queer-owned or queer-friendly, big or tiny — if your place is good to our people, it belongs here. Tell us about it and the community team will take it from there. <b>Every listing is read by a human before it goes live.</b>",
   "listBusiness.wizard.stepAria": "Step {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Step {number}: {label} (done)",
   "listBusiness.wizard.stepAriaCurrent": "Step {number}: {label} (current)",
   "listBusiness.wizard.draftSaved": "Draft saved",
-  "listBusiness.draftBanner.text": "<b>You have a saved draft.</b> Pick up where you left off?",
+  "listBusiness.draftBanner.text":
+    "<b>You have a saved draft.</b> Pick up where you left off?",
   "listBusiness.draftBanner.startFresh": "Start fresh",
   "listBusiness.draftBanner.resume": "Resume draft",
   "listBusiness.paneActions.back": "← Back",
   "listBusiness.paneActions.cancel": "Cancel",
   "listBusiness.paneActions.neededLabel": "A few things left",
   "listBusiness.paneActions.jumpToAria": "Jump to {label}",
-  "listBusiness.paneActions.blockedTitle": "Fill the required fields to continue",
+  "listBusiness.paneActions.blockedTitle":
+    "Fill the required fields to continue",
   "listBusiness.next.basics": "Next: the basics →",
   "listBusiness.next.story": "Next: the story →",
   "listBusiness.next.practical": "Next: practical →",
@@ -1269,10 +1300,12 @@ export const marketing: Catalog = {
     "You're signed in as <b>{name}</b> — we'll attach this submission to your member profile so the team knows who to thank (and ask, if needed).",
   // Verify options
   "listBusiness.verify.email.label": "Business email",
-  "listBusiness.verify.email.desc": "We send a code to an address on your domain.",
+  "listBusiness.verify.email.desc":
+    "We send a code to an address on your domain.",
   "listBusiness.verify.email.badge": "Fastest",
   "listBusiness.verify.instagram.label": "Instagram",
-  "listBusiness.verify.instagram.desc": "Confirm with a DM from the listed account.",
+  "listBusiness.verify.instagram.desc":
+    "Confirm with a DM from the listed account.",
   "listBusiness.verify.instagram.badge": "Easy",
   "listBusiness.verify.post.label": "Postcard to the address",
   "listBusiness.verify.post.desc": "Old-school. A code arrives in 3–5 days.",
@@ -1289,7 +1322,8 @@ export const marketing: Catalog = {
   "listBusiness.step1.nameLabel": "What's it called?",
   "listBusiness.step1.nameHelper": "The name as people would search for it.",
   "listBusiness.step1.namePlaceholder": "e.g. Café Beirão",
-  "listBusiness.step1.dupHead": "A place by this name may already be in the directory:",
+  "listBusiness.step1.dupHead":
+    "A place by this name may already be in the directory:",
   "listBusiness.step1.catsLabel": "What kind of place is it? — pick up to 2",
   "listBusiness.step1.catsAria": "Category",
   "listBusiness.step1.hoodLabel": "Which neighbourhood?",
@@ -1300,10 +1334,12 @@ export const marketing: Catalog = {
   "listBusiness.step1.badgeAria": "Ownership",
   "listBusiness.step1.owned.tag": "Queer-owned",
   "listBusiness.step1.owned.title": "Owned or led by our community",
-  "listBusiness.step1.owned.desc": "You, your co-owners, or leadership are LGBTQ+.",
+  "listBusiness.step1.owned.desc":
+    "You, your co-owners, or leadership are LGBTQ+.",
   "listBusiness.step1.friendly.tag": "LGBTQ+ friendly",
   "listBusiness.step1.friendly.title": "A place that welcomes us",
-  "listBusiness.step1.friendly.desc": "Not queer-owned, but actively safe and affirming.",
+  "listBusiness.step1.friendly.desc":
+    "Not queer-owned, but actively safe and affirming.",
   "listBusiness.step1.evidenceLabel": "A light touch — how is it queer-owned?",
   "listBusiness.step1.evidenceHelp":
     "No documents. Just a sentence the reviewer can sanity-check. This is what keeps the badge meaningful.",
@@ -1343,7 +1379,8 @@ export const marketing: Catalog = {
   "listBusiness.step2.witLabel": "What it actually is",
   "listBusiness.step2.witHelper":
     "Two to four short lines. The things you'd want a stranger to know walking in.",
-  "listBusiness.step2.witFirstPlaceholder": "e.g. Galão, pastéis, two daily specials",
+  "listBusiness.step2.witFirstPlaceholder":
+    "e.g. Galão, pastéis, two daily specials",
   "listBusiness.step2.witMorePlaceholder": "One more thing worth knowing",
   "listBusiness.step2.witRemoveAria": "Remove line",
   "listBusiness.step2.witAdd": "Add another line",
@@ -1383,7 +1420,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.addressLabel": "Address",
   "listBusiness.step3.addressHelper":
     "Street and number is enough — we'll place the pin from there.",
-  "listBusiness.step3.addressPlaceholder": "R. Antero de Quental 26, 1170-024 Lisboa",
+  "listBusiness.step3.addressPlaceholder":
+    "R. Antero de Quental 26, 1170-024 Lisboa",
   "listBusiness.step3.findOnMap": "Find on map",
   "listBusiness.step3.pinPlaced": "Pin placed near {place}",
   "listBusiness.step3.hoursHeading": "Opening hours *",
@@ -1431,7 +1469,8 @@ export const marketing: Catalog = {
   "listBusiness.step4.alt.d1": "Detail 1 · alt text",
   "listBusiness.step4.alt.d2": "Detail 2 · alt text",
   "listBusiness.step4.alt.vibe": "Vibe · alt text",
-  "listBusiness.step4.altPlaceholder": "Describe it for blind & low-vision members",
+  "listBusiness.step4.altPlaceholder":
+    "Describe it for blind & low-vision members",
   "listBusiness.step4.aboutYouHeading": "A little about you",
   "listBusiness.step4.relLabel": "Your connection to the place",
   "listBusiness.step4.relAria": "Your connection",
@@ -1444,7 +1483,8 @@ export const marketing: Catalog = {
     "We took over a 60-year-old pastelaria in 2019 and rebuilt it around one rule: everyone's welcome, exactly as they are.",
   "listBusiness.step4.visLabel": "Who can see your name?",
   "listBusiness.step4.visAria": "Name visibility",
-  "listBusiness.step4.linkProfileLabel": "Link to your member profile? — optional",
+  "listBusiness.step4.linkProfileLabel":
+    "Link to your member profile? — optional",
   "listBusiness.step4.linkProfileTitle": "Show I'm a QueerPulse member",
   "listBusiness.step4.linkProfileDesc":
     "Puts a familiar, verified face on the listing. You're signed in as {name}.",
@@ -1466,7 +1506,8 @@ export const marketing: Catalog = {
   "listBusiness.rel.work.label": "I work here",
   "listBusiness.rel.work.desc": "Staff, with the owner's blessing to list.",
   "listBusiness.rel.regular.label": "I'm a regular who loves it",
-  "listBusiness.rel.regular.desc": "Suggesting a place that's been good to you.",
+  "listBusiness.rel.regular.desc":
+    "Suggesting a place that's been good to you.",
   // Visibility options
   "listBusiness.vis.public.label": "My name and role",
   "listBusiness.vis.public.desc": "Both shown on the listing.",
@@ -1558,7 +1599,8 @@ export const marketing: Catalog = {
   "listBusiness.success.editSubmission": "Edit submission",
   "listBusiness.success.listAnother": "List another place",
   "listBusiness.success.withdraw": "Withdraw",
-  "listBusiness.success.reference": "Reference · <b>{ref}</b> &nbsp;·&nbsp; keep it somewhere",
+  "listBusiness.success.reference":
+    "Reference · <b>{ref}</b> &nbsp;·&nbsp; keep it somewhere",
   "listBusiness.success.demoFlip": "Prototype · preview review states:",
   // "What's still needed" chip labels
   "listBusiness.missing.path": "how you know the place",
@@ -1827,7 +1869,8 @@ export const marketing: Catalog = {
     "Boring meeting minutes are the foundation of trust. Here's how QueerPulse's governance actually worked in 2025.",
   "transparency.governance.seeMore":
     "For full meeting minutes, the constitution, the Sustainer agreement, and the formal organisational chart, see Governance.",
-  "transparency.signoff.title": "Signed in <em>good faith,</em> and ready for questions.",
+  "transparency.signoff.title":
+    "Signed in <em>good faith,</em> and ready for questions.",
   "transparency.signoff.body":
     "This report was prepared by Catarina Vaz and André Bento, reviewed by the full Assembly, and audited independently by Dra. Helena Faria of Faria Auditoria. <em>Errors are ours.</em> Questions, corrections, or concerns: <a>transparency@queerpulse.app</a> — a real person reads them within 48 hours.",
   "transparency.signoff.role.catarina":
@@ -1848,9 +1891,11 @@ export const marketing: Catalog = {
   "archive.featured.label": "This month's featured story",
   "archive.featured.readCta": "Read her story →",
   "archive.grid.title": "From the <em>archive</em>",
-  "archive.grid.sub": "Personal accounts from community members, past and present.",
+  "archive.grid.sub":
+    "Personal accounts from community members, past and present.",
   "archive.oral.title": "In their own <em>words.</em>",
-  "archive.oral.sub": "Short excerpts from longer oral histories in the archive.",
+  "archive.oral.sub":
+    "Short excerpts from longer oral histories in the archive.",
   "archive.submit.title": "Your story <em>belongs here too.</em>",
   "archive.submit.body":
     "The archive grows through community contribution. If you have a story you want to tell — about Lisbon, about your community, about what brought you here or what kept you going — we want to hear it. All formats welcome: written, audio, video, photos.",
@@ -1900,7 +1945,8 @@ export const marketing: Catalog = {
     "We read every suggestion. The most-voted ideas move up the roadmap.",
   "roadmap.submitIdea.title": "Submit an idea",
   "roadmap.submitIdea.ariaLabel": "Your idea",
-  "roadmap.submitIdea.placeholder": "What would make QueerPulse better for you?",
+  "roadmap.submitIdea.placeholder":
+    "What would make QueerPulse better for you?",
   "roadmap.submitIdea.cta": "Submit idea",
   "roadmap.submitIdea.toast.empty": "Write a few words first",
   "roadmap.submitIdea.toast.submitted": "Idea submitted — thank you",
@@ -1960,7 +2006,8 @@ export const marketing: Catalog = {
   "volunteer.filter.housing": "Housing",
   "volunteer.filter.arts": "Arts &amp; Culture",
   "volunteer.hero.eyebrow": "Volunteer",
-  "volunteer.hero.title": "Give your time to the <em>community</em> around you.",
+  "volunteer.hero.title":
+    "Give your time to the <em>community</em> around you.",
   "volunteer.hero.sub":
     "You don't need to be an activist. You need two free hours and a willingness to show up. Below are organisations in Lisbon genuinely looking for people like you.",
   "volunteer.hero.note":
@@ -2013,8 +2060,7 @@ export const marketing: Catalog = {
   "postOpportunity.success.em": "posted.",
   "postOpportunity.success.closeLabel": "View the volunteer board →",
   "postOpportunity.success.step1": "It's live on the volunteer board now",
-  "postOpportunity.success.step2":
-    "Members can sign up from the listing",
+  "postOpportunity.success.step2": "Members can sign up from the listing",
   "postOpportunity.success.step3":
     "You'll see everyone who signs up on the role's page",
   "postOpportunity.success.body":
@@ -2103,8 +2149,7 @@ export const marketing: Catalog = {
     "Comma-separated member handles / slugs already on the team.",
   "postOpportunity.rich.teamPlaceholder": "catarina-v, jonas-f",
   "postOpportunity.rich.applyRoleLabel": "Apply-as role label",
-  "postOpportunity.rich.applyRoleHelper":
-    "Defaults to “Role · Organisation”.",
+  "postOpportunity.rich.applyRoleHelper": "Defaults to “Role · Organisation”.",
   "postOpportunity.rich.applyRolePlaceholder":
     "Community Outreach · ILGA Lisboa",
   "postOpportunity.rich.partnerSlugLabel": "Partner slug",
@@ -2161,7 +2206,8 @@ export const marketing: Catalog = {
   //    copy, stats, and contact details are each partner org's own content
   //    (partnerDetails.dataA/B.tsx) — left English, same precedent as the
   //    Partners listing page.
-  "partnerDetail.loadError": "We couldn't load this partner just now. Please try again.",
+  "partnerDetail.loadError":
+    "We couldn't load this partner just now. Please try again.",
   "partnerDetail.backCta": "← All partners",
   "partnerDetail.tab.about": "About",
   "partnerDetail.tab.work": "Joint work",

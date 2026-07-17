@@ -60,7 +60,9 @@ export function InlineEditModal({
         >
           <FiX />
         </button>
-        <div className={styles.eye}>{t("gatherings:manage.inlineEdit.eyebrow")}</div>
+        <div className={styles.eye}>
+          {t("gatherings:manage.inlineEdit.eyebrow")}
+        </div>
         <div className={styles.title}>{editTitle}</div>
 
         <div className={styles.fields}>

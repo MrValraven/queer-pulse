@@ -24,7 +24,9 @@ export interface AboutHero {
 export function buildHero(t: TFunction): AboutHero {
   return {
     eyebrow: t(HERO_KEYS.eyebrow),
-    title: <Translation i18nKey={HERO_KEYS.title} components={{ em: <em /> }} />,
+    title: (
+      <Translation i18nKey={HERO_KEYS.title} components={{ em: <em /> }} />
+    ),
     lede: <Translation i18nKey={HERO_KEYS.lede} components={{ em: <em /> }} />,
   };
 }
@@ -39,15 +41,30 @@ export interface RateCell {
 export function buildRateCells(t: TFunction): RateCell[] {
   return [
     {
-      value: <Translation i18nKey="studio:about.rate.cell.floor.value" components={{ em: <em /> }} />,
+      value: (
+        <Translation
+          i18nKey="studio:about.rate.cell.floor.value"
+          components={{ em: <em /> }}
+        />
+      ),
       label: t("studio:about.rate.cell.floor.label"),
     },
     {
-      value: <Translation i18nKey="studio:about.rate.cell.share.value" components={{ em: <em /> }} />,
+      value: (
+        <Translation
+          i18nKey="studio:about.rate.cell.share.value"
+          components={{ em: <em /> }}
+        />
+      ),
       label: t("studio:about.rate.cell.share.label"),
     },
     {
-      value: <Translation i18nKey="studio:about.rate.cell.tip.value" components={{ em: <em /> }} />,
+      value: (
+        <Translation
+          i18nKey="studio:about.rate.cell.tip.value"
+          components={{ em: <em /> }}
+        />
+      ),
       label: t("studio:about.rate.cell.tip.label"),
       jade: true,
     },
@@ -73,7 +90,12 @@ export function buildTiers(t: TFunction): Tier[] {
           <span className="mo">{perMonth}</span>
         </>
       ),
-      body: <Translation i18nKey="studio:about.tier.casual.body" components={{ em: <em /> }} />,
+      body: (
+        <Translation
+          i18nKey="studio:about.tier.casual.body"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       label: t("studio:about.tier.building.label"),
@@ -83,7 +105,12 @@ export function buildTiers(t: TFunction): Tier[] {
           <span className="mo">{perMonth}</span>
         </>
       ),
-      body: <Translation i18nKey="studio:about.tier.building.body" components={{ em: <em /> }} />,
+      body: (
+        <Translation
+          i18nKey="studio:about.tier.building.body"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       label: t("studio:about.tier.sustaining.label"),
@@ -93,20 +120,32 @@ export function buildTiers(t: TFunction): Tier[] {
           <span className="mo">{perMonth}</span>
         </>
       ),
-      body: <Translation i18nKey="studio:about.tier.sustaining.body" components={{ em: <em /> }} />,
+      body: (
+        <Translation
+          i18nKey="studio:about.tier.sustaining.body"
+          components={{ em: <em /> }}
+        />
+      ),
       variant: "hi",
     },
     {
       label: t("studio:about.tier.touring.label"),
       value: <em>&mdash;</em>,
-      body: <Translation i18nKey="studio:about.tier.touring.body" components={{ em: <em /> }} />,
+      body: (
+        <Translation
+          i18nKey="studio:about.tier.touring.body"
+          components={{ em: <em /> }}
+        />
+      ),
       variant: "ceil",
     },
   ];
 }
 
 export function buildTierFoot(): ReactNode {
-  return <Translation i18nKey="studio:about.tierFoot" components={{ em: <em /> }} />;
+  return (
+    <Translation i18nKey="studio:about.tierFoot" components={{ em: <em /> }} />
+  );
 }
 
 /** The "hard questions" Q&A (section 05). */
@@ -119,19 +158,39 @@ export function buildSkeptics(t: TFunction): Skeptic[] {
   return [
     {
       q: t("studio:about.skeptic.broke.q"),
-      a: <Translation i18nKey="studio:about.skeptic.broke.a" components={{ em: <em /> }} />,
+      a: (
+        <Translation
+          i18nKey="studio:about.skeptic.broke.a"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       q: t("studio:about.skeptic.clique.q"),
-      a: <Translation i18nKey="studio:about.skeptic.clique.a" components={{ em: <em /> }} />,
+      a: (
+        <Translation
+          i18nKey="studio:about.skeptic.clique.a"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       q: t("studio:about.skeptic.clone.q"),
-      a: <Translation i18nKey="studio:about.skeptic.clone.a" components={{ em: <em /> }} />,
+      a: (
+        <Translation
+          i18nKey="studio:about.skeptic.clone.a"
+          components={{ em: <em /> }}
+        />
+      ),
     },
     {
       q: t("studio:about.skeptic.leave.q"),
-      a: <Translation i18nKey="studio:about.skeptic.leave.a" components={{ em: <em /> }} />,
+      a: (
+        <Translation
+          i18nKey="studio:about.skeptic.leave.a"
+          components={{ em: <em /> }}
+        />
+      ),
     },
   ];
 }
@@ -145,7 +204,12 @@ export interface AboutCta {
 
 export function buildCta(t: TFunction): AboutCta {
   return {
-    title: <Translation i18nKey="studio:about.cta.title" components={{ em: <em /> }} />,
+    title: (
+      <Translation
+        i18nKey="studio:about.cta.title"
+        components={{ em: <em /> }}
+      />
+    ),
     body: t("studio:about.cta.body"),
     join: t("studio:about.cta.join"),
     ledger: t("studio:about.cta.ledger"),

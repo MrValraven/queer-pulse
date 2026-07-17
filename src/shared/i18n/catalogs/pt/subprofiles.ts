@@ -88,7 +88,8 @@ export const subprofiles: Catalog = {
   "visibility.network.label": "A tua rede",
   "visibility.network.help": "Só quem está na tua rede consegue vê-la.",
   "visibility.private.label": "Só tu",
-  "visibility.private.help": "Guardada só para ti, enquanto a vais construindo.",
+  "visibility.private.help":
+    "Guardada só para ti, enquanto a vais construindo.",
 
   // Rótulos/placeholders dos campos do editor de itens (SubprofileItemEditor)
   "field.title.label": "Título",
@@ -120,14 +121,18 @@ export const subprofiles: Catalog = {
     "É aqui que as pessoas te vão encontrar — queerpulse.app/p/o-teu-identificador.",
   "checklist.reqHandleFailInvalid":
     "Os identificadores têm 3–30 carateres: letras minúsculas, números e hífenes.",
-  "checklist.reqHandleFailTaken": "Já existe alguém com esse identificador — tenta outro.",
-  "checklist.reqHandleFailReserved": "Esse identificador está reservado. Escolhe um diferente.",
+  "checklist.reqHandleFailTaken":
+    "Já existe alguém com esse identificador — tenta outro.",
+  "checklist.reqHandleFailReserved":
+    "Esse identificador está reservado. Escolhe um diferente.",
   "checklist.reqAvatarTitle": "Uma fotografia ou imagem",
-  "checklist.reqAvatarMet": "O teu avatar ajuda as pessoas a reconhecerem esta persona.",
+  "checklist.reqAvatarMet":
+    "O teu avatar ajuda as pessoas a reconhecerem esta persona.",
   "checklist.reqAvatarFail":
     "Adiciona um avatar para as pessoas poderem associar um rosto, ou uma marca, ao nome.",
   "checklist.reqBioTitle": "Uma biografia com pelo menos 80 carateres",
-  "checklist.reqBioMet": "Suficiente para alguém perceber quem és, num relance.",
+  "checklist.reqBioMet":
+    "Suficiente para alguém perceber quem és, num relance.",
   "checklist.reqBioFail":
     "Conta um pouco mais — a tua biografia precisa de pelo menos 80 carateres.",
   "checklist.reqItemsTitle": "Pelo menos três coisas para mostrar",
@@ -152,9 +157,11 @@ export const subprofiles: Catalog = {
   "mine.untitled": "Persona sem nome",
   "mine.defaultName": "Essa persona",
   "mine.toastDeleted": "{name} eliminada",
-  "mine.toastDeleteError": "Não conseguimos eliminar isso agora — tenta outra vez.",
+  "mine.toastDeleteError":
+    "Não conseguimos eliminar isso agora — tenta outra vez.",
   "mine.deleteModalTitle": "Eliminar esta persona?",
-  "mine.deleteModalSub": "“{name}” e tudo o que lá está vai desaparecer para sempre.",
+  "mine.deleteModalSub":
+    "“{name}” e tudo o que lá está vai desaparecer para sempre.",
   "mine.deleteModalDefaultName": "Esta persona",
   "mine.deleteModalKeep": "Manter",
   "mine.deleteModalConfirm": "Eliminar",
@@ -166,7 +173,8 @@ export const subprofiles: Catalog = {
   // Página do editor (SubprofileEditorPage)
   "editor.loading": "A carregar a tua persona…",
   "editor.notFoundTitle": "Não encontrámos essa persona",
-  "editor.notFoundDescription": "Pode ter sido removida, ou o link não está certo.",
+  "editor.notFoundDescription":
+    "Pode ter sido removida, ou o link não está certo.",
   "editor.notFoundAction": "Voltar aos teus subperfis",
   "editor.backLink": "Os teus subperfis",
 
@@ -175,13 +183,16 @@ export const subprofiles: Catalog = {
   "metaForm.avatarLabel": "Avatar",
   "metaForm.avatarPlaceholder": "Avatar",
   "metaForm.displayNameLabel": "Nome apresentado",
-  "metaForm.displayNameError": "Esta persona precisa de um nome para ficar visível.",
+  "metaForm.displayNameError":
+    "Esta persona precisa de um nome para ficar visível.",
   "metaForm.displayNamePlaceholder": "Como esta persona é conhecida",
   "metaForm.taglineLabel": "Frase de apresentação",
   "metaForm.taglineHelper": "Uma linha sobre o que fazes.",
-  "metaForm.taglinePlaceholder": "por ex. Eletrónica noturna para pistas de dança queer",
+  "metaForm.taglinePlaceholder":
+    "por ex. Eletrónica noturna para pistas de dança queer",
   "metaForm.bioLabel": "Biografia",
-  "metaForm.bioHelper": "Pelo menos 80 carateres para publicares uma persona autónoma.",
+  "metaForm.bioHelper":
+    "Pelo menos 80 carateres para publicares uma persona autónoma.",
   "metaForm.bioPlaceholder": "Umas frases nas tuas próprias palavras.",
   "metaForm.linkLabel": "Ligar ao teu perfil principal",
   "metaForm.addressLabel": "Endereço do perfil",
@@ -192,7 +203,8 @@ export const subprofiles: Catalog = {
   "metaForm.save": "Guardar detalhes",
   "metaForm.saving": "A guardar…",
   "metaForm.toastSaved": "Detalhes guardados",
-  "metaForm.toastError": "Não conseguimos guardar isso agora — tenta outra vez.",
+  "metaForm.toastError":
+    "Não conseguimos guardar isso agora — tenta outra vez.",
 
   // Editor de item (SubprofileItemEditor)
   "itemEditor.itemNumber": "Item {n}",
@@ -202,13 +214,15 @@ export const subprofiles: Catalog = {
   "itemEditor.tagsHelper": "Separa com vírgulas",
 
   // Editor de secção (SubprofileSectionEditor)
-  "sectionEditor.empty": "Ainda nada aqui — acrescenta o primeiro quando quiseres.",
+  "sectionEditor.empty":
+    "Ainda nada aqui — acrescenta o primeiro quando quiseres.",
   "sectionEditor.addTo": "Acrescentar a {section}",
   "sectionEditor.capHint": "É o máximo que podes acrescentar a uma secção.",
   "sectionEditor.save": "Guardar secção",
   "sectionEditor.saving": "A guardar…",
   "sectionEditor.toastSaved": "Alterações guardadas em {section}",
-  "sectionEditor.toastError": "Não conseguimos guardar isso agora — tenta outra vez.",
+  "sectionEditor.toastError":
+    "Não conseguimos guardar isso agora — tenta outra vez.",
 
   // Painel de publicação (SubprofilePublishPanel)
   "publishPanel.successTitle": "Estás",
@@ -230,13 +244,17 @@ export const subprofiles: Catalog = {
   "publishPanel.publishing": "A publicar…",
   "publishPanel.recheck": "Verificar e publicar",
   "publishPanel.toastLive": "A tua persona está no ar",
-  "publishPanel.toastPublishError": "Não conseguimos publicar — vê os requisitos abaixo.",
-  "publishPanel.toastUnpublished": "De volta a rascunho — só tu consegues vê-la agora.",
-  "publishPanel.toastError": "Não conseguimos fazer isso agora — tenta outra vez.",
+  "publishPanel.toastPublishError":
+    "Não conseguimos publicar — vê os requisitos abaixo.",
+  "publishPanel.toastUnpublished":
+    "De volta a rascunho — só tu consegues vê-la agora.",
+  "publishPanel.toastError":
+    "Não conseguimos fazer isso agora — tenta outra vez.",
 
   // Modal de novo subperfil (NewSubprofileModal)
   "newModal.title": "Começar uma nova <em>persona</em>",
-  "newModal.sub": "Cada uma é um lado profissional teu — escolhe para que serve.",
+  "newModal.sub":
+    "Cada uma é um lado profissional teu — escolhe para que serve.",
   "newModal.cancel": "Cancelar",
   "newModal.create": "Criar rascunho",
   "newModal.creating": "A criar…",
@@ -247,7 +265,8 @@ export const subprofiles: Catalog = {
   "newModal.displayNamePlaceholderExample": "por ex. {kind}",
   "newModal.addressLabel": "Endereço do perfil",
   "newModal.addressPlaceholder": "por ex. poesia",
-  "newModal.toastError": "Não conseguimos começar essa agora — tenta outra vez.",
+  "newModal.toastError":
+    "Não conseguimos começar essa agora — tenta outra vez.",
 
   // Campo de imagem (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Imagem",
@@ -255,7 +274,8 @@ export const subprofiles: Catalog = {
   "imageUpload.change": "Alterar",
   "imageUpload.add": "Adicionar imagem",
   "imageUpload.remove": "Remover imagem",
-  "imageUpload.error": "Não conseguimos adicionar essa imagem. Tenta outra vez.",
+  "imageUpload.error":
+    "Não conseguimos adicionar essa imagem. Tenta outra vez.",
 
   // Página pública da persona (SubprofilePage + subprofilePage.data.ts)
   "page.loading": "A carregar persona…",

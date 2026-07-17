@@ -30,7 +30,9 @@ export function CommunitiesHomePage() {
         <div className="wrap">
           <div className={styles.head}>
             <div>
-              <div className={styles.eyebrow}>{t("communities:hub.eyebrow")}</div>
+              <div className={styles.eyebrow}>
+                {t("communities:hub.eyebrow")}
+              </div>
               <h1 className={styles.h1}>
                 <Translation
                   i18nKey="communities:hub.welcome"

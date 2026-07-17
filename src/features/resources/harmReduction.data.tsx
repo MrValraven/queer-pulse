@@ -35,13 +35,11 @@ export const SECTIONS: HrSection[] = [
         bodyKey: "resources:harmReduction.section.beforeNight.item.eat.body",
       },
       {
-        titleKey:
-          "resources:harmReduction.section.beforeNight.item.test.title",
+        titleKey: "resources:harmReduction.section.beforeNight.item.test.title",
         bodyKey: "resources:harmReduction.section.beforeNight.item.test.body",
       },
       {
-        titleKey:
-          "resources:harmReduction.section.beforeNight.item.meds.title",
+        titleKey: "resources:harmReduction.section.beforeNight.item.meds.title",
         bodyKey: "resources:harmReduction.section.beforeNight.item.meds.body",
       },
       {
@@ -53,8 +51,7 @@ export const SECTIONS: HrSection[] = [
       {
         titleKey:
           "resources:harmReduction.section.beforeNight.item.budget.title",
-        bodyKey:
-          "resources:harmReduction.section.beforeNight.item.budget.body",
+        bodyKey: "resources:harmReduction.section.beforeNight.item.budget.body",
       },
     ],
   },
@@ -75,14 +72,12 @@ export const SECTIONS: HrSection[] = [
       {
         titleKey:
           "resources:harmReduction.section.duringNight.item.breaks.title",
-        bodyKey:
-          "resources:harmReduction.section.duringNight.item.breaks.body",
+        bodyKey: "resources:harmReduction.section.duringNight.item.breaks.body",
       },
       {
         titleKey:
           "resources:harmReduction.section.duringNight.item.mixing.title",
-        bodyKey:
-          "resources:harmReduction.section.duringNight.item.mixing.body",
+        bodyKey: "resources:harmReduction.section.duringNight.item.mixing.body",
       },
       {
         titleKey:
@@ -126,13 +121,11 @@ export const SOBER: HrSection = {
       bodyKey: "resources:harmReduction.section.sober.item.belong.body",
     },
     {
-      titleKey:
-        "resources:harmReduction.section.sober.item.nonAlcoholic.title",
+      titleKey: "resources:harmReduction.section.sober.item.nonAlcoholic.title",
       bodyKey: "resources:harmReduction.section.sober.item.nonAlcoholic.body",
     },
     {
-      titleKey:
-        "resources:harmReduction.section.sober.item.qpCommunity.title",
+      titleKey: "resources:harmReduction.section.sober.item.qpCommunity.title",
       bodyKey: "resources:harmReduction.section.sober.item.qpCommunity.body",
     },
   ],
@@ -153,21 +146,18 @@ export const SERVICES: HrSection = {
     {
       titleKey:
         "resources:harmReduction.section.services.item.checkpoint.title",
-      bodyKey:
-        "resources:harmReduction.section.services.item.checkpoint.body",
+      bodyKey: "resources:harmReduction.section.services.item.checkpoint.body",
     },
     {
       titleKey: "resources:harmReduction.section.services.item.cat.title",
       bodyKey: "resources:harmReduction.section.services.item.cat.body",
     },
     {
-      titleKey:
-        "resources:harmReduction.section.services.item.kosmicare.title",
+      titleKey: "resources:harmReduction.section.services.item.kosmicare.title",
       bodyKey: "resources:harmReduction.section.services.item.kosmicare.body",
     },
     {
-      titleKey:
-        "resources:harmReduction.section.services.item.tripsit.title",
+      titleKey: "resources:harmReduction.section.services.item.tripsit.title",
       bodyKey: "resources:harmReduction.section.services.item.tripsit.body",
     },
   ],
@@ -180,4 +170,3 @@ export const NALOXONE_STEPS: NaloxoneStep[] = [
   { n: 4, bodyKey: "resources:harmReduction.naloxone.step4" },
   { n: 5, bodyKey: "resources:harmReduction.naloxone.step5" },
 ];
-

@@ -108,7 +108,11 @@ export function RoomLoader() {
         <ul className={styles.steps}>
           {STEP_KEYS.map((stepKey, stepIndex) => {
             const state =
-              stepIndex < step ? "done" : stepIndex === step ? "active" : "pending";
+              stepIndex < step
+                ? "done"
+                : stepIndex === step
+                  ? "active"
+                  : "pending";
             return (
               <li key={stepKey} className={`${styles.step} ${styles[state]}`}>
                 <span className={styles.icon} aria-hidden>
@@ -126,7 +130,9 @@ export function RoomLoader() {
           })}
         </ul>
 
-        <p className={styles.caption}>{t("shared:feedback.roomLoader.caption")}</p>
+        <p className={styles.caption}>
+          {t("shared:feedback.roomLoader.caption")}
+        </p>
       </div>
     </div>
   );

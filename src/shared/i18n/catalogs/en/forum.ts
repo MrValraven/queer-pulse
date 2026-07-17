@@ -40,7 +40,7 @@ export const forum: Catalog = {
   "hero.lead":
     "The one community everyone here belongs to — questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for a smaller room?",
   "hero.findCommunitiesCta": "Find your communities →",
-  "newPostCta": "+ New post",
+  newPostCta: "+ New post",
 
   // ── ForumSidebar ────────────────────────────────────────────────────────
   "sidebar.categoriesLabel": "Categories",
@@ -97,8 +97,8 @@ export const forum: Catalog = {
   "threadList.removeUpvoteAria": "Remove upvote",
 
   // ── Shared reply-count phrasing (thread card meta + reply sort bar) ─────
-  "repliesCount_one": "{formatted} reply",
-  "repliesCount_other": "{formatted} replies",
+  repliesCount_one: "{formatted} reply",
+  repliesCount_other: "{formatted} replies",
 
   // ── ReportReplyModal ────────────────────────────────────────────────────
   "reportReply.confirmTitle": "Thank you — <em>we're on it.</em>",

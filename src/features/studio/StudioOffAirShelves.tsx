@@ -41,7 +41,10 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
       <section className={studioStyles.row} style={{ paddingTop: 24 }}>
         <div className={studioStyles.rowH}>
           <h2>
-            <Translation i18nKey="studio:offAir.carryOn.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:offAir.carryOn.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <div style={rowNote}>{t("studio:offAir.carryOn.sub")}</div>
           <Link to={routes.studioLibrary} style={rowLink}>
@@ -98,7 +101,10 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
       <section className={studioStyles.row} style={{ paddingBottom: 50 }}>
         <div className={studioStyles.rowH}>
           <h2>
-            <Translation i18nKey="studio:offAir.quietHours.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:offAir.quietHours.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <div style={rowNote}>{t("studio:offAir.quietHours.sub")}</div>
           <Link to={routes.studioSearch} style={rowLink}>

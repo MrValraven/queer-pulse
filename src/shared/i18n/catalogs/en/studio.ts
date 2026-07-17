@@ -92,7 +92,8 @@ export const studio: Catalog = {
     "Programmed by {curator} · synchronous · {count} in the room",
   "room.set.readPlanCta": "Read the plan",
   "room.set.sideHeading": "In the room with you",
-  "room.set.sideSub": "{sustainers} sustainers · {casual} casual · {cities} cities",
+  "room.set.sideSub":
+    "{sustainers} sustainers · {casual} casual · {cities} cities",
   "room.set.ledgerHead": "Ledger · this month",
   "room.set.ledgerPaidArtists": "Paid to artists",
   "room.set.ledgerPlays": "Plays",
@@ -184,7 +185,7 @@ export const studio: Catalog = {
     "80% of every listen to the artist. 100% of every tip. The other 20% covers payments, hosting, captions, sheet-music typesetting, and council stipends. The split is on every artist page, every receipt, every album.",
   "landing.promises.humans.title": "A room <em>programmed</em> by humans.",
   "landing.promises.humans.body":
-    "Every track on the homepage has a curator's name and a one-paragraph note. No \"popular near you\", no \"made for you\", no infinite scroll. The week is small, hand-built, and dated.",
+    'Every track on the homepage has a curator\'s name and a one-paragraph note. No "popular near you", no "made for you", no infinite scroll. The week is small, hand-built, and dated.',
   "landing.promises.coOwned.title": "Co-owned by the <em>listeners</em>.",
   "landing.promises.coOwned.body":
     "Sustainers ({price}/mo) become voting co-op members after twelve months. They elect the council, approve the rate card, and see every euro on the ledger. The platform is structurally accountable to the room.",
@@ -230,10 +231,12 @@ export const studio: Catalog = {
   "signin.tabs.signIn": "Sign in",
   "signin.tabs.join": "Join",
   "signin.aside.onAirNow": "On the air now · {count} in the room",
-  "signin.aside.title": "A streaming co-op that <em>pays</em> the people who made the song.",
+  "signin.aside.title":
+    "A streaming co-op that <em>pays</em> the people who made the song.",
   "signin.aside.body":
     "Eighty cents of every euro reaches the artist. Tips pass through at <em>{tipPercent}</em>. The ledger is public, updated every Monday at noon.",
-  "signin.aside.paidThisMonth": "Paid to artists this month: <em>{amount}</em> · and counting.",
+  "signin.aside.paidThisMonth":
+    "Paid to artists this month: <em>{amount}</em> · and counting.",
 
   "signin.in.title": "Welcome <em>back.</em>",
   "signin.in.lede":
@@ -258,7 +261,8 @@ export const studio: Catalog = {
   "signin.join.tier.studio.title": "Studio <em>only</em>",
   "signin.join.tier.studio.body":
     "Everything in Studio — the council's weekly set, live rooms, the full catalogue, lossless audio, direct artist subscriptions.",
-  "signin.join.tier.studio.incl": "{sharePercent} of your fee reaches artists by play",
+  "signin.join.tier.studio.incl":
+    "{sharePercent} of your fee reaches artists by play",
   "signin.join.tier.coop.badge": "Best value",
   "signin.join.tier.coop.title": "The whole <em>co-op</em>",
   "signin.join.tier.coop.body":
@@ -312,7 +316,8 @@ export const studio: Catalog = {
     "You've heard \"fair pay for artists\" from every platform that underpays them. So here's the arithmetic, the governance, and the honest ceiling — <em>no slogans you can't audit.</em>",
 
   "about.sec.whatItIs.num": "01 — what it is",
-  "about.sec.whatItIs.heading": "A listening platform, run as a <em>co-op</em>.",
+  "about.sec.whatItIs.heading":
+    "A listening platform, run as a <em>co-op</em>.",
   "about.sec.whatItIs.p1":
     "QueerPulse Studio is owned by the people who use it — listeners and artists together — not by shareholders or a label. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
   "about.sec.whatItIs.p2":
@@ -367,7 +372,8 @@ export const studio: Catalog = {
     "The per-listen floor and the split percentages are set yearly by a joint vote of sustainers and artists, with a 20% quorum. If you think the rate is wrong, you don't email support — <em>you vote, or you stand.</em>",
 
   "about.sec.hardQuestions.num": "05 — the hard questions",
-  "about.sec.hardQuestions.heading": "The ones you're <em>actually</em> asking.",
+  "about.sec.hardQuestions.heading":
+    "The ones you're <em>actually</em> asking.",
 
   "about.skeptic.broke.q":
     "This sounds lovely and doomed. How does it not go broke?",
@@ -391,7 +397,8 @@ export const studio: Catalog = {
 
   // ── Accessibility (StudioAccessibilityPage) ───────────────────────────────
   "accessibility.hero.eyebrow": "Accessibility · the working list",
-  "accessibility.hero.title": "Music is for everyone or it <em>isn't music</em>.",
+  "accessibility.hero.title":
+    "Music is for everyone or it <em>isn't music</em>.",
   "accessibility.hero.lede":
     "This is both a statement of intent and a live checklist of what actually works today. Where something's <em>not</em> done yet, we say so — we'd rather be honest than aspirational.",
   "accessibility.statement.p1":
@@ -399,7 +406,8 @@ export const studio: Catalog = {
   "accessibility.statement.p2":
     "We test with real screen readers and real users — paid, from our own community — every release. <em>If something here doesn't work for you, that's a bug, and we want the report.</em>",
 
-  "accessibility.group.deaf.heading": "For Deaf & <em>hard-of-hearing</em> listeners",
+  "accessibility.group.deaf.heading":
+    "For Deaf & <em>hard-of-hearing</em> listeners",
   "accessibility.group.deaf.dek":
     "A music platform can't pretend everyone hears it the same way. So we caption the talk and surface the words.",
   "accessibility.item.captions.heading": "Captioned <em>live rooms</em>",
@@ -415,26 +423,31 @@ export const studio: Catalog = {
   "accessibility.item.signed.body":
     "Flagship council broadcasts include a Portuguese Sign Language (LGP) interpreter window. Expanding to weekly rooms next quarter.",
 
-  "accessibility.group.language.heading": "For listeners in <em>any language</em>",
+  "accessibility.group.language.heading":
+    "For listeners in <em>any language</em>",
   "accessibility.group.language.dek":
     "The catalogue is mostly in Portuguese, with songs in a dozen other languages. Words shouldn't be a wall.",
   "accessibility.item.translation.heading": "Lyric <em>translation</em>",
   "accessibility.item.translation.body":
     "Community translations sit beside the original. Show one or both at once. Translators are credited and <em>paid from the solidarity fund</em> — translation is labour.",
-  "accessibility.item.interfaceLang.heading": "Interface in <em>your language</em>",
+  "accessibility.item.interfaceLang.heading":
+    "Interface in <em>your language</em>",
   "accessibility.item.interfaceLang.body":
     "Studio's chrome ships in Portuguese, English, Spanish and French, with more added as members translate them. Set it in Settings → Captions & lyrics.",
 
-  "accessibility.group.lowVision.heading": "For low-vision & <em>keyboard</em> navigation",
+  "accessibility.group.lowVision.heading":
+    "For low-vision & <em>keyboard</em> navigation",
   "accessibility.group.lowVision.dek":
     "The whole player is operable without a mouse, and the dark theme is built to clear contrast — not just to look moody.",
   "accessibility.item.contrast.heading": "Contrast that <em>passes</em>",
   "accessibility.item.contrast.body":
     "Body text sits at 4.5:1 or better against the plum; interactive elements at 3:1 minimum, with a high-contrast mode that lifts everything further. Focus rings are always visible.",
-  "accessibility.item.screenReader.heading": "Screen-reader notes on the <em>player</em>",
+  "accessibility.item.screenReader.heading":
+    "Screen-reader notes on the <em>player</em>",
   "accessibility.item.screenReader.body":
     "The persistent transport announces track, artist, elapsed time, and <em>what this play pays the artist</em>. Tip and save are labelled buttons; the live tip feed is a polite ARIA live region, never a barrage.",
-  "accessibility.item.reducedMotion.heading": "Respects <em>reduced motion</em>",
+  "accessibility.item.reducedMotion.heading":
+    "Respects <em>reduced motion</em>",
   "accessibility.item.reducedMotion.body":
     "Every decorative animation — the pulse dot, the waveforms, the equaliser bars — stills itself when your system asks for reduced motion. Nothing essential moves.",
 
@@ -496,14 +509,14 @@ export const studio: Catalog = {
     "<strong>€7/mo</strong> is Studio only. <strong>€11/mo</strong> is the whole QueerPulse co-op — Studio plus Cinema, the Magazine, Gatherings, reading groups, and a vote at the annual assembly. One membership, every surface. Change tiers any month.",
   "help.faq.cancel.q": "How do I cancel?",
   "help.faq.cancel.a":
-    "One click in <a>Settings → Erase & exit</a>. No retention call, no \"are you sure\" loop, no winback emails. We think leaving should be as easy as arriving — that's the only honest way to ask you to stay.",
+    'One click in <a>Settings → Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving — that\'s the only honest way to ask you to stay.',
   "help.faq.dataSold.q": "Is my data sold or used to train anything?",
   "help.faq.dataSold.a":
     "<strong>Never.</strong> We don't sell, share, or train on what you listen to. Aggregate play counts feed the public ledger, but nothing that identifies you. Full detail in the <a>trust & terms</a> page.",
 
   "help.faq.getPaid.q": "When and how do I get paid?",
   "help.faq.getPaid.a":
-    "Monthly, on the 5th, with a €5 floor. SEPA or Stripe Connect. You see the per-stream rate that month, ledger entry numbers, and per-release breakdowns. Collaborators are paid <em>directly</em> — there's no \"main artist\" wallet. See <a>Payouts</a>.",
+    'Monthly, on the 5th, with a €5 floor. SEPA or Stripe Connect. You see the per-stream rate that month, ledger entry numbers, and per-release breakdowns. Collaborators are paid <em>directly</em> — there\'s no "main artist" wallet. See <a>Payouts</a>.',
   "help.faq.keepMasters.q": "Do I keep my masters?",
   "help.faq.keepMasters.a":
     "<strong>Always.</strong> You keep your masters and your rights. You can take any release down in a one-page, 14-day process with no retention loop — and past plays stay paid. See <a>Rights & takedown</a>.",
@@ -533,7 +546,8 @@ export const studio: Catalog = {
   "press.copyFailToast": "Could not copy",
   "press.downloadingPhotosToast": "Downloading press photos · hi-res",
   "press.downloadingPhotoToast": "Downloading photo · hi-res",
-  "press.accessRequestedToast": "Press access requested — we'll verify you once",
+  "press.accessRequestedToast":
+    "Press access requested — we'll verify you once",
   "press.eyebrow": "Auto-generated press kit · always current",
   "press.fact.from": "From",
   "press.fact.pronouns": "Pronouns",
@@ -658,7 +672,7 @@ export const studio: Catalog = {
   "rights.hero.eyebrow": "Your work · your call",
   "rights.hero.title": "Rights & <em>takedown</em>.",
   "rights.hero.dek":
-    "One page. Your masters are yours — you can take any release off Studio at any time, for any reason or none. No retention team, no exit survey, no \"are you sure\" loop designed to wear you down.",
+    'One page. Your masters are yours — you can take any release off Studio at any time, for any reason or none. No retention team, no exit survey, no "are you sure" loop designed to wear you down.',
 
   "rights.releases.heading": "Your <em>releases</em>",
   "rights.releases.liveCount_one": "{count} live",
@@ -675,7 +689,7 @@ export const studio: Catalog = {
   "rights.leavingCoop.body":
     "This page only removes individual releases. To close your artist account, end your sustainer membership, and request a full data export, that lives in <a>Settings → Erase & exit</a>. <em>Even then, past payouts are yours to keep</em> and we'll keep paying out any plays that already happened.",
 
-  "rights.takedownStartedToast": "\"{title}\" enters its 14-day removal window",
+  "rights.takedownStartedToast": '"{title}" enters its 14-day removal window',
   "rights.removalCancelledToast": "Removal cancelled — release stays up",
 
   // ── Takedown confirm modal (StudioTakedownModal) ──────────────────────────
@@ -683,7 +697,7 @@ export const studio: Catalog = {
   "rights.modal.eyebrow": "Confirm takedown",
   "rights.modal.title": "Take down <em>{title}</em>?",
   "rights.modal.body":
-    "It'll stop being served within 14 days. Existing links will resolve to a short \"this work has been withdrawn by the artist\" page. <em>You can re-publish it any time</em> — your masters never leave your hands.",
+    'It\'ll stop being served within 14 days. Existing links will resolve to a short "this work has been withdrawn by the artist" page. <em>You can re-publish it any time</em> — your masters never leave your hands.',
   "rights.modal.keepEarned":
     "<em>You keep everything already earned.</em> This release stays paid for every play up to removal, in the next cycle.",
   "rights.modal.confirmCta": "Take it down →",
@@ -715,7 +729,8 @@ export const studio: Catalog = {
   "withdrawn.visitArtistCta": "Visit the artist's page",
   "withdrawn.backToPlayerCta": "Back to the player",
   "withdrawn.still.heading": "Still <em>available</em> from this artist",
-  "withdrawn.still.sub": "What's left up, and what the council programmed instead",
+  "withdrawn.still.sub":
+    "What's left up, and what the council programmed instead",
 
   // ── Social-share end card (StudioEndCardPage) ─────────────────────────────
   "endCard.eyebrow": "A streaming co-op",

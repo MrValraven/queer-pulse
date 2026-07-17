@@ -17,19 +17,39 @@ export interface CouncilFact {
 export function buildFacts(t: TFunction): CouncilFact[] {
   return [
     {
-      v: <Translation i18nKey="studio:council.fact.seats.value" components={{ em: <em /> }} />,
+      v: (
+        <Translation
+          i18nKey="studio:council.fact.seats.value"
+          components={{ em: <em /> }}
+        />
+      ),
       l: t("studio:council.fact.seats.label"),
     },
     {
-      v: <Translation i18nKey="studio:council.fact.stipend.value" components={{ em: <em /> }} />,
+      v: (
+        <Translation
+          i18nKey="studio:council.fact.stipend.value"
+          components={{ em: <em /> }}
+        />
+      ),
       l: t("studio:council.fact.stipend.label"),
     },
     {
-      v: <Translation i18nKey="studio:council.fact.slates.value" components={{ em: <em /> }} />,
+      v: (
+        <Translation
+          i18nKey="studio:council.fact.slates.value"
+          components={{ em: <em /> }}
+        />
+      ),
       l: t("studio:council.fact.slates.label"),
     },
     {
-      v: <Translation i18nKey="studio:council.fact.election.value" components={{ em: <em /> }} />,
+      v: (
+        <Translation
+          i18nKey="studio:council.fact.election.value"
+          components={{ em: <em /> }}
+        />
+      ),
       l: t("studio:council.fact.election.label"),
     },
   ];

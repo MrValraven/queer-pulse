@@ -77,7 +77,10 @@ export function MessageModal({
   const remaining = 20 - text.trim().length;
 
   return (
-    <Shell onClose={onClose} ariaLabel={t("economy:housingModal.message.ariaLabel")}>
+    <Shell
+      onClose={onClose}
+      ariaLabel={t("economy:housingModal.message.ariaLabel")}
+    >
       {done ? (
         <div className={styles.success}>
           <div className={styles.successIcon}>
@@ -235,10 +238,9 @@ export function RecommendModal({
                   .filter(Boolean)
                   .join(" ")}
                 onClick={() => setStars(starValue)}
-                aria-label={t(
-                  "economy:housingModal.recommend.starAriaLabel",
-                  { count: starValue },
-                )}
+                aria-label={t("economy:housingModal.recommend.starAriaLabel", {
+                  count: starValue,
+                })}
               >
                 <FiStar />
               </button>

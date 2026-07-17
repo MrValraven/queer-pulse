@@ -39,7 +39,10 @@ export function buildPanels(
   links: { MENTAL: string; FORUM: string; LEGAL: string },
 ): Record<TabId, Block[]> {
   const { MENTAL, FORUM } = links;
-  const tag = (labelKey: string, kind: TagKind) => ({ label: t(labelKey), kind });
+  const tag = (labelKey: string, kind: TagKind) => ({
+    label: t(labelKey),
+    kind,
+  });
 
   return {
     immediate: [
@@ -237,7 +240,10 @@ export function buildPanels(
         num: 3,
         title: t("safety:hateCrime.support.step3.title"),
         desc: t("safety:hateCrime.support.step3.desc"),
-        link: { label: t("safety:hateCrime.support.directoryCta"), href: MENTAL },
+        link: {
+          label: t("safety:hateCrime.support.directoryCta"),
+          href: MENTAL,
+        },
       },
       {
         kind: "sectionHead",

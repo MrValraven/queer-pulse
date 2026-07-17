@@ -47,7 +47,9 @@ export function ExpressPay({ pf }: { pf: PaymentForm }) {
           </span>
         </button>
       </div>
-      <div className={s["co-or"]}>{t("gatherings:checkout.express.orPayByCard")}</div>
+      <div className={s["co-or"]}>
+        {t("gatherings:checkout.express.orPayByCard")}
+      </div>
     </>
   );
 }

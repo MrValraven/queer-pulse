@@ -67,7 +67,8 @@ export const governance: Catalog = {
 
   // ── Moderation ──────────────────────────────────────────────────────────
   "sections.moderation.eyebrow": "How moderation works",
-  "sections.moderation.title": "What happens when something <em>goes wrong.</em>",
+  "sections.moderation.title":
+    "What happens when something <em>goes wrong.</em>",
   "sections.moderation.intro":
     "QueerPulse is moderated by a small team of members who agreed to take on this role. They are accountable to the advisory council, and their decisions can be appealed.",
   "sections.moderation.wontTolerate.label": "What we won't tolerate:",
@@ -124,7 +125,8 @@ export const governance: Catalog = {
 
   // ── Finances ────────────────────────────────────────────────────────────
   "sections.finances.eyebrow": "Q2 2026 · Financial transparency",
-  "sections.finances.title": "What it costs, what comes in, <em>where it goes.</em>",
+  "sections.finances.title":
+    "What it costs, what comes in, <em>where it goes.</em>",
   "sections.finances.intro":
     "We publish our finances every quarter. QueerPulse is funded by the people who use it, and those people deserve to know exactly how money is raised and spent. No investor interests. No growth targets. No exit plan.",
   "sections.finances.incomeHeading": "Where money comes from",

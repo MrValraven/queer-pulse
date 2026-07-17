@@ -64,20 +64,23 @@ export function CinemaShortsCatalog({ shelf }: { shelf: ShortsShelf }) {
       const y = el.getBoundingClientRect().top + window.scrollY - 140;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
-    shelf.notify(`Try this one → ${pick.titleEm}`);
+    shelf.notify(
+      t("cinema:shorts.catalog.surpriseToast", { title: pick.titleEm }),
+    );
   };
 
   return (
     <>
       <SecDiv
         title={
-          <>
-            Browse the <em>full catalogue</em>
-          </>
+          <Translation
+            i18nKey="cinema:shorts.catalog.title"
+            components={{ em: <em /> }}
+          />
         }
-        sub="Every community film — filter, sort, and search your way in"
+        sub={t("cinema:shorts.catalog.sub")}
         actionTo={madeHere}
-        actionLabel="Open in Browse →"
+        actionLabel={t("cinema:shorts.catalog.cta")}
       />
 
       <div className={styles.browseTop}>
@@ -85,43 +88,49 @@ export function CinemaShortsCatalog({ shelf }: { shelf: ShortsShelf }) {
           <FiSearch aria-hidden />
           <input
             type="search"
-            placeholder="Search films, makers, or themes…"
-            aria-label="Search films"
+            placeholder={t("cinema:shorts.catalog.searchPlaceholder")}
+            aria-label={t("cinema:shorts.catalog.searchAriaLabel")}
             value={state.query}
             onChange={(e) => patch({ query: e.target.value })}
           />
         </label>
         <div className={styles.selWrap}>
-          <label htmlFor="qp-lang">Language</label>
+          <label htmlFor="qp-lang">
+            {t("cinema:shorts.catalog.languageLabel")}
+          </label>
           <select
             id="qp-lang"
-            aria-label="Filter by language"
+            aria-label={t("cinema:shorts.catalog.languageAriaLabel")}
             value={state.lang}
             onChange={(e) => patch({ lang: e.target.value })}
           >
-            {langOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+            {langOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {t(option.labelKey)}
               </option>
             ))}
           </select>
         </div>
         <div className={styles.selWrap}>
-          <label htmlFor="qp-sort">Sort</label>
+          <label htmlFor="qp-sort">
+            {t("cinema:shorts.catalog.sortLabel")}
+          </label>
           <select
             id="qp-sort"
-            aria-label="Sort films"
+            aria-label={t("cinema:shorts.catalog.sortAriaLabel")}
             value={state.sort}
             onChange={(e) => patch({ sort: e.target.value })}
           >
-            {sortOptions.map((o) => (
-              <option key={o}>{o}</option>
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {t(option.labelKey)}
+              </option>
             ))}
           </select>
         </div>
         <button type="button" className={styles.btnSurprise} onClick={surprise}>
           <FiZap aria-hidden />
-          Surprise me
+          {t("cinema:shorts.catalog.surpriseCta")}
         </button>
       </div>
 
@@ -149,16 +158,15 @@ export function CinemaShortsCatalog({ shelf }: { shelf: ShortsShelf }) {
             <span className={styles.esMark}>
               <FiFilm aria-hidden />
             </span>
-            <h3>Nothing matches — yet</h3>
-            <p>
-              No films fit that combination. Loosen a filter, or tell us what
-              you wish existed — we commission from member requests.
-            </p>
+            <h3>{t("cinema:shorts.catalog.empty.title")}</h3>
+            <p>{t("cinema:shorts.catalog.empty.body")}</p>
             <div className={styles.esActions}>
               <Button variant="ghost" onClick={clearAll}>
-                Clear filters
+                {t("cinema:shorts.catalog.empty.clearCta")}
               </Button>
-              <Button to={routes.cinemaSubmit}>Suggest a film</Button>
+              <Button to={routes.cinemaSubmit}>
+                {t("cinema:shorts.catalog.empty.suggestCta")}
+              </Button>
             </div>
           </div>
         ) : (
@@ -184,6 +192,7 @@ function CatalogFilters({
   onToggle: (key: string) => void;
   onClear: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.filterGroups}>
       <button
@@ -191,25 +200,27 @@ function CatalogFilters({
         className={`${styles.fChip} ${styles.all} ${!hasFilters ? styles.on : ""}`}
         onClick={onClear}
       >
-        All films
+        {t("cinema:shorts.catalog.allFilmsChip")}
       </button>
       {filterCatOrder.map((cat) => (
         <span key={cat} className={styles.fg}>
           <span className={styles.fgSep} aria-hidden />
-          <span className={styles.fgLabel}>{cat}</span>
+          <span className={styles.fgLabel}>
+            {t(FILTER_CAT_LABEL_KEYS[cat])}
+          </span>
           {shortFilters
             .filter((x) => x.cat === cat)
-            .map((x) => {
-              const on = active.includes(x.key);
+            .map((filter) => {
+              const on = active.includes(filter.key);
               return (
                 <button
-                  key={x.key}
+                  key={filter.key}
                   type="button"
                   aria-pressed={on}
-                  className={`${styles.fChip} ${x.jade ? styles.jade : ""} ${on ? styles.on : ""}`}
-                  onClick={() => onToggle(x.key)}
+                  className={`${styles.fChip} ${filter.jade ? styles.jade : ""} ${on ? styles.on : ""}`}
+                  onClick={() => onToggle(filter.key)}
                 >
-                  {x.label}
+                  {t(filter.labelKey)}
                 </button>
               );
             })}
@@ -236,12 +247,18 @@ function CatalogStatus({
   onRemoveQuery: () => void;
   onClear: () => void;
 }) {
-  const langLabel = langOptions.find((o) => o.value === state.lang)?.label;
+  const { t } = useTranslation();
+  const langLabelKey = langOptions.find(
+    (option) => option.value === state.lang,
+  )?.labelKey;
   return (
     <div className={styles.filterStatus} aria-live="polite">
       <span className={styles.fsCount}>
-        <em>{count}</em> {count === 1 ? "film" : "films"}{" "}
-        <span className={styles.free}>· all free to watch</span>
+        <Translation
+          i18nKey="cinema:shorts.catalog.count"
+          components={{ em: <em /> }}
+          values={{ count }}
+        />
       </span>
       {(state.active.length > 0 || state.lang || state.query) && (
         <div className={styles.pillRow}>
@@ -252,17 +269,20 @@ function CatalogStatus({
               className={styles.actPill}
               onClick={() => onRemove(k)}
             >
-              {filterByKey.get(k)?.label}
+              {(() => {
+                const labelKey = filterByKey.get(k)?.labelKey;
+                return labelKey ? t(labelKey) : k;
+              })()}
               <FiX aria-hidden />
             </button>
           ))}
-          {state.lang && langLabel && (
+          {state.lang && langLabelKey && (
             <button
               type="button"
               className={styles.actPill}
               onClick={onRemoveLang}
             >
-              {langLabel}
+              {t(langLabelKey)}
               <FiX aria-hidden />
             </button>
           )}

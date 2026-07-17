@@ -48,7 +48,9 @@ export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
         }
         sub={t("cinema:shorts.shelf.becauseYouTipped.sub", { maker: "Rui" })}
         actionTo={`${routes.cinemaFilmmaker}/rui-almeida`}
-        actionLabel={t("cinema:shorts.shelf.becauseYouTipped.cta", { maker: "Rui" })}
+        actionLabel={t("cinema:shorts.shelf.becauseYouTipped.cta", {
+          maker: "Rui",
+        })}
       />
       <ShortGrid films={because} shelf={shelf} />
     </>

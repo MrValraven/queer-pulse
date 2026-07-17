@@ -60,7 +60,9 @@ export function IssueCover({
               <p className={styles.dek}>{dek}</p>
               <div className={styles.stats}>
                 <span>
-                  <b>{t("magazine:issue.stats.featuresCount", { count: 12 })}</b>
+                  <b>
+                    {t("magazine:issue.stats.featuresCount", { count: 12 })}
+                  </b>
                 </span>
                 <span>
                   <b>{t("magazine:issue.stats.pagesCount", { count: 84 })}</b>

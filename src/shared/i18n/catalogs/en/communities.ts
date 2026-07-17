@@ -78,7 +78,8 @@ export const communities: Catalog = {
   "hub.todos.reports_other": "{count} reports",
   "hub.pulse.label": "Your pulse",
   "hub.pulse.empty.title": "Quiet for now",
-  "hub.pulse.empty.description": "When your communities post, it shows up here.",
+  "hub.pulse.empty.description":
+    "When your communities post, it shows up here.",
   "hub.sidebar.yourCommunities": "Your communities",
   "hub.sidebar.discoverMore": "Discover more",
   "hub.sidebar.upcoming": "Upcoming in your communities",
@@ -129,7 +130,8 @@ export const communities: Catalog = {
   "detail.members.showingCore": "Showing the core members",
 
   // ── Forum tab (fallback hub) + community thread ──────────────────────────
-  "detail.forum.newPostPlaceholder": "Start a new discussion in this community…",
+  "detail.forum.newPostPlaceholder":
+    "Start a new discussion in this community…",
   "detail.forum.postCta": "Post",
   "detail.forum.postedToast": "Post added to the community forum.",
   "detail.thread.replies_one": "{count} reply",
@@ -186,7 +188,8 @@ export const communities: Catalog = {
   "detail.modtools.members.removeCta": "Remove from community",
   "detail.modtools.members.ownerTag": "Owner",
   "detail.modtools.toast.approved": "{name} approved — welcome them in.",
-  "detail.modtools.toast.declined": "{name}'s request wasn't approved this time.",
+  "detail.modtools.toast.declined":
+    "{name}'s request wasn't approved this time.",
   "detail.modtools.toast.postRemoved":
     "Post removed. The author has been reached.",
   "detail.modtools.toast.reportDismissed": "Report dismissed.",
@@ -348,7 +351,8 @@ export const communities: Catalog = {
   // ── Chapter 0 — Opening ────────────────────────────────────────────────────
   "start.opening.reassure":
     "<strong>Nothing you do here is public until the last step.</strong> Take your time, skip what you're unsure about, and change your mind as often as you like. Founding a community is a big, generous thing — there's no wrong way to start.",
-  "start.opening.signed": "You'll be its first steward, <strong>{name}</strong>.",
+  "start.opening.signed":
+    "You'll be its first steward, <strong>{name}</strong>.",
 
   // ── Chapter 1 — Why ────────────────────────────────────────────────────────
   "start.why.nameLabel": "Name your community",
@@ -398,7 +402,8 @@ export const communities: Catalog = {
   "start.access.invite.find":
     "Listed, but the door needs a code or an invite link.",
   "start.access.invite.join": "Only people you've invited can get in.",
-  "start.access.invite.note": "For tighter circles that still want to be visible.",
+  "start.access.invite.note":
+    "For tighter circles that still want to be visible.",
   "start.access.private.name": "Private & unlisted",
   "start.access.private.find":
     "Hidden from Discover entirely. Members share it person to person.",
@@ -449,7 +454,8 @@ export const communities: Catalog = {
     "Treat everyone with warmth and respect — no bigotry, ever.",
   "start.rulePreset.confidentiality":
     "What's shared here stays here. No screenshots, no outing.",
-  "start.rulePreset.consent": "Consent first. Ask before photos, tags, or intros.",
+  "start.rulePreset.consent":
+    "Consent first. Ask before photos, tags, or intros.",
   "start.rulePreset.welcome": "Newcomers get a welcome, not a test.",
 
   // ── Enforcement ladder ─────────────────────────────────────────────────────
@@ -518,7 +524,8 @@ export const communities: Catalog = {
   "start.preview.purposePlaceholder": "What is this space for?",
   "start.preview.insideLabel": "What's inside",
   "start.preview.foundingMembers": "Founding members",
-  "start.preview.footNote": "Nothing is public yet — this is only visible to you.",
+  "start.preview.footNote":
+    "Nothing is public yet — this is only visible to you.",
   "start.preview.handleFallback": "your-community",
 
   // ── Category options (wizard "What kind of space?" chips + badges) ───────
@@ -540,7 +547,8 @@ export const communities: Catalog = {
   "start.success.title": "Your doors are",
   "start.success.em": "open.",
   "start.success.closeLabel": "Step inside →",
-  "start.success.liveYours": "<strong>{name}</strong> is live and yours to steward.",
+  "start.success.liveYours":
+    "<strong>{name}</strong> is live and yours to steward.",
   "start.success.invitesOnWay_one": "{count} warm invite is on the way.",
   "start.success.invitesOnWay_other": "{count} warm invites are on the way.",
   "start.success.inviteWheneverReady":

@@ -27,7 +27,9 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
 
   return (
     <>
-      <div className={s["co-sec"]}>{t("gatherings:checkout.billing.heading")}</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.billing.heading")}
+      </div>
       <div className={s["co-grid-2"]}>
         <div className={s["co-field"]}>
           <label className={s["co-lbl"]} htmlFor="billCountry">
@@ -98,7 +100,9 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
                 className={s["co-in"]}
                 id="vatCompany"
                 type="text"
-                placeholder={t("gatherings:checkout.billing.companyPlaceholder")}
+                placeholder={t(
+                  "gatherings:checkout.billing.companyPlaceholder",
+                )}
               />
             </div>
             <div className={s["co-field"]}>
@@ -109,7 +113,9 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
                 className={s["co-in"]}
                 id="vatNumber"
                 type="text"
-                placeholder={t("gatherings:checkout.billing.vatNumberPlaceholder")}
+                placeholder={t(
+                  "gatherings:checkout.billing.vatNumberPlaceholder",
+                )}
               />
             </div>
           </div>

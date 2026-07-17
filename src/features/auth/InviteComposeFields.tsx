@@ -27,9 +27,7 @@ export function InviteComposeFields({
       <div className={styles.field}>
         <label>
           {t("auth:invite.compose.vouch.label")}{" "}
-          <span style={optionalStyle}>
-            {t("auth:common.optionalSuffix")}
-          </span>
+          <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
         </label>
         <textarea
           maxLength={280}
@@ -43,9 +41,7 @@ export function InviteComposeFields({
       <div className={styles.field}>
         <label>
           {t("auth:invite.compose.note.label")}{" "}
-          <span style={optionalStyle}>
-            {t("auth:common.optionalSuffix")}
-          </span>
+          <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
         </label>
         <textarea
           maxLength={200}

@@ -364,6 +364,8 @@ export const admin: Catalog = {
   "moderation.chip.vouchAbuse": "Abuso de avais",
   "moderation.chip.spam": "Spam",
   "moderation.chip.offTopic": "Fora do tópico",
+  "moderation.chip.appeal": "Recurso",
+  "moderation.chip.identityShielded": "Identidade protegida",
   "moderation.chip.appealRestriction": "Recurso · restrição",
   "moderation.chip.appealRemoval": "Recurso · remoção",
   "moderation.chip.appealWarning": "Recurso · aviso",

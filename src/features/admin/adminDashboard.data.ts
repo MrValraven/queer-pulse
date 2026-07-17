@@ -48,7 +48,11 @@ export const METRICS: StatCard[] = [
     icon: FiUsers,
     value: 8412,
     comma: true,
-    trend: { dir: "up", key: "admin:dashboard.metrics.trendPercent", values: { value: "3.9" } },
+    trend: {
+      dir: "up",
+      key: "admin:dashboard.metrics.trendPercent",
+      values: { value: "3.9" },
+    },
     footKey: "admin:dashboard.metrics.footGrowth",
     footValues: { count: 312 },
   },
@@ -56,7 +60,11 @@ export const METRICS: StatCard[] = [
     labelKey: "admin:dashboard.metrics.openReports.label",
     icon: FiShield,
     value: 23,
-    trend: { dir: "warn", key: "admin:dashboard.metrics.trendOldest", values: { hours: "14h" } },
+    trend: {
+      dir: "warn",
+      key: "admin:dashboard.metrics.trendOldest",
+      values: { hours: "14h" },
+    },
     footKey: "admin:dashboard.metrics.footEmergencies",
     footValues: { count: 2 },
   },
@@ -76,7 +84,11 @@ export const METRICS: StatCard[] = [
     value: 23150,
     comma: true,
     prefix: "€",
-    trend: { dir: "up", key: "admin:dashboard.metrics.trendPercent", values: { value: "4.1" } },
+    trend: {
+      dir: "up",
+      key: "admin:dashboard.metrics.trendPercent",
+      values: { value: "4.1" },
+    },
     footKey: "admin:dashboard.metrics.footSustainers",
     footValues: { count: 1842 },
   },
@@ -163,10 +175,26 @@ export const WEEK_LABEL_KEYS: Partial<Record<string, string>> = {
 
 /** i18n Pattern A — `id` is a stable React key, `labelKey` resolves the legend text. */
 export const REPORT_SERIES = [
-  { id: "outing", labelKey: "admin:dashboard.charts.series.outing", color: "var(--danger)" },
-  { id: "harassment", labelKey: "admin:dashboard.charts.series.harassment", color: "var(--accent)" },
-  { id: "spam", labelKey: "admin:dashboard.charts.series.spam", color: "var(--amber)" },
-  { id: "vouchAbuse", labelKey: "admin:dashboard.charts.series.vouchAbuse", color: "var(--violet)" },
+  {
+    id: "outing",
+    labelKey: "admin:dashboard.charts.series.outing",
+    color: "var(--danger)",
+  },
+  {
+    id: "harassment",
+    labelKey: "admin:dashboard.charts.series.harassment",
+    color: "var(--accent)",
+  },
+  {
+    id: "spam",
+    labelKey: "admin:dashboard.charts.series.spam",
+    color: "var(--amber)",
+  },
+  {
+    id: "vouchAbuse",
+    labelKey: "admin:dashboard.charts.series.vouchAbuse",
+    color: "var(--violet)",
+  },
 ] as const;
 
 // ── Member growth line ──────────────────────────────────────────────────────

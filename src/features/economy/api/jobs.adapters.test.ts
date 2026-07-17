@@ -100,7 +100,8 @@ describe("formatPay", () => {
 
 describe("parseDeadline", () => {
   it("null → null", () => expect(parseDeadline(null)).toBeNull());
-  it("invalid ISO → null", () => expect(parseDeadline("not-a-date")).toBeNull());
+  it("invalid ISO → null", () =>
+    expect(parseDeadline("not-a-date")).toBeNull());
   it("valid ISO → a Date", () =>
     expect(parseDeadline("2026-06-30")?.getUTCFullYear()).toBe(2026));
 });

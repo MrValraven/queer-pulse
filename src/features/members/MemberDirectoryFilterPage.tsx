@@ -119,7 +119,9 @@ export function MemberDirectoryFilterPage() {
           <MemberHeaderSkeleton />
         ) : (
           <FadeIn as="header" className={styles.head}>
-            <div className={styles.eyebrow}>{t("members:directory.eyebrow")}</div>
+            <div className={styles.eyebrow}>
+              {t("members:directory.eyebrow")}
+            </div>
             <h1 className={styles.h1}>
               {t("members:directory.findPrefix")}
               <em>
@@ -165,7 +167,8 @@ export function MemberDirectoryFilterPage() {
                 <b>
                   <em>{filtered.length.toLocaleString()}</em>
                 </b>{" "}
-                {t("members:directory.showingOf")} {totalMembers.toLocaleString()}{" "}
+                {t("members:directory.showingOf")}{" "}
+                {totalMembers.toLocaleString()}{" "}
                 {t("members:directory.memberCountLabel", {
                   count: totalMembers,
                 })}
@@ -220,9 +223,7 @@ export function MemberDirectoryFilterPage() {
                 <EmptyState
                   icon={<FiSearch />}
                   title={t("members:directory.emptyFiltered.title")}
-                  description={t(
-                    "members:directory.emptyFiltered.description",
-                  )}
+                  description={t("members:directory.emptyFiltered.description")}
                   action={{
                     label: t("members:directory.clearFiltersCta"),
                     onClick: () => {

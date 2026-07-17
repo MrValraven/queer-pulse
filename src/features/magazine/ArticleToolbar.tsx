@@ -80,7 +80,9 @@ export function ArticleToolbar({
       readTime: articleReadTime,
     });
     showToast(
-      next ? t("magazine:toolbar.savedToast") : t("magazine:toolbar.removedToast"),
+      next
+        ? t("magazine:toolbar.savedToast")
+        : t("magazine:toolbar.removedToast"),
       next ? "success" : "info",
     );
   }
@@ -149,7 +151,11 @@ export function ArticleToolbar({
           aria-hidden
           style={{ fill: saved ? "currentColor" : "none" }}
         />
-        <span>{saved ? t("magazine:toolbar.savedCta") : t("magazine:toolbar.saveCta")}</span>
+        <span>
+          {saved
+            ? t("magazine:toolbar.savedCta")
+            : t("magazine:toolbar.saveCta")}
+        </span>
       </button>
 
       <button

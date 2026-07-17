@@ -72,7 +72,8 @@ export function PlannedCard({ item }: { item: PlannedItem }) {
 
   function toggleVote() {
     setVoted((prev) => {
-      if (!prev) showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
+      if (!prev)
+        showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
       return !prev;
     });
   }

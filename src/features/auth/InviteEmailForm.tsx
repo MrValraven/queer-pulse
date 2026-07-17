@@ -154,7 +154,9 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
         </FormField>
       </div>
 
-      <div className={styles.epLabel}>{t("auth:invite.email.preview.label")}</div>
+      <div className={styles.epLabel}>
+        {t("auth:invite.email.preview.label")}
+      </div>
       <div className={styles.emailPreview}>
         <div className={styles.epContent}>
           <div className={styles.epBrand}>
@@ -193,9 +195,7 @@ export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
           {draftState === "idle" && t("auth:invite.email.saveAsDraft")}
         </Button>
       </div>
-      <div className={styles.formNote}>
-        {t("auth:invite.email.formNote")}
-      </div>
+      <div className={styles.formNote}>{t("auth:invite.email.formNote")}</div>
     </form>
   );
 }

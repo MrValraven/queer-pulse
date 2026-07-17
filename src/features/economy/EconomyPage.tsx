@@ -23,7 +23,10 @@ export function EconomyPage() {
         <div className="wrap">
           <div className={styles.cat}>{t("economy:hub.eyebrow")}</div>
           <h1>
-            <Translation i18nKey="economy:hub.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="economy:hub.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.lead}>{t("economy:hub.lead")}</p>
           <div className={styles.tabs}>
@@ -53,7 +56,10 @@ export function EconomyPage() {
 
       <Outro
         title={
-          <Translation i18nKey="economy:hub.outro.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="economy:hub.outro.title"
+            components={{ em: <em /> }}
+          />
         }
         sub={t("economy:hub.outro.sub")}
       >

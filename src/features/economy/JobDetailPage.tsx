@@ -41,7 +41,9 @@ export function JobDetailPage() {
       <PageShell>
         <div className={styles.page}>
           <div className={styles.breadcrumb}>
-            <Link to={routes.jobs}>{t("economy:jobDetail.breadcrumb.jobs")}</Link>
+            <Link to={routes.jobs}>
+              {t("economy:jobDetail.breadcrumb.jobs")}
+            </Link>
           </div>
           <JobDetailSkeleton />
         </div>
@@ -72,9 +74,7 @@ export function JobDetailPage() {
     setSaved((s) => {
       showToast(
         t(
-          s
-            ? "economy:jobDetail.unsavedToast"
-            : "economy:jobDetail.savedToast",
+          s ? "economy:jobDetail.unsavedToast" : "economy:jobDetail.savedToast",
         ),
         "info",
       );

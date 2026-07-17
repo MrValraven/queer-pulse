@@ -106,7 +106,10 @@ function ConnectionMoreMenu({
       icon: <FiFlag />,
       danger: true,
       run: () =>
-        showToast(t("connect:moreMenu.toastReportSent", { name: first }), "info"),
+        showToast(
+          t("connect:moreMenu.toastReportSent", { name: first }),
+          "info",
+        ),
     },
   ];
 
@@ -343,7 +346,9 @@ export function IncomingCard({
             values={{ count: mutuals }}
           />
         ) : (
-          <span className={styles.metaMuted}>{t("connect:card.noMutuals")}</span>
+          <span className={styles.metaMuted}>
+            {t("connect:card.noMutuals")}
+          </span>
         )}
         {sentAgo && (
           <Translation
@@ -410,9 +415,13 @@ export function BlockedCard({
   return (
     <div className={`${styles.card} ${styles.blocked}`}>
       <CardHead view={view} />
-      <span className={styles.blockedBadge}>{t("connect:card.blockedBadge")}</span>
+      <span className={styles.blockedBadge}>
+        {t("connect:card.blockedBadge")}
+      </span>
       <div className={styles.meta}>
-        <span className={styles.metaMuted}>{t("connect:card.cantMessage")}</span>
+        <span className={styles.metaMuted}>
+          {t("connect:card.cantMessage")}
+        </span>
       </div>
       <div className={styles.actions}>
         <Button type="button" variant="ghost" onClick={onUnblock}>

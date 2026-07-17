@@ -22,7 +22,8 @@ export const messages: Catalog = {
   "thread.searchPlaceholder": "Search conversations…",
   "thread.searchAria": "Search conversations",
   "thread.emptySearchTitle": "No conversations found",
-  "thread.emptySearchDescription": "No one matches “{query}”. Try a different name.",
+  "thread.emptySearchDescription":
+    "No one matches “{query}”. Try a different name.",
   "thread.clearSearch": "Clear search",
   "thread.emptyTitle": "No conversations yet",
   "thread.emptyDescription":

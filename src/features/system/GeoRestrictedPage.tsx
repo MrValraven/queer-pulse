@@ -62,7 +62,9 @@ export function GeoRestrictedPage() {
           </svg>
         </div>
 
-        <div className={styles.eyebrow}>{t("system:geoRestricted.eyebrow")}</div>
+        <div className={styles.eyebrow}>
+          {t("system:geoRestricted.eyebrow")}
+        </div>
         <h1 className={styles.h1}>
           <Translation
             i18nKey="system:geoRestricted.h1"
@@ -87,7 +89,9 @@ export function GeoRestrictedPage() {
         </div>
 
         <div className={styles.can}>
-          <h3 className={styles.canTitle}>{t("system:geoRestricted.can.title")}</h3>
+          <h3 className={styles.canTitle}>
+            {t("system:geoRestricted.can.title")}
+          </h3>
           <div className={styles.canList}>
             {CAN_DO.map((item) => (
               <div key={item.labelKey} className={styles.canRow}>

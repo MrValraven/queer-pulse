@@ -8,7 +8,9 @@ import { routes } from "../../app/routeMap";
 function FilmEntry({ film }: { film: CollectionFilm }) {
   const { t } = useTranslation();
   const watchLabel = t(
-    film.free ? "cinema:collection.films.watchCta" : "cinema:collection.films.watchNowCta",
+    film.free
+      ? "cinema:collection.films.watchCta"
+      : "cinema:collection.films.watchNowCta",
   );
   return (
     <div className={styles.entry}>

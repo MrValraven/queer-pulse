@@ -372,7 +372,7 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.heading": "Encontra as tuas <em>comunidades</em>",
   "onboarding.stepCommunities.body":
     "Grupos que talvez gostes, com base nos teus interesses.",
-  "onboarding.stepCommunities.join": "Juntar-te",
+  "onboarding.stepCommunities.join": "Junta-te",
   "onboarding.stepCommunities.joined": "Já estás dentro",
   "onboarding.stepCommunities.continue": "Continuar",
   "onboarding.stepCommunities.skip":

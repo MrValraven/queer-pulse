@@ -126,7 +126,9 @@ export function StageMenu({
   return (
     <>
       <div className={styles.popHead}>
-        {t("magazine:editor.popover.movePiece", { title: stripEm(piece.title) })}
+        {t("magazine:editor.popover.movePiece", {
+          title: stripEm(piece.title),
+        })}
       </div>
       {PIPELINE.map((s, i) => {
         const cur = s === piece.stage;

@@ -213,7 +213,9 @@ export function VouchForm({
         </>
       )}
 
-      <div className={styles.label}>{t("members:vouch.modal.form.noteLabel")}</div>
+      <div className={styles.label}>
+        {t("members:vouch.modal.form.noteLabel")}
+      </div>
       <textarea
         className={styles.textarea}
         placeholder={t("members:vouch.modal.form.notePlaceholder", { first })}

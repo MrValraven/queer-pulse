@@ -49,15 +49,20 @@ export function PitchTrackerPage() {
 
   function withdraw(pitch: Pitch) {
     setWithdrawn((prev) => new Set(prev).add(pitch.id));
-    showToast(t("magazine:pitchTracker.page.withdrawnToast"), "info", undefined, {
-      label: t("magazine:pitchTracker.page.undoCta"),
-      onClick: () =>
-        setWithdrawn((prev) => {
-          const nextSet = new Set(prev);
-          nextSet.delete(pitch.id);
-          return nextSet;
-        }),
-    });
+    showToast(
+      t("magazine:pitchTracker.page.withdrawnToast"),
+      "info",
+      undefined,
+      {
+        label: t("magazine:pitchTracker.page.undoCta"),
+        onClick: () =>
+          setWithdrawn((prev) => {
+            const nextSet = new Set(prev);
+            nextSet.delete(pitch.id);
+            return nextSet;
+          }),
+      },
+    );
   }
 
   function stub(label: string) {

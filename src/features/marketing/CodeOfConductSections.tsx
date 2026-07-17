@@ -304,7 +304,11 @@ export function CocChangesSection({
         </h2>
         <p>
           {t("marketing:coc.changes.p1", {
-            date: fmt.date(PUBLISHED_DATE, { day: "numeric", month: "long", year: "numeric" }),
+            date: fmt.date(PUBLISHED_DATE, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
           })}
         </p>
         <ul className={styles.list}>
@@ -358,8 +362,8 @@ export function CocChangesSection({
             year: "numeric",
           }),
         })}{" "}
-        · <a onClick={onDownload}>{t("marketing:coc.version.downloadCta")}</a>{" "}
-        · {t("marketing:coc.version.readManifesto")}
+        · <a onClick={onDownload}>{t("marketing:coc.version.downloadCta")}</a> ·{" "}
+        {t("marketing:coc.version.readManifesto")}
       </div>
     </>
   );

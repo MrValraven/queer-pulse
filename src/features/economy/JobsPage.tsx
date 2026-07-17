@@ -212,7 +212,9 @@ export function JobsPage() {
             <span className={styles.badge}>
               <FiCheck /> {t("economy:jobs.badge.verified")}
             </span>
-            <span className={styles.badge}>{t("economy:jobs.badge.location")}</span>
+            <span className={styles.badge}>
+              {t("economy:jobs.badge.location")}
+            </span>
           </Reveal>
         </div>
       </div>

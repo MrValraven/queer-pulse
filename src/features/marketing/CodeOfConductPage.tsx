@@ -55,7 +55,10 @@ export function CodeOfConductPage() {
     <PageShell>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <HubBackLink to={routes.governance} label={t("marketing:coc.hero.backLabel")} />
+          <HubBackLink
+            to={routes.governance}
+            label={t("marketing:coc.hero.backLabel")}
+          />
           <div className={styles.eyebrow}>
             {t("marketing:coc.hero.eyebrow", { date: versionDate })}
           </div>

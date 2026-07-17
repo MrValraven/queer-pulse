@@ -91,7 +91,9 @@ export function RequestInviteForm({
       <FormField
         label={t("auth:requestInvite.field.email.label")}
         required
-        error={emailError ? t("auth:requestInvite.field.email.error") : undefined}
+        error={
+          emailError ? t("auth:requestInvite.field.email.error") : undefined
+        }
       >
         <input
           id="ri-email"

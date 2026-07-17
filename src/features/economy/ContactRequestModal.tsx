@@ -64,7 +64,9 @@ export function ContactRequestModal({
     <ModalShell onClose={onClose} success={done}>
       {done ? (
         <SuccessPanel
-          title={successTitle ?? t("economy:contactRequest.defaultSuccessTitle")}
+          title={
+            successTitle ?? t("economy:contactRequest.defaultSuccessTitle")
+          }
           em={successEm ?? t("economy:contactRequest.defaultSuccessEm")}
           onClose={onClose}
           closeLabel={t("economy:contactRequest.done")}
@@ -126,7 +128,8 @@ export function ContactRequestModal({
               {sending ? (
                 <Sending
                   label={
-                    sendingLabel ?? t("economy:contactRequest.defaultSendingLabel")
+                    sendingLabel ??
+                    t("economy:contactRequest.defaultSendingLabel")
                   }
                 />
               ) : (

@@ -296,8 +296,7 @@ export function useMyEventsState(): MyEventsValue {
       const id = scope.evId;
       setScope((s) => ({ ...s, open: false }));
       if (!id) return;
-      if (which === "one")
-        softRemove(id, t("myevents:toast.skippedThisOne"));
+      if (which === "one") softRemove(id, t("myevents:toast.skippedThisOne"));
       else softRemove(id, t("myevents:toast.leftWholeSeries"));
     },
     [scope.evId, softRemove, t],

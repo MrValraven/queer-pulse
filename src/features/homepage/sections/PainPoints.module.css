@@ -32,7 +32,7 @@
   box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.18);
 }
 .title {
-  max-width: 22ch;
+  max-width: 25ch;
   margin: 0 auto;
   font-family: var(--serif);
   font-weight: 400;

@@ -46,7 +46,7 @@ export const forum: Catalog = {
   "hero.lead":
     "A única comunidade a que todas as pessoas aqui pertencem — perguntas, propostas, guias, e o trabalho lento de construir um movimento. Cuidem-se. Estás à procura de uma sala mais pequena?",
   "hero.findCommunitiesCta": "Encontra as tuas comunidades →",
-  "newPostCta": "+ Nova publicação",
+  newPostCta: "+ Nova publicação",
 
   // ── ForumSidebar ────────────────────────────────────────────────────────
   "sidebar.categoriesLabel": "Categorias",
@@ -103,8 +103,8 @@ export const forum: Catalog = {
   "threadList.removeUpvoteAria": "Remover voto",
 
   // ── Frase partilhada de contagem de respostas ────────────────────────────
-  "repliesCount_one": "{formatted} resposta",
-  "repliesCount_other": "{formatted} respostas",
+  repliesCount_one: "{formatted} resposta",
+  repliesCount_other: "{formatted} respostas",
 
   // ── ReportReplyModal ────────────────────────────────────────────────────
   "reportReply.confirmTitle": "Obrigade — <em>estamos a tratar disso.</em>",

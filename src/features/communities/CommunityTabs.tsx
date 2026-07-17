@@ -31,7 +31,9 @@ export function AboutTab({ detail }: { detail: CommunityDetail }) {
         </p>
       ))}
 
-      <div className={styles.secLbl}>{t("communities:detail.about.whoFor")}</div>
+      <div className={styles.secLbl}>
+        {t("communities:detail.about.whoFor")}
+      </div>
       {detail.whoFor.map((w) => (
         <div className={styles.bullet} key={w}>
           <div className={styles.bulletDot} />

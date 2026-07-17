@@ -52,9 +52,7 @@ export function PostOpportunityRichFields({
             rows={3}
             value={state.goodFor}
             onChange={(e) => set("goodFor", e.target.value)}
-            placeholder={t(
-              "marketing:postOpportunity.rich.goodForPlaceholder",
-            )}
+            placeholder={t("marketing:postOpportunity.rich.goodForPlaceholder")}
           />
         </FormField>
 
@@ -71,10 +69,9 @@ export function PostOpportunityRichFields({
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskTitlePlaceholder",
                 )}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.taskTitleAria",
-                  { index: i + 1 },
-                )}
+                aria-label={t("marketing:postOpportunity.rich.taskTitleAria", {
+                  index: i + 1,
+                })}
               />
               <input
                 type="text"
@@ -83,10 +80,9 @@ export function PostOpportunityRichFields({
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskDetailPlaceholder",
                 )}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.taskDetailAria",
-                  { index: i + 1 },
-                )}
+                aria-label={t("marketing:postOpportunity.rich.taskDetailAria", {
+                  index: i + 1,
+                })}
               />
             </div>
             {state.tasks.length > 1 && (
@@ -94,10 +90,9 @@ export function PostOpportunityRichFields({
                 type="button"
                 className={styles.repRemove}
                 onClick={() => removeTask(i)}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.taskRemoveAria",
-                  { index: i + 1 },
-                )}
+                aria-label={t("marketing:postOpportunity.rich.taskRemoveAria", {
+                  index: i + 1,
+                })}
               >
                 <FiX aria-hidden />
               </button>
@@ -223,9 +218,7 @@ export function PostOpportunityRichFields({
             type="text"
             value={state.handle}
             onChange={(e) => set("handle", e.target.value)}
-            placeholder={t(
-              "marketing:postOpportunity.rich.handlePlaceholder",
-            )}
+            placeholder={t("marketing:postOpportunity.rich.handlePlaceholder")}
           />
         </FormField>
       </div>

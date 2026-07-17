@@ -9,7 +9,8 @@ import type { Catalog } from "../../types";
  */
 export const homepage: Catalog = {
   // ── Page meta ──────────────────────────────────────────────────────────────
-  "meta.title": "QueerPulse — Lisbon's queer community, online and in real life",
+  "meta.title":
+    "QueerPulse — Lisbon's queer community, online and in real life",
   "meta.description":
     "An invite-only network for LGBTQ+ people in Lisbon — gatherings, communities, skill swaps, and support, built by and for the people who use it.",
 
@@ -62,7 +63,7 @@ export const homepage: Catalog = {
     "Every feature here started as something we wished already existed.",
 
   "painPoints.hero1.eyebrow": "The gap we felt first",
-  "painPoints.hero1.question": "\"Where do I even meet people who get it?\"",
+  "painPoints.hero1.question": '"Where do I even meet people who get it?"',
   "painPoints.hero1.heading": "So we built <em>the network.</em>",
   "painPoints.hero1.body":
     "Every member here is vouched for by someone already inside — no swiping, no cold DMs, no proving yourself to strangers.",
@@ -72,35 +73,35 @@ export const homepage: Catalog = {
   "painPoints.marker1": "Once you're in the room, more doors open.",
 
   "painPoints.exchange1.question":
-    "\"I need a favour, but I don't know who to ask.\"",
+    '"I need a favour, but I don\'t know who to ask."',
   "painPoints.exchange1.heading": "So we built <em>the board.</em>",
   "painPoints.exchange1.body":
     "Post what you need or what you can offer — from a spare room to a same-day translation — and let the community answer.",
   "painPoints.exchange1.cta": "Browse the board",
 
   "painPoints.exchange2.question":
-    "\"I want to spend my money with people like me.\"",
+    '"I want to spend my money with people like me."',
   "painPoints.exchange2.heading": "So we built <em>the directory.</em>",
   "painPoints.exchange2.body":
     "Queer-owned shops, studios, and services across Lisbon — easy to find, easy to support.",
   "painPoints.exchange2.cta": "Browse the directory",
 
   "painPoints.exchange3.question":
-    "\"I want to host something, I just don't know how.\"",
+    '"I want to host something, I just don\'t know how."',
   "painPoints.exchange3.heading": "So we built <em>a way to host.</em>",
   "painPoints.exchange3.body":
     "A step-by-step guide to running your first supper club, workshop, or screening — with community support behind you.",
   "painPoints.exchange3.cta": "Start hosting",
 
   "painPoints.exchange4.question":
-    "\"I have a skill to teach — and one I want to learn.\"",
+    '"I have a skill to teach — and one I want to learn."',
   "painPoints.exchange4.heading": "So we built <em>skill swaps.</em>",
   "painPoints.exchange4.body":
     "Trade what you know for what you need. No invoices, no algorithm — just people teaching each other.",
   "painPoints.exchange4.cta": "Explore skill swaps",
 
   "painPoints.hero2.eyebrow": "The gap we felt hardest",
-  "painPoints.hero2.question": "\"What happens if something goes wrong?\"",
+  "painPoints.hero2.question": '"What happens if something goes wrong?"',
   "painPoints.hero2.heading": "So we built <em>a safety net.</em>",
   "painPoints.hero2.body":
     "Therapists who get it, peer support that doesn't judge, and crisis lines that pick up — all vetted by the community that needs them.",
@@ -110,19 +111,19 @@ export const homepage: Catalog = {
   "painPoints.marker2": "And beyond the room, the harder questions.",
 
   "painPoints.exchange5.question":
-    "\"I want to do something, not just post about it.\"",
+    '"I want to do something, not just post about it."',
   "painPoints.exchange5.heading": "So we built <em>a way to act.</em>",
   "painPoints.exchange5.body":
     "Local campaigns, mutual aid, and organising — real ways to move something, together.",
   "painPoints.exchange5.cta": "See what's moving",
 
-  "painPoints.exchange6.question": "\"Do I actually know my rights here?\"",
+  "painPoints.exchange6.question": '"Do I actually know my rights here?"',
   "painPoints.exchange6.heading": "So we built <em>plain-language guides.</em>",
   "painPoints.exchange6.body":
     "Legal information for LGBTQ+ life in Portugal, written in plain language — no law degree required.",
   "painPoints.exchange6.cta": "Read the guides",
 
-  "painPoints.exchange7.question": "\"Will I actually be safe at this job?\"",
+  "painPoints.exchange7.question": '"Will I actually be safe at this job?"',
   "painPoints.exchange7.heading": "So we built <em>employer reviews.</em>",
   "painPoints.exchange7.body":
     "Honest ratings from queer employees, so you know before you accept the offer.",
@@ -223,7 +224,8 @@ export const homepage: Catalog = {
 
   // ── Communities (design variant G — spotlight + index) ─────────────────────
   "communities.eyebrow": "Communities · Lisboa",
-  "communities.title": "Step inside, <em>one room at a time.</em>",
+  "communities.title":
+    "Community is stronger <em>when communities connect.</em>",
   "communities.sub":
     "Search or filter the list, then open any community to see the whole room — what it is, what it does, who's inside, and what you unlock by joining.",
   "communities.browseAllCta": "Browse all communities",
@@ -337,7 +339,7 @@ export const homepage: Catalog = {
   "library.moreLabel": "in the archive →",
 
   // ── Partners ───────────────────────────────────────────────────────────────
-  "partners.title": "Community is stronger when <em>communities connect.</em>",
+  "partners.title": "Community is stronger <em>when communities connect.</em>",
   "partners.subtitle":
     "We work with organisations that share our values — across Portugal and beyond.",
   "partners.seeAllLabel": "See all partners",
@@ -395,7 +397,8 @@ export const homepage: Catalog = {
   "pillars.culture.name": "Culture",
   "pillars.culture.desc":
     "The magazine, stories, reading groups, and library — a living record of queer Lisbon, written from the inside.",
-  "pillars.culture.alt": "Drag performers walking a Pride parade route in daylight",
+  "pillars.culture.alt":
+    "Drag performers walking a Pride parade route in daylight",
   "pillars.livelihood.name": "Livelihood",
   "pillars.livelihood.desc":
     "Jobs, skills exchange, micro-grants, and barter — a queer economy built on trust, not platform fees.",
@@ -413,7 +416,8 @@ export const homepage: Catalog = {
   "pillars.activism.name": "Activism",
   "pillars.activism.desc":
     "Changemakers, volunteers, and transparent governance — building a better city from the inside out.",
-  "pillars.activism.alt": "Marchers carrying a large trans-flag banner through a city street",
+  "pillars.activism.alt":
+    "Marchers carrying a large trans-flag banner through a city street",
 
   "pillars.tag.gatherings": "Gatherings",
   "pillars.tag.forum": "Forum",

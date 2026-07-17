@@ -182,30 +182,33 @@ export function CinemaBrowsePage() {
           },
         ]
       : []),
-    ...[...filters.madeBy, ...filters.country, ...filters.accessibility, ...filters.mood].map(
-      (value) => ({
-        value,
-        label: t(
-          ALL_FILTER_OPTIONS.find((x) => x.value === value)?.labelKey ?? "",
-        ),
-      }),
-    ),
+    ...[
+      ...filters.madeBy,
+      ...filters.country,
+      ...filters.accessibility,
+      ...filters.mood,
+    ].map((value) => ({
+      value,
+      label: t(
+        ALL_FILTER_OPTIONS.find((x) => x.value === value)?.labelKey ?? "",
+      ),
+    })),
   ];
 
   return (
     <CinemaShell>
       <section className={styles.hero}>
         <div className="wrap">
-          <div className={styles.eyebrow}>{t("cinema:browse.hero.eyebrow")}</div>
+          <div className={styles.eyebrow}>
+            {t("cinema:browse.hero.eyebrow")}
+          </div>
           <h1>
             <Translation
               i18nKey="cinema:browse.hero.title"
               components={{ em: <em /> }}
             />
           </h1>
-          <p>
-            {t("cinema:browse.hero.lead", { count: FILM_CATALOGUE_COUNT })}
-          </p>
+          <p>{t("cinema:browse.hero.lead", { count: FILM_CATALOGUE_COUNT })}</p>
         </div>
       </section>
 

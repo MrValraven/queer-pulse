@@ -21,13 +21,18 @@ export function EditorDashboardHeader({
     <header className={styles.edHead}>
       <div>
         <div className={styles.edEyebrow}>
-          {t("magazine:editor.header.eyebrow", { number: CURRENT_ISSUE.number })}
+          {t("magazine:editor.header.eyebrow", {
+            number: CURRENT_ISSUE.number,
+          })}
         </div>
         <h1 className={styles.edH1}>
           <Translation
             i18nKey="magazine:editor.header.title"
             components={{ em: <em /> }}
-            values={{ number: CURRENT_ISSUE.number, theme: CURRENT_ISSUE.theme }}
+            values={{
+              number: CURRENT_ISSUE.number,
+              theme: CURRENT_ISSUE.theme,
+            }}
           />
         </h1>
         <p className={styles.edMeta}>

@@ -32,7 +32,9 @@ export function ReviewStep({ hold }: Props) {
           components={{ em: <em /> }}
         />
       </h1>
-      <p className={s["co-step-lede"]}>{t("gatherings:checkout.review.lede")}</p>
+      <p className={s["co-step-lede"]}>
+        {t("gatherings:checkout.review.lede")}
+      </p>
 
       <FirstTimerCard />
       <SeatHold left={hold.left} expired={hold.expired} reHold={hold.reHold} />
@@ -59,10 +61,14 @@ export function ReviewStep({ hold }: Props) {
       <HostCard />
       <MeetTheTable />
 
-      <div className={s["co-sec"]}>{t("gatherings:checkout.tiers.sectionTitle")}</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.tiers.sectionTitle")}
+      </div>
       <TierSelect />
 
-      <div className={s["co-sec"]}>{t("gatherings:checkout.seats.sectionTitle")}</div>
+      <div className={s["co-sec"]}>
+        {t("gatherings:checkout.seats.sectionTitle")}
+      </div>
       <SeatQuantity />
 
       <PriceSummary />

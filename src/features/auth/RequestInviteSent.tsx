@@ -27,7 +27,10 @@ export function RequestInviteSent({ first }: { first: string }) {
           </svg>
         </div>
         <h1>
-          <Translation i18nKey="auth:requestInvite.sent.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="auth:requestInvite.sent.title"
+            components={{ em: <em /> }}
+          />
         </h1>
         <p
           className={styles.sub}

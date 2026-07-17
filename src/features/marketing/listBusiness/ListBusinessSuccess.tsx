@@ -7,23 +7,24 @@ import { routes } from "../../../app/routeMap";
 import type { ListingStatus, PendingListing } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
 
-const STAGES: { id: ListingStatus; labelKey: string; icon: typeof FiClock }[] = [
-  {
-    id: "review",
-    labelKey: "marketing:listBusiness.success.stage.review",
-    icon: FiClock,
-  },
-  {
-    id: "question",
-    labelKey: "marketing:listBusiness.success.stage.question",
-    icon: FiMessageSquare,
-  },
-  {
-    id: "live",
-    labelKey: "marketing:listBusiness.success.stage.live",
-    icon: FiCheck,
-  },
-];
+const STAGES: { id: ListingStatus; labelKey: string; icon: typeof FiClock }[] =
+  [
+    {
+      id: "review",
+      labelKey: "marketing:listBusiness.success.stage.review",
+      icon: FiClock,
+    },
+    {
+      id: "question",
+      labelKey: "marketing:listBusiness.success.stage.question",
+      icon: FiMessageSquare,
+    },
+    {
+      id: "live",
+      labelKey: "marketing:listBusiness.success.stage.live",
+      icon: FiCheck,
+    },
+  ];
 
 const NOTE_KEY: Record<ListingStatus, string> = {
   review: "marketing:listBusiness.success.note.review",

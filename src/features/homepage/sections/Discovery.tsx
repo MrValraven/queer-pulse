@@ -129,8 +129,7 @@ function SpotlightFace({ member, quote }: Spotlight) {
           )}
           {member.visibility === "private" ? (
             <Link to={to} className={styles.sayHi}>
-              {t("homepage:discovery.viewProfile")}{" "}
-              <span aria-hidden>→</span>
+              {t("homepage:discovery.viewProfile")} <span aria-hidden>→</span>
             </Link>
           ) : (
             <span

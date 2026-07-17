@@ -27,7 +27,10 @@ export function CinemaCuratorPage() {
             icon={<FiFilm />}
             title={t("cinema:curator.notFound.title")}
             description={t("cinema:curator.notFound.description")}
-            action={{ label: t("cinema:curator.notFound.backCta"), to: routes.cinema }}
+            action={{
+              label: t("cinema:curator.notFound.backCta"),
+              to: routes.cinema,
+            }}
           />
         </div>
       </PageShell>
@@ -43,7 +46,9 @@ export function CinemaCuratorPage() {
           <div className={styles.crumbRow}>
             <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
             <span className={styles.sep}>›</span>
-            <Link to={routes.cinemaAbout}>{t("cinema:curator.crumb.council")}</Link>
+            <Link to={routes.cinemaAbout}>
+              {t("cinema:curator.crumb.council")}
+            </Link>
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>{name}</span>
             <Link to={routes.cinemaAbout} className={styles.crumbBack}>

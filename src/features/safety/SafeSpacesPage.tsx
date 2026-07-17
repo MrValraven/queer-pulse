@@ -101,7 +101,10 @@ export function SafeSpacesPage() {
 
           <FilterChips
             className={styles.filters}
-            options={FILTERS.map((f) => ({ value: f.id, label: t(f.labelKey) }))}
+            options={FILTERS.map((f) => ({
+              value: f.id,
+              label: t(f.labelKey),
+            }))}
             value={filter}
             onChange={(v) => setFilter(v as Category | "all")}
           />

@@ -37,19 +37,34 @@ export function buildHelpCats(t: TFunction): HelpCat[] {
   return [
     {
       target: "listening",
-      heading: <Translation i18nKey="studio:help.cat.listening.heading" components={{ em: <em /> }} />,
+      heading: (
+        <Translation
+          i18nKey="studio:help.cat.listening.heading"
+          components={{ em: <em /> }}
+        />
+      ),
       blurb: t("studio:help.cat.listening.blurb"),
       icon: "note",
     },
     {
       target: "account",
-      heading: <Translation i18nKey="studio:help.cat.account.heading" components={{ em: <em /> }} />,
+      heading: (
+        <Translation
+          i18nKey="studio:help.cat.account.heading"
+          components={{ em: <em /> }}
+        />
+      ),
       blurb: t("studio:help.cat.account.blurb"),
       icon: "user",
     },
     {
       target: "artists",
-      heading: <Translation i18nKey="studio:help.cat.artists.heading" components={{ em: <em /> }} />,
+      heading: (
+        <Translation
+          i18nKey="studio:help.cat.artists.heading"
+          components={{ em: <em /> }}
+        />
+      ),
       blurb: t("studio:help.cat.artists.blurb"),
       icon: "coin",
     },
@@ -60,7 +75,12 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
   return [
     {
       id: "listening",
-      heading: <Translation i18nKey="studio:help.cat.listening.heading" components={{ em: <em /> }} />,
+      heading: (
+        <Translation
+          i18nKey="studio:help.cat.listening.heading"
+          components={{ em: <em /> }}
+        />
+      ),
       items: [
         {
           id: "money-go",
@@ -79,7 +99,12 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
         {
           id: "tip-no-account",
           q: t("studio:help.faq.tipNoAccount.q"),
-          a: <Translation i18nKey="studio:help.faq.tipNoAccount.a" components={{ em: <em /> }} />,
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.tipNoAccount.a"
+              components={{ em: <em /> }}
+            />
+          ),
         },
         {
           id: "tip-notes-private",
@@ -87,25 +112,43 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
           a: (
             <Translation
               i18nKey="studio:help.faq.tipNotesPrivate.a"
-              components={{ strong: <strong />, a: <Link to="/studio/settings" /> }}
+              components={{
+                strong: <strong />,
+                a: <Link to="/studio/settings" />,
+              }}
             />
           ),
         },
         {
           id: "listening-history",
           q: t("studio:help.faq.listeningHistory.q"),
-          a: <Translation i18nKey="studio:help.faq.listeningHistory.a" components={{ em: <em /> }} />,
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.listeningHistory.a"
+              components={{ em: <em /> }}
+            />
+          ),
         },
       ],
     },
     {
       id: "account",
-      heading: <Translation i18nKey="studio:help.cat.account.heading" components={{ em: <em /> }} />,
+      heading: (
+        <Translation
+          i18nKey="studio:help.cat.account.heading"
+          components={{ em: <em /> }}
+        />
+      ),
       items: [
         {
           id: "7-vs-11",
           q: t("studio:help.faq.priceDiff.q"),
-          a: <Translation i18nKey="studio:help.faq.priceDiff.a" components={{ strong: <strong /> }} />,
+          a: (
+            <Translation
+              i18nKey="studio:help.faq.priceDiff.a"
+              components={{ strong: <strong /> }}
+            />
+          ),
         },
         {
           id: "cancel",
@@ -123,7 +166,10 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
           a: (
             <Translation
               i18nKey="studio:help.faq.dataSold.a"
-              components={{ strong: <strong />, a: <Link to={routes.studioTerms} /> }}
+              components={{
+                strong: <strong />,
+                a: <Link to={routes.studioTerms} />,
+              }}
             />
           ),
         },
@@ -131,7 +177,12 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
     },
     {
       id: "artists",
-      heading: <Translation i18nKey="studio:help.cat.artists.heading" components={{ em: <em /> }} />,
+      heading: (
+        <Translation
+          i18nKey="studio:help.cat.artists.heading"
+          components={{ em: <em /> }}
+        />
+      ),
       items: [
         {
           id: "get-paid",
@@ -149,7 +200,10 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
           a: (
             <Translation
               i18nKey="studio:help.faq.keepMasters.a"
-              components={{ strong: <strong />, a: <Link to={routes.studioRights} /> }}
+              components={{
+                strong: <strong />,
+                a: <Link to={routes.studioRights} />,
+              }}
             />
           ),
         },
@@ -183,7 +237,12 @@ export function buildContactCards(t: TFunction): ContactCard[] {
   return [
     {
       icon: "mail",
-      title: <Translation i18nKey="studio:help.contact.email.title" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:help.contact.email.title"
+          components={{ em: <em /> }}
+        />
+      ),
       body: (
         <>
           <em>help@queerpulse.org</em>
@@ -196,16 +255,36 @@ export function buildContactCards(t: TFunction): ContactCard[] {
     },
     {
       icon: "chat",
-      title: <Translation i18nKey="studio:help.contact.forum.title" components={{ em: <em /> }} />,
-      body: <Translation i18nKey="studio:help.contact.forum.body" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:help.contact.forum.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:help.contact.forum.body"
+          components={{ em: <em /> }}
+        />
+      ),
       action: t("studio:help.contact.forum.action"),
       toast: t("studio:help.contact.forum.toast"),
     },
     {
       icon: "check",
       jade: true,
-      title: <Translation i18nKey="studio:help.contact.access.title" components={{ em: <em /> }} />,
-      body: <Translation i18nKey="studio:help.contact.access.body" components={{ em: <em /> }} />,
+      title: (
+        <Translation
+          i18nKey="studio:help.contact.access.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: (
+        <Translation
+          i18nKey="studio:help.contact.access.body"
+          components={{ em: <em /> }}
+        />
+      ),
       action: t("studio:help.contact.access.action"),
       to: routes.studioAccessibility,
     },

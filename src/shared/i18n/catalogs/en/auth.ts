@@ -60,11 +60,13 @@ export const auth: Catalog = {
   // ── Create account ──
   "createAccount.eyebrow": "Almost there",
   "createAccount.title": "Create your <em>account</em>",
-  "createAccount.vouchText": "<strong>{name}</strong> invited you to QueerPulse.",
+  "createAccount.vouchText":
+    "<strong>{name}</strong> invited you to QueerPulse.",
   "createAccount.requiredLegend": "Fields marked <req>*</req> are required",
   "createAccount.legalNote":
     "You must be 18 or older to join (see our <eligibility>eligibility policy</eligibility>). By continuing, you agree to our <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-  "createAccount.signinPrompt": "Already have an account? <signin>Sign in</signin>",
+  "createAccount.signinPrompt":
+    "Already have an account? <signin>Sign in</signin>",
   "createAccount.submit": "Create account",
   "createAccount.section.account": "Account",
   "createAccount.section.about": "About you",
@@ -74,9 +76,11 @@ export const auth: Catalog = {
   "createAccount.field.lastName.label": "Last name",
   "createAccount.field.lastName.placeholder": "Morais",
   "createAccount.field.email.label": "Email",
-  "createAccount.field.email.helper": "From your Google account — can't be changed here.",
+  "createAccount.field.email.helper":
+    "From your Google account — can't be changed here.",
   "createAccount.field.displayName.label": "Display name",
-  "createAccount.field.displayName.helper": "How you'll appear across QueerPulse.",
+  "createAccount.field.displayName.helper":
+    "How you'll appear across QueerPulse.",
   "createAccount.field.displayName.placeholder": "What should people call you?",
   "createAccount.field.pronouns.label": "Pronouns",
   "createAccount.field.pronouns.placeholder": "e.g. she/her",
@@ -84,15 +88,18 @@ export const auth: Catalog = {
   "createAccount.field.location.placeholder": "Lisbon",
   "createAccount.field.bio.label": "Bio",
   "createAccount.field.bio.placeholder": "A few words about you",
-  "createAccount.error.firstRequired": "Your first name is missing — mind adding it?",
-  "createAccount.error.lastRequired": "Your last name is missing — mind adding it?",
+  "createAccount.error.firstRequired":
+    "Your first name is missing — mind adding it?",
+  "createAccount.error.lastRequired":
+    "Your last name is missing — mind adding it?",
   "createAccount.error.inviteRedeemFailed":
     "We couldn't confirm your invite, but your account is ready — you're in.",
   "createAccount.visibility.open.label": "Open to connect",
   "createAccount.visibility.open.sub":
     "Anyone in the network can see your profile and say hello",
   "createAccount.visibility.network.label": "Network only",
-  "createAccount.visibility.network.sub": "Reachable through mutual connections",
+  "createAccount.visibility.network.sub":
+    "Reachable through mutual connections",
   "createAccount.visibility.private.label": "Keep it quiet for now",
   "createAccount.visibility.private.sub": "I'll reach out when I'm ready",
 
@@ -103,7 +110,8 @@ export const auth: Catalog = {
   // ── Invite (send-invite dashboard + composer + link/email panels) ──
   "invite.eyebrow": "Invite someone in",
   "invite.title": "Bring someone <em>in</em>",
-  "invite.sub": "QueerPulse grows by invitation, never advertising. Vouch for someone you trust.",
+  "invite.sub":
+    "QueerPulse grows by invitation, never advertising. Vouch for someone you trust.",
   "invite.quota.available": "3 invites available this month",
   "invite.quota.resets": "Resets in 12 days",
   "invite.deliveryMethod.ariaLabel": "Choose how to send the invite",
@@ -197,7 +205,8 @@ export const auth: Catalog = {
   "under18.title": "We'll be here <em>when you're ready</em>",
   "under18.body1":
     "QueerPulse is an 18+ community for now, so we can't set you up with an account just yet — and that's not a judgement on you. You belong in queer community; this particular room just isn't open to under-18s today. Come back when you turn 18 and there'll be a place for you.",
-  "under18.body2": "In the meantime, there's plenty here that's for you right now:",
+  "under18.body2":
+    "In the meantime, there's plenty here that's for you right now:",
   "under18.link.queer101": "Queer 101 — the basics, no gatekeeping",
   "under18.link.comingOut": "Coming out, at your own pace",
   "under18.link.resources": "Community resources & support",
@@ -210,7 +219,8 @@ export const auth: Catalog = {
     "We sent a six-digit code to <strong>{email}</strong>. It expires in <strong>10 minutes</strong>.",
   "confirmEmail.verified": "Verified. Welcome aboard.",
   "confirmEmail.toastConfirmed": "Email confirmed",
-  "confirmEmail.codeMismatch": "That code didn't match. Try again, or resend below.",
+  "confirmEmail.codeMismatch":
+    "That code didn't match. Try again, or resend below.",
   "confirmEmail.resendToast": "Sent again — check spam too",
   "confirmEmail.didntGetCode": "Didn't get the code?",
   "confirmEmail.resend": "Resend",
@@ -248,8 +258,10 @@ export const auth: Catalog = {
   "requestInvite.field.city.placeholder": "Lisbon",
   "requestInvite.field.email.label": "Email",
   "requestInvite.field.email.placeholder": "you@example.com",
-  "requestInvite.field.email.error": "That email doesn't look right — mind checking it?",
-  "requestInvite.field.mutual.label": "Anyone here you know <optional>(optional)</optional>",
+  "requestInvite.field.email.error":
+    "That email doesn't look right — mind checking it?",
+  "requestInvite.field.mutual.label":
+    "Anyone here you know <optional>(optional)</optional>",
   "requestInvite.field.mutual.helper":
     "Naming a mutual is the fastest route in — but it's not required.",
   "requestInvite.field.mutual.placeholder": "A member who can vouch for you",
@@ -309,7 +321,8 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.heading": "Put a face to the <em>name</em>",
   "onboarding.stepPhoto.body":
     "A photo helps members feel comfortable connecting with you. You can always add this later.",
-  "onboarding.stepPhoto.captionPreview": "Looking good — tap the photo to change it",
+  "onboarding.stepPhoto.captionPreview":
+    "Looking good — tap the photo to change it",
   "onboarding.stepPhoto.captionGoogle":
     "From your Google account — tap the photo to change it",
   "onboarding.stepPhoto.captionUpload": "Tap to upload a photo",
@@ -354,7 +367,8 @@ export const auth: Catalog = {
   "onboarding.intent.creative": "Creative collaboration",
 
   "onboarding.stepCommunities.heading": "Find your <em>communities</em>",
-  "onboarding.stepCommunities.body": "Groups you might like based on your interests.",
+  "onboarding.stepCommunities.body":
+    "Groups you might like based on your interests.",
   "onboarding.stepCommunities.join": "Join",
   "onboarding.stepCommunities.joined": "Joined",
   "onboarding.stepCommunities.continue": "Continue",
@@ -364,9 +378,11 @@ export const auth: Catalog = {
   "onboarding.stepDone.heading": "You're <em>part of it</em> now",
   "onboarding.stepDone.cta": "Go to my home",
   "onboarding.quickStart.browseDirectory.title": "Browse the member directory",
-  "onboarding.quickStart.browseDirectory.desc": "{count} members in Lisbon and beyond",
+  "onboarding.quickStart.browseDirectory.desc":
+    "{count} members in Lisbon and beyond",
   "onboarding.quickStart.gatherings.title": "See upcoming gatherings",
-  "onboarding.quickStart.gatherings.desc": "Real-world events for the community",
+  "onboarding.quickStart.gatherings.desc":
+    "Real-world events for the community",
   "onboarding.quickStart.magazine.title": "Read the community magazine",
   "onboarding.quickStart.magazine.desc": "Published the first of every month",
 
@@ -388,7 +404,8 @@ export const auth: Catalog = {
 
   "tour.profile.eyebrow": "Your profile",
   "tour.profile.heading": "Tell us a little about <em>yourself.</em>",
-  "tour.profile.body": "This is how the community will know you. You can change everything later.",
+  "tour.profile.body":
+    "This is how the community will know you. You can change everything later.",
   "tour.profile.namePlaceholder": "Your name",
   "tour.profile.pronounsPlaceholder": "Pronouns (optional)",
   "tour.profile.rolePlaceholder": "What you do — your role or practice",
@@ -396,7 +413,8 @@ export const auth: Catalog = {
   "tour.profile.visibilityLabel": "How visible would you like to be?",
 
   "tour.visibility.open.title": "Open to connect",
-  "tour.visibility.open.desc": "Anyone in the network can see your profile and say hello",
+  "tour.visibility.open.desc":
+    "Anyone in the network can see your profile and say hello",
   "tour.visibility.network.title": "Network only",
   "tour.visibility.network.desc": "Reachable through mutual connections",
   "tour.visibility.private.title": "Keep it quiet for now",
@@ -438,27 +456,36 @@ export const auth: Catalog = {
   "tour.explore.cta": "Go to QueerPulse →",
 
   "tour.exploreCard.members.name": "Members",
-  "tour.exploreCard.members.desc": "Browse and say hello to people in the network",
+  "tour.exploreCard.members.desc":
+    "Browse and say hello to people in the network",
   "tour.exploreCard.gatherings.name": "Gatherings",
   "tour.exploreCard.gatherings.desc": "RSVP to something happening near you",
   "tour.exploreCard.communities.name": "Communities",
   "tour.exploreCard.communities.desc": "Find an ongoing group to join",
   "tour.exploreCard.culture.name": "Culture",
-  "tour.exploreCard.culture.desc": "Book club, art showcase, commission board, radio",
+  "tour.exploreCard.culture.desc":
+    "Book club, art showcase, commission board, radio",
   "tour.exploreCard.economy.name": "Economy",
-  "tour.exploreCard.economy.desc": "Incubator, freelance tools, salary transparency",
+  "tour.exploreCard.economy.desc":
+    "Incubator, freelance tools, salary transparency",
   "tour.exploreCard.queer101.name": "Queer 101",
-  "tour.exploreCard.queer101.desc": "Still exploring your identity? A quiet place to start",
+  "tour.exploreCard.queer101.desc":
+    "Still exploring your identity? A quiet place to start",
   "tour.exploreCard.volunteer.name": "Volunteer",
-  "tour.exploreCard.volunteer.desc": "Find a way to give back to the local community",
+  "tour.exploreCard.volunteer.desc":
+    "Find a way to give back to the local community",
   "tour.exploreCard.arriving.name": "New to Lisbon?",
-  "tour.exploreCard.arriving.desc": "A guide to settling into the queer scene here",
+  "tour.exploreCard.arriving.desc":
+    "A guide to settling into the queer scene here",
   "tour.exploreCard.sexualHealth.name": "Sexual health",
-  "tour.exploreCard.sexualHealth.desc": "Testing, PrEP, HIV resources — queer-specific & direct",
+  "tour.exploreCard.sexualHealth.desc":
+    "Testing, PrEP, HIV resources — queer-specific & direct",
   "tour.exploreCard.safeSpaces.name": "Safe spaces",
-  "tour.exploreCard.safeSpaces.desc": "Community-verified venues — earned, not self-declared",
+  "tour.exploreCard.safeSpaces.desc":
+    "Community-verified venues — earned, not self-declared",
   "tour.exploreCard.sober.name": "Sober & social",
-  "tour.exploreCard.sober.desc": "A full social life, without alcohol at the centre",
+  "tour.exploreCard.sober.desc":
+    "A full social life, without alcohol at the centre",
 
   "tour.neighbourhood.principeReal": "Príncipe Real",
   "tour.neighbourhood.mouraria": "Mouraria",

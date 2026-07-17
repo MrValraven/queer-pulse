@@ -40,7 +40,9 @@ export function SubprofileCard({
         className={styles.avatar}
       />
       <div className={styles.body}>
-        <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[card.kind])}</span>
+        <span className={styles.kindBadge}>
+          {t(KIND_LABEL_KEYS[card.kind])}
+        </span>
         <span className={styles.name}>{card.displayName}</span>
         {card.tagline && <span className={styles.tagline}>{card.tagline}</span>}
       </div>

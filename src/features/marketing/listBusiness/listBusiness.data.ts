@@ -123,14 +123,17 @@ export const GOODFOR = [
 ];
 
 export const GOODFOR_LABEL_KEYS: Record<string, string> = {
-  "Wheelchair accessible": "marketing:listBusiness.goodFor.wheelchairAccessible",
-  "Gender-neutral toilets": "marketing:listBusiness.goodFor.genderNeutralToilets",
+  "Wheelchair accessible":
+    "marketing:listBusiness.goodFor.wheelchairAccessible",
+  "Gender-neutral toilets":
+    "marketing:listBusiness.goodFor.genderNeutralToilets",
   "Step-free entrance": "marketing:listBusiness.goodFor.stepFreeEntrance",
   "Walk-ins welcome": "marketing:listBusiness.goodFor.walkInsWelcome",
   "Quiet, low-sensory hours": "marketing:listBusiness.goodFor.quietLowSensory",
   "Solo-friendly": "marketing:listBusiness.goodFor.soloFriendly",
   "Dog-friendly": "marketing:listBusiness.goodFor.dogFriendly",
-  "Hosts community events": "marketing:listBusiness.goodFor.hostsCommunityEvents",
+  "Hosts community events":
+    "marketing:listBusiness.goodFor.hostsCommunityEvents",
   "Budget-friendly": "marketing:listBusiness.goodFor.budgetFriendly",
   "Accessible bathroom": "marketing:listBusiness.goodFor.accessibleBathroom",
 };
@@ -151,10 +154,10 @@ export const LANGS = [
 ];
 
 export const LANG_LABEL_KEYS: Record<string, string> = {
-  "Português": "marketing:listBusiness.lang.portugues",
+  Português: "marketing:listBusiness.lang.portugues",
   English: "marketing:listBusiness.lang.english",
-  "Español": "marketing:listBusiness.lang.espanol",
-  "Français": "marketing:listBusiness.lang.francais",
+  Español: "marketing:listBusiness.lang.espanol",
+  Français: "marketing:listBusiness.lang.francais",
   "LGP (sign)": "marketing:listBusiness.lang.lgp",
   Other: "marketing:listBusiness.lang.other",
 };
@@ -218,13 +221,21 @@ export interface NotifyOption {
   on: boolean;
 }
 export const NOTIFY: NotifyOption[] = [
-  { id: "live", labelKey: "marketing:listBusiness.notify.live.label", on: true },
+  {
+    id: "live",
+    labelKey: "marketing:listBusiness.notify.live.label",
+    on: true,
+  },
   {
     id: "question",
     labelKey: "marketing:listBusiness.notify.question.label",
     on: true,
   },
-  { id: "news", labelKey: "marketing:listBusiness.notify.news.label", on: false },
+  {
+    id: "news",
+    labelKey: "marketing:listBusiness.notify.news.label",
+    on: false,
+  },
 ];
 
 export interface VerifyOption {

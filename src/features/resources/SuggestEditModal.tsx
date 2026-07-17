@@ -39,7 +39,9 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
       ) : (
         <>
           <div className={styles.body}>
-            <p className={styles.sub}>{t("resources:suggestEdit.body.intro")}</p>
+            <p className={styles.sub}>
+              {t("resources:suggestEdit.body.intro")}
+            </p>
 
             <span className={styles.label}>
               {t("resources:suggestEdit.form.termLabel")}

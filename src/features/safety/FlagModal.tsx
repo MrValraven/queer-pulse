@@ -4,7 +4,11 @@ import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useCreateReport } from "./api/useCreateReport";
-import { REASON_LABEL_KEYS, SUBJECT_REASONS, type ReasonCode } from "./reportReasons";
+import {
+  REASON_LABEL_KEYS,
+  SUBJECT_REASONS,
+  type ReasonCode,
+} from "./reportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./FlagModal.module.css";
 
@@ -18,10 +22,16 @@ function FlagSuccessPanel({ onDone }: { onDone: () => void }) {
         </svg>
       </div>
       <div className={styles.title}>
-        <Translation i18nKey="safety:flag.success.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="safety:flag.success.title"
+          components={{ em: <em /> }}
+        />
       </div>
       <p className={styles.sub}>
-        <Translation i18nKey="safety:flag.success.body" components={{ b: <b /> }} />
+        <Translation
+          i18nKey="safety:flag.success.body"
+          components={{ b: <b /> }}
+        />
       </p>
       <div className={styles.actions}>
         <Button variant="ghost" className={styles.full} onClick={onDone}>
@@ -70,7 +80,8 @@ export function FlagModal({
   const canSubmit = detail.trim().length >= 10;
 
   const label = (code: ReasonCode) =>
-    reasons.find((r) => r.code === code)?.label ?? t("safety:flag.reasonFallback");
+    reasons.find((r) => r.code === code)?.label ??
+    t("safety:flag.reasonFallback");
 
   const submit = () => {
     if (!canSubmit || createReport.isPending) return;

@@ -76,7 +76,10 @@ export function MagicLinkPage() {
             </svg>
           </div>
           <h1>
-            <Translation i18nKey="auth:magicLink.sentTitle" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="auth:magicLink.sentTitle"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p
             className={styles.sub}
@@ -85,7 +88,9 @@ export function MagicLinkPage() {
             <Translation
               i18nKey="auth:magicLink.sentBody"
               components={{
-                strong: <strong style={{ color: "var(--ink)", fontWeight: 600 }} />,
+                strong: (
+                  <strong style={{ color: "var(--ink)", fontWeight: 600 }} />
+                ),
               }}
               values={{ email }}
             />
@@ -139,7 +144,10 @@ export function MagicLinkPage() {
   return (
     <AuthLayout>
       <h1>
-        <Translation i18nKey="auth:magicLink.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="auth:magicLink.title"
+          components={{ em: <em /> }}
+        />
       </h1>
       <p className={styles.sub}>{t("auth:magicLink.sub")}</p>
 

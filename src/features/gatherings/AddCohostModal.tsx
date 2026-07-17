@@ -54,7 +54,9 @@ export function AddCohostModal({
         >
           <FiX />
         </button>
-        <div className={modal.eye}>{t("gatherings:cohost.addModal.eyebrow")}</div>
+        <div className={modal.eye}>
+          {t("gatherings:cohost.addModal.eyebrow")}
+        </div>
         <div className={modal.title}>
           <Translation
             i18nKey="gatherings:cohost.addModal.title"

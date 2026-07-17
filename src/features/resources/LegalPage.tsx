@@ -229,9 +229,15 @@ export function LegalPage() {
         }
         lead={t("resources:legal.hero.lead")}
         anchors={[
-          { label: t("resources:legal.hero.anchor.workplace"), href: "#workplace" },
+          {
+            label: t("resources:legal.hero.anchor.workplace"),
+            href: "#workplace",
+          },
           { label: t("resources:legal.hero.anchor.housing"), href: "#housing" },
-          { label: t("resources:legal.hero.anchor.healthcare"), href: "#healthcare" },
+          {
+            label: t("resources:legal.hero.anchor.healthcare"),
+            href: "#healthcare",
+          },
           { label: t("resources:legal.hero.anchor.lawyers"), href: "#lawyers" },
         ]}
         backLink={{

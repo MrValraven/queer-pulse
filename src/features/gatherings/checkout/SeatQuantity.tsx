@@ -32,7 +32,9 @@ export function SeatQuantity() {
     <>
       <div className={s["co-qty-row"]}>
         <div>
-          <div className={s["co-qty-lbl"]}>{t("gatherings:checkout.seats.label")}</div>
+          <div className={s["co-qty-lbl"]}>
+            {t("gatherings:checkout.seats.label")}
+          </div>
           <div className={s["co-qty-sub"]}>
             {t("gatherings:checkout.seats.sub", { count: qty })}
           </div>

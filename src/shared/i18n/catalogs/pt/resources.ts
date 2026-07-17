@@ -353,7 +353,7 @@ export const resources: Catalog = {
   "queer101.talk.peerSupport.title": "Grupo de apoio entre pares",
   "queer101.talk.peerSupport.desc":
     "Um espaço moderado e confidencial dentro da QueerPulse. Experiência partilhada, sem conselhos a menos que sejam pedidos. Reúne-se semanalmente.",
-  "queer101.talk.peerSupport.cta": "Juntar-te ao grupo →",
+  "queer101.talk.peerSupport.cta": "Junta-te ao grupo →",
   "queer101.talk.oneToOne.title": "Conversa individual",
   "queer101.talk.oneToOne.desc":
     "Pede uma conversa com uma pessoa da comunidade que se ofereceu para falar com quem está a explorar a sua identidade pela primeira vez.",
@@ -569,7 +569,7 @@ export const resources: Catalog = {
     "Apoio entre pares <em>dentro da comunidade</em>",
   "mentalHealth.sns.peer.body":
     "O grupo de apoio entre pares de saúde mental reúne-se mensalmente. As pessoas partilham experiências, recomendam recursos, e apoiam-se mutuamente — sem facilitação profissional, só conversa honesta.",
-  "mentalHealth.sns.peer.joinCta": "Juntar-te ao grupo",
+  "mentalHealth.sns.peer.joinCta": "Junta-te ao grupo",
   "mentalHealth.sns.peer.mentorCta": "Encontrar um mentor de pares →",
 
   // ── TherapistProfileModal + TherapistProfileBody ────────────────────────
@@ -628,7 +628,7 @@ export const resources: Catalog = {
   "wellbeing.peer.title": "Não precisas de <em>carregar isto sozinhe.</em>",
   "wellbeing.peer.body":
     "Um espaço de apoio entre pares moderado dentro do Fórum — para pessoas a passar por momentos difíceis. Sem conselhos a menos que sejam pedidos. Sem consertar. Só pessoas que compreendem, a escutar.",
-  "wellbeing.peer.joinCta": "Juntar-te ao grupo",
+  "wellbeing.peer.joinCta": "Junta-te ao grupo",
   "wellbeing.peer.crisisCta": "Em crise agora mesmo?",
   "wellbeing.peer.stat.members.label": "pessoas no espaço de apoio",
   "wellbeing.peer.stat.moderation.label": "resposta de moderação garantida",
@@ -804,7 +804,7 @@ export const resources: Catalog = {
   "transHub.community.title": "Uma comunidade que <em>te apoia.</em>",
   "transHub.community.body":
     "O Hub Trans e Não-Binárie é mais do que recursos — são pessoas. Partilham avaliações de clínicas, celebram conquistas, e aparecem umas pelas outras quando o sistema falha.",
-  "transHub.community.joinCta": "Juntar-te ao hub",
+  "transHub.community.joinCta": "Junta-te ao hub",
   "transHub.community.stat.members.label": "pessoas no hub",
   "transHub.community.stat.reviews.label": "avaliações de clínicos",
   "transHub.community.stat.lawYear.label": "lei de autodeterminação em vigor",
@@ -1047,7 +1047,7 @@ export const resources: Catalog = {
   "sober.recovery.peerGroup.title": "Grupo de pares Sóbrie e Queer",
   "sober.recovery.peerGroup.desc":
     "Um espaço privado e moderado dentro da QueerPulse para pessoas em recuperação. Reunião semanal online, canal de texto, e convívios presenciais ocasionais. Sem programa específico — todas as abordagens são bem-vindas.",
-  "sober.recovery.peerGroup.linkLabel": "Juntar-te ao grupo →",
+  "sober.recovery.peerGroup.linkLabel": "Junta-te ao grupo →",
   "sober.recovery.oneToOne.title": "Individual — fala com um par",
   "sober.recovery.oneToOne.desc":
     "Pede uma conversa com uma pessoa da comunidade que se ofereceu para falar com quem está a navegar a sobriedade. Sem conselheiros — só alguém que já passou por algo semelhante.",

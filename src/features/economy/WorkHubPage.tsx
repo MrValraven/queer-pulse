@@ -63,7 +63,10 @@ export function WorkHubPage() {
               icon={<FiBriefcase />}
               title={t("economy:workHub.emptyLive.title")}
               description={t("economy:workHub.emptyLive.description")}
-              action={{ label: t("economy:workHub.emptyLive.cta"), to: routes.jobs }}
+              action={{
+                label: t("economy:workHub.emptyLive.cta"),
+                to: routes.jobs,
+              }}
             />
           </section>
         )}

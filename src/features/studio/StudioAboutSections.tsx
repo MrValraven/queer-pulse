@@ -1,7 +1,12 @@
 import { useMemo, type ReactNode } from "react";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { buildRateCells, buildTiers, buildSkeptics, buildTierFoot } from "./studioAbout.data";
+import {
+  buildRateCells,
+  buildTiers,
+  buildSkeptics,
+  buildTierFoot,
+} from "./studioAbout.data";
 import s from "./StudioAboutPage.module.css";
 
 /** A numbered section shell: eyebrow number + heading + children. */

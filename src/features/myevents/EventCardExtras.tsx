@@ -1,5 +1,4 @@
 import { sx } from "./myEvents.styles";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
 import { ACCESS_LABEL_KEYS } from "./myEvents.data";

@@ -72,7 +72,10 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               body={detail.removeBody}
               onKeep={() => setConfirming(false)}
               onContinue={() =>
-                showToast(t("admin:members.drawer.reasonRequiredToast"), "error")
+                showToast(
+                  t("admin:members.drawer.reasonRequiredToast"),
+                  "error",
+                )
               }
             />
           ) : (
@@ -82,7 +85,9 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
                 size="md"
                 onClick={() =>
                   showToast(
-                    t("admin:members.drawer.verifiedToast", { name: member.name }),
+                    t("admin:members.drawer.verifiedToast", {
+                      name: member.name,
+                    }),
                     "success",
                   )
                 }

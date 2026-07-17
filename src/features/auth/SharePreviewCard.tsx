@@ -36,7 +36,9 @@ export function SharePreviewCard({
         <div className={styles.previewHeroExplainer}>
           {t("auth:sharePreview.heroExplainer")}
         </div>
-        <div className={styles.previewHeroSub}>{t("auth:sharePreview.heroSub")}</div>
+        <div className={styles.previewHeroSub}>
+          {t("auth:sharePreview.heroSub")}
+        </div>
       </div>
       <div className={styles.previewMeta}>
         <div className={styles.previewDomain}>{url.split("/")[0]}</div>

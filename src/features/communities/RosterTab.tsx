@@ -81,7 +81,8 @@ export function RosterTab({
               <RoleBadge role={m.role} />
               {m.verified && (
                 <span className={styles.verified}>
-                  <FiCheck aria-hidden /> {t("communities:detail.roster.verified")}
+                  <FiCheck aria-hidden />{" "}
+                  {t("communities:detail.roster.verified")}
                 </span>
               )}
             </div>

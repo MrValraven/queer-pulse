@@ -198,7 +198,9 @@ export function accessLabel(
   fmt: Formatters,
 ): string {
   if (film.access === "rent")
-    return t("cinema:access.rent", { price: fmt.currency(film.rentPrice ?? 0) });
+    return t("cinema:access.rent", {
+      price: fmt.currency(film.rentPrice ?? 0),
+    });
   if (film.access === "member") return t("cinema:access.sustainer");
   return t("cinema:access.free");
 }

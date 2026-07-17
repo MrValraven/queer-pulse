@@ -209,9 +209,7 @@ export function PastAssembliesSection() {
           components={{ em: <em /> }}
         />
       </h2>
-      <p className={styles.subText}>
-        {t("marketing:annualAssembly.past.sub")}
-      </p>
+      <p className={styles.subText}>{t("marketing:annualAssembly.past.sub")}</p>
       {HISTORY.map((h) => (
         <div className={styles.historyRow} key={h.y}>
           <div className={styles.histY}>

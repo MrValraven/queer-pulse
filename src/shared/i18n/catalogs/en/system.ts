@@ -233,8 +233,7 @@ export const system: Catalog = {
   "inviteLanding.card.googleCta": "Register with Google",
   "inviteLanding.card.consent":
     "By continuing you agree to our <termsLink>terms of use</termsLink> and <privacyLink>privacy policy</privacyLink>.",
-  "inviteLanding.card.alreadyMember":
-    "Already have an account? <a>Sign in</a>",
+  "inviteLanding.card.alreadyMember": "Already have an account? <a>Sign in</a>",
   "inviteLanding.card.notExpecting":
     "Not expecting this? <a>Privacy policy</a>",
 
@@ -335,8 +334,7 @@ export const system: Catalog = {
   "pwaPrompt.instructions.ios.step2":
     "Scroll & tap <b>Add to Home Screen</b> <em>· near the bottom</em>",
   "pwaPrompt.instructions.ios.step3": "Tap <b>Add</b> in the top-right. Done.",
-  "pwaPrompt.instructions.android.title":
-    "Android · Chrome & Firefox · 2 taps",
+  "pwaPrompt.instructions.android.title": "Android · Chrome & Firefox · 2 taps",
   "pwaPrompt.instructions.android.step1":
     "Tap the <b>three-dot menu</b> top-right",
   "pwaPrompt.instructions.android.step2":

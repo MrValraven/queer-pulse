@@ -57,7 +57,10 @@ export function StudioRightsPage() {
         <div className={s.pageH}>
           <div className={s.eb}>{t("studio:rights.hero.eyebrow")}</div>
           <h1>
-            <Translation i18nKey="studio:rights.hero.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:rights.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>{t("studio:rights.hero.dek")}</div>
         </div>
@@ -74,7 +77,10 @@ export function StudioRightsPage() {
 
         <div className={s.secH}>
           <h2>
-            <Translation i18nKey="studio:rights.releases.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:rights.releases.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <div className={s.sub}>
             {t("studio:rights.releases.liveCount", { count: liveCount })}
@@ -115,7 +121,9 @@ export function StudioRightsPage() {
                 <>
                   <div className={s.rtStatus}>
                     <span className={s.d} aria-hidden />
-                    {t("studio:rights.removingStatus", { count: rel.daysLeft ?? 0 })}
+                    {t("studio:rights.removingStatus", {
+                      count: rel.daysLeft ?? 0,
+                    })}
                   </div>
                   <button
                     type="button"
@@ -148,7 +156,10 @@ export function StudioRightsPage() {
 
         <div className={s.foot}>
           <h4>
-            <Translation i18nKey="studio:rights.leavingCoop.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:rights.leavingCoop.title"
+              components={{ em: <em /> }}
+            />
           </h4>
           <p>
             <Translation

@@ -32,7 +32,9 @@ export function MaintenancePage() {
       </Link>
 
       <div className={styles.wrap}>
-        <span className={styles.eyebrow}>{t("system:maintenance.eyebrow")}</span>
+        <span className={styles.eyebrow}>
+          {t("system:maintenance.eyebrow")}
+        </span>
         <h1 className={styles.h1}>
           <Translation
             i18nKey="system:maintenance.heading"
@@ -81,10 +83,7 @@ export function MaintenancePage() {
                 key={item.textKey}
                 className={item.up ? styles.itemUp : styles.itemDown}
               >
-                <Translation
-                  i18nKey={item.textKey}
-                  components={{ b: <b /> }}
-                />
+                <Translation i18nKey={item.textKey} components={{ b: <b /> }} />
               </li>
             ))}
           </ul>

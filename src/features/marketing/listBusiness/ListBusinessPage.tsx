@@ -133,8 +133,7 @@ export function ListBusinessPage() {
       <header className={styles.hero}>
         <div className={`${styles.heroInner} wrap`}>
           <Link to={routes.directory} className={styles.back}>
-            <FiArrowLeft size={14} />{" "}
-            {t("marketing:listBusiness.hero.backCta")}
+            <FiArrowLeft size={14} /> {t("marketing:listBusiness.hero.backCta")}
           </Link>
           <div className={styles.eyebrow}>
             {t("marketing:listBusiness.hero.eyebrow")}

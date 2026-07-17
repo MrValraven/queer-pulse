@@ -75,7 +75,9 @@ export function SustainerSidebar({ store }: { store: SustainerStore }) {
       </div>
 
       <div className={styles.sbCard}>
-        <div className={styles.sbStatsHead}>{t("support:sidebar.statsHead")}</div>
+        <div className={styles.sbStatsHead}>
+          {t("support:sidebar.statsHead")}
+        </div>
         <div className={styles.sbStats}>
           {IMPACT_STATS.map((s) => (
             <div key={s.labelKey} className={styles.sbStat}>

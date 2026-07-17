@@ -151,9 +151,7 @@ export function VolunteerPage() {
               <EmptyState
                 icon={<FiHeart />}
                 title={t("marketing:volunteer.empty.filteredTitle")}
-                description={t(
-                  "marketing:volunteer.empty.filteredDescription",
-                )}
+                description={t("marketing:volunteer.empty.filteredDescription")}
                 action={{
                   label: t("marketing:volunteer.empty.clearCta"),
                   onClick: () => setFilter("all"),

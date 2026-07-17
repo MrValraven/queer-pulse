@@ -258,7 +258,10 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
 
   const tryGoStep2 = useCallback((): boolean => {
     if (state.isGuest && !validEmail(state.guestEmail.trim())) {
-      showToast(t("gatherings:checkout.validation.guestEmailRequired"), "error");
+      showToast(
+        t("gatherings:checkout.validation.guestEmailRequired"),
+        "error",
+      );
       return false;
     }
     setState((s) => ({ ...s, reachedStep2: true, step: 2, dir: "forward" }));

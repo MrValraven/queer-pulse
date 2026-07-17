@@ -19,7 +19,10 @@ export function Studio404Page() {
       >
         <span className={styles.pulseDot} aria-hidden />
         <span className={styles.wordmark}>
-          <Translation i18nKey="studio:brand.lockup" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:brand.lockup"
+            components={{ em: <em /> }}
+          />
         </span>
         <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
       </Link>
@@ -30,9 +33,14 @@ export function Studio404Page() {
         </div>
 
         <div className={styles.errContent}>
-          <div className={styles.errEyebrow}>{t("studio:error404.eyebrow")}</div>
+          <div className={styles.errEyebrow}>
+            {t("studio:error404.eyebrow")}
+          </div>
           <h1>
-            <Translation i18nKey="studio:error404.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:error404.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.sub}>{t("studio:error404.body")}</p>
 

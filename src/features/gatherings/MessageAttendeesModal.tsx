@@ -82,10 +82,15 @@ export function MessageAttendeesModal({
           <div className={styles.title}>
             {t("gatherings:manage.messageModal.title")}
           </div>
-          <p className={styles.sub}>{t("gatherings:manage.messageModal.sub")}</p>
+          <p className={styles.sub}>
+            {t("gatherings:manage.messageModal.sub")}
+          </p>
 
           <div className={styles.fields}>
-            <FormField label={t("gatherings:manage.messageModal.subjectLabel")} required>
+            <FormField
+              label={t("gatherings:manage.messageModal.subjectLabel")}
+              required
+            >
               <input
                 type="text"
                 placeholder={t(
@@ -95,7 +100,10 @@ export function MessageAttendeesModal({
                 onChange={(e) => setSubject(e.target.value)}
               />
             </FormField>
-            <FormField label={t("gatherings:manage.messageModal.bodyLabel")} required>
+            <FormField
+              label={t("gatherings:manage.messageModal.bodyLabel")}
+              required
+            >
               <textarea
                 placeholder={t("gatherings:manage.writeUpdatePlaceholder")}
                 value={body}

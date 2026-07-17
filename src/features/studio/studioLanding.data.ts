@@ -18,10 +18,26 @@ export interface FooterColumn {
 }
 
 export const TOP_NAV: FooterLink[] = [
-  { label: "About the co-op", labelKey: "studio:landing.nav.aboutCoop", to: routes.studioAbout },
-  { label: "Public ledger", labelKey: "studio:landing.nav.publicLedger", to: routes.governance },
-  { label: "How it works", labelKey: "studio:landing.nav.howItWorks", to: "#how" },
-  { label: "For artists", labelKey: "studio:landing.nav.forArtists", to: "#artists" },
+  {
+    label: "About the co-op",
+    labelKey: "studio:landing.nav.aboutCoop",
+    to: routes.studioAbout,
+  },
+  {
+    label: "Public ledger",
+    labelKey: "studio:landing.nav.publicLedger",
+    to: routes.governance,
+  },
+  {
+    label: "How it works",
+    labelKey: "studio:landing.nav.howItWorks",
+    to: "#how",
+  },
+  {
+    label: "For artists",
+    labelKey: "studio:landing.nav.forArtists",
+    to: "#artists",
+  },
 ];
 
 export const HERO_SET_ART =
@@ -108,7 +124,11 @@ export const COUNTER_STATS: CounterStat[] = [
     suffix: "",
     labelKey: "studio:landing.counter.stat.perPlay",
   },
-  { value: 80, suffix: ".3%", labelKey: "studio:landing.counter.stat.artistShare" },
+  {
+    value: 80,
+    suffix: ".3%",
+    labelKey: "studio:landing.counter.stat.artistShare",
+  },
   { value: 2104, labelKey: "studio:landing.counter.stat.sustainers" },
   {
     value: 9,
@@ -154,9 +174,21 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: "Studio",
     titleKey: "studio:landing.footer.col.studio",
     links: [
-      { label: "This week", labelKey: "studio:landing.footer.col.studio.thisWeek", to: routes.studio },
-      { label: "Sheet music", labelKey: "studio:rail.main.sheetMusic", to: routes.studioSheetStore },
-      { label: "DJ sets", labelKey: "studio:landing.footer.col.studio.djSets", to: routes.studioSet },
+      {
+        label: "This week",
+        labelKey: "studio:landing.footer.col.studio.thisWeek",
+        to: routes.studio,
+      },
+      {
+        label: "Sheet music",
+        labelKey: "studio:rail.main.sheetMusic",
+        to: routes.studioSheetStore,
+      },
+      {
+        label: "DJ sets",
+        labelKey: "studio:landing.footer.col.studio.djSets",
+        to: routes.studioSet,
+      },
       {
         label: "Live broadcast",
         labelKey: "studio:landing.footer.col.studio.liveBroadcast",
@@ -168,7 +200,11 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: "Artists",
     titleKey: "studio:landing.footer.col.artists",
     links: [
-      { label: "Submit music", labelKey: "studio:landing.footer.col.artists.submitMusic", to: routes.studioUpload },
+      {
+        label: "Submit music",
+        labelKey: "studio:landing.footer.col.artists.submitMusic",
+        to: routes.studioUpload,
+      },
       {
         label: "Artist dashboard",
         labelKey: "studio:landing.footer.col.artists.dashboard",
@@ -190,24 +226,52 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: "The co-op",
     titleKey: "studio:rail.section.coop",
     links: [
-      { label: "The strategy plan", labelKey: "studio:landing.footer.col.coop.strategyPlan", to: routes.studioAbout },
-      { label: "Trust & terms", labelKey: "studio:rail.utility.trustTerms", to: routes.studioTerms },
-      { label: "Public ledger", labelKey: "studio:landing.nav.publicLedger", to: routes.governance },
-      { label: "Accessibility", labelKey: "studio:rail.utility.accessibility", to: routes.studioAccessibility },
+      {
+        label: "The strategy plan",
+        labelKey: "studio:landing.footer.col.coop.strategyPlan",
+        to: routes.studioAbout,
+      },
+      {
+        label: "Trust & terms",
+        labelKey: "studio:rail.utility.trustTerms",
+        to: routes.studioTerms,
+      },
+      {
+        label: "Public ledger",
+        labelKey: "studio:landing.nav.publicLedger",
+        to: routes.governance,
+      },
+      {
+        label: "Accessibility",
+        labelKey: "studio:rail.utility.accessibility",
+        to: routes.studioAccessibility,
+      },
     ],
   },
   {
     title: "Council",
     titleKey: "studio:landing.footer.col.council",
     links: [
-      { label: "Programming", labelKey: "studio:landing.footer.col.council.programming", to: routes.studioProgram },
-      { label: "Submissions", labelKey: "studio:landing.footer.col.council.submissions", to: routes.studioTriage },
+      {
+        label: "Programming",
+        labelKey: "studio:landing.footer.col.council.programming",
+        to: routes.studioProgram,
+      },
+      {
+        label: "Submissions",
+        labelKey: "studio:landing.footer.col.council.submissions",
+        to: routes.studioTriage,
+      },
       {
         label: "Curator council",
         labelKey: "studio:landing.footer.col.council.curatorCouncil",
         to: routes.studioCouncil,
       },
-      { label: "Open calls", labelKey: "studio:rail.contribute.openCalls", to: routes.studioCalls },
+      {
+        label: "Open calls",
+        labelKey: "studio:rail.contribute.openCalls",
+        to: routes.studioCalls,
+      },
     ],
   },
 ];

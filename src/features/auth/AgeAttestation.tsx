@@ -36,7 +36,9 @@ export function AgeAttestation({
           checked={confirmed}
           onChange={(e) => onConfirmedChange(e.target.checked)}
         />
-        <span className={styles.label}>{t("auth:ageAttestation.confirmLabel")}</span>
+        <span className={styles.label}>
+          {t("auth:ageAttestation.confirmLabel")}
+        </span>
       </label>
       <p className={styles.helper}>
         <Translation
@@ -44,7 +46,11 @@ export function AgeAttestation({
           components={{
             eligibility: <Link to={`${routes.terms}#eligibility`} />,
             under18: (
-              <button type="button" className={styles.under18} onClick={onUnder18} />
+              <button
+                type="button"
+                className={styles.under18}
+                onClick={onUnder18}
+              />
             ),
           }}
         />

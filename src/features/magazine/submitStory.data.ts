@@ -6,7 +6,11 @@ import { FiDollarSign, FiGlobe, FiTarget } from "react-icons/fi";
  * so this holds catalog keys (Pattern A); `SubmitStoryIntro.tsx` resolves
  * `titleKey`/`bodyKey` via `t()`.
  */
-export const LOOKING_FOR: { icon: IconType; titleKey: string; bodyKey: string }[] = [
+export const LOOKING_FOR: {
+  icon: IconType;
+  titleKey: string;
+  bodyKey: string;
+}[] = [
   {
     icon: FiTarget,
     titleKey: "magazine:submitStory.intro.lookingFor.specific.title",

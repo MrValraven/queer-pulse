@@ -396,7 +396,8 @@ export const economy: Catalog = {
   "housing.tabs.housing": "Housing",
   "housing.tabs.flatmates": "Flatmates",
   "housing.hero.eyebrow": "Housing Board · Lisbon",
-  "housing.hero.title": "Find a home — and the people to <em>share it with.</em>",
+  "housing.hero.title":
+    "Find a home — and the people to <em>share it with.</em>",
   "housing.hero.lead":
     "A queer-specific housing board for Lisbon. Browse spaces to rent, or find a flatmate you can actually be yourself around — all within the community network.",
   "housing.hero.note":
@@ -659,8 +660,7 @@ export const economy: Catalog = {
   "postProfileForm.moveIn.jul2026": "July 2026",
   "postProfileForm.moveIn.aug2026": "August 2026",
   "postProfileForm.moveIn.sep2026": "September 2026",
-  "postProfileForm.aboutLabel":
-    "About you & what you're looking for in a home",
+  "postProfileForm.aboutLabel": "About you & what you're looking for in a home",
   "postProfileForm.aboutPlaceholder":
     "Tell people a bit about yourself — your rhythm, your work, what kind of home makes you feel good. No need to sell yourself; just be honest.",
   "postProfileForm.lifestyleTagsLabel": "Lifestyle tags",
@@ -740,7 +740,8 @@ export const economy: Catalog = {
   "companyReview.cancel": "← Cancel",
   "companyReview.posting": "Posting…",
   "companyReview.submitCta": "Post review →",
-  "companyReview.toast.alreadyReviewed": "You've already reviewed this company.",
+  "companyReview.toast.alreadyReviewed":
+    "You've already reviewed this company.",
   "companyReview.toast.error":
     "We couldn't post your review. Please try again.",
 

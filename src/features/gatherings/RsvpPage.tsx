@@ -57,9 +57,14 @@ export function RsvpPage() {
                   />
                 </svg>
               </div>
-              <div className={styles.eyebrow}>{t("gatherings:rsvp.eyebrow")}</div>
+              <div className={styles.eyebrow}>
+                {t("gatherings:rsvp.eyebrow")}
+              </div>
               <h1 className={styles.h}>
-                <Translation i18nKey="gatherings:rsvp.title" components={{ em: <em /> }} />
+                <Translation
+                  i18nKey="gatherings:rsvp.title"
+                  components={{ em: <em /> }}
+                />
               </h1>
               <p className={styles.gName}>{GATHERING_TITLE}</p>
             </div>
@@ -88,7 +93,9 @@ export function RsvpPage() {
                 ))}
               </div>
 
-              <div className={styles.withLabel}>{t("gatherings:rsvp.withLabel")}</div>
+              <div className={styles.withLabel}>
+                {t("gatherings:rsvp.withLabel")}
+              </div>
               <div className={styles.withRow}>
                 <div style={{ display: "flex" }}>
                   {[
@@ -126,7 +133,9 @@ export function RsvpPage() {
                 <p className={styles.hnText}>{RSVP_HOST_QUOTE}</p>
               </div>
 
-              <div className={styles.calLabel}>{t("gatherings:rsvp.calendar.label")}</div>
+              <div className={styles.calLabel}>
+                {t("gatherings:rsvp.calendar.label")}
+              </div>
               <div className={styles.calRow}>
                 <button
                   type="button"
@@ -176,14 +185,18 @@ export function RsvpPage() {
         <div className={styles.coc}>
           <div className={styles.cocInner}>
             <h2 className={styles.cocTitle}>
-              <Translation i18nKey="gatherings:rsvp.coc.title" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="gatherings:rsvp.coc.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={styles.cocItems}>
               {RSVP_COC.map((item) => (
                 <div key={item.id} className={styles.cocItem}>
                   <div className={styles.cocDot} />
                   <p className={styles.cocText}>
-                    <strong>{t(item.strongKey)}</strong> {t(item.restKey, item.restValues)}
+                    <strong>{t(item.strongKey)}</strong>{" "}
+                    {t(item.restKey, item.restValues)}
                   </p>
                 </div>
               ))}
@@ -204,7 +217,9 @@ export function RsvpPage() {
               {t("gatherings:rsvp.footer.cancelCta")}
             </Link>{" "}
             ·{" "}
-            <Link to={routes.privacy}>{t("gatherings:rsvp.footer.privacyCta")}</Link>
+            <Link to={routes.privacy}>
+              {t("gatherings:rsvp.footer.privacyCta")}
+            </Link>
           </p>
         </div>
       </div>

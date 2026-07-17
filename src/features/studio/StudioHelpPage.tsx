@@ -97,7 +97,10 @@ export function StudioHelpPage() {
         <div className={s.pageH}>
           <div className={s.eb}>{t("studio:help.hero.eyebrow")}</div>
           <h1>
-            <Translation i18nKey="studio:help.hero.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:help.hero.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <div className={s.dek}>{t("studio:help.hero.dek")}</div>
         </div>
@@ -130,7 +133,10 @@ export function StudioHelpPage() {
 
           <section className={s.sec}>
             <h2>
-              <Translation i18nKey="studio:help.stillStuck.title" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="studio:help.stillStuck.title"
+                components={{ em: <em /> }}
+              />
             </h2>
             <div className={s.contact}>
               {contactCards.map((card, i) => (

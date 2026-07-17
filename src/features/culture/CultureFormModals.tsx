@@ -82,7 +82,9 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
           </h2>
           <p className={styles.sub}>{t("culture:suggestPick.sub")}</p>
           <div className={styles.field}>
-            <label htmlFor="pk-kind">{t("culture:suggestPick.formatLabel")}</label>
+            <label htmlFor="pk-kind">
+              {t("culture:suggestPick.formatLabel")}
+            </label>
             <select id="pk-kind" defaultValue={PICK_KINDS[0]}>
               {PICK_KINDS.map((k) => (
                 <option key={k} value={k}>
@@ -92,7 +94,9 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
             </select>
           </div>
           <div className={styles.field}>
-            <label htmlFor="pk-title">{t("culture:suggestPick.titleLabel")}</label>
+            <label htmlFor="pk-title">
+              {t("culture:suggestPick.titleLabel")}
+            </label>
             <input
               id="pk-title"
               type="text"
@@ -173,7 +177,9 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="pp-desc">{t("culture:postProject.descLabel")}</label>
+            <label htmlFor="pp-desc">
+              {t("culture:postProject.descLabel")}
+            </label>
             <textarea
               id="pp-desc"
               placeholder={t("culture:postProject.descPlaceholder")}

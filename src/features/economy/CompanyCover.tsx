@@ -66,10 +66,7 @@ export function CompanyCover({
               {profile.badges.map((badge) => (
                 <span
                   key={badge.label}
-                  className={[
-                    styles.badge,
-                    badgeClass[badge.kind ?? "plain"],
-                  ]
+                  className={[styles.badge, badgeClass[badge.kind ?? "plain"]]
                     .filter(Boolean)
                     .join(" ")}
                 >

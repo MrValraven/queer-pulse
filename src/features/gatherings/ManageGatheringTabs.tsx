@@ -210,7 +210,10 @@ function AttendeesTab({ slug }: { slug: string }) {
             })}
           </span>
           <span className={styles.capPct}>
-            {fmt.number(pct / 100, { style: "percent", maximumFractionDigits: 0 })}
+            {fmt.number(pct / 100, {
+              style: "percent",
+              maximumFractionDigits: 0,
+            })}
           </span>
         </div>
         <div className={styles.capBar}>
@@ -231,7 +234,9 @@ function AttendeesTab({ slug }: { slug: string }) {
             </div>
             <div className={styles.attInfo}>
               <div className={styles.attName}>{attendee.name}</div>
-              <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
+              <div className={styles.attMeta}>
+                {attendeeMeta(attendee, t, fmt)}
+              </div>
             </div>
             <div className={styles.attActions}>
               <button
@@ -241,7 +246,10 @@ function AttendeesTab({ slug }: { slug: string }) {
                 })}
                 className={`${styles.attActionBtn} ${styles.remove}`}
                 onClick={() =>
-                  showToast(t("gatherings:manage.attendees.removedToast"), "info")
+                  showToast(
+                    t("gatherings:manage.attendees.removedToast"),
+                    "info",
+                  )
                 }
               >
                 {t("gatherings:manage.attendees.removeCta")}
@@ -251,12 +259,16 @@ function AttendeesTab({ slug }: { slug: string }) {
         ))}
         {overflow > 0 && (
           <div className={styles.moreRow}>
-            {t("gatherings:manage.attendees.moreAttendees", { count: overflow })}
+            {t("gatherings:manage.attendees.moreAttendees", {
+              count: overflow,
+            })}
           </div>
         )}
       </div>
       <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>
-        {t("gatherings:manage.attendees.waitlistHeading", { count: waitlistCount })}
+        {t("gatherings:manage.attendees.waitlistHeading", {
+          count: waitlistCount,
+        })}
       </div>
       <div className={styles.attList}>
         {waitlist.map((attendee) => (
@@ -269,7 +281,9 @@ function AttendeesTab({ slug }: { slug: string }) {
             </div>
             <div className={styles.attInfo}>
               <div className={styles.attName}>{attendee.name}</div>
-              <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
+              <div className={styles.attMeta}>
+                {attendeeMeta(attendee, t, fmt)}
+              </div>
             </div>
             <div className={styles.attActions}>
               <button
@@ -309,7 +323,11 @@ interface SentMessage {
 }
 
 /** "just now" for a message sent this session, else a day-level relative time. */
-function messageRelativeTime(sentAt: Date, t: TFunction, fmt: Formatters): string {
+function messageRelativeTime(
+  sentAt: Date,
+  t: TFunction,
+  fmt: Formatters,
+): string {
   const diffMinutes = Math.round((sentAt.getTime() - Date.now()) / 60_000);
   if (Math.abs(diffMinutes) < 1) return t("gatherings:manage.messages.justNow");
   const diffDays = Math.round((sentAt.getTime() - Date.now()) / 86_400_000);
@@ -362,7 +380,9 @@ function MessagesTab() {
         />
         <div className={styles.compFooter}>
           <div className={styles.compHint}>
-            {t("gatherings:manage.messages.sentHint", { count: ATTENDEE_COUNT })}
+            {t("gatherings:manage.messages.sentHint", {
+              count: ATTENDEE_COUNT,
+            })}
           </div>
           <Button variant="primary" disabled={!message.trim()} onClick={send}>
             {t("gatherings:manage.messages.sendCta")}
@@ -412,7 +432,9 @@ interface SettingsTabProps {
 function SettingsTab({ slug, onCancel }: SettingsTabProps) {
   const { t } = useTranslation();
   const [toggles, setToggles] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(GATHERING_SETTINGS.map((setting) => [setting.id, setting.on])),
+    Object.fromEntries(
+      GATHERING_SETTINGS.map((setting) => [setting.id, setting.on]),
+    ),
   );
   return (
     <div>

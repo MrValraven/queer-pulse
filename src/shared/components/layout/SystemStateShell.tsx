@@ -49,7 +49,10 @@ export function SystemStateShell({
           className={`${styles.pulseDot} ${mutedBrand ? styles.pulseDotMuted : ""}`}
           aria-hidden
         />
-        <Translation i18nKey="shared:brand.wordmark" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="shared:brand.wordmark"
+          components={{ em: <em /> }}
+        />
       </Link>
       <BackToSettingsLink />
       <div className={styles.enter}>{children}</div>

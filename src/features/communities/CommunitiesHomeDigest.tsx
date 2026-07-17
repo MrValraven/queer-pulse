@@ -20,7 +20,9 @@ export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
   return (
     <div className={styles.digest}>
       <div className={styles.digestSide}>
-        <div className={styles.digestLbl}>{t("communities:hub.digest.label")}</div>
+        <div className={styles.digestLbl}>
+          {t("communities:hub.digest.label")}
+        </div>
         <p className={styles.digestNote}>{t("communities:hub.digest.note")}</p>
       </div>
       <div className={styles.digestTiles}>

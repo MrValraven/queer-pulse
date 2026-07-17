@@ -23,7 +23,9 @@ export function AuthorPage() {
         <div className={styles.notFound}>
           <h2>{t("magazine:author.notFoundTitle")}</h2>
           <p>{t("magazine:author.notFoundBody")}</p>
-          <Button to={routes.magazine}>{t("magazine:author.notFoundCta")}</Button>
+          <Button to={routes.magazine}>
+            {t("magazine:author.notFoundCta")}
+          </Button>
         </div>
       </PageShell>
     );

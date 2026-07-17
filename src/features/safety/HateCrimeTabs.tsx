@@ -54,10 +54,7 @@ export function HateCrimeTabBar({
 export function HateCrimePanel() {
   const { t } = useTranslation();
   const [tab, setTab] = useState<TabId>("immediate");
-  const panels = useMemo(
-    () => buildPanels(t, { MENTAL, FORUM, LEGAL }),
-    [t],
-  );
+  const panels = useMemo(() => buildPanels(t, { MENTAL, FORUM, LEGAL }), [t]);
 
   return (
     <>

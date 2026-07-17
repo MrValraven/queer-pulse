@@ -113,7 +113,9 @@ export function LeaveConsidering({
       </div>
 
       <div className={s.divider} />
-      <div className={s.stillWant}>{t("safety:leave.considering.stillWant")}</div>
+      <div className={s.stillWant}>
+        {t("safety:leave.considering.stillWant")}
+      </div>
       <textarea
         className={s.reasonTa}
         placeholder={t("safety:leave.considering.reasonPlaceholder")}
@@ -187,7 +189,9 @@ export function LeavePausing({
         ))}
       </div>
       <div className={s.lossCard} style={{ marginBottom: 22 }}>
-        <div className={s.lcLabel}>{t("safety:leave.pausing.effectsLabel")}</div>
+        <div className={s.lcLabel}>
+          {t("safety:leave.pausing.effectsLabel")}
+        </div>
         {PAUSE_EFFECT_KEYS.map((key) => (
           <div key={key} className={s.lossItem}>
             <span className={s.lossDot} style={{ background: "var(--jade)" }} />

@@ -32,7 +32,9 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
             {t("common:cta.signIn")}
           </Button>
           <Button variant="primary" to={routes.sustainer}>
-            {t("studio:shell.sustainCta", { price: fmt.currency(SUSTAIN_PRICE) })}
+            {t("studio:shell.sustainCta", {
+              price: fmt.currency(SUSTAIN_PRICE),
+            })}
           </Button>
         </div>
       </header>
@@ -71,7 +73,9 @@ function StudioLandingFooter() {
         </div>
       </div>
       <div className={styles.footBase}>
-        <span>{t("studio:landing.footer.copyright", { year: currentYear })}</span>
+        <span>
+          {t("studio:landing.footer.copyright", { year: currentYear })}
+        </span>
         <span>{t("studio:landing.footer.languages")}</span>
       </div>
     </footer>

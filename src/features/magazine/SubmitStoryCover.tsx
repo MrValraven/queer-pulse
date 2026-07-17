@@ -111,7 +111,8 @@ export function SubmitStoryCover({
                 onClick={remove}
                 disabled={busy}
               >
-                <FiX aria-hidden="true" /> {t("magazine:submitStory.cover.removeCta")}
+                <FiX aria-hidden="true" />{" "}
+                {t("magazine:submitStory.cover.removeCta")}
               </button>
             </div>
           </div>

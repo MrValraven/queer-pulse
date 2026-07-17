@@ -20,9 +20,14 @@ export function StudioLandingPromises() {
   return (
     <section className={styles.promises} id="how">
       <div className={styles.promisesH}>
-        <div className={styles.ebPlain}>{t("studio:landing.promises.eyebrow")}</div>
+        <div className={styles.ebPlain}>
+          {t("studio:landing.promises.eyebrow")}
+        </div>
         <h2>
-          <Translation i18nKey="studio:landing.promises.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:landing.promises.title"
+            components={{ em: <em /> }}
+          />
         </h2>
       </div>
       <div className={styles.grid4}>
@@ -57,7 +62,10 @@ export function StudioLandingCounter() {
           {t("studio:landing.counter.liveEyebrow")}
         </div>
         <h2>
-          <Translation i18nKey="studio:landing.counter.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="studio:landing.counter.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <div className={styles.bigN}>
           €<em>{fmt.number(total)}</em>
@@ -67,7 +75,9 @@ export function StudioLandingCounter() {
             count: LEDGER_ARTIST_COUNT,
             cycles: LEDGER_CYCLE_COUNT,
           })}
-          <Link to={routes.governance}>{t("studio:landing.counter.seeLedgerCta")} →</Link>
+          <Link to={routes.governance}>
+            {t("studio:landing.counter.seeLedgerCta")} →
+          </Link>
         </p>
 
         <div className={styles.counterStats}>
@@ -95,7 +105,10 @@ export function StudioLandingComparison() {
       <div className={styles.compareInner}>
         <div className={styles.compareH}>
           <h2>
-            <Translation i18nKey="studio:landing.compare.title" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="studio:landing.compare.title"
+              components={{ em: <em /> }}
+            />
           </h2>
         </div>
         <div className={styles.compareGrid}>
@@ -126,7 +139,10 @@ export function StudioLandingCta() {
   return (
     <section className={styles.ctaBand}>
       <h2>
-        <Translation i18nKey="studio:landing.cta.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="studio:landing.cta.title"
+          components={{ em: <em /> }}
+        />
       </h2>
       <p>
         <Translation
@@ -149,7 +165,9 @@ export function StudioLandingCta() {
           components={{ em: <em /> }}
           values={{ addOnPrice: fmt.currency(STUDIO_ADD_ON_PRICE) }}
         />{" "}
-        <Link to={routes.signIn}>{t("studio:landing.cta.secondaryLink")} →</Link>
+        <Link to={routes.signIn}>
+          {t("studio:landing.cta.secondaryLink")} →
+        </Link>
       </div>
     </section>
   );

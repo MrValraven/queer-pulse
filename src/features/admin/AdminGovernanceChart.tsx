@@ -58,8 +58,14 @@ export function AdminGovernanceChart() {
       </div>
 
       <div className={styles.chartLegend}>
-        <Legend swatch={styles.legIncome!} label={t("admin:governance.chart.legend.income")} />
-        <Legend swatch={styles.legSpend!} label={t("admin:governance.chart.legend.spending")} />
+        <Legend
+          swatch={styles.legIncome!}
+          label={t("admin:governance.chart.legend.income")}
+        />
+        <Legend
+          swatch={styles.legSpend!}
+          label={t("admin:governance.chart.legend.spending")}
+        />
         <Legend
           swatch={styles.legReserve!}
           label={t("admin:governance.chart.legend.surplus")}

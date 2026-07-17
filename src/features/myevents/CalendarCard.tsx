@@ -29,7 +29,10 @@ function monthLabel(
     const endLabel = `${end.getDate()} ${fmt.date(end, { month: "short" })}`;
     return `${startLabel} – ${endLabel}`;
   }
-  return fmt.date(new Date(viewY, viewM, 1), { month: "long", year: "numeric" });
+  return fmt.date(new Date(viewY, viewM, 1), {
+    month: "long",
+    year: "numeric",
+  });
 }
 
 /** The right-hand calendar aside: nav, grid, legend, subscribe, insights. */
@@ -104,13 +107,16 @@ export function CalendarCard() {
 
       <div className={sx("cal-legend")}>
         <div className={sx("cal-leg")}>
-          <span className={sx("ld hosting")} /> {t("myevents:calendar.legend.hosting")}
+          <span className={sx("ld hosting")} />{" "}
+          {t("myevents:calendar.legend.hosting")}
         </div>
         <div className={sx("cal-leg")}>
-          <span className={sx("ld going")} /> {t("myevents:calendar.legend.going")}
+          <span className={sx("ld going")} />{" "}
+          {t("myevents:calendar.legend.going")}
         </div>
         <div className={sx("cal-leg")}>
-          <span className={sx("ld pending")} /> {t("myevents:calendar.legend.pending")}
+          <span className={sx("ld pending")} />{" "}
+          {t("myevents:calendar.legend.pending")}
         </div>
       </div>
 

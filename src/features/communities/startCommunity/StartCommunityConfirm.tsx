@@ -75,7 +75,9 @@ export function StepConfirm({
 
   return (
     <div>
-      <p className={styles.confirmLead}>{t("communities:start.confirm.lead")}</p>
+      <p className={styles.confirmLead}>
+        {t("communities:start.confirm.lead")}
+      </p>
 
       <div className={styles.handleBox}>
         <label htmlFor="sc-handle">

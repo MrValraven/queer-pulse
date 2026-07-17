@@ -96,9 +96,7 @@ export function CookiesPage() {
                         <span className={styles.ckExp}>
                           {t(cookie.expiresKey)}
                         </span>
-                        <span className={styles.ckType}>
-                          {cookie.provider}
-                        </span>
+                        <span className={styles.ckType}>{cookie.provider}</span>
                       </div>
                     ))}
                   </div>

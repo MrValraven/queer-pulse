@@ -34,7 +34,8 @@ export function ImageUploadField({
   const upload = useUploadImage(kind);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const resolvedPlaceholder = placeholder ?? t("subprofiles:imageUpload.defaultPlaceholder");
+  const resolvedPlaceholder =
+    placeholder ?? t("subprofiles:imageUpload.defaultPlaceholder");
 
   useEffect(
     () => () => {

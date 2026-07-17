@@ -28,13 +28,21 @@ export function GatheringRecapSidebar({
           {t("gatherings:recap.eventDetailsLabel")}
         </div>
         <div className={styles.sbRow}>
-          <span className={styles.sdrLabel}>{t("gatherings:recap.dateLabel")}</span>
+          <span className={styles.sdrLabel}>
+            {t("gatherings:recap.dateLabel")}
+          </span>
           <span className={styles.sdrVal}>
-            {fmt.date(RECAP_EVENT_DATE, { day: "numeric", month: "long", year: "numeric" })}
+            {fmt.date(RECAP_EVENT_DATE, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </span>
         </div>
         <div className={styles.sbRow}>
-          <span className={styles.sdrLabel}>{t("gatherings:recap.venueLabel")}</span>
+          <span className={styles.sdrLabel}>
+            {t("gatherings:recap.venueLabel")}
+          </span>
           <span className={styles.sdrVal}>{RECAP_SIDEBAR_VENUE}</span>
         </div>
         <div className={styles.sbRow}>
@@ -49,7 +57,9 @@ export function GatheringRecapSidebar({
           <Avatar initials="SR" tint="jade" size={34} />
           <div>
             <div className={styles.hostName}>{RECAP_HOST_NAME}</div>
-            <div className={styles.hostRole}>{t("gatherings:recap.hostLabel")}</div>
+            <div className={styles.hostRole}>
+              {t("gatherings:recap.hostLabel")}
+            </div>
           </div>
         </div>
       </div>

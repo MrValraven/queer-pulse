@@ -130,7 +130,11 @@ export const PRESS_QUOTES: { quote: string; source: ReactNode }[] = [
  * (display) and `copy` (clipboard text) are the artist's own press data and
  * stay English in both modes per `docs/i18n/extraction-brief.md` §1.
  */
-export const BOILERPLATE: { labelKey: string; value: ReactNode; copy: string }[] = [
+export const BOILERPLATE: {
+  labelKey: string;
+  value: ReactNode;
+  copy: string;
+}[] = [
   {
     labelKey: "studio:press.boilerplate.fullName",
     value: "Mariana Sol (b. 1996, Sintra)",

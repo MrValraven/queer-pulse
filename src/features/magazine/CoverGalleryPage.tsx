@@ -313,9 +313,7 @@ export function CoverGalleryPage() {
               components={{ em: <em /> }}
             />
           </h2>
-          <p className={styles.sub}>
-            {t("magazine:coverGallery.madeWithSub")}
-          </p>
+          <p className={styles.sub}>{t("magazine:coverGallery.madeWithSub")}</p>
           <div className={styles.illusGrid}>
             {ILLUS.map((il) => (
               <Link to={MEMBER} className={styles.illusCard} key={il.name}>

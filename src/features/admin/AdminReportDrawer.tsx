@@ -2,12 +2,15 @@ import { useState } from "react";
 import { FiAlertTriangle, FiShield, FiInfo, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import {
   MOD_ACTIONS,
   MOD_REASONS,
   SEVERITY,
+  chipKey,
+  chipLabel,
   type ModReport,
   type ReportDetail,
 } from "./adminModeration.data";
@@ -18,6 +21,7 @@ import styles from "./AdminModerationPage.module.css";
 
 /** Reported content + surrounding thread + people involved (read-only context). */
 function ReportContext({ detail }: { detail: ReportDetail }) {
+  const { t } = useTranslation();
   return (
     <>
       <section className={styles.dSec}>
@@ -86,9 +90,9 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
                 <span className={styles.dPersonMeta}>{p.meta}</span>
                 {p.chips && p.chips.length > 0 && (
                   <span className={styles.dPersonChips}>
-                    {p.chips.map((c) => (
-                      <AdminChip key={c.label} tone={c.tone}>
-                        {c.label}
+                    {p.chips.map((chip) => (
+                      <AdminChip key={chipKey(chip)} tone={chip.tone}>
+                        {chipLabel(chip, t)}
                       </AdminChip>
                     ))}
                   </span>
@@ -140,6 +144,7 @@ export function AdminReportDrawer({
   /** Called when a report leaves the open queue (confirm or escalate). */
   onResolve: (id: string, opts?: ResolveOpts) => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [action, setAction] = useState<string | null>(null);
   const [reason, setReason] = useState<ReasonCode | null>(null);
@@ -188,10 +193,10 @@ export function AdminReportDrawer({
       head={
         <>
           <div className={styles.dHeadChips}>
-            <AdminCat tone={sev.cat}>{sev.label}</AdminCat>
-            {report.chips.map((c) => (
-              <AdminChip key={c.label} tone={c.tone}>
-                {c.label}
+            <AdminCat tone={sev.cat}>{t(sev.labelKey)}</AdminCat>
+            {report.chips.map((chip) => (
+              <AdminChip key={chipKey(chip)} tone={chip.tone}>
+                {chipLabel(chip, t)}
               </AdminChip>
             ))}
           </div>

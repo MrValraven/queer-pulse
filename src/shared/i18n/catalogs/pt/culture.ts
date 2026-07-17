@@ -74,8 +74,7 @@ export const culture: Catalog = {
   "common.sending": "A enviar…",
 
   "suggestPick.title": "Sugerir uma <em>escolha</em>",
-  "suggestPick.sub":
-    "Nomeia algo para a comunidade votar este mês.",
+  "suggestPick.sub": "Nomeia algo para a comunidade votar este mês.",
   "suggestPick.formatLabel": "Formato",
   "suggestPick.titleLabel": "Título",
   "suggestPick.titlePlaceholder": "p.ex. Detransition, Baby",
@@ -94,7 +93,8 @@ export const culture: Catalog = {
     "Enviamos-te os resultados por email até <strong>{date}</strong>.",
 
   "postProject.title": "Publicar um <em>projeto</em>",
-  "postProject.sub": "Conta à comunidade o que estás a criar e de quem precisas.",
+  "postProject.sub":
+    "Conta à comunidade o que estás a criar e de quem precisas.",
   "postProject.titleLabel": "Título do projeto",
   "postProject.titlePlaceholder": "O que estás a criar?",
   "postProject.descLabel": "Descrição",
@@ -121,7 +121,8 @@ export const culture: Catalog = {
   "submitWork.linkLabel": "Ligação para o trabalho",
   "submitWork.linkPlaceholder": "URL do portefólio, imagem ou vídeo",
   "submitWork.aboutLabel": "Sobre a peça",
-  "submitWork.aboutPlaceholder": "Uma breve nota que as pessoas curadoras possam ler…",
+  "submitWork.aboutPlaceholder":
+    "Uma breve nota que as pessoas curadoras possam ler…",
   "submitWork.submitCta": "Submeter trabalho",
   "submitWork.success.title": "Trabalho",
   "submitWork.success.em": "submetido.",
@@ -139,7 +140,8 @@ export const culture: Catalog = {
   "submitPlaylist.nameLabel": "Nome da playlist",
   "submitPlaylist.namePlaceholder": "p.ex. A noite que ficou em Lisboa",
   "submitPlaylist.linkLabel": "Ligação para o set",
-  "submitPlaylist.linkPlaceholder": "URL do Spotify, SoundCloud ou de uma tracklist",
+  "submitPlaylist.linkPlaceholder":
+    "URL do Spotify, SoundCloud ou de uma tracklist",
   "submitPlaylist.vibeLabel": "Ambiente",
   "submitPlaylist.noteLabel": "Nota da curadoria",
   "submitPlaylist.notePlaceholder": "Para quando é isto? Sobre o que é?…",

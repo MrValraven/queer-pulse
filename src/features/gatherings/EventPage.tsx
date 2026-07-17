@@ -48,7 +48,8 @@ export function EventPage() {
           <div className={styles.hostRow}>
             <Avatar initials="MC" tint="coral" size={34} />
             <div className={styles.by}>
-              {t("gatherings:common.hostedBy")} <strong>{EVENT_HOST_NAME}</strong> ·{" "}
+              {t("gatherings:common.hostedBy")}{" "}
+              <strong>{EVENT_HOST_NAME}</strong> ·{" "}
               <Link
                 to={routes.members}
                 style={{
@@ -103,7 +104,9 @@ export function EventPage() {
                   <p>{EVENT_ABOUT_P1}</p>
                   <p>{EVENT_ABOUT_P2}</p>
                   <p>
-                    <strong>{t("gatherings:event.about.accessibilityLabel")}:</strong>{" "}
+                    <strong>
+                      {t("gatherings:event.about.accessibilityLabel")}:
+                    </strong>{" "}
                     {EVENT_ABOUT_ACCESSIBILITY_TEXT}
                   </p>
                 </div>
@@ -134,7 +137,9 @@ export function EventPage() {
                     <FiLock />
                   </span>
                   <div>
-                    <div className={styles.locRevealHood}>{EVENT_HOOD_LABEL}</div>
+                    <div className={styles.locRevealHood}>
+                      {EVENT_HOOD_LABEL}
+                    </div>
                     <div className={styles.locRevealNote}>
                       {t("gatherings:event.details.locationNote")}
                     </div>

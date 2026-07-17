@@ -2,6 +2,7 @@ import { REASON_LABELS, type ReasonCode } from "../../safety/reportReasons";
 import type {
   Appeal,
   ModReport,
+  PriorReports,
   ReportChip,
   Severity,
 } from "../adminModeration.data";
@@ -16,14 +17,18 @@ import type { AppealDTO, ModReportDTO, ModSeverity } from "./moderation.api";
  * mode returns the mock arrays directly.
  */
 
-const RISK: Record<ModSeverity, { tone: AdminTone; label: string }> = {
-  emergency: { tone: "danger", label: "At risk" },
-  high: { tone: "coral", label: "High" },
-  medium: { tone: "amber", label: "Medium" },
-  low: { tone: "jade", label: "Low" },
+const RISK: Record<ModSeverity, { tone: AdminTone; key: string }> = {
+  emergency: { tone: "danger", key: "admin:moderation.risk.atRisk" },
+  high: { tone: "coral", key: "admin:moderation.risk.high" },
+  medium: { tone: "amber", key: "admin:moderation.risk.medium" },
+  low: { tone: "jade", key: "admin:moderation.risk.low" },
 };
 
-/** Short square-category label per reason code. */
+/**
+ * Short square-category label per reason code. Kept as plain English to mirror
+ * the mock seed's `category` field, which the demo UI does not render (see
+ * `ModReport.category`). The rendered chip uses `CATEGORY_KEY` instead.
+ */
 const CATEGORY: Partial<Record<ReasonCode, string>> = {
   outing: "Emergency",
   doxxing: "Emergency",
@@ -38,6 +43,23 @@ const CATEGORY: Partial<Record<ReasonCode, string>> = {
   venue_staff: "Venue",
   venue_accessibility: "Venue",
   other: "Other",
+};
+
+/** Catalog key per reason code, for the category chip shown on the card. */
+const CATEGORY_KEY: Partial<Record<ReasonCode, string>> = {
+  outing: "admin:moderation.category.emergency",
+  doxxing: "admin:moderation.category.emergency",
+  harassment: "admin:moderation.category.harassment",
+  hate_speech: "admin:moderation.category.hateSpeech",
+  unwanted_contact: "admin:moderation.category.harassment",
+  impersonation: "admin:moderation.category.impersonation",
+  discrimination: "admin:moderation.category.discrimination",
+  spam: "admin:moderation.category.spam",
+  off_topic: "admin:moderation.category.offTopic",
+  venue_safety: "admin:moderation.category.venue",
+  venue_staff: "admin:moderation.category.venue",
+  venue_accessibility: "admin:moderation.category.venue",
+  other: "admin:moderation.category.other",
 };
 
 const CHIP_TONE: Record<ModSeverity, AdminTone> = {
@@ -58,16 +80,20 @@ function ageOf(iso: string): string {
   return `${Math.floor(h / 24)}d`;
 }
 
-function priorLine(n: number): string | undefined {
-  if (n <= 0) return undefined;
-  return n === 1 ? "1 prior report" : `${n} prior reports`;
+function priorLine(count: number): PriorReports | undefined {
+  if (count <= 0) return undefined;
+  return { kind: "count", count };
 }
 
 export function modReportDtoToView(dto: ModReportDTO): ModReport {
   const severity = dto.severity as Severity;
   const category = CATEGORY[dto.reasonCode] ?? "Report";
   const chips: ReportChip[] = [
-    { tone: CHIP_TONE[dto.severity], label: category },
+    {
+      tone: CHIP_TONE[dto.severity],
+      labelKey:
+        CATEGORY_KEY[dto.reasonCode] ?? "admin:moderation.category.report",
+    },
   ];
   const view: ModReport = {
     id: dto.id,
@@ -116,7 +142,12 @@ export function appealDtoToView(dto: AppealDTO): Appeal {
   return {
     id: dto.id,
     severity,
-    chips: [{ tone: CHIP_TONE[dto.severity], label: "Appeal" }],
+    chips: [
+      {
+        tone: CHIP_TONE[dto.severity],
+        labelKey: "admin:moderation.chip.appeal",
+      },
+    ],
     title: dto.original.action,
     preview: dto.argument.slice(0, 140),
     appealBy: dto.appellant.handle,
@@ -125,7 +156,7 @@ export function appealDtoToView(dto: AppealDTO): Appeal {
     tone: "coral",
     community: dto.community ?? undefined,
     age: ageOf(dto.createdAt),
-    status: { tone: "amber", label: "Awaiting" },
+    status: { tone: "amber", key: "admin:moderation.status.awaiting" },
     original: {
       action: dto.original.action,
       by: dto.original.by,
