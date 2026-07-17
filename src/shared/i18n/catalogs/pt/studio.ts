@@ -125,7 +125,8 @@ export const studio: Catalog = {
     "Um servidor do nosso lado falhou a meio da gravação. A tua conta, as tuas gravações e o pagamento a cada artista estão seguros — isto é só o front of house. Espera um segundo e tenta outra vez.",
   "error500.tryAgainCta": "Tentar outra vez",
   "error500.backCta": "Voltar ao leitor",
-  "error500.statusPrefix": "Todos os pagamentos e a parte bancária não foram afetados ·",
+  "error500.statusPrefix":
+    "Todos os pagamentos e a parte bancária não foram afetados ·",
   "error500.refLine": "ref: {ref} · {timestamp} · o conselho já foi avisado",
 
   // ── Shell da página de marketing (StudioLandingShell) ─────────────────────
@@ -134,7 +135,7 @@ export const studio: Catalog = {
   "landing.nav.howItWorks": "Como funciona",
   "landing.nav.forArtists": "Para artistas",
   "landing.footer.tagline":
-    "Uma rede profissional queer com raízes em Lisboa. A Studio é uma das suas salas — a par de Cinema, Magazine e Encontros.",
+    "Uma rede profissional queer com raízes em Lisboa. A Studio é uma das suas salas — a par de Cinema, Magazine e Convívios.",
   "landing.footer.col.studio": "Studio",
   "landing.footer.col.studio.thisWeek": "Esta semana",
   "landing.footer.col.studio.djSets": "Sets de DJ",
@@ -181,7 +182,7 @@ export const studio: Catalog = {
     "80% de cada audição vai para o artista. 100% de cada gorjeta. Os outros 20% cobrem pagamentos, alojamento, legendas, edição de partituras e ajudas de custo do conselho. A divisão está em cada página de artista, cada recibo, cada álbum.",
   "landing.promises.humans.title": "Uma sala <em>programada</em> por pessoas.",
   "landing.promises.humans.body":
-    "Cada faixa na página principal tem o nome de quem a curou e uma nota de um parágrafo. Sem \"popular perto de ti\", sem \"feito para ti\", sem scroll infinito. A semana é pequena, feita à mão e datada.",
+    'Cada faixa na página principal tem o nome de quem a curou e uma nota de um parágrafo. Sem "popular perto de ti", sem "feito para ti", sem scroll infinito. A semana é pequena, feita à mão e datada.',
   "landing.promises.coOwned.title": "Co-propriedade de quem <em>ouve</em>.",
   "landing.promises.coOwned.body":
     "Sustentadores ({price}/mês) tornam-se sócios com voto na cooperativa ao fim de doze meses. Elegem o conselho, aprovam a tabela de valores e veem cada euro no livro-razão. A plataforma presta contas à sala.",
@@ -208,7 +209,8 @@ export const studio: Catalog = {
   "landing.compare.spotify.ctx":
     "Pro-rata · misturado com anúncios · cerca de 3 cêntimos por 10 reproduções",
   "landing.compare.apple.label": "Apple Music",
-  "landing.compare.apple.ctx": "Ligeiramente melhor, ainda maioritariamente nominal",
+  "landing.compare.apple.ctx":
+    "Ligeiramente melhor, ainda maioritariamente nominal",
   "landing.compare.tidal.label": "Tidal HiFi",
   "landing.compare.tidal.ctx": "Centrado na pessoa · só no plano hi-fi",
   "landing.compare.us.label": "QP Studio · piso mínimo garantido",
@@ -228,10 +230,12 @@ export const studio: Catalog = {
   "signin.tabs.signIn": "Entrar",
   "signin.tabs.join": "Juntar-te",
   "signin.aside.onAirNow": "No ar agora · {count} na sala",
-  "signin.aside.title": "Uma cooperativa de streaming que <em>paga</em> a quem fez a música.",
+  "signin.aside.title":
+    "Uma cooperativa de streaming que <em>paga</em> a quem fez a música.",
   "signin.aside.body":
     "Oitenta cêntimos de cada euro chegam ao artista. As gorjetas passam a <em>{tipPercent}</em>. O livro-razão é público, atualizado toda a segunda-feira ao meio-dia.",
-  "signin.aside.paidThisMonth": "Pago a artistas este mês: <em>{amount}</em> · e a subir.",
+  "signin.aside.paidThisMonth":
+    "Pago a artistas este mês: <em>{amount}</em> · e a subir.",
 
   "signin.in.title": "Bem-vinde de <em>volta.</em>",
   "signin.in.lede":
@@ -247,7 +251,8 @@ export const studio: Catalog = {
   "signin.in.freePrompt": "Só queres ouvir?",
   "signin.in.freeCta": "Ouve um set grátis, sem conta",
   "signin.in.signedInToast": "Sessão iniciada — bem-vinde de volta",
-  "signin.in.signedInGoogleToast": "Sessão iniciada com o Google — bem-vinde de volta",
+  "signin.in.signedInGoogleToast":
+    "Sessão iniciada com o Google — bem-vinde de volta",
 
   "signin.join.title": "Junta-te à <em>sala.</em>",
   "signin.join.lede":
@@ -256,11 +261,12 @@ export const studio: Catalog = {
   "signin.join.tier.studio.title": "Só <em>Studio</em>",
   "signin.join.tier.studio.body":
     "Tudo na Studio — o set semanal do conselho, salas ao vivo, o catálogo completo, áudio sem perdas, subscrições diretas a artistas.",
-  "signin.join.tier.studio.incl": "{sharePercent} da tua quota chega a artistas por reprodução",
+  "signin.join.tier.studio.incl":
+    "{sharePercent} da tua quota chega a artistas por reprodução",
   "signin.join.tier.coop.badge": "Melhor valor",
   "signin.join.tier.coop.title": "Toda a <em>cooperativa</em>",
   "signin.join.tier.coop.body":
-    "Studio <em>mais</em> Cinema, Magazine, Encontros, grupos de leitura e um voto na assembleia anual. Uma só assinatura, toda a QueerPulse.",
+    "Studio <em>mais</em> Cinema, Magazine, Convívios, grupos de leitura e um voto na assembleia anual. Uma só assinatura, toda a QueerPulse.",
   "signin.join.tier.coop.incl": "Uma conta em todos os espaços",
   "signin.join.submitCta": "Continuar para o pagamento",
   "signin.join.alreadyMember": "Já és pessoa da comunidade?",
@@ -296,7 +302,8 @@ export const studio: Catalog = {
   "welcome.step3.tipNotes.title": "Tornar públicas as minhas notas de gorjeta",
   "welcome.step3.tipNotes.body":
     "Desligado mantém cada nota entre ti e o artista. Podes mudar qualquer nota depois.",
-  "welcome.step3.librarySync.title": "Sincronizar a minha biblioteca entre dispositivos",
+  "welcome.step3.librarySync.title":
+    "Sincronizar a minha biblioteca entre dispositivos",
   "welcome.step3.librarySync.body":
     "As gravações e os seguimentos acompanham-te. Ligado por omissão — desliga para manter só neste dispositivo.",
   "welcome.enterRoomCta": "Entrar na sala",
@@ -310,7 +317,8 @@ export const studio: Catalog = {
     "Já ouviste «pagamento justo para artistas» da parte de todas as plataformas que os pagam mal. Por isso, aqui tens a aritmética, a governação e o teto honesto — <em>sem slogans que não se consigam verificar.</em>",
 
   "about.sec.whatItIs.num": "01 — o que é",
-  "about.sec.whatItIs.heading": "Uma plataforma de audição, gerida como <em>cooperativa</em>.",
+  "about.sec.whatItIs.heading":
+    "Uma plataforma de audição, gerida como <em>cooperativa</em>.",
   "about.sec.whatItIs.p1":
     "A QueerPulse Studio pertence a quem a usa — quem ouve e quem faz música, juntos — não a acionistas nem a uma editora discográfica. <strong>Oitenta cêntimos de cada euro gerado por uma audição vão para o artista.</strong> Cada cêntimo de cada gorjeta, também. A divisão é pública, o catálogo é curado por um conselho eleito de seis pessoas, e os masters nunca saem das mãos de quem os fez.",
   "about.sec.whatItIs.p2":
@@ -329,9 +337,11 @@ export const studio: Catalog = {
   "about.rate.cell.floor.value": "€<em>0,05</em>",
   "about.rate.cell.floor.label": "por reprodução válida · o piso",
   "about.rate.cell.share.value": "<em>80</em>%",
-  "about.rate.cell.share.label": "da receita de subscrições para artistas, por reprodução",
+  "about.rate.cell.share.label":
+    "da receita de subscrições para artistas, por reprodução",
   "about.rate.cell.tip.value": "<em>100</em>%",
-  "about.rate.cell.tip.label": "de cada gorjeta — sem corte da plataforma, nunca",
+  "about.rate.cell.tip.label":
+    "de cada gorjeta — sem corte da plataforma, nunca",
 
   "about.sec.ceiling.num": "03 — o que um artista pode realmente ganhar",
   "about.sec.ceiling.heading": "Honestos quanto ao <em>teto</em>.",
@@ -374,7 +384,8 @@ export const studio: Catalog = {
   "about.skeptic.clique.q": "Curadoria feita por seis pessoas soa a panelinha.",
   "about.skeptic.clique.a":
     "Pode tornar-se numa — esse é o risco real. As salvaguardas são mandatos de dois anos, rotação obrigatória, e o facto de cada escolha ser publicada com um nome e uma razão. <em>Uma panelinha que tem de se justificar por escrito todas as semanas é uma panelinha mais fraca.</em>",
-  "about.skeptic.clone.q": "Isto não é só um clone do Spotify com copy mais bonita?",
+  "about.skeptic.clone.q":
+    "Isto não é só um clone do Spotify com copy mais bonita?",
   "about.skeptic.clone.a":
     "Se a página principal fosse filas de capas de álbum quadradas, seria. O produto é editorial de propósito: um set semanal programado, salas de audição ao vivo, pagamentos visíveis em cada faixa. <em>Se algum dia parecermos um Spotify mais pequeno, cobra-nos este parágrafo.</em>",
   "about.skeptic.leave.q": "O que acontece à minha música se eu sair?",
@@ -389,7 +400,8 @@ export const studio: Catalog = {
 
   // ── Acessibilidade (StudioAccessibilityPage) ──────────────────────────────
   "accessibility.hero.eyebrow": "Acessibilidade · a lista em construção",
-  "accessibility.hero.title": "A música é para toda a gente, ou não é <em>música</em>.",
+  "accessibility.hero.title":
+    "A música é para toda a gente, ou não é <em>música</em>.",
   "accessibility.hero.lede":
     "Isto é, ao mesmo tempo, uma declaração de intenção e uma lista de verificação viva do que já funciona mesmo hoje. Onde algo <em>ainda não</em> está feito, dizemo-lo — preferimos ser honestos a parecer aspiracionais.",
   "accessibility.statement.p1":
@@ -397,7 +409,8 @@ export const studio: Catalog = {
   "accessibility.statement.p2":
     "Testamos com leitores de ecrã reais e pessoas reais — pagas, da nossa própria comunidade — em cada lançamento. <em>Se algo aqui não funcionar para ti, isso é um erro, e queremos o teu relatório.</em>",
 
-  "accessibility.group.deaf.heading": "Para pessoas surdas e com <em>dificuldades auditivas</em>",
+  "accessibility.group.deaf.heading":
+    "Para pessoas surdas e com <em>dificuldades auditivas</em>",
   "accessibility.group.deaf.dek":
     "Uma plataforma de música não pode fingir que toda a gente ouve da mesma forma. Por isso legendamos a conversa e mostramos as palavras.",
   "accessibility.item.captions.heading": "Salas <em>ao vivo</em> legendadas",
@@ -413,26 +426,31 @@ export const studio: Catalog = {
   "accessibility.item.signed.body":
     "As transmissões principais do conselho incluem uma janela de interpretação em Língua Gestual Portuguesa (LGP). A expandir para as salas semanais no próximo trimestre.",
 
-  "accessibility.group.language.heading": "Para quem ouve em <em>qualquer língua</em>",
+  "accessibility.group.language.heading":
+    "Para quem ouve em <em>qualquer língua</em>",
   "accessibility.group.language.dek":
     "O catálogo está sobretudo em português, com músicas numa dezena de outras línguas. As palavras não deviam ser uma barreira.",
   "accessibility.item.translation.heading": "<em>Tradução</em> de letras",
   "accessibility.item.translation.body":
     "As traduções feitas pela comunidade aparecem ao lado do original. Mostra uma, ou as duas ao mesmo tempo. Quem traduz é creditado e <em>pago pelo fundo de solidariedade</em> — traduzir é trabalho.",
-  "accessibility.item.interfaceLang.heading": "Interface na <em>tua língua</em>",
+  "accessibility.item.interfaceLang.heading":
+    "Interface na <em>tua língua</em>",
   "accessibility.item.interfaceLang.body":
     "A interface da Studio está disponível em português, inglês, espanhol e francês, com mais línguas à medida que a comunidade as traduz. Define-a em Definições → Legendas e letras.",
 
-  "accessibility.group.lowVision.heading": "Para navegação por <em>baixa visão</em> e teclado",
+  "accessibility.group.lowVision.heading":
+    "Para navegação por <em>baixa visão</em> e teclado",
   "accessibility.group.lowVision.dek":
     "Todo o leitor é operável sem rato, e o tema escuro foi construído para ter contraste claro — não só para parecer com atmosfera.",
   "accessibility.item.contrast.heading": "Contraste que <em>passa</em>",
   "accessibility.item.contrast.body":
     "O texto principal está a 4,5:1 ou melhor contra o roxo; os elementos interativos a um mínimo de 3:1, com um modo de alto contraste que reforça tudo ainda mais. Os anéis de foco estão sempre visíveis.",
-  "accessibility.item.screenReader.heading": "Notas para leitor de ecrã no <em>leitor</em>",
+  "accessibility.item.screenReader.heading":
+    "Notas para leitor de ecrã no <em>leitor</em>",
   "accessibility.item.screenReader.body":
     "O leitor persistente anuncia a faixa, o artista, o tempo decorrido, e <em>quanto esta audição paga ao artista</em>. Dar gorjeta e guardar são botões com etiqueta; a lista de gorjetas ao vivo é uma região viva ARIA educada, nunca uma rajada.",
-  "accessibility.item.reducedMotion.heading": "Respeita o <em>movimento reduzido</em>",
+  "accessibility.item.reducedMotion.heading":
+    "Respeita o <em>movimento reduzido</em>",
   "accessibility.item.reducedMotion.body":
     "Toda a animação decorativa — o ponto pulsante, as formas de onda, as barras do equalizador — imobiliza-se quando o teu sistema pede movimento reduzido. Nada essencial se move.",
 
@@ -455,7 +473,8 @@ export const studio: Catalog = {
   "accessibility.contact.body":
     "Conta-nos e vamos tratá-la como um erro, não como um pedido de funcionalidade. Relatórios de pessoas que usam tecnologia de apoio passam à frente na fila — <em>access@queerpulse.org</em>, ou assinala a partir do rodapé de qualquer página. Respondemos em dois dias úteis, com uma correção ou um prazo honesto.",
   "accessibility.contact.reportCta": "Reportar uma barreira de acesso",
-  "accessibility.contact.reportToast": "Recebido — vamos tratar isto como um erro",
+  "accessibility.contact.reportToast":
+    "Recebido — vamos tratar isto como um erro",
   "accessibility.contact.meta":
     "Última auditoria: 2 jun. 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · próxima auditoria: set. 2026",
 
@@ -464,7 +483,8 @@ export const studio: Catalog = {
   "help.hero.title": "Como podemos <em>ajudar</em>?",
   "help.hero.dek":
     "A maioria das respostas está abaixo. Se não estiver, uma pessoa lê cada mensagem — não temos um labirinto de bots, nem existe um nível de apoio que tenhas de pagar.",
-  "help.searchPlaceholder": "Pesquisar ajuda — gorjetas, pagamentos, qualidade de áudio…",
+  "help.searchPlaceholder":
+    "Pesquisar ajuda — gorjetas, pagamentos, qualidade de áudio…",
   "help.searchAria": "Pesquisar ajuda",
   "help.searchCta": "Pesquisar",
   "help.searchingToast": "A pesquisar no centro de ajuda…",
@@ -491,17 +511,18 @@ export const studio: Catalog = {
 
   "help.faq.priceDiff.q": "Qual é a diferença entre €7 e €11?",
   "help.faq.priceDiff.a":
-    "<strong>€7/mês</strong> é só a Studio. <strong>€11/mês</strong> é toda a cooperativa QueerPulse — Studio mais Cinema, Magazine, Encontros, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
+    "<strong>€7/mês</strong> é só a Studio. <strong>€11/mês</strong> é toda a cooperativa QueerPulse — Studio mais Cinema, Magazine, Convívios, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
   "help.faq.cancel.q": "Como cancelo?",
   "help.faq.cancel.a":
-    "Um clique em <a>Definições → Apagar e sair</a>. Sem chamada de retenção, sem ciclo de \"tens a certeza\", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar — é a única forma honesta de te pedir para ficares.",
-  "help.faq.dataSold.q": "Os meus dados são vendidos ou usados para treinar alguma coisa?",
+    'Um clique em <a>Definições → Apagar e sair</a>. Sem chamada de retenção, sem ciclo de "tens a certeza", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar — é a única forma honesta de te pedir para ficares.',
+  "help.faq.dataSold.q":
+    "Os meus dados são vendidos ou usados para treinar alguma coisa?",
   "help.faq.dataSold.a":
     "<strong>Nunca.</strong> Não vendemos, partilhamos, nem treinamos nada com o que ouves. As contagens agregadas de reproduções alimentam o livro-razão público, mas nada que te identifique. Todos os detalhes na página <a>confiança e termos</a>.",
 
   "help.faq.getPaid.q": "Quando e como sou pago?",
   "help.faq.getPaid.a":
-    "Mensalmente, no dia 5, com um piso de €5. SEPA ou Stripe Connect. Vês a taxa por reprodução desse mês, os números de cada entrada no livro-razão e a divisão por lançamento. Quem colabora é pago <em>diretamente</em> — não há uma carteira do \"artista principal\". Consulta <a>Pagamentos</a>.",
+    'Mensalmente, no dia 5, com um piso de €5. SEPA ou Stripe Connect. Vês a taxa por reprodução desse mês, os números de cada entrada no livro-razão e a divisão por lançamento. Quem colabora é pago <em>diretamente</em> — não há uma carteira do "artista principal". Consulta <a>Pagamentos</a>.',
   "help.faq.keepMasters.q": "Fico com os meus masters?",
   "help.faq.keepMasters.a":
     "<strong>Sempre.</strong> Ficas com os teus masters e com os teus direitos. Podes remover qualquer lançamento num processo de uma página, com 14 dias, sem ciclo de retenção — e as reproduções passadas continuam pagas. Consulta <a>Direitos e remoção</a>.",
@@ -517,11 +538,13 @@ export const studio: Catalog = {
   "help.contact.email.action": "Enviar mensagem",
   "help.contact.email.toast": "A abrir o teu cliente de email…",
   "help.contact.forum.title": "Fórum da <em>comunidade</em>",
-  "help.contact.forum.body": "Quem está na comunidade a ajudar quem está na comunidade <em>· sempre aberto</em>",
+  "help.contact.forum.body":
+    "Quem está na comunidade a ajudar quem está na comunidade <em>· sempre aberto</em>",
   "help.contact.forum.action": "Visitar o fórum",
   "help.contact.forum.toast": "A abrir o fórum…",
   "help.contact.access.title": "Reportar uma <em>barreira de acesso</em>",
-  "help.contact.access.body": "Relatórios de tecnologia de apoio <em>passam à frente na fila</em>",
+  "help.contact.access.body":
+    "Relatórios de tecnologia de apoio <em>passam à frente na fila</em>",
   "help.contact.access.action": "Acessibilidade →",
 
   // ── Kit de imprensa do artista (StudioPressPage + StudioPressBar) ─────────
@@ -529,9 +552,11 @@ export const studio: Catalog = {
   // imprensa da própria artista e ficam em inglês nos dois modos (§1).
   "press.copiedToast": "Copiado",
   "press.copyFailToast": "Não foi possível copiar",
-  "press.downloadingPhotosToast": "A transferir fotos de imprensa · alta resolução",
+  "press.downloadingPhotosToast":
+    "A transferir fotos de imprensa · alta resolução",
   "press.downloadingPhotoToast": "A transferir foto · alta resolução",
-  "press.accessRequestedToast": "Acesso de imprensa pedido — vamos verificar-te uma vez",
+  "press.accessRequestedToast":
+    "Acesso de imprensa pedido — vamos verificar-te uma vez",
   "press.eyebrow": "Kit de imprensa gerado automaticamente · sempre atual",
   "press.fact.from": "De",
   "press.fact.pronouns": "Pronomes",
@@ -577,11 +602,13 @@ export const studio: Catalog = {
   // ── Confiança e termos (StudioTermsPage) ──────────────────────────────────
   "terms.eyebrow": "As letras miúdas, em português claro",
   "terms.hero.eyebrow": "Confiança e termos",
-  "terms.hero.title": "O acordo, escrito para <em>conseguires mesmo lê-lo</em>.",
+  "terms.hero.title":
+    "O acordo, escrito para <em>conseguires mesmo lê-lo</em>.",
   "terms.hero.lede":
     "Os termos legais completos existem e foram escritos por um advogado. Mas aqui tens tudo em linguagem simples primeiro — <em>porque uma cooperativa que não consegues entender não é mesmo tua</em>.",
 
-  "terms.deal.artists.title": "Os artistas ficam com <em>80%</em> e com os seus masters",
+  "terms.deal.artists.title":
+    "Os artistas ficam com <em>80%</em> e com os seus masters",
   "terms.deal.artists.body":
     "A divisão está no estatuto, não numa página de definições. <em>O piso pode subir, nunca descer</em> sem uma votação de dois terços.",
   "terms.deal.tips.title": "As gorjetas são <em>100%</em>, sempre",
@@ -623,10 +650,12 @@ export const studio: Catalog = {
   "terms.licence.ccBySa.title": "Crédito, <em>partilha-igual</em>",
   "terms.licence.ccBySa.row1": "Reutilizar em qualquer lugar, com crédito",
   "terms.licence.ccBySa.row2": "Uso comercial permitido",
-  "terms.licence.ccBySa.row3": "Partilhar remisturas com a <em>mesma licença</em>",
+  "terms.licence.ccBySa.row3":
+    "Partilhar remisturas com a <em>mesma licença</em>",
 
   "terms.sec.privacy.num": "03 — privacidade, em resumo",
-  "terms.sec.privacy.heading": "O que <em>guardamos</em>, e o que não guardamos.",
+  "terms.sec.privacy.heading":
+    "O que <em>guardamos</em>, e o que não guardamos.",
   "terms.sec.privacy.p1":
     "Guardamos a tua conta, as tuas gravações, os teus recibos, e o que ativares explicitamente. <strong>Não</strong> guardamos um perfil do teu gosto para vender, um histórico que não pediste que guardássemos, nem nada que déssemos a um anunciante — porque não temos anunciantes.",
   "terms.sec.privacy.footnote":
@@ -656,7 +685,7 @@ export const studio: Catalog = {
   "rights.hero.eyebrow": "O teu trabalho · a tua decisão",
   "rights.hero.title": "Direitos e <em>remoção</em>.",
   "rights.hero.dek":
-    "Uma só página. Os teus masters são teus — podes remover qualquer lançamento da Studio a qualquer momento, por qualquer razão ou nenhuma. Sem equipa de retenção, sem inquérito de saída, sem ciclo de \"tens a certeza\" pensado para te desgastar.",
+    'Uma só página. Os teus masters são teus — podes remover qualquer lançamento da Studio a qualquer momento, por qualquer razão ou nenhuma. Sem equipa de retenção, sem inquérito de saída, sem ciclo de "tens a certeza" pensado para te desgastar.',
 
   "rights.releases.heading": "Os teus <em>lançamentos</em>",
   "rights.releases.liveCount_one": "{count} ativo",
@@ -673,8 +702,10 @@ export const studio: Catalog = {
   "rights.leavingCoop.body":
     "Esta página só remove lançamentos individuais. Para encerrar a tua conta de artista, terminar a tua contribuição de sustentador e pedir uma exportação completa dos teus dados, isso está em <a>Definições → Apagar e sair</a>. <em>Mesmo assim, os pagamentos passados ficam contigo</em> e vamos continuar a pagar quaisquer reproduções que já tenham acontecido.",
 
-  "rights.takedownStartedToast": "«{title}» entra na janela de remoção de 14 dias",
-  "rights.removalCancelledToast": "Remoção cancelada — o lançamento continua disponível",
+  "rights.takedownStartedToast":
+    "«{title}» entra na janela de remoção de 14 dias",
+  "rights.removalCancelledToast":
+    "Remoção cancelada — o lançamento continua disponível",
 
   // ── Modal de confirmação de remoção (StudioTakedownModal) ─────────────────
   "rights.modal.confirmAria": "Confirmar remoção de {title}",
@@ -693,11 +724,13 @@ export const studio: Catalog = {
 
   // ── Prateleiras fora de antena (StudioOffAirShelves) ──────────────────────
   "offAir.carryOn.heading": "Continua onde <em>paraste</em>",
-  "offAir.carryOn.sub": "Da tua biblioteca · continua a tocar, em transmissão ou não",
+  "offAir.carryOn.sub":
+    "Da tua biblioteca · continua a tocar, em transmissão ou não",
   "offAir.libraryCta": "Biblioteca",
   "offAir.perPlay": "por reprodução",
   "offAir.quietHours.heading": "Para as <em>horas mais calmas</em>",
-  "offAir.quietHours.sub": "Coleções do conselho que não precisam de luzes acesas",
+  "offAir.quietHours.sub":
+    "Coleções do conselho que não precisam de luzes acesas",
   "offAir.allCta": "Todas",
 
   // ── Página de lançamento removido (StudioWithdrawnPage) ───────────────────
@@ -713,7 +746,8 @@ export const studio: Catalog = {
   "withdrawn.visitArtistCta": "Ver a página do artista",
   "withdrawn.backToPlayerCta": "Voltar ao leitor",
   "withdrawn.still.heading": "Ainda <em>disponível</em> deste artista",
-  "withdrawn.still.sub": "O que continua disponível, e o que o conselho programou em vez disso",
+  "withdrawn.still.sub":
+    "O que continua disponível, e o que o conselho programou em vez disso",
 
   // ── Cartão final para partilha social (StudioEndCardPage) ─────────────────
   "endCard.eyebrow": "Uma cooperativa de streaming",

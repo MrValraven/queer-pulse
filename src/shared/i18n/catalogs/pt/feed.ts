@@ -2,8 +2,8 @@ import type { Catalog } from "../../types";
 
 /**
  * Cópia da página Feed. Corpos de publicações/autores/datas, e as
- * especificidades de encontros/artigos/pessoas (`FEED_POST`, `NEW_THIS_WEEK`,
- * os encontros próximos da barra lateral, os títulos de `SavedArticleCard`/
+ * especificidades de convívios/artigos/pessoas (`FEED_POST`, `NEW_THIS_WEEK`,
+ * os convívios próximos da barra lateral, os títulos de `SavedArticleCard`/
  * `RecapCard`) ficam deliberadamente FORA deste catálogo — em modo live vêm de
  * `GET /feed` (ver `api/feed.adapters.ts`): é conteúdo escrito por pessoas da
  * comunidade, nunca traduzido. Os valores de `FEED_TABS` mantêm-se os ids
@@ -20,7 +20,7 @@ export const feed: Catalog = {
   // ── Etiquetas dos separadores (o id canónico mantém-se em inglês) ───────
   "tab.all": "Tudo",
   "tab.communities": "Comunidades",
-  "tab.gatherings": "Encontros",
+  "tab.gatherings": "Convívios",
   "tab.people": "Pessoas",
   "tab.posts": "Publicações",
 
@@ -43,9 +43,9 @@ export const feed: Catalog = {
 
   "tab.gatherings.empty.title": "Ainda nada marcado",
   "tab.gatherings.empty.description":
-    "Quando um encontro em que participas for anunciado ou resumido, vais encontrá-lo aqui.",
+    "Quando um convívio em que participas for anunciado ou resumido, vais encontrá-lo aqui.",
   "tab.gatherings.empty.action": "Ver o que há",
-  "tab.gatherings.error.title": "Não foi possível carregar os encontros",
+  "tab.gatherings.error.title": "Não foi possível carregar os convívios",
   "tab.gatherings.error.description":
     "Não conseguimos chegar ao que aí vem. Tenta outra vez.",
 
@@ -91,7 +91,7 @@ export const feed: Catalog = {
 
   // ── FeedCards: SavedArticleCard / RecapCard ─────────────────────────────
   "card.savedArticle.eyebrow": "Dos teus guardados",
-  "card.recap.eyebrow": "Resumo do encontro",
+  "card.recap.eyebrow": "Resumo do convívio",
 
   // ── Etiquetas de ação partilhadas ────────────────────────────────────────
   "action.connect": "Ligar",
@@ -142,7 +142,8 @@ export const feed: Catalog = {
     "Denunciar também {name} à nossa equipa de segurança",
   "moderation.blockDialog.submitCta": "Bloquear {name}",
 
-  "moderation.reportConfirm.title": "Obrigade — <em>estamos a tratar disso</em>",
+  "moderation.reportConfirm.title":
+    "Obrigade — <em>estamos a tratar disso</em>",
   "moderation.reportConfirm.body":
     "A nossa equipa de moderação vai rever esta publicação sobre {name}. Para algo urgente, contacta-nos diretamente em {email}.",
   "moderation.reportDialog.title": "Denunciar esta publicação",
@@ -154,7 +155,7 @@ export const feed: Catalog = {
 
   // ── FeedSidebar ─────────────────────────────────────────────────────────
   "sidebar.upcomingHeading": "Em breve",
-  "sidebar.upcomingEmpty": "Ainda não tens encontros marcados.",
+  "sidebar.upcomingEmpty": "Ainda não tens convívios marcados.",
   "sidebar.seeCalendar": "Ver calendário completo →",
   "sidebar.newThisWeekHeading": "Novidades esta semana",
   "sidebar.newMembersEmpty": "Ainda não há pessoas novas para mostrar.",

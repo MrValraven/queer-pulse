@@ -72,7 +72,8 @@ export const settings: Catalog = {
   "modals.suggestEdit.desc":
     "Este guia é editado pela comunidade. Sugere uma redação mais clara ou uma correção — todas as alterações são revistas antes de serem publicadas.",
   "modals.suggestEdit.wordingLabel": "A tua sugestão de redação",
-  "modals.suggestEdit.wordingPlaceholder": "Uma definição mais clara de «{term}»…",
+  "modals.suggestEdit.wordingPlaceholder":
+    "Uma definição mais clara de «{term}»…",
   "modals.suggestEdit.whyLabel": "Porquê mudar?",
   "modals.suggestEdit.optional": "(opcional)",
   "modals.suggestEdit.whyPlaceholder": "Contexto que ajude a equipa editorial",
@@ -95,7 +96,8 @@ export const settings: Catalog = {
     "Personaliza o aspeto do teu perfil e do cartão no diretório. Escolhe uma bandeira, um estilo de capa e um padrão — e o que aparece junto ao teu nome.",
 
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
-  "personalisation.accessibility.title": "Preferências de <em>acessibilidade.</em>",
+  "personalisation.accessibility.title":
+    "Preferências de <em>acessibilidade.</em>",
   "personalisation.accessibility.sub":
     "Ajusta a visualização, o movimento, a leitura e a interação ao teu gosto. Estas definições aplicam-se a toda a plataforma.",
   "personalisation.accessibility.resetAll": "Repor todas as preferências",
@@ -103,7 +105,8 @@ export const settings: Catalog = {
     "Isto repõe todas as definições de visualização para os valores predefinidos. Os dados do teu perfil não são afetados.",
   "personalisation.accessibility.deviceNote":
     "As tuas preferências são guardadas localmente neste dispositivo.",
-  "personalisation.accessibility.resetToast": "Todas as preferências foram repostas",
+  "personalisation.accessibility.resetToast":
+    "Todas as preferências foram repostas",
 
   // ── SafetyPane.tsx — controlo de segurança de saída rápida ──────────────
   // Precisão acima de tudo: a saída rápida limpa o *ecrã*, não é anonimato
@@ -130,7 +133,7 @@ export const settings: Catalog = {
   // ficam em inglês, sinalizado no relatório para um follow-up coordenado.
   "interests.title": "Molda o que <em>vês.</em>",
   "interests.sub":
-    "Isto é privado — não aparece no teu perfil. Ajuda-nos a mostrar-te encontros, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
+    "Isto é privado — não aparece no teu perfil. Ajuda-nos a mostrar-te convívios, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
   "interests.identities.heading": "Que identidades sentes como tuas?",
   "interests.identities.skip": "Saltar",
   "interests.identities.skipped": "Saltado",
@@ -146,7 +149,8 @@ export const settings: Catalog = {
   "interests.life.ageLabel": "A tua faixa etária",
   "interests.life.ageNote": "(opcional — nunca é mostrado a outras pessoas)",
   "interests.reading.heading": "O que gostas de ler?",
-  "interests.reading.frequencyHeading": "Com que frequência queres ter notícias nossas?",
+  "interests.reading.frequencyHeading":
+    "Com que frequência queres ter notícias nossas?",
   "interests.content.heading": "Definições de conteúdo",
   "interests.content.helper":
     "Desativar isto nunca afeta o teu acesso à comunidade — só o teu feed.",
@@ -162,7 +166,8 @@ export const settings: Catalog = {
   // ── interests.data.ts — frequência de email (o id "daily"/"weekly"/
   // "important" é o valor guardado; só título/descrição são traduzidos) ───
   "interests.freq.daily.title": "Resumo diário",
-  "interests.freq.daily.desc": "Um email por dia com as tuas atualizações principais",
+  "interests.freq.daily.desc":
+    "Um email por dia com as tuas atualizações principais",
   "interests.freq.weekly.title": "Resumo semanal",
   "interests.freq.weekly.desc": "Um resumo semanal com o que importa",
   "interests.freq.important.title": "Só o importante",
@@ -179,7 +184,7 @@ export const settings: Catalog = {
     "Tópicos e discussões da comunidade",
 
   // ── interests.data.ts — definições de conteúdo (idem) ────────────────────
-  "interests.contentSetting.dating": "Conteúdo sobre encontros e relações",
+  "interests.contentSetting.dating": "Conteúdo sobre convívios e relações",
   "interests.contentSetting.mentalHealth":
     "Conteúdo sobre saúde mental e bem-estar",
   "interests.contentSetting.sexualityIdentity":
@@ -198,21 +203,21 @@ export const settings: Catalog = {
   "notifications.title": "Preferências de <em>notificações.</em>",
   "notifications.sub":
     "Controlo detalhado sobre o que chega até ti e como. Nunca te enviaremos algo que não tenhas pedido.",
-  "notifications.section.gatherings": "Encontros",
+  "notifications.section.gatherings": "Convívios",
   "notifications.section.messagesConnections": "Mensagens e ligações",
   "notifications.section.communitiesBoard": "Comunidades e mural",
   "notifications.section.delivery": "Entrega",
   "notifications.section.newslettersEmail": "Newsletters e email",
-  "notifications.gatherings.newAnnounced.title": "Novo encontro anunciado",
+  "notifications.gatherings.newAnnounced.title": "Novo convívio anunciado",
   "notifications.gatherings.newAnnounced.desc":
-    "Quando é publicado um encontro que corresponde aos teus interesses",
+    "Quando é publicado um convívio que corresponde aos teus interesses",
   "notifications.gatherings.rsvpReminder.title":
     "Lembrete de confirmação de presença",
   "notifications.gatherings.rsvpReminder.desc":
-    "48 horas antes de um encontro a que confirmaste presença",
+    "48 horas antes de um convívio a que confirmaste presença",
   "notifications.gatherings.lastFewSpots.title": "Últimas vagas",
   "notifications.gatherings.lastFewSpots.desc":
-    "Quando um encontro que guardaste está quase esgotado",
+    "Quando um convívio que guardaste está quase esgotado",
   "notifications.messages.newMessage.title": "Nova mensagem",
   "notifications.messages.newMessage.desc":
     "Quando alguém te envia uma mensagem direta",
@@ -220,8 +225,7 @@ export const settings: Catalog = {
   "notifications.messages.connectionRequest.desc":
     "Quando alguém te pede para se ligar a ti",
   "notifications.messages.sayHello.title": "Recebeste um «Olá»",
-  "notifications.messages.sayHello.desc":
-    "Quando alguém te acena no perfil",
+  "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
   "notifications.communities.newPost.title":
     "Nova publicação nas minhas comunidades",
   "notifications.communities.newPost.desc":
@@ -242,8 +246,7 @@ export const settings: Catalog = {
   "notifications.delivery.email.weeklyDigest": "Resumo semanal",
   "notifications.delivery.email.never": "Nunca",
   "notifications.delivery.quietHours.title": "Horas de silêncio",
-  "notifications.delivery.quietHours.desc":
-    "Não enviar nada entre estas horas",
+  "notifications.delivery.quietHours.desc": "Não enviar nada entre estas horas",
   "notifications.delivery.quietHours.none": "Sem horas de silêncio",
   "notifications.newsletter.title": "Preferências de newsletters e email",
   "notifications.newsletter.desc":
@@ -294,7 +297,7 @@ export const settings: Catalog = {
   "data.section.personalisation": "Personalização",
   "data.searchPersonalisation.title": "Personalização da pesquisa",
   "data.searchPersonalisation.desc":
-    "Usa os teus interesses e ligações para melhorar as pessoas e encontros sugeridos. Uma preferência de produto — fica na tua conta, não é monitorização.",
+    "Usa os teus interesses e ligações para melhorar as pessoas e convívios sugeridos. Uma preferência de produto — fica na tua conta, não é monitorização.",
   "data.section.dangerZone": "Zona de perigo",
   "data.deactivate.title": "Desativar conta",
   "data.deactivate.desc":

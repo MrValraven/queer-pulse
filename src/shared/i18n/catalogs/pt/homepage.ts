@@ -15,15 +15,16 @@ import type { Catalog } from "../../types";
  */
 export const homepage: Catalog = {
   // ── Meta da página ─────────────────────────────────────────────────────────
-  "meta.title": "QueerPulse — a comunidade queer de Lisboa, online e na vida real",
+  "meta.title":
+    "QueerPulse — a comunidade queer de Lisboa, online e na vida real",
   "meta.description":
-    "Uma rede só por convite para pessoas LGBTQ+ em Lisboa — encontros, comunidades, trocas de saberes e apoio, construídos por quem usa a plataforma, para quem a usa.",
+    "Uma rede só por convite para pessoas LGBTQ+ em Lisboa — convívios, comunidades, trocas de saberes e apoio, construídos por quem usa a plataforma, para quem a usa.",
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   "hero.eyebrow": "Ao vivo em Lisboa",
   "hero.title": "A tua gente, <em>aqui mesmo em Lisboa.</em>",
   "hero.sub":
-    "A QueerPulse é uma rede só por convite para a comunidade LGBTQ+ de Lisboa — encontros reais, apoio real, pessoas reais. Sem swipes, sem mensagens às cegas.",
+    "A QueerPulse é uma rede só por convite para a comunidade LGBTQ+ de Lisboa — convívios reais, apoio real, pessoas reais. Sem swipes, sem mensagens às cegas.",
   "hero.requestInviteCta": "Pedir um convite",
   "hero.exploreMembersCta": "Explorar pessoas",
   "hero.note": "Todas as semanas entram pessoas novas, sempre com aval.",
@@ -63,12 +64,14 @@ export const homepage: Catalog = {
 
   // ── PainPoints ("porque construímos isto") ──────────────────────────────────
   "painPoints.eyebrow": "Porque construímos isto",
-  "painPoints.title": "Construímos isto porque <em>também precisávamos dele.</em>",
+  "painPoints.title":
+    "Construímos a plataforma porque <em>também precisávamos dela.</em>",
   "painPoints.sub":
     "Cada funcionalidade começou por ser algo que gostávamos que já existisse.",
 
   "painPoints.hero1.eyebrow": "A primeira falha que sentimos",
-  "painPoints.hero1.question": "\"Onde é que eu conheço pessoas que percebem isto?\"",
+  "painPoints.hero1.question":
+    '"Onde é que eu conheço pessoas que percebem isto?"',
   "painPoints.hero1.heading": "Por isso construímos <em>a rede.</em>",
   "painPoints.hero1.body":
     "Cada pessoa aqui é avalizada por alguém que já está dentro — sem swipes, sem mensagens às cegas, sem teres de provar que pertences aqui.",
@@ -77,34 +80,40 @@ export const homepage: Catalog = {
 
   "painPoints.marker1": "Depois de entrares na sala, abrem-se mais portas.",
 
-  "painPoints.exchange1.question": "\"Preciso de um favor, mas não sei a quem pedir.\"",
+  "painPoints.exchange1.question":
+    '"Preciso de um favor, mas não sei a quem pedir."',
   "painPoints.exchange1.heading": "Por isso construímos <em>o quadro.</em>",
   "painPoints.exchange1.body":
     "Publica o que precisas ou o que podes oferecer — de um quarto livre a uma tradução no próprio dia — e deixa a comunidade responder.",
   "painPoints.exchange1.cta": "Ver o quadro",
 
-  "painPoints.exchange2.question": "\"Quero gastar o meu dinheiro com pessoas como eu.\"",
+  "painPoints.exchange2.question":
+    '"Quero gastar o meu dinheiro com pessoas como eu."',
   "painPoints.exchange2.heading": "Por isso construímos <em>o diretório.</em>",
   "painPoints.exchange2.body":
     "Lojas, ateliês e serviços de pessoas queer por toda a Lisboa — fáceis de encontrar, fáceis de apoiar.",
   "painPoints.exchange2.cta": "Ver o diretório",
 
-  "painPoints.exchange3.question": "\"Quero organizar um encontro, só não sei como.\"",
-  "painPoints.exchange3.heading": "Por isso construímos <em>um guia para organizar.</em>",
+  "painPoints.exchange3.question":
+    '"Quero organizar um convívio, só não sei como."',
+  "painPoints.exchange3.heading":
+    "Por isso construímos <em>um guia para organizar.</em>",
   "painPoints.exchange3.body":
     "Um guia passo a passo para organizares o teu primeiro jantar comunitário, oficina ou sessão de cinema — com o apoio da comunidade.",
   "painPoints.exchange3.cta": "Começar a organizar",
 
   "painPoints.exchange4.question":
-    "\"Tenho um saber para ensinar — e outro que quero aprender.\"",
-  "painPoints.exchange4.heading": "Por isso construímos <em>as trocas de saberes.</em>",
+    '"Tenho um saber para ensinar — e outro que quero aprender."',
+  "painPoints.exchange4.heading":
+    "Por isso construímos <em>as trocas de saberes.</em>",
   "painPoints.exchange4.body":
     "Troca o que sabes pelo que precisas. Sem faturas, sem algoritmo — só pessoas a ensinarem-se umas às outras.",
   "painPoints.exchange4.cta": "Explorar trocas de saberes",
 
   "painPoints.hero2.eyebrow": "A falha mais difícil de sentir",
-  "painPoints.hero2.question": "\"O que acontece se algo correr mal?\"",
-  "painPoints.hero2.heading": "Por isso construímos <em>uma rede de segurança.</em>",
+  "painPoints.hero2.question": '"O que acontece se algo correr mal?"',
+  "painPoints.hero2.heading":
+    "Por isso construímos <em>uma rede de segurança.</em>",
   "painPoints.hero2.body":
     "Terapeutas que percebem, apoio entre pares sem julgamentos, e linhas de crise que atendem — tudo analisado pela comunidade que precisa disto.",
   "painPoints.hero2.builtLabel": "Construímos o centro de bem-estar",
@@ -113,20 +122,24 @@ export const homepage: Catalog = {
   "painPoints.marker2": "E para lá da sala, as perguntas mais difíceis.",
 
   "painPoints.exchange5.question":
-    "\"Quero fazer alguma coisa, não só publicar sobre isso.\"",
-  "painPoints.exchange5.heading": "Por isso construímos <em>uma forma de agir.</em>",
+    '"Quero fazer alguma coisa, não só publicar sobre isso."',
+  "painPoints.exchange5.heading":
+    "Por isso construímos <em>uma forma de agir.</em>",
   "painPoints.exchange5.body":
     "Campanhas locais, entreajuda e organização — formas reais de mover alguma coisa, em conjunto.",
   "painPoints.exchange5.cta": "Ver o que está em movimento",
 
-  "painPoints.exchange6.question": "\"Conheço mesmo os meus direitos aqui?\"",
-  "painPoints.exchange6.heading": "Por isso construímos <em>guias em linguagem simples.</em>",
+  "painPoints.exchange6.question": '"Conheço mesmo os meus direitos aqui?"',
+  "painPoints.exchange6.heading":
+    "Por isso construímos <em>guias em linguagem simples.</em>",
   "painPoints.exchange6.body":
     "Informação legal sobre a vida LGBTQ+ em Portugal, escrita em linguagem simples — sem precisares de um curso de Direito.",
   "painPoints.exchange6.cta": "Ler os guias",
 
-  "painPoints.exchange7.question": "\"Vou estar mesmo em segurança neste trabalho?\"",
-  "painPoints.exchange7.heading": "Por isso construímos <em>as avaliações de empregadores.</em>",
+  "painPoints.exchange7.question":
+    '"Vou estar mesmo em segurança neste trabalho?"',
+  "painPoints.exchange7.heading":
+    "Por isso construímos <em>as avaliações de empregadores.</em>",
   "painPoints.exchange7.body":
     "Avaliações honestas de pessoas queer que já lá trabalharam, para saberes antes de aceitares a proposta.",
   "painPoints.exchange7.cta": "Ler avaliações de empregadores",
@@ -149,7 +162,7 @@ export const homepage: Catalog = {
   // ── Gatherings (destaque na homepage) ─────────────────────────────────────
   "gatherings.title": "Encontra-te em <em>salas reais.</em>",
   "gatherings.subtitle":
-    "Jantares, oficinas, sessões de cinema e caminhadas — encontros reais a acontecer por Lisboa este mês.",
+    "Jantares, oficinas, sessões de cinema e caminhadas — convívios reais a acontecer por Lisboa este mês.",
   "gatherings.spots.seatsLeft": "lugares restantes",
   "gatherings.spots.spotsLeft": "vagas restantes",
   "gatherings.spots.going": "pessoas vão",
@@ -208,7 +221,8 @@ export const homepage: Catalog = {
     "Grupos com facilitação, onde não precisas de explicar o básico primeiro.",
   "wellbeing.peerSupport.cta": "Juntar-te a um círculo",
   "wellbeing.crisis.title": "Linhas de crise",
-  "wellbeing.crisis.description": "Alguém para ligares, de dia ou de noite, quando as coisas pesam.",
+  "wellbeing.crisis.description":
+    "Alguém para ligares, de dia ou de noite, quando as coisas pesam.",
   "wellbeing.crisis.cta": "Pedir ajuda agora",
   "wellbeing.legal.title": "Conhece os teus direitos",
   "wellbeing.legal.description":
@@ -266,8 +280,10 @@ export const homepage: Catalog = {
   "communities.spotlight.emptyBody":
     "Nenhuma comunidade corresponde a estes filtros. Alarga a pesquisa, ou começa a que está a faltar.",
   "communities.spotlight.startCommunityCta": "Começar uma comunidade",
-  "communities.spotlight.quiet.membersOnlyPrivate": "Só para a comunidade · privada",
-  "communities.spotlight.quiet.discreetSafe": "Discreta e segura · sem contagem de pessoas",
+  "communities.spotlight.quiet.membersOnlyPrivate":
+    "Só para a comunidade · privada",
+  "communities.spotlight.quiet.discreetSafe":
+    "Discreta e segura · sem contagem de pessoas",
   "communities.spotlight.quiet.enterCta": "Entrar",
   "communities.spotlight.whatHappensHere": "O que acontece aqui",
   "communities.spotlight.whatYouGet": "O que ganhas ao entrar",
@@ -278,7 +294,7 @@ export const homepage: Catalog = {
 
   "communities.room.pulse": "o feed ao vivo",
   "communities.room.discussions": "conversas",
-  "communities.room.events": "encontros e confirmações",
+  "communities.room.events": "convívios e confirmações",
   "communities.room.resources": "guias e biblioteca",
 
   // ── MicroGrants ────────────────────────────────────────────────────────────
@@ -331,15 +347,16 @@ export const homepage: Catalog = {
   // ── Library ────────────────────────────────────────────────────────────────
   "library.title": "O conhecimento <em>não desaparece.</em>",
   "library.subtitle":
-    "Gravações, guias e notas de cada encontro — pesquisáveis e preservados. O saber das oficinas que sobrevive à sala.",
+    "Gravações, guias e notas de cada convívio — pesquisáveis e preservados. O saber das oficinas que sobrevive à sala.",
   "library.browseCta": "Ver a biblioteca →",
   "library.type.recording": "Gravação",
   "library.type.guide": "Guia",
-  "library.type.notes": "Notas de encontro",
+  "library.type.notes": "Notas de convívio",
   "library.moreLabel": "no arquivo →",
 
   // ── Partners ───────────────────────────────────────────────────────────────
-  "partners.title": "A comunidade é mais forte quando <em>as comunidades se ligam.</em>",
+  "partners.title":
+    "A comunidade é mais forte quando <em>as comunidades se ligam.</em>",
   "partners.subtitle":
     "Trabalhamos com organizações que partilham os nossos valores — em Portugal e além.",
   "partners.seeAllLabel": "Ver todas as parcerias",
@@ -348,7 +365,7 @@ export const homepage: Catalog = {
   // ── SpacesMap ──────────────────────────────────────────────────────────────
   "spacesMap.title": "Encontra os teus <em>espaços na cidade.</em>",
   "spacesMap.subtitle":
-    "Locais queer-seguros com curadoria da comunidade, ateliês de pessoas da comunidade e espaços de encontro por Lisboa. Não é um diretório de negócios — isto é nosso.",
+    "Locais queer-seguros com curadoria da comunidade, ateliês de pessoas da comunidade e espaços de convívio por Lisboa. Não é um diretório de negócios — isto é nosso.",
   "spacesMap.openFullMapCta": "Abrir mapa completo →",
   "spacesMap.type.all": "Todos os espaços",
   "spacesMap.type.venue": "Locais seguros",
@@ -368,7 +385,7 @@ export const homepage: Catalog = {
   // ── Newsletter ─────────────────────────────────────────────────────────────
   "newsletter.title": "Mantém-te ligade. <em>Semanal, não diário.</em>",
   "newsletter.subtitle":
-    "O resumo semanal da QueerPulse chega toda a quinta-feira — pessoas novas para conheceres, encontros a chegar, trocas de saberes abertas e um texto que vale o teu tempo. Sem ruído.",
+    "O resumo semanal da QueerPulse chega toda a quinta-feira — pessoas novas para conheceres, convívios a chegar, trocas de saberes abertas e um texto que vale o teu tempo. Sem ruído.",
   "newsletter.emailRequiredToast": "Introduz o teu email",
   "newsletter.subscribedToast": "Estás na lista — até quinta-feira",
   "newsletter.success.title": "Estás na lista, <em>quase.</em>",
@@ -379,7 +396,8 @@ export const homepage: Catalog = {
   "newsletter.success.useDifferentEmailCta": "Usar outro email",
   "newsletter.emailPlaceholder": "oteu@email.com",
   "newsletter.subscribeCta": "Subscrever",
-  "newsletter.note": "Só para a comunidade · sem spam · cancela quando quiseres",
+  "newsletter.note":
+    "Só para a comunidade · sem spam · cancela quando quiseres",
 
   // ── Pillars ("um mundo, não uma lista de funcionalidades") ─────────────────
   "pillars.eyebrow": "Uma adesão · seis mundos",
@@ -389,7 +407,7 @@ export const homepage: Catalog = {
 
   "pillars.community.name": "Comunidade",
   "pillars.community.desc":
-    "Encontros, grupos, fórum e ligações — o tecido social da Lisboa queer, online e presencial.",
+    "Convívios, grupos, fórum e ligações — o tecido social da Lisboa queer, online e presencial.",
   "pillars.community.featured":
     "O tecido social da Lisboa queer — uma sala com a porta aberta, online e presencial.",
   "pillars.community.alt":
@@ -419,7 +437,7 @@ export const homepage: Catalog = {
   "pillars.activism.alt":
     "Manifestantes a transportar uma grande faixa com a bandeira trans por uma rua da cidade",
 
-  "pillars.tag.gatherings": "Encontros",
+  "pillars.tag.gatherings": "Convívios",
   "pillars.tag.forum": "Fórum",
   "pillars.tag.communities": "Comunidades",
   "pillars.tag.magazine": "Revista",

@@ -106,7 +106,7 @@ export const communities: Catalog = {
   "detail.hero.andMore": "e mais {count}",
   "detail.sidebar.organiser": "Organização",
   "detail.sidebar.messageCta": "Enviar mensagem",
-  "detail.sidebar.nextGathering": "Próximo encontro",
+  "detail.sidebar.nextGathering": "Próximo convívio",
   "detail.sidebar.rsvpCta": "Confirmar presença",
   "detail.sidebar.relatedCommunities": "Comunidades relacionadas",
 
@@ -126,7 +126,7 @@ export const communities: Catalog = {
 
   // ── Rótulos partilhados de Sobre / Sobre+Recursos ─────────────────────────
   "detail.about.whoFor": "Para quem é",
-  "detail.about.upcomingGathering": "Próximo encontro",
+  "detail.about.upcomingGathering": "Próximo convívio",
 
   // ── Separador Pessoas (hub simplificado) ──────────────────────────────────
   "detail.members.showingOf_one": "A mostrar {shown} de {count} pessoa",
@@ -134,7 +134,8 @@ export const communities: Catalog = {
   "detail.members.showingCore": "A mostrar as pessoas principais",
 
   // ── Separador Fórum (hub simplificado) + tópico ───────────────────────────
-  "detail.forum.newPostPlaceholder": "Começa uma nova discussão nesta comunidade…",
+  "detail.forum.newPostPlaceholder":
+    "Começa uma nova discussão nesta comunidade…",
   "detail.forum.postCta": "Publicar",
   "detail.forum.postedToast": "Publicação adicionada ao fórum da comunidade.",
   "detail.thread.replies_one": "{count} resposta",
@@ -156,8 +157,8 @@ export const communities: Catalog = {
   "detail.discussion.startedToast": "Discussão iniciada.",
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
-  "detail.events.upcoming": "Próximos encontros",
-  "detail.events.past": "Encontros passados",
+  "detail.events.upcoming": "Próximos convívios",
+  "detail.events.past": "Convívios passados",
   "detail.events.recapCta": "Ler retrospetiva",
   "detail.events.rsvpCta": "Confirmar presença",
 
@@ -192,7 +193,8 @@ export const communities: Catalog = {
   "detail.modtools.members.removeCta": "Remover da comunidade",
   "detail.modtools.members.ownerTag": "Responsável",
   "detail.modtools.toast.approved": "{name} aprovade — dá-lhe as boas-vindas.",
-  "detail.modtools.toast.declined": "O pedido de {name} não foi aprovado desta vez.",
+  "detail.modtools.toast.declined":
+    "O pedido de {name} não foi aprovado desta vez.",
   "detail.modtools.toast.postRemoved":
     "Publicação removida. Já foi contactada a pessoa autora.",
   "detail.modtools.toast.reportDismissed": "Denúncia ignorada.",
@@ -247,8 +249,7 @@ export const communities: Catalog = {
     "Opcional — um pouco de contexto ajuda as pessoas a saberem quem és.",
   "join.about.namePlaceholder": "O teu nome",
   "join.about.pronounsPlaceholder": "Pronomes, se quiseres partilhar",
-  "join.about.aboutPlaceholder":
-    "Uma frase sobre ti — o que te traz até aqui?",
+  "join.about.aboutPlaceholder": "Uma frase sobre ti — o que te traz até aqui?",
   "join.involvement.eyebrow": "Quase pronto",
   "join.involvement.title": "Como gostarias de participar?",
   "join.involvement.emailPlaceholder": "O teu endereço de email",
@@ -356,7 +357,8 @@ export const communities: Catalog = {
   // ── Capítulo 0 — Abertura ──────────────────────────────────────────────────
   "start.opening.reassure":
     "<strong>Nada do que fazes aqui é público até ao último passo.</strong> Tem o teu tempo, salta o que não tens a certeza, e muda de ideias sempre que quiseres. Fundar uma comunidade é uma coisa grande e generosa — não há uma forma errada de começar.",
-  "start.opening.signed": "Vais ser a sua primeira pessoa responsável, <strong>{name}</strong>.",
+  "start.opening.signed":
+    "Vais ser a sua primeira pessoa responsável, <strong>{name}</strong>.",
 
   // ── Capítulo 1 — Porquê ────────────────────────────────────────────────────
   "start.why.nameLabel": "Dá um nome à tua comunidade",
@@ -392,12 +394,14 @@ export const communities: Catalog = {
 
   // ── Opções de nível de acesso (assistente) ────────────────────────────────
   "start.access.public.name": "Aberta a todas as pessoas",
-  "start.access.public.find": "Qualquer pessoa na QueerPulse a encontra em Descobrir.",
+  "start.access.public.find":
+    "Qualquer pessoa na QueerPulse a encontra em Descobrir.",
   "start.access.public.join": "Entram de imediato e já estão dentro.",
   "start.access.public.note":
     "Ótimo para clubes sociais, desporto, e tudo o que cresce de boca em boca.",
   "start.access.request.name": "Pedido para entrar",
-  "start.access.request.find": "Listada em Descobrir, para que as pessoas a encontrem.",
+  "start.access.request.find":
+    "Listada em Descobrir, para que as pessoas a encontrem.",
   "start.access.request.join":
     "Enviam um pedido; tu ou uma pessoa corresponsável decide deixá-las entrar.",
   "start.access.request.note":
@@ -423,7 +427,8 @@ export const communities: Catalog = {
   "start.running.ownerTag": "Tu · responsável",
   "start.running.coStewardTag": "Corresponsável",
   "start.running.removeAria": "Remover {name}",
-  "start.running.addPlaceholder": "Adiciona uma pessoa corresponsável pelo nome",
+  "start.running.addPlaceholder":
+    "Adiciona uma pessoa corresponsável pelo nome",
   "start.running.addCta": "Adicionar",
   "start.running.insideHeading": "O que está incluído",
   "start.running.insideSub":
@@ -436,7 +441,7 @@ export const communities: Catalog = {
   "start.feature.discussion.label": "Discussão",
   "start.feature.discussion.desc": "Um quadro partilhado para tópicos.",
   "start.feature.events.label": "Eventos",
-  "start.feature.events.desc": "Encontros e um calendário.",
+  "start.feature.events.desc": "Convívios e um calendário.",
   "start.feature.rooms.label": "Salas",
   "start.feature.rooms.desc": "Subcanais para temas.",
   "start.feature.roster.label": "Lista de pessoas",
@@ -478,8 +483,7 @@ export const communities: Catalog = {
   "start.tint.jade": "Jade calmo",
   "start.tint.plum": "Ameixa profundo",
   "start.feeling.taglineLabel": "Uma frase de assinatura",
-  "start.feeling.taglinePlaceholder":
-    "Uma linha que capta a sensação do lugar",
+  "start.feeling.taglinePlaceholder": "Uma linha que capta a sensação do lugar",
   "start.feeling.taglineHint":
     "Curta e calorosa — fica por baixo do nome da tua comunidade.",
 
@@ -526,7 +530,8 @@ export const communities: Catalog = {
 
   // ── Coluna de pré-visualização ao vivo ─────────────────────────────────────
   "start.preview.liveLabel": "Pré-visualização ao vivo",
-  "start.preview.emptyBody": "A tua comunidade toma forma aqui à medida que avanças.",
+  "start.preview.emptyBody":
+    "A tua comunidade toma forma aqui à medida que avanças.",
   "start.preview.purposePlaceholder": "Para que é este espaço?",
   "start.preview.insideLabel": "O que está incluído",
   "start.preview.foundingMembers": "Pessoas fundadoras",
@@ -566,7 +571,8 @@ export const communities: Catalog = {
     "Abriste algo real hoje. {name} já tem uma casa na QueerPulse — uma porta para a tua gente atravessar. Vai dizer o primeiro olá.",
 
   // ── Notificações (StartCommunityPage) ─────────────────────────────────────
-  "start.toast.createError": "Não foi possível abrir a tua comunidade — tenta novamente.",
+  "start.toast.createError":
+    "Não foi possível abrir a tua comunidade — tenta novamente.",
   "start.toast.created": "{name} está no ar — bem-vinde, responsável",
 
   // ── Texto composto no adaptador (api/communities.adapters.ts, useAllCommunities.ts) ──
@@ -577,12 +583,13 @@ export const communities: Catalog = {
   "detail.foundedRecently": "Fundada recentemente",
   "detail.foundedJustNow": "Fundada agora mesmo",
   "detail.cadenceDefault": "A encontrar o seu ritmo",
-  "detail.nextEvent.tbaTitle": "Próximo encontro a anunciar",
+  "detail.nextEvent.tbaTitle": "Próximo convívio a anunciar",
   "detail.nextEvent.checkEventsTab": "Vê o separador de eventos",
   "detail.nextEvent.openToMembers": "Aberto às pessoas da comunidade",
-  "detail.nextEvent.firstTitle": "Primeiro encontro, a anunciar",
+  "detail.nextEvent.firstTitle": "Primeiro convívio, a anunciar",
   "detail.nextEvent.onceFewPeople": "Assim que houver algumas pessoas",
-  "detail.nextEvent.openToAllMembers": "Aberto a todas as pessoas da comunidade",
+  "detail.nextEvent.openToAllMembers":
+    "Aberto a todas as pessoas da comunidade",
   "detail.topicThread.welcomeTitle": "Bem-vinde a {name}",
   "detail.topicThread.recently": "recentemente",
   "detail.topicThread.justNow": "agora mesmo",

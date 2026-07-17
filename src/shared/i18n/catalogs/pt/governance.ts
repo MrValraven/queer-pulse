@@ -39,7 +39,7 @@ export const governance: Catalog = {
     "O que esperamos umas das outras, e o que acontece quando é violado.",
   "governingDocs.annualAssembly.label": "Assembleia Anual",
   "governingDocs.annualAssembly.blurb":
-    "O encontro anual da comunidade — agenda, resoluções e atas.",
+    "O convívio anual da comunidade — agenda, resoluções e atas.",
   "governingDocs.transparencyReport.label": "Relatório de transparência",
   "governingDocs.transparencyReport.blurb":
     "Ações de moderação, finanças e pedidos de dados, em aberto.",
@@ -47,7 +47,8 @@ export const governance: Catalog = {
   "subpageIndex.title": "Lê a letra pequena.",
 
   // ── Saúde da comunidade ─────────────────────────────────────────────────
-  "sections.health.eyebrow": "Relatório de Saúde da Comunidade — 2.º trimestre 2026",
+  "sections.health.eyebrow":
+    "Relatório de Saúde da Comunidade — 2.º trimestre 2026",
   "sections.health.title": "Os <em>números,</em> com honestidade.",
   "sections.health.prose1":
     "Foram apresentadas doze denúncias este trimestre. Todas foram revistas dentro de 48 horas. Três resultaram no afastamento de pessoas da comunidade (violações repetidas do Código de Cuidado após aviso). Oito foram resolvidas com comunicação direta e sem ação formal.",
@@ -58,7 +59,7 @@ export const governance: Catalog = {
   "health.stat.retention.label": "Taxa de retenção de pessoas",
   "health.stat.reportsFiled.label": "Denúncias apresentadas este trimestre",
   "health.stat.membersRemoved.label": "Pessoas afastadas",
-  "health.stat.gatheringsHosted.label": "Encontros realizados",
+  "health.stat.gatheringsHosted.label": "Convívios realizados",
   "health.stat.appealUpheld.label": "Contestação de moderação aceite",
 
   "health.trend.upThisQuarter": "↑ {count} este trimestre",
@@ -79,7 +80,7 @@ export const governance: Catalog = {
 
   "steps.reportFiled.title": "Denúncia apresentada",
   "steps.reportFiled.text":
-    "Qualquer pessoa da comunidade pode denunciar outra pessoa, um encontro, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais — a pessoa denunciada não é informada de quem a apresentou.",
+    "Qualquer pessoa da comunidade pode denunciar outra pessoa, um convívio, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais — a pessoa denunciada não é informada de quem a apresentou.",
   "steps.review.title": "Revisão em 48 horas",
   "steps.review.text":
     "A equipa de moderação revê a denúncia no prazo de 48 horas. Para questões de segurança urgentes, no mesmo dia. Quem apresentou a denúncia é informado em cada etapa.",
@@ -103,12 +104,14 @@ export const governance: Catalog = {
 
   // ── Princípios ──────────────────────────────────────────────────────────
   "sections.principles.eyebrow": "Princípios da plataforma",
-  "sections.principles.title": "O que esta plataforma <em>vai e não vai fazer.</em>",
+  "sections.principles.title":
+    "O que esta plataforma <em>vai e não vai fazer.</em>",
 
   "principles.noSellingData.title": "Nunca vendemos dados de pessoas",
   "principles.noSellingData.text":
     "Os dados das pessoas são usados apenas para gerir a plataforma. Nunca os partilhamos, vendemos, ou usamos para publicidade.",
-  "principles.visibilityChoice.title": "A visibilidade é sempre uma escolha tua",
+  "principles.visibilityChoice.title":
+    "A visibilidade é sempre uma escolha tua",
   "principles.visibilityChoice.text":
     "Tu controlas quem pode ver o teu perfil, publicações e atividade. As predefinições são conservadoras.",
   "principles.noAlgorithms.title": "Nenhum algoritmo decide quem vês",
@@ -123,19 +126,21 @@ export const governance: Catalog = {
   "principles.accessNotConditional.title":
     "O acesso não depende da capacidade de pagar",
   "principles.accessNotConditional.text":
-    "Uma escala progressiva para todos os encontros pagos. Ninguém é excluído por motivos financeiros.",
+    "Uma escala progressiva para todos os convívios pagos. Ninguém é excluído por motivos financeiros.",
 
   // ── Finanças ────────────────────────────────────────────────────────────
   "sections.finances.eyebrow": "2.º trimestre 2026 · Transparência financeira",
-  "sections.finances.title": "Quanto custa, quanto entra, <em>para onde vai.</em>",
+  "sections.finances.title":
+    "Quanto custa, quanto entra, <em>para onde vai.</em>",
   "sections.finances.intro":
     "Publicamos as nossas finanças todos os trimestres. O QueerPulse é financiado por quem o usa, e essas pessoas merecem saber exatamente como o dinheiro é angariado e gasto. Sem interesses de investidores. Sem metas de crescimento. Sem plano de saída.",
   "sections.finances.incomeHeading": "De onde vem o dinheiro",
   "sections.finances.expenseHeading": "Para onde vai o dinheiro",
-  "sections.finances.clickHint": "Clica em qualquer linha para ver a discriminação completa.",
+  "sections.finances.clickHint":
+    "Clica em qualquer linha para ver a discriminação completa.",
   "sections.finances.totalIncome": "Receita total · {amount}",
   "sections.finances.totalExpense": "Despesa total · {amount}",
-  "sections.finances.eventsHeading": "Como funcionam as finanças dos encontros",
+  "sections.finances.eventsHeading": "Como funcionam as finanças dos convívios",
   "sections.finances.surplusHeading": "O que fazemos com o excedente.",
   "sections.finances.surplusBody":
     "Os excedentes trimestrais entram numa reserva operacional. A nossa meta é três meses de custos de funcionamento — cerca de {target}.",
@@ -155,9 +160,9 @@ export const governance: Catalog = {
   "sections.decisions.title": "O que mudou e <em>porquê.</em>",
 
   "decisions.slidingScale.lead":
-    "Maio de 2026 — Introduzida escala progressiva para os encontros.",
+    "Maio de 2026 — Introduzida escala progressiva para os convívios.",
   "decisions.slidingScale.body":
-    "Na sequência de uma discussão no fórum iniciada por Catarina Vaz, o conselho concordou em implementar uma escala progressiva para todos os encontros pagos. 23 pessoas participaram.",
+    "Na sequência de uma discussão no fórum iniciada por Catarina Vaz, o conselho concordou em implementar uma escala progressiva para todos os convívios pagos. 23 pessoas participaram.",
   "decisions.forumLaunched.lead": "Abril de 2026 — Fórum lançado.",
   "decisions.forumLaunched.body":
     "Na sequência de pedidos da comunidade por um espaço para discutir temas mais longos. Categorias e diretrizes co-desenhadas com 12 pessoas ao longo de três semanas.",
@@ -165,7 +170,8 @@ export const governance: Catalog = {
     "Março de 2026 — Predefinições de visibilidade tornadas mais conservadoras.",
   "decisions.visibilityDefaults.body":
     'Quem chega agora à comunidade passa a ter, por predefinição, "apenas rede" em vez de "aberto", podendo abrir mais quando se sentir confortável.',
-  "decisions.languageToggle.lead": "Fevereiro de 2026 — Alternador de idioma adicionado.",
+  "decisions.languageToggle.lead":
+    "Fevereiro de 2026 — Alternador de idioma adicionado.",
   "decisions.languageToggle.body":
     "Alternador PT/EN adicionado a todas as páginas, na sequência de pedidos de pessoas lusófonas.",
 
@@ -179,7 +185,7 @@ export const governance: Catalog = {
     "A tua identidade é mantida confidencial. Vais receber uma confirmação no prazo de 48 horas e uma atualização quando o assunto for resolvido.",
   "sections.raise.selectPlaceholder": "Que tipo de preocupação?",
   "sections.raise.option.member": "Denunciar uma pessoa ou comportamento",
-  "sections.raise.option.gathering": "Denunciar um encontro ou evento",
+  "sections.raise.option.gathering": "Denunciar um convívio ou evento",
   "sections.raise.option.content": "Problema de conteúdo ou da plataforma",
   "sections.raise.option.appeal": "Decisão de moderação que quero contestar",
   "sections.raise.option.other": "Outra coisa",

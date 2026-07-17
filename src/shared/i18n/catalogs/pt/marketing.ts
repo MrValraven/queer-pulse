@@ -29,7 +29,8 @@ export const marketing: Catalog = {
     "A QueerPulse começou como uma frustração, não como um plano de negócio. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção, não para nos servir — otimizadas para tempo de ecrã, não para saber se nos encontrávamos mesmo.",
   "about.why.p2":
     "Por isso, um pequeno grupo — profissionais, organizadores, artistas — decidiu construir a alternativa: uma rede pensada para a confiança, não para a escala, onde o objetivo é a ligação, não o envolvimento.",
-  "about.why.p3": "Cresce mais devagar assim. Isso é o desenho, não um defeito.",
+  "about.why.p3":
+    "Cresce mais devagar assim. Isso é o desenho, não um defeito.",
   "about.why.pullQuote":
     "Não queríamos uma audiência maior. Queríamos uma sala em que pudéssemos confiar.",
   "about.difference.eyebrow": "A diferença",
@@ -78,7 +79,8 @@ export const marketing: Catalog = {
   "about.contactStrip.contactCta": "Contacta-nos",
   "about.contactStrip.governanceCta": "Lê a nossa governação",
   "about.outro.title": "Vem ver <em>com os teus próprios olhos.</em>",
-  "about.outro.sub": "A melhor forma de perceber a QueerPulse é estar dentro dela.",
+  "about.outro.sub":
+    "A melhor forma de perceber a QueerPulse é estar dentro dela.",
   "about.outro.cta": "Pedir um convite",
 
   // ── Acessibilidade ─────────────────────────────────────────────────────
@@ -93,7 +95,7 @@ export const marketing: Catalog = {
     "Cada espaço abaixo foi revisto por uma pessoa da comunidade com deficiência antes de ser listado.",
   "accessibility.spaces.title": "Espaços <em>acessíveis</em>",
   "accessibility.spaces.body":
-    "Filtra pela característica de acesso que importa para ti. Cada ficha reflete o que uma pessoa com deficiência encontrou lá, não o que o espaço afirma sobre si próprio.",
+    "Filtra pela característica de acesso que importa para ti. Cada ficha reflete o que uma pessoa com deficiência convíviou lá, não o que o espaço afirma sobre si próprio.",
   "accessibility.spaces.filterLabel": "Filtrar por:",
   "accessibility.spaces.emptyTitle": "Ainda não há espaços com este filtro",
   "accessibility.spaces.emptyBody":
@@ -122,7 +124,7 @@ export const marketing: Catalog = {
   "accessibility.commitments.seating.status": "Garantido",
   "accessibility.commitments.sensory.title": "Momentos sensorialmente calmos",
   "accessibility.commitments.sensory.body":
-    "Janelas com menos volume e menos gente em encontros selecionados, para quem precisa.",
+    "Janelas com menos volume e menos gente em convívios selecionados, para quem precisa.",
   "accessibility.commitments.sensory.status": "Eventos selecionados",
   "accessibility.commitments.carers.title": "Acompanhantes bem-vindes",
   "accessibility.commitments.carers.body":
@@ -132,7 +134,8 @@ export const marketing: Catalog = {
   "accessibility.commitments.platform.body":
     "Suporte a leitores de ecrã, navegação por teclado e redução de movimento fazem parte do produto, não são acrescentados depois.",
   "accessibility.commitments.platform.status": "Em curso",
-  "accessibility.commitments.accomTitle": "Precisas de algo que não está na lista?",
+  "accessibility.commitments.accomTitle":
+    "Precisas de algo que não está na lista?",
   "accessibility.commitments.accomBody":
     "Diz-nos o que precisas para um evento específico e fazemos o que pudermos, mesmo em cima da hora.",
   "accessibility.commitments.accomCta": "Pedir uma adaptação",
@@ -141,7 +144,8 @@ export const marketing: Catalog = {
     "Apoio que vai além do que a própria QueerPulse consegue oferecer.",
   "accessibility.resources.openingToast": "A abrir recurso…",
   "accessibility.resources.benefits.eyebrow": "Financeiro",
-  "accessibility.resources.benefits.title": "Prestações por deficiência, explicadas",
+  "accessibility.resources.benefits.title":
+    "Prestações por deficiência, explicadas",
   "accessibility.resources.benefits.body":
     "Um guia em linguagem simples sobre prestações por deficiência em Portugal e como te candidatares.",
   "accessibility.resources.benefits.link": "Ler o guia",
@@ -166,12 +170,15 @@ export const marketing: Catalog = {
   "accessibility.peer.body":
     "Pessoas com deficiência a apoiarem-se mutuamente — juntando quem chega agora a alguém que já navegou os mesmos sistemas.",
   "accessibility.peer.joinCta": "Juntar-me como pessoa mentorada",
-  "accessibility.peer.joiningToast": "Estás na lista — juntamos-te a alguém em breve.",
+  "accessibility.peer.joiningToast":
+    "Estás na lista — juntamos-te a alguém em breve.",
   "accessibility.peer.mentorCta": "Oferecer mentoria",
-  "accessibility.outro.title": "O acesso é uma <em>prática,</em> não uma política.",
+  "accessibility.outro.title":
+    "O acesso é uma <em>prática,</em> não uma política.",
   "accessibility.outro.sub": "Diz-nos onde estamos a falhar. Preferimos saber.",
   "accessibility.outro.cta": "Pedir um convite",
-  "accessibility.venue.reviewedBy_one": "Revisto por {count} pessoa com deficiência",
+  "accessibility.venue.reviewedBy_one":
+    "Revisto por {count} pessoa com deficiência",
   "accessibility.venue.reviewedBy_other":
     "Revisto por {count} pessoas com deficiência",
   "accessibility.venue.operatedBadge": "Espaço operado pela QueerPulse",
@@ -183,7 +190,8 @@ export const marketing: Catalog = {
   "accessibility.flagIssues.sensory": "Ambiente sensorial",
   "accessibility.flagIssues.staff": "Atitude da equipa",
   "accessibility.flagIssues.other": "Outra coisa",
-  "accessibility.flagModal.ariaLabel": "Assinalar um problema de acessibilidade",
+  "accessibility.flagModal.ariaLabel":
+    "Assinalar um problema de acessibilidade",
   "accessibility.flagModal.title": "Assinalar um problema de acessibilidade",
   "accessibility.flagModal.sub":
     "Diz-nos o que aconteceu — isto vai diretamente para o espaço e para a nossa equipa de acessibilidade.",
@@ -191,9 +199,11 @@ export const marketing: Catalog = {
   "accessibility.flagModal.issueTypeLabel": "Que tipo de problema?",
   "accessibility.flagModal.issueTypePlaceholder": "Escolhe um tipo de problema",
   "accessibility.flagModal.whatHappenedLabel": "O que aconteceu?",
-  "accessibility.flagModal.whatHappenedPlaceholder": "Descreve o que encontraste",
+  "accessibility.flagModal.whatHappenedPlaceholder":
+    "Descreve o que encontraste",
   "accessibility.flagModal.whenLabel": "Quando?",
-  "accessibility.flagModal.whenPlaceholder": "ex.: no fim de semana passado, 14 de maio",
+  "accessibility.flagModal.whenPlaceholder":
+    "ex.: no fim de semana passado, 14 de maio",
   "accessibility.flagModal.submitCta": "Enviar",
   "accessibility.flagModal.cancelCta": "Cancelar",
   "accessibility.flagModal.doneTitle": "Obrigade — <em>já tratámos disto.</em>",
@@ -215,8 +225,10 @@ export const marketing: Catalog = {
   "accessibility.accomModal.contactPlaceholder": "Email ou telemóvel",
   "accessibility.accomModal.submitCta": "Enviar pedido",
   "accessibility.accomModal.cancelCta": "Cancelar",
-  "accessibility.accomModal.doneTitle": "Recebido — <em>já estamos a tratar.</em>",
-  "accessibility.accomModal.doneBody": "Alguém da equipa vai falar contigo antes do evento.",
+  "accessibility.accomModal.doneTitle":
+    "Recebido — <em>já estamos a tratar.</em>",
+  "accessibility.accomModal.doneBody":
+    "Alguém da equipa vai falar contigo antes do evento.",
   "accessibility.accomModal.closeCta": "Fechar",
 
   // ── Ativismo ───────────────────────────────────────────────────────────
@@ -235,9 +247,11 @@ export const marketing: Catalog = {
   "activism.conviction.local.word": "Local.",
   "activism.conviction.local.rest": "A mudança começa na sala em que já estás.",
   "activism.conviction.real.word": "Real.",
-  "activism.conviction.real.rest": "Não é uma partilha. É algo que te custa alguma coisa.",
+  "activism.conviction.real.rest":
+    "Não é uma partilha. É algo que te custa alguma coisa.",
   "activism.conviction.yours.word": "Teu.",
-  "activism.conviction.yours.rest": "Escolhe a forma que cabe na tua vida agora.",
+  "activism.conviction.yours.rest":
+    "Escolhe a forma que cabe na tua vida agora.",
   "activism.start.title": "Por onde <em>começar</em>",
   "activism.start.p1":
     "Não precisas de deixar o emprego nem de te filiares num partido. O ativismo cabe numa tarde.",
@@ -245,7 +259,7 @@ export const marketing: Catalog = {
     "Aqui tens uma escada — escolhe o degrau que corresponde ao que tens para dar este mês.",
   "activism.start.step1.title": "Aparece uma vez",
   "activism.start.step1.body":
-    "Vai a um encontro, uma vigília, uma reunião comunitária. A presença é o primeiro ato.",
+    "Vai a um convívio, uma vigília, uma reunião comunitária. A presença é o primeiro ato.",
   "activism.start.step2.title": "Dá algumas horas",
   "activism.start.step2.body":
     "Escolhe um turno recorrente — uma linha de apoio, uma tarde de sensibilização, uma banca num evento.",
@@ -330,7 +344,7 @@ export const marketing: Catalog = {
   "coc.toc.changes": "Alterações",
   "coc.scope.title": "§01 <em>Âmbito</em>",
   "coc.scope.p1":
-    "Este Código aplica-se a tudo na QueerPulse — <strong>publicações, mensagens, encontros, comentários, perfis</strong> — e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
+    "Este Código aplica-se a tudo na QueerPulse — <strong>publicações, mensagens, convívios, comentários, perfis</strong> — e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
   "coc.scope.p2":
     "Aplica-se a todas as pessoas, <em>sem exceção</em> — incluindo fundadores, equipa e moderação.",
   "coc.scope.p3":
@@ -341,7 +355,8 @@ export const marketing: Catalog = {
   "coc.pact.item01.body":
     "Traz a tua identidade inteira. Ninguém aqui tem de representar uma versão mais palatável de si próprio.",
   "coc.pact.item02.title": "Perguntamos antes de presumir",
-  "coc.pact.item02.body": "Pronomes, limites, níveis de conforto — confirma, não adivinhes.",
+  "coc.pact.item02.body":
+    "Pronomes, limites, níveis de conforto — confirma, não adivinhes.",
   "coc.pact.item03.title": "Mantemos esta sala privada",
   "coc.pact.item03.body":
     "O que acontece aqui fica aqui, a menos que a pessoa envolvida diga o contrário.",
@@ -381,14 +396,17 @@ export const marketing: Catalog = {
   "coc.harm.friction.hurtFeelings.rest":
     "O desconforto não é o mesmo que dano — olhamos para o que foi realmente dito ou feito.",
   "coc.harm.friction.criticism.lead": "Críticas à plataforma.",
-  "coc.harm.friction.criticism.rest": "Incluindo críticas a nós, que a gerimos.",
-  "coc.harm.friction.politicalViews.lead": "Posições políticas que não partilhas.",
+  "coc.harm.friction.criticism.rest":
+    "Incluindo críticas a nós, que a gerimos.",
+  "coc.harm.friction.politicalViews.lead":
+    "Posições políticas que não partilhas.",
   "coc.harm.friction.politicalViews.rest":
     "Desde que não visem a identidade ou a segurança de outra pessoa.",
   "coc.harm.closing":
     "A linha é o <em>impacto</em>, não a intenção. “Não foi essa a intenção” não anula o dano causado.",
   "coc.enforce.title": "§04 <em>Aplicação</em>",
-  "coc.enforce.lead": "Uma escada gradual — a maioria das denúncias resolve-se no primeiro ou segundo degrau.",
+  "coc.enforce.lead":
+    "Uma escada gradual — a maioria das denúncias resolve-se no primeiro ou segundo degrau.",
   "coc.ladder.step1.title": "Uma palavra em privado",
   "coc.ladder.step1.body":
     "Uma pessoa moderadora contacta diretamente, de forma informal, antes de qualquer registo formal.",
@@ -396,10 +414,11 @@ export const marketing: Catalog = {
   "coc.ladder.step2.body":
     "Documentado, associado à conta. <em>Um aviso mantém-se privado</em> — não é divulgado.",
   "coc.ladder.step3.title": "Suspensão temporária",
-  "coc.ladder.step3.body": "Um período de arrefecimento, de dias a semanas, consoante a gravidade.",
+  "coc.ladder.step3.body":
+    "Um período de arrefecimento, de dias a semanas, consoante a gravidade.",
   "coc.ladder.step4.title": "Remoção de um espaço",
   "coc.ladder.step4.body":
-    "Perda de acesso a um encontro, comunidade ou canal específico — não à plataforma inteira.",
+    "Perda de acesso a um convívio, comunidade ou canal específico — não à plataforma inteira.",
   "coc.ladder.step5.title": "Remoção da QueerPulse",
   "coc.ladder.step5.body":
     "Reservado para violações graves ou repetidas. <em>Sempre revisível em recurso.</em>",
@@ -415,7 +434,8 @@ export const marketing: Catalog = {
   "coc.appeal.p2":
     "Os recursos são decididos no prazo de <strong>7 dias</strong>. A decisão é final, mas a justificação é sempre partilhada contigo.",
   "coc.offplatform.title": "§06 Conduta <em>fora da plataforma</em>",
-  "coc.offplatform.lead": "Este Código pode estender-se a comportamento fora da QueerPulse em duas situações.",
+  "coc.offplatform.lead":
+    "Este Código pode estender-se a comportamento fora da QueerPulse em duas situações.",
   "coc.offplatform.case1.lead": "Dano direto a uma pessoa da comunidade.",
   "coc.offplatform.case1.rest":
     "Assédio que começou aqui e continua noutra plataforma, dirigido a uma pessoa da QueerPulse.",
@@ -433,10 +453,13 @@ export const marketing: Catalog = {
   "coc.changelog.v20.rest":
     "Reescreveu a escada de aplicação do zero e acrescentou o passo de aviso privado.",
   "coc.changelog.v14.lead": "v1.4 · {date}",
-  "coc.changelog.v14.rest": "Acrescentou doxxing e distorção de má-fé como violações explícitas.",
+  "coc.changelog.v14.rest":
+    "Acrescentou doxxing e distorção de má-fé como violações explícitas.",
   "coc.changelog.v10.lead": "v1.0 · {date}",
-  "coc.changelog.v10.rest": "Primeira versão publicada, ratificada pelo círculo fundador.",
-  "coc.changes.seeChangelog": "Consulta o <changelogLink>histórico completo</changelogLink>.",
+  "coc.changelog.v10.rest":
+    "Primeira versão publicada, ratificada pelo círculo fundador.",
+  "coc.changes.seeChangelog":
+    "Consulta o <changelogLink>histórico completo</changelogLink>.",
   "coc.version.label": "Versão 2.1",
   "coc.version.ratifiedMeta": "Ratificado em {date}",
   "coc.version.downloadCta": "descarregar como texto",
@@ -459,12 +482,14 @@ export const marketing: Catalog = {
   // ── Cookies ────────────────────────────────────────────────────────────
   "cookies.eyebrow": "Cookies",
   "cookies.h1": "O que <em>registamos,</em> e porquê.",
-  "cookies.sub": "Uma lista curta, não um muro de juridiquês. Ajusta abaixo o que te faz sentido.",
+  "cookies.sub":
+    "Uma lista curta, não um muro de juridiquês. Ajusta abaixo o que te faz sentido.",
   "cookies.essential.title": "Essenciais",
   "cookies.essential.body":
     "Necessários para te manteres com sessão iniciada e a tua conta segura. Não podem ser desligados.",
   "cookies.functional.title": "Funcionais",
-  "cookies.functional.body": "Guardam as tuas preferências — tema, idioma, definições de notificação.",
+  "cookies.functional.body":
+    "Guardam as tuas preferências — tema, idioma, definições de notificação.",
   "cookies.analytics.title": "Análise",
   "cookies.analytics.body":
     "Estatísticas de utilização agregadas e respeitadoras da privacidade, via Plausible. Sem rastreio entre sites, sem redes publicitárias.",
@@ -491,7 +516,8 @@ export const marketing: Catalog = {
   "cookies.info":
     "Altera isto quando quiseres em <settingsLink>Definições</settingsLink>. Detalhe completo na <privacyLink>Política de Privacidade</privacyLink>.",
   "cookies.outro.title": "Perguntas sobre <em>os teus dados?</em>",
-  "cookies.outro.sub": "A Política de Privacidade cobre tudo o que os cookies não cobrem.",
+  "cookies.outro.sub":
+    "A Política de Privacidade cobre tudo o que os cookies não cobrem.",
   "cookies.outro.cta": "Ler a Política de Privacidade",
   "cookies.toast.saved": "Preferências de cookies guardadas",
 
@@ -501,16 +527,21 @@ export const marketing: Catalog = {
   "dsar.h1": "Exerce os teus <em>direitos sobre os dados.</em>",
   "dsar.lead":
     "Ao abrigo do <b>RGPD</b>, podes pedir uma cópia dos teus dados, uma correção, ou a sua eliminação — <em>sem qualquer custo</em>.",
-  "dsar.gdprStrip": "Este pedido é tratado ao abrigo dos artigos 15.º a 21.º do <b>RGPD</b>.",
+  "dsar.gdprStrip":
+    "Este pedido é tratado ao abrigo dos artigos 15.º a 21.º do <b>RGPD</b>.",
   "dsar.rightLabel": "Que direito queres exercer?",
   "dsar.rights.access.label": "Direito de <em>acesso</em>",
-  "dsar.rights.access.desc": "Obtém uma cópia de tudo o que a QueerPulse guarda sobre ti.",
+  "dsar.rights.access.desc":
+    "Obtém uma cópia de tudo o que a QueerPulse guarda sobre ti.",
   "dsar.rights.access.formTitle": "Pedir uma cópia dos teus dados",
-  "dsar.rights.access.formSub": "Reunimos tudo o que está associado à tua conta e enviamos-te.",
+  "dsar.rights.access.formSub":
+    "Reunimos tudo o que está associado à tua conta e enviamos-te.",
   "dsar.rights.rectification.label": "Direito de retificação",
-  "dsar.rights.rectification.desc": "Corrige informação sobre ti que esteja incorreta ou incompleta.",
+  "dsar.rights.rectification.desc":
+    "Corrige informação sobre ti que esteja incorreta ou incompleta.",
   "dsar.rights.rectification.formTitle": "Pedir uma correção",
-  "dsar.rights.rectification.formSub": "Diz-nos o que está errado e o que deve constar em vez disso.",
+  "dsar.rights.rectification.formSub":
+    "Diz-nos o que está errado e o que deve constar em vez disso.",
   "dsar.rights.erasure.label": "Direito ao <em>apagamento</em>",
   "dsar.rights.erasure.desc":
     "Pede-nos para eliminar os teus dados pessoais, dentro dos limites legais de retenção.",
@@ -521,13 +552,15 @@ export const marketing: Catalog = {
   "dsar.rights.objection.desc":
     "Opõe-te a uma forma específica de usarmos os teus dados, como a análise de utilização.",
   "dsar.rights.objection.formTitle": "Opor-te a um uso dos teus dados",
-  "dsar.rights.objection.formSub": "Diz-nos a que processamento te estás a opor.",
+  "dsar.rights.objection.formSub":
+    "Diz-nos a que processamento te estás a opor.",
   "dsar.artPrefix": "Artigo {number}",
   "dsar.toast.showingForm": "A mostrar o formulário do Artigo {article}",
   "dsar.requestLabel": "Pedido:",
   "dsar.form.accountLabel": "A tua conta",
   "dsar.form.whatChanged.label": "O que precisa de mudar?",
-  "dsar.form.whatChanged.helper": "Dá o máximo de detalhe possível — isso acelera a análise.",
+  "dsar.form.whatChanged.helper":
+    "Dá o máximo de detalhe possível — isso acelera a análise.",
   "dsar.form.whatChanged.placeholder":
     "Descreve o que deve ser corrigido, eliminado, ou a que te opões",
   "dsar.form.scopeLabel": "Que dados abrange isto?",
@@ -540,7 +573,8 @@ export const marketing: Catalog = {
   "dsar.scopes.billing.b": "Faturação",
   "dsar.scopes.billing.s": "Escalão de adesão, histórico de pagamentos",
   "dsar.scopes.moderation.b": "Moderação",
-  "dsar.scopes.moderation.s": "Denúncias que fizeste ou em que foste mencionade",
+  "dsar.scopes.moderation.s":
+    "Denúncias que fizeste ou em que foste mencionade",
   "dsar.form.docs.label": "Documentos de suporte",
   "dsar.form.docs.optional": "(opcional)",
   "dsar.form.docs.helper":
@@ -576,9 +610,12 @@ export const marketing: Catalog = {
   "guidelines.clause02.titleEm": "boa-fé",
   "guidelines.clause02.p1":
     "A maior parte do atrito aqui vem de mal-entendidos, não de má intenção. Pergunta antes de presumir o pior.",
-  "guidelines.clause02.li1": "Lê uma mensagem duas vezes antes de reagir a ela.",
-  "guidelines.clause02.li2": "Faz uma pergunta de clarificação em vez de presumir a intenção.",
-  "guidelines.clause02.li3": "Dá espaço para alguém formular algo de forma desajeitada.",
+  "guidelines.clause02.li1":
+    "Lê uma mensagem duas vezes antes de reagir a ela.",
+  "guidelines.clause02.li2":
+    "Faz uma pergunta de clarificação em vez de presumir a intenção.",
+  "guidelines.clause02.li3":
+    "Dá espaço para alguém formular algo de forma desajeitada.",
   "guidelines.clause02.li4": "Presume que podes estar sem contexto.",
   "guidelines.clause02.li5": "Discorda do argumento, não da pessoa.",
   "guidelines.clause02.p2":
@@ -595,37 +632,45 @@ export const marketing: Catalog = {
   "guidelines.clause04.titlePre": "Mantém a sala ",
   "guidelines.clause04.titleEm": "privada",
   "guidelines.clause04.p1":
-    "O que se partilha num encontro, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
+    "O que se partilha num convívio, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
   "guidelines.clause04.p2":
     "Isto inclui capturas de ecrã. Pergunta antes de partilhares algo que veio de dentro da QueerPulse.",
   "guidelines.clause05.titlePre": "Repara, não peças só ",
   "guidelines.clause05.titleEm": "desculpa",
   "guidelines.clause05.p1":
     "Um bom pedido de desculpa nomeia o que aconteceu, reconhece o impacto e muda o comportamento daí em diante.",
-  "guidelines.clause05.p2": "“Desculpa se te sentiste assim” não é uma reparação. É uma fuga.",
+  "guidelines.clause05.p2":
+    "“Desculpa se te sentiste assim” não é uma reparação. É uma fuga.",
   "guidelines.clause06.titlePre": "Descansar faz ",
   "guidelines.clause06.titleEm": "parte disto",
-  "guidelines.clause06.p1": "Ninguém deve disponibilidade constante a esta comunidade. Recua quando precisares.",
+  "guidelines.clause06.p1":
+    "Ninguém deve disponibilidade constante a esta comunidade. Recua quando precisares.",
   "guidelines.clause06.p2":
     "Uma comunidade saudável tem espaço para as pessoas entrarem e saírem sem explicações.",
   "guidelines.clause07.titlePre": "Conhece as ",
   "guidelines.clause07.titleEm": "linhas vermelhas",
   "guidelines.clause07.p1":
     "As Diretrizes descrevem cultura. Algumas coisas cruzam para o Código de Conduta, território de cumprimento obrigatório:",
-  "guidelines.clause07.hardLinesHead": "Sempre uma questão do Código de Conduta",
+  "guidelines.clause07.hardLinesHead":
+    "Sempre uma questão do Código de Conduta",
   "guidelines.clause07.li1": "Assédio ou ataques pessoais dirigidos",
-  "guidelines.clause07.li2": "Doxxing ou partilha da informação identificativa de alguém",
-  "guidelines.clause07.li3": "Revelar a orientação ou identidade de alguém sem o seu consentimento",
+  "guidelines.clause07.li2":
+    "Doxxing ou partilha da informação identificativa de alguém",
+  "guidelines.clause07.li3":
+    "Revelar a orientação ou identidade de alguém sem o seu consentimento",
   "guidelines.clause07.li4": "Ameaças ou intimidação",
-  "guidelines.clause07.li5": "Partilhar conversas ou fotografias privadas sem consentimento",
-  "guidelines.clause07.li6": "Discriminação com base em qualquer característica protegida",
+  "guidelines.clause07.li5":
+    "Partilhar conversas ou fotografias privadas sem consentimento",
+  "guidelines.clause07.li6":
+    "Discriminação com base em qualquer característica protegida",
   "guidelines.final.titlePre": "Mais uma ",
   "guidelines.final.titleEm": "coisa",
   "guidelines.final.p1":
     "Ninguém acerta nisto sempre. O que importa é <b>como reparas</b> quando falhas, não se falhas alguma vez.",
   "guidelines.final.p2": "Obrigade por construíres isto connosco.",
   "guidelines.outro.title": "Agora já conheces <em>a cultura.</em>",
-  "guidelines.outro.sub": "O Código de Conduta cobre o que acontece se for violada.",
+  "guidelines.outro.sub":
+    "O Código de Conduta cobre o que acontece se for violada.",
   "guidelines.outro.backCta": "Voltar ao início",
 
   // ── Ajuda ──────────────────────────────────────────────────────────────
@@ -636,8 +681,8 @@ export const marketing: Catalog = {
   "help.category.gettingStarted.head": "Para <em>começar</em>",
   "help.category.account.label": "Conta",
   "help.category.account.head": "A tua <em>conta</em>",
-  "help.category.gatherings.label": "Encontros",
-  "help.category.gatherings.head": "<em>Encontros</em>",
+  "help.category.gatherings.label": "Convívios",
+  "help.category.gatherings.head": "<em>Convívios</em>",
   "help.category.safety.label": "Segurança",
   "help.category.safety.head": "<em>Segurança</em>",
   "help.category.membership.label": "Adesão",
@@ -648,10 +693,11 @@ export const marketing: Catalog = {
   "help.qa.invite.a":
     "Alguém que já está na QueerPulse <strong>avaliza-te</strong> e envia um convite, ou podes <strong>pedir um convite</strong> e associamos-te a alguém da comunidade.",
   "help.qa.afterAccept.q": "O que acontece depois de aceitar um convite?",
-  "help.qa.afterAccept.a": "Configuras o teu perfil e a tua conta fica ativa de imediato — sem período de espera.",
+  "help.qa.afterAccept.a":
+    "Configuras o teu perfil e a tua conta fica ativa de imediato — sem período de espera.",
   "help.qa.lisbonOnly.q": "A QueerPulse é só para quem vive em Lisboa?",
   "help.qa.lisbonOnly.a":
-    "Os encontros são em Lisboa, mas a adesão em si não está limitada por localização — muitas pessoas participam à distância pela rede e pela revista.",
+    "Os convívios são em Lisboa, mas a adesão em si não está limitada por localização — muitas pessoas participam à distância pela rede e pela revista.",
   "help.qa.free.q": "A QueerPulse é gratuita?",
   "help.qa.free.a":
     "Sim — a adesão é gratuita no escalão solidário. Existem <link>escalões de Apoiante</link> pagos para quem quiser apoiar a plataforma financeiramente.",
@@ -664,15 +710,18 @@ export const marketing: Catalog = {
   "help.qa.deleteAccount.q": "Como elimino a minha conta?",
   "help.qa.deleteAccount.a":
     "Em <settingsLink>Definições</settingsLink> → Conta, mais abaixo. Isto é permanente — vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
-  "help.qa.levels.q": "O que significam os diferentes níveis de pessoa da comunidade?",
+  "help.qa.levels.q":
+    "O que significam os diferentes níveis de pessoa da comunidade?",
   "help.qa.levels.a":
     "Os níveis refletem há quanto tempo foste avalizade na comunidade e a tua atividade — não são uma barreira de pagamento, só um sinal de confiança.",
   "help.qa.rsvp.q": "Como funcionam as confirmações de presença?",
   "help.qa.rsvp.a":
-    "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos encontros, por isso confirma cedo.",
-  "help.qa.hostGathering.q": "Posso organizar o meu próprio encontro?",
-  "help.qa.hostGathering.a": "Sim — vê o <hostLink>guia de organização</hostLink> para um passo a passo completo.",
-  "help.qa.cantMakeIt.q": "Confirmei presença mas afinal não posso ir — o que faço?",
+    "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos convívios, por isso confirma cedo.",
+  "help.qa.hostGathering.q": "Posso organizar o meu próprio convívio?",
+  "help.qa.hostGathering.a":
+    "Sim — vê o <hostLink>guia de organização</hostLink> para um passo a passo completo.",
+  "help.qa.cantMakeIt.q":
+    "Confirmei presença mas afinal não posso ir — o que faço?",
   "help.qa.cantMakeIt.a":
     "Cancela a tua confirmação na página do evento assim que souberes, para que alguém na lista de espera possa ficar com o teu lugar.",
   "help.qa.waitlist.q": "Como funciona a lista de espera?",
@@ -712,11 +761,13 @@ export const marketing: Catalog = {
   "help.qa.somethingBroken.a":
     "Tenta atualizar a página primeiro. Se continuar, <contactLink>avisa-nos</contactLink> com o máximo de detalhe possível.",
   "help.stillStuck.title": "Continuas com dúvidas?",
-  "help.stillStuck.body": "Uma pessoa a sério lê todas as mensagens que chegam por aqui.",
+  "help.stillStuck.body":
+    "Uma pessoa a sério lê todas as mensagens que chegam por aqui.",
   "help.stillStuck.cta": "Contacta-nos",
   "help.subpageIndex.title": "Relacionado",
   "help.subpageIndex.accessibility.label": "Acessibilidade",
-  "help.subpageIndex.accessibility.blurb": "Espaços acessíveis, adaptações e os nossos compromissos de acesso.",
+  "help.subpageIndex.accessibility.blurb":
+    "Espaços acessíveis, adaptações e os nossos compromissos de acesso.",
 
   // ── Chrome partilhado (Termos / Privacidade) ──────────────────────────
   "legal.eyebrow": "Legal",
@@ -738,7 +789,8 @@ export const marketing: Catalog = {
     "No que a QueerPulse acredita, por palavras próprias — o documento fundador por trás de tudo o resto nesta plataforma.",
   "manifesto.hero.eyebrow": "O Manifesto",
   "manifesto.hero.title": "Construímos <em>por nós, para nós.</em>",
-  "manifesto.hero.attrib": "Escrito pelo círculo fundador, <b>ratificado pela comunidade.</b>",
+  "manifesto.hero.attrib":
+    "Escrito pelo círculo fundador, <b>ratificado pela comunidade.</b>",
   "manifesto.toast.signed": "Obrigade por assinares.",
 
   // ── Parceiros ──────────────────────────────────────────────────────────
@@ -751,7 +803,8 @@ export const marketing: Catalog = {
   "partners.interstitial.body":
     "Cada organização abaixo foi avaliada quanto ao alinhamento com os nossos valores antes de aqui aparecer.",
   "partners.section.title": "Os nossos <em>parceiros</em>",
-  "partners.section.sub": "Ainda não há filtro disponível — aqui está a lista completa.",
+  "partners.section.sub":
+    "Ainda não há filtro disponível — aqui está a lista completa.",
   "partners.card.viewCta": "Ver perfil →",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
   "partners.why.p1":
@@ -760,17 +813,21 @@ export const marketing: Catalog = {
     "Fazer parcerias significa podermos encaminhar pessoas para organizações que avaliámos de facto, em vez de um resultado de pesquisa genérico.",
   "partners.why.p3":
     "Significa também que recursos reais se movem: <strong>encaminhamentos, horas de voluntariado e, nalguns casos, financiamento.</strong>",
-  "partners.why.p4": "Nenhuma destas organizações paga para estar listada aqui.",
+  "partners.why.p4":
+    "Nenhuma destas organizações paga para estar listada aqui.",
   "partners.become.title": "Queres <em>ser nosso parceiro?</em>",
   "partners.become.body":
     "Se a tua organização faz um trabalho alinhado em Lisboa ou arredores, gostaríamos de saber de ti.",
   "partners.become.applyCta": "Candidatar como parceiro",
-  "partners.outro.title": "Conheces uma organização que <em>devia estar aqui?</em>",
-  "partners.outro.sub": "Diz-nos — estamos sempre à procura de parceiros alinhados.",
+  "partners.outro.title":
+    "Conheces uma organização que <em>devia estar aqui?</em>",
+  "partners.outro.sub":
+    "Diz-nos — estamos sempre à procura de parceiros alinhados.",
 
   // ── Kit de Imprensa ────────────────────────────────────────────────────
   "pressKit.hero.eyebrow": "Imprensa",
-  "pressKit.hero.title": "Tudo o que precisas para <em>escrever sobre nós.</em>",
+  "pressKit.hero.title":
+    "Tudo o que precisas para <em>escrever sobre nós.</em>",
   "pressKit.hero.dek":
     "Texto institucional, marcas, fotografia e factos — <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
   "pressKit.hero.downloadKitCta": "Descarregar o kit completo",
@@ -781,25 +838,31 @@ export const marketing: Catalog = {
   "pressKit.contact.languagesLabel": "<b>PT / EN</b>",
   "pressKit.footerNote.licence":
     "Todos os materiais aqui são disponibilizados sob licença <a>CC BY 4.0</a> para uso editorial.",
-  "pressKit.footerNote.commercial": "Para uso comercial, <a>contacta-nos</a> primeiro.",
+  "pressKit.footerNote.commercial":
+    "Para uso comercial, <a>contacta-nos</a> primeiro.",
   "pressKit.outro.title": "Precisas de <em>algo específico?</em>",
-  "pressKit.outro.sub": "Contacta diretamente o gabinete de imprensa — a maioria dos pedidos tem resposta no mesmo dia.",
+  "pressKit.outro.sub":
+    "Contacta diretamente o gabinete de imprensa — a maioria dos pedidos tem resposta no mesmo dia.",
   "pressKit.outro.contactCta": "Enviar email ao gabinete de imprensa",
   "pressKit.downloadModal.eyebrow": "Kit completo · ZIP",
   "pressKit.downloadModal.title": "Descarrega o <em>kit completo.</em>",
-  "pressKit.downloadModal.lead": "Tudo nesta página num único ficheiro — <b>38 MB</b>, pronto para o teu CMS.",
+  "pressKit.downloadModal.lead":
+    "Tudo nesta página num único ficheiro — <b>38 MB</b>, pronto para o teu CMS.",
   "pressKit.downloadModal.buttonLabel": "Descarregar · ZIP",
   "pressKit.subpageIndex.title": "Relacionado",
   "pressKit.subpageIndex.archive.label": "Arquivo de imprensa",
-  "pressKit.subpageIndex.archive.blurb": "Todas as menções e reportagens anteriores, num só lugar.",
+  "pressKit.subpageIndex.archive.blurb":
+    "Todas as menções e reportagens anteriores, num só lugar.",
   "pressKit.modal.dialogAriaLabel": "Descarregar material",
   "pressKit.modal.closeAriaLabel": "Fechar",
   "pressKit.modal.success.title": "Descarregado — <em>está tudo pronto.</em>",
-  "pressKit.modal.success.body": "O ficheiro <b>{filename}</b> já deve estar na tua pasta de transferências.",
+  "pressKit.modal.success.body":
+    "O ficheiro <b>{filename}</b> já deve estar na tua pasta de transferências.",
   "pressKit.modal.closeCta": "Fechar",
   "pressKit.modal.cancelCta": "Cancelar",
   "pressKit.readme.heading": "KIT DE IMPRENSA QUEERPULSE",
-  "pressKit.readme.updated": "Atualizado regularmente — vê queerpulse.app/press para a versão mais recente.",
+  "pressKit.readme.updated":
+    "Atualizado regularmente — vê queerpulse.app/press para a versão mais recente.",
   "pressKit.readme.licenceHeading": "LICENÇA",
   "pressKit.readme.licenceBody":
     "Todos os materiais são disponibilizados sob licença CC BY 4.0 para uso editorial. Contacta press@queerpulse.app para licenciamento comercial.",
@@ -810,7 +873,8 @@ export const marketing: Catalog = {
   "pressKit.readme.contents.photography": "Fotografia (6 imagens)",
   "pressKit.readme.contents.spokespeople": "Porta-vozes",
   "pressKit.readme.contents.factSheet": "Ficha de factos",
-  "pressKit.readme.contents.transparencyReport": "Relatório de transparência 2025",
+  "pressKit.readme.contents.transparencyReport":
+    "Relatório de transparência 2025",
   "pressKit.readme.pressDeskHeading": "GABINETE DE IMPRENSA",
   "pressKit.readme.hours": "9h–18h WET",
   "pressKit.readme.responseTime": "Respondemos em 48 horas.",
@@ -838,8 +902,10 @@ export const marketing: Catalog = {
   "pressKit.boiler.med.text":
     "A QueerPulse é uma rede profissional queer com raízes em Lisboa, fundada em 2024. Ligamos profissionais LGBTQ+, criatives, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda. A adesão é por convite, operacionalmente protegida, e gratuita no escalão solidário. A plataforma mantém uma revista, um podcast, uma rede de espaços seguros e um fundo de microapoios distribuído pela própria comunidade.",
   "pressKit.downloads.boilerplate.title": "Texto institucional",
-  "pressKit.placeholderFile.line1": "Este é um ficheiro de substituição gerado para o protótipo.",
-  "pressKit.placeholderFile.line2": "O kit de produção incluirá o material real, pronto para produção.",
+  "pressKit.placeholderFile.line1":
+    "Este é um ficheiro de substituição gerado para o protótipo.",
+  "pressKit.placeholderFile.line2":
+    "O kit de produção incluirá o material real, pronto para produção.",
 
   // ── Política de Privacidade ────────────────────────────────────────────
   "privacy.title": "Política de <em>Privacidade</em>",
@@ -852,7 +918,8 @@ export const marketing: Catalog = {
     "Perguntas sobre esta política? <strong>Contacta-nos quando quiseres</strong> — respondemos em linguagem simples, não em juridiquês.",
   "privacy.related.title": "Relacionado",
   "privacy.related.dataRequestLabel": "Pedir os teus dados",
-  "privacy.related.dataRequestBlurb": "Acede, corrige ou elimina os teus dados pessoais ao abrigo do RGPD.",
+  "privacy.related.dataRequestBlurb":
+    "Acede, corrige ou elimina os teus dados pessoais ao abrigo do RGPD.",
   "privacy.whoWeAre.title": "Quem somos",
   "privacy.whoWeAre.p1":
     "A QueerPulse é gerida pela Associação QueerPulse, uma entidade sem fins lucrativos registada em Portugal. Esta política explica como tratamos os teus dados pessoais em toda a plataforma.",
@@ -872,7 +939,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.activity.item1":
     "<strong>Publicações, comentários e mensagens</strong> que envias na plataforma.",
   "privacy.whatWeCollect.activity.item2":
-    "<strong>Confirmações e presenças em eventos</strong>, para os encontros poderem planear-se conforme o número de pessoas.",
+    "<strong>Confirmações e presenças em eventos</strong>, para os convívios poderem planear-se conforme o número de pessoas.",
   "privacy.whatWeCollect.activity.item3":
     "<strong>Dados básicos de utilização</strong> — páginas visitadas, funcionalidades usadas — agregados e anonimizados para análise.",
   "privacy.whatWeCollect.notCollectedHeading": "O que não recolhemos",
@@ -881,11 +948,14 @@ export const marketing: Catalog = {
   "privacy.howWeUse.title": "Como usamos os dados",
   "privacy.howWeUse.intro": "Os teus dados só são usados para:",
   "privacy.howWeUse.item1": "Gerir a tua conta e manter a tua sessão segura",
-  "privacy.howWeUse.item2": "Mostrar-te encontros e conteúdo relevantes para ti",
+  "privacy.howWeUse.item2":
+    "Mostrar-te convívios e conteúdo relevantes para ti",
   "privacy.howWeUse.item3": "Processar pagamentos de adesão e de Apoiante",
-  "privacy.howWeUse.item4": "Manter a plataforma segura — investigar denúncias, aplicar o Código de Conduta",
+  "privacy.howWeUse.item4":
+    "Manter a plataforma segura — investigar denúncias, aplicar o Código de Conduta",
   "privacy.howWeUse.item5": "Enviar-te notificações que ativaste",
-  "privacy.howWeUse.item6": "Perceber a utilização agregada, para melhorar o produto",
+  "privacy.howWeUse.item6":
+    "Perceber a utilização agregada, para melhorar o produto",
   "privacy.howWeUse.p1":
     "Nunca usamos os teus dados para treinar modelos de IA de terceiros nem para os vender a anunciantes.",
   "privacy.whoSees.title": "Quem vê os teus dados",
@@ -895,20 +965,27 @@ export const marketing: Catalog = {
     "<strong>A nossa pequena equipa</strong> pode aceder a dados da conta para dar apoio, investigar denúncias e manter a plataforma a funcionar.",
   "privacy.whoSees.p3":
     "<strong>Fornecedores de serviços</strong> — o nosso alojamento, email e processadores de pagamento — veem só o necessário para a sua função específica, ao abrigo de contrato.",
-  "privacy.whoSees.p4": "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
+  "privacy.whoSees.p4":
+    "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
   "privacy.retention.title": "Por quanto tempo guardamos",
-  "privacy.retention.p1": "Os dados da conta são guardados enquanto a tua conta estiver ativa.",
+  "privacy.retention.p1":
+    "Os dados da conta são guardados enquanto a tua conta estiver ativa.",
   "privacy.retention.p2":
     "Se eliminares a tua conta, a maioria dos dados pessoais é removida em 30 dias, exceto quando somos legalmente obrigados a retê-los (por exemplo, registos de faturação).",
   "privacy.retention.p3":
-    "Os dados de presença em encontros são eliminados 30 dias após o evento, segundo a nossa política de dados de encontros.",
+    "Os dados de presença em convívios são eliminados 30 dias após o evento, segundo a nossa política de dados de convívios.",
   "privacy.yourRights.title": "Os teus direitos",
   "privacy.yourRights.intro": "Ao abrigo do RGPD, tens direito a:",
-  "privacy.yourRights.item1": "<strong>Acesso</strong> — obter uma cópia de tudo o que guardamos sobre ti",
-  "privacy.yourRights.item2": "<strong>Retificação</strong> — corrigir o que estiver errado",
-  "privacy.yourRights.item3": "<strong>Apagamento</strong> — pedir-nos para eliminar os teus dados",
-  "privacy.yourRights.item4": "<strong>Oposição</strong> — opor-te a um uso específico dos teus dados",
-  "privacy.yourRights.item5": "<strong>Portabilidade</strong> — receber os teus dados num formato portátil",
+  "privacy.yourRights.item1":
+    "<strong>Acesso</strong> — obter uma cópia de tudo o que guardamos sobre ti",
+  "privacy.yourRights.item2":
+    "<strong>Retificação</strong> — corrigir o que estiver errado",
+  "privacy.yourRights.item3":
+    "<strong>Apagamento</strong> — pedir-nos para eliminar os teus dados",
+  "privacy.yourRights.item4":
+    "<strong>Oposição</strong> — opor-te a um uso específico dos teus dados",
+  "privacy.yourRights.item5":
+    "<strong>Portabilidade</strong> — receber os teus dados num formato portátil",
   "privacy.yourRights.item6":
     "<strong>Limitação</strong> — limitar como processamos os teus dados enquanto um litígio é resolvido",
   "privacy.yourRights.p1":
@@ -925,16 +1002,20 @@ export const marketing: Catalog = {
   "privacy.thirdParties.title": "Terceiros",
   "privacy.thirdParties.intro":
     "Trabalhamos com um pequeno número de fornecedores de serviços, cada um vinculado por contrato a usar os teus dados apenas para o serviço que presta:",
-  "privacy.thirdParties.item1": "<strong>Alojamento</strong> — onde a plataforma funciona",
-  "privacy.thirdParties.item2": "<strong>Envio de email</strong> — para notificações e emails de conta",
+  "privacy.thirdParties.item1":
+    "<strong>Alojamento</strong> — onde a plataforma funciona",
+  "privacy.thirdParties.item2":
+    "<strong>Envio de email</strong> — para notificações e emails de conta",
   "privacy.thirdParties.item3":
     "<strong>Processamento de pagamentos</strong> — para adesões de Apoiante, sem nunca tocar diretamente nos dados do teu cartão",
-  "privacy.thirdParties.optInIntro": "Com o teu <strong>consentimento explícito</strong>, também usamos:",
+  "privacy.thirdParties.optInIntro":
+    "Com o teu <strong>consentimento explícito</strong>, também usamos:",
   "privacy.thirdParties.optItem1":
     "<strong>Plausible Analytics</strong> — estatísticas de utilização respeitadoras da privacidade, com poucos cookies",
   "privacy.thirdParties.optItem2":
     "<strong>Integrações de calendário</strong> — se escolheres sincronizar eventos com o Google Calendar ou o Apple Calendar",
-  "privacy.thirdParties.outro": "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
+  "privacy.thirdParties.outro":
+    "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
   "privacy.changes.title": "Alterações a esta política",
   "privacy.changes.p1":
     "Avisamos as pessoas da comunidade sobre alterações relevantes por email e por aviso na aplicação, antes de entrarem em vigor.",
@@ -951,57 +1032,71 @@ export const marketing: Catalog = {
   "terms.meta.version": "Versão {version}",
   "terms.plain.text":
     "Sê quem és, trata bem as outras pessoas, e não uses a QueerPulse para fazer mal a ninguém. Os termos completos estão abaixo.",
-  "terms.contactCta": "Perguntas sobre estes termos? <strong>Contacta-nos quando quiseres.</strong>",
+  "terms.contactCta":
+    "Perguntas sobre estes termos? <strong>Contacta-nos quando quiseres.</strong>",
   "terms.eligibility.title": "Elegibilidade",
   "terms.eligibility.p1":
     "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada pela comunidade.",
   "terms.eligibility.p2":
     "Ao entrares, confirmas que <strong>a informação no teu perfil é exata</strong>, tanto quanto sabes.",
-  "terms.eligibility.p3": "Reservamo-nos o direito de recusar ou remover a adesão de quem não cumprir estes termos.",
+  "terms.eligibility.p3":
+    "Reservamo-nos o direito de recusar ou remover a adesão de quem não cumprir estes termos.",
   "terms.account.title": "A tua conta",
   "terms.account.p1":
     "És responsável por manter as tuas credenciais de acesso seguras e por toda a atividade na tua conta.",
-  "terms.account.p2": "Avisa-nos de imediato se suspeitares de acesso não autorizado à tua conta.",
+  "terms.account.p2":
+    "Avisa-nos de imediato se suspeitares de acesso não autorizado à tua conta.",
   "terms.account.p3":
     "Podes eliminar a tua conta a qualquer momento em Definições; vê a nossa Política de Privacidade para saber o que fica retido depois.",
   "terms.conduct.title": "Conduta",
   "terms.conduct.intro": "Ao usares a QueerPulse, aceitas não:",
-  "terms.conduct.item1": "Assediar, ameaçar ou intimidar outras pessoas da comunidade",
-  "terms.conduct.item2": "Partilhar informação privada de alguém sem o seu consentimento",
+  "terms.conduct.item1":
+    "Assediar, ameaçar ou intimidar outras pessoas da comunidade",
+  "terms.conduct.item2":
+    "Partilhar informação privada de alguém sem o seu consentimento",
   "terms.conduct.item3": "Fazer-te passar por outra pessoa ou organização",
-  "terms.conduct.item4": "Usar a plataforma para promoção comercial não solicitada",
-  "terms.conduct.item5": "Tentar contornar a nossa segurança ou controlos de acesso",
+  "terms.conduct.item4":
+    "Usar a plataforma para promoção comercial não solicitada",
+  "terms.conduct.item5":
+    "Tentar contornar a nossa segurança ou controlos de acesso",
   "terms.conduct.item6": "Violar o Código de Conduta de qualquer outra forma",
   "terms.conduct.highlight":
     "As violações podem resultar num aviso, suspensão ou remoção, segundo a escada de aplicação do nosso Código de Conduta.",
   "terms.content.title": "Conteúdo",
   "terms.content.p1":
     "Manténs a titularidade de tudo o que publicas. Ao publicares, concedes à QueerPulse uma <strong>licença limitada</strong> para o mostrar na plataforma.",
-  "terms.content.p2": "És responsável pelo conteúdo que partilhas e confirmas que tens o direito de o partilhar.",
-  "terms.content.p3": "Podemos remover conteúdo que viole o Código de Conduta ou estes termos.",
+  "terms.content.p2":
+    "És responsável pelo conteúdo que partilhas e confirmas que tens o direito de o partilhar.",
+  "terms.content.p3":
+    "Podemos remover conteúdo que viole o Código de Conduta ou estes termos.",
   "terms.content.magazineHeading": "Revista e submissões criativas",
   "terms.content.magazineBody":
     "Aplicam-se termos adicionais a propostas para a revista e submissões criativas — vê as diretrizes de submissão quando propuseres algo.",
-  "terms.events.title": "Encontros e eventos",
+  "terms.events.title": "Convívios e eventos",
   "terms.events.p1":
-    "Os encontros são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
+    "Os convívios são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
   "terms.events.p2":
     "Os preços dos bilhetes em eventos de escala progressiva são definidos por quem organiza, dentro dos escalões exigidos pela plataforma — a QueerPulse não fica com nenhuma percentagem da receita dos bilhetes.",
-  "terms.events.p3": "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada encontro.",
-  "terms.events.p4": "Quem organiza pode remover participantes que violem o Código de Conduta no seu evento, ao seu critério.",
+  "terms.events.p3":
+    "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada convívio.",
+  "terms.events.p4":
+    "Quem organiza pode remover participantes que violem o Código de Conduta no seu evento, ao seu critério.",
   "terms.termination.title": "Cessação",
   "terms.termination.intro": "Podemos suspender ou encerrar a tua conta se:",
   "terms.termination.item1": "Violares o Código de Conduta ou estes termos",
-  "terms.termination.item2": "Forneceres informação falsa durante o registo ou verificação",
-  "terms.termination.item3": "Tiveres um comportamento que ponha outras pessoas da comunidade em risco",
+  "terms.termination.item2":
+    "Forneceres informação falsa durante o registo ou verificação",
+  "terms.termination.item3":
+    "Tiveres um comportamento que ponha outras pessoas da comunidade em risco",
   "terms.termination.p1":
     "Sempre que possível, avisamos-te do motivo e damos-te a oportunidade de recorrer, segundo o processo de recurso do nosso Código de Conduta.",
-  "terms.termination.p2": "Também podes encerrar a tua conta voluntariamente, a qualquer momento.",
+  "terms.termination.p2":
+    "Também podes encerrar a tua conta voluntariamente, a qualquer momento.",
   "terms.liability.title": "Responsabilidade",
   "terms.liability.p1":
     "A QueerPulse é fornecida “tal como está”. Trabalhamos para a manter a funcionar bem, mas não podemos garantir que esteja sempre disponível ou sem erros.",
   "terms.liability.p2":
-    "Não somos responsáveis pela conduta das pessoas nos encontros, embora levemos as denúncias a sério e ajamos sobre elas.",
+    "Não somos responsáveis pela conduta das pessoas nos convívios, embora levemos as denúncias a sério e ajamos sobre elas.",
   "terms.liability.p3":
     "Na medida permitida por lei, a nossa responsabilidade limita-se ao montante que nos pagaste nos últimos 12 meses, se algum.",
   "terms.liability.highlight":
@@ -1026,13 +1121,14 @@ export const marketing: Catalog = {
   "manifesto.stanza01.p1":
     "Não estamos numa corrida pela escala. Não queremos mais pessoas; queremos <em>as certas</em>. Vamos crescer ao ritmo a que a comunidade consegue absorver quem chega — avalizade, acolhide, integrade. Se isso significar sermos mais pequenos do que poderíamos ser, seremos mais pequenos do que poderíamos ser.",
   "manifesto.stanza01.p2":
-    "As outras plataformas foram construídas para te manter a percorrer o ecrã; a tua atenção é o produto que medem e vendem. Nós não vendemos nada. Não há contagens de seguidores, nem algoritmo a escolher o que vês, nem feed “para ti” a competir pela tua noite. <strong>O tempo passado aqui destina-se a somar tempo fora da plataforma</strong> — em encontros, em ateliês, em clínicas, com amigues.",
+    "As outras plataformas foram construídas para te manter a percorrer o ecrã; a tua atenção é o produto que medem e vendem. Nós não vendemos nada. Não há contagens de seguidores, nem algoritmo a escolher o que vês, nem feed “para ti” a competir pela tua noite. <strong>O tempo passado aqui destina-se a somar tempo fora da plataforma</strong> — em convívios, em ateliês, em clínicas, com amigues.",
   "manifesto.stanza02.title": "Avalizade, não <em>verificade.</em>",
   "manifesto.stanza02.p1":
     "A adesão é por convite, e cada convite é assinado por um nome. Se estás aqui, alguém que conheceste mesmo disse que devias estar. Se ficares, um dia farás o mesmo por outra pessoa. Isto não é exclusividade. É <em>responsabilidade</em>.",
   "manifesto.stanza02.p2":
     "“Verificado” é uma palavra corporativa. Pressupõe um centro que pode decidir quem tu és. Nós não decidimos. A comunidade decide — em conjunto, devagar, e com o comprovativo do tempo passado em pessoa.",
-  "manifesto.pull1": "Não pomos logótipos arco-íris em nada. <em>O trabalho fala.</em>",
+  "manifesto.pull1":
+    "Não pomos logótipos arco-íris em nada. <em>O trabalho fala.</em>",
   "manifesto.stanza03.title": "A segurança é <em>infraestrutura.</em>",
   "manifesto.stanza03.p1":
     "Uma rede profissional queer sem uma ponte para a ILGA em casos de crime de ódio é um logótipo, não uma rede. Tal como uma sem terapeutas avaliades pela comunidade, sem um mapa de espaços seguros verdadeiramente mantido, e sem uma noite de clínica aberta que se repete todos os meses no Café Beirão. <strong>Se não conseguimos proteger-nos operacionalmente, não somos uma rede.</strong>",
@@ -1062,8 +1158,10 @@ export const marketing: Catalog = {
     "Este documento está errado nalguma coisa. Não sabemos em quê. A revisão de 2025 mudou onze frases. A revisão de 2026 vai mudar mais. Manifestos que não se atualizam são lápides. <em>Este atualiza-se.</em>",
   "manifesto.stanza07.p2":
     "Se estás a ler isto e algo te soa mal, escreve para <a>manifesto@queerpulse.app</a>. Uma pessoa a sério lê todas. Discutimo-las na assembleia.",
-  "manifesto.signers.title_one": "Assinado por <em>{formatted} pessoa</em> · até agora",
-  "manifesto.signers.title_other": "Assinado por <em>{formatted} pessoas</em> · até agora",
+  "manifesto.signers.title_one":
+    "Assinado por <em>{formatted} pessoa</em> · até agora",
+  "manifesto.signers.title_other":
+    "Assinado por <em>{formatted} pessoas</em> · até agora",
   "manifesto.signers.sub":
     "Assina-se com um clique. Não há obrigação nenhuma — muita gente não assinou, e isso também está bem. Estas são algumas das pessoas que assinaram.",
   "manifesto.signers.addCta": "Juntar o meu nome",
@@ -1078,22 +1176,27 @@ export const marketing: Catalog = {
   // ── Kit de Imprensa — secções da página ───────────────────────────────
   // Os títulos/fontes da cobertura são peças de imprensa reais (palavras de
   // outras pessoas) e ficam em inglês; o chrome à volta é traduzido.
-  "pressKit.boiler.section.title": "Texto institucional · <em>livre para reutilizar</em>",
+  "pressKit.boiler.section.title":
+    "Texto institucional · <em>livre para reutilizar</em>",
   "pressKit.boiler.section.lead":
     "Três tamanhos, todos aprovados para citação direta sem necessidade de aprovação adicional. Clica em <b>copiar</b> para pores uma versão limpa na área de transferência.",
   "pressKit.boiler.copyCta": "Copiar",
   "pressKit.boiler.copiedCta": "Copiado",
   "pressKit.boiler.short.label": "25 palavras · para cabeçalhos, introduções",
-  "pressKit.boiler.med.label": "60 palavras · para comunicados, biografias curtas",
-  "pressKit.boiler.long.label": "130 palavras · para reportagens longas, secções “sobre”",
+  "pressKit.boiler.med.label":
+    "60 palavras · para comunicados, biografias curtas",
+  "pressKit.boiler.long.label":
+    "130 palavras · para reportagens longas, secções “sobre”",
   "pressKit.boiler.long.wc": "130 palavras",
   "pressKit.boiler.long.text":
     "A QueerPulse é uma rede profissional queer sediada em Lisboa, fundada em 2024 por oito pessoas da comunidade na sala das traseiras do Café Beirão. É gerida pela Associação QueerPulse, uma entidade sem fins lucrativos registada em Portugal (NIPC 517 426 884), e sustentada por adesões de Apoiante, doações pontuais e três apoios a programas. A adesão é por convite avalizado. A plataforma mantém uma revista, um podcast (The Back Room), uma rede verificada de espaços seguros por toda a Lisboa, um fundo de microapoios distribuído em 14 dias por um círculo rotativo da comunidade, e uma parceria operacional com a ILGA Portugal para apoio jurídico e encaminhamento de linhas de apoio. Os relatórios anuais de transparência são auditados de forma independente e publicados publicamente.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
     "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral — exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
-  "pressKit.mark.logo.light.meta": "<b>Principal · clara</b> · para fundos creme/brancos",
-  "pressKit.mark.logo.plum.meta": "<b>Inversa · ameixa</b> · para fundos escuros",
+  "pressKit.mark.logo.light.meta":
+    "<b>Principal · clara</b> · para fundos creme/brancos",
+  "pressKit.mark.logo.plum.meta":
+    "<b>Inversa · ameixa</b> · para fundos escuros",
   "pressKit.mark.logo.coral.meta":
     "<b>Coral · solidariedade</b> · usar com parcimónia · contextos de orgulho",
   "pressKit.mark.downloadLinkLabel": "SVG · PNG",
@@ -1108,7 +1211,8 @@ export const marketing: Catalog = {
   "pressKit.colour.section.lead":
     "Toda a marca assenta em quatro tons. Não introduzimos cores de destaque adicionais — incluindo as específicas de campanhas.",
   "pressKit.colour.plum.meta": "Âncora da marca · títulos, superfícies escuras",
-  "pressKit.colour.coral.meta": "Destaque · CTAs, ênfase em itálico, o ponto de pulso",
+  "pressKit.colour.coral.meta":
+    "Destaque · CTAs, ênfase em itálico, o ponto de pulso",
   "pressKit.colour.cream.meta": "Fundo da página · nunca branco puro",
   "pressKit.colour.jade.meta": "Verificado · ao vivo · sucesso",
   "pressKit.photography.section.title": "<em>Fotografia</em> autorizada",
@@ -1118,7 +1222,7 @@ export const marketing: Catalog = {
   "pressKit.photography.image2": "02 · Noite de clínica aberta, a decorrer",
   "pressKit.photography.image3": "03 · A revista impressa, em leque",
   "pressKit.photography.image4": "04 · Escritório do Trans Hub · Mouraria",
-  "pressKit.photography.image5": "05 · Um encontro · Atelier Pulso",
+  "pressKit.photography.image5": "05 · Um convívio · Atelier Pulso",
   "pressKit.photography.image6": "06 · Detalhe do mapa · espaços seguros",
   "pressKit.team.section.title": "<em>Porta-vozes</em> identificades",
   "pressKit.team.section.lead":
@@ -1126,15 +1230,18 @@ export const marketing: Catalog = {
   "pressKit.team.marta.role": "Cofundadora · Editora-chefe",
   "pressKit.team.marta.desc":
     "Para: decisões editoriais, a revista, governação, o manifesto. <em>Não para: histórias individuais de pessoas da comunidade, decisões de moderação.</em>",
-  "pressKit.team.marta.langs": "<b>EN · PT · ES</b> · disponível com 48h de antecedência",
+  "pressKit.team.marta.langs":
+    "<b>EN · PT · ES</b> · disponível com 48h de antecedência",
   "pressKit.team.catarina.role": "Cofundadora · Cotesoureira · Trans Hub",
   "pressKit.team.catarina.desc":
     "Para: cuidados de saúde trans-afirmativos, finanças, transparência, entreajuda, parceria com a ILGA.",
-  "pressKit.team.catarina.langs": "<b>EN · PT</b> · disponível com 24h de antecedência",
+  "pressKit.team.catarina.langs":
+    "<b>EN · PT</b> · disponível com 24h de antecedência",
   "pressKit.team.andre.role": "Cofundador · Cotesoureiro · Design",
   "pressKit.team.andre.desc":
     "Para: design da plataforma, decisões técnicas, parcerias, infraestrutura. Fotógrafo das imagens internas.",
-  "pressKit.team.andre.langs": "<b>EN · PT</b> · disponível com 72h de antecedência",
+  "pressKit.team.andre.langs":
+    "<b>EN · PT</b> · disponível com 72h de antecedência",
   "pressKit.facts.section.title": "<em>Factos</em> rápidos · a {date}",
   "pressKit.facts.section.lead":
     "Fonte: relatório de transparência de 2025. <em>Por favor liga à página de transparência quando citares.</em>",
@@ -1142,7 +1249,7 @@ export const marketing: Catalog = {
   "pressKit.facts.activeMembers": "Pessoas ativas no final de 2025",
   "pressKit.facts.toPrograms": "De cada euro vai para programas",
   "pressKit.facts.totalRaised": "Total angariado em 2025",
-  "pressKit.facts.gatherings": "Encontros realizados em 2025",
+  "pressKit.facts.gatherings": "Convívios realizados em 2025",
   "pressKit.facts.microGrants": "Microapoios distribuídos em 2025",
   "pressKit.facts.safeSpaces": "Espaços seguros verificados em Lisboa",
   "pressKit.facts.magazineIssues": "Edições da revista até hoje",
@@ -1161,7 +1268,8 @@ export const marketing: Catalog = {
   "pressKit.downloads.marksSvg.desc":
     "3 variantes · autorizadas para uso editorial · 18 KB",
   "pressKit.downloads.marksPng.title": "Marcas · PNG @ 2x",
-  "pressKit.downloads.marksPng.desc": "Para documentos, apresentações, web · 8 MB",
+  "pressKit.downloads.marksPng.desc":
+    "Para documentos, apresentações, web · 8 MB",
   "pressKit.downloads.photography.title": "Fotografia · 6 imagens",
   "pressKit.downloads.photography.desc":
     "3000 × 2000 px · com autorização de modelo · 24 MB",
@@ -1182,7 +1290,8 @@ export const marketing: Catalog = {
   // idioma nunca reescreve dados já introduzidos.
   "listBusiness.hero.backCta": "Voltar ao diretório",
   "listBusiness.hero.eyebrow": "O diretório · adicionar um lugar",
-  "listBusiness.hero.title": "Adiciona o teu lugar ao <em>diretório das pessoas.</em>",
+  "listBusiness.hero.title":
+    "Adiciona o teu lugar ao <em>diretório das pessoas.</em>",
   "listBusiness.hero.lead":
     "Queer-owned ou queer-friendly, grande ou pequenino — se o teu lugar é bom para a nossa gente, pertence aqui. Conta-nos e a equipa da comunidade trata do resto. <b>Cada anúncio é lido por uma pessoa antes de ficar no ar.</b>",
   "listBusiness.wizard.stepAria": "Passo {number}: {label}",
@@ -1207,7 +1316,8 @@ export const marketing: Catalog = {
   "listBusiness.next.send": "Enviar à equipa →",
   "listBusiness.next.continue": "Continuar →",
   "listBusiness.sending": "A enviar o teu lugar à equipa…",
-  "listBusiness.toast.submitted": "O teu anúncio está com a equipa da comunidade",
+  "listBusiness.toast.submitted":
+    "O teu anúncio está com a equipa da comunidade",
   "listBusiness.toast.withdrawn": "Anúncio retirado",
   // Passo 0 — percurso
   "listBusiness.step0.title": "Como é que",
@@ -1221,21 +1331,24 @@ export const marketing: Catalog = {
   "listBusiness.step0.suggest.title": "Estou a sugerir um lugar de que gosto",
   "listBusiness.step0.suggest.desc":
     "Um sítio que tem sido bom para ti. A equipa vai contactar quem o gere antes de ficar no ar.",
-  "listBusiness.step0.verifyLabel": "Como devemos verificar que geres este lugar?",
+  "listBusiness.step0.verifyLabel":
+    "Como devemos verificar que geres este lugar?",
   "listBusiness.step0.verifyHelp":
     "É isto que mantém o diretório de confiança. Escolhe o que for mais fácil para ti.",
   "listBusiness.step0.signedInAs":
     "Tens sessão iniciada como <b>{name}</b> — vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
   // Opções de verificação
   "listBusiness.verify.email.label": "Email do negócio",
-  "listBusiness.verify.email.desc": "Enviamos um código para um endereço do teu domínio.",
+  "listBusiness.verify.email.desc":
+    "Enviamos um código para um endereço do teu domínio.",
   "listBusiness.verify.email.badge": "Mais rápido",
   "listBusiness.verify.instagram.label": "Instagram",
   "listBusiness.verify.instagram.desc":
     "Confirma com uma mensagem direta da conta indicada.",
   "listBusiness.verify.instagram.badge": "Fácil",
   "listBusiness.verify.post.label": "Postal para a morada",
-  "listBusiness.verify.post.desc": "À moda antiga. O código chega em 3 a 5 dias.",
+  "listBusiness.verify.post.desc":
+    "À moda antiga. O código chega em 3 a 5 dias.",
   "listBusiness.verify.post.badge": "3–5 dias",
   "listBusiness.verify.later.label": "Verificar depois da revisão",
   "listBusiness.verify.later.desc":
@@ -1249,7 +1362,8 @@ export const marketing: Catalog = {
   "listBusiness.step1.nameLabel": "Como se chama?",
   "listBusiness.step1.nameHelper": "O nome tal como as pessoas o procurariam.",
   "listBusiness.step1.namePlaceholder": "ex.: Café Beirão",
-  "listBusiness.step1.dupHead": "Talvez já exista um lugar com este nome no diretório:",
+  "listBusiness.step1.dupHead":
+    "Talvez já exista um lugar com este nome no diretório:",
   "listBusiness.step1.catsLabel": "Que tipo de lugar é? — escolhe até 2",
   "listBusiness.step1.catsAria": "Categoria",
   "listBusiness.step1.hoodLabel": "Que bairro?",
@@ -1266,7 +1380,8 @@ export const marketing: Catalog = {
   "listBusiness.step1.friendly.title": "Um lugar que nos acolhe",
   "listBusiness.step1.friendly.desc":
     "Não é queer-owned, mas é ativamente seguro e afirmativo.",
-  "listBusiness.step1.evidenceLabel": "Só um toque leve — em que sentido é queer-owned?",
+  "listBusiness.step1.evidenceLabel":
+    "Só um toque leve — em que sentido é queer-owned?",
   "listBusiness.step1.evidenceHelp":
     "Sem documentos. Só uma frase que quem revê possa confirmar. É isto que mantém o distintivo com significado.",
   "listBusiness.step1.evidencePlaceholder":
@@ -1305,11 +1420,14 @@ export const marketing: Catalog = {
   "listBusiness.step2.witLabel": "O que é, na prática",
   "listBusiness.step2.witHelper":
     "Duas a quatro linhas curtas. As coisas que gostarias que alguém soubesse ao entrar.",
-  "listBusiness.step2.witFirstPlaceholder": "ex.: Galão, pastéis, dois pratos do dia",
-  "listBusiness.step2.witMorePlaceholder": "Mais uma coisa que vale a pena saber",
+  "listBusiness.step2.witFirstPlaceholder":
+    "ex.: Galão, pastéis, dois pratos do dia",
+  "listBusiness.step2.witMorePlaceholder":
+    "Mais uma coisa que vale a pena saber",
   "listBusiness.step2.witRemoveAria": "Remover linha",
   "listBusiness.step2.witAdd": "Adicionar outra linha",
-  "listBusiness.step2.tagsLabel": "Etiquetas — palavras por que as pessoas possam filtrar",
+  "listBusiness.step2.tagsLabel":
+    "Etiquetas — palavras por que as pessoas possam filtrar",
   "listBusiness.step2.tagsPlaceholder": "ex.: Acessível a cadeiras de rodas",
   "listBusiness.step2.tagsAddCta": "Adicionar",
   "listBusiness.step2.tagRemoveAria": "Remover {tag}",
@@ -1324,7 +1442,8 @@ export const marketing: Catalog = {
   "listBusiness.goodFor.genderNeutralToilets": "Casas de banho neutras",
   "listBusiness.goodFor.stepFreeEntrance": "Entrada sem degraus",
   "listBusiness.goodFor.walkInsWelcome": "Sem marcação necessária",
-  "listBusiness.goodFor.quietLowSensory": "Horas calmas, de baixo estímulo sensorial",
+  "listBusiness.goodFor.quietLowSensory":
+    "Horas calmas, de baixo estímulo sensorial",
   "listBusiness.goodFor.soloFriendly": "Bom para ir sozinhe",
   "listBusiness.goodFor.dogFriendly": "Aceita cães",
   "listBusiness.goodFor.hostsCommunityEvents": "Acolhe eventos da comunidade",
@@ -1345,7 +1464,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.addressLabel": "Morada",
   "listBusiness.step3.addressHelper":
     "Rua e número chega — colocamos o pino a partir daí.",
-  "listBusiness.step3.addressPlaceholder": "R. Antero de Quental 26, 1170-024 Lisboa",
+  "listBusiness.step3.addressPlaceholder":
+    "R. Antero de Quental 26, 1170-024 Lisboa",
   "listBusiness.step3.findOnMap": "Encontrar no mapa",
   "listBusiness.step3.pinPlaced": "Pino colocado perto de {place}",
   "listBusiness.step3.hoursHeading": "Horário de funcionamento *",
@@ -1357,7 +1477,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.closed": "Fechado",
   "listBusiness.step3.opensAria": "{day} — abertura",
   "listBusiness.step3.closesAria": "{day} — fecho",
-  "listBusiness.step3.hoursNoteLabel": "Uma nota curta sobre o horário — opcional",
+  "listBusiness.step3.hoursNoteLabel":
+    "Uma nota curta sobre o horário — opcional",
   "listBusiness.step3.hoursNotePlaceholder":
     "Fechado à segunda. A sala das traseiras reserva-se à parte.",
   "listBusiness.step3.onlineHeading": "Encontrar-te online",
@@ -1427,9 +1548,11 @@ export const marketing: Catalog = {
   "listBusiness.rel.run.label": "Faço a gestão ou ajudo a gerir",
   "listBusiness.rel.run.desc": "No dia a dia, é em parte teu.",
   "listBusiness.rel.work.label": "Trabalho aqui",
-  "listBusiness.rel.work.desc": "Equipa, com a bênção de quem gere para anunciar.",
+  "listBusiness.rel.work.desc":
+    "Equipa, com a bênção de quem gere para anunciar.",
   "listBusiness.rel.regular.label": "Sou cliente habitual e adoro",
-  "listBusiness.rel.regular.desc": "A sugerir um lugar que tem sido bom para ti.",
+  "listBusiness.rel.regular.desc":
+    "A sugerir um lugar que tem sido bom para ti.",
   // Opções de visibilidade
   "listBusiness.vis.public.label": "O meu nome e o meu papel",
   "listBusiness.vis.public.desc": "Ambos aparecem no anúncio.",
@@ -1523,7 +1646,8 @@ export const marketing: Catalog = {
   "listBusiness.success.withdraw": "Retirar",
   "listBusiness.success.reference":
     "Referência · <b>{ref}</b> &nbsp;·&nbsp; guarda-a algures",
-  "listBusiness.success.demoFlip": "Protótipo · pré-visualizar estados de revisão:",
+  "listBusiness.success.demoFlip":
+    "Protótipo · pré-visualizar estados de revisão:",
   // Etiquetas dos chips de "o que falta"
   "listBusiness.missing.path": "como conheces o lugar",
   "listBusiness.missing.verify": "uma forma de verificar",
@@ -1544,7 +1668,8 @@ export const marketing: Catalog = {
   "listBusiness.missing.contactEmail": "um email de contacto",
   "listBusiness.missing.consent": "as duas confirmações",
   // Coluna de pré-visualização ao vivo
-  "listBusiness.preview.head": "Pré-visualização ao vivo · atualiza enquanto escreves",
+  "listBusiness.preview.head":
+    "Pré-visualização ao vivo · atualiza enquanto escreves",
   "listBusiness.preview.placeholderName": "O teu lugar",
   "listBusiness.preview.placeholderMeta": "Categoria · bairro",
   "listBusiness.preview.placeholderBlurb":
@@ -1580,10 +1705,11 @@ export const marketing: Catalog = {
   // ── Assembleia Anual — chrome da página. A agenda/resoluções/contagens/
   //    histórico são registos de governação por ano (propostas e votos
   //    concretos) — ficam em inglês; ver o relatório da varredura.
-  "annualAssembly.hero.eyebrow": "Assembleia Anual · 14 de novembro de 2026 · Lisboa",
+  "annualAssembly.hero.eyebrow":
+    "Assembleia Anual · 14 de novembro de 2026 · Lisboa",
   "annualAssembly.hero.title": "Dois dias, onze <em>resoluções.</em>",
   "annualAssembly.hero.dek":
-    "O encontro anual vinculativo da QueerPulse. Onde o manifesto é revisto, o orçamento é aprovado, e qualquer decisão que não possa ser tomada por um círculo vai a votação da comunidade. <em>Podes participar presencialmente, online, ou só ler as atas depois</em> — mas o teu voto conta da mesma forma.",
+    "O convívio anual vinculativo da QueerPulse. Onde o manifesto é revisto, o orçamento é aprovado, e qualquer decisão que não possa ser tomada por um círculo vai a votação da comunidade. <em>Podes participar presencialmente, online, ou só ler as atas depois</em> — mas o teu voto conta da mesma forma.",
   "annualAssembly.hero.meta.datesLabel": "Dois dias · sáb. e dom.",
   "annualAssembly.hero.meta.videoLink": "+ link de vídeo",
   "annualAssembly.hero.meta.eligibleLabel": "Pessoas com direito a voto",
@@ -1599,13 +1725,13 @@ export const marketing: Catalog = {
   "annualAssembly.toast.openingZoom": "A abrir o link do Zoom…",
   "annualAssembly.footer.eligibility": "Perguntas sobre o teu direito a voto?",
   "annualAssembly.footer.helpCta": "Ajuda →",
-  "annualAssembly.footer.proposal":
-    "Queres propor algo para o próximo ano?",
+  "annualAssembly.footer.proposal": "Queres propor algo para o próximo ano?",
   "annualAssembly.footer.writeCta": "Escreve-nos",
   "annualAssembly.agenda.title": "A <em>agenda</em>",
   "annualAssembly.agenda.sub":
     "Mais ou menos por esta ordem. Os horários são indicativos. Nunca acabámos a horas e não esperamos começar agora.",
-  "annualAssembly.vote.title": "Votação · <em>aberta até 14 de nov. · 14:00</em>",
+  "annualAssembly.vote.title":
+    "Votação · <em>aberta até 14 de nov. · 14:00</em>",
   "annualAssembly.vote.sub":
     "Todas as pessoas votam — quer participem ou não. Vota quando quiseres; podes mudar o voto até ao encerramento. <em>Um voto por pessoa, por resolução.</em>",
   "annualAssembly.vote.quorumStrip":
@@ -1613,7 +1739,8 @@ export const marketing: Catalog = {
   "annualAssembly.vote.noCta": "Não · rejeitar",
   "annualAssembly.vote.abstainCta": "Abster",
   "annualAssembly.vote.showMore": "Mostrar mais {count} resoluções →",
-  "annualAssembly.vote.recorded": "Voto registado · podes alterá-lo quando quiseres",
+  "annualAssembly.vote.recorded":
+    "Voto registado · podes alterá-lo quando quiseres",
   "annualAssembly.vote.tallyYes": "Sim",
   "annualAssembly.vote.tallyNo": "Não",
   "annualAssembly.vote.tallyAbstain": "Abstenção",
@@ -1729,7 +1856,8 @@ export const marketing: Catalog = {
   "openLetter.sign.visibilityLabel": "Mostrar como · visibilidade",
   "openLetter.sign.noteLabel": "Acrescenta uma frase (opcional)",
   "openLetter.sign.noteCounter": "{length}/280",
-  "openLetter.sign.notePlaceholder": "Porque é que isto importa para ti · 280 carateres",
+  "openLetter.sign.notePlaceholder":
+    "Porque é que isto importa para ti · 280 carateres",
   "openLetter.sign.submitCta": "Assinar a carta",
   "openLetter.sign.signedCta": "Assinaste a carta",
   "openLetter.sign.footer":
@@ -1869,7 +1997,8 @@ export const marketing: Catalog = {
     "Lemos todas as sugestões. As ideias mais votadas sobem no roteiro.",
   "roadmap.submitIdea.title": "Submeter uma ideia",
   "roadmap.submitIdea.ariaLabel": "A tua ideia",
-  "roadmap.submitIdea.placeholder": "O que tornaria a QueerPulse melhor para ti?",
+  "roadmap.submitIdea.placeholder":
+    "O que tornaria a QueerPulse melhor para ti?",
   "roadmap.submitIdea.cta": "Submeter ideia",
   "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
   "roadmap.submitIdea.toast.submitted": "Ideia submetida — obrigado",
@@ -2082,8 +2211,7 @@ export const marketing: Catalog = {
   "postOpportunity.rich.applyRolePlaceholder":
     "Sensibilização Comunitária · ILGA Lisboa",
   "postOpportunity.rich.partnerSlugLabel": "Slug do parceiro",
-  "postOpportunity.rich.partnerSlugHelper":
-    "Liga à página de um parceiro.",
+  "postOpportunity.rich.partnerSlugHelper": "Liga à página de um parceiro.",
   "postOpportunity.rich.partnerSlugPlaceholder": "ilga-portugal",
   "postOpportunity.rich.handleLabel": "Identificador de contacto",
   "postOpportunity.rich.handleHelper":
@@ -2131,7 +2259,8 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.partnershipLink": "Sobre a parceria →",
   "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
-  "volunteerDetail.sidebar.fundInstead": "→ Financiar este trabalho em vez disso",
+  "volunteerDetail.sidebar.fundInstead":
+    "→ Financiar este trabalho em vez disso",
 
   // ── Detalhe do Parceiro — chrome da página. O conteúdo sobre/trabalho
   //    conjunto/linha do tempo/como trabalhamos, as estatísticas, e os

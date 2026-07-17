@@ -57,7 +57,7 @@ export const safety: Catalog = {
   "report.category.unwantedContact": "Contacto ou mensagens indesejados",
   "report.category.impersonation": "Falsa identidade ou personificação",
   "report.category.discrimination": "Discriminação",
-  "report.category.venueSafety": "Comportamento inseguro num encontro",
+  "report.category.venueSafety": "Comportamento inseguro num convívio",
   "report.category.other": "Outra coisa",
   "report.form.involvedLabel": "Pessoa ou conteúdo envolvido (opcional)",
   "report.form.involvedPlaceholder": "Nome de utilizador ou URL",
@@ -163,7 +163,7 @@ export const safety: Catalog = {
   "blockMute.choose.muteScopeLabel": "O que silenciar",
   "blockMute.choose.postsUpdates": "Publicações e atualizações",
   "blockMute.choose.commentsReplies": "Comentários e respostas",
-  "blockMute.choose.gatheringInvites": "Convites para encontros",
+  "blockMute.choose.gatheringInvites": "Convites para convívios",
   "blockMute.choose.durationLabel": "Duração",
   "blockMute.duration.untilUnmute": "Até eu dessilenciar",
   "blockMute.duration.sevenDays": "7 dias",
@@ -206,7 +206,7 @@ export const safety: Catalog = {
   "leave.deleted.profile": "O teu perfil, biografia e nome de exibição",
   "leave.deleted.connections": "As tuas ligações e histórico de mensagens",
   "leave.deleted.gatherings":
-    "O teu histórico de encontros e emblemas conquistados",
+    "O teu histórico de convívios e emblemas conquistados",
   "leave.deleted.savedArticles":
     "Os teus artigos guardados e histórico de leitura",
   "leave.deleted.invites": "O teu histórico de convites e avais dados",
@@ -314,14 +314,16 @@ export const safety: Catalog = {
   "crisisChat.hero.lead":
     "Um chat confidencial com uma pessoa apoiante entre pares, queer e com formação. Sem marcação, sem referenciação, sem julgamento — só alguém que fica contigo pelo tempo que precisares.",
   "crisisChat.assurance.wait.n": "< 2 min",
-  "crisisChat.assurance.wait.label": "tempo médio de espera por uma pessoa apoiante",
+  "crisisChat.assurance.wait.label":
+    "tempo médio de espera por uma pessoa apoiante",
   "crisisChat.assurance.trained.n": "Com formação",
   "crisisChat.assurance.trained.label": "voluntáries queer, não um robô",
   "crisisChat.assurance.confidential.n": "Confidencial",
   "crisisChat.assurance.confidential.label": "nada é guardado ou partilhado",
   "crisisChat.lines.heading": "Se estás em perigo imediato, liga para",
   "crisisChat.lines.emergency.label": "Serviços de emergência",
-  "crisisChat.lines.emergency.note": "Polícia, ambulância, bombeiros — 24h, gratuito",
+  "crisisChat.lines.emergency.note":
+    "Polícia, ambulância, bombeiros — 24h, gratuito",
   "crisisChat.lines.sosVozAmiga.label": "SOS Voz Amiga",
   "crisisChat.lines.sosVozAmiga.note":
     "Prevenção de crise e suicídio · 16h–24h",
@@ -360,11 +362,9 @@ export const safety: Catalog = {
   "emergency.crisis.emergencyServices.note":
     "Polícia, ambulância, bombeiros — 24h, gratuito",
   "emergency.crisis.sns24.label": "SNS 24 (Linha de Saúde)",
-  "emergency.crisis.sns24.note":
-    "Aconselhamento médico e referenciação, 24h",
+  "emergency.crisis.sns24.note": "Aconselhamento médico e referenciação, 24h",
   "emergency.crisis.sosVozAmiga.label": "SOS Voz Amiga",
-  "emergency.crisis.sosVozAmiga.note":
-    "Prevenção de crise e suicídio, 16h–24h",
+  "emergency.crisis.sosVozAmiga.note": "Prevenção de crise e suicídio, 16h–24h",
   "emergency.crisis.ilga.label": "Linha de apoio da ILGA Portugal",
   "emergency.crisis.ilga.note": "Apoio de crise LGBTQ+",
   "emergency.crisis.apav.label": "APAV (Apoio à vítima)",
@@ -525,7 +525,8 @@ export const safety: Catalog = {
   "hateCrime.report.police.step1.title": "Vai à esquadra mais próxima",
   "hateCrime.report.police.step1.desc":
     "Para crimes de ódio em Lisboa, a jurisdição é da PSP (Polícia de Segurança Pública). Podes denunciar pessoalmente ou online em queixaselectronicas.mai.gov.pt para infrações menos graves.",
-  "hateCrime.report.police.step2.title": "Pede a classificação de crime de ódio",
+  "hateCrime.report.police.step2.title":
+    "Pede a classificação de crime de ódio",
   "hateCrime.report.police.step2.desc":
     "Declara explicitamente que o crime foi motivado pela tua orientação sexual ou identidade de género. Pede que fique registado como crime de ódio ao abrigo do Artigo 132.º do Código Penal. A polícia pode não o fazer automaticamente.",
   "hateCrime.report.police.step3.title": "Leva acompanhamento",
@@ -642,7 +643,8 @@ export const safety: Catalog = {
   "spaces.hero.stat.reviews": "avaliações submetidas por pessoas",
   "spaces.hero.stat.removed": "espaços sinalizados e removidos este ano",
   "spaces.dir.title": "Espaços <em>verificados.</em>",
-  "spaces.dir.updated": "Última atualização em junho de 2025 · Mantido pela comunidade",
+  "spaces.dir.updated":
+    "Última atualização em junho de 2025 · Mantido pela comunidade",
   "spaces.dir.nominateCta": "+ Nomear um espaço",
   "spaces.empty.title": "Ainda não há espaços verificados nesta categoria",
   "spaces.empty.description":
@@ -661,7 +663,7 @@ export const safety: Catalog = {
   "spaces.badge.visualNameLine2": "Verificado",
   "spaces.badge.caption":
     "O emblema que os espaços podem exibir — conquistado, não comprado",
-  "spaces.badge.title": "O que <em>\"verificado\"</em> realmente significa.",
+  "spaces.badge.title": 'O que <em>"verificado"</em> realmente significa.',
   "spaces.badge.body":
     "Qualquer espaço pode pôr uma bandeira arco-íris na montra durante o Orgulho. A verificação significa outra coisa — significa que pessoas da comunidade estiveram lá, avaliaram-no segundo um conjunto claro de critérios, e concordaram que cumpre o padrão. E pode ser revogada.",
   "spaces.how.title": "Como <em>funciona a verificação.</em>",
@@ -697,7 +699,8 @@ export const safety: Catalog = {
   "spaces.nominate.reasonPlaceholder":
     "Porque achas que este espaço deve ser verificado? Experiências específicas ajudam.",
   "spaces.nominate.submitCta": "Submeter nomeação",
-  "spaces.nominate.thanks.title": "Obrigade. Já estamos a <em>tratar disso.</em>",
+  "spaces.nominate.thanks.title":
+    "Obrigade. Já estamos a <em>tratar disso.</em>",
   "spaces.nominate.thanks.textNamed":
     "A tua nomeação para <strong>{name}</strong> foi recebida. A comunidade é a razão por que esta lista tem algum significado — contribuir para ela é genuinamente um presente.",
   "spaces.nominate.thanks.textPlain":
@@ -741,7 +744,8 @@ export const safety: Catalog = {
   "spaces.detail.copyLinkCta": "Copiar link para partilhar",
   "spaces.detail.linkCopiedToast": "Link copiado",
 
-  "spaces.detail.removedEyebrow": "Removido dos espaços seguros · {type} · {hood}",
+  "spaces.detail.removedEyebrow":
+    "Removido dos espaços seguros · {type} · {hood}",
   "spaces.detail.removedMeta.removed": "Removido",
   "spaces.detail.removedMeta.listedSince": "Listado desde",
   "spaces.detail.removedMeta.flags": "Sinalizações de pessoas",

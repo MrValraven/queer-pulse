@@ -20,7 +20,7 @@ export const connect: Catalog = {
   "page.eyebrow": "A tua rede",
   "page.title": "Pessoas que <em>conheceste mesmo.</em>",
   "page.lead":
-    "A QueerPulse não faz seguidores. Ligas-te a pessoas quando já as conheceste — num encontro, através de alguém, ou porque te avalizaram. Qualidade em vez de quantidade.",
+    "A QueerPulse não faz seguidores. Ligas-te a pessoas quando já as conheceste — num convívio, através de alguém, ou porque te avalizaram. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
   "page.note":
     "<b>Sem contagem de seguidores, de propósito.</b> Se procuras “seguir as publicações de alguém” sem te ligares primeiro, usa antes o feed de Comunidades. As ligações são bidirecionais — desbloqueiam mensagens e atualizações marcadas.",
@@ -64,7 +64,8 @@ export const connect: Catalog = {
   "card.awaitingReplySince": "A aguardar resposta · enviado <b>{sentAgo}</b>",
   "card.withdraw": "Retirar",
   "card.unblock": "Desbloquear",
-  "card.cantMessage": "Não pode enviar-te mensagens nem ver as tuas atualizações.",
+  "card.cantMessage":
+    "Não pode enviar-te mensagens nem ver as tuas atualizações.",
 
   // Emblema + nota de aval (connections.data.ts, resolvido pelo componente)
   "vouch.forYou": "Avalizou-te",
@@ -84,7 +85,7 @@ export const connect: Catalog = {
   "allTab.sortClosestMutuals": "Mais em comum",
   "allTab.emptyTitle": "Ainda sem ligações",
   "allTab.emptyDescription":
-    "A tua rede começa com um simples olá. Conhece pessoas num encontro ou procura quem já conheces e liga-te depois de se terem encontrado.",
+    "A tua rede começa com um simples olá. Conhece pessoas num convívio ou procura quem já conheces e liga-te depois de se terem encontrado.",
   "allTab.findMembers": "Encontrar pessoas",
   "allTab.emptySearchTitle": "Nada corresponde à tua pesquisa",
   "allTab.emptySearchDescription":

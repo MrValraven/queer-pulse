@@ -119,7 +119,8 @@ export const admin: Catalog = {
   "members.verify.declineCta": "Agora não",
   "members.verify.approveCta": "Acolher",
   "members.verify.approvedToast": "Demos as boas-vindas a {name}",
-  "members.verify.declinedToast": "O pedido de {name} não foi aprovado desta vez",
+  "members.verify.declinedToast":
+    "O pedido de {name} não foi aprovado desta vez",
   "members.verify.errorToast":
     "Não foi possível guardar essa decisão — tenta novamente",
   "members.verify.mutualLine": "Indicou {name} como conhecimento em comum",
@@ -135,7 +136,8 @@ export const admin: Catalog = {
   "members.drawer.messageCta": "Mensagem",
   "members.drawer.restrictCta": "Restringir…",
   "members.drawer.removeCta": "Remover pessoa…",
-  "members.drawer.reasonRequiredToast": "É necessário um motivo antes de remover",
+  "members.drawer.reasonRequiredToast":
+    "É necessário um motivo antes de remover",
   "members.drawer.glanceTitle": "Resumo rápido",
   "members.drawer.graphTitle": "Rede de avais — quem confia nesta pessoa",
   "members.drawer.graphAriaLabel": "Abrir a rede de confiança completa",
@@ -284,7 +286,8 @@ export const admin: Catalog = {
   "moderation.reportDrawer.noteAriaLabel": "Nota para a pessoa",
   "moderation.reportDrawer.transparency":
     "Vamos dizer a {name} exatamente o que foi feito e porquê, com uma ligação para recorrer. Nada acontece em silêncio.",
-  "moderation.reportDrawer.pickActionToast": "Escolhe uma ação antes de confirmar.",
+  "moderation.reportDrawer.pickActionToast":
+    "Escolhe uma ação antes de confirmar.",
   "moderation.reportDrawer.confirmedToast":
     "{name}: {verb}. A pessoa foi notificada.",
 
@@ -410,7 +413,8 @@ export const admin: Catalog = {
   "communities.grid.stat.members": "Pessoas",
   "communities.grid.stat.activity": "Atividade",
   "communities.grid.stat.openReports": "Denúncias em aberto",
-  "communities.grid.sparklineAriaLabel": "Tendência de saúde, mais recente {value}",
+  "communities.grid.sparklineAriaLabel":
+    "Tendência de saúde, mais recente {value}",
 
   "communities.detail.backCta": "Todas as comunidades",
   "communities.detail.stewardedBy_one":
@@ -419,7 +423,8 @@ export const admin: Catalog = {
     "Cuidada por {count} pessoas moderadoras · fundada em {founded}.",
   "communities.detail.healthChip": "Saúde {score} · {label}",
   "communities.detail.settingsCta": "Definições",
-  "communities.detail.settingsToast": "As definições da comunidade abririam aqui",
+  "communities.detail.settingsToast":
+    "As definições da comunidade abririam aqui",
   "communities.detail.supportBanner.title":
     "Esta comunidade podia usar <em>uma ajuda</em>.",
   "communities.detail.supportBanner.textAlone":
@@ -453,8 +458,7 @@ export const admin: Catalog = {
   "communities.settings.addModCta": "+ Adicionar",
   "communities.settings.addModToast":
     "Procurar pessoas para adicionar à moderação",
-  "communities.settings.modRemovedToast":
-    "Removemos {name} da moderação",
+  "communities.settings.modRemovedToast": "Removemos {name} da moderação",
   "communities.settings.secondVouch.title":
     "Exigir um segundo aval para entrar",
   "communities.settings.secondVouch.sub":
@@ -469,7 +473,8 @@ export const admin: Catalog = {
     "Ganha tempo para uma pessoa rever antes de o dano se espalhar.",
   "communities.settings.autoFreeze.onToast":
     "Congelamento automático em denúncias de doxxing ativado",
-  "communities.settings.autoFreeze.offToast": "Congelamento automático desativado",
+  "communities.settings.autoFreeze.offToast":
+    "Congelamento automático desativado",
   "communities.settings.codeOfCare": "Código de cuidado",
   "communities.settings.viewCta": "Ver",
   "communities.settings.codeToast": "O código de cuidado abriria aqui",
@@ -489,7 +494,8 @@ export const admin: Catalog = {
   "communities.health.breakdown.memberActivity.name": "Atividade das pessoas",
   "communities.health.breakdown.memberActivity.desc":
     "O quão viva a comunidade parece — publicações, respostas, presença",
-  "communities.health.breakdown.reportResolution.name": "Resolução de denúncias",
+  "communities.health.breakdown.reportResolution.name":
+    "Resolução de denúncias",
   "communities.health.breakdown.reportResolution.desc":
     "Percentagem de denúncias resolvidas dentro do prazo (SLA)",
   "communities.health.breakdown.memberSentiment.name": "Sentimento das pessoas",
@@ -508,8 +514,7 @@ export const admin: Catalog = {
   "communities.support.modalTitle": "Dar uma ajuda a <em>{name}</em>",
   "communities.support.intro":
     "Escolhe como ajudar. Podes escolher mais do que uma opção — quem modera vai ver exatamente o que ofereceste.",
-  "communities.support.noteLabel":
-    "Uma nota para quem modera (opcional)",
+  "communities.support.noteLabel": "Uma nota para quem modera (opcional)",
   "communities.support.notePlaceholder":
     "Vimos a pontuação a descer — o que ajudaria mesmo agora?",
   "communities.support.cancelCta": "Cancelar",
@@ -523,8 +528,7 @@ export const admin: Catalog = {
     "Atribuir uma pessoa da equipa por 2 semanas",
   "communities.support.option.buddy.sub":
     "Uma pessoa da equipa de Confiança e Segurança comodera para aliviar a carga.",
-  "communities.support.option.toolkit.title":
-    "Partilhar o kit de desescalada",
+  "communities.support.option.toolkit.title": "Partilhar o kit de desescalada",
   "communities.support.option.toolkit.sub":
     "Modelos e guias para lidar com conversas públicas aquecidas.",
   "communities.support.option.recruit.title":
@@ -549,8 +553,10 @@ export const admin: Catalog = {
   "governance.finances.stat.totalIncome": "Receita mensal total",
   "governance.finances.stat.surplus": "Excedente mensal",
   "governance.finances.stat.solidarity": "Em acesso solidário",
-  "governance.finances.foot.sustainersCount": "{count} pessoas contribuem por mês",
-  "governance.finances.foot.sources": "Apoiantes, subsídios e receitas pontuais",
+  "governance.finances.foot.sustainersCount":
+    "{count} pessoas contribuem por mês",
+  "governance.finances.foot.sources":
+    "Apoiantes, subsídios e receitas pontuais",
   "governance.finances.foot.reserve": "Guardado na reserva da comunidade",
   "governance.finances.foot.solidarityRate":
     "Pessoas com tarifa gratuita ou reduzida",
@@ -562,7 +568,7 @@ export const admin: Catalog = {
   "governance.ledger.magazine": "Produção da revista",
   "governance.ledger.memberSustainers": "Pessoas apoiantes",
   "governance.ledger.partnerGrants": "Subsídios de parceiros",
-  "governance.ledger.gatheringTickets": "Bilhetes de encontros",
+  "governance.ledger.gatheringTickets": "Bilhetes de convívios",
 
   "governance.income.title": "De onde <em>vem</em>",
   "governance.income.sub": "{amount} / mês, vindos de três fontes honestas.",
@@ -669,8 +675,7 @@ export const admin: Catalog = {
   "partners.header.sub":
     "Organizações que se candidataram a parceria com a QueerPulse. Lê o que fazem e depois aprova-as para a página pública de parceiros ou deixa a candidatura de lado — com uma nota que vão ler.",
   "partners.forbidden": "Esta fila é apenas para administração.",
-  "partners.loadError":
-    "A fila não carregou desta vez — tenta novamente.",
+  "partners.loadError": "A fila não carregou desta vez — tenta novamente.",
   "partners.errorToast":
     "Não foi possível guardar essa decisão — tenta novamente",
   "partners.approvedToast": "{name} é agora parceira da QueerPulse",
@@ -703,7 +708,8 @@ export const admin: Catalog = {
   "modPanel.requests.requestedAgo": "Pedido feito há {time}",
   "modPanel.requests.approveCta": "Aprovar",
   "modPanel.requests.declineCta": "Recusar",
-  "modPanel.requests.approvedToast": "Aprovámos {name} — dá-lhe as boas-vindas.",
+  "modPanel.requests.approvedToast":
+    "Aprovámos {name} — dá-lhe as boas-vindas.",
   "modPanel.requests.declinedToast":
     "O pedido de {name} não foi aprovado desta vez.",
   "modPanel.requests.approvedAllToast":
@@ -736,8 +742,7 @@ export const admin: Catalog = {
   "modPanel.members.removeCta": "Remover",
   "modPanel.members.ownerTag": "Fundadora",
   "modPanel.members.promotedToast": "Agora {name} é pessoa moderadora.",
-  "modPanel.members.demotedToast":
-    "{name} deixou de fazer parte da moderação.",
+  "modPanel.members.demotedToast": "{name} deixou de fazer parte da moderação.",
   "modPanel.members.removedToast": "Removemos {name} da comunidade.",
 
   "modPanel.settings.nameLabel": "Nome da comunidade",
@@ -772,7 +777,8 @@ export const admin: Catalog = {
   "vouchGraph.modes.scenes": "Cenas",
   "vouchGraph.modes.safety": "Segurança",
   "vouchGraph.pathbar.stepPath_one": "caminho de confiança de {count} passo:",
-  "vouchGraph.pathbar.stepPath_other": "caminho de confiança de {count} passos:",
+  "vouchGraph.pathbar.stepPath_other":
+    "caminho de confiança de {count} passos:",
   "vouchGraph.pathbar.noPath": "Sem caminho de confiança entre {a} e {b}",
   "vouchGraph.pathbar.fromHint":
     "Caminho a partir de {name} — shift-clique numa segunda pessoa",
@@ -796,7 +802,8 @@ export const admin: Catalog = {
   "vouchGraph.modal.timeCutAriaLabel": "Corte temporal",
   "vouchGraph.modal.verifyToast":
     "Base de confiança associada — a abrir verificação",
-  "vouchGraph.modal.citeToast": "Caminho de confiança citado no registo de auditoria",
+  "vouchGraph.modal.citeToast":
+    "Caminho de confiança citado no registo de auditoria",
   "vouchGraph.modal.privateToast": "Esta pessoa mantém a rede privada",
 
   "vouchGraph.inspector.emptyTitle": "Escolhe alguém",
@@ -848,7 +855,8 @@ export const admin: Catalog = {
   "vouchGraph.tooltip.vouchesIn_one": "{count} aval recebido",
   "vouchGraph.tooltip.vouchesIn_other": "{count} avais recebidos",
   "vouchGraph.tooltip.joinedPrefix": "entrou em {when}",
-  "vouchGraph.tooltip.hint": "clica para inspecionar · duplo clique para recentrar",
+  "vouchGraph.tooltip.hint":
+    "clica para inspecionar · duplo clique para recentrar",
   "vouchGraph.tooltip.withdrawn": "retirado em {date}",
 
   "vouchGraph.canvas.hint.plain":

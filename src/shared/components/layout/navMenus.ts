@@ -404,10 +404,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.work.col.career.employerReviews",
             href: routes.employerReviews,
           },
-          {
-            labelKey: "shared:megaNav.work.col.career.workProfile",
-            href: routes.workProfile,
-          },
         ],
       },
       {
@@ -475,7 +471,10 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         headKey: "shared:megaNav.about.col.using.head",
         links: [
-          { labelKey: "shared:megaNav.about.col.using.helpFaq", href: routes.help },
+          {
+            labelKey: "shared:megaNav.about.col.using.helpFaq",
+            href: routes.help,
+          },
           {
             labelKey: "shared:megaNav.about.col.using.roadmap",
             href: routes.roadmap,

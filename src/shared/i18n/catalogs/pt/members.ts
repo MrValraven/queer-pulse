@@ -30,17 +30,20 @@ export const members: Catalog = {
     "Não conseguimos ler essa imagem. Tenta um ficheiro diferente.",
   "upload.error.tooSmall":
     "Essa imagem é demasiado pequena — precisa de ter pelo menos {minWidth} × {minHeight}px.",
-  "upload.error.retry": "Não conseguimos carregar essa imagem. Tenta novamente.",
+  "upload.error.retry":
+    "Não conseguimos carregar essa imagem. Tenta novamente.",
 
   // ── AvatarEditor ───────────────────────────────────────────────────────────
-  "avatar.error.generic": "Não conseguimos adicionar essa fotografia. Tenta novamente.",
+  "avatar.error.generic":
+    "Não conseguimos adicionar essa fotografia. Tenta novamente.",
   "avatar.uploading": "A carregar… {percent}%",
   "avatar.change": "Mudar fotografia",
   "avatar.add": "Adicionar fotografia",
   "avatar.remove": "Remover fotografia",
 
   // ── WorkItemEditor ─────────────────────────────────────────────────────────
-  "workItem.error.generic": "Não conseguimos adicionar essa imagem. Tenta novamente.",
+  "workItem.error.generic":
+    "Não conseguimos adicionar essa imagem. Tenta novamente.",
   "workItem.imagePlaceholder": "Trabalho",
   "workItem.uploading": "A carregar…",
   "workItem.change": "Mudar",
@@ -72,7 +75,8 @@ export const members: Catalog = {
 
   // ── Cabeçalho do perfil (ProfileSections) ──────────────────────────────────
   "profile.hero.verifiedBadge": "Pessoa verificada",
-  "profile.hero.curatorLink": "● Curadoria do Cinema — ver perfil de programação →",
+  "profile.hero.curatorLink":
+    "● Curadoria do Cinema — ver perfil de programação →",
   "profile.hero.memberSince": "Nesta comunidade desde {since}",
   "profile.hero.location": "{hood}, Lisboa",
   "profile.hero.editCta": "Editar perfil",
@@ -111,7 +115,8 @@ export const members: Catalog = {
   "content.groups.title": "Grupos e círculos",
   "content.groups.subtitle": "Onde {first} aparece na comunidade",
   "content.shapings.title": "O que me formou",
-  "content.shapings.subtitle": "Não são interesses. São textos, filmes e momentos marcantes.",
+  "content.shapings.subtitle":
+    "Não são interesses. São textos, filmes e momentos marcantes.",
   "content.activity.title": "Atividade recente",
   "content.activity.subtitle": "Momentos públicos por toda a plataforma",
   "content.related.title": "Também nesta sala",
@@ -159,15 +164,18 @@ export const members: Catalog = {
   "profileEdit.shortBio.placeholder":
     "Uma ou duas linhas sobre quem és e o que procuras.",
   "profileEdit.shortBio.counter": "{length} / {max}",
-  "profileEdit.shortBio.overLimit": "— o teu cartão mostra só as primeiras duas linhas",
+  "profileEdit.shortBio.overLimit":
+    "— o teu cartão mostra só as primeiras duas linhas",
 
   // ── Barra de edição (ProfileEditBar) ────────────────────────────────────────
-  "profileEdit.bar.unsaved": "Estás a editar o teu perfil — alterações por guardar",
+  "profileEdit.bar.unsaved":
+    "Estás a editar o teu perfil — alterações por guardar",
   "profileEdit.bar.discard": "Descartar",
   "profileEdit.bar.saving": "A guardar…",
   "profileEdit.bar.tryAgain": "Tentar novamente",
   "profileEdit.bar.save": "Guardar perfil",
-  "profileEdit.bar.savedBanner": "Guardado. <strong>O teu perfil está atualizado.</strong>",
+  "profileEdit.bar.savedBanner":
+    "Guardado. <strong>O teu perfil está atualizado.</strong>",
 
   // ── Links sociais (SocialLinksRow, SocialLinksEditor) ──────────────────────
   "social.addLinks": "Adicionar links",
@@ -208,7 +216,8 @@ export const members: Catalog = {
     "A QueerPulse mantém o dia a dia da comunidade atrás de um início de sessão, para proteger as pessoas. Junta-te e o feed de {first} desbloqueia-se de imediato — incluindo a possibilidade de enviares mensagem a {first}.",
   "publicProfile.requestInviteArrow": "Pedir um convite →",
   "publicProfile.locked.connectionsHeading": "Ligações",
-  "publicProfile.locked.connectionsTitle": "Quem {first} conhece, <em>em privado.</em>",
+  "publicProfile.locked.connectionsTitle":
+    "Quem {first} conhece, <em>em privado.</em>",
   "publicProfile.locked.connectionsBody":
     "Para proteger as redes das pessoas da comunidade, não mostramos listas de ligações publicamente. Entra para veres os teus contactos em comum com {first}.",
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
@@ -237,18 +246,19 @@ export const members: Catalog = {
   "publicProfile.control.locked.title":
     "Um perfil público é algo em que <em>cresces aos poucos.</em>",
   "publicProfile.control.locked.lede":
-    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse — quem escreve, organiza encontros ou lidera projetos. É aqui que estás:",
+    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse — quem escreve, organiza convívios ou lidera projetos. É aqui que estás:",
   "publicProfile.control.locked.progress":
     "{met} de {total} cumpridos — continua a aparecer e isto desbloqueia-se sozinho.",
   "publicProfile.control.unlocked.eyebrow": "Perfil público · desbloqueado",
   "publicProfile.control.unlocked.title":
     "Já podes partilhar um <em>perfil público.</em>",
   "publicProfile.control.unlocked.lede":
-    "Um perfil público permite que quem ainda não é da comunidade encontre a tua escrita, os teus encontros e uma forma de te contactar — sem abrir o resto da comunidade.",
+    "Um perfil público permite que quem ainda não é da comunidade encontre a tua escrita, os teus convívios e uma forma de te contactar — sem abrir o resto da comunidade.",
   "publicProfile.control.switchLabel": "Mostrar um perfil público",
   "publicProfile.control.statusOn":
     "Ativo — qualquer pessoa pode ver o teu perfil público.",
-  "publicProfile.control.statusOff": "Inativo — só quem é da comunidade te encontra.",
+  "publicProfile.control.statusOff":
+    "Inativo — só quem é da comunidade te encontra.",
   "publicProfile.control.viewCta": "Ver perfil público",
   "publicProfile.control.toast.hidden": "O teu perfil público está escondido",
   "publicProfile.control.toast.live": "O teu perfil público está ativo",
@@ -256,7 +266,7 @@ export const members: Catalog = {
   // ── Critérios de elegibilidade pública (publicFigure.ts) ───────────────────
   "publicProfile.eligibility.contributes.label": "Contribui publicamente",
   "publicProfile.eligibility.contributes.hint":
-    "Publica textos ou organiza um encontro aberto que o público possa ver.",
+    "Publica textos ou organiza um convívio aberto que o público possa ver.",
   "publicProfile.eligibility.verified.hint":
     "Confirma a tua identidade para que se saiba que és mesmo tu.",
   "publicProfile.eligibility.established.label": "Um ano na QueerPulse",
@@ -268,13 +278,13 @@ export const members: Catalog = {
 
   // ── Etiquetas de estatísticas do perfil público (currentUserPublic.data) ──
   "publicProfile.stat.poemsPublished": "Poemas publicados",
-  "publicProfile.stat.eventsHosted": "Encontros organizados",
+  "publicProfile.stat.eventsHosted": "Convívios organizados",
   "publicProfile.stat.yearsOnPlatform": "Ano na QueerPulse",
   "publicProfile.stat.membersReached": "Pessoas alcançadas",
 
   // ── Pesquisa global (SearchPage) ────────────────────────────────────────────
   "search.type.member": "Pessoas",
-  "search.type.gathering": "Encontros",
+  "search.type.gathering": "Convívios",
   "search.type.community": "Comunidades",
   "search.type.board": "Quadro",
   "search.type.topic": "Tópicos",
@@ -283,19 +293,21 @@ export const members: Catalog = {
   "search.comingSoon.badge": "Brevemente",
   "search.comingSoon.title": "A pesquisa está <em>quase a chegar.</em>",
   "search.comingSoon.body":
-    "Estamos a ligar a pesquisa em direto à comunidade — pessoas, encontros, comunidades e publicações no quadro, tudo num só lugar. Por agora está em repouso. Ativa <b>{toggleName}</b> para explorares a demonstração.",
+    "Estamos a ligar a pesquisa em direto à comunidade — pessoas, convívios, comunidades e publicações no quadro, tudo num só lugar. Por agora está em repouso. Ativa <b>{toggleName}</b> para explorares a demonstração.",
   "search.recentSearches": "Pesquisas recentes",
   "search.browseTopics": "Explorar tópicos",
-  "search.upcomingGatherings": "Próximos encontros",
+  "search.upcomingGatherings": "Próximos convívios",
   "search.jumpTo": "Ir para <b>{name}</b>",
   "search.resultCount_one": `<b>{count}</b> resultado para "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
   "search.empty.title": "Nada encontrado",
   "search.empty.body":
-    "Tenta outra palavra — nome de uma pessoa, bairro, competência, ou tipo de encontro.",
+    "Tenta outra palavra — nome de uma pessoa, bairro, competência, ou tipo de convívio.",
   "search.hero.label": "Pesquisar",
-  "search.hero.title": "Encontra quem ou o que quiseres <em>na comunidade.</em>",
-  "search.hero.placeholder": "Pessoas, encontros, comunidades, publicações no quadro…",
+  "search.hero.title":
+    "Encontra quem ou o que quiseres <em>na comunidade.</em>",
+  "search.hero.placeholder":
+    "Pessoas, convívios, comunidades, publicações no quadro…",
 
   // ── Filtro avançado do diretório (MemberDirectoryFilterPage) ───────────────
   "directory.eyebrow": "Pessoas · filtro avançado",
@@ -365,11 +377,12 @@ export const members: Catalog = {
 
   // ── Paleta de comandos (CommandPalette) ─────────────────────────────────────
   "commandPalette.ariaLabel": "Pesquisar na QueerPulse",
-  "commandPalette.placeholder": "Pesquisar pessoas, encontros, comunidades…",
+  "commandPalette.placeholder": "Pesquisar pessoas, convívios, comunidades…",
   "commandPalette.comingSoonBody":
     "A pesquisa em direto está a ser ligada à comunidade. Por agora está em repouso — ativa <em>{toggleName}</em> para explorares a demonstração.",
   "commandPalette.noMatches": "Sem resultados — tenta outra palavra.",
-  "commandPalette.seeAllResults": "Ver todos os resultados para “<b>{query}</b>”",
+  "commandPalette.seeAllResults":
+    "Ver todos os resultados para “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Abrir pesquisa completa",
 
   // ── Página de aval para convite (VouchPage) ─────────────────────────────────
@@ -417,12 +430,14 @@ export const members: Catalog = {
   "vouch.modal.form.sub":
     "Um aval é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui — a QueerPulse funciona por convite e aval, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
   "vouch.modal.form.relationshipLabel": "Como conheces {first}?",
-  "vouch.modal.form.endorseLabel": "Em que podes garantir que esta pessoa é boa?",
+  "vouch.modal.form.endorseLabel":
+    "Em que podes garantir que esta pessoa é boa?",
   "vouch.modal.form.optional": "opcional",
   "vouch.modal.form.noteLabel": "A tua nota",
   "vouch.modal.form.notePlaceholder":
     "Como conheces {first}, e o que deve saber o resto da comunidade?",
-  "vouch.modal.form.charsToSubmit_one": "Falta {count} carácter para poderes enviar",
+  "vouch.modal.form.charsToSubmit_one":
+    "Falta {count} carácter para poderes enviar",
   "vouch.modal.form.charsToSubmit_other":
     "Faltam {count} carateres para poderes enviar",
   "vouch.modal.form.charsCount_one": "{count} carácter",
@@ -528,11 +543,13 @@ export const members: Catalog = {
   "collections.header.newCta": "+ Nova coleção",
   "collections.newCard.title": "Nova coleção",
   "collections.newCard.subtitle": "Agrupa guardados pelo que significam",
-  "collections.recentSaves.heading": "Guardado recentemente · ainda sem coleção",
+  "collections.recentSaves.heading":
+    "Guardado recentemente · ainda sem coleção",
   "collections.recentSaves.unfiledCount": "+ {count} por arquivar",
   "collections.recentSaves.addCta": "+ Adicionar a uma coleção →",
   "collections.toast.created": "Coleção criada",
-  "collections.newCollection.defaultMeta": "Acabada de criar — começa a adicionar guardados",
+  "collections.newCollection.defaultMeta":
+    "Acabada de criar — começa a adicionar guardados",
   "collections.updatedJustNow": "Atualizado agora mesmo",
 
   // ── Modais de coleções (CollectionsModals) ──────────────────────────────────
@@ -548,7 +565,8 @@ export const members: Catalog = {
   "collections.modal.newCollection.cancel": "← Cancelar",
   "collections.modal.newCollection.submit": "Criar coleção →",
   "collections.modal.privacyOption.private": "Privada",
-  "collections.modal.privacyOption.shared": "Partilhada com pessoas da comunidade",
+  "collections.modal.privacyOption.shared":
+    "Partilhada com pessoas da comunidade",
   "collections.modal.privacyOption.public": "Pública",
   "collections.modal.view.dialogLabel": "Ver coleção",
   "collections.modal.view.emptyText":
@@ -571,7 +589,7 @@ export const members: Catalog = {
   "savedByYou.kind.film.cta": "Ver",
   "savedByYou.kind.job.label": "Trabalho",
   "savedByYou.kind.job.cta": "Ver vaga",
-  "savedByYou.kind.event.label": "Encontro",
+  "savedByYou.kind.event.label": "Convívio",
   "savedByYou.kind.event.cta": "Ver",
   "savedByYou.kind.post.label": "Conversa",
   "savedByYou.kind.post.cta": "Abrir conversa",
@@ -612,9 +630,10 @@ export const members: Catalog = {
   "qrScanner.closeAriaLabel": "Fechar",
   "qrScanner.title": "Ler um código <em>QueerPulse</em>",
   "qrScanner.flashAriaLabel": "Flash",
-  "qrScanner.privacyNote": "A câmara fica neste aparelho · nunca enviamos as imagens",
+  "qrScanner.privacyNote":
+    "A câmara fica neste aparelho · nunca enviamos as imagens",
   "qrScanner.hintSuffix":
-    "Autocolantes de espaço seguro · bilhetes de encontros · códigos de partilha de perfil",
+    "Autocolantes de espaço seguro · bilhetes de convívios · códigos de partilha de perfil",
   "qrScanner.cantScan": "Não consegues ler o código?",
   "qrScanner.enterCodeCta": "Inserir código manualmente",
   "qrScanner.helpCta": "Ajuda com códigos",
@@ -627,21 +646,26 @@ export const members: Catalog = {
   "badges.howToEarnXp": "Como ganhar XP →",
   "badges.earnedHeading": "Os teus <em>emblemas</em>",
   "badges.lockedHeading": "Emblemas <em>bloqueados</em>",
-  "badges.lockedSub": "Ganha XP e participa em encontros para desbloquear estes.",
+  "badges.lockedSub":
+    "Ganha XP e participa em convívios para desbloquear estes.",
   "badges.hideMore": "Esconder ▴",
   "badges.showMore": "Mostrar mais {count} ▾",
   "badges.perksUnlockHeading": "O que o teu nível <em>desbloqueia</em>",
-  "badges.perksUnlockSub": "Cada nível dá acesso a novas vantagens da comunidade.",
-  "badges.xpToNextLevel": "{xp} / {xpMax} XP para o Nível {nextLevel} · {nextName}",
+  "badges.perksUnlockSub":
+    "Cada nível dá acesso a novas vantagens da comunidade.",
+  "badges.xpToNextLevel":
+    "{xp} / {xpMax} XP para o Nível {nextLevel} · {nextName}",
 
   // ── Chrome da página de vantagens (PerksPage, PerksSections) ───────────────
   "perks.page.backToBadges": "← Emblemas e nível",
   "perks.page.title": "As tuas <em>vantagens</em>",
-  "perks.page.availableToRedeem_one": "{count} vantagem disponível para resgatar",
+  "perks.page.availableToRedeem_one":
+    "{count} vantagem disponível para resgatar",
   "perks.page.availableToRedeem_other":
     "{count} vantagens disponíveis para resgatar",
   "perks.sidebar.yourLevelTitle": "O teu nível",
-  "perks.sidebar.xpSummary": "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",
+  "perks.sidebar.xpSummary":
+    "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",
   "perks.sidebar.nextUnlockNote":
     "As próximas vantagens desbloqueiam no <strong>Nível {nextLevel} · {nextName}</strong> — organizar sem aprovação e mais convites por mês.",
   "perks.sidebar.seeAllBadgesCta": "Ver todos os emblemas e níveis →",

@@ -315,7 +315,6 @@ export const shared: Catalog = {
   "megaNav.work.col.career.skillsLearning": "Skills & Learning",
   "megaNav.work.col.career.mentorship": "Mentorship",
   "megaNav.work.col.career.employerReviews": "Employer Reviews",
-  "megaNav.work.col.career.workProfile": "Work profile",
   "megaNav.work.col.economy.head": "Economy",
   "megaNav.work.col.economy.skillsExchange": "Skills Exchange",
   "megaNav.work.col.economy.solidarityPricing": "Solidarity Pricing",

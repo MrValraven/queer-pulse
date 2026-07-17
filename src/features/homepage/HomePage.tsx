@@ -45,7 +45,7 @@ export function HomePage() {
       <Gatherings />
       <PainPoints />
       <Stories />
-      <Media />
+      {/* <Media /> */}
       <ChangeMakers />
       <Wellbeing />
       <MicroGrants />
@@ -55,9 +55,9 @@ export function HomePage() {
       <Library />
       <Partners />
       <SpacesMap />
-      <Platforms />
+      {/*  <Platforms /> */}
       <Newsletter />
-      <Pillars />
+      {/* <Pillars /> */}
       <Outro />
     </PageShell>
   );

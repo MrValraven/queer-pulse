@@ -57,7 +57,8 @@ export const resources: Catalog = {
   // ── LegalPage ───────────────────────────────────────────────────────────
   // Informação legal/de segurança — assinalar para revisão nativa.
   "legal.hero.eyebrow": "Apoio Jurídico",
-  "legal.hero.title": "Conhece os teus direitos. <em>Guarda os comprovativos.</em>",
+  "legal.hero.title":
+    "Conhece os teus direitos. <em>Guarda os comprovativos.</em>",
   "legal.hero.lead":
     "Guias jurídicos, advogados queer-friendly e recursos sobre discriminação para pessoas LGBTQ+ em Portugal — porque conhecer os teus direitos é o primeiro passo para os defenderes.",
   "legal.hero.anchor.workplace": "Direitos no trabalho",
@@ -219,7 +220,8 @@ export const resources: Catalog = {
   "safety.leaving.body2":
     'Não há aqui nenhum padrão enganoso. Sem ciclo de confirmação "tens a certeza?". Sem período de reflexão de 30 dias antes da eliminação. Sais, desapareceste, e desejamos-te tudo de bom.',
 
-  "safety.outro.title": "A segurança é uma funcionalidade, <em>não uma nota de rodapé.</em>",
+  "safety.outro.title":
+    "A segurança é uma funcionalidade, <em>não uma nota de rodapé.</em>",
   "safety.outro.sub": "Alguma questão sobre como a rede funciona? Escreve-nos.",
   "safety.outro.cta": "hello@queerpulse.pt",
 
@@ -261,10 +263,12 @@ export const resources: Catalog = {
     "Qual é a diferença entre identidade de género e orientação sexual?",
   "queer101.faq.a3":
     "A identidade de género tem a ver com quem és — o teu sentido interno de ti própria como homem, mulher, pessoa não-binária, ou outra coisa. A orientação sexual tem a ver com por quem te sentes atraíde — romântica, sexualmente, ou ambas. São independentes: uma mulher trans pode ser heterossexual, lésbica, bissexual, ou qualquer outra coisa. Uma coisa não determina a outra.",
-  "queer101.faq.q4": "Só tive relações com um género. Isso faz de mim uma pessoa heterossexual?",
+  "queer101.faq.q4":
+    "Só tive relações com um género. Isso faz de mim uma pessoa heterossexual?",
   "queer101.faq.a4":
     "Não necessariamente. Identidade e experiência não são a mesma coisa. Muitas pessoas bissexuais e queer só namoraram com um género durante longos períodos das suas vidas — circunstâncias, preferência ou acaso têm todos um papel. O que importa é o que sentes, não uma lista das tuas relações passadas.",
-  "queer101.faq.q5": "Tudo bem estar em questionamento? E se nunca tiver a certeza?",
+  "queer101.faq.q5":
+    "Tudo bem estar em questionamento? E se nunca tiver a certeza?",
   "queer101.faq.a5":
     '"Em questionamento" é uma identidade válida por si só — não é apenas uma sala de espera. Algumas pessoas encontram clareza; outras percebem que a própria pergunta deixa de importar com o tempo. Não há prazo. Não estás partide por não saberes.',
   "queer101.faq.q6":
@@ -377,7 +381,7 @@ export const resources: Catalog = {
   "glossary.backLink": "Biblioteca de Recursos",
   "glossary.hero.title": "Um <em>glossário</em> em construção.",
   "glossary.hero.dek":
-    "Palavras usadas aqui — em toda a plataforma, na revista, nos encontros. <b>As definições são rascunhos de trabalho.</b> Onde um termo é contestado, dizemo-lo. Onde é específico de Lisboa, assinalamo-lo. <em>Sugere alterações no fundo da página; a equipa editorial vê-as semanalmente.</em>",
+    "Palavras usadas aqui — em toda a plataforma, na revista, nos convívios. <b>As definições são rascunhos de trabalho.</b> Onde um termo é contestado, dizemo-lo. Onde é específico de Lisboa, assinalamo-lo. <em>Sugere alterações no fundo da página; a equipa editorial vê-as semanalmente.</em>",
   "glossary.foot.body":
     "Este é um documento de trabalho. As sugestões são lidas pela equipa editorial semanalmente e discutidas na assembleia mensal. <em>Vamos errar; preferimos errar publicamente e corrigir.</em>",
 
@@ -412,7 +416,8 @@ export const resources: Catalog = {
   "pronounsGuide.faq.eyebrow": "Perguntas frequentes",
   "pronounsGuide.faq.title": "Coisas que nos <em>perguntam.</em>",
 
-  "pronounsGuide.sidebar.updateName.title": "Atualiza o teu <em>nome agora</em>",
+  "pronounsGuide.sidebar.updateName.title":
+    "Atualiza o teu <em>nome agora</em>",
   "pronounsGuide.sidebar.updateName.body":
     "Faz alterações ao teu nome de exibição, nome escolhido e pronomes nas definições do teu perfil.",
   "pronounsGuide.sidebar.updateName.cta": "Editar perfil",
@@ -424,8 +429,10 @@ export const resources: Catalog = {
     "Se encontraste o teu nome morto nalgum lugar da plataforma, ou algo não está a atualizar corretamente, contacta-nos diretamente.",
   "pronounsGuide.sidebar.wrong.cta": "Contactar-nos",
 
-  "pronounsGuide.outro.title": "Perguntas sobre as <em>tuas definições de identidade?</em>",
-  "pronounsGuide.outro.sub": "Escreve-nos. Respondemos dentro de dois dias úteis.",
+  "pronounsGuide.outro.title":
+    "Perguntas sobre as <em>tuas definições de identidade?</em>",
+  "pronounsGuide.outro.sub":
+    "Escreve-nos. Respondemos dentro de dois dias úteis.",
   "pronounsGuide.outro.cta": "Contactar-nos",
 
   "pronounsGuide.table.head.field": "Campo",
@@ -480,7 +487,8 @@ export const resources: Catalog = {
   "pronounsGuide.faq.q5": "E se eu não quiser especificar pronomes?",
   "pronounsGuide.faq.a5":
     "Basta deixares o campo de pronomes em branco ou por selecionar. Nenhum campo é obrigatório. Não te vamos pedir para o preencheres.",
-  "pronounsGuide.faq.q6": "Como é que a plataforma trata os dados de nome legal?",
+  "pronounsGuide.faq.q6":
+    "Como é que a plataforma trata os dados de nome legal?",
   "pronounsGuide.faq.a6":
     "Os dados de nome legal só são guardados se os tiveres fornecido explicitamente para um propósito que o exigisse (ex.: certas candidaturas a bolsas feitas através da plataforma). Nunca são usados como o teu nome de exibição e são guardados em separado, com controlos de acesso mais rígidos. Podes pedir a sua eliminação a qualquer momento através de <a>Exportação de Dados</a>.",
 
@@ -515,7 +523,8 @@ export const resources: Catalog = {
   "mentalHealth.therapists.viewProfileAriaLabel": "Ver o perfil de {name}",
   "mentalHealth.therapists.viewProfileCta": "Ver perfil →",
 
-  "mentalHealth.experiences.title": "Coisas que a comunidade <em>já sentiu</em>",
+  "mentalHealth.experiences.title":
+    "Coisas que a comunidade <em>já sentiu</em>",
   "mentalHealth.experiences.lead":
     "Ser expatriade queer em Lisboa traz pressões específicas. Nomeá-las não é queixarmo-nos — é o começo de as enfrentar.",
   "mentalHealth.experience.newCommunity.title":
@@ -546,7 +555,8 @@ export const resources: Catalog = {
   "mentalHealth.sns.step1.title": "Inscreve-te primeiro num médico de família",
   "mentalHealth.sns.step1.text":
     "Precisas de estar inscrite num Centro de Saúde antes de aceder aos serviços de saúde mental do SNS. Inscreve-te com o teu cartão de residência ou certificado de registo da UE e número de NISS. Existem listas de espera para inscrição em médico de família nalgumas zonas.",
-  "mentalHealth.sns.step2.title": "Referenciação do médico de família para psicologia",
+  "mentalHealth.sns.step2.title":
+    "Referenciação do médico de família para psicologia",
   "mentalHealth.sns.step2.text":
     "O teu médico de família pode referenciar-te para um psicólogo ou psiquiatra através do SNS. Os tempos de espera para a primeira consulta são tipicamente de 3–6 meses. Para necessidades urgentes, explica claramente a gravidade — isso pode acelerar a referenciação.",
   "mentalHealth.sns.step3.title": "O idioma importa",
@@ -555,7 +565,8 @@ export const resources: Catalog = {
   "mentalHealth.sns.step4.title": "Tarifas privadas em Lisboa",
   "mentalHealth.sns.step4.text":
     "A terapia privada varia entre 50–120 € por sessão. Alguns terapeutas oferecem tarifas em escala progressiva — vale sempre a pena perguntar. Vários terapeutas no nosso diretório oferecem tarifas de pessoa da comunidade para pessoas da QueerPulse.",
-  "mentalHealth.sns.peer.title": "Apoio entre pares <em>dentro da comunidade</em>",
+  "mentalHealth.sns.peer.title":
+    "Apoio entre pares <em>dentro da comunidade</em>",
   "mentalHealth.sns.peer.body":
     "O grupo de apoio entre pares de saúde mental reúne-se mensalmente. As pessoas partilham experiências, recomendam recursos, e apoiam-se mutuamente — sem facilitação profissional, só conversa honesta.",
   "mentalHealth.sns.peer.joinCta": "Juntar-te ao grupo",
@@ -575,14 +586,13 @@ export const resources: Catalog = {
   "mentalHealth.therapistProfile.meta.fixedRate": "Tarifa fixa por sessão",
   "mentalHealth.therapistProfile.meta.years_one": "{count} ano de prática",
   "mentalHealth.therapistProfile.meta.years_other": "{count} anos de prática",
-  "mentalHealth.therapistProfile.status.acceptingNew": "A aceitar novas pessoas",
+  "mentalHealth.therapistProfile.status.acceptingNew":
+    "A aceitar novas pessoas",
   "mentalHealth.therapistProfile.status.waitlistOnly": "Só em lista de espera",
   "mentalHealth.therapistProfile.section.about": "Sobre",
   "mentalHealth.therapistProfile.section.howIWork": "Como trabalho",
-  "mentalHealth.therapistProfile.section.training":
-    "Formação e qualificações",
-  "mentalHealth.therapistProfile.section.firstSession":
-    "A tua primeira sessão",
+  "mentalHealth.therapistProfile.section.training": "Formação e qualificações",
+  "mentalHealth.therapistProfile.section.firstSession": "A tua primeira sessão",
   "mentalHealth.therapistProfile.seeFullProfileCta": "Ver perfil completo →",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
@@ -605,9 +615,10 @@ export const resources: Catalog = {
     "Consumir com mais segurança — orientação prática e sem julgamentos.",
   "wellbeing.subpage.sober.label": "Sóbrie",
   "wellbeing.subpage.sober.blurb":
-    "Sóbrie e social — encontros e apoio que não giram à volta de bebida.",
+    "Sóbrie e social — convívios e apoio que não giram à volta de bebida.",
 
-  "wellbeing.therapists.title": "Terapeutas afirmativos queer <em>em Lisboa</em>",
+  "wellbeing.therapists.title":
+    "Terapeutas afirmativos queer <em>em Lisboa</em>",
   "wellbeing.therapists.lead":
     "Avaliados por pessoas da comunidade. Cada terapeuta listado foi recomendado por pelo menos duas pessoas da QueerPulse. Não cobramos taxas de listagem. Queres adicionar alguém? <a>Contacta-nos.</a>",
   "wellbeing.therapists.requestIntroCta": "Pedir apresentação →",
@@ -665,14 +676,14 @@ export const resources: Catalog = {
     "<b>Profissional avaliade.</b> Credenciais verificadas pela QueerPulse Wellbeing em {vettedOn}. {count} avais independentes da comunidade nos últimos 12 meses. <a>Como avaliamos →</a>",
   "therapistProfilePage.sendMessageCta": "Enviar mensagem",
 
-  "therapistProfilePage.worksWith.title": "As áreas em que {name} <em>trabalha</em>",
+  "therapistProfilePage.worksWith.title":
+    "As áreas em que {name} <em>trabalha</em>",
   "therapistProfilePage.worksWith.sub":
     "Autodeclarado e consistente com a comunidade que avaliza.",
   "therapistProfilePage.approachTitle.he": "A abordagem dele",
   "therapistProfilePage.approachTitle.she": "A abordagem dela",
   "therapistProfilePage.approachTitle.neutral": "A abordagem delu",
-  "therapistProfilePage.vouches.title_one":
-    "{count} pessoa <em>avalizou</em>",
+  "therapistProfilePage.vouches.title_one": "{count} pessoa <em>avalizou</em>",
   "therapistProfilePage.vouches.title_other":
     "{count} pessoas <em>avalizaram</em>",
   "therapistProfilePage.vouches.sub":
@@ -855,8 +866,7 @@ export const resources: Catalog = {
   // names preserved exactly. Flag for the closest native review.
   "harmReduction.emergency.emergencyLabel": "Emergência:",
   "harmReduction.emergency.snsLabel": "SNS 24 (não urgente):",
-  "harmReduction.emergency.mentalHealthLabel":
-    "Linha de Apoio (saúde mental):",
+  "harmReduction.emergency.mentalHealthLabel": "Linha de Apoio (saúde mental):",
 
   "harmReduction.hero.backLink": "Hub de Bem-estar",
   "harmReduction.hero.eyebrow": "Redução de Danos · Guia da comunidade",
@@ -916,12 +926,10 @@ export const resources: Catalog = {
     "Começa com pouco, espera mais do que pensas ser preciso",
   "harmReduction.section.duringNight.item.startLow.body":
     "O MDMA demora 45–90 minutos a atingir o pico de efeito. O efeito da cocaína é mais curto. Muitas hospitalizações acontecem porque alguém tomou mais antes de a primeira dose atingir o pico. Espera pelo menos 90 minutos.",
-  "harmReduction.section.duringNight.item.breaks.title":
-    "Faz pausas na dança",
+  "harmReduction.section.duringNight.item.breaks.title": "Faz pausas na dança",
   "harmReduction.section.duringNight.item.breaks.body":
     "O sobreaquecimento é um risco real. Sai, senta-te, arrefece regularmente. Se sentires muito calor e deixares de suar, pede ajuda imediatamente.",
-  "harmReduction.section.duringNight.item.mixing.title":
-    "Misturar substâncias",
+  "harmReduction.section.duringNight.item.mixing.title": "Misturar substâncias",
   "harmReduction.section.duringNight.item.mixing.body":
     "Álcool + MDMA: mais pesado para o corpo, aumenta a desidratação. MDMA + cocaína: stress cardíaco significativo. MDMA + cetamina: imprevisível. Nunca misturar com opioides a menos que tenhas naloxona presente.",
   "harmReduction.section.duringNight.item.lookAfter.title":
@@ -931,12 +939,10 @@ export const resources: Catalog = {
 
   "harmReduction.section.after.label": "No dia seguinte",
   "harmReduction.section.after.title": "Recuperação",
-  "harmReduction.section.after.item.comedown.title":
-    "A quebra do MDMA é real",
+  "harmReduction.section.after.item.comedown.title": "A quebra do MDMA é real",
   "harmReduction.section.after.item.comedown.body":
     "O MDMA esgota temporariamente a serotonina. Os dias 2 a 4 depois do consumo podem trazer humor em baixo, ansiedade, e fadiga. Isto é neurológico, não um reflexo da tua vida. Passa. Comer, dormir, e atividade física ligeira ajudam.",
-  "harmReduction.section.after.item.sleepFood.title":
-    "Dormir e comer primeiro",
+  "harmReduction.section.after.item.sleepFood.title": "Dormir e comer primeiro",
   "harmReduction.section.after.item.sleepFood.body":
     "Antes de mais nada. O teu corpo trabalhou muito. A vontade de tomar mais para perseguir a sensação boa quase sempre piora a quebra.",
   "harmReduction.section.after.item.worried.title":
@@ -953,8 +959,7 @@ export const resources: Catalog = {
   "harmReduction.section.sober.item.belong.title": "Também pertences ali",
   "harmReduction.section.sober.item.belong.body":
     "A vida noturna queer pode parecer centrada em substâncias. Tens o direito de lá estar sem beber ou consumir — e não deves nenhuma explicação a ninguém.",
-  "harmReduction.section.sober.item.nonAlcoholic.title":
-    "Opções sem álcool",
+  "harmReduction.section.sober.item.nonAlcoholic.title": "Opções sem álcool",
   "harmReduction.section.sober.item.nonAlcoholic.body":
     "A maioria dos locais em Lisboa serve água e refrigerantes. Pede água com gás e lima se não quiseres que pareça que não estás a beber — não é da conta de mais ninguém.",
   "harmReduction.section.sober.item.qpCommunity.title":
@@ -968,8 +973,7 @@ export const resources: Catalog = {
   "harmReduction.section.services.item.gat.title": "GAT Lisboa",
   "harmReduction.section.services.item.gat.body":
     "Testes gratuitos de VIH/IST, naloxona, preservativos, apoio em redução de danos. Rua de São Lázaro 58 · gat.org.pt",
-  "harmReduction.section.services.item.checkpoint.title":
-    "Checkpoint Lisboa",
+  "harmReduction.section.services.item.checkpoint.title": "Checkpoint Lisboa",
   "harmReduction.section.services.item.checkpoint.body":
     "Testes rápidos de VIH e IST, apoio à PrEP, sem necessidade de marcação. Rua do Crucifixo 100 · checkpointlx.com",
   "harmReduction.section.services.item.cat.title":
@@ -1019,10 +1023,10 @@ export const resources: Catalog = {
   "sober.stat.changes.label":
     "isto muda quando os espaços comunitários incluem deliberadamente opções sóbrias — e quando as pessoas sóbrias não precisam de ser invisíveis",
 
-  "sober.gatherings.title": "Encontros <em>sóbries.</em>",
+  "sober.gatherings.title": "Convívios <em>sóbries.</em>",
   "sober.gatherings.lead":
-    "Eventos sem álcool, ou eventos onde o álcool está presente mas não é o foco. Todos os encontros da QueerPulse estão assinalados quando são sem álcool.",
-  "sober.gatherings.hostCta": "+ Organizar ou participar num encontro",
+    "Eventos sem álcool, ou eventos onde o álcool está presente mas não é o foco. Todos os convívios da QueerPulse estão assinalados quando são sem álcool.",
+  "sober.gatherings.hostCta": "+ Organizar ou participar num convívio",
   "sober.type.alcoholFree": "Sem álcool",
   "sober.type.supportGroup": "Grupo de apoio",
   "sober.rsvp.going": "Vou",
@@ -1042,7 +1046,7 @@ export const resources: Catalog = {
     "Isto não é só sobre preferência de estilo de vida. Se estás em recuperação — de álcool, substâncias, ou qualquer outra coisa — há aqui pessoas que compreendem. Sem conselhos a menos que peças.",
   "sober.recovery.peerGroup.title": "Grupo de pares Sóbrie e Queer",
   "sober.recovery.peerGroup.desc":
-    "Um espaço privado e moderado dentro da QueerPulse para pessoas em recuperação. Reunião semanal online, canal de texto, e encontros presenciais ocasionais. Sem programa específico — todas as abordagens são bem-vindas.",
+    "Um espaço privado e moderado dentro da QueerPulse para pessoas em recuperação. Reunião semanal online, canal de texto, e convívios presenciais ocasionais. Sem programa específico — todas as abordagens são bem-vindas.",
   "sober.recovery.peerGroup.linkLabel": "Juntar-te ao grupo →",
   "sober.recovery.oneToOne.title": "Individual — fala com um par",
   "sober.recovery.oneToOne.desc":
@@ -1063,19 +1067,19 @@ export const resources: Catalog = {
   "sober.outro.findSpacesCta": "Encontrar espaços seguros",
   "sober.outro.browseCommunitiesCta": "Explorar comunidades",
 
-  "sober.host.modalTitle": "Encontros sóbries",
-  "sober.host.success.hostTitle": "Encontro <em>submetido.</em>",
+  "sober.host.modalTitle": "Convívios sóbries",
+  "sober.host.success.hostTitle": "Convívio <em>submetido.</em>",
   "sober.host.success.attendTitle": "Estás <em>dentro.</em>",
   "sober.host.success.hostSub":
     "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. Vais receber a checklist de anfitrião por email.",
   "sober.host.success.attendSub":
     "Guardámos o teu lugar. A localização privada e um lembrete simpático vão chegar-te no dia anterior — nada é partilhado publicamente.",
   "sober.host.intro":
-    "Começa um encontro sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
+    "Começa um convívio sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
   "sober.host.modeLabel": "O que gostarias de fazer?",
-  "sober.host.mode.host.name": "Organizar um encontro",
-  "sober.host.mode.host.desc": "Propõe um novo encontro sem álcool.",
-  "sober.host.mode.attend.name": "Participar num encontro",
+  "sober.host.mode.host.name": "Organizar um convívio",
+  "sober.host.mode.host.desc": "Propõe um novo convívio sem álcool.",
+  "sober.host.mode.attend.name": "Participar num convívio",
   "sober.host.mode.attend.desc":
     "Pede para te juntares a uma reunião de apoio entre pares.",
   "sober.host.nameLabel.host": "O teu nome",
@@ -1089,6 +1093,6 @@ export const resources: Catalog = {
   "sober.host.detailPlaceholder.attend":
     "ex.: a reunião semanal Sóbrie e Queer de apoio entre pares — e se gostarias de alguém para te acompanhar lá.",
   "sober.host.cancelCta": "Cancelar",
-  "sober.host.submitCta.host": "Submeter encontro",
+  "sober.host.submitCta.host": "Submeter convívio",
   "sober.host.submitCta.attend": "Pedir para participar",
 };

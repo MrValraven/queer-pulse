@@ -30,7 +30,7 @@ export const system: Catalog = {
   "notFound.linksTitle": "Ou experimenta uma destas opções",
   "notFound.links.magazine.label": "Revista",
   "notFound.links.magazine.sub": "Edição de junho de 2026",
-  "notFound.links.gatherings.label": "Encontros",
+  "notFound.links.gatherings.label": "Convívios",
   "notFound.links.gatherings.sub": "Próximos eventos",
   "notFound.links.readingGroups.label": "Grupos de leitura",
   "notFound.links.readingGroups.sub": "8 grupos abertos",
@@ -47,7 +47,7 @@ export const system: Catalog = {
   "placeholder.eyebrow": "Brevemente",
   "placeholder.title": "{title} está <em>a caminho.</em>",
   "placeholder.sub":
-    "Esta parte da QueerPulse ainda está a ser construída. A página inicial já está no ar — explora as pessoas, os encontros e a comunidade por lá, entretanto.",
+    "Esta parte da QueerPulse ainda está a ser construída. A página inicial já está no ar — explora as pessoas, os convívios e a comunidade por lá, entretanto.",
   "placeholder.backCta": "Voltar ao início",
 
   // ── AccountBannedPage.tsx ─────────────────────────────────────────────────
@@ -89,7 +89,8 @@ export const system: Catalog = {
     "<b>Nova localização:</b> tentativa a partir de <b>Madrid, Espanha</b> — costumas iniciar sessão a partir de Lisboa.",
   "accountLocked.reason3":
     "<b>O bloqueio vai levantar-se automaticamente</b> dentro de 23 minutos — ou usa uma das opções abaixo para desbloquear já.",
-  "accountLocked.whatNow.magicLink.title": "Inicia sessão com uma ligação mágica",
+  "accountLocked.whatNow.magicLink.title":
+    "Inicia sessão com uma ligação mágica",
   "accountLocked.whatNow.magicLink.desc":
     "A opção mais rápida se és mesmo tu — confirmação por email.",
   "accountLocked.whatNow.contact.title": "Contactar a equipa",
@@ -116,7 +117,7 @@ export const system: Catalog = {
     "O que continua a funcionar · durante a suspensão",
   "accountSuspended.whatStays.item1": "Ler conteúdo público e a revista",
   "accountSuspended.whatStays.item2":
-    "Participar em encontros a que já tinhas confirmado presença",
+    "Participar em convívios a que já tinhas confirmado presença",
   "accountSuspended.whatStays.item3":
     "Chat de crise · sempre disponível, sem exceções",
   "accountSuspended.whatStays.item4":
@@ -272,9 +273,11 @@ export const system: Catalog = {
   "offline.eyebrow": "Sem ligação · versão em cache",
   "offline.h1": "Estás <em>offline.</em>",
   "offline.lead":
-    "Sem sinal, ou não conseguimos contactar os nossos servidores. <b>Não te preocupes</b> — as tuas confirmações de encontros, o teu mapa de espaços seguros guardado e o teu bilhete QR continuam aqui neste dispositivo.",
-  "offline.cachedTitle": "Disponível offline · guardado em cache neste dispositivo",
-  "offline.cached.ticket.label": "O teu bilhete QR — Noite de consultas abertas",
+    "Sem sinal, ou não conseguimos contactar os nossos servidores. <b>Não te preocupes</b> — as tuas confirmações de convívios, o teu mapa de espaços seguros guardado e o teu bilhete QR continuam aqui neste dispositivo.",
+  "offline.cachedTitle":
+    "Disponível offline · guardado em cache neste dispositivo",
+  "offline.cached.ticket.label":
+    "O teu bilhete QR — Noite de consultas abertas",
   "offline.cached.ticket.sub": "{date} · Café Beirão · em cache há 3h",
   "offline.cached.map.label": "Mapa de espaços seguros · Lisboa",
   "offline.cached.map.sub": "42 locais · atualizado {when}",
@@ -342,7 +345,8 @@ export const system: Catalog = {
     "Desliza e toca em <b>Adicionar ao ecrã principal</b> <em>· perto do fundo</em>",
   "pwaPrompt.instructions.ios.step3":
     "Toca em <b>Adicionar</b> no canto superior direito. Pronto.",
-  "pwaPrompt.instructions.android.title": "Android · Chrome e Firefox · 2 toques",
+  "pwaPrompt.instructions.android.title":
+    "Android · Chrome e Firefox · 2 toques",
   "pwaPrompt.instructions.android.step1":
     "Toca no <b>menu de três pontos</b> no canto superior direito",
   "pwaPrompt.instructions.android.step2":
@@ -384,7 +388,8 @@ export const system: Catalog = {
   "serverError.actions.retryCta": "Tentar outra vez",
   "serverError.actions.homeCta": "Ir para a página inicial",
   "serverError.actions.statusCta": "Ver o estado da plataforma",
-  "serverError.footer.contact": "Se isto continuar a acontecer, <a>contacta-nos</a>.",
+  "serverError.footer.contact":
+    "Se isto continuar a acontecer, <a>contacta-nos</a>.",
 
   // ── StatusPage.tsx / StatusComponents.tsx / status.data.ts ───────────────
   "status.hero.allOperational": "Todos os sistemas operacionais",
@@ -408,8 +413,7 @@ export const system: Catalog = {
   "status.services.search.name": "Pesquisa",
   "status.services.search.desc": "Pesquisa de pessoas e conteúdo",
   "status.services.notifications.name": "Notificações",
-  "status.services.notifications.desc":
-    "Notificações na aplicação e por email",
+  "status.services.notifications.desc": "Notificações na aplicação e por email",
   "status.services.fileStorage.name": "Armazenamento de ficheiros",
   "status.services.fileStorage.desc": "Fotos de perfil e anexos",
   "status.uptime.sectionEye": "Disponibilidade dos últimos 90 dias",
@@ -458,7 +462,8 @@ export const system: Catalog = {
   "verificationNeeded.magicLink.intro":
     "Vamos enviar uma ligação de confirmação única para <b>{email}</b>. Abre-a neste dispositivo para confirmares que és tu.",
   "verificationNeeded.magicLink.sendingCta": "A enviar ligação…",
-  "verificationNeeded.magicLink.sendCta": "Enviar-me uma ligação de confirmação",
+  "verificationNeeded.magicLink.sendCta":
+    "Enviar-me uma ligação de confirmação",
   "verificationNeeded.magicLink.sentTitle": "Ligação a caminho",
   "verificationNeeded.magicLink.sentCopy":
     "Toca na ligação que enviámos para <b>{email}</b> e depois volta aqui.",

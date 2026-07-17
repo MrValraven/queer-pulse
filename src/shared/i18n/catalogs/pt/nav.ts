@@ -15,7 +15,7 @@ export const nav: Catalog = {
 
   // Destinos principais ("Members" → "Pessoas": neutro, evita "membros")
   members: "Pessoas",
-  gatherings: "Encontros",
+  gatherings: "Convívios",
   forum: "Fórum",
   calendar: "Calendário",
   communities: "Comunidades",

@@ -125,7 +125,8 @@ export const support: Catalog = {
   // ── Impact framing (below the amount picker, per contribution level) ──
   "impact.msg.high":
     "financia quase um dia inteiro da equipa a manter este lugar a funcionar e cuidado.",
-  "impact.msg.mid": "cobre um mês de alojamento e email para dezenas de pessoas.",
+  "impact.msg.mid":
+    "cobre um mês de alojamento e email para dezenas de pessoas.",
   "impact.msg.low": "mantém o fórum e as ferramentas de moderação a funcionar.",
 
   // ── Impact stats (sidebar) ────────────────────────────────────────────
@@ -137,7 +138,8 @@ export const support: Catalog = {
 
   // ── Sidebar ────────────────────────────────────────────────────────────
   "sidebar.statsHead": "O impacto das pessoas apoiantes até agora",
-  "sidebar.membersNeeded": "pessoas em falta para cobrir todos os custos mensais",
+  "sidebar.membersNeeded":
+    "pessoas em falta para cobrir todos os custos mensais",
   "sidebar.whyHead": "Porque construímos isto assim",
   "sidebar.whyText":
     "Recusámos propostas de investimento. Não por orgulho — por princípio. No momento em que uma plataforma tem investidores, a comunidade deixa de ser o produto e começa a tornar-se um. A QueerPulse continua gratuita porque as pessoas que a usam escolhem mantê-la viva. É esse o acordo.",
@@ -176,11 +178,12 @@ export const support: Catalog = {
     "O euro é a nossa moeda predefinida e aquela em que temos os nossos custos, mas podes pagar em GBP ou USD usando o seletor de moeda acima dos valores. O teu cartão pode ser de qualquer lugar.",
   "faq.cantAfford.q": "E se não puder pagar?",
   "faq.cantAfford.a":
-    "A plataforma é gratuita e vai continuar a sê-lo. Contribuir nunca é obrigatório. Se quiseres apoiar de outras formas — organizando um encontro, avalizando outras pessoas, escrevendo para a revista — isso importa igualmente.",
+    "A plataforma é gratuita e vai continuar a sê-lo. Contribuir nunca é obrigatório. Se quiseres apoiar de outras formas — organizando um convívio, avalizando outras pessoas, escrevendo para a revista — isso importa igualmente.",
 
   // ── Member banner (already a supporter) ───────────────────────────────
   "memberBanner.label": "És uma pessoa apoiante",
-  "memberBanner.nextPayment": "Próximo pagamento a {date} · Emblema de apoiante ativo",
+  "memberBanner.nextPayment":
+    "Próximo pagamento a {date} · Emblema de apoiante ativo",
   "memberBanner.changeAmountCta": "Mudar valor",
   "memberBanner.receiptsCta": "Recibos",
   "memberBanner.cancelCta": "Cancelar",
@@ -235,7 +238,8 @@ export const support: Catalog = {
   "checkout.fineprint":
     "Ao continuar, aceitas os nossos termos. Cancela quando quiseres; reembolso em 14 dias mediante pedido.",
   "checkout.cardNumberLabel": "Número do cartão",
-  "checkout.cardNumberErr": "Introduz um número de cartão válido de 16 dígitos.",
+  "checkout.cardNumberErr":
+    "Introduz um número de cartão válido de 16 dígitos.",
   "checkout.expiryLabel": "Validade",
   "checkout.cvcLabel": "CVC",
   "checkout.cvcErr": "3–4 dígitos",

@@ -61,7 +61,8 @@ export const shared: Catalog = {
 
   // Provider-level fallback error toasts
   "profile.saveError": "Não conseguimos guardar o teu perfil. Tenta outra vez.",
-  "social.blockError": "Não conseguimos atualizar esse bloqueio. Tenta outra vez.",
+  "social.blockError":
+    "Não conseguimos atualizar esse bloqueio. Tenta outra vez.",
   "social.genericError": "Não conseguimos atualizar isso. Tenta outra vez.",
 
   // AppNav
@@ -205,7 +206,7 @@ export const shared: Catalog = {
   "megaNav.community.feature.eyebrow": "Comunidade",
   "megaNav.community.feature.title": "Encontra a tua gente.",
   "megaNav.community.feature.body":
-    "Um diretório de pessoas, fóruns e encontros — o tecido de ligação do dia a dia da rede.",
+    "Um diretório de pessoas, fóruns e convívios — o tecido de ligação do dia a dia da rede.",
   "megaNav.community.feature.cta": "Explorar pessoas",
   "megaNav.community.featurePublic.eyebrow": "Comunidade",
   "megaNav.community.featurePublic.title": "Organizar em conjunto.",
@@ -214,12 +215,12 @@ export const shared: Catalog = {
   "megaNav.community.featurePublic.cta": "Participar",
   "megaNav.community.col.people.head": "Pessoas",
   "megaNav.community.col.people.membersDirectory": "Diretório de pessoas",
-  // Kept as "Dating" (not "Encontros") to avoid colliding with nav:gatherings
-  // ("Encontros"), already the platform's term for the events feature.
+  // Kept as "Dating" (not "Convívios") to avoid colliding with nav:gatherings
+  // ("Convívios"), already the platform's term for the events feature.
   "megaNav.community.col.people.dating": "Dating",
-  "megaNav.community.col.gather.head": "Encontros",
+  "megaNav.community.col.gather.head": "Convívios",
   "megaNav.community.col.gather.events": "Eventos",
-  "megaNav.community.col.gather.hostGathering": "Organizar um encontro",
+  "megaNav.community.col.gather.hostGathering": "Organizar um convívio",
   "megaNav.community.col.organise.head": "Organizar",
   "megaNav.community.col.organise.volunteer": "Voluntariado",
   "megaNav.community.col.organise.activism": "Ativismo",
@@ -305,7 +306,6 @@ export const shared: Catalog = {
   "megaNav.work.col.career.mentorship": "Mentoria",
   "megaNav.work.col.career.employerReviews":
     "Avaliações de entidades empregadoras",
-  "megaNav.work.col.career.workProfile": "Perfil profissional",
   "megaNav.work.col.economy.head": "Economia",
   "megaNav.work.col.economy.skillsExchange": "Troca de competências",
   "megaNav.work.col.economy.solidarityPricing": "Preços solidários",

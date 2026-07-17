@@ -15,7 +15,7 @@ export const myevents: Catalog = {
     "Tudo a que vais e tudo o que organizas — reunido num só lugar acolhedor.",
   "header.settingsAria": "Preferências de eventos",
   "header.notifAria": "Notificações",
-  "header.createCta": "Criar um encontro",
+  "header.createCta": "Criar um convívio",
 
   // ── Primary bucket pills (EventPills) ─────────────────────────────────────
   "pills.upcoming": "Todos os próximos",
@@ -73,8 +73,8 @@ export const myevents: Catalog = {
   // ── Empty states (empties.data.tsx, Pattern B) ────────────────────────────
   "empties.upcoming.title": "Ainda nada no calendário <em>por agora</em>",
   "empties.upcoming.sub":
-    "Quando disseres que sim a um encontro ou organizares um teu, aparece logo aqui. Há sempre algo a acontecer — dá uma vista de olhos quando quiseres.",
-  "empties.upcoming.browseCta": "Ver encontros",
+    "Quando disseres que sim a um convívio ou organizares um teu, aparece logo aqui. Há sempre algo a acontecer — dá uma vista de olhos quando quiseres.",
+  "empties.upcoming.browseCta": "Ver convívios",
   "empties.upcoming.hostCta": "Organiza um teu",
   "empties.going.title": "Sem confirmações <em>por agora</em>",
   "empties.going.sub":
@@ -82,20 +82,20 @@ export const myevents: Catalog = {
   "empties.going.cta": "Ver o que há",
   "empties.hosting.title": "Não estás a organizar <em>nada</em>",
   "empties.hosting.sub":
-    "Os melhores encontros começam com uma pessoa a decidir abrir espaço. O teu pode ser um jantar pequeno ou um piquenique inteiro — ajudamos-te a organizá-lo.",
-  "empties.hosting.cta": "Criar um encontro",
+    "Os melhores convívios começam com uma pessoa a decidir abrir espaço. O teu pode ser um jantar pequeno ou um piquenique inteiro — ajudamos-te a organizá-lo.",
+  "empties.hosting.cta": "Criar um convívio",
   "empties.waitlisted.title": "Sem listas de espera <em>por agora</em>",
   "empties.waitlisted.sub":
-    "Quando um encontro que queres está cheio, entra na lista de espera e guardamos o teu lugar — avisamos-te se abrir uma vaga.",
-  "empties.waitlisted.cta": "Ver encontros",
+    "Quando um convívio que queres está cheio, entra na lista de espera e guardamos o teu lugar — avisamos-te se abrir uma vaga.",
+  "empties.waitlisted.cta": "Ver convívios",
   "empties.past.title": "Sem histórico <em>aqui</em> — mas ainda vais a tempo",
   "empties.past.sub":
-    "Depois do teu primeiro encontro, fica aqui como um registo tranquilo de onde estiveste e de quem conheceste.",
+    "Depois do teu primeiro convívio, fica aqui como um registo tranquilo de onde estiveste e de quem conheceste.",
   "empties.past.cta": "Encontra o teu primeiro",
   "empties.saved.title": "Nada guardado ou <em>pendente</em>",
   "empties.saved.sub":
-    "Guarda encontros de que ainda não tens a certeza, e qualquer convite de outras pessoas espera aqui por ti — sem pressa, sem stress.",
-  "empties.saved.cta": "Ver encontros",
+    "Guarda convívios de que ainda não tens a certeza, e qualquer convite de outras pessoas espera aqui por ti — sem pressa, sem stress.",
+  "empties.saved.cta": "Ver convívios",
   "empties.day.title": "Nada <em>neste dia</em>",
   "empties.day.sub":
     "Não tens nada marcado aqui. Escolhe outro dia com um ponto, ou limpa o filtro para ver tudo o que aí vem.",
@@ -167,7 +167,8 @@ export const myevents: Catalog = {
   "side.leaveNoteToast": "A abrir a tua nota…",
   "side.receiptCta": "Recibo →",
   "side.joinWaitlistCta": "Entrar na lista de espera",
-  "side.joinWaitlistToast": "Adicionade à lista de espera — entraremos em contacto",
+  "side.joinWaitlistToast":
+    "Adicionade à lista de espera — entraremos em contacto",
   "side.rsvpCta": "Confirmar presença",
   "side.removeCta": "Remover →",
   "side.removedFromSavedToast": "Removido dos guardados",
@@ -214,20 +215,20 @@ export const myevents: Catalog = {
   "access.contentNoteFallbackToast": "Este evento tem uma nota de conteúdo",
   "access.saferSpacePolicy": "Política de espaço seguro",
   "access.saferSpaceToast":
-    "Este encontro segue a política de espaço seguro da QueerPulse",
+    "Este convívio segue a política de espaço seguro da QueerPulse",
   "alert.plansChanged": "Os planos mudaram.",
   "alert.seeWhatChanged": "Ver o que mudou",
   "alert.seeWhatChangedToast": "A mostrar o histórico completo de alterações",
   "conflict.clashesWith": "Coincide com {title}",
   "conflict.body":
     "à mesma hora. Só podes estar num sítio — talvez valha a pena deixar um deles.",
-  "edge.cancelledTitle": "Quem organiza cancelou este encontro.",
+  "edge.cancelledTitle": "Quem organiza cancelou este convívio.",
   "edge.cancelledBody": "A tua confirmação foi libertada —",
   "edge.findSomethingSimilar": "encontrar algo semelhante",
-  "edge.findingSimilarToast": "A encontrar encontros semelhantes…",
+  "edge.findingSimilarToast": "A encontrar convívios semelhantes…",
   "edge.reviewTitle": "Em análise.",
   "edge.reviewBody":
-    "Chegou uma denúncia, por isso a nossa equipa está a analisar este encontro. Continua visível enquanto verificamos —",
+    "Chegou uma denúncia, por isso a nossa equipa está a analisar este convívio. Continua visível enquanto verificamos —",
   "edge.seeStatus": "ver estado",
   "edge.seeStatusToast": "A abrir o estado da análise…",
   "edge.blockedBody":
@@ -236,7 +237,7 @@ export const myevents: Catalog = {
   "dayof.runOfShow": "Ordem do dia",
   "dayof.whatToBring": "O que trazer",
   "dayof.gettingIn": "Como entrar",
-  "dayof.meetingPoint": "Ponto de encontro:",
+  "dayof.meetingPoint": "Ponto de convívio:",
   "dayof.doorCode": "Código da porta:",
   "dayof.doorCodeNote": "— mostrado porque está prestes a começar",
 
@@ -259,7 +260,8 @@ export const myevents: Catalog = {
 
   // ── Subscribe / export (CalendarSubscribe) ────────────────────────────────
   "calSubscribe.feedTitle": "Subscrever o teu feed",
-  "calSubscribe.feedSub": "Sincroniza automaticamente com o Google ou Apple Calendar",
+  "calSubscribe.feedSub":
+    "Sincroniza automaticamente com o Google ou Apple Calendar",
   "calSubscribe.feedToast":
     "Link do feed copiado — adiciona-o no Google ou Apple Calendar",
   "calSubscribe.exportTitle": "Exportar este mês",
@@ -278,11 +280,11 @@ export const myevents: Catalog = {
   "insights.eyebrow": "O teu ano até agora",
   "insights.emptyStat": "O teu ano <em>começa</em> aqui",
   "insights.emptySub":
-    "Assim que fores ao teu primeiro encontro, ele junta-se aqui — uma contagem tranquila de onde estiveste este ano.",
+    "Assim que fores ao teu primeiro convívio, ele junta-se aqui — uma contagem tranquila de onde estiveste este ano.",
   "insights.emptyCta": "Encontra o teu primeiro",
-  "insights.stat_one": "<em>{count}</em> encontro",
-  "insights.stat_other": "<em>{count}</em> encontros",
-  "insights.sub": "Todos os encontros a que apareceste este ano.",
+  "insights.stat_one": "<em>{count}</em> convívio",
+  "insights.stat_other": "<em>{count}</em> convívios",
+  "insights.sub": "Todos os convívios a que apareceste este ano.",
   "insights.streak_one": "mês seguido",
   "insights.streak_other": "meses seguidos",
   "insights.topCircle": "o teu círculo principal",
@@ -291,7 +293,8 @@ export const myevents: Catalog = {
   // ── Overflow menu (MoreMenu) ───────────────────────────────────────────────
   "moreMenu.share": "Partilhar este evento",
   "moreMenu.shareToast": "Link do evento copiado — partilha-o onde quiseres",
-  "moreMenu.shareCopyFailToast": "Não foi possível copiar o link — tenta de novo",
+  "moreMenu.shareCopyFailToast":
+    "Não foi possível copiar o link — tenta de novo",
   "moreMenu.inviteFriend": "Convidar um amigo",
   "moreMenu.messageHost": "Enviar mensagem a quem organiza",
   "moreMenu.openGroupChat": "Abrir conversa de grupo",
@@ -316,7 +319,8 @@ export const myevents: Catalog = {
   "bulk.export": "Exportar",
   "bulk.cancelRsvps": "Cancelar confirmações",
   "bulk.doneAria": "Concluir seleção",
-  "bulk.addedToCalendarToast_one": "{count} evento adicionado ao teu calendário",
+  "bulk.addedToCalendarToast_one":
+    "{count} evento adicionado ao teu calendário",
   "bulk.addedToCalendarToast_other":
     "{count} eventos adicionados ao teu calendário",
   "bulk.exportedToast_one": "{count} evento exportado como .ics",
@@ -401,7 +405,8 @@ export const myevents: Catalog = {
   "settingsModal.pushToggleLabel": "Notificações push",
   "settingsModal.syncTickets": "Sincronização e bilhetes",
   "settingsModal.connectCalendar": "Liga o teu calendário",
-  "settingsModal.connectCalendarSub": "Sincronização bidirecional com Google ou Apple",
+  "settingsModal.connectCalendarSub":
+    "Sincronização bidirecional com Google ou Apple",
   "settingsModal.ticketsReceipts": "Bilhetes e recibos",
   "settingsModal.ticketsReceiptsSub":
     "Todos os teus bilhetes e registos de pagamento",
@@ -448,12 +453,14 @@ export const myevents: Catalog = {
     "Deixas de ver eventos de quem organiza, e essa pessoa deixa de te poder convidar. Podes desfazer isto quando quiseres nas tuas definições.",
   "blockModal.cancelCta": "Cancelar",
   "blockModal.confirmCta": "Bloquear",
-  "blockModal.blockedToast": "Bloqueade — não vais mais ver os eventos desta pessoa",
+  "blockModal.blockedToast":
+    "Bloqueade — não vais mais ver os eventos desta pessoa",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
   "toast.reminderSet": "Lembrete definido — {lead} antes",
   "toast.reminderOff": "Lembrete desativado",
-  "toast.markedMaybe": "Marcade como talvez — quem organiza vê que ainda não tens a certeza",
+  "toast.markedMaybe":
+    "Marcade como talvez — quem organiza vê que ainda não tens a certeza",
   "toast.fullyIn": "Estás dentro — até já",
   "toast.rsvpGoing": "Vais — até já",
   "toast.invitationDeclined": "Convite recusado — tudo bem.",
