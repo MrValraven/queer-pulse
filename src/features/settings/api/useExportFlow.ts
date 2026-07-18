@@ -6,6 +6,7 @@ import { logError } from "../../../shared/observability/logger";
 import { currentUser, currentUserEmail } from "../../members/data/members";
 import {
   getExportJob,
+  reauth,
   requestExport,
   type ExportJob,
   type ExportFormat,
@@ -54,7 +55,6 @@ function buildDemoArchive(
 type StartArgs = {
   categories: string[];
   format: ExportFormat;
-  reauthToken?: string;
 };
 
 /**
@@ -87,7 +87,7 @@ export function useExportFlow() {
   );
 
   const start = useCallback(
-    async ({ categories, format, reauthToken }: StartArgs) => {
+    async ({ categories, format }: StartArgs) => {
       stopPoll();
       if (demoMode) {
         setJob({
@@ -116,6 +116,13 @@ export function useExportFlow() {
       }
 
       try {
+        // Step-up auth. An export is a full dump of everything we hold on a
+        // person, so it sits behind the same short-lived token the deletion and
+        // deactivation flows use — a stolen session cookie alone shouldn't be
+        // enough to exfiltrate someone's entire account. Minted here rather than
+        // by the caller so the demo branch above never touches the network and
+        // no page has to know the flow needs a token at all.
+        const { reauthToken } = await reauth();
         const created = await requestExport({
           categories,
           format,

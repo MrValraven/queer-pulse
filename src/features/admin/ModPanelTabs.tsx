@@ -11,7 +11,10 @@ import {
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import {
+  useReviewJoinRequest,
+  useSetMemberRole,
+} from "../communities/api/useCommunityMutations";
 import type { LivingCommunity } from "../communities/community.model";
 import { photoOf } from "../communities/communityPeople";
 import { RoleBadge } from "../communities/CommunityBadges";
@@ -25,7 +28,7 @@ import styles from "./ModPanel.module.css";
 export function RequestsTab({ living }: { living: LivingCommunity }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { approveRequest } = useCommunityMembership();
+  const reviewRequest = useReviewJoinRequest(living.slug);
   // Intentional: snapshot the prop into local state once, then mutate locally as
   // the moderator approves/dismisses. Not a live sync with the source list.
   const [requests, setRequests] = useState(living.joinRequests ?? []);
@@ -37,7 +40,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
 
   const resolveRequest = (id: string, name: string, approved: boolean) => {
     setRequests((prev) => prev.filter((r) => r.id !== id));
-    if (approved) approveRequest(living.slug);
+    reviewRequest.mutate({ id, action: approved ? "approve" : "decline" });
     showToast(
       t(
         approved
@@ -50,7 +53,9 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
   };
 
   const approveAll = () => {
-    requests.forEach(() => approveRequest(living.slug));
+    for (const r of requests) {
+      reviewRequest.mutate({ id: r.id, action: "approve" });
+    }
     setRequests([]);
     showToast(
       t("admin:modPanel.requests.approvedAllToast", {
@@ -237,7 +242,7 @@ const ROLE_FILTER_KEYS = [
 export function MembersTab({ living }: { living: LivingCommunity }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { promoteToMod } = useCommunityMembership();
+  const setMemberRole = useSetMemberRole(living.slug);
   const [promoted, setPromoted] = useState<string[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
   const [roleFilter, setRoleFilter] = useState<"all" | "mod" | "member">("all");
@@ -247,13 +252,16 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
 
   const promote = (slug: string | undefined, name: string) => {
     const key = memberKey(slug, name);
+    // Local list drives the row's badge + the role filter immediately; the PATCH
+    // is the real change, and its invalidation refetches the roster.
     setPromoted((p) => [...p, key]);
-    promoteToMod(living.slug, key);
+    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "mod" });
     showToast(t("admin:modPanel.members.promotedToast", { name }), "success");
   };
   const demote = (slug: string | undefined, name: string) => {
     const key = memberKey(slug, name);
     setPromoted((p) => p.filter((k) => k !== key));
+    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "member" });
     showToast(t("admin:modPanel.members.demotedToast", { name }), "info");
   };
   const removeMember = (slug: string | undefined, name: string) => {

@@ -50,12 +50,17 @@ function PartnerCardSkeleton() {
 
 export function PartnersPage() {
   const { t } = useTranslation();
-  const { data, isLoading } = usePartners();
+  const {
+    items: partners,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = usePartners();
   // Demo mode keeps the prototype's simulated entrance skeleton; live mode also
   // shows it until the query resolves. Approved partners only (the endpoint and
   // the mock registry both already exclude anything not live).
   const loading = useSimulatedLoad() || isLoading;
-  const partners = data?.items ?? [];
 
   return (
     <PageShell>
@@ -143,6 +148,21 @@ export function PartnersPage() {
                   </FadeIn>
                 ))}
           </div>
+
+          {hasNextPage && (
+            <div className={s.loadMore}>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isFetchingNextPage}
+                onClick={fetchNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("marketing:partners.loadingMore")
+                  : t("marketing:partners.loadMoreCta")}
+              </Button>
+            </div>
+          )}
 
           <div className={s.why}>
             <h2>

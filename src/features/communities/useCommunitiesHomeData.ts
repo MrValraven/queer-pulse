@@ -1,4 +1,4 @@
-import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import { useMyCommunities } from "./api/useMyCommunities";
 import { useAllCommunities } from "./useAllCommunities";
 import { getLiving } from "./livingCommunities.data";
 import type { HubPost } from "./HubPulseCard";
@@ -15,7 +15,7 @@ function interleave(lists: HubPost[][]): HubPost[] {
 
 /** Derives every list the communities home renders from your memberships. */
 export function useCommunitiesHomeData() {
-  const { memberships } = useCommunityMembership();
+  const memberships = useMyCommunities();
   const communities = useAllCommunities();
 
   const mine = Object.keys(memberships).map((slug) => ({

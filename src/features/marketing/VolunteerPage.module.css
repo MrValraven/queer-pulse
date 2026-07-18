@@ -189,3 +189,9 @@
 :global([data-theme="dark"]) .card {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}

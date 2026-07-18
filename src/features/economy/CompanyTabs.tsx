@@ -99,11 +99,17 @@ function ReviewsPane({
   reviews,
   reviewCount,
   onWrite,
+  hasMore,
+  onLoadMore,
+  isLoadingMore,
 }: {
   profile: CompanyProfile;
   reviews: CompanyReview[];
   reviewCount: number;
   onWrite: () => void;
+  hasMore: boolean;
+  onLoadMore: () => void;
+  isLoadingMore: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -167,6 +173,20 @@ function ReviewsPane({
           ))}
         </div>
       )}
+      {hasMore && (
+        <div className={styles.loadMore}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isLoadingMore}
+            onClick={onLoadMore}
+          >
+            {isLoadingMore
+              ? t("economy:company.reviews.loadingMore")
+              : t("economy:company.reviews.loadMoreCta")}
+          </Button>
+        </div>
+      )}
     </>
   );
 }
@@ -195,6 +215,9 @@ export function CompanyTabs({
   reviews,
   reviewCount,
   onWriteReview,
+  hasMoreReviews,
+  onLoadMoreReviews,
+  isLoadingMoreReviews,
   tab,
   setTab,
 }: {
@@ -203,6 +226,9 @@ export function CompanyTabs({
   reviews: CompanyReview[];
   reviewCount: number;
   onWriteReview: () => void;
+  hasMoreReviews: boolean;
+  onLoadMoreReviews: () => void;
+  isLoadingMoreReviews: boolean;
   tab: TabId;
   setTab: (t: TabId) => void;
 }) {
@@ -259,6 +285,9 @@ export function CompanyTabs({
           reviews={reviews}
           reviewCount={reviewCount}
           onWrite={onWriteReview}
+          hasMore={hasMoreReviews}
+          onLoadMore={onLoadMoreReviews}
+          isLoadingMore={isLoadingMoreReviews}
         />
       )}
       {tab === "work" && profile.work && <WorkPane work={profile.work} />}

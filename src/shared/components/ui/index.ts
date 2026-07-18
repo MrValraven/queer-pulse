@@ -31,3 +31,4 @@ export { StatTile, StatGrid } from "./StatTile";
 export { HubBackLink } from "./HubBackLink";
 export { SubpageIndex, type SubpageItem } from "./SubpageIndex";
 export { ComingSoon } from "./ComingSoon";
+export { CopyLinkRow, type CopyLinkRowProps } from "./CopyLinkRow";

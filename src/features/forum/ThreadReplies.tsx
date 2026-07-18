@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiStar, FiHeart, FiMessageSquare } from "react-icons/fi";
-import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -82,6 +82,9 @@ export function ThreadReplies({
   likedReplies,
   toggleReplyLike,
   onFocusComposer,
+  hasNextPage,
+  fetchNextPage,
+  isFetchingNextPage,
 }: {
   loading: boolean;
   replies: Reply[];
@@ -89,6 +92,10 @@ export function ThreadReplies({
   likedReplies: Record<string, boolean>;
   toggleReplyLike: (r: Reply) => void;
   onFocusComposer: () => void;
+  /** Live mode only — demo passes `false`, so no "Load more" ever renders. */
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -190,6 +197,21 @@ export function ThreadReplies({
             </FadeIn>
           );
         })}
+
+      {!loading && hasNextPage && (
+        <div className={styles.loadMore}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isFetchingNextPage}
+            onClick={fetchNextPage}
+          >
+            {isFetchingNextPage
+              ? t("forum:replies.loadingMore")
+              : t("forum:replies.loadMoreCta")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

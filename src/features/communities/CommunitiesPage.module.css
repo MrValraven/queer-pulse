@@ -111,6 +111,11 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
 /* Single-column so cards never overflow on narrow phones. */
 @media (max-width: 560px) {
   .grid {

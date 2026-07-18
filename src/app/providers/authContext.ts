@@ -40,10 +40,15 @@ export interface AuthContextValue {
    * `redirectTo` to land there after login (the in-app `navigate` that follows
    * a `signIn()` call only takes effect in demo mode, since live mode leaves the
    * SPA entirely). Pass `invite` when registering off an invite link so the
-   * backend redeems it during signup. Demo mode just flips local state and
-   * ignores both arguments.
+   * backend redeems it during signup, and `ageAttested` when the member has
+   * ticked the 18+ box — the backend rejects a NEW account without it. Demo mode
+   * just flips local state and ignores all three arguments.
    */
-  signIn: (redirectTo?: string, invite?: string) => void;
+  signIn: (
+    redirectTo?: string,
+    invite?: string,
+    ageAttested?: boolean,
+  ) => void;
   signOut: () => void;
   /** Called by the loader once its sequence completes, to dismiss it. */
   endPreparing: () => void;

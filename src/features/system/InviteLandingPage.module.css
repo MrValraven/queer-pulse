@@ -346,8 +346,15 @@
     background 0.2s;
 }
 
+/* Locked until the 18+ box is ticked. Dimmed rather than hidden, so the path
+   forward stays visible and the checkbox above reads as the thing to do. */
+.google:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 @media (hover: hover) {
-  .google:hover {
+  .google:not(:disabled):hover {
     border-color: rgba(var(--line-rgb), 0.35);
     background: var(--cream);
   }

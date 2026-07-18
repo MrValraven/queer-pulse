@@ -240,8 +240,10 @@ export const members: Catalog = {
 
   // ── Public profile sections (PublicProfileSections) ─────────────────────────
   "publicProfile.preview.ownerLabel":
-    "Preview of your public profile · this is how non-members see you",
-  "publicProfile.pill.live": "Live",
+    "Preview of your public profile · this is how non-members would see you",
+  "publicProfile.preview.notYet":
+    "Public profiles aren't open yet — this preview is only visible to you.",
+  "publicProfile.pill.live": "On",
   "publicProfile.pill.off": "Off",
   "publicProfile.preview.backToProfile": "← Back to your profile",
   "publicProfile.preview.guestLabel":
@@ -266,14 +268,19 @@ export const members: Catalog = {
   "publicProfile.control.unlocked.title":
     "You can share a <em>public profile.</em>",
   "publicProfile.control.unlocked.lede":
-    "A public profile lets people who aren't members yet find your writing, your events, and a way to reach you — without opening the rest of the community.",
+    "A public profile will let people who aren't members yet find your writing, your events, and a way to reach you — without opening the rest of the community.",
+  "publicProfile.control.notYet":
+    "Public profiles aren't open yet, so nothing here is published anywhere and nobody outside QueerPulse can see you. We're remembering what you choose, and it's what we'll turn on for you the day they open.",
   "publicProfile.control.switchLabel": "Show a public profile",
-  "publicProfile.control.statusOn":
-    "Live — anyone can view your public profile.",
-  "publicProfile.control.statusOff": "Off — only members can find you.",
-  "publicProfile.control.viewCta": "View public profile",
-  "publicProfile.control.toast.hidden": "Your public profile is hidden",
-  "publicProfile.control.toast.live": "Your public profile is live",
+  "publicProfile.control.statusOn": "On — saved for when public profiles open.",
+  "publicProfile.control.statusOff": "Off — nothing of yours goes public.",
+  "publicProfile.control.viewCta": "Preview your public profile",
+  "publicProfile.control.toast.hidden":
+    "Saved — your profile stays members-only",
+  "publicProfile.control.toast.live":
+    "Saved — we'll turn this on when public profiles open",
+  "publicProfile.control.toast.failed":
+    "We couldn't save that — your preference is unchanged. Try again in a moment.",
 
   // ── Public-eligibility criteria (publicFigure.ts) ───────────────────────────
   "publicProfile.eligibility.contributes.label": "Contributes publicly",

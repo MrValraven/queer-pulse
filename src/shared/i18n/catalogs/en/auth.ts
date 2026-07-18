@@ -32,6 +32,12 @@ export const auth: Catalog = {
   "signIn.notice.inviteRequired.title": "You'll need an invite",
   "signIn.notice.inviteRequired.body":
     "QueerPulse is invite-only. Ask a member you know, or request an invite and we'll take it from there.",
+  "signIn.notice.accountSuppressed.title": "This account was deleted",
+  "signIn.notice.accountSuppressed.body":
+    "You asked us to erase this account, so we won't quietly re-create it. If you'd like to come back, ask a member for a fresh invite — or get in touch and we'll help.",
+  "signIn.notice.ageAttestationRequired.title": "One box left to tick",
+  "signIn.notice.ageAttestationRequired.body":
+    "QueerPulse is 18+. Head back to your invite link and confirm you're 18 or older, then you're in.",
   "signIn.notice.inviteInvalid.title": "That invite isn't valid",
   "signIn.notice.inviteInvalid.body":
     "This invite link has expired or was already used. Ask your inviter for a fresh one, or request an invite yourself.",
@@ -265,6 +271,9 @@ export const auth: Catalog = {
   "requestInvite.field.mutual.helper":
     "Naming a mutual is the fastest route in — but it's not required.",
   "requestInvite.field.mutual.placeholder": "A member who can vouch for you",
+  // Appended to the message so the reviewer sees the named mutual — there is no
+  // separate field for it on POST /join-requests.
+  "requestInvite.field.mutual.messagePrefix": "Someone who knows me here: {name}",
   "requestInvite.field.why.label": "Why QueerPulse",
   "requestInvite.field.why.placeholder":
     "What you're looking for, and what brings you here. A few honest sentences is plenty.",
@@ -280,15 +289,26 @@ export const auth: Catalog = {
   "requestInvite.sent.sub_noName":
     "Thanks — your request to join QueerPulse is in. Here's what happens from here.",
   "requestInvite.sent.backHome": "← Back to home",
+  // The 409 case: an open request already exists for this email. Nothing went
+  // wrong, so this reads as a confirmation, never as a failure.
+  "requestInvite.already.title": "We already <em>have it.</em>",
+  "requestInvite.already.sub_withName":
+    "You've asked us before, {name} — your request is still with us and still being read. No need to send another.",
+  "requestInvite.already.sub_noName":
+    "You've asked us before — your request is still with us and still being read. No need to send another.",
   "requestInvite.whatNext.readsIt.title": "A real person reads it",
   "requestInvite.whatNext.readsIt.body":
     "No algorithm, no waitlist score — a member of the community looks at every request.",
   "requestInvite.whatNext.connection.title": "We look for a connection",
   "requestInvite.whatNext.connection.body":
     "If someone already here can vouch for you, that's the surest way in. Naming a mutual helps.",
-  "requestInvite.whatNext.hearBack.title": "You hear back either way",
+  // Honest about the real mechanism: there is no mail service, so an approval
+  // is a person sending a link by hand, and a decline sends nothing at all.
+  // Promising "you hear back either way" would be a quiet lie to someone who
+  // then waits for a reply that can never arrive.
+  "requestInvite.whatNext.hearBack.title": "If it's a yes, someone gets in touch",
   "requestInvite.whatNext.hearBack.body":
-    "We'll email you whatever we decide, usually within a couple of weeks. No chasing needed.",
+    "A member sends your invite link to the address you gave us, usually within a couple of weeks. We can't reply to every request, so if it stays quiet, asking someone you already know here is the surest way in.",
 
   // ── Onboarding (the 7-step post-signup flow at /onboarding) ──
   "onboarding.stepLabel": "Step {current} of {total}",

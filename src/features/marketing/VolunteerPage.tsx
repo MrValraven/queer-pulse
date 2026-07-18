@@ -83,8 +83,13 @@ export function VolunteerPage() {
     ? causeToLower(filter as VolunteerCause)
     : undefined;
 
-  const { data, isLoading } = useOpportunities({ cause, commit });
-  const opps = useMemo(() => data?.items ?? [], [data]);
+  const {
+    items: opps,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useOpportunities({ cause, commit });
   const loading = simLoading || isLoading;
 
   const visible = useMemo(
@@ -214,6 +219,21 @@ export function VolunteerPage() {
                       </div>
                     </FadeIn>
                   ))}
+            </div>
+          )}
+
+          {hasNextPage && (
+            <div className={s.loadMore}>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isFetchingNextPage}
+                onClick={fetchNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("marketing:volunteer.loadingMore")
+                  : t("marketing:volunteer.loadMoreCta")}
+              </Button>
             </div>
           )}
         </div>

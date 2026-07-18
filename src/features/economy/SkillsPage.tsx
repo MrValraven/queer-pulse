@@ -18,8 +18,11 @@ import styles from "./SkillsPage.module.css";
 export function SkillsPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { workshops } = useWorkshops();
-  const loading = useSimulatedLoad();
+  const { workshops, isLoading: workshopsLoading } = useWorkshops();
+  const simulatedLoad = useSimulatedLoad();
+  // Demo keeps the prototype's timed skeleton; live waits on the real first page
+  // of GET /workshops so the board never flashes "nothing here yet" mid-fetch.
+  const loading = demoMode ? simulatedLoad : workshopsLoading;
   const [active, setActive] = useState("all");
   const [listingWorkshop, setListingWorkshop] = useState(false);
 

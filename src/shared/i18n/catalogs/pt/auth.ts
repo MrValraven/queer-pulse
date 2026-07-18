@@ -29,6 +29,12 @@ export const auth: Catalog = {
   "signIn.notice.inviteRequired.title": "Vais precisar de um convite",
   "signIn.notice.inviteRequired.body":
     "O QueerPulse funciona só por convite. Pede a alguém que já conheças, ou pede um convite e tratamos do resto.",
+  "signIn.notice.accountSuppressed.title": "Esta conta foi eliminada",
+  "signIn.notice.accountSuppressed.body":
+    "Pediste-nos para eliminar esta conta, por isso não a vamos recriar em silêncio. Se quiseres voltar, pede um novo convite a alguém da comunidade — ou fala connosco que ajudamos.",
+  "signIn.notice.ageAttestationRequired.title": "Falta confirmar uma coisa",
+  "signIn.notice.ageAttestationRequired.body":
+    "A QueerPulse é para maiores de 18 anos. Volta ao teu link de convite e confirma que tens 18 anos ou mais para entrares.",
   "signIn.notice.inviteInvalid.title": "Esse convite não é válido",
   "signIn.notice.inviteInvalid.body":
     "Este link de convite expirou ou já foi usado. Pede um novo a quem te convidou, ou pede um convite diretamente.",
@@ -264,6 +270,8 @@ export const auth: Catalog = {
   "requestInvite.field.mutual.helper":
     "Nomear uma pessoa em comum é a forma mais rápida de entrar — mas não é obrigatório.",
   "requestInvite.field.mutual.placeholder": "Uma pessoa que possa avalizar-te",
+  "requestInvite.field.mutual.messagePrefix":
+    "Alguém que me conhece por aqui: {name}",
   "requestInvite.field.why.label": "Porquê o QueerPulse",
   "requestInvite.field.why.placeholder":
     "O que procuras, e o que te traz aqui. Umas frases sinceras já chegam.",
@@ -280,15 +288,22 @@ export const auth: Catalog = {
   "requestInvite.sent.sub_noName":
     "Obrigade — o teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
   "requestInvite.sent.backHome": "← Voltar ao início",
+  // O caso 409: já existe um pedido em aberto para este email. Não correu nada
+  // mal, por isso isto lê-se como confirmação e nunca como falha.
+  "requestInvite.already.title": "Já <em>o temos.</em>",
+  "requestInvite.already.sub_withName":
+    "Já nos tinhas pedido, {name} — o teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
+  "requestInvite.already.sub_noName":
+    "Já nos tinhas pedido — o teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
   "requestInvite.whatNext.readsIt.title": "Uma pessoa real lê-o",
   "requestInvite.whatNext.readsIt.body":
     "Sem algoritmo, sem pontuação de lista de espera — uma pessoa da comunidade vê cada pedido.",
   "requestInvite.whatNext.connection.title": "Procuramos uma ligação",
   "requestInvite.whatNext.connection.body":
     "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Nomear uma pessoa em comum ajuda.",
-  "requestInvite.whatNext.hearBack.title": "Tens sempre resposta",
+  "requestInvite.whatNext.hearBack.title": "Se for que sim, alguém entra em contacto",
   "requestInvite.whatNext.hearBack.body":
-    "Enviamos-te um email com a nossa decisão, normalmente dentro de umas semanas. Não precisas de insistir.",
+    "Uma pessoa da comunidade envia o teu link de convite para o endereço que nos deste, normalmente dentro de umas semanas. Não conseguimos responder a todos os pedidos, por isso, se ficar tudo calado, pedir a alguém que já conheces aqui é a forma mais certa de entrar.",
 
   // ── Onboarding (fluxo de 7 passos após o registo, em /onboarding) ──
   "onboarding.stepLabel": "Passo {current} de {total}",

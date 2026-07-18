@@ -139,10 +139,11 @@ export function MapPage() {
       <div className={s.filterBar}>
         <div className="wrap">
           <div className={s.fbInner}>
-            <span className={s.fbLabel}>
+            <span className={s.fbLabel} id="map-type-label">
               {t("marketing:map.filterBar.typeLabel")}
             </span>
             <FilterChips
+              labelledBy="map-type-label"
               options={TYPES.map((typeOption) => ({
                 value: typeOption.t,
                 label: t(typeOption.labelKey),

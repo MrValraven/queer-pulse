@@ -27,6 +27,7 @@ import {
   useReply,
   useUnreact,
 } from "./api/useCommunityMutations";
+import type { PulsePaging } from "./api/useCommunityPosts";
 import styles from "./PulseTab.module.css";
 
 function toggle(reactions: Reaction[], key: ReactionKey): Reaction[] {
@@ -169,10 +170,13 @@ export function PulseTab({
   community,
   name,
   isMember,
+  paging,
 }: {
   community: LivingCommunity;
   name: string;
   isMember: boolean;
+  /** Live-mode pagination for the feed; inert in demo (`hasNextPage: false`). */
+  paging: PulsePaging;
 }) {
   const loading = useSimulatedLoad(500);
   const { showToast } = useToast();
@@ -303,6 +307,21 @@ export function PulseTab({
             </div>
           </FadeIn>
         ),
+      )}
+
+      {paging.hasNextPage && (
+        <div className={styles.loadMore}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={paging.isFetchingNextPage}
+            onClick={paging.fetchNextPage}
+          >
+            {paging.isFetchingNextPage
+              ? t("communities:detail.pulse.loadingMore")
+              : t("communities:detail.pulse.loadMoreCta")}
+          </Button>
+        </div>
       )}
     </div>
   );

@@ -73,6 +73,11 @@ export function PublicPreviewBar({
               ? t("members:publicProfile.pill.live")
               : t("members:publicProfile.pill.off")}
           </span>
+          {/* The pill reads "On", not "Live": the preference persists but no
+              unauthenticated profile endpoint exists, so nothing is published. */}
+          <span className={styles.ownerNote}>
+            {t("members:publicProfile.preview.notYet")}
+          </span>
         </span>
         <div className={styles.guestActions}>
           <Button variant="ghost-dark" to={routes.accountProfile}>

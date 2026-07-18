@@ -129,7 +129,7 @@ export function AffiliateCompanyModal({
   const { affiliate } = useEmployerAffiliation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const { data: liveCompanies = [] } = useCompanies();
+  const { items: liveCompanies } = useCompanies();
   const createCompany = useCreateCompany();
 
   // Demo shows the mock profiles (unchanged); live shows API companies.

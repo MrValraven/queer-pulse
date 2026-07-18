@@ -9,10 +9,11 @@ export const MAIN_CONTENT_ID = "main-content";
  * "Skip to main content" — the first thing in the tab order, hidden until it
  * takes focus, jumping past the nav straight to `<main>`.
  *
- * Rendered only when the member has turned the pref on (Settings →
- * Accessibility → Interaction → "Skip to content link"). Until now that toggle
- * flipped a boolean no render code read and no such link existed anywhere, so
- * the control described a feature the app didn't have.
+ * Rendered by default for everyone: bypassing blocks is WCAG 2.4.1, a baseline
+ * conformance requirement rather than a preference, and a keyboard user can't
+ * be asked to walk through the nav they can't bypass to switch it on. The
+ * pref (Settings → Accessibility → Interaction → "Skip to content link")
+ * survives as an opt-*out* only.
  *
  * `href` (not `<Link>`) is deliberate: this is a same-document fragment jump,
  * and letting the router intercept it would push a history entry and move focus

@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
-import { AdminAvatar } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useJoinRequests, type JoinRequestView } from "./api/useJoinRequests";
 import { useReviewJoinRequest } from "./api/useReviewJoinRequest";
+import { JoinRequestCard } from "./JoinRequestCard";
+import { JoinRequestApprovedCard } from "./JoinRequestApprovedCard";
 import styles from "./AdminMembersPage.module.css";
 
 /**
  * Moderator review of incoming platform join requests. Sourced from
  * useJoinRequests (GET /join-requests?status=pending), with approve/decline wired
  * to useReviewJoinRequest (PATCH /join-requests/:id). The mutation invalidates the
- * ["join-requests"] query so the list refetches; we also drop the row locally with
- * a short leave animation so the action reads instantly in either mode.
+ * ["join-requests"] query so the list refetches; declines drop the row locally
+ * with a short leave animation so the action reads instantly in either mode.
+ *
+ * Approvals do *not* drop: the response carries an invite code, and since there
+ * is no email service the reviewer has to copy that link and send it themselves.
+ * The approved card is held in local state so it survives the refetch that
+ * removes the row from the pending list.
  */
 export function AdminVerifyQueue() {
   const { showToast } = useToast();
@@ -21,18 +26,39 @@ export function AdminVerifyQueue() {
   const { data, isLoading } = useJoinRequests("pending");
   const reviewJoinRequest = useReviewJoinRequest();
   const [leaving, setLeaving] = useState<Set<string>>(new Set());
-  const [resolved, setResolved] = useState<Set<string>>(new Set());
+  const [declined, setDeclined] = useState<Set<string>>(new Set());
+  // Approved rows keep their place, now carrying the invite code to hand over.
+  const [approved, setApproved] = useState<JoinRequestView[]>([]);
+
+  function unmarkLeaving(id: string) {
+    setLeaving((s) => {
+      const next = new Set(s);
+      next.delete(id);
+      return next;
+    });
+  }
 
   function resolve(item: JoinRequestView, status: "approved" | "declined") {
-    setLeaving((s) => new Set(s).add(item.id));
-    window.setTimeout(() => {
-      setResolved((s) => new Set(s).add(item.id));
-    }, 320);
+    if (status === "declined") {
+      setLeaving((s) => new Set(s).add(item.id));
+      window.setTimeout(() => {
+        setDeclined((s) => new Set(s).add(item.id));
+      }, 320);
+    }
     reviewJoinRequest.mutate(
       { id: item.id, status },
       {
+        onSuccess: (dto) => {
+          if (status !== "approved") return;
+          setApproved((list) =>
+            list.some((r) => r.id === item.id)
+              ? list
+              : [{ ...item, inviteCode: dto.inviteCode }, ...list],
+          );
+        },
         onError: () => {
-          setLeaving((s) => {
+          unmarkLeaving(item.id);
+          setDeclined((s) => {
             const next = new Set(s);
             next.delete(item.id);
             return next;
@@ -63,9 +89,12 @@ export function AdminVerifyQueue() {
     );
   }
 
-  const queue = (data ?? []).filter((r) => !resolved.has(r.id));
+  const approvedIds = new Set(approved.map((r) => r.id));
+  const queue = (data ?? []).filter(
+    (r) => !declined.has(r.id) && !approvedIds.has(r.id),
+  );
 
-  if (queue.length === 0) {
+  if (queue.length === 0 && approved.length === 0) {
     return (
       <div className={styles.queueEmpty}>
         <p className={styles.queueIntro}>{t("admin:members.verify.empty")}</p>
@@ -81,44 +110,18 @@ export function AdminVerifyQueue() {
       </p>
 
       <div className={styles.queueGrid}>
+        {approved.map((item) => (
+          <FadeIn key={item.id}>
+            <JoinRequestApprovedCard item={item} />
+          </FadeIn>
+        ))}
         {queue.map((item, i) => (
           <FadeIn key={item.id} delay={i * 60}>
-            <div
-              className={`${styles.queueCard} ${leaving.has(item.id) ? styles.queueCardLeaving : ""}`}
-            >
-              <div className={styles.queueHead}>
-                <AdminAvatar
-                  initials={item.initials}
-                  tone={item.tone}
-                  size="md"
-                  src={portrait(item.name)}
-                />
-                <div>
-                  <div className={styles.queueName}>{item.name}</div>
-                  <div className={styles.queueVouch}>{item.mutualLine}</div>
-                  <div className={styles.queueApplied}>{item.appliedLine}</div>
-                </div>
-              </div>
-
-              <p className={styles.queueMsg}>"{item.message}"</p>
-
-              <div className={styles.queueActions}>
-                <Button
-                  variant="ghost"
-                  size="md"
-                  onClick={() => resolve(item, "declined")}
-                >
-                  {t("admin:members.verify.declineCta")}
-                </Button>
-                <Button
-                  variant="jade"
-                  size="md"
-                  onClick={() => resolve(item, "approved")}
-                >
-                  {t("admin:members.verify.approveCta")}
-                </Button>
-              </div>
-            </div>
+            <JoinRequestCard
+              item={item}
+              leaving={leaving.has(item.id)}
+              onDecision={(status) => resolve(item, status)}
+            />
           </FadeIn>
         ))}
       </div>

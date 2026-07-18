@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -25,10 +25,22 @@ export function WorkProfilePage() {
     toggleTransSupport,
     safeOnly,
     setSafeOnly,
+    loading,
+    saving,
+    save: persist,
   } = useWorkProfile();
   const [saved, setSaved] = useState(false);
 
-  function save() {
+  // These are outness-disclosure settings: the success panel may only appear
+  // once the write is confirmed. A failed save rolls the editor back to what the
+  // server still holds (see WorkProfileProvider) and says so plainly, so nobody
+  // walks away believing they're set to "private" when nothing was written.
+  async function save() {
+    const ok = await persist();
+    if (!ok) {
+      showToast(t("economy:workProfile.saveFailedToast"), "error", 7000);
+      return;
+    }
     setSaved(true);
     showToast(t("economy:workProfile.savedToast"), "success");
   }
@@ -81,19 +93,36 @@ export function WorkProfilePage() {
         </header>
 
         <IdentitySection />
-        <ShowUpAtWorkSection
-          outChoice={outAtWork}
-          onOut={setOutAtWork}
-          trans={transSupport}
-          onToggleTrans={toggleTransSupport}
-          safeOnly={safeOnly}
-          onSafeOnly={setSafeOnly}
-        />
+        {/* Never paint the defaults over someone's stored disclosure settings:
+            until the read resolves we don't know whether they're "private". */}
+        {loading ? (
+          <div className={styles.loadingSection}>
+            <SkeletonLine height={18} width="40%" />
+            <SkeletonLine height={64} style={{ marginTop: 16 }} />
+            <SkeletonLine height={64} style={{ marginTop: 12 }} />
+          </div>
+        ) : (
+          <ShowUpAtWorkSection
+            outChoice={outAtWork}
+            onOut={setOutAtWork}
+            trans={transSupport}
+            onToggleTrans={toggleTransSupport}
+            safeOnly={safeOnly}
+            onSafeOnly={setSafeOnly}
+          />
+        )}
         <SkillsFocusSection />
 
         <div className={styles.saveBar}>
-          <Button variant="primary" size="lg" onClick={save}>
-            {t("economy:workProfile.saveCta")}
+          <Button
+            variant="primary"
+            size="lg"
+            disabled={saving || loading}
+            onClick={() => void save()}
+          >
+            {saving
+              ? t("economy:workProfile.savingLabel")
+              : t("economy:workProfile.saveCta")}
           </Button>
         </div>
       </div>

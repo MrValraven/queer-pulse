@@ -11,7 +11,6 @@ import { ConsentProvider } from "./providers/ConsentProvider";
 import { RealtimeProvider } from "../shared/api/realtime";
 import { I18nProvider } from "./providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
-import { AdminRoleProvider } from "./providers/AdminRoleProvider";
 import { ConnectProvider } from "./providers/ConnectProvider";
 import { ConnectionsProvider } from "./providers/ConnectionsProvider";
 import { ProfileProvider } from "./providers/ProfileProvider";
@@ -25,7 +24,6 @@ import { SavedProvider } from "./providers/SavedProvider";
 import { DraftsProvider } from "./providers/DraftsProvider";
 import { SocialProvider } from "./providers/SocialProvider";
 import { CommunityMembershipProvider } from "./providers/CommunityMembershipProvider";
-import { CreatedCommunitiesProvider } from "./providers/CreatedCommunitiesProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
 import { WorkshopsProvider } from "./providers/WorkshopsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
@@ -84,7 +82,6 @@ const RootProviders = composeProviders([
   NavModeProvider,
   I18nProvider,
   ToastProvider,
-  AdminRoleProvider,
 ]);
 
 // Member/session state that only needs to wrap the routed UI (inside the router).
@@ -103,7 +100,6 @@ const DataProviders = composeProviders([
   DraftsProvider,
   SocialProvider,
   CommunityMembershipProvider,
-  CreatedCommunitiesProvider,
   DirectoryListingsProvider,
   WorkshopsProvider,
 ]);

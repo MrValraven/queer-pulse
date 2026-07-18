@@ -17,6 +17,7 @@ import {
   A11yReadingSection,
   A11yInteractionSection,
 } from "./AccessibilityPrefSections";
+import { setSkipLinkPref, useSkipLinkPref } from "./skipLinkPref";
 import a11yStyles from "./AccessibilityPrefSections.module.css";
 
 const noRef: RefCallback<HTMLElement> = () => {};
@@ -41,14 +42,19 @@ export function ProfileThemePane({ onChange }: { onChange: () => void }) {
 export function AccessibilityPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  // Reduce motion is the one live, persisted preference; the rest are unbacked.
+  // Reduce motion and the skip link are the live, persisted preferences (each
+  // backed by its own store, since the thing they change renders outside this
+  // page); the rest are still unbacked.
   const { reduceMotion, setReduceMotion } = useReduceMotion();
+  const skipLink = useSkipLinkPref();
   const [prefs, setPrefs] = useState<A11yPrefs>(DEFAULT_PREFS);
-  const merged = { ...prefs, reduceMotion };
+  const merged = { ...prefs, reduceMotion, skipLink };
 
   function toggle(key: keyof A11yPrefs) {
     if (key === "reduceMotion") {
       setReduceMotion((current) => !current);
+    } else if (key === "skipLink") {
+      setSkipLinkPref((current) => !current);
     } else {
       setPrefs((p) => ({ ...p, [key]: !p[key] }));
     }
@@ -57,6 +63,7 @@ export function AccessibilityPane({ onChange }: { onChange: () => void }) {
 
   function resetAll() {
     setPrefs(DEFAULT_PREFS);
+    setSkipLinkPref(DEFAULT_PREFS.skipLink);
     setReduceMotion(false);
     showToast(t("settings:personalisation.accessibility.resetToast"), "info");
   }

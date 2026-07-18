@@ -93,7 +93,13 @@ export interface ModBulkInput {
 export interface AuditEntryDTO {
   id: string;
   reportId: string;
-  actorId: string;
+  /**
+   * NULL once the acting moderator has exercised their right to erasure — the
+   * audit row deliberately outlives the account (see the backend's
+   * AddDeletionErasureSupport migration), so the action trail survives even
+   * though the actor no longer does. `actorName` reads "Deleted member" then.
+   */
+  actorId: string | null;
   actorName: string;
   action: ModActionCode | "created" | "appeal_upheld" | "appeal_overturned";
   reasonCode?: ReasonCode;

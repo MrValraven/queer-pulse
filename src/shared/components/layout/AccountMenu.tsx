@@ -32,9 +32,9 @@ import {
 } from "../../../app/providers/navModeContext";
 import { routes, modPanel } from "../../../app/routeMap";
 import {
-  useAdminRole,
+  useTeamRole,
   DEMO_MOD_SLUG,
-  type AdminRole,
+  type TeamRole,
 } from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { currentUser, fullName } from "../../../features/members/data/members";
@@ -177,7 +177,7 @@ export function AccountMenu({
   const initials =
     initialsProp ?? (profile ? nameInitials(name) : currentUser.initials);
   const { demoMode, available, toggle } = useDemoMode();
-  const { role, setRole } = useAdminRole();
+  const { role, setRole, canSwitch } = useTeamRole();
   const { navMode, setNavMode } = useNavMode();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -309,45 +309,7 @@ export function AccountMenu({
                   </Link>
                 );
               })}
-              {role === "staff" && (
-                <>
-                  <Link
-                    to={routes.magazineEditor}
-                    role="menuitem"
-                    className={styles.item}
-                    onClick={() => setOpen(false)}
-                  >
-                    <FiLayout aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>
-                      {t("shared:accountMenu.staff.magazineEditor")}
-                    </span>
-                  </Link>
-                  <Link
-                    to={routes.admin}
-                    role="menuitem"
-                    className={styles.item}
-                    onClick={() => setOpen(false)}
-                  >
-                    <FiShield aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>
-                      {t("shared:accountMenu.staff.admin")}
-                    </span>
-                  </Link>
-                </>
-              )}
-              {role === "mod" && (
-                <Link
-                  to={modPanel(DEMO_MOD_SLUG)}
-                  role="menuitem"
-                  className={styles.item}
-                  onClick={() => setOpen(false)}
-                >
-                  <FiTool aria-hidden className={styles.itemIcon} />
-                  <span className={styles.itemLabel}>
-                    {t("shared:accountMenu.mod.modTools")}
-                  </span>
-                </Link>
-              )}
+              <RoleLinks role={role} onNavigate={() => setOpen(false)} />
             </div>
             <AccountMenuControls
               demoMode={demoMode}
@@ -355,6 +317,7 @@ export function AccountMenu({
               toggle={toggle}
               role={role}
               setRole={setRole}
+              canSwitch={canSwitch}
               navMode={navMode}
               setNavMode={setNavMode}
             />
@@ -380,22 +343,84 @@ export function AccountMenu({
   );
 }
 
-/** Prototype-only controls at the foot of the menu: demo data toggle, the
- * simulated team role switch, and the navigation-layout switch. */
+/**
+ * The role-gated entries in the account menu. `role` is the real `useAuth().role`
+ * in live mode (simulated only in demo), so these links now appear exactly to the
+ * people the route gate and the backend RolesGuard will actually let through —
+ * previously every member saw them and every one of them bounced to the homepage.
+ */
+function RoleLinks({
+  role,
+  onNavigate,
+}: {
+  role: TeamRole;
+  onNavigate: () => void;
+}) {
+  const { t } = useTranslation();
+  if (role === "admin") {
+    return (
+      <>
+        <Link
+          to={routes.magazineEditor}
+          role="menuitem"
+          className={styles.item}
+          onClick={onNavigate}
+        >
+          <FiLayout aria-hidden className={styles.itemIcon} />
+          <span className={styles.itemLabel}>
+            {t("shared:accountMenu.staff.magazineEditor")}
+          </span>
+        </Link>
+        <Link
+          to={routes.admin}
+          role="menuitem"
+          className={styles.item}
+          onClick={onNavigate}
+        >
+          <FiShield aria-hidden className={styles.itemIcon} />
+          <span className={styles.itemLabel}>
+            {t("shared:accountMenu.staff.admin")}
+          </span>
+        </Link>
+      </>
+    );
+  }
+  if (role === "moderator") {
+    return (
+      <Link
+        to={modPanel(DEMO_MOD_SLUG)}
+        role="menuitem"
+        className={styles.item}
+        onClick={onNavigate}
+      >
+        <FiTool aria-hidden className={styles.itemIcon} />
+        <span className={styles.itemLabel}>
+          {t("shared:accountMenu.mod.modTools")}
+        </span>
+      </Link>
+    );
+  }
+  return null;
+}
+
+/** Controls at the foot of the menu: the demo data toggle, the navigation-layout
+ * switch, and — in demo mode only — the simulated team role switch. */
 function AccountMenuControls({
   demoMode,
   available,
   toggle,
   role,
   setRole,
+  canSwitch,
   navMode,
   setNavMode,
 }: {
   demoMode: boolean;
   available: boolean;
   toggle: () => void;
-  role: AdminRole;
-  setRole: (role: AdminRole) => void;
+  role: TeamRole;
+  setRole: (role: TeamRole) => void;
+  canSwitch: boolean;
   navMode: NavMode;
   setNavMode: (mode: NavMode) => void;
 }) {
@@ -428,32 +453,38 @@ function AccountMenuControls({
             : t("shared:accountMenu.controls.noApi")}
         </span>
       </button>
-      <div className={styles.divider} />
-      <div className={styles.roleLabel}>
-        {t("shared:accountMenu.controls.actingAs")}
-      </div>
-      <div
-        className={styles.roleSwitch}
-        role="group"
-        aria-label={t("shared:accountMenu.controls.simulatedRoleAria")}
-      >
-        {(["staff", "mod", "member"] as const).map((r) => (
-          <button
-            key={r}
-            type="button"
-            className={[styles.roleBtn, role === r && styles.roleBtnActive]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setRole(r)}
+      {/* Demo-only: in live mode the team role is the real `useAuth().role`,
+          which the backend RolesGuard enforces — nothing to switch. */}
+      {canSwitch && (
+        <>
+          <div className={styles.divider} />
+          <div className={styles.roleLabel}>
+            {t("shared:accountMenu.controls.actingAs")}
+          </div>
+          <div
+            className={styles.roleSwitch}
+            role="group"
+            aria-label={t("shared:accountMenu.controls.simulatedRoleAria")}
           >
-            {r === "staff"
-              ? t("shared:accountMenu.controls.roleStaff")
-              : r === "mod"
-                ? t("shared:accountMenu.controls.roleMod")
-                : t("shared:accountMenu.controls.roleMember")}
-          </button>
-        ))}
-      </div>
+            {(["admin", "moderator", "member"] as const).map((r) => (
+              <button
+                key={r}
+                type="button"
+                className={[styles.roleBtn, role === r && styles.roleBtnActive]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setRole(r)}
+              >
+                {r === "admin"
+                  ? t("shared:accountMenu.controls.roleStaff")
+                  : r === "moderator"
+                    ? t("shared:accountMenu.controls.roleMod")
+                    : t("shared:accountMenu.controls.roleMember")}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
       <div className={styles.divider} />
       <div className={styles.roleLabel}>
         {t("shared:accountMenu.controls.navigation")}

@@ -231,6 +231,7 @@ export const system: Catalog = {
   "inviteLanding.card.validFor_other": "Valid for {count} days",
   "inviteLanding.card.expires": "Invite expires {date}",
   "inviteLanding.card.googleCta": "Register with Google",
+  "inviteLanding.card.under18BackLabel": "Back to the invitation",
   "inviteLanding.card.consent":
     "By continuing you agree to our <termsLink>terms of use</termsLink> and <privacyLink>privacy policy</privacyLink>.",
   "inviteLanding.card.alreadyMember": "Already have an account? <a>Sign in</a>",

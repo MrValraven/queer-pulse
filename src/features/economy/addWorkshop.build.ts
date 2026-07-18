@@ -11,6 +11,10 @@ import type {
   WorkshopTier,
   WorkshopTutor,
 } from "./workshops.data";
+import {
+  composeWeeksPhrase,
+  composeWorkshopFormat,
+} from "./api/workshops.adapters";
 
 /** Member tints include "auth", which ImageSlot doesn't take — fall back safely. */
 function toImageTint(tint: WorkshopTutor["tint"]): ImageSlotTint {
@@ -125,17 +129,16 @@ export function buildWorkshop(
     ? draft.venue.split("·").map((p) => p.trim())
     : [draft.venue.trim(), ""];
 
-  const weeksPhrase = t("economy:addWorkshop.build.weeks", { count: weeks });
+  // Shared with the API adapter so the demo build and a live row can never
+  // disagree about how the format line reads (DTO departure 2).
+  const weeksPhrase = composeWeeksPhrase(weeks, t);
 
   return {
     id,
     cat: draft.cat,
     title: draft.title.trim(),
     titleEm: "",
-    format: t("economy:addWorkshop.build.format", {
-      weeks: weeksPhrase,
-      size,
-    }),
+    format: composeWorkshopFormat(weeks, size, t),
     mode: draft.mode,
     blurb: draft.blurb.trim(),
     heroPlaceholder: t("economy:addWorkshop.build.heroPlaceholder", {

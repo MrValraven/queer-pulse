@@ -23,8 +23,10 @@ export function ForumPage() {
   const { demoMode } = useDemoMode();
   const simLoading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
-  // Thread source: demo returns the full mock, live calls GET /forum/threads.
+  // Thread source: demo returns the full mock as one terminal page, live pages
+  // through GET /forum/threads via the "Load more" button below the list.
   const threadsQuery = useThreads(cat);
+  const { hasNextPage, fetchNextPage, isFetchingNextPage } = threadsQuery;
   const createThread = useCreateThread();
   const loading = demoMode ? simLoading : threadsQuery.isLoading;
   const [sort, setSort] = useState<"top" | "new">("top");
@@ -57,8 +59,8 @@ export function ForumPage() {
   }
 
   const allThreads = useMemo(
-    () => [...extraThreads, ...(threadsQuery.data ?? [])],
-    [extraThreads, threadsQuery.data],
+    () => [...extraThreads, ...threadsQuery.threads],
+    [extraThreads, threadsQuery.threads],
   );
 
   // Sidebar post counts derived from the real threads (members' posts), so they
@@ -176,6 +178,21 @@ export function ForumPage() {
                 onShowAll={() => setCat("all")}
                 onCompose={() => openCompose()}
               />
+
+              {hasNextPage && (
+                <div className={styles.loadMore}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={isFetchingNextPage}
+                    onClick={fetchNextPage}
+                  >
+                    {isFetchingNextPage
+                      ? t("forum:threadList.loadingMore")
+                      : t("forum:threadList.loadMoreCta")}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

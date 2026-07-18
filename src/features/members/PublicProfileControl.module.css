@@ -62,6 +62,20 @@
   margin-bottom: 22px;
 }
 
+/* Honest scope note: public profiles don't exist on the open web yet, so the
+   switch records a preference rather than publishing anything. Quiet, not an
+   error state — a jade rule marks it as reassurance, not a warning. */
+.notYet {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(var(--cream-rgb), 0.7);
+  max-width: 60ch;
+  text-wrap: pretty;
+  border-left: 2px solid var(--jade);
+  padding-left: 14px;
+  margin: -8px 0 22px;
+}
+
 /* Checklist (locked state) */
 .list {
   list-style: none;

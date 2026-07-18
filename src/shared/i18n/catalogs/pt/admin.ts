@@ -132,6 +132,23 @@ export const admin: Catalog = {
   "members.verify.appliedRecently": "Pedido feito há pouco",
   "members.verify.appliedDaysAgo_one": "Pedido feito há {count} dia",
   "members.verify.appliedDaysAgo_other": "Pedido feito há {count} dias",
+  "members.verify.unnamedApplicant": "Nova candidatura",
+  "members.verify.emailLabel": "Email",
+  "members.verify.cityLabel": "Cidade",
+  "members.verify.noCity": "Não indicada",
+  "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
+  "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
+  // Aprovado: a plataforma não envia qualquer email — dizê-lo com clareza.
+  "members.verify.approvedLabel": "Recebide na comunidade",
+  "members.verify.sendYourself":
+    "Não foi enviado nenhum email. Envia tu esta ligação de convite para {email} — é a única forma de entrarem.",
+  "members.verify.copyLink": "Copiar ligação",
+  "members.verify.copiedLink": "Copiada",
+  "members.verify.copiedToast": "Ligação de convite copiada — agora envia-lha",
+  "members.verify.copyFailed":
+    "Não foi possível copiar a ligação — seleciona-a e copia",
+  "members.verify.noInviteCode":
+    "Não veio nenhum código de convite. Atualiza a fila ou pede a um admin para o reemitir.",
 
   "members.drawer.verifiedChip": "Pessoa verificada",
   "members.drawer.verifyCta": "Verificar",

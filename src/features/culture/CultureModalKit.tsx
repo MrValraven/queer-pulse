@@ -119,14 +119,18 @@ export function ChipSelect({
   selected,
   onToggle,
   optionLabel,
+  labelledBy,
 }: {
   options: readonly string[];
   selected: Set<string>;
   onToggle: (value: string) => void;
   optionLabel?: (option: string) => string;
+  /** `id` of the visible field label that names this group — without it the
+   *  group is announced as an anonymous "group". */
+  labelledBy?: string;
 }) {
   return (
-    <div className={styles.chips} role="group">
+    <div className={styles.chips} role="group" aria-labelledby={labelledBy}>
       {options.map((opt) => {
         const on = selected.has(opt);
         return (

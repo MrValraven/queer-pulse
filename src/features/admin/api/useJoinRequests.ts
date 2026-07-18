@@ -15,18 +15,28 @@ export interface JoinRequestView {
   name: string;
   initials: string;
   tone: AvatarTone;
+  /** How to reach the applicant — there's no account behind them yet. */
+  email: string;
+  /** Optional on the form; null when they left it blank. */
+  city: string | null;
   /** The applicant's own words — why they want in. */
   message: string;
-  /** "Named Inês Martins as a mutual" line, or the no-mutual fallback. */
-  mutualLine: string;
+  /** "18+ confirmed on 1 Jul 2026 · Terms v2.4" — the attestation record. */
+  ageLine: string;
   /** Pre-formatted "Applied 2 days ago". */
   appliedLine: string;
+  /** Set once approved; the reviewer builds the invite link from it. */
+  inviteCode: string | null;
 }
 
 const TONES: AvatarTone[] = ["coral", "jade", "violet", "amber", "plum"];
 
-function initialsOf(first: string, last: string): string {
-  return `${(first[0] ?? "").toUpperCase()}${(last[0] ?? "").toUpperCase()}`;
+/** First letters of the first two words of the applicant's own free-text name. */
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
+  return `${first}${last}`.toUpperCase();
 }
 
 /** Stable tone from a string id (deterministic across renders). */
@@ -37,10 +47,10 @@ function toneFor(id: string): AvatarTone {
 }
 
 /**
- * i18n note: this composes chrome sentences from data (a mutual's name, a
- * relative day count) at render time, in both demo and live mode alike — so
- * the phrases themselves must be catalog keys, not baked English, exactly
- * like the gatherings `api/events.adapters.ts` precedent.
+ * i18n note: this composes chrome sentences from data (a relative day count, the
+ * attestation line) at render time, in both demo and live mode alike — so the
+ * phrases themselves must be catalog keys, not baked English, exactly like the
+ * gatherings `api/events.adapters.ts` precedent.
  */
 function appliedLine(iso: string, t: TFunction): string {
   const then = new Date(iso).getTime();
@@ -50,20 +60,41 @@ function appliedLine(iso: string, t: TFunction): string {
   return t("admin:members.verify.appliedDaysAgo", { count: days });
 }
 
-function dtoToView(dto: JoinRequestDTO, t: TFunction): JoinRequestView {
-  const a = dto.applicant;
-  const first = a?.firstName ?? "New";
-  const last = a?.lastName ?? "applicant";
+/** The 18+ self-attestation as a line a reviewer can act on. */
+function ageLine(dto: JoinRequestDTO, t: TFunction, locale: string): string {
+  const at = new Date(dto.ageAttestedAt);
+  if (Number.isNaN(at.getTime())) {
+    return t("admin:members.verify.ageAttestedUnknown", {
+      version: dto.termsVersion,
+    });
+  }
+  return t("admin:members.verify.ageAttested", {
+    date: at.toLocaleDateString(locale, {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+    version: dto.termsVersion,
+  });
+}
+
+export function dtoToView(
+  dto: JoinRequestDTO,
+  t: TFunction,
+  locale: string,
+): JoinRequestView {
+  const name = dto.name.trim() || t("admin:members.verify.unnamedApplicant");
   return {
     id: dto.id,
-    name: `${first} ${last}`.trim(),
-    initials: initialsOf(first, last) || "?",
+    name,
+    initials: initialsOf(name) || "?",
     tone: toneFor(dto.id),
+    email: dto.email,
+    city: dto.city,
     message: dto.message,
-    mutualLine: a?.mutual
-      ? t("admin:members.verify.mutualLine", { name: a.mutual })
-      : t("admin:members.verify.noMutual"),
+    ageLine: ageLine(dto, t, locale),
     appliedLine: appliedLine(dto.createdAt, t),
+    inviteCode: dto.inviteCode,
   };
 }
 
@@ -81,7 +112,7 @@ export function useJoinRequests(status: JoinRequestDTO["status"] = "pending") {
       const rows = demoMode
         ? JOIN_REQUESTS.filter((r) => r.status === status)
         : await getJoinRequests(status);
-      return rows.map((row) => dtoToView(row, t));
+      return rows.map((row) => dtoToView(row, t, language));
     },
   });
 }

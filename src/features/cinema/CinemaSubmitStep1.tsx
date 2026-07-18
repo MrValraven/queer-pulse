@@ -199,6 +199,7 @@ function Step1CreativeFields({ form }: { form: SubmitForm }) {
         }
       >
         <ChipSelect
+          label={t("cinema:submit.form.step1.identityTags.label")}
           options={IDENTITY_TAGS.map((tag) => ({
             value: tag.value,
             label: t(tag.labelKey),

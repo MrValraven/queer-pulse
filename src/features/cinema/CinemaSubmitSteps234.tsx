@@ -43,6 +43,7 @@ export function CinemaSubmitStep2({ form }: { form: SubmitForm }) {
 
       <FormField label={t("cinema:submit.form.step2.captionLangs.label")}>
         <ChipSelect
+          label={t("cinema:submit.form.step2.captionLangs.label")}
           options={CAPTION_LANGS.map((captionLang) => ({
             value: captionLang.value,
             label: t(captionLang.labelKey),
@@ -70,6 +71,7 @@ export function CinemaSubmitStep2({ form }: { form: SubmitForm }) {
 
       <FormField label={t("cinema:submit.form.step2.signTracks.label")}>
         <ChipSelect
+          label={t("cinema:submit.form.step2.signTracks.label")}
           options={SIGN_TRACKS.map((signTrack) => ({
             value: signTrack.value,
             label: t(signTrack.labelKey),

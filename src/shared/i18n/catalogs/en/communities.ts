@@ -37,6 +37,8 @@ export const communities: Catalog = {
   "discover.empty.filtered.description":
     "No communities in this category yet. Switch back to all communities to see everything across Lisbon.",
   "discover.empty.filtered.cta": "Clear filters",
+  "discover.loadingMore": "Loading…",
+  "discover.loadMoreCta": "Load more communities",
   "discover.outro.title": "Not finding the right <em>space?</em>",
   "discover.outro.sub":
     "Suggest a community to add to the directory, or post on the board to find people who share your interest — and maybe start something together.",
@@ -142,6 +144,7 @@ export const communities: Catalog = {
 
   // ── Discussion tab (living hub) ───────────────────────────────────────────
   "detail.discussion.searchAria": "Search discussions",
+  "detail.discussion.filterAria": "Filter discussions",
   "detail.discussion.searchPlaceholder": "Search this community's discussions…",
   "detail.discussion.chip.all": "All",
   "detail.discussion.chip.pinned": "Pinned",
@@ -206,6 +209,8 @@ export const communities: Catalog = {
   "detail.pulse.replyAction": "Reply",
   "detail.pulse.replyPlaceholder": "Write a reply…",
   "detail.pulse.sharedToast": "Shared with the community.",
+  "detail.pulse.loadingMore": "Loading…",
+  "detail.pulse.loadMoreCta": "Load more posts",
 
   // ── About + Resources tab (living hub) ────────────────────────────────────
   "detail.aboutResources.houseRules": "House rules",

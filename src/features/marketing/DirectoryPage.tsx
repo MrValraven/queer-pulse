@@ -127,6 +127,7 @@ export function DirectoryPage() {
             />
           </div>
           <FilterChips
+            label={t("marketing:directory.filterAria")}
             options={CATS.map((c) => ({ value: c.c, label: t(c.labelKey) }))}
             value={cat}
             onChange={setCat}

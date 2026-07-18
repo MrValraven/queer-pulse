@@ -2,11 +2,9 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
-import { useAcceptInvite } from "./api/useAcceptInvite";
 import { consumePendingInvite, readInviteWelcome } from "./api/pendingInvite";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { AuthLayout } from "./AuthLayout";
@@ -30,8 +28,6 @@ function buildErrors(
 export function CreateAccountPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const acceptInvite = useAcceptInvite();
   // Who invited them, stashed by the invite landing — falls back to the mock.
   const [welcome] = useState(readInviteWelcome);
   const inviter = welcome?.inviter ?? FALLBACK_INVITER;
@@ -51,27 +47,19 @@ export function CreateAccountPage() {
   const touch = (key: keyof Touched) =>
     setTouched((t) => ({ ...t, [key]: true }));
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!isValid) {
       setTouched({ first: true, last: true });
       return;
     }
-    // Account created — redeem the invite that brought them here (if any) before
-    // onboarding, promoting them to an active member. Best-effort in this prototype.
-    const code = consumePendingInvite();
-    if (code) {
-      try {
-        await acceptInvite.mutateAsync(code);
-      } catch (err) {
-        showToast(
-          err instanceof Error
-            ? err.message
-            : t("auth:createAccount.error.inviteRedeemFailed"),
-          "error",
-        );
-      }
-    }
+    // This page is a prototype surface: the real live-mode journey is
+    // /invite/:code → Google → /onboarding, and the invite is redeemed during
+    // sign-up. It used to POST /invites/:code/accept here, which is now a
+    // removed route (see invite.api.ts) — so that call was a live 404 redeeming
+    // an invite sign-up had already consumed. Clear the stashed code so it
+    // can't leak into a later flow, and move on.
+    consumePendingInvite();
     navigate(routes.onboarding);
   }
 

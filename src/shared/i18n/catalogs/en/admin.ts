@@ -120,6 +120,22 @@ export const admin: Catalog = {
   "members.verify.appliedRecently": "Applied recently",
   "members.verify.appliedDaysAgo_one": "Applied {count} day ago",
   "members.verify.appliedDaysAgo_other": "Applied {count} days ago",
+  "members.verify.unnamedApplicant": "New applicant",
+  "members.verify.emailLabel": "Email",
+  "members.verify.cityLabel": "City",
+  "members.verify.noCity": "Not given",
+  "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
+  "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
+  // Approved: no email is ever sent by the platform — say so, plainly.
+  "members.verify.approvedLabel": "Welcomed in",
+  "members.verify.sendYourself":
+    "Nothing has been emailed. Send this invite link to {email} yourself — it's the only way they get in.",
+  "members.verify.copyLink": "Copy link",
+  "members.verify.copiedLink": "Copied",
+  "members.verify.copiedToast": "Invite link copied — now send it to them",
+  "members.verify.copyFailed": "Could not copy the link — select it and copy",
+  "members.verify.noInviteCode":
+    "No invite code came back. Refresh the queue, or ask an admin to reissue it.",
 
   "members.drawer.verifiedChip": "Verified member",
   "members.drawer.verifyCta": "Verify",

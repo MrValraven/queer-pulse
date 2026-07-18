@@ -197,6 +197,12 @@
   border-color: rgba(var(--line-rgb), 0.3);
 }
 
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
 .moment {
   display: flex;
   align-items: center;

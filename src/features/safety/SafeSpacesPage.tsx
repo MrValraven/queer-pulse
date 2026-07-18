@@ -101,6 +101,7 @@ export function SafeSpacesPage() {
 
           <FilterChips
             className={styles.filters}
+            label={t("safety:spaces.dir.filterAria")}
             options={FILTERS.map((f) => ({
               value: f.id,
               label: t(f.labelKey),

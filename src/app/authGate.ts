@@ -196,7 +196,7 @@ export function useIsLinkVisible(): (href: string) => boolean {
  * null when the visitor is allowed through (logged in, or on a public route).
  */
 export function useAuthGateRedirect(): string | null {
-  const { loggedIn, checking, role } = useAuth();
+  const { loggedIn, checking, role, status } = useAuth();
   const { demoMode } = useDemoMode();
   const { pathname, search } = useLocation();
 
@@ -206,9 +206,22 @@ export function useAuthGateRedirect(): string | null {
   if (checking) return null;
 
   if (loggedIn) {
+    // A deactivated member — paused, or inside the 30-day erasure grace window —
+    // is hidden everywhere and 403s on every ActiveMemberGuard route. Letting
+    // them through to /feed would render an app where nothing loads and no
+    // screen explains why. Send them to the delete-account page instead: it
+    // hosts both the pending-erasure banner (with the cancel button that is the
+    // only way back out of grace) and the reactivation copy. Demo mode has no
+    // real status, so this never fires there.
+    //
+    // Note the backend auto-reactivates a *deactivated* member on Google
+    // sign-in, so in practice this catches the erasure-grace case.
+    if (!demoMode && status === "deactivated") {
+      return pathname === routes.deleteAccount ? null : routes.deleteAccount;
+    }
     // Role-gate admin/mod surfaces. Demo mode is intentionally an explorable
     // sandbox where the admin panel is reachable (its team role is simulated via
-    // AdminRoleProvider, which defaults to "staff"), so role isn't enforced
+    // the demo-only role store in features/admin/adminRole.ts), so role isn't enforced
     // there — but that sandbox exists for local development only. Requiring DEV
     // as well as demo means no shipped build can ever reach the bypass, even one
     // deliberately built with VITE_DEMO=1: `import.meta.env.DEV` is inlined false

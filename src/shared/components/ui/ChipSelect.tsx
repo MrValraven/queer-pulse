@@ -29,7 +29,20 @@ function chipClass(on: boolean, tone: ChipTone, tint: ChipTint) {
     .join(" ");
 }
 
-interface FilterChipsProps {
+/**
+ * Naming the `role="group"`. A group with no accessible name is announced as a
+ * bare "group", so a screen-reader user hears the chips but not what they
+ * filter. Prefer `labelledBy` pointing at the heading/label already on screen
+ * over `label`, which duplicates that text into the accessibility tree.
+ */
+interface ChipGroupLabelling {
+  /** Accessible name for the chip group, when nothing visible labels it. */
+  label?: string;
+  /** `id` of the visible heading/label that names this group. Wins over `label`. */
+  labelledBy?: string;
+}
+
+interface FilterChipsProps extends ChipGroupLabelling {
   options: readonly (string | ChipOption)[];
   value: string;
   onChange: (value: string) => void;
@@ -50,11 +63,15 @@ export function FilterChips({
   tone = "plum",
   tint = "light",
   className,
+  label,
+  labelledBy,
 }: FilterChipsProps) {
   return (
     <div
       className={[styles.row, className].filter(Boolean).join(" ")}
       role="group"
+      aria-label={labelledBy ? undefined : label}
+      aria-labelledby={labelledBy}
     >
       {normalize(options).map((o) => (
         <button
@@ -71,7 +88,7 @@ export function FilterChips({
   );
 }
 
-interface ChipSelectProps {
+interface ChipSelectProps extends ChipGroupLabelling {
   options: readonly (string | ChipOption)[];
   selected: Set<string>;
   onToggle: (value: string) => void;
@@ -94,11 +111,15 @@ export function ChipSelect({
   tone = "plum",
   tint = "light",
   className,
+  label,
+  labelledBy,
 }: ChipSelectProps) {
   return (
     <div
       className={[styles.row, className].filter(Boolean).join(" ")}
       role="group"
+      aria-label={labelledBy ? undefined : label}
+      aria-labelledby={labelledBy}
     >
       {normalize(options).map((o) => {
         const on = selected.has(o.value);

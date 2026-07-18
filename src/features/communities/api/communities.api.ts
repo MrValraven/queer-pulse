@@ -83,6 +83,14 @@ export interface JoinResultDTO {
   request: CommunityJoinRequestDTO | null;
 }
 
+/** One row of `GET /me/communities` — the viewer's complete membership list. */
+export interface MyCommunityDTO {
+  slug: string;
+  name: string;
+  role: RosterRole;
+  joinedAt: string;
+}
+
 export interface CreateCommunityDto {
   name: string;
   purpose: string;
@@ -193,3 +201,21 @@ export const reviewJoinRequest = (
 
 export const removeMember = (slug: string, memberSlug: string) =>
   apiDelete<void>(`/communities/${slug}/members/${memberSlug}`);
+
+/** PATCH /communities/:slug/members/:memberSlug — promote to mod / demote to member. */
+export const setMemberRole = (
+  slug: string,
+  memberSlug: string,
+  role: "member" | "mod",
+) =>
+  apiPatch<{ slug: string; memberSlug: string; role: "member" | "mod" }>(
+    `/communities/${slug}/members/${memberSlug}`,
+    { role },
+  );
+
+/** GET /me/communities — every community the viewer belongs to. Deliberately a
+ *  bare array, not paginated: it's the whole membership map in one call, which
+ *  is the only way to get it (filtering paginated community pages can only ever
+ *  reconstruct the subset of pages already fetched). */
+export const getMyCommunities = () =>
+  apiGet<MyCommunityDTO[]>("/me/communities");

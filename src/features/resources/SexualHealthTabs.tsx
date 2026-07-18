@@ -61,6 +61,7 @@ export function TestingTab() {
 
       <FilterChips
         className={styles.clinicFilters}
+        label={t("resources:sexualHealth.testing.filterAria")}
         options={clinicFilterOptions}
         value={clinicFilter}
         onChange={(v) => setClinicFilter(v as ClinicType | "all")}

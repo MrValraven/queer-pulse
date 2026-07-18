@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { usePrefersReducedMotion } from "../../shared/hooks";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { SystemStateShell } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useInvite } from "../auth/api/useInvite";
-import { useAcceptInvite } from "../auth/api/useAcceptInvite";
 import {
   rememberInviteWelcome,
   rememberPendingInvite,
 } from "../auth/api/pendingInvite";
 import { OnboardingPage } from "../auth/OnboardingPage";
+import { Under18Notice } from "../auth/Under18Notice";
 import { InviteExpiredPage } from "./InviteExpiredPage";
 import { buildLoaderSteps } from "./inviteLanding.data";
 import {
@@ -26,16 +26,18 @@ type Phase = "sealed" | "opening" | "invite";
 export function InviteLandingPage() {
   const { code } = useParams<{ code: string }>();
   const prefersReduced = usePrefersReducedMotion();
-  const { showToast } = useToast();
   const { t } = useTranslation();
   const { signIn } = useAuth();
   const { demoMode } = useDemoMode();
   const { data: invite, isLoading, isError } = useInvite(code);
-  const acceptInvite = useAcceptInvite();
 
   const [phase, setPhase] = useState<Phase>("sealed");
   const [step, setStep] = useState(0);
   const [joined, setJoined] = useState(false);
+  // 18+ self-attestation (Terms §eligibility). The backend REJECTS a new account
+  // without it, so the Google button stays locked until the box is ticked.
+  const [is18, setIs18] = useState(false);
+  const [under18, setUnder18] = useState(false);
 
   // Once a valid invite resolves, stash what the join flow needs to survive the
   // hop into onboarding: the code (to redeem) and the welcome payload (inviter +
@@ -83,6 +85,19 @@ export function InviteLandingPage() {
 
   if (joined) return <OnboardingPage />;
 
+  // Someone told us they're not 18 yet — the humane block, never a dead end.
+  // Under18Notice is a bare panel, so it needs the same frame the expired-invite
+  // state uses to sit correctly on the page.
+  if (under18)
+    return (
+      <SystemStateShell>
+        <Under18Notice
+          onBack={() => setUnder18(false)}
+          backLabel={t("system:inviteLanding.card.under18BackLabel")}
+        />
+      </SystemStateShell>
+    );
+
   function openInvitation() {
     setPhase(prefersReduced ? "invite" : "opening");
   }
@@ -90,21 +105,20 @@ export function InviteLandingPage() {
   // "Register with Google" authenticates through the same OAuth call the sign-in
   // page uses. Live mode → a real /auth/google redirect carrying the invite code
   // (so the backend redeems it during signup — a new Google user with no invite
-  // is rejected) and a redirect into /onboarding on return. Demo mode has no real
-  // Google, so redeem now and reveal onboarding inline, as the prototype does.
-  async function joinWithGoogle() {
+  // is rejected), the 18+ attestation (likewise rejected without it), and a
+  // redirect into /onboarding on return.
+  function joinWithGoogle() {
+    // Belt-and-braces: the button is disabled until `is18`, but never hand the
+    // backend a signup it will bounce.
+    if (!is18) return;
     if (!demoMode) {
-      signIn("/onboarding", invite!.code);
+      signIn("/onboarding", invite!.code, true);
       return;
     }
-    try {
-      await acceptInvite.mutateAsync(invite!.code);
-    } catch (err) {
-      showToast(
-        err instanceof Error ? err.message : "Could not redeem this invite",
-        "error",
-      );
-    }
+    // Demo has no real Google and no network. This used to call the invite
+    // accept endpoint, which never did anything here (its demo branch resolved
+    // ok without a request) and no longer exists — sign-up is now the single
+    // redemption point. Just reveal onboarding, as the prototype does.
     setJoined(true);
   }
 
@@ -113,5 +127,13 @@ export function InviteLandingPage() {
   if (phase === "opening")
     return <InviteOpeningView view={invite} step={step} />;
 
-  return <InviteCardView view={invite} onGoogle={joinWithGoogle} />;
+  return (
+    <InviteCardView
+      view={invite}
+      onGoogle={joinWithGoogle}
+      is18={is18}
+      onIs18Change={setIs18}
+      onUnder18={() => setUnder18(true)}
+    />
+  );
 }

@@ -13,10 +13,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { currentUser, getMember } from "../members/data/members";
 import { clearInviteWelcome, readInviteWelcome } from "./api/pendingInvite";
-import { useAgeAttestation } from "./api/useAgeAttestation";
 import { AgeAttestation } from "./AgeAttestation";
 import { Under18Notice } from "./Under18Notice";
-import { logError } from "../../shared/observability/logger";
 import {
   NORMS,
   INTENTS,
@@ -246,17 +244,17 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const [agreed, setAgreed] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
-  const attest = useAgeAttestation();
 
-  // This is the load-bearing age gate: Google can't tell us how old anyone is, so
-  // completing this step is what records the 18+ attestation and lets a `pending`
-  // account become `active`. Best-effort — a failed POST doesn't trap onboarding.
-  async function handleContinue() {
-    try {
-      await attest.mutateAsync({});
-    } catch (err) {
-      logError(err, { where: "onboarding.ageAttestation" });
-    }
+  // The 18+ attestation is recorded at SIGN-UP now (it rides the OAuth `state`
+  // param; the backend refuses to create an account without it), so by the time
+  // anyone reaches onboarding it is already on their user row. This step used to
+  // POST /auth/onboarding, an endpoint that was never built — it 404'd silently
+  // inside a try/catch on every signup.
+  //
+  // The checkbox stays deliberately: it is the one place someone who clicked
+  // through the gate too fast can correct themselves and reach Under18Notice.
+  // It confirms; it no longer records.
+  function handleContinue() {
     onNext();
   }
 
@@ -304,11 +302,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
         onUnder18={() => setUnder18(true)}
       />
       <div className={styles.nav}>
-        <Button
-          onClick={handleContinue}
-          disabled={!agreed || !is18 || attest.isPending}
-          aria-busy={attest.isPending}
-        >
+        <Button onClick={handleContinue} disabled={!agreed || !is18}>
           {t("auth:onboarding.stepNorms.continue")}
         </Button>
         <button type="button" className={styles.back} onClick={onBack}>
@@ -331,7 +325,7 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
   return (
     <>
       <div className={styles.eye}>{stepLabel}</div>
-      <div className={styles.h}>
+      <div className={styles.h} id="onboarding-intents-heading">
         <Translation
           i18nKey="auth:onboarding.stepIntents.heading"
           components={{ em: <em /> }}
@@ -342,6 +336,7 @@ export function StepIntents({ stepLabel, onNext, onBack }: StepProps) {
       </div>
       <ChipSelect
         className={styles.chips}
+        labelledBy="onboarding-intents-heading"
         options={INTENTS.map((intent) => ({
           value: intent.value,
           label: t(intent.labelKey),

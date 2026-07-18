@@ -186,8 +186,11 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label>{t("culture:postProject.lookingForLabel")}</label>
+            <label id="pp-looking-for-label">
+              {t("culture:postProject.lookingForLabel")}
+            </label>
             <ChipSelect
+              labelledBy="pp-looking-for-label"
               options={PROJECT_LOOKING_FOR}
               selected={selected}
               onToggle={toggle}
@@ -371,8 +374,11 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label>{t("culture:submitPlaylist.vibeLabel")}</label>
+            <label id="pl-vibe-label">
+              {t("culture:submitPlaylist.vibeLabel")}
+            </label>
             <ChipSelect
+              labelledBy="pl-vibe-label"
               options={PLAYLIST_VIBES}
               selected={selected}
               onToggle={toggle}

@@ -1,33 +1,44 @@
 import { useMutation } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { createJoinRequest, type JoinRequestDTO } from "./joinRequest.api";
+import {
+  createJoinRequest,
+  type CreateJoinRequestResult,
+} from "./joinRequest.api";
 import { TERMS_VERSION } from "./ageAttestation.api";
 
 /** What the request-invite form hands the mutation. */
 export interface JoinRequestVars {
+  /** How the applicant wants to be called. */
+  name: string;
+  /** Required — with no account behind this flow it's the only way back to them. */
+  email: string;
+  /** Optional free-text city. */
+  city?: string;
   message: string;
 }
 
 /**
  * Submit a prospective member's request to join (RequestInvitePage). Demo mode
  * simulates a successful submission locally so the "You're on the list" screen
- * shows with no backend; the age fields are accepted and echoed but never sent.
- * Live mode POSTs /join-requests with the 18+ attestation. Pending-ok: usable by
- * a signed-in-but-not-yet-approved member.
+ * shows with no backend. Live mode POSTs the **public** /join-requests route
+ * with name/email/city plus the 18+ attestation — no session needed, since the
+ * applicant has no account yet.
  */
 export function useCreateJoinRequest() {
   const { demoMode } = useDemoMode();
-  return useMutation<JoinRequestDTO, Error, JoinRequestVars>({
-    mutationFn: async ({ message }) => {
+  return useMutation<CreateJoinRequestResult, Error, JoinRequestVars>({
+    mutationFn: async ({ name, email, city, message }) => {
       if (demoMode) {
         return {
           id: "demo-join-request",
-          message,
           status: "pending",
           createdAt: new Date().toISOString(),
         };
       }
       return createJoinRequest({
+        name,
+        email,
+        city: city?.trim() || undefined,
         message,
         ageAttested: true,
         termsVersion: TERMS_VERSION,

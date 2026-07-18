@@ -6,10 +6,11 @@ import {
   EmptyState,
   ImageSlot,
   Reveal,
+  SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useWorkshops } from "../../app/providers/WorkshopsProvider";
+import { useWorkshop } from "./api/useWorkshop";
 import {
   WorkshopAbout,
   WorkshopNeeds,
@@ -22,8 +23,24 @@ import styles from "./WorkshopPage.module.css";
 export function WorkshopPage() {
   const { t } = useTranslation();
   const { id } = useParams();
-  const { getWorkshop } = useWorkshops();
-  const workshop = id ? getWorkshop(id) : undefined;
+  // `id` is the workshop's slug — the backend's identifier (DTO departure 1).
+  const { workshop, isLoading } = useWorkshop(id);
+
+  // Don't flash "not found" at someone who deep-linked while the fetch is out.
+  if (isLoading) {
+    return (
+      <PageShell>
+        <div className={styles.page}>
+          <SkeletonLine height={26} width="45%" />
+          <SkeletonLine height={16} style={{ marginTop: 14 }} />
+          <SkeletonLine
+            height={220}
+            style={{ marginTop: 20, borderRadius: 18 }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
 
   if (!workshop) {
     return (

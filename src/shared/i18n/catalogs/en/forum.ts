@@ -95,6 +95,8 @@ export const forum: Catalog = {
   "threadList.pinnedBadge": "Pinned",
   "threadList.upvoteAria": "Upvote",
   "threadList.removeUpvoteAria": "Remove upvote",
+  "threadList.loadingMore": "Loading…",
+  "threadList.loadMoreCta": "Load more posts",
 
   // ── Shared reply-count phrasing (thread card meta + reply sort bar) ─────
   repliesCount_one: "{formatted} reply",
@@ -142,6 +144,8 @@ export const forum: Catalog = {
   "replies.opBadge": "OP",
   "replies.unlikeAria": "Unlike this reply",
   "replies.likeAria": "Like this reply",
+  "replies.loadingMore": "Loading…",
+  "replies.loadMoreCta": "Load more replies",
 
   // ── ForumAuthor ─────────────────────────────────────────────────────────
   "author.officialTitle": "Official QueerPulse account",

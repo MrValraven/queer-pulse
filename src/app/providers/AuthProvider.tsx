@@ -151,14 +151,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [demoMode]);
 
   const signIn = useCallback(
-    (redirectTo?: string, invite?: string) => {
+    (redirectTo?: string, invite?: string, ageAttested?: boolean) => {
       if (demoMode) {
         setLoggedIn(true);
         setPreparing(true);
         return;
       }
       markSignInPending();
-      redirectToGoogle(redirectTo, invite);
+      redirectToGoogle(redirectTo, invite, ageAttested);
     },
     [demoMode],
   );

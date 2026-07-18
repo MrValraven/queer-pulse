@@ -139,6 +139,25 @@ export const settings: Catalog = {
   "interests.identities.skipped": "Saltado",
   "interests.identities.helper":
     "Seleciona quantas fizerem sentido. Usamos isto para sugerir comunidades e conteúdo relevantes — não para te categorizar.",
+  // ── Descoberta por identidade (IdentitySections.tsx) ────────────────────
+  // Copy que pede uma revelação: diz o que acontece e quem vê, sem incentivar
+  // a resposta. Sem alcance, sem contagens, sem "ajuda os outros a encontrar-te".
+  "discoverable.heading": "Ser encontrade por identidade",
+  "discoverable.helper":
+    "Está desligado a não ser que o ligues. O que ligares aqui fica visível para outros membros com sessão iniciada quando filtram o diretório — e em mais lado nenhum. As tuas identidades continuam fora do teu perfil de qualquer forma.",
+  "discoverable.retract":
+    "Desliga e deixas de aparecer nessas pesquisas de imediato.",
+  "discoverable.rowOn": "Quem filtrar por isto consegue encontrar-te.",
+  "discoverable.rowOff": "Não apareces nestas pesquisas.",
+  "discoverable.toggleLabel": "Encontrável como {label}",
+  "discoverable.empty":
+    "Ainda não há nada aqui. O que acrescentares acima, decides uma de cada vez.",
+  "discoverable.unsaved":
+    "As identidades que acabaste de acrescentar aparecem aqui depois de guardares.",
+  "discoverable.toast.removed": "Já não apareces nessas pesquisas.",
+  "discoverable.error":
+    "Não foi possível guardar — nada mudou. Tenta outra vez daqui a pouco.",
+
   "interests.lookingFor.heading": "O que procuras aqui?",
   "interests.lookingFor.helper": "Seleciona quantas quiseres.",
   "interests.life.heading": "Um pouco sobre a tua vida",
@@ -830,7 +849,7 @@ export const settings: Catalog = {
     "Mantém a barra de navegação sempre visível ao percorreres a página.",
   "a11y.toggle.skipLink.title": "Ligação para saltar para o conteúdo",
   "a11y.toggle.skipLink.desc":
-    "Mostra uma ligação «Saltar para o conteúdo principal» no topo quando pressionas Tab.",
+    "Ligado por predefinição. Pressiona Tab e aparece no topo uma ligação «Saltar para o conteúdo principal», para passares a navegação de uma vez. Desligar remove esse atalho — a ligação fica escondida até receber foco, por isso deixá-la ligada não te custa nada.",
 
   // ── DeleteAccountPage.tsx / DeleteAccountSection.tsx / DeleteAccountSections.tsx
   // — o fluxo de saída. Precisão acima de estilo (zona de perigo).

@@ -23,10 +23,13 @@ export function ThreadPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   const numericId = Number(id);
-  // Detail source: demo returns the scripted mock, live fetches meta + posts.
+  // Detail source: demo returns the scripted mock, live fetches meta + a cursor
+  // page of posts (further pages append via the replies "Load more" button).
   const threadQuery = useThread(Number.isFinite(numericId) ? numericId : 0);
   const thread =
-    threadQuery.data ?? THREADS.find((t) => String(t.id) === id) ?? THREADS[0]!;
+    threadQuery.thread ??
+    THREADS.find((t) => String(t.id) === id) ??
+    THREADS[0]!;
   const postReply = useReply(thread.id);
   const loading = demoMode ? simLoading : threadQuery.isLoading;
 
@@ -137,6 +140,9 @@ export function ThreadPage() {
             likedReplies={likedReplies}
             toggleReplyLike={toggleReplyLike}
             onFocusComposer={() => replyBoxRef.current?.focus()}
+            hasNextPage={threadQuery.hasNextPage}
+            fetchNextPage={threadQuery.fetchNextPage}
+            isFetchingNextPage={threadQuery.isFetchingNextPage}
           />
 
           <ThreadComposer

@@ -48,7 +48,14 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
   color: rgba(var(--cream-rgb), 0.85);
+}
+/* Says plainly that public profiles aren't open yet — quieter than the label
+   it follows, so it reads as context rather than a warning. */
+.ownerNote {
+  color: rgba(var(--cream-rgb), 0.6);
+  font-size: 12.5px;
 }
 .pill {
   display: inline-flex;

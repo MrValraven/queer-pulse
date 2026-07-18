@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import type { LivingCommunity } from "./community.model";
 import { useJoinRequests } from "./api/useJoinRequests";
 import {
   useRemoveMember,
   useReviewJoinRequest,
+  useSetMemberRole,
 } from "./api/useCommunityMutations";
 import {
   ModJoinRequests,
@@ -17,9 +17,9 @@ import {
 export function ModToolsTab({ living }: { living: LivingCommunity }) {
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const { approveRequest, promoteToMod } = useCommunityMembership();
   const reviewRequest = useReviewJoinRequest(living.slug);
   const removeMember = useRemoveMember(living.slug);
+  const setMemberRole = useSetMemberRole(living.slug);
 
   // Join requests come from the join-requests endpoint (demo returns the mock
   // queue synchronously). A local resolved-id set owns the moderator's in-session
@@ -36,7 +36,6 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
 
   const resolveRequest = (id: string, name: string, approved: boolean) => {
     setResolvedRequests((prev) => new Set(prev).add(id));
-    if (approved) approveRequest(living.slug);
     reviewRequest.mutate({ id, action: approved ? "approve" : "decline" });
     showToast(
       approved
@@ -57,8 +56,10 @@ export function ModToolsTab({ living }: { living: LivingCommunity }) {
   const memberKey = (slug?: string, name?: string) => slug ?? name ?? "";
   const promote = (slug: string | undefined, name: string) => {
     const key = memberKey(slug, name);
+    // Local list drives the row's badge immediately (same shape as `removed`);
+    // the PATCH is the real change, and its invalidation refetches the roster.
     setPromoted((p) => [...p, key]);
-    promoteToMod(living.slug, key);
+    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "mod" });
     showToast(
       t("communities:detail.modtools.toast.promoted", { name }),
       "success",

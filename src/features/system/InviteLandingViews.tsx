@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { routes } from "../../app/routeMap";
 import type { InviteView } from "../../features/auth/api/useInvite";
+import { AgeAttestation } from "../auth/AgeAttestation";
 import { buildLoaderSteps, WHAT_ITEMS } from "./inviteLanding.data";
 import styles from "./InviteLandingPage.module.css";
 
@@ -155,9 +156,16 @@ export function InviteOpeningView({
 export function InviteCardView({
   view,
   onGoogle,
+  is18,
+  onIs18Change,
+  onUnder18,
 }: {
   view: InviteView;
   onGoogle: () => void;
+  /** Whether the 18+ box is ticked — gates the Google button. */
+  is18: boolean;
+  onIs18Change: (value: boolean) => void;
+  onUnder18: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -250,7 +258,20 @@ export function InviteCardView({
             </div>
           )}
 
-          <button type="button" className={styles.google} onClick={onGoogle}>
+          <AgeAttestation
+            id="invite-age-attestation"
+            confirmed={is18}
+            onConfirmedChange={onIs18Change}
+            onUnder18={onUnder18}
+          />
+
+          <button
+            type="button"
+            className={styles.google}
+            onClick={onGoogle}
+            disabled={!is18}
+            aria-disabled={!is18}
+          >
             <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>
               <path
                 d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"

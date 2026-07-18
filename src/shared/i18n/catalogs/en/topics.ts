@@ -38,6 +38,8 @@ export const topics: Catalog = {
   "feed.filters.resources": "Resources",
   "feed.loadOlder_one": "Load {count} older post",
   "feed.loadOlder_other": "Load {count} older posts",
+  "feed.loadingMore": "Loading…",
+  "feed.loadMoreCta": "Load older posts",
 
   // Post-card kind badges (canonical `PostKind` id stays English; only the
   // rendered label is translated)

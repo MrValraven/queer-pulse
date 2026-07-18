@@ -209,7 +209,10 @@ export const economy: Catalog = {
   "workProfile.sub":
     "Isto controla o que as empresas veem — e o que fica só contigo. Nada aqui é partilhado sem a tua autorização.",
   "workProfile.saveCta": "Guardar perfil de trabalho",
+  "workProfile.savingLabel": "A guardar…",
   "workProfile.savedToast": "Perfil de trabalho guardado",
+  "workProfile.saveFailedToast":
+    "Não conseguimos guardar — as tuas definições ficaram exatamente como estavam. Tenta outra vez daqui a pouco.",
 
   "workProfile.card.meterLabel": "Perfil {percent}% completo",
   "workProfile.card.note":
@@ -346,9 +349,14 @@ export const economy: Catalog = {
   "jobs.empty.showAll": "Mostrar todas as vagas",
   "jobs.empty.clearCategory": "Limpar categoria",
 
+  "jobs.loadingMore": "A carregar…",
+  "jobs.loadMoreCta": "Carregar mais vagas",
+
   "jobs.employers.title": "Empresas queer <em>em que confiamos</em>",
   "jobs.employers.subtitle":
     "Estas organizações são geridas por ou para a comunidade queer. Trabalhar aqui significa que o teu dinheiro fica na rede.",
+  "jobs.employers.loadingMore": "A carregar…",
+  "jobs.employers.loadMoreCta": "Carregar mais empresas",
 
   // ── Distintivos de segurança (vocabulário partilhado) ──────────────────
   "safetyBadge.verified.label": "Verificada como segura",
@@ -740,6 +748,8 @@ export const economy: Catalog = {
   "company.reviews.empty.description":
     "Já trabalhaste aqui ou com esta empresa? Sê a primeira pessoa a contar à próxima pessoa queer como é mesmo.",
   "company.reviews.starsAriaLabel": "{count} em 5",
+  "company.reviews.loadingMore": "A carregar…",
+  "company.reviews.loadMoreCta": "Carregar mais avaliações",
 
   "company.work.intro": "Uma pequena seleção de projetos recentes do estúdio.",
 
@@ -1765,7 +1775,9 @@ export const economy: Catalog = {
   "compareRow.howItPays": "Como paga",
 
   // ── WorkshopsSection / WorkshopPage (+ sidebar / reserve / add modals) ──
-  "workshopsSection.newBadge": "Novo · teu",
+  "workshopsSection.newBadge": "Novo",
+  "workshopsSection.loadMoreCta": "Ver mais workshops",
+  "workshopsSection.loadingMore": "A carregar…",
   "workshopsSection.withTutor": "com <b>{name}</b>",
   "workshopsSection.seatsLeft_one": "<b>{count}</b> lugar disponível",
   "workshopsSection.seatsLeft_other": "<b>{count}</b> lugares disponíveis",
@@ -1850,6 +1862,8 @@ export const economy: Catalog = {
   "addWorkshop.venuePlaceholder": "ex.: Estúdio Graça · Graça",
   "addWorkshop.note":
     "Vamos configurar automaticamente uma tarifa reduzida e uma de solidariedade a partir do teu preço padrão — podes ajustá-las depois. As sessões começam vazias; adiciona o plano semana a semana a partir da página do teu workshop.",
+  "addWorkshop.failedNote":
+    "Não conseguimos publicar agora — nada ficou listado. Os teus dados continuam aqui, por isso tenta outra vez daqui a pouco.",
   "addWorkshop.cancel": "Cancelar",
   "addWorkshop.publishingLabel": "A publicar…",
   "addWorkshop.publishCta": "Publicar workshop",

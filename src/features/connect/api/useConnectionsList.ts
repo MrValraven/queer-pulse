@@ -24,6 +24,13 @@ export interface ConnectionsListResult {
   fetchNextPage: () => void;
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
+  /**
+   * How many entries this tab holds in total — the server `total` from the
+   * paginated envelope in live mode, the exact local count in demo / blocked.
+   * `undefined` only while the first live page is still in flight, i.e. when no
+   * honest number exists yet.
+   */
+  total: number | undefined;
 }
 
 interface ConnPageVM {
@@ -108,6 +115,7 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      total: demoViews.length,
     };
   }
 
@@ -118,5 +126,7 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    // Every page echoes the same server total; take the freshest one.
+    total: query.data?.pages.at(-1)?.total,
   };
 }

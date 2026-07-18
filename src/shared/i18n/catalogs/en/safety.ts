@@ -627,6 +627,7 @@ export const safety: Catalog = {
   "spaces.dir.title": "Verified <em>spaces.</em>",
   "spaces.dir.updated": "Last updated June 2025 · Member-maintained",
   "spaces.dir.nominateCta": "+ Nominate a space",
+  "spaces.dir.filterAria": "Filter spaces by category",
   "spaces.empty.title": "No verified spaces in this category yet",
   "spaces.empty.description":
     "The list grows as members visit and review places. Try another category — or nominate somewhere you already trust, and we'll get it reviewed.",

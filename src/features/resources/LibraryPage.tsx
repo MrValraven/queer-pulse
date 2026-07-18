@@ -39,7 +39,13 @@ export function LibraryPage() {
   const { t } = useTranslation();
   const [cat, setCat] = useState<string>("all");
   const [query, setQuery] = useState("");
-  const { guides, loading: dataLoading } = useLibraryData();
+  const {
+    guides,
+    loading: dataLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useLibraryData();
   const loading = useSimulatedLoad() || dataLoading;
 
   const results = useMemo(() => {
@@ -107,6 +113,7 @@ export function LibraryPage() {
           <Reveal as="div" delay={60}>
             <FilterChips
               className={s.chips}
+              label={t("resources:library.filterAria")}
               options={CATEGORIES.map((category) => ({
                 value: category.id,
                 label: t(category.labelKey),
@@ -145,6 +152,21 @@ export function LibraryPage() {
                   </div>
                 </FadeIn>
               ))}
+            </div>
+          )}
+
+          {hasNextPage && (
+            <div className={s.loadMore}>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isFetchingNextPage}
+                onClick={fetchNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("resources:library.loadingMore")
+                  : t("resources:library.loadMoreCta")}
+              </Button>
             </div>
           )}
 

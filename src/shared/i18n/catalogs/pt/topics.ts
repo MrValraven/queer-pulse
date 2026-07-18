@@ -25,6 +25,8 @@ export const topics: Catalog = {
   "feed.filters.resources": "Recursos",
   "feed.loadOlder_one": "Carregar {count} publicação mais antiga",
   "feed.loadOlder_other": "Carregar {count} publicações mais antigas",
+  "feed.loadingMore": "A carregar…",
+  "feed.loadMoreCta": "Carregar publicações mais antigas",
 
   "postKind.asking": "Pergunta",
   "postKind.recommend": "Recomendação",

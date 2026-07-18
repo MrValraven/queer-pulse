@@ -5,6 +5,7 @@ import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Thread as ThreadData } from "./communityDetails";
 import type { LivingCommunity } from "./community.model";
 import type { CommunityRole } from "./membership.types";
+import type { PulsePaging } from "./api/useCommunityPosts";
 import { PulseTab } from "./PulseTab";
 import { DiscussionTab } from "./DiscussionTab";
 import { RosterTab } from "./RosterTab";
@@ -22,6 +23,7 @@ export function LivingHubTabs({
   threads,
   isMember,
   role,
+  pulsePaging,
 }: {
   community: Community;
   info: CommunityDetail;
@@ -29,6 +31,7 @@ export function LivingHubTabs({
   threads: ThreadData[];
   isMember: boolean;
   role: CommunityRole | null;
+  pulsePaging: PulsePaging;
 }) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("pulse");
@@ -79,6 +82,7 @@ export function LivingHubTabs({
             community={living}
             name={community.name}
             isMember={isMember}
+            paging={pulsePaging}
           />
         )}
         {active === "discussion" && <DiscussionTab threads={threads} />}

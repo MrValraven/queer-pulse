@@ -40,10 +40,11 @@ export function TherapistSection() {
           <p>{t("resources:mentalHealth.therapists.lead")}</p>
         </Reveal>
         <div className={styles.thFilter}>
-          <span className={styles.thFilterLabel}>
+          <span className={styles.thFilterLabel} id="mh-therapist-lang-label">
             {t("resources:mentalHealth.therapists.filterLabel")}
           </span>
           <FilterChips
+            labelledBy="mh-therapist-lang-label"
             tone="jade"
             value={filter}
             onChange={setFilter}

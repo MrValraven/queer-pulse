@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ChipSelect, ComingSoon } from "../../shared/components/ui";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  DiscoverableIdentitiesSection,
+  PrivateIdentitiesSection,
+} from "./IdentitySections";
 import { Pane, Section, ToggleList, ToggleRow } from "./SettingsControls";
 import {
   AGE_LABELS,
@@ -10,7 +14,6 @@ import {
   DEFAULT_AGE_INDEX,
   DEFAULT_FREQ,
   FREQ_OPTIONS,
-  IDENTITIES,
   LOOKING_FOR,
   READING_PREFS,
 } from "./interests.data";
@@ -19,7 +22,7 @@ import styles from "./InterestsPane.module.css";
 export function InterestsPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfile();
-  const [identitiesSkipped, setIdentitiesSkipped] = useState(false);
+  const uid = useId();
   const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
   const [freq, setFreq] = useState(DEFAULT_FREQ);
   // The slider clamps to AGE_LABELS' bounds, so this is always a hit; the
@@ -36,43 +39,12 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
       }
       sub={t("settings:interests.sub")}
     >
-      <div
-        className={`${styles.prefSection} ${identitiesSkipped ? styles.skipped : ""}`}
-      >
-        <div className={styles.psHead}>
-          {t("settings:interests.identities.heading")}
-          <button
-            type="button"
-            className={styles.psSkip}
-            onClick={() => setIdentitiesSkipped((v) => !v)}
-          >
-            {identitiesSkipped
-              ? t("settings:interests.identities.skipped")
-              : t("settings:interests.identities.skip")}
-          </button>
-        </div>
-        <div className={styles.psHelper}>
-          {t("settings:interests.identities.helper")}
-        </div>
-        {/* IDENTITIES.options are the literal stored value of
-            draft.identities — see the NOTE in interests.data.ts. Left
-            untranslated on purpose. */}
-        <ChipSelect
-          tick={false}
-          options={IDENTITIES.options}
-          selected={new Set(draft.identities)}
-          onToggle={(label) => {
-            const next = draft.identities.includes(label)
-              ? draft.identities.filter((x) => x !== label)
-              : [...draft.identities, label];
-            updateDraft({ identities: next });
-            onChange();
-          }}
-        />
-      </div>
+      <PrivateIdentitiesSection onChange={onChange} />
+      {/* Directly below the chips it reads from — see the doc comment there. */}
+      <DiscoverableIdentitiesSection />
 
       <div className={styles.prefSection}>
-        <div className={styles.psHead}>
+        <div className={styles.psHead} id={`${uid}-lookingFor`}>
           {t("settings:interests.lookingFor.heading")}
         </div>
         <div className={styles.psHelper}>
@@ -83,6 +55,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             untranslated on purpose. */}
         <ChipSelect
           tick={false}
+          labelledBy={`${uid}-lookingFor`}
           options={LOOKING_FOR.options}
           selected={new Set(draft.lookingFor)}
           onToggle={(label) => {

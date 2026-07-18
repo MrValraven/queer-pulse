@@ -1111,6 +1111,7 @@ export const resources: Catalog = {
   "library.hero.anchor.health": "Health",
   "library.hero.anchor.housing": "Housing",
   "library.search.placeholder": "Search guides — pronouns, PrEP, tenancy…",
+  "library.filterAria": "Filter guides by topic",
   "library.category.all": "All guides",
   "library.category.housing": "Housing",
   "library.category.health": "Health",
@@ -1119,6 +1120,8 @@ export const resources: Catalog = {
   "library.category.trans": "Trans life",
   "library.empty": "No guides match that yet — try a different search.",
   "library.readGuideCta": "Read the guide →",
+  "library.loadingMore": "Loading more guides…",
+  "library.loadMoreCta": "Load more guides",
   "library.popularLabel": "Most read:",
   "library.outro.title": "Can't find <em>what you need?</em>",
   "library.outro.sub":
@@ -1157,6 +1160,7 @@ export const resources: Catalog = {
   "sexualHealth.testing.filter.ngo": "NGO",
   "sexualHealth.testing.filter.pharmacy": "Pharmacy",
   "sexualHealth.testing.filter.private": "Private",
+  "sexualHealth.testing.filterAria": "Filter clinics by type",
   "sexualHealth.testing.empty.title": "No clinics of that type listed yet",
   "sexualHealth.testing.empty.description":
     "There are still plenty of welcoming places to get tested. Clear the filter to see every community-reviewed option.",

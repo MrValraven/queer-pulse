@@ -9,7 +9,6 @@ import { ConsentProvider } from "../app/providers/ConsentProvider";
 import { NavModeProvider } from "../app/providers/NavModeProvider";
 import { I18nProvider } from "../app/providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
-import { AdminRoleProvider } from "../app/providers/AdminRoleProvider";
 import { WorkProfileProvider } from "../app/providers/WorkProfileProvider";
 import { EmployerAffiliationProvider } from "../app/providers/EmployerAffiliationProvider";
 import { PostedJobsProvider } from "../app/providers/PostedJobsProvider";
@@ -23,7 +22,6 @@ import { SavedProvider } from "../app/providers/SavedProvider";
 import { DraftsProvider } from "../app/providers/DraftsProvider";
 import { SocialProvider } from "../app/providers/SocialProvider";
 import { CommunityMembershipProvider } from "../app/providers/CommunityMembershipProvider";
-import { CreatedCommunitiesProvider } from "../app/providers/CreatedCommunitiesProvider";
 import { DirectoryListingsProvider } from "../app/providers/DirectoryListingsProvider";
 import { WorkshopsProvider } from "../app/providers/WorkshopsProvider";
 
@@ -47,7 +45,6 @@ const PROVIDERS: ProviderComponent[] = [
   NavModeProvider,
   I18nProvider,
   ToastProvider,
-  AdminRoleProvider,
   WorkProfileProvider,
   EmployerAffiliationProvider,
   PostedJobsProvider,
@@ -61,7 +58,6 @@ const PROVIDERS: ProviderComponent[] = [
   DraftsProvider,
   SocialProvider,
   CommunityMembershipProvider,
-  CreatedCommunitiesProvider,
   DirectoryListingsProvider,
   WorkshopsProvider,
 ];

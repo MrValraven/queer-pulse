@@ -18,7 +18,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import { useMyCommunities } from "../communities/api/useMyCommunities";
 import { communities } from "../homepage/data/communities";
 import { getLiving } from "../communities/livingCommunities.data";
 import { HubPulseCard, type HubPost } from "../communities/HubPulseCard";
@@ -171,7 +171,7 @@ export function FeedPage() {
   const { demoMode } = useDemoMode();
   const [demoLoading, setDemoLoading] = useState(demoMode);
   const [prevDemo, setPrevDemo] = useState(demoMode);
-  const { memberships } = useCommunityMembership();
+  const memberships = useMyCommunities();
   const { blocked, muted } = useSocial();
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfile();

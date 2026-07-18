@@ -35,7 +35,7 @@ export function VolunteerOpportunityPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const { data, isLoading } = useOpportunity(slug);
-  const { data: list } = useOpportunities();
+  const { items: allOpportunities } = useOpportunities();
 
   // `null` means "defer to the server's mySignup"; set explicitly after a
   // successful signup / withdraw so the optimistic UI updates immediately.
@@ -74,7 +74,9 @@ export function VolunteerOpportunityPage() {
   }
   if (!opp) return <Navigate to={routes.volunteer} replace />;
 
-  const alternatives = (list?.items ?? [])
+  // First page only — this sidebar shows at most three suggestions, so it never
+  // needs to pull further pages.
+  const alternatives = allOpportunities
     .filter((o) => o.slug !== opp.slug)
     .slice(0, 3);
 

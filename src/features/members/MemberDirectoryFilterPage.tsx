@@ -72,7 +72,12 @@ export function MemberDirectoryFilterPage() {
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently active");
 
-  const serverTags = filters.identities;
+  // Identity selections go to `identities=`, NOT `tags=`. They used to be sent
+  // as tags, which the backend matched against `profiles.tags` — a skills
+  // vocabulary ('Illustration', 'NestJS') that shares no value with any identity
+  // id, so live mode returned nothing for every selection. `identities=` matches
+  // each member's opt-in published set; members who have not published an
+  // identity are simply not findable by it.
   const {
     items: sourceMembers,
     total: totalMembers,
@@ -80,7 +85,7 @@ export function MemberDirectoryFilterPage() {
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useMembers({ tags: serverTags });
+  } = useMembers({ identities: filters.identities });
 
   // Combine hook loading with simulated skeleton load for the initial render.
   const loading = isLoading || simLoading;

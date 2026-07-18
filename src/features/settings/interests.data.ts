@@ -29,10 +29,36 @@ export const IDENTITIES: ChipGroup = {
     "Two-spirit",
     "Questioning",
     "Ally",
+    // Added alongside the discoverability work: the member directory offers
+    // "QPOC / queer of colour" and "Disabled / chronic illness" as filter
+    // facets, but there was no way to declare either privately — so those two
+    // filters could never have matched anyone. Both are also in the backend's
+    // canonical list (src/profiles/identities.ts).
+    "Queer person of colour",
+    "Disabled or chronically ill",
     "Prefer not to say",
   ],
   defaults: ["Gay", "Bisexual", "Queer"],
 };
+
+/**
+ * "Prefer not to say" is a refusal to disclose. Offering it as something you
+ * can publish to a searchable directory is incoherent — a member who ticked it
+ * to mean "leave me out of this" must never be handed a switch that puts that
+ * refusal into a search index. Mirrors NON_PUBLISHABLE_INTEREST_LABELS on the
+ * backend, which rejects it too.
+ */
+export const NON_PUBLISHABLE_IDENTITIES = ["Prefer not to say"];
+
+/** The identities a member could publish for directory discovery, in their own
+ *  order. Everything else is private-only. */
+export function publishableIdentities(identities: string[]): string[] {
+  return identities.filter(
+    (label) =>
+      IDENTITIES.options.includes(label) &&
+      !NON_PUBLISHABLE_IDENTITIES.includes(label),
+  );
+}
 
 export const LOOKING_FOR: ChipGroup = {
   options: [

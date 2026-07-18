@@ -24,6 +24,65 @@ const ICONS: Record<ToastType, ComponentType> = {
   info: FiInfo,
 };
 
+/**
+ * One live region per politeness level.
+ *
+ * `polite` waits for a pause; `assertive` interrupts. Errors have to interrupt —
+ * a failure announced after everything else the user is reading arrives too late
+ * to act on (WCAG 4.1.3 Status Messages). Both regions render from the first
+ * paint and stay mounted: a live region inserted at announce time is routinely
+ * missed, because assistive tech only watches regions it already knows about.
+ */
+function ToastRegion({
+  politeness,
+  toasts,
+  onAction,
+}: {
+  politeness: "polite" | "assertive";
+  toasts: ToastItem[];
+  onAction: (toast: ToastItem) => void;
+}) {
+  return (
+    <div
+      className={styles.region}
+      aria-live={politeness}
+      aria-atomic="true"
+      role={politeness === "assertive" ? "alert" : "status"}
+    >
+      {toasts.map((toast) => {
+        const Icon = ICONS[toast.type];
+        return (
+          <div
+            key={toast.id}
+            className={[
+              styles.toast,
+              styles[toast.type],
+              toast.leaving && styles.leaving,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <span className={styles.icon} aria-hidden>
+              <Icon />
+            </span>
+            {toast.message}
+            {toast.action && (
+              <button
+                type="button"
+                className={styles.action}
+                onClick={() => onAction(toast)}
+              >
+                <FiRotateCcw aria-hidden />
+                {toast.action.label}
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const nextId = useRef(0);
@@ -63,45 +122,30 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [dismiss],
   );
 
+  const runAction = useCallback(
+    (toast: ToastItem) => {
+      toast.action?.onClick();
+      dismiss(toast.id);
+    },
+    [dismiss],
+  );
+
   const value = useMemo(() => ({ showToast }), [showToast]);
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className={styles.container} aria-live="polite" aria-atomic="true">
-        {toasts.map((toast) => {
-          const Icon = ICONS[toast.type];
-          return (
-            <div
-              key={toast.id}
-              className={[
-                styles.toast,
-                styles[toast.type],
-                toast.leaving && styles.leaving,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <span className={styles.icon} aria-hidden>
-                <Icon />
-              </span>
-              {toast.message}
-              {toast.action && (
-                <button
-                  type="button"
-                  className={styles.action}
-                  onClick={() => {
-                    toast.action?.onClick();
-                    dismiss(toast.id);
-                  }}
-                >
-                  <FiRotateCcw aria-hidden />
-                  {toast.action.label}
-                </button>
-              )}
-            </div>
-          );
-        })}
+      <div className={styles.container}>
+        <ToastRegion
+          politeness="polite"
+          toasts={toasts.filter((toast) => toast.type !== "error")}
+          onAction={runAction}
+        />
+        <ToastRegion
+          politeness="assertive"
+          toasts={toasts.filter((toast) => toast.type === "error")}
+          onAction={runAction}
+        />
       </div>
     </ToastContext.Provider>
   );

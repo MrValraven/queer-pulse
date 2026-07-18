@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { FiCheck, FiCopy } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { FiCheck } from "react-icons/fi";
+import { Button, CopyLinkRow } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -16,20 +14,7 @@ import styles from "./InvitePage.module.css";
 export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
-  const [copied, setCopied] = useState(false);
   const message = buildShareMessage(t, currentUser.first, invite.fullUrl);
-
-  async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(invite.fullUrl);
-      setCopied(true);
-      showToast(t("auth:invite.ready.linkCopied"), "success");
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      showToast(t("auth:invite.ready.copyFailed"), "error");
-    }
-  }
 
   return (
     <div className={`${styles.ready} ${styles.screenIn}`}>
@@ -44,27 +29,16 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
       </h2>
       <p className={styles.readySub}>{t("auth:invite.ready.sub")}</p>
 
-      <div className={styles.readyLinkRow}>
-        <input
-          className={styles.readyLinkField}
-          type="text"
-          readOnly
-          value={invite.url}
-        />
-        <button
-          type="button"
-          className={`${styles.readyCopyBtn} ${copied ? styles.readyCopyBtnDone : ""}`}
-          onClick={copyLink}
-          aria-label={
-            copied
-              ? t("auth:invite.ready.linkCopied")
-              : t("auth:invite.ready.copyLinkAriaLabel")
-          }
-        >
-          {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
-          {copied ? t("auth:common.copied") : t("auth:common.copy")}
-        </button>
-      </div>
+      <CopyLinkRow
+        className={styles.readyLinkRow}
+        tone="plum"
+        value={invite.fullUrl}
+        display={invite.url}
+        copyLabel={t("auth:common.copy")}
+        copiedLabel={t("auth:common.copied")}
+        copiedToast={t("auth:invite.ready.linkCopied")}
+        errorToast={t("auth:invite.ready.copyFailed")}
+      />
 
       <div className={styles.readyShare}>
         <span className={styles.readyShareLabel}>

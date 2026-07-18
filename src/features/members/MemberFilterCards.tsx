@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -46,6 +46,7 @@ export function FiltersSidebar({
   onClearAll: () => void;
 }) {
   const { t } = useTranslation();
+  const uid = useId();
   // Counts are read off the loaded directory, never authored. On a directory
   // nobody has declared into yet, an option simply carries no number.
   const openToCounts = useMemo(() => facetCounts(members, "openTo"), [members]);
@@ -78,8 +79,9 @@ export function FiltersSidebar({
       </div>
 
       <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.hoodTitle")}</h4>
+        <h4 id={`${uid}-hoods`}>{t("members:directory.filter.hoodTitle")}</h4>
         <ChipSelect
+          labelledBy={`${uid}-hoods`}
           options={NEIGHBOURHOODS.map((o) => ({
             value: o.label,
             label: HOOD_LABEL_KEY[o.label]
@@ -157,8 +159,11 @@ export function FiltersSidebar({
       </div>
 
       <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.languagesTitle")}</h4>
+        <h4 id={`${uid}-languages`}>
+          {t("members:directory.filter.languagesTitle")}
+        </h4>
         <ChipSelect
+          labelledBy={`${uid}-languages`}
           options={LANGUAGES.map((o) => o.label)}
           selected={new Set(filters.languages)}
           onToggle={(value) =>

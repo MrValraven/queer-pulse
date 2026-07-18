@@ -201,7 +201,10 @@ export const economy: Catalog = {
   "workProfile.sub":
     "This controls what employers see — and what stays yours. Nothing here is shared without your say-so.",
   "workProfile.saveCta": "Save work profile",
+  "workProfile.savingLabel": "Saving…",
   "workProfile.savedToast": "Work profile saved",
+  "workProfile.saveFailedToast":
+    "We couldn't save that — your settings are still exactly as they were. Try again in a moment.",
 
   "workProfile.card.meterLabel": "Profile {percent}% complete",
   "workProfile.card.note":
@@ -335,9 +338,14 @@ export const economy: Catalog = {
   "jobs.empty.showAll": "Show all roles",
   "jobs.empty.clearCategory": "Clear category",
 
+  "jobs.loadingMore": "Loading…",
+  "jobs.loadMoreCta": "Load more roles",
+
   "jobs.employers.title": "Queer-run employers <em>we trust</em>",
   "jobs.employers.subtitle":
     "These organisations are run by or for the queer community. Working here means your money stays in the network.",
+  "jobs.employers.loadingMore": "Loading…",
+  "jobs.employers.loadMoreCta": "Load more employers",
 
   // ── Safety badges (shared employer-safety vocabulary) ──────────────────
   "safetyBadge.verified.label": "Verified safe",
@@ -718,6 +726,8 @@ export const economy: Catalog = {
   "company.reviews.empty.description":
     "Been here, or worked with them? Be the first to tell the next queer person what it's actually like.",
   "company.reviews.starsAriaLabel": "{count} out of 5",
+  "company.reviews.loadingMore": "Loading…",
+  "company.reviews.loadMoreCta": "Load more reviews",
 
   "company.work.intro": "A small selection of recent projects from the studio.",
 
@@ -1760,7 +1770,11 @@ export const economy: Catalog = {
   // directly into that same stored content (like the pre-seeded workshops'
   // own English mode/category values), so their option lists are left
   // untranslated too, for consistency with the content they produce.
-  "workshopsSection.newBadge": "New · yours",
+  // "New" is now derived from `createdAt` (the backend stores no `added` flag),
+  // so it marks anyone's recent listing — not only the viewer's own.
+  "workshopsSection.newBadge": "New",
+  "workshopsSection.loadMoreCta": "Load more workshops",
+  "workshopsSection.loadingMore": "Loading…",
   "workshopsSection.withTutor": "with <b>{name}</b>",
   "workshopsSection.seatsLeft_one": "<b>{count}</b> seat left",
   "workshopsSection.seatsLeft_other": "<b>{count}</b> seats left",
@@ -1846,6 +1860,8 @@ export const economy: Catalog = {
   "addWorkshop.venuePlaceholder": "e.g. Estúdio Graça · Graça",
   "addWorkshop.note":
     "We'll set up a reduced and a solidarity rate automatically from your standard price — you can tune them later. Sessions start empty; add the week-by-week plan from your workshop page.",
+  "addWorkshop.failedNote":
+    "We couldn't publish that just now — nothing was listed. Your details are still here, so try again in a moment.",
   "addWorkshop.cancel": "Cancel",
   "addWorkshop.publishingLabel": "Publishing…",
   "addWorkshop.publishCta": "Publish workshop",

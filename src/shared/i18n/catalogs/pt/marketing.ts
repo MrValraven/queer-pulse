@@ -806,6 +806,8 @@ export const marketing: Catalog = {
   "partners.section.sub":
     "Ainda não há filtro disponível — aqui está a lista completa.",
   "partners.card.viewCta": "Ver perfil →",
+  "partners.loadingMore": "A carregar mais parceiros…",
+  "partners.loadMoreCta": "Carregar mais parceiros",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
   "partners.why.p1":
     "A QueerPulse não consegue fazer tudo — apoio jurídico, saúde, trabalho com jovens exigem competência dedicada que não temos internamente.",
@@ -1942,6 +1944,7 @@ export const marketing: Catalog = {
   "changelog.hero.titleLine2": "e quando.",
   "changelog.hero.sub":
     "Todas as atualizações da QueerPulse, da mais recente para a mais antiga. Publicamos as alterações aqui para saberes sempre o que é diferente e porquê. Nada acontece sem ficar registado.",
+  "changelog.filterAria": "Filtrar atualizações por tipo",
   "changelog.filter.all": "Todas",
   "changelog.filter.feature": "Funcionalidades",
   "changelog.filter.community": "Comunidade",
@@ -2058,6 +2061,8 @@ export const marketing: Catalog = {
   "volunteer.card.commitLow": "Compromisso baixo",
   "volunteer.card.commitMedium": "Compromisso médio",
   "volunteer.card.expressInterest": "Mostrar interesse →",
+  "volunteer.loadingMore": "A carregar mais oportunidades…",
+  "volunteer.loadMoreCta": "Carregar mais oportunidades",
   "volunteer.outro.title": "Queres ligar-te <em>mais a fundo?</em>",
   "volunteer.outro.sub":
     "Encontra quem já está a trabalhar nas causas que te importam.",
@@ -2647,6 +2652,7 @@ export const marketing: Catalog = {
     "Negócios queer e profissionais queer-friendly em Lisboa. Avaliados pela comunidade, mantidos pela comunidade. Quer tenhas acabado de chegar, quer já cá estejas há anos.",
   "directory.hero.note": "Verificado pela comunidade · atualizado mensalmente",
   "directory.search.placeholder": "Pesquisa por nome, bairro, ou tipo…",
+  "directory.filterAria": "Filtrar lugares por categoria",
   "directory.cat.all": "Tudo",
   "directory.cat.food": "Comida e bebida",
   "directory.cat.design": "Design e artesanato",

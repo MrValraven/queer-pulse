@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCreatedCommunities } from "../../app/providers/CreatedCommunitiesProvider";
+import { useCreatedCommunities } from "./startCommunity/createdCommunities.store";
 import { currentUser } from "../members/data/members";
 import { communities } from "../homepage/data/communities";
 import type { Community } from "../homepage/data/types";

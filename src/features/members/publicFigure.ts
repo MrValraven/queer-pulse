@@ -1,5 +1,4 @@
 import type { Member } from "./data/members";
-import type { PublicContributions } from "./currentUserPublic.data";
 
 /** One requirement toward unlocking a public profile — shown to the member as a
  *  checklist so eligibility reads as something you grow into, not a mystery.
@@ -27,17 +26,28 @@ export interface PublicEligibility {
 const NOW_YEAR = 2026;
 
 /**
+ * How much public work a member has behind them. Deliberately a plain count
+ * rather than the demo `PublicContributions` fixture: eligibility is decided for
+ * real members in live mode, so the caller derives this from the member's own
+ * profile and only falls back to the mock in demo mode (see
+ * `PublicProfileProvider`).
+ */
+export interface ContributionSignals {
+  /** Published writing, hosted open events and other public pieces. */
+  publicPieces: number;
+}
+
+/**
  * Decide whether a member may run a public profile. Public profiles are reserved
  * for members who contribute to the public side of QueerPulse, so eligibility is
  * derived from real signals rather than a numeric level. Pure — no React, no I/O.
  */
 export function evaluatePublicEligibility(
   member: Member,
-  contributions: PublicContributions,
+  contributions: ContributionSignals,
 ): PublicEligibility {
   const yearsOn = NOW_YEAR - Number(member.since);
-  const publicPieces =
-    contributions.writing.length + contributions.hosting.length;
+  const publicPieces = contributions.publicPieces;
 
   const criteria: EligibilityCriterion[] = [
     {

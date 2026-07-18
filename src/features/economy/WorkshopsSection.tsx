@@ -70,8 +70,11 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
 
 export function WorkshopsSection({ active = "all" }: { active?: string }) {
   const { t } = useTranslation();
-  const { workshops } = useWorkshops();
+  const { workshops, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useWorkshops();
   const [adding, setAdding] = useState(false);
+  // Category filtering is client-side over the pages loaded so far, as before —
+  // demo has a single synthetic page, live appends real ones.
   const filtered =
     active === "all" ? workshops : workshops.filter((w) => w.cat === active);
 
@@ -108,6 +111,21 @@ export function WorkshopsSection({ active = "all" }: { active?: string }) {
           </FadeIn>
         ))}
       </div>
+
+      {hasNextPage && (
+        <div className={styles.loadMore}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isFetchingNextPage}
+            onClick={fetchNextPage}
+          >
+            {isFetchingNextPage
+              ? t("economy:workshopsSection.loadingMore")
+              : t("economy:workshopsSection.loadMoreCta")}
+          </Button>
+        </div>
+      )}
 
       {adding && <AddWorkshopModal onClose={() => setAdding(false)} />}
     </div>

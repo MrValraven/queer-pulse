@@ -65,6 +65,15 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
         icon: FiEye,
         labelKey: "settings:nav.item.visibility",
       },
+      // Sits here, next to `visibility`, rather than under Personalisation:
+      // this pane holds the per-identity discoverability switches, and
+      // "Shape what you see" is the wrong frame for a control that decides who
+      // can find YOU. Deciding what others can see of you is a privacy choice.
+      {
+        id: "interests",
+        icon: FiHeart,
+        labelKey: "settings:nav.item.interests",
+      },
       { id: "safety", icon: FiShield, labelKey: "settings:nav.item.safety" },
     ],
   },
@@ -91,11 +100,6 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
         id: "accessibility",
         icon: FiSliders,
         labelKey: "settings:nav.item.accessibility",
-      },
-      {
-        id: "interests",
-        icon: FiHeart,
-        labelKey: "settings:nav.item.interests",
       },
     ],
   },

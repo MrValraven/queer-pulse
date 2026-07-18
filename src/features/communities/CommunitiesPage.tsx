@@ -49,14 +49,18 @@ function CommunityCardSkeleton() {
 
 export function CommunitiesPage() {
   const { t } = useTranslation();
-  const { data, isLoading } = useCommunities();
+  const {
+    items: communities,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useCommunities();
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
   const [filter, setFilter] = useState<"all" | CommunityType>("all");
   const [joining, setJoining] = useState<Community | null>(null);
   const joinMutation = useJoinCommunity(joining?.slug ?? "");
-
-  const communities = useMemo(() => data?.items ?? [], [data]);
 
   const joiningTier = joining
     ? (getLiving(joining.slug)?.accessTier ??
@@ -159,6 +163,21 @@ export function CommunitiesPage() {
                       />
                     </FadeIn>
                   ))}
+            </div>
+          )}
+
+          {!loading && hasNextPage && (
+            <div className={styles.loadMore}>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isFetchingNextPage}
+                onClick={fetchNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("communities:discover.loadingMore")
+                  : t("communities:discover.loadMoreCta")}
+              </Button>
             </div>
           )}
         </div>

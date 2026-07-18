@@ -35,9 +35,8 @@ export function ConnectionsPage() {
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
-  // Provider arrays still drive the tab COUNT badges. In demo they're exact; in
-  // live mode they're a best-effort hint (a full per-tab count fetch would be
-  // wasteful just to badge inactive tabs) — a documented, non-breaking gap.
+  // Provider arrays are the whole truth in demo mode; in live mode they are
+  // permanently empty (the server owns the lists) — see `countFor` below.
   const { connected, incoming, sent } = useConnections();
   const { blocked, isBlocked } = useSocial();
   const { vouched, hasVouched } = useVouch();
@@ -53,6 +52,7 @@ export function ConnectionsPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    total,
   } = useConnectionsList(tab);
   const loading = simulating || fetching;
 
@@ -71,17 +71,59 @@ export function ConnectionsPage() {
     return set.size;
   }, [vouched]);
 
+  /**
+   * Tab count badges.
+   *
+   * Demo: the provider arrays hold every relationship, so all five badges are
+   * exact and render immediately.
+   *
+   * Live: those arrays are empty by design, which is why every badge used to
+   * read 0. The list endpoints already return a `total` in their paginated
+   * envelope, so we remember each tab's total as it arrives and badge from that.
+   * Tabs never opened get NO badge rather than a confident, wrong 0 — better an
+   * absent number than a false one, and it needs no new endpoint. (The blocked
+   * tab has no API counterpart at all; SocialProvider owns it in both modes, so
+   * its count is always exact.)
+   */
+  const [seenTotals, setSeenTotals] = useState<Partial<Record<TabId, number>>>(
+    {},
+  );
+  if (total != null && seenTotals[tab] !== total) {
+    setSeenTotals((prev) => ({ ...prev, [tab]: total }));
+  }
+
+  const demoCounts: Record<TabId, number> = {
+    all: connected.length,
+    incoming: incoming.length,
+    sent: sent.length,
+    blocked: blocked.length,
+    vouched: vouchedCount,
+  };
+  const countFor = (id: TabId): number | undefined => {
+    if (demoMode) return demoCounts[id];
+    if (id === "blocked") return blocked.length;
+    return seenTotals[id];
+  };
+
   const tabs: ConnectionsTab[] = [
-    { id: "all", label: t("connect:tabs.all"), count: connected.length },
+    { id: "all", label: t("connect:tabs.all"), count: countFor("all") },
     {
       id: "incoming",
       label: t("connect:tabs.incoming"),
-      count: incoming.length,
-      accent: incoming.length > 0,
+      count: countFor("incoming"),
+      accent: (countFor("incoming") ?? 0) > 0,
     },
-    { id: "sent", label: t("connect:tabs.sent"), count: sent.length },
-    { id: "blocked", label: t("connect:tabs.blocked"), count: blocked.length },
-    { id: "vouched", label: t("connect:tabs.vouched"), count: vouchedCount },
+    { id: "sent", label: t("connect:tabs.sent"), count: countFor("sent") },
+    {
+      id: "blocked",
+      label: t("connect:tabs.blocked"),
+      count: countFor("blocked"),
+    },
+    {
+      id: "vouched",
+      label: t("connect:tabs.vouched"),
+      count: countFor("vouched"),
+    },
   ];
 
   function onAccept(v: ConnectionView) {

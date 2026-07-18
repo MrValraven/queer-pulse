@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PostCategory, Topic } from "./topics.data";
@@ -16,8 +17,27 @@ const FILTERS: { id: Filter; labelKey: string }[] = [
   { id: "resource", labelKey: "topics:feed.filters.resources" },
 ];
 
-export function TopicFeed({ topic }: { topic: Topic }) {
+/**
+ * The topic's post feed. The "older posts" affordance below the list is
+ * dual-mode: in DEMO it stays the prototype's scripted client-side reveal
+ * (`setLoadedOlder`, gated on the mock's `totalPosts - posts.length`) so the
+ * demo experience is unchanged; in LIVE it really pages `GET
+ * /topics/:slug/posts?cursor=` through `fetchNextPage`, showing only while the
+ * cursor query still has a next page.
+ */
+export function TopicFeed({
+  topic,
+  hasNextPage,
+  fetchNextPage,
+  isFetchingNextPage,
+}: {
+  topic: Topic;
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+}) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [filter, setFilter] = useState<Filter>("all");
   const [loadedOlder, setLoadedOlder] = useState(false);
 
@@ -61,13 +81,29 @@ export function TopicFeed({ topic }: { topic: Topic }) {
           </FadeIn>
         ))}
 
-        {older > 0 && !loadedOlder && (
-          <div className={styles.loadMore}>
-            <Button variant="ghost" onClick={() => setLoadedOlder(true)}>
-              {t("topics:feed.loadOlder", { count: older })}
-            </Button>
-          </div>
-        )}
+        {demoMode
+          ? older > 0 &&
+            !loadedOlder && (
+              <div className={styles.loadMore}>
+                <Button variant="ghost" onClick={() => setLoadedOlder(true)}>
+                  {t("topics:feed.loadOlder", { count: older })}
+                </Button>
+              </div>
+            )
+          : hasNextPage && (
+              <div className={styles.loadMore}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={isFetchingNextPage}
+                  onClick={fetchNextPage}
+                >
+                  {isFetchingNextPage
+                    ? t("topics:feed.loadingMore")
+                    : t("topics:feed.loadMoreCta")}
+                </Button>
+              </div>
+            )}
       </div>
     </main>
   );

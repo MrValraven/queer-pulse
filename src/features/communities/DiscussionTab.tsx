@@ -71,6 +71,7 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
       />
       <FilterChips
         className={styles.chips}
+        label={t("communities:detail.discussion.filterAria")}
         options={chipOptions}
         value={chip}
         onChange={(c) => setChip(c as Chip)}

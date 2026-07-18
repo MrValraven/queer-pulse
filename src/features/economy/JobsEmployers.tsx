@@ -1,6 +1,6 @@
 import { FaRainbow } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { SectionHead } from "../../shared/components/ui";
+import { Button, SectionHead } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -11,12 +11,18 @@ import styles from "./JobsPage.module.css";
 /**
  * The "employers we trust" grid at the foot of the job board. Sources its
  * companies from `useCompanies` — demo returns the mock EMPLOYERS registry
- * (slugs pre-resolved), live calls GET /companies. Renders nothing at all
- * (heading included) while loading, on error, or when there are no employers.
+ * (slugs pre-resolved) as one full page, live calls GET /companies page by page
+ * behind the "Load more" button (which never shows in demo). Renders nothing at
+ * all (heading included) while loading, on error, or with no employers.
  */
 export function JobsEmployers() {
   const { t } = useTranslation();
-  const { data: employers = [] } = useCompanies();
+  const {
+    items: employers,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useCompanies();
 
   if (employers.length === 0) return null;
 
@@ -63,6 +69,20 @@ export function JobsEmployers() {
             </Link>
           ))}
         </div>
+        {hasNextPage && (
+          <div className={styles.loadMore}>
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={isFetchingNextPage}
+              onClick={fetchNextPage}
+            >
+              {isFetchingNextPage
+                ? t("economy:jobs.employers.loadingMore")
+                : t("economy:jobs.employers.loadMoreCta")}
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

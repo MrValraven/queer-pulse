@@ -135,12 +135,31 @@ export interface VouchersResponse {
   vouchers: VoucherDTO[];
 }
 
+/**
+ * `tags` and `identities` are two different filters over two different columns
+ * and must never be conflated — the directory's identity filter used to send its
+ * selections as `tags`, which matched `profiles.tags` (skills: 'Illustration',
+ * 'NestJS') and so returned zero members for every identity, always.
+ *
+ * - `tags` — skills/craft words, matched against `profiles.tags`.
+ * - `identities` — directory identity facet ids (`lesbian`, `transNonBinary`, …),
+ *   matched against each member's OPT-IN published set. Members who have not
+ *   published an identity are not findable by it; the private list is never
+ *   searched.
+ */
 export function getMembers(
-  params: { query?: string; tags?: string[]; page?: number } = {},
+  params: {
+    query?: string;
+    tags?: string[];
+    identities?: string[];
+    page?: number;
+  } = {},
 ) {
   const q = new URLSearchParams();
   if (params.query) q.set("query", params.query);
   if (params.tags?.length) q.set("tags", params.tags.join(","));
+  if (params.identities?.length)
+    q.set("identities", params.identities.join(","));
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
   return apiGet<MembersPage>(`/members${qs ? `?${qs}` : ""}`);

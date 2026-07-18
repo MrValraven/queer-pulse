@@ -32,8 +32,27 @@ function CriterionRow({ criterion }: { criterion: EligibilityCriterion }) {
  */
 export function PublicProfileControl() {
   const { t } = useTranslation();
-  const { enabled, toggle, eligibility } = usePublicProfile();
+  const { enabled, toggle, saving, eligibility } = usePublicProfile();
   const { showToast } = useToast();
+
+  // The preference now persists, but nothing reads it: there is no
+  // unauthenticated profile endpoint, so switching this on publishes nothing.
+  // The toast confirms a *saved preference*, never "you're live on the web" —
+  // and a failed write says so instead of claiming success.
+  async function onToggle() {
+    if (saving) return;
+    const ok = await toggle();
+    if (!ok) {
+      showToast(t("members:publicProfile.control.toast.failed"), "error", 7000);
+      return;
+    }
+    showToast(
+      enabled
+        ? t("members:publicProfile.control.toast.hidden")
+        : t("members:publicProfile.control.toast.live"),
+      enabled ? "info" : "success",
+    );
+  }
 
   if (!eligibility.eligible) {
     const metCount = eligibility.criteria.filter((c) => c.met).length;
@@ -97,6 +116,9 @@ export function PublicProfileControl() {
         <p className={styles.lede}>
           {t("members:publicProfile.control.unlocked.lede")}
         </p>
+        <p className={styles.notYet}>
+          {t("members:publicProfile.control.notYet")}
+        </p>
 
         <div className={styles.switchRow}>
           <div className={styles.switchText}>
@@ -115,15 +137,7 @@ export function PublicProfileControl() {
             tone="jade"
             checked={enabled}
             label={t("members:publicProfile.control.switchLabel")}
-            onChange={() => {
-              toggle();
-              showToast(
-                enabled
-                  ? t("members:publicProfile.control.toast.hidden")
-                  : t("members:publicProfile.control.toast.live"),
-                enabled ? "info" : "success",
-              );
-            }}
+            onChange={() => void onToggle()}
           />
         </div>
 

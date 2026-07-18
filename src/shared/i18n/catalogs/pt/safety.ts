@@ -646,6 +646,7 @@ export const safety: Catalog = {
   "spaces.dir.updated":
     "Última atualização em junho de 2025 · Mantido pela comunidade",
   "spaces.dir.nominateCta": "+ Nomear um espaço",
+  "spaces.dir.filterAria": "Filtrar espaços por categoria",
   "spaces.empty.title": "Ainda não há espaços verificados nesta categoria",
   "spaces.empty.description":
     "A lista cresce à medida que as pessoas visitam e avaliam espaços. Experimenta outra categoria — ou nomeia um lugar em que já confies, e nós tratamos de o fazer avaliar.",

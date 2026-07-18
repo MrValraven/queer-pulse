@@ -41,6 +41,8 @@ export const communities: Catalog = {
   "discover.empty.filtered.description":
     "Ainda não há comunidades nesta categoria. Volta a todas as comunidades para veres tudo por Lisboa.",
   "discover.empty.filtered.cta": "Limpar filtros",
+  "discover.loadingMore": "A carregar…",
+  "discover.loadMoreCta": "Carregar mais comunidades",
   "discover.outro.title": "Não encontraste o <em>espaço certo?</em>",
   "discover.outro.sub":
     "Sugere uma comunidade para o diretório, ou publica no quadro para encontrares pessoas com os mesmos interesses — e talvez comecem algo juntas.",
@@ -146,6 +148,7 @@ export const communities: Catalog = {
 
   // ── Separador Discussão (hub completo) ────────────────────────────────────
   "detail.discussion.searchAria": "Pesquisar discussões",
+  "detail.discussion.filterAria": "Filtrar discussões",
   "detail.discussion.searchPlaceholder":
     "Pesquisar nas discussões desta comunidade…",
   "detail.discussion.chip.all": "Todas",
@@ -212,6 +215,8 @@ export const communities: Catalog = {
   "detail.pulse.replyAction": "Responder",
   "detail.pulse.replyPlaceholder": "Escreve uma resposta…",
   "detail.pulse.sharedToast": "Partilhado com a comunidade.",
+  "detail.pulse.loadingMore": "A carregar…",
+  "detail.pulse.loadMoreCta": "Carregar mais publicações",
 
   // ── Separador Sobre + Recursos (hub completo) ─────────────────────────────
   "detail.aboutResources.houseRules": "Regras da casa",

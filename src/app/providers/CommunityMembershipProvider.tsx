@@ -17,8 +17,6 @@ interface CommunityMembershipContextValue {
   memberships: Record<string, Membership>;
   /** Slugs the user has requested to join (request-tier), awaiting approval. */
   pendingRequests: string[];
-  /** Promoted-to-mod member keys per community (mod-tools simulation). */
-  promotedMods: Record<string, string[]>;
   isMember: (slug: string) => boolean;
   hasRequested: (slug: string) => boolean;
   roleIn: (slug: string) => CommunityRole | null;
@@ -29,10 +27,6 @@ interface CommunityMembershipContextValue {
   /** Found a community — the current user joins as its owner. */
   createOwned: (slug: string) => void;
   leave: (slug: string) => void;
-  /** Approve a pending request → becomes a member (mod-tools sim). */
-  approveRequest: (slug: string) => void;
-  /** Promote a roster member to mod (mod-tools sim). */
-  promoteToMod: (slug: string, memberKey: string) => void;
 }
 
 const CommunityMembershipContext =
@@ -48,7 +42,19 @@ const SEED: Record<string, Membership> = {
   "trans-hub": { role: "mod", joinedAt: "Jan 2025" },
 };
 
-/** Session-level store for the member's community memberships, roles and requests. */
+/**
+ * Session-level store for the member's community memberships, roles and requests
+ * — the DEMO source of truth, and nothing more.
+ *
+ * In live mode the server owns all of this: `myRole` and `myJoinRequestStatus`
+ * ship on every community card and detail, `GET /me/communities` returns the
+ * whole membership map (`useMyCommunities`), and joining / reviewing / removing /
+ * promoting are the mutations in `api/useCommunityMutations.ts`. So the store
+ * starts empty and stays empty live, and the mod-tools simulation that used to
+ * live here (`approveRequest`, `promoteToMod`/`promotedMods`) is gone: it wrote
+ * state nothing outside this file ever read, and its semantics were incoherent
+ * anyway (a mod approving someone else's request marked *themselves* a member).
+ */
 export function CommunityMembershipProvider({
   children,
 }: {
@@ -59,9 +65,6 @@ export function CommunityMembershipProvider({
     () => (demoMode ? SEED : {}),
   );
   const [pendingRequests, setPendingRequests] = useState<string[]>([]);
-  const [promotedMods, setPromotedMods] = useState<Record<string, string[]>>(
-    {},
-  );
 
   // Re-seed when the "Populate platform" toggle flips: the mock memberships are
   // demo-only, so live mode must never show them.
@@ -70,7 +73,6 @@ export function CommunityMembershipProvider({
     setPrevDemo(demoMode);
     setMemberships(demoMode ? SEED : {});
     setPendingRequests([]);
-    setPromotedMods({});
   }
 
   const isMember = useCallback(
@@ -117,28 +119,10 @@ export function CommunityMembershipProvider({
     });
   }, []);
 
-  const approveRequest = useCallback((slug: string) => {
-    setPendingRequests((prev) => prev.filter((s) => s !== slug));
-    setMemberships((prev) =>
-      prev[slug]
-        ? prev
-        : { ...prev, [slug]: { role: "member", joinedAt: "just now" } },
-    );
-  }, []);
-
-  const promoteToMod = useCallback((slug: string, memberKey: string) => {
-    setPromotedMods((prev) => {
-      const cur = prev[slug] ?? [];
-      if (cur.includes(memberKey)) return prev;
-      return { ...prev, [slug]: [...cur, memberKey] };
-    });
-  }, []);
-
   const value = useMemo(
     () => ({
       memberships,
       pendingRequests,
-      promotedMods,
       isMember,
       hasRequested,
       roleIn,
@@ -146,13 +130,10 @@ export function CommunityMembershipProvider({
       requestToJoin,
       createOwned,
       leave,
-      approveRequest,
-      promoteToMod,
     }),
     [
       memberships,
       pendingRequests,
-      promotedMods,
       isMember,
       hasRequested,
       roleIn,
@@ -160,8 +141,6 @@ export function CommunityMembershipProvider({
       requestToJoin,
       createOwned,
       leave,
-      approveRequest,
-      promoteToMod,
     ],
   );
 

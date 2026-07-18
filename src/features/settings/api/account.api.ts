@@ -116,11 +116,15 @@ export interface RequestExportDto {
   categories: string[];
   format: ExportFormat;
   /**
-   * Optional — Art. 20 export is verified out-of-band by the link emailed to the
-   * registered address (the "confirm your identity" step in the UI), so a
-   * step-up token isn't collected on this page.
+   * Required. An Art. 20 export dumps everything we hold on a person, so the
+   * backend gates it with the same step-up token as deletion/deactivation.
+   * `useExportFlow.start()` mints it on the live path — callers never pass it.
+   *
+   * Note the UI's "we email a verification link" copy describes a flow that
+   * does not exist (there is no mail service), so this token is the only real
+   * identity gate on the route.
    */
-  reauthToken?: string;
+  reauthToken: string;
 }
 
 /** POST /account/export — enqueue the archive build job. */

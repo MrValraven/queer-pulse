@@ -141,6 +141,28 @@ export const settings: Catalog = {
   "interests.identities.skipped": "Skipped",
   "interests.identities.helper":
     "Select as many as feel right. We use these to suggest relevant communities and content — not to categorise you.",
+  // ── Per-identity discoverability (IdentitySections.tsx) ─────────────────
+  // This copy asks someone to disclose. It states the consequence and the
+  // audience plainly and does nothing to encourage the answer: no reach, no
+  // counts, no "help others find you". The retraction line is a promise the
+  // backend keeps — the directory reads the published set live, so turning a
+  // switch off takes effect on the next search.
+  "discoverable.heading": "Being found by identity",
+  "discoverable.helper":
+    "Off unless you turn it on. Anything you turn on can be seen by other signed-in members when they filter the member directory — and nowhere else. Your identities stay off your profile either way.",
+  "discoverable.retract":
+    "Turn one off and you stop appearing in those searches straight away.",
+  "discoverable.rowOn": "Members filtering by this can find you.",
+  "discoverable.rowOff": "You don't appear in these searches.",
+  "discoverable.toggleLabel": "Findable as {label}",
+  "discoverable.empty":
+    "Nothing here yet. Whatever you add above, you decide about one at a time.",
+  "discoverable.unsaved":
+    "Identities you've just added show up here once you save.",
+  "discoverable.toast.removed": "You no longer appear in those searches.",
+  "discoverable.error":
+    "Couldn't save that — nothing changed. Try again in a moment.",
+
   "interests.lookingFor.heading": "What are you looking for here?",
   "interests.lookingFor.helper": "Select as many as you like.",
   "interests.life.heading": "A bit about your life",
@@ -813,7 +835,7 @@ export const settings: Catalog = {
     "Keeps the navigation bar always visible while scrolling.",
   "a11y.toggle.skipLink.title": "Skip to content link",
   "a11y.toggle.skipLink.desc":
-    'Shows a "Skip to main content" link at the top when you press Tab.',
+    'On by default. Press Tab and a "Skip to main content" link appears at the top, so you can jump straight past the navigation. Turning it off removes that shortcut — the link stays hidden until it\'s focused, so leaving it on costs you nothing.',
 
   // ── DeleteAccountPage.tsx / DeleteAccountSection.tsx / DeleteAccountSections.tsx
   // — the off-ramp flow. Precision matters (danger zone) — matches the wording

@@ -282,6 +282,117 @@
   margin-top: auto;
 }
 
+/* Applicant facts a reviewer needs: how to reach them, and where they are. */
+.queueFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.queueFact {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.queueFactLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 78px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.queueFactLabel svg {
+  width: 13px;
+  height: 13px;
+}
+
+.queueFactValue {
+  margin: 0;
+  min-width: 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.queueFactValue a {
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.queueFactValue a:hover {
+  text-decoration: underline;
+}
+
+/* The 18+ self-attestation record — quiet, but always visible before deciding. */
+.queueAttest {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--jade);
+}
+
+.queueAttest svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ── Approved: hand the invite link over yourself ────────── */
+.queueCardApproved {
+  border-color: rgba(var(--jade-rgb), 0.4);
+  background: var(--paper);
+}
+
+.queueApprovedTick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+}
+
+.queueApprovedTick svg {
+  width: 13px;
+  height: 13px;
+}
+
+.queueSendNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.queueSendNote svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.queueNoCode {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
 /* ── Drawer ──────────────────────────────────────────────── */
 .dHead {
   display: flex;

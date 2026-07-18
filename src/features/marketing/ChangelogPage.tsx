@@ -220,6 +220,7 @@ export function ChangelogPage() {
 
           <FilterChips
             className={styles.filter}
+            label={t("marketing:changelog.filterAria")}
             options={FILTERS.map((f) => ({
               value: f.id,
               label: t(f.labelKey),

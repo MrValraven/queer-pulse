@@ -8,6 +8,7 @@ import {
   removeMember,
   replyToPost,
   reviewJoinRequest,
+  setMemberRole,
   unreactToPost,
   updatePost,
   type CommunityDetailDTO,
@@ -116,6 +117,7 @@ export function useJoinCommunity(slug: string) {
       queryClient.invalidateQueries({ queryKey: ["communities"] });
       queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
+      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -153,6 +155,31 @@ export function useRemoveMember(slug: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/** PATCH /communities/:slug/members/:memberSlug — promote a roster member to mod
+ *  (or demote back to member). Mod-only; the server is the authority on whether
+ *  the caller may do it. Demo mode keeps the calling component's local
+ *  optimistic list, exactly as the prototype already does. */
+export function useSetMemberRole(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    void,
+    Error,
+    { memberSlug: string; role: "member" | "mod" }
+  >({
+    mutationFn: async ({ memberSlug, role }) => {
+      if (demoMode) return;
+      await setMemberRole(slug, memberSlug, role);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -170,6 +197,7 @@ export function useCreateCommunity() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communities"] });
+      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }

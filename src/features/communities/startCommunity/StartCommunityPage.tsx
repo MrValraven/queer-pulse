@@ -7,13 +7,13 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { useCreatedCommunities } from "../../../app/providers/CreatedCommunitiesProvider";
 import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { currentUserSlug } from "../../members/data/members";
 import { useCreateCommunity } from "../api/useCommunityMutations";
 import { draftToCreateDto } from "../api/communities.adapters";
 import { TOTAL_STEPS, type CreatedCommunity } from "./startCommunity.data";
+import { createCommunityRecord } from "./createdCommunities.store";
 import { useCommunityForm } from "./useCommunityForm";
 import {
   FoundingThread,
@@ -80,7 +80,6 @@ export function StartCommunityPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const { createCommunity } = useCreatedCommunities();
   const { createOwned } = useCommunityMembership();
   const create = useCreateCommunity();
 
@@ -128,7 +127,7 @@ export function StartCommunityPage() {
       return;
     }
     openTimer.current = setTimeout(() => {
-      const record = createCommunity(draft, currentUserSlug);
+      const record = createCommunityRecord(draft, currentUserSlug);
       createOwned(record.slug);
       setCreated(record);
       setPhase("done");

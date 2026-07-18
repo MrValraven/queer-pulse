@@ -4,6 +4,7 @@ import type { IconType } from "react-icons";
 import {
   FiAlertTriangle,
   FiCloudOff,
+  FiHeart,
   FiMail,
   FiUserPlus,
   FiWifiOff,
@@ -46,6 +47,24 @@ function noticeForAuthError(code: string, t: TFunction): Notice {
         Icon: FiUserPlus,
         title: t("auth:signIn.notice.inviteInvalid.title"),
         body: t("auth:signIn.notice.inviteInvalid.body"),
+      };
+    // This address is on the erasure suppression list: they deleted their
+    // account, and silently re-creating it would undo that. Not an error on
+    // their part, so the copy stays warm and points at a human, not a retry.
+    case "account_suppressed":
+      return {
+        Icon: FiHeart,
+        title: t("auth:signIn.notice.accountSuppressed.title"),
+        body: t("auth:signIn.notice.accountSuppressed.body"),
+      };
+    // The backend refused a NEW account because the 18+ box wasn't ticked.
+    // Reachable if someone hits /auth/google directly, bypassing the invite
+    // landing page where the checkbox lives.
+    case "age_attestation_required":
+      return {
+        Icon: FiUserPlus,
+        title: t("auth:signIn.notice.ageAttestationRequired.title"),
+        body: t("auth:signIn.notice.ageAttestationRequired.body"),
       };
     case "access_denied":
       return {

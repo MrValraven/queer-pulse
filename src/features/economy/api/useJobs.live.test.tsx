@@ -56,10 +56,12 @@ describe("useJobs (live mode via MSW)", () => {
     const { useJobs, wrapper } = await loadLive();
     const { result } = renderHook(() => useJobs(), { wrapper });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    const jobs = result.current.data ?? [];
+    const jobs = result.current.jobs;
     expect(jobs).toHaveLength(1);
+    // A bare-array response is one terminal page — no "Load more".
+    expect(result.current.hasNextPage).toBe(false);
     const job = jobs[0]!;
     // The DTO ran through jobCardToJob: derived cat slug, logo, salary string.
     expect(job.slug).toBe("brand-designer");

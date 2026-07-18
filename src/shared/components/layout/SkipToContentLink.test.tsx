@@ -8,7 +8,7 @@ import {
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 
 afterEach(() => {
-  resetSkipLinkPrefForTests(false);
+  resetSkipLinkPrefForTests();
   localStorage.clear();
 });
 
@@ -21,7 +21,7 @@ function renderLink() {
 }
 
 describe("SkipToContentLink", () => {
-  it("renders nothing while the pref is off (the default)", () => {
+  it("renders nothing once the member has opted out", () => {
     resetSkipLinkPrefForTests(false);
     renderLink();
     expect(screen.queryByRole("link")).toBeNull();

@@ -328,3 +328,9 @@
 :global([data-theme="dark"]) .voteUp {
   border-color: rgba(var(--cream-rgb), 0.14);
 }
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}

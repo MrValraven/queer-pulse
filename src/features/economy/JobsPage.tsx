@@ -3,7 +3,12 @@ import { FiBriefcase, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, Reveal, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  Reveal,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -157,7 +162,13 @@ export function JobsPage() {
   const { safeOnly } = useWorkProfile();
   const { postedJobs } = usePostedJobs();
   const { demoMode } = useDemoMode();
-  const jobsQuery = useJobs();
+  const {
+    jobs: liveJobs,
+    isLoading: jobsLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useJobs();
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [showAll, setShowAll] = useState(false);
@@ -169,10 +180,10 @@ export function JobsPage() {
   }, []);
 
   // Demo keeps its own posted-jobs merge + timed skeleton; live reads the query.
-  const loading = demoMode ? localLoading : jobsQuery.isLoading;
+  const loading = demoMode ? localLoading : jobsLoading;
   const allJobs = useMemo(
-    () => (demoMode ? [...postedJobs, ...JOBS] : (jobsQuery.data ?? [])),
-    [demoMode, postedJobs, jobsQuery.data],
+    () => (demoMode ? [...postedJobs, ...JOBS] : liveJobs),
+    [demoMode, postedJobs, liveJobs],
   );
   const byCat = useMemo(
     () =>
@@ -306,6 +317,20 @@ export function JobsPage() {
               visible.map((job) => <JobCard key={job.slug} job={job} />)
             )}
           </div>
+          {hasNextPage && (
+            <div className={styles.loadMore}>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isFetchingNextPage}
+                onClick={fetchNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("economy:jobs.loadingMore")
+                  : t("economy:jobs.loadMoreCta")}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

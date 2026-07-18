@@ -1,7 +1,11 @@
 /**
  * Stashes what the join flow needs to survive the hop from the landing page
- * (`/invite/:code`) through Google auth / `/create-account` into `/onboarding`:
- *  - the invite **code**, redeemed with POST /invites/:code/accept after sign-up;
+ * (`/auth/invite/:code`) through Google auth into `/onboarding`:
+ *  - the invite **code**. NOTE: it is no longer redeemed from here — the code
+ *    rides the OAuth `state` param and the backend consumes it during sign-up
+ *    (`validateInviteForSignup` + `claimInvite`). It is still stashed so the
+ *    prototype /auth/create-account page can clear it, and as the record of
+ *    which invite brought someone in;
  *  - the **welcome** payload (inviter + their vouch) shown on the onboarding
  *    "you're in" step, since the in-memory invite is gone after a full-page auth
  *    redirect.

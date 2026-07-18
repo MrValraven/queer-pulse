@@ -47,6 +47,11 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
 }
+/* Placeholder for the safety section while the stored preferences load — the
+   defaults must never be painted over someone's real disclosure settings. */
+.loadingSection {
+  composes: section;
+}
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 400;

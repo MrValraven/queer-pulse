@@ -56,9 +56,10 @@ export function TopicPage() {
   const { t } = useTranslation();
   const simLoading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
-  // Detail source: demo returns the scripted mock; live fetches meta + posts.
+  // Detail source: demo returns the scripted mock; live fetches meta + a cursor
+  // page of posts (further pages append via TopicFeed's "Load more" button).
   const topicQuery = useTopic(tag);
-  const topic = topicQuery.data ?? getTopic(tag, t);
+  const topic = topicQuery.topic ?? getTopic(tag, t);
   const loading = demoMode ? simLoading : topicQuery.isLoading;
 
   return (
@@ -70,7 +71,12 @@ export function TopicPage() {
           <>
             <TopicHeader topic={topic} />
             <div className={styles.grid}>
-              <TopicFeed topic={topic} />
+              <TopicFeed
+                topic={topic}
+                hasNextPage={topicQuery.hasNextPage}
+                fetchNextPage={topicQuery.fetchNextPage}
+                isFetchingNextPage={topicQuery.isFetchingNextPage}
+              />
               <TopicSidebar topic={topic} />
             </div>
           </>

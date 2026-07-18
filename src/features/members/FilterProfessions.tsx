@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useId, useMemo, useState } from "react";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -30,6 +30,7 @@ export function FilterProfessions({
   onChange: (next: FilterState) => void;
 }) {
   const { t } = useTranslation();
+  const uid = useId();
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
 
@@ -75,7 +76,9 @@ export function FilterProfessions({
   return (
     <>
       <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.whatTheyDoTitle")}</h4>
+        <h4 id={`${uid}-fields`}>
+          {t("members:directory.filter.whatTheyDoTitle")}
+        </h4>
         <SearchInput
           className={styles.searchField}
           placeholder={t("members:directory.filter.searchPlaceholder")}
@@ -85,6 +88,7 @@ export function FilterProfessions({
         />
         {disciplineOptions.length > 0 ? (
           <ChipSelect
+            labelledBy={`${uid}-fields`}
             options={disciplineOptions.map((o) => ({
               value: o.id,
               label: t(o.labelKey),
@@ -105,9 +109,12 @@ export function FilterProfessions({
       </div>
 
       <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.professionTitle")}</h4>
+        <h4 id={`${uid}-professions`}>
+          {t("members:directory.filter.professionTitle")}
+        </h4>
         {professionPool.length > 0 ? (
           <ChipSelect
+            labelledBy={`${uid}-professions`}
             options={professionPool.map((o) => ({
               value: o.id,
               label: t(o.labelKey),

@@ -4,17 +4,21 @@ import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { RequestInviteForm } from "./RequestInviteForm";
+import {
+  RequestInviteForm,
+  type RequestInviteOutcome,
+} from "./RequestInviteForm";
 import { RequestInviteSent } from "./RequestInviteSent";
 import styles from "./auth.module.css";
 
 export function RequestInvitePage() {
   const { t } = useTranslation();
   const [first, setFirst] = useState("");
-  const [sent, setSent] = useState(false);
+  // null until submitted; "already" when the backend told us (409) we have it.
+  const [outcome, setOutcome] = useState<RequestInviteOutcome | null>(null);
 
-  if (sent) {
-    return <RequestInviteSent first={first} />;
+  if (outcome) {
+    return <RequestInviteSent first={first} outcome={outcome} />;
   }
 
   return (
@@ -31,7 +35,7 @@ export function RequestInvitePage() {
       <RequestInviteForm
         first={first}
         setFirst={setFirst}
-        onSent={() => setSent(true)}
+        onSent={setOutcome}
       />
 
       <div className={styles.footer}>

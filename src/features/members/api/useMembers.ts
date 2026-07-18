@@ -27,7 +27,7 @@ interface MembersPageVM {
  * GET /members?page= and appends each page, stopping at the server `total`.
  */
 export function useMembers(
-  params: { query?: string; tags?: string[] } = {},
+  params: { query?: string; tags?: string[]; identities?: string[] } = {},
 ): MembersResult {
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<MembersPageVM>({

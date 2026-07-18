@@ -245,7 +245,9 @@ export const members: Catalog = {
 
   // ── Secções de perfil público (PublicProfileSections) ──────────────────────
   "publicProfile.preview.ownerLabel":
-    "Pré-visualização do teu perfil público · é assim que quem não é da comunidade te vê",
+    "Pré-visualização do teu perfil público · é assim que quem não é da comunidade te veria",
+  "publicProfile.preview.notYet":
+    "Os perfis públicos ainda não estão abertos — esta pré-visualização só é visível para ti.",
   "publicProfile.pill.live": "Ativo",
   "publicProfile.pill.off": "Inativo",
   "publicProfile.preview.backToProfile": "← Voltar ao teu perfil",
@@ -271,15 +273,20 @@ export const members: Catalog = {
   "publicProfile.control.unlocked.title":
     "Já podes partilhar um <em>perfil público.</em>",
   "publicProfile.control.unlocked.lede":
-    "Um perfil público permite que quem ainda não é da comunidade encontre a tua escrita, os teus convívios e uma forma de te contactar — sem abrir o resto da comunidade.",
+    "Um perfil público vai permitir que quem ainda não é da comunidade encontre a tua escrita, os teus convívios e uma forma de te contactar — sem abrir o resto da comunidade.",
+  "publicProfile.control.notYet":
+    "Os perfis públicos ainda não estão abertos, por isso nada aqui é publicado em lado nenhum e ninguém fora da QueerPulse te vê. Guardamos o que escolheres, e é isso que vamos ativar no dia em que abrirem.",
   "publicProfile.control.switchLabel": "Mostrar um perfil público",
   "publicProfile.control.statusOn":
-    "Ativo — qualquer pessoa pode ver o teu perfil público.",
-  "publicProfile.control.statusOff":
-    "Inativo — só quem é da comunidade te encontra.",
-  "publicProfile.control.viewCta": "Ver perfil público",
-  "publicProfile.control.toast.hidden": "O teu perfil público está escondido",
-  "publicProfile.control.toast.live": "O teu perfil público está ativo",
+    "Ativo — guardado para quando os perfis públicos abrirem.",
+  "publicProfile.control.statusOff": "Inativo — nada teu se torna público.",
+  "publicProfile.control.viewCta": "Pré-visualizar o teu perfil público",
+  "publicProfile.control.toast.hidden":
+    "Guardado — o teu perfil fica só para a comunidade",
+  "publicProfile.control.toast.live":
+    "Guardado — vamos ativar isto quando os perfis públicos abrirem",
+  "publicProfile.control.toast.failed":
+    "Não conseguimos guardar — a tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
 
   // ── Critérios de elegibilidade pública (publicFigure.ts) ───────────────────
   "publicProfile.eligibility.contributes.label": "Contribui publicamente",

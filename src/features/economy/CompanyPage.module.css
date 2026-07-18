@@ -617,3 +617,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}

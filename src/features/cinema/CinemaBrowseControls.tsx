@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ChipSelect } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,17 +15,25 @@ import {
 } from "./cinemaBrowse.data";
 import styles from "./CinemaBrowsePage.module.css";
 
+/**
+ * A labelled filter block. The label is already on screen, so the group inside
+ * is named by pointing at it (`aria-labelledby`) rather than repeating the
+ * string — hence the render-prop child, which hands down the label's `id`.
+ */
 function FilterGroup({
   label,
   children,
 }: {
   label: string;
-  children: ReactNode;
+  children: (labelId: string) => ReactNode;
 }) {
+  const labelId = useId();
   return (
     <div className={styles.group}>
-      <div className={styles.gLabel}>{label}</div>
-      {children}
+      <div className={styles.gLabel} id={labelId}>
+        {label}
+      </div>
+      {children(labelId)}
     </div>
   );
 }
@@ -77,79 +85,97 @@ export function CinemaBrowseSidebar({
       </div>
 
       <FilterGroup label={t("cinema:browse.filters.groupAccess")}>
-        <ChipSelect
-          tint="dark"
-          tick={false}
-          options={ACCESS_FILTERS.map((a) => ({
-            value: a.value,
-            label: t(a.labelKey),
-          }))}
-          selected={filters.access}
-          onToggle={(v) => toggleSet("access", v)}
-        />
+        {(labelId) => (
+          <ChipSelect
+            tint="dark"
+            tick={false}
+            options={ACCESS_FILTERS.map((a) => ({
+              value: a.value,
+              label: t(a.labelKey),
+            }))}
+            selected={filters.access}
+            onToggle={(v) => toggleSet("access", v)}
+            labelledBy={labelId}
+          />
+        )}
       </FilterGroup>
 
       <FilterGroup label={t("cinema:browse.filters.groupFormat")}>
-        <ChipSelect
-          tint="dark"
-          tick={false}
-          options={FORMAT_OPTIONS.map((f) => ({
-            value: f.value,
-            label: t(f.labelKey),
-          }))}
-          selected={formatSelected}
-          onToggle={setFormat}
-        />
+        {(labelId) => (
+          <ChipSelect
+            tint="dark"
+            tick={false}
+            options={FORMAT_OPTIONS.map((f) => ({
+              value: f.value,
+              label: t(f.labelKey),
+            }))}
+            selected={formatSelected}
+            onToggle={setFormat}
+            labelledBy={labelId}
+          />
+        )}
       </FilterGroup>
 
       <FilterGroup label={t("cinema:browse.filters.groupMadeBy")}>
-        <ChipSelect
-          tint="dark"
-          tick={false}
-          options={MADE_BY_OPTIONS.map((m) => ({
-            value: m.value,
-            label: t(m.labelKey),
-          }))}
-          selected={filters.madeBy}
-          onToggle={(v) => toggleSet("madeBy", v)}
-        />
+        {(labelId) => (
+          <ChipSelect
+            tint="dark"
+            tick={false}
+            options={MADE_BY_OPTIONS.map((m) => ({
+              value: m.value,
+              label: t(m.labelKey),
+            }))}
+            selected={filters.madeBy}
+            onToggle={(v) => toggleSet("madeBy", v)}
+            labelledBy={labelId}
+          />
+        )}
       </FilterGroup>
       <FilterGroup label={t("cinema:browse.filters.groupCountry")}>
-        <ChipSelect
-          tint="dark"
-          tick={false}
-          options={COUNTRY_OPTIONS.map((c) => ({
-            value: c.value,
-            label: t(c.labelKey),
-          }))}
-          selected={filters.country}
-          onToggle={(v) => toggleSet("country", v)}
-        />
+        {(labelId) => (
+          <ChipSelect
+            tint="dark"
+            tick={false}
+            options={COUNTRY_OPTIONS.map((c) => ({
+              value: c.value,
+              label: t(c.labelKey),
+            }))}
+            selected={filters.country}
+            onToggle={(v) => toggleSet("country", v)}
+            labelledBy={labelId}
+          />
+        )}
       </FilterGroup>
       <FilterGroup label={t("cinema:browse.filters.groupAccessibility")}>
-        <ChipSelect
-          tint="dark"
-          tone="jade"
-          tick={false}
-          options={ACCESSIBILITY_OPTIONS.map((a) => ({
-            value: a.value,
-            label: t(a.labelKey),
-          }))}
-          selected={filters.accessibility}
-          onToggle={(v) => toggleSet("accessibility", v)}
-        />
+        {(labelId) => (
+          <ChipSelect
+            tint="dark"
+            tone="jade"
+            tick={false}
+            options={ACCESSIBILITY_OPTIONS.map((a) => ({
+              value: a.value,
+              label: t(a.labelKey),
+            }))}
+            selected={filters.accessibility}
+            onToggle={(v) => toggleSet("accessibility", v)}
+            labelledBy={labelId}
+          />
+        )}
       </FilterGroup>
       <FilterGroup label={t("cinema:browse.filters.groupMood")}>
-        <ChipSelect
-          tint="dark"
-          tick={false}
-          options={MOOD_OPTIONS.map((m) => ({
-            value: m.value,
-            label: t(m.labelKey),
-          }))}
-          selected={filters.mood}
-          onToggle={(v) => toggleSet("mood", v)}
-        />
+        {(labelId) => (
+          <ChipSelect
+            tint="dark"
+            tick={false}
+            options={MOOD_OPTIONS.map((m) => ({
+              value: m.value,
+              label: t(m.labelKey),
+            }))}
+            selected={filters.mood}
+            onToggle={(v) => toggleSet("mood", v)}
+            labelledBy={labelId}
+          />
+        )}
       </FilterGroup>
     </aside>
   );

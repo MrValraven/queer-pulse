@@ -44,9 +44,7 @@ export function CompanyPage() {
     return [...postedJobs, ...JOBS].filter((j) => j.org === profile.nameText);
   }, [profile, apiOpenRoles, postedJobs]);
 
-  const baseReviews = demoMode
-    ? (profile?.reviews ?? [])
-    : (reviewsQuery.data ?? []);
+  const baseReviews = demoMode ? (profile?.reviews ?? []) : reviewsQuery.reviews;
   const reviews = [...addedReviews, ...baseReviews];
   const reviewCount = (profile?.reviewCount ?? 0) + addedReviews.length;
 
@@ -95,6 +93,9 @@ export function CompanyPage() {
             reviews={reviews}
             reviewCount={reviewCount}
             onWriteReview={() => setWriting(true)}
+            hasMoreReviews={reviewsQuery.hasNextPage}
+            onLoadMoreReviews={reviewsQuery.fetchNextPage}
+            isLoadingMoreReviews={reviewsQuery.isFetchingNextPage}
             tab={tab}
             setTab={setTab}
           />

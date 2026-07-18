@@ -1107,6 +1107,7 @@ export const resources: Catalog = {
   "library.hero.anchor.housing": "Habitação",
   "library.search.placeholder":
     "Pesquisar guias — pronomes, PrEP, arrendamento…",
+  "library.filterAria": "Filtrar guias por tema",
   "library.category.all": "Todos os guias",
   "library.category.housing": "Habitação",
   "library.category.health": "Saúde",
@@ -1116,6 +1117,8 @@ export const resources: Catalog = {
   "library.empty":
     "Ainda não há guias que correspondam — tenta outra pesquisa.",
   "library.readGuideCta": "Ler o guia →",
+  "library.loadingMore": "A carregar mais guias…",
+  "library.loadMoreCta": "Carregar mais guias",
   "library.popularLabel": "Mais lidos:",
   "library.outro.title": "Não encontras <em>o que precisas?</em>",
   "library.outro.sub":
@@ -1155,6 +1158,7 @@ export const resources: Catalog = {
   "sexualHealth.testing.filter.ngo": "ONG",
   "sexualHealth.testing.filter.pharmacy": "Farmácia",
   "sexualHealth.testing.filter.private": "Privado",
+  "sexualHealth.testing.filterAria": "Filtrar clínicas por tipo",
   "sexualHealth.testing.empty.title":
     "Ainda não há clínicas desse tipo na lista",
   "sexualHealth.testing.empty.description":

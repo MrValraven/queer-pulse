@@ -3,12 +3,36 @@ import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { RequestInviteOutcome } from "./RequestInviteForm";
 import { WHAT_NEXT } from "./requestInvite.data";
 import styles from "./auth.module.css";
 
-export function RequestInviteSent({ first }: { first: string }) {
+/**
+ * The confirmation after a request is submitted. `outcome: "already"` is the
+ * 409 case — they'd asked before — and it deliberately lands on this same calm
+ * confirmation rather than an error: nothing went wrong, we simply already have
+ * it. Only the headline and the lead sentence change.
+ */
+export function RequestInviteSent({
+  first,
+  outcome = "sent",
+}: {
+  first: string;
+  outcome?: RequestInviteOutcome;
+}) {
   const { t } = useTranslation();
   const trimmedFirst = first.trim();
+  const already = outcome === "already";
+  const titleKey = already
+    ? "auth:requestInvite.already.title"
+    : "auth:requestInvite.sent.title";
+  const subKey = already
+    ? trimmedFirst
+      ? "auth:requestInvite.already.sub_withName"
+      : "auth:requestInvite.already.sub_noName"
+    : trimmedFirst
+      ? "auth:requestInvite.sent.sub_withName"
+      : "auth:requestInvite.sent.sub_noName";
   return (
     <AuthLayout wide>
       <div className={styles.screenIn} style={{ textAlign: "center" }}>
@@ -27,18 +51,13 @@ export function RequestInviteSent({ first }: { first: string }) {
           </svg>
         </div>
         <h1>
-          <Translation
-            i18nKey="auth:requestInvite.sent.title"
-            components={{ em: <em /> }}
-          />
+          <Translation i18nKey={titleKey} components={{ em: <em /> }} />
         </h1>
         <p
           className={styles.sub}
           style={{ maxWidth: "34ch", margin: "0 auto 28px" }}
         >
-          {trimmedFirst
-            ? t("auth:requestInvite.sent.sub_withName", { name: trimmedFirst })
-            : t("auth:requestInvite.sent.sub_noName")}
+          {t(subKey, { name: trimmedFirst })}
         </p>
 
         <ol className={styles.nextList}>

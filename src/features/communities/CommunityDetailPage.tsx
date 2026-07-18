@@ -177,6 +177,7 @@ export function CommunityDetailPage() {
                 threads={threads}
                 isMember={joined}
                 role={role}
+                pulsePaging={posts}
               />
             ) : (
               <FallbackHubTabs

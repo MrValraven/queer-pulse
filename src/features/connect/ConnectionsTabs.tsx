@@ -4,7 +4,8 @@ import styles from "./ConnectionsPage.module.css";
 export type ConnectionsTab = {
   id: TabId;
   label: string;
-  count: number;
+  /** Omitted when no honest count is known yet — the badge is then not rendered. */
+  count?: number;
   accent?: boolean;
 };
 
@@ -29,13 +30,15 @@ export function ConnectionsTabs({
           onClick={() => onSelect(t.id)}
         >
           {t.label}
-          <span
-            className={[styles.badge, t.accent && styles.badgeAccent]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            {t.count}
-          </span>
+          {t.count != null && (
+            <span
+              className={[styles.badge, t.accent && styles.badgeAccent]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              {t.count}
+            </span>
+          )}
         </button>
       ))}
     </div>

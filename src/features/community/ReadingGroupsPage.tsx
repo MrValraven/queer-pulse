@@ -126,10 +126,11 @@ export function ReadingGroupsPage() {
 
       <div className={styles.filterBar}>
         <div className={styles.fbInner}>
-          <span className={styles.fbLabel}>
+          <span className={styles.fbLabel} id="rg-genre-label">
             {t("community:readingGroups.filterBar.genreLabel")}
           </span>
           <FilterChips
+            labelledBy="rg-genre-label"
             options={GENRE_FILTERS.map((f) => ({
               value: f.id,
               label: t(`community:${f.labelKey}`),
@@ -138,10 +139,11 @@ export function ReadingGroupsPage() {
             onChange={(v) => setGenre(v as Genre | "all")}
           />
           <div className={styles.fbSep} />
-          <span className={styles.fbLabel}>
+          <span className={styles.fbLabel} id="rg-format-label">
             {t("community:readingGroups.filterBar.formatLabel")}
           </span>
           <FilterChips
+            labelledBy="rg-format-label"
             options={FORMAT_FILTERS.map((f) => ({
               value: f.id,
               label: t(`community:${f.labelKey}`),

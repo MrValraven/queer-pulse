@@ -25,7 +25,11 @@ export const DEFAULT_PREFS: A11yPrefs = {
   focusRings: false,
   largeTargets: false,
   stickyNav: true,
-  skipLink: false,
+  // WCAG 2.4.1 (Bypass Blocks) is a baseline, not a taste: the link ships on for
+  // everyone. It's visually hidden until it takes focus, so it costs sighted
+  // mouse users nothing — and a keyboard user shouldn't have to reach Settings
+  // (through the very nav they can't bypass) to get it.
+  skipLink: true,
   textSize: 100,
   colorTheme: "default",
 };

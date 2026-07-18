@@ -46,7 +46,7 @@ export interface CommunityDraft {
   consent: boolean;
 }
 
-/** A community founded this session (persisted in CreatedCommunitiesProvider). */
+/** A community founded this session (demo only — see createdCommunities.store.ts). */
 export interface CreatedCommunity extends CommunityDraft {
   type: CommunityType;
   accessTier: AccessTier;

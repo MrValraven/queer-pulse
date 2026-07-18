@@ -53,18 +53,13 @@ export interface CreatedInviteDTO {
 export const createInvite = (payload: CreateInvitePayload) =>
   apiPost<CreatedInviteDTO>("/invites", payload);
 
-/** What the backend returns once a recipient redeems their invite. */
-export interface AcceptInviteResult {
-  ok: boolean;
-}
-
-/**
- * Redeem an invite for the logged-in recipient, promoting them to an active
- * member. One-time use — a second accept (or an expired/own/mismatched code)
- * returns a 4xx the caller surfaces. Requires the session + CSRF header.
- */
-export const acceptInvite = (code: string) =>
-  apiPost<AcceptInviteResult>(`/invites/${encodeURIComponent(code)}/accept`);
+// NOTE: `acceptInvite` (POST /invites/:code/accept) is gone — the backend
+// removed the route because it was unreachable by construction. Redeeming it
+// required a session, and the only way to hold one is to already have an
+// account, which you can only get by redeeming an invite at Google sign-up —
+// where `validateInviteForSignup` + `claimInvite` consume it. By the time you
+// could call the route, your invite was already `Accepted`. There is now
+// exactly one redemption point: sign-up.
 
 /**
  * One invite the current member has already sent, as returned by GET /invites.

@@ -7,12 +7,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  /* Gap lives on .region, not here: an empty live region is still a flex item,
+     so a container gap would leave a permanent 10px hole in the stack. */
+  gap: 0;
   pointer-events: none;
   /* width:max-content is load-bearing — with left:50% and no width, shrink-to-fit
      only offers half the viewport, so toasts would render as narrow towers. */
   width: max-content;
   max-width: min(560px, calc(100vw - 32px));
+}
+
+/* One per politeness level. Both are always in the DOM — a live region created
+   at announce time is not reliably announced — so each collapses to zero height
+   while empty and only then earns separating space. */
+.region {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.region:not(:empty) + .region:not(:empty) {
+  margin-block-start: 10px;
 }
 
 .toast {

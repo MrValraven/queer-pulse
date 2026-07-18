@@ -784,6 +784,8 @@ export const marketing: Catalog = {
   "partners.section.sub":
     "Filter isn't available yet — here's the full roster.",
   "partners.card.viewCta": "View profile →",
+  "partners.loadingMore": "Loading more partners…",
+  "partners.loadMoreCta": "Load more partners",
   "partners.why.title": "Why we <em>partner</em>",
   "partners.why.p1":
     "QueerPulse can't do everything — legal aid, healthcare, youth work all need dedicated expertise we don't have in-house.",
@@ -1890,6 +1892,7 @@ export const marketing: Catalog = {
   "changelog.hero.titleLine2": "and when.",
   "changelog.hero.sub":
     "Every update to QueerPulse, in reverse order. We publish changes here so you always know what's different and why. Nothing happens without a record.",
+  "changelog.filterAria": "Filter updates by type",
   "changelog.filter.all": "All",
   "changelog.filter.feature": "Features",
   "changelog.filter.community": "Community",
@@ -2004,6 +2007,8 @@ export const marketing: Catalog = {
   "volunteer.card.commitLow": "Low commitment",
   "volunteer.card.commitMedium": "Medium commitment",
   "volunteer.card.expressInterest": "Express interest →",
+  "volunteer.loadingMore": "Loading more opportunities…",
+  "volunteer.loadMoreCta": "Load more opportunities",
   "volunteer.outro.title": "Want to connect <em>more deeply?</em>",
   "volunteer.outro.sub":
     "Find the change makers already working on the causes you care about.",
@@ -2574,6 +2579,7 @@ export const marketing: Catalog = {
     "Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years.",
   "directory.hero.note": "Community-verified · updated monthly",
   "directory.search.placeholder": "Search by name, neighbourhood, or type…",
+  "directory.filterAria": "Filter places by category",
   "directory.cat.all": "All",
   "directory.cat.food": "Food & drink",
   "directory.cat.design": "Design & craft",

@@ -84,3 +84,9 @@
   opacity: 0.5;
   margin-top: 14px;
 }
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}

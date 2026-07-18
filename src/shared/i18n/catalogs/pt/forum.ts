@@ -101,6 +101,8 @@ export const forum: Catalog = {
   "threadList.pinnedBadge": "Fixado",
   "threadList.upvoteAria": "Votar a favor",
   "threadList.removeUpvoteAria": "Remover voto",
+  "threadList.loadingMore": "A carregar…",
+  "threadList.loadMoreCta": "Carregar mais publicações",
 
   // ── Frase partilhada de contagem de respostas ────────────────────────────
   repliesCount_one: "{formatted} resposta",
@@ -148,6 +150,8 @@ export const forum: Catalog = {
   "replies.opBadge": "OP",
   "replies.unlikeAria": "Remover gosto desta resposta",
   "replies.likeAria": "Gostar desta resposta",
+  "replies.loadingMore": "A carregar…",
+  "replies.loadMoreCta": "Carregar mais respostas",
 
   // ── ForumAuthor ─────────────────────────────────────────────────────────
   "author.officialTitle": "Conta oficial do QueerPulse",
