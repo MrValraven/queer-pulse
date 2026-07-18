@@ -1,28 +1,21 @@
 import { memberProfiles } from "./data/memberProfiles";
+import { OPEN_TO_PRESETS, openToPresetIds, type OpenToId } from "./openTo.data";
 
 export interface ChipOption {
   label: string;
   active?: boolean;
 }
 
-/** A single thing a member is open to — the chip on the card maps onto these. */
-export type OpenTo =
-  | "Mentoring junior peers"
-  | "Portfolio reviews"
-  | "Hosting gatherings"
-  | "Co-hosting an event"
-  | "Collaborating on something"
-  | "Coffee with new arrivals"
-  | "Vouching for a stranger";
-
+/** Self-declared identity id — stable, never changes with language; see
+ *  `IDENTITY_OPTIONS` for the id → labelKey pairing. */
 export type Identity =
-  | "Trans & non-binary"
-  | "Lesbian"
-  | "Gay"
-  | "Bi / Pan"
-  | "Aro / ace spectrum"
-  | "QPOC / queer of colour"
-  | "Disabled / chronic illness";
+  | "transNonBinary"
+  | "lesbian"
+  | "gay"
+  | "biPan"
+  | "aroAce"
+  | "qpoc"
+  | "disabledChronicIllness";
 
 export interface MemberCard {
   /** Registry slug — identity (name, initials, tint, photo) is derived from it,
@@ -39,7 +32,7 @@ export interface MemberCard {
   avatarUrl?: string | null;
   tags: { label: string; match?: boolean }[];
   // ---- structured fields the filters / sort run against ----
-  openTo: OpenTo[];
+  openTo: OpenToId[];
   hood: string;
   /** Broad professional field — drives the "What they do" filter. */
   discipline: string;
@@ -56,20 +49,30 @@ export interface MemberCard {
   mutualsCount: number;
 }
 
-/** The vocabulary of things a member can be open to — the filter's checkbox
- *  rows, in display order. The count beside each row is never authored here: it
- *  is counted off the members actually loaded (see `facetCounts`), so an empty
- *  directory shows no numbers rather than an invented population. */
-export const OPEN_TO_OPTIONS: OpenTo[] = [
-  "Mentoring junior peers",
-  "Portfolio reviews",
-  "Hosting gatherings",
-  "Co-hosting an event",
-  "Collaborating on something",
-  "Coffee with new arrivals",
-  "Vouching for a stranger",
-];
+/** The filter's checkbox rows — now the same vocabulary the profile chips use.
+ *  Counts are never authored here: they're counted off the members actually
+ *  loaded (`facetCounts`), so an empty directory shows no numbers. */
+export const OPEN_TO_OPTIONS: FilterOption[] = OPEN_TO_PRESETS.map(
+  (preset) => ({
+    id: preset.id,
+    labelKey: preset.labelKey,
+  }),
+);
 
+/** id → labelKey, for resolving a stored "open to" id back to a display label
+ *  wherever the full `OPEN_TO_OPTIONS` list isn't at hand (e.g. `appliedChips`). */
+export const OPEN_TO_LABEL_KEY: Record<string, string> = Object.fromEntries(
+  OPEN_TO_OPTIONS.map((o) => [o.id, o.labelKey]),
+);
+
+/** The "show every neighbourhood" convenience chip — not a real neighbourhood,
+ *  so (unlike the proper nouns below) it's chrome and needs a translated
+ *  label; see `HOOD_LABEL_KEY`. */
+export const ALL_OF_LISBON = "All of Lisbon";
+
+/** Where members are based. Real Lisbon neighbourhood names are proper nouns
+ *  and stay identical in every language — never translated (i18n sweep §6) —
+ *  so most of these carry no labelKey at all; only `ALL_OF_LISBON` does. */
 export const NEIGHBOURHOODS: ChipOption[] = [
   { label: "Anjos", active: true },
   { label: "Mouraria", active: true },
@@ -78,8 +81,13 @@ export const NEIGHBOURHOODS: ChipOption[] = [
   { label: "Bairro Alto" },
   { label: "Marvila" },
   { label: "Príncipe Real" },
-  { label: "All of Lisbon" },
+  { label: ALL_OF_LISBON },
 ];
+
+/** label → labelKey for the one non-proper-noun hood option above. */
+export const HOOD_LABEL_KEY: Partial<Record<string, string>> = {
+  [ALL_OF_LISBON]: "members:directory.hood.all",
+};
 
 /** A "What they do" / "Profession" filter chip. The `id` is the stable,
  *  canonical value stored in `FilterState` / `MemberCard.discipline` /
@@ -364,17 +372,30 @@ export function professionsForFields(disciplineIds: string[]): FilterOption[] {
   return out;
 }
 
-/** Self-declared identity vocabulary — same contract as `OPEN_TO_OPTIONS`:
- *  labels only, counts come from the loaded members. */
-export const IDENTITY_OPTIONS: Identity[] = [
-  "Trans & non-binary",
-  "Lesbian",
-  "Gay",
-  "Bi / Pan",
-  "Aro / ace spectrum",
-  "QPOC / queer of colour",
-  "Disabled / chronic illness",
+/** Self-declared identity vocabulary — same stored-id / rendered-label
+ *  contract as `OPEN_TO_OPTIONS` (i18n sweep §5.1); counts come from the
+ *  loaded members. */
+export const IDENTITY_OPTIONS: FilterOption[] = [
+  {
+    id: "transNonBinary",
+    labelKey: "members:directory.identity.transNonBinary",
+  },
+  { id: "lesbian", labelKey: "members:directory.identity.lesbian" },
+  { id: "gay", labelKey: "members:directory.identity.gay" },
+  { id: "biPan", labelKey: "members:directory.identity.biPan" },
+  { id: "aroAce", labelKey: "members:directory.identity.aroAce" },
+  { id: "qpoc", labelKey: "members:directory.identity.qpoc" },
+  {
+    id: "disabledChronicIllness",
+    labelKey: "members:directory.identity.disabledChronicIllness",
+  },
 ];
+
+/** id → labelKey, for resolving a stored identity id back to a display label
+ *  wherever the full `IDENTITY_OPTIONS` list isn't at hand (e.g. `appliedChips`). */
+export const IDENTITY_LABEL_KEY: Record<string, string> = Object.fromEntries(
+  IDENTITY_OPTIONS.map((o) => [o.id, o.labelKey]),
+);
 
 /** How many of `members` declare each value of a multi-select facet. Only
  *  values someone actually declares get a key, so a caller can tell "nobody"
@@ -397,18 +418,14 @@ export const LANGUAGES: ChipOption[] = [
   { label: "DE" },
 ];
 
-const HOODS = [
-  "Anjos",
-  "Mouraria",
-  "Graça",
-  "Alfama",
-  "Bairro Alto",
-  "Marvila",
-  "Príncipe Real",
-];
 const DISCIPLINE_POOL = Object.keys(PROFESSIONS_BY_FIELD);
-const OPEN_POOL: OpenTo[] = OPEN_TO_OPTIONS;
-const IDENTITY_POOL: Identity[] = IDENTITY_OPTIONS;
+// `IDENTITY_OPTIONS` is a `FilterOption[]` (id + labelKey), not `Identity[]` —
+// the pool needs the stable *id*, not the option object itself (i18n sweep
+// §5.1: a stray `FilterOption[]` here would compare objects against string
+// ids everywhere else and silently match nothing).
+const IDENTITY_POOL: Identity[] = IDENTITY_OPTIONS.map(
+  (option) => option.id as Identity,
+);
 const LANG_POOL = ["PT", "EN", "ES", "FR", "DE"];
 const PRONOUNS = ["she/her", "he/him", "they/them", "she/they", "he/they"];
 
@@ -632,12 +649,14 @@ function buildMembers(): MemberCard[] {
       bio: member?.role ?? "",
     };
     const { discipline, profession, bio } = facet;
-    const hood = pick(HOODS, r);
-    const openTo = some(OPEN_POOL, r, 1, 3);
+    // Real fields, read from the registry — never invented. A member with no
+    // openTo yields an empty facet, not a fabricated match.
+    const openTo = member ? openToPresetIds(member.openTo) : [];
+    const hood = member?.hood ?? "";
+    const vouchCount = member?.vouchers.length ?? 0;
     const identities = some(IDENTITY_POOL, r, 1, 2);
     const languages = ["PT", ...some(LANG_POOL.slice(1), r, 1, 2)];
     const years = Math.floor(r() * 9);
-    const vouchCount = 1 + Math.floor(r() * 12);
     const mutualsCount = Math.floor(r() * 14);
 
     // Show the member's own profile tags so the card reads as one coherent person.
@@ -733,7 +752,7 @@ export interface FilterState {
 }
 
 export const DEFAULT_FILTERS: FilterState = {
-  openTo: ["Mentoring junior peers", "Hosting gatherings"],
+  openTo: ["mentoring"],
   hoods: ["Anjos", "Mouraria"],
   disciplines: [],
   professions: [],
@@ -771,10 +790,13 @@ export function reconcileProfessions(f: FilterState): FilterState {
 
 /** Does a member satisfy every active criterion? (AND across groups, OR within.) */
 export function matchesFilters(m: MemberCard, f: FilterState): boolean {
-  if (f.openTo.length && !f.openTo.some((o) => m.openTo.includes(o as OpenTo)))
+  if (
+    f.openTo.length &&
+    !f.openTo.some((o) => m.openTo.includes(o as OpenToId))
+  )
     return false;
-  // "All of Lisbon" is a non-filtering convenience option.
-  const hoods = f.hoods.filter((h) => h !== "All of Lisbon");
+  // ALL_OF_LISBON is a non-filtering convenience option.
+  const hoods = f.hoods.filter((h) => h !== ALL_OF_LISBON);
   if (hoods.length && !hoods.includes(m.hood)) return false;
   if (f.disciplines.length && !f.disciplines.includes(m.discipline))
     return false;
@@ -811,20 +833,29 @@ export function sortMembers(list: MemberCard[], sort: SortKey): MemberCard[] {
 }
 
 /** Flatten the active filters into removable chips for the top-of-results row.
- *  `t` resolves the two id-backed groups (discipline/profession) to their
- *  display label; the other groups' stored value still doubles as its own
- *  label (unchanged, out of this pass's scope — see the i18n sweep notes on
- *  this file for why openTo/hood/identity/language weren't split the same way). */
+ *  `t` resolves every id-backed group (openTo/discipline/profession/identity,
+ *  plus the one non-proper-noun hood option) to its display label; real hood
+ *  proper nouns and language codes still double as their own label (i18n
+ *  sweep §6 — proper nouns and ISO-style codes are identical in every
+ *  language, so no labelKey was needed for those). */
 export function appliedChips(
   f: FilterState,
   t: (key: string) => string,
 ): AppliedChip[] {
   const chips: AppliedChip[] = [];
   f.openTo.forEach((value) =>
-    chips.push({ label: value, group: "openTo", value }),
+    chips.push({
+      label: OPEN_TO_LABEL_KEY[value] ? t(OPEN_TO_LABEL_KEY[value]!) : value,
+      group: "openTo",
+      value,
+    }),
   );
   f.hoods.forEach((value) =>
-    chips.push({ label: value, group: "hood", value }),
+    chips.push({
+      label: HOOD_LABEL_KEY[value] ? t(HOOD_LABEL_KEY[value]!) : value,
+      group: "hood",
+      value,
+    }),
   );
   f.disciplines.forEach((value) =>
     chips.push({
@@ -845,7 +876,11 @@ export function appliedChips(
     }),
   );
   f.identities.forEach((value) =>
-    chips.push({ label: value, group: "identity", value }),
+    chips.push({
+      label: IDENTITY_LABEL_KEY[value] ? t(IDENTITY_LABEL_KEY[value]!) : value,
+      group: "identity",
+      value,
+    }),
   );
   f.languages.forEach((value) =>
     chips.push({ label: value, group: "language", value }),

@@ -110,22 +110,6 @@ export interface ChangeMaker {
   image?: string;
 }
 
-export type WellbeingTone = "violet" | "jade" | "coral" | "plum";
-
-/** i18n Pattern A — a fixed set of platform-defined resource categories, so
- * title/description/ctaLabel are chrome and hold catalog keys. */
-export interface WellbeingResource {
-  href: string;
-  titleKey: string;
-  descriptionKey: string;
-  ctaLabelKey: string;
-  tone: WellbeingTone;
-  icon: WellbeingIcon;
-}
-
-export type WellbeingIcon =
-  "heart" | "people" | "phone" | "shield" | "briefcase" | "info";
-
 export type CommunityType =
   "social" | "arts" | "activism" | "support" | "sports" | "professional";
 
@@ -141,90 +125,6 @@ export interface Community {
   privateBadge?: boolean;
   /** Stable slug for the community detail route (`/community/:slug`). */
   slug?: string;
-}
-
-/** i18n Pattern A — a fixed set of 3 stat labels (chrome); `value`/`countTo`
- * are the live numbers. */
-export interface GrantStat {
-  value: string;
-  labelKey: string;
-  /** Numeric part for the count-up animation, when applicable. */
-  countTo?: number;
-  prefix?: string;
-  suffix?: string;
-}
-
-export interface GrantItem {
-  amount: string;
-  title: string;
-  description: string;
-  who: string;
-}
-
-export type BoardKind = "looking" | "offering";
-export type BoardCategory = "design" | "tech" | "space" | "care";
-
-export interface BoardPost {
-  href: string;
-  kind: BoardKind;
-  category: BoardCategory;
-  title: string;
-  posterInitials: string;
-  posterName: string;
-  posterMeta: string;
-  age: string;
-}
-
-export interface Swap {
-  href: string;
-  offering: string;
-  wanting: string;
-  posterInitials: string;
-  poster: string;
-}
-
-export interface SkillItem {
-  type: "teaching" | "learning";
-  title: string;
-  by: string;
-}
-
-export type LibraryType = "recording" | "guide" | "notes";
-
-export interface LibraryItem {
-  href: string;
-  type: LibraryType;
-  /** i18n Pattern A — a fixed set of platform-defined item types (chrome). */
-  typeLabelKey: string;
-  title: string;
-  meta: string[];
-}
-
-export interface Partner {
-  href: string;
-  initials: string;
-  name: string;
-  location: string;
-  tone: "jade" | "coral" | "plum";
-}
-
-export interface Platform {
-  href: string;
-  badge: string;
-  name: string;
-  category: string;
-  tone: "jade" | "coral" | "plum";
-}
-
-export type MapSpaceType = "venue" | "studio" | "community" | "org";
-
-export interface MapSpace {
-  type: MapSpaceType;
-  x: number;
-  y: number;
-  color: string;
-  label?: string;
-  title: string;
 }
 
 export interface DigestPreviewItem {

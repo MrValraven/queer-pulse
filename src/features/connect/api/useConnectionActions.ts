@@ -114,10 +114,10 @@ export function useConnectionActions() {
 
   /** Send a new connection request to a member. */
   const send = useCallback(
-    async (toSlug: string, message?: string) => {
+    async (toSlug: string, message?: string, reason?: string) => {
       sendRequest(toSlug); // demo + optimistic local "sent"
       if (demoMode) return;
-      await sendConnection({ toSlug, message });
+      await sendConnection({ toSlug, message, reason });
       invalidate();
     },
     [sendRequest, demoMode, invalidate],

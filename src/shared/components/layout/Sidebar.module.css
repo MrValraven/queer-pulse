@@ -193,6 +193,7 @@
 }
 .groupLabel {
   flex: 1;
+  min-width: 0;
 }
 .chevron {
   flex: none;

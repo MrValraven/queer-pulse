@@ -149,7 +149,7 @@ export const safety: Catalog = {
     "These actions are private. {name} will not be notified.",
   "blockMute.choose.muteTitle": "Mute {name}",
   "blockMute.choose.muteDesc":
-    "You won't see her posts or activity. She won't know she's been muted. You can unmute at any time.",
+    "You won't see their posts or activity. They won't know they've been muted. You can unmute at any time.",
   "blockMute.choose.muteScopeLabel": "What to mute",
   "blockMute.choose.postsUpdates": "Posts & updates",
   "blockMute.choose.commentsReplies": "Comments & replies",
@@ -160,7 +160,7 @@ export const safety: Catalog = {
   "blockMute.duration.thirtyDays": "30 days",
   "blockMute.choose.blockTitle": "Block {name}",
   "blockMute.choose.blockDesc":
-    "She can't view your profile, message you, or see you in search. Neither of you can connect with the other.",
+    "They can't view your profile, message you, or see you in search. Neither of you can connect with the other.",
   "blockMute.choose.blockNote":
     "<strong>Note:</strong> If you share communities, {name} will still appear in member lists — but won't be able to interact with you directly.",
   "blockMute.choose.continueCta": "Continue",
@@ -168,7 +168,7 @@ export const safety: Catalog = {
 
   "blockMute.muted.title": "You've <em>muted</em> {name}",
   "blockMute.muted.sub":
-    "Her posts and replies are now hidden from your feed. She doesn't know.",
+    "Their posts and replies are now hidden from your feed. They don't know.",
   "blockMute.muted.summaryLabel": "What's muted",
   "blockMute.muted.postsComments": "Posts & comments",
   "blockMute.muted.durationLabel": "Duration",
@@ -179,8 +179,8 @@ export const safety: Catalog = {
   "blockMute.blocked.title": "You've <em>blocked</em> {name}",
   "blockMute.blocked.sub":
     "{name} can no longer view your profile, message you, or find you in search.",
-  "blockMute.blocked.visibleLabel": "Profile visible to her",
-  "blockMute.blocked.messageLabel": "Can she message you",
+  "blockMute.blocked.visibleLabel": "Profile visible to them",
+  "blockMute.blocked.messageLabel": "Can they message you",
   "blockMute.blocked.notifiedLabel": "{name} notified?",
   "blockMute.blocked.manageLink": "Manage blocked members →",
   "blockMute.blocked.undoCta": "Undo — unblock {name}",
@@ -695,7 +695,7 @@ export const safety: Catalog = {
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "← Safe spaces",
-  "spaces.detail.trust.title": "Verified safe space · {tier}",
+  "spaces.detail.trust.title": "Verified safe space · Tier {tier}",
   "spaces.detail.trust.body":
     "<strong>This space meets the Safe Spaces criteria</strong> and was visited by QueerPulse moderators in the last 12 months. Last re-verified <strong>{date}</strong> · {verifier}.",
   "spaces.detail.relyTitle": "What you can rely on, <em>here</em>",

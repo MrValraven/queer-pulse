@@ -84,7 +84,7 @@ export const studio: Catalog = {
   "room.hero.inLibrary": "In library",
   "room.hero.addLibrary": "Library",
   "room.hero.payNote": "This listen pays {artist} <em>{amount}</em>.",
-  "room.hero.tipOnTop": "Tip on top? 100% to her.",
+  "room.hero.tipOnTop": "Tip on top? 100% to the artist.",
 
   // ── "This week" set section ───────────────────────────────────────────────
   "room.set.title": "The Wednesday <em>set</em>",

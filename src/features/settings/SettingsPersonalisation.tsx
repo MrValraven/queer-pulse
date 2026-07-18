@@ -17,7 +17,7 @@ import {
   A11yReadingSection,
   A11yInteractionSection,
 } from "./AccessibilityPrefSections";
-import a11yStyles from "./AccessibilityPreferencesPage.module.css";
+import a11yStyles from "./AccessibilityPrefSections.module.css";
 
 const noRef: RefCallback<HTMLElement> = () => {};
 

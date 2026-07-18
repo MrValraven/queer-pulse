@@ -14,6 +14,7 @@ import { directoryBlurb } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import {
+  HOOD_LABEL_KEY,
   IDENTITY_OPTIONS,
   LANGUAGES,
   NEIGHBOURHOODS,
@@ -57,20 +58,20 @@ export function FiltersSidebar({
       <div className={styles.filterCard}>
         <h4>{t("members:directory.filter.openToTitle")}</h4>
         {OPEN_TO_OPTIONS.map((option) => (
-          <label key={option} className={styles.filterRow}>
+          <label key={option.id} className={styles.filterRow}>
             <input
               type="checkbox"
-              checked={filters.openTo.includes(option)}
+              checked={filters.openTo.includes(option.id)}
               onChange={() =>
                 onChange({
                   ...filters,
-                  openTo: toggle(filters.openTo, option),
+                  openTo: toggle(filters.openTo, option.id),
                 })
               }
             />
-            {option}
-            {openToCounts[option] !== undefined && (
-              <span className={styles.ct}>{openToCounts[option]}</span>
+            {t(option.labelKey)}
+            {openToCounts[option.id] !== undefined && (
+              <span className={styles.ct}>{openToCounts[option.id]}</span>
             )}
           </label>
         ))}
@@ -79,7 +80,12 @@ export function FiltersSidebar({
       <div className={styles.filterCard}>
         <h4>{t("members:directory.filter.hoodTitle")}</h4>
         <ChipSelect
-          options={NEIGHBOURHOODS.map((o) => o.label)}
+          options={NEIGHBOURHOODS.map((o) => ({
+            value: o.label,
+            label: HOOD_LABEL_KEY[o.label]
+              ? t(HOOD_LABEL_KEY[o.label]!)
+              : o.label,
+          }))}
           selected={new Set(filters.hoods)}
           onToggle={(value) =>
             onChange({ ...filters, hoods: toggle(filters.hoods, value) })
@@ -92,20 +98,20 @@ export function FiltersSidebar({
       <div className={styles.filterCard}>
         <h4>{t("members:directory.filter.identityTitle")}</h4>
         {IDENTITY_OPTIONS.map((option) => (
-          <label key={option} className={styles.filterRow}>
+          <label key={option.id} className={styles.filterRow}>
             <input
               type="checkbox"
-              checked={filters.identities.includes(option)}
+              checked={filters.identities.includes(option.id)}
               onChange={() =>
                 onChange({
                   ...filters,
-                  identities: toggle(filters.identities, option),
+                  identities: toggle(filters.identities, option.id),
                 })
               }
             />
-            {option}
-            {identityCounts[option] !== undefined && (
-              <span className={styles.ct}>{identityCounts[option]}</span>
+            {t(option.labelKey)}
+            {identityCounts[option.id] !== undefined && (
+              <span className={styles.ct}>{identityCounts[option.id]}</span>
             )}
           </label>
         ))}

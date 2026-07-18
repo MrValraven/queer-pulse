@@ -12,13 +12,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type ClientModule = typeof import("./client");
 
-/** Minimal Response-like stub — client only touches ok/status/statusText/json. */
+/**
+ * Minimal Response-like stub — client touches ok/status/statusText/json/text.
+ * `text()` matters: request() reads successful bodies via res.text() + JSON.parse
+ * so that an empty 200 body doesn't throw, so the stub must serialise `body` the
+ * way a real Response would. A 204 carries no body, hence the empty string.
+ */
 function res(status: number, body: unknown = {}, statusText = ""): Response {
   return {
     ok: status >= 200 && status < 300,
     status,
     statusText,
     json: async () => body,
+    text: async () => (status === 204 ? "" : JSON.stringify(body)),
   } as unknown as Response;
 }
 

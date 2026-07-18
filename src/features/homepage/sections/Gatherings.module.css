@@ -1,7 +1,7 @@
 .gather {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  padding: 108px 0 116px;
+  padding: clamp(60px, 11vw, 108px) 0 clamp(64px, 11vw, 116px);
   position: relative;
   overflow: hidden;
 }
@@ -141,6 +141,8 @@
   .right {
     grid-column: 1 / -1;
     flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 6px;
     align-items: center;
     justify-content: space-between;
     width: 100%;

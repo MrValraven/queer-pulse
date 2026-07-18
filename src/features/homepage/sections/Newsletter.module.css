@@ -1,5 +1,5 @@
 .digest {
-  padding: 100px 0;
+  padding: clamp(60px, 11vw, 100px) 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
 }

@@ -1,6 +1,6 @@
 .section {
   background: var(--plum);
-  padding: 108px 0 116px;
+  padding: clamp(60px, 11vw, 108px) 0 clamp(64px, 11vw, 116px);
   position: relative;
   overflow: hidden;
 }
@@ -63,7 +63,7 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
   position: relative;
 }

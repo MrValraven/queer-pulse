@@ -55,6 +55,10 @@ export const members: Catalog = {
   "workItem.titleLabel": "Título do trabalho",
   "workItem.yearPlaceholder": "Ano",
   "workItem.yearLabel": "Ano do trabalho",
+  "workItem.linkPlaceholder": "Link (opcional, ex.: https://bandcamp.com/…)",
+  "workItem.linkLabel": "Link do trabalho",
+  "workItem.linkedNote":
+    "Está ligado a uma página da QueerPulse — não editável aqui.",
   "workItem.remove": "Remover",
 
   // ── Estados da página de perfil (ProfilePage) ──────────────────────────────
@@ -166,6 +170,20 @@ export const members: Catalog = {
   "profileEdit.shortBio.counter": "{length} / {max}",
   "profileEdit.shortBio.overLimit":
     "— o teu cartão mostra só as primeiras duas linhas",
+
+  // ── Estado "Agora" + Disponível para (ProfileNowField, OpenToEditor) ───────
+  "profileEdit.now.label": "Agora",
+  "profileEdit.now.help":
+    "O que te ocupa neste momento. Muda sempre que quiseres — se deixares vazio, esta secção não aparece no teu perfil.",
+  "profileEdit.now.placeholder":
+    "A acabar um fanzine, a aprender a soldar, à procura de sala de ensaio…",
+  "profileEdit.openTo.label": "Disponível para",
+  "profileEdit.openTo.help":
+    "O que te faria bem agora. As pessoas podem tocar nestes para te contactar sobre isso mesmo.",
+  "profileEdit.openTo.presetsLabel": "Coisas para que estás disponível",
+  "profileEdit.openTo.addPlaceholder": "Ou diz à tua maneira…",
+  "profileEdit.openTo.addLabel": "Adicionar algo para que estás disponível",
+  "profileEdit.openTo.removeLabel": "Remover {label}",
 
   // ── Barra de edição (ProfileEditBar) ────────────────────────────────────────
   "profileEdit.bar.unsaved":
@@ -462,6 +480,40 @@ export const members: Catalog = {
   "directory.profession.labResearcher": "Investigação laboratorial",
   "directory.profession.unspecified": "Não especificado",
 
+  // ── Vocabulário partilhado "disponível para" (openTo.data → OPEN_TO_PRESETS).
+  //    Um id → um rótulo, reutilizado pelos chips do perfil
+  //    (content.now.openLabel), pelas checkboxes do filtro do diretório
+  //    (directory.filter.openToTitle) e pelo grupo de motivos do formulário
+  //    de contacto (connect:form.reasonOpenToGroup). Redigido como a própria
+  //    pessoa o diria, não como categoria de mercado.
+  "openTo.collaborating": "Colaborações",
+  "openTo.mentoring": "Mentoria",
+  "openTo.casualMeetups": "Café e jantares longos",
+  "openTo.commissions": "Encomendas",
+  "openTo.clientWork": "Novos clientes",
+  "openTo.referrals": "Referências",
+  "openTo.swaps": "Trocas de competências",
+  "openTo.studioVisits": "Visitas ao estúdio",
+  "openTo.interviewees": "Dar entrevistas",
+
+  // ── Filtro "Onde vivem" (memberDirectoryFilter.data → NEIGHBOURHOODS). Os
+  //    nomes de bairros de Lisboa são nomes próprios e mantêm-se idênticos em
+  //    qualquer idioma; só esta opção de "ver tudo" precisa de tradução.
+  "directory.hood.all": "Toda a Lisboa",
+
+  // ── Chips do filtro "Identidade · autodeclarada" (memberDirectoryFilter.data
+  //    → IDENTITY_OPTIONS). Mesma separação id-guardado / rótulo-traduzido.
+  //    NOTA: "qpoc" fica deliberadamente por traduzir, à espera de revisão
+  //    nativa pt-PT da terminologia racial/POC (i18n sweep §6) — ver o
+  //    relatório da sweep.
+  "directory.identity.transNonBinary": "Trans e não-binárie",
+  "directory.identity.lesbian": "Lésbica",
+  "directory.identity.gay": "Gay",
+  "directory.identity.biPan": "Bi / Pan",
+  "directory.identity.aroAce": "Espectro aro/ace",
+  "directory.identity.qpoc": "QPOC / queer of colour",
+  "directory.identity.disabledChronicIllness": "Deficiência / doença crónica",
+
   // ── Pré-visualização do cartão (DirectoryCardPreview) ──────────────────────
   "directory.preview.caption": "Como o teu cartão aparece no diretório",
   "directory.preview.borrowedNote":
@@ -708,36 +760,24 @@ export const members: Catalog = {
   "savedByYou.count_other": "{count} guardados",
   "savedByYou.toast.removed": "Removido dos guardados",
 
-  // ── Os teus espaços (MyPlacesSection) ───────────────────────────────────────
-  "myPlaces.status.review": "Em análise",
-  "myPlaces.status.question": "Pergunta rápida",
-  "myPlaces.status.live": "Ativo",
-  "myPlaces.title": "Espaços que <em>giro</em>",
-  "myPlaces.subtitle":
+  // ── Espaços (PlacesSection) ──────────────────────────────────────────────────
+  // Mesmo vocabulário de estado do registo que "Os teus espaços" acima,
+  // reutilizado na secção do perfil que mostra tanto à pessoa dona do perfil
+  // como a quem a visita o que este membro gere no diretório.
+  "places.status.review": "Em análise",
+  "places.status.question": "Pergunta rápida",
+  "places.status.live": "Ativo",
+  "places.selfTitle": "Espaços que <em>geres</em>",
+  "places.visitorTitle": "Espaços que {firstName} <em>gere</em>",
+  "places.selfSubtitle":
     "Anúncios que adicionaste ao diretório. Cada um é revisto pela equipa da comunidade antes de ficar ativo.",
-  "myPlaces.refLabel": "Ref. · {ref}",
-  "myPlaces.viewListingCta": "Ver anúncio →",
-  "myPlaces.awaitingReview": "Aguarda revisão",
-
-  // ── Leitor de QR (QrScannerPage) ─────────────────────────────────────────────
-  "qrScanner.mode.safe.label": "Espaço seguro",
-  "qrScanner.mode.safe.hint": "Aponta a um autocolante",
-  "qrScanner.mode.event.label": "Bilhete de evento",
-  "qrScanner.mode.event.hint": "Aponta ao teu bilhete",
-  "qrScanner.mode.profile.label": "Perfil",
-  "qrScanner.mode.profile.hint": "Aponta a um código de perfil",
-  "qrScanner.closeAriaLabel": "Fechar",
-  "qrScanner.title": "Ler um código <em>QueerPulse</em>",
-  "qrScanner.flashAriaLabel": "Flash",
-  "qrScanner.privacyNote":
-    "A câmara fica neste aparelho · nunca enviamos as imagens",
-  "qrScanner.hintSuffix":
-    "Autocolantes de espaço seguro · bilhetes de convívios · códigos de partilha de perfil",
-  "qrScanner.cantScan": "Não consegues ler o código?",
-  "qrScanner.enterCodeCta": "Inserir código manualmente",
-  "qrScanner.helpCta": "Ajuda com códigos",
-  "qrScanner.scanToast": "{name} · espaço seguro verificado",
-  "qrScanner.manualToast": "Código aberto · fluxo de colar",
+  "places.refLabel": "Ref. · {ref}",
+  "places.viewListingCta": "Ver anúncio →",
+  "places.awaitingReview": "Aguarda revisão",
+  "places.empty.title": "Ainda sem espaços",
+  "places.empty.description":
+    "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório — assim que ficar ativo, aparece aqui também.",
+  "places.empty.action": "Registar o meu espaço",
 
   // ── Chrome da página de emblemas (BadgesPage, BadgesSections) ──────────────
   "badges.backToProfile": "← Voltar ao perfil",

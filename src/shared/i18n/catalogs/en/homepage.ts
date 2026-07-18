@@ -163,27 +163,6 @@ export const homepage: Catalog = {
     "Essays, profiles, and reporting from inside the community — no outside gaze, no explaining ourselves.",
   "stories.imagePlaceholder": "story image",
 
-  // ── Media (Cinema + Studio) ────────────────────────────────────────────────
-  "media.title": "<em>Watch it. Hear it.</em> Made by us.",
-  "media.subtitle":
-    "QueerPulse Cinema and Studio — a home for queer film and music, made by and for the community.",
-  "media.cinema.eyebrow": "Cinema",
-  "media.cinema.title": "Queer film, <em>uncut.</em>",
-  "media.cinema.desc":
-    "Stream member-made shorts and features, catch community screenings, and submit your own work.",
-  "media.cinema.chip.stream": "Stream",
-  "media.cinema.chip.screenings": "Screenings",
-  "media.cinema.chip.submit": "Submit",
-  "media.cinema.cta": "Enter Cinema",
-  "media.studio.eyebrow": "Studio",
-  "media.studio.title": "Queer sound, <em>out loud.</em>",
-  "media.studio.desc":
-    "Release your music, tune into live sessions, and discover artists from the community.",
-  "media.studio.chip.listen": "Listen",
-  "media.studio.chip.release": "Release",
-  "media.studio.chip.liveSessions": "Live sessions",
-  "media.studio.cta": "Enter Studio",
-
   // ── ChangeMakers ───────────────────────────────────────────────────────────
   "changeMakers.eyebrow": "Changemakers",
   "changeMakers.title": "Building the <em>Lisbon we want.</em>",
@@ -191,36 +170,6 @@ export const homepage: Catalog = {
     "Organisers, advocates, and everyday people pushing this city forward.",
   "changeMakers.cta": "Meet the changemakers",
   "changeMakers.portraitPlaceholder": "portrait of {name}",
-
-  // ── Wellbeing ──────────────────────────────────────────────────────────────
-  "wellbeing.title": "Support that <em>actually gets it.</em>",
-  "wellbeing.subtitle":
-    "Mental health, peer support, and crisis resources — all vetted by the community that needs them.",
-  "wellbeing.allResourcesCta": "See all wellbeing resources",
-  "wellbeing.therapists.title": "Find a therapist",
-  "wellbeing.therapists.description":
-    "Queer-affirming, community-vetted mental health professionals across Lisbon.",
-  "wellbeing.therapists.cta": "Find a therapist",
-  "wellbeing.peerSupport.title": "Peer support circles",
-  "wellbeing.peerSupport.description":
-    "Facilitated groups where you don't have to explain the basics first.",
-  "wellbeing.peerSupport.cta": "Join a circle",
-  "wellbeing.crisis.title": "Crisis lines",
-  "wellbeing.crisis.description":
-    "Someone to call, day or night, if things get heavy.",
-  "wellbeing.crisis.cta": "Get help now",
-  "wellbeing.legal.title": "Know your rights",
-  "wellbeing.legal.description":
-    "Plain-language legal guides for LGBTQ+ life in Portugal.",
-  "wellbeing.legal.cta": "Read the guides",
-  "wellbeing.employerReviews.title": "Employer reviews",
-  "wellbeing.employerReviews.description":
-    "Real ratings from queer employees — know before you apply.",
-  "wellbeing.employerReviews.cta": "Browse reviews",
-  "wellbeing.harmReduction.title": "Harm reduction",
-  "wellbeing.harmReduction.description":
-    "Honest, judgment-free guidance — no lectures, no shame.",
-  "wellbeing.harmReduction.cta": "See the guide",
 
   // ── Communities (design variant G — spotlight + index) ─────────────────────
   "communities.eyebrow": "Communities · Lisboa",
@@ -281,90 +230,6 @@ export const homepage: Catalog = {
   "communities.room.events": "gatherings & RSVPs",
   "communities.room.resources": "guides & library",
 
-  // ── MicroGrants ────────────────────────────────────────────────────────────
-  "microGrants.title": "Small funds, <em>real difference.</em>",
-  "microGrants.subtitle":
-    "Member-funded micro-grants covering the costs that keep people and projects going.",
-  "microGrants.seeFundCta": "See the fund",
-  "microGrants.applyCta": "Apply for a grant",
-  "microGrants.contributeCta": "Contribute to the fund",
-  "microGrants.stat.contributed": "Contributed by members",
-  "microGrants.stat.grantsAwarded": "Grants awarded",
-  "microGrants.stat.averageAmount": "Average grant",
-
-  // ── Board (favour board) ───────────────────────────────────────────────────
-  "board.title": "Ask, offer, <em>help each other out.</em>",
-  "board.subtitle":
-    "A community favour board — post what you need or what you can give.",
-  "board.postSomethingCta": "Post something",
-  "board.kind.lookingFor": "Looking for",
-  "board.kind.offering": "Offering",
-  "board.filter.all": "All",
-  "board.filter.asking": "Asking",
-  "board.filter.offering": "Offering",
-  "board.filter.design": "Design",
-  "board.filter.tech": "Tech",
-  "board.filter.space": "Space",
-  "board.filter.care": "Care",
-  "board.empty.title": "Nothing here yet",
-  "board.empty.description":
-    "No posts match this filter right now. Try another category, or be the first to post.",
-  "board.empty.clearFilters": "Clear filters",
-
-  // ── Barter ─────────────────────────────────────────────────────────────────
-  "barter.title": "Trade skills, <em>not invoices.</em>",
-  "barter.subtitle":
-    "Members swapping what they're good at for what they need — no money changes hands.",
-  "barter.browseAllCta": "Browse all swaps",
-  "barter.offeringLabel": "Offering",
-  "barter.inExchangeFor": "in exchange for",
-  "barter.wantingLabel": "Wanting",
-
-  // ── SkillsTeaser ───────────────────────────────────────────────────────────
-  "skillsTeaser.title": "Teach one thing, <em>learn another.</em>",
-  "skillsTeaser.subtitle":
-    "A running exchange of skills members are teaching and learning from each other.",
-  "skillsTeaser.browseAllCta": "Browse all skills",
-  "skillsTeaser.teachingLabel": "Teaching",
-  "skillsTeaser.learningLabel": "Learning",
-
-  // ── Library ────────────────────────────────────────────────────────────────
-  "library.title": "The knowledge <em>doesn't disappear.</em>",
-  "library.subtitle":
-    "Recordings, guides, and notes from every gathering — searchable and preserved. Workshop wisdom that outlives the room.",
-  "library.browseCta": "Browse the library →",
-  "library.type.recording": "Recording",
-  "library.type.guide": "Guide",
-  "library.type.notes": "Meeting Notes",
-  "library.moreLabel": "in the archive →",
-
-  // ── Partners ───────────────────────────────────────────────────────────────
-  "partners.title": "Community is stronger <em>when communities connect.</em>",
-  "partners.subtitle":
-    "We work with organisations that share our values — across Portugal and beyond.",
-  "partners.seeAllLabel": "See all partners",
-  "partners.moreCount": "{count} communities",
-
-  // ── SpacesMap ──────────────────────────────────────────────────────────────
-  "spacesMap.title": "Find your <em>spaces in the city.</em>",
-  "spacesMap.subtitle":
-    "Community-curated queer-safe venues, member studios, and gathering spaces across Lisbon. Not a business directory — this is ours.",
-  "spacesMap.openFullMapCta": "Open full map →",
-  "spacesMap.type.all": "All spaces",
-  "spacesMap.type.venue": "Safe venues",
-  "spacesMap.type.studio": "Member studios",
-  "spacesMap.type.community": "Community spaces",
-  "spacesMap.type.org": "Organisations",
-  "spacesMap.countLabel": "{count} spaces · member-curated",
-
-  // ── Platforms ──────────────────────────────────────────────────────────────
-  "platforms.title": "The wider <em>queer ecosystem</em>",
-  "platforms.subtitle":
-    "Other LGBTQ+ platforms, media, and communities worth knowing about — beyond QueerPulse.",
-  "platforms.seeAllCta": "See all platforms →",
-  "platforms.moreCount": "{count} more",
-  "platforms.browseAllCta": "Browse all →",
-
   // ── Newsletter ─────────────────────────────────────────────────────────────
   "newsletter.title": "Stay connected. <em>Weekly, not daily.</em>",
   "newsletter.subtitle":
@@ -380,63 +245,6 @@ export const homepage: Catalog = {
   "newsletter.emailPlaceholder": "your@email.com",
   "newsletter.subscribeCta": "Subscribe",
   "newsletter.note": "Members only · no spam · unsubscribe anytime",
-
-  // ── Pillars ("a world, not a feature list") ─────────────────────────────────
-  "pillars.eyebrow": "One membership · six worlds",
-  "pillars.title": "A world, not a <em>feature list.</em>",
-  "pillars.sub":
-    "Six pillars of queer professional life in Lisbon — each one built by and for the community, not bolted on afterwards.",
-
-  "pillars.community.name": "Community",
-  "pillars.community.desc":
-    "Gatherings, groups, forum, and connections — the social fabric of queer Lisbon, online and in person.",
-  "pillars.community.featured":
-    "The social fabric of queer Lisbon — a room with the door held open, online and in person.",
-  "pillars.community.alt":
-    "People celebrating around a rainbow-painted taxi at a Pride parade",
-  "pillars.culture.name": "Culture",
-  "pillars.culture.desc":
-    "The magazine, stories, reading groups, and library — a living record of queer Lisbon, written from the inside.",
-  "pillars.culture.alt":
-    "Drag performers walking a Pride parade route in daylight",
-  "pillars.livelihood.name": "Livelihood",
-  "pillars.livelihood.desc":
-    "Jobs, skills exchange, micro-grants, and barter — a queer economy built on trust, not platform fees.",
-  "pillars.livelihood.alt":
-    "Two people planning work together over laptops and notebooks",
-  "pillars.wellbeing.name": "Wellbeing",
-  "pillars.wellbeing.desc":
-    "Mental health, sexual health, trans healthcare — queer-affirming professionals, community-vetted.",
-  "pillars.wellbeing.alt": "Two men sharing a tender kiss",
-  "pillars.safety.name": "Safety",
-  "pillars.safety.desc":
-    "Legal guides, hate crime reporting, harm reduction, and emergency contacts — know your rights.",
-  "pillars.safety.alt":
-    "Demonstrators holding signs reading trans rights are human rights",
-  "pillars.activism.name": "Activism",
-  "pillars.activism.desc":
-    "Changemakers, volunteers, and transparent governance — building a better city from the inside out.",
-  "pillars.activism.alt":
-    "Marchers carrying a large trans-flag banner through a city street",
-
-  "pillars.tag.gatherings": "Gatherings",
-  "pillars.tag.forum": "Forum",
-  "pillars.tag.communities": "Communities",
-  "pillars.tag.magazine": "Magazine",
-  "pillars.tag.stories": "Stories",
-  "pillars.tag.library": "Library",
-  "pillars.tag.jobs": "Jobs",
-  "pillars.tag.skills": "Skills",
-  "pillars.tag.microGrants": "Micro-grants",
-  "pillars.tag.mentalHealth": "Mental health",
-  "pillars.tag.transHub": "Trans hub",
-  "pillars.tag.sexualHealth": "Sexual health",
-  "pillars.tag.legal": "Legal",
-  "pillars.tag.rights": "Rights",
-  "pillars.tag.emergency": "Emergency",
-  "pillars.tag.changemakers": "Changemakers",
-  "pillars.tag.volunteer": "Volunteer",
-  "pillars.tag.governance": "Governance",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk into a room where you <em>already belong.</em>",

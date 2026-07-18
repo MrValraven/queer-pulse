@@ -52,10 +52,11 @@ export function CoopHero() {
               {t("economy:housingCoop.hero.statsHead")}
             </div>
             {COOP_STATS.map((s) => (
-              <div className={styles.statRow} key={s.label}>
-                <span className="k">{s.label}</span>
+              <div className={styles.statRow} key={s.labelKey}>
+                <span className="k">{t(s.labelKey)}</span>
                 <span className="v">
                   {s.value}
+                  {s.valueKey && t(s.valueKey)}
                   {s.em && <em>{s.em}</em>}
                 </span>
               </div>
@@ -87,10 +88,10 @@ export function CoopPhases() {
             <Reveal className={styles.phase} key={p.num} delay={i * 60}>
               <div className={styles.phaseNum}>{p.num}</div>
               <div className={styles.phaseName}>
-                {p.name} <em>{p.nameEm}</em>
+                {t(p.nameKey)} <em>{t(p.nameEmKey)}</em>
               </div>
-              <div className={styles.phaseTime}>{p.time}</div>
-              <div className={styles.phaseDesc}>{p.desc}</div>
+              <div className={styles.phaseTime}>{t(p.timeKey)}</div>
+              <div className={styles.phaseDesc}>{t(p.descKey)}</div>
             </Reveal>
           ))}
         </div>
@@ -222,23 +223,26 @@ export function CoopTemplates({
           <p>{t("economy:housingCoop.templates.sub")}</p>
         </div>
         <div className={styles.tpGrid}>
-          {COOP_TEMPLATES.map((template) => (
-            <button
-              type="button"
-              className={styles.tpCard}
-              key={`${template.name} ${template.nameEm}`}
-              onClick={() => onDownload(`${template.name} ${template.nameEm}`)}
-            >
-              <div className={styles.tpTag}>{template.tag}</div>
-              <div className={styles.tpName}>
-                {template.name} <em>{template.nameEm}</em>
-              </div>
-              <div className={styles.tpMeta}>{template.meta}</div>
-              <div className={styles.tpCta}>
-                {t("economy:housingCoop.templates.download")}
-              </div>
-            </button>
-          ))}
+          {COOP_TEMPLATES.map((template) => {
+            const name = `${t(template.nameKey)} ${t(template.nameEmKey)}`;
+            return (
+              <button
+                type="button"
+                className={styles.tpCard}
+                key={template.nameKey}
+                onClick={() => onDownload(name)}
+              >
+                <div className={styles.tpTag}>{t(template.tagKey)}</div>
+                <div className={styles.tpName}>
+                  {t(template.nameKey)} <em>{t(template.nameEmKey)}</em>
+                </div>
+                <div className={styles.tpMeta}>{t(template.metaKey)}</div>
+                <div className={styles.tpCta}>
+                  {t("economy:housingCoop.templates.download")}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -290,11 +294,11 @@ export function CoopStartCta({
             {COOP_RESOURCES.map((r, i) => (
               <div className={styles.srRow} key={i}>
                 <span className={styles.srLabel}>
-                  {r.pre}
+                  {r.preKey && t(r.preKey)}
                   {r.em && <em>{r.em}</em>}
-                  {r.post}
+                  {r.postKey && t(r.postKey)}
                 </span>
-                <span className={styles.srMeta}>{r.meta}</span>
+                <span className={styles.srMeta}>{t(r.metaKey)}</span>
               </div>
             ))}
           </div>

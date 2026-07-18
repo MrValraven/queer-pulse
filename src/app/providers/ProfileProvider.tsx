@@ -16,6 +16,7 @@ import {
   type SocialLink,
   type WorkItem,
 } from "../../features/members/data/members";
+import type { OpenToEntry } from "../../features/members/openTo.data";
 import { useAuth } from "./authContext";
 import { useDemoMode } from "./DemoModeProvider";
 import type { AuthUser } from "../../features/auth/api/auth.api";
@@ -62,6 +63,10 @@ export interface ProfileDraft {
   pronouns: string;
   hood: string;
   bio: string;
+  /** Free-text "what I'm in the middle of" status, shown in the profile's Now card. */
+  now: string;
+  /** What the member is open to — the chips under the Now status. */
+  openTo: OpenToEntry[];
   tags: string[];
   visibility: VisibilityMode;
   /** Social / web links — persisted on save via PUT /profiles/me/socials. */
@@ -84,6 +89,8 @@ function toDraft(m: Member): ProfileDraft {
     pronouns: m.pronouns ?? "",
     hood: m.hood,
     bio: m.bio,
+    now: m.now,
+    openTo: m.openTo.map((entry) => ({ ...entry })),
     tags: [...m.tags],
     visibility: m.visibility,
     socials: (m.socials ?? []).map((s) => ({ ...s })),
@@ -105,6 +112,10 @@ function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     bio: d.bio.trim(),
     location: d.hood.trim(),
     visibility: d.visibility,
+    now: d.now.trim(),
+    // `OpenToEntry` is structurally the wire shape (OpenToId ⊆ string), so the
+    // draft entries pass straight through — customs keep the member's words.
+    openTo: d.openTo,
     tags: d.tags,
     identities: d.identities,
     lookingFor: d.lookingFor,
@@ -226,6 +237,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       pronouns: draft.pronouns.trim() || undefined,
       hood: draft.hood.trim() || prev.hood,
       bio: draft.bio.trim() || prev.bio,
+      now: draft.now.trim(),
+      openTo: draft.openTo,
       tags: draft.tags,
       visibility: draft.visibility,
       socials: draft.socials.filter((s) => s.urlOrHandle.trim()),

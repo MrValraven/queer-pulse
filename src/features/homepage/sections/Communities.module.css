@@ -1,5 +1,5 @@
 .section {
-  padding: 108px 0 116px;
+  padding: clamp(60px, 11vw, 108px) 0 clamp(64px, 11vw, 116px);
   background: var(--cream);
 }
 
@@ -242,7 +242,9 @@
   .fchip,
   .toolToggle,
   .toolSelect,
-  .toolSearch input {
+  .toolSearch input,
+  .railRow,
+  .railEmpty button {
     min-height: 44px;
   }
 }
@@ -291,6 +293,10 @@
   padding: 13px 14px;
   border-radius: 14px;
   cursor: pointer;
+  /* Contains the row's absolutely-positioned .visuallyHidden label. Without a
+     containing block here it resolves against an ancestor outside the rail,
+     escapes the rail's overflow clip, and stretches the page. */
+  position: relative;
   border: 1px solid transparent;
   text-align: left;
   width: 100%;
@@ -405,7 +411,7 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   overflow: hidden;
-  min-height: 560px;
+  min-height: clamp(420px, 70vw, 560px);
 }
 .spotFade {
   animation: sgIn 0.34s var(--ease) both;
@@ -820,37 +826,6 @@
   gap: 10px;
 }
 
-/* ---------- skeleton ---------- */
-.sk {
-  /* --line-rgb flips to light channels in dark mode so the shimmer stays
-     visible on dark surfaces (raw --plum-rgb would go dark-on-dark). */
-  background: linear-gradient(
-    90deg,
-    rgba(var(--line-rgb), 0.06) 25%,
-    rgba(var(--line-rgb), 0.11) 50%,
-    rgba(var(--line-rgb), 0.06) 75%
-  );
-  background-size: 200% 100%;
-  animation: skShimmer 1.4s ease infinite;
-  border-radius: 10px;
-}
-@keyframes skShimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-.skMedia {
-  height: 280px;
-  border-radius: 0;
-}
-.skLine {
-  height: 16px;
-  margin-top: 14px;
-}
-
 /* ---------- empty spotlight ---------- */
 .spotEmpty {
   display: flex;
@@ -858,7 +833,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 560px;
+  min-height: clamp(420px, 70vw, 560px);
   padding: 40px;
 }
 .spotEmpty h3 {
@@ -955,8 +930,11 @@
   .railLab {
     display: none;
   }
+  /* The vertical rail needs width:100%; once it flips to a horizontal scroller
+     that would make every row a full viewport wide, so size to content here. */
   .railRow {
     flex: 0 0 auto;
+    width: auto;
     grid-template-columns: auto auto;
   }
   .railSub,
@@ -972,8 +950,7 @@
   }
 }
 @media (max-width: 560px) {
-  .spotMedia,
-  .skMedia {
+  .spotMedia {
     height: 200px;
   }
   .spotBody {
@@ -982,9 +959,22 @@
   .spotFoot {
     gap: 14px;
   }
+  /* faces + count + sparkline exceed the card body on narrow phones; let them
+     wrap instead of being clipped by .spot's overflow. */
+  .roster {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    min-width: 0;
+  }
   .sizeCtx {
     margin-left: 0;
     padding-left: 0;
     border-left: none;
+  }
+  .actions {
+    width: 100%;
+  }
+  .actions > * {
+    flex: 1;
   }
 }

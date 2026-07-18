@@ -140,11 +140,16 @@ export default defineConfig([
       //    patterns guarded by a cleanup (e.g. swap → setTimeout → reset). Warn
       //    until each is reviewed; keep it on the radar without blocking CI.
       "react-hooks/set-state-in-effect": "warn",
-      // 6. No hardcoded user-facing copy — it must resolve through the i18n
-      //    catalogs. Error, with un-swept features exempted by path below; each
-      //    exemption is deleted as its wave lands, so the rule only ratchets
-      //    tighter and new pages can never add literals.
-      "local/no-literal-string": "error",
+      // 6. User-facing copy should resolve through the i18n catalogs. WARN, not
+      //    error, and it can never reach zero — by design. The rule flags any
+      //    JSXText with two+ letters, so it cannot tell chrome from the content
+      //    the scope rule deliberately keeps in English (brand names, member
+      //    bios, article bodies, curator quotes — anything live mode fetches;
+      //    see docs/i18n/sweep-agent-brief.md §1). Cinema, for instance, is
+      //    fully swept yet still reports ~329 hits, all of them legitimate.
+      //    So: treat it as a prompt to ask "is this chrome or content?" on new
+      //    code, not as a gate. The real gates are `tsc` and parity.test.ts.
+      "local/no-literal-string": "warn",
     },
   },
   // Country-flag emojis (🇵🇹 🇪🇸 …) have no react-icons equivalent — exempt these files.

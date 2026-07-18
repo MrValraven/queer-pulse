@@ -142,13 +142,21 @@ export const SIDEBAR_AVATARS: { initials: string; tint: AvatarTint }[] = [
 
 /** `unitKey` translates a short word-unit appended after `num` (e.g. "years")
  * — kept separate from `num` so a fused "3 yrs" style string doesn't bake an
- * untranslated English abbreviation into the data. */
+ * untranslated English abbreviation into the data.
+ *
+ * `amount` (EUR, whole units) is the one stat that's a compact-currency
+ * figure — it's rendered via `fmt.currency(amount, "EUR", { notation:
+ * "compact" })` in `SustainerSidebar.tsx` instead of baking a hardcoded,
+ * always-prefixed `"€18k"` string (pt-PT suffixes the symbol: `"18 mil €"`).
+ * The other stats ("47", "3", "100%") aren't currency and render identically
+ * in either language, so they stay plain display strings. */
 export const IMPACT_STATS: {
-  num: string;
+  num?: string;
+  amount?: number;
   unitKey?: string;
   labelKey: string;
 }[] = [
-  { num: "€18k", labelKey: "support:impactStats.mentalHealthFund" },
+  { amount: 18000, labelKey: "support:impactStats.mentalHealthFund" },
   { num: "47", labelKey: "support:impactStats.freeMemberships" },
   {
     num: "3",

@@ -162,7 +162,7 @@ const RUI_DEV: DemoSubprofile = {
       url: "https://example.com/pg-migrate-lite",
       imageUrl: null,
       date: "2023–",
-      meta: "Maintainer · 1.2k★",
+      meta: "Maintainer · 1.2k stars",
       tags: [],
     },
   ],

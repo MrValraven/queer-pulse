@@ -9,8 +9,15 @@ export interface Formatters {
   time: (value: Date | number, options?: Intl.DateTimeFormatOptions) => string;
   /** Localized number (decimal comma + space grouping in PT). */
   number: (value: number, options?: Intl.NumberFormatOptions) => string;
-  /** Currency, EUR by default (`1 234,56 €` in PT, `€1,234.56` in EN). */
-  currency: (value: number, currency?: string) => string;
+  /** Currency, EUR by default (`1 234,56 €` in PT, `€1,234.56` in EN).
+   *  `options` passes through to `Intl.NumberFormat` — e.g.
+   *  `{ notation: "compact" }` for `"18 mil €"` (PT) / `"€18K"` (EN) instead
+   *  of a hand-rolled, EN-only-correct `"€18k"` prefix string. */
+  currency: (
+    value: number,
+    currency?: string,
+    options?: Intl.NumberFormatOptions,
+  ) => string;
   /** Relative time, e.g. `há 2 dias` / `2 days ago`. */
   relativeTime: (value: number, unit: Intl.RelativeTimeFormatUnit) => string;
 }
@@ -42,10 +49,12 @@ export function createFormatters(locale: string): Formatters {
       }).format(value),
     number: (value, options) =>
       new Intl.NumberFormat(locale, options).format(value),
-    currency: (value, currency = "EUR") =>
-      new Intl.NumberFormat(locale, { style: "currency", currency }).format(
-        value,
-      ),
+    currency: (value, currency = "EUR", options) =>
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency,
+        ...options,
+      }).format(value),
     relativeTime: (value, unit) =>
       new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(
         value,

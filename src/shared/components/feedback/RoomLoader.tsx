@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../../app/providers/authContext";
 import { useScrollLock } from "../../hooks";
 import { useTranslation } from "../../i18n/useTranslation";
@@ -11,6 +11,8 @@ const STEP_KEYS = [
   "shared:feedback.roomLoader.steps.preparingRoom",
 ];
 const STEP_MS = 750;
+/** How often to re-check a still-in-flight session load once the checklist ends. */
+const CHECK_POLL_MS = 150;
 
 function CheckIcon() {
   return (
@@ -35,9 +37,15 @@ function CheckIcon() {
 const EXIT_MS = 520;
 
 export function RoomLoader() {
-  const { preparing, endPreparing } = useAuth();
+  const { preparing, checking, endPreparing } = useAuth();
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
+  // Read inside the sequence timers, which outlive the render that scheduled
+  // them — a ref keeps them looking at the *current* session-check state.
+  const checkingRef = useRef(checking);
+  useEffect(() => {
+    checkingRef.current = checking;
+  }, [checking]);
   // `mounted` keeps the overlay in the tree through its fade-out; `shown` drives
   // the opacity/transform transition (false on mount and during exit).
   const [mounted, setMounted] = useState(preparing);
@@ -72,15 +80,30 @@ export function RoomLoader() {
   useEffect(() => {
     if (!preparing) return;
     let current = 0;
+    let finishTimer = 0;
+    // Hold the finished checklist on screen until the live-mode session check has
+    // settled, re-checking on a short beat — otherwise a slow `GET /auth/me` would
+    // dump the member onto the bare session spinner right after this loader
+    // promised the room was ready.
+    const finish = () => {
+      if (checkingRef.current) {
+        finishTimer = window.setTimeout(finish, CHECK_POLL_MS);
+        return;
+      }
+      endPreparing();
+    };
     const id = window.setInterval(() => {
       current += 1;
       setStep(current);
       if (current >= STEP_KEYS.length) {
         window.clearInterval(id);
-        window.setTimeout(endPreparing, 600);
+        finishTimer = window.setTimeout(finish, 600);
       }
     }, STEP_MS);
-    return () => window.clearInterval(id);
+    return () => {
+      window.clearInterval(id);
+      window.clearTimeout(finishTimer);
+    };
   }, [preparing, endPreparing]);
 
   if (!mounted) return null;

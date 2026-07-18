@@ -159,7 +159,7 @@ export const safety: Catalog = {
     "Estas ações são privadas. {name} não será notificade.",
   "blockMute.choose.muteTitle": "Silenciar {name}",
   "blockMute.choose.muteDesc":
-    "Não vais ver as publicações ou atividade dela. Ela não vai saber que foi silenciada. Podes dessilenciar a qualquer momento.",
+    "Não vais ver as publicações nem a atividade desta pessoa. Não vai saber que foi silenciada. Podes dessilenciar a qualquer momento.",
   "blockMute.choose.muteScopeLabel": "O que silenciar",
   "blockMute.choose.postsUpdates": "Publicações e atualizações",
   "blockMute.choose.commentsReplies": "Comentários e respostas",
@@ -170,7 +170,7 @@ export const safety: Catalog = {
   "blockMute.duration.thirtyDays": "30 dias",
   "blockMute.choose.blockTitle": "Bloquear {name}",
   "blockMute.choose.blockDesc":
-    "Ela não pode ver o teu perfil, enviar-te mensagem, nem ver-te na pesquisa. Não é possível estabelecer ligação entre as duas contas.",
+    "Esta pessoa não pode ver o teu perfil, enviar-te mensagem, nem ver-te na pesquisa. Não é possível estabelecer ligação entre as duas contas.",
   "blockMute.choose.blockNote":
     "<strong>Nota:</strong> Se partilharem comunidades, {name} vai continuar a aparecer nas listas de pessoas — mas não vai conseguir interagir diretamente contigo.",
   "blockMute.choose.continueCta": "Continuar",
@@ -178,7 +178,7 @@ export const safety: Catalog = {
 
   "blockMute.muted.title": "<em>Silenciaste</em> {name}",
   "blockMute.muted.sub":
-    "As publicações e respostas dela estão agora escondidas do teu feed. Ela não sabe.",
+    "As publicações e respostas desta pessoa estão agora escondidas do teu feed. Não fica a saber.",
   "blockMute.muted.summaryLabel": "O que está silenciado",
   "blockMute.muted.postsComments": "Publicações e comentários",
   "blockMute.muted.durationLabel": "Duração",
@@ -189,7 +189,7 @@ export const safety: Catalog = {
   "blockMute.blocked.title": "<em>Bloqueaste</em> {name}",
   "blockMute.blocked.sub":
     "{name} já não pode ver o teu perfil, enviar-te mensagem, ou encontrar-te na pesquisa.",
-  "blockMute.blocked.visibleLabel": "Perfil visível para ela",
+  "blockMute.blocked.visibleLabel": "Perfil visível para esta pessoa",
   "blockMute.blocked.messageLabel": "Pode enviar-te mensagem",
   "blockMute.blocked.notifiedLabel": "{name} foi notificade?",
   "blockMute.blocked.manageLink": "Gerir pessoas bloqueadas →",
@@ -336,11 +336,11 @@ export const safety: Catalog = {
   "crisisChat.toast.typing":
     "{name} está a escrever — uma pessoa apoiante vai responder em breve.",
   "crisisChat.opening.msg1":
-    "Olá, sou o Rui. Sou um voluntário com formação e estou aqui contigo. Não há pressa — podemos ir ao ritmo que for confortável para ti.",
+    "Olá, sou o Rui. Sou voluntárie com formação e estou aqui contigo. Não há pressa — podemos ir ao ritmo que for confortável para ti.",
   "crisisChat.opening.msg2":
     "Seja o que for que te trouxe aqui hoje, não precisas de explicar bem. Começa onde quiseres.",
   "crisisChat.reply.thankYou":
-    "Obrigado por me contares isso. Estou aqui, e vamos ficar com isto juntos pelo tempo que precisares.",
+    "Obrigade por me contares isso. Estou aqui, e vamos ficar com isto pelo tempo que precisares.",
   "crisisChat.composer.placeholder": "Escreve o que conseguires…",
   "crisisChat.composer.ariaLabel": "Mensagem",
   "crisisChat.composer.sendCta": "Enviar",
@@ -715,7 +715,7 @@ export const safety: Catalog = {
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "← Espaços seguros",
-  "spaces.detail.trust.title": "Espaço seguro verificado · {tier}",
+  "spaces.detail.trust.title": "Espaço seguro verificado · Nível {tier}",
   "spaces.detail.trust.body":
     "<strong>Este espaço cumpre os critérios de Espaços Seguros</strong> e foi visitado por pessoas moderadoras da QueerPulse nos últimos 12 meses. Última reverificação em <strong>{date}</strong> · {verifier}.",
   "spaces.detail.relyTitle": "Com o que podes contar, <em>aqui</em>",

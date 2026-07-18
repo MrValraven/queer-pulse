@@ -1881,26 +1881,6 @@ export const marketing: Catalog = {
   "transparency.signoff.downloadPdf": "Download PDF (84 pages)",
   "transparency.signoff.downloadCsv": "Download raw CSV",
 
-  // ── Community Archive — page chrome. Oral-history quotes, bios, and
-  //    excerpts are real people's own testimonials — left English (the
-  //    scope rule's canonical "mock bio" case).
-  "archive.hero.category": "Community Archive",
-  "archive.hero.title": "Stories that shouldn't <em>be forgotten.</em>",
-  "archive.hero.sub":
-    "An ongoing archive of oral histories, testimonials, and personal accounts from queer people in Lisbon — past and present. Stories that document who we are, what we've built, and what it cost.",
-  "archive.featured.label": "This month's featured story",
-  "archive.featured.readCta": "Read her story →",
-  "archive.grid.title": "From the <em>archive</em>",
-  "archive.grid.sub":
-    "Personal accounts from community members, past and present.",
-  "archive.oral.title": "In their own <em>words.</em>",
-  "archive.oral.sub":
-    "Short excerpts from longer oral histories in the archive.",
-  "archive.submit.title": "Your story <em>belongs here too.</em>",
-  "archive.submit.body":
-    "The archive grows through community contribution. If you have a story you want to tell — about Lisbon, about your community, about what brought you here or what kept you going — we want to hear it. All formats welcome: written, audio, video, photos.",
-  "archive.submit.cta": "Submit your story →",
-
   // ── Changelog — page chrome. The 18 dated release entries (title/body/tag)
   //    are historical release notes — left English due to volume; flagged in
   //    the sweep report rather than rushed.

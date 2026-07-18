@@ -80,7 +80,7 @@ export const studio: Catalog = {
   "room.hero.inLibrary": "Na biblioteca",
   "room.hero.addLibrary": "Biblioteca",
   "room.hero.payNote": "Esta audição paga a {artist} <em>{amount}</em>.",
-  "room.hero.tipOnTop": "Queres dar mais? 100% para ela.",
+  "room.hero.tipOnTop": "Queres dar mais? 100% para quem faz.",
 
   // ── Secção do set "Esta semana" ────────────────────────────────────────────
   "room.set.title": "O set de quarta-feira, <em>ao vivo</em>",

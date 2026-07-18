@@ -27,6 +27,37 @@ function getInitialLoggedIn(): boolean {
   return window.localStorage.getItem(STORAGE_KEY) !== "false";
 }
 
+/**
+ * Live-mode sign-in leaves the SPA entirely (full-page redirect to Google, then
+ * back via the backend callback), so the in-memory `preparing` flag set at the
+ * moment of the click can't survive to the landing page. We stash a marker in
+ * sessionStorage just before leaving and consume it once on the way back, so the
+ * member lands on their feed behind the "preparing the room" loader rather than
+ * the bare session-check spinner. sessionStorage (not localStorage) so it dies
+ * with the tab and can never leak into an unrelated later visit.
+ */
+const PREPARING_KEY = "qp.auth.preparing";
+
+function markSignInPending(): void {
+  try {
+    window.sessionStorage.setItem(PREPARING_KEY, "1");
+  } catch {
+    // Private-mode / blocked storage: we just skip the loader, not the sign-in.
+  }
+}
+
+/** Read-and-clear the marker — returns true only for the first read after a redirect. */
+function consumeSignInPending(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const pending = window.sessionStorage.getItem(PREPARING_KEY) === "1";
+    if (pending) window.sessionStorage.removeItem(PREPARING_KEY);
+    return pending;
+  } catch {
+    return false;
+  }
+}
+
 /** The mock signed-in user used in demo mode (mirrors the prototype's currentUser). */
 const DEMO_USER: AuthUser = {
   id: "demo",
@@ -55,7 +86,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     demoMode ? getInitialLoggedIn() : false,
   );
   const [checking, setChecking] = useState<boolean>(() => !demoMode);
-  const [preparing, setPreparing] = useState(false);
+  // True from the very first render when we've just come back from the OAuth
+  // round trip, so the loader covers the whole `checking` window instead of
+  // appearing after it.
+  const [preparing, setPreparing] = useState(() =>
+    demoMode ? false : consumeSignInPending(),
+  );
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authError, setAuthError] = useState<AuthErrorCode | null>(null);
 
@@ -93,6 +129,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         setUser(null);
         setLoggedIn(false);
+        // The round trip didn't produce a session after all (rejected sign-in,
+        // expired cookie) — drop the loader so it can't sit over the sign-in page.
+        setPreparing(false);
         // A 401 just means "not signed in" — normal, no error to show. Anything
         // else (5xx, network failure) is a real fault the member should hear about.
         const isSignedOut = err instanceof ApiError && err.status === 401;
@@ -118,6 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setPreparing(true);
         return;
       }
+      markSignInPending();
       redirectToGoogle(redirectTo, invite);
     },
     [demoMode],

@@ -105,6 +105,7 @@ export const connect: Catalog = {
 
   // Modal de contacto (ConnectModal)
   "modal.close": "Fechar",
+  "modal.loading": "A carregar…",
 
   // Formulário de contacto (ConnectForm)
   "form.title": "Diz <em>olá.</em>",
@@ -116,6 +117,8 @@ export const connect: Catalog = {
   "form.emailPlaceholder": "Para poderem responder-te",
   "form.reasonLabel": "Sobre o que é?",
   "form.reasonPlaceholder": "Escolhe um motivo, ou deixa em aberto",
+  "form.reasonOpenToGroup": "Ao que {first} está disponível",
+  "form.reasonGenericGroup": "Outra coisa",
   "form.reasonCollaborate": "Gostava de colaborar",
   "form.reasonAdvice": "Gostava de um conselho",
   "form.reasonSawPost": "Vi a tua publicação no mural",

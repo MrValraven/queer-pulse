@@ -1,5 +1,5 @@
 .hero {
-  padding: 200px 0 110px;
+  padding: clamp(128px, 26vw, 200px) 0 clamp(64px, 10vw, 110px);
   position: relative;
   overflow: hidden;
 }
@@ -82,18 +82,4 @@
   border-radius: 50%;
   background: var(--jade);
   display: inline-block;
-}
-.ticker {
-  margin-top: 64px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.hood {
-  font-size: 13px;
-  color: var(--ink-60);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-pill);
-  padding: 7px 15px;
-  background: rgba(255, 255, 255, 0.4);
 }

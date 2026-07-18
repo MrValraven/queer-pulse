@@ -136,6 +136,64 @@
   overflow: hidden;
 }
 
+/* ---- Now status + Open to ------------------------------------------------- */
+.nowInput {
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.6;
+  max-width: 56ch;
+  resize: none;
+  overflow: hidden;
+}
+/* A second label inside the same field block — the chips belong to the status,
+   so they sit under it rather than starting a field of their own. */
+.subFieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 18px 0 6px;
+}
+.openToPresets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.openToChip {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  color: var(--ink-60);
+  background: var(--paper);
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .openToChip:not(.openToChipOn):hover {
+    border-color: var(--line-strong);
+    color: var(--text-strong);
+  }
+}
+.openToChipOn {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
+}
+.openToInput {
+  width: 190px;
+  font-size: 13.5px;
+  padding: 7px 14px;
+  border-radius: 999px;
+}
+
 /* ---- Pronoun picker ------------------------------------------------------- */
 .chips {
   display: flex;
@@ -428,6 +486,17 @@
   font-size: 18px;
   color: var(--text-strong);
   line-height: 1.18;
+  margin-bottom: 8px;
+}
+.workLinkInput {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-bottom: 8px;
+}
+.workLinkNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  font-style: italic;
   margin-bottom: 8px;
 }
 .workMetaRow {

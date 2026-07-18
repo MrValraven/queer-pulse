@@ -1549,43 +1549,6 @@ export const economy: Catalog = {
   "mentorDetail.sidebar.askQuestion": "→ Enviar uma pergunta a {firstName}",
   "mentorDetail.sidebar.browseAll": "→ Explorar todos os mentores",
 
-  // ── MentorProfilePage (+ sidebar / apply modal) — spotlight Catarina Vaz ──
-  "mentorProfile.backToAll": "← Todos os mentores",
-  "mentorProfile.sendQuestionCta": "Enviar uma pergunta primeiro",
-  "mentorProfile.section.howIMentor": "Como <em>mentoro</em>",
-  "mentorProfile.section.fitFor": "Para quem <em>és a pessoa certa</em>",
-  "mentorProfile.section.process": "O <em>processo</em>, passo a passo",
-  "mentorProfile.section.pastMentees":
-    "Antigas pessoas mentorandas · <em>publicaram com</em>",
-  "mentorProfile.sidebar.applyTitle": "Candidata-te à coorte de '26",
-  "mentorProfile.sidebar.noUpfrontCost":
-    "sem custo inicial · tarifa de solidariedade disponível",
-  "mentorProfile.sidebar.openApplication": "Abrir candidatura",
-  "mentorProfile.sidebar.freeSustainer":
-    "Todas as pessoas mentorandas recebem uma adesão Sustainer QueerPulse gratuita durante o ano.",
-  "mentorProfile.sidebar.moreFrom": "Mais de {firstName}",
-  "mentorApply.eyebrow": "Candidatar a mentoria com",
-  "mentorApply.title": "Pede uma sessão com <em>{firstName}.</em>",
-  "mentorApply.sub":
-    "Diz-lhe onde gostarias de focar e um pouco sobre o teu trabalho. Não há custo inicial — as pessoas mentorandas recebem uma adesão Sustainer gratuita durante o ano.",
-  "mentorApply.focusAreaLabel": "Área de foco *",
-  "mentorApply.noteLabel": "Uma nota para {firstName} *",
-  "mentorApply.notePlaceholder":
-    "No que estás a trabalhar, e o que tornaria esta mentoria valiosa para as duas partes?",
-  "mentorApply.charsRemaining_one": "Falta mais {count} caráter para enviares.",
-  "mentorApply.charsRemaining_other":
-    "Faltam mais {count} carateres para enviares.",
-  "mentorApply.polishedHint":
-    "Específico vale mais do que polido. Ela dá mentoria a quem tem algo concreto para fazer.",
-  "mentorApply.cancel": "Cancelar",
-  "mentorApply.sendingLabel": "A enviar pedido…",
-  "mentorApply.sendCta": "Enviar pedido",
-  "mentorApply.success.title": "Pedido",
-  "mentorApply.success.em": "enviado.",
-  "mentorApply.success.closeLabel": "Concluído",
-  "mentorApply.success.body":
-    "O teu pedido para trabalhar com <strong>{mentorName}</strong> em <strong>{focus}</strong> está a caminho. Ela revê pessoalmente as candidaturas à coorte de '26 e costuma responder no prazo de uma semana. Vais receber uma notificação aqui.",
-
   // ── ApplicationStatusPage (+ header/list/card, listing-manager modals) ──
   "applicationStatus.header.eyebrow": "As tuas vagas",
   "applicationStatus.header.title": "Onde tudo <em>está.</em>",
@@ -2460,8 +2423,9 @@ export const economy: Catalog = {
   // Scope note: housingCoop.data.ts's FORMING_COOPS (specific co-ops, member
   // counts, financials) is a directory of real-world entries — in live mode
   // this would be fetched. Left in English, same as the grants directory.
-  // COOP_STATS/COOP_PHASES/COOP_TEMPLATES/COOP_RESOURCES are also left as-is
-  // for now (out of time budget this pass) — flagged in the sweep report.
+  // COOP_STATS/COOP_PHASES/COOP_TEMPLATES/COOP_RESOURCES are platform-authored
+  // programme content (same shape as `incubator.step.*`, which IS translated)
+  // and are now swept below.
   "housingCoop.backLabel": "Habitação",
   "housingCoop.hero.eyebrow":
     "Formação de cooperativas de habitação · começa em Portugal, expansível",
@@ -2485,6 +2449,87 @@ export const economy: Catalog = {
   "housingCoop.startCta.postCta": "Publica que estás a começar",
   "housingCoop.startCta.storyCta": "Lê a história da Casa Sambizanga",
   "housingCoop.startCta.resourcesHead": "Recursos & pessoas mentoras",
+
+  // ── Estatísticas do hero (housingCoop.data → COOP_STATS) ────────────────
+  "housingCoop.stats.activeGroups": "Grupos ativos",
+  "housingCoop.stats.householdsHoused": "Agregados alojados",
+  "housingCoop.stats.inPhase": "Em fase 4–5",
+  "housingCoop.stats.cities": "Cidades",
+  "housingCoop.stats.citiesLisbon": "Lisboa · ",
+
+  // ── Calendário de cinco fases (housingCoop.data → COOP_PHASES) ──────────
+  "housingCoop.phase.findPeople.name": "Encontrar",
+  "housingCoop.phase.findPeople.nameEm": "as pessoas",
+  "housingCoop.phase.findPeople.time": "2–4 meses",
+  "housingCoop.phase.findPeople.desc":
+    "4–12 agregados familiares que partilham valores, calendário e hábitos financeiros. Teste de afinidades, honestidade financeira, cláusula de saída.",
+  "housingCoop.phase.legalIncorporation.name": "Constituição",
+  "housingCoop.phase.legalIncorporation.nameEm": "legal",
+  "housingCoop.phase.legalIncorporation.time": "1–3 meses",
+  "housingCoop.phase.legalIncorporation.desc":
+    "Estrutura de cooperativa CRL, estatutos, quotas de membro. Modelos específicos para a lei portuguesa.",
+  "housingCoop.phase.financeStructure.name": "Financiamento &",
+  "housingCoop.phase.financeStructure.nameEm": "estrutura",
+  "housingCoop.phase.financeStructure.time": "3–8 meses",
+  "housingCoop.phase.financeStructure.desc":
+    "Capital social dos membros, financiamento bancário ético, apoios do Estado, mecânica do fundo do grupo.",
+  "housingCoop.phase.findProperty.name": "Encontrar",
+  "housingCoop.phase.findProperty.nameEm": "o imóvel",
+  "housingCoop.phase.findProperty.time": "6–12 meses",
+  "housingCoop.phase.findProperty.desc":
+    "Levantamento, negociação, assinatura. A maioria dos grupos compra. Alguns optam por arrendamento com opção de compra. Outros arrendam a longo prazo do parque público.",
+  "housingCoop.phase.dailyGovernance.name": "Governação",
+  "housingCoop.phase.dailyGovernance.nameEm": "diária",
+  "housingCoop.phase.dailyGovernance.time": "Para sempre",
+  "housingCoop.phase.dailyGovernance.desc":
+    "Tomada de decisões, conflitos, reparações, novos membros, sucessão. Ferramentas que aguentam o tédio & os dias maus.",
+
+  // ── Modelos para descarregar (housingCoop.data → COOP_TEMPLATES) ────────
+  "housingCoop.template.foundingValues.tag": "Fase 1 · modelo",
+  "housingCoop.template.foundingValues.name": "Valores fundadores &",
+  "housingCoop.template.foundingValues.nameEm": "teste de afinidades",
+  "housingCoop.template.foundingValues.meta": "PDF · PT + EN · 14 páginas",
+  "housingCoop.template.financialHonesty.tag": "Fase 1 · modelo",
+  "housingCoop.template.financialHonesty.name": "Honestidade financeira",
+  "housingCoop.template.financialHonesty.nameEm": "folha de trabalho",
+  "housingCoop.template.financialHonesty.meta":
+    "Folha de cálculo · uma folha por membro",
+  "housingCoop.template.crlStatutes.tag": "Fase 2 · legal",
+  "housingCoop.template.crlStatutes.name": "Cooperativa CRL",
+  "housingCoop.template.crlStatutes.nameEm": "estatutos",
+  "housingCoop.template.crlStatutes.meta": "DOCX · lei portuguesa · validado",
+  "housingCoop.template.shareAgreement.tag": "Fase 2 · legal",
+  "housingCoop.template.shareAgreement.name": "Quota de membro",
+  "housingCoop.template.shareAgreement.nameEm": "acordo",
+  "housingCoop.template.shareAgreement.meta":
+    "PDF · cláusulas para família escolhida",
+  "housingCoop.template.financeModel.tag": "Fase 3 · financiamento",
+  "housingCoop.template.financeModel.name": "Financiamento do grupo",
+  "housingCoop.template.financeModel.nameEm": "modelo",
+  "housingCoop.template.financeModel.meta":
+    "Folha de cálculo · com dados de Lisboa & Porto",
+  "housingCoop.template.conflictResolution.tag": "Fase 5 · governação",
+  "housingCoop.template.conflictResolution.name": "Resolução de conflitos",
+  "housingCoop.template.conflictResolution.nameEm": "processo",
+  "housingCoop.template.conflictResolution.meta":
+    "PDF · adaptado da Casa Sambizanga",
+
+  // ── Lista de mentores/parceiros (housingCoop.data → COOP_RESOURCES).
+  //    Os campos `em` (nomes próprios: "Casa Sambizanga", "CCAM") ficam no
+  //    ficheiro de dados, não no catálogo.
+  "housingCoop.resource.sambizangaMentorsPost": " · mentoria",
+  "housingCoop.resource.sambizangaMentorsMeta": "4 ativas",
+  "housingCoop.resource.qpLegalTeamPre": "Equipa jurídica da QP",
+  "housingCoop.resource.qpLegalTeamMeta": "3 juristas",
+  "housingCoop.resource.housingFundLiaisonPre":
+    "Ligação ao fundo de habitação de Lisboa",
+  "housingCoop.resource.housingFundLiaisonMeta": "1 contacto",
+  "housingCoop.resource.caixaPre": "Caixa ",
+  "housingCoop.resource.caixaPost": " · atendimento a cooperativas",
+  "housingCoop.resource.caixaMeta": "Parceria",
+  "housingCoop.resource.monthlyAssemblyPre": "Assembleia mensal da cooperativa",
+  "housingCoop.resource.monthlyAssemblyMeta": "1.º sábado",
+
   "housingCoop.toast.updates":
     "Vais passar a receber as atualizações de {name} no teu feed.",
   "housingCoop.toast.mentoring":

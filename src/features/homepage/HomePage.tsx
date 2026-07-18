@@ -2,24 +2,16 @@ import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  Barter,
-  Board,
   ChangeMakers,
   Communities,
   Discovery,
   Gatherings,
   Hero,
-  Library,
   Manifesto,
-  MicroGrants,
   Newsletter,
   Outro,
   PainPoints,
-  Partners,
-  SkillsTeaser,
-  SpacesMap,
   Stories,
-  Wellbeing,
 } from "./sections";
 
 /**
@@ -42,19 +34,8 @@ export function HomePage() {
       <Gatherings />
       <PainPoints />
       <Stories />
-      {/* <Media /> */}
       <ChangeMakers />
-      <Wellbeing />
-      <MicroGrants />
-      <Board />
-      <Barter />
-      <SkillsTeaser />
-      <Library />
-      <Partners />
-      <SpacesMap />
-      {/*  <Platforms /> */}
       <Newsletter />
-      {/* <Pillars /> */}
       <Outro />
     </PageShell>
   );

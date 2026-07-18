@@ -1533,41 +1533,6 @@ export const economy: Catalog = {
   "mentorDetail.sidebar.askQuestion": "→ Message {firstName} a question",
   "mentorDetail.sidebar.browseAll": "→ Browse all mentors",
 
-  // ── MentorProfilePage (+ sidebar / apply modal) — Catarina Vaz spotlight ──
-  "mentorProfile.backToAll": "← All mentors",
-  "mentorProfile.sendQuestionCta": "Send a question first",
-  "mentorProfile.section.howIMentor": "How I <em>mentor</em>",
-  "mentorProfile.section.fitFor": "Who you'd <em>be a fit for</em>",
-  "mentorProfile.section.process": "The <em>process</em>, step by step",
-  "mentorProfile.section.pastMentees": "Past mentees · <em>published with</em>",
-  "mentorProfile.sidebar.applyTitle": "Apply for the '26 cohort",
-  "mentorProfile.sidebar.noUpfrontCost":
-    "no upfront cost · solidarity rate available",
-  "mentorProfile.sidebar.openApplication": "Open application",
-  "mentorProfile.sidebar.freeSustainer":
-    "All mentees get a free QueerPulse Sustainer membership for the year.",
-  "mentorProfile.sidebar.moreFrom": "More from {firstName}",
-  "mentorApply.eyebrow": "Apply to mentor with",
-  "mentorApply.title": "Request a session with <em>{firstName}.</em>",
-  "mentorApply.sub":
-    "Tell her where you'd like to focus and a little about your work. There's no upfront cost — mentees get a free Sustainer membership for the year.",
-  "mentorApply.focusAreaLabel": "Focus area *",
-  "mentorApply.noteLabel": "A note to {firstName} *",
-  "mentorApply.notePlaceholder":
-    "What are you working on, and what would make this mentorship worth her time and yours?",
-  "mentorApply.charsRemaining_one": "{count} more character to send.",
-  "mentorApply.charsRemaining_other": "{count} more characters to send.",
-  "mentorApply.polishedHint":
-    "Specific beats polished. She mentors people with a concrete thing to make.",
-  "mentorApply.cancel": "Cancel",
-  "mentorApply.sendingLabel": "Sending request…",
-  "mentorApply.sendCta": "Send request",
-  "mentorApply.success.title": "Request",
-  "mentorApply.success.em": "sent.",
-  "mentorApply.success.closeLabel": "Done",
-  "mentorApply.success.body":
-    "Your request to work with <strong>{mentorName}</strong> on <strong>{focus}</strong> is on its way. She reviews applications for the '26 cohort personally and usually replies within a week. You'll get a notification here.",
-
   // ── ApplicationStatusPage (+ header/list/card, listing-manager modals) ──
   // Scope note: application content in applicationStatus.data.tsx /
   // .patches.tsx (job titles, company names, stage hints, status blurbs,
@@ -2445,8 +2410,9 @@ export const economy: Catalog = {
   // Scope note: housingCoop.data.ts's FORMING_COOPS (specific co-ops, member
   // counts, financials) is a directory of real-world entries — in live mode
   // this would be fetched. Left in English, same as the grants directory.
-  // COOP_STATS/COOP_PHASES/COOP_TEMPLATES/COOP_RESOURCES are also left as-is
-  // for now (out of time budget this pass) — flagged in the sweep report.
+  // COOP_STATS/COOP_PHASES/COOP_TEMPLATES/COOP_RESOURCES are platform-authored
+  // programme content (same shape as `incubator.step.*`, which IS translated)
+  // and are now swept below.
   "housingCoop.backLabel": "Housing",
   "housingCoop.hero.eyebrow":
     "Housing co-op formation · Portugal-first, expandable",
@@ -2470,6 +2436,85 @@ export const economy: Catalog = {
   "housingCoop.startCta.postCta": "Post that you're starting",
   "housingCoop.startCta.storyCta": "Read Casa Sambizanga's story",
   "housingCoop.startCta.resourcesHead": "Resources & mentors",
+
+  // ── Hero stat labels (housingCoop.data → COOP_STATS) ────────────────────
+  "housingCoop.stats.activeGroups": "Active groups",
+  "housingCoop.stats.householdsHoused": "Households housed",
+  "housingCoop.stats.inPhase": "In phase 4–5",
+  "housingCoop.stats.cities": "Cities",
+  "housingCoop.stats.citiesLisbon": "Lisbon · ",
+
+  // ── Five-phase timeline (housingCoop.data → COOP_PHASES) ────────────────
+  "housingCoop.phase.findPeople.name": "Find",
+  "housingCoop.phase.findPeople.nameEm": "the people",
+  "housingCoop.phase.findPeople.time": "2–4 months",
+  "housingCoop.phase.findPeople.desc":
+    "4–12 households who share values, calendar, money habits. Vibes test, financial honesty, exit clause.",
+  "housingCoop.phase.legalIncorporation.name": "Legal",
+  "housingCoop.phase.legalIncorporation.nameEm": "incorporation",
+  "housingCoop.phase.legalIncorporation.time": "1–3 months",
+  "housingCoop.phase.legalIncorporation.desc":
+    "CRL co-op structure, statutes, member shares. Templates for Portuguese law specifically.",
+  "housingCoop.phase.financeStructure.name": "Finance &",
+  "housingCoop.phase.financeStructure.nameEm": "structure",
+  "housingCoop.phase.financeStructure.time": "3–8 months",
+  "housingCoop.phase.financeStructure.desc":
+    "Member share capital, ethical bank financing, government supports, group fund mechanics.",
+  "housingCoop.phase.findProperty.name": "Find",
+  "housingCoop.phase.findProperty.nameEm": "the property",
+  "housingCoop.phase.findProperty.time": "6–12 months",
+  "housingCoop.phase.findProperty.desc":
+    "Survey, negotiate, sign. Most groups buy. Some lease-to-own. Some take long lease from public stock.",
+  "housingCoop.phase.dailyGovernance.name": "Daily",
+  "housingCoop.phase.dailyGovernance.nameEm": "governance",
+  "housingCoop.phase.dailyGovernance.time": "Forever",
+  "housingCoop.phase.dailyGovernance.desc":
+    "Decision-making, conflict, repairs, new members, succession. Tools that survive boredom & bad days.",
+
+  // ── Downloadable templates (housingCoop.data → COOP_TEMPLATES) ──────────
+  "housingCoop.template.foundingValues.tag": "Phase 1 · template",
+  "housingCoop.template.foundingValues.name": "Founding values &",
+  "housingCoop.template.foundingValues.nameEm": "vibes test",
+  "housingCoop.template.foundingValues.meta": "PDF · PT + EN · 14 pages",
+  "housingCoop.template.financialHonesty.tag": "Phase 1 · template",
+  "housingCoop.template.financialHonesty.name": "Financial honesty",
+  "housingCoop.template.financialHonesty.nameEm": "worksheet",
+  "housingCoop.template.financialHonesty.meta":
+    "Spreadsheet · 1 sheet per member",
+  "housingCoop.template.crlStatutes.tag": "Phase 2 · legal",
+  "housingCoop.template.crlStatutes.name": "CRL co-op",
+  "housingCoop.template.crlStatutes.nameEm": "statutes",
+  "housingCoop.template.crlStatutes.meta": "DOCX · Portuguese law · vetted",
+  "housingCoop.template.shareAgreement.tag": "Phase 2 · legal",
+  "housingCoop.template.shareAgreement.name": "Member share",
+  "housingCoop.template.shareAgreement.nameEm": "agreement",
+  "housingCoop.template.shareAgreement.meta": "PDF · clauses for chosen family",
+  "housingCoop.template.financeModel.tag": "Phase 3 · finance",
+  "housingCoop.template.financeModel.name": "Group finance",
+  "housingCoop.template.financeModel.nameEm": "model",
+  "housingCoop.template.financeModel.meta":
+    "Spreadsheet · with Lisbon & Porto data",
+  "housingCoop.template.conflictResolution.tag": "Phase 5 · governance",
+  "housingCoop.template.conflictResolution.name": "Conflict resolution",
+  "housingCoop.template.conflictResolution.nameEm": "process",
+  "housingCoop.template.conflictResolution.meta":
+    "PDF · adapted from Casa Sambizanga",
+
+  // ── Mentors/partners list (housingCoop.data → COOP_RESOURCES). `em` fields
+  //    (proper nouns: "Casa Sambizanga", "CCAM") stay in the data file, not
+  //    the catalog.
+  "housingCoop.resource.sambizangaMentorsPost": " mentors",
+  "housingCoop.resource.sambizangaMentorsMeta": "4 active",
+  "housingCoop.resource.qpLegalTeamPre": "QP legal team",
+  "housingCoop.resource.qpLegalTeamMeta": "3 lawyers",
+  "housingCoop.resource.housingFundLiaisonPre": "Lisbon housing fund liaison",
+  "housingCoop.resource.housingFundLiaisonMeta": "1 contact",
+  "housingCoop.resource.caixaPre": "Caixa ",
+  "housingCoop.resource.caixaPost": " co-op desk",
+  "housingCoop.resource.caixaMeta": "Partner",
+  "housingCoop.resource.monthlyAssemblyPre": "Monthly co-op assembly",
+  "housingCoop.resource.monthlyAssemblyMeta": "First Sat",
+
   "housingCoop.toast.updates": "You'll get {name}'s updates in your feed.",
   "housingCoop.toast.mentoring": "Mentoring request sent to Casa Sambizanga.",
   "housingCoop.toast.seeAll": "The full co-op directory is coming soon.",

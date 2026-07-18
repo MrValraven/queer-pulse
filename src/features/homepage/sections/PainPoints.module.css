@@ -1,6 +1,6 @@
 /* ── Section shell ─────────────────────────────────────────────────── */
 .pain {
-  padding: 52px 0 108px;
+  padding: clamp(36px, 7vw, 52px) 0 clamp(60px, 11vw, 108px);
   background: var(--cream);
 }
 

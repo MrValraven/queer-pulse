@@ -13,8 +13,7 @@ import { CommunityThread } from "./CommunityThread";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
-const CHIPS = ["All", "Pinned", "Newest"] as const;
-type Chip = (typeof CHIPS)[number];
+type Chip = "All" | "Pinned" | "Newest";
 
 export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
   const { t } = useTranslation();

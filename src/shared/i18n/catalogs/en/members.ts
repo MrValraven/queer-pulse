@@ -54,6 +54,9 @@ export const members: Catalog = {
   "workItem.titleLabel": "Work title",
   "workItem.yearPlaceholder": "Year",
   "workItem.yearLabel": "Work year",
+  "workItem.linkPlaceholder": "Link (optional, e.g. https://bandcamp.com/…)",
+  "workItem.linkLabel": "Work link",
+  "workItem.linkedNote": "Links to a QueerPulse page — not editable here.",
   "workItem.remove": "Remove",
 
   // ── Profile page states (ProfilePage) ──────────────────────────────────────
@@ -163,6 +166,20 @@ export const members: Catalog = {
     "A line or two on who you are and what you're around for.",
   "profileEdit.shortBio.counter": "{length} / {max}",
   "profileEdit.shortBio.overLimit": "— your card shows the first two lines",
+
+  // ── Now status + Open to (ProfileNowField, OpenToEditor) ───────────────────
+  "profileEdit.now.label": "Now",
+  "profileEdit.now.help":
+    "What you're in the middle of. Change it as often as you like — leave it empty and this section stays off your profile.",
+  "profileEdit.now.placeholder":
+    "Finishing a zine, learning to weld, looking for a rehearsal room…",
+  "profileEdit.openTo.label": "Open to",
+  "profileEdit.openTo.help":
+    "What you'd welcome right now. People can tap these to reach you about that thing specifically.",
+  "profileEdit.openTo.presetsLabel": "Things you're open to",
+  "profileEdit.openTo.addPlaceholder": "Or say it your own way…",
+  "profileEdit.openTo.addLabel": "Add something you're open to",
+  "profileEdit.openTo.removeLabel": "Remove {label}",
 
   // ── Edit bar (ProfileEditBar) ───────────────────────────────────────────────
   "profileEdit.bar.unsaved": "You're editing your profile — unsaved changes",
@@ -452,6 +469,39 @@ export const members: Catalog = {
   "directory.profession.labResearcher": "Lab Researcher",
   "directory.profession.unspecified": "Not specified",
 
+  // ── Shared "open to" vocabulary (openTo.data → OPEN_TO_PRESETS). One id →
+  //    label, reused by the profile chips (content.now.openLabel), the
+  //    directory filter's checkbox rows (directory.filter.openToTitle), and
+  //    the connect form's reason select (connect:form.reasonOpenToGroup).
+  //    Phrased as the member would say it, not a marketplace category.
+  "openTo.collaborating": "Collaborating",
+  "openTo.mentoring": "Mentoring",
+  "openTo.casualMeetups": "Coffee and long dinners",
+  "openTo.commissions": "Commissions",
+  "openTo.clientWork": "New clients",
+  "openTo.referrals": "Referrals",
+  "openTo.swaps": "Skill swaps",
+  "openTo.studioVisits": "Studio visits",
+  "openTo.interviewees": "Being interviewed",
+
+  // ── "Where they're based" hood filter (memberDirectoryFilter.data →
+  //    NEIGHBOURHOODS). Real neighbourhood names are proper nouns and are
+  //    rendered directly, with no labelKey — only this "show everyone"
+  //    convenience option is chrome and needs one.
+  "directory.hood.all": "All of Lisbon",
+
+  // ── "Identity · self-declared" filter chips (memberDirectoryFilter.data →
+  //    IDENTITY_OPTIONS). Same stored-id / rendered-label split. NOTE:
+  //    "qpoc" is deliberately left untranslated pending native pt-PT review
+  //    of race/POC terminology (i18n sweep §6) — see the sweep report.
+  "directory.identity.transNonBinary": "Trans & non-binary",
+  "directory.identity.lesbian": "Lesbian",
+  "directory.identity.gay": "Gay",
+  "directory.identity.biPan": "Bi / Pan",
+  "directory.identity.aroAce": "Aro / ace spectrum",
+  "directory.identity.qpoc": "QPOC / queer of colour",
+  "directory.identity.disabledChronicIllness": "Disabled / chronic illness",
+
   // ── Directory card preview (DirectoryCardPreview) ───────────────────────────
   "directory.preview.caption": "How your card reads in the directory",
   "directory.preview.borrowedNote":
@@ -694,36 +744,24 @@ export const members: Catalog = {
   "savedByYou.count_other": "{count} saved",
   "savedByYou.toast.removed": "Removed from saved",
 
-  // ── My Places (MyPlacesSection) ──────────────────────────────────────────────
-  "myPlaces.status.review": "In review",
-  "myPlaces.status.question": "Quick question",
-  "myPlaces.status.live": "Live",
-  "myPlaces.title": "Places I <em>run</em>",
-  "myPlaces.subtitle":
+  // ── Places (PlacesSection) ───────────────────────────────────────────────────
+  // Same registry-status vocabulary as My Places above, reused on the
+  // profile-facing section that shows both the owner and their visitors what
+  // this member runs in the directory.
+  "places.status.review": "In review",
+  "places.status.question": "Quick question",
+  "places.status.live": "Live",
+  "places.selfTitle": "Places <em>you run</em>",
+  "places.visitorTitle": "Places {firstName} <em>runs</em>",
+  "places.selfSubtitle":
     "Listings you've added to the directory. Each is read by the community team before it goes live.",
-  "myPlaces.refLabel": "Ref · {ref}",
-  "myPlaces.viewListingCta": "View listing →",
-  "myPlaces.awaitingReview": "Awaiting review",
-
-  // ── QR scanner (QrScannerPage) ───────────────────────────────────────────────
-  "qrScanner.mode.safe.label": "Safe space",
-  "qrScanner.mode.safe.hint": "Point at a sticker",
-  "qrScanner.mode.event.label": "Event ticket",
-  "qrScanner.mode.event.hint": "Point at your ticket",
-  "qrScanner.mode.profile.label": "Profile",
-  "qrScanner.mode.profile.hint": "Point at a profile code",
-  "qrScanner.closeAriaLabel": "Close",
-  "qrScanner.title": "Scan a <em>QueerPulse</em> code",
-  "qrScanner.flashAriaLabel": "Flash",
-  "qrScanner.privacyNote":
-    "Camera stays on this device · we never upload frames",
-  "qrScanner.hintSuffix":
-    "Safe-space window stickers · gathering tickets · profile sharing codes",
-  "qrScanner.cantScan": "Can't scan?",
-  "qrScanner.enterCodeCta": "Enter code manually",
-  "qrScanner.helpCta": "Help with codes",
-  "qrScanner.scanToast": "{name} · verified safe space",
-  "qrScanner.manualToast": "Open code · paste flow",
+  "places.refLabel": "Ref · {ref}",
+  "places.viewListingCta": "View listing →",
+  "places.awaitingReview": "Awaiting review",
+  "places.empty.title": "No places yet",
+  "places.empty.description":
+    "Run a studio, shop, clinic or space in Lisbon? List it in the directory — once it's live, it'll show up here too.",
+  "places.empty.action": "List my business",
 
   // ── Badges page chrome (BadgesPage, BadgesSections) ─────────────────────────
   // Badge names, categories, rarity and level names are recognition-domain

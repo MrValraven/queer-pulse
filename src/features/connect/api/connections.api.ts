@@ -58,8 +58,12 @@ export function getConnections(tab: ConnectionApiTab, page?: number) {
 }
 
 /** POST /connections — send a connection request. Returns the created record. */
-export const sendConnection = (body: { toSlug: string; message?: string }) =>
-  apiPost<ConnectionDTO>("/connections", body);
+export const sendConnection = (body: {
+  toSlug: string;
+  message?: string;
+  /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
+  reason?: string;
+}) => apiPost<ConnectionDTO>("/connections", body);
 
 /** The actions PATCH /connections/:id accepts. */
 export type ConnectionAction = "accept" | "decline" | "block" | "unblock";

@@ -1932,26 +1932,6 @@ export const marketing: Catalog = {
   "transparency.signoff.downloadPdf": "Descarregar PDF (84 páginas)",
   "transparency.signoff.downloadCsv": "Descarregar CSV em bruto",
 
-  // ── Arquivo da Comunidade — chrome da página. As citações, biografias e
-  //    excertos de histórias orais são testemunhos reais de pessoas — ficam
-  //    em inglês (o caso canónico de "biografia fictícia" da regra de âmbito).
-  "archive.hero.category": "Arquivo da Comunidade",
-  "archive.hero.title": "Histórias que não devem <em>ser esquecidas.</em>",
-  "archive.hero.sub":
-    "Um arquivo contínuo de histórias orais, testemunhos e relatos pessoais de pessoas queer em Lisboa — de ontem e de hoje. Histórias que registam quem somos, o que construímos, e o que isso custou.",
-  "archive.featured.label": "A história em destaque este mês",
-  "archive.featured.readCta": "Lê a história dela →",
-  "archive.grid.title": "Do <em>arquivo</em>",
-  "archive.grid.sub":
-    "Relatos pessoais de pessoas da comunidade, de ontem e de hoje.",
-  "archive.oral.title": "Nas <em>próprias palavras.</em>",
-  "archive.oral.sub":
-    "Excertos curtos de histórias orais mais longas no arquivo.",
-  "archive.submit.title": "A tua história <em>também tem lugar aqui.</em>",
-  "archive.submit.body":
-    "O arquivo cresce com a contribuição da comunidade. Se tens uma história para contar — sobre Lisboa, sobre a tua comunidade, sobre o que te trouxe até aqui ou o que te manteve a caminhar — queremos ouvi-la. Todos os formatos são bem-vindos: escrito, áudio, vídeo, fotos.",
-  "archive.submit.cta": "Submete a tua história →",
-
   // ── Registo de alterações — chrome da página. As 18 entradas datadas
   //    (título/corpo/tag) são notas de lançamento históricas — ficam em
   //    inglês por causa do volume; sinalizado no relatório em vez de feito

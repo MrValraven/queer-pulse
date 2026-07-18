@@ -8,6 +8,10 @@ import {
 
 export type Visibility = "open" | "network" | "private";
 
+/** One "open to" entry on the wire: a shared preset id, or the member's words. */
+export type OpenToEntryDTO =
+  { kind: "preset"; id: string } | { kind: "custom"; label: string };
+
 export interface MemberCardDTO {
   slug: string;
   firstName: string;
@@ -18,6 +22,9 @@ export interface MemberCardDTO {
   tags?: string[];
   vouchCount: number;
   visibility: Visibility;
+  openTo?: OpenToEntryDTO[];
+  /** Neighbourhood / area shown as the profile's "hood". */
+  location?: string;
 }
 
 export interface MembersPage {
@@ -36,6 +43,11 @@ export interface WorkItemDTO {
   title: string;
   year: string;
   imageUrl?: string;
+  /** Where the card points, wire-shaped: a platform ref (`refEntity` + `refSlug`)
+   *  or an off-platform `href`. Absent when the item is unlinked. */
+  refEntity?: string;
+  refSlug?: string;
+  href?: string;
 }
 
 /** A barter-board post by the member ("On the board"). */
@@ -82,8 +94,7 @@ export interface ActivityItemDTO {
 
 export interface ProfileDTO extends MemberCardDTO {
   bio?: string;
-  location?: string;
-  openTo?: string[];
+  openTo?: OpenToEntryDTO[];
   /** Private Interests preferences — not shown on the profile (Settings → Interests). */
   identities?: string[];
   lookingFor?: string[];
@@ -148,7 +159,9 @@ export interface UpdateProfileDTO {
   bio?: string;
   location?: string;
   visibility?: Visibility;
-  openTo?: string[];
+  /** Free-text "what I'm in the middle of" status ("Now"); "" clears it. */
+  now?: string;
+  openTo?: OpenToEntryDTO[];
   /** Private Interests preferences — not shown on the profile (Settings → Interests). */
   identities?: string[];
   lookingFor?: string[];

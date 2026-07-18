@@ -1,7 +1,7 @@
 import { type RefCallback } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type A11yPrefs } from "./accessibilityPreferences.data";
-import styles from "./AccessibilityPreferencesPage.module.css";
+import styles from "./AccessibilityPrefSections.module.css";
 
 type ToggleKey = keyof A11yPrefs;
 

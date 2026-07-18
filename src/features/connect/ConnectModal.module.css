@@ -51,6 +51,16 @@
   }
 }
 
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 48px 4px;
+  color: var(--ink-60);
+  font-size: 14px;
+}
+
 .toRow {
   display: flex;
   align-items: center;

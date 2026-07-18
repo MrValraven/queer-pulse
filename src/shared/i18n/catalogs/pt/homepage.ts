@@ -178,27 +178,6 @@ export const homepage: Catalog = {
     "Ensaios, perfis e reportagens de dentro da comunidade — sem olhar de fora, sem termos de nos explicar.",
   "stories.imagePlaceholder": "imagem da história",
 
-  // ── Media (Cinema + Studio) ────────────────────────────────────────────────
-  "media.title": "<em>Vê. Ouve.</em> Feito por nós.",
-  "media.subtitle":
-    "QueerPulse Cinema e Studio — uma casa para o cinema e a música queer, feita por e para a comunidade.",
-  "media.cinema.eyebrow": "Cinema",
-  "media.cinema.title": "Cinema queer, <em>sem cortes.</em>",
-  "media.cinema.desc":
-    "Vê curtas e longas feitas por pessoas da comunidade, vai a sessões comunitárias, e submete o teu próprio trabalho.",
-  "media.cinema.chip.stream": "Streaming",
-  "media.cinema.chip.screenings": "Sessões",
-  "media.cinema.chip.submit": "Submeter",
-  "media.cinema.cta": "Entrar no Cinema",
-  "media.studio.eyebrow": "Studio",
-  "media.studio.title": "Som queer, <em>em voz alta.</em>",
-  "media.studio.desc":
-    "Lança a tua música, sintoniza sessões ao vivo, e descobre artistas da comunidade.",
-  "media.studio.chip.listen": "Ouvir",
-  "media.studio.chip.release": "Lançar",
-  "media.studio.chip.liveSessions": "Sessões ao vivo",
-  "media.studio.cta": "Entrar no Studio",
-
   // ── ChangeMakers ───────────────────────────────────────────────────────────
   "changeMakers.eyebrow": "Agentes de mudança",
   "changeMakers.title": "A construir a <em>Lisboa que queremos.</em>",
@@ -206,36 +185,6 @@ export const homepage: Catalog = {
     "Pessoas organizadoras, ativistas e gente do dia a dia a impulsionar esta cidade.",
   "changeMakers.cta": "Conhecer os agentes de mudança",
   "changeMakers.portraitPlaceholder": "retrato de {name}",
-
-  // ── Wellbeing ──────────────────────────────────────────────────────────────
-  "wellbeing.title": "Apoio que <em>percebe mesmo.</em>",
-  "wellbeing.subtitle":
-    "Saúde mental, apoio entre pares e recursos de crise — tudo analisado pela comunidade que precisa disto.",
-  "wellbeing.allResourcesCta": "Ver todos os recursos de bem-estar",
-  "wellbeing.therapists.title": "Encontra apoio terapêutico",
-  "wellbeing.therapists.description":
-    "Profissionais de saúde mental afirmativos e avaliados pela comunidade, por toda a Lisboa.",
-  "wellbeing.therapists.cta": "Encontrar apoio terapêutico",
-  "wellbeing.peerSupport.title": "Círculos de apoio entre pares",
-  "wellbeing.peerSupport.description":
-    "Grupos com facilitação, onde não precisas de explicar o básico primeiro.",
-  "wellbeing.peerSupport.cta": "Junta-te a um círculo",
-  "wellbeing.crisis.title": "Linhas de crise",
-  "wellbeing.crisis.description":
-    "Alguém para ligares, de dia ou de noite, quando as coisas pesam.",
-  "wellbeing.crisis.cta": "Pedir ajuda agora",
-  "wellbeing.legal.title": "Conhece os teus direitos",
-  "wellbeing.legal.description":
-    "Guias jurídicos em linguagem simples para a vida LGBTQ+ em Portugal.",
-  "wellbeing.legal.cta": "Ler os guias",
-  "wellbeing.employerReviews.title": "Avaliações de empregadores",
-  "wellbeing.employerReviews.description":
-    "Avaliações reais de pessoas queer que já trabalharam lá — sabe antes de te candidatares.",
-  "wellbeing.employerReviews.cta": "Ver avaliações",
-  "wellbeing.harmReduction.title": "Redução de danos",
-  "wellbeing.harmReduction.description":
-    "Orientação honesta e sem julgamentos — sem sermões, sem vergonha.",
-  "wellbeing.harmReduction.cta": "Ver o guia",
 
   // ── Communities (variante G — destaque + índice) ───────────────────────────
   "communities.eyebrow": "Comunidades · Lisboa",
@@ -298,91 +247,6 @@ export const homepage: Catalog = {
   "communities.room.events": "convívios e confirmações",
   "communities.room.resources": "guias e biblioteca",
 
-  // ── MicroGrants ────────────────────────────────────────────────────────────
-  "microGrants.title": "Pequenos fundos, <em>diferença real.</em>",
-  "microGrants.subtitle":
-    "Microbolsas financiadas pela comunidade, a cobrir os custos que mantêm pessoas e projetos a avançar.",
-  "microGrants.seeFundCta": "Ver o fundo",
-  "microGrants.applyCta": "Candidatar-te a uma bolsa",
-  "microGrants.contributeCta": "Contribuir para o fundo",
-  "microGrants.stat.contributed": "Contribuído por pessoas da comunidade",
-  "microGrants.stat.grantsAwarded": "Bolsas atribuídas",
-  "microGrants.stat.averageAmount": "Bolsa média",
-
-  // ── Board (quadro de favores) ──────────────────────────────────────────────
-  "board.title": "Pede ajuda, <em>oferece a tua.</em>",
-  "board.subtitle":
-    "Um quadro de favores da comunidade — publica o que precisas ou o que podes dar.",
-  "board.postSomethingCta": "Publicar algo",
-  "board.kind.lookingFor": "Precisa de",
-  "board.kind.offering": "Oferece",
-  "board.filter.all": "Todos",
-  "board.filter.asking": "A pedir",
-  "board.filter.offering": "A oferecer",
-  "board.filter.design": "Design",
-  "board.filter.tech": "Tecnologia",
-  "board.filter.space": "Espaço",
-  "board.filter.care": "Cuidado",
-  "board.empty.title": "Ainda não há nada aqui",
-  "board.empty.description":
-    "Nenhuma publicação corresponde a este filtro agora. Experimenta outra categoria, ou sê a primeira pessoa a publicar.",
-  "board.empty.clearFilters": "Limpar filtros",
-
-  // ── Barter ─────────────────────────────────────────────────────────────────
-  "barter.title": "Troca saberes, <em>não faturas.</em>",
-  "barter.subtitle":
-    "Pessoas da comunidade a trocar aquilo em que são boas pelo que precisam — sem dinheiro a mudar de mãos.",
-  "barter.browseAllCta": "Ver todas as trocas",
-  "barter.offeringLabel": "Oferece",
-  "barter.inExchangeFor": "em troca de",
-  "barter.wantingLabel": "Procura",
-
-  // ── SkillsTeaser ───────────────────────────────────────────────────────────
-  "skillsTeaser.title": "Ensina uma coisa, <em>aprende outra.</em>",
-  "skillsTeaser.subtitle":
-    "Uma troca contínua de saberes que as pessoas da comunidade ensinam e aprendem umas com as outras.",
-  "skillsTeaser.browseAllCta": "Ver todos os saberes",
-  "skillsTeaser.teachingLabel": "A ensinar",
-  "skillsTeaser.learningLabel": "A aprender",
-
-  // ── Library ────────────────────────────────────────────────────────────────
-  "library.title": "O conhecimento <em>não desaparece.</em>",
-  "library.subtitle":
-    "Gravações, guias e notas de cada convívio — pesquisáveis e preservados. O saber das oficinas que sobrevive à sala.",
-  "library.browseCta": "Ver a biblioteca →",
-  "library.type.recording": "Gravação",
-  "library.type.guide": "Guia",
-  "library.type.notes": "Notas de convívio",
-  "library.moreLabel": "no arquivo →",
-
-  // ── Partners ───────────────────────────────────────────────────────────────
-  "partners.title":
-    "A comunidade é mais forte <em>quando se constroem juntas</em>",
-  "partners.subtitle":
-    "Trabalhamos com organizações que partilham os nossos valores — em Portugal e além.",
-  "partners.seeAllLabel": "Ver todas as parcerias",
-  "partners.moreCount": "{count} comunidades",
-
-  // ── SpacesMap ──────────────────────────────────────────────────────────────
-  "spacesMap.title": "Encontra os teus <em>espaços na cidade.</em>",
-  "spacesMap.subtitle":
-    "Locais queer-seguros com curadoria da comunidade, ateliês de pessoas da comunidade e espaços de convívio por Lisboa. Não é um diretório de negócios — isto é nosso.",
-  "spacesMap.openFullMapCta": "Abrir mapa completo →",
-  "spacesMap.type.all": "Todos os espaços",
-  "spacesMap.type.venue": "Locais seguros",
-  "spacesMap.type.studio": "Ateliês de pessoas da comunidade",
-  "spacesMap.type.community": "Espaços comunitários",
-  "spacesMap.type.org": "Organizações",
-  "spacesMap.countLabel": "{count} espaços · com curadoria da comunidade",
-
-  // ── Platforms ──────────────────────────────────────────────────────────────
-  "platforms.title": "O ecossistema <em>queer mais alargado</em>",
-  "platforms.subtitle":
-    "Outras plataformas, media e comunidades LGBTQ+ que vale a pena conhecer — para lá da QueerPulse.",
-  "platforms.seeAllCta": "Ver todas as plataformas →",
-  "platforms.moreCount": "mais {count}",
-  "platforms.browseAllCta": "Ver tudo →",
-
   // ── Newsletter ─────────────────────────────────────────────────────────────
   "newsletter.title": "Mantém-te ligade. <em>Semanal, não diário.</em>",
   "newsletter.subtitle":
@@ -399,63 +263,6 @@ export const homepage: Catalog = {
   "newsletter.subscribeCta": "Subscrever",
   "newsletter.note":
     "Só para a comunidade · sem spam · cancela quando quiseres",
-
-  // ── Pillars ("um mundo, não uma lista de funcionalidades") ─────────────────
-  "pillars.eyebrow": "Uma adesão · seis mundos",
-  "pillars.title": "Um mundo, não uma <em>lista de funcionalidades.</em>",
-  "pillars.sub":
-    "Seis pilares da vida profissional queer em Lisboa — cada um construído por e para a comunidade, não acrescentado depois.",
-
-  "pillars.community.name": "Comunidade",
-  "pillars.community.desc":
-    "Convívios, grupos, fórum e ligações — o tecido social da Lisboa queer, online e presencial.",
-  "pillars.community.featured":
-    "O tecido social da Lisboa queer — uma sala com a porta aberta, online e presencial.",
-  "pillars.community.alt":
-    "Pessoas a celebrar à volta de um táxi pintado com as cores do arco-íris numa marcha do Orgulho",
-  "pillars.culture.name": "Cultura",
-  "pillars.culture.desc":
-    "A revista, histórias, grupos de leitura e biblioteca — um registo vivo da Lisboa queer, escrito de dentro.",
-  "pillars.culture.alt":
-    "Artistas de drag a percorrer o trajeto de uma marcha do Orgulho, de dia",
-  "pillars.livelihood.name": "Sustento",
-  "pillars.livelihood.desc":
-    "Vagas, trocas de saberes, microbolsas e trocas diretas — uma economia queer construída sobre confiança, não sobre comissões de plataforma.",
-  "pillars.livelihood.alt":
-    "Duas pessoas a planear trabalho juntas com portáteis e cadernos",
-  "pillars.wellbeing.name": "Bem-estar",
-  "pillars.wellbeing.desc":
-    "Saúde mental, saúde sexual, cuidados de saúde para pessoas trans — profissionais afirmativos, avaliados pela comunidade.",
-  "pillars.wellbeing.alt": "Dois homens a partilhar um beijo terno",
-  "pillars.safety.name": "Segurança",
-  "pillars.safety.desc":
-    "Guias jurídicos, denúncia de crimes de ódio, redução de danos e contactos de emergência — conhece os teus direitos.",
-  "pillars.safety.alt":
-    "Manifestantes a segurar cartazes com a frase os direitos trans são direitos humanos",
-  "pillars.activism.name": "Ativismo",
-  "pillars.activism.desc":
-    "Agentes de mudança, voluntariado e governança transparente — a construir uma cidade melhor, de dentro para fora.",
-  "pillars.activism.alt":
-    "Manifestantes a transportar uma grande faixa com a bandeira trans por uma rua da cidade",
-
-  "pillars.tag.gatherings": "Convívios",
-  "pillars.tag.forum": "Fórum",
-  "pillars.tag.communities": "Comunidades",
-  "pillars.tag.magazine": "Revista",
-  "pillars.tag.stories": "Histórias",
-  "pillars.tag.library": "Biblioteca",
-  "pillars.tag.jobs": "Vagas",
-  "pillars.tag.skills": "Competências",
-  "pillars.tag.microGrants": "Microbolsas",
-  "pillars.tag.mentalHealth": "Saúde mental",
-  "pillars.tag.transHub": "Hub trans",
-  "pillars.tag.sexualHealth": "Saúde sexual",
-  "pillars.tag.legal": "Jurídico",
-  "pillars.tag.rights": "Direitos",
-  "pillars.tag.emergency": "Emergência",
-  "pillars.tag.changemakers": "Agentes de mudança",
-  "pillars.tag.volunteer": "Voluntariado",
-  "pillars.tag.governance": "Governança",
 
   // ── Outro (chamada final) ──────────────────────────────────────────────────
   "outro.title": "Entra numa sala onde <em>já pertences.</em>",

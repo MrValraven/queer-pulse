@@ -11,6 +11,8 @@ import {
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBadge";
 import { routes } from "../../../app/routeMap";
+import type { OpenToEntry } from "../openTo.data";
+import type { WorkLink } from "../workLink.data";
 
 export interface ShapingItem {
   title: string;
@@ -21,6 +23,9 @@ export interface WorkItem {
   title: string;
   year: string;
   image?: string;
+  /** Where the card points — a platform entity or an external URL. Unlinked
+   *  items render as plain cards, exactly as before. */
+  link?: WorkLink;
 }
 /** A social / web link the member surfaces on their profile. */
 export interface SocialLink {
@@ -71,7 +76,10 @@ export interface Member {
   since: string;
   bio: string;
   now: string;
-  openTo: string[];
+  /** What this member is open to — shared presets plus their own words.
+   *  Presets are translatable and drive the directory filter; customs are the
+   *  member's phrasing and are display-only. */
+  openTo: OpenToEntry[];
   work: WorkItem[];
   /** Social / web links the member surfaces on their profile. Optional — most
    *  members have none; default to `[]` wherever read. */
@@ -126,7 +134,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "Film critic and archivist in Marvila. I write on Portuguese and Iberian cinema for Expresso, Público and DocLisboa, and I programme the cover film each week for QueerPulse Cinema. My thesis, roughly: the room where queer people lived always precedes the film about it.",
     now: "Programming the autumn season for QueerPulse Cinema and finishing an essay on the queer silences in 1960s Portuguese cinema.",
-    openTo: ["Screening proposals", "Collection ideas", "Archive tips"],
+    openTo: [
+      { kind: "custom", label: "Screening proposals" },
+      { kind: "custom", label: "Collection ideas" },
+      { kind: "custom", label: "Archive tips" },
+    ],
     socials: [
       { platform: "website", urlOrHandle: "joaoribeiro.pt" },
       { platform: "instagram", urlOrHandle: "@joao.programmes" },
@@ -138,6 +150,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1753944847480-92f369a5f00e?q=80&w=600&auto=format&fit=crop",
+        link: {
+          kind: "ref",
+          entity: "collection",
+          slug: "iberian-queer-cinema",
+        },
       },
       {
         category: "Essay",
@@ -249,7 +266,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "I design identities and editorial systems for cultural institutions, small presses and the occasional brave restaurant. Most of my work starts with a long conversation and a worse-for-wear notebook. I run a studio off the garden in Príncipe Real — the door's usually open.",
     now: "Wrapping a visual identity for a queer-run bookshop opening in Anjos this autumn, and slowly setting type for a riso zine about Lisbon's disappearing tascas.",
-    openTo: ["Collaborations", "Mentoring juniors", "Coffee in the garden"],
+    openTo: [
+      { kind: "preset", id: "collaborating" },
+      { kind: "preset", id: "mentoring" },
+      { kind: "preset", id: "casualMeetups" },
+    ],
     socials: [
       { platform: "instagram", urlOrHandle: "@atelierpulso" },
       { platform: "website", urlOrHandle: "atelierpulso.pt" },
@@ -363,9 +384,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I build infrastructure for things that should last. Mostly backend, mostly Rust. I care a lot about systems that don't burn people out — technical or otherwise. Based in a warehouse in Marvila with too many plants.",
     now: "Building a low-cost infrastructure toolkit for queer-run nonprofits. Looking for a collaborator who knows their way around DevOps.",
     openTo: [
-      "Mentoring junior engineers",
-      "Infrastructure consulting",
-      "After-work drinks",
+      { kind: "preset", id: "mentoring" },
+      { kind: "preset", id: "clientWork" },
+      { kind: "preset", id: "casualMeetups" },
     ],
     socials: [
       { platform: "github", urlOrHandle: "github.com/ruimarcal" },
@@ -465,7 +486,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2023",
     bio: "I make documentaries about people who would never think to be documented. Slow, quiet, observational work — usually shot in Lisbon, occasionally somewhere with better light. I edit in a borrowed room in Alfama with a view I will never deserve.",
     now: "Post-production on a 28-minute doc about the last remaining tascas in Lisbon. Looking for a composer.",
-    openTo: ["Collaboration", "Co-directing", "Screening events"],
+    openTo: [
+      { kind: "preset", id: "collaborating" },
+      { kind: "custom", label: "Co-directing" },
+      { kind: "custom", label: "Screening events" },
+    ],
     work: [
       {
         category: "Documentary",
@@ -560,7 +585,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2025",
     bio: "I run a supper club out of my home in Mouraria every few weeks — twelve seats, no menu, whatever came in that week. I ferment things obsessively and think deeply about food as hospitality, not spectacle.",
     now: "Planning the 13th edition of the Mouraria supper club. Working on a small fermentation guide for the community.",
-    openTo: ["Catering collaborations", "Recipe testing", "Long dinners"],
+    openTo: [
+      { kind: "custom", label: "Catering collaborations" },
+      { kind: "custom", label: "Recipe testing" },
+      { kind: "preset", id: "casualMeetups" },
+    ],
     work: [
       {
         category: "Supper club",
@@ -640,9 +669,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I work with LGBTQ+ adults navigating identity, relationships and the weight of being visible in a world that sometimes asks too much of us. My practice is in Estrela. I'm on QueerPulse because community matters for mental health — including mine.",
     now: "Running a monthly peer support group for queer professionals. Currently full but keeping a waitlist.",
     openTo: [
-      "Peer consultations",
-      "Referrals",
-      "Community mental health conversations",
+      { kind: "custom", label: "Peer consultations" },
+      { kind: "preset", id: "referrals" },
+      { kind: "custom", label: "Community mental health conversations" },
     ],
     work: [],
     board: [],
@@ -711,9 +740,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I shoot portraits on film — mostly medium format, mostly natural light, mostly people who have never liked having their photograph taken. I have a darkroom in Cais do Sodré that smells like fixer and old wood. Come and visit.",
     now: "Offering free portrait sessions for trans and nonbinary community members. No agenda, just a good photo.",
     openTo: [
-      "Portrait commissions",
-      "Collaborative zines",
-      "Darkroom visitors",
+      { kind: "preset", id: "commissions" },
+      { kind: "custom", label: "Collaborative zines" },
+      { kind: "preset", id: "studioVisits" },
     ],
     work: [
       {
@@ -806,7 +835,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "I've shipped products at two fintechs and one very strange startup. I'm interested in what it means to build ethically — not as a marketing position but as a daily practice. I live in Arroios, walk everywhere, and am genuinely good at spotting the real problem.",
     now: "Between roles, thinking carefully about what's next. Looking for a June–August sublet while I figure it out.",
-    openTo: ["Product consulting", "Informal chats", "Sublet leads in Arroios"],
+    openTo: [
+      { kind: "preset", id: "clientWork" },
+      { kind: "preset", id: "casualMeetups" },
+      { kind: "custom", label: "Sublet leads in Arroios" },
+    ],
     work: [
       {
         category: "Product",
@@ -899,9 +932,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I make ceramics in a studio in Graça — functional pieces with a slow, considered aesthetic. I teach occasional workshops and am almost always covered in clay. The studio has two spare desks and good afternoon light.",
     now: "Preparing a small exhibition of functional pieces for late summer. Also testing new glaze formulas that keep going wrong in interesting ways.",
     openTo: [
-      "Studio visitors",
-      "Collaborations with designers",
-      "Workshop participants",
+      { kind: "preset", id: "studioVisits" },
+      { kind: "custom", label: "Collaborations with designers" },
+      { kind: "custom", label: "Workshop participants" },
     ],
     work: [
       {
@@ -994,7 +1027,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2023",
     bio: "I produce electronic music and mix live sets — mostly for queer club nights but occasionally for things that don't have a name yet. I have a small studio above a café in Bairro Alto that I share with two other producers. The hours are unsociable but the music is worth it.",
     now: "Working on a new EP and scoring music for Sofia's documentary. Open to new live set commissions for late 2026.",
-    openTo: ["Live set commissions", "Collaborations", "Skill swaps"],
+    openTo: [
+      { kind: "preset", id: "commissions" },
+      { kind: "preset", id: "collaborating" },
+      { kind: "preset", id: "swaps" },
+    ],
     work: [
       {
         category: "Production",
@@ -1002,6 +1039,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://plus.unsplash.com/premium_photo-1682545693253-c9491d190b8f?q=80&w=800&auto=format&fit=crop",
+        link: {
+          kind: "external",
+          href: "https://nightform.bandcamp.com",
+        },
       },
       {
         category: "Live",
@@ -1093,9 +1134,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I design public-service tools that don't make people feel stupid — forms, booking flows, the boring stuff that decides whether someone gets help. I came to UX from a screen-reader habit and never left accessibility behind. Most weeks you'll find me sketching flows at a café table in Arroios with too many post-its.",
     now: "Rebuilding the appointment booking flow for a trans health clinic so it works on a five-year-old Android.",
     openTo: [
-      "Mentoring junior designers",
-      "Accessibility audits",
-      "Coffee in the garden",
+      { kind: "preset", id: "mentoring" },
+      { kind: "custom", label: "Accessibility audits" },
+      { kind: "preset", id: "casualMeetups" },
     ],
     work: [
       {
@@ -1182,7 +1223,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2022",
     bio: "I'm an architect obsessed with the question of who gets to stay in a neighbourhood. I work mostly on co-housing and on turning forgotten warehouses in Marvila into spaces queer collectives can actually afford. I cook for everyone who comes through the studio — it's how I think.",
     now: "Drawing up a shared-kitchen co-living scheme for a queer elders' housing pilot.",
-    openTo: ["Collaborations", "Site visits", "Long dinners"],
+    openTo: [
+      { kind: "preset", id: "collaborating" },
+      { kind: "custom", label: "Site visits" },
+      { kind: "preset", id: "casualMeetups" },
+    ],
     work: [
       {
         category: "Project",
@@ -1272,9 +1317,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I translate between Slovene, English and Portuguese for a living, and I write poems that get stuck in the gaps between those languages. Mouraria feels like home because everyone here is from somewhere else too. I'm she or they, depending on the day and the language.",
     now: "Finishing a poetry collection about queerness and migration — the working title keeps changing.",
     openTo: [
-      "Bilingual reading series",
-      "Translation swaps",
-      "Coffee in the garden",
+      { kind: "custom", label: "Bilingual reading series" },
+      { kind: "preset", id: "swaps" },
+      { kind: "preset", id: "casualMeetups" },
     ],
     work: [
       { category: "Chapbook", title: "Border Tongues", year: "2025" },
@@ -1358,9 +1403,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I help groups have the hard conversations without falling apart — facilitation, mediation, the slow work of trust. They/them, always. After a decade in social-sector roles I mostly spend my energy now helping the next people through the door not burn out in year one.",
     now: "Running a six-week facilitation lab for people moving into community work for the first time.",
     openTo: [
-      "Mentoring",
-      "Facilitating tricky meetings",
-      "Coffee in the garden",
+      { kind: "preset", id: "mentoring" },
+      { kind: "custom", label: "Facilitating tricky meetings" },
+      { kind: "preset", id: "casualMeetups" },
     ],
     work: [
       {
@@ -1448,9 +1493,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I'm a clinical psychologist in Porto working mostly with queer and trans clients — the kind of care I wish had existed when I was twenty. My practice in Cedofeita is small and slow on purpose. I also supervise psychologists retraining toward affirming practice, because there still aren't enough of us.",
     now: "Building a referral network of affirming therapists across the north of Portugal.",
     openTo: [
-      "New clients",
-      "Supervising retraining psychologists",
-      "Collaborations",
+      { kind: "preset", id: "clientWork" },
+      { kind: "custom", label: "Supervising retraining psychologists" },
+      { kind: "preset", id: "collaborating" },
     ],
     work: [
       {
@@ -1537,7 +1582,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "Apr 2026",
     bio: "I'm a filmmaker who just landed in Lisbon and fell straight into Cais do Sodré at 4am. They/them. I make documentaries about the places that disappear when the lights come up — right now, the queer dancefloors of southern Europe before they're priced out of existence.",
     now: "Shooting a documentary on queer nightlife across Lisbon, Barcelona and Naples — chasing the rooms before they close.",
-    openTo: ["Interviewees", "Fixers & local guides", "Collaborations"],
+    openTo: [
+      { kind: "preset", id: "interviewees" },
+      { kind: "custom", label: "Fixers & local guides" },
+      { kind: "preset", id: "collaborating" },
+    ],
     work: [
       { category: "Film", title: "Last Call (in production)", year: "2026" },
       {
@@ -1619,7 +1668,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2023",
     bio: "I'm a physiotherapist who does trans-affirming bodywork and post-surgical rehab — the kind of touch-based care that has to be built on consent, slowly. My room in Estrela is quiet and warm and you keep on whatever clothes you want. I believe a body in pain deserves to feel safe before it feels better.",
     now: "Putting together a movement class for people recovering from top surgery.",
-    openTo: ["New clients", "Collaborations with surgeons & therapists"],
+    openTo: [
+      { kind: "preset", id: "clientWork" },
+      { kind: "custom", label: "Collaborations with surgeons & therapists" },
+    ],
     work: [
       {
         category: "Practice",
@@ -1709,9 +1761,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I coordinate peer support and crisis referral for queer migrants and refugees arriving in Lisbon, mostly out of a small office in Arroios that smells like cardamom coffee. I came here from Casablanca eight years ago, so I know what it is to land somewhere and not have the words yet. My job is to make sure nobody has to face the asylum system alone.",
     now: "Building a multilingual safe-housing list with three other diaspora collectives.",
     openTo: [
-      "Interpreters for Arabic and Farsi",
-      "Lawyers who do pro-bono asylum work",
-      "A bigger drop-in space in Arroios",
+      { kind: "custom", label: "Interpreters for Arabic and Farsi" },
+      { kind: "custom", label: "Lawyers who do pro-bono asylum work" },
+      { kind: "custom", label: "A bigger drop-in space in Arroios" },
     ],
     work: [
       {
@@ -1811,9 +1863,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I organise tenants in Marvila and Graça — knocking on doors, sitting with people the night before an eviction, helping neighbours realise they have more power together than alone. My dream is a proper queer housing co-op where nobody's lease depends on staying closeted to a landlord. I've been priced out of three flats myself, so this isn't theory for me.",
     now: "Drafting the bylaws for Lisbon's first explicitly queer-friendly housing co-op.",
     openTo: [
-      "People who've run co-ops before",
-      "A lawyer for cooperative law",
-      "Anyone facing eviction who wants backup",
+      { kind: "custom", label: "People who've run co-ops before" },
+      { kind: "custom", label: "A lawyer for cooperative law" },
+      { kind: "custom", label: "Anyone facing eviction who wants backup" },
     ],
     work: [
       {
@@ -1908,9 +1960,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I do sexual-health and harm-reduction outreach across Cais do Sodré and Bairro Alto — testing tents, naloxone, PrEP navigation, and a lot of just listening at 3am. I trained as a nurse but found my place out on the street where the clinic walls scare people off. No judgement, ever; that's the whole job.",
     now: "Setting up a no-appointment rapid-testing night that runs after the bars close.",
     openTo: [
-      "Volunteers comfortable with late nights",
-      "A nurse or two for the testing nights",
-      "Donations of safer-use supplies",
+      { kind: "custom", label: "Volunteers comfortable with late nights" },
+      { kind: "custom", label: "A nurse or two for the testing nights" },
+      { kind: "custom", label: "Donations of safer-use supplies" },
     ],
     work: [
       {
@@ -2014,9 +2066,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I'm a lawyer who gives away the hours I was trained never to give away. Most of my pro-bono work is queer family law and discrimination — the cases people can't afford to bring and can't afford to lose. I split my time between a small practice in Estrela and a lot of other people's kitchen tables. The law is only protection if you can actually reach it, so I spend as much time explaining rights as I do defending them.",
     now: "Running a free monthly rights clinic and training a new cohort of lawyers to take LGBTQ+ cases without fumbling the parts that matter.",
     openTo: [
-      "Pro-bono referrals",
-      "Lawyers who want to take queer cases",
-      "Rights talks for community groups",
+      { kind: "preset", id: "referrals" },
+      { kind: "custom", label: "Lawyers who want to take queer cases" },
+      { kind: "custom", label: "Rights talks for community groups" },
     ],
     work: [
       {
@@ -2121,9 +2173,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I make zines and queer comics, mostly printed on a temperamental risograph in a shared Mouraria studio that always smells of soy ink. My work is soft and a bit absurd — lesbian saints, fluorescent saudade, dogs who give good advice. I teach risograph and bookbinding workshops because watching someone print their first page never gets old.",
     now: "Finishing a 40-page riso comic about my grandmother's kitchen and coming out to her.",
     openTo: [
-      "Writers who want their words illustrated",
-      "A second hand for workshop days",
-      "Trades — prints for almost anything",
+      { kind: "custom", label: "Writers who want their words illustrated" },
+      { kind: "custom", label: "A second hand for workshop days" },
+      { kind: "custom", label: "Trades — prints for almost anything" },
     ],
     work: [
       {
@@ -2217,9 +2269,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "Galician mother, Portuguese father, raised between Vigo and Lisbon — I shoot documentary work and the queer nightlife that raised me, mostly in Príncipe Real and the basements of Cais do Sodré. I'm interested in the hour after the lights come up, when everyone's tender and honest. I shoot film because waiting for the contact sheet keeps me humble.",
     now: "Editing a year-long photo essay on Lisbon's last few queer dance floors before they're sold off.",
     openTo: [
-      "Venues to document before they close",
-      "A darkroom share",
-      "Subjects who want honest portraits",
+      { kind: "custom", label: "Venues to document before they close" },
+      { kind: "custom", label: "A darkroom share" },
+      { kind: "custom", label: "Subjects who want honest portraits" },
     ],
     work: [
       {
@@ -2311,9 +2363,12 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "Frontend engineer by day, accessibility nerd by conviction — I believe a website that locks out a screen-reader user is just a broken website. I spend my evenings building tools for small queer nonprofits who can't afford a dev. I'm trans and quietly so; this profile stays private for now, and that's allowed to be okay.",
     now: "Rebuilding a trans-healthcare directory so it actually works on a cheap phone with a screen reader.",
     openTo: [
-      "Nonprofits who need a website that won't break",
-      "A designer to pair with",
-      "Junior devs who want a patient mentor",
+      {
+        kind: "custom",
+        label: "Nonprofits who need a website that won't break",
+      },
+      { kind: "custom", label: "A designer to pair with" },
+      { kind: "custom", label: "Junior devs who want a patient mentor" },
     ],
     work: [
       {
@@ -2407,9 +2462,12 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I curate contemporary shows and, more stubbornly, I build a queer archive — flyers, love letters, club photos, the things institutions never thought worth keeping. I work between a white-cube gallery in Príncipe Real and a damp storage room in Estrela full of other people's history. My job is making sure we're not erased twice: once while living, once after.",
     now: "Curating an exhibition built entirely from donated queer ephemera from the 80s and 90s.",
     openTo: [
-      "People with old photos, flyers, letters to donate",
-      "Oral-history interviewees",
-      "A grant writer who gets archives",
+      {
+        kind: "custom",
+        label: "People with old photos, flyers, letters to donate",
+      },
+      { kind: "preset", id: "interviewees" },
+      { kind: "custom", label: "A grant writer who gets archives" },
     ],
     work: [
       {
@@ -2503,7 +2561,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2023",
     bio: "I report on the slow machinery of LGBTQ+ rights in Portugal — the bills that stall, the clinics that quietly close, the names that never make the headline. I work out of a shared desk in Arroios with too much coffee and a wall of sticky notes. If a story matters and nobody's chasing it, that's usually where you'll find me.",
     now: "Filing a months-long investigation into waiting times at gender-affirming care services across the public system.",
-    openTo: ["Confidential tips", "Co-reporting with regional journalists"],
+    openTo: [
+      { kind: "custom", label: "Confidential tips" },
+      { kind: "custom", label: "Co-reporting with regional journalists" },
+    ],
     work: [
       {
         category: "Investigation",
@@ -2580,7 +2641,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2022",
     bio: "I organise around trans rights and I write essays in the gaps between meetings, usually on the 28 tram going up to Graça. My politics are unglamorous: phone trees, legal forms, someone's deadname on a hospital wristband that needs fixing. The writing is just me trying to make sense of the work out loud.",
     now: "Drafting a guide to changing your legal name and gender marker, written by people who've actually done it.",
-    openTo: ["Speaking on panels", "Pairing new organisers with mentors"],
+    openTo: [
+      { kind: "custom", label: "Speaking on panels" },
+      { kind: "custom", label: "Pairing new organisers with mentors" },
+    ],
     work: [
       { category: "Essay", title: "On Patience and Rage", year: "2025" },
       {
@@ -2663,8 +2727,8 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I help queer tenants who are being pushed out of their homes — by landlords, by rent hikes, by the slow violence of a city selling itself off. I trained as a paralegal and now I split my time between a legal-aid desk in Marvila and people's kitchen tables. Housing is a queer issue; nobody comes out of a home they can't afford.",
     now: "Building a small fund and a buddy system so nobody faces an eviction hearing alone.",
     openTo: [
-      "Volunteer note-takers for hearings",
-      "Lawyers willing to do pro bono",
+      { kind: "custom", label: "Volunteer note-takers for hearings" },
+      { kind: "custom", label: "Lawyers willing to do pro bono" },
     ],
     work: [
       {
@@ -2752,7 +2816,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "I'm a disabled queer person working at the messy intersection of disability justice and healthcare access. I do accessibility audits for community spaces and help people fight for the care they're owed. Lisbon's cobblestones nearly killed my wrists, so now I keep a running map of which venues a wheelchair can actually reach.",
     now: "Auditing queer venues in Cais do Sodré and Príncipe Real and publishing honest access notes for each.",
-    openTo: ["Venues wanting an access audit", "Crip-led peer support"],
+    openTo: [
+      { kind: "custom", label: "Venues wanting an access audit" },
+      { kind: "custom", label: "Crip-led peer support" },
+    ],
     work: [
       {
         category: "Guide",
@@ -2833,7 +2900,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "Jun 2026",
     bio: "I'm Turkish-Portuguese and I make sound for film and theatre, and I tune club rigs so they hit your chest without shredding your ears. I grew up between Istanbul and Almada, so my ear is full of ferries, call to prayer and bad PA systems. New here, but I've already found the best spot in Marvila to record at 4am.",
     now: "Designing the sound for a queer theatre piece and rebuilding a soundsystem for a Marvila warehouse party.",
-    openTo: ["Film and theatre collaborations", "Mentoring on field recording"],
+    openTo: [
+      { kind: "custom", label: "Film and theatre collaborations" },
+      { kind: "custom", label: "Mentoring on field recording" },
+    ],
     work: [
       {
         category: "Theatre",
@@ -2925,8 +2995,8 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I make contemporary dance about queer bodies refusing to behave — work that's tender, sweaty and a little feral. I rehearse in a borrowed studio in Estrela and improvise on the kitchen floor when I can't afford the space. Just landed in this community and looking for dancers who'd rather risk falling than stay safe.",
     now: "Developing a duet about waiting rooms and longing, set to almost no music at all.",
     openTo: [
-      "Dancers for a new devised piece",
-      "Cross-disciplinary collaborators",
+      { kind: "custom", label: "Dancers for a new devised piece" },
+      { kind: "custom", label: "Cross-disciplinary collaborators" },
     ],
     work: [
       { category: "Performance", title: "Soft Animals", year: "2025" },
@@ -3004,7 +3074,10 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "May 2026",
     bio: "I'm a nurse by day and a harm-reduction worker by night, mostly in the clubs around Cais do Sodré and the warehouse parties out east. I carry naloxone, water, earplugs and zero judgement. The dancefloor is healthcare too, and I'd rather meet people where they already are than wait for them in a waiting room.",
     now: "Training a new cohort of peer first-aiders to cover the summer party season.",
-    openTo: ["Volunteers for the night team", "Venues wanting a welfare point"],
+    openTo: [
+      { kind: "custom", label: "Volunteers for the night team" },
+      { kind: "custom", label: "Venues wanting a welfare point" },
+    ],
     work: [
       { category: "Programme", title: "The Night Welfare Point", year: "2026" },
       {
@@ -3089,9 +3162,9 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
     bio: "I'm a librarian by trade and one of the people who keeps the forum a kind place to be — part-time, on a small honorarium, accountable to the council like the rest of the team. Moderation, for me, is mostly cataloguing of a different sort: keeping the useful things findable and making sure nobody gets lost or shouted down on the way in.",
     now: "Moderating the forum a few hours a week, and keeping the community resource guide tidy so new arrivals can actually find what they need.",
     openTo: [
-      "Reporting something quietly",
-      "Help finding a resource",
-      "Reading recommendations",
+      { kind: "custom", label: "Reporting something quietly" },
+      { kind: "custom", label: "Help finding a resource" },
+      { kind: "custom", label: "Reading recommendations" },
     ],
     work: [
       {
@@ -3176,7 +3249,11 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
     bio: "test bio description for logged in user (tiago)",
     now: "Building things for the web, writing poetry, and organising events for the queer and non-monogamy communities in Lisbon.",
-    openTo: ["Collaboration", "Community events", "Mentorship"],
+    openTo: [
+      { kind: "preset", id: "collaborating" },
+      { kind: "custom", label: "Community events" },
+      { kind: "preset", id: "mentoring" },
+    ],
     identities: ["Gay", "Bisexual", "Queer"],
     lookingFor: [
       "Community & friendship",

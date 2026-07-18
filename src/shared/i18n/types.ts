@@ -47,12 +47,6 @@ export type Namespace =
 export type Catalog = Record<string, string>;
 
 /**
- * @deprecated Legacy flat-catalog alias kept so `strings.en.ts` still type-checks.
- * New code authors per-namespace `Catalog`s under `catalogs/`.
- */
-export type StringCatalog = Catalog;
-
-/**
  * Values passed to `t(key, options)`. `count` drives CLDR pluralization; every
  * other entry is available for `{token}` interpolation.
  */

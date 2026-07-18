@@ -2,7 +2,6 @@ import { Button, Eyebrow, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { neighbourhoods } from "../data/gatherings";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -41,14 +40,6 @@ export function Hero() {
           <Reveal as="p" className={styles.note} delay={220}>
             <span className={styles.liveDot} aria-hidden />
             {t("homepage:hero.note")}
-          </Reveal>
-
-          <Reveal className={styles.ticker} delay={260}>
-            {neighbourhoods.map((hood) => (
-              <span key={hood} className={styles.hood}>
-                {hood}
-              </span>
-            ))}
           </Reveal>
         </div>
       </div>

@@ -36,7 +36,8 @@ export interface VerifiedSpace {
   eyebrow: string;
   sub: string;
   metaPills: { label: string; accent?: boolean }[];
-  tier: string;
+  /** Trust tier as a number; the label is composed at render so it localizes. */
+  tier: number;
   reVerified: string;
   verifier: string;
   promises: Promise[];
@@ -86,7 +87,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Gender-neutral bathrooms", accent: true },
       { label: "Step-free entrance", accent: true },
     ],
-    tier: "Tier 1",
+    tier: 1,
     reVerified: "2 May 2026",
     verifier: "Mod team · 2 visits",
     promises: [
@@ -152,7 +153,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Drag Fridays" },
       { label: "Stairs to main bar", accent: true },
     ],
-    tier: "Tier 2",
+    tier: 2,
     reVerified: "11 Apr 2026",
     verifier: "Mod team · 2 visits",
     promises: [
@@ -219,7 +220,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Trained security", accent: true },
       { label: "Multiple floors" },
     ],
-    tier: "Tier 1",
+    tier: 1,
     reVerified: "28 Mar 2026",
     verifier: "Mod team · 3 visits",
     promises: [
@@ -286,7 +287,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Sober-friendly", accent: true },
       { label: "Fully accessible", accent: true },
     ],
-    tier: "Tier 1",
+    tier: 1,
     reVerified: "6 May 2026",
     verifier: "Mod team · 2 visits",
     promises: [
@@ -353,7 +354,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Trans-experienced staff", accent: true },
       { label: "Walk-in & booking" },
     ],
-    tier: "Tier 1",
+    tier: 1,
     reVerified: "19 May 2026",
     verifier: "Mod team · 2 visits",
     promises: [
@@ -420,7 +421,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Walk-in welcome" },
       { label: "Trans-experienced", accent: true },
     ],
-    tier: "Tier 2",
+    tier: 2,
     reVerified: "24 Apr 2026",
     verifier: "Mod team · 2 visits",
     promises: [
@@ -487,7 +488,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Hosts community events", accent: true },
       { label: "Step-free main hall", accent: true },
     ],
-    tier: "Tier 1",
+    tier: 1,
     reVerified: "15 Apr 2026",
     verifier: "Mod team · 2 visits",
     promises: [
@@ -558,7 +559,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       { label: "Sober-friendly", accent: true },
       { label: "Gender-neutral bathroom", accent: true },
     ],
-    tier: "Tier 2",
+    tier: 2,
     reVerified: "9 May 2026",
     verifier: "Mod team · 2 visits",
     promises: [

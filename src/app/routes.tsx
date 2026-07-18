@@ -341,11 +341,6 @@ const GetTheAppPage = lazy(() =>
     default: m.GetTheAppPage,
   })),
 );
-const ComponentLibraryPage = lazy(() =>
-  import("../features/marketing/ComponentLibraryPage").then((m) => ({
-    default: m.ComponentLibraryPage,
-  })),
-);
 const CitiesPage = lazy(() =>
   import("../features/marketing/CitiesPage").then((m) => ({
     default: m.CitiesPage,
@@ -1030,11 +1025,6 @@ const OpenLetterPage = lazy(() =>
     default: m.OpenLetterPage,
   })),
 );
-const ArchivePage = lazy(() =>
-  import("../features/marketing/ArchivePage").then((m) => ({
-    default: m.ArchivePage,
-  })),
-);
 const PlatformsPage = lazy(() =>
   import("../features/marketing/PlatformsPage").then((m) => ({
     default: m.PlatformsPage,
@@ -1206,11 +1196,6 @@ const StudioSettingsPage = lazy(() =>
     default: m.StudioSettingsPage,
   })),
 );
-const AccessibilityPreferencesPage = lazy(() =>
-  import("../features/settings/AccessibilityPreferencesPage").then((m) => ({
-    default: m.AccessibilityPreferencesPage,
-  })),
-);
 const NotificationPreferencesPage = lazy(() =>
   import("../features/settings/NotificationPreferencesPage").then((m) => ({
     default: m.NotificationPreferencesPage,
@@ -1231,11 +1216,6 @@ const EditProfilePage = lazy(() =>
     default: m.EditProfilePage,
   })),
 );
-const LinkedAccountsPage = lazy(() =>
-  import("../features/settings/LinkedAccountsPage").then((m) => ({
-    default: m.LinkedAccountsPage,
-  })),
-);
 const SecurityPage = lazy(() =>
   import("../features/settings/SecurityPage").then((m) => ({
     default: m.SecurityPage,
@@ -1244,16 +1224,6 @@ const SecurityPage = lazy(() =>
 const SessionsPage = lazy(() =>
   import("../features/settings/SessionsPage").then((m) => ({
     default: m.SessionsPage,
-  })),
-);
-const ProfileThemePage = lazy(() =>
-  import("../features/settings/ProfileThemePage").then((m) => ({
-    default: m.ProfileThemePage,
-  })),
-);
-const SubscriptionsPage = lazy(() =>
-  import("../features/settings/SubscriptionsPage").then((m) => ({
-    default: m.SubscriptionsPage,
   })),
 );
 const CancelMembershipPage = lazy(() =>
@@ -1281,11 +1251,6 @@ const PublicProfilePage = lazy(() =>
     default: m.PublicProfilePage,
   })),
 );
-const MentorProfilePage = lazy(() =>
-  import("../features/economy/MentorProfilePage").then((m) => ({
-    default: m.MentorProfilePage,
-  })),
-);
 const WorkHubPage = lazy(() =>
   import("../features/economy/WorkHubPage").then((m) => ({
     default: m.WorkHubPage,
@@ -1294,11 +1259,6 @@ const WorkHubPage = lazy(() =>
 const WorkProfilePage = lazy(() =>
   import("../features/economy/WorkProfilePage").then((m) => ({
     default: m.WorkProfilePage,
-  })),
-);
-const NotificationDeepLinkPage = lazy(() =>
-  import("../features/notifications/NotificationDeepLinkPage").then((m) => ({
-    default: m.NotificationDeepLinkPage,
   })),
 );
 const MentionsPage = lazy(() =>
@@ -1324,11 +1284,6 @@ const PerksPage = lazy(() =>
 const DraftsPage = lazy(() =>
   import("../features/members/DraftsPage").then((m) => ({
     default: m.DraftsPage,
-  })),
-);
-const QrScannerPage = lazy(() =>
-  import("../features/members/QrScannerPage").then((m) => ({
-    default: m.QrScannerPage,
   })),
 );
 const CookiesPage = lazy(() =>
@@ -1511,12 +1466,8 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/settings", routes.settings],
   ["/edit-profile", routes.editProfile],
   ["/notification-preferences", routes.notificationPreferences],
-  ["/accessibility-preferences", routes.accessibilityPreferences],
-  ["/profile-theme", routes.profileTheme],
-  ["/linked-accounts", routes.linkedAccounts],
   ["/security", routes.security],
   ["/sessions", routes.sessions],
-  ["/subscriptions", routes.subscriptions],
   ["/data-export", routes.dataExport],
   ["/delete-account", routes.deleteAccount],
   ["/cancel-membership", routes.cancelMembership],
@@ -1576,7 +1527,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/employer-reviews", routes.employerReviews],
   ["/application-status", routes.applicationStatus],
   ["/mentorship", routes.mentorship],
-  ["/mentor-profile", routes.mentorProfile],
   ["/flatmates", `${routes.housing}?tab=flatmates`],
   // Hub re-parenting (2026-07-06): old full paths → new homes
   ["/work/housing", routes.housing],
@@ -1612,7 +1562,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/donate", routes.donate],
   ["/volunteer", routes.volunteer],
   ["/governance", routes.governance],
-  ["/component-library", routes.componentLibrary],
   ["/partners", routes.partners],
   // Policies
   ["/privacy", routes.privacy],
@@ -1737,14 +1686,9 @@ export function AppRoutes() {
           <Route path={routes.caregivers} element={<CaregiversPage />} />
           <Route path={routes.messages} element={<MessagesPage />} />
           <Route path={routes.notifications} element={<NotificationsPage />} />
-          <Route
-            path={routes.notificationDeepLink}
-            element={<NotificationDeepLinkPage />}
-          />
           <Route path={routes.mentions} element={<MentionsPage />} />
           <Route path={routes.collections} element={<CollectionsPage />} />
           <Route path={routes.drafts} element={<DraftsPage />} />
-          <Route path={routes.qrScanner} element={<QrScannerPage />} />
           <Route path={routes.communities} element={<CommunitiesPage />} />
           <Route
             path={routes.communitiesHome}
@@ -1845,10 +1789,6 @@ export function AppRoutes() {
             element={<AssemblyMinutesPage />}
           />
           <Route path={routes.getTheApp} element={<GetTheAppPage />} />
-          <Route
-            path={routes.componentLibrary}
-            element={<ComponentLibraryPage />}
-          />
           <Route path={routes.cities} element={<CitiesPage />} />
           <Route
             path={routes.forOrganisations}
@@ -2040,7 +1980,6 @@ export function AppRoutes() {
             path={`${routes.mentorship}/:slug`}
             element={<MentorDetailPage />}
           />
-          <Route path={routes.mentorProfile} element={<MentorProfilePage />} />
           <Route
             path="/jobs/:slug"
             element={
@@ -2240,7 +2179,6 @@ export function AppRoutes() {
           <Route path={routes.resources} element={<ResourceLibraryPage />} />
           <Route path={routes.activism} element={<ActivismPage />} />
           <Route path={routes.openLetter} element={<OpenLetterPage />} />
-          <Route path={routes.archive} element={<ArchivePage />} />
           <Route
             path="/annual-assembly/minutes/:year"
             element={
@@ -2337,18 +2275,8 @@ export function AppRoutes() {
             path={routes.notificationPreferences}
             element={<NotificationPreferencesPage />}
           />
-          <Route
-            path={routes.accessibilityPreferences}
-            element={<AccessibilityPreferencesPage />}
-          />
-          <Route path={routes.profileTheme} element={<ProfileThemePage />} />
-          <Route
-            path={routes.linkedAccounts}
-            element={<LinkedAccountsPage />}
-          />
           <Route path={routes.security} element={<SecurityPage />} />
           <Route path={routes.sessions} element={<SessionsPage />} />
-          <Route path={routes.subscriptions} element={<SubscriptionsPage />} />
           <Route path={routes.dataExport} element={<DataExportPage />} />
           <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
           <Route

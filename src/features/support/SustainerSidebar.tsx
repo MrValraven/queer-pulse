@@ -1,5 +1,6 @@
 import { FiCheckCircle, FiLock, FiShield } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { useCountUp } from "../../shared/hooks";
 import { useAnimatedFill } from "./useAnimatedFill";
 import {
@@ -22,6 +23,7 @@ const AV_CLASS: Record<AvatarTint, string> = {
 /** Sticky sidebar: live supporter count, impact stats, the "why", reassurance. */
 export function SustainerSidebar({ store }: { store: SustainerStore }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const count = useCountUp(store.count);
   const pct = Math.min(100, Math.round((store.count / store.goal) * 100));
   const fill = useAnimatedFill(pct);
@@ -82,7 +84,9 @@ export function SustainerSidebar({ store }: { store: SustainerStore }) {
           {IMPACT_STATS.map((s) => (
             <div key={s.labelKey} className={styles.sbStat}>
               <div className={styles.sbStatNum}>
-                {s.num}
+                {s.amount !== undefined
+                  ? fmt.currency(s.amount, "EUR", { notation: "compact" })
+                  : s.num}
                 {s.unitKey ? ` ${t(s.unitKey)}` : ""}
               </div>
               <div className={styles.sbStatLabel}>{t(s.labelKey)}</div>

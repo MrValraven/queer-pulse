@@ -1,63 +1,75 @@
 import type { AvatarTint } from "../../shared/components/ui";
 
-/** Hero stat rows — `value` renders plain, `em` in coral italic after it. */
+/** Hero stat rows — `value`/`valueKey` renders plain, `em` in coral italic
+ *  after it. Platform-authored programme copy (same shape as
+ *  `incubator.step.*`), so `label`/`value` are catalog keys; `em` figures are
+ *  either live counts (kept as plain numeric strings) or the proper noun
+ *  "Porto" (identical in both languages, so it carries no key — "Lisbon"
+ *  does change to "Lisboa" in pt-PT, so that one gets `valueKey`). */
 export interface CoopStat {
-  label: string;
+  labelKey: string;
   value?: string;
+  valueKey?: string;
   em?: string;
 }
 
 export const COOP_STATS: CoopStat[] = [
-  { label: "Active groups", em: "8" },
-  { label: "Households housed", em: "14" },
-  { label: "In phase 4–5", em: "3" },
-  { label: "Cities", value: "Lisbon · ", em: "Porto" },
+  { labelKey: "economy:housingCoop.stats.activeGroups", em: "8" },
+  { labelKey: "economy:housingCoop.stats.householdsHoused", em: "14" },
+  { labelKey: "economy:housingCoop.stats.inPhase", em: "3" },
+  {
+    labelKey: "economy:housingCoop.stats.cities",
+    valueKey: "economy:housingCoop.stats.citiesLisbon",
+    em: "Porto",
+  },
 ];
 
-/** One step in the five-phase formation timeline. */
+/** One step in the five-phase formation timeline. Platform-authored programme
+ *  copy (same shape as `incubator.step.*`) — `name`/`nameEm`/`time`/`desc` are
+ *  all catalog keys; `num` is a plain ordinal, not translated. */
 export interface CoopPhase {
   num: string;
-  name: string;
-  nameEm: string;
-  time: string;
-  desc: string;
+  nameKey: string;
+  nameEmKey: string;
+  timeKey: string;
+  descKey: string;
 }
 
 export const COOP_PHASES: CoopPhase[] = [
   {
     num: "01",
-    name: "Find",
-    nameEm: "the people",
-    time: "2–4 months",
-    desc: "4–12 households who share values, calendar, money habits. Vibes test, financial honesty, exit clause.",
+    nameKey: "economy:housingCoop.phase.findPeople.name",
+    nameEmKey: "economy:housingCoop.phase.findPeople.nameEm",
+    timeKey: "economy:housingCoop.phase.findPeople.time",
+    descKey: "economy:housingCoop.phase.findPeople.desc",
   },
   {
     num: "02",
-    name: "Legal",
-    nameEm: "incorporation",
-    time: "1–3 months",
-    desc: "CRL co-op structure, statutes, member shares. Templates for Portuguese law specifically.",
+    nameKey: "economy:housingCoop.phase.legalIncorporation.name",
+    nameEmKey: "economy:housingCoop.phase.legalIncorporation.nameEm",
+    timeKey: "economy:housingCoop.phase.legalIncorporation.time",
+    descKey: "economy:housingCoop.phase.legalIncorporation.desc",
   },
   {
     num: "03",
-    name: "Finance &",
-    nameEm: "structure",
-    time: "3–8 months",
-    desc: "Member share capital, ethical bank financing, government supports, group fund mechanics.",
+    nameKey: "economy:housingCoop.phase.financeStructure.name",
+    nameEmKey: "economy:housingCoop.phase.financeStructure.nameEm",
+    timeKey: "economy:housingCoop.phase.financeStructure.time",
+    descKey: "economy:housingCoop.phase.financeStructure.desc",
   },
   {
     num: "04",
-    name: "Find",
-    nameEm: "the property",
-    time: "6–12 months",
-    desc: "Survey, negotiate, sign. Most groups buy. Some lease-to-own. Some take long lease from public stock.",
+    nameKey: "economy:housingCoop.phase.findProperty.name",
+    nameEmKey: "economy:housingCoop.phase.findProperty.nameEm",
+    timeKey: "economy:housingCoop.phase.findProperty.time",
+    descKey: "economy:housingCoop.phase.findProperty.desc",
   },
   {
     num: "05",
-    name: "Daily",
-    nameEm: "governance",
-    time: "Forever",
-    desc: "Decision-making, conflict, repairs, new members, succession. Tools that survive boredom & bad days.",
+    nameKey: "economy:housingCoop.phase.dailyGovernance.name",
+    nameEmKey: "economy:housingCoop.phase.dailyGovernance.nameEm",
+    timeKey: "economy:housingCoop.phase.dailyGovernance.time",
+    descKey: "economy:housingCoop.phase.dailyGovernance.desc",
   },
 ];
 
@@ -187,65 +199,87 @@ export const FORMING_COOPS: FormingCoop[] = [
   },
 ];
 
-/** A downloadable formation template. */
+/** A downloadable formation template. Platform-authored programme copy — all
+ *  four fields are catalog keys (same treatment as `COOP_PHASES` above). */
 export interface CoopTemplate {
-  tag: string;
-  name: string;
-  nameEm: string;
-  meta: string;
+  tagKey: string;
+  nameKey: string;
+  nameEmKey: string;
+  metaKey: string;
 }
 
 export const COOP_TEMPLATES: CoopTemplate[] = [
   {
-    tag: "Phase 1 · template",
-    name: "Founding values &",
-    nameEm: "vibes test",
-    meta: "PDF · PT + EN · 14 pages",
+    tagKey: "economy:housingCoop.template.foundingValues.tag",
+    nameKey: "economy:housingCoop.template.foundingValues.name",
+    nameEmKey: "economy:housingCoop.template.foundingValues.nameEm",
+    metaKey: "economy:housingCoop.template.foundingValues.meta",
   },
   {
-    tag: "Phase 1 · template",
-    name: "Financial honesty",
-    nameEm: "worksheet",
-    meta: "Spreadsheet · 1 sheet per member",
+    tagKey: "economy:housingCoop.template.financialHonesty.tag",
+    nameKey: "economy:housingCoop.template.financialHonesty.name",
+    nameEmKey: "economy:housingCoop.template.financialHonesty.nameEm",
+    metaKey: "economy:housingCoop.template.financialHonesty.meta",
   },
   {
-    tag: "Phase 2 · legal",
-    name: "CRL co-op",
-    nameEm: "statutes",
-    meta: "DOCX · Portuguese law · vetted",
+    tagKey: "economy:housingCoop.template.crlStatutes.tag",
+    nameKey: "economy:housingCoop.template.crlStatutes.name",
+    nameEmKey: "economy:housingCoop.template.crlStatutes.nameEm",
+    metaKey: "economy:housingCoop.template.crlStatutes.meta",
   },
   {
-    tag: "Phase 2 · legal",
-    name: "Member share",
-    nameEm: "agreement",
-    meta: "PDF · clauses for chosen family",
+    tagKey: "economy:housingCoop.template.shareAgreement.tag",
+    nameKey: "economy:housingCoop.template.shareAgreement.name",
+    nameEmKey: "economy:housingCoop.template.shareAgreement.nameEm",
+    metaKey: "economy:housingCoop.template.shareAgreement.meta",
   },
   {
-    tag: "Phase 3 · finance",
-    name: "Group finance",
-    nameEm: "model",
-    meta: "Spreadsheet · with Lisbon & Porto data",
+    tagKey: "economy:housingCoop.template.financeModel.tag",
+    nameKey: "economy:housingCoop.template.financeModel.name",
+    nameEmKey: "economy:housingCoop.template.financeModel.nameEm",
+    metaKey: "economy:housingCoop.template.financeModel.meta",
   },
   {
-    tag: "Phase 5 · governance",
-    name: "Conflict resolution",
-    nameEm: "process",
-    meta: "PDF · adapted from Casa Sambizanga",
+    tagKey: "economy:housingCoop.template.conflictResolution.tag",
+    nameKey: "economy:housingCoop.template.conflictResolution.name",
+    nameEmKey: "economy:housingCoop.template.conflictResolution.nameEm",
+    metaKey: "economy:housingCoop.template.conflictResolution.meta",
   },
 ];
 
-/** A mentor / partner row in the Start-a-co-op panel. `em` renders in coral. */
+/** A mentor / partner row in the Start-a-co-op panel. `em` renders in coral —
+ *  it's always a proper noun here (a co-op or partner-bank name) so it's
+ *  never translated; `pre`/`post` are chrome connective text and `meta` a
+ *  short chrome status label, so those resolve via `t()`. */
 export interface CoopResource {
-  pre?: string;
+  preKey?: string;
   em?: string;
-  post?: string;
-  meta: string;
+  postKey?: string;
+  metaKey: string;
 }
 
 export const COOP_RESOURCES: CoopResource[] = [
-  { em: "Casa Sambizanga", post: " mentors", meta: "4 active" },
-  { pre: "QP legal team", meta: "3 lawyers" },
-  { pre: "Lisbon housing fund liaison", meta: "1 contact" },
-  { pre: "Caixa ", em: "CCAM", post: " co-op desk", meta: "Partner" },
-  { pre: "Monthly co-op assembly", meta: "First Sat" },
+  {
+    em: "Casa Sambizanga",
+    postKey: "economy:housingCoop.resource.sambizangaMentorsPost",
+    metaKey: "economy:housingCoop.resource.sambizangaMentorsMeta",
+  },
+  {
+    preKey: "economy:housingCoop.resource.qpLegalTeamPre",
+    metaKey: "economy:housingCoop.resource.qpLegalTeamMeta",
+  },
+  {
+    preKey: "economy:housingCoop.resource.housingFundLiaisonPre",
+    metaKey: "economy:housingCoop.resource.housingFundLiaisonMeta",
+  },
+  {
+    preKey: "economy:housingCoop.resource.caixaPre",
+    em: "CCAM",
+    postKey: "economy:housingCoop.resource.caixaPost",
+    metaKey: "economy:housingCoop.resource.caixaMeta",
+  },
+  {
+    preKey: "economy:housingCoop.resource.monthlyAssemblyPre",
+    metaKey: "economy:housingCoop.resource.monthlyAssemblyMeta",
+  },
 ];

@@ -13,7 +13,7 @@ import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
-import { MyPlacesSection } from "./MyPlacesSection";
+import { PlacesSection } from "./PlacesSection";
 import { PublicProfileControl } from "./PublicProfileControl";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
@@ -165,7 +165,11 @@ export function ProfilePage() {
 
       {selfView && !isEditing && <PublicProfileControl />}
 
-      {isSelf && <MyPlacesSection memberSlug={selfSlug} />}
+      <PlacesSection
+        memberSlug={isSelf ? selfSlug : (slug ?? "")}
+        isSelf={selfView}
+        firstName={resolvedProfile.first}
+      />
 
       {selfView && <ProfileEditBar />}
 

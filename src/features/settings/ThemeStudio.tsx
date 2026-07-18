@@ -9,7 +9,7 @@ import {
 import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
 import { currentUser, fullName } from "../members/data/members";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import styles from "./ProfileThemePage.module.css";
+import styles from "./ThemeStudio.module.css";
 
 function buildCoverBg(
   colors: string[],

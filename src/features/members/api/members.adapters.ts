@@ -10,10 +10,17 @@ import {
 } from "react-icons/fi";
 import type { Member } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import {
+  OPEN_TO_PRESETS,
+  type OpenToEntry,
+  type OpenToId,
+} from "../openTo.data";
+import type { WorkLink, WorkRefEntity } from "../workLink.data";
 import type {
   ActivityKind,
   GroupMembershipDTO,
   MemberCardDTO,
+  OpenToEntryDTO,
   ProfileDTO,
   ShapingItemDTO,
   ShapingKind,
@@ -25,6 +32,25 @@ import type { MemberCard } from "../memberDirectoryFilter.data";
 
 const TINTS: AvatarTint[] = ["coral", "plum", "jade"];
 
+const KNOWN_OPEN_TO_IDS = new Set<string>(
+  OPEN_TO_PRESETS.map((preset) => preset.id),
+);
+
+/** Map wire entries to the domain union, dropping preset ids this build doesn't
+ *  know (a backend ahead of the frontend must not crash the profile) and
+ *  customs with no text. */
+export function toOpenToEntries(dto?: OpenToEntryDTO[]): OpenToEntry[] {
+  return (dto ?? []).flatMap((entry): OpenToEntry[] => {
+    if (entry.kind === "preset") {
+      return KNOWN_OPEN_TO_IDS.has(entry.id)
+        ? [{ kind: "preset", id: entry.id as OpenToId }]
+        : [];
+    }
+    const label = entry.label?.trim();
+    return label ? [{ kind: "custom", label }] : [];
+  });
+}
+
 /** Backend activity kinds → the icon each renders with in "Recent activity". */
 const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
   post: FiFileText,
@@ -35,6 +61,33 @@ const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
   photo: FiCamera,
   music: FiMusic,
 };
+
+const KNOWN_WORK_REF_ENTITIES = new Set<WorkRefEntity>([
+  "collection",
+  "filmmaker",
+  "curator",
+  "gathering",
+  "place",
+]);
+
+/** Reconstruct a work item's link union from the wire's flat ref/href fields,
+ *  dropping a `refEntity` this build doesn't know (same not-crash principle as
+ *  `toOpenToEntries`) rather than sending the viewer to a broken path. */
+function toWorkLink(dto: WorkItemDTO): WorkLink | undefined {
+  if (
+    dto.refEntity &&
+    dto.refSlug &&
+    KNOWN_WORK_REF_ENTITIES.has(dto.refEntity as WorkRefEntity)
+  ) {
+    return {
+      kind: "ref",
+      entity: dto.refEntity as WorkRefEntity,
+      slug: dto.refSlug,
+    };
+  }
+  if (dto.href) return { kind: "external", href: dto.href };
+  return undefined;
+}
 
 /** Format an ISO join date to the year the hero shows ("2024"); "" if absent. */
 function joinYear(iso?: string): string {
@@ -62,7 +115,7 @@ export function cardToMember(dto: MemberCardDTO): Member {
     last: dto.lastName,
     role: dto.tagline ?? "",
     pronouns: dto.pronouns,
-    hood: "",
+    hood: dto.location ?? "",
     tags: dto.tags ?? [],
     visibility: dto.visibility,
     initials: initialsOf(dto.firstName, dto.lastName),
@@ -72,7 +125,7 @@ export function cardToMember(dto: MemberCardDTO): Member {
     since: "",
     bio: "",
     now: "",
-    openTo: [],
+    openTo: toOpenToEntries(dto.openTo),
     work: [],
     board: [],
     // Placeholder entries preserve the vouch COUNT; faces resolve via getVouchers.
@@ -122,7 +175,7 @@ export function profileToMember(dto: ProfileDTO): Member {
     verified: dto.verified ?? false,
     since: joinYear(dto.joinedAt),
     now: dto.now ?? "",
-    openTo: dto.openTo ?? [],
+    openTo: toOpenToEntries(dto.openTo),
     identities: dto.identities ?? [],
     lookingFor: dto.lookingFor ?? [],
     socials: (dto.socials ?? []).map((s) => ({
@@ -134,6 +187,7 @@ export function profileToMember(dto: ProfileDTO): Member {
       title: w.title,
       year: w.year,
       image: w.imageUrl,
+      link: toWorkLink(w),
     })),
     board: (dto.board ?? []).map((b) => ({
       kind: b.kind,
@@ -171,6 +225,10 @@ export function workToDto(work: Member["work"]): WorkItemDTO[] {
     title: w.title,
     year: w.year,
     ...(w.image ? { imageUrl: w.image } : {}),
+    ...(w.link?.kind === "ref"
+      ? { refEntity: w.link.entity, refSlug: w.link.slug }
+      : {}),
+    ...(w.link?.kind === "external" ? { href: w.link.href } : {}),
   }));
 }
 

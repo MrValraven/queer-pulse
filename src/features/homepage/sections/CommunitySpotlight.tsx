@@ -41,43 +41,14 @@ const mediaTint = (tint: FullCommunity["tint"]): ImageSlotTint =>
 
 export function CommunitySpotlight({
   community,
-  loading,
   onClear,
 }: {
   community: SpotlightCommunity | null;
-  loading: boolean;
   onClear: () => void;
 }) {
-  if (loading) return <SpotlightSkeleton />;
   if (!community) return <EmptySpotlight onClear={onClear} />;
   if (community.quiet) return <QuietSpotlight community={community} />;
   return <FullSpotlight community={community} />;
-}
-
-function SpotlightSkeleton() {
-  return (
-    <article className={styles.spot} aria-busy>
-      <div className={[styles.sk, styles.skMedia].join(" ")} />
-      <div className={styles.spotBody}>
-        <div
-          className={[styles.sk, styles.skLine].join(" ")}
-          style={{ width: "55%", height: 30 }}
-        />
-        <div
-          className={[styles.sk, styles.skLine].join(" ")}
-          style={{ width: "90%" }}
-        />
-        <div
-          className={[styles.sk, styles.skLine].join(" ")}
-          style={{ width: "80%" }}
-        />
-        <div
-          className={[styles.sk, styles.skLine].join(" ")}
-          style={{ width: "40%", marginTop: 24 }}
-        />
-      </div>
-    </article>
-  );
 }
 
 function EmptySpotlight({ onClear }: { onClear: () => void }) {

@@ -303,7 +303,9 @@ export function ProfileContent({
   return (
     <div className="wrap">
       {isSelf && <RecognitionSection />}
-      <NowSection profile={profile} />
+      {/* While editing, the Now editor lives in the hero — showing the committed
+          card here too would just be a stale second copy of the same field. */}
+      {!workEdit && <NowSection profile={profile} isSelf={isSelf} />}
       {workEdit ? (
         <WorkEditor work={workEdit.work} onChange={workEdit.onChange} />
       ) : (

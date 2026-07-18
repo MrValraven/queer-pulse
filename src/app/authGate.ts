@@ -45,7 +45,6 @@ const GATED_PATTERNS: string[] = [
   "/messages",
   "/notifications",
   "/mentions",
-  "/notification-deep-link",
   // Communities
   "/communities",
   "/communities/*",
@@ -79,7 +78,6 @@ const GATED_PATTERNS: string[] = [
   "/caregivers",
   // Member-only actions
   "/vouch",
-  "/qr-scanner",
   "/magazine/submit-story",
   // Local discovery — directory & map (safe-spaces / visas / arriving stay public)
   "/local/directory",

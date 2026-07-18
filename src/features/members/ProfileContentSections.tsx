@@ -1,14 +1,29 @@
 import { Link } from "react-router-dom";
+import { FiExternalLink } from "react-icons/fi";
+import { useConnect } from "../../app/providers/ConnectProvider";
 import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
+import type { WorkItem } from "./data/members";
 import { SHAPING_META } from "./profileSections.data";
 import { Section } from "./ProfileSections";
+import { openToLabel, reasonValue } from "./openTo.data";
+import { workLinkTarget } from "./workLink.data";
 import styles from "./ProfilePage.module.css";
 
-export function NowSection({ profile }: { profile: MemberProfile }) {
+export function NowSection({
+  profile,
+  isSelf = false,
+}: {
+  profile: MemberProfile;
+  /** Your own chips are inert — there's no one to reach out to. */
+  isSelf?: boolean;
+}) {
   const { t } = useTranslation();
+  const { openConnect } = useConnect();
+  // Nothing to say and no chips to offer — an empty card reads as a bug.
+  if (!profile.now?.trim() && profile.openTo.length === 0) return null;
   return (
     <Section
       title={t("members:content.now.title")}
@@ -17,20 +32,58 @@ export function NowSection({ profile }: { profile: MemberProfile }) {
       <div className={styles.nowCard}>
         <span className={styles.nowDot} aria-hidden />
         <div className={styles.nowBody}>
-          <p>{profile.now}</p>
+          {profile.now?.trim() && <p>{profile.now}</p>}
           {profile.openTo.length > 0 && (
             <div className={styles.nowOpen}>
               <span className="lbl">{t("members:content.now.openLabel")}</span>
-              {profile.openTo.map((item) => (
-                <span key={item} className={styles.openChip}>
-                  {item}
-                </span>
-              ))}
+              {profile.openTo.map((entry) => {
+                const label = openToLabel(entry, t);
+                return isSelf ? (
+                  <span key={reasonValue(entry)} className={styles.openChip}>
+                    {label}
+                  </span>
+                ) : (
+                  <button
+                    key={reasonValue(entry)}
+                    type="button"
+                    className={`${styles.openChip} ${styles.openChipAction}`}
+                    onClick={() =>
+                      openConnect(profile.slug, reasonValue(entry))
+                    }
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
       </div>
     </Section>
+  );
+}
+
+function WorkCardBody({ item, index }: { item: WorkItem; index: number }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <ImageSlot
+        tint={(["coral", "jade", "plum"] as const)[index % 3]}
+        src={item.image}
+        height={200}
+        radius={14}
+        placeholder={t("members:workItem.imagePlaceholder")}
+        style={{ marginBottom: 14 }}
+      />
+      <div className={styles.workCat}>{item.category}</div>
+      <h3>
+        {item.title}
+        {item.link?.kind === "external" && (
+          <FiExternalLink className={styles.workExternal} aria-hidden />
+        )}
+      </h3>
+      <div className={styles.workYear}>{item.year}</div>
+    </>
   );
 }
 
@@ -43,21 +96,39 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
       subtitle={t("members:content.work.subtitle")}
     >
       <div className={styles.workGrid}>
-        {profile.work.map((item, index) => (
-          <article key={item.title} className={styles.workCard}>
-            <ImageSlot
-              tint={(["coral", "jade", "plum"] as const)[index % 3]}
-              src={item.image}
-              height={200}
-              radius={14}
-              placeholder={t("members:workItem.imagePlaceholder")}
-              style={{ marginBottom: 14 }}
-            />
-            <div className={styles.workCat}>{item.category}</div>
-            <h3>{item.title}</h3>
-            <div className={styles.workYear}>{item.year}</div>
-          </article>
-        ))}
+        {profile.work.map((item, index) => {
+          const target = item.link ? workLinkTarget(item.link) : null;
+          const body = <WorkCardBody item={item} index={index} />;
+          if (target?.kind === "internal") {
+            return (
+              <Link
+                key={item.title}
+                to={target.to}
+                className={`${styles.workCard} ${styles.workCardLink}`}
+              >
+                {body}
+              </Link>
+            );
+          }
+          if (target?.kind === "external") {
+            return (
+              <a
+                key={item.title}
+                href={target.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={`${styles.workCard} ${styles.workCardLink}`}
+              >
+                {body}
+              </a>
+            );
+          }
+          return (
+            <article key={item.title} className={styles.workCard}>
+              {body}
+            </article>
+          );
+        })}
       </div>
     </Section>
   );

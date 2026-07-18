@@ -1,5 +1,5 @@
 .stories {
-  padding: 108px 0 116px;
+  padding: clamp(60px, 11vw, 108px) 0 clamp(64px, 11vw, 116px);
 }
 .head {
   margin-bottom: 46px;

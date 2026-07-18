@@ -103,6 +103,7 @@ export const connect: Catalog = {
 
   // Connect modal shell (ConnectModal)
   "modal.close": "Close",
+  "modal.loading": "Loading…",
 
   // Reach-out form (ConnectForm)
   "form.title": "Say <em>hello.</em>",
@@ -114,6 +115,8 @@ export const connect: Catalog = {
   "form.emailPlaceholder": "So they can write back",
   "form.reasonLabel": "What's this about?",
   "form.reasonPlaceholder": "Pick a reason, or leave it open",
+  "form.reasonOpenToGroup": "What {first} is open to",
+  "form.reasonGenericGroup": "Something else",
   "form.reasonCollaborate": "I'd love to collaborate",
   "form.reasonAdvice": "I'd like some advice",
   "form.reasonSawPost": "I saw your board post",

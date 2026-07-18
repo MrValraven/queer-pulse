@@ -12,6 +12,7 @@ import {
   TagEditor,
   VisibilityPicker,
 } from "./profileEditControls";
+import { ProfileNowField } from "./ProfileNowField";
 import { ProfileShortBioField } from "./ProfileShortBioField";
 import { SocialLinksEditor } from "./SocialLinksEditor";
 import base from "./ProfilePage.module.css";
@@ -140,6 +141,8 @@ export function EditableProfileHero({
                 onChange={(v) => updateDraft({ bio: v })}
               />
             </div>
+
+            <ProfileNowField />
 
             <div className={styles.field}>
               <label className={styles.fieldLabel}>

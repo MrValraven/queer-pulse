@@ -134,6 +134,27 @@ export function WorkItemEditor({
         aria-label={t("members:workItem.titleLabel")}
         onChange={(e) => onChange({ title: e.target.value })}
       />
+      {item.link?.kind === "ref" ? (
+        // A `ref` link points at an internal QueerPulse page (e.g. a curated
+        // collection). There's no ref/entity picker in this editor (out of
+        // scope), so rendering the external-URL input here would show a blank
+        // box whose first keystroke silently downgrades and destroys the ref.
+        // Show a read-only note instead — every other field stays editable.
+        <p className={editStyles.workLinkNote}>
+          {t("members:workItem.linkedNote")}
+        </p>
+      ) : (
+        <input
+          className={`${editStyles.inlineInput} ${editStyles.workLinkInput}`}
+          value={item.link?.kind === "external" ? item.link.href : ""}
+          placeholder={t("members:workItem.linkPlaceholder")}
+          aria-label={t("members:workItem.linkLabel")}
+          onChange={(e) => {
+            const href = e.target.value.trim();
+            onChange({ link: href ? { kind: "external", href } : undefined });
+          }}
+        />
+      )}
       <div className={editStyles.workMetaRow}>
         <input
           className={`${editStyles.inlineInput} ${editStyles.workYearInput}`}
