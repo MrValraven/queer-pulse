@@ -167,7 +167,7 @@ export function MemberDirectoryFilterPage() {
             }}
           />
 
-          <main>
+          <div>
             <div className={styles.topRow}>
               <div className={styles.count}>
                 {t("members:directory.showingPrefix")}{" "}
@@ -272,7 +272,7 @@ export function MemberDirectoryFilterPage() {
                 </Button>
               </div>
             )}
-          </main>
+          </div>
         </div>
       </div>
     </PageShell>

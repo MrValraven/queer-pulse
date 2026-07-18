@@ -244,7 +244,7 @@
 }
 .hc_amber {
   background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .hc_coral {
   background: rgba(var(--accent-rgb), 0.13);

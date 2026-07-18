@@ -24,6 +24,22 @@ const FORMAT_MAP: Record<Format, ExportFormat> = {
   Both: "both",
 };
 
+/**
+ * What the archive is actually called. Only `json` is a bare file — `csv` and
+ * `both` come back as a zip of per-category CSVs (plus the JSON, for `both`).
+ *
+ * This used to be hardcoded `queerpulse-export.json` for every format, so a CSV
+ * export offered a `.json` download. The server's `Content-Disposition` is the
+ * real authority here — the `download` attribute is ignored on a cross-origin
+ * response, and the API is on a different host — but the UI should not name the
+ * file something it isn't.
+ */
+const FILENAME: Record<Format, string> = {
+  JSON: "queerpulse-export.json",
+  CSV: "queerpulse-export.zip",
+  Both: "queerpulse-export.zip",
+};
+
 export function DataExportPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -74,7 +90,7 @@ export function DataExportPage() {
         </div>
       </header>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           <DataExportSteps phase={phase} />
 
@@ -90,14 +106,14 @@ export function DataExportPage() {
           ) : (
             <DataExportStatus
               job={job}
-              filename="queerpulse-export.json"
+              filename={FILENAME[format]}
               onRetry={reset}
             />
           )}
 
           <DataExportIncluded openAcc={openAcc} setOpenAcc={setOpenAcc} />
         </div>
-      </main>
+      </div>
 
       <Outro
         title={

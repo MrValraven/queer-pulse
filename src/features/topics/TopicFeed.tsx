@@ -58,7 +58,7 @@ export function TopicFeed({
   const older = topic.totalPosts - topic.posts.length;
 
   return (
-    <main>
+    <div>
       <div className={styles.chips}>
         {chips.map((f) => (
           <button
@@ -105,6 +105,6 @@ export function TopicFeed({
               </div>
             )}
       </div>
-    </main>
+    </div>
   );
 }

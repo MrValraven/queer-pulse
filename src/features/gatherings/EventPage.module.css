@@ -22,7 +22,7 @@
 .back {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   display: inline-flex;
   align-items: center;
   gap: 6px;

@@ -46,7 +46,7 @@ export function MicroGrantsPage() {
         </div>
       </section>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           <div className={styles.layout}>
             <div>
@@ -185,7 +185,7 @@ export function MicroGrantsPage() {
 
           <ContributeStrip />
         </div>
-      </main>
+      </div>
 
       <Outro
         title={

@@ -45,6 +45,24 @@ export interface WorkshopTutor {
   memberSlug?: string;
 }
 
+/**
+ * The stored values behind the composed display strings.
+ *
+ * `format`, `price`, `priceSub` and `tiers[].amount` on `Workshop` are all
+ * *rendered text* — translated and currency-formatted for whoever is looking —
+ * so they can't be fed back into the edit form without re-parsing prose. This
+ * mirrors `CreateWorkshopDto` field-for-field and is what `workshopToDraft`
+ * reads, so editing a workshop round-trips exactly what listing it wrote.
+ */
+export interface WorkshopSource {
+  weeks: number;
+  size: number;
+  price: number;
+  /** ISO 4217, e.g. "EUR". */
+  currency: string;
+  venue: string;
+}
+
 export interface Workshop {
   id: string;
   /** Category — matches the SkillsPage filter values. */
@@ -78,6 +96,15 @@ export interface Workshop {
   tags: string[];
   /** Member-added (via List a workshop) — badged as "New". */
   added?: boolean;
+  /** The editable values behind the display strings — seeds the edit form. */
+  source: WorkshopSource;
+  /**
+   * True when the viewer hosts this workshop. PATCH/DELETE are host-only on the
+   * backend, so this decides whether the edit/delete controls render at all —
+   * the UI should never offer an action that is going to 403. Mirrors
+   * `JobDetailDTO.isPoster`.
+   */
+  isHost?: boolean;
 }
 
 export const WORKSHOPS: Workshop[] = [
@@ -207,6 +234,13 @@ export const WORKSHOPS: Workshop[] = [
         "Step-free entrance. Bathroom is single-stall, gender-free. 7-minute walk from Anjos metro.",
     },
     tags: ["Print", "Zines", "Design"],
+    source: {
+      weeks: 6,
+      size: 8,
+      price: 180,
+      currency: "EUR",
+      venue: "Editora Anjos",
+    },
   },
   {
     id: "advanced-wheel-throwing",
@@ -324,6 +358,13 @@ export const WORKSHOPS: Workshop[] = [
         "One step at the entrance — ask and we'll ramp it. Gender-free bathroom. 5-minute walk from Graça tram.",
     },
     tags: ["Ceramics", "Glaze", "Hands-on"],
+    source: {
+      weeks: 5,
+      size: 6,
+      price: 150,
+      currency: "EUR",
+      venue: "Estúdio Graça",
+    },
   },
   {
     id: "finish-a-track",
@@ -431,5 +472,12 @@ export const WORKSHOPS: Workshop[] = [
         "Step-free from the street. Gender-free bathroom. Sessions also stream for anyone who can't make it in person.",
     },
     tags: ["Ableton", "Production", "Release"],
+    source: {
+      weeks: 4,
+      size: 8,
+      price: 120,
+      currency: "EUR",
+      venue: "Estúdio Bairro",
+    },
   },
 ];

@@ -31,7 +31,7 @@ export function NotificationPreferencesPage() {
       <div className={styles.settingsPage}>
         <NotificationSidebar />
 
-        <main className={styles.main}>
+        <div className={styles.main}>
           <h1 className={styles.paneTitle}>
             <Translation
               i18nKey="settings:notifPrefs.title"
@@ -59,7 +59,7 @@ export function NotificationPreferencesPage() {
               }
             />
           </div>
-        </main>
+        </div>
       </div>
     </AppShell>
   );

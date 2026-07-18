@@ -26,8 +26,15 @@
   font-size: 16px;
 }
 
-/* Disabled — applies to <button> only (links are never disabled) */
-.button:disabled {
+/* Disabled — applies to <button> only (links are never disabled).
+   `[aria-disabled="true"]` gets the identical treatment on purpose: a submit
+   button that is merely *invalid* should stay focusable and clickable so the
+   form can answer the click (reveal the errors, move focus to the first one).
+   A real `disabled` attribute takes the control out of the tab order entirely,
+   so a keyboard user gets silence — the failure mode spec 14 is about. Same
+   pixels, different semantics. */
+.button:disabled,
+.button[aria-disabled="true"] {
   opacity: 0.4;
   cursor: not-allowed;
   box-shadow: none;
@@ -36,13 +43,20 @@
 
 /* Primary — coral */
 .primary {
-  background: var(--accent);
+  /* --accent behind a white label is 2.91:1 — fails AA at BOTH normal and
+     large sizes, on every CTA in the product. --accent-fill is 4.52:1.
+     --accent is still the brand colour everywhere it isn't carrying text.
+     See docs/production-readiness/contrast-audit.md §4. */
+  background: var(--accent-fill);
   color: #fff;
   box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), 0.8);
 }
 @media (hover: hover) {
-  .primary:hover:not(:disabled) {
-    background: var(--accent-ink);
+  .primary:hover:not(:disabled):not([aria-disabled="true"]) {
+    /* --accent-ink behind white is 4.21:1 — still under AA. --accent-deep is
+       5.94:1, and its own token comment already names it the pressed/hover
+       partner for accent-ink. */
+    background: var(--accent-deep);
     transform: translateY(-1px);
     box-shadow: 0 12px 26px -10px rgba(var(--accent-rgb), 0.9);
   }
@@ -52,10 +66,13 @@
 .ghost {
   background: transparent;
   color: var(--text-strong);
-  border: 1.5px solid rgba(var(--line-rgb), 0.22);
+  /* A ghost button's border is the ONLY thing that makes it a button — with a
+     transparent fill there is no other boundary cue, so it is a UI component
+     needing 3:1 (WCAG 1.4.11). 0.22 measured 1.56:1; 0.50 reaches 3.10:1. */
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
 }
 @media (hover: hover) {
-  .ghost:hover:not(:disabled) {
+  .ghost:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: var(--line-strong);
     background: rgba(var(--plum-rgb), 0.04);
     transform: translateY(-1px);
@@ -69,7 +86,7 @@
   border: 1.5px solid rgba(var(--cream-rgb), 0.32);
 }
 @media (hover: hover) {
-  .ghostDark:hover:not(:disabled) {
+  .ghostDark:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: rgba(var(--cream-rgb), 1);
     background: rgba(var(--cream-rgb), 0.08);
     transform: translateY(-1px);
@@ -78,12 +95,13 @@
 
 /* Jade — success */
 .jade {
-  background: var(--jade);
+  /* --jade behind white is 3.98:1 — large text only. --jade-fill is 4.52:1. */
+  background: var(--jade-fill);
   color: #fff;
   box-shadow: 0 8px 22px -10px rgba(var(--jade-rgb), 0.7);
 }
 @media (hover: hover) {
-  .jade:hover:not(:disabled) {
+  .jade:hover:not(:disabled):not([aria-disabled="true"]) {
     transform: translateY(-1px);
     box-shadow: 0 12px 26px -10px rgba(var(--jade-rgb), 0.85);
   }
@@ -96,7 +114,7 @@
   box-shadow: 0 8px 22px -10px rgba(var(--danger-rgb), 0.7);
 }
 @media (hover: hover) {
-  .danger:hover:not(:disabled) {
+  .danger:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--danger-ink);
     transform: translateY(-1px);
     box-shadow: 0 12px 26px -10px rgba(var(--danger-rgb), 0.85);

@@ -268,7 +268,7 @@
   color: var(--jade-soft);
 }
 .noteIconWarn {
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .noteIconDanger {
   color: var(--danger);
@@ -294,7 +294,7 @@
 .hardWarnTitle svg {
   flex-shrink: 0;
   font-size: 20px;
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .hardWarnTitle em {
   font-style: italic;
@@ -323,7 +323,7 @@
   font-family: var(--sans);
   font-size: 12px;
   line-height: 1.55;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 
 @media (prefers-reduced-motion: reduce) {

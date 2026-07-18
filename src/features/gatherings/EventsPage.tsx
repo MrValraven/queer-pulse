@@ -168,7 +168,7 @@ export function EventsPage() {
         </div>
       </header>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           {!noEvents && (
             <div
@@ -261,7 +261,7 @@ export function EventsPage() {
             </>
           )}
         </div>
-      </main>
+      </div>
     </PageShell>
   );
 }

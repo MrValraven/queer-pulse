@@ -96,12 +96,12 @@ export function PartnerDetailPage() {
         <PartnerTabBar p={p} tab={tab} setTab={setTab} />
 
         <div className={s.grid}>
-          <main>
+          <div>
             {tab === "about" && <PartnerAboutTab p={p} />}
             {tab === "work" && <PartnerWorkTab p={p} />}
             {tab === "timeline" && <PartnerTimelineTab p={p} />}
             {tab === "how" && <PartnerHowTab p={p} />}
-          </main>
+          </div>
 
           <PartnerDetailSidebar p={p} />
         </div>

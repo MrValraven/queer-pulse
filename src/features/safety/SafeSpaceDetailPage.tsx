@@ -93,7 +93,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
       </header>
 
       <div className={styles.grid}>
-        <main>
+        <div>
           <section className={styles.sec}>
             <h2>
               <Translation
@@ -183,7 +183,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
               </Link>
             </div>
           </section>
-        </main>
+        </div>
 
         <aside className={styles.side}>
           <div className={styles.sideCard}>
@@ -279,7 +279,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
       </div>
 
       <div className={styles.removedBody}>
-        <main>
+        <div>
           <section className={styles.sec}>
             <h2>
               <Translation
@@ -314,7 +314,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
               ))}
             </div>
           </section>
-        </main>
+        </div>
 
         <aside className={styles.side}>
           <div className={styles.whatNowCard}>

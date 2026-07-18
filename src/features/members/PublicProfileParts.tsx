@@ -1,0 +1,78 @@
+import { FiExternalLink } from "react-icons/fi";
+import { FadeIn, ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type {
+  PublicProfileLinkDTO,
+  PublicProfileWorkDTO,
+} from "./api/publicProfile.api";
+import styles from "./PublicProfilePage.module.css";
+
+/**
+ * The member's outbound links.
+ *
+ * These are member-entered URLs shown to logged-out visitors, so every one is
+ * `rel="noopener noreferrer nofollow"`: `noopener`/`noreferrer` keep the target
+ * from reaching back into this tab or reading the referrer, and `nofollow`
+ * stops a public, indexable profile from passing search-ranking signal — which
+ * is what would otherwise make these pages worth farming for spam links.
+ */
+export function PublicProfileLinks({
+  links,
+}: {
+  links: PublicProfileLinkDTO[];
+}) {
+  const { t } = useTranslation();
+  if (links.length === 0) return null;
+
+  return (
+    <FadeIn as="section" className={styles.sec} delay={140}>
+      <div className={styles.secH}>
+        <h2>{t("members:publicBySlug.linksHeading")}</h2>
+      </div>
+      <ul className={styles.linkList}>
+        {links.map((link) => (
+          <li key={`${link.label}-${link.url}`}>
+            <a
+              className={styles.publicLink}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <span>{link.label}</span>
+              <FiExternalLink aria-hidden />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </FadeIn>
+  );
+}
+
+/** The work the member chose to show publicly. */
+export function PublicProfileWork({ work }: { work: PublicProfileWorkDTO[] }) {
+  const { t } = useTranslation();
+  if (work.length === 0) return null;
+
+  return (
+    <FadeIn as="section" className={styles.sec} delay={200}>
+      <div className={styles.secH}>
+        <h2>{t("members:publicBySlug.workHeading")}</h2>
+      </div>
+      <div className={styles.workGrid}>
+        {work.map((item) => (
+          <article key={`${item.title}-${item.year}`} className={styles.card}>
+            <ImageSlot
+              className={styles.workImg}
+              radius={14}
+              placeholder={item.title}
+              src={item.imageUrl ?? undefined}
+              alt=""
+            />
+            <div className={styles.cardTitle}>{item.title}</div>
+            <div className={styles.cardMeta}>{item.year}</div>
+          </article>
+        ))}
+      </div>
+    </FadeIn>
+  );
+}

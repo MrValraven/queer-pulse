@@ -29,7 +29,7 @@ export function TherapistSections({
   const short = shortName(therapist.name);
 
   return (
-    <main>
+    <div>
       <section className={styles.sec}>
         <h2 className={styles.secTitle}>
           <Translation
@@ -145,6 +145,6 @@ export function TherapistSections({
           onClose={() => setVouching(false)}
         />
       )}
-    </main>
+    </div>
   );
 }

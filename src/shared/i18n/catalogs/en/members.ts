@@ -214,6 +214,24 @@ export const members: Catalog = {
     "No vouches for {first} yet. If you know them, yours could be the first.",
 
   // ── Public profile page (PublicProfilePage) ─────────────────────────────────
+  // ── /public-profile/:slug — the logged-out, indexable public profile ──────
+  // The not-found copy is load-bearing: an unpublished profile, a deactivated
+  // member and a slug that never existed must all read identically. Nothing
+  // here may hint that someone is here but hidden — that would make this page
+  // a way to confirm a person is on QueerPulse. It reads like any dead link.
+  "publicBySlug.meta.title": "{name} · QueerPulse",
+  "publicBySlug.aboutHeading": "About",
+  "publicBySlug.linksHeading": "Elsewhere",
+  "publicBySlug.workHeading": "Work",
+  "publicBySlug.joinTitle": "QueerPulse is invite-only",
+  "publicBySlug.joinBody":
+    "A place queer Lisbon gathers — no ads, no algorithm. You need someone to bring you in, or you can ask us directly.",
+  "publicBySlug.notFound.metaTitle": "Not found · QueerPulse",
+  "publicBySlug.notFound.title": "Nothing at this link",
+  "publicBySlug.notFound.description":
+    "There's nothing here to show. Worth double-checking the address you followed.",
+  "publicBySlug.notFound.backCta": "Go to QueerPulse",
+
   "publicProfile.hereForTitle": "What I'm <em>here for</em>",
   "publicProfile.visiblePublicly": "Visible publicly",
   "publicProfile.writing.heading": "Public <em>writing</em>",

@@ -287,7 +287,7 @@
 }
 .svvK {
   font-size: 11px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
@@ -295,7 +295,7 @@
 }
 .svvNote {
   font-size: 12.5px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 16px;
   font-family: var(--serif);
   font-style: italic;
@@ -393,7 +393,7 @@
 }
 .ccRole {
   font-size: 12.5px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   font-family: var(--serif);
   font-style: italic;
   margin-top: 2px;

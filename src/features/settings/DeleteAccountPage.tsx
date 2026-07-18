@@ -55,9 +55,9 @@ export function DeleteAccountPage() {
           </div>
         </aside>
 
-        <main className={styles.main}>
+        <div className={styles.main}>
           <DeleteAccountSection />
-        </main>
+        </div>
       </div>
     </AppShell>
   );

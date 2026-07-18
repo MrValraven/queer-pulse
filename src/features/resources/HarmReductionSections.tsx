@@ -143,7 +143,7 @@ export function NaloxoneCard() {
 
 export function HarmReductionGrid() {
   return (
-    <main className={styles.body}>
+    <div className={styles.body}>
       <div className="wrap">
         <div className={styles.grid}>
           <SectionCard section={SECTIONS[0]!} />
@@ -154,7 +154,7 @@ export function HarmReductionGrid() {
           <SectionCard section={SERVICES} />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

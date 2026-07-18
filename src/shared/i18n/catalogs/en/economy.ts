@@ -1872,6 +1872,47 @@ export const economy: Catalog = {
   "addWorkshop.listed.body":
     "<strong>{title}</strong> is live on Skills & learning. Members can browse it, read the plan, and reserve a seat. Edit the details or add sessions any time from your workshop page.",
 
+  // ── Editing a workshop you host (same form, different framing) ──────────
+  "editWorkshop.ariaLabel": "Edit your workshop",
+  "editWorkshop.eyebrow": "Your workshop",
+  "editWorkshop.title": "Edit your <em>workshop.</em>",
+  "editWorkshop.sub":
+    "Change anything that's moved on. People who've already reserved keep their spot — only the details on this page change.",
+  "editWorkshop.note":
+    "Your reduced and solidarity rates follow the standard price. The week-by-week plan and the spots already taken stay as they are.",
+  "editWorkshop.failedNote":
+    "We couldn't save that just now — nothing changed. Your edits are still here, so try again in a moment.",
+  "editWorkshop.savingLabel": "Saving…",
+  "editWorkshop.saveCta": "Save changes",
+  "editWorkshop.saved.title": "Changes",
+  "editWorkshop.saved.em": "saved.",
+  "editWorkshop.saved.body":
+    "<strong>{title}</strong> is updated on Skills & learning. Anyone opening it from here on sees the new details.",
+
+  // ── Deleting a workshop you host ────────────────────────────────────────
+  // A workshop people may be planning their weeks around is not a neutral
+  // thing to remove, so this copy is plain about what deleting does and —
+  // just as importantly — about what it does not do. There is no email
+  // service and no reservations model behind this, so nothing here may
+  // suggest that anyone gets told. Saying so is what lets the host go and
+  // tell people themselves.
+  "workshopHost.label": "You host this",
+  "workshopHost.note":
+    "Only you can see these. Edits show up straight away for anyone looking at this page.",
+  "workshopHost.editCta": "Edit workshop",
+  "workshopHost.deleteCta": "Delete",
+  "deleteWorkshop.title": "Delete this workshop?",
+  "deleteWorkshop.body":
+    "Deleting is permanent. It comes off Skills & learning right away, and anyone holding the link will find nothing there.",
+  "deleteWorkshop.attendeesNote":
+    "No message goes out to anyone. If people are planning to come, tell them yourself first — they won't hear it from us.",
+  "deleteWorkshop.keepCta": "Keep it",
+  "deleteWorkshop.confirmCta": "Delete workshop",
+  "deleteWorkshop.deletingLabel": "Deleting…",
+  "deleteWorkshop.failedNote":
+    "We couldn't delete that just now — your workshop is still up. Try again in a moment.",
+  "deleteWorkshop.toast": "Workshop deleted",
+
   "addWorkshop.cat.creative": "Creative",
   "addWorkshop.cat.craft": "Craft",
   "addWorkshop.cat.design": "Design",

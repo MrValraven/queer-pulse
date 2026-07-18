@@ -68,7 +68,7 @@ export function CreativesPage() {
         onToggleFilter={toggleFilter}
       />
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           {mode === "art" ? (
             loading ? (
@@ -128,7 +128,7 @@ export function CreativesPage() {
             </div>
           )}
         </div>
-      </main>
+      </div>
 
       <Outro
         title={

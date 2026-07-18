@@ -361,7 +361,7 @@
   color: rgba(var(--cream-rgb), 0.3);
 }
 .footer a {
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;

@@ -18,7 +18,7 @@ export function VolunteerOpportunityMain({
   opp: VolunteerOpportunity;
 }) {
   return (
-    <main>
+    <div>
       <section className={styles.sec}>
         <h2>
           <Translation
@@ -104,6 +104,6 @@ export function VolunteerOpportunityMain({
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

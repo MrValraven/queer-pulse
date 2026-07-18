@@ -1991,7 +1991,7 @@
 }
 .demoFlip span {
   font-size: 11px;
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 700;

@@ -6,11 +6,22 @@
   --plum-rgb: 45, 27, 61;
   --plum-deep: #241430;
 
-  /* ── Accent (coral / terracotta — swappable) ── */
+  /* ── Accent (coral / terracotta — swappable) ──
+     `--accent` is the BRAND colour: fills, tints, glows, decorative marks.
+     It measures 2.63:1 on cream, so it must never carry small text or be the
+     sole carrier of meaning — use the two derived tokens below for that.
+     See docs/production-readiness/contrast-audit.md §1, §4, §8. */
   --accent: #e8775a;
   --accent-rgb: 232, 119, 90;
   --accent-ink: #c85a40;
   --accent-deep: #a84430; /* darker accent — pressed/hover on accent-ink */
+  /* Coral as TEXT on light surfaces. 5.38:1 on cream, 5.94:1 on paper, and
+     still ≥4.5:1 over every coral-tinted badge in the app. Same value as
+     --accent-deep — an alias, not a new brand colour. */
+  --accent-text: #a84430;
+  /* Coral as a FILLED BUTTON background carrying a white label: 4.52:1 against
+     #fff, where --accent itself is 2.91:1 and fails AA at every size. */
+  --accent-fill: #d5431e;
 
   /* ── Surfaces ── */
   --cream: #f7f3ee; /* page background */
@@ -23,11 +34,24 @@
   --jade: #4a8c6f;
   --jade-rgb: 74, 140, 111;
   --jade-soft: #7cd7ad; /* light jade — text/icons on jade-tinted surfaces */
-  --jade-ink: #3f7d63; /* darker jade — small text on light (AA at body sizes) */
+  /* Darker jade for small text on light. Was #3f7d63, which cleared --paper
+     (4.86:1) but missed --cream (4.40:1) — and cream is the page background,
+     so the old "AA at body sizes" comment was not true.
+     #3C7159 rather than the bare 4.5 minimum (#3E7B62) because this token also
+     carries badge/chip text on jade TINTS, which are darker than cream:
+     5.14 cream / 5.68 paper / 4.51 over jade-12% / 4.50 over jade-20%. */
+  --jade-ink: #3c7159;
+  /* Jade as a FILLED BUTTON background with a white label: 4.52:1 against #fff
+     (--jade itself is 3.98:1 — large text only). */
+  --jade-fill: #458267;
 
   /* ── Amber (warning / medium states) ── */
   --amber: #e8b44a;
   --amber-rgb: 232, 180, 74;
+  /* Amber as TEXT. --amber itself is 1.72:1 on cream — the worst ratio in the
+     audit — so it is a fill/background colour only. 4.96 cream / 5.48 paper,
+     and it clears AA over the 20% amber tint the badges and chips use. */
+  --amber-ink: #8a6210;
 
   /* ── Danger (destructive actions: delete, block, report, emergency) ── */
   --danger: #b91c1c;
@@ -46,12 +70,12 @@
   --ink-rgb:
     26, 26, 31; /* ink channels for rgba() faint text — flips in dark mode */
   --ink-60: rgba(26, 26, 31, 0.62); /* body copy */
-  --ink-40: rgba(
-    26,
-    26,
-    31,
-    0.55
-  ); /* metadata, placeholders — 0.55 keeps small text at WCAG AA on cream */
+  /* Metadata, placeholders, FormField helper + char counts, ~1095 sites.
+     Was 0.55, whose comment claimed WCAG AA on cream — it did not: the
+     composite was #7D7C7C at 3.77:1. 0.61 is the minimum clearing both
+     surfaces (4.55:1 cream / 4.71:1 paper). Dark mode is unaffected in the bad
+     direction — the dark composite rises to 6.79:1. */
+  --ink-40: rgba(26, 26, 31, 0.61);
 
   /* ── Lines (borders / dividers / hairlines) ──
      Borders were written as plum rgba() for hairlines and solid plum for
@@ -80,13 +104,26 @@
   --ink: rgba(247, 243, 238, 0.92);
   --ink-rgb: 247, 243, 238; /* light channels so rgba() faint text flips too */
   --ink-60: rgba(247, 243, 238, 0.62);
-  --ink-40: rgba(247, 243, 238, 0.55);
+  --ink-40: rgba(247, 243, 238, 0.61);
   --jade-ink: #7cd7ad; /* on dark surfaces a lighter jade reads as "ink" */
+  /* These three don't flip and land badly on dark --paper #1A1030.
+     See contrast-audit.md §9. */
+  --danger: #e34646; /* was #B91C1C → 2.80:1. Now 4.51 paper / 4.87 cream. */
+  --violet: #906fc4; /* was #7A52B8 → 3.21:1. Now 4.53 / 4.89. */
+  /* The FormField error colour. On dark, plain --accent is already 6.22:1 on
+     paper / 6.72:1 on cream — no new colour needed. */
+  --accent-ink: var(--accent);
+  --accent-text: var(--accent);
+  /* The light-mode --amber-ink is a dark ochre — on the dark page it would be
+     worse than the value it replaced. Plain --amber is ~9:1 on dark paper. */
+  --amber-ink: var(--amber);
   /* Plum-coloured headings/emphasis flip to light ink so they stay legible on
      the dark page + paper surfaces. */
   --text-strong: rgba(247, 243, 238, 0.92);
   /* Borders/dividers flip to light channels so hairlines stay visible on dark
      surfaces (keeps the same per-border opacity). */
   --line-rgb: 247, 243, 238;
-  --line-strong: rgba(247, 243, 238, 0.32);
+  /* 0.32 was 2.71:1 on dark paper — under the 3:1 UI-component threshold.
+     0.45 reaches 4.15:1. */
+  --line-strong: rgba(247, 243, 238, 0.45);
 }

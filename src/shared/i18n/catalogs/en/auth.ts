@@ -260,12 +260,15 @@ export const auth: Catalog = {
   "requestInvite.alreadyMember": "Already a member? Sign in",
   "requestInvite.field.name.label": "Your name",
   "requestInvite.field.name.placeholder": "Alex",
+  "requestInvite.field.name.error": "Tell us what to call you.",
   "requestInvite.field.city.label": "City",
   "requestInvite.field.city.placeholder": "Lisbon",
   "requestInvite.field.email.label": "Email",
   "requestInvite.field.email.placeholder": "you@example.com",
   "requestInvite.field.email.error":
     "That email doesn't look right — mind checking it?",
+  "requestInvite.field.email.errorRequired":
+    "We need an email so we can write back.",
   "requestInvite.field.mutual.label":
     "Anyone here you know <optional>(optional)</optional>",
   "requestInvite.field.mutual.helper":
@@ -277,6 +280,8 @@ export const auth: Catalog = {
   "requestInvite.field.why.label": "Why QueerPulse",
   "requestInvite.field.why.placeholder":
     "What you're looking for, and what brings you here. A few honest sentences is plenty.",
+  "requestInvite.field.why.error":
+    "Tell us a little about what brings you here.",
   "requestInvite.agree":
     "I've read the <guidelines>community guidelines</guidelines> and I'm here in good faith.",
   "requestInvite.submit": "Send my request",

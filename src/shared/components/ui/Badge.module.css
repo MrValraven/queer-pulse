@@ -19,21 +19,26 @@
   background: currentColor;
   flex: none;
 }
+/* Each family is small text on a light tint of its own hue, which is a harder
+   surface than plain cream — so these use the `-ink`/`-text` variants, not the
+   raw brand tokens. `--accent-ink` (3.52:1 over coral tint), `--jade` (3.16:1
+   over jade tint) and `--amber` (1.72:1) all failed here.
+   See docs/production-readiness/contrast-audit.md §2, §3, §7. */
 .badge_danger {
   background: rgba(var(--danger-rgb), 0.1);
   color: var(--danger);
 }
 .badge_coral {
   background: rgba(var(--accent-rgb), 0.13);
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .badge_amber {
   background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .badge_jade {
   background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
+  color: var(--jade-ink);
 }
 .badge_violet {
   background: rgba(var(--violet-rgb), 0.13);
@@ -69,9 +74,9 @@
 }
 .cat_coral {
   background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .cat_jade {
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade);
+  color: var(--jade-ink);
 }

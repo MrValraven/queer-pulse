@@ -176,7 +176,7 @@ export function EditorDashboardPage() {
               />
             </FadeIn>
             <div className={styles.edGrid}>
-              <main>
+              <div>
                 <EditorPiecesTable
                   pieces={visible}
                   totalPieces={state.pieces.length}
@@ -197,7 +197,7 @@ export function EditorDashboardPage() {
                     stub(t("magazine:editor.page.everyPitchLoaded"))
                   }
                 />
-              </main>
+              </div>
               <EditorSidebar
                 pieces={state.pieces}
                 me={state.me}

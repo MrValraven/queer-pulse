@@ -59,7 +59,7 @@ export function HateCrimePanel() {
   return (
     <>
       <HateCrimeTabBar tab={tab} setTab={setTab} />
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           <div className={styles.layout}>
             <div>
@@ -118,7 +118,7 @@ export function HateCrimePanel() {
             <HateCrimeSidebar />
           </div>
         </div>
-      </main>
+      </div>
     </>
   );
 }

@@ -158,6 +158,16 @@ export function workshopDtoToWorkshop(
     tags: dto.tags ?? [],
     // Departure 3 — derived from createdAt, not read off the wire.
     added: isRecentlyAdded(dto.createdAt, now),
+    // The editable truth behind the formatted strings above, so the edit form
+    // can be seeded without re-parsing "€180" or "Workshop · 6 weeks · …".
+    source: {
+      weeks,
+      size,
+      price: dto.price ?? 0,
+      currency,
+      venue: dto.location?.name ?? "",
+    },
+    isHost: dto.isHost === true,
   };
 }
 
@@ -189,5 +199,32 @@ export function workshopDraftToCreateDto(
     price: Math.max(0, Number(draft.price) || 0),
     currency,
     venue: draft.venue.trim() || undefined,
+  };
+}
+
+/**
+ * The inverse of `workshopDraftToCreateDto`: seed the listing form from a
+ * workshop that already exists, so "Edit" reuses `AddWorkshopModal` rather than
+ * growing a second form.
+ *
+ * Everything numeric comes off `workshop.source` — never off the rendered
+ * strings, which are translated and currency-formatted for the viewer and would
+ * not survive a round trip. `titleEm` is deliberately left out: `CreateWorkshopDto`
+ * has no field for it, so PATCH cannot change it and folding it into `title`
+ * here would silently rewrite the headline on the first save.
+ */
+export function workshopToDraft(workshop: Workshop): WorkshopDraft {
+  return {
+    title: workshop.title,
+    blurb: workshop.blurb,
+    // `about` is stored as paragraphs and edited as one textarea — the exact
+    // split `workshopDraftToCreateDto` performs, run backwards.
+    about: workshop.about.join("\n\n"),
+    cat: workshop.cat,
+    mode: workshop.mode,
+    weeks: String(workshop.source.weeks),
+    size: String(workshop.source.size),
+    price: String(workshop.source.price),
+    venue: workshop.source.venue,
   };
 }

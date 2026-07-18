@@ -244,7 +244,7 @@
 }
 .qIco_amber {
   background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .qTx {
   display: flex;
@@ -489,7 +489,7 @@
 }
 .fIco_amber {
   background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .fTx {
   font-size: 13px;

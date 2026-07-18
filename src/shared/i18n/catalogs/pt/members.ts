@@ -219,6 +219,24 @@ export const members: Catalog = {
     "Ainda ninguém avalizou {first}. Se conheces esta pessoa, o teu pode ser o primeiro.",
 
   // ── Página de perfil público (PublicProfilePage) ────────────────────────────
+  // ── /public-profile/:slug — o perfil público, visível sem sessão ──────────
+  // O texto de "não encontrado" é essencial: um perfil não publicado, uma
+  // pessoa desativada e um slug que nunca existiu têm de ler exatamente igual.
+  // Nada aqui pode sugerir que alguém está cá mas escondido — isso tornaria
+  // esta página uma forma de confirmar que uma pessoa está no QueerPulse.
+  "publicBySlug.meta.title": "{name} · QueerPulse",
+  "publicBySlug.aboutHeading": "Sobre",
+  "publicBySlug.linksHeading": "Noutros sítios",
+  "publicBySlug.workHeading": "Trabalho",
+  "publicBySlug.joinTitle": "O QueerPulse é só por convite",
+  "publicBySlug.joinBody":
+    "Um sítio onde a Lisboa queer se junta — sem anúncios, sem algoritmo. Precisas de alguém que te traga, ou podes pedir-nos diretamente.",
+  "publicBySlug.notFound.metaTitle": "Não encontrado · QueerPulse",
+  "publicBySlug.notFound.title": "Não há nada neste link",
+  "publicBySlug.notFound.description":
+    "Não há nada para mostrar aqui. Vale a pena confirmares o endereço que seguiste.",
+  "publicBySlug.notFound.backCta": "Ir para o QueerPulse",
+
   "publicProfile.hereForTitle": "Para que <em>estou aqui</em>",
   "publicProfile.visiblePublicly": "Visível publicamente",
   "publicProfile.writing.heading": "Escrita <em>pública</em>",

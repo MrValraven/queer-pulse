@@ -81,7 +81,7 @@
 .tab {
   font-size: 14.5px;
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   padding: 14px 22px;
   cursor: pointer;
   border: none;

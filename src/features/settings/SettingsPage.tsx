@@ -110,7 +110,7 @@ export function SettingsPage() {
           ))}
         </aside>
 
-        <main className={styles.main}>
+        <div className={styles.main}>
           <FadeIn key={pane}>
             {pane === "notifications" && (
               <NotificationsPane onChange={markChanged} />
@@ -136,7 +136,7 @@ export function SettingsPage() {
             {pane === "simulations" && <SimulationsPane />}
             {pane === "delete" && <DeleteAccountSection />}
           </FadeIn>
-        </main>
+        </div>
       </div>
 
       {dirty && (

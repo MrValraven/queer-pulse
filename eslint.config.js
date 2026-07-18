@@ -2,8 +2,23 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
+
+// jsx-a11y's recommended set ships 31 of its 34 rules at "error". We take the
+// rule list (and each rule's own options) but force every severity down to
+// "warn": the existing tail of a11y debt is real and untriaged, so erroring
+// would block every build today for problems nobody has had a chance to fix.
+// Promote individual rules to "error" as each is driven to zero.
+// The 3 rules recommended turns off (deprecated/superseded ones) stay off.
+const jsxA11yWarnings = Object.fromEntries(
+  Object.entries(jsxA11y.flatConfigs.recommended.rules).map(([id, setting]) => {
+    const severity = Array.isArray(setting) ? setting[0] : setting;
+    if (severity === "off" || severity === 0) return [id, "off"];
+    return [id, Array.isArray(setting) ? ["warn", ...setting.slice(1)] : "warn"];
+  }),
+);
 
 // Local rule: ban emoji glyphs in source — the platform uses react-icons instead
 // of emoji (see CLAUDE.md). Country flags have no react-icons equivalent and are
@@ -91,7 +106,7 @@ export default defineConfig([
   globalIgnores(["dist", "coverage"]),
   {
     files: ["**/*.{ts,tsx}"],
-    plugins: { local: localPlugin },
+    plugins: { local: localPlugin, "jsx-a11y": jsxA11y },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -102,6 +117,18 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      // 0. Accessibility. Every jsx-a11y recommended rule, forced to "warn"
+      //    (see jsxA11yWarnings above). Never "error" — it must not block CI
+      //    while the existing tail is being triaged. Baseline at introduction:
+      //    218 warnings, dominated by click-events-have-key-events (81) and
+      //    no-static-element-interactions (68) — the same div-with-onClick
+      //    pattern counted twice, so ~81 real sites, not 149.
+      //    KNOWN FALSE POSITIVES: all 15 `anchor-has-content` hits are the
+      //    `<Translation components={{ a: <a href="…" /> }}>` idiom — those
+      //    anchors are element *templates* that React clones with children at
+      //    render time. The rule can't see that. Don't "fix" them by adding
+      //    dummy children.
+      ...jsxA11yWarnings,
       // Underscore-prefixed args/vars are intentional throwaways.
       "@typescript-eslint/no-unused-vars": [
         "error",

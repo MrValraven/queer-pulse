@@ -83,7 +83,7 @@
 }
 .w span {
   font-size: 13px;
-  color: rgba(var(--cream-rgb), 0.48);
+  color: rgba(var(--cream-rgb), 0.5);
   line-height: 1.55;
 }
 @media (max-width: 640px) {

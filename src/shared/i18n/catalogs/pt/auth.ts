@@ -259,12 +259,15 @@ export const auth: Catalog = {
   "requestInvite.alreadyMember": "Já fazes parte? Entrar",
   "requestInvite.field.name.label": "O teu nome",
   "requestInvite.field.name.placeholder": "Alex",
+  "requestInvite.field.name.error": "Diz-nos como te chamas.",
   "requestInvite.field.city.label": "Cidade",
   "requestInvite.field.city.placeholder": "Lisboa",
   "requestInvite.field.email.label": "Email",
   "requestInvite.field.email.placeholder": "tu@exemplo.com",
   "requestInvite.field.email.error":
     "Esse email não parece estar certo — importas-te de verificar?",
+  "requestInvite.field.email.errorRequired":
+    "Precisamos de um email para te podermos responder.",
   "requestInvite.field.mutual.label":
     "Conheces alguém aqui <optional>(opcional)</optional>",
   "requestInvite.field.mutual.helper":
@@ -275,6 +278,8 @@ export const auth: Catalog = {
   "requestInvite.field.why.label": "Porquê o QueerPulse",
   "requestInvite.field.why.placeholder":
     "O que procuras, e o que te traz aqui. Umas frases sinceras já chegam.",
+  "requestInvite.field.why.error":
+    "Conta-nos um pouco sobre o que te traz aqui.",
   "requestInvite.agree":
     "Li as <guidelines>diretrizes da comunidade</guidelines> e estou aqui de boa-fé.",
   "requestInvite.submit": "Enviar o meu pedido",

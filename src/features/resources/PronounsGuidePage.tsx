@@ -30,7 +30,7 @@ export function PronounsGuidePage() {
         </div>
       </header>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className={styles.layout}>
           <div>
             <Reveal as="section" className={styles.section}>
@@ -140,7 +140,7 @@ export function PronounsGuidePage() {
             </div>
           </aside>
         </div>
-      </main>
+      </div>
 
       <Outro
         title={

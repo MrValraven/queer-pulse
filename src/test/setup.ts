@@ -1,6 +1,23 @@
 import "@testing-library/jest-dom/vitest";
-import { afterEach, vi } from "vitest";
+import { afterEach, expect, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
+import * as axeMatchers from "vitest-axe/matchers.js";
+
+// ── axe-core matcher ─────────────────────────────────────────────────────────
+// Registers `expect(results).toHaveNoViolations()` for every suite. The `axe()`
+// runner itself is imported per-test from "vitest-axe" — see the a11y suites in
+// src/test/a11y.test.tsx. Imported with the explicit `.js` because vitest-axe
+// 0.1.0 ships no "exports" map, so extensionless subpath resolution is only a
+// bundler nicety rather than a guarantee.
+expect.extend(axeMatchers);
+
+// Declaration merging: the type parameter must match @vitest/expect's own
+// `interface Matchers<T = any>` exactly, or TS rejects the merge.
+declare module "vitest" {
+  /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type */
+  interface Matchers<T = any> extends axeMatchers.AxeMatchers {}
+  /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type */
+}
 
 // ── jsdom polyfills ──────────────────────────────────────────────────────────
 // jsdom has no layout engine, so APIs the app touches during render must be

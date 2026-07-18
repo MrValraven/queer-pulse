@@ -303,7 +303,7 @@
   outline: none;
 }
 .nomInput::placeholder {
-  color: rgba(var(--cream-rgb), 0.42);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 
 @media (max-width: 860px) {

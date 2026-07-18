@@ -41,7 +41,7 @@
 .breadcrumb {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 0.42);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 22px;
   display: inline-flex;
   align-items: center;
@@ -97,7 +97,7 @@
   flex-wrap: wrap;
   align-items: center;
   font-size: 13.5px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   font-weight: 500;
   margin-bottom: 28px;
 }
@@ -199,7 +199,7 @@
 }
 .stripNote {
   font-size: 13px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-left: 10px;
 }
 

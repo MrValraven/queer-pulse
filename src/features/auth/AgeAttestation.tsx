@@ -10,6 +10,11 @@ interface AgeAttestationProps {
   /** Whether the "I'm 18 or older" box is ticked. */
   confirmed: boolean;
   onConfirmedChange: (value: boolean) => void;
+  /**
+   * Marks the box as an outstanding required answer after a rejected submit, so
+   * `focusFirstError` can land on it. Optional: onboarding doesn't submit.
+   */
+  invalid?: boolean;
   /** Fired when the member says they're under 18 — surfaces the humane block. */
   onUnder18: () => void;
 }
@@ -25,6 +30,7 @@ export function AgeAttestation({
   confirmed,
   onConfirmedChange,
   onUnder18,
+  invalid = false,
 }: AgeAttestationProps) {
   const { t } = useTranslation();
   return (
@@ -35,6 +41,7 @@ export function AgeAttestation({
           type="checkbox"
           checked={confirmed}
           onChange={(e) => onConfirmedChange(e.target.checked)}
+          aria-invalid={invalid}
         />
         <span className={styles.label}>
           {t("auth:ageAttestation.confirmLabel")}

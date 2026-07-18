@@ -141,7 +141,7 @@
   padding-top: 18px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.1);
   font-size: 12.5px;
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
   font-style: italic;
   font-family: var(--serif);
 }
@@ -168,7 +168,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 14px;
 }
 .noteHead {
@@ -197,7 +197,7 @@
 }
 .noteRole {
   font-size: 12px;
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .sCard p {
   font-size: 14px;
@@ -281,7 +281,7 @@
   color: rgba(var(--cream-rgb), 0.78);
 }
 .credRow .role {
-  color: var(--text40, rgba(var(--cream-rgb), 0.4));
+  color: var(--text40, rgba(var(--cream-rgb), 0.5));
   white-space: nowrap;
   font-size: 12px;
 }
@@ -319,7 +319,7 @@
 .sheetMini .nm small {
   display: block;
   font-size: 11.5px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 3px;
 }
 .sheetMini > a {

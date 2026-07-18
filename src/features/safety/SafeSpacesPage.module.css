@@ -526,7 +526,7 @@
 }
 .nomInput::placeholder,
 .nomTextarea::placeholder {
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .nomSelect {
   appearance: none;

@@ -104,7 +104,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .searchBar input::placeholder {
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .chips {
   display: flex;

@@ -41,7 +41,7 @@
   color: var(--ink);
 }
 .h1 em {
-  color: var(--accent-ink);
+  color: var(--accent-text);
   font-style: italic;
 }
 .phSub {
@@ -176,15 +176,15 @@
 }
 .chip_coral {
   background: rgba(var(--accent-rgb), 0.13);
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .chip_amber {
   background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .chip_jade {
   background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
+  color: var(--jade-ink);
 }
 .chip_violet {
   background: rgba(var(--violet-rgb), 0.13);
@@ -220,11 +220,11 @@
 }
 .cat_coral {
   background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .cat_jade {
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade);
+  color: var(--jade-ink);
 }
 
 /* ── Avatars (ax-av) ─────────────────────────────────────────────────────── */
@@ -267,11 +267,11 @@
 }
 .av_coral {
   background: rgba(var(--accent-rgb), 0.18);
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .av_jade {
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade);
+  color: var(--jade-ink);
 }
 .av_violet {
   background: rgba(var(--violet-rgb), 0.18);
@@ -279,7 +279,7 @@
 }
 .av_amber {
   background: rgba(var(--amber-rgb), 0.24);
-  color: var(--amber);
+  color: var(--amber-ink);
 }
 .av_anon {
   background: rgba(var(--plum-rgb), 0.08);
@@ -476,7 +476,7 @@
   color: var(--ink);
 }
 .modalTitle em {
-  color: var(--accent-ink);
+  color: var(--accent-text);
   font-style: italic;
 }
 .modalX {
@@ -611,7 +611,7 @@
   }
 }
 .checkLineOn {
-  border-color: var(--jade);
+  border-color: var(--jade-ink);
   background: rgba(var(--jade-rgb), 0.06);
 }
 .checkBox {
@@ -630,7 +630,7 @@
 }
 .checkLineOn .checkBox {
   background: var(--jade);
-  border-color: var(--jade);
+  border-color: var(--jade-ink);
 }
 .checkBox svg {
   width: 13px;

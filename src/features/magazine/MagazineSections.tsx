@@ -194,7 +194,7 @@ function SubmitBanner() {
 
 export function MagazineSections() {
   return (
-    <main className={styles.body}>
+    <div className={styles.body}>
       <div className="wrap">
         <section className={styles.section}>
           <SectionHead
@@ -282,6 +282,6 @@ export function MagazineSections() {
         <ArchiveSection />
         <SubmitBanner />
       </div>
-    </main>
+    </div>
   );
 }

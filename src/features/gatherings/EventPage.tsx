@@ -92,7 +92,7 @@ export function EventPage() {
         />
       </div>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           <div className={styles.layout}>
             <div>
@@ -182,7 +182,7 @@ export function EventPage() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </PageShell>
   );
 }

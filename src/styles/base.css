@@ -35,10 +35,28 @@ a {
 }
 
 /* Global keyboard-focus ring — components may override with an equally
-   visible :focus-visible style, but never with a bare outline: none. */
+   visible :focus-visible style, but never with a bare outline: none.
+
+   TWO-TONE, and it has to be. A focus indicator needs 3:1 against the colour
+   next to it (WCAG 2.4.11), and this ring appears on cream, on white paper AND
+   on plum panels. No single colour can do that: anything clearing 3:1 on white
+   must be dark, anything clearing 3:1 on plum must be light. The old single
+   coral ring measured 2.63:1 on cream and 2.91:1 on paper — it failed on the
+   two surfaces it appears on most.
+
+   So: a light halo sits in the outline's offset gap, with the dark ring outside
+   it. On light surfaces the dark ring carries it (--accent-deep is 5.38:1 on
+   cream, 5.94:1 on paper); on plum the cream halo does (12.6:1). One of the two
+   always contrasts, whatever is behind.
+
+   The halo uses box-shadow, so any component with a class-scoped `:focus` glow
+   out-specifies it — those components re-declare the halo in their own
+   `:focus-visible` rule (FormField, CopyLinkRow). See
+   docs/production-readiness/contrast-audit.md §8. */
 :focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 3px solid var(--accent-deep);
   outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
   border-radius: 4px;
 }
 

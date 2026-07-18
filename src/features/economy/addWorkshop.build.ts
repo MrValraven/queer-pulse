@@ -177,5 +177,51 @@ export function buildWorkshop(
     },
     tags: [draft.mode, weeksPhrase],
     added: true,
+    // Same clamped values the display strings above were composed from, kept so
+    // the member can reopen this listing in the edit form and get their own
+    // numbers back rather than a parse of "€150".
+    source: {
+      weeks,
+      size,
+      price,
+      currency: "EUR",
+      venue: draft.venue.trim(),
+    },
+    // Demo mode has no session cookie to check: a workshop you listed in this
+    // session is one you host, which is what makes edit/delete explorable here.
+    isHost: true,
+  };
+}
+
+/**
+ * Apply an edited draft to a workshop that already exists — demo mode's stand-in
+ * for PATCH /workshops/:slug.
+ *
+ * Re-derives everything the draft actually owns (title, blurb, about, price
+ * tiers, the composed format line) but keeps the workshop's identity and the
+ * state that no form field controls: the slug, how many spots are already taken,
+ * and the real session programme. Rebuilding `sessions` here would quietly
+ * replace a planned six-week schedule with "Week n · to be planned" rows.
+ */
+export function applyWorkshopDraft(
+  workshop: Workshop,
+  draft: WorkshopDraft,
+  t: TFunction,
+  fmt: Formatters,
+): Workshop {
+  const rebuilt = buildWorkshop(draft, workshop.tutor, t, fmt);
+  return {
+    ...rebuilt,
+    id: workshop.id,
+    // PATCH has no field for these, so an edit must not invent changes to them.
+    titleEm: workshop.titleEm,
+    heroTint: workshop.heroTint,
+    spotsFilled: workshop.spotsFilled,
+    sessions: workshop.sessions,
+    pastWork: workshop.pastWork,
+    startDate: workshop.startDate,
+    cancellation: workshop.cancellation,
+    added: workshop.added,
+    isHost: workshop.isHost,
   };
 }

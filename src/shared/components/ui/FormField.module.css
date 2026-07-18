@@ -22,7 +22,8 @@
 }
 
 .req {
-  color: var(--accent-ink);
+  /* --accent-ink is 3.81:1 on cream — fails AA. --accent-text is 5.38:1. */
+  color: var(--accent-text);
   font-weight: 700;
 }
 
@@ -39,7 +40,10 @@
   font-size: 15.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  /* 0.16 measured 1.37:1. A form control's boundary is a UI component under
+     WCAG 1.4.11 and needs 3:1 — on a cream page this input previously had no
+     qualifying boundary at all. 0.50 reaches 3.10:1. */
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
   border-radius: 12px;
   padding: 13px 15px;
   width: 100%;
@@ -64,6 +68,16 @@
   background: var(--paper);
 }
 
+/* Keyboard focus. These selectors are class-scoped, so they out-specify the
+   global `:focus-visible` in base.css and would drop its light halo — leaving
+   only the decorative 8%-plum glow above, which is nowhere near 3:1. Restate
+   the halo here so the two-tone ring survives. */
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+}
+
 .field input:disabled,
 .field textarea:disabled,
 .field select:disabled {
@@ -75,7 +89,10 @@
 .field input[aria-invalid="true"],
 .field textarea[aria-invalid="true"],
 .field select[aria-invalid="true"] {
-  border-color: rgba(var(--accent-rgb), 0.6);
+  /* This border is the ONLY visual carrier of the invalid state on the control
+     itself, so it is a UI component under WCAG 1.4.11 and needs 3:1. The old
+     rgba(accent, .6) measured 1.77:1; solid --accent-ink reaches 3.81:1. */
+  border-color: var(--accent-ink);
 }
 
 .helper {
@@ -86,14 +103,18 @@
 
 .error {
   font-size: 12px;
-  color: var(--accent-ink);
+  /* The most a11y-critical colour in the app: 12px/600 error text is exactly
+     what WCAG 3.3.1 expects to be readable. --accent-ink was 3.81:1 on cream
+     and 3.52:1 on coral-tinted badges. --accent-text is 5.38 / ≥4.5. */
+  color: var(--accent-text);
   line-height: 1.45;
   font-weight: 600;
 }
 
 .ok {
   font-size: 12px;
-  color: var(--jade);
+  /* --jade is 3.61:1 on cream at 12px. --jade-ink is the small-text variant. */
+  color: var(--jade-ink);
   line-height: 1.45;
   font-weight: 600;
 }

@@ -1874,6 +1874,47 @@ export const economy: Catalog = {
   "addWorkshop.listed.body":
     "<strong>{title}</strong> já está publicado em Competências e aprendizagem. As pessoas podem explorá-lo, ler o plano, e reservar um lugar. Edita os detalhes ou adiciona sessões a qualquer momento a partir da página do teu workshop.",
 
+  // ── Editar um workshop que organizas (mesmo formulário, outro enquadramento) ──
+  "editWorkshop.ariaLabel": "Editar o teu workshop",
+  "editWorkshop.eyebrow": "O teu workshop",
+  "editWorkshop.title": "Edita o teu <em>workshop.</em>",
+  "editWorkshop.sub":
+    "Muda o que já não corresponde. Quem já reservou mantém o lugar — só mudam os detalhes desta página.",
+  "editWorkshop.note":
+    "As tarifas reduzida e solidária acompanham o preço normal. O plano semana a semana e os lugares já ocupados ficam como estão.",
+  "editWorkshop.failedNote":
+    "Não conseguimos guardar agora — nada mudou. As tuas alterações continuam aqui, por isso tenta outra vez daqui a pouco.",
+  "editWorkshop.savingLabel": "A guardar…",
+  "editWorkshop.saveCta": "Guardar alterações",
+  "editWorkshop.saved.title": "Alterações",
+  "editWorkshop.saved.em": "guardadas.",
+  "editWorkshop.saved.body":
+    "<strong>{title}</strong> está atualizado em Competências e aprendizagem. Quem abrir a partir de agora vê os novos detalhes.",
+
+  // ── Eliminar um workshop que organizas ──────────────────────────────────
+  // Um workshop à volta do qual há pessoas a planear semanas não é uma coisa
+  // neutra de remover, por isso este texto é claro sobre o que eliminar faz
+  // e — tão importante quanto isso — sobre o que não faz. Não há serviço de
+  // email nem modelo de reservas por trás disto, portanto nada aqui pode
+  // sugerir que alguém é avisado. Dizê-lo é o que permite a quem organiza ir
+  // avisar as pessoas.
+  "workshopHost.label": "Organizas este",
+  "workshopHost.note":
+    "Só tu vês isto. As edições aparecem logo para quem estiver a ver esta página.",
+  "workshopHost.editCta": "Editar workshop",
+  "workshopHost.deleteCta": "Eliminar",
+  "deleteWorkshop.title": "Eliminar este workshop?",
+  "deleteWorkshop.body":
+    "Eliminar é permanente. Sai de Competências e aprendizagem de imediato, e quem tiver o link não vai encontrar nada.",
+  "deleteWorkshop.attendeesNote":
+    "Não é enviada nenhuma mensagem a ninguém. Se há pessoas a contar vir, avisa-as tu primeiro — não vão saber por nós.",
+  "deleteWorkshop.keepCta": "Manter",
+  "deleteWorkshop.confirmCta": "Eliminar workshop",
+  "deleteWorkshop.deletingLabel": "A eliminar…",
+  "deleteWorkshop.failedNote":
+    "Não conseguimos eliminar agora — o teu workshop continua no ar. Tenta outra vez daqui a pouco.",
+  "deleteWorkshop.toast": "Workshop eliminado",
+
   "addWorkshop.cat.creative": "Criativo",
   "addWorkshop.cat.craft": "Artesanato",
   "addWorkshop.cat.design": "Design",

@@ -7,6 +7,7 @@ import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { Workshop } from "./workshops.data";
 import { WorkshopReserveModal } from "./WorkshopReserveModal";
+import { WorkshopHostControls } from "./WorkshopHostControls";
 import styles from "./WorkshopPage.module.css";
 
 export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
@@ -20,6 +21,9 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
 
   return (
     <aside className={styles.side}>
+      {/* Renders nothing unless the viewer hosts this workshop. */}
+      <WorkshopHostControls workshop={workshop} />
+
       <div className={styles.card}>
         <div className={styles.bookHead}>
           <h4>{t("economy:workshopSidebar.reserveTitle")}</h4>

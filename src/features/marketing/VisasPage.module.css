@@ -57,7 +57,7 @@
   align-items: center;
   gap: 9px;
   font-size: 13px;
-  color: rgba(var(--cream-rgb), 0.44);
+  color: rgba(var(--cream-rgb), 0.5);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: 999px;
   padding: 10px 18px;

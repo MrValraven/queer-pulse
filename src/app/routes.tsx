@@ -1676,6 +1676,12 @@ export function AppRoutes() {
           />
           <Route path="/profile/:slug" element={<MemberProfileRedirect />} />
           <Route path={routes.publicProfile} element={<PublicProfilePage />} />
+          {/* The addressable public profile. Public by design — unlike
+              /members/:slug, this one is reachable and indexable logged-out. */}
+          <Route
+            path={`${routes.publicProfile}/:slug`}
+            element={<PublicProfilePage />}
+          />
           <Route path={routes.badges} element={<BadgesPage />} />
           <Route path={routes.perks} element={<PerksPage />} />
           <Route path={routes.connections} element={<ConnectionsPage />} />

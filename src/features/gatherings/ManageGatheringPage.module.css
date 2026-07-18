@@ -615,7 +615,7 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
   font-size: 10px;
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
   text-align: center;
   line-height: 1.6;
   position: relative;

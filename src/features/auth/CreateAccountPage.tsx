@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { consumePendingInvite, readInviteWelcome } from "./api/pendingInvite";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
+import { focusFirstErrorAfterRender } from "../../shared/lib/focusFirstError";
 import { AuthLayout } from "./AuthLayout";
 import { FALLBACK_INVITER, type Visibility } from "./createAccount.data";
 import { AccountFields, type Touched } from "./CreateAccountFields";
@@ -40,6 +41,7 @@ export function CreateAccountPage() {
     first: false,
     last: false,
   });
+  const formRef = useRef<HTMLFormElement>(null);
 
   const errors = useMemo(() => buildErrors(t, first, last), [t, first, last]);
 
@@ -50,7 +52,12 @@ export function CreateAccountPage() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!isValid) {
+      // Reveal every error at once, then send focus to the first one. Marking
+      // the fields touched is what makes FormField render the error and stamp
+      // `aria-invalid`, so the focus call has to wait a frame for that render —
+      // hence `AfterRender`.
       setTouched({ first: true, last: true });
+      focusFirstErrorAfterRender(formRef.current);
       return;
     }
     // This page is a prototype surface: the real live-mode journey is
@@ -106,7 +113,12 @@ export function CreateAccountPage() {
         />
       </p>
 
-      <form onSubmit={handleSubmit} noValidate style={{ marginTop: 20 }}>
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        noValidate
+        style={{ marginTop: 20 }}
+      >
         <AccountFields
           first={first}
           setFirst={setFirst}
@@ -126,10 +138,16 @@ export function CreateAccountPage() {
           setVisibility={setVisibility}
         />
 
+        {/* Deliberately `aria-disabled`, NOT `disabled`. A truly disabled submit
+            is unfocusable and swallows the click, so an invalid form gives a
+            keyboard or screen-reader user no feedback at all — they cannot even
+            reach the control that would tell them what's wrong. Left enabled,
+            the click lands, handleSubmit reveals the errors and moves focus to
+            the first one. It still *looks* disabled (Button.module.css styles
+            `[aria-disabled="true"]` identically). */}
         <Button
           type="submit"
           className={styles.authBtn}
-          disabled={!isValid}
           aria-disabled={!isValid}
         >
           {t("auth:createAccount.submit")}

@@ -58,10 +58,10 @@ export function EditProfilePage() {
       <div className={styles.page}>
         <EditProfileSidebar />
 
-        <main className={styles.main}>
+        <div className={styles.main}>
           <EditProfilePane onChange={markChanged} />
           <div style={{ height: "80px" }} />
-        </main>
+        </div>
       </div>
 
       {savedSections && (

@@ -661,7 +661,7 @@
 }
 .field input::placeholder,
 .field textarea::placeholder {
-  color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .field textarea {
   resize: vertical;
@@ -677,7 +677,7 @@
 }
 .formSmall {
   font-size: 11.5px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-top: 10px;
   line-height: 1.5;
 }

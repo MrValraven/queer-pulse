@@ -396,3 +396,25 @@
 :global([data-theme="dark"]) .need {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+/* Host-only controls (edit / delete). Same paper card as the rest of the
+   sidebar, marked out by a coral edge rather than a louder surface — it's the
+   host's own tooling, not an alert. */
+.hostCard {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 18px;
+  padding: 22px 24px;
+}
+.hostNote {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  margin-bottom: 14px;
+}
+.hostActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

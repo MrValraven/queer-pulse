@@ -137,7 +137,7 @@ export function PodcastEpisodes() {
   const visibleOlder = OLDER_EPISODES.slice(0, shown);
 
   return (
-    <main>
+    <div>
       <div className={styles.epH}>
         <h2>
           <Translation
@@ -214,7 +214,7 @@ export function PodcastEpisodes() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -50,7 +50,7 @@ export function CookiesPage() {
         <p className={styles.sub}>{t("marketing:cookies.sub")}</p>
       </header>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className={styles.layout}>
           <div className={styles.group}>
             {COOKIE_CATEGORIES.map((cat) => {
@@ -175,7 +175,7 @@ export function CookiesPage() {
             </div>
           </aside>
         </div>
-      </main>
+      </div>
 
       <Outro
         title={

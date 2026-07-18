@@ -816,7 +816,7 @@
 
 .flagNote {
   background: rgba(var(--amber-rgb), 0.12);
-  color: var(--amber);
+  color: var(--amber-ink);
   border: 1px solid rgba(var(--amber-rgb), 0.28);
 }
 
@@ -838,7 +838,7 @@
 
 .recAmber {
   background: rgba(var(--amber-rgb), 0.12);
-  color: var(--amber);
+  color: var(--amber-ink);
   border: 1px solid rgba(var(--amber-rgb), 0.28);
 }
 

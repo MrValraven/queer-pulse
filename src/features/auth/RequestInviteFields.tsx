@@ -17,8 +17,15 @@ export interface RequestInviteFieldsProps {
   setCity: (v: string) => void;
   email: string;
   setEmail: (v: string) => void;
+  /** Malformed email. Mutually exclusive with `emailMissing`. */
   emailError: boolean;
+  /** Required-but-empty email, only ever true after a submit attempt. */
+  emailMissing: boolean;
   onEmailBlur: () => void;
+  /** Required-but-empty name, only ever true after a submit attempt. */
+  firstMissing: boolean;
+  /** Required-but-empty "why", only ever true after a submit attempt. */
+  whyMissing: boolean;
   why: string;
   setWhy: (v: string) => void;
   /**
@@ -45,7 +52,10 @@ export function RequestInviteFields({
   email,
   setEmail,
   emailError,
+  emailMissing,
   onEmailBlur,
+  firstMissing,
+  whyMissing,
   why,
   setWhy,
   mutual,
@@ -55,7 +65,13 @@ export function RequestInviteFields({
   return (
     <>
       <div className={styles.twoCol}>
-        <FormField label={t("auth:requestInvite.field.name.label")} required>
+        <FormField
+          label={t("auth:requestInvite.field.name.label")}
+          required
+          error={
+            firstMissing ? t("auth:requestInvite.field.name.error") : undefined
+          }
+        >
           <input
             id="ri-first"
             type="text"
@@ -81,7 +97,11 @@ export function RequestInviteFields({
         label={t("auth:requestInvite.field.email.label")}
         required
         error={
-          emailError ? t("auth:requestInvite.field.email.error") : undefined
+          emailMissing
+            ? t("auth:requestInvite.field.email.errorRequired")
+            : emailError
+              ? t("auth:requestInvite.field.email.error")
+              : undefined
         }
       >
         <input
@@ -92,7 +112,7 @@ export function RequestInviteFields({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onBlur={onEmailBlur}
-          aria-invalid={emailError}
+          aria-invalid={emailError || emailMissing}
         />
       </FormField>
 
@@ -118,6 +138,7 @@ export function RequestInviteFields({
         label={t("auth:requestInvite.field.why.label")}
         required
         labelAside={`${why.length}/400`}
+        error={whyMissing ? t("auth:requestInvite.field.why.error") : undefined}
       >
         <textarea
           id="ri-why"

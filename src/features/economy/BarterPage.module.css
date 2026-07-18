@@ -354,7 +354,7 @@
   background: rgba(var(--cream-rgb), 0.08);
 }
 .psInput::placeholder {
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 .psInput:focus {
   border-color: rgba(var(--cream-rgb), 0.4);

@@ -43,7 +43,7 @@ export function DirectorySpaceMain({ place }: Props) {
   const todayIdx = (new Date().getDay() + 6) % 7;
 
   return (
-    <main>
+    <div>
       <header className={s.head}>
         <div className={s.eyebrow}>
           {t(CAT_LABEL_KEYS[place.cat]!)} · {place.hood} · Lisbon
@@ -205,6 +205,6 @@ export function DirectorySpaceMain({ place }: Props) {
           </div>
         ))}
       </section>
-    </main>
+    </div>
   );
 }

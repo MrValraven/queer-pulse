@@ -302,7 +302,7 @@
 }
 .feByline {
   font-size: 13px;
-  color: rgba(var(--cream-rgb), 0.45);
+  color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 20px;
 }
 .feExcerpt {
