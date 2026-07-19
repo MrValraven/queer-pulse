@@ -184,9 +184,18 @@ function DsarRequestForm({ right }: { right: Right }) {
       </FormField>
 
       <div className={styles.field}>
-        <label>{t("marketing:dsar.form.scopeLabel")}</label>
-        <div className={styles.scopeList}>
+        {/* A caption for a set of checkboxes, not a label for one control:
+            a bare <label> with no control names nothing. */}
+        <div className={styles.groupLabel} id="dsar-scope-label">
+          {t("marketing:dsar.form.scopeLabel")}
+        </div>
+        <div
+          className={styles.scopeList}
+          role="group"
+          aria-labelledby="dsar-scope-label"
+        >
           {SCOPES.map((scope, index) => (
+            // eslint-disable-next-line jsx-a11y/label-has-associated-control -- the label's text (<b> + <span>) sits one level deeper than the rule's default depth of 2; the accessible name is computed correctly from the subtree.
             <label
               key={scope.bKey}
               className={[

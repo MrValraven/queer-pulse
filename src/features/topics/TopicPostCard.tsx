@@ -3,6 +3,7 @@ import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import type { PostKind, TopicPost } from "./topics.data";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./TopicPage.module.css";
 
 const KIND_LABEL_KEY: Record<PostKind, string> = {
@@ -37,7 +38,10 @@ export function TopicPostCard({
       <div className={styles.postHead}>
         <Avatar initials={post.initials} tint={post.tone} size={32} />
         <div>
-          <div className={styles.postName}>{post.author}</div>
+          <div className={styles.postNameRow}>
+            <div className={styles.postName}>{post.author}</div>
+            <MemberStaffBadge slug={post.authorSlug} />
+          </div>
           <div className={styles.postMeta}>{post.meta}</div>
         </div>
         <span className={kindClass}>{t(KIND_LABEL_KEY[post.kind])}</span>

@@ -9,11 +9,7 @@ import { TERMS_VERSION } from "./ageAttestation.api";
  * these members, so the app must route them somewhere useful rather than let
  * them land on a feed that fails to load (see authGate.ts).
  */
-export type MemberStatus =
-  | "pending"
-  | "active"
-  | "suspended"
-  | "deactivated";
+export type MemberStatus = "active" | "suspended" | "deactivated";
 export type MemberRole = "member" | "moderator" | "admin";
 
 export interface AuthUser {
@@ -23,8 +19,8 @@ export interface AuthUser {
   role: MemberRole;
   /**
    * ISO timestamp of the member's 18+ self-attestation, or null if they haven't
-   * passed the age gate yet (spec 06). A `pending` user with a null value must be
-   * forced through the onboarding attestation before promotion to `active`.
+   * passed the age gate yet (spec 06). A member with a null value must be forced
+   * through the onboarding attestation before they can use the app.
    */
   ageAttestedAt: string | null;
   profile: {

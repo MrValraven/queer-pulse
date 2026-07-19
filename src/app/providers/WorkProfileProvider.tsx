@@ -8,18 +8,22 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   DEFAULT_WORK_PREFERENCES,
-  getWorkPreferences,
   normalizeWorkPreferences,
   putWorkPreferences,
   type WorkPreferencesDTO,
 } from "../../features/economy/api/workPreferences.api";
+import { useWorkPreferences } from "../../features/economy/api/useWorkPreferences";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
 
+/**
+ * The overlay-only slice: the working copy and its mutators. Deliberately does
+ * NOT carry `loading`, which belongs to the query the composition hook owns.
+ */
 interface WorkProfileContextValue {
   /** Out-at-work spectrum value: 'out' | 'verified' | 'private'. */
   outAtWork: string;
@@ -30,8 +34,6 @@ interface WorkProfileContextValue {
   /** Only surface community-verified-safe employers. */
   safeOnly: boolean;
   setSafeOnly: (v: boolean) => void;
-  /** True while the stored preferences are still being read (live mode only). */
-  loading: boolean;
   /** True while a save is in flight. */
   saving: boolean;
   /**
@@ -42,6 +44,14 @@ interface WorkProfileContextValue {
    * written — callers must not show a success state on `false`.
    */
   save: () => Promise<boolean>;
+  /**
+   * Adopt the stored preferences. Idempotent per live session: only the FIRST
+   * call lands. Hydration is now driven by whichever consumer's query resolves,
+   * and consumers mount and unmount as the member navigates — without this
+   * latch, opening the jobs board after editing the work profile would replay
+   * hydration and silently discard the unsaved draft.
+   */
+  hydrate: (data: WorkPreferencesDTO) => void;
 }
 
 const WorkProfileContext = createContext<WorkProfileContextValue | null>(null);
@@ -74,23 +84,22 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
 
   const live = !demoMode && loggedIn;
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["workPreferences", demoMode],
-    enabled: live,
-    queryFn: getWorkPreferences,
-  });
+  // Whether this live session has already adopted the server's values.
+  const hydrated = useRef(false);
 
-  // Adopt the stored preferences once they arrive. Demo mode never gets here.
-  useEffect(() => {
-    if (!data) return;
+  const hydrate = useCallback((data: WorkPreferencesDTO) => {
+    if (hydrated.current) return;
+    hydrated.current = true;
     persisted.current = data;
     setDraft(data);
-  }, [data]);
+  }, []);
 
   // Leaving live mode (sign-out, or the demo toggle) drops back to the safe
-  // defaults rather than leaving another session's disclosure settings on screen.
+  // defaults rather than leaving another session's disclosure settings on
+  // screen — and re-arms the latch so the next session hydrates for itself.
   useEffect(() => {
     if (live) return;
+    hydrated.current = false;
     persisted.current = DEFAULT_WORK_PREFERENCES;
     setDraft(DEFAULT_WORK_PREFERENCES);
   }, [live]);
@@ -146,20 +155,11 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
       toggleTransSupport,
       safeOnly: draft.safeOnly,
       setSafeOnly,
-      loading: live && isLoading,
       saving,
       save,
+      hydrate,
     }),
-    [
-      draft,
-      setOutAtWork,
-      toggleTransSupport,
-      setSafeOnly,
-      live,
-      isLoading,
-      saving,
-      save,
-    ],
+    [draft, setOutAtWork, toggleTransSupport, setSafeOnly, saving, save, hydrate],
   );
 
   return (
@@ -169,10 +169,43 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useWorkProfile() {
+/** The public shape — unchanged from before this provider was scoped. */
+export interface WorkProfileValue
+  extends Omit<WorkProfileContextValue, "hydrate"> {
+  /** True while the stored preferences are still being read (live mode only). */
+  loading: boolean;
+}
+
+function useWorkProfileContext(): WorkProfileContextValue {
   const ctx = useContext(WorkProfileContext);
   if (!ctx) {
     throw new Error("useWorkProfile must be used within WorkProfileProvider");
   }
   return ctx;
+}
+
+/**
+ * The member's work-profile preferences: the session working copy from the
+ * provider, joined to the stored values from `useWorkPreferences`.
+ *
+ * Calling this SUBSCRIBES to GET /me/work-preferences — that subscription is
+ * the entire mechanism by which the request now fires on the two pages that
+ * read these preferences instead of on every route. A component that only
+ * needed to *write* must therefore not call this hook; today there is no such
+ * consumer (both read server-hydrated fields), so there is no actions-only
+ * hook. If one appears, add `useWorkProfileActions()` returning the context
+ * alone rather than routing it through here.
+ */
+export function useWorkProfile(): WorkProfileValue {
+  const { hydrate, ...overlay } = useWorkProfileContext();
+  const { data, isLoading } = useWorkPreferences();
+
+  useEffect(() => {
+    if (data) hydrate(data);
+  }, [data, hydrate]);
+
+  return useMemo(
+    () => ({ ...overlay, loading: isLoading }),
+    [overlay, isLoading],
+  );
 }

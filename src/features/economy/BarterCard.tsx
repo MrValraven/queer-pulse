@@ -4,6 +4,7 @@ import { Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import {
   type Barter,
   BADGE_KEY,
@@ -35,7 +36,10 @@ export function BarterCard({ barter: b }: Props) {
       <div className={styles.bcHead}>
         <Avatar initials={info.initials} tint={info.tint} size={40} />
         <div className={styles.bcMeta}>
-          <div className={styles.bcName}>{info.name}</div>
+          <div className={styles.nameRow}>
+            <div className={styles.bcName}>{info.name}</div>
+            <MemberStaffBadge slug={b.member} />
+          </div>
           <div className={styles.bcHood}>{info.hood}</div>
         </div>
         <span className={`${styles.bcBadge} ${styles[b.mode]}`}>

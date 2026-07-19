@@ -58,6 +58,41 @@ describe("handleQueryError", () => {
     expect(emit).not.toHaveBeenCalled();
   });
 
+  it("stays silent for a PLATFORM_LOCKED 503 (the lock provider owns that screen)", () => {
+    // ToastProvider sits ABOVE PlatformLockProvider, so its viewport renders
+    // over the maintenance screen. Without this carve-out a lockdown starting
+    // mid-session stacks red server-error toasts on top of the calm
+    // explanation that exists precisely to replace them.
+    handleQueryError(
+      new ApiError(503, "Locked", {
+        code: "PLATFORM_LOCKED",
+        message: "Back soon.",
+      }),
+      query,
+    );
+    expect(emit).not.toHaveBeenCalled();
+    // Still logged — silence is a presentation decision, not an observability one.
+    expect(logError).toHaveBeenCalledOnce();
+  });
+
+  it("still toasts a plain 503 that is not a platform lockdown", () => {
+    handleQueryError(new ApiError(503, "down", { code: "SOMETHING_ELSE" }), query);
+    expect(emit).toHaveBeenCalledWith(
+      "Something went wrong on our end — please try again.",
+      "error",
+      6000,
+    );
+  });
+
+  it("respects meta.silentError (a fail-soft query must not toast)", () => {
+    handleQueryError(new ApiError(500, "boom"), {
+      queryKey: ["platform-status", false],
+      meta: { silentError: true },
+    });
+    expect(emit).not.toHaveBeenCalled();
+    expect(logError).toHaveBeenCalledOnce();
+  });
+
   it("toasts a generic message for a non-Api (network) error", () => {
     handleQueryError(new TypeError("Failed to fetch"), query);
     expect(emit).toHaveBeenCalledWith(
@@ -113,6 +148,16 @@ describe("handleMutationError", () => {
   it("stays silent for a 401 (auth refresh owns it)", () => {
     handleMutationError(
       new ApiError(401, "unauth"),
+      undefined,
+      undefined,
+      mutation,
+    );
+    expect(emit).not.toHaveBeenCalled();
+  });
+
+  it("stays silent for a PLATFORM_LOCKED 503 (the lock provider owns that screen)", () => {
+    handleMutationError(
+      new ApiError(503, "Locked", { code: "PLATFORM_LOCKED", message: null }),
       undefined,
       undefined,
       mutation,

@@ -13,15 +13,14 @@ import {
   type ListingStatus,
   type PendingListing,
 } from "../../features/marketing/listBusiness/listBusiness.data";
-import {
-  useListingMutations,
-  useMyListings,
-} from "../../features/marketing/listBusiness/api/useListings";
+import { useListingMutations } from "../../features/marketing/listBusiness/api/useListings";
 import { useDemoMode } from "./DemoModeProvider";
 
-interface DirectoryListingsContextValue {
-  /** Listings submitted this session, newest first. */
-  submitted: PendingListing[];
+interface DirectoryListingsActions {
+  /** Demo: the full store. Live: session-local optimistic additions only. */
+  local: PendingListing[];
+  /** Live-only tombstones: refs withdrawn this session. */
+  withdrawn: Set<string>;
   /** Persist a draft as a pending listing; returns the created record. */
   addListing: (draft: ListingDraft, submittedBy: string) => PendingListing;
   /** Remove a pending listing by reference. */
@@ -30,17 +29,27 @@ interface DirectoryListingsContextValue {
   setStatus: (ref: string, status: ListingStatus) => void;
 }
 
-const DirectoryListingsContext =
-  createContext<DirectoryListingsContextValue | null>(null);
+const DirectoryListingsContext = createContext<DirectoryListingsActions | null>(
+  null,
+);
 
 /**
  * Store for member-submitted directory listings (pending review).
  *
  * Demo mode is byte-for-byte the original behaviour: a local `useState` array
  * plus a `seq` counter is the whole source of truth, and nothing touches the
- * network. Live mode hydrates from GET /listings/mine and layers session-local
- * optimistic additions on top, so `addListing` can still return synchronously
- * while the create mutation lands and invalidation refreshes the server list.
+ * network.
+ *
+ * This provider holds ONLY the overlay — it does not fetch. The server list
+ * (GET /listings/mine) is composed on top at read time by
+ * `useDirectoryListings` in
+ * `features/marketing/listBusiness/api/useDirectoryListings.ts`, so the
+ * request fires when a reader mounts rather than on every route.
+ *
+ * The overlay stays app-wide deliberately: `addListing` is called on
+ * /local/directory/list and `submitted` is read on /account/profile. Scope
+ * this state to either route and a listing submitted on one stops appearing
+ * on the other.
  */
 export function DirectoryListingsProvider({
   children,
@@ -48,10 +57,6 @@ export function DirectoryListingsProvider({
   children: ReactNode;
 }) {
   const { demoMode } = useDemoMode();
-  const { items: serverItems } = useMyListings().data ?? {
-    items: [],
-    total: 0,
-  };
   const { createListing, withdrawListing: withdrawMutation } =
     useListingMutations();
 
@@ -100,23 +105,9 @@ export function DirectoryListingsProvider({
     setLocal((prev) => prev.map((l) => (l.ref === ref ? { ...l, status } : l)));
   }, []);
 
-  const submitted = useMemo<PendingListing[]>(() => {
-    if (demoMode) return local;
-    // Live: optimistic additions first, then server rows, deduped by ref and
-    // with anything withdrawn this session filtered out.
-    const seen = new Set<string>();
-    const merged: PendingListing[] = [];
-    for (const l of [...local, ...serverItems]) {
-      if (withdrawn.has(l.ref) || seen.has(l.ref)) continue;
-      seen.add(l.ref);
-      merged.push(l);
-    }
-    return merged;
-  }, [demoMode, local, serverItems, withdrawn]);
-
   const value = useMemo(
-    () => ({ submitted, addListing, withdrawListing, setStatus }),
-    [submitted, addListing, withdrawListing, setStatus],
+    () => ({ local, withdrawn, addListing, withdrawListing, setStatus }),
+    [local, withdrawn, addListing, withdrawListing, setStatus],
   );
 
   return (
@@ -126,11 +117,18 @@ export function DirectoryListingsProvider({
   );
 }
 
-export function useDirectoryListings(): DirectoryListingsContextValue {
+/**
+ * Overlay state + mutators only. **No query subscription** — a consumer that
+ * only writes (ListBusinessPage) must use this, not `useDirectoryListings`,
+ * or it re-subscribes GET /listings/mine and reintroduces the eager request
+ * this refactor removed. Nothing visibly breaks if you get this wrong; only
+ * `src/test/requestBudget.test.tsx` catches it.
+ */
+export function useDirectoryListingsActions(): DirectoryListingsActions {
   const ctx = useContext(DirectoryListingsContext);
   if (!ctx) {
     throw new Error(
-      "useDirectoryListings must be used within a DirectoryListingsProvider",
+      "useDirectoryListingsActions must be used within a DirectoryListingsProvider",
     );
   }
   return ctx;

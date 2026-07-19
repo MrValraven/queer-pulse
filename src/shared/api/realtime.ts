@@ -92,6 +92,23 @@ class RealtimeClient {
     // the socket so it reconnects with a freshly-refreshed cookie).
     socket.on("exception", (data) => {
       logWarn("realtime: gateway exception", { message: String(data.message) });
+      // Platform lockdown: the server will refuse every handshake until an admin
+      // lifts it, and each refusal costs a JWT verify + a user lookup that no
+      // rate limiter covers (the gateway's buckets key on a user id that only
+      // exists after a SUCCESSFUL handshake; the HTTP throttler skips WS). Left
+      // to its default cadence, every signed-in member would retry ~once a
+      // second for the whole lockdown. Stop reconnecting. Recovery needs no
+      // reload: once the maintenance screen renders, the messages page
+      // unmounts, `demand` drops to 0 and the effect cleanup disposes this
+      // RealtimeClient — so the next connect() builds a brand-new io() Manager
+      // with reconnection back at its default.
+      //
+      // Known gap: a member idling on /messages makes no HTTP request, so
+      // nothing 503s and nothing trips the lock. They see a dead socket rather
+      // than the maintenance screen until they navigate or otherwise act.
+      if (data.code === "PLATFORM_LOCKED") {
+        socket.io.reconnection(false);
+      }
     });
 
     // Cache patching. Invalidation (rather than hand-merging into cursor pages)

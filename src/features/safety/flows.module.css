@@ -191,6 +191,24 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+}
+/* The real radio drives selection; `.ocRadio` is its visual stand-in, so the
+   input is visually hidden but still focusable — the focus ring is forwarded. */
+.ocRadioInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.ocRadioInput:focus-visible + .ocRadio {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .ocRadio {
   width: 18px;

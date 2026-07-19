@@ -1,6 +1,7 @@
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { AdminChip, AdminCat, AdminAvatar } from "./ui";
@@ -86,6 +87,7 @@ function ReportRow({ item }: { item: QueueItem }) {
 
 export function MembersPane({ community }: { community: Community }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <div className={styles.pane}>
       {community.mods.map((m) => (
@@ -94,8 +96,13 @@ export function MembersPane({ community }: { community: Community }) {
             initials={m.initials}
             tone={m.tone}
             size="md"
-            verified
-            src={portrait(m.name)}
+            // `portrait()` looks up the mock adminPeople fixture and
+            // `verified` asserts a check the platform doesn't compute — both
+            // are demo-only chrome. On the live path a real moderator who
+            // happens to share a fixture name must not get a stranger's
+            // stock photo, and we must not claim a verification we don't have.
+            verified={demoMode}
+            src={demoMode ? portrait(m.name) : undefined}
             alt={m.name}
           />
           <div className={styles.memberMeta}>

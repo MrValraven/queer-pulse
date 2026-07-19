@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useConnections } from "../../../app/providers/ConnectionsProvider";
 import { useSocial } from "../../../app/providers/SocialProvider";
-import { useVouch } from "../../../app/providers/VouchProvider";
+import { useVouchActions } from "../../../app/providers/VouchProvider";
 import {
   CONNECTION_META,
   connectionViews,
@@ -55,7 +55,7 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
   const { demoMode } = useDemoMode();
   const { connected, incoming, sent } = useConnections();
   const { blocked } = useSocial();
-  const { vouched } = useVouch();
+  const { vouched } = useVouchActions();
 
   // Slugs the mock/demo path renders for each tab.
   const demoSlugs = useMemo(() => {

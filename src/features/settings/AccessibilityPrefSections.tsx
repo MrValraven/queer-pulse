@@ -23,7 +23,12 @@ export function TglRow({
         <div className={styles.tglDesc}>{desc}</div>
       </div>
       <label className={styles.tglSw}>
-        <input type="checkbox" checked={checked} onChange={onChange} />
+        <input
+          type="checkbox"
+          aria-label={title}
+          checked={checked}
+          onChange={onChange}
+        />
         <div className={styles.tglTrack} />
         <div className={styles.tglThumb} />
       </label>

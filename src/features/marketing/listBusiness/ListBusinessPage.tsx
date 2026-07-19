@@ -7,7 +7,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { useDirectoryListings } from "../../../app/providers/DirectoryListingsProvider";
+import { useDirectoryListingsActions } from "../../../app/providers/DirectoryListingsProvider";
 import { currentUser, currentUserSlug } from "../../members/data/members";
 import {
   TOTAL_STEPS,
@@ -42,7 +42,8 @@ export function ListBusinessPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { addListing, withdrawListing, setStatus } = useDirectoryListings();
+  const { addListing, withdrawListing, setStatus } =
+    useDirectoryListingsActions();
 
   const form = useListingForm();
   const { draft } = form;

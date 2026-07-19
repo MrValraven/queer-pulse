@@ -14,6 +14,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { minReadText } from "./magazineFormat";
 import { PrintOrderModal } from "./PrintOrderModal";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./IssuePage.module.css";
 import { resolveWriter } from "./authorContent.data";
 import { TOC, CONTRIBUTORS, PRINT_EDITION_IMG } from "./issue.data";
@@ -162,21 +163,24 @@ function ContributorsSection() {
                 <ContribCardSkeleton key={i} />
               ))
             : CONTRIBUTORS.map((person, i) => {
-                const dest = resolveWriter(person.name);
+                const writer = resolveWriter(person.name);
                 const body = (
                   <>
                     <Avatar initials={person.initials} tint="coral" size={38} />
                     <div>
-                      <div className={styles.contribName}>{person.name}</div>
+                      <div className={styles.contribName}>
+                        {person.name}
+                        <MemberStaffBadge slug={writer?.slug} />
+                      </div>
                       <div className={styles.contribRole}>{person.role}</div>
                     </div>
                   </>
                 );
-                return dest ? (
+                return writer ? (
                   <FadeIn
                     as={Link}
                     key={person.name}
-                    to={dest}
+                    to={writer.to}
                     className={styles.contribCard}
                     delay={Math.min(i, 8) * 60}
                   >

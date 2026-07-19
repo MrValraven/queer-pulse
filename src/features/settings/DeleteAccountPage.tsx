@@ -13,34 +13,24 @@ export function DeleteAccountPage() {
         <aside className={styles.sidebar}>
           <div className={styles.sidebarInner}>
             <div className={styles.sidebarHead}>
-              {t("settings:notifPrefs.sidebar.account")}
+              {t("settings:deleteAccount.sidebar.account")}
             </div>
             <Link to={routes.editProfile} className={styles.navItem}>
               <svg className={styles.navIcon} viewBox="0 0 16 16">
                 <circle cx="8" cy="6" r="3" />
                 <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" />
               </svg>
-              {t("settings:notifPrefs.sidebar.editProfile")}
-            </Link>
-            <Link
-              to={routes.notificationPreferences}
-              className={styles.navItem}
-            >
-              <svg className={styles.navIcon} viewBox="0 0 16 16">
-                <path d="M8 2a6 6 0 0 1 6 6c0 3.3-6 8-6 8S2 11.3 2 8a6 6 0 0 1 6-6z" />
-                <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-              </svg>
-              {t("settings:notifPrefs.sidebar.notifications")}
+              {t("settings:deleteAccount.sidebar.editProfile")}
             </Link>
             <button type="button" className={styles.navItem}>
               <svg className={styles.navIcon} viewBox="0 0 16 16">
                 <rect x="2" y="11" width="12" height="3" rx="1" />
                 <path d="M5 8h6M5 5h4" />
               </svg>
-              {t("settings:notifPrefs.sidebar.privacy")}
+              {t("settings:deleteAccount.sidebar.privacy")}
             </button>
             <div className={styles.sidebarHead}>
-              {t("settings:notifPrefs.sidebar.dangerZone")}
+              {t("settings:deleteAccount.sidebar.dangerZone")}
             </div>
             <button
               type="button"
@@ -50,7 +40,7 @@ export function DeleteAccountPage() {
                 <polyline points="3,4 13,4" />
                 <path d="M6 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M5 4l.5 9h5l.5-9" />
               </svg>
-              {t("settings:notifPrefs.sidebar.deactivateAccount")}
+              {t("settings:deleteAccount.sidebar.deactivateAccount")}
             </button>
           </div>
         </aside>

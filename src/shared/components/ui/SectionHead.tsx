@@ -31,18 +31,15 @@ export function SectionHead({
   const cls = [styles.head, dark && styles.dark, className]
     .filter(Boolean)
     .join(" ");
-  const hasAside = subtitle || linkLabel || action;
+  const hasAside = linkLabel || action;
   return (
     <div className={cls} {...rest}>
       <div className={styles.titleBlock}>
         <h2 className={styles.title}>{title}</h2>
-        {subtitle && action && (
-          <p className={styles.subtitleLeft}>{subtitle}</p>
-        )}
+        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
       </div>
       {hasAside && (
         <div className={styles.aside}>
-          {subtitle && !action && <p className={styles.subtitle}>{subtitle}</p>}
           {linkLabel && (
             <Link to={linkTo ?? "#"} className={styles.link}>
               {linkLabel}

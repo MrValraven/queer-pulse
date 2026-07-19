@@ -28,6 +28,9 @@
   margin-bottom: 52px;
   position: relative;
 }
+.topText {
+  flex: 1 1 420px;
+}
 .eyebrow {
   font-size: 12px;
   font-weight: 700;
@@ -59,7 +62,8 @@
   font-size: 15px;
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.65;
-  max-width: 36ch;
+  max-width: 52ch;
+  margin: 14px 0 0;
 }
 .grid {
   display: grid;
@@ -74,6 +78,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
   color: inherit;
   transition:
     transform var(--dur-slow) var(--ease),

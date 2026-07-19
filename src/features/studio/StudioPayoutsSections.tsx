@@ -109,16 +109,15 @@ export function PayoutsList({
               components={{ em: <em /> }}
             />
           </h3>
-          <a
-            href="#"
+          <button
+            type="button"
             className={s.allLink}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               onExport();
             }}
           >
             {t("studio:payouts.list.exportCsv")}
-          </a>
+          </button>
         </div>
         {loading
           ? Array.from({ length: PAYOUTS.length }).map((_, skeletonIndex) => (

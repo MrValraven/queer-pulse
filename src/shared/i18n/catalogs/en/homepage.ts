@@ -35,6 +35,9 @@ export const homepage: Catalog = {
   "manifesto.assurance.vouched.title": "Invited or vouched",
   "manifesto.assurance.vouched.description":
     "Every member arrives through a vouch or a reviewed invite request — never an open sign-up.",
+  "manifesto.assurance.safeSpaces.title": "Safe spaces we've been to",
+  "manifesto.assurance.safeSpaces.description":
+    "Venues our mod team visits in person, re-verified on a date you can see.",
   "manifesto.assurance.encrypted.title": "End-to-end encrypted",
   "manifesto.assurance.encrypted.description":
     "Direct messages are encrypted — private conversations stay private.",
@@ -44,9 +47,6 @@ export const homepage: Catalog = {
   "manifesto.assurance.moderation.title": "Moderated around the clock",
   "manifesto.assurance.moderation.description":
     "Reports get a real response, usually within hours — not days.",
-  "manifesto.assurance.quickExit.title": "Quick exit, one tap",
-  "manifesto.assurance.quickExit.description":
-    "Leave any page instantly if someone looks over your shoulder.",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
   "trustStrip.vouched": "Invite-only & vouched",

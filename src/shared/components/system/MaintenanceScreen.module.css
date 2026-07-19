@@ -1,0 +1,29 @@
+/*
+ * Reuses MaintenancePage.module.css for the shared visual language (orb
+ * backdrop, brand wordmark, eyebrow/heading/lead rhythm, actions row). Only
+ * what's genuinely new to this screen lives here: the "still signed in"
+ * reassurance pill, styled after the design system's jade-success idiom
+ * (see docs/STYLE-RULES.md) since it is good news, not a warning.
+ */
+
+.stillSignedIn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: rgba(var(--cream-rgb), 0.85);
+  background: rgba(var(--jade-rgb), 0.12);
+  border: 1px solid rgba(var(--jade-rgb), 0.25);
+  border-radius: 999px;
+  padding: 8px 16px;
+  margin: 0 auto 28px;
+}
+
+.stillSignedIn::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+}

@@ -12,12 +12,14 @@ import {
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
+import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { AuthLayout } from "./AuthLayout";
 import { CommunityArt } from "./CommunityArt";
+import { PlatformClosedNotice } from "./PlatformClosedNotice";
 import styles from "./auth.module.css";
 
 type FailedProbe = Extract<BackendProbe, { ok: false }>;
@@ -84,6 +86,15 @@ function noticeForAuthError(code: string, t: TFunction): Notice {
         title: t("auth:signIn.notice.emailUnverified.title"),
         body: t("auth:signIn.notice.emailUnverified.body"),
       };
+    // Registration is switched off platform-wide, or the platform is locked
+    // (lockdown also closes signups). Existing members are unaffected — this
+    // only ever reaches a brand-new account attempt.
+    case "registration_disabled":
+      return {
+        Icon: FiUserPlus,
+        title: t("auth:signIn.notice.registrationDisabled.title"),
+        body: t("auth:signIn.notice.registrationDisabled.body"),
+      };
     case "invalid_state":
     case "oauth_failed":
     default:
@@ -140,6 +151,16 @@ export function SignInPage() {
   // Set when the backend's Google callback bounced us back here after a failed
   // or rejected sign-in (invite-only gate, cancelled consent, bad state nonce).
   const authError = searchParams.get("error");
+
+  // Pre-emptive closed state, read BEFORE anyone attempts to sign in. Fails
+  // open by construction: outside demo mode there is no `initialData`, so
+  // while the query is loading or if it errors `platformStatus` is
+  // `undefined` here, `registrationClosed` stays `false`, and the page renders
+  // exactly as it does today — a briefly-unreachable status endpoint must
+  // never block a legitimate sign-in. Sign-in itself is never gated on this:
+  // only the "create an account" affordance below reflects it.
+  const { data: platformStatus } = usePlatformStatus();
+  const registrationClosed = platformStatus?.registrationOpen === false;
 
   // Note: a signed-in member never reaches this page — the walled-garden gate
   // (see authGate.ts / AppRoutes) treats /auth/sign-in as guest-only and
@@ -203,6 +224,17 @@ export function SignInPage() {
             <span>{notice.body}</span>
           </div>
         </div>
+      )}
+
+      {registrationClosed && (
+        <PlatformClosedNotice
+          icon={FiUserPlus}
+          title={t("auth:signIn.closed.title")}
+          body={
+            platformStatus?.registrationClosedMessage ||
+            t("auth:signIn.closed.body")
+          }
+        />
       )}
 
       <button

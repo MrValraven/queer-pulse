@@ -196,6 +196,14 @@
 .artStem {
   animation: qpArtStemIn 0.5s var(--ease-out) both;
 }
+/* One gentle beat of the coral core, after it has bloomed and before the first
+   member orb arrives. Sits on a wrapper <g> so it composes with the core's own
+   bloom transform instead of fighting it. */
+.hearthBeat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: qpHearthBeat 0.7s var(--ease) 0.6s both;
+}
 @keyframes qpArtGlowIn {
   from {
     opacity: 0;
@@ -232,9 +240,19 @@
     opacity: 1;
   }
 }
+@keyframes qpHearthBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.13);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .artGlow,
   .hearthBloom,
+  .hearthBeat,
   .artOrb,
   .artStem {
     animation: none;
@@ -246,7 +264,7 @@
 .hearthRipple {
   transform-box: fill-box;
   transform-origin: center;
-  animation: qpHearthRipple 2.8s var(--ease) 0.9s infinite;
+  animation: qpHearthRipple 2.8s var(--ease) 0.66s infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .hearthRipple {

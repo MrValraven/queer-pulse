@@ -110,15 +110,12 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
 
       <div className={styles.foot}>
         {t("studio:signin.in.newHere")}{" "}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            onSwitch();
-          }}
+        <button
+          type="button"
+          onClick={onSwitch}
         >
           {t("studio:signin.in.joinCta")} →
-        </a>
+        </button>
         <span className={styles.free}>
           {t("studio:signin.in.freePrompt")}{" "}
           <Link to={routes.studioLanding}>{t("studio:signin.in.freeCta")}</Link>
@@ -282,15 +279,12 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
 
       <div className={styles.foot}>
         {t("studio:signin.join.alreadyMember")}{" "}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            onSwitch();
-          }}
+        <button
+          type="button"
+          onClick={onSwitch}
         >
           {t("studio:signin.tabs.signIn")} →
-        </a>
+        </button>
         <span className={styles.free}>
           {t("studio:signin.join.notReady")}{" "}
           <Link to={routes.studioLanding}>

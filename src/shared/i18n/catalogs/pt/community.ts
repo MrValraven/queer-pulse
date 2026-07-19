@@ -248,6 +248,8 @@ export const community: Catalog = {
   "creatives.card.viewProfileCtaShort": "Ver perfil",
   "creatives.card.artistPhoto": "foto de artista",
   "creatives.player.playAriaLabel": "Reproduzir",
+  "creatives.player.seekAriaLabel": "Navegar pela faixa",
+  "creatives.player.seekValueText": "{{percent}}% da faixa",
   "creatives.empty.art.title": "Nada corresponde aos teus filtros",
   "creatives.empty.art.description":
     "Nenhuma obra corresponde a estas etiquetas agora. Limpa-as para veres tudo o que a comunidade partilhou.",

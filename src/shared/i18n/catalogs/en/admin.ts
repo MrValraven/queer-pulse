@@ -408,25 +408,42 @@ export const admin: Catalog = {
   // ── Communities ────────────────────────────────────────────────────────────
   "communities.title": "Communities · <em>all spaces</em>",
   "communities.grid.eyebrow": "Communities",
-  "communities.grid.titleLine1": "Eight spaces,",
+  "communities.grid.titleLine1_one": "{spelled} space,",
+  "communities.grid.titleLine1_other": "{spelled} spaces,",
+  "communities.grid.titleLine1Unknown": "Spaces,",
   "communities.grid.titleLine2": "each <em>tended to</em>.",
   "communities.grid.sub":
     "Every community has a moderator who knows it by name. Health is how steady each one feels — reports answered, members held, no one slipping through.",
-  "communities.grid.newCta": "+ New community",
-  "communities.grid.newToast":
-    "Creating a new community would open a guided setup",
+  "communities.grid.loadError": "Couldn’t load the communities.",
   "communities.grid.healthAriaLabel": "Health {score}, see breakdown",
   "communities.grid.needsHand": "· needs a hand",
   "communities.grid.stat.members": "Members",
   "communities.grid.stat.activity": "Activity",
   "communities.grid.stat.openReports": "Open reports",
-  "communities.grid.sparklineAriaLabel": "Health trend, latest {value}",
+  "communities.grid.sparklineAriaLabel": "Weekly activity, latest {value}",
+  "communities.grid.emptyTitle": "No spaces <em>yet</em>.",
+  "communities.grid.emptyText":
+    "Spaces here come from members, not admins — when the first one takes shape, its health, its moderators, and its queue will show up right here.",
+  // Activity classification the health math computes server-side (chrome,
+  // not fetched free text) — see adminCommunities.adapters.ts.
+  "communities.activityLabel.quiet": "Quiet",
+  "communities.activityLabel.growing": "Growing",
+  "communities.activityLabel.steady": "Steady",
+  "communities.activityLabel.active": "Active",
+  "communities.activityLabel.high": "High",
+  "communities.activityLabel.busy": "Busy",
 
   "communities.detail.backCta": "All communities",
   "communities.detail.stewardedBy_one":
     "Stewarded by {count} moderator · founded {founded}.",
   "communities.detail.stewardedBy_other":
     "Stewarded by {count} moderators · founded {founded}.",
+  // CLDR has no "zero" plural category for en/pt, so `stewardedBy_zero` would
+  // never be selected automatically (see translate.ts's resolveEntry) — this
+  // key is chosen with an explicit branch in AdminCommunityDetail.tsx instead,
+  // dropping the "stewarded by 0" clause rather than rendering it right above
+  // the `supportBanner.textNone` banner that already says the same thing.
+  "communities.detail.foundedOnly": "Founded {founded}.",
   "communities.detail.healthChip": "Health {score} · {label}",
   "communities.detail.settingsCta": "Settings",
   "communities.detail.settingsToast": "Community settings would open here",
@@ -436,11 +453,13 @@ export const admin: Catalog = {
     "A health score this low is a call for support, not a mark against the mods. {name} is stewarding {members} members almost alone.",
   "communities.detail.supportBanner.textThin":
     "A health score this low is a call for support, not a mark against the mods. {name} is stewarding {members} members with a thin team.",
+  "communities.detail.supportBanner.textNone":
+    "A health score this low is a call for support, not a mark against the mods. This community currently has no moderator at all, and {members} members are relying on it.",
   "communities.detail.supportBanner.offerCta": "Offer support",
   "communities.detail.stat.members": "Members",
   "communities.detail.stat.activeThisWeek": "Active this week",
   "communities.detail.stat.openReports": "Open reports",
-  "communities.detail.stat.resolvedOnTime": "Resolved on time",
+  "communities.detail.stat.handled": "Handled",
   "communities.detail.tabs.queue": "Scoped queue",
   "communities.detail.tabs.members": "Members",
   "communities.detail.tabs.settings": "Settings",
@@ -450,12 +469,16 @@ export const admin: Catalog = {
 
   "communities.queue.emptyTitle": "Nothing open, <em>nothing owed</em>.",
   "communities.queue.emptyText":
-    "This community resolves everything itself — a {pct}% on-time record. Its moderators rarely need you.",
+    "This community takes care of itself — a {pct}% handled rate. Its moderators rarely need you.",
   "communities.queue.moreHandled":
     "+ {count} more being handled by the community's own moderators",
   "communities.queue.reviewCta": "Review",
   "communities.members.moderatorChip": "Moderator",
   "communities.members.seeAllCta": "See all {total} members",
+  // A moderator's subline, composed from the API's owner/mod role + join
+  // date (chrome, not fetched free text) — see adminCommunities.adapters.ts.
+  "communities.moderators.roleLine.owner": "Founded the community",
+  "communities.moderators.roleLine.mod": "Moderator since {date}",
 
   "communities.settings.whoCanJoin": "Who can join",
   "communities.settings.moderators": "Moderators",
@@ -466,6 +489,11 @@ export const admin: Catalog = {
   "communities.settings.secondVouch.title": "Require a second vouch to join",
   "communities.settings.secondVouch.sub":
     "Slows growth, raises trust. Recommended for support spaces.",
+  // Shown, and the toggle disabled, when the community has no `join` data at
+  // all (live mode — see adminCommunities.adapters.ts) rather than silently
+  // rendering the toggle as "off" and claiming a state nobody actually knows.
+  "communities.settings.secondVouch.unavailableSub":
+    "Not available yet — the platform doesn't track this setting.",
   "communities.settings.secondVouch.onToast":
     "Second vouch now required to join",
   "communities.settings.secondVouch.offToast":
@@ -474,6 +502,12 @@ export const admin: Catalog = {
     "Auto-freeze new accounts on a doxxing report",
   "communities.settings.autoFreeze.sub":
     "Buys time for a human to review before harm spreads.",
+  // Shown, and the toggle disabled, always — there is no `autoFreeze` field
+  // anywhere yet (not even a mock one), unlike `join`/`code` which are just
+  // empty in live mode. Same "don't claim a state nobody knows" reasoning as
+  // secondVouch.unavailableSub above.
+  "communities.settings.autoFreeze.unavailableSub":
+    "Not available yet — the platform doesn't track this setting.",
   "communities.settings.autoFreeze.onToast":
     "Auto-freeze on doxxing reports enabled",
   "communities.settings.autoFreeze.offToast": "Auto-freeze disabled",
@@ -491,14 +525,15 @@ export const admin: Catalog = {
     "Health is a weighted blend of four signals, recalculated nightly",
   "communities.health.offerSupportCta": "Offer support",
   "communities.health.closeCta": "Close",
+  "communities.health.notMeasured": "Not measured yet",
   "communities.health.intro":
     "Health is a blend of four signals, weighted by community size. It's a thermometer, not a grade —",
   "communities.health.breakdown.memberActivity.name": "Member activity",
   "communities.health.breakdown.memberActivity.desc":
     "How alive the space feels — posts, replies, attendance",
-  "communities.health.breakdown.reportResolution.name": "Report resolution",
+  "communities.health.breakdown.reportResolution.name": "Report handling",
   "communities.health.breakdown.reportResolution.desc":
-    "Share of reports resolved within the SLA",
+    "Share of reports no longer sitting open — resolved or escalated",
   "communities.health.breakdown.memberSentiment.name": "Member sentiment",
   "communities.health.breakdown.memberSentiment.desc":
     "Quiet pulse-check surveys and reaction signals",
@@ -525,6 +560,8 @@ export const admin: Catalog = {
   "communities.support.option.message.title": "Message the moderators",
   "communities.support.option.message.sub":
     "A warm check-in to {names} — how can we help?",
+  "communities.support.option.message.subNoMods":
+    "A warm check-in to its moderators — how can we help?",
   "communities.support.option.buddy.title": "Assign a staff buddy for 2 weeks",
   "communities.support.option.buddy.sub":
     "A Trust & Safety teammate co-moderates to take the load off.",
@@ -870,4 +907,108 @@ export const admin: Catalog = {
     "Trust network for {name}: {count} direct vouch connection",
   "vouchGraph.preview.ariaLabel_other":
     "Trust network for {name}: {count} direct vouch connections",
+
+  // ── Platform settings (/admin/settings) ───────────────────────────────────
+  "settings.breadcrumb": "Settings",
+  "settings.eyebrow": "Platform",
+  "settings.title": "Platform settings",
+  "settings.sub":
+    "Emergency controls for registration and access. Changes take effect within about 10 seconds.",
+  "settings.tab.access": "Access",
+  "settings.tab.history": "History",
+
+  "settings.registration.title": "New account registration",
+  "settings.registration.sub":
+    "When off, nobody can create a new account. People who already have one sign in as normal.",
+  "settings.joinRequests.title": "Invite requests",
+  "settings.joinRequests.sub":
+    "When off, the public “request an invite” form stops accepting submissions.",
+  "settings.closedMessage.label": "Message shown when signups are closed",
+  "settings.closedMessage.placeholder":
+    "Explain briefly why signups are paused.",
+
+  "settings.lockdown.title": "Platform lockdown",
+  "settings.lockdown.sub":
+    "Blocks the platform for everyone except you and other admins. Members stay signed in and see a maintenance screen.",
+  "settings.lockdown.allowMods": "Also allow moderators through",
+  "settings.lockdown.allowModsSub":
+    "Useful during an incident — moderators are usually the people cleaning it up.",
+  "settings.lockdown.message.label": "Maintenance message",
+  "settings.lockdown.message.placeholder":
+    "What members will see while the platform is locked.",
+  "settings.lockdown.youKeepAccess":
+    "You are an admin, so you will keep full access.",
+
+  "settings.presets.label": "Start from a preset",
+  "settings.presets.hint": "Presets fill the box — edit freely before saving.",
+
+  // Lockdown message presets. Selecting one FILLS the textarea; the saved value
+  // is always free text, so the backend never needs to know presets exist.
+  "settings.presets.lockdown.scheduled.label": "Scheduled maintenance",
+  "settings.presets.lockdown.scheduled.body":
+    "QueerPulse is down for planned maintenance. We’ll be back shortly — thanks for your patience.",
+  "settings.presets.lockdown.emergency.label": "Emergency maintenance",
+  "settings.presets.lockdown.emergency.body":
+    "We’ve taken QueerPulse offline briefly to fix an unexpected problem. We’re on it.",
+  "settings.presets.lockdown.security.label": "Security incident",
+  "settings.presets.lockdown.security.body":
+    "QueerPulse is temporarily locked while we investigate a security issue. Your account is safe; we’ll share more as soon as we can.",
+  "settings.presets.lockdown.spam.label": "Spam / abuse wave",
+  "settings.presets.lockdown.spam.body":
+    "We’ve paused the platform while we clear out a wave of spam accounts. Back very soon.",
+  "settings.presets.lockdown.deploy.label": "Deploying an update",
+  "settings.presets.lockdown.deploy.body":
+    "We’re rolling out an update. QueerPulse will be back in a few minutes.",
+  "settings.presets.lockdown.safety.label": "Community safety pause",
+  "settings.presets.lockdown.safety.body":
+    "QueerPulse is paused while the team addresses a community safety matter. We’ll update everyone directly.",
+
+  "settings.presets.closed.spam.label": "Spam response",
+  "settings.presets.closed.spam.body":
+    "New signups are paused while we deal with a wave of spam accounts. Please check back soon.",
+  "settings.presets.closed.capacity.label": "At capacity",
+  "settings.presets.closed.capacity.body":
+    "We’ve temporarily paused new signups while we catch up with our current community. Thanks for your patience.",
+  "settings.presets.closed.review.label": "Process review",
+  "settings.presets.closed.review.body":
+    "New signups are paused while we review how we welcome new members. We’ll reopen soon.",
+
+  // Confirmation modal — enabling lockdown takes the whole platform down.
+  "settings.confirm.enable.eyebrow": "Confirm",
+  "settings.confirm.enable.title": "Lock the platform?",
+  "settings.confirm.enable.body":
+    "Every member will be blocked immediately and shown your maintenance message. They stay signed in, so lifting the lockdown restores everyone without anyone re-authenticating.",
+  "settings.confirm.enable.messagePreview": "They will see:",
+  "settings.confirm.enable.cta": "Lock the platform",
+  "settings.confirm.disable.eyebrow": "Confirm",
+  "settings.confirm.disable.title": "Lift the lockdown?",
+  "settings.confirm.disable.body":
+    "The platform reopens for everyone within about 10 seconds.",
+  "settings.confirm.disable.cta": "Lift lockdown",
+
+  "settings.banner.title": "The platform is locked down.",
+  "settings.banner.sub": "Only admins can reach it right now.",
+  "settings.banner.cta": "End lockdown",
+
+  "settings.note.label": "Note (optional)",
+  "settings.note.placeholder": "Why are you making this change?",
+  "settings.saved": "Settings saved.",
+  "settings.saveError": "Couldn’t save that. Nothing was changed.",
+
+  "settings.history.title": "Recent changes",
+  "settings.history.empty": "No changes yet.",
+  "settings.history.error": "Couldn’t load recent changes.",
+  "settings.history.by": "by {actor}",
+  "settings.history.unknownActor": "a deleted admin",
+  "settings.history.on": "on",
+  "settings.history.off": "off",
+  "settings.history.cleared": "cleared",
+  "settings.history.changed": "{setting}: {from} → {to}",
+
+  "settings.key.registrationEnabled": "Registration",
+  "settings.key.joinRequestsEnabled": "Invite requests",
+  "settings.key.lockdownEnabled": "Lockdown",
+  "settings.key.lockdownAllowsModerators": "Moderators during lockdown",
+  "settings.key.lockdownMessage": "Maintenance message",
+  "settings.key.registrationClosedMessage": "Signups-closed message",
 };

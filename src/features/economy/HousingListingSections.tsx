@@ -10,7 +10,7 @@ import s from "./HousingListingPage.module.css";
 export function HousingListingMain({ listing }: { listing: HousingListing }) {
   const { t } = useTranslation();
   return (
-    <main>
+    <div>
       <section className={s.sec}>
         <h2>{t("economy:housingListing.section.about")}</h2>
         {listing.longDesc.map((paragraph, index) => (
@@ -52,7 +52,7 @@ export function HousingListingMain({ listing }: { listing: HousingListing }) {
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 

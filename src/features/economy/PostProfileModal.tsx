@@ -20,6 +20,9 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
   return (
     <div
       className={styles.overlay}
+      // Backdrop click is a mouse-only shortcut; Esc and the close button
+      // already provide the keyboard path, so this div is not interactive.
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

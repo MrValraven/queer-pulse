@@ -93,6 +93,21 @@ export function isUnder18Error(err: unknown): boolean {
 }
 
 /**
+ * True for the typed `403 { code: "JOIN_REQUESTS_CLOSED" }` rejection — an
+ * admin closed invite requests while this form was already open. The
+ * pre-emptive check on RequestInvitePage can't catch this, since it only reads
+ * platform status once, before the form is filled in.
+ */
+export function isJoinRequestsClosedError(err: unknown): boolean {
+  return (
+    err instanceof ApiError &&
+    err.status === 403 &&
+    (err.data as { code?: string } | null | undefined)?.code ===
+      "JOIN_REQUESTS_CLOSED"
+  );
+}
+
+/**
  * List join requests for the moderator queue (Mod/Admin only). Optional `status`
  * filters the queue (defaults to the backend's own default, typically "pending").
  */

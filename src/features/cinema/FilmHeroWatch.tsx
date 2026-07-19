@@ -39,11 +39,13 @@ export function FilmHeroWatch() {
     <div className={styles.watchBlock}>
       <div className={styles.wbTabs}>
         {WATCH_TABS.map((tabInfo, index) => (
-          <div
+          <button
+            type="button"
             key={tabInfo.labelKey}
             className={[styles.wbTab, tab === index && styles.wbTabActive]
               .filter(Boolean)
               .join(" ")}
+            aria-current={tab === index}
             onClick={() => setTab(index)}
           >
             <span>
@@ -60,7 +62,7 @@ export function FilmHeroWatch() {
                 tabInfo.hours != null ? { hours: tabInfo.hours } : undefined,
               )}
             </span>
-          </div>
+          </button>
         ))}
       </div>
       <div className={styles.wbActions}>

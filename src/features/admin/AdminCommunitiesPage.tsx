@@ -8,17 +8,17 @@ import { AdminSupportModal } from "./AdminSupportModal";
 import type { Community } from "./adminCommunities.data";
 
 export function AdminCommunitiesPage() {
-  const [selected, setSelected] = useState<Community | null>(null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [healthFor, setHealthFor] = useState<Community | null>(null);
   const [supportFor, setSupportFor] = useState<Community | null>(null);
 
-  function openDetail(c: Community) {
-    setSelected(c);
+  function openDetail(slug: string) {
+    setSelectedSlug(slug);
     window.scrollTo(0, 0);
   }
 
   function backToGrid() {
-    setSelected(null);
+    setSelectedSlug(null);
     window.scrollTo(0, 0);
   }
 
@@ -31,8 +31,8 @@ export function AdminCommunitiesPage() {
         />
       }
     >
-      {selected ? (
-        <AdminCommunityDetail community={selected} onBack={backToGrid} />
+      {selectedSlug !== null ? (
+        <AdminCommunityDetail slug={selectedSlug} onBack={backToGrid} />
       ) : (
         <AdminCommunityGrid onOpen={openDetail} onHealth={setHealthFor} />
       )}

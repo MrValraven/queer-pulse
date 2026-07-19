@@ -560,6 +560,7 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
               <input
                 type="radio"
                 name="vis"
+                aria-label={t(o.titleKey)}
                 value={o.v}
                 checked={draft.visibility === o.v}
                 onChange={() => {
@@ -644,6 +645,14 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
             onChange={onChange}
           />
         </ToggleList>
+        <div className={styles.dataCards}>
+          <DataCard
+            title={t("settings:account.disclosure.title")}
+            desc={t("settings:account.disclosure.desc")}
+            btn={t("settings:account.disclosure.cta")}
+            to={routes.security}
+          />
+        </div>
       </Section>
     </Pane>
   );

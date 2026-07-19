@@ -63,10 +63,18 @@ export function PhotoViewer({
       aria-modal="true"
       aria-label={t("gatherings:photos.viewerAriaLabel")}
       className={styles.overlay}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
     >
+      {/* The lightbox is itself full-bleed, so click-to-dismiss can't live on
+          the dialog element. A real button behind the content keeps the
+          affordance without putting a handler on a non-interactive role; it's
+          hidden from AT because the topbar close button already exposes it. */}
+      <button
+        type="button"
+        aria-hidden="true"
+        tabIndex={-1}
+        className={styles.backdrop}
+        onClick={onClose}
+      />
       <div className={styles.topbar}>
         <span className={styles.counter}>
           {index + 1} / {pics.length}

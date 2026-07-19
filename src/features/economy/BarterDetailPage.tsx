@@ -108,7 +108,7 @@ export function BarterDetailPage() {
             </div>
 
             <div className={styles.grid}>
-              <main>
+              <div>
                 {b.offer && (
                   <section className={styles.sec}>
                     <h2 className={styles.secTitle}>
@@ -164,7 +164,7 @@ export function BarterDetailPage() {
                     ))}
                   </div>
                 </section>
-              </main>
+              </div>
 
               <aside className={styles.side}>
                 <BarterProposeCard name={info.name} firstName={firstName} />

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiHeart, FiCornerUpLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Post } from "./community.model";
 import { photoOf } from "./communityPeople";
 import styles from "./CommunitiesHomePage.module.css";
@@ -37,7 +38,12 @@ export function HubPulseCard({ item }: { item: HubPost }) {
           alt={post.author.name}
         />
         <div>
-          <div className={styles.pulseName}>{post.author.name}</div>
+          <div className={styles.pulseName}>
+            <span className={styles.nameRow}>
+              {post.author.name}
+              <MemberStaffBadge slug={post.author.slug} />
+            </span>
+          </div>
           <div className={styles.pulseTime}>
             {t("communities:common.timeAgo", { time: post.time })}
           </div>

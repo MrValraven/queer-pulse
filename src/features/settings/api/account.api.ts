@@ -17,11 +17,13 @@ import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 /* ────────────────────────────────────────────────────────────────────────
  * Email template catalogue (spec 11 — transactional email).
  *
- * The frontend never SENDS email; it triggers a server action that enqueues a
- * send, then shows an honest pending/"check your inbox" state on the 2xx (never
- * a fake success). Documented here so the trigger endpoints and the templates
- * stay in lockstep. Provider committed in policy: Postmark. All are
- * TRANSACTIONAL (no unsubscribe) unless noted.
+ * ⚠️ NONE OF THIS IS BUILT. There is no mail service in the backend — no
+ * provider, no dependency, no sender. This block is a DESIGN for spec 11, kept
+ * because the trigger endpoints below are real and the templates should stay in
+ * lockstep with them when email does land. Postmark is the intended provider,
+ * not a wired one. Do not write UI copy that promises any of these arrive: the
+ * export and deletion screens each shipped such a promise and both had to be
+ * rewritten. All would be TRANSACTIONAL (no unsubscribe) unless noted.
  *
  *   Template                     Server trigger (enqueues send)        Key data
  *   ─────────────────────────    ──────────────────────────────────    ─────────────────────────────
@@ -120,9 +122,9 @@ export interface RequestExportDto {
    * backend gates it with the same step-up token as deletion/deactivation.
    * `useExportFlow.start()` mints it on the live path — callers never pass it.
    *
-   * Note the UI's "we email a verification link" copy describes a flow that
-   * does not exist (there is no mail service), so this token is the only real
-   * identity gate on the route.
+   * This token is the ONLY identity gate on the route. The UI used to claim an
+   * emailed verification link gated it; that flow never existed and the copy
+   * has since been corrected to describe the in-app step-up.
    */
   reauthToken: string;
 }
@@ -209,7 +211,7 @@ export const revokeOtherSessions = () => apiDelete<void>("/account/sessions");
 /* ── Email preferences (spec 11 stub — shared with spec 10 store) ───────── */
 
 export interface EmailPreference {
-  /** Matrix row / category key (see notificationPreferences.data.ts). */
+  /** Matrix row / category key (matches the backend notification categories). */
   category: string;
   email: boolean;
   /** ALWAYS_ON transactional messages cannot be turned off. */

@@ -3,7 +3,7 @@ import {
   FiClock,
   FiEyeOff,
   FiLock,
-  FiShield,
+  FiMapPin,
   FiUserPlus,
 } from "react-icons/fi";
 
@@ -25,6 +25,11 @@ export const manifestoAssurances: ManifestoAssurance[] = [
     descriptionKey: "homepage:manifesto.assurance.vouched.description",
   },
   {
+    icon: <FiMapPin />,
+    titleKey: "homepage:manifesto.assurance.safeSpaces.title",
+    descriptionKey: "homepage:manifesto.assurance.safeSpaces.description",
+  },
+  {
     icon: <FiLock />,
     titleKey: "homepage:manifesto.assurance.encrypted.title",
     descriptionKey: "homepage:manifesto.assurance.encrypted.description",
@@ -38,10 +43,5 @@ export const manifestoAssurances: ManifestoAssurance[] = [
     icon: <FiClock />,
     titleKey: "homepage:manifesto.assurance.moderation.title",
     descriptionKey: "homepage:manifesto.assurance.moderation.description",
-  },
-  {
-    icon: <FiShield />,
-    titleKey: "homepage:manifesto.assurance.quickExit.title",
-    descriptionKey: "homepage:manifesto.assurance.quickExit.description",
   },
 ];

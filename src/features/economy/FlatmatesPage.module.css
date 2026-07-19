@@ -308,6 +308,12 @@
   flex: 1;
   min-width: 0;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .name {
   display: inline-block;
   font-family: var(--serif);

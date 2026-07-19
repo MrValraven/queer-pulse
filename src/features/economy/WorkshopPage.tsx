@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useWorkshop } from "./api/useWorkshop";
+import type { WorkshopWithRsvp } from "./api/workshops.adapters";
 import {
   WorkshopAbout,
   WorkshopNeeds,
@@ -24,7 +25,17 @@ export function WorkshopPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   // `id` is the workshop's slug — the backend's identifier (DTO departure 1).
-  const { workshop, isLoading } = useWorkshop(id);
+  //
+  // Widened to `WorkshopWithRsvp`: the adapter attaches the viewer's own
+  // booking to the row it builds, but `useWorkshop` is typed against the shared
+  // render shape, which is deliberately viewer-agnostic (see
+  // `WorkshopRsvpFields`). The field is absent in demo mode, where the booking
+  // lives in the provider's session store instead — hence `Partial`, and hence
+  // every reader passing a seed alongside it.
+  const { workshop, isLoading } = useWorkshop(id) as {
+    workshop: WorkshopWithRsvp | undefined;
+    isLoading: boolean;
+  };
 
   // Don't flash "not found" at someone who deep-linked while the fetch is out.
   if (isLoading) {

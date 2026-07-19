@@ -61,6 +61,20 @@ export const auth: Catalog = {
   "signIn.notice.unreachable.body":
     "O servidor não respondeu. Pode estar a arrancar — espera um momento e tenta novamente.",
 
+  // O registo está desligado em toda a plataforma (ou a plataforma está
+  // bloqueada). Não é culpa de quem visita, e não há nada a repetir — a cópia
+  // diz isso com clareza e não convida a tentar de novo em ciclo.
+  "signIn.notice.registrationDisabled.title": "Novas contas em pausa",
+  "signIn.notice.registrationDisabled.body":
+    "Não estamos a criar contas novas neste momento. Se já tens uma conta, continuas a poder entrar normalmente.",
+
+  // Estados antecipados, mostrados a partir de GET /platform-status ANTES do
+  // envio, para ninguém passar pelo ecrã da Google só para ser rejeitade no
+  // regresso.
+  "signIn.closed.title": "Novas contas em pausa",
+  "signIn.closed.body":
+    "Podes continuar a entrar numa conta já existente, aqui em baixo.",
+
   // ── Criar conta ──
   "createAccount.eyebrow": "Quase lá",
   "createAccount.title": "Cria a tua <em>conta</em>",
@@ -219,37 +233,8 @@ export const auth: Catalog = {
   "under18.backDefault": "Voltar",
 
   // ── Confirmar email (código de seis dígitos) ──
-  "confirmEmail.title": "Vê a tua <em>caixa de entrada.</em>",
-  "confirmEmail.sub":
-    "Enviámos um código de seis dígitos para <strong>{email}</strong>. Expira em <strong>10 minutos</strong>.",
-  "confirmEmail.verified": "Verificado. Bem-vinde a bordo.",
-  "confirmEmail.toastConfirmed": "Email confirmado",
-  "confirmEmail.codeMismatch":
-    "Esse código não coincide. Tenta outra vez, ou reenvia abaixo.",
-  "confirmEmail.resendToast": "Enviado de novo — verifica também o spam",
-  "confirmEmail.didntGetCode": "Não recebeste o código?",
-  "confirmEmail.resend": "Reenviar",
-  "confirmEmail.waitSeconds": "espera {seconds}s",
-  "confirmEmail.wrongEmail": "Email errado? <startOver>Recomeçar</startOver>",
 
   // ── Entrar por link mágico ──
-  "magicLink.title": "Entra com um <em>link.</em>",
-  "magicLink.sub":
-    "Enviamos-te um link de um só toque. Sem palavra-passe, sem app, sem fricção. Expira em 10 minutos.",
-  "magicLink.emailLabel": "Email",
-  "magicLink.emailPlaceholder": "tu@exemplo.com",
-  "magicLink.emailError": "Introduz um endereço de email válido.",
-  "magicLink.submit": "Enviar-me um link →",
-  "magicLink.dividerOr": "ou",
-  "magicLink.signInWithPassword": "Entrar com palavra-passe",
-  "magicLink.notAMemberPrompt": "Ainda não fazes parte? Pede um convite",
-  "magicLink.sentTitle": "Vê o teu <em>email.</em>",
-  "magicLink.sentBody":
-    "Um link de acesso está a caminho de <strong>{email}</strong>. Toca nele neste dispositivo para voltares com a sessão iniciada.",
-  "magicLink.resendPromptPrefix": "Não recebeste? Vê no spam, ou",
-  "magicLink.resendLink": "reenviar link",
-  "magicLink.resendIn": "reenviar em {seconds}s",
-  "magicLink.useDifferentMethod": "← Usar outro método",
 
   // ── Pedir um convite ──
   "requestInvite.eyebrow": "Pedir um convite",
@@ -309,6 +294,15 @@ export const auth: Catalog = {
   "requestInvite.whatNext.hearBack.title": "Se for que sim, alguém entra em contacto",
   "requestInvite.whatNext.hearBack.body":
     "Uma pessoa da comunidade envia o teu link de convite para o endereço que nos deste, normalmente dentro de umas semanas. Não conseguimos responder a todos os pedidos, por isso, se ficar tudo calado, pedir a alguém que já conheces aqui é a forma mais certa de entrar.",
+
+  // Estados antecipados, mostrados a partir de GET /platform-status ANTES do
+  // envio, para ninguém preencher o formulário todo só para ser rejeitade ao
+  // submeter.
+  "requestInvite.closed.title": "Pedidos de convite em pausa",
+  "requestInvite.closed.body":
+    "Não estamos a receber novos pedidos de convite neste momento. Volta a passar por aqui em breve.",
+  "requestInvite.closedError":
+    "Os pedidos de convite ficaram em pausa enquanto preenchias isto. Tenta novamente mais tarde.",
 
   // ── Onboarding (fluxo de 7 passos após o registo, em /onboarding) ──
   "onboarding.stepLabel": "Passo {current} de {total}",

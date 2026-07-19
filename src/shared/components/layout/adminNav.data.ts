@@ -5,6 +5,7 @@ import {
   FiGlobe,
   FiAward,
   FiInbox,
+  FiSettings,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -55,6 +56,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.governance",
     to: routes.adminGovernance,
     icon: FiAward,
+  },
+  {
+    labelKey: "admin:settings.breadcrumb",
+    to: routes.adminSettings,
+    icon: FiSettings,
   },
 ];
 

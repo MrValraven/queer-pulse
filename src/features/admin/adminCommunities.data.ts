@@ -88,8 +88,13 @@ export interface Community {
   health: number;
   founded: string;
   spark: number[];
-  /** [activity, resolution, sentiment, safety] */
-  bd: [number, number, number, number];
+  /**
+   * [activity, resolution, sentiment, safety] — positionally paired with
+   * BREAKDOWN_META. Sentiment is null until something on the platform actually
+   * measures it; the modal renders that as "not measured yet" rather than a
+   * score nobody computed.
+   */
+  bd: [number, number, number | null, number];
   join: string;
   code: string;
   vis: Visibility;
@@ -136,7 +141,7 @@ export const COMMUNITIES: Community[] = [
     health: 94,
     founded: "Mar 2023",
     spark: [5, 6, 5, 7, 6, 8, 7, 9],
-    bd: [91, 100, 95, 90],
+    bd: [91, 100, null, 90],
     join: "Vouch-gated · 2 vouches",
     code: "Platform Code of Care + 2 additions on deadnaming",
     vis: "private",
@@ -189,7 +194,7 @@ export const COMMUNITIES: Community[] = [
     health: 88,
     founded: "May 2023",
     spark: [4, 5, 6, 5, 7, 6, 8, 7],
-    bd: [82, 96, 88, 84],
+    bd: [82, 96, null, 84],
     join: "Open · with a portfolio",
     code: "Platform Code of Care",
     vis: "network",
@@ -242,7 +247,7 @@ export const COMMUNITIES: Community[] = [
     health: 71,
     founded: "Jan 2023",
     spark: [8, 7, 9, 8, 10, 9, 11, 10],
-    bd: [88, 84, 62, 58],
+    bd: [88, 84, null, 58],
     join: "Open · public",
     code: "Platform Code of Care",
     vis: "public",
@@ -295,7 +300,7 @@ export const COMMUNITIES: Community[] = [
     health: 96,
     founded: "Sep 2024",
     spark: [2, 3, 3, 4, 4, 5, 6, 7],
-    bd: [78, 100, 98, 100],
+    bd: [78, 100, null, 100],
     join: "Open · with a welcome chat",
     code: "Platform Code of Care",
     vis: "network",
@@ -326,7 +331,7 @@ export const COMMUNITIES: Community[] = [
     health: 92,
     founded: "Feb 2024",
     spark: [3, 4, 3, 4, 4, 5, 4, 5],
-    bd: [74, 100, 96, 100],
+    bd: [74, 100, null, 100],
     join: "Vouch-gated · 1 vouch",
     code: "Platform Code of Care + medical-privacy rules",
     vis: "private",
@@ -357,7 +362,7 @@ export const COMMUNITIES: Community[] = [
     health: 79,
     founded: "Apr 2023",
     spark: [6, 9, 5, 10, 6, 11, 7, 9],
-    bd: [94, 88, 70, 66],
+    bd: [94, 88, null, 66],
     join: "Open · public",
     code: "Platform Code of Care + consent guidelines",
     vis: "public",
@@ -410,7 +415,7 @@ export const COMMUNITIES: Community[] = [
     health: 98,
     founded: "Nov 2023",
     spark: [2, 2, 3, 2, 3, 3, 2, 3],
-    bd: [68, 100, 100, 100],
+    bd: [68, 100, null, 100],
     join: "Vouch-gated · 1 vouch",
     code: "Platform Code of Care",
     vis: "private",
@@ -441,7 +446,7 @@ export const COMMUNITIES: Community[] = [
     health: 90,
     founded: "Jun 2023",
     spark: [5, 5, 6, 6, 5, 7, 6, 7],
-    bd: [80, 97, 92, 90],
+    bd: [80, 97, null, 90],
     join: "Open · with a welcome chat",
     code: "Platform Code of Care",
     vis: "network",

@@ -27,6 +27,10 @@ import {
   workshopDtoToWorkshop,
 } from "../../features/economy/api/workshops.adapters";
 import {
+  useWorkshopRsvpStore,
+  type WorkshopRsvpStore,
+} from "../../features/economy/api/workshopRsvp.hooks";
+import {
   currentUser,
   currentUserSlug,
 } from "../../features/members/data/members";
@@ -35,17 +39,18 @@ import { useFormat } from "../../shared/i18n/format";
 import { logError } from "../../shared/observability/logger";
 import { useDemoMode } from "./DemoModeProvider";
 
+/**
+ * The session overlay: workshops listed, edited or deleted in this browser
+ * session, plus the mutators. Deliberately carries NO catalogue and no query
+ * state — those come from `useWorkshops()`, the composition hook below.
+ */
 interface WorkshopsContextValue {
-  /** The catalogue: locally-listed workshops first, then the loaded pages. */
-  workshops: Workshop[];
-  /** Server-reported total (demo: the fixture's length). */
-  total: number;
-  /** True while the first page is in flight (live mode only). */
-  isLoading: boolean;
-  hasNextPage: boolean;
-  fetchNextPage: () => void;
-  isFetchingNextPage: boolean;
-  getWorkshop: (id: string) => Workshop | undefined;
+  /** Workshops listed in this session, newest first. */
+  added: Workshop[];
+  /** Session-local edits, by workshop id. */
+  edited: Record<string, Workshop>;
+  /** Ids deleted in this session. */
+  removed: string[];
   /**
    * List a workshop from the form draft. Resolves the created workshop, or
    * `null` when the write failed — callers must not show a success panel on
@@ -56,29 +61,39 @@ interface WorkshopsContextValue {
    * Edit a workshop you host. Resolves the updated workshop, or `null` when the
    * write failed — callers must not show a success state on `null`.
    */
-  updateWorkshop: (
-    id: string,
-    draft: WorkshopDraft,
-  ) => Promise<Workshop | null>;
+  updateWorkshop: (id: string, draft: WorkshopDraft) => Promise<Workshop | null>;
   /** Delete a workshop you host. Resolves false when the write failed. */
   deleteWorkshop: (id: string) => Promise<boolean>;
 }
 
-const WorkshopsContext = createContext<WorkshopsContextValue | null>(null);
+/** Overlay + bookings: everything a component can do without reading the
+ *  catalogue, and therefore without triggering GET /workshops. */
+export type WorkshopsActions = WorkshopsContextValue & WorkshopRsvpStore;
+
+/** The catalogue joined to the overlay — the shape readers have always had. */
+export interface WorkshopsValue extends WorkshopsActions {
+  /** The catalogue: locally-listed workshops first, then the loaded pages. */
+  workshops: Workshop[];
+  /** Server-reported total (demo: the fixture's length), overlay-adjusted. */
+  total: number;
+  /** True while the first page is in flight (live mode only). */
+  isLoading: boolean;
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+  getWorkshop: (id: string) => Workshop | undefined;
+}
+
+const WorkshopsContext = createContext<WorkshopsActions | null>(null);
 
 /**
- * The workshops catalogue.
- *
- * Dual-mode: demo mode shows the seeded `WORKSHOPS` fixture plus anything the
- * member lists in this session, and never touches the network — listing a
- * workshop just runs the client-side `buildWorkshop`. Live mode pages through
- * GET /workshops (see `useWorkshops`) and POSTs new listings, prepending the
- * server's own response optimistically until the refetch catches up.
- *
- * Category filtering stays client-side over the loaded pages, exactly as before
- * — `SkillsPage` owns the active filter and needs the unfiltered count for its
- * empty state, so the provider holds one unfiltered query. The endpoint's `cat`
- * param is supported in `workshops.api.ts` for a future per-category board.
+ * The provider holds only the session overlay — workshops listed, edited or
+ * deleted in this browser session, plus this session's RSVPs — because those
+ * have to outlive navigating off the board. The catalogue itself is a
+ * react-query query (`src/features/economy/api/useWorkshops.ts`) subscribed by
+ * `useWorkshops()` below, so GET /workshops fires when a component that renders
+ * the catalogue mounts. Components that only act on a workshop call
+ * `useWorkshopsActions()` and fire nothing.
  */
 export function WorkshopsProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
@@ -92,15 +107,8 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
   // first — the overlay is applied on every read below.
   const [edited, setEdited] = useState<Record<string, Workshop>>({});
   const [removed, setRemoved] = useState<string[]>([]);
-
-  const {
-    workshops: fetched,
-    total,
-    isLoading,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useWorkshopsQuery();
+  // Reservations: this session's bookings over whatever each row arrived with.
+  const rsvpStore = useWorkshopRsvpStore();
 
   const { mutateAsync: postWorkshop } = useMutation({
     mutationKey: ["workshops", "create"],
@@ -157,11 +165,13 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
         // Demo has no server to answer with the updated row, so it rebuilds
         // from the one it already has. Read through the same overlays the
         // consumers see, so editing twice in a row starts from the previous
-        // edit rather than from the original.
+        // edit rather than from the original. The last fallback is the fixture
+        // itself: in demo the catalogue query resolves to exactly `WORKSHOPS`,
+        // so this is the same row it used to find via the query result.
         const current =
           edited[id] ??
           added.find((w) => w.id === id) ??
-          fetched.find((w) => w.id === id);
+          WORKSHOPS.find((w) => w.id === id);
         if (!current) return null;
         const next = applyWorkshopDraft(current, draft, t, fmt);
         setEdited((prev) => ({ ...prev, [id]: next }));
@@ -187,7 +197,7 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
         return null;
       }
     },
-    [demoMode, t, fmt, edited, added, fetched, invalidateWorkshop],
+    [demoMode, t, fmt, edited, added, invalidateWorkshop],
   );
 
   const deleteWorkshop = useCallback(
@@ -216,7 +226,69 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
     [demoMode, queryClient],
   );
 
-  const value = useMemo<WorkshopsContextValue>(() => {
+  const value = useMemo<WorkshopsActions>(
+    () => ({
+      added,
+      edited,
+      removed,
+      addWorkshop,
+      updateWorkshop,
+      deleteWorkshop,
+      ...rsvpStore,
+    }),
+    [added, edited, removed, addWorkshop, updateWorkshop, deleteWorkshop, rsvpStore],
+  );
+
+  return (
+    <WorkshopsContext.Provider value={value}>
+      {children}
+    </WorkshopsContext.Provider>
+  );
+}
+
+/**
+ * The session overlay and mutators, with NO catalogue subscription — so calling
+ * this never triggers GET /workshops. Use it from anything that acts on a
+ * workshop (RSVP, edit, delete) rather than rendering the catalogue.
+ */
+export function useWorkshopsActions(): WorkshopsActions {
+  const ctx = useContext(WorkshopsContext);
+  if (!ctx) {
+    throw new Error("useWorkshops must be used within WorkshopsProvider");
+  }
+  return ctx;
+}
+
+/**
+ * The catalogue — the loaded pages with this session's listings, edits and
+ * deletions applied over them.
+ *
+ * Calling this SUBSCRIBES to GET /workshops. That subscription is what replaced
+ * the `useMatch` route gate this hook's query used to carry: the request fires
+ * because a component that renders the catalogue mounted, not because someone
+ * remembered to add a route to a list. Anything that does not render the
+ * catalogue must call `useWorkshopsActions()` instead — leaving a write-only
+ * consumer here would silently reintroduce an app-wide fetch.
+ *
+ * Category filtering stays client-side over the loaded pages: `SkillsPage` owns
+ * the active filter and needs the unfiltered count for its empty state, so this
+ * holds one unfiltered query. The endpoint's `cat` param is supported in
+ * `workshops.api.ts` for a future per-category board.
+ */
+export function useWorkshops(): WorkshopsValue {
+  const actions = useWorkshopsActions();
+  const {
+    workshops: fetched,
+    total,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useWorkshopsQuery();
+  const { added, edited, removed } = actions;
+  const { demoMode } = useDemoMode();
+
+  return useMemo<WorkshopsValue>(() => {
     // `fetched` already carries the seeded catalogue in demo mode (the query's
     // demo branch returns WORKSHOPS) — locally-listed ones go in front of it.
     const seen = new Set(added.map((w) => w.id));
@@ -228,6 +300,7 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
       ? WORKSHOPS.length + added.length
       : total + added.length;
     return {
+      ...actions,
       workshops,
       // Deleted rows are already out of `workshops`; keep the count honest so
       // the catalogue header doesn't promise a listing that isn't there.
@@ -237,11 +310,9 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
       fetchNextPage,
       isFetchingNextPage,
       getWorkshop: (id) => workshops.find((w) => w.id === id),
-      addWorkshop,
-      updateWorkshop,
-      deleteWorkshop,
     };
   }, [
+    actions,
     added,
     edited,
     removed,
@@ -252,22 +323,5 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-    addWorkshop,
-    updateWorkshop,
-    deleteWorkshop,
   ]);
-
-  return (
-    <WorkshopsContext.Provider value={value}>
-      {children}
-    </WorkshopsContext.Provider>
-  );
-}
-
-export function useWorkshops() {
-  const ctx = useContext(WorkshopsContext);
-  if (!ctx) {
-    throw new Error("useWorkshops must be used within WorkshopsProvider");
-  }
-  return ctx;
 }

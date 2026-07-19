@@ -26,6 +26,12 @@ export interface Notification {
   /** Either an avatar (initials + tint) or an emoji icon with a background. */
   avatar?: { initials: string; tint: AvatarTint };
   icon?: { Glyph: IconType; bg: string };
+  /** Member slug of the person named inside `text`, when `text` names one and
+   *  that person has a real member account. `text` is a `ReactNode` blob (an
+   *  interpolated `<Translation>` or plain string) with no separate name
+   *  field, so this is the only handle a staff badge can hang off. Omitted
+   *  for org/system/anonymous rows. */
+  actorSlug?: string;
   text: ReactNode;
   meta: string;
   time: string;

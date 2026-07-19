@@ -161,6 +161,13 @@
   grid-template-columns: auto 1fr auto;
   gap: 18px;
   padding: 16px 0;
+  width: 100%;
+  text-align: left;
+  appearance: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  border: none;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: center;
   text-decoration: none;

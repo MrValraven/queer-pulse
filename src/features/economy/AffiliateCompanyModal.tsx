@@ -3,7 +3,7 @@ import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ModalShell, Sending } from "./ModalKit";
-import { useEmployerAffiliation } from "../../app/providers/EmployerAffiliationProvider";
+import { useEmployerAffiliationActions } from "./api/useEmployerAffiliation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { COMPANY_PROFILES } from "./companies.data";
 import { useCompanies } from "./api/useCompanies";
@@ -126,7 +126,7 @@ export function AffiliateCompanyModal({
   onAffiliated: () => void;
 }) {
   const { t } = useTranslation();
-  const { affiliate } = useEmployerAffiliation();
+  const { affiliate } = useEmployerAffiliationActions();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const { items: liveCompanies } = useCompanies();

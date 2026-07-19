@@ -32,7 +32,11 @@ export function AdminDrawer({
 
   return (
     <>
-      <div className={styles.scrim} onClick={onClose} />
+      <div
+        className={styles.scrim}
+        role="presentation"
+        onClick={onClose}
+      />
       <aside
         className={styles.drawer}
         role="dialog"

@@ -1814,6 +1814,31 @@ export const economy: Catalog = {
   "workshopSidebar.taughtBy": "Taught by",
   "workshopSidebar.where": "Where",
 
+  // ── WorkshopRsvpControl (reserving a spot, for real) ───────────────────────
+  // Nothing here promises a message, an email, or a payment link — none of
+  // those exist. Reserving holds a spot and that is all it claims to do.
+  "workshopRsvp.reserveCta": "Reserve a spot",
+  "workshopRsvp.joinWaitlistCta": "Join the waitlist",
+  "workshopRsvp.savingLabel": "One moment…",
+  "workshopRsvp.holdingTitle": "Your spot is held.",
+  "workshopRsvp.holdingNote":
+    "Nothing else to do for now — just turn up. You can give the spot back any time if plans change.",
+  "workshopRsvp.releaseCta": "Give up your spot",
+  "workshopRsvp.waitlistTitle": "You're on the waitlist.",
+  "workshopRsvp.waitlistNote":
+    "If someone gives a spot back, the queue moves and yours could be next. Check back here — there's no message we can send you yet.",
+  "workshopRsvp.leaveWaitlistCta": "Leave the waitlist",
+  "workshopRsvp.failedNote":
+    "That didn't go through — nothing changed. Try again in a moment.",
+  // Host view: the count, in place of a control they can't use. Zero gets its
+  // own line — English has no CLDR "zero" category, so "0 people have spots"
+  // is what the plural rules would otherwise produce.
+  "workshopRsvp.hostCountNone": "No one has booked a spot yet.",
+  "workshopRsvp.hostCount_one": "One person has a spot.",
+  "workshopRsvp.hostCount_other": "{count} people have spots.",
+  "workshopRsvp.hostNote":
+    "Only you can see this. Anyone who books after the cohort fills goes on the waitlist, and moves up on their own if a spot frees.",
+
   "workshopReserve.ariaLabel": "Reserve a spot in {title}",
   "workshopReserve.success.title": "Seat",
   "workshopReserve.success.em": "held.",
@@ -1904,8 +1929,15 @@ export const economy: Catalog = {
   "deleteWorkshop.title": "Delete this workshop?",
   "deleteWorkshop.body":
     "Deleting is permanent. It comes off Skills & learning right away, and anyone holding the link will find nothing there.",
-  "deleteWorkshop.attendeesNote":
-    "No message goes out to anyone. If people are planning to come, tell them yourself first — they won't hear it from us.",
+  // Booked people lose their spot when the workshop goes — the cascade is real
+  // now, so the copy names them. It still can't claim anyone is told: there's
+  // no email service and no notification behind this. The number is the weight.
+  "deleteWorkshop.attendeesNote_one":
+    "One person has a spot in this. Deleting takes it away, and no message goes out — if you want them to hear it from you, tell them first.",
+  "deleteWorkshop.attendeesNote_other":
+    "{count} people have spots in this. Deleting takes them away, and no message goes out — if you want them to hear it from you, tell them first.",
+  "deleteWorkshop.noAttendeesNote":
+    "Nobody has booked a spot yet, so no one loses anything today.",
   "deleteWorkshop.keepCta": "Keep it",
   "deleteWorkshop.confirmCta": "Delete workshop",
   "deleteWorkshop.deletingLabel": "Deleting…",

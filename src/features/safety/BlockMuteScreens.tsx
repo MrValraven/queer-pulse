@@ -57,16 +57,22 @@ export function BlockMuteChoose({
         className={[s.optionCard, chosen === "mute" && s.optionSelected]
           .filter(Boolean)
           .join(" ")}
-        onClick={() => onChoose("mute")}
       >
-        <div className={s.ocHeader}>
-          <span className={s.ocRadio}>
+        <label className={s.ocHeader}>
+          <input
+            type="radio"
+            name="block-mute-choice"
+            className={s.ocRadioInput}
+            checked={chosen === "mute"}
+            onChange={() => onChoose("mute")}
+          />
+          <span className={s.ocRadio} aria-hidden>
             <span className={s.ocDot} />
           </span>
           <span className={s.ocTitle}>
             {t("safety:blockMute.choose.muteTitle", { name })}
           </span>
-        </div>
+        </label>
         <div className={s.ocDesc}>{t("safety:blockMute.choose.muteDesc")}</div>
         {chosen === "mute" && (
           <div className={s.subOpts}>
@@ -113,16 +119,22 @@ export function BlockMuteChoose({
         className={[s.optionCard, chosen === "block" && s.optionSelected]
           .filter(Boolean)
           .join(" ")}
-        onClick={() => onChoose("block")}
       >
-        <div className={s.ocHeader}>
-          <span className={s.ocRadio}>
+        <label className={s.ocHeader}>
+          <input
+            type="radio"
+            name="block-mute-choice"
+            className={s.ocRadioInput}
+            checked={chosen === "block"}
+            onChange={() => onChoose("block")}
+          />
+          <span className={s.ocRadio} aria-hidden>
             <span className={s.ocDot} />
           </span>
           <span className={s.ocTitle}>
             {t("safety:blockMute.choose.blockTitle", { name })}
           </span>
-        </div>
+        </label>
         <div className={s.ocDesc}>{t("safety:blockMute.choose.blockDesc")}</div>
         {chosen === "block" && (
           <div className={s.subOpts}>

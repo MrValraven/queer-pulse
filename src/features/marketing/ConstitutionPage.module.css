@@ -200,9 +200,9 @@
   color: var(--ink-60);
   font-weight: 600;
 }
-.version a {
+/* Inert emphasis, not a control: this footer item has no destination and no
+   handler, so it carries no pointer cursor and no link affordance. */
+.versionStrong {
   color: var(--text-strong);
   font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
 }

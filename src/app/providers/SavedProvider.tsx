@@ -9,6 +9,7 @@ import {
 import { useLocalStorage } from "../../shared/hooks";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
+import { useSessionBootstrap } from "../../shared/api/useSessionBootstrap";
 import {
   getSaved,
   putSaved,
@@ -68,10 +69,27 @@ export function SavedProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
 
-  // Live-only: hydrate the store from the server list once the member is signed
-  // in. Parked in demo mode and while logged out (re-runs when login lands).
+  // Live-only: hydrate the store from the session bootstrap payload. Shares the
+  // one ["bootstrap"] request mounted by SessionBootstrapProvider — this hook
+  // call adds a subscriber, not a request. Demo mode and logged-out both leave
+  // the query disabled, so this never fires there.
+  const { data: bootstrap, isError: bootstrapErrored } = useSessionBootstrap();
+
   useEffect(() => {
     if (demoMode || !loggedIn) return;
+
+    if (bootstrap) {
+      // Bootstrap warmed the cache — use it and skip the standalone fetch.
+      setItems(bootstrap.saved.items.map(dtoToSavedItem));
+      return;
+    }
+
+    // Bootstrap is a cache-warmer, never a dependency: only fall back once it
+    // has settled WITHOUT data (404/500/rejected-payload, or the endpoint isn't
+    // deployed yet). While it's still in flight, wait for it rather than racing
+    // a duplicate request.
+    if (!bootstrapErrored) return;
+
     let active = true;
     getSaved()
       .then((res) => {
@@ -83,7 +101,7 @@ export function SavedProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false;
     };
-  }, [demoMode, loggedIn, setItems]);
+  }, [demoMode, loggedIn, bootstrap, bootstrapErrored, setItems]);
 
   const isSaved = useCallback(
     (id: string) => items.some((it) => it.id === id),

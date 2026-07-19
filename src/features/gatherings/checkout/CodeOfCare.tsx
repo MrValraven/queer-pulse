@@ -18,13 +18,18 @@ export function CodeOfCare() {
           <input
             type="checkbox"
             id="cocCheck"
+            aria-labelledby="cocCheckLabel"
             checked={cocAgreed}
             onChange={(e) => setCoc(e.target.checked)}
           />
           <span className={s["co-coc-check"]} aria-hidden />
         </label>
         <div>
-          <label className={s["co-coc-txt"]} htmlFor="cocCheck">
+          <label
+            id="cocCheckLabel"
+            className={s["co-coc-txt"]}
+            htmlFor="cocCheck"
+          >
             <Translation
               i18nKey="gatherings:checkout.coc.agreementLabel"
               components={{ strong: <strong /> }}

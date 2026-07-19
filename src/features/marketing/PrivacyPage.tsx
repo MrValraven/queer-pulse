@@ -288,6 +288,7 @@ function buildPrivacySections(t: TFunction): LegalSection[] {
           <p>
             <Translation
               i18nKey="marketing:privacy.contactSection.body"
+              // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
               components={{ a: <a href="mailto:privacy@queerpulse.pt" /> }}
             />
           </p>

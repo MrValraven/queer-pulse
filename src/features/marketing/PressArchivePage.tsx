@@ -399,11 +399,10 @@ export function PressArchivePage() {
               </h2>
               {yg.pieces.map((p, i) => (
                 <FadeIn key={i} delay={Math.min(i, 8) * 60}>
-                  <a
-                    href="#"
+                  <button
+                    type="button"
                     className={styles.row}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       showToast(
                         t("marketing:pressArchive.toast.opening", {
                           source: p.out,
@@ -435,7 +434,7 @@ export function PressArchivePage() {
                       <div className={styles.meta}>{p.meta}</div>
                     </div>
                     <div className={styles.out}>{p.out}</div>
-                  </a>
+                  </button>
                 </FadeIn>
               ))}
             </div>

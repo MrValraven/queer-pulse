@@ -96,7 +96,13 @@ export function Modal({
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   return (
-    <div className={styles.scrim} onClick={onClose}>
+    <div
+      className={styles.scrim}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         ref={dialogRef}
         tabIndex={-1}
@@ -105,7 +111,6 @@ export function Modal({
           .join(" ")}
         role="dialog"
         aria-modal="true"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.modalHead}>
           <div className={styles.modalHeadTx}>
@@ -158,6 +163,7 @@ export function ModalSheet({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

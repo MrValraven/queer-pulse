@@ -157,7 +157,8 @@ export function ResourcesSection({
               <div className={styles.rcTitle}>{t(r.titleKey)}</div>
               <div className={styles.rcBody}>{t(r.bodyKey)}</div>
               <div className={styles.rcLink}>
-                <a
+                <button
+                  type="button"
                   onClick={() =>
                     showToast(
                       t("marketing:accessibility.resources.openingToast"),
@@ -166,7 +167,7 @@ export function ResourcesSection({
                   }
                 >
                   {t(r.linkKey)} →
-                </a>
+                </button>
               </div>
             </div>
           ))}

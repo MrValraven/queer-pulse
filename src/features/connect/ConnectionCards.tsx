@@ -7,6 +7,7 @@ import { useSocial } from "../../app/providers/SocialProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useConnectionActions } from "./api/useConnectionActions";
 import {
   profilePath,
@@ -176,7 +177,10 @@ export function CardHead({
       </Link>
       <div>
         <div className={styles.name}>
-          <Link to={to}>{view.name}</Link>
+          <span className={styles.nameRow}>
+            <Link to={to}>{view.name}</Link>
+            <MemberStaffBadge slug={view.slug} />
+          </span>
         </div>
         {view.pron && <div className={styles.pron}>{view.pron}</div>}
         <div className={styles.role}>{view.role}</div>

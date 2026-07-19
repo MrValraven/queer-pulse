@@ -37,7 +37,11 @@ export function ErrorFallback({ onReset, referenceId }: ErrorFallbackProps) {
           <Button size="lg" variant="ghost-dark" onClick={onReset}>
             {t("shared:feedback.errorFallback.tryAgain")}
           </Button>
-          <Button size="lg" variant="ghost-dark" to={routes.homepage}>
+          {/* Plain `href`, not `to`: the app-level ErrorBoundary sits outside
+              BrowserRouter, so a router <Link> here throws on a null
+              NavigationContext and takes the fallback down with it. A full
+              reload is the better recovery from a crash anyway. */}
+          <Button size="lg" variant="ghost-dark" href={routes.homepage}>
             {t("common:cta.backHome")}
           </Button>
         </div>

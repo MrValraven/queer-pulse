@@ -141,7 +141,11 @@ export function MegaNav() {
       {activeMenu &&
         createPortal(
           <>
-            <div className={styles.overlay} onClick={closeMenu} />
+            <div
+              className={styles.overlay}
+              role="presentation"
+              onClick={closeMenu}
+            />
             <div
               id="mega-panel"
               role="region"

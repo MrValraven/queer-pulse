@@ -27,9 +27,35 @@ const FILL: Record<Tone, string> = {
   cream: "rgba(var(--cream-rgb), 0.92)",
 };
 
-/** A point 34% of the way from an orb toward the hearth — a short dashed
- *  "drifting home" stem, rather than a hard line all the way in. */
-const toward = (from: number, target: number) => from + (target - from) * 0.34;
+/** Radius of the hearth's coral core, and the gaps the dashed trail leaves at
+ *  each end so it reads as touching rather than piercing. */
+const HEARTH_CORE_RADIUS = 14;
+const ORB_GAP = 3;
+const HEARTH_GAP = 2;
+
+/** The dashed trail an orb leaves behind it: a full run from just outside the
+ *  orb all the way in to the edge of the hearth's core, so every member is
+ *  visibly connected to the centre. */
+function trail(orb: Orb) {
+  const deltaX = orb.cx - HEARTH.cx;
+  const deltaY = orb.cy - HEARTH.cy;
+  const distance = Math.hypot(deltaX, deltaY) || 1;
+  const unitX = deltaX / distance;
+  const unitY = deltaY / distance;
+  const inset = orb.r + ORB_GAP;
+  const outset = HEARTH_CORE_RADIUS + HEARTH_GAP;
+  return {
+    x1: orb.cx - unitX * inset,
+    y1: orb.cy - unitY * inset,
+    x2: HEARTH.cx + unitX * outset,
+    y2: HEARTH.cy + unitY * outset,
+  };
+}
+
+/** The first orb waits until the hearth has bloomed and given one full beat
+ *  (see `.hearthBeat` in auth.module.css), then they arrive in sequence. */
+const ORB_DELAY = 1.3;
+const ORB_STEP = 0.09;
 
 /** Each orb enters by drifting home from a little further out. This returns the
  *  small outward offset (in user units) it starts from — the vector pointing
@@ -70,45 +96,42 @@ export function CommunityArt() {
         fill="url(#qpHearthGlow)"
       />
 
-      {/* Short dashed stems pulling each orb toward the hearth — each fades in
-          with its orb */}
+      {/* Dashed trails running from each orb all the way in to the hearth —
+          each fades in just behind its own orb */}
       <g
         stroke="rgba(var(--cream-rgb), 0.24)"
         strokeWidth={1.3}
         strokeLinecap="round"
         strokeDasharray="1.5 5"
       >
-        {ORBS.map((o, i) => (
+        {ORBS.map((orb, index) => (
           <line
-            key={i}
+            key={index}
             className={styles.artStem}
-            style={{ animationDelay: `${0.52 + i * 0.08}s` }}
-            x1={o.cx}
-            y1={o.cy}
-            x2={toward(o.cx, HEARTH.cx)}
-            y2={toward(o.cy, HEARTH.cy)}
+            style={{ animationDelay: `${ORB_DELAY + index * ORB_STEP + 0.08}s` }}
+            {...trail(orb)}
           />
         ))}
       </g>
 
       {/* Member orbs — drift home toward the hearth, one after another */}
-      {ORBS.map((o, i) => {
-        const { dx, dy } = driftFrom(o);
+      {ORBS.map((orb, index) => {
+        const { dx, dy } = driftFrom(orb);
         return (
           <circle
-            key={i}
+            key={index}
             className={styles.artOrb}
             style={
               {
                 "--dx": `${dx}px`,
                 "--dy": `${dy}px`,
-                animationDelay: `${0.44 + i * 0.08}s`,
+                animationDelay: `${ORB_DELAY + index * ORB_STEP}s`,
               } as CSSProperties
             }
-            cx={o.cx}
-            cy={o.cy}
-            r={o.r}
-            fill={FILL[o.tone]}
+            cx={orb.cx}
+            cy={orb.cy}
+            r={orb.r}
+            fill={FILL[orb.tone]}
             stroke="rgba(var(--cream-rgb), 0.5)"
             strokeWidth={1.2}
           />
@@ -116,7 +139,8 @@ export function CommunityArt() {
       })}
 
       {/* The hearth: a still ring, one gently pulsing ring (the brand pulse),
-          and the warm coral core — blooms in before the orbs arrive */}
+          and the warm coral core. It blooms and beats once on its own before
+          any member arrives — the centre calls, then the community answers. */}
       <circle
         className={styles.hearthBloom}
         cx={HEARTH.cx}
@@ -135,15 +159,17 @@ export function CommunityArt() {
         stroke="rgba(var(--accent-rgb), 0.45)"
         strokeWidth={1.4}
       />
-      <circle
-        className={styles.hearthBloom}
-        cx={HEARTH.cx}
-        cy={HEARTH.cy}
-        r={14}
-        fill="var(--accent)"
-        stroke="rgba(var(--cream-rgb), 0.55)"
-        strokeWidth={1.4}
-      />
+      <g className={styles.hearthBeat}>
+        <circle
+          className={styles.hearthBloom}
+          cx={HEARTH.cx}
+          cy={HEARTH.cy}
+          r={HEARTH_CORE_RADIUS}
+          fill="var(--accent)"
+          stroke="rgba(var(--cream-rgb), 0.55)"
+          strokeWidth={1.4}
+        />
+      </g>
     </svg>
   );
 }

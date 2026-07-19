@@ -88,9 +88,6 @@ export const system: Catalog = {
     "<b>New location:</b> attempt from <b>Madrid, Spain</b> — you usually sign in from Lisbon.",
   "accountLocked.reason3":
     "<b>Lock will lift automatically</b> in 23 minutes — or use one of the options below to unlock now.",
-  "accountLocked.whatNow.magicLink.title": "Sign in with a magic link",
-  "accountLocked.whatNow.magicLink.desc":
-    "Quickest if you're the rightful owner — confirm via email.",
   "accountLocked.whatNow.contact.title": "Contact the team",
   "accountLocked.whatNow.contact.desc":
     "If none of the above work, write to us and we'll verify you by hand.",
@@ -465,4 +462,22 @@ export const system: Catalog = {
   "verificationNeeded.expired.sub":
     "For your security, re-authentication only stays open for a few minutes. Start again to continue.",
   "verificationNeeded.expired.restartCta": "Start over",
+
+  // ── Platform lockdown screen (member-facing kill-switch maintenance state) ─
+  // DEVIATION from task-2-brief.md: the brief specifies "maintenance.eyebrow"
+  // for this block, but that key already exists above (line ~239) for
+  // MaintenancePage.tsx's scheduled-maintenance kicker ("Scheduled
+  // maintenance"). A duplicate key in the same object literal is a hard `tsc`
+  // error (TS1117: "An object literal cannot have multiple properties with
+  // the same name"), verified locally before writing this file. Renamed to
+  // "maintenance.brandEyebrow" to disambiguate; all other keys below are
+  // verbatim from the brief.
+  "maintenance.brandEyebrow": "QueerPulse",
+  "maintenance.title": "We’ll be right back",
+  // Fallback only — the admin's own message is shown when they set one.
+  "maintenance.body":
+    "QueerPulse is temporarily unavailable. Please check back soon.",
+  "maintenance.stillSignedIn":
+    "You’re still signed in. Everything will be here when we’re back.",
+  "maintenance.retry": "Try again",
 };

@@ -20,7 +20,7 @@ export function LandlordSkeleton() {
       </header>
 
       <div className={s.grid}>
-        <main>
+        <div>
           <section className={s.sec}>
             <SkeletonLine width="40%" height={24} />
             <SkeletonLine height={14} style={{ marginTop: 16 }} />
@@ -74,7 +74,7 @@ export function LandlordSkeleton() {
               ))}
             </div>
           </section>
-        </main>
+        </div>
 
         <aside className={s.side}>
           {Array.from({ length: 3 }).map((_, i) => (

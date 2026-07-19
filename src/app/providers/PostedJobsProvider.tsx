@@ -7,19 +7,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import type { Job } from "../../features/economy/jobs.data";
-import { jobCardToJob } from "../../features/economy/api/jobs.adapters";
-import { getMyJobs } from "../../features/economy/api/myJobs.api";
 import { closeJob } from "../../features/economy/api/jobs.api";
 import { useDemoMode } from "./DemoModeProvider";
-import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
 
 interface PostedJobsContextValue {
-  /** Member-posted jobs, newest first. Merged into the board + company pages. */
+  /** Jobs published in this session. Demo-mode source for the board, the job
+   *  detail page and the company page; see the provider docblock. */
   postedJobs: Job[];
   addJob: (job: Job) => void;
   removeJob: (slug: string) => void;
@@ -42,20 +38,29 @@ function readInitial(): Job[] {
 }
 
 /**
- * Session store for jobs members publish through the composer. In demo mode the
- * localStorage array is the sole source of truth (the prototype's stand-in for a
- * backend), so a freshly posted role keeps showing after a reload. In live mode
- * the same localStorage array is only a cache of optimistic additions; the real
- * "my postings" list is hydrated from GET /me/jobs and the two are merged
- * (server rows + any not-yet-refetched local additions, deduped by slug).
+ * Session store for jobs members publish through the composer — a localStorage
+ * array, the prototype's stand-in for a backend, so a freshly posted role keeps
+ * showing after a reload.
+ *
+ * **Demo-mode only, by consumer.** This once also hydrated from GET /me/jobs and
+ * merged the server's rows in, but every consumer reads `postedJobs` inside a
+ * `demoMode` branch: `JobsPage` (`demoMode ? [...postedJobs, ...JOBS] :
+ * liveJobs`), `JobDetailPage` (demo lookup), `CompanyPage` (whose local merge is
+ * unreachable live — `profile` and `openRoles` come from the same `useCompany`
+ * response, so the API's roles always win), and `PostJobComposer` (which calls
+ * `addJob` only in its demo branch). The live query fed nothing that rendered,
+ * so it fired on every route for no one and has been removed.
+ *
+ * In live mode a posted job reaches the UI through `useCreateJob`, which
+ * invalidates `["jobs"]` / `["companies"]` / `["company", slug]` — the keys the
+ * board and company pages actually render from. Do not reintroduce a `["myJobs"]`
+ * query here; if "my postings" ever needs its own view, give that view its own
+ * hook under `src/features/economy/api/`.
  */
 export function PostedJobsProvider({ children }: { children: ReactNode }) {
   const [postedJobs, setPostedJobs] = useState<Job[]>(readInitial);
   const { demoMode } = useDemoMode();
-  const { loggedIn } = useAuth();
   const queryClient = useQueryClient();
-  const { t, language } = useTranslation();
-  const fmt = useFormat();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -66,32 +71,12 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
     }
   }, [postedJobs]);
 
-  // Live hydration — the member's own postings from the API. Disabled (never
-  // hits the network) in demo mode. The query key carries `demoMode` so the two
-  // modes never share a cache entry.
-  const { data: serverJobs = [] } = useQuery({
-    queryKey: ["myJobs", demoMode, language],
-    enabled: !demoMode && loggedIn,
-    queryFn: async () => {
-      const res = await getMyJobs();
-      return res.items.map((dto) => jobCardToJob(dto, t, fmt));
-    },
-  });
-
-  const addJob = useCallback(
-    (job: Job) => {
-      setPostedJobs((prev) => [
-        job,
-        ...prev.filter((j) => j.slug !== job.slug),
-      ]);
-      // The real server create already happened at the composer call site via
-      // useCreateJob — don't double-POST. Just refresh the "my postings" read.
-      if (!demoMode) {
-        queryClient.invalidateQueries({ queryKey: ["myJobs"] });
-      }
-    },
-    [demoMode, queryClient],
-  );
+  const addJob = useCallback((job: Job) => {
+    // The real server create already happened at the composer call site via
+    // useCreateJob, which invalidates the board's own keys — don't double-POST
+    // and don't invalidate here.
+    setPostedJobs((prev) => [job, ...prev.filter((j) => j.slug !== job.slug)]);
+  }, []);
 
   const removeJob = useCallback(
     (slug: string) => {
@@ -103,7 +88,6 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
       if (demoMode) return;
       closeJob(slug)
         .then(() => {
-          queryClient.invalidateQueries({ queryKey: ["myJobs"] });
           queryClient.invalidateQueries({ queryKey: ["jobs"] });
         })
         .catch((err) => {
@@ -120,19 +104,9 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
     [demoMode, queryClient],
   );
 
-  // Demo returns the localStorage array unchanged. Live merges the server-hydrated
-  // postings with any optimistic local additions the refetch hasn't caught up to
-  // yet, deduped by slug (local additions kept newest-first, ahead of server rows).
-  const mergedJobs = useMemo<Job[]>(() => {
-    if (demoMode) return postedJobs;
-    const seen = new Set(serverJobs.map((j) => j.slug));
-    const localOnly = postedJobs.filter((j) => !seen.has(j.slug));
-    return [...localOnly, ...serverJobs];
-  }, [demoMode, postedJobs, serverJobs]);
-
   const value = useMemo(
-    () => ({ postedJobs: mergedJobs, addJob, removeJob }),
-    [mergedJobs, addJob, removeJob],
+    () => ({ postedJobs, addJob, removeJob }),
+    [postedJobs, addJob, removeJob],
   );
 
   return (

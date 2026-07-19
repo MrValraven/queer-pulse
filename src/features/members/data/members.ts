@@ -13,6 +13,7 @@ import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBad
 import { routes } from "../../../app/routeMap";
 import type { OpenToEntry } from "../openTo.data";
 import type { WorkLink } from "../workLink.data";
+import { REAL_ENTRIES } from "./realMembers";
 
 export interface ShapingItem {
   title: string;
@@ -105,12 +106,11 @@ export interface Member {
 }
 
 /**
- * The canonical member registry — the single source of truth for every recurring
- * person on the platform (names, avatars, tints, roles, bios, vouchers, …).
- * Pages should read from here (via the helpers below) rather than re-typing a
- * member's details inline, so a change here propagates everywhere.
+ * Prototype seed members — invented people who keep the demo populated while the
+ * real community grows. Real members live in `./realMembers` and are merged in
+ * below; when there are enough of them, this object is what gets deleted.
  */
-const ENTRIES: Record<string, Omit<Member, "id">> = {
+const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
   "joao-ribeiro": {
     slug: "joao-ribeiro",
     first: "João",
@@ -3349,6 +3349,20 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
       },
     },
   },
+};
+
+/**
+ * The canonical member registry — the single source of truth for every recurring
+ * person on the platform (names, avatars, tints, roles, bios, vouchers, …).
+ * Pages should read from here (via the helpers below) rather than re-typing a
+ * member's details inline, so a change here propagates everywhere.
+ *
+ * Real members are spread last, so a real entry always wins over a seed one
+ * sharing its slug, and new real people get the next ids in registration order.
+ */
+const ENTRIES: Record<string, Omit<Member, "id">> = {
+  ...SEED_ENTRIES,
+  ...REAL_ENTRIES,
 };
 
 /** The registry, keyed by slug, with a stable numeric `id` assigned by order. */

@@ -5,9 +5,9 @@ import { Button, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useWorkshops } from "../../app/providers/WorkshopsProvider";
+import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
 import { AddWorkshopModal } from "./AddWorkshopModal";
-import type { Workshop } from "./workshops.data";
+import type { WorkshopWithRsvp } from "./api/workshops.adapters";
 import styles from "./WorkshopPage.module.css";
 
 /**
@@ -24,18 +24,36 @@ import styles from "./WorkshopPage.module.css";
  * much smaller blast radius, and the same modal pattern already covers the
  * closest analogue in this codebase (deleting a subprofile). The weight belongs
  * in the copy, which says plainly what will and won't happen.
+ *
+ * That copy can now count the people it affects. Deleting cascades to every
+ * booking on the workshop, so the modal names how many there are before the
+ * host confirms — and still says plainly that nobody is told, because there is
+ * no email service and no notification to raise. The number is the honest
+ * weight; inventing a "we'll let them know" would not be.
  */
-export function WorkshopHostControls({ workshop }: { workshop: Workshop }) {
+export function WorkshopHostControls({
+  workshop,
+}: {
+  workshop: WorkshopWithRsvp;
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { deleteWorkshop } = useWorkshops();
+  const { deleteWorkshop, getRsvp } = useWorkshopsActions();
   const [editing, setEditing] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [failed, setFailed] = useState(false);
 
   if (!workshop.isHost) return null;
+
+  // How many people lose a booking if this goes. Read through the RSVP overlay
+  // so it matches the count the sidebar is showing on the same screen.
+  const { spotsFilled: booked } = getRsvp(workshop.id, {
+    status: workshop.myRsvpStatus ?? null,
+    spotsFilled: workshop.spotsFilled,
+    spotsTotal: workshop.spotsTotal,
+  });
 
   const closeConfirm = () => {
     if (deleting) return; // don't yank the modal out from under a live request
@@ -107,7 +125,11 @@ export function WorkshopHostControls({ workshop }: { workshop: Workshop }) {
           }
         >
           <p>{t("economy:deleteWorkshop.body")}</p>
-          <p>{t("economy:deleteWorkshop.attendeesNote")}</p>
+          <p>
+            {booked > 0
+              ? t("economy:deleteWorkshop.attendeesNote", { count: booked })
+              : t("economy:deleteWorkshop.noAttendeesNote")}
+          </p>
           {failed && (
             <p role="alert">{t("economy:deleteWorkshop.failedNote")}</p>
           )}

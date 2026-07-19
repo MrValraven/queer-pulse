@@ -27,6 +27,7 @@ const STANZAS = [
 const RUNS = {
   em: <em />,
   strong: <strong />,
+  // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
   a: <a href="mailto:manifesto@queerpulse.app" />,
 };
 

@@ -154,6 +154,13 @@ export const SAFETY_EMAIL = "safety@queerpulse.pt";
 export interface FeedReply {
   id: string;
   author: string;
+  /** Member slug for `author`, when the display name resolves to a real
+   *  member account. Parallel to `author` (which stays the display string
+   *  used for rendering) rather than replacing it, so no existing mock
+   *  reply's shape needs rewriting. Left undefined for replies whose author
+   *  is abbreviated (e.g. "Joana P.") and can't be matched to a member
+   *  without guessing a surname. */
+  authorSlug?: string;
   body: string;
 }
 

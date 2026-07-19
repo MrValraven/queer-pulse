@@ -135,7 +135,6 @@ const MOD_PATTERNS: string[] = ["/mod/*"];
 const GUEST_ONLY_PATTERNS: string[] = [
   routes.signIn,
   routes.createAccount,
-  routes.magicLink,
   routes.requestInvite,
   "/studio/sign-in",
 ];

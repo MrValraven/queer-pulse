@@ -1110,6 +1110,8 @@ export const cinema: Catalog = {
   "watch.controls.subtitleLang.en": "Legendas EN",
   "watch.controls.subtitleLang.es": "Legendas ES",
   "watch.controls.subtitleLang.none": "Sem legendas",
+  "watch.controls.ccAria": "Legendas em inglês",
+  "watch.controls.adAria": "Audiodescrição",
   "watch.sidePanel.lobbyPlaceholder": "Diz algo à lobby…",
   "watch.sidePanel.qnaPlaceholder": "Faz uma pergunta a {name}…",
   "watch.sidePanel.sendCta": "Enviar",

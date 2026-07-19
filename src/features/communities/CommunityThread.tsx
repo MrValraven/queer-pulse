@@ -3,6 +3,7 @@ import { FiMessageCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
 import styles from "./CommunityDetailPage.module.css";
@@ -61,6 +62,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
               {data.author.initials}
             </div>
             <span className={styles.thName}>{data.author.name}</span>
+            <MemberStaffBadge slug={data.author.slug} />
             <span>{data.time}</span>
             <span className={styles.thReplies}>
               <FiMessageCircle />{" "}

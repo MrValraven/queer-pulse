@@ -64,6 +64,7 @@ export function ProfileSubprofilesSection({
                   key={persona.slug}
                   card={toCard(persona)}
                   to={nestedPersonaPath(ownerSlug, persona.slug)}
+                  ownerSlug={ownerSlug}
                 />
               ))}
             </div>

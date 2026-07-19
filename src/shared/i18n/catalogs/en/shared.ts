@@ -207,6 +207,12 @@ export const shared: Catalog = {
   "visibilityBadge.private": "Private",
   "visibilityBadge.titleTemplate": "Visibility: {label}",
 
+  // StaffBadge
+  "staffBadge.admin.long": "QueerPulse Staff",
+  "staffBadge.admin.short": "Staff",
+  "staffBadge.moderator.long": "QueerPulse Mod",
+  "staffBadge.moderator.short": "Mod",
+
   // ImageSlot
   "imageSlot.placeholder": "Image",
 

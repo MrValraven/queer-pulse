@@ -8,6 +8,28 @@ import type {
   WorkshopDTO,
   WorkshopTierDTO,
 } from "./workshops.api";
+import type { WorkshopRsvpStatus } from "./workshopRsvp.api";
+
+/**
+ * The viewer's own booking, carried alongside the render shape.
+ *
+ * Kept out of `Workshop` (in `workshops.data.ts`) on purpose. That type is the
+ * prototype's static render shape, shared by the catalogue cards and the demo
+ * fixture, and neither of those knows anything about a viewer. `myRsvpStatus`
+ * is per-viewer, per-request state that only the detail route answers for, so
+ * it rides along as an optional extra rather than becoming a field every mock
+ * workshop would have to declare and leave empty.
+ *
+ * Optional because the demo builder (`buildWorkshop`) doesn't set it — in demo
+ * mode the booking lives in the session store on `WorkshopsProvider`, which is
+ * where the components read it from anyway.
+ */
+export interface WorkshopRsvpFields {
+  myRsvpStatus: WorkshopRsvpStatus;
+}
+
+/** A workshop plus whatever the server said about *your* seat on it. */
+export type WorkshopWithRsvp = Workshop & Partial<WorkshopRsvpFields>;
 
 // Same fallback shape jobs.adapters uses, for any caller not yet threading fmt.
 const FALLBACK_FORMATTERS: Formatters = createFormatters("en");
@@ -106,9 +128,9 @@ export function workshopDtoToWorkshop(
   t: TFunction,
   fmt: Formatters = FALLBACK_FORMATTERS,
   now: number = Date.now(),
-): Workshop {
+): WorkshopWithRsvp {
   const weeks = Math.max(1, dto.weeks || 1);
-  const size = Math.max(1, dto.size || 1);
+  const size = Math.max(1, dto.spotsTotal || 1);
   const currency = dto.currency || "EUR";
 
   return {
@@ -168,6 +190,8 @@ export function workshopDtoToWorkshop(
       venue: dto.location?.name ?? "",
     },
     isHost: dto.isHost === true,
+    // Per-viewer, not part of the render shape — see `WorkshopRsvpFields`.
+    myRsvpStatus: dto.myRsvpStatus ?? null,
   };
 }
 
@@ -195,7 +219,10 @@ export function workshopDraftToCreateDto(
     cat: draft.cat,
     mode: draft.mode,
     weeks: Math.max(1, Math.min(52, Number(draft.weeks) || 1)),
-    size: Math.max(2, Math.min(40, Number(draft.size) || 2)),
+    // Wire name: the backend's CreateWorkshopDto field is `spotsTotal`
+    // (@IsInt @Min(2) @Max(40)). Sending `size` failed whitelist
+    // validation AND omitted a required field — a guaranteed 400.
+    spotsTotal: Math.max(2, Math.min(40, Number(draft.size) || 2)),
     price: Math.max(0, Number(draft.price) || 0),
     currency,
     venue: draft.venue.trim() || undefined,

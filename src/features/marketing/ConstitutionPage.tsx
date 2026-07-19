@@ -91,7 +91,10 @@ export function ConstitutionPage() {
           i18nKey="marketing:constitution.footer.version"
           components={{ b: <b /> }}
         />{" "}
-        <a>{t("marketing:constitution.footer.downloadPdf")}</a> ·{" "}
+        <span className={styles.versionStrong}>
+          {t("marketing:constitution.footer.downloadPdf")}
+        </span>{" "}
+        ·{" "}
         {t("marketing:constitution.footer.seeAssembly")} ·{" "}
         {t("marketing:constitution.footer.readCodeOfConduct")}
       </div>

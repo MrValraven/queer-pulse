@@ -1,23 +1,32 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
-import type { Workshop } from "./workshops.data";
-import { WorkshopReserveModal } from "./WorkshopReserveModal";
+import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import type { WorkshopWithRsvp } from "./api/workshops.adapters";
+import { WorkshopRsvpControl } from "./WorkshopRsvpControl";
 import { WorkshopHostControls } from "./WorkshopHostControls";
 import styles from "./WorkshopPage.module.css";
 
-export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
+export function WorkshopSidebar({ workshop }: { workshop: WorkshopWithRsvp }) {
   const { t } = useTranslation();
-  const [reserving, setReserving] = useState(false);
   const { showToast } = useToast();
-  const filledPct = Math.round(
-    (workshop.spotsFilled / workshop.spotsTotal) * 100,
-  );
-  const full = workshop.spotsFilled >= workshop.spotsTotal;
+  const { getRsvp } = useWorkshopsActions();
+
+  // Read the counts through the RSVP overlay, not off the row: taking or
+  // giving back a spot has to move the "3 / 8" and the bar immediately, in demo
+  // mode as well as live.
+  const { spotsFilled, spotsTotal } = getRsvp(workshop.id, {
+    status: workshop.myRsvpStatus ?? null,
+    spotsFilled: workshop.spotsFilled,
+    spotsTotal: workshop.spotsTotal,
+  });
+  const filledPct = spotsTotal
+    ? Math.min(100, Math.round((spotsFilled / spotsTotal) * 100))
+    : 0;
 
   return (
     <aside className={styles.side}>
@@ -36,7 +45,7 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
         <div className={styles.row}>
           <span>{t("economy:workshopSidebar.spotsFilled")}</span>
           <b>
-            {workshop.spotsFilled} / {workshop.spotsTotal}
+            {spotsFilled} / {spotsTotal}
           </b>
         </div>
         <div className={styles.spotsBar}>
@@ -61,16 +70,22 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
           <b>{workshop.cancellation}</b>
         </div>
 
+        {/* The host is teaching this, not attending it — they get the count of
+            who has booked instead of a control that would 403. */}
+        {workshop.isHost ? (
+          <p className={styles.rsvpState}>
+            <b>
+              {spotsFilled === 0
+                ? t("economy:workshopRsvp.hostCountNone")
+                : t("economy:workshopRsvp.hostCount", { count: spotsFilled })}
+            </b>
+            {t("economy:workshopRsvp.hostNote")}
+          </p>
+        ) : (
+          <WorkshopRsvpControl workshop={workshop} />
+        )}
+
         <div className={styles.cta}>
-          <Button
-            variant="primary"
-            disabled={full}
-            onClick={() => setReserving(true)}
-          >
-            {full
-              ? t("economy:workshopSidebar.cohortFull")
-              : t("economy:workshopSidebar.reserveCta")}
-          </Button>
           <Button
             variant="ghost"
             onClick={() =>
@@ -103,13 +118,16 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
           />
           <div>
             <div className={styles.tutorName}>
-              {workshop.tutor.memberSlug ? (
-                <Link to={`${routes.members}/${workshop.tutor.memberSlug}`}>
-                  {workshop.tutor.name}
-                </Link>
-              ) : (
-                workshop.tutor.name
-              )}
+              <span className={styles.nameRow}>
+                {workshop.tutor.memberSlug ? (
+                  <Link to={`${routes.members}/${workshop.tutor.memberSlug}`}>
+                    {workshop.tutor.name}
+                  </Link>
+                ) : (
+                  workshop.tutor.name
+                )}
+                <MemberStaffBadge slug={workshop.tutor.memberSlug} />
+              </span>
             </div>
             <div className={styles.tutorRole}>{workshop.tutor.role}</div>
           </div>
@@ -126,13 +144,6 @@ export function WorkshopSidebar({ workshop }: { workshop: Workshop }) {
         </p>
         <p className={styles.whereAccess}>{workshop.location.access}</p>
       </div>
-
-      {reserving && (
-        <WorkshopReserveModal
-          workshop={workshop}
-          onClose={() => setReserving(false)}
-        />
-      )}
     </aside>
   );
 }

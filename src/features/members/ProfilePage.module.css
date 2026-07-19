@@ -569,6 +569,12 @@ button.socialChip {
   color: var(--text-strong);
   line-height: 1.1;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .relRole {
   font-size: 13px;
   color: var(--ink-60);

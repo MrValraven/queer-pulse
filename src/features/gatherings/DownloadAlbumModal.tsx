@@ -24,6 +24,7 @@ export function DownloadAlbumModal({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         // Only allow dismissing once the album is ready.
         if (ready && e.target === e.currentTarget) onClose();

@@ -49,6 +49,12 @@
   line-height: 0.98;
   margin-bottom: 14px;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .name em {
   font-style: italic;
   font-weight: 400;

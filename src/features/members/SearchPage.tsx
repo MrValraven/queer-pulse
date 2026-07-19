@@ -5,6 +5,7 @@ import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { linkToPath } from "../../app/routeMap";
 import {
   TYPE_BG,
@@ -58,7 +59,10 @@ function ResultCard({ item }: { item: SearchItem }) {
       </div>
       <div className={styles.cardBody}>
         <div className={styles.cardType}>{t(TYPE_LABEL_KEY[item.t])}</div>
-        <div className={styles.cardName}>{item.name}</div>
+        <div className={styles.nameRow}>
+          <div className={styles.cardName}>{item.name}</div>
+          <MemberStaffBadge slug={item.slug} />
+        </div>
         <div className={styles.cardSub}>{item.sub}</div>
       </div>
     </Link>

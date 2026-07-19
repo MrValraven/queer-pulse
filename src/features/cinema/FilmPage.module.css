@@ -299,6 +299,11 @@
   padding: 14px 16px;
   text-align: center;
   cursor: pointer;
+  appearance: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  border: none;
   border-right: 1px solid rgba(var(--line-rgb), 0.08);
   transition: background 0.2s;
 }

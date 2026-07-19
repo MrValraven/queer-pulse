@@ -23,6 +23,7 @@ export function AcceptInviteConfirm() {
   return (
     <div
       className={`${sx("confirm-overlay")} ${confirm.open ? sx("show") : ""}`}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) closeConfirm();
       }}

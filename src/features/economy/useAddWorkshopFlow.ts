@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useWorkshops } from "../../app/providers/WorkshopsProvider";
+import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
 import type { WorkshopDraft } from "./addWorkshop.build";
 import type { Workshop } from "./workshops.data";
 
@@ -20,7 +20,7 @@ const DEMO_PUBLISH_MS = 700;
  */
 export function useAddWorkshopFlow(editing?: Workshop) {
   const { demoMode } = useDemoMode();
-  const { addWorkshop, updateWorkshop } = useWorkshops();
+  const { addWorkshop, updateWorkshop } = useWorkshopsActions();
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [newId, setNewId] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);

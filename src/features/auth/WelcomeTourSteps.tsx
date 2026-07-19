@@ -109,6 +109,7 @@ export function TourProfile({ onNext, onBack }: StepProps) {
             <input
               type="radio"
               name="vis"
+              aria-label={t(opt.titleKey)}
               value={opt.value}
               checked={visibility === opt.value}
               onChange={() => setVisibility(opt.value)}
@@ -214,6 +215,7 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
           >
             <input
               type="checkbox"
+              aria-label={community.name}
               checked={joined.has(community.name)}
               onChange={() => toggle(community.name)}
             />

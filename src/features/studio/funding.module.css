@@ -805,6 +805,12 @@
   height: 13px;
 }
 .resolve {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
   color: var(--accent);
   cursor: pointer;
   font-weight: 600;

@@ -7,6 +7,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { usePublicProfileBySlug } from "./api/usePublicProfile";
@@ -106,6 +107,9 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
                 <span className={styles.pron}>{profile.pronouns}</span>
               </div>
             )}
+            <div className={styles.badgeRow}>
+              <MemberStaffBadge slug={profile.slug} size="lg" />
+            </div>
             {profile.tagline && (
               <p className={styles.publicTagline}>{profile.tagline}</p>
             )}

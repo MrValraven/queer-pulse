@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { linkToPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import type { SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
@@ -21,13 +22,21 @@ function initialsFrom(name: string): string {
  * and takes a plain `SubprofileCardDTO`. Links to `/p/<handle>` by default; pass
  * `to` to override — the "Also as…" block sends linked personas to their nested
  * `/members/<owner>/<slug>` route instead (linked personas have no handle).
+ *
+ * `ownerSlug` is the *member* slug of the persona's owner — `card` itself only
+ * carries a `handle`, which isn't a member identifier — and feeds the staff
+ * badge shown beside the display name. Pass it wherever the call site already
+ * knows the owning member's slug (e.g. the profile's "Also as…" block); the
+ * directory, which only has the DTO, omits it and renders no badge.
  */
 export function SubprofileCard({
   card,
   to,
+  ownerSlug,
 }: {
   card: SubprofileCardDTO;
   to?: string;
+  ownerSlug?: string;
 }) {
   const { t } = useTranslation();
   return (
@@ -43,7 +52,10 @@ export function SubprofileCard({
         <span className={styles.kindBadge}>
           {t(KIND_LABEL_KEYS[card.kind])}
         </span>
-        <span className={styles.name}>{card.displayName}</span>
+        <span className={styles.nameRow}>
+          <span className={styles.name}>{card.displayName}</span>
+          <MemberStaffBadge slug={ownerSlug} />
+        </span>
         {card.tagline && <span className={styles.tagline}>{card.tagline}</span>}
       </div>
     </Link>

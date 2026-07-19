@@ -7,28 +7,38 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  getAffiliation,
   postAffiliation,
   deleteAffiliation,
 } from "../../features/economy/api/affiliation.api";
+import {
+  affiliationQueryKey,
+  type EmployerAffiliation,
+} from "../../features/economy/api/useEmployerAffiliationQuery";
 import { useDemoMode } from "./DemoModeProvider";
-import { useAuth } from "./authContext";
 import { logError } from "../../shared/observability/logger";
 
-/** Which company the current member is authorised to post jobs for. */
-export interface EmployerAffiliation {
-  companySlug: string;
-  /** The member's role at the company, e.g. "Founder", "Hiring lead". */
-  role: string;
-  /** Live-only lifecycle: `pending` while affiliation is confirmed, then `active`.
-   *  Optional — consumers only check the affiliation is non-null. */
-  status?: "pending" | "active";
-}
+export type { EmployerAffiliation };
 
-interface EmployerAffiliationContextValue {
-  affiliation: EmployerAffiliation | null;
-  /** Grant (or switch) the member's employer affiliation — simulated instantly. */
+/**
+ * The overlay's tri-state. This is the load-bearing type of phase 3.
+ *
+ * - `EmployerAffiliation` — a local value: the demo store's contents, or a live
+ *   optimistic value awaiting/holding a server confirmation.
+ * - `null` — an explicit "no affiliation": the demo store is empty, or the
+ *   member just cleared it optimistically.
+ * - `undefined` — **no local decision at all; defer to the server query.**
+ *
+ * The third arm is what the old single-slot design lacked, and why it could not
+ * be scoped. With only `T | null`, an optimistic clear and a cold start look
+ * identical, so server truth would immediately paper back over the clear.
+ */
+export type AffiliationOverlay = EmployerAffiliation | null | undefined;
+
+interface EmployerAffiliationOverlayValue {
+  overlay: AffiliationOverlay;
+  /** Grant (or switch) the member's employer affiliation. */
   affiliate: (companySlug: string, role: string) => void;
   clearAffiliation: () => void;
 }
@@ -36,7 +46,7 @@ interface EmployerAffiliationContextValue {
 const STORAGE_KEY = "qp-employer-affiliation";
 
 const EmployerAffiliationContext =
-  createContext<EmployerAffiliationContextValue | null>(null);
+  createContext<EmployerAffiliationOverlayValue | null>(null);
 
 function readInitial(): EmployerAffiliation | null {
   if (typeof window === "undefined") return null;
@@ -51,110 +61,125 @@ function readInitial(): EmployerAffiliation | null {
 }
 
 /**
- * Session store for the member's employer affiliation. Default is `null` — an
- * ordinary member with no company to post for — so the posting gate is visible.
- * In demo mode affiliating is simulated instantly (create-it-live, `active`) and
- * persisted so it survives a reload. In live mode the affiliation is hydrated
- * from GET /me/affiliation, requesting it POSTs (optimistically `pending`, then
- * the server-confirmed status), and clearing it DELETEs — both with rollback.
+ * The member's employer affiliation — **overlay only**. This provider no longer
+ * fetches; server truth lives in `useEmployerAffiliationQuery`, which
+ * `useEmployerAffiliation` (src/features/economy/api/useEmployerAffiliation.ts)
+ * merges on top of this. See that file for the merge rule.
+ *
+ * Two responsibilities, discriminated by `demoMode` — they never coexist:
+ *
+ * - DEMO: this is the source of truth. Seeded from localStorage, persisted back,
+ *   affiliating is granted instantly (`active`, create-it-live), exactly as the
+ *   prototype has always behaved. No network, ever.
+ * - LIVE: a memory-only optimistic overlay. `undefined` until the member acts,
+ *   so the server query shows through; a `pending` value while a POST is in
+ *   flight; `null` immediately after a DELETE. **localStorage is not read or
+ *   written in live mode** — mirroring server truth into it, which is what this
+ *   provider used to do, is an uninvalidated cache that can render a company the
+ *   member no longer works for. `ConnectionsProvider` made the same call for the
+ *   same reason (see its lines 98-99).
  */
 export function EmployerAffiliationProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [affiliation, setAffiliation] = useState<EmployerAffiliation | null>(
-    readInitial,
-  );
   const { demoMode } = useDemoMode();
-  const { loggedIn } = useAuth();
+  const queryClient = useQueryClient();
+  const [overlay, setOverlay] = useState<AffiliationOverlay>(() =>
+    demoMode ? readInitial() : undefined,
+  );
 
+  // Demo-only persistence. The guard is the whole point of the phase: before it,
+  // this effect also fired on server-hydrated values, which is what made the
+  // demo cache and live server truth indistinguishable at read time.
   useEffect(() => {
+    if (!demoMode) return;
     if (typeof window === "undefined") return;
     try {
-      if (affiliation) {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(affiliation));
+      if (overlay) {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(overlay));
       } else {
         window.localStorage.removeItem(STORAGE_KEY);
       }
     } catch {
       // Ignore storage failures (private mode, quota) — session state still works.
     }
-  }, [affiliation]);
+  }, [demoMode, overlay]);
 
-  // Live hydration — the member's real affiliation. Never hits the network in
-  // demo mode or while logged out (re-runs once login lands).
-  useEffect(() => {
-    if (demoMode || !loggedIn) return;
-    let active = true;
-    getAffiliation()
-      .then((dto) => {
-        if (!active) return;
-        setAffiliation(
-          dto
-            ? {
-                companySlug: dto.companySlug,
-                role: dto.role,
-                status: dto.status,
-              }
-            : null,
-        );
-      })
-      .catch((err) => {
-        logError(err);
-      });
-    return () => {
-      active = false;
-    };
-  }, [demoMode, loggedIn]);
+  // Reset when the mode flips at runtime (the "Populate platform" toggle):
+  // re-seed from localStorage entering demo, drop to "defer to server" going
+  // live. React's "adjust state during render" pattern rather than an effect, so
+  // there's no cascading-render round-trip — same as ConnectionsProvider:113-117.
+  const [prevDemo, setPrevDemo] = useState(demoMode);
+  if (prevDemo !== demoMode) {
+    setPrevDemo(demoMode);
+    setOverlay(demoMode ? readInitial() : undefined);
+  }
 
   const affiliate = useCallback(
     (companySlug: string, role: string) => {
       if (demoMode) {
         // Create-it-live: granted instantly, unchanged prototype behaviour.
-        setAffiliation({ companySlug, role, status: "active" });
+        setOverlay({ companySlug, role, status: "active" });
         return;
       }
-      let previous: EmployerAffiliation | null = null;
-      setAffiliation((prev) => {
+      // MOVED VERBATIM from the pre-phase-3 provider, `let` capture and all.
+      // Yes, capturing `previous` inside a setState updater is StrictMode-
+      // fragile. It is preserved on purpose: this phase relocates state, it does
+      // not redesign rollback. Changing it here would put an untested behaviour
+      // change inside a refactor whose proof of success is a request count.
+      let previous: AffiliationOverlay = undefined;
+      setOverlay((prev) => {
         previous = prev;
         return { companySlug, role, status: "pending" };
       });
       postAffiliation({ companySlug, role })
         .then((dto) => {
-          setAffiliation({
+          const confirmed: EmployerAffiliation = {
             companySlug: dto.companySlug,
             role: dto.role,
             status: dto.status,
-          });
+          };
+          setOverlay(confirmed);
+          // Added in phase 3: keep the cache honest. The overlay outranks the
+          // query for the rest of the session, so this is not what the member
+          // sees — it stops a later subscriber (or a devtools reader) finding a
+          // cache entry that contradicts the overlay. Costs no request.
+          queryClient.setQueryData(affiliationQueryKey(false), confirmed);
         })
         .catch((err) => {
           logError(err);
-          setAffiliation(previous);
+          setOverlay(previous);
         });
     },
-    [demoMode],
+    [demoMode, queryClient],
   );
 
   const clearAffiliation = useCallback(() => {
     if (demoMode) {
-      setAffiliation(null);
+      setOverlay(null);
       return;
     }
-    let previous: EmployerAffiliation | null = null;
-    setAffiliation((prev) => {
+    // MOVED VERBATIM — see the note in `affiliate`.
+    let previous: AffiliationOverlay = undefined;
+    setOverlay((prev) => {
       previous = prev;
       return null;
     });
-    deleteAffiliation().catch((err) => {
-      logError(err);
-      setAffiliation(previous);
-    });
-  }, [demoMode]);
+    deleteAffiliation()
+      .then(() => {
+        queryClient.setQueryData(affiliationQueryKey(false), null);
+      })
+      .catch((err) => {
+        logError(err);
+        setOverlay(previous);
+      });
+  }, [demoMode, queryClient]);
 
   const value = useMemo(
-    () => ({ affiliation, affiliate, clearAffiliation }),
-    [affiliation, affiliate, clearAffiliation],
+    () => ({ overlay, affiliate, clearAffiliation }),
+    [overlay, affiliate, clearAffiliation],
   );
 
   return (
@@ -164,11 +189,17 @@ export function EmployerAffiliationProvider({
   );
 }
 
-export function useEmployerAffiliation() {
+/**
+ * Raw overlay access. **Not for pages** — it exposes the tri-state, which is an
+ * implementation detail of the merge. Consumers use
+ * `useEmployerAffiliation()` (read) or `useEmployerAffiliationActions()`
+ * (write-only), both from `src/features/economy/api/useEmployerAffiliation.ts`.
+ */
+export function useEmployerAffiliationOverlay() {
   const ctx = useContext(EmployerAffiliationContext);
   if (!ctx) {
     throw new Error(
-      "useEmployerAffiliation must be used within EmployerAffiliationProvider",
+      "useEmployerAffiliationOverlay must be used within EmployerAffiliationProvider",
     );
   }
   return ctx;

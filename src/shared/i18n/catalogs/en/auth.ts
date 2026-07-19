@@ -63,6 +63,19 @@ export const auth: Catalog = {
   "signIn.notice.unreachable.body":
     "The server didn't respond. It might be waking up — give it a moment and try again.",
 
+  // Registration is switched off platform-wide (or the platform is locked).
+  // Not the visitor's fault and not retryable — the copy says so plainly and
+  // does not invite them to try again in a loop.
+  "signIn.notice.registrationDisabled.title": "New accounts are paused",
+  "signIn.notice.registrationDisabled.body":
+    "We’re not creating new accounts right now. If you already have one, you can still sign in.",
+
+  // Pre-emptive states, rendered from GET /platform-status BEFORE submit so
+  // nobody round-trips through Google only to be rejected at the callback.
+  "signIn.closed.title": "New accounts are paused",
+  "signIn.closed.body":
+    "You can still sign in to an existing account below.",
+
   // ── Create account ──
   "createAccount.eyebrow": "Almost there",
   "createAccount.title": "Create your <em>account</em>",
@@ -220,37 +233,8 @@ export const auth: Catalog = {
   "under18.backDefault": "Back",
 
   // ── Confirm email (six-digit code) ──
-  "confirmEmail.title": "Check your <em>inbox.</em>",
-  "confirmEmail.sub":
-    "We sent a six-digit code to <strong>{email}</strong>. It expires in <strong>10 minutes</strong>.",
-  "confirmEmail.verified": "Verified. Welcome aboard.",
-  "confirmEmail.toastConfirmed": "Email confirmed",
-  "confirmEmail.codeMismatch":
-    "That code didn't match. Try again, or resend below.",
-  "confirmEmail.resendToast": "Sent again — check spam too",
-  "confirmEmail.didntGetCode": "Didn't get the code?",
-  "confirmEmail.resend": "Resend",
-  "confirmEmail.waitSeconds": "wait {seconds}s",
-  "confirmEmail.wrongEmail": "Wrong email? <startOver>Start over</startOver>",
 
   // ── Magic link sign-in ──
-  "magicLink.title": "Sign in with a <em>link.</em>",
-  "magicLink.sub":
-    "We'll email you a one-tap link. No password, no app, no friction. Expires in 10 minutes.",
-  "magicLink.emailLabel": "Email",
-  "magicLink.emailPlaceholder": "you@example.com",
-  "magicLink.emailError": "Please enter a valid email address.",
-  "magicLink.submit": "Send me a link →",
-  "magicLink.dividerOr": "or",
-  "magicLink.signInWithPassword": "Sign in with password instead",
-  "magicLink.notAMemberPrompt": "Not a member yet? Request an invite",
-  "magicLink.sentTitle": "Check your <em>email.</em>",
-  "magicLink.sentBody":
-    "A sign-in link is on its way to <strong>{email}</strong>. Tap it on this device to come back signed in.",
-  "magicLink.resendPromptPrefix": "Didn't get it? Look in spam, or",
-  "magicLink.resendLink": "resend link",
-  "magicLink.resendIn": "resend in {seconds}s",
-  "magicLink.useDifferentMethod": "← Use a different method",
 
   // ── Request an invite (prospective-member ask-to-join form + confirmation) ──
   "requestInvite.eyebrow": "Request an invite",
@@ -314,6 +298,14 @@ export const auth: Catalog = {
   "requestInvite.whatNext.hearBack.title": "If it's a yes, someone gets in touch",
   "requestInvite.whatNext.hearBack.body":
     "A member sends your invite link to the address you gave us, usually within a couple of weeks. We can't reply to every request, so if it stays quiet, asking someone you already know here is the surest way in.",
+
+  // Pre-emptive states, rendered from GET /platform-status BEFORE submit so
+  // nobody fills in the whole form only to be rejected on submit.
+  "requestInvite.closed.title": "Invite requests are paused",
+  "requestInvite.closed.body":
+    "We’re not taking new invite requests at the moment. Please check back soon.",
+  "requestInvite.closedError":
+    "Invite requests were paused while you were filling this in. Please try again later.",
 
   // ── Onboarding (the 7-step post-signup flow at /onboarding) ──
   "onboarding.stepLabel": "Step {current} of {total}",

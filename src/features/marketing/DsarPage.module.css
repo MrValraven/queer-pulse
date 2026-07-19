@@ -158,6 +158,9 @@
   gap: 7px;
   margin-bottom: 18px;
 }
+/* Caption for a grouped set of controls — matches .field label's look without
+   claiming to label a single control. */
+.groupLabel,
 .field label {
   font-size: 11.5px;
   font-weight: 700;

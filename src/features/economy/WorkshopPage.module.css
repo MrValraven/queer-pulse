@@ -336,6 +336,28 @@
   line-height: 1.55;
 }
 
+/* "Your spot is held" / "You're on the waitlist" / the host's booked count.
+   A jade rule marks it as a settled, good-news state rather than an action. */
+.rsvpState {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  border-inline-start: 3px solid var(--jade);
+  padding-inline-start: 12px;
+  margin-top: 14px;
+}
+.rsvpState b {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.rsvpError {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--accent);
+  margin-top: 8px;
+}
+
 .cardLabel {
   font-size: 11.5px;
   font-weight: 700;
@@ -356,6 +378,12 @@
   font-size: 17px;
   color: var(--text-strong);
   letter-spacing: -0.01em;
+}
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
 }
 .tutorName a {
   color: inherit;

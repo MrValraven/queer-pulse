@@ -183,13 +183,18 @@ export function DeleteAccountModal({
   }, [onClose]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={styles.modal}
         role="dialog"
         aria-modal="true"
         aria-labelledby="delete-account-modal-title"
-        onClick={(e) => e.stopPropagation()}
       >
         <h3 id="delete-account-modal-title">
           {t("settings:controls.deleteModal.title")}

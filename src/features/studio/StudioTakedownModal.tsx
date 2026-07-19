@@ -37,6 +37,7 @@ export function StudioTakedownModal({
   return (
     <div
       className={s.modalBg}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

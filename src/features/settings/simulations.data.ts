@@ -57,18 +57,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.signIn,
       },
       {
-        title: "Magic-link sign-in",
-        desc: "See the passwordless flow — request a one-time sign-in link sent to your email.",
-        to: routes.magicLink,
-        preview: true,
-      },
-      {
-        title: "Confirm your email",
-        desc: "Preview the email-confirmation step that verifies a newly entered address.",
-        to: routes.confirmEmail,
-        preview: true,
-      },
-      {
         title: "Verification needed",
         desc: "Preview the prompt shown when an account needs to verify identity before continuing.",
         to: routes.verificationNeeded,
@@ -132,27 +120,12 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     ],
   },
   {
-    label: "Managing your membership",
+    label: "Your data & leaving",
     flows: [
-      {
-        title: "Membership & billing",
-        desc: "Review and change your membership tier, benefits, and recurring billing all in one place.",
-        to: routes.membership,
-      },
-      {
-        title: "Gift a membership",
-        desc: "Walk through buying and sending a membership to someone else.",
-        to: routes.giftMembership,
-      },
       {
         title: "Your data rights",
         desc: "Exercise your data rights — request a full export of your data or file a formal GDPR access request.",
         to: routes.dataExport,
-      },
-      {
-        title: "Cancel membership",
-        desc: "Walk through pausing or cancelling a paid membership.",
-        to: routes.cancelMembership,
       },
       {
         title: "Leave the community",

@@ -4,6 +4,7 @@ import { Footer } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberName } from "../members/data/members";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
@@ -124,7 +125,12 @@ export function RsvpPage() {
                 <div className={styles.hnHead}>
                   <Avatar initials="ML" tint="plum" size={28} />
                   <div>
-                    <div className={styles.hnName}>{memberName("mariana")}</div>
+                    <div className={styles.hnName}>
+                      <span className={styles.nameRow}>
+                        {memberName("mariana")}
+                        <MemberStaffBadge slug="mariana" />
+                      </span>
+                    </div>
                     <div className={styles.hnRole}>
                       {t("gatherings:rsvp.host.roleLabel")}
                     </div>

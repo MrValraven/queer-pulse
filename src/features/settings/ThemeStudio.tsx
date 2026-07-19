@@ -69,11 +69,14 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
         </div>
         <div className={styles.flagGrid}>
           {FLAG_SWATCHES.map((f, i) => (
-            <div
+            <button
+              type="button"
               key={f.label}
               className={`${styles.flagSwatch} ${i === selectedFlag ? styles.flagSwatchSelected : ""}`}
               style={{ background: f.background }}
               title={f.label}
+              aria-label={f.label}
+              aria-pressed={i === selectedFlag}
               onClick={() => edit({ flag: i })}
             />
           ))}
@@ -84,16 +87,18 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
         </div>
         <div className={styles.coverStyleOpts}>
           {COVER_STYLES.map((cs) => (
-            <div
+            <button
+              type="button"
               key={cs.key}
               className={`${styles.csOpt} ${coverStyle === cs.key ? styles.csOptSelected : ""}`}
+              aria-pressed={coverStyle === cs.key}
               onClick={() => edit({ coverStyle: cs.key })}
             >
-              <div className={styles.csRadio}>
-                <div className={styles.csDot} />
-              </div>
-              <div className={styles.csLabel}>{t(cs.labelKey)}</div>
-            </div>
+              <span className={styles.csRadio} aria-hidden>
+                <span className={styles.csDot} />
+              </span>
+              <span className={styles.csLabel}>{t(cs.labelKey)}</span>
+            </button>
           ))}
         </div>
 
@@ -102,11 +107,14 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
         </div>
         <div className={styles.patternGrid}>
           {PATTERNS.map((p) => (
-            <div
+            <button
+              type="button"
               key={p.key}
               className={`${styles.patSwatch} ${pattern === p.key ? styles.patSwatchSelected : ""}`}
               style={{ background: p.background }}
               title={t(p.titleKey)}
+              aria-label={t(p.titleKey)}
+              aria-pressed={pattern === p.key}
               onClick={() => edit({ pattern: p.key })}
             />
           ))}
@@ -123,6 +131,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
+                aria-label={t("settings:themeStudio.showBadgesToggle")}
                 checked={showBadges}
                 onChange={(e) => edit({ showBadges: e.target.checked })}
               />
@@ -137,6 +146,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
+                aria-label={t("settings:themeStudio.showLevelToggle")}
                 checked={showLevel}
                 onChange={(e) => edit({ showLevel: e.target.checked })}
               />

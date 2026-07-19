@@ -13,7 +13,7 @@ export function ChangeMakers() {
     <section className={styles.section} id="changemakers">
       <div className="wrap">
         <div className={styles.top}>
-          <div>
+          <div className={styles.topText}>
             <Reveal className={styles.eyebrow}>
               {t("homepage:changeMakers.eyebrow")}
             </Reveal>
@@ -23,11 +23,11 @@ export function ChangeMakers() {
                 components={{ em: <em /> }}
               />
             </Reveal>
-          </div>
-          <div className={styles.aside}>
-            <Reveal as="p" className={styles.sub}>
+            <Reveal as="p" className={styles.sub} delay={90}>
               {t("homepage:changeMakers.sub")}
             </Reveal>
+          </div>
+          <div className={styles.aside}>
             <Reveal delay={60}>
               <Button variant="ghost-dark" to={routes.changemakers}>
                 {t("homepage:changeMakers.cta")}

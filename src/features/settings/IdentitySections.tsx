@@ -107,12 +107,15 @@ function IdentityToggleRow({
  */
 export function DiscoverableIdentitiesSection() {
   const { t } = useTranslation();
-  const { draft } = useProfile();
+  const { draft, savedVersion } = useProfile();
   const { showToast } = useToast();
   // Rows are drawn from the member's own saved-and-publishable identities.
   const draftPublishable = publishableIdentities(draft.identities);
+  // `savedVersion` re-reads the server's sets after each profile save, so an
+  // identity ticked above gets its switch as soon as it is stored — the pane
+  // used to keep saying "once you save" until a full page reload.
   const { available, published, loading, saving, error, setPublished } =
-    useDiscoverableIdentities(draftPublishable);
+    useDiscoverableIdentities(draftPublishable, savedVersion);
 
   const rows = draftPublishable.filter((identity) =>
     available.includes(identity),

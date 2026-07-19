@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useDrafts } from "../../app/providers/DraftsProvider";
+import { useDraftsActions } from "../../app/providers/DraftsProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Draft, DraftAction, DraftMeta } from "../members/drafts.data";
@@ -53,7 +53,7 @@ function buildInviteDraft(
 export function InviteEmailForm({ onSent }: InviteEmailFormProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { addDraft, removeDraft } = useDrafts();
+  const { addDraft, removeDraft } = useDraftsActions();
   const [first, setFirst] = useState("");
   const [know, setKnow] = useState("");
   const [note, setNote] = useState("");

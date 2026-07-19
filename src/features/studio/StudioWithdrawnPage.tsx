@@ -68,11 +68,9 @@ function StillCard({ card }: { card: WithdrawnCard }) {
       </Link>
     );
   }
-  return (
-    <a href="#" className={s.tcard} onClick={(e) => e.preventDefault()}>
-      {inner}
-    </a>
-  );
+  // No destination: an inert card, not a link. Rendering an <a href="#"> here
+  // put a focusable element that goes nowhere into the tab order.
+  return <div className={s.tcard}>{inner}</div>;
 }
 
 export function StudioWithdrawnPage() {

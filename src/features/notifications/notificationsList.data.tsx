@@ -39,6 +39,7 @@ export function buildNotifications(
       type: "messages",
       unread: true,
       avatar: { initials: "IT", tint: "jade" },
+      actorSlug: "ines",
       text: (
         <Translation
           i18nKey="notifications:list.1.text"
@@ -96,6 +97,7 @@ export function buildNotifications(
       type: "community",
       unread: true,
       avatar: { initials: "DV", tint: "plum" },
+      actorSlug: "diogo",
       text: (
         <Translation
           i18nKey="notifications:list.3.text"
@@ -129,6 +131,7 @@ export function buildNotifications(
       type: "messages",
       unread: true,
       avatar: { initials: "SA", tint: "jade" },
+      actorSlug: "sofia",
       text: (
         <Translation
           i18nKey="notifications:list.4.text"
@@ -206,6 +209,7 @@ export function buildNotifications(
       type: "community",
       unread: true,
       avatar: { initials: "MC", tint: "coral" },
+      actorSlug: "mariana-costa",
       text: (
         <Translation
           i18nKey="notifications:list.7.text"
@@ -268,6 +272,7 @@ export function buildNotifications(
       type: "messages",
       unread: false,
       avatar: { initials: "RF", tint: "jade" },
+      actorSlug: "rui-fernandes",
       text: (
         <Translation
           i18nKey="notifications:list.10.text"

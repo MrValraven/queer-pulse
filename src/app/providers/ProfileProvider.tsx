@@ -24,6 +24,7 @@ import { useUpdateProfile } from "../../features/members/api/useUpdateProfile";
 import { useUpdateProfileLists } from "../../features/members/api/useUpdateProfileLists";
 import { useMemberProfile } from "../../features/members/api/useMemberProfile";
 import type { UpdateProfileDTO } from "../../features/members/api/members.api";
+import { useSessionBootstrapSettled } from "../../shared/api/useSessionBootstrap";
 
 /**
  * The logged-in member's profile: the authenticated user's identity fields (real
@@ -129,6 +130,13 @@ interface ProfileContextValue {
   draft: ProfileDraft;
   /** True for a few seconds after a save, to drive the confirmation banner. */
   justSaved: boolean;
+  /**
+   * Increments once per successful save. A save signal for state that lives
+   * OUTSIDE react-query and so can't be reached by `invalidateQueries` — see
+   * `useDiscoverableIdentities`, whose server-derived `available` list is a
+   * function of the `identities` this save just persisted.
+   */
+  savedVersion: number;
   /** True while the save request is in flight (live mode). */
   isSaving: boolean;
   /** Set when a save fails so the edit bar can surface it; cleared on retry. */
@@ -145,11 +153,20 @@ const ProfileContext = createContext<ProfileContextValue | null>(null);
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
+  const bootstrapSettled = useSessionBootstrapSettled();
   // Fetch the logged-in member's own full profile (bio, tags, role, hood, work)
   // in live mode — auth alone only carries identity fields. Disabled in demo
-  // mode (the mock `currentUser` already has the rich fields).
+  // mode (the mock `currentUser` already has the rich fields), and held off
+  // until the session bootstrap settles: bootstrap seeds this exact
+  // `["profile", false, slug]` cache key, so waiting lets a successful
+  // bootstrap warm it and skip this fetch, while a failed/inapplicable
+  // bootstrap still opens the gate so this falls back to its own endpoint.
+  // `useMemberProfile` itself stays untouched — it's also used to fetch OTHER
+  // members' profiles app-wide, and gating it globally would needlessly delay
+  // every profile page; passing `undefined` here only holds off this
+  // own-profile call, since the hook already disables on a falsy slug.
   const { data: ownProfile } = useMemberProfile(
-    demoMode ? undefined : user?.profile.slug,
+    demoMode || !bootstrapSettled ? undefined : user?.profile.slug,
   );
   const base = (!demoMode && ownProfile?.member) || currentUser;
 
@@ -161,6 +178,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<ProfileDraft>(() => toDraft(seed));
   const [justSaved, setJustSaved] = useState(false);
+  const [savedVersion, setSavedVersion] = useState(0);
   const [saveError, setSaveError] = useState<string | null>(null);
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSeed = useRef(seed);
@@ -249,6 +267,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }));
     setIsEditing(false);
     setJustSaved(true);
+    setSavedVersion((n) => n + 1);
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setJustSaved(false), 5000);
     return true;
@@ -260,6 +279,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       isEditing,
       draft,
       justSaved,
+      savedVersion,
       isSaving,
       saveError,
       startEditing,
@@ -272,6 +292,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       isEditing,
       draft,
       justSaved,
+      savedVersion,
       isSaving,
       saveError,
       startEditing,

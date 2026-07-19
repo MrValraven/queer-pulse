@@ -462,7 +462,13 @@
   font-family: var(--serif);
   font-style: italic;
 }
-.foot a {
+.foot a,
+.foot button {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   color: var(--accent);
   font-weight: 600;
   font-style: normal;

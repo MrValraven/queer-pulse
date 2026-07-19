@@ -94,6 +94,7 @@ export function AboutAndVisibility({
               <input
                 type="radio"
                 name="vis"
+                aria-label={t(opt.labelKey)}
                 checked={visibility === opt.value}
                 onChange={() => setVisibility(opt.value)}
               />

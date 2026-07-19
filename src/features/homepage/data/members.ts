@@ -45,6 +45,18 @@ export const members: Member[] = [
   card("carla", "tech", ["Fintech", "Strategy"], "Product Manager"),
   card("beatriz", "craft", ["Studio", "Glazing"], "Ceramicist"),
   card("diogo", "music", ["Mixing", "Live sets"], "Music Producer"),
+  card(
+    "gabriella",
+    "tech",
+    ["Data", "Marketing", "Training"],
+    "Marketer & Data Analyst",
+  ),
+  card(
+    "philippine",
+    "tech",
+    ["Venture capital", "Sustainability", "Dance"],
+    "Venture Builder & Dancer",
+  ),
 ];
 
 export const memberFilters: {

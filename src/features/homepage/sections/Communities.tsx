@@ -41,7 +41,7 @@ export function Communities() {
       <div className="wrap">
         <Reveal>
           <div className={styles.head}>
-            <div>
+            <div className={styles.headText}>
               <div className={styles.eyebrow}>
                 <span className={styles.live} aria-hidden />
                 {t("homepage:communities.eyebrow")}
@@ -52,9 +52,9 @@ export function Communities() {
                   components={{ em: <em /> }}
                 />
               </h2>
+              <p className={styles.sub}>{t("homepage:communities.sub")}</p>
             </div>
             <div className={styles.headRight}>
-              <p className={styles.sub}>{t("homepage:communities.sub")}</p>
               <Button variant="ghost" to={routes.communities}>
                 {t("homepage:communities.browseAllCta")}{" "}
                 <FiArrowRight aria-hidden />

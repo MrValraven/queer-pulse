@@ -74,7 +74,7 @@ export function SolidarityDirectory() {
         </div>
       </div>
 
-      <main className={styles.body}>
+      <div className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
             {loading &&
@@ -178,7 +178,7 @@ export function SolidarityDirectory() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </>
   );
 }

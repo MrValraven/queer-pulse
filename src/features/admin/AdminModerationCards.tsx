@@ -255,7 +255,7 @@ export function AppealCard({
   const { t } = useTranslation();
   const sev = SEVERITY[appeal.severity];
   return (
-    <article
+    <div
       className={[styles.report, leaving && styles.reportLeaving]
         .filter(Boolean)
         .join(" ")}
@@ -318,7 +318,7 @@ export function AppealCard({
         </span>
         <AdminChip tone={appeal.status.tone}>{t(appeal.status.key)}</AdminChip>
       </div>
-    </article>
+    </div>
   );
 }
 

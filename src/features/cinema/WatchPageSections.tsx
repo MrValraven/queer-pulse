@@ -156,22 +156,28 @@ export function WatchControls({
           <span className="cur">31:44</span> / 1:32:18
         </span>
         <div className={styles.ctrlSpace} />
-        <span
+        <button
+          type="button"
           className={[styles.ctrlPill, cc && styles.ctrlPillOn]
             .filter(Boolean)
             .join(" ")}
+          aria-pressed={cc}
+          aria-label={t("cinema:watch.controls.ccAria")}
           onClick={onCcToggle}
         >
           CC EN
-        </span>
-        <span
+        </button>
+        <button
+          type="button"
           className={[styles.ctrlPill, ad && styles.ctrlPillOn]
             .filter(Boolean)
             .join(" ")}
+          aria-pressed={ad}
+          aria-label={t("cinema:watch.controls.adAria")}
           onClick={onAdToggle}
         >
           AD
-        </span>
+        </button>
         <select className={styles.ctrlLang} defaultValue="en">
           <option value="pt">
             {t("cinema:watch.controls.subtitleLang.pt")}
@@ -229,16 +235,18 @@ export function WatchSidePanel() {
     <aside className={styles.sidePanel}>
       <div className={styles.spTabs}>
         {TABS.map((tabDef) => (
-          <div
+          <button
+            type="button"
             key={tabDef.id}
             className={[styles.spTab, tab === tabDef.id && styles.spTabActive]
               .filter(Boolean)
               .join(" ")}
+            aria-current={tab === tabDef.id}
             onClick={() => setTab(tabDef.id)}
           >
             {t(tabDef.labelKey)}
             {tabDef.id === "live-qna" && <span className={styles.spDot} />}
-          </div>
+          </button>
         ))}
       </div>
 

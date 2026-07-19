@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./GatheringModals.module.css";
 
@@ -29,6 +29,8 @@ export function InlineEditModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
   const [value, setValue] = useState(initialValue);
+  // Only one of the two branches renders, so a single ref serves both.
+  const inputRef = useFocusOnMount<HTMLTextAreaElement & HTMLInputElement>();
   const canSave = value.trim().length > 0 && value !== initialValue;
 
   const save = () => {
@@ -42,6 +44,7 @@ export function InlineEditModal({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -69,16 +72,16 @@ export function InlineEditModal({
           <FormField>
             {multiline ? (
               <textarea
+                ref={inputRef}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                autoFocus
               />
             ) : (
               <input
+                ref={inputRef}
                 type="text"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                autoFocus
               />
             )}
           </FormField>

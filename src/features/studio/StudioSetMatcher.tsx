@@ -129,7 +129,8 @@ export function StudioSetMatcher({
                   </span>
                 ) : (
                   <span className={s.st}>
-                    <span
+                    <button
+                      type="button"
                       className={s.resolve}
                       onClick={() =>
                         showToast(
@@ -139,7 +140,7 @@ export function StudioSetMatcher({
                       }
                     >
                       {t("studio:setSubmission.matcher.identifyCta")}
-                    </span>
+                    </button>
                   </span>
                 )}
               </FadeIn>

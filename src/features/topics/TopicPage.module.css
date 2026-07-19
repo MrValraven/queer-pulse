@@ -167,6 +167,13 @@
   gap: 11px;
   margin-bottom: 12px;
 }
+/* Groups a post's author name with their staff badge (when they have one). */
+.postNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
 .postName {
   font-size: 14px;
   font-weight: 700;
@@ -332,6 +339,14 @@
 .personText {
   min-width: 0;
   flex: 1;
+}
+/* Groups a top voice's name with their staff badge (when they have one) so
+   the two move as a single unit inside the flexible personText column. */
+.personNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 .personName {
   font-size: 13.5px;

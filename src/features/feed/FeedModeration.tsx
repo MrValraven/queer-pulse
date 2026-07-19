@@ -167,7 +167,13 @@ export function BlockConfirmModal({
   }, [onClose]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={
           done ? `${styles.dialog} ${styles.dialogConfirm}` : styles.dialog
@@ -175,7 +181,6 @@ export function BlockConfirmModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="block-title"
-        onClick={(e) => e.stopPropagation()}
       >
         {done ? (
           <div className={styles.confirm}>
@@ -294,7 +299,13 @@ export function ReportModal({
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={
           sent ? `${styles.dialog} ${styles.dialogConfirm}` : styles.dialog
@@ -302,7 +313,6 @@ export function ReportModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="report-title"
-        onClick={(e) => e.stopPropagation()}
       >
         {sent ? (
           <div className={styles.confirm}>

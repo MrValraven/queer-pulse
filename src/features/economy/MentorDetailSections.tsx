@@ -20,7 +20,7 @@ export function MentorDetailSections({
   ].filter((x) => x.text);
 
   return (
-    <main>
+    <div>
       <section className={styles.sec}>
         <h2>
           <Translation
@@ -73,6 +73,6 @@ export function MentorDetailSections({
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

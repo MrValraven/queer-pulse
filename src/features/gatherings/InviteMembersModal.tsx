@@ -66,6 +66,7 @@ export function InviteMembersModal({
   return (
     <div
       className={modal.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

@@ -43,7 +43,7 @@ export function MentorDetailSkeleton() {
       </header>
 
       <div className={styles.grid}>
-        <main>
+        <div>
           {[0, 1, 2].map((s) => (
             <section key={s} className={styles.sec}>
               <SkeletonLine
@@ -64,7 +64,7 @@ export function MentorDetailSkeleton() {
               <SkeletonLine width="80%" height={16} />
             </section>
           ))}
-        </main>
+        </div>
 
         <aside className={styles.side}>
           <div className={styles.sideCard}>

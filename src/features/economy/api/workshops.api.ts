@@ -5,6 +5,7 @@ import {
   apiPost,
 } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
+import type { WorkshopRsvpStatus } from "./workshopRsvp.api";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
 // The workshops domain. Three fields the prototype's `Workshop` renders are
@@ -63,8 +64,12 @@ export interface WorkshopDTO {
   heroTint: string | null;
   /** Course length in weeks — one half of the client-composed `format` line. */
   weeks: number;
-  /** Cohort size — the other half, and the render shape's `spotsTotal`. */
-  size: number;
+  /** Cohort size — the other half of `format`, and the render shape's
+      `spotsTotal`. NAMED FOR THE WIRE: the backend calls this `spotsTotal` on
+      both the read DTO and the create DTO. It was `size` here, which meant
+      reads resolved to undefined and creates were rejected outright by the
+      global ValidationPipe's `forbidNonWhitelisted`. */
+  spotsTotal: number;
   spotsFilled: number;
   /** Numeric price + ISO 4217 code; formatted for display client-side. */
   price: number;
@@ -82,6 +87,13 @@ export interface WorkshopDTO {
   tags: string[];
   /** True when the viewer is the host (PATCH/DELETE are host-only). */
   isHost?: boolean;
+  /**
+   * The viewer's own booking on this workshop, or `null` when they have none.
+   * Only the detail route fills this in — cards never render a reserve control,
+   * so the list endpoint deliberately leaves it null rather than pay for a
+   * per-row lookup.
+   */
+  myRsvpStatus?: WorkshopRsvpStatus;
   /** Stands in for the render shape's `added` flag. */
   createdAt: string;
 }
@@ -93,7 +105,7 @@ export interface CreateWorkshopDto {
   cat: string;
   mode: string;
   weeks: number;
-  size: number;
+  spotsTotal: number;
   price: number;
   currency: string;
   venue?: string;

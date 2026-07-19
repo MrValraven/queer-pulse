@@ -8,6 +8,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { memberProfiles } from "../members/data/memberProfiles";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Skill } from "./skills.data";
 import styles from "./SkillsPage.module.css";
 
@@ -27,8 +28,11 @@ export function SkillCard({ skill }: { skill: Skill }) {
       </div>
       <div>
         <div className={styles.skill}>{skill.skill}</div>
-        <div className={styles.name}>
-          {member.first} {member.last}
+        <div className={styles.nameRow}>
+          <div className={styles.name}>
+            {member.first} {member.last}
+          </div>
+          <MemberStaffBadge slug={skill.member} />
         </div>
       </div>
       <div className={styles.desc}>{skill.desc}</div>

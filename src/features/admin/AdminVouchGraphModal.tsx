@@ -161,13 +161,18 @@ export function AdminVouchGraphModal({
   }, [onClose]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={styles.shell}
         role="dialog"
         aria-modal="true"
         aria-label={t("admin:vouchGraph.modal.ariaLabel")}
-        onClick={(e) => e.stopPropagation()}
       >
         <header className={styles.top}>
           <div className={styles.titleBlock}>

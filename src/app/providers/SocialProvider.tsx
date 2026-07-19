@@ -12,6 +12,7 @@ import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { logError } from "../../shared/observability/logger";
+import { useSessionBootstrapSettled } from "../../shared/api/useSessionBootstrap";
 import {
   blockMember,
   getBlocks,
@@ -82,6 +83,7 @@ export function SocialProvider({ children }: { children: ReactNode }) {
   const { loggedIn } = useAuth();
   const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const bootstrapSettled = useSessionBootstrapSettled();
   const [state, setState] = useState<SocialState>(readInitial);
 
   // Demo mode is the only durable store; live mode's truth is the server.
@@ -96,14 +98,18 @@ export function SocialProvider({ children }: { children: ReactNode }) {
 
   // Live-mode hydration. Idle in demo mode, and until the member is signed in —
   // firing these while logged out just 401s and hammers the refresh endpoint.
+  // Also idle until the session bootstrap has settled: it seeds these exact
+  // cache keys, so waiting lets a successful bootstrap warm the cache and
+  // skip this fetch entirely, while a failed/inapplicable bootstrap still
+  // opens the gate so this falls back to its own endpoint.
   const blocksQuery = useQuery({
     queryKey: ["blocks", demoMode],
-    enabled: !demoMode && loggedIn,
+    enabled: !demoMode && loggedIn && bootstrapSettled,
     queryFn: () => getBlocks(),
   });
   const mutesQuery = useQuery({
     queryKey: ["mutes", demoMode],
-    enabled: !demoMode && loggedIn,
+    enabled: !demoMode && loggedIn && bootstrapSettled,
     queryFn: () => getMutes(),
   });
 

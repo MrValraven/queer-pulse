@@ -63,6 +63,7 @@ export function ConnectModal({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(event) => {
         if (event.target === event.currentTarget && phase !== "sending")
           onClose();

@@ -131,6 +131,7 @@ export function ServerErrorPage() {
                   i18nKey="system:serverError.status.maintenance"
                   components={{
                     strong: <strong />,
+                    // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
                     a: <a href="https://status.queerpulse.pt" />,
                   }}
                 />
@@ -139,6 +140,7 @@ export function ServerErrorPage() {
                   i18nKey="system:serverError.status.error"
                   components={{
                     strong: <strong />,
+                    // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
                     a: <a href={routes.status} />,
                   }}
                 />
@@ -177,6 +179,7 @@ export function ServerErrorPage() {
         <p>
           <Translation
             i18nKey="system:serverError.footer.contact"
+            // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
             components={{ a: <a href="mailto:help@queerpulse.pt" /> }}
           />
         </p>

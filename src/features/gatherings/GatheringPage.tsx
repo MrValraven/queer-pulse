@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { JoinVouchCallout } from "./JoinVouchCallout";
 import {
@@ -143,12 +144,15 @@ export function GatheringPage() {
                   />
                   <div>
                     <div className={styles.hostName}>
-                      <Link
-                        to={`/members/${host.slug}`}
-                        style={{ color: "var(--ink)" }}
-                      >
-                        {host.first} {host.last}
-                      </Link>
+                      <span className={styles.nameRow}>
+                        <Link
+                          to={`/members/${host.slug}`}
+                          style={{ color: "var(--ink)" }}
+                        >
+                          {host.first} {host.last}
+                        </Link>
+                        <MemberStaffBadge slug={host.slug} />
+                      </span>
                     </div>
                     <div className={styles.hostRole}>
                       {host.role.split("·")[0]!.trim()}

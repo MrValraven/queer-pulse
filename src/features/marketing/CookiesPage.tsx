@@ -67,6 +67,10 @@ export function CookiesPage() {
                       )}
                     </div>
                     <label className={styles.toggle}>
+                      {/* The switch's only visible name sits in .cardTitle,
+                          which is not associated with the control — so the
+                          label carries it for assistive tech. */}
+                      <span className="visuallyHidden">{t(cat.titleKey)}</span>
                       <input
                         type="checkbox"
                         checked={cat.required ? true : (toggle?.value ?? false)}

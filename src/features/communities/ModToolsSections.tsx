@@ -1,6 +1,7 @@
 import { FiCheck, FiX, FiFlag, FiUserPlus, FiShield } from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { LivingCommunity } from "./community.model";
 import { photoOf } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
@@ -55,7 +56,10 @@ export function ModJoinRequests({
               alt={r.person.name}
             />
             <div className={styles.modMain}>
-              <div className={styles.modName}>{r.person.name}</div>
+              <div className={styles.modName}>
+                {r.person.name}
+                <MemberStaffBadge slug={r.person.slug} />
+              </div>
               {r.note && <div className={styles.modNote}>“{r.note}”</div>}
               <div className={styles.modMeta}>
                 {t("communities:detail.modtools.joinRequests.requestedAgo", {
@@ -186,6 +190,7 @@ export function ModMemberManagement({
               <div className={styles.modName}>
                 {m.name}{" "}
                 <RoleBadge role={promoted.includes(key) ? "mod" : m.role} />
+                <MemberStaffBadge slug={m.slug} />
               </div>
               {m.title && <div className={styles.modMeta}>{m.title}</div>}
             </div>

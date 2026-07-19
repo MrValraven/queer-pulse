@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiCheck, FiClock, FiMapPin } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Profile } from "./flatmates.data";
 import styles from "./FlatmatesPage.module.css";
 
@@ -27,9 +28,12 @@ export function FlatmateCard({
           size={52}
         />
         <div className={styles.identity}>
-          <Link to={`/members/${p.slug}`} className={styles.name}>
-            {p.name}
-          </Link>
+          <span className={styles.nameRow}>
+            <Link to={`/members/${p.slug}`} className={styles.name}>
+              {p.name}
+            </Link>
+            <MemberStaffBadge slug={p.slug} />
+          </span>
           <div className={styles.pronouns}>{p.pronouns}</div>
         </div>
         <span

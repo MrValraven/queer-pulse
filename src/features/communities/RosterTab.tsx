@@ -4,6 +4,7 @@ import { FiCheck, FiMessageCircle } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { RosterMember } from "./community.model";
 import { photoOf } from "./communityPeople";
 import { alsoIn } from "./communityConnections";
@@ -69,13 +70,19 @@ export function RosterTab({
               />
             </div>
             <div className={styles.rosterName}>
-              {m.slug ? (
-                <Link to={`/members/${m.slug}`} className={styles.rosterLink}>
-                  {m.name}
-                </Link>
-              ) : (
-                m.name
-              )}
+              <span className={styles.nameRow}>
+                {m.slug ? (
+                  <Link
+                    to={`/members/${m.slug}`}
+                    className={styles.rosterLink}
+                  >
+                    {m.name}
+                  </Link>
+                ) : (
+                  m.name
+                )}
+                <MemberStaffBadge slug={m.slug} />
+              </span>
             </div>
             <div className={styles.rosterBadgeRow}>
               <RoleBadge role={m.role} />

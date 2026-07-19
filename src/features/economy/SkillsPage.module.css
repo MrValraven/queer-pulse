@@ -172,6 +172,12 @@
   color: var(--ink-60);
   margin-top: 3px;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .desc {
   font-size: 13.5px;
   color: var(--ink-60);

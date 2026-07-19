@@ -3,6 +3,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { fullName, type Member } from "../members/data/members";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./WorkHubPage.module.css";
 
 /** Share of the employer-facing profile fields the member has actually filled. */
@@ -44,6 +45,7 @@ export function WorkProfileCard() {
             {profile.pronouns && (
               <span className={styles.pPronouns}>{profile.pronouns}</span>
             )}
+            <MemberStaffBadge slug={profile.slug} />
           </div>
           <div className={styles.pHeadline}>{profile.role}</div>
           <div className={styles.pLocation}>{profile.hood}</div>

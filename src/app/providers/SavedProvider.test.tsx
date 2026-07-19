@@ -1,0 +1,114 @@
+import { renderHook, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
+
+const savedPage = {
+  items: [
+    { id: "article:one", kind: "article", title: "One", savedAt: "2026-01-01T00:00:00Z" },
+  ],
+  total: 1,
+  page: 1,
+  pageSize: 20,
+};
+
+async function loadLiveSaved(client: QueryClient) {
+  vi.resetModules();
+  vi.stubEnv("VITE_API_URL", "http://localhost:3000");
+  vi.stubEnv("VITE_DEMO", "");
+
+  const getSaved = vi.fn();
+  vi.doMock("../../features/members/api/saved.api", async () => ({
+    ...(await vi.importActual("../../features/members/api/saved.api")),
+    getSaved,
+  }));
+  vi.doMock("./authContext", () => ({
+    useAuth: () => ({ loggedIn: true, user: { profile: { slug: "tiago-costa" } } }),
+  }));
+
+  const { SavedProvider, useSaved } = await import("./SavedProvider");
+  const { DemoModeProvider } = await import("./DemoModeProvider");
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>
+      <DemoModeProvider>
+        <SavedProvider>{children}</SavedProvider>
+      </DemoModeProvider>
+    </QueryClientProvider>
+  );
+  return { useSaved, wrapper, getSaved };
+}
+
+/**
+ * Variant of `loadLiveSaved` for the fallback path: no `["bootstrap"]` data is
+ * pre-seeded, and `getBootstrap` itself is mocked to reject, so
+ * `useSessionBootstrap`'s query runs for real and settles with `isError: true`
+ * and no data — simulating a 404 (frontend ahead of backend), a 500, or a
+ * member with no profile row.
+ */
+async function loadLiveSavedBootstrapError(client: QueryClient) {
+  vi.resetModules();
+  vi.stubEnv("VITE_API_URL", "http://localhost:3000");
+  vi.stubEnv("VITE_DEMO", "");
+
+  const getSaved = vi.fn().mockResolvedValue(savedPage);
+  vi.doMock("../../features/members/api/saved.api", async () => ({
+    ...(await vi.importActual("../../features/members/api/saved.api")),
+    getSaved,
+  }));
+  vi.doMock("../../shared/api/bootstrap.api", async () => ({
+    ...(await vi.importActual("../../shared/api/bootstrap.api")),
+    getBootstrap: vi.fn().mockRejectedValue(new Error("bootstrap unavailable")),
+  }));
+  vi.doMock("./authContext", () => ({
+    useAuth: () => ({ loggedIn: true, user: { profile: { slug: "tiago-costa" } } }),
+  }));
+
+  const { SavedProvider, useSaved } = await import("./SavedProvider");
+  const { DemoModeProvider } = await import("./DemoModeProvider");
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>
+      <DemoModeProvider>
+        <SavedProvider>{children}</SavedProvider>
+      </DemoModeProvider>
+    </QueryClientProvider>
+  );
+  return { useSaved, wrapper, getSaved };
+}
+
+beforeEach(() => {
+  window.localStorage.clear();
+});
+
+describe("SavedProvider (live mode)", () => {
+  it("hydrates from the bootstrap payload without calling getSaved", async () => {
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    client.setQueryData(["bootstrap"], {
+      profile: { slug: "tiago-costa", limited: false },
+      saved: savedPage,
+      blocks: { items: [], total: 0, page: 1, pageSize: 20 },
+      mutes: { items: [], total: 0, page: 1, pageSize: 20 },
+    });
+
+    const { useSaved, wrapper, getSaved } = await loadLiveSaved(client);
+    const { result } = renderHook(() => useSaved(), { wrapper });
+
+    await waitFor(() => expect(result.current.items).toHaveLength(1));
+    expect(result.current.isSaved("article:one")).toBe(true);
+    expect(getSaved).not.toHaveBeenCalled();
+  });
+
+  it("falls back to getSaved when the bootstrap query settles in error", async () => {
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    // No ["bootstrap"] data seeded: the real (mocked-to-reject) getBootstrap
+    // runs, so the query settles with isError: true and no data — this is what
+    // must trigger the fallback. Without it, `items` would stay empty forever
+    // and this assertion would time out.
+
+    const { useSaved, wrapper, getSaved } = await loadLiveSavedBootstrapError(client);
+    const { result } = renderHook(() => useSaved(), { wrapper });
+
+    await waitFor(() => expect(result.current.items).toHaveLength(1));
+    expect(result.current.isSaved("article:one")).toBe(true);
+    expect(getSaved).toHaveBeenCalledTimes(1);
+  });
+});

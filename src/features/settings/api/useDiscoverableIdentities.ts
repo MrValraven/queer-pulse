@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   getDiscoverableIdentities,
@@ -38,6 +38,14 @@ export interface DiscoverableIdentitiesState {
 export function useDiscoverableIdentities(
   /** The member's private identities, for demo mode's `available`. */
   demoAvailable: string[],
+  /**
+   * Bump to re-read the server's sets — pass the profile save counter. Adding a
+   * private identity changes what the server considers publishable, and removing
+   * one silently prunes it from the published set, so the ONLY correct response
+   * to a profile save is to ask the server again rather than to patch either set
+   * locally from the draft.
+   */
+  reloadKey: number = 0,
 ): DiscoverableIdentitiesState {
   const { demoMode } = useDemoMode();
   const [available, setAvailable] = useState<string[]>([]);
@@ -45,16 +53,22 @@ export function useDiscoverableIdentities(
   const [loading, setLoading] = useState(!demoMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
+  const loadedOnce = useRef(false);
 
   useEffect(() => {
     // Demo mode never fetches; `loading` is derived as false for it below
     // rather than set here, so this effect only ever drives the live path.
     if (demoMode) return;
     let cancelled = false;
-    setLoading(true);
+    // Only the FIRST read blanks the pane. A post-save re-read keeps the
+    // existing switches on screen while it resolves — flashing them away and
+    // back would read as "your disclosures were dropped".
+    if (!loadedOnce.current) setLoading(true);
+    setError(false);
     getDiscoverableIdentities()
       .then((dto) => {
         if (cancelled) return;
+        loadedOnce.current = true;
         setAvailable(dto.available);
         setPublishedState(dto.published);
       })
@@ -70,7 +84,7 @@ export function useDiscoverableIdentities(
     return () => {
       cancelled = true;
     };
-  }, [demoMode]);
+  }, [demoMode, reloadKey]);
 
   const setPublished = useCallback(
     async (identity: string, next: boolean): Promise<boolean> => {

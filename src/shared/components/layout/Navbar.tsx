@@ -202,16 +202,18 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
       {isMobile && drawerOpen && (
         <div
           className={styles.drawer}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t("nav:menu")}
-          onClick={closeDrawer}
+          role="presentation"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeDrawer();
+          }}
         >
           <div
             ref={drawerPanelRef}
             className={styles.drawerPanel}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("nav:menu")}
             tabIndex={-1}
-            onClick={(event) => event.stopPropagation()}
           >
             <MegaNavDrawer onNavigate={closeDrawer} />
             <Link

@@ -11,12 +11,14 @@ import { ConsentProvider } from "./providers/ConsentProvider";
 import { RealtimeProvider } from "../shared/api/realtime";
 import { I18nProvider } from "./providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
+import { PlatformLockProvider } from "./providers/PlatformLockProvider";
 import { ConnectProvider } from "./providers/ConnectProvider";
 import { ConnectionsProvider } from "./providers/ConnectionsProvider";
 import { ProfileProvider } from "./providers/ProfileProvider";
 import { PublicProfileProvider } from "./providers/PublicProfileProvider";
 import { ProfileThemeProvider } from "./providers/ProfileThemeProvider";
 import { VouchProvider } from "./providers/VouchProvider";
+import { SessionBootstrapProvider } from "./providers/SessionBootstrapProvider";
 import { WorkProfileProvider } from "./providers/WorkProfileProvider";
 import { EmployerAffiliationProvider } from "./providers/EmployerAffiliationProvider";
 import { PostedJobsProvider } from "./providers/PostedJobsProvider";
@@ -82,10 +84,19 @@ const RootProviders = composeProviders([
   NavModeProvider,
   I18nProvider,
   ToastProvider,
+  // Platform-lockdown render gate: needs AuthProvider above it (reads `role`,
+  // to never trap the one admin who could lift the lockdown) and I18nProvider
+  // above it (the maintenance screen calls `t()`). Placed last so it only
+  // gates what RootProviders wraps — the ErrorBoundary/BrowserRouter/routed
+  // app passed in as `children` below — while everything above it (toasts,
+  // consent, realtime, nav mode) keeps working normally and is ready
+  // immediately if the lockdown lifts.
+  PlatformLockProvider,
 ]);
 
 // Member/session state that only needs to wrap the routed UI (inside the router).
 const DataProviders = composeProviders([
+  SessionBootstrapProvider,
   WorkProfileProvider,
   EmployerAffiliationProvider,
   PostedJobsProvider,
@@ -94,7 +105,6 @@ const DataProviders = composeProviders([
   PublicProfileProvider,
   ProfileThemeProvider,
   ConnectionsProvider,
-  ConnectProvider,
   VouchProvider,
   SavedProvider,
   DraftsProvider,
@@ -102,6 +112,12 @@ const DataProviders = composeProviders([
   CommunityMembershipProvider,
   DirectoryListingsProvider,
   WorkshopsProvider,
+  // Innermost on purpose: ConnectProvider renders <ConnectModal> as a sibling
+  // of its children, so the modal only sees contexts provided ABOVE it. It
+  // calls useConnectionActions → useSocial/useConnections, so it must sit below
+  // SocialProvider and ConnectionsProvider. Keep any provider whose state the
+  // modal consumes above this line.
+  ConnectProvider,
 ]);
 
 export function App() {

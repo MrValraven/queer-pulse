@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { routes } from "../../app/routeMap";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Author } from "./authorContent.data";
 import styles from "./AuthorPage.module.css";
 
@@ -21,7 +22,12 @@ export function AuthorHeader({ author }: { author: Author }) {
           {/* Content: eyebrow/name/role/bio/pronouns are the writer's own
               profile fields — kept in English like a member bio. */}
           <div className={styles.eyebrow}>{author.eyebrow}</div>
-          <h1 className={styles.name}>{author.name}</h1>
+          <h1 className={styles.name}>
+            <span className={styles.nameRow}>
+              {author.name}
+              <MemberStaffBadge slug={author.slug} />
+            </span>
+          </h1>
           <div className={styles.role}>{author.role}</div>
           <p className={styles.bio}>{author.bio}</p>
           <div className={styles.metaRow}>

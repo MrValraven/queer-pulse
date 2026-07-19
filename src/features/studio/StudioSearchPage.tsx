@@ -70,7 +70,6 @@ export function StudioSearchPage() {
           placeholder={t("studio:search.inputPlaceholder")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          autoFocus
         />
       </div>
 

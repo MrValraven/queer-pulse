@@ -1,6 +1,6 @@
 import type { IconType } from "react-icons";
 import { FiCalendar, FiCamera, FiHeart, FiTag } from "react-icons/fi";
-import type { SpotsLabel } from "./data";
+import { gatheringPath, type SpotsLabel } from "./data";
 
 /**
  * i18n Pattern A — the data file holds catalog *keys*, the component resolves
@@ -67,7 +67,7 @@ export const FEATURED: {
     title: "Queer Supper Club №12",
     hood: "Mouraria",
     spots: { key: "gatherings:spots.seatsLeft", values: { count: 8 } },
-    to: "/gathering",
+    to: gatheringPath("supper-club-12"),
   },
   {
     date: new Date(2026, 5, 14),

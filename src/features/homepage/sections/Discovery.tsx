@@ -11,8 +11,8 @@ import {
 import { usePrefersReducedMotion } from "../../../shared/hooks";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../../shared/staff/MemberStaffBadge";
 import { routes } from "../../../app/routeMap";
-import { useConnect } from "../../../app/providers/ConnectProvider";
 import { members } from "../data/members";
 import type { Member } from "../data/types";
 import { featuredSpotlights, highlightRowKeys } from "./Discovery.data";
@@ -62,7 +62,6 @@ const ROTATE_MS = 5500;
 
 /** One featured member: big portrait on the left, their story on the right. */
 function SpotlightFace({ member, quote }: Spotlight) {
-  const { openConnect } = useConnect();
   const { t } = useTranslation();
   const to = profilePath(member);
   const portrait = portraitSrc(member.photo);
@@ -107,9 +106,12 @@ function SpotlightFace({ member, quote }: Spotlight) {
         <span className={styles.capMeta}>
           {t("homepage:discovery.featuredMember")}
         </span>
-        <Link to={to} className={styles.nameLink}>
-          <h3 className={styles.name}>{member.name}</h3>
-        </Link>
+        <span className={styles.nameRow}>
+          <Link to={to} className={styles.nameLink}>
+            <h3 className={styles.name}>{member.name}</h3>
+          </Link>
+          <MemberStaffBadge slug={member.key} />
+        </span>
         <p className={styles.role}>
           {member.role} · {member.hood}
         </p>
@@ -127,26 +129,12 @@ function SpotlightFace({ member, quote }: Spotlight) {
               {t("homepage:discovery.vouchedBy", { name: member.vouchedBy })}
             </span>
           )}
-          {member.visibility === "private" ? (
-            <Link to={to} className={styles.sayHi}>
-              {t("homepage:discovery.viewProfile")} <span aria-hidden>→</span>
-            </Link>
-          ) : (
-            <span
-              role="button"
-              tabIndex={0}
-              className={styles.sayHi}
-              onClick={() => openConnect(member.key)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  openConnect(member.key);
-                }
-              }}
-            >
-              {t("homepage:discovery.sayHello")} <span aria-hidden>→</span>
-            </span>
-          )}
+          {/* The card is a teaser: send people to the profile to read the full
+              story first. Reaching out happens from there, so the Connect modal
+              has one entry point instead of two. */}
+          <Link to={to} className={styles.sayHi}>
+            {t("homepage:discovery.viewProfile")} <span aria-hidden>→</span>
+          </Link>
         </div>
       </div>
     </div>
@@ -252,7 +240,10 @@ function MemberRow({ member }: { member: Member }) {
         alt={member.name}
       />
       <span className={styles.rowMeta}>
-        <span className={styles.rowName}>{member.name}</span>
+        <span className={styles.nameRow}>
+          <span className={styles.rowName}>{member.name}</span>
+          <MemberStaffBadge slug={member.key} />
+        </span>
         <span className={styles.rowSub}>
           {member.role} · {member.hood}
         </span>

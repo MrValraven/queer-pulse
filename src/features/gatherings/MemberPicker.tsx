@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { CohostCandidate } from "./manageCohosts.data";
 import styles from "./ManageCohosts.module.css";
 
@@ -87,7 +88,12 @@ export function MemberPicker({
                   size={38}
                 />
                 <div className={styles.pickerInfo}>
-                  <div className={styles.pickerName}>{c.name}</div>
+                  <div className={styles.pickerName}>
+                    <span className={styles.nameRow}>
+                      {c.name}
+                      <MemberStaffBadge slug={c.slug} />
+                    </span>
+                  </div>
                   <div className={styles.pickerRole}>{c.role}</div>
                 </div>
                 {multiSelect && (

@@ -175,6 +175,7 @@ function GatheringPhotosFooter() {
             i18nKey="gatherings:photos.policyBody2"
             components={{
               em: <em />,
+              // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
               mailLink: <a href="mailto:photos@queerpulse.app" />,
               privLink: <Link to={routes.privacy} />,
             }}

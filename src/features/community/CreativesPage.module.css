@@ -468,6 +468,11 @@
   align-items: center;
   gap: 2px;
 }
+.waveform:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 .wfBar {
   flex: 1;
   border-radius: 2px;

@@ -10,6 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type {
   LivingCommunity,
   Post,
@@ -105,7 +106,9 @@ function PulsePost({
         />
         <div className={styles.pWho}>
           <div className={styles.pName}>
-            {post.author.name} <RoleBadge role={roleOf(post.author)} />
+            {post.author.name}{" "}
+            <MemberStaffBadge slug={post.author.slug} />{" "}
+            <RoleBadge role={roleOf(post.author)} />
           </div>
           <div className={styles.pTime}>
             {t("communities:common.timeAgo", { time: post.time })}
@@ -143,6 +146,7 @@ function PulsePost({
           </div>
           <div>
             <span className={styles.rName}>{rep.author.name}</span>{" "}
+            <MemberStaffBadge slug={rep.author.slug} />{" "}
             <span className={styles.rTime}>{rep.time}</span>
             <div className={styles.rText}>{rep.text}</div>
           </div>

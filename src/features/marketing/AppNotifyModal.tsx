@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -19,12 +19,20 @@ export function AppNotifyModal({
   const [sent, setSent] = useState(false);
   useScrollLock();
 
+  // Focus moves into the dialog on open — correct for a modal, and announced as
+  // such because the move happens on mount rather than mid-page via autofocus.
+  const emailRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
+
   const valid = /.+@.+\..+/.test(email);
   const store = platform === "iOS" ? "App Store" : "Google Play";
 
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -94,12 +102,12 @@ export function AppNotifyModal({
                 <span className={styles.req}>*</span>
               </label>
               <input
+                ref={emailRef}
                 id="notify-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                autoFocus
               />
               <span className={styles.hint}>
                 {t("marketing:appNotify.emailHint")}

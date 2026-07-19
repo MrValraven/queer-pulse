@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { AddCohostModal } from "./AddCohostModal";
 import { INITIAL_COHOSTS, type CohostCandidate } from "./manageCohosts.data";
 import { useAddCohost, useRemoveCohost } from "./api/useEventMutations";
@@ -67,7 +68,12 @@ export function CohostManager({ slug }: { slug: string }) {
                 size={40}
               />
               <div className={styles.cohostInfo}>
-                <div className={styles.cohostName}>{c.name}</div>
+                <div className={styles.cohostName}>
+                  <span className={styles.nameRow}>
+                    {c.name}
+                    <MemberStaffBadge slug={c.slug} />
+                  </span>
+                </div>
                 <div className={styles.cohostRole}>{c.role}</div>
               </div>
               {confirming === c.slug ? (

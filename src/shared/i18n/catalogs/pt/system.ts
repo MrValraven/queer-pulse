@@ -89,10 +89,6 @@ export const system: Catalog = {
     "<b>Nova localização:</b> tentativa a partir de <b>Madrid, Espanha</b> — costumas iniciar sessão a partir de Lisboa.",
   "accountLocked.reason3":
     "<b>O bloqueio vai levantar-se automaticamente</b> dentro de 23 minutos — ou usa uma das opções abaixo para desbloquear já.",
-  "accountLocked.whatNow.magicLink.title":
-    "Inicia sessão com uma ligação mágica",
-  "accountLocked.whatNow.magicLink.desc":
-    "A opção mais rápida se és mesmo tu — confirmação por email.",
   "accountLocked.whatNow.contact.title": "Contactar a equipa",
   "accountLocked.whatNow.contact.desc":
     "Se nada disto resultar, escreve-nos e verificamos-te manualmente.",
@@ -480,4 +476,19 @@ export const system: Catalog = {
   "verificationNeeded.expired.sub":
     "Por segurança, a verificação só fica disponível durante alguns minutos. Recomeça para continuar.",
   "verificationNeeded.expired.restartCta": "Recomeçar",
+
+  // ── Ecrã de bloqueio da plataforma (estado de manutenção do kill-switch) ──
+  // Ver a nota de desvio em en/system.ts: "maintenance.eyebrow" já existe
+  // acima para o kicker da MaintenancePage.tsx ("Manutenção agendada"), por
+  // isso esta chave nova ficou "maintenance.brandEyebrow" em vez do nome do
+  // brief, para evitar uma chave duplicada no mesmo objeto (erro de tsc).
+  "maintenance.brandEyebrow": "QueerPulse",
+  "maintenance.title": "Já voltamos",
+  // Só usado como recurso — quando a administração define a própria
+  // mensagem, é essa que aparece.
+  "maintenance.body":
+    "A QueerPulse está temporariamente indisponível. Volta a passar por aqui em breve.",
+  "maintenance.stillSignedIn":
+    "A tua sessão continua iniciada. Está tudo à tua espera quando voltarmos.",
+  "maintenance.retry": "Tentar outra vez",
 };

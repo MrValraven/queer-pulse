@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiCheck, FiImage, FiUploadCloud } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PhotoUploadModal.module.css";
@@ -30,6 +30,7 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
   const [picked, setPicked] = useState(0);
   const [caption, setCaption] = useState("");
   const [done, setDone] = useState(false);
+  const captionRef = useFocusOnMount<HTMLInputElement>();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -40,7 +41,13 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
   }, [onClose]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={
           done ? `${styles.dialog} ${styles.dialogConfirm}` : styles.dialog
@@ -48,7 +55,6 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="photo-title"
-        onClick={(e) => e.stopPropagation()}
       >
         {done ? (
           <div className={styles.confirm}>
@@ -122,12 +128,12 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
             </label>
             <input
               id="photo-caption"
+              ref={captionRef}
               className={styles.input}
               type="text"
               placeholder={t("gatherings:recap.upload.captionPlaceholder")}
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              autoFocus
             />
 
             <div className={styles.dialogActions}>

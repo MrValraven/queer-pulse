@@ -201,6 +201,13 @@
   font-weight: 700;
   text-decoration: none;
 }
+/* Groups the mentioner's name with their staff badge (when they have one) so
+   the two move as a single unit rather than the badge floating loose. */
+.whoName {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 .who span {
   color: var(--ink-60);
 }

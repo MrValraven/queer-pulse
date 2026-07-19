@@ -3,6 +3,7 @@ import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useVouch } from "../../app/providers/VouchProvider";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import {
   memberProfiles,
   currentUserSlug,
@@ -89,7 +90,12 @@ export function HeroVouchRow({
                   zIndex: faces.length - index,
                 }}
               >
-                <span className={styles.vouchTip}>{face.name}</span>
+                <span className={styles.vouchTip}>
+                  <span className={styles.nameRow}>
+                    {face.name}
+                    <MemberStaffBadge slug={face.slug} />
+                  </span>
+                </span>
                 <Avatar
                   initials={face.initials}
                   tint={face.tint}

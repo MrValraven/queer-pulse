@@ -101,6 +101,19 @@
   color: var(--accent-ink);
 }
 
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+/* The badge renders null for non-staff members; without this the wrapper's
+   gap and margin leave stray space on almost every profile. */
+.badgeRow:empty {
+  display: none;
+}
+
 /* ---- Directory card preview ---------------------------------------------- */
 .previewWrap {
   margin-top: 16px;

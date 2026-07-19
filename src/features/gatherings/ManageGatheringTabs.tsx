@@ -452,6 +452,7 @@ function SettingsTab({ slug, onCancel }: SettingsTabProps) {
             <label className={styles.tglSw}>
               <input
                 type="checkbox"
+                aria-label={t(setting.titleKey)}
                 checked={toggles[setting.id] ?? false}
                 onChange={() =>
                   setToggles((prev) => ({

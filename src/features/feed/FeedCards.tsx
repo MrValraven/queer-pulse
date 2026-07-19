@@ -11,6 +11,7 @@ import {
 import { Avatar, EmptyState } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useSaved } from "../../app/providers/SavedProvider";
+import { useFocusOnMount } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { memberAvatar } from "../members/data/members";
@@ -22,6 +23,7 @@ import { FEED_POST, type FeedPost, type FeedReply } from "./feed.data";
 import { MoreMenu, ReportModal } from "./FeedModeration";
 import { useLikePost, useReplyToPost } from "./api/useFeedMutations";
 import { initials, relativeTime } from "./api/feed.adapters";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./FeedPage.module.css";
 
 export function GatheringCard() {
@@ -105,7 +107,12 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
           alt={name}
         />
         <div className={styles.nmInfo}>
-          <div className={styles.nmName}>{name}</div>
+          <div className={styles.nmName}>
+            <span className={styles.nameRow}>
+              {name}
+              <MemberStaffBadge slug={slug || undefined} />
+            </span>
+          </div>
           <div className={styles.nmMeta}>{meta}</div>
           <div className={styles.nmBio}>{bio}</div>
           {!item && (
@@ -141,6 +148,7 @@ function ReplyComposer({
 }) {
   const { t } = useTranslation();
   const [value, setValue] = useState("");
+  const inputRef = useFocusOnMount<HTMLTextAreaElement>();
   return (
     <form
       className={styles.composer}
@@ -157,12 +165,12 @@ function ReplyComposer({
       </label>
       <textarea
         id="reply-input"
+        ref={inputRef}
         className={styles.composerInput}
         placeholder={t("feed:composer.placeholder")}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         rows={2}
-        autoFocus
       />
       <div className={styles.composerRow}>
         <button type="button" className={styles.linkBtn} onClick={onCancel}>
@@ -264,7 +272,12 @@ export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
             size={36}
           />
           <div>
-            <div className={styles.paName}>{post.authorName}</div>
+            <div className={styles.paName}>
+              <span className={styles.nameRow}>
+                {post.authorName}
+                <MemberStaffBadge slug={post.slug} />
+              </span>
+            </div>
             <div className={styles.paTime}>
               {post.time} · {post.context}
             </div>
@@ -330,7 +343,10 @@ export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
         <ul className={styles.thread}>
           {replies.map((r) => (
             <li key={r.id} className={styles.reply}>
-              <span className={styles.replyAuthor}>{r.author}</span>
+              <span className={styles.replyAuthorRow}>
+                <span className={styles.replyAuthor}>{r.author}</span>
+                <MemberStaffBadge slug={r.authorSlug} />
+              </span>
               <span className={styles.replyBody}>{r.body}</span>
             </li>
           ))}

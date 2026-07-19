@@ -56,18 +56,21 @@
   font-style: italic;
   color: var(--accent);
 }
+.headText {
+  flex: 1 1 420px;
+}
 .headRight {
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-items: flex-start;
-  max-width: 34ch;
 }
 .sub {
   font-size: 15px;
   color: var(--ink-60);
   line-height: 1.6;
-  margin: 0;
+  margin: 14px 0 0;
+  max-width: 52ch;
 }
 
 /* ---------- toolbar ---------- */

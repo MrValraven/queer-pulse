@@ -41,6 +41,9 @@ export const homepage: Catalog = {
   "manifesto.assurance.vouched.title": "Convite ou aval",
   "manifesto.assurance.vouched.description":
     "Cada pessoa entra através de um aval ou de um pedido de convite analisado — nunca por inscrição aberta.",
+  "manifesto.assurance.safeSpaces.title": "Espaços seguros onde já estivemos",
+  "manifesto.assurance.safeSpaces.description":
+    "Locais que a nossa equipa de moderação visita em pessoa, com data de verificação à vista.",
   "manifesto.assurance.encrypted.title": "Encriptação de ponta a ponta",
   "manifesto.assurance.encrypted.description":
     "As mensagens diretas são encriptadas — as conversas privadas mantêm-se privadas.",
@@ -50,9 +53,6 @@ export const homepage: Catalog = {
   "manifesto.assurance.moderation.title": "Moderação 24 horas por dia",
   "manifesto.assurance.moderation.description":
     "As denúncias têm resposta real, normalmente em poucas horas — não em dias.",
-  "manifesto.assurance.quickExit.title": "Saída rápida, num toque",
-  "manifesto.assurance.quickExit.description":
-    "Sai de qualquer página no instante em que alguém olhar por cima do teu ombro.",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
   "trustStrip.vouched": "Só por convite e aval",

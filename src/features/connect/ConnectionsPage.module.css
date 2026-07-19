@@ -248,6 +248,12 @@
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .name a {
   color: inherit;
   text-decoration: none;

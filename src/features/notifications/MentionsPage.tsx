@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
+import { useFocusOnMount, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -17,6 +17,7 @@ import {
   type MentionActionType,
 } from "./mentions.data";
 import { MentionsListSkeleton } from "./MentionsSkeleton";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./MentionsPage.module.css";
 import type { TFunction } from "../../shared/i18n/types";
 
@@ -49,6 +50,7 @@ function ReplyComposer({
 }) {
   const { t } = useTranslation();
   const [value, setValue] = useState("");
+  const replyRef = useFocusOnMount<HTMLTextAreaElement>();
   return (
     <form
       className={styles.composer}
@@ -61,6 +63,7 @@ function ReplyComposer({
       }}
     >
       <textarea
+        ref={replyRef}
         className={styles.rcInput}
         rows={1}
         placeholder={t("notifications:mentions.composer.placeholder", {
@@ -68,7 +71,6 @@ function ReplyComposer({
         })}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        autoFocus
       />
       <button className={styles.rcSend} type="submit" disabled={!value.trim()}>
         {t("notifications:mentions.actions.reply")}
@@ -137,7 +139,10 @@ function MentionRow({
       <div className={styles.headRow}>
         <div className={`${styles.av} ${avClass[m.tint]}`}>{m.initials}</div>
         <div className={styles.who}>
-          <Link to={routes.members}>{m.name}</Link>
+          <span className={styles.whoName}>
+            <Link to={routes.members}>{m.name}</Link>
+            <MemberStaffBadge slug={m.actorSlug} />
+          </span>
           <span> · {m.context}</span>
         </div>
         <div className={`${styles.when} ${m.fresh ? styles.fresh : ""}`}>

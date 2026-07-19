@@ -20,7 +20,7 @@ export function BarterDetailSkeleton() {
       </div>
 
       <div className={styles.grid}>
-        <main>
+        <div>
           {[0, 1].map((i) => (
             <section key={i} className={styles.sec}>
               <SkeletonLine
@@ -78,7 +78,7 @@ export function BarterDetailSkeleton() {
               ))}
             </div>
           </section>
-        </main>
+        </div>
 
         <aside className={styles.side}>
           <div className={styles.sideCard}>

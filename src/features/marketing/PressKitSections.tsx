@@ -115,19 +115,9 @@ export function MarkSection() {
             </div>
             <div className={styles.logoMeta}>
               <span>{l.meta}</span>
-              <a
-                role="button"
-                tabIndex={0}
-                onClick={() => setOpen(i)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setOpen(i);
-                  }
-                }}
-              >
+              <button type="button" onClick={() => setOpen(i)}>
                 {t("marketing:pressKit.mark.downloadLinkLabel")}
-              </a>
+              </button>
             </div>
           </div>
         ))}
@@ -341,12 +331,11 @@ export function CoverageSection() {
       </p>
       <div className={styles.covList}>
         {COVERAGE.map((c, i) => (
-          <a
-            href="#"
+          <button
+            type="button"
             className={styles.covRow}
             key={i}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={() => {
               showToast(
                 t("marketing:pressKit.coverage.openingToast", {
                   source: c.source.split(" · ")[0] ?? c.source,
@@ -364,7 +353,7 @@ export function CoverageSection() {
               {c.day}
               <em>{c.month}</em>
             </div>
-          </a>
+          </button>
         ))}
       </div>
     </section>

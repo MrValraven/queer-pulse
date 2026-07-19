@@ -103,7 +103,7 @@ export function LandlordPage() {
           </header>
 
           <div className={s.grid}>
-            <main>
+            <div>
               <section className={s.sec}>
                 <h2>
                   {t("economy:landlordPage.section.about", {
@@ -156,7 +156,7 @@ export function LandlordPage() {
                   ))}
                 </div>
               </section>
-            </main>
+            </div>
 
             <aside className={s.side}>
               <div className={s.sideCard}>

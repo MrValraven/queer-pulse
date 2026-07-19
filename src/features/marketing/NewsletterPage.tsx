@@ -199,6 +199,9 @@ export function NewsletterPage() {
                     <div className={styles.trFreq}>{t(pref.freqKey)}</div>
                   </div>
                   <label className={styles.switch}>
+                    {/* The visible name lives in .trTitle, which is not tied to
+                        the control — the label carries it for assistive tech. */}
+                    <span className="visuallyHidden">{t(pref.titleKey)}</span>
                     <input
                       type="checkbox"
                       checked={pref.checked}

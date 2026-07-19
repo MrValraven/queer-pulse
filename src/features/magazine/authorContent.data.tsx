@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { routes } from "../../app/routeMap";
-import { memberName } from "../members/data/members";
+import { getMember, memberName } from "../members/data/members";
 import { AUTHOR_PORTRAIT_IMG, AUTHOR_FEATURE_IMG } from "./authorPage.data";
 
 export interface AuthorStat {
@@ -1485,15 +1485,33 @@ const MEMBER_NAMES: Record<string, string> = {
   "André Quintela": "andre",
 };
 
+export interface ResolvedWriter {
+  /** Router destination — the writer's magazine author page or member profile. */
+  to: string;
+  /**
+   * Member-registry slug for this writer, when they also have a member
+   * account — feeds `<MemberStaffBadge>` so a staff byline can carry the
+   * badge. Undefined for writers who have a bespoke magazine author page but
+   * no matching member entry (e.g. "Marta Reis") — never guessed from the
+   * name, only looked up against the real registry.
+   */
+  slug?: string;
+}
+
 /**
  * Resolve a byline name to a router destination, or null when it should stay
  * plain text (unknown names, photographer/illustrator credits).
  */
-export function resolveWriter(name: string): string | null {
+export function resolveWriter(name: string): ResolvedWriter | null {
   const key = name.trim();
   const authorSlug = AUTHOR_NAMES[key];
-  if (authorSlug) return `${routes.author}/${authorSlug}`;
+  if (authorSlug) {
+    return {
+      to: `${routes.author}/${authorSlug}`,
+      slug: getMember(authorSlug) ? authorSlug : undefined,
+    };
+  }
   const memberSlug = MEMBER_NAMES[key];
-  if (memberSlug) return `${routes.members}/${memberSlug}`;
+  if (memberSlug) return { to: `${routes.members}/${memberSlug}`, slug: memberSlug };
   return null;
 }

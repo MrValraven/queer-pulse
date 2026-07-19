@@ -1817,6 +1817,26 @@ export const economy: Catalog = {
   "workshopSidebar.taughtBy": "Dado por",
   "workshopSidebar.where": "Onde",
 
+  // ── WorkshopRsvpControl (reservar um lugar, a sério) ──────────────────────
+  "workshopRsvp.reserveCta": "Reservar um lugar",
+  "workshopRsvp.joinWaitlistCta": "Entrar na lista de espera",
+  "workshopRsvp.savingLabel": "Um momento…",
+  "workshopRsvp.holdingTitle": "O teu lugar está reservado.",
+  "workshopRsvp.holdingNote":
+    "Por agora não há mais nada a fazer — é só aparecer. Podes devolver o lugar quando quiseres, se os planos mudarem.",
+  "workshopRsvp.releaseCta": "Devolver o teu lugar",
+  "workshopRsvp.waitlistTitle": "Estás na lista de espera.",
+  "workshopRsvp.waitlistNote":
+    "Se alguém devolver um lugar, a fila anda e o teu pode ser o próximo. Volta aqui para ver — ainda não te conseguimos enviar nenhuma mensagem.",
+  "workshopRsvp.leaveWaitlistCta": "Sair da lista de espera",
+  "workshopRsvp.failedNote":
+    "Não foi possível concluir — nada mudou. Tenta outra vez daqui a pouco.",
+  "workshopRsvp.hostCountNone": "Ainda ninguém reservou lugar.",
+  "workshopRsvp.hostCount_one": "Há uma pessoa com lugar.",
+  "workshopRsvp.hostCount_other": "Há {count} pessoas com lugar.",
+  "workshopRsvp.hostNote":
+    "Só tu vês isto. Quem reservar depois de a turma encher fica em lista de espera, e sobe sozinhe se algum lugar ficar livre.",
+
   "workshopReserve.ariaLabel": "Reservar um lugar em {title}",
   "workshopReserve.success.title": "Lugar",
   "workshopReserve.success.em": "reservado.",
@@ -1906,8 +1926,13 @@ export const economy: Catalog = {
   "deleteWorkshop.title": "Eliminar este workshop?",
   "deleteWorkshop.body":
     "Eliminar é permanente. Sai de Competências e aprendizagem de imediato, e quem tiver o link não vai encontrar nada.",
-  "deleteWorkshop.attendeesNote":
-    "Não é enviada nenhuma mensagem a ninguém. Se há pessoas a contar vir, avisa-as tu primeiro — não vão saber por nós.",
+  // Ver a nota no catálogo EN: o número é real, o aviso continua a não existir.
+  "deleteWorkshop.attendeesNote_one":
+    "Há uma pessoa com lugar neste workshop. Eliminar tira-lho, e não é enviada nenhuma mensagem — se queres que saiba por ti, avisa-a primeiro.",
+  "deleteWorkshop.attendeesNote_other":
+    "Há {count} pessoas com lugar neste workshop. Eliminar tira-lhos, e não é enviada nenhuma mensagem — se queres que saibam por ti, avisa-as primeiro.",
+  "deleteWorkshop.noAttendeesNote":
+    "Ainda ninguém reservou lugar, por isso hoje ninguém perde nada.",
   "deleteWorkshop.keepCta": "Manter",
   "deleteWorkshop.confirmCta": "Eliminar workshop",
   "deleteWorkshop.deletingLabel": "A eliminar…",

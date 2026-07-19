@@ -23,16 +23,6 @@
   margin: 0;
 }
 
-.subtitleLeft {
-  font-size: 14px;
-  color: var(--ink-60);
-  max-width: 46ch;
-  line-height: var(--lh-body);
-  margin: 0;
-}
-.dark .subtitleLeft {
-  color: rgba(var(--cream-rgb), 0.62);
-}
 .title em {
   font-style: italic;
   color: var(--accent);
@@ -48,10 +38,9 @@
 .subtitle {
   font-size: 14px;
   color: var(--ink-60);
-  max-width: 30ch;
+  max-width: 46ch;
   line-height: var(--lh-body);
   margin: 0;
-  text-align: right;
 }
 
 .link {

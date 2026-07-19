@@ -426,26 +426,38 @@ export const admin: Catalog = {
   // ── Comunidades ────────────────────────────────────────────────────────────
   "communities.title": "Comunidades · <em>todos os espaços</em>",
   "communities.grid.eyebrow": "Comunidades",
-  "communities.grid.titleLine1": "Oito espaços,",
+  "communities.grid.titleLine1_one": "{spelled} espaço,",
+  "communities.grid.titleLine1_other": "{spelled} espaços,",
+  "communities.grid.titleLine1Unknown": "Espaços,",
   "communities.grid.titleLine2": "cada um <em>bem cuidado</em>.",
   "communities.grid.sub":
     "Cada comunidade tem uma pessoa moderadora que a conhece pelo nome. A saúde é o quão estável cada uma se sente — denúncias respondidas, pessoas acompanhadas, ninguém a passar despercebido.",
-  "communities.grid.newCta": "+ Nova comunidade",
-  "communities.grid.newToast":
-    "Criar uma nova comunidade abriria uma configuração guiada",
+  "communities.grid.loadError": "Não foi possível carregar as comunidades.",
   "communities.grid.healthAriaLabel": "Saúde {score}, ver detalhe",
   "communities.grid.needsHand": "· precisa de uma ajuda",
   "communities.grid.stat.members": "Pessoas",
   "communities.grid.stat.activity": "Atividade",
   "communities.grid.stat.openReports": "Denúncias em aberto",
   "communities.grid.sparklineAriaLabel":
-    "Tendência de saúde, mais recente {value}",
+    "Atividade semanal, mais recente {value}",
+  "communities.grid.emptyTitle": "<em>Ainda</em> não há espaços.",
+  "communities.grid.emptyText":
+    "Os espaços aqui nascem das pessoas, não da administração — quando o primeiro tomar forma, a sua saúde, as suas pessoas moderadoras e a sua fila vão aparecer aqui mesmo.",
+  // Classificação de atividade calculada pelo cálculo de saúde no servidor
+  // (interface, não texto obtido pela API) — ver adminCommunities.adapters.ts.
+  "communities.activityLabel.quiet": "Tranquila",
+  "communities.activityLabel.growing": "Em crescimento",
+  "communities.activityLabel.steady": "Estável",
+  "communities.activityLabel.active": "Ativa",
+  "communities.activityLabel.high": "Muito ativa",
+  "communities.activityLabel.busy": "Agitada",
 
   "communities.detail.backCta": "Todas as comunidades",
   "communities.detail.stewardedBy_one":
     "Cuidada por {count} pessoa moderadora · fundada em {founded}.",
   "communities.detail.stewardedBy_other":
     "Cuidada por {count} pessoas moderadoras · fundada em {founded}.",
+  "communities.detail.foundedOnly": "Fundada em {founded}.",
   "communities.detail.healthChip": "Saúde {score} · {label}",
   "communities.detail.settingsCta": "Definições",
   "communities.detail.settingsToast":
@@ -456,11 +468,13 @@ export const admin: Catalog = {
     "Uma pontuação de saúde tão baixa pede apoio, não é uma marca contra quem modera. {name} está a cuidar de {members} pessoas praticamente sozinha.",
   "communities.detail.supportBanner.textThin":
     "Uma pontuação de saúde tão baixa pede apoio, não é uma marca contra quem modera. {name} está a cuidar de {members} pessoas com uma equipa reduzida.",
+  "communities.detail.supportBanner.textNone":
+    "Uma pontuação de saúde tão baixa pede apoio, não é uma marca contra quem modera. Esta comunidade não tem, neste momento, qualquer pessoa a moderar, e {members} pessoas dependem dela.",
   "communities.detail.supportBanner.offerCta": "Oferecer apoio",
   "communities.detail.stat.members": "Pessoas",
   "communities.detail.stat.activeThisWeek": "Ativas esta semana",
   "communities.detail.stat.openReports": "Denúncias em aberto",
-  "communities.detail.stat.resolvedOnTime": "Resolvidas a tempo",
+  "communities.detail.stat.handled": "Tratadas",
   "communities.detail.tabs.queue": "Fila da comunidade",
   "communities.detail.tabs.members": "Pessoas",
   "communities.detail.tabs.settings": "Definições",
@@ -470,12 +484,17 @@ export const admin: Catalog = {
 
   "communities.queue.emptyTitle": "Nada em aberto, <em>nada por pagar</em>.",
   "communities.queue.emptyText":
-    "Esta comunidade resolve tudo por si própria — um registo de {pct}% a tempo. As pessoas que a moderam raramente precisam de ti.",
+    "Esta comunidade trata de tudo por si própria — uma taxa de {pct}% tratadas. As pessoas que a moderam raramente precisam de ti.",
   "communities.queue.moreHandled":
     "+ {count} a serem tratadas pelas próprias pessoas moderadoras da comunidade",
   "communities.queue.reviewCta": "Rever",
   "communities.members.moderatorChip": "Pessoa moderadora",
   "communities.members.seeAllCta": "Ver as {total} pessoas",
+  // Subtítulo de uma pessoa moderadora, composto a partir do papel
+  // owner/mod e da data de entrada da API (interface, não texto obtido pela
+  // API) — ver adminCommunities.adapters.ts.
+  "communities.moderators.roleLine.owner": "Fundou a comunidade",
+  "communities.moderators.roleLine.mod": "Modera desde {date}",
 
   "communities.settings.whoCanJoin": "Quem pode entrar",
   "communities.settings.moderators": "Pessoas moderadoras",
@@ -488,6 +507,8 @@ export const admin: Catalog = {
     "Exigir um segundo aval para entrar",
   "communities.settings.secondVouch.sub":
     "Torna o crescimento mais lento, aumenta a confiança. Recomendado para espaços de apoio.",
+  "communities.settings.secondVouch.unavailableSub":
+    "Ainda não disponível — a plataforma não regista esta definição.",
   "communities.settings.secondVouch.onToast":
     "Segundo aval agora obrigatório para entrar",
   "communities.settings.secondVouch.offToast":
@@ -496,6 +517,8 @@ export const admin: Catalog = {
     "Congelar automaticamente contas novas numa denúncia de doxxing",
   "communities.settings.autoFreeze.sub":
     "Ganha tempo para uma pessoa rever antes de o dano se espalhar.",
+  "communities.settings.autoFreeze.unavailableSub":
+    "Ainda não disponível — a plataforma não regista esta definição.",
   "communities.settings.autoFreeze.onToast":
     "Congelamento automático em denúncias de doxxing ativado",
   "communities.settings.autoFreeze.offToast":
@@ -514,15 +537,16 @@ export const admin: Catalog = {
     "A saúde é uma combinação ponderada de quatro sinais, recalculada todas as noites",
   "communities.health.offerSupportCta": "Oferecer apoio",
   "communities.health.closeCta": "Fechar",
+  "communities.health.notMeasured": "Ainda por medir",
   "communities.health.intro":
     "A saúde é uma combinação de quatro sinais, ponderada pelo tamanho da comunidade. É um termómetro, não uma nota —",
   "communities.health.breakdown.memberActivity.name": "Atividade das pessoas",
   "communities.health.breakdown.memberActivity.desc":
     "O quão viva a comunidade parece — publicações, respostas, presença",
   "communities.health.breakdown.reportResolution.name":
-    "Resolução de denúncias",
+    "Tratamento de denúncias",
   "communities.health.breakdown.reportResolution.desc":
-    "Percentagem de denúncias resolvidas dentro do prazo (SLA)",
+    "Percentagem de denúncias que deixaram de estar em aberto — resolvidas ou escaladas",
   "communities.health.breakdown.memberSentiment.name": "Sentimento das pessoas",
   "communities.health.breakdown.memberSentiment.desc":
     "Sondagens discretas e sinais de reação",
@@ -549,6 +573,8 @@ export const admin: Catalog = {
   "communities.support.option.message.title": "Enviar mensagem à moderação",
   "communities.support.option.message.sub":
     "Um contacto próximo com {names} — como podemos ajudar?",
+  "communities.support.option.message.subNoMods":
+    "Um contacto próximo com as pessoas moderadoras — como podemos ajudar?",
   "communities.support.option.buddy.title":
     "Atribuir uma pessoa da equipa por 2 semanas",
   "communities.support.option.buddy.sub":
@@ -905,4 +931,110 @@ export const admin: Catalog = {
     "Rede de confiança de {name}: {count} ligação de aval direta",
   "vouchGraph.preview.ariaLabel_other":
     "Rede de confiança de {name}: {count} ligações de aval diretas",
+
+  // ── Definições da plataforma (/admin/settings) ────────────────────────────
+  "settings.breadcrumb": "Definições",
+  "settings.eyebrow": "Plataforma",
+  "settings.title": "Definições da plataforma",
+  "settings.sub":
+    "Controlos de emergência para o registo e o acesso. As alterações fazem efeito em cerca de 10 segundos.",
+  "settings.tab.access": "Acesso",
+  "settings.tab.history": "Histórico",
+
+  "settings.registration.title": "Registo de novas contas",
+  "settings.registration.sub":
+    "Quando desligado, ninguém consegue criar uma conta nova. Quem já tem conta continua a entrar normalmente.",
+  "settings.joinRequests.title": "Pedidos de convite",
+  "settings.joinRequests.sub":
+    "Quando desligado, o formulário público de “pedir um convite” deixa de aceitar novos pedidos.",
+  "settings.closedMessage.label": "Mensagem mostrada quando os registos estão fechados",
+  "settings.closedMessage.placeholder":
+    "Explica em poucas palavras porque é que os registos estão em pausa.",
+
+  "settings.lockdown.title": "Bloqueio da plataforma",
+  "settings.lockdown.sub":
+    "Bloqueia a plataforma para toda a gente, exceto tu e outras pessoas da administração. As pessoas da comunidade continuam com sessão iniciada e veem um ecrã de manutenção.",
+  "settings.lockdown.allowMods": "Também deixar passar a moderação",
+  "settings.lockdown.allowModsSub":
+    "Útil durante um incidente — quem modera costuma ser quem está a resolvê-lo.",
+  "settings.lockdown.message.label": "Mensagem de manutenção",
+  "settings.lockdown.message.placeholder":
+    "O que as pessoas vão ver enquanto a plataforma estiver bloqueada.",
+  "settings.lockdown.youKeepAccess":
+    "És administração, por isso vais manter acesso total.",
+
+  "settings.presets.label": "Começar a partir de um modelo",
+  "settings.presets.hint":
+    "Os modelos preenchem a caixa — edita à vontade antes de guardar.",
+
+  // Modelos de mensagem para o bloqueio. Escolher um PREENCHE a caixa de texto;
+  // o valor guardado é sempre texto livre, por isso o backend nunca precisa de
+  // saber que os modelos existem.
+  "settings.presets.lockdown.scheduled.label": "Manutenção agendada",
+  "settings.presets.lockdown.scheduled.body":
+    "A QueerPulse está em baixo para uma manutenção planeada. Voltamos em breve — obrigade pela paciência.",
+  "settings.presets.lockdown.emergency.label": "Manutenção de emergência",
+  "settings.presets.lockdown.emergency.body":
+    "Tirámos a QueerPulse do ar por breves instantes para resolver um problema inesperado. Estamos a tratar disso.",
+  "settings.presets.lockdown.security.label": "Incidente de segurança",
+  "settings.presets.lockdown.security.body":
+    "A QueerPulse está temporariamente bloqueada enquanto investigamos uma questão de segurança. A tua conta está segura; partilhamos mais informação assim que pudermos.",
+  "settings.presets.lockdown.spam.label": "Onda de spam / abuso",
+  "settings.presets.lockdown.spam.body":
+    "Pausámos a plataforma enquanto limpamos uma onda de contas de spam. Voltamos muito em breve.",
+  "settings.presets.lockdown.deploy.label": "A publicar uma atualização",
+  "settings.presets.lockdown.deploy.body":
+    "Estamos a lançar uma atualização. A QueerPulse volta dentro de alguns minutos.",
+  "settings.presets.lockdown.safety.label": "Pausa por segurança da comunidade",
+  "settings.presets.lockdown.safety.body":
+    "A QueerPulse está em pausa enquanto a equipa trata de uma questão de segurança da comunidade. Vamos atualizar todas as pessoas diretamente.",
+
+  "settings.presets.closed.spam.label": "Resposta a spam",
+  "settings.presets.closed.spam.body":
+    "Os novos registos estão em pausa enquanto lidamos com uma onda de contas de spam. Volta a passar por aqui em breve.",
+  "settings.presets.closed.capacity.label": "Na capacidade máxima",
+  "settings.presets.closed.capacity.body":
+    "Pausámos temporariamente os novos registos enquanto damos atenção à comunidade que já cá está. Obrigade pela paciência.",
+  "settings.presets.closed.review.label": "Revisão do processo",
+  "settings.presets.closed.review.body":
+    "Os novos registos estão em pausa enquanto revemos a forma como acolhemos pessoas novas. Reabrimos em breve.",
+
+  // Modal de confirmação — ativar o bloqueio derruba a plataforma inteira.
+  "settings.confirm.enable.eyebrow": "Confirmar",
+  "settings.confirm.enable.title": "Bloquear a plataforma?",
+  "settings.confirm.enable.body":
+    "Todas as pessoas ficam bloqueadas de imediato e veem a tua mensagem de manutenção. Continuam com sessão iniciada, por isso levantar o bloqueio restaura o acesso a todas sem ninguém ter de voltar a autenticar-se.",
+  "settings.confirm.enable.messagePreview": "Vão ver:",
+  "settings.confirm.enable.cta": "Bloquear a plataforma",
+  "settings.confirm.disable.eyebrow": "Confirmar",
+  "settings.confirm.disable.title": "Levantar o bloqueio?",
+  "settings.confirm.disable.body":
+    "A plataforma reabre para toda a gente em cerca de 10 segundos.",
+  "settings.confirm.disable.cta": "Levantar o bloqueio",
+
+  "settings.banner.title": "A plataforma está bloqueada.",
+  "settings.banner.sub": "Só a administração consegue aceder agora.",
+  "settings.banner.cta": "Terminar o bloqueio",
+
+  "settings.note.label": "Nota (opcional)",
+  "settings.note.placeholder": "Porque estás a fazer esta alteração?",
+  "settings.saved": "Definições guardadas.",
+  "settings.saveError": "Não foi possível guardar. Nada foi alterado.",
+
+  "settings.history.title": "Alterações recentes",
+  "settings.history.empty": "Ainda não há alterações.",
+  "settings.history.error": "Não foi possível carregar as alterações recentes.",
+  "settings.history.by": "por {actor}",
+  "settings.history.unknownActor": "uma pessoa administradora entretanto eliminada",
+  "settings.history.on": "ligado",
+  "settings.history.off": "desligado",
+  "settings.history.cleared": "vazio",
+  "settings.history.changed": "{setting}: {from} → {to}",
+
+  "settings.key.registrationEnabled": "Registo",
+  "settings.key.joinRequestsEnabled": "Pedidos de convite",
+  "settings.key.lockdownEnabled": "Bloqueio",
+  "settings.key.lockdownAllowsModerators": "Moderação durante o bloqueio",
+  "settings.key.lockdownMessage": "Mensagem de manutenção",
+  "settings.key.registrationClosedMessage": "Mensagem de registos fechados",
 };

@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiFolder, FiPlus, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
@@ -37,6 +37,7 @@ function Modal({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -87,6 +88,7 @@ export function NewCollectionModal({
   const { t } = useTranslation();
   const [name, setName] = useState("");
   const [privacy, setPrivacy] = useState<Privacy>("private");
+  const nameRef = useFocusOnMount<HTMLInputElement>();
   const canCreate = name.trim().length > 0;
 
   return (
@@ -116,8 +118,8 @@ export function NewCollectionModal({
           </label>
           <input
             id="nc-name"
+            ref={nameRef}
             type="text"
-            autoFocus
             placeholder={t(
               "members:collections.modal.newCollection.namePlaceholder",
             )}

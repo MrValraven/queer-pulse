@@ -143,6 +143,7 @@ export function JoinStepInvolvement({
                 <input
                   type="radio"
                   name="involvement"
+                  aria-label={t(o.labelKey)}
                   value={o.value}
                   checked={involvement === o.value}
                   onChange={() => setInvolvement(o.value)}

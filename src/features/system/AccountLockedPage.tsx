@@ -76,22 +76,8 @@ export function AccountLockedPage() {
         </div>
 
         <div className={styles.whatNow}>
-          <Link to={routes.magicLink} className={styles.wnRow}>
-            <div className={styles.wnNum}>1</div>
-            <div className={styles.wnText}>
-              <div className={styles.wnTitle}>
-                {t("system:accountLocked.whatNow.magicLink.title")}
-              </div>
-              <div className={styles.wnDesc}>
-                {t("system:accountLocked.whatNow.magicLink.desc")}
-              </div>
-            </div>
-            <span className={styles.wnArrow} aria-hidden>
-              →
-            </span>
-          </Link>
           <Link to={routes.contact} className={styles.wnRow}>
-            <div className={styles.wnNum}>2</div>
+            <div className={styles.wnNum}>1</div>
             <div className={styles.wnText}>
               <div className={styles.wnTitle}>
                 {t("system:accountLocked.whatNow.contact.title")}

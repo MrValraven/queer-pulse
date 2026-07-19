@@ -27,6 +27,11 @@ export function setQueryErrorDemoMode(isDemo: boolean): void {
 function messageFor(error: unknown): string | null {
   if (error instanceof ApiError) {
     if (error.status === 401) return null; // auth refresh / onAuthLost owns this
+    if (
+      error.status === 503 &&
+      (error.data as { code?: string } | null)?.code === "PLATFORM_LOCKED"
+    )
+      return null; // PlatformLockProvider owns this (maintenance screen)
     if (error.status === 403) return "You don't have access to that.";
     if (error.status === 404) return null; // pages own their empty state
     if (error.status >= 500)
@@ -41,10 +46,14 @@ function messageFor(error: unknown): string | null {
  *  contract without importing react-query's deep generics. */
 export function handleQueryError(
   error: unknown,
-  query: { queryKey: unknown },
+  query: { queryKey: unknown; meta?: Record<string, unknown> },
 ): void {
   logError(error, { queryKey: query.queryKey });
   if (demo.current) return;
+  // Opt-out for queries whose failure is not the visitor's problem: they fail
+  // soft by design and the page renders identically either way (see
+  // usePlatformStatus). Logged above, never toasted.
+  if (query.meta?.silentError) return;
   if (error instanceof ApiError && error.status < 500) return;
   const msg = messageFor(error);
   if (msg) emit?.(msg, "error", 6000);

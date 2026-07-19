@@ -60,6 +60,7 @@ export function VouchMemberModal({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget && status !== "loading") onClose();
       }}

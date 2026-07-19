@@ -42,26 +42,38 @@ export function AdminSeg({
   );
 }
 
-/** Switch toggle. */
+/** Switch toggle. `disabled` is for a setting the platform has no backing
+ *  data for yet — greyed out and inert, rather than silently rendering as
+ *  "off" and claiming a state nobody actually knows. */
 export function AdminToggle({
   checked,
   onChange,
   label,
+  disabled = false,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
+      aria-disabled={disabled || undefined}
       aria-label={label}
-      className={[styles.toggle, checked && styles.toggleOn]
+      disabled={disabled}
+      className={[
+        styles.toggle,
+        checked && styles.toggleOn,
+        disabled && styles.toggleDisabled,
+      ]
         .filter(Boolean)
         .join(" ")}
-      onClick={() => onChange(!checked)}
+      onClick={() => {
+        if (!disabled) onChange(!checked);
+      }}
     >
       <span className={styles.toggleKnob} aria-hidden />
     </button>

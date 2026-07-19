@@ -56,7 +56,13 @@ export function ReportReplyModal({
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={
           status === "done"
@@ -66,7 +72,6 @@ export function ReportReplyModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="report-title"
-        onClick={(e) => e.stopPropagation()}
       >
         {status === "done" ? (
           <div>

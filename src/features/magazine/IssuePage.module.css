@@ -358,6 +358,9 @@
   }
 }
 .contribName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
   font-weight: 700;
   color: var(--text-strong);

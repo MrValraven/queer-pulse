@@ -8,6 +8,7 @@ import {
   authorHref,
 } from "./ForumAuthor";
 import { ModeratorByline } from "./ThreadReplies";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadOpCard({
@@ -60,6 +61,7 @@ export function ThreadOpCard({
             >
               {thread.author.n}
             </ProfileLink>
+            <MemberStaffBadge slug={thread.author.slug} />
             {thread.author.official && <OfficialBadge />}
           </div>
           <ModeratorByline mod={thread.author.mod} />

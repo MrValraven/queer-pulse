@@ -12,6 +12,7 @@ import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
 import { useMarkAllRead } from "./api/useMarkAllRead";
 import { notificationTabs, type NotifType, type Notification } from "./data";
 import { MENTION_UNREAD_IDS } from "./mentions.data";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./NotificationsPage.module.css";
 
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
@@ -90,6 +91,7 @@ export function NotificationsPage() {
             {notification.icon && <notification.icon.Glyph />}
           </span>
         )}
+        <MemberStaffBadge slug={notification.actorSlug} />
         <div className={styles.body}>
           <div className={styles.text}>{notification.text}</div>
           <div className={styles.meta}>{notification.meta}</div>

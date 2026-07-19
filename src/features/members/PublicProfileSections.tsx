@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -148,6 +149,9 @@ export function PublicProfileHead({
           )}
           {profile.role}
         </p>
+        <div className={styles.badgeRow}>
+          <MemberStaffBadge slug={profile.slug} size="lg" />
+        </div>
         {curatorSlug && (
           <Link
             className={styles.curatorLink}

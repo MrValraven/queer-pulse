@@ -1176,16 +1176,6 @@ const StudioOffAirPage = lazy(() =>
     default: m.StudioOffAirPage,
   })),
 );
-const MagicLinkPage = lazy(() =>
-  import("../features/auth/MagicLinkPage").then((m) => ({
-    default: m.MagicLinkPage,
-  })),
-);
-const ConfirmEmailPage = lazy(() =>
-  import("../features/auth/ConfirmEmailPage").then((m) => ({
-    default: m.ConfirmEmailPage,
-  })),
-);
 const StudioSignInPage = lazy(() =>
   import("../features/studio/StudioSignInPage").then((m) => ({
     default: m.StudioSignInPage,
@@ -1194,11 +1184,6 @@ const StudioSignInPage = lazy(() =>
 const StudioSettingsPage = lazy(() =>
   import("../features/studio/StudioSettingsPage").then((m) => ({
     default: m.StudioSettingsPage,
-  })),
-);
-const NotificationPreferencesPage = lazy(() =>
-  import("../features/settings/NotificationPreferencesPage").then((m) => ({
-    default: m.NotificationPreferencesPage,
   })),
 );
 const DataExportPage = lazy(() =>
@@ -1224,21 +1209,6 @@ const SecurityPage = lazy(() =>
 const SessionsPage = lazy(() =>
   import("../features/settings/SessionsPage").then((m) => ({
     default: m.SessionsPage,
-  })),
-);
-const CancelMembershipPage = lazy(() =>
-  import("../features/settings/CancelMembershipPage").then((m) => ({
-    default: m.CancelMembershipPage,
-  })),
-);
-const MembershipPage = lazy(() =>
-  import("../features/settings/MembershipPage").then((m) => ({
-    default: m.MembershipPage,
-  })),
-);
-const GiftMembershipPage = lazy(() =>
-  import("../features/settings/GiftMembershipPage").then((m) => ({
-    default: m.GiftMembershipPage,
   })),
 );
 const SustainerPage = lazy(() =>
@@ -1406,6 +1376,11 @@ const AdminPartnerApplicationsPage = lazy(() =>
     default: m.AdminPartnerApplicationsPage,
   })),
 );
+const AdminSettingsPage = lazy(() =>
+  import("../features/admin/AdminSettingsPage").then((m) => ({
+    default: m.AdminSettingsPage,
+  })),
+);
 import { KNOWN_ROUTE_SLUGS, routes } from "./routeMap";
 import { useAuthGateRedirect, isGatedPath, isGuestOnlyPath } from "./authGate";
 import { useAuth } from "./providers/authContext";
@@ -1465,14 +1440,10 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/drafts", routes.drafts],
   ["/settings", routes.settings],
   ["/edit-profile", routes.editProfile],
-  ["/notification-preferences", routes.notificationPreferences],
   ["/security", routes.security],
   ["/sessions", routes.sessions],
   ["/data-export", routes.dataExport],
   ["/delete-account", routes.deleteAccount],
-  ["/cancel-membership", routes.cancelMembership],
-  ["/membership", routes.membership],
-  ["/gift-membership", routes.giftMembership],
   ["/my-events", routes.myEvents],
   // Section moves appended by Tasks 2–10 below.
   // Magazine
@@ -1543,8 +1514,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/onboarding", "/auth/onboarding"],
   ["/welcome", routes.welcome],
   ["/welcome-tour", routes.welcomeTour],
-  ["/magic-link", routes.magicLink],
-  ["/confirm-email", routes.confirmEmail],
   // About
   ["/contact", routes.contact],
   ["/help", routes.help],
@@ -1709,7 +1678,13 @@ export function AppRoutes() {
           {/* Gatherings */}
           <Route path={routes.calendar} element={<CalendarPage />} />
           <Route path={routes.events} element={<EventsPage />} />
-          <Route path={routes.gathering} element={<GatheringPage />} />
+          {/* `/gathering` alone identifies no gathering — the detail page needs
+              a slug. Existing bare links mean "browse gatherings", so send them
+              to the index rather than rendering a detail page with no subject. */}
+          <Route
+            path={routes.gathering}
+            element={<Navigate to={routes.gatherings} replace />}
+          />
           <Route
             path={`${routes.gathering}/:slug`}
             element={<GatheringPage />}
@@ -1932,11 +1907,6 @@ export function AppRoutes() {
           <Route
             path={routes.welcomeTour}
             element={auth(<WelcomeTourPage />)}
-          />
-          <Route path={routes.magicLink} element={auth(<MagicLinkPage />)} />
-          <Route
-            path={routes.confirmEmail}
-            element={auth(<ConfirmEmailPage />)}
           />
           <Route
             path="/invite/:code"
@@ -2277,23 +2247,10 @@ export function AppRoutes() {
           />
           <Route path={routes.work} element={<WorkHubPage />} />
           <Route path={routes.workProfile} element={<WorkProfilePage />} />
-          <Route
-            path={routes.notificationPreferences}
-            element={<NotificationPreferencesPage />}
-          />
           <Route path={routes.security} element={<SecurityPage />} />
           <Route path={routes.sessions} element={<SessionsPage />} />
           <Route path={routes.dataExport} element={<DataExportPage />} />
           <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
-          <Route
-            path={routes.cancelMembership}
-            element={<CancelMembershipPage />}
-          />
-          <Route path={routes.membership} element={<MembershipPage />} />
-          <Route
-            path={routes.giftMembership}
-            element={<GiftMembershipPage />}
-          />
           <Route path={routes.sustainer} element={<SustainerPage />} />
 
           {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
@@ -2353,6 +2310,7 @@ export function AppRoutes() {
             path={routes.adminGovernance}
             element={<AdminGovernancePage />}
           />
+          <Route path={routes.adminSettings} element={<AdminSettingsPage />} />
           <Route
             path={`${routes.adminCommunities}/:slug/mod`}
             element={<AdminCommunityModPage />}

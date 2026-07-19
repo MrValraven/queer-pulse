@@ -1,5 +1,6 @@
 import { Avatar, type AvatarTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Most tags a result card shows before collapsing the rest into a "+N" chip.
@@ -8,6 +9,9 @@ const MAX_CARD_TAGS = 3;
 
 export interface MemberCardBodyProps {
   name: string;
+  /** Member slug, so the card can show the staff badge next to the name.
+   *  Optional: callers with no slug in scope simply render no badge. */
+  slug?: string;
   initials: string;
   tint: AvatarTint;
   photo?: string;
@@ -34,6 +38,7 @@ export interface MemberCardBodyProps {
  */
 export function MemberCardBody({
   name,
+  slug,
   initials,
   tint,
   photo,
@@ -60,6 +65,7 @@ export function MemberCardBody({
         <div>
           <div className={styles.mName}>
             {name}
+            <MemberStaffBadge slug={slug} />
             {isMe && (
               <span className={styles.mYou}>{t("members:card.you")}</span>
             )}

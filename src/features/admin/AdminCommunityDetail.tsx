@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
-import { Button, FadeIn } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  SkeletonAvatar,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -9,14 +14,32 @@ import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
 import { SettingsPane } from "./AdminCommunitySettings";
 import { AdminHealthModal } from "./AdminHealthModal";
 import { AdminSupportModal } from "./AdminSupportModal";
-import { firstName, type Community } from "./adminCommunities.data";
+import { useAdminCommunity } from "./api/useAdminCommunities";
+import { firstName } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
+function BackLink({ onBack }: { onBack: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <button type="button" className={styles.backLink} onClick={onBack}>
+      <FiArrowLeft aria-hidden /> {t("admin:communities.detail.backCta")}
+    </button>
+  );
+}
+
+/**
+ * Loading, error, and "loaded but missing" are kept distinct — mirroring the
+ * rule `AdminSettingsHistory` follows. `data` is `undefined` in both the
+ * error and the missing-after-load cases, so falling through past this guard
+ * would either crash on `community.mods[0]!` or silently render nothing
+ * useful. The back link is always present so a stalled or failed fetch never
+ * strands the admin on a dead screen.
+ */
 export function AdminCommunityDetail({
-  community,
+  slug,
   onBack,
 }: {
-  community: Community;
+  slug: string;
   onBack: () => void;
 }) {
   const { t } = useTranslation();
@@ -24,6 +47,37 @@ export function AdminCommunityDetail({
   const [active, setActive] = useState("queue");
   const [health, setHealth] = useState(false);
   const [support, setSupport] = useState(false);
+  const { data: community, isLoading, isError } = useAdminCommunity(slug);
+
+  if (isLoading) {
+    return (
+      <FadeIn>
+        <BackLink onBack={onBack} />
+        <div className={styles.hero}>
+          <SkeletonAvatar size={56} />
+          <div className={styles.heroMain}>
+            <SkeletonLine width="45%" height={32} />
+            <SkeletonLine width="70%" style={{ marginTop: 12 }} />
+            <div className={styles.heroChips}>
+              <SkeletonLine width={130} height={32} />
+              <SkeletonLine width={100} height={32} />
+            </div>
+          </div>
+        </div>
+      </FadeIn>
+    );
+  }
+
+  if (isError || !community) {
+    return (
+      <FadeIn>
+        <BackLink onBack={onBack} />
+        <p className={styles.loadError}>
+          {t("admin:communities.grid.loadError")}
+        </p>
+      </FadeIn>
+    );
+  }
 
   const tabs: AdminTab[] = [
     {
@@ -45,9 +99,7 @@ export function AdminCommunityDetail({
 
   return (
     <FadeIn>
-      <button type="button" className={styles.backLink} onClick={onBack}>
-        <FiArrowLeft aria-hidden /> {t("admin:communities.detail.backCta")}
-      </button>
+      <BackLink onBack={onBack} />
 
       <div className={styles.hero}>
         <AdminAvatar
@@ -62,10 +114,14 @@ export function AdminCommunityDetail({
           </h1>
           <p className={styles.heroDesc}>
             {community.desc}{" "}
-            {t("admin:communities.detail.stewardedBy", {
-              count: community.mods.length,
-              founded: community.founded,
-            })}
+            {community.mods.length === 0
+              ? t("admin:communities.detail.foundedOnly", {
+                  founded: community.founded,
+                })
+              : t("admin:communities.detail.stewardedBy", {
+                  count: community.mods.length,
+                  founded: community.founded,
+                })}
           </p>
           <div className={styles.heroChips}>
             <button
@@ -102,15 +158,10 @@ export function AdminCommunityDetail({
               />
             </h3>
             <p className={styles.bannerText}>
-              {t(
-                community.mods.length < 2
-                  ? "admin:communities.detail.supportBanner.textAlone"
-                  : "admin:communities.detail.supportBanner.textThin",
-                {
-                  name: firstName(community.mods[0]!.name),
-                  members: community.members,
-                },
-              )}
+              {t(supportBannerTextKey(community.mods.length), {
+                name: community.mods[0] ? firstName(community.mods[0].name) : "",
+                members: community.members,
+              })}
             </p>
           </div>
           <Button variant="primary" size="md" onClick={() => setSupport(true)}>
@@ -134,7 +185,7 @@ export function AdminCommunityDetail({
           color={community.reports > 0 ? "var(--accent-ink)" : "var(--jade)"}
         />
         <StatCell
-          label={t("admin:communities.detail.stat.resolvedOnTime")}
+          label={t("admin:communities.detail.stat.handled")}
           value={`${community.resolvedPct}%`}
           color={community.resolvedPct >= 95 ? "var(--jade)" : "var(--amber)"}
         />
@@ -197,4 +248,17 @@ function labelFor(score: number): string {
   if (score >= 90) return "thriving";
   if (score >= 78) return "steady";
   return "needsHand";
+}
+
+/**
+ * A community can legitimately have zero moderators — the backend drops a
+ * moderator whose profile no longer resolves and just logs a warning rather
+ * than failing the request — so `moderatorCount` can be 0, not just 1 or
+ * many. `textNone` avoids naming a moderator that doesn't exist instead of
+ * crashing on (or silently blanking) the missing name.
+ */
+function supportBannerTextKey(moderatorCount: number): string {
+  if (moderatorCount === 0) return "admin:communities.detail.supportBanner.textNone";
+  if (moderatorCount === 1) return "admin:communities.detail.supportBanner.textAlone";
+  return "admin:communities.detail.supportBanner.textThin";
 }

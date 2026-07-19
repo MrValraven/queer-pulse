@@ -32,7 +32,7 @@ export function HousingListingSkeleton() {
       </header>
 
       <div className={s.grid}>
-        <main>
+        <div>
           <section className={s.sec}>
             <SkeletonLine width="40%" height={24} />
             <SkeletonLine height={14} style={{ marginTop: 16 }} />
@@ -89,7 +89,7 @@ export function HousingListingSkeleton() {
               />
             ))}
           </section>
-        </main>
+        </div>
 
         <aside className={s.side}>
           <div className={s.priceCard}>

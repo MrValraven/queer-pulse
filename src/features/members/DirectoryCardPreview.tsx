@@ -32,6 +32,7 @@ export function DirectoryCardPreview() {
       <div className={`${card.mCard} ${card.mCardMe} ${card.mCardStatic}`}>
         <MemberCardBody
           name={name}
+          slug={profile.slug}
           initials={initials}
           tint={profile.tint}
           photo={draft.photo}

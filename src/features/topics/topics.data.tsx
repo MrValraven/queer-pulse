@@ -14,6 +14,10 @@ export type PostCategory =
 
 export interface TopicPost {
   author: string;
+  /** Member slug for `author`, when the display name resolves to a real
+   *  member account. Parallel to `author` (which stays the display string,
+   *  bylines and org names included) rather than replacing it. */
+  authorSlug?: string;
   initials: string;
   tone: AvatarTint;
   /** e.g. "2 hours ago · Trans & Non-Binary Network" */
@@ -35,6 +39,10 @@ export interface TopVoice {
   tone: AvatarTint;
   detail: string;
   href: string;
+  /** Member slug for `name`, when it resolves to a real member account
+   *  (rather than one of the fictional voices sharing a first name/role with
+   *  a real member but a different surname). Left undefined otherwise. */
+  slug?: string;
 }
 
 export interface RelatedTopic {
@@ -117,6 +125,7 @@ const healthcare: Topic = {
   posts: [
     {
       author: "Anika Kovač",
+      authorSlug: "anika",
       initials: "AK",
       tone: "coral",
       meta: "2 hours ago · Trans & Non-Binary Network",
@@ -139,6 +148,7 @@ const healthcare: Topic = {
     },
     {
       author: "Sara Pinheiro for QueerPulse Magazine",
+      authorSlug: "sara-pinheiro",
       initials: "SP",
       tone: "jade",
       meta: "3 days ago · 8 min read",
@@ -182,6 +192,7 @@ const healthcare: Topic = {
     },
     {
       author: "Nuno Alves",
+      authorSlug: "nuno",
       initials: "NA",
       tone: "plum",
       meta: "5 days ago · Trans Hub",
@@ -255,6 +266,7 @@ const healthcare: Topic = {
       tone: "jade",
       detail: "Trans Hub coordinator · 42 posts",
       href: routes.members,
+      slug: "nuno",
     },
     {
       name: "Rita Vasquez",
@@ -269,6 +281,7 @@ const healthcare: Topic = {
       tone: "plum",
       detail: "Magazine writer · 14 articles",
       href: routes.author,
+      slug: "sara-pinheiro",
     },
     {
       name: "Joana Tavares",
@@ -351,6 +364,7 @@ const trans: Topic = {
     },
     {
       author: "Nuno Alves",
+      authorSlug: "nuno",
       initials: "NA",
       tone: "plum",
       meta: "6 days ago · Trans Hub",
@@ -407,6 +421,7 @@ const trans: Topic = {
       tone: "jade",
       detail: "Trans Hub coordinator · 61 posts",
       href: routes.members,
+      slug: "nuno",
     },
     {
       name: "Céu Marques",
@@ -515,6 +530,7 @@ const mentalhealth: Topic = {
     },
     {
       author: "Sara Pinheiro for QueerPulse Magazine",
+      authorSlug: "sara-pinheiro",
       initials: "SP",
       tone: "jade",
       meta: "1 week ago · 6 min read",
@@ -564,6 +580,7 @@ const mentalhealth: Topic = {
       tone: "plum",
       detail: "Magazine writer · 11 essays",
       href: routes.author,
+      slug: "sara-pinheiro",
     },
   ],
   resources: {
@@ -660,6 +677,7 @@ const housing: Topic = {
     },
     {
       author: "Nuno Alves",
+      authorSlug: "nuno",
       initials: "NA",
       tone: "coral",
       meta: "1 week ago · Trans Hub",

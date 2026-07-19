@@ -1,61 +1,95 @@
-import { Button, FadeIn } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { spellNumber } from "../../shared/i18n/numberWords";
 import { AdminPageHeader, AdminAvatar } from "./ui";
-import {
-  COMMUNITIES,
-  healthColor,
-  type Community,
-} from "./adminCommunities.data";
+import { useAdminCommunities } from "./api/useAdminCommunities";
+import { AdminCommunitiesEmpty } from "./AdminCommunitiesEmpty";
+import { healthColor, type Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
 export function AdminCommunityGrid({
   onOpen,
   onHealth,
 }: {
-  onOpen: (c: Community) => void;
-  onHealth: (c: Community) => void;
+  onOpen: (slug: string) => void;
+  onHealth: (community: Community) => void;
 }) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
+  const { data: communityList, isLoading, isError } = useAdminCommunities();
+  const { t, language } = useTranslation();
+
+  const communityCount = communityList?.length ?? 0;
+  const countKnown = !isLoading && !isError;
+
+  const header = (
+    <FadeIn>
+      <AdminPageHeader
+        eyebrow={t("admin:communities.grid.eyebrow")}
+        title={
+          <>
+            {countKnown
+              ? t("admin:communities.grid.titleLine1", {
+                  count: communityCount,
+                  spelled: spellNumber(communityCount, language),
+                })
+              : t("admin:communities.grid.titleLine1Unknown")}
+            <br />
+            <Translation
+              i18nKey="admin:communities.grid.titleLine2"
+              components={{ em: <em /> }}
+            />
+          </>
+        }
+        sub={t("admin:communities.grid.sub")}
+      />
+    </FadeIn>
+  );
+
+  if (isLoading) {
+    return (
+      <>
+        {header}
+        <div className={styles.grid}>
+          {[0, 1, 2].map((placeholderIndex) => (
+            <div className={styles.card} key={placeholderIndex}>
+              <SkeletonLine width="55%" height={18} />
+              <SkeletonLine width="100%" height={48} />
+              <SkeletonLine width="80%" />
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        {header}
+        <p className={styles.loadError}>{t("admin:communities.grid.loadError")}</p>
+      </>
+    );
+  }
+
+  if (!communityList || communityList.length === 0) {
+    return (
+      <>
+        {header}
+        <AdminCommunitiesEmpty />
+      </>
+    );
+  }
 
   return (
     <>
-      <FadeIn>
-        <AdminPageHeader
-          eyebrow={t("admin:communities.grid.eyebrow")}
-          title={
-            <>
-              {t("admin:communities.grid.titleLine1")}
-              <br />
-              <Translation
-                i18nKey="admin:communities.grid.titleLine2"
-                components={{ em: <em /> }}
-              />
-            </>
-          }
-          sub={t("admin:communities.grid.sub")}
-          actions={
-            <Button
-              variant="ghost"
-              onClick={() =>
-                showToast(t("admin:communities.grid.newToast"), "info")
-              }
-            >
-              {t("admin:communities.grid.newCta")}
-            </Button>
-          }
-        />
-      </FadeIn>
-
+      {header}
       <div className={styles.grid}>
-        {COMMUNITIES.map((c, i) => (
-          <FadeIn key={c.slug} delay={Math.min(i, 8) * 60}>
+        {communityList.map((community, communityIndex) => (
+          <FadeIn key={community.slug} delay={Math.min(communityIndex, 8) * 60}>
             <HealthCard
-              community={c}
-              onOpen={() => onOpen(c)}
-              onHealth={() => onHealth(c)}
+              community={community}
+              onOpen={() => onOpen(community.slug)}
+              onHealth={() => onHealth(community)}
             />
           </FadeIn>
         ))}
@@ -65,7 +99,7 @@ export function AdminCommunityGrid({
 }
 
 function HealthCard({
-  community: c,
+  community,
   onOpen,
   onHealth,
 }: {
@@ -74,17 +108,17 @@ function HealthCard({
   onHealth: () => void;
 }) {
   const { t } = useTranslation();
-  const color = healthColor(c.health);
+  const color = healthColor(community.health);
 
   return (
     <button type="button" className={styles.card} onClick={onOpen}>
       <div className={styles.cardHead}>
-        <AdminAvatar initials={c.initials} tone={c.tone} size="md" />
+        <AdminAvatar initials={community.initials} tone={community.tone} size="md" />
         <div className={styles.cardMeta}>
-          <div className={styles.cardName}>{c.name}</div>
+          <div className={styles.cardName}>{community.name}</div>
           <div className={styles.cardTag}>
-            {c.tag}
-            {c.support && (
+            {community.tag}
+            {community.support && (
               <span className={styles.cardTagWarn}>
                 {" "}
                 {t("admin:communities.grid.needsHand")}
@@ -98,40 +132,40 @@ function HealthCard({
           className={styles.scoreBtn}
           style={{ color }}
           aria-label={t("admin:communities.grid.healthAriaLabel", {
-            score: c.health,
+            score: community.health,
           })}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
             onHealth();
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              e.stopPropagation();
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              event.stopPropagation();
               onHealth();
             }
           }}
         >
-          {c.health}
+          {community.health}
         </span>
       </div>
 
-      <Sparkline points={c.spark} color={color} />
+      <Sparkline points={community.spark} color={color} />
 
       <div className={styles.cardStats}>
         <Stat
           label={t("admin:communities.grid.stat.members")}
-          value={c.members}
+          value={community.members}
         />
         <Stat
           label={t("admin:communities.grid.stat.activity")}
-          value={c.activity}
+          value={community.activity}
         />
         <Stat
           label={t("admin:communities.grid.stat.openReports")}
-          value={String(c.reports)}
-          tone={c.reports > 0 ? "coral" : "jade"}
+          value={String(community.reports)}
+          tone={community.reports > 0 ? "coral" : "jade"}
         />
       </div>
     </button>
@@ -166,42 +200,52 @@ function Stat({
 
 // ── Inline sparkline (area + line) ──────────────────────────────────────────
 
-const SW = 220;
-const SH = 48;
-const SPAD = 4;
+const SPARK_WIDTH = 220;
+const SPARK_HEIGHT = 48;
+const SPARK_PADDING = 4;
 
 function Sparkline({ points, color }: { points: number[]; color: string }) {
   const { t } = useTranslation();
-  const min = Math.min(...points);
-  const max = Math.max(...points);
-  const span = max - min || 1;
-  const n = points.length;
-  const px = (i: number) => SPAD + (i * (SW - SPAD * 2)) / (n - 1);
-  const py = (v: number) => SPAD + (SH - SPAD * 2) * (1 - (v - min) / span);
+  const minimumValue = Math.min(...points);
+  const maximumValue = Math.max(...points);
+  const valueSpan = maximumValue - minimumValue || 1;
+  const pointCount = points.length;
+  const pointX = (pointIndex: number) =>
+    SPARK_PADDING +
+    (pointIndex * (SPARK_WIDTH - SPARK_PADDING * 2)) / (pointCount - 1);
+  const pointY = (value: number) =>
+    SPARK_PADDING +
+    (SPARK_HEIGHT - SPARK_PADDING * 2) * (1 - (value - minimumValue) / valueSpan);
 
-  const coords = points.map((v, i): [number, number] => [px(i), py(v)]);
-  const line = coords
-    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`)
+  const coordinates = points.map((value, pointIndex): [number, number] => [
+    pointX(pointIndex),
+    pointY(value),
+  ]);
+  const linePath = coordinates
+    .map(
+      ([coordinateX, coordinateY], pointIndex) =>
+        `${pointIndex === 0 ? "M" : "L"}${coordinateX.toFixed(1)} ${coordinateY.toFixed(1)}`,
+    )
     .join(" ");
-  const area = `${line} L${coords[n - 1]![0].toFixed(1)} ${SH - SPAD} L${coords[0]![0].toFixed(1)} ${SH - SPAD} Z`;
-  const last = coords[n - 1]!;
+  const areaPath = `${linePath} L${coordinates[pointCount - 1]![0].toFixed(1)} ${SPARK_HEIGHT - SPARK_PADDING} L${coordinates[0]![0].toFixed(1)} ${SPARK_HEIGHT - SPARK_PADDING} Z`;
+  const lastPoint = coordinates[pointCount - 1]!;
 
   return (
     <svg
       className={styles.spark}
-      viewBox={`0 0 ${SW} ${SH}`}
+      viewBox={`0 0 ${SPARK_WIDTH} ${SPARK_HEIGHT}`}
       width="100%"
-      height={SH}
+      height={SPARK_HEIGHT}
       preserveAspectRatio="none"
       role="img"
       aria-label={t("admin:communities.grid.sparklineAriaLabel", {
-        value: points[n - 1] ?? 0,
+        value: points[pointCount - 1] ?? 0,
       })}
     >
-      <path d={area} fill={color} opacity={0.1} />
+      <path d={areaPath} fill={color} opacity={0.1} />
       <path
         className={styles.sparkLine}
-        d={line}
+        d={linePath}
         fill="none"
         stroke={color}
         strokeWidth={2}
@@ -209,7 +253,7 @@ function Sparkline({ points, color }: { points: number[]; color: string }) {
         strokeLinejoin="round"
         pathLength={1}
       />
-      <circle cx={last[0]} cy={last[1]} r={2.6} fill={color} />
+      <circle cx={lastPoint[0]} cy={lastPoint[1]} r={2.6} fill={color} />
     </svg>
   );
 }

@@ -1,6 +1,7 @@
 import { Avatar, Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUser, type MemberProfile } from "./data/memberProfiles";
 import { RELATIONSHIPS, RELATIONSHIP_LABEL_KEY } from "./vouchMember.data";
 import styles from "./VouchMemberModal.module.css";
@@ -136,7 +137,10 @@ export function VouchForm({
         />
         <div>
           <div className={styles.candName}>
-            {first} {profile.last}
+            <span className={styles.nameRow}>
+              {first} {profile.last}
+              <MemberStaffBadge slug={profile.slug} />
+            </span>
           </div>
           <div className={styles.candRole}>{profile.role}</div>
         </div>

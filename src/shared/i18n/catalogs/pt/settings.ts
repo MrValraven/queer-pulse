@@ -380,6 +380,10 @@ export const settings: Catalog = {
   "account.loginAlerts.title": "Alertas de início de sessão",
   "account.loginAlerts.desc":
     "Avisa-me por email quando a minha conta é acedida a partir de um novo dispositivo",
+  "account.disclosure.title": "Comunicar uma vulnerabilidade de segurança",
+  "account.disclosure.desc":
+    "Encontraste uma falha ou uma fragilidade no QueerPulse? A nossa política de divulgação explica como comunicá-la e o que acontece a seguir.",
+  "account.disclosure.cta": "Ler a política",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Perfil",
@@ -586,7 +590,7 @@ export const settings: Catalog = {
   "dataExport.outro.titleLine1": "Perguntas sobre",
   "dataExport.outro.titleLine2": "os teus dados?",
   "dataExport.outro.sub":
-    "Escreve à nossa equipa de dados. Respondemos a todos os pedidos no prazo de 5 dias úteis.",
+    "Escreve-nos e uma pessoa real responde-te.",
   "dataExport.outro.cta": "Contacta-nos",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────
@@ -595,19 +599,19 @@ export const settings: Catalog = {
     "Seleciona os tipos de dados que queres incluir no teu arquivo.",
   "dataExport.steps.step2.label": "Confirma a tua identidade",
   "dataExport.steps.step2.desc":
-    "Enviamos uma ligação de verificação para o teu endereço registado.",
+    "Pedimos-te para confirmares que és tu, aqui mesmo — sem email nem palavra-passe.",
   "dataExport.steps.step3.label": "Descarrega o teu arquivo",
   "dataExport.steps.step3.desc":
-    "Uma ligação de utilização única, disponível durante 7 dias.",
+    "É criado logo e descarregas a partir desta página.",
 
   // ── DataExportSections.tsx — DataExportForm ──────────────────────────────
   "dataExport.form.title": "Pede o teu <em>arquivo de dados</em>",
   "dataExport.form.sub":
-    "Seleciona as categorias que queres incluir. Podes pedir uma exportação completa ou apenas tipos de dados específicos. Enviamos-te uma ligação segura assim que o teu arquivo estiver pronto.",
+    "Seleciona as categorias que queres incluir. Podes levar tudo, ou só as partes que te interessam. O teu arquivo é criado assim que o pedires.",
   "dataExport.form.includeLabel": "O que incluir",
   "dataExport.form.formatLabel": "Formato do ficheiro",
   "dataExport.form.legalNote":
-    "Ao abrigo do <strong>artigo 20.º do RGPD</strong>, fornecemos os teus dados no prazo de <strong>30 dias</strong> após um pedido verificado. O arquivo é encriptado em trânsito e a ligação de transferência é de utilização única.",
+    "Ao abrigo do <strong>artigo 20.º do RGPD</strong>, podes levar os teus dados contigo, num formato que outros serviços conseguem ler. O teu arquivo é criado a pedido e descarregado através de uma ligação encriptada.",
   "dataExport.form.submitting": "A pedir…",
   "dataExport.form.submit": "Pedir o meu arquivo de dados",
   "dataExport.format.both": "Ambos",
@@ -632,12 +636,12 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "O teu arquivo está pronto",
   "dataExport.status.ready.body":
-    "Também enviámos esta ligação para o teu endereço registado. É de utilização única.",
+    "Está pronto para descarregares. Não enviámos nada por email — isto fica entre ti e esta página.",
   "dataExport.status.ready.bodyWithExpiry":
-    "Também enviámos esta ligação para o teu endereço registado. É de utilização única e expira a <strong>{date}</strong>.",
+    "Está pronto para descarregares. Não enviámos nada por email. Guardamo-lo aqui até <strong>{date}</strong> e depois apagamo-lo.",
   "dataExport.status.expired.title": "Essa ligação expirou",
   "dataExport.status.expired.body":
-    "Por segurança, as ligações de exportação expiram ao fim de 7 dias. Pede um novo arquivo e vamos construí-lo outra vez.",
+    "Não guardamos arquivos indefinidamente. Pede outra vez e criamos-te um novo.",
   "dataExport.status.failed.title": "Isso não funcionou",
   "dataExport.status.failed.body":
     "Não conseguimos construir o teu arquivo agora — nada saiu da tua conta. Tenta novamente dentro de momentos.",
@@ -718,76 +722,6 @@ export const settings: Catalog = {
   "saveButton.savingLabel": "A guardar…",
   "saveButton.savedLabel": "Guardado",
 
-  // ── NotificationPreferencesPage.tsx + Sections — página de protótipo de
-  // matriz de notificações (distinta da NotificationsPane em SettingsPanes) ─
-  "notifPrefs.sidebar.account": "Conta",
-  "notifPrefs.sidebar.editProfile": "Editar perfil",
-  "notifPrefs.sidebar.notifications": "Notificações",
-  "notifPrefs.sidebar.privacy": "Privacidade",
-  "notifPrefs.sidebar.dangerZone": "Zona de perigo",
-  "notifPrefs.sidebar.deactivateAccount": "Desativar conta",
-  "notifPrefs.title": "Preferências de <em>notificações</em>",
-  "notifPrefs.sub":
-    "Controla exatamente o que a QueerPulse te envia, e quando. A predefinição é enviar menos — podes sempre ativar mais.",
-  "notifPrefs.digest.sectionLabel": "Resumo por email",
-  "notifPrefs.digest.frequencyLabel": "Frequência do resumo",
-  "notifPrefs.digest.frequencySub":
-    "Um resumo da atividade desde a tua última visita. Nunca promocional.",
-  "notifPrefs.digest.freq.never": "Nunca",
-  "notifPrefs.digest.freq.daily": "Diariamente",
-  "notifPrefs.digest.freq.weeklyMonday": "Semanalmente (segunda-feira)",
-  "notifPrefs.digest.freq.fortnightly": "Quinzenalmente",
-  "notifPrefs.digest.includesLabel": "O resumo inclui",
-  "notifPrefs.digest.includesSub":
-    "Que secções aparecem no teu email de resumo.",
-  "notifPrefs.digest.includes.forumEvents": "Destaques do fórum + Eventos",
-  "notifPrefs.digest.includes.everything": "Tudo",
-  "notifPrefs.digest.includes.eventsOnly": "Só eventos",
-  "notifPrefs.digest.includes.forumOnly": "Só fórum",
-  "notifPrefs.matrix.sectionLabel": "O que desencadeia uma notificação",
-  "notifPrefs.matrix.colEvent": "Evento",
-  "notifPrefs.matrix.colInApp": "Na app",
-  "notifPrefs.matrix.colEmail": "Email",
-  "notifPrefs.matrix.colPush": "Push",
-  "notifPrefs.row.dm.label": "Mensagem direta recebida",
-  "notifPrefs.row.dm.sub": "Alguém te envia uma mensagem direta",
-  "notifPrefs.row.forumReply.label": "Resposta no fórum à tua publicação",
-  "notifPrefs.row.forumReply.sub": "Alguém responde a um tópico que começaste",
-  "notifPrefs.row.forumMention.label": "Menção no fórum",
-  "notifPrefs.row.forumMention.sub": "Alguém usa @oteunome numa publicação",
-  "notifPrefs.row.rsvpReminder.label": "Lembrete de confirmação de presença",
-  "notifPrefs.row.rsvpReminder.sub":
-    "24h antes de um evento a que te inscreveste",
-  "notifPrefs.row.newEvent.label": "Novo evento na tua área",
-  "notifPrefs.row.newEvent.sub": "Eventos que correspondem aos teus interesses",
-  "notifPrefs.row.magazineIssue.label": "Nova edição da revista",
-  "notifPrefs.row.magazineIssue.sub": "Quando a edição mensal fica disponível",
-  "notifPrefs.row.connectionRequest.label": "Pedido de ligação",
-  "notifPrefs.row.connectionRequest.sub": "Uma pessoa quer ligar-se a ti",
-  "notifPrefs.row.mentalHealthFund.label":
-    "Atualização do fundo de saúde mental",
-  "notifPrefs.row.mentalHealthFund.sub":
-    "Se estiveres a usar o fundo, alterações de estado",
-  "notifPrefs.quietHours.sectionLabel": "Horas de silêncio",
-  "notifPrefs.quietHours.enableTitle": "Ativar horas de silêncio",
-  "notifPrefs.quietHours.enableDesc":
-    "Sem notificações push durante estas horas. Email e notificações na app não são afetados.",
-  "notifPrefs.quietHours.from": "De",
-  "notifPrefs.quietHours.until": "Até",
-  "notifPrefs.alwaysOn.sectionLabel": "Sempre ativo · não pode ser desativado",
-  "notifPrefs.alwaysOn.securityAlerts.title": "Alertas de segurança",
-  "notifPrefs.alwaysOn.securityAlerts.desc":
-    "Novo início de sessão a partir de um dispositivo ou localização não reconhecidos.",
-  "notifPrefs.alwaysOn.dataExportReady.title": "Exportação de dados pronta",
-  "notifPrefs.alwaysOn.dataExportReady.desc":
-    "Quando o teu arquivo de dados estiver disponível para descarregar.",
-  "notifPrefs.alwaysOn.moderationDecisions.title": "Decisões de moderação",
-  "notifPrefs.alwaysOn.moderationDecisions.desc":
-    "Se um moderador atuar sobre conteúdo que publicaste.",
-  "notifPrefs.saveBar.note": "As alterações são guardadas automaticamente.",
-  "notifPrefs.saveBar.label": "Guardar preferências",
-  "notifPrefs.toast.saved": "Preferências de notificações guardadas.",
-
   // ── AccessibilityPreferencesPage.tsx + Sections — a página completa de
   // acessibilidade. Só a Redução de movimento é funcional; o resto são
   // etiquetas em interruptores não funcionais — só as etiquetas são traduzidas.
@@ -853,6 +787,11 @@ export const settings: Catalog = {
 
   // ── DeleteAccountPage.tsx / DeleteAccountSection.tsx / DeleteAccountSections.tsx
   // — o fluxo de saída. Precisão acima de estilo (zona de perigo).
+  "deleteAccount.sidebar.account": "Conta",
+  "deleteAccount.sidebar.editProfile": "Editar perfil",
+  "deleteAccount.sidebar.privacy": "Privacidade",
+  "deleteAccount.sidebar.dangerZone": "Zona de perigo",
+  "deleteAccount.sidebar.deactivateAccount": "Desativar conta",
   "deleteAccount.page.title": "Estás a sair da <em>QueerPulse?</em>",
   "deleteAccount.page.sub":
     "Lamentamos que te vás embora. Antes de decidires, escolhe a opção que se adequa à tua situação.",
@@ -978,390 +917,6 @@ export const settings: Catalog = {
   "themeStudio.backToProfile": "← O meu perfil",
   "themeStudio.saveTheme": "Guardar tema",
   "themeStudio.toast.saved": "Tema guardado",
-
-  // ── MembershipPage.tsx / MembershipSidebar.tsx / membership.data.tsx —
-  // Adesão e faturação. "Adesão" para membership (evita confundir com
-  // "Subscrição", usado noutro sítio para newsletters); "escalão" para tier;
-  // nunca "membro" — ver glossário. ────────────────────────────────────────
-  "membership.breadcrumb.current": "Adesão",
-  "membership.page.title": "A tua <em>adesão</em>",
-  "membership.tabs.plan": "Plano",
-  "membership.tabs.billing": "Faturação",
-  "membership.tabs.access": "Acesso",
-
-  "membership.tier.hardship.name": "Isenção por dificuldades",
-  "membership.tier.hardship.desc":
-    "Financiada na íntegra pelas pessoas em Sustentação — apoiada pela comunidade. Sem perguntas, sem prazo de validade, sem comprovativos de rendimento.",
-  "membership.tier.solidarity.name": "Solidariedade",
-  "membership.tier.solidarity.desc":
-    "A escolha mais comum. Contribui com o que realmente consegues — qualquer valor entre {min} e {max}.",
-  "membership.tier.sustaining.name": "Sustentação",
-  "membership.tier.sustaining.desc":
-    "A tua contribuição financia o acesso de quem não o pode pagar. Qualquer valor acima de {threshold} vai diretamente para o fundo de solidariedade.",
-  "membership.tier.sub.free": "{amount} / mês",
-  "membership.tier.sub.range": "{min}–{max} / mês",
-  "membership.tier.sub.plus": "{amount}+ / mês",
-  "membership.tier.amount.other": "Outro",
-  "membership.tier.amount.otherSub": "valor",
-  "membership.tier.customAmountPlaceholder": "por ex. {amount} / mês",
-
-  "membership.current.eyebrow": "Plano atual",
-  "membership.current.tierLabel": "Pessoa em Sustentação",
-  "membership.current.cadence": "/ mês",
-  "membership.current.since": "Na comunidade desde {date}",
-  "membership.current.activeBadge": "Em vigor",
-
-  "membership.plan.switchTier": "Mudar de escalão",
-  "membership.plan.fineprint":
-    "As alterações têm efeito na próxima data de faturação. Nunca ficarás sem acesso a meio do ciclo.",
-  "membership.plan.saving": "A guardar…",
-  "membership.plan.saveCta": "Guardar alterações →",
-  "membership.plan.pauseCta": "Pausar por 1 mês",
-  "membership.plan.cancelCta": "Cancelar adesão",
-  "membership.plan.pauseConfirmText":
-    "Pausar significa que o teu acesso continua até {date} e depois fica suspenso durante 30 dias. Podes retomar quando quiseres. O teu lugar na comunidade nunca é afetado.",
-  "membership.plan.confirmPause": "Confirmar pausa",
-  "membership.plan.keepActive": "Manter ativa",
-  "membership.plan.beforeYouGo": "Antes de saíres",
-  "membership.plan.cancelConfirmText":
-    "Se for uma questão financeira, há uma isenção por dificuldades — ficas na comunidade sem custos. Se precisares de uma pausa, a opção de pausa mantém a tua conta guardada. Se fizemos algo errado, queremos saber.",
-  "membership.plan.keepMembership": "Manter adesão",
-  "membership.plan.toast.updated":
-    "Plano atualizado. As alterações têm efeito a {date}.",
-  "membership.plan.toast.paused":
-    "Adesão pausada a partir de {date}. Podes retomar quando quiseres, aqui nesta página.",
-  "membership.plan.toast.cancelled":
-    "Adesão cancelada. O teu acesso continua até {date}.",
-
-  "membership.sidebar.activeMember": "Adesão ativa",
-  "membership.sidebar.solidarityLink": "Sobre os preços solidários →",
-
-  "membership.status.tierLabel": "Escalão de Sustentação",
-  "membership.status.renewal": "Próxima renovação: {date}",
-
-  "membership.contribution.label": "contribuídos até agora",
-  "membership.contribution.since_one": "Desde {date} · {count} mês",
-  "membership.contribution.since_other": "Desde {date} · {count} meses",
-  "membership.contribution.impact.therapyHours":
-    "Aproximadamente {count} horas do programa de acesso à saúde mental",
-  "membership.contribution.impact.microGrants_one":
-    "{count} microbolsa para pessoas em dificuldade financeira",
-  "membership.contribution.impact.microGrants_other":
-    "{count} microbolsas para pessoas em dificuldade financeira",
-  "membership.contribution.impact.hardshipAccess_one":
-    "Acesso à plataforma para ~{count} pessoa com isenção por dificuldades",
-  "membership.contribution.impact.hardshipAccess_other":
-    "Acesso à plataforma para ~{count} pessoas com isenção por dificuldades",
-
-  "membership.billing.sectionPaymentHistory": "Histórico de pagamentos",
-  "membership.billing.sectionPaymentMethod": "Método de pagamento",
-  "membership.billing.sectionInvoices": "Faturas",
-  "membership.billing.row.lastPayment": "Último pagamento",
-  "membership.billing.row.nextBillingDate": "Próxima data de faturação",
-  "membership.billing.row.billingCycle": "Ciclo de faturação",
-  "membership.billing.row.amount": "Valor",
-  "membership.billing.cycle.monthly": "Mensal",
-  "membership.billing.updateCard": "Atualizar cartão",
-  "membership.billing.downloadPdf": "Transferir PDF",
-  "membership.billing.cardForm.note":
-    "Introduz os dados do teu novo cartão. Usamos o Stripe para o processamento seguro — nunca guardamos números de cartão.",
-  "membership.billing.cardForm.cardNumberLabel": "Número do cartão",
-  "membership.billing.cardForm.expiryLabel": "Validade",
-  "membership.billing.cardForm.cvcLabel": "CVC",
-  "membership.billing.cardForm.nameLabel": "Nome no cartão",
-  "membership.billing.cardForm.namePlaceholder": "Nome completo",
-  "membership.billing.cardForm.saving": "A guardar…",
-  "membership.billing.cardForm.save": "Guardar cartão",
-  "membership.billing.cardForm.cancel": "Cancelar",
-  "membership.billing.toast.invalidCard":
-    "Introduz um número de cartão válido.",
-  "membership.billing.toast.cardUpdated": "Cartão atualizado.",
-  "membership.billing.toast.invoiceDownloaded":
-    "Fatura de {period} transferida",
-  "membership.billing.paymentMethod.expires": "Expira em {date}",
-
-  "membership.invoice.eyebrow": "Fatura · {period}",
-  "membership.invoice.title": "A tua <em>fatura.</em>",
-  "membership.invoice.paidInFullShort": "Paga na totalidade",
-  "membership.invoice.totalLabel": "Total",
-  "membership.invoice.lineItemLabel": "Adesão em Sustentação",
-  "membership.invoice.vatNote": "IVA em autoliquidação · {amount}",
-  "membership.invoice.downloadCta": "Transferir fatura",
-  "membership.invoice.docTitle": "QueerPulse — Fatura de adesão",
-  "membership.invoice.invoiceNumberLabel": "Número da fatura:",
-  "membership.invoice.billingPeriodLabel": "Período de faturação:",
-  "membership.invoice.issuedToLabel": "Emitida a:",
-  "membership.invoice.lineItemsHeading": "Itens da fatura",
-  "membership.invoice.totalRow": "Total",
-  "membership.invoice.paidInFullLong":
-    "Paga na totalidade. Obrigade por sustentares a comunidade.",
-
-  "membership.access.lead":
-    "Tudo o que a tua adesão em Sustentação desbloqueia. Mudar de escalão não afeta o acesso até ao fim do ciclo atual.",
-  "membership.access.item.magazine.label": "Revista e conteúdo editorial",
-  "membership.access.item.magazine.note": "Todas as edições + arquivo",
-  "membership.access.item.forum.label": "Fórum da comunidade",
-  "membership.access.item.forum.note": "Publicar, responder, votar",
-  "membership.access.item.dm.label": "Mensagens diretas",
-  "membership.access.item.dm.note": "Conversas ilimitadas",
-  "membership.access.item.readingGroups.label": "Grupos de leitura",
-  "membership.access.item.readingGroups.note_one":
-    "{count} grupo ativo neste momento",
-  "membership.access.item.readingGroups.note_other":
-    "{count} grupos ativos neste momento",
-  "membership.access.item.gatheringTickets.label": "Bilhetes para encontros",
-  "membership.access.item.gatheringTickets.note":
-    "Preço de pessoa associada em todos os eventos pagos",
-  "membership.access.item.jobBoard.label": "Bolsa de emprego e competências",
-  "membership.access.item.jobBoard.note": "Publicar e candidatar-te",
-  "membership.access.item.resourceLibrary.label": "Biblioteca de recursos",
-  "membership.access.item.resourceLibrary.note":
-    "Habitação, saúde, jurídico, finanças",
-  "membership.access.item.mentalHealth.label":
-    "Programa de acesso à saúde mental",
-  "membership.access.item.mentalHealth.note":
-    "Encaminhamento subsidiado para terapia",
-  "membership.access.item.microGrants.label": "Candidaturas a microbolsas",
-  "membership.access.item.microGrants.note": "Trimestral — até {amount}",
-  "membership.access.item.directory.label": "Diretório e descoberta de pessoas",
-  "membership.access.item.directory.note_one":
-    "Encontra e liga-te a {count} pessoa",
-  "membership.access.item.directory.note_other":
-    "Encontra e liga-te a {count} pessoas",
-
-  // ── CancelMembershipPage.tsx / CancelMembershipSteps.tsx /
-  // cancelMembership.data.tsx / CancelConfirmModal.tsx — funil de
-  // cancelamento. "Associação" designa o escalão inferior ("Member" em EN,
-  // distinto de "Adesão" enquanto funcionalidade e "Sustentação" enquanto
-  // escalão superior). Frases de reembolso/fim de acesso traduzidas
-  // literalmente, nunca parafraseadas (§6). ───────────────────────────────
-  "cancelMembership.page.backLink": "← Adesão",
-  "cancelMembership.page.eyebrow": "Cancelar · Sustentação (anual)",
-  "cancelMembership.page.title": "É pena estares a <em>pensar nisso.</em>",
-  "cancelMembership.page.lead":
-    "Sem padrões enganosos — três passos rápidos e sais, ou podes pausar ou mudar de escalão em vez disso. De qualquer forma, sem vergonha nenhuma. O teu acesso à comunidade mantém-se.",
-  "cancelMembership.page.cancelledToast": "Adesão cancelada · email enviado",
-  "cancelMembership.stepper.options": "Opções",
-  "cancelMembership.stepper.tellUsWhy": "Diz-nos porquê",
-  "cancelMembership.stepper.confirm": "Confirmar",
-
-  "cancelMembership.alt.pause.eyebrow": "Pausar · Sustentação",
-  "cancelMembership.alt.pause.title": "Pausar por <em>3 meses?</em>",
-  "cancelMembership.alt.pause.body":
-    "Vamos congelar a tua renovação durante <b>3 meses</b>. Manténs o acesso completo durante esse tempo e não te cobramos nada até retomares — podes desfazer isto quando quiseres.",
-  "cancelMembership.alt.pause.confirmLabel": "Sim, pausar",
-  "cancelMembership.alt.downshift.eyebrow": "Mudar para Associação",
-  "cancelMembership.alt.downshift.title": "Mudar para <em>Associação?</em>",
-  "cancelMembership.alt.downshift.body":
-    "Passas para <b>Associação · {amount} / ano</b>. Manténs todo o acesso à comunidade, mas as vantagens exclusivas de Sustentação (Open Studio, consulta jurídica da ILGA, revista) terminam no fim do teu período atual. Podes voltar a subir de escalão quando quiseres.",
-  "cancelMembership.alt.downshift.confirmLabel": "Sim, mudar para Associação",
-  "cancelMembership.alt.solidarity.eyebrow": "Tarifa solidária",
-  "cancelMembership.alt.solidarity.title":
-    "Passar para a <em>tarifa solidária?</em>",
-  "cancelMembership.alt.solidarity.body":
-    "Vais pagar <b>{amount} / ano</b>, sem perguntas — o fundo da comunidade cobre a diferença, a sério. Manténs <b>todas as vantagens de Sustentação</b> exatamente como estão agora.",
-  "cancelMembership.alt.solidarity.confirmLabel":
-    "Sim, passar para {amount} / ano",
-
-  "cancelMembership.reason.r1":
-    "<b>Ando com o dinheiro apertado.</b> O preço não é o certo para mim agora.",
-  "cancelMembership.reason.r2":
-    "<b>Não estou a usar o suficiente.</b> Entro menos vezes do que gostaria.",
-  "cancelMembership.reason.r3":
-    "<b>Vou sair de Lisboa</b> ou já não estou por cá.",
-  "cancelMembership.reason.r4":
-    "<b>Aconteceu algo na plataforma</b> que quero sinalizar.",
-  "cancelMembership.reason.r5":
-    "<b>Não vejo valor</b> nas vantagens que estou a pagar.",
-  "cancelMembership.reason.r6": "<b>Outro motivo / prefiro não dizer.</b>",
-
-  "cancelMembership.ends.openStudio.title":
-    "Open Studio exclusivo de Sustentação",
-  "cancelMembership.ends.openStudio.desc":
-    "Perdes o teu convite fixo para as sessões mensais.",
-  "cancelMembership.ends.magazine.title": "Assinatura da revista",
-  "cancelMembership.ends.magazine.desc":
-    "A revista trimestral em papel deixa de chegar depois da próxima edição.",
-  "cancelMembership.ends.legalConsult.title":
-    "Consulta jurídica gratuita da ILGA",
-  "cancelMembership.ends.legalConsult.desc":
-    "A tua consulta deste ano, se não a usares, expira quando a adesão terminar.",
-  "cancelMembership.ends.badge.title": "Emblema de Sustentação",
-  "cancelMembership.ends.badge.desc":
-    "O pequeno coração no teu perfil desaparece.",
-
-  "cancelMembership.stays.account.title": "A tua conta e ligações",
-  "cancelMembership.stays.account.desc":
-    "Perfil, mensagens, ligações, comunidades — tudo fica.",
-  "cancelMembership.stays.gatherings.title": "Encontros e comunidades",
-  "cancelMembership.stays.gatherings.desc":
-    "Podes continuar a confirmar presença, participar e organizar encontros.",
-  "cancelMembership.stays.wellbeing.title": "Recursos de bem-estar",
-  "cancelMembership.stays.wellbeing.desc":
-    "Chat de crise, diretório, terapeutas verificados — aberto a todas as pessoas.",
-  "cancelMembership.stays.safeSpaces.title": "Rede de espaços seguros",
-  "cancelMembership.stays.safeSpaces.desc":
-    "A razão de ser da QueerPulse mantém-se gratuita.",
-
-  "cancelMembership.options.currentTitle": "A tua <em>adesão</em> atual",
-  "cancelMembership.options.currentTierLabel": "Sustentação · <em>anual</em>",
-  "cancelMembership.options.currentMeta":
-    "Renovada a <b>{renewedDate}</b> · próxima cobrança <b>{nextChargeDate}</b>",
-  "cancelMembership.options.perYear": "/ ano",
-  "cancelMembership.options.beforeYouGoTitle":
-    "Antes de saíres — <em>três opções mais suaves</em>",
-  "cancelMembership.options.sub":
-    "Cada uma demora 30 segundos. Podes sempre voltar para cancelar.",
-  "cancelMembership.options.pauseTitle": "Pausar por 3 meses",
-  "cancelMembership.options.pauseDesc":
-    "Congelamos a tua renovação. Manténs o acesso. Não cobramos nada até retomares.",
-  "cancelMembership.options.downshiftTitle":
-    "Mudar para Associação ({amount} / ano)",
-  "cancelMembership.options.downshiftDesc":
-    "Manténs todo o acesso à comunidade. Perdes as vantagens exclusivas de Sustentação (open studio, consulta da ILGA, revista).",
-  "cancelMembership.options.solidarityTitle": "Passar para a tarifa solidária",
-  "cancelMembership.options.solidarityDesc":
-    "{amount} / ano, sem perguntas. O fundo cobre a diferença. <b>A sério.</b>",
-  "cancelMembership.options.continueCancellingCta": "Continuar a cancelar →",
-  "cancelMembership.keepSustainerCta": "Manter a minha Sustentação",
-
-  "cancelMembership.reasons.title": "Ajuda-nos a <em>perceber.</em>",
-  "cancelMembership.reasons.sub":
-    "Opcional, mas útil. Lemos todas as respostas. Escolhe o que se aplica.",
-  "cancelMembership.reasons.addNote":
-    "Queres acrescentar mais alguma coisa? (opcional)",
-  "cancelMembership.reasons.placeholder":
-    "Uma ou duas frases ajudam-nos a perceber padrões. Nada disto é mostrado a outras pessoas.",
-  "cancelMembership.backCta": "← Voltar",
-  "cancelMembership.continueCta": "Continuar →",
-
-  "cancelMembership.confirm.title": "Uma última <em>confirmação.</em>",
-  "cancelMembership.confirm.sub":
-    "Aqui está o que muda quando cancelas — e o que não muda.",
-  "cancelMembership.confirm.whatEnds": "O que termina",
-  "cancelMembership.confirm.whatStays": "O que fica — grátis, para sempre",
-  "cancelMembership.confirm.accessContinuesNote":
-    "O teu acesso continua até <b>{date}</b>. Sem reembolso — mas também sem mais cobranças.",
-  "cancelMembership.confirm.writeToUs":
-    "Se algo não estiver bem, escreve para <a>cancel@queerpulse.app</a> — é uma pessoa real que lê.",
-  "cancelMembership.confirm.checkboxLabel":
-    "Percebo que a minha adesão de Sustentação não vai renovar, e que <b>o meu acesso termina a {date}</b>. Posso voltar quando quiser.",
-  "cancelMembership.confirm.cancelMyMembershipCta": "Cancelar a minha adesão",
-
-  "cancelMembership.done.title": "Até à <em>próxima.</em>",
-  "cancelMembership.done.accessNote":
-    "A tua adesão de Sustentação não vai renovar. O acesso continua até <b>{date}</b>.",
-  "cancelMembership.done.emailNote":
-    "Enviámos uma confirmação para <b>{email}</b> com tudo explicado.",
-  "cancelMembership.done.mistakeNote":
-    "Se isto foi um engano, podes voltar a subscrever com um toque a partir do email ou das definições da tua conta — sem penalização.",
-  "cancelMembership.backToHomeCta": "Voltar ao início",
-  "cancelMembership.resubscribeCta": "Voltar a aderir",
-
-  "cancelMembership.paused.title": "Em pausa — <em>até breve.</em>",
-  "cancelMembership.paused.lead1":
-    "Congelámos a tua renovação de Sustentação durante <b>3 meses</b>. Manténs o acesso completo durante esse tempo — e não te cobramos um cêntimo até retomares.",
-  "cancelMembership.paused.lead2":
-    "A tua renovação passa para <b>{date}</b>. Enviámos os detalhes para <b>{email}</b>.",
-  "cancelMembership.paused.note":
-    "Mudaste de ideias? Podes retomar quando quiseres — continua exatamente onde ficaste, sem penalização.",
-  "cancelMembership.backToMembershipCta": "Voltar à adesão",
-  "cancelMembership.paused.undoCta": "Desfazer pausa",
-
-  "cancelMembership.downshifted.title": "Bem-vinde à <em>Associação.</em>",
-  "cancelMembership.downshifted.lead1":
-    "Estás agora no plano <b>Associação</b> — <b>{amount} / ano</b>. Todo o teu acesso à comunidade mantém-se exatamente igual.",
-  "cancelMembership.downshifted.lead2":
-    "As tuas vantagens exclusivas de Sustentação (Open Studio, consulta da ILGA, revista em papel) terminam no fim do período atual. A tua próxima cobrança é de <b>{amount} a {date}</b>.",
-  "cancelMembership.downshifted.note":
-    "A confirmação está a caminho de <b>{email}</b>. Podes voltar a subir para Sustentação quando quiseres.",
-  "cancelMembership.downshifted.undoCta": "Desfazer — manter Sustentação",
-
-  "cancelMembership.solidarity.title":
-    "Estás agora na <em>tarifa solidária.</em>",
-  "cancelMembership.solidarity.lead1":
-    "A partir da tua próxima renovação vais pagar <b>{amount} / ano</b> — e manténs <b>todas as vantagens de Sustentação</b> exatamente como estão agora. O fundo da comunidade cobre o resto.",
-  "cancelMembership.solidarity.lead2":
-    "A tua próxima cobrança é de <b>{amount} a {date}</b>. Enviámos os detalhes para <b>{email}</b>.",
-  "cancelMembership.solidarity.note":
-    "Quando a situação melhorar, podes voltar à tarifa normal quando quiseres — sem pressão, sem lembretes.",
-  "cancelMembership.solidarity.undoCta": "Desfazer",
-
-  // ── GiftMembershipPage.tsx / GiftMembershipForm.tsx / giftMembership.data.tsx
-  // — fluxo de oferta e patrocínio. Nome/contacto/nota da pessoa destinatária
-  // mantêm-se em inglês (conteúdo fictício de exemplo, não chrome). ────────
-  "giftMembership.hero.eyebrow": "Sustentação · oferecer e patrocinar",
-  "giftMembership.hero.title": "Dá <em>um lugar</em> a outra pessoa.",
-  "giftMembership.hero.dek":
-    "Há duas formas de fazeres isto. <b>Oferece</b> a alguém que conheces diretamente — uma parceira, um amigo, a pessoa que te apresentou a tudo isto. Ou <b>patrocina anonimamente</b> — a tua oferta entra numa bolsa a que uma pessoa se candidata, sem perguntas, quando precisar. <em>As duas mantêm alguém por perto que, de outra forma, talvez desistisse.</em>",
-  "giftMembership.modes.title": "Que <em>oferta</em> estás a fazer?",
-  "giftMembership.mode.gift.title": "Oferecer · <em>a alguém que conheces</em>",
-  "giftMembership.mode.gift.body":
-    "Para: uma parceira. Um amigo. A pessoa colega que anda sempre a perguntar como se junta. <b>Recebe um convite pelo nome</b>, com uma nota pessoal tua. Regista-se com um link de utilização única. Se recusar, és reembolsade.",
-  "giftMembership.mode.gift.priceSub": "/ ano · Sustentação · igual à tua",
-  "giftMembership.mode.sponsor.title":
-    "Patrocinar · <em>anonimamente, para quem precisar</em>",
-  "giftMembership.mode.sponsor.body_one":
-    "Para: retribuir. A tua oferta entra na <b>bolsa de solidariedade</b>. Pessoas que não conseguem pagar {amount} candidatam-se com uma frase — aprovamos, sem pedir provas. <em>Está {count} pessoa na bolsa neste momento.</em> A tua oferta é emparelhada em poucos dias.",
-  "giftMembership.mode.sponsor.body_other":
-    "Para: retribuir. A tua oferta entra na <b>bolsa de solidariedade</b>. Pessoas que não conseguem pagar {amount} candidatam-se com uma frase — aprovamos, sem pedir provas. <em>Estão {count} pessoas na bolsa neste momento.</em> A tua oferta é emparelhada em poucos dias.",
-  "giftMembership.mode.sponsor.priceSub":
-    "dá o valor que quiseres · emparelhado com nome ou anonimamente",
-  "giftMembership.form.title":
-    "Detalhes da oferta · <em>diz-nos para quem é</em>",
-  "giftMembership.form.sub":
-    "Tudo editável até aceitarem. Também podes agendar a entrega — para um aniversário, um aniversário de saída do armário, o dia em que mais precisar.",
-  "giftMembership.sponsorFoot.title":
-    "Ou salta o formulário · <em>patrocina anonimamente</em>",
-  "giftMembership.sponsorFoot.body":
-    "Se preferires não indicar uma pessoa destinatária, <a>coloca a tua oferta na bolsa de adesões solidárias</a>. Emparelhamo-la com uma pessoa que se candidatou — geralmente dentro de 48 horas. <em>Recebes um obrigado e uma contagem; não um nome.</em>",
-
-  "giftMembership.delivery.now.label": "Agora",
-  "giftMembership.delivery.now.desc":
-    "Enviado no minuto seguinte · o email chega na hora",
-  "giftMembership.delivery.now.note": "entregue de imediato",
-  "giftMembership.delivery.schedule.label": "Agendar",
-  "giftMembership.delivery.schedule.desc":
-    "Escolhe uma data · enviamos às 09:00 no fuso horário da pessoa",
-  "giftMembership.delivery.schedule.note":
-    "agendado · escolhe a data no passo seguinte",
-  "giftMembership.delivery.print.label": "Imprimir e enviar pelo correio",
-  "giftMembership.delivery.print.desc":
-    "+ {amount} de portes · cartão risografado · chega em 5 a 7 dias",
-  "giftMembership.delivery.print.note": "impresso + enviado · +{amount}",
-
-  "giftMembership.anon.no": "Não — mostrar o meu nome à pessoa destinatária",
-  "giftMembership.anon.yes": "Sim — anónimo para a pessoa destinatária",
-  "giftMembership.anon.initials": "Só as minhas iniciais",
-
-  "giftMembership.form.sectionRecipient": "Pessoa destinatária",
-  "giftMembership.form.recipientNameLabel": "O nome da pessoa",
-  "giftMembership.form.recipientNameHint": "— como será tratada",
-  "giftMembership.form.recipientContactLabel": "O email ou telemóvel da pessoa",
-  "giftMembership.form.recipientContactHint":
-    "Usamos uma vez · para enviar o convite. A pessoa controla o que acontece depois.",
-  "giftMembership.form.sectionFromYou": "Da tua parte",
-  "giftMembership.form.senderNameLabel": "Como queres que o teu nome apareça",
-  "giftMembership.form.anonLabel": "Queres ficar no anonimato?",
-  "giftMembership.form.anonHint": "só para essa pessoa",
-  "giftMembership.form.noteLabel": "Uma nota breve",
-  "giftMembership.form.noteHint":
-    "— opcional · texto simples · impresso no cartão",
-  "giftMembership.form.charCount": "{count} / 280 carateres",
-  "giftMembership.form.sectionDelivery": "Entrega",
-  "giftMembership.form.deliveryIntro": "Quando deve chegar o convite?",
-  "giftMembership.form.previewHeading":
-    "Pré-visualização · o que a pessoa vai ver",
-  "giftMembership.form.previewStamp": "De uma pessoa amiga",
-  "giftMembership.form.previewTitle":
-    "{name} — alguém <em>está do teu lado.</em>",
-  "giftMembership.form.previewSender":
-    "— <b>{sender}</b> · com um ano de adesão de Sustentação · {amount} · ativa quando quiseres, até <b>{date}</b>",
-  "giftMembership.form.summary":
-    "Uma oferta de Sustentação · <b>{amount}</b> · {deliveryNote}",
-  "giftMembership.form.payCta": "Pagar · oferecer a {name} →",
-  "giftMembership.form.toast.charged":
-    "Cobrámos {amount} · convite enviado a {name}",
 
   // ── LinkProviderModal.tsx ─────────────────────────────────────────────────
   "linkProvider.ariaLabel": "Autorizar {provider}",

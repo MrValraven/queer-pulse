@@ -234,6 +234,12 @@
   font-weight: 700;
   color: var(--text-strong);
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .hnRole {
   font-size: 11.5px;
   color: var(--ink-40);

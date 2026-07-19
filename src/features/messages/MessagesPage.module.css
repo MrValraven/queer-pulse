@@ -100,6 +100,13 @@
   gap: 6px;
   margin-bottom: 2px;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
 .trName {
   font-size: 14px;
   font-weight: 600;

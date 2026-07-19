@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
-import { useEmployerAffiliation } from "../../app/providers/EmployerAffiliationProvider";
+import { useEmployerAffiliation } from "./api/useEmployerAffiliation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { COMPANY_PROFILES } from "./companies.data";
 import { useCompany } from "./api/useCompany";
@@ -13,7 +13,7 @@ import type { Job } from "./jobs.data";
 import styles from "./PostJobPage.module.css";
 
 export function PostJobPage() {
-  const { affiliation, clearAffiliation } = useEmployerAffiliation();
+  const { affiliation, clearAffiliation, isLoading } = useEmployerAffiliation();
   const { demoMode } = useDemoMode();
   const [params] = useSearchParams();
   const companyParam = params.get("company") ?? undefined;
@@ -28,8 +28,13 @@ export function PostJobPage() {
       ? COMPANY_PROFILES[affiliation.companySlug]
       : (companyQuery.data?.profile ?? undefined)
     : undefined;
+  // Two loads can be outstanding: the affiliation itself (live-only — phase 3
+  // stopped mirroring it into localStorage, so it is genuinely unknown until
+  // GET /me/affiliation lands) and then the company it points at. Either one
+  // renders the skeleton. Without the first term this page would flash
+  // PostJobGate — "you have no employer" — at a member who does.
   const loadingCompany =
-    Boolean(affiliation) && !demoMode && companyQuery.isLoading;
+    isLoading || (Boolean(affiliation) && !demoMode && companyQuery.isLoading);
 
   return (
     <PageShell>

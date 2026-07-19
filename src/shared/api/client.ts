@@ -17,10 +17,18 @@ export class ApiError extends Error {
 
 let csrfToken: string | null = null;
 let onAuthLost: (() => void) | null = null;
+let onPlatformLocked: ((message: string | null) => void) | null = null;
 
 /** Register a callback fired when a 401 cannot be recovered by refresh. */
 export function setOnAuthLost(cb: () => void): void {
   onAuthLost = cb;
+}
+
+/** Register a callback fired when the backend reports a platform lockdown. */
+export function setOnPlatformLocked(
+  cb: (message: string | null) => void,
+): void {
+  onPlatformLocked = cb;
 }
 
 /**
@@ -61,9 +69,9 @@ export async function probeBackend(): Promise<BackendProbe> {
   }
 }
 
-/** Fetch + cache the CSRF token once. Call on app load before any mutation. */
-export async function ensureCsrf(): Promise<void> {
-  if (csrfToken) return;
+let csrfFetch: Promise<void> | null = null;
+
+async function fetchCsrf(): Promise<void> {
   try {
     const res = await fetch(`${API_BASE_URL}/csrf-token`, {
       credentials: "include",
@@ -72,6 +80,27 @@ export async function ensureCsrf(): Promise<void> {
   } catch {
     /* backend unreachable — leave token null; mutations will surface the error */
   }
+}
+
+/**
+ * Fetch + cache the CSRF token once. Call on app load before any mutation.
+ *
+ * Single-flight, the same way `refreshOnce` below is: caching only the *result*
+ * isn't enough, because callers that arrive while the first request is still in
+ * flight all see a null token and all go to the network. That happens for real —
+ * two concurrent mutations on a cold cache, and on every dev-mode load, where
+ * StrictMode runs AuthProvider's bootstrap effect twice. Holding the promise
+ * collapses them into one request; it's cleared afterwards so a failed attempt
+ * (which resolves rather than rejects — the token just stays null) can be retried.
+ */
+export function ensureCsrf(): Promise<void> {
+  if (csrfToken) return Promise.resolve();
+  if (!csrfFetch) {
+    csrfFetch = fetchCsrf().finally(() => {
+      csrfFetch = null;
+    });
+  }
+  return csrfFetch;
 }
 
 let refreshing: Promise<boolean> | null = null;
@@ -145,6 +174,17 @@ async function request<T>(
       csrfToken = null;
       await ensureCsrf();
       return request<T>(method, path, body, false);
+    }
+
+    // Platform lockdown. 503 rather than 403 precisely so it is distinguishable
+    // from a permission denial: the platform is temporarily unavailable, not
+    // this caller being unauthorised. The session and cookies are untouched, so
+    // lifting the lockdown restores everyone with no re-authentication.
+    if (
+      res.status === 503 &&
+      (data as { code?: string })?.code === "PLATFORM_LOCKED"
+    ) {
+      onPlatformLocked?.((data as { message?: string }).message ?? null);
     }
 
     throw new ApiError(res.status, message, data);

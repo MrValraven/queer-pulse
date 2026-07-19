@@ -2,7 +2,7 @@ import { FiClock, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDirectoryListings } from "../../app/providers/DirectoryListingsProvider";
+import { useDirectoryListings } from "../marketing/listBusiness/api/useDirectoryListings";
 import { routes } from "../../app/routeMap";
 import { EmptyState } from "../../shared/components/ui";
 import {

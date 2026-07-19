@@ -234,6 +234,8 @@ export const community: Catalog = {
   "creatives.card.viewProfileCtaShort": "View profile",
   "creatives.card.artistPhoto": "artist photo",
   "creatives.player.playAriaLabel": "Play",
+  "creatives.player.seekAriaLabel": "Seek through the track",
+  "creatives.player.seekValueText": "{{percent}}% through the track",
   "creatives.empty.art.title": "Nothing matches your filters",
   "creatives.empty.art.description":
     "No works fit these tags right now. Clear them to see everything the community has shared.",

@@ -4,6 +4,7 @@ import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/SocialProvider";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { conversations, type Conversation } from "./data";
 import styles from "./NewMessageModal.module.css";
 
@@ -39,13 +40,18 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
   }, [query, isBlocked]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={styles.dialog}
         role="dialog"
         aria-modal="true"
         aria-labelledby="new-message-title"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.head}>
           <h2 id="new-message-title" className={styles.title}>
@@ -82,7 +88,10 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
                   size={40}
                 />
                 <div className={styles.rowBody}>
-                  <span className={styles.rowName}>{person.name}</span>
+                  <span className={styles.nameRow}>
+                    <span className={styles.rowName}>{person.name}</span>
+                    <MemberStaffBadge slug={person.slug} />
+                  </span>
                   <span className={styles.rowMeta}>{person.pronouns}</span>
                 </div>
               </button>

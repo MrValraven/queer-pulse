@@ -152,21 +152,11 @@ export function VoteSection() {
         ))}
       {!showAll && (
         <p className={styles.showMore}>
-          <a
-            role="button"
-            tabIndex={0}
-            onClick={() => setShowAll(true)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setShowAll(true);
-              }
-            }}
-          >
+          <button type="button" onClick={() => setShowAll(true)}>
             {t("marketing:annualAssembly.vote.showMore", {
               count: MORE_RESOLUTIONS.length,
             })}
-          </a>
+          </button>
         </p>
       )}
     </section>

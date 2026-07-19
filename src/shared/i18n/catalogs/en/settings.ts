@@ -375,6 +375,10 @@ export const settings: Catalog = {
   "account.loginAlerts.title": "Login alerts",
   "account.loginAlerts.desc":
     "Email me when my account is accessed from a new device",
+  "account.disclosure.title": "Report a security vulnerability",
+  "account.disclosure.desc":
+    "Found a bug or a weakness in QueerPulse? Our disclosure policy explains how to report it and what happens next.",
+  "account.disclosure.cta": "Read the policy",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Profile",
@@ -575,7 +579,7 @@ export const settings: Catalog = {
   "dataExport.outro.titleLine1": "Questions about",
   "dataExport.outro.titleLine2": "your data?",
   "dataExport.outro.sub":
-    "Write to our data team. We respond to all requests within 5 working days.",
+    "Write to us and a real person will get back to you.",
   "dataExport.outro.cta": "Contact us",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────
@@ -584,18 +588,19 @@ export const settings: Catalog = {
     "Select the data types you want included in your archive.",
   "dataExport.steps.step2.label": "Confirm your identity",
   "dataExport.steps.step2.desc":
-    "We email a verification link to your registered address.",
+    "We ask you to confirm it's you, right here — no email, no password.",
   "dataExport.steps.step3.label": "Download your archive",
-  "dataExport.steps.step3.desc": "A single-use link, available for 7 days.",
+  "dataExport.steps.step3.desc":
+    "It's built straight away and downloads from this page.",
 
   // ── DataExportSections.tsx — DataExportForm ──────────────────────────────
   "dataExport.form.title": "Request your <em>data archive</em>",
   "dataExport.form.sub":
-    "Select the categories you want included. You can request a full export or only specific data types. We'll email you a secure link the moment your archive is ready.",
+    "Select the categories you want included. You can take everything, or only the parts you're after. Your archive is built as soon as you ask for it.",
   "dataExport.form.includeLabel": "What to include",
   "dataExport.form.formatLabel": "File format",
   "dataExport.form.legalNote":
-    "Under <strong>GDPR Article 20</strong>, we provide your data within <strong>30 days</strong> of a verified request. The archive is encrypted in transit and the download link is single-use.",
+    "Under <strong>GDPR Article 20</strong> you can take your data with you, in a format other services can read. Your archive is built on request and downloads over an encrypted connection.",
   "dataExport.form.submitting": "Requesting…",
   "dataExport.form.submit": "Request my data archive",
   // "JSON"/"CSV" are technical format abbreviations, identical in both
@@ -620,12 +625,12 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "Your archive is ready",
   "dataExport.status.ready.body":
-    "We've also emailed this link to your registered address. It's single-use.",
+    "It's ready to download now. Nothing was emailed — this stays between you and this page.",
   "dataExport.status.ready.bodyWithExpiry":
-    "We've also emailed this link to your registered address. It's single-use and expires on <strong>{date}</strong>.",
+    "It's ready to download now. Nothing was emailed. We'll keep it here until <strong>{date}</strong>, then clear it out.",
   "dataExport.status.expired.title": "That link has expired",
   "dataExport.status.expired.body":
-    "For your safety, export links expire after 7 days. Request a fresh archive and we'll build it again.",
+    "We don't keep archives around indefinitely. Ask again and we'll build you a fresh one.",
   "dataExport.status.failed.title": "That didn't work",
   "dataExport.status.failed.body":
     "We couldn't build your archive just now — nothing left your account. Try again in a moment.",
@@ -706,74 +711,6 @@ export const settings: Catalog = {
   "saveButton.savingLabel": "Saving…",
   "saveButton.savedLabel": "Saved",
 
-  // ── NotificationPreferencesPage.tsx + Sections — a standalone prototype
-  // notification-matrix page (distinct from SettingsPanes' NotificationsPane) ─
-  "notifPrefs.sidebar.account": "Account",
-  "notifPrefs.sidebar.editProfile": "Edit profile",
-  "notifPrefs.sidebar.notifications": "Notifications",
-  "notifPrefs.sidebar.privacy": "Privacy",
-  "notifPrefs.sidebar.dangerZone": "Danger zone",
-  "notifPrefs.sidebar.deactivateAccount": "Deactivate account",
-  "notifPrefs.title": "Notification <em>preferences</em>",
-  "notifPrefs.sub":
-    "Control exactly what QueerPulse sends you, and when. We default to less — you can always turn more on.",
-  "notifPrefs.digest.sectionLabel": "Email digest",
-  "notifPrefs.digest.frequencyLabel": "Digest frequency",
-  "notifPrefs.digest.frequencySub":
-    "A summary of activity since your last visit. Never promotional.",
-  "notifPrefs.digest.freq.never": "Never",
-  "notifPrefs.digest.freq.daily": "Daily",
-  "notifPrefs.digest.freq.weeklyMonday": "Weekly (Monday)",
-  "notifPrefs.digest.freq.fortnightly": "Fortnightly",
-  "notifPrefs.digest.includesLabel": "Digest includes",
-  "notifPrefs.digest.includesSub":
-    "Which sections appear in your digest email.",
-  "notifPrefs.digest.includes.forumEvents": "Forum highlights + Events",
-  "notifPrefs.digest.includes.everything": "Everything",
-  "notifPrefs.digest.includes.eventsOnly": "Events only",
-  "notifPrefs.digest.includes.forumOnly": "Forum only",
-  "notifPrefs.matrix.sectionLabel": "What triggers a notification",
-  "notifPrefs.matrix.colEvent": "Event",
-  "notifPrefs.matrix.colInApp": "In-app",
-  "notifPrefs.matrix.colEmail": "Email",
-  "notifPrefs.matrix.colPush": "Push",
-  "notifPrefs.row.dm.label": "Direct message received",
-  "notifPrefs.row.dm.sub": "Someone sends you a DM",
-  "notifPrefs.row.forumReply.label": "Forum reply to your post",
-  "notifPrefs.row.forumReply.sub": "Someone replies to a thread you started",
-  "notifPrefs.row.forumMention.label": "Forum mention",
-  "notifPrefs.row.forumMention.sub": "Someone uses @yourname in a post",
-  "notifPrefs.row.rsvpReminder.label": "Event RSVP reminder",
-  "notifPrefs.row.rsvpReminder.sub": "24h before an event you've signed up for",
-  "notifPrefs.row.newEvent.label": "New event in your area",
-  "notifPrefs.row.newEvent.sub": "Events matching your interests",
-  "notifPrefs.row.magazineIssue.label": "Magazine new issue",
-  "notifPrefs.row.magazineIssue.sub": "When the monthly issue goes live",
-  "notifPrefs.row.connectionRequest.label": "Connection request",
-  "notifPrefs.row.connectionRequest.sub": "A member wants to connect with you",
-  "notifPrefs.row.mentalHealthFund.label": "Mental health fund update",
-  "notifPrefs.row.mentalHealthFund.sub":
-    "If you're using the fund, status changes",
-  "notifPrefs.quietHours.sectionLabel": "Quiet hours",
-  "notifPrefs.quietHours.enableTitle": "Enable quiet hours",
-  "notifPrefs.quietHours.enableDesc":
-    "No push notifications during these hours. Email and in-app unaffected.",
-  "notifPrefs.quietHours.from": "From",
-  "notifPrefs.quietHours.until": "Until",
-  "notifPrefs.alwaysOn.sectionLabel": "Always on · cannot be disabled",
-  "notifPrefs.alwaysOn.securityAlerts.title": "Security alerts",
-  "notifPrefs.alwaysOn.securityAlerts.desc":
-    "New sign-in from an unrecognised device or location.",
-  "notifPrefs.alwaysOn.dataExportReady.title": "Data export ready",
-  "notifPrefs.alwaysOn.dataExportReady.desc":
-    "When your data archive is available to download.",
-  "notifPrefs.alwaysOn.moderationDecisions.title": "Moderation decisions",
-  "notifPrefs.alwaysOn.moderationDecisions.desc":
-    "If a moderator acts on content you posted.",
-  "notifPrefs.saveBar.note": "Changes are saved automatically.",
-  "notifPrefs.saveBar.label": "Save preferences",
-  "notifPrefs.toast.saved": "Notification preferences saved.",
-
   // ── AccessibilityPreferencesPage.tsx + Sections — the full accessibility
   // page (SettingsPersonalisation's AccessibilityPane is a summary card that
   // links here). Only Reduce motion is functional; the rest are labelled but
@@ -842,6 +779,11 @@ export const settings: Catalog = {
   // already established in DataPane's deactivate/delete cards. `phrase` is a
   // client-only typed-confirmation string (never sent anywhere), so it's safe
   // to translate in full — display and match target resolve from the same key. ─
+  "deleteAccount.sidebar.account": "Account",
+  "deleteAccount.sidebar.editProfile": "Edit profile",
+  "deleteAccount.sidebar.privacy": "Privacy",
+  "deleteAccount.sidebar.dangerZone": "Danger zone",
+  "deleteAccount.sidebar.deactivateAccount": "Deactivate account",
   "deleteAccount.page.title": "Leaving <em>QueerPulse?</em>",
   "deleteAccount.page.sub":
     "We're sorry to see you go. Before you decide, choose the option that fits your situation.",
@@ -967,380 +909,6 @@ export const settings: Catalog = {
   "themeStudio.backToProfile": "← My profile",
   "themeStudio.saveTheme": "Save theme",
   "themeStudio.toast.saved": "Theme saved",
-
-  // ── MembershipPage.tsx / MembershipSidebar.tsx / membership.data.tsx —
-  // Membership & Billing cluster. Money and dates are never baked into these
-  // strings — components interpolate `fmt.currency()`/`fmt.date()` results
-  // into the `{amount}`/`{date}`/`{period}` tokens below. ──────────────────
-  "membership.breadcrumb.current": "Membership",
-  "membership.page.title": "Your <em>membership</em>",
-  "membership.tabs.plan": "Plan",
-  "membership.tabs.billing": "Billing",
-  "membership.tabs.access": "Access",
-
-  "membership.tier.hardship.name": "Hardship waiver",
-  "membership.tier.hardship.desc":
-    "Community supported — fully funded by Sustaining members. No questions asked, no expiry, no means testing.",
-  "membership.tier.solidarity.name": "Solidarity",
-  "membership.tier.solidarity.desc":
-    "The most common choice. Pay what genuinely sustains you — anything between {min} and {max}.",
-  "membership.tier.sustaining.name": "Sustaining",
-  "membership.tier.sustaining.desc":
-    "Your contribution funds access for members who can't afford it. Any amount above {threshold} goes directly into the solidarity pool.",
-  "membership.tier.sub.free": "{amount} / month",
-  "membership.tier.sub.range": "{min}–{max} / month",
-  "membership.tier.sub.plus": "{amount}+ / month",
-  "membership.tier.amount.other": "Other",
-  "membership.tier.amount.otherSub": "amount",
-  "membership.tier.customAmountPlaceholder": "e.g. {amount} / month",
-
-  "membership.current.eyebrow": "Current plan",
-  "membership.current.tierLabel": "Sustaining member",
-  "membership.current.cadence": "/ month",
-  "membership.current.since": "Member since {date}",
-  "membership.current.activeBadge": "Active",
-
-  "membership.plan.switchTier": "Switch tier",
-  "membership.plan.fineprint":
-    "Changes take effect at the next billing date. You'll never be locked out mid-cycle.",
-  "membership.plan.saving": "Saving…",
-  "membership.plan.saveCta": "Save changes →",
-  "membership.plan.pauseCta": "Pause for 1 month",
-  "membership.plan.cancelCta": "Cancel membership",
-  "membership.plan.pauseConfirmText":
-    "Pausing means your access continues until {date}, then suspends for 30 days. You can unpause at any time. Your position in the community is never affected.",
-  "membership.plan.confirmPause": "Confirm pause",
-  "membership.plan.keepActive": "Keep active",
-  "membership.plan.beforeYouGo": "Before you go",
-  "membership.plan.cancelConfirmText":
-    "If it's financial, there's a hardship waiver — you stay in the community at no cost. If you're taking a break, the pause option keeps your account warm. If we've done something wrong, we want to know.",
-  "membership.plan.keepMembership": "Keep membership",
-  "membership.plan.toast.updated":
-    "Plan updated. Changes take effect on {date}.",
-  "membership.plan.toast.paused":
-    "Membership paused from {date}. Resume anytime from this page.",
-  "membership.plan.toast.cancelled":
-    "Membership cancelled. Your access continues until {date}.",
-
-  "membership.sidebar.activeMember": "Active member",
-  "membership.sidebar.solidarityLink": "About solidarity pricing →",
-
-  "membership.status.tierLabel": "Sustaining tier",
-  "membership.status.renewal": "Next renewal: {date}",
-
-  "membership.contribution.label": "contributed to date",
-  "membership.contribution.since_one": "Since {date} · {count} month",
-  "membership.contribution.since_other": "Since {date} · {count} months",
-  "membership.contribution.impact.therapyHours":
-    "Approximately {count} hours of the mental health access programme",
-  "membership.contribution.impact.microGrants_one":
-    "{count} micro-grant for members in financial need",
-  "membership.contribution.impact.microGrants_other":
-    "{count} micro-grants for members in financial need",
-  "membership.contribution.impact.hardshipAccess_one":
-    "Platform access for ~{count} member on hardship waivers",
-  "membership.contribution.impact.hardshipAccess_other":
-    "Platform access for ~{count} members on hardship waivers",
-
-  "membership.billing.sectionPaymentHistory": "Payment history",
-  "membership.billing.sectionPaymentMethod": "Payment method",
-  "membership.billing.sectionInvoices": "Invoices",
-  "membership.billing.row.lastPayment": "Last payment",
-  "membership.billing.row.nextBillingDate": "Next billing date",
-  "membership.billing.row.billingCycle": "Billing cycle",
-  "membership.billing.row.amount": "Amount",
-  "membership.billing.cycle.monthly": "Monthly",
-  "membership.billing.updateCard": "Update card",
-  "membership.billing.downloadPdf": "Download PDF",
-  "membership.billing.cardForm.note":
-    "Enter your new card details. We use Stripe for secure card handling — we never store card numbers.",
-  "membership.billing.cardForm.cardNumberLabel": "Card number",
-  "membership.billing.cardForm.expiryLabel": "Expiry",
-  "membership.billing.cardForm.cvcLabel": "CVC",
-  "membership.billing.cardForm.nameLabel": "Name on card",
-  "membership.billing.cardForm.namePlaceholder": "Full name",
-  "membership.billing.cardForm.saving": "Saving…",
-  "membership.billing.cardForm.save": "Save card",
-  "membership.billing.cardForm.cancel": "Cancel",
-  "membership.billing.toast.invalidCard": "Please enter a valid card number.",
-  "membership.billing.toast.cardUpdated": "Card updated.",
-  "membership.billing.toast.invoiceDownloaded":
-    "Invoice for {period} downloaded",
-  "membership.billing.paymentMethod.expires": "Expires {date}",
-
-  "membership.invoice.eyebrow": "Invoice · {period}",
-  "membership.invoice.title": "Your <em>invoice.</em>",
-  "membership.invoice.paidInFullShort": "Paid in full",
-  "membership.invoice.totalLabel": "Total",
-  "membership.invoice.lineItemLabel": "Sustaining membership",
-  "membership.invoice.vatNote": "VAT reverse-charged · {amount}",
-  "membership.invoice.downloadCta": "Download invoice",
-  "membership.invoice.docTitle": "QueerPulse — Membership invoice",
-  "membership.invoice.invoiceNumberLabel": "Invoice number:",
-  "membership.invoice.billingPeriodLabel": "Billing period:",
-  "membership.invoice.issuedToLabel": "Issued to:",
-  "membership.invoice.lineItemsHeading": "Line items",
-  "membership.invoice.totalRow": "Total",
-  "membership.invoice.paidInFullLong":
-    "Paid in full. Thank you for sustaining the community.",
-
-  "membership.access.lead":
-    "Everything your Sustaining membership unlocks. Changing tiers doesn't affect access until the current cycle ends.",
-  "membership.access.item.magazine.label": "Magazine & editorial",
-  "membership.access.item.magazine.note": "All issues + archive",
-  "membership.access.item.forum.label": "Community forum",
-  "membership.access.item.forum.note": "Post, reply, vote",
-  "membership.access.item.dm.label": "Direct messages",
-  "membership.access.item.dm.note": "Unlimited conversations",
-  "membership.access.item.readingGroups.label": "Reading groups",
-  "membership.access.item.readingGroups.note_one":
-    "{count} group currently running",
-  "membership.access.item.readingGroups.note_other":
-    "{count} groups currently running",
-  "membership.access.item.gatheringTickets.label": "Gathering tickets",
-  "membership.access.item.gatheringTickets.note":
-    "Member pricing on all paid events",
-  "membership.access.item.jobBoard.label": "Job board & skill listings",
-  "membership.access.item.jobBoard.note": "Post and apply",
-  "membership.access.item.resourceLibrary.label": "Resource library",
-  "membership.access.item.resourceLibrary.note":
-    "Housing, health, legal, finance",
-  "membership.access.item.mentalHealth.label": "Mental health access programme",
-  "membership.access.item.mentalHealth.note": "Subsidised therapy referrals",
-  "membership.access.item.microGrants.label": "Micro-grant applications",
-  "membership.access.item.microGrants.note": "Quarterly — up to {amount}",
-  "membership.access.item.directory.label": "Member directory & discovery",
-  "membership.access.item.directory.note_one":
-    "Find and connect with {count} member",
-  "membership.access.item.directory.note_other":
-    "Find and connect with {count} members",
-
-  // ── CancelMembershipPage.tsx / CancelMembershipSteps.tsx /
-  // cancelMembership.data.tsx / CancelConfirmModal.tsx — cancellation funnel.
-  // Precision matters here (§6): every refund/no-refund/access-end sentence
-  // was translated literally, not paraphrased. Money and dates are always
-  // interpolated via `fmt.currency()`/`fmt.date()`, never baked in. ────────
-  "cancelMembership.page.backLink": "← Membership",
-  "cancelMembership.page.eyebrow": "Cancel · Sustainer (annual)",
-  "cancelMembership.page.title": "Sorry to see you <em>thinking about it.</em>",
-  "cancelMembership.page.lead":
-    "No dark patterns — three quick steps and you're out, or you can pause or downshift instead. Either way, no shame. Your community access remains.",
-  "cancelMembership.page.cancelledToast": "Membership cancelled · email sent",
-  "cancelMembership.stepper.options": "Options",
-  "cancelMembership.stepper.tellUsWhy": "Tell us why",
-  "cancelMembership.stepper.confirm": "Confirm",
-
-  "cancelMembership.alt.pause.eyebrow": "Pause · Sustainer",
-  "cancelMembership.alt.pause.title": "Pause for <em>3 months?</em>",
-  "cancelMembership.alt.pause.body":
-    "We'll freeze your renewal for <b>3 months</b>. You keep full access the whole time, and we won't charge you until you resume — you can undo it any time.",
-  "cancelMembership.alt.pause.confirmLabel": "Yes, pause it",
-  "cancelMembership.alt.downshift.eyebrow": "Downshift to Member",
-  "cancelMembership.alt.downshift.title": "Switch to <em>Member?</em>",
-  "cancelMembership.alt.downshift.body":
-    "You'll move to <b>Member · {amount} / year</b>. You keep all community access, but Sustainer-only perks (Open Studio, ILGA consult, magazine) wind down at the end of your term. Upgrade back any time.",
-  "cancelMembership.alt.downshift.confirmLabel": "Yes, switch to Member",
-  "cancelMembership.alt.solidarity.eyebrow": "Solidarity rate",
-  "cancelMembership.alt.solidarity.title":
-    "Drop to the <em>solidarity rate?</em>",
-  "cancelMembership.alt.solidarity.body":
-    "You'll pay <b>{amount} / year</b>, no questions asked — the community fund covers the difference, genuinely. You keep <b>every Sustainer perk</b> exactly as it is now.",
-  "cancelMembership.alt.solidarity.confirmLabel":
-    "Yes, drop to {amount} / year",
-
-  "cancelMembership.reason.r1":
-    "<b>Money is tight.</b> The price isn't right for me right now.",
-  "cancelMembership.reason.r2":
-    "<b>I'm not using it enough.</b> Logging in less than I'd like.",
-  "cancelMembership.reason.r3":
-    "<b>I'm leaving Lisbon</b> or no longer based here.",
-  "cancelMembership.reason.r4":
-    "<b>Something happened on the platform</b> that I want to flag.",
-  "cancelMembership.reason.r5":
-    "<b>I don't see the value</b> in the perks I'm paying for.",
-  "cancelMembership.reason.r6": "<b>Other / prefer not to say.</b>",
-
-  "cancelMembership.ends.openStudio.title": "Sustainer-only Open Studio",
-  "cancelMembership.ends.openStudio.desc":
-    "You'll lose your standing invite to the monthly sessions.",
-  "cancelMembership.ends.magazine.title": "Magazine subscription",
-  "cancelMembership.ends.magazine.desc":
-    "Quarterly print magazine stops shipping after the next issue.",
-  "cancelMembership.ends.legalConsult.title": "Free ILGA legal consult",
-  "cancelMembership.ends.legalConsult.desc":
-    "Your unused consult for this year expires when membership ends.",
-  "cancelMembership.ends.badge.title": "Sustainer badge",
-  "cancelMembership.ends.badge.desc":
-    "The little heart on your profile goes away.",
-
-  "cancelMembership.stays.account.title": "Your account & connections",
-  "cancelMembership.stays.account.desc":
-    "Profile, messages, connections, communities — all stay.",
-  "cancelMembership.stays.gatherings.title": "Gatherings & communities",
-  "cancelMembership.stays.gatherings.desc":
-    "You can still RSVP, attend, and host.",
-  "cancelMembership.stays.wellbeing.title": "Wellbeing resources",
-  "cancelMembership.stays.wellbeing.desc":
-    "Crisis chat, directory, vetted therapists — open to everyone.",
-  "cancelMembership.stays.safeSpaces.title": "Safe-spaces network",
-  "cancelMembership.stays.safeSpaces.desc":
-    "The whole point of QueerPulse stays free.",
-
-  "cancelMembership.options.currentTitle": "Your current <em>membership</em>",
-  "cancelMembership.options.currentTierLabel": "Sustainer · <em>annual</em>",
-  "cancelMembership.options.currentMeta":
-    "Renewed <b>{renewedDate}</b> · next charge <b>{nextChargeDate}</b>",
-  "cancelMembership.options.perYear": "/ year",
-  "cancelMembership.options.beforeYouGoTitle":
-    "Before you go — <em>three softer options</em>",
-  "cancelMembership.options.sub":
-    "Each takes 30 seconds. You can always come back to cancel.",
-  "cancelMembership.options.pauseTitle": "Pause for 3 months",
-  "cancelMembership.options.pauseDesc":
-    "We freeze your renewal. You keep access. We don't charge until you resume.",
-  "cancelMembership.options.downshiftTitle":
-    "Downshift to Member ({amount} / year)",
-  "cancelMembership.options.downshiftDesc":
-    "Keep all community access. Drop Sustainer-only perks (open studio, ILGA consult, magazine).",
-  "cancelMembership.options.solidarityTitle": "Drop to solidarity rate",
-  "cancelMembership.options.solidarityDesc":
-    "{amount} / year, no questions asked. The fund covers the difference. <b>Genuinely.</b>",
-  "cancelMembership.options.continueCancellingCta": "Continue cancelling →",
-  "cancelMembership.keepSustainerCta": "Keep my Sustainer",
-
-  "cancelMembership.reasons.title": "Help us <em>understand.</em>",
-  "cancelMembership.reasons.sub":
-    "Optional, but useful. We read every response. Pick what fits.",
-  "cancelMembership.reasons.addNote": "Anything you'd like to add? (optional)",
-  "cancelMembership.reasons.placeholder":
-    "A sentence or two helps us notice patterns. Nothing's shown to other members.",
-  "cancelMembership.backCta": "← Back",
-  "cancelMembership.continueCta": "Continue →",
-
-  "cancelMembership.confirm.title": "One last <em>check.</em>",
-  "cancelMembership.confirm.sub":
-    "Here's what changes when you cancel — and what doesn't.",
-  "cancelMembership.confirm.whatEnds": "What ends",
-  "cancelMembership.confirm.whatStays": "What stays — free, forever",
-  "cancelMembership.confirm.accessContinuesNote":
-    "Your access continues until <b>{date}</b>. No refund — but no further charges.",
-  "cancelMembership.confirm.writeToUs":
-    "If something feels off, write to <a>cancel@queerpulse.app</a> — a real person reads it.",
-  "cancelMembership.confirm.checkboxLabel":
-    "I understand my Sustainer membership will not renew, and <b>my access ends {date}</b>. I can come back any time.",
-  "cancelMembership.confirm.cancelMyMembershipCta": "Cancel my membership",
-
-  "cancelMembership.done.title": "Until <em>next time.</em>",
-  "cancelMembership.done.accessNote":
-    "Your Sustainer membership won't renew. Access continues through <b>{date}</b>.",
-  "cancelMembership.done.emailNote":
-    "We sent a confirmation to <b>{email}</b> with everything written down.",
-  "cancelMembership.done.mistakeNote":
-    "If this was a mistake, you can resubscribe one-tap from the email or your account settings — no penalty.",
-  "cancelMembership.backToHomeCta": "Back to home",
-  "cancelMembership.resubscribeCta": "Resubscribe",
-
-  "cancelMembership.paused.title": "Paused — <em>see you soon.</em>",
-  "cancelMembership.paused.lead1":
-    "We've frozen your Sustainer renewal for <b>3 months</b>. You keep full access the whole time — and we won't charge you a cent until you resume.",
-  "cancelMembership.paused.lead2":
-    "Your renewal moves to <b>{date}</b>. We sent the details to <b>{email}</b>.",
-  "cancelMembership.paused.note":
-    "Changed your mind? You can resume any time — it picks up right where you left off, no penalty.",
-  "cancelMembership.backToMembershipCta": "Back to membership",
-  "cancelMembership.paused.undoCta": "Undo pause",
-
-  "cancelMembership.downshifted.title": "Welcome to <em>Member.</em>",
-  "cancelMembership.downshifted.lead1":
-    "You're on the <b>Member</b> plan now — <b>{amount} / year</b>. All your community access stays exactly as it was.",
-  "cancelMembership.downshifted.lead2":
-    "Your Sustainer-only perks (Open Studio, ILGA consult, the print magazine) wind down at the end of your current term. Your next charge is <b>{amount} on {date}</b>.",
-  "cancelMembership.downshifted.note":
-    "Confirmation is on its way to <b>{email}</b>. You can upgrade back to Sustainer any time.",
-  "cancelMembership.downshifted.undoCta": "Undo — keep Sustainer",
-
-  "cancelMembership.solidarity.title":
-    "You're on the <em>solidarity rate.</em>",
-  "cancelMembership.solidarity.lead1":
-    "From your next renewal you'll pay <b>{amount} / year</b> — and you keep <b>every Sustainer perk</b> exactly as it is now. The community fund covers the rest.",
-  "cancelMembership.solidarity.lead2":
-    "Your next charge is <b>{amount} on {date}</b>. We sent the details to <b>{email}</b>.",
-  "cancelMembership.solidarity.note":
-    "When things ease up, you can move back to the full rate any time — no pressure, no reminder.",
-  "cancelMembership.solidarity.undoCta": "Undo",
-
-  // ── GiftMembershipPage.tsx / GiftMembershipForm.tsx / giftMembership.data.tsx
-  // — gift & sponsor flow. Recipient name/contact/note default values stay
-  // English (fictional example content, not chrome — same rule as a mock bio). ─
-  "giftMembership.hero.eyebrow": "Sustainer · gift & sponsor",
-  "giftMembership.hero.title": "Give somebody else <em>a seat.</em>",
-  "giftMembership.hero.dek":
-    "Two ways to do this. <b>Gift</b> someone you know directly — a friend, a partner, the person who introduced you to all this. Or <b>sponsor anonymously</b> — your gift goes into a pool a member applies to, no questions asked, when they need it. <em>Both keep someone here who might otherwise have stepped back.</em>",
-  "giftMembership.modes.title": "Which <em>gift</em> are you making?",
-  "giftMembership.mode.gift.title": "Gift it · <em>to someone you know</em>",
-  "giftMembership.mode.gift.body":
-    "For: a partner. A friend. The colleague who keeps asking how to join. <b>They get an invitation by name</b>, with a personal note from you. They sign up using a single-use link. If they decline, you get refunded.",
-  "giftMembership.mode.gift.priceSub": "/ year · Sustainer · same as your own",
-  "giftMembership.mode.sponsor.title":
-    "Sponsor · <em>anonymously, for whoever needs it</em>",
-  "giftMembership.mode.sponsor.body_one":
-    "For: paying forward. Your gift sits in the <b>solidarity pool</b>. Members who can't afford the {amount} apply with a sentence — we approve, no proof asked. <em>{count} member is in the pool right now.</em> Your gift gets matched within days.",
-  "giftMembership.mode.sponsor.body_other":
-    "For: paying forward. Your gift sits in the <b>solidarity pool</b>. Members who can't afford the {amount} apply with a sentence — we approve, no proof asked. <em>{count} members are in the pool right now.</em> Your gift gets matched within days.",
-  "giftMembership.mode.sponsor.priceSub":
-    "give any amount · matched by name or anonymously",
-  "giftMembership.form.title": "Gift details · <em>tell us who's it for</em>",
-  "giftMembership.form.sub":
-    "All editable until they accept. You can also schedule the delivery — for a birthday, a coming-out anniversary, the day they need it most.",
-  "giftMembership.sponsorFoot.title":
-    "Or skip the form · <em>sponsor anonymously</em>",
-  "giftMembership.sponsorFoot.body":
-    "If you'd rather not name a recipient, <a>drop your gift into the solidarity-membership pool</a>. We match it with a member who applied — usually within 48 hours. <em>You get a thank-you and a count; not a name.</em>",
-
-  "giftMembership.delivery.now.label": "Now",
-  "giftMembership.delivery.now.desc":
-    "Sent in the next minute · email arrives instantly",
-  "giftMembership.delivery.now.note": "delivered immediately",
-  "giftMembership.delivery.schedule.label": "Schedule",
-  "giftMembership.delivery.schedule.desc":
-    "Pick a date · we send at 09:00 in their timezone",
-  "giftMembership.delivery.schedule.note": "scheduled · pick a date next step",
-  "giftMembership.delivery.print.label": "Print & post",
-  "giftMembership.delivery.print.desc":
-    "+ {amount} postage · risograph card · arrives in 5–7 days",
-  "giftMembership.delivery.print.note": "printed + posted · +{amount}",
-
-  "giftMembership.anon.no": "No — show my name to the recipient",
-  "giftMembership.anon.yes": "Yes — anonymous to recipient",
-  "giftMembership.anon.initials": "Just my initials",
-
-  "giftMembership.form.sectionRecipient": "Recipient",
-  "giftMembership.form.recipientNameLabel": "Their name",
-  "giftMembership.form.recipientNameHint": "— how they'll be addressed",
-  "giftMembership.form.recipientContactLabel": "Their email · or phone",
-  "giftMembership.form.recipientContactHint":
-    "We use it once · to send the invitation. They control what happens after.",
-  "giftMembership.form.sectionFromYou": "From you",
-  "giftMembership.form.senderNameLabel": "How you'd like to be named",
-  "giftMembership.form.anonLabel": "Anonymous?",
-  "giftMembership.form.anonHint": "just to them",
-  "giftMembership.form.noteLabel": "A short note",
-  "giftMembership.form.noteHint":
-    "— optional · plain text · printed on the card",
-  "giftMembership.form.charCount": "{count} / 280 characters",
-  "giftMembership.form.sectionDelivery": "Delivery",
-  "giftMembership.form.deliveryIntro": "When should the invitation arrive?",
-  "giftMembership.form.previewHeading": "Preview · what they'll see",
-  "giftMembership.form.previewStamp": "From a friend",
-  "giftMembership.form.previewTitle":
-    "{name} — someone got <em>your back.</em>",
-  "giftMembership.form.previewSender":
-    "— <b>{sender}</b> · with a year of Sustainer membership · {amount} · activate any time before <b>{date}</b>",
-  "giftMembership.form.summary":
-    "One Sustainer gift · <b>{amount}</b> · {deliveryNote}",
-  "giftMembership.form.payCta": "Pay · gift {name} →",
-  "giftMembership.form.toast.charged":
-    "Charged {amount} · invitation sent to {name}",
 
   // ── LinkProviderModal.tsx ─────────────────────────────────────────────────
   "linkProvider.ariaLabel": "Authorize {provider}",

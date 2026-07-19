@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Reveal } from "../../shared/components/ui";
 import type { ImageSlotTint } from "../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../shared/hooks";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { AvatarEditor } from "./AvatarEditor";
@@ -98,6 +99,10 @@ export function EditableProfileHero({
                   onChange={(v) => updateDraft({ last: v })}
                 />
               </div>
+            </div>
+
+            <div className={styles.badgeRow}>
+              <MemberStaffBadge slug={profile.slug} size="lg" />
             </div>
 
             <ProfileShortBioField />

@@ -7,7 +7,11 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
-import { isDuplicateJoinRequest, isUnder18Error } from "./api/joinRequest.api";
+import {
+  isDuplicateJoinRequest,
+  isJoinRequestsClosedError,
+  isUnder18Error,
+} from "./api/joinRequest.api";
 import { AgeAttestation } from "./AgeAttestation";
 import { RequestInviteFields } from "./RequestInviteFields";
 import { Under18Notice } from "./Under18Notice";
@@ -97,6 +101,12 @@ export function RequestInviteForm({
       // 403 UNDER_18: the same humane pause the attestation checkbox leads to.
       if (isUnder18Error(err)) {
         setUnder18(true);
+        return;
+      }
+      // Requests were closed after this form was rendered. The pre-emptive
+      // check in RequestInvitePage cannot catch this — the flag flipped mid-fill.
+      if (isJoinRequestsClosedError(err)) {
+        showToast(t("auth:requestInvite.closedError"), "error");
         return;
       }
       showToast(t("auth:requestInvite.submitError"), "error");

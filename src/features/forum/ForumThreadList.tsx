@@ -13,6 +13,7 @@ import {
   authorHref,
 } from "./ForumAuthor";
 import { ForumThreadListSkeleton } from "./ForumSkeleton";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./ForumPage.module.css";
 
 export function ForumThreadList({
@@ -181,6 +182,7 @@ export function ForumThreadList({
                         }}
                       />
                       <span className={styles.tmAuthor}>{thread.author.n}</span>
+                      <MemberStaffBadge slug={thread.author.slug} />
                       {thread.author.official && <OfficialBadge />}
                     </ProfileSpanLink>
                     <span className={styles.tmDot} />

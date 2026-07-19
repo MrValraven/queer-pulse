@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
@@ -35,6 +35,7 @@ export function ComposeThreadModal({
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
   const [published, setPublished] = useState(false);
+  const titleRef = useFocusOnMount<HTMLInputElement>();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -47,7 +48,13 @@ export function ComposeThreadModal({
   const canPublish = title.trim().length > 0 && body.trim().length > 0;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={
           published ? `${styles.dialog} ${styles.dialogConfirm}` : styles.dialog
@@ -55,7 +62,6 @@ export function ComposeThreadModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="compose-title"
-        onClick={(e) => e.stopPropagation()}
       >
         {published ? (
           <div className={styles.confirm}>
@@ -96,12 +102,12 @@ export function ComposeThreadModal({
                 {t("forum:compose.titleFieldLabel")}
               </span>
               <input
+                ref={titleRef}
                 className={styles.input}
                 type="text"
                 placeholder={t("forum:compose.titlePlaceholder")}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                autoFocus
               />
             </label>
 

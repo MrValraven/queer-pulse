@@ -9,6 +9,7 @@ import { ConsentProvider } from "../app/providers/ConsentProvider";
 import { NavModeProvider } from "../app/providers/NavModeProvider";
 import { I18nProvider } from "../app/providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
+import { SessionBootstrapProvider } from "../app/providers/SessionBootstrapProvider";
 import { WorkProfileProvider } from "../app/providers/WorkProfileProvider";
 import { EmployerAffiliationProvider } from "../app/providers/EmployerAffiliationProvider";
 import { PostedJobsProvider } from "../app/providers/PostedJobsProvider";
@@ -45,6 +46,7 @@ const PROVIDERS: ProviderComponent[] = [
   NavModeProvider,
   I18nProvider,
   ToastProvider,
+  SessionBootstrapProvider,
   WorkProfileProvider,
   EmployerAffiliationProvider,
   PostedJobsProvider,
@@ -73,15 +75,40 @@ export interface TestProvidersProps {
   children: ReactNode;
   /** Router history to start on (route smoke tests pass one URL). */
   initialEntries?: string[];
+  /**
+   * Escape hatch for the one class of test that needs different QueryClient
+   * defaults: a request-budget test asserting exactly which network calls a
+   * route fires. Seeded caches (e.g. the session bootstrap seeding
+   * `["blocks", false]` / `["mutes", false]` / `["profile", false, slug]`
+   * before gated consumers turn `enabled` on — see
+   * `src/shared/api/useSessionBootstrap.ts`) only suppress the consumer's own
+   * redundant fetch when react-query still considers that seeded data FRESH.
+   * Freshness is `staleTime`-gated, and this file's default client below sets
+   * none (defaults to 0), which makes react-query's `isStaleByTime` treat data
+   * seeded microseconds ago as already stale — see
+   * `@tanstack/query-core`'s `shouldFetchOptionally`/`isStaleByTime`. That's
+   * deliberately fine for almost every test here (no test but a request-budget
+   * one cares whether a *suppressed* fetch happened), but it means a test
+   * built on the default client cannot observe the seeding actually working —
+   * only that a route renders correctly regardless of how many times each
+   * endpoint was hit. Pass a client mirroring `src/shared/api/queryClient.ts`
+   * (importantly its `staleTime: 30_000`) to make that suppression observable.
+   * Omit it and every existing test is byte-for-byte unaffected: still a
+   * fresh, `staleTime: 0`, retry-free client minted per render.
+   */
+  queryClient?: QueryClient;
 }
 
 export function TestProviders({
   children,
   initialEntries = ["/"],
+  queryClient,
 }: TestProvidersProps) {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
+  const client =
+    queryClient ??
+    new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
   return (
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={initialEntries}>

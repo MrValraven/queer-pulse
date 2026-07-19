@@ -3,6 +3,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Tint } from "./communityDetails";
@@ -54,13 +55,16 @@ export function CommunitySidebar({
           )}
         </div>
         <div className={styles.sbOrgName}>
-          {org.slug ? (
-            <Link to={`/members/${org.slug}`} style={{ color: "inherit" }}>
-              {org.name}
-            </Link>
-          ) : (
-            org.name
-          )}
+          <span className={styles.nameRow}>
+            {org.slug ? (
+              <Link to={`/members/${org.slug}`} style={{ color: "inherit" }}>
+                {org.name}
+              </Link>
+            ) : (
+              org.name
+            )}
+            <MemberStaffBadge slug={org.slug} />
+          </span>
         </div>
         <div className={styles.sbBadge}>{org.role}</div>
         <p className={styles.sbOrgBio}>{detail.organiser.bio}</p>

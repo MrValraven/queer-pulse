@@ -317,6 +317,7 @@ export function Signoff() {
           i18nKey="marketing:transparency.signoff.body"
           components={{
             em: <em />,
+            // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
             a: <a href="mailto:transparency@queerpulse.app" />,
           }}
         />

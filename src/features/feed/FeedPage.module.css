@@ -225,6 +225,12 @@
   letter-spacing: -0.01em;
   margin-bottom: 2px;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .nmMeta {
   font-size: 12.5px;
   color: var(--ink-40);
@@ -501,10 +507,18 @@
   font-size: 13.5px;
   line-height: 1.55;
 }
+/* Groups a reply's author name with their staff badge (when they have one)
+   and carries the spacing before the reply body that used to live directly
+   on .replyAuthor. */
+.replyAuthorRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 6px;
+}
 .replyAuthor {
   font-weight: 700;
   color: var(--text-strong);
-  margin-right: 6px;
 }
 .replyBody {
   color: var(--ink-60);

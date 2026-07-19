@@ -43,6 +43,9 @@ export interface Mention {
   initials: string;
   tint: "coral" | "jade" | "plum";
   name: string;
+  /** Member slug for `name`, when it resolves to a real member account. Left
+   *  undefined for people who name-match nothing in the roster. */
+  actorSlug?: string;
   category: MentionCategory;
   /** Translated "in a reply" / "in an article comment" / … descriptor. */
   context: ReactNode;
@@ -61,6 +64,7 @@ interface MentionSeed {
   initials: string;
   tint: Mention["tint"];
   name: string;
+  actorSlug?: string;
   category: MentionCategory;
   context: (t: TFunction) => ReactNode;
   when: (fmt: Formatters) => string;
@@ -79,6 +83,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     initials: "AK",
     tint: "coral",
     name: "Anika Kovač",
+    actorSlug: "anika",
     category: "post",
     context: (t) => t("notifications:mentions.context.reply"),
     when: (fmt) => fmt.relativeTime(-14, "minute"),
@@ -104,6 +109,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     initials: "SP",
     tint: "jade",
     name: "Sara Pinheiro",
+    actorSlug: "sara-pinheiro",
     category: "article",
     context: (t) => t("notifications:mentions.context.articleComment"),
     when: (fmt) => fmt.relativeTime(-3, "hour"),
@@ -151,6 +157,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     initials: "LG",
     tint: "coral",
     name: "Luísa Gomes",
+    actorSlug: "luisa",
     category: "post",
     context: (_t) => (
       <Translation
@@ -192,6 +199,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     initials: "CV",
     tint: "plum",
     name: "Catarina Vaz",
+    actorSlug: "catarina-vaz",
     category: "event",
     context: (t) => t("notifications:mentions.context.eventInvite"),
     when: (fmt) => fmt.date(new Date(2026, 5, 15), { weekday: "short" }),
@@ -278,6 +286,7 @@ export function buildMentionDays(
       initials: seed.initials,
       tint: seed.tint,
       name: seed.name,
+      actorSlug: seed.actorSlug,
       category: seed.category,
       context: seed.context(t),
       when: seed.when(fmt),

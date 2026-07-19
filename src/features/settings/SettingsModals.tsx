@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SettingsModal.module.css";
@@ -28,6 +28,7 @@ function ModalShell({
   return (
     <div
       className={styles.overlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -101,6 +102,7 @@ export function SuggestEditModal({
   const [phase, setPhase] = useState<Phase>("form");
   const [suggestion, setSuggestion] = useState("");
   const [why, setWhy] = useState("");
+  const suggestionRef = useFocusOnMount<HTMLTextAreaElement>();
   const valid = suggestion.trim().length > 2;
 
   useEffect(() => {
@@ -157,6 +159,7 @@ export function SuggestEditModal({
               </label>
               <textarea
                 id="sugg"
+                ref={suggestionRef}
                 className={styles.input}
                 rows={3}
                 value={suggestion}
@@ -165,7 +168,6 @@ export function SuggestEditModal({
                   "settings:modals.suggestEdit.wordingPlaceholder",
                   { term },
                 )}
-                autoFocus
                 required
               />
             </div>

@@ -82,11 +82,40 @@ export function MusicPlayer({
         </button>
         <div
           className={styles.waveform}
+          role="slider"
+          tabIndex={0}
+          aria-label={t("community:creatives.player.seekAriaLabel")}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(progress * 100)}
+          aria-valuetext={t("community:creatives.player.seekValueText", {
+            percent: Math.round(progress * 100),
+          })}
           onClick={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             setProgress(
               Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)),
             );
+          }}
+          onKeyDown={(e) => {
+            const step =
+              e.key === "ArrowLeft" || e.key === "ArrowDown"
+                ? -0.05
+                : e.key === "ArrowRight" || e.key === "ArrowUp"
+                  ? 0.05
+                  : null;
+            if (step !== null) {
+              e.preventDefault();
+              setProgress((p) => Math.max(0, Math.min(1, p + step)));
+              return;
+            }
+            if (e.key === "Home") {
+              e.preventDefault();
+              setProgress(0);
+            } else if (e.key === "End") {
+              e.preventDefault();
+              setProgress(1);
+            }
           }}
         >
           {heights.map((h, i) => (

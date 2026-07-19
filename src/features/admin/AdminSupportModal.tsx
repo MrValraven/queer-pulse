@@ -25,9 +25,12 @@ export function AdminSupportModal({
   const options: { titleKey: string; sub: string }[] = [
     {
       titleKey: "admin:communities.support.option.message.title",
-      sub: t("admin:communities.support.option.message.sub", {
-        names: modFirsts,
-      }),
+      sub:
+        community.mods.length > 0
+          ? t("admin:communities.support.option.message.sub", {
+              names: modFirsts,
+            })
+          : t("admin:communities.support.option.message.subNoMods"),
     },
     {
       titleKey: "admin:communities.support.option.buddy.title",

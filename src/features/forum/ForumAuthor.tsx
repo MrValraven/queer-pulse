@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiShield } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -56,12 +55,17 @@ export function ForumAvatar({
   );
 }
 
-/** The "Official" pill shown beside the QueerPulse account's name. */
+/** The "Official" pill shown beside the QueerPulse account's name.
+ *  Uses the QP monogram, NOT the shield — the shield marks staff *humans*
+ *  (`shared/staff/MemberStaffBadge`), and this is an institutional account. */
 export function OfficialBadge() {
   const { t } = useTranslation();
   return (
     <span className={styles.official} title={t("forum:author.officialTitle")}>
-      <FiShield aria-hidden /> {t("forum:author.officialBadge")}
+      <span className={styles.officialMark} aria-hidden>
+        QP
+      </span>
+      {t("forum:author.officialBadge")}
     </span>
   );
 }

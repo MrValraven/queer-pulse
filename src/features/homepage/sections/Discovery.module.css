@@ -219,9 +219,13 @@
   color: var(--jade-soft);
 }
 @media (max-width: 560px) {
+  /* Match the 4:5 portrait `portraitSrc()` requests, so the face isn't cropped. */
   .featPhoto {
     min-height: 0;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
+  }
+  .featPhoto img {
+    object-position: 50% 30%;
   }
 }
 
@@ -239,6 +243,12 @@
   text-transform: uppercase;
   color: var(--tfg);
   margin-bottom: 14px;
+}
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
 }
 .nameLink {
   color: inherit;

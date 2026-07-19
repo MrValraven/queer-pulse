@@ -39,8 +39,10 @@ export interface ServerToClientEvents {
   /** Fan-out to the recipient's `user:${userId}` room (added by the A-emit
    *  backend workstream, mirroring the `message:new` pattern). */
   "notification:new": { notification: RealtimeNotification };
-  /** Auth/handshake/validation failures, incl. access-token expiry. */
-  exception: { status: string; message: unknown };
+  /** Auth/handshake/validation failures, incl. access-token expiry. `code` is
+   *  only set for a platform-lockdown refusal (`"PLATFORM_LOCKED"`); every other
+   *  rejection is the generic `Unauthorized` with no `code`. */
+  exception: { status: string; message: unknown; code?: string };
 }
 
 export type ServerToClientEvent = keyof ServerToClientEvents;

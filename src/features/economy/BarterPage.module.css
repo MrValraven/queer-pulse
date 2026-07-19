@@ -208,6 +208,12 @@
   flex: 1;
   min-width: 0;
 }
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
 .bcName {
   font-size: 14.5px;
   font-weight: 600;

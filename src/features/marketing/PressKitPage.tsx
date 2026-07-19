@@ -106,6 +106,7 @@ export function PressKitPage() {
             i18nKey="marketing:pressKit.footerNote.licence"
             components={{
               a: (
+                // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
                 <a
                   href="https://creativecommons.org/licenses/by/4.0/"
                   target="_blank"
@@ -117,6 +118,7 @@ export function PressKitPage() {
           <br />
           <Translation
             i18nKey="marketing:pressKit.footerNote.commercial"
+            // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
             components={{ a: <a href="mailto:press@queerpulse.app" /> }}
           />
         </div>

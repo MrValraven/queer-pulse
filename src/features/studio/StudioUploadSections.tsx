@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FiPlus, FiCheck } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button } from "../../shared/components/ui";
@@ -204,6 +204,13 @@ export function SplitsTable({
   const [adding, setAdding] = useState(false);
   const [handle, setHandle] = useState("");
 
+  // The field only appears after the user asks for it, so sending focus there
+  // follows their action rather than teleporting them on page load.
+  const handleRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (adding) handleRef.current?.focus();
+  }, [adding]);
+
   function submit() {
     const trimmed = handle.trim();
     if (!trimmed) return;
@@ -299,7 +306,7 @@ export function SplitsTable({
       {adding && (
         <div className={s.collabForm}>
           <input
-            autoFocus
+            ref={handleRef}
             placeholder={t("studio:upload.splits.handlePlaceholder")}
             value={handle}
             onChange={(e) => setHandle(e.target.value)}

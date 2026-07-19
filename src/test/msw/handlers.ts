@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import type { AdminCommunityCardDTO } from "../../features/admin/api/adminCommunities.api";
 import type { JobCardDTO } from "../../features/economy/api/jobs.api";
 import type { Paginated } from "../../shared/api/refs";
 import { subprofileHandlers } from "./subprofiles.handlers";
@@ -42,6 +43,27 @@ const jobCard: JobCardDTO = {
   createdAt: "2026-06-01",
 };
 
+const adminCommunityCard: AdminCommunityCardDTO = {
+  slug: "trans-friends",
+  name: "Trans & Friends",
+  initials: "TR",
+  tone: "jade",
+  tag: "Peer support · private",
+  memberCount: 1204,
+  activityLabel: "High",
+  activePercentage: 68,
+  openReportCount: 1,
+  healthScore: 94,
+  healthBreakdown: {
+    memberActivity: 91,
+    reportResolution: 100,
+    memberSentiment: null,
+    safetyLoad: 90,
+  },
+  activitySparkline: [5, 6, 5, 7, 6, 8, 7, 9],
+  needsSupport: false,
+};
+
 export const handlers = [
   http.get(`${API}/csrf-token`, () =>
     HttpResponse.json({ csrfToken: "test-csrf" }),
@@ -59,6 +81,9 @@ export const handlers = [
     };
     return HttpResponse.json(body);
   }),
+  http.get(`${API}/admin/communities`, () =>
+    HttpResponse.json<AdminCommunityCardDTO[]>([adminCommunityCard]),
+  ),
   ...subprofileHandlers(API),
   ...handleHandlers(API),
 ];

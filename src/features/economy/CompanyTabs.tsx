@@ -253,7 +253,7 @@ export function CompanyTabs({
   ];
 
   return (
-    <main>
+    <div>
       <div className={styles.tabs} role="tablist">
         {tabs.map((tabItem) => (
           <button
@@ -291,6 +291,6 @@ export function CompanyTabs({
         />
       )}
       {tab === "work" && profile.work && <WorkPane work={profile.work} />}
-    </main>
+    </div>
   );
 }

@@ -10,6 +10,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { NEW_THIS_WEEK } from "./feed.data";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./FeedPage.module.css";
 
 function UpcomingRowSkeleton() {
@@ -132,6 +133,7 @@ export function FeedSidebar({
                   size={30}
                 />
                 <span className={styles.sbMemberName}>{person.name}</span>
+                <MemberStaffBadge slug={person.slug} />
               </Link>
               <button
                 type="button"

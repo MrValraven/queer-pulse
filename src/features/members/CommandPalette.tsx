@@ -5,6 +5,7 @@ import { useScrollLock } from "../../shared/hooks/useScrollLock";
 import { Avatar } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberAvatar } from "./data/members";
 import { linkToPath, routes } from "../../app/routeMap";
 import { TYPE_ICON, TYPE_LABEL_KEY, type SearchItem } from "./search.data";
@@ -115,13 +116,18 @@ export function CommandPalette() {
   if (!open) return null;
 
   return (
-    <div className={styles.overlay} role="presentation" onClick={close}>
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) close();
+      }}
+    >
       <div
         className={styles.panel}
         role="dialog"
         aria-modal="true"
         aria-label={t("members:commandPalette.ariaLabel")}
-        onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.inputRow}>
           <FiSearch aria-hidden className={styles.inputIcon} />
@@ -212,7 +218,10 @@ export function CommandPalette() {
                         </span>
                       )}
                       <span className={styles.rowBody}>
-                        <span className={styles.rowName}>{item.name}</span>
+                        <span className={styles.nameRow}>
+                          <span className={styles.rowName}>{item.name}</span>
+                          <MemberStaffBadge slug={item.slug} />
+                        </span>
                         <span className={styles.rowSub}>{item.sub}</span>
                       </span>
                       <span className={styles.rowType}>

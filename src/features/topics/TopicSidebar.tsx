@@ -3,6 +3,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes, topicPath } from "../../app/routeMap";
 import type { Topic } from "./topics.data";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./TopicPage.module.css";
 
 export function TopicSidebar({ topic }: { topic: Topic }) {
@@ -48,7 +49,10 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
               >
                 <Avatar initials={voice.initials} tint={voice.tone} size={32} />
                 <div className={styles.personText}>
-                  <div className={styles.personName}>{voice.name}</div>
+                  <div className={styles.personNameRow}>
+                    <div className={styles.personName}>{voice.name}</div>
+                    <MemberStaffBadge slug={voice.slug} />
+                  </div>
                   <div className={styles.personDetail}>{voice.detail}</div>
                 </div>
               </Link>

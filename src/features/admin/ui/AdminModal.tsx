@@ -33,14 +33,19 @@ export function AdminModal({
   }, [onClose]);
 
   return (
-    <div className={styles.modalScrim} onClick={onClose}>
+    <div
+      className={styles.modalScrim}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
         className={[styles.modal, wide && styles.modalWide]
           .filter(Boolean)
           .join(" ")}
         role="dialog"
         aria-modal="true"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.modalHead}>
           <div className={styles.modalHeadTx}>

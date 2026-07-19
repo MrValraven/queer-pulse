@@ -264,6 +264,7 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
     >
       <MemberCardBody
         name={name}
+        slug={member.slug}
         initials={initials}
         tint={tint}
         photo={photo}

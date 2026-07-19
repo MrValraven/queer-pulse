@@ -116,6 +116,7 @@ export function SustainerPaymentModal({
   return (
     <div
       className={styles.payOverlay}
+      role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

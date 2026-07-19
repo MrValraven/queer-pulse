@@ -26,6 +26,7 @@ export function TierSelect() {
             <input
               type="radio"
               name="tier"
+              aria-label={t(tierOption.nameKey)}
               value={tierOption.id}
               checked={selected}
               onChange={() => setTier(tierOption.id)}

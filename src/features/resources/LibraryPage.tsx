@@ -103,6 +103,7 @@ export function LibraryPage() {
               </svg>
               <input
                 type="search"
+                aria-label={t("resources:library.search.placeholder")}
                 placeholder={t("resources:library.search.placeholder")}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}

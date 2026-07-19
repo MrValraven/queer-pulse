@@ -108,25 +108,36 @@ export function AdminHealthModal({
         {t(`admin:${breakdownNarrativeKey(community.health)}`)}
       </p>
       <div className={styles.bdList}>
-        {BREAKDOWN_META.map((meta, i) => {
-          const value = community.bd[i]!;
+        {BREAKDOWN_META.map((signalMeta, signalIndex) => {
+          const value = community.bd[signalIndex]!;
+          const isMeasured = value !== null;
           return (
-            <div key={meta.id} className={styles.bdRow}>
-              <HealthRing value={value} />
+            <div key={signalMeta.id} className={styles.bdRow}>
+              {isMeasured ? (
+                <HealthRing value={value} />
+              ) : (
+                <span className={styles.ringUnmeasured} aria-hidden />
+              )}
               <div className={styles.bdText}>
                 <div className={styles.bdName}>
-                  {t(`admin:${meta.nameKey}`)}
+                  {t(`admin:${signalMeta.nameKey}`)}
                 </div>
                 <div className={styles.bdDesc}>
-                  {t(`admin:${meta.descKey}`)}
+                  {t(`admin:${signalMeta.descKey}`)}
                 </div>
               </div>
-              <div
-                className={styles.bdScore}
-                style={{ color: breakdownColor(value) }}
-              >
-                {value}
-              </div>
+              {isMeasured ? (
+                <div
+                  className={styles.bdScore}
+                  style={{ color: breakdownColor(value) }}
+                >
+                  {value}
+                </div>
+              ) : (
+                <div className={styles.bdUnmeasured}>
+                  {t("admin:communities.health.notMeasured")}
+                </div>
+              )}
             </div>
           );
         })}

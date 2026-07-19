@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
@@ -284,7 +285,10 @@ export function RelatedSection({ profile }: { profile: MemberProfile }) {
               />
               <div>
                 <div className={styles.relName}>
-                  {related.first} {related.last}
+                  <span className={styles.nameRow}>
+                    {related.first} {related.last}
+                    <MemberStaffBadge slug={relSlug} />
+                  </span>
                 </div>
                 <div className={styles.relRole}>
                   {related.role.split("·")[0]!.trim()} · {related.hood}

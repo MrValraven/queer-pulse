@@ -6,6 +6,7 @@ import {
   SearchInput,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -128,7 +129,10 @@ export function MessagesThreadList({
                   </div>
                   <div className={styles.trBody}>
                     <div className={styles.trHeader}>
-                      <span className={styles.trName}>{thread.name}</span>
+                      <span className={styles.nameRow}>
+                        <span className={styles.trName}>{thread.name}</span>
+                        <MemberStaffBadge slug={thread.slug} />
+                      </span>
                       <span className={styles.trTime}>{thread.time}</span>
                     </div>
                     <div

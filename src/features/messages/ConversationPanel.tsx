@@ -4,6 +4,7 @@ import { routes } from "../../app/routeMap";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { me, type ChatMessage, type Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -54,7 +55,12 @@ export function ConversationPanel({
       <div className={styles.topbar}>
         <Avatar initials={active.initials} tint={active.tint} size={38} />
         <div className={styles.ctbInfo}>
-          <div className={styles.ctbName}>{active.name}</div>
+          <div className={styles.ctbName}>
+            <span className={styles.nameRow}>
+              {active.name}
+              <MemberStaffBadge slug={active.slug} />
+            </span>
+          </div>
           <div className={styles.ctbMeta}>
             {active.official
               ? t("messages:conversation.officialMeta")

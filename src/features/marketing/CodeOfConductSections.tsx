@@ -362,7 +362,11 @@ export function CocChangesSection({
             year: "numeric",
           }),
         })}{" "}
-        · <a onClick={onDownload}>{t("marketing:coc.version.downloadCta")}</a> ·{" "}
+        ·{" "}
+        <button type="button" onClick={onDownload}>
+          {t("marketing:coc.version.downloadCta")}
+        </button>{" "}
+        ·{" "}
         {t("marketing:coc.version.readManifesto")}
       </div>
     </>

@@ -18,6 +18,7 @@ import {
   memberPath,
 } from "./ForumAuthor";
 import { memberName } from "../members/data/members";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
 import styles from "./ThreadPage.module.css";
 
@@ -153,6 +154,7 @@ export function ThreadReplies({
                       {r.name}
                     </ProfileLink>
                   </span>
+                  <MemberStaffBadge slug={r.slug} />
                   {r.official && <OfficialBadge />}
                   {r.isOP && (
                     <span className={styles.opBadge}>
