@@ -80,7 +80,7 @@
   grid-template-columns: repeat(4, max-content);
   gap: 28px 44px;
 }
-.col h4 {
+.col h2 {
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;

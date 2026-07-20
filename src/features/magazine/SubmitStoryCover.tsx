@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiImage, FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
@@ -6,39 +6,28 @@ import styles from "./SubmitStoryPage.module.css";
 import upload from "./SubmitStoryCover.module.css";
 
 /**
- * Story-cover picker. Uploads through `useUploadImage("story-cover")` — demo
- * returns an object-URL preview, live uploads to storage and returns the stable
- * public URL. `onChange` emits that URL (not the filename), so the cover is
- * actually persisted through the submit-story save flow. Object URLs are revoked
- * on replace/unmount.
+ * Story-cover picker. Uploads through `useUploadImage("story-cover")`, which
+ * resolves to `{ key, previewUrl }`. The thumbnail renders `previewUrl` (an
+ * instant local preview, revoked on replace/remove/unmount); `onChange` emits
+ * `key` — the value that's actually persisted through the submit-story save
+ * flow, never the preview URL.
  */
 export function SubmitStoryCover({
   onChange,
 }: {
-  onChange: (url: string | null) => void;
+  onChange: (key: string | null) => void;
 }) {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
-  const createdUrl = useRef<string | null>(null);
   const uploadCover = useUploadImage("story-cover");
-  const [cover, setCover] = useState<{ url: string; name: string } | null>(
+  const [cover, setCover] = useState<{ previewUrl: string; name: string } | null>(
     null,
   );
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(
-    () => () => {
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-    },
-    [],
-  );
-
-  function revokeCreated() {
-    if (createdUrl.current) {
-      URL.revokeObjectURL(createdUrl.current);
-      createdUrl.current = null;
-    }
+  function revokeCoverPreview() {
+    if (cover) URL.revokeObjectURL(cover.previewUrl);
   }
 
   async function pick(file: File | undefined) {
@@ -46,13 +35,14 @@ export function SubmitStoryCover({
     setError(null);
     setProgress(0);
     try {
-      const url = await uploadCover(file, {
+      const { key, previewUrl } = await uploadCover(file, {
         onProgress: (p) => setProgress(p),
       });
-      revokeCreated();
-      if (url.startsWith("blob:")) createdUrl.current = url;
-      setCover({ url, name: file.name });
-      onChange(url);
+      // Single-slot picker — the previous preview (if any) is now stale, so
+      // revoke it right away instead of leaving it to the hook's unmount sweep.
+      revokeCoverPreview();
+      setCover({ previewUrl, name: file.name });
+      onChange(key);
     } catch (err) {
       setError(
         err instanceof Error && err.message
@@ -65,7 +55,7 @@ export function SubmitStoryCover({
   }
 
   function remove() {
-    revokeCreated();
+    revokeCoverPreview();
     setCover(null);
     onChange(null);
     setError(null);
@@ -91,7 +81,7 @@ export function SubmitStoryCover({
         <div className={styles.coverPreview}>
           <img
             className={styles.coverImg}
-            src={cover.url}
+            src={cover.previewUrl}
             alt={t("magazine:submitStory.cover.previewAlt")}
           />
           <div className={styles.coverMeta}>

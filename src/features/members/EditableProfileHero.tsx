@@ -63,7 +63,7 @@ export function EditableProfileHero({
               initials={profile.initials}
               tint={resolveTint(profile.tint)}
               name={`${draft.first} ${draft.last}`}
-              onChange={(url) => updateDraft({ photo: url })}
+              onChange={(key) => updateDraft({ photo: key })}
               onRemove={() => updateDraft({ photo: undefined })}
             />
           </Reveal>

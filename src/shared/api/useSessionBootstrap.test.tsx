@@ -5,7 +5,14 @@ import type { ReactNode } from "react";
 
 const page = { items: [], total: 0, page: 1, pageSize: 20 };
 const payload = {
-  profile: { slug: "tiago-costa", limited: false, firstName: "Tiago" },
+  profile: {
+    slug: "tiago-costa",
+    limited: false,
+    firstName: "Tiago",
+    lastName: "Costa",
+    vouchCount: 0,
+    visibility: "open" as const,
+  },
   saved: page,
   blocks: page,
   mutes: page,

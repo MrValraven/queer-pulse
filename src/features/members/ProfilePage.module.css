@@ -111,7 +111,14 @@ div.backBar {
 .name em {
   font-style: italic;
 }
+/* Role, pronouns and the staff badge form one "who this person is" cluster, so
+   they share a line. Wrapping drops the badge below the text on narrow columns
+   rather than breaking the role itself. */
 .role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   font-size: 18px;
   color: var(--ink);
   font-weight: 500;

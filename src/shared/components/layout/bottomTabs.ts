@@ -1,0 +1,123 @@
+import type { IconType } from "react-icons";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiHome,
+  FiLogIn,
+  FiMail,
+  FiMapPin,
+  FiUsers,
+} from "react-icons/fi";
+import { routes } from "../../../app/routeMap";
+
+export interface BottomTab {
+  /** Stable identity for React keys and active-state comparison. */
+  key: string;
+  labelKey: string;
+  href: string;
+  icon: IconType;
+  /**
+   * Path prefixes that should light this tab. A prefix matches the pathname
+   * exactly, or as a full path segment (`/members` matches `/members/123` but
+   * never `/members-only`).
+   */
+  matchPrefixes: string[];
+}
+
+/**
+ * The installed-app tab sets. Deliberately hand-curated rather than derived from
+ * NAV_MENUS: a tab bar has five slots, so which destinations earn permanent
+ * residence is an editorial decision, not a filter. Everything else stays
+ * reachable through the "More" tab, which opens the same drawer NAV_MENUS feeds.
+ *
+ * Both sets hold four links; BottomTabBar renders "More" as the fifth slot.
+ */
+export const MEMBER_TABS: BottomTab[] = [
+  {
+    key: "feed",
+    labelKey: "nav:feed",
+    href: routes.feed,
+    icon: FiHome,
+    matchPrefixes: [routes.feed],
+  },
+  {
+    key: "events",
+    labelKey: "nav:events",
+    href: routes.events,
+    icon: FiCalendar,
+    matchPrefixes: [routes.events, routes.calendar],
+  },
+  {
+    key: "messages",
+    labelKey: "nav:messages",
+    href: routes.messages,
+    icon: FiMail,
+    matchPrefixes: [routes.messages],
+  },
+  {
+    key: "members",
+    labelKey: "nav:members",
+    href: routes.members,
+    icon: FiUsers,
+    matchPrefixes: [routes.members],
+  },
+];
+
+export const PUBLIC_TABS: BottomTab[] = [
+  {
+    key: "events",
+    labelKey: "nav:events",
+    href: routes.events,
+    icon: FiCalendar,
+    matchPrefixes: [routes.events, routes.calendar],
+  },
+  {
+    key: "places",
+    labelKey: "nav:places",
+    href: routes.directory,
+    icon: FiMapPin,
+    matchPrefixes: [routes.directory],
+  },
+  {
+    key: "resources",
+    labelKey: "nav:resources",
+    href: routes.resources,
+    icon: FiBookOpen,
+    matchPrefixes: [routes.resources],
+  },
+  {
+    key: "signIn",
+    labelKey: "nav:signIn",
+    href: routes.signIn,
+    icon: FiLogIn,
+    matchPrefixes: [routes.signIn],
+  },
+];
+
+/**
+ * The key of the tab that owns `pathname`, or null when none does.
+ *
+ * Longest prefix wins, so a nested tab (`/local/directory`) beats a broader one
+ * (`/local`) on a path both could claim. Matching is segment-aware to stop
+ * `/members-only` from lighting the `/members` tab.
+ */
+export function activeTabKey(
+  pathname: string,
+  tabs: BottomTab[],
+): string | null {
+  let matchedKey: string | null = null;
+  let matchedLength = 0;
+
+  for (const tab of tabs) {
+    for (const prefix of tab.matchPrefixes) {
+      const isMatch =
+        pathname === prefix || pathname.startsWith(`${prefix}/`);
+      if (isMatch && prefix.length > matchedLength) {
+        matchedKey = tab.key;
+        matchedLength = prefix.length;
+      }
+    }
+  }
+
+  return matchedKey;
+}

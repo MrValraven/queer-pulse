@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { ComingSoon, Toggle } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -110,16 +110,18 @@ export function SelectRow({
     typeof o === "string" ? { value: o, label: o } : o,
   );
   const controlled = value !== undefined;
+  const titleId = useId();
   return (
     <div className={styles.selectRow}>
       <div className={styles.toggleLabel}>
         <div className={styles.toggleTitle}>
-          {title} {comingSoon && <ComingSoon />}
+          <span id={titleId}>{title}</span> {comingSoon && <ComingSoon />}
         </div>
         <div className={styles.toggleDesc}>{desc}</div>
       </div>
       <select
         className={styles.select}
+        aria-labelledby={titleId}
         {...(controlled ? { value } : { defaultValue })}
         disabled={comingSoon}
         onChange={comingSoon ? undefined : (e) => onChange(e.target.value)}

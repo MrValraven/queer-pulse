@@ -168,8 +168,7 @@ export function getMembers(
 export const getProfile = (slug: string) =>
   apiGet<ProfileDTO>(`/profiles/${slug}`);
 
-/** Fields the current member can edit on their own profile (PATCH /profiles/me).
- *  Note: the avatar/photo is not part of this endpoint, so it isn't persisted here. */
+/** Fields the current member can edit on their own profile (PATCH /profiles/me). */
 export interface UpdateProfileDTO {
   firstName?: string;
   lastName?: string;
@@ -177,6 +176,9 @@ export interface UpdateProfileDTO {
   tagline?: string;
   bio?: string;
   location?: string;
+  /** Storage key from an avatar upload, or `null`/`""` to clear it back to the
+   *  Google OAuth fallback. */
+  avatarUrl?: string | null;
   visibility?: Visibility;
   /** Free-text "what I'm in the middle of" status ("Now"); "" clears it. */
   now?: string;

@@ -23,7 +23,10 @@ import type { AuthUser } from "../../features/auth/api/auth.api";
 import { useUpdateProfile } from "../../features/members/api/useUpdateProfile";
 import { useUpdateProfileLists } from "../../features/members/api/useUpdateProfileLists";
 import { useMemberProfile } from "../../features/members/api/useMemberProfile";
-import type { UpdateProfileDTO } from "../../features/members/api/members.api";
+import type {
+  ProfileDTO,
+  UpdateProfileDTO,
+} from "../../features/members/api/members.api";
 import { useSessionBootstrapSettled } from "../../shared/api/useSessionBootstrap";
 
 /**
@@ -102,8 +105,10 @@ function toDraft(m: Member): ProfileDraft {
   };
 }
 
-/** Map the editable draft to the backend's PATCH /profiles/me payload. The photo
- *  has no field on this endpoint, so it stays local-only (see UpdateProfileDTO). */
+/** Map the editable draft to the backend's PATCH /profiles/me payload. `d.photo`
+ *  is the storage key from `AvatarEditor`'s upload (or `undefined` after a
+ *  removal); sending `d.photo || null` lets a removal clear the stored avatar
+ *  the same way `SubprofileMetaForm` does for a subprofile's `avatarUrl`. */
 function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
   return {
     firstName: d.first.trim(),
@@ -112,6 +117,7 @@ function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     tagline: d.role.trim(),
     bio: d.bio.trim(),
     location: d.hood.trim(),
+    avatarUrl: d.photo || null,
     visibility: d.visibility,
     now: d.now.trim(),
     // `OpenToEntry` is structurally the wire shape (OpenToId ⊆ string), so the
@@ -223,6 +229,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const save = useCallback(async (): Promise<boolean> => {
     setSaveError(null);
+    // Set (live mode) once the PATCH resolves; stays undefined in demo mode,
+    // where `persistProfile` is a no-op and never touches the network.
+    let savedProfile: ProfileDTO | undefined;
     try {
       // Persist to the backend first (no-op in demo mode); only commit the live
       // profile and show the confirmation once it actually succeeds. The core
@@ -230,7 +239,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       // socials, skills) persist via PUT /profiles/me/*; the still-untouched
       // lists (groups, shapings) re-send from the committed profile
       // (idempotent full-replace).
-      await persistProfile(draftToUpdateDto(draft));
+      savedProfile = await persistProfile(draftToUpdateDto(draft));
       await persistLists({
         work: draft.work,
         skills: draft.skills,
@@ -248,7 +257,17 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }
     setProfile((prev) => ({
       ...prev,
-      photo: draft.photo,
+      // `draft.photo` is a storage KEY (unfetchable by the browser), not a
+      // URL — rendering it directly would show a broken image once the local
+      // upload preview is gone. `persistProfile` resolves the PATCH response,
+      // whose `avatarUrl` the backend has already turned into a fetchable
+      // `${API_URL}/files/<key>` URL (or `null` after a removal) — mirrors how
+      // `profileFromAuth` above seeds `photo` from `p.avatarUrl ?? base.photo`.
+      // In demo mode `persistProfile` is a no-op and `savedProfile` stays
+      // undefined, so this falls back to the pre-existing `draft.photo`
+      // behaviour, which in that mode already holds a locally fetchable
+      // object URL (see `useUploadImage`'s demo-mode branch).
+      photo: savedProfile?.avatarUrl ?? draft.photo,
       first: draft.first.trim() || prev.first,
       last: draft.last.trim() || prev.last,
       role: draft.role.trim(),

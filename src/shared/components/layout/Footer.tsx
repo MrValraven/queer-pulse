@@ -115,7 +115,7 @@ export function Footer() {
           <nav className={styles.cols} aria-label={t("footer:aria.footerNav")}>
             {columns.map((column) => (
               <div key={column.headingKey} className={styles.col}>
-                <h4>{t(column.headingKey)}</h4>
+                <h2>{t(column.headingKey)}</h2>
                 {column.links.map((link) => (
                   <Link key={link.href} to={linkToPath(link.href)}>
                     {t(link.labelKey)}

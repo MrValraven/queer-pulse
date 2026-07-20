@@ -31,8 +31,6 @@ export interface Gathering {
   /** i18n Pattern A — "seats left" / "going" / "spots left" / "Casual" chrome. */
   spotsLabelKey: string;
   spotsValue?: string;
-  /** i18n Pattern A — "Reserve a seat" / "I'll be there" / etc. chrome. */
-  ctaLabelKey: string;
 }
 
 /** Warm (belonging/build) vs. safe (heavier safety/rights) styling. */

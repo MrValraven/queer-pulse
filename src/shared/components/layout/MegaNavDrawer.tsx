@@ -47,6 +47,11 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                       <Link
                         key={link.labelKey}
                         to={linkToPath(link.href)}
+                        // Overwrites the history entry MobileNavDrawer's
+                        // provider pushed for the Back gesture instead of
+                        // stacking on it. Only ever rendered inside that
+                        // drawer, so this is always the right call.
+                        replace
                         className={[
                           styles.link,
                           link.featured && styles.linkFeatured,

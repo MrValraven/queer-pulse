@@ -144,14 +144,14 @@ export function PublicProfileHead({
           )}
         </h1>
         <p className={styles.pronouns}>
-          {profile.pronouns && (
-            <span className={styles.pron}>{profile.pronouns}</span>
-          )}
-          {profile.role}
-        </p>
-        <div className={styles.badgeRow}>
+          <span>
+            {profile.pronouns && (
+              <span className={styles.pron}>{profile.pronouns}</span>
+            )}
+            {profile.role}
+          </span>
           <MemberStaffBadge slug={profile.slug} size="lg" />
-        </div>
+        </p>
         {curatorSlug && (
           <Link
             className={styles.curatorLink}

@@ -4,7 +4,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../shared/api/queryClient";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { AccessibilityProvider } from "./providers/AccessibilityProvider";
+import { DisplayModeProvider } from "./providers/DisplayModeProvider";
 import { NavModeProvider } from "./providers/NavModeProvider";
+import { NavDrawerProvider } from "./providers/NavDrawerProvider";
 import { DemoModeProvider } from "./providers/DemoModeProvider";
 import { AuthProvider } from "./providers/AuthProvider";
 import { ConsentProvider } from "./providers/ConsentProvider";
@@ -35,6 +37,7 @@ import { QueryErrorToastBridge } from "../shared/components/feedback/QueryErrorT
 import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { ConsentBanner } from "../shared/components/consent/ConsentBanner";
 import { QuickExit } from "../shared/components/safety/QuickExit";
+import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { ScrollManager } from "./ScrollManager";
 import { AppRoutes } from "./routes";
 
@@ -69,6 +72,9 @@ const RootProviders = composeProviders([
   // Reflects the "Reduce motion" preference onto <html>; independent of the
   // others, kept next to ThemeProvider since both drive DOM-attribute display state.
   AccessibilityProvider,
+  // Same family: stamps `data-display-mode` on <html> so standalone.css can
+  // restyle the shell when running as an installed PWA. Needs nothing above it.
+  DisplayModeProvider,
   DemoModeProvider,
   QueryProvider,
   AuthProvider,
@@ -82,6 +88,10 @@ const RootProviders = composeProviders([
   // Inside AuthProvider: the sidebar is a signed-in-only affordance, so nav mode
   // is derived from the auth state (signed-out visitors always get the MegaNav).
   NavModeProvider,
+  // Mobile drawer open state, lifted above both of its triggers (Navbar
+  // hamburger, BottomTabBar "More"). Must sit above the routed UI that renders
+  // the shells.
+  NavDrawerProvider,
   I18nProvider,
   ToastProvider,
   // Platform-lockdown render gate: needs AuthProvider above it (reads `role`,
@@ -137,6 +147,7 @@ export function App() {
           <RoomLoader />
           <ConsentBanner />
           <AuthErrorToast />
+          <PwaUpdatePrompt />
           <QueryErrorToastBridge />
         </BrowserRouter>
       </ErrorBoundary>

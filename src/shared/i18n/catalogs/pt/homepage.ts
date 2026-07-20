@@ -167,10 +167,7 @@ export const homepage: Catalog = {
   "gatherings.spots.spotsLeft": "vagas restantes",
   "gatherings.spots.going": "pessoas vão",
   "gatherings.spots.casual": "Informal",
-  "gatherings.cta.reserveSeat": "Reservar lugar",
-  "gatherings.cta.illBeThere": "Eu vou",
-  "gatherings.cta.requestSpot": "Pedir uma vaga",
-  "gatherings.cta.rsvp": "Confirmar presença",
+  "gatherings.cta.seeDetails": "Ver detalhes do evento",
 
   // ── Stories ────────────────────────────────────────────────────────────────
   "stories.title": "Contado <em>com as nossas palavras.</em>",

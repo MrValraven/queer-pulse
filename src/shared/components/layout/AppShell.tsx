@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
+import { BottomTabBar } from "./BottomTabBar";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 
 /**
  * Logged-in page frame: the single site-wide Navbar (which reflects auth state)
- * + main content + the full site Footer. `unreadCount` feeds the nav's
- * notifications bell.
+ * + main content + the full site Footer + the installed-PWA bottom tab bar.
+ * `unreadCount` feeds the nav's notifications bell.
  *
  * `tabIndex={-1}` on `<main>` is what makes the skip link actually work: without
  * it the fragment jump scrolls but leaves focus stranded back in the nav, so the
@@ -27,6 +28,7 @@ export function AppShell({
         {children}
       </main>
       <Footer />
+      <BottomTabBar />
     </>
   );
 }

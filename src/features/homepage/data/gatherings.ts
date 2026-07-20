@@ -24,7 +24,6 @@ export const gatherings: Gathering[] = [
     detail: "Hosted by Tomás B.",
     spotsValue: "8",
     spotsLabelKey: "homepage:gatherings.spots.seatsLeft",
-    ctaLabelKey: "homepage:gatherings.cta.reserveSeat",
   },
   {
     id: "portfolio-night",
@@ -36,7 +35,6 @@ export const gatherings: Gathering[] = [
     detail: "Open to all members",
     spotsValue: "32",
     spotsLabelKey: "homepage:gatherings.spots.going",
-    ctaLabelKey: "homepage:gatherings.cta.illBeThere",
   },
   {
     id: "studio-visit",
@@ -48,7 +46,6 @@ export const gatherings: Gathering[] = [
     detail: "Limited to 10",
     spotsValue: "3",
     spotsLabelKey: "homepage:gatherings.spots.spotsLeft",
-    ctaLabelKey: "homepage:gatherings.cta.requestSpot",
   },
   {
     id: "founders-breakfast",
@@ -59,6 +56,5 @@ export const gatherings: Gathering[] = [
     hood: "Marvila",
     detail: "Early start, good coffee",
     spotsLabelKey: "homepage:gatherings.spots.casual",
-    ctaLabelKey: "homepage:gatherings.cta.rsvp",
   },
 ];

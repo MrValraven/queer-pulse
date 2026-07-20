@@ -69,7 +69,32 @@ img {
 .wrap {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 var(--wrap-px, 28px);
+  /* Horizontal safe-area insets are applied HERE, on the shared content
+     container — not on <body>.
+
+     index.html carries `viewport-fit=cover` because the installed-PWA tab bar
+     needs `env(safe-area-inset-*)` to resolve to real values. That flag is
+     global, so it also extends the layout viewport under the notch and the
+     rounded corners for every ordinary iOS Safari user; in landscape, copy and
+     card edges would otherwise render under the sensor housing.
+
+     Why not <body> padding, the obvious layer: this design is built from
+     full-bleed bands — a full-width `<section>` carrying a coloured background
+     with a `.wrap` nested inside for its copy (e.g. the homepage
+     ChangeMakers `.section` and TrustStrip `.strip`, both
+     `background: var(--plum)`, and the plum `.site-footer`). Padding <body>
+     would inset those *bands*, leaving cream gutter stripes down both sides of
+     every coloured section. Insetting `.wrap` keeps the bleed intact and moves
+     only the content that must clear the notch.
+
+     Fixed-position chrome sits outside `main`, so it can't inherit this and
+     handles itself: `.nav`/`.appBar` in Navbar.module.css and `.bar` in
+     BottomTabBar.module.css.
+
+     Inert wherever `env()` resolves to 0 (all desktop, all portrait, every
+     non-notched device), so current layouts are unchanged. */
+  padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
+  padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
 }
 
 /* Visually-hidden helper for accessible labels */

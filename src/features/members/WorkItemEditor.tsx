@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,9 +12,11 @@ const TINTS = ["coral", "jade", "plum"] as const;
 
 /**
  * One editable "Selected work" card: an image picker (uploads via
- * `useUploadImage("work-image")` — demo returns an object-URL preview, live
- * uploads to storage and returns the public URL) plus title / category / year
- * fields, and a remove action. Mirrors `AvatarEditor`'s upload + error handling.
+ * `useUploadImage("work-image")`, which resolves to `{ key, previewUrl }` —
+ * `previewUrl` renders instantly as this component's own local preview state,
+ * `key` is what `onChange` persists onto `item.image`) plus title / category /
+ * year fields, and a remove action. Mirrors `AvatarEditor`'s upload + error
+ * handling.
  */
 export function WorkItemEditor({
   item,
@@ -29,26 +31,22 @@ export function WorkItemEditor({
 }) {
   const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
-  const createdUrl = useRef<string | null>(null);
   const uploadWorkImage = useUploadImage("work-image");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(
-    () => () => {
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-    },
-    [],
-  );
 
   async function pick(file: File) {
     setError(null);
     setUploading(true);
     try {
-      const url = await uploadWorkImage(file);
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-      createdUrl.current = url.startsWith("blob:") ? url : null;
-      onChange({ image: url });
+      const { key, previewUrl: newPreviewUrl } = await uploadWorkImage(file);
+      // Single-slot picker — the previous local preview (if any) is now
+      // stale, so revoke it right away instead of leaving it to the hook's
+      // unmount sweep.
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(newPreviewUrl);
+      onChange({ image: key });
     } catch (err) {
       setError(
         err instanceof ImageProcessingError
@@ -60,12 +58,14 @@ export function WorkItemEditor({
     }
   }
 
+  const displayedImage = previewUrl ?? item.image;
+
   return (
     <article className={styles.workCard}>
       <div className={editStyles.workImageWrap}>
         <ImageSlot
           tint={TINTS[index % 3]}
-          src={item.image}
+          src={displayedImage}
           height={200}
           radius={14}
           placeholder={t("members:workItem.imagePlaceholder")}
@@ -81,19 +81,19 @@ export function WorkItemEditor({
             <FiCamera size={14} />
             {uploading
               ? t("members:workItem.uploading")
-              : item.image
+              : displayedImage
                 ? t("members:workItem.change")
                 : t("members:workItem.add")}
           </button>
-          {item.image && !uploading && (
+          {displayedImage && !uploading && (
             <button
               type="button"
               className={`${editStyles.avatarBtn} ${editStyles.avatarBtnGhost}`}
               aria-label={t("members:workItem.removeImage")}
               onClick={() => {
-                if (createdUrl.current) {
-                  URL.revokeObjectURL(createdUrl.current);
-                  createdUrl.current = null;
+                if (previewUrl) {
+                  URL.revokeObjectURL(previewUrl);
+                  setPreviewUrl(null);
                 }
                 onChange({ image: undefined });
               }}

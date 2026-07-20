@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui";
 import { useScrolled } from "../../hooks/useScrolled";
@@ -6,14 +6,17 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavMode } from "../../../app/providers/navModeContext";
+import { useDisplayMode } from "../../../app/providers/displayModeContext";
 import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { MegaNav } from "./MegaNav";
-import { MegaNavDrawer } from "./MegaNavDrawer";
 import { Sidebar } from "./Sidebar";
-import { AccountMenu, ACCOUNT_ITEMS } from "./AccountMenu";
+import { AccountMenu } from "./AccountMenu";
+import { MobileNavDrawer } from "./MobileNavDrawer";
+import { NAV_DRAWER_TRIGGER_ATTRIBUTE } from "./useNavDrawerFocus";
+import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import styles from "./Navbar.module.css";
 
 function Brand({ to }: { to: string }) {
@@ -65,63 +68,26 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   const scrolled = useScrolled(8);
   const isMobile = useMediaQuery("(max-width: 860px)");
   const { theme, toggleTheme } = useTheme();
-  const { loggedIn, signOut } = useAuth();
+  const { loggedIn } = useAuth();
   const { navMode } = useNavMode();
   const { t } = useTranslation();
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const drawerPanelRef = useRef<HTMLDivElement>(null);
+  const { drawerOpen, openDrawer, closeDrawer } = useNavDrawer();
+  const { isInstalled } = useDisplayMode();
 
-  const closeDrawer = () => setDrawerOpen(false);
-
-  // Manage focus + keyboard for the mobile drawer (dialog) while it is open.
+  // The drawer only renders below the mobile breakpoint (see the gate at the
+  // bottom of this component), but the open state lives in a provider that
+  // outlives it. Without this, resizing past 860px with the drawer open unmounts
+  // it while `drawerOpen` stays true — so resizing back down reopens a drawer
+  // the user never asked for, and leaves the scroll lock and the pushed history
+  // entry live in between. Close it as the gate closes.
   useEffect(() => {
-    if (!drawerOpen) return;
-
-    const trigger = menuButtonRef.current;
-    const panel = drawerPanelRef.current;
-    // Move focus into the drawer on open.
-    panel?.focus();
-
-    const getFocusable = () =>
-      Array.from(
-        panel?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ) ?? [],
-      );
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        setDrawerOpen(false);
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const focusable = getFocusable();
-      if (focusable.length === 0) {
-        event.preventDefault();
-        panel?.focus();
-        return;
-      }
-      const first = focusable[0]!;
-      const last = focusable[focusable.length - 1]!;
-      const active = document.activeElement;
-      if (event.shiftKey && (active === first || active === panel)) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      // Restore focus to the trigger when the drawer closes.
-      trigger?.focus();
-    };
-  }, [drawerOpen]);
+    if (!isMobile && drawerOpen) closeDrawer();
+  }, [isMobile, drawerOpen, closeDrawer]);
+  // Installed on mobile: the tab bar owns navigation, so the top bar drops to a
+  // slim title strip. The hamburger goes with it — the "More" tab opens the
+  // drawer now — but search and the notifications bell have no other home, so
+  // they stay.
+  const isAppBar = isInstalled && isMobile;
 
   // Desktop sidebar mode: swap the whole top bar for the left rail. Mobile always
   // keeps the top bar + drawer below, regardless of nav mode.
@@ -132,7 +98,11 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   return (
     <>
       <nav
-        className={[styles.nav, scrolled && styles.scrolled]
+        className={[
+          styles.nav,
+          scrolled && styles.scrolled,
+          isAppBar && styles.appBar,
+        ]
           .filter(Boolean)
           .join(" ")}
       >
@@ -152,7 +122,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          {!isMobile && (
+          {(!isMobile || isAppBar) && (
             // Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT).
             <button
               type="button"
@@ -165,6 +135,15 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
               <SearchIcon />
             </button>
           )}
+
+          {isAppBar &&
+            (loggedIn ? (
+              <NotificationsBell unreadCount={unreadCount} />
+            ) : (
+              <Link to={routes.signIn} className={styles.signIn}>
+                {t("nav:signIn")}
+              </Link>
+            ))}
 
           {!isMobile &&
             (loggedIn ? (
@@ -183,15 +162,15 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
               </>
             ))}
 
-          {isMobile && (
+          {isMobile && !isAppBar && (
             <button
-              ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
-              onClick={() => setDrawerOpen(true)}
+              onClick={openDrawer}
               aria-haspopup="dialog"
               aria-expanded={drawerOpen}
               aria-label={t("nav:openMenu")}
+              {...{ [NAV_DRAWER_TRIGGER_ATTRIBUTE]: "" }}
             >
               <MenuIcon />
             </button>
@@ -199,74 +178,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
         </div>
       </nav>
 
-      {isMobile && drawerOpen && (
-        <div
-          className={styles.drawer}
-          role="presentation"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) closeDrawer();
-          }}
-        >
-          <div
-            ref={drawerPanelRef}
-            className={styles.drawerPanel}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("nav:menu")}
-            tabIndex={-1}
-          >
-            <MegaNavDrawer onNavigate={closeDrawer} />
-            <Link
-              to={routes.search}
-              className={styles.drawerSignIn}
-              onClick={closeDrawer}
-            >
-              {t("nav:searchShort")}
-            </Link>
-            {loggedIn ? (
-              <>
-                {ACCOUNT_ITEMS.map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={styles.drawerSignIn}
-                    onClick={closeDrawer}
-                  >
-                    {t(item.labelKey)}
-                  </Link>
-                ))}
-                <Link
-                  to={routes.homepage}
-                  className={styles.drawerSignIn}
-                  onClick={() => {
-                    signOut();
-                    closeDrawer();
-                  }}
-                >
-                  {t("nav:signOut")}
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  to={routes.signIn}
-                  className={styles.drawerSignIn}
-                  onClick={closeDrawer}
-                >
-                  {t("nav:signIn")}
-                </Link>
-                <Button
-                  to={routes.requestInvite}
-                  className={styles.drawerCta}
-                  onClick={closeDrawer}
-                >
-                  {t("nav:requestInvite")}
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      {isMobile && <MobileNavDrawer />}
     </>
   );
 }

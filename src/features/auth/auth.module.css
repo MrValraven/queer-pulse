@@ -180,21 +180,21 @@
    one after another. Transform/opacity only; all disabled + resting-visible
    under reduced motion. */
 .artGlow {
-  animation: qpArtGlowIn 0.7s var(--ease-out) both;
+  animation: qpArtGlowIn 0.4s var(--ease-out) both;
 }
 .hearthBloom {
   transform-box: fill-box;
   transform-origin: center;
-  animation: qpArtBloom 0.5s var(--ease-out) both;
-  animation-delay: 0.14s;
+  animation: qpArtBloom 0.34s var(--ease-out) both;
+  animation-delay: 0.08s;
 }
 .artOrb {
   transform-box: fill-box;
   transform-origin: center;
-  animation: qpArtOrbArrive 0.52s var(--ease) both;
+  animation: qpArtOrbArrive 0.4s var(--ease) both;
 }
 .artStem {
-  animation: qpArtStemIn 0.5s var(--ease-out) both;
+  animation: qpArtStemIn 0.34s var(--ease-out) both;
 }
 /* One gentle beat of the coral core, after it has bloomed and before the first
    member orb arrives. Sits on a wrapper <g> so it composes with the core's own
@@ -202,7 +202,7 @@
 .hearthBeat {
   transform-box: fill-box;
   transform-origin: center;
-  animation: qpHearthBeat 0.7s var(--ease) 0.6s both;
+  animation: qpHearthBeat 0.5s var(--ease) 0.36s both;
 }
 @keyframes qpArtGlowIn {
   from {
@@ -264,7 +264,7 @@
 .hearthRipple {
   transform-box: fill-box;
   transform-origin: center;
-  animation: qpHearthRipple 2.8s var(--ease) 0.66s infinite;
+  animation: qpHearthRipple 2.8s var(--ease) 0.45s infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .hearthRipple {

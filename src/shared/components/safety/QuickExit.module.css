@@ -3,7 +3,10 @@
 .root {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom));
+  /* `--bottom-inset` is 0 in a browser tab and the tab bar's height when
+     installed on mobile (see styles/standalone.css), so the safety exit is never
+     buried under the bar. */
+  bottom: calc(var(--bottom-inset) + max(16px, env(safe-area-inset-bottom)));
   z-index: 150;
   display: flex;
   flex-direction: column;

@@ -51,7 +51,9 @@ export function Gatherings() {
                       {event.spotsValue ? <b>{event.spotsValue}</b> : null}{" "}
                       {t(event.spotsLabelKey)}
                     </div>
-                    <span className={styles.cta}>{t(event.ctaLabelKey)}</span>
+                    <span className={styles.cta}>
+                      {t("homepage:gatherings.cta.seeDetails")}
+                    </span>
                   </div>
                 </Link>
               </Reveal>

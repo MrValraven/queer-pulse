@@ -6,6 +6,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { detectPlatform, useInstallPrompt } from "../../shared/hooks";
+import { useDisplayMode } from "../../app/providers/displayModeContext";
 import styles from "./PwaPromptPage.module.css";
 
 const FEATURES: { labelKey: string; detailKey: string }[] = [
@@ -79,11 +81,23 @@ export function PwaPromptPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const [platform, setPlatform] = useState<Platform>("ios");
+  // Default to the visitor's actual platform rather than always iOS; the tabs
+  // stay switchable so anyone can read the other sets of instructions.
+  const [platform, setPlatform] = useState<Platform>(detectPlatform);
+  const { canInstall, promptInstall } = useInstallPrompt();
+  const { isInstalled } = useDisplayMode();
 
   const { titleKey, stepKeys } = INSTRUCTIONS[platform];
 
-  function install() {
+  async function install() {
+    // Chrome path: show the browser's real install dialog.
+    if (canInstall) {
+      const accepted = await promptInstall();
+      if (accepted) return;
+    }
+    // iOS fires no beforeinstallprompt and Safari has no programmatic install,
+    // so the on-screen instructions are the actual answer there. Same fallback
+    // when Chrome hasn't (yet) judged the app installable.
     showToast(t("system:pwaPrompt.toast.installHint"), "info");
   }
 
@@ -134,18 +148,23 @@ export function PwaPromptPage() {
         </div>
 
         <div className={styles.tabs}>
-          {(["ios", "android", "desktop"] as Platform[]).map((p) => (
-            <button
-              type="button"
-              key={p}
-              className={[styles.tab, platform === p && styles.tabActive]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setPlatform(p)}
-            >
-              {t(TAB_LABEL_KEY[p])}
-            </button>
-          ))}
+          {(["ios", "android", "desktop"] as Platform[]).map(
+            (platformOption) => (
+              <button
+                type="button"
+                key={platformOption}
+                className={[
+                  styles.tab,
+                  platform === platformOption && styles.tabActive,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setPlatform(platformOption)}
+              >
+                {t(TAB_LABEL_KEY[platformOption])}
+              </button>
+            ),
+          )}
         </div>
 
         <div className={styles.howto}>
@@ -164,7 +183,11 @@ export function PwaPromptPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={install} className={styles.installBtn}>
+          <Button
+            onClick={install}
+            className={styles.installBtn}
+            disabled={isInstalled}
+          >
             {t("system:pwaPrompt.installCta")}
           </Button>
           <button type="button" className={styles.laterBtn} onClick={snooze}>

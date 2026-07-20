@@ -148,7 +148,14 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Pronouns, role and the staff badge form one "who this person is" cluster, so
+   they share a line. Wrapping drops the badge below the text on narrow columns
+   rather than breaking the role itself. */
 .pronouns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   font-size: 14px;
   color: var(--ink-60);
   margin-bottom: 14px;

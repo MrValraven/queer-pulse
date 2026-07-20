@@ -34,6 +34,7 @@ async function loadDemo() {
   const { DemoModeProvider } = await import(
     "../../../app/providers/DemoModeProvider"
   );
+  const { AuthProvider } = await import("../../../app/providers/AuthProvider");
   const { EmployerAffiliationProvider } = await import(
     "../../../app/providers/EmployerAffiliationProvider"
   );
@@ -44,7 +45,9 @@ async function loadDemo() {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
       <DemoModeProvider>
-        <EmployerAffiliationProvider>{children}</EmployerAffiliationProvider>
+        <AuthProvider>
+          <EmployerAffiliationProvider>{children}</EmployerAffiliationProvider>
+        </AuthProvider>
       </DemoModeProvider>
     </QueryClientProvider>
   );

@@ -152,10 +152,7 @@ export const homepage: Catalog = {
   "gatherings.spots.spotsLeft": "spots left",
   "gatherings.spots.going": "going",
   "gatherings.spots.casual": "Casual",
-  "gatherings.cta.reserveSeat": "Reserve a seat",
-  "gatherings.cta.illBeThere": "I'll be there",
-  "gatherings.cta.requestSpot": "Request a spot",
-  "gatherings.cta.rsvp": "RSVP",
+  "gatherings.cta.seeDetails": "See event details",
 
   // ── Stories ────────────────────────────────────────────────────────────────
   "stories.title": "Told in <em>our own words.</em>",

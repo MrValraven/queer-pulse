@@ -22,11 +22,15 @@ export type UploadKind =
  *     signature (the client mirrors the same caps in `uploadProcessing.ts`).
  *
  * Response — `PresignedUpload` (Variant A, signed PUT — what this client does):
- *   { uploadUrl, publicUrl, expiresIn? }
+ *   { uploadUrl, key, expiresIn? }
  *   - `uploadUrl`: short-lived (≤5 min) presigned URL to `PUT` the bytes to,
  *     direct-to-storage. No cookies/CSRF — the signature authorizes it.
- *   - `publicUrl`: the stable, CDN-served URL the processed object lives at; we
- *     persist this once the PUT succeeds.
+ *   - `key`: the storage key the object was written under (e.g.
+ *     `avatars/<id>.webp`). The bucket is private with no public URL, so this
+ *     key — not a fetchable URL — is what we persist, sending it back verbatim
+ *     as the value of the domain field (`avatarUrl`, `imageUrl`,
+ *     `coverImageUrl`, ...). The backend resolves it to `GET /files/<key>` when
+ *     it builds responses that include the image.
  *
  *   (Variant B — S3/GCS POST-policy form-post — would add a `fields` map and
  *   require `useUploadImage` to switch the PUT to a multipart POST that appends
@@ -36,15 +40,15 @@ export type UploadKind =
  * SERVER RESPONSIBILITIES (authoritative — the client only mirrors what it can):
  *   1. Reject `byteSize` over the per-kind cap; verify MAGIC BYTES, not just the
  *      declared `contentType` (a client can lie); short single-use TTL.
- *   2. Virus / malware scan the received object; `publicUrl` must not serve
- *      until the scan passes (pending state or scan-then-promote).
+ *   2. Virus / malware scan the received object; `GET /files/<key>` must not
+ *      serve it until the scan passes (pending state or scan-then-promote).
  *   3. EXIF / metadata strip — SAFETY-CRITICAL. Strip ALL metadata (GPS,
  *      capture time, device IDs, embedded thumbnails) by re-encoding pixels, for
  *      EVERY kind including avatars. This is the authoritative defence against
  *      the geolocation-outing risk; the client-side strip in `uploadProcessing`
  *      is only best-effort defence-in-depth.
  *   4. Resize / re-encode per kind (avatar 512², cover 1600px) to WebP/AVIF with
- *      a JPEG fallback; serve `publicUrl` from a cache-friendly CDN origin.
+ *      a JPEG fallback.
  *   5. Private-by-default bucket; presign grants write to a single key only.
  */
 export interface PresignRequest {
@@ -58,8 +62,12 @@ export interface PresignRequest {
 export interface PresignedUpload {
   /** Short-lived presigned URL to `PUT` the raw bytes to (direct-to-storage). */
   uploadUrl: string;
-  /** Stable, CDN-served URL we persist once the PUT succeeds. */
-  publicUrl: string;
+  /**
+   * Storage key the object was (will be) written under. Not a fetchable URL —
+   * the bucket is private. We persist this verbatim once the PUT succeeds; the
+   * backend resolves it to `GET /files/<key>` when it builds responses.
+   */
+  key: string;
   /** Seconds until `uploadUrl` expires, if the backend reports it. */
   expiresIn?: number;
 }

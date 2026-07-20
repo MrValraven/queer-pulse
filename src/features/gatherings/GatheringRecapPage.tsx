@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -18,8 +18,12 @@ import {
 } from "./gatheringRecap.data";
 import styles from "./GatheringRecapPage.module.css";
 
-/** A submitted recap photo carrying the real uploaded URL (used in live mode). */
-type SubmittedPhoto = RecapPhoto & { image?: string };
+/**
+ * A submitted recap photo carrying the uploaded storage key (what a real
+ * submission endpoint would persist) plus the local preview URL it renders
+ * with, since the key alone isn't fetchable in live mode.
+ */
+type SubmittedPhoto = RecapPhoto & { imageKey?: string; imagePreviewUrl?: string };
 
 export function GatheringRecapPage() {
   const { t } = useTranslation();
@@ -28,30 +32,37 @@ export function GatheringRecapPage() {
   const loading = useSimulatedLoad();
   const uploadPhoto = useUploadImage("gathering-photo");
   const fileRef = useRef<HTMLInputElement>(null);
-  const createdUrl = useRef<string | null>(null);
-  const uploadedUrl = useRef<string | null>(null);
+  const uploadedPhoto = useRef<{ key: string; previewUrl: string } | null>(
+    null,
+  );
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [submittedPhotos, setSubmittedPhotos] = useState<SubmittedPhoto[]>([]);
 
-  useEffect(
-    () => () => {
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-    },
-    [],
-  );
-
   // "Submit yours" opens a real file picker. The picked file is validated,
   // EXIF-stripped and uploaded (durable in live mode); the caption is then
   // collected in the existing modal.
+  //
+  // Unlike the single-slot editors elsewhere (avatar, work image, story
+  // cover), this page accumulates a *gallery* of photos: each accepted
+  // upload's preview must go on staying visible in `submittedPhotos`
+  // alongside every earlier one, so this component must NOT eagerly revoke a
+  // preview just because a newer upload started — that would break whichever
+  // earlier photo is still on screen. The only exception is an in-flight
+  // pick that never gets confirmed via `addPhoto` (the modal is dismissed, or
+  // a second file is picked before the first is confirmed); that abandoned
+  // preview is revoked here. Anything actually added to the gallery is left
+  // for `useUploadImage`'s own unmount sweep to revoke when this page goes
+  // away.
   async function handleFile(file: File | undefined) {
     if (!file) return;
     setUploading(true);
     try {
-      const url = await uploadPhoto(file);
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-      createdUrl.current = url.startsWith("blob:") ? url : null;
-      uploadedUrl.current = url;
+      const { key, previewUrl } = await uploadPhoto(file);
+      if (uploadedPhoto.current) {
+        URL.revokeObjectURL(uploadedPhoto.current.previewUrl);
+      }
+      uploadedPhoto.current = { key, previewUrl };
       setUploadOpen(true);
     } catch (err) {
       showToast(
@@ -68,9 +79,13 @@ export function GatheringRecapPage() {
   function addPhoto(photo: RecapPhoto) {
     setSubmittedPhotos((prev) => [
       ...prev,
-      { ...photo, image: uploadedUrl.current ?? undefined },
+      {
+        ...photo,
+        imageKey: uploadedPhoto.current?.key,
+        imagePreviewUrl: uploadedPhoto.current?.previewUrl,
+      },
     ]);
-    uploadedUrl.current = null;
+    uploadedPhoto.current = null;
     showToast(t("gatherings:recap.photoAddedToast"), "success");
   }
 

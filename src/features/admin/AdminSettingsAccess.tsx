@@ -145,12 +145,19 @@ export function AdminSettingsAccess({
     lastSeededClosedMsg.current = serverClosedMsg;
   }, [serverClosedMsg]);
 
-  // Read via a ref (updated every render) rather than closing over the
-  // `settings` prop directly: `save` closes over whatever `settings` was at
-  // the render where it was invoked, and a slow failure can resolve after
-  // `settings` has since moved on (e.g. another admin's change landed).
+  // Read via a ref rather than closing over the `settings` prop directly:
+  // `save` closes over whatever `settings` was at the render where it was
+  // invoked, and a slow failure can resolve after `settings` has since moved
+  // on (e.g. another admin's change landed). The revert below wants *current*
+  // server truth, not the snapshot from the render that fired the request —
+  // reverting to that stale snapshot would clobber the other admin's change.
+  // Synced from its own dependency-array-less effect so it is never written
+  // during render (per `react-hooks/refs`), which still leaves it holding the
+  // latest value by the time any onError callback can run.
   const settingsRef = useRef(settings);
-  settingsRef.current = settings;
+  useEffect(() => {
+    settingsRef.current = settings;
+  });
 
   function save(input: UpdatePlatformSettingsInput) {
     update.mutate(input, {

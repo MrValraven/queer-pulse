@@ -6,7 +6,11 @@ import {
 } from "../../../../shared/api/client";
 import { toItemsPage } from "../../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../../shared/api/refs";
-import type { ListingDraft, ListingStatus } from "../listBusiness.data";
+import type {
+  ListingDraft,
+  ListingStatus,
+  PhotoKey,
+} from "../listBusiness.data";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // The directory-listings domain accepts the full listing draft on create/patch
@@ -17,14 +21,23 @@ import type { ListingDraft, ListingStatus } from "../listBusiness.data";
 /** POST/PATCH body — the wizard's draft is the create payload verbatim. */
 export type CreateListingDto = ListingDraft;
 
-/** A listing as returned by the backend. */
-export interface ListingDTO extends CreateListingDto {
+/**
+ * A listing as returned by the backend. `photos` is narrower than the request
+ * payload's `Record<PhotoKey, string>`: the backend response converts each
+ * stored storage key / external URL to a fetchable URL via `toImageUrl`,
+ * which maps an absent/invalid value to `null` rather than `''` (see
+ * `listing-response.ts`, `ListingPhotoSetView`) — so this widens just that
+ * field to match, instead of the request-only `CreateListingDto` it otherwise
+ * extends verbatim.
+ */
+export interface ListingDTO extends Omit<CreateListingDto, "photos"> {
   ref: string;
   slug: string;
   status: ListingStatus;
   submittedBy: MemberRefDTO;
   /** ISO 8601 timestamp. */
   createdAt: string;
+  photos: Record<PhotoKey, string | null>;
 }
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────

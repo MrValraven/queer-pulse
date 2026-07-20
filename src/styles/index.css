@@ -6,4 +6,5 @@
 @import "./fonts.css";
 @import "./base.css";
 @import "./nav-mode.css";
+@import "./standalone.css";
 @import "../features/economy/tools/tools.print.css";

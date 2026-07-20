@@ -74,11 +74,11 @@ describe("reasonValue", () => {
 describe("member registry migration", () => {
   const entries = Object.values(MEMBERS).flatMap((member) => member.openTo);
 
-  it("still carries all 94 entries across 34 members", () => {
-    expect(entries).toHaveLength(94);
+  it("still carries all 97 entries across 36 members", () => {
+    expect(entries).toHaveLength(97);
     expect(
       Object.values(MEMBERS).filter((member) => member.openTo.length > 0),
-    ).toHaveLength(34);
+    ).toHaveLength(36);
   });
 
   it("resolves every entry to a non-empty label", () => {
@@ -94,8 +94,8 @@ describe("member registry migration", () => {
     }
   });
 
-  it("maps 34 entries to presets and keeps 60 as customs", () => {
-    expect(entries.filter(isPreset)).toHaveLength(34);
+  it("maps 37 entries to presets and keeps 60 as customs", () => {
+    expect(entries.filter(isPreset)).toHaveLength(37);
     expect(entries.filter((entry) => entry.kind === "custom")).toHaveLength(60);
   });
 

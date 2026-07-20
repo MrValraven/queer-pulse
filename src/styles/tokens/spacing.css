@@ -30,6 +30,19 @@
   /* ── Navbar ── */
   --nav-top: 18px;
   --nav-height: 62px;
+  /* Installed-PWA top app bar. Published here so Navbar.module.css and
+     standalone.css read one value. */
+  --app-bar-h: 48px;
+  /* Installed-PWA bottom tab bar. Published here so BottomTabBar.module.css and
+     standalone.css read one value. */
+  --tab-bar-h: 58px;
+  /* How much bottom-anchored floating UI (QuickExit, the consent banner) must
+     clear. Zero in a browser tab; standalone.css raises it to the tab bar's
+     total occupied height on mobile — the bar itself PLUS
+     env(safe-area-inset-bottom), because the bar already reserves its own
+     padding for the iOS home indicator, and floating UI needs to clear that
+     too, not just the bar's nominal height. */
+  --bottom-inset: 0px;
 }
 
 /* Shorthand alias for components that still reference the old name */

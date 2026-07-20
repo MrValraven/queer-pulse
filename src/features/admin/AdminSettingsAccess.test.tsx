@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { AdminSettingsAccess } from "./AdminSettingsAccess";
@@ -124,8 +124,13 @@ describe("AdminSettingsAccess", () => {
     // "value sent must equal value previewed" contract the review flagged as
     // unexercised (a comparison flip, or sending settings.lockdownMessage
     // instead of the draft, would still show the right preview here but send
-    // the wrong payload below).
-    expect(screen.getByText(presetText).tagName).toBe("BLOCKQUOTE");
+    // the wrong payload below). Scoped to the dialog: React keeps a
+    // controlled textarea's child text node in sync with its value, so an
+    // unscoped getByText would also match the textarea itself and throw on
+    // "found multiple elements" before ever checking the preview.
+    expect(
+      within(screen.getByRole("dialog")).getByText(presetText).tagName,
+    ).toBe("BLOCKQUOTE");
 
     fireEvent.click(screen.getByRole("button", { name: "Lock the platform" }));
     expect(mutate).toHaveBeenCalledTimes(1);

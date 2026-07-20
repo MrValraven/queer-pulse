@@ -52,10 +52,10 @@ function trail(orb: Orb) {
   };
 }
 
-/** The first orb waits until the hearth has bloomed and given one full beat
- *  (see `.hearthBeat` in auth.module.css), then they arrive in sequence. */
-const ORB_DELAY = 1.3;
-const ORB_STEP = 0.09;
+/** The first orb waits until the hearth has bloomed and its beat is underway
+ *  (see `.hearthBeat` in auth.module.css), then they arrive in quick sequence. */
+const ORB_DELAY = 0.55;
+const ORB_STEP = 0.05;
 
 /** Each orb enters by drifting home from a little further out. This returns the
  *  small outward offset (in user units) it starts from — the vector pointing
@@ -139,7 +139,7 @@ export function CommunityArt() {
       })}
 
       {/* The hearth: a still ring, one gently pulsing ring (the brand pulse),
-          and the warm coral core. It blooms and beats once on its own before
+          and the warm coral core. It blooms and starts its single beat before
           any member arrives — the centre calls, then the community answers. */}
       <circle
         className={styles.hearthBloom}

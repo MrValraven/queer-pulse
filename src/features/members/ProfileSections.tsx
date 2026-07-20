@@ -13,6 +13,7 @@ import { routes } from "../../app/routeMap";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useVouch } from "../../app/providers/VouchProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
@@ -126,10 +127,13 @@ export function ProfileHero({
               {profile.first} <em>{profile.last}</em>
             </h1>
             <div className={styles.role}>
-              {profile.role}
-              {profile.pronouns && (
-                <span className={styles.pronoun}> · {profile.pronouns}</span>
-              )}
+              <span>
+                {profile.role}
+                {profile.pronouns && (
+                  <span className={styles.pronoun}> · {profile.pronouns}</span>
+                )}
+              </span>
+              <MemberStaffBadge slug={profile.slug} size="lg" />
             </div>
             {curatorSlug && (
               <Link

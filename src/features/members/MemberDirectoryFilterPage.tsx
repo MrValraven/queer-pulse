@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { FiSearch, FiUsers } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
@@ -71,6 +71,7 @@ export function MemberDirectoryFilterPage() {
   const simLoading = useSimulatedLoad();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently active");
+  const sortLabelId = useId();
 
   // Identity selections go to `identities=`, NOT `tags=`. They used to be sent
   // as tags, which the backend matched against `profiles.tags` — a skills
@@ -180,11 +181,12 @@ export function MemberDirectoryFilterPage() {
                 })}
               </div>
               <div className={styles.sort}>
-                <span className={styles.sortLabel}>
+                <span id={sortLabelId} className={styles.sortLabel}>
                   {t("members:directory.sortLabel")}
                 </span>
                 <select
                   value={sort}
+                  aria-labelledby={sortLabelId}
                   onChange={(e) => setSort(e.target.value as SortKey)}
                 >
                   {SORTS.map((s) => (

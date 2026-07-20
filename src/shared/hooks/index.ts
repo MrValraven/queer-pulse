@@ -13,3 +13,9 @@ export {
   type QuickExitApi,
   type QuickExitPrefs,
 } from "./useQuickExit";
+export {
+  useInstallPrompt,
+  detectPlatform,
+  type InstallPromptApi,
+  type InstallPlatform,
+} from "./useInstallPrompt";

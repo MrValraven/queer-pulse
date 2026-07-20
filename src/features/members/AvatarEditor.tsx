@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,8 +8,11 @@ import styles from "./ProfileEdit.module.css";
 
 /**
  * The hero portrait in edit mode: shows the current photo (or initials) with a
- * "Change photo" action and, when a photo is set, a "Remove" action. Object URLs
- * created from picked files are revoked when replaced or on unmount.
+ * "Change photo" action and, when a photo is set, a "Remove" action. A freshly
+ * picked photo shows instantly via a local preview URL (this component's own
+ * state, revoked on replace/remove); `onChange` is called with the persistable
+ * storage key, not the preview URL — the parent's `photo` prop stays the value
+ * to submit and is what renders once it's a real, saved image.
  */
 export function AvatarEditor({
   photo,
@@ -23,38 +26,31 @@ export function AvatarEditor({
   initials: string;
   tint: ImageSlotTint;
   name: string;
-  onChange: (url: string) => void;
+  onChange: (key: string) => void;
   onRemove: () => void;
 }) {
   const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
-  const createdUrl = useRef<string | null>(null);
   const uploadAvatar = useUploadImage("avatar");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(
-    () => () => {
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-    },
-    [],
-  );
-
-  // Demo mode: `uploadAvatar` returns a local object URL (kept for revoking).
-  // Live mode: it uploads to storage and returns the stable public URL, so no
-  // object URL is created and there's nothing to revoke.
   async function pick(file: File) {
     setError(null);
     setProgress(0);
     setUploading(true);
     try {
-      const url = await uploadAvatar(file, {
+      const { key, previewUrl: newPreviewUrl } = await uploadAvatar(file, {
         onProgress: (p) => setProgress(p),
       });
-      if (createdUrl.current) URL.revokeObjectURL(createdUrl.current);
-      createdUrl.current = url.startsWith("blob:") ? url : null;
-      onChange(url);
+      // This editor shows one photo at a time, so the previous local preview
+      // (if any) is now stale — revoke it ourselves rather than waiting for
+      // the hook's unmount sweep to hold onto it for the rest of the session.
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(newPreviewUrl);
+      onChange(key);
     } catch (err) {
       setError(
         err instanceof ImageProcessingError
@@ -66,11 +62,13 @@ export function AvatarEditor({
     }
   }
 
+  const displayedPhoto = previewUrl ?? photo;
+
   return (
     <div className={styles.avatarWrap}>
       <ImageSlot
         tint={tint}
-        src={photo}
+        src={displayedPhoto}
         initials={initials}
         height={430}
         radius={20}
@@ -86,19 +84,19 @@ export function AvatarEditor({
           <FiCamera size={15} />
           {uploading
             ? t("members:avatar.uploading", { percent: progress })
-            : photo
+            : displayedPhoto
               ? t("members:avatar.change")
               : t("members:avatar.add")}
         </button>
-        {photo && !uploading && (
+        {displayedPhoto && !uploading && (
           <button
             type="button"
             className={`${styles.avatarBtn} ${styles.avatarBtnGhost}`}
             aria-label={t("members:avatar.remove")}
             onClick={() => {
-              if (createdUrl.current) {
-                URL.revokeObjectURL(createdUrl.current);
-                createdUrl.current = null;
+              if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+                setPreviewUrl(null);
               }
               onRemove();
             }}

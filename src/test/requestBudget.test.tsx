@@ -159,8 +159,40 @@ function registerSessionHandlers() {
     http.get(`${API}/notifications/unread-count`, () =>
       HttpResponse.json({ count: 0 }),
     ),
+    // ConsentProvider (src/app/providers/ConsentProvider.tsx) sits app-wide in
+    // RootProviders and fires `fetchMyConsent()` unconditionally on mount in
+    // live mode — gated only on `apiAvailable && !demoMode`, no login check.
+    // This is pre-existing, byte-identical-to-HEAD behaviour (see
+    // .superpowers/sdd/investigate-requestBudget.md §4), not a regression:
+    // consent state is meaningful for anonymous visitors too, so an app-wide
+    // unconditional fetch is defensible product behaviour. It therefore
+    // belongs in this shared, route-agnostic handler set, mirrored by
+    // SESSION_REQUEST_BUDGET below.
+    http.get(`${API}/consent/me`, () =>
+      HttpResponse.json({
+        categories: { necessary: true, analytics: false, monitoring: false },
+        policyVersion: "3.3",
+      }),
+    ),
   );
 }
+
+/**
+ * The exact session/chrome paths mocked by `registerSessionHandlers()` above
+ * — expected on every live-mode route regardless of which page renders. Kept
+ * as a single source of truth so each route's expected array below spreads
+ * this in rather than re-typing the same five strings per route: a route
+ * that forgot to paste one in by hand would silently under-assert instead of
+ * failing loudly. See `registerSessionHandlers()`'s doc comments above for
+ * why each entry (in particular `/consent/me`) belongs here.
+ */
+const SESSION_REQUEST_BUDGET = [
+  "/auth/me",
+  "/consent/me",
+  "/csrf-token",
+  "/me/bootstrap",
+  "/notifications/unread-count",
+];
 
 /**
  * Mirrors `src/shared/api/queryClient.ts`'s query defaults — importantly
@@ -255,14 +287,9 @@ describe("request budget (live mode)", () => {
       // the optimistic overlay, and `useDirectoryListings` (the composition
       // hook in features/marketing/listBusiness/api/) owns the query. Its sole
       // reader is PlacesSection on /account/profile — see that test below.
-      expect(seen).toEqual([
-        "/auth/me",
-        "/csrf-token",
-        "/feed",
-        "/me/bootstrap",
-        "/me/communities",
-        "/notifications/unread-count",
-      ]);
+      expect(seen).toEqual(
+        [...SESSION_REQUEST_BUDGET, "/feed", "/me/communities"].sort(),
+      );
     },
     15000,
   );
@@ -301,12 +328,7 @@ describe("request budget (live mode)", () => {
       // every entry in the observed set is a request this route legitimately
       // needs. Do not paper over a failure by adding this array's entries
       // without checking why they fired.
-      expect(seen).toEqual([
-        "/auth/me",
-        "/csrf-token",
-        "/me/bootstrap",
-        "/notifications/unread-count",
-      ]);
+      expect(seen).toEqual([...SESSION_REQUEST_BUDGET].sort());
     },
     15000,
   );
@@ -346,6 +368,12 @@ describe("request budget (live mode)", () => {
         http.get(`${API}/members/${SLUG}/vouchers`, () =>
           HttpResponse.json({ vouchers: [] }),
         ),
+        // ProfileHero (src/features/members/ProfileSections.tsx) renders
+        // MemberStaffBadge, which reads useStaffRole()'s useStaffMap() →
+        // GET /platform/staff (enabled when logged in). Response shape is
+        // PlatformStaffRowDTO[]; an empty array means the mocked member
+        // holds no staff role, which is all this test needs.
+        http.get(`${API}/platform/staff`, () => HttpResponse.json([])),
       );
 
       const seen = await renderRouteLive("/account/profile");
@@ -396,18 +424,28 @@ describe("request budget (live mode)", () => {
       // from the DTO types, not from a passing run). Do not paper over a
       // failure by adding this array's entries without checking why they
       // fired.
-      expect(seen).toEqual([
-        "/auth/me",
-        "/csrf-token",
-        "/listings/mine",
-        "/me/bootstrap",
-        "/me/public-profile",
-        "/me/vouches/given",
-        `/members/${SLUG}/vouchers`,
-        "/notifications/unread-count",
-        `/profiles/${SLUG}/recognition`,
-        `/profiles/${SLUG}/subprofiles`,
-      ]);
+      expect(seen).toEqual(
+        [
+          ...SESSION_REQUEST_BUDGET,
+          "/listings/mine",
+          "/me/public-profile",
+          "/me/vouches/given",
+          `/members/${SLUG}/vouchers`,
+          // /platform/staff: this is genuinely NEW eager-request behaviour,
+          // not pre-existing at HEAD (see
+          // .superpowers/sdd/investigate-requestBudget.md §4). It comes from
+          // MemberStaffBadge, rendered by ProfileHero
+          // (src/features/members/ProfileSections.tsx) via useStaffRole()'s
+          // useStaffMap(). The maintainer has confirmed the self-view staff
+          // badge is intended product behaviour, so it belongs in this
+          // route's budget — unlike /consent/me, this one is route-specific
+          // (only /account/profile renders ProfileHero), so it stays local
+          // to this array rather than joining SESSION_REQUEST_BUDGET.
+          "/platform/staff",
+          `/profiles/${SLUG}/recognition`,
+          `/profiles/${SLUG}/subprofiles`,
+        ].sort(),
+      );
     },
     15000,
   );

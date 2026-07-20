@@ -12,6 +12,10 @@ export const nav: Catalog = {
   signOut: "Sair",
   openMenu: "Abrir o menu",
   menu: "Menu",
+  more: "Mais",
+  primary: "Principal",
+  updateAvailable: "Está pronta uma nova versão do QueerPulse.",
+  updateReload: "Recarregar",
 
   // Destinos principais ("Members" → "Pessoas": neutro, evita "membros")
   members: "Pessoas",
@@ -21,4 +25,9 @@ export const nav: Catalog = {
   communities: "Comunidades",
   arriving: "Acabaste de chegar a Lisboa?",
   skills: "Competências",
+  feed: "Início",
+  events: "Eventos",
+  messages: "Mensagens",
+  places: "Locais",
+  resources: "Recursos",
 };

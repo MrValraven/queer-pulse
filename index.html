@@ -3,14 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- iOS ignores SVG here, so this must stay a PNG. -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
+    <!-- viewport-fit=cover is what makes env(safe-area-inset-*) resolve to real
+         values on iOS; without it every safe-area calculation in the app is 0. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <meta
       name="description"
       content="QueerPulse — a quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon."
     />
     <meta name="theme-color" content="#2D1B3D" />
+
+    <!-- Installed-app presentation. `black-translucent` lets the page extend
+         under the status bar; the slim app bar (Navbar.module.css .appBar) pads
+         itself by env(safe-area-inset-top) so the clock reads against the bar
+         rather than against content. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="QueerPulse" />
 
     <!--
       Base / default social metadata. NEUTRAL, brand-level copy only — this
