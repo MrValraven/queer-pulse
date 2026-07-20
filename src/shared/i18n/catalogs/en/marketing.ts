@@ -419,7 +419,6 @@ export const marketing: Catalog = {
   "coc.report.body":
     "Every report is read by a person, never auto-actioned. We aim to respond within 48 hours.",
   "coc.report.fileCta": "File a report",
-  "coc.report.crisisCta": "Talk to someone now",
   "coc.report.emergencyCta": "This is an emergency",
   "coc.appeal.title": "§05 <em>Appeals</em>",
   "coc.appeal.p1":
@@ -457,7 +456,6 @@ export const marketing: Catalog = {
   "coc.version.ratifiedMeta": "Ratified {date}",
   "coc.version.downloadCta": "download as text",
   "coc.version.readManifesto": "read the Manifesto",
-  "coc.crisisChatToast": "Opening crisis chat…",
   "coc.download.headerTitle": "QueerPulse Code of Conduct",
   "coc.download.headerMeta": "In effect since {date}",
   "coc.download.intro":

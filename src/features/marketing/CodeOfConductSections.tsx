@@ -182,13 +182,11 @@ export function CocEnforceSection() {
 interface CocReportCtaProps {
   reportPath: string;
   emergencyPath: string;
-  onCrisisChat: () => void;
 }
 
 export function CocReportCta({
   reportPath,
   emergencyPath,
-  onCrisisChat,
 }: CocReportCtaProps) {
   const { t } = useTranslation();
   return (
@@ -203,9 +201,6 @@ export function CocReportCta({
       <div className={styles.reportActions}>
         <Button to={reportPath} variant="primary">
           {t("marketing:coc.report.fileCta")}
-        </Button>
-        <Button type="button" variant="ghost-dark" onClick={onCrisisChat}>
-          {t("marketing:coc.report.crisisCta")}
         </Button>
         <Button to={emergencyPath} variant="ghost-dark">
           {t("marketing:coc.report.emergencyCta")}

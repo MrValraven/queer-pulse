@@ -432,7 +432,6 @@ export const marketing: Catalog = {
   "coc.report.body":
     "Toda a denúncia é lida por uma pessoa, nunca resolvida automaticamente. Procuramos responder em 48 horas.",
   "coc.report.fileCta": "Fazer uma denúncia",
-  "coc.report.crisisCta": "Falar com alguém agora",
   "coc.report.emergencyCta": "Isto é uma emergência",
   "coc.appeal.title": "§05 <em>Recursos</em>",
   "coc.appeal.p1":
@@ -470,7 +469,6 @@ export const marketing: Catalog = {
   "coc.version.ratifiedMeta": "Ratificado em {date}",
   "coc.version.downloadCta": "descarregar como texto",
   "coc.version.readManifesto": "ler o Manifesto",
-  "coc.crisisChatToast": "A abrir o chat de crise…",
   "coc.download.headerTitle": "Código de Conduta da QueerPulse",
   "coc.download.headerMeta": "Em vigor desde {date}",
   "coc.download.intro":

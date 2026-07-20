@@ -1,5 +1,4 @@
 import { PageShell } from "../../shared/components/layout";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -46,7 +45,6 @@ ${t("marketing:coc.download.mockNote")}
 export function CodeOfConductPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
   const versionDate = fmt.date(COC_VERSION_DATE, {
     day: "numeric",
     month: "long",
@@ -126,9 +124,6 @@ export function CodeOfConductPage() {
         <CocReportCta
           reportPath={REPORT}
           emergencyPath={EMERGENCY}
-          onCrisisChat={() =>
-            showToast(t("marketing:coc.crisisChatToast"), "info")
-          }
         />
         <CocChangesSection
           changelogPath={CHANGELOG}
