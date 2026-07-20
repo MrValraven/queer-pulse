@@ -16,9 +16,11 @@
  * SAFETY: assertNoGatedPaths() runs before anything is written. A gated path
  * would bake in the sign-in redirect and leak member surface structure.
  *
- * DEMO MODE: this runs with VITE_API_URL unset, so DemoModeProvider forces demo
- * mode. Only pages whose content is static hand-written copy may be listed in
- * QUIET_PUBLIC_PATHS — see the note there.
+ * ENVIRONMENT: this runs against the production bundle, so it inherits that
+ * build's env. Demo mode is an explicit VITE_DEMO=1 opt-in and is NEVER inferred
+ * from a missing VITE_API_URL (src/shared/api/config.ts) — an earlier version of
+ * this comment claimed otherwise and was wrong. The env contract is asserted
+ * below, before any work happens.
  */
 import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
@@ -29,6 +31,8 @@ import { QUIET_PUBLIC_PATHS, assertNoGatedPaths } from "./publicPaths.mjs";
 const DIST_DIRECTORY = "dist";
 const NAVIGATION_TIMEOUT_MS = 20_000;
 const READY_TIMEOUT_MS = 10_000;
+/** Frames to let React commit fetched content after the ready flag flips. */
+const SETTLE_AFTER_READY_MS = 250;
 
 const CONTENT_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -49,7 +53,7 @@ const CONTENT_TYPES = {
  * Static file server over dist/, falling back to index.html so client-side
  * routes resolve — the same contract vercel.json provides in production.
  */
-function createDistServer() {
+function createDistServer(shellHtml) {
   return createServer(async (request, response) => {
     const requestPath = new URL(request.url, "http://localhost").pathname;
     const candidate = join(DIST_DIRECTORY, requestPath);
@@ -60,9 +64,14 @@ function createDistServer() {
       });
       response.end(body);
     } catch {
-      const shell = await readFile(join(DIST_DIRECTORY, "index.html"));
+      // Serve the ORIGINAL shell captured before the loop started, never a
+      // re-read of dist/index.html. "/" is the first path we prerender and it
+      // overwrites dist/index.html — so a re-read would hand every subsequent
+      // page the prerendered homepage as its shell, and since <JsonLd> only
+      // appends, all 66 of them would ship the homepage's Organization schema
+      // on top of their own. Snapshotting also makes output order-independent.
       response.writeHead(200, { "Content-Type": CONTENT_TYPES[".html"] });
-      response.end(shell);
+      response.end(shellHtml);
     }
   });
 }
@@ -82,7 +91,48 @@ function outputPathFor(publicPath) {
 // --- Guard before any I/O ---------------------------------------------------
 assertNoGatedPaths(QUIET_PUBLIC_PATHS);
 
-const server = createDistServer();
+// --- Environment contract ---------------------------------------------------
+// src/shared/api/config.ts THROWS at module load in a production build that has
+// neither VITE_API_URL nor VITE_DEMO=1 — deliberately, so a mis-configured build
+// cannot silently serve mock data as real community content. If that happens
+// here React never mounts, no page ever signals ready, and all 67 paths burn the
+// full ready-timeout before failing. That is a very expensive way to discover a
+// missing env var, so check it up front and say so plainly.
+const apiUrl = (process.env.VITE_API_URL ?? "").trim();
+const isDemoBuild = process.env.VITE_DEMO === "1";
+
+if (!apiUrl && !isDemoBuild) {
+  console.error(
+    "[prerender] Refusing to run: neither VITE_API_URL nor VITE_DEMO=1 is set.\n" +
+      "  The app throws at boot in that state (src/shared/api/config.ts), so every\n" +
+      "  page would render nothing and time out.\n" +
+      "  Set VITE_API_URL to the API origin for a real build, or VITE_DEMO=1 to\n" +
+      "  prerender the standalone demo prototype.",
+  );
+  process.exit(1);
+}
+
+if (isDemoBuild) {
+  console.warn(
+    "[prerender] WARNING: VITE_DEMO=1 — mock/fixture data will be baked into the\n" +
+      "  prerendered HTML and served to crawlers as though it were real content.\n" +
+      "  This is acceptable for a demo deploy ONLY. Do not ship it to queerpulse.com.",
+  );
+}
+
+// A handful of indexed pages read live data (the glossary, the guide library,
+// partners, volunteer opportunities). With a real VITE_API_URL they will fetch
+// during this pass, so the build machine needs to be able to reach the API — or
+// those pages bake in their empty-state fallback.
+console.log(
+  `[prerender] mode: ${isDemoBuild ? "DEMO (mock data)" : `live API ${apiUrl}`}`,
+);
+
+// Capture the untouched SPA shell before anything is overwritten (see the
+// fallback comment in createDistServer).
+const shellHtml = await readFile(join(DIST_DIRECTORY, "index.html"));
+
+const server = createDistServer(shellHtml);
 const port = await listen(server);
 const failures = [];
 
@@ -94,9 +144,17 @@ let browser;
 
 try {
   browser = await chromium.launch();
-  const page = await browser.newPage();
+  // reducedMotion: "reduce" makes useCountUp jump straight to its target
+  // instead of animating over 1100ms — without it, pages like /about/cities
+  // serialise mid-animation and ship "0 members, 0 gatherings, 0 safe spaces"
+  // as their indexed content. It also settles every other reveal animation.
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
   for (const publicPath of QUIET_PUBLIC_PATHS) {
-    const url = `http://127.0.0.1:${port}${publicPath}`;
+    // ?__prerender=1 tells the app to skip its simulated-load skeletons — see
+    // src/shared/prerender.ts. It is a search param, so it never leaks into
+    // canonical/og:url (both are built from pathname).
+    const url = `http://127.0.0.1:${port}${publicPath}?__prerender=1`;
     try {
       await page.goto(url, {
         waitUntil: "networkidle",
@@ -109,6 +167,10 @@ try {
         undefined,
         { timeout: READY_TIMEOUT_MS },
       );
+      // The ready flag proves the metadata effect ran; it does not prove React
+      // has committed the content those pages fetched. Give the render loop a
+      // couple of frames to flush before serialising.
+      await page.waitForTimeout(SETTLE_AFTER_READY_MS);
       // Strip the readiness marker before serialising — it is a signal between
       // the app and this script, not something that belongs in shipped HTML.
       await page.evaluate(() => {

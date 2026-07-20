@@ -417,6 +417,9 @@ export const economy: Catalog = {
   "jobDetail.sidebar.applyCta": "Candidatar agora →",
 
   // ── HousingPage / HousingBoard / HousingSections ───────────────────────
+  "housing.meta.title": "Quadro de habitação e colegas de casa em Lisboa",
+  "housing.meta.description":
+    "Encontra um quarto, uma sublocação ou um colega de casa em Lisboa no quadro de habitação da QueerPulse — vê os anúncios, filtra por tipo, ou anuncia o teu próprio espaço.",
   "housing.tabs.housing": "Habitação",
   "housing.tabs.flatmates": "Colegas de casa",
   "housing.hero.eyebrow": "Quadro de Habitação · Lisboa",

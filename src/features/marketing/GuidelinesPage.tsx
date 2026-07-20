@@ -6,6 +6,11 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import s from "./GuidelinesPage.module.css";
 
 interface Clause {
@@ -136,9 +141,18 @@ export function GuidelinesPage() {
     month: "long",
     year: "numeric",
   });
+  const pageTitle = t("marketing:guidelines.meta.title");
+  const pageDescription = t("marketing:guidelines.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.guidelines },
+        ])}
+      />
       <PageHero
         eyebrow={t("marketing:guidelines.hero.eyebrow")}
         title={

@@ -4,14 +4,24 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { HEALTHCARE, LEGAL, RESOURCES } from "./transHub.data";
 import styles from "./resources.module.css";
 
 export function TransHubPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:transHub.meta.title");
+  const pageDescription = t("resources:transHub.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/trans-hub" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:transHub.hero.eyebrow")}
         eyebrowDotColor="var(--violet)"

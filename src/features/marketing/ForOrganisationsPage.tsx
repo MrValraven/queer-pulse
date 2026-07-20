@@ -4,14 +4,24 @@ import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./ForOrganisationsPage.module.css";
 import { NOT_DO_KEYS, PROCESS, PARTNERS } from "./forOrganisationsPage.data";
 import { TiersSection, PartnerContactForm } from "./ForOrganisationsSections";
 
 export function ForOrganisationsPage() {
   const { t } = useTranslation();
+  const pageTitle = t("marketing:forOrgs.meta.title");
+  const pageDescription = t("marketing:forOrgs.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.forOrganisations },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <Reveal as="div" className={styles.eyebrow}>

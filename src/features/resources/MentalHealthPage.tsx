@@ -3,6 +3,12 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { CRISIS } from "./mentalHealth.data";
 import {
   TherapistSection,
@@ -16,8 +22,24 @@ const MENTORSHIP = routes.mentorship;
 
 export function MentalHealthPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:mentalHealth.meta.title");
+  const pageDescription = t("resources:mentalHealth.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/mental-health",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/mental-health" },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>

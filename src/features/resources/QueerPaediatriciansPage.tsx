@@ -5,6 +5,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { PROVIDERS } from "./queerPaediatricians.data";
 import styles from "./resources.module.css";
@@ -12,9 +18,25 @@ import styles from "./resources.module.css";
 export function QueerPaediatriciansPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const pageTitle = t("resources:queerPaediatricians.meta.title");
+  const pageDescription = t("resources:queerPaediatricians.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/queer-paediatricians",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/queer-paediatricians" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:queerPaediatricians.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

@@ -12,6 +12,11 @@ import type { Catalog } from "../../types";
  * ARE chrome and are translated below.
  */
 export const governance: Catalog = {
+  // ── Meta (search/AI) ────────────────────────────────────────────────────
+  "page.meta.title": "How QueerPulse is governed: council, finances, appeals",
+  "page.meta.description":
+    "How QueerPulse is run — community health reports, moderation and appeals, the advisory council, platform principles, quarterly finances, and how to raise a concern.",
+
   // ── Side nav ────────────────────────────────────────────────────────────
   "nav.health": "Community health",
   "nav.moderation": "Moderation",

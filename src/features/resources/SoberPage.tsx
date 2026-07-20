@@ -14,6 +14,12 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
+import {
   REASON_KEYS,
   EVENTS,
   TYPE_CLASS,
@@ -65,9 +71,25 @@ export function SoberPage() {
   const [going, setGoing] = useState<Set<number>>(
     () => new Set(EVENTS.filter((e) => e.going).map((e) => e.id)),
   );
+  const pageTitle = t("resources:sober.meta.title");
+  const pageDescription = t("resources:sober.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/sober",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/sober" },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <HubBackLink

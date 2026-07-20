@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { downloadBlob } from "./downloadBlob";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./CodeOfConductPage.module.css";
 import { TOC } from "./codeOfConductPage.data";
 import {
@@ -51,8 +52,18 @@ export function CodeOfConductPage() {
     month: "long",
     year: "numeric",
   });
+  const pageTitle = t("marketing:coc.meta.title");
+  const pageDescription = t("marketing:coc.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: t("marketing:hub.governanceLabel"), path: routes.governance },
+          { name: pageTitle, path: routes.codeOfConduct },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <HubBackLink

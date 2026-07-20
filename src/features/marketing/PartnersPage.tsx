@@ -13,6 +13,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { type Region } from "./partnerDetails";
 import { usePartners } from "./api/usePartners";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import s from "./PartnersPage.module.css";
 
 const regionClass: Record<Region, string> = {
@@ -61,9 +62,18 @@ export function PartnersPage() {
   // shows it until the query resolves. Approved partners only (the endpoint and
   // the mock registry both already exclude anything not live).
   const loading = useSimulatedLoad() || isLoading;
+  const pageTitle = t("marketing:partners.meta.title");
+  const pageDescription = t("marketing:partners.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.partners },
+        ])}
+      />
       <PageHero
         eyebrow={t("marketing:partners.hero.eyebrow")}
         title={

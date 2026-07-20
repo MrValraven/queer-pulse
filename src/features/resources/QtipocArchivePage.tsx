@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { PIECES } from "./qtipocArchive.data";
 import styles from "./resources.module.css";
@@ -11,9 +12,18 @@ import styles from "./resources.module.css";
 export function QtipocArchivePage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const pageTitle = t("resources:qtipocArchive.meta.title");
+  const pageDescription = t("resources:qtipocArchive.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/qtipoc-archive" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:qtipocArchive.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

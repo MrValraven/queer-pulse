@@ -5,6 +5,12 @@ import { Button, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildFaqSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import s from "./HelpPage.module.css";
 
 interface QA {
@@ -180,9 +186,22 @@ export function HelpPage() {
   const [tab, setTab] = useState(CATEGORIES[0]!.id);
   const [open, setOpen] = useState<string | null>(`${CATEGORIES[0]!.id}-0`);
   const category = CATEGORIES.find((c) => c.id === tab)!;
+  const pageTitle = t("marketing:help.meta.title");
+  const pageDescription = t("marketing:help.meta.description");
+  const faqEntries = CATEGORIES.flatMap((c) =>
+    c.qa.map((item) => ({ question: t(item.qKey), answer: t(item.aKey) })),
+  );
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd schema={buildFaqSchema(faqEntries)} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.help },
+        ])}
+      />
       <PageHero
         plum={false}
         eyebrow={t("marketing:help.hero.eyebrow")}

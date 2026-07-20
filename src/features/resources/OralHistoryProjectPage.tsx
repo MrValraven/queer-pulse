@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { STEPS, VOICES } from "./oralHistoryProject.data";
 import styles from "./resources.module.css";
@@ -11,9 +12,18 @@ import styles from "./resources.module.css";
 export function OralHistoryProjectPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const pageTitle = t("resources:oralHistoryProject.meta.title");
+  const pageDescription = t("resources:oralHistoryProject.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/oral-history-project" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:oralHistoryProject.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

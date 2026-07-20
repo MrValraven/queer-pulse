@@ -4,12 +4,20 @@ import { PageShell } from "../../shared/components/layout";
 import { Reveal, Tabs } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { HousingBoard } from "./HousingBoard";
 import { FlatmatesBoard } from "./FlatmatesBoard";
 import styles from "./HousingPage.module.css";
 
 export function HousingPage() {
   const { t } = useTranslation();
+  const pageTitle = t("economy:housing.meta.title");
+  const pageDescription = t("economy:housing.meta.description");
   const [params, setParams] = useSearchParams();
   const tabs = useMemo(
     () => [
@@ -31,6 +39,16 @@ export function HousingPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          {
+            name: t("shared:megaNav.lisbon.title"),
+            path: routes.safeSpaces,
+          },
+          { name: pageTitle, path: routes.housing },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>

@@ -14,6 +14,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import styles from "./resources.module.css";
 
@@ -216,8 +221,17 @@ export function LegalPage() {
   const { t } = useTranslation();
   const { openConnect } = useConnect();
   const loading = useSimulatedLoad();
+  const pageTitle = t("resources:legal.meta.title");
+  const pageDescription = t("resources:legal.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.legal },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:legal.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

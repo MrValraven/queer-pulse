@@ -4,6 +4,12 @@ import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { CrisisStrip } from "./CrisisStrip";
 import {
@@ -16,6 +22,8 @@ import { WELLBEING_SUBPAGES } from "./wellbeing.data";
 
 export function WellbeingPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:wellbeing.meta.title");
+  const pageDescription = t("resources:wellbeing.meta.description");
   const subpages = useMemo(
     () =>
       WELLBEING_SUBPAGES.map((subpage) => ({
@@ -48,6 +56,20 @@ export function WellbeingPage() {
   );
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/wellbeing",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/wellbeing" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:wellbeing.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

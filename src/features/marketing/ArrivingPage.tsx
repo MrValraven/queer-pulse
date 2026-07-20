@@ -4,6 +4,11 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
+import {
   NeighbourhoodsSection,
   HealthSection,
   HousingSection,
@@ -15,8 +20,20 @@ import styles from "./ArrivingPage.module.css";
 
 export function ArrivingPage() {
   const { t } = useTranslation();
+  const pageTitle = t("marketing:arriving.meta.title");
+  const pageDescription = t("marketing:arriving.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          {
+            name: t("shared:megaNav.lisbon.title"),
+            path: routes.safeSpaces,
+          },
+          { name: pageTitle, path: routes.arriving },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>

@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { EQUIPMENT, CARE_KEYS } from "./sharedEquipment.data";
 import styles from "./resources.module.css";
@@ -11,9 +12,18 @@ import styles from "./resources.module.css";
 export function SharedEquipmentPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const pageTitle = t("resources:sharedEquipment.meta.title");
+  const pageDescription = t("resources:sharedEquipment.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/shared-equipment" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:sharedEquipment.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

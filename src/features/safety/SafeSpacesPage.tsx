@@ -11,6 +11,11 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import { VERIFIED_SPACES, type Category } from "./safeSpaces";
 import { FILTERS } from "./safeSpacesPage.data";
@@ -38,9 +43,18 @@ export function SafeSpacesPage() {
   );
   const scrollToNominate = () =>
     nomRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+  const pageTitle = t("safety:spaces.meta.title");
+  const pageDescription = t("safety:spaces.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.safeSpaces },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <div className={styles.cat}>{t("safety:spaces.hero.category")}</div>

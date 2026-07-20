@@ -77,9 +77,14 @@ function upsertCanonical(href: string): () => void {
  * current page, restoring the previous values on unmount / dependency change.
  *
  * React-19-native and dependency-free: it manages tags via a single effect so
- * it composes cleanly with the static defaults baked into `index.html`. Because
- * meta is applied client-side, non-JS social scrapers still see the static
- * shell — see README.md in this folder for the prerender option.
+ * it composes cleanly with the static defaults baked into `index.html`.
+ *
+ * Meta is applied client-side, so non-JS crawlers would see only the static
+ * shell — which is why `scripts/prerender.mjs` renders every public page to real
+ * HTML at build time. This hook is what tells it a page is ready: the effect
+ * sets `data-prerender-ready`, and the prerenderer waits for it. A page that
+ * never renders `<PageMeta>` therefore fails the build by design. See README.md
+ * in this folder.
  */
 export function useDocumentMeta(meta: DocumentMeta): void {
   const { pathname } = useLocation();

@@ -27,6 +27,9 @@ export const safety: Catalog = {
   "nav.safetyGuideLabel": "Guia de Segurança",
 
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
+  "report.meta.title": "Denunciar uma preocupação à equipa de segurança",
+  "report.meta.description":
+    "Como denunciar assédio ou uma situação insegura na QueerPulse, o que acontece depois de submeteres uma denúncia, e um registo público de decisões de moderação anteriores.",
   "report.eyebrow": "Segurança e Denúncias",
   "report.hero.title": "A segurança é <em>estrutural.</em>",
   "report.hero.lead":
@@ -153,6 +156,9 @@ export const safety: Catalog = {
   "flag.reasonFallback": "preocupação",
 
   // ── BlockMutePage.tsx / BlockMuteScreens.tsx / blockMute.data.ts ──────
+  "blockMute.meta.title": "Silenciar ou bloquear alguém na QueerPulse",
+  "blockMute.meta.description":
+    "Como silenciar ou bloquear outra pessoa na QueerPulse — o que cada opção esconde, se a pessoa é notificada, e como desfazer mais tarde.",
   "common.no": "Não",
   "blockMute.choose.title": "Controlos de <em>privacidade</em>",
   "blockMute.choose.sub":
@@ -198,6 +204,9 @@ export const safety: Catalog = {
     "Precisas de denunciar um comportamento prejudicial? <link>Fazer uma denúncia →</link>",
 
   // ── LeavePage.tsx / LeaveScreens.tsx / leave.data.ts ──────────────────
+  "leave.meta.title": "Pausar ou eliminar a tua conta QueerPulse",
+  "leave.meta.description":
+    "Como fazer uma pausa na QueerPulse ou eliminar definitivamente a tua conta — o que é removido, o que é preservado, e uma opção de pausa mais suave se ainda não tens a certeza.",
   "leave.backLink": "← Voltar às definições",
   "leave.considering.title": "A <em>sair</em> da QueerPulse",
   "leave.considering.sub":
@@ -309,6 +318,10 @@ export const safety: Catalog = {
   "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança →",
 
   // ── CrisisChatPage.tsx / crisisChat.data.ts ────────────────────────────
+  "crisisChat.meta.title":
+    "Fala agora com uma pessoa apoiante: chat de crise LGBTQ+",
+  "crisisChat.meta.description":
+    "Um chat confidencial com uma pessoa apoiante entre pares, queer e com formação, sem necessidade de marcação. Se estás em perigo imediato, liga antes para os números de emergência listados nesta página.",
   "crisisChat.eyebrow": "Chat de crise · Há uma pessoa apoiante online",
   "crisisChat.hero.title": "Não precisas de <em>carregar isto sozinhe.</em>",
   "crisisChat.hero.lead":
@@ -348,6 +361,10 @@ export const safety: Catalog = {
     "Isto é um protótipo — as mensagens não são enviadas a uma pessoa real. Na plataforma real, nada aqui é guardado ou mostrado no teu perfil.",
 
   // ── EmergencyPage.tsx ──────────────────────────────────────────────────
+  "emergency.meta.title":
+    "Contactos de emergência e linhas de crise LGBTQ+ em Portugal",
+  "emergency.meta.description":
+    "Uma página de referenciação com números de emergência, linhas de crise e organizações de apoio LGBTQ+ em Portugal — saúde mental, apoio específico trans, emergências habitacionais e jurídicas, tudo numa lista.",
   "emergency.exitBar.text":
     "Se precisares de sair rapidamente desta página, clica em Sair — vai imediatamente para o Google.",
   "emergency.exitBar.cta": "Sair do site agora",
@@ -427,6 +444,10 @@ export const safety: Catalog = {
   "emergency.online.rainbowRailroad.sub": "Inglês · Fuga a perseguição",
 
   // ── HateCrimePage.tsx ──────────────────────────────────────────────────
+  "hateCrime.meta.title":
+    "Denunciar um crime de ódio em Portugal: guia passo a passo",
+  "hateCrime.meta.description":
+    "O que conta como crime de ódio em Portugal, como documentá-lo em segurança, a quem denunciar, e onde encontrar apoio jurídico e comunitário depois.",
   "hateCrime.eyebrow": "Guia de denúncia · Portugal",
   "hateCrime.title.line1": "Como denunciar",
   "hateCrime.title.line2": "<em>um crime de ódio.</em>",
@@ -635,6 +656,9 @@ export const safety: Catalog = {
   "spaces.filter.arts": "Artes",
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
+  "spaces.meta.title": "Espaços seguros LGBTQ+ verificados em Lisboa",
+  "spaces.meta.description":
+    "Um diretório de espaços em Lisboa avaliado pela comunidade e verificado como genuinamente seguro para pessoas LGBTQ+ — não autodeclarado — com avaliações, um emblema de verificação, e uma forma de sinalizar ou nomear um espaço.",
   "spaces.hero.category": "Verificado pela comunidade",
   "spaces.hero.title": "Espaços que são realmente <em>seguros.</em>",
   "spaces.hero.lead":

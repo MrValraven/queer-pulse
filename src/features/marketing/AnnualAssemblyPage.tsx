@@ -7,6 +7,7 @@ import { Button, HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import {
   AgendaSection,
   VoteSection,
@@ -23,6 +24,8 @@ export function AnnualAssemblyPage() {
   const { showToast } = useToast();
   const [rsvped, setRsvped] = useState(false);
   const spotsLeft = TOTAL_SPOTS - (rsvped ? SPOTS_TAKEN + 1 : SPOTS_TAKEN);
+  const pageTitle = t("marketing:annualAssembly.meta.title");
+  const pageDescription = t("marketing:annualAssembly.meta.description");
 
   const toggleRsvp = () => {
     if (rsvped) {
@@ -36,6 +39,14 @@ export function AnnualAssemblyPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: t("marketing:hub.governanceLabel"), path: routes.governance },
+          { name: pageTitle, path: routes.annualAssembly },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <HubBackLink

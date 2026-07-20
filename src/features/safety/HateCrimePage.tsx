@@ -3,6 +3,11 @@ import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { HateCrimePanel } from "./HateCrimeTabs";
 import styles from "./HateCrimePage.module.css";
 
@@ -10,9 +15,18 @@ const LEGAL = routes.legal;
 
 export function HateCrimePage() {
   const { t } = useTranslation();
+  const pageTitle = t("safety:hateCrime.meta.title");
+  const pageDescription = t("safety:hateCrime.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.hateCrime },
+        ])}
+      />
       <header className={styles.hero}>
         <div className="wrap">
           <HubBackLink

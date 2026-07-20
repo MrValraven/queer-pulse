@@ -4,15 +4,25 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { ORGS } from "./qtipocOrganisations.data";
 import styles from "./resources.module.css";
 
 export function QtipocOrganisationsPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:qtipocOrganisations.meta.title");
+  const pageDescription = t("resources:qtipocOrganisations.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/qtipoc-organisations" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:qtipocOrganisations.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

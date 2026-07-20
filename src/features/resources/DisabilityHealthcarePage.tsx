@@ -3,15 +3,37 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { STEPS, TIPS } from "./disabilityHealthcare.data";
 import styles from "./resources.module.css";
 
 export function DisabilityHealthcarePage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:disabilityHealthcare.meta.title");
+  const pageDescription = t("resources:disabilityHealthcare.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/disability-healthcare",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/disability-healthcare" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:disabilityHealthcare.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

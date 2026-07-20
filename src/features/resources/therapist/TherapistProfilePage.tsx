@@ -7,6 +7,13 @@ import {
   SkeletonLine,
 } from "../../../shared/components/ui";
 import { useSimulatedLoad } from "../../../shared/hooks";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../../shared/seo";
 import { THERAPISTS } from "../mentalHealth.data";
 import { THERAPIST_PROFILES } from "./therapistProfiles.data";
 import { TherapistHero } from "./TherapistHero";
@@ -16,16 +23,38 @@ import styles from "./TherapistProfilePage.module.css";
 
 export function TherapistProfilePage() {
   const { id } = useParams();
+  const { t } = useTranslation();
   const loading = useSimulatedLoad();
-  const therapist = THERAPISTS.find((t) => t.id === id);
+  const therapist = THERAPISTS.find(
+    (therapistEntry) => therapistEntry.id === id,
+  );
   const profile = id ? THERAPIST_PROFILES[id] : undefined;
 
   if (!therapist || !profile) {
     return <Navigate to={routes.mentalHealth} replace />;
   }
 
+  // Every :id shares this one template, so meta describes the directory in
+  // general rather than the individual profile currently loaded.
+  const pageTitle = t("resources:therapists.meta.title");
+  const pageDescription = t("resources:therapists.meta.description");
+
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/therapists",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/therapists" },
+        ])}
+      />
       <div className={styles.page}>
         {loading ? (
           <ProfileSkeleton />

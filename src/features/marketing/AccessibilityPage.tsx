@@ -6,6 +6,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { VENUES } from "./accessibility.data";
 import {
   AccessibleSpacesSection,
@@ -28,9 +29,19 @@ export function AccessibilityPage() {
   const venues = VENUES.filter(
     (v) => filter === "all" || v.featureTags.includes(filter),
   );
+  const pageTitle = t("marketing:accessibility.meta.title");
+  const pageDescription = t("marketing:accessibility.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: t("marketing:help.meta.title"), path: routes.help },
+          { name: pageTitle, path: routes.accessibility },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <HubBackLink

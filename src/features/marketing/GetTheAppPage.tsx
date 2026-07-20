@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./GetTheAppPage.module.css";
 import { Button } from "../../shared/components/ui";
 import { AppNotifyModal, type AppPlatform } from "./AppNotifyModal";
@@ -147,6 +148,8 @@ export function GetTheAppPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [notify, setNotify] = useState<AppPlatform | null>(null);
+  const pageTitle = t("marketing:getTheApp.meta.title");
+  const pageDescription = t("marketing:getTheApp.meta.description");
 
   const copyLink = () => {
     if (navigator.clipboard)
@@ -164,6 +167,13 @@ export function GetTheAppPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.getTheApp },
+        ])}
+      />
       <section className={styles.heroSection}>
         <div className={styles.heroInner}>
           <div>

@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { DonateModal } from "./DonateModal";
 import { ALLOCATION, AMOUNTS, TRUST } from "./donate.data";
 import styles from "./DonatePage.module.css";
@@ -17,9 +18,18 @@ export function DonatePage() {
   const [giving, setGiving] = useState(false);
 
   const selectedAmount = AMOUNTS[selected]!.value;
+  const pageTitle = t("marketing:donate.meta.title");
+  const pageDescription = t("marketing:donate.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.donate },
+        ])}
+      />
       <header className={styles.hero}>
         <div className="wrap">
           <Reveal className={styles.eyebrow}>

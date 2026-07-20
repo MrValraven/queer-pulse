@@ -17,6 +17,7 @@ import { causeToLower } from "./api/volunteering.adapters";
 import type { VolunteerCause } from "./volunteerOpportunities.types";
 import type { Cause, Commit } from "./api/volunteering.api";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import s from "./VolunteerPage.module.css";
 
 const CAUSE_FILTERS = new Set<string>([
@@ -101,9 +102,18 @@ export function VolunteerPage() {
       }),
     [opps, filter],
   );
+  const pageTitle = t("marketing:volunteer.meta.title");
+  const pageDescription = t("marketing:volunteer.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.volunteer },
+        ])}
+      />
       <PageHero
         eyebrow={t("marketing:volunteer.hero.eyebrow")}
         title={

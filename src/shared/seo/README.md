@@ -31,36 +31,38 @@ export function MyPage() {
 - `<PageMeta>` restores the previous tag values on unmount, so it composes with
   the static defaults baked into `index.html`.
 
-## ⚠️ SPA-crawler limitation (important)
+## The SPA-crawler problem — and how it is solved
 
 `<PageMeta>` applies metadata **client-side, after the JS bundle loads and React
 renders**. Two audiences don't run (or don't wait for) that JS:
 
 1. **Social scrapers** — Slack, WhatsApp, iMessage, Facebook, Signal, LinkedIn,
-   and X by default — fetch the raw HTML and **do not execute JavaScript**. They
-   see only the static `index.html` shell, so client-side `<PageMeta>` **does not
-   fix link unfurls on its own**. It only fixes in-app document titles and the
-   experience of any JS-running client.
-2. **Search crawlers** — Googlebot renders JS (deferred, best-effort), so CSR
-   meta is _mostly_ indexable by Google over time; Bing and most others are
-   unreliable.
+   and X by default — fetch the raw HTML and **do not execute JavaScript**.
+2. **AI retrieval crawlers** — `OAI-SearchBot`, `Claude-SearchBot`,
+   `PerplexityBot` — do not execute JavaScript **at all**. (Googlebot does, on a
+   deferred best-effort basis; Bing and most others are unreliable.)
 
-### Fix for correct unfurls: prerender the public pages (recommended)
+**This is solved as of 2026-07-20.** `scripts/prerender.mjs` runs after
+`vite build` and renders every path in `QUIET_PUBLIC_PATHS`
+(`scripts/publicPaths.mjs`) to a real `dist/<path>/index.html` in headless
+Chromium, with the correct `<title>`, OG/Twitter tags and JSON-LD baked in. The
+gated member app stays a pure CSR SPA.
 
-Add a build-time prerender pass that renders the **public** static routes to real
-HTML files in `dist/`, each with its correct baked-in `<title>`/OG/Twitter — while
-the gated member app stays a pure CSR SPA.
+Three things to know if you touch this:
 
-- Feed the prerender tool exactly the public path list from
-  `scripts/generate-sitemap.mjs` (`PUBLIC_SITEMAP_PATHS`). **Never** prerender a
-  gated path — it would bake in the sign-in redirect.
-- Tooling options: a Puppeteer/`react-snap`-style crawl, or `vite-plugin-prerender`.
-- Dynamic `:slug` pages (magazine articles, films) stay CSR until there is a real
-  content source to enumerate — acceptable with mock data.
+- **A page without `<PageMeta>` fails the build.** The prerenderer waits for
+  `data-prerender-ready`, which only `useDocumentMeta` sets. This is deliberate —
+  it makes metadata coverage build-enforced rather than aspirational.
+- **`QUIET_PUBLIC_PATHS` is the single source of truth**, shared by the
+  prerenderer and the sitemap generator, and guarded by an `isGatedPath` mirror
+  of `src/app/authGate.ts`. A gated path can never be written to disk.
+- **Anything that delays content races the serialiser.** Skeletons and count-up
+  animations are skipped during the pass via `src/shared/prerender.ts`. If you
+  add a new loading pattern, make it prerender-aware or the page ships empty.
 
-Alternatives, in decreasing preference: an on-demand OG service for bot
-user-agents (Prerender.io / an edge function), or full SSR (a large architectural
-change; not warranted for a P2). Accepting CSR-only meta leaves social unfurls
-wrong and is only a stopgap once `index.html`'s default is at least neutral.
+Dynamic `:slug` pages (magazine articles, films) stay CSR — there is no canonical
+content source to enumerate, and those surfaces are deliberately not indexed.
 
-See `docs/production-readiness/15-seo-and-metadata.md` for the full rationale.
+See `docs/superpowers/specs/2026-07-20-seo-and-ai-discoverability-design.md` for
+the current design, and `docs/production-readiness/15-seo-and-metadata.md` for
+the original rationale.

@@ -4,6 +4,12 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import {
   ARRIVING,
   FORUM,
@@ -18,6 +24,8 @@ import styles from "./VisasPage.module.css";
 
 export function VisasPage() {
   const { t } = useTranslation();
+  const pageTitle = t("marketing:visas.meta.title");
+  const pageDescription = t("marketing:visas.meta.description");
   const [active, setActive] = useState<TabId>("eu");
   const [selectedRoute, setSelectedRoute] = useState<number | null>(null);
   const tabNavRef = useRef<HTMLDivElement>(null);
@@ -39,6 +47,16 @@ export function VisasPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          {
+            name: t("shared:megaNav.lisbon.title"),
+            path: routes.safeSpaces,
+          },
+          { name: pageTitle, path: routes.visas },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>

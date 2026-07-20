@@ -406,6 +406,9 @@ export const economy: Catalog = {
   "jobDetail.sidebar.applyCta": "Apply now →",
 
   // ── HousingPage / HousingBoard / HousingSections ───────────────────────
+  "housing.meta.title": "LGBTQ+ housing and flatmates board in Lisbon",
+  "housing.meta.description":
+    "Find a room, sublet, or flatmate in Lisbon on QueerPulse's housing board — browse listings, filter by type, or list your own space.",
   "housing.tabs.housing": "Housing",
   "housing.tabs.flatmates": "Flatmates",
   "housing.hero.eyebrow": "Housing Board · Lisbon",

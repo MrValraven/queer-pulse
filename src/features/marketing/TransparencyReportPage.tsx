@@ -4,6 +4,7 @@ import { HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { TABS } from "./transparencyReport.data";
 import {
   GovernanceSection,
@@ -19,9 +20,19 @@ import styles from "./TransparencyReportPage.module.css";
 export function TransparencyReportPage() {
   const { t } = useTranslation();
   const [active, setActive] = useState("money");
+  const pageTitle = t("marketing:transparency.meta.title");
+  const pageDescription = t("marketing:transparency.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: t("marketing:hub.governanceLabel"), path: routes.governance },
+          { name: pageTitle, path: routes.transparencyReport },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <HubBackLink

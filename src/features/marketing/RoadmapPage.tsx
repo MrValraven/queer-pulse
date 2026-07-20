@@ -5,6 +5,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { BuildingCard, PlannedCard, ShippedCard } from "./RoadmapCards";
 import { HowWeDecide, SubmitIdea, TopIdeas } from "./RoadmapSections";
 import { BUILDING, HERO_STATS, PLANNED, SHIPPED } from "./roadmap.data";
@@ -13,9 +14,18 @@ import styles from "./RoadmapPage.module.css";
 export function RoadmapPage() {
   const { t } = useTranslation();
   const loading = useSimulatedLoad();
+  const pageTitle = t("marketing:roadmap.meta.title");
+  const pageDescription = t("marketing:roadmap.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.roadmap },
+        ])}
+      />
       <header className={styles.hero}>
         <div className="wrap">
           <div className={styles.eyebrow}>

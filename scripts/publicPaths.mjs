@@ -121,10 +121,19 @@ export function isGatedPath(pathname) {
  *
  * Two hard rules for anything added here:
  *   1. It must not be gated (assertNoGatedPaths enforces this).
- *   2. Its content must be STATIC hand-written copy, not API-backed. The
- *      prerender runs with VITE_API_URL unset, so DemoModeProvider forces demo
- *      mode — an API-backed page would bake its *.data.ts mock into indexed
- *      HTML. Verify per page before adding.
+ *   2. Its content must be verifiably safe to serialise at BUILD time.
+ *      The prerender runs against the production bundle. Demo mode is an
+ *      explicit VITE_DEMO=1 opt-in and is NEVER inferred from a missing
+ *      VITE_API_URL (see src/shared/api/config.ts) — so with a real
+ *      VITE_API_URL an API-backed page will FETCH during the pass, and bakes
+ *      whatever it gets (including an empty-state fallback if the build machine
+ *      cannot reach the API). With VITE_DEMO=1 it bakes fixture data as though
+ *      it were real. Both are ways to ship a misleading page to crawlers.
+ *      Known API-backed paths in this list: /resources/glossary,
+ *      /resources/library, /about/partners, /about/volunteer. They are kept
+ *      because their content is genuinely worth indexing, but the build machine
+ *      MUST be able to reach the API. Audit any new path against this before
+ *      adding it.
  *
  * Dynamic `:slug` routes are excluded: there is no canonical content source to
  * enumerate, and profiles are gated regardless.
@@ -161,7 +170,12 @@ export const QUIET_PUBLIC_PATHS = [
   "/resources/shared-equipment",
   "/resources/sober",
   "/resources/spoon-theory",
-  "/resources/therapists",
+  // NOTE: "/resources/therapists" is deliberately ABSENT. routeMap.ts defines
+  // the constant, but routes.tsx registers only "/resources/therapists/:id"
+  // (individual profiles) — there is no directory index at the bare path. It
+  // would fall through to the SPA catch-all, render NotFound, never set
+  // data-prerender-ready, and fail the build; and it would advertise a dead URL
+  // in the sitemap. Re-add it here if a real therapists index page is built.
   "/resources/trans-healthcare",
   "/resources/trans-hub",
   "/resources/wellbeing",
@@ -173,7 +187,14 @@ export const QUIET_PUBLIC_PATHS = [
   "/safety/legal",
   "/safety/report",
   "/safety/block-mute",
-  "/safety/crisis-chat",
+  // NOTE: "/safety/crisis-chat" is deliberately ABSENT, pending a maintainer
+  // decision. The page advertises "< 2 min" wait and "queer volunteers, not a
+  // bot" and shows a scripted greeting from a named volunteer — but
+  // CrisisChatPage.tsx makes NO network calls of any kind, and
+  // crisisChat.data.ts describes its own content as "the prototype's canned
+  // opening messages". Indexing it would route people in acute distress to a
+  // crisis service that does not exist. Re-add ONLY when the chat is genuinely
+  // staffed, or once the page's claims are rewritten to match what it does.
   "/safety/leave",
 
   // ── About / governance ───────────────────────────────────────────────────

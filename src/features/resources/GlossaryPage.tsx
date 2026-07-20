@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { isValidElement, useMemo, useState, type ReactNode } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
@@ -11,10 +11,39 @@ import {
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
+import {
+  PageMeta,
+  JsonLd,
+  buildFaqSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ALPHABET, GLOSSARY_COPY, type TypeKind } from "./glossary.data";
 import { useGlossaryData } from "./api/useGlossaryData";
 
 const CONTACT = routes.contact;
+
+/**
+ * Recursively flattens a term's ReactNode definition (which may embed <em>,
+ * <b>, and cross-reference <Link> elements) down to plain text, so the
+ * glossary's existing term data can feed a schema.org FAQPage without
+ * hand-duplicating the definitions as separate plain-string copy.
+ */
+function extractPlainText(node: ReactNode): string {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return "";
+  }
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractPlainText).join("");
+  }
+  if (isValidElement(node)) {
+    const props = node.props as { children?: ReactNode };
+    return extractPlainText(props.children);
+  }
+  return "";
+}
 
 const TYPE_CLASS: Record<TypeKind, string> = {
   "": "",
@@ -65,6 +94,18 @@ export function GlossaryPage() {
   const loading = useSimulatedLoad() || dataLoading;
   const q = query.trim().toLowerCase();
   const copy = GLOSSARY_COPY[lang];
+  const pageTitle = t("resources:glossary.meta.title");
+  const pageDescription = t("resources:glossary.meta.description");
+  const glossaryFaqEntries = useMemo(
+    () =>
+      allBlocks.flatMap((block) =>
+        block.terms.map((term) => ({
+          question: `What does "${term.name}" mean?`,
+          answer: extractPlainText(term.def),
+        })),
+      ),
+    [allBlocks],
+  );
   const HAS = useMemo(
     () => new Set(allBlocks.map((b) => b.letter)),
     [allBlocks],
@@ -84,6 +125,14 @@ export function GlossaryPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd schema={buildFaqSchema(glossaryFaqEntries)} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/glossary" },
+        ])}
+      />
       <div className={styles.page}>
         <section className={styles.hero}>
           <div className={styles.heroInner}>

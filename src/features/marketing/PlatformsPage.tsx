@@ -10,6 +10,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import s from "./PlatformsPage.module.css";
 
 interface Platform {
@@ -242,9 +243,18 @@ export function PlatformsPage() {
   const loading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
   const cats = filter === "all" ? CAT_ORDER : [filter];
+  const pageTitle = t("marketing:platforms.meta.title");
+  const pageDescription = t("marketing:platforms.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.platforms },
+        ])}
+      />
       <PageHero
         eyebrow={t("marketing:platforms.hero.eyebrow")}
         title={

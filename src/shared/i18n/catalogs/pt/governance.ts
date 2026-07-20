@@ -15,6 +15,11 @@ import type { Catalog } from "../../types";
  * "membros" torna-se "pessoas" em todo o lado (ver docs/i18n/glossary-pt.md).
  */
 export const governance: Catalog = {
+  // ── Meta (pesquisa/IA) ──────────────────────────────────────────────────
+  "page.meta.title": "Como a QueerPulse é gerida: conselho, finanças, recursos",
+  "page.meta.description":
+    "Como a QueerPulse é gerida — relatórios de saúde da comunidade, moderação e recursos, o conselho consultivo, princípios da plataforma, finanças trimestrais, e como levantar uma preocupação.",
+
   // ── Navegação lateral ───────────────────────────────────────────────────
   "nav.health": "Saúde da comunidade",
   "nav.moderation": "Moderação",

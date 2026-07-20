@@ -15,6 +15,11 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
+import {
   InfoCards,
   VoiceCard,
   VoiceCardSkeleton,
@@ -34,9 +39,18 @@ function scrollToSection(id: string) {
 export function IntersectionalityPage() {
   const loading = useSimulatedLoad();
   const { t } = useTranslation();
+  const pageTitle = t("resources:intersectionality.meta.title");
+  const pageDescription = t("resources:intersectionality.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/intersectionality" },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <HubBackLink

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { isPrerendering } from "../prerender";
 
 /**
  * Simulates a short data fetch for the mock prototype: returns `loading` as
@@ -11,11 +12,18 @@ import { useEffect, useState } from "react";
  * @param delay milliseconds before content is "loaded" (default 600)
  */
 export function useSimulatedLoad(delay = 600) {
-  const [loading, setLoading] = useState(true);
+  // During the build-time prerender there is no user to show a skeleton to —
+  // only a serialiser about to snapshot the DOM. Starting in the loaded state
+  // means the snapshot captures real content instead of a placeholder. Without
+  // this, 13 indexed pages (including /resources, the entry point of the whole
+  // indexed surface) race the prerenderer and can ship as skeletons while the
+  // build still reports success. See src/shared/prerender.ts.
+  const [loading, setLoading] = useState(() => !isPrerendering());
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), delay);
-    return () => clearTimeout(t);
+    if (isPrerendering()) return;
+    const timeoutId = setTimeout(() => setLoading(false), delay);
+    return () => clearTimeout(timeoutId);
   }, [delay]);
 
   return loading;

@@ -3,17 +3,32 @@ import { FiZap, FiPhone } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
+import { routes } from "../../app/routeMap";
 import styles from "./EmergencyPage.module.css";
 import { CRISIS_NUMS, ONLINE, SECTIONS } from "./emergency.data";
 
 export function EmergencyPage() {
   const { t } = useTranslation();
+  const pageTitle = t("safety:emergency.meta.title");
+  const pageDescription = t("safety:emergency.meta.description");
   const leaveSite = () => {
     window.location.replace("https://www.google.com");
   };
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.emergency },
+        ])}
+      />
       <div className={styles.exitBar}>
         <p>{t("safety:emergency.exitBar.text")}</p>
         <button type="button" className={styles.exitBtn} onClick={leaveSite}>

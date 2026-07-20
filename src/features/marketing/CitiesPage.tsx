@@ -3,6 +3,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad, useCountUp } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import {
   GroundworkSection,
   HowSection,
@@ -15,6 +17,8 @@ export function CitiesPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
+  const pageTitle = t("marketing:cities.meta.title");
+  const pageDescription = t("marketing:cities.meta.description");
 
   // Count-up targets — Lisbon
   const lBonusCount = useCountUp(612, { active: !loading, durationMs: 1200 });
@@ -41,6 +45,13 @@ export function CitiesPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.cities },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>

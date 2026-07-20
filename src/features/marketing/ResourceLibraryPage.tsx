@@ -9,7 +9,7 @@ import {
   SubpageIndex,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { PageMeta } from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath, routes } from "../../app/routeMap";
@@ -352,6 +352,8 @@ export function ResourceLibraryPage() {
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
+  const pageTitle = t("marketing:resourceLibrary.meta.title");
+  const pageDescription = t("marketing:resourceLibrary.meta.description");
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -372,9 +374,11 @@ export function ResourceLibraryPage() {
 
   return (
     <PageShell>
-      <PageMeta
-        title={t("marketing:resourceLibrary.meta.title")}
-        description={t("marketing:resourceLibrary.meta.description")}
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+        ])}
       />
       <PageHero
         eyebrow={t("marketing:resourceLibrary.hero.eyebrow")}

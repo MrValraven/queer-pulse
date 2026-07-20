@@ -4,15 +4,29 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { TOPICS, LINKS } from "./lgbtqAgingGuide.data";
 import styles from "./resources.module.css";
 
 export function LgbtqAgingGuidePage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:lgbtqAgingGuide.meta.title");
+  const pageDescription = t("resources:lgbtqAgingGuide.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/lgbtq-aging-guide" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:lgbtqAgingGuide.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

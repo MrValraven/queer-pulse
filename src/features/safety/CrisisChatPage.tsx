@@ -5,6 +5,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
+import { routes } from "../../app/routeMap";
+import {
   SUPPORTER_NAME,
   buildAssurances,
   buildLines,
@@ -21,6 +27,8 @@ export function CrisisChatPage() {
   const opening = useMemo(() => buildOpening(t), [t]);
   const [messages, setMessages] = useState<Message[]>(opening);
   const [draft, setDraft] = useState("");
+  const pageTitle = t("safety:crisisChat.meta.title");
+  const pageDescription = t("safety:crisisChat.meta.description");
 
   function handleSend(event: FormEvent) {
     event.preventDefault();
@@ -45,6 +53,13 @@ export function CrisisChatPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.crisisChat },
+        ])}
+      />
       <section className={styles.page}>
         <div className="wrap">
           <div className={styles.inner}>

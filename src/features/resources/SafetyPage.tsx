@@ -8,11 +8,19 @@ import {
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
+import { routes } from "../../app/routeMap";
 import styles from "./SafetyPage.module.css";
 import { SAFETY_SUBPAGES } from "./safety.data";
 
 export function SafetyPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:safety.meta.title");
+  const pageDescription = t("resources:safety.meta.description");
   const subpages = useMemo(
     () =>
       SAFETY_SUBPAGES.map((item) => ({
@@ -25,6 +33,13 @@ export function SafetyPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.safety },
+        ])}
+      />
       <header className={styles.hero}>
         <div className="wrap">
           <div className={styles.cat}>{t("resources:safety.hero.cat")}</div>

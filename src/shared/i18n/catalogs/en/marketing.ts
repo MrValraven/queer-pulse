@@ -9,9 +9,9 @@ import type { Catalog } from "../../types";
  */
 export const marketing: Catalog = {
   // ── About ──────────────────────────────────────────────────────────────
-  "about.meta.title": "About — QueerPulse",
+  "about.meta.title": "About QueerPulse: a small, member-run network",
   "about.meta.description":
-    "QueerPulse is a queer professional network built in Lisbon — no ads, no algorithm, no growth for its own sake. Here's what we believe, and why we built it this way.",
+    "QueerPulse is a small, invite-based queer community platform in Lisbon — no ads, no algorithm, no growth for its own sake. What we believe, and who runs it.",
   "about.hero.eyebrow": "About",
   "about.hero.title": "A platform built <em>on purpose.</em>",
   "about.hero.sub":
@@ -77,6 +77,9 @@ export const marketing: Catalog = {
   "about.outro.cta": "Request an invite",
 
   // ── Accessibility ──────────────────────────────────────────────────────
+  "accessibility.meta.title": "Accessible queer spaces in Lisbon, reviewed",
+  "accessibility.meta.description":
+    "Real accessibility information for queer venues in Lisbon, reviewed by disabled community members rather than guessed at — plus how to request an accommodation directly.",
   "accessibility.backLabel": "← Help",
   "accessibility.category": "Accessibility",
   "accessibility.hero.title": "Access <em>shouldn't be a maybe.</em>",
@@ -312,6 +315,9 @@ export const marketing: Catalog = {
   "activism.outro.seeBoardCta": "See the volunteer board",
 
   // ── Code of Conduct ────────────────────────────────────────────────────
+  "coc.meta.title": "QueerPulse's Code of Conduct: what's enforceable",
+  "coc.meta.description":
+    "The binding Code of Conduct QueerPulse enforces — six commitments members make, what counts as harm, how reports are handled, and how to appeal a decision.",
   "coc.hero.backLabel": "← Governance",
   "coc.hero.eyebrow": "Code of Conduct · in effect since {date}",
   "coc.hero.title": "How we treat <em>each other here.</em>",
@@ -467,6 +473,9 @@ export const marketing: Catalog = {
     "(This is a prototype download — the production file will match the web page exactly.)",
 
   // ── Cookies ────────────────────────────────────────────────────────────
+  "cookies.meta.title": "QueerPulse Cookie Policy and preferences",
+  "cookies.meta.description":
+    "Which cookies QueerPulse uses — essential, functional, and analytics — what each one does, and where to adjust your preferences. No advertising cookies.",
   "cookies.eyebrow": "Cookies",
   "cookies.h1": "What we <em>track,</em> and why.",
   "cookies.sub":
@@ -580,6 +589,9 @@ export const marketing: Catalog = {
   "dsar.toast.submitted": "Request submitted — reference {ref}",
 
   // ── Community Guidelines ──────────────────────────────────────────────
+  "guidelines.meta.title": "QueerPulse Community Guidelines",
+  "guidelines.meta.description":
+    "The culture we're building together on QueerPulse — how to show up, disagree well, and keep the space safe, distinct from the enforceable Code of Conduct.",
   "guidelines.hero.eyebrow": "Community Guidelines",
   "guidelines.hero.title": "The culture we're <em>building together.</em>",
   "guidelines.hero.sub":
@@ -654,6 +666,9 @@ export const marketing: Catalog = {
   "guidelines.outro.backCta": "Back to home",
 
   // ── Help ───────────────────────────────────────────────────────────────
+  "help.meta.title": "QueerPulse help centre: invites, safety, gatherings",
+  "help.meta.description":
+    "Answers to common QueerPulse questions — how invites work, managing your account, RSVPs and hosting gatherings, reporting and appeals, and membership tiers.",
   "help.hero.eyebrow": "Help",
   "help.hero.title": "Questions, <em>answered.</em>",
   "help.hero.sub": "Search below, or browse by topic.",
@@ -762,9 +777,9 @@ export const marketing: Catalog = {
   "listBusiness.wizard.pill.review": "Review",
 
   // ── Manifesto ──────────────────────────────────────────────────────────
-  "manifesto.meta.title": "The Manifesto — QueerPulse",
+  "manifesto.meta.title": "The QueerPulse manifesto: what we believe",
   "manifesto.meta.description":
-    "What QueerPulse believes, in its own words — the founding document behind everything else on this platform.",
+    "The founding document behind QueerPulse — written by the founding circle and ratified by the community. Read what we believe, then add your name.",
   "manifesto.hero.eyebrow": "The Manifesto",
   "manifesto.hero.title": "We build for <em>each other.</em>",
   "manifesto.hero.attrib":
@@ -772,6 +787,9 @@ export const marketing: Catalog = {
   "manifesto.toast.signed": "Thanks for adding your name.",
 
   // ── Partners ───────────────────────────────────────────────────────────
+  "partners.meta.title": "QueerPulse's partner organisations in Portugal",
+  "partners.meta.description":
+    "The organisations QueerPulse partners with in Portugal and beyond — each vetted for alignment with our values before being listed, never a paid placement.",
   "partners.hero.eyebrow": "Partners",
   "partners.hero.title": "Organisations we <em>stand with.</em>",
   "partners.hero.sub":
@@ -802,6 +820,9 @@ export const marketing: Catalog = {
   "partners.outro.sub": "Tell us — we're always looking for aligned partners.",
 
   // ── Press Kit ──────────────────────────────────────────────────────────
+  "pressKit.meta.title": "QueerPulse press kit: logos, facts, photography",
+  "pressKit.meta.description":
+    "Everything a journalist needs to write about QueerPulse — pre-cleared boilerplate, marks, photography, key facts, and a direct press contact.",
   "pressKit.hero.eyebrow": "Press",
   "pressKit.hero.title": "Everything you need to <em>write about us.</em>",
   "pressKit.hero.dek":
@@ -883,6 +904,9 @@ export const marketing: Catalog = {
     "The production kit will include the real production-ready asset.",
 
   // ── Privacy Policy ─────────────────────────────────────────────────────
+  "privacy.meta.title": "QueerPulse Privacy Policy: what we collect and why",
+  "privacy.meta.description":
+    "What data QueerPulse collects, how it's used, who can see it, how long it's kept, and how to exercise your data rights — including a plain-language summary.",
   "privacy.title": "Privacy <em>Policy</em>",
   "privacy.meta.effective": "Effective {date}",
   "privacy.meta.lastUpdated": "Last updated {date}",
@@ -1000,6 +1024,9 @@ export const marketing: Catalog = {
     "Questions about this policy or your data? Email <a>privacy@queerpulse.pt</a> and a real person will respond.",
 
   // ── Terms of Service ───────────────────────────────────────────────────
+  "terms.meta.title": "QueerPulse Terms of Service",
+  "terms.meta.description":
+    "The rules for using QueerPulse — eligibility, account conduct, content ownership, event participation, and what happens if the terms are broken.",
   "terms.title": "Terms of <em>Service</em>",
   "terms.meta.effective": "Effective {date}",
   "terms.meta.lastUpdated": "Last updated {date}",
@@ -1660,6 +1687,9 @@ export const marketing: Catalog = {
   // ── Annual Assembly — page chrome. The agenda/resolutions/tallies/history
   //    are per-year governance records (specific proposals, vote counts,
   //    dates) — left English; see the sweep report for why.
+  "annualAssembly.meta.title": "QueerPulse Annual Assembly: eleven resolutions",
+  "annualAssembly.meta.description":
+    "QueerPulse's binding annual members' meeting — vote on eleven resolutions, join in person or online in Lisbon on 14–15 November, or read the minutes after.",
   "annualAssembly.hero.eyebrow": "Annual Assembly · 14 November 2026 · Lisbon",
   "annualAssembly.hero.title": "Two days, eleven <em>resolutions.</em>",
   "annualAssembly.hero.dek":
@@ -1824,6 +1854,9 @@ export const marketing: Catalog = {
   //    breakdown, moderation rows, government requests, named mistakes and
   //    governance stats are the year's actual audited figures — left
   //    English; see the sweep report.
+  "transparency.meta.title": "QueerPulse's 2025 transparency report",
+  "transparency.meta.description":
+    "QueerPulse's audited 2025 transparency report — where €278,400 came from and went, moderation actions, government data requests, and the mistakes we're naming.",
   "transparency.tabs.money": "Money",
   "transparency.tabs.people": "People",
   "transparency.tabs.moderation": "Moderation",
@@ -1912,6 +1945,9 @@ export const marketing: Catalog = {
   // ── Roadmap — page chrome. Shipped/building/planned items, top ideas and
   //    vote counts are the live backlog — left English; see the sweep
   //    report.
+  "roadmap.meta.title": "The QueerPulse roadmap: shipped, building, planned",
+  "roadmap.meta.description":
+    "See what QueerPulse has shipped, what a small Lisbon team is building right now, and what's planned next — plus how to submit and vote on ideas.",
   "roadmap.hero.eyebrow": "What we're building",
   "roadmap.hero.title": "The <em>roadmap</em>",
   "roadmap.hero.sub":
@@ -1980,6 +2016,9 @@ export const marketing: Catalog = {
   //    the adapter composes a few chrome fragments (commitment label,
   //    stat/spot-row labels, confirmation sentence) which are also keyed
   //    here so live mode translates identically to demo.
+  "volunteer.meta.title": "Volunteer with QueerPulse: pick a cause, pick hours",
+  "volunteer.meta.description":
+    "Browse QueerPulse volunteer opportunities by cause — rights, health, youth, housing, arts — and by time commitment, or post one for your own organisation.",
   "volunteer.filter.all": "All opportunities",
   "volunteer.filter.low": "Low commitment",
   "volunteer.filter.medium": "Medium commitment",
@@ -2207,6 +2246,9 @@ export const marketing: Catalog = {
 
   // ── Donate — page chrome. All platform-authored (amounts/allocation/trust
   //    copy are QueerPulse's own fixed figures, not fetched user content).
+  "donate.meta.title": "Donate to QueerPulse: where every euro goes",
+  "donate.meta.description":
+    "Support QueerPulse with a monthly or one-off gift — funding mutual aid, gatherings, platform safety and paid creative work, with allocation reported every quarter.",
   "donate.hero.eyebrow": "Support QueerPulse",
   "donate.hero.title": "Members keep this <em>alive.</em>",
   "donate.hero.lead":
@@ -2283,6 +2325,9 @@ export const marketing: Catalog = {
     "Your {amount} goes straight to mutual aid, gatherings, and paying queer creatives fairly. We'll email your receipt shortly.",
 
   // ── Contact — page chrome. All platform-authored form/routing copy.
+  "contact.meta.title": "Contact QueerPulse: general, safety, press, partners",
+  "contact.meta.description":
+    "Get in touch with QueerPulse — a small team that reads and answers every message itself. Routes for general questions, safety concerns, press, and partnerships.",
   "contact.eyebrow": "We read everything",
   "contact.hero.title": "Get in <em>touch.</em>",
   "contact.hero.body":
@@ -2328,6 +2373,9 @@ export const marketing: Catalog = {
 
   // ── Newsletter — email-preferences page chrome. All platform-authored
   //    preference names/descriptions.
+  "newsletter.meta.title": "Email preferences: what QueerPulse sends you",
+  "newsletter.meta.description":
+    "Manage which QueerPulse emails you receive — magazine issues, event reminders, community updates, and safety alerts — or unsubscribe from everything at once.",
   "newsletter.backToSettings": "← Settings",
   "newsletter.header.eyebrow": "Email preferences",
   "newsletter.header.title": "What we <em>send you,</em> and when.",
@@ -2390,6 +2438,9 @@ export const marketing: Catalog = {
   "newsletter.unsub.toast": "Unsubscribed from all optional emails",
 
   // ── Get the App — landing page chrome. All platform-authored.
+  "getTheApp.meta.title": "Get the QueerPulse app: crisis chat, RSVPs",
+  "getTheApp.meta.description":
+    "Download the QueerPulse app for iOS and Android — quick exit, one-tap crisis chat, gathering RSVPs with QR tickets, and an offline safe-spaces map.",
   "getTheApp.hero.eyebrow": "Mobile · iOS & Android",
   "getTheApp.hero.title": "Take it with you <em>anyway.</em>",
   "getTheApp.hero.lead":
@@ -2457,6 +2508,9 @@ export const marketing: Catalog = {
   //    PARTNERS records (name/tenure/description) and the Filipa Mendes
   //    testimonial are each org's own content — left English, same
   //    precedent as the Partners listing page.
+  "forOrgs.meta.title": "Partner with QueerPulse: operational, not promotional",
+  "forOrgs.meta.description":
+    "How organisations can partner with QueerPulse — operational collaborations, not sponsored content or Pride-month campaigns, and how the process starts.",
   "forOrgs.hero.eyebrow": "For organisations · partnerships",
   "forOrgs.hero.title": "Work <em>with us,</em> not <em>at us.</em>",
   "forOrgs.hero.dek":
@@ -2643,6 +2697,9 @@ export const marketing: Catalog = {
   //    blurbs, org descriptions, community-group blurbs (`arrivingPage.data.ts`,
   //    `arrivingPageCards.data.ts`) are Lisbon city-guide content — left
   //    English, same precedent as the Cities page's per-city blurbs.
+  "arriving.meta.title": "New to Lisbon? A queer newcomer's guide",
+  "arriving.meta.description":
+    "A practical starting guide for LGBTQ+ people new to Lisbon — welcoming neighbourhoods, health resources, housing basics, key organisations, and first steps.",
   "arriving.hero.eyebrow": "New to Lisbon",
   "arriving.hero.title": "Queer and new to Lisbon? <em>Welcome.</em>",
   "arriving.hero.body":
@@ -2689,6 +2746,9 @@ export const marketing: Catalog = {
   //    attributed to named/anonymous members, and the reviewed-lawyers'
   //    names/quotes, are testimonial content — left English, same precedent
   //    as `directoryPlaces.ts` reviews.
+  "visas.meta.title": "Visas and residency in Portugal for LGBTQ+ people",
+  "visas.meta.description":
+    "Community guidance on EU and non-EU visa routes, residency permits, and same-sex partner immigration in Portugal, plus reviewed immigration lawyers — not legal advice.",
   "visas.hero.eyebrow": "Visas & Residency · Portugal",
   "visas.hero.title": "Portugal, legally. <em>Your path to residency.</em>",
   "visas.hero.sub":
@@ -2941,6 +3001,9 @@ export const marketing: Catalog = {
   //    reader is already reading Portuguese), so the pt-PT copy drops the
   //    "this is the English translation" meta-reference rather than
   //    faithfully mistranslating it — flagged in the sweep report.
+  "constitution.meta.title": "QueerPulse's constitution: twelve plain articles",
+  "constitution.meta.description":
+    "The constitution of Associação QueerPulse — twelve plain-language articles on purpose, membership and governance, ratified 14 November 2025.",
   "constitution.artNumLabel": "Article",
   "constitution.hero.eyebrow": "Constitution · v1.4 · ratified 14 Nov 2025",
   "constitution.hero.title":
@@ -3073,7 +3136,8 @@ export const marketing: Catalog = {
   //    directory-style content, same precedent as `directoryPlaces.ts` /
   //    the Platforms page below — left English. `LIBRARY_SUBPAGES`
   //    label/blurb are short platform-authored teaser chrome — translated.
-  "resourceLibrary.meta.title": "Resource Library — QueerPulse",
+  "resourceLibrary.meta.title":
+    "Queer resources in Lisbon: health, legal, housing and money support",
   "resourceLibrary.meta.description":
     "Things that actually help — a curated library of free and sliding-scale health, legal, housing, money, identity and safety resources for queer Lisbon.",
   "resourceLibrary.hero.eyebrow": "Resource Library",
@@ -3119,6 +3183,9 @@ export const marketing: Catalog = {
   // ── Platforms (the wider queer web) — page/filter chrome. `PLATFORMS`
   //    entries (name/desc — named third-party apps/orgs) are directory-style
   //    content, same precedent as Resource Library above — left English.
+  "platforms.meta.title": "Queer platforms and organisations worth knowing",
+  "platforms.meta.description":
+    "A directory of dating apps, media, professional networks and advocacy organisations useful to queer people — including Portugal-specific groups like ILGA Portugal.",
   "platforms.hero.eyebrow": "Queer platforms",
   "platforms.hero.title": "The wider <em>queer web.</em>",
   "platforms.hero.sub":
@@ -3228,6 +3295,9 @@ export const marketing: Catalog = {
   //    the Lisbon/Porto card bodies) are content — a previous agent's
   //    deliberate call, not re-litigated here. Country-flag emoji in this
   //    feature are the lint rule's one exemption — left as-is.
+  "cities.meta.title": "Where QueerPulse operates: Lisbon, and what's next",
+  "cities.meta.description":
+    "QueerPulse is live in Lisbon, building toward Porto, and taking member votes on where to go next — each new city needs a local moderator and partner first.",
   "cities.hero.eyebrow": "Cities · network footprint · selector",
   "cities.hero.title": "One city at a <em>time.</em>",
   "cities.hero.dek":

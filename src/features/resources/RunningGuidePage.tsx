@@ -4,15 +4,25 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { PACE_GROUPS, BRING } from "./runningGuide.data";
 import styles from "./resources.module.css";
 
 export function RunningGuidePage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:runningGuide.meta.title");
+  const pageDescription = t("resources:runningGuide.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/running-guide" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:runningGuide.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

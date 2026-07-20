@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./NewsletterPage.module.css";
 
 const SETTINGS = routes.settings;
@@ -126,6 +127,8 @@ export function NewsletterPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [sections, setSections] = useState<Section[]>(INITIAL);
+  const pageTitle = t("marketing:newsletter.meta.title");
+  const pageDescription = t("marketing:newsletter.meta.description");
 
   const toggle = (sectionIndex: number, prefIndex: number) => {
     setSections((prev) =>
@@ -158,6 +161,13 @@ export function NewsletterPage() {
 
   return (
     <AppShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.newsletter },
+        ])}
+      />
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
           <Link to={SETTINGS} className={styles.back}>

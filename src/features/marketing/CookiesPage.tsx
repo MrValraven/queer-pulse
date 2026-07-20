@@ -6,6 +6,11 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { COOKIE_CATEGORIES } from "./cookies.data";
 import styles from "./CookiesPage.module.css";
 
@@ -14,6 +19,8 @@ export function CookiesPage() {
   const { t } = useTranslation();
   const [functional, setFunctional] = useState(true);
   const [analytics, setAnalytics] = useState(false);
+  const pageTitle = t("marketing:cookies.meta.title");
+  const pageDescription = t("marketing:cookies.meta.description");
 
   const toggleFor: Record<
     string,
@@ -39,6 +46,13 @@ export function CookiesPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.cookies },
+        ])}
+      />
       <header className={styles.hero}>
         <div className={styles.eyebrow}>{t("marketing:cookies.eyebrow")}</div>
         <h1 className={styles.h1}>

@@ -4,6 +4,12 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { WHAT_KEYS, USES, RSVP_TIP_KEYS } from "./spoonTheory.data";
 import styles from "./resources.module.css";
@@ -12,9 +18,25 @@ const SPOONS = [false, false, false, false, true, true]; // last two spent
 
 export function SpoonTheoryPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:spoonTheory.meta.title");
+  const pageDescription = t("resources:spoonTheory.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/spoon-theory",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/spoon-theory" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:spoonTheory.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

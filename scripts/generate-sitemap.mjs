@@ -2,10 +2,10 @@
 /**
  * Build-time sitemap generator for QueerPulse.
  *
- * Emits `public/sitemap.xml` listing ONLY public routes. Run manually via the
- * `sitemap` package.json script (see repo README/report) — it is intentionally
- * NOT wired into the main `build` and NOT required in CI. Because `public/` is
- * copied verbatim into `dist/`, the generated file ships as `/sitemap.xml`.
+ * Emits `public/sitemap.xml` listing ONLY public routes. Wired into `build`
+ * (before `vite build`, which copies `public/` verbatim into `dist/`), so the
+ * shipped sitemap can never disagree with the prerendered set — both derive
+ * from QUIET_PUBLIC_PATHS in ./publicPaths.mjs.
  *
  * The public path list and the gated-path check both live in
  * `./publicPaths.mjs` (shared with the prerenderer), which is in turn a mirror

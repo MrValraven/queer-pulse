@@ -48,6 +48,10 @@ export const resources: Catalog = {
 
   // ── LegalPage ───────────────────────────────────────────────────────────
   // Legal/safety information — flag for native review.
+  "legal.meta.title":
+    "LGBTQ+ legal rights in Portugal: work, housing and health",
+  "legal.meta.description":
+    "Know your rights at work, in housing, and in healthcare as an LGBTQ+ person in Portugal, plus a directory of vetted queer-friendly lawyers in Lisbon.",
   "legal.hero.eyebrow": "Legal Aid",
   "legal.hero.title": "Know your rights. <em>Have your receipts.</em>",
   "legal.hero.lead":
@@ -126,6 +130,10 @@ export const resources: Catalog = {
   "legal.outro.requestInviteCta": "Request an invite",
 
   // ── CommunityPrivacyPage ────────────────────────────────────────────────
+  "communityPrivacy.meta.title":
+    "QueerPulse privacy: what's visible, and to whom",
+  "communityPrivacy.meta.description":
+    "How visibility works on QueerPulse by default — what shows on your public profile, inside the community, and to the moderation team, and how to change it.",
   "communityPrivacy.hero.eyebrow": "Coming Out · Privacy",
   "communityPrivacy.hero.title": "You control <em>what's visible.</em>",
   "communityPrivacy.hero.lead":
@@ -160,6 +168,9 @@ export const resources: Catalog = {
   "communityPrivacy.outro.cta": "Open privacy settings",
 
   // ── SafetyPage ──────────────────────────────────────────────────────────
+  "safety.meta.title": "How QueerPulse protects your privacy and safety",
+  "safety.meta.description":
+    "How visibility levels, vouching, and data protection work on QueerPulse — plus how to report a concern and what happens if you decide to leave.",
   "safety.hero.cat": "Safety & privacy",
   "safety.hero.title": "Your visibility. <em>Your choice.</em>",
   "safety.hero.intro":
@@ -228,6 +239,9 @@ export const resources: Catalog = {
     "Know your rights and find legal support when you need it.",
 
   // ── Queer101Page (Queer101Sections.tsx + queer101.data.ts) ─────────────
+  "queer101.meta.title": "Queer 101: a no-pressure LGBTQ+ starter guide",
+  "queer101.meta.description":
+    "For anyone newly exploring their identity — common questions answered, key terms explained, and low-pressure ways to talk to someone, no account required.",
   "queer101.hero.backLink": "Resource Library",
   "queer101.hero.label": "Queer 101",
   "queer101.hero.title": "Start here, wherever <em>here</em> is.",
@@ -368,6 +382,9 @@ export const resources: Catalog = {
   // (`GLOSSARY_COPY`, `BLOCKS` in glossary.data.tsx) independent of the site
   // locale — deliberately left untouched (see sweep report). Only the
   // language-invariant page chrome below is routed through the catalog.
+  "glossary.meta.title": "LGBTQ+ glossary: queer terms explained (EN/PT)",
+  "glossary.meta.description":
+    "A living glossary of LGBTQ+ terms — identity, healthcare, and Lisbon-specific words — in English and Portuguese, kept current and open to community edits.",
   "glossary.backLink": "Resource Library",
   "glossary.hero.title": "A working <em>glossary.</em>",
   "glossary.hero.dek":
@@ -377,6 +394,11 @@ export const resources: Catalog = {
 
   // ── PronounsGuidePage (+ PronounsGuideSections.tsx + pronounsGuide.data.tsx) ──
   // Trans-specific guidance — flag for native review.
+  "pronounsGuide.meta.title":
+    "Pronouns and chosen name on QueerPulse: a practical guide",
+  "pronounsGuide.meta.description":
+    "How QueerPulse handles chosen names and pronouns across the platform, plus answers on deadnames, name changes, privacy, and legal name data.",
+
   "pronounsGuide.hero.eyebrow": "For trans & nonbinary members",
   "pronounsGuide.hero.title": "Names, pronouns, <em>done right.</em>",
   "pronounsGuide.hero.sub":
@@ -479,7 +501,18 @@ export const resources: Catalog = {
   "pronounsGuide.faq.a6":
     "Legal name data is only stored if you've explicitly provided it for a purpose that required it (e.g. certain grant applications run through the platform). It's never used as your display name and is stored separately with stricter access controls. You can request its deletion at any time via <a>Data Export</a>.",
 
+  // ── TherapistProfilePage (+ therapist/therapistProfiles.data.tsx) ────────
+  // The individual therapist template rendered at /resources/therapists/:id;
+  // meta describes the directory in general since every :id shares this page.
+  "therapists.meta.title":
+    "LGBTQ+-affirming therapists in Lisbon: verified profiles",
+  "therapists.meta.description":
+    "Vetted LGBTQ+-affirming therapists and psychologists in Lisbon and online — specialisms, languages, sliding-scale fees, and what a first session looks like.",
+
   // ── MentalHealthPage (+ MentalHealthSections.tsx + mentalHealth.data.ts) ──
+  "mentalHealth.meta.title": "Queer-affirming mental health support in Lisbon",
+  "mentalHealth.meta.description":
+    "Queer-affirming therapists in Lisbon, crisis lines for immediate support, and a practical guide to accessing mental health care through the SNS.",
   "mentalHealth.hero.cat": "Mental Health",
   "mentalHealth.hero.title": "You don't have to be <em>okay.</em>",
   "mentalHealth.hero.sub":
@@ -582,6 +615,11 @@ export const resources: Catalog = {
   "mentalHealth.therapistProfile.seeFullProfileCta": "See full profile →",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
+  "wellbeing.meta.title":
+    "LGBTQ+ wellbeing in Lisbon: therapists, peers, crisis help",
+  "wellbeing.meta.description":
+    "Wellbeing resources built by and for the community — a vetted therapist directory, peer support, crisis contacts, and harm reduction, all in one place.",
+
   "wellbeing.hero.eyebrow": "Wellbeing",
   "wellbeing.hero.title": "A room that <em>looks after you.</em>",
   "wellbeing.hero.lead":
@@ -729,6 +767,11 @@ export const resources: Catalog = {
   // review. Real-world proper nouns (SNS, Hospital de Santa Maria, Hospital
   // Curry Cabral, ILGA Portugal, Rede ex aequo, Cartão de Cidadão, NIF, Law
   // 38/2018) stay untranslated inside the catalog values themselves.
+  "transHub.meta.title":
+    "Trans & non-binary hub: healthcare, legal, and community",
+  "transHub.meta.description":
+    "A dedicated hub for trans and non-binary members — healthcare navigation, legal and admin guides, peer support, and community, built specifically for you.",
+
   "transHub.hero.eyebrow": "Trans & Non-Binary Hub",
   "transHub.hero.title": "A dedicated space, <em>not an afterthought.</em>",
   "transHub.hero.lead":
@@ -866,6 +909,10 @@ export const resources: Catalog = {
   // in this namespace. Kept literal and unambiguous; every number, timing,
   // drug name, phone number and org name is preserved exactly between EN and
   // PT. Flag for the closest native review before shipping.
+  "harmReduction.meta.title":
+    "Harm reduction in Lisbon: safer partying, no judgment",
+  "harmReduction.meta.description":
+    "Non-judgmental harm-reduction guidance for nightlife in Lisbon — naloxone and overdose response, safer use, comedowns, chemsex, and where to get tested.",
   "harmReduction.emergency.emergencyLabel": "Emergency:",
   "harmReduction.emergency.snsLabel": "SNS 24 (non-emergency):",
   "harmReduction.emergency.mentalHealthLabel":
@@ -1000,6 +1047,11 @@ export const resources: Catalog = {
   // typeLabel is lifted to a shared per-EventType map since it's a repeated
   // chrome phrase, not organizer-specific.
   "sober.hero.backLink": "Wellbeing Hub",
+  "sober.meta.title":
+    "Sober and queer in Lisbon: alcohol-free events and venues",
+  "sober.meta.description":
+    "A full queer social life without alcohol — sober and alcohol-free events in Lisbon, venues that don't centre the bar, and peer support for recovery or sober-curious members.",
+
   "sober.hero.eyebrow": "Sober & social",
   "sober.hero.title": "A full social life, without <em>alcohol.</em>",
   "sober.hero.lead":
@@ -1102,6 +1154,10 @@ export const resources: Catalog = {
   "sober.host.submitCta.attend": "Request to attend",
 
   // ── LibraryPage ──────────────────────────────────────────────────────────
+  "library.meta.title":
+    "Guide library: legal, health, housing and trans-life guides",
+  "library.meta.description":
+    "Community-written guides on legal rights, health, housing, and trans life in Portugal — searchable by topic, from workplace discrimination to starting HRT.",
   // GUIDES entries (title/desc/catLabel/meta) are demo content mirroring the
   // live GET /resources feed — stay English, see resources.adapters.ts.
   // POPULAR search shortcuts double as the literal query string matched
@@ -1142,6 +1198,11 @@ export const resources: Catalog = {
   // English rather than risk an imprecise medical translation. Only the
   // structural chrome around them (headings, tab/filter labels, buttons,
   // empty states, generic CTAs) is translated here; see the sweep report.
+  "sexualHealth.meta.title":
+    "Sexual health in Lisbon: testing, PrEP and HIV resources",
+  "sexualHealth.meta.description":
+    "A practical guide to sexual health in Lisbon — where to get tested, how to access free PrEP through the SNS, HIV resources and U=U, and a community-reviewed clinic directory.",
+
   "sexualHealth.hero.cat": "Sexual health",
   "sexualHealth.hero.title": "Your health, on your <em>own terms.</em>",
   "sexualHealth.hero.lead":
@@ -1423,6 +1484,11 @@ export const resources: Catalog = {
   "microGrants.panel.submitCta": "Add me to the panel",
 
   // ── PeerSupportPage (+ peerSupport.data.ts) ─────────────────────────────
+  "peerSupport.meta.title":
+    "Peer support for trans people in Lisbon: how it works",
+  "peerSupport.meta.description":
+    "Peer support in QueerPulse's Trans Hub — not therapy, not advice, just someone who's been where you are. How to ask for support or become a peer yourself.",
+
   "peerSupport.hero.eyebrow": "Trans Hub · Peer Support",
   "peerSupport.hero.title": "Someone who <em>gets it.</em>",
   "peerSupport.hero.lead":
@@ -1456,6 +1522,10 @@ export const resources: Catalog = {
   "peerSupport.outro.forumCta": "Open the forum",
 
   // ── AccessibleLisbonPage (+ accessibleLisbon.data.ts) ───────────────────
+  "accessibleLisbon.meta.title":
+    "Accessible Lisbon: step-free routes and low-sensory spots",
+  "accessibleLisbon.meta.description":
+    "Peer-verified accessible Lisbon — step-free walking routes, low-sensory bars and cafés, and family-friendly parks, each checked by someone who's been there.",
   "accessibleLisbon.hero.eyebrow": "Accessible Lisbon",
   "accessibleLisbon.hero.title": "Lisbon, <em>actually reachable.</em>",
   "accessibleLisbon.hero.lead":
@@ -1523,6 +1593,9 @@ export const resources: Catalog = {
   "accessibleLisbon.outro.cta": "Find a gathering",
 
   // ── ArtCritGuidePage (+ artCritGuide.data.ts) ───────────────────────────
+  "artCritGuide.meta.title": "How Rainbow Arts crit sessions work",
+  "artCritGuide.meta.description":
+    "How Rainbow Arts group critiques work — the honest, kind, specific method, the four-step flow, and examples of useful versus unhelpful feedback.",
   "artCritGuide.hero.eyebrow": "Rainbow Arts",
   "artCritGuide.hero.title": "How our crits <em>work.</em>",
   "artCritGuide.hero.lead":
@@ -1575,6 +1648,10 @@ export const resources: Catalog = {
 
   // ── ComingOutAtWorkPage (+ comingOutAtWork.data.ts) ─────────────────────
   // VOICES stay English — attributed peer quotes (a member's own words).
+  "comingOutAtWork.meta.title":
+    "Coming out at work: timing, scripts and your rights",
+  "comingOutAtWork.meta.description":
+    "A practical guide to coming out at work in Portugal — reading the room, sample scripts for telling colleagues, and what to do if it goes badly.",
   "comingOutAtWork.hero.eyebrow": "Coming Out · At Work",
   "comingOutAtWork.hero.title": "Coming out <em>at work.</em>",
   "comingOutAtWork.hero.lead":
@@ -1649,6 +1726,10 @@ export const resources: Catalog = {
   // accommodations, referrals, choosing GPs, insurance paperwork) — same
   // register as the already-swept legal.healthcare.* guidance, translated.
   // TIPS stay English — attributed peer quotes (a member's own words).
+  "disabilityHealthcare.meta.title":
+    "Disability and chronic illness care in Portugal",
+  "disabilityHealthcare.meta.description":
+    "A practical guide to navigating Portuguese healthcare with a disability or chronic condition — accommodations, referrals, accessible GPs, and insurance.",
   "disabilityHealthcare.hero.eyebrow": "Disabled Queers",
   "disabilityHealthcare.hero.title": "The system, <em>navigated.</em>",
   "disabilityHealthcare.hero.lead":
@@ -1681,6 +1762,10 @@ export const resources: Catalog = {
   "disabilityHealthcare.outro.askCta": "Ask the group",
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
+  "firstMeetupGuide.meta.title":
+    "Your first QueerPulse meetup: what to expect",
+  "firstMeetupGuide.meta.description":
+    "What actually happens at a first in-person meetup, what 'no agenda' really means, and honest answers to the questions newcomers are too nervous to ask.",
   "firstMeetupGuide.hero.eyebrow": "Queer Social",
   "firstMeetupGuide.hero.title": "Your first meetup, <em>no pressure.</em>",
   "firstMeetupGuide.hero.lead":
@@ -1735,6 +1820,9 @@ export const resources: Catalog = {
   // SHOWS (title/when/venue/blurb) are an archival record of real community
   // shows — kept English per the scope rule, same treatment as QTIPOC
   // Archive and Organisations. Only the surrounding chrome is translated.
+  "groupShowArchive.meta.title": "Rainbow Arts: an archive of every group show",
+  "groupShowArchive.meta.description":
+    "An archive of every Rainbow Arts group show — dates, venues, and what was made — from the first pop-up to the most recent weekend residency.",
   "groupShowArchive.hero.eyebrow": "Rainbow Arts · Archive",
   "groupShowArchive.hero.title": "Everything we've <em>hung.</em>",
   "groupShowArchive.hero.lead":
@@ -1754,6 +1842,9 @@ export const resources: Catalog = {
   // ── IngredientsMapPage (+ ingredientsMap.data.ts) ───────────────────────
   // Spot names are shop names (proper nouns, untranslated); finds/origin/
   // hours are chrome, translated.
+  "ingredientsMap.meta.title": "Where to find ingredients from home in Lisbon",
+  "ingredientsMap.meta.description":
+    "A community-mapped guide to Lisbon grocers, markets, and stalls carrying ingredients from home — organised by neighbourhood, from Mouraria to Marvila.",
   "ingredientsMap.hero.eyebrow": "Queer POC",
   "ingredientsMap.hero.title": "Ingredients from <em>home.</em>",
   "ingredientsMap.hero.lead":
@@ -1804,6 +1895,9 @@ export const resources: Catalog = {
   // ── LgbtqAgingGuidePage (+ lgbtqAgingGuide.data.ts) ─────────────────────
   // LINKS point at real organisations (ILGA Portugal, SNS 24) — org/service
   // names and phone numbers stay as-is; note/label chrome is translated.
+  "lgbtqAgingGuide.meta.title": "LGBTQ+ aging in Portugal: healthcare after 50",
+  "lgbtqAgingGuide.meta.description":
+    "Navigating Portuguese healthcare as an LGBTQ+ person over 50 — finding affirming GPs and hospitals, care options, and mental health support.",
   "lgbtqAgingGuide.hero.eyebrow": "Queer Elders",
   "lgbtqAgingGuide.hero.title": "Aging on <em>your own terms.</em>",
   "lgbtqAgingGuide.hero.lead":
@@ -1842,6 +1936,11 @@ export const resources: Catalog = {
 
   // ── OralHistoryProjectPage (+ oralHistoryProject.data.ts) ───────────────
   // VOICES stay English — attributed peer quotes (a member's own words).
+  "oralHistoryProject.meta.title":
+    "LGBTQ+ oral history project in Lisbon: share your story",
+  "oralHistoryProject.meta.description":
+    "QueerPulse is recording the lives of LGBTQ+ elders in Lisbon — voice-only if you prefer, no faces required, and entirely on your own terms.",
+
   "oralHistoryProject.hero.eyebrow": "Queer Elders · Oral History",
   "oralHistoryProject.hero.title": "Your story is <em>worth keeping.</em>",
   "oralHistoryProject.hero.lead":
@@ -1884,6 +1983,11 @@ export const resources: Catalog = {
   // PIECES (title/kind/year/blurb) are an archival record of contributed
   // community work — kept English per the scope rule. Only the surrounding
   // chrome is translated.
+  "qtipocArchive.meta.title":
+    "QTIPOC archive: Lisbon's community-held queer history",
+  "qtipocArchive.meta.description":
+    "A living, community-held archive of QTIPOC life in Lisbon — photo essays, writing, recordings and documents, contributed and credited by the people who made them.",
+
   "qtipocArchive.hero.eyebrow": "Queer POC · Archive",
   "qtipocArchive.hero.title": "Kept by us, <em>for us.</em>",
   "qtipocArchive.hero.lead":
@@ -1912,6 +2016,11 @@ export const resources: Catalog = {
   // ── QtipocOrganisationsPage (+ qtipocOrganisations.data.ts) ─────────────
   // ORGS (name/mission/offers/tags) are a directory record of real
   // organisations — kept English per the scope rule. Chrome is translated.
+  "qtipocOrganisations.meta.title":
+    "QTIPOC organisations in Portugal and how to reach them",
+  "qtipocOrganisations.meta.description":
+    "A directory of organisations across Portugal working where race and queerness meet — housing, legal aid, youth groups and advocacy — with what they offer and how to reach them.",
+
   "qtipocOrganisations.hero.eyebrow": "Queer POC",
   "qtipocOrganisations.hero.title":
     "Organisations that <em>hold all of it.</em>",
@@ -1935,6 +2044,11 @@ export const resources: Catalog = {
   // PROVIDERS (name/practice/hood/notedFor/tags/checked) are a peer-reviewed
   // directory record, akin to therapist bios — kept English. HOW_IT_WORKS is
   // chrome (not clinical instruction), translated.
+  "queerPaediatricians.meta.title":
+    "Queer-friendly paediatricians in Lisbon: parent-vetted list",
+  "queerPaediatricians.meta.description":
+    "A peer-verified list of Lisbon paediatricians that LGBTQ+ families actually trust — doctors comfortable with two-parent forms and same-sex parents, dated and honestly reviewed.",
+
   "queerPaediatricians.hero.eyebrow": "Queer Parents",
   "queerPaediatricians.hero.title": "Doctors who <em>don't blink.</em>",
   "queerPaediatricians.hero.lead":
@@ -1963,6 +2077,11 @@ export const resources: Catalog = {
   "queerPaediatricians.outro.cta": "Ask in the forum",
 
   // ── RunningGuidePage (+ runningGuide.data.ts) ───────────────────────────
+  "runningGuide.meta.title":
+    "Queer running group in Lisbon: pace groups and what to bring",
+  "runningGuide.meta.description":
+    "QueerPulse's Lisbon running group — three pace groups from social to steady, what to bring on your first run, and the rule that matters most: nobody runs alone.",
+
   "runningGuide.hero.eyebrow": "Queer Runners",
   "runningGuide.hero.title": "Your first run, <em>honestly.</em>",
   "runningGuide.hero.lead":
@@ -2013,6 +2132,11 @@ export const resources: Catalog = {
   // pai") are domain terms already in Portuguese in the source and are kept
   // byte-identical in both catalogs — flag any doubt to a native reviewer.
   // VOICES stay English — attributed peer quotes (a member's own words).
+  "schoolFormsGuide.meta.title":
+    "School intake forms for queer families in Lisbon",
+  "schoolFormsGuide.meta.description":
+    "How to navigate school intake forms as a two-parent or queer family in Lisbon — what to expect on the fields, how to ask for both your names, and your rights.",
+
   "schoolFormsGuide.hero.eyebrow": "Queer Parents",
   "schoolFormsGuide.hero.title": "Two parents, <em>one form.</em>",
   "schoolFormsGuide.hero.lead":
@@ -2059,6 +2183,11 @@ export const resources: Catalog = {
   "schoolFormsGuide.outro.forumCta": "Ask the parents forum",
 
   // ── SharedEquipmentPage (+ sharedEquipment.data.ts) ─────────────────────
+  "sharedEquipment.meta.title":
+    "Shared studio equipment: the Rainbow Arts kit library",
+  "sharedEquipment.meta.description":
+    "The risograph, kiln, projector and bookbinding kit the Rainbow Arts collective shares in Lisbon — what's available, how to book it, and how the community keeps it in good shape.",
+
   "sharedEquipment.hero.eyebrow": "Rainbow Arts",
   "sharedEquipment.hero.title": "Shared kit, <em>shared care.</em>",
   "sharedEquipment.hero.lead":
@@ -2109,6 +2238,11 @@ export const resources: Catalog = {
   // illness writing) — moderate confidence, not certain this is what pt-PT
   // disabled-queer communities specifically say day to day. Verify before
   // shipping; see sweep report.
+  "spoonTheory.meta.title":
+    "Spoon theory explained: how this queer community uses it",
+  "spoonTheory.meta.description":
+    "What spoon theory means, and how QueerPulse applies it for chronic illness and disability — hybrid events by default, no-penalty drop-outs, and permission to say 'I'm low on spoons.'",
+
   "spoonTheory.hero.eyebrow": "Disabled Queers",
   "spoonTheory.hero.title": "What we mean by <em>spoons.</em>",
   "spoonTheory.hero.lead":
@@ -2155,6 +2289,10 @@ export const resources: Catalog = {
   // stay English, matching the wellbeing/soberPage VOICES precedent. ORGS
   // real-world organisation names stay English; their category ("focus") and
   // description are platform-authored chrome and are translated.
+  "intersectionality.meta.title":
+    "Race, faith and class in Lisbon's queer community",
+  "intersectionality.meta.description":
+    "How race, faith, class, and disability intersect with queerness in Lisbon — member voices and resources for people navigating more than one identity at once.",
   "intersectionality.hero.backLabel": "Resource Library",
   "intersectionality.hero.cat": "Intersectionality",
   "intersectionality.hero.title": "More than one thing <em>at once.</em>",

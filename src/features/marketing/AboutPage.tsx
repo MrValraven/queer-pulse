@@ -1,7 +1,7 @@
 import { FiCheck, FiX } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
-import { PageMeta } from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -19,12 +19,16 @@ import s from "./AboutPage.module.css";
 
 export function AboutPage() {
   const { t } = useTranslation();
+  const pageTitle = t("marketing:about.meta.title");
+  const pageDescription = t("marketing:about.meta.description");
 
   return (
     <PageShell>
-      <PageMeta
-        title={t("marketing:about.meta.title")}
-        description={t("marketing:about.meta.description")}
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: pageTitle, path: routes.about },
+        ])}
       />
       <PageHero
         eyebrow={t("marketing:about.hero.eyebrow")}

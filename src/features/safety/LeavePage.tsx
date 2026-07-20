@@ -2,7 +2,13 @@ import { useCallback, useMemo, useState } from "react";
 import { Footer } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { useAuth } from "../../app/providers/authContext";
+import { routes } from "../../app/routeMap";
 import { logError } from "../../shared/observability/logger";
 import { DestructiveActionFlow } from "../settings/DestructiveActionFlow";
 import { buildDestructiveFlow } from "../settings/destructiveFlows.data";
@@ -33,6 +39,8 @@ export function LeavePage() {
   const [dur, setDur] = useState<PauseDurationId>("oneMonth");
   const [flowOpen, setFlowOpen] = useState(false);
   const destructiveFlow = useMemo(() => buildDestructiveFlow(t), [t]);
+  const pageTitle = t("safety:leave.meta.title");
+  const pageDescription = t("safety:leave.meta.description");
 
   const runDeletion = useCallback(async () => {
     const { reauthToken } = await reauth();
@@ -52,6 +60,13 @@ export function LeavePage() {
 
   return (
     <>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: routes.resources },
+          { name: pageTitle, path: routes.leave },
+        ])}
+      />
       <div className={s.page}>
         {state === "considering" && (
           <LeaveConsidering

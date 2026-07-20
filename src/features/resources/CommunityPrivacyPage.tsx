@@ -5,6 +5,11 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { TIERS, HOW_TO_KEYS } from "./communityPrivacy.data";
 import styles from "./resources.module.css";
@@ -17,8 +22,17 @@ const ICONS: Record<string, IconType> = {
 
 export function CommunityPrivacyPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:communityPrivacy.meta.title");
+  const pageDescription = t("resources:communityPrivacy.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/community-privacy" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:communityPrivacy.hero.eyebrow")}
         eyebrowDotColor="var(--violet)"

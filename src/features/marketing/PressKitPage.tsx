@@ -4,6 +4,7 @@ import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
 import { buildKitManifest, buildKitPreview } from "./pressKitAssets.data";
 import {
@@ -23,9 +24,18 @@ export function PressKitPage() {
   const [showDownload, setShowDownload] = useState(false);
   const kitManifest = useMemo(() => buildKitManifest(t), [t]);
   const kitPreview = useMemo(() => buildKitPreview(t), [t]);
+  const pageTitle = t("marketing:pressKit.meta.title");
+  const pageDescription = t("marketing:pressKit.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.pressKit },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>

@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { PageMeta } from "../../shared/seo";
+import { PageMeta, JsonLd, buildOrganizationSchema } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   ChangeMakers,
@@ -27,6 +27,7 @@ export function HomePage() {
         title={t("homepage:meta.title")}
         description={t("homepage:meta.description")}
       />
+      <JsonLd schema={buildOrganizationSchema()} />
       <Hero />
       <Manifesto />
       <Discovery />

@@ -1,8 +1,9 @@
 import { PageShell } from "../../shared/components/layout";
-import { PageMeta } from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
 import {
   ManifestoBody,
   ManifestoSigners,
@@ -13,14 +14,19 @@ import styles from "./ManifestoPage.module.css";
 export function ManifestoPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const pageTitle = t("marketing:manifesto.meta.title");
+  const pageDescription = t("marketing:manifesto.meta.description");
   const sign = () =>
     showToast(t("marketing:manifesto.toast.signed"), "success");
 
   return (
     <PageShell>
-      <PageMeta
-        title={t("marketing:manifesto.meta.title")}
-        description={t("marketing:manifesto.meta.description")}
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.manifesto },
+        ])}
       />
       <div className={styles.page}>
         <section className={styles.open}>

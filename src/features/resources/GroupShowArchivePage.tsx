@@ -3,15 +3,29 @@ import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { SHOWS } from "./groupShowArchive.data";
 import styles from "./resources.module.css";
 
 export function GroupShowArchivePage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:groupShowArchive.meta.title");
+  const pageDescription = t("resources:groupShowArchive.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/group-show-archive" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:groupShowArchive.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

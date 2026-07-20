@@ -3,14 +3,36 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { WHAT_IT_IS_KEYS, STEPS } from "./peerSupport.data";
 import styles from "./resources.module.css";
 
 export function PeerSupportPage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:peerSupport.meta.title");
+  const pageDescription = t("resources:peerSupport.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/peer-support",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/peer-support" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:peerSupport.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

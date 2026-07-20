@@ -3,6 +3,7 @@ import { HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ARTICLES } from "./constitution.data";
 import styles from "./ConstitutionPage.module.css";
 
@@ -10,8 +11,18 @@ const N = ({ n }: { n: string }) => <span className={styles.num}>{n}</span>;
 
 export function ConstitutionPage() {
   const { t } = useTranslation();
+  const pageTitle = t("marketing:constitution.meta.title");
+  const pageDescription = t("marketing:constitution.meta.description");
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: t("marketing:hub.governanceLabel"), path: routes.governance },
+          { name: pageTitle, path: routes.constitution },
+        ])}
+      />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <HubBackLink

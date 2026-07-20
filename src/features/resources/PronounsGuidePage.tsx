@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
@@ -5,14 +6,50 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
+import {
+  PageMeta,
+  JsonLd,
+  buildFaqSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { NameTable, WhereGrid, FaqList } from "./PronounsGuideSections";
+import { PRONOUN_FAQS } from "./pronounsGuide.data";
 import styles from "./PronounsGuidePage.module.css";
+
+/**
+ * Two FAQ answers embed a templated `<a>...</a>` run for <Translation> (the
+ * mailto and Data Export links) — stripped to plain text for schema.org's
+ * FAQPage, which takes text-only answers. Mirrors GlossaryPage's
+ * extractPlainText precedent for building structured data off existing copy
+ * without hand-duplicating it.
+ */
+function stripFaqLinkTags(answer: string): string {
+  return answer.replace(/<a>(.*?)<\/a>/g, "$1");
+}
 
 export function PronounsGuidePage() {
   const { t } = useTranslation();
   const { loggedIn } = useAuth();
+  const pageTitle = t("resources:pronounsGuide.meta.title");
+  const pageDescription = t("resources:pronounsGuide.meta.description");
+  const pronounsFaqEntries = useMemo(
+    () =>
+      PRONOUN_FAQS.map((faq) => ({
+        question: t(faq.qKey),
+        answer: stripFaqLinkTags(t(faq.aKey)),
+      })),
+    [t],
+  );
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd schema={buildFaqSchema(pronounsFaqEntries)} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/pronouns-guide" },
+        ])}
+      />
       <header className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroEye}>

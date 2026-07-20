@@ -6,6 +6,7 @@ import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import s from "./ContactPage.module.css";
 
 const ROUTES: {
@@ -54,9 +55,18 @@ export function ContactPage() {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
     form.topic &&
     form.msg.trim();
+  const pageTitle = t("marketing:contact.meta.title");
+  const pageDescription = t("marketing:contact.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.contact },
+        ])}
+      />
       <div className="wrap">
         <div className={s.grid}>
           <Reveal className={s.intro}>

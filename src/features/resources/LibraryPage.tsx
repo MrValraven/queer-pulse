@@ -13,6 +13,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { CATEGORIES, POPULAR } from "./library.data";
 import { useLibraryData } from "./api/useLibraryData";
@@ -47,6 +52,8 @@ export function LibraryPage() {
     isFetchingNextPage,
   } = useLibraryData();
   const loading = useSimulatedLoad() || dataLoading;
+  const pageTitle = t("resources:library.meta.title");
+  const pageDescription = t("resources:library.meta.description");
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -63,6 +70,13 @@ export function LibraryPage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/library" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:library.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"

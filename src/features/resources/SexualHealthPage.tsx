@@ -4,6 +4,12 @@ import { Button, Outro, Tabs } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { TABS, type TabId } from "./sexualHealth.data";
 import { GuidesTab, HivTab, PrepTab, TestingTab } from "./SexualHealthTabs";
 import styles from "./SexualHealthPage.module.css";
@@ -16,9 +22,25 @@ export function SexualHealthPage() {
       TABS.map((tabItem) => ({ id: tabItem.id, label: t(tabItem.labelKey) })),
     [t],
   );
+  const pageTitle = t("resources:sexualHealth.meta.title");
+  const pageDescription = t("resources:sexualHealth.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/sexual-health",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/sexual-health" },
+        ])}
+      />
       <div className={styles.hero}>
         <div className="wrap">
           <div className={styles.cat}>

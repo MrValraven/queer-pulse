@@ -22,6 +22,9 @@ export const safety: Catalog = {
   "nav.safetyGuideLabel": "Safety Guide",
 
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
+  "report.meta.title": "Report a concern to the QueerPulse safety team",
+  "report.meta.description":
+    "How to report harassment or an unsafe situation on QueerPulse, what happens after you submit a report, and a public log of past moderation outcomes.",
   "report.eyebrow": "Safety & Reporting",
   "report.hero.title": "Safety is <em>structural.</em>",
   "report.hero.lead":
@@ -143,6 +146,9 @@ export const safety: Catalog = {
   "flag.reasonFallback": "concern",
 
   // ── BlockMutePage.tsx / BlockMuteScreens.tsx / blockMute.data.ts ──────
+  "blockMute.meta.title": "Blocking and muting someone on QueerPulse",
+  "blockMute.meta.description":
+    "How to mute or block another member on QueerPulse — what each option hides, whether they're notified, and how to undo it later.",
   "common.no": "No",
   "blockMute.choose.title": "Privacy <em>controls</em>",
   "blockMute.choose.sub":
@@ -188,6 +194,9 @@ export const safety: Catalog = {
     "Need to report harmful behaviour? <link>File a report →</link>",
 
   // ── LeavePage.tsx / LeaveScreens.tsx / leave.data.ts ──────────────────
+  "leave.meta.title": "Pausing or deleting your QueerPulse account",
+  "leave.meta.description":
+    "How to take a break from QueerPulse or permanently delete your account — what gets removed, what's kept, and a gentler pause option if you're not sure yet.",
   "leave.backLink": "← Back to settings",
   "leave.considering.title": "<em>Leaving</em> QueerPulse",
   "leave.considering.sub":
@@ -296,6 +305,9 @@ export const safety: Catalog = {
   "appeal.upheld.contactCta": "Message the Trust team →",
 
   // ── CrisisChatPage.tsx / crisisChat.data.ts ────────────────────────────
+  "crisisChat.meta.title": "Talk to a peer supporter now: LGBTQ+ crisis chat",
+  "crisisChat.meta.description":
+    "A confidential chat with a trained queer peer supporter, no appointment needed. If you're in immediate danger, call the emergency numbers listed on this page instead.",
   "crisisChat.eyebrow": "Crisis chat · A supporter is online",
   "crisisChat.hero.title": "You don't have to <em>hold this alone.</em>",
   "crisisChat.hero.lead":
@@ -333,6 +345,10 @@ export const safety: Catalog = {
     "This is a prototype — messages aren't sent to a real person. In the live platform, nothing here is stored or shown on your profile.",
 
   // ── EmergencyPage.tsx ──────────────────────────────────────────────────
+  "emergency.meta.title":
+    "LGBTQ+ emergency contacts and crisis numbers in Portugal",
+  "emergency.meta.description":
+    "A signposting page of emergency numbers, crisis lines, and LGBTQ+ support organisations in Portugal — mental health, trans-specific support, housing and legal emergencies, all in one list.",
   "emergency.exitBar.text":
     "If you need to leave this page quickly, click Exit — it goes to Google immediately.",
   "emergency.exitBar.cta": "Leave site now",
@@ -411,6 +427,10 @@ export const safety: Catalog = {
   "emergency.online.rainbowRailroad.sub": "English · Escape from persecution",
 
   // ── HateCrimePage.tsx ──────────────────────────────────────────────────
+  "hateCrime.meta.title":
+    "Reporting a hate crime in Portugal: a step-by-step guide",
+  "hateCrime.meta.description":
+    "What counts as a hate crime in Portugal, how to document it safely, who to report it to, and where to find legal and community support afterwards.",
   "hateCrime.eyebrow": "Reporting guide · Portugal",
   "hateCrime.title.line1": "How to report",
   "hateCrime.title.line2": "<em>a hate crime.</em>",
@@ -617,6 +637,9 @@ export const safety: Catalog = {
   "spaces.filter.arts": "Arts",
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
+  "spaces.meta.title": "Verified LGBTQ+ safe spaces in Lisbon",
+  "spaces.meta.description":
+    "A community-reviewed directory of venues in Lisbon verified as genuinely LGBTQ+ safe — not self-declared — with member reviews, a verification badge, and a way to flag or nominate a space.",
   "spaces.hero.category": "Community verified",
   "spaces.hero.title": "Spaces that are actually <em>safe.</em>",
   "spaces.hero.lead":

@@ -3,6 +3,7 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { ON_FORMS, RIGHTS, VOICES } from "./schoolFormsGuide.data";
 import styles from "./resources.module.css";
@@ -20,9 +21,18 @@ const badgeLabelKey: Record<string, string> = {
 
 export function SchoolFormsGuidePage() {
   const { t } = useTranslation();
+  const pageTitle = t("resources:schoolFormsGuide.meta.title");
+  const pageDescription = t("resources:schoolFormsGuide.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/school-forms-guide" },
+        ])}
+      />
       <ResourceHero
         eyebrow={t("resources:schoolFormsGuide.hero.eyebrow")}
         eyebrowDotColor="var(--accent)"

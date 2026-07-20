@@ -3,6 +3,8 @@ import { PageShell } from "../../shared/components/layout";
 import { Reveal, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
+import { routes } from "../../app/routeMap";
 import { NAV, GOVERNING_DOCS } from "./governance.data";
 import {
   CouncilSection,
@@ -17,6 +19,8 @@ import styles from "./GovernancePage.module.css";
 
 export function GovernancePage() {
   const { t } = useTranslation();
+  const pageTitle = t("governance:page.meta.title");
+  const pageDescription = t("governance:page.meta.description");
   const [active, setActive] = useState("health");
   const governingDocs = useMemo(
     () =>
@@ -46,6 +50,13 @@ export function GovernancePage() {
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("shared:megaNav.about.title"), path: routes.about },
+          { name: pageTitle, path: routes.governance },
+        ])}
+      />
       <section className={styles.hero}>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
