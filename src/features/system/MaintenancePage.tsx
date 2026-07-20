@@ -93,7 +93,7 @@ export function MaintenancePage() {
           <Button to={routes.status}>
             {t("system:maintenance.actions.statusCta")}
           </Button>
-          <Button variant="ghost-dark" to={routes.crisisChat}>
+          <Button variant="ghost-dark" to={routes.emergency}>
             {t("system:maintenance.actions.crisisCta")}
           </Button>
         </div>

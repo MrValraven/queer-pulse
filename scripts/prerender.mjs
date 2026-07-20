@@ -12,7 +12,9 @@
  * download into $HOME/.cache/ms-playwright, so `pnpm build` runs
  * `prerender:browser` (playwright install chromium --only-shell) first. Do not
  * assume a developer's local e2e install is present; CI and Vercel start with
- * an empty browser cache. Vercel serves directory indexes
+ * an empty browser cache. The binary also needs system libs that Vercel's
+ * Amazon Linux 2023 build image does not ship (nss/nspr) — vercel.json's
+ * installCommand dnf-installs them. Vercel serves directory indexes
  * natively, and vercel.json's rewrites only fire when no file matches — so
  * these files win, and the /(.*)->/ rule degrades into an SPA fallback for
  * gated routes.

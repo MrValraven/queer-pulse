@@ -193,77 +193,6 @@ export const safety: Catalog = {
   "blockMute.blocked.reportNote":
     "Need to report harmful behaviour? <link>File a report →</link>",
 
-  // ── LeavePage.tsx / LeaveScreens.tsx / leave.data.ts ──────────────────
-  "leave.meta.title": "Pausing or deleting your QueerPulse account",
-  "leave.meta.description":
-    "How to take a break from QueerPulse or permanently delete your account — what gets removed, what's kept, and a gentler pause option if you're not sure yet.",
-  "leave.backLink": "← Back to settings",
-  "leave.considering.title": "<em>Leaving</em> QueerPulse",
-  "leave.considering.sub":
-    "We're sorry to see you go. Before you delete your account, we want to make sure this is the right choice — and that you have everything you need.",
-  "leave.deleted.label": "What gets deleted",
-  "leave.deleted.profile": "Your profile, bio, and display name",
-  "leave.deleted.connections": "Your connections and message history",
-  "leave.deleted.gatherings": "Your gathering history and earned badges",
-  "leave.deleted.savedArticles": "Your saved articles and reading history",
-  "leave.deleted.invites": "Your invite history and vouches given",
-  "leave.considering.privacyNote":
-    "We retain only anonymised, aggregated data. Your personal data is deleted within 30 days. <link>Read our Privacy Policy →</link>",
-  "leave.considering.altLabel": "There might be a gentler option",
-  "leave.considering.pauseTitle": "Take a break — pause for up to 6 months",
-  "leave.considering.pauseDesc":
-    "Your profile goes private, you disappear from search, and no notifications are sent. Everything is exactly as you left it when you come back.",
-  "leave.considering.pauseCta": "Pause instead",
-  "leave.considering.quietTitle": "Step back quietly — reduce your presence",
-  "leave.considering.quietDesc":
-    "Set your profile to private, mute all notifications, and come back whenever you're ready. No pressure, no timer, no questions.",
-  "leave.considering.quietCta": "Go quiet instead",
-  "leave.considering.stillWant": "Still want to delete?",
-  "leave.considering.reasonPlaceholder":
-    "Optional — tell us why you're leaving. We read every response.",
-  "leave.considering.deleteCta": "Delete my account",
-
-  "leave.pausing.backCta": "← Back",
-  "leave.pausing.title": "Pausing your <em>account</em>",
-  "leave.pausing.sub":
-    "Your profile goes private, you leave search results, and we stop sending notifications. Everything is preserved.",
-  "leave.duration.oneMonth": "1 month",
-  "leave.duration.threeMonths": "3 months",
-  "leave.duration.sixMonths": "6 months",
-  "leave.duration.backOn": "Back on {date}",
-  "leave.pausing.effectsLabel": "What pausing does",
-  "leave.pausing.effects.profileInvisible":
-    "Your profile becomes invisible to other members",
-  "leave.pausing.effects.notInSearch":
-    "You won't appear in search or the member directory",
-  "leave.pausing.effects.notificationsPaused": "All notifications are paused",
-  "leave.pausing.effects.dataPreserved":
-    "All your data, badges, and connections are preserved",
-  "leave.pausing.effects.reactivateAnytime":
-    "Sign back in at any time to reactivate instantly",
-  "leave.pausing.pauseCta": "Pause my account",
-  "leave.pausing.deleteInsteadCta": "Actually, I'd rather delete →",
-
-  "leave.paused.title": "Your account is <em>resting.</em>",
-  "leave.paused.sub":
-    "You're invisible to other members now, and we've stopped every notification. Your people, your badges, your history — all of it is exactly where you left it. Come back the moment you want to.",
-  "leave.paused.reactivateLabel": "You'll reactivate automatically",
-  "leave.paused.comeBackCta": "Come back early →",
-  "leave.paused.backToSettingsCta": "Back to settings",
-
-  "leave.confirmed.title": "Account deletion <em>requested</em>",
-  "leave.confirmed.sub":
-    "Your account will be fully deleted within 30 days. You've been signed out and your profile is no longer visible.",
-  "leave.confirmed.timeline.submitted": "Request submitted",
-  "leave.confirmed.timeline.processing": "Processing",
-  "leave.confirmed.timeline.deleted": "Deleted",
-  "leave.confirmed.cancelNote":
-    "Changed your mind? You can cancel by signing back in within 30 days.",
-  "leave.confirmed.cancelCta": "Sign in to cancel →",
-
-  "leave.toast.pauseFailed":
-    "We couldn't pause your account just now. Try again.",
-
   // ── AppealOutcomePage.tsx ──────────────────────────────────────────────
   "appeal.state.pending": "Pending",
   "appeal.state.overturned": "Overturned",
@@ -303,46 +232,6 @@ export const safety: Catalog = {
   "appeal.upheld.contactNote":
     "If you believe this is in error, you can contact our Trust team directly.",
   "appeal.upheld.contactCta": "Message the Trust team →",
-
-  // ── CrisisChatPage.tsx / crisisChat.data.ts ────────────────────────────
-  "crisisChat.meta.title": "Talk to a peer supporter now: LGBTQ+ crisis chat",
-  "crisisChat.meta.description":
-    "A confidential chat with a trained queer peer supporter, no appointment needed. If you're in immediate danger, call the emergency numbers listed on this page instead.",
-  "crisisChat.eyebrow": "Crisis chat · A supporter is online",
-  "crisisChat.hero.title": "You don't have to <em>hold this alone.</em>",
-  "crisisChat.hero.lead":
-    "A confidential chat with a trained queer peer supporter. No appointment, no referral, no judgement — just someone who will stay with you for as long as you need.",
-  "crisisChat.assurance.wait.n": "< 2 min",
-  "crisisChat.assurance.wait.label": "average wait for a peer supporter",
-  "crisisChat.assurance.trained.n": "Trained",
-  "crisisChat.assurance.trained.label": "queer volunteers, not a bot",
-  "crisisChat.assurance.confidential.n": "Confidential",
-  "crisisChat.assurance.confidential.label": "nothing is stored or shared",
-  "crisisChat.lines.heading": "If you're in immediate danger, call",
-  "crisisChat.lines.emergency.label": "Emergency services",
-  "crisisChat.lines.emergency.note": "Police, ambulance, fire — 24h, free",
-  "crisisChat.lines.sosVozAmiga.label": "SOS Voz Amiga",
-  "crisisChat.lines.sosVozAmiga.note":
-    "Crisis & suicide prevention · 16:00–24:00",
-  "crisisChat.lines.ilga.label": "ILGA Portugal helpline",
-  "crisisChat.lines.ilga.note": "LGBTQ+ crisis support",
-  "crisisChat.lines.sns24.label": "SNS 24 (Health line)",
-  "crisisChat.lines.sns24.note": "Medical advice & referral · 24h",
-  "crisisChat.chat.status": "Peer supporter · online now",
-  "crisisChat.chat.supporterLabel": "{name} · peer supporter",
-  "crisisChat.toast.typing":
-    "{name} is typing — a peer supporter will reply shortly.",
-  "crisisChat.opening.msg1":
-    "Hi, I'm Rui. I'm a trained volunteer and I'm here with you. There's no rush — we can take this at whatever pace feels okay.",
-  "crisisChat.opening.msg2":
-    "Whatever brought you here today, you don't have to explain it well. Just start wherever you want.",
-  "crisisChat.reply.thankYou":
-    "Thank you for telling me that. I'm here, and we'll stay with it together for as long as you need.",
-  "crisisChat.composer.placeholder": "Type whatever you can…",
-  "crisisChat.composer.ariaLabel": "Message",
-  "crisisChat.composer.sendCta": "Send",
-  "crisisChat.note":
-    "This is a prototype — messages aren't sent to a real person. In the live platform, nothing here is stored or shown on your profile.",
 
   // ── EmergencyPage.tsx ──────────────────────────────────────────────────
   "emergency.meta.title":

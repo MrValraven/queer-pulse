@@ -61,12 +61,6 @@ Disallow: /local/directory
 # site could send someone to a practitioner who does not exist. Unblock only
 # when the directory is backed by real, consented practitioner data.
 Disallow: /resources/therapists
-# /safety/crisis-chat advertises a staffed crisis line ("< 2 min" wait, "queer
-# volunteers, not a bot") but CrisisChatPage.tsx makes no network calls and its
-# data file calls the content "the prototype's canned opening messages".
-# Blocked so nobody in acute distress is routed to a service that does not
-# exist. Unblock only when the chat is genuinely staffed.
-Disallow: /safety/crisis-chat
 Disallow: /local/map
 Disallow: /business-directory
 Disallow: /spaces-map
@@ -164,12 +158,6 @@ Disallow: /local/directory
 # site could send someone to a practitioner who does not exist. Unblock only
 # when the directory is backed by real, consented practitioner data.
 Disallow: /resources/therapists
-# /safety/crisis-chat advertises a staffed crisis line ("< 2 min" wait, "queer
-# volunteers, not a bot") but CrisisChatPage.tsx makes no network calls and its
-# data file calls the content "the prototype's canned opening messages".
-# Blocked so nobody in acute distress is routed to a service that does not
-# exist. Unblock only when the chat is genuinely staffed.
-Disallow: /safety/crisis-chat
 Disallow: /local/map
 Disallow: /business-directory
 Disallow: /spaces-map

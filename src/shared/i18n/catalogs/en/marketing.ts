@@ -2463,9 +2463,9 @@ export const marketing: Catalog = {
   "getTheApp.features.quickExit.title": "Quick exit",
   "getTheApp.features.quickExit.desc":
     "Lives in the nav. One tap closes the app and switches to a neutral home screen. Always available.",
-  "getTheApp.features.crisisChat.title": "Crisis chat",
+  "getTheApp.features.crisisChat.title": "Crisis support",
   "getTheApp.features.crisisChat.desc":
-    "One tap from anywhere. Trained peer operators reply in < 90 seconds, 24/7. Works on patchy signal.",
+    "One tap from anywhere to the emergency helplines page — real numbers to call, no app required, works on patchy signal.",
   "getTheApp.features.gatherings.title": "Gatherings & RSVPs",
   "getTheApp.features.gatherings.desc":
     "RSVP in two taps. Tickets show as QR codes at the door. Calendar export to whatever you use.",

@@ -203,80 +203,6 @@ export const safety: Catalog = {
   "blockMute.blocked.reportNote":
     "Precisas de denunciar um comportamento prejudicial? <link>Fazer uma denúncia →</link>",
 
-  // ── LeavePage.tsx / LeaveScreens.tsx / leave.data.ts ──────────────────
-  "leave.meta.title": "Pausar ou eliminar a tua conta QueerPulse",
-  "leave.meta.description":
-    "Como fazer uma pausa na QueerPulse ou eliminar definitivamente a tua conta — o que é removido, o que é preservado, e uma opção de pausa mais suave se ainda não tens a certeza.",
-  "leave.backLink": "← Voltar às definições",
-  "leave.considering.title": "A <em>sair</em> da QueerPulse",
-  "leave.considering.sub":
-    "Lamentamos ver-te partir. Antes de eliminares a tua conta, queremos ter a certeza de que é a escolha certa — e que tens tudo o que precisas.",
-  "leave.deleted.label": "O que é eliminado",
-  "leave.deleted.profile": "O teu perfil, biografia e nome de exibição",
-  "leave.deleted.connections": "As tuas ligações e histórico de mensagens",
-  "leave.deleted.gatherings":
-    "O teu histórico de convívios e emblemas conquistados",
-  "leave.deleted.savedArticles":
-    "Os teus artigos guardados e histórico de leitura",
-  "leave.deleted.invites": "O teu histórico de convites e avais dados",
-  "leave.considering.privacyNote":
-    "Só mantemos dados anonimizados e agregados. Os teus dados pessoais são eliminados no prazo de 30 dias. <link>Lê a nossa Política de Privacidade →</link>",
-  "leave.considering.altLabel": "Pode haver uma opção mais suave",
-  "leave.considering.pauseTitle": "Faz uma pausa — até 6 meses",
-  "leave.considering.pauseDesc":
-    "O teu perfil torna-se privado, desapareces da pesquisa, e não são enviadas notificações. Tudo fica exatamente como o deixaste quando voltares.",
-  "leave.considering.pauseCta": "Pausar em vez disso",
-  "leave.considering.quietTitle": "Recua em silêncio — reduz a tua presença",
-  "leave.considering.quietDesc":
-    "Torna o teu perfil privado, silencia todas as notificações, e volta quando estiveres pronte. Sem pressão, sem temporizador, sem perguntas.",
-  "leave.considering.quietCta": "Ficar em silêncio em vez disso",
-  "leave.considering.stillWant": "Ainda queres eliminar a conta?",
-  "leave.considering.reasonPlaceholder":
-    "Opcional — conta-nos porque estás a sair. Lemos todas as respostas.",
-  "leave.considering.deleteCta": "Eliminar a minha conta",
-
-  "leave.pausing.backCta": "← Voltar",
-  "leave.pausing.title": "A pausar a tua <em>conta</em>",
-  "leave.pausing.sub":
-    "O teu perfil torna-se privado, sais dos resultados de pesquisa, e deixamos de enviar notificações. Tudo é preservado.",
-  "leave.duration.oneMonth": "1 mês",
-  "leave.duration.threeMonths": "3 meses",
-  "leave.duration.sixMonths": "6 meses",
-  "leave.duration.backOn": "De volta a {date}",
-  "leave.pausing.effectsLabel": "O que a pausa faz",
-  "leave.pausing.effects.profileInvisible":
-    "O teu perfil torna-se invisível para as outras pessoas",
-  "leave.pausing.effects.notInSearch":
-    "Não vais aparecer na pesquisa nem no diretório de pessoas",
-  "leave.pausing.effects.notificationsPaused":
-    "Todas as notificações ficam pausadas",
-  "leave.pausing.effects.dataPreserved":
-    "Todos os teus dados, emblemas e ligações são preservados",
-  "leave.pausing.effects.reactivateAnytime":
-    "Inicia sessão a qualquer momento para reativar de imediato",
-  "leave.pausing.pauseCta": "Pausar a minha conta",
-  "leave.pausing.deleteInsteadCta": "Na verdade, prefiro eliminar →",
-
-  "leave.paused.title": "A tua conta está <em>em repouso.</em>",
-  "leave.paused.sub":
-    "Agora estás invisível para as outras pessoas, e paramos todas as notificações. As tuas pessoas, os teus emblemas, o teu histórico — está tudo exatamente onde o deixaste. Volta assim que quiseres.",
-  "leave.paused.reactivateLabel": "Vais reativar automaticamente",
-  "leave.paused.comeBackCta": "Voltar mais cedo →",
-  "leave.paused.backToSettingsCta": "Voltar às definições",
-
-  "leave.confirmed.title": "Eliminação de conta <em>pedida</em>",
-  "leave.confirmed.sub":
-    "A tua conta vai ser totalmente eliminada no prazo de 30 dias. A tua sessão foi terminada e o teu perfil já não está visível.",
-  "leave.confirmed.timeline.submitted": "Pedido submetido",
-  "leave.confirmed.timeline.processing": "Em processamento",
-  "leave.confirmed.timeline.deleted": "Eliminada",
-  "leave.confirmed.cancelNote":
-    "Mudaste de ideias? Podes cancelar iniciando sessão novamente no prazo de 30 dias.",
-  "leave.confirmed.cancelCta": "Iniciar sessão para cancelar →",
-
-  "leave.toast.pauseFailed":
-    "Não conseguimos pausar a tua conta agora. Tenta novamente.",
-
   // ── AppealOutcomePage.tsx ──────────────────────────────────────────────
   "appeal.state.pending": "Pendente",
   "appeal.state.overturned": "Revertida",
@@ -316,49 +242,6 @@ export const safety: Catalog = {
   "appeal.upheld.contactNote":
     "Se acreditares que isto é um erro, podes contactar diretamente a nossa equipa de Confiança.",
   "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança →",
-
-  // ── CrisisChatPage.tsx / crisisChat.data.ts ────────────────────────────
-  "crisisChat.meta.title":
-    "Fala agora com uma pessoa apoiante: chat de crise LGBTQ+",
-  "crisisChat.meta.description":
-    "Um chat confidencial com uma pessoa apoiante entre pares, queer e com formação, sem necessidade de marcação. Se estás em perigo imediato, liga antes para os números de emergência listados nesta página.",
-  "crisisChat.eyebrow": "Chat de crise · Há uma pessoa apoiante online",
-  "crisisChat.hero.title": "Não precisas de <em>carregar isto sozinhe.</em>",
-  "crisisChat.hero.lead":
-    "Um chat confidencial com uma pessoa apoiante entre pares, queer e com formação. Sem marcação, sem referenciação, sem julgamento — só alguém que fica contigo pelo tempo que precisares.",
-  "crisisChat.assurance.wait.n": "< 2 min",
-  "crisisChat.assurance.wait.label":
-    "tempo médio de espera por uma pessoa apoiante",
-  "crisisChat.assurance.trained.n": "Com formação",
-  "crisisChat.assurance.trained.label": "voluntáries queer, não um robô",
-  "crisisChat.assurance.confidential.n": "Confidencial",
-  "crisisChat.assurance.confidential.label": "nada é guardado ou partilhado",
-  "crisisChat.lines.heading": "Se estás em perigo imediato, liga para",
-  "crisisChat.lines.emergency.label": "Serviços de emergência",
-  "crisisChat.lines.emergency.note":
-    "Polícia, ambulância, bombeiros — 24h, gratuito",
-  "crisisChat.lines.sosVozAmiga.label": "SOS Voz Amiga",
-  "crisisChat.lines.sosVozAmiga.note":
-    "Prevenção de crise e suicídio · 16h–24h",
-  "crisisChat.lines.ilga.label": "Linha de apoio da ILGA Portugal",
-  "crisisChat.lines.ilga.note": "Apoio de crise LGBTQ+",
-  "crisisChat.lines.sns24.label": "SNS 24 (Linha de Saúde)",
-  "crisisChat.lines.sns24.note": "Aconselhamento médico e referenciação · 24h",
-  "crisisChat.chat.status": "Pessoa apoiante entre pares · online agora",
-  "crisisChat.chat.supporterLabel": "{name} · pessoa apoiante entre pares",
-  "crisisChat.toast.typing":
-    "{name} está a escrever — uma pessoa apoiante vai responder em breve.",
-  "crisisChat.opening.msg1":
-    "Olá, sou o Rui. Sou voluntárie com formação e estou aqui contigo. Não há pressa — podemos ir ao ritmo que for confortável para ti.",
-  "crisisChat.opening.msg2":
-    "Seja o que for que te trouxe aqui hoje, não precisas de explicar bem. Começa onde quiseres.",
-  "crisisChat.reply.thankYou":
-    "Obrigade por me contares isso. Estou aqui, e vamos ficar com isto pelo tempo que precisares.",
-  "crisisChat.composer.placeholder": "Escreve o que conseguires…",
-  "crisisChat.composer.ariaLabel": "Mensagem",
-  "crisisChat.composer.sendCta": "Enviar",
-  "crisisChat.note":
-    "Isto é um protótipo — as mensagens não são enviadas a uma pessoa real. Na plataforma real, nada aqui é guardado ou mostrado no teu perfil.",
 
   // ── EmergencyPage.tsx ──────────────────────────────────────────────────
   "emergency.meta.title":

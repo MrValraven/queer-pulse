@@ -738,7 +738,7 @@ export const resources: Catalog = {
   "therapistProfilePage.sidebar.crisisHeading": "In crisis right now",
   "therapistProfilePage.sidebar.crisisText":
     "Therapy isn't the right path when you're in immediate danger. Use these instead — they're staffed for this.",
-  "therapistProfilePage.sidebar.crisisChatCta": "Open crisis chat",
+  "therapistProfilePage.sidebar.crisisChatCta": "Crisis support",
   "therapistProfilePage.sidebar.sosVozAmigaCta": "SOS Voz Amiga · 213 544 545",
 
   "therapistProfilePage.vouch.successAriaLabel": "Vouch received",

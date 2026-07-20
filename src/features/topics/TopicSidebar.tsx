@@ -66,7 +66,7 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
           <p>{t("topics:sidebar.crisis.body")}</p>
           <Button
             variant="primary"
-            to={linkToPath(routes.crisisChat)}
+            to={linkToPath(routes.emergency)}
             className={styles.crisisBtn}
           >
             {t("topics:sidebar.crisis.cta")}

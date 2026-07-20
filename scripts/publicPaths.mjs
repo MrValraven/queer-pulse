@@ -187,15 +187,10 @@ export const QUIET_PUBLIC_PATHS = [
   "/safety/legal",
   "/safety/report",
   "/safety/block-mute",
-  // NOTE: "/safety/crisis-chat" is deliberately ABSENT, pending a maintainer
-  // decision. The page advertises "< 2 min" wait and "queer volunteers, not a
-  // bot" and shows a scripted greeting from a named volunteer — but
-  // CrisisChatPage.tsx makes NO network calls of any kind, and
-  // crisisChat.data.ts describes its own content as "the prototype's canned
-  // opening messages". Indexing it would route people in acute distress to a
-  // crisis service that does not exist. Re-add ONLY when the chat is genuinely
-  // staffed, or once the page's claims are rewritten to match what it does.
-  "/safety/leave",
+  // NOTE: "/safety/crisis-chat" and "/safety/leave" were deleted outright
+  // (2026-07-20) — crisis-chat was a fake crisis-line mockup with no real
+  // backend, and leave duplicated /account/delete-account. Don't re-add
+  // either path here.
 
   // ── About / governance ───────────────────────────────────────────────────
   "/about",

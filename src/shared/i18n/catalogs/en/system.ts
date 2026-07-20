@@ -71,7 +71,7 @@ export const system: Catalog = {
     "The case file exists internally for 36 months. Your connections were notified you left, without reason. No member will know you were removed unless you tell them.",
   "accountBanned.whatNow.row4.title": "Crisis support remains available",
   "accountBanned.whatNow.row4.body":
-    "<crisisLink>Crisis chat</crisisLink> and the <wellbeingLink>resource library</wellbeingLink> are open to everyone, member or not.",
+    "<crisisLink>Crisis support</crisisLink> and the <wellbeingLink>resource library</wellbeingLink> are open to everyone, member or not.",
   "accountBanned.actions.appealCta": "File the appeal",
   "accountBanned.actions.eraseCta": "Request full data erasure",
   "accountBanned.foot":
@@ -136,7 +136,7 @@ export const system: Catalog = {
     "The full editorial archive is open · <a>browse →</a>",
   "geoRestricted.can.crisis.label": "Access crisis & safety resources",
   "geoRestricted.can.crisis.detail":
-    "Crisis chat, emergency guides, and harm-reduction docs · <a>open crisis chat →</a>",
+    "Emergency guides, helplines, and harm-reduction docs · <a>see emergency help →</a>",
   "geoRestricted.can.resources.label": "Browse vetted international resources",
   "geoRestricted.can.resources.detail":
     "Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <a>resource library →</a>",
@@ -249,15 +249,15 @@ export const system: Catalog = {
   "maintenance.affected.mobile": "Mobile app · same deployment",
   "maintenance.affected.email": "Email notifications · queued, sent after",
   "maintenance.affected.crisisChat":
-    "Crisis chat · <b>fully up</b> — backed by separate infrastructure",
+    "Crisis support · <b>fully up</b> — the emergency helplines page is a static page, always reachable",
   "maintenance.affected.emergencyPages":
     "Emergency & safety pages · <b>fully up</b> · cached worldwide",
   "maintenance.actions.statusCta": "Live status →",
-  "maintenance.actions.crisisCta": "Crisis chat (still on)",
+  "maintenance.actions.crisisCta": "Crisis support (still on)",
   "maintenance.meta.line1":
     "Follow along on <a>status.queerpulse.app</a> · we post a public retrospective every time.",
   "maintenance.meta.line2":
-    "Built by humans in Lisbon, who'd rather we ship slowly than break crisis chat.",
+    "Built by humans in Lisbon, who'd rather we ship slowly than break crisis support.",
 
   // ── OfflinePage.tsx ───────────────────────────────────────────────────────
   "offline.eyebrow": "No connection · cached version",
@@ -269,8 +269,8 @@ export const system: Catalog = {
   "offline.cached.ticket.sub": "{date} · Café Beirão · cached 3h ago",
   "offline.cached.map.label": "Safe-spaces map · Lisbon",
   "offline.cached.map.sub": "42 venues · updated {when}",
-  "offline.cached.crisisChat.label": "Crisis chat · SMS fallback",
-  "offline.cached.crisisChat.sub": "Will deliver as soon as signal returns",
+  "offline.cached.crisisChat.label": "Crisis support",
+  "offline.cached.crisisChat.sub": "Helplines & emergency numbers, no signal needed",
   "offline.cached.emergency.label": "Emergency contacts",
   "offline.cached.emergency.sub": "112 · SOS Voz Amiga · ILGA helpline",
   "offline.status": "Listening for signal",

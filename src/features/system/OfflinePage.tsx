@@ -70,7 +70,7 @@ function buildCached(t: TFunction, fmt: Formatters): CachedItem[] {
       ),
     },
     {
-      to: routes.crisisChat,
+      to: routes.emergency,
       label: t("system:offline.cached.crisisChat.label"),
       sub: t("system:offline.cached.crisisChat.sub"),
       icon: (

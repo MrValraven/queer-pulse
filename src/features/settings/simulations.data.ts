@@ -108,9 +108,9 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.appealOutcome,
       },
       {
-        title: "Crisis chat",
-        desc: "Preview the immediate-support chat available to members in distress.",
-        to: routes.crisisChat,
+        title: "Crisis support",
+        desc: "Preview the emergency helplines page shown to members in distress.",
+        to: routes.emergency,
       },
       {
         title: "Report a hate crime",
@@ -130,7 +130,7 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
       {
         title: "Leave the community",
         desc: "See the considered off-boarding flow for someone choosing to step away.",
-        to: routes.leave,
+        to: routes.deleteAccount,
       },
       {
         title: "Delete account",

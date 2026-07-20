@@ -1073,11 +1073,6 @@ const ReportPage = lazy(() =>
     default: m.ReportPage,
   })),
 );
-const LeavePage = lazy(() =>
-  import("../features/safety/LeavePage").then((m) => ({
-    default: m.LeavePage,
-  })),
-);
 const BlockMutePage = lazy(() =>
   import("../features/safety/BlockMutePage").then((m) => ({
     default: m.BlockMutePage,
@@ -1281,11 +1276,6 @@ const GatheringsPage = lazy(() =>
     default: m.GatheringsPage,
   })),
 );
-const CrisisChatPage = lazy(() =>
-  import("../features/safety/CrisisChatPage").then((m) => ({
-    default: m.CrisisChatPage,
-  })),
-);
 const VouchPage = lazy(() =>
   import("../features/members/VouchPage").then((m) => ({
     default: m.VouchPage,
@@ -1482,10 +1472,8 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/hate-crime", routes.hateCrime],
   ["/emergency", routes.emergency],
   ["/report", routes.report],
-  ["/leave", routes.leave],
   ["/block-mute", routes.blockMute],
   ["/appeal-outcome", routes.appealOutcome],
-  ["/crisis-chat", routes.crisisChat],
   // Work
   ["/jobs", routes.jobs],
   ["/housing", routes.housing],
@@ -1882,10 +1870,8 @@ export function AppRoutes() {
           <Route path={routes.spoonTheory} element={<SpoonTheoryPage />} />
           <Route path={routes.safety} element={<SafetyPage />} />
           <Route path={routes.report} element={<ReportPage />} />
-          <Route path={routes.leave} element={<LeavePage />} />
           <Route path={routes.blockMute} element={<BlockMutePage />} />
           <Route path={routes.appealOutcome} element={<AppealOutcomePage />} />
-          <Route path={routes.crisisChat} element={<CrisisChatPage />} />
 
           {/* Auth & onboarding — branded AuthLoader fallback per chunk */}
           <Route path={routes.signIn} element={auth(<SignInPage />)} />

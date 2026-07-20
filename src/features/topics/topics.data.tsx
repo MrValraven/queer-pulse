@@ -85,7 +85,7 @@ export interface Topic {
   topVoices: TopVoice[];
   /** Curated-resources panel — omitted on the generic fallback. */
   resources?: TopicResources;
-  /** Show the plum crisis-chat card in the sidebar. */
+  /** Show the plum crisis-support card (links to /safety/emergency) in the sidebar. */
   crisisCard: boolean;
   /** Total posts, for the "Load N older posts" affordance. */
   totalPosts: number;

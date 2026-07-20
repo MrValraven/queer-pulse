@@ -14,7 +14,7 @@ const CAN_DO = [
   {
     labelKey: "system:geoRestricted.can.crisis.label",
     detailKey: "system:geoRestricted.can.crisis.detail",
-    to: routes.crisisChat,
+    to: routes.emergency,
   },
   {
     labelKey: "system:geoRestricted.can.resources.label",

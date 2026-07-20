@@ -295,7 +295,7 @@ export const PARTNERS_A: Partner[] = [
       {
         date: "12 Jan 2026",
         title: "200th warm referral",
-        body: "The crisis-chat handoff passed 200 members connected to a clinician.",
+        body: "The peer-support referral programme passed 200 members connected to a clinician.",
         tint: "jade",
       },
       {

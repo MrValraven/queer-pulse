@@ -183,7 +183,7 @@ export function TherapistSidebar({
         <Button
           variant="primary"
           className={styles.crisisBtn}
-          to={routes.crisisChat}
+          to={routes.emergency}
         >
           {t("resources:therapistProfilePage.sidebar.crisisChatCta")}
         </Button>

@@ -2529,9 +2529,9 @@ export const marketing: Catalog = {
   "getTheApp.features.quickExit.title": "Saída rápida",
   "getTheApp.features.quickExit.desc":
     "Vive na navegação. Um toque fecha a aplicação e muda para um ecrã inicial neutro. Sempre disponível.",
-  "getTheApp.features.crisisChat.title": "Chat de crise",
+  "getTheApp.features.crisisChat.title": "Apoio em crise",
   "getTheApp.features.crisisChat.desc":
-    "Um toque, de qualquer lado. Pessoas de apoio entre pares respondem em menos de 90 segundos, 24 horas por dia. Funciona com sinal fraco.",
+    "Um toque, de qualquer lado, para a página de linhas de apoio de emergência — números reais para ligar, sem precisares de aplicação, funciona com sinal fraco.",
   "getTheApp.features.gatherings.title": "Encontros e confirmações",
   "getTheApp.features.gatherings.desc":
     "Confirma presença em dois toques. Os bilhetes aparecem como códigos QR à porta. Exportação de calendário para o que usares.",
