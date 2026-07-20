@@ -12,7 +12,7 @@ export default defineConfig({
       // the running page importing chunks the new build no longer has.
       // PwaUpdatePrompt surfaces a toast and reloads on the user's say-so.
       registerType: "prompt",
-      includeAssets: ["favicon.svg", "icons/apple-touch-icon-180.png"],
+      includeAssets: ["favicon.svg", "icons/apple-touch-icon-180-v2.png"],
       // The manifest lives here rather than in public/manifest.json so it stays
       // in one place alongside the icon list. public/manifest.json is deleted.
       manifest: {
@@ -30,19 +30,19 @@ export default defineConfig({
         background_color: "#f7f3ee",
         icons: [
           {
-            src: "/icons/icon-192.png",
+            src: "/icons/icon-192-v2.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon-512.png",
+            src: "/icons/icon-512-v2.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon-512-maskable.png",
+            src: "/icons/icon-512-maskable-v2.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",

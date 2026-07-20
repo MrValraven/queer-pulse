@@ -817,6 +817,11 @@ export const resources: Catalog = {
   // ── TransHealthcarePage ──────────────────────────────────────────────────
   // FLAGGED, partially swept — see sweep report. transHealthcare.data.ts's
   // ~26 procedural steps + CONTACTS stay English pending native review.
+  "transHealthcare.meta.title":
+    "Saúde trans em Lisboa: clínicas, mudança de nome e por onde começar",
+  "transHealthcare.meta.description":
+    "Um guia prático de saúde trans em Portugal — hormonoterapia no SNS e no privado, mudança legal de nome e de menção de sexo, e clínicos afirmativos em Lisboa.",
+
   "transHealthcare.hero.eyebrow": "Saúde Trans · Portugal",
   "transHealthcare.hero.titleLine1": "A tua jornada,",
   "transHealthcare.hero.titleLine2": "passo a passo.",

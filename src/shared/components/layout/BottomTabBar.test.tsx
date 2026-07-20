@@ -58,12 +58,16 @@ describe("BottomTabBar visibility", () => {
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 
-  it("renders five slots when installed on mobile", () => {
+  it("renders the public slots when installed on mobile", () => {
     renderBar();
     const bar = screen.getByRole("navigation");
-    // Four links plus the More button.
-    expect(bar.querySelectorAll("a")).toHaveLength(4);
+    // Three public links plus the More button — no sign-in tab, because the
+    // installed-mode app bar already carries sign-in.
+    expect(bar.querySelectorAll("a")).toHaveLength(3);
     expect(screen.getByRole("button", { name: /more/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /sign in/i }),
+    ).not.toBeInTheDocument();
   });
 });
 

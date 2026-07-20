@@ -1,0 +1,42 @@
+# QueerPulse
+
+> A quiet, vouched-for network for LGBTQ+ professionals, creatives and
+> community in Lisbon, Portugal. No ads, no algorithm. Membership is by
+> invitation from an existing member.
+
+QueerPulse runs a public-service surface that anyone may read, and a private
+member surface that requires an invitation. Only the public surface is listed
+here.
+
+## What is public
+
+- **Resources** (https://queerpulse.com/resources) — practical guides for queer
+  life in Lisbon: trans healthcare and name changes, LGBTQ+-affirming
+  therapists and paediatricians, sexual health, harm reduction, disability and
+  accessibility, ageing, peer support, and a glossary of terms.
+- **Safety** (https://queerpulse.com/safety) — crisis and emergency guidance,
+  reporting hate crime, legal rights in Portugal, and how to leave a situation
+  safely.
+- **Local guides** (https://queerpulse.com/local/safe-spaces) — arriving in
+  Lisbon, visas, housing, and safe spaces.
+- **About** (https://queerpulse.com/about) — the manifesto, governance,
+  constitution and transparency reporting.
+- **Policies** (https://queerpulse.com/policies/privacy) — privacy, terms,
+  cookies and community guidelines.
+
+## What is not public
+
+Member profiles, the feed, messages, gatherings and events, communities, the
+forum, the job board and the member directory are all private and require an
+invitation. Please do not attempt to index or summarise them.
+
+The magazine, cinema catalogue and studio are public to read but are
+deliberately excluded from search indexing. They are shared directly and by
+word of mouth rather than surfaced through search.
+
+## Usage
+
+Retrieval and citation with a link back to queerpulse.com is welcome. Use for
+model training is not permitted — see https://queerpulse.com/robots.txt.
+
+Contact: https://queerpulse.com/about/contact

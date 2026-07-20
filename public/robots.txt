@@ -1,9 +1,17 @@
 # QueerPulse robots policy
 #
-# Public marketing / magazine / cinema / resources / safety / policies stay
-# crawlable; the gated member surface is disallowed. The single source of truth
-# for public-vs-gated is GATED_PATTERNS in src/app/authGate.ts — keep the
-# Disallow list below in sync with it (and note the /studio public exceptions).
+# Posture: DELIBERATELY QUIET. Only the public-service surface is indexed —
+# resources, safety, about/governance, policies and the local arrival guides.
+# The magazine, cinema, studio, activism, archive and sustainer surfaces are
+# intentionally NOT indexed; they rely on word-of-mouth and direct sharing.
+# The gated member surface is disallowed outright.
+#
+# Sources of truth:
+#   - public-vs-gated: GATED_PATTERNS in src/app/authGate.ts
+#   - the indexed list: QUIET_PUBLIC_PATHS in scripts/publicPaths.mjs
+# Keep the Disallow list below in sync with both.
+#
+# See docs/superpowers/specs/2026-07-20-seo-and-ai-discoverability-design.md
 
 User-agent: *
 Allow: /
@@ -53,10 +61,6 @@ Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /cinema/watch
 Disallow: /cinema/membership
-
-# Studio: the public shopfront (/studio, /studio/about, /studio/press, etc.)
-# stays crawlable — only the member studio surfaces are gated.
-Allow: /studio
 Disallow: /studio/dashboard
 Disallow: /studio/library
 Disallow: /studio/upload
@@ -69,5 +73,100 @@ Disallow: /studio/receipt
 Disallow: /studio/calls
 Disallow: /studio/triage
 Disallow: /studio/council
+
+# --- Deliberately de-indexed public surfaces (word-of-mouth only) ---
+Disallow: /magazine
+Disallow: /cinema
+Disallow: /studio
+Disallow: /activism
+Disallow: /archive
+Disallow: /sustainer
+
+# ---------------------------------------------------------------------------
+# AI crawlers: allow RETRIEVAL, block TRAINING.
+#
+# Retrieval crawlers fetch a page at answer time and cite it with a link back,
+# so a person asking an AI for queer healthcare guidance in Lisbon can still be
+# pointed here — and the words stay on our domain. Training crawlers absorb
+# community writing into model weights without attribution; our members did not
+# consent to being training data.
+#
+# This is a statement of intent with partial enforcement: robots.txt is
+# voluntary, and Bytespider and some stealth crawlers are documented ignoring
+# it. It does not hide anything from a determined scraper.
+# ---------------------------------------------------------------------------
+
+# --- Retrieval / citation: allowed, but ONLY on the quiet public surface ---
+#
+# A crawler that matches a specific User-agent group obeys ONLY that group —
+# per-agent groups do NOT inherit the `User-agent: *` rules above. So these
+# agents must be given the full Disallow list again, or naming them here would
+# hand them the gated member surface. Stacking the User-agent lines applies one
+# rule block to all six, which keeps the list in a single place.
+
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Disallow: /account
+Disallow: /work
+Disallow: /economy
+Disallow: /admin
+Disallow: /mod
+Disallow: /feed
+Disallow: /search
+Disallow: /members
+Disallow: /member-directory-filter
+Disallow: /dating
+Disallow: /reading-groups
+Disallow: /family
+Disallow: /messages
+Disallow: /notifications
+Disallow: /mentions
+Disallow: /notification-deep-link
+Disallow: /communities
+Disallow: /community
+Disallow: /calendar
+Disallow: /events
+Disallow: /event
+Disallow: /gathering
+Disallow: /gatherings
+Disallow: /rsvp
+Disallow: /host
+Disallow: /create-gathering
+Disallow: /manage-gathering
+Disallow: /co-host-invite
+Disallow: /forum
+Disallow: /thread
+Disallow: /changemaker
+Disallow: /changemakers
+Disallow: /coming-out
+Disallow: /parents
+Disallow: /caregivers
+Disallow: /vouch
+Disallow: /qr-scanner
+Disallow: /local/directory
+Disallow: /local/map
+Disallow: /business-directory
+Disallow: /spaces-map
+Disallow: /magazine
+Disallow: /cinema
+Disallow: /studio
+Disallow: /activism
+Disallow: /archive
+Disallow: /sustainer
+Allow: /
+
+# --- Model training: blocked outright ---
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: CCBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: meta-externalagent
+User-agent: Bytespider
+Disallow: /
 
 Sitemap: https://queerpulse.com/sitemap.xml

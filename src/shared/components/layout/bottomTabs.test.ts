@@ -2,9 +2,13 @@ import { describe, expect, it } from "vitest";
 import { MEMBER_TABS, PUBLIC_TABS, activeTabKey } from "./bottomTabs";
 
 describe("tab sets", () => {
-  it("each carries four links, leaving the fifth slot for More", () => {
+  it("leaves the last slot for More", () => {
     expect(MEMBER_TABS).toHaveLength(4);
-    expect(PUBLIC_TABS).toHaveLength(4);
+    expect(PUBLIC_TABS).toHaveLength(3);
+  });
+
+  it("keeps sign-in out of the public set — the app bar owns it", () => {
+    expect(PUBLIC_TABS.some((tab) => tab.key === "signIn")).toBe(false);
   });
 
   it("uses unique keys within each set", () => {

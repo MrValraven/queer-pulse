@@ -3,7 +3,6 @@ import {
   FiBookOpen,
   FiCalendar,
   FiHome,
-  FiLogIn,
   FiMail,
   FiMapPin,
   FiUsers,
@@ -30,7 +29,10 @@ export interface BottomTab {
  * residence is an editorial decision, not a filter. Everything else stays
  * reachable through the "More" tab, which opens the same drawer NAV_MENUS feeds.
  *
- * Both sets hold four links; BottomTabBar renders "More" as the fifth slot.
+ * MEMBER_TABS holds four links; BottomTabBar renders "More" as the fifth slot.
+ * PUBLIC_TABS deliberately holds only three: signing in is the app bar's job
+ * (Navbar renders it in the installed-mode strip), and duplicating it at the
+ * bottom gave a logged-out visitor two sign-in affordances on one screen.
  */
 export const MEMBER_TABS: BottomTab[] = [
   {
@@ -84,13 +86,6 @@ export const PUBLIC_TABS: BottomTab[] = [
     href: routes.resources,
     icon: FiBookOpen,
     matchPrefixes: [routes.resources],
-  },
-  {
-    key: "signIn",
-    labelKey: "nav:signIn",
-    href: routes.signIn,
-    icon: FiLogIn,
-    matchPrefixes: [routes.signIn],
   },
 ];
 

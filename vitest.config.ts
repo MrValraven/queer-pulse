@@ -11,7 +11,12 @@ export default defineConfig({
     setupFiles: ["./src/test/setup.ts"],
     // Treat CSS-module imports as no-ops: we assert behaviour, not class strings.
     css: false,
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    // scripts/**/*.test.mjs covers the build-time generators (sitemap,
+    // prerender, the shared public-path list). They are plain .mjs run under
+    // node, not app code, but their correctness gates what ships to crawlers —
+    // a gated path leaking into the sitemap is a privacy bug, so they are
+    // tested alongside everything else rather than left unverified.
+    include: ["src/**/*.{test,spec}.{ts,tsx}", "scripts/**/*.test.mjs"],
     exclude: ["e2e/**", "node_modules/**", "dist/**"],
     // Default: demo mode explicitly opted into (VITE_DEMO=1) with no API URL =>
     // config.ts freezes apiAvailable=false => demo is forced on, so route and

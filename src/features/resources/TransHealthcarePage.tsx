@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  PageMeta,
+  JsonLd,
+  buildMedicalWebPageSchema,
+  buildBreadcrumbSchema,
+} from "../../shared/seo";
 import { PATHS } from "./transHealthcare.data";
 import {
   TransHealthcareHero,
@@ -14,9 +20,25 @@ export function TransHealthcarePage() {
   const { t } = useTranslation();
   const [active, setActive] = useState("hrt-sns");
   const path = PATHS.find((p) => p.id === active) ?? PATHS[0]!;
+  const pageTitle = t("resources:transHealthcare.meta.title");
+  const pageDescription = t("resources:transHealthcare.meta.description");
 
   return (
     <PageShell>
+      <PageMeta title={pageTitle} description={pageDescription} />
+      <JsonLd
+        schema={buildMedicalWebPageSchema({
+          name: pageTitle,
+          description: pageDescription,
+          path: "/resources/trans-healthcare",
+        })}
+      />
+      <JsonLd
+        schema={buildBreadcrumbSchema([
+          { name: t("nav:resources"), path: "/resources" },
+          { name: pageTitle, path: "/resources/trans-healthcare" },
+        ])}
+      />
       <TransHealthcareHero />
 
       <div className={styles.pathBar}>

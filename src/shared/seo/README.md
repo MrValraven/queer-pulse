@@ -15,7 +15,7 @@ export function MyPage() {
       <PageMeta
         title="My Page — QueerPulse"
         description="A one-line summary that unfurls on Slack/WhatsApp/X."
-        image="/og-default.svg" // optional; root-relative or absolute
+        image="/og-default.png" // optional; root-relative or absolute
       />
       {/* … */}
     </PageShell>

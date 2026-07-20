@@ -20,6 +20,29 @@
   flex-direction: column;
   gap: 4px;
   box-shadow: var(--shadow-panel);
+  /* The accordion sections expand in place, so the panel's content routinely
+     outgrows the viewport — and useScrollLock has already frozen the body, so
+     without this the overflow is simply unreachable. `contain` stops a
+     rubber-band at either end from chaining out to the locked page behind. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* A column flex container shrinks its children to fit before it will scroll.
+   Pinning every direct child at its natural height is what actually produces
+   the overflow `overflow-y: auto` then scrolls. */
+.panel > * {
+  flex: none;
+}
+
+/* Installed mode keeps the fixed tab bar painted above the drawer (z-index 100
+   vs the overlay's 99), so the last links would otherwise sit under it.
+   Mirrors the `main[data-page-main]` reservation in standalone.css. */
+@media (max-width: 860px) {
+  :global(html[data-display-mode="standalone"]) .panel {
+    padding-bottom: calc(28px + var(--tab-bar-h) + env(safe-area-inset-bottom));
+  }
 }
 .link {
   margin-top: 20px;

@@ -118,8 +118,13 @@ export function useDocumentMeta(meta: DocumentMeta): void {
       cleanups.push(upsertMeta("name", "robots", "noindex, nofollow"));
     }
 
+    // Signals scripts/prerender.mjs that this route's metadata has been
+    // applied and the DOM is safe to serialise. Harmless in the browser.
+    document.documentElement.dataset.prerenderReady = "true";
+
     return () => {
       document.title = previousTitle;
+      delete document.documentElement.dataset.prerenderReady;
       // Restore in reverse so overlapping tags unwind cleanly.
       for (let i = cleanups.length - 1; i >= 0; i--) cleanups[i]?.();
     };

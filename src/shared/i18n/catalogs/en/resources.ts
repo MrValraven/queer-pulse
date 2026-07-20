@@ -811,8 +811,13 @@ export const resources: Catalog = {
   // untranslated pending dedicated native review: this is the densest,
   // highest-precision medical/legal content in the namespace and a rushed
   // translation risks a subtly wrong wait-time or legal detail. Only the
-  // surrounding page chrome below (hero, tab labels, section headers,
+  // surrounding page chrome below (meta, hero, tab labels, section headers,
   // sidebar, outro) is translated.
+  "transHealthcare.meta.title":
+    "Trans healthcare in Lisbon: clinics, name changes and where to start",
+  "transHealthcare.meta.description":
+    "A practical guide to trans healthcare in Portugal — SNS and private HRT pathways, legal name and gender marker changes, and affirming clinicians in Lisbon.",
+
   "transHealthcare.hero.eyebrow": "Trans Healthcare · Portugal",
   "transHealthcare.hero.titleLine1": "Your journey,",
   "transHealthcare.hero.titleLine2": "step by step.",

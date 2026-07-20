@@ -12,10 +12,13 @@ import {
   SiBehance,
   SiBluesky,
   SiDribbble,
+  SiGoodreads,
+  SiLetterboxd,
   SiMastodon,
   SiTiktok,
   SiX,
 } from "react-icons/si";
+import { LuGamepad2 } from "react-icons/lu";
 
 /** A selectable platform in the social-links editor. `key` is stored on the
  *  `SocialLink`; `icon` renders it in read + edit mode; `placeholder` hints the
@@ -105,6 +108,31 @@ export const SOCIAL_PLATFORMS: SocialPlatform[] = [
     hrefPrefix: "https://www.tiktok.com/@",
   },
   {
+    key: "letterboxd",
+    label: "Letterboxd",
+    icon: SiLetterboxd,
+    placeholder: "letterboxd.com/you",
+    hrefPrefix: "https://letterboxd.com/",
+  },
+  {
+    key: "backloggd",
+    // No Backloggd mark in simple-icons yet — a neutral gamepad reads the
+    // category (games) without faking a brand logo.
+    label: "Backloggd",
+    icon: LuGamepad2,
+    placeholder: "backloggd.com/u/you",
+    hrefPrefix: "https://backloggd.com/u/",
+  },
+  {
+    key: "goodreads",
+    // Goodreads profile URLs are /user/show/<id>-<name>, so a bare handle can't
+    // be prefixed reliably — members paste the full path and the bare-domain
+    // rule in `socialHref` adds the scheme.
+    label: "Goodreads",
+    icon: SiGoodreads,
+    placeholder: "goodreads.com/user/show/…",
+  },
+  {
     key: "email",
     label: "Email",
     icon: FiMail,
@@ -127,19 +155,34 @@ export function socialPlatform(key: string): SocialPlatform {
   return BY_KEY[key] ?? BY_KEY.other!;
 }
 
+/** Host a `hrefPrefix` points at, without any "www." — e.g. "tiktok.com". */
+function prefixHost(hrefPrefix: string): string {
+  return new URL(hrefPrefix).host.replace(/^www\./i, "");
+}
+
 /** Turn a stored `urlOrHandle` into an `href`, or `undefined` if it can't be a
  *  link (e.g. a Mastodon "@a@b" address the member should just read). */
 export function socialHref(
   platform: string,
   value: string,
 ): string | undefined {
-  const v = value.trim();
-  if (!v) return undefined;
-  if (platform === "email") return `mailto:${v.replace(/^mailto:/, "")}`;
-  if (/^https?:\/\//i.test(v)) return v;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  if (platform === "email")
+    return `mailto:${trimmed.replace(/^mailto:/, "")}`;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
   const meta = socialPlatform(platform);
-  if (meta.hrefPrefix) return `${meta.hrefPrefix}${v.replace(/^@/, "")}`;
+  if (meta.hrefPrefix) {
+    // Members routinely paste the whole path ("github.com/you") into a field
+    // whose prefix already carries the host — prefixing again would yield
+    // "https://github.com/github.com/you". Treat it as a scheme-less URL.
+    const withoutWww = trimmed.replace(/^www\./i, "");
+    const host = prefixHost(meta.hrefPrefix);
+    if (withoutWww.toLowerCase().startsWith(`${host}/`))
+      return `https://${withoutWww}`;
+    return `${meta.hrefPrefix}${trimmed.replace(/^@/, "")}`;
+  }
   // Looks like a bare domain (has a dot, no spaces) → assume https.
-  if (/^[^\s@]+\.[^\s@]+$/.test(v)) return `https://${v}`;
+  if (/^[^\s@]+\.[^\s@]+$/.test(trimmed)) return `https://${trimmed}`;
   return undefined;
 }
