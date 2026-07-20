@@ -6,9 +6,13 @@
  * allow (OAI-SearchBot, Claude-SearchBot, PerplexityBot) do NOT execute
  * JavaScript at all — without this pass they receive an empty <div id="root">.
  *
- * HOW: serve dist/ on an ephemeral port, visit each quiet public path in the
- * headless Chromium already installed for the Playwright e2e suite, and write
- * the settled DOM to dist/<path>/index.html. Vercel serves directory indexes
+ * HOW: serve dist/ on an ephemeral port, visit each quiet public path in a
+ * headless Chromium, and write the settled DOM to dist/<path>/index.html.
+ * The browser binary is NOT a dependency of `pnpm install` — it is a separate
+ * download into $HOME/.cache/ms-playwright, so `pnpm build` runs
+ * `prerender:browser` (playwright install chromium --only-shell) first. Do not
+ * assume a developer's local e2e install is present; CI and Vercel start with
+ * an empty browser cache. Vercel serves directory indexes
  * natively, and vercel.json's rewrites only fire when no file matches — so
  * these files win, and the /(.*)->/ rule degrades into an SPA fallback for
  * gated routes.
