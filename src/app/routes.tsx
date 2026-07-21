@@ -1156,6 +1156,11 @@ const StatusPage = lazy(() =>
     default: m.StatusPage,
   })),
 );
+const GenesisPage = lazy(() =>
+  import("../features/system/GenesisPage").then((m) => ({
+    default: m.GenesisPage,
+  })),
+);
 const Studio404Page = lazy(() =>
   import("../features/studio/Studio404Page").then((m) => ({
     default: m.Studio404Page,
@@ -2267,6 +2272,7 @@ export function AppRoutes() {
             element={<VerificationNeededPage />}
           />
           <Route path={routes.status} element={<StatusPage />} />
+          <Route path={routes.genesis} element={<GenesisPage />} />
 
           {/* Newly built community / resource / support pages */}
           <Route path={routes.comingOut} element={<ComingOutPage />} />

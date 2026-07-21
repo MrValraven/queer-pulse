@@ -1,10 +1,14 @@
 /* QueerPulse — Typography tokens
    Two-font system: Fraunces (editorial serif) + DM Sans (UI sans).
-   Import both from Google Fonts before this file is consumed. */
+   Both are self-hosted; styles/fonts.css declares the @font-face rules. */
 :root {
-  /* ── Font families ── */
-  --serif: "Fraunces", Georgia, serif;
-  --sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  /* ── Font families ──
+     "… Variable" is the family name Fontsource registers for the variable-axis
+     builds — it is not interchangeable with the static "Fraunces"/"DM Sans",
+     which is why both are listed: the bare name still picks up a locally
+     installed copy before falling back to Georgia/system-ui. */
+  --serif: "Fraunces Variable", "Fraunces", Georgia, serif;
+  --sans: "DM Sans Variable", "DM Sans", system-ui, -apple-system, sans-serif;
 
   /* ── Fluid display scale (clamp) ── */
   --text-hero: clamp(50px, 8.2vw, 118px);

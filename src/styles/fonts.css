@@ -1,3 +1,30 @@
 /* QueerPulse — web fonts
-   Fraunces (editorial serif) + DM Sans (UI sans), matching the design bundle. */
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap");
+   Fraunces (editorial serif) + DM Sans (UI sans), matching the design bundle.
+
+   Self-hosted via Fontsource rather than fetched from Google Fonts. Three
+   reasons, in order of what they cost us when ignored:
+
+   1. CSP. The app ships a strict `style-src 'self' 'unsafe-inline'`
+      (vercel.json) and Google's stylesheet lives on fonts.googleapis.com, so
+      the browser blocked it outright and every page silently fell back to
+      Georgia/system-ui. Serving the CSS and the woff2 from our own origin
+      satisfies the policy as written; the alternative was allowlisting two more
+      third-party hosts.
+   2. Privacy. Google Fonts hands the visitor's IP to a third party on first
+      paint. For a queer community platform that is a real disclosure.
+   3. Performance. Drops a render-blocking DNS + TLS + round-trip to two extra
+      hosts (googleapis for the CSS, gstatic for the files) off the critical
+      path.
+
+   `opsz` builds deliberately: the previous Google request asked for
+   `ital,opsz,wght`, and nothing in the codebase sets `font-optical-sizing`, so
+   the browser's default `auto` applies the optical-size axis on its own. The
+   wght-only build would silently drop that — Fraunces is drawn to change
+   substantially across its 9..144 optical range. Fontsource registers these
+   under the family names "Fraunces Variable" / "DM Sans Variable"; keep them in
+   sync with --serif / --sans in tokens/typography.css. */
+
+@import "@fontsource-variable/fraunces/opsz.css";
+@import "@fontsource-variable/fraunces/opsz-italic.css";
+@import "@fontsource-variable/dm-sans/opsz.css";
+@import "@fontsource-variable/dm-sans/opsz-italic.css";

@@ -145,6 +145,8 @@ export const routes = {
   flatmates: "/local/housing/flatmates",
   forOrganisations: "/about/for-organisations",
   forum: "/forum",
+  /** One-time founder bootstrap. Public, and 404s from the API once used. */
+  genesis: "/genesis",
   gathering: "/gathering",
   gatherings: "/gatherings",
   gatheringCancelled: "/gathering-cancelled",
