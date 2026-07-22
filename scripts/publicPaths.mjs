@@ -180,26 +180,10 @@ export const QUIET_PUBLIC_PATHS = [
   "/resources/trans-hub",
   "/resources/wellbeing",
 
-  // ── Safety / crisis — public by design ───────────────────────────────────
-  "/safety",
-  "/safety/emergency",
-  "/safety/hate-crime",
-  "/safety/legal",
-  "/safety/report",
-  "/safety/block-mute",
-  // NOTE: "/safety/crisis-chat" and "/safety/leave" were deleted outright
-  // (2026-07-20) — crisis-chat was a fake crisis-line mockup with no real
-  // backend, and leave duplicated /account/delete-account. Don't re-add
-  // either path here.
-
   // ── About / governance ───────────────────────────────────────────────────
   "/about",
   "/about/manifesto",
   "/about/governance",
-  "/about/governance/code-of-conduct",
-  "/about/governance/constitution",
-  "/about/governance/transparency-report",
-  "/about/governance/annual-assembly",
   "/about/contact",
   "/about/roadmap",
   "/about/partners",
@@ -212,7 +196,6 @@ export const QUIET_PUBLIC_PATHS = [
   "/about/help/accessibility",
   "/about/volunteer",
   "/about/platforms",
-  "/about/get-the-app",
 
   // ── Policies ─────────────────────────────────────────────────────────────
   "/policies/privacy",
@@ -224,7 +207,6 @@ export const QUIET_PUBLIC_PATHS = [
   "/local/safe-spaces",
   "/local/arriving",
   "/local/visas",
-  "/local/housing",
 ];
 
 /**
