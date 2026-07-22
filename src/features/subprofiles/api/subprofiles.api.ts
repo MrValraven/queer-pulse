@@ -22,6 +22,12 @@ export type SubprofileKind =
   | "filmmaker"
   | "designer"
   | "maker"
+  | "drag"
+  | "dj"
+  | "dancer"
+  | "performer"
+  | "photographer"
+  | "videomaker"
   | "generic";
 
 export type SubprofileSection =
@@ -30,15 +36,23 @@ export type SubprofileSection =
   | "publications"
   | "readings" // writer
   | "discography"
-  | "gigs" // musician
+  | "gigs" // musician + dj
   | "portfolio"
-  | "exhibitions" // visual_artist
+  | "exhibitions" // visual_artist + photographer
   | "filmography"
-  | "screenings" // filmmaker
+  | "screenings" // filmmaker + videomaker
   | "selected_work"
   | "clients" // designer
   | "collections"
   | "workshops" // maker
+  | "shows"
+  | "looks" // drag
+  | "mixes" // dj
+  | "performances"
+  | "reel" // dancer + performer
+  | "appearances" // performer
+  | "series" // photographer
+  | "videos" // videomaker
   | "showcase" // generic
   | "links"; // every kind
 

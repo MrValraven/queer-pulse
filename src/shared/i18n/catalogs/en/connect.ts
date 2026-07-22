@@ -128,6 +128,8 @@ export const connect: Catalog = {
   "form.send": "Send",
   "form.sendError":
     "That didn't go through. Check your connection and try again.",
+  "form.rateLimitError":
+    "You're reaching out to a lot of people right now. Give it a minute, then try again.",
 
   // Success panel after sending (ConnectSentPanel)
   "sent.title": "Message <em>sent.</em>",
@@ -135,4 +137,26 @@ export const connect: Catalog = {
     "Your message to {name} is on its way. If they'd like to continue, they'll reply right here in your inbox.",
   "sent.close": "Close",
   "sent.autoClose": "Closing automatically in {seconds}s",
+
+  // Terminal notice panels (ConnectNoticePanel) — shown when a reach-out can't
+  // go through and retrying won't help. Copy stays warm and never reveals a
+  // block we weren't explicitly told about (see cannotConnect).
+  "notice.close": "Close",
+  "notice.alreadyPending.title": "You've already <em>reached out.</em>",
+  "notice.alreadyPending.body":
+    "Your message is already waiting with {name}. They'll open the conversation when they're ready — no need to send it again.",
+  "notice.alreadyConnected.title": "You're already <em>connected.</em>",
+  "notice.alreadyConnected.body":
+    "You and {name} are already connected. Open your messages to pick the conversation back up.",
+  "notice.youBlocked.title": "You <em>blocked</em> {name}.",
+  "notice.youBlocked.body":
+    "You'll need to unblock them before you can say hello. You can do that from their profile.",
+  "notice.notAccepting.title": "{name} isn't taking new <em>hellos</em> right now.",
+  "notice.notAccepting.body":
+    "They've paused new connection requests. You're welcome to try again another time.",
+  "notice.needsIntro.title": "{name} connects through <em>introductions.</em>",
+  "notice.needsIntro.body":
+    "They reach out through people they already know. Ask a mutual connection to introduce you.",
+  "notice.cannotConnect.title": "You can't reach {name} <em>right now.</em>",
+  "notice.cannotConnect.body": "This connection isn't available right now.",
 };

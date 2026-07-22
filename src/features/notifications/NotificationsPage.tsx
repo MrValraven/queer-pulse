@@ -8,22 +8,20 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../app/routeMap";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { useNotifications } from "./api/useNotifications";
+import { useMentions } from "./api/useMentions";
 import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
 import { useMarkAllRead } from "./api/useMarkAllRead";
 import { notificationTabs, type NotifType, type Notification } from "./data";
-import { MENTION_UNREAD_IDS } from "./mentions.data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./NotificationsPage.module.css";
 
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
 type NotificationId = Notification["id"];
 
-/** Unread @-mentions, from the same mock source the Mentions thread renders. */
-const unreadMentions = MENTION_UNREAD_IDS.length;
-
 export function NotificationsPage() {
   const { t } = useTranslation();
   const { data: notifications = [], isLoading } = useNotifications();
+  const { data: mentionDays = [] } = useMentions();
   const markReadMutation = useMarkNotificationRead();
   const markAllReadMutation = useMarkAllRead();
   const navigate = useNavigate();
@@ -45,6 +43,17 @@ export function NotificationsPage() {
   const unreadCount = visible.filter(
     (n) => n.unread && !readIds.has(n.id),
   ).length;
+
+  // Unread @-mentions for the "Mentions" tab badge — from the same demo/live
+  // source the Mentions thread renders, so it's 0 (hidden) in live mode until a
+  // backend endpoint exists rather than showing the mock count.
+  const unreadMentions = useMemo(
+    () =>
+      mentionDays
+        .flatMap((group) => group.items)
+        .filter((mention) => mention.unread).length,
+    [mentionDays],
+  );
 
   const recent = visible.slice(0, 7);
   const earlier = visible.slice(7);

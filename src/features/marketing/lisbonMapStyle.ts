@@ -1,6 +1,7 @@
 import type {
   StyleSpecification,
   LayerSpecification,
+  FilterSpecification,
 } from "maplibre-gl";
 
 // OpenFreeMap public vector style — no API key, no signup. Swapping to another
@@ -57,8 +58,63 @@ export async function buildWarmStyle(): Promise<StyleSpecification> {
   for (const layer of style.layers ?? []) {
     remapLayerFont(layer);
     recolorLayer(layer);
+    patchLayerFilter(layer);
   }
   return style;
+}
+
+// Comparison operators positron uses in layer filters. When one operand is a
+// value-typed `["get", …]` and the other a number literal, MapLibre wraps the
+// `get` in an implicit `["number", …]` assertion (see the expression compiler:
+// `"value"===s.type.kind && "value"!==o.type.kind ? new Assertion(o.type,[s])`).
+// That assertion THROWS "Expected value to be of type number, but found null
+// instead." for every feature missing the property — a benign but noisy console
+// warning. positron hits it on nullable OSM props: admin_level / maritime /
+// disputed on boundaries, rank on country labels, ref_length on road shields.
+const COMPARISON_OPERATORS = new Set(["==", "!=", "<", "<=", ">", ">="]);
+
+type FilterNode = unknown;
+
+// The property name of a bare `["get", "name"]` operand, else null (legacy
+// string-key filters and computed operands are left untouched).
+function comparedPropertyName(operand: FilterNode): string | null {
+  return Array.isArray(operand) &&
+    operand[0] === "get" &&
+    operand.length === 2 &&
+    typeof operand[1] === "string"
+    ? operand[1]
+    : null;
+}
+
+// Guard a numeric comparison with `has` so it is never evaluated on a missing
+// property (null in a vector tile ⇒ the key is absent). `all`/`any` short-
+// circuit at the leading `has`, so the throwing assertion is never reached.
+// Semantics are preserved: a missing property is neither equal to nor ordered
+// against a number, so "!=" stays true and every other comparison stays false.
+function guardNumericComparison(comparison: unknown[]): FilterNode {
+  const [operator, left, right] = comparison;
+  const propertyName =
+    comparedPropertyName(left) ?? comparedPropertyName(right);
+  const comparesToNumber =
+    typeof left === "number" || typeof right === "number";
+  if (!propertyName || !comparesToNumber) return comparison;
+  return operator === "!="
+    ? ["any", ["!", ["has", propertyName]], comparison]
+    : ["all", ["has", propertyName], comparison];
+}
+
+function makeFilterNullSafe(node: FilterNode): FilterNode {
+  if (!Array.isArray(node)) return node;
+  const operator = node[0];
+  if (typeof operator === "string" && COMPARISON_OPERATORS.has(operator)) {
+    return guardNumericComparison(node);
+  }
+  return node.map(makeFilterNullSafe);
+}
+
+function patchLayerFilter(layer: LayerSpecification): void {
+  if (!("filter" in layer) || layer.filter === undefined) return;
+  layer.filter = makeFilterNullSafe(layer.filter) as FilterSpecification;
 }
 
 function remapLayerFont(layer: LayerSpecification): void {

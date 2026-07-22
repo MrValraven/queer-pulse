@@ -1,7 +1,7 @@
 import { FiEdit3, FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
-import { socialHref, socialPlatform } from "./socialLinks.data";
+import { socialDisplayLabel, socialHref, socialPlatform } from "./socialLinks.data";
 import styles from "./ProfilePage.module.css";
 
 /**
@@ -36,7 +36,7 @@ export function SocialLinksRow({
         const meta = socialPlatform(link.platform);
         const Icon = meta.icon;
         const href = socialHref(link.platform, link.urlOrHandle);
-        const label = link.urlOrHandle.trim();
+        const label = socialDisplayLabel(link.platform, link.urlOrHandle);
         const inner = (
           <>
             <Icon aria-hidden />

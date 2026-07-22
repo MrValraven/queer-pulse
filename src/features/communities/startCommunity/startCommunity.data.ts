@@ -40,7 +40,7 @@ export interface CommunityDraft {
   tint: TintKey;
   tagline: string;
   /** Chapter 7 — people */
-  invites: string[]; // INVITE_CANDIDATES keys
+  invites: string[]; // member slugs of connections you're inviting
   /** Chapter 8 — confirm */
   handle: string;
   consent: boolean;
@@ -331,47 +331,6 @@ export const TINT_OPTIONS: TintOption[] = [
   { key: "coral", labelKey: "communities:start.tint.coral" },
   { key: "jade", labelKey: "communities:start.tint.jade" },
   { key: "plum", labelKey: "communities:start.tint.plum" },
-];
-
-/* ---------- Invite-seed candidates ---------- */
-
-export const INVITE_CANDIDATES: Steward[] = [
-  {
-    key: "sofia",
-    name: "Sofia Almeida",
-    initials: "SA",
-    tint: "jade",
-    role: "mod",
-  },
-  { key: "rui", name: "Rui Mendes", initials: "RM", tint: "plum", role: "mod" },
-  {
-    key: "tomas",
-    name: "Tomás Brito",
-    initials: "TB",
-    tint: "coral",
-    role: "mod",
-  },
-  {
-    key: "ana",
-    name: "Ana Quintela",
-    initials: "AQ",
-    tint: "jade",
-    role: "mod",
-  },
-  {
-    key: "camila",
-    name: "Camila Nunes",
-    initials: "CN",
-    tint: "coral",
-    role: "mod",
-  },
-  {
-    key: "bea",
-    name: "Beatriz Pinto",
-    initials: "BP",
-    tint: "plum",
-    role: "mod",
-  },
 ];
 
 /* ---------- Helpers ---------- */

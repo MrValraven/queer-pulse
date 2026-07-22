@@ -9,7 +9,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { currentUserSlug } from "../../members/data/members";
+import { useAuth } from "../../../app/providers/authContext";
 import { useCreateCommunity } from "../api/useCommunityMutations";
 import { draftToCreateDto } from "../api/communities.adapters";
 import { TOTAL_STEPS, type CreatedCommunity } from "./startCommunity.data";
@@ -80,6 +80,7 @@ export function StartCommunityPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const { createOwned } = useCommunityMembership();
   const create = useCreateCommunity();
 
@@ -127,7 +128,7 @@ export function StartCommunityPage() {
       return;
     }
     openTimer.current = setTimeout(() => {
-      const record = createCommunityRecord(draft, currentUserSlug);
+      const record = createCommunityRecord(draft, user?.profile.slug ?? "");
       createOwned(record.slug);
       setCreated(record);
       setPhase("done");

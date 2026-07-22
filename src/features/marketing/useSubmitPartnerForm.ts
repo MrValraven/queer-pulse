@@ -1,76 +1,70 @@
 import { useCallback, useState } from "react";
 import type { TFunction } from "../../shared/i18n/types";
 import type { CreatePartnerApplicationDto, Region } from "./api/partners.api";
-import { DEFAULT_REGION_LABEL_KEY } from "./submitPartnerApplication.data";
+import {
+  DEFAULT_REGION_LABEL_KEY,
+  DEFAULT_TIER,
+  EYEBROW_PREFIX,
+  MAX_TAGS,
+} from "./submitPartnerApplication.data";
 
 export interface SubmitPartnerState {
   name: string;
   logo: string;
+  /** True once the applicant manually edits the logo — stops auto-derivation. */
+  logoTouched: boolean;
   region: Region;
-  regionLabel: string;
   city: string;
-  desc: string;
-  tags: string;
-  tier: string;
-  since: string;
-  eyebrow: string;
+  /** The kind of organisation only; the "Partner · " eyebrow prefix is added on submit. */
+  orgType: string;
   tagline: string;
+  desc: string;
+  tags: Set<string>;
+  website: string;
+  email: string;
   /** Honeypot — real people leave it blank. */
   handle: string;
 }
 
-/** The fictional "current" year the demo/live app renders as — matches the
- * rest of the prototype's dated content. */
+/** The fictional "current" year the demo/live app renders as. */
 const CURRENT_YEAR = 2026;
 
-function buildEmptyState(t: TFunction): SubmitPartnerState {
+function buildEmptyState(): SubmitPartnerState {
   return {
     name: "",
     logo: "",
+    logoTouched: false,
     region: "pt",
-    regionLabel: t(DEFAULT_REGION_LABEL_KEY.pt),
     city: "",
-    desc: "",
-    tags: "",
-    tier: "",
-    since: t("marketing:submitPartner.form.sinceDefault", {
-      year: CURRENT_YEAR,
-    }),
-    eyebrow: "",
+    orgType: "",
     tagline: "",
+    desc: "",
+    tags: new Set(),
+    website: "",
+    email: "",
     handle: "",
   };
 }
 
-const splitCommas = (s: string) =>
-  s
-    .split(",")
-    .map((x) => x.trim())
-    .filter(Boolean);
+/**
+ * Badge initials from the organisation name: first letter of up to the first
+ * three significant words, uppercased, capped at the field's 5-char limit.
+ * "Casa T" → "CT"; "Casa Trans Lisboa" → "CTL".
+ */
+function deriveInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 3)
+    .map((word) => word[0]!.toUpperCase())
+    .join("")
+    .slice(0, 5);
+}
 
 /** Fields that must be filled before the application can be submitted. */
-export type RequiredField =
-  | "name"
-  | "logo"
-  | "regionLabel"
-  | "city"
-  | "desc"
-  | "tier"
-  | "since"
-  | "eyebrow"
-  | "tagline";
+export type RequiredField = "name" | "orgType" | "city" | "tagline" | "desc";
 
-const REQUIRED: RequiredField[] = [
-  "name",
-  "logo",
-  "regionLabel",
-  "city",
-  "desc",
-  "tier",
-  "since",
-  "eyebrow",
-  "tagline",
-];
+const REQUIRED: RequiredField[] = ["name", "orgType", "city", "tagline", "desc"];
 
 /**
  * State + payload builder for the "Apply to partner" form. Holds every field the
@@ -84,65 +78,83 @@ const REQUIRED: RequiredField[] = [
  * remounts, not on every render.
  */
 export function useSubmitPartnerForm(t: TFunction) {
-  const [state, setState] = useState<SubmitPartnerState>(() =>
-    buildEmptyState(t),
-  );
+  const [state, setState] = useState<SubmitPartnerState>(buildEmptyState);
   const [touched, setTouched] = useState(false);
 
   const set = useCallback(
     <K extends keyof SubmitPartnerState>(
       key: K,
       value: SubmitPartnerState[K],
-    ) => setState((s) => ({ ...s, [key]: value })),
+    ) => setState((previous) => ({ ...previous, [key]: value })),
     [],
   );
 
-  /** Changing region prefills the human label — unless the user customised it. */
-  const setRegion = useCallback(
-    (region: Region) => {
-      setState((s) => {
-        const defaultLabelsInActiveLanguage = Object.values(
-          DEFAULT_REGION_LABEL_KEY,
-        ).map((labelKey) => t(labelKey));
-        const untouchedLabel =
-          !s.regionLabel.trim() ||
-          defaultLabelsInActiveLanguage.includes(s.regionLabel.trim());
-        return {
-          ...s,
-          region,
-          regionLabel: untouchedLabel
-            ? t(DEFAULT_REGION_LABEL_KEY[region])
-            : s.regionLabel,
-        };
-      });
-    },
-    [t],
-  );
+  /** Name drives the derived logo until the applicant edits the logo directly. */
+  const setName = useCallback((value: string) => {
+    setState((previous) => ({
+      ...previous,
+      name: value,
+      logo: previous.logoTouched ? previous.logo : deriveInitials(value),
+    }));
+  }, []);
 
-  const missing = REQUIRED.filter((f) => !String(state[f]).trim());
+  const setLogo = useCallback((value: string) => {
+    setState((previous) => ({ ...previous, logo: value, logoTouched: true }));
+  }, []);
+
+  const setRegion = useCallback((region: Region) => {
+    setState((previous) => ({ ...previous, region }));
+  }, []);
+
+  const toggleTag = useCallback((value: string) => {
+    setState((previous) => {
+      const tags = new Set(previous.tags);
+      if (tags.has(value)) tags.delete(value);
+      else if (tags.size < MAX_TAGS) tags.add(value);
+      return { ...previous, tags };
+    });
+  }, []);
+
+  const missing = REQUIRED.filter((field) => !String(state[field]).trim());
   const valid = missing.length === 0;
 
-  const errorFor = (f: RequiredField): string | null => {
+  const errorFor = (field: RequiredField): string | null => {
     if (!touched) return null;
-    return missing.includes(f)
+    return missing.includes(field)
       ? t("marketing:submitPartner.fields.requiredError")
       : null;
   };
 
   const toDto = (): CreatePartnerApplicationDto => {
-    const tags = splitCommas(state.tags);
+    const tags = Array.from(state.tags);
+    const website = state.website.trim();
+    const email = state.email.trim();
+    const hasContact = Boolean(website || email);
     return {
       name: state.name.trim(),
-      logo: state.logo.trim(),
+      logo: state.logo.trim() || deriveInitials(state.name),
       region: state.region,
-      regionLabel: state.regionLabel.trim(),
+      regionLabel: t(DEFAULT_REGION_LABEL_KEY[state.region]),
       city: state.city.trim(),
       desc: state.desc.trim(),
-      tier: state.tier.trim(),
-      since: state.since.trim(),
-      eyebrow: state.eyebrow.trim(),
+      tier: DEFAULT_TIER,
+      since: t("marketing:submitPartner.form.sinceDefault", {
+        year: CURRENT_YEAR,
+      }),
+      eyebrow: `${EYEBROW_PREFIX}${state.orgType.trim()}`,
       tagline: state.tagline.trim(),
       ...(tags.length ? { tags } : {}),
+      ...(hasContact
+        ? {
+            contact: {
+              website: website || null,
+              email: email || null,
+              phone: null,
+              phoneNote: null,
+              address: null,
+            },
+          }
+        : {}),
       ...(state.handle.trim() ? { handle: state.handle.trim() } : {}),
     };
   };
@@ -150,7 +162,12 @@ export function useSubmitPartnerForm(t: TFunction) {
   return {
     state,
     set,
+    setName,
+    setLogo,
     setRegion,
+    toggleTag,
+    tagCount: state.tags.size,
+    tagsFull: state.tags.size >= MAX_TAGS,
     valid,
     errorFor,
     markTouched: () => setTouched(true),

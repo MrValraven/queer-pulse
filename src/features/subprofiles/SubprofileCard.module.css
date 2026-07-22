@@ -46,12 +46,6 @@
   color: var(--jade-ink);
 }
 
-.nameRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .name {
   font-family: var(--serif);
   font-weight: 400;

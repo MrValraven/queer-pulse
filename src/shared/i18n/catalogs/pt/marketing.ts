@@ -3337,47 +3337,38 @@ export const marketing: Catalog = {
 
   "submitPartner.fields.sectionOrg": "A tua organização",
   "submitPartner.fields.name.label": "Nome da organização",
-  "submitPartner.fields.name.placeholder": "ex.: Casa Arco",
-  "submitPartner.fields.logo.label": "Marca do logótipo",
-  "submitPartner.fields.logo.helper":
-    "Uma palavra curta ou iniciais mostradas no distintivo (ex.: “ILGA”, “CA”).",
-  "submitPartner.fields.logo.placeholder": "ex.: CA",
+  "submitPartner.fields.name.placeholder": "ex.: Casa T",
+  "submitPartner.fields.orgType.label": "Tipo de organização",
+  "submitPartner.fields.orgType.helper":
+    "Só o tipo de organização que são — o rótulo “Parceiro ·” é adicionado por nós.",
+  "submitPartner.fields.orgType.placeholder": "ex.: Clínica de saúde comunitária",
   "submitPartner.fields.city.label": "Cidade / base",
-  "submitPartner.fields.city.placeholder": "ex.: Porto",
+  "submitPartner.fields.city.placeholder": "ex.: Lisboa",
   "submitPartner.fields.region.label": "Região",
-  "submitPartner.fields.regionLabel.label": "Rótulo da região",
-  "submitPartner.fields.regionLabel.helper":
-    "Mostrado no cartão — substitui o padrão se preferires.",
-  "submitPartner.fields.regionLabel.placeholder": "ex.: Portugal",
+  "submitPartner.fields.logo.label": "Marca do logótipo",
+  "submitPartner.fields.logo.derivedHelper":
+    "Preenchido a partir do nome — edita se preferires definir a insígnia.",
+  "submitPartner.fields.logo.placeholder": "ex.: CT",
   "submitPartner.fields.sectionPitch": "A apresentação",
-  "submitPartner.fields.eyebrow.label": "Linha de abertura",
-  "submitPartner.fields.eyebrow.helper":
-    "Uma linha curta do tipo de parceria, ex.: “Parceiro · Apoio comunitário”.",
-  "submitPartner.fields.eyebrow.placeholder":
-    "ex.: Parceiro · Organização de defesa de direitos",
   "submitPartner.fields.tagline.label": "Frase-síntese",
   "submitPartner.fields.tagline.helper":
     "A frase única que resume o que fazem.",
   "submitPartner.fields.tagline.placeholder":
-    "Uma cozinha comunitária que decidiu que ninguém deveria passar frio ou fome à espera de uma cama segura.",
+    "Um espaço de acolhimento em Lisboa onde ninguém espera por cuidados sozinho.",
   "submitPartner.fields.desc.label": "Descrição breve",
   "submitPartner.fields.desc.helper":
-    "Uma ou duas frases mostradas no cartão de listagem.",
+    "Uma ou duas frases mostradas no cartão da listagem.",
   "submitPartner.fields.desc.placeholder":
-    "O que a tua organização faz, em linguagem simples, e a quem serve.",
+    "O que a organização faz, em linguagem simples, e quem serve em Lisboa.",
   "submitPartner.fields.tags.label": "Etiquetas",
-  "submitPartner.fields.tags.helper":
-    "Separadas por vírgulas — mostradas como chips no cartão.",
-  "submitPartner.fields.tags.placeholder":
-    "Habitação, Alimentação, Apoio direto",
-  "submitPartner.fields.sectionPartnering": "Como seria a parceria",
-  "submitPartner.fields.tier.label": "Nível de parceria",
-  "submitPartner.fields.tier.helper": "Como descreverias a relação.",
-  "submitPartner.fields.tier.placeholder": "ex.: Parceiro comunitário",
-  "submitPartner.fields.since.label": "Desde / estado",
-  "submitPartner.fields.since.helper":
-    "Uma linha de estado curta para o cartão.",
-  "submitPartner.fields.since.placeholder": "ex.: A candidatar · 2026",
+  "submitPartner.fields.tags.pickerHelper":
+    "Escolhe até 3 que se ajustem ao vosso trabalho.",
+  "submitPartner.fields.tags.count": "{count}/{max}",
+  "submitPartner.fields.sectionContact": "Como te contactar",
+  "submitPartner.fields.website.label": "Website",
+  "submitPartner.fields.website.placeholder": "ex.: casat.pt",
+  "submitPartner.fields.email.label": "Email de contacto",
+  "submitPartner.fields.email.placeholder": "ex.: ola@casat.pt",
   "submitPartner.fields.requiredError": "Este campo é obrigatório.",
   "submitPartner.form.sinceDefault": "A candidatar · {year}",
 

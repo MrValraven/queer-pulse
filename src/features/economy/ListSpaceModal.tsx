@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import type { CreateHousingListingBody } from "./api/housingListing.api";
+import { useSubmitHousingListing } from "./api/useSubmitHousingListing";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import styles from "./ApplicationModals.module.css";
 
 const SPACE_TYPES = [
@@ -18,9 +20,26 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
   const [area, setArea] = useState("");
   const [rent, setRent] = useState("");
   const [type, setType] = useState("");
-  const { sending, done, submit } = useSubmitFlow();
+  const [done, setDone] = useState(false);
+  const submitListing = useSubmitHousingListing();
+  const sending = submitListing.isPending;
   const valid =
     title.trim().length > 3 && area.trim().length > 1 && !!rent && !!type;
+
+  const handleSubmit = () => {
+    if (!valid) return;
+    const body: CreateHousingListingBody = {
+      type: type as CreateHousingListingBody["type"],
+      title: title.trim(),
+      city: area.trim(),
+      area: area.trim(),
+      rentEuros: Number(rent),
+    };
+    submitListing.mutate(body, {
+      onSuccess: () => setDone(true),
+      onError: () => setDone(true),
+    });
+  };
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -106,7 +125,7 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
               variant="primary"
               size="lg"
               disabled={!valid || sending}
-              onClick={() => valid && submit()}
+              onClick={handleSubmit}
             >
               {sending ? (
                 <Sending label={t("economy:listSpace.submitting")} />

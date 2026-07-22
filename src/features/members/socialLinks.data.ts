@@ -160,6 +160,50 @@ function prefixHost(hrefPrefix: string): string {
   return new URL(hrefPrefix).host.replace(/^www\./i, "");
 }
 
+/** Bare host of a URL or bare-domain value — no scheme, no "www.", no path.
+ *  e.g. "https://www.tiagocostadev.com/#/" → "tiagocostadev.com". */
+function domainOf(value: string): string | undefined {
+  const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    const host = new URL(withScheme).host.replace(/^www\./i, "");
+    return host || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** A short, human-friendly label for a stored link, for read-mode chips: the
+ *  bare handle for handle platforms ("https://github.com/you" → "you"), the
+ *  bare domain for a website or other link ("https://you.com/#/" → "you.com"),
+ *  the address for email. Falls back to the raw value when nothing tidier can
+ *  be derived (e.g. a Mastodon "@you@instance" address, which reads best whole). */
+export function socialDisplayLabel(platform: string, value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return trimmed;
+  if (platform === "email") return trimmed.replace(/^mailto:/i, "");
+  if (platform === "mastodon") return trimmed;
+
+  const meta = socialPlatform(platform);
+  if (meta.hrefPrefix) {
+    // Normalise to the resolved link, then strip the platform's own prefix so
+    // only the handle remains — whether the member pasted "@you", "you", or the
+    // whole "github.com/you" URL.
+    const href = socialHref(platform, trimmed);
+    if (href) {
+      const path = href.replace(/^https?:\/\/(www\.)?/i, "");
+      const prefixPath = meta.hrefPrefix.replace(/^https?:\/\/(www\.)?/i, "");
+      if (path.toLowerCase().startsWith(prefixPath.toLowerCase())) {
+        const handle = path.slice(prefixPath.length).replace(/\/+$/, "");
+        if (handle) return handle;
+      }
+    }
+    return trimmed.replace(/^@/, "");
+  }
+
+  // Prefix-less platforms (website, goodreads, other): show the bare domain.
+  return domainOf(trimmed) ?? trimmed;
+}
+
 /** Turn a stored `urlOrHandle` into an `href`, or `undefined` if it can't be a
  *  link (e.g. a Mastodon "@a@b" address the member should just read). */
 export function socialHref(

@@ -199,6 +199,10 @@
   font-weight: 600;
 }
 
+.cta {
+  margin-top: 14px;
+}
+
 :global([data-theme="dark"]) .panel {
   background: var(--paper);
   border-color: rgba(var(--cream-rgb), 0.12);

@@ -127,7 +127,7 @@ export function MembersTab({
         <p className={styles.showing}>
           {hasCount
             ? t("communities:detail.members.showingOf", {
-                shown: 8,
+                shown: members.length,
                 count: memberNum,
               })
             : t("communities:detail.members.showingCore")}

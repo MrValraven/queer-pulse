@@ -130,6 +130,8 @@ export const connect: Catalog = {
   "form.send": "Enviar",
   "form.sendError":
     "Não foi possível enviar. Verifica a ligação e tenta novamente.",
+  "form.rateLimitError":
+    "Estás a contactar muitas pessoas agora. Espera um minuto e tenta novamente.",
 
   // Painel de sucesso após o envio (ConnectSentPanel)
   "sent.title": "Mensagem <em>enviada.</em>",
@@ -137,4 +139,27 @@ export const connect: Catalog = {
     "A tua mensagem para {name} está a caminho. Se quiser continuar, essa pessoa responde-te aqui mesmo, na tua caixa de entrada.",
   "sent.close": "Fechar",
   "sent.autoClose": "A fechar automaticamente daqui a {seconds}s",
+
+  // Painéis de aviso terminais (ConnectNoticePanel) — mostrados quando um
+  // contacto não pode seguir e voltar a tentar não ajuda. O tom mantém-se
+  // caloroso e nunca revela um bloqueio que não nos foi indicado (ver
+  // cannotConnect).
+  "notice.close": "Fechar",
+  "notice.alreadyPending.title": "Já <em>lhe escreveste.</em>",
+  "notice.alreadyPending.body":
+    "A tua mensagem já está à espera de {name}. Vão abrir a conversa quando quiserem — não precisas de enviar outra vez.",
+  "notice.alreadyConnected.title": "Já estão <em>ligados.</em>",
+  "notice.alreadyConnected.body":
+    "Tu e {name} já estão ligados. Abre as mensagens para continuar a conversa.",
+  "notice.youBlocked.title": "<em>Bloqueaste</em> {name}.",
+  "notice.youBlocked.body":
+    "Precisas de desbloquear esta pessoa antes de dizer olá. Podes fazê-lo no perfil dela.",
+  "notice.notAccepting.title": "{name} não está a aceitar novos <em>pedidos</em> agora.",
+  "notice.notAccepting.body":
+    "Colocaram os pedidos de contacto em pausa. Podes tentar noutra altura.",
+  "notice.needsIntro.title": "{name} liga-se através de <em>apresentações.</em>",
+  "notice.needsIntro.body":
+    "Chegam a novas pessoas através de quem já conhecem. Pede a uma ligação em comum para te apresentar.",
+  "notice.cannotConnect.title": "Não consegues contactar {name} <em>agora.</em>",
+  "notice.cannotConnect.body": "Este contacto não está disponível de momento.",
 };

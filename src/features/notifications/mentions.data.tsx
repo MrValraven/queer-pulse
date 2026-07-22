@@ -12,17 +12,12 @@ export type MentionTabId = "all" | "unread" | "posts" | "articles" | "events";
 export const MENTION_TAB_DEFS: {
   id: MentionTabId;
   labelKey: string;
-  count: number;
 }[] = [
-  { id: "all", labelKey: "notifications:mentions.tabs.all", count: 8 },
-  { id: "unread", labelKey: "notifications:mentions.tabs.unread", count: 3 },
-  { id: "posts", labelKey: "notifications:mentions.tabs.posts", count: 4 },
-  {
-    id: "articles",
-    labelKey: "notifications:mentions.tabs.articles",
-    count: 2,
-  },
-  { id: "events", labelKey: "notifications:mentions.tabs.events", count: 2 },
+  { id: "all", labelKey: "notifications:mentions.tabs.all" },
+  { id: "unread", labelKey: "notifications:mentions.tabs.unread" },
+  { id: "posts", labelKey: "notifications:mentions.tabs.posts" },
+  { id: "articles", labelKey: "notifications:mentions.tabs.articles" },
+  { id: "events", labelKey: "notifications:mentions.tabs.events" },
 ];
 
 /** What a mention row is "about", for tab filtering — kept separate from the
@@ -256,12 +251,6 @@ const MENTION_SEEDS: MentionSeed[] = [
     day: "thisWeek",
   },
 ];
-
-/** Ids of mentions that start unread — exported so callers (the bell badge on
- * `NotificationsPage`) can count without needing `t`/`fmt`. */
-export const MENTION_UNREAD_IDS = MENTION_SEEDS.filter((m) => m.unread).map(
-  (m) => m.id,
-);
 
 /**
  * Build the day-grouped mention list. A function of `t` + `fmt` (Pattern B):

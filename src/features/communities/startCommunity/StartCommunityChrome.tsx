@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, type CSSProperties } from "react";
 import { FiAlertCircle, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
@@ -20,7 +20,10 @@ export function FoundingThread({
   const currentThread = current ? t(current.threadKey) : "";
   return (
     <div className={styles.threadWrap}>
-      <div className={styles.thread}>
+      <div
+        className={styles.thread}
+        style={{ "--thread-steps": TOTAL_STEPS } as CSSProperties}
+      >
         <span
           className={styles.threadFill}
           style={{ transform: `scaleX(${fill / 100})` }}

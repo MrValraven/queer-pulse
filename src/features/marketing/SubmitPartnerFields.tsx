@@ -1,14 +1,24 @@
-import { FormField } from "../../shared/components/ui";
+import { FormField, FilterChips, ChipSelect } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Region } from "./api/partners.api";
 import type { SubmitPartnerForm } from "./useSubmitPartnerForm";
-import { REGION_OPTIONS } from "./submitPartnerApplication.data";
+import {
+  MAX_TAGS,
+  REGION_OPTIONS,
+  TAG_OPTIONS,
+} from "./submitPartnerApplication.data";
 import styles from "./SubmitPartnerApplicationPage.module.css";
 
 /** All the fields of the "Apply to partner" application form. */
 export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
   const { t } = useTranslation();
-  const { state, set, setRegion, errorFor } = form;
+  const { state, set, setName, setLogo, setRegion, toggleTag, errorFor } = form;
+
+  const regionOptions = REGION_OPTIONS.map((option) => ({
+    value: option.value,
+    label: t(option.labelKey),
+  }));
+
   return (
     <>
       <div className={styles.sectionHead}>
@@ -23,27 +33,26 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
         <input
           type="text"
           value={state.name}
-          onChange={(e) => set("name", e.target.value)}
+          onChange={(event) => setName(event.target.value)}
           placeholder={t("marketing:submitPartner.fields.name.placeholder")}
         />
       </FormField>
 
-      <div className={styles.row}>
-        <FormField
-          label={t("marketing:submitPartner.fields.logo.label")}
-          required
-          error={errorFor("logo")}
-          helper={t("marketing:submitPartner.fields.logo.helper")}
-        >
-          <input
-            type="text"
-            value={state.logo}
-            onChange={(e) => set("logo", e.target.value)}
-            placeholder={t("marketing:submitPartner.fields.logo.placeholder")}
-            maxLength={5}
-          />
-        </FormField>
+      <FormField
+        label={t("marketing:submitPartner.fields.orgType.label")}
+        required
+        error={errorFor("orgType")}
+        helper={t("marketing:submitPartner.fields.orgType.helper")}
+      >
+        <input
+          type="text"
+          value={state.orgType}
+          onChange={(event) => set("orgType", event.target.value)}
+          placeholder={t("marketing:submitPartner.fields.orgType.placeholder")}
+        />
+      </FormField>
 
+      <div className={styles.row}>
         <FormField
           label={t("marketing:submitPartner.fields.city.label")}
           required
@@ -52,63 +61,38 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
           <input
             type="text"
             value={state.city}
-            onChange={(e) => set("city", e.target.value)}
+            onChange={(event) => set("city", event.target.value)}
             placeholder={t("marketing:submitPartner.fields.city.placeholder")}
           />
         </FormField>
-      </div>
 
-      <div className={styles.row}>
-        <FormField
-          label={t("marketing:submitPartner.fields.region.label")}
-          required
-        >
-          <select
+        <FormField label={t("marketing:submitPartner.fields.region.label")}>
+          <FilterChips
+            options={regionOptions}
             value={state.region}
-            onChange={(e) => setRegion(e.target.value as Region)}
-          >
-            {REGION_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
-        </FormField>
-
-        <FormField
-          label={t("marketing:submitPartner.fields.regionLabel.label")}
-          required
-          error={errorFor("regionLabel")}
-          helper={t("marketing:submitPartner.fields.regionLabel.helper")}
-        >
-          <input
-            type="text"
-            value={state.regionLabel}
-            onChange={(e) => set("regionLabel", e.target.value)}
-            placeholder={t(
-              "marketing:submitPartner.fields.regionLabel.placeholder",
-            )}
+            onChange={(value) => setRegion(value as Region)}
+            label={t("marketing:submitPartner.fields.region.label")}
           />
         </FormField>
       </div>
+
+      <FormField
+        className={styles.logoField}
+        label={t("marketing:submitPartner.fields.logo.label")}
+        helper={t("marketing:submitPartner.fields.logo.derivedHelper")}
+      >
+        <input
+          type="text"
+          value={state.logo}
+          onChange={(event) => setLogo(event.target.value)}
+          placeholder={t("marketing:submitPartner.fields.logo.placeholder")}
+          maxLength={5}
+        />
+      </FormField>
 
       <div className={styles.sectionHead}>
         {t("marketing:submitPartner.fields.sectionPitch")}
       </div>
-
-      <FormField
-        label={t("marketing:submitPartner.fields.eyebrow.label")}
-        required
-        error={errorFor("eyebrow")}
-        helper={t("marketing:submitPartner.fields.eyebrow.helper")}
-      >
-        <input
-          type="text"
-          value={state.eyebrow}
-          onChange={(e) => set("eyebrow", e.target.value)}
-          placeholder={t("marketing:submitPartner.fields.eyebrow.placeholder")}
-        />
-      </FormField>
 
       <FormField
         label={t("marketing:submitPartner.fields.tagline.label")}
@@ -119,7 +103,7 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
         <textarea
           rows={2}
           value={state.tagline}
-          onChange={(e) => set("tagline", e.target.value)}
+          onChange={(event) => set("tagline", event.target.value)}
           placeholder={t("marketing:submitPartner.fields.tagline.placeholder")}
         />
       </FormField>
@@ -133,53 +117,47 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
         <textarea
           rows={3}
           value={state.desc}
-          onChange={(e) => set("desc", e.target.value)}
+          onChange={(event) => set("desc", event.target.value)}
           placeholder={t("marketing:submitPartner.fields.desc.placeholder")}
         />
       </FormField>
 
       <FormField
         label={t("marketing:submitPartner.fields.tags.label")}
-        helper={t("marketing:submitPartner.fields.tags.helper")}
+        helper={t("marketing:submitPartner.fields.tags.pickerHelper")}
+        labelAside={t("marketing:submitPartner.fields.tags.count", {
+          count: form.tagCount,
+          max: MAX_TAGS,
+        })}
       >
-        <input
-          type="text"
-          value={state.tags}
-          onChange={(e) => set("tags", e.target.value)}
-          placeholder={t("marketing:submitPartner.fields.tags.placeholder")}
+        <ChipSelect
+          options={TAG_OPTIONS}
+          selected={state.tags}
+          onToggle={toggleTag}
+          label={t("marketing:submitPartner.fields.tags.label")}
         />
       </FormField>
 
       <div className={styles.sectionHead}>
-        {t("marketing:submitPartner.fields.sectionPartnering")}
+        {t("marketing:submitPartner.fields.sectionContact")}
       </div>
 
       <div className={styles.row}>
-        <FormField
-          label={t("marketing:submitPartner.fields.tier.label")}
-          required
-          error={errorFor("tier")}
-          helper={t("marketing:submitPartner.fields.tier.helper")}
-        >
+        <FormField label={t("marketing:submitPartner.fields.website.label")}>
           <input
             type="text"
-            value={state.tier}
-            onChange={(e) => set("tier", e.target.value)}
-            placeholder={t("marketing:submitPartner.fields.tier.placeholder")}
+            value={state.website}
+            onChange={(event) => set("website", event.target.value)}
+            placeholder={t("marketing:submitPartner.fields.website.placeholder")}
           />
         </FormField>
 
-        <FormField
-          label={t("marketing:submitPartner.fields.since.label")}
-          required
-          error={errorFor("since")}
-          helper={t("marketing:submitPartner.fields.since.helper")}
-        >
+        <FormField label={t("marketing:submitPartner.fields.email.label")}>
           <input
-            type="text"
-            value={state.since}
-            onChange={(e) => set("since", e.target.value)}
-            placeholder={t("marketing:submitPartner.fields.since.placeholder")}
+            type="email"
+            value={state.email}
+            onChange={(event) => set("email", event.target.value)}
+            placeholder={t("marketing:submitPartner.fields.email.placeholder")}
           />
         </FormField>
       </div>
@@ -192,7 +170,7 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
         autoComplete="off"
         aria-hidden
         value={state.handle}
-        onChange={(e) => set("handle", e.target.value)}
+        onChange={(event) => set("handle", event.target.value)}
       />
     </>
   );

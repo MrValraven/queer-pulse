@@ -9,7 +9,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAllCommunities } from "./useAllCommunities";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import { JoinModal } from "./JoinModal";
-import { membersFor, type Thread as ThreadData } from "./communityDetails";
+import type { Person } from "./communityDetails";
 import { useCommunity } from "./api/useCommunity";
 import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
@@ -84,32 +84,13 @@ export function CommunityDetailPage() {
 
   const memberNum = parseInt(community.count, 10);
   const hasCount = !Number.isNaN(memberNum);
-  const members = membersFor(slug!.length, 8);
+  // The real roster: live mode fetches it, flagship demo communities supply it,
+  // and a just-founded community has only its founder — so fall back to the
+  // organiser rather than fabricating a crowd that isn't there.
+  const members: Person[] = roster.length > 0 ? roster : [detail.organiser];
   const heroAvatars = members.slice(0, 5);
 
-  const welcome: ThreadData = {
-    votes: 38,
-    title: t("communities:detail.welcomeThread.title"),
-    author: detail.organiser,
-    time: "2 weeks ago",
-    replyCount: 18,
-    post: t("communities:detail.welcomeThread.post", { name: community.name }),
-    replies: [
-      {
-        initials: members[6]!.initials,
-        name: members[6]!.name,
-        tint: members[6]!.tint,
-        text: "Hello! Just moved to Lisbon and this is the first thing I've joined. Already feels like the right call.",
-      },
-      {
-        initials: members[4]!.initials,
-        name: members[4]!.name,
-        tint: members[4]!.tint,
-        text: "Welcome! Come to the next one — easiest way in is just to show up.",
-      },
-    ],
-  };
-  const threads = [detail.topicThread, welcome];
+  const threads = [detail.topicThread];
   const related = allCommunities
     .filter((c) => c.slug !== slug && !c.privateBadge)
     .slice(0, 3);

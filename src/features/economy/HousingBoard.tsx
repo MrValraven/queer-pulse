@@ -3,8 +3,8 @@ import { Reveal, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { HOUSING_LISTINGS as LISTINGS } from "./housingListings";
 import { FILTERS, HOUSING_SUBPAGES } from "./housing.data";
+import { useHousingListings } from "./api/useHousingListings";
 import { HousingListingGrid } from "./HousingListingGrid";
 import { HousingLandlords, HousingTips } from "./HousingSections";
 import { ListSpaceModal } from "./ListSpaceModal";
@@ -25,10 +25,7 @@ export function HousingBoard() {
       })),
     [t],
   );
-  // The housing board has no live backend yet, so real listings/endorsements
-  // only exist in demo mode ("Populate platform"). Live mode shows the empty
-  // board rather than mock members' spaces.
-  const source = demoMode ? LISTINGS : [];
+  const { data: source = [] } = useHousingListings(filter);
   // With nothing on the board, the type filters have nothing to act on — hide
   // them and let the empty state carry the single call to action.
   const boardEmpty = source.length === 0;

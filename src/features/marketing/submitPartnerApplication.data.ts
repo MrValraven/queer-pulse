@@ -11,12 +11,54 @@ export const REGION_OPTIONS: { value: Region; labelKey: string }[] = [
   { value: "int", labelKey: "marketing:submitPartner.region.int" },
 ];
 
-/** The default human `regionLabel` key prefilled per region (user can override). */
+/** The human `regionLabel` key synthesized per region in `toDto()` at submit time. */
 export const DEFAULT_REGION_LABEL_KEY: Record<Region, string> = {
   pt: "marketing:submitPartner.region.pt",
   eu: "marketing:submitPartner.region.eu",
   int: "marketing:submitPartner.region.int",
 };
+
+/**
+ * Curated tag vocabulary for the apply form's chip picker. Stored value === the
+ * displayed label (English, shown as-is on the public card like every other
+ * partner tag — tags are content, not a translated enum, so they are never run
+ * through i18n). Grounded in the tags real partners already use.
+ */
+export const TAG_OPTIONS: readonly string[] = [
+  "Rights",
+  "Legal",
+  "Crisis support",
+  "Mental health",
+  "Peer support",
+  "Health",
+  "Trans care",
+  "Therapy",
+  "Youth",
+  "Trans rights",
+  "Activism",
+  "Migration",
+  "Refugees",
+  "Housing",
+  "Food",
+  "Drop-in",
+  "Culture",
+  "Education",
+  "Funder",
+  "Network",
+];
+
+/** Most tags a card renders cleanly — the picker caps selection here. */
+export const MAX_TAGS = 3;
+
+/** The eyebrow shown on the card is `Partner · <the type the applicant typed>`. */
+export const EYEBROW_PREFIX = "Partner · ";
+
+/**
+ * Pending applications carry a neutral default tier. The real partnership tier
+ * ("Founding partner", "Health partner", …) is assigned by the team at approval,
+ * NOT self-declared by the applicant.
+ */
+export const DEFAULT_TIER = "Community partner";
 
 /** Tips shown in the sidebar while filling out the application. */
 export const APPLY_TIPS: { titleKey: string; bodyKey: string }[] = [

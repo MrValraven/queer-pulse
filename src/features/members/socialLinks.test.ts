@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { socialHref } from "./socialLinks.data";
+import { socialDisplayLabel, socialHref } from "./socialLinks.data";
 
 describe("socialHref", () => {
   it("prefixes a bare handle", () => {
@@ -49,5 +49,37 @@ describe("socialHref", () => {
   it("returns undefined when the value can't be a link", () => {
     expect(socialHref("mastodon", "@you@instance.social")).toBeUndefined();
     expect(socialHref("website", "   ")).toBeUndefined();
+  });
+});
+
+describe("socialDisplayLabel", () => {
+  it("shows only the handle for handle platforms", () => {
+    expect(socialDisplayLabel("github", "https://github.com/MrValraven")).toBe(
+      "MrValraven",
+    );
+    expect(socialDisplayLabel("github", "github.com/MrValraven")).toBe(
+      "MrValraven",
+    );
+    expect(socialDisplayLabel("instagram", "@mrvalraven")).toBe("mrvalraven");
+    expect(socialDisplayLabel("instagram", "mrvalraven")).toBe("mrvalraven");
+    expect(socialDisplayLabel("tiktok", "www.tiktok.com/@joao")).toBe("joao");
+  });
+
+  it("shows only the domain for a website", () => {
+    expect(
+      socialDisplayLabel("website", "https://www.tiagocostadev.com/#/"),
+    ).toBe("tiagocostadev.com");
+    expect(socialDisplayLabel("website", "tiagocostadev.com")).toBe(
+      "tiagocostadev.com",
+    );
+  });
+
+  it("strips mailto for email and leaves a Mastodon address whole", () => {
+    expect(socialDisplayLabel("email", "mailto:you@email.com")).toBe(
+      "you@email.com",
+    );
+    expect(socialDisplayLabel("mastodon", "@you@instance.social")).toBe(
+      "@you@instance.social",
+    );
   });
 });

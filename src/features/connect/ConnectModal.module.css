@@ -184,6 +184,19 @@
     opacity: 1;
   }
 }
+/* Terminal-notice mark — same pop as the success tick, but a calm cream-tinted
+   circle rather than the jade success wash. */
+.noticeIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(var(--cream-rgb), 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 22px;
+  animation: connectPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
 /* Draw the checkmark on after the icon pops in */
 .tyCheck {
   stroke-dasharray: 24;
@@ -283,6 +296,7 @@
 @media (prefers-reduced-motion: reduce) {
   .modal,
   .tyIcon,
+  .noticeIcon,
   .tyCheck,
   .sent h2,
   .sent p,

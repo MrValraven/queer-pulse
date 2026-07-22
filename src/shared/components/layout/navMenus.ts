@@ -19,6 +19,12 @@ export interface MegaColumn {
   /** Catalog key for the column heading — resolve with `t()`. */
   headKey: string;
   links: MegaLink[];
+  /**
+   * Optional call-to-action rendered as a `<Button>` beneath the column's
+   * links, foregrounding the column's primary "do" action (e.g. hosting a
+   * gathering) instead of burying it as one more plain text link.
+   */
+  cta?: MegaLink;
 }
 
 /** Promo cell shown on the left of each mega panel, foregrounding the menu's hero destination. */
@@ -75,8 +81,10 @@ export function filterMenus(
         .map((column) => ({
           ...column,
           links: column.links.filter((link) => isVisible(link.href)),
+          cta:
+            column.cta && isVisible(column.cta.href) ? column.cta : undefined,
         }))
-        .filter((column) => column.links.length > 0);
+        .filter((column) => column.links.length > 0 || column.cta);
       const feature =
         menu.feature && isVisible(menu.feature.href)
           ? menu.feature
@@ -134,12 +142,12 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.events,
           },
           { labelKey: "nav:calendar", href: routes.calendar },
-          {
-            labelKey: "shared:megaNav.community.col.gather.hostGathering",
-            href: routes.host,
-          },
           { labelKey: "nav:communities", href: routes.communities },
         ],
+        cta: {
+          labelKey: "shared:megaNav.community.col.gather.hostGathering",
+          href: routes.host,
+        },
       },
       {
         headKey: "shared:megaNav.community.col.organise.head",

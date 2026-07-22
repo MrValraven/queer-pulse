@@ -156,6 +156,7 @@ export function ProfileHero({
                 </span>
               )}
             </div>
+            {isSelf && <HeroRecognition />}
             <p className={styles.bio}>{profile.bio}</p>
             <TagRow style={{ marginTop: 20 }}>
               {profile.tags.map((tag) => (
@@ -179,15 +180,16 @@ export function ProfileHero({
                 </>
               ) : (
                 <>
-                  {profile.visibility === "private" ? (
-                    <Button size="lg" variant="ghost" to={routes.invite}>
-                      {t("members:profile.hero.requestIntroCta")}
-                    </Button>
-                  ) : (
-                    <Button size="lg" onClick={() => openConnect(profile.slug)}>
-                      {t("members:profile.hero.sayHelloCta")}
-                    </Button>
-                  )}
+                  {!asVisitor &&
+                    (profile.visibility === "private" ? (
+                      <Button size="lg" variant="ghost" to={routes.invite}>
+                        {t("members:profile.hero.requestIntroCta")}
+                      </Button>
+                    ) : (
+                      <Button size="lg" onClick={() => openConnect(profile.slug)}>
+                        {t("members:profile.hero.sayHelloCta")}
+                      </Button>
+                    ))}
                   {!realSelf &&
                     (vouched ? (
                       <span className={styles.vouchedActions}>
@@ -232,62 +234,38 @@ export function ProfileHero({
   );
 }
 
-export function RecognitionSection() {
+/**
+ * A quiet, self-only recognition strip that lives in the profile hero meta zone:
+ * three small chips (level, badges, perks) that link through to their pages.
+ * Deliberately subtle — no heading, no card — so it reads as secondary hero meta
+ * rather than a headline section. Rendered only on your own profile.
+ */
+function HeroRecognition() {
   const { t } = useTranslation();
   const { level, badges, perks } = useRecognition();
+  const totalBadges = badges.earnedCount + badges.discoverCount;
   return (
-    <Section
-      title={t("members:profile.hero.recognitionTitle")}
-      subtitle={t("members:profile.hero.recognitionSubtitle")}
-    >
-      <div className={styles.recogGrid}>
-        <Link to={routes.badges} className={styles.recogCard}>
-          <div className={styles.recogTop}>
-            <span className={styles.recogChip}>
-              {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
-              {level.name}
-            </span>
-          </div>
-          <div className={styles.recogTitle}>
-            {t("members:profile.hero.badgesTitle")}
-          </div>
-          <div className={styles.recogDesc}>
-            {t("members:profile.hero.badgesDesc", {
-              earned: badges.earnedCount,
-              discover: badges.discoverCount,
-            })}
-          </div>
-          <div className={styles.recogXpBar}>
-            <div
-              className={styles.recogXpFill}
-              style={{ width: `${level.percent}%` }}
-            />
-          </div>
-          <div className={styles.recogArrow}>
-            {t("members:profile.hero.badgesArrow")}
-          </div>
-        </Link>
-
-        <Link to={routes.perks} className={styles.recogCard}>
-          <div className={styles.recogTop}>
-            <span className={`${styles.recogChip} ${styles.jade}`}>
-              {t("members:profile.hero.perksAvailable", {
-                count: perks.availableCount,
-              })}
-            </span>
-          </div>
-          <div className={styles.recogTitle}>
-            {t("members:profile.hero.perksTitle")}
-          </div>
-          <div className={styles.recogDesc}>
-            {t("members:profile.hero.perksDesc")}
-          </div>
-          <div className={styles.recogArrow}>
-            {t("members:profile.hero.perksArrow")}
-          </div>
-        </Link>
-      </div>
-    </Section>
+    <div className={styles.heroRecog}>
+      <Link
+        to={routes.badges}
+        className={`${styles.heroRecogChip} ${styles.accent}`}
+      >
+        {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
+        {level.name}
+      </Link>
+      <Link to={routes.badges} className={styles.heroRecogChip}>
+        {t("members:profile.hero.badgesChip", {
+          earned: badges.earnedCount,
+          total: totalBadges,
+        })}
+      </Link>
+      <Link
+        to={routes.perks}
+        className={`${styles.heroRecogChip} ${styles.jade}`}
+      >
+        {t("members:profile.hero.perksChip", { count: perks.availableCount })}
+      </Link>
+    </div>
   );
 }
 
@@ -306,7 +284,6 @@ export function ProfileContent({
 }) {
   return (
     <div className="wrap">
-      {isSelf && <RecognitionSection />}
       {/* While editing, the Now editor lives in the hero — showing the committed
           card here too would just be a stale second copy of the same field. */}
       {!workEdit && <NowSection profile={profile} isSelf={isSelf} />}

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Spinner } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberProfiles } from "./data/memberProfiles";
+import { useMemberProfile } from "./api/useMemberProfile";
 import { RELATIONSHIPS } from "./vouchMember.data";
 import { VouchForm, VouchSuccess } from "./VouchMemberModalParts";
 import styles from "./VouchMemberModal.module.css";
@@ -37,10 +39,20 @@ export function VouchMemberModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, status]);
 
-  const profile = memberProfiles[slug];
-  if (!profile) return null;
+  // Source the member from the same hook the profile page uses, so live mode can
+  // vouch for a fetched member (e.g. the house account) that isn't present in the
+  // static demo registry. The `?? memberProfiles[slug]` fallback covers the first
+  // render before the (demo) query resolves. Mirrors ConnectModal's resolution.
+  const { data: profileResult, isLoading: profileLoading } =
+    useMemberProfile(slug);
+  const profile =
+    profileResult?.member ?? (slug ? memberProfiles[slug] : undefined) ?? null;
+  // In live mode the fetch is async; only gate the initial render while there's
+  // no profile yet, so a member already in the registry shows the form instantly.
+  const memberLoading = Boolean(slug) && profileLoading && !profileResult;
+  if (!profile && !memberLoading) return null;
 
-  const first = profile.first;
+  const first = profile?.first ?? "";
   const canSubmit = note.trim().length >= 12;
 
   const toggleTag = (tag: string) =>
@@ -83,7 +95,12 @@ export function VouchMemberModal({
         )}
 
         <div className={styles.scroll}>
-          {status === "done" ? (
+          {memberLoading || !profile ? (
+            <div className={styles.loading}>
+              <Spinner />
+              <span>{t("members:profile.loading")}</span>
+            </div>
+          ) : status === "done" ? (
             <VouchSuccess profile={profile} first={first} onClose={onClose} />
           ) : (
             <VouchForm

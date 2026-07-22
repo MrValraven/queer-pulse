@@ -8,6 +8,7 @@ import {
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { NAV_MENUS, filterMenus } from "./navMenus";
+import { Button } from "../ui";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useTranslation } from "../../i18n/useTranslation";
@@ -201,6 +202,15 @@ export function MegaNav() {
                         {t(link.labelKey)}
                       </Link>
                     ))}
+                    {column.cta && (
+                      <Button
+                        to={linkToPath(column.cta.href)}
+                        className={styles.cta}
+                        onClick={closeMenu}
+                      >
+                        {t(column.cta.labelKey)}
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>

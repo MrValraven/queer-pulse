@@ -1,25 +1,33 @@
-import { useCallback, useMemo, useState } from "react";
-import { currentUser } from "../../members/data/members";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "../../../app/providers/authContext";
+import type { AuthUser } from "../../auth/api/auth.api";
 import {
-  INVITE_CANDIDATES,
   RULE_PRESET_KEYS,
   type CommunityDraft,
   type Steward,
   type TintKey,
 } from "./startCommunity.data";
 
-/** The founder, always the first (locked) steward. */
-export function ownerSteward(): Steward {
+/**
+ * The founder, always the first (locked) steward — derived from the signed-in
+ * member (demo mode → mock session, live mode → GET /auth/me), never a hardcoded
+ * mock persona, so the roster shows whoever is actually creating the community.
+ */
+export function ownerStewardFrom(user: AuthUser | null): Steward {
+  const firstName = user?.profile.firstName ?? "";
+  const lastName = user?.profile.lastName ?? "";
+  const initials =
+    `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || "?";
   return {
     key: "owner",
-    name: `${currentUser.first} ${currentUser.last}`,
-    initials: currentUser.initials,
-    tint: (currentUser.tint as TintKey) ?? "plum",
+    name: `${firstName} ${lastName}`.trim(),
+    initials,
+    tint: "plum",
     role: "owner",
   };
 }
 
-export function emptyDraft(): CommunityDraft {
+export function emptyDraft(owner: Steward): CommunityDraft {
   return {
     name: "",
     purpose: "",
@@ -27,7 +35,7 @@ export function emptyDraft(): CommunityDraft {
     whoFor: "",
     accessTier: "",
     rosterVisible: true,
-    stewards: [ownerSteward()],
+    stewards: [owner],
     features: ["discussion"],
     rules: [...RULE_PRESET_KEYS],
     tint: "coral",
@@ -40,15 +48,42 @@ export function emptyDraft(): CommunityDraft {
 
 /** All Start-a-Community wizard state + setters, shared by page and panels. */
 export function useCommunityForm(initial?: CommunityDraft) {
-  const [draft, setDraft] = useState<CommunityDraft>(initial ?? emptyDraft());
+  const { user } = useAuth();
+  const owner = useMemo(() => ownerStewardFrom(user), [user]);
+  const [draft, setDraft] = useState<CommunityDraft>(
+    initial ?? emptyDraft(owner),
+  );
+
+  // In live mode `user` resolves after GET /auth/me settles, so the owner
+  // steward seeded at init may start as a placeholder; keep the locked owner
+  // entry in sync once the real session (or a demo→live switch) lands.
+  useEffect(() => {
+    setDraft((d) => {
+      const current = d.stewards.find((s) => s.key === "owner");
+      if (
+        current &&
+        current.name === owner.name &&
+        current.initials === owner.initials
+      ) {
+        return d;
+      }
+      return {
+        ...d,
+        stewards: d.stewards.map((s) => (s.key === "owner" ? owner : s)),
+      };
+    });
+  }, [owner]);
 
   const set = useCallback((patch: Partial<CommunityDraft>) => {
     setDraft((d) => ({ ...d, ...patch }));
   }, []);
 
-  const reset = useCallback((next?: CommunityDraft) => {
-    setDraft(next ?? emptyDraft());
-  }, []);
+  const reset = useCallback(
+    (next?: CommunityDraft) => {
+      setDraft(next ?? emptyDraft(owner));
+    },
+    [owner],
+  );
 
   /* stewards (owner is locked) */
   const addSteward = useCallback((s: Steward) => {
@@ -157,7 +192,6 @@ export function useCommunityForm(initial?: CommunityDraft) {
     addRule,
     toggleInvite,
     setTint,
-    candidates: INVITE_CANDIDATES,
     missing,
     canAdvance,
   };

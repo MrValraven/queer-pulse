@@ -3,12 +3,14 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ACCESS_OPTIONS,
   FEATURE_OPTIONS,
-  INVITE_CANDIDATES,
   initialsOf,
   type CommunityDraft,
   type TintKey,
 } from "./startCommunity.data";
-import { ownerSteward } from "./useCommunityForm";
+import { ownerStewardFrom } from "./useCommunityForm";
+import { connectionViews } from "../../connect/connections.data";
+import { useAuth } from "../../../app/providers/authContext";
+import type { AvatarTint } from "../../../shared/components/ui";
 import styles from "./StartCommunityPage.module.css";
 
 const COVER: Record<TintKey, string> = {
@@ -16,10 +18,12 @@ const COVER: Record<TintKey, string> = {
   jade: styles.coverJade!,
   plum: styles.coverPlum!,
 };
-const FACE: Record<TintKey, string> = {
+const FACE: Record<AvatarTint, string> = {
   coral: styles.tintFaceCoral!,
   jade: styles.tintFaceJade!,
   plum: styles.tintFacePlum!,
+  default: styles.tintFacePlum!,
+  auth: styles.tintFacePlum!,
 };
 const AV: Record<TintKey, string> = {
   coral: styles.tintFaceCoral!,
@@ -36,10 +40,16 @@ const ACCESS_ICON = {
 /** Sticky live community-card preview that fills in as the wizard progresses. */
 export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
   const { t } = useTranslation();
-  const owner = ownerSteward();
-  const invited = draft.invites
-    .map((k) => INVITE_CANDIDATES.find((c) => c.key === k))
-    .filter(Boolean) as (typeof INVITE_CANDIDATES)[number][];
+  const { user } = useAuth();
+  const owner = ownerStewardFrom(user);
+  // Invited members are your real connections, resolved from their slugs to
+  // face-pile rows (name/initials/tint) — no hardcoded personas.
+  const invited = connectionViews(draft.invites).map((view) => ({
+    key: view.slug,
+    name: view.name,
+    initials: view.initials,
+    tint: view.tint,
+  }));
   const roster = [owner, ...invited];
   const handle = (draft.handle || "").trim();
   const access = ACCESS_OPTIONS.find((a) => a.tier === draft.accessTier);

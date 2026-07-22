@@ -112,11 +112,6 @@ export const communities: Catalog = {
   "detail.sidebar.rsvpCta": "Confirmar presença",
   "detail.sidebar.relatedCommunities": "Comunidades relacionadas",
 
-  // ── Tópico "boas-vindas" fixo, mostrado no fórum de todas as comunidades ──
-  "detail.welcomeThread.title": "Boas-vindas às pessoas novas — apresenta-te",
-  "detail.welcomeThread.post":
-    "Chegaste agora a {name}? Diz olá aqui. Conta-nos o teu nome, de onde és, e o que te trouxe até aqui. Lemos todas as mensagens.",
-
   // ── Separadores do hub (rótulos partilhados) ──────────────────────────────
   "detail.tabs.about": "Sobre",
   "detail.tabs.members": "Pessoas",
@@ -496,6 +491,8 @@ export const communities: Catalog = {
   "start.people.label": "Pessoas que adorarias ver aqui",
   "start.people.hint":
     "Vão receber um convite caloroso quando abrires — sem pressão, sem spam.",
+  "start.people.empty":
+    "Ainda não estás em contacto com ninguém. Assim que te ligares a pessoas, poderás convidá-las aqui.",
   "start.people.seedNote":
     "Também podes partilhar o link da tua comunidade assim que abrir — é muitas vezes assim que as primeiras dez pessoas chegam de verdade.",
 

@@ -1,6 +1,7 @@
 import {
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type KeyboardEvent,
@@ -9,6 +10,7 @@ import { FiX } from "react-icons/fi";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_OPTIONS, VISIBILITY_OPTIONS } from "./profileEdit.data";
+import { POPULAR_PROFILE_TAGS, PROFILE_TAG_OPTIONS } from "./profileTags.data";
 import styles from "./ProfileEdit.module.css";
 
 /** Seamless single-line text field that inherits its surroundings' typography. */
@@ -107,7 +109,11 @@ export function PronounPicker({
   );
 }
 
-/** Chip editor: remove with ×, add by typing and pressing Enter. */
+/**
+ * Tag picker: choose skills from a curated vocabulary (PROFILE_TAG_OPTIONS).
+ * Search to filter matching options, quick-add from a popular row, remove with ×.
+ * Only tags in the list can be added; legacy off-list tags still show and remove.
+ */
 export function TagEditor({
   tags,
   onChange,
@@ -119,45 +125,140 @@ export function TagEditor({
 }) {
   const { t } = useTranslation();
   const [input, setInput] = useState("");
-  function add() {
-    const value = input.trim();
-    if (!value) return;
-    if (!tags.some((tag) => tag.toLowerCase() === value.toLowerCase()))
-      onChange([...tags, value]);
+  const [highlight, setHighlight] = useState(-1);
+  const [focused, setFocused] = useState(false);
+
+  const isSelected = (option: string) =>
+    tags.some((tag) => tag.toLowerCase() === option.toLowerCase());
+
+  const matches = useMemo(() => {
+    const query = input.trim().toLowerCase();
+    if (!query) return [];
+    return PROFILE_TAG_OPTIONS.filter(
+      (option) => option.toLowerCase().includes(query) && !isSelected(option),
+    ).slice(0, 6);
+    // isSelected reads `tags`, so `tags` is the real dependency here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input, tags]);
+
+  const popular = useMemo(
+    () => POPULAR_PROFILE_TAGS.filter((option) => !isSelected(option)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tags],
+  );
+
+  const showSuggestions = focused && matches.length > 0;
+
+  function add(candidate: string) {
+    const canonical = PROFILE_TAG_OPTIONS.find(
+      (option) => option.toLowerCase() === candidate.trim().toLowerCase(),
+    );
+    if (!canonical || isSelected(canonical)) return;
+    onChange([...tags, canonical]);
     setInput("");
+    setHighlight(-1);
   }
-  function handleKey(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      add();
-    } else if (e.key === "Backspace" && !input && tags.length) {
+
+  function handleKey(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "ArrowDown" && matches.length) {
+      event.preventDefault();
+      setHighlight((current) => Math.min(current + 1, matches.length - 1));
+    } else if (event.key === "ArrowUp" && matches.length) {
+      event.preventDefault();
+      setHighlight((current) => Math.max(current - 1, 0));
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      const choice = highlight > -1 ? matches[highlight] : matches[0];
+      if (choice) add(choice);
+    } else if (event.key === "Escape") {
+      setInput("");
+      setHighlight(-1);
+    } else if (event.key === "Backspace" && !input && tags.length) {
       onChange(tags.slice(0, -1));
     }
   }
+
   return (
-    <div className={styles.tagEditor}>
-      {tags.map((tag) => (
-        <span key={tag} className={styles.tag}>
-          {tag}
-          <button
-            type="button"
-            className={styles.tagRemove}
-            aria-label={t("members:profileEdit.removeTagLabel", { tag })}
-            onClick={() => onChange(tags.filter((x) => x !== tag))}
-          >
-            <FiX size={13} />
-          </button>
-        </span>
-      ))}
-      <input
-        className={`${styles.inlineInput} ${styles.tagInput}`}
-        value={input}
-        placeholder={placeholder ?? t("members:profileEdit.addTagPlaceholder")}
-        aria-label={t("members:profileEdit.addTagLabel")}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKey}
-        onBlur={add}
-      />
+    <div className={styles.tagField}>
+      <div className={styles.tagEditor}>
+        {tags.map((tag) => (
+          <span key={tag} className={styles.tag}>
+            {tag}
+            <button
+              type="button"
+              className={styles.tagRemove}
+              aria-label={t("members:profileEdit.removeTagLabel", { tag })}
+              onClick={() => onChange(tags.filter((entry) => entry !== tag))}
+            >
+              <FiX size={13} />
+            </button>
+          </span>
+        ))}
+        <div className={styles.tagInputWrap}>
+          <input
+            className={`${styles.inlineInput} ${styles.tagInput}`}
+            value={input}
+            role="combobox"
+            aria-expanded={showSuggestions}
+            aria-autocomplete="list"
+            aria-controls="profile-tag-suggestions"
+            placeholder={
+              placeholder ?? t("members:profileEdit.searchTagPlaceholder")
+            }
+            aria-label={t("members:profileEdit.addTagLabel")}
+            onChange={(event) => {
+              setInput(event.target.value);
+              setHighlight(-1);
+            }}
+            onKeyDown={handleKey}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+          />
+          {showSuggestions && (
+            <div
+              id="profile-tag-suggestions"
+              role="listbox"
+              className={styles.tagSuggest}
+            >
+              {matches.map((option, index) => (
+                <button
+                  key={option}
+                  type="button"
+                  role="option"
+                  aria-selected={index === highlight}
+                  className={`${styles.tagSuggestItem} ${
+                    index === highlight ? styles.tagSuggestItemHl : ""
+                  }`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => add(option)}
+                >
+                  <span aria-hidden>+</span>
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {popular.length > 0 && (
+        <div className={styles.tagPopular}>
+          <span className={styles.tagPopularLabel}>
+            {t("members:profileEdit.popularTagsLabel")}
+          </span>
+          {popular.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={styles.tagAdd}
+              onClick={() => add(option)}
+            >
+              <span aria-hidden>+</span>
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

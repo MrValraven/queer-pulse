@@ -247,6 +247,13 @@
 }
 
 /* ---- Tag editor ----------------------------------------------------------- */
+/* Stacks the chips+search row above the "popular" quick-add row. */
+.tagField {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
 .tagEditor {
   display: flex;
   flex-wrap: wrap;
@@ -286,11 +293,112 @@
     color: var(--accent-ink);
   }
 }
+/* The search field anchors the suggestion popover below it. */
+.tagInputWrap {
+  position: relative;
+}
 .tagInput {
-  width: 130px;
+  width: 170px;
   font-size: 13.5px;
   padding: 7px 14px;
   border-radius: 999px;
+}
+
+/* Type-ahead suggestion dropdown of curated tags. */
+.tagSuggest {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  min-width: 200px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 12px;
+  box-shadow: 0 16px 34px -18px rgba(var(--plum-rgb), 0.55);
+}
+.tagSuggestItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.15s var(--ease);
+}
+.tagSuggestItem span {
+  color: var(--ink-40);
+  font-weight: 600;
+}
+@media (hover: hover) {
+  .tagSuggestItem:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.tagSuggestItemHl {
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+/* One-tap "popular" quick-add chips shown beneath the field. */
+.tagPopular {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.tagPopularLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-right: 2px;
+}
+.tagAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1.5px dashed rgba(var(--line-rgb), 0.28);
+  border-radius: 999px;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
+}
+.tagAdd span {
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .tagAdd:hover {
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tagSuggestItem,
+  .tagAdd {
+    transition: none;
+  }
 }
 
 /* ---- Visibility segmented control ----------------------------------------- */

@@ -3253,45 +3253,37 @@ export const marketing: Catalog = {
 
   "submitPartner.fields.sectionOrg": "Your organisation",
   "submitPartner.fields.name.label": "Organisation name",
-  "submitPartner.fields.name.placeholder": "e.g. Casa Arco",
-  "submitPartner.fields.logo.label": "Logo mark",
-  "submitPartner.fields.logo.helper":
-    "A short word or initials shown as the badge (e.g. “ILGA”, “CA”).",
-  "submitPartner.fields.logo.placeholder": "e.g. CA",
+  "submitPartner.fields.name.placeholder": "e.g. Casa T",
+  "submitPartner.fields.orgType.label": "Organisation type",
+  "submitPartner.fields.orgType.helper":
+    "Just the kind of organisation you are — we add the “Partner ·” label.",
+  "submitPartner.fields.orgType.placeholder": "e.g. Community health clinic",
   "submitPartner.fields.city.label": "City / base",
-  "submitPartner.fields.city.placeholder": "e.g. Porto",
+  "submitPartner.fields.city.placeholder": "e.g. Lisbon",
   "submitPartner.fields.region.label": "Region",
-  "submitPartner.fields.regionLabel.label": "Region label",
-  "submitPartner.fields.regionLabel.helper":
-    "Shown on the card — override the default if you like.",
-  "submitPartner.fields.regionLabel.placeholder": "e.g. Portugal",
+  "submitPartner.fields.logo.label": "Logo mark",
+  "submitPartner.fields.logo.derivedHelper":
+    "Auto-filled from your name — edit it if you'd rather set the badge yourself.",
+  "submitPartner.fields.logo.placeholder": "e.g. CT",
   "submitPartner.fields.sectionPitch": "The pitch",
-  "submitPartner.fields.eyebrow.label": "Eyebrow",
-  "submitPartner.fields.eyebrow.helper":
-    "A short kind-of-partner line, e.g. “Partner · Community drop-in”.",
-  "submitPartner.fields.eyebrow.placeholder":
-    "e.g. Partner · Advocacy organisation",
   "submitPartner.fields.tagline.label": "One-line tagline",
   "submitPartner.fields.tagline.helper":
     "The single sentence that captures what you do.",
   "submitPartner.fields.tagline.placeholder":
-    "A community kitchen that decided nobody should be cold or hungry while they wait for a safe bed.",
+    "A Lisbon drop-in where nobody waits for care alone.",
   "submitPartner.fields.desc.label": "Short description",
   "submitPartner.fields.desc.helper":
     "One or two sentences shown on the listing card.",
   "submitPartner.fields.desc.placeholder":
-    "What your organisation does, in plain language, and who it serves.",
+    "What your organisation does, in plain language, and who it serves in Lisbon.",
   "submitPartner.fields.tags.label": "Tags",
-  "submitPartner.fields.tags.helper":
-    "Comma-separated — shown as chips on the card.",
-  "submitPartner.fields.tags.placeholder": "Housing, Food, Drop-in",
-  "submitPartner.fields.sectionPartnering": "How you'd partner",
-  "submitPartner.fields.tier.label": "Partner tier",
-  "submitPartner.fields.tier.helper": "How you'd describe the relationship.",
-  "submitPartner.fields.tier.placeholder": "e.g. Community partner",
-  "submitPartner.fields.since.label": "Since / status",
-  "submitPartner.fields.since.helper": "A short status line for the card.",
-  "submitPartner.fields.since.placeholder": "e.g. Applying · 2026",
+  "submitPartner.fields.tags.pickerHelper": "Pick up to 3 that fit your work.",
+  "submitPartner.fields.tags.count": "{count}/{max}",
+  "submitPartner.fields.sectionContact": "How to reach you",
+  "submitPartner.fields.website.label": "Website",
+  "submitPartner.fields.website.placeholder": "e.g. casat.pt",
+  "submitPartner.fields.email.label": "Contact email",
+  "submitPartner.fields.email.placeholder": "e.g. ola@casat.pt",
   "submitPartner.fields.requiredError": "This field is required.",
   "submitPartner.form.sinceDefault": "Applying · {year}",
 

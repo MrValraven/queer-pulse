@@ -1,11 +1,16 @@
 import type { IconType } from "react-icons";
 import {
+  FiActivity,
+  FiAward,
   FiBookOpen,
+  FiCamera,
   FiCode,
   FiDisc,
+  FiFeather,
   FiFilm,
   FiGitBranch,
   FiGrid,
+  FiHeadphones,
   FiImage,
   FiLayers,
   FiLink,
@@ -33,6 +38,12 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   filmmaker: ["filmography", "screenings"],
   designer: ["selected_work", "clients"],
   maker: ["collections", "workshops"],
+  drag: ["shows", "looks"],
+  dj: ["mixes", "gigs"],
+  dancer: ["performances", "reel"],
+  performer: ["appearances", "reel"],
+  photographer: ["series", "exhibitions"],
+  videomaker: ["videos", "screenings"],
   generic: ["showcase"],
 };
 
@@ -146,6 +157,52 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     icon: FiTool,
     fields: ["title", "subtitle", "date", "url"],
   },
+  // drag
+  shows: {
+    labelKey: "subprofiles:section.shows",
+    icon: FiFeather,
+    fields: ["title", "subtitle", "date", "url"],
+  },
+  looks: {
+    labelKey: "subprofiles:section.looks",
+    icon: FiImage,
+    fields: ["title", "description", "imageUrl", "date"],
+  },
+  // dj
+  mixes: {
+    labelKey: "subprofiles:section.mixes",
+    icon: FiHeadphones,
+    fields: ["title", "subtitle", "imageUrl", "url", "date"],
+  },
+  // dancer + performer
+  performances: {
+    labelKey: "subprofiles:section.performances",
+    icon: FiActivity,
+    fields: ["title", "subtitle", "date", "url"],
+  },
+  reel: {
+    labelKey: "subprofiles:section.reel",
+    icon: FiVideo,
+    fields: ["title", "description", "url", "imageUrl"],
+  },
+  // performer
+  appearances: {
+    labelKey: "subprofiles:section.appearances",
+    icon: FiAward,
+    fields: ["title", "subtitle", "date", "url"],
+  },
+  // photographer
+  series: {
+    labelKey: "subprofiles:section.series",
+    icon: FiCamera,
+    fields: ["title", "description", "imageUrl", "date", "url"],
+  },
+  // videomaker
+  videos: {
+    labelKey: "subprofiles:section.videos",
+    icon: FiVideo,
+    fields: ["title", "subtitle", "description", "imageUrl", "url", "date"],
+  },
   // generic
   showcase: {
     labelKey: "subprofiles:section.showcase",
@@ -181,6 +238,12 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   filmmaker: "subprofiles:kind.filmmaker",
   designer: "subprofiles:kind.designer",
   maker: "subprofiles:kind.maker",
+  drag: "subprofiles:kind.drag",
+  dj: "subprofiles:kind.dj",
+  dancer: "subprofiles:kind.dancer",
+  performer: "subprofiles:kind.performer",
+  photographer: "subprofiles:kind.photographer",
+  videomaker: "subprofiles:kind.videomaker",
   generic: "subprofiles:kind.generic",
 };
 
@@ -203,6 +266,12 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   filmmaker: "Filmmaker",
   designer: "Designer",
   maker: "Maker",
+  drag: "Drag performer",
+  dj: "DJ",
+  dancer: "Dancer",
+  performer: "Performer",
+  photographer: "Photographer",
+  videomaker: "Videomaker",
   generic: "Other",
 };
 
@@ -225,6 +294,12 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   filmmaker: "filmmaker",
   designer: "designer",
   maker: "maker",
+  drag: "drag",
+  dj: "dj",
+  dancer: "dancer",
+  performer: "performer",
+  photographer: "photographer",
+  videomaker: "videomaker",
   generic: "other",
 };
 

@@ -83,6 +83,11 @@ const GATED_PATTERNS: string[] = [
   "/local/directory",
   "/local/directory/*",
   "/local/map",
+  // Housing board + listing detail + flatmates tab are member-only (backend
+  // browse is ActiveMemberGuard); the co-ops surface stays public — see
+  // PUBLIC_EXCEPTIONS below.
+  "/local/housing",
+  "/local/housing/*",
   "/business-directory",
   "/spaces-map",
   // Cinema: browsing films is public; watching + membership are gated
@@ -109,6 +114,10 @@ const PUBLIC_EXCEPTIONS: string[] = [
   "/studio/help",
   "/studio/press",
   "/studio/end-card",
+  // Housing co-ops stay public (their backend browse is @Public), even though
+  // the rest of /local/housing/* is gated above.
+  "/local/housing/coop",
+  "/local/housing/coop/*",
 ];
 
 function matchesAny(pathname: string, patterns: string[]): boolean {

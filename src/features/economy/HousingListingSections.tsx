@@ -3,7 +3,7 @@ import { routes } from "../../app/routeMap";
 import { Avatar, Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { HOUSING_LISTINGS, type HousingListing } from "./housingListings";
+import type { HousingListing } from "./housingListings";
 import { GAL_BG } from "./housingListing.data";
 import s from "./HousingListingPage.module.css";
 
@@ -59,16 +59,15 @@ export function HousingListingMain({ listing }: { listing: HousingListing }) {
 export function HousingListingSidebar({
   listing,
   first,
+  similar,
   onMessage,
 }: {
   listing: HousingListing;
   first: string;
+  similar: HousingListing[];
   onMessage: () => void;
 }) {
   const { t } = useTranslation();
-  const similar = HOUSING_LISTINGS.filter(
-    (other) => other.slug !== listing.slug,
-  ).slice(0, 3);
   return (
     <aside className={s.side}>
       <div className={s.priceCard}>

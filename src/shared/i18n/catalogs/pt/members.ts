@@ -90,16 +90,12 @@ export const members: Catalog = {
   "profile.hero.vouchedFor": "Avalizaste {first}",
   "profile.hero.withdrawVouchCta": "Retirar aval",
   "profile.hero.vouchForCta": "Avalizar {first}",
-  "profile.hero.recognitionTitle": "Reconhecimento",
-  "profile.hero.recognitionSubtitle": "O teu nível, emblemas e vantagens",
   "profile.hero.levelLabel": "Nível {number}",
-  "profile.hero.badgesTitle": "Emblemas e nível",
+  "profile.hero.badgesChip": "{earned} / {total} emblemas",
   "profile.hero.badgesDesc": "{earned} conquistados · {discover} por descobrir",
   "profile.hero.badgesArrow": "Ver emblemas e nível →",
-  "profile.hero.perksAvailable": "{count} disponíveis",
+  "profile.hero.perksChip": "{count} vantagens",
   "profile.hero.perksTitle": "Vantagens",
-  "profile.hero.perksDesc":
-    "Bónus que o teu nível desbloqueia — confirmação de presença antecipada, o Trusted Lounge e muito mais.",
   "profile.hero.perksArrow": "Resgatar as tuas vantagens →",
 
   // ── Secções de conteúdo do perfil (ProfileContentSections, WorkEditor) ────
@@ -152,11 +148,13 @@ export const members: Catalog = {
   "profileEdit.field.bioHelp":
     "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta.",
   "profileEdit.field.tags": "Etiquetas",
-  "profileEdit.field.addSkillPlaceholder": "Adicionar uma competência…",
+  "profileEdit.field.addSkillPlaceholder": "Procurar competências…",
   "profileEdit.field.links": "Links",
   "profileEdit.customPronounPlaceholder": "personalizado…",
   "profileEdit.customPronounsLabel": "Pronomes personalizados",
   "profileEdit.addTagPlaceholder": "Adicionar uma etiqueta…",
+  "profileEdit.searchTagPlaceholder": "Procurar competências…",
+  "profileEdit.popularTagsLabel": "Populares",
   "profileEdit.addTagLabel": "Adicionar uma etiqueta",
   "profileEdit.removeTagLabel": "Remover {tag}",
   "profileEdit.visibilityGroupLabel": "Visibilidade do perfil",

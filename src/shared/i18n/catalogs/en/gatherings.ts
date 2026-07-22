@@ -330,7 +330,7 @@ export const gatherings: Catalog = {
   // Events
   "events.eyebrow": "What's on",
   "events.subtitle":
-    "Every gathering, meetup, and partner event across the Lisbon network — browse the season and find your people.",
+    "Every event across the Lisbon network is hosted by a community, partner org, or venue — browse the season and find your people.",
   "events.categoryAll": "All events",
   "events.categoryQueerpulse": "QueerPulse",
   "events.categoryCommunity": "Community",

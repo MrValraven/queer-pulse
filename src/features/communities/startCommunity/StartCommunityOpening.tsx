@@ -1,15 +1,19 @@
-import { FiHeart, FiShield } from "react-icons/fi";
-import { currentUser } from "../../members/data/members";
+import { FiShield } from "react-icons/fi";
+import { useAuth } from "../../../app/providers/authContext";
+import { Avatar } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import styles from "./StartCommunityPage.module.css";
 
 /** Chapter 0 — the reassuring opening, before any fields. */
 export function StepOpening() {
+  const { user } = useAuth();
+  const firstName = user?.profile.firstName ?? "";
+  const lastName = user?.profile.lastName ?? "";
+  const initials =
+    `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || "?";
+
   return (
     <div>
-      <div className={styles.crest}>
-        <FiHeart size={30} aria-hidden />
-      </div>
       <div className={styles.reassure}>
         <FiShield size={20} aria-hidden />
         <p>
@@ -20,13 +24,16 @@ export function StepOpening() {
         </p>
       </div>
       <div className={styles.signed}>
-        <span className={`${styles.signedAv} ${styles.tintFacePlum}`}>
-          {currentUser.initials}
-        </span>
+        <Avatar
+          initials={initials}
+          src={user?.profile.avatarUrl ?? undefined}
+          tint="plum"
+          size={26}
+        />
         <Translation
           i18nKey="communities:start.opening.signed"
           components={{ strong: <b /> }}
-          values={{ name: currentUser.first }}
+          values={{ name: firstName }}
         />
       </div>
     </div>

@@ -9,10 +9,13 @@ import {
 } from "../members/data/memberProfiles";
 import { useConnectionActions } from "./api/useConnectionActions";
 import { ConnectForm } from "./ConnectForm";
+import { ConnectNoticePanel } from "./ConnectNoticePanel";
 import { ConnectSentPanel } from "./ConnectSentPanel";
+import { describeConnectError, type ConnectErrorView } from "./connectErrorView";
 import styles from "./ConnectModal.module.css";
 
 type Phase = "idle" | "sending" | "sent";
+type NoticeView = Extract<ConnectErrorView, { mode: "panel" }>;
 
 export function ConnectModal({
   slug,
@@ -39,9 +42,12 @@ export function ConnectModal({
   const { send } = useConnectionActions();
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<NoticeView | null>(null);
   useScrollLock();
 
   const sent = phase === "sent";
+  // Both the success and terminal-notice panels use the plum-panel chrome.
+  const plum = sent || notice !== null;
   // In live mode the member fetch is async; gate only the initial idle render
   // so ConnectForm never mounts with the seed's openTo and then swaps under it.
   const memberLoading = Boolean(slug) && profileLoading && !profileResult;
@@ -67,8 +73,13 @@ export function ConnectModal({
         new Promise((resolve) => window.setTimeout(resolve, 1100)),
       ]);
       setPhase("sent");
-    } catch {
-      setError(t("connect:form.sendError"));
+    } catch (err) {
+      // Adapt to the outcome: terminal cases (already sent, blocked, not
+      // accepting…) replace the form with a notice panel; retryable ones keep
+      // the form and show an inline message. See describeConnectError.
+      const view = describeConnectError(err);
+      if (view.mode === "panel") setNotice(view);
+      else setError(t(view.messageKey));
       setPhase("idle");
     }
   }
@@ -82,7 +93,7 @@ export function ConnectModal({
           onClose();
       }}
     >
-      <div className={`${styles.modal} ${sent ? styles.modalSent : ""}`}>
+      <div className={`${styles.modal} ${plum ? styles.modalSent : ""}`}>
         {phase !== "sending" && (
           <button
             type="button"
@@ -99,6 +110,14 @@ export function ConnectModal({
             <Spinner />
             <span>{t("connect:modal.loading")}</span>
           </div>
+        ) : notice ? (
+          <ConnectNoticePanel
+            titleKey={notice.titleKey}
+            bodyKey={notice.bodyKey}
+            icon={notice.icon}
+            firstName={member.first}
+            onClose={onClose}
+          />
         ) : sent ? (
           <ConnectSentPanel firstName={member.first} onClose={onClose} />
         ) : (

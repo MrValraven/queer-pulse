@@ -6,7 +6,6 @@ import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { getListing } from "./housingListings";
 import { GAL_BG } from "./housingListing.data";
 import { FILTERS } from "./housing.data";
 import { MessageModal } from "./HousingModals";
@@ -15,6 +14,8 @@ import {
   HousingListingMain,
   HousingListingSidebar,
 } from "./HousingListingSections";
+import { useHousingListing } from "./api/useHousingListing";
+import { useHousingListings } from "./api/useHousingListings";
 import s from "./HousingListingPage.module.css";
 
 export function HousingListingPage() {
@@ -23,10 +24,10 @@ export function HousingListingPage() {
   const [messaging, setMessaging] = useState(false);
   const loading = useSimulatedLoad();
 
-  const listing = getListing(slug);
-  if (!listing) return <Navigate to={routes.housing} replace />;
+  const { data, isLoading, isError } = useHousingListing(slug);
+  const { data: allListings = [] } = useHousingListings("all");
 
-  if (loading) {
+  if (isLoading || loading) {
     return (
       <PageShell>
         <div className={s.page}>
@@ -38,6 +39,13 @@ export function HousingListingPage() {
       </PageShell>
     );
   }
+
+  if (isError || !data) return <Navigate to={routes.housing} replace />;
+
+  const listing = data.listing;
+  const similar = allListings
+    .filter((other) => other.slug !== listing.slug)
+    .slice(0, 3);
 
   const first =
     listing.poster.fullName.split(" ")[0] ?? listing.poster.fullName;
@@ -93,6 +101,7 @@ export function HousingListingPage() {
             <HousingListingSidebar
               listing={listing}
               first={first}
+              similar={similar}
               onMessage={() => setMessaging(true)}
             />
           </div>
@@ -104,6 +113,7 @@ export function HousingListingPage() {
           toName={listing.poster.fullName}
           listingTitle={listing.title}
           responseTime={listing.poster.responseTime}
+          listingRef={data.ref}
           onClose={() => setMessaging(false)}
         />
       )}

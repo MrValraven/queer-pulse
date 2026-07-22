@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
-import { useFocusOnMount, useSimulatedLoad } from "../../shared/hooks";
+import { useFocusOnMount } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -11,11 +11,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import {
   MENTION_TAB_DEFS,
-  MENTION_UNREAD_IDS,
-  buildMentionDays,
   type Mention,
   type MentionActionType,
+  type MentionTabId,
 } from "./mentions.data";
+import { useMentions } from "./api/useMentions";
 import { MentionsListSkeleton } from "./MentionsSkeleton";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./MentionsPage.module.css";
@@ -209,23 +209,48 @@ function MentionRow({
 export function MentionsPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const loading = useSimulatedLoad();
+  const { data: mentionDays = [], isLoading: loading } = useMentions();
   const { showToast } = useToast();
   const [tab, setTab] = useState(0);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   let rowIndex = 0;
 
-  const mentionDays = useMemo(() => buildMentionDays(t, fmt), [t, fmt]);
-  const unreadCount = MENTION_UNREAD_IDS.filter(
-    (id) => !readIds.has(id),
-  ).length;
+  const allMentions = useMemo(
+    () => mentionDays.flatMap((group) => group.items),
+    [mentionDays],
+  );
+  const unreadIds = useMemo(
+    () =>
+      allMentions
+        .filter((mention) => mention.unread)
+        .map((mention) => mention.id),
+    [allMentions],
+  );
+  const unreadCount = unreadIds.filter((id) => !readIds.has(id)).length;
+
+  // Tab badge counts derived from the live data, so they stay correct in demo
+  // and live mode alike (and never show mock totals when the thread is empty).
+  const tabCounts: Record<MentionTabId, number> = useMemo(
+    () => ({
+      all: allMentions.length,
+      unread: allMentions.filter(
+        (mention) => mention.unread && !readIds.has(mention.id),
+      ).length,
+      posts: allMentions.filter((mention) => mention.category === "post").length,
+      articles: allMentions.filter((mention) => mention.category === "article")
+        .length,
+      events: allMentions.filter((mention) => mention.category === "event")
+        .length,
+    }),
+    [allMentions, readIds],
+  );
 
   function markRead(id: string) {
     setReadIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   }
   function markAllRead() {
     if (unreadCount === 0) return;
-    setReadIds(new Set(MENTION_UNREAD_IDS));
+    setReadIds(new Set(unreadIds));
     showToast(t("notifications:mentions.markAllReadToast"), "success");
   }
 
@@ -276,7 +301,7 @@ export function MentionsPage() {
               onClick={() => setTab(index)}
             >
               {t(tabDef.labelKey)}{" "}
-              <span className={styles.tabCount}>{tabDef.count}</span>
+              <span className={styles.tabCount}>{tabCounts[tabDef.id]}</span>
             </button>
           ))}
         </div>

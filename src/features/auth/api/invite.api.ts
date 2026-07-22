@@ -94,3 +94,20 @@ export interface SentInviteDTO {
  * The backend scopes this to the current session — no member id needed.
  */
 export const getSentInvites = () => apiGet<SentInviteDTO[]>("/invites");
+
+/**
+ * The member's personal-invite allowance for the current calendar month, as
+ * returned by GET /invites/quota. `used` counts every invite created since the
+ * UTC month start regardless of status; `resetsAt` is 00:00 UTC on the 1st of
+ * next month. The backend scopes this to the current session — no id needed.
+ */
+export interface InviteQuotaDTO {
+  limit: number;
+  used: number;
+  remaining: number;
+  /** ISO timestamp the allowance resets (1st of next month, UTC). */
+  resetsAt: string;
+}
+
+/** The current member's remaining personal invites + reset date. */
+export const getInviteQuota = () => apiGet<InviteQuotaDTO>("/invites/quota");

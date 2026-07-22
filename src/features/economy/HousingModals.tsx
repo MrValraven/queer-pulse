@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
 import styles from "./housingModals.module.css";
 
 const Check = () => (
@@ -64,11 +65,13 @@ export function MessageModal({
   toName,
   listingTitle,
   responseTime,
+  listingRef,
   onClose,
 }: {
   toName: string;
   listingTitle: string;
   responseTime: string;
+  listingRef: string | null;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -76,8 +79,19 @@ export function MessageModal({
     `Hi ${toName.split(" ")[0]}, I'm interested in "${listingTitle}". Is it still available? A bit about me: `,
   );
   const [done, setDone] = useState(false);
+  const sendEnquiry = useSendHousingEnquiry();
   const canSend = text.trim().length >= 20;
   const remaining = 20 - text.trim().length;
+
+  const handleSend = () => {
+    sendEnquiry.mutate(
+      { ref: listingRef, body: text.trim() },
+      {
+        onSuccess: () => setDone(true),
+        onError: () => setDone(true),
+      },
+    );
+  };
 
   return (
     <Shell
@@ -149,8 +163,8 @@ export function MessageModal({
             <Button
               variant="primary"
               className={styles.full}
-              onClick={() => setDone(true)}
-              disabled={!canSend}
+              onClick={handleSend}
+              disabled={!canSend || sendEnquiry.isPending}
             >
               {t("economy:housingModal.message.send")}
             </Button>

@@ -107,12 +107,6 @@ export const communities: Catalog = {
   "detail.sidebar.rsvpCta": "RSVP",
   "detail.sidebar.relatedCommunities": "Related communities",
 
-  // ── Canned "welcome" thread shown on every community's forum ──────────────
-  // Composed chrome: the phrase is platform copy, only {name} is community data.
-  "detail.welcomeThread.title": "Welcome, new members — introduce yourself",
-  "detail.welcomeThread.post":
-    "New to {name}? Say hello here. Tell us your name, where you're from, and what brought you here. We read every one.",
-
   // ── Hub tabs (shared labels, FallbackHubTabs + LivingHubTabs) ─────────────
   "detail.tabs.about": "About",
   "detail.tabs.members": "Members",
@@ -486,6 +480,8 @@ export const communities: Catalog = {
   "start.people.label": "People you'd love to see here",
   "start.people.hint":
     "They'll get a warm invite when you open — no pressure, no spam.",
+  "start.people.empty":
+    "You're not connected to anyone yet. Once you connect with people, you'll be able to invite them here.",
   "start.people.seedNote":
     "You can also share your community's link once it's open — that's often how the first ten people really arrive.",
 

@@ -126,15 +126,18 @@
   margin-bottom: 34px;
 }
 .thread {
+  --thread-steps: 9;
   display: flex;
   align-items: flex-start;
   position: relative;
 }
+/* Rail + fill span dot-center to dot-center — inset by half a node on each
+   side so the line never pokes out past the first/last dots. */
 .thread::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
+  left: calc(100% / var(--thread-steps) / 2);
+  right: calc(100% / var(--thread-steps) / 2);
   top: 9px;
   height: 2px;
   background: rgba(var(--plum-rgb), 0.1);
@@ -142,14 +145,14 @@
 }
 .threadFill {
   position: absolute;
-  left: 0;
+  left: calc(100% / var(--thread-steps) / 2);
+  right: calc(100% / var(--thread-steps) / 2);
   top: 9px;
   height: 2px;
-  width: 100%;
   transform-origin: left;
   background: var(--accent);
   border-radius: 2px;
-  transition: transform 0.55s var(--ease);
+  transition: transform var(--dur-slow) var(--ease);
   z-index: 1;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -185,9 +188,10 @@
   align-items: center;
   justify-content: center;
   transition:
-    background 0.35s var(--ease),
-    border-color 0.35s var(--ease),
-    box-shadow 0.35s var(--ease);
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
 }
 .dot::after {
   content: "";
@@ -195,14 +199,18 @@
   height: 7px;
   border-radius: 50%;
   background: transparent;
-  transition: background 0.3s var(--ease);
+  transition: background var(--dur-base) var(--ease);
 }
 .node.done .dot {
   border-color: var(--jade);
   background: var(--jade);
 }
+/* Completed nodes signal via the checkmark; drop the redundant centre dot. */
 .node.done .dot::after {
-  background: var(--paper);
+  display: none;
+}
+.node.done .dot svg {
+  color: var(--paper);
 }
 .node.current .dot {
   border-color: var(--accent);
@@ -211,6 +219,46 @@
 }
 .node.current .dot::after {
   background: var(--accent);
+}
+/* One-time arrival motion — the check scales in as a step completes, the
+   current dot gives a gentle spring. Both are decorative → off for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .node.done .dot svg {
+    animation: threadCheckIn var(--dur-base) var(--ease) both;
+  }
+  .node.current .dot {
+    animation: threadDotPop var(--dur-base) var(--ease);
+  }
+}
+@keyframes threadCheckIn {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes threadDotPop {
+  0% {
+    transform: scale(0.85);
+  }
+  55% {
+    transform: scale(1.09);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Done nodes are clickable (jump back) — give them a real hover affordance. */
+@media (hover: hover) {
+  .nodeDone:hover .dot {
+    transform: scale(1.14);
+  }
+  .nodeDone:hover .nodeLabel {
+    color: var(--text-strong);
+  }
 }
 .node:focus-visible {
   outline: none;

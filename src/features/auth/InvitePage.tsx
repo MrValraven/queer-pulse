@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiLink, FiMail } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -10,6 +10,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InviteEmailForm } from "./InviteEmailForm";
 import { InviteLinkPanel } from "./InviteLinkPanel";
 import { SentInvitesList } from "./SentInvitesList";
+import { useInviteQuota, daysUntilReset } from "./api/useInviteQuota";
 import styles from "./InvitePage.module.css";
 
 type Mode = "email" | "link";
@@ -22,6 +23,14 @@ const MOCK_EXPIRES_AT = new Date(2026, 5, 13);
 export function InvitePage() {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const {
+    data: quota,
+    isLoading: quotaLoading,
+    isError: quotaError,
+  } = useInviteQuota();
+  // Derived at render (not cached) so the countdown stays correct if the page
+  // is left open across midnight.
+  const resetsInDays = quota ? daysUntilReset(quota.resetsAt) : 0;
   const [mode, setMode] = useState<Mode>("email");
   const [sentName, setSentName] = useState<string | null>(null);
 
@@ -108,14 +117,33 @@ export function InvitePage() {
             />
           </div>
           <div className={styles.sub}>{t("auth:invite.sub")}</div>
-          <div className={styles.quotaRow}>
-            <div className={styles.quotaChip}>
-              {t("auth:invite.quota.available")}
+          {/* Hidden entirely if the quota can't be loaded (live-mode fetch
+              error) — the compose flow still works, and an absent row is
+              less alarming than a stuck skeleton or a wrong count. */}
+          {!quotaError && (
+            <div className={styles.quotaRow}>
+              {quotaLoading || !quota ? (
+                <SkeletonLine width="220px" />
+              ) : (
+                <>
+                  <div className={styles.quotaChip}>
+                    {quota.remaining === 0
+                      ? t("auth:invite.quota.none")
+                      : t("auth:invite.quota.available", {
+                          count: quota.remaining,
+                        })}
+                  </div>
+                  <div className={styles.resetNote}>
+                    {resetsInDays === 0
+                      ? t("auth:invite.quota.resets_zero")
+                      : t("auth:invite.quota.resets", {
+                          count: resetsInDays,
+                        })}
+                  </div>
+                </>
+              )}
             </div>
-            <div className={styles.resetNote}>
-              {t("auth:invite.quota.resets")}
-            </div>
-          </div>
+          )}
 
           <div
             className={styles.segmented}

@@ -87,16 +87,12 @@ export const members: Catalog = {
   "profile.hero.vouchedFor": "Vouched for {first}",
   "profile.hero.withdrawVouchCta": "Withdraw vouch",
   "profile.hero.vouchForCta": "Vouch for {first}",
-  "profile.hero.recognitionTitle": "Recognition",
-  "profile.hero.recognitionSubtitle": "Your level, badges and member perks",
   "profile.hero.levelLabel": "Level {number}",
-  "profile.hero.badgesTitle": "Badges & level",
+  "profile.hero.badgesChip": "{earned} / {total} badges",
   "profile.hero.badgesDesc": "{earned} earned · {discover} to discover",
   "profile.hero.badgesArrow": "See badges & level →",
-  "profile.hero.perksAvailable": "{count} available",
+  "profile.hero.perksChip": "{count} perks",
   "profile.hero.perksTitle": "Member perks",
-  "profile.hero.perksDesc":
-    "Bonuses your level unlocks — early RSVP access, the Trusted Lounge and more.",
   "profile.hero.perksArrow": "Redeem your perks →",
 
   // ── Profile content sections (ProfileContentSections, WorkEditor) ─────────
@@ -149,11 +145,13 @@ export const members: Catalog = {
   "profileEdit.field.bioHelp":
     "The longer version, on your profile page. If you leave your short bio empty, your directory card borrows the opening of this.",
   "profileEdit.field.tags": "Tags",
-  "profileEdit.field.addSkillPlaceholder": "Add a skill…",
+  "profileEdit.field.addSkillPlaceholder": "Search skills…",
   "profileEdit.field.links": "Links",
   "profileEdit.customPronounPlaceholder": "custom…",
   "profileEdit.customPronounsLabel": "Custom pronouns",
   "profileEdit.addTagPlaceholder": "Add a tag…",
+  "profileEdit.searchTagPlaceholder": "Search skills…",
+  "profileEdit.popularTagsLabel": "Popular",
   "profileEdit.addTagLabel": "Add a tag",
   "profileEdit.removeTagLabel": "Remove {tag}",
   "profileEdit.visibilityGroupLabel": "Profile visibility",

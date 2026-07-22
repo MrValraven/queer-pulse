@@ -336,7 +336,7 @@ export const gatherings: Catalog = {
   // Events
   "events.eyebrow": "O que se passa",
   "events.subtitle":
-    "Todos os convívios, meetups e eventos parceiros da rede de Lisboa — explora a temporada e encontra a tua gente.",
+    "Cada evento da rede de Lisboa é organizado por uma comunidade, organização parceira ou espaço — explora a temporada e encontra a tua gente.",
   "events.categoryAll": "Todos os eventos",
   "events.categoryQueerpulse": "QueerPulse",
   "events.categoryCommunity": "Comunidade",

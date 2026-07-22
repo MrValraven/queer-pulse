@@ -90,6 +90,11 @@
   }
 }
 
+/* ── Logo field: present but quiet — it's auto-filled from the name ───────── */
+.logoField {
+  max-width: 220px;
+}
+
 /* ── Honeypot (visually hidden bot trap) ──────────────────────────────────── */
 .honeypot {
   position: absolute !important;

@@ -53,6 +53,12 @@ export const subprofiles: Catalog = {
   "kind.filmmaker": "Filmmaker",
   "kind.designer": "Designer",
   "kind.maker": "Maker",
+  "kind.drag": "Drag performer",
+  "kind.dj": "DJ",
+  "kind.dancer": "Dancer",
+  "kind.performer": "Performer",
+  "kind.photographer": "Photographer",
+  "kind.videomaker": "Videomaker",
   "kind.generic": "Other",
 
   // Section display labels — `section` is also persisted (SubprofileItemDTO.section).
@@ -70,6 +76,14 @@ export const subprofiles: Catalog = {
   "section.clients": "Clients",
   "section.collections": "Collections",
   "section.workshops": "Workshops",
+  "section.shows": "Shows",
+  "section.looks": "Looks",
+  "section.mixes": "Mixes",
+  "section.performances": "Performances",
+  "section.reel": "Reel",
+  "section.appearances": "Appearances",
+  "section.series": "Series",
+  "section.videos": "Videos",
   "section.showcase": "Showcase",
   "section.links": "Links",
 
@@ -221,6 +235,7 @@ export const subprofiles: Catalog = {
   "publishPanel.successTitle": "You're",
   "publishPanel.successEm": "live",
   "publishPanel.closeLabel": "Keep editing",
+  "publishPanel.viewLive": "See it live",
   "publishPanel.successLinked":
     "This persona now shows on your main profile as another side of you.",
   "publishPanel.successUnlinked":

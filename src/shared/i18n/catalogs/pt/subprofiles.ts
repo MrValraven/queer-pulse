@@ -51,6 +51,12 @@ export const subprofiles: Catalog = {
   "kind.filmmaker": "Realização",
   "kind.designer": "Design",
   "kind.maker": "Maker",
+  "kind.drag": "Arte drag",
+  "kind.dj": "DJ",
+  "kind.dancer": "Dança",
+  "kind.performer": "Performance",
+  "kind.photographer": "Fotografia",
+  "kind.videomaker": "Videografia",
   "kind.generic": "Generalista",
 
   // Rótulos de secção — `section` também é persistido (SubprofileItemDTO.section).
@@ -68,6 +74,14 @@ export const subprofiles: Catalog = {
   "section.clients": "Clientes",
   "section.collections": "Coleções",
   "section.workshops": "Oficinas",
+  "section.shows": "Espetáculos",
+  "section.looks": "Looks",
+  "section.mixes": "Sets",
+  "section.performances": "Atuações",
+  "section.reel": "Reel",
+  "section.appearances": "Aparições",
+  "section.series": "Séries",
+  "section.videos": "Vídeos",
   "section.showcase": "Mostra",
   "section.links": "Links",
 

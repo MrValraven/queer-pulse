@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button, SuccessPanel } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useAuth } from "../../app/providers/authContext";
+import { nestedPersonaPath, personaPath } from "../../app/routeMap";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
   PublishUnmetError,
@@ -30,11 +32,23 @@ export function SubprofilePublishPanel({
   const { publish, unpublish } = useSubprofileMutations();
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [justPublished, setJustPublished] = useState(false);
 
   const isPublished = subprofile.status === "published";
   const isLinked = subprofile.linkVisibility === "linked";
+
+  // Where the now-live persona can be viewed: a linked persona nests under the
+  // owner's main profile; an unlinked one stands on its own handle.
+  const ownerSlug = user?.profile.slug;
+  const livePath = isLinked
+    ? ownerSlug
+      ? nestedPersonaPath(ownerSlug, subprofile.slug)
+      : null
+    : subprofile.handle
+      ? personaPath(subprofile.handle)
+      : null;
 
   async function onPublish() {
     setChecklist(null);
@@ -70,6 +84,13 @@ export function SubprofilePublishPanel({
         em={t("subprofiles:publishPanel.successEm")}
         onClose={() => setJustPublished(false)}
         closeLabel={t("subprofiles:publishPanel.closeLabel")}
+        footer={
+          livePath && (
+            <Button variant="ghost-dark" to={livePath}>
+              {t("subprofiles:publishPanel.viewLive")}
+            </Button>
+          )
+        }
       >
         {isLinked
           ? t("subprofiles:publishPanel.successLinked")

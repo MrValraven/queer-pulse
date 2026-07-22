@@ -399,7 +399,7 @@ describe("request budget (live mode)", () => {
       //     GET /me/vouches/given
       //   - ProfileSubprofilesSection → useProfileSubprofiles(selfSlug) →
       //     GET /profiles/{slug}/subprofiles
-      //   - ProfileContent's RecognitionSection (isSelf only) →
+      //   - ProfileHero's HeroRecognition chips (isSelf only) →
       //     useRecognition() → GET /profiles/{slug}/recognition — NOTE: this
       //     hook defaults its `target` to the signed-in user's own slug rather
       //     than leaving it undefined, so even the OWNER's own view hits the
