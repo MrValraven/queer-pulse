@@ -4,6 +4,7 @@ import {
   FiSun,
   FiMoon,
   FiBell,
+  FiMessageSquare,
   FiUser,
   FiChevronsLeft,
   FiChevronsRight,
@@ -12,6 +13,7 @@ import { AccountMenu } from "./AccountMenu";
 import { Button } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
 import { useTheme } from "../../../app/providers/themeContext";
+import { useUnreadMessages } from "../../../features/messages/api/useConversations";
 import { useTranslation } from "../../i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import styles from "./Sidebar.module.css";
@@ -34,6 +36,7 @@ export function SidebarFooter({
   const { loggedIn } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { t } = useTranslation();
+  const unreadMessages = useUnreadMessages();
 
   return (
     <div className={styles.footer}>
@@ -56,6 +59,18 @@ export function SidebarFooter({
         >
           {theme === "dark" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
         </button>
+        {loggedIn && (
+          <Link
+            to={routes.messages}
+            className={styles.utilBtn}
+            aria-label={t("nav:messages")}
+          >
+            <FiMessageSquare aria-hidden />
+            {unreadMessages > 0 && (
+              <span className={styles.bellBadge}>{unreadMessages}</span>
+            )}
+          </Link>
+        )}
         {loggedIn && (
           <Link
             to={routes.notifications}

@@ -6,15 +6,17 @@ import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateInvite, type CreatedInvite } from "./api/useCreateInvite";
 import { SharePreviewCard } from "./SharePreviewCard";
-import { INVITE_URL, SENDER_NAME, defaultVouch } from "./invite.data";
+import { INVITE_URL, defaultVouch } from "./invite.data";
 import { sleep } from "./inviteLinkPanel.data";
 import { InviteReadyPanel } from "./InviteReadyPanel";
 import { InviteComposeFields } from "./InviteComposeFields";
+import { useInviteSender } from "./useInviteSender";
 import styles from "./InvitePage.module.css";
 
 export function InviteLinkPanel() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const sender = useInviteSender();
   const createInvite = useCreateInvite();
   const [vouch, setVouch] = useState("");
   const [note, setNote] = useState("");
@@ -80,7 +82,7 @@ export function InviteLinkPanel() {
 
       <div className={styles.epLabel}>{t("auth:invite.link.previewLabel")}</div>
       <SharePreviewCard
-        senderName={SENDER_NAME}
+        senderName={sender.full}
         description={description}
         url={INVITE_URL}
       />

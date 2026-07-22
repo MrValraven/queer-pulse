@@ -1,4 +1,5 @@
 import { MEMBERS, memberName } from "../members/data/members";
+import { nextEventFromGathering } from "./nextGathering";
 import type { CommunityDetail, Person } from "./communityDetails";
 
 /* Shared, lightly-rotated member pool — members overlap across communities. */
@@ -148,13 +149,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Chef · host",
       bio: "Runs a supper club in Mouraria and believes the best conversations happen sideways, over food, with no one in charge.",
     },
-    nextEvent: {
-      dd: "19",
-      mm: "Jun",
-      title: "June meetup — terrace at Park",
-      meta: "Thursday · 19:00 · Bairro Alto",
-      spots: "open to all",
-    },
+    nextEvent: nextEventFromGathering("supper-club-12"),
     topicThread: {
       votes: 17,
       title: "June meetup — where should we go?",
@@ -213,13 +208,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Curator",
       bio: "Curates queer programming into Lisbon's mainstream venues by day; co-founded this collective to build the rooms those shows often start in.",
     },
-    nextEvent: {
-      dd: "21",
-      mm: "Jun",
-      title: "Open crit — bring one work",
-      meta: "Saturday · 15:00 · Atelier Pulso",
-      spots: "8 spots left",
-    },
+    nextEvent: nextEventFromGathering("portfolio-night"),
     topicThread: {
       votes: 22,
       title: "Shared riso press — who's in for a group buy?",
@@ -274,13 +263,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Coordinator",
       bio: "Healthcare designer who got tired of watching people fall through the same gaps, and started keeping the list everyone now relies on.",
     },
-    nextEvent: {
-      dd: "12",
-      mm: "Jun",
-      title: "Open clinic night — bring questions",
-      meta: "Thursday · 19:00 · Café Beirão",
-      spots: "drop-in",
-    },
+    nextEvent: nextEventFromGathering("trans-mutual-aid"),
     topicThread: {
       votes: 31,
       title: "Updated vetted-clinician list — June",
@@ -335,13 +318,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Organiser",
       bio: "Physiotherapist in Alvalade. Running communities since 2019. Believes strongly that Sunday morning runs should end with good coffee.",
     },
-    nextEvent: {
-      dd: "8",
-      mm: "Jun",
-      title: "Sunrise run — Parque das Nações",
-      meta: "Sunday · 8:00 AM · 7 km loop",
-      spots: "9 spots remaining",
-    },
+    nextEvent: nextEventFromGathering("queer-runners-run"),
     topicThread: {
       votes: 22,
       title: "Best running shoes for Lisbon's cobblestones?",
@@ -400,13 +377,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Coordinator",
       bio: "Co-parent of two, support coordinator by trade. Started the network after one too many baby groups where she had to explain her family before she could sit down.",
     },
-    nextEvent: {
-      dd: "15",
-      mm: "Jun",
-      title: "Family picnic — Jardim da Estrela",
-      meta: "Sunday · 11:00 · bring a blanket",
-      spots: "all families welcome",
-    },
+    nextEvent: nextEventFromGathering("queer-parent-network"),
     topicThread: {
       votes: 18,
       title: "Queer-friendly paediatricians in Lisbon?",
@@ -465,13 +436,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Facilitator",
       bio: "Clinical psychologist who facilitates this space with a light hand. Holds confidentiality as the first rule and the last.",
     },
-    nextEvent: {
-      dd: "—",
-      mm: "",
-      title: "Weekly check-in circle",
-      meta: "Wednesdays · 19:00 · members only",
-      spots: "private",
-    },
+    nextEvent: nextEventFromGathering("wellbeing-ama"),
     topicThread: {
       votes: 26,
       title: "Telling my sister this weekend — any advice?",
@@ -526,13 +491,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Co-lead",
       bio: "Co-leads the Hub and the podcast The Back Room. Keeps the vetted-providers list and answers her own phone.",
     },
-    nextEvent: {
-      dd: "20",
-      mm: "Jun",
-      title: "Legal name-change workshop",
-      meta: "Friday · 18:30 · with ILGA legal",
-      spots: "12 spots left",
-    },
+    nextEvent: nextEventFromGathering("trans-hub-meetup"),
     topicThread: {
       votes: 29,
       title: "Hormone supply shortage — what to do this month",
@@ -587,13 +546,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Convener",
       bio: "Lawyer in Anjos, out since the eighties. Convenes this group because the queer community is bad at remembering it will, with luck, get old.",
     },
-    nextEvent: {
-      dd: "18",
-      mm: "Jun",
-      title: "Long lunch — Cervejaria, Baixa",
-      meta: "Wednesday · 13:00 · accessible venue",
-      spots: "10 seats",
-    },
+    nextEvent: nextEventFromGathering("queer-elders-social"),
     topicThread: {
       votes: 24,
       title: "Recording our stories — anyone want to help?",
@@ -651,13 +604,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Facilitator",
       bio: "Illustrator, 24, who started facilitating after the group gave her a first commission and a sense of where she lived.",
     },
-    nextEvent: {
-      dd: "13",
-      mm: "Jun",
-      title: "CVs & first jobs clinic",
-      meta: "Friday · 18:00 · bring a laptop",
-      spots: "15 spots",
-    },
+    nextEvent: nextEventFromGathering("queer-youth-gathering"),
     topicThread: {
       votes: 19,
       title: "Cheap(ish) first flats — which neighbourhoods?",
@@ -712,13 +659,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Co-organiser",
       bio: "Support coordinator and migrant-rights organiser. Holds this space because she spent years being the only one in every other one.",
     },
-    nextEvent: {
-      dd: "22",
-      mm: "Jun",
-      title: "Supper & sounds — Mouraria",
-      meta: "Saturday · 20:00 · shared dinner",
-      spots: "few left",
-    },
+    nextEvent: nextEventFromGathering("queer-of-colour-gathering"),
     topicThread: {
       votes: 27,
       title: "Where to find ingredients from home in Lisbon",
@@ -774,13 +715,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
       role: "Coordinator",
       bio: "Ceramicist in Graça who builds the access into every event first and the programme second — because the other way round never works.",
     },
-    nextEvent: {
-      dd: "16",
-      mm: "Jun",
-      title: "Low-sensory hangout (hybrid)",
-      meta: "Sunday · 16:00 · seated + online",
-      spots: "drop-in",
-    },
+    nextEvent: nextEventFromGathering("disability-access-talk"),
     topicThread: {
       votes: 23,
       title: "Genuinely step-free venues — let's keep a list",

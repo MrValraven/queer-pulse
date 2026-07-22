@@ -9,6 +9,7 @@ import { useNavMode } from "../../../app/providers/navModeContext";
 import { useDisplayMode } from "../../../app/providers/displayModeContext";
 import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
+import { useUnreadMessages } from "../../../features/messages/api/useConversations";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { MegaNav } from "./MegaNav";
@@ -54,6 +55,24 @@ function NotificationsBell({ unreadCount }: { unreadCount?: number }) {
           strokeLinejoin="round"
         />
       </svg>
+      {count > 0 && <span className={styles.bellBadge}>{count}</span>}
+    </Link>
+  );
+}
+
+function MessagesLink() {
+  // Sibling to the bell: sources its own unread badge from the shared
+  // conversations query cache (demo → mock unread, live → fetched inbox), so no
+  // page has to thread a count down. Mirrors NotificationsBell exactly.
+  const count = useUnreadMessages();
+  const { t } = useTranslation();
+  return (
+    <Link
+      to={routes.messages}
+      className={styles.bell}
+      aria-label={t("nav:messages")}
+    >
+      <MessageIcon />
       {count > 0 && <span className={styles.bellBadge}>{count}</span>}
     </Link>
   );
@@ -148,6 +167,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
           {!isMobile &&
             (loggedIn ? (
               <>
+                <MessagesLink />
                 <NotificationsBell unreadCount={unreadCount} />
                 <AccountMenu />
               </>
@@ -180,6 +200,23 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
 
       {isMobile && <MobileNavDrawer />}
     </>
+  );
+}
+
+function MessageIcon() {
+  // Speech bubble matching the account menu's former Messages glyph
+  // (react-icons FiMessageSquare), redrawn inline to sit with the bell/search
+  // icons that Navbar keeps as hand-authored SVGs.
+  return (
+    <svg width={19} height={19} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 

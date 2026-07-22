@@ -3,7 +3,6 @@ import { routes } from "../../app/routeMap";
 
 export const EPISODE_PATH = routes.audioPlayer;
 export const MEMBER_PATH = routes.members;
-export const NEWSLETTER_PATH = routes.newsletter;
 export const CONTACT_PATH = routes.contact;
 
 export const RSS_URL = "https://feeds.queerpulse.fm/the-back-room.xml";

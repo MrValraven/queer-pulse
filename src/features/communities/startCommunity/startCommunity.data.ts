@@ -15,8 +15,12 @@ export type TintKey = "coral" | "jade" | "plum";
 /** A person helping run the space (owner or co-steward). */
 export interface Steward {
   key: string;
+  /** Member slug — set for co-stewards picked from your connections; the owner may omit it. */
+  slug?: string;
   name: string;
   initials: string;
+  /** Profile photo, when the person has one; falls back to initials. */
+  src?: string;
   tint: TintKey;
   role: "owner" | "mod";
 }

@@ -10,20 +10,13 @@ import {
 import { ownerStewardFrom } from "./useCommunityForm";
 import { connectionViews } from "../../connect/connections.data";
 import { useAuth } from "../../../app/providers/authContext";
-import type { AvatarTint } from "../../../shared/components/ui";
+import { AvatarStack } from "../../../shared/components/ui";
 import styles from "./StartCommunityPage.module.css";
 
 const COVER: Record<TintKey, string> = {
   coral: styles.coverCoral!,
   jade: styles.coverJade!,
   plum: styles.coverPlum!,
-};
-const FACE: Record<AvatarTint, string> = {
-  coral: styles.tintFaceCoral!,
-  jade: styles.tintFaceJade!,
-  plum: styles.tintFacePlum!,
-  default: styles.tintFacePlum!,
-  auth: styles.tintFacePlum!,
 };
 const AV: Record<TintKey, string> = {
   coral: styles.tintFaceCoral!,
@@ -48,6 +41,7 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
     key: view.slug,
     name: view.name,
     initials: view.initials,
+    src: view.photo,
     tint: view.tint,
   }));
   const roster = [owner, ...invited];
@@ -123,17 +117,15 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
                 <span>{t("communities:start.preview.foundingMembers")}</span>
                 <span>{roster.length}</span>
               </div>
-              <div className={styles.cpvRoster}>
-                {roster.slice(0, 6).map((m) => (
-                  <span
-                    key={m.key}
-                    className={`${styles.cpvFace} ${FACE[m.tint]}`}
-                    title={m.name}
-                  >
-                    {m.initials}
-                  </span>
-                ))}
-              </div>
+              <AvatarStack
+                className={styles.cpvRoster}
+                size={34}
+                avatars={roster.slice(0, 6).map((m) => ({
+                  initials: m.initials,
+                  src: m.src,
+                  tint: m.tint,
+                }))}
+              />
             </div>
           </div>
         </div>

@@ -1,17 +1,9 @@
 import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { AvatarTint } from "../../../shared/components/ui";
+import { Avatar } from "../../../shared/components/ui";
 import { useConnectionsList } from "../../connect/api/useConnectionsList";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
-
-const FACE: Record<AvatarTint, string> = {
-  coral: styles.tintFaceCoral!,
-  jade: styles.tintFaceJade!,
-  plum: styles.tintFacePlum!,
-  default: styles.tintFacePlum!,
-  auth: styles.tintFacePlum!,
-};
 
 /**
  * Chapter 7 — People: invite a few to be there on day one. You can only invite
@@ -46,9 +38,12 @@ export function StepPeople({ form }: { form: CommunityForm }) {
                   aria-pressed={on}
                   onClick={() => toggleInvite(c.slug)}
                 >
-                  <span className={`${styles.icAv} ${FACE[c.tint]}`}>
-                    {c.initials}
-                  </span>
+                  <Avatar
+                    src={c.photo}
+                    initials={c.initials}
+                    tint={c.tint}
+                    size={28}
+                  />
                   <span className={styles.icName}>{c.name}</span>
                   {on && (
                     <span className={styles.icCheck}>

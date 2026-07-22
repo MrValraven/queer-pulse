@@ -30,7 +30,12 @@ export function CommunityCard({
         : t("communities:card.join.request");
 
   return (
-    <Link to={`/community/${community.slug}`} className={styles.card}>
+    <Link
+      to={`/community/${community.slug}`}
+      className={[styles.card, joined && styles.joinedCard]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className={styles.cardTop}>
         <span className={[styles.type, styles[community.type]].join(" ")}>
           {community.typeLabel}

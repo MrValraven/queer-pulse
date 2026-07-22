@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { ChipSelect, ComingSoon } from "../../shared/components/ui";
+import { ChipSelect, ComingSoon, Toggle } from "../../shared/components/ui";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -66,6 +66,17 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             onChange();
           }}
         />
+        <div className={styles.showOnProfileRow}>
+          <Toggle
+            checked={draft.lookingForPublic}
+            onChange={(checked) => {
+              updateDraft({ lookingForPublic: checked });
+              onChange();
+            }}
+            label={t("settings:interests.lookingFor.showOnProfile")}
+          />
+          <span>{t("settings:interests.lookingFor.showOnProfile")}</span>
+        </div>
       </div>
 
       <div className={styles.prefSection}>

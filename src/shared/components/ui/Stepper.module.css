@@ -1,0 +1,204 @@
+/* ==========================================================
+   Stepper — horizontal connected-dot progress rail. Tokens only.
+   Geometry: rail + fill inset half a step each side so the line
+   spans dot-centre to dot-centre and never leaks past the ends.
+   ========================================================== */
+.stepper {
+  --stepper-accent: var(--accent);
+  --stepper-done: var(--jade);
+  --stepper-fill: var(--stepper-accent);
+  --stepper-dot: 26px;
+  --stepper-check: 13px;
+  --stepper-num: 12px;
+  --stepper-label: 12px;
+}
+.track {
+  position: relative;
+}
+.track::before {
+  content: "";
+  position: absolute;
+  inset-inline: calc(100% / var(--stepper-count) / 2);
+  top: calc(var(--stepper-dot) / 2 - 1px);
+  height: 2px;
+  background: rgba(var(--plum-rgb), 0.1);
+  border-radius: 2px;
+}
+.fill {
+  position: absolute;
+  inset-inline: calc(100% / var(--stepper-count) / 2);
+  top: calc(var(--stepper-dot) / 2 - 1px);
+  height: 2px;
+  transform-origin: left;
+  background: var(--stepper-fill);
+  border-radius: 2px;
+  transition: transform var(--dur-slow) var(--ease);
+  z-index: 1;
+}
+.list {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+}
+.item {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+.node {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: default;
+  font-family: var(--sans);
+}
+.nodeButton {
+  cursor: pointer;
+}
+.dot {
+  width: var(--stepper-dot);
+  height: var(--stepper-dot);
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid rgba(var(--line-rgb), 0.18);
+  color: var(--ink-40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+.num {
+  font-size: var(--stepper-num);
+  font-weight: 700;
+  line-height: 1;
+}
+.check {
+  width: var(--stepper-check);
+  height: var(--stepper-check);
+}
+.pip {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background var(--dur-base) var(--ease);
+}
+.node.done .dot {
+  border-color: var(--stepper-done);
+  background: var(--stepper-done);
+  color: var(--paper);
+}
+.node.current .dot {
+  border-color: var(--stepper-accent);
+  background: var(--cream);
+  color: var(--stepper-accent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--stepper-accent) 16%, transparent);
+}
+.node.current .pip {
+  background: var(--stepper-accent);
+}
+/* Numbered rails read best with a solid current dot (the number sits on the
+   accent fill); checkmark rails keep the lighter ring + pip. */
+.markerNumber .node.current .dot {
+  background: var(--stepper-accent);
+  border-color: var(--stepper-accent);
+  color: var(--paper);
+}
+.label {
+  font-size: var(--stepper-label);
+  font-weight: 600;
+  color: var(--ink-40);
+  max-width: 11ch;
+  transition: color var(--dur-base) var(--ease);
+}
+.node.current .label {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+.node.done .label {
+  color: var(--ink-60);
+}
+.node:focus-visible {
+  outline: none;
+}
+.node:focus-visible .dot {
+  outline: 2px solid var(--stepper-accent);
+  outline-offset: 3px;
+}
+/* sizes */
+.sizeSm {
+  --stepper-dot: 20px;
+  --stepper-check: 11px;
+  --stepper-num: 11px;
+  --stepper-label: 11.5px;
+}
+.sizeMd {
+  --stepper-dot: 26px;
+  --stepper-check: 13px;
+  --stepper-num: 12px;
+  --stepper-label: 12px;
+}
+.sizeLg {
+  --stepper-dot: 32px;
+  --stepper-check: 15px;
+  --stepper-num: 13.5px;
+  --stepper-label: 12.5px;
+}
+/* motion — one-shot, reduced-motion safe */
+@media (prefers-reduced-motion: no-preference) {
+  .node.done .check {
+    animation: stepperCheckIn var(--dur-base) var(--ease) both;
+  }
+  .node.current .dot {
+    animation: stepperDotPop var(--dur-base) var(--ease);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}
+@media (hover: hover) {
+  .nodeButton:hover .dot {
+    transform: scale(1.12);
+  }
+  .nodeButton:hover .label {
+    color: var(--text-strong);
+  }
+}
+@keyframes stepperCheckIn {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes stepperDotPop {
+  0% {
+    transform: scale(0.85);
+  }
+  55% {
+    transform: scale(1.09);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

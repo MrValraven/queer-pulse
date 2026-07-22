@@ -191,7 +191,6 @@ export const routes = {
   messages: "/messages",
   myEvents: "/account/events",
   microGrants: "/work/grants/micro",
-  newsletter: "/about/newsletter",
   newsletterArchive: "/magazine/newsletter-archive",
   notifications: "/notifications",
   offer: "/work/offer",

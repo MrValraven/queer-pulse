@@ -100,6 +100,18 @@
 .confirm {
   text-align: center;
   padding: 8px 4px;
+  animation: confirmIn 0.34s var(--ease) both;
+}
+@keyframes confirmIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confirm {
+    animation: none;
+  }
 }
 .confirmIcon {
   display: inline-flex;
@@ -112,6 +124,21 @@
   color: var(--jade);
   font-size: 24px;
   margin-bottom: 16px;
+  animation: iconPop 0.32s var(--ease) 0.18s both;
+}
+@keyframes iconPop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confirmIcon {
+    animation: none;
+  }
 }
 .confirmTitle {
   font-family: var(--serif);

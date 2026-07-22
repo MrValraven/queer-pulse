@@ -14,6 +14,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community, CommunityType } from "../homepage/data/types";
 import { useCommunities } from "./api/useCommunities";
 import { useJoinCommunity } from "./api/useCommunityMutations";
@@ -58,6 +59,7 @@ export function CommunitiesPage() {
   } = useCommunities();
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
+  const { demoMode } = useDemoMode();
   const [filter, setFilter] = useState<"all" | CommunityType>("all");
   const [joining, setJoining] = useState<Community | null>(null);
   const joinMutation = useJoinCommunity(joining?.slug ?? "");
@@ -157,7 +159,11 @@ export function CommunitiesPage() {
                       <CommunityCard
                         community={community}
                         joined={
-                          community.slug ? isMember(community.slug) : false
+                          demoMode
+                            ? community.slug
+                              ? isMember(community.slug)
+                              : false
+                            : community.myRole != null
                         }
                         onJoin={setJoining}
                       />

@@ -104,6 +104,11 @@ export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
     joinLabel: joinLabelFor(dto.accessTier),
     dashed: dto.accessTier === "private",
     privateBadge: dto.accessTier === "private",
+    // Carry the viewer's membership through so the discover grid can show the
+    // joined state without a second lookup — the detail page reads the same
+    // `myRole` off its DTO. Dropping it here is what made the grid always show
+    // "Join" even for communities you're already in.
+    myRole: dto.myRole,
   };
 }
 
@@ -131,6 +136,7 @@ export function detailDtoToDetail(dto: CommunityDetailDTO): CommunityDetail {
       title: "Next gathering to be announced",
       meta: "Check the events tab",
       spots: "Open to members",
+      tba: true,
     },
     topicThread: {
       votes: 0,

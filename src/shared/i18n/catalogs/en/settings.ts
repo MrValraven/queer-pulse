@@ -165,6 +165,8 @@ export const settings: Catalog = {
 
   "interests.lookingFor.heading": "What are you looking for here?",
   "interests.lookingFor.helper": "Select as many as you like.",
+  "interests.lookingFor.showOnProfile":
+    "Show what I'm looking for on my profile",
   "interests.life.heading": "A bit about your life",
   "interests.life.note": "(private — helps with local suggestions)",
   "interests.life.cityLabel": "City / region",
@@ -226,7 +228,6 @@ export const settings: Catalog = {
   "notifications.section.messagesConnections": "Messages & connections",
   "notifications.section.communitiesBoard": "Communities & board",
   "notifications.section.delivery": "Delivery",
-  "notifications.section.newslettersEmail": "Newsletters & email",
   "notifications.gatherings.newAnnounced.title": "New gathering announced",
   "notifications.gatherings.newAnnounced.desc":
     "When a gathering matching your interests is posted",
@@ -264,10 +265,6 @@ export const settings: Catalog = {
   "notifications.delivery.quietHours.desc":
     "Don't send anything between these hours",
   "notifications.delivery.quietHours.none": "No quiet hours",
-  "notifications.newsletter.title": "Newsletter & email preferences",
-  "notifications.newsletter.desc":
-    "Choose which newsletters and email streams you receive — magazine issues, event digests, community announcements, and more.",
-  "notifications.newsletter.manage": "Manage",
 
   // ── SettingsPanes.tsx — LanguagePane ──────────────────────────────────────
   "language.title": "Language & <em>terminology.</em>",

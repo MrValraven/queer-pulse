@@ -368,6 +368,32 @@ div.backBar {
   outline-offset: 2px;
 }
 
+.lookingForChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lookingForHint {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--ink-60);
+}
+
+.lookingForHelper {
+  margin: 0 0 12px;
+  color: var(--ink-60);
+}
+.lookingForToggleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.lookingForToggleLabel {
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
 .workGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

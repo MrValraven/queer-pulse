@@ -24,13 +24,15 @@ import type {
 // `useFormat()`. That keeps the live path and the demo `data.ts` registry on one
 // shape, so a language switch translates both identically.
 
-/** Pick a category dot colour from the org label, matching the mock palette. */
+/**
+ * Pick a category dot colour from the org label, matching the mock palette.
+ * QueerPulse only distinguishes gatherings it hosts from everything else
+ * (community-run), so anything that isn't QueerPulse maps to the community dot.
+ */
 function orgColorFor(org?: string): string {
-  const o = (org ?? "").toLowerCase();
-  if (o.includes("queerpulse")) return orgColors.queerpulse;
-  if (o.includes("ilga")) return orgColors.ilga;
-  if (o.includes("community")) return orgColors.community;
-  return orgColors.partner;
+  const organiser = (org ?? "").toLowerCase();
+  if (organiser.includes("queerpulse")) return orgColors.queerpulse;
+  return orgColors.community;
 }
 
 function hostName(dto?: EventCardDTO["host"], org?: string): string {

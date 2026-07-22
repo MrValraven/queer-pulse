@@ -12,7 +12,6 @@ import {
   SHOW_INFO,
   EPISODE_PATH,
   MEMBER_PATH,
-  NEWSLETTER_PATH,
   CONTACT_PATH,
   type Episode,
 } from "./podcastShow.data";
@@ -62,9 +61,6 @@ export function PodcastHero() {
             <Button to={EPISODE_PATH} variant="primary">
               <FiPlay style={{ verticalAlign: "-2px", marginRight: 8 }} />
               {t("magazine:podcast.hero.playLatestCta")}
-            </Button>
-            <Button to={NEWSLETTER_PATH} variant="ghost-dark">
-              {t("magazine:podcast.hero.subscribeCta")}
             </Button>
           </div>
         </div>

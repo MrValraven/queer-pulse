@@ -22,6 +22,7 @@ export function ownerStewardFrom(user: AuthUser | null): Steward {
     key: "owner",
     name: `${firstName} ${lastName}`.trim(),
     initials,
+    src: user?.profile.avatarUrl ?? undefined,
     tint: "plum",
     role: "owner",
   };
@@ -63,7 +64,8 @@ export function useCommunityForm(initial?: CommunityDraft) {
       if (
         current &&
         current.name === owner.name &&
-        current.initials === owner.initials
+        current.initials === owner.initials &&
+        current.src === owner.src
       ) {
         return d;
       }

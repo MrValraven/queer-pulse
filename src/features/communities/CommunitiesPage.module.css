@@ -286,6 +286,25 @@
   }
 }
 
+/* Communities you're already part of read as "yours" at a glance across the
+   grid — a soft jade ring, echoing the jade "Joined" pill in the footer. */
+.joinedCard {
+  border-color: rgba(var(--jade-rgb), 0.45);
+  box-shadow:
+    0 0 0 1px rgba(var(--jade-rgb), 0.28),
+    var(--shadow-card);
+}
+@media (hover: hover) {
+  .joinedCard:hover {
+    box-shadow:
+      0 0 0 1px rgba(var(--jade-rgb), 0.28),
+      0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+  }
+}
+
 :global([data-theme="dark"]) .card {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+:global([data-theme="dark"]) .joinedCard {
+  border-color: rgba(var(--jade-rgb), 0.5);
 }

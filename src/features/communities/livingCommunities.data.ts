@@ -1,5 +1,6 @@
 import type { Person } from "./communityDetails";
 import { POOL } from "./communityDetails.data";
+import { communityEventFromGathering } from "./nextGathering";
 import type {
   CommunityEvent,
   CommunityResource,
@@ -194,14 +195,7 @@ const RUNNERS_MOMENTS: PulseMoment[] = [
 ];
 
 const RUNNERS_EVENTS: CommunityEvent[] = [
-  {
-    id: "run-e1",
-    dd: "8",
-    mm: "Jun",
-    title: "Sunrise run — Parque das Nações",
-    meta: "Sunday · 8:00 · 7 km loop",
-    spots: "9 spots remaining",
-  },
+  communityEventFromGathering("run-e1", "queer-runners-run"),
   {
     id: "run-e2",
     dd: "15",
@@ -367,14 +361,7 @@ const HUB_MOMENTS: PulseMoment[] = [
 ];
 
 const HUB_EVENTS: CommunityEvent[] = [
-  {
-    id: "hub-e1",
-    dd: "20",
-    mm: "Jun",
-    title: "Legal name-change workshop",
-    meta: "Friday · 18:30 · with ILGA legal",
-    spots: "12 spots left",
-  },
+  communityEventFromGathering("hub-e1", "trans-hub-meetup"),
   {
     id: "hub-e2",
     dd: "12",
@@ -592,14 +579,7 @@ const ARTS_MOMENTS: PulseMoment[] = [
 ];
 
 const ARTS_EVENTS: CommunityEvent[] = [
-  {
-    id: "art-e1",
-    dd: "21",
-    mm: "Jun",
-    title: "Open crit — bring one work",
-    meta: "Saturday · 15:00 · Atelier Pulso",
-    spots: "8 spots left",
-  },
+  communityEventFromGathering("art-e1", "portfolio-night"),
   {
     id: "art-e2",
     dd: "28",
@@ -782,14 +762,7 @@ const SOCIAL_MOMENTS: PulseMoment[] = [
 ];
 
 const SOCIAL_EVENTS: CommunityEvent[] = [
-  {
-    id: "soc-e1",
-    dd: "19",
-    mm: "Jun",
-    title: "June meetup — Park rooftop",
-    meta: "Thursday · 19:00 · Bairro Alto",
-    spots: "open to all",
-  },
+  communityEventFromGathering("soc-e1", "supper-club-12"),
   {
     id: "soc-e2",
     dd: "17",
@@ -949,14 +922,7 @@ const AID_MOMENTS: PulseMoment[] = [
 ];
 
 const AID_EVENTS: CommunityEvent[] = [
-  {
-    id: "aid-e1",
-    dd: "13",
-    mm: "Jun",
-    title: "Open clinic night — bring any question",
-    meta: "Thursday · 19:00 · Café Beirão",
-    spots: "drop-in",
-  },
+  communityEventFromGathering("aid-e1", "trans-mutual-aid"),
   {
     id: "aid-e2",
     dd: "20",
@@ -1130,14 +1096,7 @@ const PARENTS_MOMENTS: PulseMoment[] = [
 ];
 
 const PARENTS_EVENTS: CommunityEvent[] = [
-  {
-    id: "par-e1",
-    dd: "15",
-    mm: "Jun",
-    title: "Family picnic — Jardim da Estrela",
-    meta: "Sunday · 11:00 · bring a blanket",
-    spots: "all families welcome",
-  },
+  communityEventFromGathering("par-e1", "queer-parent-network"),
   {
     id: "par-e2",
     dd: "29",
@@ -1279,14 +1238,7 @@ const COMINGOUT_MOMENTS: PulseMoment[] = [
 ];
 
 const COMINGOUT_EVENTS: CommunityEvent[] = [
-  {
-    id: "cout-e1",
-    dd: "18",
-    mm: "Jun",
-    title: "Weekly check-in circle",
-    meta: "Wednesday · 19:00 · members only",
-    spots: "private",
-  },
+  communityEventFromGathering("cout-e1", "wellbeing-ama"),
   {
     id: "cout-e2",
     dd: "25",
@@ -1450,14 +1402,7 @@ const ELDERS_MOMENTS: PulseMoment[] = [
 ];
 
 const ELDERS_EVENTS: CommunityEvent[] = [
-  {
-    id: "eld-e1",
-    dd: "18",
-    mm: "Jun",
-    title: "Long lunch — Cervejaria Trindade",
-    meta: "Wednesday · 13:00 · accessible, Chiado",
-    spots: "10 seats",
-  },
+  communityEventFromGathering("eld-e1", "queer-elders-social"),
   {
     id: "eld-e2",
     dd: "16",
@@ -1654,14 +1599,7 @@ const YOUTH_MOMENTS: PulseMoment[] = [
 ];
 
 const YOUTH_EVENTS: CommunityEvent[] = [
-  {
-    id: "yth-e1",
-    dd: "13",
-    mm: "Jun",
-    title: "CVs & first-jobs clinic",
-    meta: "Friday · 18:00 · bring a laptop",
-    spots: "15 spots",
-  },
+  communityEventFromGathering("yth-e1", "queer-youth-gathering"),
   {
     id: "yth-e2",
     dd: "27",
@@ -1827,14 +1765,7 @@ const POC_MOMENTS: PulseMoment[] = [
 ];
 
 const POC_EVENTS: CommunityEvent[] = [
-  {
-    id: "poc-e1",
-    dd: "22",
-    mm: "Jun",
-    title: "Supper & sounds — Mouraria",
-    meta: "Saturday · 20:00 · shared dinner",
-    spots: "few spots left",
-  },
+  communityEventFromGathering("poc-e1", "queer-of-colour-gathering"),
   {
     id: "poc-e2",
     dd: "13",
@@ -2003,14 +1934,7 @@ const DISABLED_MOMENTS: PulseMoment[] = [
 ];
 
 const DISABLED_EVENTS: CommunityEvent[] = [
-  {
-    id: "dis-e1",
-    dd: "16",
-    mm: "Jun",
-    title: "Low-sensory hangout (hybrid)",
-    meta: "Sunday · 16:00 · in-person + online",
-    spots: "drop-in",
-  },
+  communityEventFromGathering("dis-e1", "disability-access-talk"),
   {
     id: "dis-e2",
     dd: "7",

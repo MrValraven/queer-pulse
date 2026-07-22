@@ -18,7 +18,15 @@ import {
   savedItemToBody,
 } from "../../features/members/api/saved.api";
 
-export type SavedKind = "article" | "film" | "job" | "post" | "event" | "group";
+export type SavedKind =
+  | "article"
+  | "film"
+  | "job"
+  | "post"
+  | "event"
+  | "group"
+  | "housing"
+  | "flatmate";
 
 export interface SavedItem {
   /** Stable unique id, conventionally `${kind}:${slug}`. */

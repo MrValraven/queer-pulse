@@ -57,7 +57,9 @@ export function LivingHubTabs({
     pulse: living.pinned.length + living.pulse.length,
     discussion: threads.length,
     members: living.stats.members,
-    events: living.events.filter((e) => !e.past).length,
+    // The Events tab surfaces only the next upcoming gathering, so the badge
+    // caps at 1 to match what's shown rather than the full upcoming count.
+    events: Math.min(1, living.events.filter((e) => !e.past).length),
     modtools:
       (living.joinRequests?.length ?? 0) + (living.reports?.length ?? 0),
   };

@@ -7,9 +7,6 @@ import {
   inviteFullUrlFor,
   inviteUrlFor,
 } from "../../shared/lib/inviteUrl";
-import { currentUser } from "../members/data/members";
-
-export const SENDER_NAME = `${currentUser.first} ${currentUser.last}`;
 
 export const INVITE_CODE = "QP-7F3K-2026";
 

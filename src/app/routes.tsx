@@ -321,11 +321,6 @@ const PressArchivePage = lazy(() =>
     default: m.PressArchivePage,
   })),
 );
-const NewsletterPage = lazy(() =>
-  import("../features/marketing/NewsletterPage").then((m) => ({
-    default: m.NewsletterPage,
-  })),
-);
 const AnnualAssemblyPage = lazy(() =>
   import("../features/marketing/AnnualAssemblyPage").then((m) => ({
     default: m.AnnualAssemblyPage,
@@ -1535,7 +1530,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/roadmap", routes.roadmap],
   ["/press-archive", routes.pressArchive],
   ["/press-kit", routes.pressKit],
-  ["/newsletter", routes.newsletter],
   ["/annual-assembly", routes.annualAssembly],
   ["/get-the-app", routes.getTheApp],
   ["/cities", routes.cities],
@@ -1773,7 +1767,6 @@ export function AppRoutes() {
           <Route path={routes.changelog} element={<ChangelogPage />} />
           <Route path={routes.roadmap} element={<RoadmapPage />} />
           <Route path={routes.pressArchive} element={<PressArchivePage />} />
-          <Route path={routes.newsletter} element={<NewsletterPage />} />
           <Route
             path={routes.annualAssembly}
             element={<AnnualAssemblyPage />}

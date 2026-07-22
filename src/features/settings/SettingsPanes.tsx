@@ -186,16 +186,6 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           onChange={onChange}
         />
       </Section>
-      <Section label={t("settings:notifications.section.newslettersEmail")}>
-        <div className={styles.dataCards}>
-          <DataCard
-            title={t("settings:notifications.newsletter.title")}
-            desc={t("settings:notifications.newsletter.desc")}
-            btn={t("settings:notifications.newsletter.manage")}
-            to={routes.newsletter}
-          />
-        </div>
-      </Section>
     </Pane>
   );
 }

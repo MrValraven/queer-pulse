@@ -427,9 +427,17 @@ export const communities: Catalog = {
   "start.running.ownerTag": "Tu · responsável",
   "start.running.coStewardTag": "Corresponsável",
   "start.running.removeAria": "Remover {name}",
-  "start.running.addPlaceholder":
-    "Adiciona uma pessoa corresponsável pelo nome",
-  "start.running.addCta": "Adicionar",
+  "start.running.addCta": "Adicionar corresponsável",
+  "start.running.addStewardModal.eyebrow": "Adicionar corresponsável",
+  "start.running.addStewardModal.title": "Escolhe alguém a quem estás ligada",
+  "start.running.addStewardModal.sub":
+    "As pessoas corresponsáveis só podem ser membros a quem já estás ligada. Pesquisa nas tuas ligações abaixo.",
+  "start.running.addStewardModal.searchLabel": "Pesquisar nas tuas ligações",
+  "start.running.addStewardModal.searchPlaceholder":
+    "Pesquisa por nome ou @slug…",
+  "start.running.addStewardModal.closeAria": "Fechar",
+  "start.running.addStewardModal.empty":
+    "Podes adicionar pessoas corresponsáveis assim que estiveres ligada a outros membros. Vai a Ligações para aumentar o teu círculo primeiro.",
   "start.running.insideHeading": "O que está incluído",
   "start.running.insideSub":
     "Ativa o que fizer sentido. Podes sempre adicionar mais depois de estares em funcionamento.",

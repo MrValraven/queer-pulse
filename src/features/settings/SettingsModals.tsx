@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
@@ -25,7 +26,11 @@ function ModalShell({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
-  return (
+  // Portal to <body> so the fixed-position overlay escapes any ancestor that
+  // establishes a containing block for fixed descendants. The settings panes
+  // are wrapped in <FadeIn> (`will-change: transform`), which would otherwise
+  // trap `position: fixed` inside the tall pane box and mis-position the modal.
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -49,7 +54,8 @@ function ModalShell({
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

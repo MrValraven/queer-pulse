@@ -65,6 +65,13 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   margin-bottom: 32px;
 }
+.headTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
 .type {
   font-size: 11px;
   font-weight: 700;
@@ -73,7 +80,9 @@
   padding: 4px 11px;
   border-radius: 7px;
   display: inline-block;
-  margin-bottom: 14px;
+}
+.saveBtn {
+  flex: none;
 }
 .title {
   font-family: var(--serif);
@@ -319,6 +328,11 @@
 .safety b {
   color: var(--jade);
   font-weight: 700;
+}
+.reportBtn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 12px;
 }
 
 /* similar */

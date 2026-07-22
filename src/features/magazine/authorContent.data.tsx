@@ -71,7 +71,6 @@ export interface Author {
   reading: ReadingItem[];
   elsewhere: ElsewhereLink[];
   portrait: string;
-  columnLabel: string;
 }
 
 export const AUTHORS: Record<string, Author> = {
@@ -249,7 +248,6 @@ export const AUTHORS: Record<string, Author> = {
       { label: "Member profile", note: "· in Lisbon", to: routes.members },
     ],
     portrait: AUTHOR_PORTRAIT_IMG,
-    columnLabel: "Subscribe to her column",
   },
 
   jonas: {
@@ -419,7 +417,6 @@ export const AUTHORS: Record<string, Author> = {
     ],
     portrait:
       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to his beat",
   },
 
   luisa: {
@@ -589,7 +586,6 @@ export const AUTHORS: Record<string, Author> = {
     ],
     portrait:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to her column",
   },
 
   "catarina-vaz": {
@@ -759,7 +755,6 @@ export const AUTHORS: Record<string, Author> = {
     ],
     portrait:
       "https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to her column",
   },
 
   "tomas-mendes": {
@@ -930,7 +925,6 @@ export const AUTHORS: Record<string, Author> = {
     ],
     portrait:
       "https://images.unsplash.com/photo-1485688809171-248861015a63?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to the column",
   },
 
   anika: {
@@ -1100,7 +1094,6 @@ export const AUTHORS: Record<string, Author> = {
     ],
     portrait:
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to her beat",
   },
 
   sofia: {
@@ -1274,7 +1267,6 @@ export const AUTHORS: Record<string, Author> = {
     ],
     portrait:
       "https://images.unsplash.com/photo-1484876065684-b683cf17d276?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to her column",
   },
 
   "marta-reis": {
@@ -1442,15 +1434,9 @@ export const AUTHORS: Record<string, Author> = {
         note: "· @martareis",
         href: "https://bsky.app/profile/martareis.bsky.social",
       },
-      {
-        label: "The newsletter",
-        note: "· editor's note, monthly",
-        to: routes.newsletter,
-      },
     ],
     portrait:
       "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=400&auto=format&fit=crop",
-    columnLabel: "Subscribe to the newsletter",
   },
 };
 

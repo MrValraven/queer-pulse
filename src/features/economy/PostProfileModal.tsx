@@ -3,11 +3,16 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useToast } from "../../shared/components/feedback/useToast";
+import type { UpsertFlatmateProfileBody } from "./api/flatmateProfile.api";
+import { useMyFlatmateProfile } from "./api/useMyFlatmateProfile";
+import { useUpsertFlatmateProfile } from "./api/useUpsertFlatmateProfile";
 import { PostProfileForm } from "./PostProfileForm";
 import styles from "./FlatmatesPage.module.css";
 
 export function PostProfileModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   useScrollLock();
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) =>
@@ -16,6 +21,16 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
   const [submitted, setSubmitted] = useState(false);
+  const { data: myProfile } = useMyFlatmateProfile();
+  const upsertFlatmateProfile = useUpsertFlatmateProfile();
+
+  const handleSubmit = (body: UpsertFlatmateProfileBody) => {
+    upsertFlatmateProfile.mutate(body, {
+      onSuccess: () => setSubmitted(true),
+      onError: () =>
+        showToast(t("economy:postProfileModal.error"), "error"),
+    });
+  };
 
   return (
     <div
@@ -68,7 +83,8 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
           </div>
         ) : (
           <PostProfileForm
-            onSubmit={() => setSubmitted(true)}
+            initial={myProfile}
+            onSubmit={handleSubmit}
             onClose={onClose}
           />
         )}

@@ -9,6 +9,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { gatheringPath } from "../gatherings/data";
 import type {
   CommunityDetail,
   Person,
@@ -44,7 +45,14 @@ export function AboutTab({ detail }: { detail: CommunityDetail }) {
       <div className={styles.secLbl}>
         {t("communities:detail.about.upcomingGathering")}
       </div>
-      <Link to={GATHERING} className={styles.gCard}>
+      <Link
+        to={
+          detail.nextEvent.slug
+            ? gatheringPath(detail.nextEvent.slug)
+            : GATHERING
+        }
+        className={styles.gCard}
+      >
         <div className={styles.gDate}>
           <div className={styles.gDd}>{detail.nextEvent.dd}</div>
           <div className={styles.gDm}>{detail.nextEvent.mm}</div>

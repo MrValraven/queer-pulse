@@ -103,16 +103,24 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
       },
     ],
   },
-  {
-    groupKey: "settings:nav.group.prototype",
-    items: [
-      {
-        id: "simulations",
-        icon: FiPlayCircle,
-        labelKey: "settings:nav.item.simulations",
-      },
-    ],
-  },
+  // Prototype simulations are a dev-only affordance: gate the whole group
+  // behind Vite's DEV flag so it never renders in a production build. This also
+  // keeps `simulations` out of the valid-pane list in SettingsPage, so a stray
+  // `?pane=simulations` in prod falls back to the default pane.
+  ...(import.meta.env.DEV
+    ? [
+        {
+          groupKey: "settings:nav.group.prototype",
+          items: [
+            {
+              id: "simulations" as const,
+              icon: FiPlayCircle,
+              labelKey: "settings:nav.item.simulations",
+            },
+          ],
+        },
+      ]
+    : []),
   {
     groupKey: "settings:nav.group.dangerZone",
     items: [

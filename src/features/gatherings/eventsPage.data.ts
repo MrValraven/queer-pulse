@@ -39,10 +39,4 @@ export const EVENT_CATEGORIES: EventCategory[] = [
     dot: orgColors.community,
     colors: [orgColors.community],
   },
-  {
-    key: "partners",
-    labelKey: "gatherings:events.categoryPartners",
-    dot: orgColors.ilga,
-    colors: [orgColors.ilga, orgColors.partner],
-  },
 ];

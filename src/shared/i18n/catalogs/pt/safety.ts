@@ -127,6 +127,9 @@ export const safety: Catalog = {
   "reason.venueSafety": "Um incidente de assédio ou segurança no espaço",
   "reason.venueStaff": "A equipa não interveio quando foi necessário",
   "reason.venueAccessibility": "Um problema de acessibilidade",
+  "reason.housingUnsafe":
+    "Alojamento inseguro, discriminatório, ou com informação enganosa",
+  "reason.housingScam": "Burla ou anúncio falso",
   "reason.other": "Outra coisa — explicada em detalhe",
 
   // ── FlagModal.tsx ──────────────────────────────────────────────────────

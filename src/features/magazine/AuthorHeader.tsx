@@ -47,9 +47,6 @@ export function AuthorHeader({ author }: { author: Author }) {
                 ? t("magazine:author.followingCta")
                 : t("magazine:author.followWriterCta")}
             </Button>
-            <Button variant="ghost" to={routes.newsletter}>
-              {author.columnLabel}
-            </Button>
             <span className={styles.pronouns}>{author.pronouns}</span>
           </div>
         </div>

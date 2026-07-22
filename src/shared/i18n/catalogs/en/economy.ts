@@ -436,6 +436,10 @@ export const economy: Catalog = {
   "housing.empty.listSpace": "List a space",
   "housing.listing.photoAlt": "Photo · {hood}",
   "housing.listing.from": "From {date}",
+  "housing.card.saveAriaLabel": "Save {title}",
+  "housing.card.unsaveAriaLabel": "Remove {title} from saved",
+  "housing.card.savedToast": "Saved {title}",
+  "housing.card.unsavedToast": "Removed {title} from saved",
 
   "housing.landlords.heading": "Community-endorsed <em>landlords</em>",
   "housing.landlords.subtitle":
@@ -552,6 +556,41 @@ export const economy: Catalog = {
   "housingListing.staySafe.body":
     "<b>Never pay a deposit before viewing in person.</b> Keep the conversation on QueerPulse until you've met. If something feels off, the Queer Housing Justice Network can advise.",
   "housingListing.moreOnBoard": "More on the board",
+  "housingListing.save": "Save",
+  "housingListing.saved": "Saved",
+  "housingListing.saveAriaLabel": "Save {title}",
+  "housingListing.unsaveAriaLabel": "Remove {title} from saved",
+  "housingListing.savedToast": "Saved {title}",
+  "housingListing.unsavedToast": "Removed {title} from saved",
+
+  // ── ReportListingModal ─────────────────────────────────────────────────
+  "housingListing.report": "Report",
+  "housingListing.reportAriaLabel": "Report {title}",
+  "housingListing.reportModal.ariaLabel": "Report this listing",
+  "housingListing.reportModal.eyebrow": "Report this listing",
+  "housingListing.reportModal.title": "What's wrong with <em>{title}?</em>",
+  "housingListing.reportModal.lead":
+    "Reports help us keep the housing board trustworthy. Tell us what's going on — specifics help the review team. Your name is never shared with the lister.",
+  "housingListing.reportModal.concernLabel": "What's the concern?",
+  "housingListing.reportModal.detailLabel": "Tell us more",
+  "housingListing.reportModal.detailPlaceholder":
+    "What made this listing feel unsafe, discriminatory, or untrustworthy? Be as specific as you're comfortable with.",
+  "housingListing.reportModal.charsRemaining_one":
+    "{count} more character to submit",
+  "housingListing.reportModal.charsRemaining_other":
+    "{count} more characters to submit",
+  "housingListing.reportModal.charsCount_one": "{count} character",
+  "housingListing.reportModal.charsCount_other": "{count} characters",
+  "housingListing.reportModal.confidentialNote":
+    "Reports are confidential. Moderators see your name; the lister never does. In an emergency, call <strong>112</strong> first.",
+  "housingListing.reportModal.cancelCta": "Cancel",
+  "housingListing.reportModal.submitting": "Submitting…",
+  "housingListing.reportModal.submitCta": "Submit report",
+  "housingListing.reportModal.success.title": "Report",
+  "housingListing.reportModal.success.em": "received.",
+  "housingListing.reportModal.success.body":
+    "Thank you. A moderator will review {title}. We may contact you for more detail, but we'll never share your report with the lister.",
+  "housingListing.reportModal.doneCta": "Done",
 
   // ── ContactRequestModal (shared "reach out" flow) ──────────────────────
   "contactRequest.defaultTitle": "Send a",
@@ -652,9 +691,20 @@ export const economy: Catalog = {
   "flatmates.card.memberSince": "Member since {date}",
   "flatmates.card.sayHello": "Say hello →",
   "flatmates.card.helloSent": "Hello sent",
+  "flatmates.card.matchScore": "{score}% match",
+  "flatmates.card.save": "Save",
+  "flatmates.card.saved": "Saved",
+  "flatmates.card.saveAriaLabel": "Save {name}'s profile",
+  "flatmates.card.unsaveAriaLabel": "Remove {name}'s profile from saved",
+  "flatmates.card.savedToast": "Saved {name}'s profile",
+  "flatmates.card.unsavedToast": "Removed {name}'s profile from saved",
+  "flatmates.card.reportCta": "Report",
+  "flatmates.card.reportAriaLabel": "Report {name}'s profile",
 
   // ── PostProfileModal / PostProfileForm ─────────────────────────────────
   "postProfileModal.ariaLabel": "Post your flatmate profile",
+  "postProfileModal.error":
+    "Couldn't save your profile — mind giving it another try?",
   "postProfileModal.success.title": "You're on the <em>board.</em>",
   "postProfileModal.success.body":
     "Your profile is live. Members will reach out directly — keep an eye on your QueerPulse messages.",
@@ -666,15 +716,13 @@ export const economy: Catalog = {
   "postProfileForm.lookingForLabel": "What are you looking for?",
   "postProfileForm.seekingDesc": "You're looking for a room in a flat or house",
   "postProfileForm.offeringDesc": "You have a room or flat share to offer",
-  "postProfileForm.nameLabel": "Your name",
-  "postProfileForm.namePlaceholder": "First name or nickname",
   "postProfileForm.pronounsLabel": "Pronouns (optional)",
   "postProfileForm.pronounsPlaceholder": "e.g. she/her, they/them",
   "postProfileForm.neighbourhoodLabel": "Neighbourhood",
   "postProfileForm.neighbourhoodPlaceholder": "Preference / location",
   "postProfileForm.anywhereCentral": "Anywhere central",
-  "postProfileForm.budgetLabel": "Budget / month",
-  "postProfileForm.budgetPlaceholder": "e.g. €700–900",
+  "postProfileForm.budgetLabel": "Budget / month (€)",
+  "postProfileForm.budgetPlaceholder": "e.g. 750",
   "postProfileForm.moveInLabel": "Available / move-in from",
   "postProfileForm.moveInPlaceholder": "When?",
   "postProfileForm.moveIn.jul2026": "July 2026",
@@ -684,8 +732,6 @@ export const economy: Catalog = {
   "postProfileForm.aboutPlaceholder":
     "Tell people a bit about yourself — your rhythm, your work, what kind of home makes you feel good. No need to sell yourself; just be honest.",
   "postProfileForm.lifestyleTagsLabel": "Lifestyle tags",
-  "postProfileForm.emailLabel": "Your email (not shown publicly)",
-  "postProfileForm.emailPlaceholder": "So members can reach you via QueerPulse",
   "postProfileForm.submitCta": "Post profile →",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────

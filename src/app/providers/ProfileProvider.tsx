@@ -82,6 +82,8 @@ export interface ProfileDraft {
   /** Private Settings → Interests preferences — not shown on the profile. */
   identities: string[];
   lookingFor: string[];
+  /** Whether `lookingFor` is shown on the profile to other viewers. */
+  lookingForPublic: boolean;
 }
 
 function toDraft(m: Member): ProfileDraft {
@@ -102,6 +104,7 @@ function toDraft(m: Member): ProfileDraft {
     skills: m.skills.map((s) => ({ ...s })),
     identities: [...(m.identities ?? [])],
     lookingFor: [...(m.lookingFor ?? [])],
+    lookingForPublic: m.lookingForPublic ?? false,
   };
 }
 
@@ -126,6 +129,7 @@ function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     tags: d.tags,
     identities: d.identities,
     lookingFor: d.lookingFor,
+    lookingForPublic: d.lookingForPublic,
   };
 }
 
@@ -283,6 +287,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       skills: draft.skills,
       identities: draft.identities,
       lookingFor: draft.lookingFor,
+      lookingForPublic: draft.lookingForPublic,
     }));
     setIsEditing(false);
     setJustSaved(true);

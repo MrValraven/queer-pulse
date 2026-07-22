@@ -226,7 +226,6 @@ export const settings: Catalog = {
   "notifications.section.messagesConnections": "Mensagens e ligações",
   "notifications.section.communitiesBoard": "Comunidades e mural",
   "notifications.section.delivery": "Entrega",
-  "notifications.section.newslettersEmail": "Newsletters e email",
   "notifications.gatherings.newAnnounced.title": "Novo convívio anunciado",
   "notifications.gatherings.newAnnounced.desc":
     "Quando é publicado um convívio que corresponde aos teus interesses",
@@ -267,10 +266,6 @@ export const settings: Catalog = {
   "notifications.delivery.quietHours.title": "Horas de silêncio",
   "notifications.delivery.quietHours.desc": "Não enviar nada entre estas horas",
   "notifications.delivery.quietHours.none": "Sem horas de silêncio",
-  "notifications.newsletter.title": "Preferências de newsletters e email",
-  "notifications.newsletter.desc":
-    "Escolhe que newsletters e fluxos de email recebes — edições da revista, resumos de eventos, anúncios da comunidade e mais.",
-  "notifications.newsletter.manage": "Gerir",
 
   // ── SettingsPanes.tsx — LanguagePane ──────────────────────────────────────
   "language.title": "Idioma e <em>terminologia.</em>",

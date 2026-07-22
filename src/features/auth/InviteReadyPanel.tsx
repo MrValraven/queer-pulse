@@ -4,17 +4,18 @@ import { routes } from "../../app/routeMap";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { currentUser } from "../members/data/members";
 import type { CreatedInvite } from "./api/useCreateInvite";
 import { SHARE_TARGETS, buildShareMessage } from "./invite.data";
 import { expiryLabel } from "./inviteLinkPanel.data";
+import { useInviteSender } from "./useInviteSender";
 import styles from "./InvitePage.module.css";
 
 /** Ready: the invite exists. Quiet plum success panel with the live link. */
 export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const message = buildShareMessage(t, currentUser.first, invite.fullUrl);
+  const sender = useInviteSender();
+  const message = buildShareMessage(t, sender.first, invite.fullUrl);
 
   return (
     <div className={`${styles.ready} ${styles.screenIn}`}>

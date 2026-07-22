@@ -3,6 +3,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
+import { gatheringPath } from "../gatherings/data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
 import type { Community } from "../homepage/data/types";
@@ -91,16 +92,23 @@ export function CommunitySidebar({
           <span className={styles.sbESdot} />
           {detail.nextEvent.spots}
         </div>
-        <Button
-          variant="primary"
-          to={GATHERING}
-          className={styles.sbFull}
-          style={{ marginTop: 14 }}
-        >
-          {t("communities:detail.sidebar.rsvpCta")} →
-        </Button>
+        {!detail.nextEvent.tba && (
+          <Button
+            variant="primary"
+            to={
+              detail.nextEvent.slug
+                ? gatheringPath(detail.nextEvent.slug)
+                : GATHERING
+            }
+            className={styles.sbFull}
+            style={{ marginTop: 14 }}
+          >
+            {t("communities:detail.sidebar.rsvpCta")} →
+          </Button>
+        )}
       </div>
 
+      {related.length > 0 && (
       <div className={styles.sbC}>
         <div className={styles.sbLbl}>
           {t("communities:detail.sidebar.relatedCommunities")}
@@ -127,6 +135,7 @@ export function CommunitySidebar({
           </Link>
         ))}
       </div>
+      )}
     </aside>
   );
 }

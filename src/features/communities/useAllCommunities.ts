@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useCreatedCommunities } from "./startCommunity/createdCommunities.store";
-import { currentUser } from "../members/data/members";
 import { communities } from "../homepage/data/communities";
 import type { Community } from "../homepage/data/types";
 import {
@@ -35,10 +34,14 @@ export function useAllCommunities(): Community[] {
 
 /** Synthesize a full detail record for a freshly-founded community. */
 export function buildCreatedDetail(c: CreatedCommunity): CommunityDetail {
+  // The founder is whoever actually created the community — captured at creation
+  // time as the locked "owner" steward (derived from the signed-in member via
+  // `ownerStewardFrom`), never a hardcoded persona.
+  const owner = c.stewards.find((steward) => steward.key === "owner");
   const organiser: Person & { bio: string } = {
-    name: `${currentUser.first} ${currentUser.last}`,
-    initials: currentUser.initials,
-    tint: (currentUser.tint as Tint) ?? "plum",
+    name: owner?.name || "Founder",
+    initials: owner?.initials || "?",
+    tint: (owner?.tint as Tint) ?? "plum",
     role: "Founder",
     slug: c.ownerSlug,
     bio: `Just opened ${c.name}. ${c.tagline || c.purpose}`,
@@ -57,6 +60,7 @@ export function buildCreatedDetail(c: CreatedCommunity): CommunityDetail {
       title: "First gathering, to be announced",
       meta: "Once a few people are in",
       spots: "Open to all members",
+      tba: true,
     },
     topicThread: {
       votes: 1,

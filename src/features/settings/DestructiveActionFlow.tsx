@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -74,7 +75,10 @@ export function DestructiveActionFlow({
 
   const canDismiss = phase === "confirm" || phase === "error";
 
-  return (
+  // Portal to <body>: the settings panes sit inside <FadeIn>
+  // (`will-change: transform`), which makes a containing block for fixed
+  // descendants and would otherwise mis-position this fixed overlay.
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -163,6 +167,7 @@ export function DestructiveActionFlow({
           )}
         </div>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 }

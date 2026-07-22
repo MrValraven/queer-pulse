@@ -33,7 +33,9 @@ import {
   type FeedPost,
   type FeedTabIcon,
   type SidebarMember,
+  type SidebarGathering,
 } from "./feed.data";
+import { useEvents } from "../gatherings/api/useEvents";
 import { initials } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
 import { tintForSlug } from "../../shared/api/refs";
@@ -284,6 +286,17 @@ export function FeedPage() {
 
   // Live feed source (inert in demo mode, which renders its scripted cards).
   const feed = useFeed(displayTab);
+  // The sidebar's "New this week" widget is page-global — it must stay put no
+  // matter which feed tab is active. Source it from a dedicated People-tab
+  // query rather than the tab-scoped `feed` above, whose `newMembers` is empty
+  // on tabs like Gatherings/Posts. When the active tab *is* People this shares
+  // `feed`'s query key, so react-query dedupes it into a single request.
+  const sidebarFeed = useFeed("People");
+  // The sidebar's "Upcoming" widget shows the upcoming gatherings, independent of
+  // the active feed tab — same page-global rationale as the members widget.
+  // `useEvents` branches demo/live internally; in demo the sidebar keeps its own
+  // curated rows and ignores this.
+  const upcomingFeed = useEvents({ filter: "upcoming" });
 
   // Defense-in-depth: hide any author I've blocked or muted from my feed. The
   // server is authoritative in live mode; this stops any flash of their content.
@@ -353,12 +366,19 @@ export function FeedPage() {
     : livePosts.length === 0 && liveMembers.length === 0;
 
   // Sidebar "New this week" rows: the demo mock in demo mode, otherwise the live
-  // recently-joined members (already block/mute filtered above) mapped to the
-  // widget's row shape and capped to a short list. Items without a handle can't
-  // link to a profile, so they're dropped.
+  // recently-joined members from the tab-independent `sidebarFeed` (block/mute
+  // filtered like the list) mapped to the widget's row shape and capped to a
+  // short list. Items without a handle can't link to a profile, so they're
+  // dropped. Sourcing this from `sidebarFeed` (not `liveMembers`) keeps the
+  // widget populated across every tab switch.
+  const sidebarNewMembers = demoMode
+    ? []
+    : sidebarFeed.newMembers.filter(
+        (member) => !member.actor?.handle || !hidden.has(member.actor.handle),
+      );
   const sidebarMembers: SidebarMember[] = demoMode
     ? NEW_THIS_WEEK
-    : liveMembers
+    : sidebarNewMembers
         .filter((item) => item.actor?.handle)
         .slice(0, 5)
         .map((item) => {
@@ -371,6 +391,24 @@ export function FeedPage() {
             photo: item.actor?.avatarUrl ?? undefined,
           };
         });
+
+  // Sidebar "Upcoming" rows: demo keeps its curated rows inside the sidebar;
+  // live mode surfaces the viewer's own "going" gatherings, dropping any already
+  // past, soonest first, capped to a short list. Each `CalendarEvent` already
+  // carries a ready `to` link and a `Date` the widget formats into a date pill.
+  const nowInstant = new Date();
+  const sidebarGatherings: SidebarGathering[] = demoMode
+    ? []
+    : upcomingFeed.items
+        .filter((event) => event.date >= nowInstant)
+        .sort((first, second) => first.date.getTime() - second.date.getTime())
+        .slice(0, 3)
+        .map((event) => ({
+          to: event.to,
+          date: event.date,
+          name: event.title,
+          venue: event.hood,
+        }));
 
   const selectTab = (tab: FeedTab) => {
     setHasSwitchedTab(true);
@@ -470,9 +508,13 @@ export function FeedPage() {
               </div>
             </div>
             <FeedSidebar
-              loading={loading}
+              loading={
+                loading ||
+                (!demoMode && (sidebarFeed.isLoading || upcomingFeed.isLoading))
+              }
               populated={demoMode}
               members={sidebarMembers}
+              gatherings={sidebarGatherings}
             />
           </div>
         </div>

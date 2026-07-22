@@ -65,6 +65,17 @@ export function MobileNavDrawer() {
         </Link>
         {loggedIn ? (
           <>
+            {/* Messages left the account grid to become a top-level nav icon on
+                desktop; on mobile it keeps an explicit drawer link (the installed
+                app already carries it in the bottom tab bar). */}
+            <Link
+              to={routes.messages}
+              replace
+              className={styles.link}
+              onClick={closeDrawerForNavigation}
+            >
+              {t("nav:messages")}
+            </Link>
             {ACCOUNT_ITEMS.map((item) => (
               <Link
                 key={item.to}

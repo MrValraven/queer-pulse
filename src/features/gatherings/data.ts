@@ -211,11 +211,11 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     date: new Date(2026, 6, 11),
     title: "Free Legal Clinic",
     hood: "Intendente",
-    host: "ILGA Portugal",
+    host: "Community legal volunteers",
     hostSlug: "",
     spots: { key: "gatherings:spots.byAppointment" },
     ctaKey: "gatherings:cta.bookSlot",
-    body: "Free, confidential one-to-one sessions with volunteer lawyers from ILGA Portugal — name changes, residency, discrimination, housing, and more. Twenty-minute slots, booked in advance. Bring any relevant paperwork; everything discussed stays private.",
+    body: "Free, confidential one-to-one sessions with volunteer lawyers from the queer community — name changes, residency, discrimination, housing, and more. Twenty-minute slots, booked in advance. Bring any relevant paperwork; everything discussed stays private.",
   },
   "queer-choir-rehearsal": {
     slug: "queer-choir-rehearsal",
@@ -478,16 +478,17 @@ export interface CalendarEvent {
 }
 
 const ACCENT = "var(--accent)";
-const JADE = "var(--jade)";
 const COMMUNITY = "var(--violet)";
-const PARTNER = "rgba(45,27,61,.7)";
 
-/** Org category colours shared between the calendar and the events list. */
+/**
+ * Org category colours shared between the calendar and the events list.
+ * QueerPulse shows two kinds of things: gatherings we host, and gatherings
+ * run by people in the community. Nothing here implies a formal partnership
+ * with an outside organisation.
+ */
 export const orgColors = {
   queerpulse: ACCENT,
-  ilga: JADE,
   community: COMMUNITY,
-  partner: PARTNER,
 };
 
 export const calendarEvents: CalendarEvent[] = [
@@ -543,8 +544,8 @@ export const calendarEvents: CalendarEvent[] = [
   },
   {
     date: new Date(2026, 5, 18, 18, 30),
-    org: "ILGA Portugal",
-    orgColor: JADE,
+    org: "Community",
+    orgColor: COMMUNITY,
     title: "LGBTQ+ Support Circle",
     hood: "Intendente",
     to: "/event",
@@ -628,9 +629,9 @@ export const calendarEvents: CalendarEvent[] = [
   },
   {
     date: new Date(2026, 6, 7, 18, 0),
-    org: "Rede ex aequo",
-    orgColor: PARTNER,
-    title: "Rede Monthly Gathering",
+    org: "Community",
+    orgColor: COMMUNITY,
+    title: "Queer Youth — Monthly Gathering",
     hood: "Lisbon",
     to: "/event",
     kind: "gathering",
@@ -646,8 +647,8 @@ export const calendarEvents: CalendarEvent[] = [
   },
   {
     date: new Date(2026, 6, 11, 14, 0),
-    org: "ILGA Portugal",
-    orgColor: JADE,
+    org: "Community",
+    orgColor: COMMUNITY,
     title: "Free Legal Clinic",
     hood: "Intendente",
     to: gatheringPath("legal-clinic"),
@@ -673,8 +674,8 @@ export const calendarEvents: CalendarEvent[] = [
   },
   {
     date: new Date(2026, 6, 19, 18, 30),
-    org: "Opus Diversus",
-    orgColor: JADE,
+    org: "Community",
+    orgColor: COMMUNITY,
     title: "Peer Support Circle — Open Session",
     hood: "Estrela",
     to: "/event",
@@ -702,10 +703,5 @@ export const calendarEvents: CalendarEvent[] = [
 
 export const calendarLegend = [
   { labelKey: "gatherings:calendar.legend.queerpulse", color: ACCENT },
-  { labelKey: "gatherings:calendar.legend.ilga", color: JADE },
   { labelKey: "gatherings:calendar.legend.community", color: COMMUNITY },
-  {
-    labelKey: "gatherings:calendar.legend.partners",
-    color: "rgba(247,243,238,.5)",
-  },
 ];

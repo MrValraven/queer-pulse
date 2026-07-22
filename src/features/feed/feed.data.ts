@@ -139,6 +139,18 @@ export interface SidebarMember {
   photo?: string;
 }
 
+/** A row in the sidebar's "Upcoming" widget — the live gatherings the viewer is
+ *  attending, mapped from the events API in live mode. Demo mode keeps its own
+ *  curated rows inside the sidebar component. */
+export interface SidebarGathering {
+  /** Router path to the gathering detail page. */
+  to: string;
+  /** Start instant — formatted to a date pill at render via `useFormat()`. */
+  date: Date;
+  name: string;
+  venue: string;
+}
+
 export const NEW_THIS_WEEK: SidebarMember[] = NEW_SLUGS.map((slug) => {
   const member = MEMBERS[slug]!;
   return {

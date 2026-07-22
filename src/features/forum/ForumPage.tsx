@@ -7,7 +7,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { SELF_AUTHOR, type Thread } from "./forum.data";
+import { useAuth } from "../../app/providers/authContext";
+import { SELF_AUTHOR, selfAuthorFromProfile, type Thread } from "./forum.data";
 import { useThreads } from "./api/useForum";
 import { useCreateThread } from "./api/useForumMutations";
 import { ComposeThreadModal, type NewThreadInput } from "./ComposeThreadModal";
@@ -21,6 +22,7 @@ const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
 export function ForumPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const simLoading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
   // Thread source: demo returns the full mock as one terminal page, live pages
@@ -58,10 +60,19 @@ export function ForumPage() {
     setComposing(true);
   }
 
-  const allThreads = useMemo(
-    () => [...extraThreads, ...threadsQuery.threads],
-    [extraThreads, threadsQuery.threads],
-  );
+  const allThreads = useMemo(() => {
+    // Once the server-persisted copy of a just-posted thread comes back in the
+    // refetched list, drop the local optimistic copy so the post doesn't render
+    // twice (matched on category + title). Demo never refetches, so its
+    // optimistic posts are kept as the record.
+    const serverKeys = new Set(
+      threadsQuery.threads.map((thread) => `${thread.cat}::${thread.title}`),
+    );
+    const optimistic = extraThreads.filter(
+      (thread) => !serverKeys.has(`${thread.cat}::${thread.title}`),
+    );
+    return [...optimistic, ...threadsQuery.threads];
+  }, [extraThreads, threadsQuery.threads]);
 
   // Sidebar post counts derived from the real threads (members' posts), so they
   // stay truthful and update live when a member publishes a new one.
@@ -83,13 +94,18 @@ export function ForumPage() {
   function publishThread({ title, body, cat: postCat }: NewThreadInput) {
     const id = Date.now();
     const excerpt = body.length > 160 ? `${body.slice(0, 157)}…` : body;
+    // Live posts are authored by the REAL session user — never the mock
+    // `SELF_AUTHOR` ("Tiago Costa" demo persona), which would otherwise leak into
+    // production. Demo keeps the scripted "You" persona.
+    const author =
+      demoMode || !user ? SELF_AUTHOR : selfAuthorFromProfile(user.profile);
     setExtraThreads((prev) => [
       {
         id,
         cat: postCat,
         title,
         excerpt,
-        author: SELF_AUTHOR,
+        author,
         posted: "just now",
         views: 1,
         upvotes: 1,

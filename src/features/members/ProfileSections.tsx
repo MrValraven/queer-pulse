@@ -23,12 +23,14 @@ import {
   ActivitySection,
   BoardSection,
   GroupsSection,
+  LookingForSection,
   NowSection,
   RelatedSection,
   SelectedWorkSection,
   ShapingsSection,
   SkillsSection,
 } from "./ProfileContentSections";
+import { LookingForEditor } from "./LookingForEditor";
 import { SocialLinksRow } from "./SocialLinksRow";
 import { WorkEditor } from "./WorkEditor";
 import styles from "./ProfilePage.module.css";
@@ -53,14 +55,14 @@ export function Section({
   children,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   children: ReactNode;
 }) {
   return (
     <Reveal as="section" className={styles.section}>
       <div className={styles.sectionHead}>
         <h2>{title}</h2>
-        <span className={styles.sectionSub}>{subtitle}</span>
+        {subtitle && <span className={styles.sectionSub}>{subtitle}</span>}
       </div>
       {children}
     </Reveal>
@@ -287,6 +289,11 @@ export function ProfileContent({
       {/* While editing, the Now editor lives in the hero — showing the committed
           card here too would just be a stale second copy of the same field. */}
       {!workEdit && <NowSection profile={profile} isSelf={isSelf} />}
+      {workEdit ? (
+        <LookingForEditor />
+      ) : (
+        <LookingForSection profile={profile} isSelf={isSelf} />
+      )}
       {workEdit ? (
         <WorkEditor work={workEdit.work} onChange={workEdit.onChange} />
       ) : (

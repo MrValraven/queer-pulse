@@ -108,9 +108,7 @@ export const gatherings: Catalog = {
 
   // ── Calendar legend (calendarLegend in data.ts) ───────────────────────────
   "calendar.legend.queerpulse": "QueerPulse",
-  "calendar.legend.ilga": "ILGA Portugal",
   "calendar.legend.community": "Community",
-  "calendar.legend.partners": "Partner orgs",
 
   // ── Event, RSVP, gathering detail, cancelled, cohost invite ───────────────
   // Shared/cross-page chrome
@@ -308,7 +306,7 @@ export const gatherings: Catalog = {
   "calendar.eyebrow": "Community Calendar",
   "calendar.heroTitle": "Everything happening <em>in one place.</em>",
   "calendar.heroSub":
-    "QueerPulse gatherings, ILGA Portugal events, Rede ex aequo, Opus Diversus, community screenings, and more — all in one shared calendar.",
+    "Every QueerPulse gathering and community-run event across Lisbon — dinners, workshops, support circles, screenings, and more — in one shared calendar.",
   "calendar.prevMonth": "Previous month",
   "calendar.nextMonth": "Next month",
   "calendar.upcomingTitle": "All upcoming events",
@@ -330,11 +328,10 @@ export const gatherings: Catalog = {
   // Events
   "events.eyebrow": "What's on",
   "events.subtitle":
-    "Every event across the Lisbon network is hosted by a community, partner org, or venue — browse the season and find your people.",
+    "Every event here is hosted by QueerPulse or by people in the community — browse the season and find your people.",
   "events.categoryAll": "All events",
   "events.categoryQueerpulse": "QueerPulse",
   "events.categoryCommunity": "Community",
-  "events.categoryPartners": "Partner orgs",
   "events.heroTitle": "Everything happening <em>this season</em>",
   "events.viewCalendarCta": "View as calendar",
   "events.filterAriaLabel": "Filter events",

@@ -32,6 +32,8 @@ export interface ConnectionMeta {
   /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
   requestReason?: string;
   sentAgo?: string;
+  /** The mutual who introduced this requester (live-mode network intros only). */
+  introducedBy?: { slug: string; name: string };
 }
 
 export const CONNECTION_META: Record<string, ConnectionMeta> = {

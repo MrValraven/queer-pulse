@@ -15,35 +15,85 @@ export const API_TAB: Partial<Record<TabId, ConnectionApiTab>> = {
   vouched: "vouched",
 };
 
-/** Extract just the relationship metadata a card renders, defaulting the rest. */
+const MINUTE = 60_000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+/**
+ * Compact "how long ago" label for a request, matching the mock convention
+ * ("just now" / "2h ago" / "yesterday" / "3 days ago"). The backend sends a raw
+ * ISO `createdAt`; the age is derived here. Pure (with an injectable `now`) so
+ * the list adapter stays side-effect-free and testable.
+ */
+export function relativeAgo(
+  iso: string | null,
+  now: number = Date.now(),
+): string | undefined {
+  if (!iso) return undefined;
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return undefined;
+  const delta = Math.max(0, now - then);
+  if (delta < MINUTE) return "just now";
+  if (delta < HOUR) return `${Math.floor(delta / MINUTE)}m ago`;
+  if (delta < DAY) return `${Math.floor(delta / HOUR)}h ago`;
+  const days = Math.floor(delta / DAY);
+  return days === 1 ? "yesterday" : `${days} days ago`;
+}
+
+/** Month/year label the "Connected since" line renders, e.g. "Mar 2025". */
+export function monthYear(iso: string | null): string | undefined {
+  if (!iso) return undefined;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return undefined;
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    year: "numeric",
+  });
+}
+
+/**
+ * Extract just the relationship metadata a card renders — mutuals, vouch badge,
+ * request note, and the introducer, all sourced from the connections response.
+ */
 export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
+  const introducer = dto.introducedBy;
   return {
     id: dto.id,
-    pron: dto.pronouns,
+    pron: dto.member.pronouns ?? undefined,
     mutuals: dto.mutuals,
-    since: dto.since,
-    vouchBadge: dto.vouchBadge,
-    requestMessage: dto.requestMessage,
-    requestReason: dto.requestReason,
-    sentAgo: dto.sentAgo,
+    vouchBadge: dto.vouchBadge ?? undefined,
+    // Accepted connections show when they were accepted; pending ones fall back
+    // to when the request was sent (only the accepted tabs render "since").
+    since: monthYear(dto.respondedAt ?? dto.createdAt),
+    requestMessage: dto.requestMessage ?? undefined,
+    requestReason: dto.requestReason ?? undefined,
+    sentAgo: relativeAgo(dto.createdAt),
+    introducedBy: introducer
+      ? {
+          slug: introducer.slug,
+          name: `${introducer.firstName} ${introducer.lastName}`.trim(),
+        }
+      : undefined,
   };
 }
 
 /**
  * Map a connection DTO to the prototype's `ConnectionView` — the exact shape the
- * cards already render. Avatar initials/tint are derived the same deterministic
- * way as the members adapter, so live cards look identical to mock ones.
+ * cards already render. Member fields come from the nested `member` object;
+ * avatar initials/tint are derived the same deterministic way as the members
+ * adapter, so live cards look identical to mock ones.
  */
 export function connectionDtoToView(dto: ConnectionDTO): ConnectionView {
+  const { member } = dto;
   return {
-    slug: dto.slug,
-    name: `${dto.firstName} ${dto.lastName}`.trim(),
-    initials: initialsOf(dto.firstName, dto.lastName),
-    tint: tintForSlug(dto.slug),
-    photo: dto.avatarUrl ?? undefined,
-    role: dto.tagline ?? "",
-    pron: dto.pronouns,
-    tags: dto.tags ?? [],
+    slug: member.slug,
+    name: `${member.firstName} ${member.lastName}`.trim(),
+    initials: initialsOf(member.firstName, member.lastName),
+    tint: tintForSlug(member.slug),
+    photo: member.avatarUrl ?? undefined,
+    role: member.tagline ?? "",
+    pron: member.pronouns ?? undefined,
+    tags: [],
     meta: dtoToMeta(dto),
   };
 }

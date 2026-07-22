@@ -208,24 +208,6 @@ export const revokeSession = (id: string) =>
 /** DELETE /account/sessions — revoke every session except the current one. */
 export const revokeOtherSessions = () => apiDelete<void>("/account/sessions");
 
-/* ── Email preferences (spec 11 stub — shared with spec 10 store) ───────── */
-
-export interface EmailPreference {
-  /** Matrix row / category key (matches the backend notification categories). */
-  category: string;
-  email: boolean;
-  /** ALWAYS_ON transactional messages cannot be turned off. */
-  locked?: boolean;
-}
-
-/** GET /account/email-preferences — the email column of the notification matrix. */
-export const getEmailPreferences = () =>
-  apiGet<EmailPreference[]>("/account/email-preferences");
-
-/** PATCH /account/email-preferences — persist one category toggle. */
-export const updateEmailPreference = (category: string, email: boolean) =>
-  apiPost<EmailPreference>("/account/email-preferences", { category, email });
-
 /* ── Demo/live helper ──────────────────────────────────────────────────── */
 
 /**

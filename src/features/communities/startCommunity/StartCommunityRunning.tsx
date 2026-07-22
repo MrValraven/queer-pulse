@@ -8,21 +8,15 @@ import {
   FiMessageCircle,
   FiPlus,
 } from "react-icons/fi";
-import { Button } from "../../../shared/components/ui";
+import { Avatar, Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  FEATURE_OPTIONS,
-  initialsOf,
-  type TintKey,
-} from "./startCommunity.data";
+import { FEATURE_OPTIONS } from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
+import { AddStewardModal } from "./AddStewardModal";
+import { toStewardTint } from "./stewardCandidates";
+import type { CohostCandidate } from "../../gatherings/manageCohosts.data";
 
-const FACE: Record<TintKey, string> = {
-  coral: styles.tintFaceCoral!,
-  jade: styles.tintFaceJade!,
-  plum: styles.tintFacePlum!,
-};
 const FEATURE_ICON: Record<string, typeof FiCalendar> = {
   discussion: FiMessageCircle,
   events: FiCalendar,
@@ -30,25 +24,28 @@ const FEATURE_ICON: Record<string, typeof FiCalendar> = {
   roster: FiUsers,
   library: FiFolder,
 };
-const TINTS: TintKey[] = ["coral", "jade", "plum"];
 
 /** Chapter 4 — Running: co-stewards and what the community can do. */
 export function StepRunning({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
   const { draft, addSteward, removeSteward, toggleFeature } = form;
-  const [name, setName] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
-  const add = () => {
-    const n = name.trim();
-    if (!n) return;
+  const excludeSlugs = draft.stewards
+    .map((steward) => steward.slug)
+    .filter((slug): slug is string => Boolean(slug));
+
+  const pickSteward = (candidate: CohostCandidate) => {
     addSteward({
-      key: `co-${Date.now()}-${draft.stewards.length}`,
-      name: n,
-      initials: initialsOf(n),
-      tint: TINTS[draft.stewards.length % TINTS.length]!,
+      key: candidate.slug,
+      slug: candidate.slug,
+      name: candidate.name,
+      initials: candidate.initials,
+      tint: toStewardTint(candidate.tint),
+      src: candidate.photo,
       role: "mod",
     });
-    setName("");
+    setPickerOpen(false);
   };
 
   return (
@@ -62,7 +59,7 @@ export function StepRunning({ form }: { form: CommunityForm }) {
 
       {draft.stewards.map((s) => (
         <div key={s.key} className={styles.teamRow}>
-          <span className={`${styles.trAv} ${FACE[s.tint]}`}>{s.initials}</span>
+          <Avatar src={s.src} initials={s.initials} tint={s.tint} size={32} />
           <span className={styles.trName}>{s.name}</span>
           <span
             className={[
@@ -90,24 +87,19 @@ export function StepRunning({ form }: { form: CommunityForm }) {
       ))}
 
       <div className={styles.addRow}>
-        <input
-          type="text"
-          className={styles.input}
-          placeholder={t("communities:start.running.addPlaceholder")}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              add();
-            }
-          }}
-        />
-        <Button variant="ghost" onClick={add} disabled={!name.trim()}>
+        <Button variant="ghost" onClick={() => setPickerOpen(true)}>
           <FiPlus size={15} aria-hidden />{" "}
           {t("communities:start.running.addCta")}
         </Button>
       </div>
+
+      {pickerOpen && (
+        <AddStewardModal
+          excludeSlugs={excludeSlugs}
+          onPick={pickSteward}
+          onClose={() => setPickerOpen(false)}
+        />
+      )}
 
       <div className={styles.groupH}>
         {t("communities:start.running.insideHeading")}

@@ -29,6 +29,12 @@
   line-height: 1.55;
   margin-bottom: 14px;
 }
+.showOnProfileRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
 .psSkip {
   font-size: 13px;
   color: var(--accent-ink);

@@ -50,7 +50,6 @@ export const notifications: Catalog = {
   // Chrome da página de notificações
   "page.title": "Notificações",
   "page.markAllRead": "Marcar tudo como lido",
-  "page.preferences": "Preferências",
   "page.dayRecent": "Hoje e recentes",
   "page.dayEarlier": "Anteriores",
   "page.empty.title": "Tudo em dia",

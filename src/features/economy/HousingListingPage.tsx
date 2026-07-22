@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { FiMapPin } from "react-icons/fi";
+import { FiBookmark, FiMapPin } from "react-icons/fi";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { useSaved } from "../../app/providers/SavedProvider";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GAL_BG } from "./housingListing.data";
@@ -14,6 +16,7 @@ import {
   HousingListingMain,
   HousingListingSidebar,
 } from "./HousingListingSections";
+import { ReportListingModal } from "./ReportListingModal";
 import { useHousingListing } from "./api/useHousingListing";
 import { useHousingListings } from "./api/useHousingListings";
 import s from "./HousingListingPage.module.css";
@@ -22,7 +25,10 @@ export function HousingListingPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const [messaging, setMessaging] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const loading = useSimulatedLoad();
+  const { isSaved, toggleSave } = useSaved();
+  const { showToast } = useToast();
 
   const { data, isLoading, isError } = useHousingListing(slug);
   const { data: allListings = [] } = useHousingListings("all");
@@ -54,6 +60,28 @@ export function HousingListingPage() {
       ?.labelKey ?? "economy:housing.filter.all",
   );
 
+  const savedId = `housing:${listing.slug}`;
+  const saved = isSaved(savedId);
+
+  function handleToggleSave() {
+    const now = toggleSave({
+      id: savedId,
+      kind: "housing",
+      title: listing.title,
+      href: `${routes.housing}/${listing.slug}`,
+      meta: listing.hood,
+    });
+    showToast(
+      t(
+        now
+          ? "economy:housingListing.savedToast"
+          : "economy:housingListing.unsavedToast",
+        { title: listing.title },
+      ),
+      now ? "success" : "info",
+    );
+  }
+
   return (
     <PageShell>
       <div className={s.page}>
@@ -75,18 +103,47 @@ export function HousingListingPage() {
           </div>
 
           <header className={s.head}>
-            <span
-              className={s.type}
-              style={{ background: listing.typeColor, color: listing.typeText }}
-            >
-              {typeLabel}
-            </span>
+            <div className={s.headTop}>
+              <span
+                className={s.type}
+                style={{
+                  background: listing.typeColor,
+                  color: listing.typeText,
+                }}
+              >
+                {typeLabel}
+              </span>
+              <Button
+                variant="ghost"
+                className={s.saveBtn}
+                onClick={handleToggleSave}
+                aria-pressed={saved}
+                aria-label={t(
+                  saved
+                    ? "economy:housingListing.unsaveAriaLabel"
+                    : "economy:housingListing.saveAriaLabel",
+                  { title: listing.title },
+                )}
+              >
+                <FiBookmark
+                  aria-hidden
+                  style={{ fill: saved ? "currentColor" : "none" }}
+                />
+                {t(
+                  saved
+                    ? "economy:housingListing.saved"
+                    : "economy:housingListing.save",
+                )}
+              </Button>
+            </div>
             <h1 className={s.title}>{listing.title}</h1>
             <div className={s.metaRow}>
               <span className={s.metaPill}>
                 <FiMapPin /> {listing.hood}
               </span>
-              <span className={s.metaPill}>{listing.beds}</span>
+              {listing.beds && (
+                <span className={s.metaPill}>{listing.beds}</span>
+              )}
               <span className={s.metaPill}>
                 {t("economy:housing.listing.from", { date: listing.avail })}
               </span>
@@ -103,6 +160,7 @@ export function HousingListingPage() {
               first={first}
               similar={similar}
               onMessage={() => setMessaging(true)}
+              onReport={() => setReporting(true)}
             />
           </div>
         </FadeIn>
@@ -115,6 +173,15 @@ export function HousingListingPage() {
           responseTime={listing.poster.responseTime}
           listingRef={data.ref}
           onClose={() => setMessaging(false)}
+        />
+      )}
+
+      {reporting && (
+        <ReportListingModal
+          subjectType="housing"
+          subjectId={listing.slug}
+          subjectName={listing.title}
+          onClose={() => setReporting(false)}
         />
       )}
     </PageShell>

@@ -11,7 +11,14 @@
 
 /** What can be reported. `subjectType` + `subjectId` identify the target. */
 export type ReportSubjectType =
-  "member" | "post" | "reply" | "venue" | "message" | "community";
+  | "member"
+  | "post"
+  | "reply"
+  | "venue"
+  | "message"
+  | "community"
+  | "housing"
+  | "flatmate";
 
 export type ReasonCode =
   | "outing"
@@ -26,6 +33,8 @@ export type ReasonCode =
   | "venue_safety"
   | "venue_staff"
   | "venue_accessibility"
+  | "housing_unsafe"
+  | "housing_scam"
   | "other";
 
 /** Stable code → human label. Labels are the only thing that gets localized. */
@@ -42,6 +51,8 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   venue_safety: "A harassment or safety incident at the space",
   venue_staff: "Staff didn't intervene when needed",
   venue_accessibility: "An accessibility problem",
+  housing_unsafe: "Unsafe, discriminatory, or misrepresented housing",
+  housing_scam: "Scam or fake listing",
   other: "Something else — explained in detail",
 };
 
@@ -66,6 +77,8 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   venue_safety: "safety:reason.venueSafety",
   venue_staff: "safety:reason.venueStaff",
   venue_accessibility: "safety:reason.venueAccessibility",
+  housing_unsafe: "safety:reason.housingUnsafe",
+  housing_scam: "safety:reason.housingScam",
   other: "safety:reason.other",
 };
 
@@ -121,6 +134,20 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "other",
   ],
   community: ["hate_speech", "spam", "other"],
+  housing: [
+    "housing_unsafe",
+    "harassment",
+    "discrimination",
+    "housing_scam",
+    "other",
+  ],
+  flatmate: [
+    "harassment",
+    "discrimination",
+    "impersonation",
+    "unwanted_contact",
+    "other",
+  ],
 };
 
 export interface ReasonOption {

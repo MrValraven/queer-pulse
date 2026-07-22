@@ -13,36 +13,53 @@ export type ConnectionApiTab = "all" | "incoming" | "outgoing" | "vouched";
 /** How the current user relates to a connection, mirroring the mock vouch badge. */
 export type ConnectionVouchBadge = "vouched-for-you" | "you-vouched" | "mutual";
 
+/** The connection's lifecycle state, mirroring the backend `ConnectionStatus` enum. */
+export type ConnectionStatus = "pending" | "accepted" | "declined" | "blocked";
+
+/** How the connection relates to the current viewer, as the backend derives it. */
+export type ConnectionDirection = "incoming" | "outgoing" | "connected";
+
 /**
- * A single connection record as the backend returns it. The backend owns the
- * member's display fields (name, role, avatar) and the relationship metadata
- * (mutuals, when you connected, the request message) — the frontend no longer
- * needs the mock member registry to render a live card.
+ * The other member's display fields, nested exactly as the backend returns them
+ * (`ConnectionMemberView`). The backend owns name/role/avatar so the frontend no
+ * longer needs the mock member registry to render a live card.
+ */
+export interface ConnectionMemberDTO {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string | null;
+  pronouns: string | null;
+  /** Tagline / role line shown under the name. */
+  tagline: string | null;
+}
+
+/**
+ * A single connection record as the backend returns it (`ConnectionListItem`).
+ * Member fields are nested under `member`; the request's age is derived on the
+ * client from `createdAt` / `respondedAt` (the backend sends raw ISO timestamps).
  */
 export interface ConnectionDTO {
   /** Stable connection id — the target of PATCH /connections/:id and DELETE. */
   id: string;
-  /** The other member's profile slug. */
-  slug: string;
-  firstName: string;
-  lastName: string;
-  pronouns?: string;
-  /** Tagline / role line shown under the name. */
-  tagline?: string;
-  avatarUrl?: string | null;
-  tags?: string[];
-  /** Shared connections count. */
-  mutuals?: number;
-  /** Human month/label the connection was formed, e.g. "Mar 2025". */
-  since?: string;
-  /** Relative time an incoming/sent request was created, e.g. "2h ago". */
-  sentAgo?: string;
-  /** The note attached to an incoming request. */
-  requestMessage?: string;
+  status: ConnectionStatus;
+  direction: ConnectionDirection;
+  /** The note attached to a request. */
+  requestMessage: string | null;
   /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
-  requestReason?: string;
-  /** The vouch relationship between you and this member, if any. */
-  vouchBadge?: ConnectionVouchBadge;
+  requestReason: string | null;
+  /** ISO timestamp the request was created. */
+  createdAt: string;
+  /** ISO timestamp it was accepted/declined, or null while still pending. */
+  respondedAt: string | null;
+  /** The other member in the connection. */
+  member: ConnectionMemberDTO;
+  /** Accepted connections you share with this member. */
+  mutuals: number;
+  /** The vouch relationship between you and this member, or null. */
+  vouchBadge: ConnectionVouchBadge | null;
+  /** The mutual who introduced the requester (network intros only), else null. */
+  introducedBy: ConnectionMemberDTO | null;
 }
 
 export interface ConnectionsPageDTO {

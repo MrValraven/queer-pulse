@@ -418,8 +418,17 @@ export const communities: Catalog = {
   "start.running.ownerTag": "You · owner",
   "start.running.coStewardTag": "Co-steward",
   "start.running.removeAria": "Remove {name}",
-  "start.running.addPlaceholder": "Add a co-steward by name",
-  "start.running.addCta": "Add",
+  "start.running.addCta": "Add a co-steward",
+  "start.running.addStewardModal.eyebrow": "Add a co-steward",
+  "start.running.addStewardModal.title": "Choose someone you're connected to",
+  "start.running.addStewardModal.sub":
+    "Co-stewards can only be members you're already connected with. Search your connections below.",
+  "start.running.addStewardModal.searchLabel": "Search your connections",
+  "start.running.addStewardModal.searchPlaceholder":
+    "Search by name or @slug…",
+  "start.running.addStewardModal.closeAria": "Close",
+  "start.running.addStewardModal.empty":
+    "You can add co-stewards once you're connected with other members. Head to Connections to grow your circle first.",
   "start.running.insideHeading": "What's inside",
   "start.running.insideSub":
     "Turn on what fits. You can always add more once you're up and running.",

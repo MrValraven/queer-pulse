@@ -91,6 +91,9 @@ export interface Member {
   /** Private "what are you looking for here" preference (Settings → Interests).
    *  Fixed taxonomy, private — distinct from the public `openTo` blurbs. */
   lookingFor?: string[];
+  /** Whether `lookingFor` is shown on the profile to other viewers. Owner-only
+   *  control; defaults to false (private) when absent. */
+  lookingForPublic?: boolean;
   board: BoardItem[];
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];
@@ -3262,6 +3265,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "Creative collaboration",
       "Reading & culture",
     ],
+    lookingForPublic: true,
     work: [
       {
         category: "Fullstack Developer",

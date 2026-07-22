@@ -87,73 +87,11 @@
   margin-bottom: 26px;
   gap: 4px;
 }
-.stepNode {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  background: none;
-  border: none;
-  font: inherit;
-  cursor: pointer;
-  padding: 4px 2px;
-  color: var(--ink-40);
-}
-.stepDot {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 13px;
-  font-weight: 700;
-  background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.16);
-  color: var(--ink-60);
-  transition: all 0.2s var(--ease);
-}
-.stepNode svg {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.stepName {
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-@media (max-width: 640px) {
-  .stepName {
-    display: none;
-  }
-}
-.stepActive {
-  color: var(--text-strong);
-}
-.stepActive .stepDot {
-  background: var(--plum);
-  border-color: var(--line-strong);
-  color: rgba(var(--cream-rgb), 1);
-}
-.stepDone {
-  color: var(--text-strong);
-}
-.stepDone .stepDot {
-  background: var(--jade);
-  border-color: var(--jade);
-  color: #fff;
-}
-.stepLine {
-  flex: 1;
-  height: 1.5px;
-  background: rgba(45, 27, 61, 0.14);
-  min-width: 12px;
-}
-.stepLineDone {
-  background: var(--jade);
+.jobStepper {
+  /* Original rail: current dot solid plum, but the completed connector line
+     and done dots were jade — keep those distinct. */
+  --stepper-accent: var(--plum);
+  --stepper-fill: var(--jade);
 }
 
 /* Step head */

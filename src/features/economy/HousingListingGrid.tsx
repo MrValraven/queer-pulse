@@ -1,5 +1,7 @@
-import { FiHome } from "react-icons/fi";
+import type { KeyboardEvent, SyntheticEvent } from "react";
+import { FiBookmark, FiHome } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useSaved } from "../../app/providers/SavedProvider";
 import { routes } from "../../app/routeMap";
 import {
   Avatar,
@@ -8,12 +10,73 @@ import {
   ImageSlot,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS } from "./housing.data";
 import type { HOUSING_LISTINGS } from "./housingListings";
 import styles from "./HousingPage.module.css";
 
 type Listing = (typeof HOUSING_LISTINGS)[number];
+
+/**
+ * Floating save/bookmark toggle overlaid on a listing card's photo. The card
+ * itself is a router `<Link>` (see HousingListingGrid below), so this is a
+ * `span[role="button"]` rather than a nested `<button>` — a real `<button>`
+ * inside a `<Link>` is invalid HTML and unreachable by some AT.
+ */
+function ListingSaveToggle({ listing }: { listing: Listing }) {
+  const { t } = useTranslation();
+  const { isSaved, toggleSave } = useSaved();
+  const { showToast } = useToast();
+  const savedId = `housing:${listing.slug}`;
+  const saved = isSaved(savedId);
+
+  function handleSave(event: SyntheticEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    const now = toggleSave({
+      id: savedId,
+      kind: "housing",
+      title: listing.title,
+      href: `${routes.housing}/${listing.slug}`,
+      meta: listing.hood,
+    });
+    showToast(
+      t(
+        now
+          ? "economy:housing.card.savedToast"
+          : "economy:housing.card.unsavedToast",
+        { title: listing.title },
+      ),
+      now ? "success" : "info",
+    );
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
+    if (event.key === "Enter" || event.key === " ") handleSave(event);
+  }
+
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      aria-pressed={saved}
+      aria-label={t(
+        saved
+          ? "economy:housing.card.unsaveAriaLabel"
+          : "economy:housing.card.saveAriaLabel",
+        { title: listing.title },
+      )}
+      className={[styles.saveBtn, saved && styles.saveBtnOn]
+        .filter(Boolean)
+        .join(" ")}
+      onClick={handleSave}
+      onKeyDown={handleKeyDown}
+    >
+      <FiBookmark aria-hidden style={{ fill: saved ? "currentColor" : "none" }} />
+    </span>
+  );
+}
 
 function ListingSkeleton() {
   return (
@@ -88,15 +151,18 @@ export function HousingListingGrid({
             className={styles.card}
             delay={Math.min(listingIndex, 8) * 60}
           >
-            <ImageSlot
-              tint={listing.tint}
-              src={listing.image}
-              height={150}
-              radius={0}
-              placeholder={t("economy:housing.listing.photoAlt", {
-                hood: listing.hood,
-              })}
-            />
+            <div className={styles.thumbWrap}>
+              <ImageSlot
+                tint={listing.tint}
+                src={listing.image}
+                height={150}
+                radius={0}
+                placeholder={t("economy:housing.listing.photoAlt", {
+                  hood: listing.hood,
+                })}
+              />
+              <ListingSaveToggle listing={listing} />
+            </div>
             <div className={styles.cardBody}>
               <span
                 className={styles.type}
@@ -114,7 +180,9 @@ export function HousingListingGrid({
               <div className={styles.cardTitle}>{listing.title}</div>
               <div className={styles.details}>
                 <span className={styles.detail}>{listing.hood}</span>
-                <span className={styles.detail}>{listing.beds}</span>
+                {listing.beds && (
+                  <span className={styles.detail}>{listing.beds}</span>
+                )}
                 <span className={styles.detail}>
                   {t("economy:housing.listing.from", { date: listing.avail })}
                 </span>

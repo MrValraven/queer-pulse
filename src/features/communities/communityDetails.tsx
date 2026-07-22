@@ -41,6 +41,13 @@ export interface CommunityDetail {
     title: string;
     meta: string;
     spots: string;
+    /** No gathering is actually scheduled yet — the card shows placeholder copy
+     *  and the sidebar hides its RSVP action. Real gatherings leave this unset. */
+    tba?: boolean;
+    /** Slug of the real gathering this card mirrors, when there is one — the
+     *  RSVP button links to `gatheringPath(slug)` (the specific gathering) rather
+     *  than the generic gatherings landing. Absent for TBA/placeholder events. */
+    slug?: string;
   };
   topicThread: Thread;
 }

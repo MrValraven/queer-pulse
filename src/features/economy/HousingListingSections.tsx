@@ -61,11 +61,13 @@ export function HousingListingSidebar({
   first,
   similar,
   onMessage,
+  onReport,
 }: {
   listing: HousingListing;
   first: string;
   similar: HousingListing[];
   onMessage: () => void;
+  onReport: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -119,6 +121,16 @@ export function HousingListingSidebar({
             components={{ b: <b /> }}
           />
         </div>
+        <Button
+          variant="ghost"
+          className={s.reportBtn}
+          onClick={onReport}
+          aria-label={t("economy:housingListing.reportAriaLabel", {
+            title: listing.title,
+          })}
+        >
+          {t("economy:housingListing.report")}
+        </Button>
       </div>
 
       <div className={s.sideCard}>

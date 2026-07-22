@@ -57,6 +57,7 @@ export const connect: Catalog = {
   "card.tagsMoreTitle": "Also: {list}",
   "card.noMutuals": "No mutuals — review carefully",
   "card.sentAgo": "Sent <b>{sentAgo}</b>",
+  "card.introducedBy": "Introduced by <a>{name}</a>",
   "card.reason": "About <b>{reason}</b>",
   "card.decline": "Decline",
   "card.accept": "Accept",

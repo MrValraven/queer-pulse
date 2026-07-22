@@ -43,4 +43,17 @@ export const KIND_CARD: Record<SavedKind, KindCard> = {
     variant: "group",
     readKey: "members:savedByYou.kind.group.cta",
   },
+  // Reuses the "job" colour variant — both are board-listing kinds, so this
+  // doesn't need its own token in SavedByYou.module.css.
+  housing: {
+    labelKey: "members:savedByYou.kind.housing.label",
+    variant: "job",
+    readKey: "members:savedByYou.kind.housing.cta",
+  },
+  // Reuses the "job" colour variant, same reasoning as `housing` above.
+  flatmate: {
+    labelKey: "members:savedByYou.kind.flatmate.label",
+    variant: "job",
+    readKey: "members:savedByYou.kind.flatmate.cta",
+  },
 };

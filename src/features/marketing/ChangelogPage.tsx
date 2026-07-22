@@ -46,7 +46,7 @@ const DATA: YearBlock[] = [
         date: "June 2026",
         badge: "Community",
         title: "Notifications centre launched",
-        body: "Members can now see all activity — messages, event confirmations, reading group invitations, magazine issues, and platform announcements — in one place. Filterable by type. Mark as read individually or all at once. Preferences managed via Newsletter settings.",
+        body: "Members can now see all activity — messages, event confirmations, reading group invitations, magazine issues, and platform announcements — in one place. Filterable by type. Mark as read individually or all at once.",
         tag: "See notifications →",
       },
       {

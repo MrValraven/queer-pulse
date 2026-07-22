@@ -804,7 +804,6 @@ export const magazine: Catalog = {
   "tag.hero.stats.issuesRepresented": "Edições representadas",
   "tag.hero.stats.contributors": "Pessoas colaboradoras",
   "tag.hero.curatorEyebrow": "Nota editorial",
-  "tag.hero.getLongReadsCta": "Recebe as reportagens longas por email →",
   "tag.list.emptyTitle": "Ainda não há reportagens longas nesta categoria",
   "tag.list.emptyDescription":
     "Ainda não há nada arquivado em <em>{topic}</em> nas reportagens longas. Explora todas as peças, ou recebe a próxima por email.",
@@ -839,7 +838,6 @@ export const magazine: Catalog = {
     "Carregar {count} edições mais antigas",
   "newsletterArchive.issue.backToArchive": "Voltar ao arquivo",
   "newsletterArchive.issue.browseFullArchive": "Explorar o arquivo completo",
-  "newsletterArchive.issue.subscribeToThis": "Subscrever esta newsletter",
 
   // ══════════════════ Podcast (The Back Room) ═════════════════════════════
   // Os títulos/descrições/nomes de convidados/datas de cada episódio

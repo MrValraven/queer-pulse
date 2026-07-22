@@ -125,161 +125,20 @@
 .threadWrap {
   margin-bottom: 34px;
 }
-.thread {
-  --thread-steps: 9;
-  display: flex;
-  align-items: flex-start;
-  position: relative;
+.threadRail {
+  display: block;
 }
-/* Rail + fill span dot-center to dot-center — inset by half a node on each
-   side so the line never pokes out past the first/last dots. */
-.thread::before {
-  content: "";
-  position: absolute;
-  left: calc(100% / var(--thread-steps) / 2);
-  right: calc(100% / var(--thread-steps) / 2);
-  top: 9px;
-  height: 2px;
-  background: rgba(var(--plum-rgb), 0.1);
-  border-radius: 2px;
-}
-.threadFill {
-  position: absolute;
-  left: calc(100% / var(--thread-steps) / 2);
-  right: calc(100% / var(--thread-steps) / 2);
-  top: 9px;
-  height: 2px;
-  transform-origin: left;
-  background: var(--accent);
-  border-radius: 2px;
-  transition: transform var(--dur-slow) var(--ease);
-  z-index: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .threadFill {
-    transition: none;
+@media (max-width: 860px) {
+  .threadRail {
+    display: none;
   }
-}
-.node {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 9px;
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  background: none;
-  border: none;
-  cursor: default;
-  font-family: var(--sans);
-  padding: 0;
-}
-.nodeDone {
-  cursor: pointer;
-}
-.dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--cream);
-  border: 2px solid rgba(var(--line-rgb), 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    background var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease),
-    transform var(--dur-base) var(--ease);
-}
-.dot::after {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: transparent;
-  transition: background var(--dur-base) var(--ease);
-}
-.node.done .dot {
-  border-color: var(--jade);
-  background: var(--jade);
-}
-/* Completed nodes signal via the checkmark; drop the redundant centre dot. */
-.node.done .dot::after {
-  display: none;
-}
-.node.done .dot svg {
-  color: var(--paper);
-}
-.node.current .dot {
-  border-color: var(--accent);
-  background: var(--cream);
-  box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.16);
-}
-.node.current .dot::after {
-  background: var(--accent);
-}
-/* One-time arrival motion — the check scales in as a step completes, the
-   current dot gives a gentle spring. Both are decorative → off for reduced motion. */
-@media (prefers-reduced-motion: no-preference) {
-  .node.done .dot svg {
-    animation: threadCheckIn var(--dur-base) var(--ease) both;
+  .threadMobile {
+    display: block;
   }
-  .node.current .dot {
-    animation: threadDotPop var(--dur-base) var(--ease);
+  .threadWrap {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   }
-}
-@keyframes threadCheckIn {
-  from {
-    transform: scale(0.2);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-@keyframes threadDotPop {
-  0% {
-    transform: scale(0.85);
-  }
-  55% {
-    transform: scale(1.09);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-/* Done nodes are clickable (jump back) — give them a real hover affordance. */
-@media (hover: hover) {
-  .nodeDone:hover .dot {
-    transform: scale(1.14);
-  }
-  .nodeDone:hover .nodeLabel {
-    color: var(--text-strong);
-  }
-}
-.node:focus-visible {
-  outline: none;
-}
-.node:focus-visible .dot {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-.nodeLabel {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--ink-40);
-  transition: color 0.3s var(--ease);
-  max-width: 11ch;
-}
-.node.current .nodeLabel {
-  color: var(--text-strong);
-  font-weight: 700;
-}
-.node.done .nodeLabel {
-  color: var(--ink-60);
 }
 .threadMobile {
   display: none;
@@ -290,18 +149,6 @@
 .threadMobile b {
   color: var(--text-strong);
   font-weight: 700;
-}
-@media (max-width: 860px) {
-  .thread {
-    display: none;
-  }
-  .threadMobile {
-    display: block;
-  }
-  .threadWrap {
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-  }
 }
 
 /* ---- chapter ---- */
@@ -1089,16 +936,6 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.icAv {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .icName {
   font-size: 13.5px;
   color: var(--text-strong);
@@ -1624,6 +1461,7 @@
   letter-spacing: -0.01em;
   position: relative;
   z-index: 1;
+  box-shadow: 0 4px 12px rgba(var(--plum-rgb), 0.16);
 }
 .cpvName {
   font-family: var(--serif);
@@ -1730,21 +1568,6 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-}
-.cpvFace {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  border: 2px solid var(--paper);
-  margin-left: -8px;
-}
-.cpvFace:first-child {
-  margin-left: 0;
 }
 .pvFoot {
   font-size: 11.5px;

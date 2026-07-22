@@ -768,6 +768,10 @@ export const members: Catalog = {
   "savedByYou.kind.post.cta": "Abrir conversa",
   "savedByYou.kind.group.label": "Comunidade",
   "savedByYou.kind.group.cta": "Abrir",
+  "savedByYou.kind.housing.label": "Habitação",
+  "savedByYou.kind.housing.cta": "Ver anúncio",
+  "savedByYou.kind.flatmate.label": "Colega de casa",
+  "savedByYou.kind.flatmate.cta": "Ver perfil",
 
   // ── Chrome de guardados por ti (SavedByYou) ─────────────────────────────────
   "savedByYou.removeAriaLabel": "Remover {title} dos guardados",

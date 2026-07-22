@@ -64,6 +64,48 @@ export function NowSection({
   );
 }
 
+export function LookingForSection({
+  profile,
+  isSelf = false,
+}: {
+  profile: MemberProfile;
+  isSelf?: boolean;
+}) {
+  const { t } = useTranslation();
+  // Non-owners only ever receive a populated list when the member opted in
+  // (backend strips it otherwise), so an empty list means "nothing to show".
+  if (!profile.lookingFor || profile.lookingFor.length === 0) return null;
+  // Belt-and-suspenders: for any non-owner view — including the owner's own
+  // "preview as visitor", which renders their populated live profile with
+  // isSelf=false — never show the section unless the member opted in. Keeps
+  // preview faithful to what a real visitor sees and guards against a private
+  // list ever surfacing on a non-owner render.
+  if (!isSelf && !profile.lookingForPublic) return null;
+  return (
+    <Section
+      title={t("members:content.lookingFor.title")}
+      subtitle={t("members:content.lookingFor.subtitle", {
+        first: profile.first,
+      })}
+    >
+      <div className={styles.lookingForChips}>
+        {profile.lookingFor.map((label) => (
+          <span key={label} className={styles.openChip}>
+            {label}
+          </span>
+        ))}
+      </div>
+      {isSelf && (
+        <p className={styles.lookingForHint}>
+          {profile.lookingForPublic
+            ? t("members:content.lookingFor.visibleHint")
+            : t("members:content.lookingFor.privateHint")}
+        </p>
+      )}
+    </Section>
+  );
+}
+
 function WorkCardBody({ item, index }: { item: WorkItem; index: number }) {
   const { t } = useTranslation();
   return (

@@ -13,7 +13,6 @@ import styles from "./HousingPage.module.css";
 export function HousingBoard() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const loading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
   const [listing, setListing] = useState(false);
   const subpages = useMemo(
@@ -25,7 +24,8 @@ export function HousingBoard() {
       })),
     [t],
   );
-  const { data: source = [] } = useHousingListings(filter);
+  const { data: source = [], isFetching } = useHousingListings(filter);
+  const loading = useSimulatedLoad() || (!demoMode && isFetching);
   // With nothing on the board, the type filters have nothing to act on — hide
   // them and let the empty state carry the single call to action.
   const boardEmpty = source.length === 0;

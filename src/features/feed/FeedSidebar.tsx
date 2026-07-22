@@ -7,9 +7,10 @@ import {
 } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
-import type { SidebarMember } from "./feed.data";
+import type { SidebarGathering, SidebarMember } from "./feed.data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./FeedPage.module.css";
 
@@ -60,14 +61,20 @@ export function FeedSidebar({
   loading = false,
   populated = false,
   members = [],
+  gatherings = [],
 }: {
   loading?: boolean;
   populated?: boolean;
   /** Rows for the "New this week" widget — the demo mock in demo mode, the
    *  live recently-joined members in live mode. Empty renders the empty state. */
   members?: SidebarMember[];
+  /** Rows for the "Upcoming" widget in live mode — the viewer's own gatherings.
+   *  Ignored in demo mode, which renders its own curated rows. Empty renders the
+   *  empty state. */
+  gatherings?: SidebarGathering[];
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { openConnect } = useConnect();
   return (
     <aside className={styles.sidebar}>
@@ -79,9 +86,7 @@ export function FeedSidebar({
           Array.from({ length: 2 }).map((_, i) => (
             <UpcomingRowSkeleton key={i} />
           ))
-        ) : !populated ? (
-          <p className={styles.sbEmpty}>{t("feed:sidebar.upcomingEmpty")}</p>
-        ) : (
+        ) : populated ? (
           <>
             <Link
               to={gatheringPath("queer-night-swim")}
@@ -105,6 +110,27 @@ export function FeedSidebar({
               </div>
             </Link>
           </>
+        ) : gatherings.length === 0 ? (
+          <p className={styles.sbEmpty}>{t("feed:sidebar.upcomingEmpty")}</p>
+        ) : (
+          gatherings.map((gathering, i) => (
+            <Link
+              key={gathering.to}
+              to={gathering.to}
+              className={`${styles.upcomingRow} ${styles.revealRow}`}
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              <span className={styles.datePill}>
+                {fmt.date(gathering.date, { day: "numeric", month: "short" })}
+              </span>
+              <div>
+                <div className={styles.upName}>{gathering.name}</div>
+                {gathering.venue && (
+                  <div className={styles.upVenue}>{gathering.venue}</div>
+                )}
+              </div>
+            </Link>
+          ))
         )}
         <Link to={routes.calendar} className={styles.sbLink}>
           {t("feed:sidebar.seeCalendar")}

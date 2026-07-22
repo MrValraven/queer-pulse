@@ -99,6 +99,10 @@ export const members: Catalog = {
   "content.now.title": "Now",
   "content.now.subtitle": "What {first} is in the middle of",
   "content.now.openLabel": "Open to",
+  "content.lookingFor.title": "Looking for",
+  "content.lookingFor.subtitle": "What {first} is here for",
+  "content.lookingFor.visibleHint": "Shown on your profile",
+  "content.lookingFor.privateHint": "Only you can see this",
   "content.work.title": "Selected work",
   "content.work.subtitle": "A few things, not a portfolio dump",
   "content.board.title": "On the board",
@@ -178,6 +182,12 @@ export const members: Catalog = {
   "profileEdit.openTo.addPlaceholder": "Or say it your own way…",
   "profileEdit.openTo.addLabel": "Add something you're open to",
   "profileEdit.openTo.removeLabel": "Remove {label}",
+
+  // ── Looking for (LookingForEditor) ──────────────────────────────────────────
+  "profileEdit.lookingFor.heading": "What are you looking for here?",
+  "profileEdit.lookingFor.helper": "Select as many as you like.",
+  "profileEdit.lookingFor.toggleLabel":
+    "Show what I'm looking for on my profile",
 
   // ── Edit bar (ProfileEditBar) ───────────────────────────────────────────────
   "profileEdit.bar.unsaved": "You're editing your profile — unsaved changes",
@@ -752,6 +762,10 @@ export const members: Catalog = {
   "savedByYou.kind.post.cta": "Open thread",
   "savedByYou.kind.group.label": "Community",
   "savedByYou.kind.group.cta": "Open",
+  "savedByYou.kind.housing.label": "Housing",
+  "savedByYou.kind.housing.cta": "View listing",
+  "savedByYou.kind.flatmate.label": "Flatmate",
+  "savedByYou.kind.flatmate.cta": "View profile",
 
   // ── Saved-by-you chrome (SavedByYou) ─────────────────────────────────────────
   "savedByYou.removeAriaLabel": "Remove {title} from saved",

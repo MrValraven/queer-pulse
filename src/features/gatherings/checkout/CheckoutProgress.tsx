@@ -1,7 +1,6 @@
-import { FiCheck } from "react-icons/fi";
 import { useCheckout } from "./checkoutContext";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { cx } from "./cx";
+import { Stepper, type StepperStep } from "../../../shared/components/ui";
 import s from "./checkout.module.css";
 
 const STEPS = [
@@ -14,38 +13,27 @@ export function CheckoutProgress() {
   const { step, paid, goStep } = useCheckout();
   const { t } = useTranslation();
 
+  const currentIndex = step - 1;
+  const stepperSteps: StepperStep[] = STEPS.map((item) => ({
+    key: item.labelKey,
+    label: t(item.labelKey),
+  }));
+
   return (
-    <nav
-      className={s["co-progress"]}
-      aria-label={t("gatherings:checkout.progress.ariaLabel")}
-    >
-      {STEPS.map((item, idx) => {
-        const status = item.n < step ? "done" : item.n === step ? "active" : "";
-        const clickable = item.n < step && !paid;
-        return (
-          <div key={item.n} style={{ display: "contents" }}>
-            {idx > 0 && (
-              <div className={cx(s["cop-line"], item.n - 1 < step && s.done)} />
-            )}
-            <div className={s["cop-step"]}>
-              <button
-                className={cx(s["cop-btn"], clickable && s.clickable)}
-                type="button"
-                disabled={!clickable && item.n !== step}
-                aria-current={item.n === step ? "step" : undefined}
-                onClick={() => clickable && goStep(item.n as 1 | 2 | 3, "back")}
-              >
-                <span className={cx(s["cop-dot"], status && s[status])}>
-                  {status === "done" ? <FiCheck /> : item.n}
-                </span>
-                <span className={cx(s["cop-label"], status && s[status])}>
-                  {t(item.labelKey)}
-                </span>
-              </button>
-            </div>
-          </div>
-        );
-      })}
-    </nav>
+    <div className={s["co-progress"]}>
+      <Stepper
+        steps={stepperSteps}
+        current={currentIndex}
+        size="lg"
+        marker="number"
+        ariaLabel={t("gatherings:checkout.progress.ariaLabel")}
+        className={s["cop-stepper"]}
+        onStepClick={
+          paid
+            ? undefined
+            : (index) => goStep((index + 1) as 1 | 2 | 3, "back")
+        }
+      />
+    </div>
   );
 }

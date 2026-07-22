@@ -64,9 +64,6 @@ export function NewsletterArchiveIssuePage() {
                 <Button variant="ghost-dark" to={routes.newsletterArchive}>
                   {t("magazine:newsletterArchive.issue.browseFullArchive")}
                 </Button>
-                <Button variant="ghost-dark" to={routes.newsletter}>
-                  {t("magazine:newsletterArchive.issue.subscribeToThis")}
-                </Button>
               </div>
             </div>
           </footer>

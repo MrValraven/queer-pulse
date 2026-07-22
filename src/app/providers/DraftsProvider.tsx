@@ -119,7 +119,7 @@ function useDraftsStore(): DraftsStore {
 /**
  * The local store and its mutators, with **no query subscription**.
  *
- * For consumers that only WRITE drafts (`InviteEmailForm`). Calling `useDrafts()`
+ * For consumers that only WRITE drafts (never read the list). Calling `useDrafts()`
  * from a write-only consumer would subscribe it to `useMyDrafts()` and
  * re-introduce exactly the eager `/me/drafts` request this phase removes —
  * silently, because nothing would break; only the request-budget test would

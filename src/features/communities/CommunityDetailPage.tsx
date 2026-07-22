@@ -6,11 +6,11 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useAllCommunities } from "./useAllCommunities";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import { JoinModal } from "./JoinModal";
 import type { Person } from "./communityDetails";
 import { useCommunity } from "./api/useCommunity";
+import { useRelatedCommunities } from "./api/useRelatedCommunities";
 import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import { useJoinCommunity } from "./api/useCommunityMutations";
@@ -40,7 +40,7 @@ export function CommunityDetailPage() {
   const roster = useRoster(slug);
   const posts = useCommunityPosts(slug);
   const joinMutation = useJoinCommunity(slug ?? "");
-  const allCommunities = useAllCommunities();
+  const related = useRelatedCommunities(slug, community?.type);
 
   if (notFound) return <Navigate to={routes.communities} replace />;
   if (isLoading || !community || !detail) {
@@ -91,9 +91,6 @@ export function CommunityDetailPage() {
   const heroAvatars = members.slice(0, 5);
 
   const threads = [detail.topicThread];
-  const related = allCommunities
-    .filter((c) => c.slug !== slug && !c.privateBadge)
-    .slice(0, 3);
 
   const onJoined = () => {
     if (slug) join(slug);

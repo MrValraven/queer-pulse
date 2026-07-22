@@ -19,7 +19,11 @@ interface MemberPickerProps {
   atCap?: boolean;
   /** Show a checkbox on each row (multi-select). Off = single-tap add. */
   multiSelect?: boolean;
+  /** Secondary line + search field: the member's role (default) or their @slug. */
+  secondaryField?: "role" | "slug";
   searchLabel?: string;
+  /** Search-box placeholder. Defaults to the cohost picker's "name or role" copy. */
+  placeholder?: string;
 }
 
 /** Searchable member list shared by the invite + add-cohost modals. */
@@ -30,7 +34,9 @@ export function MemberPicker({
   onToggle,
   atCap = false,
   multiSelect = false,
+  secondaryField = "role",
   searchLabel,
+  placeholder,
 }: MemberPickerProps) {
   const { t } = useTranslation();
   const resolvedSearchLabel =
@@ -38,22 +44,25 @@ export function MemberPicker({
   const [query, setQuery] = useState("");
 
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return candidates.filter((c) => {
-      if (excludeSlugs.includes(c.slug)) return false;
-      if (!q) return true;
+    const normalizedQuery = query.trim().toLowerCase();
+    return candidates.filter((candidate) => {
+      if (excludeSlugs.includes(candidate.slug)) return false;
+      if (!normalizedQuery) return true;
+      const secondary =
+        secondaryField === "slug" ? candidate.slug : candidate.role;
       return (
-        c.name.toLowerCase().includes(q) || c.role.toLowerCase().includes(q)
+        candidate.name.toLowerCase().includes(normalizedQuery) ||
+        secondary.toLowerCase().includes(normalizedQuery)
       );
     });
-  }, [candidates, excludeSlugs, query]);
+  }, [candidates, excludeSlugs, query, secondaryField]);
 
   return (
     <div>
       <SearchInput
         value={query}
         onChange={setQuery}
-        placeholder={t("gatherings:cohost.picker.placeholder")}
+        placeholder={placeholder ?? t("gatherings:cohost.picker.placeholder")}
         ariaLabel={resolvedSearchLabel}
       />
       <div
@@ -66,12 +75,12 @@ export function MemberPicker({
             {t("gatherings:cohost.picker.noResults", { query })}
           </div>
         ) : (
-          visible.map((c) => {
-            const isOn = selected.includes(c.slug);
+          visible.map((candidate) => {
+            const isOn = selected.includes(candidate.slug);
             const disabled = multiSelect && atCap && !isOn;
             return (
               <button
-                key={c.slug}
+                key={candidate.slug}
                 type="button"
                 role="option"
                 aria-selected={isOn}
@@ -79,22 +88,26 @@ export function MemberPicker({
                 className={[styles.pickerRow, isOn && styles.pickerRowActive]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => onToggle(c.slug)}
+                onClick={() => onToggle(candidate.slug)}
               >
                 <Avatar
-                  initials={c.initials}
-                  tint={c.tint}
-                  src={c.photo}
+                  initials={candidate.initials}
+                  tint={candidate.tint}
+                  src={candidate.photo}
                   size={38}
                 />
                 <div className={styles.pickerInfo}>
                   <div className={styles.pickerName}>
                     <span className={styles.nameRow}>
-                      {c.name}
-                      <MemberStaffBadge slug={c.slug} />
+                      {candidate.name}
+                      <MemberStaffBadge slug={candidate.slug} />
                     </span>
                   </div>
-                  <div className={styles.pickerRole}>{c.role}</div>
+                  <div className={styles.pickerRole}>
+                    {secondaryField === "slug"
+                      ? `@${candidate.slug}`
+                      : candidate.role}
+                  </div>
                 </div>
                 {multiSelect && (
                   <span

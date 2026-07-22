@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { FiSmartphone, FiMonitor, FiExternalLink, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
@@ -27,7 +28,10 @@ export function SimulationPreviewModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
+  // Portal to <body>: the settings panes sit inside <FadeIn>
+  // (`will-change: transform`), which makes a containing block for fixed
+  // descendants and would otherwise mis-position this fixed overlay.
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -110,6 +114,7 @@ export function SimulationPreviewModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

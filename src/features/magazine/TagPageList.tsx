@@ -14,7 +14,6 @@ import { ALL_ITEMS, CHIPS, PAGE_SIZE } from "./tag.data";
 import styles from "./TagPage.module.css";
 
 const ARTICLE = routes.article;
-const NEWSLETTER = routes.newsletter;
 
 function ItemSkeleton() {
   // Mirrors the real .item: kicker line, two-line title, dek, byline.
@@ -85,10 +84,6 @@ export function TagPageList({
               onResetChip();
               setVisible(PAGE_SIZE);
             },
-          }}
-          secondaryAction={{
-            label: t("magazine:tag.hero.getLongReadsCta"),
-            to: NEWSLETTER,
           }}
         />
       ) : (

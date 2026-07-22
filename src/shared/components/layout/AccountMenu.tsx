@@ -14,7 +14,6 @@ import {
   FiLayers,
   FiRss,
   FiCalendar,
-  FiMessageSquare,
   FiUsers,
   FiSettings,
   FiHelpCircle,
@@ -65,15 +64,9 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       icon: FiUserPlus,
     },
   ],
-  // Talking & belonging
-  [
-    {
-      labelKey: "shared:accountMenu.items.messages",
-      to: routes.messages,
-      icon: FiMessageSquare,
-    },
-    { labelKey: "nav:communities", to: routes.communitiesHome, icon: FiUsers },
-  ],
+  // Belonging — Messages now lives as a top-level nav icon (Navbar/SidebarFooter),
+  // beside notifications, rather than as a link here.
+  [{ labelKey: "nav:communities", to: routes.communitiesHome, icon: FiUsers }],
   // Career
   [
     {

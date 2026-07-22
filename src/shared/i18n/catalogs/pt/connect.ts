@@ -58,6 +58,7 @@ export const connect: Catalog = {
   "card.tagsMoreTitle": "Também: {list}",
   "card.noMutuals": "Sem pessoas em comum — revê com atenção",
   "card.sentAgo": "Enviado <b>{sentAgo}</b>",
+  "card.introducedBy": "Apresentado por <a>{name}</a>",
   "card.reason": "Sobre <b>{reason}</b>",
   "card.decline": "Recusar",
   "card.accept": "Aceitar",

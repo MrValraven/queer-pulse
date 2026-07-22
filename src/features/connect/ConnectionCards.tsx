@@ -339,11 +339,21 @@ export function IncomingCard({
   onDecline: () => void;
 }) {
   const { t } = useTranslation();
-  const { mutuals, sentAgo, requestMessage, requestReason } = view.meta;
+  const { mutuals, sentAgo, requestMessage, requestReason, introducedBy } =
+    view.meta;
   const reason = reasonLabel(requestReason, t);
   return (
     <div className={`${styles.card} ${styles.pending}`}>
       <CardHead view={view} />
+      {introducedBy && (
+        <p className={styles.introBy}>
+          <Translation
+            i18nKey="connect:card.introducedBy"
+            components={{ a: <Link to={profilePath(introducedBy.slug)} /> }}
+            values={{ name: introducedBy.name }}
+          />
+        </p>
+      )}
       <div className={styles.meta}>
         {mutuals != null && mutuals > 0 ? (
           <Translation

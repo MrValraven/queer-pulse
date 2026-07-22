@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, HubBackLink } from "../../shared/components/ui";
+import { HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -8,7 +8,6 @@ import { CHIPS } from "./tag.data";
 import styles from "./TagPage.module.css";
 
 const ARTICLE = routes.article;
-const NEWSLETTER = routes.newsletter;
 
 export function TagPageHero({
   activeChip,
@@ -130,9 +129,6 @@ export function TagPageHero({
               — <AuthorLink name="Marta Reis" />, editor in chief
             </p>
           </div>
-          <Button to={NEWSLETTER} variant="ghost-dark">
-            {t("magazine:tag.hero.getLongReadsCta")}
-          </Button>
         </div>
       </div>
     </>

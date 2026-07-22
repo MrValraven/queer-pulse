@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { HOUSING_LISTINGS, type HousingListing } from "../housingListings";
 import { getHousingListings } from "./housingListing.api";
@@ -19,6 +19,7 @@ export function useHousingListings(filter = "all") {
       const page = await getHousingListings({ type: filter });
       return page.items.map(listingDtoToHousingListing);
     },
+    placeholderData: keepPreviousData,
   });
 }
 

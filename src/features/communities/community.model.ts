@@ -56,6 +56,9 @@ export interface CommunityEvent {
   spots?: string;
   past?: boolean;
   recapHref?: string;
+  /** Slug of the real gathering this row mirrors, when there is one — the RSVP
+   *  button links to `gatheringPath(slug)` rather than the generic landing. */
+  slug?: string;
 }
 
 /** A community member with their role + light directory metadata. */

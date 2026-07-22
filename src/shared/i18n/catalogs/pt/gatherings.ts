@@ -7,8 +7,8 @@ import type { Catalog } from "../../types";
  * - "Members" → *pessoas* / *a comunidade*, nunca *Membros* (masculino por
  *   omissão, genderiza toda a comunidade).
  * - Registo `tu`, caloroso, nunca `você`.
- * - Nomes próprios (bairros de Lisboa, ILGA Portugal) e a marca QueerPulse
- *   ficam iguais.
+ * - Nomes próprios (bairros de Lisboa, como Príncipe Real ou Intendente) e a
+ *   marca QueerPulse ficam iguais.
  * - Títulos, descrições e biografias fictícias dos eventos NÃO são traduzidos —
  *   em modo live vêm da API como texto de quem os escreveu.
  */
@@ -109,9 +109,7 @@ export const gatherings: Catalog = {
 
   // ── Legenda do calendário ─────────────────────────────────────────────────
   "calendar.legend.queerpulse": "QueerPulse",
-  "calendar.legend.ilga": "ILGA Portugal",
   "calendar.legend.community": "Comunidade",
-  "calendar.legend.partners": "Organizações parceiras",
 
   // ── Event, RSVP, gathering detail, cancelled, cohost invite ───────────────
   // Shared/cross-page chrome
@@ -314,7 +312,7 @@ export const gatherings: Catalog = {
   "calendar.eyebrow": "Calendário da Comunidade",
   "calendar.heroTitle": "Tudo o que está a acontecer <em>num só lugar.</em>",
   "calendar.heroSub":
-    "Convívios QueerPulse, eventos da ILGA Portugal, Rede ex aequo, Opus Diversus, sessões de cinema da comunidade e muito mais — tudo num calendário partilhado.",
+    "Todos os convívios QueerPulse e eventos organizados pela comunidade em Lisboa — jantares, workshops, círculos de apoio, sessões de cinema e muito mais — num calendário partilhado.",
   "calendar.prevMonth": "Mês anterior",
   "calendar.nextMonth": "Mês seguinte",
   "calendar.upcomingTitle": "Todos os próximos eventos",
@@ -336,11 +334,10 @@ export const gatherings: Catalog = {
   // Events
   "events.eyebrow": "O que se passa",
   "events.subtitle":
-    "Cada evento da rede de Lisboa é organizado por uma comunidade, organização parceira ou espaço — explora a temporada e encontra a tua gente.",
+    "Cada evento aqui é organizado pela QueerPulse ou por pessoas da comunidade — explora a temporada e encontra a tua gente.",
   "events.categoryAll": "Todos os eventos",
   "events.categoryQueerpulse": "QueerPulse",
   "events.categoryCommunity": "Comunidade",
-  "events.categoryPartners": "Organizações parceiras",
   "events.heroTitle": "Tudo o que está a acontecer <em>esta temporada</em>",
   "events.viewCalendarCta": "Ver como calendário",
   "events.filterAriaLabel": "Filtrar eventos",

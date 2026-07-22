@@ -28,6 +28,8 @@ interface Listing {
 export interface Profile {
   id: number;
   slug: string;
+  profileSlug: string; // the flatmate-profile slug (for hello/save/report); demo reuses the member slug
+  matchScore?: number | null; // live compatibility score (0-100) when the viewer has a profile
   name: string;
   pronouns: string;
   type: ListingType;
@@ -151,6 +153,7 @@ export const PROFILES: Profile[] = LISTINGS.map((l, i) => {
   return {
     id: i + 1,
     slug: l.slug,
+    profileSlug: l.slug,
     name: fullName(m),
     pronouns: l.pronouns,
     type: l.type,

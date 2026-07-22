@@ -2,11 +2,11 @@ import { useState } from "react";
 import { FiHome } from "react-icons/fi";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PROFILES, matchesBudget, type ListingType } from "./flatmates.data";
+import { matchesBudget, type ListingType } from "./flatmates.data";
+import { useFlatmateProfiles } from "./api/useFlatmateProfiles";
 import { FlatmateCard } from "./FlatmateCard";
 import { FlatmateSkeleton } from "./FlatmateSkeleton";
 import { FlatmatesFilterBar } from "./FlatmatesFilterBar";
@@ -15,7 +15,6 @@ import styles from "./FlatmatesPage.module.css";
 
 export function FlatmatesBoard() {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [type, setType] = useState<ListingType | "all">("all");
   const [neighbourhood, setNeighbourhood] = useState("all");
@@ -25,10 +24,7 @@ export function FlatmatesBoard() {
   const [sent, setSent] = useState<Set<number>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
 
-  // The flatmate board has no live backend yet, so real member profiles only
-  // exist in demo mode ("Populate platform"). Live mode shows the empty board
-  // rather than mock members' profiles.
-  const source = demoMode ? PROFILES : [];
+  const { data: source = [] } = useFlatmateProfiles();
   // With nothing on the board, the filters have nothing to act on — hide them
   // and let the empty state carry the single call to action.
   const boardEmpty = source.length === 0;

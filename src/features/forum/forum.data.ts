@@ -11,6 +11,7 @@ import {
 import { LuPalette } from "react-icons/lu";
 import { FaHandFist } from "react-icons/fa6";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import { tintForSlug, initialsOf } from "../../shared/api/refs";
 import { MEMBERS, fullName, currentUser } from "../members/data/members";
 
 /**
@@ -171,7 +172,10 @@ const qpReply = (
   ...rest,
 });
 
-/** Author block for the logged-in member, shown when they publish a thread. */
+/** Author block for the logged-in member, shown when they publish a thread —
+ *  DEMO ONLY. It is built from the mock `currentUser` (the "Tiago Costa"
+ *  persona), so it must never author a live post. Live mode uses
+ *  `selfAuthorFromProfile` with the real session identity instead. */
 export const SELF_AUTHOR: Thread["author"] = {
   i: currentUser.initials,
   n: "You",
@@ -180,6 +184,30 @@ export const SELF_AUTHOR: Thread["author"] = {
   slug: currentUser.slug,
   photo: currentUser.photo,
 };
+
+/**
+ * Author block for a REAL authenticated member publishing in live mode, built
+ * entirely from the session profile (`useAuth().user.profile`) — never the mock
+ * registry — so the demo "Tiago Costa" persona can never appear on a production
+ * post. Avatar tint is derived deterministically from the real slug, matching
+ * how `threadToCard` colours the same member's server-persisted copy.
+ */
+export function selfAuthorFromProfile(profile: {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string | null;
+}): Thread["author"] {
+  const tone = solid(tintForSlug(profile.slug));
+  return {
+    i: initialsOf(profile.firstName, profile.lastName),
+    n: `${profile.firstName} ${profile.lastName}`.trim(),
+    t: tone.t,
+    tt: tone.tt,
+    slug: profile.slug,
+    photo: profile.avatarUrl ?? undefined,
+  };
+}
 
 export const THREADS: Thread[] = [
   {

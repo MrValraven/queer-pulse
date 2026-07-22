@@ -447,6 +447,10 @@ export const economy: Catalog = {
   "housing.empty.listSpace": "Anunciar um espaço",
   "housing.listing.photoAlt": "Foto · {hood}",
   "housing.listing.from": "A partir de {date}",
+  "housing.card.saveAriaLabel": "Guardar {title}",
+  "housing.card.unsaveAriaLabel": "Remover {title} das guardadas",
+  "housing.card.savedToast": "{title} guardada",
+  "housing.card.unsavedToast": "{title} removida das guardadas",
 
   "housing.landlords.heading":
     "Pessoas proprietárias <em>com aval da comunidade</em>",
@@ -569,6 +573,41 @@ export const economy: Catalog = {
   "housingListing.staySafe.body":
     "<b>Nunca pagues um depósito antes de visitares o espaço pessoalmente.</b> Mantém a conversa dentro da QueerPulse até se terem conhecido. Se algo parecer estranho, a Queer Housing Justice Network pode aconselhar-te.",
   "housingListing.moreOnBoard": "Mais no quadro",
+  "housingListing.save": "Guardar",
+  "housingListing.saved": "Guardada",
+  "housingListing.saveAriaLabel": "Guardar {title}",
+  "housingListing.unsaveAriaLabel": "Remover {title} das guardadas",
+  "housingListing.savedToast": "{title} guardada",
+  "housingListing.unsavedToast": "{title} removida das guardadas",
+
+  // ── ReportListingModal ─────────────────────────────────────────────────
+  "housingListing.report": "Denunciar",
+  "housingListing.reportAriaLabel": "Denunciar {title}",
+  "housingListing.reportModal.ariaLabel": "Denunciar este anúncio",
+  "housingListing.reportModal.eyebrow": "Denunciar este anúncio",
+  "housingListing.reportModal.title": "O que se passa com <em>{title}?</em>",
+  "housingListing.reportModal.lead":
+    "As denúncias ajudam-nos a manter o quadro de habitação fiável. Conta-nos o que se passa — detalhes ajudam a equipa de revisão. O teu nome nunca é partilhado com a pessoa anunciante.",
+  "housingListing.reportModal.concernLabel": "Qual é a preocupação?",
+  "housingListing.reportModal.detailLabel": "Conta-nos mais",
+  "housingListing.reportModal.detailPlaceholder":
+    "O que fez este anúncio parecer inseguro, discriminatório, ou pouco fiável? Sê tão específique quanto te sintas confortável.",
+  "housingListing.reportModal.charsRemaining_one":
+    "Falta {count} carácter para submeter",
+  "housingListing.reportModal.charsRemaining_other":
+    "Faltam {count} carateres para submeter",
+  "housingListing.reportModal.charsCount_one": "{count} carácter",
+  "housingListing.reportModal.charsCount_other": "{count} carateres",
+  "housingListing.reportModal.confidentialNote":
+    "As denúncias são confidenciais. As pessoas moderadoras veem o teu nome; a pessoa anunciante nunca o vê. Em caso de emergência, liga primeiro para o <strong>112</strong>.",
+  "housingListing.reportModal.cancelCta": "Cancelar",
+  "housingListing.reportModal.submitting": "A submeter…",
+  "housingListing.reportModal.submitCta": "Submeter denúncia",
+  "housingListing.reportModal.success.title": "Denúncia",
+  "housingListing.reportModal.success.em": "recebida.",
+  "housingListing.reportModal.success.body":
+    "Obrigade. Uma pessoa moderadora vai rever {title}. Podemos contactar-te para mais detalhe, mas nunca partilharemos a tua denúncia com a pessoa anunciante.",
+  "housingListing.reportModal.doneCta": "Concluído",
 
   // ── ContactRequestModal (fluxo partilhado de "contactar") ──────────────
   "contactRequest.defaultTitle": "Enviar um",
@@ -671,9 +710,20 @@ export const economy: Catalog = {
   "flatmates.card.memberSince": "Membro desde {date}",
   "flatmates.card.sayHello": "Dizer olá →",
   "flatmates.card.helloSent": "Olá enviado",
+  "flatmates.card.matchScore": "{score}% compatível",
+  "flatmates.card.save": "Guardar",
+  "flatmates.card.saved": "Guardado",
+  "flatmates.card.saveAriaLabel": "Guardar o perfil de {name}",
+  "flatmates.card.unsaveAriaLabel": "Remover o perfil de {name} dos guardados",
+  "flatmates.card.savedToast": "Perfil de {name} guardado",
+  "flatmates.card.unsavedToast": "Perfil de {name} removido dos guardados",
+  "flatmates.card.reportCta": "Denunciar",
+  "flatmates.card.reportAriaLabel": "Denunciar o perfil de {name}",
 
   // ── PostProfileModal / PostProfileForm ─────────────────────────────────
   "postProfileModal.ariaLabel": "Publicar o teu perfil de colega de casa",
+  "postProfileModal.error":
+    "Não foi possível guardar o teu perfil — importas-te de tentar de novo?",
   "postProfileModal.success.title": "Já estás no <em>quadro.</em>",
   "postProfileModal.success.body":
     "O teu perfil está publicado. As pessoas vão contactar-te diretamente — fica atente às tuas mensagens QueerPulse.",
@@ -687,15 +737,13 @@ export const economy: Catalog = {
     "Estás à procura de um quarto num apartamento ou casa",
   "postProfileForm.offeringDesc":
     "Tens um quarto ou casa partilhada para oferecer",
-  "postProfileForm.nameLabel": "O teu nome",
-  "postProfileForm.namePlaceholder": "Primeiro nome ou alcunha",
   "postProfileForm.pronounsLabel": "Pronomes (opcional)",
   "postProfileForm.pronounsPlaceholder": "ex.: ela, ele, elu",
   "postProfileForm.neighbourhoodLabel": "Bairro",
   "postProfileForm.neighbourhoodPlaceholder": "Preferência / localização",
   "postProfileForm.anywhereCentral": "Em qualquer zona central",
-  "postProfileForm.budgetLabel": "Orçamento / mês",
-  "postProfileForm.budgetPlaceholder": "ex.: 700–900 €",
+  "postProfileForm.budgetLabel": "Orçamento / mês (€)",
+  "postProfileForm.budgetPlaceholder": "ex.: 750",
   "postProfileForm.moveInLabel": "Disponível / entrada a partir de",
   "postProfileForm.moveInPlaceholder": "Quando?",
   "postProfileForm.moveIn.jul2026": "Julho de 2026",
@@ -705,9 +753,6 @@ export const economy: Catalog = {
   "postProfileForm.aboutPlaceholder":
     "Conta um pouco sobre ti — o teu ritmo, o teu trabalho, que tipo de casa te faz sentir bem. Não precisas de te vender; sê apenas honesta.",
   "postProfileForm.lifestyleTagsLabel": "Tags de estilo de vida",
-  "postProfileForm.emailLabel": "O teu email (não é mostrado publicamente)",
-  "postProfileForm.emailPlaceholder":
-    "Para que as pessoas te possam contactar via QueerPulse",
   "postProfileForm.submitCta": "Publicar perfil →",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { FiBell } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { Avatar, Button, FadeIn, Tabs } from "../../shared/components/ui";
+import { Avatar, FadeIn, Tabs } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../app/routeMap";
@@ -155,13 +155,6 @@ export function NotificationsPage() {
               >
                 {t("notifications:page.markAllRead")}
               </button>
-              <Button
-                variant="ghost"
-                to={routes.newsletter}
-                style={{ padding: "8px 16px", fontSize: 13 }}
-              >
-                {t("notifications:page.preferences")}
-              </Button>
             </div>
           </div>
 
