@@ -2521,6 +2521,7 @@ export const economy: Catalog = {
   "housingCoop.templates.sub":
     "Every document we wish someone had given us. Drafted with QueerPulse legal, translated PT & EN, stress-tested by Casa Sambizanga's first two years.",
   "housingCoop.templates.download": "Download →",
+  "housingCoop.templates.read": "Read →",
   "housingCoop.startCta.eyebrow": "Start a co-op",
   "housingCoop.startCta.title": "Don't have <em>your people yet</em>?",
   "housingCoop.startCta.body":
@@ -2528,6 +2529,18 @@ export const economy: Catalog = {
   "housingCoop.startCta.postCta": "Post that you're starting",
   "housingCoop.startCta.storyCta": "Read Casa Sambizanga's story",
   "housingCoop.startCta.resourcesHead": "Resources & mentors",
+
+  // ── "Forming now" empty state (CoopEmptyState) ──────────────────────────
+  "housingCoop.empty.title": "No co-ops",
+  "housingCoop.empty.titleEm": "forming yet",
+  "housingCoop.empty.body":
+    "This is where you'll find groups organizing housing together. Post that you're starting, and we'll help you find your people.",
+  "housingCoop.empty.cta": "Post that you're starting",
+
+  // ── CoopTemplatePage (formation template documents) ─────────────────────
+  "coopTemplate.back": "Back to housing co-ops",
+  "coopTemplate.disclaimer":
+    "This is a starting template — adapt it with your group and, where it matters legally, a lawyer or notary.",
 
   // ── Hero stat labels (housingCoop.data → COOP_STATS) ────────────────────
   "housingCoop.stats.activeGroups": "Active groups",
@@ -2637,6 +2650,7 @@ export const economy: Catalog = {
   "joinCoop.cancel": "Cancel",
   "joinCoop.sending": "Sending…",
   "joinCoop.sendCta": "Send request",
+  "joinCoop.error": "Couldn't send your request — please try again.",
   "joinCoop.household.justMe": "Just me",
   "joinCoop.household.mePlusPartners": "Me + partner(s)",
   "joinCoop.household.small": "A household of 3–4",

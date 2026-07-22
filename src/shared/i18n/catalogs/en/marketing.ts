@@ -2644,6 +2644,8 @@ export const marketing: Catalog = {
   "directory.loading": "Loading places…",
   "directory.count": "Showing <b>{shown}</b> of {total} places",
   "directory.empty": "No places match — try a broader filter.",
+  "directory.noListings":
+    "No places listed yet — be the first to add one below.",
   "directory.badge.queerOwned": "Queer-owned",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
@@ -2669,6 +2671,19 @@ export const marketing: Catalog = {
   "directory.detail.hoursClosed": "Closed",
   "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
   "directory.detail.reviewsSub": "Sorted by most helpful.",
+  "directory.detail.review.formTitle": "Been here? Leave a review",
+  "directory.detail.review.starsAria": "Your rating",
+  "directory.detail.review.starAria": "{count} out of 5 stars",
+  "directory.detail.review.placeholder":
+    "Share what your visit was like — what worked, and who it's for.",
+  "directory.detail.review.submit": "Post review",
+  "directory.detail.review.submitting": "Posting…",
+  "directory.detail.review.successToast": "Thanks — your review is up.",
+  "directory.detail.review.errorToast":
+    "Couldn't post your review. Please try again.",
+  "directory.detail.review.signInPrompt":
+    "Sign in to leave a review of this space.",
+  "directory.detail.review.signInCta": "Sign in",
   "directory.detail.helpful": "<b>{count}</b> members found this helpful",
   "directory.detail.visitWebsite": "Visit website →",
   "directory.detail.getInTouch": "Get in touch →",
@@ -2920,7 +2935,7 @@ export const marketing: Catalog = {
   "visas.ground.niss.title": "NISS — Social security",
   "visas.ground.niss.body":
     "Your Número de Identificação de Segurança Social gives you access to SNS healthcare and records contributions. Register at your local Centro de Emprego e Formação Profissional or Segurança Social office. Required before you can access SNS appointments.",
-  // Note: the source component (`visas.data.tsx`) said "NHS appointments"
+  // Note: the source component (`visas.data.ts`) said "NHS appointments"
   // here — the UK's health service, not Portugal's. Corrected to SNS per the
   // i18n brief's "flag/fix an English-source bug, don't faithfully translate
   // it" rule; flagged in the sweep report.
@@ -2934,6 +2949,8 @@ export const marketing: Catalog = {
     "Register with a GP (Centro de Saúde) in your area using your AR card or EU registration certificate plus NISS. Wait times are long — many community members use private health insurance alongside SNS access. See the Wellbeing page for queer-friendly healthcare providers.",
 
   "visas.lawyers.title": "Community-reviewed <em>immigration lawyers</em>",
+  "visas.lawyers.emptyBody":
+    "We're building a community-reviewed directory of LGBTQ+-friendly immigration lawyers. It isn't ready yet — until it is, the best recommendations come from members who've been through the process. Ask in the visa forum thread.",
   "visas.lawyers.forumCta": "Ask the visa forum thread →",
 
   "visas.outro.title": "You're building a life <em>here.</em>",
@@ -2984,6 +3001,10 @@ export const marketing: Catalog = {
   // Bairro is a Lisbon proper noun — identical in both catalogs, only the
   // surrounding phrase is translated.
   "map.svg.filterByAria": "Filter the map by {bairro}",
+  "map.mapError": "The map could not load. The venue list below still works.",
+  "map.pinAria": "{name} — {type}",
+  "map.clusterAria_one": "{count} venue here — zoom in",
+  "map.clusterAria_other": "{count} venues here — zoom in",
 
   // ── Constitution — governance/constitutional copy (`ConstitutionPage.tsx`,
   //    `constitution.data.tsx`). Platform-authored, ships in the bundle, no

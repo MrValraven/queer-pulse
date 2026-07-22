@@ -45,21 +45,42 @@ export const TYPE_CARDS: {
   },
 ];
 
-/** Partner-venue directory records — real data fetched in live mode. */
-export const SPACES = [
+/**
+ * One partner-venue row on the host page's "Partner spaces" card. `slug`
+ * links to the directory listing when known (live rows always carry it; demo
+ * fixtures may omit it). `note` is the composed venue line
+ * ("Studio · up to 15 · member-run") — in live mode the adapter builds it from
+ * the listing's `spaceType`/`capacity`/`hostNote` primitives.
+ */
+export interface HostSpace {
+  slug?: string;
+  hood: string;
+  name: string;
+  note: string;
+}
+
+/**
+ * Demo-mode partner-venue rows. In live mode the same card is fed by
+ * `useHostSpaces()` → `GET /directory/spaces` (listings flagged as partner
+ * venues), so these must never render as platform truth in live mode.
+ */
+export const SPACES: HostSpace[] = [
   {
+    slug: "queer-supper-club",
     hood: "Mouraria",
-    name: "Casa da Mariquinhas",
-    note: "Kitchen + dining room · up to 20",
+    name: "Queer Supper Club",
+    note: "Kitchen + dining room · up to 20 · ticketed",
   },
   {
+    slug: "atelier-pulso",
     hood: "Príncipe Real",
     name: "Atelier Pulso",
     note: "Studio · up to 15 · member-run",
   },
   {
+    slug: "galeria-lume",
     hood: "Marvila",
-    name: "Fábrica Nuno Gama",
+    name: "Galeria Lume",
     note: "Warehouse · up to 50 · events only",
   },
 ];

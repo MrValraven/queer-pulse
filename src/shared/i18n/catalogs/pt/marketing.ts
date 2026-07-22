@@ -2718,6 +2718,8 @@ export const marketing: Catalog = {
   "directory.loading": "A carregar lugares…",
   "directory.count": "A mostrar <b>{shown}</b> de {total} lugares",
   "directory.empty": "Nenhum lugar corresponde — tenta um filtro mais amplo.",
+  "directory.noListings":
+    "Ainda não há lugares — sê o primeiro a adicionar um abaixo.",
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
@@ -2746,6 +2748,19 @@ export const marketing: Catalog = {
   "directory.detail.reviewsTitle":
     "Avaliações da comunidade · <em>{count}</em>",
   "directory.detail.reviewsSub": "Ordenado por mais úteis.",
+  "directory.detail.review.formTitle": "Já cá estiveste? Deixa uma avaliação",
+  "directory.detail.review.starsAria": "A tua avaliação",
+  "directory.detail.review.starAria": "{count} de 5 estrelas",
+  "directory.detail.review.placeholder":
+    "Conta como foi a tua visita — o que resultou e para quem é.",
+  "directory.detail.review.submit": "Publicar avaliação",
+  "directory.detail.review.submitting": "A publicar…",
+  "directory.detail.review.successToast": "Obrigada — a tua avaliação está publicada.",
+  "directory.detail.review.errorToast":
+    "Não foi possível publicar a tua avaliação. Tenta novamente.",
+  "directory.detail.review.signInPrompt":
+    "Inicia sessão para avaliar este espaço.",
+  "directory.detail.review.signInCta": "Iniciar sessão",
   "directory.detail.helpful": "<b>{count}</b> pessoas acharam isto útil",
   "directory.detail.visitWebsite": "Visitar o site →",
   "directory.detail.getInTouch": "Entrar em contacto →",
@@ -3019,6 +3034,8 @@ export const marketing: Catalog = {
 
   "visas.lawyers.title":
     "Advocacia de imigração <em>avaliada pela comunidade</em>",
+  "visas.lawyers.emptyBody":
+    "Estamos a construir um diretório de advogados de imigração LGBTQ+-friendly avaliado pela comunidade. Ainda não está pronto — até estar, as melhores recomendações vêm de membros que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
   "visas.lawyers.forumCta": "Pergunta no tópico do fórum sobre vistos →",
 
   "visas.outro.title": "Estás a construir uma vida <em>aqui.</em>",
@@ -3069,6 +3086,10 @@ export const marketing: Catalog = {
   "map.venueCard.beenThere": "Já estiveste aqui",
   "map.venueCard.markBeen": "Já estive aqui",
   "map.svg.filterByAria": "Filtrar o mapa por {bairro}",
+  "map.mapError": "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
+  "map.pinAria": "{name} — {type}",
+  "map.clusterAria_one": "{count} espaço aqui — ampliar",
+  "map.clusterAria_other": "{count} espaços aqui — ampliar",
 
   // ── Constituição — texto de governação constitucional. Literal e preciso;
   //    números, percentagens e referências a artigos mantidos exatos.

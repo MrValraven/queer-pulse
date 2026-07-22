@@ -2525,6 +2525,7 @@ export const economy: Catalog = {
   "housingCoop.templates.sub":
     "Todos os documentos que gostávamos que nos tivessem dado. Preparados com a equipa jurídica da QueerPulse, traduzidos PT & EN, testados nos primeiros dois anos da Casa Sambizanga.",
   "housingCoop.templates.download": "Descarregar →",
+  "housingCoop.templates.read": "Ler →",
   "housingCoop.startCta.eyebrow": "Começa uma cooperativa",
   "housingCoop.startCta.title": "Ainda não tens <em>o teu grupo</em>?",
   "housingCoop.startCta.body":
@@ -2532,6 +2533,18 @@ export const economy: Catalog = {
   "housingCoop.startCta.postCta": "Publica que estás a começar",
   "housingCoop.startCta.storyCta": "Lê a história da Casa Sambizanga",
   "housingCoop.startCta.resourcesHead": "Recursos & pessoas mentoras",
+
+  // ── Estado vazio de "a formar-se agora" (CoopEmptyState) ────────────────
+  "housingCoop.empty.title": "Ainda nenhuma cooperativa",
+  "housingCoop.empty.titleEm": "a formar-se",
+  "housingCoop.empty.body":
+    "É aqui que vais encontrar grupos a organizar habitação em conjunto. Publica que estás a começar e vamos ajudar-te a encontrar o teu grupo.",
+  "housingCoop.empty.cta": "Publica que estás a começar",
+
+  // ── CoopTemplatePage (documentos-modelo de formação) ────────────────────
+  "coopTemplate.back": "Voltar às cooperativas de habitação",
+  "coopTemplate.disclaimer":
+    "Este é um modelo de partida — adapta-o com o teu grupo e, sempre que for juridicamente relevante, com um advogado ou notário.",
 
   // ── Estatísticas do hero (housingCoop.data → COOP_STATS) ────────────────
   "housingCoop.stats.activeGroups": "Grupos ativos",
@@ -2647,6 +2660,7 @@ export const economy: Catalog = {
   "joinCoop.cancel": "Cancelar",
   "joinCoop.sending": "A enviar…",
   "joinCoop.sendCta": "Enviar pedido",
+  "joinCoop.error": "Não foi possível enviar o teu pedido — tenta novamente.",
   "joinCoop.household.justMe": "Só eu",
   "joinCoop.household.mePlusPartners": "Eu + acompanhante(s)",
   "joinCoop.household.small": "Um agregado de 3–4",

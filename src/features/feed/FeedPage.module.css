@@ -128,6 +128,22 @@
 .listSwitch .cardReveal {
   animation-duration: 0.25s;
 }
+/* Height wrapper for the tab-content list. Eases between the outgoing and
+   incoming content heights so a tab swap (e.g. populated → empty) doesn't snap.
+   Height is driven imperatively by useSequencedTabSwap and is `auto` at rest. */
+.viewport {
+  overflow: hidden;
+  transition: height var(--dur-base) var(--ease);
+}
+/* Exit fade for the leaving content, played before the incoming reveal.
+   Transform/opacity only. */
+.leaving {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-fast) var(--ease-in),
+    transform var(--dur-fast) var(--ease-in);
+}
 .pad {
   padding: 18px 20px;
 }
@@ -848,6 +864,14 @@
   .greetingRow,
   .postActionOn svg {
     animation: none;
+  }
+  .viewport {
+    transition: none;
+  }
+  .leaving {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
   @media (hover: hover) {
     .cardLink:hover {

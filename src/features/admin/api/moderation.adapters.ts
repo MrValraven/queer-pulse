@@ -4,10 +4,17 @@ import type {
   ModReport,
   PriorReports,
   ReportChip,
+  ResolvedItem,
   Severity,
 } from "../adminModeration.data";
 import type { AdminTone } from "../ui";
-import type { AppealDTO, ModReportDTO, ModSeverity } from "./moderation.api";
+import type {
+  AppealDTO,
+  ModActionCode,
+  ModReportDTO,
+  ModSeverity,
+  ResolutionNotifiedParty,
+} from "./moderation.api";
 
 /**
  * DTO → existing view-model adapters (spec 04). The moderation UI is built
@@ -166,5 +173,72 @@ export function appealDtoToView(dto: AppealDTO): Appeal {
     },
     argument: dto.argument,
     supporters: [],
+  };
+}
+
+/** Outcome-badge tone by action severity: destructive → danger, moderate →
+ *  coral, light-touch → jade. Mirrors the mock seed's `outcomeTone` intent. */
+const OUTCOME_TONE: Record<ModActionCode, "danger" | "coral" | "jade"> = {
+  ban: "danger",
+  remove_content: "danger",
+  suspend: "danger",
+  restrict: "coral",
+  warn: "coral",
+  hide_content: "coral",
+  escalate: "coral",
+  dismiss: "jade",
+  shield: "jade",
+};
+
+/**
+ * Verbatim "X notified" lines, matching the mock seed. Rendered as-is by
+ * `ResolvedRow` (like the open adapter's non-localized `title`/`preview`), so
+ * these are composed here rather than resolved through a catalog key.
+ */
+const NOTIFIED_LABEL: Record<ResolutionNotifiedParty, string> = {
+  member: "Member notified",
+  reporter: "Reporter notified",
+  affected: "Affected member supported",
+};
+
+/** "Closed 3h ago" / "Closed just now" from an ISO close timestamp. */
+function closedLabel(iso: string): string {
+  const age = ageOf(iso);
+  return age === "just now" ? "Closed just now" : `Closed ${age} ago`;
+}
+
+export function resolvedDtoToView(dto: ModReportDTO): ResolvedItem {
+  const severity = dto.severity as Severity;
+  const chips: ReportChip[] = [
+    { tone: CHIP_TONE[dto.severity], labelKey: "admin:moderation.chip.resolved" },
+  ];
+  const status = { tone: "jade" as AdminTone, key: "admin:moderation.status.logged" };
+  const res = dto.resolution;
+  if (!res) {
+    // Graceful fallback when the backend omits the resolution block.
+    return {
+      id: dto.id,
+      severity,
+      chips,
+      outcome: "Resolved",
+      outcomeTone: "jade",
+      title: REASON_LABELS[dto.reasonCode],
+      preview: dto.detail?.excerpt ?? REASON_LABELS[dto.reasonCode],
+      closed: closedLabel(dto.createdAt),
+      notified: [],
+      status,
+    };
+  }
+  return {
+    id: dto.id,
+    severity,
+    chips,
+    outcome: res.outcomeLabel,
+    outcomeTone: OUTCOME_TONE[res.action] ?? "jade",
+    title: REASON_LABELS[dto.reasonCode],
+    preview: `Resolved by ${res.actorName} — ${res.note}`,
+    closed: closedLabel(res.closedAt),
+    notified: res.notified.map((party) => NOTIFIED_LABEL[party]),
+    status,
   };
 }

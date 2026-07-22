@@ -28,9 +28,15 @@ import {
   FEED_POST,
   FEED_TAB_COPY,
   FEED_TAB_LABEL_KEY,
+  NEW_THIS_WEEK,
   type FeedTab,
+  type FeedPost,
   type FeedTabIcon,
+  type SidebarMember,
 } from "./feed.data";
+import { initials } from "./api/feed.adapters";
+import type { FeedItem } from "./api/feed.api";
+import { tintForSlug } from "../../shared/api/refs";
 import {
   GatheringCard,
   NewMemberCard,
@@ -39,6 +45,7 @@ import {
   RecapCard,
 } from "./FeedCards";
 import { useFeed } from "./api/useFeed";
+import { useSequencedTabSwap } from "./useSequencedTabSwap";
 import { FeedSidebar } from "./FeedSidebar";
 import styles from "./FeedPage.module.css";
 
@@ -164,9 +171,107 @@ function FeedTabs({
   );
 }
 
+/** The feed list items for the current tab/mode. Purely presentational: the
+ *  page derives the arrays and the empty/error panels, this renders the right
+ *  branch. Kept separate so the reveal wrappers and skeletons stay in one place
+ *  and FeedPage itself stays small. */
+function FeedListBody({
+  loading,
+  demoMode,
+  isError,
+  empty,
+  emptyPanel,
+  errorPanel,
+  livePosts,
+  liveMembers,
+  pulse,
+  staticItems,
+  revealDelay,
+}: {
+  loading: boolean;
+  demoMode: boolean;
+  isError: boolean;
+  empty: boolean;
+  emptyPanel: React.ReactNode;
+  errorPanel: React.ReactNode;
+  livePosts: FeedPost[];
+  liveMembers: FeedItem[];
+  pulse: HubPost[];
+  staticItems: { key: string; Card: () => React.ReactElement }[];
+  revealDelay: (index: number) => string;
+}) {
+  if (loading) {
+    return (
+      <>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <FeedSkeleton key={index} />
+        ))}
+      </>
+    );
+  }
+
+  if (!demoMode) {
+    if (isError) return <>{errorPanel}</>;
+    if (empty) return <>{emptyPanel}</>;
+    return (
+      <>
+        {livePosts.map((post, index) => (
+          <div
+            key={post.id}
+            className={styles.cardReveal}
+            style={{ animationDelay: revealDelay(index) }}
+          >
+            <PostCard post={post} />
+          </div>
+        ))}
+        {liveMembers.map((item, index) => (
+          <div
+            key={item.id}
+            className={styles.cardReveal}
+            style={{ animationDelay: revealDelay(index + livePosts.length) }}
+          >
+            <NewMemberCard item={item} />
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  if (empty) return <>{emptyPanel}</>;
+  return (
+    <>
+      {pulse.map((item, index) => (
+        <div
+          key={item.post.id}
+          className={styles.cardReveal}
+          style={{ animationDelay: revealDelay(index) }}
+        >
+          <HubPulseCard item={item} />
+        </div>
+      ))}
+      {staticItems.map(({ key, Card }, index) => (
+        <div
+          key={key}
+          className={styles.cardReveal}
+          style={{ animationDelay: revealDelay(index + pulse.length) }}
+        >
+          <Card />
+        </div>
+      ))}
+    </>
+  );
+}
+
 export function FeedPage() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<FeedTab>("All");
+  const {
+    targetTab,
+    displayTab,
+    leaving,
+    selectTab: swapTab,
+    viewportRef,
+    contentRef,
+  } = useSequencedTabSwap("All");
   const [hasSwitchedTab, setHasSwitchedTab] = useState(false);
   const { demoMode } = useDemoMode();
   const [demoLoading, setDemoLoading] = useState(demoMode);
@@ -178,7 +283,7 @@ export function FeedPage() {
   const { greeting, dateLine } = useNowGreeting();
 
   // Live feed source (inert in demo mode, which renders its scripted cards).
-  const feed = useFeed(activeTab);
+  const feed = useFeed(displayTab);
 
   // Defense-in-depth: hide any author I've blocked or muted from my feed. The
   // server is authoritative in live mode; this stops any flash of their content.
@@ -219,16 +324,16 @@ export function FeedPage() {
     )
     .slice(0, 5);
 
-  const showCommunity = activeTab === "All" || activeTab === "Communities";
+  const showCommunity = displayTab === "All" || displayTab === "Communities";
   // All feed content is mock data, gated behind the "Populate platform" toggle.
   const pulse = (demoMode && showCommunity ? communityPulse : []).filter(
     (item) => !item.post.author.slug || !hidden.has(item.post.author.slug),
   );
   const staticItems =
-    demoMode && activeTab !== "Communities"
+    demoMode && displayTab !== "Communities"
       ? FEED_ITEMS.filter(
           ({ tab, authorSlug }) =>
-            (activeTab === "All" || tab === activeTab) &&
+            (displayTab === "All" || tab === displayTab) &&
             !(authorSlug && hidden.has(authorSlug)),
         )
       : [];
@@ -247,9 +352,29 @@ export function FeedPage() {
     ? pulse.length === 0 && staticItems.length === 0
     : livePosts.length === 0 && liveMembers.length === 0;
 
+  // Sidebar "New this week" rows: the demo mock in demo mode, otherwise the live
+  // recently-joined members (already block/mute filtered above) mapped to the
+  // widget's row shape and capped to a short list. Items without a handle can't
+  // link to a profile, so they're dropped.
+  const sidebarMembers: SidebarMember[] = demoMode
+    ? NEW_THIS_WEEK
+    : liveMembers
+        .filter((item) => item.actor?.handle)
+        .slice(0, 5)
+        .map((item) => {
+          const slug = item.actor!.handle;
+          return {
+            slug,
+            name: item.title,
+            initials: initials(item.title),
+            tint: tintForSlug(slug),
+            photo: item.actor?.avatarUrl ?? undefined,
+          };
+        });
+
   const selectTab = (tab: FeedTab) => {
     setHasSwitchedTab(true);
-    setActiveTab(tab);
+    swapTab(tab);
   };
 
   // Card entrance timing. The first paint of the page is a load, so it earns the
@@ -259,7 +384,7 @@ export function FeedPage() {
     hasSwitchedTab ? `${Math.min(index, 5) * 40}ms` : `${index * 60}ms`;
 
   // Tab-specific empty/error copy, so each corner of the feed says what it's for.
-  const tabCopy = FEED_TAB_COPY[activeTab];
+  const tabCopy = FEED_TAB_COPY[displayTab];
   const emptyPanel = (
     <div className={styles.cardReveal}>
       <EmptyState
@@ -273,7 +398,7 @@ export function FeedPage() {
           }
         }
         secondaryAction={
-          activeTab === "All"
+          displayTab === "All"
             ? undefined
             : {
                 label: t("feed:common.viewEverything"),
@@ -282,6 +407,17 @@ export function FeedPage() {
         }
       />
     </div>
+  );
+  const errorPanel = (
+    <EmptyState
+      icon={TAB_ICONS[tabCopy.icon]}
+      title={t(tabCopy.error.titleKey)}
+      description={t(tabCopy.error.descriptionKey)}
+      action={{
+        label: t("feed:common.tryAgain"),
+        onClick: () => void feed.refetch(),
+      }}
+    />
   );
 
   return (
@@ -297,88 +433,47 @@ export function FeedPage() {
 
           <div className={styles.layout}>
             <div>
-              <FeedTabs activeTab={activeTab} onSelect={selectTab} />
-              {/* Keyed on the tab so every switch re-mounts the panel and the
-                  card reveal replays — without this, cards shared between two
-                  tabs keep their DOM nodes and silently jump into place. */}
-              <div
-                key={activeTab}
-                className={[styles.list, hasSwitchedTab && styles.listSwitch]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {loading ? (
-                  Array.from({ length: 4 }).map((_, index) => (
-                    <FeedSkeleton key={index} />
-                  ))
-                ) : !demoMode ? (
-                  feed.isError ? (
-                    <EmptyState
-                      icon={TAB_ICONS[tabCopy.icon]}
-                      title={t(tabCopy.error.titleKey)}
-                      description={t(tabCopy.error.descriptionKey)}
-                      action={{
-                        label: t("feed:common.tryAgain"),
-                        onClick: () => void feed.refetch(),
-                      }}
-                    />
-                  ) : empty ? (
-                    emptyPanel
-                  ) : (
-                    <>
-                      {livePosts.map((post, index) => (
-                        <div
-                          key={post.id}
-                          className={styles.cardReveal}
-                          style={{ animationDelay: revealDelay(index) }}
-                        >
-                          <PostCard post={post} />
-                        </div>
-                      ))}
-                      {liveMembers.map((item, index) => (
-                        <div
-                          key={item.id}
-                          className={styles.cardReveal}
-                          style={{
-                            animationDelay: revealDelay(
-                              index + livePosts.length,
-                            ),
-                          }}
-                        >
-                          <NewMemberCard item={item} />
-                        </div>
-                      ))}
-                    </>
-                  )
-                ) : empty ? (
-                  emptyPanel
-                ) : (
-                  <>
-                    {pulse.map((item, index) => (
-                      <div
-                        key={item.post.id}
-                        className={styles.cardReveal}
-                        style={{ animationDelay: revealDelay(index) }}
-                      >
-                        <HubPulseCard item={item} />
-                      </div>
-                    ))}
-                    {staticItems.map(({ key, Card }, index) => (
-                      <div
-                        key={key}
-                        className={styles.cardReveal}
-                        style={{
-                          animationDelay: revealDelay(index + pulse.length),
-                        }}
-                      >
-                        <Card />
-                      </div>
-                    ))}
-                  </>
-                )}
+              <FeedTabs activeTab={targetTab} onSelect={selectTab} />
+              {/* useSequencedTabSwap fades the outgoing content (`.leaving`)
+                  before committing the swap, then eases this viewport's height
+                  across the change so it never snaps. */}
+              <div ref={viewportRef} className={styles.viewport}>
+                {/* Keyed on displayTab so every committed switch re-mounts the
+                    panel and the card reveal replays — without this, cards
+                    shared between two tabs keep their DOM nodes and silently
+                    jump into place. */}
+                <div
+                  ref={contentRef}
+                  key={displayTab}
+                  className={[
+                    styles.list,
+                    hasSwitchedTab && styles.listSwitch,
+                    leaving && styles.leaving,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <FeedListBody
+                    loading={loading}
+                    demoMode={demoMode}
+                    isError={feed.isError}
+                    empty={empty}
+                    emptyPanel={emptyPanel}
+                    errorPanel={errorPanel}
+                    livePosts={livePosts}
+                    liveMembers={liveMembers}
+                    pulse={pulse}
+                    staticItems={staticItems}
+                    revealDelay={revealDelay}
+                  />
+                </div>
               </div>
             </div>
-            <FeedSidebar loading={loading} populated={demoMode} />
+            <FeedSidebar
+              loading={loading}
+              populated={demoMode}
+              members={sidebarMembers}
+            />
           </div>
         </div>
       </div>

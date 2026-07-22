@@ -36,6 +36,15 @@ export const admin: Catalog = {
   "dashboard.metrics.trendPercent": "{value}%",
   "dashboard.metrics.trendOldest": "oldest {hours}",
   "dashboard.metrics.trendWellUnder": "well under",
+  // Median response is live but over the 6h SLA target — a warning, not the
+  // "well under" badge.
+  "dashboard.metrics.trendOverSla": "over target",
+  // No comparison data yet for this metric (e.g. no prior period to compare
+  // against) — a neutral placeholder instead of a fabricated delta.
+  "dashboard.metrics.trendNoData": "not enough data yet",
+  // The metric has a real, live value but nothing to compare it against
+  // (e.g. sustainer MRR has no historical growth-rate feed yet).
+  "dashboard.metrics.trendTracked": "tracked live",
   "dashboard.metrics.footGrowth": "+{count} this month",
   "dashboard.metrics.footEmergencies_one": "{count} is an emergency",
   "dashboard.metrics.footEmergencies_other": "{count} are emergencies",
@@ -62,7 +71,7 @@ export const admin: Catalog = {
   "dashboard.charts.series.outing": "Outing/doxxing",
   "dashboard.charts.series.harassment": "Harassment",
   "dashboard.charts.series.spam": "Spam",
-  "dashboard.charts.series.vouchAbuse": "Vouch-abuse",
+  "dashboard.charts.series.other": "Other",
   "dashboard.charts.memberGrowth.title": "Member growth",
   "dashboard.charts.memberGrowth.sub": "Joined vs churned · with Pride spike",
   "dashboard.charts.memberGrowth.ariaLabel": "Member growth line chart",
@@ -78,11 +87,40 @@ export const admin: Catalog = {
   "dashboard.charts.week.last": "last",
   "dashboard.charts.week.this": "this",
 
+  // Shared across any stat tile / chart whose backing metric has no data
+  // recorded yet (MRR, median response, response-time distribution, churn).
+  "dashboard.notMeasuredYet": "Not measured yet",
+
   "dashboard.feed.title": "Live activity",
   "dashboard.feed.live": "Live",
   "dashboard.feed.transparency":
     "Every action here is <strong>logged and shown</strong> to the member it affects. No silent removals, ever.",
   "dashboard.feed.auditLinkCta": "See the audit log",
+
+  // Live-feed sentence fragments, composed per `feed[].type` from the DTO's
+  // actor/target/community/count around these; see adminOverview.adapters.ts.
+  // `type` is one of the 6 strings `admin-overview.service.ts` emits:
+  // report_filed / report_resolved / member_joined / vouch_received /
+  // community_joined / join_request_submitted.
+  "dashboard.feed.type.reportFiled.body": "filed a report",
+  "dashboard.feed.type.reportFiled.anonymousLead": "A report",
+  "dashboard.feed.type.reportFiled.anonymousBody": "was filed anonymously",
+  "dashboard.feed.type.reportResolved.body": "resolved a report",
+  "dashboard.feed.type.reportResolved.anonymousLead": "A moderator",
+  "dashboard.feed.type.memberJoined.body": "joined the platform",
+  "dashboard.feed.type.memberJoined.leadCount_one": "{count} new member",
+  "dashboard.feed.type.memberJoined.leadCount_other": "{count} new members",
+  "dashboard.feed.type.memberJoined.genericLead": "New members",
+  "dashboard.feed.type.vouchReceived.body": "received a vouch from",
+  "dashboard.feed.type.vouchReceived.bodyNoActor": "received a new vouch",
+  "dashboard.feed.type.vouchReceived.genericLead": "A member",
+  "dashboard.feed.type.communityJoined.body": "joined",
+  "dashboard.feed.type.communityJoined.genericLead": "A member",
+  "dashboard.feed.type.joinRequestSubmitted.body": "requested to join",
+  "dashboard.feed.type.joinRequestSubmitted.genericLead": "Someone",
+  // Fallback for any feed `type` the backend adds later that this file
+  // doesn't yet map — an honest generic line rather than blank/unmapped copy.
+  "dashboard.feed.type.generic.body": "made an update",
 
   // ── Members ────────────────────────────────────────────────────────────────
   "members.title": "Members · <em>the people</em>",
@@ -100,6 +138,7 @@ export const admin: Catalog = {
   "members.filters.verified": "Verified",
   "members.filters.new": "New this week",
   "members.empty": "No members match those filters.",
+  "members.loadMore": "Load more members",
   "members.openAriaLabel": "Open {name}",
   "members.vouchedLabel": "vouched",
 
@@ -214,6 +253,91 @@ export const admin: Catalog = {
   "members.glance.memberFor": "Member for",
   "members.glance.reportsAgainst": "Reports against",
 
+  // ── Members: DTO → view-model adapter composed strings (D2) ───────────────
+  // `adminMembers.adapters.ts` composes these at adapt time (locale-sensitive
+  // dates via `Formatters`, plurals via `{count}`) rather than baking English
+  // into the view model, mirroring `adminCommunities.adapters.ts`.
+  "members.meta.joined": "Joined {date}",
+  "members.glance.memberFor.new": "New",
+  "members.glance.memberFor.years_one": "{count}yr",
+  "members.glance.memberFor.years_other": "{count}yr",
+  "members.glance.memberFor.months_one": "{count}mo",
+  "members.glance.memberFor.months_other": "{count}mo",
+  "members.detail.graphNote_one":
+    "{count} member vouches for {name}. A mutual graph is a sign of trust — not a metric to optimise.",
+  "members.detail.graphNote_other":
+    "{count} members vouch for {name}. A mutual graph is a sign of trust — not a metric to optimise.",
+  "members.detail.removeBody":
+    "This ends {name}'s membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.",
+  "members.communities.role.owner": "owner",
+  "members.communities.role.mod": "moderator",
+  "members.contributions.kind.vouch": "Vouched for a member",
+  "members.contributions.kind.other": "Contributed to the community",
+  "members.timeline.action.dismiss": "Report dismissed",
+  "members.timeline.action.warn": "Member warned",
+  "members.timeline.action.hideContent": "Content hidden",
+  "members.timeline.action.removeContent": "Content removed",
+  "members.timeline.action.restrict": "Access restricted",
+  "members.timeline.action.suspend": "Account suspended",
+  "members.timeline.action.ban": "Account banned",
+  "members.timeline.action.shield": "Shielded from contact",
+  "members.timeline.action.escalate": "Escalated to the safety team",
+  "members.timeline.action.appealUpheld": "Appeal upheld",
+  "members.timeline.action.suspensionLifted": "Suspension lifted",
+  "members.timeline.action.verified": "Verified identity",
+  "members.timeline.action.noReports": "No reports against this member",
+  "members.timeline.action.other": "Moderation action taken",
+  "members.timeline.noReportsMeta": "A clean record so far",
+  "members.timeline.verifiedMeta": "{date} · vouches confirmed",
+  "members.timeline.actedByMeta": "{date} · acted on by {name}",
+  "members.timeline.viewCta": "view",
+
+  // ── Safe spaces (/admin/safe-spaces) ───────────────────────────────────────
+  "adminSafeSpaces.title": "Safe spaces · <em>the verified list</em>",
+  "adminSafeSpaces.header.eyebrow": "Trust & safety",
+  "adminSafeSpaces.header.title": "Verify <em>safe spaces</em>",
+  "adminSafeSpaces.header.sub":
+    "Mark a listing as a verified safe space, edit its public profile, or remove one that's no longer earning that trust.",
+  "adminSafeSpaces.empty": "No listings to review yet.",
+  "adminSafeSpaces.status.none": "Not reviewed",
+  "adminSafeSpaces.status.verified": "Verified",
+  "adminSafeSpaces.status.removed": "Removed",
+  "adminSafeSpaces.markCta": "Mark as safe space",
+  "adminSafeSpaces.unmarkCta": "Unmark",
+  "adminSafeSpaces.editCta": "Edit profile",
+  "adminSafeSpaces.toast.marked": "{name} was marked as a safe space",
+  "adminSafeSpaces.toast.unmarked": "{name} was unmarked as a safe space",
+
+  "adminSafeSpaces.modal.loadingProfile":
+    "Loading this listing's current safe-space profile…",
+  "adminSafeSpaces.modal.loadFailed":
+    "Couldn't load this listing's current safe-space profile. Close and reopen to try again.",
+  "adminSafeSpaces.modal.eyebrow": "Safe space profile",
+  "adminSafeSpaces.modal.title": "Edit {name}",
+  "adminSafeSpaces.modal.statusLabel": "Status",
+  "adminSafeSpaces.modal.tierLabel": "Tier",
+  "adminSafeSpaces.modal.verifierLabel": "Verified by",
+  "adminSafeSpaces.modal.reVerifiedAtLabel": "Re-verified on",
+  "adminSafeSpaces.modal.subLabel": "Subheading",
+  "adminSafeSpaces.modal.promisesLabel": "Promises",
+  "adminSafeSpaces.modal.promiseTitlePlaceholder": "Promise title",
+  "adminSafeSpaces.modal.promiseDescPlaceholder": "Promise description",
+  "adminSafeSpaces.modal.addPromiseCta": "Add promise",
+  "adminSafeSpaces.modal.vouchesLabel": "Vouches",
+  "adminSafeSpaces.modal.vouchNamePlaceholder": "Name",
+  "adminSafeSpaces.modal.vouchBylinePlaceholder": "Byline",
+  "adminSafeSpaces.modal.vouchTextPlaceholder": "Vouch text",
+  "adminSafeSpaces.modal.vouchWhenPlaceholder": "When (e.g. 2 weeks ago)",
+  "adminSafeSpaces.modal.addVouchCta": "Add vouch",
+  "adminSafeSpaces.modal.removeRowAriaLabel": "Remove",
+  "adminSafeSpaces.modal.reasonLabel": "Reason for removal",
+  "adminSafeSpaces.modal.reasonHint":
+    "Shown to members visiting the removed listing's page.",
+  "adminSafeSpaces.modal.cancelCta": "Cancel",
+  "adminSafeSpaces.modal.saveCta": "Save",
+  "adminSafeSpaces.modal.savingCta": "Saving…",
+  "adminSafeSpaces.modal.savedToast": "{name}'s safe space profile was saved",
+
   // ── Moderation ─────────────────────────────────────────────────────────────
   "moderation.title": "Moderation · <em>triage</em>",
   "moderation.header.eyebrow": "Moderation queue",
@@ -268,6 +392,7 @@ export const admin: Catalog = {
   "moderation.appeal.supportersFlag_other": "{count} backing them",
   "moderation.appeal.fallbackName": "member",
   "moderation.resolvedSection": "Recently resolved",
+  "moderation.resolvedEmpty": "Nothing resolved yet. Closed reports land here.",
 
   "moderation.reportDrawer.label": "Report — {title}",
   "moderation.reportDrawer.title": "A private trans status was outed",

@@ -131,6 +131,7 @@ export const shared: Catalog = {
   // adminNav.data.ts
   "adminNav.items.overview": "Visão geral",
   "adminNav.items.moderation": "Moderação",
+  "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.partnerships": "Parcerias",
   "adminNav.items.governance": "Governação",
 
@@ -225,6 +226,7 @@ export const shared: Catalog = {
   // ("Convívios"), already the platform's term for the events feature.
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.head": "Convívios",
+  "megaNav.community.col.gather.allGatherings": "Convívios",
   "megaNav.community.col.gather.events": "Eventos",
   "megaNav.community.col.gather.hostGathering": "Organizar um convívio",
   "megaNav.community.col.organise.head": "Organizar",

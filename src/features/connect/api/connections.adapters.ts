@@ -24,6 +24,7 @@ export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
     since: dto.since,
     vouchBadge: dto.vouchBadge,
     requestMessage: dto.requestMessage,
+    requestReason: dto.requestReason,
     sentAgo: dto.sentAgo,
   };
 }

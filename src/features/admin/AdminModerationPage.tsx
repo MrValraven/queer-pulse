@@ -93,7 +93,7 @@ export function AdminModerationPage() {
 
       {tab === "open" && <OpenPane q={q} />}
       {tab === "appeals" && <AppealsPane q={q} />}
-      {tab === "resolved" && <ResolvedPane />}
+      {tab === "resolved" && <ResolvedPane q={q} />}
 
       {q.selected && (
         <AdminReportDrawer

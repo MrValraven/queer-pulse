@@ -2,7 +2,6 @@ import { useCallback, useId, useMemo, useState } from "react";
 import { ChipSelect, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  ALL_PROFESSIONS,
   DISCIPLINES,
   FIELD_BY_PROFESSION,
   PROFESSIONS_BY_FIELD,
@@ -21,7 +20,8 @@ function toggle(arr: string[], value: string): string[] {
  *  Chips carry a stable `id` (compared/stored) alongside a `t()`-resolved
  *  display label — see the i18n sweep note on `memberDirectoryFilter.data.ts`
  *  for why the two were split. The free-text search matches against the
- *  *resolved* label so it works in whichever language is active. */
+ *  *resolved* label so it works in whichever language is active. Search lives
+ *  in the "What they do" card but drives the Profession card below it too. */
 export function FilterProfessions({
   filters,
   onChange,
@@ -46,31 +46,6 @@ export function FilterProfessions({
           )
         : DISCIPLINES,
     [q, t],
-  );
-  const professionPool = useMemo(
-    () =>
-      q
-        ? ALL_PROFESSIONS.filter((p) => t(p.labelKey).toLowerCase().includes(q))
-        : professionsForFields(filters.disciplines),
-    [q, filters.disciplines, t],
-  );
-
-  // Toggling a profession on also selects its parent field, so the choice
-  // survives `reconcileProfessions` and the field chip lights up to match.
-  const toggleProfession = useCallback(
-    (value: string) => {
-      const has = filters.professions.includes(value);
-      const professions = has
-        ? filters.professions.filter((p) => p !== value)
-        : [...filters.professions, value];
-      const field = FIELD_BY_PROFESSION[value];
-      const disciplines =
-        !has && field && !filters.disciplines.includes(field)
-          ? [...filters.disciplines, field]
-          : filters.disciplines;
-      onChange({ ...filters, professions, disciplines });
-    },
-    [filters, onChange],
   );
 
   return (
@@ -108,39 +83,150 @@ export function FilterProfessions({
         )}
       </div>
 
-      <div className={styles.filterCard}>
-        <h4 id={`${uid}-professions`}>
-          {t("members:directory.filter.professionTitle")}
-        </h4>
-        {professionPool.length > 0 ? (
-          <ChipSelect
-            labelledBy={`${uid}-professions`}
-            options={professionPool.map((o) => ({
-              value: o.id,
-              label: t(o.labelKey),
-            }))}
-            selected={new Set(filters.professions)}
-            onToggle={toggleProfession}
-          />
+      <ProfessionFilterCard filters={filters} onChange={onChange} query={query} />
+    </>
+  );
+}
+
+/** The "Profession" card. Three states, never a wall of ~70 chips:
+ *   • searching → matching professions grouped under their parent field, so a
+ *     result like "Nurse" is never a floating, contextless chip;
+ *   • field(s) chosen, no search → just those fields' professions (already
+ *     scoped, so a flat row);
+ *   • nothing chosen, no search → a prompt to pick a field or search, not the
+ *     entire flattened pool. */
+function ProfessionFilterCard({
+  filters,
+  onChange,
+  query,
+}: {
+  filters: FilterState;
+  onChange: (next: FilterState) => void;
+  query: string;
+}) {
+  const { t } = useTranslation();
+  const uid = useId();
+  const q = query.trim().toLowerCase();
+
+  // While searching, professions are grouped under their parent field (fields
+  // kept in `DISCIPLINES` order) so the pool stays navigable and each match
+  // shows which field it belongs to. Empty groups are dropped.
+  const professionGroups = useMemo(
+    () =>
+      q
+        ? DISCIPLINES.map((discipline) => ({
+            fieldId: discipline.id,
+            labelKey: discipline.labelKey,
+            professions: (PROFESSIONS_BY_FIELD[discipline.id] ?? []).filter((p) =>
+              t(p.labelKey).toLowerCase().includes(q),
+            ),
+          })).filter((group) => group.professions.length > 0)
+        : [],
+    [q, t],
+  );
+
+  // With no search, professions are scoped to the chosen fields. No field chosen
+  // means an intentional empty list (the card shows a prompt) — never the whole
+  // flattened pool.
+  const scopedProfessions = useMemo(
+    () =>
+      !q && filters.disciplines.length
+        ? professionsForFields(filters.disciplines)
+        : [],
+    [q, filters.disciplines],
+  );
+
+  // Toggling a profession on also selects its parent field, so the choice
+  // survives `reconcileProfessions` and the field chip lights up to match —
+  // this is what keeps a searched profession coherent once picked.
+  const toggleProfession = useCallback(
+    (value: string) => {
+      const has = filters.professions.includes(value);
+      const professions = has
+        ? filters.professions.filter((p) => p !== value)
+        : [...filters.professions, value];
+      const field = FIELD_BY_PROFESSION[value];
+      const disciplines =
+        !has && field && !filters.disciplines.includes(field)
+          ? [...filters.disciplines, field]
+          : filters.disciplines;
+      onChange({ ...filters, professions, disciplines });
+    },
+    [filters, onChange],
+  );
+
+  // The footer note only appears alongside actual chips: searching with matches,
+  // or a field scoping the list. The empty states carry their own prompt as the
+  // card body, so no note is added there (avoids a doubled message).
+  const professionNote = q
+    ? professionGroups.length > 0
+      ? t("members:directory.filter.matchingSearch")
+      : null
+    : filters.disciplines.length
+      ? t("members:directory.filter.showingWithinField", {
+          count: filters.disciplines.length,
+        })
+      : null;
+
+  const selectedProfessions = new Set(filters.professions);
+
+  return (
+    <div className={styles.filterCard}>
+      <h4 id={`${uid}-professions`}>
+        {t("members:directory.filter.professionTitle")}
+      </h4>
+
+      {q ? (
+        professionGroups.length > 0 ? (
+          <div className={styles.professionGroups}>
+            {professionGroups.map((group) => {
+              const groupLabelId = `${uid}-pg-${group.fieldId}`;
+              return (
+                <div key={group.fieldId}>
+                  <p id={groupLabelId} className={styles.professionGroupLabel}>
+                    {t(group.labelKey)}
+                  </p>
+                  <ChipSelect
+                    labelledBy={groupLabelId}
+                    options={group.professions.map((o) => ({
+                      value: o.id,
+                      label: t(o.labelKey),
+                    }))}
+                    selected={selectedProfessions}
+                    onToggle={toggleProfession}
+                  />
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <p className={styles.rangeNote}>
             <em>
               {t("members:directory.filter.noProfessionMatch", { query })}
             </em>
           </p>
-        )}
+        )
+      ) : filters.disciplines.length ? (
+        <ChipSelect
+          labelledBy={`${uid}-professions`}
+          options={scopedProfessions.map((o) => ({
+            value: o.id,
+            label: t(o.labelKey),
+          }))}
+          selected={selectedProfessions}
+          onToggle={toggleProfession}
+        />
+      ) : (
         <p className={styles.rangeNote}>
-          <em>
-            {q
-              ? t("members:directory.filter.matchingSearch")
-              : filters.disciplines.length
-                ? t("members:directory.filter.showingWithinField", {
-                    count: filters.disciplines.length,
-                  })
-                : t("members:directory.filter.pickField")}
-          </em>
+          <em>{t("members:directory.filter.pickField")}</em>
         </p>
-      </div>
-    </>
+      )}
+
+      {professionNote && (
+        <p className={styles.rangeNote}>
+          <em>{professionNote}</em>
+        </p>
+      )}
+    </div>
   );
 }

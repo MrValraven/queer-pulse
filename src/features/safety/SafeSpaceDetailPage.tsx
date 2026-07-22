@@ -1,17 +1,13 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import {
-  getSpace,
-  type Tint,
-  type VerifiedSpace,
-  type RemovedSpace,
-} from "./safeSpaces";
+import { useSafeSpace } from "./api/useSafeSpaces";
+import { type Tint, type VerifiedSpace, type RemovedSpace } from "./safeSpaces";
 import { VouchModal } from "./VouchModal";
 import styles from "./SafeSpaceDetailPage.module.css";
 
@@ -57,7 +53,11 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
           <Tick />
         </div>
         <div>
-          <h3>{t("safety:spaces.detail.trust.title", { tier: s.tier })}</h3>
+          <h3>
+            {s.tier > 0
+              ? t("safety:spaces.detail.trust.title", { tier: s.tier })
+              : t("safety:spaces.detail.trust.titleNoTier")}
+          </h3>
           <p>
             <Translation
               i18nKey="safety:spaces.detail.trust.body"
@@ -362,7 +362,21 @@ function RemovedView({ s }: { s: RemovedSpace }) {
 
 export function SafeSpaceDetailPage() {
   const { slug } = useParams();
-  const space = getSpace(slug);
+  const { space, isLoading } = useSafeSpace(slug);
+
+  if (isLoading) {
+    return (
+      <PageShell>
+        <div className={styles.page} aria-busy="true">
+          <SkeletonLine width={120} height={14} />
+          <SkeletonLine width="40%" height={30} style={{ marginTop: 16 }} />
+          <SkeletonLine width="70%" height={16} style={{ marginTop: 16 }} />
+          <SkeletonLine width="55%" height={16} style={{ marginTop: 10 }} />
+        </div>
+      </PageShell>
+    );
+  }
+
   if (!space) return <Navigate to={routes.safeSpaces} replace />;
 
   return (

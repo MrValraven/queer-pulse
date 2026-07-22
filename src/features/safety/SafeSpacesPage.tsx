@@ -8,7 +8,6 @@ import {
   Outro,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -17,7 +16,8 @@ import {
   buildBreadcrumbSchema,
 } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
-import { VERIFIED_SPACES, type Category } from "./safeSpaces";
+import { type Category } from "./safeSpaces";
+import { useSafeSpaces } from "./api/useSafeSpaces";
 import { FILTERS } from "./safeSpacesPage.data";
 import { FlagModal } from "./FlagModal";
 import { SafeSpaceCard } from "./SafeSpaceCard";
@@ -33,12 +33,12 @@ import styles from "./SafeSpacesPage.module.css";
 export function SafeSpacesPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const loading = useSimulatedLoad();
+  const { verified, removed, stats, isLoading } = useSafeSpaces();
   const [filter, setFilter] = useState<Category | "all">("all");
   const [flagging, setFlagging] = useState<string | null>(null);
   const nomRef = useRef<HTMLDivElement>(null);
 
-  const items = VERIFIED_SPACES.filter(
+  const items = verified.filter(
     (s) => filter === "all" || s.cat === filter,
   );
   const scrollToNominate = () =>
@@ -67,19 +67,19 @@ export function SafeSpacesPage() {
           <p className={styles.lead}>{t("safety:spaces.hero.lead")}</p>
           <div className={styles.heroStats}>
             <div className={styles.stat}>
-              <div className={styles.n}>47</div>
+              <div className={styles.n}>{stats.verified}</div>
               <div className={styles.l}>
                 {t("safety:spaces.hero.stat.verified")}
               </div>
             </div>
             <div className={styles.stat}>
-              <div className={styles.n}>312</div>
+              <div className={styles.n}>{stats.reviews}</div>
               <div className={styles.l}>
                 {t("safety:spaces.hero.stat.reviews")}
               </div>
             </div>
             <div className={styles.stat}>
-              <div className={styles.n}>6</div>
+              <div className={styles.n}>{stats.removed}</div>
               <div className={styles.l}>
                 {t("safety:spaces.hero.stat.removed")}
               </div>
@@ -124,8 +124,8 @@ export function SafeSpacesPage() {
             onChange={(v) => setFilter(v as Category | "all")}
           />
 
-          <div className={styles.grid} aria-busy={loading}>
-            {loading
+          <div className={styles.grid} aria-busy={isLoading}>
+            {isLoading
               ? Array.from({ length: 6 }).map((_, i) => (
                   <SafeSpaceCardSkeleton key={i} />
                 ))
@@ -139,7 +139,7 @@ export function SafeSpacesPage() {
                 ))}
           </div>
 
-          {!loading && items.length === 0 && (
+          {!isLoading && items.length === 0 && (
             <EmptyState
               icon={<FiMapPin />}
               title={t("safety:spaces.empty.title")}
@@ -158,7 +158,7 @@ export function SafeSpacesPage() {
       </div>
 
       <HowSection />
-      <RemovedSection />
+      <RemovedSection removed={removed} />
       <NominateSection sectionRef={nomRef} />
 
       <Outro

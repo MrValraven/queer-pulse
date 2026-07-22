@@ -2,7 +2,7 @@ import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks/useCountUp";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { METRICS, type StatCard } from "./adminDashboard.data";
+import type { StatCard } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
 
 /** Decorative direction glyph — a symbol, not language content. */
@@ -12,10 +12,16 @@ const TREND_ARROW: Record<StatCard["trend"]["dir"], string> = {
   warn: "",
 };
 
-export function AdminStatGrid({ loading = false }: { loading?: boolean }) {
+export function AdminStatGrid({
+  metrics,
+  loading = false,
+}: {
+  metrics: StatCard[];
+  loading?: boolean;
+}) {
   return (
     <div className={styles.statGrid}>
-      {METRICS.map((m, i) => (
+      {metrics.map((m, i) => (
         <FadeIn key={m.labelKey} delay={i * 70}>
           <AdminStatCard stat={m} loading={loading} />
         </FadeIn>
@@ -44,10 +50,16 @@ function AdminStatCard({
     trend,
     footKey,
     footValues,
+    notMeasured,
   } = stat;
   const target = decimal ? Math.round(value * 10) : value;
-  // Hold at the start value until the skeleton clears, then count up on reveal.
-  const n = useCountUp(target, { active: !loading, durationMs: 1200 });
+  // Hold at the start value until the skeleton clears, then count up on
+  // reveal — an un-backed metric has nothing to count up to, so it never
+  // animates in the first place.
+  const n = useCountUp(target, {
+    active: !loading && !notMeasured,
+    durationMs: 1200,
+  });
   const display = decimal
     ? (n / 10).toFixed(1)
     : comma
@@ -62,6 +74,10 @@ function AdminStatCard({
       </span>
       {loading ? (
         <SkeletonLine height={30} width="68%" style={{ margin: "2px 0 4px" }} />
+      ) : notMeasured ? (
+        <span className={styles.statNumMuted}>
+          {t("admin:dashboard.notMeasuredYet")}
+        </span>
       ) : (
         <span className={styles.statNum}>
           {prefix}

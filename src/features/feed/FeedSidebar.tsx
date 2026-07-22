@@ -9,7 +9,7 @@ import { useConnect } from "../../app/providers/ConnectProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
-import { NEW_THIS_WEEK } from "./feed.data";
+import type { SidebarMember } from "./feed.data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./FeedPage.module.css";
 
@@ -59,9 +59,13 @@ function ConnectionsSkeleton() {
 export function FeedSidebar({
   loading = false,
   populated = false,
+  members = [],
 }: {
   loading?: boolean;
   populated?: boolean;
+  /** Rows for the "New this week" widget — the demo mock in demo mode, the
+   *  live recently-joined members in live mode. Empty renders the empty state. */
+  members?: SidebarMember[];
 }) {
   const { t } = useTranslation();
   const { openConnect } = useConnect();
@@ -113,12 +117,12 @@ export function FeedSidebar({
         </div>
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => <MemberRowSkeleton key={i} />)
-        ) : !populated ? (
+        ) : members.length === 0 ? (
           <p className={styles.sbEmpty}>{t("feed:sidebar.newMembersEmpty")}</p>
         ) : (
-          NEW_THIS_WEEK.map((person, i) => (
+          members.map((person, i) => (
             <div
-              key={person.name}
+              key={person.slug}
               className={`${styles.sbMemberRow} ${styles.revealRow}`}
               style={{ animationDelay: `${i * 50}ms` }}
             >

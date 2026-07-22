@@ -255,6 +255,7 @@ export function useModerationQueue() {
     setFilter,
     open,
     appeals,
+    resolved: data?.resolved ?? [], // read-only: resolved rows carry no actions
     leaving,
     picked,
     selected,

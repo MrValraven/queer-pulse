@@ -3,10 +3,10 @@ import { FiArrowRight } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { TRIAGE_QUEUE } from "./adminDashboard.data";
+import type { QueueRow } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
 
-export function AdminTriageQueue() {
+export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
   const { showToast } = useToast();
   const { t } = useTranslation();
 
@@ -31,7 +31,7 @@ export function AdminTriageQueue() {
       </div>
 
       <div className={styles.queue}>
-        {TRIAGE_QUEUE.map(
+        {queue.map(
           ({ titleKey, subKey, subEmKey, count, tone, icon: Icon, to }) => (
             <Link key={titleKey} to={to} className={styles.qRow}>
               <span className={[styles.qIco, styles[`qIco_${tone}`]].join(" ")}>

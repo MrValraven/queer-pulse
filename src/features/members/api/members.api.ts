@@ -152,6 +152,9 @@ export function getMembers(
     query?: string;
     tags?: string[];
     identities?: string[];
+    /** Server-side sort order; one of the `MemberSort` wire tokens
+     *  (`recentlyJoined` | `closestMutuals` | `aToZ` | `mostVouched`). */
+    sort?: string;
     page?: number;
   } = {},
 ) {
@@ -160,6 +163,7 @@ export function getMembers(
   if (params.tags?.length) q.set("tags", params.tags.join(","));
   if (params.identities?.length)
     q.set("identities", params.identities.join(","));
+  if (params.sort) q.set("sort", params.sort);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
   return apiGet<MembersPage>(`/members${qs ? `?${qs}` : ""}`);

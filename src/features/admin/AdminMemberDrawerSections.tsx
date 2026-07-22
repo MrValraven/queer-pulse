@@ -21,11 +21,11 @@ import styles from "./AdminMembersPage.module.css";
  */
 export function MemberOverviewSections({
   detail,
-  focusId,
+  memberName,
   onOpenNetwork,
 }: {
   detail: MemberDetail;
-  focusId: string;
+  memberName: string;
   onOpenNetwork: () => void;
 }) {
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ export function MemberOverviewSections({
             }
           }}
         >
-          <VouchGraphPreview focusId={focusId} />
+          <VouchGraphPreview graph={detail.graph} name={memberName} />
         </div>
         <div className={styles.graphNoteRow}>
           <p className={styles.dHint}>{detail.graphNote}</p>

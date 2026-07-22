@@ -16,6 +16,7 @@ import {
   EMPTY_FILTERS,
   SORTS,
   SORT_LABEL_KEY,
+  SORT_PARAM,
   appliedChips,
   matchesFilters,
   reconcileProfessions,
@@ -25,6 +26,7 @@ import {
   type SortKey,
 } from "./memberDirectoryFilter.data";
 import { useMembers } from "./api/useMembers";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   FiltersSidebar,
   MemberResultCard,
@@ -69,8 +71,9 @@ export function MemberDirectoryFilterPage() {
   const fmt = useFormat();
   const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
-  const [sort, setSort] = useState<SortKey>("Recently active");
+  const [sort, setSort] = useState<SortKey>("Recently joined");
   const sortLabelId = useId();
 
   // Identity selections go to `identities=`, NOT `tags=`. They used to be sent
@@ -86,7 +89,13 @@ export function MemberDirectoryFilterPage() {
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useMembers({ identities: filters.identities });
+  } = useMembers({
+    identities: filters.identities,
+    // Live mode sorts server-side (sort is part of the query key, so changing it
+    // refetches). Demo mode sorts in the browser and must NOT put sort in the key
+    // — otherwise every sort change would refetch and flash the skeleton.
+    sort: demoMode ? undefined : SORT_PARAM[sort],
+  });
 
   // Combine hook loading with simulated skeleton load for the initial render.
   const loading = isLoading || simLoading;
@@ -97,10 +106,14 @@ export function MemberDirectoryFilterPage() {
   // behind the skeleton. Reduced motion jumps to the total.
   const countedTotal = useCountUp(totalMembers, { active: !loading, from: 1 });
 
+  // Demo mode sorts the whole mock list in the browser; live mode renders the
+  // server's order as-is — the API sorts across the full (paginated) directory,
+  // and the live cards carry no ranking fields to re-sort by anyway (they'd all
+  // tie and scramble the server order). See `useMembers` / the directory API.
   const filtered = useMemo(() => {
     const matched = sourceMembers.filter((m) => matchesFilters(m, filters));
-    return sortMembers(matched, sort);
-  }, [sourceMembers, filters, sort]);
+    return demoMode ? sortMembers(matched, sort) : matched;
+  }, [sourceMembers, filters, sort, demoMode]);
 
   const chips = useMemo(() => appliedChips(filters, t), [filters, t]);
   // Distinguish a genuinely empty directory (nothing to show, e.g. live mode
@@ -236,7 +249,7 @@ export function MemberDirectoryFilterPage() {
                     label: t("members:directory.clearFiltersCta"),
                     onClick: () => {
                       applyFilters(EMPTY_FILTERS);
-                      setSort("Recently active");
+                      setSort("Recently joined");
                     },
                   }}
                 />

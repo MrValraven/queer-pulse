@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { FiStar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,7 +13,6 @@ import {
   ARRIVING,
   FORUM,
   GROUND,
-  LAWYERS,
   ROUTES,
   TABS,
   type TabId,
@@ -174,42 +172,8 @@ export function VisasPage() {
               />
             </h2>
           </Reveal>
-          <div className={styles.reviewGrid}>
-            {LAWYERS.map((lawyer, index) => (
-              <Reveal
-                className={styles.reviewCard}
-                key={lawyer.name}
-                delay={index * 60}
-              >
-                <div className={styles.rvTop}>
-                  <div
-                    className={styles.rvAv}
-                    style={{ background: lawyer.bg, color: lawyer.color }}
-                  >
-                    {lawyer.initials}
-                  </div>
-                  <div>
-                    <div className={styles.rvName}>{lawyer.name}</div>
-                    <div className={styles.rvContext}>{lawyer.context}</div>
-                  </div>
-                </div>
-                <div className={styles.rvStars}>
-                  {[1, 2, 3, 4, 5].map((starPosition) => (
-                    <FiStar
-                      key={starPosition}
-                      className={
-                        starPosition <= lawyer.stars
-                          ? styles.rvStarOn
-                          : undefined
-                      }
-                    />
-                  ))}
-                </div>
-                <div className={styles.rvQuote}>{lawyer.quote}</div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className={styles.lawyerCta} delay={60}>
+          <Reveal className={styles.lawyerEmpty} delay={60}>
+            <p>{t("marketing:visas.lawyers.emptyBody")}</p>
             <Button to={FORUM} variant="ghost">
               {t("marketing:visas.lawyers.forumCta")}
             </Button>

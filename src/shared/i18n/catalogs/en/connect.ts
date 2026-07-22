@@ -57,6 +57,7 @@ export const connect: Catalog = {
   "card.tagsMoreTitle": "Also: {list}",
   "card.noMutuals": "No mutuals — review carefully",
   "card.sentAgo": "Sent <b>{sentAgo}</b>",
+  "card.reason": "About <b>{reason}</b>",
   "card.decline": "Decline",
   "card.accept": "Accept",
   "card.awaitingReply": "Awaiting reply",
@@ -109,10 +110,6 @@ export const connect: Catalog = {
   "form.title": "Say <em>hello.</em>",
   "form.sub":
     "Your message goes directly. No notifications, no read receipts, no algorithm watching. Just a real message.",
-  "form.nameLabel": "Your name",
-  "form.namePlaceholder": "How you'd like to be known",
-  "form.emailLabel": "Your email",
-  "form.emailPlaceholder": "So they can write back",
   "form.reasonLabel": "What's this about?",
   "form.reasonPlaceholder": "Pick a reason, or leave it open",
   "form.reasonOpenToGroup": "What {first} is open to",
@@ -125,15 +122,17 @@ export const connect: Catalog = {
   "form.messageLabel": "Your message",
   "form.messagePlaceholder": "Write naturally. There's no template.",
   "form.note":
-    "Messages from people not yet in the network are held briefly and reviewed by the team before delivery. This keeps the room safe.",
+    "If you're not connected yet, this arrives as a request — they decide whether to open the conversation. Either way, it stays between the two of you.",
   "form.cancel": "Cancel",
   "form.sendingLabel": "Sending…",
   "form.send": "Send",
+  "form.sendError":
+    "That didn't go through. Check your connection and try again.",
 
   // Success panel after sending (ConnectSentPanel)
   "sent.title": "Message <em>sent.</em>",
   "sent.body":
-    "Your message to {name} is on its way. If they'd like to continue the conversation, they'll write back directly to your email.",
+    "Your message to {name} is on its way. If they'd like to continue, they'll reply right here in your inbox.",
   "sent.close": "Close",
   "sent.autoClose": "Closing automatically in {seconds}s",
 };

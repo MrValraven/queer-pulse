@@ -1,12 +1,12 @@
 import type { IconType } from "react-icons";
 import { FiCalendar, FiCamera, FiHeart, FiTag } from "react-icons/fi";
-import { gatheringPath, type SpotsLabel } from "./data";
 
 /**
  * i18n Pattern A — the data file holds catalog *keys*, the component resolves
- * them with `t()`. Everything here is platform-authored chrome (a static nav
- * grid, a decorative neighbourhood rail), so it is translated; the mock event
- * records below keep their organizer-authored fields in English.
+ * them with `t()`. Everything here is platform-authored chrome: a static "ways
+ * to gather" nav grid and a decorative neighbourhood rail. The upcoming-events
+ * strip is NOT here — it comes live from `useEvents()` (demo/live), never mock
+ * records baked into the page.
  */
 export const WAYS: {
   icon: IconType;
@@ -42,48 +42,6 @@ export const WAYS: {
     bodyKey: "gatherings:landing.ways.recap.body",
     to: "/gathering-recap",
     ctaKey: "gatherings:landing.ways.recap.cta",
-  },
-];
-
-/**
- * Mock event records. `type`, `title` and `hood` are organizer-authored — in
- * live mode they arrive from `GET /events` and are never translated. The date
- * is held as a `Date` so the component can format it through `useFormat()`,
- * and the seat-count line reuses the shared `SpotsLabel` shape from `./data`
- * because in live mode the phrase is chrome and only the number comes over the
- * wire.
- */
-export const FEATURED: {
-  date: Date;
-  type: string;
-  title: string;
-  hood: string;
-  spots: SpotsLabel;
-  to: string;
-}[] = [
-  {
-    date: new Date(2026, 5, 6),
-    type: "Supper Club",
-    title: "Queer Supper Club №12",
-    hood: "Mouraria",
-    spots: { key: "gatherings:spots.seatsLeft", values: { count: 8 } },
-    to: gatheringPath("supper-club-12"),
-  },
-  {
-    date: new Date(2026, 5, 14),
-    type: "Mixer",
-    title: "Portfolio Night: Designers & Photographers",
-    hood: "Príncipe Real",
-    spots: { key: "gatherings:spots.going", values: { count: 32 } },
-    to: "/event",
-  },
-  {
-    date: new Date(2026, 5, 21),
-    type: "Workshop",
-    title: "Riso printing for beginners",
-    hood: "Marvila",
-    spots: { key: "gatherings:spots.spotsLeft", values: { count: 4 } },
-    to: "/event",
   },
 ];
 

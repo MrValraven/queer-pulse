@@ -6,12 +6,12 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { TYPES, VENUES, VIBES, VIBE_LABEL_KEYS, type Venue } from "./map.data";
-import { LisbonMapSvg } from "./LisbonMapSvg";
+import { LisbonMap } from "./LisbonMap";
 import { MapVenueCard } from "./MapVenueCard";
 import s from "./MapPage.module.css";
 
 function VenueCardSkeleton() {
-  // Mirrors the collapsed .vc: head (38px icon + name/bairro + type tag) and a vibes row.
+  // Mirrors the collapsed .vc: head (38px icon + name/area + type tag) and a vibes row.
   return (
     <div className={s.vc} aria-hidden>
       <div className={s.vcHead}>
@@ -41,67 +41,83 @@ function VenueCardSkeleton() {
 export function MapPage() {
   const { t } = useTranslation();
   const loading = useSimulatedLoad();
-  const [bairro, setBairro] = useState<string | null>(null);
+  const [freguesia, setFreguesia] = useState<string | null>(null);
   const [type, setType] = useState("all");
   const [vibes, setVibes] = useState<string[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
-  const items = useMemo(
+  // Venues matching the type + vibe filters, but NOT the selected parish. This
+  // drives the map's per-parish counts and pins, so selecting one parish never
+  // zeroes out the others' badges.
+  const typeVibeFiltered = useMemo(
     () =>
-      VENUES.filter((v) => {
-        if (bairro && v.bairro !== bairro) return false;
-        if (type !== "all" && v.type !== type) return false;
-        if (vibes.length && !vibes.some((f) => v.vibe.includes(f)))
+      VENUES.filter((venue) => {
+        if (type !== "all" && venue.type !== type) return false;
+        if (vibes.length && !vibes.some((filter) => venue.vibe.includes(filter)))
           return false;
         return true;
       }),
-    [bairro, type, vibes],
+    [type, vibes],
+  );
+
+  // The sidebar list narrows further to the selected parish.
+  const items = useMemo(
+    () =>
+      freguesia
+        ? typeVibeFiltered.filter((venue) => venue.freguesia === freguesia)
+        : typeVibeFiltered,
+    [typeVibeFiltered, freguesia],
   );
 
   const counts = useMemo(() => {
-    const c: Record<string, number> = {};
-    items.forEach((v) => {
-      c[v.bairro] = (c[v.bairro] ?? 0) + 1;
+    const byFreguesia: Record<string, number> = {};
+    typeVibeFiltered.forEach((venue) => {
+      byFreguesia[venue.freguesia] = (byFreguesia[venue.freguesia] ?? 0) + 1;
     });
-    return c;
-  }, [items]);
+    return byFreguesia;
+  }, [typeVibeFiltered]);
 
   const groups = useMemo(() => {
-    if (bairro) return null;
-    const g: { bairro: string; venues: Venue[] }[] = [];
-    items.forEach((v) => {
-      let grp = g.find((x) => x.bairro === v.bairro);
-      if (!grp) {
-        grp = { bairro: v.bairro, venues: [] };
-        g.push(grp);
+    if (freguesia) return null;
+    const grouped: { freguesia: string; venues: Venue[] }[] = [];
+    items.forEach((venue) => {
+      let group = grouped.find((entry) => entry.freguesia === venue.freguesia);
+      if (!group) {
+        group = { freguesia: venue.freguesia, venues: [] };
+        grouped.push(group);
       }
-      grp.venues.push(v);
+      group.venues.push(venue);
     });
-    return g;
-  }, [items, bairro]);
+    return grouped;
+  }, [items, freguesia]);
 
-  function toggleVibe(v: string) {
-    setVibes((cur) =>
-      cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v],
+  function toggleVibe(vibe: string) {
+    setVibes((current) =>
+      current.includes(vibe)
+        ? current.filter((entry) => entry !== vibe)
+        : [...current, vibe],
     );
     setExpanded(null);
   }
-  function selectBairro(name: string | null) {
-    setBairro(name);
+  function selectFreguesia(name: string | null) {
+    setFreguesia(name);
     setExpanded(null);
   }
+  function selectVenue(venueId: string) {
+    setExpanded(venueId);
+  }
 
-  const renderCard = (v: Venue, i: number) => (
-    <FadeIn key={v.id} delay={Math.min(i, 8) * 60}>
+  const renderCard = (venue: Venue, index: number) => (
+    <FadeIn key={venue.id} delay={Math.min(index, 8) * 60}>
       <MapVenueCard
-        v={v}
-        isExpanded={expanded === v.id}
-        beenCount={been[v.id] ?? v.beenHere}
-        marked={been[v.id] !== undefined}
-        onToggle={() => setExpanded(expanded === v.id ? null : v.id)}
+        v={venue}
+        isExpanded={expanded === venue.id}
+        beenCount={been[venue.id] ?? venue.beenHere}
+        marked={been[venue.id] !== undefined}
+        onToggle={() => setExpanded(expanded === venue.id ? null : venue.id)}
         onMarkBeen={() =>
-          setBeen((cur) => ({ ...cur, [v.id]: v.beenHere + 1 }))
+          setBeen((current) => ({ ...current, [venue.id]: venue.beenHere + 1 }))
         }
       />
     </FadeIn>
@@ -176,17 +192,20 @@ export function MapPage() {
 
       <div className="wrap">
         <div className={s.body}>
-          <LisbonMapSvg
-            bairro={bairro}
+          <LisbonMap
+            venues={typeVibeFiltered}
+            freguesia={freguesia}
+            selectedVenueId={expanded}
             counts={counts}
-            onSelectBairro={selectBairro}
+            onSelectFreguesia={selectFreguesia}
+            onSelectVenue={selectVenue}
           />
 
           <aside className={s.sidebar}>
             <div className={s.sbTop}>
               <div>
                 <div className={s.sbHeading}>
-                  {bairro ?? t("marketing:map.sidebar.allVenues")}
+                  {freguesia ?? t("marketing:map.sidebar.allVenues")}
                 </div>
                 <div className={s.sbCount}>
                   <Translation
@@ -196,11 +215,11 @@ export function MapPage() {
                   />
                 </div>
               </div>
-              {bairro && (
+              {freguesia && (
                 <button
                   type="button"
                   className={s.clear}
-                  onClick={() => selectBairro(null)}
+                  onClick={() => selectFreguesia(null)}
                 >
                   <FiX /> {t("marketing:map.sidebar.clear")}
                 </button>
@@ -216,10 +235,10 @@ export function MapPage() {
                   <VenueCardSkeleton key={i} />
                 ))
               : groups
-                ? groups.map((g) => (
-                    <div key={g.bairro}>
-                      <div className={s.groupHead}>{g.bairro}</div>
-                      {g.venues.map(renderCard)}
+                ? groups.map((group) => (
+                    <div key={group.freguesia}>
+                      <div className={s.groupHead}>{group.freguesia}</div>
+                      {group.venues.map(renderCard)}
                     </div>
                   ))
                 : items.map(renderCard)}

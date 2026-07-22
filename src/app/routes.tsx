@@ -499,6 +499,11 @@ const HousingCoopPage = lazy(() =>
     default: m.HousingCoopPage,
   })),
 );
+const CoopTemplatePage = lazy(() =>
+  import("../features/economy/CoopTemplatePage").then((m) => ({
+    default: m.CoopTemplatePage,
+  })),
+);
 const HousingListingPage = lazy(() =>
   import("../features/economy/HousingListingPage").then((m) => ({
     default: m.HousingListingPage,
@@ -1346,6 +1351,16 @@ const AdminMembersPage = lazy(() =>
     default: m.AdminMembersPage,
   })),
 );
+const AdminSafeSpacesPage = lazy(() =>
+  import("../features/admin/AdminSafeSpacesPage").then((m) => ({
+    default: m.AdminSafeSpacesPage,
+  })),
+);
+const AdminChangemakersPage = lazy(() =>
+  import("../features/admin/AdminChangemakersPage").then((m) => ({
+    default: m.AdminChangemakersPage,
+  })),
+);
 const AdminCommunitiesPage = lazy(() =>
   import("../features/admin/AdminCommunitiesPage").then((m) => ({
     default: m.AdminCommunitiesPage,
@@ -1369,6 +1384,11 @@ const ModPanelPage = lazy(() =>
 const AdminPartnerApplicationsPage = lazy(() =>
   import("../features/admin/AdminPartnerApplicationsPage").then((m) => ({
     default: m.AdminPartnerApplicationsPage,
+  })),
+);
+const AdminHousingCoopsPage = lazy(() =>
+  import("../features/admin/AdminHousingCoopsPage").then((m) => ({
+    default: m.AdminHousingCoopsPage,
   })),
 );
 const AdminSettingsPage = lazy(() =>
@@ -1923,6 +1943,10 @@ export function AppRoutes() {
           <Route path="/work/landlord/:slug" element={<LandlordPage />} />
           <Route path={routes.housingCoop} element={<HousingCoopPage />} />
           <Route
+            path={`${routes.housingCoop}/templates/:slug`}
+            element={<CoopTemplatePage />}
+          />
+          <Route
             path="/work/housing/:slug"
             element={
               <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
@@ -2291,12 +2315,24 @@ export function AppRoutes() {
           />
           <Route path={routes.adminMembers} element={<AdminMembersPage />} />
           <Route
+            path={routes.adminSafeSpaces}
+            element={<AdminSafeSpacesPage />}
+          />
+          <Route
+            path={routes.adminChangemakers}
+            element={<AdminChangemakersPage />}
+          />
+          <Route
             path={routes.adminCommunities}
             element={<AdminCommunitiesPage />}
           />
           <Route
             path={routes.adminPartnerApplications}
             element={<AdminPartnerApplicationsPage />}
+          />
+          <Route
+            path={routes.adminHousingCoops}
+            element={<AdminHousingCoopsPage />}
           />
           <Route
             path={routes.adminGovernance}

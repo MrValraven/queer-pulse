@@ -5,7 +5,9 @@ import { useConnect } from "../../app/providers/ConnectProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { CHANGEMAKERS, getChangemaker, type Tint } from "./changemakerStories";
+import { type Tint } from "./changemakerStories";
+import { useChangemaker } from "./api/useChangemaker";
+import { useChangemakers } from "./api/useChangemakers";
 import styles from "./ChangemakerStoryPage.module.css";
 
 const HERO_GRADIENT: Record<Tint, string> = {
@@ -30,12 +32,23 @@ export function ChangemakerStoryPage() {
   const { slug } = useParams();
   const { openConnect } = useConnect();
   const { t } = useTranslation();
-  const cm = getChangemaker(slug);
-  if (!cm) return <Navigate to={routes.changemakers} replace />;
+  const { changemaker, isLoading } = useChangemaker(slug);
+  const { profiles } = useChangemakers();
 
-  const others = CHANGEMAKERS.filter((c) => c.slug !== cm.slug).slice(0, 3);
-  const [first, ...rest] = cm.body;
-  const firstName = cm.name.split(" ")[0] ?? cm.name;
+  if (isLoading) {
+    return (
+      <PageShell>
+        <div className="wrap" style={{ padding: "80px 0" }} />
+      </PageShell>
+    );
+  }
+  if (!changemaker) return <Navigate to={routes.changemakers} replace />;
+
+  const others = profiles
+    .filter((profile) => profile.slug !== changemaker.slug)
+    .slice(0, 3);
+  const [first, ...rest] = changemaker.body;
+  const firstName = changemaker.name.split(" ")[0] ?? changemaker.name;
 
   return (
     <PageShell>
@@ -49,42 +62,42 @@ export function ChangemakerStoryPage() {
 
       <div
         className={styles.hero}
-        style={{ background: HERO_GRADIENT[cm.tint] }}
+        style={{ background: HERO_GRADIENT[changemaker.tint] }}
       >
-        <div className={styles.heroInitials}>{cm.initials}</div>
+        <div className={styles.heroInitials}>{changemaker.initials}</div>
         <div className={styles.heroOverlay} />
         <div className={styles.heroLabel}>
           <div className="wrap">
             <div className={styles.cat}>
               {t("community:changemakerStory.categoryLabel", {
-                cause: cm.cause,
+                cause: changemaker.cause,
               })}
             </div>
-            <h1 className={styles.title}>{cm.name}</h1>
+            <h1 className={styles.title}>{changemaker.name}</h1>
             <div className={styles.byline}>
-              <span className={styles.bylineAv}>{cm.initials}</span>
-              <span>{cm.byline}</span>
+              <span className={styles.bylineAv}>{changemaker.initials}</span>
+              <span>{changemaker.byline}</span>
               <span className={styles.bDot} />
-              <span>{cm.readTime}</span>
+              <span>{changemaker.readTime}</span>
               <span className={styles.bDot} />
-              <span>{cm.date}</span>
+              <span>{changemaker.date}</span>
             </div>
           </div>
         </div>
       </div>
 
       <article className={styles.articleWrap}>
-        <p className={styles.lead}>{cm.lead}</p>
+        <p className={styles.lead}>{changemaker.lead}</p>
         <div className={styles.meta}>
-          {cm.tags.map((t) => (
-            <span className={styles.tag} key={t}>
-              {t}
+          {changemaker.tags.map((tag) => (
+            <span className={styles.tag} key={tag}>
+              {tag}
             </span>
           ))}
           <span className={styles.metaDot} />
-          <span>{cm.readTime}</span>
+          <span>{changemaker.readTime}</span>
           <span className={styles.metaDot} />
-          <span>{cm.date}</span>
+          <span>{changemaker.date}</span>
         </div>
 
         <div className={styles.body}>
@@ -92,8 +105,8 @@ export function ChangemakerStoryPage() {
           {rest[0] && <p>{rest[0]}</p>}
 
           <blockquote className={styles.quote}>
-            <p>“{cm.pullQuote.text}”</p>
-            <cite>{cm.pullQuote.cite}</cite>
+            <p>“{changemaker.pullQuote.text}”</p>
+            <cite>{changemaker.pullQuote.cite}</cite>
           </blockquote>
 
           <div className={styles.impactCard}>
@@ -102,7 +115,7 @@ export function ChangemakerStoryPage() {
                 name: firstName,
               })}
             </div>
-            {cm.impact.map((row) => (
+            {changemaker.impact.map((row) => (
               <div className={styles.impactRow} key={row}>
                 <span className={styles.impactIc}>
                   <Tick />
@@ -112,8 +125,8 @@ export function ChangemakerStoryPage() {
             ))}
           </div>
 
-          {rest.slice(1).map((p, i) => (
-            <p key={i}>{p}</p>
+          {rest.slice(1).map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
           ))}
         </div>
       </article>
@@ -143,20 +156,22 @@ export function ChangemakerStoryPage() {
           {t("community:changemakerStory.moreLabel")}
         </div>
         <div className={styles.moreGrid}>
-          {others.map((o) => (
+          {others.map((other) => (
             <Link
-              key={o.slug}
-              to={`/changemaker/${o.slug}`}
+              key={other.slug}
+              to={`/changemaker/${other.slug}`}
               className={styles.moreCard}
             >
               <div
-                className={[styles.moreAv, styles[AV_CLASS[o.tint]]].join(" ")}
+                className={[styles.moreAv, styles[AV_CLASS[other.tint]]].join(
+                  " ",
+                )}
               >
-                {o.initials}
+                {other.initials}
               </div>
               <div>
-                <div className={styles.moreName}>{o.name}</div>
-                <div className={styles.moreCause}>{o.cause}</div>
+                <div className={styles.moreName}>{other.name}</div>
+                <div className={styles.moreCause}>{other.cause}</div>
               </div>
             </Link>
           ))}

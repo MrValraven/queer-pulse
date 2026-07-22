@@ -1,6 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { portrait } from "./adminPeople.data";
-import { TONE, findEdge, neighbors, personById } from "./adminVouchGraph.data";
+import type { AvatarTone } from "./ui";
+import type { MemberDetail, VouchAvatar } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
 const W = 360;
@@ -14,18 +14,46 @@ const NODE_R = 18;
 const MAX = 10;
 
 /**
- * A static, faithful thumbnail of a member's 1-hop trust network — same visual
- * language as the full modal (photos, trust-tone rings, jade mutual ties,
- * verified ticks, curved connectors). Signals what "Explore network" opens.
+ * Token-backed fill/stroke per avatar tone, mirroring `adminUi.module.css`'s
+ * `av_*` classes. Restated here (rather than imported) because this preview
+ * draws its own SVG circles instead of `<AdminAvatar>`, and the vouch-graph
+ * fixture's own tone map (`adminVouchGraph.data.ts`'s `TONE`) doesn't cover
+ * `"anon"` and uses a different tone vocabulary from `AvatarTone`.
  */
-export function VouchGraphPreview({ focusId }: { focusId: string }) {
+const AVATAR_TONE_INK: Record<AvatarTone, { fill: string; stroke: string }> = {
+  plum: { fill: "rgba(var(--plum-rgb), .1)", stroke: "var(--text-strong)" },
+  coral: {
+    fill: "rgba(var(--accent-rgb), .18)",
+    stroke: "var(--accent-text)",
+  },
+  jade: { fill: "rgba(var(--jade-rgb), .2)", stroke: "var(--jade-ink)" },
+  violet: { fill: "rgba(var(--violet-rgb), .18)", stroke: "var(--violet)" },
+  amber: { fill: "rgba(var(--amber-rgb), .24)", stroke: "var(--amber-ink)" },
+  anon: { fill: "rgba(var(--plum-rgb), .08)", stroke: "var(--ink-40)" },
+};
+
+/**
+ * A static thumbnail of a member's direct vouch network, built straight from
+ * the drawer's own `detail.graph` (a real center + up to `MAX` voucher
+ * avatars from the backend). Unlike the full-screen modal — which still
+ * renders the `adminVouchGraph.data` fixture network — this preview has no
+ * per-edge mutual/withdrawn detail or portraits, since the backend graph
+ * summary only carries `{ initials, tone }` per node. Same visual language
+ * (radial layout, curved connectors) as before, but real for every member.
+ */
+export function VouchGraphPreview({
+  graph,
+  name,
+}: {
+  graph: MemberDetail["graph"];
+  name: string;
+}) {
   const { t } = useTranslation();
-  const focus = personById[focusId]!;
-  const nbrs = neighbors(focusId, true).slice(0, MAX);
-  const n = nbrs.length;
-  const placed = nbrs.map((id, i) => {
+  const nodes = graph.nodes.slice(0, MAX);
+  const n = nodes.length;
+  const placed = nodes.map((node, i) => {
     const ang = -Math.PI / 2 + (i / Math.max(1, n)) * Math.PI * 2;
-    return { id, x: CX + Math.cos(ang) * RX, y: CY + Math.sin(ang) * RY };
+    return { node, x: CX + Math.cos(ang) * RX, y: CY + Math.sin(ang) * RY };
   });
 
   return (
@@ -33,22 +61,9 @@ export function VouchGraphPreview({ focusId }: { focusId: string }) {
       viewBox={`0 0 ${W} ${H}`}
       className={styles.previewSvg}
       role="img"
-      aria-label={t("admin:vouchGraph.preview.ariaLabel", {
-        name: focus.name,
-        count: n,
-      })}
+      aria-label={t("admin:vouchGraph.preview.ariaLabel", { name, count: n })}
     >
-      <defs>
-        <clipPath id="pvClipC">
-          <circle r={CENTER_R} />
-        </clipPath>
-        <clipPath id="pvClipN">
-          <circle r={NODE_R} />
-        </clipPath>
-      </defs>
-
-      {placed.map((p) => {
-        const e = findEdge(focusId, p.id);
+      {placed.map((p, i) => {
         const dx = p.x - CX,
           dy = p.y - CY;
         const len = Math.hypot(dx, dy) || 1;
@@ -60,113 +75,50 @@ export function VouchGraphPreview({ focusId }: { focusId: string }) {
           y2 = p.y - uy * NODE_R;
         const cx = (x1 + x2) / 2 + (-dy / len) * 14;
         const cy = (y1 + y2) / 2 + (dx / len) * 14;
-        const cls = [
-          styles.previewEdge,
-          e?.mutual && styles.previewEdgeMutual,
-          e?.withdrawn && styles.previewEdgeWithdrawn,
-        ]
-          .filter(Boolean)
-          .join(" ");
         return (
           <path
-            key={p.id}
-            className={cls}
+            key={i}
+            className={styles.previewEdge}
             fill="none"
             d={`M${x1} ${y1}Q${cx} ${cy} ${x2} ${y2}`}
           />
         );
       })}
 
-      {placed.map((p) => (
-        <PreviewNode
-          key={p.id}
-          id={p.id}
-          x={p.x}
-          y={p.y}
-          r={NODE_R}
-          clip="pvClipN"
-        />
+      {placed.map((p, i) => (
+        <PreviewNode key={i} avatar={p.node} x={p.x} y={p.y} r={NODE_R} />
       ))}
-      <PreviewNode
-        id={focusId}
-        x={CX}
-        y={CY}
-        r={CENTER_R}
-        clip="pvClipC"
-        focus
-      />
+      <PreviewNode avatar={graph.center} x={CX} y={CY} r={CENTER_R} focus />
     </svg>
   );
 }
 
 function PreviewNode({
-  id,
+  avatar,
   x,
   y,
   r,
-  clip,
   focus = false,
 }: {
-  id: string;
+  avatar: VouchAvatar;
   x: number;
   y: number;
   r: number;
-  clip: string;
   focus?: boolean;
 }) {
-  const p = personById[id]!;
-  const ink = TONE[p.tone];
-  const photo = !p.private && !p.anon ? portrait(p.name) : undefined;
-  const verified = p.standing === "trusted" && !p.anon;
-  const sw = focus ? 2.5 : 2;
-
+  const ink = AVATAR_TONE_INK[avatar.tone];
+  const strokeWidth = focus ? 2.5 : 2;
   return (
     <g transform={`translate(${x} ${y})`}>
-      <circle r={r} fill="var(--cream)" />
-      {photo ? (
-        <>
-          <image
-            href={photo}
-            x={-r}
-            y={-r}
-            width={r * 2}
-            height={r * 2}
-            clipPath={`url(#${clip})`}
-            preserveAspectRatio="xMidYMid slice"
-          />
-          <circle r={r} fill="none" stroke={ink.stroke} strokeWidth={sw} />
-        </>
-      ) : (
-        <>
-          <circle r={r} fill={ink.fill} stroke={ink.stroke} strokeWidth={sw} />
-          <text
-            className={styles.previewInit}
-            dy={r / 3}
-            fontSize={focus ? r * 0.6 : r * 0.7}
-            fill={p.anon ? "var(--ink-40)" : ink.stroke}
-          >
-            {p.initials}
-          </text>
-        </>
-      )}
-      {verified && (
-        <>
-          <circle
-            cx={r * 0.72}
-            cy={r * 0.72}
-            r={4.5}
-            fill="var(--jade)"
-            stroke="var(--paper)"
-            strokeWidth={2}
-          />
-          <path
-            d={`M ${r * 0.72 - 2} ${r * 0.72} l 1.4 1.4 l 2.6 -3`}
-            stroke="var(--paper)"
-            strokeWidth={1.3}
-            fill="none"
-          />
-        </>
-      )}
+      <circle r={r} fill={ink.fill} stroke={ink.stroke} strokeWidth={strokeWidth} />
+      <text
+        className={styles.previewInit}
+        dy={r / 3}
+        fontSize={focus ? r * 0.6 : r * 0.7}
+        fill={ink.stroke}
+      >
+        {avatar.initials}
+      </text>
     </g>
   );
 }

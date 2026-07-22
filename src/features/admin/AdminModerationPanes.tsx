@@ -10,7 +10,6 @@ import {
   AppealCard,
   ResolvedRow,
 } from "./AdminModerationCards";
-import { RESOLVED } from "./adminModeration.data";
 import styles from "./AdminModerationPage.module.css";
 import type { useModerationQueue } from "./useModerationQueue";
 
@@ -139,18 +138,32 @@ export function AppealsPane({ q }: { q: Queue }) {
   );
 }
 
-export function ResolvedPane() {
+export function ResolvedPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
+  const { resolved } = q;
+
+  // Live mode fetches asynchronously — hold the pane blank while it loads
+  // rather than flashing an empty "nothing resolved" state.
+  if (q.loading && resolved.length === 0) {
+    return <div className={styles.pane} aria-busy="true" />;
+  }
+
   return (
     <div className={styles.pane}>
       <SectionLabel>{t("admin:moderation.resolvedSection")}</SectionLabel>
-      <div className={styles.list}>
-        {RESOLVED.map((item, i) => (
-          <FadeIn key={item.id} delay={Math.min(i, 6) * 55}>
-            <ResolvedRow item={item} />
-          </FadeIn>
-        ))}
-      </div>
+      {resolved.length === 0 ? (
+        <p className={styles.filterEmpty}>
+          {t("admin:moderation.resolvedEmpty")}
+        </p>
+      ) : (
+        <div className={styles.list}>
+          {resolved.map((item, i) => (
+            <FadeIn key={item.id} delay={Math.min(i, 6) * 55}>
+              <ResolvedRow item={item} />
+            </FadeIn>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

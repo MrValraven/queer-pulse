@@ -1,0 +1,116 @@
+/* ── Safe space profile editor ────────────────────────────── */
+.fieldLabel {
+  display: block;
+  margin: 18px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.fieldLabel:first-child {
+  margin-top: 0;
+}
+
+.textInput,
+.numberInput {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 14px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.numberInput {
+  max-width: 160px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 14px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.textInput::placeholder,
+.textarea::placeholder {
+  color: var(--ink-40);
+}
+
+.textInput:focus-visible,
+.numberInput:focus-visible,
+.textarea:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+.hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Repeatable promises / vouches ────────────────────────── */
+.repeatSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.repeatRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  background: var(--cream);
+}
+
+.repeatRow .textInput,
+.repeatRow .textarea {
+  flex: 1 1 160px;
+  width: auto;
+}
+
+.rowRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
+}
+
+@media (hover: hover) {
+  .rowRemove:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+    color: var(--accent-ink);
+  }
+}
+
+.rowRemove:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}

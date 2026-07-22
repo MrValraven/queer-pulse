@@ -437,6 +437,15 @@
   background: rgba(var(--plum-rgb), 0.03);
   border-radius: 8px;
 }
+.reqReason {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.reqReason b {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
 .pending {
   background: rgba(var(--accent-rgb), 0.05);
   border: 1px dashed rgba(var(--accent-rgb), 0.3);

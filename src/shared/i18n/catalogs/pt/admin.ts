@@ -42,6 +42,9 @@ export const admin: Catalog = {
   "dashboard.metrics.trendPercent": "{value}%",
   "dashboard.metrics.trendOldest": "mais antiga: {hours}",
   "dashboard.metrics.trendWellUnder": "bem abaixo",
+  "dashboard.metrics.trendOverSla": "acima do alvo",
+  "dashboard.metrics.trendNoData": "ainda sem dados suficientes",
+  "dashboard.metrics.trendTracked": "acompanhado em tempo real",
   "dashboard.metrics.footGrowth": "+{count} este mês",
   "dashboard.metrics.footEmergencies_one": "{count} é uma emergência",
   "dashboard.metrics.footEmergencies_other": "{count} são emergências",
@@ -69,7 +72,7 @@ export const admin: Catalog = {
   "dashboard.charts.series.outing": "Outing/doxxing",
   "dashboard.charts.series.harassment": "Assédio",
   "dashboard.charts.series.spam": "Spam",
-  "dashboard.charts.series.vouchAbuse": "Abuso de avais",
+  "dashboard.charts.series.other": "Outras",
   "dashboard.charts.memberGrowth.title": "Crescimento de pessoas",
   "dashboard.charts.memberGrowth.sub":
     "Entradas vs. saídas · com pico do Orgulho",
@@ -88,11 +91,33 @@ export const admin: Catalog = {
   "dashboard.charts.week.last": "passada",
   "dashboard.charts.week.this": "esta",
 
+  "dashboard.notMeasuredYet": "Ainda não medido",
+
   "dashboard.feed.title": "Atividade em direto",
   "dashboard.feed.live": "Direto",
   "dashboard.feed.transparency":
     "Cada ação aqui é <strong>registada e mostrada</strong> à pessoa afetada. Nunca há remoções silenciosas.",
   "dashboard.feed.auditLinkCta": "Ver o registo de auditoria",
+
+  "dashboard.feed.type.reportFiled.body": "apresentou uma denúncia",
+  "dashboard.feed.type.reportFiled.anonymousLead": "Uma denúncia",
+  "dashboard.feed.type.reportFiled.anonymousBody":
+    "foi apresentada de forma anónima",
+  "dashboard.feed.type.reportResolved.body": "resolveu uma denúncia",
+  "dashboard.feed.type.reportResolved.anonymousLead":
+    "Uma pessoa moderadora",
+  "dashboard.feed.type.memberJoined.body": "entrou na plataforma",
+  "dashboard.feed.type.memberJoined.leadCount_one": "{count} pessoa nova",
+  "dashboard.feed.type.memberJoined.leadCount_other": "{count} pessoas novas",
+  "dashboard.feed.type.memberJoined.genericLead": "Pessoas novas",
+  "dashboard.feed.type.vouchReceived.body": "recebeu um aval de",
+  "dashboard.feed.type.vouchReceived.bodyNoActor": "recebeu um novo aval",
+  "dashboard.feed.type.vouchReceived.genericLead": "Uma pessoa",
+  "dashboard.feed.type.communityJoined.body": "entrou em",
+  "dashboard.feed.type.communityJoined.genericLead": "Uma pessoa",
+  "dashboard.feed.type.joinRequestSubmitted.body": "pediu para entrar",
+  "dashboard.feed.type.joinRequestSubmitted.genericLead": "Alguém",
+  "dashboard.feed.type.generic.body": "fez uma atualização",
 
   // ── Pessoas ────────────────────────────────────────────────────────────────
   "members.title": "Pessoas · <em>a comunidade</em>",
@@ -110,6 +135,7 @@ export const admin: Catalog = {
   "members.filters.verified": "Verificadas",
   "members.filters.new": "Novas esta semana",
   "members.empty": "Nenhuma pessoa corresponde a estes filtros.",
+  "members.loadMore": "Mostrar mais pessoas",
   "members.openAriaLabel": "Abrir {name}",
   "members.vouchedLabel": "avalizada",
 
@@ -229,6 +255,92 @@ export const admin: Catalog = {
   "members.glance.memberFor": "Aqui há",
   "members.glance.reportsAgainst": "Denúncias recebidas",
 
+  // ── Pessoas: strings compostas pelo adaptador DTO → view-model (D2) ───────
+  // `adminMembers.adapters.ts` compõe estas strings no momento da adaptação
+  // (datas sensíveis ao idioma via `Formatters`, plurais via `{count}`) em
+  // vez de fixar inglês no view-model, tal como `adminCommunities.adapters.ts`.
+  "members.meta.joined": "Membro desde {date}",
+  "members.glance.memberFor.new": "Recente",
+  "members.glance.memberFor.years_one": "{count} ano",
+  "members.glance.memberFor.years_other": "{count} anos",
+  "members.glance.memberFor.months_one": "{count} mês",
+  "members.glance.memberFor.months_other": "{count} meses",
+  "members.detail.graphNote_one":
+    "{count} pessoa avaliza {name}. Uma rede mútua é sinal de confiança — não uma métrica para otimizar.",
+  "members.detail.graphNote_other":
+    "{count} pessoas avalizam {name}. Uma rede mútua é sinal de confiança — não uma métrica para otimizar.",
+  "members.detail.removeBody":
+    "Isto encerra a participação de {name} na comunidade, oculta o conteúdo dessa pessoa e essa pessoa é notificada com o teu motivo e o direito a recurso. Os avais que deu a outras pessoas continuam válidos. Fica registado no registo de auditoria em teu nome.",
+  "members.communities.role.owner": "responsável",
+  "members.communities.role.mod": "pessoa moderadora",
+  "members.contributions.kind.vouch": "Avalizou uma pessoa",
+  "members.contributions.kind.other": "Contribuiu para a comunidade",
+  "members.timeline.action.dismiss": "Denúncia arquivada",
+  "members.timeline.action.warn": "Pessoa avisada",
+  "members.timeline.action.hideContent": "Conteúdo ocultado",
+  "members.timeline.action.removeContent": "Conteúdo removido",
+  "members.timeline.action.restrict": "Acesso restringido",
+  "members.timeline.action.suspend": "Conta suspensa",
+  "members.timeline.action.ban": "Conta banida",
+  "members.timeline.action.shield": "Protegida de contacto indesejado",
+  "members.timeline.action.escalate": "Encaminhado à equipa de segurança",
+  "members.timeline.action.appealUpheld": "Recurso aceite",
+  "members.timeline.action.suspensionLifted": "Suspensão levantada",
+  "members.timeline.action.verified": "Identidade verificada",
+  "members.timeline.action.noReports": "Sem denúncias contra esta pessoa",
+  "members.timeline.action.other": "Ação de moderação tomada",
+  "members.timeline.noReportsMeta": "Um histórico limpo, até agora",
+  "members.timeline.verifiedMeta": "{date} · avais confirmados",
+  "members.timeline.actedByMeta": "{date} · decisão de {name}",
+  "members.timeline.viewCta": "ver",
+
+  // ── Espaços seguros (/admin/safe-spaces) ────────────────────────────────────
+  "adminSafeSpaces.title": "Espaços seguros · <em>a lista verificada</em>",
+  "adminSafeSpaces.header.eyebrow": "Confiança e segurança",
+  "adminSafeSpaces.header.title": "Verificar <em>espaços seguros</em>",
+  "adminSafeSpaces.header.sub":
+    "Marca um espaço como seguro e verificado, edita o perfil público, ou remove um que já não merece essa confiança.",
+  "adminSafeSpaces.empty": "Ainda não há espaços para rever.",
+  "adminSafeSpaces.status.none": "Por rever",
+  "adminSafeSpaces.status.verified": "Verificado",
+  "adminSafeSpaces.status.removed": "Removido",
+  "adminSafeSpaces.markCta": "Marcar como espaço seguro",
+  "adminSafeSpaces.unmarkCta": "Desmarcar",
+  "adminSafeSpaces.editCta": "Editar perfil",
+  "adminSafeSpaces.toast.marked": "{name} foi marcado como espaço seguro",
+  "adminSafeSpaces.toast.unmarked": "{name} foi desmarcado como espaço seguro",
+
+  "adminSafeSpaces.modal.loadingProfile":
+    "A carregar o perfil de espaço seguro atual deste espaço…",
+  "adminSafeSpaces.modal.loadFailed":
+    "Não foi possível carregar o perfil de espaço seguro atual deste espaço. Fecha e reabre para tentar de novo.",
+  "adminSafeSpaces.modal.eyebrow": "Perfil de espaço seguro",
+  "adminSafeSpaces.modal.title": "Editar {name}",
+  "adminSafeSpaces.modal.statusLabel": "Estado",
+  "adminSafeSpaces.modal.tierLabel": "Nível",
+  "adminSafeSpaces.modal.verifierLabel": "Verificado por",
+  "adminSafeSpaces.modal.reVerifiedAtLabel": "Reverificado em",
+  "adminSafeSpaces.modal.subLabel": "Subtítulo",
+  "adminSafeSpaces.modal.promisesLabel": "Promessas",
+  "adminSafeSpaces.modal.promiseTitlePlaceholder": "Título da promessa",
+  "adminSafeSpaces.modal.promiseDescPlaceholder": "Descrição da promessa",
+  "adminSafeSpaces.modal.addPromiseCta": "Adicionar promessa",
+  "adminSafeSpaces.modal.vouchesLabel": "Avais",
+  "adminSafeSpaces.modal.vouchNamePlaceholder": "Nome",
+  "adminSafeSpaces.modal.vouchBylinePlaceholder": "Assinatura",
+  "adminSafeSpaces.modal.vouchTextPlaceholder": "Texto do aval",
+  "adminSafeSpaces.modal.vouchWhenPlaceholder": "Quando (ex.: há 2 semanas)",
+  "adminSafeSpaces.modal.addVouchCta": "Adicionar aval",
+  "adminSafeSpaces.modal.removeRowAriaLabel": "Remover",
+  "adminSafeSpaces.modal.reasonLabel": "Motivo da remoção",
+  "adminSafeSpaces.modal.reasonHint":
+    "Mostrado às pessoas que visitarem a página do espaço removido.",
+  "adminSafeSpaces.modal.cancelCta": "Cancelar",
+  "adminSafeSpaces.modal.saveCta": "Guardar",
+  "adminSafeSpaces.modal.savingCta": "A guardar…",
+  "adminSafeSpaces.modal.savedToast":
+    "O perfil de espaço seguro de {name} foi guardado",
+
   // ── Moderação ──────────────────────────────────────────────────────────────
   "moderation.title": "Moderação · <em>triagem</em>",
   "moderation.header.eyebrow": "Fila de moderação",
@@ -284,6 +396,8 @@ export const admin: Catalog = {
   "moderation.appeal.supportersFlag_other": "{count} pessoas a apoiar",
   "moderation.appeal.fallbackName": "pessoa",
   "moderation.resolvedSection": "Resolvidas recentemente",
+  "moderation.resolvedEmpty":
+    "Ainda nada resolvido. As denúncias fechadas aparecem aqui.",
 
   "moderation.reportDrawer.label": "Denúncia — {title}",
   "moderation.reportDrawer.title": "Um estado trans privado foi exposto",

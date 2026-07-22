@@ -13,7 +13,8 @@ import {
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DIRECTORY_PLACES as BIZS, type Tint } from "./directoryPlaces";
+import { type Tint } from "./directoryPlaces";
+import { useDirectoryPlaces } from "./api/useDirectory";
 import { CAT_LABEL_KEYS } from "./directorySpace.data";
 import { routes } from "../../app/routeMap";
 import s from "./DirectoryPage.module.css";
@@ -69,12 +70,13 @@ function DirectoryCardSkeleton() {
 export function DirectoryPage() {
   const { t } = useTranslation();
   const loading = useSimulatedLoad();
+  const places = useDirectoryPlaces();
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return BIZS.filter((b) => {
+    return places.filter((b) => {
       if (cat !== "all" && b.cat !== cat) return false;
       if (
         q &&
@@ -87,7 +89,7 @@ export function DirectoryPage() {
         return false;
       return true;
     });
-  }, [cat, query]);
+  }, [places, cat, query]);
 
   return (
     <PageShell>
@@ -144,7 +146,7 @@ export function DirectoryPage() {
               <Translation
                 i18nKey="marketing:directory.count"
                 components={{ b: <b /> }}
-                values={{ shown: visible.length, total: BIZS.length }}
+                values={{ shown: visible.length, total: places.length }}
               />
             )}
           </Reveal>
@@ -154,7 +156,13 @@ export function DirectoryPage() {
                 <DirectoryCardSkeleton key={index} />
               ))}
             {!loading && visible.length === 0 && (
-              <div className={s.empty}>{t("marketing:directory.empty")}</div>
+              <div className={s.empty}>
+                {t(
+                  places.length === 0
+                    ? "marketing:directory.noListings"
+                    : "marketing:directory.empty",
+                )}
+              </div>
             )}
             {!loading &&
               visible.map((place, index) => (

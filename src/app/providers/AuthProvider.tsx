@@ -8,12 +8,11 @@ import {
 import { AuthContext, type AuthErrorCode } from "./authContext";
 import { AUTH_STORAGE_KEY as STORAGE_KEY } from "../../features/marketing/cookies.data";
 import { useDemoMode } from "./DemoModeProvider";
-import { ApiError, setOnAuthLost } from "../../shared/api/client";
+import { ApiError, refreshSession, setOnAuthLost } from "../../shared/api/client";
 import {
   bootstrapCsrf,
   fetchMe,
   postLogout,
-  postRefresh,
   redirectToGoogle,
   type AuthUser,
 } from "../../features/auth/api/auth.api";
@@ -179,8 +178,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     if (demoMode) return;
+    // Share the on-401 single-flight + cross-tab lock (see `refreshSession`) so
+    // an explicit refresh never races the automatic one and double-spends the
+    // rotating token — which the backend would read as reuse and sign out every
+    // session. A false result means the rotation failed: treat it as logged out.
+    const ok = await refreshSession();
+    if (!ok) {
+      setUser(null);
+      setLoggedIn(false);
+      return;
+    }
     try {
-      await postRefresh();
       const u = await fetchMe();
       setUser(u);
       setLoggedIn(true);

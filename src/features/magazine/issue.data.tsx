@@ -30,7 +30,7 @@ export const PRINT_EDITION_IMG =
  */
 export const TOC: { headingKey: string; entries: Entry[] }[] = [
   {
-    headingKey: "contents.heading.coverStory",
+    headingKey: "magazine:contents.heading.coverStory",
     entries: [
       {
         category: "Cover",
@@ -53,7 +53,7 @@ export const TOC: { headingKey: string; entries: Entry[] }[] = [
     ],
   },
   {
-    headingKey: "contents.heading.features",
+    headingKey: "magazine:contents.heading.features",
     entries: [
       {
         category: "Reportage",
@@ -126,7 +126,7 @@ export const TOC: { headingKey: string; entries: Entry[] }[] = [
     ],
   },
   {
-    headingKey: "contents.heading.profiles",
+    headingKey: "magazine:contents.heading.profiles",
     entries: [
       {
         category: "Profile",

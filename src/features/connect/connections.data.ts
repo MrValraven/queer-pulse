@@ -29,6 +29,8 @@ export interface ConnectionMeta {
   since?: string;
   vouchBadge?: "vouched-for-you" | "you-vouched" | "mutual";
   requestMessage?: string;
+  /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
+  requestReason?: string;
   sentAgo?: string;
 }
 

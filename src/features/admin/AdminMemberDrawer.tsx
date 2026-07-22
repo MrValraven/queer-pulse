@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { AdminDrawer, AdminAvatar, AdminChip } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,7 +12,8 @@ import {
 } from "./AdminMemberDrawerSections";
 import { MessageModal, RestrictModal } from "./AdminMemberModals";
 import { portrait } from "./adminPeople.data";
-import { detailFor, type AdminMember } from "./adminMembers.data";
+import { useAdminMember } from "./api/useAdminMembers";
+import { type AdminMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
 interface Props {
@@ -29,7 +30,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
   const [modal, setModal] = useState<"message" | "restrict" | "network" | null>(
     null,
   );
-  const detail = detailFor(member);
+  const { data: detail, isLoading } = useAdminMember(member);
   const first = firstName(member.name);
   const focusId = personIdByInitials(member.initials);
 
@@ -67,7 +68,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           </div>
         }
         foot={
-          confirming ? (
+          confirming && detail ? (
             <RemovePanel
               body={detail.removeBody}
               onKeep={() => setConfirming(false)}
@@ -111,6 +112,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               <Button
                 variant="danger"
                 size="md"
+                disabled={!detail}
                 onClick={() => setConfirming(true)}
               >
                 {t("admin:members.drawer.removeCta")}
@@ -119,13 +121,18 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           )
         }
       >
-        <MemberOverviewSections
-          detail={detail}
-          focusId={focusId}
-          onOpenNetwork={() => setModal("network")}
-        />
-
-        <ModerationTimeline entries={detail.moderationTimeline} />
+        {isLoading || !detail ? (
+          <DrawerBodySkeleton />
+        ) : (
+          <>
+            <MemberOverviewSections
+              detail={detail}
+              memberName={member.name}
+              onOpenNetwork={() => setModal("network")}
+            />
+            <ModerationTimeline entries={detail.moderationTimeline} />
+          </>
+        )}
 
         <SealedIdentity />
       </AdminDrawer>
@@ -182,6 +189,38 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
         />
       )}
     </>
+  );
+}
+
+/**
+ * Live mode's `useAdminMember` fetches over the network, so the body/footer
+ * sections that read `detail.*` need a placeholder for the gap between the
+ * drawer opening and the detail arriving. Demo mode never renders this — its
+ * `initialData` resolves instantly.
+ */
+function DrawerBodySkeleton() {
+  return (
+    <div aria-busy="true">
+      <div className={styles.dSection}>
+        <SkeletonLine width="40%" height={18} />
+        <div className={styles.glanceGrid} style={{ marginTop: 10 }}>
+          <SkeletonLine height={64} style={{ borderRadius: 14 }} />
+          <SkeletonLine height={64} style={{ borderRadius: 14 }} />
+          <SkeletonLine height={64} style={{ borderRadius: 14 }} />
+        </div>
+      </div>
+      <div className={styles.dSection}>
+        <SkeletonLine width="55%" height={18} />
+        <SkeletonLine
+          height={200}
+          style={{ marginTop: 10, borderRadius: 16 }}
+        />
+      </div>
+      <div className={styles.dSection}>
+        <SkeletonLine width="70%" />
+        <SkeletonLine width="90%" style={{ marginTop: 8 }} />
+      </div>
+    </div>
   );
 }
 

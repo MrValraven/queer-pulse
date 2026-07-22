@@ -1,11 +1,13 @@
+import { Link } from "react-router-dom";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useHousingCoops } from "./api/useHousingCoops";
+import { CoopEmptyState } from "./CoopEmptyState";
 import {
   COOP_STATS,
   COOP_PHASES,
-  FORMING_COOPS,
   COOP_TEMPLATES,
   COOP_RESOURCES,
   type FormingCoop,
@@ -152,13 +154,19 @@ function CoopCard({
         </div>
       </div>
       <div className={styles.ccFoot}>
-        <div className={styles.avStack} aria-hidden>
-          {coop.faces.map((f, i) => (
-            <div className={`${styles.av} ${FACE_TINT[f.tint]}`} key={i}>
-              {f.initials}
-            </div>
-          ))}
-        </div>
+        {coop.faces.length > 0 ? (
+          <div className={styles.avStack} aria-hidden>
+            {coop.faces.map((f, i) => (
+              <div className={`${styles.av} ${FACE_TINT[f.tint]}`} key={i}>
+                {f.initials}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <span className={styles.ccCountChip}>
+            {coop.location.split("·")[1]?.trim() ?? coop.location}
+          </span>
+        )}
         <Button
           variant={coop.cta.kind === "join" ? "primary" : "ghost"}
           onClick={() => onCta(coop)}
@@ -170,15 +178,19 @@ function CoopCard({
   );
 }
 
-/** The grid of co-ops currently forming or operational. */
+/** The grid of co-ops currently forming or operational, wired to live data
+ *  in live mode (demo mode still renders the `FORMING_COOPS` fixture). */
 export function CoopGrid({
   onCta,
   onSeeAll,
+  onStart,
 }: {
   onCta: (coop: FormingCoop) => void;
   onSeeAll: () => void;
+  onStart: () => void;
 }) {
   const { t } = useTranslation();
+  const { data: coops = [], isLoading } = useHousingCoops();
   return (
     <section className={styles.active}>
       <div className="wrap">
@@ -189,26 +201,34 @@ export function CoopGrid({
               components={{ em: <em /> }}
             />
           </h2>
-          <button type="button" className={styles.all} onClick={onSeeAll}>
-            {t("economy:housingCoop.grid.seeAll")}
-          </button>
+          {coops.length > 0 && (
+            <button type="button" className={styles.all} onClick={onSeeAll}>
+              {t("economy:housingCoop.grid.seeAll")}
+            </button>
+          )}
         </div>
-        <div className={styles.coopGrid}>
-          {FORMING_COOPS.map((coop) => (
-            <CoopCard key={coop.id} coop={coop} onCta={onCta} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className={styles.coopGrid} aria-busy="true">
+            {[0, 1, 2].map((slot) => (
+              <div key={slot} className={styles.coopCardSkeleton} />
+            ))}
+          </div>
+        ) : coops.length === 0 ? (
+          <CoopEmptyState onStart={onStart} />
+        ) : (
+          <div className={styles.coopGrid}>
+            {coops.map((coop) => (
+              <CoopCard key={coop.id} coop={coop} onCta={onCta} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
-/** Downloadable formation templates. */
-export function CoopTemplates({
-  onDownload,
-}: {
-  onDownload: (name: string) => void;
-}) {
+/** Formation templates — each card links to its full in-app document. */
+export function CoopTemplates() {
   const { t } = useTranslation();
   return (
     <section className={styles.templates}>
@@ -223,26 +243,22 @@ export function CoopTemplates({
           <p>{t("economy:housingCoop.templates.sub")}</p>
         </div>
         <div className={styles.tpGrid}>
-          {COOP_TEMPLATES.map((template) => {
-            const name = `${t(template.nameKey)} ${t(template.nameEmKey)}`;
-            return (
-              <button
-                type="button"
-                className={styles.tpCard}
-                key={template.nameKey}
-                onClick={() => onDownload(name)}
-              >
-                <div className={styles.tpTag}>{t(template.tagKey)}</div>
-                <div className={styles.tpName}>
-                  {t(template.nameKey)} <em>{t(template.nameEmKey)}</em>
-                </div>
-                <div className={styles.tpMeta}>{t(template.metaKey)}</div>
-                <div className={styles.tpCta}>
-                  {t("economy:housingCoop.templates.download")}
-                </div>
-              </button>
-            );
-          })}
+          {COOP_TEMPLATES.map((template) => (
+            <Link
+              className={styles.tpCard}
+              key={template.slug}
+              to={`${routes.housingCoop}/templates/${template.slug}`}
+            >
+              <div className={styles.tpTag}>{t(template.tagKey)}</div>
+              <div className={styles.tpName}>
+                {t(template.nameKey)} <em>{t(template.nameEmKey)}</em>
+              </div>
+              <div className={styles.tpMeta}>{t(template.metaKey)}</div>
+              <div className={styles.tpCta}>
+                {t("economy:housingCoop.templates.read")}
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

@@ -142,6 +142,7 @@ export const shared: Catalog = {
   // fetched data, not platform chrome).
   "adminNav.items.overview": "Overview",
   "adminNav.items.moderation": "Moderation",
+  "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.partnerships": "Partnerships",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
   "adminNav.items.governance": "Governance",
@@ -235,6 +236,7 @@ export const shared: Catalog = {
   "megaNav.community.col.people.membersDirectory": "Members directory",
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.head": "Gather",
+  "megaNav.community.col.gather.allGatherings": "Gatherings",
   "megaNav.community.col.gather.events": "Events",
   "megaNav.community.col.gather.hostGathering": "Host a gathering",
   "megaNav.community.col.organise.head": "Organise",

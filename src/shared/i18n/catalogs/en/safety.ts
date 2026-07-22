@@ -609,6 +609,7 @@ export const safety: Catalog = {
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "← Safe spaces",
   "spaces.detail.trust.title": "Verified safe space · Tier {tier}",
+  "spaces.detail.trust.titleNoTier": "Verified safe space",
   "spaces.detail.trust.body":
     "<strong>This space meets the Safe Spaces criteria</strong> and was visited by QueerPulse moderators in the last 12 months. Last re-verified <strong>{date}</strong> · {verifier}.",
   "spaces.detail.relyTitle": "What you can rely on, <em>here</em>",

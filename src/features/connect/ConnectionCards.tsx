@@ -9,6 +9,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useConnectionActions } from "./api/useConnectionActions";
+import { reasonLabel } from "./connectModal.data";
 import {
   profilePath,
   vouchBadgeLabelKey,
@@ -338,7 +339,8 @@ export function IncomingCard({
   onDecline: () => void;
 }) {
   const { t } = useTranslation();
-  const { mutuals, sentAgo, requestMessage } = view.meta;
+  const { mutuals, sentAgo, requestMessage, requestReason } = view.meta;
+  const reason = reasonLabel(requestReason, t);
   return (
     <div className={`${styles.card} ${styles.pending}`}>
       <CardHead view={view} />
@@ -362,6 +364,15 @@ export function IncomingCard({
           />
         )}
       </div>
+      {reason && (
+        <p className={styles.reqReason}>
+          <Translation
+            i18nKey="connect:card.reason"
+            components={{ b: <b /> }}
+            values={{ reason }}
+          />
+        </p>
+      )}
       {requestMessage && <p className={styles.reqMessage}>{requestMessage}</p>}
       <div className={styles.actions}>
         <Button type="button" variant="ghost" onClick={onDecline}>

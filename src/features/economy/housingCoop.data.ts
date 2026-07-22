@@ -1,4 +1,7 @@
 import type { AvatarTint } from "../../shared/components/ui";
+import type { CoopTemplateSlug } from "./coopTemplateContent.data";
+
+export type { CoopTemplateSlug };
 
 /** Hero stat rows — `value`/`valueKey` renders plain, `em` in coral italic
  *  after it. Platform-authored programme copy (same shape as
@@ -206,6 +209,9 @@ export interface CoopTemplate {
   nameKey: string;
   nameEmKey: string;
   metaKey: string;
+  /** Looks up the template's full in-app document in `COOP_TEMPLATE_CONTENT`
+   *  (see `coopTemplateContent.data.tsx`). */
+  slug: CoopTemplateSlug;
 }
 
 export const COOP_TEMPLATES: CoopTemplate[] = [
@@ -214,36 +220,42 @@ export const COOP_TEMPLATES: CoopTemplate[] = [
     nameKey: "economy:housingCoop.template.foundingValues.name",
     nameEmKey: "economy:housingCoop.template.foundingValues.nameEm",
     metaKey: "economy:housingCoop.template.foundingValues.meta",
+    slug: "founding-values",
   },
   {
     tagKey: "economy:housingCoop.template.financialHonesty.tag",
     nameKey: "economy:housingCoop.template.financialHonesty.name",
     nameEmKey: "economy:housingCoop.template.financialHonesty.nameEm",
     metaKey: "economy:housingCoop.template.financialHonesty.meta",
+    slug: "financial-honesty",
   },
   {
     tagKey: "economy:housingCoop.template.crlStatutes.tag",
     nameKey: "economy:housingCoop.template.crlStatutes.name",
     nameEmKey: "economy:housingCoop.template.crlStatutes.nameEm",
     metaKey: "economy:housingCoop.template.crlStatutes.meta",
+    slug: "crl-statutes",
   },
   {
     tagKey: "economy:housingCoop.template.shareAgreement.tag",
     nameKey: "economy:housingCoop.template.shareAgreement.name",
     nameEmKey: "economy:housingCoop.template.shareAgreement.nameEm",
     metaKey: "economy:housingCoop.template.shareAgreement.meta",
+    slug: "share-agreement",
   },
   {
     tagKey: "economy:housingCoop.template.financeModel.tag",
     nameKey: "economy:housingCoop.template.financeModel.name",
     nameEmKey: "economy:housingCoop.template.financeModel.nameEm",
     metaKey: "economy:housingCoop.template.financeModel.meta",
+    slug: "finance-model",
   },
   {
     tagKey: "economy:housingCoop.template.conflictResolution.tag",
     nameKey: "economy:housingCoop.template.conflictResolution.name",
     nameEmKey: "economy:housingCoop.template.conflictResolution.nameEm",
     metaKey: "economy:housingCoop.template.conflictResolution.meta",
+    slug: "conflict-resolution",
   },
 ];
 

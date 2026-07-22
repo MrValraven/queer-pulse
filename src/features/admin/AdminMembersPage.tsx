@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Button, FadeIn } from "../../shared/components/ui";
+import { useState } from "react";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,19 +8,13 @@ import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminMemberRows, AdminFlaggedRows } from "./AdminMemberRows";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
-import {
-  MEMBERS,
-  FLAGGED,
-  VERIFY_PENDING_COUNT,
-  type AdminMember,
-} from "./adminMembers.data";
+import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
+import { useJoinRequests } from "./api/useJoinRequests";
+import { type AdminMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
 type TabId = "all" | "pending" | "flagged";
 type StatusFilter = "all" | "verified" | "new";
-
-/** Total active members shown in the hero headline (mirrors the dashboard stat). */
-const ACTIVE_MEMBER_COUNT = 8412;
 
 export function AdminMembersPage() {
   const { t } = useTranslation();
@@ -29,17 +23,28 @@ export function AdminMembersPage() {
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [selected, setSelected] = useState<AdminMember | null>(null);
 
+  const {
+    members,
+    total,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useAdminMembers(filter);
+  const { data: flagged = [] } = useAdminFlagged();
+  const pendingCount = useJoinRequests("pending").data?.length ?? 0;
+
   const TABS: AdminTab[] = [
     { id: "all", label: t("admin:members.tabs.all") },
     {
       id: "pending",
       label: t("admin:members.tabs.pending"),
-      count: VERIFY_PENDING_COUNT,
+      count: pendingCount,
     },
     {
       id: "flagged",
       label: t("admin:members.tabs.flagged"),
-      count: FLAGGED.length,
+      count: flagged.length,
     },
   ];
 
@@ -48,12 +53,6 @@ export function AdminMembersPage() {
     { id: "verified", label: t("admin:members.filters.verified") },
     { id: "new", label: t("admin:members.filters.new") },
   ];
-
-  const visibleMembers = useMemo(() => {
-    if (filter === "verified") return MEMBERS.filter((m) => m.verified);
-    if (filter === "new") return MEMBERS.filter((m) => m.newThisWeek);
-    return MEMBERS;
-  }, [filter]);
 
   return (
     <AdminShell
@@ -70,7 +69,7 @@ export function AdminMembersPage() {
           title={
             <>
               {t("admin:members.header.titleLine1", {
-                total: fmt.number(ACTIVE_MEMBER_COUNT),
+                total: fmt.number(total),
               })}
               <br />
               <Translation
@@ -79,7 +78,7 @@ export function AdminMembersPage() {
               />
             </>
           }
-          sub={t("admin:members.header.sub", { count: VERIFY_PENDING_COUNT })}
+          sub={t("admin:members.header.sub", { count: pendingCount })}
           actions={
             <Button variant="ghost" size="md">
               {t("admin:members.header.exportCta")}
@@ -101,15 +100,15 @@ export function AdminMembersPage() {
               role="group"
               aria-label={t("admin:members.filterAriaLabel")}
             >
-              {FILTERS.map((f) => (
+              {FILTERS.map((statusFilter) => (
                 <button
-                  key={f.id}
+                  key={statusFilter.id}
                   type="button"
-                  className={`${styles.filterPill} ${filter === f.id ? styles.filterPillOn : ""}`}
-                  aria-pressed={filter === f.id}
-                  onClick={() => setFilter(f.id)}
+                  className={`${styles.filterPill} ${filter === statusFilter.id ? styles.filterPillOn : ""}`}
+                  aria-pressed={filter === statusFilter.id}
+                  onClick={() => setFilter(statusFilter.id)}
                 >
-                  {f.label}
+                  {statusFilter.label}
                 </button>
               ))}
             </div>
@@ -118,11 +117,28 @@ export function AdminMembersPage() {
       </FadeIn>
 
       <FadeIn delay={140}>
-        {tab === "all" && (
-          <AdminMemberRows members={visibleMembers} onSelect={setSelected} />
-        )}
+        {tab === "all" &&
+          (isLoading ? (
+            <MemberRowsSkeleton />
+          ) : (
+            <>
+              <AdminMemberRows members={members} onSelect={setSelected} />
+              {hasNextPage && (
+                <div className={styles.loadMore}>
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                  >
+                    {t("admin:members.loadMore")}
+                  </Button>
+                </div>
+              )}
+            </>
+          ))}
         {tab === "pending" && <AdminVerifyQueue />}
-        {tab === "flagged" && <AdminFlaggedRows members={FLAGGED} />}
+        {tab === "flagged" && <AdminFlaggedRows members={flagged} />}
       </FadeIn>
 
       {selected && (
@@ -132,5 +148,19 @@ export function AdminMembersPage() {
         />
       )}
     </AdminShell>
+  );
+}
+
+function MemberRowsSkeleton() {
+  return (
+    <div className={styles.rows}>
+      {[0, 1, 2, 3, 4].map((skeletonIndex) => (
+        <SkeletonLine
+          key={skeletonIndex}
+          height={64}
+          style={{ borderRadius: 14 }}
+        />
+      ))}
+    </div>
   );
 }

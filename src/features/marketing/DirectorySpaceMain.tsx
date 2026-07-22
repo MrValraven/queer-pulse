@@ -3,6 +3,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, hoursRows, type Tint } from "./directoryPlaces";
 import { CAT_LABEL_KEYS, STAR_SLOTS } from "./directorySpace.data";
+import { DirectoryReviewForm } from "./DirectoryReviewForm";
 import s from "./DirectorySpacePage.module.css";
 
 const TINT: Record<Tint, string> = {
@@ -182,6 +183,7 @@ export function DirectorySpaceMain({ place }: Props) {
         <p className={s.subLine}>
           {t("marketing:directory.detail.reviewsSub")}
         </p>
+        <DirectoryReviewForm slug={place.slug} />
         {place.reviews.map((review) => (
           <div key={review.name} className={s.rev}>
             <div className={s.revHead}>

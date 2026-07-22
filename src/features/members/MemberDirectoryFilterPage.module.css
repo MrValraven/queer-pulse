@@ -109,6 +109,23 @@
   margin-bottom: 10px;
 }
 
+/* Grouped profession search results: each field's matches sit under their own
+   sub-heading. Outer gap (between fields) is looser than the label→chips gap
+   within a field, so proximity alone reads the groups. */
+.professionGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.professionGroupLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-block-end: 6px;
+}
+
 .range {
   display: flex;
   gap: 8px;

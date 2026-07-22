@@ -1,4 +1,5 @@
 import { MEMBERS, memberName } from "../members/data/members";
+import type { AvatarTint } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 
 /**
@@ -127,7 +128,18 @@ const NEW_SLUGS = [
   "daniel-oliveira",
 ] as const;
 
-export const NEW_THIS_WEEK = NEW_SLUGS.map((slug) => {
+/** A row in the sidebar's "New this week" widget — shared by the demo mock
+ *  (`NEW_THIS_WEEK`) and the live members mapped from the feed's `new_member`
+ *  items, so the widget renders one way regardless of mode. */
+export interface SidebarMember {
+  slug: string;
+  name: string;
+  initials: string;
+  tint: AvatarTint;
+  photo?: string;
+}
+
+export const NEW_THIS_WEEK: SidebarMember[] = NEW_SLUGS.map((slug) => {
   const member = MEMBERS[slug]!;
   return {
     slug,

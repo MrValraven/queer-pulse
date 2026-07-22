@@ -34,7 +34,6 @@ export interface AuthUser {
 
 export const fetchMe = () => apiGet<AuthUser>("/auth/me");
 export const postLogout = () => apiPost<{ ok: true }>("/auth/logout");
-export const postRefresh = () => apiPost<{ ok: true }>("/auth/refresh");
 export const bootstrapCsrf = ensureCsrf;
 
 /**

@@ -9,23 +9,12 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NominateChangemakerSection } from "./NominateChangemakerSection";
-import { CHANGEMAKERS } from "./changemakerStories";
+import { useChangemakers } from "./api/useChangemakers";
 import styles from "./ChangemakersPage.module.css";
-
-const STATS = [
-  { n: "34", labelKey: "community:changemakers.stat.profiled" },
-  { n: "6", labelKey: "community:changemakers.stat.causeAreas" },
-  { n: "1.2k", labelKey: "community:changemakers.stat.peopleHelped" },
-  { n: "12", labelKey: "community:changemakers.stat.activeCampaigns" },
-];
-
-const FEATURED = CHANGEMAKERS[0]!;
-const MAKERS = CHANGEMAKERS.slice(1);
 
 function MakerCardSkeleton() {
   return (
@@ -42,9 +31,14 @@ function MakerCardSkeleton() {
 }
 
 export function ChangemakersPage() {
-  const loading = useSimulatedLoad();
+  const { profiles, featured, stats, isLoading } = useChangemakers();
   const { openConnect } = useConnect();
   const { t } = useTranslation();
+
+  const makers = featured
+    ? profiles.filter((profile) => profile.slug !== featured.slug)
+    : profiles;
+  const loading = isLoading;
 
   return (
     <PageShell>
@@ -63,12 +57,12 @@ export function ChangemakersPage() {
             {t("community:changemakers.hero.lead")}
           </Reveal>
           <div className={styles.stats}>
-            {STATS.map((s, i) => (
+            {stats.map((stat, index) => (
               <Reveal
                 as="div"
-                key={s.labelKey}
+                key={stat.labelKey}
                 className={styles.stat}
-                delay={160 + i * 60}
+                delay={160 + index * 60}
               >
                 <div
                   className="n"
@@ -81,7 +75,7 @@ export function ChangemakersPage() {
                     lineHeight: 1,
                   }}
                 >
-                  {s.n}
+                  {stat.value}
                 </div>
                 <div
                   style={{
@@ -91,7 +85,7 @@ export function ChangemakersPage() {
                     lineHeight: 1.4,
                   }}
                 >
-                  {t(s.labelKey)}
+                  {t(stat.labelKey)}
                 </div>
               </Reveal>
             ))}
@@ -99,48 +93,50 @@ export function ChangemakersPage() {
         </div>
       </section>
 
-      <section className={styles.featured}>
-        <div className="wrap">
-          <Reveal as="div" className={styles.featLabel}>
-            {t("community:changemakers.featured.label")}
-          </Reveal>
-          <Reveal as="div" className={styles.featCard}>
-            <ImageSlot
-              tint={FEATURED.tint}
-              src={FEATURED.image}
-              width="100%"
-              height="100%"
-              radius={0}
-              placeholder={FEATURED.name}
-              initials={FEATURED.initials}
-            />
-            <div className={styles.featBody}>
-              <div className={styles.featCause}>{FEATURED.cause}</div>
-              <div className={styles.featName}>{FEATURED.name}</div>
-              <p className={styles.featBio}>{FEATURED.summary}</p>
-              <div className={styles.impact}>
-                {FEATURED.impact.map((row) => (
-                  <div key={row} className={styles.impactRow}>
-                    {row}
-                  </div>
-                ))}
+      {featured && (
+        <section className={styles.featured}>
+          <div className="wrap">
+            <Reveal as="div" className={styles.featLabel}>
+              {t("community:changemakers.featured.label")}
+            </Reveal>
+            <Reveal as="div" className={styles.featCard}>
+              <ImageSlot
+                tint={featured.tint}
+                src={featured.image}
+                width="100%"
+                height="100%"
+                radius={0}
+                placeholder={featured.name}
+                initials={featured.initials}
+              />
+              <div className={styles.featBody}>
+                <div className={styles.featCause}>{featured.cause}</div>
+                <div className={styles.featName}>{featured.name}</div>
+                <p className={styles.featBio}>{featured.summary}</p>
+                <div className={styles.impact}>
+                  {featured.impact.map((row) => (
+                    <div key={row} className={styles.impactRow}>
+                      {row}
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.featFoot}>
+                  <Button to={`/changemaker/${featured.slug}`}>
+                    {t("community:changemakers.featured.readStoryCta")}
+                  </Button>
+                  <Button variant="ghost" onClick={() => openConnect()}>
+                    {t("community:changemakers.featured.connectCta")}
+                  </Button>
+                </div>
               </div>
-              <div className={styles.featFoot}>
-                <Button to={`/changemaker/${FEATURED.slug}`}>
-                  {t("community:changemakers.featured.readStoryCta")}
-                </Button>
-                <Button variant="ghost" onClick={() => openConnect()}>
-                  {t("community:changemakers.featured.connectCta")}
-                </Button>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       <section className={styles.profiles}>
         <div className="wrap">
-          {!loading && MAKERS.length === 0 ? (
+          {!loading && makers.length === 0 ? (
             <EmptyState
               icon={<FiHeart />}
               title={t("community:changemakers.empty.title")}
@@ -149,34 +145,34 @@ export function ChangemakersPage() {
           ) : (
             <div className={styles.grid}>
               {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <MakerCardSkeleton key={i} />
+                ? Array.from({ length: 6 }).map((_, index) => (
+                    <MakerCardSkeleton key={index} />
                   ))
-                : MAKERS.map((m, i) => (
+                : makers.map((maker, index) => (
                     <FadeIn
                       as={Link}
-                      to={`/changemaker/${m.slug}`}
-                      key={m.name}
+                      to={`/changemaker/${maker.slug}`}
+                      key={maker.name}
                       className={styles.card}
-                      delay={Math.min(i, 8) * 60}
+                      delay={Math.min(index, 8) * 60}
                     >
                       <ImageSlot
-                        tint={m.tint}
-                        src={m.image}
+                        tint={maker.tint}
+                        src={maker.image}
                         width="100%"
                         height={180}
                         radius={0}
-                        placeholder={m.name}
-                        initials={m.initials}
+                        placeholder={maker.name}
+                        initials={maker.initials}
                       />
                       <div className={styles.cardBody}>
-                        <div className={styles.cardCause}>{m.cause}</div>
-                        <div className={styles.cardName}>{m.name}</div>
-                        <p className={styles.cardBio}>{m.summary}</p>
+                        <div className={styles.cardCause}>{maker.cause}</div>
+                        <div className={styles.cardName}>{maker.name}</div>
+                        <p className={styles.cardBio}>{maker.summary}</p>
                         <div className={styles.cardTags}>
-                          {m.tags.map((t) => (
-                            <span key={t} className={styles.cardTag}>
-                              {t}
+                          {maker.tags.map((tag) => (
+                            <span key={tag} className={styles.cardTag}>
+                              {tag}
                             </span>
                           ))}
                         </div>

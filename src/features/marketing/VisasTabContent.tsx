@@ -85,13 +85,6 @@ export function VisasTabContent({
             ))}
           </div>
         )}
-
-        {tab.note && (
-          <div className={styles.communityNote}>
-            <div className={styles.cnBar} />
-            <div className={styles.cnBody}>{tab.note}</div>
-          </div>
-        )}
       </div>
     </div>
   );

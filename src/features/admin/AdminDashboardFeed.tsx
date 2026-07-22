@@ -3,11 +3,17 @@ import { FiInfo } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ACTIVITY_FEED } from "./adminDashboard.data";
+import type { FeedItem } from "./adminDashboard.data";
 import { routes } from "../../app/routeMap";
 import styles from "./AdminDashboardPage.module.css";
 
-export function AdminDashboardFeed({ loading = false }: { loading?: boolean }) {
+export function AdminDashboardFeed({
+  feed,
+  loading = false,
+}: {
+  feed: FeedItem[];
+  loading?: boolean;
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.feedRail}>
@@ -28,7 +34,7 @@ export function AdminDashboardFeed({ loading = false }: { loading?: boolean }) {
                   <SkeletonLine height={42} style={{ borderRadius: 11 }} />
                 </div>
               ))
-            : ACTIVITY_FEED.map(
+            : feed.map(
                 ({
                   id,
                   tone,

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useSubmitCoopJoinRequest } from "./api/useSubmitCoopJoinRequest";
 import type { FormingCoop } from "./housingCoop.data";
 import styles from "./ApplicationModals.module.css";
 
@@ -25,12 +27,27 @@ export function JoinCoopModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [name, setName] = useState("");
   const [household, setHousehold] = useState("");
   const [note, setNote] = useState("");
-  const { sending, done, submit } = useSubmitFlow();
+  const joinRequest = useSubmitCoopJoinRequest();
   const coopName = `${coop.name}${coop.nameEm ? ` ${coop.nameEm}` : ""}`;
   const valid = name.trim().length > 1 && !!household;
+  const done = joinRequest.isSuccess;
+
+  const handleSubmit = () => {
+    if (!valid) return;
+    joinRequest.mutate(
+      {
+        slug: coop.id,
+        name: name.trim(),
+        householdSize: household,
+        note: note.trim() || undefined,
+      },
+      { onError: () => showToast(t("economy:joinCoop.error"), "error") },
+    );
+  };
 
   return (
     <ModalShell
@@ -111,10 +128,10 @@ export function JoinCoopModal({
             <Button
               variant="primary"
               size="lg"
-              disabled={!valid || sending}
-              onClick={() => valid && submit()}
+              disabled={!valid || joinRequest.isPending}
+              onClick={handleSubmit}
             >
-              {sending ? (
+              {joinRequest.isPending ? (
                 <Sending label={t("economy:joinCoop.sending")} />
               ) : (
                 t("economy:joinCoop.sendCta")

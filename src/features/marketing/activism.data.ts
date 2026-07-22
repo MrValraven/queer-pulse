@@ -11,27 +11,27 @@
  * authored text, not platform chrome.
  */
 export const ACTIVISM_NAV: { id: string; labelKey: string }[] = [
-  { id: "start", labelKey: "activism.nav.start" },
-  { id: "local", labelKey: "activism.nav.local" },
-  { id: "skills", labelKey: "activism.nav.skills" },
-  { id: "mobilise", labelKey: "activism.nav.mobilise" },
-  { id: "feel", labelKey: "activism.nav.feel" },
-  { id: "orgs", labelKey: "activism.nav.orgs" },
-  { id: "volunteer", labelKey: "activism.nav.volunteer" },
+  { id: "start", labelKey: "marketing:activism.nav.start" },
+  { id: "local", labelKey: "marketing:activism.nav.local" },
+  { id: "skills", labelKey: "marketing:activism.nav.skills" },
+  { id: "mobilise", labelKey: "marketing:activism.nav.mobilise" },
+  { id: "feel", labelKey: "marketing:activism.nav.feel" },
+  { id: "orgs", labelKey: "marketing:activism.nav.orgs" },
+  { id: "volunteer", labelKey: "marketing:activism.nav.volunteer" },
 ];
 
 export const CONVICTION_ITEMS: { wordKey: string; restKey: string }[] = [
   {
-    wordKey: "activism.conviction.local.word",
-    restKey: "activism.conviction.local.rest",
+    wordKey: "marketing:activism.conviction.local.word",
+    restKey: "marketing:activism.conviction.local.rest",
   },
   {
-    wordKey: "activism.conviction.real.word",
-    restKey: "activism.conviction.real.rest",
+    wordKey: "marketing:activism.conviction.real.word",
+    restKey: "marketing:activism.conviction.real.rest",
   },
   {
-    wordKey: "activism.conviction.yours.word",
-    restKey: "activism.conviction.yours.rest",
+    wordKey: "marketing:activism.conviction.yours.word",
+    restKey: "marketing:activism.conviction.yours.rest",
   },
 ];
 
@@ -39,42 +39,42 @@ export const START_STEPS: { num: string; titleKey: string; bodyKey: string }[] =
   [
     {
       num: "01",
-      titleKey: "activism.start.step1.title",
-      bodyKey: "activism.start.step1.body",
+      titleKey: "marketing:activism.start.step1.title",
+      bodyKey: "marketing:activism.start.step1.body",
     },
     {
       num: "02",
-      titleKey: "activism.start.step2.title",
-      bodyKey: "activism.start.step2.body",
+      titleKey: "marketing:activism.start.step2.title",
+      bodyKey: "marketing:activism.start.step2.body",
     },
     {
       num: "03",
-      titleKey: "activism.start.step3.title",
-      bodyKey: "activism.start.step3.body",
+      titleKey: "marketing:activism.start.step3.title",
+      bodyKey: "marketing:activism.start.step3.body",
     },
     {
       num: "04",
-      titleKey: "activism.start.step4.title",
-      bodyKey: "activism.start.step4.body",
+      titleKey: "marketing:activism.start.step4.title",
+      bodyKey: "marketing:activism.start.step4.body",
     },
   ];
 
 export const SKILLS_CARDS: { titleKey: string; bodyKey: string }[] = [
   {
-    titleKey: "activism.skills.design.title",
-    bodyKey: "activism.skills.design.body",
+    titleKey: "marketing:activism.skills.design.title",
+    bodyKey: "marketing:activism.skills.design.body",
   },
   {
-    titleKey: "activism.skills.tech.title",
-    bodyKey: "activism.skills.tech.body",
+    titleKey: "marketing:activism.skills.tech.title",
+    bodyKey: "marketing:activism.skills.tech.body",
   },
   {
-    titleKey: "activism.skills.food.title",
-    bodyKey: "activism.skills.food.body",
+    titleKey: "marketing:activism.skills.food.title",
+    bodyKey: "marketing:activism.skills.food.body",
   },
   {
-    titleKey: "activism.skills.care.title",
-    bodyKey: "activism.skills.care.body",
+    titleKey: "marketing:activism.skills.care.title",
+    bodyKey: "marketing:activism.skills.care.body",
   },
 ];
 

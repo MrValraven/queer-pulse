@@ -39,6 +39,8 @@ export interface ConnectionDTO {
   sentAgo?: string;
   /** The note attached to an incoming request. */
   requestMessage?: string;
+  /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
+  requestReason?: string;
   /** The vouch relationship between you and this member, if any. */
   vouchBadge?: ConnectionVouchBadge;
 }

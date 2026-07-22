@@ -43,7 +43,6 @@ export interface MemberCard {
   /** Years on QueerPulse. */
   years: number;
   /** Sort keys (lower = more recent / earlier). */
-  activeRank: number;
   joinedRank: number;
   vouchCount: number;
   mutualsCount: number;
@@ -684,7 +683,6 @@ function buildMembers(): MemberCard[] {
       identities,
       languages,
       years,
-      activeRank: i,
       joinedRank: count - i,
       vouchCount,
       mutualsCount,
@@ -704,15 +702,17 @@ export const TOTAL_MEMBERS = MEMBERS.length;
 /** How many cards are shown per page. */
 export const PAGE_SIZE = 12;
 
+// "Recently active" is deliberately absent: the backend tracks no last-active
+// timestamp, so in live mode it could only ever be a no-op (which is exactly the
+// "sort does nothing" bug it caused). Sorting is server-side in live mode, so a
+// key with no real ordering must not exist. "Recently joined" is the default.
 export type SortKey =
-  | "Recently active"
   | "Recently joined"
   | "Closest mutuals"
   | "A to Z"
   | "Most vouched";
 
 export const SORTS: SortKey[] = [
-  "Recently active",
   "Recently joined",
   "Closest mutuals",
   "A to Z",
@@ -724,11 +724,20 @@ export const SORTS: SortKey[] = [
  *  the internal comparator id (see `sortMembers`); only the on-screen label
  *  is translated. */
 export const SORT_LABEL_KEY: Record<SortKey, string> = {
-  "Recently active": "members:directory.sort.recentlyActive",
   "Recently joined": "members:directory.sort.recentlyJoined",
   "Closest mutuals": "members:directory.sort.closestMutuals",
   "A to Z": "members:directory.sort.aToZ",
   "Most vouched": "members:directory.sort.mostVouched",
+};
+
+/** Wire token per sort key for the live directory API's `?sort=`. Must match the
+ *  backend `MemberSort` enum. Demo mode sorts in the browser (see `sortMembers`)
+ *  and ignores this; live mode sends it and renders the server's order. */
+export const SORT_PARAM: Record<SortKey, string> = {
+  "Recently joined": "recentlyJoined",
+  "Closest mutuals": "closestMutuals",
+  "A to Z": "aToZ",
+  "Most vouched": "mostVouched",
 };
 
 /** The chips shown applied at the top, with the control + value each maps to. */
@@ -817,8 +826,6 @@ export function matchesFilters(m: MemberCard, f: FilterState): boolean {
 export function sortMembers(list: MemberCard[], sort: SortKey): MemberCard[] {
   const out = [...list];
   switch (sort) {
-    case "Recently active":
-      return out.sort((a, b) => a.activeRank - b.activeRank);
     case "Recently joined":
       return out.sort((a, b) => a.joinedRank - b.joinedRank);
     case "Closest mutuals":

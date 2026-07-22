@@ -726,6 +726,7 @@ export const gatherings: Catalog = {
   "host.sidebar.spacesTitle": "Espaços parceiros",
   "host.sidebar.spacesBody":
     "Espaços que já receberam convívios da QueerPulse e estão disponíveis para receber mais.",
+  "host.sidebar.capacity": "até {max}",
 
   // ── Host dashboard, manage, cohosts, QR, album ────────────────────────────
   // ── Day-of dashboard (GatheringDashboardPage / GatheringDashboardCards) ────

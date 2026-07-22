@@ -735,3 +735,24 @@ export function getSpace(slug: string | undefined): AnySpace | undefined {
   if (r) return { kind: "removed", data: r };
   return undefined;
 }
+
+/**
+ * Demo-mode stats for the safe-spaces directory header, derived from the mock
+ * arrays the same way the live backend derives them from real rows. `reviews`
+ * sums each verified space's review count out of its "N reviews" string.
+ */
+export function demoStats(): {
+  verified: number;
+  reviews: number;
+  removed: number;
+} {
+  const reviews = VERIFIED_SPACES.reduce(
+    (total, space) => total + (parseInt(space.reviews, 10) || 0),
+    0,
+  );
+  return {
+    verified: VERIFIED_SPACES.length,
+    reviews,
+    removed: REMOVED_SPACES.length,
+  };
+}

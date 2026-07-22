@@ -81,48 +81,51 @@ export function MapVenueCard({
           </span>
         ))}
       </div>
-      {isExpanded && (
-        <div className={s.vcBody}>
-          <div className={s.vcRow}>
-            <span className={s.vcRowIcon}>
-              <FiMapPin />
-            </span>
-            <span>{v.address}</span>
-          </div>
-          <div className={s.vcRow}>
-            <span className={s.vcRowIcon}>◷</span>
-            <span>{v.hours}</span>
-          </div>
-          <div className={s.vcNote}>{v.note}</div>
-          <div className={s.vcBeenRow}>
-            <div className={s.beenCount}>
-              <Translation
-                i18nKey="marketing:map.venueCard.beenCount"
-                values={{ count: beenCount }}
-                components={{ b: <b /> }}
-              />
+      <div className={s.vcReveal} data-open={isExpanded}>
+        <div className={s.vcRevealInner}>
+          <div className={s.vcBody} aria-hidden={!isExpanded}>
+            <div className={s.vcRow}>
+              <span className={s.vcRowIcon}>
+                <FiMapPin />
+              </span>
+              <span>{v.address}</span>
             </div>
-            <button
-              type="button"
-              className={[s.beenBtn, marked && s.beenDone]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!marked) onMarkBeen();
-              }}
-            >
-              {marked ? (
-                <>
-                  <FiCheck /> {t("marketing:map.venueCard.beenThere")}
-                </>
-              ) : (
-                t("marketing:map.venueCard.markBeen")
-              )}
-            </button>
+            <div className={s.vcRow}>
+              <span className={s.vcRowIcon}>◷</span>
+              <span>{v.hours}</span>
+            </div>
+            <div className={s.vcNote}>{v.note}</div>
+            <div className={s.vcBeenRow}>
+              <div className={s.beenCount}>
+                <Translation
+                  i18nKey="marketing:map.venueCard.beenCount"
+                  values={{ count: beenCount }}
+                  components={{ b: <b /> }}
+                />
+              </div>
+              <button
+                type="button"
+                tabIndex={isExpanded ? 0 : -1}
+                className={[s.beenBtn, marked && s.beenDone]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!marked) onMarkBeen();
+                }}
+              >
+                {marked ? (
+                  <>
+                    <FiCheck /> {t("marketing:map.venueCard.beenThere")}
+                  </>
+                ) : (
+                  t("marketing:map.venueCard.markBeen")
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

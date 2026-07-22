@@ -40,6 +40,10 @@ export interface StatCard {
   };
   footKey: string;
   footValues?: Record<string, string | number>;
+  /** True when the backing metric has no data yet (e.g. no sustainer
+   *  payments/resolved reports recorded) — E4 renders "not measured yet"
+   *  instead of counting up `value` (which stays 0 as a safe placeholder). */
+  notMeasured?: boolean;
 }
 
 export const METRICS: StatCard[] = [
@@ -152,8 +156,8 @@ export interface WeekBar {
    *  language; "last"/"this" resolve through WEEK_LABEL_KEYS below since those
    *  two are real English words shown to the moderator. */
   week: string;
-  /** Stacking order: outing → harassment → spam → vouch. */
-  values: [outing: number, harassment: number, spam: number, vouch: number];
+  /** Stacking order: outing → harassment → spam → other. */
+  values: [outing: number, harassment: number, spam: number, other: number];
 }
 
 export const REPORT_WEEKS: WeekBar[] = [
@@ -191,8 +195,10 @@ export const REPORT_SERIES = [
     color: "var(--amber)",
   },
   {
-    id: "vouchAbuse",
-    labelKey: "admin:dashboard.charts.series.vouchAbuse",
+    // Relabeled from "vouch abuse" — the backend's 4th `reportsByType` bucket
+    // is a general catch-all, not specifically vouch-abuse reports.
+    id: "other",
+    labelKey: "admin:dashboard.charts.series.other",
     color: "var(--violet)",
   },
 ] as const;
@@ -203,7 +209,10 @@ export interface GrowthPoint {
   /** `null` means "no tick label at this point" (design keeps the axis sparse). */
   date: Date | null;
   joined: number;
-  churned: number;
+  /** `null` means "not measured yet" (no churn data recorded for this
+   *  period) — E4 renders the churn line only across points with a real
+   *  number, never a fabricated 0. */
+  churned: number | null;
   /** True on the labelled marker point (the Pride spike). */
   spike?: boolean;
 }

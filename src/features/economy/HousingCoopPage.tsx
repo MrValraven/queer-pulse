@@ -37,12 +37,11 @@ export function HousingCoopPage() {
       <CoopGrid
         onCta={onCta}
         onSeeAll={() => showToast(t("economy:housingCoop.toast.seeAll"))}
-      />
-      <CoopTemplates
-        onDownload={(name) =>
-          showToast(t("economy:housingCoop.toast.preparingDownload", { name }))
+        onStart={() =>
+          showToast(t("economy:housingCoop.toast.postHelp"), "success")
         }
       />
+      <CoopTemplates />
       <CoopStartCta
         onPost={() =>
           showToast(t("economy:housingCoop.toast.postHelp"), "success")

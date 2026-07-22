@@ -1,5 +1,4 @@
 import { FadeIn } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { ADMIN_PROFILE } from "../../shared/components/layout/adminNav.data";
 import { Translation } from "../../shared/i18n/Translation";
@@ -12,12 +11,14 @@ import {
   ResponseTimeChart,
 } from "./AdminDashboardCharts";
 import { AdminDashboardFeed } from "./AdminDashboardFeed";
+import { useAdminOverview } from "./api/useAdminOverview";
 import styles from "./AdminDashboardPage.module.css";
 
 export function AdminDashboardPage() {
-  // Short skeleton pass: stat numbers, charts and the feed shimmer in, then the
-  // real content reveals and its count-up / draw animations play.
-  const loading = useSimulatedLoad(900);
+  // Fixtures in demo mode, the live `GET /admin/overview` DTO otherwise — the
+  // skeleton/count-up/draw animations below key off `isLoading`, same as the
+  // old simulated-load shimmer did.
+  const { data, isLoading } = useAdminOverview();
 
   return (
     <AdminShell
@@ -33,19 +34,29 @@ export function AdminDashboardPage() {
         <AdminDashboardHeader />
       </FadeIn>
 
-      <AdminStatGrid loading={loading} />
+      <AdminStatGrid metrics={data?.metrics ?? []} loading={isLoading} />
 
       <FadeIn delay={120}>
         <div className={styles.dashGrid}>
           <div className={styles.dashLeft}>
-            <AdminTriageQueue />
-            <ReportsByTypeChart loading={loading} />
+            <AdminTriageQueue queue={data?.triage ?? []} />
+            <ReportsByTypeChart
+              weeks={data?.reportWeeks ?? []}
+              series={data?.reportSeries ?? []}
+              loading={isLoading}
+            />
             <div className={styles.chart2up}>
-              <MemberGrowthChart loading={loading} />
-              <ResponseTimeChart loading={loading} />
+              <MemberGrowthChart
+                points={data?.memberGrowth ?? []}
+                loading={isLoading}
+              />
+              <ResponseTimeChart
+                buckets={data?.responseDist ?? null}
+                loading={isLoading}
+              />
             </div>
           </div>
-          <AdminDashboardFeed loading={loading} />
+          <AdminDashboardFeed feed={data?.feed ?? []} loading={isLoading} />
         </div>
       </FadeIn>
     </AdminShell>

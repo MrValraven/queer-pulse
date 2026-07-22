@@ -1,7 +1,9 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { getPlace, type Tint } from "./directoryPlaces";
+import { type Tint } from "./directoryPlaces";
+import { useDirectoryPlace } from "./api/useDirectory";
 import { routes } from "../../app/routeMap";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DirectorySpaceAside } from "./DirectorySpaceAside";
@@ -16,7 +18,27 @@ const GCELL: Record<Tint, string> = {
 export function DirectorySpacePage() {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const place = getPlace(slug);
+  const { place, isLoading } = useDirectoryPlace(slug);
+
+  // In live mode the fetch is async: hold the layout while it's in flight
+  // rather than redirecting on the initial undefined. Only redirect once the
+  // read has settled with no matching live listing.
+  if (isLoading) {
+    return (
+      <PageShell>
+        <div className={s.page}>
+          <div className={s.grid}>
+            <div>
+              <SkeletonLine width="45%" height={16} />
+              <SkeletonLine width="80%" height={34} style={{ marginTop: 12 }} />
+              <SkeletonLine width="60%" height={16} style={{ marginTop: 12 }} />
+            </div>
+            <SkeletonLine width="100%" height={220} />
+          </div>
+        </div>
+      </PageShell>
+    );
+  }
   if (!place) return <Navigate to={routes.directory} replace />;
 
   return (

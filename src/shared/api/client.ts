@@ -103,22 +103,68 @@ export function ensureCsrf(): Promise<void> {
   return csrfFetch;
 }
 
+// A cross-tab mutex name. Refresh tokens ROTATE on every use, and the backend
+// treats a second presentation of an already-rotated token as theft: it revokes
+// the member's ENTIRE token family (see auth.service `rotateRefreshToken` +
+// `revokeFamily`), logging every session out. The in-memory single-flight below
+// only dedupes refreshes WITHIN one tab; two tabs sharing the one refresh-token
+// cookie would still double-spend it once the 15-minute access token lapses and
+// both fire a request. Serialising every tab's refresh through one Web Lock
+// means each POST /auth/refresh runs against the cookie the previous holder just
+// rotated in, so a token is never replayed and the family is never nuked.
+const REFRESH_LOCK = "qp.auth.refresh";
+
+/** The Web Locks manager, or undefined where unsupported (SSR/prerender, jsdom,
+ *  very old Safari). Callers fall back to the in-tab single-flight alone. */
+function lockManager(): LockManager | undefined {
+  if (typeof navigator === "undefined") return undefined;
+  return navigator.locks;
+}
+
+/** Run `task` while holding the cross-tab refresh lock, or directly when the
+ *  Web Locks API is unavailable. */
+function withRefreshLock<T>(task: () => Promise<T>): Promise<T> {
+  const locks = lockManager();
+  if (!locks) return task();
+  return locks.request(REFRESH_LOCK, task);
+}
+
+/** POST /auth/refresh once; resolves true on a 2xx, false on anything else. */
+function runRefresh(): Promise<boolean> {
+  return fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+    headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+  })
+    .then((r) => r.ok)
+    .catch(() => false);
+}
+
 let refreshing: Promise<boolean> | null = null;
-/** Single-flight refresh: concurrent 401s share one POST /auth/refresh. */
+/**
+ * Coalesce refreshes into a single network call across two layers:
+ *  - `refreshing` collapses concurrent 401s in THIS tab into one request;
+ *  - `withRefreshLock` serialises that request against OTHER tabs so the
+ *    rotating refresh token is never double-spent (see REFRESH_LOCK).
+ */
 function refreshOnce(): Promise<boolean> {
   if (!refreshing) {
-    refreshing = fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: "POST",
-      credentials: "include",
-      headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
-    })
-      .then((r) => r.ok)
-      .catch(() => false)
-      .finally(() => {
-        refreshing = null;
-      });
+    refreshing = withRefreshLock(runRefresh).finally(() => {
+      refreshing = null;
+    });
   }
   return refreshing;
+}
+
+/**
+ * Perform a single, cross-tab-coordinated token refresh. Exposed so the auth
+ * layer's explicit `refresh()` (after a role change, vouch, genesis bootstrap,
+ * etc.) shares the very same single-flight + lock as the automatic on-401
+ * refresh — rather than firing an independent POST /auth/refresh that would race
+ * it and double-spend the rotating token. Resolves true on success.
+ */
+export function refreshSession(): Promise<boolean> {
+  return refreshOnce();
 }
 
 const SAFE = new Set(["GET", "HEAD", "OPTIONS"]);

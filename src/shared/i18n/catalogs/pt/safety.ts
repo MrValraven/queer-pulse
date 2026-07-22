@@ -624,6 +624,7 @@ export const safety: Catalog = {
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "← Espaços seguros",
   "spaces.detail.trust.title": "Espaço seguro verificado · Nível {tier}",
+  "spaces.detail.trust.titleNoTier": "Espaço seguro verificado",
   "spaces.detail.trust.body":
     "<strong>Este espaço cumpre os critérios de Espaços Seguros</strong> e foi visitado por pessoas moderadoras da QueerPulse nos últimos 12 meses. Última reverificação em <strong>{date}</strong> · {verifier}.",
   "spaces.detail.relyTitle": "Com o que podes contar, <em>aqui</em>",

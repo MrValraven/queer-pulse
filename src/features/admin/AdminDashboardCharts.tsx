@@ -2,19 +2,43 @@ import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import {
-  REPORT_WEEKS,
-  REPORT_SERIES,
-  MEMBER_GROWTH,
-  RESPONSE_DIST,
   WEEK_LABEL_KEYS,
+  type WeekBar,
+  type GrowthPoint,
+  type DistBucket,
 } from "./adminDashboard.data";
+import { chartMax } from "./api/adminOverview.adapters";
 import styles from "./AdminDashboardPage.module.css";
+
+interface ReportSeriesItem {
+  id: string;
+  labelKey: string;
+  color: string;
+}
+
+/** Evenly-spaced "nice" gridline values from 0 up to `count * round(max/count)`
+ *  — reproduces the fixture's own hand-picked ticks (0/4/8/12, 0/140/.../560,
+ *  0/40/80) exactly when fed the fixture's hardcoded max, and generalizes the
+ *  same shape to a live `chartMax(...)` axis. */
+function axisTicks(max: number, count: number): number[] {
+  const step = Math.round(max / count);
+  return Array.from({ length: count + 1 }, (_, index) => step * index);
+}
 
 type ChartProps = { loading?: boolean };
 
 // ── 1 · Reports by type (stacked bar) ───────────────────────────────────────
 
-export function ReportsByTypeChart({ loading = false }: ChartProps) {
+interface ReportsByTypeChartProps extends ChartProps {
+  weeks: WeekBar[];
+  series: readonly ReportSeriesItem[];
+}
+
+export function ReportsByTypeChart({
+  weeks,
+  series,
+  loading = false,
+}: ReportsByTypeChartProps) {
   const { t } = useTranslation();
   const W = 640,
     H = 240,
@@ -23,8 +47,9 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
     padT = 12;
   const gw = W - padL - 10,
     gh = H - padB - padT;
-  const max = 14;
-  const colW = gw / REPORT_WEEKS.length;
+  const max = chartMax(weeks.flatMap((wk) => wk.values));
+  const ticks = axisTicks(max, 3);
+  const colW = gw / Math.max(weeks.length, 1);
   const bw = colW * 0.52;
 
   return (
@@ -39,10 +64,13 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
           </div>
         </div>
         <div className={styles.chLegend}>
-          {REPORT_SERIES.map((s) => (
-            <span key={s.id} className={styles.chLeg}>
-              <span className={styles.chSw} style={{ background: s.color }} />
-              {t(s.labelKey)}
+          {series.map((seriesItem) => (
+            <span key={seriesItem.id} className={styles.chLeg}>
+              <span
+                className={styles.chSw}
+                style={{ background: seriesItem.color }}
+              />
+              {t(seriesItem.labelKey)}
             </span>
           ))}
         </div>
@@ -56,7 +84,7 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
           role="img"
           aria-label={t("admin:dashboard.charts.reportsByType.ariaLabel")}
         >
-          {[0, 4, 8, 12].map((v) => {
+          {ticks.map((v) => {
             const y = padT + gh - (v / max) * gh;
             return (
               <g key={v}>
@@ -79,10 +107,10 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
               </g>
             );
           })}
-          {REPORT_WEEKS.map((wk, i) => {
+          {weeks.map((wk, i) => {
             const x = padL + (i + 0.5) * colW - bw / 2;
             let acc = 0;
-            const recent = i >= REPORT_WEEKS.length - 2;
+            const recent = i >= weeks.length - 2;
             return (
               <g key={wk.week}>
                 {wk.values.map((val, si) => {
@@ -98,7 +126,7 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
                       y={y}
                       width={bw}
                       height={bh}
-                      fill={REPORT_SERIES[si]!.color}
+                      fill={series[si]?.color}
                       style={{ animationDelay: `${i * 55 + si * 20}ms` }}
                     />
                   );
@@ -109,9 +137,7 @@ export function ReportsByTypeChart({ loading = false }: ChartProps) {
                   textAnchor="middle"
                   className={recent ? styles.chLabelStrong : styles.chLabel}
                 >
-                  {WEEK_LABEL_KEYS[wk.week]
-                    ? t(WEEK_LABEL_KEYS[wk.week]!)
-                    : wk.week}
+                  {WEEK_LABEL_KEYS[wk.week] ? t(WEEK_LABEL_KEYS[wk.week]!) : wk.week}
                 </text>
               </g>
             );
@@ -135,7 +161,14 @@ function smoothPath(pts: [number, number][]) {
   return d;
 }
 
-export function MemberGrowthChart({ loading = false }: ChartProps) {
+interface MemberGrowthChartProps extends ChartProps {
+  points: GrowthPoint[];
+}
+
+export function MemberGrowthChart({
+  points,
+  loading = false,
+}: MemberGrowthChartProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const W = 360,
@@ -146,21 +179,27 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
     padB = 26;
   const gw = W - padL - padR,
     gh = H - padT - padB;
-  const max = 560;
-  const n = MEMBER_GROWTH.length;
-  const px = (i: number) => padL + i * (gw / (n - 1));
+  const knownChurned = points
+    .map((p) => p.churned)
+    .filter((v): v is number => v !== null);
+  const max = chartMax([...points.map((p) => p.joined), ...knownChurned]);
+  const n = points.length;
+  const px = (i: number) => padL + i * (gw / Math.max(n - 1, 1));
   const py = (v: number) => padT + gh - (v / max) * gh;
-  const joined = MEMBER_GROWTH.map((p, i): [number, number] => [
-    px(i),
-    py(p.joined),
-  ]);
-  const churned = MEMBER_GROWTH.map((p, i): [number, number] => [
-    px(i),
-    py(p.churned),
-  ]);
-  const area = `${smoothPath(joined)} L${joined[n - 1]![0]} ${padT + gh} L${joined[0]![0]} ${padT + gh} Z`;
-  const spikeIdx = MEMBER_GROWTH.findIndex((p) => p.spike);
+  const joined = points.map((p, i): [number, number] => [px(i), py(p.joined)]);
+  const churnedPoints = points
+    .map((point, index): [number, number] | null =>
+      point.churned === null ? null : [px(index), py(point.churned)],
+    )
+    .filter((point): point is [number, number] => point !== null);
+  const hasChurnData = churnedPoints.length > 0;
+  const area =
+    n > 0
+      ? `${smoothPath(joined)} L${joined[n - 1]![0]} ${padT + gh} L${joined[0]![0]} ${padT + gh} Z`
+      : "";
+  const spikeIdx = points.findIndex((p) => p.spike);
   const spike = joined[spikeIdx];
+  const ticks = axisTicks(max, 4);
 
   return (
     <figure className={styles.chartCard}>
@@ -179,7 +218,7 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
           role="img"
           aria-label={t("admin:dashboard.charts.memberGrowth.ariaLabel")}
         >
-          {[0, 140, 280, 420, 560].map((v) => (
+          {ticks.map((v) => (
             <line
               key={v}
               x1={padL}
@@ -190,26 +229,30 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
               strokeWidth={1}
             />
           ))}
-          <path d={area} fill="rgba(var(--jade-rgb),.10)" />
-          <path
-            d={smoothPath(churned)}
-            fill="none"
-            stroke="var(--accent-ink)"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeDasharray="1 5"
-          />
-          <path
-            className={styles.lineDraw}
-            d={smoothPath(joined)}
-            pathLength={1}
-            fill="none"
-            stroke="var(--jade)"
-            strokeWidth={2.6}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          {n > 0 && <path d={area} fill="rgba(var(--jade-rgb),.10)" />}
+          {hasChurnData && (
+            <path
+              d={smoothPath(churnedPoints)}
+              fill="none"
+              stroke="var(--accent-ink)"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray="1 5"
+            />
+          )}
+          {n > 0 && (
+            <path
+              className={styles.lineDraw}
+              d={smoothPath(joined)}
+              pathLength={1}
+              fill="none"
+              stroke="var(--jade)"
+              strokeWidth={2.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
           {spike && (
             <>
               <circle
@@ -230,7 +273,7 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
               </text>
             </>
           )}
-          {MEMBER_GROWTH.map((p, i) =>
+          {points.map((p, i) =>
             p.date ? (
               <text
                 key={i}
@@ -253,13 +296,20 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
           />
           {t("admin:dashboard.charts.legend.joined")}
         </span>
-        <span className={styles.chLeg}>
-          <span
-            className={styles.chSwDot}
-            style={{ background: "var(--accent-ink)" }}
-          />
-          {t("admin:dashboard.charts.legend.churned")}
-        </span>
+        {hasChurnData ? (
+          <span className={styles.chLeg}>
+            <span
+              className={styles.chSwDot}
+              style={{ background: "var(--accent-ink)" }}
+            />
+            {t("admin:dashboard.charts.legend.churned")}
+          </span>
+        ) : (
+          <span className={styles.chLegMuted}>
+            {t("admin:dashboard.charts.legend.churned")} ·{" "}
+            {t("admin:dashboard.notMeasuredYet")}
+          </span>
+        )}
       </div>
     </figure>
   );
@@ -267,7 +317,14 @@ export function MemberGrowthChart({ loading = false }: ChartProps) {
 
 // ── 3 · Response time (distribution) ────────────────────────────────────────
 
-export function ResponseTimeChart({ loading = false }: ChartProps) {
+interface ResponseTimeChartProps extends ChartProps {
+  buckets: DistBucket[] | null;
+}
+
+export function ResponseTimeChart({
+  buckets,
+  loading = false,
+}: ResponseTimeChartProps) {
   const { t } = useTranslation();
   const W = 360,
     H = 220,
@@ -277,9 +334,10 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
     padB = 30;
   const gw = W - padL - padR,
     gh = H - padT - padB;
-  const max = 80;
-  const slaIdx = RESPONSE_DIST.findIndex((b) => b.overSla);
-  const colW = gw / RESPONSE_DIST.length;
+  const max = buckets ? chartMax(buckets.map((b) => b.value)) : 0;
+  const ticks = axisTicks(max, 2);
+  const slaIdx = buckets?.findIndex((b) => b.overSla) ?? -1;
+  const colW = gw / Math.max(buckets?.length ?? 1, 1);
   const bw = colW * 0.6;
   const slaX = padL + slaIdx * colW;
 
@@ -293,6 +351,10 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
       </div>
       {loading ? (
         <SkeletonLine height={180} style={{ borderRadius: 14, marginTop: 8 }} />
+      ) : buckets === null ? (
+        <p className={styles.chNotMeasured}>
+          {t("admin:dashboard.notMeasuredYet")}
+        </p>
       ) : (
         <svg
           viewBox={`0 0 ${W} ${H}`}
@@ -300,7 +362,7 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
           role="img"
           aria-label={t("admin:dashboard.charts.responseTime.ariaLabel")}
         >
-          {[0, 40, 80].map((v) => {
+          {ticks.map((v) => {
             const y = padT + gh - (v / max) * gh;
             return (
               <g key={v}>
@@ -318,7 +380,7 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
               </g>
             );
           })}
-          {RESPONSE_DIST.map((b, i) => {
+          {buckets.map((b, i) => {
             const bh = (b.value / max) * gh;
             const x = padL + (i + 0.5) * colW - bw / 2;
             const y = padT + gh - bh;
@@ -346,34 +408,45 @@ export function ResponseTimeChart({ loading = false }: ChartProps) {
               </g>
             );
           })}
-          <line
-            x1={slaX}
-            y1={padT - 2}
-            x2={slaX}
-            y2={padT + gh}
-            stroke="var(--danger)"
-            strokeWidth={1.4}
-            strokeDasharray="4 4"
-            opacity={0.6}
-          />
-          <text x={slaX + 5} y={padT + 8} className={styles.chSla}>
-            {t("admin:dashboard.charts.responseTime.slaLabel", { hours: "6h" })}
-          </text>
+          {slaIdx >= 0 && (
+            <>
+              <line
+                x1={slaX}
+                y1={padT - 2}
+                x2={slaX}
+                y2={padT + gh}
+                stroke="var(--danger)"
+                strokeWidth={1.4}
+                strokeDasharray="4 4"
+                opacity={0.6}
+              />
+              <text x={slaX + 5} y={padT + 8} className={styles.chSla}>
+                {t("admin:dashboard.charts.responseTime.slaLabel", {
+                  hours: "6h",
+                })}
+              </text>
+            </>
+          )}
         </svg>
       )}
-      <div className={styles.chLegend}>
-        <span className={styles.chLeg}>
-          <span className={styles.chSw} style={{ background: "var(--jade)" }} />
-          {t("admin:dashboard.charts.legend.withinSla")}
-        </span>
-        <span className={styles.chLeg}>
-          <span
-            className={styles.chSw}
-            style={{ background: "var(--amber)" }}
-          />
-          {t("admin:dashboard.charts.legend.overSla", { hours: "6h" })}
-        </span>
-      </div>
+      {buckets !== null && (
+        <div className={styles.chLegend}>
+          <span className={styles.chLeg}>
+            <span
+              className={styles.chSw}
+              style={{ background: "var(--jade)" }}
+            />
+            {t("admin:dashboard.charts.legend.withinSla")}
+          </span>
+          <span className={styles.chLeg}>
+            <span
+              className={styles.chSw}
+              style={{ background: "var(--amber)" }}
+            />
+            {t("admin:dashboard.charts.legend.overSla", { hours: "6h" })}
+          </span>
+        </div>
+      )}
     </figure>
   );
 }

@@ -61,6 +61,12 @@
   gap: 10px;
 }
 
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 .emptyLine {
   font-size: 14px;
   color: var(--ink-60);

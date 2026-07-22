@@ -280,33 +280,6 @@
   }
 }
 
-.communityNote {
-  background: rgba(var(--accent-rgb), 0.06);
-  border: 1px solid rgba(var(--accent-rgb), 0.18);
-  border-radius: 18px;
-  padding: 22px 26px;
-  margin-bottom: 36px;
-  display: flex;
-  gap: 14px;
-}
-.cnBar {
-  width: 3px;
-  background: var(--accent);
-  border-radius: 2px;
-  flex: none;
-}
-.cnBody {
-  font-size: 14.5px;
-  color: var(--ink-60);
-  line-height: 1.68;
-  font-style: italic;
-}
-.cnBody strong {
-  font-style: normal;
-  color: var(--ink);
-  font-weight: 600;
-}
-
 .steps {
   display: flex;
   flex-direction: column;
@@ -425,67 +398,19 @@
 .lawyerSec {
   padding: 72px 0 100px;
 }
-.reviewGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+.lawyerEmpty {
   margin-top: 28px;
-}
-.reviewCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
-  padding: 20px 22px;
+  padding: 28px 30px;
+  max-width: 620px;
 }
-.rvTop {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.rvAv {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 15px;
-  flex: none;
-}
-.rvName {
+.lawyerEmpty p {
   font-size: 14.5px;
-  font-weight: 600;
-  color: var(--ink);
-}
-.rvContext {
-  font-size: 12px;
-  color: var(--ink-40);
-  margin-top: 2px;
-}
-.rvStars {
-  display: inline-flex;
-  align-items: center;
-  gap: 1px;
-  color: var(--accent);
-  font-size: 12px;
-  margin-bottom: 7px;
-}
-.rvStarOn {
-  fill: currentColor;
-}
-.rvQuote {
-  font-size: 13.5px;
   color: var(--ink-60);
-  line-height: 1.6;
-  font-style: italic;
-  border-left: 2px solid rgba(var(--accent-rgb), 0.3);
-  padding-left: 12px;
-}
-.lawyerCta {
-  margin-top: 36px;
+  line-height: 1.68;
+  margin: 0 0 20px;
 }
 
 @media (max-width: 640px) {

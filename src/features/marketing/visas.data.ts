@@ -1,4 +1,3 @@
-import { type ReactNode } from "react";
 import { routes } from "../../app/routeMap";
 
 export type TabId = "eu" | "d7" | "d8" | "work" | "partner" | "citizenship";
@@ -26,9 +25,6 @@ export interface Tab {
   headTextKey: string;
   cards: InfoCard[];
   steps?: Step[];
-  /** Anonymised "Community note" quote attributed to a member — testimonial
-   * content, left English per the i18n sweep's directoryPlaces precedent. */
-  note?: ReactNode;
 }
 
 export const ROUTES: {
@@ -101,14 +97,6 @@ export const TABS: Tab[] = [
         link: { labelKey: "marketing:visas.tabs.eu.card3.link", href: "#" },
       },
     ],
-    note: (
-      <>
-        <strong>Community note:</strong> "The Câmara process was genuinely easy.
-        The more annoying step is getting your NIF and NISS sorted — do both as
-        early as possible, you'll need them for everything." —{" "}
-        <strong>Member, moved from Germany</strong>
-      </>
-    ),
   },
   {
     id: "d7",
@@ -154,14 +142,6 @@ export const TABS: Tab[] = [
         textKey: "marketing:visas.tabs.d7.step4.text",
       },
     ],
-    note: (
-      <>
-        <strong>Community note:</strong> "AIMA appointments are the bottleneck
-        right now. Book as soon as you land — even if it's 3 months out. Having
-        a lawyer help with the initial consulate application saved us from a
-        rejection." — <strong>Member, moved from Canada</strong>
-      </>
-    ),
   },
   {
     id: "d8",
@@ -187,14 +167,6 @@ export const TABS: Tab[] = [
         link: { labelKey: "marketing:visas.tabs.d8.card3.link", href: LEGAL },
       },
     ],
-    note: (
-      <>
-        <strong>Community note:</strong> "D8 was the right route for me — I work
-        for a UK company. The income requirement was challenging to prove but
-        the consulate was clear about what they wanted. The whole process took
-        about four months." — <strong>Member, moved from the UK</strong>
-      </>
-    ),
   },
   {
     id: "work",
@@ -259,14 +231,6 @@ export const TABS: Tab[] = [
         bodyKey: "marketing:visas.tabs.partner.card4.body",
       },
     ],
-    note: (
-      <>
-        <strong>Community note:</strong> "We got married at the Conservatória
-        before starting our residency applications — it made everything cleaner.
-        Portugal treated us exactly like any married couple, no complications."
-        — <strong>Member couple, moved from Brazil and UK</strong>
-      </>
-    ),
   },
   {
     id: "citizenship",
@@ -324,46 +288,3 @@ export const GROUND: { labelKey: string; titleKey: string; bodyKey: string }[] =
       bodyKey: "marketing:visas.ground.sns.body",
     },
   ];
-
-// Named reviewed lawyers with attributed quotes/testimonials — content, left
-// English per the i18n sweep's directoryPlaces/testimonials precedent.
-export const LAWYERS: {
-  initials: string;
-  bg: string;
-  color: string;
-  name: string;
-  context: string;
-  stars: number;
-  quote: string;
-}[] = [
-  {
-    initials: "SM",
-    bg: "rgba(74,140,111,.15)",
-    color: "var(--jade)",
-    name: "Sofia Mendes",
-    context: "Immigration law · Chiado",
-    stars: 5,
-    quote:
-      '"Handled our same-sex couple application with complete ease. Knew the Coman ruling and how to apply it. Clear pricing, no surprises. Two members have used her this year."',
-  },
-  {
-    initials: "JF",
-    bg: "rgba(232,119,90,.15)",
-    color: "var(--accent-ink)",
-    name: "João Figueiredo",
-    context: "Immigration & tax law · Marquês de Pombal",
-    stars: 5,
-    quote:
-      '"Specialises in D7 and D8 applications. Also handles the IFICI tax regime. Efficient, English-speaking, and experienced with international LGBTQ+ clients."',
-  },
-  {
-    initials: "CL",
-    bg: "rgba(45,27,61,.12)",
-    color: "var(--plum)",
-    name: "Carla Lima Advogados",
-    context: "Firm · Arroios",
-    stars: 4,
-    quote:
-      '"Good firm for complex situations — non-EU couples, prior visa refusals, cross-border family cases. More expensive than solo practitioners but thorough."',
-  },
-];

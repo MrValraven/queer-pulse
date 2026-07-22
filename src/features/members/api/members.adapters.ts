@@ -158,7 +158,6 @@ export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
     identities: [],
     languages: [],
     years: 0,
-    activeRank: 0,
     joinedRank: 0,
     vouchCount: dto.vouchCount,
     mutualsCount: 0,

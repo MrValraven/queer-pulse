@@ -38,6 +38,7 @@ export function ConnectModal({
     memberProfiles[defaultProfileSlug]!;
   const { send } = useConnectionActions();
   const [phase, setPhase] = useState<Phase>("idle");
+  const [error, setError] = useState<string | null>(null);
   useScrollLock();
 
   const sent = phase === "sent";
@@ -45,19 +46,31 @@ export function ConnectModal({
   // so ConnectForm never mounts with the seed's openTo and then swaps under it.
   const memberLoading = Boolean(slug) && profileLoading && !profileResult;
 
-  function handleSubmit(message: string, submittedReason: string) {
+  async function handleSubmit(message: string, submittedReason: string) {
     if (phase !== "idle") return;
+    setError(null);
     setPhase("sending");
     // Reaching out records a sent request: demo updates local state, live POSTs
     // /connections. Existing connections no-op locally, so messaging a friend is
-    // safe. Errors are swallowed here so the success panel still shows (the
-    // prototype simulates delivery); a future pass can surface a live failure.
-    if (slug)
-      void send(slug, message || undefined, submittedReason || undefined).catch(
-        () => {},
-      );
-    // Simulate delivery, then reveal the animated success panel.
-    window.setTimeout(() => setPhase("sent"), 1100);
+    // safe. Without a slug there's no target to POST to, so keep the prototype's
+    // simulated delivery.
+    if (!slug) {
+      window.setTimeout(() => setPhase("sent"), 1100);
+      return;
+    }
+    try {
+      // Race the request against a minimum "sending" beat so a fast success
+      // still reads as a deliberate delivery, not an instant flash. A live
+      // failure rejects here (before the beat) and drops us back to the form.
+      await Promise.all([
+        send(slug, message || undefined, submittedReason || undefined),
+        new Promise((resolve) => window.setTimeout(resolve, 1100)),
+      ]);
+      setPhase("sent");
+    } catch {
+      setError(t("connect:form.sendError"));
+      setPhase("idle");
+    }
   }
 
   return (
@@ -93,6 +106,7 @@ export function ConnectModal({
             member={member}
             initialReason={reason}
             sending={phase === "sending"}
+            error={error}
             onSubmit={handleSubmit}
             onClose={onClose}
           />

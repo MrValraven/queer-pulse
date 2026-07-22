@@ -118,10 +118,24 @@
   border-radius: 18px;
   overflow: hidden;
 }
-.svg {
-  display: block;
+.mapCanvas {
   width: 100%;
-  height: auto;
+  height: 560px;
+}
+/* WebGL tiles can't read CSS vars; subtle darkening keeps the map in-key
+   with dark mode without a separate tile style. */
+:global([data-theme="dark"]) .mapCanvas {
+  filter: saturate(0.92) brightness(0.82);
+}
+.mapError {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  color: var(--ink-60);
+  background: color-mix(in srgb, var(--cream) 88%, var(--plum));
 }
 .bairro {
   cursor: pointer;
@@ -298,10 +312,37 @@
   padding: 3px 8px;
   border-radius: 6px;
 }
+/* Accordion reveal: the 0fr→1fr grid-rows technique animates to the details'
+   natural height. Details stay mounted so it plays open AND closed. */
+.vcReveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-slow) var(--ease);
+}
+.vcReveal[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.vcRevealInner {
+  overflow: hidden;
+  min-height: 0;
+}
 .vcBody {
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.vcReveal[data-open="true"] .vcBody {
+  opacity: 1;
+}
+/* Beyond a small fade/slide (this grows the card's height), land the reduced-
+   motion end state explicitly rather than leaning on the global duration net. */
+@media (prefers-reduced-motion: reduce) {
+  .vcReveal,
+  .vcBody {
+    transition: none;
+  }
 }
 .vcRow {
   display: flex;

@@ -5,7 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { REMOVED_SPACES } from "./safeSpaces";
+import type { RemovedSpace } from "./safeSpaces";
 import { CRITERIA, HOW, NOMINATE_TYPE_KEYS } from "./safeSpacesPage.data";
 import styles from "./SafeSpacesPage.module.css";
 
@@ -84,7 +84,7 @@ export function HowSection() {
   );
 }
 
-export function RemovedSection() {
+export function RemovedSection({ removed }: { removed: RemovedSpace[] }) {
   const { t } = useTranslation();
   return (
     <div className={styles.removedSection}>
@@ -97,7 +97,7 @@ export function RemovedSection() {
             />
           </h2>
           <p>
-            {t("safety:spaces.removed.lead", { count: REMOVED_SPACES.length })}
+            {t("safety:spaces.removed.lead", { count: removed.length })}
           </p>
         </div>
         <div className={styles.removedSteps}>
@@ -127,7 +127,7 @@ export function RemovedSection() {
           </div>
         </div>
         <div className={styles.removedList}>
-          {REMOVED_SPACES.map((r) => (
+          {removed.map((r) => (
             <Link
               key={r.slug}
               to={`${routes.safeSpaces}/${r.slug}`}

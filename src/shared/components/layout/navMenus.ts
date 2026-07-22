@@ -126,6 +126,10 @@ export const NAV_MENUS: MegaMenu[] = [
         headKey: "shared:megaNav.community.col.gather.head",
         links: [
           {
+            labelKey: "shared:megaNav.community.col.gather.allGatherings",
+            href: routes.gatherings,
+          },
+          {
             labelKey: "shared:megaNav.community.col.gather.events",
             href: routes.events,
           },

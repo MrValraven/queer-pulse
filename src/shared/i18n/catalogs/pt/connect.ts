@@ -58,6 +58,7 @@ export const connect: Catalog = {
   "card.tagsMoreTitle": "Também: {list}",
   "card.noMutuals": "Sem pessoas em comum — revê com atenção",
   "card.sentAgo": "Enviado <b>{sentAgo}</b>",
+  "card.reason": "Sobre <b>{reason}</b>",
   "card.decline": "Recusar",
   "card.accept": "Aceitar",
   "card.awaitingReply": "A aguardar resposta",
@@ -111,10 +112,6 @@ export const connect: Catalog = {
   "form.title": "Diz <em>olá.</em>",
   "form.sub":
     "A tua mensagem vai diretamente. Sem notificações, sem confirmações de leitura, sem algoritmo a observar. Só uma mensagem verdadeira.",
-  "form.nameLabel": "O teu nome",
-  "form.namePlaceholder": "Como preferes que te chamem",
-  "form.emailLabel": "O teu email",
-  "form.emailPlaceholder": "Para poderem responder-te",
   "form.reasonLabel": "Sobre o que é?",
   "form.reasonPlaceholder": "Escolhe um motivo, ou deixa em aberto",
   "form.reasonOpenToGroup": "Ao que {first} está disponível",
@@ -127,15 +124,17 @@ export const connect: Catalog = {
   "form.messageLabel": "A tua mensagem",
   "form.messagePlaceholder": "Escreve com naturalidade. Não há modelo.",
   "form.note":
-    "As mensagens de pessoas que ainda não estão na rede ficam retidas por breves instantes e são revistas pela equipa antes da entrega. Isto mantém o espaço seguro.",
+    "Se ainda não estão ligados, isto chega como um pedido — essa pessoa decide se quer abrir a conversa. De qualquer forma, fica só entre vocês os dois.",
   "form.cancel": "Cancelar",
   "form.sendingLabel": "A enviar…",
   "form.send": "Enviar",
+  "form.sendError":
+    "Não foi possível enviar. Verifica a ligação e tenta novamente.",
 
   // Painel de sucesso após o envio (ConnectSentPanel)
   "sent.title": "Mensagem <em>enviada.</em>",
   "sent.body":
-    "A tua mensagem para {name} está a caminho. Se quiser continuar a conversa, essa pessoa responde diretamente para o teu email.",
+    "A tua mensagem para {name} está a caminho. Se quiser continuar, essa pessoa responde-te aqui mesmo, na tua caixa de entrada.",
   "sent.close": "Fechar",
   "sent.autoClose": "A fechar automaticamente daqui a {seconds}s",
 };

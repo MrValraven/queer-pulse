@@ -106,6 +106,16 @@
   line-height: 1.5;
   margin-bottom: 24px;
 }
+.sendError {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--danger-ink);
+  background: rgba(var(--danger-rgb), 0.08);
+  border: 1px solid rgba(var(--danger-rgb), 0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
 .foot {
   display: flex;
   align-items: center;

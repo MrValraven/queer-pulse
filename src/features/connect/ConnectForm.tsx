@@ -13,7 +13,7 @@ import {
   reasonValue,
   type OpenToEntry,
 } from "../members/openTo.data";
-import { EMAIL_RE, REASONS } from "./connectModal.data";
+import { REASONS } from "./connectModal.data";
 import styles from "./ConnectModal.module.css";
 
 type FormMember = {
@@ -33,6 +33,7 @@ export function ConnectForm({
   member,
   initialReason,
   sending,
+  error,
   onSubmit,
   onClose,
 }: {
@@ -40,20 +41,17 @@ export function ConnectForm({
   /** Preselects the reason (from an "open to" chip). */
   initialReason?: string;
   sending: boolean;
+  /** A failed send message to surface above the footer; null when all is well. */
+  error?: string | null;
   onSubmit: (message: string, reason: string) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [reason, setReason] = useState(initialReason ?? "");
   const [message, setMessage] = useState("");
   const memberOpenTo = member.openTo ?? [];
 
-  const canSend =
-    name.trim().length > 0 &&
-    EMAIL_RE.test(email.trim()) &&
-    message.trim().length > 0;
+  const canSend = message.trim().length > 0;
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -84,26 +82,6 @@ export function ConnectForm({
       </h1>
       <p className={styles.sub}>{t("connect:form.sub")}</p>
 
-      <FormField label={t("connect:form.nameLabel")} required>
-        <input
-          id="connect-name"
-          type="text"
-          placeholder={t("connect:form.namePlaceholder")}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          disabled={sending}
-        />
-      </FormField>
-      <FormField label={t("connect:form.emailLabel")} required>
-        <input
-          id="connect-email"
-          type="email"
-          placeholder={t("connect:form.emailPlaceholder")}
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          disabled={sending}
-        />
-      </FormField>
       <FormField label={t("connect:form.reasonLabel")}>
         <select
           id="connect-about"
@@ -145,6 +123,12 @@ export function ConnectForm({
       </FormField>
 
       <div className={styles.note}>{t("connect:form.note")}</div>
+
+      {error && (
+        <p className={styles.sendError} role="alert">
+          {error}
+        </p>
+      )}
 
       <div className={styles.foot}>
         <button

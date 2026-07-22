@@ -11,6 +11,9 @@ import type { ReasonCode, ReportSubjectType } from "../../safety/reportReasons";
 export type ModSeverity = "emergency" | "high" | "medium" | "low";
 export type ModStatus = "open" | "resolved" | "escalated";
 
+/** Which parties a resolved report's outcome was communicated to. */
+export type ResolutionNotifiedParty = "member" | "reporter" | "affected";
+
 /** Moderator action codes. `hide_content`/`remove_content` map to hide/remove. */
 export type ModActionCode =
   | "dismiss"
@@ -36,6 +39,26 @@ export interface ModReportDTO {
   createdAt: string;
   slaDueAt: string;
   status: ModStatus;
+  /**
+   * Only present on resolved-tab items (`GET /mod/reports?tab=resolved`). Carries
+   * the resolution metadata a `ResolvedItem` row shows — the outcome badge, the
+   * deciding moderator, when it closed, the member-facing note, and who was
+   * notified. The base DTO can't hold this (it lives in the audit trail), so the
+   * backend denormalizes it onto the resolved queue rather than forcing a
+   * per-row audit fetch. Absent → the adapter renders a generic "Resolved" row.
+   */
+  resolution?: {
+    /** Canonical action taken — drives the outcome badge tone. */
+    action: ModActionCode;
+    /** Server-formatted outcome badge, e.g. "Restricted · 7 days" / "Dismissed". */
+    outcomeLabel: string;
+    /** Deciding moderator's display name; "Deleted member" after erasure. */
+    actorName: string;
+    closedAt: string;
+    /** The exact member-facing resolution note (never a vague summary). */
+    note: string;
+    notified: ResolutionNotifiedParty[];
+  };
   /** Only present on `GET /mod/reports/:id`. */
   detail?: {
     contentAuthor: string;

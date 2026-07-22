@@ -366,7 +366,6 @@ export const members: Catalog = {
   "directory.memberCountLabel_one": "pessoa",
   "directory.memberCountLabel_other": "pessoas",
   "directory.sortLabel": "Ordenar",
-  "directory.sort.recentlyActive": "Ativas recentemente",
   "directory.sort.recentlyJoined": "Juntaram-se recentemente",
   "directory.sort.closestMutuals": "Mais contactos em comum",
   "directory.sort.aToZ": "De A a Z",

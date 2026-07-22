@@ -6,10 +6,15 @@ import {
   FiAward,
   FiInbox,
   FiSettings,
+  FiHeart,
+  FiMapPin,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
 import { currentUser } from "../../../features/members/data/members";
+
+/** Live pending-count source for a nav pill, resolved in AdminSidebar. */
+export type AdminNavBadge = "moderation" | "members" | "partnerships";
 
 export interface AdminNavItem {
   /** Catalog key for the visible label — resolve with `t()`. */
@@ -17,8 +22,8 @@ export interface AdminNavItem {
   to: string;
   icon: IconType;
   end?: boolean;
-  /** Optional pending count shown as a pill. */
-  count?: number;
+  /** Which live queue feeds this item's pill; the pill is hidden when its count is 0. */
+  badge?: AdminNavBadge;
   /** Pill tone: 'alert' (red) for urgent, 'warn' (amber) for waiting. */
   tone?: "alert" | "warn";
 }
@@ -34,22 +39,32 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.moderation",
     to: routes.adminModeration,
     icon: FiShield,
-    count: 23,
+    badge: "moderation",
     tone: "alert",
   },
   {
     labelKey: "nav:members",
     to: routes.adminMembers,
     icon: FiUsers,
-    count: 11,
+    badge: "members",
     tone: "warn",
   },
   { labelKey: "nav:communities", to: routes.adminCommunities, icon: FiGlobe },
   {
+    labelKey: "shared:adminNav.items.safeSpaces",
+    to: routes.adminSafeSpaces,
+    icon: FiMapPin,
+  },
+  {
+    labelKey: "community:changemakers.admin.navLabel",
+    to: routes.adminChangemakers,
+    icon: FiHeart,
+  },
+  {
     labelKey: "shared:adminNav.items.partnerships",
     to: routes.adminPartnerApplications,
     icon: FiInbox,
-    count: 2,
+    badge: "partnerships",
     tone: "warn",
   },
   {
