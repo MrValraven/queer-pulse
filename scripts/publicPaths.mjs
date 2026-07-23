@@ -185,16 +185,12 @@ export const QUIET_PUBLIC_PATHS = [
   "/about/manifesto",
   "/about/governance",
   "/about/contact",
-  "/about/roadmap",
   "/about/partners",
   "/about/press-kit",
   "/about/for-organisations",
-  "/about/donate",
-  "/about/cities",
   "/about/help",
   "/about/help/accessibility",
   "/about/volunteer",
-  "/about/platforms",
 
   // ── Policies ─────────────────────────────────────────────────────────────
   "/policies/privacy",
