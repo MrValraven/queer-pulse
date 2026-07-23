@@ -189,7 +189,6 @@ export const QUIET_PUBLIC_PATHS = [
   "/about/partners",
   "/about/press-kit",
   "/about/for-organisations",
-  "/about/newsletter",
   "/about/donate",
   "/about/cities",
   "/about/help",
