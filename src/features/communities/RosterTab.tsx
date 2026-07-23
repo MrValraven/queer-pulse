@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiCheck, FiMessageCircle } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { RosterMember } from "./community.model";
 import { photoOf } from "./communityPeople";
@@ -18,6 +18,35 @@ const ROLE_ORDER: Record<RosterMember["role"], number> = {
   member: 2,
 };
 
+/**
+ * The roster card's "Message" affordance — a `span role="button"` (no `<button>`
+ * inside the profile `<Link>`, per the design rule). Extracted so
+ * `useMemberContact` runs at a component top level rather than inside the
+ * `shown.map` below, where a hook call would be illegal.
+ */
+function RosterMessageButton({ member }: { member: RosterMember }) {
+  const { t } = useTranslation();
+  const { connected, contact } = useMemberContact(member.slug ?? "");
+  const reachOut = () =>
+    contact({ slug: member.slug ?? "", name: member.name });
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      className={styles.msgBtn}
+      onClick={reachOut}
+      onKeyDown={(e) =>
+        (e.key === "Enter" || e.key === " ") && (e.preventDefault(), reachOut())
+      }
+    >
+      <FiMessageCircle aria-hidden />{" "}
+      {connected
+        ? t("connect:contact.message")
+        : t("communities:detail.roster.messageCta")}
+    </span>
+  );
+}
+
 export function RosterTab({
   roster,
   total,
@@ -27,7 +56,6 @@ export function RosterTab({
   total: number;
   slug: string;
 }) {
-  const { openConnect } = useConnect();
   const { t } = useTranslation();
   const [q, setQ] = useState("");
 
@@ -107,19 +135,7 @@ export function RosterTab({
                 </div>
               ) : null;
             })()}
-            <span
-              role="button"
-              tabIndex={0}
-              className={styles.msgBtn}
-              onClick={() => openConnect(m.slug)}
-              onKeyDown={(e) =>
-                (e.key === "Enter" || e.key === " ") &&
-                (e.preventDefault(), openConnect(m.slug))
-              }
-            >
-              <FiMessageCircle aria-hidden />{" "}
-              {t("communities:detail.roster.messageCta")}
-            </span>
+            <RosterMessageButton member={m} />
           </div>
         ))}
       </div>

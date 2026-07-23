@@ -1,21 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useCommunityEdits } from "../../../app/providers/CommunityEditsProvider";
 import {
   createCommunity,
   createPost,
+  deleteCommunityPost,
+  deleteCommunityReply,
+  editCommunityReply,
   joinCommunity,
   reactToPost,
   removeMember,
   replyToPost,
+  restoreCommunityPost,
+  restoreCommunityReply,
   reviewJoinRequest,
   setMemberRole,
   unreactToPost,
+  updateCommunity,
   updatePost,
   type CommunityDetailDTO,
   type CreateCommunityDto,
   type CreatePostDto,
   type JoinResultDTO,
   type ReactionKey,
+  type UpdateCommunityDto,
   type UpdatePostDto,
 } from "./communities.api";
 
@@ -198,6 +206,114 @@ export function useCreateCommunity() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communities"] });
       queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/** PATCH /communities/:slug — owner/mod edit of community info. Live PATCHes and
+ *  invalidates the detail + lists; demo writes the session override store (the
+ *  demo detail memo re-derives from it) and returns null. */
+export function useUpdateCommunity() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const { applyOverride } = useCommunityEdits();
+  return useMutation<
+    CommunityDetailDTO | null,
+    Error,
+    { slug: string; dto: UpdateCommunityDto }
+  >({
+    mutationFn: async ({ slug, dto }) => {
+      if (demoMode) {
+        applyOverride(slug, dto);
+        return null;
+      }
+      return updateCommunity(slug, dto);
+    },
+    onSuccess: (_data, { slug }) => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      queryClient.invalidateQueries({ queryKey: ["communities"] });
+      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/** DELETE /communities/:slug/posts/:id — soft tombstone the OP post. */
+export function useDeleteCommunityPost(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { id: string }>({
+    mutationFn: async ({ id }) => {
+      if (demoMode) return;
+      await deleteCommunityPost(slug, id);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+    },
+  });
+}
+
+/** POST /communities/:slug/posts/:id/restore — clear the OP tombstone. */
+export function useRestoreCommunityPost(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { id: string }>({
+    mutationFn: async ({ id }) => {
+      if (demoMode) return;
+      await restoreCommunityPost(slug, id);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+    },
+  });
+}
+
+/** PATCH /communities/:slug/posts/:id/replies/:replyId — author edits a reply. */
+export function useEditCommunityReply(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { postId: string; replyId: string; text: string }>({
+    mutationFn: async ({ postId, replyId, text }) => {
+      if (demoMode) return;
+      await editCommunityReply(slug, postId, replyId, text);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+    },
+  });
+}
+
+/** DELETE /communities/:slug/posts/:id/replies/:replyId — soft tombstone a reply. */
+export function useDeleteCommunityReply(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { postId: string; replyId: string }>({
+    mutationFn: async ({ postId, replyId }) => {
+      if (demoMode) return;
+      await deleteCommunityReply(slug, postId, replyId);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+    },
+  });
+}
+
+/** POST /communities/:slug/posts/:id/replies/:replyId/restore — clear a reply tombstone. */
+export function useRestoreCommunityReply(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { postId: string; replyId: string }>({
+    mutationFn: async ({ postId, replyId }) => {
+      if (demoMode) return;
+      await restoreCommunityReply(slug, postId, replyId);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }

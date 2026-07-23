@@ -18,12 +18,17 @@ import type { Catalog } from "../../types";
  */
 export const notifications: Catalog = {
   "type.connection_request.text": "Someone would like to connect with you.",
+  "type.connection_request.textNamed":
+    "<profile>{name}</profile> would like to connect with you.",
   "type.connection_request.meta": "Connection request",
 
   "type.connection_accepted.text": "Your connection request was accepted.",
+  "type.connection_accepted.textNamed":
+    "<profile>{name}</profile> accepted your connection request.",
   "type.connection_accepted.meta": "Connection",
 
   "type.vouch_received.text": "Someone vouched for you.",
+  "type.vouch_received.textNamed": "<profile>{name}</profile> vouched for you.",
   "type.vouch_received.meta": "Vouch",
 
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
@@ -33,9 +38,13 @@ export const notifications: Catalog = {
   "type.new_message.meta": "Private message",
 
   "type.introduction_made.text": "An introduction you made went through.",
+  "type.introduction_made.textNamed":
+    "An introduction you made for <profile>{name}</profile> went through.",
   "type.introduction_made.meta": "Introduction",
 
   "type.event_invite.text": "You have an invitation to a gathering.",
+  "type.event_invite.textNamed":
+    "<profile>{name}</profile> invited you to a gathering.",
   "type.event_invite.meta": "Gathering invitation",
 
   "type.event_reminder.text": "A gathering you're going to is coming up.",

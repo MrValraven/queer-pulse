@@ -420,6 +420,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+  /* Stays flush to the end of .foot whether or not .since renders (it's
+     hidden for live members with no join date on file). */
+  margin-inline-start: auto;
 }
 .saveBtn {
   font-family: var(--sans);

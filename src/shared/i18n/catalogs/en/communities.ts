@@ -92,6 +92,8 @@ export const communities: Catalog = {
   // ── Small shared bits (relative time, generic "just now") ────────────────
   "common.timeAgo": "{time} ago",
   "common.justNow": "just now",
+  "common.error": "Something went wrong. Try again in a moment.",
+  "common.loading": "Loading…",
 
   // ── Community detail page (hero + sidebar) ────────────────────────────────
   "detail.breadcrumb": "← Communities",
@@ -147,6 +149,7 @@ export const communities: Catalog = {
   "detail.discussion.empty.description":
     "Try a different search, or start the discussion below.",
   "detail.discussion.startedToast": "Discussion started.",
+  "detail.discussion.loadMore": "Load more",
 
   // ── Events tab (living hub) ────────────────────────────────────────────────
   "detail.events.upcoming": "Upcoming gatherings",
@@ -598,4 +601,26 @@ export const communities: Catalog = {
   "detail.topicThread.beginningPost":
     "This is the very beginning of {name}. Introduce yourself and tell us what brought you here.",
   "detail.organiser.founder": "Founder",
+
+  // ── Edit community (EditCommunityModal) ───────────────────────────────────
+  "edit.cta": "Edit community",
+  "edit.eyebrow": "Community settings",
+  "edit.title": "Edit your community",
+  "edit.save": "Save changes",
+  "edit.saving": "Saving…",
+  "edit.cancel": "Cancel",
+  "edit.field.name": "Name",
+  "edit.field.tagline": "Tagline",
+  "edit.field.type": "Kind of space",
+  "edit.field.whoFor": "Who it's for",
+  "edit.field.purpose": "What it's for",
+  "edit.field.access": "Who can find it",
+  "edit.field.rosterVisible": "Show the member list to members",
+  "edit.field.features": "What's inside",
+  "edit.field.rules": "Shared values",
+  "edit.rules.add": "Add",
+  "edit.rules.addPlaceholder": "Add a shared value…",
+  "edit.rules.remove": "Remove rule",
+  "edit.toast.saved": "Changes saved",
+  "edit.toast.error": "Couldn't save your changes — please try again.",
 };

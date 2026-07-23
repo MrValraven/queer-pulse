@@ -97,6 +97,10 @@ export const communities: Catalog = {
   // ── Pequenos elementos partilhados (tempo relativo, "agora mesmo") ───────
   "common.timeAgo": "há {time}",
   "common.justNow": "agora mesmo",
+  // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
+  "common.error": "Something went wrong. Try again in a moment.",
+  // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
+  "common.loading": "Loading…",
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "← Comunidades",
@@ -153,6 +157,8 @@ export const communities: Catalog = {
   "detail.discussion.empty.description":
     "Tenta outra pesquisa, ou começa a discussão abaixo.",
   "detail.discussion.startedToast": "Discussão iniciada.",
+  // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
+  "detail.discussion.loadMore": "Load more",
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
   "detail.events.upcoming": "Próximos convívios",
@@ -607,4 +613,26 @@ export const communities: Catalog = {
   "detail.topicThread.beginningPost":
     "Isto é o início de {name}. Apresenta-te e diz-nos o que te trouxe até aqui.",
   "detail.organiser.founder": "Pessoa fundadora",
+
+  // ── Editar comunidade (EditCommunityModal) ────────────────────────────────
+  "edit.cta": "Editar comunidade",
+  "edit.eyebrow": "Definições da comunidade",
+  "edit.title": "Editar a tua comunidade",
+  "edit.save": "Guardar alterações",
+  "edit.saving": "A guardar…",
+  "edit.cancel": "Cancelar",
+  "edit.field.name": "Nome",
+  "edit.field.tagline": "Frase de assinatura",
+  "edit.field.type": "Que tipo de espaço",
+  "edit.field.whoFor": "Para quem é",
+  "edit.field.purpose": "Para que serve",
+  "edit.field.access": "Quem a pode encontrar",
+  "edit.field.rosterVisible": "Mostrar a lista de pessoas às pessoas",
+  "edit.field.features": "O que há por dentro",
+  "edit.field.rules": "Valores partilhados",
+  "edit.rules.add": "Adicionar",
+  "edit.rules.addPlaceholder": "Adiciona um valor partilhado…",
+  "edit.rules.remove": "Remover regra",
+  "edit.toast.saved": "Alterações guardadas",
+  "edit.toast.error": "Não foi possível guardar as alterações — tenta de novo.",
 };

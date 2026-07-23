@@ -4,6 +4,9 @@ export interface ChatMessage {
   from: "me" | "them";
   text: string;
   time?: string;
+  /** Stable server id (live mode) for React keys. Absent for demo/optimistic
+   *  messages, which fall back to a positional key. */
+  id?: string;
 }
 
 export interface Conversation {
@@ -19,6 +22,10 @@ export interface Conversation {
   time: string;
   preview: string;
   unread: boolean;
+  /** Optional presence — renders a ring on the avatar when true. Absent = unknown, renders nothing. */
+  online?: boolean;
+  /** Optional precise unread count — renders a badge when > 0. Absent = fall back to the `unread` dot. */
+  unreadCount?: number;
   official?: boolean;
   messages: { day: string; items: ChatMessage[] }[];
 }
@@ -38,6 +45,7 @@ export const conversations: Conversation[] = [
     time: "Now",
     preview: "Thanks for the recommendation! I'll reach out to her this week",
     unread: true,
+    unreadCount: 2,
     messages: [
       {
         day: "Yesterday",
@@ -80,6 +88,7 @@ export const conversations: Conversation[] = [
     time: "Yesterday",
     preview: "See you at the book club on Saturday",
     unread: false,
+    online: true,
     messages: [
       {
         day: "Yesterday",

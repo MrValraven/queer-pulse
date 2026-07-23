@@ -26,7 +26,8 @@ export type SavedKind =
   | "event"
   | "group"
   | "housing"
-  | "flatmate";
+  | "flatmate"
+  | "landlord";
 
 export interface SavedItem {
   /** Stable unique id, conventionally `${kind}:${slug}`. */

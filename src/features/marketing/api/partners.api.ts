@@ -26,6 +26,10 @@ export interface PartnerCardDTO {
   tags: string[];
   tier: string;
   since: string;
+  featured: boolean;
+  testimonialQuote: string | null;
+  testimonialAuthor: string | null;
+  testimonialRole: string | null;
 }
 
 export interface PartnerStat {
@@ -119,18 +123,19 @@ export interface TriagePartnerApplicationDto {
 
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
-/** GET /partners?region=&page= — approved partners only. */
+/** GET /partners?region=&page=&featured= — approved partners only. */
 export async function getPartners(
-  params: { region?: Region; page?: number } = {},
+  params: { region?: Region; page?: number; featured?: boolean } = {},
 ): Promise<Paginated<PartnerCardDTO>> {
-  const q = new URLSearchParams();
-  if (params.region) q.set("region", params.region);
-  if (params.page) q.set("page", String(params.page));
-  const qs = q.toString();
-  const res = await apiGet<PartnerCardDTO[] | Paginated<PartnerCardDTO>>(
-    `/partners${qs ? `?${qs}` : ""}`,
+  const query = new URLSearchParams();
+  if (params.region) query.set("region", params.region);
+  if (params.page) query.set("page", String(params.page));
+  if (params.featured) query.set("featured", "true");
+  const queryString = query.toString();
+  const response = await apiGet<PartnerCardDTO[] | Paginated<PartnerCardDTO>>(
+    `/partners${queryString ? `?${queryString}` : ""}`,
   );
-  return toItemsPage(res);
+  return toItemsPage(response);
 }
 
 /**

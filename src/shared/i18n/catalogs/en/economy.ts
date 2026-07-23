@@ -445,6 +445,10 @@ export const economy: Catalog = {
   "housing.landlords.subtitle":
     "Members have vouched for these landlords as queer-friendly, reliable, and fair. Not a guarantee — always do your own due diligence.",
   "housing.landlords.endorsedBadge": "Community-endorsed",
+  "housing.landlords.suggestCta": "Suggest a landlord",
+  "housing.landlords.emptyTitle": "No landlords endorsed yet",
+  "housing.landlords.emptyBody":
+    "Be the first to tell us about one you'd vouch for — queer-friendly, reliable, fair.",
 
   "housing.tipsHeading": "Housing in Lisbon — <em>what to know</em>",
   "housing.tip.budget.title": "Budget for a competitive market",
@@ -494,6 +498,10 @@ export const economy: Catalog = {
   "housingModal.message.note":
     "For your safety, keep the conversation on QueerPulse until you've met. Never send a deposit before viewing the place in person.",
   "housingModal.message.send": "Send message",
+  "housingModal.message.draftNamed":
+    'Hi {name}, I\'m interested in "{listingTitle}". Is it still available? A bit about me: ',
+  "housingModal.message.draftGeneric":
+    'Hi there, I\'m interested in "{listingTitle}". Is it still available? A bit about me: ',
 
   "housingModal.recommend.ariaLabel": "Recommend a landlord",
   "housingModal.recommend.successTitle": "Thank you. <em>Recorded.</em>",
@@ -512,6 +520,8 @@ export const economy: Catalog = {
   "housingModal.recommend.note":
     "Recommendations are checked before they appear. Only recommend landlords you've actually rented from.",
   "housingModal.recommend.submit": "Submit recommendation",
+  "housingModal.recommend.error":
+    "Couldn't submit your recommendation — check your connection and try again.",
 
   // ── ListSpaceModal ──────────────────────────────────────────────────────
   "listSpace.type.sublet": "Sublet",
@@ -538,6 +548,36 @@ export const economy: Catalog = {
     "Listings are reviewed before they appear. Never ask for a deposit before someone has viewed the place in person.",
   "listSpace.submitting": "Submitting…",
   "listSpace.submitCta": "Submit listing",
+
+  // ── SuggestLandlordModal ────────────────────────────────────────────────
+  "suggestLandlord.ariaLabel": "Suggest a landlord",
+  "suggestLandlord.eyebrow": "Housing board",
+  "suggestLandlord.title": "Suggest a <em>landlord.</em>",
+  "suggestLandlord.sub":
+    "Know someone renting out queer-friendly, actually decent places? Tell us about them — a moderator checks in before they join the board.",
+  "suggestLandlord.nameLabel": "Landlord's name *",
+  "suggestLandlord.namePlaceholder": "e.g. Mariana Sousa",
+  "suggestLandlord.hoodLabel": "Neighbourhood",
+  "suggestLandlord.hoodPlaceholder": "e.g. Arroios, Lisbon",
+  "suggestLandlord.taglineLabel": "One-line tagline",
+  "suggestLandlord.taglinePlaceholder": "e.g. Fair rents, fast repairs",
+  "suggestLandlord.noteLabel": "Short note for the board card",
+  "suggestLandlord.notePlaceholder":
+    "What should members know at a glance?",
+  "suggestLandlord.aboutLabel": "More about them",
+  "suggestLandlord.aboutPlaceholder":
+    "What's it like renting from them? Specifics help other members.",
+  "suggestLandlord.areasLabel": "Where they rent",
+  "suggestLandlord.areasPlaceholder":
+    "One area per line, e.g.\nArroios\nAnjos\nGraça",
+  "suggestLandlord.note":
+    "Suggestions are reviewed before they're added to the board. Only suggest landlords you or someone you trust has actually rented from.",
+  "suggestLandlord.submitting": "Sending…",
+  "suggestLandlord.submitCta": "Suggest landlord",
+  "suggestLandlord.success.title": "Thank you. <em>Sent to review.</em>",
+  "suggestLandlord.success.body":
+    "A moderator will look over <strong>{name}</strong> before adding them to the board. We'll let you know if we need anything else.",
+  "suggestLandlord.error": "Couldn't send that — mind trying again?",
 
   // ── HousingListingPage (+ sections) ────────────────────────────────────
   "housingListing.back": "← Housing board",
@@ -612,6 +652,8 @@ export const economy: Catalog = {
     "Looks good — keep the conversation here until you both decide to take it further.",
   "contactRequest.cancel": "Cancel",
   "contactRequest.done": "Done",
+  "contactRequest.sendError":
+    "Couldn't send that — mind giving it another try?",
 
   // ── LandlordPage ─────────────────────────────────────────────────────────
   "landlordPage.eyebrow": "Community-endorsed landlord",
@@ -644,6 +686,15 @@ export const economy: Catalog = {
   "landlordPage.intro.successBody":
     "We've passed your note to <strong>{firstName}</strong>. If they have something that fits, they'll reach out here — no pressure either way.",
   "landlordPage.intro.sendLabel": "Request introduction",
+  "landlordPage.intro.fallbackName": "A member",
+  "landlordPage.save": "Save",
+  "landlordPage.saved": "Saved",
+  "landlordPage.saveAriaLabel": "Save {name}",
+  "landlordPage.unsaveAriaLabel": "Remove {name} from saved",
+  "landlordPage.savedToast": "Saved {name}",
+  "landlordPage.unsavedToast": "Removed {name} from saved",
+  "landlordPage.report": "Report",
+  "landlordPage.reportAriaLabel": "Report {name}",
 
   // ── ModalKit (shared modal shell + success panel used across Economy) ──
   "modalKit.closeAriaLabel": "Close",
@@ -691,6 +742,7 @@ export const economy: Catalog = {
   "flatmates.card.memberSince": "Member since {date}",
   "flatmates.card.sayHello": "Say hello →",
   "flatmates.card.helloSent": "Hello sent",
+  "flatmates.card.sayHelloError": "Couldn't send your hello — try again in a moment.",
   "flatmates.card.matchScore": "{score}% match",
   "flatmates.card.save": "Save",
   "flatmates.card.saved": "Saved",
@@ -1235,6 +1287,7 @@ export const economy: Catalog = {
   "postJob.stepLabels.pay": "Pay & perks",
   "postJob.stepLabels.screening": "Screening",
   "postJob.stepLabels.review": "Review",
+  "postJob.stepLabels.ariaLabel": "Job posting progress",
 
   "postJob.topbar.back": "Jobs & skills",
   "postJob.topbar.savedJustNow": "Saved just now",

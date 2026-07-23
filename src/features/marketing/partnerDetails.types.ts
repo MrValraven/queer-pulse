@@ -37,6 +37,14 @@ export interface Contact {
   address?: string;
 }
 
+export interface PartnerTestimonial {
+  quote: string;
+  author: string;
+  role: string;
+  /** Author initials for the avatar chip ("Programme Director" → "PD"). */
+  initials: string;
+}
+
 export interface Partner {
   /* card */
   slug: string;
@@ -50,6 +58,8 @@ export interface Partner {
   city: string;
   desc: string;
   tags: string[];
+  featured: boolean;
+  testimonial: PartnerTestimonial | null;
   /* detail */
   eyebrow: string;
   tagline: string;

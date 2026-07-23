@@ -59,7 +59,7 @@ export function ConnectionsAllTab({
   allowMorePool?: boolean;
   isBlocked: (slug: string) => boolean;
   onUnblock: (v: ConnectionView) => void;
-  onMessage: (slug: string) => void;
+  onMessage: (slug: string, name: string) => void;
 }) {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
@@ -124,7 +124,7 @@ export function ConnectionsAllTab({
                   view={v}
                   blocked={isBlocked(v.slug)}
                   onUnblock={() => onUnblock(v)}
-                  onMessage={() => onMessage(v.slug)}
+                  onMessage={() => onMessage(v.slug, v.name)}
                 />
               </FadeIn>
             ))}

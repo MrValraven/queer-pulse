@@ -1,11 +1,25 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useRecommendLandlord } from "./api/useRecommendLandlord";
 import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
 import styles from "./housingModals.module.css";
+
+/** posterFrom() (housingListing.adapters.ts) uses this exact placeholder when
+ * a live listing has no lister on file — never a real member's name. */
+const GENERIC_LISTER_NAME = "A member";
+
+/** First name to greet, or null when there's no real name to greet (empty or
+ * the anonymous-lister placeholder) — callers fall back to a generic greeting. */
+function firstNameOf(toName: string): string | null {
+  const trimmed = toName.trim();
+  if (!trimmed || trimmed === GENERIC_LISTER_NAME) return null;
+  return trimmed.split(/\s+/)[0] ?? null;
+}
 
 const Check = () => (
   <svg viewBox="0 0 24 24">
@@ -75,8 +89,14 @@ export function MessageModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const [text, setText] = useState(
-    `Hi ${toName.split(" ")[0]}, I'm interested in "${listingTitle}". Is it still available? A bit about me: `,
+  const firstName = firstNameOf(toName);
+  const [text, setText] = useState(() =>
+    firstName
+      ? t("economy:housingModal.message.draftNamed", {
+          name: firstName,
+          listingTitle,
+        })
+      : t("economy:housingModal.message.draftGeneric", { listingTitle }),
   );
   const [done, setDone] = useState(false);
   const sendEnquiry = useSendHousingEnquiry();
@@ -177,25 +197,42 @@ export function MessageModal({
 
 /* ---- Recommend a landlord ---- */
 export function RecommendModal({
+  slug,
   landlordName,
   onClose,
   onSubmitted,
 }: {
+  slug: string;
   landlordName: string;
   onClose: () => void;
   onSubmitted?: (stars: number, text: string) => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [stars, setStars] = useState(5);
   const [text, setText] = useState("");
   const [done, setDone] = useState(false);
+  const recommendLandlord = useRecommendLandlord(slug);
   const canSubmit = text.trim().length >= 20;
   const remaining = 20 - text.trim().length;
 
   const submit = () => {
     if (!canSubmit) return;
-    onSubmitted?.(stars, text.trim());
-    setDone(true);
+    const trimmedText = text.trim();
+    recommendLandlord.mutate(
+      { stars, text: trimmedText },
+      {
+        onSuccess: () => {
+          onSubmitted?.(stars, trimmedText);
+          setDone(true);
+        },
+        onError: () => {
+          // Leave the form open and filled in so the member can retry —
+          // don't show the success panel for a submission that didn't land.
+          showToast(t("economy:housingModal.recommend.error"), "error");
+        },
+      },
+    );
   };
 
   return (
@@ -291,7 +328,7 @@ export function RecommendModal({
               variant="primary"
               className={styles.full}
               onClick={submit}
-              disabled={!canSubmit}
+              disabled={!canSubmit || recommendLandlord.isPending}
             >
               {t("economy:housingModal.recommend.submit")}
             </Button>

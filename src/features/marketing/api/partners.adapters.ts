@@ -10,7 +10,11 @@ import type {
   PartnerContact,
   PartnerDetailDTO,
 } from "./partners.api";
-import type { Contact, Partner } from "../partnerDetails.types";
+import type {
+  Contact,
+  Partner,
+  PartnerTestimonial,
+} from "../partnerDetails.types";
 
 // Map each backend DTO onto the EXISTING mock `Partner` view-model the pages
 // already render. The API doesn't carry the prototype's display-only bits — the
@@ -37,6 +41,17 @@ function orgInitials(name: string): string {
     return `${words[0]![0] ?? ""}${words[1]![0] ?? ""}`.toUpperCase();
   }
   return (name.slice(0, 2) || "QP").toUpperCase();
+}
+
+/** Build the testimonial view-model, or null when the partner has no quote. */
+function toTestimonial(dto: PartnerCardDTO): PartnerTestimonial | null {
+  if (!dto.testimonialQuote || !dto.testimonialAuthor) return null;
+  return {
+    quote: dto.testimonialQuote,
+    author: dto.testimonialAuthor,
+    role: dto.testimonialRole ?? "",
+    initials: orgInitials(dto.testimonialAuthor),
+  };
 }
 
 /** Map the API's nullable contact fields to the view-model's optional strings. */
@@ -71,6 +86,8 @@ export function cardToPartner(dto: PartnerCardDTO): Partner {
     city: dto.city,
     desc: dto.desc,
     tags: dto.tags ?? [],
+    featured: dto.featured,
+    testimonial: toTestimonial(dto),
     // ── detail-only (defaulted; the card view doesn't read these) ──
     eyebrow: `Partner · ${dto.regionLabel}`,
     tagline: dto.desc,

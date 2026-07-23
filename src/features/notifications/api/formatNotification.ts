@@ -53,6 +53,10 @@ export interface FormattedNotification {
   meta: string;
   /** The tab/icon category this kind renders under. */
   category: NotifType;
+  /** The recognised backend kind, or `null` for an unknown/future type. Lets
+   *  callers build the personalized `type.<kind>.textNamed` variant without
+   *  re-deriving the type→kind mapping that lives here. */
+  kind: NotificationKind | null;
 }
 
 /**
@@ -98,5 +102,6 @@ export function formatNotification(
     text: t(`notifications:type.${key}.text`, tokens),
     meta: t(`notifications:type.${key}.meta`, tokens),
     category: known ? KIND_CATEGORY[type] : "platform",
+    kind: known ? type : null,
   };
 }

@@ -5,10 +5,7 @@ import { routes } from "../../app/routeMap";
 /**
  * i18n Pattern A — every field below is platform-authored chrome (the intro
  * preview cards, community norms, intent chips, and quick-start tiles), so
- * the component resolves each `*Key` through `t()`. `COMMUNITIES_LIST` is the
- * one exception: in live mode it's `GET /communities?recommended=true`, so its
- * `name`/`desc`/`count` are a community's own authored content and stay
- * English — see docs/i18n/extraction-brief.md §1.
+ * the component resolves each `*Key` through `t()`.
  */
 export const ONBOARDING_PREVIEW = [
   {
@@ -79,37 +76,6 @@ export const INTENTS: { value: string; labelKey: string }[] = [
   },
 ];
 
-export const COMMUNITIES_LIST = [
-  {
-    id: "cc1",
-    name: "Queer Lisbon",
-    count: "284 members",
-    desc: "The main hub for queer life in Lisbon — events, housing, jobs, and everything in between.",
-    joined: true,
-  },
-  {
-    id: "cc2",
-    name: "Queer Creatives",
-    count: "96 members",
-    desc: "Artists, writers, filmmakers, and makers building queer culture in Portugal and beyond.",
-    joined: false,
-  },
-  {
-    id: "cc3",
-    name: "Trans & Non-Binary",
-    count: "118 members",
-    desc: "A dedicated space for trans and non-binary members — peer support, healthcare, community.",
-    joined: false,
-  },
-  {
-    id: "cc4",
-    name: "Queer Tech",
-    count: "61 members",
-    desc: "Queer people working in technology — design, engineering, product, and the ethics behind it.",
-    joined: false,
-  },
-];
-
 export const QUICK_STARTS: {
   to: string;
   icon: IconType;
@@ -125,7 +91,6 @@ export const QUICK_STARTS: {
     iconBg: "rgba(45,27,61,.07)",
     titleKey: "auth:onboarding.quickStart.browseDirectory.title",
     descKey: "auth:onboarding.quickStart.browseDirectory.desc",
-    descValues: { count: 482 },
   },
   {
     to: "/calendar",

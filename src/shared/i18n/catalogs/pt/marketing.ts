@@ -283,6 +283,8 @@ export const marketing: Catalog = {
   "activism.local.letter.title": "Assina a carta aberta",
   "activism.local.letter.body":
     "<b>{signatures}</b> de {target} assinaturas — entregue em mão na Câmara Municipal assim que atingirmos a meta.",
+  "activism.local.letter.bodyLive":
+    "Junta o teu nome — entregue em mão na Câmara Municipal assim que atingirmos a nossa meta de assinaturas.",
   "activism.skills.title": "Traz uma <em>competência</em>",
   "activism.skills.p1":
     "Cada organização abaixo precisa de mais do que voluntários com cartazes — precisa do teu ofício.",
@@ -2435,74 +2437,6 @@ export const marketing: Catalog = {
     "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
   "contact.outro.backCta": "Voltar à sala",
 
-  // ── Get the App — chrome da landing page. Tudo escrito pela plataforma.
-  "getTheApp.meta.title": "A app da QueerPulse: chat de crise, confirmações",
-  "getTheApp.meta.description":
-    "Descarrega a app da QueerPulse para iOS e Android — saída rápida, chat de crise num toque, confirmações de presença com bilhete QR, e mapa de espaços seguros offline.",
-  "getTheApp.hero.eyebrow": "Móvel · iOS e Android",
-  "getTheApp.hero.title": "Leva-a contigo, <em>de qualquer forma.</em>",
-  "getTheApp.hero.lead":
-    "A aplicação faz o que precisas mesmo no telemóvel: <b>saída rápida, chat de crise, confirmações de presença, o teu mapa de espaços seguros, e o bilhete QR à porta.</b> Tudo o resto fica melhor na web.",
-  "getTheApp.store.ios.line1": "Transferir na",
-  "getTheApp.store.ios.line2": "App Store",
-  "getTheApp.store.android.line1": "Disponível no",
-  "getTheApp.store.android.line2": "Google Play",
-  "getTheApp.sendPhone.title": "Não queres as <em>lojas de aplicações?</em>",
-  "getTheApp.sendPhone.body":
-    "Deixa o teu número e enviamos-te um link de instalação de utilização única. Não te inscreve em mais nada.",
-  "getTheApp.sendPhone.placeholder": "+351 91·••··••··",
-  "getTheApp.sendPhone.cta": "Enviar-me o link por SMS",
-  "getTheApp.sendPhone.toast": "Link enviado — verifica as tuas mensagens",
-  "getTheApp.qr.label": "Digitaliza com <em>o teu telemóvel</em>",
-  "getTheApp.qr.sub":
-    "A câmara deve detetá-lo automaticamente · encaminha para a loja certa",
-  "getTheApp.what.title": "Para que <em>serve</em> a aplicação",
-  "getTheApp.what.sub": "Uma lista curta. Não vamos pôr tudo num ecrã pequeno.",
-  "getTheApp.features.quickExit.title": "Saída rápida",
-  "getTheApp.features.quickExit.desc":
-    "Vive na navegação. Um toque fecha a aplicação e muda para um ecrã inicial neutro. Sempre disponível.",
-  "getTheApp.features.crisisChat.title": "Apoio em crise",
-  "getTheApp.features.crisisChat.desc":
-    "Um toque, de qualquer lado, para a página de linhas de apoio de emergência — números reais para ligar, sem precisares de aplicação, funciona com sinal fraco.",
-  "getTheApp.features.gatherings.title": "Encontros e confirmações",
-  "getTheApp.features.gatherings.desc":
-    "Confirma presença em dois toques. Os bilhetes aparecem como códigos QR à porta. Exportação de calendário para o que usares.",
-  "getTheApp.features.safeMap.title": "Mapa de espaços seguros · offline",
-  "getTheApp.features.safeMap.desc":
-    "Mapa de espaços verificados em Lisboa, guardado em cache para funcionar sem sinal. Cada marcador verificado nos últimos 90 dias.",
-  "getTheApp.features.quietNotifs.title": "Notificações discretas",
-  "getTheApp.features.quietNotifs.desc":
-    "Respostas, confirmações, mensagens. Sem iscos de interação, sem sequências. Horas de silêncio configuráveis por categoria.",
-  "getTheApp.features.onTheGo.title": "Sempre contigo",
-  "getTheApp.features.onTheGo.desc":
-    "As tuas mensagens, os teus guardados, o teu perfil. Tema claro + um preto verdadeiro para usar de noite.",
-  "getTheApp.what.notIn":
-    "<b>Fora da aplicação, de propósito:</b> a revista completa, o arquivo de artigos, o Fórum, os perfis longos, os documentos de governação, as ferramentas de organização. <em>Estas ficam melhor numa secretária.</em> A web continua a ser a casa de tudo o que exige tempo.",
-  "getTheApp.share.eyebrow": "Passa a palavra",
-  "getTheApp.share.title": "Tens alguém que <em>ia gostar disto?</em>",
-  "getTheApp.share.body":
-    'Mostra-lhe este QR — é a mesma página de instalação, só que a tua. Se a pessoa instalar, vão aparecer nesse resumo de "já nos conhecemos pessoalmente" no próximo encontro em que estiverem juntas.',
-  "getTheApp.share.copyLinkCta": "Copiar link",
-  "getTheApp.share.shareAppsCta": "Partilhar com aplicações",
-  "getTheApp.share.copyToast": "Link copiado",
-  "getTheApp.share.notMemberCta": "Ainda não fazes parte? Pede um convite →",
-
-  // ── Get the App — modal de aviso de lançamento (App Store / Google Play
-  //    ainda não disponíveis).
-  "appNotify.ariaLabel": "Recebe um aviso no lançamento",
-  "appNotify.close": "Fechar",
-  "appNotify.success.title": "Vamos avisar-<em>te.</em>",
-  "appNotify.success.body":
-    "Estás na lista para o lançamento em {platform}. Vamos enviar um email para <b>{email}</b> no dia em que estiver disponível — e mais nada.",
-  "appNotify.eyebrow": "{store} · brevemente",
-  "appNotify.title": "A QueerPulse está a chegar ao <em>{platform}.</em>",
-  "appNotify.lead":
-    "A aplicação ainda não está na loja. Deixa o teu email e avisamos-te assim que a versão para {platform} estiver disponível. Sem marketing, sem listas que não pediste.",
-  "appNotify.emailLabel": "O teu email",
-  "appNotify.emailHint": "Só vamos usar isto para o aviso de lançamento.",
-  "appNotify.maybeLaterCta": "← Talvez mais tarde",
-  "appNotify.notifyCta": "Avisa-me →",
-
   // ── Para Organizações — chrome da página de parcerias. Os quatro registos
   //    de PARTNERS (nome/tempo de parceria/descrição) e o testemunho de
   //    Filipa Mendes são conteúdo próprio de cada organização — ficam em
@@ -3025,6 +2959,16 @@ export const marketing: Catalog = {
   "map.clusterAria_one": "{count} espaço aqui — ampliar",
   "map.clusterAria_other": "{count} espaços aqui — ampliar",
 
+  // ── Local — explorador combinado de locais em lista/mapa.
+  "local.cat.nightlife": "Noite",
+  "local.view.list": "Lista",
+  "local.view.map": "Mapa",
+  "local.view.toggleAria": "Escolher vista de lista ou mapa",
+  "local.card.seeFullDetails": "Ver detalhes",
+  "local.filter.searchPlaceholder": "Procurar espaços e locais…",
+  "local.filter.categoryAria": "Filtrar por categoria",
+  "local.filter.vibeLabel": "Ambiente",
+
   // ── Constituição — texto de governação constitucional. Literal e preciso;
   //    números, percentagens e referências a artigos mantidos exatos.
   //    "Associação QueerPulse", "NIPC" e "ILGA Portugal" são nomes próprios,
@@ -3321,42 +3265,4 @@ export const marketing: Catalog = {
   "submitPartner.tips.whatNext.body":
     "A tua candidatura chega como pendente. Uma pessoa da equipa revê-a, e entraremos em contacto — seja um sim, um ainda não, ou uma pergunta.",
 
-  // ── Cidades (CitiesPage + Sections + LiveCards) ───────────────────────────
-  "cities.meta.title": "Onde a QueerPulse está: Lisboa, e a seguir",
-  "cities.meta.description":
-    "A QueerPulse está ativa em Lisboa, a preparar o Porto, e a recolher votos das pessoas membras sobre a próxima cidade — cada nova cidade exige moderação local e um parceiro.",
-  "cities.hero.eyebrow": "Cidades · presença da rede · seletor",
-  "cities.hero.title": "Uma cidade de cada <em>vez.</em>",
-  "cities.hero.dek":
-    "A QueerPulse está enraizada em Lisboa. Só abrimos numa nova cidade quando há <b>pelo menos uma pessoa moderadora no país</b>, uma organização parceira alinhada, e uma necessidade local clara. <em>Isso torna a expansão lenta de propósito.</em> Abaixo: onde estamos agora, onde estamos a construir, e como podes puxar-nos para a tua cidade.",
-  "cities.hero.browsingAs": "Estás a navegar como",
-  "cities.hero.changeCta": "Mudar",
-  "cities.hero.changeToast":
-    "Detetado pelo IP. Podes mudar a partir de qualquer cartão de cidade abaixo.",
-
-  "cities.live.heading": "Ativas · <em>totalmente operacionais</em>",
-  "cities.live.meta": "Comunidade ativa, moderação, organizações parceiras",
-
-  "cities.groundwork.heading": "Em <em>preparação</em>",
-  "cities.groundwork.meta":
-    "Pessoa moderadora local identificada · negociações com parceiros em curso",
-
-  "cities.waitlist.heading":
-    "Cidades <em>que as pessoas membras estão a pedir</em>",
-  "cities.waitlist.meta":
-    "Lista de espera pública · pessoas membras podem votar · 1 voto por pessoa",
-  "cities.waitlist.intro":
-    "Os votos são <em>sinais para nós sobre onde está a comunidade</em>, não promessas de construir. Abrimos uma cidade de cada vez. Adicionar o teu voto demora 1 clique.",
-  "cities.waitlist.membersAsking": "Pessoas a pedir",
-  "cities.waitlist.pctToThreshold": "{pct}% até ao limiar",
-  "cities.waitlist.votedCta": "Votaste",
-  "cities.waitlist.voteCta": "+ Adicionar o meu voto",
-  "cities.waitlist.voteToast":
-    "Voto registado · lemos estes sinais todos os meses",
-  "cities.waitlist.footNote":
-    "Não vês a tua cidade? <a>Escreve-nos</a> a dizer o que construirias lá.",
-
-  "cities.how.kicker": "O livro de regras",
-  "cities.how.title": "Como <em>realmente abrimos</em> uma nova cidade.",
-  "cities.how.intro": "Quatro condições, todas obrigatórias. Sem atalhos.",
 };

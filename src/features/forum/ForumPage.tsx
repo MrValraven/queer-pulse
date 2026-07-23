@@ -10,11 +10,16 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { SELF_AUTHOR, selfAuthorFromProfile, type Thread } from "./forum.data";
 import { useThreads } from "./api/useForum";
-import { useCreateThread } from "./api/useForumMutations";
+import { useCreateThread, useEditThreadTitle } from "./api/useForumMutations";
 import { ComposeThreadModal, type NewThreadInput } from "./ComposeThreadModal";
+import { EditTitleModal } from "./EditTitleModal";
 import { FirstPostPrompt } from "./FirstPostPrompt";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
+import { useToast } from "../../shared/components/feedback/useToast";
+// DEMO-ONLY persona — read ONLY inside the `demoMode` branch of `canEditThread`
+// below; the live branch must use solely the DTO's `thread.canEdit` flag.
+import { currentUser } from "../members/data/members";
 import styles from "./ForumPage.module.css";
 
 const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
@@ -36,6 +41,11 @@ export function ForumPage() {
   const [composing, setComposing] = useState(false);
   const [composeSeed, setComposeSeed] = useState("");
   const [extraThreads, setExtraThreads] = useState<Thread[]>([]);
+  const { showToast } = useToast();
+  const [editingTitleThreadId, setEditingTitleThreadId] = useState<
+    number | null
+  >(null);
+  const editThreadTitle = useEditThreadTitle(editingTitleThreadId ?? 0);
   const [promptDismissed, setPromptDismissed] = useState(
     () =>
       typeof localStorage !== "undefined" &&
@@ -73,6 +83,38 @@ export function ForumPage() {
     );
     return [...optimistic, ...threadsQuery.threads];
   }, [extraThreads, threadsQuery.threads]);
+
+  // Live: author-only edit right comes from the DTO flag on the card.
+  // Demo: the persona owns threads it authored ("You" / its slug). currentUser
+  // is only touched inside this demoMode branch.
+  const canEditThread = (thread: Thread): boolean =>
+    demoMode
+      ? thread.author.slug === currentUser.slug || thread.author.n === "You"
+      : !!thread.canEdit;
+
+  const editingThread =
+    editingTitleThreadId != null
+      ? allThreads.find((thread) => thread.id === editingTitleThreadId)
+      : undefined;
+
+  function saveThreadTitle(title: string) {
+    if (demoMode) {
+      // Demo edit only ever targets locally-composed threads (in extraThreads);
+      // seeded THREADS are never authored by the demo persona.
+      setExtraThreads((prev) =>
+        prev.map((thread) =>
+          thread.id === editingTitleThreadId ? { ...thread, title } : thread,
+        ),
+      );
+    } else {
+      editThreadTitle.mutate(
+        { title },
+        { onError: () => showToast(t("forum:toast.error"), "error") },
+      );
+    }
+    setEditingTitleThreadId(null);
+    showToast(t("forum:toast.editSaved"), "success");
+  }
 
   // Sidebar post counts derived from the real threads (members' posts), so they
   // stay truthful and update live when a member publishes a new one.
@@ -193,6 +235,8 @@ export function ForumPage() {
                 filtered={cat !== "all"}
                 onShowAll={() => setCat("all")}
                 onCompose={() => openCompose()}
+                canEditThread={canEditThread}
+                onEditTitle={(thread) => setEditingTitleThreadId(thread.id)}
               />
 
               {hasNextPage && (
@@ -219,6 +263,15 @@ export function ForumPage() {
           initialTitle={composeSeed}
           onClose={() => setComposing(false)}
           onPublish={publishThread}
+        />
+      )}
+
+      {editingThread && (
+        <EditTitleModal
+          initialTitle={editingThread.title}
+          busy={editThreadTitle.isPending}
+          onSave={saveThreadTitle}
+          onClose={() => setEditingTitleThreadId(null)}
         />
       )}
     </PageShell>

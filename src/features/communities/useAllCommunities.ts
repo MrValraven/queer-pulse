@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { useCreatedCommunities } from "./startCommunity/createdCommunities.store";
+import { useCommunityEdits } from "../../app/providers/CommunityEditsProvider";
+import { applyCommunityOverride } from "./api/communities.adapters";
 import { communities } from "../homepage/data/communities";
 import type { Community } from "../homepage/data/types";
 import {
@@ -23,12 +25,25 @@ export function createdToCommunity(c: CreatedCommunity): Community {
   };
 }
 
-/** Static directory + everything founded this session (created first). */
+/** Static directory + everything founded this session (created first), with any
+ *  session edit overrides applied so an owner/mod's demo edit shows on the
+ *  discover grid too — not just the detail page. Live mode leaves `overrides`
+ *  empty (the server owns the data + the grid refetches on `["communities"]`),
+ *  so the map is a no-op there. */
 export function useAllCommunities(): Community[] {
   const { created } = useCreatedCommunities();
+  const { overrides } = useCommunityEdits();
   return useMemo(
-    () => [...created.map(createdToCommunity), ...communities],
-    [created],
+    () =>
+      [...created.map(createdToCommunity), ...communities].map((community) => {
+        const override = community.slug
+          ? overrides[community.slug]
+          : undefined;
+        return override
+          ? applyCommunityOverride(community, override)
+          : community;
+      }),
+    [created, overrides],
   );
 }
 
@@ -44,6 +59,10 @@ export function buildCreatedDetail(c: CreatedCommunity): CommunityDetail {
     tint: (owner?.tint as Tint) ?? "plum",
     role: "Founder",
     slug: c.ownerSlug,
+    // The founder's real profile picture, captured on the owner steward at
+    // creation time — so the organiser card + hero show their actual face
+    // rather than initials when their slug isn't in the static registry.
+    avatarUrl: owner?.src ?? null,
     bio: `Just opened ${c.name}. ${c.tagline || c.purpose}`,
   };
   return {

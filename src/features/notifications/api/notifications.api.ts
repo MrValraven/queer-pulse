@@ -11,17 +11,32 @@ import type { NotificationKind } from "./formatNotification";
  * can gain a member without a frontend deploy, and an unrecognised value must
  * degrade to the generic fallback rather than blank the row.
  */
+/**
+ * The member whose action triggered a person-based notification (connection
+ * request/accept, vouch, introduction, event invite), resolved server-side so
+ * the row can name them, show their avatar, and link to their profile. Absent
+ * (or null) for system notifications and any row whose actor can't be resolved.
+ */
+export interface NotificationActorDTO {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string | null;
+}
+
 export interface NotificationDTO {
   /** A uuid — not a number. */
   id: string;
   userId: string;
   type: NotificationKind | (string & {});
-  /** Structured jsonb. Currently opaque IDs only, no display names. */
+  /** Structured jsonb. Opaque IDs only — display names come via `actor`. */
   payload: Record<string, unknown>;
   /** The backend's field. The view-model inverts this to `unread`. */
   read: boolean;
   /** ISO timestamp. */
   createdAt: string;
+  /** The acting member, when the backend could resolve one. */
+  actor?: NotificationActorDTO | null;
 }
 
 /**

@@ -137,6 +137,10 @@ export const forum: Catalog = {
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Fórum",
   "threadPage.replyPostedToast": "Resposta publicada",
+  "threadPage.notFound.title": "Este tópico não está aqui",
+  "threadPage.notFound.description":
+    "Pode ter sido removido ou o link pode estar quebrado. Volta ao fórum para encontrares as conversas atuais.",
+  "threadPage.notFound.backCta": "Voltar ao fórum",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
   "byline.withRole":
@@ -158,4 +162,50 @@ export const forum: Catalog = {
   "author.officialBadge": "Oficial",
   "author.aboutTeamAria": "Sobre a equipa e a governação do QueerPulse",
   "author.viewProfileAria": "Ver o perfil de {name}",
+
+  // ── PostActionsMenu (⋯ overflow menu) — placeholder EN text, TODO: pt-PT ──
+  "postMenu.edit": "Edit",
+  "postMenu.delete": "Delete",
+  "postMenu.restore": "Restore",
+  "postMenu.history": "View edit history",
+  "postMenu.ariaLabel": "Post actions",
+
+  // ── Edited mark / deleted-post tombstone ─────────────────────────────────
+  "edited.mark": "(edited)",
+  "tombstone.body": "This post was deleted.",
+  "tombstone.author": "[deleted]",
+
+  // ── Inline reply edit ────────────────────────────────────────────────────
+  "replyEdit.save": "Save",
+  "replyEdit.cancel": "Cancel",
+  "replyEdit.saving": "Saving…",
+  "replyEdit.textareaAria": "Edit your reply",
+
+  // ── OP (original post) edit ──────────────────────────────────────────────
+  "opEdit.title": "Edit post",
+  "opEdit.titleLabel": "Title",
+  "opEdit.bodyLabel": "Post",
+  "opEdit.save": "Save changes",
+  "opEdit.cancel": "Cancel",
+  "opEdit.saving": "Saving…",
+
+  // ── Delete confirmation ───────────────────────────────────────────────────
+  "deleteConfirm.title": "Delete this post?",
+  "deleteConfirm.body":
+    "It’ll be hidden from the thread. You can restore it later — nothing is lost.",
+  "deleteConfirm.confirm": "Delete",
+  "deleteConfirm.cancel": "Keep it",
+  "deleteConfirm.deleting": "Deleting…",
+
+  // ── Edit history modal ────────────────────────────────────────────────────
+  "history.title": "Edit history",
+  "history.empty": "No earlier versions to show.",
+  "history.titleChange": "Title was: {title}",
+  "history.close": "Close",
+
+  // ── Toasts (edit / delete / restore) ─────────────────────────────────────
+  "toast.editSaved": "Your edit is live.",
+  "toast.deleted": "Post deleted.",
+  "toast.restored": "Post restored.",
+  "toast.error": "Something went wrong. Try again in a moment.",
 };

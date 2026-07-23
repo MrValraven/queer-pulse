@@ -21,17 +21,21 @@ export function LivingHubTabs({
   info,
   living,
   threads,
+  slug,
   isMember,
   role,
   pulsePaging,
+  discussionPaging,
 }: {
   community: Community;
   info: CommunityDetail;
   living: LivingCommunity;
   threads: ThreadData[];
+  slug: string;
   isMember: boolean;
   role: CommunityRole | null;
   pulsePaging: PulsePaging;
+  discussionPaging: PulsePaging;
 }) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("pulse");
@@ -87,7 +91,14 @@ export function LivingHubTabs({
             paging={pulsePaging}
           />
         )}
-        {active === "discussion" && <DiscussionTab threads={threads} />}
+        {active === "discussion" && (
+          <DiscussionTab
+            threads={threads}
+            slug={slug}
+            isMember={isMember}
+            paging={discussionPaging}
+          />
+        )}
         {active === "members" && (
           <RosterTab
             roster={living.roster}

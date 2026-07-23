@@ -52,6 +52,12 @@ export interface CommunityReplyDTO {
   author: MemberRefDTO | null;
   text: string;
   createdAt: string;
+  editedAt: string | null;
+  deleted: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  canRestore: boolean;
+  canViewHistory: boolean;
 }
 export interface CommunityPostDTO {
   id: string;
@@ -61,9 +67,33 @@ export interface CommunityPostDTO {
   kind: "post" | "announcement";
   pinned: boolean;
   createdAt: string;
+  editedAt: string | null;
+  deleted: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  canRestore: boolean;
+  canViewHistory: boolean;
   reactions: CommunityReactionSummary[];
   replies: CommunityReplyDTO[];
   replyCount: number;
+}
+export interface CommunityPostHistoryEntry {
+  id: string;
+  author: MemberRefDTO | null;
+  previousBody: string;
+  createdAt: string;
+}
+export interface CommunityPostHistoryResponse {
+  revisions: CommunityPostHistoryEntry[];
+}
+export interface CommunityReplyHistoryEntry {
+  id: string;
+  author: MemberRefDTO | null;
+  previousText: string;
+  createdAt: string;
+}
+export interface CommunityReplyHistoryResponse {
+  revisions: CommunityReplyHistoryEntry[];
 }
 export interface RosterEntryDTO {
   member: MemberRefDTO;
@@ -179,6 +209,62 @@ export const replyToPost = (slug: string, id: string, text: string) =>
   apiPost<CommunityReplyDTO>(`/communities/${slug}/posts/${id}/replies`, {
     text,
   });
+
+/** DELETE /communities/:slug/posts/:id — soft tombstone (author or owner/mod). */
+export const deleteCommunityPost = (slug: string, id: string) =>
+  apiDelete<CommunityPostDTO>(`/communities/${slug}/posts/${id}`);
+
+/** POST /communities/:slug/posts/:id/restore — clear the tombstone. */
+export const restoreCommunityPost = (slug: string, id: string) =>
+  apiPost<CommunityPostDTO>(`/communities/${slug}/posts/${id}/restore`);
+
+/** GET /communities/:slug/posts/:id/history — post-body revisions. */
+export const getCommunityPostHistory = (slug: string, id: string) =>
+  apiGet<CommunityPostHistoryResponse>(
+    `/communities/${slug}/posts/${id}/history`,
+  );
+
+/** PATCH /communities/:slug/posts/:id/replies/:replyId — author edits a reply. */
+export const editCommunityReply = (
+  slug: string,
+  postId: string,
+  replyId: string,
+  text: string,
+) =>
+  apiPatch<CommunityReplyDTO>(
+    `/communities/${slug}/posts/${postId}/replies/${replyId}`,
+    { text },
+  );
+
+/** DELETE /communities/:slug/posts/:id/replies/:replyId — soft tombstone. */
+export const deleteCommunityReply = (
+  slug: string,
+  postId: string,
+  replyId: string,
+) =>
+  apiDelete<CommunityReplyDTO>(
+    `/communities/${slug}/posts/${postId}/replies/${replyId}`,
+  );
+
+/** POST /communities/:slug/posts/:id/replies/:replyId/restore — clear tombstone. */
+export const restoreCommunityReply = (
+  slug: string,
+  postId: string,
+  replyId: string,
+) =>
+  apiPost<CommunityReplyDTO>(
+    `/communities/${slug}/posts/${postId}/replies/${replyId}/restore`,
+  );
+
+/** GET /communities/:slug/posts/:id/replies/:replyId/history — reply revisions. */
+export const getCommunityReplyHistory = (
+  slug: string,
+  postId: string,
+  replyId: string,
+) =>
+  apiGet<CommunityReplyHistoryResponse>(
+    `/communities/${slug}/posts/${postId}/replies/${replyId}/history`,
+  );
 
 export const getRoster = (slug: string) =>
   apiGet<RosterEntryDTO[]>(`/communities/${slug}/roster`);

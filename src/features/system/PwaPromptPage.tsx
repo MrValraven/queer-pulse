@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { detectPlatform, useInstallPrompt } from "../../shared/hooks";
 import { useDisplayMode } from "../../app/providers/displayModeContext";
 import styles from "./PwaPromptPage.module.css";
@@ -199,7 +198,6 @@ export function PwaPromptPage() {
             i18nKey="system:pwaPrompt.actionsFoot"
             components={{
               b: <b />,
-              a: <Link to={routes.getTheApp} className={styles.appLink} />,
             }}
           />
         </p>

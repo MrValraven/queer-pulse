@@ -37,7 +37,13 @@ export function FlatmateCard({
   const saved = isSaved(savedId);
 
   const handleSayHello = () => {
-    sendHello({ slug: p.profileSlug });
+    sendHello(
+      { slug: p.profileSlug },
+      {
+        onError: () =>
+          showToast(t("economy:flatmates.card.sayHelloError"), "error"),
+      },
+    );
     onSayHello();
   };
 
@@ -122,9 +128,11 @@ export function FlatmateCard({
         ))}
       </div>
       <div className={styles.foot}>
-        <span className={styles.since}>
-          {t("economy:flatmates.card.memberSince", { date: p.since })}
-        </span>
+        {p.since && (
+          <span className={styles.since}>
+            {t("economy:flatmates.card.memberSince", { date: p.since })}
+          </span>
+        )}
         <div className={styles.footActions}>
           <span
             role="button"

@@ -16,7 +16,10 @@ import { API_BASE_URL, apiAvailable } from "./config";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logInfo, logWarn } from "../observability/logger";
-import type { ServerToClientEvents } from "../contracts/realtime";
+import type {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from "../contracts/realtime";
 
 // ── The realtime layer ──────────────────────────────────────────────────────
 // A socket.io client for the backend's `/chat` namespace, honouring
@@ -36,6 +39,11 @@ type ServerListeners = {
   [K in keyof ServerToClientEvents]: (data: ServerToClientEvents[K]) => void;
 };
 
+/** Same shape for the frames we emit, so `socket.emit(...)` is type-checked. */
+type ClientEmitters = {
+  [K in keyof ClientToServerEvents]: (data: ClientToServerEvents[K]) => void;
+};
+
 /** The namespace URL. socket.io reads the path as the namespace, the rest as origin. */
 function realtimeUrl(): string | null {
   if (!API_BASE_URL) return null;
@@ -48,10 +56,12 @@ function realtimeUrl(): string | null {
  * its query keys. `dispose()` closes it for good.
  */
 class RealtimeClient {
-  private socket: Socket<ServerListeners> | null = null;
+  private socket: Socket<ServerListeners, ClientEmitters> | null = null;
   private listeners = new Set<(connected: boolean) => void>();
   private url: string;
   private qc: QueryClient;
+  /** The open thread whose room we want joined. Remembered across (re)connects. */
+  private activeConversationId: string | null = null;
 
   constructor(url: string, qc: QueryClient) {
     this.url = url;
@@ -69,7 +79,7 @@ class RealtimeClient {
 
   connect(): void {
     if (this.socket) return;
-    const socket: Socket<ServerListeners> = io(this.url, {
+    const socket: Socket<ServerListeners, ClientEmitters> = io(this.url, {
       withCredentials: true,
       transports: ["websocket"],
     });
@@ -78,6 +88,16 @@ class RealtimeClient {
     socket.on("connect", () => {
       this.emit(true);
       logInfo("realtime: connected");
+      // Conversation-room membership lives on the socket connection and is
+      // dropped on every reconnect, so (re)join the open thread each time we
+      // connect. This is what makes the gateway's per-conversation broadcasts
+      // (message:new / read / typing) reach us — without it, new DMs only
+      // appear on a manual refresh.
+      if (this.activeConversationId) {
+        socket.emit("conversation:join", {
+          conversationId: this.activeConversationId,
+        });
+      }
     });
     socket.on("disconnect", (reason) => {
       this.emit(false);
@@ -127,8 +147,27 @@ class RealtimeClient {
     });
   }
 
+  /**
+   * Track which conversation thread is open and join its room, so the gateway's
+   * `message:new` / `read` broadcasts (which target the conversation room, not
+   * the per-user room) reach this socket. Safe to call before the socket
+   * connects — the id is remembered and the join is (re)issued from the
+   * `connect` handler above. There is no server `conversation:leave`; a
+   * superseded room simply stops being the active thread, and the stray
+   * `conversations` invalidations its events still trigger are cheap (and keep
+   * the inbox previews/unread fresh anyway).
+   */
+  setActiveConversation(conversationId: string | null): void {
+    if (conversationId === this.activeConversationId) return;
+    this.activeConversationId = conversationId;
+    if (conversationId && this.socket?.connected) {
+      this.socket.emit("conversation:join", { conversationId });
+    }
+  }
+
   dispose(): void {
     this.listeners.clear();
+    this.activeConversationId = null;
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;
@@ -141,11 +180,15 @@ interface RealtimeContextValue {
   connected: boolean;
   /** Register demand for the socket; returns a release fn. See `useRealtime`. */
   request: () => () => void;
+  /** Join (or, with null, clear) the conversation room to stream into. Inert
+   *  until a socket exists; survives socket re-creation and reconnects. */
+  joinConversation: (conversationId: string | null) => void;
 }
 
 const RealtimeContext = createContext<RealtimeContextValue>({
   connected: false,
   request: () => () => {},
+  joinConversation: () => {},
 });
 
 /**
@@ -164,6 +207,10 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const [connected, setConnected] = useState(false);
   const [demand, setDemand] = useState(0);
   const clientRef = useRef<RealtimeClient | null>(null);
+  // The thread a consumer wants joined, held here (not just on the client) so a
+  // freshly-created client re-applies it — consumers may set it before the
+  // socket exists, or it must survive a sign-out/back-in that rebuilds the client.
+  const activeConversationRef = useRef<string | null>(null);
 
   const active = loggedIn && !demoMode && apiAvailable && demand > 0;
 
@@ -172,12 +219,21 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     return () => setDemand((n) => Math.max(0, n - 1));
   }, []);
 
+  const joinConversation = useCallback((conversationId: string | null) => {
+    activeConversationRef.current = conversationId;
+    clientRef.current?.setActiveConversation(conversationId);
+  }, []);
+
   useEffect(() => {
     if (!active) return;
     const url = realtimeUrl();
     if (!url) return;
     const client = new RealtimeClient(url, queryClient);
     clientRef.current = client;
+    // Re-apply the desired thread onto the new client: a consumer may have asked
+    // to join before this client existed (demand bump and connect race across
+    // renders), and it's cleared on the client but remembered here.
+    client.setActiveConversation(activeConversationRef.current);
     const off = client.onStatus(setConnected);
     client.connect();
     return () => {
@@ -189,8 +245,8 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   }, [active]);
 
   const value = useMemo<RealtimeContextValue>(
-    () => ({ connected, request }),
-    [connected, request],
+    () => ({ connected, request, joinConversation }),
+    [connected, request, joinConversation],
   );
 
   return createElement(RealtimeContext.Provider, { value }, children);
@@ -211,4 +267,20 @@ export function useRealtime(): RealtimeContextValue {
 export function useRealtimeConnection(): void {
   const { request } = useRealtime();
   useEffect(() => request(), [request]);
+}
+
+/**
+ * Keep the realtime socket joined to `conversationId`'s room while mounted, so
+ * the open thread receives the gateway's per-conversation frames (message:new /
+ * read) live. Pass the currently-open conversation id, or `null` in demo mode /
+ * when no thread is open. Switching threads leaves the old room implicitly and
+ * joins the new one; unmounting clears it. Inert until a socket exists and
+ * re-joins itself across reconnects — both handled by the RealtimeClient.
+ */
+export function useJoinConversation(conversationId: string | null): void {
+  const { joinConversation } = useRealtime();
+  useEffect(() => {
+    joinConversation(conversationId);
+    return () => joinConversation(null);
+  }, [conversationId, joinConversation]);
 }

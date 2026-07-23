@@ -4,11 +4,16 @@ import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useOrgTiers } from "./api/useOrgTiers";
+import type { OrgTier } from "./orgTiers.data";
 import styles from "./ForOrganisationsPage.module.css";
 
 export function TiersSection() {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const { tiers } = useOrgTiers();
+
+  if (tiers.length === 0) return null;
+
   return (
     <section className={styles.doSection}>
       <div className={styles.doInner}>
@@ -22,156 +27,67 @@ export function TiersSection() {
           {t("marketing:forOrgs.tiers.sub")}
         </Reveal>
         <div className={styles.tierGrid}>
-          <Reveal className={styles.tier} delay={0}>
-            <div className={styles.tierName}>
-              {t("marketing:forOrgs.tiers.employer.name")}
-            </div>
-            <div>
-              <div className={styles.tierPrice}>
-                €<em>2.4</em>k
-              </div>
-              <div className={styles.tierPricePeriod}>
-                {t("marketing:forOrgs.tiers.employer.pricePeriod")}
-              </div>
-            </div>
-            <p className={styles.tierDek}>
-              {t("marketing:forOrgs.tiers.employer.dek")}
-            </p>
-            <ul className={styles.tierList}>
-              <li>
-                <Translation
-                  i18nKey="marketing:forOrgs.tiers.employer.list1"
-                  components={{ b: <b /> }}
-                />
-              </li>
-              <li>{t("marketing:forOrgs.tiers.employer.list2")}</li>
-              <li>{t("marketing:forOrgs.tiers.employer.list3")}</li>
-              <li>{t("marketing:forOrgs.tiers.employer.list4")}</li>
-              <li>{t("marketing:forOrgs.tiers.employer.list5")}</li>
-            </ul>
-            <p className={styles.tierFootNote}>
-              {t("marketing:forOrgs.tiers.employer.footnote")}
-            </p>
-            <Button
-              type="button"
-              variant="ghost"
-              className={styles.tierBtn}
-              onClick={() =>
-                showToast(
-                  t("marketing:forOrgs.tiers.employer.reviewToast"),
-                  "info",
-                )
+          {tiers.map((tier, index) => (
+            <Reveal
+              key={tier.slug}
+              className={
+                tier.featured
+                  ? `${styles.tier} ${styles.tierFeatured}`
+                  : styles.tier
               }
+              delay={index * 60}
             >
-              {t("marketing:forOrgs.tiers.employer.reviewCta")}
-            </Button>
-            <Link
-              to={`${routes.company}/atelier-pulso`}
-              className={styles.tierExample}
-            >
-              {t("marketing:forOrgs.tiers.employer.exampleCta")}
-            </Link>
-          </Reveal>
-
-          <Reveal
-            className={`${styles.tier} ${styles.tierFeatured}`}
-            delay={60}
-          >
-            <div className={styles.tierName}>
-              <Translation
-                i18nKey="marketing:forOrgs.tiers.partner.name"
-                components={{ em: <em /> }}
-              />
-            </div>
-            <div>
-              <div className={styles.tierPrice}>
-                <Translation
-                  i18nKey="marketing:forOrgs.tiers.partner.price"
-                  components={{ em: <em /> }}
-                />
+              <div className={styles.tierName}>{tier.name}</div>
+              <div>
+                <div className={styles.tierPrice}>{tier.priceDisplay}</div>
+                <div className={styles.tierPricePeriod}>{tier.pricePeriod}</div>
               </div>
-              <div className={styles.tierPricePeriod}>
-                {t("marketing:forOrgs.tiers.partner.pricePeriod")}
-              </div>
-            </div>
-            <p className={styles.tierDek}>
-              {t("marketing:forOrgs.tiers.partner.dek")}
-            </p>
-            <ul className={styles.tierList}>
-              <li>
-                <Translation
-                  i18nKey="marketing:forOrgs.tiers.partner.list1"
-                  components={{ b: <b /> }}
-                />
-              </li>
-              <li>{t("marketing:forOrgs.tiers.partner.list2")}</li>
-              <li>{t("marketing:forOrgs.tiers.partner.list3")}</li>
-              <li>{t("marketing:forOrgs.tiers.partner.list4")}</li>
-              <li>
-                <Translation
-                  i18nKey="marketing:forOrgs.tiers.partner.list5"
-                  components={{ b: <b /> }}
-                />
-              </li>
-            </ul>
-            <p className={styles.tierFootNote}>
-              <Translation
-                i18nKey="marketing:forOrgs.tiers.partner.footnote"
-                components={{ b: <b /> }}
-              />
-            </p>
-            <Button
-              href="#start"
-              variant="primary"
-              className={styles.tierBtn}
-              style={{ background: "var(--accent)", color: "var(--cream)" }}
-            >
-              {t("marketing:forOrgs.tiers.partner.proposeCta")}
-            </Button>
-          </Reveal>
-
-          <Reveal className={styles.tier} delay={120}>
-            <div className={styles.tierName}>
-              {t("marketing:forOrgs.tiers.funder.name")}
-            </div>
-            <div>
-              <div className={styles.tierPrice}>
-                €<em>15</em>k+
-              </div>
-              <div className={styles.tierPricePeriod}>
-                {t("marketing:forOrgs.tiers.funder.pricePeriod")}
-              </div>
-            </div>
-            <p className={styles.tierDek}>
-              {t("marketing:forOrgs.tiers.funder.dek")}
-            </p>
-            <ul className={styles.tierList}>
-              <li>{t("marketing:forOrgs.tiers.funder.list1")}</li>
-              <li>{t("marketing:forOrgs.tiers.funder.list2")}</li>
-              <li>{t("marketing:forOrgs.tiers.funder.list3")}</li>
-              <li>{t("marketing:forOrgs.tiers.funder.list4")}</li>
-              <li>{t("marketing:forOrgs.tiers.funder.list5")}</li>
-            </ul>
-            <p className={styles.tierFootNote}>
-              {t("marketing:forOrgs.tiers.funder.footnote")}
-            </p>
-            <Button
-              type="button"
-              variant="ghost"
-              className={styles.tierBtn}
-              onClick={() =>
-                showToast(
-                  t("marketing:forOrgs.tiers.funder.discussToast"),
-                  "info",
-                )
-              }
-            >
-              {t("marketing:forOrgs.tiers.funder.discussCta")}
-            </Button>
-          </Reveal>
+              <p className={styles.tierDek}>{tier.dek}</p>
+              <ul className={styles.tierList}>
+                {tier.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+              <p className={styles.tierFootNote}>{tier.footnote}</p>
+              <OrgTierCtaButton cta={tier.cta} />
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function OrgTierCtaButton({ cta }: { cta: OrgTier["cta"] }) {
+  const { showToast } = useToast();
+  if (cta.kind === "link") {
+    return (
+      <Button to={cta.to} variant="ghost" className={styles.tierBtn}>
+        {cta.label}
+      </Button>
+    );
+  }
+  if (cta.kind === "propose") {
+    return (
+      <Button
+        href="#start"
+        variant="primary"
+        className={styles.tierBtn}
+        style={{ background: "var(--accent)", color: "var(--cream)" }}
+      >
+        {cta.label}
+      </Button>
+    );
+  }
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      className={styles.tierBtn}
+      onClick={() => showToast(cta.label, "info")}
+    >
+      {cta.label}
+    </Button>
   );
 }
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import styles from "./OfferPage.module.css";
 import { Button } from "../../shared/components/ui";
 import { MEMBERS, memberName } from "../members/data/members";
@@ -79,7 +79,7 @@ export function OfferPage() {
   const { t } = useTranslation();
   const o = MAIN;
   const owner = o.owner;
-  const { openConnect } = useConnect();
+  const { connected, contact } = useMemberContact("ines");
   const profile = routes.members;
   const offer = routes.offer;
 
@@ -106,11 +106,13 @@ export function OfferPage() {
               <p className={styles.body}>{o.body}</p>
               <div className={styles.cta}>
                 <Button
-                  onClick={() => openConnect("ines")}
+                  onClick={() => contact({ slug: "ines", name: owner.first })}
                   variant="primary"
                   size="lg"
                 >
-                  {t("economy:offerBoard.respondCta", { name: owner.first })}
+                  {connected
+                    ? t("connect:contact.message")
+                    : t("economy:offerBoard.respondCta", { name: owner.first })}
                 </Button>
                 <Button to={profile} variant="ghost" size="lg">
                   {t("economy:offerBoard.seeProfileCta")}
@@ -151,11 +153,13 @@ export function OfferPage() {
                 )}
               </div>
               <Button
-                onClick={() => openConnect("ines")}
+                onClick={() => contact({ slug: "ines", name: owner.first })}
                 variant="primary"
                 className={styles.sidebarBtn}
               >
-                {t("economy:offerBoard.sayHelloCta", { name: owner.first })}
+                {connected
+                  ? t("connect:contact.message")
+                  : t("economy:offerBoard.sayHelloCta", { name: owner.first })}
               </Button>
             </aside>
           </div>

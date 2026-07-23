@@ -1,0 +1,210 @@
+/* Edit-community modal — a plain vertical settings form inside the shared
+   Modal. FormField already carries its own 16px bottom rhythm and control
+   styling, so the custom blocks (roster toggle, feature list, rules, error)
+   match that same 16px rhythm rather than adding a competing grid gap. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Non-FormField blocks match the FormField's baked-in 16px vertical rhythm. */
+.block {
+  margin-bottom: 16px;
+}
+
+.blockLabel {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 10px;
+}
+
+/* Required marker on the custom (non-FormField) block labels — matches the
+   asterisk FormField renders for its own required fields (--accent-text is the
+   AA-passing coral; --accent-ink fails contrast on cream). */
+.req {
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+/* Roster-visibility toggle row */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.check input {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+
+.checkText {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* Feature checkboxes */
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.featureRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.featureRow input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+
+.featureRow input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.featureText {
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.featureRow input:disabled + .featureText {
+  color: var(--ink-40);
+}
+
+/* Rules list */
+.ruleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-bottom: 12px;
+}
+
+.ruleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.ruleText {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.ruleRemove {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ruleRemove:hover {
+    background: rgba(var(--accent-rgb), 0.12);
+    color: var(--accent-text);
+  }
+}
+
+.ruleRemove:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+.ruleAdd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ruleAdd input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: none;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+
+.ruleAdd input:focus {
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  background: var(--paper);
+}
+
+/* Error alert */
+.alert {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-text);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ruleRemove,
+  .ruleAdd input {
+    transition: none;
+  }
+}

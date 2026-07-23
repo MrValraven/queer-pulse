@@ -95,6 +95,19 @@
 .opCat {
   font-weight: 600;
 }
+.opMenu {
+  margin-left: auto;
+}
+.editedMark {
+  color: var(--plum);
+  opacity: 0.6;
+  font-size: 0.85em;
+}
+.tombstone {
+  color: var(--plum);
+  opacity: 0.6;
+  font-style: italic;
+}
 .opTitle {
   font-family: var(--serif);
   font-weight: 400;
@@ -260,6 +273,28 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-ink);
+}
+.replyMenu {
+  margin-left: auto;
+}
+.inlineEdit {
+  margin: 8px 0;
+}
+.inlineTextarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.18);
+  border-radius: 10px;
+  background: var(--cream);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.inlineActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
 }
 .replyTime {
   margin-left: auto;

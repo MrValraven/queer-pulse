@@ -231,16 +231,6 @@ const TopicPage = lazy(() =>
     default: m.TopicPage,
   })),
 );
-const PodcastShowPage = lazy(() =>
-  import("../features/magazine/PodcastShowPage").then((m) => ({
-    default: m.PodcastShowPage,
-  })),
-);
-const AudioPlayerPage = lazy(() =>
-  import("../features/magazine/AudioPlayerPage").then((m) => ({
-    default: m.AudioPlayerPage,
-  })),
-);
 const NewsletterArchivePage = lazy(() =>
   import("../features/magazine/NewsletterArchivePage").then((m) => ({
     default: m.NewsletterArchivePage,
@@ -329,16 +319,6 @@ const AnnualAssemblyPage = lazy(() =>
 const AssemblyMinutesPage = lazy(() =>
   import("../features/marketing/AssemblyMinutesPage").then((m) => ({
     default: m.AssemblyMinutesPage,
-  })),
-);
-const GetTheAppPage = lazy(() =>
-  import("../features/marketing/GetTheAppPage").then((m) => ({
-    default: m.GetTheAppPage,
-  })),
-);
-const CitiesPage = lazy(() =>
-  import("../features/marketing/CitiesPage").then((m) => ({
-    default: m.CitiesPage,
   })),
 );
 const ForOrganisationsPage = lazy(() =>
@@ -1463,8 +1443,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/issues", routes.issues],
   ["/cover-gallery", routes.coverGallery],
   ["/tag", routes.tag],
-  ["/podcast-show", routes.podcastShow],
-  ["/audio-player", routes.audioPlayer],
   ["/newsletter-archive", routes.newsletterArchive],
   ["/story", routes.story],
   ["/story-tomas", routes.storyTomas],
@@ -1531,8 +1509,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/press-archive", routes.pressArchive],
   ["/press-kit", routes.pressKit],
   ["/annual-assembly", routes.annualAssembly],
-  ["/get-the-app", routes.getTheApp],
-  ["/cities", routes.cities],
   ["/for-organisations", routes.forOrganisations],
   ["/platforms", routes.platforms],
   ["/donate", routes.donate],
@@ -1734,8 +1710,6 @@ export function AppRoutes() {
           <Route path={routes.coverGallery} element={<CoverGalleryPage />} />
           <Route path={routes.tag} element={<TagPage />} />
           <Route path={`${routes.topic}/:tag`} element={<TopicPage />} />
-          <Route path={routes.podcastShow} element={<PodcastShowPage />} />
-          <Route path={routes.audioPlayer} element={<AudioPlayerPage />} />
           <Route
             path={routes.newsletterArchive}
             element={<NewsletterArchivePage />}
@@ -1775,8 +1749,6 @@ export function AppRoutes() {
             path="/about/governance/annual-assembly/minutes/:year"
             element={<AssemblyMinutesPage />}
           />
-          <Route path={routes.getTheApp} element={<GetTheAppPage />} />
-          <Route path={routes.cities} element={<CitiesPage />} />
           <Route
             path={routes.forOrganisations}
             element={<ForOrganisationsPage />}

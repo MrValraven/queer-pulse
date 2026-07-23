@@ -5,12 +5,36 @@ import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/SocialProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { conversations, type Conversation } from "./data";
+import { useConnectionsList } from "../connect/api/useConnectionsList";
+import type { ConnectionView } from "../connect/connections.data";
+import { type Conversation } from "./data";
 import styles from "./NewMessageModal.module.css";
 
 interface NewMessageModalProps {
   onClose: () => void;
   onPick: (recipient: Conversation) => void;
+}
+
+/**
+ * A connection → the seed of a fresh thread. Only identity fields matter here;
+ * the real history (messages, unread, timestamps) is filled by the server once
+ * the thread opens (or stays empty in demo). Mirrors the messages view-model
+ * (initials + tint, no photo) so a picked recipient renders like any thread.
+ */
+function connectionToRecipient(view: ConnectionView): Conversation {
+  return {
+    id: view.slug,
+    slug: view.slug,
+    initials: view.initials,
+    tint: view.tint,
+    name: view.name,
+    pronouns: view.pron ?? "",
+    connectedSince: view.meta.since ?? "",
+    time: "",
+    preview: "",
+    unread: false,
+    messages: [],
+  };
 }
 
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
@@ -20,6 +44,22 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
   const { isBlocked } = useSocial();
   const [query, setQuery] = useState("");
 
+  // The recipient pool is the member's accepted connections — demo resolves the
+  // mock relationships locally, live fetches GET /connections. (Mirrors the
+  // "add steward" picker; never the mock DM threads, which are neither.)
+  const { views, loading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useConnectionsList("all");
+
+  // A picker with a search box must see EVERY connection, not just the first
+  // page: the search below filters what's loaded, so an unfetched connection is
+  // silently unreachable. The connection set is personal and bounded, so drain
+  // the remaining pages while the modal is open — each fetch flips
+  // hasNextPage/isFetchingNextPage, re-running this until the last page lands.
+  // No-op in demo / blocked (hasNextPage is false there).
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -28,16 +68,21 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const people = useMemo(() => {
+  const candidates = useMemo(
     // Blocked members are unreachable — never offer them as a recipient.
-    const candidates = conversations.filter(
-      (c) => !c.official && !(c.slug && isBlocked(c.slug)),
-    );
+    () =>
+      views
+        .filter((view) => !isBlocked(view.slug))
+        .map(connectionToRecipient),
+    [views, isBlocked],
+  );
+
+  const people = useMemo(() => {
     const q = query.trim().toLowerCase();
     return q
       ? candidates.filter((c) => c.name.toLowerCase().includes(q))
       : candidates;
-  }, [query, isBlocked]);
+  }, [query, candidates]);
 
   return (
     <div
@@ -97,7 +142,15 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
               </button>
             </li>
           ))}
-          {people.length === 0 && (
+          {loading && candidates.length === 0 && (
+            <li className={styles.empty}>
+              {t("messages:newMessage.loading")}
+            </li>
+          )}
+          {!loading && candidates.length === 0 && (
+            <li className={styles.empty}>{t("messages:newMessage.none")}</li>
+          )}
+          {!loading && candidates.length > 0 && people.length === 0 && (
             <li className={styles.empty}>
               {t("messages:newMessage.empty", { query })}
             </li>

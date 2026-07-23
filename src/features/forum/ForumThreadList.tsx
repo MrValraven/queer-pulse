@@ -14,6 +14,7 @@ import {
 } from "./ForumAuthor";
 import { ForumThreadListSkeleton } from "./ForumSkeleton";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { PostActionsMenu } from "./PostActionsMenu";
 import styles from "./ForumPage.module.css";
 
 export function ForumThreadList({
@@ -26,6 +27,8 @@ export function ForumThreadList({
   filtered,
   onShowAll,
   onCompose,
+  canEditThread,
+  onEditTitle,
 }: {
   loading: boolean;
   threads: Thread[];
@@ -36,6 +39,8 @@ export function ForumThreadList({
   filtered: boolean;
   onShowAll: () => void;
   onCompose: () => void;
+  canEditThread: (thread: Thread) => boolean;
+  onEditTitle: (thread: Thread) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -100,8 +105,9 @@ export function ForumThreadList({
           const cs = CAT_STYLE[thread.cat];
           return (
             <FadeIn key={thread.id} delay={Math.min(idx, 8) * 60}>
-              <Link
-                to={threadPath(thread.id)}
+              <div className={styles.threadRow}>
+                <Link
+                to={threadPath(thread.slug ?? thread.id)}
                 className={[styles.thread, thread.pinned && styles.threadPinned]
                   .filter(Boolean)
                   .join(" ")}
@@ -196,7 +202,19 @@ export function ForumThreadList({
                     </span>
                   </div>
                 </div>
-              </Link>
+                </Link>
+                {canEditThread(thread) && (
+                  <div className={styles.threadMenu}>
+                    <PostActionsMenu
+                      canEdit
+                      onEdit={() => onEditTitle(thread)}
+                      onDelete={() => {}}
+                      onRestore={() => {}}
+                      onHistory={() => {}}
+                    />
+                  </div>
+                )}
+              </div>
             </FadeIn>
           );
         })}

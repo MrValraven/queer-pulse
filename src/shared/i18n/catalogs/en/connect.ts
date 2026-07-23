@@ -160,4 +160,5 @@ export const connect: Catalog = {
     "They reach out through people they already know. Ask a mutual connection to introduce you.",
   "notice.cannotConnect.title": "You can't reach {name} <em>right now.</em>",
   "notice.cannotConnect.body": "This connection isn't available right now.",
+  "contact.message": "Message",
 };

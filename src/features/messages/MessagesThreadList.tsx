@@ -125,7 +125,12 @@ export function MessagesThreadList({
                       tint={thread.tint}
                       size={42}
                     />
-                    {isUnread && <span className={styles.unreadDot} />}
+                    {thread.online && (
+                      <span
+                        className={styles.presenceRing}
+                        title={t("messages:thread.presenceOnline")}
+                      />
+                    )}
                   </div>
                   <div className={styles.trBody}>
                     <div className={styles.trHeader}>
@@ -135,15 +140,25 @@ export function MessagesThreadList({
                       </span>
                       <span className={styles.trTime}>{thread.time}</span>
                     </div>
-                    <div
-                      className={[
-                        styles.trPreview,
-                        isUnread && styles.trPreviewUnread,
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                    >
-                      {thread.preview}
+                    <div className={styles.trPreviewRow}>
+                      <div
+                        className={[
+                          styles.trPreview,
+                          isUnread && styles.trPreviewUnread,
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      >
+                        {thread.preview}
+                      </div>
+                      {isUnread &&
+                        (thread.unreadCount && thread.unreadCount > 0 ? (
+                          <span className={styles.unreadBadge}>
+                            {thread.unreadCount}
+                          </span>
+                        ) : (
+                          <span className={styles.unreadDot} />
+                        ))}
                     </div>
                   </div>
                 </button>

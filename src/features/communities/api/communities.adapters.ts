@@ -1,6 +1,6 @@
 import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
 import type { Community } from "../../homepage/data/types";
-import type { CommunityDetail, Person, Tint } from "../communityDetails";
+import type { CommunityDetail, Person, Reply, Thread, Tint } from "../communityDetails";
 import type {
   LivingCommunity,
   ModRequest,
@@ -21,6 +21,7 @@ import type {
   CommunityType,
   CreateCommunityDto,
   RosterEntryDTO,
+  UpdateCommunityDto,
 } from "./communities.api";
 
 // Map each backend DTO onto the EXISTING mock view-model types the pages
@@ -85,6 +86,7 @@ export function refToPerson(ref: MemberRefDTO | null | undefined): Person {
     name: p.name,
     tint: p.tint as Tint,
     slug: p.slug,
+    avatarUrl: p.avatarUrl,
   };
 }
 
@@ -181,9 +183,16 @@ function summaryToReaction(s: CommunityReactionSummary): Reaction {
 
 function replyDtoToPostReply(dto: CommunityReplyDTO): PostReply {
   return {
+    id: dto.id,
     author: refToPerson(dto.author),
     text: dto.text,
     time: relTime(dto.createdAt),
+    editedAt: dto.editedAt,
+    deleted: dto.deleted,
+    canEdit: dto.canEdit,
+    canDelete: dto.canDelete,
+    canRestore: dto.canRestore,
+    canViewHistory: dto.canViewHistory,
   };
 }
 
@@ -199,7 +208,14 @@ export function postDtoToPost(dto: CommunityPostDTO, slug: string): Post {
     reactions: dto.reactions.map(summaryToReaction),
     replies: dto.replies.map(replyDtoToPostReply),
     time: relTime(dto.createdAt),
+    createdAt: dto.createdAt,
     communitySlug: slug,
+    editedAt: dto.editedAt,
+    deleted: dto.deleted,
+    canEdit: dto.canEdit,
+    canDelete: dto.canDelete,
+    canRestore: dto.canRestore,
+    canViewHistory: dto.canViewHistory,
   };
 }
 
@@ -233,6 +249,59 @@ export function joinRequestToModRequest(
   };
 }
 
+/** The post body's first line, trimmed, as the discussion thread's heading.
+ *  Community posts have no title (sub-project #2 decision: derive from body). */
+function headingFromBody(body: string): string {
+  const firstLine =
+    body
+      .split("\n")
+      .map((line) => line.trim())
+      .find(Boolean) ?? body.trim();
+  return firstLine.length > 120 ? `${firstLine.slice(0, 119)}…` : firstLine;
+}
+
+function postReplyToThreadReply(reply: PostReply): Reply {
+  return {
+    id: reply.id,
+    initials: reply.author.initials,
+    name: reply.author.name,
+    tint: reply.author.tint,
+    text: reply.text,
+    editedAt: reply.editedAt,
+    deleted: reply.deleted,
+    canEdit: reply.canEdit,
+    canDelete: reply.canDelete,
+    canRestore: reply.canRestore,
+    canViewHistory: reply.canViewHistory,
+  };
+}
+
+/** A community `Post` → the Discussion widget's `Thread` view-model. Heading is
+ *  the first body line; `votes` is the Heart-reaction count (the discussion
+ *  upvote arrow maps to a Heart toggle). */
+export function postToThread(post: Post): Thread {
+  const heart = post.reactions.find((reaction) => reaction.key === "heart");
+  return {
+    id: post.id,
+    votes: heart?.count ?? 0,
+    voted: heart?.reacted ?? false,
+    pinned: post.pinned ?? false,
+    createdAt: post.createdAt,
+    title: headingFromBody(post.body),
+    author: post.author,
+    time: post.time,
+    replyCount: post.replies.length,
+    post: post.body,
+    replies: post.replies.map(postReplyToThreadReply),
+    editedAt: post.editedAt,
+    deleted: post.deleted,
+    canEdit: post.canEdit,
+    canDelete: post.canDelete,
+    canRestore: post.canRestore,
+    canViewHistory: post.canViewHistory,
+  };
+}
+
 /** Start-a-Community wizard draft → the POST /communities payload.
  *  Co-stewards (non-owner) are sent as `stewards` (seeded as mods); the invite
  *  seeds are forwarded as `invites` (accepted but not persisted server-side). */
@@ -252,5 +321,126 @@ export function draftToCreateDto(draft: CommunityDraft): CreateCommunityDto {
       .filter((s) => s.role !== "owner" && s.key !== "owner")
       .map((s) => s.key),
     invites: draft.invites,
+  };
+}
+
+/** The exact set of fields an owner/mod may edit (backend whitelist). One clean
+ *  interface for the edit modal to seed from, in both demo and live mode. */
+export interface EditableCommunityFields {
+  name: string;
+  tagline: string;
+  type: CommunityType;
+  whoFor: string;
+  purpose: string;
+  accessTier: AccessTier;
+  rosterVisible: boolean;
+  features: string[];
+  rules: string[];
+}
+
+/** Live seed: the authoritative current values straight off the detail DTO. */
+export function dtoToEditable(dto: CommunityDetailDTO): EditableCommunityFields {
+  return {
+    name: dto.name,
+    tagline: dto.tagline,
+    type: dto.type,
+    whoFor: dto.whoFor,
+    purpose: dto.purpose,
+    accessTier: dto.accessTier,
+    rosterVisible: dto.rosterVisible,
+    features: dto.features,
+    rules: dto.rules,
+  };
+}
+
+/** Merge a demo edit patch onto the discover-grid `Community` view-model.
+ *  `count` is left as-is: the raw member number isn't recoverable here, so an
+ *  access-tier change only re-derives the private/join affordances. */
+export function applyCommunityOverride(
+  community: Community,
+  patch: UpdateCommunityDto,
+): Community {
+  const next: Community = { ...community };
+  if (patch.name !== undefined) next.name = patch.name;
+  if (patch.tagline !== undefined) next.description = patch.tagline;
+  if (patch.type !== undefined) {
+    next.type = patch.type;
+    next.typeLabel = TYPE_SHORT[patch.type] ?? community.typeLabel;
+  }
+  if (patch.accessTier !== undefined) {
+    next.privateBadge = patch.accessTier === "private";
+    next.dashed = patch.accessTier === "private";
+    next.joinLabel = joinLabelFor(patch.accessTier);
+  }
+  return next;
+}
+
+/** Merge a demo edit patch onto the `CommunityDetail` "info" view-model. */
+export function applyDetailOverride(
+  detail: CommunityDetail,
+  patch: UpdateCommunityDto,
+): CommunityDetail {
+  const badge =
+    patch.type !== undefined ? TYPE_SHORT[patch.type] ?? detail.badge : detail.badge;
+  return {
+    ...detail,
+    badge,
+    tags: patch.type !== undefined ? [badge] : detail.tags,
+    about: patch.purpose !== undefined ? [patch.purpose] : detail.about,
+    whoFor: patch.whoFor !== undefined ? [patch.whoFor] : detail.whoFor,
+  };
+}
+
+/** Merge a demo edit patch onto the enriched `LivingCommunity` (rules + tier). */
+export function applyLivingOverride(
+  living: LivingCommunity | undefined,
+  patch: UpdateCommunityDto,
+): LivingCommunity | undefined {
+  if (!living) return living;
+  return {
+    ...living,
+    rules: patch.rules !== undefined ? patch.rules : living.rules,
+    accessTier:
+      patch.accessTier !== undefined ? patch.accessTier : living.accessTier,
+  };
+}
+
+/** Seed the shared wizard-draft shape from the current editable values. The
+ *  steward/invite/handle/consent/tint fields are inert here — the edit modal
+ *  never shows them and `draftToUpdateDto` never sends them. */
+export function editableToDraft(
+  editable: EditableCommunityFields,
+): CommunityDraft {
+  return {
+    name: editable.name,
+    purpose: editable.purpose,
+    type: editable.type,
+    whoFor: editable.whoFor,
+    accessTier: editable.accessTier,
+    rosterVisible: editable.rosterVisible,
+    stewards: [],
+    features: editable.features,
+    rules: editable.rules,
+    tint: "coral",
+    tagline: editable.tagline,
+    invites: [],
+    handle: "",
+    consent: true,
+  };
+}
+
+/** Edit-modal draft → the PATCH /communities/:slug payload. Editable fields
+ *  only — no handle/slug (frozen), no stewards/invites. */
+export function draftToUpdateDto(draft: CommunityDraft): UpdateCommunityDto {
+  return {
+    name: draft.name.trim(),
+    purpose: draft.purpose.trim(),
+    type: (draft.type || "social") as CommunityType,
+    whoFor: draft.whoFor.trim(),
+    accessTier: (draft.accessTier || "public") as AccessTier,
+    rosterVisible: draft.rosterVisible,
+    features: draft.features,
+    rules: draft.rules,
+    tagline: draft.tagline.trim(),
   };
 }

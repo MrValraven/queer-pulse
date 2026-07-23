@@ -12,12 +12,17 @@ import type { Catalog } from "../../types";
  */
 export const notifications: Catalog = {
   "type.connection_request.text": "Alguém quer ligar-se a ti.",
+  "type.connection_request.textNamed":
+    "<profile>{name}</profile> quer ligar-se a ti.",
   "type.connection_request.meta": "Pedido de ligação",
 
   "type.connection_accepted.text": "O teu pedido de ligação foi aceite.",
+  "type.connection_accepted.textNamed":
+    "<profile>{name}</profile> aceitou o teu pedido de ligação.",
   "type.connection_accepted.meta": "Ligação",
 
   "type.vouch_received.text": "Alguém te avalizou.",
+  "type.vouch_received.textNamed": "<profile>{name}</profile> avalizou-te.",
   "type.vouch_received.meta": "Aval",
 
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
@@ -28,9 +33,13 @@ export const notifications: Catalog = {
 
   "type.introduction_made.text":
     "Uma apresentação que fizeste foi concretizada.",
+  "type.introduction_made.textNamed":
+    "Uma apresentação que fizeste a <profile>{name}</profile> foi concretizada.",
   "type.introduction_made.meta": "Apresentação",
 
   "type.event_invite.text": "Tens um convite para um convívio.",
+  "type.event_invite.textNamed":
+    "<profile>{name}</profile> convidou-te para um convívio.",
   "type.event_invite.meta": "Convite para convívio",
 
   "type.event_reminder.text":

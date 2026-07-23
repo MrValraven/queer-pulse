@@ -18,7 +18,8 @@ export type ReportSubjectType =
   | "message"
   | "community"
   | "housing"
-  | "flatmate";
+  | "flatmate"
+  | "landlord";
 
 export type ReasonCode =
   | "outing"
@@ -146,6 +147,13 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "impersonation",
     "unwanted_contact",
+    "other",
+  ],
+  landlord: [
+    "discrimination",
+    "harassment",
+    "impersonation",
+    "spam",
     "other",
   ],
 };

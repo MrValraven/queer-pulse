@@ -91,4 +91,58 @@ describe("notificationDtoToView", () => {
       notificationDtoToView(dto({ createdAt: "nonsense" }), t, fmt).time,
     ).toBe("");
   });
+
+  describe("actor enrichment", () => {
+    const actor = {
+      slug: "ines",
+      firstName: "Inês",
+      lastName: "Tavares",
+      avatarUrl: "https://cdn.example/ines.jpg",
+    };
+
+    it("links a connection row to the actor's profile with personalized copy", () => {
+      const view = notificationDtoToView(
+        dto({ type: "connection_accepted", actor }),
+        t,
+        fmt,
+      );
+      expect(view.actorSlug).toBe("ines");
+      expect(view.actor).toEqual({
+        name: "Inês Tavares",
+        href: "/members/ines",
+        textKey: "notifications:type.connection_accepted.textNamed",
+      });
+    });
+
+    it("shows the actor's photo when present, a monogram otherwise", () => {
+      const withPhoto = notificationDtoToView(
+        dto({ type: "vouch_received", actor }),
+        t,
+        fmt,
+      );
+      expect(withPhoto.avatar?.src).toBe("https://cdn.example/ines.jpg");
+      expect(withPhoto.avatar?.initials).toBe("IT");
+      // The actor's avatar replaces the generic category icon.
+      expect(withPhoto.icon).toBeUndefined();
+
+      const noPhoto = notificationDtoToView(
+        dto({ type: "vouch_received", actor: { ...actor, avatarUrl: null } }),
+        t,
+        fmt,
+      );
+      expect(noPhoto.avatar?.src).toBeUndefined();
+      expect(noPhoto.avatar?.initials).toBe("IT");
+    });
+
+    it("leaves a row with no actor as an anonymous icon row", () => {
+      const view = notificationDtoToView(
+        dto({ type: "connection_request" }),
+        t,
+        fmt,
+      );
+      expect(view.actor).toBeUndefined();
+      expect(view.avatar).toBeUndefined();
+      expect(view.icon).toBeDefined();
+    });
+  });
 });

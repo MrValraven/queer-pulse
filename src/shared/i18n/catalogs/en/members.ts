@@ -766,6 +766,8 @@ export const members: Catalog = {
   "savedByYou.kind.housing.cta": "View listing",
   "savedByYou.kind.flatmate.label": "Flatmate",
   "savedByYou.kind.flatmate.cta": "View profile",
+  "savedByYou.kind.landlord.label": "Landlord",
+  "savedByYou.kind.landlord.cta": "View landlord",
 
   // ── Saved-by-you chrome (SavedByYou) ─────────────────────────────────────────
   "savedByYou.removeAriaLabel": "Remove {title} from saved",

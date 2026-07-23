@@ -772,6 +772,8 @@ export const members: Catalog = {
   "savedByYou.kind.housing.cta": "Ver anúncio",
   "savedByYou.kind.flatmate.label": "Colega de casa",
   "savedByYou.kind.flatmate.cta": "Ver perfil",
+  "savedByYou.kind.landlord.label": "Pessoa proprietária",
+  "savedByYou.kind.landlord.cta": "Ver pessoa proprietária",
 
   // ── Chrome de guardados por ti (SavedByYou) ─────────────────────────────────
   "savedByYou.removeAriaLabel": "Remover {title} dos guardados",

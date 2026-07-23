@@ -5,14 +5,15 @@ import { I18nProvider } from "../../app/providers/I18nProvider";
 import { NowSection } from "./ProfileContentSections";
 import type { MemberProfile } from "./data/memberProfiles";
 
-const openConnect = vi.fn();
-vi.mock("../../app/providers/ConnectProvider", () => ({
-  useConnect: () => ({ openConnect }),
+const contact = vi.fn();
+vi.mock("../connect/useMemberContact", () => ({
+  useMemberContact: () => ({ connected: false, contact }),
 }));
 
 const profile = {
   slug: "joao-ribeiro",
   first: "João",
+  last: "Ribeiro",
   now: "Programming the autumn season.",
   openTo: [
     { kind: "preset", id: "collaborating" },
@@ -37,20 +38,20 @@ describe("NowSection open-to chips", () => {
     expect(screen.getByRole("button", { name: "Archive tips" })).toBeVisible();
   });
 
-  it("opens connect with the preset reason encoded", async () => {
+  it("contacts the member with the preset reason encoded", async () => {
     renderNowSection(false);
     await userEvent.click(screen.getAllByRole("button")[0]!);
-    expect(openConnect).toHaveBeenCalledWith(
-      "joao-ribeiro",
+    expect(contact).toHaveBeenCalledWith(
+      { slug: "joao-ribeiro", name: "João Ribeiro" },
       "open:collaborating",
     );
   });
 
-  it("opens connect with the custom reason encoded", async () => {
+  it("contacts the member with the custom reason encoded", async () => {
     renderNowSection(false);
     await userEvent.click(screen.getByRole("button", { name: "Archive tips" }));
-    expect(openConnect).toHaveBeenCalledWith(
-      "joao-ribeiro",
+    expect(contact).toHaveBeenCalledWith(
+      { slug: "joao-ribeiro", name: "João Ribeiro" },
       "custom:Archive tips",
     );
   });

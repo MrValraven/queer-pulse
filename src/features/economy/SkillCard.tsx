@@ -6,7 +6,7 @@ import {
   TagRow,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Skill } from "./skills.data";
@@ -15,7 +15,9 @@ import styles from "./SkillsPage.module.css";
 export function SkillCard({ skill }: { skill: Skill }) {
   const { t } = useTranslation();
   const member = memberProfiles[skill.member]!;
-  const { openConnect } = useConnect();
+  const { connected, contact } = useMemberContact(skill.member);
+  const reachOut = () =>
+    contact({ slug: skill.member, name: `${member.first} ${member.last}` });
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>
@@ -47,15 +49,15 @@ export function SkillCard({ skill }: { skill: Skill }) {
           role="button"
           tabIndex={0}
           className={styles.reach}
-          onClick={() => openConnect(skill.member)}
+          onClick={reachOut}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
               event.preventDefault();
-              openConnect(skill.member);
+              reachOut();
             }
           }}
         >
-          Reach out →
+          {connected ? t("connect:contact.message") : "Reach out →"}
         </span>
       </div>
     </div>

@@ -1,0 +1,10 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailLink {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 4px 0;
+}

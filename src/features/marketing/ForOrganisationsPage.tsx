@@ -6,11 +6,13 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./ForOrganisationsPage.module.css";
-import { NOT_DO_KEYS, PROCESS, PARTNERS } from "./forOrganisationsPage.data";
+import { NOT_DO_KEYS, PROCESS } from "./forOrganisationsPage.data";
+import { useFeaturedPartners } from "./api/useFeaturedPartners";
 import { TiersSection, PartnerContactForm } from "./ForOrganisationsSections";
 
 export function ForOrganisationsPage() {
   const { t } = useTranslation();
+  const { partners: featuredPartners, testimonial } = useFeaturedPartners();
   const pageTitle = t("marketing:forOrgs.meta.title");
   const pageDescription = t("marketing:forOrgs.meta.description");
   return (
@@ -83,66 +85,55 @@ export function ForOrganisationsPage() {
         </div>
       </section>
 
-      <section className={styles.proof}>
-        <div className={styles.proofInner}>
-          <Reveal as="h2">
-            <Translation
-              i18nKey="marketing:forOrgs.proof.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.proofSub} delay={60}>
-            {t("marketing:forOrgs.proof.sub")}
-          </Reveal>
-          <div className={styles.partnerRow}>
-            {PARTNERS.map((partner, index) => (
-              <Reveal
-                key={partner.slug}
-                as={Link}
-                to={`${routes.partner}/${partner.slug}`}
-                className={styles.partnerCard}
-                delay={index * 60}
-              >
-                <div
-                  className={[
-                    styles.partnerLogo,
-                    partner.logoCls && styles[partner.logoCls],
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+      {featuredPartners.length > 0 && (
+        <section className={styles.proof}>
+          <div className={styles.proofInner}>
+            <Reveal as="h2">
+              <Translation
+                i18nKey="marketing:forOrgs.proof.title"
+                components={{ em: <em /> }}
+              />
+            </Reveal>
+            <Reveal as="p" className={styles.proofSub} delay={60}>
+              {t("marketing:forOrgs.proof.sub")}
+            </Reveal>
+            <div className={styles.partnerRow}>
+              {featuredPartners.map((partner, index) => (
+                <Reveal
+                  key={partner.slug}
+                  as={Link}
+                  to={`${routes.partner}/${partner.slug}`}
+                  className={styles.partnerCard}
+                  delay={index * 60}
                 >
-                  {partner.logo}
-                </div>
-                <div className={styles.partnerType}>{partner.type}</div>
-                <div className={styles.partnerName}>{partner.name}</div>
-                <div className={styles.partnerSince}>{partner.since}</div>
-                <p>{partner.desc}</p>
-                <span className={styles.arrow}>
-                  {t("marketing:forOrgs.proof.viewCta")}
-                </span>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className={styles.quoteCard} delay={60}>
-            <p>
-              "What QueerPulse asked us for at the start was strange:{" "}
-              <em>not money</em>, not co-branding — they wanted us to commit to
-              specific operational changes in how our helpline handed off to a
-              community. It took a year. It's the partnership we're proudest
-              of."
-            </p>
-            <div className={styles.quoteBy}>
-              <div className={styles.quoteAv}>FM</div>
-              <div>
-                <div className={styles.quoteName}>Filipa Mendes</div>
-                <div className={styles.quoteRole}>
-                  Executive Director · ILGA Portugal
-                </div>
-              </div>
+                  <div className={styles.partnerLogo}>{partner.logo}</div>
+                  <div className={styles.partnerType}>{partner.tier}</div>
+                  <div className={styles.partnerName}>{partner.name}</div>
+                  <div className={styles.partnerSince}>{partner.since}</div>
+                  <p>{partner.desc}</p>
+                  <span className={styles.arrow}>
+                    {t("marketing:forOrgs.proof.viewCta")}
+                  </span>
+                </Reveal>
+              ))}
             </div>
-          </Reveal>
-        </div>
-      </section>
+            {testimonial && (
+              <Reveal className={styles.quoteCard} delay={60}>
+                <p>{testimonial.quote}</p>
+                <div className={styles.quoteBy}>
+                  <div className={styles.quoteAv}>{testimonial.initials}</div>
+                  <div>
+                    <div className={styles.quoteName}>
+                      {testimonial.author}
+                    </div>
+                    <div className={styles.quoteRole}>{testimonial.role}</div>
+                  </div>
+                </div>
+              </Reveal>
+            )}
+          </div>
+        </section>
+      )}
 
       <PartnerContactForm />
     </PageShell>

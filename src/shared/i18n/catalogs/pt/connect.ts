@@ -163,4 +163,5 @@ export const connect: Catalog = {
     "Chegam a novas pessoas através de quem já conhecem. Pede a uma ligação em comum para te apresentar.",
   "notice.cannotConnect.title": "Não consegues contactar {name} <em>agora.</em>",
   "notice.cannotConnect.body": "Este contacto não está disponível de momento.",
+  "contact.message": "Mensagem",
 };

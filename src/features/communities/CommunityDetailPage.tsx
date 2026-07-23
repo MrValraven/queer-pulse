@@ -8,11 +8,13 @@ import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
 import { JoinModal } from "./JoinModal";
+import { EditCommunityModal } from "./EditCommunityModal";
 import type { Person } from "./communityDetails";
 import { useCommunity } from "./api/useCommunity";
 import { useRelatedCommunities } from "./api/useRelatedCommunities";
 import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
+import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
 import { useJoinCommunity } from "./api/useCommunityMutations";
 import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
 import { LivingHubTabs } from "./LivingHubTabs";
@@ -27,6 +29,7 @@ export function CommunityDetailPage() {
   const { isMember, join, leave, hasRequested, requestToJoin, roleIn } =
     useCommunityMembership();
   const [joining, setJoining] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const {
     community,
@@ -34,11 +37,13 @@ export function CommunityDetailPage() {
     living: baseLiving,
     myRole,
     myJoinRequestStatus,
+    editable,
     notFound,
     isLoading,
   } = useCommunity(slug);
   const roster = useRoster(slug);
   const posts = useCommunityPosts(slug);
+  const { threads, paging: discussionPaging } = useCommunityDiscussions(slug);
   const joinMutation = useJoinCommunity(slug ?? "");
   const related = useRelatedCommunities(slug, community?.type);
 
@@ -72,6 +77,7 @@ export function CommunityDetailPage() {
       : false
     : myJoinRequestStatus === "pending";
   const role = demoMode ? (slug ? roleIn(slug) : null) : myRole;
+  const canEdit = role === "owner" || role === "mod";
 
   const tier =
     living?.accessTier ?? (community.privateBadge ? "private" : "public");
@@ -89,8 +95,6 @@ export function CommunityDetailPage() {
   // organiser rather than fabricating a crowd that isn't there.
   const members: Person[] = roster.length > 0 ? roster : [detail.organiser];
   const heroAvatars = members.slice(0, 5);
-
-  const threads = [detail.topicThread];
 
   const onJoined = () => {
     if (slug) join(slug);
@@ -135,6 +139,11 @@ export function CommunityDetailPage() {
                 {joinLabel}
               </Button>
             )}
+            {canEdit && (
+              <Button variant="ghost" onClick={() => setEditing(true)}>
+                {t("communities:edit.cta")}
+              </Button>
+            )}
             <CommunityHeroAvatars
               avatars={heroAvatars}
               memberNum={memberNum}
@@ -153,9 +162,11 @@ export function CommunityDetailPage() {
                 info={detail}
                 living={living}
                 threads={threads}
+                slug={living.slug}
                 isMember={joined}
                 role={role}
                 pulsePaging={posts}
+                discussionPaging={discussionPaging}
               />
             ) : (
               <FallbackHubTabs
@@ -164,6 +175,9 @@ export function CommunityDetailPage() {
                 hasCount={hasCount}
                 memberNum={memberNum}
                 threads={threads}
+                slug={slug ?? ""}
+                isMember={joined}
+                discussionPaging={discussionPaging}
               />
             )}
 
@@ -185,6 +199,14 @@ export function CommunityDetailPage() {
           onClose={() => setJoining(false)}
           onJoined={onJoined}
           onRequested={onRequested}
+        />
+      )}
+
+      {editing && slug && editable && (
+        <EditCommunityModal
+          slug={slug}
+          editable={editable}
+          onClose={() => setEditing(false)}
         />
       )}
     </PageShell>

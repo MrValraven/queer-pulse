@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -22,7 +22,7 @@ export function NowSection({
   isSelf?: boolean;
 }) {
   const { t } = useTranslation();
-  const { openConnect } = useConnect();
+  const { contact } = useMemberContact(profile.slug);
   // Nothing to say and no chips to offer — an empty card reads as a bug.
   if (!profile.now?.trim() && profile.openTo.length === 0) return null;
   return (
@@ -49,7 +49,13 @@ export function NowSection({
                     type="button"
                     className={`${styles.openChip} ${styles.openChipAction}`}
                     onClick={() =>
-                      openConnect(profile.slug, reasonValue(entry))
+                      contact(
+                        {
+                          slug: profile.slug,
+                          name: `${profile.first} ${profile.last}`,
+                        },
+                        reasonValue(entry),
+                      )
                     }
                   >
                     {label}

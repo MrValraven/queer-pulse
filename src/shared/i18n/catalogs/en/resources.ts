@@ -543,6 +543,11 @@ export const resources: Catalog = {
   "mentalHealth.therapists.waitlist": "Waitlist",
   "mentalHealth.therapists.viewProfileAriaLabel": "View {name}'s profile",
   "mentalHealth.therapists.viewProfileCta": "View profile →",
+  "mentalHealth.therapists.comingSoon.badge": "Coming soon",
+  "mentalHealth.therapists.comingSoon.title":
+    "The directory is <em>almost here.</em>",
+  "mentalHealth.therapists.comingSoon.body":
+    "We're verifying queer-affirming therapists in Lisbon before they go live here, so every profile is one you can trust. For now it's resting. Turn on <b>{toggleName}</b> to explore the demo.",
 
   "mentalHealth.experiences.title": "Things the community <em>has felt</em>",
   "mentalHealth.experiences.lead":

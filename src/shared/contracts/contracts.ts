@@ -222,6 +222,7 @@ export interface ForumThreadResponse {
   replyCount: number;
   lastActivityAt: string;
   createdAt: string;
+  canEdit: boolean;
 }
 
 export interface ForumPostResponse {
@@ -232,6 +233,24 @@ export interface ForumPostResponse {
   voteCount: number;
   myVote: number;
   createdAt: string;
+  editedAt: string | null;
+  deleted: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+  canRestore: boolean;
+  canViewHistory: boolean;
+}
+
+export interface ForumPostHistoryEntry {
+  id: string;
+  previousBody: string;
+  previousTitle: string | null;
+  author: AuthorSummary;
+  createdAt: string;
+}
+
+export interface ForumPostHistoryResponse {
+  revisions: ForumPostHistoryEntry[];
 }
 
 // --- Content / CMS ---

@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { FiBell } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Avatar, FadeIn, Tabs } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath, routes } from "../../app/routeMap";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { useNotifications } from "./api/useNotifications";
@@ -87,11 +88,27 @@ export function NotificationsPage() {
       >
         {isUnread && <span className={styles.unreadDot} aria-hidden />}
         {notification.avatar ? (
-          <Avatar
-            initials={notification.avatar.initials}
-            tint={notification.avatar.tint}
-            size={40}
-          />
+          notification.actor ? (
+            <Link
+              to={linkToPath(notification.actor.href)}
+              className={styles.avatarLink}
+              aria-label={notification.actor.name}
+            >
+              <Avatar
+                initials={notification.avatar.initials}
+                tint={notification.avatar.tint}
+                src={notification.avatar.src}
+                size={40}
+              />
+            </Link>
+          ) : (
+            <Avatar
+              initials={notification.avatar.initials}
+              tint={notification.avatar.tint}
+              src={notification.avatar.src}
+              size={40}
+            />
+          )
         ) : (
           <span
             className={styles.icon}
@@ -102,7 +119,24 @@ export function NotificationsPage() {
         )}
         <MemberStaffBadge slug={notification.actorSlug} />
         <div className={styles.body}>
-          <div className={styles.text}>{notification.text}</div>
+          <div className={styles.text}>
+            {notification.actor?.textKey ? (
+              <Translation
+                i18nKey={notification.actor.textKey}
+                components={{
+                  profile: (
+                    <Link
+                      to={linkToPath(notification.actor.href)}
+                      className={styles.actorLink}
+                    />
+                  ),
+                }}
+                values={{ name: notification.actor.name }}
+              />
+            ) : (
+              notification.text
+            )}
+          </div>
           <div className={styles.meta}>{notification.meta}</div>
           {notification.actions && (
             <div className={styles.itemActions}>

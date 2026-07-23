@@ -353,6 +353,10 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.continue": "Continue",
   "onboarding.stepPhoto.skip": "Skip for now — you can add this later",
   "onboarding.stepPhoto.back": "← Back",
+  "onboarding.stepPhoto.uploadError":
+    "We couldn't add that photo. Please try again.",
+  "onboarding.stepPhoto.saveError":
+    "We couldn't save your photo. Please try again.",
 
   "onboarding.stepNorms.heading": "This is a <em>cared-for</em> space",
   "onboarding.stepNorms.norm.bePresent.title": "Be present",
@@ -376,6 +380,8 @@ export const auth: Catalog = {
   "onboarding.stepIntents.hint": "Pick at least one — choose as many as fit.",
   "onboarding.stepIntents.continue": "Continue",
   "onboarding.stepIntents.back": "← Back",
+  "onboarding.stepIntents.saveError":
+    "We couldn't save that just now. Please try again.",
   "onboarding.intent.community": "Community",
   "onboarding.intent.gatherings": "Gatherings & events",
   "onboarding.intent.professional": "Professional connections",
@@ -392,15 +398,18 @@ export const auth: Catalog = {
     "Groups you might like based on your interests.",
   "onboarding.stepCommunities.join": "Join",
   "onboarding.stepCommunities.joined": "Joined",
+  "onboarding.stepCommunities.requested": "Requested",
   "onboarding.stepCommunities.continue": "Continue",
   "onboarding.stepCommunities.skip": "Skip for now — explore and join later",
   "onboarding.stepCommunities.back": "← Back",
+  "onboarding.stepCommunities.empty":
+    "No suggestions right now — you can explore and join communities anytime.",
 
   "onboarding.stepDone.heading": "You're <em>part of it</em> now",
   "onboarding.stepDone.cta": "Go to my home",
   "onboarding.quickStart.browseDirectory.title": "Browse the member directory",
   "onboarding.quickStart.browseDirectory.desc":
-    "{count} members in Lisbon and beyond",
+    "Members across Lisbon and beyond",
   "onboarding.quickStart.gatherings.title": "See upcoming gatherings",
   "onboarding.quickStart.gatherings.desc":
     "Real-world events for the community",

@@ -26,7 +26,7 @@ export function PostJobStepper({
         marker="number"
         onStepClick={onGo}
         isStepClickable={() => true}
-        ariaLabel="Job posting progress"
+        ariaLabel={t("economy:postJob.stepLabels.ariaLabel")}
         className={styles.jobStepper}
       />
     </div>

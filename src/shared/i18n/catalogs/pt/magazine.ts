@@ -209,67 +209,6 @@ export const magazine: Catalog = {
   "author.work.seeAllPicksCta": "Ver todas as escolhas →",
   "author.work.findElsewhereHeading": "Encontra {name} <em>noutros sítios</em>",
 
-  // ── AudioPlayerPage tabs ─────────────────────────────────────────────────
-  "audio.tabs.showNotes": "Notas do episódio",
-  "audio.tabs.chapters": "Capítulos · {count}",
-  "audio.tabs.transcript": "Transcrição",
-
-  // ── AudioPlayerControls ──────────────────────────────────────────────────
-  "audio.controls.previousChapter": "Capítulo anterior",
-  "audio.controls.back15s": "-15s",
-  "audio.controls.pause": "Pausar",
-  "audio.controls.play": "Reproduzir",
-  "audio.controls.forward30s": "+30s",
-  "audio.controls.nextChapter": "Capítulo seguinte",
-  "audio.controls.saveCta": "Guardar",
-  "audio.controls.likeCta": "Gosto",
-  "audio.controls.sleepCta": "Suspender",
-  "audio.controls.cancelSleepTimer": "Cancelar temporizador",
-
-  // ── AudioPlayerMain ──────────────────────────────────────────────────────
-  "audio.linkCopiedToast": "Link copiado",
-  "audio.backToShow": "← Voltar ao podcast",
-  "audio.shareTitle": "Partilhar",
-  "audio.castTitle": "Cast / AirPlay",
-  "audio.seekAriaLabel": "Avançar ou recuar",
-
-  // ── AudioPlayerModals ────────────────────────────────────────────────────
-  "audio.modal.closeAriaLabel": "Fechar",
-  "audio.cast.connectedToast": "Ligado a {name}",
-  "audio.cast.streamingTitle": "A transmitir para <em>{name}</em>",
-  "audio.cast.playingOnDevice":
-    "{kind} · o áudio está agora a tocar neste dispositivo.",
-  "audio.cast.chooseAnotherCta": "Escolher outro",
-  "audio.cast.doneCta": "Concluído",
-  "audio.cast.eyebrow": "Cast · AirPlay",
-  "audio.cast.nearbyDevicesTitle": "Dispositivos por perto",
-  "audio.cast.pickDeviceSub":
-    "Escolhe um altifalante ou ecrã para transmitir este episódio.",
-  // CAST_TARGETS.kindKey (audioPlayer.data.ts) — device protocol/type chrome.
-  "audio.cast.kind.airplaySpeaker": "AirPlay · altifalante",
-  "audio.cast.kind.castScreen": "Cast · ecrã",
-  "audio.cast.kind.airplayTwoSpeakers": "AirPlay · 2 altifalantes",
-  "audio.cast.kind.bluetoothHeadphones": "Bluetooth · auscultadores",
-  "audio.sleep.eyebrow": "Temporizador de suspensão",
-  "audio.sleep.title": "Parar de reproduzir depois de…",
-  "audio.sleep.sub":
-    "A reprodução esbate-se e pausa quando o temporizador chega a zero.",
-  "audio.sleep.minutesLabel": "minutos",
-  "audio.sleep.turnOffCta": "Desligar temporizador",
-  "audio.transcriptModal.eyebrow": "Transcrição · Episódio {number}",
-  "audio.transcriptModal.title": "Pré-visualizar e transferir",
-  "audio.transcriptModal.sub":
-    "Transcrição completa com identificação de quem fala e marcas temporais.",
-  "audio.transcriptModal.downloadCta": "Transferir .txt",
-  "audio.transcriptModal.closeCta": "Fechar",
-
-  // ── AudioPlayerTabs ──────────────────────────────────────────────────────
-  "audio.tabs.searchPlaceholder": "Pesquisar na transcrição",
-  "audio.tabs.autoScroll": "Deslocamento automático",
-  "audio.tabs.autoScrollOn": "Deslocamento automático · ativo",
-  "audio.tabs.downloadCta": "Transferir",
-  "audio.tabs.nowPlaying": "Agora",
-
   // ══════════════════ Painel de edição (uso interno) ═══════════════════════
   // Os REGISTOS de peças/propostas (títulos, notas, feed de atividade, nomes
   // de secções) ficam como dados em inglês — conteúdo editorial, não chrome.
@@ -838,47 +777,4 @@ export const magazine: Catalog = {
     "Carregar {count} edições mais antigas",
   "newsletterArchive.issue.backToArchive": "Voltar ao arquivo",
   "newsletterArchive.issue.browseFullArchive": "Explorar o arquivo completo",
-
-  // ══════════════════ Podcast (The Back Room) ═════════════════════════════
-  // Os títulos/descrições/nomes de convidados/datas de cada episódio
-  // (podcastShow.data.tsx) são o conteúdo editorial do programa — ficam em
-  // inglês, como o corpo de um artigo. Só o chrome à volta é traduzido abaixo.
-  "podcast.hero.eyebrow": "QueerPulse Audio · podcast",
-  "podcast.hero.playLatestCta": "Reproduzir o mais recente",
-  "podcast.hero.subscribeCta": "Subscrever",
-  "podcast.listenOnLabel": "Ouve em",
-  "podcast.aboutShowHeading": "Sobre o <em>programa</em>",
-  "podcast.episodesHeading": "Episódios · {count}",
-  "podcast.newestFirst": "Mais recentes primeiro",
-  "podcast.viewEpisodeNotesCta": "Ver notas do episódio →",
-  "podcast.playEpisodeAria": "Reproduzir episódio",
-  "podcast.playEpisodeNumberAria": "Reproduzir episódio {number}",
-  "podcast.showOlderEpisodes_one": "Mostrar {count} episódio mais antigo",
-  "podcast.showOlderEpisodes_other": "Mostrar {count} episódios mais antigos",
-  "podcast.sidebar.hostsHeading": "Apresentação",
-  "podcast.sidebar.aboutShowHeading": "Sobre o programa",
-  "podcast.sidebar.sponsoredLabel": "Patrocinado",
-  "podcast.sidebar.guestHeading": "Queres ser convidade?",
-  "podcast.sidebar.guestBody":
-    "Isto acontece com frequência. Normalmente não aceitamos propostas diretas, mas se estás a fazer algo que vale mesmo a pena, conta-nos.",
-  "podcast.sidebar.writeToTeamCta": "Escrever à equipa",
-  "podcast.modal.listenToTitle": "Ouve <em>{show}</em>",
-  "podcast.modal.sub":
-    "Abre o programa na tua aplicação de podcasts, ou copia o feed.",
-  "podcast.modal.copyCta": "Copiar",
-  "podcast.modal.closeAria": "Fechar",
-  "podcast.modal.rssCopiedToast": "Link do RSS copiado",
-
-  // ── PLATFORMS.kindKey (PodcastShowModals.tsx category label) ────────────
-  "podcast.platformKind.streaming": "Streaming",
-  "podcast.platformKind.app": "Aplicação",
-  "podcast.platformKind.rawFeed": "Feed direto",
-
-  // ── SHOW_INFO.labelKey (PodcastShowSections.tsx sidebar facts) ──────────
-  "podcast.showInfo.format": "Formato",
-  "podcast.showInfo.schedule": "Periodicidade",
-  "podcast.showInfo.length": "Duração",
-  "podcast.showInfo.languages": "Idiomas",
-  "podcast.showInfo.transcripts": "Transcrições",
-  "podcast.showInfo.music": "Música",
 };

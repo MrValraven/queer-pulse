@@ -5,7 +5,7 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -36,6 +36,25 @@ function MemberRowSkeleton() {
       <SkeletonAvatar size={30} />
       <SkeletonLine width="55%" height={13} />
     </div>
+  );
+}
+
+/**
+ * The "New this week" row's connect affordance. Lives in its own component so
+ * `useMemberContact` — a hook — is called at a component top level rather than
+ * inside the `members.map` below (hooks can't run in a loop callback).
+ */
+function SidebarConnectButton({ person }: { person: SidebarMember }) {
+  const { t } = useTranslation();
+  const { connected, contact } = useMemberContact(person.slug);
+  return (
+    <button
+      type="button"
+      className={styles.linkBtn}
+      onClick={() => contact({ slug: person.slug, name: person.name })}
+    >
+      {connected ? t("connect:contact.message") : t("feed:action.connect")}
+    </button>
   );
 }
 
@@ -75,7 +94,6 @@ export function FeedSidebar({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { openConnect } = useConnect();
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sbCard}>
@@ -165,13 +183,7 @@ export function FeedSidebar({
                 <span className={styles.sbMemberName}>{person.name}</span>
                 <MemberStaffBadge slug={person.slug} />
               </Link>
-              <button
-                type="button"
-                className={styles.linkBtn}
-                onClick={() => openConnect(person.slug)}
-              >
-                {t("feed:action.connect")}
-              </button>
+              <SidebarConnectButton person={person} />
             </div>
           ))
         )}

@@ -8,24 +8,52 @@ import {
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  THERAPISTS,
   EXPERIENCES,
   SNS,
   LANGS,
   type Therapist,
 } from "./mentalHealth.data";
+import { useTherapists } from "./api/useTherapists";
 import { TherapistProfileModal } from "./TherapistProfileModal";
 import styles from "./MentalHealthPage.module.css";
 
+/** Live-mode placeholder — the therapist directory isn't wired to the backend yet. */
+function TherapistsComingSoon() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.comingSoon}>
+      <span className={styles.comingSoonBadge}>
+        {t("resources:mentalHealth.therapists.comingSoon.badge")}
+      </span>
+      <h3 className={styles.comingSoonTitle}>
+        <Translation
+          i18nKey="resources:mentalHealth.therapists.comingSoon.title"
+          components={{ em: <em /> }}
+        />
+      </h3>
+      <p className={styles.comingSoonText}>
+        <Translation
+          i18nKey="resources:mentalHealth.therapists.comingSoon.body"
+          components={{ b: <b /> }}
+          values={{
+            toggleName: t("shared:accountMenu.controls.populatePlatform"),
+          }}
+        />
+      </p>
+    </div>
+  );
+}
+
 export function TherapistSection() {
   const { t } = useTranslation();
+  const { therapists: allTherapists, comingSoon } = useTherapists();
   const [filter, setFilter] = useState("all");
   const [active, setActive] = useState<Therapist | null>(null);
 
   const therapists =
     filter === "all"
-      ? THERAPISTS
-      : THERAPISTS.filter((th) => th.langs.includes(filter));
+      ? allTherapists
+      : allTherapists.filter((th) => th.langs.includes(filter));
 
   return (
     <section className={styles.sec}>
@@ -39,6 +67,10 @@ export function TherapistSection() {
           </h2>
           <p>{t("resources:mentalHealth.therapists.lead")}</p>
         </Reveal>
+        {comingSoon ? (
+          <TherapistsComingSoon />
+        ) : (
+          <>
         <div className={styles.thFilter}>
           <span className={styles.thFilterLabel} id="mh-therapist-lang-label">
             {t("resources:mentalHealth.therapists.filterLabel")}
@@ -122,6 +154,8 @@ export function TherapistSection() {
             </Reveal>
           ))}
         </div>
+          </>
+        )}
       </div>
       {active && (
         <TherapistProfileModal

@@ -77,6 +77,7 @@ export function threadToCard(
   const s = SOLID[tint];
   return {
     id,
+    slug: dto.slug,
     cat: dto.category,
     pinned: dto.isPinned,
     title: dto.title,
@@ -96,6 +97,7 @@ export function threadToCard(
     tags: [],
     body: [],
     replies: [],
+    canEdit: dto.canEdit,
   };
 }
 
@@ -120,6 +122,13 @@ export function postToReply(
     isOP,
     body: paragraphs(dto.body),
     reactions: dto.voteCount,
+    postId: dto.id,
+    editedAt: dto.editedAt,
+    deleted: dto.deleted,
+    canEdit: dto.canEdit,
+    canDelete: dto.canDelete,
+    canRestore: dto.canRestore,
+    canViewHistory: dto.canViewHistory,
   };
 }
 
@@ -137,6 +146,13 @@ export function threadDetail(
     excerpt: op ? (paragraphs(op.body)[0] ?? "") : "",
     body: op ? paragraphs(op.body) : [],
     upvotes: op?.voteCount ?? 0,
-    replies: rest.map((p) => postToReply(p, t, fmt)),
+    replies: rest.map((post) => postToReply(post, t, fmt)),
+    opPostId: op?.id,
+    editedAt: op?.editedAt ?? null,
+    deleted: op?.deleted ?? false,
+    canEdit: op?.canEdit ?? false,
+    canDelete: op?.canDelete ?? false,
+    canRestore: op?.canRestore ?? false,
+    canViewHistory: op?.canViewHistory ?? false,
   };
 }

@@ -361,7 +361,7 @@ export const system: Catalog = {
   "pwaPrompt.installCta": "Instalar agora",
   "pwaPrompt.laterCta": "Talvez depois",
   "pwaPrompt.actionsFoot":
-    "Adiar isto impede-nos de perguntar de novo neste dispositivo durante <b>30 dias</b>. Também podes instalar a qualquer momento em <a>Obter a aplicação</a>.",
+    "Adiar isto impede-nos de perguntar de novo neste dispositivo durante <b>30 dias</b>.",
   "pwaPrompt.toast.installHint":
     "Procura o aviso de instalação · normalmente no canto superior direito",
   "pwaPrompt.toast.snoozed": "Não voltamos a perguntar durante 30 dias",

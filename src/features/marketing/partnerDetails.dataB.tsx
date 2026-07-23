@@ -13,6 +13,8 @@ export const PARTNERS_B: Partner[] = [
     city: "Madrid",
     desc: "A sister network to QueerPulse — queer professional community in Madrid with whom we share events, members, and the occasional borrowed studio. Iberian solidarity.",
     tags: ["Network", "Sister city"],
+    featured: false,
+    testimonial: null,
     eyebrow: "Partner · Sister network",
     tagline:
       "Our sister network across the border — shared members, shared events, and a standing open door in Madrid.",
@@ -153,6 +155,8 @@ export const PARTNERS_B: Partner[] = [
     city: "Berlin",
     desc: "Community network and cultural organisation in Berlin. We collaborate on exchange programmes for members travelling between the cities.",
     tags: ["Cultural exchange", "Network"],
+    featured: false,
+    testimonial: null,
     eyebrow: "Partner · Cultural network",
     tagline:
       "A Berlin community-and-culture network — our route into a bigger scene, and a welcome for members heading north.",
@@ -295,6 +299,8 @@ export const PARTNERS_B: Partner[] = [
     city: "Nairobi / London",
     desc: "Network supporting queer creatives of African origin globally. A reminder that the queer experience is not Western, and that solidarity requires listening.",
     tags: ["African diaspora", "Creatives"],
+    featured: false,
+    testimonial: null,
     eyebrow: "Partner · Global creative network",
     tagline:
       "A global network for queer creatives of African origin — and a standing correction to the idea that queerness is Western.",
@@ -435,6 +441,8 @@ export const PARTNERS_B: Partner[] = [
     city: "Lisbon",
     desc: "Support and advocacy for LGBTQ+ migrants and refugees navigating the Portuguese immigration system. We refer members to them, they refer people to us.",
     tags: ["Migration", "Refugees"],
+    featured: false,
+    testimonial: null,
     eyebrow: "Partner · Migrant support",
     tagline:
       "Support and advocacy for queer migrants and refugees — and the people who actually understand the asylum maze.",

@@ -3,25 +3,51 @@ import { FiMessageCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
+import { useReact, useUnreact, useReply } from "./api/useCommunityMutations";
 import styles from "./CommunityDetailPage.module.css";
 
-export function CommunityThread({ data }: { data: ThreadData }) {
+export function CommunityThread({
+  data,
+  slug,
+}: {
+  data: ThreadData;
+  slug: string;
+}) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [open, setOpen] = useState(false);
-  const [voted, setVoted] = useState(false);
-  const [reply, setReply] = useState("");
-  const [extra, setExtra] = useState<{ name: string; text: string }[]>([]);
+  const { demoMode } = useDemoMode();
+  const react = useReact(slug);
+  const unreact = useUnreact(slug);
+  const reply = useReply(slug);
 
-  const post = () => {
-    if (!reply.trim()) return;
-    setExtra((e) => [...e, { name: "You", text: reply.trim() }]);
-    setReply("");
+  const [open, setOpen] = useState(false);
+  const [voted, setVoted] = useState(!!data.voted);
+  const [replyText, setReplyText] = useState("");
+  const [extraReplies, setExtraReplies] = useState<{ name: string; text: string }[]>([]);
+
+  const onError = () => showToast(t("communities:common.error"), "error");
+
+  function toggleVote() {
+    const next = !voted;
+    setVoted(next);
+    if (demoMode || !data.id) return;
+    if (next) react.mutate({ id: data.id, key: "heart" }, { onError });
+    else unreact.mutate({ id: data.id, key: "heart" }, { onError });
+  }
+
+  function postReply() {
+    const text = replyText.trim();
+    if (!text) return;
+    setExtraReplies((prev) => [...prev, { name: "You", text }]);
+    setReplyText("");
     showToast(t("communities:detail.thread.replyToast"), "success");
-  };
+    if (demoMode || !data.id) return;
+    reply.mutate({ id: data.id, text }, { onError });
+  }
 
   return (
     <div className={styles.thread}>
@@ -30,11 +56,11 @@ export function CommunityThread({ data }: { data: ThreadData }) {
         role="button"
         tabIndex={0}
         aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setOpen((o) => !o);
+        onClick={() => setOpen((value) => !value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setOpen((value) => !value);
           }
         }}
       >
@@ -44,21 +70,21 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             className={[styles.vbtn, voted && styles.vbtnVoted]
               .filter(Boolean)
               .join(" ")}
-            onClick={(e) => {
-              e.stopPropagation();
-              setVoted((v) => !v);
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleVote();
             }}
           >
             ▲
           </button>
-          <span className={styles.vnum}>{data.votes + (voted ? 1 : 0)}</span>
+          <span className={styles.vnum}>
+            {data.votes + (voted && !data.voted ? 1 : 0) - (!voted && data.voted ? 1 : 0)}
+          </span>
         </div>
         <div className={styles.thMain}>
           <div className={styles.thTitle}>{data.title}</div>
           <div className={styles.thMeta}>
-            <div
-              className={[styles.thAv, AV_CLASS[data.author.tint]].join(" ")}
-            >
+            <div className={[styles.thAv, AV_CLASS[data.author.tint]].join(" ")}>
               {data.author.initials}
             </div>
             <span className={styles.thName}>{data.author.name}</span>
@@ -66,9 +92,7 @@ export function CommunityThread({ data }: { data: ThreadData }) {
             <span>{data.time}</span>
             <span className={styles.thReplies}>
               <FiMessageCircle />{" "}
-              {t("communities:detail.thread.replies", {
-                count: data.replyCount,
-              })}
+              {t("communities:detail.thread.replies", { count: data.replyCount })}
             </span>
           </div>
         </div>
@@ -76,23 +100,23 @@ export function CommunityThread({ data }: { data: ThreadData }) {
       {open && (
         <div className={styles.thBody}>
           <p className={styles.postText}>{data.post}</p>
-          {data.replies.map((r, i) => (
-            <div className={styles.reply} key={i}>
-              <div className={[styles.rAv, AV_CLASS[r.tint]].join(" ")}>
-                {r.initials}
+          {data.replies.map((threadReply, index) => (
+            <div className={styles.reply} key={threadReply.id ?? index}>
+              <div className={[styles.rAv, AV_CLASS[threadReply.tint]].join(" ")}>
+                {threadReply.initials}
               </div>
               <div>
-                <div className={styles.rName}>{r.name}</div>
-                <div className={styles.rText}>{r.text}</div>
+                <div className={styles.rName}>{threadReply.name}</div>
+                <div className={styles.rText}>{threadReply.text}</div>
               </div>
             </div>
           ))}
-          {extra.map((r, i) => (
-            <div className={styles.reply} key={`x${i}`}>
+          {extraReplies.map((localReply, index) => (
+            <div className={styles.reply} key={`local-${index}`}>
               <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
               <div>
-                <div className={styles.rName}>{r.name}</div>
-                <div className={styles.rText}>{r.text}</div>
+                <div className={styles.rName}>{localReply.name}</div>
+                <div className={styles.rText}>{localReply.text}</div>
               </div>
             </div>
           ))}
@@ -102,12 +126,12 @@ export function CommunityThread({ data }: { data: ThreadData }) {
               className={styles.replyTa}
               rows={1}
               placeholder={t("communities:detail.thread.replyPlaceholder")}
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
+              value={replyText}
+              onChange={(event) => setReplyText(event.target.value)}
             />
             <Button
               variant="primary"
-              onClick={post}
+              onClick={postReply}
               style={{ padding: "9px 16px", fontSize: 13 }}
             >
               {t("communities:detail.thread.replyCta")}

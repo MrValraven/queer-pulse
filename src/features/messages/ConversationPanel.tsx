@@ -1,10 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import { Avatar } from "../../shared/components/ui";
+import { initialsOf, tintForSlug } from "../../shared/api/refs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { Composer } from "./Composer";
+import { MessageRunView, type RunParticipant } from "./MessageRun";
+import { groupIntoRuns } from "./messageRuns";
 import { me, type ChatMessage, type Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -30,6 +35,8 @@ interface ConversationPanelProps {
   onSend: () => void;
   /** True when the counterpart is blocked — the composer is severed. */
   blocked?: boolean;
+  /** Mobile only — returns to the conversation list. Absent on desktop. */
+  onBack?: () => void;
 }
 
 /** Right-hand conversation pane: header, scrolling message area, composer. */
@@ -40,9 +47,11 @@ export function ConversationPanel({
   onDraftChange,
   onSend,
   blocked = false,
+  onBack,
 }: ConversationPanelProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useAuth();
   const areaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,9 +59,42 @@ export function ConversationPanel({
     if (el) el.scrollTop = el.scrollHeight;
   }, [messageGroups, active.id]);
 
+  const counterpart: RunParticipant = {
+    initials: active.initials,
+    tint: active.tint,
+  };
+  // The signed-in member's sent-bubble avatar. `useAuth().user` is the real
+  // member in live mode and the mock member in demo mode, so this works in both;
+  // `me` is only a fallback for the brief pre-auth / logged-out window.
+  const self: RunParticipant = user
+    ? {
+        initials: initialsOf(user.profile.firstName, user.profile.lastName),
+        tint: tintForSlug(user.profile.slug),
+        src: user.profile.avatarUrl ?? undefined,
+      }
+    : me;
+
   return (
     <div className={styles.convoPanel}>
       <div className={styles.topbar}>
+        {onBack && (
+          <button
+            type="button"
+            className={styles.backBtn}
+            onClick={onBack}
+            aria-label={t("messages:conversation.backToList")}
+          >
+            <svg width={18} height={18} viewBox="0 0 18 18" fill="none" aria-hidden>
+              <path
+                d="M11 3.5 5.5 9l5.5 5.5"
+                stroke="currentColor"
+                strokeWidth={1.6}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        )}
         <Avatar initials={active.initials} tint={active.tint} size={38} />
         <div className={styles.ctbInfo}>
           <div className={styles.ctbName}>
@@ -84,92 +126,33 @@ export function ConversationPanel({
         )}
       </div>
 
-      <div className={styles.area} ref={areaRef}>
+      <div className={styles.area} ref={areaRef} role="log" aria-live="polite">
         {messageGroups.map((group) => (
-          <div key={group.day}>
-            <div className={styles.dayLabel}>{dayHeading(group.day, t)}</div>
-            {group.items.map((message, index) => {
-              const isSent = message.from === "me";
-              return (
-                <div
-                  key={`${group.day}-${index}-${message.text}`}
-                  className={[styles.bubbleRow, isSent && styles.bubbleRowSent]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  <Avatar
-                    initials={isSent ? me.initials : active.initials}
-                    tint={isSent ? me.tint : active.tint}
-                    size={28}
-                    style={{ alignSelf: "flex-end" }}
-                  />
-                  <div>
-                    <div
-                      className={[
-                        styles.bubble,
-                        isSent ? styles.sent : styles.received,
-                      ].join(" ")}
-                    >
-                      {message.text}
-                    </div>
-                    {message.time && (
-                      <div className={styles.bubbleTime}>{message.time}</div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <div key={group.day} className={styles.dayGroup}>
+            <div className={styles.daySep}>
+              <span className={styles.daySepLabel}>{dayHeading(group.day, t)}</span>
+            </div>
+            <div className={styles.runs}>
+              {groupIntoRuns(group.items).map((run, index) => (
+                <MessageRunView
+                  key={run.items[0]?.id ?? `${group.day}-run-${index}`}
+                  run={run}
+                  counterpart={counterpart}
+                  self={self}
+                />
+              ))}
+            </div>
           </div>
         ))}
       </div>
 
-      {active.official ? (
-        <div className={styles.officialBar}>
-          {t("messages:conversation.officialNotice")}
-        </div>
-      ) : blocked ? (
-        <div className={styles.officialBar}>
-          {t("messages:conversation.blockedNotice", {
-            name: active.name.split(" ")[0]!,
-          })}
-        </div>
-      ) : (
-        <div className={styles.composer}>
-          <textarea
-            className={styles.composerTa}
-            placeholder={t("messages:conversation.composerPlaceholder", {
-              name: active.name.split(" ")[0]!,
-            })}
-            value={draft}
-            rows={1}
-            onChange={(event) => onDraftChange(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                onSend();
-              }
-            }}
-          />
-          <button
-            type="button"
-            className={[styles.sendBtn, draft.trim() && styles.sendBtnActive]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={onSend}
-            aria-label={t("messages:conversation.send")}
-          >
-            <svg
-              width={16}
-              height={16}
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden
-            >
-              <path d="M2 8l12-6-4 6 4 6-12-6Z" fill="rgba(247,243,238,.9)" />
-            </svg>
-          </button>
-        </div>
-      )}
+      <Composer
+        active={active}
+        draft={draft}
+        onDraftChange={onDraftChange}
+        onSend={onSend}
+        blocked={blocked}
+      />
     </div>
   );
 }

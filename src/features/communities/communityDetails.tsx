@@ -11,12 +11,26 @@ export interface Person {
   /** Registry slug — when set, the avatar shows the member's photo and links to
    *  their profile (`/profile/<slug>`). */
   slug?: string;
+  /** The member's own avatar photo, carried straight from the auth profile /
+   *  API `MemberRef`. Preferred over the static registry lookup so real users
+   *  (owner + members) show their actual picture, not just initials. */
+  avatarUrl?: string | null;
 }
 export interface Reply {
   initials: string;
   name: string;
   tint: Tint;
   text: string;
+  /** Backend reply id (present for live-wired threads; absent in static demo). */
+  id?: string;
+  /** ISO timestamp of the last edit, when the reply has been edited. */
+  editedAt?: string | null;
+  /** True when the reply is a soft-tombstone ("[deleted]"). */
+  deleted?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canRestore?: boolean;
+  canViewHistory?: boolean;
 }
 export interface Thread {
   votes: number;
@@ -26,6 +40,22 @@ export interface Thread {
   replyCount: number;
   post: string;
   replies: Reply[];
+  /** Backend post id (present for live-wired threads; absent in static demo). */
+  id?: string;
+  /** ISO creation timestamp, for the Newest sort. */
+  createdAt?: string;
+  /** Whether the viewer has Heart-reacted (seeds the upvote toggle). */
+  voted?: boolean;
+  /** Pinned by a mod (drives the Pinned filter chip). */
+  pinned?: boolean;
+  /** ISO timestamp of the last edit, when the OP post has been edited. */
+  editedAt?: string | null;
+  /** True when the OP post is a soft-tombstone ("[deleted]"). */
+  deleted?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canRestore?: boolean;
+  canViewHistory?: boolean;
 }
 export interface CommunityDetail {
   badge: string;

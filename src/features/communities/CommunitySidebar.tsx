@@ -5,9 +5,9 @@ import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { memberProfiles } from "../members/data/memberProfiles";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Tint } from "./communityDetails";
+import { photoOf } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -30,12 +30,11 @@ export function CommunitySidebar({
   const { t } = useTranslation();
   const { openConnect } = useConnect();
   const org = detail.organiser;
-  const orgMember = org.slug ? memberProfiles[org.slug] : undefined;
   const orgAvatar = (
     <Avatar
       initials={org.initials}
       tint={org.tint}
-      src={orgMember?.photo}
+      src={photoOf(org)}
       size={48}
       alt={org.name}
     />

@@ -3,9 +3,16 @@ import type { RosterMember } from "./community.model";
 import type { CommunityRole } from "./membership.types";
 import { memberProfiles } from "../members/data/memberProfiles";
 
-/** Resolve a registry photo for a person, when their slug maps to one. */
+/**
+ * Resolve a person's avatar photo: their own `avatarUrl` (the real picture the
+ * owner/member set on their profile) when present, otherwise the static
+ * registry photo their slug maps to. Undefined → the Avatar renders initials.
+ */
 export function photoOf(person: Person): string | undefined {
-  return person.slug ? memberProfiles[person.slug]?.photo : undefined;
+  return (
+    person.avatarUrl ??
+    (person.slug ? memberProfiles[person.slug]?.photo : undefined)
+  );
 }
 
 /**

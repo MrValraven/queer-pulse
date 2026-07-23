@@ -350,6 +350,10 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.continue": "Continuar",
   "onboarding.stepPhoto.skip": "Saltar por agora — podes adicionar isto depois",
   "onboarding.stepPhoto.back": "← Voltar",
+  "onboarding.stepPhoto.uploadError":
+    "Não conseguimos adicionar essa foto. Tenta novamente.",
+  "onboarding.stepPhoto.saveError":
+    "Não conseguimos guardar a tua foto. Tenta novamente.",
 
   "onboarding.stepNorms.heading": "Este é um espaço <em>cuidado</em>",
   "onboarding.stepNorms.norm.bePresent.title": "Está presente",
@@ -376,6 +380,8 @@ export const auth: Catalog = {
     "Escolhe pelo menos uma — escolhe quantas fizerem sentido.",
   "onboarding.stepIntents.continue": "Continuar",
   "onboarding.stepIntents.back": "← Voltar",
+  "onboarding.stepIntents.saveError":
+    "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.intent.community": "Comunidade",
   "onboarding.intent.gatherings": "Convívios e eventos",
   "onboarding.intent.professional": "Ligações profissionais",
@@ -392,17 +398,20 @@ export const auth: Catalog = {
     "Grupos que talvez gostes, com base nos teus interesses.",
   "onboarding.stepCommunities.join": "Junta-te",
   "onboarding.stepCommunities.joined": "Já estás dentro",
+  "onboarding.stepCommunities.requested": "Pedido enviado",
   "onboarding.stepCommunities.continue": "Continuar",
   "onboarding.stepCommunities.skip":
     "Saltar por agora — explora e junta-te depois",
   "onboarding.stepCommunities.back": "← Voltar",
+  "onboarding.stepCommunities.empty":
+    "Sem sugestões de momento — podes explorar e juntar-te a comunidades quando quiseres.",
 
   "onboarding.stepDone.heading": "Já fazes <em>parte disto</em>",
   "onboarding.stepDone.cta": "Ir para o meu início",
   "onboarding.quickStart.browseDirectory.title":
     "Explora o diretório de pessoas",
   "onboarding.quickStart.browseDirectory.desc":
-    "{count} pessoas em Lisboa e mais além",
+    "Membros em Lisboa e não só",
   "onboarding.quickStart.gatherings.title": "Vê os próximos convívios",
   "onboarding.quickStart.gatherings.desc": "Eventos reais para a comunidade",
   "onboarding.quickStart.magazine.title": "Lê a revista da comunidade",

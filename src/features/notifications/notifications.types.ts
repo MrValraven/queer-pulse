@@ -23,8 +23,9 @@ export interface Notification {
   id: string | number;
   type: NotifType;
   unread: boolean;
-  /** Either an avatar (initials + tint) or an emoji icon with a background. */
-  avatar?: { initials: string; tint: AvatarTint };
+  /** Either an avatar (initials + tint, optionally a real photo) or an emoji
+   *  icon with a background. */
+  avatar?: { initials: string; tint: AvatarTint; src?: string };
   icon?: { Glyph: IconType; bg: string };
   /** Member slug of the person named inside `text`, when `text` names one and
    *  that person has a real member account. `text` is a `ReactNode` blob (an
@@ -32,6 +33,14 @@ export interface Notification {
    *  field, so this is the only handle a staff badge can hang off. Omitted
    *  for org/system/anonymous rows. */
   actorSlug?: string;
+  /**
+   * The member behind a person-based notification (connection, vouch, intro,
+   * event invite), resolved live. When present, the row renders their name as a
+   * link and their avatar links to the same profile. `textKey` is the
+   * personalized `notifications:type.<kind>.textNamed` copy with a
+   * `<profile>{name}</profile>` slot; absent when no personalized copy exists.
+   */
+  actor?: { name: string; href: string; textKey?: string };
   text: ReactNode;
   meta: string;
   time: string;

@@ -130,6 +130,22 @@
   font-weight: 600;
   color: var(--text-strong);
 }
+/* The acting member's name, rendered as a link to their profile. Reads like
+   the bold `<strong>` names in the demo copy, but is clickable. */
+.actorLink {
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: none;
+}
+.actorLink:hover {
+  text-decoration: underline;
+}
+/* Wraps the avatar so it too links to the profile, keeping a round focus ring. */
+.avatarLink {
+  flex: none;
+  display: inline-flex;
+  border-radius: 50%;
+}
 .meta {
   font-size: 12px;
   color: var(--ink-40);

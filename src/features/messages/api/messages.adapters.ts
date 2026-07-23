@@ -76,6 +76,7 @@ export function messageToChat(
   myHandle: string | null,
 ): ChatMessage {
   return {
+    id: dto.id,
     from: myHandle && dto.sender.handle === myHandle ? "me" : "them",
     text: dto.body,
     time: timeLabel(dto.createdAt),

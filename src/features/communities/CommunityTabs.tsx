@@ -8,6 +8,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import type {
@@ -16,7 +17,11 @@ import type {
   Thread as ThreadData,
 } from "./communityDetails";
 import { CommunityThread } from "./CommunityThread";
+import { photoOf } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
+import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
+import { useCreatePost } from "./api/useCommunityMutations";
+import type { PulsePaging } from "./api/useCommunityPosts";
 import styles from "./CommunityDetailPage.module.css";
 
 const GATHERING = routes.gathering;
@@ -115,21 +120,32 @@ export function MembersTab({
                 />
               </div>
             ))
-          : members.map((m, i) => (
-              <FadeIn
-                as={Link}
-                to={MEMBER}
-                className={styles.mCard}
-                key={i}
-                delay={Math.min(i, 8) * 60}
-              >
-                <div className={[styles.mAv, AV_CLASS[m.tint]].join(" ")}>
-                  {m.initials}
-                </div>
-                <div className={styles.mName}>{m.name}</div>
-                <div className={styles.mRole}>{m.role}</div>
-              </FadeIn>
-            ))}
+          : members.map((m, i) => {
+              const photo = photoOf(m);
+              return (
+                <FadeIn
+                  as={Link}
+                  to={MEMBER}
+                  className={styles.mCard}
+                  key={i}
+                  delay={Math.min(i, 8) * 60}
+                >
+                  <div className={[styles.mAv, AV_CLASS[m.tint]].join(" ")}>
+                    {photo ? (
+                      <img
+                        src={resolveAvatarSrc(photo)}
+                        alt={m.name}
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      m.initials
+                    )}
+                  </div>
+                  <div className={styles.mName}>{m.name}</div>
+                  <div className={styles.mRole}>{m.role}</div>
+                </FadeIn>
+              );
+            })}
       </div>
       {!loading && (
         <p className={styles.showing}>
@@ -147,24 +163,32 @@ export function MembersTab({
 
 export function ForumTab({
   threads,
+  slug,
+  isMember,
   loading = false,
+  paging,
 }: {
   threads: ThreadData[];
+  slug: string;
+  isMember: boolean;
   loading?: boolean;
+  paging: PulsePaging;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
+  const createPost = useCreatePost(slug);
   const [newPost, setNewPost] = useState("");
   const [extraThreads, setExtraThreads] = useState<ThreadData[]>([]);
 
   const post = () => {
     const text = newPost.trim();
     if (!text) return;
-    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text;
+    const heading = text.length > 70 ? `${text.slice(0, 67)}…` : text;
     setExtraThreads((prev) => [
       {
-        votes: 1,
-        title,
+        votes: 0,
+        title: heading,
         author: { initials: "Me", name: "You", tint: "plum" },
         time: t("communities:common.justNow"),
         replyCount: 0,
@@ -175,14 +199,19 @@ export function ForumTab({
     ]);
     setNewPost("");
     showToast(t("communities:detail.forum.postedToast"), "success");
+    if (demoMode) return;
+    createPost.mutate(
+      { body: text },
+      { onError: () => showToast(t("communities:common.error"), "error") },
+    );
   };
 
   if (loading) {
     return (
       <div aria-busy="true">
-        {Array.from({ length: 2 }).map((_, i) => (
+        {Array.from({ length: 2 }).map((_, index) => (
           <div
-            key={i}
+            key={index}
             className={styles.mCard}
             style={{ textAlign: "left", marginBottom: 14, padding: 18 }}
           >
@@ -201,36 +230,51 @@ export function ForumTab({
 
   return (
     <div>
-      {extraThreads.map((t, i) => (
-        <CommunityThread data={t} key={`x${i}`} />
+      {extraThreads.map((thread, index) => (
+        <CommunityThread data={thread} slug={slug} key={`local-${index}`} />
       ))}
-      {threads.map((t, i) => (
-        <FadeIn key={i} delay={Math.min(i, 8) * 60}>
-          <CommunityThread data={t} />
+      {threads.map((thread, index) => (
+        <FadeIn key={thread.id ?? index} delay={Math.min(index, 8) * 60}>
+          <CommunityThread data={thread} slug={slug} />
         </FadeIn>
       ))}
-      <div className={styles.newPost}>
-        <div
-          className={[styles.rAv, styles.tPlum].join(" ")}
-          style={{ width: 30, height: 30 }}
-        >
-          Me
+      {paging.hasNextPage && (
+        <div style={{ textAlign: "center", marginTop: 12 }}>
+          <Button
+            variant="ghost"
+            disabled={paging.isFetchingNextPage}
+            onClick={paging.fetchNextPage}
+          >
+            {paging.isFetchingNextPage
+              ? t("communities:common.loading")
+              : t("communities:detail.discussion.loadMore")}
+          </Button>
         </div>
-        <textarea
-          className={styles.npTa}
-          rows={1}
-          placeholder={t("communities:detail.forum.newPostPlaceholder")}
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
-        />
-        <Button
-          variant="ghost"
-          onClick={post}
-          style={{ whiteSpace: "nowrap", fontSize: 13 }}
-        >
-          {t("communities:detail.forum.postCta")}
-        </Button>
-      </div>
+      )}
+      {isMember && (
+        <div className={styles.newPost}>
+          <div
+            className={[styles.rAv, styles.tPlum].join(" ")}
+            style={{ width: 30, height: 30 }}
+          >
+            Me
+          </div>
+          <textarea
+            className={styles.npTa}
+            rows={1}
+            placeholder={t("communities:detail.forum.newPostPlaceholder")}
+            value={newPost}
+            onChange={(event) => setNewPost(event.target.value)}
+          />
+          <Button
+            variant="ghost"
+            onClick={post}
+            style={{ whiteSpace: "nowrap", fontSize: 13 }}
+          >
+            {t("communities:detail.forum.postCta")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

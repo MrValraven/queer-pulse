@@ -11,6 +11,9 @@
   --stepper-check: 13px;
   --stepper-num: 12px;
   --stepper-label: 12px;
+  /* Span the container even when dropped into a flex parent (the block nav
+     would otherwise shrink to content width). */
+  width: 100%;
 }
 .track {
   position: relative;

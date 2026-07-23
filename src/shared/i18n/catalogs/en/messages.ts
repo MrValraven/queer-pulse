@@ -29,6 +29,7 @@ export const messages: Catalog = {
   "thread.emptyDescription":
     "When you start a chat, it'll live here — a quiet, private space just for you and the people you reach out to.",
   "thread.newMessage": "New message",
+  "thread.presenceOnline": "Online now",
 
   // Conversation panel (ConversationPanel)
   "conversation.officialMeta": "Official · Cannot reply to this thread",
@@ -40,6 +41,10 @@ export const messages: Catalog = {
     "You blocked {name}. Unblock them from their profile to send a message.",
   "conversation.composerPlaceholder": "Message {name}…",
   "conversation.send": "Send",
+  "conversation.backToList": "Back to conversations",
+  "conversation.emptyPanelTitle": "Your messages live here",
+  "conversation.emptyPanelBody":
+    "Pick a conversation on the left, or start a new one — a quiet, private space just for you and the people you reach out to.",
   "day.today": "Today",
   "day.yesterday": "Yesterday",
   "time.justNow": "Just now",
@@ -50,5 +55,7 @@ export const messages: Catalog = {
   "newMessage.sub": "Pick a connection to start a conversation.",
   "newMessage.searchPlaceholder": "Search connections…",
   "newMessage.searchAria": "Search connections",
+  "newMessage.loading": "Loading your connections…",
+  "newMessage.none": "You haven't connected with anyone yet.",
   "newMessage.empty": "No connections match “{query}”.",
 };

@@ -6,7 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import {
   PRACTITIONERS,
   FILTERS,
@@ -14,16 +14,43 @@ import {
   TINT_FG,
   initials,
   type Cat,
+  type Practitioner,
 } from "./solidarity.data";
 import { SolidaritySkeleton } from "./SolidaritySkeleton";
 import styles from "./SolidarityPage.module.css";
+
+/**
+ * A practitioner card's contact affordance. Extracted so `useMemberContact` runs
+ * at a component top level rather than inside the `items.map` below, where a hook
+ * call would be illegal.
+ */
+function PractitionerContactButton({
+  practitioner,
+}: {
+  practitioner: Practitioner;
+}) {
+  const { t } = useTranslation();
+  const { connected, contact } = useMemberContact(practitioner.id);
+  return (
+    <button
+      type="button"
+      className={styles.pcContact}
+      onClick={() =>
+        contact({ slug: practitioner.id, name: practitioner.name })
+      }
+    >
+      {connected
+        ? t("connect:contact.message")
+        : t("economy:solidarityDirectory.contactCta")}
+    </button>
+  );
+}
 
 export function SolidarityDirectory() {
   const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState<Cat | "all">("all");
   const [query, setQuery] = useState("");
-  const { openConnect } = useConnect();
   const q = query.toLowerCase();
 
   const items = PRACTITIONERS.filter((p) => {
@@ -147,13 +174,7 @@ export function SolidarityDirectory() {
                   </div>
                   <div className={styles.pcFoot}>
                     <span className={styles.pcLang}>{p.langs.join(" · ")}</span>
-                    <button
-                      type="button"
-                      className={styles.pcContact}
-                      onClick={() => openConnect(p.id)}
-                    >
-                      {t("economy:solidarityDirectory.contactCta")}
-                    </button>
+                    <PractitionerContactButton practitioner={p} />
                   </div>
                 </FadeIn>
               ))}

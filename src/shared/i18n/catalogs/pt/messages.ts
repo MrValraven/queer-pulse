@@ -17,6 +17,7 @@ export const messages: Catalog = {
   "thread.emptyDescription":
     "Quando começares uma conversa, ela fica aqui — um espaço tranquilo e privado só para ti e para quem contactares.",
   "thread.newMessage": "Nova mensagem",
+  "thread.presenceOnline": "Online agora",
 
   // Painel da conversa (ConversationPanel)
   "conversation.officialMeta":
@@ -29,6 +30,10 @@ export const messages: Catalog = {
     "Bloqueaste {name}. Desbloqueia esta pessoa a partir do perfil dela para enviares uma mensagem.",
   "conversation.composerPlaceholder": "Mensagem para {name}…",
   "conversation.send": "Enviar",
+  "conversation.backToList": "Voltar às conversas",
+  "conversation.emptyPanelTitle": "As tuas mensagens ficam aqui",
+  "conversation.emptyPanelBody":
+    "Escolhe uma conversa à esquerda, ou começa uma nova — um espaço tranquilo e privado só para ti e para quem contactares.",
   "day.today": "Hoje",
   "day.yesterday": "Ontem",
   "time.justNow": "Agora mesmo",
@@ -39,5 +44,7 @@ export const messages: Catalog = {
   "newMessage.sub": "Escolhe uma ligação para iniciar uma conversa.",
   "newMessage.searchPlaceholder": "Pesquisar ligações…",
   "newMessage.searchAria": "Pesquisar ligações",
+  "newMessage.loading": "A carregar as tuas ligações…",
+  "newMessage.none": "Ainda não tens ligações.",
   "newMessage.empty": "Nenhuma ligação corresponde a “{query}”.",
 };

@@ -271,6 +271,8 @@ export const marketing: Catalog = {
   "activism.local.letter.title": "Sign the open letter",
   "activism.local.letter.body":
     "<b>{signatures}</b> of {target} signatures — hand-delivered to the Câmara Municipal once we reach the target.",
+  "activism.local.letter.bodyLive":
+    "Add your name — hand-delivered to the Câmara Municipal once we reach our signature target.",
   "activism.skills.title": "Bring a <em>skill</em>",
   "activism.skills.p1":
     "Every organisation below needs more than volunteers with picket signs — they need your actual craft.",
@@ -2369,73 +2371,6 @@ export const marketing: Catalog = {
     "QueerPulse is a small, member-supported network. Your feedback helps keep it good.",
   "contact.outro.backCta": "Back to the room",
 
-  // ── Get the App — landing page chrome. All platform-authored.
-  "getTheApp.meta.title": "Get the QueerPulse app: crisis chat, RSVPs",
-  "getTheApp.meta.description":
-    "Download the QueerPulse app for iOS and Android — quick exit, one-tap crisis chat, gathering RSVPs with QR tickets, and an offline safe-spaces map.",
-  "getTheApp.hero.eyebrow": "Mobile · iOS & Android",
-  "getTheApp.hero.title": "Take it with you <em>anyway.</em>",
-  "getTheApp.hero.lead":
-    "The app does the things you actually need on a phone: <b>quick exit, crisis chat, RSVPs, your safe-spaces map, and the QR ticket at the door.</b> Everything else stays better on the web.",
-  "getTheApp.store.ios.line1": "Download on the",
-  "getTheApp.store.ios.line2": "App Store",
-  "getTheApp.store.android.line1": "Get it on",
-  "getTheApp.store.android.line2": "Google Play",
-  "getTheApp.sendPhone.title": "Don't want the <em>app stores?</em>",
-  "getTheApp.sendPhone.body":
-    "Pop your number in and we'll text you a one-time install link. Doesn't add you to anything.",
-  "getTheApp.sendPhone.placeholder": "+351 91·••··••··",
-  "getTheApp.sendPhone.cta": "Text me the link",
-  "getTheApp.sendPhone.toast": "Link sent — check your messages",
-  "getTheApp.qr.label": "Scan with <em>your phone</em>",
-  "getTheApp.qr.sub": "Camera app should detect it · routes to the right store",
-  "getTheApp.what.title": "What the app is <em>for</em>",
-  "getTheApp.what.sub":
-    "A short list. We won't put everything on a small screen.",
-  "getTheApp.features.quickExit.title": "Quick exit",
-  "getTheApp.features.quickExit.desc":
-    "Lives in the nav. One tap closes the app and switches to a neutral home screen. Always available.",
-  "getTheApp.features.crisisChat.title": "Crisis support",
-  "getTheApp.features.crisisChat.desc":
-    "One tap from anywhere to the emergency helplines page — real numbers to call, no app required, works on patchy signal.",
-  "getTheApp.features.gatherings.title": "Gatherings & RSVPs",
-  "getTheApp.features.gatherings.desc":
-    "RSVP in two taps. Tickets show as QR codes at the door. Calendar export to whatever you use.",
-  "getTheApp.features.safeMap.title": "Safe-spaces map · offline",
-  "getTheApp.features.safeMap.desc":
-    "Map of vetted venues across Lisbon, cached so it works without signal. Verified within 90 days, every pin.",
-  "getTheApp.features.quietNotifs.title": "Quiet notifications",
-  "getTheApp.features.quietNotifs.desc":
-    "Replies, RSVPs, messages. No engagement bait, no streaks. Granular quiet hours by category.",
-  "getTheApp.features.onTheGo.title": "Member-on-the-go",
-  "getTheApp.features.onTheGo.desc":
-    "Your DMs, your saves, your profile. Light theme + a true black for night use.",
-  "getTheApp.what.notIn":
-    "<b>Not in the app, on purpose:</b> the full Magazine, the article archive, the Forum, the long-form profiles, governance documents, hosting tools. <em>These are better at a desk.</em> Web stays the canonical home for everything that takes time.",
-  "getTheApp.share.eyebrow": "Pass it along",
-  "getTheApp.share.title": "Got a friend who'd <em>use this?</em>",
-  "getTheApp.share.body":
-    "Show them this QR — it's the same install page, just yours. If they install, you'll both see each other in the \"we've met in person\" recap when you're next at a gathering together.",
-  "getTheApp.share.copyLinkCta": "Copy link",
-  "getTheApp.share.shareAppsCta": "Share to apps",
-  "getTheApp.share.copyToast": "Link copied",
-  "getTheApp.share.notMemberCta": "Not a member yet? Request an invite →",
-
-  // ── Get the App — notify-me modal (App Store / Google Play not live yet).
-  "appNotify.ariaLabel": "Get notified at launch",
-  "appNotify.close": "Close",
-  "appNotify.success.title": "We'll let you <em>know.</em>",
-  "appNotify.success.body":
-    "You're on the list for the {platform} launch. We'll email <b>{email}</b> the day it lands — and nothing else.",
-  "appNotify.eyebrow": "{store} · coming soon",
-  "appNotify.title": "QueerPulse is coming to <em>{platform}.</em>",
-  "appNotify.lead":
-    "The app isn't in the store yet. Drop your email and we'll let you know the moment the {platform} build is live. No marketing, no lists you didn't ask for.",
-  "appNotify.emailLabel": "Your email",
-  "appNotify.emailHint": "We'll only use this for the launch heads-up.",
-  "appNotify.maybeLaterCta": "← Maybe later",
-  "appNotify.notifyCta": "Notify me →",
-
   // ── For Organisations — partnerships landing page chrome. The four
   //    PARTNERS records (name/tenure/description) and the Filipa Mendes
   //    testimonial are each org's own content — left English, same
@@ -2940,6 +2875,16 @@ export const marketing: Catalog = {
   "map.clusterAria_one": "{count} venue here — zoom in",
   "map.clusterAria_other": "{count} venues here — zoom in",
 
+  // ── Local — combined list/map venue explorer.
+  "local.cat.nightlife": "Nightlife",
+  "local.view.list": "List",
+  "local.view.map": "Map",
+  "local.view.toggleAria": "Choose list or map view",
+  "local.card.seeFullDetails": "See full details",
+  "local.filter.searchPlaceholder": "Search places and venues…",
+  "local.filter.categoryAria": "Filter by category",
+  "local.filter.vibeLabel": "Vibe",
+
   // ── Constitution — governance/constitutional copy (`ConstitutionPage.tsx`,
   //    `constitution.data.tsx`). Platform-authored, ships in the bundle, no
   //    `api/` fetch. Precise and literal per the i18n brief §6 — numbers,
@@ -3235,44 +3180,4 @@ export const marketing: Catalog = {
   "submitPartner.tips.whatNext.body":
     "Your application arrives as pending. A member of the team reviews it, and we'll be in touch — whether it's a yes, a not-yet, or a question.",
 
-  // ── Cities (CitiesPage + Sections + LiveCards) — chrome only. Per-city
-  //    descriptions, coordinator credits, and vote counts (`cities.data.tsx`,
-  //    the Lisbon/Porto card bodies) are content — a previous agent's
-  //    deliberate call, not re-litigated here. Country-flag emoji in this
-  //    feature are the lint rule's one exemption — left as-is.
-  "cities.meta.title": "Where QueerPulse operates: Lisbon, and what's next",
-  "cities.meta.description":
-    "QueerPulse is live in Lisbon, building toward Porto, and taking member votes on where to go next — each new city needs a local moderator and partner first.",
-  "cities.hero.eyebrow": "Cities · network footprint · selector",
-  "cities.hero.title": "One city at a <em>time.</em>",
-  "cities.hero.dek":
-    "QueerPulse is rooted in Lisbon. We will only open in a new city when there is <b>at least one moderator in-country</b>, a partner organisation aligned, and a clear local need. <em>That makes expansion slow on purpose.</em> Below: where we are now, where we're building, and how you can pull us toward your city.",
-  "cities.hero.browsingAs": "You're browsing as",
-  "cities.hero.changeCta": "Change",
-  "cities.hero.changeToast":
-    "Detected from IP. You can switch from any city card below.",
-
-  "cities.live.heading": "Live · <em>fully operational</em>",
-  "cities.live.meta": "Active community, moderators, partner orgs",
-
-  "cities.groundwork.heading": "In <em>groundwork</em>",
-  "cities.groundwork.meta":
-    "Local moderator identified · partner negotiations underway",
-
-  "cities.waitlist.heading": "Cities <em>members are asking for</em>",
-  "cities.waitlist.meta":
-    "Public waitlist · members can vote · 1 vote per member",
-  "cities.waitlist.intro":
-    "Votes are <em>signals to us about where the community is</em>, not promises to build. We open one city at a time. Adding your vote takes 1 click.",
-  "cities.waitlist.membersAsking": "Members asking",
-  "cities.waitlist.pctToThreshold": "{pct}% to threshold",
-  "cities.waitlist.votedCta": "You voted",
-  "cities.waitlist.voteCta": "+ Add my vote",
-  "cities.waitlist.voteToast": "Vote recorded · we read these signals monthly",
-  "cities.waitlist.footNote":
-    "Don't see your city? <a>Write to us</a> with what you'd build there.",
-
-  "cities.how.kicker": "The rule book",
-  "cities.how.title": "How we <em>actually open</em> a new city.",
-  "cities.how.intro": "Four conditions, all required. No shortcuts.",
 };

@@ -203,66 +203,6 @@ export const magazine: Catalog = {
   "author.work.seeAllPicksCta": "See all picks →",
   "author.work.findElsewhereHeading": "Find {name} <em>elsewhere</em>",
 
-  // ── AudioPlayerPage tabs ─────────────────────────────────────────────────
-  "audio.tabs.showNotes": "Show notes",
-  "audio.tabs.chapters": "Chapters · {count}",
-  "audio.tabs.transcript": "Transcript",
-
-  // ── AudioPlayerControls ──────────────────────────────────────────────────
-  "audio.controls.previousChapter": "Previous chapter",
-  "audio.controls.back15s": "-15s",
-  "audio.controls.pause": "Pause",
-  "audio.controls.play": "Play",
-  "audio.controls.forward30s": "+30s",
-  "audio.controls.nextChapter": "Next chapter",
-  "audio.controls.saveCta": "Save",
-  "audio.controls.likeCta": "Like",
-  "audio.controls.sleepCta": "Sleep",
-  "audio.controls.cancelSleepTimer": "Cancel sleep timer",
-
-  // ── AudioPlayerMain ──────────────────────────────────────────────────────
-  "audio.linkCopiedToast": "Link copied",
-  "audio.backToShow": "← Back to show",
-  "audio.shareTitle": "Share",
-  "audio.castTitle": "Cast / AirPlay",
-  "audio.seekAriaLabel": "Seek",
-
-  // ── AudioPlayerModals ────────────────────────────────────────────────────
-  "audio.modal.closeAriaLabel": "Close",
-  "audio.cast.connectedToast": "Connected to {name}",
-  "audio.cast.streamingTitle": "Streaming to <em>{name}</em>",
-  "audio.cast.playingOnDevice": "{kind} · audio is now playing on this device.",
-  "audio.cast.chooseAnotherCta": "Choose another",
-  "audio.cast.doneCta": "Done",
-  "audio.cast.eyebrow": "Cast · AirPlay",
-  "audio.cast.nearbyDevicesTitle": "Nearby devices",
-  "audio.cast.pickDeviceSub":
-    "Pick a speaker or screen to stream this episode to.",
-  // CAST_TARGETS.kindKey (audioPlayer.data.ts) — device protocol/type chrome.
-  "audio.cast.kind.airplaySpeaker": "AirPlay · speaker",
-  "audio.cast.kind.castScreen": "Cast · screen",
-  "audio.cast.kind.airplayTwoSpeakers": "AirPlay · 2 speakers",
-  "audio.cast.kind.bluetoothHeadphones": "Bluetooth · headphones",
-  "audio.sleep.eyebrow": "Sleep timer",
-  "audio.sleep.title": "Stop playing after…",
-  "audio.sleep.sub":
-    "Playback fades out and pauses when the timer reaches zero.",
-  "audio.sleep.minutesLabel": "minutes",
-  "audio.sleep.turnOffCta": "Turn off timer",
-  "audio.transcriptModal.eyebrow": "Transcript · Episode {number}",
-  "audio.transcriptModal.title": "Preview & download",
-  "audio.transcriptModal.sub":
-    "Full transcript with speaker labels and timestamps.",
-  "audio.transcriptModal.downloadCta": "Download .txt",
-  "audio.transcriptModal.closeCta": "Close",
-
-  // ── AudioPlayerTabs ──────────────────────────────────────────────────────
-  "audio.tabs.searchPlaceholder": "Search transcript",
-  "audio.tabs.autoScroll": "Auto-scroll",
-  "audio.tabs.autoScrollOn": "Auto-scroll · on",
-  "audio.tabs.downloadCta": "Download",
-  "audio.tabs.nowPlaying": "Now",
-
   // ══════════════════ Editor dashboard (staff-only) ════════════════════════
   // Piece/pitch RECORDS (titles, notes, activity feed, section names) are
   // left as English mock data — editorial-database content, not chrome.
@@ -824,47 +764,4 @@ export const magazine: Catalog = {
   "newsletterArchive.list.loadOlder_other": "Load {count} older issues",
   "newsletterArchive.issue.backToArchive": "Back to the archive",
   "newsletterArchive.issue.browseFullArchive": "Browse the full archive",
-
-  // ══════════════════ Podcast show (The Back Room) ═══════════════════════════
-  // Episode titles/descriptions/guest names/dates (podcastShow.data.tsx) are
-  // the show's own editorial content — left in English, like an article body.
-  // Only the surrounding show-page chrome is translated below.
-  "podcast.hero.eyebrow": "QueerPulse Audio · podcast",
-  "podcast.hero.playLatestCta": "Play latest",
-  "podcast.hero.subscribeCta": "Subscribe",
-  "podcast.listenOnLabel": "Listen on",
-  "podcast.aboutShowHeading": "About the <em>show</em>",
-  "podcast.episodesHeading": "Episodes · {count}",
-  "podcast.newestFirst": "Newest first",
-  "podcast.viewEpisodeNotesCta": "View episode notes →",
-  "podcast.playEpisodeAria": "Play episode",
-  "podcast.playEpisodeNumberAria": "Play episode {number}",
-  "podcast.showOlderEpisodes_one": "Show {count} older episode",
-  "podcast.showOlderEpisodes_other": "Show {count} older episodes",
-  "podcast.sidebar.hostsHeading": "Hosts",
-  "podcast.sidebar.aboutShowHeading": "About the show",
-  "podcast.sidebar.sponsoredLabel": "Sponsored",
-  "podcast.sidebar.guestHeading": "Want to be a guest?",
-  "podcast.sidebar.guestBody":
-    "We get this often. We don't typically take pitches, but if you're doing something genuinely worth an hour, tell us.",
-  "podcast.sidebar.writeToTeamCta": "Write to the team",
-  "podcast.modal.listenToTitle": "Listen to <em>{show}</em>",
-  "podcast.modal.sub":
-    "Open the show in your podcast app, or grab the raw feed.",
-  "podcast.modal.copyCta": "Copy",
-  "podcast.modal.closeAria": "Close",
-  "podcast.modal.rssCopiedToast": "RSS link copied",
-
-  // ── PLATFORMS.kindKey (PodcastShowModals.tsx category label) ────────────
-  "podcast.platformKind.streaming": "Streaming",
-  "podcast.platformKind.app": "App",
-  "podcast.platformKind.rawFeed": "Raw feed",
-
-  // ── SHOW_INFO.labelKey (PodcastShowSections.tsx sidebar facts) ──────────
-  "podcast.showInfo.format": "Format",
-  "podcast.showInfo.schedule": "Schedule",
-  "podcast.showInfo.length": "Length",
-  "podcast.showInfo.languages": "Languages",
-  "podcast.showInfo.transcripts": "Transcripts",
-  "podcast.showInfo.music": "Music",
 };

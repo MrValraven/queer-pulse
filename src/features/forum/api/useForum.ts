@@ -11,7 +11,7 @@ import {
   type ForumPostResponse,
   type ForumThreadResponse,
 } from "./forum.api";
-import { slugForThreadId, threadDetail, threadToCard } from "./forum.adapters";
+import { threadDetail, threadToCard } from "./forum.adapters";
 
 interface ThreadListPage {
   items: Thread[];
@@ -33,11 +33,9 @@ interface ThreadPostsPage {
  * false, no "Load more" renders, and ForumPage's own client-side category/sort
  * split still sees the exact same array as before: demo is byte-identical.
  *
- * Note the adaptation (`threadToCard`) deliberately happens inside `queryFn`,
- * per page, not in a memo over the flattened list: `threadToCard` populates the
- * `slugForThreadId` numeric-id → backend-slug map as a side effect, and
- * `useThread` needs that entry for EVERY thread the member can click, not just
- * the ones on page 1.
+ * Each card carries its backend `slug`, so `ForumThreadList` links to
+ * `/thread/:slug` and `useThread` fetches the detail straight from that param —
+ * detail no longer depends on the list step having populated any lookup map.
  *
  * `queryKey` includes `demoMode` + `language` so caches never cross either
  * boundary.
@@ -85,29 +83,33 @@ export function useThreads(category: string) {
  * (`threadDetail`), whose first post is the OP body and whose remainder are the
  * replies — so the merge stays correct as pages append.
  *
- * Demo mode short-circuits both queries (`enabled: false`) and returns the
- * scripted `THREADS` mock with `hasNextPage === false`, so the demo experience
- * is unchanged: same thread, same replies, no "Load more", no extra spinners.
+ * Demo mode short-circuits both queries (`enabled: false`) and resolves the
+ * scripted `THREADS` mock by numeric id with `hasNextPage === false`, so the
+ * demo experience is unchanged: same thread, same replies, no "Load more".
  *
- * Live resolution needs the backend slug, which the list step remembers by
- * numeric id — so deep-linking a thread the list hasn't produced yet returns
- * undefined (loading/empty), a documented prototype limitation.
+ * Live resolution fetches straight from the backend slug carried in the route
+ * param (`/thread/:slug`), so a hard refresh, a shared link, or any deep link
+ * loads the real thread — it no longer depends on the list step having run.
+ * `thread` is `undefined` only while the live queries are in flight or when the
+ * slug genuinely resolves to nothing (404); it NEVER falls back to mock data in
+ * live mode — that leak was the bug this replaces.
  */
-export function useThread(id: number) {
+export function useThread(routeParam: string) {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
   const fmt = useFormat();
-  const slug = demoMode ? undefined : slugForThreadId(id);
+  // Live: the route param IS the backend slug. Demo: it is the numeric mock id.
+  const slug = demoMode ? undefined : routeParam || undefined;
   const live = !demoMode && !!slug;
 
   const metaQuery = useQuery<ForumThreadResponse>({
-    queryKey: ["forum-thread-meta", demoMode, id, language],
+    queryKey: ["forum-thread-meta", demoMode, routeParam, language],
     enabled: live,
     queryFn: () => getThread(slug as string),
   });
 
   const postsQuery = useInfiniteQuery<ThreadPostsPage>({
-    queryKey: ["forum-thread-posts", demoMode, id, language],
+    queryKey: ["forum-thread-posts", demoMode, routeParam, language],
     enabled: live,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
@@ -127,14 +129,19 @@ export function useThread(id: number) {
 
   const thread = useMemo<Thread | undefined>(() => {
     if (demoMode)
-      return THREADS.find((candidate) => candidate.id === id) ?? THREADS[0];
+      return (
+        THREADS.find((candidate) => String(candidate.id) === routeParam) ??
+        THREADS[0]
+      );
     if (!metaQuery.data) return undefined;
     return threadDetail(metaQuery.data, posts, t, fmt);
-  }, [demoMode, id, metaQuery.data, posts, t, fmt]);
+  }, [demoMode, routeParam, metaQuery.data, posts, t, fmt]);
 
   return {
     thread,
-    isLoading: metaQuery.isLoading || postsQuery.isLoading,
+    // Only meaningful in live mode; demo drives its own simulated spinner.
+    isLoading: live && (metaQuery.isLoading || postsQuery.isLoading),
+    isNotFound: live && metaQuery.isError,
     hasNextPage: !demoMode && postsQuery.hasNextPage,
     fetchNextPage: () => void postsQuery.fetchNextPage(),
     isFetchingNextPage: postsQuery.isFetchingNextPage,

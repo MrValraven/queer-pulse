@@ -399,6 +399,46 @@
   flex-wrap: wrap;
 }
 
+/* Live-mode placeholder shown in the therapist section when the platform is
+   un-populated and no live directory backend exists yet. */
+.comingSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 56px 24px 64px;
+}
+.comingSoonBadge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 22px;
+}
+.comingSoonTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 34px;
+  color: var(--text-strong);
+  margin: 0 0 14px;
+}
+.comingSoonTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.comingSoonText {
+  font-size: 15px;
+  color: var(--ink-60);
+  max-width: 46ch;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
 @media (max-width: 640px) {
   .crisisInner {
     flex-direction: column;

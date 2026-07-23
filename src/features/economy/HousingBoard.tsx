@@ -5,6 +5,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS, HOUSING_SUBPAGES } from "./housing.data";
 import { useHousingListings } from "./api/useHousingListings";
+import { useLandlords } from "./api/useLandlords";
 import { HousingListingGrid } from "./HousingListingGrid";
 import { HousingLandlords, HousingTips } from "./HousingSections";
 import { ListSpaceModal } from "./ListSpaceModal";
@@ -25,6 +26,7 @@ export function HousingBoard() {
     [t],
   );
   const { data: source = [], isFetching } = useHousingListings(filter);
+  const { data: landlords = [] } = useLandlords();
   const loading = useSimulatedLoad() || (!demoMode && isFetching);
   // With nothing on the board, the type filters have nothing to act on — hide
   // them and let the empty state carry the single call to action.
@@ -77,7 +79,7 @@ export function HousingBoard() {
         </div>
       </div>
 
-      {demoMode && <HousingLandlords />}
+      <HousingLandlords landlords={landlords} />
 
       <HousingTips />
 

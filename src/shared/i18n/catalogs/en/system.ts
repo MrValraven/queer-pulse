@@ -349,7 +349,7 @@ export const system: Catalog = {
   "pwaPrompt.installCta": "Install now",
   "pwaPrompt.laterCta": "Maybe later",
   "pwaPrompt.actionsFoot":
-    "Snoozing this stops us asking on this device for <b>30 days</b>. You can also install any time from <a>Get the app</a>.",
+    "Snoozing this stops us asking on this device for <b>30 days</b>.",
   "pwaPrompt.toast.installHint":
     "Look for the install prompt · usually top-right",
   "pwaPrompt.toast.snoozed": "Won't ask again for 30 days",

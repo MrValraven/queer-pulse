@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import { Avatar, EmptyState } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { useSaved } from "../../app/providers/SavedProvider";
 import { useFocusOnMount } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -78,6 +79,7 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
   const { openConnect } = useConnect();
   const slug = item ? (item.actor?.handle ?? "") : "kai";
   const name = item?.title ?? "Kai Larsson";
+  const { connected, contact } = useMemberContact(slug || "");
   const bio =
     item?.summary ??
     "Filmmaker making a documentary about queer nightlife in southern Europe. Looking for interviewees and collaborators.";
@@ -125,9 +127,13 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
             <button
               type="button"
               className={styles.btnOutline}
-              onClick={() => openConnect(slug || undefined)}
+              onClick={() =>
+                slug ? contact({ slug, name }) : openConnect(undefined)
+              }
             >
-              {t("feed:action.connect")}
+              {slug && connected
+                ? t("connect:contact.message")
+                : t("feed:action.connect")}
             </button>
             <Link to={profileLink} className={styles.linkBtn}>
               {t("feed:action.viewProfile")}
@@ -241,7 +247,7 @@ function PostActions({
 
 export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
   const { t } = useTranslation();
-  const { openConnect } = useConnect();
+  const { connected, contact } = useMemberContact(post.slug);
   const { isSaved, toggleSave } = useSaved();
   const likePost = useLikePost();
   const replyToPost = useReplyToPost();
@@ -287,9 +293,13 @@ export function PostCard({ post = FEED_POST }: { post?: FeedPost }) {
           <button
             type="button"
             className={styles.btnOutline}
-            onClick={() => openConnect(post.slug)}
+            onClick={() =>
+              contact({ slug: post.slug, name: post.authorName })
+            }
           >
-            {t("feed:action.connect")}
+            {connected
+              ? t("connect:contact.message")
+              : t("feed:action.connect")}
           </button>
           <MoreMenu
             authorName={post.authorName}

@@ -4,16 +4,22 @@ import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { usePartners } from "./api/usePartners";
+import { useOpportunities } from "./api/useOpportunities";
 import {
   START_STEPS,
   SKILLS_CARDS,
-  ORGS,
-  VOLUNTEER_ROLES,
   OPEN_LETTER_SIGNATURES,
   OPEN_LETTER_TARGET,
 } from "./activism.data";
 import s from "./ActivismPage.module.css";
+
+/** How many partners / opportunities the activism teasers surface before the
+ *  "see all" link takes over — the full lists live on /about/partners and
+ *  /about/volunteer. */
+const TEASER_COUNT = 4;
 
 export function StartSection() {
   const { t } = useTranslation();
@@ -47,6 +53,7 @@ export function StartSection() {
 export function LocalSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
   return (
     <section className={s.section} id="local">
       <Reveal as="h2">
@@ -85,14 +92,21 @@ export function LocalSection() {
             {t("marketing:activism.local.letter.title")}
           </div>
           <p>
-            <Translation
-              i18nKey="marketing:activism.local.letter.body"
-              components={{ b: <b /> }}
-              values={{
-                signatures: fmt.number(OPEN_LETTER_SIGNATURES),
-                target: fmt.number(OPEN_LETTER_TARGET),
-              }}
-            />
+            {/* The open letter is mock-only (no backend endpoint), so the
+                fabricated signature count is shown only when the platform is
+                populated (demo). Live mode gets the count-less variant. */}
+            {demoMode ? (
+              <Translation
+                i18nKey="marketing:activism.local.letter.body"
+                components={{ b: <b /> }}
+                values={{
+                  signatures: fmt.number(OPEN_LETTER_SIGNATURES),
+                  target: fmt.number(OPEN_LETTER_TARGET),
+                }}
+              />
+            ) : (
+              t("marketing:activism.local.letter.bodyLive")
+            )}
           </p>
         </div>
       </Reveal>
@@ -190,6 +204,11 @@ export function FeelSection() {
 
 export function OrgsSection() {
   const { t } = useTranslation();
+  // Live-aware: real approved partners in live mode, the demo registry when the
+  // platform is populated. An empty (unpopulated) platform shows no orgs — the
+  // heading + intro stay, since they're platform-authored chrome.
+  const { items } = usePartners();
+  const orgs = items.slice(0, TEASER_COUNT);
   return (
     <section className={s.section} id="orgs">
       <Reveal as="h2">
@@ -201,35 +220,41 @@ export function OrgsSection() {
       <Reveal as="p" delay={60}>
         {t("marketing:activism.orgs.p1")}
       </Reveal>
-      <div className={s.orgList}>
-        {/* name/desc are partner-org profile copy — content, left in English */}
-        {ORGS.map((o, i) => (
-          <Reveal
-            key={o.name}
-            as={Link}
-            to={routes.partners}
-            className={s.orgRow}
-            delay={i * 55}
-          >
-            <span
-              className={s.orgAv}
-              style={{ background: o.bg, color: o.color }}
+      {orgs.length > 0 && (
+        <div className={s.orgList}>
+          {/* name/desc are the partner org's own authored profile copy */}
+          {orgs.map((org, index) => (
+            <Reveal
+              key={org.slug}
+              as={Link}
+              to={`${routes.partner}/${org.slug}`}
+              className={s.orgRow}
+              delay={index * 55}
             >
-              {o.av}
-            </span>
-            <div>
-              <div className={s.orgName}>{o.name}</div>
-              <div className={s.orgDesc}>{o.desc}</div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
+              <span
+                className={s.orgAv}
+                style={{ background: org.bg, color: org.color }}
+              >
+                {org.av}
+              </span>
+              <div>
+                <div className={s.orgName}>{org.name}</div>
+                <div className={s.orgDesc}>{org.desc}</div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
 
 export function VolunteerSection() {
   const { t } = useTranslation();
+  // Live-aware: real open opportunities in live mode, the demo registry when
+  // populated. Unpopulated → no cards, but heading + intro + "see all" stay.
+  const { items } = useOpportunities();
+  const roles = items.slice(0, TEASER_COUNT);
   return (
     <section className={s.section} id="volunteer">
       <Reveal as="h2">
@@ -241,27 +266,31 @@ export function VolunteerSection() {
       <Reveal as="p" delay={60}>
         {t("marketing:activism.volunteer.p1")}
       </Reveal>
-      <div className={s.actionGrid}>
-        {/* title/pill/body are volunteer-opportunity postings — content, left in English */}
-        {VOLUNTEER_ROLES.map((v, i) => (
-          <Reveal
-            key={v.title}
-            as={Link}
-            to={routes.volunteer}
-            className={s.actionCard}
-            delay={i * 60}
-          >
-            <div className={s.acHead}>
-              <div className={s.acTitle}>{v.title}</div>
-              <span className={s.acPill}>{v.pill}</span>
-            </div>
-            <div className={s.acBody}>{v.body}</div>
-            <span className={s.acLink}>
-              {t("marketing:activism.volunteer.expressInterestCta")}
-            </span>
-          </Reveal>
-        ))}
-      </div>
+      {roles.length > 0 && (
+        <div className={s.actionGrid}>
+          {/* role/org/desc are the posting org's own authored copy */}
+          {roles.map((role, index) => (
+            <Reveal
+              key={role.slug}
+              as={Link}
+              to={`${routes.volunteer}/opportunity/${role.slug}`}
+              className={s.actionCard}
+              delay={index * 60}
+            >
+              <div className={s.acHead}>
+                <div className={s.acTitle}>{role.role}</div>
+                <span className={s.acPill}>{role.time}</span>
+              </div>
+              <div className={s.acBody}>
+                {role.org} · {role.desc}
+              </div>
+              <span className={s.acLink}>
+                {t("marketing:activism.volunteer.expressInterestCta")}
+              </span>
+            </Reveal>
+          ))}
+        </div>
+      )}
       <Reveal style={{ marginTop: 28 }} delay={60}>
         <Button variant="ghost" to={routes.volunteer}>
           {t("marketing:activism.volunteer.seeAllCta")}

@@ -61,10 +61,24 @@ export interface Reply {
   quote?: { cite: string; text: string };
   body: string[];
   reactions: number;
+  // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
+  /** Backend post id — the edit/delete/restore/history target. */
+  postId?: string;
+  /** ISO timestamp of the last edit, when the post has been edited. */
+  editedAt?: string | null;
+  /** True when the post is a soft-tombstone ("[deleted]"). */
+  deleted?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canRestore?: boolean;
+  canViewHistory?: boolean;
 }
 
 export interface Thread {
   id: number;
+  /** Backend slug — the live detail/reply route param. Undefined for demo mock
+   *  threads, which route by their numeric `id` instead. */
+  slug?: string;
   cat: string;
   pinned?: boolean;
   title: string;
@@ -87,6 +101,14 @@ export interface Thread {
   /** Full opening-post paragraphs shown on the thread page. */
   body: string[];
   replies: Reply[];
+  /** Backend id of the opening post (edit/delete/restore/history target). */
+  opPostId?: string;
+  editedAt?: string | null;
+  deleted?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canRestore?: boolean;
+  canViewHistory?: boolean;
 }
 
 // ── Author / reply identity, driven by the member registry ──────────────────

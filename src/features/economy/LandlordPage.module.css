@@ -89,6 +89,10 @@
   align-items: flex-end;
   gap: 8px;
 }
+.heroSecondary {
+  display: flex;
+  gap: 8px;
+}
 .recCount {
   font-size: 12.5px;
   color: var(--ink-40);

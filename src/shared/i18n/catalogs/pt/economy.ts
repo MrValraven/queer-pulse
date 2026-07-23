@@ -457,6 +457,10 @@ export const economy: Catalog = {
   "housing.landlords.subtitle":
     "A comunidade já confirmou que estas pessoas proprietárias são queer-friendly, de confiança e justas. Não é uma garantia — faz sempre a tua própria verificação.",
   "housing.landlords.endorsedBadge": "Aval da comunidade",
+  "housing.landlords.suggestCta": "Sugerir uma pessoa proprietária",
+  "housing.landlords.emptyTitle": "Ainda sem pessoas proprietárias com aval",
+  "housing.landlords.emptyBody":
+    "Sê a primeira pessoa a indicar alguém em quem confiaste — queer-friendly, de confiança e justa.",
 
   "housing.tipsHeading":
     "Habitação em Lisboa — <em>o que precisas de saber</em>",
@@ -509,6 +513,10 @@ export const economy: Catalog = {
   "housingModal.message.note":
     "Para tua segurança, mantém a conversa dentro da QueerPulse até se terem conhecido pessoalmente. Nunca envies um depósito antes de visitar o espaço.",
   "housingModal.message.send": "Enviar mensagem",
+  "housingModal.message.draftNamed":
+    'Olá, {name}! Tenho interesse em "{listingTitle}". Ainda está disponível? Um pouco sobre mim: ',
+  "housingModal.message.draftGeneric":
+    'Olá! Tenho interesse em "{listingTitle}". Ainda está disponível? Um pouco sobre mim: ',
 
   "housingModal.recommend.ariaLabel": "Recomendar uma pessoa proprietária",
   "housingModal.recommend.successTitle": "Agradecemos. <em>Registada.</em>",
@@ -528,6 +536,8 @@ export const economy: Catalog = {
   "housingModal.recommend.note":
     "As recomendações são verificadas antes de aparecerem. Recomenda apenas pessoas proprietárias com quem tenhas mesmo arrendado.",
   "housingModal.recommend.submit": "Submeter recomendação",
+  "housingModal.recommend.error":
+    "Não foi possível submeter a tua recomendação — verifica a ligação e tenta novamente.",
 
   // ── ListSpaceModal ──────────────────────────────────────────────────────
   "listSpace.type.sublet": "Sublocação",
@@ -555,6 +565,36 @@ export const economy: Catalog = {
     "Os anúncios são revistos antes de aparecerem. Nunca peças um depósito antes de a pessoa visitar o espaço pessoalmente.",
   "listSpace.submitting": "A submeter…",
   "listSpace.submitCta": "Submeter anúncio",
+
+  // ── SuggestLandlordModal ────────────────────────────────────────────────
+  "suggestLandlord.ariaLabel": "Sugerir uma pessoa proprietária",
+  "suggestLandlord.eyebrow": "Quadro de habitação",
+  "suggestLandlord.title": "Sugerir uma <em>pessoa proprietária.</em>",
+  "suggestLandlord.sub":
+    "Conheces alguém que arrenda espaços queer-friendly e genuinamente decentes? Conta-nos sobre essa pessoa — uma pessoa moderadora confirma tudo antes de entrar no quadro.",
+  "suggestLandlord.nameLabel": "Nome da pessoa proprietária *",
+  "suggestLandlord.namePlaceholder": "ex.: Mariana Sousa",
+  "suggestLandlord.hoodLabel": "Bairro",
+  "suggestLandlord.hoodPlaceholder": "ex.: Arroios, Lisboa",
+  "suggestLandlord.taglineLabel": "Frase de apresentação",
+  "suggestLandlord.taglinePlaceholder": "ex.: Rendas justas, reparações rápidas",
+  "suggestLandlord.noteLabel": "Nota curta para o cartão do quadro",
+  "suggestLandlord.notePlaceholder":
+    "O que é que as pessoas membro devem saber rapidamente?",
+  "suggestLandlord.aboutLabel": "Mais sobre esta pessoa",
+  "suggestLandlord.aboutPlaceholder":
+    "Como é arrendar com esta pessoa? Detalhes ajudam outras pessoas membro.",
+  "suggestLandlord.areasLabel": "Onde arrenda",
+  "suggestLandlord.areasPlaceholder":
+    "Uma zona por linha, ex.:\nArroios\nAnjos\nGraça",
+  "suggestLandlord.note":
+    "As sugestões são revistas antes de entrarem no quadro. Sugere apenas pessoas proprietárias com quem tu ou alguém de confiança já arrendou.",
+  "suggestLandlord.submitting": "A enviar…",
+  "suggestLandlord.submitCta": "Sugerir pessoa proprietária",
+  "suggestLandlord.success.title": "Obrigada. <em>Enviado para revisão.</em>",
+  "suggestLandlord.success.body":
+    "Uma pessoa moderadora vai rever <strong>{name}</strong> antes de a adicionar ao quadro. Avisamos-te se precisarmos de mais alguma coisa.",
+  "suggestLandlord.error": "Não foi possível enviar — importas-te de tentar outra vez?",
 
   // ── HousingListingPage (+ secções) ─────────────────────────────────────
   "housingListing.back": "← Quadro de habitação",
@@ -629,6 +669,8 @@ export const economy: Catalog = {
     "Está ótimo — mantém a conversa aqui até ambas as partes decidirem avançar.",
   "contactRequest.cancel": "Cancelar",
   "contactRequest.done": "Concluído",
+  "contactRequest.sendError":
+    "Não foi possível enviar — importas-te de tentar outra vez?",
 
   // ── LandlordPage ─────────────────────────────────────────────────────────
   "landlordPage.eyebrow": "Pessoa proprietária com aval da comunidade",
@@ -662,6 +704,15 @@ export const economy: Catalog = {
   "landlordPage.intro.successBody":
     "Já enviámos a tua nota a <strong>{firstName}</strong>. Se tiver algo que corresponda, vai entrar em contacto por aqui — sem pressão de qualquer forma.",
   "landlordPage.intro.sendLabel": "Pedir apresentação",
+  "landlordPage.intro.fallbackName": "Uma pessoa da comunidade",
+  "landlordPage.save": "Guardar",
+  "landlordPage.saved": "Guardada",
+  "landlordPage.saveAriaLabel": "Guardar {name}",
+  "landlordPage.unsaveAriaLabel": "Remover {name} das guardadas",
+  "landlordPage.savedToast": "{name} guardada",
+  "landlordPage.unsavedToast": "{name} removida das guardadas",
+  "landlordPage.report": "Denunciar",
+  "landlordPage.reportAriaLabel": "Denunciar {name}",
 
   // ── ModalKit (moldura de modal partilhada + painel de sucesso) ──────────
   "modalKit.closeAriaLabel": "Fechar",
@@ -710,6 +761,7 @@ export const economy: Catalog = {
   "flatmates.card.memberSince": "Membro desde {date}",
   "flatmates.card.sayHello": "Dizer olá →",
   "flatmates.card.helloSent": "Olá enviado",
+  "flatmates.card.sayHelloError": "Não foi possível enviar o teu olá — tenta novamente daqui a pouco.",
   "flatmates.card.matchScore": "{score}% compatível",
   "flatmates.card.save": "Guardar",
   "flatmates.card.saved": "Guardado",
@@ -1252,6 +1304,7 @@ export const economy: Catalog = {
   "postJob.stepLabels.pay": "Remuneração e benefícios",
   "postJob.stepLabels.screening": "Triagem",
   "postJob.stepLabels.review": "Revisão",
+  "postJob.stepLabels.ariaLabel": "Progresso da publicação da vaga",
 
   "postJob.topbar.back": "Vagas e competências",
   "postJob.topbar.savedJustNow": "Guardado agora mesmo",

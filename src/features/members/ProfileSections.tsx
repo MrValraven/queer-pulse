@@ -10,7 +10,7 @@ import {
   TagRow,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { useVouch } from "../../app/providers/VouchProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -94,7 +94,7 @@ export function ProfileHero({
   onPreview?: () => void;
 }) {
   const { t } = useTranslation();
-  const { openConnect } = useConnect();
+  const { connected, contact } = useMemberContact(profile.slug);
   const { openVouch, hasVouched, removeVouch } = useVouch();
   const realSelf = self ?? profile.slug === currentUserSlug;
   const isSelf = realSelf && !asVisitor;
@@ -188,8 +188,18 @@ export function ProfileHero({
                         {t("members:profile.hero.requestIntroCta")}
                       </Button>
                     ) : (
-                      <Button size="lg" onClick={() => openConnect(profile.slug)}>
-                        {t("members:profile.hero.sayHelloCta")}
+                      <Button
+                        size="lg"
+                        onClick={() =>
+                          contact({
+                            slug: profile.slug,
+                            name: `${profile.first} ${profile.last}`,
+                          })
+                        }
+                      >
+                        {connected
+                          ? t("connect:contact.message")
+                          : t("members:profile.hero.sayHelloCta")}
                       </Button>
                     ))}
                   {!realSelf &&

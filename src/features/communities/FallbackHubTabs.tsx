@@ -6,6 +6,7 @@ import type {
   Person,
   Thread as ThreadData,
 } from "./communityDetails";
+import type { PulsePaging } from "./api/useCommunityPosts";
 import { AboutTab, ForumTab, MembersTab } from "./CommunityTabs";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -22,12 +23,18 @@ export function FallbackHubTabs({
   hasCount,
   memberNum,
   threads,
+  slug,
+  isMember,
+  discussionPaging,
 }: {
   detail: CommunityDetail;
   members: Person[];
   hasCount: boolean;
   memberNum: number;
   threads: ThreadData[];
+  slug: string;
+  isMember: boolean;
+  discussionPaging: PulsePaging;
 }) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("about");
@@ -77,7 +84,15 @@ export function FallbackHubTabs({
             loading={tabLoading}
           />
         )}
-        {tab === "forum" && <ForumTab threads={threads} loading={tabLoading} />}
+        {tab === "forum" && (
+          <ForumTab
+            threads={threads}
+            slug={slug}
+            isMember={isMember}
+            loading={tabLoading}
+            paging={discussionPaging}
+          />
+        )}
       </FadeIn>
     </div>
   );

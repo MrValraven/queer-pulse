@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiHome } from "react-icons/fi";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,7 +16,7 @@ import styles from "./FlatmatesPage.module.css";
 
 export function FlatmatesBoard() {
   const { t } = useTranslation();
-  const loading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
   const [type, setType] = useState<ListingType | "all">("all");
   const [neighbourhood, setNeighbourhood] = useState("all");
   const [budget, setBudget] = useState("all");
@@ -24,7 +25,10 @@ export function FlatmatesBoard() {
   const [sent, setSent] = useState<Set<number>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { data: source = [] } = useFlatmateProfiles();
+  const { data: source = [], isFetching } = useFlatmateProfiles();
+  // Skeleton while the simulated demo beat runs OR (live) the query is in
+  // flight — otherwise a slow live fetch flashes the empty-board CTA.
+  const loading = useSimulatedLoad() || (!demoMode && isFetching);
   // With nothing on the board, the filters have nothing to act on — hide them
   // and let the empty state carry the single call to action.
   const boardEmpty = source.length === 0;

@@ -15,6 +15,15 @@ export interface PostReply {
   author: Person;
   text: string;
   time: string;
+  /** Backend reply id — the edit/delete target (sub-project #3). */
+  id?: string;
+  // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
+  editedAt?: string | null;
+  deleted?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canRestore?: boolean;
+  canViewHistory?: boolean;
 }
 
 /** A lightweight Pulse post — the "for now" unit (vs. heavier Discussion threads). */
@@ -28,7 +37,16 @@ export interface Post {
   reactions: Reaction[];
   replies: PostReply[];
   time: string;
+  /** ISO creation timestamp (for Newest sorting in the discussion view). */
+  createdAt?: string;
   communitySlug: string;
+  // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
+  editedAt?: string | null;
+  deleted?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canRestore?: boolean;
+  canViewHistory?: boolean;
 }
 
 /** A non-post moment interleaved into the Pulse feed (joins, new gatherings…). */

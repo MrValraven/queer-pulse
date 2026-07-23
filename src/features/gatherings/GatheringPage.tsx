@@ -5,7 +5,7 @@ import { Avatar, Button, Tag } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useMemberContact } from "../connect/useMemberContact";
 import { routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
@@ -30,7 +30,7 @@ export function GatheringPage() {
   const kind = gatheringKind(gathering);
   const host = gathering.hostSlug ? memberProfiles[gathering.hostSlug] : null;
   const spotsCount = gathering.spots.values?.count;
-  const { openConnect } = useConnect();
+  const { connected, contact } = useMemberContact(gathering.hostSlug);
 
   const others = Object.values(gatheringDetails).filter(
     (g) => g.slug !== gathering.slug,
@@ -85,9 +85,15 @@ export function GatheringPage() {
               <div className={styles.cta}>
                 <Button
                   size="lg"
-                  onClick={() => openConnect(gathering.hostSlug)}
+                  onClick={() =>
+                    contact({
+                      slug: gathering.hostSlug,
+                      name: gathering.host,
+                    })
+                  }
                 >
-                  {t(gathering.ctaKey)} →
+                  {connected ? t("connect:contact.message") : t(gathering.ctaKey)}{" "}
+                  →
                 </Button>
                 <Button size="lg" variant="ghost" to={routes.calendar}>
                   {t("gatherings:gathering.seeAllCta")}
@@ -170,9 +176,11 @@ export function GatheringPage() {
 
               <Button
                 className={styles.fullBtn}
-                onClick={() => openConnect(gathering.hostSlug)}
+                onClick={() =>
+                  contact({ slug: gathering.hostSlug, name: gathering.host })
+                }
               >
-                {t(gathering.ctaKey)}
+                {connected ? t("connect:contact.message") : t(gathering.ctaKey)}
               </Button>
 
               <div className={styles.locReveal}>

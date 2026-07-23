@@ -124,10 +124,6 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.members,
           },
           { labelKey: "nav:forum", href: routes.forum },
-          {
-            labelKey: "shared:megaNav.community.col.people.dating",
-            href: routes.dating,
-          },
         ],
       },
       {
@@ -292,6 +288,10 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.resources.col.learn.forCaregivers",
             href: routes.caregivers,
           },
+          {
+            labelKey: "shared:megaNav.community.col.people.dating",
+            href: routes.dating,
+          },
         ],
       },
     ],
@@ -337,14 +337,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.culture.col.screenSound.cinema",
             href: routes.cinema,
             featured: true,
-          },
-          {
-            labelKey: "shared:megaNav.culture.col.screenSound.podcast",
-            href: routes.podcastShow,
-          },
-          {
-            labelKey: "shared:megaNav.culture.col.screenSound.radio",
-            href: routes.audioPlayer,
           },
         ],
       },
@@ -470,10 +462,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:adminNav.items.governance",
             href: routes.governance,
           },
-          {
-            labelKey: "shared:megaNav.about.col.mission.cities",
-            href: routes.cities,
-          },
         ],
       },
       {
@@ -486,10 +474,6 @@ export const NAV_MENUS: MegaMenu[] = [
           {
             labelKey: "shared:megaNav.about.col.using.roadmap",
             href: routes.roadmap,
-          },
-          {
-            labelKey: "shared:megaNav.about.col.using.getTheApp",
-            href: routes.getTheApp,
           },
           {
             labelKey: "shared:megaNav.about.col.using.forOrganisations",

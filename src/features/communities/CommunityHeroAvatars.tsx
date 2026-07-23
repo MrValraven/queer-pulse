@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { memberProfiles } from "../members/data/memberProfiles";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Person, Tint } from "./communityDetails";
+import { photoOf } from "./communityPeople";
 import styles from "./CommunityDetailPage.module.css";
 
 const HERO_AV: Record<Tint, { background: string; color: string }> = {
@@ -29,7 +29,7 @@ export function CommunityHeroAvatars({
     <div style={{ display: "flex", alignItems: "center" }}>
       <div className={styles.avStrip}>
         {avatars.map((m, i) => {
-          const photo = m.slug ? memberProfiles[m.slug]?.photo : undefined;
+          const photo = photoOf(m);
           const inner = (
             <>
               <span className={styles.heroAvTip}>{m.name}</span>

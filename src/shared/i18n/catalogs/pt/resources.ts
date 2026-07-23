@@ -557,6 +557,11 @@ export const resources: Catalog = {
   "mentalHealth.therapists.waitlist": "Lista de espera",
   "mentalHealth.therapists.viewProfileAriaLabel": "Ver o perfil de {name}",
   "mentalHealth.therapists.viewProfileCta": "Ver perfil →",
+  "mentalHealth.therapists.comingSoon.badge": "Brevemente",
+  "mentalHealth.therapists.comingSoon.title":
+    "O diretório está <em>quase a chegar.</em>",
+  "mentalHealth.therapists.comingSoon.body":
+    "Estamos a verificar terapeutas afirmativos queer em Lisboa antes de aparecerem aqui, para que cada perfil seja de confiança. Por agora está em repouso. Ativa <b>{toggleName}</b> para explorares a demonstração.",
 
   "mentalHealth.experiences.title":
     "Coisas que a comunidade <em>já sentiu</em>",

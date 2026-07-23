@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiStar, FiHeart, FiMessageSquare } from "react-icons/fi";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
@@ -20,6 +21,7 @@ import {
 import { memberName } from "../members/data/members";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
+import { PostActionsMenu } from "./PostActionsMenu";
 import styles from "./ThreadPage.module.css";
 
 /** Names the moderator who published an official QueerPulse post, linking to
@@ -86,6 +88,15 @@ export function ThreadReplies({
   hasNextPage,
   fetchNextPage,
   isFetchingNextPage,
+  demoMode,
+  demoOwns,
+  editingReplyPostId,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onDelete,
+  onRestore,
+  onHistory,
 }: {
   loading: boolean;
   replies: Reply[];
@@ -97,6 +108,15 @@ export function ThreadReplies({
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
+  demoMode: boolean;
+  demoOwns: (person: { slug?: string; name?: string }) => boolean;
+  editingReplyPostId: string | null;
+  onStartEdit: (reply: Reply) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (postId: string, body: string) => void;
+  onDelete: (reply: Reply) => void;
+  onRestore: (reply: Reply) => void;
+  onHistory: (reply: Reply) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -117,6 +137,16 @@ export function ThreadReplies({
       {!loading &&
         replies.map((r, i) => {
           const isLiked = !!likedReplies[replyKey(r)];
+          const replyIdentity = r.postId ?? replyKey(r);
+          const isEditing = editingReplyPostId === replyIdentity;
+          const canEdit = demoMode ? demoOwns(r) && !r.deleted : !!r.canEdit;
+          const canDelete = demoMode
+            ? demoOwns(r) && !r.deleted
+            : !!r.canDelete;
+          const canRestore = demoMode
+            ? demoOwns(r) && !!r.deleted
+            : !!r.canRestore;
+          const canViewHistory = demoMode ? false : !!r.canViewHistory;
           return (
             <FadeIn
               key={replyKey(r)}
@@ -167,34 +197,70 @@ export function ThreadReplies({
                     </span>
                   )}
                   <span className={styles.replyTime}>{r.time}</span>
+                  <span className={styles.replyMenu}>
+                    <PostActionsMenu
+                      canEdit={canEdit}
+                      canDelete={canDelete}
+                      canRestore={canRestore}
+                      canViewHistory={canViewHistory}
+                      onEdit={() => onStartEdit(r)}
+                      onDelete={() => onDelete(r)}
+                      onRestore={() => onRestore(r)}
+                      onHistory={() => onHistory(r)}
+                    />
+                  </span>
                 </div>
                 {r.official && r.mod && <ModeratorByline mod={r.mod} />}
-                <div className={styles.replyBody}>
-                  {r.quote && (
-                    <div className={styles.quote}>
-                      <cite>{r.quote.cite}</cite>
-                      {r.quote.text}
+                {r.deleted ? (
+                  <div className={styles.replyBody}>
+                    <p className={styles.tombstone}>
+                      {t("forum:tombstone.body")}
+                    </p>
+                  </div>
+                ) : isEditing ? (
+                  <InlineReplyEditor
+                    initial={r.body.join("\n")}
+                    onCancel={onCancelEdit}
+                    onSave={(next) => onSaveEdit(replyIdentity, next)}
+                  />
+                ) : (
+                  <>
+                    <div className={styles.replyBody}>
+                      {r.quote && (
+                        <div className={styles.quote}>
+                          <cite>{r.quote.cite}</cite>
+                          {r.quote.text}
+                        </div>
+                      )}
+                      {r.body.map((p, j) => (
+                        <p key={j}>{p}</p>
+                      ))}
+                      {r.editedAt && (
+                        <span className={styles.editedMark}>
+                          {t("forum:edited.mark")}
+                        </span>
+                      )}
                     </div>
-                  )}
-                  {r.body.map((p, j) => (
-                    <p key={j}>{p}</p>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  aria-pressed={isLiked}
-                  aria-label={
-                    isLiked
-                      ? t("forum:replies.unlikeAria")
-                      : t("forum:replies.likeAria")
-                  }
-                  className={[styles.replyReact, isLiked && styles.replyReactOn]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => toggleReplyLike(r)}
-                >
-                  <FiHeart /> {r.reactions + (isLiked ? 1 : 0)}
-                </button>
+                    <button
+                      type="button"
+                      aria-pressed={isLiked}
+                      aria-label={
+                        isLiked
+                          ? t("forum:replies.unlikeAria")
+                          : t("forum:replies.likeAria")
+                      }
+                      className={[
+                        styles.replyReact,
+                        isLiked && styles.replyReactOn,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => toggleReplyLike(r)}
+                    >
+                      <FiHeart /> {r.reactions + (isLiked ? 1 : 0)}
+                    </button>
+                  </>
+                )}
               </div>
             </FadeIn>
           );
@@ -214,6 +280,44 @@ export function ThreadReplies({
           </Button>
         </div>
       )}
+    </div>
+  );
+}
+
+function InlineReplyEditor({
+  initial,
+  onCancel,
+  onSave,
+}: {
+  initial: string;
+  onCancel: () => void;
+  onSave: (next: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [value, setValue] = useState(initial);
+  const trimmed = value.trim();
+  return (
+    <div className={styles.inlineEdit}>
+      <textarea
+        className={styles.inlineTextarea}
+        aria-label={t("forum:replyEdit.textareaAria")}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        rows={4}
+      />
+      <div className={styles.inlineActions}>
+        <Button variant="ghost" type="button" onClick={onCancel}>
+          {t("forum:replyEdit.cancel")}
+        </Button>
+        <Button
+          variant="primary"
+          type="button"
+          disabled={!trimmed || trimmed === initial}
+          onClick={() => onSave(trimmed)}
+        >
+          {t("forum:replyEdit.save")}
+        </Button>
+      </div>
     </div>
   );
 }

@@ -38,7 +38,7 @@ export function FoundingThread({
             step: step + 1,
             total: TOTAL_STEPS,
             thread: currentThread,
-          })}
+          }).replace(/<[^>]*>/g, "")}
         />
       </div>
       <div className={styles.threadMobile}>

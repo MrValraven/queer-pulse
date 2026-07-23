@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
@@ -30,6 +31,14 @@ interface ContactRequestModalProps {
   sendingLabel?: string;
   /** Minimum characters before the button enables. */
   minChars?: number;
+  /**
+   * Optional real send path. When provided, `submit` awaits this instead of
+   * the default `useSubmitFlow` fake timer, then flips to the success panel.
+   * A rejection surfaces a toast and leaves the form open so the member can
+   * retry. Omit to keep the original timer-only behavior unchanged (existing
+   * mentoring/company call-sites don't pass this).
+   */
+  onSend?: (message: string) => Promise<void>;
   onClose: () => void;
 }
 
@@ -51,14 +60,36 @@ export function ContactRequestModal({
   sendLabel,
   sendingLabel,
   minChars = 20,
+  onSend,
   onClose,
 }: ContactRequestModalProps) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [message, setMessage] = useState(preset);
-  const { sending, done, submit } = useSubmitFlow();
+  const timerFlow = useSubmitFlow();
+  const [customSending, setCustomSending] = useState(false);
+  const [customDone, setCustomDone] = useState(false);
   const valid = message.trim().length >= minChars;
   const firstName = toName.split(" ")[0];
   const remaining = minChars - message.trim().length;
+  const sending = onSend ? customSending : timerFlow.sending;
+  const done = onSend ? customDone : timerFlow.done;
+
+  const submit = async () => {
+    if (!onSend) {
+      timerFlow.submit();
+      return;
+    }
+    setCustomSending(true);
+    try {
+      await onSend(message.trim());
+      setCustomDone(true);
+    } catch {
+      showToast(t("economy:contactRequest.sendError"), "error");
+    } finally {
+      setCustomSending(false);
+    }
+  };
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -83,7 +114,7 @@ export function ContactRequestModal({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (valid) submit();
+            if (valid) void submit();
           }}
         >
           {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}

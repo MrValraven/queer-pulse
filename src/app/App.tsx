@@ -28,6 +28,7 @@ import { SavedProvider } from "./providers/SavedProvider";
 import { DraftsProvider } from "./providers/DraftsProvider";
 import { SocialProvider } from "./providers/SocialProvider";
 import { CommunityMembershipProvider } from "./providers/CommunityMembershipProvider";
+import { CommunityEditsProvider } from "./providers/CommunityEditsProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
 import { WorkshopsProvider } from "./providers/WorkshopsProvider";
 import { CommandPalette } from "../features/members/CommandPalette";
@@ -120,6 +121,7 @@ const DataProviders = composeProviders([
   DraftsProvider,
   SocialProvider,
   CommunityMembershipProvider,
+  CommunityEditsProvider,
   DirectoryListingsProvider,
   WorkshopsProvider,
   // Innermost on purpose: ConnectProvider renders <ConnectModal> as a sibling

@@ -4,15 +4,11 @@ import styles from "./OnboardingPage.module.css";
 import { TOTAL_STEPS } from "./onboardingPage.data";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  StepIntro,
-  StepWelcome,
-  StepPhoto,
-  StepNorms,
-  StepIntents,
-  StepCommunities,
-  StepDone,
-} from "./OnboardingSteps";
+import { StepIntro, StepNorms, StepDone } from "./OnboardingSteps";
+import { StepIntents } from "./StepIntents";
+import { StepWelcome } from "./StepWelcome";
+import { StepPhoto } from "./StepPhoto";
+import { StepCommunities } from "./StepCommunities";
 
 export function OnboardingPage() {
   const { t } = useTranslation();

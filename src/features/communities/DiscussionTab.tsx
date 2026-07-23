@@ -8,40 +8,59 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Thread as ThreadData } from "./communityDetails";
+import type { PulsePaging } from "./api/useCommunityPosts";
+import { useCreatePost } from "./api/useCommunityMutations";
 import { CommunityThread } from "./CommunityThread";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
 type Chip = "All" | "Pinned" | "Newest";
 
-export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
+export function DiscussionTab({
+  threads,
+  slug,
+  isMember,
+  paging,
+}: {
+  threads: ThreadData[];
+  slug: string;
+  isMember: boolean;
+  paging: PulsePaging;
+}) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [q, setQ] = useState("");
+  const { demoMode } = useDemoMode();
+  const createPost = useCreatePost(slug);
+  const [searchTerm, setSearchTerm] = useState("");
   const [chip, setChip] = useState<Chip>("All");
   const [newPost, setNewPost] = useState("");
   const [extra, setExtra] = useState<ThreadData[]>([]);
 
   const shown = useMemo(() => {
-    const term = q.trim().toLowerCase();
+    const term = searchTerm.trim().toLowerCase();
     let list = [...extra, ...threads];
     if (term)
-      list = list.filter((t) =>
-        `${t.title} ${t.post}`.toLowerCase().includes(term),
+      list = list.filter((thread) =>
+        `${thread.title} ${thread.post}`.toLowerCase().includes(term),
       );
-    if (chip === "Newest") list = [...list].sort((a, b) => b.votes - a.votes);
+    if (chip === "Pinned") list = list.filter((thread) => thread.pinned);
+    if (chip === "Newest")
+      list = [...list].sort((a, b) =>
+        (b.createdAt ?? "").localeCompare(a.createdAt ?? ""),
+      );
     return list;
-  }, [q, chip, extra, threads]);
+  }, [searchTerm, chip, extra, threads]);
 
-  const post = () => {
+  function post() {
     const text = newPost.trim();
     if (!text) return;
-    const title = text.length > 70 ? `${text.slice(0, 67)}…` : text;
+    const heading = text.length > 70 ? `${text.slice(0, 67)}…` : text;
     setExtra((prev) => [
       {
-        votes: 1,
-        title,
+        votes: 0,
+        title: heading,
         author: { initials: "Me", name: "You", tint: "plum" },
         time: t("communities:common.justNow"),
         replyCount: 0,
@@ -52,7 +71,12 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
     ]);
     setNewPost("");
     showToast(t("communities:detail.discussion.startedToast"), "success");
-  };
+    if (demoMode) return;
+    createPost.mutate(
+      { body: text },
+      { onError: () => showToast(t("communities:common.error"), "error") },
+    );
+  }
 
   const chipOptions = [
     { value: "All", label: t("communities:detail.discussion.chip.all") },
@@ -66,15 +90,15 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
         className={styles.searchRow}
         ariaLabel={t("communities:detail.discussion.searchAria")}
         placeholder={t("communities:detail.discussion.searchPlaceholder")}
-        value={q}
-        onChange={setQ}
+        value={searchTerm}
+        onChange={setSearchTerm}
       />
       <FilterChips
         className={styles.chips}
         label={t("communities:detail.discussion.filterAria")}
         options={chipOptions}
         value={chip}
-        onChange={(c) => setChip(c as Chip)}
+        onChange={(value) => setChip(value as Chip)}
       />
 
       {shown.length === 0 ? (
@@ -83,35 +107,51 @@ export function DiscussionTab({ threads }: { threads: ThreadData[] }) {
           description={t("communities:detail.discussion.empty.description")}
         />
       ) : (
-        shown.map((thread, i) => (
-          <FadeIn key={thread.title} delay={Math.min(i, 8) * 55}>
-            <CommunityThread data={thread} />
+        shown.map((thread, index) => (
+          <FadeIn key={thread.id ?? thread.title} delay={Math.min(index, 8) * 55}>
+            <CommunityThread data={thread} slug={slug} />
           </FadeIn>
         ))
       )}
 
-      <div className={detail.newPost} style={{ marginTop: 16 }}>
-        <div
-          className={[detail.rAv, detail.tPlum].join(" ")}
-          style={{ width: 30, height: 30 }}
-        >
-          Me
+      {paging.hasNextPage && (
+        <div style={{ textAlign: "center", marginTop: 12 }}>
+          <Button
+            variant="ghost"
+            disabled={paging.isFetchingNextPage}
+            onClick={paging.fetchNextPage}
+          >
+            {paging.isFetchingNextPage
+              ? t("communities:common.loading")
+              : t("communities:detail.discussion.loadMore")}
+          </Button>
         </div>
-        <textarea
-          className={detail.npTa}
-          rows={1}
-          placeholder={t("communities:detail.forum.newPostPlaceholder")}
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
-        />
-        <Button
-          variant="ghost"
-          onClick={post}
-          style={{ whiteSpace: "nowrap", fontSize: 13 }}
-        >
-          {t("communities:detail.forum.postCta")}
-        </Button>
-      </div>
+      )}
+
+      {isMember && (
+        <div className={detail.newPost} style={{ marginTop: 16 }}>
+          <div
+            className={[detail.rAv, detail.tPlum].join(" ")}
+            style={{ width: 30, height: 30 }}
+          >
+            Me
+          </div>
+          <textarea
+            className={detail.npTa}
+            rows={1}
+            placeholder={t("communities:detail.forum.newPostPlaceholder")}
+            value={newPost}
+            onChange={(event) => setNewPost(event.target.value)}
+          />
+          <Button
+            variant="ghost"
+            onClick={post}
+            style={{ whiteSpace: "nowrap", fontSize: 13 }}
+          >
+            {t("communities:detail.forum.postCta")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

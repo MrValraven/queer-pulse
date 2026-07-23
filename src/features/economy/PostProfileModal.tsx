@@ -82,7 +82,12 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
             </Button>
           </div>
         ) : (
+          // Keyed on the loaded profile so the form remounts (re-running its
+          // useState initializers) once `useMyFlatmateProfile` resolves in live
+          // edit mode — otherwise an existing profile opens blank. Demo/create
+          // resolve immediately/to null, so the key stays "new".
           <PostProfileForm
+            key={myProfile?.slug ?? "new"}
             initial={myProfile}
             onSubmit={handleSubmit}
             onClose={onClose}

@@ -76,6 +76,22 @@ export function getConnections(tab: ConnectionApiTab, page?: number) {
   return apiGet<ConnectionsPageDTO>(`/connections?${q.toString()}`);
 }
 
+/**
+ * The total for each tab, keyed by the backend `tab` value. Powers the tab
+ * badges without fetching any list — one cheap call seeds every badge on first
+ * paint. ("blocked" is absent: SocialProvider owns that count in both modes.)
+ */
+export interface ConnectionCountsDTO {
+  all: number;
+  incoming: number;
+  outgoing: number;
+  vouched: number;
+}
+
+/** GET /connections/counts — the badge total for every tab in one call. */
+export const getConnectionCounts = () =>
+  apiGet<ConnectionCountsDTO>("/connections/counts");
+
 /** POST /connections — send a connection request. Returns the created record. */
 export const sendConnection = (body: {
   toSlug: string;
@@ -94,3 +110,8 @@ export const respondConnection = (id: string, action: ConnectionAction) =>
 /** DELETE /connections/:id — remove an existing connection. */
 export const removeConnection = (id: string) =>
   apiDelete<{ ok: true }>(`/connections/${id}`);
+
+/** GET /connections/accepted — bare slugs of the viewer's accepted connections.
+ *  The lightweight signal that flips a member's "Say hello" to "Message". */
+export const getAcceptedConnections = () =>
+  apiGet<string[]>("/connections/accepted");

@@ -166,6 +166,15 @@
   flex: none;
 }
 
+.threadRow {
+  position: relative;
+}
+.threadMenu {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+}
 .thread {
   display: grid;
   grid-template-columns: 52px 1fr;

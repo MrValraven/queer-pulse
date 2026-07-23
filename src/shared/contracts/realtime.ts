@@ -47,7 +47,25 @@ export interface ServerToClientEvents {
 
 export type ServerToClientEvent = keyof ServerToClientEvents;
 
-// The gateway also accepts client→server frames (`conversation:join`,
-// `message:send`, `typing`, `read`, `presence:snapshot`). We send none of them —
-// writes go over HTTP — so they are deliberately not typed here. Add them when
-// something actually emits.
+/**
+ * Frames we emit to the gateway.
+ *
+ * Message *writes* still go over HTTP (POST /conversations/:id/messages) — that
+ * stays the source of truth. The one frame we emit is room management:
+ * `message:new`/`read`/`typing` are broadcast by the gateway to the
+ * *conversation room* (`namespace.to(conversationId)`, chat.gateway.ts), and a
+ * socket only enters that room by emitting `conversation:join`. Without it those
+ * broadcasts reach no one and new DMs only surface on a manual refresh.
+ *
+ * The gateway also accepts `message:send`, `typing`, `read` and
+ * `presence:snapshot`; we don't emit those (writes/receipts go over HTTP), so
+ * they stay untyped here until something actually sends them.
+ */
+export interface ClientToServerEvents {
+  /** `chat.gateway.ts` `@SubscribeMessage('conversation:join')`. `conversationId`
+   *  must be a v4 UUID (the gateway's ValidationPipe rejects otherwise). Room
+   *  membership is per-connection and lost on reconnect, so re-emit on connect. */
+  "conversation:join": { conversationId: string };
+}
+
+export type ClientToServerEvent = keyof ClientToServerEvents;
