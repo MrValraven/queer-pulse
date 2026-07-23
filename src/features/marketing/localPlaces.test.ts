@@ -63,7 +63,7 @@ describe("mergeLocalPlaces", () => {
       (place) => place.name.toLowerCase() === "navalha",
     );
     expect(navalhaEntries).toHaveLength(1);
-    const navalha = navalhaEntries[0];
+    /*   const navalha = navalhaEntries[0]; */
     /*  expect(navalha.kind).toBe("business");
     expect(navalha.coords).not.toBeNull();
     expect(navalha.vibe).toBeDefined();
