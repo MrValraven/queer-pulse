@@ -1576,10 +1576,6 @@ export function AppRoutes() {
             path={routes.members}
             element={<MemberDirectoryFilterPage />}
           />
-          <Route
-            path={routes.memberDirectoryFilter}
-            element={<Navigate to={routes.members} replace />}
-          />
           <Route path={routes.search} element={<SearchPage />} />
           <Route path={routes.accountProfile} element={<ProfilePage />} />
           <Route path={`${routes.members}/:slug`} element={<ProfilePage />} />
