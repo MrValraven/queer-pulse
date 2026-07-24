@@ -36,7 +36,7 @@
   /* Installed-PWA bottom tab bar. Published here so BottomTabBar.module.css and
      standalone.css read one value. */
   --tab-bar-h: 58px;
-  /* How much bottom-anchored floating UI (QuickExit, the consent banner) must
+  /* How much bottom-anchored floating UI (the consent banner) must
      clear. Zero in a browser tab; standalone.css raises it to the tab bar's
      total occupied height on mobile — the bar itself PLUS
      env(safe-area-inset-bottom), because the bar already reserves its own

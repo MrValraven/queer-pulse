@@ -53,8 +53,6 @@ export const topics: Catalog = {
   // Sidebar
   "sidebar.relatedTitle": "Related topics",
   "sidebar.topVoicesTitle": "Top voices here",
-  "sidebar.crisis.body": "In crisis? Don't wait for the thread.",
-  "sidebar.crisis.cta": "Crisis support",
 
   // Generic fallback for an uncurated/unknown tag (`getTopic()`'s fallback
   // branch) — platform-authored prompt copy, not fetched content, so it

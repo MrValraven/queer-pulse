@@ -189,7 +189,7 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           {
             labelKey: "shared:megaNav.lisbon.col.discover.spacesMap",
-            href: routes.map,
+            href: `${routes.directory}?view=map`,
           },
           {
             labelKey: "shared:megaNav.lisbon.col.discover.safeSpaces",
@@ -253,11 +253,6 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         headKey: "shared:megaNav.resources.col.safety.head",
         links: [
-          {
-            labelKey: "shared:megaNav.resources.col.safety.emergency",
-            href: routes.emergency,
-            featured: true,
-          },
           {
             labelKey: "shared:megaNav.resources.col.safety.safetyGuide",
             href: routes.safety,
@@ -453,10 +448,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.about.col.mission.aboutQueerPulse",
             href: routes.about,
             featured: true,
-          },
-          {
-            labelKey: "shared:megaNav.about.col.mission.manifesto",
-            href: routes.manifesto,
           },
           {
             labelKey: "shared:adminNav.items.governance",

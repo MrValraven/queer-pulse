@@ -378,6 +378,10 @@ export const members: Catalog = {
     "Este diretório ainda está a encher-se. À medida que as pessoas se juntam à QueerPulse e optam por ser encontráveis, vão aparecer aqui — volta a verificar em breve.",
   "directory.loadingMore": "A carregar…",
   "directory.loadMoreCta": "Carregar mais pessoas",
+  "directory.filtersCta": "Filtros",
+  "directory.filtersSheetLabel": "Filtrar pessoas",
+  "directory.showResultsCta_one": "Ver {count} pessoa",
+  "directory.showResultsCta_other": "Ver {count} pessoas",
 
   // ── Barra lateral de filtros (MemberFilterCards) ────────────────────────────
   "directory.filter.openToTitle": "Ao que estão disponíveis",

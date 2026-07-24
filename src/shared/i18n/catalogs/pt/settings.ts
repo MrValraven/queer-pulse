@@ -20,7 +20,6 @@ export const settings: Catalog = {
   "nav.item.language": "Idioma e terminologia",
   "nav.item.data": "Dados e privacidade",
   "nav.item.visibility": "Visibilidade",
-  "nav.item.safety": "Segurança",
   "nav.item.profile": "Perfil",
   "nav.item.account": "Conta",
   "nav.item.profileTheme": "Tema do perfil",
@@ -107,22 +106,6 @@ export const settings: Catalog = {
     "As tuas preferências são guardadas localmente neste dispositivo.",
   "personalisation.accessibility.resetToast":
     "Todas as preferências foram repostas",
-
-  // ── SafetyPane.tsx — controlo de segurança de saída rápida ──────────────
-  // Precisão acima de tudo: a saída rápida limpa o *ecrã*, não é anonimato
-  // e não apaga o histórico do navegador. Mantém essa distinção exata.
-  "safety.title": "Segurança e <em>saída rápida.</em>",
-  "safety.sub":
-    "Uma forma rápida de limpar o ecrã se alguém entrar na sala. Estas definições vivem só neste dispositivo — nunca ficam associadas à tua conta.",
-  "safety.gdprBox":
-    "<strong>A saída rápida limpa o ecrã depressa — não é anonimato.</strong> Envia este separador para uma página neutra do estado do tempo e reabre a QueerPulse noutro separador. Não consegue apagar o teu histórico anterior do navegador, marcadores ou sugestões da barra de endereço — para isso, usa também uma janela privada.",
-  "safety.section.quickExit": "Saída rápida",
-  "safety.toggle.showButton.title": "Mostrar o botão de saída rápida",
-  "safety.toggle.showButton.desc":
-    "Um botão flutuante, em todas as páginas, que sai do site instantaneamente. Ativo por predefinição, para a segurança de todes.",
-  "safety.toggle.doubleTap.title": "Atalho de duplo toque no Shift",
-  "safety.toggle.doubleTap.desc":
-    "Carrega duas vezes na tecla Shift para saíres sem teres de procurar o botão. Só funciona enquanto o botão de saída rápida estiver ativo.",
 
   // ── InterestsPane.tsx ─────────────────────────────────────────────────────
   // NOTA: IDENTITIES.options / LOOKING_FOR.options (interests.data.ts) são o

@@ -11,7 +11,7 @@ import { photoOf } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
 import styles from "./CommunityDetailPage.module.css";
 
-const GATHERING = routes.gathering;
+const GATHERING = routes.gatherings;
 
 const relTint = (t: string): Tint =>
   t === "sports" || t === "social" || t === "support"

@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import maplibregl, { type Map as MapLibreMap, type Marker } from "maplibre-gl";
-import { TYPE_ICON } from "./map.data";
+import { CATEGORY_ICON, TYPE_ICON } from "./map.data";
 import s from "./venueMarker.module.css";
 
 // CSS-module class access is `string | undefined` (noUncheckedIndexedAccess);
@@ -27,7 +27,7 @@ const SELECTED_Z_INDEX = "5";
 // Pre-render each venue-type icon (react-icons) to static SVG markup once, so
 // markers can be built as plain DOM without a React root per marker.
 const ICON_SVG: Record<string, string> = Object.fromEntries(
-  Object.entries(TYPE_ICON).map(([type, Icon]) => [
+  Object.entries({ ...TYPE_ICON, ...CATEGORY_ICON }).map(([type, Icon]) => [
     type,
     renderToStaticMarkup(createElement(Icon)),
   ]),

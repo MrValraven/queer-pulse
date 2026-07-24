@@ -42,6 +42,12 @@ export interface GatheringDetail {
   hood: string;
   host: string;
   hostSlug: string;
+  /** Host display fields carried from the event DTO in live mode, so the page
+   *  renders the host avatar without reading the demo `memberProfiles` registry.
+   *  Absent in the demo registry (demo resolves the host from `hostSlug`). */
+  hostFirst?: string;
+  hostLast?: string;
+  hostAvatarUrl?: string | null;
   spots: SpotsLabel;
   /** Catalog key for the RSVP button — chrome, varies by event kind. */
   ctaKey: string;
@@ -424,7 +430,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
 
 export const defaultGatheringSlug = "supper-club-12";
 
-// ── Gathering detail routing: /gathering/<slug>-<shortId> ──
+// ── Gathering detail routing: /gatherings/<slug>-<shortId> ──
 // Canonical convention. The shortId stands in for a real per-event id and is
 // derived deterministically from the slug so links stay stable.
 
@@ -437,8 +443,36 @@ export function gatheringShortId(slug: string): string {
 
 /** Canonical path for a gathering detail page. */
 export function gatheringPath(slug: string): string {
-  return `/gathering/${slug}-${gatheringShortId(slug)}`;
+  return `/gatherings/${slug}-${gatheringShortId(slug)}`;
 }
+
+/** Lifecycle sub-pages of one gathering (all under `/gatherings/:slug/...`). */
+export const gatheringRecapPath = (slug: string): string =>
+  `${gatheringPath(slug)}/recap`;
+export const gatheringCancelledPath = (slug: string): string =>
+  `${gatheringPath(slug)}/cancelled`;
+export const gatheringDashboardPath = (slug: string): string =>
+  `${gatheringPath(slug)}/dashboard`;
+export const manageGatheringPath = (slug: string): string =>
+  `${gatheringPath(slug)}/manage`;
+export const gatheringPhotosPath = (slug: string): string =>
+  `${gatheringPath(slug)}/photos`;
+export const coHostInvitePath = (slug: string): string =>
+  `${gatheringPath(slug)}/co-host-invite`;
+
+/**
+ * The concrete gathering each lifecycle page renders in demo mode. The pages
+ * keep static data, so links to them build a real subject slug from here rather
+ * than resolving the URL param (they don't read it yet).
+ */
+export const DEMO_GATHERING_SLUGS = {
+  manage: "pride-brunch-jun",
+  dashboard: "pride-brunch-jun",
+  recap: "pride-brunch-jun",
+  cancelled: "atelier-pulso-jul",
+  photos: "open-clinic-night",
+  coHostInvite: "open-clinic-night",
+} as const;
 
 /** Resolve a `:slug` route param (`<slug>-<shortId>`) back to a gathering. */
 export function resolveGathering(param: string | undefined): GatheringDetail {

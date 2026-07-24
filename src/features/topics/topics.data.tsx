@@ -3,6 +3,7 @@ import type { AvatarTint } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
+import { gatheringPath } from "../gatherings/data";
 
 /** The badge shown top-right of a post card. */
 export type PostKind =
@@ -85,8 +86,6 @@ export interface Topic {
   topVoices: TopVoice[];
   /** Curated-resources panel — omitted on the generic fallback. */
   resources?: TopicResources;
-  /** Show the plum crisis-support card (links to /safety/emergency) in the sidebar. */
-  crisisCard: boolean;
   /** Total posts, for the "Load N older posts" affordance. */
   totalPosts: number;
 }
@@ -188,7 +187,7 @@ const healthcare: Topic = {
         </>
       ),
       tags: ["healthcare", "trans", "mutualaid"],
-      href: `${routes.gathering}/open-clinic-night`,
+      href: gatheringPath("open-clinic-night"),
     },
     {
       author: "Nuno Alves",
@@ -296,7 +295,6 @@ const healthcare: Topic = {
     ctaLabel: "Browse vetted resources →",
     href: routes.transHub,
   },
-  crisisCard: true,
 };
 
 const trans: Topic = {
@@ -360,7 +358,7 @@ const trans: Topic = {
         </>
       ),
       tags: ["trans", "legal", "mutualaid"],
-      href: `${routes.gathering}/name-change-clinic`,
+      href: gatheringPath("name-change-clinic"),
     },
     {
       author: "Nuno Alves",
@@ -443,7 +441,6 @@ const trans: Topic = {
     ctaLabel: "Open the Trans Hub →",
     href: routes.transHub,
   },
-  crisisCard: true,
 };
 
 const mentalhealth: Topic = {
@@ -507,7 +504,7 @@ const mentalhealth: Topic = {
         </>
       ),
       tags: ["mentalhealth", "peersupport"],
-      href: `${routes.gathering}/peer-support-circle`,
+      href: gatheringPath("peer-support-circle"),
     },
     {
       author: "Anonymous member",
@@ -588,7 +585,6 @@ const mentalhealth: Topic = {
     ctaLabel: "Browse Wellbeing →",
     href: routes.wellbeing,
   },
-  crisisCard: true,
 };
 
 const housing: Topic = {
@@ -651,7 +647,7 @@ const housing: Topic = {
         </>
       ),
       tags: ["housing", "coop", "mutualaid"],
-      href: `${routes.gathering}/coop-info-night`,
+      href: gatheringPath("coop-info-night"),
     },
     {
       author: "Beatriz Lopes",
@@ -725,7 +721,6 @@ const housing: Topic = {
       href: routes.members,
     },
   ],
-  crisisCard: false,
 };
 
 const nightlife: Topic = {
@@ -768,7 +763,7 @@ const nightlife: Topic = {
         </>
       ),
       tags: ["nightlife", "music", "lisbon"],
-      href: `${routes.gathering}/trans-djs-warehouse`,
+      href: gatheringPath("trans-djs-warehouse"),
     },
     {
       author: "Rita Vasquez",
@@ -863,7 +858,6 @@ const nightlife: Topic = {
       href: routes.members,
     },
   ],
-  crisisCard: false,
 };
 
 export const TOPICS: Record<string, Topic> = {
@@ -954,6 +948,5 @@ export function getTopic(rawTag: string, t: TFunction): Topic {
     ],
     relatedTopics: related,
     topVoices: [],
-    crisisCard: false,
-  };
+    };
 }

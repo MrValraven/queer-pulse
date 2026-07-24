@@ -8,6 +8,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { FiStar } from "react-icons/fi";
 import { useRespondInvite } from "./api/useEventMutations";
+import { DEMO_GATHERING_SLUGS, manageGatheringPath } from "./data";
 import styles from "./CoHostInvitePage.module.css";
 
 /** Placeholder invite id for this static co-host invitation. */
@@ -120,7 +121,10 @@ export function CoHostInvitePage() {
       "success",
       3500,
     );
-    setTimeout(() => navigate(routes.manageGathering), 1300);
+    setTimeout(
+      () => navigate(manageGatheringPath(DEMO_GATHERING_SLUGS.coHostInvite)),
+      1300,
+    );
   };
   const decline = () => {
     respondInvite.mutate({ id: INVITE_ID, action: "decline" });

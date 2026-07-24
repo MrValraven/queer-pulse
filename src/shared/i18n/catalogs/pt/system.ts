@@ -72,7 +72,7 @@ export const system: Catalog = {
     "O processo existe internamente durante 36 meses. As tuas ligações foram notificadas de que saíste, sem motivo dado. Ninguém saberá que a tua conta foi encerrada, a menos que sejas tu a contar.",
   "accountBanned.whatNow.row4.title": "O apoio em crise continua disponível",
   "accountBanned.whatNow.row4.body":
-    "O <crisisLink>apoio em crise</crisisLink> e a <wellbeingLink>biblioteca de recursos</wellbeingLink> estão abertos a todas as pessoas, sejam ou não da comunidade.",
+    "A <wellbeingLink>biblioteca de recursos</wellbeingLink> está aberta a todas as pessoas, sejam ou não da comunidade.",
   "accountBanned.actions.appealCta": "Apresentar o recurso",
   "accountBanned.actions.eraseCta": "Pedir a eliminação total dos dados",
   "accountBanned.foot":
@@ -139,9 +139,6 @@ export const system: Catalog = {
     "Ler todos os artigos públicos e a revista",
   "geoRestricted.can.readArticles.detail":
     "O arquivo editorial completo está aberto · <a>explorar →</a>",
-  "geoRestricted.can.crisis.label": "Aceder a recursos de crise e segurança",
-  "geoRestricted.can.crisis.detail":
-    "Guias de emergência, linhas de apoio e documentos de redução de danos · <a>ver apoio de emergência →</a>",
   "geoRestricted.can.resources.label":
     "Explorar recursos internacionais verificados",
   "geoRestricted.can.resources.detail":
@@ -255,12 +252,7 @@ export const system: Catalog = {
   "maintenance.affected.mobile": "Aplicação móvel · mesma implementação",
   "maintenance.affected.email":
     "Notificações por email · em fila, enviadas depois",
-  "maintenance.affected.crisisChat":
-    "Apoio em crise · <b>totalmente ativo</b> — a página de linhas de apoio de emergência é estática, sempre acessível",
-  "maintenance.affected.emergencyPages":
-    "Páginas de emergência e segurança · <b>totalmente ativas</b> · em cache em todo o mundo",
   "maintenance.actions.statusCta": "Estado em direto →",
-  "maintenance.actions.crisisCta": "Apoio em crise (continua ativo)",
   "maintenance.meta.line1":
     "Acompanha em <a>status.queerpulse.app</a> · publicamos sempre uma retrospetiva pública.",
   "maintenance.meta.line2":
@@ -278,11 +270,6 @@ export const system: Catalog = {
   "offline.cached.ticket.sub": "{date} · Café Beirão · em cache há 3h",
   "offline.cached.map.label": "Mapa de espaços seguros · Lisboa",
   "offline.cached.map.sub": "42 locais · atualizado {when}",
-  "offline.cached.crisisChat.label": "Apoio em crise",
-  "offline.cached.crisisChat.sub":
-    "Linhas de apoio e números de emergência, sem necessidade de sinal",
-  "offline.cached.emergency.label": "Contactos de emergência",
-  "offline.cached.emergency.sub": "112 · SOS Voz Amiga · Linha de apoio ILGA",
   "offline.status": "À escuta de sinal",
   "offline.retryCta": "Tentar outra vez",
   "offline.retryingCta": "Ainda offline",
@@ -321,9 +308,6 @@ export const system: Catalog = {
   "pwaPrompt.heading": "Mantém a <em>QueerPulse</em> a um toque de distância.",
   "pwaPrompt.lead":
     "Instala a aplicação web no teu telemóvel em 30 segundos. <em>Igual a uma aplicação normal</em> — mas sem conta de loja de aplicações, sem rastreio, sem revisão. Só um atalho que abre o chat de crise, o teu bilhete e o mapa de espaços seguros num toque.",
-  "pwaPrompt.features.quickExit.label": "Saída rápida",
-  "pwaPrompt.features.quickExit.detail":
-    "· está na barra de navegação · um toque fecha a aplicação",
   "pwaPrompt.features.push.label": "Notificações push",
   "pwaPrompt.features.push.detail":
     "· confirmações, respostas, menções · detalhadas e discretas",

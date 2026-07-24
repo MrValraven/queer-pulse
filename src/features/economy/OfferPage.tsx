@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
+import { FiClipboard } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
 import styles from "./OfferPage.module.css";
-import { Button } from "../../shared/components/ui";
+import { Button, EmptyState } from "../../shared/components/ui";
 import { MEMBERS, memberName } from "../members/data/members";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 
 type Kind = "looking" | "offering";
 type Tint = "coral" | "jade" | "plum";
@@ -77,11 +79,35 @@ const OTHERS: { slug: string; kind: Kind; title: string; by: string }[] = [
 
 export function OfferPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const o = MAIN;
   const owner = o.owner;
   const { connected, contact } = useMemberContact("ines");
   const profile = routes.members;
   const offer = routes.offer;
+
+  // There is no economy/offers backend yet, so the offer content below is
+  // entirely mock personas. Never render fabricated members in live — show a
+  // "coming soon" state until the board is wired to the API.
+  if (!demoMode) {
+    return (
+      <PageShell>
+        <div className={styles.page}>
+          <div className="wrap">
+            <EmptyState
+              icon={<FiClipboard />}
+              title={t("economy:offerBoard.comingSoon.title")}
+              description={t("economy:offerBoard.comingSoon.body")}
+              action={{
+                label: t("economy:offerBoard.backLink"),
+                to: routes.economy,
+              }}
+            />
+          </div>
+        </div>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell>

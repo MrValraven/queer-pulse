@@ -11,7 +11,7 @@ import { spotsText } from "./data";
 import styles from "./GatheringCancelledPage.module.css";
 
 const CALENDAR = routes.calendar;
-const GATHERING = routes.gathering;
+const GATHERING = routes.gatherings;
 const MESSAGES = routes.messages;
 
 /** The cancelling host's name — organizer-authored content. */

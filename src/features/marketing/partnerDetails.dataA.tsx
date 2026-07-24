@@ -368,7 +368,7 @@ export const PARTNERS_A: Partner[] = [
   {
     slug: "youth-alliance",
     av: "YA",
-    logo: "ya",
+    logo: "YA",
     bg: "rgba(45,27,61,.1)",
     color: "var(--plum)",
     region: "pt",

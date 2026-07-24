@@ -74,7 +74,10 @@ export function DiscussionTab({
     if (demoMode) return;
     createPost.mutate(
       { body: text },
-      { onError: () => showToast(t("communities:common.error"), "error") },
+      {
+        onSuccess: () => setExtra([]),
+        onError: () => showToast(t("communities:common.error"), "error"),
+      },
     );
   }
 

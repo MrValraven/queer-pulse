@@ -497,7 +497,7 @@ export function ManageGatheringSidebar({
 }: ManageGatheringSidebarProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const GATHERING = routes.gathering;
+  const GATHERING = routes.gatherings;
   const CONTACT = routes.contact;
   return (
     <div className={styles.sidebar}>

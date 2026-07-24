@@ -103,7 +103,7 @@ export function PublicProfileOwnPreview() {
             }
             meta={t("members:publicProfile.hosting.meta")}
             cards={pub.hosting}
-            to={routes.gathering}
+            to={routes.gatherings}
           />
         </FadeIn>
 

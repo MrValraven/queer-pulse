@@ -10,6 +10,7 @@ import type { Conversation } from "./data";
 export function buildRecipientConversation(
   slug: string,
   name: string,
+  avatarUrl?: string,
 ): Conversation {
   const initials = name
     .split(/\s+/)
@@ -22,6 +23,7 @@ export function buildRecipientConversation(
     slug,
     initials,
     tint: "plum" as AvatarTint,
+    avatarUrl,
     name,
     pronouns: "",
     connectedSince: "",

@@ -2,6 +2,7 @@ import { routes } from "../../app/routeMap";
 import type { DirectoryPlace } from "./directoryPlaces";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
+import { FREGUESIAS } from "./freguesias.data";
 
 export type LocalKind = "business" | "venue";
 
@@ -46,6 +47,28 @@ export const HOOD_TO_FREGUESIA: Record<string, string> = {
   Marvila: "Marvila",
 };
 
+/** The official parish names that have a polygon on the map. Source of truth: freguesias.data. */
+export const FREGUESIA_NAMES: ReadonlySet<string> = new Set(
+  FREGUESIAS.features.map((feature) => feature.properties.name),
+);
+
+/**
+ * A place's map count only renders if its `freguesia` matches a parish polygon.
+ * In dev, warn when it does not, so an unmapped hood or a mistyped venue parish
+ * surfaces instead of silently dropping off the map (the place still lists in
+ * the sidebar). `source` names where the value came from, for the message.
+ */
+function warnIfUnknownFreguesia(freguesia: string, source: string): string {
+  if (import.meta.env.DEV && !FREGUESIA_NAMES.has(freguesia)) {
+    console.warn(
+      `[localPlaces] ${source} → freguesia "${freguesia}" is not one of the ` +
+        `${FREGUESIA_NAMES.size} Lisbon parishes; its map count will not render. ` +
+        `Add the hood to HOOD_TO_FREGUESIA or fix the parish name.`,
+    );
+  }
+  return freguesia;
+}
+
 /** Venue `type` → unified category id (folds bar/club/sauna into "nightlife"). */
 export const VENUE_TYPE_TO_CATEGORY: Record<string, string> = {
   café: "food",
@@ -88,7 +111,10 @@ export function businessToLocal(place: DirectoryPlace): LocalPlace {
     name: place.name,
     category: place.cat,
     neighbourhood: place.hood,
-    freguesia: HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
+    freguesia: warnIfUnknownFreguesia(
+      HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
+      `business "${place.name}"`,
+    ),
     coords: BUSINESS_COORDS[place.slug] ?? null,
     detailPath: `${routes.directory}/${place.slug}`,
     source: place,
@@ -102,7 +128,7 @@ export function venueToLocal(venue: Venue): LocalPlace {
     name: venue.name,
     category: VENUE_TYPE_TO_CATEGORY[venue.type] ?? venue.type,
     neighbourhood: venue.bairro,
-    freguesia: venue.freguesia,
+    freguesia: warnIfUnknownFreguesia(venue.freguesia, `venue "${venue.name}"`),
     coords: { latitude: venue.latitude, longitude: venue.longitude },
     detailPath: `${routes.venue}/${venue.id}`,
     vibe: venue.vibe,

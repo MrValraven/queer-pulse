@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiAlertCircle, FiPhone } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { CRISIS_LINES } from "./crisisStrip.data";
 import styles from "./crisisStrip.module.css";
 
@@ -55,9 +53,6 @@ export function CrisisStrip() {
           </ul>
 
           <div className={styles.actions}>
-            <Button variant="ghost-dark" to={routes.emergency}>
-              {t("resources:crisis.emergencyCta")}
-            </Button>
             <Link className={styles.jump} to="#crisis">
               {t("resources:crisis.jumpCta")}
             </Link>

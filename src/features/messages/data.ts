@@ -16,6 +16,8 @@ export interface Conversation {
   slug?: string;
   initials: string;
   tint: AvatarTint;
+  /** Counterpart's profile photo (live: from the DTO). Absent → initials avatar. */
+  avatarUrl?: string;
   name: string;
   pronouns: string;
   connectedSince: string;
@@ -30,8 +32,14 @@ export interface Conversation {
   messages: { day: string; items: ChatMessage[] }[];
 }
 
-/** The signed-in member, used for sent-bubble avatars. */
-export const me = { initials: "SR", tint: "plum" as AvatarTint };
+/**
+ * Neutral placeholder for the sent-bubble avatar during the brief pre-auth /
+ * logged-out window only. The real sent avatar always comes from the signed-in
+ * member (`useAuth().user.profile` — see `ConversationPanel`); this must stay a
+ * non-identity so no fabricated persona ("SR", a demo member) can ever leak into
+ * a live thread. Empty initials render as a plain neutral circle.
+ */
+export const me = { initials: "", tint: "default" as AvatarTint };
 
 export const conversations: Conversation[] = [
   {

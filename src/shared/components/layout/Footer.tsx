@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import type { IconType } from "react-icons";
 import {
-  FiAlertOctagon,
   FiInstagram,
   FiYoutube,
   FiAtSign,
@@ -25,7 +24,6 @@ import {
 import styles from "./Footer.module.css";
 
 const LINK_ICONS: Record<NonNullable<FooterLink["icon"]>, IconType> = {
-  emergency: FiAlertOctagon,
   accessibility: MdAccessible,
 };
 const SOCIAL_ICONS: Record<(typeof SOCIAL_LINKS)[number]["icon"], IconType> = {
@@ -51,10 +49,7 @@ function BaseLink({ link }: { link: FooterLink }) {
   const { t } = useTranslation();
   const Icon = link.icon ? LINK_ICONS[link.icon] : null;
   return (
-    <Link
-      to={linkToPath(link.href)}
-      className={link.icon === "emergency" ? styles.emergency : undefined}
-    >
+    <Link to={linkToPath(link.href)}>
       {Icon && <Icon aria-hidden />}
       {t(link.labelKey)}
     </Link>

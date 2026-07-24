@@ -2772,6 +2772,9 @@ export const economy: Catalog = {
     "{name} is a member in good standing and has been verified by the team. Every member is vouched for by someone already in the room.",
   "offerBoard.sayHelloCta": "Say hello to {name}",
   "offerBoard.moreFromBoard": "More from <em>the board</em>",
+  "offerBoard.comingSoon.title": "Asks & Offers is on its way",
+  "offerBoard.comingSoon.body":
+    "The community board — where members post what they're looking for and what they can offer — is coming soon. Check back shortly.",
 
   // ── SalarySubmitModal ────────────────────────────────────────────────────
   "salarySubmitModal.subtitle":

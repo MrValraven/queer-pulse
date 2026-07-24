@@ -12,7 +12,7 @@ import {
   VIBE_LABEL_KEYS,
   type Venue,
 } from "./map.data";
-import s from "./MapPage.module.css";
+import s from "./localMap.module.css";
 
 export function MapVenueCard({
   v,

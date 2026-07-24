@@ -223,21 +223,21 @@ const PROFILES: CompanyProfile[] = [
     },
   },
   {
-    slug: "ilga-portugal",
-    logo: "IL",
+    slug: "national-lgbtq-rights-org",
+    logo: "LR",
     logoBg: "rgba(247,243,238,.10)",
     logoText: "var(--cream)",
-    name: <>ILGA Portugal</>,
-    nameText: "ILGA Portugal",
+    name: <>A national LGBTQ+ rights organisation</>,
+    nameText: "A national LGBTQ+ rights organisation",
     tagline:
-      "The country's longest-running LGBTI+ rights organisation. Advocacy, legal support, and community programmes, nationwide, since 1995.",
+      "A long-established LGBTI+ rights organisation. Advocacy, legal support, and community programmes, nationwide.",
     badges: [
       { label: "Queer-led · verified", kind: "verified" },
-      { label: "Intendente", kind: "plain" },
+      { label: "Lisbon", kind: "plain" },
       { label: "NGO", kind: "plain" },
     ],
     stats: [
-      { value: <em>1995</em>, label: "Founded" },
+      { value: <em>2004</em>, label: "Founded" },
       { value: "34", label: "Staff · 21 queer" },
       { value: <em>4.4</em>, label: "Avg review · 9 reviews" },
       { value: "6", label: "Hires from QueerPulse" },
@@ -245,9 +245,9 @@ const PROFILES: CompanyProfile[] = [
     about: (
       <>
         <p>
-          ILGA Portugal has been doing this work since 1995 — advocacy at the
+          We have been doing this work for two decades — advocacy at the
           level of law and policy, a legal support line, a documentation centre,
-          and community programmes that run out of our building in Intendente
+          and community programmes that run out of our building in Lisbon
           and out into the country. We are a <em>membership organisation</em>,
           which means the people we serve are also the people we answer to.
         </p>
@@ -314,11 +314,11 @@ const PROFILES: CompanyProfile[] = [
       },
     ],
     info: [
-      { label: "Founded", value: "1995" },
+      { label: "Founded", value: "2004" },
       { label: "Team size", value: "34 people" },
       { label: "Queer headcount", value: "21 / 34" },
       { label: "Working week", value: "5 days" },
-      { label: "Office", value: "Intendente" },
+      { label: "Office", value: "Lisbon" },
       { label: "Hybrid", value: "Mostly in-person" },
       { label: "Languages", value: "PT · EN" },
     ],

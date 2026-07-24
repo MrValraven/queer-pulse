@@ -8,6 +8,8 @@ import {
 } from "react";
 import { type Draft } from "../../features/members/drafts.data";
 import { useLocalStorage } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "./DemoModeProvider";
 import { useMyDrafts } from "../../features/members/api/useMyDrafts";
 import {
@@ -62,6 +64,8 @@ export function DraftsProvider({ children }: { children: ReactNode }) {
     (v): v is Draft[] => Array.isArray(v),
   );
   const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
 
   const addDraft = useCallback(
     (draft: Draft) => {
@@ -72,11 +76,13 @@ export function DraftsProvider({ children }: { children: ReactNode }) {
       });
       if (demoMode || existed) return;
       createDraft(draftToDto(draft)).catch(() => {
-        // Roll back the optimistic add on failure.
+        // Roll back the optimistic add on failure, and tell the user — the
+        // draft silently disappears otherwise.
         setDrafts((prev) => prev.filter((d) => d.id !== draft.id));
+        showToast(t("common:toast.saveFailed"), "error");
       });
     },
-    [setDrafts, demoMode],
+    [setDrafts, demoMode, showToast, t],
   );
 
   const removeDraft = useCallback(
@@ -89,13 +95,15 @@ export function DraftsProvider({ children }: { children: ReactNode }) {
       if (demoMode || !removed) return;
       const restore = removed;
       deleteDraft(id).catch(() => {
-        // Roll back the optimistic removal on failure (restore newest-first).
+        // Roll back the optimistic removal on failure (restore newest-first),
+        // and tell the user — the draft silently reappears otherwise.
         setDrafts((prev) =>
           prev.some((d) => d.id === id) ? prev : [restore, ...prev],
         );
+        showToast(t("common:toast.removeFailed"), "error");
       });
     },
-    [setDrafts, demoMode],
+    [setDrafts, demoMode, showToast, t],
   );
 
   const value = useMemo<DraftsStore>(

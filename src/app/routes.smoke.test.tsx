@@ -43,7 +43,6 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["governance", routes.governance],
   ["admin settings", routes.adminSettings],
   ["cookies policy", routes.cookies],
-  ["emergency (safety)", routes.emergency],
   ["glossary", routes.glossary],
   ["dating", routes.dating],
   ["badges", routes.badges],

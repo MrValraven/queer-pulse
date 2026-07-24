@@ -30,7 +30,7 @@ export function Gatherings() {
             {gatherings.map((event, index) => (
               <Reveal key={event.id} delay={index * 50}>
                 <Link
-                  to={`${routes.gathering}#${event.id}`}
+                  to={`${routes.gatherings}#${event.id}`}
                   className={styles.row}
                 >
                   <div className={styles.date}>

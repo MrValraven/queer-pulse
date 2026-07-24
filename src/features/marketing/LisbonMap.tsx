@@ -2,12 +2,13 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useMemo } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useLisbonMap } from "./useLisbonMap";
-import { TYPE_LABEL_KEYS, type Venue } from "./map.data";
-import type { MarkerLabels } from "./venueMarker";
-import s from "./MapPage.module.css";
+import { TYPE_LABEL_KEYS } from "./map.data";
+import { LOCAL_CATEGORY_LABEL_KEYS } from "./localPlaces";
+import type { MarkerLabels, VenueMarkerData } from "./venueMarker";
+import s from "./localMap.module.css";
 
 interface LisbonMapProps {
-  venues: Venue[];
+  venues: VenueMarkerData[];
   freguesia: string | null;
   selectedVenueId: string | null;
   counts: Record<string, number>;
@@ -27,7 +28,7 @@ export function LisbonMap({
   const markerLabels = useMemo<MarkerLabels>(
     () => ({
       venuePin: (name, type) => {
-        const typeKey = TYPE_LABEL_KEYS[type];
+        const typeKey = TYPE_LABEL_KEYS[type] ?? LOCAL_CATEGORY_LABEL_KEYS[type];
         const localizedType = typeKey ? t(typeKey) : type;
         return t("marketing:map.pinAria", { name, type: localizedType });
       },

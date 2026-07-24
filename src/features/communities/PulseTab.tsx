@@ -9,6 +9,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type {
@@ -51,8 +52,9 @@ function PulsePost({
   pinned?: boolean;
   /** Persist a reaction toggle (no-op in demo — local state owns the UI). */
   onReactPost?: (id: string, key: ReactionKey, willReact: boolean) => void;
-  /** Persist a reply (no-op in demo). */
-  onReplyPost?: (id: string, text: string) => void;
+  /** Persist a reply (no-op in demo). `onDone` fires when the live mutation
+   *  succeeds so the caller can clear its optimistic reply copy. */
+  onReplyPost?: (id: string, text: string, onDone?: () => void) => void;
 }) {
   const { t } = useTranslation();
   const [reactions, setReactions] = useState(post.reactions);
@@ -78,7 +80,7 @@ function PulsePost({
       },
     ]);
     setReplyDraft("");
-    onReplyPost?.(post.id, text);
+    onReplyPost?.(post.id, text, () => setAdded([]));
   };
   const replyAction = t("communities:detail.pulse.replyAction");
   const replyLabel = replies.length
@@ -185,6 +187,7 @@ export function PulseTab({
   const loading = useSimulatedLoad(500);
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const createPost = useCreatePost(community.slug);
   const react = useReact(community.slug);
   const unreact = useUnreact(community.slug);
@@ -202,7 +205,10 @@ export function PulseTab({
     if (willReact) react.mutate({ id, key });
     else unreact.mutate({ id, key });
   };
-  const onReplyPost = (id: string, text: string) => reply.mutate({ id, text });
+  const onReplyPost = (id: string, text: string, onDone?: () => void) => {
+    if (demoMode) return;
+    reply.mutate({ id, text }, { onSuccess: onDone });
+  };
 
   const share = () => {
     const text = draft.trim();
@@ -221,7 +227,9 @@ export function PulseTab({
       ...prev,
     ]);
     setDraft("");
-    createPost.mutate({ body: text });
+    if (!demoMode) {
+      createPost.mutate({ body: text }, { onSuccess: () => setMine([]) });
+    }
     showToast(t("communities:detail.pulse.sharedToast"), "success");
   };
 

@@ -59,6 +59,7 @@ export function conversationToView(dto: ConversationResponse): Conversation {
     slug,
     initials: p ? initialsOf(first, last) : "QP",
     tint,
+    avatarUrl: p?.avatarUrl ?? undefined,
     name,
     pronouns: p ? "" : "Official",
     connectedSince: "",

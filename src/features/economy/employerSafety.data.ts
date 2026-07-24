@@ -18,7 +18,7 @@ export const EMPLOYER_SAFETY: Record<string, SafetySignals> = {
     transFriendly: true,
     safeToBeOut: 9.4,
   },
-  "ILGA Portugal": {
+  "A national LGBTQ+ rights organisation": {
     verifiedSafe: true,
     transFriendly: true,
     safeToBeOut: 9.6,

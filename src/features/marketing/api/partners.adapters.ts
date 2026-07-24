@@ -34,7 +34,7 @@ const TINT_CSS: Record<
   plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
 };
 
-/** Two-letter org initials for the card avatar ("ILGA Portugal" → "IL"). */
+/** Two-letter org initials for the card avatar ("Community Arts Space" → "CA"). */
 function orgInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   if (words.length >= 2) {

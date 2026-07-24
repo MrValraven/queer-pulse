@@ -1,6 +1,6 @@
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import styles from "./MentionsPage.module.css";
+import styles from "./MentionsPanel.module.css";
 
 /** Mirrors a mention row: head (avatar + who + when) + content + where. */
 function MentionRowSkeleton() {

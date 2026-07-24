@@ -19,6 +19,11 @@ export const common: Catalog = {
   "language.en": "English",
   "language.pt": "Português",
 
+  // Optimistic-write failures — shown when a save/remove is rolled back because
+  // the API call failed (SavedProvider, DraftsProvider).
+  "toast.saveFailed": "That didn't save — check your connection and try again.",
+  "toast.removeFailed": "That didn't update — check your connection and try again.",
+
   // Interpolation + pluralization examples (proves the helpers, and reusable).
   "greeting.welcome": "Welcome back, {name}",
   "members.count_one": "{count} member",

@@ -84,7 +84,6 @@ export function AccountBannedPage() {
                 <Translation
                   i18nKey="system:accountBanned.whatNow.row4.body"
                   components={{
-                    crisisLink: <Link to={routes.emergency} />,
                     wellbeingLink: <Link to={routes.wellbeing} />,
                   }}
                 />

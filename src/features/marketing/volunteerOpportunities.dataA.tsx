@@ -6,8 +6,8 @@ import {
 export const VOLUNTEER_OPPORTUNITIES_A: VolunteerOpportunity[] = [
   {
     slug: "community-outreach",
-    org: "ILGA Portugal",
-    av: "IL",
+    org: "A national LGBTQ+ rights organisation",
+    av: "LR",
     bg: "rgba(74,140,111,.14)",
     color: "var(--jade)",
     role: "Community Outreach Volunteer",
@@ -16,15 +16,16 @@ export const VOLUNTEER_OPPORTUNITIES_A: VolunteerOpportunity[] = [
     time: "2–4 hrs/week",
     location: "In-person · Lisbon",
     skills: ["Communication", "Languages", "Event support"],
-    desc: "Help ILGA reach more people through community events, tabling, and direct outreach. No experience necessary — training provided on day one.",
-    eyebrow: "Volunteer · LGBTQ+ Rights · ILGA partnership",
+    desc: "Help a national LGBTQ+ rights organisation reach more people through community events, tabling, and direct outreach. No experience necessary — training provided on day one.",
+    eyebrow: "Volunteer · LGBTQ+ Rights · rights-org partnership",
     urgent: "Recruiting now · rolling intake",
     titleLead: "Community outreach · ",
-    titleEm: "ILGA Lisboa.",
+    titleEm: "a local rights association.",
     sub: (
       <>
-        ILGA does the slow, unglamorous work of being <b>present</b> — at fairs,
-        in schools, at the info table nobody notices until they need it.{" "}
+        The organisation does the slow, unglamorous work of being{" "}
+        <b>present</b> — at fairs, in schools, at the info table nobody notices
+        until they need it.{" "}
         <em>You're the friendly face at that table.</em> You hand out
         information, answer the easy questions, and know exactly who to point
         people toward for the hard ones.
@@ -48,14 +49,15 @@ export const VOLUNTEER_OPPORTUNITIES_A: VolunteerOpportunity[] = [
     ],
     why: [
       <>
-        Most people don't find ILGA in a crisis — they find it at a stall,
-        months earlier, and remember it when they need it.{" "}
+        Most people don't find the organisation in a crisis — they find it at a
+        stall, months earlier, and remember it when they need it.{" "}
         <b>Showing up consistently is the whole job.</b> A staffed table at the
         right event reaches more people than a month of social posts.
       </>,
       <>
-        Outreach is also how ILGA spots what's changing on the ground — which
-        questions are getting more common, which neighbourhoods are underserved.{" "}
+        Outreach is also how the organisation spots what's changing on the
+        ground — which questions are getting more common, which neighbourhoods
+        are underserved.{" "}
         <em>You're the eyes and ears as much as the hands.</em>
       </>,
     ],
@@ -70,7 +72,7 @@ export const VOLUNTEER_OPPORTUNITIES_A: VolunteerOpportunity[] = [
       },
       {
         title: "Refer the harder ones",
-        desc: "You don't advise. You connect people to ILGA's legal and health teams.",
+        desc: "You don't advise. You connect people to the organisation's legal and health teams.",
       },
       {
         title: "Log who you reached",
@@ -100,7 +102,7 @@ export const VOLUNTEER_OPPORTUNITIES_A: VolunteerOpportunity[] = [
     teamIntro:
       "18 outreach volunteers active this quarter. A few of the people you'd share a table with:",
     team: TEAM_POOL.slice(0, 5),
-    applyRole: "Community Outreach · ILGA Lisboa",
+    applyRole: "Community Outreach · a local rights association",
     spotsFilled: "18 / 24",
     spotsPct: 75,
     spots: [
@@ -115,16 +117,16 @@ export const VOLUNTEER_OPPORTUNITIES_A: VolunteerOpportunity[] = [
     applyConfirm: (
       <>
         Application submitted for{" "}
-        <strong>Community Outreach · ILGA Lisboa</strong>. The outreach lead
-        will send you the onboarding link within a couple of days.
+        <strong>Community Outreach · a local rights association</strong>. The
+        outreach lead will send you the onboarding link within a couple of days.
       </>
     ),
     partner: {
-      name: "ILGA Portugal · founding partner",
+      name: "A national LGBTQ+ rights organisation · founding partner",
       text: (
         <>
-          Onboarding is run by ILGA's community team. Background checks are by
-          QueerPulse moderation.{" "}
+          Onboarding is run by the organisation's community team. Background
+          checks are by QueerPulse moderation.{" "}
           <em>
             Your data is shared only between these two orgs, for this role.
           </em>

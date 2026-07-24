@@ -157,6 +157,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  /* Reserve room for the absolutely-positioned .boilerCopy button (top-right)
+     so the .wc metadata stops to its left instead of rendering underneath.
+     Sized to clear the button at its widest ("COPIED" state). */
+  padding-right: 84px;
 }
 .boilerH .wc {
   font-weight: 600;

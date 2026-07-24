@@ -1,0 +1,119 @@
+.page {
+  background: var(--cream);
+  padding: 40px 0 80px;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: 14px;
+  text-decoration: none;
+  margin-bottom: 28px;
+}
+.back:hover {
+  color: var(--ink);
+}
+.head {
+  margin-bottom: 28px;
+}
+.tag {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 10px;
+}
+.name {
+  font-family: var(--serif);
+  font-size: clamp(30px, 5vw, 46px);
+  color: var(--plum);
+  margin: 0 0 12px;
+}
+.sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: 15px;
+}
+.hood,
+.access {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.access {
+  color: var(--jade);
+}
+.body {
+  max-width: 640px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+  padding: 32px;
+}
+.note {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+.details {
+  display: grid;
+  gap: 16px;
+  margin: 0 0 24px;
+}
+.details div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.details dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.details dd {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+}
+.vibes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.vibesLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-right: 4px;
+}
+.vibe {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--jade);
+  background: rgba(74, 140, 111, 0.1);
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+.been {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-60);
+  margin-bottom: 24px;
+}

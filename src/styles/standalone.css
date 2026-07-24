@@ -13,14 +13,14 @@
 @media (max-width: 860px) {
   html[data-display-mode="standalone"] {
     /* Raise bottom-anchored floating UI clear of the tab bar. Consumed by
-       QuickExit.module.css and Consent.module.css, both of which add their own
+       Consent.module.css, which adds its own
        `max(…, env(safe-area-inset-bottom))` clearance on top of this value —
        so this must track the bar's *total* occupied height, not just
        `--tab-bar-h`. The bar (BottomTabBar.module.css `.bar`) also carries
        `padding-bottom: env(safe-area-inset-bottom)` to clear the iOS home
        indicator; omitting that here previously let a notched phone's inset get
        absorbed into this property instead of adding real clearance above the
-       bar, leaving QuickExit flush against it with no gap. Mirrors the
+       bar, leaving the consent banner flush against it with no gap. Mirrors the
        `main[data-page-main]` padding rule below, which already gets this right. */
     --bottom-inset: calc(var(--tab-bar-h) + env(safe-area-inset-bottom));
   }

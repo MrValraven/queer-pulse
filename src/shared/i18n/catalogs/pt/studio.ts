@@ -158,7 +158,6 @@ export const studio: Catalog = {
   "landing.hero.title": "Música, <em>programada</em> por ouvidos queer.",
   "landing.hero.dek":
     "Uma sala de streaming cooperativa. <em>{sharePercent}</em> de cada audição vai para o artista. <em>{tipPercent}</em> de cada gorjeta. O livro-razão é público. Quem cura tem nome. <em>Nenhum algoritmo alguma vez pôs aqui os pés.</em>",
-  "landing.hero.sustainCta": "Sustentar a sala · {price}/mês",
   "landing.hero.demoCta": "Ouvir um set de demonstração · grátis",
 
   "landing.demo.eyebrow": "O set de quarta-feira · pré-visualização grátis",

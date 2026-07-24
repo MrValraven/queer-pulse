@@ -2,18 +2,11 @@ import { Link } from "react-router-dom";
 import { FiStar } from "react-icons/fi";
 import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { usePartners } from "./api/usePartners";
 import { useOpportunities } from "./api/useOpportunities";
-import {
-  START_STEPS,
-  SKILLS_CARDS,
-  OPEN_LETTER_SIGNATURES,
-  OPEN_LETTER_TARGET,
-} from "./activism.data";
+import { START_STEPS, SKILLS_CARDS } from "./activism.data";
 import s from "./ActivismPage.module.css";
 
 /** How many partners / opportunities the activism teasers surface before the
@@ -52,8 +45,6 @@ export function StartSection() {
 
 export function LocalSection() {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const { demoMode } = useDemoMode();
   return (
     <section className={s.section} id="local">
       <Reveal as="h2">
@@ -78,36 +69,6 @@ export function LocalSection() {
             {t("marketing:activism.local.banner.title")}
           </div>
           <p>{t("marketing:activism.local.banner.body")}</p>
-        </div>
-      </Reveal>
-      <Reveal
-        as={Link}
-        to={routes.openLetter}
-        className={`${s.banner} ${s.bannerLink}`}
-        delay={180}
-      >
-        <span className={s.ibDot} />
-        <div>
-          <div className={s.ibHead}>
-            {t("marketing:activism.local.letter.title")}
-          </div>
-          <p>
-            {/* The open letter is mock-only (no backend endpoint), so the
-                fabricated signature count is shown only when the platform is
-                populated (demo). Live mode gets the count-less variant. */}
-            {demoMode ? (
-              <Translation
-                i18nKey="marketing:activism.local.letter.body"
-                components={{ b: <b /> }}
-                values={{
-                  signatures: fmt.number(OPEN_LETTER_SIGNATURES),
-                  target: fmt.number(OPEN_LETTER_TARGET),
-                }}
-              />
-            ) : (
-              t("marketing:activism.local.letter.bodyLive")
-            )}
-          </p>
         </div>
       </Reveal>
     </section>

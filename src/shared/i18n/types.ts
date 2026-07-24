@@ -34,7 +34,6 @@ export type Namespace =
   | "topics"
   | "governance"
   | "myevents"
-  | "support"
   | "connect"
   | "messages"
   | "culture"

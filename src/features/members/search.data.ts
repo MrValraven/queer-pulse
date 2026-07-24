@@ -8,6 +8,7 @@ import {
   FiLayers,
 } from "react-icons/fi";
 import { routes, topicPath } from "../../app/routeMap";
+import { gatheringPath } from "../gatherings/data";
 import { memberName } from "./data/members";
 import { TOPICS } from "../topics/topics.data";
 export type ResultType =
@@ -130,28 +131,28 @@ export const SEARCH_DATA: SearchItem[] = [
     t: "gathering",
     name: "Queer Supper Club №12",
     sub: "Mouraria · 6 Jun — 8 seats left",
-    href: "/gathering/supper-club-12",
+    href: gatheringPath("supper-club-12"),
     kw: "food social supper dinner",
   },
   {
     t: "gathering",
     name: "Portfolio Night: Designers & Photographers",
     sub: "Príncipe Real · 14 Jun — 32 going",
-    href: "/gathering/portfolio-night",
+    href: gatheringPath("portfolio-night"),
     kw: "design photography portfolio mixer",
   },
   {
     t: "gathering",
     name: "Inside Beatriz's Ceramics Studio",
     sub: "Graça · 21 Jun — 3 spots left",
-    href: "/gathering/studio-visit",
+    href: gatheringPath("studio-visit"),
     kw: "craft ceramics studio visit",
   },
   {
     t: "gathering",
     name: "Founders & Builders Breakfast",
     sub: "Marvila · 2 Jul",
-    href: "/gathering/founders-breakfast",
+    href: gatheringPath("founders-breakfast"),
     kw: "founders tech breakfast networking",
   },
   {

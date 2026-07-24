@@ -8,7 +8,7 @@ import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useDirectoryListingsActions } from "../../../app/providers/DirectoryListingsProvider";
-import { currentUser, currentUserSlug } from "../../members/data/members";
+import { useProfile } from "../../../app/providers/ProfileProvider";
 import {
   TOTAL_STEPS,
   type ListingStatus,
@@ -36,14 +36,16 @@ const NEXT_LABEL_KEYS = [
   "marketing:listBusiness.next.send",
 ];
 
-const USER_NAME = `${currentUser.first} ${currentUser.last}`;
-
 export function ListBusinessPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { addListing, withdrawListing, setStatus } =
     useDirectoryListingsActions();
+  // The signed-in member the listing is authored by — the real user in live
+  // mode, the mock persona in demo (never the hardcoded `currentUser`/slug).
+  const { profile } = useProfile();
+  const userName = `${profile.first} ${profile.last}`;
 
   const form = useListingForm();
   const { draft } = form;
@@ -80,7 +82,7 @@ export function ListBusinessPage() {
     setPhase("sending");
     scrollUp();
     sendTimer.current = setTimeout(() => {
-      const created = addListing(draft, currentUserSlug);
+      const created = addListing(draft, profile.slug);
       setListing(created);
       clearDraft();
       setPhase("success");
@@ -167,19 +169,19 @@ export function ListBusinessPage() {
                 <FadeIn key={step}>
                   <div className={styles.pane}>
                     {step === 0 && (
-                      <StepPath form={form} userName={USER_NAME} />
+                      <StepPath form={form} userName={userName} />
                     )}
                     {step === 1 && <StepBasics form={form} />}
                     {step === 2 && <StepStory form={form} />}
                     {step === 3 && <StepPractical form={form} />}
                     {step === 4 && (
-                      <StepPhotosYou form={form} userName={USER_NAME} />
+                      <StepPhotosYou form={form} userName={userName} />
                     )}
                     {step === 5 && (
                       <StepReview
                         form={form}
-                        userName={USER_NAME}
-                        userInitials={currentUser.initials}
+                        userName={userName}
+                        userInitials={profile.initials}
                         onEdit={goToStep}
                       />
                     )}
@@ -201,7 +203,7 @@ export function ListBusinessPage() {
                 </FadeIn>
               </div>
 
-              <ListBusinessPreview draft={draft} userName={USER_NAME} />
+              <ListBusinessPreview draft={draft} userName={userName} />
             </div>
           </div>
         )}

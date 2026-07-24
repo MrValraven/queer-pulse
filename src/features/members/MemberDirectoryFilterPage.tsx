@@ -1,13 +1,14 @@
 import { useId, useMemo, useState } from "react";
-import { FiSearch, FiUsers } from "react-icons/fi";
+import { FiSearch, FiSliders, FiUsers } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
   EmptyState,
   FadeIn,
+  ModalSheet,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useCountUp, useSimulatedLoad } from "../../shared/hooks";
+import { useCountUp, useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -75,6 +76,11 @@ export function MemberDirectoryFilterPage() {
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently joined");
   const sortLabelId = useId();
+  // Below the grid's single-column breakpoint the filter sidebar would stack as a
+  // tall wall above the results; there it collapses into a bottom-sheet opened
+  // from a "Filters" button instead. Matches the 860px grid breakpoint below.
+  const isMobile = useMediaQuery("(max-width: 860px)");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Identity selections go to `identities=`, NOT `tags=`. They used to be sent
   // as tags, which the backend matched against `profiles.tags` — a skills
@@ -133,6 +139,11 @@ export function MemberDirectoryFilterPage() {
     setFilters(reconcileProfessions(next));
   };
 
+  const clearAllFilters = () => {
+    applyFilters(EMPTY_FILTERS);
+    showToast(t("members:directory.toast.filtersCleared"), "info");
+  };
+
   return (
     <PageShell>
       <div className={styles.page}>
@@ -170,16 +181,15 @@ export function MemberDirectoryFilterPage() {
         )}
 
         <div className={styles.grid}>
-          <FiltersSidebar
-            filters={filters}
-            members={sourceMembers}
-            appliedCount={chips.length}
-            onChange={applyFilters}
-            onClearAll={() => {
-              applyFilters(EMPTY_FILTERS);
-              showToast(t("members:directory.toast.filtersCleared"), "info");
-            }}
-          />
+          {!isMobile && (
+            <FiltersSidebar
+              filters={filters}
+              members={sourceMembers}
+              appliedCount={chips.length}
+              onChange={applyFilters}
+              onClearAll={clearAllFilters}
+            />
+          )}
 
           <div>
             <div className={styles.topRow}>
@@ -193,21 +203,38 @@ export function MemberDirectoryFilterPage() {
                   count: totalMembers,
                 })}
               </div>
-              <div className={styles.sort}>
-                <span id={sortLabelId} className={styles.sortLabel}>
-                  {t("members:directory.sortLabel")}
-                </span>
-                <select
-                  value={sort}
-                  aria-labelledby={sortLabelId}
-                  onChange={(e) => setSort(e.target.value as SortKey)}
-                >
-                  {SORTS.map((s) => (
-                    <option key={s} value={s}>
-                      {t(SORT_LABEL_KEY[s])}
-                    </option>
-                  ))}
-                </select>
+              <div className={styles.topControls}>
+                {isMobile && (
+                  <button
+                    type="button"
+                    className={styles.filtersBtn}
+                    onClick={() => setFiltersOpen(true)}
+                  >
+                    <FiSliders aria-hidden />
+                    {t("members:directory.filtersCta")}
+                    {chips.length > 0 && (
+                      <span className={styles.filtersBtnCount}>
+                        {fmt.number(chips.length)}
+                      </span>
+                    )}
+                  </button>
+                )}
+                <div className={styles.sort}>
+                  <span id={sortLabelId} className={styles.sortLabel}>
+                    {t("members:directory.sortLabel")}
+                  </span>
+                  <select
+                    value={sort}
+                    aria-labelledby={sortLabelId}
+                    onChange={(e) => setSort(e.target.value as SortKey)}
+                  >
+                    {SORTS.map((s) => (
+                      <option key={s} value={s}>
+                        {t(SORT_LABEL_KEY[s])}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -290,6 +317,36 @@ export function MemberDirectoryFilterPage() {
           </div>
         </div>
       </div>
+
+      {isMobile && filtersOpen && (
+        <ModalSheet
+          onClose={() => setFiltersOpen(false)}
+          ariaLabel={t("members:directory.filtersSheetLabel")}
+        >
+          <h2 className={styles.sheetTitle}>
+            {t("members:directory.filtersSheetLabel")}
+          </h2>
+          <FiltersSidebar
+            inSheet
+            filters={filters}
+            members={sourceMembers}
+            appliedCount={chips.length}
+            onChange={applyFilters}
+            onClearAll={clearAllFilters}
+          />
+          <div className={styles.sheetFoot}>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => setFiltersOpen(false)}
+            >
+              {t("members:directory.showResultsCta", {
+                count: filtered.length,
+              })}
+            </Button>
+          </div>
+        </ModalSheet>
+      )}
     </PageShell>
   );
 }

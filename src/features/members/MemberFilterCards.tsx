@@ -37,6 +37,7 @@ export function FiltersSidebar({
   appliedCount,
   onChange,
   onClearAll,
+  inSheet = false,
 }: {
   filters: FilterState;
   /** Every member loaded so far — the population the counts are taken from. */
@@ -44,6 +45,9 @@ export function FiltersSidebar({
   appliedCount: number;
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
+  /** Rendered inside the mobile filters sheet — drops the sticky desktop
+   *  positioning so the cards flow naturally in the scrolling sheet. */
+  inSheet?: boolean;
 }) {
   const { t } = useTranslation();
   const uid = useId();
@@ -55,7 +59,7 @@ export function FiltersSidebar({
     [members],
   );
   return (
-    <aside className={styles.filters}>
+    <aside className={inSheet ? styles.filtersSheet : styles.filters}>
       <div className={styles.filterCard}>
         <h4>{t("members:directory.filter.openToTitle")}</h4>
         {OPEN_TO_OPTIONS.map((option) => (

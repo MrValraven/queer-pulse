@@ -1,10 +1,19 @@
 import { Link, useParams } from "react-router-dom";
-import { FiLock } from "react-icons/fi";
+import { FiLock, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Avatar, Button, Tag } from "../../shared/components/ui";
+import {
+  Avatar,
+  Button,
+  EmptyState,
+  SkeletonLine,
+  Tag,
+  type AvatarTint,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useSimulatedLoad } from "../../shared/hooks";
 import { useMemberContact } from "../connect/useMemberContact";
 import { routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -16,25 +25,129 @@ import {
   gatheringPath,
   resolveGathering,
   spotsText,
+  type GatheringDetail,
 } from "./data";
 import { useEvent } from "./api/useEvent";
 
 import styles from "./GatheringPage.module.css";
 
+/** The host fields the sidebar avatar block renders, normalized across modes. */
+interface HostView {
+  slug: string;
+  first: string;
+  last: string;
+  initials: string;
+  tint: AvatarTint;
+  photo?: string;
+  role: string;
+}
+
+/**
+ * Resolve the host avatar block. Demo reads the mock `memberProfiles` registry
+ * (keyed by the mock `hostSlug`); live builds the view purely from the DTO host
+ * fields carried on `GatheringDetail` — so a real event never accidentally
+ * borrows a demo persona whose slug happens to collide with the registry.
+ */
+function resolveHost(
+  gathering: GatheringDetail,
+  demoMode: boolean,
+): HostView | null {
+  if (demoMode) {
+    const member = gathering.hostSlug
+      ? memberProfiles[gathering.hostSlug]
+      : undefined;
+    if (!member) return null;
+    return {
+      slug: member.slug,
+      first: member.first,
+      last: member.last,
+      initials: member.initials,
+      tint: member.tint,
+      photo: member.photo,
+      role: member.role,
+    };
+  }
+  if (!gathering.hostSlug || (!gathering.hostFirst && !gathering.hostLast)) {
+    return null;
+  }
+  return {
+    slug: gathering.hostSlug,
+    first: gathering.hostFirst ?? "",
+    last: gathering.hostLast ?? "",
+    initials:
+      `${gathering.hostFirst?.[0] ?? ""}${gathering.hostLast?.[0] ?? ""}`.toUpperCase(),
+    tint: "plum",
+    photo: gathering.hostAvatarUrl ?? undefined,
+    role: "",
+  };
+}
+
+/**
+ * The gathering's loading / not-found frame. Live has no gathering until the
+ * fetch resolves — a skeleton while loading, then a real "not found" state if
+ * the slug resolves to nothing. Demo always resolves, so this is live-only.
+ */
+function GatheringUnavailable({ loading }: { loading: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <PageShell>
+      <div className={styles.page}>
+        <div className="wrap">
+          <div className={styles.back}>
+            <Link to={routes.calendar} className={styles.backLink}>
+              {t("gatherings:common.backToGatherings")}
+            </Link>
+          </div>
+          {loading ? (
+            <>
+              <SkeletonLine width="30%" height={18} />
+              <SkeletonLine width="70%" height={40} style={{ marginTop: 16 }} />
+              <SkeletonLine width="90%" height={16} style={{ marginTop: 16 }} />
+            </>
+          ) : (
+            <EmptyState
+              icon={<FiCalendar />}
+              title={t("gatherings:gathering.notFoundTitle")}
+              description={t("gatherings:gathering.notFoundDescription")}
+              action={{
+                label: t("gatherings:common.backToGatherings"),
+                to: routes.calendar,
+              }}
+            />
+          )}
+        </div>
+      </div>
+    </PageShell>
+  );
+}
+
 export function GatheringPage() {
   const { slug: param } = useParams();
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { data } = useEvent(param);
-  const gathering = data?.gathering ?? resolveGathering(param);
-  const kind = gatheringKind(gathering);
-  const host = gathering.hostSlug ? memberProfiles[gathering.hostSlug] : null;
-  const spotsCount = gathering.spots.values?.count;
-  const { connected, contact } = useMemberContact(gathering.hostSlug);
+  const { demoMode } = useDemoMode();
+  const simLoading = useSimulatedLoad();
+  const { data, isLoading } = useEvent(param);
+  // NEVER fall back to the mock registry in live — that leaked demo gatherings
+  // into production. Demo resolves the route param against the mock; live uses
+  // only the fetched event (null until it resolves, or if the slug 404s).
+  const gathering = demoMode
+    ? resolveGathering(param)
+    : (data?.gathering ?? null);
+  const loading = demoMode ? simLoading : isLoading;
+  const { connected, contact } = useMemberContact(gathering?.hostSlug ?? "");
 
-  const others = Object.values(gatheringDetails).filter(
-    (g) => g.slug !== gathering.slug,
-  );
+  if (!gathering) return <GatheringUnavailable loading={loading} />;
+
+  const kind = gatheringKind(gathering);
+  const host = resolveHost(gathering, demoMode);
+  const spotsCount = gathering.spots.values?.count;
+
+  // The "more gatherings" rail is mock-only; live has no list endpoint here, so
+  // it stays empty rather than leaking demo gatherings into production.
+  const others = demoMode
+    ? Object.values(gatheringDetails).filter((g) => g.slug !== gathering.slug)
+    : [];
 
   return (
     <PageShell>
@@ -92,7 +205,9 @@ export function GatheringPage() {
                     })
                   }
                 >
-                  {connected ? t("connect:contact.message") : t(gathering.ctaKey)}{" "}
+                  {connected
+                    ? t("connect:contact.message")
+                    : t(gathering.ctaKey)}{" "}
                   →
                 </Button>
                 <Button size="lg" variant="ghost" to={routes.calendar}>
@@ -199,39 +314,41 @@ export function GatheringPage() {
             </aside>
           </div>
 
-          <div className={styles.other}>
-            <h2>
-              <Translation
-                i18nKey="gatherings:gathering.moreTitle"
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <div className={styles.cards}>
-              {others.map((other) => (
-                <Link
-                  key={other.slug}
-                  to={gatheringPath(other.slug)}
-                  className={styles.card}
-                >
-                  <div className={styles.dateMini}>
-                    <div className={styles.gd}>
-                      {fmt.date(other.date, { day: "2-digit" })}
+          {others.length > 0 && (
+            <div className={styles.other}>
+              <h2>
+                <Translation
+                  i18nKey="gatherings:gathering.moreTitle"
+                  components={{ em: <em /> }}
+                />
+              </h2>
+              <div className={styles.cards}>
+                {others.map((other) => (
+                  <Link
+                    key={other.slug}
+                    to={gatheringPath(other.slug)}
+                    className={styles.card}
+                  >
+                    <div className={styles.dateMini}>
+                      <div className={styles.gd}>
+                        {fmt.date(other.date, { day: "2-digit" })}
+                      </div>
+                      <div className={styles.gm}>
+                        {fmt.date(other.date, { month: "short" })}
+                      </div>
                     </div>
-                    <div className={styles.gm}>
-                      {fmt.date(other.date, { month: "short" })}
+                    <div>
+                      <div className={styles.cardType}>{other.type}</div>
+                      <h3 className={styles.cardTitle}>{other.title}</h3>
+                      <div className={styles.cardHood}>
+                        {other.hood} · {spotsText(other.spots, t, fmt)}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div className={styles.cardType}>{other.type}</div>
-                    <h3 className={styles.cardTitle}>{other.title}</h3>
-                    <div className={styles.cardHood}>
-                      {other.hood} · {spotsText(other.spots, t, fmt)}
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </PageShell>

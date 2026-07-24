@@ -266,11 +266,6 @@ const CulturePage = lazy(() =>
     default: m.CulturePage,
   })),
 );
-const ManifestoPage = lazy(() =>
-  import("../features/marketing/ManifestoPage").then((m) => ({
-    default: m.ManifestoPage,
-  })),
-);
 const PrivacyPage = lazy(() =>
   import("../features/marketing/PrivacyPage").then((m) => ({
     default: m.PrivacyPage,
@@ -309,16 +304,6 @@ const RoadmapPage = lazy(() =>
 const PressArchivePage = lazy(() =>
   import("../features/marketing/PressArchivePage").then((m) => ({
     default: m.PressArchivePage,
-  })),
-);
-const AnnualAssemblyPage = lazy(() =>
-  import("../features/marketing/AnnualAssemblyPage").then((m) => ({
-    default: m.AnnualAssemblyPage,
-  })),
-);
-const AssemblyMinutesPage = lazy(() =>
-  import("../features/marketing/AssemblyMinutesPage").then((m) => ({
-    default: m.AssemblyMinutesPage,
   })),
 );
 const ForOrganisationsPage = lazy(() =>
@@ -970,6 +955,11 @@ const DirectorySpacePage = lazy(() =>
     default: m.DirectorySpacePage,
   })),
 );
+const VenueDetailPage = lazy(() =>
+  import("../features/marketing/VenueDetailPage").then((m) => ({
+    default: m.VenueDetailPage,
+  })),
+);
 const ListBusinessPage = lazy(() =>
   import("../features/marketing/listBusiness/ListBusinessPage").then((m) => ({
     default: m.ListBusinessPage,
@@ -1000,18 +990,10 @@ const ActivismPage = lazy(() =>
     default: m.ActivismPage,
   })),
 );
-const OpenLetterPage = lazy(() =>
-  import("../features/marketing/OpenLetterPage").then((m) => ({
-    default: m.OpenLetterPage,
-  })),
-);
 const PlatformsPage = lazy(() =>
   import("../features/marketing/PlatformsPage").then((m) => ({
     default: m.PlatformsPage,
   })),
-);
-const MapPage = lazy(() =>
-  import("../features/marketing/MapPage").then((m) => ({ default: m.MapPage })),
 );
 const SafeSpacesPage = lazy(() =>
   import("../features/safety/SafeSpacesPage").then((m) => ({
@@ -1041,11 +1023,6 @@ const ArrivingPage = lazy(() =>
 const HateCrimePage = lazy(() =>
   import("../features/safety/HateCrimePage").then((m) => ({
     default: m.HateCrimePage,
-  })),
-);
-const EmergencyPage = lazy(() =>
-  import("../features/safety/EmergencyPage").then((m) => ({
-    default: m.EmergencyPage,
   })),
 );
 const ReportPage = lazy(() =>
@@ -1191,11 +1168,6 @@ const SessionsPage = lazy(() =>
     default: m.SessionsPage,
   })),
 );
-const SustainerPage = lazy(() =>
-  import("../features/support/SustainerPage").then((m) => ({
-    default: m.SustainerPage,
-  })),
-);
 const PublicProfilePage = lazy(() =>
   import("../features/members/PublicProfilePage").then((m) => ({
     default: m.PublicProfilePage,
@@ -1209,11 +1181,6 @@ const WorkHubPage = lazy(() =>
 const WorkProfilePage = lazy(() =>
   import("../features/economy/WorkProfilePage").then((m) => ({
     default: m.WorkProfilePage,
-  })),
-);
-const MentionsPage = lazy(() =>
-  import("../features/notifications/MentionsPage").then((m) => ({
-    default: m.MentionsPage,
   })),
 );
 const CollectionsPage = lazy(() =>
@@ -1326,6 +1293,11 @@ const AdminMembersPage = lazy(() =>
     default: m.AdminMembersPage,
   })),
 );
+const AdminBotsPage = lazy(() =>
+  import("../features/admin/AdminBotsPage").then((m) => ({
+    default: m.AdminBotsPage,
+  })),
+);
 const AdminSafeSpacesPage = lazy(() =>
   import("../features/admin/AdminSafeSpacesPage").then((m) => ({
     default: m.AdminSafeSpacesPage,
@@ -1366,6 +1338,11 @@ const AdminHousingCoopsPage = lazy(() =>
     default: m.AdminHousingCoopsPage,
   })),
 );
+const AdminOrgTiersPage = lazy(() =>
+  import("../features/admin/AdminOrgTiersPage").then((m) => ({
+    default: m.AdminOrgTiersPage,
+  })),
+);
 const AdminSettingsPage = lazy(() =>
   import("../features/admin/AdminSettingsPage").then((m) => ({
     default: m.AdminSettingsPage,
@@ -1391,11 +1368,9 @@ const BUILT_SLUGS = new Set([
   "communities",
   "calendar",
   "events",
-  "gathering",
   "event",
   "rsvp",
   "rsvp-ticket",
-  "gathering-recap",
   "host",
   "magazine",
   "safety",
@@ -1468,7 +1443,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/legal", routes.legal],
   // Safety
   ["/hate-crime", routes.hateCrime],
-  ["/emergency", routes.emergency],
   ["/report", routes.report],
   ["/block-mute", routes.blockMute],
   ["/appeal-outcome", routes.appealOutcome],
@@ -1503,12 +1477,10 @@ const LEGACY_REDIRECTS: [string, string][] = [
   // About
   ["/contact", routes.contact],
   ["/help", routes.help],
-  ["/manifesto", routes.manifesto],
   ["/changelog", routes.changelog],
   ["/roadmap", routes.roadmap],
   ["/press-archive", routes.pressArchive],
   ["/press-kit", routes.pressKit],
-  ["/annual-assembly", routes.annualAssembly],
   ["/for-organisations", routes.forOrganisations],
   ["/platforms", routes.platforms],
   ["/donate", routes.donate],
@@ -1529,7 +1501,6 @@ const LEGACY_REDIRECTS: [string, string][] = [
   ["/policies/constitution", routes.constitution],
   ["/policies/code-of-conduct", routes.codeOfConduct],
   ["/policies/transparency-report", routes.transparencyReport],
-  ["/about/annual-assembly", routes.annualAssembly],
   ["/about/changelog", routes.changelog],
   ["/policies/accessibility", routes.accessibility],
   ["/about/press-archive", routes.pressArchive],
@@ -1644,7 +1615,6 @@ export function AppRoutes() {
           <Route path={routes.caregivers} element={<CaregiversPage />} />
           <Route path={routes.messages} element={<MessagesPage />} />
           <Route path={routes.notifications} element={<NotificationsPage />} />
-          <Route path={routes.mentions} element={<MentionsPage />} />
           <Route path={routes.collections} element={<CollectionsPage />} />
           <Route path={routes.drafts} element={<DraftsPage />} />
           <Route path={routes.communities} element={<CommunitiesPage />} />
@@ -1661,44 +1631,45 @@ export function AppRoutes() {
           {/* Gatherings */}
           <Route path={routes.calendar} element={<CalendarPage />} />
           <Route path={routes.events} element={<EventsPage />} />
-          {/* `/gathering` alone identifies no gathering — the detail page needs
-              a slug. Existing bare links mean "browse gatherings", so send them
-              to the index rather than rendering a detail page with no subject. */}
+          {/* `/gathering/:slug` (singular) and the flat `/gathering-*` routes were
+              unified under `/gatherings/:slug/...`. Hard cutover — no redirect shims. */}
           <Route
-            path={routes.gathering}
-            element={<Navigate to={routes.gatherings} replace />}
+            path={`${routes.gatherings}/:slug`}
+            element={<GatheringPage />}
           />
           <Route
-            path={`${routes.gathering}/:slug`}
-            element={<GatheringPage />}
+            path={`${routes.gatherings}/:slug/recap`}
+            element={<GatheringRecapPage />}
+          />
+          <Route
+            path={`${routes.gatherings}/:slug/cancelled`}
+            element={<GatheringCancelledPage />}
+          />
+          <Route
+            path={`${routes.gatherings}/:slug/dashboard`}
+            element={<GatheringDashboardPage />}
+          />
+          <Route
+            path={`${routes.gatherings}/:slug/manage`}
+            element={<ManageGatheringPage />}
+          />
+          <Route
+            path={`${routes.gatherings}/:slug/photos`}
+            element={<GatheringPhotosPage />}
+          />
+          <Route
+            path={`${routes.gatherings}/:slug/co-host-invite`}
+            element={<CoHostInvitePage />}
           />
           <Route path={routes.event} element={<EventPage />} />
           <Route path={routes.rsvp} element={<RsvpPage />} />
           <Route path={routes.rsvpTicket} element={<RsvpPage />} />
           <Route path={routes.checkout} element={<CheckoutPage />} />
-          <Route
-            path={routes.gatheringRecap}
-            element={<GatheringRecapPage />}
-          />
           <Route path={routes.host} element={<HostPage />} />
           <Route
             path={routes.createGathering}
             element={<CreateGatheringPage />}
           />
-          <Route
-            path={routes.gatheringDashboard}
-            element={<GatheringDashboardPage />}
-          />
-          <Route
-            path={routes.manageGathering}
-            element={<ManageGatheringPage />}
-          />
-          <Route path={routes.coHostInvite} element={<CoHostInvitePage />} />
-          <Route
-            path={routes.gatheringCancelled}
-            element={<GatheringCancelledPage />}
-          />
-          <Route path="/gathering-photos" element={<GatheringPhotosPage />} />
 
           {/* Magazine */}
           <Route path={routes.magazine} element={<MagazinePage />} />
@@ -1737,18 +1708,9 @@ export function AppRoutes() {
           />
           <Route path={routes.creatives} element={<CreativesPage />} />
           <Route path={routes.culture} element={<CulturePage />} />
-          <Route path={routes.manifesto} element={<ManifestoPage />} />
           <Route path={routes.changelog} element={<ChangelogPage />} />
           <Route path={routes.roadmap} element={<RoadmapPage />} />
           <Route path={routes.pressArchive} element={<PressArchivePage />} />
-          <Route
-            path={routes.annualAssembly}
-            element={<AnnualAssemblyPage />}
-          />
-          <Route
-            path="/about/governance/annual-assembly/minutes/:year"
-            element={<AssemblyMinutesPage />}
-          />
           <Route
             path={routes.forOrganisations}
             element={<ForOrganisationsPage />}
@@ -1789,7 +1751,6 @@ export function AppRoutes() {
           <Route path={routes.sexualHealth} element={<SexualHealthPage />} />
           <Route path={routes.sober} element={<SoberPage />} />
           <Route path={routes.hateCrime} element={<HateCrimePage />} />
-          <Route path={routes.emergency} element={<EmergencyPage />} />
           <Route path={routes.queer101} element={<Queer101Page />} />
           <Route path={routes.glossary} element={<GlossaryPage />} />
           <Route path={routes.pronounsGuide} element={<PronounsGuidePage />} />
@@ -2134,27 +2095,6 @@ export function AppRoutes() {
           />
           <Route path={routes.resources} element={<ResourceLibraryPage />} />
           <Route path={routes.activism} element={<ActivismPage />} />
-          <Route path={routes.openLetter} element={<OpenLetterPage />} />
-          <Route
-            path="/annual-assembly/minutes/:year"
-            element={
-              <ParamRedirect
-                build={(p) =>
-                  `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
-                }
-              />
-            }
-          />
-          <Route
-            path="/about/annual-assembly/minutes/:year"
-            element={
-              <ParamRedirect
-                build={(p) =>
-                  `/about/governance/annual-assembly/minutes/${p.year ?? ""}`
-                }
-              />
-            }
-          />
           <Route
             path="/volunteer-opportunity/:slug"
             element={
@@ -2187,9 +2127,13 @@ export function AppRoutes() {
           />
           <Route path={routes.visas} element={<VisasPage />} />
           <Route path={routes.arriving} element={<ArrivingPage />} />
-          <Route path={routes.map} element={<MapPage />} />
+          <Route
+            path={routes.map}
+            element={<Navigate to={routes.directory} replace />}
+          />
           <Route path={routes.directory} element={<DirectoryPage />} />
           <Route path={routes.listBusiness} element={<ListBusinessPage />} />
+          <Route path={`${routes.venue}/:id`} element={<VenueDetailPage />} />
           <Route
             path={`${routes.directory}/:slug`}
             element={<DirectorySpacePage />}
@@ -2231,7 +2175,6 @@ export function AppRoutes() {
           <Route path={routes.sessions} element={<SessionsPage />} />
           <Route path={routes.dataExport} element={<DataExportPage />} />
           <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
-          <Route path={routes.sustainer} element={<SustainerPage />} />
 
           {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
           {LEGACY_REDIRECTS.map(([from, to]) => (
@@ -2279,6 +2222,7 @@ export function AppRoutes() {
             element={<AdminModerationPage />}
           />
           <Route path={routes.adminMembers} element={<AdminMembersPage />} />
+          <Route path={routes.adminBots} element={<AdminBotsPage />} />
           <Route
             path={routes.adminSafeSpaces}
             element={<AdminSafeSpacesPage />}
@@ -2299,6 +2243,7 @@ export function AppRoutes() {
             path={routes.adminHousingCoops}
             element={<AdminHousingCoopsPage />}
           />
+          <Route path={routes.adminOrgTiers} element={<AdminOrgTiersPage />} />
           <Route
             path={routes.adminGovernance}
             element={<AdminGovernancePage />}

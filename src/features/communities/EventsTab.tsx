@@ -12,7 +12,7 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
   const { t } = useTranslation();
   // Link to the specific gathering when this row mirrors a real one; otherwise
   // fall back to the gatherings landing (fabricated rows have no detail page).
-  const to = ev.slug ? gatheringPath(ev.slug) : routes.gathering;
+  const to = ev.slug ? gatheringPath(ev.slug) : routes.gatherings;
   return (
     <div
       className={[styles.eventRow, ev.past && styles.eventPast]

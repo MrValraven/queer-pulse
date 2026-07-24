@@ -139,7 +139,7 @@ export function CreateGatheringPage() {
                     </div>
                   )}
                   <div className={styles.successActions}>
-                    <Button to={routes.gathering} variant="ghost-dark">
+                    <Button to={routes.gatherings} variant="ghost-dark">
                       {t("gatherings:create.success.viewCta")} →
                     </Button>
                     <Button to={routes.event} variant="primary">

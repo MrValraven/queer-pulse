@@ -2781,6 +2781,9 @@ export const economy: Catalog = {
     "{name} é uma pessoa membro em situação regular e foi verificada pela equipa. Cada pessoa membro tem o aval de alguém que já está na comunidade.",
   "offerBoard.sayHelloCta": "Diz olá a {name}",
   "offerBoard.moreFromBoard": "Mais do <em>quadro</em>",
+  "offerBoard.comingSoon.title": "Pedidos & Ofertas está a caminho",
+  "offerBoard.comingSoon.body":
+    "O quadro da comunidade — onde os membros publicam o que procuram e o que podem oferecer — chega brevemente. Volta daqui a pouco.",
 
   // ── SalarySubmitModal ────────────────────────────────────────────────────
   "salarySubmitModal.subtitle":

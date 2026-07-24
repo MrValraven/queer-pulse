@@ -118,7 +118,6 @@ export function topicDetailToTopic(
     posts: posts.map((dto) => topicPostResponseToTopicPost(dto, fmt)),
     relatedTopics: detail.relatedTopics,
     topVoices: [],
-    crisisCard: detail.crisisCard,
     totalPosts: detail.totalPosts,
   };
 }

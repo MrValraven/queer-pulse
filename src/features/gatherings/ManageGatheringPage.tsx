@@ -4,7 +4,6 @@ import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import {
   ManageGatheringTabs,
   ManageGatheringSidebar,
@@ -17,6 +16,7 @@ import {
   GATHERING_DETAILS,
   ATTENDEE_COUNT,
 } from "./manageGathering.data";
+import { gatheringCancelledPath, gatheringDashboardPath } from "./data";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -73,7 +73,7 @@ export function ManageGatheringPage() {
       )
     ) {
       cancelEvent.mutate();
-      navigate(routes.gatheringCancelled);
+      navigate(gatheringCancelledPath(MANAGE_SLUG));
     }
   };
 
@@ -122,7 +122,7 @@ export function ManageGatheringPage() {
                 <Button
                   variant="primary"
                   className={styles.actionBtn}
-                  to={routes.gatheringDashboard}
+                  to={gatheringDashboardPath(MANAGE_SLUG)}
                 >
                   {t("gatherings:manage.actions.dayOfDashboard")} →
                 </Button>

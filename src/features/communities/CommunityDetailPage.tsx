@@ -68,6 +68,18 @@ export function CommunityDetailPage() {
     ? { ...baseLiving, roster, pinned: posts.pinned, pulse: posts.pulse }
     : undefined;
 
+  // Discussion threads: real `community_post` data is the source of truth,
+  // but non-flagship demo communities have no living/mock posts seeded, so
+  // `useCommunityDiscussions` returns empty and the tab would show an
+  // EmptyState where the synthetic thread used to render. In demo mode only,
+  // fall back to the synthetic `detail.topicThread` when there are no real
+  // threads. Live mode always uses the real threads — an empty state there
+  // is intentional.
+  const discussionThreads =
+    demoMode && threads.length === 0 && detail.topicThread
+      ? [detail.topicThread]
+      : threads;
+
   // Membership CTA state: the session provider is the demo source of truth;
   // live mode reads the viewer's role/request straight off the detail DTO.
   const joined = demoMode ? (slug ? isMember(slug) : false) : myRole != null;
@@ -161,7 +173,7 @@ export function CommunityDetailPage() {
                 community={community}
                 info={detail}
                 living={living}
-                threads={threads}
+                threads={discussionThreads}
                 slug={living.slug}
                 isMember={joined}
                 role={role}
@@ -174,7 +186,7 @@ export function CommunityDetailPage() {
                 members={members}
                 hasCount={hasCount}
                 memberNum={memberNum}
-                threads={threads}
+                threads={discussionThreads}
                 slug={slug ?? ""}
                 isMember={joined}
                 discussionPaging={discussionPaging}

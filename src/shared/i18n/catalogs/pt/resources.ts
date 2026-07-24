@@ -25,7 +25,6 @@ export const resources: Catalog = {
   "crisis.title": "Em crise <em>agora mesmo?</em>",
   "crisis.body":
     "Se estás em perigo imediato, liga para o <strong>112</strong>. Estas linhas são gratuitas e confidenciais — toca para ligar, ou copia o número.",
-  "crisis.emergencyCta": "Apoio de emergência da QueerPulse",
   "crisis.jumpCta": "Todos os recursos de crise ↓",
   // crisisStrip.data.ts — nomes reais de linhas de apoio mantidos como estão;
   // só a parte descritiva e o horário são traduzidos. Assinalar para revisão
@@ -128,10 +127,6 @@ export const resources: Catalog = {
   "legal.lawyers.lead":
     "Avaliados por pessoas da comunidade, com experiência específica em casos LGBTQ+ em Portugal. Consultas iniciais gratuitas para pessoas da QueerPulse.",
   "legal.lawyers.requestConsultationCta": "Pedir consulta →",
-  "legal.lawyers.emergency.title": "A enfrentar algo <em>urgente?</em>",
-  "legal.lawyers.emergency.body":
-    "Se estás a lidar com uma situação jurídica urgente — detenção, aviso de despejo ou suspensão no trabalho — usa a rede de emergência da QueerPulse. Normalmente há alguém disponível para ajudar dentro de horas.",
-  "legal.lawyers.emergencyCta": "Rede de emergência →",
 
   "legal.outro.title": "Tens <em>direitos.</em>",
   "legal.outro.sub":
@@ -691,11 +686,6 @@ export const resources: Catalog = {
   "wellbeing.crisis.redeExAequo.desc":
     "Apoio para pessoas LGBTQ+ com menos de 30 anos. Chat online e telefone — seguro, confidencial, liderado por pares.",
   "wellbeing.crisis.redeExAequo.hours": "Online · Dias úteis 18h–22h",
-  "wellbeing.crisis.qpEmergency.title": "Emergência QueerPulse",
-  "wellbeing.crisis.qpEmergency.desc":
-    "Contactos de alojamento seguro, pessoas da comunidade que podem ajudar, e vias de escalonamento de emergência — sempre disponíveis.",
-  "wellbeing.crisis.qpEmergency.cta": "Abrir página de emergência →",
-  "wellbeing.crisis.qpEmergency.hours": "Sempre disponível",
 
   "wellbeing.harm.title": "Redução de <em>danos</em>",
   "wellbeing.harm.lead":
@@ -758,7 +748,6 @@ export const resources: Catalog = {
   "therapistProfilePage.sidebar.crisisHeading": "Em crise agora mesmo",
   "therapistProfilePage.sidebar.crisisText":
     "A terapia não é o caminho certo quando estás em perigo imediato. Usa isto em vez disso — está preparado para isso.",
-  "therapistProfilePage.sidebar.crisisChatCta": "Apoio em crise",
   "therapistProfilePage.sidebar.sosVozAmigaCta": "SOS Voz Amiga · 213 544 545",
 
   "therapistProfilePage.vouch.successAriaLabel": "Aval recebido",

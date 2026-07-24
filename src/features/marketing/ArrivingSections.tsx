@@ -211,7 +211,7 @@ export function FirstStepSection() {
               work or just yourself.
             </p>
           </div>
-          <Button to={routes.gathering} variant="ghost-dark">
+          <Button to={routes.gatherings} variant="ghost-dark">
             {t("marketing:arriving.firstStep.rsvpCta")}
           </Button>
         </Reveal>

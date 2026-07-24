@@ -14,7 +14,7 @@ describe("workLinkTarget", () => {
     ).toEqual({ kind: "internal", to: "/cinema/curators/joao" });
     expect(
       workLinkTarget({ kind: "ref", entity: "gathering", slug: "supper" }),
-    ).toEqual({ kind: "internal", to: "/gathering/supper" });
+    ).toEqual({ kind: "internal", to: "/gatherings/supper" });
     expect(
       workLinkTarget({ kind: "ref", entity: "place", slug: "janela" }),
     ).toEqual({ kind: "internal", to: "/local/directory/janela" });

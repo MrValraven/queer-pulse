@@ -1,4 +1,9 @@
 import { routes } from "../../app/routeMap";
+import {
+  DEMO_GATHERING_SLUGS,
+  gatheringRecapPath,
+  gatheringCancelledPath,
+} from "../gatherings/data";
 
 export interface SimFlow {
   title: string;
@@ -80,12 +85,12 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
       {
         title: "Gathering recap",
         desc: "Preview the post-event recap a host or attendee sees once a gathering has wrapped.",
-        to: routes.gatheringRecap,
+        to: gatheringRecapPath(DEMO_GATHERING_SLUGS.recap),
       },
       {
         title: "Gathering cancelled",
         desc: "See the notice attendees receive when a gathering they signed up for is called off.",
-        to: routes.gatheringCancelled,
+        to: gatheringCancelledPath(DEMO_GATHERING_SLUGS.cancelled),
       },
     ],
   },
@@ -106,11 +111,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         title: "Appeal an outcome",
         desc: "Walk through appealing a moderation decision you disagree with.",
         to: routes.appealOutcome,
-      },
-      {
-        title: "Crisis support",
-        desc: "Preview the emergency helplines page shown to members in distress.",
-        to: routes.emergency,
       },
       {
         title: "Report a hate crime",

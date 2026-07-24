@@ -24,7 +24,7 @@ import { useCreatePost } from "./api/useCommunityMutations";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import styles from "./CommunityDetailPage.module.css";
 
-const GATHERING = routes.gathering;
+const GATHERING = routes.gatherings;
 const MEMBER = routes.members;
 
 export function AboutTab({ detail }: { detail: CommunityDetail }) {
@@ -202,7 +202,10 @@ export function ForumTab({
     if (demoMode) return;
     createPost.mutate(
       { body: text },
-      { onError: () => showToast(t("communities:common.error"), "error") },
+      {
+        onSuccess: () => setExtraThreads([]),
+        onError: () => showToast(t("communities:common.error"), "error"),
+      },
     );
   };
 

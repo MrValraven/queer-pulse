@@ -11,10 +11,6 @@ import styles from "./PwaPromptPage.module.css";
 
 const FEATURES: { labelKey: string; detailKey: string }[] = [
   {
-    labelKey: "system:pwaPrompt.features.quickExit.label",
-    detailKey: "system:pwaPrompt.features.quickExit.detail",
-  },
-  {
     labelKey: "system:pwaPrompt.features.push.label",
     detailKey: "system:pwaPrompt.features.push.detail",
   },

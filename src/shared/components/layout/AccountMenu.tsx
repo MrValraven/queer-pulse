@@ -17,7 +17,6 @@ import {
   FiUsers,
   FiSettings,
   FiHelpCircle,
-  FiHeart,
   FiLogOut,
   FiDatabase,
   FiLayout,
@@ -110,11 +109,6 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       labelKey: "shared:accountMenu.items.saved",
       to: routes.collections,
       icon: FiBookmark,
-    },
-    {
-      labelKey: "shared:accountMenu.items.membership",
-      to: routes.sustainer,
-      icon: FiHeart,
     },
     {
       labelKey: "shared:accountMenu.items.settings",

@@ -63,11 +63,11 @@ describe("mergeLocalPlaces", () => {
       (place) => place.name.toLowerCase() === "navalha",
     );
     expect(navalhaEntries).toHaveLength(1);
-    /*   const navalha = navalhaEntries[0]; */
-    /*  expect(navalha.kind).toBe("business");
+    const navalha = navalhaEntries[0]!;
+    expect(navalha.kind).toBe("business");
     expect(navalha.coords).not.toBeNull();
     expect(navalha.vibe).toBeDefined();
-    expect(navalha.beenHere).toBeDefined(); */
+    expect(navalha.beenHere).toBeDefined();
   });
 
   it("passes venues with no business twin through unchanged", () => {
@@ -92,7 +92,7 @@ describe("mergeLocalPlaces", () => {
     };
     const merged = mergeLocalPlaces([business], [twin]);
     expect(merged).toHaveLength(1);
-    /* expect(merged[0].coords).toEqual(business.coords); */
+    expect(merged[0]!.coords).toEqual(business.coords);
   });
 });
 

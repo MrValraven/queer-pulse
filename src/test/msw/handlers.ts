@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import type { AdminCommunityCardDTO } from "../../features/admin/api/adminCommunities.api";
+import type { AdminBotSummaryDTO } from "../../features/admin/api/adminBots.api";
 import type { JobCardDTO } from "../../features/economy/api/jobs.api";
 import type { Paginated } from "../../shared/api/refs";
 import { subprofileHandlers } from "./subprofiles.handlers";
@@ -64,6 +65,14 @@ const adminCommunityCard: AdminCommunityCardDTO = {
   needsSupport: false,
 };
 
+const adminBotSummary: AdminBotSummaryDTO = {
+  userId: "u-house",
+  slug: "queerpulse",
+  firstName: "QueerPulse",
+  lastName: "",
+  avatarUrl: null,
+};
+
 export const handlers = [
   http.get(`${API}/csrf-token`, () =>
     HttpResponse.json({ csrfToken: "test-csrf" }),
@@ -83,6 +92,9 @@ export const handlers = [
   }),
   http.get(`${API}/admin/communities`, () =>
     HttpResponse.json<AdminCommunityCardDTO[]>([adminCommunityCard]),
+  ),
+  http.get(`${API}/admin/bots`, () =>
+    HttpResponse.json<AdminBotSummaryDTO[]>([adminBotSummary]),
   ),
   ...subprofileHandlers(API),
   ...handleHandlers(API),

@@ -21,7 +21,7 @@ const BASE_BY_ENTITY: Record<WorkRefEntity, string> = {
   collection: routes.cinemaCollections,
   filmmaker: routes.cinemaFilmmaker,
   curator: routes.cinemaCurator,
-  gathering: routes.gathering,
+  gathering: routes.gatherings,
   place: routes.directory,
 };
 

@@ -10,8 +10,6 @@ const AFFECTED: { up: boolean; textKey: string }[] = [
   { up: false, textKey: "system:maintenance.affected.web" },
   { up: false, textKey: "system:maintenance.affected.mobile" },
   { up: false, textKey: "system:maintenance.affected.email" },
-  { up: true, textKey: "system:maintenance.affected.crisisChat" },
-  { up: true, textKey: "system:maintenance.affected.emergencyPages" },
 ];
 
 export function MaintenancePage() {
@@ -92,9 +90,6 @@ export function MaintenancePage() {
         <div className={styles.actions}>
           <Button to={routes.status}>
             {t("system:maintenance.actions.statusCta")}
-          </Button>
-          <Button variant="ghost-dark" to={routes.emergency}>
-            {t("system:maintenance.actions.crisisCta")}
           </Button>
         </div>
 

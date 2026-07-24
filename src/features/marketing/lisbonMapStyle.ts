@@ -30,15 +30,6 @@ export const BRAND = {
   building: "#efe9e1", // faint warm building fill
 } as const;
 
-// Label anchor per parish (lng, lat) — real approximate parish centres.
-export const FREGUESIA_LABEL_POINTS: Record<string, [number, number]> = {
-  "Alcântara": [-9.177, 38.704],
-  "Estrela": [-9.16, 38.713],
-  "Misericórdia": [-9.146, 38.711],
-  "Santa Maria Maior": [-9.133, 38.712],
-  "Arroios": [-9.135, 38.726],
-};
-
 // OpenFreeMap's glyph server hosts Noto Sans, not the "Open Sans / Metropolis"
 // stack the positron style requests (those 404). Every text layer is remapped
 // to Noto so labels render from the server with no missing-glyph fallback.

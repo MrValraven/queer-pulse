@@ -136,15 +136,6 @@
     color: rgba(var(--cream-rgb), 1);
   }
 }
-.baseLinks a.emergency {
-  color: var(--accent);
-}
-@media (hover: hover) {
-  .baseLinks a.emergency:hover {
-    color: var(--accent);
-    opacity: 0.82;
-  }
-}
 
 /* ---- Theme + language controls ---- */
 .controls {

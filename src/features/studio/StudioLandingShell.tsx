@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { SUSTAIN_PRICE } from "./studioShell.data";
 import { TOP_NAV, FOOTER_COLUMNS } from "./studioLanding.data";
 import styles from "./StudioLandingPage.module.css";
 
 /** Logged-out marketing chrome for the Studio landing: sticky topbar + footer. */
 export function StudioLandingShell({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   return (
     <div className={styles.page}>
       <header className={styles.top}>
@@ -30,11 +27,6 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
         <div className={styles.topRight}>
           <Button variant="ghost-dark" to={routes.signIn}>
             {t("common:cta.signIn")}
-          </Button>
-          <Button variant="primary" to={routes.sustainer}>
-            {t("studio:shell.sustainCta", {
-              price: fmt.currency(SUSTAIN_PRICE),
-            })}
           </Button>
         </div>
       </header>

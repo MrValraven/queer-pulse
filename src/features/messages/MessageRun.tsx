@@ -49,6 +49,8 @@ export function MessageRunView({
               className={[
                 styles.bubble,
                 isSent ? styles.sent : styles.received,
+                index > 0 && styles.groupTop,
+                index < lastIndex && styles.groupBottom,
                 isLast && (isSent ? styles.tailSent : styles.tailReceived),
               ]
                 .filter(Boolean)

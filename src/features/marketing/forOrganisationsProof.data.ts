@@ -1,98 +1,10 @@
+import { PARTNERS } from "./partnerDetails";
 import type { Partner } from "./partnerDetails.types";
 
-// Demo fallback for the For Organisations proof rail. Illustrative only — no
-// real organisation, person, or audited figure (see the honesty constraint).
-// Slugs are intended to match approved entries in the demo partner data so the
-// "View partnership" links resolve in demo mode (aligned in a later task).
-export const FEATURED_PARTNERS_DEMO: Partner[] = [
-  {
-    slug: "northside-lgbti-association",
-    av: "NA",
-    logo: "NA",
-    bg: "rgba(45,27,61,.1)",
-    color: "var(--plum)",
-    region: "pt",
-    regionLabel: "Portugal",
-    name: "Northside LGBTI+ Association",
-    city: "Lisbon",
-    desc: "Operational case-bridge, free legal consults, joint advocacy. An illustrative founding partnership.",
-    tags: ["Advocacy", "Support"],
-    featured: true,
-    testimonial: {
-      quote:
-        "What QueerPulse asked us for at the start was unusual: not money, not co-branding — a commitment to specific operational changes in how our helpline handed off to a community.",
-      author: "Programme Director",
-      role: "Northside LGBTI+ Association",
-      initials: "PD",
-    },
-    eyebrow: "Partner · Portugal",
-    tagline: "An illustrative founding partnership.",
-    tier: "Operational · founding",
-    since: "Illustrative partner",
-    about: [],
-    stats: [],
-    aboutMore: [],
-    jointWork: [],
-    timeline: [],
-    how: [],
-    funding: "",
-    atGlance: [],
-    contact: {},
-  },
-  {
-    slug: "community-health-collective",
-    av: "CH",
-    logo: "CH",
-    bg: "rgba(232,119,90,.14)",
-    color: "var(--accent-ink)",
-    region: "pt",
-    regionLabel: "Portugal",
-    name: "Community Health Collective",
-    city: "Porto",
-    desc: "Open clinic nights, trans-affirming care pathway, vouching for verified therapists.",
-    tags: ["Health"],
-    featured: true,
-    testimonial: null,
-    eyebrow: "Partner · Portugal",
-    tagline: "An illustrative operational partnership.",
-    tier: "Operational",
-    since: "Illustrative partner",
-    about: [],
-    stats: [],
-    aboutMore: [],
-    jointWork: [],
-    timeline: [],
-    how: [],
-    funding: "",
-    atGlance: [],
-    contact: {},
-  },
-  {
-    slug: "regional-arts-foundation",
-    av: "RA",
-    logo: "RA",
-    bg: "rgba(74,140,111,.15)",
-    color: "var(--jade)",
-    region: "eu",
-    regionLabel: "Europe",
-    name: "Regional Arts Foundation",
-    city: "—",
-    desc: "A multi-year grant for the micro-grants fund, with quarterly reports and an annual audit.",
-    tags: ["Funding"],
-    featured: true,
-    testimonial: null,
-    eyebrow: "Partner · Europe",
-    tagline: "An illustrative programme funder.",
-    tier: "Programme funder",
-    since: "Illustrative partner",
-    about: [],
-    stats: [],
-    aboutMore: [],
-    jointWork: [],
-    timeline: [],
-    how: [],
-    funding: "",
-    atGlance: [],
-    contact: {},
-  },
-];
+// Demo fallback for the For Organisations proof rail: the featured partners
+// from the demo registry (derived, so it never diverges from the detail pages
+// those cards link to). Illustrative only — no real organisation, person, or
+// audited figure (see the honesty constraint).
+export const FEATURED_PARTNERS_DEMO: Partner[] = PARTNERS.filter(
+  (partner) => partner.featured,
+);

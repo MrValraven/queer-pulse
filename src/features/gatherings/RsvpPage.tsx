@@ -172,7 +172,7 @@ export function RsvpPage() {
               </div>
 
               <div className={styles.ctas}>
-                <Button size="lg" to={routes.gathering}>
+                <Button size="lg" to={routes.gatherings}>
                   {t("gatherings:rsvp.viewDetailsCta")}
                 </Button>
                 <Button
@@ -214,7 +214,7 @@ export function RsvpPage() {
           <p>
             {t("gatherings:rsvp.footer.membership")}{" "}
             <Link
-              to={routes.gathering}
+              to={routes.gatherings}
               onClick={() => {
                 unrsvp.mutate();
                 showToast(t("gatherings:rsvp.footer.cancelledToast"), "info");

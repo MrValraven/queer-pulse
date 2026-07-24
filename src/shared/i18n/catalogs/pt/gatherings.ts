@@ -193,6 +193,9 @@ export const gatherings: Catalog = {
   "gathering.locationNote":
     "A localização completa é partilhada com quem confirmar presença.",
   "gathering.moreTitle": "Mais <em>convívios</em>",
+  "gathering.notFoundTitle": "Não encontrámos este convívio",
+  "gathering.notFoundDescription":
+    "Pode ter sido cancelado, ou o link pode estar desatualizado.",
 
   // JoinVouchCallout
   "vouchCallout.title": "Chegaste agora? <em>Pede um aval.</em>",

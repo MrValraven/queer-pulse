@@ -135,7 +135,7 @@ export const notifications: Catalog = {
     "The <strong>{report}</strong> has been published. Moderation stats and finances are now live.",
   "list.12.meta": "Governance · Quarterly report",
 
-  // Mentions thread (MentionsPage.tsx / mentions.data.tsx)
+  // Mentions thread (MentionsPanel.tsx / mentions.data.tsx)
   "mentions.day.today": "Today",
   "mentions.day.yesterday": "Yesterday",
   "mentions.day.thisWeek": "This week",

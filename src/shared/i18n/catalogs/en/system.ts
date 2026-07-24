@@ -71,7 +71,7 @@ export const system: Catalog = {
     "The case file exists internally for 36 months. Your connections were notified you left, without reason. No member will know you were removed unless you tell them.",
   "accountBanned.whatNow.row4.title": "Crisis support remains available",
   "accountBanned.whatNow.row4.body":
-    "<crisisLink>Crisis support</crisisLink> and the <wellbeingLink>resource library</wellbeingLink> are open to everyone, member or not.",
+    "The <wellbeingLink>resource library</wellbeingLink> is open to everyone, member or not.",
   "accountBanned.actions.appealCta": "File the appeal",
   "accountBanned.actions.eraseCta": "Request full data erasure",
   "accountBanned.foot":
@@ -134,9 +134,6 @@ export const system: Catalog = {
     "Read all public articles & the magazine",
   "geoRestricted.can.readArticles.detail":
     "The full editorial archive is open · <a>browse →</a>",
-  "geoRestricted.can.crisis.label": "Access crisis & safety resources",
-  "geoRestricted.can.crisis.detail":
-    "Emergency guides, helplines, and harm-reduction docs · <a>see emergency help →</a>",
   "geoRestricted.can.resources.label": "Browse vetted international resources",
   "geoRestricted.can.resources.detail":
     "Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <a>resource library →</a>",
@@ -248,12 +245,7 @@ export const system: Catalog = {
   "maintenance.affected.web": "Web platform · everything except…",
   "maintenance.affected.mobile": "Mobile app · same deployment",
   "maintenance.affected.email": "Email notifications · queued, sent after",
-  "maintenance.affected.crisisChat":
-    "Crisis support · <b>fully up</b> — the emergency helplines page is a static page, always reachable",
-  "maintenance.affected.emergencyPages":
-    "Emergency & safety pages · <b>fully up</b> · cached worldwide",
   "maintenance.actions.statusCta": "Live status →",
-  "maintenance.actions.crisisCta": "Crisis support (still on)",
   "maintenance.meta.line1":
     "Follow along on <a>status.queerpulse.app</a> · we post a public retrospective every time.",
   "maintenance.meta.line2":
@@ -269,10 +261,6 @@ export const system: Catalog = {
   "offline.cached.ticket.sub": "{date} · Café Beirão · cached 3h ago",
   "offline.cached.map.label": "Safe-spaces map · Lisbon",
   "offline.cached.map.sub": "42 venues · updated {when}",
-  "offline.cached.crisisChat.label": "Crisis support",
-  "offline.cached.crisisChat.sub": "Helplines & emergency numbers, no signal needed",
-  "offline.cached.emergency.label": "Emergency contacts",
-  "offline.cached.emergency.sub": "112 · SOS Voz Amiga · ILGA helpline",
   "offline.status": "Listening for signal",
   "offline.retryCta": "Try again",
   "offline.retryingCta": "Still offline",
@@ -311,9 +299,6 @@ export const system: Catalog = {
   "pwaPrompt.heading": "Keep <em>QueerPulse</em> a tap away.",
   "pwaPrompt.lead":
     "Install the web app on your phone in 30 seconds. <em>Same as a regular app</em> — but no app-store account, no tracking, no review. Just a shortcut that opens crisis chat, your ticket, and the safe-spaces map in one tap.",
-  "pwaPrompt.features.quickExit.label": "Quick exit",
-  "pwaPrompt.features.quickExit.detail":
-    "· lives in the nav · one tap closes the app",
   "pwaPrompt.features.push.label": "Push notifications",
   "pwaPrompt.features.push.detail":
     "· RSVPs, replies, mentions · granular & quiet",

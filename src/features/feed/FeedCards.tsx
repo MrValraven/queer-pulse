@@ -16,7 +16,11 @@ import { useFocusOnMount } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { memberAvatar } from "../members/data/members";
-import { gatheringPath } from "../gatherings/data";
+import {
+  gatheringPath,
+  DEMO_GATHERING_SLUGS,
+  gatheringRecapPath,
+} from "../gatherings/data";
 import { routes } from "../../app/routeMap";
 import { tintForSlug } from "../../shared/api/refs";
 import type { FeedItem } from "../../shared/contracts/contracts";
@@ -403,7 +407,10 @@ export function RecapCard() {
       <div className={styles.savedSource}>
         You attended · 3 days ago · 38 people were there
       </div>
-      <Link className={styles.savedLink} to={routes.gatheringRecap}>
+      <Link
+        className={styles.savedLink}
+        to={gatheringRecapPath(DEMO_GATHERING_SLUGS.recap)}
+      >
         {t("feed:action.readRecap")}
       </Link>
     </article>

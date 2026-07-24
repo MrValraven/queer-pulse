@@ -5,7 +5,7 @@ export interface FooterLink {
   /** Catalog key for the visible label — resolve with `t()`. */
   labelKey: string;
   href: string;
-  icon?: "emergency" | "accessibility";
+  icon?: "accessibility";
 }
 export interface FooterColumn {
   /** Catalog key for the column heading — resolve with `t()`. */
@@ -40,7 +40,7 @@ export const COLUMNS: FooterColumn[] = [
     links: [
       {
         labelKey: "shared:megaNav.lisbon.col.discover.spacesMap",
-        href: routes.map,
+        href: `${routes.directory}?view=map`,
       },
       {
         labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
@@ -110,11 +110,6 @@ export const COLUMNS: FooterColumn[] = [
 
 /** Quiet legal / utility row in the bottom bar of the full footer. */
 export const BASE_LINKS: FooterLink[] = [
-  {
-    labelKey: "shared:megaNav.resources.col.safety.emergency",
-    href: routes.emergency,
-    icon: "emergency",
-  },
   { labelKey: "shared:footerData.base.privacy", href: routes.privacy },
   { labelKey: "shared:footerData.base.cookies", href: routes.cookies },
   { labelKey: "shared:footerData.base.guidelines", href: routes.guidelines },

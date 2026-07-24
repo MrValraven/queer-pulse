@@ -14,6 +14,7 @@ import {
   type PartnerApplicationView,
 } from "../marketing/api/usePartnerApplications";
 import { AdminPartnerApplicationCard } from "./AdminPartnerApplicationCard";
+import { AdminApprovedPartners } from "./AdminApprovedPartners";
 import styles from "./AdminPartnerApplicationsPage.module.css";
 
 /**
@@ -122,6 +123,8 @@ export function AdminPartnerApplicationsPage() {
           onReject={(v, note) => decide(v, "reject", note)}
         />
       )}
+
+      <AdminApprovedPartners />
     </AdminShell>
   );
 }

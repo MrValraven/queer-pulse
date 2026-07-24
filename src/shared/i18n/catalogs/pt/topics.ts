@@ -37,8 +37,6 @@ export const topics: Catalog = {
 
   "sidebar.relatedTitle": "Tópicos relacionados",
   "sidebar.topVoicesTitle": "Vozes em destaque aqui",
-  "sidebar.crisis.body": "Em crise? Não esperes por uma resposta no fórum.",
-  "sidebar.crisis.cta": "Apoio em crise",
 
   "fallback.sub":
     "Publicações, perguntas e recomendações com a etiqueta <strong>#{tag}</strong> de toda a comunidade QueerPulse.",

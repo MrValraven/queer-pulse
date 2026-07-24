@@ -12,7 +12,6 @@ import { DeleteAccountSection } from "./DeleteAccountSection";
 import { EditProfilePane } from "./EditProfilePane";
 import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
 import { InterestsPane } from "./InterestsPane";
-import { SafetyPane } from "./SafetyPane";
 import { DeleteAccountModal } from "./SettingsControls";
 import {
   AccountPane,
@@ -132,7 +131,6 @@ export function SettingsPage() {
             )}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
-            {pane === "safety" && <SafetyPane />}
             {pane === "simulations" && <SimulationsPane />}
             {pane === "delete" && <DeleteAccountSection />}
           </FadeIn>

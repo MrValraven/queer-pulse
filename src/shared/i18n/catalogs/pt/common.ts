@@ -25,6 +25,11 @@ export const common: Catalog = {
   "language.en": "English",
   "language.pt": "Português",
 
+  // Falhas de escrita otimista — mostradas quando um guardar/remover é revertido
+  // porque a chamada à API falhou (SavedProvider, DraftsProvider).
+  "toast.saveFailed": "Não foi possível guardar — verifica a ligação e tenta de novo.",
+  "toast.removeFailed": "Não foi possível atualizar — verifica a ligação e tenta de novo.",
+
   // Exemplos de interpolação + pluralização ("bem-vinde": forma neutra -e)
   "greeting.welcome": "Bem-vinde de volta, {name}",
   "members.count_one": "{count} pessoa",

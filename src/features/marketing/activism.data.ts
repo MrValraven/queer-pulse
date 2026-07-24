@@ -75,11 +75,3 @@ export const SKILLS_CARDS: { titleKey: string; bodyKey: string }[] = [
     bodyKey: "marketing:activism.skills.care.body",
   },
 ];
-
-/** The open letter's demo signature count + hand-delivery target — held as
- * numbers so the component can format them with `useFormat()` rather than
- * baking the digits into the catalog string. The open letter is mock-only (no
- * backend endpoint), so these render only when the platform is populated
- * (demo); live mode hides the count entirely. */
-export const OPEN_LETTER_SIGNATURES = 2847;
-export const OPEN_LETTER_TARGET = 5000;

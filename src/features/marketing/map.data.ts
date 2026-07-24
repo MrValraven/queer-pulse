@@ -8,6 +8,8 @@ import {
   FiUsers,
   FiScissors,
   FiActivity,
+  FiPenTool,
+  FiCpu,
 } from "react-icons/fi";
 import { FaWineGlass } from "react-icons/fa6";
 
@@ -375,15 +377,6 @@ export const VENUES: Venue[] = [
   },
 ];
 
-/** Official freguesias shown on the map, in the order venues cluster densest. */
-export const FREGUESIA_NAMES = [
-  "Misericórdia",
-  "Santa Maria Maior",
-  "Arroios",
-  "Estrela",
-  "Alcântara",
-] as const;
-
 // `t` is the canonical (English, stored/filter) type id — never translate the
 // id itself, only `labelKey`'s resolved value (i18n brief §5.1: enum/filter
 // values must stay stable across a language switch).
@@ -458,6 +451,18 @@ export const TYPE_ICON: Record<string, IconType> = {
   "community space": FiUsers,
   barbershop: FiScissors,
   gym: FiActivity,
+};
+/** Icon per unified business category (mirrors TYPE_ICON, for the unified map's business pins). */
+export const CATEGORY_ICON: Record<string, IconType> = {
+  food: FiCoffee,
+  design: FiPenTool,
+  health: FiPlusCircle,
+  space: FiUsers,
+  culture: FiBookOpen,
+  tech: FiCpu,
+  grooming: FiScissors,
+  fitness: FiActivity,
+  nightlife: FiMusic,
 };
 export const VIBE_BG: Record<string, string> = {
   mixed: "rgba(45,27,61,.06)",

@@ -1,0 +1,188 @@
+/* ── Rows (tier list) ─────────────────────────────────────────── */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.rowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rowName {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowMeta {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.featuredTag {
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--accent-text);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: 999px;
+}
+
+/* ── Empty / error notices ───────────────────────────────────── */
+.empty,
+.notice {
+  padding: 8px 0;
+}
+
+.emptyText,
+.noticeText {
+  max-width: 60ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Create/edit form ─────────────────────────────────────────── */
+.editorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0 24px;
+  align-items: start;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fieldLabel {
+  display: block;
+  margin: 16px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.fieldLabel:first-child {
+  margin-top: 0;
+}
+
+.fieldHint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.textInput,
+.numberInput {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 14px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.numberInput {
+  max-width: 160px;
+}
+
+.textInput::placeholder,
+.textarea::placeholder {
+  color: var(--ink-40);
+}
+
+.textInput:focus-visible,
+.numberInput:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 14px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.select {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  padding: 10px 30px 10px 14px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-40) 50%),
+    linear-gradient(135deg, var(--ink-40) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) center,
+    calc(100% - 13px) center;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.checkStack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ── Delete confirm modal ─────────────────────────────────────── */
+.deleteConfirmBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}

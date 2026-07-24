@@ -6,8 +6,9 @@ import { Avatar, FadeIn, Tabs } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { linkToPath, routes } from "../../app/routeMap";
+import { linkToPath } from "../../app/routeMap";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
+import { MentionsPanel } from "./MentionsPanel";
 import { useNotifications } from "./api/useNotifications";
 import { useMentions } from "./api/useMentions";
 import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
@@ -27,20 +28,24 @@ export function NotificationsPage() {
   const markAllReadMutation = useMarkAllRead();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const [filter, setFilter] = useState<"all" | NotifType>("all");
+  const [filter, setFilter] = useState<"all" | NotifType | "mentions">("all");
   const [readIds, setReadIds] = useState<Set<NotificationId>>(new Set());
   const [resolvedIds, setResolvedIds] = useState<Set<NotificationId>>(
     new Set(),
   );
+  const onMentions = filter === "mentions";
 
-  const visible = useMemo(
-    () =>
-      notifications.filter(
-        (n) =>
-          (filter === "all" || n.type === filter) && !resolvedIds.has(n.id),
-      ),
-    [notifications, filter, resolvedIds],
-  );
+  // "mentions" is a pseudo-filter that swaps the whole list for <MentionsPanel>,
+  // so for the notifications list itself treat it as "all" — this keeps the
+  // header/nav unread count meaningful while the Mentions tab is active.
+  const visible = useMemo(() => {
+    const listFilter = filter === "mentions" ? "all" : filter;
+    return notifications.filter(
+      (n) =>
+        (listFilter === "all" || n.type === listFilter) &&
+        !resolvedIds.has(n.id),
+    );
+  }, [notifications, filter, resolvedIds]);
   const unreadCount = visible.filter(
     (n) => n.unread && !readIds.has(n.id),
   ).length;
@@ -181,15 +186,17 @@ export function NotificationsPage() {
                 <span className={styles.badge}>{unreadCount}</span>
               )}
             </div>
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={styles.markRead}
-                onClick={markAllRead}
-              >
-                {t("notifications:page.markAllRead")}
-              </button>
-            </div>
+            {!onMentions && (
+              <div className={styles.actions}>
+                <button
+                  type="button"
+                  className={styles.markRead}
+                  onClick={markAllRead}
+                >
+                  {t("notifications:page.markAllRead")}
+                </button>
+              </div>
+            )}
           </div>
 
           <Tabs
@@ -211,18 +218,12 @@ export function NotificationsPage() {
               })),
             ]}
             active={filter}
-            onChange={(id) => {
-              // "Mentions" is a link-style tab — it opens the dedicated thread
-              // rather than filtering the notifications list in place.
-              if (id === "mentions") {
-                navigate(routes.mentions);
-                return;
-              }
-              setFilter(id as "all" | NotifType);
-            }}
+            onChange={(id) => setFilter(id as "all" | NotifType | "mentions")}
           />
 
-          {isLoading ? (
+          {onMentions ? (
+            <MentionsPanel />
+          ) : isLoading ? (
             <NotificationsListSkeleton count={7} />
           ) : visible.length === 0 ? (
             <div className={styles.empty}>

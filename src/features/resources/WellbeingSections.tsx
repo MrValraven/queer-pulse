@@ -167,24 +167,6 @@ export function CrisisSection() {
               <div className={styles.crisisHours}>{t(item.hoursKey)}</div>
             </Reveal>
           ))}
-          <Reveal className={styles.card} delay={CRISIS.length * 55}>
-            <div className={styles.cardName} style={{ fontSize: 18 }}>
-              {t("resources:wellbeing.crisis.qpEmergency.title")}
-            </div>
-            <div className={styles.cardSpec}>
-              {t("resources:wellbeing.crisis.qpEmergency.desc")}
-            </div>
-            <Link
-              to={routes.emergency}
-              className={styles.crisisNum}
-              style={{ fontSize: 16 }}
-            >
-              {t("resources:wellbeing.crisis.qpEmergency.cta")}
-            </Link>
-            <div className={styles.crisisHours}>
-              {t("resources:wellbeing.crisis.qpEmergency.hours")}
-            </div>
-          </Reveal>
         </div>
       </div>
     </section>

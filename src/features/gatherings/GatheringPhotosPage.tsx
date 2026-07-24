@@ -29,6 +29,7 @@ import {
   PHOTOS_VENUE,
   PICS,
 } from "./gatheringPhotos.data";
+import { DEMO_GATHERING_SLUGS, gatheringRecapPath } from "./data";
 import styles from "./GatheringPhotosPage.module.css";
 
 function PhotoSkeleton({ span }: { span?: string }) {
@@ -43,7 +44,7 @@ function PhotoSkeleton({ span }: { span?: string }) {
   );
 }
 
-const RECAP = routes.gatheringRecap;
+const RECAP = gatheringRecapPath(DEMO_GATHERING_SLUGS.photos);
 const MEMBER = routes.members;
 const CALENDAR = routes.calendar;
 const REPORT = routes.report;

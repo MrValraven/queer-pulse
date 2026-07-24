@@ -10,7 +10,6 @@ import {
   FiMessageCircle,
   FiPlayCircle,
   FiSettings,
-  FiShield,
   FiSliders,
 } from "react-icons/fi";
 
@@ -24,7 +23,6 @@ export type PaneId =
   | "accessibility"
   | "interests"
   | "account"
-  | "safety"
   | "simulations"
   | "delete";
 
@@ -74,7 +72,6 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
         icon: FiHeart,
         labelKey: "settings:nav.item.interests",
       },
-      { id: "safety", icon: FiShield, labelKey: "settings:nav.item.safety" },
     ],
   },
   {

@@ -18,7 +18,6 @@ import {
 } from "./CodeOfConductSections";
 
 const REPORT = routes.report;
-const EMERGENCY = routes.emergency;
 const CHANGELOG = routes.changelog;
 
 const COC_VERSION_DATE = new Date(2026, 0, 14);
@@ -121,10 +120,7 @@ export function CodeOfConductPage() {
         <CocPactSection />
         <CocHarmSection />
         <CocEnforceSection />
-        <CocReportCta
-          reportPath={REPORT}
-          emergencyPath={EMERGENCY}
-        />
+        <CocReportCta reportPath={REPORT} />
         <CocChangesSection
           changelogPath={CHANGELOG}
           onDownload={() =>

@@ -24,7 +24,6 @@ export const settings: Catalog = {
   "nav.item.language": "Language & terminology",
   "nav.item.data": "Data & privacy",
   "nav.item.visibility": "Visibility",
-  "nav.item.safety": "Safety",
   "nav.item.profile": "Profile",
   "nav.item.account": "Account",
   "nav.item.profileTheme": "Profile theme",
@@ -108,23 +107,6 @@ export const settings: Catalog = {
   "personalisation.accessibility.deviceNote":
     "Your preferences are saved locally to this device.",
   "personalisation.accessibility.resetToast": "All preferences reset",
-
-  // ── SafetyPane.tsx — quick-exit safety control ───────────────────────────
-  // Precision matters here: quick exit clears the *screen*, it is not
-  // anonymity and does not wipe browser history. Keep that distinction exact
-  // in every locale.
-  "safety.title": "Safety & <em>quick exit.</em>",
-  "safety.sub":
-    "A fast way to clear the screen if someone walks in. These settings live on this device only — they're never tied to your account.",
-  "safety.gdprBox":
-    "<strong>Quick exit is a fast screen-clear, not anonymity.</strong> It sends this tab to a neutral weather page and reopens QueerPulse in a separate tab. It can't wipe your earlier browser history, bookmarks, or address-bar suggestions — for that, also use a private window.",
-  "safety.section.quickExit": "Quick exit",
-  "safety.toggle.showButton.title": "Show the Quick exit button",
-  "safety.toggle.showButton.desc":
-    "A floating button, on every page, that leaves the site instantly. On by default for everyone's safety.",
-  "safety.toggle.doubleTap.title": "Double-tap Shift shortcut",
-  "safety.toggle.doubleTap.desc":
-    "Tap the Shift key twice to leave without reaching for the button. Works only while the Quick exit button is on.",
 
   // ── InterestsPane.tsx ─────────────────────────────────────────────────────
   // NOTE: IDENTITIES.options / LOOKING_FOR.options (interests.data.ts) are the

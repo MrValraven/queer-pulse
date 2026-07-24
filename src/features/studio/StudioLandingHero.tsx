@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Button, ImageSlot } from "../../shared/components/ui";
-import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { SUSTAIN_PRICE } from "./studioShell.data";
 import { DEMO_WAVE, HERO_SET_ART } from "./studioLanding.data";
 import styles from "./StudioLandingPage.module.css";
 
@@ -56,11 +54,6 @@ export function StudioLandingHero() {
             />
           </p>
           <div className={styles.actions}>
-            <Button variant="primary" size="lg" to={routes.sustainer}>
-              {t("studio:landing.hero.sustainCta", {
-                price: fmt.currency(SUSTAIN_PRICE),
-              })}
-            </Button>
             <Button variant="ghost-dark" size="lg" href="#demo">
               {t("studio:landing.hero.demoCta")}
             </Button>

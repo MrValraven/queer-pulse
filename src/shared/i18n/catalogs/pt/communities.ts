@@ -144,6 +144,15 @@ export const communities: Catalog = {
   "detail.thread.replyPlaceholder": "Responde a este tópico…",
   "detail.thread.replyCta": "Responder",
   "detail.thread.replyToast": "Resposta publicada.",
+  "detail.thread.editedMark": "(editado)",
+  "detail.thread.tombstone": "Esta mensagem foi eliminada.",
+  "detail.thread.editSave": "Guardar",
+  "detail.thread.editCancel": "Cancelar",
+  "detail.thread.editSaving": "A guardar…",
+  "detail.thread.editAria": "Edita a tua mensagem",
+  "detail.thread.editSavedToast": "A tua edição está publicada.",
+  "detail.thread.deletedToast": "Mensagem eliminada.",
+  "detail.thread.restoredToast": "Mensagem restaurada.",
 
   // ── Separador Discussão (hub completo) ────────────────────────────────────
   "detail.discussion.searchAria": "Pesquisar discussões",

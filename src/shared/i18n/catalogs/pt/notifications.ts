@@ -128,7 +128,7 @@ export const notifications: Catalog = {
     "O <strong>{report}</strong> já foi publicado. As estatísticas de moderação e as contas já estão disponíveis.",
   "list.12.meta": "Governação · Relatório trimestral",
 
-  // Conversa de menções (MentionsPage.tsx / mentions.data.tsx)
+  // Conversa de menções (MentionsPanel.tsx / mentions.data.tsx)
   "mentions.day.today": "Hoje",
   "mentions.day.yesterday": "Ontem",
   "mentions.day.thisWeek": "Esta semana",

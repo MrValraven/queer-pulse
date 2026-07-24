@@ -1,0 +1,312 @@
+.panel {
+  margin-top: 4px;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+  flex-wrap: wrap;
+}
+.tab {
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  padding: 11px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--text-strong);
+  }
+}
+.tab.active {
+  color: var(--text-strong);
+}
+.tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--accent);
+}
+.tabCount {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-40);
+  background: rgba(var(--plum-rgb), 0.06);
+  border-radius: 5px;
+  padding: 1px 7px;
+  margin-left: 5px;
+}
+.tab.active .tabCount {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.markRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: rgba(var(--plum-rgb), 0.04);
+  border-radius: 11px;
+  margin-bottom: 18px;
+}
+.markRow p {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.markRow p b {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+.markBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-strong);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+@media (hover: hover) {
+  .markBtn:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.markBtn:disabled {
+  color: var(--ink-40);
+  cursor: default;
+  opacity: 0.6;
+}
+@media (hover: hover) {
+  .markBtn:disabled:hover {
+    background: transparent;
+  }
+}
+
+.day {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.row {
+  padding: 18px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  transition:
+    background 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+.row.unread {
+  background: rgba(var(--accent-rgb), 0.04);
+  border-color: rgba(var(--accent-rgb), 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}
+.headRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.avCoral {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+}
+.avJade {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+.avPlum {
+  background: rgba(var(--plum-rgb), 0.1);
+  color: var(--text-strong);
+}
+.who {
+  font-size: 13.5px;
+}
+.who a {
+  color: var(--text-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+/* Groups the mentioner's name with their staff badge (when they have one) so
+   the two move as a single unit rather than the badge floating loose. */
+.whoName {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.who span {
+  color: var(--ink-60);
+}
+.when {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--ink-40);
+}
+.when.fresh {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.content {
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.65;
+  padding-left: 42px;
+}
+.content em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.content mark {
+  background: rgba(var(--accent-rgb), 0.2);
+  color: var(--accent-ink);
+  padding: 0 3px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.where {
+  padding-left: 42px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+.where a {
+  color: var(--text-strong);
+  font-weight: 600;
+  text-decoration: none;
+}
+.actions {
+  padding: 8px 0 0 42px;
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.action {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  transition: all 0.2s;
+}
+@media (hover: hover) {
+  .action:hover {
+    color: var(--text-strong);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.action.primary {
+  color: var(--accent-ink);
+}
+@media (hover: hover) {
+  .action.primary:hover {
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+.action.going {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+
+/* Inline reply composer */
+.composer {
+  margin: 12px 0 0 42px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.rcInput {
+  flex: 1;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink);
+  outline: none;
+  resize: none;
+  min-height: 38px;
+  transition: border-color 0.2s var(--ease);
+}
+.rcInput:focus {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.rcSend {
+  background: var(--plum);
+  border: none;
+  border-radius: 9px;
+  padding: 8px 14px;
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--sans);
+  flex: none;
+  transition: opacity 0.2s var(--ease);
+}
+.rcSend:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Sent replies */
+.sentReply {
+  margin: 10px 0 0 42px;
+  padding: 10px 14px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border: 1px solid rgba(var(--accent-rgb), 0.14);
+  border-radius: 11px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.srAuthor {
+  font-weight: 700;
+  color: var(--accent-ink);
+  margin-right: 6px;
+}

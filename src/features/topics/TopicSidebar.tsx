@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { linkToPath, routes, topicPath } from "../../app/routeMap";
+import { linkToPath, topicPath } from "../../app/routeMap";
 import type { Topic } from "./topics.data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./TopicPage.module.css";
@@ -61,18 +61,6 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
         </div>
       )}
 
-      {topic.crisisCard && (
-        <div className={styles.crisis}>
-          <p>{t("topics:sidebar.crisis.body")}</p>
-          <Button
-            variant="primary"
-            to={linkToPath(routes.emergency)}
-            className={styles.crisisBtn}
-          >
-            {t("topics:sidebar.crisis.cta")}
-          </Button>
-        </div>
-      )}
     </aside>
   );
 }

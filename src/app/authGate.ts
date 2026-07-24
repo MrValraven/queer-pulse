@@ -44,7 +44,6 @@ const GATED_PATTERNS: string[] = [
   "/family",
   "/messages",
   "/notifications",
-  "/mentions",
   // Communities
   "/communities",
   "/communities/*",
@@ -53,19 +52,12 @@ const GATED_PATTERNS: string[] = [
   "/calendar",
   "/events",
   "/event",
-  "/gathering",
-  "/gathering/*",
   "/gatherings",
+  "/gatherings/*",
   "/rsvp",
   "/rsvp-ticket",
-  "/gathering-recap",
-  "/gathering-cancelled",
-  "/gathering-dashboard",
-  "/gathering-photos",
   "/host",
   "/create-gathering",
-  "/manage-gathering",
-  "/co-host-invite",
   // Forum
   "/forum",
   "/thread",
@@ -83,6 +75,8 @@ const GATED_PATTERNS: string[] = [
   "/local/directory",
   "/local/directory/*",
   "/local/map",
+  "/local/venue",
+  "/local/venue/*",
   // Housing board + listing detail + flatmates tab are member-only (backend
   // browse is ActiveMemberGuard); the co-ops surface stays public — see
   // PUBLIC_EXCEPTIONS below.
@@ -183,7 +177,7 @@ export function isGatedPath(pathname: string): boolean {
  * external/non-path hrefs are treated as public.
  */
 export function isGatedLink(href: string): boolean {
-  const path = linkToPath(href).split("#")[0] || "/";
+  const path = linkToPath(href).split(/[?#]/)[0] || "/";
   if (!path.startsWith("/")) return false; // external / mailto / tel
   return isGatedPath(path);
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
-import { routes } from "../../../app/routeMap";
 import { Button, Sending } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Therapist } from "../mentalHealth.data";
@@ -180,13 +179,6 @@ export function TherapistSidebar({
         <p className={styles.crisisText}>
           {t("resources:therapistProfilePage.sidebar.crisisText")}
         </p>
-        <Button
-          variant="primary"
-          className={styles.crisisBtn}
-          to={routes.emergency}
-        >
-          {t("resources:therapistProfilePage.sidebar.crisisChatCta")}
-        </Button>
         <Button
           variant="ghost"
           className={styles.crisisBtn}

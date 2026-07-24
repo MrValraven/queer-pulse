@@ -17,8 +17,9 @@ import {
   StatsColumn,
 } from "./GatheringDashboardCards";
 import styles from "./GatheringDashboardPage.module.css";
+import { DEMO_GATHERING_SLUGS, manageGatheringPath } from "./data";
 
-const MANAGE = routes.manageGathering;
+const MANAGE = manageGatheringPath(DEMO_GATHERING_SLUGS.dashboard);
 
 // The brand wordmark and the gathering's own title are content, not chrome —
 // they come from a constant / mock record, never a literal JSX string, so the

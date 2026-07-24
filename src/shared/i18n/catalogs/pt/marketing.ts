@@ -280,11 +280,6 @@ export const marketing: Catalog = {
   "activism.local.banner.title": "Pressão habitacional na Mouraria",
   "activism.local.banner.body":
     "Vários agregados queer enfrentam avisos de não renovação este trimestre. O papel de Defesa da Habitação abaixo é uma resposta direta.",
-  "activism.local.letter.title": "Assina a carta aberta",
-  "activism.local.letter.body":
-    "<b>{signatures}</b> de {target} assinaturas — entregue em mão na Câmara Municipal assim que atingirmos a meta.",
-  "activism.local.letter.bodyLive":
-    "Junta o teu nome — entregue em mão na Câmara Municipal assim que atingirmos a nossa meta de assinaturas.",
   "activism.skills.title": "Traz uma <em>competência</em>",
   "activism.skills.p1":
     "Cada organização abaixo precisa de mais do que voluntários com cartazes — precisa do teu ofício.",
@@ -434,7 +429,6 @@ export const marketing: Catalog = {
   "coc.report.body":
     "Toda a denúncia é lida por uma pessoa, nunca resolvida automaticamente. Procuramos responder em 48 horas.",
   "coc.report.fileCta": "Fazer uma denúncia",
-  "coc.report.emergencyCta": "Isto é uma emergência",
   "coc.appeal.title": "§05 <em>Recursos</em>",
   "coc.appeal.p1":
     "Toda a decisão de aplicação pode ser contestada uma vez, no prazo de <strong>14 dias</strong>, junto de uma pessoa moderadora diferente da que tomou a decisão original.",
@@ -798,16 +792,6 @@ export const marketing: Catalog = {
   "listBusiness.wizard.pill.photos": "Fotos",
   "listBusiness.wizard.pill.review": "Revisão",
 
-  // ── Manifesto ──────────────────────────────────────────────────────────
-  "manifesto.meta.title": "O manifesto da QueerPulse: no que acreditamos",
-  "manifesto.meta.description":
-    "O documento fundador por trás da QueerPulse — escrito pelo círculo fundador e ratificado pela comunidade. Lê no que acreditamos e assina o teu nome.",
-  "manifesto.hero.eyebrow": "O Manifesto",
-  "manifesto.hero.title": "Construímos <em>por nós, para nós.</em>",
-  "manifesto.hero.attrib":
-    "Escrito pelo círculo fundador, <b>ratificado pela comunidade.</b>",
-  "manifesto.toast.signed": "Obrigade por assinares.",
-
   // ── Parceiros ──────────────────────────────────────────────────────────
   "partners.meta.title": "As organizações parceiras da QueerPulse",
   "partners.meta.description":
@@ -1144,65 +1128,6 @@ export const marketing: Catalog = {
   "terms.contactSection.body":
     "Perguntas sobre estes termos? Envia um email para <a>hello@queerpulse.pt</a> e uma pessoa a sério responde.",
 
-  // ── Corpo do Manifesto (documento fundador — autoria da plataforma, vai
-  //    no bundle nos dois modos, logo é chrome pela regra de âmbito).
-  //    Os nomes de quem assina ficam em inglês: são nomes de pessoas.
-  "manifesto.stanza01.title": "Mais devagar é <em>mais gentil.</em>",
-  "manifesto.stanza01.p1":
-    "Não estamos numa corrida pela escala. Não queremos mais pessoas; queremos <em>as certas</em>. Vamos crescer ao ritmo a que a comunidade consegue absorver quem chega — avalizade, acolhide, integrade. Se isso significar sermos mais pequenos do que poderíamos ser, seremos mais pequenos do que poderíamos ser.",
-  "manifesto.stanza01.p2":
-    "As outras plataformas foram construídas para te manter a percorrer o ecrã; a tua atenção é o produto que medem e vendem. Nós não vendemos nada. Não há contagens de seguidores, nem algoritmo a escolher o que vês, nem feed “para ti” a competir pela tua noite. <strong>O tempo passado aqui destina-se a somar tempo fora da plataforma</strong> — em convívios, em ateliês, em clínicas, com amigues.",
-  "manifesto.stanza02.title": "Avalizade, não <em>verificade.</em>",
-  "manifesto.stanza02.p1":
-    "A adesão é por convite, e cada convite é assinado por um nome. Se estás aqui, alguém que conheceste mesmo disse que devias estar. Se ficares, um dia farás o mesmo por outra pessoa. Isto não é exclusividade. É <em>responsabilidade</em>.",
-  "manifesto.stanza02.p2":
-    "“Verificado” é uma palavra corporativa. Pressupõe um centro que pode decidir quem tu és. Nós não decidimos. A comunidade decide — em conjunto, devagar, e com o comprovativo do tempo passado em pessoa.",
-  "manifesto.pull1":
-    "Não pomos logótipos arco-íris em nada. <em>O trabalho fala.</em>",
-  "manifesto.stanza03.title": "A segurança é <em>infraestrutura.</em>",
-  "manifesto.stanza03.p1":
-    "Uma rede profissional queer sem uma ponte para a ILGA em casos de crime de ódio é um logótipo, não uma rede. Tal como uma sem terapeutas avaliades pela comunidade, sem um mapa de espaços seguros verdadeiramente mantido, e sem uma noite de clínica aberta que se repete todos os meses no Café Beirão. <strong>Se não conseguimos proteger-nos operacionalmente, não somos uma rede.</strong>",
-  "manifesto.stanza03.p2":
-    "A saída rápida vive na navegação. O chat de crise está a um toque. A porta das traseiras da Mercearia Rosa abre para a Penha de França. Nada disto são funcionalidades. São o chão.",
-  "manifesto.stanza04.title": "O dinheiro move-se <em>de lado.</em>",
-  "manifesto.stanza04.p1":
-    "As pessoas Apoiantes pagam 96 € por ano. Isso paga a equipa, a infraestrutura, e as coisas que têm de continuar a funcionar. Acima disso, cada euro é alocado <em>de lado</em> — para um fundo que distribui apoios de 50 a 200 €, decididos por um círculo rotativo, entregues em 14 dias. <strong>96% de cada euro vai para programas.</strong> Discriminação completa, todos os anos, no relatório de governação.",
-  "manifesto.stanza04.p2":
-    "O trabalho também se move de lado. A rede profissional que devia ligar-nos só nos vendeu de volta a recrutadores. Aqui, as pessoas contratam-se, orientam-se, encomendam e arrendam umas às outras — e o valor <em>fica connosco</em> em vez de ser retirado por cima.",
-  "manifesto.stanza04.p3":
-    "Existe um escalão solidário. É genuinamente gratuito. Não perguntamos porquê.",
-  "manifesto.pull2":
-    "Se não consegues pagar, isso é informação sobre <em>o mundo</em>, não sobre ti.",
-  "manifesto.stanza05.title": "Lisboa, <em>de propósito.</em>",
-  "manifesto.stanza05.p1":
-    "Estamos sediades num lugar. Concretamente: Anjos, Mouraria, Graça, Alfama, Bairro Alto, Marvila, e as carreiras de autocarro que os ligam. Uma rede queer enraizada em lado nenhum é um feed. Uma rede queer enraizada algures — numa cidade que se atravessa a pé numa hora, com espaços, núcleos e uma Câmara Municipal — é uma rede.",
-  "manifesto.stanza05.p2":
-    "Só vamos expandir para outras cidades quando houver lá uma comunidade a pedir-nos. Não antes. <strong>O Porto é o próximo.</strong> Depois Madrid. Depois paramos e repensamos.",
-  "manifesto.stanza06.title": "O desacordo está <em>incluído.</em>",
-  "manifesto.stanza06.p1":
-    "Discordámos publicamente, por duas vezes, da ILGA Portugal, a nossa parceira mais antiga. Vamos voltar a fazê-lo. Coligação não é consenso. Não falamos por todas as pessoas queer, e ninguém fala por nós. O fórum acolhe discussões que esperamos que fiquem por resolver. A Assembleia vota o que não pode ficar por resolver.",
-  "manifesto.stanza06.p2":
-    "Moderar não é ser neutro. Vamos remover crueldade. Não vamos remover incómodo.",
-  "manifesto.stanza07.title": "Segura tudo isto <em>sem apertar.</em>",
-  "manifesto.stanza07.p1":
-    "Este documento está errado nalguma coisa. Não sabemos em quê. A revisão de 2025 mudou onze frases. A revisão de 2026 vai mudar mais. Manifestos que não se atualizam são lápides. <em>Este atualiza-se.</em>",
-  "manifesto.stanza07.p2":
-    "Se estás a ler isto e algo te soa mal, escreve para <a>manifesto@queerpulse.app</a>. Uma pessoa a sério lê todas. Discutimo-las na assembleia.",
-  "manifesto.signers.title_one":
-    "Assinado por <em>{formatted} pessoa</em> · até agora",
-  "manifesto.signers.title_other":
-    "Assinado por <em>{formatted} pessoas</em> · até agora",
-  "manifesto.signers.sub":
-    "Assina-se com um clique. Não há obrigação nenhuma — muita gente não assinou, e isso também está bem. Estas são algumas das pessoas que assinaram.",
-  "manifesto.signers.addCta": "Juntar o meu nome",
-  "manifesto.signers.more":
-    "Mais <b>{formatted}</b> · a última assinatura foi de <b>{name}</b>, {time}.",
-  "manifesto.signers.minutesAgo_one": "há {count} minuto",
-  "manifesto.signers.minutesAgo_other": "há {count} minutos",
-  "manifesto.actions.addName": "Junta o teu nome",
-  "manifesto.actions.print": "Imprimir / guardar PDF",
-  "manifesto.actions.governance": "Ler o relatório de governação →",
-
   // ── Kit de Imprensa — secções da página ───────────────────────────────
   // Os títulos/fontes da cobertura são peças de imprensa reais (palavras de
   // outras pessoas) e ficam em inglês; o chrome à volta é traduzido.
@@ -1219,7 +1144,7 @@ export const marketing: Catalog = {
     "130 palavras · para reportagens longas, secções “sobre”",
   "pressKit.boiler.long.wc": "130 palavras",
   "pressKit.boiler.long.text":
-    "A QueerPulse é uma rede profissional queer sediada em Lisboa, fundada em 2024 por oito pessoas da comunidade na sala das traseiras do Café Beirão. É gerida pela Associação QueerPulse, uma entidade sem fins lucrativos registada em Portugal (NIPC 517 426 884), e sustentada por adesões de Apoiante, doações pontuais e três apoios a programas. A adesão é por convite avalizado. A plataforma mantém uma revista, um podcast (The Back Room), uma rede verificada de espaços seguros por toda a Lisboa, um fundo de microapoios distribuído em 14 dias por um círculo rotativo da comunidade, e uma parceria operacional com a ILGA Portugal para apoio jurídico e encaminhamento de linhas de apoio. Os relatórios anuais de transparência são auditados de forma independente e publicados publicamente.",
+    "A QueerPulse é uma rede profissional queer sediada em Lisboa, fundada em 2024 por oito pessoas da comunidade na sala das traseiras do Café Beirão. É gerida pela Associação QueerPulse, uma entidade sem fins lucrativos registada em Portugal (NIPC 517 426 884), e sustentada por adesões de Apoiante, doações pontuais e três apoios a programas. A adesão é por convite avalizado. A plataforma mantém uma revista, um podcast (The Back Room), uma rede verificada de espaços seguros por toda a Lisboa, um fundo de microapoios distribuído em 14 dias por um círculo rotativo da comunidade, e uma parceria operacional com uma organização nacional de direitos LGBTQ+ para apoio jurídico e encaminhamento de linhas de apoio. Os relatórios anuais de transparência são auditados de forma independente e publicados publicamente.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
     "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral — exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
@@ -1264,7 +1189,7 @@ export const marketing: Catalog = {
     "<b>EN · PT · ES</b> · disponível com 48h de antecedência",
   "pressKit.team.catarina.role": "Cofundadora · Cotesoureira · Trans Hub",
   "pressKit.team.catarina.desc":
-    "Para: cuidados de saúde trans-afirmativos, finanças, transparência, entreajuda, parceria com a ILGA.",
+    "Para: cuidados de saúde trans-afirmativos, finanças, transparência, entreajuda, parceria de apoio jurídico.",
   "pressKit.team.catarina.langs":
     "<b>EN · PT</b> · disponível com 24h de antecedência",
   "pressKit.team.andre.role": "Cofundador · Cotesoureiro · Design",
@@ -1732,175 +1657,6 @@ export const marketing: Catalog = {
   // ── Etiqueta partilhada de regresso ao hub (secção Governação) ─────────
   "hub.governanceLabel": "Governação",
 
-  // ── Assembleia Anual — chrome da página. A agenda/resoluções/contagens/
-  //    histórico são registos de governação por ano (propostas e votos
-  //    concretos) — ficam em inglês; ver o relatório da varredura.
-  "annualAssembly.meta.title": "Assembleia Anual da QueerPulse: onze resoluções",
-  "annualAssembly.meta.description":
-    "O convívio anual vinculativo da QueerPulse — vota em onze resoluções, participa presencialmente ou online em Lisboa a 14–15 de novembro, ou lê as atas depois.",
-  "annualAssembly.hero.eyebrow":
-    "Assembleia Anual · 14 de novembro de 2026 · Lisboa",
-  "annualAssembly.hero.title": "Dois dias, onze <em>resoluções.</em>",
-  "annualAssembly.hero.dek":
-    "O convívio anual vinculativo da QueerPulse. Onde o manifesto é revisto, o orçamento é aprovado, e qualquer decisão que não possa ser tomada por um círculo vai a votação da comunidade. <em>Podes participar presencialmente, online, ou só ler as atas depois</em> — mas o teu voto conta da mesma forma.",
-  "annualAssembly.hero.meta.datesLabel": "Dois dias · sáb. e dom.",
-  "annualAssembly.hero.meta.videoLink": "+ link de vídeo",
-  "annualAssembly.hero.meta.eligibleLabel": "Pessoas com direito a voto",
-  "annualAssembly.hero.meta.quorumLabel": "Quórum · atingido",
-  "annualAssembly.hero.voteCta": "Vota agora · {count} resoluções",
-  "annualAssembly.hero.rsvpGoing": "Vais participar · toca para cancelar",
-  "annualAssembly.hero.rsvpCta":
-    "Confirmar presença · faltam {spotsLeft} de {totalSpots} vagas",
-  "annualAssembly.hero.joinOnlineCta": "Participar online · link do Zoom",
-  "annualAssembly.toast.rsvpCancelled":
-    "Confirmação cancelada · o teu lugar volta a estar disponível",
-  "annualAssembly.toast.rsvpConfirmed": "Estás na lista · até 14 de novembro",
-  "annualAssembly.toast.openingZoom": "A abrir o link do Zoom…",
-  "annualAssembly.footer.eligibility": "Perguntas sobre o teu direito a voto?",
-  "annualAssembly.footer.helpCta": "Ajuda →",
-  "annualAssembly.footer.proposal": "Queres propor algo para o próximo ano?",
-  "annualAssembly.footer.writeCta": "Escreve-nos",
-  "annualAssembly.agenda.title": "A <em>agenda</em>",
-  "annualAssembly.agenda.sub":
-    "Mais ou menos por esta ordem. Os horários são indicativos. Nunca acabámos a horas e não esperamos começar agora.",
-  "annualAssembly.vote.title":
-    "Votação · <em>aberta até 14 de nov. · 14:00</em>",
-  "annualAssembly.vote.sub":
-    "Todas as pessoas votam — quer participem ou não. Vota quando quiseres; podes mudar o voto até ao encerramento. <em>Um voto por pessoa, por resolução.</em>",
-  "annualAssembly.vote.quorumStrip":
-    "<b>Quórum:</b> são precisos 184 votos para validar uma resolução. <em>Neste momento há 312 votos registados</em> — quórum atingido. <b>Limiares de aprovação:</b> maioria simples para itens de orçamento; maioria qualificada de 60% para alterações ao Código de Conduta e ao manifesto.",
-  "annualAssembly.vote.noCta": "Não · rejeitar",
-  "annualAssembly.vote.abstainCta": "Abster",
-  "annualAssembly.vote.showMore": "Mostrar mais {count} resoluções →",
-  "annualAssembly.vote.recorded":
-    "Voto registado · podes alterá-lo quando quiseres",
-  "annualAssembly.vote.tallyYes": "Sim",
-  "annualAssembly.vote.tallyNo": "Não",
-  "annualAssembly.vote.tallyAbstain": "Abstenção",
-  "annualAssembly.attend.title": "Não podes vir presencialmente?",
-  "annualAssembly.attend.body":
-    "Vota online quando quiseres até 14 de nov. · 14:00. Assiste à transmissão em direto das sessões presenciais com chat. Lê as atas na sexta-feira seguinte.",
-  "annualAssembly.attend.voteCta": "Vota",
-  "annualAssembly.attend.streamCta": "Link da transmissão",
-  "annualAssembly.past.title": "Assembleias <em>anteriores</em>",
-  "annualAssembly.past.sub":
-    "As resoluções e as atas de todas as Assembleias Anuais são públicas.",
-  "annualAssembly.past.minutesCta": "Atas →",
-
-  // ── Modal de transmissão em direto (Assembleia Anual) ──────────────────
-  "liveStream.closeAria": "Fechar",
-  "liveStream.eyebrow": "Transmissão em direto · Atelier Pulso",
-  "liveStream.title": "Assembleia Anual · <em>em direto.</em>",
-  "liveStream.lead":
-    "As sessões presenciais são transmitidas aqui, com chat aberto. A transmissão começa quando a sala abre — <b>14 de nov. · 10:00 WET.</b>",
-  "liveStream.playAria": "Reproduzir transmissão",
-  "liveStream.statusLive": "Em direto",
-  "liveStream.statusSoon": "Começa em breve",
-  "liveStream.noteStreaming":
-    "A transmitir a sala principal · áudio + diapositivos · chat abaixo",
-  "liveStream.noteSoon": "A transmissão começa às 10:00 WET, 14 de novembro",
-  "liveStream.backCta": "← Fechar",
-  "liveStream.voteInsteadCta": "Ir votar em vez disso →",
-
-  // ── Atas da Assembleia — chrome da página. As atas de cada ano (resumo,
-  //    agenda, resoluções, ações) são o registo oficial de governação —
-  //    ficam em inglês; ver o relatório da varredura.
-  "assemblyMinutes.hero.eyebrow": "Assembleia Anual · Atas · {year}",
-  "assemblyMinutes.hero.title": "As <em>atas.</em>",
-  "assemblyMinutes.hero.dek":
-    "O registo público da Assembleia Anual de {year} — quem presidiu, o que esteve em cima da mesa, e como ficou cada resolução.",
-  "assemblyMinutes.hero.fallbackNote":
-    "Não temos atas de {requestedYear} arquivadas, por isso aqui tens o registo de {year}.",
-  "assemblyMinutes.hero.backCta": "← Voltar à Assembleia",
-  "assemblyMinutes.otherYears": "Outros anos:",
-  "assemblyMinutes.meta.date": "Data",
-  "assemblyMinutes.meta.location": "Local",
-  "assemblyMinutes.meta.chair": "Presidência",
-  "assemblyMinutes.meta.secretary": "Secretariado",
-  "assemblyMinutes.meta.quorum": "Quórum",
-  "assemblyMinutes.meta.attendance": "Presenças",
-  "assemblyMinutes.meta.attendanceValue":
-    "{inPerson} presenciais · {online} online · {votes} votos",
-  "assemblyMinutes.summary.title": "Resumo dos <em>trabalhos</em>",
-  "assemblyMinutes.agenda.title": "<em>Agenda</em> seguida",
-  "assemblyMinutes.resolutions.title": "Resoluções e <em>resultados</em>",
-  "assemblyMinutes.actions.title": "Ações e <em>próximos passos</em>",
-  "assemblyMinutes.signoff":
-    "Atas registadas por {secretary} · ratificadas no encerramento da Assembleia Anual de {year}. Este é o registo público.",
-  "assemblyMinutes.outcome.passed": "Aprovada",
-  "assemblyMinutes.outcome.rejected": "Rejeitada",
-  "assemblyMinutes.outcome.tabled": "Adiada",
-
-  // ── Carta aberta — o corpo da carta é um documento de defesa de direitos
-  //    autoral e delimitado (não é conteúdo de utilizadores); traduzido na
-  //    íntegra, como o Manifesto. Nomes de signatários e notas individuais
-  //    de assinatura ficam em inglês (palavras/nomes próprios das pessoas).
-  "openLetter.hero.eyebrowPrefix": "Carta aberta · {partners}",
-  "openLetter.hero.live_one": "Ativa · falta {days} dia",
-  "openLetter.hero.live_other": "Ativa · faltam {days} dias",
-  "openLetter.hero.addressed": "Endereçada a <b>{to}</b> · {date}",
-  "openLetter.hero.countGoalSuffix": "/ {goal} assinaturas",
-  "openLetter.hero.countLabel":
-    "Pessoas da QueerPulse e organizações parceiras · última assinatura <b>{at}</b> por {by}",
-  "openLetter.hero.pctLabel": "<b>{pct}%</b> · {note}",
-  "openLetter.toast.signatureAdded": "Assinatura adicionada · {total} no total",
-  "openLetter.body.addressee":
-    "Ao Ministério da Saúde, e à Direção-Geral da Saúde:",
-  "openLetter.body.lead":
-    "A Lei n.º 38/2018 consagrou um princípio fundamental na lei portuguesa: que a identidade de género de uma pessoa é dela para determinar, e que o Estado e o seu sistema de saúde são obrigados a reconhecer essa determinação. <em>A lei é boa.</em> Ainda não está a ser aplicada.",
-  "openLetter.body.p2":
-    "Concretamente, os protocolos de prescrição de terapêutica hormonal de substituição em Portugal <strong>não são portáteis dentro do SNS</strong>. Uma pessoa trans que inicia acompanhamento com um médico de família em Lisboa, constrói um processo clínico ao longo de 12 a 24 meses, e depois muda de cidade — por trabalho, por habitação, por segurança — tem de, na prática, recomeçar do zero com um novo médico de família na nova cidade. A evidência clínica não a acompanha. O historial de prescrições não a acompanha. <em>A confiança construída com quem a acompanhava não a acompanha.</em>",
-  "openLetter.body.p3":
-    "Não é isto que a lei diz que deveria acontecer. É esta a realidade operacional.",
-  "openLetter.body.asksTitle": "O que estamos a <em>pedir</em>",
-  "openLetter.body.asksLead":
-    "Três mudanças concretas e exequíveis. Nenhuma exige legislação nova.",
-  "openLetter.body.ask1.lead": "Um registo nacional de prescrições de THS",
-  "openLetter.body.ask1.body":
-    ", de adesão voluntária e acesso restrito a clínicos, disponível a qualquer médico de família do SNS que a pessoa autorize. O mesmo modelo do registo de diabetes adotado em 2019.",
-  "openLetter.body.ask2.lead": "Uma regra de “receita-ponte” de 14 dias",
-  "openLetter.body.ask2.body":
-    " — quando a pessoa muda de região, o novo médico de família pode emitir uma receita-ponte de 90 dias até uma reavaliação completa, sem exigir um novo processo de diagnóstico.",
-  "openLetter.body.ask3.lead":
-    "Inclusão dos cuidados afirmativos trans no módulo de formação inicial de medicina geral e familiar",
-  "openLetter.body.ask3.body":
-    " — obrigatório, com quatro horas, elaborado em colaboração com clínicos portugueses certificados pela WPATH.",
-  "openLetter.body.whyNowTitle": "Porquê <em>agora</em>",
-  "openLetter.body.whyNowP1":
-    "Porque a janela política está aberta. Porque o Ministério assumiu, no orçamento da saúde de 2026, o compromisso de “avaliar percursos de continuidade de cuidados para medicação crónica”. Porque os clínicos que teriam de implementar isto — incluindo a <em>Dra. Inês Pereira</em>, da Clínica do Largo, o <em>Dr. Hugo Marques</em>, da USF Sé, e a <em>Dra. Mariza Câmara</em>, da Câmara — já declararam publicamente que estão prontos a participar.",
-  "openLetter.body.whyNowP2":
-    "E porque, por cada mês que esperamos, <strong>cerca de 40 pessoas trans em Portugal perdem a continuidade da THS</strong> só por atrito administrativo. O custo clínico destas interrupções está documentado. O custo pessoal é incalculável.",
-  "openLetter.body.whatWeDoTitle": "O que vamos fazer <em>com esta carta</em>",
-  "openLetter.body.whatWeDoP1":
-    "Ao chegar às 5000 assinaturas, esta carta será entregue em mão ao Ministério por uma delegação de três pessoas: <em>Catarina Vaz</em> (QueerPulse, Trans Hub), <em>Filipa Mendes</em> (ILGA Portugal), e uma pessoa trans cuja continuidade de cuidados foi interrompida nos últimos 24 meses. Vamos pedir uma reunião. Vamos publicar a resposta, seja ela qual for.",
-  "openLetter.body.whatWeDoP2":
-    "Se recusarem reunir-se, esta carta segue para a próxima audição trimestral da comissão de saúde da Assembleia da República — já agendada para discutir a implementação da Lei n.º 38/2018 — e para a imprensa.",
-  "openLetter.body.kicker":
-    "Não estamos a pedir um direito novo. <strong>Estamos a pedir que um direito já existente se torne real na prática.</strong>",
-  "openLetter.sig.transHub":
-    "Coordenação do Trans Hub · co-tesouraria · QueerPulse",
-  "openLetter.sig.ilgaDirector": "Direção executiva · ILGA Portugal",
-  "openLetter.sidebar.recentSignatures": "Assinaturas recentes",
-  "openLetter.sidebar.aboutRunning":
-    "<b>Porque fazemos cartas abertas assim:</b> por trás de cada assinatura está um nome verificado. <em>Isso torna-as mais difíceis de ignorar.</em> Não fazemos petições de massa anónimas — o modelo é menos assinaturas, mas reais e identificadas.",
-  "openLetter.sign.title": "Assina a carta aberta",
-  "openLetter.sign.asLabel": "Como {name} · {pronouns}",
-  "openLetter.sign.nameLabel": "Nome a mostrar na lista",
-  "openLetter.sign.visibilityLabel": "Mostrar como · visibilidade",
-  "openLetter.sign.noteLabel": "Acrescenta uma frase (opcional)",
-  "openLetter.sign.noteCounter": "{length}/280",
-  "openLetter.sign.notePlaceholder":
-    "Porque é que isto importa para ti · 280 carateres",
-  "openLetter.sign.submitCta": "Assinar a carta",
-  "openLetter.sign.signedCta": "Assinaste a carta",
-  "openLetter.sign.footer":
-    "Só para pessoas da comunidade. Nunca partilhamos os teus dados com a organização destinatária. Podes retirar a tua assinatura quando quiseres.",
-  "openLetter.sign.anonName": "Uma pessoa da comunidade",
-  "openLetter.visibility.full": "Nome completo · público",
-  "openLetter.visibility.initials": "Só iniciais",
-  "openLetter.visibility.anon": "Anónimo · “Uma pessoa da comunidade”",
-  "openLetter.sidebar.noNote": "—",
-
   // ── Relatório de Transparência — chrome da página. Os valores em euros,
   //    a repartição do orçamento, as linhas de moderação, os pedidos
   //    governamentais, os erros nomeados e as estatísticas de governação
@@ -2171,7 +1927,7 @@ export const marketing: Catalog = {
     "Um turno regular e um prazo mínimo — a consistência importa.",
   "postOpportunity.core.basicsHeading": "O essencial",
   "postOpportunity.core.orgLabel": "Organização",
-  "postOpportunity.core.orgPlaceholder": "ex.: ILGA Portugal",
+  "postOpportunity.core.orgPlaceholder": "ex.: a sua organização",
   "postOpportunity.core.roleLabel": "Título da função",
   "postOpportunity.core.rolePlaceholder":
     "ex.: Voluntário de Sensibilização Comunitária",
@@ -2234,10 +1990,10 @@ export const marketing: Catalog = {
   "postOpportunity.rich.applyRoleHelper":
     "Por predefinição, “Função · Organização”.",
   "postOpportunity.rich.applyRolePlaceholder":
-    "Sensibilização Comunitária · ILGA Lisboa",
+    "Sensibilização Comunitária · uma associação LGBTQ+ local",
   "postOpportunity.rich.partnerSlugLabel": "Slug do parceiro",
   "postOpportunity.rich.partnerSlugHelper": "Liga à página de um parceiro.",
-  "postOpportunity.rich.partnerSlugPlaceholder": "ilga-portugal",
+  "postOpportunity.rich.partnerSlugPlaceholder": "your-organisation",
   "postOpportunity.rich.handleLabel": "Identificador de contacto",
   "postOpportunity.rich.handleHelper":
     "Onde as pessoas interessadas te podem contactar.",
@@ -2502,7 +2258,7 @@ export const marketing: Catalog = {
   "forOrgs.tiers.partner.price": "Por <em>acordo</em>",
   "forOrgs.tiers.partner.pricePeriod": "recíproco · normalmente não pago",
   "forOrgs.tiers.partner.dek":
-    "Para organizações que deviam estar operacionalmente ligadas à QueerPulse — ILGA, Trans Hub, serviços cívicos, associações aliadas. Construímos infraestrutura em conjunto, não co-marketing.",
+    "Para organizações que deviam estar operacionalmente ligadas à QueerPulse — organizações de apoio jurídico, serviços de saúde, serviços cívicos, associações aliadas. Construímos infraestrutura em conjunto, não co-marketing.",
   "forOrgs.tiers.partner.list1":
     "<b>Ligação operacional:</b> ponte de casos, encaminhamento da linha de apoio, protocolo conjunto",
   "forOrgs.tiers.partner.list2":
@@ -2546,7 +2302,7 @@ export const marketing: Catalog = {
   "forOrgs.form.nameLabel": "O teu nome",
   "forOrgs.form.namePlaceholder": "Filipa Mendes",
   "forOrgs.form.orgLabel": "Organização",
-  "forOrgs.form.orgPlaceholder": "ILGA Portugal",
+  "forOrgs.form.orgPlaceholder": "A sua organização",
   "forOrgs.form.emailLabel": "Email",
   "forOrgs.form.emailPlaceholder": "tu@organizacao.exemplo",
   "forOrgs.form.interestLabel": "Área de interesse",
@@ -2558,9 +2314,9 @@ export const marketing: Catalog = {
   "forOrgs.form.messagePlaceholder": "Temos uma linha de apoio LGBTQ+ e…",
   "forOrgs.form.submitCta": "Enviar à equipa de parcerias",
   "forOrgs.form.small":
-    "Vai diretamente para a Marta e o André. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
+    "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
   "forOrgs.form.toast":
-    "Enviado à Marta e ao André — vão responder no prazo de 5 dias úteis",
+    "Enviado à nossa equipa de parcerias — vão responder no prazo de 5 dias úteis",
 
   // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
   //    registos de locais (`directoryPlaces.ts`: nomes, taglines,
@@ -2919,16 +2675,6 @@ export const marketing: Catalog = {
   //    `vibe` mantêm-se como strings canónicas em inglês (valores
   //    guardados/de filtro); só os rótulos apresentados abaixo são
   //    traduzidos.
-  "map.hero.eyebrow": "Lisboa · Guia da comunidade",
-  "map.hero.title": "O <em>guia queer</em> da cidade",
-  "map.hero.sub":
-    "Bares, discotecas, cafés, clínicas, livrarias, saunas e espaços comunitários — mapeados por quem já lá esteve.",
-  "map.stats.venuesListed": "espaços listados",
-  "map.stats.neighbourhoods": "bairros",
-  "map.stats.communityLabel": "Comunidade",
-  "map.stats.maintained": "mantido",
-  "map.filterBar.typeLabel": "Tipo",
-  "map.filterBar.vibeLabel": "Ambiente",
   "map.filter.type.all": "Todos",
   "map.filter.type.bar": "Bar",
   "map.filter.type.club": "Discoteca",
@@ -2968,6 +2714,13 @@ export const marketing: Catalog = {
   "local.filter.searchPlaceholder": "Procurar espaços e locais…",
   "local.filter.categoryAria": "Filtrar por categoria",
   "local.filter.vibeLabel": "Ambiente",
+  "local.venue.back": "Voltar ao mapa",
+  "local.venue.address": "Morada",
+  "local.venue.hours": "Horário",
+  "local.venue.accessible": "Acesso para cadeira de rodas",
+  "local.venue.onMap": "Ver no mapa",
+  "local.venue.been_one": "{count} pessoa já esteve aqui",
+  "local.venue.been_other": "{count} pessoas já estiveram aqui",
 
   // ── Constituição — texto de governação constitucional. Literal e preciso;
   //    números, percentagens e referências a artigos mantidos exatos.
@@ -3094,7 +2847,7 @@ export const marketing: Catalog = {
   "constitution.art11.clause1":
     "A associação só pode ser dissolvida por resolução da Assembleia que exija uma <strong>maioria qualificada de 75%</strong> de todas as pessoas-membro ativas, e não apenas das que votam.",
   "constitution.art11.clause2":
-    "Em caso de dissolução, todos os ativos remanescentes têm de ser transferidos para a ILGA Portugal, ou para uma organização LGBTQ+ sucessora escolhida pela Assembleia dissolvente. Nenhum ativo pode ser distribuído a indivíduos.",
+    "Em caso de dissolução, todos os ativos remanescentes têm de ser transferidos para uma organização de direitos LGBTQ+ registada escolhida pela Assembleia dissolvente. Nenhum ativo pode ser distribuído a indivíduos.",
 
   "constitution.art12.toc": "XII · Emendas",
   "constitution.art12.title": "Emendas",

@@ -161,7 +161,6 @@ export const studio: Catalog = {
   "landing.hero.title": "Music, <em>programmed</em> by queer ears.",
   "landing.hero.dek":
     "A co-op streaming room. <em>{sharePercent}</em> of every listen to the artist. <em>{tipPercent}</em> of every tip. The ledger is public. The curators have names. <em>No algorithm has ever set foot in here.</em>",
-  "landing.hero.sustainCta": "Sustain the room · {price}/mo",
   "landing.hero.demoCta": "Listen to a demo set · free",
 
   "landing.demo.eyebrow": "The Wednesday set · free preview",

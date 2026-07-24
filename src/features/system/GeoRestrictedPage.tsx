@@ -12,11 +12,6 @@ const CAN_DO = [
     to: routes.magazine,
   },
   {
-    labelKey: "system:geoRestricted.can.crisis.label",
-    detailKey: "system:geoRestricted.can.crisis.detail",
-    to: routes.emergency,
-  },
-  {
     labelKey: "system:geoRestricted.can.resources.label",
     detailKey: "system:geoRestricted.can.resources.detail",
     to: routes.resources,

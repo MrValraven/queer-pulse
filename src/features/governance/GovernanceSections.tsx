@@ -4,21 +4,13 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useGovernanceFinances } from "./api/useGovernanceFinances";
-import {
-  COUNCIL,
-  DECISIONS,
-  FINANCE_PARTNERS,
-  HEALTH,
-  PRINCIPLES,
-  RESERVE_CURRENT,
-  RESERVE_TARGET,
-  STEPS,
-} from "./governance.data";
+import { useGovernanceOverview } from "./api/useGovernanceOverview";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
 
 export function HealthSection() {
   const { t } = useTranslation();
+  const { health, loading } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="health">
       <div className={styles.eye}>
@@ -31,20 +23,31 @@ export function HealthSection() {
         />
       </h2>
       <div className={styles.statGrid}>
-        {HEALTH.map((s) => (
-          <div key={s.labelKey} className={styles.statCard}>
-            <div className={styles.statN}>{s.n}</div>
-            <div className={styles.statL}>{t(s.labelKey)}</div>
-            <div
-              className={[
-                styles.statTrend,
-                s.up ? styles.trendUp : styles.trendOk,
-              ].join(" ")}
-            >
-              {t(s.trendKey, s.trendValues)}
-            </div>
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className={styles.statCard} aria-hidden>
+                <SkeletonLine width="50%" height={26} />
+                <SkeletonLine
+                  width="80%"
+                  height={13}
+                  style={{ marginTop: 8 }}
+                />
+              </div>
+            ))
+          : health.map((stat) => (
+              <div key={stat.labelKey} className={styles.statCard}>
+                <div className={styles.statN}>{stat.n}</div>
+                <div className={styles.statL}>{t(stat.labelKey)}</div>
+                <div
+                  className={[
+                    styles.statTrend,
+                    stat.up ? styles.trendUp : styles.trendOk,
+                  ].join(" ")}
+                >
+                  {t(stat.trendKey, stat.trendValues)}
+                </div>
+              </div>
+            ))}
       </div>
       <div className={styles.prose}>
         <p>{t("governance:sections.health.prose1")}</p>
@@ -56,6 +59,7 @@ export function HealthSection() {
 
 export function ModerationSection() {
   const { t } = useTranslation();
+  const { moderationSteps } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="moderation">
       <div className={styles.eye}>
@@ -71,12 +75,12 @@ export function ModerationSection() {
         <p>{t("governance:sections.moderation.intro")}</p>
       </div>
       <div className={styles.steps}>
-        {STEPS.map((s, i) => (
-          <div key={s.titleKey} className={styles.step}>
-            <div className={styles.stepNum}>{i + 1}</div>
+        {moderationSteps.map((step, index) => (
+          <div key={step.titleKey} className={styles.step}>
+            <div className={styles.stepNum}>{index + 1}</div>
             <div>
-              <div className={styles.stepTitle}>{t(s.titleKey)}</div>
-              <div className={styles.stepText}>{t(s.textKey)}</div>
+              <div className={styles.stepTitle}>{t(step.titleKey)}</div>
+              <div className={styles.stepText}>{t(step.textKey)}</div>
             </div>
           </div>
         ))}
@@ -95,6 +99,7 @@ export function ModerationSection() {
 
 export function CouncilSection() {
   const { t } = useTranslation();
+  const { council } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="council">
       <div className={styles.eye}>
@@ -110,17 +115,17 @@ export function CouncilSection() {
         <p>{t("governance:sections.council.intro")}</p>
       </div>
       <div className={styles.acList}>
-        {COUNCIL.map((m) => (
-          <div key={m.name} className={styles.acItem}>
+        {council.map((seat) => (
+          <div key={seat.name} className={styles.acItem}>
             <div
               className={styles.acAv}
-              style={{ background: m.bg, color: m.color }}
+              style={{ background: seat.bg, color: seat.color }}
             >
-              {m.i}
+              {seat.initials}
             </div>
             <div>
-              <div className={styles.acName}>{m.name}</div>
-              <div className={styles.acRole}>{t(m.roleKey)}</div>
+              <div className={styles.acName}>{seat.name}</div>
+              <div className={styles.acRole}>{t(seat.roleKey)}</div>
             </div>
           </div>
         ))}
@@ -131,6 +136,7 @@ export function CouncilSection() {
 
 export function PrinciplesSection() {
   const { t } = useTranslation();
+  const { principles } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="principles">
       <div className={styles.eye}>
@@ -143,14 +149,14 @@ export function PrinciplesSection() {
         />
       </h2>
       <div className={styles.prinList}>
-        {PRINCIPLES.map((p) => (
-          <div key={p.titleKey} className={styles.prinItem}>
+        {principles.map((principle) => (
+          <div key={principle.titleKey} className={styles.prinItem}>
             <span className={styles.prinIcon}>
-              <p.icon />
+              <principle.icon />
             </span>
             <div>
-              <div className={styles.prinTitle}>{t(p.titleKey)}</div>
-              <div className={styles.prinText}>{t(p.textKey)}</div>
+              <div className={styles.prinTitle}>{t(principle.titleKey)}</div>
+              <div className={styles.prinText}>{t(principle.textKey)}</div>
             </div>
           </div>
         ))}
@@ -162,7 +168,7 @@ export function PrinciplesSection() {
 export function FinancesSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { stats, income, expense, eventNotes, loading } =
+  const { stats, income, expense, eventNotes, reserve, partners, loading } =
     useGovernanceFinances();
   const totalIncome = stats.find((s) => s.l === "Total income this quarter")?.n;
   const totalExpense = stats.find((s) => s.l === "Total expenditure")?.n;
@@ -265,22 +271,27 @@ export function FinancesSection() {
       <div className={styles.prose} style={{ marginTop: 28 }}>
         <p>
           <strong>{t("governance:sections.finances.surplusHeading")}</strong>{" "}
-          {t("governance:sections.finances.surplusBody", {
-            target: fmt.currency(RESERVE_TARGET),
-          })}
+          {reserve &&
+            t("governance:sections.finances.surplusBody", {
+              target: fmt.currency(reserve.target),
+            })}
         </p>
-        <div className={styles.reserveBar}>
-          <div className={styles.reserveFill} />
-        </div>
-        <p className={styles.reserveCap}>
-          {t("governance:sections.finances.reserveProgress", {
-            current: fmt.currency(RESERVE_CURRENT),
-            target: fmt.currency(RESERVE_TARGET),
-          })}
-        </p>
+        {reserve && (
+          <>
+            <div className={styles.reserveBar}>
+              <div className={styles.reserveFill} />
+            </div>
+            <p className={styles.reserveCap}>
+              {t("governance:sections.finances.reserveProgress", {
+                current: fmt.currency(reserve.current),
+                target: fmt.currency(reserve.target),
+              })}
+            </p>
+          </>
+        )}
         <p>{t("governance:sections.finances.surplusRedirect")}</p>
       </div>
-      {FINANCE_PARTNERS.map((partner) => (
+      {partners.map((partner) => (
         <div key={partner.name} className={styles.partnerRow}>
           <div className={styles.partnerName}>{partner.name}</div>
           <div className={styles.partnerBody}>
@@ -300,6 +311,7 @@ export function FinancesSection() {
 
 export function DecisionsSection() {
   const { t } = useTranslation();
+  const { decisions } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="decisions">
       <div className={styles.eye}>
@@ -312,9 +324,9 @@ export function DecisionsSection() {
         />
       </h2>
       <div className={styles.prose}>
-        {DECISIONS.map((d) => (
-          <p key={d.leadKey}>
-            <strong>{t(d.leadKey)}</strong> {t(d.bodyKey)}
+        {decisions.map((decision) => (
+          <p key={decision.leadKey}>
+            <strong>{t(decision.leadKey)}</strong> {t(decision.bodyKey)}
           </p>
         ))}
       </div>

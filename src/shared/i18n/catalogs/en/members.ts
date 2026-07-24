@@ -380,6 +380,10 @@ export const members: Catalog = {
     "This directory is still filling up. As people join QueerPulse and opt in to being findable, they'll show up here — check back soon.",
   "directory.loadingMore": "Loading…",
   "directory.loadMoreCta": "Load more members",
+  "directory.filtersCta": "Filters",
+  "directory.filtersSheetLabel": "Filter members",
+  "directory.showResultsCta_one": "Show {count} member",
+  "directory.showResultsCta_other": "Show {count} members",
 
   // ── Directory filter sidebar (MemberFilterCards) ────────────────────────────
   "directory.filter.openToTitle": "What they're open to",

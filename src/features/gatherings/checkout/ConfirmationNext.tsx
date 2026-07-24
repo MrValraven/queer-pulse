@@ -5,7 +5,6 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
-import { routes } from "../../../app/routeMap";
 import {
   ADDRESS_UNLOCK_DATE,
   EVENT,
@@ -15,6 +14,7 @@ import {
 import { useCheckout } from "./checkoutContext";
 import { downloadIcs, googleCalendarUrl } from "./calendar";
 import { cx } from "./cx";
+import { gatheringPath } from "../data";
 import s from "./checkout.module.css";
 
 /** Timeline + "roughly where" map + the two logistics cards. */
@@ -204,7 +204,7 @@ function NextActions() {
   const { t } = useTranslation();
 
   function copyShare() {
-    const link = "https://queerpulse.pt/gathering/supper-club-13";
+    const link = `https://queerpulse.pt${gatheringPath("supper-club-13")}`;
     navigator.clipboard
       ?.writeText(link)
       .then(() =>
@@ -219,7 +219,7 @@ function NextActions() {
       >
         <Button
           variant="primary"
-          to={routes.gathering}
+          to={gatheringPath("supper-club-13")}
           style={{ flex: 1, justifyContent: "center" }}
         >
           {t("gatherings:checkout.confirm.viewGatheringCta")}

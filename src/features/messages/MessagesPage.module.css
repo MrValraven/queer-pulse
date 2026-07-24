@@ -306,29 +306,51 @@
 }
 
 .bubble {
+  --bubble-radius: 18px;
+  --bubble-radius-tight: 6px;
   width: fit-content;
-  max-width: min(72%, 46ch);
-  padding: 10px 14px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  border-radius: var(--radius-panel);
+  max-width: min(74%, 48ch);
+  padding: 9px 14px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  border-radius: var(--bubble-radius);
   overflow-wrap: anywhere;
 }
 .received {
   background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   color: var(--ink);
+  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.05);
 }
 .sent {
   background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--cream-rgb), 0.96);
+  box-shadow: 0 1px 3px rgba(var(--plum-rgb), 0.22);
 }
-/* Tail only on the last bubble of a run — the messenger read. */
-.tailReceived {
-  border-end-start-radius: 5px;
+
+/* ── Grouped-run corner shaping ──
+   Same-sender bubbles stack with a 2px gap; tightening the sender-side corners
+   where they meet — plus the tail corner beside the avatar on the run's last
+   bubble — makes a run read as one grouped unit (the modern-messenger read).
+   `groupTop`/`groupBottom` mark a bubble that has a same-sender neighbour
+   above/below it. */
+.sent.groupTop {
+  border-start-end-radius: var(--bubble-radius-tight);
+}
+.sent.groupBottom {
+  border-end-end-radius: var(--bubble-radius-tight);
+}
+.received.groupTop {
+  border-start-start-radius: var(--bubble-radius-tight);
+}
+.received.groupBottom {
+  border-end-start-radius: var(--bubble-radius-tight);
 }
 .tailSent {
-  border-end-end-radius: 5px;
+  border-end-end-radius: var(--bubble-radius-tight);
+}
+.tailReceived {
+  border-end-start-radius: var(--bubble-radius-tight);
 }
 
 .emojiOnly {

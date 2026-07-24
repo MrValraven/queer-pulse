@@ -25,7 +25,6 @@ import { forum as enForum } from "./en/forum";
 import { topics as enTopics } from "./en/topics";
 import { governance as enGovernance } from "./en/governance";
 import { myevents as enMyevents } from "./en/myevents";
-import { support as enSupport } from "./en/support";
 import { connect as enConnect } from "./en/connect";
 import { messages as enMessages } from "./en/messages";
 import { culture as enCulture } from "./en/culture";
@@ -59,7 +58,6 @@ import { forum as ptForum } from "./pt/forum";
 import { topics as ptTopics } from "./pt/topics";
 import { governance as ptGovernance } from "./pt/governance";
 import { myevents as ptMyevents } from "./pt/myevents";
-import { support as ptSupport } from "./pt/support";
 import { connect as ptConnect } from "./pt/connect";
 import { messages as ptMessages } from "./pt/messages";
 import { culture as ptCulture } from "./pt/culture";
@@ -103,7 +101,6 @@ export const catalogs: Record<Language, Record<Namespace, Catalog>> = {
     topics: enTopics,
     governance: enGovernance,
     myevents: enMyevents,
-    support: enSupport,
     connect: enConnect,
     messages: enMessages,
     culture: enCulture,
@@ -138,7 +135,6 @@ export const catalogs: Record<Language, Record<Namespace, Catalog>> = {
     topics: ptTopics,
     governance: ptGovernance,
     myevents: ptMyevents,
-    support: ptSupport,
     connect: ptConnect,
     messages: ptMessages,
     culture: ptCulture,

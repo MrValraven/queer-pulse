@@ -123,6 +123,7 @@ export function MessagesThreadList({
                     <Avatar
                       initials={thread.initials}
                       tint={thread.tint}
+                      src={thread.avatarUrl}
                       size={42}
                     />
                     {thread.online && (

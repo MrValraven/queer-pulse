@@ -37,7 +37,7 @@ function buildItems(
     c.closeMore();
     const url =
       (typeof window !== "undefined" ? window.location.origin : "") +
-      (ev.slug ? gatheringPath(ev.slug) : routes.gathering);
+      (ev.slug ? gatheringPath(ev.slug) : routes.gatherings);
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(url).then(
         () => c.toast(translate("myevents:moreMenu.shareToast"), "success"),

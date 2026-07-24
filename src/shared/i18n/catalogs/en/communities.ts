@@ -137,6 +137,15 @@ export const communities: Catalog = {
   "detail.thread.replyPlaceholder": "Reply to this thread…",
   "detail.thread.replyCta": "Reply",
   "detail.thread.replyToast": "Reply posted.",
+  "detail.thread.editedMark": "(edited)",
+  "detail.thread.tombstone": "This message was deleted.",
+  "detail.thread.editSave": "Save",
+  "detail.thread.editCancel": "Cancel",
+  "detail.thread.editSaving": "Saving…",
+  "detail.thread.editAria": "Edit your message",
+  "detail.thread.editSavedToast": "Your edit is live.",
+  "detail.thread.deletedToast": "Message deleted.",
+  "detail.thread.restoredToast": "Message restored.",
 
   // ── Discussion tab (living hub) ───────────────────────────────────────────
   "detail.discussion.searchAria": "Search discussions",

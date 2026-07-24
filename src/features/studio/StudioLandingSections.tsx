@@ -152,9 +152,6 @@ export function StudioLandingCta() {
         />
       </p>
       <div className={styles.ctaActions}>
-        <Button variant="primary" size="lg" to={routes.sustainer}>
-          {t("studio:shell.sustainCta", { price: fmt.currency(SUSTAIN_PRICE) })}
-        </Button>
         <Button variant="ghost-dark" size="lg" to={routes.studioAbout}>
           {t("studio:landing.cta.readPlanCta")}
         </Button>

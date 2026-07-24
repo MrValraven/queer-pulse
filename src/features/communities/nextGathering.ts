@@ -6,7 +6,7 @@ import type { CommunityEvent } from "./community.model";
 // A flagship community's next gathering IS a real entry in the gatherings
 // registry, so both the sidebar "Next Gathering" card and the Events tab derive
 // their upcoming event from it here — the card, the tab row and their RSVP
-// destination (`/gathering/:slug`) then always describe the same event.
+// destination (`/gatherings/:slug`) then always describe the same event.
 
 const MONTHS_SHORT = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",

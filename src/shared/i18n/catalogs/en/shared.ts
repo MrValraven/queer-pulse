@@ -91,7 +91,6 @@ export const shared: Catalog = {
   "accountMenu.items.drafts": "Drafts",
   "accountMenu.items.pitches": "Pitches",
   "accountMenu.items.saved": "Saved",
-  "accountMenu.items.membership": "Membership",
   "accountMenu.items.settings": "Settings",
   "accountMenu.items.help": "Help",
   "accountMenu.ariaLabel": "Account menu",
@@ -144,8 +143,10 @@ export const shared: Catalog = {
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.partnerships": "Partnerships",
+  "adminNav.items.orgTiers": "Partnership tiers",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
   "adminNav.items.governance": "Governance",
+  "adminNav.items.systemAccounts": "System accounts",
 
   // BackToSettingsLink
   "backToSettingsLink.label": "Back to settings",
@@ -162,26 +163,6 @@ export const shared: Catalog = {
 
   // SkipToContentLink
   "skipToContent.label": "Skip to main content",
-
-  // QuickExit (safety escape widget)
-  "quickExit.tooltip.withShortcut":
-    "<strong>Need to leave fast?</strong> This button — or tapping Shift twice — sends you to a weather page.",
-  "quickExit.tooltip.noShortcut":
-    "<strong>Need to leave fast?</strong> This button sends you to a weather page.",
-  "quickExit.tooltip.dismissAria": "Dismiss Quick exit tip",
-  "quickExit.about.aria": "About Quick exit",
-  "quickExit.about.body":
-    "Quick exit sends this tab to a weather page and reopens QueerPulse in a separate tab. It's a fast screen-clear, not anonymity: it can't wipe your earlier browser history, bookmarks, or address-bar suggestions. For real safety, also use a private window and clear your history.",
-  "quickExit.about.note":
-    "Don't need it? You can hide this button and turn it back on any time in <strong>Settings → Safety</strong>.",
-  "quickExit.about.gotIt": "Got it",
-  "quickExit.about.hide": "Hide Quick exit",
-  "quickExit.about.limitsAria": "About Quick exit and its limits",
-  "quickExit.button.aria": "Quick exit — leave this site now",
-  "quickExit.button.label": "Quick exit",
-  "quickExit.button.shortcutHint": "Shortcut: press Shift twice",
-  "quickExit.toastHidden":
-    "Quick exit hidden. Turn it back on in Settings → Safety.",
 
   // Avatar
   "avatar.verified": "Verified member",
@@ -278,7 +259,6 @@ export const shared: Catalog = {
   "megaNav.resources.col.health.transHealthcare": "Trans Healthcare",
   "megaNav.resources.col.health.wellbeingHub": "Wellbeing Hub",
   "megaNav.resources.col.safety.head": "Safety & rights",
-  "megaNav.resources.col.safety.emergency": "Emergency",
   "megaNav.resources.col.safety.safetyGuide": "Safety Guide",
   "megaNav.resources.col.learn.head": "Learn & belong",
   "megaNav.resources.col.learn.resourceLibrary": "Resource Library",
@@ -337,7 +317,6 @@ export const shared: Catalog = {
   "megaNav.about.feature.cta": "About QueerPulse",
   "megaNav.about.col.mission.head": "Mission & governance",
   "megaNav.about.col.mission.aboutQueerPulse": "About QueerPulse",
-  "megaNav.about.col.mission.manifesto": "The Manifesto",
   "megaNav.about.col.using.head": "Using QueerPulse",
   "megaNav.about.col.using.helpFaq": "Help & FAQ",
   "megaNav.about.col.using.roadmap": "Roadmap",

@@ -36,11 +36,6 @@ export const GOVERNING_DOCS = [
     blurbKey: "governance:governingDocs.codeOfConduct.blurb",
   },
   {
-    labelKey: "governance:governingDocs.annualAssembly.label",
-    to: routes.annualAssembly,
-    blurbKey: "governance:governingDocs.annualAssembly.blurb",
-  },
-  {
     labelKey: "governance:governingDocs.transparencyReport.label",
     to: routes.transparencyReport,
     blurbKey: "governance:governingDocs.transparencyReport.blurb",
@@ -294,7 +289,7 @@ export const INCOME: FinLine[] = [
         period: "Mental Health Fund",
         amount: "€400",
       },
-      { name: "ILGA Portugal", period: "Community events", amount: "€200" },
+      { name: "Legal-aid partner", period: "Community events", amount: "€200" },
     ],
     total: { label: "2 partners · restricted use only", amount: "€600" },
   },
@@ -568,7 +563,7 @@ export const FINANCE_PARTNERS: FinancePartner[] = [
     scopeKey: "governance:sections.finances.partnerScope.mentalHealthFund",
   },
   {
-    name: "ILGA Portugal",
+    name: "National LGBTQ+ rights organisation",
     amount: 200,
     scopeKey: "governance:sections.finances.partnerScope.communityEvents",
   },

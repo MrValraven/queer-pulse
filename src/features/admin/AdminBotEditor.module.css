@@ -1,0 +1,154 @@
+/* ── System-account editor drawer ─────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 14px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.textarea {
+  min-height: 84px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+.error {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--danger);
+}
+
+/* ── Avatar picker ─────────────────────────────────────────── */
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* A `<label>` styled to read as a ghost button, wrapping a visually-hidden
+   file input (sr-only, not `hidden` — hidden inputs don't reliably answer a
+   label click). Mirrors StepPhoto.tsx's photoFrame/photoInput pattern. */
+.avatarPicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .avatarPicker:hover {
+    border-color: var(--line-strong);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+
+.avatarPicker:focus-within {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+}
+
+.avatarInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Social links ──────────────────────────────────────────── */
+.socialRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  background: var(--cream);
+}
+
+.socialRow .input {
+  flex: 1 1 160px;
+  width: auto;
+}
+
+.rowRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .rowRemove:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+    color: var(--accent-ink);
+  }
+}
+
+.rowRemove:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+.foot {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}

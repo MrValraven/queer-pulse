@@ -76,7 +76,7 @@ export const ALLOC = [
     w: 10,
     label: "Partner & legal operations",
     detail:
-      "ILGA legal-consult programme (€45/consult), policy work, the auditor",
+      "legal-consult programme (€45/consult), policy work, the auditor",
     amt: "€26,750",
     pct: "10%",
   },
@@ -356,8 +356,9 @@ export const MISTAKES = [
     ),
     text: (
       <>
-        Two posts from the same member criticising our partnership with ILGA on
-        the 2024 self-determination amendments were removed by a new moderator
+        Two posts from the same member criticising our partnership with a
+        legal-aid organisation on the 2024 self-determination amendments were
+        removed by a new moderator
         who interpreted them as "personal attacks".{" "}
         <b>They weren't — they were disagreement.</b> Both were reinstated
         within 36 hours after the appeal.

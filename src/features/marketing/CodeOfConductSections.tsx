@@ -181,13 +181,9 @@ export function CocEnforceSection() {
 
 interface CocReportCtaProps {
   reportPath: string;
-  emergencyPath: string;
 }
 
-export function CocReportCta({
-  reportPath,
-  emergencyPath,
-}: CocReportCtaProps) {
+export function CocReportCta({ reportPath }: CocReportCtaProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.reportCta}>
@@ -201,9 +197,6 @@ export function CocReportCta({
       <div className={styles.reportActions}>
         <Button to={reportPath} variant="primary">
           {t("marketing:coc.report.fileCta")}
-        </Button>
-        <Button to={emergencyPath} variant="ghost-dark">
-          {t("marketing:coc.report.emergencyCta")}
         </Button>
       </div>
     </div>

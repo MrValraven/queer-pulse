@@ -14,7 +14,7 @@ export const STORIES_PART_1: ChangemakerStory[] = [
     impact: [
       "Helped 14 queer households navigate legal challenges to eviction notices",
       "Testified twice at Câmara Municipal on the impact of short-term rentals on queer residents",
-      "Co-authoring a housing rights brief for LGBTQ+ people with ILGA Portugal",
+      "Co-authoring a housing rights brief for LGBTQ+ people with a national LGBTQ+ rights organisation",
     ],
     byline: "Words by Marta Reis",
     readTime: "6 min read",
@@ -53,8 +53,8 @@ export const STORIES_PART_1: ChangemakerStory[] = [
       <>
         Today her residents' network is the most active in Mouraria. It runs a
         phone tree for anyone who gets a notice, a shared folder of
-        documentation, and a standing relationship with ILGA Portugal's legal
-        team. <em>None of it existed three years ago.</em> All of it exists
+        documentation, and a standing relationship with a national LGBTQ+
+        rights organisation's legal team. <em>None of it existed three years ago.</em> All of it exists
         because one person decided that the neighbourhood that raised us should
         still have room for us.
       </>,

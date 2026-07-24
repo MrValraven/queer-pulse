@@ -121,6 +121,15 @@ export interface TriagePartnerApplicationDto {
   note?: string;
 }
 
+/** PATCH /admin/partners/:id — an admin sets a partner's featured flag and/or
+ *  testimonial. The backend 409s a quote written without an author. */
+export interface UpdatePartnerAdminDto {
+  featured?: boolean;
+  testimonialQuote?: string | null;
+  testimonialAuthor?: string | null;
+  testimonialRole?: string | null;
+}
+
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
 /** GET /partners?region=&page=&featured= — approved partners only. */
@@ -158,3 +167,11 @@ export const triagePartnerApplication = (
   id: string,
   dto: TriagePartnerApplicationDto,
 ) => apiPatch<PartnerApplicationDTO>(`/partner-applications/${id}`, dto);
+
+/** GET /admin/partners — admin-only list of APPROVED partners (id + featured + testimonial). */
+export const getAdminPartners = () =>
+  apiGet<PartnerApplicationDTO[]>("/admin/partners");
+
+/** PATCH /admin/partners/:id — admin sets a partner's featured flag + testimonial. */
+export const updatePartnerAdmin = (id: string, dto: UpdatePartnerAdminDto) =>
+  apiPatch<PartnerApplicationDTO>(`/admin/partners/${id}`, dto);

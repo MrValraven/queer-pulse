@@ -28,11 +28,19 @@ async function loadLiveSaved(client: QueryClient) {
 
   const { SavedProvider, useSaved } = await import("./SavedProvider");
   const { DemoModeProvider } = await import("./DemoModeProvider");
+  const { I18nProvider } = await import("./I18nProvider");
+  const { ToastProvider } = await import(
+    "../../shared/components/feedback/ToastProvider"
+  );
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
-      <DemoModeProvider>
-        <SavedProvider>{children}</SavedProvider>
-      </DemoModeProvider>
+      <I18nProvider>
+        <ToastProvider>
+          <DemoModeProvider>
+            <SavedProvider>{children}</SavedProvider>
+          </DemoModeProvider>
+        </ToastProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
   return { useSaved, wrapper, getSaved };
@@ -65,11 +73,19 @@ async function loadLiveSavedBootstrapError(client: QueryClient) {
 
   const { SavedProvider, useSaved } = await import("./SavedProvider");
   const { DemoModeProvider } = await import("./DemoModeProvider");
+  const { I18nProvider } = await import("./I18nProvider");
+  const { ToastProvider } = await import(
+    "../../shared/components/feedback/ToastProvider"
+  );
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
-      <DemoModeProvider>
-        <SavedProvider>{children}</SavedProvider>
-      </DemoModeProvider>
+      <I18nProvider>
+        <ToastProvider>
+          <DemoModeProvider>
+            <SavedProvider>{children}</SavedProvider>
+          </DemoModeProvider>
+        </ToastProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
   return { useSaved, wrapper, getSaved };

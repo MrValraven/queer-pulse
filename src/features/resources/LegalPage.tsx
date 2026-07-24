@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { FiAlertOctagon } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
@@ -353,21 +352,6 @@ export function LegalPage() {
                   </FadeIn>
                 ))}
           </div>
-
-          <Reveal className={styles.emergencyStrip}>
-            <div>
-              <h3>
-                <Translation
-                  i18nKey="resources:legal.lawyers.emergency.title"
-                  components={{ em: <em /> }}
-                />
-              </h3>
-              <p>{t("resources:legal.lawyers.emergency.body")}</p>
-            </div>
-            <Button variant="ghost-dark" size="lg" to={routes.emergency}>
-              <FiAlertOctagon /> {t("resources:legal.lawyers.emergencyCta")}
-            </Button>
-          </Reveal>
         </div>
       </section>
 

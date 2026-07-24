@@ -17,7 +17,6 @@ export const resources: Catalog = {
   "crisis.title": "In crisis <em>right now?</em>",
   "crisis.body":
     "If you are in immediate danger, call <strong>112</strong>. These lines are free and confidential — tap to call, or copy the number.",
-  "crisis.emergencyCta": "QueerPulse emergency support",
   "crisis.jumpCta": "All crisis resources ↓",
   // crisisStrip.data.ts — real-world helpline names kept in English/as-is;
   // only the descriptive portions and hours are translated. Flag for native
@@ -119,10 +118,6 @@ export const resources: Catalog = {
   "legal.lawyers.lead":
     "Vetted by community members, with specific experience in LGBTQ+ cases in Portugal. Initial consultations are free for QueerPulse members.",
   "legal.lawyers.requestConsultationCta": "Request consultation →",
-  "legal.lawyers.emergency.title": "Facing something <em>urgent?</em>",
-  "legal.lawyers.emergency.body":
-    "If you're dealing with an immediate legal situation — arrest, eviction notice, or workplace suspension — use the QueerPulse emergency network. Someone who can help is usually reachable within hours.",
-  "legal.lawyers.emergencyCta": "Emergency network →",
 
   "legal.outro.title": "You have <em>rights.</em>",
   "legal.outro.sub":
@@ -675,11 +670,6 @@ export const resources: Catalog = {
   "wellbeing.crisis.redeExAequo.desc":
     "Support for LGBTQ+ people under 30. Online chat and phone — safe, confidential, peer-led.",
   "wellbeing.crisis.redeExAequo.hours": "Online · Weekdays 18h–22h",
-  "wellbeing.crisis.qpEmergency.title": "QueerPulse Emergency",
-  "wellbeing.crisis.qpEmergency.desc":
-    "Safe housing contacts, community members who can help, and emergency escalation paths — available always.",
-  "wellbeing.crisis.qpEmergency.cta": "Open emergency page →",
-  "wellbeing.crisis.qpEmergency.hours": "Always available",
 
   "wellbeing.harm.title": "Harm <em>reduction</em>",
   "wellbeing.harm.lead":
@@ -743,7 +733,6 @@ export const resources: Catalog = {
   "therapistProfilePage.sidebar.crisisHeading": "In crisis right now",
   "therapistProfilePage.sidebar.crisisText":
     "Therapy isn't the right path when you're in immediate danger. Use these instead — they're staffed for this.",
-  "therapistProfilePage.sidebar.crisisChatCta": "Crisis support",
   "therapistProfilePage.sidebar.sosVozAmigaCta": "SOS Voz Amiga · 213 544 545",
 
   "therapistProfilePage.vouch.successAriaLabel": "Vouch received",

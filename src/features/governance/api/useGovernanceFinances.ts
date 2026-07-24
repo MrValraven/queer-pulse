@@ -3,14 +3,19 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   getGovernanceFinances,
   type FinanceEventNoteDTO,
+  type FinancePartnerDTO,
+  type FinanceReserveDTO,
   type FinanceStatDTO,
   type GovernanceFinanceResponseDTO,
 } from "./governance.api";
 import {
   EVENTS,
   EXPENSE,
+  FINANCE_PARTNERS,
   FIN_STATS,
   INCOME,
+  RESERVE_CURRENT,
+  RESERVE_TARGET,
   type FinLine,
 } from "../governance.data";
 
@@ -19,6 +24,8 @@ export interface GovernanceFinancesResult {
   income: FinLine[];
   expense: FinLine[];
   eventNotes: FinanceEventNoteDTO[];
+  reserve: FinanceReserveDTO | null;
+  partners: FinancePartnerDTO[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
 }
@@ -32,11 +39,18 @@ const DEMO_EVENT_NOTES: FinanceEventNoteDTO[] = EVENTS.map(([title, body]) => ({
   body,
 }));
 
+const DEMO_RESERVE: FinanceReserveDTO = {
+  current: RESERVE_CURRENT,
+  target: RESERVE_TARGET,
+};
+
 const EMPTY: GovernanceFinancesResult = {
   stats: [],
   income: [],
   expense: [],
   eventNotes: [],
+  reserve: null,
+  partners: [],
   loading: false,
 };
 
@@ -65,6 +79,8 @@ export function useGovernanceFinances(): GovernanceFinancesResult {
       income: INCOME,
       expense: EXPENSE,
       eventNotes: DEMO_EVENT_NOTES,
+      reserve: DEMO_RESERVE,
+      partners: FINANCE_PARTNERS,
       loading: false,
     };
   }
@@ -78,6 +94,8 @@ export function useGovernanceFinances(): GovernanceFinancesResult {
     income: query.data.income,
     expense: query.data.expense,
     eventNotes: query.data.eventNotes,
+    reserve: query.data.reserve,
+    partners: query.data.partners,
     loading: false,
   };
 }

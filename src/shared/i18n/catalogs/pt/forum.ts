@@ -163,49 +163,49 @@ export const forum: Catalog = {
   "author.aboutTeamAria": "Sobre a equipa e a governação do QueerPulse",
   "author.viewProfileAria": "Ver o perfil de {name}",
 
-  // ── PostActionsMenu (⋯ overflow menu) — placeholder EN text, TODO: pt-PT ──
-  "postMenu.edit": "Edit",
-  "postMenu.delete": "Delete",
-  "postMenu.restore": "Restore",
-  "postMenu.history": "View edit history",
-  "postMenu.ariaLabel": "Post actions",
+  // ── PostActionsMenu (⋯ overflow menu) ────────────────────────────────────
+  "postMenu.edit": "Editar",
+  "postMenu.delete": "Eliminar",
+  "postMenu.restore": "Restaurar",
+  "postMenu.history": "Ver histórico de edições",
+  "postMenu.ariaLabel": "Ações da publicação",
 
   // ── Edited mark / deleted-post tombstone ─────────────────────────────────
-  "edited.mark": "(edited)",
-  "tombstone.body": "This post was deleted.",
-  "tombstone.author": "[deleted]",
+  "edited.mark": "(editado)",
+  "tombstone.body": "Esta publicação foi eliminada.",
+  "tombstone.author": "[eliminado]",
 
   // ── Inline reply edit ────────────────────────────────────────────────────
-  "replyEdit.save": "Save",
-  "replyEdit.cancel": "Cancel",
-  "replyEdit.saving": "Saving…",
-  "replyEdit.textareaAria": "Edit your reply",
+  "replyEdit.save": "Guardar",
+  "replyEdit.cancel": "Cancelar",
+  "replyEdit.saving": "A guardar…",
+  "replyEdit.textareaAria": "Edita a tua resposta",
 
   // ── OP (original post) edit ──────────────────────────────────────────────
-  "opEdit.title": "Edit post",
-  "opEdit.titleLabel": "Title",
-  "opEdit.bodyLabel": "Post",
-  "opEdit.save": "Save changes",
-  "opEdit.cancel": "Cancel",
-  "opEdit.saving": "Saving…",
+  "opEdit.title": "Editar publicação",
+  "opEdit.titleLabel": "Título",
+  "opEdit.bodyLabel": "Publicação",
+  "opEdit.save": "Guardar alterações",
+  "opEdit.cancel": "Cancelar",
+  "opEdit.saving": "A guardar…",
 
   // ── Delete confirmation ───────────────────────────────────────────────────
-  "deleteConfirm.title": "Delete this post?",
+  "deleteConfirm.title": "Eliminar esta publicação?",
   "deleteConfirm.body":
-    "It’ll be hidden from the thread. You can restore it later — nothing is lost.",
-  "deleteConfirm.confirm": "Delete",
-  "deleteConfirm.cancel": "Keep it",
-  "deleteConfirm.deleting": "Deleting…",
+    "Fica escondida do tópico. Podes restaurá-la mais tarde — não se perde nada.",
+  "deleteConfirm.confirm": "Eliminar",
+  "deleteConfirm.cancel": "Manter",
+  "deleteConfirm.deleting": "A eliminar…",
 
   // ── Edit history modal ────────────────────────────────────────────────────
-  "history.title": "Edit history",
-  "history.empty": "No earlier versions to show.",
-  "history.titleChange": "Title was: {title}",
-  "history.close": "Close",
+  "history.title": "Histórico de edições",
+  "history.empty": "Não há versões anteriores para mostrar.",
+  "history.titleChange": "Título anterior: {title}",
+  "history.close": "Fechar",
 
   // ── Toasts (edit / delete / restore) ─────────────────────────────────────
-  "toast.editSaved": "Your edit is live.",
-  "toast.deleted": "Post deleted.",
-  "toast.restored": "Post restored.",
-  "toast.error": "Something went wrong. Try again in a moment.",
+  "toast.editSaved": "A tua edição está publicada.",
+  "toast.deleted": "Publicação eliminada.",
+  "toast.restored": "Publicação restaurada.",
+  "toast.error": "Algo correu mal. Tenta novamente daqui a pouco.",
 };

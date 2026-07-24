@@ -189,6 +189,9 @@ export const gatherings: Catalog = {
   "gathering.locationNote":
     "Full location shared with confirmed guests after you RSVP.",
   "gathering.moreTitle": "More <em>gatherings</em>",
+  "gathering.notFoundTitle": "We couldn't find this gathering",
+  "gathering.notFoundDescription":
+    "It may have been cancelled, or the link might be out of date.",
 
   // JoinVouchCallout
   "vouchCallout.title": "New here? <em>Get vouched in.</em>",

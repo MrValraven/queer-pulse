@@ -3,16 +3,16 @@ import { cardToPartner } from "./partners.adapters";
 import type { PartnerCardDTO } from "./partners.api";
 
 const baseCardDto: PartnerCardDTO = {
-  slug: "ilga-portugal",
-  name: "ILGA Portugal",
-  logo: "ILGA",
+  slug: "northside-lgbti-association",
+  name: "Northside LGBTI+ Association",
+  logo: "NA",
   region: "pt",
   regionLabel: "Portugal",
   city: "Lisbon",
-  desc: "Portugal's leading LGBTQ+ rights organisation.",
+  desc: "An illustrative advocacy and support partner.",
   tags: ["Rights", "Legal", "Crisis support"],
-  tier: "Founding partner",
-  since: "Partnered since 2022 · 4 years",
+  tier: "Operational · founding",
+  since: "Illustrative partner",
   featured: false,
   testimonialQuote: null,
   testimonialAuthor: null,
@@ -31,14 +31,14 @@ describe("cardToPartner", () => {
     const partner = cardToPartner({
       ...baseCardDto,
       testimonialQuote: "QueerPulse referrals changed how fast we can help.",
-      testimonialAuthor: "Marta Luís",
+      testimonialAuthor: "Alex Rivers",
       testimonialRole: "Programme Director",
     });
     expect(partner.testimonial).toEqual({
       quote: "QueerPulse referrals changed how fast we can help.",
-      author: "Marta Luís",
+      author: "Alex Rivers",
       role: "Programme Director",
-      initials: "ML",
+      initials: "AR",
     });
   });
 
@@ -47,7 +47,7 @@ describe("cardToPartner", () => {
       cardToPartner({
         ...baseCardDto,
         testimonialQuote: null,
-        testimonialAuthor: "Marta Luís",
+        testimonialAuthor: "Alex Rivers",
         testimonialRole: "Programme Director",
       }).testimonial,
     ).toBeNull();

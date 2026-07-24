@@ -7,7 +7,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { currentUserSlug } from "../members/data/members";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
@@ -37,6 +37,9 @@ export function SubprofileMetaForm({
   const { update } = useSubprofileMutations();
   const { showToast } = useToast();
   const { t } = useTranslation();
+  // The signed-in member's own slug for the linked-address preview — the real
+  // user in live mode, the mock persona in demo (never the hardcoded slug).
+  const { profile } = useProfile();
 
   const [displayName, setDisplayName] = useState(subprofile.displayName);
   const [tagline, setTagline] = useState(subprofile.tagline);
@@ -166,7 +169,7 @@ export function SubprofileMetaForm({
             <>
               {t("subprofiles:metaForm.livesAt")}{" "}
               <span className={styles.pathPreview}>
-                /members/{currentUserSlug}/{slug || "…"}
+                /members/{profile.slug}/{slug || "…"}
               </span>
             </>
           }

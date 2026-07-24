@@ -1,5 +1,6 @@
 import type { IconType } from "react-icons";
 import { FiCalendar, FiCamera, FiHeart, FiTag } from "react-icons/fi";
+import { DEMO_GATHERING_SLUGS, gatheringRecapPath } from "./data";
 
 /**
  * i18n Pattern A — the data file holds catalog *keys*, the component resolves
@@ -40,7 +41,7 @@ export const WAYS: {
     icon: FiCamera,
     titleKey: "gatherings:landing.ways.recap.title",
     bodyKey: "gatherings:landing.ways.recap.body",
-    to: "/gathering-recap",
+    to: gatheringRecapPath(DEMO_GATHERING_SLUGS.recap),
     ctaKey: "gatherings:landing.ways.recap.cta",
   },
 ];

@@ -62,6 +62,7 @@ export function ConversationPanel({
   const counterpart: RunParticipant = {
     initials: active.initials,
     tint: active.tint,
+    src: active.avatarUrl,
   };
   // The signed-in member's sent-bubble avatar. `useAuth().user` is the real
   // member in live mode and the mock member in demo mode, so this works in both;
@@ -95,7 +96,12 @@ export function ConversationPanel({
             </svg>
           </button>
         )}
-        <Avatar initials={active.initials} tint={active.tint} size={38} />
+        <Avatar
+          initials={active.initials}
+          tint={active.tint}
+          src={active.avatarUrl}
+          size={38}
+        />
         <div className={styles.ctbInfo}>
           <div className={styles.ctbName}>
             <span className={styles.nameRow}>

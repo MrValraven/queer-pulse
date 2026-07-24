@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from "react";
 import { useLocalStorage } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { useSessionBootstrap } from "../../shared/api/useSessionBootstrap";
@@ -77,6 +79,8 @@ export function SavedProvider({ children }: { children: ReactNode }) {
   );
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
 
   // Live-only: hydrate the store from the session bootstrap payload. Shares the
   // one ["bootstrap"] request mounted by SessionBootstrapProvider — this hook
@@ -126,11 +130,13 @@ export function SavedProvider({ children }: { children: ReactNode }) {
       });
       if (demoMode || existed) return;
       putSaved(item.id, savedItemToBody(item)).catch(() => {
-        // Roll back the optimistic add on failure.
+        // Roll back the optimistic add on failure, and tell the user — the
+        // change silently disappears otherwise.
         setItems((prev) => prev.filter((it) => it.id !== item.id));
+        showToast(t("common:toast.saveFailed"), "error");
       });
     },
-    [setItems, demoMode],
+    [setItems, demoMode, showToast, t],
   );
 
   const unsave = useCallback(
@@ -143,13 +149,15 @@ export function SavedProvider({ children }: { children: ReactNode }) {
       if (demoMode || !removed) return;
       const restore = removed;
       deleteSaved(id).catch(() => {
-        // Roll back the optimistic removal on failure (restore most-recent-first).
+        // Roll back the optimistic removal on failure (restore most-recent-first),
+        // and tell the user — the item silently reappears otherwise.
         setItems((prev) =>
           prev.some((it) => it.id === id) ? prev : [restore, ...prev],
         );
+        showToast(t("common:toast.removeFailed"), "error");
       });
     },
-    [setItems, demoMode],
+    [setItems, demoMode, showToast, t],
   );
 
   const toggleSave = useCallback(
@@ -167,7 +175,8 @@ export function SavedProvider({ children }: { children: ReactNode }) {
           ? deleteSaved(item.id)
           : putSaved(item.id, savedItemToBody(item));
         op.catch(() => {
-          // Roll back to the pre-toggle state for this id.
+          // Roll back to the pre-toggle state for this id, and tell the user —
+          // the toggle silently snaps back otherwise.
           setItems((prev) => {
             if (wasSaved) {
               return prev.some((it) => it.id === item.id)
@@ -176,11 +185,15 @@ export function SavedProvider({ children }: { children: ReactNode }) {
             }
             return prev.filter((it) => it.id !== item.id);
           });
+          showToast(
+            t(wasSaved ? "common:toast.removeFailed" : "common:toast.saveFailed"),
+            "error",
+          );
         });
       }
       return !wasSaved;
     },
-    [items, setItems, demoMode],
+    [items, setItems, demoMode, showToast, t],
   );
 
   const byKind = useCallback(

@@ -8,6 +8,8 @@ import {
   FiSettings,
   FiHeart,
   FiMapPin,
+  FiLayers,
+  FiCpu,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -68,9 +70,19 @@ export const ADMIN_NAV: AdminNavItem[] = [
     tone: "warn",
   },
   {
+    labelKey: "shared:adminNav.items.orgTiers",
+    to: routes.adminOrgTiers,
+    icon: FiLayers,
+  },
+  {
     labelKey: "shared:adminNav.items.governance",
     to: routes.adminGovernance,
     icon: FiAward,
+  },
+  {
+    labelKey: "shared:adminNav.items.systemAccounts",
+    to: routes.adminBots,
+    icon: FiCpu,
   },
   {
     labelKey: "admin:settings.breadcrumb",

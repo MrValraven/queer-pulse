@@ -3,10 +3,7 @@ import { Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
-import { type DirectoryPlace } from "./directoryPlaces";
-import { type Venue } from "./map.data";
-import { LocalBusinessCard } from "./LocalBusinessCard";
-import { LocalVenueCard } from "./LocalVenueCard";
+import { LocalPlaceCard } from "./LocalPlaceCard";
 import s from "./DirectoryPage.module.css";
 
 function DirectoryCardSkeleton() {
@@ -47,6 +44,13 @@ export function DirectoryListView({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
+  function toggleExpand(placeId: string) {
+    setExpandedId((current) => (current === placeId ? null : placeId));
+  }
+  function markBeen(placeId: string, currentBeen: number) {
+    setBeen((current) => ({ ...current, [placeId]: currentBeen + 1 }));
+  }
+
   return (
     <section className={s.content}>
       <div className="wrap">
@@ -76,37 +80,17 @@ export function DirectoryListView({
             </div>
           )}
           {!loading &&
-            places.map((place, index) => {
-              if (place.kind === "business") {
-                return (
-                  <LocalBusinessCard
-                    key={place.id}
-                    place={place.source as DirectoryPlace}
-                    index={index}
-                  />
-                );
-              }
-              const venue = place.source as Venue;
-              return (
-                <LocalVenueCard
-                  key={place.id}
-                  venue={venue}
-                  index={index}
-                  isExpanded={expandedId === venue.id}
-                  beenCount={been[venue.id] ?? venue.beenHere}
-                  marked={been[venue.id] !== undefined}
-                  onToggle={() =>
-                    setExpandedId(expandedId === venue.id ? null : venue.id)
-                  }
-                  onMarkBeen={() =>
-                    setBeen((current) => ({
-                      ...current,
-                      [venue.id]: venue.beenHere + 1,
-                    }))
-                  }
-                />
-              );
-            })}
+            places.map((place, index) => (
+              <LocalPlaceCard
+                key={place.id}
+                place={place}
+                index={index}
+                expandedId={expandedId}
+                been={been}
+                onToggleExpand={toggleExpand}
+                onMarkBeen={markBeen}
+              />
+            ))}
         </div>
       </div>
     </section>

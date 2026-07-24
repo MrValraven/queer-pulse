@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ForumAvatar } from "./ForumAuthor";
-import { currentUser } from "../members/data/members";
+import { useProfile } from "../../app/providers/ProfileProvider";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadComposer({
@@ -20,14 +20,17 @@ export function ThreadComposer({
   textareaRef: RefObject<HTMLTextAreaElement | null>;
 }) {
   const { t } = useTranslation();
+  // The signed-in member, mode-aware: the real user in live, the mock persona in
+  // demo — so the composer never borrows the demo persona's avatar in production.
+  const { profile } = useProfile();
   return (
     <div className={styles.compose}>
       <div className={styles.crHead}>
         <ForumAvatar
           className={styles.crAv}
           person={{
-            photo: currentUser.photo,
-            initials: currentUser.initials,
+            photo: profile.photo,
+            initials: profile.initials,
             name: "You",
           }}
         />

@@ -63,11 +63,30 @@
   .grid {
     grid-template-columns: 1fr;
   }
+  .page {
+    /* Tighter gutters so the results grid keeps its full width on phones — at the
+       old 28px the minmax(280px) columns overflowed narrow viewports. */
+    padding: 92px 16px 64px;
+  }
+}
+/* Below the point where a 280px card + gutters no longer fits, drop the results
+   to a single fluid column so cards never overflow or clip. */
+@media (max-width: 560px) {
+  .mGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .filters {
   position: sticky;
   top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* Same filter stack, rendered inside the mobile filters sheet: no sticky offset,
+   and it flows naturally within the sheet's own scroll. */
+.filtersSheet {
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -204,6 +223,14 @@
   font-style: italic;
   color: var(--accent);
 }
+/* Groups the mobile Filters button with the sort control so they stay together
+   on the right of the top row (and share a line when it wraps on phones). */
+.topControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 .sort {
   display: flex;
   gap: 6px;
@@ -226,6 +253,62 @@
   padding: 7px 12px;
   outline: none;
   cursor: pointer;
+}
+
+/* Mobile-only trigger that opens the filters bottom-sheet. Hidden on desktop,
+   where the sidebar sits inline. Pushed to the left of the sort control by the
+   topRow's space-between. */
+.filtersBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 9px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.filtersBtn svg {
+  font-size: 15px;
+}
+.filtersBtnCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Filters sheet header + apply footer. */
+.sheetTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+  margin-bottom: 16px;
+}
+.sheetFoot {
+  position: sticky;
+  bottom: 0;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+}
+.sheetFoot :global(button) {
+  width: 100%;
 }
 
 .appliedRow {

@@ -26,18 +26,27 @@ async function loadLiveDrafts(getDrafts: ReturnType<typeof vi.fn>) {
   }));
 
   const { DemoModeProvider } = await import("./DemoModeProvider");
+  const { I18nProvider } = await import("./I18nProvider");
+  const { ToastProvider } = await import(
+    "../../shared/components/feedback/ToastProvider"
+  );
   const mod = await import("./DraftsProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   // DemoModeProvider is required, not optional: DraftsProvider calls
   // useDemoMode() unconditionally and throws without it. It resolves to LIVE
-  // here because the loader stubbed VITE_API_URL/VITE_DEMO above.
+  // here because the loader stubbed VITE_API_URL/VITE_DEMO above. I18nProvider
+  // and ToastProvider are likewise required: the rollback path surfaces a toast.
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
-      <DemoModeProvider>
-        <mod.DraftsProvider>{children}</mod.DraftsProvider>
-      </DemoModeProvider>
+      <I18nProvider>
+        <ToastProvider>
+          <DemoModeProvider>
+            <mod.DraftsProvider>{children}</mod.DraftsProvider>
+          </DemoModeProvider>
+        </ToastProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
   return { ...mod, wrapper };

@@ -82,7 +82,6 @@ export const shared: Catalog = {
   "accountMenu.items.drafts": "Rascunhos",
   "accountMenu.items.pitches": "Propostas",
   "accountMenu.items.saved": "Guardados",
-  "accountMenu.items.membership": "Adesão",
   "accountMenu.items.settings": "Definições",
   "accountMenu.items.help": "Ajuda",
   "accountMenu.ariaLabel": "Menu da conta",
@@ -133,7 +132,9 @@ export const shared: Catalog = {
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.partnerships": "Parcerias",
+  "adminNav.items.orgTiers": "Níveis de parceria",
   "adminNav.items.governance": "Governação",
+  "adminNav.items.systemAccounts": "Contas de sistema",
 
   // BackToSettingsLink
   "backToSettingsLink.label": "Voltar às definições",
@@ -150,26 +151,6 @@ export const shared: Catalog = {
 
   // SkipToContentLink
   "skipToContent.label": "Saltar para o conteúdo principal",
-
-  // QuickExit
-  "quickExit.tooltip.withShortcut":
-    "<strong>Precisas de sair depressa?</strong> Este botão — ou premir Shift duas vezes — leva-te para uma página do tempo.",
-  "quickExit.tooltip.noShortcut":
-    "<strong>Precisas de sair depressa?</strong> Este botão leva-te para uma página do tempo.",
-  "quickExit.tooltip.dismissAria": "Dispensar a dica de Saída rápida",
-  "quickExit.about.aria": "Sobre a Saída rápida",
-  "quickExit.about.body":
-    "A Saída rápida envia este separador para uma página do tempo e reabre a QueerPulse noutro separador. É uma forma rápida de limpar o ecrã, não anonimato: não consegue apagar o teu histórico anterior, marcadores ou sugestões da barra de endereço. Para mais segurança, usa também uma janela privada e limpa o teu histórico.",
-  "quickExit.about.note":
-    "Não precisas disto? Podes esconder este botão e voltar a ativá-lo quando quiseres em <strong>Definições → Segurança</strong>.",
-  "quickExit.about.gotIt": "Percebido",
-  "quickExit.about.hide": "Esconder Saída rápida",
-  "quickExit.about.limitsAria": "Sobre a Saída rápida e os seus limites",
-  "quickExit.button.aria": "Saída rápida — sair já deste site",
-  "quickExit.button.label": "Saída rápida",
-  "quickExit.button.shortcutHint": "Atalho: prime Shift duas vezes",
-  "quickExit.toastHidden":
-    "Saída rápida escondida. Volta a ativá-la em Definições → Segurança.",
 
   // Avatar
   "avatar.verified": "Pessoa verificada",
@@ -268,7 +249,6 @@ export const shared: Catalog = {
   "megaNav.resources.col.health.transHealthcare": "Cuidados de saúde trans",
   "megaNav.resources.col.health.wellbeingHub": "Centro de bem-estar",
   "megaNav.resources.col.safety.head": "Segurança e direitos",
-  "megaNav.resources.col.safety.emergency": "Emergência",
   "megaNav.resources.col.safety.safetyGuide": "Guia de segurança",
   "megaNav.resources.col.learn.head": "Aprender e pertencer",
   "megaNav.resources.col.learn.resourceLibrary": "Biblioteca de recursos",
@@ -328,7 +308,6 @@ export const shared: Catalog = {
   "megaNav.about.feature.cta": "Sobre a QueerPulse",
   "megaNav.about.col.mission.head": "Missão e governação",
   "megaNav.about.col.mission.aboutQueerPulse": "Sobre a QueerPulse",
-  "megaNav.about.col.mission.manifesto": "O Manifesto",
   "megaNav.about.col.using.head": "Usar a QueerPulse",
   "megaNav.about.col.using.helpFaq": "Ajuda e perguntas frequentes",
   "megaNav.about.col.using.roadmap": "Roteiro",

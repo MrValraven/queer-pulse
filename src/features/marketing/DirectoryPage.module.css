@@ -14,43 +14,6 @@
   box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.3);
 }
 
-.bar {
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(var(--cream-rgb), 0.88);
-  backdrop-filter: blur(12px);
-}
-/* Frosted sticky bar: flip to a dark frost in dark mode (the light cream
-   channels don't flip on their own, leaving a bright bar on the dark page). */
-:global([data-theme="dark"]) .bar {
-  background: rgba(14, 8, 32, 0.85);
-}
-.search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
-  padding: 11px 16px;
-  background: var(--paper);
-  margin-bottom: 14px;
-}
-.search svg {
-  width: 17px;
-  height: 17px;
-  color: var(--ink-40);
-}
-.search input {
-  flex: 1;
-  border: none;
-  background: none;
-  font-family: var(--sans);
-  font-size: 14.5px;
-  color: var(--ink);
-}
 .content {
   padding: 32px 0 80px;
 }
@@ -215,10 +178,12 @@
   }
 }
 
-:global([data-theme="dark"]) .bar {
-  background: rgba(26, 16, 40, 0.86);
-}
-:global([data-theme="dark"]) .card,
-:global([data-theme="dark"]) .search {
+:global([data-theme="dark"]) .card {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+.viewToggle {
+  display: flex;
+  justify-content: center;
+  padding: 20px 16px 0;
 }

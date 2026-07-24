@@ -278,7 +278,6 @@ export interface TopicResponse {
   label: string;
   description: string;
   totalPosts: number;
-  crisisCard: boolean;
 }
 
 export interface RelatedTopicResponse {

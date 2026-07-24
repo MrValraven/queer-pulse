@@ -742,6 +742,52 @@
   color: var(--ink-40);
 }
 
+.rBody {
+  flex: 1;
+  min-width: 0;
+}
+.rHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rMenu {
+  margin-left: auto;
+}
+.opMenu {
+  margin-left: 4px;
+  display: inline-flex;
+}
+.editedMark {
+  color: var(--plum);
+  opacity: 0.6;
+  font-size: 0.85em;
+}
+.tombstone {
+  color: var(--plum);
+  opacity: 0.6;
+  font-style: italic;
+}
+.inlineEdit {
+  margin: 6px 0;
+}
+.inlineTa {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(45, 27, 61, 0.18);
+  border-radius: 10px;
+  background: var(--cream);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.inlineActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 /* avatar tints */
 .tCoral {
   background: rgba(var(--accent-rgb), 0.14);

@@ -26,7 +26,7 @@ const LINKS = [
     icon: <FiCalendar />,
     labelKey: "system:notFound.links.gatherings.label",
     subKey: "system:notFound.links.gatherings.sub",
-    to: routes.gathering,
+    to: routes.gatherings,
   },
   {
     icon: <FiBook />,

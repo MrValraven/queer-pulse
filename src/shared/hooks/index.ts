@@ -9,11 +9,6 @@ export { useFocusOnMount } from "./useFocusOnMount";
 export { useLocalStorage } from "./useLocalStorage";
 export { useSubmitFlow, type FlowStatus } from "./useSubmitFlow";
 export {
-  useQuickExit,
-  type QuickExitApi,
-  type QuickExitPrefs,
-} from "./useQuickExit";
-export {
   useInstallPrompt,
   detectPlatform,
   type InstallPromptApi,

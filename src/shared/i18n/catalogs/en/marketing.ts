@@ -268,11 +268,6 @@ export const marketing: Catalog = {
   "activism.local.banner.title": "Housing pressure in Mouraria",
   "activism.local.banner.body":
     "Several queer households are facing non-renewal notices this quarter. The Housing Advocate role below is a direct response.",
-  "activism.local.letter.title": "Sign the open letter",
-  "activism.local.letter.body":
-    "<b>{signatures}</b> of {target} signatures — hand-delivered to the Câmara Municipal once we reach the target.",
-  "activism.local.letter.bodyLive":
-    "Add your name — hand-delivered to the Câmara Municipal once we reach our signature target.",
   "activism.skills.title": "Bring a <em>skill</em>",
   "activism.skills.p1":
     "Every organisation below needs more than volunteers with picket signs — they need your actual craft.",
@@ -421,7 +416,6 @@ export const marketing: Catalog = {
   "coc.report.body":
     "Every report is read by a person, never auto-actioned. We aim to respond within 48 hours.",
   "coc.report.fileCta": "File a report",
-  "coc.report.emergencyCta": "This is an emergency",
   "coc.appeal.title": "§05 <em>Appeals</em>",
   "coc.appeal.p1":
     "Every enforcement decision can be appealed once, within <strong>14 days</strong>, to a different moderator than the one who made the original call.",
@@ -776,16 +770,6 @@ export const marketing: Catalog = {
   "listBusiness.wizard.pill.photos": "Photos",
   "listBusiness.wizard.pill.review": "Review",
 
-  // ── Manifesto ──────────────────────────────────────────────────────────
-  "manifesto.meta.title": "The QueerPulse manifesto: what we believe",
-  "manifesto.meta.description":
-    "The founding document behind QueerPulse — written by the founding circle and ratified by the community. Read what we believe, then add your name.",
-  "manifesto.hero.eyebrow": "The Manifesto",
-  "manifesto.hero.title": "We build for <em>each other.</em>",
-  "manifesto.hero.attrib":
-    "Written by the founding circle, <b>ratified by the community.</b>",
-  "manifesto.toast.signed": "Thanks for adding your name.",
-
   // ── Partners ───────────────────────────────────────────────────────────
   "partners.meta.title": "QueerPulse's partner organisations in Portugal",
   "partners.meta.description":
@@ -1113,65 +1097,6 @@ export const marketing: Catalog = {
   "terms.contactSection.body":
     "Questions about these terms? Email <a>hello@queerpulse.pt</a> and a real person will respond.",
 
-  // ── Manifesto body (the founding document — platform-authored, ships in
-  //    the bundle in both modes, so it's chrome under the scope rule).
-  //    Signer names stay English: fictional people's own names.
-  "manifesto.stanza01.title": "Slower is <em>kinder.</em>",
-  "manifesto.stanza01.p1":
-    "We are not racing to scale. We do not want more members; we want <em>the right ones</em>. We will grow at the pace at which the community can absorb new arrivals — vouched-for, welcomed, integrated. If that means we are smaller than we could be, we will be smaller than we could be.",
-  "manifesto.stanza01.p2":
-    "The other platforms are engineered to keep you scrolling; your attention is the product they measure and sell. We sell nothing. There are no follower counts, no algorithm choosing what you see, no “for you” feed competing for your evening. <strong>Time spent here is meant to add up to time off the platform</strong> — at gatherings, in studios, at clinics, with friends.",
-  "manifesto.stanza02.title": "Vouched, not <em>verified.</em>",
-  "manifesto.stanza02.p1":
-    "Membership is by invitation, and every invitation is signed by a name. If you are here, someone you have actually met said you should be. If you stay, you'll eventually do the same for someone else. This is not exclusivity. It is <em>accountability</em>.",
-  "manifesto.stanza02.p2":
-    "“Verified” is a corporate word. It assumes a centre that can decide who you are. We don't. The community decides — together, slowly, and with the receipts of in-person time.",
-  "manifesto.pull1":
-    "We do not put rainbow logos on anything. <em>The work speaks.</em>",
-  "manifesto.stanza03.title": "Safety is <em>infrastructure.</em>",
-  "manifesto.stanza03.p1":
-    "A queer professional network without a hate-crime bridge to ILGA is a logo, not a network. So is one without therapists vetted by the community, a safe-spaces map that is actually maintained, and an open clinic night that meets every month at Café Beirão. <strong>If we cannot operationally protect each other, we are not a network.</strong>",
-  "manifesto.stanza03.p2":
-    "Quick-exit lives in the nav. Crisis chat is one tap. Mercearia Rosa's back door opens to Penha de França. None of these are features. They are the floor.",
-  "manifesto.stanza04.title": "Money moves <em>sideways.</em>",
-  "manifesto.stanza04.p1":
-    "Sustainer members pay €96 a year. That pays for staff, infrastructure, and the things that have to keep running. Above that, every euro is allocated <em>sideways</em> — into a fund that disperses in €50–200 grants, decided by a rotating circle, distributed in 14 days. <strong>96% of every euro goes to programs.</strong> Full breakdown, every year, in the governance report.",
-  "manifesto.stanza04.p2":
-    "Work moves sideways too. The professional network that was supposed to connect us only ever sold us back to recruiters. Here, members hire, mentor, commission, and rent from each other — and the value <em>stays with us</em> instead of being skimmed off the top.",
-  "manifesto.stanza04.p3":
-    "There is a solidarity rate. It is genuinely free. We do not ask why.",
-  "manifesto.pull2":
-    "If you cannot pay, that is information about <em>the world</em>, not about you.",
-  "manifesto.stanza05.title": "Lisbon, on <em>purpose.</em>",
-  "manifesto.stanza05.p1":
-    "We are based in a place. Specifically: Anjos, Mouraria, Graça, Alfama, Bairro Alto, Marvila, and the bus routes that connect them. A queer network rooted in nowhere is a feed. A queer network rooted somewhere — in a city you can walk across in an hour, with venues and chapters and a Câmara Municipal — is a network.",
-  "manifesto.stanza05.p2":
-    "We will expand to other cities only when there is a community there asking us to. Not before. <strong>Porto is next.</strong> Then Madrid. Then we stop and re-think.",
-  "manifesto.stanza06.title": "Disagreement is <em>included.</em>",
-  "manifesto.stanza06.p1":
-    "We have, twice, publicly disagreed with our oldest partner ILGA Portugal. We will do it again. Coalition is not consensus. We do not speak for every queer person, and no one speaks for us. The forum hosts arguments that we expect to remain unresolved. The Assembly votes on what cannot be left unresolved.",
-  "manifesto.stanza06.p2":
-    "Moderation is not neutrality. We will remove cruelty. We will not remove inconvenience.",
-  "manifesto.stanza07.title": "Hold all of <em>this loosely.</em>",
-  "manifesto.stanza07.p1":
-    "This document is wrong about something. We don't know what. The 2025 revision changed eleven sentences. The 2026 revision will change more. Manifestos that don't update are gravestones. <em>This one updates.</em>",
-  "manifesto.stanza07.p2":
-    "If you are reading this and something feels off, write to <a>manifesto@queerpulse.app</a>. A real person reads every one. We discuss them at the assembly.",
-  "manifesto.signers.title_one":
-    "Signed by <em>{formatted} member</em> · so far",
-  "manifesto.signers.title_other":
-    "Signed by <em>{formatted} members</em> · so far",
-  "manifesto.signers.sub":
-    "Members sign by clicking once. There's no obligation — many haven't, and that's also fine. These are some of the people who have.",
-  "manifesto.signers.addCta": "Add my name",
-  "manifesto.signers.more":
-    "Plus <b>{formatted} more</b> · last signed by <b>{name}</b>, {time}.",
-  "manifesto.signers.minutesAgo_one": "{count} minute ago",
-  "manifesto.signers.minutesAgo_other": "{count} minutes ago",
-  "manifesto.actions.addName": "Add your name",
-  "manifesto.actions.print": "Print / save PDF",
-  "manifesto.actions.governance": "Read the governance report →",
-
   // ── Press Kit — page sections ─────────────────────────────────────────
   // Coverage headlines/sources are real press pieces (someone else's words)
   // and stay English; the surrounding section chrome is translated.
@@ -1186,7 +1111,7 @@ export const marketing: Catalog = {
     "130 words · for longer features, “about” sections",
   "pressKit.boiler.long.wc": "130 words",
   "pressKit.boiler.long.text":
-    "QueerPulse is a Lisbon-based queer professional network, founded in 2024 by eight community members in the back room of Café Beirão. It is operated by Associação QueerPulse, a not-for-profit registered in Portugal (NIPC 517 426 884), and supported by Sustainer memberships, one-off donations, and three programme grants. Membership is by vouched invitation. The platform supports a magazine, a podcast (The Back Room), a verified safe-spaces network across Lisbon, a micro-grants fund disbursed within 14 days by a rotating community circle, and an operational partnership with ILGA Portugal for legal aid and helpline handoffs. Annual transparency reports are independently audited and published publicly.",
+    "QueerPulse is a Lisbon-based queer professional network, founded in 2024 by eight community members in the back room of Café Beirão. It is operated by Associação QueerPulse, a not-for-profit registered in Portugal (NIPC 517 426 884), and supported by Sustainer memberships, one-off donations, and three programme grants. Membership is by vouched invitation. The platform supports a magazine, a podcast (The Back Room), a verified safe-spaces network across Lisbon, a micro-grants fund disbursed within 14 days by a rotating community circle, and an operational partnership with a national LGBTQ+ rights organisation for legal aid and helpline handoffs. Annual transparency reports are independently audited and published publicly.",
   "pressKit.mark.section.title": "The <em>mark</em> and how to use it",
   "pressKit.mark.section.lead":
     "Three approved variations. The wordmark always carries the coral pulse dot — except in the inverse “coral” variant, where the dot becomes plum. Don't recolour the dot to anything else.",
@@ -1229,7 +1154,7 @@ export const marketing: Catalog = {
   "pressKit.team.marta.langs": "<b>EN · PT · ES</b> · available on 48h notice",
   "pressKit.team.catarina.role": "Co-founder · Co-treasurer · Trans Hub",
   "pressKit.team.catarina.desc":
-    "For: trans-affirming healthcare, finances, transparency, mutual aid, ILGA partnership.",
+    "For: trans-affirming healthcare, finances, transparency, mutual aid, legal-aid partnership.",
   "pressKit.team.catarina.langs": "<b>EN · PT</b> · available on 24h notice",
   "pressKit.team.andre.role": "Co-founder · Co-treasurer · Design",
   "pressKit.team.andre.desc":
@@ -1684,172 +1609,6 @@ export const marketing: Catalog = {
   // ── Shared hub back-link label (Governance section) ────────────────────
   "hub.governanceLabel": "Governance",
 
-  // ── Annual Assembly — page chrome. The agenda/resolutions/tallies/history
-  //    are per-year governance records (specific proposals, vote counts,
-  //    dates) — left English; see the sweep report for why.
-  "annualAssembly.meta.title": "QueerPulse Annual Assembly: eleven resolutions",
-  "annualAssembly.meta.description":
-    "QueerPulse's binding annual members' meeting — vote on eleven resolutions, join in person or online in Lisbon on 14–15 November, or read the minutes after.",
-  "annualAssembly.hero.eyebrow": "Annual Assembly · 14 November 2026 · Lisbon",
-  "annualAssembly.hero.title": "Two days, eleven <em>resolutions.</em>",
-  "annualAssembly.hero.dek":
-    "QueerPulse's binding annual gathering. Where the manifesto gets revised, the budget gets approved, and any decision that can't be made by a circle goes to a member vote. <em>You can attend in person, online, or just read the minutes after</em> — but your vote counts the same.",
-  "annualAssembly.hero.meta.datesLabel": "Two days · Sat & Sun",
-  "annualAssembly.hero.meta.videoLink": "+ video link",
-  "annualAssembly.hero.meta.eligibleLabel": "Members eligible to vote",
-  "annualAssembly.hero.meta.quorumLabel": "Quorum · met",
-  "annualAssembly.hero.voteCta": "Vote now · {count} resolutions",
-  "annualAssembly.hero.rsvpGoing": "You're going · tap to cancel",
-  "annualAssembly.hero.rsvpCta":
-    "RSVP in-person · {spotsLeft} of {totalSpots} spots left",
-  "annualAssembly.hero.joinOnlineCta": "Join online · Zoom link",
-  "annualAssembly.toast.rsvpCancelled":
-    "RSVP cancelled · your seat is back in the pool",
-  "annualAssembly.toast.rsvpConfirmed": "You're on the list · see you 14 Nov",
-  "annualAssembly.toast.openingZoom": "Opening Zoom link…",
-  "annualAssembly.footer.eligibility": "Questions about your eligibility?",
-  "annualAssembly.footer.helpCta": "Help →",
-  "annualAssembly.footer.proposal":
-    "Want to submit a member proposal for next year?",
-  "annualAssembly.footer.writeCta": "Write to us",
-  "annualAssembly.agenda.title": "The <em>agenda</em>",
-  "annualAssembly.agenda.sub":
-    "Roughly the order. Times are guidelines. We've never finished on time and we don't expect to.",
-  "annualAssembly.vote.title": "Vote · <em>open until 14 Nov · 14:00</em>",
-  "annualAssembly.vote.sub":
-    "Everyone votes — whether you're attending or not. Cast your vote any time; you can change it until the close. <em>One vote per member, per resolution.</em>",
-  "annualAssembly.vote.quorumStrip":
-    "<b>Quorum:</b> 184 votes required to validate a resolution. <em>Currently at 312 votes cast</em> — quorum met. <b>Yes/no thresholds:</b> simple majority for budget items; 60% supermajority for Code of Conduct & manifesto changes.",
-  "annualAssembly.vote.noCta": "No · reject",
-  "annualAssembly.vote.abstainCta": "Abstain",
-  "annualAssembly.vote.showMore": "Show {count} more resolutions →",
-  "annualAssembly.vote.recorded": "Vote recorded · you can change it any time",
-  "annualAssembly.vote.tallyYes": "Yes",
-  "annualAssembly.vote.tallyNo": "No",
-  "annualAssembly.vote.tallyAbstain": "Abstain",
-  "annualAssembly.attend.title": "Can't make it in person?",
-  "annualAssembly.attend.body":
-    "Vote online any time until 14 Nov · 14:00. Watch the live stream of the in-person sessions with chat. Read the minutes the following Friday.",
-  "annualAssembly.attend.voteCta": "Cast your vote",
-  "annualAssembly.attend.streamCta": "Live stream link",
-  "annualAssembly.past.title": "Past <em>assemblies</em>",
-  "annualAssembly.past.sub":
-    "Every Annual Assembly's resolutions and minutes are public.",
-  "annualAssembly.past.minutesCta": "Minutes →",
-
-  // ── Live-stream modal (Annual Assembly) ────────────────────────────────
-  "liveStream.closeAria": "Close",
-  "liveStream.eyebrow": "Live stream · Atelier Pulso",
-  "liveStream.title": "Annual Assembly · <em>live.</em>",
-  "liveStream.lead":
-    "The in-person sessions are streamed here with open chat. The stream goes live when the room opens — <b>14 Nov · 10:00 WET.</b>",
-  "liveStream.playAria": "Play stream",
-  "liveStream.statusLive": "Live",
-  "liveStream.statusSoon": "Starts soon",
-  "liveStream.noteStreaming":
-    "Streaming the main room · audio + slides · chat below",
-  "liveStream.noteSoon": "Stream starts at 10:00 WET on 14 November",
-  "liveStream.backCta": "← Close",
-  "liveStream.voteInsteadCta": "Cast your vote instead →",
-
-  // ── Assembly Minutes — page chrome. Each year's minutes (summary, agenda,
-  //    resolutions, actions) are the official governance record — left
-  //    English; see the sweep report.
-  "assemblyMinutes.hero.eyebrow": "Annual Assembly · Minutes · {year}",
-  "assemblyMinutes.hero.title": "The <em>minutes.</em>",
-  "assemblyMinutes.hero.dek":
-    "The public record of the {year} Annual Assembly — who chaired, what was on the table, and how every resolution landed.",
-  "assemblyMinutes.hero.fallbackNote":
-    "We don't have minutes for {requestedYear} on file, so here's the {year} record instead.",
-  "assemblyMinutes.hero.backCta": "← Back to the Assembly",
-  "assemblyMinutes.otherYears": "Other years:",
-  "assemblyMinutes.meta.date": "Date",
-  "assemblyMinutes.meta.location": "Location",
-  "assemblyMinutes.meta.chair": "Chair",
-  "assemblyMinutes.meta.secretary": "Secretary",
-  "assemblyMinutes.meta.quorum": "Quorum",
-  "assemblyMinutes.meta.attendance": "Attendance",
-  "assemblyMinutes.meta.attendanceValue":
-    "{inPerson} in person · {online} online · {votes} votes",
-  "assemblyMinutes.summary.title": "Summary of <em>proceedings</em>",
-  "assemblyMinutes.agenda.title": "<em>Agenda</em> as taken",
-  "assemblyMinutes.resolutions.title": "Resolutions & <em>outcomes</em>",
-  "assemblyMinutes.actions.title": "Actions & <em>next steps</em>",
-  "assemblyMinutes.signoff":
-    "Minutes recorded by {secretary} · ratified at the close of the {year} Annual Assembly. This is the public record.",
-  "assemblyMinutes.outcome.passed": "Passed",
-  "assemblyMinutes.outcome.rejected": "Rejected",
-  "assemblyMinutes.outcome.tabled": "Tabled",
-
-  // ── Open Letter — the letter body is a single bounded advocacy document,
-  //    platform-authored (not per-user content); translated in full like the
-  //    Manifesto. Signatory names + individual signature notes stay English
-  //    (people's own words/names).
-  "openLetter.hero.eyebrowPrefix": "Open letter · {partners}",
-  "openLetter.hero.live_one": "Live · {days} day left",
-  "openLetter.hero.live_other": "Live · {days} days left",
-  "openLetter.hero.addressed": "Addressed to <b>{to}</b> · {date}",
-  "openLetter.hero.countGoalSuffix": "/ {goal} signatures",
-  "openLetter.hero.countLabel":
-    "Members of QP & partner orgs · last signed <b>{at}</b> by {by}",
-  "openLetter.hero.pctLabel": "<b>{pct}%</b> · {note}",
-  "openLetter.toast.signatureAdded": "Signature added · {total} total",
-  "openLetter.body.addressee":
-    "To the Ministry of Health, and to the Direção-Geral da Saúde:",
-  "openLetter.body.lead":
-    "Law No. 38/2018 codified a fundamental principle in Portuguese law: that a person's gender identity is theirs to determine, and that the state and its health system are obliged to recognise that determination. <em>The law is good.</em> It is not yet being applied.",
-  "openLetter.body.p2":
-    "Specifically, the prescription protocols for hormone-replacement therapy in Portugal are <strong>not portable across the SNS</strong>. A trans patient who establishes care with a GP in Lisbon, builds an evidence file over 12–24 months, and then moves — for work, for housing, for safety — must, in practice, start over with a new GP in their new city. The clinical evidence does not move with them. The prescription history does not move with them. <em>The trust they built with a clinician does not move with them.</em>",
-  "openLetter.body.p3":
-    "This is not what the law says should happen. This is what the operational reality is.",
-  "openLetter.body.asksTitle": "What we're <em>asking for</em>",
-  "openLetter.body.asksLead":
-    "Three specific, implementable changes. None require new legislation.",
-  "openLetter.body.ask1.lead": "A national HRT prescription registry",
-  "openLetter.body.ask1.body":
-    ", opt-in and clinician-only, accessible to any SNS-affiliated GP a patient consents to. Same model as the diabetes care registry adopted in 2019.",
-  "openLetter.body.ask2.lead": "A 14-day “continuity script” rule",
-  "openLetter.body.ask2.body":
-    " — when a patient moves regions, their new GP may issue a 90-day script bridging to a full review, without requiring a fresh diagnostic process.",
-  "openLetter.body.ask3.lead":
-    "Inclusion of trans-affirming care in the standard GP onboarding module",
-  "openLetter.body.ask3.body":
-    " — mandatory, four hours, drafted in collaboration with WPATH-certified Portuguese clinicians.",
-  "openLetter.body.whyNowTitle": "Why <em>now</em>",
-  "openLetter.body.whyNowP1":
-    "Because the policy window is open. Because the Ministry has committed, in the 2026 health budget, to “evaluate continuity-of-care pathways for chronic medications.” Because the clinicians who would have to implement this — including <em>Dr. Inês Pereira</em> at Clínica do Largo, <em>Dr. Hugo Marques</em> at USF Sé, and <em>Dra. Mariza Câmara</em> at the Câmara — have publicly stated they are ready to participate.",
-  "openLetter.body.whyNowP2":
-    "And because every month we wait, <strong>roughly 40 trans patients in Portugal lose continuity of HRT</strong> due solely to administrative friction. The clinical cost of these interruptions is documented. The personal cost is incalculable.",
-  "openLetter.body.whatWeDoTitle": "What we'll do <em>with this letter</em>",
-  "openLetter.body.whatWeDoP1":
-    "At 5,000 signatures, this letter will be hand-delivered to the Ministry by a delegation of three: <em>Catarina Vaz</em> (QueerPulse, Trans Hub), <em>Filipa Mendes</em> (ILGA Portugal), and one trans person whose continuity of care has been interrupted in the last 24 months. We will request a meeting. We will publish their response, whatever it is.",
-  "openLetter.body.whatWeDoP2":
-    "If they decline to meet, this letter goes to the next quarterly Assembleia da República's health committee hearing — already scheduled to discuss Law No. 38/2018 implementation — and to the press.",
-  "openLetter.body.kicker":
-    "We are not asking for a new right. <strong>We are asking that an existing right be made operationally real.</strong>",
-  "openLetter.sig.transHub":
-    "Trans Hub coordinator · co-treasurer · QueerPulse",
-  "openLetter.sig.ilgaDirector": "Executive Director · ILGA Portugal",
-  "openLetter.sidebar.recentSignatures": "Recent signatures",
-  "openLetter.sidebar.aboutRunning":
-    "<b>Why we run open letters this way:</b> every signature has a verified member name behind it. <em>That makes them harder to dismiss.</em> We won't do anonymous-mass petitions — the model is fewer, real, named signatures.",
-  "openLetter.sign.title": "Sign the open letter",
-  "openLetter.sign.asLabel": "As {name} · {pronouns}",
-  "openLetter.sign.nameLabel": "Display name on the list",
-  "openLetter.sign.visibilityLabel": "Show as · visibility",
-  "openLetter.sign.noteLabel": "Add a sentence (optional)",
-  "openLetter.sign.noteCounter": "{length}/280",
-  "openLetter.sign.notePlaceholder": "Why this matters to you · 280 chars",
-  "openLetter.sign.submitCta": "Sign the letter",
-  "openLetter.sign.signedCta": "You signed the letter",
-  "openLetter.sign.footer":
-    "Members only. We never share your data with the recipient organisation. You can withdraw your signature any time.",
-  "openLetter.sign.anonName": "A member",
-  "openLetter.visibility.full": "Full name · public",
-  "openLetter.visibility.initials": "Initials only",
-  "openLetter.visibility.anon": "Anonymous · “A member”",
-  "openLetter.sidebar.noNote": "—",
-
   // ── Transparency Report — page chrome. The euro figures, allocation
   //    breakdown, moderation rows, government requests, named mistakes and
   //    governance stats are the year's actual audited figures — left
@@ -2114,7 +1873,7 @@ export const marketing: Catalog = {
     "A regular shift and a minimum term — consistency matters.",
   "postOpportunity.core.basicsHeading": "The basics",
   "postOpportunity.core.orgLabel": "Organisation",
-  "postOpportunity.core.orgPlaceholder": "e.g. ILGA Portugal",
+  "postOpportunity.core.orgPlaceholder": "e.g. your organisation",
   "postOpportunity.core.roleLabel": "Role title",
   "postOpportunity.core.rolePlaceholder": "e.g. Community Outreach Volunteer",
   "postOpportunity.core.causeLabel": "Cause",
@@ -2175,10 +1934,10 @@ export const marketing: Catalog = {
   "postOpportunity.rich.applyRoleLabel": "Apply-as role label",
   "postOpportunity.rich.applyRoleHelper": "Defaults to “Role · Organisation”.",
   "postOpportunity.rich.applyRolePlaceholder":
-    "Community Outreach · ILGA Lisboa",
+    "Community Outreach · a local LGBTQ+ association",
   "postOpportunity.rich.partnerSlugLabel": "Partner slug",
   "postOpportunity.rich.partnerSlugHelper": "Links to a partner's page.",
-  "postOpportunity.rich.partnerSlugPlaceholder": "ilga-portugal",
+  "postOpportunity.rich.partnerSlugPlaceholder": "your-organisation",
   "postOpportunity.rich.handleLabel": "Contact handle",
   "postOpportunity.rich.handleHelper":
     "Where interested volunteers can reach you.",
@@ -2437,7 +2196,7 @@ export const marketing: Catalog = {
   "forOrgs.tiers.partner.price": "By <em>arrangement</em>",
   "forOrgs.tiers.partner.pricePeriod": "reciprocal · usually unpaid",
   "forOrgs.tiers.partner.dek":
-    "For organisations that should be operationally connected to QueerPulse — ILGA, Trans Hub, civic-service agencies, allied associations. We build infrastructure together, not co-marketing.",
+    "For organisations that should be operationally connected to QueerPulse — legal-aid organisations, health services, civic-service agencies, allied associations. We build infrastructure together, not co-marketing.",
   "forOrgs.tiers.partner.list1":
     "<b>Operational seam:</b> case bridge, helpline handoff, joint protocol",
   "forOrgs.tiers.partner.list2": "Shared moderation channel where appropriate",
@@ -2474,7 +2233,7 @@ export const marketing: Catalog = {
   "forOrgs.form.nameLabel": "Your name",
   "forOrgs.form.namePlaceholder": "Filipa Mendes",
   "forOrgs.form.orgLabel": "Organisation",
-  "forOrgs.form.orgPlaceholder": "ILGA Portugal",
+  "forOrgs.form.orgPlaceholder": "Your organisation",
   "forOrgs.form.emailLabel": "Email",
   "forOrgs.form.emailPlaceholder": "you@org.example",
   "forOrgs.form.interestLabel": "Interested in",
@@ -2486,9 +2245,9 @@ export const marketing: Catalog = {
   "forOrgs.form.messagePlaceholder": "We run an LGBTQ+ helpline and…",
   "forOrgs.form.submitCta": "Send to partnerships team",
   "forOrgs.form.small":
-    "Goes directly to Marta and André. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
+    "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
   "forOrgs.form.toast":
-    "Sent to Marta and André — they'll reply within 5 working days",
+    "Sent to our partnerships team — they'll reply within 5 working days",
 
   // ── Directory — business directory + detail page chrome. Place records
   //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
@@ -2833,16 +2592,6 @@ export const marketing: Catalog = {
   //    Bairro (neighbourhood) names are Lisbon proper nouns — kept identical.
   //    Filter `type`/`vibe` ids stay canonical English strings (stored/filter
   //    values); only their display labels below are translated.
-  "map.hero.eyebrow": "Lisbon · Community guide",
-  "map.hero.title": "The queer <em>city guide</em>",
-  "map.hero.sub":
-    "Bars, clubs, cafés, clinics, bookshops, saunas and community spaces — mapped by people who've actually been there.",
-  "map.stats.venuesListed": "venues listed",
-  "map.stats.neighbourhoods": "neighbourhoods",
-  "map.stats.communityLabel": "Community",
-  "map.stats.maintained": "maintained",
-  "map.filterBar.typeLabel": "Type",
-  "map.filterBar.vibeLabel": "Vibe",
   "map.filter.type.all": "All",
   "map.filter.type.bar": "Bar",
   "map.filter.type.club": "Club",
@@ -2858,11 +2607,11 @@ export const marketing: Catalog = {
   "map.filter.vibe.femmeLeaning": "femme-leaning",
   "map.filter.vibe.transCentred": "trans-centred",
   "map.filter.vibe.soberFriendly": "sober-friendly",
-  "map.sidebar.allVenues": "All venues",
-  "map.sidebar.venueCount_one": "<b>{count}</b> venue",
-  "map.sidebar.venueCount_other": "<b>{count}</b> venues",
+  "map.sidebar.allVenues": "All places",
+  "map.sidebar.venueCount_one": "<b>{count}</b> place",
+  "map.sidebar.venueCount_other": "<b>{count}</b> places",
   "map.sidebar.clear": "Clear",
-  "map.sidebar.empty": "No venues match these filters.",
+  "map.sidebar.empty": "No places match these filters.",
   "map.venueCard.beenCount_one": "<b>{count}</b> person been here",
   "map.venueCard.beenCount_other": "<b>{count}</b> people been here",
   "map.venueCard.beenThere": "Been there",
@@ -2872,8 +2621,8 @@ export const marketing: Catalog = {
   "map.svg.filterByAria": "Filter the map by {bairro}",
   "map.mapError": "The map could not load. The venue list below still works.",
   "map.pinAria": "{name} — {type}",
-  "map.clusterAria_one": "{count} venue here — zoom in",
-  "map.clusterAria_other": "{count} venues here — zoom in",
+  "map.clusterAria_one": "{count} place here — zoom in",
+  "map.clusterAria_other": "{count} places here — zoom in",
 
   // ── Local — combined list/map venue explorer.
   "local.cat.nightlife": "Nightlife",
@@ -2884,6 +2633,13 @@ export const marketing: Catalog = {
   "local.filter.searchPlaceholder": "Search places and venues…",
   "local.filter.categoryAria": "Filter by category",
   "local.filter.vibeLabel": "Vibe",
+  "local.venue.back": "Back to the map",
+  "local.venue.address": "Address",
+  "local.venue.hours": "Hours",
+  "local.venue.accessible": "Wheelchair accessible",
+  "local.venue.onMap": "See it on the map",
+  "local.venue.been_one": "{count} person has been here",
+  "local.venue.been_other": "{count} people have been here",
 
   // ── Constitution — governance/constitutional copy (`ConstitutionPage.tsx`,
   //    `constitution.data.tsx`). Platform-authored, ships in the bundle, no
@@ -3012,7 +2768,7 @@ export const marketing: Catalog = {
   "constitution.art11.clause1":
     "The association may be dissolved only by Assembly resolution requiring a <strong>75% supermajority</strong> of all active members, not merely of those voting.",
   "constitution.art11.clause2":
-    "On dissolution, all remaining assets must be transferred to ILGA Portugal, or to a successor LGBTQ+ organisation chosen by the dissolving Assembly. No assets may be distributed to individuals.",
+    "On dissolution, all remaining assets must be transferred to a registered LGBTQ+ rights organisation chosen by the dissolving Assembly. No assets may be distributed to individuals.",
 
   "constitution.art12.toc": "XII · Amendments",
   "constitution.art12.title": "Amendments",

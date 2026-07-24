@@ -10,22 +10,17 @@ import type {
   Polygon,
   MultiPolygon,
 } from "geojson";
-import {
-  LISBON_BOUNDS,
-  BRAND,
-  FREGUESIA_LABEL_POINTS,
-  buildWarmStyle,
-} from "./lisbonMapStyle";
+import { LISBON_BOUNDS, BRAND, buildWarmStyle } from "./lisbonMapStyle";
 import { FREGUESIAS } from "./freguesias.data";
-import type { Venue } from "./map.data";
 import {
   createVenueMarkerManager,
   type VenueMarkerManager,
   type MarkerLabels,
+  type VenueMarkerData,
 } from "./venueMarker";
 
 interface UseLisbonMapOptions {
-  venues: Venue[];
+  venues: VenueMarkerData[];
   selectedFreguesia: string | null;
   selectedVenueId: string | null;
   counts: Record<string, number>;
@@ -39,13 +34,14 @@ function buildLabelCollection(
 ): FeatureCollection<Point, { name: string; count: number }> {
   return {
     type: "FeatureCollection",
-    features: Object.entries(FREGUESIA_LABEL_POINTS).map(
-      ([name, coordinates]) => ({
-        type: "Feature",
-        properties: { name, count: counts[name] ?? 0 },
-        geometry: { type: "Point", coordinates },
-      }),
-    ),
+    features: FREGUESIAS.features.map((feature) => ({
+      type: "Feature",
+      properties: {
+        name: feature.properties.name,
+        count: counts[feature.properties.name] ?? 0,
+      },
+      geometry: { type: "Point", coordinates: feature.properties.labelPoint },
+    })),
   };
 }
 
@@ -250,36 +246,39 @@ function addMapLayers(map: MapLibreMap, counts: Record<string, number>) {
     type: "geojson",
     data: buildLabelCollection(counts),
   });
+  // One label per parish: the name, plus the place count on a second line when
+  // it is greater than zero. Collision is left on (text-allow-overlap defaults
+  // to false) so the tightly packed central parishes declutter at city zoom
+  // rather than overlapping into a blob; `symbol-sort-key` = -count lets
+  // parishes with places win placement over empty ones. Every label reappears
+  // as you zoom in, and the polygon fills stay visible regardless.
   map.addLayer({
     id: "freguesia-label",
     type: "symbol",
     source: "freguesia-labels",
     layout: {
-      "text-field": ["get", "name"],
+      "text-field": [
+        "case",
+        [">", ["get", "count"], 0],
+        [
+          "format",
+          ["get", "name"],
+          {},
+          "\n",
+          {},
+          ["to-string", ["get", "count"]],
+          { "text-color": BRAND.accentInk },
+        ],
+        ["format", ["get", "name"], {}],
+      ],
       "text-font": ["Noto Sans Bold"],
       "text-size": 12,
-      "text-offset": [0, -0.6],
-      "text-allow-overlap": true,
+      "text-line-height": 1.3,
+      "text-padding": 4,
+      "symbol-sort-key": ["-", 0, ["get", "count"]],
     },
     paint: {
       "text-color": BRAND.plum,
-      "text-halo-color": BRAND.cream,
-      "text-halo-width": 1.5,
-    },
-  });
-  map.addLayer({
-    id: "freguesia-count",
-    type: "symbol",
-    source: "freguesia-labels",
-    layout: {
-      "text-field": ["to-string", ["get", "count"]],
-      "text-font": ["Noto Sans Bold"],
-      "text-size": 13,
-      "text-offset": [0, 0.7],
-      "text-allow-overlap": true,
-    },
-    paint: {
-      "text-color": BRAND.accentInk,
       "text-halo-color": BRAND.cream,
       "text-halo-width": 1.5,
     },

@@ -18,6 +18,7 @@ import {
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
 import {
@@ -70,32 +71,50 @@ function RelatedCardSkeleton({ className }: { className: string }) {
 
 export function ArticlePage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [params] = useSearchParams();
   const [textSize, setTextSize] = useState<TextSize>("md");
-  const loading = useSimulatedLoad();
+  const simLoading = useSimulatedLoad();
   const id = params.get("id") ?? defaultArticleId;
-  const { data } = useArticle(id);
-  const article = data?.article ?? articles[id];
+  const { data, isLoading } = useArticle(id);
+  // NEVER fall back to the mock registry in live — that leaked demo articles
+  // into production. Demo resolves the id against the mock; live uses only the
+  // fetched article (null until it resolves, or if the slug 404s).
+  const article = demoMode ? (articles[id] ?? null) : (data?.article ?? null);
+  const loading = demoMode ? simLoading : isLoading;
 
   if (!article) {
+    // Live mode has no article until the fetch resolves — show a skeleton while
+    // it loads, then a real "not found" state if the slug resolves to nothing.
     return (
       <PageShell>
         <PageMeta title={t("magazine:article.notFoundMetaTitle")} noIndex />
         <div className={`${styles.notFound} wrap`}>
-          <h2>{t("magazine:article.notFoundTitle")}</h2>
-          <p>{t("magazine:article.notFoundBody")}</p>
-          <Button to={routes.magazine}>
-            {t("magazine:article.notFoundCta")}
-          </Button>
+          {loading ? (
+            <>
+              <SkeletonLine width="40%" height={20} />
+              <SkeletonLine width="70%" height={32} style={{ marginTop: 12 }} />
+              <SkeletonLine width="90%" height={16} style={{ marginTop: 12 }} />
+            </>
+          ) : (
+            <>
+              <h2>{t("magazine:article.notFoundTitle")}</h2>
+              <p>{t("magazine:article.notFoundBody")}</p>
+              <Button to={routes.magazine}>
+                {t("magazine:article.notFoundCta")}
+              </Button>
+            </>
+          )}
         </div>
       </PageShell>
     );
   }
 
-  const mockRelated = (articles[id]?.related ?? [])
-    .map((relatedId) => articles[relatedId])
-    .filter((value): value is NonNullable<typeof value> => Boolean(value));
-  const related = data?.related ?? mockRelated;
+  const related = demoMode
+    ? (articles[id]?.related ?? [])
+        .map((relatedId) => articles[relatedId])
+        .filter((value): value is NonNullable<typeof value> => Boolean(value))
+    : (data?.related ?? []);
 
   // First plain-text paragraph doubles as the saved-card blurb.
   const blurb = article.body.find(
