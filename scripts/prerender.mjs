@@ -32,7 +32,11 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import { chromium } from "@playwright/test";
-import { QUIET_PUBLIC_PATHS, assertNoGatedPaths } from "./publicPaths.mjs";
+import {
+  QUIET_PUBLIC_PATHS,
+  assertNoGatedPaths,
+  fetchSubprofilePublicPaths,
+} from "./publicPaths.mjs";
 
 const DIST_DIRECTORY = "dist";
 const NAVIGATION_TIMEOUT_MS = 20_000;
@@ -126,6 +130,15 @@ if (isDemoBuild) {
   );
 }
 
+// Dynamic persona pages (/p/:handle) — fetched from the backend. Demo builds
+// have no API to ask, so they skip dynamic paths entirely; a live build's
+// fetch never throws (returns [] + warns on any failure), so a build machine
+// that can't reach the API still produces the static quiet surface.
+const dynamicEntries = isDemoBuild ? [] : await fetchSubprofilePublicPaths(apiUrl);
+const dynamicPersonaPaths = dynamicEntries.map((entry) => entry.path);
+assertNoGatedPaths(dynamicPersonaPaths);
+const allPublicPaths = [...QUIET_PUBLIC_PATHS, ...dynamicPersonaPaths];
+
 // A handful of indexed pages read live data (the glossary, the guide library,
 // partners, volunteer opportunities). With a real VITE_API_URL they will fetch
 // during this pass, so the build machine needs to be able to reach the API — or
@@ -156,7 +169,7 @@ try {
   // as their indexed content. It also settles every other reveal animation.
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
-  for (const publicPath of QUIET_PUBLIC_PATHS) {
+  for (const publicPath of allPublicPaths) {
     // ?__prerender=1 tells the app to skip its simulated-load skeletons — see
     // src/shared/prerender.ts. It is a search param, so it never leaks into
     // canonical/og:url (both are built from pathname).
@@ -199,9 +212,11 @@ try {
 
 if (failures.length > 0) {
   console.error(
-    `[prerender] ${failures.length} of ${QUIET_PUBLIC_PATHS.length} paths failed. Failing the build rather than shipping an empty shell for them.`,
+    `[prerender] ${failures.length} of ${allPublicPaths.length} paths failed. Failing the build rather than shipping an empty shell for them.`,
   );
   process.exit(1);
 }
 
-console.log(`[prerender] Wrote ${QUIET_PUBLIC_PATHS.length} pages.`);
+console.log(
+  `[prerender] Wrote ${allPublicPaths.length} pages (${QUIET_PUBLIC_PATHS.length} static + ${dynamicPersonaPaths.length} persona).`,
+);

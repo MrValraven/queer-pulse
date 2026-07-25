@@ -4,7 +4,6 @@ import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SubprofileSection } from "./api/subprofiles.api";
 import {
   itemsToInputDto,
   type SubprofileItemView,
@@ -12,30 +11,14 @@ import {
 } from "./api/subprofiles.adapters";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import { MAX_ITEMS_PER_SECTION } from "./subprofileEditor.data";
+import { TEMPLATE_ITEMS, buildTemplateItems } from "./subprofileTemplates.data";
+import {
+  emptyItem,
+  withUid,
+  type SubprofileEditorRow,
+} from "./subprofileSectionEditorRows";
 import { SubprofileItemEditor } from "./SubprofileItemEditor";
 import styles from "./SubprofileEditor.module.css";
-
-type Row = SubprofileItemView & { _uid: string };
-
-let seq = 0;
-const withUid = (item: SubprofileItemView): Row => ({
-  ...item,
-  _uid: `row-${seq++}`,
-});
-
-const emptyItem = (section: SubprofileSection): SubprofileItemView => ({
-  section,
-  title: "",
-  subtitle: "",
-  description: "",
-  url: "",
-  imageUrl: "",
-  date: "",
-  meta: "",
-  tags: [],
-  isFeatured: false,
-  collaborators: [],
-});
 
 /**
  * Edits one section of a subprofile: a list of items with add / remove / reorder,
@@ -52,13 +35,19 @@ export function SubprofileSectionEditor({
   const { replaceSection } = useSubprofileMutations();
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const [rows, setRows] = useState<Row[]>(() => section.items.map(withUid));
+  const [rows, setRows] = useState<SubprofileEditorRow[]>(() =>
+    section.items.map(withUid),
+  );
   const [dirty, setDirty] = useState(false);
 
   const Icon = section.icon;
   const label = t(section.labelKey);
   const atMax = rows.length >= MAX_ITEMS_PER_SECTION;
   const saving = replaceSection.isPending;
+  const canInsertExamples =
+    section.section !== "links" &&
+    rows.length === 0 &&
+    TEMPLATE_ITEMS[section.section] !== undefined;
 
   function touch() {
     setDirty(true);
@@ -85,6 +74,10 @@ export function SubprofileSectionEditor({
   function add() {
     if (atMax) return;
     setRows((cur) => [...cur, withUid(emptyItem(section.section))]);
+    touch();
+  }
+  function insertExamples() {
+    setRows(buildTemplateItems(section.section, t).map(withUid));
     touch();
   }
   function toggleFeatured(uid: string) {
@@ -141,6 +134,11 @@ export function SubprofileSectionEditor({
         <p className={styles.emptySection}>
           {t("subprofiles:sectionEditor.empty")}
         </p>
+      )}
+      {canInsertExamples && (
+        <Button variant="ghost" onClick={insertExamples}>
+          {t("subprofiles:template.insertExamples")}
+        </Button>
       )}
 
       <div className={styles.itemsWrap}>

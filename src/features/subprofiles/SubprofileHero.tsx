@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowUpRight } from "react-icons/fi";
+import { HiOutlineQrCode } from "react-icons/hi2";
 import { Avatar, Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,6 +16,8 @@ import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileAvailability } from "./SubprofileAvailability";
 import { SubprofileEndorse } from "./SubprofileEndorse";
 import { SubprofileFollow } from "./SubprofileFollow";
+import { SubprofileShare } from "./SubprofileShare";
+import { SubprofileShareCard } from "./SubprofileShareCard";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileHero.module.css";
 
@@ -44,6 +48,7 @@ export function SubprofileHero({
   const { profile } = useProfile();
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
+  const [shareCardOpen, setShareCardOpen] = useState(false);
 
   const accent = view.accent ?? DEFAULT_ACCENT;
   const { tint, on } = ACCENT_TOKENS[accent];
@@ -70,97 +75,114 @@ export function SubprofileHero({
     : undefined;
 
   return (
-    <header
-      className={styles.hero}
-      style={{
-        ["--accent-tint" as string]: tint,
-        ["--accent-on" as string]: on,
-      }}
-    >
-      <div
-        className={`${styles.cover} ${view.coverUrl ? "" : styles.coverGradient}`}
-        style={coverStyle}
-      />
-      <div className="wrap">
-        <Reveal className={styles.heroInner}>
-          <div className={styles.avatarRing}>
-            <Avatar
-              initials={initialsFrom(view.displayName)}
-              src={view.avatarUrl ?? undefined}
-              tint="plum"
-              size={104}
-            />
-          </div>
-
-          <div className={styles.heroText}>
-            <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[view.kind])}</span>
-            <h1 className={styles.name}>{view.displayName}</h1>
-            {view.tagline && <p className={styles.tagline}>{view.tagline}</p>}
-
-            <SubprofileSocialRow links={view.socialLinks} accent={accent} />
-
-            <div className={styles.actions}>
-              <SubprofileAvailability value={view.availability} accent={accent} />
-              {canMessage && (
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() =>
-                    contact({
-                      slug: view.ownerSlug ?? "",
-                      name: view.ownerName ?? view.displayName,
-                    })
-                  }
-                >
-                  {t("subprofiles:hero.message")}
-                </Button>
-              )}
-              {hasCta && (
-                <Button
-                  variant={ctaVariant}
-                  size="md"
-                  href={view.ctaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {view.ctaLabel}
-                </Button>
-              )}
-            </div>
-
-            <div className={styles.socialProofRow}>
-              <SubprofileEndorse
-                subprofileId={view.id}
-                endorsementCount={view.endorsementCount}
-                viewerEndorsed={view.viewerEndorsed}
-                isOwnerViewing={isOwnerViewing}
-              />
-              <SubprofileFollow
-                subprofileId={view.id}
-                followerCount={view.followerCount}
-                viewerFollowing={view.viewerFollowing}
-                isOwnerViewing={isOwnerViewing}
+    <>
+      <header
+        className={styles.hero}
+        style={{
+          ["--accent-tint" as string]: tint,
+          ["--accent-on" as string]: on,
+        }}
+      >
+        <div
+          className={`${styles.cover} ${view.coverUrl ? "" : styles.coverGradient}`}
+          style={coverStyle}
+        />
+        <div className="wrap">
+          <Reveal className={styles.heroInner}>
+            <div className={styles.avatarRing}>
+              <Avatar
+                initials={initialsFrom(view.displayName)}
+                src={view.avatarUrl ?? undefined}
+                tint="plum"
+                size={104}
               />
             </div>
 
-            {linkedToOwner && (
-              <Link
-                className={styles.ownerTie}
-                to={`${routes.members}/${view.ownerSlug}`}
-              >
-                <Translation
-                  i18nKey="subprofiles:page.ownerTie"
-                  components={{ em: <em /> }}
-                  values={{ name: view.ownerName ?? "" }}
+            <div className={styles.heroText}>
+              <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[view.kind])}</span>
+              <h1 className={styles.name}>{view.displayName}</h1>
+              {view.tagline && <p className={styles.tagline}>{view.tagline}</p>}
+
+              <SubprofileSocialRow links={view.socialLinks} accent={accent} />
+
+              <div className={styles.actions}>
+                <SubprofileAvailability value={view.availability} accent={accent} />
+                {canMessage && (
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() =>
+                      contact({
+                        slug: view.ownerSlug ?? "",
+                        name: view.ownerName ?? view.displayName,
+                      })
+                    }
+                  >
+                    {t("subprofiles:hero.message")}
+                  </Button>
+                )}
+                {hasCta && (
+                  <Button
+                    variant={ctaVariant}
+                    size="md"
+                    href={view.ctaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {view.ctaLabel}
+                  </Button>
+                )}
+                <SubprofileShare view={view} />
+                <Button
+                  variant="ghost"
+                  size="md"
+                  onClick={() => setShareCardOpen(true)}
+                >
+                  <HiOutlineQrCode aria-hidden /> {t("subprofiles:shareCard.cta")}
+                </Button>
+              </div>
+
+              <div className={styles.socialProofRow}>
+                <SubprofileEndorse
+                  subprofileId={view.id}
+                  endorsementCount={view.endorsementCount}
+                  viewerEndorsed={view.viewerEndorsed}
+                  isOwnerViewing={isOwnerViewing}
                 />
-                <FiArrowUpRight aria-hidden />
-              </Link>
-            )}
+                <SubprofileFollow
+                  subprofileId={view.id}
+                  followerCount={view.followerCount}
+                  viewerFollowing={view.viewerFollowing}
+                  isOwnerViewing={isOwnerViewing}
+                />
+              </div>
 
-            {view.bio && <p className={styles.bio}>{view.bio}</p>}
-          </div>
-        </Reveal>
-      </div>
-    </header>
+              {linkedToOwner && (
+                <Link
+                  className={styles.ownerTie}
+                  to={`${routes.members}/${view.ownerSlug}`}
+                >
+                  <Translation
+                    i18nKey="subprofiles:page.ownerTie"
+                    components={{ em: <em /> }}
+                    values={{ name: view.ownerName ?? "" }}
+                  />
+                  <FiArrowUpRight aria-hidden />
+                </Link>
+              )}
+
+              {view.bio && <p className={styles.bio}>{view.bio}</p>}
+            </div>
+          </Reveal>
+        </div>
+      </header>
+
+      {shareCardOpen && (
+        <SubprofileShareCard
+          view={view}
+          onClose={() => setShareCardOpen(false)}
+        />
+      )}
+    </>
   );
 }

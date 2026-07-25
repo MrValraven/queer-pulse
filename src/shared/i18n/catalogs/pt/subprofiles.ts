@@ -355,6 +355,117 @@ export const subprofiles: Catalog = {
   "newModal.toastError":
     "Não conseguimos começar essa agora — tenta outra vez.",
 
+  // Modelos iniciais (Fase 4a) — seletor no momento de criação
+  // (NewSubprofileModal) e o botão "Inserir exemplos" no editor
+  // (SubprofileSectionEditor). O texto dos exemplos lê-se como um
+  // preenchimento simpático e editável — a ideia é que a pessoa o substitua
+  // pelo seu próprio trabalho, não que o mantenha tal como está.
+  "template.startFromTemplate": "Começar a partir de um modelo",
+  "template.startBlank": "Começar do zero",
+  "template.helper":
+    "Os modelos preenchem as tuas secções com alguns exemplos e sugerem uma frase de apresentação — tudo pode ser editado ou apagado.",
+  "template.insertExamples": "Inserir exemplos",
+
+  // Frases de apresentação sugeridas por ofício — aplicadas junto com os
+  // modelos de secção, mas totalmente editáveis.
+  "template.tagline.developer":
+    "A construir coisas, sobretudo para quem eu amo.",
+  "template.tagline.writer":
+    "Palavras que não conseguia guardar só para mim.",
+  "template.tagline.musician":
+    "Som para noites queer e manhãs tranquilas.",
+  "template.tagline.visual_artist":
+    "Imagens que guardam o que as palavras não conseguem.",
+  "template.tagline.filmmaker": "Histórias contadas fotograma a fotograma.",
+  "template.tagline.designer":
+    "A tornar as coisas mais fáceis, e um pouco mais bonitas.",
+  "template.tagline.maker": "Feito à mão, feito com cuidado.",
+  "template.tagline.drag": "Glamour com uma mensagem para dar.",
+  "template.tagline.dj": "Sets feitos para a pista de dança.",
+  "template.tagline.dancer": "Movimento como outra forma de falar.",
+  "template.tagline.performer": "Em palco, para quem precisar.",
+  "template.tagline.photographer":
+    "A guardar parado o que normalmente passa depressa demais.",
+  "template.tagline.videomaker":
+    "Imagens em movimento, feitas com intenção.",
+  "template.tagline.generic": "Umas quantas coisas que fiz, reunidas aqui.",
+
+  // Exemplos por secção (usados tanto pelo modelo inicial como pelo botão
+  // "Inserir exemplos") — um ou dois itens por secção, de acordo com os
+  // campos que essa secção realmente mostra.
+  "template.section.projects.item1.title": "O meu projeto em destaque",
+  "template.section.projects.item1.desc":
+    "Uma ou duas linhas sobre o que construíste e porque é importante.",
+  "template.section.projects.item2.title":
+    "Outro projeto que vale a pena mostrar",
+  "template.section.projects.item2.desc":
+    "O que faz, para quem é, e o que aprendeste ao construí-lo.",
+  "template.section.open_source.item1.title":
+    "Um projeto para o qual contribuo",
+  "template.section.open_source.item1.desc":
+    "O que faz e como estás envolvido — mantenedor, colaborador, ou a começar agora.",
+  "template.section.publications.item1.title": "Algo que escrevi",
+  "template.section.publications.item1.subtitle": "Onde foi publicado",
+  "template.section.publications.item1.desc":
+    "Uma linha sobre do que trata e porque o escreveste.",
+  "template.section.readings.item1.title": "Uma leitura ou evento",
+  "template.section.readings.item1.subtitle": "Onde aconteceu",
+  "template.section.discography.item1.title": "Um lançamento",
+  "template.section.discography.item1.subtitle": "Faixa, EP ou álbum",
+  "template.section.gigs.item1.title": "Um concerto",
+  "template.section.gigs.item1.subtitle": "Onde tocaste",
+  "template.section.portfolio.item1.title": "Uma peça que fiz",
+  "template.section.portfolio.item1.desc":
+    "O que é e o que envolveu criá-la.",
+  "template.section.portfolio.item2.title": "Outra peça",
+  "template.section.portfolio.item2.desc":
+    "Um segundo exemplo — troca por aquilo que melhor mostra o teu trabalho.",
+  "template.section.exhibitions.item1.title": "Uma exposição",
+  "template.section.exhibitions.item1.subtitle": "Onde esteve patente",
+  "template.section.filmography.item1.title": "Um filme que fiz",
+  "template.section.filmography.item1.subtitle": "O teu papel nele",
+  "template.section.filmography.item1.desc":
+    "Sobre o que é, numa ou duas frases.",
+  "template.section.screenings.item1.title": "Uma exibição",
+  "template.section.screenings.item1.subtitle": "Onde passou",
+  "template.section.selected_work.item1.title": "Um projeto de que me orgulho",
+  "template.section.selected_work.item1.subtitle": "O cliente ou o briefing",
+  "template.section.selected_work.item1.desc":
+    "O que fizeste e o problema que resolveu.",
+  "template.section.clients.item1.title":
+    "Um cliente ou marca com quem trabalhaste",
+  "template.section.collections.item1.title": "Uma coleção",
+  "template.section.collections.item1.desc":
+    "Do que é feita e o que a inspirou.",
+  "template.section.workshops.item1.title": "Uma oficina que dei",
+  "template.section.workshops.item1.subtitle": "Onde aconteceu",
+  "template.section.shows.item1.title": "Um espetáculo",
+  "template.section.shows.item1.subtitle": "Onde atuaste",
+  "template.section.looks.item1.title": "Um look",
+  "template.section.looks.item1.desc":
+    "O que o inspirou e como o construíste.",
+  "template.section.mixes.item1.title": "Um set",
+  "template.section.mixes.item1.subtitle": "Onde o tocaste",
+  "template.section.mixes.item2.title": "Outro set",
+  "template.section.mixes.item2.subtitle": "Um segundo exemplo para trocares",
+  "template.section.performances.item1.title": "Uma atuação",
+  "template.section.performances.item1.subtitle": "Onde aconteceu",
+  "template.section.reel.item1.title": "O meu reel",
+  "template.section.reel.item1.desc": "O que mostra e de onde é.",
+  "template.section.appearances.item1.title": "Uma aparição",
+  "template.section.appearances.item1.subtitle":
+    "O espetáculo, evento ou palco",
+  "template.section.series.item1.title": "Uma série",
+  "template.section.series.item1.desc":
+    "Sobre o que é e o que liga tudo.",
+  "template.section.videos.item1.title": "Um vídeo",
+  "template.section.videos.item1.subtitle": "De onde é",
+  "template.section.videos.item1.desc":
+    "O que mostra, numa ou duas linhas.",
+  "template.section.showcase.item1.title": "Algo que fiz",
+  "template.section.showcase.item1.subtitle": "Uma etiqueta curta para isto",
+  "template.section.showcase.item1.desc": "O que é e porque está aqui.",
+
   // Campo de imagem (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Imagem",
   "imageUpload.uploading": "A carregar…",
@@ -385,6 +496,24 @@ export const subprofiles: Catalog = {
   "hero.follow.count_other": "{count} seguidores",
   "hero.follow.error": "Não conseguimos guardar isso agora — tenta outra vez.",
 
+  // Controlo de partilha (SubprofileShare, MySubprofileRow)
+  "share.cta": "Partilhar",
+  "share.ariaLabel": "Partilhar esta persona",
+  "share.copied": "Link copiado",
+
+  // Modal de cartão de partilha (SubprofileShareCard) + código QR
+  // (SubprofileQR) — pontos de entrada no SubprofileHero (público) e no
+  // MySubprofileRow (responsável).
+  "shareCard.cta": "Código QR",
+  "shareCard.title": "Leva contigo",
+  "shareCard.subtitle":
+    "Digitaliza para abrir a página de {name} noutro dispositivo, ou guarda os detalhes abaixo.",
+  "shareCard.download": "Transferir cartão de contacto",
+  "shareCard.qrAria": "Código QR que liga à página da persona de {name}",
+  "shareCard.copyLink": "Copiar link",
+  "qr.loading": "A gerar código QR…",
+  "qr.error": "Não conseguimos gerar o código QR — aqui tens o link em alternativa.",
+
   // Destaque do item em foco (SubprofileSpotlight)
   "spotlight.eyebrow": "Destaque",
   "spotlight.visit": "Visitar",
@@ -397,6 +526,7 @@ export const subprofiles: Catalog = {
   "page.ownerTie": "Parte de <em>{name}</em>",
   "page.visit": "Visitar",
   "page.notFoundTitle": "Esta persona não está aqui",
+  "page.notFoundMetaTitle": "Persona não encontrada — QueerPulse",
   "page.notFoundDescription":
     "Pode ter sido despublicada, mantida privada, ou este link pode estar desatualizado. Não há nada de errado do teu lado.",
   "page.notFoundAction": "Explorar personas",

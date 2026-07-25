@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, Spinner } from "../../shared/components/ui";
+import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   usePublicSubprofile,
@@ -12,6 +13,8 @@ import { SubprofileSpotlight } from "./SubprofileSpotlight";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
 import { NOT_FOUND } from "./subprofilePage.data";
+import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { personaPublicPath } from "./personaLinks.data";
 import type { AccentKey } from "./api/subprofiles.api";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import styles from "./SubprofilePage.module.css";
@@ -46,6 +49,7 @@ export function SubprofilePage() {
   if (!data) {
     return (
       <PageShell>
+        <PageMeta title={t("subprofiles:page.notFoundMetaTitle")} noIndex />
         <div className={styles.stateWrap}>
           <SubprofileNotFoundArt />
           <EmptyState
@@ -68,6 +72,13 @@ export function SubprofilePage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={`${data.displayName} · ${t(KIND_LABEL_KEYS[data.kind])} — QueerPulse`}
+        description={(data.tagline || data.bio || "").slice(0, 160) || undefined}
+        image={data.coverUrl ?? data.avatarUrl ?? undefined}
+        canonical={personaPublicPath(data)}
+        type="profile"
+      />
       <SubprofileHero
         view={data}
         canMessage={data.linkVisibility === "linked" && Boolean(data.ownerSlug)}

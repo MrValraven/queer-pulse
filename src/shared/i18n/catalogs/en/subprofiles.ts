@@ -343,6 +343,108 @@ export const subprofiles: Catalog = {
   "newModal.addressPlaceholder": "e.g. poetry",
   "newModal.toastError": "We couldn't start that one — try again.",
 
+  // Starter templates (Phase 4a) — create-time picker (NewSubprofileModal)
+  // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
+  // Section-item copy reads as friendly, editable placeholders — a creator
+  // is meant to replace them with their own work, not keep them as-is.
+  "template.startFromTemplate": "Start from a template",
+  "template.startBlank": "Start from scratch",
+  "template.helper":
+    "Templates fill your sections with a couple of example items and a suggested tagline — everything's yours to edit or clear.",
+  "template.insertExamples": "Insert examples",
+
+  // Per-kind suggested taglines — applied alongside the section templates,
+  // but left fully editable.
+  "template.tagline.developer": "Building things, mostly for people I love.",
+  "template.tagline.writer": "Words I couldn't keep to myself.",
+  "template.tagline.musician": "Sound for queer nights and quiet mornings.",
+  "template.tagline.visual_artist":
+    "Images that hold what words can't.",
+  "template.tagline.filmmaker": "Stories told frame by frame.",
+  "template.tagline.designer":
+    "Making things easier, and a little more beautiful.",
+  "template.tagline.maker": "Made by hand, made with care.",
+  "template.tagline.drag": "Glamour with a point to make.",
+  "template.tagline.dj": "Sets built for the dancefloor.",
+  "template.tagline.dancer": "Movement as another way of speaking.",
+  "template.tagline.performer": "On stage, for whoever needs it.",
+  "template.tagline.photographer":
+    "Holding still what usually moves too fast.",
+  "template.tagline.videomaker": "Moving pictures, made with intention.",
+  "template.tagline.generic": "A few things I've made, gathered here.",
+
+  // Per-section example items (used by both the create-time template and
+  // the "Insert examples" button) — one or two items per section, matching
+  // that section's actual fields.
+  "template.section.projects.item1.title": "My standout project",
+  "template.section.projects.item1.desc":
+    "A line or two on what you built and why it matters.",
+  "template.section.projects.item2.title": "Another project worth showing",
+  "template.section.projects.item2.desc":
+    "What it does, who it's for, and what you learned building it.",
+  "template.section.open_source.item1.title": "A project I contribute to",
+  "template.section.open_source.item1.desc":
+    "What it does, and how you're involved — maintainer, contributor, or just started.",
+  "template.section.publications.item1.title": "Something I wrote",
+  "template.section.publications.item1.subtitle": "Where it was published",
+  "template.section.publications.item1.desc":
+    "A line on what it's about and why you wrote it.",
+  "template.section.readings.item1.title": "A reading or event",
+  "template.section.readings.item1.subtitle": "Where it happened",
+  "template.section.discography.item1.title": "A release",
+  "template.section.discography.item1.subtitle": "Track, EP or album",
+  "template.section.gigs.item1.title": "A gig",
+  "template.section.gigs.item1.subtitle": "Where you played",
+  "template.section.portfolio.item1.title": "A piece I made",
+  "template.section.portfolio.item1.desc":
+    "What it is and what went into making it.",
+  "template.section.portfolio.item2.title": "Another piece",
+  "template.section.portfolio.item2.desc":
+    "A second example — swap in whatever shows your range.",
+  "template.section.exhibitions.item1.title": "An exhibition",
+  "template.section.exhibitions.item1.subtitle": "Where it showed",
+  "template.section.filmography.item1.title": "A film I made",
+  "template.section.filmography.item1.subtitle": "Your role on it",
+  "template.section.filmography.item1.desc":
+    "What it's about, in a sentence or two.",
+  "template.section.screenings.item1.title": "A screening",
+  "template.section.screenings.item1.subtitle": "Where it played",
+  "template.section.selected_work.item1.title": "A project I'm proud of",
+  "template.section.selected_work.item1.subtitle": "The client or brief",
+  "template.section.selected_work.item1.desc":
+    "What you made and the problem it solved.",
+  "template.section.clients.item1.title": "A client or brand you've worked with",
+  "template.section.collections.item1.title": "A collection",
+  "template.section.collections.item1.desc":
+    "What it's made of and what inspired it.",
+  "template.section.workshops.item1.title": "A workshop I ran",
+  "template.section.workshops.item1.subtitle": "Where it happened",
+  "template.section.shows.item1.title": "A show",
+  "template.section.shows.item1.subtitle": "Where you performed",
+  "template.section.looks.item1.title": "A look",
+  "template.section.looks.item1.desc":
+    "What inspired it and how you built it.",
+  "template.section.mixes.item1.title": "A mix",
+  "template.section.mixes.item1.subtitle": "Where you played it",
+  "template.section.mixes.item2.title": "Another mix",
+  "template.section.mixes.item2.subtitle": "A second example to swap in",
+  "template.section.performances.item1.title": "A performance",
+  "template.section.performances.item1.subtitle": "Where it happened",
+  "template.section.reel.item1.title": "My reel",
+  "template.section.reel.item1.desc": "What it shows and where it's from.",
+  "template.section.appearances.item1.title": "An appearance",
+  "template.section.appearances.item1.subtitle": "The show, event or stage",
+  "template.section.series.item1.title": "A series",
+  "template.section.series.item1.desc":
+    "What it's about and what ties it together.",
+  "template.section.videos.item1.title": "A video",
+  "template.section.videos.item1.subtitle": "Where it's from",
+  "template.section.videos.item1.desc":
+    "What it shows, in a line or two.",
+  "template.section.showcase.item1.title": "Something I made",
+  "template.section.showcase.item1.subtitle": "A short label for it",
+  "template.section.showcase.item1.desc": "What it is and why it's here.",
+
   // Image upload field (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Image",
   "imageUpload.uploading": "Uploading…",
@@ -372,6 +474,23 @@ export const subprofiles: Catalog = {
   "hero.follow.count_other": "{count} followers",
   "hero.follow.error": "We couldn't save that just now — try again.",
 
+  // Share control (SubprofileShare, MySubprofileRow)
+  "share.cta": "Share",
+  "share.ariaLabel": "Share this persona",
+  "share.copied": "Link copied",
+
+  // Share-card modal (SubprofileShareCard) + QR code (SubprofileQR) —
+  // entry points in SubprofileHero (public) and MySubprofileRow (owner).
+  "shareCard.cta": "QR code",
+  "shareCard.title": "Take it with you",
+  "shareCard.subtitle":
+    "Scan to open {name}'s page on another device, or save the details below.",
+  "shareCard.download": "Download contact card",
+  "shareCard.qrAria": "QR code linking to {name}'s persona page",
+  "shareCard.copyLink": "Copy link",
+  "qr.loading": "Generating QR code…",
+  "qr.error": "Couldn't generate a QR code — here's the link instead.",
+
   // Featured item spotlight (SubprofileSpotlight)
   "spotlight.eyebrow": "Spotlight",
   "spotlight.visit": "Visit",
@@ -384,6 +503,7 @@ export const subprofiles: Catalog = {
   "page.ownerTie": "Part of <em>{name}</em>",
   "page.visit": "Visit",
   "page.notFoundTitle": "This persona isn't here",
+  "page.notFoundMetaTitle": "Persona not found — QueerPulse",
   "page.notFoundDescription":
     "It may have been unpublished, kept private, or this link could be out of date. Nothing's wrong on your end.",
   "page.notFoundAction": "Browse personas",

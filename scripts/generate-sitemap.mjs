@@ -16,44 +16,74 @@
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { QUIET_PUBLIC_PATHS, assertNoGatedPaths } from "./publicPaths.mjs";
+import {
+  QUIET_PUBLIC_PATHS,
+  assertNoGatedPaths,
+  fetchSubprofilePublicPaths,
+} from "./publicPaths.mjs";
 
 const SITE_ORIGIN = process.env.VITE_SITE_ORIGIN ?? "https://queerpulse.com";
 
-// --- Guard: no gated path may leak in ---------------------------------------
-assertNoGatedPaths(QUIET_PUBLIC_PATHS);
+async function main() {
+  // --- Guard: no gated path may leak in -------------------------------------
+  assertNoGatedPaths(QUIET_PUBLIC_PATHS);
 
-// De-dupe defensively (QUIET_PUBLIC_PATHS is asserted duplicate-free upstream).
-const uniquePaths = [...new Set(QUIET_PUBLIC_PATHS)];
+  // De-dupe defensively (QUIET_PUBLIC_PATHS is asserted duplicate-free upstream).
+  const uniquePaths = [...new Set(QUIET_PUBLIC_PATHS)];
 
-const lastmod = new Date().toISOString().slice(0, 10);
-const urls = uniquePaths
-  .map((publicPath) => {
-    const loc = `${SITE_ORIGIN}${publicPath === "/" ? "/" : publicPath}`;
-    const priority = publicPath === "/" ? "1.0" : "0.7";
-    return [
-      "  <url>",
-      `    <loc>${loc}</loc>`,
-      `    <lastmod>${lastmod}</lastmod>`,
-      `    <priority>${priority}</priority>`,
-      "  </url>",
-    ].join("\n");
-  })
-  .join("\n");
+  // Dynamic persona pages — fetched from the backend; [] on any failure or
+  // missing VITE_API_URL, so an offline/demo build still succeeds.
+  const dynamicPersonaPaths = await fetchSubprofilePublicPaths(process.env.VITE_API_URL);
 
-const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  const lastmod = new Date().toISOString().slice(0, 10);
+  const staticUrls = uniquePaths
+    .map((publicPath) => {
+      const loc = `${SITE_ORIGIN}${publicPath === "/" ? "/" : publicPath}`;
+      const priority = publicPath === "/" ? "1.0" : "0.7";
+      return [
+        "  <url>",
+        `    <loc>${loc}</loc>`,
+        `    <lastmod>${lastmod}</lastmod>`,
+        `    <priority>${priority}</priority>`,
+        "  </url>",
+      ].join("\n");
+    })
+    .join("\n");
+
+  const dynamicUrls = dynamicPersonaPaths
+    .map(({ path: dynamicPath, lastmod: dynamicLastmod }) => {
+      const loc = `${SITE_ORIGIN}${dynamicPath}`;
+      return [
+        "  <url>",
+        `    <loc>${loc}</loc>`,
+        ...(dynamicLastmod ? [`    <lastmod>${dynamicLastmod}</lastmod>`] : []),
+        "    <priority>0.5</priority>",
+        "  </url>",
+      ].join("\n");
+    })
+    .join("\n");
+
+  const urls = [staticUrls, dynamicUrls].filter(Boolean).join("\n");
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls}
 </urlset>
 `;
 
-const outPath = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "public",
-  "sitemap.xml",
-);
-writeFileSync(outPath, xml, "utf8");
-console.log(
-  `[sitemap] Wrote ${uniquePaths.length} public URLs to ${outPath} (origin ${SITE_ORIGIN})`,
-);
+  const outPath = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    "..",
+    "public",
+    "sitemap.xml",
+  );
+  writeFileSync(outPath, xml, "utf8");
+  console.log(
+    `[sitemap] Wrote ${uniquePaths.length} public URLs + ${dynamicPersonaPaths.length} persona URLs to ${outPath} (origin ${SITE_ORIGIN})`,
+  );
+}
+
+await main().catch((error) => {
+  console.error(`[sitemap] Failed to generate sitemap: ${error.message}`);
+  process.exit(1);
+});

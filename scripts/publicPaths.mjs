@@ -116,8 +116,8 @@ export function isGatedPath(pathname) {
  * Scope decision (see docs/superpowers/specs/2026-07-20-seo-and-ai-discoverability-design.md):
  * QueerPulse deliberately does NOT index the magazine, cinema, studio, activism,
  * archive or sustainer surfaces — they rely on word-of-mouth and direct sharing.
- * Resources and safety are the front door: they are the pages someone searching
- * for queer healthcare, legal or crisis guidance in Lisbon actually needs.
+ * The resources surface is likewise excluded from prerender + sitemap: it is
+ * served as normal SPA routes. Safety and arrival guides are the front door.
  *
  * Two hard rules for anything added here:
  *   1. It must not be gated (assertNoGatedPaths enforces this).
@@ -129,56 +129,16 @@ export function isGatedPath(pathname) {
  *      whatever it gets (including an empty-state fallback if the build machine
  *      cannot reach the API). With VITE_DEMO=1 it bakes fixture data as though
  *      it were real. Both are ways to ship a misleading page to crawlers.
- *      Known API-backed paths in this list: /resources/glossary,
- *      /resources/library, /about/partners, /about/volunteer. They are kept
- *      because their content is genuinely worth indexing, but the build machine
- *      MUST be able to reach the API. Audit any new path against this before
- *      adding it.
+ *      Known API-backed paths in this list: /about/partners, /about/volunteer.
+ *      They are kept because their content is genuinely worth indexing, but the
+ *      build machine MUST be able to reach the API. Audit any new path against
+ *      this before adding it.
  *
  * Dynamic `:slug` routes are excluded: there is no canonical content source to
  * enumerate, and profiles are gated regardless.
  */
 export const QUIET_PUBLIC_PATHS = [
   "/",
-
-  // ── Resources — the primary indexed surface ──────────────────────────────
-  "/resources",
-  "/resources/101",
-  "/resources/accessible-lisbon",
-  "/resources/art-crit-guide",
-  "/resources/coming-out-at-work",
-  "/resources/community-privacy",
-  "/resources/disability-healthcare",
-  "/resources/first-meetup-guide",
-  "/resources/glossary",
-  "/resources/group-show-archive",
-  "/resources/harm-reduction",
-  "/resources/ingredients-map",
-  "/resources/intersectionality",
-  "/resources/lgbtq-aging-guide",
-  "/resources/library",
-  "/resources/mental-health",
-  "/resources/oral-history-project",
-  "/resources/peer-support",
-  "/resources/pronouns-guide",
-  "/resources/qtipoc-archive",
-  "/resources/qtipoc-organisations",
-  "/resources/queer-paediatricians",
-  "/resources/running-guide",
-  "/resources/school-forms-guide",
-  "/resources/sexual-health",
-  "/resources/shared-equipment",
-  "/resources/sober",
-  "/resources/spoon-theory",
-  // NOTE: "/resources/therapists" is deliberately ABSENT. routeMap.ts defines
-  // the constant, but routes.tsx registers only "/resources/therapists/:id"
-  // (individual profiles) — there is no directory index at the bare path. It
-  // would fall through to the SPA catch-all, render NotFound, never set
-  // data-prerender-ready, and fail the build; and it would advertise a dead URL
-  // in the sitemap. Re-add it here if a real therapists index page is built.
-  "/resources/trans-healthcare",
-  "/resources/trans-hub",
-  "/resources/wellbeing",
 
   // ── About / governance ───────────────────────────────────────────────────
   "/about",
@@ -213,5 +173,33 @@ export function assertNoGatedPaths(paths) {
     throw new Error(
       `Refusing to proceed — these paths are GATED per authGate.ts:\n  ${leaked.join("\n  ")}`,
     );
+  }
+}
+
+/**
+ * Fetch the published-persona handles from the backend
+ * (`GET /subprofiles/public-handles`) and turn them into dynamic `/p/:handle`
+ * sitemap/prerender entries.
+ *
+ * NEVER throws: a demo/offline build must still succeed with no API
+ * reachable, so any failure (missing apiUrl, network error, non-2xx, bad
+ * JSON) is swallowed into a `console.warn` + an empty array.
+ */
+export async function fetchSubprofilePublicPaths(apiUrl) {
+  if (!apiUrl) return [];
+  try {
+    const response = await fetch(`${apiUrl.replace(/\/$/, "")}/subprofiles/public-handles`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const body = await response.json();
+    const entries = (body.items ?? [])
+      .filter((item) => item && typeof item.handle === "string" && item.handle.length > 0)
+      .map((item) => ({ path: `/p/${item.handle}`, lastmod: item.updatedAt ?? null }));
+    assertNoGatedPaths(entries.map((entry) => entry.path));
+    return entries;
+  } catch (error) {
+    console.warn(
+      `[publicPaths] Could not fetch persona handles: ${error.message}. Skipping dynamic /p/* paths.`,
+    );
+    return [];
   }
 }

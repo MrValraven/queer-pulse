@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, FormField, Modal } from "../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  Modal,
+  SegmentedControl,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import { currentUserSlug } from "../members/data/members";
 import type { SubprofileKind } from "./api/subprofiles.api";
+import { itemsToInputDto } from "./api/subprofiles.adapters";
 import {
   KIND_LABELS,
   KIND_LABEL_KEYS,
@@ -14,6 +21,7 @@ import {
   defaultSlugForKind,
   slugify,
 } from "./subprofile-kinds";
+import { buildTemplateSections, templateTaglineFor } from "./subprofileTemplates.data";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import styles from "./MySubprofilesPage.module.css";
 
@@ -22,6 +30,38 @@ const KINDS = Object.keys(KIND_LABELS) as SubprofileKind[];
 /** The lead section's icon stands in for the whole kind in the picker. */
 function kindIcon(kind: SubprofileKind) {
   return SECTION_META[KIND_SECTIONS[kind][0]!].icon;
+}
+
+/** "Start from a template" (default) vs "start blank" — enabled once a kind is
+ *  chosen, since the templates are kind-specific. Extracted to keep the modal
+ *  under the line budget. */
+function TemplateModePicker({
+  templateMode,
+  onChange,
+  t,
+}: {
+  templateMode: boolean;
+  onChange: (templateMode: boolean) => void;
+  t: TranslationApi["t"];
+}) {
+  const choices = [
+    { value: true, label: t("subprofiles:template.startFromTemplate") },
+    { value: false, label: t("subprofiles:template.startBlank") },
+  ];
+  const current = choices.find((choice) => choice.value === templateMode)!;
+  return (
+    <FormField helper={t("subprofiles:template.helper")}>
+      <SegmentedControl
+        fullWidth
+        options={choices.map((choice) => choice.label)}
+        value={current.label}
+        onChange={(value) => {
+          const match = choices.find((choice) => choice.label === value);
+          if (match) onChange(match.value);
+        }}
+      />
+    </FormField>
+  );
 }
 
 /**
@@ -34,7 +74,7 @@ function kindIcon(kind: SubprofileKind) {
  */
 export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
-  const { create, update } = useSubprofileMutations();
+  const { create, update, replaceSection } = useSubprofileMutations();
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [kind, setKind] = useState<SubprofileKind | null>(null);
@@ -43,6 +83,9 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
   // until then it's derived from the display name (or the profession).
   const [customSlug, setCustomSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
+  // Defaults to "start from a template" — the friendlier first-run path; the
+  // owner can opt into a blank draft instead.
+  const [templateMode, setTemplateMode] = useState(true);
 
   // Default the address to the slugified display name, falling back to the
   // profession's slug when the name is still blank.
@@ -75,6 +118,31 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
           });
         } catch {
           /* address stays the default; editable in the editor */
+        }
+      }
+      // Seed the kind's starter template: example items per section, then a
+      // suggested tagline. Each piece is applied independently — a failure on
+      // one section (or the tagline) never strands the fresh draft; the owner
+      // lands in the editor either way and can fill in what's missing.
+      if (templateMode) {
+        for (const { section, items } of buildTemplateSections(kind, t)) {
+          try {
+            await replaceSection.mutateAsync({
+              id: created.id,
+              section,
+              items: itemsToInputDto(items),
+            });
+          } catch {
+            /* that section stays empty; editable in the editor */
+          }
+        }
+        const tagline = templateTaglineFor(kind, t);
+        if (tagline) {
+          try {
+            await update.mutateAsync({ id: created.id, dto: { tagline } });
+          } catch {
+            /* tagline stays blank; editable in the editor */
+          }
         }
       }
       onClose();
@@ -130,6 +198,14 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
           );
         })}
       </div>
+
+      {kind && (
+        <TemplateModePicker
+          templateMode={templateMode}
+          onChange={setTemplateMode}
+          t={t}
+        />
+      )}
 
       <FormField
         label={t("subprofiles:newModal.displayNameLabel")}
