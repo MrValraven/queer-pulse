@@ -5,6 +5,7 @@ import type { SubprofileItemDTO } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { FIELD_META } from "./subprofileEditor.data";
 import { ImageUploadField } from "./ImageUploadField";
+import { HandleChipInput } from "./HandleChipInput";
 import styles from "./SubprofileEditor.module.css";
 
 type Field = keyof SubprofileItemDTO;
@@ -168,6 +169,11 @@ export function SubprofileItemEditor({
           />
         </FormField>
       )}
+
+      <HandleChipInput
+        collaborators={item.collaborators}
+        onChange={(collaborators) => onChange({ collaborators })}
+      />
     </article>
   );
 }

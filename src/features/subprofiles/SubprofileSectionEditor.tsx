@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileSection } from "./api/subprofiles.api";
@@ -33,6 +34,7 @@ const emptyItem = (section: SubprofileSection): SubprofileItemView => ({
   meta: "",
   tags: [],
   isFeatured: false,
+  collaborators: [],
 });
 
 /**
@@ -113,8 +115,16 @@ export function SubprofileSectionEditor({
         t("subprofiles:sectionEditor.toastSaved", { section: label }),
         "success",
       );
-    } catch {
-      showToast(t("subprofiles:sectionEditor.toastError"), "error");
+    } catch (err) {
+      // A 400 names the exact problem (e.g. an unknown/blocked collaborator
+      // handle) — surface that instead of the generic fallback so the owner
+      // knows which chip to fix. Any other failure keeps the generic message.
+      const detailedMessage =
+        err instanceof ApiError && err.status === 400 ? err.message : null;
+      showToast(
+        detailedMessage ?? t("subprofiles:sectionEditor.toastError"),
+        "error",
+      );
     }
   }
 

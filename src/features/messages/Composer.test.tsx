@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { expect, it } from "vitest";
 import { Composer } from "./Composer";
 import type { Conversation } from "./data";
 

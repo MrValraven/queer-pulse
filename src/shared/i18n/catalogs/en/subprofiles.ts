@@ -271,6 +271,14 @@ export const subprofiles: Catalog = {
   "itemEditor.unfeature": "Remove from spotlight",
   "itemEditor.featuredBadge": "Featured",
 
+  // Collaborator chip editor (HandleChipInput, inside SubprofileItemEditor)
+  "itemEditor.collaboratorsLabel": "Collaborators",
+  "itemEditor.collaboratorsPlaceholder": "@handle",
+  "itemEditor.collaboratorsHelper":
+    "Type an @handle and press enter or comma to credit them here.",
+  "itemEditor.collaboratorsCapHint": "That's the most collaborators you can add.",
+  "itemEditor.collaboratorRemove": "Remove @{handle}",
+
   // Social links editor (SubprofileSocialLinksEditor)
   "socialEditor.title": "Social links",
   "socialEditor.add": "Add a link",
@@ -367,6 +375,9 @@ export const subprofiles: Catalog = {
   // Featured item spotlight (SubprofileSpotlight)
   "spotlight.eyebrow": "Spotlight",
   "spotlight.visit": "Visit",
+
+  // Collaborator credits on a public item (ItemCollaborators, in SubprofileSections)
+  "collab.with": "with",
 
   // Public persona page (SubprofilePage + subprofilePage.data.ts)
   "page.loading": "Loading persona…",

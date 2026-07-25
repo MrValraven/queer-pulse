@@ -277,6 +277,15 @@ export const subprofiles: Catalog = {
   "itemEditor.unfeature": "Remover do destaque",
   "itemEditor.featuredBadge": "Destaque",
 
+  // Editor de chips de colaboração (HandleChipInput, dentro de SubprofileItemEditor)
+  "itemEditor.collaboratorsLabel": "Pessoas colaboradoras",
+  "itemEditor.collaboratorsPlaceholder": "@identificador",
+  "itemEditor.collaboratorsHelper":
+    "Escreve um @identificador e prime enter ou vírgula para o creditar aqui.",
+  "itemEditor.collaboratorsCapHint":
+    "É o máximo de pessoas colaboradoras que podes acrescentar.",
+  "itemEditor.collaboratorRemove": "Remover @{handle}",
+
   // Editor de links sociais (SubprofileSocialLinksEditor)
   "socialEditor.title": "Links sociais",
   "socialEditor.add": "Adicionar um link",
@@ -379,6 +388,9 @@ export const subprofiles: Catalog = {
   // Destaque do item em foco (SubprofileSpotlight)
   "spotlight.eyebrow": "Destaque",
   "spotlight.visit": "Visitar",
+
+  // Créditos de colaboração num item público (ItemCollaborators, em SubprofileSections)
+  "collab.with": "com",
 
   // Página pública da persona (SubprofilePage + subprofilePage.data.ts)
   "page.loading": "A carregar persona…",

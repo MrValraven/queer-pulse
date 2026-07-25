@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { isNearBottom } from "./useStickToBottom";
 
 function fakeEl(scrollHeight: number, scrollTop: number, clientHeight: number) {

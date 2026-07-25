@@ -47,6 +47,17 @@ export interface EndorserDTO {
   note: string | null;
 }
 
+/** One resolved collaboration credit on an item ("with @handle"). Resolved
+ *  server-side from the persisted handle — dropped on read if the handle no
+ *  longer resolves or is block-filtered against the viewer. */
+export interface CollaboratorDTO {
+  handle: string;
+  type: "member" | "persona";
+  name: string;
+  avatarUrl: string | null;
+  slug: string | null; // member profile slug for /members/:slug; null for personas
+}
+
 export type SubprofileKind =
   | "developer"
   | "writer"
@@ -100,6 +111,7 @@ export interface SubprofileItemDTO {
   meta?: string | null;
   tags: string[];
   isFeatured: boolean;
+  collaborators: CollaboratorDTO[];
 }
 
 /** Owner-facing (full), returned by GET /subprofiles/mine, GET /subprofiles/:id,
@@ -211,6 +223,7 @@ export interface SubprofileItemInputDTO {
   meta?: string;
   tags?: string[];
   isFeatured?: boolean;
+  collaborators?: string[]; // handles, resolved server-side on read
 }
 
 // ── Endpoint fns (contract C4) ───────────────────────────────────────────────

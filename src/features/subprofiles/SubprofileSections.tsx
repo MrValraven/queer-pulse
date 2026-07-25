@@ -1,5 +1,7 @@
 import { FiExternalLink } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import {
+  Avatar,
   ImageSlot,
   Reveal,
   SectionHead,
@@ -7,11 +9,58 @@ import {
   TagRow,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { CollaboratorDTO } from "./api/subprofiles.api";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
 } from "./api/subprofiles.adapters";
+import { collaboratorHref } from "./collaborators.data";
 import styles from "./SubprofileSections.module.css";
+
+/** Up to two initials from a display name, for the avatar fallback (mirrors
+ *  `SubprofileAffiliations`' local helper — no shared util for this yet). */
+function initialsFrom(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
+  return (first + last).toUpperCase();
+}
+
+/** Credit row for an item's collaborators — a small "with" label plus each
+ *  collaborator as an avatar+name link (member profile or persona page).
+ *  Renders nothing when the item has none. */
+function ItemCollaborators({
+  collaborators,
+}: {
+  collaborators: CollaboratorDTO[];
+}) {
+  const { t } = useTranslation();
+  if (collaborators.length === 0) return null;
+  return (
+    <div className={styles.collaborators}>
+      <span className={styles.collabLabel}>{t("subprofiles:collab.with")}</span>
+      <ul className={styles.collabList}>
+        {collaborators.map((collaborator) => (
+          <li key={collaborator.handle}>
+            <Link
+              className={styles.collabLink}
+              to={collaboratorHref(collaborator)}
+            >
+              <Avatar
+                initials={initialsFrom(collaborator.name)}
+                src={collaborator.avatarUrl ?? undefined}
+                alt={collaborator.name}
+                size={22}
+              />
+              <span className={styles.collabName}>{collaborator.name}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 /** A field is rendered only when the section's descriptor lists it AND the item
  *  actually carries a value — so each kind shows exactly the shape spec §3.3
@@ -70,6 +119,7 @@ function ItemCard({
             ))}
           </TagRow>
         )}
+        <ItemCollaborators collaborators={item.collaborators} />
         {shows(section, item, "url") && (
           <a
             className={styles.visit}

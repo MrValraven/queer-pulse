@@ -3,6 +3,7 @@ import type {
   AccentKey,
   AffiliationDTO,
   AvailabilityKey,
+  CollaboratorDTO,
   LinkVisibility,
   SocialLinkDTO,
   SubprofileDTO,
@@ -30,6 +31,7 @@ export interface SubprofileItemView {
   meta: string;
   tags: string[];
   isFeatured: boolean;
+  collaborators: CollaboratorDTO[];
 }
 
 /** A section grouped for rendering/editing: its metadata + ordered items.
@@ -113,6 +115,7 @@ function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
     meta: dto.meta ?? "",
     tags: dto.tags ?? [],
     isFeatured: dto.isFeatured ?? false,
+    collaborators: dto.collaborators ?? [],
   };
 }
 
@@ -228,5 +231,8 @@ export function itemsToInputDto(
     ...(i.meta ? { meta: i.meta } : {}),
     ...(i.tags.length ? { tags: i.tags } : {}),
     ...(i.isFeatured ? { isFeatured: true } : {}),
+    ...(i.collaborators.length
+      ? { collaborators: i.collaborators.map((collaborator) => collaborator.handle) }
+      : {}),
   }));
 }

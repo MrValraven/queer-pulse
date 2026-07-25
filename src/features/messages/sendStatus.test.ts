@@ -1,3 +1,4 @@
+import { expect, it } from "vitest";
 import { nextLocalId } from "./useMessagesController";
 
 it("mints unique, stable-prefixed local ids", () => {

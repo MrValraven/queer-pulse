@@ -1,11 +1,55 @@
 import { currentUserSlug } from "../../members/data/members";
 import { isContentSection } from "../subprofile-kinds";
 import type {
+  CollaboratorDTO,
   EndorserDTO,
   SubprofileCardDTO,
   SubprofileDTO,
   SubprofilePublicDTO,
 } from "../api/subprofiles.api";
+
+// ── Demo collaborator directory ─────────────────────────────────────────────
+// A tiny handle→CollaboratorDTO registry standing in for the backend's
+// `handles` table + block-filtered resolver. Seeds the one demo item with
+// collaborator credits and backs the MSW section-replace echo + the demo
+// mutation path (`useSubprofileMutations`), both of which resolve incoming
+// handle strings the same way the backend would: known handle → resolved
+// card, unknown handle → dropped.
+const RUI_COLLABORATOR: CollaboratorDTO = {
+  handle: "rui",
+  type: "member",
+  name: "Rui Marçal",
+  avatarUrl:
+    "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  slug: "rui",
+};
+
+const GRAIN_COLLABORATOR: CollaboratorDTO = {
+  handle: "grain-studio",
+  type: "persona",
+  name: "GRAIN",
+  avatarUrl:
+    "https://images.unsplash.com/photo-1519638831568-d9897f54ed69?q=80&w=800&auto=format&fit=crop",
+  slug: null,
+};
+
+const DEMO_COLLABORATOR_DIRECTORY: Record<string, CollaboratorDTO> = {
+  rui: RUI_COLLABORATOR,
+  "grain-studio": GRAIN_COLLABORATOR,
+};
+
+/** Resolve collaborator handle strings against the demo directory, dropping
+ *  any handle that isn't a seeded member/persona — mirrors the backend's
+ *  drop-if-unresolvable rule for the demo/MSW paths. */
+export function resolveCollaboratorsDemo(
+  handles: string[] = [],
+): CollaboratorDTO[] {
+  return handles
+    .map((handle) => DEMO_COLLABORATOR_DIRECTORY[handle])
+    .filter((collaborator): collaborator is CollaboratorDTO =>
+      Boolean(collaborator),
+    );
+}
 
 // ── Demo personas ────────────────────────────────────────────────────────────
 // Owner-full `SubprofileDTO`s attached to existing mock members. The registry is
@@ -106,6 +150,8 @@ const NIGHTFORM: DemoSubprofile = {
       tags: ["techno", "vinyl"],
       // Sample persona for the spotlight: the one featured item in the demo registry.
       isFeatured: true,
+      // Sample item for collab credits: a member (mix) + an unlinked persona (art).
+      collaborators: [RUI_COLLABORATOR, GRAIN_COLLABORATOR],
     },
     {
       section: "discography",
@@ -119,6 +165,7 @@ const NIGHTFORM: DemoSubprofile = {
       meta: null,
       tags: ["ambient"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "discography",
@@ -131,6 +178,7 @@ const NIGHTFORM: DemoSubprofile = {
       meta: null,
       tags: ["remix"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "gigs",
@@ -143,6 +191,7 @@ const NIGHTFORM: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "gigs",
@@ -155,6 +204,7 @@ const NIGHTFORM: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "links",
@@ -167,6 +217,7 @@ const NIGHTFORM: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "links",
@@ -179,6 +230,7 @@ const NIGHTFORM: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
   ],
 };
@@ -226,6 +278,7 @@ const RUI_DEV: DemoSubprofile = {
       meta: null,
       tags: ["Rust", "Postgres"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "projects",
@@ -238,6 +291,7 @@ const RUI_DEV: DemoSubprofile = {
       meta: null,
       tags: ["Go", "gRPC"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "open_source",
@@ -250,6 +304,7 @@ const RUI_DEV: DemoSubprofile = {
       meta: "Maintainer · 1.2k stars",
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
   ],
 };
@@ -293,6 +348,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "publications",
@@ -305,6 +361,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "readings",
@@ -317,6 +374,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "readings",
@@ -329,6 +387,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
   ],
 };
@@ -393,6 +452,7 @@ const ANDRE_LENS: DemoSubprofile = {
       meta: null,
       tags: ["analog", "film"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "portfolio",
@@ -406,6 +466,7 @@ const ANDRE_LENS: DemoSubprofile = {
       meta: null,
       tags: ["expired-film"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "portfolio",
@@ -418,6 +479,7 @@ const ANDRE_LENS: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "exhibitions",
@@ -430,6 +492,7 @@ const ANDRE_LENS: DemoSubprofile = {
       meta: null,
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
   ],
 };
@@ -476,6 +539,7 @@ const TIAGO_DRAFT: DemoSubprofile = {
       meta: null,
       tags: ["React", "TypeScript"],
       isFeatured: false,
+      collaborators: [],
     },
     {
       section: "open_source",
@@ -488,6 +552,7 @@ const TIAGO_DRAFT: DemoSubprofile = {
       meta: "Author",
       tags: [],
       isFeatured: false,
+      collaborators: [],
     },
   ],
 };

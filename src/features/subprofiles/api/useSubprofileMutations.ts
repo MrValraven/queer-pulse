@@ -19,6 +19,7 @@ import {
 import {
   mockMineSubprofiles,
   mockSubprofileById,
+  resolveCollaboratorsDemo,
   validatePublishDemo,
 } from "../data/subprofiles.data";
 import { KIND_LABELS, defaultSlugForKind, slugify } from "../subprofile-kinds";
@@ -101,6 +102,7 @@ function applySection(
     meta: item.meta ?? null,
     tags: item.tags ?? [],
     isFeatured: isLinksSection ? false : (item.isFeatured ?? false),
+    collaborators: resolveCollaboratorsDemo(item.collaborators),
   }));
   const incomingHasFeaturedItem = replacedItems.some(
     (item) => item.isFeatured,

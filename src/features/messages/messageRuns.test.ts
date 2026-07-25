@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { groupIntoRuns } from "./messageRuns";
 import type { ChatMessage } from "./data";
 

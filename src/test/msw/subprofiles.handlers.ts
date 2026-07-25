@@ -18,6 +18,7 @@ import {
   mockSetFollowing,
   mockSubprofileById,
   mockSubprofilesForProfile,
+  resolveCollaboratorsDemo,
   validatePublishDemo,
 } from "../../features/subprofiles/data/subprofiles.data";
 import {
@@ -126,6 +127,7 @@ export function subprofileHandlers(api: string) {
           meta: item.meta ?? null,
           tags: item.tags ?? [],
           isFeatured: isLinksSection ? false : (item.isFeatured ?? false),
+          collaborators: resolveCollaboratorsDemo(item.collaborators),
         }));
         const incomingHasFeaturedItem = replacedItems.some(
           (item) => item.isFeatured,
