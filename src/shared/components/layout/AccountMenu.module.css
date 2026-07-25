@@ -26,10 +26,9 @@
   }
 }
 
-/* ── Rail placement — "balanced split" ──────────────────────────────────────
+/* ── Rail placement ──────────────────────────────────────────────────────────
    Sits on the plum sidebar (so text/icons are cream). Identity on the left is
-   the menu trigger; a matching pair of round controls on the right (Settings
-   shortcut + menu chevron) weights both ends of the rail. */
+   the menu trigger; a round chevron control on the right also opens the menu. */
 .railTrigger {
   display: flex;
   align-items: center;
@@ -167,6 +166,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .headerText {
+  flex: 1;
   min-width: 0;
 }
 .headerName,
@@ -217,6 +217,35 @@
 .headerMeta {
   font-size: 12px;
   color: var(--ink-60);
+}
+
+.headerActions {
+  flex: none;
+  display: flex;
+  gap: 4px;
+}
+.headerIcon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  color: var(--ink-60);
+  font-size: 16px;
+  text-decoration: none;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .headerIcon:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+    color: var(--ink);
+  }
+}
+.headerIcon:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
 }
 
 /* Two-column icon grid; reflows to one column when the panel is too narrow

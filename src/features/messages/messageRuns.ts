@@ -10,14 +10,34 @@ export interface MessageRun {
 /**
  * Split a day-group's flat message list into runs — consecutive messages from
  * the same sender collapse into one run so the avatar renders once and inner
- * spacing can tighten. Order is preserved; an empty input yields no runs.
+ * spacing can tighten. A run also breaks when two consecutive messages both have
+ * `at` and differ by more than `maxGapMs` (default 15 minutes), and — when
+ * `breakBefore` is given — immediately before that exact message object, so the
+ * unread divider always sits at the head of a run even when the read/unread
+ * boundary falls mid-burst. Order is preserved; an empty input yields no runs.
  */
-export function groupIntoRuns(items: ChatMessage[]): MessageRun[] {
+export function groupIntoRuns(
+  items: ChatMessage[],
+  maxGapMs = 15 * 60_000,
+  breakBefore?: ChatMessage,
+): MessageRun[] {
   const runs: MessageRun[] = [];
   for (const message of items) {
-    const current = runs[runs.length - 1];
-    if (current && current.from === message.from) {
-      current.items.push(message);
+    const currentRun = runs[runs.length - 1];
+    const previousMessage = currentRun?.items[currentRun.items.length - 1];
+    const gapTooLarge =
+      !!previousMessage?.at &&
+      !!message.at &&
+      new Date(message.at).getTime() - new Date(previousMessage.at).getTime() >
+        maxGapMs;
+    const forcedBreak = breakBefore !== undefined && message === breakBefore;
+    if (
+      currentRun &&
+      currentRun.from === message.from &&
+      !gapTooLarge &&
+      !forcedBreak
+    ) {
+      currentRun.items.push(message);
     } else {
       runs.push({ from: message.from, items: [message] });
     }

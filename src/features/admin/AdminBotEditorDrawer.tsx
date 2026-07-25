@@ -8,7 +8,11 @@ import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { ApiError } from "../../shared/api/client";
 import { useAdminBotProfile } from "./api/useAdminBots";
 import { useUpdateBot } from "./api/useUpdateBot";
-import { AdminBotEditorFields, type BotFormState } from "./AdminBotEditorFields";
+import {
+  AdminBotEditorFields,
+  createSocialRow,
+  type BotFormState,
+} from "./AdminBotEditorFields";
 import type { AdminBotSummaryDTO } from "./api/adminBots.api";
 import styles from "./AdminBotEditor.module.css";
 
@@ -55,7 +59,7 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
       location: profile.location ?? "",
       bio: profile.bio ?? "",
       avatarKey: null,
-      socials: profile.socials ?? [],
+      socials: (profile.socials ?? []).map((social) => createSocialRow(social)),
     });
     setAvatarPreview(profile.avatarUrl ?? null);
   }, [profile, bot.slug]);
@@ -110,9 +114,13 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
           // DTO otherwise leaves the current avatar untouched.
           ...(form.avatarKey ? { avatarUrl: form.avatarKey } : {}),
         },
-        socials: form.socials.filter(
-          (social) => social.platform && social.urlOrHandle,
-        ),
+        // Drop the client-only `id` and any blank rows before sending.
+        socials: form.socials
+          .filter((social) => social.platform && social.urlOrHandle)
+          .map((social) => ({
+            platform: social.platform,
+            urlOrHandle: social.urlOrHandle,
+          })),
       },
       {
         onSuccess: () => {

@@ -1,42 +1,96 @@
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
+import type { QueueRow } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
 
-/** Fixed demo "now" the eyebrow timestamp is built from — formatted via
- *  useFormat() rather than baked as a hardcoded English string. */
-const DEMO_NOW = new Date(2026, 5, 28, 9, 14);
+interface AdminDashboardHeaderProps {
+  /** The live (or demo) triage queue, so the headline count and the
+   *  emergency callout reflect the real backlog rather than a baked number. */
+  triage: QueueRow[];
+  loading: boolean;
+}
 
-export function AdminDashboardHeader() {
+export function AdminDashboardHeader({
+  triage,
+  loading,
+}: AdminDashboardHeaderProps) {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const fmt = useFormat();
+
+  // The eyebrow shows the actual current moment — genuine data, not a baked
+  // demo timestamp.
+  const now = new Date();
+
+  // Everything in the triage queue "needs a human"; the danger-tone row is the
+  // safety-emergencies bucket (same discriminator in demo and live).
+  const totalNeedsHuman = triage.reduce((sum, row) => sum + row.count, 0);
+  const emergencyCount = triage
+    .filter((row) => row.tone === "danger")
+    .reduce((sum, row) => sum + row.count, 0);
+  const isCaughtUp = totalNeedsHuman === 0;
 
   return (
     <div className={styles.ph}>
       <div className={styles.phText}>
         <div className={styles.eyebrow}>
           <span className={styles.eyebrowDot} aria-hidden />
-          {fmt.date(DEMO_NOW, {
+          {fmt.date(now, {
             weekday: "long",
             day: "numeric",
             month: "long",
             year: "numeric",
           })}{" "}
-          · {fmt.time(DEMO_NOW)}
+          · {fmt.time(now)}
         </div>
-        <h1 className={styles.h1}>
-          {t("admin:dashboard.header.titleLine1")}
-          <br />
-          <Translation
-            i18nKey="admin:dashboard.header.titleLine2"
-            components={{ em: <em /> }}
-          />
-        </h1>
-        <p className={styles.phSub}>{t("admin:dashboard.header.sub")}</p>
+
+        {loading ? (
+          <>
+            <SkeletonLine width={240} height={40} style={{ marginTop: 4 }} />
+            <SkeletonLine width={190} height={40} style={{ marginTop: 10 }} />
+            <SkeletonLine width={360} height={15} style={{ marginTop: 20 }} />
+          </>
+        ) : (
+          <>
+            <h1 className={styles.h1}>
+              {isCaughtUp ? (
+                <>
+                  {t("admin:dashboard.header.titleClearLine1")}
+                  <br />
+                  <Translation
+                    i18nKey="admin:dashboard.header.titleClearLine2"
+                    components={{ em: <em /> }}
+                  />
+                </>
+              ) : (
+                <>
+                  {t("admin:dashboard.header.titleLine1", {
+                    count: totalNeedsHuman,
+                  })}
+                  <br />
+                  <Translation
+                    i18nKey="admin:dashboard.header.titleLine2"
+                    components={{ em: <em /> }}
+                    values={{ count: totalNeedsHuman }}
+                  />
+                </>
+              )}
+            </h1>
+            <p className={styles.phSub}>
+              {isCaughtUp
+                ? t("admin:dashboard.header.subClear")
+                : emergencyCount > 0
+                  ? t("admin:dashboard.header.subEmergencies", {
+                      count: emergencyCount,
+                    })
+                  : t("admin:dashboard.header.subCalm")}
+            </p>
+          </>
+        )}
       </div>
       <div className={styles.phActions}>
         <Button

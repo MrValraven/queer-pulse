@@ -39,6 +39,12 @@ export interface ServerToClientEvents {
   /** Fan-out to the recipient's `user:${userId}` room (added by the A-emit
    *  backend workstream, mirroring the `message:new` pattern). */
   "notification:new": { notification: RealtimeNotification };
+  /** `namespace.to(conversationId).emit('reaction', …)` — a reaction was added
+   *  or removed on a message in this conversation. */
+  reaction: { conversationId: string; messageId: string };
+  /** `namespace.to(conversationId).emit('message:deleted', …)` — a message was
+   *  soft-deleted in this conversation. */
+  "message:deleted": { conversationId: string; messageId: string };
   /** Auth/handshake/validation failures, incl. access-token expiry. `code` is
    *  only set for a platform-lockdown refusal (`"PLATFORM_LOCKED"`); every other
    *  rejection is the generic `Unauthorized` with no `code`. */
@@ -57,15 +63,19 @@ export type ServerToClientEvent = keyof ServerToClientEvents;
  * socket only enters that room by emitting `conversation:join`. Without it those
  * broadcasts reach no one and new DMs only surface on a manual refresh.
  *
- * The gateway also accepts `message:send`, `typing`, `read` and
- * `presence:snapshot`; we don't emit those (writes/receipts go over HTTP), so
- * they stay untyped here until something actually sends them.
+ * We emit `typing` (the composer's typing indicator — see the realtime layer's
+ * `emitTyping`). The gateway also accepts `message:send`, `read` and
+ * `presence:snapshot`, which we don't emit (writes/receipts go over HTTP), so
+ * those stay untyped here until something actually sends them.
  */
 export interface ClientToServerEvents {
   /** `chat.gateway.ts` `@SubscribeMessage('conversation:join')`. `conversationId`
    *  must be a v4 UUID (the gateway's ValidationPipe rejects otherwise). Room
    *  membership is per-connection and lost on reconnect, so re-emit on connect. */
   "conversation:join": { conversationId: string };
+  /** `chat.gateway.ts` `@SubscribeMessage('typing')`. Broadcast to the room as
+   *  `typing` with `userId` added server-side. Requires prior `conversation:join`. */
+  typing: { conversationId: string; isTyping: boolean };
 }
 
 export type ClientToServerEvent = keyof ClientToServerEvents;

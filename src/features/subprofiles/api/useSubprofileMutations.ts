@@ -5,10 +5,12 @@ import {
   createSubprofile,
   deleteSubprofile,
   publishSubprofile,
+  replaceSocialLinks,
   replaceSubprofileSection,
   unpublishSubprofile,
   updateSubprofile,
   type CreateSubprofileDTO,
+  type SocialLinkDTO,
   type SubprofileDTO,
   type SubprofileItemInputDTO,
   type SubprofileSection,
@@ -60,33 +62,55 @@ function demoCreatedDto(dto: CreateSubprofileDTO): SubprofileDTO {
     avatarUrl: null,
     tagline: null,
     bio: null,
+    coverUrl: null,
+    accent: null,
+    availability: null,
+    ctaLabel: null,
+    ctaUrl: null,
+    socialLinks: [],
     linkVisibility: "linked",
     visibility: "open",
     status: "draft",
     position: 0,
     items: [],
+    endorsementCount: 0,
+    followerCount: 0,
+    affiliations: [],
   };
 }
 
-/** Map the section-replace input back onto stored items (demo optimistic return). */
+/** Map the section-replace input back onto stored items (demo optimistic return).
+ *  Persists `isFeatured` from the payload and mirrors the backend's single-
+ *  spotlight rule: `links` items can never be featured, and when the incoming
+ *  section carries a featured item, every OTHER section's items are cleared
+ *  so at most one item across the whole persona stays featured. */
 function applySection(
   dto: SubprofileDTO,
   section: SubprofileSection,
   items: SubprofileItemInputDTO[],
 ): SubprofileDTO {
-  const others = dto.items.filter((i) => i.section !== section);
-  const replaced = items.map((i) => ({
+  const isLinksSection = section === "links";
+  const replacedItems = items.map((item) => ({
     section,
-    title: i.title,
-    subtitle: i.subtitle ?? null,
-    description: i.description ?? null,
-    url: i.url ?? null,
-    imageUrl: i.imageUrl ?? null,
-    date: i.date ?? null,
-    meta: i.meta ?? null,
-    tags: i.tags ?? [],
+    title: item.title,
+    subtitle: item.subtitle ?? null,
+    description: item.description ?? null,
+    url: item.url ?? null,
+    imageUrl: item.imageUrl ?? null,
+    date: item.date ?? null,
+    meta: item.meta ?? null,
+    tags: item.tags ?? [],
+    isFeatured: isLinksSection ? false : (item.isFeatured ?? false),
   }));
-  return { ...dto, items: [...others, ...replaced] };
+  const incomingHasFeaturedItem = replacedItems.some(
+    (item) => item.isFeatured,
+  );
+  const otherSectionItems = dto.items
+    .filter((item) => item.section !== section)
+    .map((item) =>
+      incomingHasFeaturedItem ? { ...item, isFeatured: false } : item,
+    );
+  return { ...dto, items: [...otherSectionItems, ...replacedItems] };
 }
 
 /**
@@ -134,6 +158,20 @@ export function useSubprofileMutations() {
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
       return applySection(current, section, items);
+    },
+    onSuccess: invalidateAll,
+  });
+
+  const replaceSocials = useMutation<
+    SubprofileDTO,
+    Error,
+    { id: string; items: SocialLinkDTO[] }
+  >({
+    mutationFn: async ({ id, items }) => {
+      if (!demoMode) return replaceSocialLinks(id, items);
+      const current = mockSubprofileById(id);
+      if (!current) throw new Error("Subprofile not found");
+      return { ...current, socialLinks: items };
     },
     onSuccess: invalidateAll,
   });
@@ -193,5 +231,13 @@ export function useSubprofileMutations() {
     onSuccess: invalidateAll,
   });
 
-  return { create, update, replaceSection, publish, unpublish, remove };
+  return {
+    create,
+    update,
+    replaceSection,
+    replaceSocials,
+    publish,
+    unpublish,
+    remove,
+  };
 }

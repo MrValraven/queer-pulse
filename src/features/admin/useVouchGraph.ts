@@ -2,18 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  EDGES,
-  PEOPLE,
-  T_MAX,
-  T_MIN,
-  findEdge,
-  isIsolated,
-  neighbors,
-  personById,
-  shortestPath,
-  ym,
+  ymValue,
+  type TrustGraph,
   type VouchEdge,
-} from "./adminVouchGraph.data";
+} from "./trustGraph/trustGraphModel";
 
 export type VouchMode = "plain" | "clusters" | "safety";
 
@@ -22,16 +14,17 @@ const REPLAY_STEP_MS = 130;
 /**
  * All view state for the trust-network modal: focus, expanded neighbourhoods,
  * overlay mode, time cut-off, selection, the two-point trust path, search, and
- * the re-centre breadcrumb trail. Derives the visible node/edge sets.
+ * the re-centre breadcrumb trail. Derives the visible node/edge sets from the
+ * fetched `graph` (demo fixture or live `/admin/trust-network` data).
  */
-export function useVouchGraph(initialFocus: string) {
+export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
   const [focus, setFocus] = useState(initialFocus);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [mode, setMode] = useState<VouchMode>("plain");
-  const [timeCut, setTimeCut] = useState(T_MAX);
+  const [timeCut, setTimeCut] = useState(graph.tMax);
   const [sel, setSel] = useState<string | null>(initialFocus);
   const [pathA, setPathA] = useState<string | null>(null);
   const [pathB, setPathB] = useState<string | null>(null);
@@ -44,55 +37,58 @@ export function useVouchGraph(initialFocus: string) {
 
   const { visIds, visEdges } = useMemo(() => {
     const set = new Set<string>([focus]);
-    neighbors(focus, true).forEach((n) => set.add(n));
-    expanded.forEach((id) => neighbors(id, true).forEach((n) => set.add(n)));
+    graph.neighbors(focus, true).forEach((n) => set.add(n));
+    expanded.forEach((id) =>
+      graph.neighbors(id, true).forEach((n) => set.add(n)),
+    );
     if (mode === "safety") {
-      PEOPLE.forEach((p) => {
-        if (p.scene === "ring" || p.standing === "flagged" || isIsolated(p.id))
-          set.add(p.id);
+      graph.people.forEach((p) => {
+        if (p.standing === "flagged" || graph.isIsolated(p.id)) set.add(p.id);
       });
-      [...set].forEach((id) => neighbors(id, true).forEach((n) => set.add(n)));
+      [...set].forEach((id) =>
+        graph.neighbors(id, true).forEach((n) => set.add(n)),
+      );
     }
     // time filter: a node stays if it is the focus or has any edge within the cut
     const ids = [...set].filter(
       (id) =>
         id === focus ||
-        EDGES.some(
-          (e) => (e.from === id || e.to === id) && ym(e.date) <= timeCut,
+        graph.edges.some(
+          (e) => (e.from === id || e.to === id) && ymValue(e.date) <= timeCut,
         ),
     );
     const idSet = new Set(ids);
-    const edges: VouchEdge[] = EDGES.filter(
-      (e) => idSet.has(e.from) && idSet.has(e.to) && ym(e.date) <= timeCut,
+    const edges: VouchEdge[] = graph.edges.filter(
+      (e) => idSet.has(e.from) && idSet.has(e.to) && ymValue(e.date) <= timeCut,
     );
     return { visIds: ids, visEdges: edges };
     // expandedKey stands in for the Set's contents
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focus, expandedKey, mode, timeCut]);
+  }, [graph, focus, expandedKey, mode, timeCut]);
 
   const { pathNodes, pathEdges } = useMemo(() => {
     const nodes = new Set<string>();
     const edges = new Set<string>();
     if (pathA && pathB) {
-      const path = shortestPath(pathA, pathB);
+      const path = graph.shortestPath(pathA, pathB);
       if (path) {
         path.forEach((id, i) => {
           nodes.add(id);
           if (i > 0) {
-            const e = findEdge(path[i - 1]!, path[i]!);
+            const e = graph.findEdge(path[i - 1]!, path[i]!);
             if (e) edges.add(e.id);
           }
         });
       }
     }
     return { pathNodes: nodes, pathEdges: edges };
-  }, [pathA, pathB]);
+  }, [graph, pathA, pathB]);
 
   const select = useCallback((id: string | null) => setSel(id), []);
 
   const recenter = useCallback(
     (id: string) => {
-      if (personById[id]?.private) {
+      if (graph.peopleById[id]?.private) {
         showToast(t("admin:vouchGraph.modal.privateToast"), "info");
         return;
       }
@@ -101,7 +97,7 @@ export function useVouchGraph(initialFocus: string) {
       setExpanded(new Set());
       setSel(id);
     },
-    [focus, showToast, t],
+    [focus, graph, showToast, t],
   );
 
   const gotoCrumb = useCallback((index: number) => {
@@ -158,14 +154,14 @@ export function useVouchGraph(initialFocus: string) {
   const replay = useCallback(() => {
     if (replayRef.current !== null) return;
     setReplaying(true);
-    setTimeCut(T_MIN);
-    let v = T_MIN;
+    setTimeCut(graph.tMin);
+    let v = graph.tMin;
     replayRef.current = window.setInterval(() => {
       v += 1;
       setTimeCut(v);
-      if (v >= T_MAX) stopReplay();
+      if (v >= graph.tMax) stopReplay();
     }, REPLAY_STEP_MS);
-  }, [stopReplay]);
+  }, [graph, stopReplay]);
 
   useEffect(() => stopReplay, [stopReplay]);
 

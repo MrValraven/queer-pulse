@@ -1,3 +1,5 @@
+import type { SubprofileView } from "./api/subprofiles.adapters";
+
 /**
  * The completeness requirements an unlinked persona must meet to publish, in the
  * order they're shown. Each requirement maps the exact contract-C5 unmet codes
@@ -67,5 +69,36 @@ export const PUBLISH_REQUIREMENTS: PublishRequirement[] = [
     failKey: {
       blocked_terms: "subprofiles:checklist.reqLanguageFail",
     },
+  },
+];
+
+/**
+ * Optional "polish" nudges — never gate publishing, carry no contract-C5 `unmet`
+ * code, and never touch the backend. Each is derived client-side straight off
+ * the loaded `SubprofileView` so the polish list can render instantly alongside
+ * the (separate, blocking) `PUBLISH_REQUIREMENTS` checklist above.
+ */
+export interface PolishNudge {
+  key: string;
+  titleKey: string;
+  /** True once this nudge is satisfied and should drop out of the list. */
+  isSatisfied: (subprofile: SubprofileView) => boolean;
+}
+
+export const POLISH_NUDGES: PolishNudge[] = [
+  {
+    key: "cover",
+    titleKey: "subprofiles:checklist.polishCover",
+    isSatisfied: (subprofile) => Boolean(subprofile.coverUrl),
+  },
+  {
+    key: "socials",
+    titleKey: "subprofiles:checklist.polishSocials",
+    isSatisfied: (subprofile) => subprofile.socialLinks.length > 0,
+  },
+  {
+    key: "availability",
+    titleKey: "subprofiles:checklist.polishAvailability",
+    isSatisfied: (subprofile) => Boolean(subprofile.availability),
   },
 ];

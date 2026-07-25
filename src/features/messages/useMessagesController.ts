@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSocial } from "../../app/providers/SocialProvider";
+import { useAuth } from "../../app/providers/authContext";
 import {
   useJoinConversation,
+  useReadFrames,
   useRealtimeConnection,
 } from "../../shared/api/realtime";
 import { type ChatMessage, type Conversation } from "./data";
@@ -18,6 +20,13 @@ import {
   useStartConversation,
 } from "./api/useMessageMutations";
 
+let localIdSequence = 0;
+/** Monotonic client id for optimistic messages (module-scoped; survives re-renders). */
+export function nextLocalId(): string {
+  localIdSequence += 1;
+  return `local-${localIdSequence}`;
+}
+
 /**
  * All Messages page state, data wiring, and handlers — extracted from
  * `MessagesPage` so the component stays a thin render. Behaviour is unchanged:
@@ -29,6 +38,8 @@ export function useMessagesController() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { isBlocked } = useSocial();
+  const { user } = useAuth();
+  const myUserId = user?.id ?? null;
   const simLoading = useSimulatedLoad();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [view, setView] = useState<"list" | "thread">("list");
@@ -47,6 +58,9 @@ export function useMessagesController() {
   const [extraThreads, setExtraThreads] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  /** Live "Seen" watermark per conversation, from the counterpart's `read`
+   *  frames — the max lastReadAt observed so far, keyed by conversation id. */
+  const [readWatermarks, setReadWatermarks] = useState<Record<string, string>>({});
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState("");
   /** Per-thread optimistic messages sent this session, keyed by conversation id. */
@@ -77,6 +91,31 @@ export function useMessagesController() {
     [allThreads, activeId],
   );
 
+  // Read receipts ("Seen"): the counterpart's `read` frame reports THEIR
+  // lastReadAt, which advances the watermark for the message they've now read
+  // up to. Ignore frames carrying my OWN userId — those are my own read
+  // (drives the unread badge elsewhere), not a receipt on my sent messages.
+  const onRead = useCallback(
+    (frame: { conversationId: string; userId: string; lastReadAt: string }) => {
+      if (myUserId && frame.userId === myUserId) return;
+      setReadWatermarks((prev) => {
+        const existing = prev[frame.conversationId];
+        if (existing && existing >= frame.lastReadAt) return prev; // ISO strings compare lexicographically
+        return { ...prev, [frame.conversationId]: frame.lastReadAt };
+      });
+    },
+    [myUserId],
+  );
+  useReadFrames(onRead);
+
+  /** Effective "Seen" watermark for the open thread: a live `read` frame wins
+   *  once one has arrived, otherwise fall back to the conversation's last
+   *  known `otherLastReadAt` from the inbox fetch. Null in demo mode (no read
+   *  frames, no `otherLastReadAt` on mock threads) — "Seen" simply never shows. */
+  const counterpartLastReadAt = active
+    ? (readWatermarks[active.id] ?? active.otherLastReadAt ?? null)
+    : null;
+
   // Join the open thread's realtime room so the gateway's per-conversation
   // frames (a new message from either side, read receipts) stream in live
   // instead of only appearing after a refresh. Inert in demo mode.
@@ -84,6 +123,13 @@ export function useMessagesController() {
 
   // Live message history for the open thread (inert in demo mode).
   const thread = useMessageThread(demoMode ? null : (active?.id ?? null));
+  const hasMoreOlder = demoMode ? false : (thread.hasNextPage ?? false);
+  const loadingOlder = demoMode ? false : thread.isFetchingNextPage;
+  function loadOlder() {
+    if (!demoMode && thread.hasNextPage && !thread.isFetchingNextPage) {
+      thread.fetchNextPage();
+    }
+  }
   const sendMessage = useSendMessage(active?.id ?? null);
   const markRead = useMarkRead(active?.id ?? null);
   const startConversation = useStartConversation();
@@ -204,30 +250,64 @@ export function useMessagesController() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingRecipient?.slug]);
 
+  function appendOptimistic(convId: string, message: ChatMessage) {
+    setSent((prev) => ({ ...prev, [convId]: [...(prev[convId] ?? []), message] }));
+  }
+
+  function setStatus(convId: string, localId: string, status: ChatMessage["status"]) {
+    setSent((prev) => ({
+      ...prev,
+      [convId]: (prev[convId] ?? []).map((item) =>
+        item.localId === localId ? { ...item, status } : item,
+      ),
+    }));
+  }
+
+  function deliver(convId: string, body: string, localId: string) {
+    if (demoMode) {
+      setStatus(convId, localId, "sent");
+      return;
+    }
+    sendMessage.mutate(body, {
+      // Drop only THIS optimistic message (matched by localId) — a concurrent
+      // second send in the same thread must survive. The mutation invalidates
+      // ["messages", convId], so the authoritative server copy backfills it.
+      onSuccess: () =>
+        setSent((prev) => {
+          const remaining = (prev[convId] ?? []).filter(
+            (item) => item.localId !== localId,
+          );
+          const next = { ...prev };
+          if (remaining.length > 0) next[convId] = remaining;
+          else delete next[convId];
+          return next;
+        }),
+      onError: () => setStatus(convId, localId, "failed"),
+    });
+  }
+
   function send() {
     const body = draft.trim();
     if (!body || activeBlocked || !active) return;
     const convId = active.id;
+    const localId = nextLocalId();
     // Optimistic append — instant feedback in both modes. In live mode the
     // server refetch is authoritative, so clear the optimistic copy on success.
-    setSent((prev) => ({
-      ...prev,
-      [convId]: [
-        ...(prev[convId] ?? []),
-        { from: "me", text: body, time: t("messages:time.justNow") },
-      ],
-    }));
+    appendOptimistic(convId, {
+      from: "me",
+      text: body,
+      time: t("messages:time.justNow"),
+      status: "sending",
+      localId,
+    });
     setDraft("");
-    if (!demoMode) {
-      sendMessage.mutate(body, {
-        onSuccess: () =>
-          setSent((prev) => {
-            const next = { ...prev };
-            delete next[convId];
-            return next;
-          }),
-      });
-    }
+    deliver(convId, body, localId);
+  }
+
+  function retrySend(message: ChatMessage) {
+    if (!active || !message.localId) return;
+    setStatus(active.id, message.localId, "sending");
+    deliver(active.id, message.text, message.localId);
   }
 
   return {
@@ -247,9 +327,14 @@ export function useMessagesController() {
     setComposing,
     active,
     activeBlocked,
+    counterpartLastReadAt,
     messageGroups,
+    hasMoreOlder,
+    loadingOlder,
+    loadOlder,
     openThread,
     startThread,
     send,
+    retrySend,
   };
 }

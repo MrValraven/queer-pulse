@@ -71,6 +71,9 @@ export function useLisbonMap({
   });
 
   const [failed, setFailed] = useState(false);
+  // Gates the in-panel loader: false until the map has painted its first full
+  // frame, so switching List→Map never flashes a blank/half-drawn canvas.
+  const [ready, setReady] = useState(false);
 
   // Create the map once. The style is fetched and patched (warm colours + Noto
   // fonts) before creation, so failure to load the style is the only fatal
@@ -79,6 +82,9 @@ export function useLisbonMap({
     const container = containerRef.current;
     if (!container) return;
     let cancelled = false;
+    // Safety net: reveal the map even if `idle` never fires (e.g. a tile source
+    // that never settles), so the loader can't get stuck forever.
+    let revealTimer: ReturnType<typeof setTimeout> | undefined;
 
     buildWarmStyle()
       .then((style) => {
@@ -108,10 +114,20 @@ export function useLisbonMap({
           );
           markerManagerRef.current = markerManager;
           markerManager.setSelected(selectedVenueId);
-          markerManager.render(venues);
 
-          readyRef.current = true;
-          pushSelected(map, selectedFreguesia);
+          // Draw the pins + reveal the map only once the basemap has fully
+          // painted (`idle`), so the staggered drop-in lands on a settled canvas
+          // instead of playing hidden under a still-loading one.
+          const reveal = () => {
+            if (cancelled || readyRef.current) return;
+            clearTimeout(revealTimer);
+            markerManager.render(venues);
+            readyRef.current = true;
+            pushSelected(map, selectedFreguesia);
+            setReady(true);
+          };
+          map.once("idle", reveal);
+          revealTimer = setTimeout(reveal, 3000);
 
           // Parish interactions (fills are WebGL; pins handle their own clicks).
           map.on("click", "freguesia-fill", (event) => {
@@ -145,6 +161,7 @@ export function useLisbonMap({
 
     return () => {
       cancelled = true;
+      clearTimeout(revealTimer);
       readyRef.current = false;
       markerManagerRef.current?.clear();
       markerManagerRef.current = null;
@@ -189,7 +206,7 @@ export function useLisbonMap({
     markerManagerRef.current?.setSelected(selectedVenueId);
   }, [selectedVenueId]);
 
-  return { containerRef, failed };
+  return { containerRef, failed, ready };
 }
 
 // Registers the freguesia fill/line/label/count sources and layers. Venue pins

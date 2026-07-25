@@ -31,7 +31,7 @@ export function AdminDashboardPage() {
       }
     >
       <FadeIn>
-        <AdminDashboardHeader />
+        <AdminDashboardHeader triage={data?.triage ?? []} loading={isLoading} />
       </FadeIn>
 
       <AdminStatGrid metrics={data?.metrics ?? []} loading={isLoading} />

@@ -2701,6 +2701,7 @@ export const marketing: Catalog = {
   "map.venueCard.markBeen": "Já estive aqui",
   "map.svg.filterByAria": "Filtrar o mapa por {bairro}",
   "map.mapError": "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
+  "map.mapLoading": "A dar <em>vida</em> ao mapa…",
   "map.pinAria": "{name} — {type}",
   "map.clusterAria_one": "{count} espaço aqui — ampliar",
   "map.clusterAria_other": "{count} espaços aqui — ampliar",

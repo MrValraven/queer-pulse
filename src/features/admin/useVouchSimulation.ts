@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import {
-  SCENE_ANCHOR,
-  personById,
-  type VouchEdge,
-} from "./adminVouchGraph.data";
+import type { TrustGraph, VouchEdge } from "./trustGraph/trustGraphModel";
 
 export interface NodePos {
   x: number;
@@ -16,6 +12,7 @@ interface RunArgs {
   visIds: string[];
   edges: VouchEdge[];
   focusId: string;
+  graph: TrustGraph;
   /** how strongly nodes are pulled toward their community sector */
   clusterStrength?: number;
   /** nodes the user has dragged into place — the layout leaves these fixed */
@@ -28,6 +25,7 @@ interface RunArgs {
 
 const TICKS = 140;
 const PRESETTLE = 150;
+const ORIGIN = { x: 0, y: 0 };
 
 /**
  * Force-directed layout for the trust network. Positions live in a ref and are
@@ -68,6 +66,7 @@ export function useVouchSimulation(reduced: boolean) {
       visIds,
       edges,
       focusId,
+      graph,
       clusterStrength = 0.014,
       pinned,
       paint,
@@ -77,6 +76,11 @@ export function useVouchSimulation(reduced: boolean) {
       const pos = posRef.current;
       const n = visIds.length;
 
+      const sceneAnchorFor = (id: string) => {
+        const sceneId = graph.peopleById[id]?.sceneId ?? "";
+        return graph.sceneAnchor[sceneId] ?? ORIGIN;
+      };
+
       // seed positions: focus pinned at origin, newcomers near their community sector
       visIds.forEach((id) => {
         const existing = pos.get(id);
@@ -84,7 +88,7 @@ export function useVouchSimulation(reduced: boolean) {
           if (id === focusId) {
             pos.set(id, { x: 0, y: 0, vx: 0, vy: 0 });
           } else {
-            const anchor = SCENE_ANCHOR[personById[id]!.scene];
+            const anchor = sceneAnchorFor(id);
             pos.set(id, {
               x: anchor.x + (Math.random() * 70 - 35),
               y: anchor.y + (Math.random() * 70 - 35),
@@ -156,7 +160,7 @@ export function useVouchSimulation(reduced: boolean) {
             continue;
           }
           // pull toward the member's community sector instead of the centre
-          const anchor = SCENE_ANCHOR[personById[id]!.scene];
+          const anchor = sceneAnchorFor(id);
           p.vx += (anchor.x - p.x) * clusterStrength;
           p.vy += (anchor.y - p.y) * clusterStrength;
           p.vx *= 0.86;
@@ -177,10 +181,10 @@ export function useVouchSimulation(reduced: boolean) {
             continue;
           }
           if (pinned?.has(id)) continue; // keep a dropped node where it is
-          const scene = personById[id]!.scene;
-          const anchor = SCENE_ANCHOR[scene];
-          const k = sceneIndex[scene] ?? 0;
-          sceneIndex[scene] = k + 1;
+          const sceneId = graph.peopleById[id]?.sceneId ?? "";
+          const anchor = graph.sceneAnchor[sceneId] ?? ORIGIN;
+          const k = sceneIndex[sceneId] ?? 0;
+          sceneIndex[sceneId] = k + 1;
           p.x = anchor.x + Math.cos(k * 1.7) * (24 + k * 10);
           p.y = anchor.y + Math.sin(k * 1.7) * (24 + k * 10);
         }

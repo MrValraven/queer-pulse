@@ -2620,6 +2620,7 @@ export const marketing: Catalog = {
   // surrounding phrase is translated.
   "map.svg.filterByAria": "Filter the map by {bairro}",
   "map.mapError": "The map could not load. The venue list below still works.",
+  "map.mapLoading": "Bringing the map to <em>life</em>…",
   "map.pinAria": "{name} — {type}",
   "map.clusterAria_one": "{count} place here — zoom in",
   "map.clusterAria_other": "{count} places here — zoom in",

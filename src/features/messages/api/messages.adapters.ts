@@ -66,6 +66,8 @@ export function conversationToView(dto: ConversationResponse): Conversation {
     time: timeLabel(dto.updatedAt),
     preview: dto.lastMessage?.body ?? "",
     unread: dto.unreadCount > 0,
+    otherLastReadAt: dto.otherLastReadAt ?? undefined,
+    otherParticipantId: dto.otherParticipantId ?? undefined,
     official: !p,
     messages: [],
   };
@@ -81,6 +83,9 @@ export function messageToChat(
     from: myHandle && dto.sender.handle === myHandle ? "me" : "them",
     text: dto.body,
     time: timeLabel(dto.createdAt),
+    at: dto.createdAt,
+    reactions: dto.reactions,
+    deletedAt: dto.deletedAt ?? undefined,
   };
 }
 

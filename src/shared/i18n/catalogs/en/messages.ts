@@ -32,9 +32,15 @@ export const messages: Catalog = {
   "thread.presenceOnline": "Online now",
 
   // Conversation panel (ConversationPanel)
+  "conversation.activeNow": "Active now",
   "conversation.officialMeta": "Official · Cannot reply to this thread",
   "conversation.connectedSinceSuffix": " · Connected since {date}",
   "conversation.viewProfile": "View profile",
+  "conversation.you": "You",
+  "conversation.newMessages": "New messages",
+  "conversation.unreadDivider": "New messages",
+  "conversation.loadingOlder": "Loading earlier messages…",
+  "conversation.typing": "{name} is typing…",
   "conversation.officialNotice":
     "This is an automated thread — replies aren't monitored.",
   "conversation.blockedNotice":
@@ -48,6 +54,21 @@ export const messages: Catalog = {
   "day.today": "Today",
   "day.yesterday": "Yesterday",
   "time.justNow": "Just now",
+  "status.sending": "Sending…",
+  "status.retry": "Not delivered · Retry",
+  "status.seen": "Seen",
+
+  // Per-message action bar (MessageActions/ReactionPicker)
+  "actions.react": "React",
+  "actions.more": "More",
+  "actions.report": "Report",
+  "actions.delete": "Delete",
+  tombstone: "This message was deleted",
+  "delete.confirmTitle": "Delete this message?",
+  "delete.confirmBody": "It will be removed for everyone in this chat.",
+  "delete.confirmCta": "Delete",
+  "delete.cancelCta": "Cancel",
+  "report.title": "Report this message",
 
   // New-message recipient picker (NewMessageModal)
   "newMessage.title": "New message",

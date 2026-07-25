@@ -78,6 +78,9 @@ export function CommandPalette() {
   const activeIndex = Math.min(active, Math.max(0, results.length - 1));
 
   const goToAll = useCallback(() => {
+    // Search has no backend yet in live mode — the palette only shows the
+    // "coming soon" notice, so there's nothing to open on the full /search page.
+    if (comingSoon) return;
     const trimmed = query.trim();
     navigate(
       trimmed
@@ -85,7 +88,7 @@ export function CommandPalette() {
         : routes.search,
     );
     close();
-  }, [query, navigate, close]);
+  }, [comingSoon, query, navigate, close]);
 
   const goToItem = useCallback(
     (item: SearchItem) => {
@@ -140,6 +143,7 @@ export function CommandPalette() {
             aria-controls="qp-cmd-results"
             placeholder={t("members:commandPalette.placeholder")}
             value={query}
+            readOnly={comingSoon}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
           />
@@ -235,18 +239,20 @@ export function CommandPalette() {
           </>
         )}
 
-        <button type="button" className={styles.footer} onClick={goToAll}>
-          <FiCornerDownLeft aria-hidden />
-          {query.trim() ? (
-            <Translation
-              i18nKey="members:commandPalette.seeAllResults"
-              components={{ b: <b /> }}
-              values={{ query: query.trim() }}
-            />
-          ) : (
-            t("members:commandPalette.openFullSearch")
-          )}
-        </button>
+        {!comingSoon && (
+          <button type="button" className={styles.footer} onClick={goToAll}>
+            <FiCornerDownLeft aria-hidden />
+            {query.trim() ? (
+              <Translation
+                i18nKey="members:commandPalette.seeAllResults"
+                components={{ b: <b /> }}
+                values={{ query: query.trim() }}
+              />
+            ) : (
+              t("members:commandPalette.openFullSearch")
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

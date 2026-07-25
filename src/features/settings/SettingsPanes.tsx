@@ -568,6 +568,15 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
       </Section>
       <Section label={t("settings:visibility.section.additionalControls")}>
         <ToggleList>
+          <ConsentToggleRow
+            title={t("settings:visibility.privateNetwork.label")}
+            desc={t("settings:visibility.privateNetwork.help")}
+            checked={draft.privateNetwork}
+            onChange={(next) => {
+              updateDraft({ privateNetwork: next });
+              onChange();
+            }}
+          />
           <ToggleRow
             title={t("settings:visibility.newArrivals.title")}
             desc={t("settings:visibility.newArrivals.desc")}

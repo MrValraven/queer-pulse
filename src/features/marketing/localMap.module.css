@@ -117,6 +117,10 @@
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 18px;
   overflow: hidden;
+  /* Ease the map surface in on mount so switching List→Map (which re-creates
+     the MapLibre instance) reads as an intentional reveal, not a flicker.
+     Reduced motion snaps to the end state via the global net in effects.css. */
+  animation: qpMapIn var(--dur-slow) var(--ease-out) both;
 }
 .mapCanvas {
   width: 100%;
@@ -136,6 +140,20 @@
   text-align: center;
   color: var(--ink-60);
   background: color-mix(in srgb, var(--cream) 88%, var(--plum));
+}
+
+/* Local copy of the shared map-panel entrance keyframe — a CSS Module can't
+   reference the global @keyframes in effects.css (the animation-name gets
+   scoped to a dangling hash). See the same note in Skeleton.module.css. */
+@keyframes qpMapIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .bairro {
   cursor: pointer;

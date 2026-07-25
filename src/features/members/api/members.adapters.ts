@@ -178,6 +178,7 @@ export function profileToMember(dto: ProfileDTO): Member {
     identities: dto.identities ?? [],
     lookingFor: dto.lookingFor ?? [],
     lookingForPublic: dto.lookingForPublic ?? false,
+    privateNetwork: dto.privateNetwork ?? false,
     socials: (dto.socials ?? []).map((s) => ({
       platform: s.platform,
       urlOrHandle: s.urlOrHandle,

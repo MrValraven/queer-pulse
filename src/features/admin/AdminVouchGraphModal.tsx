@@ -1,20 +1,16 @@
-import { Fragment, useEffect } from "react";
-import { FiLock, FiPlay, FiSearch, FiX } from "react-icons/fi";
+import { Fragment, useEffect, type ReactNode } from "react";
+import { FiLock, FiPlay, FiSearch, FiUser, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
+import { SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { VouchGraphCanvas } from "./VouchGraphCanvas";
 import { VouchGraphInspector } from "./VouchGraphInspector";
 import { useVouchGraph, type VouchMode } from "./useVouchGraph";
-import {
-  SCENES,
-  T_MAX,
-  T_MIN,
-  monthDateFromValue,
-  personById,
-  shortestPath,
-} from "./adminVouchGraph.data";
+import { useTrustNetwork } from "./api/useTrustNetwork";
+import { TrustGraphProvider, useTrustGraph } from "./trustGraph/TrustGraphContext";
+import { monthDateFromValue } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 
 /** `admin:vouchGraph.modes.*` catalog keys, resolved with `t()`. */
@@ -34,20 +30,21 @@ function PathBar({
   onClear: () => void;
 }) {
   const { t } = useTranslation();
+  const graph = useTrustGraph();
   if (!pathA) return null;
   let content;
   if (pathA && pathB) {
-    const path = shortestPath(pathA, pathB);
+    const path = graph.shortestPath(pathA, pathB);
     content = path ? (
       <span>
         <b>{t("admin:vouchGraph.pathbar.stepPath", { count: path.length })}</b>{" "}
-        {path.map((id) => personById[id]!.initials).join(" → ")}
+        {path.map((id) => graph.peopleById[id]!.initials).join(" → ")}
       </span>
     ) : (
       <span>
         {t("admin:vouchGraph.pathbar.noPath", {
-          a: personById[pathA]!.initials,
-          b: personById[pathB]!.initials,
+          a: graph.peopleById[pathA]!.initials,
+          b: graph.peopleById[pathB]!.initials,
         })}
       </span>
     );
@@ -55,7 +52,7 @@ function PathBar({
     content = (
       <span>
         {t("admin:vouchGraph.pathbar.fromHint", {
-          name: personById[pathA]!.initials,
+          name: graph.peopleById[pathA]!.initials,
         })}
       </span>
     );
@@ -72,13 +69,14 @@ function PathBar({
 
 function Legend({ mode }: { mode: VouchMode }) {
   const { t } = useTranslation();
+  const graph = useTrustGraph();
   if (mode === "clusters") {
     return (
       <div className={styles.legend}>
-        {Object.values(SCENES).map((s) => (
-          <span key={s.label ?? s.labelKey} className={styles.leg}>
+        {graph.scenes.map((s) => (
+          <span key={s.id} className={styles.leg}>
             <span className={styles.legDot} style={{ background: s.color }} />
-            {s.labelKey ? t(s.labelKey) : s.label}
+            {s.label}
           </span>
         ))}
       </div>
@@ -140,25 +138,57 @@ function Legend({ mode }: { mode: VouchMode }) {
   );
 }
 
-export function AdminVouchGraphModal({
-  focusId,
+/** Thin overlay + close-button chrome shared by the loading/empty states,
+ *  before the real graph shell (header/canvas/footer) can be rendered. */
+function GraphModalShell({
+  onClose,
+  children,
+}: {
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className={styles.shell}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("admin:vouchGraph.modal.ariaLabel")}
+      >
+        <button
+          type="button"
+          className={styles.close}
+          onClick={onClose}
+          aria-label={t("admin:common.close")}
+        >
+          <FiX />
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function GraphModalInner({
+  focusSlug,
   onClose,
 }: {
-  focusId: string;
+  focusSlug: string;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  useScrollLock();
   const { showToast } = useToast();
-  const g = useVouchGraph(focusId);
-  const focusPerson = personById[g.focus]!;
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const graph = useTrustGraph();
+  const g = useVouchGraph(graph, focusSlug);
+  const focusPerson = graph.peopleById[g.focus]!;
 
   return (
     <div
@@ -193,7 +223,7 @@ export function AdminVouchGraphModal({
                   className={styles.crumb}
                   onClick={() => g.gotoCrumb(i)}
                 >
-                  {personById[id]!.initials}
+                  {graph.peopleById[id]!.initials}
                 </button>
                 <span className={styles.crumbSep}>›</span>
               </Fragment>
@@ -269,6 +299,11 @@ export function AdminVouchGraphModal({
 
         <footer className={styles.bottom}>
           <Legend mode={g.mode} />
+          {graph.truncated && (
+            <span className={styles.leg}>
+              {t("admin:vouchGraph.modal.truncatedNotice")}
+            </span>
+          )}
           <div className={styles.timeWrap}>
             <button
               type="button"
@@ -280,8 +315,8 @@ export function AdminVouchGraphModal({
             </button>
             <input
               type="range"
-              min={T_MIN}
-              max={T_MAX}
+              min={graph.tMin}
+              max={graph.tMax}
               value={g.timeCut}
               onChange={(e) => g.setTime(Number(e.target.value))}
               aria-label={t("admin:vouchGraph.modal.timeCutAriaLabel")}
@@ -296,5 +331,57 @@ export function AdminVouchGraphModal({
         </footer>
       </div>
     </div>
+  );
+}
+
+export function AdminVouchGraphModal({
+  focusSlug,
+  onClose,
+}: {
+  focusSlug: string;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  useScrollLock();
+  const { data, isLoading } = useTrustNetwork();
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  if (isLoading || !data) {
+    return (
+      <GraphModalShell onClose={onClose}>
+        <div className={styles.insEmpty} aria-busy="true">
+          <h4>{t("admin:vouchGraph.modal.loadingTitle")}</h4>
+          <SkeletonLine
+            height={280}
+            style={{ marginTop: 16, borderRadius: 16 }}
+          />
+        </div>
+      </GraphModalShell>
+    );
+  }
+
+  if (!data.peopleById[focusSlug]) {
+    return (
+      <GraphModalShell onClose={onClose}>
+        <div className={styles.insEmpty}>
+          <span className={styles.insEmptyIc}>
+            <FiUser aria-hidden />
+          </span>
+          <h4>{t("admin:vouchGraph.modal.emptyTitle")}</h4>
+          <p>{t("admin:vouchGraph.modal.emptyBody")}</p>
+        </div>
+      </GraphModalShell>
+    );
+  }
+
+  return (
+    <TrustGraphProvider data={data}>
+      <GraphModalInner focusSlug={focusSlug} onClose={onClose} />
+    </TrustGraphProvider>
   );
 }

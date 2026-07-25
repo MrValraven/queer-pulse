@@ -11,6 +11,7 @@ export { ImageSlot, type ImageSlotTint } from "./ImageSlot";
 export { Reveal } from "./Reveal";
 export { FadeIn } from "./FadeIn";
 export { Outro } from "./Outro";
+export { Tooltip } from "./Tooltip";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";

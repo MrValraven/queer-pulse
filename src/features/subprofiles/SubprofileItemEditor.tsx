@@ -1,4 +1,4 @@
-import { FiArrowDown, FiArrowUp, FiTrash2 } from "react-icons/fi";
+import { FiArrowDown, FiArrowUp, FiStar, FiTrash2 } from "react-icons/fi";
 import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
@@ -16,9 +16,12 @@ interface SubprofileItemEditorProps {
   fields: Field[];
   canMoveUp: boolean;
   canMoveDown: boolean;
+  /** Whether this section supports a spotlight item at all (false for `links`). */
+  canFeature: boolean;
   onChange: (patch: Partial<SubprofileItemView>) => void;
   onRemove: () => void;
   onMove: (dir: -1 | 1) => void;
+  onToggleFeatured: () => void;
 }
 
 /**
@@ -33,9 +36,11 @@ export function SubprofileItemEditor({
   fields,
   canMoveUp,
   canMoveDown,
+  canFeature,
   onChange,
   onRemove,
   onMove,
+  onToggleFeatured,
 }: SubprofileItemEditorProps) {
   const { t } = useTranslation();
   const textFields = fields.filter(
@@ -49,6 +54,33 @@ export function SubprofileItemEditor({
           {t("subprofiles:itemEditor.itemNumber", { n: index + 1 })}
         </span>
         <div className={styles.itemTools}>
+          {canFeature && (
+            <button
+              type="button"
+              className={
+                item.isFeatured
+                  ? `${styles.featureBtn} ${styles.featureBtnActive}`
+                  : styles.featureBtn
+              }
+              onClick={onToggleFeatured}
+              aria-pressed={item.isFeatured}
+              aria-label={t(
+                item.isFeatured
+                  ? "subprofiles:itemEditor.unfeature"
+                  : "subprofiles:itemEditor.feature",
+              )}
+              title={t(
+                item.isFeatured
+                  ? "subprofiles:itemEditor.unfeature"
+                  : "subprofiles:itemEditor.feature",
+              )}
+            >
+              <FiStar size={15} aria-hidden />
+              {item.isFeatured && (
+                <span>{t("subprofiles:itemEditor.featuredBadge")}</span>
+              )}
+            </button>
+          )}
           <button
             type="button"
             className={styles.toolBtn}

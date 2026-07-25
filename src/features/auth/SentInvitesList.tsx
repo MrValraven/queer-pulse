@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -48,6 +49,7 @@ export function SentInvitesList() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { data, isLoading } = useSentInvites();
+  const [open, setOpen] = useState(true);
 
   if (isLoading) {
     return (
@@ -71,14 +73,27 @@ export function SentInvitesList() {
 
   return (
     <section className={styles.wrap}>
-      <div className={styles.label}>{t("auth:invite.sentList.label")}</div>
-      <div className={styles.list}>
-        {data.map((invite, i) => (
-          <FadeIn key={invite.code} delay={i * 60}>
-            <SentInviteRow invite={invite} t={t} fmt={fmt} />
-          </FadeIn>
-        ))}
-      </div>
+      <button
+        type="button"
+        className={styles.label}
+        aria-expanded={open}
+        aria-controls="sent-invites-list"
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
+      >
+        <span>{t("auth:invite.sentList.label")}</span>
+        <span className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}>
+          ▾
+        </span>
+      </button>
+      {open && (
+        <div id="sent-invites-list" className={styles.list}>
+          {data.map((invite, index) => (
+            <FadeIn key={invite.code} delay={index * 60}>
+              <SentInviteRow invite={invite} t={t} fmt={fmt} />
+            </FadeIn>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -2,7 +2,7 @@ import type {
   PointerEvent as ReactPointerEvent,
   MouseEvent as ReactMouseEvent,
 } from "react";
-import type { VouchPerson } from "./adminVouchGraph.data";
+import type { VouchPerson } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 
 interface NodeProps {
@@ -40,8 +40,8 @@ export function VouchGraphNode({
   onPointerLeave,
   onDoubleClick,
 }: NodeProps) {
-  const verified = person.standing === "trusted" && !person.anon;
-  const showPhoto = !!photo && !person.private && !person.anon;
+  const verified = !!person.verified;
+  const showPhoto = !!photo && !person.private;
 
   return (
     <g
@@ -49,7 +49,7 @@ export function VouchGraphNode({
       className={className}
       role="button"
       tabIndex={-1}
-      aria-label={`${person.name}, ${person.role}`}
+      aria-label={person.role ? `${person.name}, ${person.role}` : person.name}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -98,15 +98,6 @@ export function VouchGraphNode({
                   d={`M ${-r * 0.18} ${-r * 0.02} V ${-r * 0.22} a ${r * 0.18} ${r * 0.18} 0 0 1 ${r * 0.36} 0 V ${-r * 0.02}`}
                 />
               </g>
-            ) : person.anon ? (
-              <text
-                className={styles.init}
-                dy={r / 3}
-                fontSize={r * 0.9}
-                fill="var(--ink-40)"
-              >
-                ?
-              </text>
             ) : (
               <text
                 className={styles.init}

@@ -27,10 +27,22 @@ export const admin: Catalog = {
 
   // ── Painel principal ──────────────────────────────────────────────────────
   "dashboard.title": "Resumo · <em>bom dia, {name}</em>",
-  "dashboard.header.titleLine1": "Sete denúncias",
-  "dashboard.header.titleLine2": "precisam de <em>uma pessoa</em>.",
-  "dashboard.header.sub":
-    "Duas estão sinalizadas como emergências de segurança — outing e doxxing. Tudo o resto está calmo. Estás a manter toda a rede estável; aqui está por onde começar.",
+  // Contagem e subtítulo derivados da fila de triagem real
+  // (`GET /admin/overview` → contagens de triagem); `{count}` ativa o plural.
+  "dashboard.header.titleLine1_one": "{count} coisa",
+  "dashboard.header.titleLine1_other": "{count} coisas",
+  "dashboard.header.titleLine2_one": "precisa de <em>uma pessoa</em>.",
+  "dashboard.header.titleLine2_other": "precisam de <em>uma pessoa</em>.",
+  "dashboard.header.titleClearLine1": "Estás",
+  "dashboard.header.titleClearLine2": "totalmente <em>em dia</em>.",
+  "dashboard.header.subEmergencies_one":
+    "Uma está sinalizada como emergência de segurança — começa por aí. Tudo o resto está estável, e estás a manter toda a rede unida.",
+  "dashboard.header.subEmergencies_other":
+    "{count} estão sinalizadas como emergências de segurança — começa por aí. Tudo o resto está estável, e estás a manter toda a rede unida.",
+  "dashboard.header.subCalm":
+    "Nada está sinalizado como urgente — trabalha a fila ao teu ritmo. Estás a manter toda a rede estável.",
+  "dashboard.header.subClear":
+    "Cada item aberto tem uma decisão humana associada. Vai descansar — a rede está segura nas tuas mãos.",
   "dashboard.header.digestCta": "Resumo semanal",
   "dashboard.header.digestToast": "O resumo semanal abriria num novo separador",
   "dashboard.header.moderationCta": "Abrir moderação",
@@ -961,6 +973,12 @@ export const admin: Catalog = {
   "vouchGraph.legend.plain.anonymous": "Anónima",
   "vouchGraph.legend.plain.private": "Rede privada",
 
+  "vouchGraph.relationship.collaborated": "Colaborámos",
+  "vouchGraph.relationship.friends": "Amizade",
+  "vouchGraph.relationship.group": "Mesmo grupo",
+  "vouchGraph.relationship.met_through": "Conhecemo-nos na QueerPulse",
+  "vouchGraph.relationship.neighbours": "Vizinhança",
+
   "vouchGraph.modal.ariaLabel": "Rede de confiança",
   "vouchGraph.modal.eyebrow": "Rede de confiança",
   "vouchGraph.modal.searchPlaceholder": "Encontrar uma pessoa…",
@@ -972,6 +990,11 @@ export const admin: Catalog = {
   "vouchGraph.modal.citeToast":
     "Caminho de confiança citado no registo de auditoria",
   "vouchGraph.modal.privateToast": "Esta pessoa mantém a rede privada",
+  "vouchGraph.modal.loadingTitle": "A carregar rede de confiança…",
+  "vouchGraph.modal.emptyTitle": "Ainda sem rede de confiança",
+  "vouchGraph.modal.emptyBody": "Esta pessoa ainda não tem vouches registados.",
+  "vouchGraph.modal.truncatedNotice":
+    "A mostrar os 500 membros mais recentes — algumas ligações podem estar ocultas.",
 
   "vouchGraph.inspector.emptyTitle": "Escolhe alguém",
   "vouchGraph.inspector.emptyBody":

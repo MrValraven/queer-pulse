@@ -4,7 +4,6 @@ import { AdminDrawer, AdminAvatar, AdminChip } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminVouchGraphModal } from "./AdminVouchGraphModal";
-import { personIdByInitials } from "./adminVouchGraph.data";
 import {
   MemberOverviewSections,
   ModerationTimeline,
@@ -32,7 +31,6 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
   );
   const { data: detail, isLoading } = useAdminMember(member);
   const first = firstName(member.name);
-  const focusId = personIdByInitials(member.initials);
 
   return (
     <>
@@ -139,7 +137,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
 
       {modal === "network" && (
         <AdminVouchGraphModal
-          focusId={focusId}
+          focusSlug={member.slug}
           onClose={() => setModal(null)}
         />
       )}

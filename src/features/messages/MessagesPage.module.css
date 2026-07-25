@@ -175,13 +175,14 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  position: relative;
 }
 .topbar {
-  padding: 14px 20px;
+  padding: 18px 22px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex: none;
   background: var(--paper);
 }
@@ -211,25 +212,62 @@
 }
 .ctbInfo {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 .ctbName {
   font-family: var(--serif);
   font-size: 18px;
+  line-height: 1.2;
   color: var(--text-strong);
   letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .ctbMeta {
   font-size: 12px;
   color: var(--ink-40);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.activeNowDot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
 }
 .ctbLink {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 8px 14px;
+  margin-inline-end: -6px;
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-ink);
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--sans);
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .ctbLink:hover {
+    background: rgba(var(--accent-rgb), 0.1);
+  }
+}
+.ctbLink:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
 }
 
 .area {
@@ -240,6 +278,30 @@
   flex-direction: column;
   gap: 10px;
 }
+.loadingOlder {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  padding-block: 8px;
+}
+.jumpPill {
+  position: absolute;
+  inset-block-end: 84px;
+  inset-inline: 0;
+  margin-inline: auto;
+  width: max-content;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: var(--cream);
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-toast);
+  z-index: 2;
+  animation: msgBubbleIn var(--dur-base) var(--ease-out) both;
+}
 .dayGroup {
   display: flex;
   flex-direction: column;
@@ -249,6 +311,9 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
 }
 .daySep {
   display: flex;
@@ -265,6 +330,24 @@
   background: rgba(var(--plum-rgb), 0.05);
   padding: 4px 12px;
   border-radius: var(--radius-pill);
+}
+.unreadDivider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-block: 4px;
+  color: var(--accent-ink);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.unreadDivider::before,
+.unreadDivider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(var(--accent-rgb), 0.4);
 }
 /* ── Message runs ── */
 .run {
@@ -359,6 +442,203 @@
   padding: 2px 4px;
 }
 
+/* ── Per-message action bar + reactions ──
+   `.bubbleWrap` hugs its bubble's width (same shrink-to-fit as `.bubble`
+   itself) so the hover-revealed action bar and the reaction chips never
+   stretch the run wider than the message actually is. */
+.bubbleWrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  max-width: 100%;
+}
+.messageActionsSlot {
+  position: absolute;
+  top: -6px;
+  inset-inline-end: 6px;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease);
+  z-index: 3;
+}
+/* Sent bubbles hug the right edge of the panel — open the bar toward the
+   center instead, so it can't spill past the viewport. */
+.messageActionsSlotSent {
+  inset-inline-end: auto;
+  inset-inline-start: 6px;
+}
+@media (hover: hover) {
+  .bubbleWrap:hover .messageActionsSlot {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+/* Keyboard reachability: Tab lands on the (invisible-until-focused) action
+   buttons regardless of hover support; focus-within then reveals the bar.
+   `:has([data-open])` also keeps it visible while a popover is open, even
+   after the pointer leaves. */
+.bubbleWrap:focus-within .messageActionsSlot,
+.messageActionsSlot:has(.messageActions[data-open="true"]) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.messageActions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  box-shadow: var(--shadow-toast);
+}
+.messageActionBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: var(--ink-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .messageActionBtn:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+    color: var(--text-strong);
+  }
+}
+.messageActionBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+.reactionPickerPopover {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  inset-inline-start: 0;
+  z-index: 4;
+}
+.reactionPicker {
+  display: flex;
+  gap: 2px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  box-shadow: var(--shadow-toast);
+  animation: msgBubbleIn var(--dur-fast) var(--ease-out) both;
+}
+.reactionPickerBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  font-size: 17px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .reactionPickerBtn:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+    transform: scale(1.12);
+  }
+}
+.reactionPickerBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+.messageActionsMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-end: 0;
+  min-width: 148px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-badge);
+  box-shadow: var(--shadow-toast);
+  padding: 4px;
+  z-index: 4;
+  animation: msgBubbleIn var(--dur-fast) var(--ease-out) both;
+}
+.messageActionsMenuItem {
+  display: block;
+  width: 100%;
+  text-align: start;
+  padding: 8px 10px;
+  border-radius: var(--radius-badge);
+  border: none;
+  background: none;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .messageActionsMenuItem:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.messageActionsMenuItem:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: -2px;
+}
+.messageActionsMenuItemDanger {
+  color: var(--danger);
+}
+
+.reactionChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-block-start: 4px;
+}
+.runSent .reactionChips {
+  justify-content: flex-end;
+}
+.reactionChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  background: var(--paper);
+  font-size: 0.75rem;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .reactionChip:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.reactionChip:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+.reactionChipMine {
+  background: rgba(var(--plum-rgb), 0.12);
+  border-color: rgba(var(--plum-rgb), 0.35);
+  color: var(--plum);
+  font-weight: 600;
+}
+
 .bubbleTime {
   font-size: 0.6875rem;
   color: var(--ink-40);
@@ -367,6 +647,24 @@
 .runSent .bubbleTime {
   text-align: end;
 }
+
+.msgStatus {
+  font-size: 0.6875rem;
+  color: var(--ink-40);
+  margin-block-start: 2px;
+}
+.runSent .msgStatus { text-align: end; }
+.retryBtn {
+  font-size: 0.6875rem;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 0;
+  font-family: var(--sans);
+  margin-block-start: 2px;
+}
+.runSent .retryBtn { align-self: flex-end; }
 
 .composer {
   padding: 12px 16px;
@@ -391,6 +689,7 @@
   resize: none;
   min-height: 44px;
   max-height: 120px;
+  overflow-y: auto;
   line-height: 1.5;
   transition: border-color var(--dur-fast) var(--ease);
 }
@@ -427,6 +726,12 @@
 }
 .sendBtnActive:active {
   transform: scale(0.94);
+}
+.typingRow {
+  padding: 4px 20px;
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  font-style: italic;
 }
 .officialBar {
   padding: 14px 16px;
@@ -473,4 +778,75 @@
 }
 :global([data-theme="dark"]) .received {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+:global([data-theme="dark"]) .sent {
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+}
+:global([data-theme="dark"]) .messageActions,
+:global([data-theme="dark"]) .messageActionsMenu,
+:global([data-theme="dark"]) .reactionPicker,
+:global([data-theme="dark"]) .reactionChip {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+
+/* ── Tombstone (soft-deleted message) ── */
+.tombstone {
+  width: fit-content;
+  max-width: min(74%, 48ch);
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+/* ── Message report modal (reason radios + detail) ── */
+.reportLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block: 12px 6px;
+}
+.reportOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.reportOpt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.reportOptChecked {
+  border-color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.reportTextarea {
+  width: 100%;
+  min-height: 84px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  background: var(--cream);
+  resize: vertical;
+  line-height: 1.5;
+}
+.reportTextarea:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.reportCounter {
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  margin-block-start: 6px;
 }

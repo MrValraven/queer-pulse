@@ -28,8 +28,9 @@ function kindIcon(kind: SubprofileKind) {
  * Start a new persona: pick one of the eight kinds and land straight in the
  * editor. Naming is optional — leave the display name blank and the persona is
  * just named after the profession (a Writer lives at /members/you/writer). The
- * address defaults from the kind too but can be edited here. Creation makes a
- * draft via `create`; the section scaffold comes from the kind.
+ * address defaults to the slugified display name (or the profession when the
+ * name is blank) but can be edited here — a valid address is required to
+ * create. Creation makes a draft via `create`; the scaffold comes from the kind.
  */
 export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
@@ -38,17 +39,20 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const [kind, setKind] = useState<SubprofileKind | null>(null);
   const [displayName, setDisplayName] = useState("");
-  // Slug follows the picked kind until the owner types their own address.
-  const [slug, setSlug] = useState("");
+  // The address holds its own value only once the owner types a custom one;
+  // until then it's derived from the display name (or the profession).
+  const [customSlug, setCustomSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
 
-  // A profession is all it takes; name and address both fall back to the kind.
-  const ready = kind !== null;
+  // Default the address to the slugified display name, falling back to the
+  // profession's slug when the name is still blank.
+  const autoSlug = slugify(displayName) || (kind ? defaultSlugForKind(kind) : "");
+  const slug = slugEdited ? customSlug : autoSlug;
+  const normalizedSlug = slugify(slug);
+  const slugValid = normalizedSlug.length > 0;
 
-  function pickKind(k: SubprofileKind) {
-    setKind(k);
-    if (!slugEdited) setSlug(defaultSlugForKind(k));
-  }
+  // Need a profession for the scaffold and a valid address to create.
+  const ready = kind !== null && slugValid;
 
   async function submit() {
     if (!ready || !kind) return;
@@ -59,10 +63,10 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
         kind,
         displayName: displayName.trim() || KIND_LABELS[kind],
       });
-      // Apply a custom address, if the owner typed one, via the same PATCH the
-      // editor uses. A failure here (e.g. a taken slug) shouldn't strand the
-      // draft — they land in the editor where the address is editable.
-      const wantedSlug = slugify(slug);
+      // Apply the chosen address via the same PATCH the editor uses. A failure
+      // here (e.g. a taken slug) shouldn't strand the draft — they land in the
+      // editor where the address is editable.
+      const wantedSlug = normalizedSlug;
       if (wantedSlug && wantedSlug !== created.slug) {
         try {
           await update.mutateAsync({
@@ -118,7 +122,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
               className={[styles.kindBtn, kind === k && styles.kindBtnOn]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => pickKind(k)}
+              onClick={() => setKind(k)}
             >
               <Icon size={18} aria-hidden />
               {t(KIND_LABEL_KEYS[k])}
@@ -150,7 +154,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
           <>
             {t("subprofiles:metaForm.livesAt")}{" "}
             <span className={styles.pathPreview}>
-              /members/{currentUserSlug}/{slug || "…"}
+              /members/{currentUserSlug}/{normalizedSlug || "…"}
             </span>
           </>
         }
@@ -158,9 +162,10 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
         <input
           value={slug}
           placeholder={t("subprofiles:newModal.addressPlaceholder")}
+          aria-invalid={!slugValid}
           onChange={(e) => {
             setSlugEdited(true);
-            setSlug(e.target.value);
+            setCustomSlug(e.target.value);
           }}
         />
       </FormField>

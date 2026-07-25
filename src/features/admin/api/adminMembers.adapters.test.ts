@@ -115,10 +115,11 @@ describe("cardDtoToMember", () => {
     ).toBe(true);
   });
 
-  it("drops slug/avatarUrl from vouchedBy (view-model VouchAvatar is initials+tone)", () => {
+  it("drops slug but keeps avatarUrl on vouchedBy (the trust-network graph reads it for real portraits)", () => {
     expect(cardDtoToMember(baseCardDto, translate, fmt).vouchedBy[0]).toEqual({
       initials: "TM",
       tone: "violet",
+      avatarUrl: null,
     });
   });
 });

@@ -25,6 +25,14 @@
     border-color var(--dur-fast) var(--ease);
 }
 
+/* Staggered drop-in for pins/clusters on the map's first paint (List→Map).
+   Applied per-marker in venueMarker.ts with an inline animation-delay, and only
+   when motion is allowed. `backwards` holds the pin hidden through its delay,
+   then releases cleanly so hover/selected transforms take back over. */
+.pinEnter {
+  animation: qpPinPop 320ms var(--ease-out) backwards;
+}
+
 /* Expand the touch target to ~44px without enlarging the visible chip. */
 .pin::after {
   content: "";
@@ -183,6 +191,23 @@
   background: #f4eff8;
   border-color: rgba(45, 27, 61, 0.16);
   color: #1a1a1f;
+}
+
+/* Local copy of the shared drop-in keyframe — a CSS Module can't reference the
+   global @keyframes in effects.css (the name gets scoped to a dangling hash).
+   Same note as Skeleton.module.css / localMap.module.css. */
+@keyframes qpPinPop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

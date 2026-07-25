@@ -98,3 +98,59 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* ── Polish nudges: informational-only, deliberately muted so they never read
+   as another set of requirements. No card surface, no pass/fail icons. ── */
+.polish {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(var(--line-rgb), 0.14);
+}
+
+.polishTitle {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 0 0 8px;
+}
+
+.polishList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.polishRow {
+  position: relative;
+  padding-left: 14px;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.polishRow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink-40);
+}
+
+.polishDone {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(var(--line-rgb), 0.14);
+  font-size: 13px;
+  color: var(--ink-40);
+}

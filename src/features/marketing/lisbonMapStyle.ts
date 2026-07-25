@@ -50,8 +50,35 @@ export async function buildWarmStyle(): Promise<StyleSpecification> {
     remapLayerFont(layer);
     recolorLayer(layer);
     patchLayerFilter(layer);
+    hideOverlaidPlaceLabels(layer);
   }
   return style;
+}
+
+// Neighbourhood-scale OSM `place` classes that the freguesia overlay
+// (useLisbonMap) already labels with our own branded symbols. positron draws
+// these same features from its `label_other` layer (e.g. a grey uppercase
+// "CAMPOLIDE" beneath our bold "Campolide"), so the two stack — often as a
+// visible duplicate. Suppressing them at the base leaves the overlay as the
+// single source of truth. City-and-up labels ("Lisbon") and every road / water
+// / POI label are untouched.
+const OVERLAID_PLACE_CLASSES = ["suburb", "neighbourhood", "quarter"] as const;
+
+// Excludes the overlaid classes from any base symbol layer reading the `place`
+// source-layer. positron's place filters are all expression-based, so wrapping
+// the existing filter in an `all` is safe (no legacy/expression mixing).
+function hideOverlaidPlaceLabels(layer: LayerSpecification): void {
+  if (layer.type !== "symbol") return;
+  const sourceLayer = (layer as { "source-layer"?: string })["source-layer"];
+  if (sourceLayer !== "place") return;
+  const excludeOverlaid: FilterSpecification = [
+    "!",
+    ["in", ["get", "class"], ["literal", [...OVERLAID_PLACE_CLASSES]]],
+  ];
+  layer.filter =
+    "filter" in layer && layer.filter !== undefined
+      ? (["all", layer.filter, excludeOverlaid] as FilterSpecification)
+      : excludeOverlaid;
 }
 
 // Comparison operators positron uses in layer filters. When one operand is a

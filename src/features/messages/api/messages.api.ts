@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type {
   ConversationResponse,
@@ -56,3 +56,30 @@ export const markConversationRead = (
   apiPost<{ ok: true }>(`/conversations/${conversationId}/read`, {
     lastReadAt,
   });
+
+/** POST /conversations/:id/messages/:messageId/reactions — add (or replace) my reaction. */
+export const addMessageReaction = (
+  conversationId: string,
+  messageId: string,
+  key: string,
+) =>
+  apiPost<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/reactions`,
+    { key },
+  );
+
+/** DELETE /conversations/:id/messages/:messageId/reactions/:key — remove my reaction. */
+export const removeMessageReaction = (
+  conversationId: string,
+  messageId: string,
+  key: string,
+) =>
+  apiDelete<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/reactions/${encodeURIComponent(key)}`,
+  );
+
+/** DELETE /conversations/:id/messages/:messageId — soft-delete a message. */
+export const deleteMessage = (conversationId: string, messageId: string) =>
+  apiDelete<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}`,
+  );

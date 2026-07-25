@@ -177,6 +177,23 @@
   flex: none;
 }
 
+/* ── Vouch anonymously toggle ── */
+.anonRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 12px;
+  margin-bottom: 22px;
+}
+.anonLabel {
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
 /* ── Skill endorsement chips ── */
 .chips {
   display: flex;
@@ -261,6 +278,12 @@
   color: var(--ink-40);
   text-align: right;
   margin-bottom: 18px;
+}
+
+.error {
+  font-size: 13px;
+  color: var(--danger);
+  margin: 0 0 14px;
 }
 
 .actions {

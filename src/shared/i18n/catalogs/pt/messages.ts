@@ -20,10 +20,16 @@ export const messages: Catalog = {
   "thread.presenceOnline": "Online agora",
 
   // Painel da conversa (ConversationPanel)
+  "conversation.activeNow": "Ativo/a agora",
   "conversation.officialMeta":
     "Oficial · Não é possível responder nesta conversa",
   "conversation.connectedSinceSuffix": " · Ligação desde {date}",
   "conversation.viewProfile": "Ver perfil",
+  "conversation.you": "Tu",
+  "conversation.newMessages": "Novas mensagens",
+  "conversation.unreadDivider": "Novas mensagens",
+  "conversation.loadingOlder": "A carregar mensagens anteriores…",
+  "conversation.typing": "{name} está a escrever…",
   "conversation.officialNotice":
     "Esta é uma conversa automática — as respostas não são monitorizadas.",
   "conversation.blockedNotice":
@@ -37,6 +43,21 @@ export const messages: Catalog = {
   "day.today": "Hoje",
   "day.yesterday": "Ontem",
   "time.justNow": "Agora mesmo",
+  "status.sending": "A enviar…",
+  "status.retry": "Não entregue · Tentar de novo",
+  "status.seen": "Visto",
+
+  // Barra de ações por mensagem (MessageActions/ReactionPicker)
+  "actions.react": "Reagir",
+  "actions.more": "Mais",
+  "actions.report": "Denunciar",
+  "actions.delete": "Eliminar",
+  tombstone: "Esta mensagem foi eliminada",
+  "delete.confirmTitle": "Eliminar esta mensagem?",
+  "delete.confirmBody": "Será removida para todos nesta conversa.",
+  "delete.confirmCta": "Eliminar",
+  "delete.cancelCta": "Cancelar",
+  "report.title": "Denunciar esta mensagem",
 
   // Escolha de destinatário para nova mensagem (NewMessageModal)
   "newMessage.title": "Nova mensagem",

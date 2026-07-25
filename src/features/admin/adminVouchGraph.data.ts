@@ -539,18 +539,79 @@ export function nodeRadius(id: string, focusId: string): number {
   return personById[id]!.scene === "ring" ? 15 : 20;
 }
 
-/** map a member's initials to a person in the network (drawer → graph focus) */
-export function personIdByInitials(initials: string): string {
-  const match = PEOPLE.find(
-    (p) => p.initials.toLowerCase() === initials.toLowerCase(),
-  );
-  return match ? match.id : "ines";
-}
-
-/** portrait for a network member by initials, or undefined (→ initials fallback) */
+/** portrait for a network member by initials, or undefined (→ initials fallback).
+ *  Still used by `adminMembers.data.ts`'s demo `MEMBERS.vouchedBy` fixtures so
+ *  the row vouch-strip keeps real portraits in demo mode. */
 export function portraitByInitials(initials: string): string | undefined {
   const match = PEOPLE.find(
     (p) => p.initials.toLowerCase() === initials.toLowerCase(),
   );
   return match ? portrait(match.name) : undefined;
 }
+
+// ── Demo TrustGraphData adapter ─────────────────────────────────────────────
+// Adapts this file's fixtures (PEOPLE/EDGES/SCENES/SCENE_ANCHOR/personById)
+// into the shape `createTrustGraph` expects, so demo mode can share the same
+// graph model as live mode. `Scene` is aliased to `TrustScene` — this file
+// already declares its own (unrelated) local `Scene` interface above.
+
+import {
+  createTrustGraph,
+  ymValue,
+  type Scene as TrustScene,
+  type TrustGraphData,
+  type VouchEdge as ModelEdge,
+  type VouchPerson as ModelPerson,
+} from "./trustGraph/trustGraphModel";
+
+const DEMO_SCENES: TrustScene[] = Object.entries(SCENES).map(([key, scene]) => ({
+  id: key,
+  label: scene.label ?? key,
+  color: scene.color,
+}));
+
+const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person) => ({
+  id: person.id,
+  name: person.name,
+  pronoun: person.pronoun,
+  initials: person.initials,
+  tone: person.tone === "danger" ? "coral" : (person.tone as ModelPerson["tone"]),
+  joined: person.joined,
+  standing: person.standing,
+  sceneId: person.scene,
+  role: person.role,
+  reports: person.reports,
+  private: person.private,
+  verified: person.standing === "trusted",
+  avatarUrl: portrait(person.name) ?? null,
+}));
+
+const DEMO_EDGES: ModelEdge[] = EDGES.map((edge) => ({
+  id: edge.id,
+  from: edge.from,
+  to: edge.to,
+  mutual: edge.mutual,
+  withdrawn: edge.withdrawn,
+  date: edge.date,
+  relationship: edge.tag ?? null,
+  reason: edge.reason ?? null,
+  anonymous: personById[edge.from]?.anon ?? false,
+}));
+
+const DEMO_SCENE_ANCHOR: Record<string, { x: number; y: number }> =
+  Object.fromEntries(
+    Object.entries(SCENE_ANCHOR).map(([key, anchor]) => [key, anchor]),
+  );
+
+export const DEMO_TRUST_GRAPH_DATA: TrustGraphData = {
+  people: DEMO_PEOPLE,
+  peopleById: Object.fromEntries(DEMO_PEOPLE.map((p) => [p.id, p])),
+  edges: DEMO_EDGES,
+  scenes: DEMO_SCENES,
+  sceneAnchor: DEMO_SCENE_ANCHOR,
+  tMin: Math.min(...DEMO_EDGES.map((e) => ymValue(e.date))),
+  tMax: Math.max(...DEMO_EDGES.map((e) => ymValue(e.date))),
+  truncated: false,
+};
+
+export const DEMO_TRUST_GRAPH = createTrustGraph(DEMO_TRUST_GRAPH_DATA);

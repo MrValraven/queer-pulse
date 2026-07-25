@@ -2,6 +2,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useMemo } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useLisbonMap } from "./useLisbonMap";
+import { MapLoading } from "./MapLoading";
 import { TYPE_LABEL_KEYS } from "./map.data";
 import { LOCAL_CATEGORY_LABEL_KEYS } from "./localPlaces";
 import type { MarkerLabels, VenueMarkerData } from "./venueMarker";
@@ -37,7 +38,7 @@ export function LisbonMap({
     [t],
   );
 
-  const { containerRef, failed } = useLisbonMap({
+  const { containerRef, failed, ready } = useLisbonMap({
     venues,
     selectedFreguesia: freguesia,
     selectedVenueId,
@@ -50,6 +51,7 @@ export function LisbonMap({
   return (
     <div className={s.mapPanel}>
       <div ref={containerRef} className={s.mapCanvas} aria-hidden={failed} />
+      {!failed && <MapLoading ready={ready} />}
       {failed && (
         <div className={s.mapError} role="status">
           {t("marketing:map.mapError")}

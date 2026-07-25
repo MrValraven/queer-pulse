@@ -1,0 +1,144 @@
+/* "City lights" loader for the Lisbon map — see MapLoading.tsx. Sits over the
+   map canvas (its .mapPanel parent is positioned) and crossfades out on ready. */
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  /* A gentle dusk wash over the same warm cream→plum tokens as .mapPanel, so the
+     crossfade to the real basemap stays seamless. The soft gradient gives the
+     panel depth (a dusk sky, not a flat grey field). Cream flips to near-black
+     in dark mode, so this reads as a deep night sky there with no extra work. */
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--cream) 93%, var(--plum)),
+    color-mix(in srgb, var(--cream) 76%, var(--plum))
+  );
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    visibility var(--dur-slow) var(--ease-out);
+}
+.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The scattered dots. Positioned + coloured + timed per-dot from the data file
+   via CSS custom properties + inline animation-delay/duration. */
+.lights {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The street web drawn behind the dots — a faint plum network the lights sit on.
+   Fills the panel; the 0–100 viewBox lines up with the dots' top/left %. Fades
+   in softly as a whole while each street draws itself (below). */
+.streets {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: 0;
+  fill: none;
+  /* --text-strong, not --plum: bare plum doesn't flip, so it would vanish
+     dark-on-dark in dark mode. This flips to light ink there, so the streets
+     read as faint plum lines on the dusk field and faint light lines on the
+     night field — the correct "city at night" look either way. */
+  stroke: var(--text-strong);
+  animation: qpStreetsIn var(--dur-slow) var(--ease-out) forwards;
+}
+.street {
+  /* pathLength="100" normalises every polyline, so dasharray:100 / dashoffset:100
+     is "fully undrawn" regardless of the street's real length — the line then
+     draws in as the offset animates to 0 (one-shot, no loop). */
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.13;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: qpStreetDraw var(--dur-slow) var(--ease-out) forwards;
+}
+.artery {
+  stroke-width: 1.6;
+  opacity: 0.17;
+}
+.light {
+  position: absolute;
+  inline-size: var(--light-size);
+  block-size: var(--light-size);
+  border-radius: 50%;
+  background: var(--light-color);
+  /* Static soft glow in the dot's own colour. It rides the breathe animation's
+     `scale` (transform scales the shadow too), so the glow pulses for free —
+     no painting an animated box-shadow. */
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--light-color) 26%, transparent);
+  opacity: 0.7;
+  animation-name: cityLightBreathe;
+  animation-timing-function: var(--ease);
+  animation-iteration-count: infinite;
+}
+
+/* The status line: a warm Fraunces line with the house coral italic emphasis.
+   A soft cream halo lifts it clear of any dot that breathes behind it. */
+.label {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding-inline: 24px;
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 1rem + 1.3vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--ink);
+  text-shadow: 0 1px 14px color-mix(in srgb, var(--cream) 82%, transparent);
+}
+.label em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+@keyframes cityLightBreathe {
+  0%,
+  100% {
+    transform: scale(0.55);
+    opacity: 0.28;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+/* One-shot line-draw: reveal the polyline by winding its dash gap off to 0. */
+@keyframes qpStreetDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes qpStreetsIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light {
+    animation: none;
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+  /* Land the street web fully drawn and visible — never mid-draw. */
+  .streets {
+    animation: none;
+    opacity: 1;
+  }
+  .street {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

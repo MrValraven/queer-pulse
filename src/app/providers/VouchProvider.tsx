@@ -21,8 +21,6 @@ interface VouchContextValue {
   hasVouched: (slug: string) => boolean;
   /** Open the vouch modal addressed to a member slug. */
   openVouch: (slug: string) => void;
-  /** Record a vouch for a member slug (called by the modal on success). */
-  addVouch: (slug: string) => void;
   /** Withdraw an existing vouch for a member slug. */
   removeVouch: (slug: string) => void;
 }
@@ -90,16 +88,10 @@ export function VouchProvider({ children }: { children: ReactNode }) {
   // mutates IS provider state (see the docblock above), so the mutations must
   // write there. Re-pointing them at a query cache would drag the localStorage
   // store out of the provider — the one thing this refactor must not do.
-  const { vouch, unvouch } = useVouchMutations({ setVouched, refresh });
+  const { unvouch } = useVouchMutations({ setVouched, refresh });
 
   const openVouch = useCallback((slug: string) => setOpenSlug(slug), []);
   const close = useCallback(() => setOpenSlug(null), []);
-  const addVouch = useCallback(
-    (slug: string) => {
-      vouch.mutate(slug);
-    },
-    [vouch],
-  );
 
   const removeVouch = useCallback(
     (slug: string) => {
@@ -113,11 +105,10 @@ export function VouchProvider({ children }: { children: ReactNode }) {
       vouched,
       hasVouched: (slug) => vouched.includes(slug),
       openVouch,
-      addVouch,
       removeVouch,
       setVouched,
     }),
-    [vouched, openVouch, addVouch, removeVouch],
+    [vouched, openVouch, removeVouch],
   );
 
   return (
@@ -127,7 +118,16 @@ export function VouchProvider({ children }: { children: ReactNode }) {
         <VouchMemberModal
           slug={openSlug}
           onClose={close}
-          onVouched={() => addVouch(openSlug)}
+          // The modal performs the real vouch write itself (useVouchMember).
+          // onVouched only records it in the optimistic list that drives
+          // `hasVouched` + the face-row — it must NOT fire its own POST here, or
+          // the endpoint would 409 (the modal already created the row) and the
+          // failure would roll this entry back out. Prepend without a network write.
+          onVouched={() =>
+            setVouched((prev) =>
+              prev.includes(openSlug) ? prev : [openSlug, ...prev],
+            )
+          }
         />
       )}
     </VouchContext.Provider>

@@ -602,12 +602,14 @@ export const members: Catalog = {
   "vouch.modal.form.noteLabel": "Your note",
   "vouch.modal.form.notePlaceholder":
     "How do you know {first}, and what should other members know?",
-  "vouch.modal.form.charsToSubmit_one": "{count} more character to submit",
-  "vouch.modal.form.charsToSubmit_other": "{count} more characters to submit",
+  "vouch.modal.form.noteOptional": "Optional — but a note means more",
   "vouch.modal.form.charsCount_one": "{count} character",
   "vouch.modal.form.charsCount_other": "{count} characters",
   "vouch.modal.form.cancel": "Cancel",
   "vouch.modal.form.sending": "Sending your vouch…",
+  "vouch.modal.form.anonymousLabel":
+    "Vouch anonymously — your name stays hidden from other members",
+  "vouch.modal.error": "We couldn't save your vouch. Please try again.",
 
   // ── Drafts tabs/sort/status vocab (drafts.data.tsx) ─────────────────────────
   "drafts.tabs.all": "All",

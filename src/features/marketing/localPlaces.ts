@@ -52,14 +52,23 @@ export const FREGUESIA_NAMES: ReadonlySet<string> = new Set(
   FREGUESIAS.features.map((feature) => feature.properties.name),
 );
 
+/** Freguesia strings already warned about, so a re-render never re-logs the same one. */
+const warnedFreguesias = new Set<string>();
+
 /**
  * A place's map count only renders if its `freguesia` matches a parish polygon.
  * In dev, warn when it does not, so an unmapped hood or a mistyped venue parish
  * surfaces instead of silently dropping off the map (the place still lists in
- * the sidebar). `source` names where the value came from, for the message.
+ * the sidebar). Each distinct unknown freguesia warns once, however many times
+ * the mappers re-run. `source` names where the value came from, for the message.
  */
 function warnIfUnknownFreguesia(freguesia: string, source: string): string {
-  if (import.meta.env.DEV && !FREGUESIA_NAMES.has(freguesia)) {
+  if (
+    import.meta.env.DEV &&
+    !FREGUESIA_NAMES.has(freguesia) &&
+    !warnedFreguesias.has(freguesia)
+  ) {
+    warnedFreguesias.add(freguesia);
     console.warn(
       `[localPlaces] ${source} → freguesia "${freguesia}" is not one of the ` +
         `${FREGUESIA_NAMES.size} Lisbon parishes; its map count will not render. ` +

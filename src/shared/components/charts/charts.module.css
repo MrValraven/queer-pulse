@@ -1,0 +1,109 @@
+/* Editorial frame around a chart. */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  padding: 18px 18px 14px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--text-strong);
+}
+
+.sub {
+  font-size: 0.82rem;
+  color: var(--ink-soft, rgba(45, 27, 61, 0.6));
+  margin-top: 2px;
+}
+
+/* Positioned so the tooltip portal anchors to the plot area. */
+.plot {
+  position: relative;
+  margin-top: 8px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--ink-soft, rgba(45, 27, 61, 0.6));
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendMuted {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.swatchDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.notMeasured {
+  font-size: 0.85rem;
+  color: var(--ink-soft, rgba(45, 27, 61, 0.6));
+  font-style: italic;
+  padding: 40px 0;
+  text-align: center;
+}
+
+/* Cursor-following tooltip bubble. `unstyled` on TooltipInPortal removes the
+   library default so only these tokens apply. */
+.tip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--plum);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  padding: 6px 9px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(var(--plum-rgb), 0.25);
+  transform: translate(-50%, calc(-100% - 10px));
+  white-space: nowrap;
+  z-index: 30;
+}
+
+.tipStrong {
+  font-family: var(--serif);
+  font-size: 0.82rem;
+}
+
+/* Focusable data mark (see markFocusProps): keyboard users tab to it and the
+   tooltip opens on focus. :focus-visible keeps the ring off mouse interaction. */
+.mark {
+  outline: none;
+}
+
+.mark:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

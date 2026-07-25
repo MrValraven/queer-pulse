@@ -1,34 +1,28 @@
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { routes } from "../../app/routeMap";
+import { useCallback, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
-import { Avatar } from "../../shared/components/ui";
 import { initialsOf, tintForSlug } from "../../shared/api/refs";
+import { usePresenceOnline } from "../../shared/api/realtime";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { Composer } from "./Composer";
-import { MessageRunView, type RunParticipant } from "./MessageRun";
-import { groupIntoRuns } from "./messageRuns";
+import { ConversationHeader } from "./ConversationHeader";
+import { MessageArea } from "./MessageArea";
+import { type RunParticipant } from "./MessageRun";
+import { useMessageScroll } from "./useMessageScroll";
+import { useTypingIndicator } from "./useTypingIndicator";
+import { useUnreadDivider } from "./useUnreadDivider";
+import { useToggleReaction, useDeleteMessage } from "./api/useMessageActions";
+import { DeleteMessageDialog } from "./DeleteMessageDialog";
+import { MessageReportModal } from "./MessageReportModal";
 import { me, type ChatMessage, type Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
-/**
- * `day` is a stable canonical id ("Today" / "Yesterday", or an already
- * locale-formatted date string from the adapter) — label-key indirection so
- * only "Today"/"Yesterday" (the two chrome buckets computed client-side)
- * resolve through the catalog; any other value is a date string and rendered
- * as-is (see the sweep report for the known gap in the rest of the date
- * formatting here).
- */
-function dayHeading(day: string, t: TFunction): string {
-  if (day === "Today") return t("messages:day.today");
-  if (day === "Yesterday") return t("messages:day.yesterday");
-  return day;
-}
-
 interface ConversationPanelProps {
   active: Conversation;
+  /** Max lastReadAt the counterpart has acknowledged for this thread, from a
+   *  live `read` frame or the conversation's `otherLastReadAt`; null when
+   *  unknown (always null in demo mode) — "Seen" then never renders. */
+  counterpartLastReadAt: string | null;
   messageGroups: { day: string; items: ChatMessage[] }[];
   draft: string;
   onDraftChange: (value: string) => void;
@@ -37,27 +31,89 @@ interface ConversationPanelProps {
   blocked?: boolean;
   /** Mobile only — returns to the conversation list. Absent on desktop. */
   onBack?: () => void;
+  /** Retries a failed optimistic send. */
+  onRetry: (message: ChatMessage) => void;
+  /** Whether older history exists beyond what's loaded (always false in demo mode). */
+  hasMoreOlder: boolean;
+  /** True while an older-history page is in flight. */
+  loadingOlder: boolean;
+  /** Fetches the next (older) page of history. No-op in demo mode. */
+  onLoadOlder: () => void;
 }
 
-/** Right-hand conversation pane: header, scrolling message area, composer. */
+/** Right-hand conversation pane: header, scrolling message area, composer. Thin
+ *  orchestrator — scroll/typing/divider logic live in colocated hooks and the
+ *  header/log render in their own components. */
 export function ConversationPanel({
   active,
+  counterpartLastReadAt,
   messageGroups,
   draft,
   onDraftChange,
   onSend,
   blocked = false,
   onBack,
+  onRetry,
+  hasMoreOlder,
+  loadingOlder,
+  onLoadOlder,
 }: ConversationPanelProps) {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const areaRef = useRef<HTMLDivElement>(null);
+  const viewerIsStaff = user?.role === "admin" || user?.role === "moderator";
 
-  useEffect(() => {
-    const el = areaRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [messageGroups, active.id]);
+  const toggleReaction = useToggleReaction(active.id);
+  const deleteMessage = useDeleteMessage(active.id);
+  /** Message the report modal is open for (its server id is the report subject). */
+  const [reportTarget, setReportTarget] = useState<ChatMessage | null>(null);
+  /** Message the delete-confirm dialog is open for. */
+  const [deleteTarget, setDeleteTarget] = useState<ChatMessage | null>(null);
+  const confirmDelete = useCallback(() => {
+    if (deleteTarget?.id) deleteMessage.mutate(deleteTarget.id);
+    setDeleteTarget(null);
+  }, [deleteTarget, deleteMessage]);
+  /** Adds/removes a reaction. Live-only: `message.id` is the server id the
+   *  mutation needs; demo messages have none, so this is a no-op there. */
+  const handleReactionToggle = useCallback(
+    (message: ChatMessage, key: MessageReactionKey, mine: boolean) => {
+      if (!message.id) return;
+      toggleReaction.mutate({ messageId: message.id, key, mine });
+    },
+    [toggleReaction],
+  );
+
+  const online = usePresenceOnline();
+  const isCounterpartOnline =
+    (!!active.otherParticipantId && online.has(active.otherParticipantId)) ||
+    (!active.otherParticipantId && !!active.online);
+
+  const flatMessages = messageGroups.flatMap((group) => group.items);
+  const messageCount = flatMessages.length;
+  const dividerAnchorMessage = useUnreadDivider(
+    flatMessages,
+    active.id,
+    active.unreadCount ?? 0,
+  );
+
+  // "Seen": the last message I sent, and whether the counterpart's read
+  // watermark has caught up to it — only that message's run shows the label.
+  const lastOutbound = [...flatMessages]
+    .reverse()
+    .find((message) => message.from === "me");
+  const seenActive =
+    !!lastOutbound?.at &&
+    !!counterpartLastReadAt &&
+    lastOutbound.at <= counterpartLastReadAt;
+
+  const { areaRef, showJumpPill, handleAreaScroll, jumpToLatest } =
+    useMessageScroll(
+      messageCount,
+      active.id,
+      hasMoreOlder,
+      loadingOlder,
+      onLoadOlder,
+    );
+  const counterpartTyping = useTypingIndicator(active.id);
 
   const counterpart: RunParticipant = {
     initials: active.initials,
@@ -77,88 +133,63 @@ export function ConversationPanel({
 
   return (
     <div className={styles.convoPanel}>
-      <div className={styles.topbar}>
-        {onBack && (
-          <button
-            type="button"
-            className={styles.backBtn}
-            onClick={onBack}
-            aria-label={t("messages:conversation.backToList")}
-          >
-            <svg width={18} height={18} viewBox="0 0 18 18" fill="none" aria-hidden>
-              <path
-                d="M11 3.5 5.5 9l5.5 5.5"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        )}
-        <Avatar
-          initials={active.initials}
-          tint={active.tint}
-          src={active.avatarUrl}
-          size={38}
-        />
-        <div className={styles.ctbInfo}>
-          <div className={styles.ctbName}>
-            <span className={styles.nameRow}>
-              {active.name}
-              <MemberStaffBadge slug={active.slug} />
-            </span>
-          </div>
-          <div className={styles.ctbMeta}>
-            {active.official
-              ? t("messages:conversation.officialMeta")
-              : `${active.pronouns}${
-                  active.connectedSince
-                    ? t("messages:conversation.connectedSinceSuffix", {
-                        date: active.connectedSince,
-                      })
-                    : ""
-                }`}
-          </div>
-        </div>
-        {!active.official && (
-          <button
-            type="button"
-            className={styles.ctbLink}
-            onClick={() => navigate(routes.accountProfile)}
-          >
-            {t("messages:conversation.viewProfile")} →
-          </button>
-        )}
-      </div>
+      <ConversationHeader
+        active={active}
+        isCounterpartOnline={isCounterpartOnline}
+        onBack={onBack}
+      />
 
-      <div className={styles.area} ref={areaRef} role="log" aria-live="polite">
-        {messageGroups.map((group) => (
-          <div key={group.day} className={styles.dayGroup}>
-            <div className={styles.daySep}>
-              <span className={styles.daySepLabel}>{dayHeading(group.day, t)}</span>
-            </div>
-            <div className={styles.runs}>
-              {groupIntoRuns(group.items).map((run, index) => (
-                <MessageRunView
-                  key={run.items[0]?.id ?? `${group.day}-run-${index}`}
-                  run={run}
-                  counterpart={counterpart}
-                  self={self}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <MessageArea
+        areaRef={areaRef}
+        messageGroups={messageGroups}
+        loadingOlder={loadingOlder}
+        onScroll={handleAreaScroll}
+        dividerAnchorMessage={dividerAnchorMessage}
+        counterpart={counterpart}
+        self={self}
+        counterpartName={active.name}
+        onRetry={onRetry}
+        seenActive={seenActive}
+        lastOutbound={lastOutbound}
+        onReactionToggle={handleReactionToggle}
+        onReportMessage={setReportTarget}
+        onDeleteMessage={setDeleteTarget}
+        viewerIsStaff={viewerIsStaff}
+      />
+
+      {showJumpPill && (
+        <button type="button" className={styles.jumpPill} onClick={jumpToLatest}>
+          {t("messages:conversation.newMessages")} ↓
+        </button>
+      )}
+
+      {counterpartTyping && (
+        <div className={styles.typingRow} aria-live="polite">
+          {t("messages:conversation.typing", { name: active.name.split(" ")[0] })}
+        </div>
+      )}
 
       <Composer
         active={active}
+        conversationId={active.id}
         draft={draft}
         onDraftChange={onDraftChange}
         onSend={onSend}
         blocked={blocked}
       />
+      {deleteTarget && (
+        <DeleteMessageDialog
+          onConfirm={confirmDelete}
+          onClose={() => setDeleteTarget(null)}
+          pending={deleteMessage.isPending}
+        />
+      )}
+      {reportTarget?.id && (
+        <MessageReportModal
+          messageId={reportTarget.id}
+          onClose={() => setReportTarget(null)}
+        />
+      )}
     </div>
   );
 }

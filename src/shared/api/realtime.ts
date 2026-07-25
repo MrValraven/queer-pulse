@@ -62,6 +62,14 @@ class RealtimeClient {
   private qc: QueryClient;
   /** The open thread whose room we want joined. Remembered across (re)connects. */
   private activeConversationId: string | null = null;
+  /** Per-event fan-out sets, additive alongside the cache-invalidation handlers
+   *  registered directly in `connect()` below. */
+  private typingHandlers = new Set<(frame: ServerToClientEvents["typing"]) => void>();
+  private readHandlers = new Set<(frame: ServerToClientEvents["read"]) => void>();
+  private presenceHandlers = new Set<(online: ReadonlySet<string>) => void>();
+  /** The current set of online user ids, maintained from `presence` (single
+   *  add/remove) and `presence:snapshot` (full replace) frames. */
+  private onlineUserIds = new Set<string>();
 
   constructor(url: string, qc: QueryClient) {
     this.url = url;
@@ -75,6 +83,41 @@ class RealtimeClient {
 
   private emit(connected: boolean): void {
     for (const cb of this.listeners) cb(connected);
+  }
+
+  onTyping(handler: (frame: ServerToClientEvents["typing"]) => void): () => void {
+    this.typingHandlers.add(handler);
+    return () => this.typingHandlers.delete(handler);
+  }
+  /** Detach a handler by reference (used by the provider to unsubscribe from the
+   *  CURRENT client after reconnects re-attached it). */
+  offTyping(handler: (frame: ServerToClientEvents["typing"]) => void): void {
+    this.typingHandlers.delete(handler);
+  }
+  onRead(handler: (frame: ServerToClientEvents["read"]) => void): () => void {
+    this.readHandlers.add(handler);
+    return () => this.readHandlers.delete(handler);
+  }
+  offRead(handler: (frame: ServerToClientEvents["read"]) => void): void {
+    this.readHandlers.delete(handler);
+  }
+  onPresence(handler: (online: ReadonlySet<string>) => void): () => void {
+    this.presenceHandlers.add(handler);
+    handler(new Set(this.onlineUserIds)); // prime with a snapshot COPY (see below)
+    return () => this.presenceHandlers.delete(handler);
+  }
+  offPresence(handler: (online: ReadonlySet<string>) => void): void {
+    this.presenceHandlers.delete(handler);
+  }
+  // Always hand subscribers a fresh copy, never the live mutable `onlineUserIds`
+  // Set — a consumer that stored the reference would otherwise see it mutate
+  // in place with no re-render trigger.
+  private notifyPresence(): void {
+    const snapshot = new Set(this.onlineUserIds);
+    for (const handler of this.presenceHandlers) handler(snapshot);
+  }
+  emitTyping(conversationId: string, isTyping: boolean): void {
+    this.socket?.emit("typing", { conversationId, isTyping });
   }
 
   connect(): void {
@@ -145,6 +188,31 @@ class RealtimeClient {
     socket.on("notification:new", () => {
       void this.qc.invalidateQueries({ queryKey: ["notifications"] });
     });
+    socket.on("reaction", ({ conversationId }) => {
+      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
+    });
+    socket.on("message:deleted", ({ conversationId }) => {
+      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
+      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+    });
+
+    // Per-event fan-out to component subscribers (additive — the invalidation
+    // handlers above still run for every frame).
+    socket.on("typing", (frame) => {
+      for (const handler of this.typingHandlers) handler(frame);
+    });
+    socket.on("read", (frame) => {
+      for (const handler of this.readHandlers) handler(frame);
+    });
+    socket.on("presence", ({ userId, online }) => {
+      if (online) this.onlineUserIds.add(userId);
+      else this.onlineUserIds.delete(userId);
+      this.notifyPresence();
+    });
+    socket.on("presence:snapshot", ({ online }) => {
+      this.onlineUserIds = new Set(online);
+      this.notifyPresence();
+    });
   }
 
   /**
@@ -168,6 +236,10 @@ class RealtimeClient {
   dispose(): void {
     this.listeners.clear();
     this.activeConversationId = null;
+    this.typingHandlers.clear();
+    this.readHandlers.clear();
+    this.presenceHandlers.clear();
+    this.onlineUserIds.clear();
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;
@@ -183,12 +255,28 @@ interface RealtimeContextValue {
   /** Join (or, with null, clear) the conversation room to stream into. Inert
    *  until a socket exists; survives socket re-creation and reconnects. */
   joinConversation: (conversationId: string | null) => void;
+  /** Subscribe to `typing` frames. Returns an unsubscribe. Survives socket
+   *  re-creation (reconnects) — a no-op in demo/logged-out mode. */
+  onTyping: (handler: (frame: ServerToClientEvents["typing"]) => void) => () => void;
+  /** Subscribe to `read` frames (additive to the cache invalidation the
+   *  provider already runs for `read`). Survives socket re-creation. */
+  onRead: (handler: (frame: ServerToClientEvents["read"]) => void) => () => void;
+  /** Subscribe to the live online-user-id set; primed immediately with the
+   *  current snapshot. Survives socket re-creation. */
+  onPresence: (handler: (online: ReadonlySet<string>) => void) => () => void;
+  /** Emit a `typing` frame for `conversationId`. Safe no-op before connect / in
+   *  demo mode (no socket). */
+  emitTyping: (conversationId: string, isTyping: boolean) => void;
 }
 
 const RealtimeContext = createContext<RealtimeContextValue>({
   connected: false,
   request: () => () => {},
   joinConversation: () => {},
+  onTyping: () => () => {},
+  onRead: () => () => {},
+  onPresence: () => () => {},
+  emitTyping: () => {},
 });
 
 /**
@@ -211,6 +299,19 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   // freshly-created client re-applies it — consumers may set it before the
   // socket exists, or it must survive a sign-out/back-in that rebuilds the client.
   const activeConversationRef = useRef<string | null>(null);
+  // Per-event subscriber handlers, held on the provider (not just the client) so
+  // they survive the client being torn down and re-created on every (re)connect
+  // (see the connect effect below, which re-attaches every held handler to a
+  // freshly-created client via `client.onTyping`/`onRead`/`onPresence`).
+  const handlersRef = useRef<{
+    typing: Set<(frame: ServerToClientEvents["typing"]) => void>;
+    read: Set<(frame: ServerToClientEvents["read"]) => void>;
+    presence: Set<(online: ReadonlySet<string>) => void>;
+  }>({
+    typing: new Set(),
+    read: new Set(),
+    presence: new Set(),
+  });
 
   const active = loggedIn && !demoMode && apiAvailable && demand > 0;
 
@@ -222,6 +323,51 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const joinConversation = useCallback((conversationId: string | null) => {
     activeConversationRef.current = conversationId;
     clientRef.current?.setActiveConversation(conversationId);
+  }, []);
+
+  // Unsubscribe detaches from the CURRENT client (read at unsubscribe time), not
+  // the one captured at subscribe time — a reconnect rebuilds the client and
+  // re-attaches every handler in `handlersRef` to the new one, so a stale
+  // captured unsubscribe would only remove the handler from the dead client and
+  // leak it on the live one.
+  const onTyping = useCallback(
+    (handler: (frame: ServerToClientEvents["typing"]) => void) => {
+      handlersRef.current.typing.add(handler);
+      clientRef.current?.onTyping(handler);
+      return () => {
+        handlersRef.current.typing.delete(handler);
+        clientRef.current?.offTyping(handler);
+      };
+    },
+    [],
+  );
+
+  const onRead = useCallback(
+    (handler: (frame: ServerToClientEvents["read"]) => void) => {
+      handlersRef.current.read.add(handler);
+      clientRef.current?.onRead(handler);
+      return () => {
+        handlersRef.current.read.delete(handler);
+        clientRef.current?.offRead(handler);
+      };
+    },
+    [],
+  );
+
+  const onPresence = useCallback(
+    (handler: (online: ReadonlySet<string>) => void) => {
+      handlersRef.current.presence.add(handler);
+      clientRef.current?.onPresence(handler);
+      return () => {
+        handlersRef.current.presence.delete(handler);
+        clientRef.current?.offPresence(handler);
+      };
+    },
+    [],
+  );
+
+  const emitTyping = useCallback((conversationId: string, isTyping: boolean) => {
+    clientRef.current?.emitTyping(conversationId, isTyping);
   }, []);
 
   useEffect(() => {
@@ -236,6 +382,12 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     client.setActiveConversation(activeConversationRef.current);
     const off = client.onStatus(setConnected);
     client.connect();
+    // Re-attach every handler a consumer registered before (or across) this
+    // client's lifetime — the previous client (if any) is gone, along with its
+    // own handler sets, but the provider's `handlersRef` outlives it.
+    handlersRef.current.typing.forEach((handler) => client.onTyping(handler));
+    handlersRef.current.read.forEach((handler) => client.onRead(handler));
+    handlersRef.current.presence.forEach((handler) => client.onPresence(handler));
     return () => {
       off();
       client.dispose();
@@ -245,8 +397,8 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   }, [active]);
 
   const value = useMemo<RealtimeContextValue>(
-    () => ({ connected, request, joinConversation }),
-    [connected, request, joinConversation],
+    () => ({ connected, request, joinConversation, onTyping, onRead, onPresence, emitTyping }),
+    [connected, request, joinConversation, onTyping, onRead, onPresence, emitTyping],
   );
 
   return createElement(RealtimeContext.Provider, { value }, children);
@@ -283,4 +435,54 @@ export function useJoinConversation(conversationId: string | null): void {
     joinConversation(conversationId);
     return () => joinConversation(null);
   }, [conversationId, joinConversation]);
+}
+
+/**
+ * Subscribe to `typing` frames for as long as the calling component is
+ * mounted. A no-op in demo/logged-out/no-backend runs (no socket). `handler`
+ * must be memoized by the caller (e.g. `useCallback`) — a new function
+ * identity on every render resubscribes on every render.
+ */
+export function useTypingFrames(
+  handler: (frame: ServerToClientEvents["typing"]) => void,
+): void {
+  const { onTyping } = useRealtime();
+  useEffect(() => onTyping(handler), [onTyping, handler]);
+}
+
+/**
+ * Subscribe to `read` frames for as long as the calling component is mounted.
+ * Additive to the provider's own cache-invalidation handling of `read` — this
+ * is for components that want the raw frame (e.g. to show a "seen" tick).
+ * `handler` must be memoized by the caller (e.g. `useCallback`) — a new
+ * function identity on every render resubscribes on every render.
+ */
+export function useReadFrames(
+  handler: (frame: ServerToClientEvents["read"]) => void,
+): void {
+  const { onRead } = useRealtime();
+  useEffect(() => onRead(handler), [onRead, handler]);
+}
+
+/**
+ * The live set of online user ids, kept in sync with `presence` /
+ * `presence:snapshot` frames. Starts empty and is populated once a socket
+ * exists (immediately primed with the current snapshot on subscribe) — always
+ * empty in demo/logged-out/no-backend runs.
+ */
+export function usePresenceOnline(): ReadonlySet<string> {
+  const { onPresence } = useRealtime();
+  const [online, setOnline] = useState<ReadonlySet<string>>(new Set());
+  useEffect(() => onPresence((next) => setOnline(new Set(next))), [onPresence]);
+  return online;
+}
+
+/**
+ * Returns a stable `emitTyping(conversationId, isTyping)` function that sends
+ * a `typing` frame over the socket. Safe to call before connect / in demo mode
+ * (no socket) — it's a no-op.
+ */
+export function useEmitTyping(): (conversationId: string, isTyping: boolean) => void {
+  const { emitTyping } = useRealtime();
+  return emitTyping;
 }

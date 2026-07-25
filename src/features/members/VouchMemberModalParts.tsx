@@ -1,9 +1,13 @@
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar, Button, Toggle } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUser, type MemberProfile } from "./data/memberProfiles";
-import { RELATIONSHIPS, RELATIONSHIP_LABEL_KEY } from "./vouchMember.data";
+import {
+  RELATIONSHIPS,
+  RELATIONSHIP_LABEL_KEY,
+  type VouchRelationship,
+} from "./vouchMember.data";
 import styles from "./VouchMemberModal.module.css";
 
 /**
@@ -95,21 +99,25 @@ export function VouchForm({
   toggleTag,
   note,
   setNote,
-  canSubmit,
-  status,
+  anonymous,
+  setAnonymous,
+  isPending,
+  isError,
   onClose,
   onSubmit,
 }: {
   profile: MemberProfile;
   first: string;
-  relationship: string;
-  setRelationship: (r: string) => void;
+  relationship: VouchRelationship;
+  setRelationship: (r: VouchRelationship) => void;
   endorsed: string[];
   toggleTag: (tag: string) => void;
   note: string;
   setNote: (n: string) => void;
-  canSubmit: boolean;
-  status: "form" | "loading" | "done";
+  anonymous: boolean;
+  setAnonymous: (anonymous: boolean) => void;
+  isPending: boolean;
+  isError: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }) {
@@ -167,6 +175,17 @@ export function VouchForm({
             {t(RELATIONSHIP_LABEL_KEY[r])}
           </label>
         ))}
+      </div>
+
+      <div className={styles.anonRow}>
+        <span className={styles.anonLabel}>
+          {t("members:vouch.modal.form.anonymousLabel")}
+        </span>
+        <Toggle
+          checked={anonymous}
+          onChange={setAnonymous}
+          label={t("members:vouch.modal.form.anonymousLabel")}
+        />
       </div>
 
       {profile.tags.length > 0 && (
@@ -227,14 +246,14 @@ export function VouchForm({
         onChange={(e) => setNote(e.target.value)}
       />
       <div className={styles.counter}>
-        {note.trim().length < 12
-          ? t("members:vouch.modal.form.charsToSubmit", {
-              count: 12 - note.trim().length,
-            })
-          : t("members:vouch.modal.form.charsCount", {
+        {note.trim().length > 0
+          ? t("members:vouch.modal.form.charsCount", {
               count: note.trim().length,
-            })}
+            })
+          : t("members:vouch.modal.form.noteOptional")}
       </div>
+
+      {isError && <p className={styles.error}>{t("members:vouch.modal.error")}</p>}
 
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onClose}>
@@ -244,9 +263,9 @@ export function VouchForm({
           variant="primary"
           className={styles.full}
           onClick={onSubmit}
-          disabled={!canSubmit || status === "loading"}
+          disabled={isPending}
         >
-          {status === "loading" ? (
+          {isPending ? (
             <>
               <span className={styles.spinner} aria-hidden />
               {t("members:vouch.modal.form.sending")}

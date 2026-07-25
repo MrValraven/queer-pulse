@@ -2,7 +2,6 @@
 .card,
 .statCard,
 .queueCard,
-.chartCard,
 .feedCard,
 .transpCard {
   background: var(--paper);
@@ -301,79 +300,6 @@
 }
 
 /* ── Charts ──────────────────────────────────────────────────────────────── */
-.chartCard {
-  padding: 22px 24px 18px;
-}
-.chHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 6px;
-}
-.chTitle {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--text-strong);
-}
-[data-theme="dark"] .chTitle {
-  color: var(--ink);
-}
-.chSub {
-  font-size: 13px;
-  color: var(--ink-60);
-  margin-top: 3px;
-}
-.chLegend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 4px;
-}
-.chLeg {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-60);
-}
-/* Churn has no recorded data yet — a plain muted note stands in for the
-   swatch + label pair rather than a fabricated series. */
-.chLegMuted {
-  font-size: 12px;
-  font-style: italic;
-  font-weight: 500;
-  color: var(--ink-40);
-}
-/* Response-time distribution not measured yet — replaces the histogram
-   with a centered muted note, holding roughly the same chart-body height so
-   the card doesn't jump. */
-.chNotMeasured {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 180px;
-  margin: 8px 0 0;
-  font-size: 13px;
-  font-style: italic;
-  color: var(--ink-60);
-  text-align: center;
-}
-.chSw {
-  width: 11px;
-  height: 11px;
-  border-radius: 3px;
-  flex: none;
-}
-.chSwDot {
-  width: 11px;
-  height: 11px;
-  border-radius: 999px;
-  flex: none;
-}
 .chAxisSerif {
   font-family: var(--serif);
   font-size: 12px;

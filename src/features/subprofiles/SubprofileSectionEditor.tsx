@@ -32,6 +32,7 @@ const emptyItem = (section: SubprofileSection): SubprofileItemView => ({
   date: "",
   meta: "",
   tags: [],
+  isFeatured: false,
 });
 
 /**
@@ -84,6 +85,21 @@ export function SubprofileSectionEditor({
     setRows((cur) => [...cur, withUid(emptyItem(section.section))]);
     touch();
   }
+  function toggleFeatured(uid: string) {
+    setRows((cur) => {
+      const target = cur.find((r) => r._uid === uid);
+      if (!target) return cur;
+      const turningOn = !target.isFeatured;
+      // Single-select within THIS section's working list only — the backend
+      // enforces the cross-section, persona-wide spotlight on save, clearing
+      // any featured item left in other sections.
+      return cur.map((r) => ({
+        ...r,
+        isFeatured: r._uid === uid ? turningOn : turningOn ? false : r.isFeatured,
+      }));
+    });
+    touch();
+  }
 
   async function save() {
     try {
@@ -126,9 +142,11 @@ export function SubprofileSectionEditor({
             fields={section.fields}
             canMoveUp={index > 0}
             canMoveDown={index < rows.length - 1}
+            canFeature={section.section !== "links"}
             onChange={(p) => patch(row._uid, p)}
             onRemove={() => remove(row._uid)}
             onMove={(dir) => move(row._uid, dir)}
+            onToggleFeatured={() => toggleFeatured(row._uid)}
           />
         ))}
       </div>

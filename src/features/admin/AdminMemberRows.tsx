@@ -2,7 +2,6 @@ import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminAvatar, AdminChip } from "./ui";
 import { portrait } from "./adminPeople.data";
-import { portraitByInitials } from "./adminVouchGraph.data";
 import type {
   AdminMember,
   FlaggedMember,
@@ -92,7 +91,7 @@ function VouchStrip({
               initials={v.initials}
               tone={v.tone}
               size="sm"
-              src={portraitByInitials(v.initials)}
+              src={v.avatarUrl ?? undefined}
             />
           </span>
         ))}

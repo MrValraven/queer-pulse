@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FiLayers } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, Reveal, Spinner } from "../../shared/components/ui";
@@ -7,21 +7,72 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
 import { SubprofileCard } from "./SubprofileCard";
 import { SubprofileDirectoryFilters } from "./SubprofileDirectoryFilters";
-import type { SubprofileKind } from "./api/subprofiles.api";
+import type { SubprofileCardDTO, SubprofileKind } from "./api/subprofiles.api";
 import styles from "./SubprofileDirectoryPage.module.css";
+
+const AVAILABLE_TAGS_CAP = 20;
+
+/** Union of `card.tags` across the loaded result set, deduped and capped at
+ *  `AVAILABLE_TAGS_CAP`, most-frequent tag first. Purely client-side — the
+ *  directory endpoint isn't re-queried for this. */
+function computeAvailableTags(cards: SubprofileCardDTO[]): string[] {
+  const occurrenceCountByTag = new Map<string, number>();
+  for (const card of cards) {
+    for (const tag of card.tags) {
+      occurrenceCountByTag.set(tag, (occurrenceCountByTag.get(tag) ?? 0) + 1);
+    }
+  }
+  return [...occurrenceCountByTag.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, AVAILABLE_TAGS_CAP)
+    .map(([tag]) => tag);
+}
 
 /**
  * Browse standalone (unlinked + published) personas across the community,
  * filterable by craft and free-text search. Wrapped in `AppShell` (logged-in).
- * The hook re-queries as the filters change; cards link to `/p/<handle>`.
+ * Kind + query re-query the directory hook; "open to collabs" and tags are
+ * applied client-side over the already-fetched cards.
  */
 export function SubprofileDirectoryPage() {
   const { t } = useTranslation();
   const [kind, setKind] = useState<SubprofileKind | undefined>(undefined);
   const [query, setQuery] = useState("");
+  const [activeTags, setActiveTags] = useState<string[]>([]);
+  const [openToCollabs, setOpenToCollabs] = useState(false);
 
   const { data, isLoading } = useSubprofileDirectory({ kind, query });
   const cards = data ?? [];
+
+  const availableTags = useMemo(() => computeAvailableTags(cards), [cards]);
+
+  // Client-side only: "open to collabs" narrows to that availability; tag
+  // matching is OR (a card is kept if it has ANY selected tag, not all of
+  // them) — the two conditions combine with AND.
+  const visibleCards = useMemo(() => {
+    return cards.filter((card) => {
+      if (openToCollabs && card.availability !== "open_to_collabs") {
+        return false;
+      }
+      if (
+        activeTags.length > 0 &&
+        !card.tags.some((tag) => activeTags.includes(tag))
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [cards, activeTags, openToCollabs]);
+
+  const onToggleTag = (tag: string) => {
+    setActiveTags((current) =>
+      current.includes(tag)
+        ? current.filter((activeTag) => activeTag !== tag)
+        : [...current, tag],
+    );
+  };
+
+  const onToggleOpenToCollabs = () => setOpenToCollabs((current) => !current);
 
   return (
     <AppShell>
@@ -45,6 +96,11 @@ export function SubprofileDirectoryPage() {
             onKind={setKind}
             query={query}
             onQuery={setQuery}
+            availableTags={availableTags}
+            activeTags={activeTags}
+            onToggleTag={onToggleTag}
+            openToCollabs={openToCollabs}
+            onToggleOpenToCollabs={onToggleOpenToCollabs}
           />
 
           {isLoading ? (
@@ -52,7 +108,7 @@ export function SubprofileDirectoryPage() {
               <Spinner />
               <span>{t("subprofiles:directory.loading")}</span>
             </div>
-          ) : cards.length === 0 ? (
+          ) : visibleCards.length === 0 ? (
             <EmptyState
               icon={<FiLayers />}
               title={t("subprofiles:directory.empty.title")}
@@ -62,12 +118,14 @@ export function SubprofileDirectoryPage() {
                 onClick: () => {
                   setKind(undefined);
                   setQuery("");
+                  setActiveTags([]);
+                  setOpenToCollabs(false);
                 },
               }}
             />
           ) : (
             <div className={styles.grid}>
-              {cards.map((card, i) => (
+              {visibleCards.map((card, i) => (
                 <Reveal key={card.handle} delay={Math.min(i, 8) * 60}>
                   <SubprofileCard card={card} />
                 </Reveal>

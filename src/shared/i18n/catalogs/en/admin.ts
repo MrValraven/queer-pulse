@@ -21,10 +21,22 @@ export const admin: Catalog = {
 
   // ── Dashboard ──────────────────────────────────────────────────────────────
   "dashboard.title": "Overview · <em>good morning, {name}</em>",
-  "dashboard.header.titleLine1": "Seven reports",
-  "dashboard.header.titleLine2": "need <em>a human</em>.",
-  "dashboard.header.sub":
-    "Two are flagged as safety emergencies — outing and doxxing. Everything else is calm. You're holding the whole network steady; here's where to start.",
+  // Headline count + subtitle are derived from the real triage backlog
+  // (`GET /admin/overview` → triage counts); `{count}` drives pluralization.
+  "dashboard.header.titleLine1_one": "{count} thing",
+  "dashboard.header.titleLine1_other": "{count} things",
+  "dashboard.header.titleLine2_one": "needs <em>a human</em>.",
+  "dashboard.header.titleLine2_other": "need <em>a human</em>.",
+  "dashboard.header.titleClearLine1": "You're",
+  "dashboard.header.titleClearLine2": "all <em>caught up</em>.",
+  "dashboard.header.subEmergencies_one":
+    "One is flagged as a safety emergency — start there. Everything else is steady, and you're holding the whole network together.",
+  "dashboard.header.subEmergencies_other":
+    "{count} are flagged as safety emergencies — start there. Everything else is steady, and you're holding the whole network together.",
+  "dashboard.header.subCalm":
+    "Nothing's flagged urgent — work down the queue at your own pace. You're holding the whole network steady.",
+  "dashboard.header.subClear":
+    "Every open item has a human decision attached. Go rest — the network's safe in your hands.",
   "dashboard.header.digestCta": "Weekly digest",
   "dashboard.header.digestToast": "The weekly digest would open in a new tab",
   "dashboard.header.moderationCta": "Open moderation",
@@ -953,6 +965,12 @@ export const admin: Catalog = {
   "vouchGraph.legend.plain.anonymous": "Anonymous",
   "vouchGraph.legend.plain.private": "Private network",
 
+  "vouchGraph.relationship.collaborated": "Collaborated",
+  "vouchGraph.relationship.friends": "Friends",
+  "vouchGraph.relationship.group": "Same group",
+  "vouchGraph.relationship.met_through": "Met through QueerPulse",
+  "vouchGraph.relationship.neighbours": "Neighbours",
+
   "vouchGraph.modal.ariaLabel": "Trust network",
   "vouchGraph.modal.eyebrow": "Trust network",
   "vouchGraph.modal.searchPlaceholder": "Find a member…",
@@ -962,6 +980,11 @@ export const admin: Catalog = {
   "vouchGraph.modal.verifyToast": "Trust basis attached — opening verification",
   "vouchGraph.modal.citeToast": "Trust path cited in the audit log",
   "vouchGraph.modal.privateToast": "This member keeps their network private",
+  "vouchGraph.modal.loadingTitle": "Loading trust network…",
+  "vouchGraph.modal.emptyTitle": "No trust network yet",
+  "vouchGraph.modal.emptyBody": "This member doesn't have any vouches on record.",
+  "vouchGraph.modal.truncatedNotice":
+    "Showing the 500 most recent members — some connections may be hidden.",
 
   "vouchGraph.inspector.emptyTitle": "Pick anyone",
   "vouchGraph.inspector.emptyBody":

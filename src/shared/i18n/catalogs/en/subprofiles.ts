@@ -19,6 +19,14 @@ export const subprofiles: Catalog = {
   "directory.empty.description":
     "Nothing matches this just now. Try another craft, or clear your search and see everyone.",
   "directory.empty.clear": "Clear filters",
+  "directory.openToCollabsChip": "Open to collabs",
+  "directory.tagFilterHeading": "Tags",
+  "directory.tagFilterLabel": "Filter by tag",
+
+  // Directory card affordances (SubprofileCard)
+  "card.openToCollabs": "Open to collabs",
+  "card.socialCount_one": "{count} social link",
+  "card.socialCount_other": "{count} social links",
 
   // Main-profile "Also as…" block (ProfileSubprofilesSection)
   "alsoAs.title": "Also working as",
@@ -106,6 +114,18 @@ export const subprofiles: Catalog = {
   "visibility.private.label": "Just you",
   "visibility.private.help": "Kept to yourself while you shape it.",
 
+  // Presence — accent swatches (SubprofilePresenceFields) and availability
+  // status (SubprofileAvailability, SubprofileCard, SubprofilePresenceFields)
+  // — both persisted fields.
+  "accent.plum": "Plum",
+  "accent.coral": "Coral",
+  "accent.jade": "Jade",
+  "accent.amber": "Amber",
+  "accent.violet": "Violet",
+  "availability.openToCollabs": "Open to collabs",
+  "availability.booking": "Taking bookings",
+  "availability.notAvailable": "Not available right now",
+
   // Item-editor field labels/placeholders (SubprofileItemEditor)
   "field.title.label": "Title",
   "field.title.placeholder": "What's it called?",
@@ -157,6 +177,13 @@ export const subprofiles: Catalog = {
   "checklist.reqLanguageFail":
     "Something in your name, handle or bio was flagged — please reword it.",
 
+  // Publish-checklist polish nudges (non-blocking, PublishChecklist.tsx)
+  "checklist.polishTitle": "A little more polish",
+  "checklist.polishCover": "A cover image",
+  "checklist.polishSocials": "A social link",
+  "checklist.polishAvailability": "Your availability",
+  "checklist.polishDone": "Looking polished",
+
   // Owner dashboard (MySubprofilesPage + MySubprofileRow)
   "mine.title": "Your <em>subprofiles</em>",
   "mine.sub":
@@ -180,6 +207,10 @@ export const subprofiles: Catalog = {
   "mine.deleteModalBody": "This can't be undone.",
   "mine.rowEdit": "Edit",
   "mine.rowDelete": "Delete",
+  "mine.endorsementCount_one": "{count} endorsement",
+  "mine.endorsementCount_other": "{count} endorsements",
+  "mine.followerCount_one": "{count} follower",
+  "mine.followerCount_other": "{count} followers",
 
   // Editor page (SubprofileEditorPage)
   "editor.loading": "Loading your persona…",
@@ -210,6 +241,21 @@ export const subprofiles: Catalog = {
   "metaForm.addressPlaceholder": "e.g. engineering",
   "metaForm.handleLabel": "Handle",
   "metaForm.visibilityLabel": "Who can see it",
+
+  // Presence fields (SubprofilePresenceFields): cover, accent, availability, CTA
+  "metaForm.coverLabel": "Cover image",
+  "metaForm.coverPlaceholder": "Cover image",
+  "metaForm.accentLabel": "Accent colour",
+  "metaForm.availabilityLabel": "Availability",
+  "metaForm.availabilityUnset": "Not set",
+  "metaForm.ctaLabelLabel": "Button label",
+  "metaForm.ctaLabelPlaceholder": "e.g. Book a session",
+  "metaForm.ctaUrlLabel": "Button link",
+  "metaForm.ctaUrlPlaceholder": "https://",
+  "metaForm.ctaHelper":
+    "Add both a label and a link to show a button on your page.",
+  "metaForm.ctaMismatch": "Add both a label and a link, or leave both blank.",
+
   "metaForm.save": "Save details",
   "metaForm.saving": "Saving…",
   "metaForm.toastSaved": "Details saved",
@@ -221,6 +267,22 @@ export const subprofiles: Catalog = {
   "itemEditor.moveDown": "Move down",
   "itemEditor.remove": "Remove",
   "itemEditor.tagsHelper": "Separate with commas",
+  "itemEditor.feature": "Make this the spotlight",
+  "itemEditor.unfeature": "Remove from spotlight",
+  "itemEditor.featuredBadge": "Featured",
+
+  // Social links editor (SubprofileSocialLinksEditor)
+  "socialEditor.title": "Social links",
+  "socialEditor.add": "Add a link",
+  "socialEditor.platformLabel": "Link platform",
+  "socialEditor.linkFor": "{platform} link",
+  "socialEditor.removeLinkFor": "Remove {platform} link",
+  "socialEditor.other": "Other link",
+  "socialEditor.save": "Save links",
+  "socialEditor.saving": "Saving…",
+  "socialEditor.saved": "Links saved",
+  "socialEditor.error": "We couldn't save that just now — try again.",
+  "socialEditor.capHint": "That's the most links you can add.",
 
   // Section editor (SubprofileSectionEditor)
   "sectionEditor.empty": "Nothing here yet — add your first when you're ready.",
@@ -281,6 +343,31 @@ export const subprofiles: Catalog = {
   "imageUpload.remove": "Remove image",
   "imageUpload.error": "We couldn't add that image. Please try again.",
 
+  // Persona hero (SubprofileHero)
+  "hero.message": "Message",
+
+  // Endorse control (SubprofileEndorse)
+  "hero.endorse.cta": "Endorse",
+  "hero.endorse.endorsed": "Endorsed",
+  "hero.endorse.count_one": "{count} endorsement",
+  "hero.endorse.count_other": "{count} endorsements",
+  "hero.endorse.addNote": "Add a note",
+  "hero.endorse.notePlaceholder": "Say a word about why (optional)",
+  "hero.endorse.send": "Send",
+  "hero.endorse.error": "We couldn't save that just now — try again.",
+  "hero.endorse.endorsedByNames": "Endorsed by {names}",
+
+  // Follow control (SubprofileFollow)
+  "hero.follow.cta": "Follow",
+  "hero.follow.following": "Following",
+  "hero.follow.count_one": "{count} follower",
+  "hero.follow.count_other": "{count} followers",
+  "hero.follow.error": "We couldn't save that just now — try again.",
+
+  // Featured item spotlight (SubprofileSpotlight)
+  "spotlight.eyebrow": "Spotlight",
+  "spotlight.visit": "Visit",
+
   // Public persona page (SubprofilePage + subprofilePage.data.ts)
   "page.loading": "Loading persona…",
   "page.ownerTie": "Part of <em>{name}</em>",
@@ -290,4 +377,38 @@ export const subprofiles: Catalog = {
     "It may have been unpublished, kept private, or this link could be out of date. Nothing's wrong on your end.",
   "page.notFoundAction": "Browse personas",
   "page.notFoundBack": "Go back",
+
+  // Affiliations ("Part of") — public section (SubprofileAffiliations) and
+  // the owner editor (SubprofileAffiliationsEditor, SubprofileAffiliationRow).
+  // `role` is a PRESET, PERSISTED field (AFFILIATION_ROLE_KEYS in
+  // affiliations.data.ts) — label-key indirection, same pattern as `kind`.
+  "affiliation.heading": "Part of",
+  "affiliation.type.event": "Event",
+  "affiliation.type.community": "Community",
+  "affiliation.role.performing": "Performing",
+  "affiliation.role.attending": "Attending",
+  "affiliation.role.hosting": "Hosting",
+  "affiliation.role.member": "Member",
+  "affiliation.role.mod": "Mod",
+  "affiliation.role.founder": "Founder",
+
+  "affiliationsEditor.title": "Part of",
+  "affiliationsEditor.note":
+    "Link this persona to the events and communities you're part of.",
+  "affiliationsEditor.empty":
+    "Nothing linked yet — add an event or community below.",
+  "affiliationsEditor.itemNumber": "Item {n}",
+  "affiliationsEditor.remove": "Remove",
+  "affiliationsEditor.typeLabel": "Type",
+  "affiliationsEditor.roleLabel": "Role",
+  "affiliationsEditor.slugLabel": "Event or community address",
+  "affiliationsEditor.slugPlaceholder": "e.g. queer-book-club",
+  "affiliationsEditor.slugHelper":
+    "We'll check it matches a real event or community when you save.",
+  "affiliationsEditor.add": "Add a link",
+  "affiliationsEditor.capHint": "That's the most links you can add.",
+  "affiliationsEditor.save": "Save links",
+  "affiliationsEditor.saving": "Saving…",
+  "affiliationsEditor.saved": "Links saved",
+  "affiliationsEditor.error": "We couldn't save that just now — try again.",
 };

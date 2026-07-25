@@ -24,10 +24,15 @@ export function MessagesPage() {
     setComposing,
     active,
     activeBlocked,
+    counterpartLastReadAt,
     messageGroups,
+    hasMoreOlder,
+    loadingOlder,
+    loadOlder,
     openThread,
     startThread,
     send,
+    retrySend,
   } = useMessagesController();
 
   const showList = !isMobile || view === "list";
@@ -53,12 +58,17 @@ export function MessagesPage() {
           (active ? (
             <ConversationPanel
               active={active}
+              counterpartLastReadAt={counterpartLastReadAt}
               messageGroups={messageGroups}
               draft={draft}
               onDraftChange={setDraft}
               onSend={send}
               blocked={activeBlocked}
               onBack={isMobile ? () => setView("list") : undefined}
+              onRetry={retrySend}
+              hasMoreOlder={hasMoreOlder}
+              loadingOlder={loadingOlder}
+              onLoadOlder={loadOlder}
             />
           ) : (
             <MessagesEmptyPanel />

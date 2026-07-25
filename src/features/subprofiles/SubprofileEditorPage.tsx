@@ -7,6 +7,8 @@ import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { useSubprofile } from "./api/useSubprofile";
 import { STATUS_BADGE } from "./mySubprofiles.data";
 import { SubprofileMetaForm } from "./SubprofileMetaForm";
+import { SubprofileSocialLinksEditor } from "./SubprofileSocialLinksEditor";
+import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
 import { SubprofileSectionEditor } from "./SubprofileSectionEditor";
 import { SubprofilePublishPanel } from "./SubprofilePublishPanel";
 import styles from "./SubprofileEditor.module.css";
@@ -77,6 +79,10 @@ export function SubprofileEditorPage() {
           </div>
 
           <SubprofileMetaForm subprofile={subprofile} />
+
+          <SubprofileSocialLinksEditor subprofile={subprofile} />
+
+          <SubprofileAffiliationsEditor subprofile={subprofile} />
 
           {subprofile.sections.map((section) => (
             <SubprofileSectionEditor

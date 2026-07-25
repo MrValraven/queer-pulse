@@ -1,6 +1,10 @@
 import type { IconType } from "react-icons";
 import type {
+  AccentKey,
+  AffiliationDTO,
+  AvailabilityKey,
   LinkVisibility,
+  SocialLinkDTO,
   SubprofileDTO,
   SubprofileItemDTO,
   SubprofileItemInputDTO,
@@ -25,6 +29,7 @@ export interface SubprofileItemView {
   date: string;
   meta: string;
   tags: string[];
+  isFeatured: boolean;
 }
 
 /** A section grouped for rendering/editing: its metadata + ordered items.
@@ -49,15 +54,26 @@ export interface SubprofileView {
   avatarUrl: string | null;
   tagline: string;
   bio: string;
+  coverUrl: string | null;
+  accent: AccentKey | null;
+  availability: AvailabilityKey | null;
+  ctaLabel: string;
+  ctaUrl: string;
+  socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
   visibility: Visibility;
   status: SubprofileStatus;
   position: number;
   sections: SubprofileSectionView[];
+  featured: SubprofileItemView | null;
+  affiliations: AffiliationDTO[];
+  endorsementCount: number;
+  followerCount: number;
 }
 
 /** Public view model (from SubprofilePublicDTO); owner fields only when linked. */
 export interface PublicSubprofileView {
+  id: string;
   kind: SubprofileKind;
   slug: string;
   handle: string | null;
@@ -65,10 +81,22 @@ export interface PublicSubprofileView {
   avatarUrl: string | null;
   tagline: string;
   bio: string;
+  coverUrl: string | null;
+  accent: AccentKey | null;
+  availability: AvailabilityKey | null;
+  ctaLabel: string;
+  ctaUrl: string;
+  socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
   ownerSlug?: string;
   ownerName?: string;
   sections: SubprofileSectionView[];
+  featured: SubprofileItemView | null;
+  affiliations: AffiliationDTO[];
+  endorsementCount: number;
+  viewerEndorsed: boolean;
+  followerCount: number;
+  viewerFollowing: boolean;
 }
 
 // ── DTO → view model ─────────────────────────────────────────────────────────
@@ -84,7 +112,15 @@ function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
     date: dto.date ?? "",
     meta: dto.meta ?? "",
     tags: dto.tags ?? [],
+    isFeatured: dto.isFeatured ?? false,
   };
+}
+
+/** Find the single featured item across all sections (the backend enforces at
+ *  most one); `null` when none. Not a wire field — computed from `items`. */
+function findFeatured(items: SubprofileItemDTO[]): SubprofileItemView | null {
+  const featured = items.find((item) => item.isFeatured);
+  return featured ? itemToView(featured) : null;
 }
 
 /** Group a flat item list into per-section views, ordered by `sectionsForKind`.
@@ -124,11 +160,21 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     avatarUrl: dto.avatarUrl,
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
+    coverUrl: dto.coverUrl,
+    accent: dto.accent as AccentKey | null,
+    availability: dto.availability as AvailabilityKey | null,
+    ctaLabel: dto.ctaLabel ?? "",
+    ctaUrl: dto.ctaUrl ?? "",
+    socialLinks: dto.socialLinks,
     linkVisibility: dto.linkVisibility,
     visibility: dto.visibility,
     status: dto.status,
     position: dto.position,
     sections: buildSections(dto.items, dto.kind, { includeEmpty: true }),
+    featured: findFeatured(dto.items),
+    affiliations: dto.affiliations ?? [],
+    endorsementCount: dto.endorsementCount,
+    followerCount: dto.followerCount,
   };
 }
 
@@ -137,6 +183,7 @@ export function publicSubprofileToView(
   dto: SubprofilePublicDTO,
 ): PublicSubprofileView {
   return {
+    id: dto.id,
     kind: dto.kind,
     slug: dto.slug,
     handle: dto.handle,
@@ -144,10 +191,22 @@ export function publicSubprofileToView(
     avatarUrl: dto.avatarUrl,
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
+    coverUrl: dto.coverUrl,
+    accent: dto.accent as AccentKey | null,
+    availability: dto.availability as AvailabilityKey | null,
+    ctaLabel: dto.ctaLabel ?? "",
+    ctaUrl: dto.ctaUrl ?? "",
+    socialLinks: dto.socialLinks,
     linkVisibility: dto.linkVisibility,
     ...(dto.ownerSlug !== undefined ? { ownerSlug: dto.ownerSlug } : {}),
     ...(dto.ownerName !== undefined ? { ownerName: dto.ownerName } : {}),
     sections: buildSections(dto.items, dto.kind),
+    featured: findFeatured(dto.items),
+    affiliations: dto.affiliations ?? [],
+    endorsementCount: dto.endorsementCount,
+    viewerEndorsed: dto.viewerEndorsed,
+    followerCount: dto.followerCount,
+    viewerFollowing: dto.viewerFollowing,
   };
 }
 
@@ -168,5 +227,6 @@ export function itemsToInputDto(
     ...(i.date ? { date: i.date } : {}),
     ...(i.meta ? { meta: i.meta } : {}),
     ...(i.tags.length ? { tags: i.tags } : {}),
+    ...(i.isFeatured ? { isFeatured: true } : {}),
   }));
 }

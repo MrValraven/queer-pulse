@@ -20,6 +20,12 @@ function toCard(view: PublicSubprofileView): SubprofileCardDTO {
     displayName: view.displayName,
     avatarUrl: view.avatarUrl,
     tagline: view.tagline || null,
+    accent: view.accent ?? null,
+    // Linked personas don't surface availability on the "Also as…" cards.
+    availability: null,
+    socialCount: view.socialLinks?.length ?? 0,
+    // Linked "Also as…" cards don't surface craft tags.
+    tags: [],
   };
 }
 

@@ -54,6 +54,16 @@ export function MySubprofileRow({
           </Badge>
           <Badge tone={link.tone}>{t(link.labelKey)}</Badge>
           <VisibilityBadge mode={subprofile.visibility} />
+          <span className={styles.count}>
+            {t("subprofiles:mine.endorsementCount", {
+              count: subprofile.endorsementCount,
+            })}
+          </span>
+          <span className={styles.count}>
+            {t("subprofiles:mine.followerCount", {
+              count: subprofile.followerCount,
+            })}
+          </span>
         </div>
       </div>
       <div className={styles.rowActions}>

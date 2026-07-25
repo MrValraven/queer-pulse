@@ -4,7 +4,8 @@ import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberProfiles } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
-import { RELATIONSHIPS } from "./vouchMember.data";
+import { useVouchMember } from "./api/useVouchMember";
+import { RELATIONSHIPS, type VouchRelationship } from "./vouchMember.data";
 import { VouchForm, VouchSuccess } from "./VouchMemberModalParts";
 import styles from "./VouchMemberModal.module.css";
 
@@ -26,18 +27,22 @@ export function VouchMemberModal({
   onVouched: () => void;
 }) {
   const { t } = useTranslation();
-  const [relationship, setRelationship] = useState<string>(RELATIONSHIPS[0]);
+  const [relationship, setRelationship] = useState<VouchRelationship>(
+    RELATIONSHIPS[0],
+  );
   const [endorsed, setEndorsed] = useState<string[]>([]);
   const [note, setNote] = useState("");
-  const [status, setStatus] = useState<"form" | "loading" | "done">("form");
+  const [anonymous, setAnonymous] = useState(false);
+  const [status, setStatus] = useState<"form" | "done">("form");
+  const vouch = useVouchMember();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && status !== "loading") onClose();
+      if (e.key === "Escape" && !vouch.isPending) onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, status]);
+  }, [onClose, vouch.isPending]);
 
   // Source the member from the same hook the profile page uses, so live mode can
   // vouch for a fetched member (e.g. the house account) that isn't present in the
@@ -53,7 +58,6 @@ export function VouchMemberModal({
   if (!profile && !memberLoading) return null;
 
   const first = profile?.first ?? "";
-  const canSubmit = note.trim().length >= 12;
 
   const toggleTag = (tag: string) =>
     setEndorsed((prev) =>
@@ -61,12 +65,18 @@ export function VouchMemberModal({
     );
 
   const submit = () => {
-    if (!canSubmit || status !== "form") return;
-    setStatus("loading");
-    window.setTimeout(() => {
-      onVouched();
-      setStatus("done");
-    }, 1100);
+    // The note is optional — a relationship is always selected, so a vouch is
+    // always submittable. Only guard against a double-submit while in flight.
+    if (vouch.isPending) return;
+    vouch.mutate(
+      { slug, relationship, note: note.trim(), anonymous },
+      {
+        onSuccess: () => {
+          onVouched();
+          setStatus("done");
+        },
+      },
+    );
   };
 
   return (
@@ -74,7 +84,7 @@ export function VouchMemberModal({
       className={styles.overlay}
       role="presentation"
       onClick={(e) => {
-        if (e.target === e.currentTarget && status !== "loading") onClose();
+        if (e.target === e.currentTarget && !vouch.isPending) onClose();
       }}
     >
       <div
@@ -83,7 +93,7 @@ export function VouchMemberModal({
         aria-label={t("members:vouch.modal.ariaLabel", { first })}
         className={`${styles.modal} ${status === "done" ? styles.modalDone : ""}`}
       >
-        {status !== "loading" && (
+        {!vouch.isPending && (
           <button
             type="button"
             className={styles.close}
@@ -112,8 +122,10 @@ export function VouchMemberModal({
               toggleTag={toggleTag}
               note={note}
               setNote={setNote}
-              canSubmit={canSubmit}
-              status={status}
+              anonymous={anonymous}
+              setAnonymous={setAnonymous}
+              isPending={vouch.isPending}
+              isError={vouch.isError}
               onClose={onClose}
               onSubmit={submit}
             />

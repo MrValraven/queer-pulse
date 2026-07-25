@@ -14,7 +14,7 @@ export type TipData =
   | {
       kind: "edge";
       label: string;
-      tag?: string;
+      relationship?: string;
       reason?: string;
       date: string;
       withdrawn?: boolean;
@@ -54,7 +54,9 @@ export function VouchGraphTooltip({ tip, x, y }: Props) {
       ) : (
         <>
           <div className={styles.tipName}>{tip.label}</div>
-          {tip.tag && <div className={styles.tipTag}>{tip.tag}</div>}
+          {tip.relationship && (
+            <div className={styles.tipTag}>{tip.relationship}</div>
+          )}
           {tip.reason && <div className={styles.tipRole}>“{tip.reason}”</div>}
           <div className={tip.withdrawn ? styles.tipMetaWd : styles.tipMeta}>
             {tip.withdrawn

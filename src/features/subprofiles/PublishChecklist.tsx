@@ -1,7 +1,8 @@
-import { FiAlertCircle, FiCheck, FiClock } from "react-icons/fi";
+import { FiAlertCircle, FiCheck, FiClock, FiStar } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PUBLISH_REQUIREMENTS } from "./publishChecklist.data";
+import { POLISH_NUDGES, PUBLISH_REQUIREMENTS } from "./publishChecklist.data";
+import type { SubprofileView } from "./api/subprofiles.adapters";
 import styles from "./PublishChecklist.module.css";
 
 interface PublishChecklistProps {
@@ -81,6 +82,48 @@ export function PublishChecklist({
             </li>
           );
         })}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * Optional, non-blocking "polish" nudges — visually + semantically separate
+ * from the required checklist above. They never carry an `unmet` code, never
+ * touch the backend, and never affect whether the publish button is enabled;
+ * they're just a muted, friendly prompt to round out the persona. Renders a
+ * short "looking polished" line once every nudge is satisfied.
+ */
+export function SubprofilePolishList({
+  subprofile,
+}: {
+  subprofile: SubprofileView;
+}) {
+  const { t } = useTranslation();
+  const pendingNudges = POLISH_NUDGES.filter(
+    (nudge) => !nudge.isSatisfied(subprofile),
+  );
+
+  if (pendingNudges.length === 0) {
+    return (
+      <p className={styles.polishDone}>
+        <FiStar size={13} aria-hidden />
+        {t("subprofiles:checklist.polishDone")}
+      </p>
+    );
+  }
+
+  return (
+    <div className={styles.polish}>
+      <h4 className={styles.polishTitle}>
+        {t("subprofiles:checklist.polishTitle")}
+      </h4>
+      <ul className={styles.polishList}>
+        {pendingNudges.map((nudge) => (
+          <li key={nudge.key} className={styles.polishRow}>
+            {t(nudge.titleKey)}
+          </li>
+        ))}
       </ul>
     </div>
   );

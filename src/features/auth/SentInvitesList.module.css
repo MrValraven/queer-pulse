@@ -4,12 +4,38 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--ink-40);
-  margin-bottom: 14px;
+}
+.chevron {
+  flex: none;
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 0.2s var(--ease);
+  transform: rotate(-90deg);
+}
+.chevronOpen {
+  transform: rotate(0deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
 }
 .list {
   display: flex;

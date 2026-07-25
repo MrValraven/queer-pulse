@@ -1,0 +1,89 @@
+import { FormField } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ImageUploadField } from "./ImageUploadField";
+import { MIN_BIO } from "./subprofileEditor.data";
+
+interface SubprofileIdentityFieldsProps {
+  avatarUrl: string;
+  onAvatarUrlChange: (value: string) => void;
+  displayName: string;
+  onDisplayNameChange: (value: string) => void;
+  nameMissing: boolean;
+  tagline: string;
+  onTaglineChange: (value: string) => void;
+  bio: string;
+  onBioChange: (value: string) => void;
+}
+
+/**
+ * The persona's core identity controls: avatar, display name, tagline, and
+ * bio (with a live count against the 80-char publish minimum). Extracted
+ * from `SubprofileMetaForm` to keep both components under the 200-line cap.
+ * Purely controlled — the parent owns state and the PATCH.
+ */
+export function SubprofileIdentityFields({
+  avatarUrl,
+  onAvatarUrlChange,
+  displayName,
+  onDisplayNameChange,
+  nameMissing,
+  tagline,
+  onTaglineChange,
+  bio,
+  onBioChange,
+}: SubprofileIdentityFieldsProps) {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <FormField label={t("subprofiles:metaForm.avatarLabel")}>
+        <ImageUploadField
+          value={avatarUrl}
+          kind="avatar"
+          circle
+          size={120}
+          placeholder={t("subprofiles:metaForm.avatarPlaceholder")}
+          onChange={onAvatarUrlChange}
+        />
+      </FormField>
+
+      <FormField
+        label={t("subprofiles:metaForm.displayNameLabel")}
+        required
+        error={
+          nameMissing ? t("subprofiles:metaForm.displayNameError") : undefined
+        }
+      >
+        <input
+          value={displayName}
+          placeholder={t("subprofiles:metaForm.displayNamePlaceholder")}
+          onChange={(event) => onDisplayNameChange(event.target.value)}
+        />
+      </FormField>
+
+      <FormField
+        label={t("subprofiles:metaForm.taglineLabel")}
+        helper={t("subprofiles:metaForm.taglineHelper")}
+      >
+        <input
+          value={tagline}
+          placeholder={t("subprofiles:metaForm.taglinePlaceholder")}
+          onChange={(event) => onTaglineChange(event.target.value)}
+        />
+      </FormField>
+
+      <FormField
+        label={t("subprofiles:metaForm.bioLabel")}
+        labelAside={`${bio.length}/${MIN_BIO}`}
+        helper={t("subprofiles:metaForm.bioHelper")}
+      >
+        <textarea
+          value={bio}
+          rows={4}
+          placeholder={t("subprofiles:metaForm.bioPlaceholder")}
+          onChange={(event) => onBioChange(event.target.value)}
+        />
+      </FormField>
+    </>
+  );
+}

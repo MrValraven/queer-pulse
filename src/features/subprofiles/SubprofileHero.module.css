@@ -1,0 +1,135 @@
+/* Hero */
+.hero {
+  position: relative;
+  padding-top: 128px;
+  padding-bottom: 48px;
+  overflow: hidden;
+}
+@media (min-width: 861px) {
+  :global(html[data-nav-mode="sidebar"]) .hero {
+    padding-top: 48px;
+  }
+}
+
+.cover {
+  width: 100%;
+  height: clamp(150px, 22vw, 220px);
+  background-size: cover;
+  background-position: center;
+  background-color: var(--cream);
+}
+.coverGradient {
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-tint) 55%, var(--cream)),
+    color-mix(in srgb, var(--accent-tint) 18%, var(--cream))
+  );
+}
+
+.heroInner {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: clamp(16px, 3vw, 28px);
+}
+
+.avatarRing {
+  flex: none;
+  margin-top: -56px;
+  padding: 4px;
+  background: var(--cream);
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(45, 27, 61, 0.12);
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 320px;
+  padding-top: 12px;
+}
+
+.kindBadge {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-on);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.name {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 2px 0 0;
+}
+
+.tagline {
+  color: var(--ink-60);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 60ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.socialProofRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: 6px;
+}
+
+.ownerTie {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  margin-top: 2px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-60);
+  transition: color var(--dur-base) var(--ease);
+}
+.ownerTie em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.ownerTie svg {
+  font-size: 0.95em;
+}
+@media (hover: hover) {
+  .ownerTie:hover {
+    color: var(--accent-ink);
+  }
+}
+
+.bio {
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 8px 0 0;
+  max-width: 65ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ownerTie {
+    transition: none;
+  }
+}

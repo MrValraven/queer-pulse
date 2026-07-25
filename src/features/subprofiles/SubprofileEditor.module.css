@@ -292,6 +292,40 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+.featureBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .featureBtn:not(.featureBtnActive):hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+}
+.featureBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.featureBtnActive {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--amber) 20%, transparent);
+  color: var(--amber-ink);
+}
 
 /* ── Publish panel ───────────────────────────────────────────────────────── */
 .publishBar {

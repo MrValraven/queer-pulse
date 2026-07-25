@@ -5,6 +5,26 @@ import { initialsOf } from "../../shared/api/refs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AdminBotEditor.module.css";
 
+/**
+ * A social link while it's being edited. Carries a stable client-only `id` so
+ * React keys survive reorder/removal (an array index misplaces focus when a
+ * middle row is deleted). The `id` is stripped before the list is sent to the
+ * API — see `AdminBotEditorDrawer`'s save.
+ */
+export interface SocialRow extends SocialLinkDTO {
+  id: string;
+}
+
+let nextSocialRowId = 0;
+
+/** Wrap a social link (default: an empty row) with a fresh stable id. */
+export function createSocialRow(
+  social: SocialLinkDTO = { platform: "", urlOrHandle: "" },
+): SocialRow {
+  nextSocialRowId += 1;
+  return { id: `social-${nextSocialRowId}`, ...social };
+}
+
 export interface BotFormState {
   firstName: string;
   lastName: string;
@@ -15,7 +35,7 @@ export interface BotFormState {
   bio: string;
   /** Storage key from a fresh avatar upload, or null when unchanged. */
   avatarKey: string | null;
-  socials: SocialLinkDTO[];
+  socials: SocialRow[];
 }
 
 interface Props {
@@ -75,28 +95,26 @@ export function AdminBotEditorFields({
     setForm((previous) => ({ ...previous, [key]: value }));
   }
 
-  function setSocial(index: number, patch: Partial<SocialLinkDTO>) {
+  function setSocial(id: string, patch: Partial<SocialLinkDTO>) {
     setForm((previous) => ({
       ...previous,
-      socials: previous.socials.map((social, socialIndex) =>
-        socialIndex === index ? { ...social, ...patch } : social,
+      socials: previous.socials.map((social) =>
+        social.id === id ? { ...social, ...patch } : social,
       ),
     }));
   }
 
-  function removeSocial(index: number) {
+  function removeSocial(id: string) {
     setForm((previous) => ({
       ...previous,
-      socials: previous.socials.filter(
-        (_social, socialIndex) => socialIndex !== index,
-      ),
+      socials: previous.socials.filter((social) => social.id !== id),
     }));
   }
 
   function addSocial() {
     setForm((previous) => ({
       ...previous,
-      socials: [...previous.socials, { platform: "", urlOrHandle: "" }],
+      socials: [...previous.socials, createSocialRow()],
     }));
   }
 
@@ -173,15 +191,15 @@ export function AdminBotEditorFields({
 
       <div className={styles.row}>
         <span className={styles.label}>{t("admin:bots.field.socials")}</span>
-        {form.socials.map((social, index) => (
-          <div className={styles.socialRow} key={index}>
+        {form.socials.map((social) => (
+          <div className={styles.socialRow} key={social.id}>
             <input
               className={styles.input}
               value={social.platform}
               placeholder={t("admin:bots.socials.platform")}
               aria-label={t("admin:bots.socials.platform")}
               onChange={(event) =>
-                setSocial(index, { platform: event.target.value })
+                setSocial(social.id, { platform: event.target.value })
               }
             />
             <input
@@ -190,14 +208,14 @@ export function AdminBotEditorFields({
               placeholder={t("admin:bots.socials.handle")}
               aria-label={t("admin:bots.socials.handle")}
               onChange={(event) =>
-                setSocial(index, { urlOrHandle: event.target.value })
+                setSocial(social.id, { urlOrHandle: event.target.value })
               }
             />
             <button
               type="button"
               className={styles.rowRemove}
               aria-label={t("admin:bots.socials.remove")}
-              onClick={() => removeSocial(index)}
+              onClick={() => removeSocial(social.id)}
             >
               <FiX size={15} />
             </button>

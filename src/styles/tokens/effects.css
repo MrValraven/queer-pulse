@@ -53,6 +53,33 @@
   }
 }
 
+/* ── Map panel entrance (List→Map reveal) ── */
+@keyframes qpMapIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Map pin drop-in (staggered, on first map paint) ── */
+@keyframes qpPinPop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* ── Pulse dot ── */
 @keyframes qpPulse {
   0% {

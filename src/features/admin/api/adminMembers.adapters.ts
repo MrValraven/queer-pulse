@@ -81,6 +81,7 @@ export function cardDtoToMember(
   ].filter((segment) => segment.length > 0);
   return {
     id: cardDto.id,
+    slug: cardDto.slug,
     name: cardDto.name,
     initials: cardDto.initials,
     tone: cardDto.tone,
@@ -96,6 +97,7 @@ export function cardDtoToMember(
       (vouchAvatarDto: VouchAvatarDTO): VouchAvatar => ({
         initials: vouchAvatarDto.initials,
         tone: vouchAvatarDto.tone,
+        avatarUrl: vouchAvatarDto.avatarUrl,
       }),
     ),
   };

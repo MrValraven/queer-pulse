@@ -1,0 +1,100 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.noteToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-pill);
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+.noteToggle svg {
+  font-size: 1em;
+}
+@media (hover: hover) and (pointer: fine) {
+  .noteToggle:hover {
+    color: var(--accent-ink);
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.noteToggle:focus-visible {
+  outline: 2px solid var(--accent-tint);
+  outline-offset: 2px;
+}
+
+.count {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.cluster {
+  display: flex;
+  align-items: center;
+}
+
+.clusterFace {
+  border: 2px solid var(--cream);
+  border-radius: 999px;
+}
+.clusterFace:not(:first-child) {
+  margin-inline-start: -10px;
+}
+
+.noteForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 440px;
+}
+
+.noteInput {
+  flex: 1 1 220px;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  padding: 10px 14px;
+  outline: none;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease);
+}
+.noteInput:focus {
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+}
+.noteInput:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noteToggle,
+  .noteInput {
+    transition: none;
+  }
+}

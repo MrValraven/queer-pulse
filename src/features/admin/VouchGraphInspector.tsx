@@ -2,15 +2,14 @@ import { FiLock, FiUser } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import type { AvatarTone } from "./ui";
+import { useTrustGraph } from "./trustGraph/TrustGraphContext";
 import {
-  EDGES,
   TONE,
   monthDate,
-  isIsolated,
-  personById,
+  relationshipLabel,
   type VouchEdge,
-  type VouchTone,
-} from "./adminVouchGraph.data";
+} from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 
 interface Props {
@@ -28,7 +27,7 @@ function VAvatar({
   className,
 }: {
   initials: string;
-  tone: VouchTone;
+  tone: AvatarTone;
   className: string;
 }) {
   const ink = TONE[tone];
@@ -71,6 +70,7 @@ function VouchList({
   onGo: (id: string) => void;
 }) {
   const { t } = useTranslation();
+  const graph = useTrustGraph();
   return (
     <div className={styles.insSec}>
       <div className={styles.insT}>{title}</div>
@@ -81,7 +81,7 @@ function VouchList({
       ) : (
         edges.map((e) => {
           const otherId = e.from === selId ? e.to : e.from;
-          const o = personById[otherId]!;
+          const o = graph.peopleById[otherId]!;
           return (
             <button
               key={e.id}
@@ -102,7 +102,11 @@ function VouchList({
                       {t("admin:vouchGraph.inspector.mutualTag")}
                     </span>
                   )}
-                  {e.tag && <span className={styles.tag}>{e.tag}</span>}
+                  {e.relationship && (
+                    <span className={styles.tag}>
+                      {relationshipLabel(t, e.relationship)}
+                    </span>
+                  )}
                 </span>
                 {e.reason && <span className={styles.rr}>“{e.reason}”</span>}
               </span>
@@ -124,6 +128,7 @@ export function VouchGraphInspector({
 }: Props) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const graph = useTrustGraph();
 
   if (!sel) {
     return (
@@ -139,16 +144,16 @@ export function VouchGraphInspector({
     );
   }
 
-  const p = personById[sel]!;
+  const p = graph.peopleById[sel]!;
   const first = p.name.split(" ")[0];
-  const vouchedBy = EDGES.filter((e) => e.to === sel && !e.withdrawn);
-  const vouchedFor = EDGES.filter((e) => e.from === sel && !e.withdrawn);
-  const withdrawn = EDGES.filter(
+  const vouchedBy = graph.edges.filter((e) => e.to === sel && !e.withdrawn);
+  const vouchedFor = graph.edges.filter((e) => e.from === sel && !e.withdrawn);
+  const withdrawn = graph.edges.filter(
     (e) => (e.to === sel || e.from === sel) && e.withdrawn,
   );
-  const iso = isIsolated(sel);
+  const iso = graph.isIsolated(sel);
   const pendingAffected = vouchedFor.some(
-    (e) => personById[e.to]!.standing === "new",
+    (e) => graph.peopleById[e.to]!.standing === "new",
   );
 
   return (
@@ -171,7 +176,7 @@ export function VouchGraphInspector({
         <FiLock aria-hidden /> {t("admin:vouchGraph.inspector.sealed")}
       </div>
 
-      {p.scene === "ring" && (
+      {p.standing === "flagged" && (
         <Banner
           kind="danger"
           title={t("admin:vouchGraph.inspector.ringBanner.title")}
@@ -199,13 +204,6 @@ export function VouchGraphInspector({
           kind="plum"
           title={t("admin:vouchGraph.inspector.privateBanner.title")}
           body={t("admin:vouchGraph.inspector.privateBanner.body")}
-        />
-      )}
-      {p.anon && (
-        <Banner
-          kind="plum"
-          title={t("admin:vouchGraph.inspector.anonBanner.title")}
-          body={t("admin:vouchGraph.inspector.anonBanner.body")}
         />
       )}
 

@@ -606,14 +606,14 @@ export const members: Catalog = {
   "vouch.modal.form.noteLabel": "A tua nota",
   "vouch.modal.form.notePlaceholder":
     "Como conheces {first}, e o que deve saber o resto da comunidade?",
-  "vouch.modal.form.charsToSubmit_one":
-    "Falta {count} carácter para poderes enviar",
-  "vouch.modal.form.charsToSubmit_other":
-    "Faltam {count} carateres para poderes enviar",
+  "vouch.modal.form.noteOptional": "Opcional — mas uma nota diz mais",
   "vouch.modal.form.charsCount_one": "{count} carácter",
   "vouch.modal.form.charsCount_other": "{count} carateres",
   "vouch.modal.form.cancel": "Cancelar",
   "vouch.modal.form.sending": "A enviar o teu aval…",
+  "vouch.modal.form.anonymousLabel":
+    "Avalizar anonimamente — o teu nome fica oculto de outros membros",
+  "vouch.modal.error": "Não conseguimos guardar o teu aval. Tenta novamente.",
 
   // ── Vocabulário de separadores/ordenação/estado dos rascunhos (drafts.data.tsx) ──
   "drafts.tabs.all": "Tudo",

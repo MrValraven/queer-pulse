@@ -84,6 +84,9 @@ export interface ProfileDraft {
   lookingFor: string[];
   /** Whether `lookingFor` is shown on the profile to other viewers. */
   lookingForPublic: boolean;
+  /** Whether the member's trust network (vouchers/vouched-for) is hidden
+   *  from other members. Admins can still see it for safety. */
+  privateNetwork: boolean;
 }
 
 function toDraft(m: Member): ProfileDraft {
@@ -105,6 +108,7 @@ function toDraft(m: Member): ProfileDraft {
     identities: [...(m.identities ?? [])],
     lookingFor: [...(m.lookingFor ?? [])],
     lookingForPublic: m.lookingForPublic ?? false,
+    privateNetwork: m.privateNetwork ?? false,
   };
 }
 
@@ -130,6 +134,7 @@ function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     identities: d.identities,
     lookingFor: d.lookingFor,
     lookingForPublic: d.lookingForPublic,
+    privateNetwork: d.privateNetwork,
   };
 }
 
@@ -288,6 +293,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       identities: draft.identities,
       lookingFor: draft.lookingFor,
       lookingForPublic: draft.lookingForPublic,
+      privateNetwork: draft.privateNetwork,
     }));
     setIsEditing(false);
     setJustSaved(true);

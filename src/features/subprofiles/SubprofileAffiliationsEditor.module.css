@@ -1,0 +1,10 @@
+/* Layout for SubprofileAffiliationsEditor / SubprofileAffiliationRow. Tokens
+   only; the row card, remove button, add button, etc. all come from the
+   shared `SubprofileEditor.module.css` cluster — this only adds the
+   type+role two-up layout specific to one affiliation row. */
+
+.metaRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}

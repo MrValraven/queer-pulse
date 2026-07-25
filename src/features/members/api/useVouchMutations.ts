@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { vouchFor, unvouch } from "./members.api";
+import { unvouch } from "./members.api";
 
 /** Rollback context: whether the slug was already in the list before onMutate. */
 interface VouchMutationContext {
@@ -16,10 +16,14 @@ interface UseVouchMutationsArgs {
 }
 
 /**
- * The vouch / unvouch optimistic lifecycle, moved out of VouchProvider and into
- * React Query. Each mutation optimistically updates the provider's `vouched`
- * list on `onMutate`, rolls that change back on `onError`, and on `onSettled`
+ * The withdraw-vouch optimistic lifecycle, moved out of VouchProvider and into
+ * React Query. Optimistically updates the provider's `vouched` list on
+ * `onMutate`, rolls that change back on `onError`, and on `onSettled`
  * invalidates the affected query keys plus re-runs auth refresh.
+ *
+ * (Adding a vouch is owned by `VouchMemberModal` via `useVouchMember` — it does
+ * the real POST with relationship/note/anonymous — so there is no `vouch`
+ * mutation here; the modal's `onVouched` updates `vouched` directly.)
  *
  * Demo mode never hits the network: `mutationFn` short-circuits, and the
  * optimistic `setVouched` change simply stays (there's no server to reconcile,
@@ -44,28 +48,6 @@ export function useVouchMutations({
     // back below it. Pick up the new status claim. (No-op in demo.)
     void refresh();
   };
-
-  const vouch = useMutation<void, Error, string, VouchMutationContext>({
-    onMutate: (slug) => {
-      let existed = false;
-      setVouched((prev) => {
-        existed = prev.includes(slug);
-        return existed ? prev : [slug, ...prev];
-      });
-      return { existed };
-    },
-    mutationFn: async (slug) => {
-      if (demoMode) return;
-      await vouchFor(slug);
-    },
-    onError: (_e, slug, ctx) => {
-      // Roll back the optimistic add — only if we were the ones who added it.
-      if (!ctx?.existed) {
-        setVouched((prev) => prev.filter((s) => s !== slug));
-      }
-    },
-    onSettled,
-  });
 
   const unvouchMutation = useMutation<
     void,
@@ -94,5 +76,5 @@ export function useVouchMutations({
     onSettled,
   });
 
-  return { vouch, unvouch: unvouchMutation };
+  return { unvouch: unvouchMutation };
 }

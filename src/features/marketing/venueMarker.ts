@@ -14,7 +14,22 @@ const CLASS = {
   pinName: s.pinName ?? "",
   pinAddress: s.pinAddress ?? "",
   cluster: s.cluster ?? "",
+  pinEnter: s.pinEnter ?? "",
 };
+
+// Cap the drop-in cascade so a dense map doesn't take seconds to finish.
+const ENTRANCE_STAGGER_MS = 30;
+const ENTRANCE_STAGGER_CAP = 9;
+
+// Give a freshly-created marker its staggered drop-in on the map's first paint.
+// Animates the inner button (mirroring hover/selected/animateFromOrigin), so the
+// maplibre positioning transform on the wrapper is never disturbed.
+function applyPinEntrance(wrapper: HTMLElement, order: number): void {
+  const button = wrapper.firstElementChild;
+  if (!(button instanceof HTMLElement) || !CLASS.pinEnter) return;
+  button.classList.add(CLASS.pinEnter);
+  button.style.animationDelay = `${Math.min(order, ENTRANCE_STAGGER_CAP) * ENTRANCE_STAGGER_MS}ms`;
+}
 
 // Pins closer than this many screen pixels get grouped into one cluster, so the
 // ~34px chips never overlap. Zooming in spreads them apart and the groups split.
@@ -193,6 +208,9 @@ export function createVenueMarkerManager(
   const markers = new Map<string, Marker>();
   let venues: VenueMarkerData[] = [];
   let selectedId: string | null = null;
+  // The first render with real data gets the staggered drop-in; later reclusters
+  // (pan/zoom) rely on the break-out/merge animations instead.
+  let firstPaint = true;
 
   // Greedy screen-space grouping: anchor on the first ungrouped pin and absorb
   // any others within CLUSTER_RADIUS_PX of it.
@@ -249,6 +267,9 @@ export function createVenueMarkerManager(
 
   function recluster() {
     const groups = computeGroups();
+    // Stagger the drop-in across markers created on the first paint only.
+    const entrance = firstPaint && !prefersReducedMotion();
+    let entranceOrder = 0;
     // Where each venue's marker sits right now — a pin breaking out of a cluster
     // animates from the cluster's position.
     const previousAnchor = new Map<string, [number, number]>();
@@ -292,6 +313,7 @@ export function createVenueMarkerManager(
             .addTo(map);
           markers.set(key, marker);
           if (anchor.id === selectedId) element.style.zIndex = SELECTED_Z_INDEX;
+          if (entrance) applyPinEntrance(element, entranceOrder++);
           const origin = previousAnchor.get(anchor.id);
           const button = element.firstElementChild;
           if (origin && button instanceof HTMLElement) {
@@ -320,6 +342,7 @@ export function createVenueMarkerManager(
               .setLngLat([anchor.longitude, anchor.latitude])
               .addTo(map),
           );
+          if (entrance) applyPinEntrance(element, entranceOrder++);
         }
       }
     }
@@ -342,6 +365,9 @@ export function createVenueMarkerManager(
   function render(nextVenues: VenueMarkerData[]) {
     venues = nextVenues;
     recluster();
+    // Keep the drop-in armed until the first render that actually has data, so a
+    // pre-load empty render doesn't consume the one-shot entrance.
+    if (venues.length > 0) firstPaint = false;
   }
 
   function setSelected(venueId: string | null) {

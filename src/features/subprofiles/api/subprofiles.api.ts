@@ -14,6 +14,39 @@ export type Visibility = "open" | "network" | "private";
 export type LinkVisibility = "linked" | "unlinked";
 export type SubprofileStatus = "draft" | "published";
 
+export type AccentKey = "plum" | "coral" | "jade" | "amber" | "violet";
+export type AvailabilityKey = "open_to_collabs" | "booking" | "not_available";
+
+export interface SocialLinkDTO {
+  platform: string;
+  urlOrHandle: string;
+}
+
+/** One resolved persona→entity link ("Part of"). Dropped server-side (on read)
+ *  when the target no longer resolves or is block-filtered against the viewer. */
+export interface AffiliationDTO {
+  targetType: "event" | "community";
+  targetSlug: string;
+  role: string;
+  name: string;
+  imageUrl: string | null;
+}
+
+/** Owner-authored input for `PUT /subprofiles/:id/affiliations` (replace-all). */
+export interface AffiliationInputDTO {
+  targetType: "event" | "community";
+  targetSlug: string;
+  role: string;
+}
+
+/** One member's endorsement of a persona (returned by the endorsers list). */
+export interface EndorserDTO {
+  slug: string;
+  name: string;
+  avatarUrl: string | null;
+  note: string | null;
+}
+
 export type SubprofileKind =
   | "developer"
   | "writer"
@@ -66,6 +99,7 @@ export interface SubprofileItemDTO {
   date?: string | null;
   meta?: string | null;
   tags: string[];
+  isFeatured: boolean;
 }
 
 /** Owner-facing (full), returned by GET /subprofiles/mine, GET /subprofiles/:id,
@@ -79,16 +113,26 @@ export interface SubprofileDTO {
   avatarUrl: string | null;
   tagline: string | null;
   bio: string | null;
+  coverUrl: string | null;
+  accent: string | null;
+  availability: string | null;
+  ctaLabel: string | null;
+  ctaUrl: string | null;
+  socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
   visibility: Visibility;
   status: SubprofileStatus;
   position: number;
   items: SubprofileItemDTO[]; // all sections, ordered by (section, position)
+  affiliations: AffiliationDTO[]; // event/community links ("Part of")
+  endorsementCount: number;
+  followerCount: number;
 }
 
 /** Public view: owner-stripped when linkVisibility === 'unlinked'.
  *  ownerSlug/ownerName present only when linkVisibility === 'linked'. */
 export interface SubprofilePublicDTO {
+  id: string;
   kind: SubprofileKind;
   slug: string;
   handle: string | null;
@@ -96,10 +140,21 @@ export interface SubprofilePublicDTO {
   avatarUrl: string | null;
   tagline: string | null;
   bio: string | null;
+  coverUrl: string | null;
+  accent: string | null;
+  availability: string | null;
+  ctaLabel: string | null;
+  ctaUrl: string | null;
+  socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
   items: SubprofileItemDTO[];
+  affiliations: AffiliationDTO[]; // event/community links ("Part of")
   ownerSlug?: string; // linked only
   ownerName?: string; // linked only
+  endorsementCount: number;
+  viewerEndorsed: boolean;
+  followerCount: number;
+  viewerFollowing: boolean;
 }
 
 /** Directory / list card. */
@@ -109,6 +164,10 @@ export interface SubprofileCardDTO {
   displayName: string;
   avatarUrl: string | null;
   tagline: string | null;
+  accent: string | null;
+  availability: string | null;
+  socialCount: number;
+  tags: string[];
 }
 
 /** Publish failure body (HTTP 422). */
@@ -131,6 +190,11 @@ export interface UpdateSubprofileDTO {
   avatarUrl?: string | null;
   tagline?: string | null;
   bio?: string | null;
+  coverUrl?: string | null;
+  accent?: string | null;
+  availability?: string | null;
+  ctaLabel?: string | null;
+  ctaUrl?: string | null;
   linkVisibility?: LinkVisibility;
   visibility?: Visibility;
   position?: number;
@@ -146,6 +210,7 @@ export interface SubprofileItemInputDTO {
   date?: string;
   meta?: string;
   tags?: string[];
+  isFeatured?: boolean;
 }
 
 // ── Endpoint fns (contract C4) ───────────────────────────────────────────────
@@ -177,6 +242,14 @@ export const replaceSubprofileSection = (
   items: SubprofileItemInputDTO[],
 ) => apiPut<SubprofileDTO>(`/subprofiles/${id}/sections/${section}`, { items });
 
+/** Fully replace a persona's social links. */
+export const replaceSocialLinks = (id: string, items: SocialLinkDTO[]) =>
+  apiPut<SubprofileDTO>(`/subprofiles/${id}/social-links`, { items });
+
+/** Fully replace a persona's event/community affiliations ("Part of"). */
+export const replaceAffiliations = (id: string, items: AffiliationInputDTO[]) =>
+  apiPut<SubprofileDTO>(`/subprofiles/${id}/affiliations`, { items });
+
 /** Validate + publish. Rejects with an ApiError(422) whose body is PublishUnmetDTO. */
 export const publishSubprofile = (id: string) =>
   apiPost<SubprofileDTO>(`/subprofiles/${id}/publish`);
@@ -205,3 +278,37 @@ export const getSubprofileDirectory = (
     `/subprofiles/directory${qs ? `?${qs}` : ""}`,
   );
 };
+
+/** Endorse a published persona (one-tap + optional note). Keyed on the
+ *  persona's non-identifying `id`, not its slug/handle. */
+export const endorseSubprofile = (id: string, note?: string) =>
+  apiPost<{ endorsementCount: number; viewerEndorsed: boolean }>(
+    `/subprofiles/${id}/endorse`,
+    note ? { note } : {},
+  );
+
+/** Withdraw the current member's endorsement of a persona. */
+export const withdrawEndorsement = (id: string) =>
+  apiDelete<{ endorsementCount: number; viewerEndorsed: boolean }>(
+    `/subprofiles/${id}/endorse`,
+  );
+
+/** List a persona's active endorsers (newest first, capped server-side). */
+export const getEndorsers = (id: string) =>
+  apiGet<{ count: number; endorsers: EndorserDTO[] }>(
+    `/subprofiles/${id}/endorsements`,
+  );
+
+/** Follow a published persona (one-way, instant, count-only). Keyed on the
+ *  persona's non-identifying `id`, not its slug/handle. */
+export const followSubprofile = (id: string) =>
+  apiPost<{ followerCount: number; viewerFollowing: boolean }>(
+    `/subprofiles/${id}/follow`,
+    {},
+  );
+
+/** Unfollow a persona the current member is following. */
+export const unfollowSubprofile = (id: string) =>
+  apiDelete<{ followerCount: number; viewerFollowing: boolean }>(
+    `/subprofiles/${id}/follow`,
+  );

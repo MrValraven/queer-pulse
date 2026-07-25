@@ -334,6 +334,9 @@ export const settings: Catalog = {
   "visibility.private.desc":
     "Contacto quando for a altura certa. Perfil não visível na pesquisa.",
   "visibility.section.additionalControls": "Controlos adicionais",
+  "visibility.privateNetwork.label": "Manter a minha rede de confiança privada",
+  "visibility.privateNetwork.help":
+    "Esconde de outros membros quem te deu aval e a quem deste aval. A administração continua a conseguir ver, por motivos de segurança.",
   "visibility.newArrivals.title": "Mostrar-me em «Novidades»",
   "visibility.newArrivals.desc":
     "Diz à comunidade que te juntaste recentemente",

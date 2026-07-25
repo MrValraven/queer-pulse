@@ -13,12 +13,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useVouchSimulation } from "./useVouchSimulation";
 import type { TipData } from "./VouchGraphTooltip";
 import {
-  EDGES,
   monthDate,
-  nodeRadius,
-  personById,
+  relationshipLabel,
+  type TrustGraph,
   type VouchEdge,
-} from "./adminVouchGraph.data";
+} from "./trustGraph/trustGraphModel";
 
 /** Endpoints trimmed to each circle's edge so a line never crosses the discs. */
 function trimEdge(
@@ -43,28 +42,34 @@ const MONTH_YEAR: Intl.DateTimeFormatOptions = {
   year: "numeric",
 };
 
-function nodeTip(id: string, fmt: Formatters): TipData {
-  const p = personById[id]!;
-  const vin = EDGES.filter((e) => e.to === id && !e.withdrawn).length;
-  const vout = EDGES.filter((e) => e.from === id && !e.withdrawn).length;
+function nodeTip(id: string, fmt: Formatters, graph: TrustGraph): TipData {
+  const p = graph.peopleById[id]!;
+  const vin = graph.edges.filter((e) => e.to === id && !e.withdrawn).length;
+  const vout = graph.edges.filter((e) => e.from === id && !e.withdrawn).length;
   return {
     kind: "node",
     name: p.name,
     pronoun: p.pronoun,
-    role: p.role,
+    role: p.role ?? "",
     vouchesIn: vin,
     vouchesOut: vout,
     joined: fmt.date(monthDate(p.joined), MONTH_YEAR),
   };
 }
 
-function edgeTip(e: VouchEdge, fmt: Formatters, mutualLabel: string): TipData {
-  const label = `${personById[e.from]!.initials} → ${personById[e.to]!.initials}${e.mutual ? ` · ${mutualLabel}` : ""}`;
+function edgeTip(
+  e: VouchEdge,
+  fmt: Formatters,
+  mutualLabel: string,
+  graph: TrustGraph,
+  t: (key: string) => string,
+): TipData {
+  const label = `${graph.peopleById[e.from]!.initials} → ${graph.peopleById[e.to]!.initials}${e.mutual ? ` · ${mutualLabel}` : ""}`;
   return {
     kind: "edge",
     label,
-    tag: e.tag,
-    reason: e.reason,
+    relationship: relationshipLabel(t, e.relationship) ?? undefined,
+    reason: e.reason ?? undefined,
     date: fmt.date(monthDate(e.date), MONTH_YEAR),
     withdrawn: e.withdrawn,
   };
@@ -76,6 +81,7 @@ interface Args {
   focus: string;
   /** tighter community clustering in Scenes mode */
   cluster?: boolean;
+  graph: TrustGraph;
   stageRef: RefObject<HTMLDivElement | null>;
   svgRef: RefObject<SVGSVGElement | null>;
   viewportRef: RefObject<SVGGElement | null>;
@@ -94,6 +100,7 @@ export function useVouchCanvas({
   visEdges,
   focus,
   cluster = false,
+  graph,
   stageRef,
   svgRef,
   viewportRef,
@@ -160,8 +167,8 @@ export function useVouchCanvas({
           a.y,
           b.x,
           b.y,
-          nodeRadius(e.from, focus),
-          nodeRadius(e.to, focus),
+          graph.nodeRadius(e.from, focus),
+          graph.nodeRadius(e.to, focus),
         );
         // gentle quadratic curve; reciprocal edges bow to opposite sides
         const dx = x2 - x1,
@@ -173,7 +180,7 @@ export function useVouchCanvas({
         path.setAttribute("d", `M${x1} ${y1}Q${cx} ${cy} ${x2} ${y2}`);
       }
     }
-  }, [visIds, visEdges, getPos, viewportRef, focus]);
+  }, [visIds, visEdges, getPos, viewportRef, focus, graph]);
 
   const fit = useCallback(() => {
     const svg = svgRef.current;
@@ -218,12 +225,13 @@ export function useVouchCanvas({
       visIds,
       edges: visEdges,
       focusId: focus,
+      graph,
       clusterStrength: cluster ? 0.03 : 0.014,
       pinned: pinnedRef.current,
       paint,
       onSettled: fit,
     });
-  }, [run, visIds, visEdges, focus, cluster, paint, fit]);
+  }, [run, visIds, visEdges, focus, graph, cluster, paint, fit]);
 
   useEffect(() => {
     restart();
@@ -340,7 +348,7 @@ export function useVouchCanvas({
     onPointerEnter: (e: ReactPointerEvent<SVGGElement>) => {
       if (dragRef.current) return;
       setHoverId(id);
-      setTip({ data: nodeTip(id, fmt), ...tipXY(e.clientX, e.clientY) });
+      setTip({ data: nodeTip(id, fmt, graph), ...tipXY(e.clientX, e.clientY) });
     },
     onPointerLeave: onNodeLeave,
     onDoubleClick: (e: ReactMouseEvent<SVGGElement>) => {
@@ -351,9 +359,9 @@ export function useVouchCanvas({
 
   const edgeHandlers = (edge: VouchEdge) => ({
     onPointerEnter: (e: ReactPointerEvent<SVGPathElement>) => {
-      if (dragRef.current || (!edge.reason && !edge.tag)) return;
+      if (dragRef.current || (!edge.reason && !edge.relationship)) return;
       setTip({
-        data: edgeTip(edge, fmt, mutualLabel),
+        data: edgeTip(edge, fmt, mutualLabel, graph, t),
         ...tipXY(e.clientX, e.clientY),
       });
     },

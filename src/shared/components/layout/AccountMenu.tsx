@@ -11,8 +11,6 @@ import {
   FiSend,
   FiBriefcase,
   FiBookmark,
-  FiLayers,
-  FiRss,
   FiCalendar,
   FiUsers,
   FiSettings,
@@ -22,7 +20,7 @@ import {
   FiLayout,
   FiChevronDown,
 } from "react-icons/fi";
-import { Avatar } from "../ui";
+import { Avatar, Tooltip } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
 import {
   useNavMode,
@@ -42,15 +40,15 @@ import styles from "./AccountMenu.module.css";
 type AccountItem = { labelKey: string; to: string; icon: IconType };
 
 /**
- * The canonical account links, grouped by type. Each inner array is a cluster;
- * flattened in order they fill the desktop two-column grid row by row, so each
- * pair of consecutive items reads as a category (people, talking & belonging,
- * career, activity, your stuff / system). The mobile drawer in Navbar flattens
- * them via ACCOUNT_ITEMS, ignoring the icon. Labels are bare nouns (no
- * "My"/"Your" mix) — the menu is already scoped to "you" by the avatar header.
+ * The canonical account links, grouped by type. Each inner array renders as its
+ * own two-column sub-grid in the desktop menu, separated by a divider, so the
+ * clusters read as categories (people & what's on · career · writing · support).
+ * Saved and Settings are NOT here — they live as icon actions in the menu header
+ * (see HEADER_ACTIONS). The mobile drawer flattens ACCOUNT_ITEMS, which re-adds
+ * the header actions so nothing is lost on small screens. Labels are bare nouns.
  */
 export const ACCOUNT_GROUPS: AccountItem[][] = [
-  // You / people
+  // People — you, your circles, and what's on
   [
     {
       labelKey: "shared:accountMenu.items.profile",
@@ -62,10 +60,13 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       to: routes.connections,
       icon: FiUserPlus,
     },
+    { labelKey: "nav:communities", to: routes.communitiesHome, icon: FiUsers },
+    {
+      labelKey: "shared:accountMenu.items.events",
+      to: routes.myEvents,
+      icon: FiCalendar,
+    },
   ],
-  // Belonging — Messages now lives as a top-level nav icon (Navbar/SidebarFooter),
-  // beside notifications, rather than as a link here.
-  [{ labelKey: "nav:communities", to: routes.communitiesHome, icon: FiUsers }],
   // Career
   [
     {
@@ -78,22 +79,8 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       to: routes.work,
       icon: FiBriefcase,
     },
-    {
-      labelKey: "shared:accountMenu.items.subprofiles",
-      to: routes.subprofilesDashboard,
-      icon: FiLayers,
-    },
   ],
-  // Activity
-  [
-    {
-      labelKey: "shared:accountMenu.items.events",
-      to: routes.myEvents,
-      icon: FiCalendar,
-    },
-    { labelKey: "shared:accountMenu.items.feed", to: "/feed", icon: FiRss },
-  ],
-  // Your stuff / system
+  // Writing
   [
     {
       labelKey: "shared:accountMenu.items.drafts",
@@ -105,16 +92,9 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       to: routes.pitchTracker,
       icon: FiSend,
     },
-    {
-      labelKey: "shared:accountMenu.items.saved",
-      to: routes.collections,
-      icon: FiBookmark,
-    },
-    {
-      labelKey: "shared:accountMenu.items.settings",
-      to: routes.settings,
-      icon: FiSettings,
-    },
+  ],
+  // Support
+  [
     {
       labelKey: "shared:accountMenu.items.help",
       to: routes.help,
@@ -123,8 +103,29 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   ],
 ];
 
-/** Flattened links for the mobile drawer and the desktop icon grid. */
-export const ACCOUNT_ITEMS = ACCOUNT_GROUPS.flat();
+/**
+ * Saved + Settings — promoted out of the grid into compact icon actions in the
+ * menu header (rendered with tooltips). Kept as AccountItems so the mobile drawer
+ * can re-include them via ACCOUNT_ITEMS.
+ */
+export const HEADER_ACTIONS: AccountItem[] = [
+  {
+    labelKey: "shared:accountMenu.items.saved",
+    to: routes.collections,
+    icon: FiBookmark,
+  },
+  {
+    labelKey: "shared:accountMenu.items.settings",
+    to: routes.settings,
+    icon: FiSettings,
+  },
+];
+
+/** Flattened links for the mobile drawer: every grid link plus the header actions. */
+export const ACCOUNT_ITEMS: AccountItem[] = [
+  ...ACCOUNT_GROUPS.flat(),
+  ...HEADER_ACTIONS,
+];
 
 /** Initials from a name, e.g. "Tiago Costa" -> "TC". */
 function nameInitials(name: string): string {
@@ -190,9 +191,8 @@ export function AccountMenu({
   return (
     <div className={styles.wrap} ref={ref}>
       {placement === "rail" ? (
-        // "Balanced split": identity opens the menu on the left; a matching pair
-        // of round controls (a Settings shortcut + the menu chevron) sits on the
-        // right, so weight lands at both ends of the rail instead of a lone chip.
+        // Identity opens the menu on the left; a single round chevron control
+        // sits on the right and also opens the menu.
         <div className={styles.railTrigger}>
           <button
             type="button"
@@ -211,14 +211,6 @@ export function AccountMenu({
             <span className={styles.railName}>{name.split(" ")[0]}</span>
           </button>
           <div className={styles.railCluster}>
-            <Link
-              to={routes.settings}
-              className={styles.railMini}
-              aria-label={t("shared:accountMenu.items.settings")}
-              onClick={() => setOpen(false)}
-            >
-              <FiSettings aria-hidden />
-            </Link>
             <button
               type="button"
               className={styles.railMini}
@@ -257,31 +249,110 @@ export function AccountMenu({
       )}
 
       {open && (
-        <div
-          className={[styles.menu, placement === "rail" && styles.menuRail]
-            .filter(Boolean)
-            .join(" ")}
-          role="menu"
-        >
-          <div className={styles.header}>
-            <Avatar
-              initials={initials}
-              src={photo ?? undefined}
-              alt={name}
-              tint="coral"
-              size={36}
-            />
-            <div className={styles.headerText}>
-              <div className={styles.headerName}>{name}</div>
-              <div className={styles.headerMeta}>
-                {t("shared:accountMenu.header.subtitle")}
-              </div>
-            </div>
-          </div>
+        <AccountMenuPanel
+          name={name}
+          photo={photo ?? undefined}
+          initials={initials}
+          placement={placement}
+          role={role}
+          setRole={setRole}
+          canSwitch={canSwitch}
+          navMode={navMode}
+          setNavMode={setNavMode}
+          demoMode={demoMode}
+          available={available}
+          toggle={toggle}
+          onClose={() => setOpen(false)}
+          onSignOut={signOut}
+        />
+      )}
+    </div>
+  );
+}
 
-          <div className={styles.scroll}>
+/** The open dropdown panel for {@link AccountMenu}: header, scrollable link
+ * groups, and the sign-out footer. Split out to keep AccountMenu itself under
+ * the repo's 200-line-per-component limit. */
+function AccountMenuPanel({
+  name,
+  photo,
+  initials,
+  placement,
+  role,
+  setRole,
+  canSwitch,
+  navMode,
+  setNavMode,
+  demoMode,
+  available,
+  toggle,
+  onClose,
+  onSignOut,
+}: {
+  name: string;
+  photo?: string;
+  initials: string;
+  placement: "default" | "rail";
+  role: TeamRole;
+  setRole: (role: TeamRole) => void;
+  canSwitch: boolean;
+  navMode: NavMode;
+  setNavMode: (mode: NavMode) => void;
+  demoMode: boolean;
+  available: boolean;
+  toggle: () => void;
+  onClose: () => void;
+  onSignOut: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={[styles.menu, placement === "rail" && styles.menuRail]
+        .filter(Boolean)
+        .join(" ")}
+      role="menu"
+    >
+      <div className={styles.header}>
+        <Avatar
+          initials={initials}
+          src={photo ?? undefined}
+          alt={name}
+          tint="coral"
+          size={36}
+        />
+        <div className={styles.headerText}>
+          <div className={styles.headerName}>{name}</div>
+          <div className={styles.headerMeta}>
+            {t("shared:accountMenu.header.subtitle")}
+          </div>
+        </div>
+        <div className={styles.headerActions}>
+          {HEADER_ACTIONS.map((action) => {
+            const ActionIcon = action.icon;
+            const actionLabel = t(action.labelKey);
+            return (
+              <Tooltip key={action.to} label={actionLabel}>
+                <Link
+                  to={action.to}
+                  role="menuitem"
+                  className={styles.headerIcon}
+                  aria-label={actionLabel}
+                  onClick={onClose}
+                >
+                  <ActionIcon aria-hidden />
+                </Link>
+              </Tooltip>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className={styles.scroll}>
+        {ACCOUNT_GROUPS.map((group, groupIndex) => (
+          <div key={group[0]?.to ?? groupIndex}>
+            {groupIndex > 0 && <div className={styles.divider} />}
             <div className={styles.grid}>
-              {ACCOUNT_ITEMS.map((item) => {
+              {group.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link
@@ -289,43 +360,52 @@ export function AccountMenu({
                     to={item.to}
                     role="menuitem"
                     className={styles.item}
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                   >
                     <Icon aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>{t(item.labelKey)}</span>
+                    <span className={styles.itemLabel}>
+                      {t(item.labelKey)}
+                    </span>
                   </Link>
                 );
               })}
-              <RoleLinks role={role} onNavigate={() => setOpen(false)} />
             </div>
-            <AccountMenuControls
-              demoMode={demoMode}
-              available={available}
-              toggle={toggle}
-              role={role}
-              setRole={setRole}
-              canSwitch={canSwitch}
-              navMode={navMode}
-              setNavMode={setNavMode}
-            />
           </div>
+        ))}
+        {role !== "member" && (
+          <>
+            <div className={styles.divider} />
+            <div className={styles.grid}>
+              <RoleLinks role={role} onNavigate={onClose} />
+            </div>
+          </>
+        )}
+        <AccountMenuControls
+          demoMode={demoMode}
+          available={available}
+          toggle={toggle}
+          role={role}
+          setRole={setRole}
+          canSwitch={canSwitch}
+          navMode={navMode}
+          setNavMode={setNavMode}
+        />
+      </div>
 
-          <div className={styles.footer}>
-            <Link
-              to="/"
-              role="menuitem"
-              className={`${styles.item} ${styles.signOut}`}
-              onClick={() => {
-                signOut();
-                setOpen(false);
-              }}
-            >
-              <FiLogOut aria-hidden className={styles.itemIcon} />
-              <span className={styles.itemLabel}>{t("nav:signOut")}</span>
-            </Link>
-          </div>
-        </div>
-      )}
+      <div className={styles.footer}>
+        <Link
+          to="/"
+          role="menuitem"
+          className={`${styles.item} ${styles.signOut}`}
+          onClick={() => {
+            onSignOut();
+            onClose();
+          }}
+        >
+          <FiLogOut aria-hidden className={styles.itemIcon} />
+          <span className={styles.itemLabel}>{t("nav:signOut")}</span>
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import type { AvatarTone } from "./ui";
+import { portraitByInitials } from "./adminVouchGraph.data";
 
 /* ── Types ────────────────────────────────────────────────── */
 
@@ -7,6 +8,7 @@ export type MemberStatus = "active" | "review" | "frozen" | "limited";
 export interface VouchAvatar {
   initials: string;
   tone: AvatarTone;
+  avatarUrl?: string | null;
 }
 
 /**
@@ -18,6 +20,9 @@ export interface VouchAvatar {
  */
 export interface AdminMember {
   id: string;
+  /** stable slug the trust-network graph keys on (`AdminVouchGraphModal`'s
+   *  `focusSlug`) — distinct from `id` in live mode. */
+  slug: string;
   name: string;
   initials: string;
   tone: AvatarTone;
@@ -106,6 +111,7 @@ export const ACTIVE_MEMBER_COUNT = 8412;
 export const MEMBERS: AdminMember[] = [
   {
     id: "ines",
+    slug: "ines",
     name: "Inês Martins",
     initials: "IM",
     tone: "jade",
@@ -116,13 +122,14 @@ export const MEMBERS: AdminMember[] = [
     meta: "Joined Mar 2023 · Founder, Maré Records · Trans & Friends · Queer Creatives",
     vouchCount: 21,
     vouchedBy: [
-      { initials: "TM", tone: "violet" },
-      { initials: "AL", tone: "coral" },
-      { initials: "DO", tone: "coral" },
+      { initials: "TM", tone: "violet", avatarUrl: portraitByInitials("TM") },
+      { initials: "AL", tone: "coral", avatarUrl: portraitByInitials("AL") },
+      { initials: "DO", tone: "coral", avatarUrl: portraitByInitials("DO") },
     ],
   },
   {
     id: "devon",
+    slug: "devon",
     name: "Devon Okoro",
     initials: "DO",
     tone: "coral",
@@ -133,12 +140,13 @@ export const MEMBERS: AdminMember[] = [
     meta: "Joined Jun 2025 · Illustrator · Queer Creatives",
     vouchCount: 10,
     vouchedBy: [
-      { initials: "IM", tone: "jade" },
-      { initials: "KS", tone: "plum" },
+      { initials: "IM", tone: "jade", avatarUrl: portraitByInitials("IM") },
+      { initials: "KS", tone: "plum", avatarUrl: portraitByInitials("KS") },
     ],
   },
   {
     id: "theo",
+    slug: "theo",
     name: "Théo Mendes",
     initials: "TM",
     tone: "violet",
@@ -150,12 +158,13 @@ export const MEMBERS: AdminMember[] = [
     meta: "Joined Sep 2024 · Community organiser · Lisbon Queers",
     vouchCount: 7,
     vouchedBy: [
-      { initials: "IM", tone: "jade" },
-      { initials: "SA", tone: "amber" },
+      { initials: "IM", tone: "jade", avatarUrl: portraitByInitials("IM") },
+      { initials: "SA", tone: "amber", avatarUrl: portraitByInitials("SA") },
     ],
   },
   {
     id: "sofia",
+    slug: "sofia",
     name: "Sofia Almeida",
     initials: "SA",
     tone: "amber",
@@ -166,12 +175,13 @@ export const MEMBERS: AdminMember[] = [
     meta: "Joined Jan 2024 · Nurse · mutual aid lead · Trans & Friends",
     vouchCount: 14,
     vouchedBy: [
-      { initials: "DO", tone: "coral" },
-      { initials: "TM", tone: "violet" },
+      { initials: "DO", tone: "coral", avatarUrl: portraitByInitials("DO") },
+      { initials: "TM", tone: "violet", avatarUrl: portraitByInitials("TM") },
     ],
   },
   {
     id: "kai",
+    slug: "kai",
     name: "Kai Sousa",
     initials: "KS",
     tone: "plum",
@@ -181,7 +191,9 @@ export const MEMBERS: AdminMember[] = [
     newThisWeek: true,
     meta: "Joined Nov 2025 · DJ · night-life · Queer Creatives",
     vouchCount: 4,
-    vouchedBy: [{ initials: "SA", tone: "amber" }],
+    vouchedBy: [
+      { initials: "SA", tone: "amber", avatarUrl: portraitByInitials("SA") },
+    ],
   },
 ];
 

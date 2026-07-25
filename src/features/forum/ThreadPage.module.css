@@ -297,7 +297,6 @@
   margin-top: 8px;
 }
 .replyTime {
-  margin-left: auto;
   font-size: 12px;
   color: var(--ink-40);
   font-family: var(--serif);

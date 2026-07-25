@@ -119,12 +119,28 @@ export interface CommunityPostResponse {
   createdAt: string;
 }
 
+export type MessageReactionKey =
+  | "love"
+  | "laugh"
+  | "like"
+  | "wow"
+  | "sad"
+  | "thanks";
+
+export interface ReactionSummary {
+  key: MessageReactionKey;
+  count: number;
+  mine: boolean;
+}
+
 export interface MessageResponse {
   id: string;
   conversationId: string;
   body: string;
   sender: AuthorSummary;
   createdAt: string;
+  reactions: ReactionSummary[];
+  deletedAt: string | null;
 }
 
 export interface ConversationResponse {
@@ -134,6 +150,12 @@ export interface ConversationResponse {
   lastMessage: MessageResponse | null;
   unreadCount: number;
   updatedAt: string;
+  /** The OTHER participant's read watermark (ISO), for "Seen" receipts. Null for
+   *  official/group threads or a counterpart who has never read. */
+  otherLastReadAt: string | null;
+  /** The other participant's user id — used only client-side to correlate
+   *  presence (`presence` events key by userId). Null for official/group. */
+  otherParticipantId: string | null;
 }
 
 export interface GatheringResponse {

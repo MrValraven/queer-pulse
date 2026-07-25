@@ -1,4 +1,5 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import type { ReactionSummary } from "../../shared/contracts/contracts";
 
 export interface ChatMessage {
   from: "me" | "them";
@@ -7,6 +8,19 @@ export interface ChatMessage {
   /** Stable server id (live mode) for React keys. Absent for demo/optimistic
    *  messages, which fall back to a positional key. */
   id?: string;
+  /** ISO timestamp (live mode) used to break same-sender runs across large time
+   *  gaps. Absent in demo (mock groups are day-bucketed and need no gap logic). */
+  at?: string;
+  /** Delivery state of an optimistic (this-session) send. Absent for server/history messages. */
+  status?: "sending" | "sent" | "failed";
+  /** Client id for an optimistic message, so a failed one can be found + retried. */
+  localId?: string;
+  /** Per-key reaction counts + whether the signed-in member reacted (live mode).
+   *  Absent for demo/optimistic messages, which carry no reactions. */
+  reactions?: ReactionSummary[];
+  /** ISO timestamp the message was soft-deleted at (live mode). Absent for a
+   *  message that hasn't been deleted, and for demo/optimistic messages. */
+  deletedAt?: string;
 }
 
 export interface Conversation {
@@ -28,6 +42,10 @@ export interface Conversation {
   online?: boolean;
   /** Optional precise unread count — renders a badge when > 0. Absent = fall back to the `unread` dot. */
   unreadCount?: number;
+  /** Counterpart's read watermark (ISO, live). Drives the "Seen" receipt. */
+  otherLastReadAt?: string;
+  /** Counterpart's user id (live) — correlates presence events. */
+  otherParticipantId?: string;
   official?: boolean;
   messages: { day: string; items: ChatMessage[] }[];
 }
@@ -80,6 +98,13 @@ export const conversations: Conversation[] = [
             from: "them",
             text: "Thanks for the recommendation! I'll reach out to her this week — really appreciate you taking the time.",
             time: "Just now",
+            // Demo-only seed so the reaction chips have something to render in
+            // the prototype; toggling is inert here (no server id to mutate —
+            // see `useToggleReaction`'s demo no-op branch).
+            reactions: [
+              { key: "love", count: 2, mine: false },
+              { key: "like", count: 1, mine: true },
+            ],
           },
         ],
       },

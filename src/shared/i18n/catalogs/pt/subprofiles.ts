@@ -15,6 +15,14 @@ export const subprofiles: Catalog = {
   "directory.empty.description":
     "Nada corresponde a isto por agora. Experimenta outro ofício ou limpa a pesquisa para veres toda a gente.",
   "directory.empty.clear": "Limpar filtros",
+  "directory.openToCollabsChip": "Aberto a colaborações",
+  "directory.tagFilterHeading": "Tags",
+  "directory.tagFilterLabel": "Filtrar por tag",
+
+  // Afinidades do cartão do diretório (SubprofileCard)
+  "card.openToCollabs": "Aberto a colaborações",
+  "card.socialCount_one": "{count} link social",
+  "card.socialCount_other": "{count} links sociais",
 
   // Bloco "Também como…" no perfil principal (ProfileSubprofilesSection)
   "alsoAs.title": "Também a trabalhar como",
@@ -105,6 +113,18 @@ export const subprofiles: Catalog = {
   "visibility.private.help":
     "Guardada só para ti, enquanto a vais construindo.",
 
+  // Presença — cores de destaque (SubprofilePresenceFields) e estado de
+  // disponibilidade (SubprofileAvailability, SubprofileCard,
+  // SubprofilePresenceFields) — também campos persistidos.
+  "accent.plum": "Ameixa",
+  "accent.coral": "Coral",
+  "accent.jade": "Jade",
+  "accent.amber": "Âmbar",
+  "accent.violet": "Violeta",
+  "availability.openToCollabs": "Aberto a colaborações",
+  "availability.booking": "A aceitar marcações",
+  "availability.notAvailable": "Sem disponibilidade agora",
+
   // Rótulos/placeholders dos campos do editor de itens (SubprofileItemEditor)
   "field.title.label": "Título",
   "field.title.placeholder": "Como se chama?",
@@ -158,6 +178,13 @@ export const subprofiles: Catalog = {
   "checklist.reqLanguageFail":
     "Algo no teu nome, identificador ou biografia foi assinalado — por favor reformula-o.",
 
+  // Sugestões de polimento, não bloqueantes (PublishChecklist.tsx)
+  "checklist.polishTitle": "Uns retoques finais",
+  "checklist.polishCover": "Uma imagem de capa",
+  "checklist.polishSocials": "Um link social",
+  "checklist.polishAvailability": "A tua disponibilidade",
+  "checklist.polishDone": "Página cuidada",
+
   // Painel de gestão (MySubprofilesPage + MySubprofileRow)
   "mine.title": "Os teus <em>subperfis</em>",
   "mine.sub":
@@ -183,6 +210,10 @@ export const subprofiles: Catalog = {
   "mine.deleteModalBody": "Isto não pode ser desfeito.",
   "mine.rowEdit": "Editar",
   "mine.rowDelete": "Eliminar",
+  "mine.endorsementCount_one": "{count} endosso",
+  "mine.endorsementCount_other": "{count} endossos",
+  "mine.followerCount_one": "{count} seguidor",
+  "mine.followerCount_other": "{count} seguidores",
 
   // Página do editor (SubprofileEditorPage)
   "editor.loading": "A carregar a tua persona…",
@@ -214,6 +245,22 @@ export const subprofiles: Catalog = {
   "metaForm.addressPlaceholder": "por ex. engenharia",
   "metaForm.handleLabel": "Identificador",
   "metaForm.visibilityLabel": "Quem pode ver",
+
+  // Campos de presença (SubprofilePresenceFields): capa, cor, disponibilidade, CTA
+  "metaForm.coverLabel": "Imagem de capa",
+  "metaForm.coverPlaceholder": "Imagem de capa",
+  "metaForm.accentLabel": "Cor de destaque",
+  "metaForm.availabilityLabel": "Disponibilidade",
+  "metaForm.availabilityUnset": "Não definida",
+  "metaForm.ctaLabelLabel": "Texto do botão",
+  "metaForm.ctaLabelPlaceholder": "por ex. Marcar uma sessão",
+  "metaForm.ctaUrlLabel": "Link do botão",
+  "metaForm.ctaUrlPlaceholder": "https://",
+  "metaForm.ctaHelper":
+    "Adiciona um texto e um link para mostrar um botão na tua página.",
+  "metaForm.ctaMismatch":
+    "Adiciona os dois — texto e link — ou deixa ambos em branco.",
+
   "metaForm.save": "Guardar detalhes",
   "metaForm.saving": "A guardar…",
   "metaForm.toastSaved": "Detalhes guardados",
@@ -226,6 +273,22 @@ export const subprofiles: Catalog = {
   "itemEditor.moveDown": "Mover para baixo",
   "itemEditor.remove": "Remover",
   "itemEditor.tagsHelper": "Separa com vírgulas",
+  "itemEditor.feature": "Tornar isto o destaque",
+  "itemEditor.unfeature": "Remover do destaque",
+  "itemEditor.featuredBadge": "Destaque",
+
+  // Editor de links sociais (SubprofileSocialLinksEditor)
+  "socialEditor.title": "Links sociais",
+  "socialEditor.add": "Adicionar um link",
+  "socialEditor.platformLabel": "Plataforma do link",
+  "socialEditor.linkFor": "Link de {platform}",
+  "socialEditor.removeLinkFor": "Remover link de {platform}",
+  "socialEditor.other": "Outro link",
+  "socialEditor.save": "Guardar links",
+  "socialEditor.saving": "A guardar…",
+  "socialEditor.saved": "Links guardados",
+  "socialEditor.error": "Não conseguimos guardar isso agora — tenta outra vez.",
+  "socialEditor.capHint": "É o máximo de links que podes acrescentar.",
 
   // Editor de secção (SubprofileSectionEditor)
   "sectionEditor.empty":
@@ -242,6 +305,7 @@ export const subprofiles: Catalog = {
   "publishPanel.successTitle": "Estás",
   "publishPanel.successEm": "no ar",
   "publishPanel.closeLabel": "Continuar a editar",
+  "publishPanel.viewLive": "Ver ao vivo",
   "publishPanel.successLinked":
     "Esta persona já aparece no teu perfil principal como outro lado teu.",
   "publishPanel.successUnlinked":
@@ -291,6 +355,31 @@ export const subprofiles: Catalog = {
   "imageUpload.error":
     "Não conseguimos adicionar essa imagem. Tenta outra vez.",
 
+  // Cabeçalho da persona (SubprofileHero)
+  "hero.message": "Mensagem",
+
+  // Controlo de endosso (SubprofileEndorse)
+  "hero.endorse.cta": "Endossar",
+  "hero.endorse.endorsed": "Endossado",
+  "hero.endorse.count_one": "{count} endosso",
+  "hero.endorse.count_other": "{count} endossos",
+  "hero.endorse.addNote": "Adicionar nota",
+  "hero.endorse.notePlaceholder": "Diz uma palavra sobre porquê (opcional)",
+  "hero.endorse.send": "Enviar",
+  "hero.endorse.error": "Não conseguimos guardar isso agora — tenta outra vez.",
+  "hero.endorse.endorsedByNames": "Endossado por {names}",
+
+  // Controlo de seguir (SubprofileFollow)
+  "hero.follow.cta": "Seguir",
+  "hero.follow.following": "A seguir",
+  "hero.follow.count_one": "{count} seguidor",
+  "hero.follow.count_other": "{count} seguidores",
+  "hero.follow.error": "Não conseguimos guardar isso agora — tenta outra vez.",
+
+  // Destaque do item em foco (SubprofileSpotlight)
+  "spotlight.eyebrow": "Destaque",
+  "spotlight.visit": "Visitar",
+
   // Página pública da persona (SubprofilePage + subprofilePage.data.ts)
   "page.loading": "A carregar persona…",
   "page.ownerTie": "Parte de <em>{name}</em>",
@@ -300,4 +389,39 @@ export const subprofiles: Catalog = {
     "Pode ter sido despublicada, mantida privada, ou este link pode estar desatualizado. Não há nada de errado do teu lado.",
   "page.notFoundAction": "Explorar personas",
   "page.notFoundBack": "Voltar atrás",
+
+  // Afiliações ("Parte de") — secção pública (SubprofileAffiliations) e editor
+  // do responsável (SubprofileAffiliationsEditor, SubprofileAffiliationRow).
+  // `role` é um campo predefinido e PERSISTIDO (AFFILIATION_ROLE_KEYS em
+  // affiliations.data.ts) — indireção por chave, tal como em `kind`.
+  "affiliation.heading": "Parte de",
+  "affiliation.type.event": "Evento",
+  "affiliation.type.community": "Comunidade",
+  "affiliation.role.performing": "A atuar",
+  "affiliation.role.attending": "A participar",
+  "affiliation.role.hosting": "A receber",
+  "affiliation.role.member": "Pessoa membro",
+  "affiliation.role.mod": "Mod",
+  "affiliation.role.founder": "Pessoa fundadora",
+
+  "affiliationsEditor.title": "Parte de",
+  "affiliationsEditor.note":
+    "Liga esta persona aos eventos e comunidades de que fazes parte.",
+  "affiliationsEditor.empty":
+    "Ainda nada ligado — acrescenta um evento ou uma comunidade abaixo.",
+  "affiliationsEditor.itemNumber": "Item {n}",
+  "affiliationsEditor.remove": "Remover",
+  "affiliationsEditor.typeLabel": "Tipo",
+  "affiliationsEditor.roleLabel": "Função",
+  "affiliationsEditor.slugLabel": "Endereço do evento ou da comunidade",
+  "affiliationsEditor.slugPlaceholder": "por ex. clube-de-leitura-queer",
+  "affiliationsEditor.slugHelper":
+    "Vamos verificar que corresponde a um evento ou comunidade reais quando guardares.",
+  "affiliationsEditor.add": "Adicionar um link",
+  "affiliationsEditor.capHint": "É o máximo de links que podes acrescentar.",
+  "affiliationsEditor.save": "Guardar links",
+  "affiliationsEditor.saving": "A guardar…",
+  "affiliationsEditor.saved": "Links guardados",
+  "affiliationsEditor.error":
+    "Não conseguimos guardar isso agora — tenta outra vez.",
 };

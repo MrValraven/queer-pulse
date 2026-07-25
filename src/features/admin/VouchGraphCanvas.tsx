@@ -1,35 +1,17 @@
 import { useRef, type ReactNode } from "react";
 import { FiRotateCcw } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useTrustGraph } from "./trustGraph/TrustGraphContext";
+import { TONE } from "./trustGraph/trustGraphModel";
+import type { VouchEdge } from "./trustGraph/trustGraphModel";
 import { useVouchCanvas } from "./useVouchCanvas";
 import { VouchGraphNode } from "./VouchGraphNode";
 import { VouchGraphTooltip } from "./VouchGraphTooltip";
-import {
-  TONE,
-  edgeWeight,
-  isIsolated,
-  neighbors,
-  nodeRadius,
-  personById,
-  type SceneKey,
-  type VouchEdge,
-  type VouchTone,
-} from "./adminVouchGraph.data";
-import { portrait } from "./adminPeople.data";
 import type { VouchMode } from "./useVouchGraph";
 import styles from "./AdminVouchGraph.module.css";
 
 const cx = (...c: (string | false | null | undefined)[]) =>
   c.filter(Boolean).join(" ");
-
-const SCENE_TONE: Record<SceneKey, VouchTone> = {
-  tf: "jade",
-  creatives: "violet",
-  nightlife: "coral",
-  newly: "amber",
-  elders: "plum",
-  ring: "danger",
-};
 
 /** `admin:vouchGraph.canvas.hint.*` catalog keys, resolved with `t()`. */
 const HINT_KEYS: Record<VouchMode, string> = {
@@ -68,6 +50,7 @@ export function VouchGraphCanvas({
   children,
 }: CanvasProps) {
   const { t } = useTranslation();
+  const graph = useTrustGraph();
   const stageRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const viewportRef = useRef<SVGGElement>(null);
@@ -76,6 +59,7 @@ export function VouchGraphCanvas({
     visEdges,
     focus,
     cluster: mode === "clusters",
+    graph,
     stageRef,
     svgRef,
     viewportRef,
@@ -88,7 +72,7 @@ export function VouchGraphCanvas({
   // hover, or a pinned selection, focuses the view on that member's ego-network
   const active = c.hoverId ?? sel;
   const activeNodes = active
-    ? new Set<string>([active, ...neighbors(active, true)])
+    ? new Set<string>([active, ...graph.neighbors(active, true)])
     : null;
 
   return (
@@ -125,7 +109,7 @@ export function VouchGraphCanvas({
         <g ref={viewportRef}>
           <g>
             {visEdges.map((e) => {
-              const base = e.withdrawn ? 1 : 0.8 + edgeWeight(e) * 2.2;
+              const base = e.withdrawn ? 1 : 0.8 + graph.edgeWeight(e) * 2.2;
               const onPath = pathEdges.has(e.id);
               const incident =
                 !!active && (e.from === active || e.to === active);
@@ -154,28 +138,31 @@ export function VouchGraphCanvas({
           </g>
           <g>
             {visIds.map((id) => {
-              const p = personById[id]!;
+              const p = graph.peopleById[id]!;
               const isFocus = id === focus;
-              const radius = nodeRadius(id, focus);
-              const ink =
-                mode === "clusters" ? TONE[SCENE_TONE[p.scene]] : TONE[p.tone];
-              const fill = p.anon ? "url(#vgHatch)" : ink.fill;
+              const radius = graph.nodeRadius(id, focus);
+              const ink = TONE[p.tone];
+              const fill =
+                mode === "clusters"
+                  ? (graph.scenes.find((s) => s.id === p.sceneId)?.color ??
+                    ink.fill)
+                  : ink.fill;
               const matches =
                 !q ||
                 p.name.toLowerCase().includes(q) ||
                 p.initials.toLowerCase().includes(q);
               const safety = mode === "safety";
-              const isolated = safety && p.scene !== "ring" && isIsolated(id);
+              const flagged = p.standing === "flagged";
+              // Flagged (ring) nodes keep their red "ring" halo — don't also
+              // paint them with the amber "isolated" halo, which (declared
+              // later in the CSS) would override and hide the ring signal.
+              const isolated = safety && !flagged && graph.isIsolated(id);
               const className = cx(
                 styles.node,
                 sel === id && styles.selected,
-                safety && p.scene === "ring" && styles.ring,
+                safety && flagged && styles.ring,
                 isolated && styles.isolated,
-                safety &&
-                  p.scene !== "ring" &&
-                  !isolated &&
-                  (!!p.reports || p.standing === "flagged") &&
-                  styles.reported,
+                safety && !flagged && !isolated && !!p.reports && styles.reported,
                 pathNodes.has(id) && styles.pathnode,
                 q && !matches && styles.searchDim,
                 q && matches && styles.searchHit,
@@ -189,7 +176,7 @@ export function VouchGraphCanvas({
                   isFocus={isFocus}
                   fill={fill}
                   stroke={ink.stroke}
-                  photo={portrait(p.name)}
+                  photo={p.avatarUrl ?? undefined}
                   className={className}
                   nodeRef={(el) => c.registerNode(id, el)}
                   {...c.nodeHandlers(id)}

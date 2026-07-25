@@ -5,6 +5,7 @@ import {
   FadeIn,
   SearchInput,
 } from "../../shared/components/ui";
+import { usePresenceOnline } from "../../shared/api/realtime";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
@@ -31,6 +32,10 @@ export function MessagesThreadList({
   onCompose: () => void;
 }) {
   const { t } = useTranslation();
+  /** Live online-userId set from realtime presence frames; always empty in
+   *  demo mode (no socket) — rows without an `otherParticipantId` fall back
+   *  to the static `thread.online` mock flag instead. */
+  const online = usePresenceOnline();
   return (
     <div className={styles.threadPanel}>
       <div className={styles.tpTop}>
@@ -107,6 +112,10 @@ export function MessagesThreadList({
               thread.unread &&
               !readIds.has(thread.id) &&
               thread.id !== activeId;
+            const isOnline =
+              (!!thread.otherParticipantId &&
+                online.has(thread.otherParticipantId)) ||
+              (!thread.otherParticipantId && !!thread.online);
             return (
               <FadeIn key={thread.id} delay={Math.min(i, 8) * 60}>
                 <button
@@ -126,7 +135,7 @@ export function MessagesThreadList({
                       src={thread.avatarUrl}
                       size={42}
                     />
-                    {thread.online && (
+                    {isOnline && (
                       <span
                         className={styles.presenceRing}
                         title={t("messages:thread.presenceOnline")}

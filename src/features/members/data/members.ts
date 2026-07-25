@@ -94,6 +94,10 @@ export interface Member {
   /** Whether `lookingFor` is shown on the profile to other viewers. Owner-only
    *  control; defaults to false (private) when absent. */
   lookingForPublic?: boolean;
+  /** Whether the member's trust network (vouchers/vouched-for) is hidden
+   *  from other members. Owner-only control; defaults to false (visible)
+   *  when absent. Admins can still see it for safety. */
+  privateNetwork?: boolean;
   board: BoardItem[];
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];

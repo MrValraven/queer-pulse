@@ -5,6 +5,7 @@ import {
   apiPut,
   apiDelete,
 } from "../../../shared/api/client";
+import type { VouchRelationship } from "../vouchMember.data";
 
 export type Visibility = "open" | "network" | "private";
 
@@ -100,6 +101,9 @@ export interface ProfileDTO extends MemberCardDTO {
   lookingFor?: string[];
   /** Whether `lookingFor` is shown on the profile to other viewers. */
   lookingForPublic?: boolean;
+  /** Whether the member's trust network (vouchers/vouched-for) is hidden
+   *  from other members. Admins can still see it for safety. */
+  privateNetwork?: boolean;
   socials?: SocialLinkDTO[];
   work?: WorkItemDTO[];
   /** Whether the member is identity-verified (drives the "Verified member" badge). */
@@ -193,6 +197,9 @@ export interface UpdateProfileDTO {
   identities?: string[];
   lookingFor?: string[];
   lookingForPublic?: boolean;
+  /** Whether the member's trust network (vouchers/vouched-for) is hidden
+   *  from other members. Admins can still see it for safety. */
+  privateNetwork?: boolean;
   tags?: string[];
 }
 
@@ -231,11 +238,19 @@ export interface GroupMembershipDTO {
 export const replaceGroups = (items: GroupMembershipDTO[]) =>
   apiPut<ProfileDTO>("/profiles/me/groups", { items });
 
-export const vouchFor = (slug: string, note?: string) =>
-  apiPost<{ vouchCount: number }>(
-    `/members/${slug}/vouch`,
-    note ? { note } : {},
-  );
+export const vouchFor = (
+  slug: string,
+  input: {
+    relationship?: VouchRelationship;
+    note?: string;
+    anonymous?: boolean;
+  } = {},
+) =>
+  apiPost<{ vouchCount: number }>(`/members/${slug}/vouch`, {
+    ...(input.note ? { note: input.note } : {}),
+    ...(input.relationship ? { relationship: input.relationship } : {}),
+    ...(input.anonymous ? { anonymous: true } : {}),
+  });
 
 export const unvouch = (slug: string) =>
   apiDelete<{ ok: true }>(`/members/${slug}/vouch`);

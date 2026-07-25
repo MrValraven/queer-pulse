@@ -1,6 +1,7 @@
 import { currentUserSlug } from "../../members/data/members";
 import { isContentSection } from "../subprofile-kinds";
 import type {
+  EndorserDTO,
   SubprofileCardDTO,
   SubprofileDTO,
   SubprofilePublicDTO,
@@ -11,10 +12,16 @@ import type {
 // keyed nowhere special; each carries its own `ownerSlug` (demo-only field below)
 // so the mock selectors can build public views. Shapes match the wire DTOs.
 
-/** A demo persona = the owner-full DTO plus the owner slug/name (demo-only). */
+/** A demo persona = the owner-full DTO plus the owner slug/name (demo-only) and
+ *  the demo-only endorsement state (`viewerEndorsed`/`endorsers`; `endorsementCount`
+ *  is already part of `SubprofileDTO`). `viewerFollowing` is likewise demo-only
+ *  state (`followerCount` is already part of `SubprofileDTO`). */
 export interface DemoSubprofile extends SubprofileDTO {
   ownerSlug: string;
   ownerName: string;
+  viewerEndorsed: boolean;
+  endorsers: EndorserDTO[];
+  viewerFollowing: boolean;
 }
 
 const NIGHTFORM: DemoSubprofile = {
@@ -29,10 +36,62 @@ const NIGHTFORM: DemoSubprofile = {
     "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
   tagline: "After-hours electronics for queer dancefloors",
   bio: "NIGHTFORM is a Lisbon-based producer and DJ making low-slung, hypnotic club tracks for the hours when the room finally lets go. Resident at a handful of the city's queer nights.",
+  coverUrl:
+    "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1600&auto=format&fit=crop",
+  accent: "violet",
+  availability: "booking",
+  ctaLabel: "Book a set",
+  ctaUrl: "https://example.com/nightform/booking",
+  socialLinks: [
+    { platform: "instagram", urlOrHandle: "@nightform" },
+    { platform: "bandcamp", urlOrHandle: "nightform" },
+    { platform: "soundcloud", urlOrHandle: "nightform" },
+  ],
   linkVisibility: "unlinked",
   visibility: "open",
   status: "published",
   position: 0,
+  endorsementCount: 3,
+  viewerEndorsed: false,
+  followerCount: 41,
+  viewerFollowing: false,
+  affiliations: [
+    {
+      targetType: "event",
+      targetSlug: "queer-karaoke-night",
+      role: "performing",
+      name: "Queer Karaoke Night",
+      imageUrl:
+        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+    },
+    {
+      targetType: "community",
+      targetSlug: "rainbow-arts",
+      role: "founder",
+      name: "Rainbow Arts Collective",
+      imageUrl: null,
+    },
+  ],
+  endorsers: [
+    {
+      slug: "rui",
+      name: "Rui Marçal",
+      avatarUrl: null,
+      note: "Saw NIGHTFORM close out Rrraw — the whole room was still buzzing an hour later.",
+    },
+    {
+      slug: "anika",
+      name: "Anika Kovač",
+      avatarUrl: null,
+      note: "Threshold EP has been on repeat since it dropped.",
+    },
+    {
+      slug: "andre",
+      name: "André Quintela",
+      avatarUrl: null,
+      note: null,
+    },
+  ],
   items: [
     {
       section: "discography",
@@ -44,7 +103,9 @@ const NIGHTFORM: DemoSubprofile = {
         "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=600&auto=format&fit=crop",
       date: "2025",
       meta: null,
-      tags: [],
+      tags: ["techno", "vinyl"],
+      // Sample persona for the spotlight: the one featured item in the demo registry.
+      isFeatured: true,
     },
     {
       section: "discography",
@@ -56,7 +117,8 @@ const NIGHTFORM: DemoSubprofile = {
         "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=600&auto=format&fit=crop",
       date: "2024",
       meta: null,
-      tags: [],
+      tags: ["ambient"],
+      isFeatured: false,
     },
     {
       section: "discography",
@@ -67,7 +129,8 @@ const NIGHTFORM: DemoSubprofile = {
       imageUrl: null,
       date: "2024",
       meta: null,
-      tags: [],
+      tags: ["remix"],
+      isFeatured: false,
     },
     {
       section: "gigs",
@@ -79,6 +142,7 @@ const NIGHTFORM: DemoSubprofile = {
       date: "Nov 2025",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "gigs",
@@ -90,6 +154,7 @@ const NIGHTFORM: DemoSubprofile = {
       date: "Sep 2025",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "links",
@@ -101,6 +166,7 @@ const NIGHTFORM: DemoSubprofile = {
       date: null,
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "links",
@@ -112,6 +178,7 @@ const NIGHTFORM: DemoSubprofile = {
       date: null,
       meta: null,
       tags: [],
+      isFeatured: false,
     },
   ],
 };
@@ -127,10 +194,26 @@ const RUI_DEV: DemoSubprofile = {
   avatarUrl: null,
   tagline: "Backend & infrastructure · Rust, Go, Postgres",
   bio: "Systems engineer focused on resilient backends and developer tooling. I care about the boring parts that keep things up at 3am.",
+  coverUrl:
+    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1600&auto=format&fit=crop",
+  accent: "coral",
+  availability: "open_to_collabs",
+  ctaLabel: "Get in touch",
+  ctaUrl: "https://example.com/rui/contact",
+  socialLinks: [
+    { platform: "github", urlOrHandle: "ruimarcal" },
+    { platform: "website", urlOrHandle: "ruimarcal.dev" },
+  ],
   linkVisibility: "linked",
   visibility: "open",
   status: "published",
   position: 0,
+  endorsementCount: 0,
+  viewerEndorsed: false,
+  followerCount: 6,
+  viewerFollowing: false,
+  affiliations: [],
+  endorsers: [],
   items: [
     {
       section: "projects",
@@ -142,6 +225,7 @@ const RUI_DEV: DemoSubprofile = {
       date: "2025",
       meta: null,
       tags: ["Rust", "Postgres"],
+      isFeatured: false,
     },
     {
       section: "projects",
@@ -153,6 +237,7 @@ const RUI_DEV: DemoSubprofile = {
       date: "2024",
       meta: null,
       tags: ["Go", "gRPC"],
+      isFeatured: false,
     },
     {
       section: "open_source",
@@ -164,6 +249,7 @@ const RUI_DEV: DemoSubprofile = {
       date: "2023–",
       meta: "Maintainer · 1.2k stars",
       tags: [],
+      isFeatured: false,
     },
   ],
 };
@@ -179,10 +265,22 @@ const ANIKA_WRITER: DemoSubprofile = {
   avatarUrl: null,
   tagline: "Poems & translations on migration and belonging",
   bio: "Bilingual poet and translator working between Slovene and Portuguese. My work lives in the seams between languages.",
+  coverUrl: null,
+  accent: null,
+  availability: null,
+  ctaLabel: null,
+  ctaUrl: null,
+  socialLinks: [],
   linkVisibility: "linked",
   visibility: "open",
   status: "published",
   position: 0,
+  endorsementCount: 0,
+  viewerEndorsed: false,
+  followerCount: 14,
+  viewerFollowing: false,
+  affiliations: [],
+  endorsers: [],
   items: [
     {
       section: "publications",
@@ -194,6 +292,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       date: "2025",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "publications",
@@ -205,6 +304,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       date: "2024",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "readings",
@@ -216,6 +316,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       date: "May 2025",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "readings",
@@ -227,6 +328,7 @@ const ANIKA_WRITER: DemoSubprofile = {
       date: "Oct 2024",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
   ],
 };
@@ -243,10 +345,41 @@ const ANDRE_LENS: DemoSubprofile = {
     "https://images.unsplash.com/photo-1519638831568-d9897f54ed69?q=80&w=800&auto=format&fit=crop",
   tagline: "Analog portraiture, queer bodies, medium format",
   bio: "GRAIN is a darkroom practice photographing queer and trans community on film. Slow, consensual, tender portraits — no rush, no flash.",
+  coverUrl:
+    "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?q=80&w=1600&auto=format&fit=crop",
+  accent: "amber",
+  availability: "open_to_collabs",
+  ctaLabel: "Book a sitting",
+  ctaUrl: "https://example.com/grain/inquire",
+  socialLinks: [
+    { platform: "instagram", urlOrHandle: "@grain.studio" },
+    { platform: "website", urlOrHandle: "grainstudio.pt" },
+    { platform: "kofi", urlOrHandle: "grainstudio" },
+  ],
   linkVisibility: "unlinked",
   visibility: "open",
   status: "published",
   position: 0,
+  endorsementCount: 2,
+  viewerEndorsed: false,
+  followerCount: 23,
+  viewerFollowing: false,
+  affiliations: [],
+  endorsers: [
+    {
+      slug: "diogo",
+      name: "Diogo Vasques",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+      note: "Sat for the Held series — gentlest photographer I've worked with.",
+    },
+    {
+      slug: "tiago",
+      name: "Tiago Costa",
+      avatarUrl: null,
+      note: null,
+    },
+  ],
   items: [
     {
       section: "portfolio",
@@ -258,7 +391,8 @@ const ANDRE_LENS: DemoSubprofile = {
         "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=600&auto=format&fit=crop",
       date: "2025",
       meta: null,
-      tags: [],
+      tags: ["analog", "film"],
+      isFeatured: false,
     },
     {
       section: "portfolio",
@@ -270,7 +404,8 @@ const ANDRE_LENS: DemoSubprofile = {
         "https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=600&auto=format&fit=crop",
       date: "2024",
       meta: null,
-      tags: [],
+      tags: ["expired-film"],
+      isFeatured: false,
     },
     {
       section: "portfolio",
@@ -282,6 +417,7 @@ const ANDRE_LENS: DemoSubprofile = {
       date: "2024",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
     {
       section: "exhibitions",
@@ -293,6 +429,7 @@ const ANDRE_LENS: DemoSubprofile = {
       date: "2025",
       meta: null,
       tags: [],
+      isFeatured: false,
     },
   ],
 };
@@ -311,10 +448,22 @@ const TIAGO_DRAFT: DemoSubprofile = {
   avatarUrl: null,
   tagline: "Fullstack — React, TypeScript, Node",
   bio: "Building for the community.",
+  coverUrl: null,
+  accent: null,
+  availability: null,
+  ctaLabel: null,
+  ctaUrl: null,
+  socialLinks: [],
   linkVisibility: "unlinked",
   visibility: "open",
   status: "draft",
   position: 0,
+  endorsementCount: 0,
+  viewerEndorsed: false,
+  followerCount: 0,
+  viewerFollowing: false,
+  affiliations: [],
+  endorsers: [],
   items: [
     {
       section: "projects",
@@ -326,6 +475,7 @@ const TIAGO_DRAFT: DemoSubprofile = {
       date: "2026",
       meta: null,
       tags: ["React", "TypeScript"],
+      isFeatured: false,
     },
     {
       section: "open_source",
@@ -337,6 +487,7 @@ const TIAGO_DRAFT: DemoSubprofile = {
       date: "2026",
       meta: "Author",
       tags: [],
+      isFeatured: false,
     },
   ],
 };
@@ -363,17 +514,27 @@ export function toOwnerDto(sp: DemoSubprofile): SubprofileDTO {
     avatarUrl: sp.avatarUrl,
     tagline: sp.tagline,
     bio: sp.bio,
+    coverUrl: sp.coverUrl,
+    accent: sp.accent,
+    availability: sp.availability,
+    ctaLabel: sp.ctaLabel,
+    ctaUrl: sp.ctaUrl,
+    socialLinks: sp.socialLinks,
     linkVisibility: sp.linkVisibility,
     visibility: sp.visibility,
     status: sp.status,
     position: sp.position,
     items: sp.items,
+    endorsementCount: sp.endorsementCount,
+    followerCount: sp.followerCount,
+    affiliations: sp.affiliations,
   };
 }
 
 /** Owner-strip when unlinked; keep ownerSlug/ownerName only when linked. */
 export function toPublicDto(sp: DemoSubprofile): SubprofilePublicDTO {
   const base: SubprofilePublicDTO = {
+    id: sp.id,
     kind: sp.kind,
     slug: sp.slug,
     handle: sp.handle,
@@ -381,14 +542,40 @@ export function toPublicDto(sp: DemoSubprofile): SubprofilePublicDTO {
     avatarUrl: sp.avatarUrl,
     tagline: sp.tagline,
     bio: sp.bio,
+    coverUrl: sp.coverUrl,
+    accent: sp.accent,
+    availability: sp.availability,
+    ctaLabel: sp.ctaLabel,
+    ctaUrl: sp.ctaUrl,
+    socialLinks: sp.socialLinks,
     linkVisibility: sp.linkVisibility,
     items: sp.items,
+    endorsementCount: sp.endorsementCount,
+    viewerEndorsed: sp.viewerEndorsed,
+    followerCount: sp.followerCount,
+    viewerFollowing: sp.viewerFollowing,
+    affiliations: sp.affiliations,
   };
   if (sp.linkVisibility === "linked") {
     base.ownerSlug = sp.ownerSlug;
     base.ownerName = sp.ownerName;
   }
   return base;
+}
+
+/** Union of tags across a persona's content items (excludes `links`), dedup,
+ *  capped at 12 — mirrors the backend's batched `loadContentTagsFor`. */
+function contentItemTags(sp: DemoSubprofile): string[] {
+  const tags: string[] = [];
+  for (const item of sp.items) {
+    if (!isContentSection(item.section)) continue;
+    for (const tag of item.tags ?? []) {
+      if (tags.length < 12 && !tags.includes(tag)) {
+        tags.push(tag);
+      }
+    }
+  }
+  return tags;
 }
 
 export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
@@ -398,6 +585,10 @@ export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
     displayName: sp.displayName,
     avatarUrl: sp.avatarUrl,
     tagline: sp.tagline,
+    accent: sp.accent,
+    availability: sp.availability,
+    socialCount: sp.socialLinks.length,
+    tags: contentItemTags(sp),
   };
 }
 
@@ -411,6 +602,63 @@ export const mockMineSubprofiles = (): SubprofileDTO[] =>
 export const mockSubprofileById = (id: string): SubprofileDTO | null => {
   const sp = DEMO_SUBPROFILES.find((s) => s.id === id);
   return sp ? toOwnerDto(sp) : null;
+};
+
+/** Resolve a persona by its non-identifying endorse-route id (published only) —
+ *  backs the MSW `:id/endorse*` handlers, which key on `id`, never slug/handle. */
+const findEndorsablePersona = (id: string): DemoSubprofile | undefined =>
+  DEMO_SUBPROFILES.find((s) => s.id === id && s.status === "published");
+
+/** GET /subprofiles/:id/endorsements mock — active endorsers for the persona. */
+export const mockEndorsersById = (
+  id: string,
+): { count: number; endorsers: EndorserDTO[] } | null => {
+  const sp = findEndorsablePersona(id);
+  return sp ? { count: sp.endorsementCount, endorsers: sp.endorsers } : null;
+};
+
+/** POST/DELETE /subprofiles/:id/endorse mock — flips the in-memory demo state for
+ *  the persona so a route-smoke suite exercising both calls in sequence sees a
+ *  consistent count. Idempotent: repeating the same direction is a no-op. */
+export const mockSetEndorsed = (
+  id: string,
+  viewerEndorsed: boolean,
+): { endorsementCount: number; viewerEndorsed: boolean } | null => {
+  const sp = findEndorsablePersona(id);
+  if (!sp) return null;
+  if (sp.viewerEndorsed !== viewerEndorsed) {
+    sp.endorsementCount = Math.max(
+      0,
+      sp.endorsementCount + (viewerEndorsed ? 1 : -1),
+    );
+    sp.viewerEndorsed = viewerEndorsed;
+  }
+  return {
+    endorsementCount: sp.endorsementCount,
+    viewerEndorsed: sp.viewerEndorsed,
+  };
+};
+
+/** POST/DELETE /subprofiles/:id/follow mock — flips the in-memory demo state for
+ *  the persona so a route-smoke suite exercising both calls in sequence sees a
+ *  consistent count. Idempotent: repeating the same direction is a no-op. */
+export const mockSetFollowing = (
+  id: string,
+  viewerFollowing: boolean,
+): { followerCount: number; viewerFollowing: boolean } | null => {
+  const sp = findEndorsablePersona(id);
+  if (!sp) return null;
+  if (sp.viewerFollowing !== viewerFollowing) {
+    sp.followerCount = Math.max(
+      0,
+      sp.followerCount + (viewerFollowing ? 1 : -1),
+    );
+    sp.viewerFollowing = viewerFollowing;
+  }
+  return {
+    followerCount: sp.followerCount,
+    viewerFollowing: sp.viewerFollowing,
+  };
 };
 
 /** Public fetch by global handle (unlinked + published) — GET /by-handle/:handle. */

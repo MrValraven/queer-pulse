@@ -331,6 +331,9 @@ export const settings: Catalog = {
   "visibility.private.desc":
     "I'll reach out when I'm ready. Profile not visible in search.",
   "visibility.section.additionalControls": "Additional controls",
+  "visibility.privateNetwork.label": "Keep my trust network private",
+  "visibility.privateNetwork.help":
+    "Hide who's vouched for you, and who you've vouched for, from other members. Admins can still see it for safety.",
   "visibility.newArrivals.title": 'Show me in "New arrivals"',
   "visibility.newArrivals.desc":
     "Let the community know you've recently joined",

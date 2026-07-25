@@ -70,11 +70,11 @@ const ICON_BY_KEY: Record<string, IconType> = {
 };
 
 // Tint-key → avatar `{bg,color}`, mirroring `COUNCIL`'s inline palette.
-const TINT_BY_KEY: Record<string, { bg: string; color: string }> = {
+const TINT_BY_KEY = {
   jade: { bg: "rgba(74,140,111,.15)", color: "var(--jade)" },
   violet: { bg: "rgba(122,82,184,.12)", color: "var(--violet)" },
   plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
-};
+} satisfies Record<string, { bg: string; color: string }>;
 
 // Demo mode reshapes the page's own mocks (which already carry full i18n keys,
 // icon components, and inline colours) into the view model — byte-for-byte the

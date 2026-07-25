@@ -9,7 +9,7 @@ import {
   PublishUnmetError,
   useSubprofileMutations,
 } from "./api/useSubprofileMutations";
-import { PublishChecklist } from "./PublishChecklist";
+import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
 import styles from "./SubprofileEditor.module.css";
 
 interface ChecklistState {
@@ -142,6 +142,7 @@ export function SubprofilePublishPanel({
           />
         </div>
       )}
+      <SubprofilePolishList subprofile={subprofile} />
     </div>
   );
 }
