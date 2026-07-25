@@ -182,7 +182,6 @@ export const QUIET_PUBLIC_PATHS = [
 
   // ── About / governance ───────────────────────────────────────────────────
   "/about",
-  "/about/manifesto",
   "/about/governance",
   "/about/contact",
   "/about/partners",
