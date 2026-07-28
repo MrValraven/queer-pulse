@@ -48,15 +48,15 @@ export interface PartnerTestimonial {
 export interface Partner {
   /* card */
   slug: string;
-  av: string;
+  avatar: string;
   logo: string;
-  bg: string;
+  background: string;
   color: string;
   region: Region;
   regionLabel: string;
   name: string;
   city: string;
-  desc: string;
+  description: string;
   tags: string[];
   featured: boolean;
   testimonial: PartnerTestimonial | null;

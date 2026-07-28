@@ -30,7 +30,7 @@ export function SafeSpaceCard({
       delay={delay}
     >
       <div className={styles.cardHead}>
-        <div className={`${styles.venueType} ${styles[TYPE_CLASS[s.cat]]}`}>
+        <div className={`${styles.venueType} ${styles[TYPE_CLASS[s.category]]}`}>
           {s.typeLabel}
         </div>
         <div className={styles.verifiedBadge}>
@@ -41,9 +41,9 @@ export function SafeSpaceCard({
       <div className={styles.name}>{s.name}</div>
       <div className={styles.hood}>
         <span className={styles.pin} />
-        {s.hood}
+        {s.neighbourhood}
       </div>
-      <div className={styles.desc}>{s.desc}</div>
+      <div className={styles.desc}>{s.description}</div>
       <div className={styles.tags}>
         {s.tags.map((t) => (
           <span key={t} className={styles.tag}>

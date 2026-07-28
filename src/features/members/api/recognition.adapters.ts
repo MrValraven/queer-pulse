@@ -34,7 +34,7 @@ export interface Recognition {
 
 function badgeFromDto(b: BadgeDTO): Badge {
   return {
-    cat: b.cat,
+    category: b.cat,
     name: b.name,
     when: b.context,
     rarity: b.rarity,
@@ -56,7 +56,7 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
       nextName: dto.level.nextName ?? "",
     },
     levelLadder: dto.levelLadder.map((r) => ({
-      num: r.num,
+      number: r.num,
       name: r.name,
       state: r.state,
     })),
@@ -71,15 +71,15 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
       groups: dto.perks.groups.map((g) => ({
         label: g.label,
         perks: g.perks.map((p) => ({
-          cat: p.cat,
+          category: p.cat,
           title: p.title,
-          desc: p.desc,
+          description: p.desc,
           state: p.state,
           footer: p.footer,
         })),
       })),
       ladder: dto.perks.ladder.map((r) => ({
-        num: r.num,
+        number: r.num,
         name: r.name,
         state: r.state,
         status: r.status,

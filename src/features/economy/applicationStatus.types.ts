@@ -92,7 +92,7 @@ export interface ThreadEntry {
 
 export interface Application {
   id: string;
-  cat: Cat;
+  category: Cat;
   logo: string;
   logoTint: LogoTint;
   title: string;

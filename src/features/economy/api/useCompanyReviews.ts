@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getCompanyReviews } from "./companies.api";
 import { reviewDtoToReview } from "./companies.adapters";
-import { COMPANY_PROFILES, type CompanyReview } from "../companies.data";
+import type { CompanyReview } from "../companies.data";
 
 export interface CompanyReviewsResult {
   /** All reviews fetched so far, flattened across loaded pages. */
@@ -49,6 +49,8 @@ export function useCompanyReviews(
     queryFn: async ({ pageParam }) => {
       if (!slug) return { items: [], total: 0, page: 1 };
       if (demoMode) {
+        // Demo-only mock — loaded on demand so it never ships in the live bundle.
+        const { COMPANY_PROFILES } = await import("../companies.data");
         const items = COMPANY_PROFILES[slug]?.reviews ?? [];
         return { items, total: items.length, page: 1 };
       }

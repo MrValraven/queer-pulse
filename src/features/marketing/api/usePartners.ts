@@ -2,7 +2,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getPartners, type Region } from "./partners.api";
 import { cardToPartner } from "./partners.adapters";
-import { PARTNERS } from "../partnerDetails";
 import type { Partner } from "../partnerDetails.types";
 
 export interface PartnersResult {
@@ -44,6 +43,7 @@ export function usePartners(params: { region?: Region } = {}): PartnersResult {
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
+        const { PARTNERS } = await import("../partnerDetails");
         return { items: PARTNERS, total: PARTNERS.length, page: 1 };
       }
       const res = await getPartners({ ...params, page: pageParam as number });

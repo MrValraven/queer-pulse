@@ -1,4 +1,5 @@
 import { FormField } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./auth.module.css";
 
@@ -38,6 +39,7 @@ export function AccountFields({
   errors,
 }: AccountFieldsProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   return (
     <div className={styles.section}>
       <div className={styles.sectionLabel}>
@@ -77,7 +79,7 @@ export function AccountFields({
         label={t("auth:createAccount.field.email.label")}
         helper={t("auth:createAccount.field.email.helper")}
       >
-        <input type="email" value="tiago@gmail.com" disabled />
+        <input type="email" value={user?.email ?? ""} disabled />
       </FormField>
     </div>
   );

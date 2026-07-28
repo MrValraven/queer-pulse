@@ -127,9 +127,9 @@ export function PartnersPage() {
                       <div className={s.top}>
                         <span
                           className={s.av}
-                          style={{ background: p.bg, color: p.color }}
+                          style={{ background: p.background, color: p.color }}
                         >
-                          {p.av}
+                          {p.avatar}
                         </span>
                         <span
                           className={`${s.region} ${regionClass[p.region]}`}
@@ -143,7 +143,7 @@ export function PartnersPage() {
                           <FiMapPin /> {p.city}
                         </div>
                       </div>
-                      <div className={s.desc}>{p.desc}</div>
+                      <div className={s.desc}>{p.description}</div>
                       <div className={s.tags}>
                         {p.tags.map((tag) => (
                           <span key={tag} className={s.tag}>

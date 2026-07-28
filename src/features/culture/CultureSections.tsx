@@ -115,14 +115,14 @@ export function ClubSection() {
           </div>
           <div className={styles.threadList}>
             {THREADS.map((thread) => (
-              <article key={thread.q} className={styles.threadItem}>
+              <article key={thread.question} className={styles.threadItem}>
                 <Avatar
                   initials={thread.initials}
                   tint={thread.tint}
                   size={36}
                 />
                 <div className={styles.threadBody}>
-                  <div className={styles.threadQ}>{thread.q}</div>
+                  <div className={styles.threadQ}>{thread.question}</div>
                   <div className={styles.threadMeta}>{thread.meta}</div>
                 </div>
                 <div className={styles.threadReplies}>
@@ -151,11 +151,11 @@ function CommissionCard({ commission }: { commission: Commission }) {
   const [open, setOpen] = useState(false);
   return (
     <article className={styles.projCard}>
-      <div className={`${styles.pcPill} ${styles[`pill_${commission.cat}`]}`}>
-        {t(COMMISSION_CAT_LABEL_KEY[commission.cat])}
+      <div className={`${styles.pcPill} ${styles[`pill_${commission.category}`]}`}>
+        {t(COMMISSION_CAT_LABEL_KEY[commission.category])}
       </div>
       <div className={styles.pcTitle}>{commission.title}</div>
-      <p className={styles.pcDesc}>{commission.desc}</p>
+      <p className={styles.pcDesc}>{commission.description}</p>
       <div className={styles.pcSeeking}>{commission.seeking}</div>
       <div className={styles.pcTags}>
         {commission.tags.map((tag) => (
@@ -261,7 +261,7 @@ export function ShowcaseSection() {
           {GALLERY.map((item) => (
             <div
               key={item.title}
-              className={`${styles.galItem} ${item.feat ? styles.galFeat : ""}`}
+              className={`${styles.galItem} ${item.featured ? styles.galFeat : ""}`}
             >
               <div
                 className={styles.galBg}

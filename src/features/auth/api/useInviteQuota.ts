@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getInviteQuota, type InviteQuotaDTO } from "./invite.api";
-import { INVITE_QUOTA } from "../inviteQuota.data";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -42,7 +41,10 @@ export function useInviteQuota() {
   return useQuery<InviteQuotaView>({
     queryKey: ["invite-quota", demoMode],
     queryFn: async () => {
-      const dto = demoMode ? INVITE_QUOTA : await getInviteQuota();
+      // Demo mock is loaded on demand so it stays out of the live bundle.
+      const dto = demoMode
+        ? (await import("../inviteQuota.data")).INVITE_QUOTA
+        : await getInviteQuota();
       return dtoToView(dto);
     },
   });

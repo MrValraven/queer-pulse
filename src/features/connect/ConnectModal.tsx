@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Spinner } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -28,17 +29,25 @@ export function ConnectModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   // Source the member from the same hook the profile page uses, so live mode
   // addresses the fetched member (name/avatar/openTo) rather than the static
-  // demo registry. The `?? memberProfiles[slug]` fallback covers the first
-  // render before the (demo) query resolves, and `defaultProfileSlug` keeps
-  // the existing no-slug/placeholder behaviour.
+  // demo registry. The registry fallbacks below are DEMO-ONLY: the
+  // `?? memberProfiles[slug]` entry covers the first render before the (demo)
+  // query resolves, and `defaultProfileSlug` keeps the no-slug placeholder for
+  // the prototype's simulated delivery. In LIVE mode we never substitute a mock
+  // persona (notably the default "Inês") for a member the fetch hasn't yielded —
+  // on a fetch failure that would show the wrong person's identity. `member` is
+  // then null and the modal shows an unavailable state; the form still POSTs the
+  // real `slug` regardless.
   const { data: profileResult, isLoading: profileLoading } =
     useMemberProfile(slug);
   const member =
     profileResult?.member ??
-    (slug ? memberProfiles[slug] : undefined) ??
-    memberProfiles[defaultProfileSlug]!;
+    (demoMode
+      ? ((slug ? memberProfiles[slug] : undefined) ??
+        memberProfiles[defaultProfileSlug]!)
+      : null);
   const { send } = useConnectionActions();
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -109,6 +118,12 @@ export function ConnectModal({
           <div className={styles.loading}>
             <Spinner />
             <span>{t("connect:modal.loading")}</span>
+          </div>
+        ) : !member ? (
+          // Live mode, member fetch didn't yield anyone — surface that rather
+          // than fall back to a demo persona's identity.
+          <div className={styles.loading} role="alert">
+            <span>{t("connect:modal.error")}</span>
           </div>
         ) : notice ? (
           <ConnectNoticePanel

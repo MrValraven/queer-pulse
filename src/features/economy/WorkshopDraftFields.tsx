@@ -72,8 +72,8 @@ export function WorkshopDraftFields({
           </label>
           <select
             id="aw-cat"
-            value={draft.cat}
-            onChange={(e) => set({ cat: e.target.value })}
+            value={draft.category}
+            onChange={(e) => set({ category: e.target.value })}
           >
             {CATS.map((c) => (
               <option key={c.value} value={c.value}>
@@ -158,7 +158,7 @@ export const EMPTY_WORKSHOP_DRAFT: WorkshopDraft = {
   title: "",
   blurb: "",
   about: "",
-  cat: "creative",
+  category: "creative",
   mode: "In-person",
   weeks: "6",
   size: "8",

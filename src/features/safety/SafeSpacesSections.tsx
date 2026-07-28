@@ -72,10 +72,10 @@ export function HowSection() {
         </h2>
         <div className={styles.howGrid}>
           {HOW.map((h) => (
-            <div className={styles.howCard} key={h.num}>
-              <div className={styles.howNum}>{h.num}</div>
+            <div className={styles.howCard} key={h.number}>
+              <div className={styles.howNum}>{h.number}</div>
               <div className={styles.howTitle}>{t(h.titleKey)}</div>
-              <div className={styles.howDesc}>{t(h.descKey)}</div>
+              <div className={styles.howDesc}>{t(h.descriptionKey)}</div>
             </div>
           ))}
         </div>
@@ -135,7 +135,7 @@ export function RemovedSection({ removed }: { removed: RemovedSpace[] }) {
             >
               <div className={styles.rcTop}>
                 <span className={styles.rcType}>
-                  {r.typeLabel} · {r.hood}
+                  {r.typeLabel} · {r.neighbourhood}
                 </span>
                 <span className={styles.rcBadge}>
                   {t("safety:spaces.removed.card.badge")}

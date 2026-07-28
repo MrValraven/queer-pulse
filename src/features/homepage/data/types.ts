@@ -108,27 +108,12 @@ export interface ChangeMaker {
   image?: string;
 }
 
-export type CommunityType =
-  "social" | "arts" | "activism" | "support" | "sports" | "professional";
-
-export interface Community {
-  href: string;
-  type: CommunityType;
-  typeLabel: string;
-  name: string;
-  description: string;
-  count: string;
-  joinLabel: string;
-  dashed?: boolean;
-  privateBadge?: boolean;
-  /** Stable slug for the community detail route (`/community/:slug`). */
-  slug?: string;
-  /** The viewer's roster role in this community when the source knows it (the
-   *  live-mode card DTO). `null`/absent means not a member — but absence is not
-   *  proof of non-membership: demo mode leaves this unset and reads the session
-   *  membership store instead. */
-  myRole?: "owner" | "mod" | "member" | null;
-}
+/**
+ * Cross-feature domain types now live in the shared layer; re-exported here so
+ * the ~19 existing importers (communities/members/auth/feed) keep working. New
+ * code should import these from `src/shared/types/domain` directly.
+ */
+export type { Community, CommunityType } from "../../../shared/types/domain";
 
 export interface DigestPreviewItem {
   tag: string;

@@ -59,20 +59,20 @@ export const EVENT_SPOTS: SpotsLabel = {
  * host only ever sets price/spots. `price` is a plain number, formatted via
  * `useFormat().currency()` at render rather than a baked `"€8"` string.
  */
-export const TIERS: { nameKey: string; descKey: string; price: number }[] = [
+export const TIERS: { nameKey: string; descriptionKey: string; price: number }[] = [
   {
     nameKey: "gatherings:event.tiers.free.name",
-    descKey: "gatherings:event.tiers.free.desc",
+    descriptionKey: "gatherings:event.tiers.free.desc",
     price: 0,
   },
   {
     nameKey: "gatherings:event.tiers.standard.name",
-    descKey: "gatherings:event.tiers.standard.desc",
+    descriptionKey: "gatherings:event.tiers.standard.desc",
     price: 8,
   },
   {
     nameKey: "gatherings:event.tiers.supporter.name",
-    descKey: "gatherings:event.tiers.supporter.desc",
+    descriptionKey: "gatherings:event.tiers.supporter.desc",
     price: 15,
   },
 ];

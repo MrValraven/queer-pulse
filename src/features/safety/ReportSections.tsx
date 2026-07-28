@@ -28,24 +28,24 @@ const CATEGORIES: { code: ReasonCode; labelKey: string }[] = [
 /** i18n Pattern A — chrome list, sole consumer is `ReportFormSection`. */
 const FLOW = [
   {
-    n: "01",
+    number: "01",
     titleKey: "safety:report.flow.step1.title",
-    descKey: "safety:report.flow.step1.desc",
+    descriptionKey: "safety:report.flow.step1.desc",
   },
   {
-    n: "02",
+    number: "02",
     titleKey: "safety:report.flow.step2.title",
-    descKey: "safety:report.flow.step2.desc",
+    descriptionKey: "safety:report.flow.step2.desc",
   },
   {
-    n: "03",
+    number: "03",
     titleKey: "safety:report.flow.step3.title",
-    descKey: "safety:report.flow.step3.desc",
+    descriptionKey: "safety:report.flow.step3.desc",
   },
   {
-    n: "04",
+    number: "04",
     titleKey: "safety:report.flow.step4.title",
-    descKey: "safety:report.flow.step4.desc",
+    descriptionKey: "safety:report.flow.step4.desc",
   },
 ];
 
@@ -76,11 +76,11 @@ const PRINCIPLES = [
  * the live-mode equivalent of a fetched quarterly report); only the label
  * next to each count is platform chrome and gets translated. */
 const LOG = [
-  { n: "14", labelKey: "safety:report.modLog.stat.received" },
-  { n: "12", labelKey: "safety:report.modLog.stat.resolved" },
-  { n: "3", labelKey: "safety:report.modLog.stat.removed" },
-  { n: "2", labelKey: "safety:report.modLog.stat.appeals" },
-  { n: "1", labelKey: "safety:report.modLog.stat.reversed" },
+  { number: "14", labelKey: "safety:report.modLog.stat.received" },
+  { number: "12", labelKey: "safety:report.modLog.stat.resolved" },
+  { number: "3", labelKey: "safety:report.modLog.stat.removed" },
+  { number: "2", labelKey: "safety:report.modLog.stat.appeals" },
+  { number: "1", labelKey: "safety:report.modLog.stat.reversed" },
 ];
 
 /** Infer the subject from the reason + the free-text "who/what" field. */
@@ -148,10 +148,10 @@ export function ReportFormSection() {
         <p className={s.lead}>{t("safety:report.how.lead")}</p>
         <div className={s.flow}>
           {FLOW.map((f) => (
-            <div key={f.n} className={s.flowStep}>
-              <div className={s.flowN}>{f.n}</div>
+            <div key={f.number} className={s.flowStep}>
+              <div className={s.flowN}>{f.number}</div>
               <div className={s.flowTitle}>{t(f.titleKey)}</div>
-              <div className={s.flowDesc}>{t(f.descKey)}</div>
+              <div className={s.flowDesc}>{t(f.descriptionKey)}</div>
             </div>
           ))}
         </div>
@@ -271,7 +271,7 @@ export function ModerationLogSection() {
                     lineHeight: 1,
                   }}
                 >
-                  {stat.n}
+                  {stat.number}
                 </div>
                 <div
                   className="l"

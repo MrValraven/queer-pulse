@@ -4,14 +4,14 @@ export type DeleteOption = "deactivate" | "delete";
 // baked in. It's now a catalog key resolved via `<Translation>` at render
 // (Pattern A) so the rich text can be translated at all.
 interface WhatItem {
-  col: string;
+  color: string;
   textKey: string;
 }
 
 export const DELETE_CONTENT: Record<
   DeleteOption,
   {
-    wh: WhatItem[];
+    whatHappens: WhatItem[];
     /** Catalog key for the typed-confirmation phrase, or `null` for none.
      * Client-only match target (never sent to an API) — safe to fully
      * translate since display and comparison both resolve from this key. */
@@ -23,25 +23,25 @@ export const DELETE_CONTENT: Record<
   }
 > = {
   deactivate: {
-    wh: [
+    whatHappens: [
       {
-        col: "rgba(45,27,61,.3)",
+        color: "rgba(45,27,61,.3)",
         textKey: "settings:deleteAccount.wh.deactivate.profileHidden",
       },
       {
-        col: "var(--jade)",
+        color: "var(--jade)",
         textKey: "settings:deleteAccount.wh.deactivate.dataPreserved",
       },
       {
-        col: "var(--jade)",
+        color: "var(--jade)",
         textKey: "settings:deleteAccount.wh.deactivate.reactivateInstantly",
       },
       {
-        col: "rgba(45,27,61,.3)",
+        color: "rgba(45,27,61,.3)",
         textKey: "settings:deleteAccount.wh.deactivate.nameRemoved",
       },
       {
-        col: "rgba(45,27,61,.3)",
+        color: "rgba(45,27,61,.3)",
         textKey: "settings:deleteAccount.wh.deactivate.attributedDeactivated",
       },
     ],
@@ -54,25 +54,25 @@ export const DELETE_CONTENT: Record<
     isDanger: false,
   },
   delete: {
-    wh: [
+    whatHappens: [
       {
-        col: "var(--accent-ink)",
+        color: "var(--accent-ink)",
         textKey: "settings:deleteAccount.wh.delete.queuedForDeletion",
       },
       {
-        col: "var(--accent-ink)",
+        color: "var(--accent-ink)",
         textKey: "settings:deleteAccount.wh.delete.messagesDeleted",
       },
       {
-        col: "var(--accent-ink)",
+        color: "var(--accent-ink)",
         textKey: "settings:deleteAccount.wh.delete.postsRemoved",
       },
       {
-        col: "rgba(45,27,61,.3)",
+        color: "rgba(45,27,61,.3)",
         textKey: "settings:deleteAccount.wh.delete.emailSuppressed",
       },
       {
-        col: "rgba(45,27,61,.3)",
+        color: "rgba(45,27,61,.3)",
         textKey: "settings:deleteAccount.wh.delete.exportFirst",
       },
     ],

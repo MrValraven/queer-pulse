@@ -70,7 +70,7 @@ export function ContractGeneratorPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:contractTool.sub")}
+      subtitle={t("economy:contractTool.sub")}
       form={
         <ContractForm
           ctx={ctx}

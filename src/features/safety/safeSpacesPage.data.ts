@@ -50,36 +50,36 @@ export const CRITERIA: { icon: IconType; leadKey: string; restKey: string }[] =
     },
   ];
 
-export const HOW: { num: string; titleKey: string; descKey: string }[] = [
+export const HOW: { number: string; titleKey: string; descriptionKey: string }[] = [
   {
-    num: "01",
+    number: "01",
     titleKey: "safety:spaces.how.step1.title",
-    descKey: "safety:spaces.how.step1.desc",
+    descriptionKey: "safety:spaces.how.step1.desc",
   },
   {
-    num: "02",
+    number: "02",
     titleKey: "safety:spaces.how.step2.title",
-    descKey: "safety:spaces.how.step2.desc",
+    descriptionKey: "safety:spaces.how.step2.desc",
   },
   {
-    num: "03",
+    number: "03",
     titleKey: "safety:spaces.how.step3.title",
-    descKey: "safety:spaces.how.step3.desc",
+    descriptionKey: "safety:spaces.how.step3.desc",
   },
   {
-    num: "04",
+    number: "04",
     titleKey: "safety:spaces.how.step4.title",
-    descKey: "safety:spaces.how.step4.desc",
+    descriptionKey: "safety:spaces.how.step4.desc",
   },
   {
-    num: "05",
+    number: "05",
     titleKey: "safety:spaces.how.step5.title",
-    descKey: "safety:spaces.how.step5.desc",
+    descriptionKey: "safety:spaces.how.step5.desc",
   },
   {
-    num: "06",
+    number: "06",
     titleKey: "safety:spaces.how.step6.title",
-    descKey: "safety:spaces.how.step6.desc",
+    descriptionKey: "safety:spaces.how.step6.desc",
   },
 ];
 

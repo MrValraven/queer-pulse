@@ -10,15 +10,15 @@ import { routes } from "../../app/routeMap";
 export const ONBOARDING_PREVIEW = [
   {
     titleKey: "auth:onboarding.preview.makeItYours.title",
-    descKey: "auth:onboarding.preview.makeItYours.desc",
+    descriptionKey: "auth:onboarding.preview.makeItYours.desc",
   },
   {
     titleKey: "auth:onboarding.preview.setIntentions.title",
-    descKey: "auth:onboarding.preview.setIntentions.desc",
+    descriptionKey: "auth:onboarding.preview.setIntentions.desc",
   },
   {
     titleKey: "auth:onboarding.preview.findCommunities.title",
-    descKey: "auth:onboarding.preview.findCommunities.desc",
+    descriptionKey: "auth:onboarding.preview.findCommunities.desc",
   },
 ];
 
@@ -30,19 +30,19 @@ export const TOTAL_STEPS = 7;
 export const NORMS = [
   {
     titleKey: "auth:onboarding.stepNorms.norm.bePresent.title",
-    descKey: "auth:onboarding.stepNorms.norm.bePresent.desc",
+    descriptionKey: "auth:onboarding.stepNorms.norm.bePresent.desc",
   },
   {
     titleKey: "auth:onboarding.stepNorms.norm.namesPronouns.title",
-    descKey: "auth:onboarding.stepNorms.norm.namesPronouns.desc",
+    descriptionKey: "auth:onboarding.stepNorms.norm.namesPronouns.desc",
   },
   {
     titleKey: "auth:onboarding.stepNorms.norm.staysHere.title",
-    descKey: "auth:onboarding.stepNorms.norm.staysHere.desc",
+    descriptionKey: "auth:onboarding.stepNorms.norm.staysHere.desc",
   },
   {
     titleKey: "auth:onboarding.stepNorms.norm.askBeforePhoto.title",
-    descKey: "auth:onboarding.stepNorms.norm.askBeforePhoto.desc",
+    descriptionKey: "auth:onboarding.stepNorms.norm.askBeforePhoto.desc",
   },
 ];
 
@@ -79,31 +79,31 @@ export const INTENTS: { value: string; labelKey: string }[] = [
 export const QUICK_STARTS: {
   to: string;
   icon: IconType;
-  iconBg: string;
+  iconBackground: string;
   titleKey: string;
-  descKey: string;
-  /** Interpolation values for `descKey`, e.g. the member-count stat. */
-  descValues?: Record<string, string | number>;
+  descriptionKey: string;
+  /** Interpolation values for `descriptionKey`, e.g. the member-count stat. */
+  descriptionValues?: Record<string, string | number>;
 }[] = [
   {
     to: routes.members,
     icon: FiUsers,
-    iconBg: "rgba(45,27,61,.07)",
+    iconBackground: "rgba(45,27,61,.07)",
     titleKey: "auth:onboarding.quickStart.browseDirectory.title",
-    descKey: "auth:onboarding.quickStart.browseDirectory.desc",
+    descriptionKey: "auth:onboarding.quickStart.browseDirectory.desc",
   },
   {
     to: "/calendar",
     icon: FiCalendar,
-    iconBg: "rgba(232,119,90,.08)",
+    iconBackground: "rgba(232,119,90,.08)",
     titleKey: "auth:onboarding.quickStart.gatherings.title",
-    descKey: "auth:onboarding.quickStart.gatherings.desc",
+    descriptionKey: "auth:onboarding.quickStart.gatherings.desc",
   },
   {
     to: "/magazine",
     icon: FiBookOpen,
-    iconBg: "rgba(74,140,111,.08)",
+    iconBackground: "rgba(74,140,111,.08)",
     titleKey: "auth:onboarding.quickStart.magazine.title",
-    descKey: "auth:onboarding.quickStart.magazine.desc",
+    descriptionKey: "auth:onboarding.quickStart.magazine.desc",
   },
 ];

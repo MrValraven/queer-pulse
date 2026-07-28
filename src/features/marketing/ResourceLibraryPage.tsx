@@ -18,7 +18,7 @@ import s from "./ResourceLibraryPage.module.css";
 interface Resource {
   cat: string;
   name: string;
-  desc: string;
+  description: string;
   cost: "free" | "sliding";
   internal: boolean;
   link: string;
@@ -81,7 +81,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "health",
     name: "Trans Healthcare Journey Map",
-    desc: "Step-by-step guide to HRT via the SNS, private care, legal name change, and surgery access in Portugal.",
+    description: "Step-by-step guide to HRT via the SNS, private care, legal name change, and surgery access in Portugal.",
     cost: "free",
     internal: true,
     link: routes.transHub,
@@ -90,7 +90,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "health",
     name: "Harm Reduction Guide",
-    desc: "Honest, non-judgmental information about substances, naloxone, and safer clubbing.",
+    description: "Honest, non-judgmental information about substances, naloxone, and safer clubbing.",
     cost: "free",
     internal: true,
     link: routes.wellbeing,
@@ -99,7 +99,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "health",
     name: "GAT Lisboa",
-    desc: "Free HIV and STI testing, naloxone, harm reduction, and trans health services. Walk-in welcome.",
+    description: "Free HIV and STI testing, naloxone, harm reduction, and trans health services. Walk-in welcome.",
     cost: "free",
     internal: false,
     link: "https://www.gat.org.pt",
@@ -108,7 +108,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "health",
     name: "Checkpoint Lisboa",
-    desc: "Rapid HIV/STI testing, PrEP consultations, walk-in appointments. No referral needed.",
+    description: "Rapid HIV/STI testing, PrEP consultations, walk-in appointments. No referral needed.",
     cost: "free",
     internal: false,
     link: "https://checkpointlx.com",
@@ -117,7 +117,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "health",
     name: "Mental Health Directory",
-    desc: "Queer-affirming therapists and counsellors, including sliding-scale options.",
+    description: "Queer-affirming therapists and counsellors, including sliding-scale options.",
     cost: "sliding",
     internal: true,
     link: routes.wellbeing,
@@ -126,7 +126,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "legal",
     name: "Hate Crime Reporting Guide",
-    desc: "Right now, documenting, PSP reporting, ILGA Portugal, EU mechanisms, and Portuguese law.",
+    description: "Right now, documenting, PSP reporting, ILGA Portugal, EU mechanisms, and Portuguese law.",
     cost: "free",
     internal: true,
     link: routes.legal,
@@ -135,7 +135,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "legal",
     name: "ILGA Portugal",
-    desc: "Legal support, hate crime monitoring, advocacy, and community programmes.",
+    description: "Legal support, hate crime monitoring, advocacy, and community programmes.",
     cost: "free",
     internal: false,
     link: "https://ilga-portugal.pt",
@@ -144,7 +144,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "legal",
     name: "APAV — Victim Support",
-    desc: "Free, confidential support for crime victims. 24-hour line: 116 006.",
+    description: "Free, confidential support for crime victims. 24-hour line: 116 006.",
     cost: "free",
     internal: false,
     link: "https://apav.pt",
@@ -153,7 +153,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "legal",
     name: "Visas & Residency Guide",
-    desc: "D7, NHR, digital nomad visa, and residency for LGBTQ+ people in Portugal.",
+    description: "D7, NHR, digital nomad visa, and residency for LGBTQ+ people in Portugal.",
     cost: "free",
     internal: true,
     link: routes.legal,
@@ -162,7 +162,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "housing",
     name: "Housing Resources",
-    desc: "Rights, emergency housing, and queer-friendly landlords in Lisbon.",
+    description: "Rights, emergency housing, and queer-friendly landlords in Lisbon.",
     cost: "free",
     internal: true,
     link: routes.housing,
@@ -171,7 +171,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "housing",
     name: "Queer Flatmates",
-    desc: "Community-curated flatmate matching — safe, vetted, connected to the network.",
+    description: "Community-curated flatmate matching — safe, vetted, connected to the network.",
     cost: "free",
     internal: true,
     link: routes.housing,
@@ -180,7 +180,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "housing",
     name: "Safe Spaces",
-    desc: "Physical spaces in Lisbon where you are guaranteed to be safe and welcome.",
+    description: "Physical spaces in Lisbon where you are guaranteed to be safe and welcome.",
     cost: "free",
     internal: true,
     link: routes.safety,
@@ -189,7 +189,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "money",
     name: "Micro Grants",
-    desc: "Small grants (€200–2000) for queer community projects in Lisbon. Transparent allocation.",
+    description: "Small grants (€200–2000) for queer community projects in Lisbon. Transparent allocation.",
     cost: "free",
     internal: true,
     link: routes.grants,
@@ -198,7 +198,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "money",
     name: "Barter & Skill Exchange",
-    desc: "Trade skills instead of money. Design for cooking, coding for legal advice.",
+    description: "Trade skills instead of money. Design for cooking, coding for legal advice.",
     cost: "free",
     internal: true,
     link: routes.barter,
@@ -207,7 +207,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "money",
     name: "Gig Workers Portugal",
-    desc: "Practical guides to recibos verdes, IRS, and social security for freelancers.",
+    description: "Practical guides to recibos verdes, IRS, and social security for freelancers.",
     cost: "free",
     internal: false,
     link: "#",
@@ -216,7 +216,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "identity",
     name: "Trans Hub",
-    desc: "Resources, community, and support specifically for trans and non-binary people.",
+    description: "Resources, community, and support specifically for trans and non-binary people.",
     cost: "free",
     internal: true,
     link: routes.transHub,
@@ -225,7 +225,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "identity",
     name: "Queer 101",
-    desc: "Introductory resource for people exploring their identity or new to the community.",
+    description: "Introductory resource for people exploring their identity or new to the community.",
     cost: "free",
     internal: true,
     link: routes.wellbeing,
@@ -234,7 +234,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "identity",
     name: "Family Resources",
-    desc: "For queer people navigating family — estrangement, coming out, chosen family.",
+    description: "For queer people navigating family — estrangement, coming out, chosen family.",
     cost: "free",
     internal: true,
     link: routes.wellbeing,
@@ -243,7 +243,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "safety",
     name: "Safety & Visibility Guide",
-    desc: "How to manage visibility online and offline — for people who need to be careful.",
+    description: "How to manage visibility online and offline — for people who need to be careful.",
     cost: "free",
     internal: true,
     link: routes.safety,
@@ -252,7 +252,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "safety",
     name: "Report to QueerPulse",
-    desc: "Report a member, incident, or safeguarding concern to the platform team.",
+    description: "Report a member, incident, or safeguarding concern to the platform team.",
     cost: "free",
     internal: true,
     link: routes.governance,
@@ -261,7 +261,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "safety",
     name: "Emergency",
-    desc: "Immediate safety resources — crisis lines, emergency housing, urgent support.",
+    description: "Immediate safety resources — crisis lines, emergency housing, urgent support.",
     cost: "free",
     internal: true,
     link: routes.safety,
@@ -270,7 +270,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "community",
     name: "Reading Groups",
-    desc: "Small queer book clubs across Lisbon and online — fiction, theory, memoir, poetry.",
+    description: "Small queer book clubs across Lisbon and online — fiction, theory, memoir, poetry.",
     cost: "free",
     internal: true,
     link: routes.communities,
@@ -279,7 +279,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "community",
     name: "Monthly Magazine",
-    desc: "Interviews, essays, reviews, and community life — published the first of every month.",
+    description: "Interviews, essays, reviews, and community life — published the first of every month.",
     cost: "free",
     internal: true,
     link: routes.magazine,
@@ -288,7 +288,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "community",
     name: "Activism & Organising",
-    desc: "Community organising resources, campaigns, and how to get involved in queer activism.",
+    description: "Community organising resources, campaigns, and how to get involved in queer activism.",
     cost: "free",
     internal: true,
     link: routes.activism,
@@ -297,7 +297,7 @@ const RESOURCES: Resource[] = [
   {
     cat: "community",
     name: "Volunteer",
-    desc: "Ways to give time to the QueerPulse community and partner organisations.",
+    description: "Ways to give time to the QueerPulse community and partner organisations.",
     cost: "free",
     internal: true,
     link: routes.volunteer,
@@ -363,7 +363,7 @@ export function ResourceLibraryPage() {
         q &&
         !(
           r.name.toLowerCase().includes(q) ||
-          r.desc.toLowerCase().includes(q) ||
+          r.description.toLowerCase().includes(q) ||
           r.tags.join(" ").toLowerCase().includes(q)
         )
       )
@@ -482,7 +482,7 @@ export function ResourceLibraryPage() {
                       </span>
                     </div>
                     <div className={s.name}>{resource.name}</div>
-                    <div className={s.desc}>{resource.desc}</div>
+                    <div className={s.desc}>{resource.description}</div>
                     <div className={s.tags}>
                       {resource.tags.map((tag) => (
                         <span key={tag} className={s.tag}>

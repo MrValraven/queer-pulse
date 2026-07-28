@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FiCheck, FiMessageCircle } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMemberContact } from "../connect/useMemberContact";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { RosterMember } from "./community.model";
@@ -57,6 +58,7 @@ export function RosterTab({
   slug: string;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [q, setQ] = useState("");
 
   const shown = useMemo(() => {
@@ -91,7 +93,7 @@ export function RosterTab({
               <Avatar
                 initials={m.initials}
                 tint={m.tint}
-                src={photoOf(m)}
+                src={photoOf(m, demoMode)}
                 size={48}
                 alt={m.name}
                 verified={m.verified}

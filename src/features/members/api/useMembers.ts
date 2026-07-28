@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getMembers, type MembersPage } from "./members.api";
 import { cardDtoToMemberCard } from "./members.adapters";
-import { MEMBERS, type MemberCard } from "../memberDirectoryFilter.data";
+import type { MemberCard } from "../memberDirectoryFilter.data";
 
 export interface MembersResult {
   /** All members fetched so far, flattened across loaded pages. */
@@ -42,6 +42,7 @@ export function useMembers(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
+        const { MEMBERS } = await import("../memberDirectoryFilter.data");
         return { items: MEMBERS, total: MEMBERS.length, page: 1 };
       }
       const res: MembersPage = await getMembers({

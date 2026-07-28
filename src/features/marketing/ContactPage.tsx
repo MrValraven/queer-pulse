@@ -11,35 +11,35 @@ import s from "./ContactPage.module.css";
 
 const ROUTES: {
   icon: IconType;
-  bg: string;
+  background: string;
   titleKey: string;
   descKey: string;
   email: string;
 }[] = [
   {
     icon: FiMail,
-    bg: "rgba(232,119,90,.12)",
+    background: "rgba(232,119,90,.12)",
     titleKey: "marketing:contact.routes.general.title",
     descKey: "marketing:contact.routes.general.desc",
     email: "hello@queerpulse.pt",
   },
   {
     icon: FiShield,
-    bg: "rgba(74,140,111,.12)",
+    background: "rgba(74,140,111,.12)",
     titleKey: "marketing:contact.routes.safety.title",
     descKey: "marketing:contact.routes.safety.desc",
     email: "safe@queerpulse.pt",
   },
   {
     icon: FiFileText,
-    bg: "rgba(45,27,61,.08)",
+    background: "rgba(45,27,61,.08)",
     titleKey: "marketing:contact.routes.press.title",
     descKey: "marketing:contact.routes.press.desc",
     email: "press@queerpulse.pt",
   },
   {
     icon: FiUsers,
-    bg: "rgba(232,119,90,.1)",
+    background: "rgba(232,119,90,.1)",
     titleKey: "marketing:contact.routes.partnerships.title",
     descKey: "marketing:contact.routes.partnerships.desc",
     email: "partners@queerpulse.pt",
@@ -49,12 +49,12 @@ const ROUTES: {
 export function ContactPage() {
   const { t } = useTranslation();
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", topic: "", msg: "" });
+  const [form, setForm] = useState({ name: "", email: "", topic: "", message: "" });
   const valid =
     form.name.trim() &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
     form.topic &&
-    form.msg.trim();
+    form.message.trim();
   const pageTitle = t("marketing:contact.meta.title");
   const pageDescription = t("marketing:contact.meta.description");
 
@@ -83,7 +83,7 @@ export function ContactPage() {
             <div className={s.routes}>
               {ROUTES.map((r) => (
                 <a key={r.email} className={s.route} href={`mailto:${r.email}`}>
-                  <span className={s.routeIcon} style={{ background: r.bg }}>
+                  <span className={s.routeIcon} style={{ background: r.background }}>
                     <r.icon />
                   </span>
                   <div>
@@ -183,8 +183,8 @@ export function ContactPage() {
                 <FormField label={t("marketing:contact.form.messageLabel")}>
                   <textarea
                     placeholder={t("marketing:contact.form.messagePlaceholder")}
-                    value={form.msg}
-                    onChange={(e) => setForm({ ...form, msg: e.target.value })}
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
                   />
                 </FormField>
                 <Button

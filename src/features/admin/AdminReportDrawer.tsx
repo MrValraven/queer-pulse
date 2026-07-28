@@ -207,7 +207,7 @@ export function AdminReportDrawer({
       head={
         <>
           <div className={styles.dHeadChips}>
-            <AdminCat tone={sev.cat}>{t(sev.labelKey)}</AdminCat>
+            <AdminCat tone={sev.category}>{t(sev.labelKey)}</AdminCat>
             {report.chips.map((chip) => (
               <AdminChip key={chipKey(chip)} tone={chip.tone}>
                 {chipLabel(chip, t)}
@@ -256,7 +256,7 @@ export function AdminReportDrawer({
               onClick={() => setAction(a.id)}
             >
               <span className={styles.dActionLabel}>{t(a.labelKey)}</span>
-              <span className={styles.dActionDesc}>{t(a.descKey)}</span>
+              <span className={styles.dActionDesc}>{t(a.descriptionKey)}</span>
             </button>
           ))}
         </div>

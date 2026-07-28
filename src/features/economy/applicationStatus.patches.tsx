@@ -66,7 +66,7 @@ export function negotiationAngles(app: Application): NegotiationAngle[] {
 
 export function withdrawnPatch(): Partial<Application> {
   return {
-    cat: "closed",
+    category: "closed",
     badge: { kind: "rejected", label: "Withdrawn" },
     stages: [
       { label: "Submitted", state: "done" },
@@ -103,7 +103,7 @@ export function followedUpPatch(): Partial<Application> {
 
 export function submittedDraftPatch(): Partial<Application> {
   return {
-    cat: "active",
+    category: "active",
     deadline: undefined,
     badge: { kind: "in-review", label: "Just sent", pulse: true },
     stages: [
@@ -149,7 +149,7 @@ export function acceptedOfferPatch(): Partial<Application> {
 /** Snapshot of the fields an offer response mutates, so the action can be undone. */
 export function offerRevertPatch(app: Application): Partial<Application> {
   return {
-    cat: app.cat,
+    category: app.category,
     accent: app.accent,
     deadline: app.deadline,
     badge: app.badge,
@@ -161,7 +161,7 @@ export function offerRevertPatch(app: Application): Partial<Application> {
 
 export function declinedOfferPatch(): Partial<Application> {
   return {
-    cat: "closed",
+    category: "closed",
     accent: undefined,
     deadline: undefined,
     badge: { kind: "rejected", label: "Offer declined" },

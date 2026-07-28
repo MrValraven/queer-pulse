@@ -95,11 +95,18 @@ Catalog`.
 - **Reuse existing keys.** Before adding a key, grep the namespace's catalog for
   the prefix you're about to add — a duplicate key is invisible to the parity
   test (see below) and silently shadows the original.
-- All catalogs are statically imported today, so every namespace ships in the
-  main bundle. If the registry grows heavy, swap the inner values in
-  `catalogs/index.ts` for lazy `() => import(...)` — the resolver only depends
-  on the `Record<Namespace, Catalog>` shape, so the change stays local to that
-  file.
+- **Loading strategy.** EN is bundled eagerly and in full: it's the resolver's
+  universal fallback, so keeping it synchronous means a not-yet-loaded namespace
+  degrades to a real English string rather than the raw key. PT ships only its
+  shell namespaces (`common`, `nav`, `footer`, `shared`, `system`) eagerly;
+  every other PT namespace is a lazy `() => import(...)` chunk in
+  `ptNamespaceLoaders` (`catalogs/index.ts`), fetched on demand by
+  `I18nProvider` the first time a route asks for one of its keys. English
+  visitors never download any PT. To make a PT namespace eager (e.g. to avoid a
+  brief EN→PT flip on a landing route), move it from the lazy loader map into
+  the eager block. Splitting EN the same way would need a Suspense boundary or a
+  route→namespace preload map to preserve the no-raw-key fallback, so EN stays
+  eager for now.
 
 ## The scope rule
 

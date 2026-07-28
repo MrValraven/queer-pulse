@@ -31,7 +31,7 @@ function BackLink({ onBack }: { onBack: () => void }) {
  * Loading, error, and "loaded but missing" are kept distinct — mirroring the
  * rule `AdminSettingsHistory` follows. `data` is `undefined` in both the
  * error and the missing-after-load cases, so falling through past this guard
- * would either crash on `community.mods[0]!` or silently render nothing
+ * would either crash on `community.moderators[0]!` or silently render nothing
  * useful. The back link is always present so a stalled or failed fetch never
  * strands the admin on a dead screen.
  */
@@ -113,13 +113,13 @@ export function AdminCommunityDetail({
             <em>{lastWord}</em>
           </h1>
           <p className={styles.heroDesc}>
-            {community.desc}{" "}
-            {community.mods.length === 0
+            {community.description}{" "}
+            {community.moderators.length === 0
               ? t("admin:communities.detail.foundedOnly", {
                   founded: community.founded,
                 })
               : t("admin:communities.detail.stewardedBy", {
-                  count: community.mods.length,
+                  count: community.moderators.length,
                   founded: community.founded,
                 })}
           </p>
@@ -158,8 +158,8 @@ export function AdminCommunityDetail({
               />
             </h3>
             <p className={styles.bannerText}>
-              {t(supportBannerTextKey(community.mods.length), {
-                name: community.mods[0] ? firstName(community.mods[0].name) : "",
+              {t(supportBannerTextKey(community.moderators.length), {
+                name: community.moderators[0] ? firstName(community.moderators[0].name) : "",
                 members: community.members,
               })}
             </p>
@@ -177,7 +177,7 @@ export function AdminCommunityDetail({
         />
         <StatCell
           label={t("admin:communities.detail.stat.activeThisWeek")}
-          value={`${community.activePct}%`}
+          value={`${community.activePercent}%`}
         />
         <StatCell
           label={t("admin:communities.detail.stat.openReports")}
@@ -186,8 +186,8 @@ export function AdminCommunityDetail({
         />
         <StatCell
           label={t("admin:communities.detail.stat.handled")}
-          value={`${community.resolvedPct}%`}
-          color={community.resolvedPct >= 95 ? "var(--jade)" : "var(--amber)"}
+          value={`${community.resolvedPercent}%`}
+          color={community.resolvedPercent >= 95 ? "var(--jade)" : "var(--amber)"}
         />
       </div>
 

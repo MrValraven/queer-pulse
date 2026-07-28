@@ -2,22 +2,27 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getCompanies } from "./companies.api";
 import { companyCardToEmployer, type EmployerCard } from "./companies.adapters";
-import { EMPLOYERS } from "../jobs.data";
-import { COMPANY_SLUG_BY_NAME } from "../companies.data";
 
-/** The mock employers grid, with each row's profile slug resolved by name. */
-const DEMO_EMPLOYERS: EmployerCard[] = EMPLOYERS.map((e) => ({
-  slug: COMPANY_SLUG_BY_NAME[e.name] ?? null,
-  logo: e.logo,
-  bg: e.bg,
-  text: e.text,
-  name: e.name,
-  type: e.type,
-  qr: e.qr,
-  badge: e.badge,
-  badgeBg: e.badgeBg,
-  badgeText: e.badgeText,
-}));
+/**
+ * The mock employers grid, with each row's profile slug resolved by name.
+ * Demo-only mock — loaded on demand so it never ships in the live bundle.
+ */
+async function loadDemoEmployers(): Promise<EmployerCard[]> {
+  const { EMPLOYERS } = await import("../jobs.data");
+  const { COMPANY_SLUG_BY_NAME } = await import("../companies.data");
+  return EMPLOYERS.map((e) => ({
+    slug: COMPANY_SLUG_BY_NAME[e.name] ?? null,
+    logo: e.logo,
+    background: e.background,
+    text: e.text,
+    name: e.name,
+    type: e.type,
+    qr: e.qr,
+    badge: e.badge,
+    badgeBg: e.badgeBg,
+    badgeText: e.badgeText,
+  }));
+}
 
 export interface CompaniesResult {
   /** All employer rows fetched so far, flattened across loaded pages. */
@@ -55,9 +60,10 @@ export function useCompanies(): CompaniesResult {
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
+        const demoEmployers = await loadDemoEmployers();
         return {
-          items: DEMO_EMPLOYERS,
-          total: DEMO_EMPLOYERS.length,
+          items: demoEmployers,
+          total: demoEmployers.length,
           page: 1,
         };
       }

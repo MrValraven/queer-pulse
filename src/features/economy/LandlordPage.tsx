@@ -134,7 +134,7 @@ export function LandlordPage() {
           eyebrow={t("economy:landlordPage.intro.eyebrow")}
           title={t("economy:landlordPage.intro.title")}
           em={t("economy:landlordPage.intro.em")}
-          sub={t("economy:landlordPage.intro.sub", { name: landlord.name })}
+          subtitle={t("economy:landlordPage.intro.sub", { name: landlord.name })}
           preset={t("economy:landlordPage.intro.preset", { firstName })}
           successTitle={t("economy:landlordPage.intro.successTitle")}
           successEm={t("economy:landlordPage.intro.successEm")}

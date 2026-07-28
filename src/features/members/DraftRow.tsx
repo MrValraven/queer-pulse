@@ -129,7 +129,7 @@ export function DraftRow({
             <span className={styles.title}>{draft.title}</span>
           )}
         </div>
-        <span className={styles.sub}>{draft.desc}</span>
+        <span className={styles.sub}>{draft.description}</span>
         <div className={styles.meta}>
           {draft.meta.map((m, i) => (
             <span

@@ -141,7 +141,7 @@ describe("sessionResponseToSession", () => {
   // blank rather than fabricate a plausible-looking one.
   it("invents no location and no last activity", () => {
     const session = sessionResponseToSession(response(), t, fmt, now);
-    expect(session.loc).toBeUndefined();
+    expect(session.location).toBeUndefined();
     expect(session.lastActivity).toBeUndefined();
     expect(session.extra).toBeUndefined();
   });

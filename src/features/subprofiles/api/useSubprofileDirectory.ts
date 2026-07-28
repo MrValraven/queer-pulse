@@ -5,7 +5,6 @@ import {
   type SubprofileCardDTO,
   type SubprofileKind,
 } from "./subprofiles.api";
-import { mockDirectory } from "../data/subprofiles.data";
 
 export interface SubprofileDirectoryFilters {
   kind?: SubprofileKind;
@@ -23,7 +22,10 @@ export function useSubprofileDirectory(
   return useQuery<SubprofileCardDTO[]>({
     queryKey: ["subprofiles", "directory", demoMode, kind, query],
     queryFn: async () => {
-      if (demoMode) return mockDirectory({ kind, query });
+      if (demoMode) {
+        const { mockDirectory } = await import("../data/subprofiles.data");
+        return mockDirectory({ kind, query });
+      }
       const res = await getSubprofileDirectory({ kind, query });
       return res.items;
     },

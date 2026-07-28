@@ -1,4 +1,5 @@
 // src/features/messages/MessageRun.tsx
+import { useRef } from "react";
 import { Avatar } from "../../shared/components/ui";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -26,7 +27,6 @@ interface MessageBubbleProps {
   lastIndex: number;
   isSent: boolean;
   senderName: string;
-  canDelete: boolean;
   /** Adds/removes a reaction on `message`; `mine` is whether the signed-in
    *  member already had that reaction (decides add vs. remove upstream). */
   onReactionToggle?: (
@@ -34,10 +34,6 @@ interface MessageBubbleProps {
     key: MessageReactionKey,
     mine: boolean,
   ) => void;
-  /** Opens the report flow for `message`. */
-  onReportMessage?: (message: ChatMessage) => void;
-  /** Opens the delete-confirm flow for `message`. */
-  onDeleteMessage?: (message: ChatMessage) => void;
   /** Opens the long-press/right-click action overlay for `message`. */
   onOpenActions?: (
     message: ChatMessage,
@@ -65,10 +61,7 @@ function MessageBubble({
   lastIndex,
   isSent,
   senderName,
-  canDelete,
   onReactionToggle,
-  onReportMessage,
-  onDeleteMessage,
   onOpenActions,
   editingMessageId,
   onSubmitEdit,
@@ -77,6 +70,7 @@ function MessageBubble({
 }: MessageBubbleProps) {
   const { t } = useTranslation();
   const isLast = index === lastIndex;
+  const wrapRef = useRef<HTMLDivElement>(null);
   const longPress = useLongPress(
     (origin) => onOpenActions?.(message, origin, isSent),
     { enabled: !!message.id && !message.deletedAt },
@@ -162,7 +156,12 @@ function MessageBubble({
   const hasVisibleReactions = reactions.some((reaction) => reaction.count > 0);
 
   return (
-    <div id={bubbleDomId} className={styles.bubbleWrap} {...longPress}>
+    <div
+      id={bubbleDomId}
+      ref={wrapRef}
+      className={styles.bubbleWrap}
+      {...longPress}
+    >
       {bubbleContent}
       {message.editedAt && !message.deletedAt && (
         <span className={styles.editedMarker}> · {t("messages:actions.edited")}</span>
@@ -176,12 +175,18 @@ function MessageBubble({
           .join(" ")}
       >
         <MessageActions
-          canDelete={canDelete}
           onReact={(reactionKey) =>
             onReactionToggle?.(message, reactionKey, false)
           }
-          onReport={() => onReportMessage?.(message)}
-          onDelete={() => onDeleteMessage?.(message)}
+          onOpenOverlay={() => {
+            if (wrapRef.current) {
+              onOpenActions?.(
+                message,
+                { rect: wrapRef.current.getBoundingClientRect() },
+                isSent,
+              );
+            }
+          }}
         />
       </div>
       {hasVisibleReactions && (
@@ -206,9 +211,6 @@ export function MessageRunView({
   onRetry,
   showSeen,
   onReactionToggle,
-  onReportMessage,
-  onDeleteMessage,
-  viewerIsStaff,
   onOpenActions,
   editingMessageId,
   onSubmitEdit,
@@ -236,13 +238,6 @@ export function MessageRunView({
     key: MessageReactionKey,
     mine: boolean,
   ) => void;
-  /** Opens the report flow for `message` (Task 5 renders the modal). */
-  onReportMessage?: (message: ChatMessage) => void;
-  /** Opens the delete-confirm flow for `message` (Task 6 renders the modal). */
-  onDeleteMessage?: (message: ChatMessage) => void;
-  /** True when the signed-in member is an admin/moderator — widens `canDelete`
-   *  to any message, not just the member's own. */
-  viewerIsStaff?: boolean;
   /** Opens the long-press/right-click action overlay for `message`. */
   onOpenActions?: (
     message: ChatMessage,
@@ -268,7 +263,6 @@ export function MessageRunView({
   const senderName = isSent ? selfName : counterpartName;
   const lastIndex = run.items.length - 1;
   const runTime = run.items[lastIndex]?.time;
-  const canDelete = isSent || !!viewerIsStaff;
 
   return (
     <div
@@ -287,10 +281,7 @@ export function MessageRunView({
             lastIndex={lastIndex}
             isSent={isSent}
             senderName={senderName}
-            canDelete={canDelete}
             onReactionToggle={onReactionToggle}
-            onReportMessage={onReportMessage}
-            onDeleteMessage={onDeleteMessage}
             onOpenActions={onOpenActions}
             editingMessageId={editingMessageId}
             onSubmitEdit={onSubmitEdit}

@@ -14,7 +14,7 @@ const PRIVACY = routes.privacy;
 interface Right {
   art: number;
   label: ReactNode;
-  desc: string;
+  description: string;
   formTitle: string;
   formSub: string;
 }
@@ -33,14 +33,14 @@ function buildRights(t: TFunction): Right[] {
           components={{ em: <em /> }}
         />
       ),
-      desc: t("marketing:dsar.rights.access.desc"),
+      description: t("marketing:dsar.rights.access.desc"),
       formTitle: t("marketing:dsar.rights.access.formTitle"),
       formSub: t("marketing:dsar.rights.access.formSub"),
     },
     {
       art: 16,
       label: <>{t("marketing:dsar.rights.rectification.label")}</>,
-      desc: t("marketing:dsar.rights.rectification.desc"),
+      description: t("marketing:dsar.rights.rectification.desc"),
       formTitle: t("marketing:dsar.rights.rectification.formTitle"),
       formSub: t("marketing:dsar.rights.rectification.formSub"),
     },
@@ -52,7 +52,7 @@ function buildRights(t: TFunction): Right[] {
           components={{ em: <em /> }}
         />
       ),
-      desc: t("marketing:dsar.rights.erasure.desc"),
+      description: t("marketing:dsar.rights.erasure.desc"),
       formTitle: t("marketing:dsar.rights.erasure.formTitle"),
       formSub: t("marketing:dsar.rights.erasure.formSub"),
     },
@@ -64,7 +64,7 @@ function buildRights(t: TFunction): Right[] {
           components={{ em: <em /> }}
         />
       ),
-      desc: t("marketing:dsar.rights.objection.desc"),
+      description: t("marketing:dsar.rights.objection.desc"),
       formTitle: t("marketing:dsar.rights.objection.formTitle"),
       formSub: t("marketing:dsar.rights.objection.formSub"),
     },
@@ -133,7 +133,7 @@ function RightPicker({
             {t("marketing:dsar.artPrefix", { number: r.art })}
           </div>
           <h3>{r.label}</h3>
-          <p>{r.desc}</p>
+          <p>{r.description}</p>
         </button>
       ))}
     </div>

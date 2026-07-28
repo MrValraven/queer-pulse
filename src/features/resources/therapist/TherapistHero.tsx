@@ -10,7 +10,7 @@ import type { Therapist } from "../mentalHealth.data";
 import type { TherapistProfile } from "./therapistProfiles.data";
 import styles from "./TherapistProfilePage.module.css";
 
-type MsgPhase = "idle" | "sending" | "sent";
+type MessagePhase = "idle" | "sending" | "sent";
 
 const PILL_TONE: Record<string, string | undefined> = {
   lang: styles.pillLang,
@@ -25,7 +25,7 @@ export function TherapistHero({
   profile: TherapistProfile;
 }) {
   const { t } = useTranslation();
-  const [msg, setMsg] = useState<MsgPhase>("idle");
+  const [message, setMessage] = useState<MessagePhase>("idle");
   const reduced = usePrefersReducedMotion();
   const firstName = therapist.name.replace(/^Dr\.\s*/, "").split(" ")[0];
 
@@ -37,9 +37,9 @@ export function TherapistHero({
   }
 
   function sendMessage() {
-    if (msg !== "idle") return;
-    setMsg("sending");
-    window.setTimeout(() => setMsg("sent"), 1100);
+    if (message !== "idle") return;
+    setMessage("sending");
+    window.setTimeout(() => setMessage("sent"), 1100);
   }
 
   return (
@@ -103,7 +103,7 @@ export function TherapistHero({
               </span>
             ))}
           </div>
-          {msg === "sent" ? (
+          {message === "sent" ? (
             <div className={styles.sentNote}>
               <FiCheck aria-hidden />
               <div>
@@ -125,9 +125,9 @@ export function TherapistHero({
               <Button
                 variant="ghost"
                 onClick={sendMessage}
-                disabled={msg === "sending"}
+                disabled={message === "sending"}
               >
-                {msg === "sending" ? (
+                {message === "sending" ? (
                   <Sending label={t("resources:suggestEdit.sendingLabel")} />
                 ) : (
                   t("resources:therapistProfilePage.sendMessageCta")

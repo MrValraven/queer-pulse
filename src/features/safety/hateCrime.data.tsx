@@ -11,13 +11,13 @@ export type Block =
   | { kind: "note"; text: string }
   | {
       kind: "step";
-      num: number;
+      number: number;
       title: string;
-      desc: string;
+      description: string;
       tag?: { label: string; kind: TagKind };
       link?: { label: string; href: string };
     }
-  | { kind: "def"; h4: string; paras: string[] };
+  | { kind: "def"; h4: string; paragraphs: string[] };
 
 /** i18n Pattern A — chrome list, sole consumer is `HateCrimeTabBar`. */
 export const TAB_KEYS: { id: TabId; labelKey: string }[] = [
@@ -49,37 +49,37 @@ export function buildPanels(
       { kind: "preamble", text: t("safety:hateCrime.immediate.preamble") },
       {
         kind: "step",
-        num: 1,
+        number: 1,
         title: t("safety:hateCrime.immediate.step1.title"),
-        desc: t("safety:hateCrime.immediate.step1.desc"),
+        description: t("safety:hateCrime.immediate.step1.desc"),
         tag: tag("safety:hateCrime.tag.immediate", "immediate"),
       },
       {
         kind: "step",
-        num: 2,
+        number: 2,
         title: t("safety:hateCrime.immediate.step2.title"),
-        desc: t("safety:hateCrime.immediate.step2.desc"),
+        description: t("safety:hateCrime.immediate.step2.desc"),
         tag: tag("safety:hateCrime.tag.immediate", "immediate"),
       },
       {
         kind: "step",
-        num: 3,
+        number: 3,
         title: t("safety:hateCrime.immediate.step3.title"),
-        desc: t("safety:hateCrime.immediate.step3.desc"),
+        description: t("safety:hateCrime.immediate.step3.desc"),
         tag: tag("safety:hateCrime.tag.ifHurt", "immediate"),
       },
       {
         kind: "step",
-        num: 4,
+        number: 4,
         title: t("safety:hateCrime.immediate.step4.title"),
-        desc: t("safety:hateCrime.immediate.step4.desc"),
+        description: t("safety:hateCrime.immediate.step4.desc"),
         tag: tag("safety:hateCrime.tag.recommended", "recommended"),
       },
       {
         kind: "step",
-        num: 5,
+        number: 5,
         title: t("safety:hateCrime.immediate.step5.title"),
-        desc: t("safety:hateCrime.immediate.step5.desc"),
+        description: t("safety:hateCrime.immediate.step5.desc"),
         tag: tag("safety:hateCrime.tag.recommended", "recommended"),
       },
     ],
@@ -96,33 +96,33 @@ export function buildPanels(
       },
       {
         kind: "step",
-        num: 1,
+        number: 1,
         title: t("safety:hateCrime.document.step1.title"),
-        desc: t("safety:hateCrime.document.step1.desc"),
+        description: t("safety:hateCrime.document.step1.desc"),
       },
       {
         kind: "step",
-        num: 2,
+        number: 2,
         title: t("safety:hateCrime.document.step2.title"),
-        desc: t("safety:hateCrime.document.step2.desc"),
+        description: t("safety:hateCrime.document.step2.desc"),
       },
       {
         kind: "step",
-        num: 3,
+        number: 3,
         title: t("safety:hateCrime.document.step3.title"),
-        desc: t("safety:hateCrime.document.step3.desc"),
+        description: t("safety:hateCrime.document.step3.desc"),
       },
       {
         kind: "step",
-        num: 4,
+        number: 4,
         title: t("safety:hateCrime.document.step4.title"),
-        desc: t("safety:hateCrime.document.step4.desc"),
+        description: t("safety:hateCrime.document.step4.desc"),
       },
       {
         kind: "step",
-        num: 5,
+        number: 5,
         title: t("safety:hateCrime.document.step5.title"),
-        desc: t("safety:hateCrime.document.step5.desc"),
+        description: t("safety:hateCrime.document.step5.desc"),
         tag: tag("safety:hateCrime.tag.ifApplicable", "optional"),
       },
       {
@@ -149,22 +149,22 @@ export function buildPanels(
       },
       {
         kind: "step",
-        num: 1,
+        number: 1,
         title: t("safety:hateCrime.report.police.step1.title"),
-        desc: t("safety:hateCrime.report.police.step1.desc"),
+        description: t("safety:hateCrime.report.police.step1.desc"),
       },
       {
         kind: "step",
-        num: 2,
+        number: 2,
         title: t("safety:hateCrime.report.police.step2.title"),
-        desc: t("safety:hateCrime.report.police.step2.desc"),
+        description: t("safety:hateCrime.report.police.step2.desc"),
         tag: tag("safety:hateCrime.tag.important", "immediate"),
       },
       {
         kind: "step",
-        num: 3,
+        number: 3,
         title: t("safety:hateCrime.report.police.step3.title"),
-        desc: t("safety:hateCrime.report.police.step3.desc"),
+        description: t("safety:hateCrime.report.police.step3.desc"),
         tag: tag("safety:hateCrime.tag.stronglyRecommended", "recommended"),
       },
       {
@@ -178,16 +178,16 @@ export function buildPanels(
       },
       {
         kind: "step",
-        num: 1,
+        number: 1,
         title: t("safety:hateCrime.report.ilga.step1.title"),
-        desc: t("safety:hateCrime.report.ilga.step1.desc"),
+        description: t("safety:hateCrime.report.ilga.step1.desc"),
         tag: tag("safety:hateCrime.tag.anonOptionAvailable", "recommended"),
       },
       {
         kind: "step",
-        num: 2,
+        number: 2,
         title: t("safety:hateCrime.report.ilga.step2.title"),
-        desc: t("safety:hateCrime.report.ilga.step2.desc"),
+        description: t("safety:hateCrime.report.ilga.step2.desc"),
       },
       {
         kind: "sectionHead",
@@ -200,15 +200,15 @@ export function buildPanels(
       },
       {
         kind: "step",
-        num: 1,
+        number: 1,
         title: t("safety:hateCrime.report.eu.step1.title"),
-        desc: t("safety:hateCrime.report.eu.step1.desc"),
+        description: t("safety:hateCrime.report.eu.step1.desc"),
       },
       {
         kind: "step",
-        num: 2,
+        number: 2,
         title: t("safety:hateCrime.report.eu.step2.title"),
-        desc: t("safety:hateCrime.report.eu.step2.desc"),
+        description: t("safety:hateCrime.report.eu.step2.desc"),
         tag: tag("safety:hateCrime.tag.afterDomesticProcess", "optional"),
       },
     ],
@@ -225,21 +225,21 @@ export function buildPanels(
       },
       {
         kind: "step",
-        num: 1,
+        number: 1,
         title: t("safety:hateCrime.support.step1.title"),
-        desc: t("safety:hateCrime.support.step1.desc"),
+        description: t("safety:hateCrime.support.step1.desc"),
       },
       {
         kind: "step",
-        num: 2,
+        number: 2,
         title: t("safety:hateCrime.support.step2.title"),
-        desc: t("safety:hateCrime.support.step2.desc"),
+        description: t("safety:hateCrime.support.step2.desc"),
       },
       {
         kind: "step",
-        num: 3,
+        number: 3,
         title: t("safety:hateCrime.support.step3.title"),
-        desc: t("safety:hateCrime.support.step3.desc"),
+        description: t("safety:hateCrime.support.step3.desc"),
         link: {
           label: t("safety:hateCrime.support.directoryCta"),
           href: MENTAL,
@@ -256,15 +256,15 @@ export function buildPanels(
       },
       {
         kind: "step",
-        num: 4,
+        number: 4,
         title: t("safety:hateCrime.support.step4.title"),
-        desc: t("safety:hateCrime.support.step4.desc"),
+        description: t("safety:hateCrime.support.step4.desc"),
       },
       {
         kind: "step",
-        num: 5,
+        number: 5,
         title: t("safety:hateCrime.support.step5.title"),
-        desc: t("safety:hateCrime.support.step5.desc"),
+        description: t("safety:hateCrime.support.step5.desc"),
         link: { label: t("safety:hateCrime.support.forumCta"), href: FORUM },
       },
     ],
@@ -273,7 +273,7 @@ export function buildPanels(
       {
         kind: "def",
         h4: t("safety:hateCrime.law.def1.h4"),
-        paras: [
+        paragraphs: [
           t("safety:hateCrime.law.def1.para1"),
           t("safety:hateCrime.law.def1.para2"),
         ],
@@ -281,17 +281,17 @@ export function buildPanels(
       {
         kind: "def",
         h4: t("safety:hateCrime.law.def2.h4"),
-        paras: [t("safety:hateCrime.law.def2.para1")],
+        paragraphs: [t("safety:hateCrime.law.def2.para1")],
       },
       {
         kind: "def",
         h4: t("safety:hateCrime.law.def3.h4"),
-        paras: [t("safety:hateCrime.law.def3.para1")],
+        paragraphs: [t("safety:hateCrime.law.def3.para1")],
       },
       {
         kind: "def",
         h4: t("safety:hateCrime.law.def4.h4"),
-        paras: [t("safety:hateCrime.law.def4.para1")],
+        paragraphs: [t("safety:hateCrime.law.def4.para1")],
       },
     ],
   };

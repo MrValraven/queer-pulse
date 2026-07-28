@@ -38,9 +38,6 @@ export interface MessageAreaProps {
     key: MessageReactionKey,
     mine: boolean,
   ) => void;
-  onReportMessage: (message: ChatMessage) => void;
-  onDeleteMessage: (message: ChatMessage) => void;
-  viewerIsStaff: boolean;
   /** Opens the long-press/right-click action overlay for `message`. */
   onOpenActions?: (
     message: ChatMessage,
@@ -74,9 +71,6 @@ export function MessageArea({
   seenActive,
   lastOutbound,
   onReactionToggle,
-  onReportMessage,
-  onDeleteMessage,
-  viewerIsStaff,
   onOpenActions,
   editingMessageId,
   onBeginEdit,
@@ -129,9 +123,6 @@ export function MessageArea({
                         run.items[run.items.length - 1] === lastOutbound
                       }
                       onReactionToggle={onReactionToggle}
-                      onReportMessage={onReportMessage}
-                      onDeleteMessage={onDeleteMessage}
-                      viewerIsStaff={viewerIsStaff}
                       onOpenActions={onOpenActions}
                       editingMessageId={editingMessageId}
                       onBeginEdit={onBeginEdit}

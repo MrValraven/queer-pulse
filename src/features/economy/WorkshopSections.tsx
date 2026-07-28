@@ -46,7 +46,7 @@ export function WorkshopSessions({ workshop }: { workshop: Workshop }) {
             </div>
             <div className={styles.sessInfo}>
               <b>{s.title}</b>
-              <span>{s.desc}</span>
+              <span>{s.description}</span>
             </div>
             <div className={styles.sessMeta}>
               <b>{s.date}</b>

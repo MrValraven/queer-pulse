@@ -3,7 +3,6 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import { getPartner } from "./partners.api";
 import { detailToPartner } from "./partners.adapters";
-import { getPartner as getMockPartner } from "../partnerDetails";
 import type { Partner } from "../partnerDetails.types";
 
 export interface PartnerResult {
@@ -27,6 +26,7 @@ export function usePartner(slug: string | undefined) {
     queryFn: async () => {
       if (!slug) return { partner: undefined, notFound: true };
       if (demoMode) {
+        const { getPartner: getMockPartner } = await import("../partnerDetails");
         const partner = getMockPartner(slug);
         return { partner, notFound: !partner };
       }

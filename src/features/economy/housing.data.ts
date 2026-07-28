@@ -10,32 +10,32 @@ export const FILTERS = [
 
 export const TIPS = [
   {
-    num: "01",
+    number: "01",
     titleKey: "economy:housing.tip.budget.title",
     textKey: "economy:housing.tip.budget.text",
   },
   {
-    num: "02",
+    number: "02",
     titleKey: "economy:housing.tip.board.title",
     textKey: "economy:housing.tip.board.text",
   },
   {
-    num: "03",
+    number: "03",
     titleKey: "economy:housing.tip.rights.title",
     textKey: "economy:housing.tip.rights.text",
   },
   {
-    num: "04",
+    number: "04",
     titleKey: "economy:housing.tip.shortTerm.title",
     textKey: "economy:housing.tip.shortTerm.text",
   },
   {
-    num: "05",
+    number: "05",
     titleKey: "economy:housing.tip.gut.title",
     textKey: "economy:housing.tip.gut.text",
   },
   {
-    num: "06",
+    number: "06",
     titleKey: "economy:housing.tip.emergency.title",
     textKey: "economy:housing.tip.emergency.text",
   },

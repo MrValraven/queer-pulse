@@ -7,11 +7,17 @@ import { memberProfiles } from "../members/data/memberProfiles";
  * Resolve a person's avatar photo: their own `avatarUrl` (the real picture the
  * owner/member set on their profile) when present, otherwise the static
  * registry photo their slug maps to. Undefined → the Avatar renders initials.
+ *
+ * The registry fallback is DEMO-ONLY — pass `demoMode` from the caller's
+ * `useDemoMode()`. In live mode a real person without an `avatarUrl` must render
+ * initials rather than borrow a mock persona's photo on a slug collision. The
+ * default (`false`) is the safe direction: a caller that forgets loses a mock
+ * avatar in demo mode, never leaks one into production.
  */
-export function photoOf(person: Person): string | undefined {
+export function photoOf(person: Person, demoMode = false): string | undefined {
   return (
     person.avatarUrl ??
-    (person.slug ? memberProfiles[person.slug]?.photo : undefined)
+    (demoMode && person.slug ? memberProfiles[person.slug]?.photo : undefined)
   );
 }
 

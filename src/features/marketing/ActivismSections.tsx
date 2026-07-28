@@ -32,8 +32,8 @@ export function StartSection() {
       </Reveal>
       <div className={s.actionGrid}>
         {START_STEPS.map((c, i) => (
-          <Reveal key={c.num} className={s.actionCard} delay={i * 60}>
-            <div className={s.acNum}>{c.num}</div>
+          <Reveal key={c.number} className={s.actionCard} delay={i * 60}>
+            <div className={s.acNum}>{c.number}</div>
             <div className={s.acTitle}>{t(c.titleKey)}</div>
             <div className={s.acBody}>{t(c.bodyKey)}</div>
           </Reveal>
@@ -194,13 +194,13 @@ export function OrgsSection() {
             >
               <span
                 className={s.orgAv}
-                style={{ background: org.bg, color: org.color }}
+                style={{ background: org.background, color: org.color }}
               >
-                {org.av}
+                {org.avatar}
               </span>
               <div>
                 <div className={s.orgName}>{org.name}</div>
-                <div className={s.orgDesc}>{org.desc}</div>
+                <div className={s.orgDesc}>{org.description}</div>
               </div>
             </Reveal>
           ))}
@@ -243,7 +243,7 @@ export function VolunteerSection() {
                 <span className={s.acPill}>{role.time}</span>
               </div>
               <div className={s.acBody}>
-                {role.org} · {role.desc}
+                {role.org} · {role.description}
               </div>
               <span className={s.acLink}>
                 {t("marketing:activism.volunteer.expressInterestCta")}

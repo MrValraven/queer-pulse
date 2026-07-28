@@ -7,45 +7,36 @@ import { ReactionPicker } from "./ReactionPicker";
 import styles from "./MessagesPage.module.css";
 
 export interface MessageActionsProps {
-  /** Whether the signed-in member may delete this message (own message, or staff). */
-  canDelete: boolean;
   onReact: (key: MessageReactionKey) => void;
-  onReport: () => void;
-  onDelete: () => void;
+  /** Opens the full action overlay (Reply / Edit / Copy / Delete / Report) —
+   *  the same sheet long-press (touch) and right-click (desktop) open. Wiring
+   *  the "More" button to it gives keyboard and mouse users every action, not
+   *  just React: the hover bar is reachable via `:focus-within`, so Tab lands
+   *  here and Enter opens the overlay, which then manages its own focus. */
+  onOpenOverlay: () => void;
 }
 
 /**
- * Small floating action bar shown on bubble hover (desktop) — revealed via
- * CSS in `MessageRun`. A "React" button opens the emoji picker popover; a
- * "More" button opens a menu with Report (always) and Delete (only when
- * `canDelete`). `data-open` on the root lets the CSS keep the whole bar
- * visible while either popover is open, even after the pointer leaves.
+ * Small floating action bar shown on bubble hover (desktop) and reachable by
+ * keyboard (revealed via `:focus-within` in `MessageRun`). A "React" button
+ * opens the emoji picker popover; a "More" button opens the full action
+ * overlay. `data-open` on the root lets the CSS keep the bar visible while the
+ * picker is open, even after the pointer leaves.
  */
-export function MessageActions({
-  canDelete,
-  onReact,
-  onReport,
-  onDelete,
-}: MessageActionsProps) {
+export function MessageActions({ onReact, onOpenOverlay }: MessageActionsProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const anyOpen = pickerOpen || menuOpen;
 
   useEffect(() => {
-    if (!anyOpen) return;
+    if (!pickerOpen) return;
     function closeOnOutsideClick(event: MouseEvent) {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setPickerOpen(false);
-        setMenuOpen(false);
       }
     }
     function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setPickerOpen(false);
-        setMenuOpen(false);
-      }
+      if (event.key === "Escape") setPickerOpen(false);
     }
     document.addEventListener("mousedown", closeOnOutsideClick);
     document.addEventListener("keydown", closeOnEscape);
@@ -53,13 +44,13 @@ export function MessageActions({
       document.removeEventListener("mousedown", closeOnOutsideClick);
       document.removeEventListener("keydown", closeOnEscape);
     };
-  }, [anyOpen]);
+  }, [pickerOpen]);
 
   return (
     <div
       className={styles.messageActions}
       ref={rootRef}
-      data-open={anyOpen ? "true" : undefined}
+      data-open={pickerOpen ? "true" : undefined}
     >
       <button
         type="button"
@@ -67,22 +58,18 @@ export function MessageActions({
         aria-haspopup="menu"
         aria-expanded={pickerOpen}
         aria-label={t("messages:actions.react")}
-        onClick={() => {
-          setMenuOpen(false);
-          setPickerOpen((open) => !open);
-        }}
+        onClick={() => setPickerOpen((open) => !open)}
       >
         <FiSmile aria-hidden />
       </button>
       <button
         type="button"
         className={styles.messageActionBtn}
-        aria-haspopup="menu"
-        aria-expanded={menuOpen}
+        aria-haspopup="dialog"
         aria-label={t("messages:actions.more")}
         onClick={() => {
           setPickerOpen(false);
-          setMenuOpen((open) => !open);
+          onOpenOverlay();
         }}
       >
         <FiMoreHorizontal aria-hidden />
@@ -96,35 +83,6 @@ export function MessageActions({
               onReact(key);
             }}
           />
-        </div>
-      )}
-
-      {menuOpen && (
-        <div className={styles.messageActionsMenu} role="menu">
-          <button
-            type="button"
-            role="menuitem"
-            className={styles.messageActionsMenuItem}
-            onClick={() => {
-              setMenuOpen(false);
-              onReport();
-            }}
-          >
-            {t("messages:actions.report")}
-          </button>
-          {canDelete && (
-            <button
-              type="button"
-              role="menuitem"
-              className={`${styles.messageActionsMenuItem} ${styles.messageActionsMenuItemDanger}`}
-              onClick={() => {
-                setMenuOpen(false);
-                onDelete();
-              }}
-            >
-              {t("messages:actions.delete")}
-            </button>
-          )}
         </div>
       )}
     </div>

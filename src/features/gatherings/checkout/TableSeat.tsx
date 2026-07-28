@@ -14,7 +14,7 @@ export interface RenderedSeat {
   angle: number;
   variant: "guest" | "host" | "you" | "open";
   tint?: "jade" | "coral" | "plum";
-  av: string;
+  avatar: string;
   gift?: boolean;
   name: string;
   pron?: string;
@@ -70,7 +70,7 @@ export function TableSeat({
         {!isPickable && <span className={s["tbl-cutlery"]} />}
       </span>
       <span className={s["tbl-plate"]}>
-        <span className={s["tbl-av"]}>{r.gift ? <FiHeart /> : r.av}</span>
+        <span className={s["tbl-av"]}>{r.gift ? <FiHeart /> : r.avatar}</span>
         {r.variant === "host" && <span className={s["tbl-host-badge"]} />}
       </span>
     </>

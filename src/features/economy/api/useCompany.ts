@@ -5,7 +5,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { getCompany } from "./companies.api";
 import { companyDetailToProfile } from "./companies.adapters";
 import { jobCardToJob } from "./jobs.adapters";
-import { COMPANY_PROFILES, type CompanyProfile } from "../companies.data";
+import type { CompanyProfile } from "../companies.data";
 import type { Job } from "../jobs.data";
 
 export interface CompanyResult {
@@ -31,6 +31,8 @@ export function useCompany(slug: string | undefined) {
     queryFn: async () => {
       if (!slug) return { profile: null, openRoles: null, isOwner: false };
       if (demoMode) {
+        // Demo-only mock — loaded on demand so it never ships in the live bundle.
+        const { COMPANY_PROFILES } = await import("../companies.data");
         return {
           profile: COMPANY_PROFILES[slug] ?? null,
           openRoles: null,

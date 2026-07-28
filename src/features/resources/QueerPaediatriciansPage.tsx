@@ -80,7 +80,7 @@ export function QueerPaediatriciansPage() {
                   {p.name}
                 </div>
                 <div className={styles.archiveMeta}>
-                  {p.practice} · {p.hood}
+                  {p.practice} · {p.neighbourhood}
                 </div>
                 <div className={styles.cardSpec}>{p.notedFor}</div>
                 <div className={styles.tags}>

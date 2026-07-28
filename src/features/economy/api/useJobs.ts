@@ -4,7 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getJobs } from "./jobs.api";
 import { jobCardToJob } from "./jobs.adapters";
-import { JOBS, type Job } from "../jobs.data";
+import type { Job } from "../jobs.data";
 
 export interface JobsResult {
   /** All jobs fetched so far, flattened across loaded pages. */
@@ -50,7 +50,11 @@ export function useJobs(
     queryKey: ["jobs", demoMode, language, params],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
-      if (demoMode) return { items: JOBS, total: JOBS.length, page: 1 };
+      if (demoMode) {
+        // Demo-only mock — loaded on demand so it never ships in the live bundle.
+        const { JOBS } = await import("../jobs.data");
+        return { items: JOBS, total: JOBS.length, page: 1 };
+      }
       const res = await getJobs({ ...params, page: pageParam as number });
       return {
         items: res.items.map((dto) => jobCardToJob(dto, t, fmt)),

@@ -46,7 +46,7 @@ export const GOING_ATTENDEES = [
   {
     id: "going-sr",
     initials: "SR",
-    bg: "rgba(74,140,111,.12)",
+    background: "rgba(74,140,111,.12)",
     color: "var(--jade)",
     name: "Sofia Rodrigues",
     pronouns: "she/her",
@@ -55,7 +55,7 @@ export const GOING_ATTENDEES = [
   {
     id: "going-ak",
     initials: "AK",
-    bg: "rgba(232,119,90,.12)",
+    background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
     name: "Anika Kovač",
     pronouns: "she/they",
@@ -64,7 +64,7 @@ export const GOING_ATTENDEES = [
   {
     id: "going-jp",
     initials: "JP",
-    bg: "rgba(45,27,61,.1)",
+    background: "rgba(45,27,61,.1)",
     color: "var(--plum)",
     name: "Jordan Park",
     pronouns: "they/them",
@@ -73,7 +73,7 @@ export const GOING_ATTENDEES = [
   {
     id: "going-tm",
     initials: "TM",
-    bg: "rgba(74,140,111,.08)",
+    background: "rgba(74,140,111,.08)",
     color: "var(--jade)",
     name: "Tomás Mendes",
     pronouns: "he/him",
@@ -85,7 +85,7 @@ export const WAITLIST_ATTENDEES = [
   {
     id: "wait-nc",
     initials: "NC",
-    bg: "rgba(45,27,61,.07)",
+    background: "rgba(45,27,61,.07)",
     color: "var(--plum)",
     name: "Nadia Castillo",
     pronouns: "she/her",
@@ -95,7 +95,7 @@ export const WAITLIST_ATTENDEES = [
   {
     id: "wait-kl",
     initials: "KL",
-    bg: "rgba(74,140,111,.08)",
+    background: "rgba(74,140,111,.08)",
     color: "var(--jade)",
     name: "Kai Larsson",
     pronouns: "they/them",
@@ -105,7 +105,7 @@ export const WAITLIST_ATTENDEES = [
   {
     id: "wait-mf",
     initials: "MF",
-    bg: "rgba(232,119,90,.08)",
+    background: "rgba(232,119,90,.08)",
     color: "var(--accent-ink)",
     name: "Maria Ferreira",
     pronouns: "she/her",
@@ -138,30 +138,30 @@ export const PREVIOUS_MESSAGES = [
 ];
 
 // i18n note: `id` is a stable lookup key for toggle state (never rendered);
-// `titleKey`/`descKey` are the chrome copy shown per row.
+// `titleKey`/`descriptionKey` are the chrome copy shown per row.
 export const GATHERING_SETTINGS = [
   {
     id: "allowWaitlist",
     titleKey: "gatherings:manage.settings.allowWaitlist.title",
-    descKey: "gatherings:manage.settings.allowWaitlist.desc",
+    descriptionKey: "gatherings:manage.settings.allowWaitlist.desc",
     on: true,
   },
   {
     id: "showAttendeeCount",
     titleKey: "gatherings:manage.settings.showAttendeeCount.title",
-    descKey: "gatherings:manage.settings.showAttendeeCount.desc",
+    descriptionKey: "gatherings:manage.settings.showAttendeeCount.desc",
     on: true,
   },
   {
     id: "allowQuestions",
     titleKey: "gatherings:manage.settings.allowQuestions.title",
-    descKey: "gatherings:manage.settings.allowQuestions.desc",
+    descriptionKey: "gatherings:manage.settings.allowQuestions.desc",
     on: false,
   },
   {
     id: "requireApproval",
     titleKey: "gatherings:manage.settings.requireApproval.title",
-    descKey: "gatherings:manage.settings.requireApproval.desc",
+    descriptionKey: "gatherings:manage.settings.requireApproval.desc",
     on: false,
   },
 ];

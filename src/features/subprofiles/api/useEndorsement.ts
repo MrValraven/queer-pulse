@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { endorseSubprofile, withdrawEndorsement } from "./subprofiles.api";
-import { mockSetEndorsed } from "../data/subprofiles.data";
 
 /** Result shape shared by the endorse and withdraw endpoints. */
 export interface EndorsementResult {
@@ -46,6 +45,7 @@ export function useEndorsement(subprofileId: string) {
   const endorse = useMutation<EndorsementResult, Error, EndorseVariables>({
     mutationFn: async ({ currentEndorsementCount, note }) => {
       if (demoMode) {
+        const { mockSetEndorsed } = await import("../data/subprofiles.data");
         return (
           mockSetEndorsed(subprofileId, true) ?? {
             endorsementCount: currentEndorsementCount + 1,
@@ -61,6 +61,7 @@ export function useEndorsement(subprofileId: string) {
   const withdraw = useMutation<EndorsementResult, Error, WithdrawVariables>({
     mutationFn: async ({ currentEndorsementCount }) => {
       if (demoMode) {
+        const { mockSetEndorsed } = await import("../data/subprofiles.data");
         return (
           mockSetEndorsed(subprofileId, false) ?? {
             endorsementCount: Math.max(0, currentEndorsementCount - 1),

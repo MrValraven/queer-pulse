@@ -25,7 +25,7 @@ const LOGO_TEXT = "var(--cream)";
 export interface EmployerCard {
   slug: string | null;
   logo: string;
-  bg: string;
+  background: string;
   text: string;
   name: string;
   type: string;
@@ -74,7 +74,7 @@ function barsFromHistogram(h: CompanyReviewBars): CompanyReviewBar[] {
   const total = rows.reduce((sum, r) => sum + r.n, 0);
   return rows.map((r) => ({
     label: r.label,
-    pct: total ? Math.round((r.n / total) * 100) : 0,
+    percent: total ? Math.round((r.n / total) * 100) : 0,
     score: String(r.n),
   }));
 }
@@ -92,7 +92,7 @@ export function companyCardToEmployer(dto: CompanyCardDTO): EmployerCard {
   return {
     slug: dto.slug,
     logo: logoFromName(dto.nameText),
-    bg: "rgba(var(--accent-rgb),.12)",
+    background: "rgba(var(--accent-rgb),.12)",
     text: "var(--accent-ink)",
     name: dto.nameText,
     type: dto.tagline,
@@ -138,7 +138,7 @@ export function companyDetailToProfile(dto: CompanyDetailDTO): CompanyProfile {
     badges: badgesFromFlags(dto.badges),
     stats,
     about: dto.about,
-    values: dto.values.map((v) => ({ title: v.title, desc: v.desc })),
+    values: dto.values.map((v) => ({ title: v.title, description: v.desc })),
     reviewScore: dto.reviewScore != null ? dto.reviewScore.toFixed(1) : "—",
     reviewCount: dto.reviewCount,
     reviewBars: barsFromHistogram(dto.reviewBars),

@@ -19,8 +19,8 @@ const CURRENT_ISSUE_PUBLISHED = new Date(2026, 5, 6);
 
 type Tint = "a" | "b" | "c" | "d";
 interface Issue {
-  num: string;
-  numLabel: string;
+  number: string;
+  numberLabel: string;
   current?: boolean;
   title: React.ReactNode;
   date: string;
@@ -36,8 +36,8 @@ interface Issue {
  */
 const ISSUES: Issue[] = [
   {
-    num: "09",
-    numLabel: "Issue 09 · Current",
+    number: "09",
+    numberLabel: "Issue 09 · Current",
     current: true,
     title: (
       <>
@@ -51,8 +51,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Spring 2026", detail: "84pp · 12 pieces" },
   },
   {
-    num: "08",
-    numLabel: "Issue 08",
+    number: "08",
+    numberLabel: "Issue 08",
     title: (
       <>
         On <em>work.</em>
@@ -65,8 +65,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Winter 2026", detail: "72pp · 10 pieces" },
   },
   {
-    num: "07",
-    numLabel: "Issue 07",
+    number: "07",
+    numberLabel: "Issue 07",
     title: (
       <>
         On <em>inheritance.</em>
@@ -79,8 +79,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Autumn 2025", detail: "68pp · 11 pieces" },
   },
   {
-    num: "06",
-    numLabel: "Issue 06",
+    number: "06",
+    numberLabel: "Issue 06",
     title: (
       <>
         On <em>the city.</em>
@@ -93,8 +93,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Summer 2025", detail: "80pp · 14 pieces" },
   },
   {
-    num: "05",
-    numLabel: "Issue 05",
+    number: "05",
+    numberLabel: "Issue 05",
     title: (
       <>
         On <em>migration.</em>
@@ -107,8 +107,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Spring 2025", detail: "76pp · 12 pieces" },
   },
   {
-    num: "04",
-    numLabel: "Issue 04",
+    number: "04",
+    numberLabel: "Issue 04",
     title: (
       <>
         On <em>the body.</em>
@@ -121,8 +121,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Winter 2025", detail: "64pp · 10 pieces" },
   },
   {
-    num: "03",
-    numLabel: "Issue 03",
+    number: "03",
+    numberLabel: "Issue 03",
     title: (
       <>
         On <em>belonging.</em>
@@ -135,8 +135,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Autumn 2024", detail: "60pp · 9 pieces" },
   },
   {
-    num: "02",
-    numLabel: "Issue 02",
+    number: "02",
+    numberLabel: "Issue 02",
     title: (
       <>
         On <em>time.</em>
@@ -149,8 +149,8 @@ const ISSUES: Issue[] = [
     meta: { season: "Summer 2024", detail: "56pp · 8 pieces" },
   },
   {
-    num: "01",
-    numLabel: "Issue 01 · Inaugural",
+    number: "01",
+    numberLabel: "Issue 01 · Inaugural",
     title: (
       <>
         On <em>beginning.</em>
@@ -336,61 +336,61 @@ function ArchiveSection({
       {view === "grid" ? (
         <div className={styles.grid}>
           {loading
-            ? Array.from({ length: issuesList.length }).map((_, i) => (
-                <IssueTileSkeleton key={i} />
+            ? Array.from({ length: issuesList.length }).map((_, index) => (
+                <IssueTileSkeleton key={index} />
               ))
-            : issuesList.map((iss, i) => (
+            : issuesList.map((issue, index) => (
                 <FadeIn
                   as={Link}
                   to={ISSUE}
                   className={styles.tile}
-                  key={iss.num}
-                  delay={Math.min(i, 8) * 60}
+                  key={issue.number}
+                  delay={Math.min(index, 8) * 60}
                 >
                   <div
-                    className={`${styles.tileCover} ${styles[TINT_CLASS[iss.tint]]}`}
+                    className={`${styles.tileCover} ${styles[TINT_CLASS[issue.tint]]}`}
                   >
-                    {iss.cover}
+                    {issue.cover}
                   </div>
                   <div
                     className={[
                       styles.tileNum,
-                      iss.current && styles.tileNumCurrent,
+                      issue.current && styles.tileNumCurrent,
                     ]
                       .filter(Boolean)
                       .join(" ")}
                   >
-                    {iss.numLabel}
+                    {issue.numberLabel}
                   </div>
-                  <div className={styles.tileH}>{iss.title}</div>
-                  <div className={styles.tileDate}>{iss.date}</div>
+                  <div className={styles.tileH}>{issue.title}</div>
+                  <div className={styles.tileDate}>{issue.date}</div>
                 </FadeIn>
               ))}
         </div>
       ) : (
         <div className={styles.list}>
           {loading
-            ? Array.from({ length: issuesList.length }).map((_, i) => (
-                <IssueRowSkeleton key={i} />
+            ? Array.from({ length: issuesList.length }).map((_, index) => (
+                <IssueRowSkeleton key={index} />
               ))
-            : issuesList.map((iss, i) => (
+            : issuesList.map((issue, index) => (
                 <FadeIn
                   as={Link}
                   to={ISSUE}
                   className={styles.listRow}
-                  key={iss.num}
-                  delay={Math.min(i, 8) * 60}
+                  key={issue.number}
+                  delay={Math.min(index, 8) * 60}
                 >
                   <div className={styles.listNum}>
-                    {iss.current ? <em>{iss.num}</em> : iss.num}
+                    {issue.current ? <em>{issue.number}</em> : issue.number}
                   </div>
                   <div>
-                    <div className={styles.listH}>{iss.title}</div>
-                    <div className={styles.listDek}>{iss.dek}</div>
+                    <div className={styles.listH}>{issue.title}</div>
+                    <div className={styles.listDek}>{issue.dek}</div>
                   </div>
                   <div className={styles.listMeta}>
-                    <b>{iss.meta.season}</b>
-                    {iss.meta.detail}
+                    <b>{issue.meta.season}</b>
+                    {issue.meta.detail}
                   </div>
                 </FadeIn>
               ))}

@@ -4,8 +4,8 @@ export type Stream = "dispatch" | "long" | "trans";
 
 export interface Row {
   stream: Stream;
-  num: string;
-  numLabel: string;
+  number: string;
+  numberLabel: string;
   title: ReactNode;
   ed?: string;
   dek: string;
@@ -32,8 +32,8 @@ export const YEARS: Year[] = [
     rows: [
       {
         stream: "dispatch",
-        num: "52",
-        numLabel: "Dispatch",
+        number: "52",
+        numberLabel: "Dispatch",
         title: (
           <>
             The summer slowdown <em>edition.</em>
@@ -48,8 +48,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "long",
-        num: "18",
-        numLabel: "Long",
+        number: "18",
+        numberLabel: "Long",
         title: (
           <>
             Five things I learned{" "}
@@ -64,8 +64,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "51",
-        numLabel: "Dispatch",
+        number: "51",
+        numberLabel: "Dispatch",
         title: (
           <>
             Pride month, and the <em>boring stuff that matters.</em>
@@ -79,8 +79,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "trans",
-        num: "08",
-        numLabel: "Trans Hub",
+        number: "08",
+        numberLabel: "Trans Hub",
         title: (
           <>
             The 2026 vetted-providers list — <em>refreshed.</em>
@@ -94,8 +94,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "50",
-        numLabel: "Dispatch",
+        number: "50",
+        numberLabel: "Dispatch",
         title: (
           <>
             Fiftieth dispatch. A little <em>thank you.</em>
@@ -109,8 +109,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "long",
-        num: "17",
-        numLabel: "Long",
+        number: "17",
+        numberLabel: "Long",
         title: (
           <>
             What the SNS gets right (and{" "}
@@ -125,8 +125,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "49",
-        numLabel: "Dispatch",
+        number: "49",
+        numberLabel: "Dispatch",
         title: (
           <>
             May Day. The queer history of <em>the trade union.</em>
@@ -146,8 +146,8 @@ export const YEARS: Year[] = [
     rows: [
       {
         stream: "dispatch",
-        num: "30",
-        numLabel: "Dispatch",
+        number: "30",
+        numberLabel: "Dispatch",
         title: <>The end-of-year issue.</>,
         dek: "2025 in numbers, the Year in Review (with its caveats), and what's planned for 2026.",
         date: "22 Dec 2025",
@@ -157,8 +157,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "long",
-        num: "12",
-        numLabel: "Long",
+        number: "12",
+        numberLabel: "Long",
         title: (
           <>
             The visa queue is <em>a kind of closet.</em>
@@ -172,8 +172,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "29",
-        numLabel: "Dispatch",
+        number: "29",
+        numberLabel: "Dispatch",
         title: (
           <>
             Cold weather, <em>warm rooms.</em>
@@ -187,8 +187,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "28",
-        numLabel: "Dispatch",
+        number: "28",
+        numberLabel: "Dispatch",
         title: <>Trans Day of Remembrance.</>,
         dek: "The names we're holding, the gathering, and a quiet ask.",
         date: "20 Nov 2025",
@@ -198,8 +198,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "trans",
-        num: "04",
-        numLabel: "Trans Hub",
+        number: "04",
+        numberLabel: "Trans Hub",
         title: (
           <>
             Hormone supply shortages — <em>what to do.</em>
@@ -219,8 +219,8 @@ export const YEARS: Year[] = [
     rows: [
       {
         stream: "dispatch",
-        num: "12",
-        numLabel: "Dispatch",
+        number: "12",
+        numberLabel: "Dispatch",
         title: (
           <>
             One year in. <em>What we got wrong.</em>
@@ -234,8 +234,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "long",
-        num: "06",
-        numLabel: "Long",
+        number: "06",
+        numberLabel: "Long",
         title: (
           <>
             The Lisbon we built <em>by accident.</em>
@@ -249,8 +249,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "11",
-        numLabel: "Dispatch",
+        number: "11",
+        numberLabel: "Dispatch",
         title: (
           <>
             Winter mutual aid <em>is open.</em>
@@ -264,8 +264,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "trans",
-        num: "02",
-        numLabel: "Trans Hub",
+        number: "02",
+        numberLabel: "Trans Hub",
         title: <>Starting the bulletin.</>,
         dek: "Why we split the Trans Hub into its own monthly, and what it will (and will not) carry.",
         date: "18 Nov 2024",
@@ -275,8 +275,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "08",
-        numLabel: "Dispatch",
+        number: "08",
+        numberLabel: "Dispatch",
         title: <>The first hundred members.</>,
         dek: "A welcome to everyone vouched in this autumn, plus the gatherings that filled up fastest.",
         date: "6 Oct 2024",
@@ -286,8 +286,8 @@ export const YEARS: Year[] = [
       },
       {
         stream: "dispatch",
-        num: "01",
-        numLabel: "Dispatch",
+        number: "01",
+        numberLabel: "Dispatch",
         title: (
           <>
             Hello. <em>This is the first one.</em>
@@ -351,7 +351,7 @@ export interface LatestIssue {
   dek: string;
   info: { label: string; value: string }[];
   /** Issue number used to build the "read in browser" link. */
-  num: string;
+  number: string;
 }
 
 /** The newest issue per stream, surfaced in the hero card. */
@@ -370,7 +370,7 @@ export const LATEST: Record<Stream | "all", LatestIssue> = {
       { label: "Read time", value: "~ 8 min" },
       { label: "Open rate", value: "61%" },
     ],
-    num: "52",
+    number: "52",
   },
   dispatch: {
     meta: "Latest dispatch · sent yesterday · 8,420 inboxes",
@@ -386,7 +386,7 @@ export const LATEST: Record<Stream | "all", LatestIssue> = {
       { label: "Read time", value: "~ 8 min" },
       { label: "Open rate", value: "61%" },
     ],
-    num: "52",
+    number: "52",
   },
   long: {
     meta: "Latest long read · sent 6 Jun · 2,100 inboxes",
@@ -402,7 +402,7 @@ export const LATEST: Record<Stream | "all", LatestIssue> = {
       { label: "Read time", value: "~ 16 min" },
       { label: "Open rate", value: "72%" },
     ],
-    num: "18",
+    number: "18",
   },
   trans: {
     meta: "Latest bulletin · sent 20 May · 1,600 inboxes",
@@ -418,6 +418,6 @@ export const LATEST: Record<Stream | "all", LatestIssue> = {
       { label: "Read time", value: "~ 10 min" },
       { label: "Open rate", value: "74%" },
     ],
-    num: "08",
+    number: "08",
   },
 };

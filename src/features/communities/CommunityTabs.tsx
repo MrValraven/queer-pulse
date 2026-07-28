@@ -93,6 +93,7 @@ export function MembersTab({
   loading?: boolean;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <div>
       <div className={styles.memberGrid} aria-busy={loading}>
@@ -121,7 +122,7 @@ export function MembersTab({
               </div>
             ))
           : members.map((m, i) => {
-              const photo = photoOf(m);
+              const photo = photoOf(m, demoMode);
               return (
                 <FadeIn
                   as={Link}

@@ -19,7 +19,7 @@ export function JobDetailSidebar({
   const { t } = useTranslation();
   const fmt = useFormat();
   const d = job.detail;
-  const companySlug = COMPANY_SLUG_BY_NAME[job.org];
+  const companySlug = COMPANY_SLUG_BY_NAME[job.organization];
   return (
     <aside className={styles.sidebar}>
       <div className={styles.card}>
@@ -31,9 +31,9 @@ export function JobDetailSidebar({
         </div>
         <div className={styles.coName}>
           {companySlug ? (
-            <Link to={`${routes.company}/${companySlug}`}>{job.org}</Link>
+            <Link to={`${routes.company}/${companySlug}`}>{job.organization}</Link>
           ) : (
-            job.org
+            job.organization
           )}
         </div>
         {job.qr && (

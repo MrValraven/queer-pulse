@@ -38,7 +38,7 @@ export function CommissionInterestModal({
     mutation.mutate(
       {
         commissionTitle: commission.title,
-        commissionCategory: commission.cat,
+        commissionCategory: commission.category,
         recipientName: commission.who.name,
         message: message.trim() || undefined,
       },
@@ -95,7 +95,7 @@ export function CommissionInterestModal({
             />
             <div>
               <div className={styles.panelCat}>
-                {t(COMMISSION_CAT_LABEL_KEY[commission.cat])}
+                {t(COMMISSION_CAT_LABEL_KEY[commission.category])}
               </div>
               <div className={styles.panelTitle}>{commission.title}</div>
             </div>

@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getOrgTiers } from "./orgTiers.api";
 import { dtoToOrgTier } from "./orgTiers.adapters";
-import { ORG_TIERS_DEMO } from "../orgTiers.data";
 import type { OrgTier } from "../orgTiers.data";
 
 export interface OrgTiersResult {
@@ -17,7 +16,10 @@ export function useOrgTiers(): OrgTiersResult {
   const query = useQuery<OrgTier[]>({
     queryKey: ["org-tiers", demoMode],
     queryFn: async () => {
-      if (demoMode) return ORG_TIERS_DEMO;
+      if (demoMode) {
+        const { ORG_TIERS_DEMO } = await import("../orgTiers.data");
+        return ORG_TIERS_DEMO;
+      }
       const dtos = await getOrgTiers();
       return dtos.map(dtoToOrgTier);
     },

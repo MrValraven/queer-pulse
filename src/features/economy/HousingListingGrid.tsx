@@ -187,7 +187,7 @@ export function HousingListingGrid({
                   {t("economy:housing.listing.from", { date: listing.avail })}
                 </span>
               </div>
-              <p className={styles.cardDesc}>{listing.desc}</p>
+              <p className={styles.cardDesc}>{listing.description}</p>
               <div className={styles.foot}>
                 <div className={styles.price}>
                   {listing.price} <span>/ {listing.period}</span>

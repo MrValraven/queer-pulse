@@ -119,7 +119,7 @@ export function CheckInColumn({
                 <div
                   className={styles.rrAv}
                   style={{
-                    background: recentGuest.bg,
+                    background: recentGuest.background,
                     color: recentGuest.color,
                   }}
                 >
@@ -250,7 +250,7 @@ export function GuestListCard({
             <div className={styles.attRow} key={guest.name}>
               <div
                 className={styles.attAv}
-                style={{ background: guest.bg, color: guest.color }}
+                style={{ background: guest.background, color: guest.color }}
               >
                 {guest.initials}
               </div>
@@ -313,7 +313,7 @@ export function GuestListCard({
               <div className={styles.attRow} key={waitlisted.name}>
                 <div
                   className={styles.attAv}
-                  style={{ background: waitlisted.bg, color: waitlisted.color }}
+                  style={{ background: waitlisted.background, color: waitlisted.color }}
                 >
                   {waitlisted.initials}
                 </div>

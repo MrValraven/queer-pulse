@@ -34,7 +34,7 @@ export function SkillsPage() {
     () =>
       active === "all"
         ? source
-        : source.filter((skill) => skill.cat === active),
+        : source.filter((skill) => skill.category === active),
     [source, active],
   );
   const offering = filtered.filter((skill) => skill.type === "offering");

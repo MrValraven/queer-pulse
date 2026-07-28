@@ -31,20 +31,20 @@ export const CATS: { id: string; nameKey: string; icon: IconType }[] = [
   { id: "trans", nameKey: "forum:cat.trans", icon: FiZap },
 ];
 
-export const CAT_STYLE: Record<string, { bg: string; color: string }> = {
-  general: { bg: "rgba(45,27,61,.08)", color: "var(--plum)" },
-  housing: { bg: "rgba(74,140,111,.1)", color: "var(--jade)" },
-  health: { bg: "rgba(122,82,184,.1)", color: "var(--violet)" },
-  arts: { bg: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
-  activism: { bg: "rgba(var(--danger-rgb),.07)", color: "var(--danger)" },
-  guides: { bg: "rgba(74,140,111,.1)", color: "var(--jade)" },
-  jobs: { bg: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
-  trans: { bg: "rgba(122,82,184,.1)", color: "var(--violet)" },
+export const CAT_STYLE: Record<string, { background: string; color: string }> = {
+  general: { background: "rgba(45,27,61,.08)", color: "var(--plum)" },
+  housing: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
+  health: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
+  arts: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
+  activism: { background: "rgba(var(--danger-rgb),.07)", color: "var(--danger)" },
+  guides: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
+  jobs: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
+  trans: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
 };
 
 export interface Reply {
-  av: string;
-  bg: string;
+  avatar: string;
+  background: string;
   color: string;
   name: string;
   /** Member slug, when the author is a real member (links to their profile). */
@@ -79,15 +79,15 @@ export interface Thread {
   /** Backend slug — the live detail/reply route param. Undefined for demo mock
    *  threads, which route by their numeric `id` instead. */
   slug?: string;
-  cat: string;
+  category: string;
   pinned?: boolean;
   title: string;
   excerpt: string;
   author: {
-    i: string;
-    n: string;
-    t: string;
-    tt: string;
+    initials: string;
+    name: string;
+    background: string;
+    color: string;
     slug?: string;
     photo?: string;
     official?: boolean;
@@ -118,16 +118,16 @@ export interface Thread {
 // non-member voice is the institutional QueerPulse account.
 
 // Solid avatar (thread authors) by member tint.
-const SOLID: Partial<Record<AvatarTint, { t: string; tt: string }>> = {
-  coral: { t: "var(--accent)", tt: "var(--paper)" },
-  jade: { t: "var(--jade)", tt: "var(--paper)" },
-  plum: { t: "var(--plum)", tt: "var(--cream)" },
+const SOLID: Partial<Record<AvatarTint, { background: string; color: string }>> = {
+  coral: { background: "var(--accent)", color: "var(--paper)" },
+  jade: { background: "var(--jade)", color: "var(--paper)" },
+  plum: { background: "var(--plum)", color: "var(--cream)" },
 };
 // Soft avatar (reply authors) by member tint.
-const SOFT: Partial<Record<AvatarTint, { bg: string; color: string }>> = {
-  coral: { bg: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
-  jade: { bg: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
+const SOFT: Partial<Record<AvatarTint, { background: string; color: string }>> = {
+  coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
+  jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
+  plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
 };
 const solid = (tint: AvatarTint) => SOLID[tint] ?? SOLID.plum!;
 const soft = (tint: AvatarTint) => SOFT[tint] ?? SOFT.plum!;
@@ -137,10 +137,10 @@ function author(slug: string): Thread["author"] {
   const m = MEMBERS[slug]!;
   const s = solid(m.tint);
   return {
-    i: m.initials,
-    n: fullName(m),
-    t: s.t,
-    tt: s.tt,
+    initials: m.initials,
+    name: fullName(m),
+    background: s.background,
+    color: s.color,
     slug,
     photo: m.photo,
   };
@@ -151,14 +151,14 @@ function reply(
   slug: string,
   rest: Omit<
     Reply,
-    "av" | "bg" | "color" | "name" | "slug" | "photo" | "official" | "mod"
+    "avatar" | "background" | "color" | "name" | "slug" | "photo" | "official" | "mod"
   >,
 ): Reply {
   const m = MEMBERS[slug]!;
   const s = soft(m.tint);
   return {
-    av: m.initials,
-    bg: s.bg,
+    avatar: m.initials,
+    background: s.background,
     color: s.color,
     name: fullName(m),
     slug,
@@ -171,10 +171,10 @@ function reply(
 // post is published by a named moderator on the platform's behalf (the `mod`
 // slug), and links to the governance page rather than a personal profile.
 const qpAuthor = (mod: string): Thread["author"] => ({
-  i: "QP",
-  n: "QueerPulse",
-  t: "var(--accent)",
-  tt: "var(--paper)",
+  initials: "QP",
+  name: "QueerPulse",
+  background: "var(--accent)",
+  color: "var(--paper)",
   official: true,
   mod,
 });
@@ -182,11 +182,11 @@ const qpReply = (
   mod: string,
   rest: Omit<
     Reply,
-    "av" | "bg" | "color" | "name" | "slug" | "photo" | "official" | "mod"
+    "avatar" | "background" | "color" | "name" | "slug" | "photo" | "official" | "mod"
   >,
 ): Reply => ({
-  av: "QP",
-  bg: "rgba(232,119,90,.14)",
+  avatar: "QP",
+  background: "rgba(232,119,90,.14)",
   color: "var(--accent-ink)",
   name: "QueerPulse",
   official: true,
@@ -199,10 +199,10 @@ const qpReply = (
  *  persona), so it must never author a live post. Live mode uses
  *  `selfAuthorFromProfile` with the real session identity instead. */
 export const SELF_AUTHOR: Thread["author"] = {
-  i: currentUser.initials,
-  n: "You",
-  t: solid(currentUser.tint).t,
-  tt: solid(currentUser.tint).tt,
+  initials: currentUser.initials,
+  name: "You",
+  background: solid(currentUser.tint).background,
+  color: solid(currentUser.tint).color,
   slug: currentUser.slug,
   photo: currentUser.photo,
 };
@@ -222,10 +222,10 @@ export function selfAuthorFromProfile(profile: {
 }): Thread["author"] {
   const tone = solid(tintForSlug(profile.slug));
   return {
-    i: initialsOf(profile.firstName, profile.lastName),
-    n: `${profile.firstName} ${profile.lastName}`.trim(),
-    t: tone.t,
-    tt: tone.tt,
+    initials: initialsOf(profile.firstName, profile.lastName),
+    name: `${profile.firstName} ${profile.lastName}`.trim(),
+    background: tone.background,
+    color: tone.color,
     slug: profile.slug,
     photo: profile.avatarUrl ?? undefined,
   };
@@ -234,7 +234,7 @@ export function selfAuthorFromProfile(profile: {
 export const THREADS: Thread[] = [
   {
     id: 1,
-    cat: "guides",
+    category: "guides",
     pinned: true,
     title: "Master resource guide: LGBTQ+ in Lisbon",
     excerpt:
@@ -283,7 +283,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 2,
-    cat: "health",
+    category: "health",
     pinned: true,
     title: "Trans-affirming healthcare in Lisbon — the full guide",
     excerpt:
@@ -327,7 +327,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 3,
-    cat: "general",
+    category: "general",
     pinned: true,
     title: "Welcome thread — introduce yourself",
     excerpt:
@@ -368,7 +368,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 5,
-    cat: "activism",
+    category: "activism",
     title: "Proposal: Monthly queer film night at Cinema São Jorge",
     excerpt:
       "Sofia is proposing a monthly queer film screening at Cinema São Jorge. She has a relationship with their programming team. Upvote if you'd come.",
@@ -415,7 +415,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 6,
-    cat: "general",
+    category: "general",
     title: "What queer spaces in Lisbon do you miss or want to see return?",
     excerpt:
       "Bars, clubs, bookshops, community centres — what's been lost, what never existed but should, and what we could build. Share yours.",
@@ -457,7 +457,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 8,
-    cat: "housing",
+    category: "housing",
     title: "Honest guide to finding a flat in Lisbon as a newcomer",
     excerpt:
       "Carla wrote this after three weeks on the rental market. Not encouraging. But useful, and more honest than anything you'll find on a portal.",
@@ -492,7 +492,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 16,
-    cat: "trans",
+    category: "trans",
     pinned: true,
     title: "Trans healthcare in Portugal 2026 — the complete SNS guide",
     excerpt:
@@ -528,7 +528,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 11,
-    cat: "arts",
+    category: "arts",
     title: "Vote: Queer film series — what do we watch in July?",
     excerpt:
       "We're doing our first proper screening. Submit and upvote films below. Foreign language films very welcome.",
@@ -570,7 +570,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 13,
-    cat: "general",
+    category: "general",
     title: "Should QueerPulse be more accessible to non-professionals?",
     excerpt:
       "The invite-only + 'professional network' framing might be excluding people who need community most. Thoughts?",
@@ -616,7 +616,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 18,
-    cat: "activism",
+    category: "activism",
     title: "Micro-grants: Q3 2026 applications now open",
     excerpt:
       "The community fund has €840 available this quarter for projects, events, and emergencies. €50–200 grants, no bureaucracy.",
@@ -650,7 +650,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 15,
-    cat: "jobs",
+    category: "jobs",
     title: "Queer-run bookshop in Anjos — hiring a bookseller",
     excerpt:
       "The bookshop we've been building is opening in September. Looking for a part-time bookseller with a love of queer literature.",
@@ -693,7 +693,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 19,
-    cat: "trans",
+    category: "trans",
     title: "Legal name change in Portugal — sharing experiences and tips",
     excerpt:
       "Possible since 2018, but in practice it depends heavily on which conservatória and official you see. Share your story.",

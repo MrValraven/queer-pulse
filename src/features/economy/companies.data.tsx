@@ -13,12 +13,12 @@ export interface CompanyStat {
 
 export interface CompanyValue {
   title: string;
-  desc: string;
+  description: string;
 }
 
 export interface CompanyReviewBar {
   label: string;
-  pct: number;
+  percent: number;
   score: string;
 }
 
@@ -43,7 +43,7 @@ export interface CompanyTeamAv {
 export interface CompanyWorkSlot {
   label: string;
   /** Optional real image; falls back to a labelled placeholder tile. */
-  img?: string;
+  image?: string;
 }
 
 export interface CompanyProfile {
@@ -136,29 +136,29 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Four-day week",
-        desc: 'Closed Fridays. Same salary. No exceptions, no "in-office Friday for emergencies".',
+        description: 'Closed Fridays. Same salary. No exceptions, no "in-office Friday for emergencies".',
       },
       {
         title: "Pay equity",
-        desc: "Salary bands are public to the team. Same role pays the same. We don't negotiate.",
+        description: "Salary bands are public to the team. Same role pays the same. We don't negotiate.",
       },
       {
         title: "Slow hiring",
-        desc: 'Three rounds max. Paid trial week is paid (€500 flat). No "culture fit" rejections.',
+        description: 'Three rounds max. Paid trial week is paid (€500 flat). No "culture fit" rejections.',
       },
       {
         title: "Time for your work",
-        desc: "One paid day per month for self-initiated work, magazine contributions, or volunteering.",
+        description: "One paid day per month for self-initiated work, magazine contributions, or volunteering.",
       },
     ],
     reviewScore: "4.7",
     reviewCount: 11,
     reviewBars: [
-      { label: "Inclusion & safety", pct: 96, score: "4.9" },
-      { label: "Pay & benefits", pct: 88, score: "4.5" },
-      { label: "Work–life balance", pct: 94, score: "4.8" },
-      { label: "Growth opportunities", pct: 80, score: "4.1" },
-      { label: "Management", pct: 92, score: "4.6" },
+      { label: "Inclusion & safety", percent: 96, score: "4.9" },
+      { label: "Pay & benefits", percent: 88, score: "4.5" },
+      { label: "Work–life balance", percent: 94, score: "4.8" },
+      { label: "Growth opportunities", percent: 80, score: "4.1" },
+      { label: "Management", percent: 92, score: "4.6" },
     ],
     reviews: [
       {
@@ -269,29 +269,29 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Institutional weight",
-        desc: "Three decades of relationships with clinics, schools, and lawmakers. Your work lands where it counts.",
+        description: "Three decades of relationships with clinics, schools, and lawmakers. Your work lands where it counts.",
       },
       {
         title: "Supervision, always",
-        desc: "Front-line roles come with structured supervision. Care work is treated as work.",
+        description: "Front-line roles come with structured supervision. Care work is treated as work.",
       },
       {
         title: "We reply to everyone",
-        desc: "Applicants hear back whether or not we move forward. No black holes.",
+        description: "Applicants hear back whether or not we move forward. No black holes.",
       },
       {
         title: "Members first",
-        desc: "We answer to the community we serve, not to funders or a board that's never met us.",
+        description: "We answer to the community we serve, not to funders or a board that's never met us.",
       },
     ],
     reviewScore: "4.4",
     reviewCount: 9,
     reviewBars: [
-      { label: "Inclusion & safety", pct: 98, score: "4.9" },
-      { label: "Pay & benefits", pct: 66, score: "3.3" },
-      { label: "Work–life balance", pct: 78, score: "3.9" },
-      { label: "Growth opportunities", pct: 84, score: "4.2" },
-      { label: "Management", pct: 88, score: "4.4" },
+      { label: "Inclusion & safety", percent: 98, score: "4.9" },
+      { label: "Pay & benefits", percent: 66, score: "3.3" },
+      { label: "Work–life balance", percent: 78, score: "3.9" },
+      { label: "Growth opportunities", percent: 84, score: "4.2" },
+      { label: "Management", percent: 88, score: "4.4" },
     ],
     reviews: [
       {
@@ -380,29 +380,29 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Lived experience counts",
-        desc: "No formal qualification required for peer roles. We train you and never leave you unsupported.",
+        description: "No formal qualification required for peer roles. We train you and never leave you unsupported.",
       },
       {
         title: "Supervision as standard",
-        desc: "Clinical supervision for every front-line facilitator. Care work needs care.",
+        description: "Clinical supervision for every front-line facilitator. Care work needs care.",
       },
       {
         title: "Steady, not heroic",
-        desc: "Good boundaries beat burnout. We build rotas that let people last.",
+        description: "Good boundaries beat burnout. We build rotas that let people last.",
       },
       {
         title: "We read everything",
-        desc: "Every application is read by us and answered, usually within a week.",
+        description: "Every application is read by us and answered, usually within a week.",
       },
     ],
     reviewScore: "4.6",
     reviewCount: 7,
     reviewBars: [
-      { label: "Inclusion & safety", pct: 98, score: "4.9" },
-      { label: "Pay & benefits", pct: 70, score: "3.5" },
-      { label: "Work–life balance", pct: 90, score: "4.5" },
-      { label: "Growth opportunities", pct: 76, score: "3.8" },
-      { label: "Management", pct: 94, score: "4.7" },
+      { label: "Inclusion & safety", percent: 98, score: "4.9" },
+      { label: "Pay & benefits", percent: 70, score: "3.5" },
+      { label: "Work–life balance", percent: 90, score: "4.5" },
+      { label: "Growth opportunities", percent: 76, score: "3.8" },
+      { label: "Management", percent: 94, score: "4.7" },
     ],
     reviews: [
       {
@@ -489,29 +489,29 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "A founding voice",
-        desc: "Join before we open and help shape the sections, the events, and the shop's whole feel.",
+        description: "Join before we open and help shape the sections, the events, and the shop's whole feel.",
       },
       {
         title: "Books first",
-        desc: "A real love of queer literature matters more than a retail CV. We'll teach the till.",
+        description: "A real love of queer literature matters more than a retail CV. We'll teach the till.",
       },
       {
         title: "Slow on purpose",
-        desc: "We're called Devagar for a reason. No rush, no churn, no pressure to upsell.",
+        description: "We're called Devagar for a reason. No rush, no churn, no pressure to upsell.",
       },
       {
         title: "Community, not footfall",
-        desc: "Readings, launches, and a space that belongs to the neighbourhood as much as to us.",
+        description: "Readings, launches, and a space that belongs to the neighbourhood as much as to us.",
       },
     ],
     reviewScore: "5.0",
     reviewCount: 2,
     reviewBars: [
-      { label: "Inclusion & safety", pct: 100, score: "5.0" },
-      { label: "Pay & benefits", pct: 72, score: "3.6" },
-      { label: "Work–life balance", pct: 96, score: "4.8" },
-      { label: "Growth opportunities", pct: 80, score: "4.0" },
-      { label: "Management", pct: 98, score: "4.9" },
+      { label: "Inclusion & safety", percent: 100, score: "5.0" },
+      { label: "Pay & benefits", percent: 72, score: "3.6" },
+      { label: "Work–life balance", percent: 96, score: "4.8" },
+      { label: "Growth opportunities", percent: 80, score: "4.0" },
+      { label: "Management", percent: 98, score: "4.9" },
     ],
     reviews: [
       {
@@ -593,29 +593,29 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Build in the open",
-        desc: "Roadmaps, salary bands, and decisions are shared with the team. No mystery.",
+        description: "Roadmaps, salary bands, and decisions are shared with the team. No mystery.",
       },
       {
         title: "Practise what we list",
-        desc: "Every standard we hold employers to, we meet ourselves — starting with pay transparency.",
+        description: "Every standard we hold employers to, we meet ourselves — starting with pay transparency.",
       },
       {
         title: "Remote, not scattered",
-        desc: "Async by default, a Lisbon anchor for those who want it, real overlap hours for the rest.",
+        description: "Async by default, a Lisbon anchor for those who want it, real overlap hours for the rest.",
       },
       {
         title: "People over résumés",
-        desc: "We read written samples before CVs and hire for judgement, not pedigree.",
+        description: "We read written samples before CVs and hire for judgement, not pedigree.",
       },
     ],
     reviewScore: "4.8",
     reviewCount: 12,
     reviewBars: [
-      { label: "Inclusion & safety", pct: 100, score: "5.0" },
-      { label: "Pay & benefits", pct: 90, score: "4.5" },
-      { label: "Work–life balance", pct: 92, score: "4.6" },
-      { label: "Growth opportunities", pct: 88, score: "4.4" },
-      { label: "Management", pct: 94, score: "4.7" },
+      { label: "Inclusion & safety", percent: 100, score: "5.0" },
+      { label: "Pay & benefits", percent: 90, score: "4.5" },
+      { label: "Work–life balance", percent: 92, score: "4.6" },
+      { label: "Growth opportunities", percent: 88, score: "4.4" },
+      { label: "Management", percent: 94, score: "4.7" },
     ],
     reviews: [
       {

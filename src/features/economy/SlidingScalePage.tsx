@@ -44,7 +44,7 @@ export function SlidingScalePage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:slidingScale.sub")}
+      subtitle={t("economy:slidingScale.sub")}
       form={
         <SlidingScaleForm
           scale={scale}

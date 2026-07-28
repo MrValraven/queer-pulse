@@ -22,11 +22,11 @@ export function fmtPhone(v: string): string {
   );
 }
 
-export function luhn(num: string): boolean {
+export function luhn(cardNumber: string): boolean {
   let sum = 0;
   let alt = false;
-  for (let i = num.length - 1; i >= 0; i--) {
-    let d = parseInt(num.charAt(i), 10);
+  for (let i = cardNumber.length - 1; i >= 0; i--) {
+    let d = parseInt(cardNumber.charAt(i), 10);
     if (alt) {
       d *= 2;
       if (d > 9) d -= 9;

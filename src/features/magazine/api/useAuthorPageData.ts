@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { AUTHORS, type Author } from "../authorContent.data";
+import type { Author } from "../authorContent.data";
 import { mergeAuthor } from "./magazine.adapters";
 import { getArticles, getAuthor } from "./magazine.api";
 
@@ -24,6 +24,10 @@ export function useAuthorPageData(slug: string) {
   return useQuery<Author | null>({
     queryKey: ["magazine-author", demoMode, language, slug],
     queryFn: async () => {
+      // Curated mock profiles — dynamically imported so they never ship in the
+      // live bundle. Live mode still overlays the API onto this base (see
+      // `mergeAuthor`), matching the prototype's 8 curated author slugs.
+      const { AUTHORS } = await import("../authorContent.data");
       const base = AUTHORS[slug];
       if (demoMode || !base) return null;
 

@@ -100,7 +100,7 @@ export const PLAYLIST_VIBE_LABEL_KEY: Record<
  * `useFormat().date()` so pt-PT gets its own date phrasing.
  */
 export function replyByDate(weeks = 2): Date {
-  const d = new Date();
-  d.setDate(d.getDate() + weeks * 7);
-  return d;
+  const date = new Date();
+  date.setDate(date.getDate() + weeks * 7);
+  return date;
 }

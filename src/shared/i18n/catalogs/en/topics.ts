@@ -65,4 +65,11 @@ export const topics: Catalog = {
   "fallback.postBody":
     "Topics grow when someone goes first. Post a question, a recommendation, or a resource with #{tag} and it will show up right here.",
   "fallback.postStats": "<b>0</b> posts · waiting for you",
+
+  // Live-mode not-found state (the slug resolved to no topic, or the fetch
+  // errored). Page chrome, not fetched content, so it translates.
+  "notFound.title": "This topic isn't here",
+  "notFound.description":
+    "We couldn't find a topic for that tag — it may have been renamed or removed. Head back to the forum to find where the conversation moved.",
+  "notFound.backCta": "Back to the forum",
 };

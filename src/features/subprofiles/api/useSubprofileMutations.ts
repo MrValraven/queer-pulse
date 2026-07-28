@@ -9,6 +9,7 @@ import {
   replaceSubprofileSection,
   unpublishSubprofile,
   updateSubprofile,
+  type CollaboratorDTO,
   type CreateSubprofileDTO,
   type SocialLinkDTO,
   type SubprofileDTO,
@@ -16,12 +17,6 @@ import {
   type SubprofileSection,
   type UpdateSubprofileDTO,
 } from "./subprofiles.api";
-import {
-  mockMineSubprofiles,
-  mockSubprofileById,
-  resolveCollaboratorsDemo,
-  validatePublishDemo,
-} from "../data/subprofiles.data";
 import { KIND_LABELS, defaultSlugForKind, slugify } from "../subprofile-kinds";
 
 /** Thrown by the publish mutation when the completeness check fails. In demo mode
@@ -50,7 +45,10 @@ function uniqueSlug(base: string, taken: Set<string>): string {
  *  (falling back to the kind), so a persona can be created with nothing but a
  *  profession picked. Slug is de-duped against existing ones; a custom address
  *  is applied afterwards via the same PATCH the live path uses. */
-function demoCreatedDto(dto: CreateSubprofileDTO): SubprofileDTO {
+function demoCreatedDto(
+  dto: CreateSubprofileDTO,
+  mockMineSubprofiles: () => SubprofileDTO[],
+): SubprofileDTO {
   const displayName = dto.displayName?.trim() || KIND_LABELS[dto.kind];
   const base = slugify(displayName) || defaultSlugForKind(dto.kind);
   const taken = new Set(mockMineSubprofiles().map((sp) => sp.slug));
@@ -89,6 +87,7 @@ function applySection(
   dto: SubprofileDTO,
   section: SubprofileSection,
   items: SubprofileItemInputDTO[],
+  resolveCollaboratorsDemo: (handles?: string[]) => CollaboratorDTO[],
 ): SubprofileDTO {
   const isLinksSection = section === "links";
   const replacedItems = items.map((item) => ({
@@ -131,8 +130,11 @@ export function useSubprofileMutations() {
   };
 
   const create = useMutation<SubprofileDTO, Error, CreateSubprofileDTO>({
-    mutationFn: async (dto) =>
-      demoMode ? demoCreatedDto(dto) : createSubprofile(dto),
+    mutationFn: async (dto) => {
+      if (!demoMode) return createSubprofile(dto);
+      const { mockMineSubprofiles } = await import("../data/subprofiles.data");
+      return demoCreatedDto(dto, mockMineSubprofiles);
+    },
     onSuccess: invalidateAll,
   });
 
@@ -143,6 +145,7 @@ export function useSubprofileMutations() {
   >({
     mutationFn: async ({ id, dto }) => {
       if (!demoMode) return updateSubprofile(id, dto);
+      const { mockSubprofileById } = await import("../data/subprofiles.data");
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
       return { ...current, ...dto };
@@ -157,9 +160,12 @@ export function useSubprofileMutations() {
   >({
     mutationFn: async ({ id, section, items }) => {
       if (!demoMode) return replaceSubprofileSection(id, section, items);
+      const { mockSubprofileById, resolveCollaboratorsDemo } = await import(
+        "../data/subprofiles.data"
+      );
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
-      return applySection(current, section, items);
+      return applySection(current, section, items, resolveCollaboratorsDemo);
     },
     onSuccess: invalidateAll,
   });
@@ -171,6 +177,7 @@ export function useSubprofileMutations() {
   >({
     mutationFn: async ({ id, items }) => {
       if (!demoMode) return replaceSocialLinks(id, items);
+      const { mockSubprofileById } = await import("../data/subprofiles.data");
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
       return { ...current, socialLinks: items };
@@ -198,6 +205,9 @@ export function useSubprofileMutations() {
           throw err;
         }
       }
+      const { mockSubprofileById, validatePublishDemo } = await import(
+        "../data/subprofiles.data"
+      );
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
       const unmet = validatePublishDemo(current);
@@ -217,6 +227,7 @@ export function useSubprofileMutations() {
   const unpublish = useMutation<SubprofileDTO, Error, string>({
     mutationFn: async (id) => {
       if (!demoMode) return unpublishSubprofile(id);
+      const { mockSubprofileById } = await import("../data/subprofiles.data");
       const current = mockSubprofileById(id);
       if (!current) throw new Error("Subprofile not found");
       return {

@@ -11,7 +11,7 @@ import type { SessionResponse } from "./account.api";
  * refresh-token store behind `GET /account/sessions` carries only
  * `id / userAgent / current / createdAt / expiresAt`, so:
  *
- * - `loc` and `lastActivity` are left undefined (the card omits them) rather
+ * - `location` and `lastActivity` are left undefined (the card omits them) rather
  *   than filled with a plausible-looking city or timestamp.
  * - `variant` is only ever `current` or `normal`. There is no server-side
  *   "this login looks suspicious" signal, so no session is ever badged

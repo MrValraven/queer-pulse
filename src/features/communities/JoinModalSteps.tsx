@@ -150,7 +150,7 @@ export function JoinStepInvolvement({
                 />
                 <div>
                   <span>{t(o.labelKey)}</span>
-                  <small>{t(o.descKey)}</small>
+                  <small>{t(o.descriptionKey)}</small>
                 </div>
               </label>
             ))}

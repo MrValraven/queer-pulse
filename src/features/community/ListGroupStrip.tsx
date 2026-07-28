@@ -59,7 +59,7 @@ export function ListGroupStrip({
             spine: (titlePart?.trim() || book).charAt(0).toUpperCase(),
             spineColor: "var(--violet)",
             name: t("community:readingGroups.listGroup.defaultName"),
-            desc:
+            description:
               whyField.trim() ||
               t("community:readingGroups.listGroup.newGroupDesc"),
             where: t(
@@ -69,7 +69,7 @@ export function ListGroupStrip({
             ),
             frequency: t("community:readingGroups.listGroup.defaultFrequency"),
             spots: Math.max(1, parseInt(maxField, 10) - 1),
-            lang: t("community:readingGroups.listGroup.defaultLang"),
+            language: t("community:readingGroups.listGroup.defaultLang"),
           };
           onListed(newGroup);
           setListedGroup(newGroup);

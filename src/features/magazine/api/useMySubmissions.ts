@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { PITCHES, type Pitch } from "../pitchTracker.data";
+import type { Pitch } from "../pitchTracker.data";
 import { submissionToPitch } from "./magazine.adapters";
 import { getMySubmissions } from "./magazine.api";
 
@@ -33,7 +33,12 @@ export function useMySubmissions() {
   return useQuery<Pitch[]>({
     queryKey: [MY_SUBMISSIONS_QUERY_KEY, demoMode, language],
     queryFn: async () => {
-      if (demoMode) return PITCHES;
+      if (demoMode) {
+        // Demo-only mock registry — dynamically imported so it never ships in
+        // the live bundle (live mode fetches from the API below).
+        const { PITCHES } = await import("../pitchTracker.data");
+        return PITCHES;
+      }
       const rows = await getMySubmissions();
       return rows.map((dto) => submissionToPitch(dto, fmt));
     },

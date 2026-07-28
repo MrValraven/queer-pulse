@@ -35,7 +35,7 @@ export const LOGO_CLASS: Record<LogoTint, string> = {
 export const APPS: Application[] = [
   {
     id: "atelier-pulso",
-    cat: "active",
+    category: "active",
     logo: "AP",
     logoTint: "",
     title: "Junior Graphic Designer",
@@ -102,7 +102,7 @@ export const APPS: Application[] = [
   },
   {
     id: "pixel-mode",
-    cat: "active",
+    category: "active",
     logo: "PM",
     logoTint: "jade",
     title: "Senior Product Designer",
@@ -173,7 +173,7 @@ export const APPS: Application[] = [
   },
   {
     id: "equip-editions",
-    cat: "offer",
+    category: "offer",
     logo: "EQ",
     logoTint: "plum",
     title: "Editorial Lead, Magazine",
@@ -261,7 +261,7 @@ export const APPS: Application[] = [
   },
   {
     id: "casa-rua",
-    cat: "offer",
+    category: "offer",
     logo: "CR",
     logoTint: "jade",
     title: "Senior Designer",
@@ -314,7 +314,7 @@ export const APPS: Application[] = [
   },
   {
     id: "bairro-vivo",
-    cat: "active",
+    category: "active",
     logo: "BV",
     logoTint: "",
     title: "Community Manager",
@@ -352,7 +352,7 @@ export const APPS: Application[] = [
   },
   {
     id: "novamente",
-    cat: "active",
+    category: "active",
     logo: "NV",
     logoTint: "jade",
     title: "UX Researcher (12-mo contract)",
@@ -394,7 +394,7 @@ export const APPS: Application[] = [
   },
   {
     id: "solar-lisboa",
-    cat: "closed",
+    category: "closed",
     logo: "SL",
     logoTint: "",
     title: "Brand Designer",
@@ -422,7 +422,7 @@ export const APPS: Application[] = [
   },
   {
     id: "vinhos-do-sul",
-    cat: "closed",
+    category: "closed",
     logo: "VS",
     logoTint: "plum",
     title: "Marketing Coordinator",
@@ -443,7 +443,7 @@ export const APPS: Application[] = [
   },
   {
     id: "clube-das-letras",
-    cat: "draft",
+    category: "draft",
     logo: "CL",
     logoTint: "draft",
     title: "Communications Manager",

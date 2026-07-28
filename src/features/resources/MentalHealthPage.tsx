@@ -75,7 +75,7 @@ export function MentalHealthPage() {
               {CRISIS.map((c) => (
                 <div className={styles.crisisLine} key={c.name}>
                   <div className={styles.clName}>{c.name}</div>
-                  <div className={styles.clNum}>{c.num}</div>
+                  <div className={styles.clNum}>{c.number}</div>
                   <div className={styles.clNote}>{t(c.noteKey)}</div>
                 </div>
               ))}

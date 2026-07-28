@@ -27,15 +27,15 @@ export function slugForThreadId(id: number): string | undefined {
   return slugById.get(id);
 }
 
-const SOLID: Record<SlugTint, { t: string; tt: string }> = {
-  coral: { t: "var(--accent)", tt: "var(--paper)" },
-  jade: { t: "var(--jade)", tt: "var(--paper)" },
-  plum: { t: "var(--plum)", tt: "var(--cream)" },
+const SOLID: Record<SlugTint, { background: string; color: string }> = {
+  coral: { background: "var(--accent)", color: "var(--paper)" },
+  jade: { background: "var(--jade)", color: "var(--paper)" },
+  plum: { background: "var(--plum)", color: "var(--cream)" },
 };
-const SOFT: Record<SlugTint, { bg: string; color: string }> = {
-  coral: { bg: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
-  jade: { bg: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
+const SOFT: Record<SlugTint, { background: string; color: string }> = {
+  coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
+  jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
+  plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
 };
 
 function initials(name: string): string {
@@ -78,15 +78,15 @@ export function threadToCard(
   return {
     id,
     slug: dto.slug,
-    cat: dto.category,
+    category: dto.category,
     pinned: dto.isPinned,
     title: dto.title,
     excerpt: "",
     author: {
-      i: initials(dto.author.displayName),
-      n: dto.author.displayName,
-      t: s.t,
-      tt: s.tt,
+      initials: initials(dto.author.displayName),
+      name: dto.author.displayName,
+      background: s.background,
+      color: s.color,
       slug,
       photo: dto.author.avatarUrl ?? undefined,
     },
@@ -112,8 +112,8 @@ export function postToReply(
   const tint = tintForSlug(slug);
   const soft = SOFT[tint];
   return {
-    av: initials(dto.author.displayName),
-    bg: soft.bg,
+    avatar: initials(dto.author.displayName),
+    background: soft.background,
     color: soft.color,
     name: dto.author.displayName,
     slug,

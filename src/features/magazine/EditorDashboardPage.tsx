@@ -103,7 +103,7 @@ export function EditorDashboardPage() {
   const handleBulk = (verdict: TriageVerdict) =>
     runTriage([...state.selPitches], () => dash.bulkTriage(verdict));
 
-  const stub = (msg: string) => showToast(msg, "info");
+  const stub = (message: string) => showToast(message, "info");
   const openChase = (piece: Piece) => setModal({ kind: "chase", piece });
 
   const handlers: PieceRowHandlers = {

@@ -16,13 +16,13 @@ export function HostCard() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [message, setMessage] = useState("");
   const hostFirstName = EVENT.hostName.split(" ")[0] ?? EVENT.hostName;
 
   function send() {
-    if (!msg.trim()) return;
+    if (!message.trim()) return;
     setOpen(false);
-    setMsg("");
+    setMessage("");
     showToast(
       t("gatherings:checkout.host.messageSentToast", { host: hostFirstName }),
       "success",
@@ -74,8 +74,8 @@ export function HostCard() {
         <textarea
           className={s["co-ta"]}
           id="askInput"
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           placeholder={t("gatherings:checkout.host.messagePlaceholder")}
         />
         <div className={s["co-ask-send"]}>

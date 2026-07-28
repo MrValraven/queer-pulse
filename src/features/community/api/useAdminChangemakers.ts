@@ -16,7 +16,6 @@ import {
   type CreateChangemakerBody,
   type UpdateChangemakerBody,
 } from "./changemakers.api";
-import { ADMIN_CHANGEMAKERS_DEMO } from "../../admin/adminChangemakers.data";
 
 const ADMIN_KEY = ["admin", "changemakers"];
 const STATS_KEY = [...ADMIN_KEY, "stats"];
@@ -26,7 +25,12 @@ export function useAdminChangemakers() {
   return useQuery<ChangemakerDTO[]>({
     queryKey: [...ADMIN_KEY, demoMode],
     queryFn: async () => {
-      if (demoMode) return ADMIN_CHANGEMAKERS_DEMO;
+      if (demoMode) {
+        const { ADMIN_CHANGEMAKERS_DEMO } = await import(
+          "../../admin/adminChangemakers.data"
+        );
+        return ADMIN_CHANGEMAKERS_DEMO;
+      }
       return fetchAdminChangemakers();
     },
   });

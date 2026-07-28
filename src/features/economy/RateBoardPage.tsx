@@ -153,7 +153,7 @@ export function RateBoardPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:rateBoard.sub")}
+      subtitle={t("economy:rateBoard.sub")}
       form={
         <RateBoardForm
           onAdd={handleAdd}

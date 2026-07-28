@@ -90,50 +90,50 @@ export type ResType = "Book" | "Film" | "Podcast" | "Guide";
 /**
  * i18n note: real book/film/podcast titles and their author/director credits
  * are real-world proper nouns and stay in English/untranslated (`title`,
- * `by`); only the curatorial `descKey` (platform-authored review copy) is
+ * `by`); only the curatorial `descriptionKey` (platform-authored review copy) is
  * translated.
  */
 export const RESOURCES: {
   type: ResType;
   title: string;
   by: string;
-  descKey: string;
+  descriptionKey: string;
 }[] = [
   {
     type: "Book",
     title: "Gender Queer",
     by: "Maia Kobabe · 2019",
-    descKey: "resources:queer101.resource.genderQueer.desc",
+    descriptionKey: "resources:queer101.resource.genderQueer.desc",
   },
   {
     type: "Book",
     title: "Stone Butch Blues",
     by: "Leslie Feinberg · 1993",
-    descKey: "resources:queer101.resource.stoneButchBlues.desc",
+    descriptionKey: "resources:queer101.resource.stoneButchBlues.desc",
   },
   {
     type: "Film",
     title: "Moonlight",
     by: "Barry Jenkins · 2016",
-    descKey: "resources:queer101.resource.moonlight.desc",
+    descriptionKey: "resources:queer101.resource.moonlight.desc",
   },
   {
     type: "Film",
     title: "The Kids Are All Right",
     by: "Lisa Cholodenko · 2010",
-    descKey: "resources:queer101.resource.kidsAreAllRight.desc",
+    descriptionKey: "resources:queer101.resource.kidsAreAllRight.desc",
   },
   {
     type: "Podcast",
     title: "Queery with Cameron Esposito",
     by: "Cameron Esposito",
-    descKey: "resources:queer101.resource.queery.desc",
+    descriptionKey: "resources:queer101.resource.queery.desc",
   },
   {
     type: "Guide",
     title: "Coming Out: A Handbook",
     by: "ILGA-Europe",
-    descKey: "resources:queer101.resource.comingOutHandbook.desc",
+    descriptionKey: "resources:queer101.resource.comingOutHandbook.desc",
   },
 ];
 
@@ -154,12 +154,12 @@ export const RES_TYPE_LABEL_KEY: Record<ResType, string> = {
 /** i18n Pattern A — chrome, resolved via `t()`. */
 export const TALK: {
   titleKey: string;
-  descKey: string;
+  descriptionKey: string;
   link: { labelKey: string; href: string };
 }[] = [
   {
     titleKey: "resources:queer101.talk.peerSupport.title",
-    descKey: "resources:queer101.talk.peerSupport.desc",
+    descriptionKey: "resources:queer101.talk.peerSupport.desc",
     link: {
       labelKey: "resources:queer101.talk.peerSupport.cta",
       href: COMMUNITIES,
@@ -167,7 +167,7 @@ export const TALK: {
   },
   {
     titleKey: "resources:queer101.talk.oneToOne.title",
-    descKey: "resources:queer101.talk.oneToOne.desc",
+    descriptionKey: "resources:queer101.talk.oneToOne.desc",
     link: {
       labelKey: "resources:queer101.talk.oneToOne.cta",
       href: MENTORSHIP,
@@ -175,12 +175,12 @@ export const TALK: {
   },
   {
     titleKey: "resources:queer101.talk.therapy.title",
-    descKey: "resources:queer101.talk.therapy.desc",
+    descriptionKey: "resources:queer101.talk.therapy.desc",
     link: { labelKey: "resources:queer101.talk.therapy.cta", href: WELLBEING },
   },
   {
     titleKey: "resources:queer101.talk.askAnon.title",
-    descKey: "resources:queer101.talk.askAnon.desc",
+    descriptionKey: "resources:queer101.talk.askAnon.desc",
     link: { labelKey: "resources:queer101.talk.askAnon.cta", href: FORUM },
   },
 ];

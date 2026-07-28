@@ -59,12 +59,12 @@ function GrantCard({ grant, delay }: { grant: Grant; delay: number }) {
     <FadeIn as="div" delay={delay} className={styles.gc}>
       <div className={styles.gcTop}>
         <div>
-          <div className={styles.gcOrg}>{grant.org}</div>
+          <div className={styles.gcOrg}>{grant.organization}</div>
           <div className={styles.gcName}>{grant.name}</div>
         </div>
         <div className={styles.gcAmount}>{grant.amount}</div>
       </div>
-      <div className={styles.gcDesc}>{grant.desc}</div>
+      <div className={styles.gcDesc}>{grant.description}</div>
       <div className={styles.gcFoot}>
         <div className={styles.gcTags}>
           {grant.tags.map((tag) => (

@@ -116,7 +116,7 @@ export function DayRateCalculatorPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:dayRate.sub")}
+      subtitle={t("economy:dayRate.sub")}
       form={form}
       preview={<DayRateResult base={base} withIva={withIva} hourly={hourly} />}
     />

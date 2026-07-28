@@ -33,25 +33,25 @@ export const CONVICTION_ITEMS: { wordKey: string; restKey: string }[] = [
   },
 ];
 
-export const START_STEPS: { num: string; titleKey: string; bodyKey: string }[] =
+export const START_STEPS: { number: string; titleKey: string; bodyKey: string }[] =
   [
     {
-      num: "01",
+      number: "01",
       titleKey: "marketing:activism.start.step1.title",
       bodyKey: "marketing:activism.start.step1.body",
     },
     {
-      num: "02",
+      number: "02",
       titleKey: "marketing:activism.start.step2.title",
       bodyKey: "marketing:activism.start.step2.body",
     },
     {
-      num: "03",
+      number: "03",
       titleKey: "marketing:activism.start.step3.title",
       bodyKey: "marketing:activism.start.step3.body",
     },
     {
-      num: "04",
+      number: "04",
       titleKey: "marketing:activism.start.step4.title",
       bodyKey: "marketing:activism.start.step4.body",
     },

@@ -80,7 +80,7 @@ function memberToTeam(
   const tint = TEAM_TINTS[i % TEAM_TINTS.length]!;
   return {
     initials: person?.initials ?? "",
-    bg: tint.bg,
+    background: tint.bg,
     color: tint.color,
     name: person
       ? `${person.firstName} ${person.lastName[0] ?? ""}.`.trim()
@@ -104,8 +104,8 @@ export function cardToOpportunity(
   return {
     slug: dto.slug,
     org: dto.org,
-    av: orgInitials(dto.org),
-    bg: tint.bg,
+    avatar: orgInitials(dto.org),
+    background: tint.bg,
     color: tint.color,
     role: dto.role,
     cause,
@@ -113,7 +113,7 @@ export function cardToOpportunity(
     time: dto.time,
     location: dto.location,
     skills: dto.skills ?? [],
-    desc: dto.desc,
+    description: dto.desc,
     // ── detail header (defaulted; the card view doesn't read these) ──
     eyebrow: `Volunteer · ${cause} · ${dto.org}`,
     urgent: closed ? "Closed · not recruiting" : "Recruiting now",
@@ -162,7 +162,10 @@ export function detailToOpportunity(
       { value: <b>{spotsOpen}</b>, label: "Spots still open" },
     ],
     why: dto.why ?? [],
-    tasks: dto.tasks ?? [],
+    tasks: (dto.tasks ?? []).map((task) => ({
+      title: task.title,
+      description: task.desc,
+    })),
     commitments: (dto.commitments ?? []).map((c) => ({
       b: c.label,
       s: c.detail,
@@ -195,7 +198,7 @@ export interface SignupRow {
   person: Person | null;
   name: string;
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   note: string | null;
   when: string;
@@ -216,7 +219,7 @@ export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
     person,
     name: person?.name ?? "A member",
     initials: person?.initials ?? "··",
-    bg: tint.bg,
+    background: tint.bg,
     color: tint.color,
     note: dto.note,
     when,

@@ -31,7 +31,7 @@ export const COOP_STATS: CoopStat[] = [
  *  copy (same shape as `incubator.step.*`) — `name`/`nameEm`/`time`/`desc` are
  *  all catalog keys; `num` is a plain ordinal, not translated. */
 export interface CoopPhase {
-  num: string;
+  number: string;
   nameKey: string;
   nameEmKey: string;
   timeKey: string;
@@ -40,35 +40,35 @@ export interface CoopPhase {
 
 export const COOP_PHASES: CoopPhase[] = [
   {
-    num: "01",
+    number: "01",
     nameKey: "economy:housingCoop.phase.findPeople.name",
     nameEmKey: "economy:housingCoop.phase.findPeople.nameEm",
     timeKey: "economy:housingCoop.phase.findPeople.time",
     descKey: "economy:housingCoop.phase.findPeople.desc",
   },
   {
-    num: "02",
+    number: "02",
     nameKey: "economy:housingCoop.phase.legalIncorporation.name",
     nameEmKey: "economy:housingCoop.phase.legalIncorporation.nameEm",
     timeKey: "economy:housingCoop.phase.legalIncorporation.time",
     descKey: "economy:housingCoop.phase.legalIncorporation.desc",
   },
   {
-    num: "03",
+    number: "03",
     nameKey: "economy:housingCoop.phase.financeStructure.name",
     nameEmKey: "economy:housingCoop.phase.financeStructure.nameEm",
     timeKey: "economy:housingCoop.phase.financeStructure.time",
     descKey: "economy:housingCoop.phase.financeStructure.desc",
   },
   {
-    num: "04",
+    number: "04",
     nameKey: "economy:housingCoop.phase.findProperty.name",
     nameEmKey: "economy:housingCoop.phase.findProperty.nameEm",
     timeKey: "economy:housingCoop.phase.findProperty.time",
     descKey: "economy:housingCoop.phase.findProperty.desc",
   },
   {
-    num: "05",
+    number: "05",
     nameKey: "economy:housingCoop.phase.dailyGovernance.name",
     nameEmKey: "economy:housingCoop.phase.dailyGovernance.nameEm",
     timeKey: "economy:housingCoop.phase.dailyGovernance.time",
@@ -103,7 +103,7 @@ export interface FormingCoop {
   /** Coral/jade emphasis after the label (e.g. the operational-since date). */
   progressEm?: string;
   operational?: boolean;
-  desc: string;
+  description: string;
   meta: CoopMeta[];
   faces: CoopFace[];
   cta: { label: string; kind: CoopCtaKind };
@@ -118,7 +118,7 @@ export const FORMING_COOPS: FormingCoop[] = [
     phaseLabel: "Phase 4 · property",
     progress: 78,
     progressLabel: "78%",
-    desc: "A 6-household co-op with a survey signed on a 19th-century triplex in Alfama. Closing target: September 2026. Trans-led. Looking for one more household before close.",
+    description: "A 6-household co-op with a survey signed on a 19th-century triplex in Alfama. Closing target: September 2026. Trans-led. Looking for one more household before close.",
     meta: [
       { label: "Member shares", value: "€8k" },
       { label: "Monthly", value: "€420" },
@@ -141,7 +141,7 @@ export const FORMING_COOPS: FormingCoop[] = [
     phaseLabel: "Phase 3 · finance",
     progress: 52,
     progressLabel: "52%",
-    desc: "8 households organising around a former industrial building in Marvila offered by the municipality on long lease. Negotiating financing through Caixa Crédito Agrícola Mútuo & the Lisbon city housing fund.",
+    description: "8 households organising around a former industrial building in Marvila offered by the municipality on long lease. Negotiating financing through Caixa Crédito Agrícola Mútuo & the Lisbon city housing fund.",
     meta: [
       { label: "Member shares", value: "€5k" },
       { label: "Monthly", value: "€340" },
@@ -167,7 +167,7 @@ export const FORMING_COOPS: FormingCoop[] = [
     progressLabel: "Operational since",
     progressEm: "Jan 2024",
     operational: true,
-    desc: "QueerPulse's first formed co-op. 9 households, 14 adults, 3 children. Mostly Black queer households, formed through the Cova da Moura tenants' association. Open to mentor new co-ops.",
+    description: "QueerPulse's first formed co-op. 9 households, 14 adults, 3 children. Mostly Black queer households, formed through the Cova da Moura tenants' association. Open to mentor new co-ops.",
     meta: [
       { label: "Member shares", value: "€4k" },
       { label: "Monthly", value: "€280" },
@@ -187,7 +187,7 @@ export const FORMING_COOPS: FormingCoop[] = [
     phaseLabel: "Phase 1 · forming",
     progress: 22,
     progressLabel: "22%",
-    desc: "First QueerPulse co-op in Porto. 5 households so far, looking for 3 more before incorporating. Monthly meetings at Centro Galiza. Mostly under 35.",
+    description: "First QueerPulse co-op in Porto. 5 households so far, looking for 3 more before incorporating. Monthly meetings at Centro Galiza. Mostly under 35.",
     meta: [
       { label: "Target shares", value: "€6k" },
       { label: "Forming since", value: "Apr 2026" },

@@ -14,7 +14,7 @@ import {
 import s from "./GuidelinesPage.module.css";
 
 interface Clause {
-  num: string;
+  number: string;
   titlePreKey: string;
   titleEmKey: string;
   body: ReactNode;
@@ -31,7 +31,7 @@ const REVISED_DATE = new Date(2026, 5, 1);
 function buildClauses(t: TFunction): Clause[] {
   return [
     {
-      num: "01",
+      number: "01",
       titlePreKey: "guidelines.clause01.titlePre",
       titleEmKey: "guidelines.clause01.titleEm",
       body: (
@@ -42,7 +42,7 @@ function buildClauses(t: TFunction): Clause[] {
       ),
     },
     {
-      num: "02",
+      number: "02",
       titlePreKey: "guidelines.clause02.titlePre",
       titleEmKey: "guidelines.clause02.titleEm",
       body: (
@@ -60,7 +60,7 @@ function buildClauses(t: TFunction): Clause[] {
       ),
     },
     {
-      num: "03",
+      number: "03",
       titlePreKey: "guidelines.clause03.titlePre",
       titleEmKey: "guidelines.clause03.titleEm",
       body: (
@@ -75,7 +75,7 @@ function buildClauses(t: TFunction): Clause[] {
       ),
     },
     {
-      num: "04",
+      number: "04",
       titlePreKey: "guidelines.clause04.titlePre",
       titleEmKey: "guidelines.clause04.titleEm",
       body: (
@@ -86,7 +86,7 @@ function buildClauses(t: TFunction): Clause[] {
       ),
     },
     {
-      num: "05",
+      number: "05",
       titlePreKey: "guidelines.clause05.titlePre",
       titleEmKey: "guidelines.clause05.titleEm",
       body: (
@@ -97,7 +97,7 @@ function buildClauses(t: TFunction): Clause[] {
       ),
     },
     {
-      num: "06",
+      number: "06",
       titlePreKey: "guidelines.clause06.titlePre",
       titleEmKey: "guidelines.clause06.titleEm",
       body: (
@@ -108,7 +108,7 @@ function buildClauses(t: TFunction): Clause[] {
       ),
     },
     {
-      num: "07",
+      number: "07",
       titlePreKey: "guidelines.clause07.titlePre",
       titleEmKey: "guidelines.clause07.titleEm",
       body: (
@@ -171,8 +171,8 @@ export function GuidelinesPage() {
             {t("marketing:guidelines.updatedMeta", { date: revisedDate })}
           </div>
           {clauses.map((c) => (
-            <div key={c.num} className={s.clause}>
-              <div className={s.clauseNum}>{c.num}</div>
+            <div key={c.number} className={s.clause}>
+              <div className={s.clauseNum}>{c.number}</div>
               <div>
                 <h2>
                   {t(`marketing:${c.titlePreKey}`)}

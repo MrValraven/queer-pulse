@@ -133,7 +133,7 @@ export interface Draft {
   kind: string;
   kindVariant: "job" | "pitch" | "grant" | "post";
   title: ReactNode;
-  desc: ReactNode;
+  description: ReactNode;
   meta: DraftMeta[];
   progress: number;
   ready?: boolean;
@@ -196,7 +196,7 @@ export const DRAFTS: Draft[] = [
         Application · <em>Communications Manager</em>
       </>
     ),
-    desc: (
+    description: (
       <>
         For <em>Clube das Letras</em> · Hybrid, Lisbon · €32–38k
       </>
@@ -230,7 +230,7 @@ export const DRAFTS: Draft[] = [
         Pitch · <em>"The pharmacist who fills every prescription"</em>
       </>
     ),
-    desc: "For QueerPulse Magazine · Issue 10 · 1,200-word profile · talked with Rui yesterday",
+    description: "For QueerPulse Magazine · Issue 10 · 1,200-word profile · talked with Rui yesterday",
     meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 85,
     actions: [
@@ -251,7 +251,7 @@ export const DRAFTS: Draft[] = [
     sortTitle: "Grant application · €150",
     searchText: "grant application 150 replacement t prescription",
     title: <>Grant application · €150</>,
-    desc: "Replacement T prescription · drafted earlier this week",
+    description: "Replacement T prescription · drafted earlier this week",
     meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 100,
     ready: true,
@@ -274,7 +274,7 @@ export const DRAFTS: Draft[] = [
         Post in <em>Creatives</em>
       </>
     ),
-    desc: '"Hosting a portfolio night the first Wednesday of every month, at Café Beirão. 12 spots, drop a link…"',
+    description: '"Hosting a portfolio night the first Wednesday of every month, at Café Beirão. 12 spots, drop a link…"',
     meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 78,
     actions: [
@@ -300,7 +300,7 @@ export const DRAFTS: Draft[] = [
         Reply to <em>Anika Kovač's post about queer-friendly GPs</em>
       </>
     ),
-    desc: '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch — go. Worth knowing that her phone is the one on the door, not the website…"',
+    description: '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch — go. Worth knowing that her phone is the one on the door, not the website…"',
     meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 92,
     actions: [{ label: "Send reply", variant: "primary" }, { label: "Edit" }],
@@ -323,7 +323,7 @@ export const DRAFTS: Draft[] = [
         Post in <em>Trans Hub</em>
       </>
     ),
-    desc: '"Question for the group: anyone navigated SNS continuity-of-care when moving between Lisbon and Porto…"',
+    description: '"Question for the group: anyone navigated SNS continuity-of-care when moving between Lisbon and Porto…"',
     meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 42,
     actions: [
@@ -349,7 +349,7 @@ export const DRAFTS: Draft[] = [
         Pitch · <em>"Six months on a four-day week — the sequel"</em>
       </>
     ),
-    desc: "Follow-up to my Issue 05 piece · sent to editorial in March, never finished revision",
+    description: "Follow-up to my Issue 05 piece · sent to editorial in March, never finished revision",
     meta: [{ kind: "startedAgo" }, { kind: "deletesIn", variant: "warn" }],
     progress: 34,
     actions: [
@@ -375,7 +375,7 @@ export const DRAFTS: Draft[] = [
         Application · <em>Editorial Lead, Magazine</em>
       </>
     ),
-    desc: (
+    description: (
       <>
         For Equip Editions · barely started · saved by accident?{" "}
         <em>Probably delete.</em>
@@ -410,7 +410,7 @@ function draftSearchText(d: Draft): string {
   return [
     d.sortTitle,
     typeof d.title === "string" ? d.title : "",
-    typeof d.desc === "string" ? d.desc : "",
+    typeof d.description === "string" ? d.description : "",
     d.kind,
   ]
     .filter(Boolean)

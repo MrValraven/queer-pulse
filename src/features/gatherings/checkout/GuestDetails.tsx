@@ -16,14 +16,14 @@ export function GuestDetails() {
       </div>
       <div>
         {guests.map((g, i) => {
-          const num = i + 2;
+          const guestNumber = i + 2;
           return (
             <div key={i} className={s["co-guest-card"]}>
               <div className={s["co-guest-head"]}>
                 <div className={s["co-guest-lbl"]}>
-                  <span className={s["co-guest-num"]}>{num}</span>
+                  <span className={s["co-guest-num"]}>{guestNumber}</span>
                   {t("gatherings:checkout.guest.guestNumberLabel", {
-                    number: num,
+                    number: guestNumber,
                   })}
                 </div>
                 <label className={s["co-gift-toggle"]}>

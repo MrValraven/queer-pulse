@@ -109,7 +109,7 @@ type FlaggedCategory = FlaggedMember["category"];
 
 const FLAGGED_CATEGORY_TONE: Record<
   FlaggedCategory["kind"],
-  FlaggedMember["catTone"]
+  FlaggedMember["categoryTone"]
 > = {
   doxxing: "danger",
   spam: "amber",
@@ -157,7 +157,7 @@ export function flaggedDtoToMember(
     initials: flaggedDto.initials,
     tone: flaggedDto.tone,
     category,
-    catTone: FLAGGED_CATEGORY_TONE[category.kind],
+    categoryTone: FLAGGED_CATEGORY_TONE[category.kind],
     meta: metaSegments.join(" · "),
     statusId,
     statusTone: FLAGGED_STATUS_TONE[statusId],

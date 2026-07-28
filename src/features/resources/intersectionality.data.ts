@@ -13,7 +13,7 @@ export const CONTACT = routes.contact;
 /** Attributed member quotes — content, stays English (wellbeing/soberPage VOICES precedent). */
 export interface Voice {
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   name: string;
   context: string;
@@ -29,7 +29,7 @@ export interface InfoCard {
 export const RACE_VOICES: Voice[] = [
   {
     initials: "AM",
-    bg: "rgba(45,27,61,.12)",
+    background: "rgba(45,27,61,.12)",
     color: "var(--plum)",
     name: "Amara M.",
     context: "Black British queer woman · Mouraria · Member since 2024",
@@ -38,7 +38,7 @@ export const RACE_VOICES: Voice[] = [
   },
   {
     initials: "RS",
-    bg: "rgba(74,140,111,.16)",
+    background: "rgba(74,140,111,.16)",
     color: "var(--jade)",
     name: "Ravi S.",
     context: "South Asian non-binary · Arroios · Member since 2023",
@@ -47,7 +47,7 @@ export const RACE_VOICES: Voice[] = [
   },
   {
     initials: "DF",
-    bg: "rgba(232,119,90,.16)",
+    background: "rgba(232,119,90,.16)",
     color: "var(--accent-ink)",
     name: "Diallo F.",
     context: "Afro-Portuguese queer man · Cais do Sodré · Member since 2022",
@@ -84,7 +84,7 @@ export const RACE_INFO: InfoCard[] = [
 export const FAITH_VOICES: Voice[] = [
   {
     initials: "LK",
-    bg: "rgba(45,27,61,.12)",
+    background: "rgba(45,27,61,.12)",
     color: "var(--plum)",
     name: "Leila K.",
     context: "Queer Muslim · Graça · Member since 2024",
@@ -93,7 +93,7 @@ export const FAITH_VOICES: Voice[] = [
   },
   {
     initials: "MT",
-    bg: "rgba(74,140,111,.16)",
+    background: "rgba(74,140,111,.16)",
     color: "var(--jade)",
     name: "Marco T.",
     context: "Queer Catholic · Estrela · Member since 2022",
@@ -150,7 +150,7 @@ export const CLASS_INFO: InfoCard[] = [
 ];
 export const CLASS_VOICE: Voice = {
   initials: "JB",
-  bg: "rgba(232,119,90,.16)",
+  background: "rgba(232,119,90,.16)",
   color: "var(--accent-ink)",
   name: "Joana B.",
   context: "Queer woman · Porto-born, Lisbon resident · Member since 2023",

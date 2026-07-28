@@ -6,28 +6,28 @@
 export const RECENT = [
   {
     initials: "SR",
-    bg: "rgba(74,140,111,.15)",
+    background: "rgba(74,140,111,.15)",
     color: "var(--jade)",
     name: "Sofia R.",
     minutesAgo: 0,
   },
   {
     initials: "AK",
-    bg: "rgba(232,119,90,.12)",
+    background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
     name: "Anika K.",
     minutesAgo: 3,
   },
   {
     initials: "JP",
-    bg: "rgba(45,27,61,.1)",
+    background: "rgba(45,27,61,.1)",
     color: "var(--plum)",
     name: "Jordan P.",
     minutesAgo: 7,
   },
   {
     initials: "TM",
-    bg: "rgba(74,140,111,.08)",
+    background: "rgba(74,140,111,.08)",
     color: "var(--jade)",
     name: "Tomás M.",
     minutesAgo: 11,
@@ -36,7 +36,7 @@ export const RECENT = [
 
 export interface Guest {
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   name: string;
   pronouns: string;
@@ -52,7 +52,7 @@ function checkInAt(hour: number, minute: number): Date {
 export const INITIAL_GUESTS: Guest[] = [
   {
     initials: "SR",
-    bg: "rgba(74,140,111,.12)",
+    background: "rgba(74,140,111,.12)",
     color: "var(--jade)",
     name: "Sofia Rodrigues",
     pronouns: "she/her",
@@ -61,7 +61,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "AK",
-    bg: "rgba(232,119,90,.12)",
+    background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
     name: "Anika Kovač",
     pronouns: "she/they",
@@ -70,7 +70,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "JP",
-    bg: "rgba(45,27,61,.1)",
+    background: "rgba(45,27,61,.1)",
     color: "var(--plum)",
     name: "Jordan Park",
     pronouns: "they/them",
@@ -79,7 +79,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "TM",
-    bg: "rgba(74,140,111,.08)",
+    background: "rgba(74,140,111,.08)",
     color: "var(--jade)",
     name: "Tomás Mendes",
     pronouns: "he/him",
@@ -88,7 +88,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "MF",
-    bg: "rgba(45,27,61,.07)",
+    background: "rgba(45,27,61,.07)",
     color: "var(--plum)",
     name: "Maria Ferreira",
     pronouns: "she/her",
@@ -97,7 +97,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "RL",
-    bg: "rgba(232,119,90,.08)",
+    background: "rgba(232,119,90,.08)",
     color: "var(--accent-ink)",
     name: "Rosa Lima",
     pronouns: "she/her",
@@ -106,7 +106,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "BK",
-    bg: "rgba(74,140,111,.1)",
+    background: "rgba(74,140,111,.1)",
     color: "var(--jade)",
     name: "Bilal Kaya",
     pronouns: "he/him",
@@ -115,7 +115,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "PO",
-    bg: "rgba(45,27,61,.08)",
+    background: "rgba(45,27,61,.08)",
     color: "var(--plum)",
     name: "Priya Osei",
     pronouns: "she/they",
@@ -124,7 +124,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "CN",
-    bg: "rgba(232,119,90,.1)",
+    background: "rgba(232,119,90,.1)",
     color: "var(--accent-ink)",
     name: "Carlos Neves",
     pronouns: "he/him",
@@ -133,7 +133,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "LM",
-    bg: "rgba(45,27,61,.06)",
+    background: "rgba(45,27,61,.06)",
     color: "var(--ink-60)",
     name: "Lena Müller",
     pronouns: "she/her",
@@ -141,7 +141,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "XP",
-    bg: "rgba(45,27,61,.06)",
+    background: "rgba(45,27,61,.06)",
     color: "var(--ink-60)",
     name: "Xabi Prieto",
     pronouns: "he/they",
@@ -149,7 +149,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "AS",
-    bg: "rgba(45,27,61,.06)",
+    background: "rgba(45,27,61,.06)",
     color: "var(--ink-60)",
     name: "Amara Sow",
     pronouns: "she/her",
@@ -157,7 +157,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "DO",
-    bg: "rgba(45,27,61,.06)",
+    background: "rgba(45,27,61,.06)",
     color: "var(--ink-60)",
     name: "Daniel Oliveira",
     pronouns: "he/him",
@@ -165,7 +165,7 @@ export const INITIAL_GUESTS: Guest[] = [
   },
   {
     initials: "IF",
-    bg: "rgba(45,27,61,.06)",
+    background: "rgba(45,27,61,.06)",
     color: "var(--ink-60)",
     name: "Ines Fonseca",
     pronouns: "she/her",
@@ -176,7 +176,7 @@ export const INITIAL_GUESTS: Guest[] = [
 export const WAITLIST = [
   {
     initials: "NC",
-    bg: "rgba(232,119,90,.08)",
+    background: "rgba(232,119,90,.08)",
     color: "var(--accent-ink)",
     name: "Nadia Castillo",
     pronouns: "she/her",
@@ -184,7 +184,7 @@ export const WAITLIST = [
   },
   {
     initials: "KL",
-    bg: "rgba(74,140,111,.08)",
+    background: "rgba(74,140,111,.08)",
     color: "var(--jade)",
     name: "Kai Larsson",
     pronouns: "they/them",

@@ -41,7 +41,7 @@ export function ComparatorPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:comparator.sub")}
+      subtitle={t("economy:comparator.sub")}
       form={
         <ComparatorForm
           gross={gross}

@@ -17,7 +17,7 @@ export function MusicPlayer({
   const [trackIdx, setTrackIdx] = useState(0);
   const [progress, setProgress] = useState(0);
   const heights = useMemo(() => seededHeights(artist.id, 40), [artist.id]);
-  const duration = parseDur(artist.tracks[trackIdx]!.dur);
+  const duration = parseDur(artist.tracks[trackIdx]!.duration);
 
   // Stop playing if another player takes over (adjust state during render).
   if (!active && playing) setPlaying(false);
@@ -148,7 +148,7 @@ export function MusicPlayer({
           >
             <span className={styles.tiNum}>{i + 1}</span>
             <span className={styles.tiTitle}>{t.title}</span>
-            <span className={styles.tiDur}>{t.dur}</span>
+            <span className={styles.tiDur}>{t.duration}</span>
           </button>
         ))}
       </div>

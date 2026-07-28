@@ -6,14 +6,14 @@ export interface Spot {
 }
 
 export interface MapArea {
-  hoodKey: string;
+  neighbourhoodKey: string;
   anchorId: string;
   spots: Spot[];
 }
 
 export const AREAS: MapArea[] = [
   {
-    hoodKey: "resources:ingredientsMap.hood.mourariaIntendente",
+    neighbourhoodKey: "resources:ingredientsMap.hood.mourariaIntendente",
     anchorId: "mouraria",
     spots: [
       {
@@ -37,7 +37,7 @@ export const AREAS: MapArea[] = [
     ],
   },
   {
-    hoodKey: "resources:ingredientsMap.hood.anjosArroios",
+    neighbourhoodKey: "resources:ingredientsMap.hood.anjosArroios",
     anchorId: "anjos",
     spots: [
       {
@@ -55,7 +55,7 @@ export const AREAS: MapArea[] = [
     ],
   },
   {
-    hoodKey: "resources:ingredientsMap.hood.marvilaBeato",
+    neighbourhoodKey: "resources:ingredientsMap.hood.marvilaBeato",
     anchorId: "marvila",
     spots: [
       {

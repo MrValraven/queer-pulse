@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Spinner } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -27,6 +28,7 @@ export function VouchMemberModal({
   onVouched: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [relationship, setRelationship] = useState<VouchRelationship>(
     RELATIONSHIPS[0],
   );
@@ -46,12 +48,16 @@ export function VouchMemberModal({
 
   // Source the member from the same hook the profile page uses, so live mode can
   // vouch for a fetched member (e.g. the house account) that isn't present in the
-  // static demo registry. The `?? memberProfiles[slug]` fallback covers the first
-  // render before the (demo) query resolves. Mirrors ConnectModal's resolution.
+  // static demo registry. The `?? memberProfiles[slug]` fallback is DEMO-ONLY and
+  // covers the first render before the (demo) query resolves — in live mode we
+  // never substitute a mock persona for a real member the fetch hasn't yielded.
+  // Mirrors ConnectModal's resolution.
   const { data: profileResult, isLoading: profileLoading } =
     useMemberProfile(slug);
   const profile =
-    profileResult?.member ?? (slug ? memberProfiles[slug] : undefined) ?? null;
+    profileResult?.member ??
+    (demoMode && slug ? memberProfiles[slug] : undefined) ??
+    null;
   // In live mode the fetch is async; only gate the initial render while there's
   // no profile yet, so a member already in the registry shows the form instantly.
   const memberLoading = Boolean(slug) && profileLoading && !profileResult;

@@ -76,7 +76,7 @@ export function WorkshopsSection({ active = "all" }: { active?: string }) {
   // Category filtering is client-side over the pages loaded so far, as before —
   // demo has a single synthetic page, live appends real ones.
   const filtered =
-    active === "all" ? workshops : workshops.filter((w) => w.cat === active);
+    active === "all" ? workshops : workshops.filter((w) => w.category === active);
 
   // With no workshops to show — none listed at all, or a category filter that
   // hides them all — the section has nothing to say, so step out of the way.

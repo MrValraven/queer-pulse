@@ -200,17 +200,17 @@ export function usePostJobForm() {
         ? state.city || "Lisbon"
         : state.format;
       const salary = payLabel || "To discuss";
-      const desc =
+      const description =
         state.description.length > 180
           ? `${state.description.slice(0, 177)}…`
           : state.description;
       const qr = company.badges.some((b) => /queer/i.test(b.label));
       return {
         slug: `${slugify(state.title)}-${Date.now().toString(36)}`,
-        cat: slugify(state.category.split(" ")[0] ?? state.category),
+        category: slugify(state.category.split(" ")[0] ?? state.category),
         qr,
         qrLabel: qr ? "Queer-run" : "Inclusive",
-        org: company.nameText,
+        organization: company.nameText,
         logo: company.logo,
         logoBg: "rgba(var(--accent-rgb),.14)",
         logoText: "var(--accent-ink)",
@@ -219,7 +219,7 @@ export function usePostJobForm() {
         location,
         salary,
         deadline: parseFormDeadline(state.deadline),
-        desc,
+        description,
         tags: state.tags.length ? state.tags : [state.category],
         detail: {
           category: state.category,

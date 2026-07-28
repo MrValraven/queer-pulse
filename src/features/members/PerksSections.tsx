@@ -153,13 +153,13 @@ function PerkCard({ perk }: { perk: Perk }) {
       <div className={`${styles.pcBar} ${barClass[perk.state]}`} />
       <div className={styles.pcBody}>
         <div className={`${styles.pcCat} ${catClass[perk.state]}`}>
-          {perk.cat}
+          {perk.category}
         </div>
         <h3 className={`${styles.pcTitle} ${dimmed ? styles.pcTitleDim : ""}`}>
           {perk.title}
         </h3>
         <p className={`${styles.pcDesc} ${dimmed ? styles.pcDescDim : ""}`}>
-          {perk.desc}
+          {perk.description}
         </p>
         <div className={styles.pcFooter}>
           <PerkFooter perk={perk} />

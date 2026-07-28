@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getAttendees } from "./events.api";
 import { attendeeToRow, type AttendeeRow } from "./events.adapters";
-import { GOING_ATTENDEES, WAITLIST_ATTENDEES } from "../manageGathering.data";
 
 export interface AttendeesResult {
   going: AttendeeRow[];
@@ -12,8 +11,12 @@ export interface AttendeesResult {
   capacity?: number;
 }
 
-/** Shape the mock manage-page attendee arrays into the shared AttendeeRow. */
-function mockRows(): AttendeesResult {
+/** Shape the mock manage-page attendee arrays into the shared AttendeeRow.
+ *  The mock registry is loaded lazily so live-mode bundles never pull it in. */
+async function mockRows(): Promise<AttendeesResult> {
+  const { GOING_ATTENDEES, WAITLIST_ATTENDEES } = await import(
+    "../manageGathering.data"
+  );
   const going: AttendeeRow[] = GOING_ATTENDEES.map((a) => ({
     ...a,
     slug: a.id,
@@ -42,7 +45,7 @@ export function useAttendees(slug: string | undefined) {
     queryKey: ["attendees", demoMode, slug],
     enabled: Boolean(slug),
     queryFn: async () => {
-      if (demoMode || !slug) return mockRows();
+      if (demoMode || !slug) return await mockRows();
       const res = await getAttendees(slug);
       return {
         going: res.going.map(attendeeToRow),

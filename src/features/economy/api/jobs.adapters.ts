@@ -153,10 +153,10 @@ export function jobCardToJob(
   t: TFunction,
   fmt: Formatters = FALLBACK_FORMATTERS,
 ): Job {
-  const org = dto.company?.nameText ?? "";
+  const organization = dto.company?.nameText ?? "";
   return {
     slug: dto.slug,
-    cat: catSlug(dto.category),
+    category: catSlug(dto.category),
     qr: dto.queerRun,
     // `dto.qrLabel` is the company's own wording (fetched); the fallback is
     // chrome, so it resolves through the catalog.
@@ -167,8 +167,8 @@ export function jobCardToJob(
           ? "economy:safetyBadge.affiliation.run.label"
           : "economy:jobs.qrLabel.inclusive",
       ),
-    org,
-    logo: logoFromName(org || dto.title),
+    organization,
+    logo: logoFromName(organization || dto.title),
     logoBg: LOGO_BG,
     logoText: LOGO_TEXT,
     title: dto.title,
@@ -176,7 +176,7 @@ export function jobCardToJob(
     location: dto.location,
     salary: formatPay(dto.pay, t, fmt),
     deadline: parseDeadline(dto.deadline),
-    desc: dto.desc,
+    description: dto.desc,
     tags: dto.tags,
     detail: {
       category: dto.category,

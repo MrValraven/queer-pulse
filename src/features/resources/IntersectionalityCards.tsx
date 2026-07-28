@@ -46,7 +46,7 @@ export function VoiceCard({ v }: { v: Voice }) {
       <div className={styles.vcTop}>
         <div
           className={styles.vcAv}
-          style={{ background: v.bg, color: v.color }}
+          style={{ background: v.background, color: v.color }}
         >
           {v.initials}
         </div>

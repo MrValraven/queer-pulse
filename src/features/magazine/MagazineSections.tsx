@@ -165,7 +165,7 @@ function ArchiveSection() {
             to={routes.issue}
             className={styles.archiveIssue}
           >
-            <div className={styles.aiCover} style={{ background: issue.bg }}>
+            <div className={styles.aiCover} style={{ background: issue.background }}>
               {/* Content: the issue's own cover title. */}
               <div className={styles.aiCoverTitle}>{issue.title}</div>
             </div>

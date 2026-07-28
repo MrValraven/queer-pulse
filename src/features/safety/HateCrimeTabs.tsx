@@ -86,17 +86,17 @@ export function HateCrimePanel() {
                   return (
                     <div className={styles.defBox} key={i}>
                       <h4>{b.h4}</h4>
-                      {b.paras.map((p, j) => (
+                      {b.paragraphs.map((p, j) => (
                         <p key={j}>{p}</p>
                       ))}
                     </div>
                   );
                 return (
                   <div className={styles.hcs} key={i}>
-                    <div className={styles.hcsNum}>{b.num}</div>
+                    <div className={styles.hcsNum}>{b.number}</div>
                     <div className={styles.hcsBody}>
                       <div className={styles.hcsTitle}>{b.title}</div>
-                      <div className={styles.hcsDesc}>{b.desc}</div>
+                      <div className={styles.hcsDesc}>{b.description}</div>
                       {b.tag && (
                         <span
                           className={`${styles.hcsTag} ${styles[TAG_CLASS[b.tag.kind]]}`}

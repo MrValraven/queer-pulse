@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { GUIDES, type Guide } from "../library.data";
+import type { Guide } from "../library.data";
 import { getResources } from "./resources.api";
 import { resourceToGuide } from "./resources.adapters";
 
@@ -27,9 +27,12 @@ interface LibraryPageVM {
 /**
  * Data source for the Guide Library (`LibraryPage`), paginated in live mode.
  *
- * Demo mode returns the page's own `GUIDES` mock unchanged, resolved before the
- * query is ever touched (`enabled: !demoMode`), with `hasNextPage` hard-false —
- * so demo never fetches, never paginates and renders exactly as before.
+ * Demo mode returns the page's own `GUIDES` mock as a single page with
+ * `hasNextPage` hard-false — so demo never paginates and renders exactly as
+ * before. The mock is code-split out of the live bundle via a demo-gated
+ * dynamic `import()` inside the query function, so `GUIDES` only loads when
+ * demo mode actually asks for it; `LibraryPage` already renders a loading
+ * state (`useSimulatedLoad() || dataLoading`), so the extra tick is invisible.
  *
  * Live mode calls GET /resources?page= and appends each page, stopping at the
  * server `total`, so a library larger than one page is fully reachable via
@@ -43,9 +46,12 @@ export function useLibraryData(): LibraryDataResult {
 
   const query = useInfiniteQuery<LibraryPageVM>({
     queryKey: ["resources", "library", demoMode],
-    enabled: !demoMode,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
+      if (demoMode) {
+        const { GUIDES } = await import("../library.data");
+        return { items: GUIDES, total: GUIDES.length, page: 1 };
+      }
       const res = await getResources({ page: pageParam as number });
       return {
         items: res.items.map(resourceToGuide),
@@ -67,15 +73,6 @@ export function useLibraryData(): LibraryDataResult {
     [query.data],
   );
 
-  if (demoMode) {
-    return {
-      guides: GUIDES,
-      loading: false,
-      hasNextPage: false,
-      fetchNextPage: () => {},
-      isFetchingNextPage: false,
-    };
-  }
   return {
     guides,
     loading: query.isPending,

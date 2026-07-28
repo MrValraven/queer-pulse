@@ -74,9 +74,9 @@ describe("verifiedCardDtoToSpace", () => {
     const space = verifiedCardDtoToSpace(verifiedCard);
     expect(space.status).toBe("verified");
     expect(space.slug).toBe("purex");
-    expect(space.cat).toBe("Bar");
+    expect(space.category).toBe("Bar");
     expect(space.name).toBe("Purex");
-    expect(space.hood).toBe("Intendente");
+    expect(space.neighbourhood).toBe("Intendente");
     expect(space.tags).toEqual(verifiedCard.tags);
     expect(space.rating).toBe("4.9");
     expect(space.reviews).toBe("54 reviews");
@@ -106,7 +106,7 @@ describe("removedCardDtoToSpace", () => {
     expect(space.status).toBe("removed");
     expect(space.slug).toBe("bar-atlas");
     expect(space.typeLabel).toBe("Bar");
-    expect(space.hood).toBe("Santos");
+    expect(space.neighbourhood).toBe("Santos");
     expect(space.name).toBe("Bar Atlas");
     expect(space.reason).toBe(removedCard.reason);
     expect(space.removedDate).toBe("8 May 2026");

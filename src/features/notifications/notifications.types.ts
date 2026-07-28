@@ -26,7 +26,7 @@ export interface Notification {
   /** Either an avatar (initials + tint, optionally a real photo) or an emoji
    *  icon with a background. */
   avatar?: { initials: string; tint: AvatarTint; src?: string };
-  icon?: { Glyph: IconType; bg: string };
+  icon?: { Glyph: IconType; background: string };
   /** Member slug of the person named inside `text`, when `text` names one and
    *  that person has a real member account. `text` is a `ReactNode` blob (an
    *  interpolated `<Translation>` or plain string) with no separate name

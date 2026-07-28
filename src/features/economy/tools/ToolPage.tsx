@@ -10,7 +10,7 @@ import styles from "./ToolPage.module.css";
 interface ToolPageProps {
   eyebrow: string;
   title: ReactNode;
-  sub: ReactNode;
+  subtitle: ReactNode;
   /** The input column. */
   form: ReactNode;
   /** The live document preview column (a <DocPreview>). */
@@ -27,7 +27,7 @@ interface ToolPageProps {
 export function ToolPage({
   eyebrow,
   title,
-  sub,
+  subtitle,
   form,
   preview,
   actions,
@@ -43,7 +43,7 @@ export function ToolPage({
           <header className={styles.head}>
             <Eyebrow>{eyebrow}</Eyebrow>
             <h1 className={styles.title}>{title}</h1>
-            <p className={styles.sub}>{sub}</p>
+            <p className={styles.sub}>{subtitle}</p>
           </header>
 
           <div className={styles.layout}>

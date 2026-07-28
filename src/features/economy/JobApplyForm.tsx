@@ -158,7 +158,7 @@ function WhySection({ job, fields, setField }: SectionProps) {
         {t("economy:jobApply.whyTitle")}
       </h2>
       <p className={styles.secSub}>
-        {t("economy:jobApply.whySub", { org: job.org })}
+        {t("economy:jobApply.whySub", { org: job.organization })}
       </p>
       <FormField
         label={t("economy:jobApply.coverNote")}
@@ -223,7 +223,7 @@ function ExtraSection({ job, fields, setField }: SectionProps) {
         </span>
       </h2>
       <p className={styles.secSub}>
-        {t("economy:jobApply.extraSub", { org: job.org })}
+        {t("economy:jobApply.extraSub", { org: job.organization })}
       </p>
       <FormField
         label={t("economy:jobApply.extraLabel")}

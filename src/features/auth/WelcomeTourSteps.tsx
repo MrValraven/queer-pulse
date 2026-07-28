@@ -116,7 +116,7 @@ export function TourProfile({ onNext, onBack }: StepProps) {
             />
             <span className={styles.visText}>
               <span>{t(opt.titleKey)}</span>
-              <small>{t(opt.descKey)}</small>
+              <small>{t(opt.descriptionKey)}</small>
             </span>
           </label>
         ))}
@@ -221,7 +221,7 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
             />
             <span>
               <span className={styles.commName}>{community.name}</span>
-              <span className={styles.commDesc}>{community.desc}</span>
+              <span className={styles.commDesc}>{community.description}</span>
             </span>
           </label>
         ))}
@@ -315,7 +315,7 @@ export function TourExplore() {
               <card.icon />
             </div>
             <div className={styles.exName}>{t(card.nameKey)}</div>
-            <div className={styles.exDesc}>{t(card.descKey)}</div>
+            <div className={styles.exDesc}>{t(card.descriptionKey)}</div>
           </Link>
         ))}
       </div>

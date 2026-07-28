@@ -163,11 +163,11 @@ export function JobApplyPage() {
             <div className={styles.success}>
               <SuccessPanel
                 title={t("economy:jobApply.success.title")}
-                em={job.org}
+                em={job.organization}
                 closeLabel={t("economy:jobApply.success.closeLabel")}
                 onClose={() => navigate(routes.applicationStatus)}
                 steps={[
-                  t("economy:jobApply.success.step1", { org: job.org }),
+                  t("economy:jobApply.success.step1", { org: job.organization }),
                   t("economy:jobApply.success.step2"),
                   t("economy:jobApply.success.step3"),
                 ]}
@@ -178,7 +178,7 @@ export function JobApplyPage() {
                 }
               >
                 {t("economy:jobApply.success.body", {
-                  org: job.org,
+                  org: job.organization,
                   title: job.title,
                 })}
               </SuccessPanel>
@@ -186,7 +186,7 @@ export function JobApplyPage() {
           </FadeIn>
         ) : (
           <FadeIn>
-            <JobApplyHeader job={job} deadlineFull={deadlineFull} pct={pct} />
+            <JobApplyHeader job={job} deadlineFull={deadlineFull} percent={pct} />
             <div className={styles.grid}>
               <JobApplyForm
                 job={job}

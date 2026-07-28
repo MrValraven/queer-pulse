@@ -46,4 +46,9 @@ export const topics: Catalog = {
   "fallback.postBody":
     "Os tópicos crescem quando alguém dá o primeiro passo. Publica uma pergunta, uma recomendação ou um recurso com #{tag} e aparece aqui mesmo.",
   "fallback.postStats": "<b>0</b> publicações · à tua espera",
+
+  "notFound.title": "Este tópico não está aqui",
+  "notFound.description":
+    "Não encontrámos um tópico para essa etiqueta — pode ter sido renomeado ou removido. Volta ao fórum para veres onde a conversa continua.",
+  "notFound.backCta": "Voltar ao fórum",
 };

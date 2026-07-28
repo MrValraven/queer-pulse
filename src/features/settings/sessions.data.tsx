@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
  * Demo fallback for `SessionsPage`. Live mode fetches the real
  * `GET /account/sessions` instead (see `api/useSessions.ts`); this mock is the
  * demo branch only, and is the richer of the two shapes — the backend's
- * refresh-token store has no location or last-activity column, so `loc` and
+ * refresh-token store has no location or last-activity column, so `location` and
  * `lastActivity` are optional and simply absent in live mode rather than
  * invented (see `api/sessions.adapters.ts`).
  */
@@ -18,7 +18,7 @@ export interface Session {
   variant: SessionVariant;
   deviceType: DeviceType;
   /** Where the session was seen. Demo-only — the backend stores no geo/IP. */
-  loc?: ReactNode;
+  location?: ReactNode;
   signedIn: string;
   /** Demo-only — the backend stores no last-seen timestamp. */
   lastActivity?: string;
@@ -31,7 +31,7 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: "MacBook Pro · Safari 18",
     variant: "current",
     deviceType: "desktop",
-    loc: (
+    location: (
       <>
         🇵🇹 <b>Lisbon</b>, Portugal · <b>home network</b> · 192.168.•••
       </>
@@ -44,7 +44,7 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: "iPhone 14 · QueerPulse app 2.4.1",
     variant: "normal",
     deviceType: "mobile",
-    loc: (
+    location: (
       <>
         🇵🇹 <b>Lisbon</b>, Portugal · <b>MEO mobile</b>
       </>
@@ -57,7 +57,7 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: "Studio iMac · Chrome 138",
     variant: "normal",
     deviceType: "desktop",
-    loc: (
+    location: (
       <>
         🇵🇹 <b>Atelier Pulso office, Largo do Carmo</b>
       </>
@@ -70,7 +70,7 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: "Unknown · Firefox 132 · macOS",
     variant: "suspect",
     deviceType: "desktop",
-    loc: (
+    location: (
       <>
         🇪🇸 <b>Madrid</b>, Spain · <b>unfamiliar network</b>
       </>
@@ -84,7 +84,7 @@ export const ACTIVE_SESSIONS: Session[] = [
     device: "iPad Pro · Safari 18",
     variant: "normal",
     deviceType: "mobile",
-    loc: (
+    location: (
       <>
         🇵🇹 <b>Lisbon</b>, Portugal · <b>home</b>
       </>

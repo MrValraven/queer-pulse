@@ -46,7 +46,7 @@ export function VolunteerSignupsCard({
               <>
                 <span
                   className={styles.signupAv}
-                  style={{ background: row.bg, color: row.color }}
+                  style={{ background: row.background, color: row.color }}
                 >
                   {row.initials}
                 </span>

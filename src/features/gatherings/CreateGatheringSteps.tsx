@@ -64,8 +64,8 @@ export function TypeStep({ form }: { form: GatheringForm }) {
       <textarea
         className={styles.textarea}
         placeholder={t("gatherings:create.step1.descPlaceholder")}
-        value={form.desc}
-        onChange={(e) => form.setDesc(e.target.value)}
+        value={form.description}
+        onChange={(e) => form.setDescription(e.target.value)}
       />
     </div>
   );

@@ -79,7 +79,7 @@ export function BarterPage() {
     return [...posted, ...seeded].filter((b) => {
       if (mode === "offering" && b.mode === "seeking") return false;
       if (mode === "seeking" && b.mode === "offering") return false;
-      if (cat !== "all" && b.cat !== cat) return false;
+      if (cat !== "all" && b.category !== cat) return false;
       if (q) {
         const hay = (
           b.offer +

@@ -10,7 +10,7 @@ import styles from "./JobDetailPage.module.css";
 export function JobDetailBody({ job }: { job: Job }) {
   const { t } = useTranslation();
   const d = job.detail;
-  const companySlug = COMPANY_SLUG_BY_NAME[job.org];
+  const companySlug = COMPANY_SLUG_BY_NAME[job.organization];
   return (
     <div>
       <div className={styles.section}>
@@ -68,7 +68,7 @@ export function JobDetailBody({ job }: { job: Job }) {
 
       <div className={styles.section}>
         <h2 className={styles.secTitle}>
-          {t("economy:jobDetail.section.aboutCompany", { company: job.org })}
+          {t("economy:jobDetail.section.aboutCompany", { company: job.organization })}
         </h2>
         <p className={styles.text}>{d.aboutCompany}</p>
         {companySlug && (
@@ -82,16 +82,16 @@ export function JobDetailBody({ job }: { job: Job }) {
         )}
       </div>
 
-      {safetyFor(job.org) && (
+      {safetyFor(job.organization) && (
         <div className={styles.section}>
           <h2 className={styles.secTitle}>
             {t("economy:jobDetail.section.safety")}
           </h2>
           <p className={styles.text}>
-            {t("economy:jobDetail.section.safetyBody", { company: job.org })}
+            {t("economy:jobDetail.section.safetyBody", { company: job.organization })}
           </p>
           <div className={styles.safetyBlock}>
-            <SafetyBadges signals={safetyFor(job.org)} />
+            <SafetyBadges signals={safetyFor(job.organization)} />
             <Button variant="ghost" to={routes.employerReviews}>
               {t("economy:jobDetail.section.safetyReviews")}
             </Button>

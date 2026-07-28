@@ -9,7 +9,7 @@ export type ServiceStatus = "op" | "deg" | "out";
 export interface Service {
   id: string;
   nameKey: string;
-  descKey: string;
+  descriptionKey: string;
   status: ServiceStatus;
 }
 
@@ -24,49 +24,49 @@ export const SERVICES: Service[] = [
   {
     id: "authentication",
     nameKey: "system:status.services.authentication.name",
-    descKey: "system:status.services.authentication.desc",
+    descriptionKey: "system:status.services.authentication.desc",
     status: "op",
   },
   {
     id: "messages",
     nameKey: "system:status.services.messages.name",
-    descKey: "system:status.services.messages.desc",
+    descriptionKey: "system:status.services.messages.desc",
     status: "op",
   },
   {
     id: "forum",
     nameKey: "system:status.services.forum.name",
-    descKey: "system:status.services.forum.desc",
+    descriptionKey: "system:status.services.forum.desc",
     status: "op",
   },
   {
     id: "eventsCalendar",
     nameKey: "system:status.services.eventsCalendar.name",
-    descKey: "system:status.services.eventsCalendar.desc",
+    descriptionKey: "system:status.services.eventsCalendar.desc",
     status: "op",
   },
   {
     id: "magazine",
     nameKey: "system:status.services.magazine.name",
-    descKey: "system:status.services.magazine.desc",
+    descriptionKey: "system:status.services.magazine.desc",
     status: "op",
   },
   {
     id: "search",
     nameKey: "system:status.services.search.name",
-    descKey: "system:status.services.search.desc",
+    descriptionKey: "system:status.services.search.desc",
     status: "op",
   },
   {
     id: "notifications",
     nameKey: "system:status.services.notifications.name",
-    descKey: "system:status.services.notifications.desc",
+    descriptionKey: "system:status.services.notifications.desc",
     status: "op",
   },
   {
     id: "fileStorage",
     nameKey: "system:status.services.fileStorage.name",
-    descKey: "system:status.services.fileStorage.desc",
+    descriptionKey: "system:status.services.fileStorage.desc",
     status: "op",
   },
 ];

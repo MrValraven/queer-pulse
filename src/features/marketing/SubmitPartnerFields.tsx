@@ -111,13 +111,13 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
       <FormField
         label={t("marketing:submitPartner.fields.desc.label")}
         required
-        error={errorFor("desc")}
+        error={errorFor("description")}
         helper={t("marketing:submitPartner.fields.desc.helper")}
       >
         <textarea
           rows={3}
-          value={state.desc}
-          onChange={(event) => set("desc", event.target.value)}
+          value={state.description}
+          onChange={(event) => set("description", event.target.value)}
           placeholder={t("marketing:submitPartner.fields.desc.placeholder")}
         />
       </FormField>

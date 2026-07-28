@@ -11,7 +11,7 @@ export interface Barter {
   initials?: string;
   tint?: AvatarTint;
   hood?: string;
-  cat: string;
+  category: string;
   mode: Mode;
   offer: string;
   want: string;
@@ -25,7 +25,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b1",
     member: "ines",
-    cat: "creative",
+    category: "creative",
     mode: "both",
     offer: "Brand identity design",
     want: "Portuguese tax return help",
@@ -39,7 +39,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b2",
     member: "sofia",
-    cat: "creative",
+    category: "creative",
     mode: "both",
     offer: "Short film editing (Premiere, DaVinci)",
     want: "Legal advice on self-employment contracts",
@@ -53,7 +53,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b3",
     member: "andre",
-    cat: "creative",
+    category: "creative",
     mode: "offering",
     offer: "Portrait session — analog, medium format",
     want: "",
@@ -66,7 +66,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b4",
     member: "rui",
-    cat: "tech",
+    category: "tech",
     mode: "both",
     offer: "Website build or debug (React, vanilla JS)",
     want: "Cooking lessons or a meal",
@@ -80,7 +80,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b5",
     member: "carla",
-    cat: "tech",
+    category: "tech",
     mode: "seeking",
     offer: "",
     want: "UX feedback on a product I'm building",
@@ -96,7 +96,7 @@ export const BARTERS: Barter[] = [
     initials: "MF",
     tint: "jade",
     hood: "Intendente",
-    cat: "tech",
+    category: "tech",
     mode: "offering",
     offer: "Linux server setup and sysadmin",
     want: "",
@@ -112,7 +112,7 @@ export const BARTERS: Barter[] = [
     initials: "BM",
     tint: "plum",
     hood: "Graça",
-    cat: "legal",
+    category: "legal",
     mode: "both",
     offer: "NHR and visa paperwork help (PT law)",
     want: "Massage or bodywork",
@@ -129,7 +129,7 @@ export const BARTERS: Barter[] = [
     initials: "TR",
     tint: "coral",
     hood: "Mouraria",
-    cat: "legal",
+    category: "legal",
     mode: "offering",
     offer: "Contract translation PT ↔ EN",
     want: "",
@@ -142,7 +142,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b9",
     member: "mariana",
-    cat: "care",
+    category: "care",
     mode: "offering",
     offer: "Psychotherapy session (sliding scale barter)",
     want: "",
@@ -158,7 +158,7 @@ export const BARTERS: Barter[] = [
     initials: "CL",
     tint: "jade",
     hood: "Alfama",
-    cat: "care",
+    category: "care",
     mode: "both",
     offer: "Yoga and breathwork (1:1 or small group)",
     want: "Graphic design for my practice",
@@ -175,7 +175,7 @@ export const BARTERS: Barter[] = [
     initials: "PV",
     tint: "coral",
     hood: "Santos",
-    cat: "care",
+    category: "care",
     mode: "seeking",
     offer: "",
     want: "Haircut — someone trans-competent, not expensive",
@@ -188,7 +188,7 @@ export const BARTERS: Barter[] = [
   {
     id: "b12",
     member: "tomas",
-    cat: "food",
+    category: "food",
     mode: "both",
     offer: "A dinner for two, cooked properly",
     want: "Photography of the dishes",
@@ -205,7 +205,7 @@ export const BARTERS: Barter[] = [
     initials: "JS",
     tint: "jade",
     hood: "Príncipe Real",
-    cat: "food",
+    category: "food",
     mode: "offering",
     offer: "Natural wine tasting and education (up to 4 people)",
     want: "",
@@ -221,7 +221,7 @@ export const BARTERS: Barter[] = [
     initials: "KM",
     tint: "plum",
     hood: "Marvila",
-    cat: "body",
+    category: "body",
     mode: "both",
     offer: "Capoeira basics (up to 4 sessions)",
     want: "Web presence — something simple",
@@ -238,7 +238,7 @@ export const BARTERS: Barter[] = [
     initials: "RD",
     tint: "coral",
     hood: "Cais do Sodré",
-    cat: "body",
+    category: "body",
     mode: "seeking",
     offer: "",
     want: "Running buddy — 3× per week, Ribeira",

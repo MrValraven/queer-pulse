@@ -58,7 +58,7 @@ export interface ArtWork {
   medium: string;
   title: string;
   statement: string;
-  imgH: number;
+  imageHeight: number;
   badges: string[];
 }
 export const ART_WORKS: ArtWork[] = [
@@ -71,7 +71,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "Pulso Display — variable serif",
     statement:
       "A typeface rooted in 1970s Portuguese protest printing, reworked for contemporary queer editorial.",
-    imgH: 200,
+    imageHeight: 200,
     badges: ["commission"],
   },
   {
@@ -83,7 +83,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "Faces of the Bairro",
     statement:
       "40 medium-format portraits of Mouraria residents shot over six months. No retouching, no direction.",
-    imgH: 300,
+    imageHeight: 300,
     badges: ["commission", "open call"],
   },
   {
@@ -95,7 +95,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "Slow Objects — functional series",
     statement:
       "Bowls, cups, vessels designed for daily use. Each piece fired once and left to age.",
-    imgH: 170,
+    imageHeight: 170,
     badges: ["exhibition"],
   },
   {
@@ -107,7 +107,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "Corpo Presente",
     statement:
       "Large-scale embroidered figures exploring trans embodiment. Currently touring community spaces.",
-    imgH: 260,
+    imageHeight: 260,
     badges: ["exhibition", "commission"],
   },
   {
@@ -119,7 +119,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "Lisbon Queer Zine Series",
     statement:
       "Self-published zines documenting queer life in Lisbon's historic bairros since 2023.",
-    imgH: 210,
+    imageHeight: 210,
     badges: ["open call"],
   },
   {
@@ -131,7 +131,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "O Café das Seis",
     statement:
       "A 22-minute portrait of a Mouraria café and the chosen family that lives inside it.",
-    imgH: 160,
+    imageHeight: 160,
     badges: ["exhibition"],
   },
   {
@@ -143,7 +143,7 @@ export const ART_WORKS: ArtWork[] = [
     title: "Arco — Príncipe Real mural",
     statement:
       "A 14-metre mural commissioned by the neighbourhood association. Pigment on exposed brick.",
-    imgH: 230,
+    imageHeight: 230,
     badges: ["commission"],
   },
 ];
@@ -156,7 +156,7 @@ export interface MusicArtist {
   genre: string;
   bio: string;
   badges: string[];
-  tracks: { title: string; dur: string }[];
+  tracks: { title: string; duration: string }[];
 }
 export const MUSIC_ARTISTS: MusicArtist[] = [
   {
@@ -168,10 +168,10 @@ export const MUSIC_ARTISTS: MusicArtist[] = [
     bio: "Diogo produces textured electronic music rooted in queer club culture. He scores films, runs a live set residency at Lux, and shares a studio above a café in Bairro Alto with two other producers.",
     badges: ["commission", "live sets"],
     tracks: [
-      { title: "Pulso (Club Edit)", dur: "6:14" },
-      { title: "Noite Longa", dur: "8:02" },
-      { title: "Réstia", dur: "4:48" },
-      { title: "Cais (feat. Mariana L.)", dur: "5:33" },
+      { title: "Pulso (Club Edit)", duration: "6:14" },
+      { title: "Noite Longa", duration: "8:02" },
+      { title: "Réstia", duration: "4:48" },
+      { title: "Cais (feat. Mariana L.)", duration: "5:33" },
     ],
   },
   {
@@ -183,9 +183,9 @@ export const MUSIC_ARTISTS: MusicArtist[] = [
     bio: "Mara writes and performs in Portuguese, drawing on fado structures and dismantling them. Her debut record came out in March on a small Lisbon label. She performs in spaces that feel like living rooms.",
     badges: ["bookings open"],
     tracks: [
-      { title: "Espelho", dur: "3:41" },
-      { title: "Março", dur: "4:22" },
-      { title: "Cidade Pequena", dur: "5:08" },
+      { title: "Espelho", duration: "3:41" },
+      { title: "Março", duration: "4:22" },
+      { title: "Cidade Pequena", duration: "5:08" },
     ],
   },
   {
@@ -197,9 +197,9 @@ export const MUSIC_ARTISTS: MusicArtist[] = [
     bio: "Kiko plays piano and keys and leads a quartet focused on improvisation and composition in equal measure. They play roughly once a month at a natural wine bar in Marvila.",
     badges: ["live sets", "commission"],
     tracks: [
-      { title: "Quarta-Feira", dur: "7:18" },
-      { title: "Forma Livre", dur: "9:44" },
-      { title: "Estação", dur: "5:29" },
+      { title: "Quarta-Feira", duration: "7:18" },
+      { title: "Forma Livre", duration: "9:44" },
+      { title: "Estação", duration: "5:29" },
     ],
   },
   {
@@ -211,10 +211,10 @@ export const MUSIC_ARTISTS: MusicArtist[] = [
     bio: "Vera writes, produces, and sings — mostly late at night in a home studio that used to be a pantry. Her sound lives between late 90s R&B and something she hasn't named yet.",
     badges: ["collab"],
     tracks: [
-      { title: "Tarde de Abril", dur: "3:55" },
-      { title: "Ninguém Vê", dur: "4:14" },
-      { title: "Mel", dur: "3:38" },
-      { title: "Distância Zero", dur: "5:02" },
+      { title: "Tarde de Abril", duration: "3:55" },
+      { title: "Ninguém Vê", duration: "4:14" },
+      { title: "Mel", duration: "3:38" },
+      { title: "Distância Zero", duration: "5:02" },
     ],
   },
 ];

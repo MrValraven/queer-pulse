@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Person, Tint } from "./communityDetails";
 import { photoOf } from "./communityPeople";
 import styles from "./CommunityDetailPage.module.css";
@@ -25,11 +26,12 @@ export function CommunityHeroAvatars({
   hasCount: boolean;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <div className={styles.avStrip}>
         {avatars.map((m, i) => {
-          const photo = photoOf(m);
+          const photo = photoOf(m, demoMode);
           const inner = (
             <>
               <span className={styles.heroAvTip}>{m.name}</span>

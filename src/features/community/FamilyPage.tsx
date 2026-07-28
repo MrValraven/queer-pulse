@@ -87,7 +87,7 @@ export function FamilyPage() {
                   {t(`community:${s.nameKey}`)}
                 </div>
                 <div className={styles.sitDesc}>
-                  {t(`community:${s.descKey}`)}
+                  {t(`community:${s.descriptionKey}`)}
                 </div>
                 <div className={styles.sitTo}>{t(`community:${s.toKey}`)}</div>
               </button>

@@ -68,6 +68,10 @@ export const notifications: Catalog = {
   "page.dayEarlier": "Anteriores",
   "page.empty.title": "Tudo em dia",
   "page.empty.description": "Sem notificações nesta categoria.",
+  "page.error.title": "Não conseguimos carregar as tuas notificações",
+  "page.error.description":
+    "Algo correu mal ao contactar o servidor. Isto não é uma caixa vazia — tenta novamente daqui a pouco.",
+  "page.error.retry": "Tentar novamente",
 
   // Separadores de filtro (notificationTabs em data.tsx + o separador Menções)
   "tabs.all": "Todas",

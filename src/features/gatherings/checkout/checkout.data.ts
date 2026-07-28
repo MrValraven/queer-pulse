@@ -7,7 +7,7 @@ import type { Formatters } from "../../../shared/i18n/format";
 export type TierId = "solidarity" | "standard" | "supporter";
 
 /**
- * i18n Pattern A. `name`/`desc`/`tag` stay as plain English strings too —
+ * i18n Pattern A. `name`/`description`/`tag` stay as plain English strings too —
  * CheckoutSidebar.tsx, CheckoutMobileBar.tsx and PriceSummary.tsx (outside this
  * slice) still read `.name` directly, so the key fields are additive rather
  * than a breaking rename. `TierSelect.tsx` (this slice) reads the `*Key`
@@ -19,8 +19,8 @@ export interface Tier {
   name: string;
   nameKey: string;
   price: number;
-  desc: string;
-  descKey: string;
+  description: string;
+  descriptionKey: string;
   tag?: string;
   tagKey?: string;
 }
@@ -31,16 +31,16 @@ export const TIERS: Tier[] = [
     name: "Solidarity",
     nameKey: "gatherings:checkout.tiers.solidarity.name",
     price: 6,
-    desc: "If money's tight right now. No questions, no proof — same seat, same welcome.",
-    descKey: "gatherings:checkout.tiers.solidarity.desc",
+    description: "If money's tight right now. No questions, no proof — same seat, same welcome.",
+    descriptionKey: "gatherings:checkout.tiers.solidarity.desc",
   },
   {
     id: "standard",
     name: "Standard",
     nameKey: "gatherings:checkout.tiers.standard.name",
     price: 12,
-    desc: "Covers your meal, ingredients, and the host's time.",
-    descKey: "gatherings:checkout.tiers.standard.desc",
+    description: "Covers your meal, ingredients, and the host's time.",
+    descriptionKey: "gatherings:checkout.tiers.standard.desc",
     tag: "Most pick this",
     tagKey: "gatherings:checkout.tiers.standard.tag",
   },
@@ -49,8 +49,8 @@ export const TIERS: Tier[] = [
     name: "Supporter",
     nameKey: "gatherings:checkout.tiers.supporter.name",
     price: 18,
-    desc: "Pays it forward — you quietly cover a solidarity seat for someone else.",
-    descKey: "gatherings:checkout.tiers.supporter.desc",
+    description: "Pays it forward — you quietly cover a solidarity seat for someone else.",
+    descriptionKey: "gatherings:checkout.tiers.supporter.desc",
   },
 ];
 

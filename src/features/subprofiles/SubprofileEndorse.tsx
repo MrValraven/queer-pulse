@@ -7,7 +7,6 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { getEndorsers } from "./api/subprofiles.api";
-import { mockEndorsersById } from "./data/subprofiles.data";
 import { useEndorsement } from "./api/useEndorsement";
 import styles from "./SubprofileEndorse.module.css";
 
@@ -51,10 +50,11 @@ export function SubprofileEndorse({
 
   const { data: endorsersResult } = useQuery({
     queryKey: ["subprofile", "endorsers", subprofileId],
-    queryFn: () =>
-      demoMode
-        ? (mockEndorsersById(subprofileId) ?? { count: 0, endorsers: [] })
-        : getEndorsers(subprofileId),
+    queryFn: async () => {
+      if (!demoMode) return getEndorsers(subprofileId);
+      const { mockEndorsersById } = await import("./data/subprofiles.data");
+      return mockEndorsersById(subprofileId) ?? { count: 0, endorsers: [] };
+    },
     enabled: Boolean(subprofileId),
   });
   const endorsers = endorsersResult?.endorsers ?? [];

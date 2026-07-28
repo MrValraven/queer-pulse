@@ -75,7 +75,7 @@ export function ServicesGrid() {
                 <div className={styles.svcCard}>
                   <div>
                     <div className={styles.svcName}>{t(svc.nameKey)}</div>
-                    <div className={styles.svcDesc}>{t(svc.descKey)}</div>
+                    <div className={styles.svcDesc}>{t(svc.descriptionKey)}</div>
                   </div>
                   <span
                     className={`${styles.svcPill} ${PILL_CLASS[svc.status]}`}

@@ -14,7 +14,7 @@ import styles from "./AdminCommunitiesPage.module.css";
 export function SettingsPane({ community }: { community: Community }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [mods, setMods] = useState<Moderator[]>(community.mods);
+  const [moderators, setModerators] = useState<Moderator[]>(community.moderators);
   // Neither `join` nor `code` has a backend field yet (live mode — see
   // adminCommunities.adapters.ts), so both arrive as "". `hasJoinData` also
   // gates the second-vouch toggle below, which otherwise derives its initial
@@ -33,7 +33,7 @@ export function SettingsPane({ community }: { community: Community }) {
   const [autoFreeze, setAutoFreeze] = useState(hasAutoFreezeData);
 
   function removeMod(m: Moderator) {
-    setMods((prev) => prev.filter((x) => x.name !== m.name));
+    setModerators((prev) => prev.filter((x) => x.name !== m.name));
     showToast(
       t("admin:communities.settings.modRemovedToast", { name: m.name }),
       "success",
@@ -41,7 +41,7 @@ export function SettingsPane({ community }: { community: Community }) {
       {
         label: t("admin:common.undo"),
         onClick: () =>
-          setMods((prev) =>
+          setModerators((prev) =>
             prev.some((x) => x.name === m.name) ? prev : [...prev, m],
           ),
       },
@@ -66,7 +66,7 @@ export function SettingsPane({ community }: { community: Community }) {
           {t("admin:communities.settings.moderators")}
         </div>
         <div className={styles.modChips}>
-          {mods.map((m) => (
+          {moderators.map((m) => (
             <span key={m.name} className={styles.modChip}>
               {shortName(m.name)}
               <button
@@ -161,8 +161,8 @@ export function SettingsPane({ community }: { community: Community }) {
           <div className={styles.setLabel}>
             {t("admin:communities.settings.visibility")}
           </div>
-          <AdminChip tone={community.vis === "public" ? "jade" : "violet"}>
-            {t(`admin:${visLabelKey(community.vis)}`)}
+          <AdminChip tone={community.visibility === "public" ? "jade" : "violet"}>
+            {t(`admin:${visLabelKey(community.visibility)}`)}
           </AdminChip>
         </div>
       </div>

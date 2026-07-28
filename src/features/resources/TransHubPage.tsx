@@ -139,10 +139,10 @@ export function TransHubPage() {
                   className={styles.resCat}
                   style={{ color: res.catColor, background: res.catBg }}
                 >
-                  {t(res.catKey)}
+                  {t(res.categoryKey)}
                 </span>
                 <div className={styles.resTitle}>{t(res.titleKey)}</div>
-                <div className={styles.resDesc}>{t(res.descKey)}</div>
+                <div className={styles.resDesc}>{t(res.descriptionKey)}</div>
                 <Link to={routes.library} className={styles.rightLink}>
                   {t("resources:transHub.resources.openCta")}
                 </Link>

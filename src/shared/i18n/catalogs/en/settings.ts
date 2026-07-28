@@ -935,4 +935,83 @@ export const settings: Catalog = {
     "Each integration is scoped narrowly — none can read your DMs, drafts, billing, or community memberships.",
   "integrationsModal.connectedTag": "Connected",
   "integrationsModal.connectCta": "Connect",
+
+  // ── SecurityPage.tsx — vulnerability disclosure ──────────────────────────
+  // The Hall-of-Fame credits (SecurityPage HALL) are attribution records —
+  // researcher names plus the vuln type/date they reported — and stay in
+  // English like the other stored/record values noted at the top of this file.
+  "security.hero.eyebrow": "Vulnerability disclosure",
+  "security.hero.titleTop": "Found something?",
+  "security.hero.titleEm": "Tell us.",
+  "security.hero.sub":
+    "We take security seriously. If you've found a vulnerability in QueerPulse, we want to know about it. This page explains how to report it, what to expect, and how we handle disclosures.",
+
+  "security.commitment.eyebrow": "Our commitment",
+  "security.commitment.title": "We won't <em>punish</em> good faith.",
+  "security.commitment.body1":
+    "Security researchers who report vulnerabilities in good faith will not face legal action from us. We will not contact your employer, ISP, or law enforcement unless you use your access to harm members. We believe security research makes everyone safer, and we're grateful when people take the time to report what they find.",
+  "security.commitment.body2":
+    "We ask that you give us reasonable time to fix an issue before disclosing it publicly. In return, we commit to acknowledging your report within 48 hours, keeping you updated on progress, and crediting you in our security acknowledgements if you'd like.",
+
+  "security.scope.eyebrow": "Scope",
+  "security.scope.title": "What's <em>in scope.</em>",
+  "security.scope.inLabel": "In scope",
+  "security.scope.outLabel": "Out of scope",
+  "security.scope.in.1": "queerpulse.pt and *.queerpulse.pt",
+  "security.scope.in.2": "Authentication & session management",
+  "security.scope.in.3": "Data access & privilege escalation",
+  "security.scope.in.4": "Stored and reflected XSS",
+  "security.scope.in.5": "CSRF on authenticated endpoints",
+  "security.scope.in.6": "SQL injection",
+  "security.scope.in.7": "Insecure direct object references",
+  "security.scope.in.8": "Sensitive data exposure",
+  "security.scope.out.1": "Denial of service attacks",
+  "security.scope.out.2": "Social engineering of our team",
+  "security.scope.out.3": "Physical attacks against infrastructure",
+  "security.scope.out.4": "Spam or rate-limiting bypass",
+  "security.scope.out.5":
+    "Third-party infrastructure (Hetzner, Postmark, Backblaze)",
+  "security.scope.out.6": "Clickjacking on non-sensitive pages",
+  "security.scope.out.7": "Missing security headers (report only)",
+
+  "security.process.eyebrow": "Process",
+  "security.process.title": "What happens <em>after you report.</em>",
+  "security.process.step1.title": "Acknowledgement",
+  "security.process.step1.text":
+    "We'll confirm receipt within 48 hours and let you know we're looking at it. We'll assign a reference number so we can track it together.",
+  "security.process.step1.note": "Target: 48 hours",
+  "security.process.step2.title": "Assessment",
+  "security.process.step2.text":
+    "We'll investigate and assess the severity. We'll keep you updated and may ask follow-up questions. If we can't reproduce it, we'll tell you why.",
+  "security.process.step2.note": "Target: 5 working days",
+  "security.process.step3.title": "Fix",
+  "security.process.step3.text":
+    "For confirmed vulnerabilities, we'll fix and deploy a patch. The timeline depends on severity — critical issues are treated as emergencies.",
+  "security.process.step3.note":
+    "Critical: <72h · High: <7 days · Medium/Low: next release",
+  "security.process.step4.title": "Disclosure",
+  "security.process.step4.text":
+    "We'll coordinate a disclosure timeline with you. We'll credit you in our security acknowledgements unless you prefer anonymity.",
+  "security.process.step4.note": "Default: 90-day coordinated disclosure",
+
+  "security.ack.eyebrow": "Acknowledgements",
+  "security.ack.title": "Security <em>researchers</em> who've helped.",
+  "security.ack.body":
+    "We're grateful to the following researchers who disclosed vulnerabilities responsibly. (Listed with permission.)",
+
+  "security.report.titleTop": "Report a",
+  "security.report.titleEm": "vulnerability",
+  "security.report.body":
+    "Encrypt your report using our PGP key and email us. Please include steps to reproduce, the potential impact, and any proof of concept.",
+  "security.report.cta": "Email security team",
+  "security.pgp.label": "PGP public key",
+  "security.pgp.copyCta": "Copy key",
+  "security.pgp.copied": "PGP key copied.",
+  "security.pgp.copyFailed": "Copy failed — select and copy manually.",
+
+  "security.outro.titleTop": "Security is",
+  "security.outro.titleEm": "community work.",
+  "security.outro.sub":
+    "Thank you to everyone who helps keep QueerPulse safe.",
+  "security.outro.cta": "Contact the security team",
 };

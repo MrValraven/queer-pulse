@@ -100,7 +100,7 @@ export function MeetTheTable() {
       return {
         ...base,
         variant: "host",
-        av: seat.init ?? "",
+        avatar: seat.init ?? "",
         name: seat.name ?? "",
         pron: `Host · ${seat.pron}`,
       };
@@ -110,7 +110,7 @@ export function MeetTheTable() {
         ...base,
         variant: "guest",
         tint: seat.tint,
-        av: seat.init ?? "",
+        avatar: seat.init ?? "",
         name: seat.name ?? "",
         pron: seat.pron,
         joined: seat.joinedAgo,
@@ -122,14 +122,14 @@ export function MeetTheTable() {
       return {
         ...base,
         variant: "open",
-        av: "+",
+        avatar: "+",
         name: t("gatherings:checkout.table.emptySeatLabel"),
       };
     if (pos === 0) {
       return {
         ...base,
         variant: "you",
-        av: priv ? "" : t("gatherings:checkout.table.youLabel"),
+        avatar: priv ? "" : t("gatherings:checkout.table.youLabel"),
         name: priv
           ? t("gatherings:checkout.table.youPrivateLabel")
           : t("gatherings:checkout.table.youLabel"),
@@ -141,7 +141,7 @@ export function MeetTheTable() {
       return {
         ...base,
         variant: "you",
-        av: "",
+        avatar: "",
         gift: true,
         name: priv
           ? t("gatherings:checkout.table.privateLabel")
@@ -152,7 +152,7 @@ export function MeetTheTable() {
     return {
       ...base,
       variant: "you",
-      av: g?.name ? g.name.trim().charAt(0).toUpperCase() : String(pos + 1),
+      avatar: g?.name ? g.name.trim().charAt(0).toUpperCase() : String(pos + 1),
       name: priv
         ? t("gatherings:checkout.table.privateLabel")
         : first ||

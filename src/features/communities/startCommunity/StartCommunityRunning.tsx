@@ -131,7 +131,7 @@ export function StepRunning({ form }: { form: CommunityForm }) {
               </span>
               <span className={styles.ftTxt}>
                 <b>{t(f.labelKey)}</b>
-                <span>{t(f.descKey)}</span>
+                <span>{t(f.descriptionKey)}</span>
               </span>
               <span className={styles.ftState}>
                 {f.locked

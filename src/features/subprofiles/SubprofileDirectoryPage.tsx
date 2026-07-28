@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FiLayers } from "react-icons/fi";
+import { FiLayers, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, Reveal, Spinner } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -41,7 +41,10 @@ export function SubprofileDirectoryPage() {
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [openToCollabs, setOpenToCollabs] = useState(false);
 
-  const { data, isLoading } = useSubprofileDirectory({ kind, query });
+  const { data, isLoading, isError, refetch } = useSubprofileDirectory({
+    kind,
+    query,
+  });
   const cards = data ?? [];
 
   const availableTags = useMemo(() => computeAvailableTags(cards), [cards]);
@@ -108,6 +111,18 @@ export function SubprofileDirectoryPage() {
               <Spinner />
               <span>{t("subprofiles:directory.loading")}</span>
             </div>
+          ) : isError ? (
+            // Distinct from the empty state: a failed fetch must not read as
+            // "no personas yet" — offer a retry rather than a filter clear.
+            <EmptyState
+              icon={<FiAlertCircle />}
+              title={t("subprofiles:directory.error.title")}
+              description={t("subprofiles:directory.error.description")}
+              action={{
+                label: t("subprofiles:directory.error.retry"),
+                onClick: () => refetch(),
+              }}
+            />
           ) : visibleCards.length === 0 ? (
             <EmptyState
               icon={<FiLayers />}

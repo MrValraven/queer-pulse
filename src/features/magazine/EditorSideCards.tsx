@@ -293,7 +293,7 @@ export function ActivityCard() {
 export function QuickActionsCard({
   onStub,
 }: {
-  onStub: (msg: string) => void;
+  onStub: (message: string) => void;
 }) {
   const { t } = useTranslation();
   return (

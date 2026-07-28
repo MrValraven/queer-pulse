@@ -16,7 +16,7 @@ interface ContactRequestModalProps {
   /** The emphasised word (coral italic). Defaults to "request." */
   em?: string;
   /** One warm sentence describing what this is. */
-  sub?: string;
+  subtitle?: string;
   /** Pre-filled message body. */
   preset?: string;
   /** Success-panel title before the <em>. Defaults to "Request". */
@@ -52,7 +52,7 @@ export function ContactRequestModal({
   eyebrow,
   title,
   em,
-  sub,
+  subtitle,
   preset = "",
   successTitle,
   successEm,
@@ -122,7 +122,7 @@ export function ContactRequestModal({
             {title ?? t("economy:contactRequest.defaultTitle")}{" "}
             <em>{em ?? t("economy:contactRequest.defaultEm")}</em>
           </h2>
-          {sub && <p className={styles.sub}>{sub}</p>}
+          {subtitle && <p className={styles.sub}>{subtitle}</p>}
 
           <div className={styles.field}>
             <label htmlFor="cr-msg">

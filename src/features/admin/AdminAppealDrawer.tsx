@@ -95,7 +95,7 @@ export function AdminAppealDrawer({
         </h3>
         <div className={styles.appealOrig}>
           <div className={styles.appealOrigTop}>
-            <AdminCat tone={appeal.original.cat}>
+            <AdminCat tone={appeal.original.category}>
               {appeal.original.action}
             </AdminCat>
             <span className={styles.appealOrigBy}>

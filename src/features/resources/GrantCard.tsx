@@ -26,7 +26,7 @@ export function GrantCard({ g }: { g: Grant }) {
       <div className={styles.gcAmount}>{g.amount}</div>
       <div className={styles.gcBody}>
         <div className={styles.gcName}>{g.name}</div>
-        <div className={styles.gcDesc}>{g.desc}</div>
+        <div className={styles.gcDesc}>{g.description}</div>
         <div className={styles.gcFoot}>
           {g.tags.map((t) => (
             <span key={t} className={styles.gtag}>

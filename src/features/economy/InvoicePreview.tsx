@@ -118,9 +118,9 @@ export function InvoicePreview(props: InvoicePreviewProps) {
         <tbody>
           {lineItems.map((l) => (
             <tr key={l.id}>
-              <td className={styles.docTd}>{l.desc || "—"}</td>
+              <td className={styles.docTd}>{l.description || "—"}</td>
               <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                {Number.isFinite(l.qty) ? l.qty : 0}
+                {Number.isFinite(l.quantity) ? l.quantity : 0}
               </td>
               <td className={`${styles.docTd} ${styles.docNumCol}`}>
                 {fmt.currency(l.unit || 0)}

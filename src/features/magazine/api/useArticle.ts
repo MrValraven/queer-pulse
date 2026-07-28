@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { articles, type Article } from "../data/articles";
+import type { Article } from "../data/articles";
 import {
   articleListItemToArticle,
   articleResponseToArticle,
@@ -34,6 +34,9 @@ export function useArticle(id: string) {
     queryKey: ["magazine-article", demoMode, language, id],
     queryFn: async () => {
       if (demoMode) {
+        // Demo-only mock registry — dynamically imported so it never ships in
+        // the live bundle (live mode fetches from the API below).
+        const { articles } = await import("../data/articles");
         const article = articles[id] ?? null;
         const related = article
           ? article.related

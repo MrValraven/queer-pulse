@@ -114,17 +114,17 @@ export function CardForm({ pf }: { pf: PaymentForm }) {
           </label>
           <div className={s["co-ccnum-wrap"]}>
             <input
-              className={cx(s["co-in"], errors.num && s.invalid)}
+              className={cx(s["co-in"], errors.number && s.invalid)}
               id="ccNum"
               type="text"
               inputMode="numeric"
               autoComplete="cc-number"
               placeholder={t("gatherings:checkout.card.numberPlaceholder")}
               maxLength={19}
-              value={card.num}
-              onChange={(e) => pf.onNum(e.target.value)}
+              value={card.number}
+              onChange={(e) => pf.onNumber(e.target.value)}
               onBlur={(e) =>
-                e.target.value && pf.setErr("num", !validCardNumber(card.num))
+                e.target.value && pf.setErr("number", !validCardNumber(card.number))
               }
             />
             <span
@@ -137,7 +137,7 @@ export function CardForm({ pf }: { pf: PaymentForm }) {
               {BRAND_LABEL[brand] ?? ""}
             </span>
           </div>
-          <div className={cx(s["co-err"], errors.num && s.show)}>
+          <div className={cx(s["co-err"], errors.number && s.show)}>
             {t("gatherings:checkout.card.numberError")}
           </div>
         </div>

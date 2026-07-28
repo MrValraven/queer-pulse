@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getOpportunity } from "./volunteering.api";
 import { detailToOpportunity } from "./volunteering.adapters";
-import {
-  getOpportunity as getMockOpportunity,
-  type VolunteerOpportunity,
-} from "../volunteerOpportunities";
+import type { VolunteerOpportunity } from "../volunteerOpportunities";
 
 export interface OpportunityResult {
   opportunity: VolunteerOpportunity | undefined;
@@ -40,6 +37,9 @@ export function useOpportunity(slug: string | undefined) {
     enabled: Boolean(slug),
     queryFn: async () => {
       if (demoMode) {
+        const { getOpportunity: getMockOpportunity } = await import(
+          "../volunteerOpportunities"
+        );
         const opp = getMockOpportunity(slug);
         const { filled, total } = parseSpots(opp?.spotsFilled ?? "0 / 0");
         return {

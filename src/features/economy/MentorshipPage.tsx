@@ -164,7 +164,7 @@ export function MentorshipPage() {
                         <div className={styles.mcTop}>
                           <div
                             className={styles.mcAv}
-                            style={{ background: mentor.bg, color: mentor.color }}
+                            style={{ background: mentor.background, color: mentor.color }}
                           >
                             {mentor.initials}
                           </div>

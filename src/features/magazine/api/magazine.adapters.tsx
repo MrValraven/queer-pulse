@@ -65,8 +65,8 @@ export function formatDayMonthYear(
 // ── Issues ───────────────────────────────────────────────────────────────
 
 export interface IssueTile {
-  num: string;
-  numLabel: string;
+  number: string;
+  numberLabel: string;
   current: boolean;
   title: ReactNode;
   date: string;
@@ -123,8 +123,8 @@ export function issueToTile(
   const inaugural = index === total - 1;
 
   return {
-    num: dto.number,
-    numLabel: current
+    number: dto.number,
+    numberLabel: current
       ? `Issue ${dto.number} · Current`
       : inaugural
         ? `Issue ${dto.number} · Inaugural`

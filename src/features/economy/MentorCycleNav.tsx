@@ -6,16 +6,16 @@ import styles from "./MentorDetailPage.module.css";
 /** Previous / position / next navigation between mentor profiles. */
 export function MentorCycleNav({
   base,
-  prev,
+  previous,
   next,
-  pos,
+  position,
   total,
   last,
 }: {
   base: string;
-  prev: Mentor;
+  previous: Mentor;
   next: Mentor;
-  pos: number;
+  position: number;
   total: number;
   last?: boolean;
 }) {
@@ -25,14 +25,14 @@ export function MentorCycleNav({
       className={styles.cycle}
       style={last ? { marginBottom: 0 } : undefined}
     >
-      <Link to={`${base}/${prev.slug}`} className={styles.cycleBtn}>
+      <Link to={`${base}/${previous.slug}`} className={styles.cycleBtn}>
         <span className={styles.cycleDir}>
           {t("economy:mentorDetail.cyclePrevious")}
         </span>
-        <span className={styles.cycleName}>{prev.name}</span>
+        <span className={styles.cycleName}>{previous.name}</span>
       </Link>
       <span className={styles.cyclePos}>
-        {t("economy:mentorDetail.cyclePosition", { position: pos, total })}
+        {t("economy:mentorDetail.cyclePosition", { position, total })}
       </span>
       <Link
         to={`${base}/${next.slug}`}

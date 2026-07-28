@@ -1,7 +1,9 @@
+import { FiHash } from "react-icons/fi";
 import { useParams } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PageShell } from "../../shared/components/layout";
-import { SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useTopic } from "./api/useTopic";
@@ -59,7 +61,10 @@ export function TopicPage() {
   // Detail source: demo returns the scripted mock; live fetches meta + a cursor
   // page of posts (further pages append via TopicFeed's "Load more" button).
   const topicQuery = useTopic(tag);
-  const topic = topicQuery.topic ?? getTopic(tag, t);
+  // Demo returns the scripted mock (curated or a generic fallback — always a
+  // value); the `getTopic` fallback is demo-only so a live 404/error for a slug
+  // that collides with a curated topic can't leak scripted data into live mode.
+  const topic = demoMode ? topicQuery.topic ?? getTopic(tag, t) : topicQuery.topic;
   const loading = demoMode ? simLoading : topicQuery.isLoading;
 
   return (
@@ -67,7 +72,7 @@ export function TopicPage() {
       <div className={styles.page}>
         {loading ? (
           <TopicSkeleton />
-        ) : (
+        ) : topic ? (
           <>
             <TopicHeader topic={topic} />
             <div className={styles.grid}>
@@ -80,6 +85,15 @@ export function TopicPage() {
               <TopicSidebar topic={topic} />
             </div>
           </>
+        ) : (
+          // Live-only: the fetch resolved with no topic (or errored). Show a
+          // real not-found state instead of a scripted mock.
+          <EmptyState
+            icon={<FiHash />}
+            title={t("topics:notFound.title")}
+            description={t("topics:notFound.description")}
+            action={{ label: t("topics:notFound.backCta"), to: routes.forum }}
+          />
         )}
       </div>
     </PageShell>

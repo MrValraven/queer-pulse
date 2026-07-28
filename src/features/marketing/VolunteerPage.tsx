@@ -189,9 +189,9 @@ export function VolunteerPage() {
                         <div className={s.org}>
                           <span
                             className={s.orgAv}
-                            style={{ background: o.bg, color: o.color }}
+                            style={{ background: o.background, color: o.color }}
                           >
-                            {o.av}
+                            {o.avatar}
                           </span>
                           <div>
                             <div className={s.orgName}>{o.org}</div>
@@ -199,7 +199,7 @@ export function VolunteerPage() {
                           </div>
                         </div>
                         <div className={s.role}>{o.role}</div>
-                        <p className={s.desc}>{o.desc}</p>
+                        <p className={s.desc}>{o.description}</p>
                         <div className={s.metaRow}>
                           <span
                             className={`${s.commit} ${o.commit === "low" ? s.commitGreen : s.commitAmber}`}

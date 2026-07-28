@@ -6,7 +6,6 @@ import {
   getJoinRequests,
   type JoinRequestDTO,
 } from "../../auth/api/joinRequest.api";
-import { JOIN_REQUESTS } from "./joinRequests.data";
 import type { AvatarTone } from "../ui";
 
 /** Presentation-normalized join request for the mod review queue. */
@@ -109,9 +108,13 @@ export function useJoinRequests(status: JoinRequestDTO["status"] = "pending") {
   return useQuery<JoinRequestView[]>({
     queryKey: ["join-requests", demoMode, status, language],
     queryFn: async () => {
-      const rows = demoMode
-        ? JOIN_REQUESTS.filter((r) => r.status === status)
-        : await getJoinRequests(status);
+      let rows: JoinRequestDTO[];
+      if (demoMode) {
+        const { JOIN_REQUESTS } = await import("./joinRequests.data");
+        rows = JOIN_REQUESTS.filter((r) => r.status === status);
+      } else {
+        rows = await getJoinRequests(status);
+      }
       return rows.map((row) => dtoToView(row, t, language));
     },
   });

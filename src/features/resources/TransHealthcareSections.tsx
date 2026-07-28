@@ -43,7 +43,7 @@ export function TransHealthcareJourney({ path }: { path: Path }) {
               <div className={styles.stepNum}>{s.n}</div>
               <div className={styles.stepBody}>
                 <div className={styles.stepTitle}>{s.title}</div>
-                <div className={styles.stepDesc}>{s.desc}</div>
+                <div className={styles.stepDesc}>{s.description}</div>
                 <div className={styles.stepMeta}>
                   {s.time && (
                     <span className={`${styles.metaPill} ${styles.pillTime}`}>

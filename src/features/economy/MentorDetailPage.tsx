@@ -65,9 +65,9 @@ export function MentorDetailPage() {
 
         <MentorCycleNav
           base={base}
-          prev={prev}
+          previous={prev}
           next={next}
-          pos={idx + 1}
+          position={idx + 1}
           total={MENTORS.length}
         />
 
@@ -86,9 +86,9 @@ export function MentorDetailPage() {
             </div>
             <MentorCycleNav
               base={base}
-              prev={prev}
+              previous={prev}
               next={next}
-              pos={idx + 1}
+              position={idx + 1}
               total={MENTORS.length}
               last
             />

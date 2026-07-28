@@ -53,7 +53,7 @@ export interface FlaggedMember {
    *  per-member report count (`{ count }`), never a baked English string. */
   category:
     { kind: "doxxing" | "spam" } | { kind: "reportsCount"; count: number };
-  catTone: "danger" | "amber" | "violet" | "coral";
+  categoryTone: "danger" | "amber" | "violet" | "coral";
   meta: string;
   statusId: FlaggedStatusId;
   statusTone: "danger" | "amber" | "violet" | "coral";
@@ -206,7 +206,7 @@ export const FLAGGED: FlaggedMember[] = [
     initials: "N",
     tone: "plum",
     category: { kind: "reportsCount", count: 4 },
-    catTone: "danger",
+    categoryTone: "danger",
     meta: "Joined Sep 2024 · Pattern: repeated DMs after blocks",
     statusId: "underReview",
     statusTone: "coral",
@@ -217,7 +217,7 @@ export const FLAGGED: FlaggedMember[] = [
     initials: "A",
     tone: "anon",
     category: { kind: "doxxing" },
-    catTone: "danger",
+    categoryTone: "danger",
     meta: "New account · 1h old · 0 vouches · Auto-frozen pending review",
     statusId: "frozen",
     statusTone: "danger",
@@ -228,7 +228,7 @@ export const FLAGGED: FlaggedMember[] = [
     initials: "CD",
     tone: "amber",
     category: { kind: "spam" },
-    catTone: "amber",
+    categoryTone: "amber",
     meta: "Joined last week · Crypto links across 6 threads",
     statusId: "limited",
     statusTone: "amber",

@@ -30,7 +30,7 @@ export function BarterPostStrip({
       initials: "Y",
       tint: "coral",
       hood: t("economy:barter.postStrip.hoodPlaceholder"),
-      cat: "all",
+      category: "all",
       mode: "both",
       offer,
       want,

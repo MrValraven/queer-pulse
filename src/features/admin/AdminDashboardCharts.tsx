@@ -14,13 +14,19 @@ import {
 } from "../../shared/components/charts";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import type { TFunction } from "../../shared/i18n/types";
 import {
   WEEK_LABEL_KEYS,
   type WeekBar,
   type GrowthPoint,
   type DistBucket,
 } from "./adminDashboard.data";
+import {
+  ChartTooltip,
+  GrowthSpike,
+  growthLegendItems,
+  growthPointTip,
+  type GrowthTip,
+} from "./AdminDashboardChartParts";
 import { chartMax } from "./api/adminOverview.adapters";
 import styles from "./AdminDashboardPage.module.css";
 import chartStyles from "../../shared/components/charts/charts.module.css";
@@ -188,17 +194,14 @@ export function ReportsByTypeChart({
             );
           }}
         </ResponsiveChart>
-        {tip.tooltipOpen && tip.tooltipData && (
-          <tip.TooltipInPortal
-            top={tip.tooltipTop}
-            left={tip.tooltipLeft}
-            className={chartStyles.tip}
-            unstyled
-          >
-            <div className={chartStyles.tipStrong}>{tip.tooltipData.weekLabel}</div>
-            {tip.tooltipData.seriesLabel}: {tip.tooltipData.value}
-          </tip.TooltipInPortal>
-        )}
+        <ChartTooltip tip={tip}>
+          {(data) => (
+            <>
+              <div className={chartStyles.tipStrong}>{data.weekLabel}</div>
+              {data.seriesLabel}: {data.value}
+            </>
+          )}
+        </ChartTooltip>
       </div>
     </ChartFrame>
   );
@@ -208,63 +211,6 @@ export function ReportsByTypeChart({
 
 interface MemberGrowthChartProps extends ChartProps {
   points: GrowthPoint[];
-}
-
-interface GrowthTip {
-  label: string;
-  joined: number;
-  churned: number | null;
-}
-
-/** Builds the member-growth legend items — joined (always) plus churned,
- *  which falls back to a muted "not measured yet" entry when no churn
- *  data is available yet. Extracted to keep MemberGrowthChart under the
- *  200-line component limit. */
-function growthLegendItems(
-  hasChurnData: boolean,
-  t: TFunction,
-): LegendItem[] {
-  return [
-    {
-      color: "var(--jade)",
-      label: t("admin:dashboard.charts.legend.joined"),
-      dot: true,
-    },
-    hasChurnData
-      ? {
-          color: "var(--accent-ink)",
-          label: t("admin:dashboard.charts.legend.churned"),
-          dot: true,
-        }
-      : {
-          color: "",
-          muted: true,
-          label: `${t("admin:dashboard.charts.legend.churned")} · ${t("admin:dashboard.notMeasuredYet")}`,
-        },
-  ];
-}
-
-/** Builds a growth point's tooltip datum plus the aria-label announced when a
- *  keyboard user focuses that point. Extracted to keep MemberGrowthChart under
- *  the 200-line component limit. */
-function growthPointTip(
-  point: GrowthPoint,
-  fmt: ReturnType<typeof useFormat>,
-  t: TFunction,
-): { datum: GrowthTip; ariaLabel: string } {
-  const datum: GrowthTip = {
-    label: point.date
-      ? fmt.date(point.date, { month: "short" })
-      : t("admin:dashboard.charts.memberGrowth.title"),
-    joined: point.joined,
-    churned: point.churned,
-  };
-  const ariaLabel =
-    `${datum.label}: ${t("admin:dashboard.charts.legend.joined")} ${point.joined}` +
-    (point.churned !== null
-      ? `, ${t("admin:dashboard.charts.legend.churned")} ${point.churned}`
-      : "");
-  return { datum, ariaLabel };
 }
 
 export function MemberGrowthChart({
@@ -396,24 +342,11 @@ export function MemberGrowthChart({
                   );
                 })}
                 {spikeIndex >= 0 && (
-                  <>
-                    <circle
-                      cx={pointX(spikeIndex)}
-                      cy={valueScale(points[spikeIndex]!.joined)}
-                      r={5}
-                      fill="var(--accent)"
-                      stroke="var(--paper)"
-                      strokeWidth={2}
-                    />
-                    <text
-                      x={pointX(spikeIndex)}
-                      y={valueScale(points[spikeIndex]!.joined) - 12}
-                      textAnchor="middle"
-                      className={styles.chSpike}
-                    >
-                      {t("admin:dashboard.charts.memberGrowth.spike")}
-                    </text>
-                  </>
+                  <GrowthSpike
+                    x={pointX(spikeIndex)}
+                    y={valueScale(points[spikeIndex]!.joined)}
+                    label={t("admin:dashboard.charts.memberGrowth.spike")}
+                  />
                 )}
                 {points.map((point, index) =>
                   point.date ? (
@@ -432,24 +365,20 @@ export function MemberGrowthChart({
             );
           }}
         </ResponsiveChart>
-        {tip.tooltipOpen && tip.tooltipData && (
-          <tip.TooltipInPortal
-            top={tip.tooltipTop}
-            left={tip.tooltipLeft}
-            className={chartStyles.tip}
-            unstyled
-          >
-            <div className={chartStyles.tipStrong}>{tip.tooltipData.label}</div>
-            {t("admin:dashboard.charts.legend.joined")}: {tip.tooltipData.joined}
-            {tip.tooltipData.churned !== null && (
-              <>
-                <br />
-                {t("admin:dashboard.charts.legend.churned")}:{" "}
-                {tip.tooltipData.churned}
-              </>
-            )}
-          </tip.TooltipInPortal>
-        )}
+        <ChartTooltip tip={tip}>
+          {(data) => (
+            <>
+              <div className={chartStyles.tipStrong}>{data.label}</div>
+              {t("admin:dashboard.charts.legend.joined")}: {data.joined}
+              {data.churned !== null && (
+                <>
+                  <br />
+                  {t("admin:dashboard.charts.legend.churned")}: {data.churned}
+                </>
+              )}
+            </>
+          )}
+        </ChartTooltip>
       </div>
       {legend}
     </ChartFrame>
@@ -623,20 +552,17 @@ export function ResponseTimeChart({
             );
           }}
         </ResponsiveChart>
-        {tip.tooltipOpen && tip.tooltipData && (
-          <tip.TooltipInPortal
-            top={tip.tooltipTop}
-            left={tip.tooltipLeft}
-            className={chartStyles.tip}
-            unstyled
-          >
-            <div className={chartStyles.tipStrong}>{tip.tooltipData.label}</div>
-            {tip.tooltipData.value}{" "}
-            {tip.tooltipData.overSla
-              ? t("admin:dashboard.charts.legend.overSla", { hours: "6h" })
-              : t("admin:dashboard.charts.legend.withinSla")}
-          </tip.TooltipInPortal>
-        )}
+        <ChartTooltip tip={tip}>
+          {(data) => (
+            <>
+              <div className={chartStyles.tipStrong}>{data.label}</div>
+              {data.value}{" "}
+              {data.overSla
+                ? t("admin:dashboard.charts.legend.overSla", { hours: "6h" })
+                : t("admin:dashboard.charts.legend.withinSla")}
+            </>
+          )}
+        </ChartTooltip>
       </div>
       {legend}
     </ChartFrame>

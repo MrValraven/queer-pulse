@@ -76,13 +76,13 @@ export function CultureRadioPanel() {
             <div className={styles.radioQueue}>
               <div className={styles.rqLabel}>{t("culture:radio.upNext")}</div>
               {RADIO.queue.map((item) => (
-                <div key={item.n} className={styles.rqItem}>
-                  <div className={styles.rqN}>{item.n}</div>
+                <div key={item.number} className={styles.rqItem}>
+                  <div className={styles.rqN}>{item.number}</div>
                   <div className={styles.rqInfo}>
                     <div className={styles.rqTrack}>{item.track}</div>
                     <div className={styles.rqArtist}>{item.artist}</div>
                   </div>
-                  <div className={styles.rqDur}>{item.dur}</div>
+                  <div className={styles.rqDur}>{item.duration}</div>
                 </div>
               ))}
             </div>

@@ -87,10 +87,10 @@ function SessionCard({
           )}
         </div>
         <div className={`${styles.row} ${isSuspect ? styles.rowSuspect : ""}`}>
-          {/* `loc` only exists in demo — the backend stores no location. */}
-          {session.loc && (
+          {/* `location` only exists in demo — the backend stores no location. */}
+          {session.location && (
             <>
-              <span>{session.loc}</span>
+              <span>{session.location}</span>
               <span className={styles.sep}>·</span>
             </>
           )}

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiCheck, FiActivity, FiMessageCircle } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
 import { photoOf } from "./communityPeople";
@@ -18,6 +19,7 @@ export function CommunityCard({
   onJoin: (c: Community) => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const living = getLiving(community.slug);
   const tier =
     living?.accessTier ?? (community.privateBadge ? "private" : "public");
@@ -70,7 +72,7 @@ export function CommunityCard({
                 <Avatar
                   initials={m.initials}
                   tint={m.tint}
-                  src={photoOf(m)}
+                  src={photoOf(m, demoMode)}
                   size={26}
                   alt={m.name}
                 />

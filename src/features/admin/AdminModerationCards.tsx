@@ -83,7 +83,7 @@ export function ReportCard({
         onClick={() => onOpen(report)}
       >
         <span className={styles.reportTop}>
-          <AdminCat tone={sev.cat}>{t(sev.labelKey)}</AdminCat>
+          <AdminCat tone={sev.category}>{t(sev.labelKey)}</AdminCat>
           {report.chips.map((chip) => (
             <AdminChip key={chipKey(chip)} tone={chip.tone} dot={chip.dot}>
               {chipLabel(chip, t)}

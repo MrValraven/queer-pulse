@@ -106,6 +106,8 @@ export const connect: Catalog = {
   // Connect modal shell (ConnectModal)
   "modal.close": "Close",
   "modal.loading": "Loading…",
+  "modal.error":
+    "We couldn't load this member right now. Close this and try again in a moment.",
 
   // Reach-out form (ConnectForm)
   "form.title": "Say <em>hello.</em>",

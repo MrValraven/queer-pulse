@@ -94,8 +94,8 @@ export function CoopPhases() {
         </Reveal>
         <div className={styles.phaseRail}>
           {COOP_PHASES.map((p, i) => (
-            <Reveal className={styles.phase} key={p.num} delay={i * 60}>
-              <div className={styles.phaseNum}>{p.num}</div>
+            <Reveal className={styles.phase} key={p.number} delay={i * 60}>
+              <div className={styles.phaseNum}>{p.number}</div>
               <div className={styles.phaseName}>
                 {t(p.nameKey)} <em>{t(p.nameEmKey)}</em>
               </div>
@@ -150,7 +150,7 @@ function CoopCard({
             )}
           </div>
         </div>
-        <div className={styles.ccDesc}>{coop.desc}</div>
+        <div className={styles.ccDesc}>{coop.description}</div>
         <div className={styles.ccMeta}>
           {coop.meta.map((m, i) => (
             <span key={m.label}>

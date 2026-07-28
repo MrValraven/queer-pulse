@@ -56,7 +56,7 @@ export function BarterDetailPage() {
   const info = getMemberInfo(b);
   const firstName = info.name.split(" ")[0] ?? info.name;
   const headline = b.mode === "seeking" ? b.want : b.offer;
-  const catLabelKey = CATS.find((c) => c.value === b.cat)?.labelKey;
+  const catLabelKey = CATS.find((c) => c.value === b.category)?.labelKey;
   const catLabel = catLabelKey
     ? t(catLabelKey)
     : t("economy:barter.cat.fallback");

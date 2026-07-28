@@ -4,7 +4,7 @@ const s = (tint: BadgeTint) => `var(--${tint})`;
 
 export const earnedBadges: Badge[] = [
   {
-    cat: "Attendance",
+    category: "Attendance",
     name: "First Gathering",
     when: "Pride Brunch · Jun 2025",
     rarity: "common",
@@ -37,7 +37,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Attendance",
+    category: "Attendance",
     name: "Three's Company",
     when: "3 gatherings attended",
     rarity: "common",
@@ -51,7 +51,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Attendance",
+    category: "Attendance",
     name: "Regular",
     when: "5 gatherings in one year",
     rarity: "rare",
@@ -75,7 +75,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Connector",
     when: "10 connections made",
     rarity: "common",
@@ -100,7 +100,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Vouch",
     when: "Vouched for a new member",
     rarity: "rare",
@@ -125,7 +125,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Thread Starter",
     when: "Started a community thread",
     rarity: "common",
@@ -155,7 +155,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Platform",
+    category: "Platform",
     name: "Founding Member",
     when: "Joined in the first 500",
     rarity: "legendary",
@@ -180,7 +180,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Platform",
+    category: "Platform",
     name: "Sustainer",
     when: "Supporting member · 6 months",
     rarity: "rare",
@@ -204,7 +204,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Platform",
+    category: "Platform",
     name: "Event Host",
     when: "Hosted a QueerPulse gathering",
     rarity: "legendary",
@@ -236,7 +236,7 @@ export const earnedBadges: Badge[] = [
 
 export const lockedBadges: Badge[] = [
   {
-    cat: "Attendance",
+    category: "Attendance",
     name: "Decade",
     when: "Attend 10 gatherings",
     rarity: "rare",
@@ -255,7 +255,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Trusted Voice",
     when: "Have your vouch accepted 3 times",
     rarity: "rare",
@@ -272,7 +272,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Networker",
     when: "Connect with 50 members",
     rarity: "rare",
@@ -291,7 +291,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Hosting",
+    category: "Hosting",
     name: "Serial Host",
     when: "Host 3 approved gatherings",
     rarity: "legendary",
@@ -315,7 +315,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Platform",
+    category: "Platform",
     name: "???",
     when: "Legendary · Secret badge",
     rarity: "legendary",
@@ -347,7 +347,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Platform",
+    category: "Platform",
     name: "2-Year Member",
     when: "Active for 2 full years",
     rarity: "rare",
@@ -364,7 +364,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Contributor",
     when: "Submit a member story",
     rarity: "common",
@@ -394,7 +394,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Platform",
+    category: "Platform",
     name: "???",
     when: "Legendary · Secret badge",
     rarity: "legendary",
@@ -413,7 +413,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
-    cat: "Community",
+    category: "Community",
     name: "Bridge Builder",
     when: "Connect members across cities",
     rarity: "rare",

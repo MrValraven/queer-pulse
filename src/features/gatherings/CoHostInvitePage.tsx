@@ -50,42 +50,42 @@ const ROLES = [
   {
     ic: "G",
     title: "Greet at the door, 18:30 — 19:30",
-    desc: "Check names against the RSVP list. Anika will join you by 19:00.",
+    description: "Check names against the RSVP list. Anika will join you by 19:00.",
     permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
   },
   {
     ic: "R",
     title: "Manage the room flow",
-    desc: "Walk between Dr. Pereira and the pharmacist's tables so neither gets a queue.",
+    description: "Walk between Dr. Pereira and the pharmacist's tables so neither gets a queue.",
     permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
   },
   {
     ic: "M",
     title: "Co-moderate questions",
-    desc: "If a public Q&A breaks out, you and Anika tag-team it.",
+    description: "If a public Q&A breaks out, you and Anika tag-team it.",
     permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
   },
   {
     ic: "P",
     title: "Edit the event page",
-    desc: "Add/remove RSVPs, change time, send updates, post a recap after.",
+    description: "Add/remove RSVPs, change time, send updates, post a recap after.",
     permKey: "gatherings:cohostInvite.permGranted",
     permCls: "permYes",
   },
   {
     ic: "F",
     title: "Access the host fund",
-    desc: "€60 spending budget for tea/coffee, small first-aid kit, and after-snacks.",
+    description: "€60 spending budget for tea/coffee, small first-aid kit, and after-snacks.",
     permKey: "gatherings:cohostInvite.permHostOnly",
     permCls: "permNo",
   },
   {
     ic: "C",
     title: "Cancel the event",
-    desc: "This stays with Anika as the lead host.",
+    description: "This stays with Anika as the lead host.",
     permKey: "gatherings:cohostInvite.permHostOnly",
     permCls: "permNo",
   },
@@ -242,7 +242,7 @@ export function CoHostInvitePage() {
                 <div className={styles.roleIc}>{r.ic}</div>
                 <div className={styles.roleText}>
                   <b>{r.title}</b>
-                  <span>{r.desc}</span>
+                  <span>{r.description}</span>
                 </div>
                 <div className={`${styles.rolePerm} ${styles[r.permCls]}`}>
                   {t(r.permKey, { host: HOST_NAME })}

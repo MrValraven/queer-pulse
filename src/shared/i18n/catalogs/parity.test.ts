@@ -1,10 +1,23 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { catalogs } from "./index";
-import type { Namespace } from "../types";
+import { catalogs, loadPtNamespace } from "./index";
+import type { Catalog, Language, Namespace } from "../types";
 
 const namespaces = Object.keys(catalogs.en) as Namespace[];
 const languages = ["en", "pt"] as const;
+
+/**
+ * PT ships most namespaces as lazy chunks, so `catalogs.pt[namespace]` is a
+ * placeholder until loaded. Resolve the real catalog for either language.
+ */
+async function catalogFor(
+  language: Language,
+  namespace: Namespace,
+): Promise<Catalog> {
+  return language === "pt"
+    ? loadPtNamespace(namespace)
+    : catalogs.en[namespace];
+}
 
 /**
  * A catalog entry's key, at exactly one indent level. Anchoring to two spaces
@@ -28,15 +41,16 @@ function declaredKeysInSource(language: string, namespace: string): string[] {
 describe("catalog parity", () => {
   it.each(namespaces)(
     "pt/%s declares exactly the keys en/%s declares",
-    (namespace) => {
+    async (namespace) => {
       const enKeys = Object.keys(catalogs.en[namespace]).sort();
-      const ptKeys = Object.keys(catalogs.pt[namespace]).sort();
+      const ptKeys = Object.keys(await loadPtNamespace(namespace)).sort();
       expect(ptKeys).toEqual(enKeys);
     },
   );
 
-  it.each(namespaces)("pt/%s has no empty values", (namespace) => {
-    const blank = Object.entries(catalogs.pt[namespace])
+  it.each(namespaces)("pt/%s has no empty values", async (namespace) => {
+    const ptCatalog = await loadPtNamespace(namespace);
+    const blank = Object.entries(ptCatalog)
       .filter(([, value]) => value.trim() === "")
       .map(([key]) => key);
     expect(blank).toEqual([]);
@@ -49,8 +63,9 @@ describe("catalog parity", () => {
    * (This shipped: 35 instances across 8 catalogs.)
    */
   describe.each(languages)("%s has no HTML entities", (language) => {
-    it.each(namespaces)("%s", (namespace) => {
-      const offenders = Object.entries(catalogs[language][namespace])
+    it.each(namespaces)("%s", async (namespace) => {
+      const catalog = await catalogFor(language, namespace);
+      const offenders = Object.entries(catalog)
         .filter(([, value]) => /&[a-zA-Z]+;|&#[0-9]+;/.test(value))
         .map(([key, value]) => `${key}: ${value}`);
       expect(offenders).toEqual([]);

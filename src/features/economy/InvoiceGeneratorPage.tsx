@@ -64,7 +64,7 @@ export function InvoiceGeneratorPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:invoiceTool.sub")}
+      subtitle={t("economy:invoiceTool.sub")}
       form={
         <InvoiceForm
           issuer={issuer}

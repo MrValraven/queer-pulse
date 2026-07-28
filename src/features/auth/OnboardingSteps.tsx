@@ -37,7 +37,7 @@ export function StepIntro({
             <div className={styles.ncDot} />
             <div>
               <div className={styles.ncTitle}>{t(item.titleKey)}</div>
-              <div className={styles.ncDesc}>{t(item.descKey)}</div>
+              <div className={styles.ncDesc}>{t(item.descriptionKey)}</div>
             </div>
           </div>
         ))}
@@ -87,7 +87,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
             <div className={styles.ncDot} />
             <div>
               <div className={styles.ncTitle}>{t(norm.titleKey)}</div>
-              <div className={styles.ncDesc}>{t(norm.descKey)}</div>
+              <div className={styles.ncDesc}>{t(norm.descriptionKey)}</div>
             </div>
           </div>
         ))}
@@ -138,13 +138,13 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
       <div className={styles.quickStart}>
         {QUICK_STARTS.map((qs) => (
           <Link key={qs.to} to={qs.to} className={styles.qsCard}>
-            <span className={styles.qsIcon} style={{ background: qs.iconBg }}>
+            <span className={styles.qsIcon} style={{ background: qs.iconBackground }}>
               <qs.icon />
             </span>
             <div className={styles.qsBody}>
               <div className={styles.qsTitle}>{t(qs.titleKey)}</div>
               <div className={styles.qsDesc}>
-                {t(qs.descKey, qs.descValues)}
+                {t(qs.descriptionKey, qs.descriptionValues)}
               </div>
             </div>
             <span className={styles.qsArrow}>→</span>

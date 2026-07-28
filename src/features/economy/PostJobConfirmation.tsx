@@ -27,7 +27,7 @@ export function PostJobConfirmation({
         </svg>
       </div>
       <div className={styles.eyebrow} style={{ textAlign: "center" }}>
-        {job.org}
+        {job.organization}
       </div>
       <h1 className={styles.confirmTitle}>
         <Translation

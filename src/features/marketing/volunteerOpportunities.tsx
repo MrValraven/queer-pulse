@@ -1,5 +1,4 @@
-import { VOLUNTEER_OPPORTUNITIES_A } from "./volunteerOpportunities.dataA";
-import { VOLUNTEER_OPPORTUNITIES_B } from "./volunteerOpportunities.dataB";
+import { VOLUNTEER_OPPORTUNITIES } from "./volunteerOpportunities.data";
 import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
 
 export type {
@@ -9,10 +8,7 @@ export type {
   VolunteerOpportunity,
 } from "./volunteerOpportunities.types";
 
-export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
-  ...VOLUNTEER_OPPORTUNITIES_A,
-  ...VOLUNTEER_OPPORTUNITIES_B,
-];
+export { VOLUNTEER_OPPORTUNITIES };
 
 export function getOpportunity(
   slug: string | undefined,

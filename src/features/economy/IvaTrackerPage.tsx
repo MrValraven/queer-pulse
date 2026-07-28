@@ -27,7 +27,7 @@ export function IvaTrackerPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:ivaTracker.sub")}
+      subtitle={t("economy:ivaTracker.sub")}
       form={<IvaTrackerForm entries={entries} setEntries={setEntries} />}
       preview={<IvaTrackerStatus entries={entries} />}
     />

@@ -80,7 +80,7 @@ export function NeighbourhoodsSection() {
                 {h.tag}
               </span>
               <div className={styles.hoodName}>{h.name}</div>
-              <p className={styles.hoodDesc}>{h.desc}</p>
+              <p className={styles.hoodDesc}>{h.description}</p>
               <div className={styles.hoodNote}>{h.note}</div>
             </Reveal>
           ))}
@@ -164,13 +164,13 @@ export function OrgsSection() {
             >
               <div
                 className={styles.orgAv}
-                style={{ background: o.bg, color: o.color }}
+                style={{ background: o.background, color: o.color }}
               >
                 {o.initials}
               </div>
               <div className={styles.orgBody}>
                 <div className={styles.orgName}>{o.name}</div>
-                <p className={styles.orgDesc}>{o.desc}</p>
+                <p className={styles.orgDesc}>{o.description}</p>
                 <div className={styles.orgUrl}>{o.url}</div>
               </div>
             </Reveal>

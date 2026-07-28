@@ -60,14 +60,14 @@ export function MentorDetailSections({
         </h2>
         <div>
           {m.process.map((step) => (
-            <div key={step.num} className={styles.procRow}>
+            <div key={step.number} className={styles.procRow}>
               <div className={styles.procNum}>
-                {step.num.charAt(0)}
-                <em>{step.num.charAt(1)}</em>
+                {step.number.charAt(0)}
+                <em>{step.number.charAt(1)}</em>
               </div>
               <div>
                 <b>{step.title}</b>
-                <span>{step.desc}</span>
+                <span>{step.description}</span>
               </div>
             </div>
           ))}

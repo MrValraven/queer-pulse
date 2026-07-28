@@ -227,9 +227,9 @@ export type AuditRange = "today" | "thisWeek" | "thisQuarter";
 
 export interface AuditEntry {
   id: string;
-  modName: string;
-  modInitials: string;
-  modTone: "plum" | "coral" | "jade" | "violet" | "amber" | "anon";
+  moderatorName: string;
+  moderatorInitials: string;
+  moderatorTone: "plum" | "coral" | "jade" | "violet" | "amber" | "anon";
   action: string;
   actionTone: AuditTone;
   type: AuditType;
@@ -244,9 +244,9 @@ export interface AuditEntry {
 export const AUDIT_ENTRIES: AuditEntry[] = [
   {
     id: "a1",
-    modName: "Júlia Saraiva",
-    modInitials: "JS",
-    modTone: "jade",
+    moderatorName: "Júlia Saraiva",
+    moderatorInitials: "JS",
+    moderatorTone: "jade",
     action: "Removed + banned",
     actionTone: "danger",
     type: "removed",
@@ -259,9 +259,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a2",
-    modName: "Inês Martins",
-    modInitials: "IM",
-    modTone: "jade",
+    moderatorName: "Inês Martins",
+    moderatorInitials: "IM",
+    moderatorTone: "jade",
     action: "Restricted · 7 days",
     actionTone: "amber",
     type: "restricted",
@@ -273,9 +273,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a3",
-    modName: "Júlia Saraiva",
-    modInitials: "JS",
-    modTone: "jade",
+    moderatorName: "Júlia Saraiva",
+    moderatorInitials: "JS",
+    moderatorTone: "jade",
     action: "Dismissed",
     actionTone: "coral",
     type: "dismissed",
@@ -288,9 +288,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a4",
-    modName: "System",
-    modInitials: "SY",
-    modTone: "plum",
+    moderatorName: "System",
+    moderatorInitials: "SY",
+    moderatorTone: "plum",
     action: "Auto-froze account",
     actionTone: "amber",
     type: "froze",
@@ -303,9 +303,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a5",
-    modName: "Sofia Almeida",
-    modInitials: "SA",
-    modTone: "amber",
+    moderatorName: "Sofia Almeida",
+    moderatorInitials: "SA",
+    moderatorTone: "amber",
     action: "Warned",
     actionTone: "coral",
     type: "warned",
@@ -317,9 +317,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a6",
-    modName: "Inês Martins",
-    modInitials: "IM",
-    modTone: "jade",
+    moderatorName: "Inês Martins",
+    moderatorInitials: "IM",
+    moderatorTone: "jade",
     action: "Verified",
     actionTone: "jade",
     type: "verified",
@@ -331,9 +331,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a7",
-    modName: "Júlia Saraiva",
-    modInitials: "JS",
-    modTone: "jade",
+    moderatorName: "Júlia Saraiva",
+    moderatorInitials: "JS",
+    moderatorTone: "jade",
     action: "Upheld appeal",
     actionTone: "violet",
     type: "appeal",
@@ -346,9 +346,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a8",
-    modName: "Kai Sousa",
-    modInitials: "KS",
-    modTone: "plum",
+    moderatorName: "Kai Sousa",
+    moderatorInitials: "KS",
+    moderatorTone: "plum",
     action: "Edited policy",
     actionTone: "violet",
     type: "policy",
@@ -360,9 +360,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a9",
-    modName: "Sofia Almeida",
-    modInitials: "SA",
-    modTone: "amber",
+    moderatorName: "Sofia Almeida",
+    moderatorInitials: "SA",
+    moderatorTone: "amber",
     action: "Restricted · 30 days",
     actionTone: "amber",
     type: "restricted",
@@ -375,9 +375,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a10",
-    modName: "Júlia Saraiva",
-    modInitials: "JS",
-    modTone: "jade",
+    moderatorName: "Júlia Saraiva",
+    moderatorInitials: "JS",
+    moderatorTone: "jade",
     action: "Overturned appeal",
     actionTone: "jade",
     type: "appeal",
@@ -390,9 +390,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a11",
-    modName: "Inês Martins",
-    modInitials: "IM",
-    modTone: "jade",
+    moderatorName: "Inês Martins",
+    moderatorInitials: "IM",
+    moderatorTone: "jade",
     action: "Removed content",
     actionTone: "danger",
     type: "removed",
@@ -404,9 +404,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a12",
-    modName: "System",
-    modInitials: "SY",
-    modTone: "plum",
+    moderatorName: "System",
+    moderatorInitials: "SY",
+    moderatorTone: "plum",
     action: "Flagged vouch ring",
     actionTone: "violet",
     type: "froze",
@@ -418,9 +418,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a13",
-    modName: "Sofia Almeida",
-    modInitials: "SA",
-    modTone: "amber",
+    moderatorName: "Sofia Almeida",
+    moderatorInitials: "SA",
+    moderatorTone: "amber",
     action: "Verified",
     actionTone: "jade",
     type: "verified",
@@ -432,9 +432,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a14",
-    modName: "Júlia Saraiva",
-    modInitials: "JS",
-    modTone: "jade",
+    moderatorName: "Júlia Saraiva",
+    moderatorInitials: "JS",
+    moderatorTone: "jade",
     action: "Dismissed",
     actionTone: "coral",
     type: "dismissed",
@@ -447,9 +447,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a15",
-    modName: "Kai Sousa",
-    modInitials: "KS",
-    modTone: "plum",
+    moderatorName: "Kai Sousa",
+    moderatorInitials: "KS",
+    moderatorTone: "plum",
     action: "Warned",
     actionTone: "coral",
     type: "warned",
@@ -461,9 +461,9 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
   },
   {
     id: "a16",
-    modName: "Inês Martins",
-    modInitials: "IM",
-    modTone: "jade",
+    moderatorName: "Inês Martins",
+    moderatorInitials: "IM",
+    moderatorTone: "jade",
     action: "Edited policy",
     actionTone: "violet",
     type: "policy",

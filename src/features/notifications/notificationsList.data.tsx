@@ -66,7 +66,7 @@ export function buildNotifications(
       id: 2,
       type: "events",
       unread: true,
-      icon: { Glyph: FiTag, bg: "rgba(232,119,90,.1)" },
+      icon: { Glyph: FiTag, background: "rgba(232,119,90,.1)" },
       text: (
         <Translation
           i18nKey="notifications:list.2.text"
@@ -156,7 +156,7 @@ export function buildNotifications(
       id: 5,
       type: "platform",
       unread: true,
-      icon: { Glyph: FiBookOpen, bg: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiBookOpen, background: "rgba(45,27,61,.07)" },
       text: (
         <Translation
           i18nKey="notifications:list.5.text"
@@ -181,7 +181,7 @@ export function buildNotifications(
       id: 6,
       type: "events",
       unread: true,
-      icon: { Glyph: FiClock, bg: "rgba(74,140,111,.1)" },
+      icon: { Glyph: FiClock, background: "rgba(74,140,111,.1)" },
       text: (
         <Translation
           i18nKey="notifications:list.6.text"
@@ -224,7 +224,7 @@ export function buildNotifications(
       id: 8,
       type: "platform",
       unread: false,
-      icon: { Glyph: FiStar, bg: "rgba(232,119,90,.09)" },
+      icon: { Glyph: FiStar, background: "rgba(232,119,90,.09)" },
       text: (
         <Translation
           i18nKey="notifications:list.8.text"
@@ -246,7 +246,7 @@ export function buildNotifications(
       id: 9,
       type: "events",
       unread: false,
-      icon: { Glyph: FiTag, bg: "rgba(232,119,90,.1)" },
+      icon: { Glyph: FiTag, background: "rgba(232,119,90,.1)" },
       text: (
         <Translation
           i18nKey="notifications:list.9.text"
@@ -298,7 +298,7 @@ export function buildNotifications(
       id: 11,
       type: "community",
       unread: false,
-      icon: { Glyph: FiClipboard, bg: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiClipboard, background: "rgba(45,27,61,.07)" },
       text: t("notifications:list.11.text", {
         count: 12,
         postTitle: "Housing law update — what I found out",
@@ -317,7 +317,7 @@ export function buildNotifications(
       id: 12,
       type: "platform",
       unread: false,
-      icon: { Glyph: FiHome, bg: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiHome, background: "rgba(45,27,61,.07)" },
       text: (
         <Translation
           i18nKey="notifications:list.12.text"

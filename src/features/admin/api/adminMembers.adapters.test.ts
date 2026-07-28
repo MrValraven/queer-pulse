@@ -138,10 +138,10 @@ const baseFlaggedDto: FlaggedMemberDTO = {
 };
 
 describe("flaggedDtoToMember", () => {
-  it("maps doxxing to the doxxing category, danger catTone, and frozen statusId/statusTone", () => {
+  it("maps doxxing to the doxxing category, danger categoryTone, and frozen statusId/statusTone", () => {
     const flagged = flaggedDtoToMember(baseFlaggedDto, translate, fmt);
     expect(flagged.category).toEqual({ kind: "doxxing" });
-    expect(flagged.catTone).toBe("danger");
+    expect(flagged.categoryTone).toBe("danger");
     expect(flagged.statusId).toBe("frozen");
     expect(flagged.statusTone).toBe("danger");
   });
@@ -164,7 +164,7 @@ describe("flaggedDtoToMember", () => {
     expect(flagged.statusTone).toBe("coral");
   });
 
-  it("maps spam to amber catTone and limited statusTone", () => {
+  it("maps spam to amber categoryTone and limited statusTone", () => {
     const flagged = flaggedDtoToMember(
       {
         ...baseFlaggedDto,
@@ -176,7 +176,7 @@ describe("flaggedDtoToMember", () => {
       fmt,
     );
     expect(flagged.category).toEqual({ kind: "spam" });
-    expect(flagged.catTone).toBe("amber");
+    expect(flagged.categoryTone).toBe("amber");
     expect(flagged.statusTone).toBe("amber");
   });
 

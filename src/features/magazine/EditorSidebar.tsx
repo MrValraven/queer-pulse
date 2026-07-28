@@ -19,7 +19,7 @@ export function EditorSidebar({
   pieces: Piece[];
   me: Editor;
   query: string;
-  onStub: (msg: string) => void;
+  onStub: (message: string) => void;
 }) {
   return (
     <aside className={styles.edSide}>

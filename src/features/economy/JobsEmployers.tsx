@@ -47,7 +47,7 @@ export function JobsEmployers() {
             >
               <div
                 className={styles.empLogo}
-                style={{ background: emp.bg, color: emp.text }}
+                style={{ background: emp.background, color: emp.text }}
               >
                 {emp.logo}
               </div>

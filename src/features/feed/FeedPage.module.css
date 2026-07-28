@@ -54,6 +54,14 @@
   align-items: flex-start;
   margin-top: 24px;
 }
+/* Grid items default to `min-width: auto`, so the feed column's min-content
+   (the scrollable tab strip + the cards) can force the `1fr` track wider than
+   its container, overflowing the page horizontally on mobile. Letting the
+   items shrink below their content keeps the column inside the viewport — the
+   tab strip then scrolls within its own `overflow-x: auto`. */
+.layout > * {
+  min-width: 0;
+}
 
 .tabs {
   display: flex;

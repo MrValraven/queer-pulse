@@ -68,37 +68,37 @@ export function buildKitManifest(t: TFunction): PressAsset {
 
 export function buildKitPreview(
   t: TFunction,
-): { ic: string; title: string; desc: string }[] {
+): { ic: string; title: string; description: string }[] {
   return [
     {
       ic: "TXT",
       title: t("marketing:pressKit.preview.readme.title"),
-      desc: t("marketing:pressKit.preview.readme.desc"),
+      description: t("marketing:pressKit.preview.readme.desc"),
     },
     {
       ic: "SVG",
       title: t("marketing:pressKit.preview.marks.title"),
-      desc: t("marketing:pressKit.preview.marks.desc"),
+      description: t("marketing:pressKit.preview.marks.desc"),
     },
     {
       ic: "PNG",
       title: t("marketing:pressKit.preview.marksPng.title"),
-      desc: t("marketing:pressKit.preview.marksPng.desc"),
+      description: t("marketing:pressKit.preview.marksPng.desc"),
     },
     {
       ic: "JPG",
       title: t("marketing:pressKit.preview.photography.title"),
-      desc: t("marketing:pressKit.preview.photography.desc"),
+      description: t("marketing:pressKit.preview.photography.desc"),
     },
     {
       ic: "TXT",
       title: t("marketing:pressKit.preview.boilerplate.title"),
-      desc: t("marketing:pressKit.preview.boilerplate.desc"),
+      description: t("marketing:pressKit.preview.boilerplate.desc"),
     },
     {
       ic: "PDF",
       title: t("marketing:pressKit.preview.factSheet.title"),
-      desc: t("marketing:pressKit.preview.factSheet.desc"),
+      description: t("marketing:pressKit.preview.factSheet.desc"),
     },
   ];
 }
@@ -128,7 +128,7 @@ export function assetFor(
   t: TFunction,
   ic: string,
   title: string,
-  desc: string,
+  description: string,
 ): PressAsset {
   const slug = title
     .toLowerCase()
@@ -151,6 +151,6 @@ export function assetFor(
       title === t("marketing:pressKit.downloads.boilerplate.title") ||
       /boilerplate/i.test(title)
         ? buildBoilerTxt(t)
-        : `QUEERPULSE — ${title.toUpperCase()}\n\n${desc}\n\n${t("marketing:pressKit.placeholderFile.line1")}\n${t("marketing:pressKit.placeholderFile.line2")}\n\npress@queerpulse.app\n`,
+        : `QUEERPULSE — ${title.toUpperCase()}\n\n${description}\n\n${t("marketing:pressKit.placeholderFile.line1")}\n${t("marketing:pressKit.placeholderFile.line2")}\n\npress@queerpulse.app\n`,
   };
 }

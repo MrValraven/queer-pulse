@@ -47,7 +47,7 @@ export function TherapistSections({
               <div className={styles.specIc}>{s.initial}</div>
               <div className={styles.specText}>
                 <b>{s.title}</b>
-                <span>{s.desc}</span>
+                <span>{s.description}</span>
               </div>
             </div>
           ))}

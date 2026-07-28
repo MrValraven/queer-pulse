@@ -4,7 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getJob } from "./jobs.api";
 import { jobDetailToJob } from "./jobs.adapters";
-import { JOBS, type Job } from "../jobs.data";
+import type { Job } from "../jobs.data";
 
 /**
  * A single job's detail. Demo returns the mock `JOBS` entry (the calling page
@@ -23,7 +23,11 @@ export function useJob(slug: string | undefined) {
     enabled: Boolean(slug),
     queryFn: async () => {
       if (!slug) return null;
-      if (demoMode) return JOBS.find((j) => j.slug === slug) ?? null;
+      if (demoMode) {
+        // Demo-only mock — loaded on demand so it never ships in the live bundle.
+        const { JOBS } = await import("../jobs.data");
+        return JOBS.find((j) => j.slug === slug) ?? null;
+      }
       return jobDetailToJob(await getJob(slug), t, fmt);
     },
   });

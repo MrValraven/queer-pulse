@@ -4,7 +4,6 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getNotifications } from "./notifications.api";
 import { notificationDtoToView } from "./notifications.adapters";
-import { buildNotifications } from "../notificationsList.data";
 import type { Notification } from "../notifications.types";
 
 /**
@@ -25,6 +24,8 @@ export function useNotifications(unreadOnly = false) {
     queryKey: ["notifications", demoMode, unreadOnly, language],
     queryFn: async () => {
       if (demoMode) {
+        // Code-split: the demo mock is only pulled into the bundle in demo mode.
+        const { buildNotifications } = await import("../notificationsList.data");
         const list = buildNotifications(t, fmt);
         return unreadOnly ? list.filter((n) => n.unread) : list;
       }

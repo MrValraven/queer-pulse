@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getVouchers } from "./members.api";
 import { initialsOf, tintForSlug } from "./members.adapters";
-import { MEMBERS } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 
 /** A single voucher face rendered on a profile's "Vouched for by…" row. */
@@ -35,6 +34,7 @@ export function useVouchers(slug: string | undefined) {
     queryFn: async () => {
       if (!slug) return [];
       if (demoMode) {
+        const { MEMBERS } = await import("../data/members");
         const member = MEMBERS[slug];
         if (!member) return [];
         return member.vouchers.flatMap((voucherSlug) => {

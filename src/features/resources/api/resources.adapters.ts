@@ -26,9 +26,9 @@ const TITLE_TO_ROUTE: Record<string, string> = Object.fromEntries(
 export function resourceToGuide(dto: ResourceResponseDTO): Guide {
   return {
     title: dto.title,
-    desc: dto.description,
-    cat: dto.category,
-    catLabel: CATEGORY_LABELS[dto.category] ?? dto.category,
+    description: dto.description,
+    category: dto.category,
+    categoryLabel: CATEGORY_LABELS[dto.category] ?? dto.category,
     meta: dto.meta ?? "Guide",
     to: TITLE_TO_ROUTE[dto.title] ?? routes.library,
   };

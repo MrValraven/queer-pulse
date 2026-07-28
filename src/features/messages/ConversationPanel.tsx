@@ -207,9 +207,6 @@ export function ConversationPanel({
         seenActive={seenActive}
         lastOutbound={lastOutbound}
         onReactionToggle={handleReactionToggle}
-        onReportMessage={setReportTarget}
-        onDeleteMessage={setDeleteTarget}
-        viewerIsStaff={viewerIsStaff}
         onOpenActions={openActions}
         editingMessageId={editingMessageId}
         onBeginEdit={beginEdit}

@@ -17,7 +17,7 @@ const KIND_ICONS: Record<NotifType, IconType> = {
 };
 
 /** Subtle tinted background behind each kind's icon, matching the mock palette. */
-const KIND_ICON_BG: Record<NotifType, string> = {
+const KIND_ICON_BACKGROUND: Record<NotifType, string> = {
   messages: "rgba(74,140,111,.1)",
   events: "rgba(232,119,90,.1)",
   community: "rgba(45,27,61,.07)",
@@ -65,7 +65,10 @@ export function notificationDtoToView(
     // The backend sends `read`; the view-model is phrased the other way round.
     // Missing/!boolean degrades to unread so a row is never silently swallowed.
     unread: dto.read !== true,
-    icon: { Glyph: KIND_ICONS[category] ?? FiBell, bg: KIND_ICON_BG[category] },
+    icon: {
+      Glyph: KIND_ICONS[category] ?? FiBell,
+      background: KIND_ICON_BACKGROUND[category],
+    },
     text,
     meta,
     time: formatTime(dto.createdAt, fmt),

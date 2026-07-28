@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMembers } from "../../features/members/api/useMembers";
 import { useCommunities } from "../../features/communities/api/useCommunities";
 import { MEMBERS, memberName } from "../../features/members/data/members";
@@ -24,6 +25,7 @@ export function useMentionSuggestions(): {
   members: Suggestion[];
   communities: Suggestion[];
 } {
+  const { demoMode } = useDemoMode();
   const memberList = useMembers();
   const communityList = useCommunities();
 
@@ -32,9 +34,13 @@ export function useMentionSuggestions(): {
       memberList.items.map((card) => {
         // Live cards carry their own identity; demo cards resolve it from the
         // registry by slug (avatarUrl/firstName are undefined on demo cards).
+        // The registry reads are DEMO-ONLY — in live mode a card missing a name
+        // or photo falls back to its slug/initials rather than a mock persona's.
         const name = card.firstName
           ? `${card.firstName} ${card.lastName ?? ""}`.trim()
-          : memberName(card.slug);
+          : demoMode
+            ? memberName(card.slug)
+            : card.slug;
         // initialsOf takes first/last separately — derive them from the card
         // when present, otherwise split the resolved display name.
         const firstName = card.firstName ?? name.split(" ")[0] ?? "";
@@ -43,11 +49,14 @@ export function useMentionSuggestions(): {
           kind: "member",
           slug: card.slug,
           name,
-          avatarUrl: card.avatarUrl ?? MEMBERS[card.slug]?.photo ?? undefined,
+          avatarUrl:
+            card.avatarUrl ??
+            (demoMode ? MEMBERS[card.slug]?.photo : undefined) ??
+            undefined,
           initials: initialsOf(firstName, lastName),
         };
       }),
-    [memberList.items],
+    [memberList.items, demoMode],
   );
 
   const communities = useMemo<Suggestion[]>(

@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { followSubprofile, unfollowSubprofile } from "./subprofiles.api";
-import { mockSetFollowing } from "../data/subprofiles.data";
 
 /** Result shape shared by the follow and unfollow endpoints. */
 export interface FollowResult {
@@ -42,6 +41,7 @@ export function useFollow(subprofileId: string) {
   const follow = useMutation<FollowResult, Error, FollowVariables>({
     mutationFn: async ({ currentFollowerCount }) => {
       if (demoMode) {
+        const { mockSetFollowing } = await import("../data/subprofiles.data");
         return (
           mockSetFollowing(subprofileId, true) ?? {
             followerCount: currentFollowerCount + 1,
@@ -57,6 +57,7 @@ export function useFollow(subprofileId: string) {
   const unfollow = useMutation<FollowResult, Error, UnfollowVariables>({
     mutationFn: async ({ currentFollowerCount }) => {
       if (demoMode) {
+        const { mockSetFollowing } = await import("../data/subprofiles.data");
         return (
           mockSetFollowing(subprofileId, false) ?? {
             followerCount: Math.max(0, currentFollowerCount - 1),

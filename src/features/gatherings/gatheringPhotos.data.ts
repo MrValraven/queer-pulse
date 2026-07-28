@@ -95,28 +95,28 @@ export const PICS: Pic[] = [
 export const CONTRIBUTORS = [
   {
     initials: "AB",
-    bg: "rgba(var(--accent-rgb),.14)",
+    background: "rgba(var(--accent-rgb),.14)",
     color: "var(--accent-ink)",
     name: "André Bento",
     count: 18,
   },
   {
     initials: "SC",
-    bg: "rgba(var(--jade-rgb),.16)",
+    background: "rgba(var(--jade-rgb),.16)",
     color: "var(--jade)",
     name: "Sofia Castaño",
     count: 6,
   },
   {
     initials: "TM",
-    bg: "rgba(45,27,61,.10)",
+    background: "rgba(45,27,61,.10)",
     color: "var(--plum)",
     name: "Tomás Mendes",
     count: 3,
   },
   {
     initials: "FL",
-    bg: "rgba(var(--accent-rgb),.14)",
+    background: "rgba(var(--accent-rgb),.14)",
     color: "var(--accent-ink)",
     name: "Filipa Lopes",
     count: 1,

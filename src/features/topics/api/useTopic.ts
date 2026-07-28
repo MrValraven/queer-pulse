@@ -72,6 +72,9 @@ export function useTopic(tag: string) {
   return {
     topic,
     isLoading: detailQuery.isLoading || postsQuery.isLoading,
+    // Live-only: the meta fetch failing (404 for an unknown slug, network
+    // error) means there is no topic to show. Demo never errors here.
+    isError: !demoMode && detailQuery.isError,
     hasNextPage: !demoMode && postsQuery.hasNextPage,
     fetchNextPage: () => void postsQuery.fetchNextPage(),
     isFetchingNextPage: postsQuery.isFetchingNextPage,

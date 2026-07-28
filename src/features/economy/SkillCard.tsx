@@ -37,7 +37,7 @@ export function SkillCard({ skill }: { skill: Skill }) {
           <MemberStaffBadge slug={skill.member} />
         </div>
       </div>
-      <div className={styles.desc}>{skill.desc}</div>
+      <div className={styles.desc}>{skill.description}</div>
       <TagRow>
         {skill.tags.map((tag) => (
           <Tag key={tag}>{tag}</Tag>

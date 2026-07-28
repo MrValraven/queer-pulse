@@ -194,7 +194,7 @@ function GatheringPhotosFooter() {
             <Link to={MEMBER} className={styles.pill} key={c.name}>
               <span
                 className={styles.pillAv}
-                style={{ background: c.bg, color: c.color }}
+                style={{ background: c.background, color: c.color }}
               >
                 {c.initials}
               </span>

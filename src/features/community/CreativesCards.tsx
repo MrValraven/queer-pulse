@@ -17,7 +17,7 @@ export function ArtCard({ w }: { w: ArtWork }) {
   const { t } = useTranslation();
   return (
     <article className={styles.artCard}>
-      <div className={styles.artImg} style={{ height: w.imgH }}>
+      <div className={styles.artImg} style={{ height: w.imageHeight }}>
         {w.medium}
       </div>
       <div className={styles.artCardBody}>

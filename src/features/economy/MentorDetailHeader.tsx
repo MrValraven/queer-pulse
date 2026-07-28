@@ -29,7 +29,7 @@ export function MentorDetailHeader({
     <header className={styles.head}>
       <div
         className={styles.portrait}
-        style={{ background: m.bg, color: m.color }}
+        style={{ background: m.background, color: m.color }}
         aria-hidden="true"
       >
         <span className={styles.portraitInitials}>{m.initials}</span>

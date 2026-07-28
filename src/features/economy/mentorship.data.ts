@@ -19,22 +19,22 @@ export interface SideRow {
 }
 
 export interface ProcessStep {
-  num: string;
+  number: string;
   title: string;
-  desc: string;
+  description: string;
 }
 
 export interface Mentor {
   slug: string;
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   name: string;
   pronouns: string;
   role: string;
   areas: string[];
   cap: string;
-  btn: string;
+  button: string;
   /** One-line on how they mentor. */
   quote: string;
   /** Why they're a good mentor. */
@@ -75,14 +75,14 @@ export const MENTORS: Mentor[] = [
   {
     slug: "ines-tavares",
     initials: "IT",
-    bg: "rgba(var(--accent-rgb),.15)",
+    background: "rgba(var(--accent-rgb),.15)",
     color: "var(--accent-ink)",
     name: memberName("ines"),
     pronouns: "she/her",
     role: "Graphic Designer",
     areas: ["Design career", "Freelancing", "Studio building"],
     cap: "1 open spot this quarter",
-    btn: "Request a match",
+    button: "Request a match",
     quote: "I'll tell you what's working before I tell you what's not.",
     why: "Inês has built a studio from nothing and hired junior designers herself, so she knows both sides of the table. She mentors people who want to do good work slowly, and she's honest without being harsh.",
     charge:
@@ -109,24 +109,24 @@ export const MENTORS: Mentor[] = [
     ],
     process: [
       {
-        num: "01",
+        number: "01",
         title: "Ask for me by name",
-        desc: "Request a match through the form and mention you'd like to work with me specifically. I read every one.",
+        description: "Request a match through the form and mention you'd like to work with me specifically. I read every one.",
       },
       {
-        num: "02",
+        number: "02",
         title: "A short intro call",
-        desc: "Fifteen minutes, both ways. You see if I'm useful, I see what you're making. No pressure either side.",
+        description: "Fifteen minutes, both ways. You see if I'm useful, I see what you're making. No pressure either side.",
       },
       {
-        num: "03",
+        number: "03",
         title: "We pick one thing",
-        desc: "One project, one habit, one decision you're stuck on. We start there rather than trying to fix everything at once.",
+        description: "One project, one habit, one decision you're stuck on. We start there rather than trying to fix everything at once.",
       },
       {
-        num: "04",
+        number: "04",
         title: "Monthly, over coffee",
-        desc: "We meet once a month, in person when we can, with a thread open in between for the small stuff.",
+        description: "We meet once a month, in person when we can, with a thread open in between for the small stuff.",
       },
     ],
     price: {
@@ -144,14 +144,14 @@ export const MENTORS: Mentor[] = [
   {
     slug: "rui-marcal",
     initials: "RM",
-    bg: "rgba(var(--plum-rgb),.12)",
+    background: "rgba(var(--plum-rgb),.12)",
     color: "var(--plum)",
     name: memberName("rui"),
     pronouns: "he/him",
     role: "Software Engineer",
     areas: ["Engineering career", "Junior to mid", "Open source"],
     cap: "2 open spots this quarter",
-    btn: "Request a match",
+    button: "Request a match",
     quote:
       "Most engineering careers stall for non-engineering reasons. Let's fix those.",
     why: "Rui has gone from junior to senior and mentored open-source contributors along the way. He's good at the unglamorous parts — code-review habits, navigating teams, asking for the raise.",
@@ -179,24 +179,24 @@ export const MENTORS: Mentor[] = [
     ],
     process: [
       {
-        num: "01",
+        number: "01",
         title: "Tell me where you're stuck",
-        desc: "Request a match and note your level and the thing blocking you right now. Specific beats broad.",
+        description: "Request a match and note your level and the thing blocking you right now. Specific beats broad.",
       },
       {
-        num: "02",
+        number: "02",
         title: "A first call within a week",
-        desc: "Thirty minutes to map what you want and whether I'm the right person. If I'm not, I'll say so.",
+        description: "Thirty minutes to map what you want and whether I'm the right person. If I'm not, I'll say so.",
       },
       {
-        num: "03",
+        number: "03",
         title: "Work it in writing",
-        desc: "Most of our back-and-forth is async — a PR, a plan, a hard message. You get a real answer, not a vibe.",
+        description: "Most of our back-and-forth is async — a PR, a plan, a hard message. You get a real answer, not a vibe.",
       },
       {
-        num: "04",
+        number: "04",
         title: "Talk when it matters",
-        desc: "We jump on a call for the big decisions — a job move, a raise, a team you're struggling to read.",
+        description: "We jump on a call for the big decisions — a job move, a raise, a team you're struggling to read.",
       },
     ],
     price: {
@@ -214,14 +214,14 @@ export const MENTORS: Mentor[] = [
   {
     slug: "mariana-loucao",
     initials: "ML",
-    bg: "rgba(var(--jade-rgb),.15)",
+    background: "rgba(var(--jade-rgb),.15)",
     color: "var(--jade)",
     name: memberName("mariana"),
     pronouns: "she/her",
     role: "Clinical Psychologist",
     areas: ["Wellbeing at work", "Coming out professionally", "Identity"],
     cap: "Waitlist only right now",
-    btn: "Join waitlist",
+    button: "Join waitlist",
     quote: "Work is where a lot of us hide. Mentorship can be where we stop.",
     why: "Mariana is a clinical psychologist who runs a peer-support group for queer professionals. She mentors on the human side of careers — burnout, coming out at work, identity and ambition.",
     charge:
@@ -248,24 +248,24 @@ export const MENTORS: Mentor[] = [
     ],
     process: [
       {
-        num: "01",
+        number: "01",
         title: "Join the waitlist",
-        desc: "Add your name through the form. I reach out personally when a spot opens, usually within a month or two.",
+        description: "Add your name through the form. I reach out personally when a spot opens, usually within a month or two.",
       },
       {
-        num: "02",
+        number: "02",
         title: "A gentle first conversation",
-        desc: "We start slow. You tell me what's heavy right now; I tell you honestly whether I'm the right support.",
+        description: "We start slow. You tell me what's heavy right now; I tell you honestly whether I'm the right support.",
       },
       {
-        num: "03",
+        number: "03",
         title: "We name the real thing",
-        desc: "Often the career question sits on top of something else. We take the time to find what it actually is.",
+        description: "Often the career question sits on top of something else. We take the time to find what it actually is.",
       },
       {
-        num: "04",
+        number: "04",
         title: "Regular, unhurried check-ins",
-        desc: "We meet on a rhythm that suits you, with clear edges around what this is and what it isn't.",
+        description: "We meet on a rhythm that suits you, with clear edges around what this is and what it isn't.",
       },
     ],
     price: {
@@ -283,14 +283,14 @@ export const MENTORS: Mentor[] = [
   {
     slug: "carla-nogueira",
     initials: "CN",
-    bg: "rgba(var(--accent-rgb),.12)",
+    background: "rgba(var(--accent-rgb),.12)",
     color: "var(--accent-ink)",
     name: memberName("carla"),
     pronouns: "she/her",
     role: "Product Manager",
     areas: ["Product career", "Fintech", "Switching industries"],
     cap: "1 open spot this quarter",
-    btn: "Request a match",
+    button: "Request a match",
     quote:
       "I switched industries twice. I know how scary and how doable it is.",
     why: "Carla is a product manager who moved into fintech from a different field, so she mentors people mid-switch. She's structured, direct, and good at turning a vague goal into a plan.",
@@ -318,24 +318,24 @@ export const MENTORS: Mentor[] = [
     ],
     process: [
       {
-        num: "01",
+        number: "01",
         title: "Tell me where you are and where you want to be",
-        desc: "Request a match with the gap you're trying to cross. The clearer the gap, the faster we move.",
+        description: "Request a match with the gap you're trying to cross. The clearer the gap, the faster we move.",
       },
       {
-        num: "02",
+        number: "02",
         title: "A 30-minute fit call",
-        desc: "We check the chemistry and whether I can actually help. If product isn't really your path, I'll tell you kindly.",
+        description: "We check the chemistry and whether I can actually help. If product isn't really your path, I'll tell you kindly.",
       },
       {
-        num: "03",
+        number: "03",
         title: "We build the plan",
-        desc: "We turn the goal into steps with dates. You leave the first session knowing exactly what's next.",
+        description: "We turn the goal into steps with dates. You leave the first session knowing exactly what's next.",
       },
       {
-        num: "04",
+        number: "04",
         title: "Monthly, with homework",
-        desc: "We meet monthly to review what you did and adjust. Between calls, you do the reps.",
+        description: "We meet monthly to review what you did and adjust. Between calls, you do the reps.",
       },
     ],
     price: {
@@ -353,14 +353,14 @@ export const MENTORS: Mentor[] = [
   {
     slug: "sofia-andrade",
     initials: "SA",
-    bg: "rgba(var(--jade-rgb),.15)",
+    background: "rgba(var(--jade-rgb),.15)",
     color: "var(--jade)",
     name: memberName("sofia"),
     pronouns: "she/her",
     role: "Documentary Filmmaker",
     areas: ["Filmmaking", "Creative practice", "Arts funding"],
     cap: "2 open spots this quarter",
-    btn: "Request a match",
+    button: "Request a match",
     quote: "Funding and finishing are the hard parts. Making is the easy bit.",
     why: "Sofia makes documentaries and has navigated grants, co-productions, and the long middle of a creative project. She mentors people stuck in the part nobody warns you about.",
     charge:
@@ -387,24 +387,24 @@ export const MENTORS: Mentor[] = [
     ],
     process: [
       {
-        num: "01",
+        number: "01",
         title: "Tell me what you're making",
-        desc: "Request a match with the project and where it's stuck. I care more about what it is than how far along it is.",
+        description: "Request a match with the project and where it's stuck. I care more about what it is than how far along it is.",
       },
       {
-        num: "02",
+        number: "02",
         title: "We meet in person, at least once",
-        desc: "I like to start face to face if we can — a coffee, a walk. Some things only come out that way.",
+        description: "I like to start face to face if we can — a coffee, a walk. Some things only come out that way.",
       },
       {
-        num: "03",
+        number: "03",
         title: "We set the trade",
-        desc: "We agree what I'll help with and what you'll help me with. Fair, light, and written down so neither of us guesses.",
+        description: "We agree what I'll help with and what you'll help me with. Fair, light, and written down so neither of us guesses.",
       },
       {
-        num: "04",
+        number: "04",
         title: "Through the long middle",
-        desc: "We check in on a rhythm through the hard part — funding, structure, the will to finish.",
+        description: "We check in on a rhythm through the hard part — funding, structure, the will to finish.",
       },
     ],
     price: {
@@ -422,14 +422,14 @@ export const MENTORS: Mentor[] = [
   {
     slug: "raquel-baptista",
     initials: "RB",
-    bg: "rgba(var(--violet-rgb),.12)",
+    background: "rgba(var(--violet-rgb),.12)",
     color: "var(--violet)",
     name: memberName("raquel-baptista"),
     pronouns: "she/her",
     role: "Lawyer",
     areas: ["Legal career", "Rights navigation", "Advocacy"],
     cap: "1 open spot this quarter",
-    btn: "Request a match",
+    button: "Request a match",
     quote: "Knowing your rights is half of using them.",
     why: "Raquel is a lawyer who does rights-navigation and advocacy work. She mentors people thinking about legal careers and members trying to understand their own rights at work or in the system.",
     charge:
@@ -456,24 +456,24 @@ export const MENTORS: Mentor[] = [
     ],
     process: [
       {
-        num: "01",
+        number: "01",
         title: "Request a match",
-        desc: "Tell me whether you're thinking about a legal career or trying to understand a right. Both are welcome.",
+        description: "Tell me whether you're thinking about a legal career or trying to understand a right. Both are welcome.",
       },
       {
-        num: "02",
+        number: "02",
         title: "A first call to place you",
-        desc: "We work out what you actually need — mentorship, or a resource that will help you faster.",
+        description: "We work out what you actually need — mentorship, or a resource that will help you faster.",
       },
       {
-        num: "03",
+        number: "03",
         title: "Understanding, not dependence",
-        desc: "The goal is that you leave able to read the situation yourself, not needing me to read it for you.",
+        description: "The goal is that you leave able to read the situation yourself, not needing me to read it for you.",
       },
       {
-        num: "04",
+        number: "04",
         title: "Ongoing, as questions come",
-        desc: "We keep a light rhythm and you reach out as the real questions arrive.",
+        description: "We keep a light rhythm and you reach out as the real questions arrive.",
       },
     ],
     price: {

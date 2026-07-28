@@ -52,12 +52,16 @@ export function useStartConversation() {
   });
 }
 
-/** POST /conversations/:id/read — clear the unread badge for a thread. */
-export function useMarkRead(conversationId: string | null) {
+/** POST /conversations/:id/read — clear the unread badge for a thread. The
+ *  target conversation id is passed at mutate time, not bound when the hook
+ *  runs: `openThread` fires this synchronously right after `setActiveId`, when
+ *  the render-time `active` is still the *previous* thread — binding the id at
+ *  creation would mark the wrong conversation read. */
+export function useMarkRead() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, void>({
-    mutationFn: async () => {
+  return useMutation<void, Error, string>({
+    mutationFn: async (conversationId) => {
       if (demoMode || !conversationId) return;
       await markConversationRead(conversationId, new Date().toISOString());
     },

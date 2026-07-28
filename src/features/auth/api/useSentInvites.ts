@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getSentInvites, type SentInviteDTO } from "./invite.api";
-import { SENT_INVITES } from "../sentInvites.data";
 
 /**
  * Presentation-normalized "invite I've sent" — status chip + dates.
@@ -65,7 +64,10 @@ export function useSentInvites() {
   return useQuery<SentInviteView[]>({
     queryKey: ["sent-invites", demoMode],
     queryFn: async () => {
-      const rows = demoMode ? SENT_INVITES : await getSentInvites();
+      // Demo mock is loaded on demand so it stays out of the live bundle.
+      const rows = demoMode
+        ? (await import("../sentInvites.data")).SENT_INVITES
+        : await getSentInvites();
       return rows.map(dtoToView);
     },
   });

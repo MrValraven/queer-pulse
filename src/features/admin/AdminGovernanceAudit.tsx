@@ -21,7 +21,7 @@ import { AdminGovernanceAuditModal } from "./AdminGovernanceAuditModal";
 import styles from "./AdminGovernancePage.module.css";
 
 function matches(e: AuditEntry, f: AuditFilterState): boolean {
-  if (f.moderator !== "all" && e.modName !== f.moderator) return false;
+  if (f.moderator !== "all" && e.moderatorName !== f.moderator) return false;
   if (f.action !== "all" && e.type !== f.action) return false;
   if (f.range !== "all" && e.range !== f.range) return false;
   if (f.query.trim()) {
@@ -164,12 +164,12 @@ function AuditRow({
     >
       <span className={styles.auditMod} role="cell">
         <AdminAvatar
-          initials={entry.modInitials}
-          tone={entry.modTone}
+          initials={entry.moderatorInitials}
+          tone={entry.moderatorTone}
           size="sm"
-          src={portrait(entry.modName)}
+          src={portrait(entry.moderatorName)}
         />
-        {entry.modName}
+        {entry.moderatorName}
       </span>
       <span role="cell">
         <AdminChip tone={entry.actionTone}>{entry.action}</AdminChip>

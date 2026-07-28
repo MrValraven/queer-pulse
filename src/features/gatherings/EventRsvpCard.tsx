@@ -117,7 +117,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
                     >
                       {t(tier.nameKey)}
                     </span>
-                    <span className={styles.tierDesc}>{t(tier.descKey)}</span>
+                    <span className={styles.tierDesc}>{t(tier.descriptionKey)}</span>
                   </span>
                   <span className={styles.tierPrice}>
                     {fmt.currency(tier.price)}

@@ -14,8 +14,8 @@ export interface Therapist {
   /** Short pull-quote shown on the card. */
   note: string;
   photo: string;
-  avBg: string;
-  avCol: string;
+  avatarBackground: string;
+  avatarColor: string;
   /** Whether the therapist is currently taking on new clients. */
   acceptingNew: boolean;
   /** Years in practice. */
@@ -51,8 +51,8 @@ export const THERAPISTS: Therapist[] = [
     note: '"My practice is specifically focused on LGBTQ+ clients. I have been doing this for 12 years and will not make you explain your identity to me."',
     photo:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop",
-    avBg: "rgba(74,140,111,.16)",
-    avCol: "var(--jade)",
+    avatarBackground: "rgba(74,140,111,.16)",
+    avatarColor: "var(--jade)",
     acceptingNew: true,
     years: 12,
     rate: "€70–90 / session",
@@ -90,8 +90,8 @@ export const THERAPISTS: Therapist[] = [
     note: '"I work with queer expats specifically — I understand the particular stress of building a life in a new country while navigating your identity."',
     photo:
       "https://images.unsplash.com/photo-1544168190-79c17527004f?q=80&w=600&auto=format&fit=crop",
-    avBg: "rgba(232,119,90,.16)",
-    avCol: "var(--accent-ink)",
+    avatarBackground: "rgba(232,119,90,.16)",
+    avatarColor: "var(--accent-ink)",
     acceptingNew: true,
     years: 9,
     rate: "€55–75 / session",
@@ -129,8 +129,8 @@ export const THERAPISTS: Therapist[] = [
     note: '"I offer a non-judgmental space for people navigating sexual orientation, gender identity, and family relationships. Sliding scale available."',
     photo:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop",
-    avBg: "rgba(45,27,61,.12)",
-    avCol: "var(--plum)",
+    avatarBackground: "rgba(45,27,61,.12)",
+    avatarColor: "var(--plum)",
     acceptingNew: false,
     years: 7,
     rate: "€50–70 / session",
@@ -168,8 +168,8 @@ export const THERAPISTS: Therapist[] = [
     note: '"I work at the intersection of race, queerness, and displacement. If you\'ve struggled to find a therapist who holds all of it, I do."',
     photo:
       "https://images.unsplash.com/photo-1638727295415-286409421143?q=80&w=600&auto=format&fit=crop",
-    avBg: "rgba(122,82,184,.14)",
-    avCol: "var(--violet)",
+    avatarBackground: "rgba(122,82,184,.14)",
+    avatarColor: "var(--violet)",
     acceptingNew: true,
     years: 11,
     rate: "€65–85 / session",
@@ -207,8 +207,8 @@ export const THERAPISTS: Therapist[] = [
     note: '"Queer myself. I have specific experience working with coming-out processes at all ages, trans identities, and queer couples and relationships."',
     photo:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600&auto=format&fit=crop",
-    avBg: "rgba(74,140,111,.16)",
-    avCol: "var(--jade)",
+    avatarBackground: "rgba(74,140,111,.16)",
+    avatarColor: "var(--jade)",
     acceptingNew: true,
     years: 8,
     rate: "€60–80 / session",
@@ -246,8 +246,8 @@ export const THERAPISTS: Therapist[] = [
     note: "\"I don't treat being queer as the problem. I treat what the world does to you for being queer — and what you'd like to do about it.\"",
     photo:
       "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=600&auto=format&fit=crop",
-    avBg: "rgba(232,119,90,.16)",
-    avCol: "var(--accent-ink)",
+    avatarBackground: "rgba(232,119,90,.16)",
+    avatarColor: "var(--accent-ink)",
     acceptingNew: true,
     years: 12,
     rate: "€25–60 / session",
@@ -274,25 +274,25 @@ export const THERAPISTS: Therapist[] = [
  * Portugal, Samaritans) are proper nouns and stay untranslated; `noteKey`
  * (the descriptive hours/format text) is chrome and resolved via `t()`.
  */
-export const CRISIS: { name: string; num: string; noteKey: string }[] = [
+export const CRISIS: { name: string; number: string; noteKey: string }[] = [
   {
     name: "SOS Voz Amiga",
-    num: "213 544 545",
+    number: "213 544 545",
     noteKey: "resources:mentalHealth.crisisLine.sosVozAmiga.note",
   },
   {
     name: "SNS 24",
-    num: "808 24 24 24",
+    number: "808 24 24 24",
     noteKey: "resources:mentalHealth.crisisLine.sns24.note",
   },
   {
     name: "ILGA Portugal",
-    num: "213 887 239",
+    number: "213 887 239",
     noteKey: "resources:mentalHealth.crisisLine.ilga.note",
   },
   {
     name: "Samaritans (online)",
-    num: "jo@samaritans.org",
+    number: "jo@samaritans.org",
     noteKey: "resources:mentalHealth.crisisLine.samaritans.note",
   },
 ];
@@ -325,24 +325,24 @@ export const EXPERIENCES: { titleKey: string; textKey: string }[] = [
   },
 ];
 
-export const SNS: { num: string; titleKey: string; textKey: string }[] = [
+export const SNS: { number: string; titleKey: string; textKey: string }[] = [
   {
-    num: "01",
+    number: "01",
     titleKey: "resources:mentalHealth.sns.step1.title",
     textKey: "resources:mentalHealth.sns.step1.text",
   },
   {
-    num: "02",
+    number: "02",
     titleKey: "resources:mentalHealth.sns.step2.title",
     textKey: "resources:mentalHealth.sns.step2.text",
   },
   {
-    num: "03",
+    number: "03",
     titleKey: "resources:mentalHealth.sns.step3.title",
     textKey: "resources:mentalHealth.sns.step3.text",
   },
   {
-    num: "04",
+    number: "04",
     titleKey: "resources:mentalHealth.sns.step4.title",
     textKey: "resources:mentalHealth.sns.step4.text",
   },

@@ -254,7 +254,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
         <div className={styles.removedEyebrow}>
           {t("safety:spaces.detail.removedEyebrow", {
             type: s.typeLabel,
-            hood: s.hood,
+            hood: s.neighbourhood,
           })}
         </div>
         <h1 className={styles.removedTitle}>

@@ -8,11 +8,6 @@ import {
   publicSubprofileToView,
   type PublicSubprofileView,
 } from "./subprofiles.adapters";
-import {
-  mockPublicByHandle,
-  mockPublicByOwnerSlug,
-  mockSubprofilesForProfile,
-} from "../data/subprofiles.data";
 
 /** Args discriminate the two public entry points: a standalone `/p/:handle`
  *  persona, or a linked persona nested under `/members/:slug/:subslug`. */
@@ -32,6 +27,9 @@ export function usePublicSubprofile(args: PublicSubprofileArgs) {
     queryFn: async () => {
       if (handle) {
         if (demoMode) {
+          const { mockPublicByHandle } = await import(
+            "../data/subprofiles.data"
+          );
           const dto = mockPublicByHandle(handle);
           return dto ? publicSubprofileToView(dto) : null;
         }
@@ -39,6 +37,9 @@ export function usePublicSubprofile(args: PublicSubprofileArgs) {
       }
       if (!ownerSlug || !subslug) return null;
       if (demoMode) {
+        const { mockPublicByOwnerSlug } = await import(
+          "../data/subprofiles.data"
+        );
         const dto = mockPublicByOwnerSlug(ownerSlug, subslug);
         return dto ? publicSubprofileToView(dto) : null;
       }
@@ -60,9 +61,13 @@ export function useProfileSubprofiles(slug: string | undefined) {
     enabled: Boolean(slug),
     queryFn: async () => {
       if (!slug) return [];
-      const dtos = demoMode
-        ? mockSubprofilesForProfile(slug)
-        : await getProfileSubprofiles(slug);
+      if (demoMode) {
+        const { mockSubprofilesForProfile } = await import(
+          "../data/subprofiles.data"
+        );
+        return mockSubprofilesForProfile(slug).map(publicSubprofileToView);
+      }
+      const dtos = await getProfileSubprofiles(slug);
       return dtos.map(publicSubprofileToView);
     },
   });

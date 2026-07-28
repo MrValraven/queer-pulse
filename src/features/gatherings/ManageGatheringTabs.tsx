@@ -228,7 +228,7 @@ function AttendeesTab({ slug }: { slug: string }) {
           <div className={styles.attRow} key={attendee.id}>
             <div
               className={styles.attAv}
-              style={{ background: attendee.bg, color: attendee.color }}
+              style={{ background: attendee.background, color: attendee.color }}
             >
               {attendee.initials}
             </div>
@@ -275,7 +275,7 @@ function AttendeesTab({ slug }: { slug: string }) {
           <div className={styles.attRow} key={attendee.id}>
             <div
               className={styles.attAv}
-              style={{ background: attendee.bg, color: attendee.color }}
+              style={{ background: attendee.background, color: attendee.color }}
             >
               {attendee.initials}
             </div>
@@ -447,7 +447,7 @@ function SettingsTab({ slug, onCancel }: SettingsTabProps) {
           <div className={styles.tglRow} key={setting.id}>
             <div>
               <div className={styles.tglTitle}>{t(setting.titleKey)}</div>
-              <div className={styles.tglDesc}>{t(setting.descKey)}</div>
+              <div className={styles.tglDesc}>{t(setting.descriptionKey)}</div>
             </div>
             <label className={styles.tglSw}>
               <input

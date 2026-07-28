@@ -228,8 +228,10 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
   const isMe = !!user && member.slug === user.profile.slug;
   // Identity resolves from the card itself (live/API cards carry it), falling
   // back to the local registry (demo cards), then to slug-derived defaults so a
-  // member with no mock profile never crashes the card.
-  const profile = memberProfiles[member.slug];
+  // member with no mock profile never crashes the card. The registry read is
+  // DEMO-ONLY: in live mode a real member whose slug happens to collide with a
+  // mock entry must keep their own photo/tags rather than have the mock's win.
+  const profile = demoMode ? memberProfiles[member.slug] : undefined;
   const name = member.firstName
     ? `${member.firstName} ${member.lastName ?? ""}`.trim()
     : profile
@@ -251,10 +253,7 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
   // `member.role` is already final and the bio branch never fires. The registry
   // bio is passed only in demo mode: pulling a mock bio onto a live card would
   // put words in a real member's mouth.
-  const blurb = directoryBlurb(
-    member.role || profile?.role,
-    demoMode ? profile?.bio : undefined,
-  );
+  const blurb = directoryBlurb(member.role || profile?.role, profile?.bio);
   const tags: MemberCard["tags"] =
     member.tags.length > 0
       ? member.tags

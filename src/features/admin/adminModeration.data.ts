@@ -4,33 +4,33 @@ import type { AdminTone } from "./ui";
 export type Severity = "emergency" | "high" | "medium" | "low";
 
 /** i18n Pattern A. `labelKey` resolves the severity name shown on the AdminCat
- *  stripe; `stripe`/`cat` are styling tokens, not language. */
+ *  stripe; `stripe`/`category` are styling tokens, not language. */
 export interface SeverityMeta {
   labelKey: string;
   stripe: string;
-  cat: "danger" | "coral" | "jade";
+  category: "danger" | "coral" | "jade";
 }
 
 export const SEVERITY: Record<Severity, SeverityMeta> = {
   emergency: {
     labelKey: "admin:moderation.severity.emergency",
     stripe: "var(--danger)",
-    cat: "danger",
+    category: "danger",
   },
   high: {
     labelKey: "admin:moderation.severity.high",
     stripe: "var(--danger)",
-    cat: "coral",
+    category: "coral",
   },
   medium: {
     labelKey: "admin:moderation.severity.medium",
     stripe: "var(--amber)",
-    cat: "coral",
+    category: "coral",
   },
   low: {
     labelKey: "admin:moderation.severity.low",
     stripe: "var(--jade)",
-    cat: "jade",
+    category: "jade",
   },
 };
 
@@ -139,7 +139,7 @@ export interface AppealOriginal {
   by: string;
   when: string;
   reason: string;
-  cat: "danger" | "coral" | "jade";
+  category: "danger" | "coral" | "jade";
 }
 
 export interface Appeal {
@@ -363,7 +363,7 @@ export const APPEALS: Appeal[] = [
       when: "2 days ago",
       reason:
         '"Hostile comment in a public thread — restricted for a week after a prior warning."',
-      cat: "coral",
+      category: "coral",
     },
     argument:
       '"That thread was three close friends roasting each other — we do it constantly. Whoever reported it doesn\'t know us. I get how it looked from outside, but muting me for a week feels heavy for an in-joke. Ask Théo or Sofia, they were there."',
@@ -391,7 +391,7 @@ export const APPEALS: Appeal[] = [
       by: "Júlia S.",
       when: "3 days ago",
       reason: '"Reported for an aggressive reply in a housing thread."',
-      cat: "danger",
+      category: "danger",
     },
     argument:
       "\"The person who reported me started it — they'd been needling me for days. I snapped once and got removed; they're still posting. I'm not asking for them to be punished, just for someone to read the whole thread, not only my last message.\"",
@@ -416,7 +416,7 @@ export const APPEALS: Appeal[] = [
       by: "Sofia A.",
       when: "20h ago",
       reason: '"Posted an external link in a support thread."',
-      cat: "coral",
+      category: "coral",
     },
     argument:
       "\"It was a GoFundMe for a member's top surgery, posted because someone asked how to help. I should've added context — that's on me — but calling it spam stings. Happy to repost it properly.\"",
@@ -475,7 +475,7 @@ export type ActionKind = "neutral" | "protect" | "destruct";
 export interface ModAction {
   id: string;
   labelKey: string;
-  descKey: string;
+  descriptionKey: string;
   kind: ActionKind;
   /** Past-tense phrase catalog key, used in the confirmation toast. */
   doneKey: string;
@@ -485,42 +485,42 @@ export const MOD_ACTIONS: ModAction[] = [
   {
     id: "hide",
     labelKey: "admin:moderation.actions.hide.label",
-    descKey: "admin:moderation.actions.hide.desc",
+    descriptionKey: "admin:moderation.actions.hide.desc",
     kind: "protect",
     doneKey: "admin:moderation.actions.hide.done",
   },
   {
     id: "shield",
     labelKey: "admin:moderation.actions.shield.label",
-    descKey: "admin:moderation.actions.shield.desc",
+    descriptionKey: "admin:moderation.actions.shield.desc",
     kind: "protect",
     doneKey: "admin:moderation.actions.shield.done",
   },
   {
     id: "warn",
     labelKey: "admin:moderation.actions.warn.label",
-    descKey: "admin:moderation.actions.warn.desc",
+    descriptionKey: "admin:moderation.actions.warn.desc",
     kind: "neutral",
     doneKey: "admin:moderation.actions.warn.done",
   },
   {
     id: "restrict",
     labelKey: "admin:moderation.actions.restrict.label",
-    descKey: "admin:moderation.actions.restrict.desc",
+    descriptionKey: "admin:moderation.actions.restrict.desc",
     kind: "neutral",
     doneKey: "admin:moderation.actions.restrict.done",
   },
   {
     id: "remove",
     labelKey: "admin:moderation.actions.remove.label",
-    descKey: "admin:moderation.actions.remove.desc",
+    descriptionKey: "admin:moderation.actions.remove.desc",
     kind: "destruct",
     doneKey: "admin:moderation.actions.remove.done",
   },
   {
     id: "ban",
     labelKey: "admin:moderation.actions.ban.label",
-    descKey: "admin:moderation.actions.ban.desc",
+    descriptionKey: "admin:moderation.actions.ban.desc",
     kind: "destruct",
     doneKey: "admin:moderation.actions.ban.done",
   },

@@ -136,7 +136,7 @@ export function workshopDtoToWorkshop(
   return {
     // Departure 1 — the backend's identifier is the slug.
     id: dto.slug,
-    cat: dto.cat,
+    category: dto.cat,
     title: dto.title,
     titleEm: dto.titleEm ?? "",
     // Departure 2 — composed, never stored.
@@ -163,7 +163,14 @@ export function workshopDtoToWorkshop(
       dto.cancellation ?? t("economy:addWorkshop.build.cancellation"),
     tiers: (dto.tiers ?? []).map((tier) => tierToTier(tier, currency, t, fmt)),
     about: dto.about ?? [],
-    sessions: dto.sessions ?? [],
+    sessions: (dto.sessions ?? []).map((session) => ({
+      n: session.n,
+      title: session.title,
+      description: session.desc,
+      date: session.date,
+      length: session.length,
+      ...(session.done != null ? { done: session.done } : {}),
+    })),
     needs: dto.needs ?? [],
     pastWork: dto.pastWork ?? [],
     tutor: {
@@ -216,7 +223,7 @@ export function workshopDraftToCreateDto(
     title: draft.title.trim(),
     blurb: draft.blurb.trim(),
     about: about.length > 0 ? about : [draft.about.trim()],
-    cat: draft.cat,
+    cat: draft.category,
     mode: draft.mode,
     weeks: Math.max(1, Math.min(52, Number(draft.weeks) || 1)),
     // Wire name: the backend's CreateWorkshopDto field is `spotsTotal`
@@ -247,7 +254,7 @@ export function workshopToDraft(workshop: Workshop): WorkshopDraft {
     // `about` is stored as paragraphs and edited as one textarea — the exact
     // split `workshopDraftToCreateDto` performs, run backwards.
     about: workshop.about.join("\n\n"),
-    cat: workshop.cat,
+    category: workshop.category,
     mode: workshop.mode,
     weeks: String(workshop.source.weeks),
     size: String(workshop.source.size),

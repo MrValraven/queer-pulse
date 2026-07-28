@@ -6,14 +6,14 @@
 
 export interface LineItem {
   id: string;
-  desc: string;
-  qty: number;
+  description: string;
+  quantity: number;
   unit: number;
 }
 
 /** Per-line total (qty × unit). Guards NaN so a half-typed field reads as 0. */
 export const lineTotal = (l: LineItem) =>
-  (Number.isFinite(l.qty) ? l.qty : 0) * (Number.isFinite(l.unit) ? l.unit : 0);
+  (Number.isFinite(l.quantity) ? l.quantity : 0) * (Number.isFinite(l.unit) ? l.unit : 0);
 
 let counter = 0;
 /** Stable unique id — crypto.randomUUID() when available, else a counter. */
@@ -28,8 +28,8 @@ export function newId(): string {
 /** A fresh, empty editable line. */
 export const emptyLine = (): LineItem => ({
   id: newId(),
-  desc: "",
-  qty: 1,
+  description: "",
+  quantity: 1,
   unit: 0,
 });
 
@@ -37,11 +37,11 @@ export const emptyLine = (): LineItem => ({
 export const initialLineItems: LineItem[] = [
   {
     id: newId(),
-    desc: "Brand identity — logo + guidelines",
-    qty: 1,
+    description: "Brand identity — logo + guidelines",
+    quantity: 1,
     unit: 1200,
   },
-  { id: newId(), desc: "Web design (per page)", qty: 5, unit: 180 },
+  { id: newId(), description: "Web design (per page)", quantity: 5, unit: 180 },
 ];
 
 /** Empty client block. */

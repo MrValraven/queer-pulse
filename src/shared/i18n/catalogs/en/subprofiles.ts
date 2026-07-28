@@ -19,6 +19,10 @@ export const subprofiles: Catalog = {
   "directory.empty.description":
     "Nothing matches this just now. Try another craft, or clear your search and see everyone.",
   "directory.empty.clear": "Clear filters",
+  "directory.error.title": "We couldn't load the directory",
+  "directory.error.description":
+    "Something went wrong reaching the server. This isn't an empty directory — try again in a moment.",
+  "directory.error.retry": "Try again",
   "directory.openToCollabsChip": "Open to collabs",
   "directory.tagFilterHeading": "Tags",
   "directory.tagFilterLabel": "Filter by tag",

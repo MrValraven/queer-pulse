@@ -6,7 +6,6 @@ import {
   type AffiliationInputDTO,
   type SubprofileDTO,
 } from "./subprofiles.api";
-import { mockSubprofileById } from "../data/subprofiles.data";
 
 /** Re-resolve an owner-edited affiliation input against the persona's
  *  currently-known (already-resolved) affiliations, so edits/reorders/removals
@@ -51,6 +50,7 @@ export function useAffiliations(subprofileId: string) {
   const replace = useMutation<SubprofileDTO, Error, AffiliationInputDTO[]>({
     mutationFn: async (items) => {
       if (!demoMode) return replaceAffiliations(subprofileId, items);
+      const { mockSubprofileById } = await import("../data/subprofiles.data");
       const current = mockSubprofileById(subprofileId);
       if (!current) throw new Error("Subprofile not found");
       return {

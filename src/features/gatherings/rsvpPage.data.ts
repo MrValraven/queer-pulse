@@ -10,25 +10,25 @@ import { memberName } from "../members/data/members";
  */
 export const RSVP_DETAILS: {
   icon: IconType;
-  bg: string;
+  background: string;
   labelKey: string;
   value: string | Date;
 }[] = [
   {
     icon: FiCalendar,
-    bg: "rgba(232,119,90,.1)",
+    background: "rgba(232,119,90,.1)",
     labelKey: "gatherings:rsvp.details.dateTime",
     value: new Date(2026, 5, 22, 19, 0),
   },
   {
     icon: FiMapPin,
-    bg: "rgba(74,140,111,.1)",
+    background: "rgba(74,140,111,.1)",
     labelKey: "gatherings:rsvp.details.location",
     value: "Mouraria Community Centre",
   },
   {
     icon: FiUser,
-    bg: "rgba(45,27,61,.07)",
+    background: "rgba(45,27,61,.07)",
     labelKey: "gatherings:rsvp.details.host",
     value: memberName("mariana"),
   },

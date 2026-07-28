@@ -50,8 +50,8 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
             className={styles.rcInput}
             type="text"
             placeholder={t("economy:invoiceTool.lines.descPlaceholder")}
-            value={l.desc}
-            onChange={(e) => patch(l.id, { desc: e.target.value })}
+            value={l.description}
+            onChange={(e) => patch(l.id, { description: e.target.value })}
           />
 
           <label className={styles.srOnly} htmlFor={`qty-${l.id}`}>
@@ -63,8 +63,8 @@ export function InvoiceLineItems({ items, onChange }: InvoiceLineItemsProps) {
             type="number"
             min={0}
             step="any"
-            value={Number.isFinite(l.qty) ? l.qty : ""}
-            onChange={(e) => patch(l.id, { qty: num(e.target.value) })}
+            value={Number.isFinite(l.quantity) ? l.quantity : ""}
+            onChange={(e) => patch(l.id, { quantity: num(e.target.value) })}
           />
 
           <label className={styles.srOnly} htmlFor={`unit-${l.id}`}>

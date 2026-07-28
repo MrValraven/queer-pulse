@@ -117,7 +117,7 @@ export function AdminFlaggedRows({ members }: { members: FlaggedMember[] }) {
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowHandle}>{m.handle}</span>
-                <AdminChip tone={m.catTone}>
+                <AdminChip tone={m.categoryTone}>
                   {m.category.kind === "reportsCount"
                     ? t("admin:members.flagged.reportsCount", {
                         count: m.category.count,

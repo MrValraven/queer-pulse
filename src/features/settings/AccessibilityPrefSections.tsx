@@ -7,12 +7,12 @@ type ToggleKey = keyof A11yPrefs;
 
 export function TglRow({
   title,
-  desc,
+  description,
   checked,
   onChange,
 }: {
   title: string;
-  desc: string;
+  description: string;
   checked: boolean;
   onChange: () => void;
 }) {
@@ -20,7 +20,7 @@ export function TglRow({
     <div className={styles.tglRow}>
       <div>
         <div className={styles.tglTitle}>{title}</div>
-        <div className={styles.tglDesc}>{desc}</div>
+        <div className={styles.tglDesc}>{description}</div>
       </div>
       <label className={styles.tglSw}>
         <input
@@ -60,19 +60,19 @@ export function A11yDisplaySection({
       <div className={styles.toggleList}>
         <TglRow
           title={t("settings:a11y.toggle.highContrast.title")}
-          desc={t("settings:a11y.toggle.highContrast.desc")}
+          description={t("settings:a11y.toggle.highContrast.desc")}
           checked={prefs.highContrast}
           onChange={() => onToggle("highContrast")}
         />
         <TglRow
           title={t("settings:a11y.toggle.largerText.title")}
-          desc={t("settings:a11y.toggle.largerText.desc")}
+          description={t("settings:a11y.toggle.largerText.desc")}
           checked={prefs.largerText}
           onChange={() => onToggle("largerText")}
         />
         <TglRow
           title={t("settings:a11y.toggle.dyslexia.title")}
-          desc={t("settings:a11y.toggle.dyslexia.desc")}
+          description={t("settings:a11y.toggle.dyslexia.desc")}
           checked={prefs.dyslexia}
           onChange={() => onToggle("dyslexia")}
         />
@@ -121,13 +121,13 @@ export function A11yMotionSection({
       <div className={styles.toggleList}>
         <TglRow
           title={t("settings:a11y.toggle.reduceMotion.title")}
-          desc={t("settings:a11y.toggle.reduceMotion.desc")}
+          description={t("settings:a11y.toggle.reduceMotion.desc")}
           checked={prefs.reduceMotion}
           onChange={() => onToggle("reduceMotion")}
         />
         <TglRow
           title={t("settings:a11y.toggle.pauseDecorative.title")}
-          desc={t("settings:a11y.toggle.pauseDecorative.desc")}
+          description={t("settings:a11y.toggle.pauseDecorative.desc")}
           checked={prefs.pauseDecorative}
           onChange={() => onToggle("pauseDecorative")}
         />
@@ -157,17 +157,17 @@ export function A11yMotionSection({
 const SWATCH_OPTIONS = [
   {
     theme: "default",
-    cls: styles.swatchPlum,
+    swatchClassName: styles.swatchPlum,
     titleKey: "settings:a11y.colorTheme.default",
   },
   {
     theme: "softer",
-    cls: styles.swatchInk,
+    swatchClassName: styles.swatchInk,
     titleKey: "settings:a11y.colorTheme.softer",
   },
   {
     theme: "high-contrast",
-    cls: styles.swatchBlack,
+    swatchClassName: styles.swatchBlack,
     titleKey: "settings:a11y.colorTheme.highContrast",
   },
 ] as const;
@@ -190,13 +190,13 @@ export function A11yReadingSection({
       <div className={styles.toggleList}>
         <TglRow
           title={t("settings:a11y.toggle.wideSpacing.title")}
-          desc={t("settings:a11y.toggle.wideSpacing.desc")}
+          description={t("settings:a11y.toggle.wideSpacing.desc")}
           checked={prefs.wideSpacing}
           onChange={() => onToggle("wideSpacing")}
         />
         <TglRow
           title={t("settings:a11y.toggle.focusRings.title")}
-          desc={t("settings:a11y.toggle.focusRings.desc")}
+          description={t("settings:a11y.toggle.focusRings.desc")}
           checked={prefs.focusRings}
           onChange={() => onToggle("focusRings")}
         />
@@ -211,7 +211,7 @@ export function A11yReadingSection({
           {t("settings:a11y.colorTheme.headingLabel")}
         </div>
         <div className={styles.colorSwatches}>
-          {SWATCH_OPTIONS.map(({ theme, cls, titleKey }) => (
+          {SWATCH_OPTIONS.map(({ theme, swatchClassName, titleKey }) => (
             <button
               type="button"
               key={theme}
@@ -219,7 +219,7 @@ export function A11yReadingSection({
               aria-pressed={prefs.colorTheme === theme}
               className={[
                 styles.colorSwatch,
-                cls,
+                swatchClassName,
                 prefs.colorTheme === theme && styles.colorSwatchSelected,
               ]
                 .filter(Boolean)
@@ -250,19 +250,19 @@ export function A11yInteractionSection({
       <div className={styles.toggleList}>
         <TglRow
           title={t("settings:a11y.toggle.largeTargets.title")}
-          desc={t("settings:a11y.toggle.largeTargets.desc")}
+          description={t("settings:a11y.toggle.largeTargets.desc")}
           checked={prefs.largeTargets}
           onChange={() => onToggle("largeTargets")}
         />
         <TglRow
           title={t("settings:a11y.toggle.stickyNav.title")}
-          desc={t("settings:a11y.toggle.stickyNav.desc")}
+          description={t("settings:a11y.toggle.stickyNav.desc")}
           checked={prefs.stickyNav}
           onChange={() => onToggle("stickyNav")}
         />
         <TglRow
           title={t("settings:a11y.toggle.skipLink.title")}
-          desc={t("settings:a11y.toggle.skipLink.desc")}
+          description={t("settings:a11y.toggle.skipLink.desc")}
           checked={prefs.skipLink}
           onChange={() => onToggle("skipLink")}
         />

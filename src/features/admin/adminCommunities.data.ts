@@ -26,40 +26,40 @@ export function breakdownNarrativeKey(score: number): string {
   return "communities.health.narrative.dragging";
 }
 
-/** The four health signals, in bd[] order, with name/desc catalog keys — resolve with `t()`. */
+/** The four health signals, in breakdown[] order, with name/description catalog keys — resolve with `t()`. */
 export const BREAKDOWN_META: {
   id: string;
   nameKey: string;
-  descKey: string;
+  descriptionKey: string;
 }[] = [
   {
     id: "memberActivity",
     nameKey: "communities.health.breakdown.memberActivity.name",
-    descKey: "communities.health.breakdown.memberActivity.desc",
+    descriptionKey: "communities.health.breakdown.memberActivity.desc",
   },
   {
     id: "reportResolution",
     nameKey: "communities.health.breakdown.reportResolution.name",
-    descKey: "communities.health.breakdown.reportResolution.desc",
+    descriptionKey: "communities.health.breakdown.reportResolution.desc",
   },
   {
     id: "memberSentiment",
     nameKey: "communities.health.breakdown.memberSentiment.name",
-    descKey: "communities.health.breakdown.memberSentiment.desc",
+    descriptionKey: "communities.health.breakdown.memberSentiment.desc",
   },
   {
     id: "safetyLoad",
     nameKey: "communities.health.breakdown.safetyLoad.name",
-    descKey: "communities.health.breakdown.safetyLoad.desc",
+    descriptionKey: "communities.health.breakdown.safetyLoad.desc",
   },
 ];
 
 export type Severity = "danger" | "coral" | "amber" | "jade";
 
 export interface QueueItem {
-  sev: Severity;
-  catTone: "danger" | "coral" | "amber" | "jade" | "violet";
-  catLabel: string;
+  severity: Severity;
+  categoryTone: "danger" | "coral" | "amber" | "jade" | "violet";
+  categoryLabel: string;
   title: string;
   meta: string;
 }
@@ -79,12 +79,12 @@ export interface Community {
   initials: string;
   tone: BadgeTone;
   tag: string;
-  desc: string;
+  description: string;
   members: string;
   activity: string;
-  activePct: number;
+  activePercent: number;
   reports: number;
-  resolvedPct: number;
+  resolvedPercent: number;
   health: number;
   founded: string;
   spark: number[];
@@ -94,12 +94,12 @@ export interface Community {
    * measures it; the modal renders that as "not measured yet" rather than a
    * score nobody computed.
    */
-  bd: [number, number, number | null, number];
+  breakdown: [number, number, number | null, number];
   join: string;
   code: string;
-  vis: Visibility;
+  visibility: Visibility;
   support: boolean;
-  mods: Moderator[];
+  moderators: Moderator[];
   queue: QueueItem[];
 }
 
@@ -132,21 +132,21 @@ export const COMMUNITIES: Community[] = [
     initials: "TR",
     tone: "jade",
     tag: "Peer support · private",
-    desc: "A peer-support and friendship space for trans, non-binary and questioning members.",
+    description: "A peer-support and friendship space for trans, non-binary and questioning members.",
     members: "1,204",
     activity: "High",
-    activePct: 68,
+    activePercent: 68,
     reports: 1,
-    resolvedPct: 100,
+    resolvedPercent: 100,
     health: 94,
     founded: "Mar 2023",
     spark: [5, 6, 5, 7, 6, 8, 7, 9],
-    bd: [91, 100, null, 90],
+    breakdown: [91, 100, null, 90],
     join: "Vouch-gated · 2 vouches",
     code: "Platform Code of Care + 2 additions on deadnaming",
-    vis: "private",
+    visibility: "private",
     support: false,
-    mods: [
+    moderators: [
       {
         initials: "IM",
         name: "Inês Martins",
@@ -171,9 +171,9 @@ export const COMMUNITIES: Community[] = [
     ],
     queue: [
       {
-        sev: "coral",
-        catTone: "coral",
-        catLabel: "Harassment",
+        severity: "coral",
+        categoryTone: "coral",
+        categoryLabel: "Harassment",
         title: "Repeated unwanted DMs after being asked to stop",
         meta: "Reported by Sofia D. · about a member with 4 prior reports · 3h ago",
       },
@@ -185,21 +185,21 @@ export const COMMUNITIES: Community[] = [
     initials: "QC",
     tone: "violet",
     tag: "Artists & makers",
-    desc: "A network for queer artists, designers and makers to share work and collaborate.",
+    description: "A network for queer artists, designers and makers to share work and collaborate.",
     members: "842",
     activity: "Active",
-    activePct: 54,
+    activePercent: 54,
     reports: 2,
-    resolvedPct: 96,
+    resolvedPercent: 96,
     health: 88,
     founded: "May 2023",
     spark: [4, 5, 6, 5, 7, 6, 8, 7],
-    bd: [82, 96, null, 84],
+    breakdown: [82, 96, null, 84],
     join: "Open · with a portfolio",
     code: "Platform Code of Care",
-    vis: "network",
+    visibility: "network",
     support: false,
-    mods: [
+    moderators: [
       {
         initials: "DO",
         name: "Devon Okoro",
@@ -217,16 +217,16 @@ export const COMMUNITIES: Community[] = [
     ],
     queue: [
       {
-        sev: "amber",
-        catTone: "violet",
-        catLabel: "Vouch-abuse",
+        severity: "amber",
+        categoryTone: "violet",
+        categoryLabel: "Vouch-abuse",
         title: "A cluster of accounts vouching for each other",
         meta: "System flag · 5 accounts · 5h ago",
       },
       {
-        sev: "coral",
-        catTone: "coral",
-        catLabel: "Harassment",
+        severity: "coral",
+        categoryTone: "coral",
+        categoryLabel: "Harassment",
         title: "Misgendering after repeated correction",
         meta: "Reported by Devon O. · 4h ago",
       },
@@ -238,21 +238,21 @@ export const COMMUNITIES: Community[] = [
     initials: "LQ",
     tone: "coral",
     tag: "City-wide · public",
-    desc: "The big public square — anyone in Lisbon can join. High traffic, and the hardest to keep warm.",
+    description: "The big public square — anyone in Lisbon can join. High traffic, and the hardest to keep warm.",
     members: "3,180",
     activity: "Busy",
-    activePct: 72,
+    activePercent: 72,
     reports: 6,
-    resolvedPct: 84,
+    resolvedPercent: 84,
     health: 71,
     founded: "Jan 2023",
     spark: [8, 7, 9, 8, 10, 9, 11, 10],
-    bd: [88, 84, null, 58],
+    breakdown: [88, 84, null, 58],
     join: "Open · public",
     code: "Platform Code of Care",
-    vis: "public",
+    visibility: "public",
     support: true,
-    mods: [
+    moderators: [
       {
         initials: "TM",
         name: "Théo Mendes",
@@ -263,23 +263,23 @@ export const COMMUNITIES: Community[] = [
     ],
     queue: [
       {
-        sev: "danger",
-        catTone: "danger",
-        catLabel: "Outing / doxxing",
+        severity: "danger",
+        categoryTone: "danger",
+        categoryLabel: "Outing / doxxing",
         title: "A member's private trans status was posted publicly",
         meta: "Anonymous · Emergency · 26m ago",
       },
       {
-        sev: "coral",
-        catTone: "amber",
-        catLabel: "Spam",
+        severity: "coral",
+        categoryTone: "amber",
+        categoryLabel: "Spam",
         title: "Crypto promo links across 6 threads",
         meta: "3 reporters · 8h ago",
       },
       {
-        sev: "amber",
-        catTone: "amber",
-        catLabel: "Spam",
+        severity: "amber",
+        categoryTone: "amber",
+        categoryLabel: "Spam",
         title: "Repost bot flooding #housing",
         meta: "System flag · 6h ago",
       },
@@ -291,21 +291,21 @@ export const COMMUNITIES: Community[] = [
     initials: "NA",
     tone: "jade",
     tag: "Migrants & arrivals",
-    desc: "A soft landing for queer people new to Lisbon — housing, paperwork, friendship.",
+    description: "A soft landing for queer people new to Lisbon — housing, paperwork, friendship.",
     members: "410",
     activity: "Growing",
-    activePct: 61,
+    activePercent: 61,
     reports: 0,
-    resolvedPct: 100,
+    resolvedPercent: 100,
     health: 96,
     founded: "Sep 2024",
     spark: [2, 3, 3, 4, 4, 5, 6, 7],
-    bd: [78, 100, null, 100],
+    breakdown: [78, 100, null, 100],
     join: "Open · with a welcome chat",
     code: "Platform Code of Care",
-    vis: "network",
+    visibility: "network",
     support: false,
-    mods: [
+    moderators: [
       {
         initials: "MK",
         name: "Marsh K.",
@@ -322,21 +322,21 @@ export const COMMUNITIES: Community[] = [
     initials: "TH",
     tone: "jade",
     tag: "Navigators · support",
-    desc: "Members sharing trusted clinics, hormone resources and healthcare navigation.",
+    description: "Members sharing trusted clinics, hormone resources and healthcare navigation.",
     members: "560",
     activity: "Steady",
-    activePct: 49,
+    activePercent: 49,
     reports: 0,
-    resolvedPct: 100,
+    resolvedPercent: 100,
     health: 92,
     founded: "Feb 2024",
     spark: [3, 4, 3, 4, 4, 5, 4, 5],
-    bd: [74, 100, null, 100],
+    breakdown: [74, 100, null, 100],
     join: "Vouch-gated · 1 vouch",
     code: "Platform Code of Care + medical-privacy rules",
-    vis: "private",
+    visibility: "private",
     support: false,
-    mods: [
+    moderators: [
       {
         initials: "SA",
         name: "Sofia Almeida",
@@ -353,21 +353,21 @@ export const COMMUNITIES: Community[] = [
     initials: "NF",
     tone: "violet",
     tag: "Events · high traffic",
-    desc: "Where the parties, afters and DJ line-ups get shared. Fast, loud, occasionally messy.",
+    description: "Where the parties, afters and DJ line-ups get shared. Fast, loud, occasionally messy.",
     members: "1,640",
     activity: "Spiky",
-    activePct: 80,
+    activePercent: 80,
     reports: 3,
-    resolvedPct: 88,
+    resolvedPercent: 88,
     health: 79,
     founded: "Apr 2023",
     spark: [6, 9, 5, 10, 6, 11, 7, 9],
-    bd: [94, 88, null, 66],
+    breakdown: [94, 88, null, 66],
     join: "Open · public",
     code: "Platform Code of Care + consent guidelines",
-    vis: "public",
+    visibility: "public",
     support: true,
-    mods: [
+    moderators: [
       {
         initials: "KS",
         name: "Kai Sousa",
@@ -378,23 +378,23 @@ export const COMMUNITIES: Community[] = [
     ],
     queue: [
       {
-        sev: "amber",
-        catTone: "amber",
-        catLabel: "Spam",
+        severity: "amber",
+        categoryTone: "amber",
+        categoryLabel: "Spam",
         title: "Ticket-scalping links in event threads",
         meta: "2 reporters · 5h ago",
       },
       {
-        sev: "coral",
-        catTone: "coral",
-        catLabel: "Harassment",
+        severity: "coral",
+        categoryTone: "coral",
+        categoryLabel: "Harassment",
         title: "Unwanted advances reported in a thread",
         meta: "Reported by a member · 9h ago",
       },
       {
-        sev: "jade",
-        catTone: "jade",
-        catLabel: "Off-topic",
+        severity: "jade",
+        categoryTone: "jade",
+        categoryLabel: "Off-topic",
         title: "A noise complaint about an after",
         meta: "Reported · 12h ago",
       },
@@ -406,21 +406,21 @@ export const COMMUNITIES: Community[] = [
     initials: "EM",
     tone: "amber",
     tag: "Intergenerational",
-    desc: "Older members and memory-keepers holding queer history and mentorship.",
+    description: "Older members and memory-keepers holding queer history and mentorship.",
     members: "220",
     activity: "Calm",
-    activePct: 43,
+    activePercent: 43,
     reports: 0,
-    resolvedPct: 100,
+    resolvedPercent: 100,
     health: 98,
     founded: "Nov 2023",
     spark: [2, 2, 3, 2, 3, 3, 2, 3],
-    bd: [68, 100, null, 100],
+    breakdown: [68, 100, null, 100],
     join: "Vouch-gated · 1 vouch",
     code: "Platform Code of Care",
-    vis: "private",
+    visibility: "private",
     support: false,
-    mods: [
+    moderators: [
       {
         initials: "LB",
         name: "Lurdes B.",
@@ -437,21 +437,21 @@ export const COMMUNITIES: Community[] = [
     initials: "MA",
     tone: "coral",
     tag: "Solidarity & care",
-    desc: "Practical solidarity — fund drives, surplus sharing, crisis support.",
+    description: "Practical solidarity — fund drives, surplus sharing, crisis support.",
     members: "980",
     activity: "Active",
-    activePct: 58,
+    activePercent: 58,
     reports: 1,
-    resolvedPct: 97,
+    resolvedPercent: 97,
     health: 90,
     founded: "Jun 2023",
     spark: [5, 5, 6, 6, 5, 7, 6, 7],
-    bd: [80, 97, null, 90],
+    breakdown: [80, 97, null, 90],
     join: "Open · with a welcome chat",
     code: "Platform Code of Care",
-    vis: "network",
+    visibility: "network",
     support: false,
-    mods: [
+    moderators: [
       {
         initials: "SA",
         name: "Sofia Almeida",
@@ -462,9 +462,9 @@ export const COMMUNITIES: Community[] = [
     ],
     queue: [
       {
-        sev: "jade",
-        catTone: "jade",
-        catLabel: "Off-topic",
+        severity: "jade",
+        categoryTone: "jade",
+        categoryLabel: "Off-topic",
         title: "Self-promotion in a support thread",
         meta: "Reported by Kai S. · 11h ago",
       },

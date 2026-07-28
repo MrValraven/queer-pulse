@@ -115,42 +115,42 @@ export const TYPE_CLASS: Record<EventType, string> = {
 
 export const STATS = [
   {
-    nKey: "resources:sober.stat.rate.n",
-    lKey: "resources:sober.stat.rate.label",
+    numberKey: "resources:sober.stat.rate.n",
+    labelKey: "resources:sober.stat.rate.label",
   },
   {
-    nKey: "resources:sober.stat.fewSpaces.n",
-    lKey: "resources:sober.stat.fewSpaces.label",
+    numberKey: "resources:sober.stat.fewSpaces.n",
+    labelKey: "resources:sober.stat.fewSpaces.label",
   },
   {
-    nKey: "resources:sober.stat.changes.n",
-    lKey: "resources:sober.stat.changes.label",
+    numberKey: "resources:sober.stat.changes.n",
+    labelKey: "resources:sober.stat.changes.label",
   },
 ];
 
 export const VENUES = [
   {
-    hood: "Príncipe Real",
+    neighbourhood: "Príncipe Real",
     name: "Linha d'Água",
-    desc: "A calm, queer-owned café. Excellent coffee and non-alcoholic options. Community notice board, good for a long conversation or quiet work. Fully accessible.",
+    description: "A calm, queer-owned café. Excellent coffee and non-alcoholic options. Community notice board, good for a long conversation or quiet work. Fully accessible.",
     tags: ["Queer-owned", "No alcohol", "Accessible"],
   },
   {
-    hood: "Cais do Sodré",
+    neighbourhood: "Cais do Sodré",
     name: "Copenhagen Coffee Lab",
-    desc: "Speciality coffee, relaxed atmosphere, queer-staffed. A go-to for a first meeting or first date that doesn't involve alcohol. Gender-neutral bathroom.",
+    description: "Speciality coffee, relaxed atmosphere, queer-staffed. A go-to for a first meeting or first date that doesn't involve alcohol. Gender-neutral bathroom.",
     tags: ["No alcohol", "Gender-neutral bathroom"],
   },
   {
-    hood: "Bairro Alto",
+    neighbourhood: "Bairro Alto",
     name: "ZDB — Zé dos Bois",
-    desc: "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus — many events are entirely sober in practice. Consistently queer-safe.",
+    description: "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus — many events are entirely sober in practice. Consistently queer-safe.",
     tags: ["Alcohol present", "Never the focus", "Arts-led"],
   },
   {
-    hood: "Mouraria",
+    neighbourhood: "Mouraria",
     name: "Chapitô",
-    desc: "Restaurant and cultural space with terrace views. Good non-alcoholic drinks menu, not just water and Coke. Staff don't push alcohol. Popular for community dinners.",
+    description: "Restaurant and cultural space with terrace views. Good non-alcoholic drinks menu, not just water and Coke. Staff don't push alcohol. Popular for community dinners.",
     tags: ["Good NA menu", "Community dinners"],
   },
 ];
@@ -159,27 +159,27 @@ export const VOICES = [
   {
     quote:
       '"I thought getting sober would mean losing the community. It turned out I found a deeper one — people who show up because they want to, not because the bar is there."',
-    av: "ML",
-    avBg: "rgba(232,119,90,.15)",
-    avCol: "var(--accent-ink)",
+    avatar: "ML",
+    avatarBackground: "rgba(232,119,90,.15)",
+    avatarColor: "var(--accent-ink)",
     name: memberName("mariana"),
     role: "3 years sober · Clinical Psychologist",
   },
   {
     quote:
       "\"I don't drink for health reasons, not recovery — but the reaction is often the same. Having spaces where it just isn't the question is a relief I can't fully describe.\"",
-    av: "RP",
-    avBg: "rgba(74,140,111,.15)",
-    avCol: "var(--jade)",
+    avatar: "RP",
+    avatarBackground: "rgba(74,140,111,.15)",
+    avatarColor: "var(--jade)",
     name: "Rafael Pinto",
     role: "Illustrator · Graça",
   },
   {
     quote:
       "\"The morning walk group changed things for me. I'd been so isolated — not because I didn't want connection, but because every social option seemed to start at midnight in a bar.\"",
-    av: "CF",
-    avBg: "rgba(45,27,61,.1)",
-    avCol: "var(--plum)",
+    avatar: "CF",
+    avatarBackground: "rgba(45,27,61,.1)",
+    avatarColor: "var(--plum)",
     name: "Catarina Faria",
     role: "Architect · Estrela",
   },
@@ -188,25 +188,25 @@ export const VOICES = [
 export const RECOVERY_OPTS = [
   {
     titleKey: "resources:sober.recovery.peerGroup.title",
-    descKey: "resources:sober.recovery.peerGroup.desc",
+    descriptionKey: "resources:sober.recovery.peerGroup.desc",
     linkLabelKey: "resources:sober.recovery.peerGroup.linkLabel",
     linkKey: "COMMUNITIES",
   },
   {
     titleKey: "resources:sober.recovery.oneToOne.title",
-    descKey: "resources:sober.recovery.oneToOne.desc",
+    descriptionKey: "resources:sober.recovery.oneToOne.desc",
     linkLabelKey: "resources:sober.recovery.oneToOne.linkLabel",
     linkKey: "MENTORSHIP",
   },
   {
     titleKey: "resources:sober.recovery.therapists.title",
-    descKey: "resources:sober.recovery.therapists.desc",
+    descriptionKey: "resources:sober.recovery.therapists.desc",
     linkLabelKey: "resources:sober.recovery.therapists.linkLabel",
     linkKey: "WELLBEING",
   },
   {
     titleKey: "resources:sober.recovery.external.title",
-    descKey: "resources:sober.recovery.external.desc",
+    descriptionKey: "resources:sober.recovery.external.desc",
     linkLabelKey: "resources:sober.recovery.external.linkLabel",
     linkKey: "RESOURCES",
   },

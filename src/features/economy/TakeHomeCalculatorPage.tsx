@@ -43,7 +43,7 @@ export function TakeHomeCalculatorPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:takeHome.sub")}
+      subtitle={t("economy:takeHome.sub")}
       form={
         <TakeHomeForm
           gross={state.gross}

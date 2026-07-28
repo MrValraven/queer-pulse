@@ -12,10 +12,10 @@ export interface HubDigest {
 export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
   const { t } = useTranslation();
   const tiles = [
-    { num: digest.posts, labelKey: "communities:hub.digest.posts" },
-    { num: digest.active, labelKey: "communities:hub.digest.active" },
-    { num: digest.events, labelKey: "communities:hub.digest.events" },
-    { num: digest.joined, labelKey: "communities:hub.digest.joined" },
+    { count: digest.posts, labelKey: "communities:hub.digest.posts" },
+    { count: digest.active, labelKey: "communities:hub.digest.active" },
+    { count: digest.events, labelKey: "communities:hub.digest.events" },
+    { count: digest.joined, labelKey: "communities:hub.digest.joined" },
   ];
   return (
     <div className={styles.digest}>
@@ -28,7 +28,7 @@ export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
       <div className={styles.digestTiles}>
         {tiles.map((tile) => (
           <div key={tile.labelKey} className={styles.tile}>
-            <div className={styles.tileNum}>{tile.num}</div>
+            <div className={styles.tileNum}>{tile.count}</div>
             <div className={styles.tileLbl}>{t(tile.labelKey)}</div>
           </div>
         ))}

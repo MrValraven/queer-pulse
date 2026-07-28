@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import { getPublicProfile, type PublicProfileDTO } from "./publicProfile.api";
-import { demoPublicProfile } from "../publicProfileDemo.data";
 
 export interface PublicProfileResult {
   profile: PublicProfileDTO | undefined;
@@ -42,7 +41,10 @@ export function usePublicProfileBySlug(
     // state. This retry covers transient failures (network, 5xx) instead.
     retry: 1,
     queryFn: async (): Promise<PublicProfileDTO | null> => {
-      if (demoMode) return demoPublicProfile(slug as string);
+      if (demoMode) {
+        const { demoPublicProfile } = await import("../publicProfileDemo.data");
+        return demoPublicProfile(slug as string);
+      }
       try {
         return await getPublicProfile(slug as string);
       } catch (err) {

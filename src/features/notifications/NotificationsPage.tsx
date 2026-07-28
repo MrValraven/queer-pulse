@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FiBell } from "react-icons/fi";
+import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Avatar, FadeIn, Tabs } from "../../shared/components/ui";
@@ -22,7 +22,12 @@ type NotificationId = Notification["id"];
 
 export function NotificationsPage() {
   const { t } = useTranslation();
-  const { data: notifications = [], isLoading } = useNotifications();
+  const {
+    data: notifications = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useNotifications();
   const { data: mentionDays = [] } = useMentions();
   const markReadMutation = useMarkNotificationRead();
   const markAllReadMutation = useMarkAllRead();
@@ -117,7 +122,7 @@ export function NotificationsPage() {
         ) : (
           <span
             className={styles.icon}
-            style={{ background: notification.icon?.bg }}
+            style={{ background: notification.icon?.background }}
           >
             {notification.icon && <notification.icon.Glyph />}
           </span>
@@ -225,6 +230,26 @@ export function NotificationsPage() {
             <MentionsPanel />
           ) : isLoading ? (
             <NotificationsListSkeleton count={7} />
+          ) : isError ? (
+            // Distinct from "all caught up": a failed fetch must not read as an
+            // empty inbox, or a real backend fault looks like zero notifications.
+            <div className={styles.empty} role="alert">
+              <div style={{ fontSize: 40 }}>
+                <FiAlertCircle />
+              </div>
+              <div className={styles.emptyTitle}>
+                {t("notifications:page.error.title")}
+              </div>
+              <div>{t("notifications:page.error.description")}</div>
+              <button
+                type="button"
+                className={[styles.btn, styles.btnPrimary].join(" ")}
+                style={{ marginTop: 14 }}
+                onClick={() => refetch()}
+              >
+                {t("notifications:page.error.retry")}
+              </button>
+            </div>
           ) : visible.length === 0 ? (
             <div className={styles.empty}>
               <div style={{ fontSize: 40 }}>

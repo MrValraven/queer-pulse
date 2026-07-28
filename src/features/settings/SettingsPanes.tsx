@@ -89,21 +89,21 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
         <ToggleList>
           <ToggleRow
             title={t("settings:notifications.gatherings.newAnnounced.title")}
-            desc={t("settings:notifications.gatherings.newAnnounced.desc")}
+            description={t("settings:notifications.gatherings.newAnnounced.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:notifications.gatherings.rsvpReminder.title")}
-            desc={t("settings:notifications.gatherings.rsvpReminder.desc")}
+            description={t("settings:notifications.gatherings.rsvpReminder.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:notifications.gatherings.lastFewSpots.title")}
-            desc={t("settings:notifications.gatherings.lastFewSpots.desc")}
+            description={t("settings:notifications.gatherings.lastFewSpots.desc")}
             comingSoon
             onChange={onChange}
           />
@@ -114,21 +114,21 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           <PushNotificationRow />
           <ToggleRow
             title={t("settings:notifications.messages.newMessage.title")}
-            desc={t("settings:notifications.messages.newMessage.desc")}
+            description={t("settings:notifications.messages.newMessage.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:notifications.messages.connectionRequest.title")}
-            desc={t("settings:notifications.messages.connectionRequest.desc")}
+            description={t("settings:notifications.messages.connectionRequest.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:notifications.messages.sayHello.title")}
-            desc={t("settings:notifications.messages.sayHello.desc")}
+            description={t("settings:notifications.messages.sayHello.desc")}
             comingSoon
             onChange={onChange}
           />
@@ -138,21 +138,21 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
         <ToggleList>
           <ToggleRow
             title={t("settings:notifications.communities.newPost.title")}
-            desc={t("settings:notifications.communities.newPost.desc")}
+            description={t("settings:notifications.communities.newPost.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:notifications.communities.threadReply.title")}
-            desc={t("settings:notifications.communities.threadReply.desc")}
+            description={t("settings:notifications.communities.threadReply.desc")}
             defaultChecked
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:notifications.communities.weeklyDigest.title")}
-            desc={t("settings:notifications.communities.weeklyDigest.desc")}
+            description={t("settings:notifications.communities.weeklyDigest.desc")}
             comingSoon
             onChange={onChange}
           />
@@ -161,7 +161,7 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       <Section label={t("settings:notifications.section.delivery")}>
         <SelectRow
           title={t("settings:notifications.delivery.email.title")}
-          desc={t("settings:notifications.delivery.email.desc")}
+          description={t("settings:notifications.delivery.email.desc")}
           options={EMAIL_DELIVERY_OPTIONS.map((option) => ({
             value: option.value,
             label: t(option.key),
@@ -172,7 +172,7 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
         />
         <SelectRow
           title={t("settings:notifications.delivery.quietHours.title")}
-          desc={t("settings:notifications.delivery.quietHours.desc")}
+          description={t("settings:notifications.delivery.quietHours.desc")}
           options={[
             {
               value: "none",
@@ -218,7 +218,7 @@ export function LanguagePane() {
       <Section label={t("settings:language.section.platformPreference")}>
         <SelectRow
           title={t("settings:language.interfaceLanguage.title")}
-          desc={t("settings:language.interfaceLanguage.desc")}
+          description={t("settings:language.interfaceLanguage.desc")}
           options={[
             { value: "en", label: t("common:language.en") },
             { value: "pt", label: t("common:language.pt") },
@@ -287,12 +287,12 @@ export function buildExports(
 /** Controlled consent row bound to real state (not the cosmetic ToggleRow). */
 function ConsentToggleRow({
   title,
-  desc,
+  description,
   checked,
   onChange,
 }: {
   title: string;
-  desc: string;
+  description: string;
   checked: boolean;
   onChange: (next: boolean) => void;
 }) {
@@ -300,7 +300,7 @@ function ConsentToggleRow({
     <div className={styles.toggleRow}>
       <div className={styles.toggleLabel}>
         <div className={styles.toggleTitle}>{title}</div>
-        <div className={styles.toggleDesc}>{desc}</div>
+        <div className={styles.toggleDesc}>{description}</div>
       </div>
       <Toggle
         tone="coral"
@@ -361,20 +361,20 @@ export function DataPane({
         <div className={styles.dataCards}>
           <DataCard
             title={t("settings:data.download.title")}
-            desc={t("settings:data.download.desc")}
-            btn={t("settings:data.download.cta")}
+            description={t("settings:data.download.desc")}
+            button={t("settings:data.download.cta")}
             onClick={() => setExportKind("full")}
           />
           <DataCard
             title={t("settings:data.downloadMessages.title")}
-            desc={t("settings:data.downloadMessages.desc")}
-            btn={t("settings:data.downloadMessages.cta")}
+            description={t("settings:data.downloadMessages.desc")}
+            button={t("settings:data.downloadMessages.cta")}
             onClick={() => setExportKind("messages")}
           />
           <DataCard
             title={t("settings:data.correct.title")}
-            desc={t("settings:data.correct.desc")}
-            btn={t("settings:data.correct.cta")}
+            description={t("settings:data.correct.desc")}
+            button={t("settings:data.correct.cta")}
             to={routes.contact}
           />
         </div>
@@ -383,7 +383,7 @@ export function DataPane({
         <ToggleList>
           <ConsentToggleRow
             title={t("settings:data.consent.analytics.title")}
-            desc={t("settings:data.consent.analytics.desc")}
+            description={t("settings:data.consent.analytics.desc")}
             checked={consent.analytics}
             onChange={(next) =>
               setConsent(
@@ -394,7 +394,7 @@ export function DataPane({
           />
           <ConsentToggleRow
             title={t("settings:data.consent.monitoring.title")}
-            desc={t("settings:data.consent.monitoring.desc")}
+            description={t("settings:data.consent.monitoring.desc")}
             checked={consent.monitoring}
             onChange={(next) =>
               setConsent(
@@ -407,8 +407,8 @@ export function DataPane({
         <div className={styles.dataCards}>
           <DataCard
             title={t("settings:data.cookiePrefs.title")}
-            desc={t("settings:data.cookiePrefs.desc")}
-            btn={t("settings:data.cookiePrefs.cta")}
+            description={t("settings:data.cookiePrefs.desc")}
+            button={t("settings:data.cookiePrefs.cta")}
             onClick={openPreferences}
           />
         </div>
@@ -417,7 +417,7 @@ export function DataPane({
         <ToggleList>
           <ToggleRow
             title={t("settings:data.searchPersonalisation.title")}
-            desc={t("settings:data.searchPersonalisation.desc")}
+            description={t("settings:data.searchPersonalisation.desc")}
             onChange={onChange}
           />
         </ToggleList>
@@ -505,16 +505,16 @@ export function SimulationsPane() {
                 <DataCard
                   key={f.title}
                   title={f.title}
-                  desc={f.desc}
-                  btn={t("settings:simulations.preview")}
+                  description={f.description}
+                  button={t("settings:simulations.preview")}
                   onClick={() => setPreview(f)}
                 />
               ) : (
                 <DataCard
                   key={f.title}
                   title={f.title}
-                  desc={f.desc}
-                  btn={t("settings:simulations.start")}
+                  description={f.description}
+                  button={t("settings:simulations.start")}
                   to={f.to}
                 />
               ),
@@ -572,7 +572,7 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
         <ToggleList>
           <ConsentToggleRow
             title={t("settings:visibility.privateNetwork.label")}
-            desc={t("settings:visibility.privateNetwork.help")}
+            description={t("settings:visibility.privateNetwork.help")}
             checked={draft.privateNetwork}
             onChange={(next) => {
               updateDraft({ privateNetwork: next });
@@ -581,19 +581,19 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
           />
           <ToggleRow
             title={t("settings:visibility.newArrivals.title")}
-            desc={t("settings:visibility.newArrivals.desc")}
+            description={t("settings:visibility.newArrivals.desc")}
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:visibility.suggestedConnections.title")}
-            desc={t("settings:visibility.suggestedConnections.desc")}
+            description={t("settings:visibility.suggestedConnections.desc")}
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:visibility.activityStatus.title")}
-            desc={t("settings:visibility.activityStatus.desc")}
+            description={t("settings:visibility.activityStatus.desc")}
             comingSoon
             onChange={onChange}
           />
@@ -635,13 +635,13 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
         <ToggleList>
           <ToggleRow
             title={t("settings:account.twoFactor.title")}
-            desc={t("settings:account.twoFactor.desc")}
+            description={t("settings:account.twoFactor.desc")}
             comingSoon
             onChange={onChange}
           />
           <ToggleRow
             title={t("settings:account.loginAlerts.title")}
-            desc={t("settings:account.loginAlerts.desc")}
+            description={t("settings:account.loginAlerts.desc")}
             comingSoon
             onChange={onChange}
           />
@@ -649,8 +649,8 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
         <div className={styles.dataCards}>
           <DataCard
             title={t("settings:account.disclosure.title")}
-            desc={t("settings:account.disclosure.desc")}
-            btn={t("settings:account.disclosure.cta")}
+            description={t("settings:account.disclosure.desc")}
+            button={t("settings:account.disclosure.cta")}
             to={routes.security}
           />
         </div>

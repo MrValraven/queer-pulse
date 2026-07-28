@@ -18,7 +18,7 @@ export interface SubmitPartnerState {
   /** The kind of organisation only; the "Partner · " eyebrow prefix is added on submit. */
   orgType: string;
   tagline: string;
-  desc: string;
+  description: string;
   tags: Set<string>;
   website: string;
   email: string;
@@ -38,7 +38,7 @@ function buildEmptyState(): SubmitPartnerState {
     city: "",
     orgType: "",
     tagline: "",
-    desc: "",
+    description: "",
     tags: new Set(),
     website: "",
     email: "",
@@ -62,9 +62,9 @@ function deriveInitials(name: string): string {
 }
 
 /** Fields that must be filled before the application can be submitted. */
-export type RequiredField = "name" | "orgType" | "city" | "tagline" | "desc";
+export type RequiredField = "name" | "orgType" | "city" | "tagline" | "description";
 
-const REQUIRED: RequiredField[] = ["name", "orgType", "city", "tagline", "desc"];
+const REQUIRED: RequiredField[] = ["name", "orgType", "city", "tagline", "description"];
 
 /**
  * State + payload builder for the "Apply to partner" form. Holds every field the
@@ -136,7 +136,7 @@ export function useSubmitPartnerForm(t: TFunction) {
       region: state.region,
       regionLabel: t(DEFAULT_REGION_LABEL_KEY[state.region]),
       city: state.city.trim(),
-      desc: state.desc.trim(),
+      desc: state.description.trim(),
       tier: DEFAULT_TIER,
       since: t("marketing:submitPartner.form.sinceDefault", {
         year: CURRENT_YEAR,

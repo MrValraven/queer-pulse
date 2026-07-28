@@ -97,9 +97,9 @@ describe("useAdminCommunities (live mode via MSW)", () => {
     expect(community.members).toBe("1,204");
     expect(community.activity).toBe("High");
     expect(community.health).toBe(94);
-    expect(community.bd).toEqual([91, 100, null, 90]);
+    expect(community.breakdown).toEqual([91, 100, null, 90]);
     // The card endpoint carries no moderator roster or scoped queue.
-    expect(community.mods).toEqual([]);
+    expect(community.moderators).toEqual([]);
     expect(community.queue).toEqual([]);
   });
 

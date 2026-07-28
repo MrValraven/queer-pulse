@@ -43,7 +43,7 @@ interface Props {
 }
 
 function olderIssueCount(fromYear: number): number {
-  return YEARS.slice(fromYear).reduce((sum, y) => sum + y.rows.length, 0);
+  return YEARS.slice(fromYear).reduce((sum, year) => sum + year.rows.length, 0);
 }
 
 export function NewsletterArchiveList({ stream, onClearStream }: Props) {
@@ -60,15 +60,15 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
     return () => clearTimeout(t);
   }, [stream]);
 
-  const openIssue = (r: Row) =>
-    navigate(`${routes.newsletterArchive}/${r.num}`);
+  const openIssue = (row: Row) =>
+    navigate(`${routes.newsletterArchive}/${row.number}`);
 
   const remaining = olderIssueCount(shownYears);
 
   const shownRows = YEARS.slice(0, shownYears).reduce(
-    (sum, y) =>
+    (sum, year) =>
       sum +
-      y.rows.filter((r) => stream === "all" || r.stream === stream).length,
+      year.rows.filter((row) => stream === "all" || row.stream === stream).length,
     0,
   );
 
@@ -109,28 +109,28 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
 
   return (
     <section className={styles.list}>
-      {YEARS.slice(0, shownYears).map((y, yi) => (
-        <div key={yi}>
+      {YEARS.slice(0, shownYears).map((year, yearIndex) => (
+        <div key={yearIndex}>
           <div className={styles.year}>
-            <h3>{y.label as ReactNode}</h3>
-            <div className={styles.yearMeta}>{y.meta}</div>
+            <h3>{year.label as ReactNode}</h3>
+            <div className={styles.yearMeta}>{year.meta}</div>
           </div>
-          {y.rows
-            .filter((r) => stream === "all" || r.stream === stream)
-            .map((r, ri) => (
+          {year.rows
+            .filter((row) => stream === "all" || row.stream === stream)
+            .map((row, rowIndex) => (
               <FadeIn
                 as="button"
                 type="button"
-                key={ri}
-                delay={Math.min(ri, 8) * 60}
+                key={rowIndex}
+                delay={Math.min(rowIndex, 8) * 60}
                 className={[
                   styles.row,
-                  STREAM_CLASS[r.stream] &&
-                    styles[STREAM_CLASS[r.stream] as keyof typeof styles],
+                  STREAM_CLASS[row.stream] &&
+                    styles[STREAM_CLASS[row.stream] as keyof typeof styles],
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                onClick={() => openIssue(r)}
+                onClick={() => openIssue(row)}
                 style={{
                   textAlign: "left",
                   border: "none",
@@ -142,24 +142,24 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
               >
                 <div>
                   <div className={styles.rowNum}>
-                    №<em>{r.num}</em>
+                    №<em>{row.number}</em>
                   </div>
-                  <div className={styles.rowNumL}>{r.numLabel}</div>
+                  <div className={styles.rowNumL}>{row.numberLabel}</div>
                 </div>
                 <div>
                   <div className={styles.rowH}>
-                    {r.title}
-                    {r.ed && <span className={styles.ed}>{r.ed}</span>}
+                    {row.title}
+                    {row.ed && <span className={styles.ed}>{row.ed}</span>}
                   </div>
-                  <div className={styles.rowDek}>{r.dek}</div>
+                  <div className={styles.rowDek}>{row.dek}</div>
                 </div>
                 <div className={styles.rowMeta}>
-                  <b>{r.date}</b>
-                  <span>{r.streamMeta}</span>
+                  <b>{row.date}</b>
+                  <span>{row.streamMeta}</span>
                 </div>
                 <div className={styles.rowStats}>
-                  <b>{r.opens}</b>
-                  <span className={styles.label}>{r.rate}</span>
+                  <b>{row.opens}</b>
+                  <span className={styles.label}>{row.rate}</span>
                 </div>
               </FadeIn>
             ))}

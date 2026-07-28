@@ -27,7 +27,7 @@ export interface WorkshopDraft {
   title: string;
   blurb: string;
   about: string;
-  cat: string;
+  category: string;
   mode: string;
   weeks: string;
   size: string;
@@ -95,7 +95,7 @@ function placeholderSessions(weeks: number, t: TFunction): WorkshopSession[] {
     return {
       n: n < 10 ? `0${n}` : `${n}`,
       title: t("economy:addWorkshop.build.sessionTitle", { n }),
-      desc: t("economy:addWorkshop.build.sessionDesc"),
+      description: t("economy:addWorkshop.build.sessionDesc"),
       date: t("economy:addWorkshop.build.sessionDateTba"),
       length: t("economy:addWorkshop.build.sessionLength"),
     };
@@ -135,7 +135,7 @@ export function buildWorkshop(
 
   return {
     id,
-    cat: draft.cat,
+    category: draft.category,
     title: draft.title.trim(),
     titleEm: "",
     format: composeWorkshopFormat(weeks, size, t),

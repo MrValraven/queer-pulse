@@ -34,7 +34,7 @@ export function JobDetailHeader({
         </button>
       </div>
       <div className={styles.org}>
-        {job.org}
+        {job.organization}
         {job.qr && (
           <span className={styles.qrBadge}>
             <FaRainbow /> {job.qrLabel}

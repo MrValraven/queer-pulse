@@ -23,7 +23,7 @@ export function EmployerReviewCard({
           className={styles.coAv}
           style={{ background: c.avBg, color: c.avColor }}
         >
-          {c.av}
+          {c.avatar}
         </div>
         <div style={{ flex: 1, paddingLeft: 14 }}>
           <div className={styles.coName}>{c.name}</div>
@@ -56,7 +56,7 @@ export function EmployerReviewCard({
               <div
                 className={styles.barFill}
                 style={{
-                  width: `${b.pct}%`,
+                  width: `${b.percent}%`,
                   background: b.accent ? "var(--accent)" : undefined,
                 }}
               />

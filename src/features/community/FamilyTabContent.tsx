@@ -89,7 +89,7 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
                 <div className={styles.rvTop}>
                   <div
                     className={styles.rvAv}
-                    style={{ background: r.bg, color: r.color }}
+                    style={{ background: r.background, color: r.color }}
                   >
                     {r.initials}
                   </div>

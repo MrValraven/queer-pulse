@@ -60,8 +60,8 @@ export function DatingPage() {
           </div>
           <div className={styles.cultureGrid}>
             {CULTURE.map((c) => (
-              <div className={styles.cultureCard} key={c.num}>
-                <div className={styles.ccNum}>{c.num}</div>
+              <div className={styles.cultureCard} key={c.number}>
+                <div className={styles.ccNum}>{c.number}</div>
                 <div>
                   <div className={styles.ccTitle}>{t(c.titleKey)}</div>
                   <div className={styles.ccText}>{t(c.textKey)}</div>

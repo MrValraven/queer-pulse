@@ -75,8 +75,8 @@ export function PostOpportunityRichFields({
               />
               <input
                 type="text"
-                value={task.desc}
-                onChange={(e) => setTask(i, { desc: e.target.value })}
+                value={task.description}
+                onChange={(e) => setTask(i, { description: e.target.value })}
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskDetailPlaceholder",
                 )}

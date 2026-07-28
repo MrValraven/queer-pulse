@@ -24,11 +24,11 @@ export interface GlanceRow {
 export interface VerifiedSpace {
   status: "verified";
   slug: string;
-  cat: Category;
+  category: Category;
   typeLabel: string;
   name: string;
-  hood: string;
-  desc: string;
+  neighbourhood: string;
+  description: string;
   tags: string[];
   rating: string;
   reviews: string;
@@ -49,10 +49,10 @@ export interface VerifiedSpace {
 export interface RemovedSpace {
   status: "removed";
   slug: string;
-  cat: Category;
+  category: Category;
   typeLabel: string;
   name: string;
-  hood: string;
+  neighbourhood: string;
   /** Short headline reason shown on cards. */
   reason: string;
   removedDate: string;
@@ -72,11 +72,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "purex",
-    cat: "Bar",
+    category: "Bar",
     typeLabel: "Bar",
     name: "Purex",
-    hood: "Intendente",
-    desc: "One of Lisbon's longest-running queer bars. Genuinely inclusive — not a scene where one type of person dominates. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
+    neighbourhood: "Intendente",
+    description: "One of Lisbon's longest-running queer bars. Genuinely inclusive — not a scene where one type of person dominates. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
     tags: ["Gender-neutral bathrooms", "Accessible", "Trans-welcoming"],
     rating: "4.9",
     reviews: "54 reviews",
@@ -139,11 +139,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "trumps",
-    cat: "Bar",
+    category: "Bar",
     typeLabel: "Bar",
     name: "Trumps",
-    hood: "Rato",
-    desc: "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people — not just gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
+    neighbourhood: "Rato",
+    description: "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people — not just gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
     tags: ["Drag nights", "Long-standing", "Stairs noted"],
     rating: "4.7",
     reviews: "38 reviews",
@@ -205,11 +205,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "lux-fragil",
-    cat: "Club",
+    category: "Club",
     typeLabel: "Club",
     name: "Lux Frágil",
-    hood: "Santa Apolónia",
-    desc: "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly — check their calendar.",
+    neighbourhood: "Santa Apolónia",
+    description: "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly — check their calendar.",
     tags: ["Queer nights", "Reviewed security", "Multiple floors"],
     rating: "4.6",
     reviews: "47 reviews",
@@ -272,11 +272,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "linha-dagua",
-    cat: "Cafe",
+    category: "Cafe",
     typeLabel: "Café",
     name: "Linha d'Água",
-    hood: "Príncipe Real",
-    desc: "A calm, queer-owned café. Good for laptop work or a quiet coffee. Community notice board on the wall. Staff know many regulars by name. Fully accessible. One of the few alcohol-free-friendly options in the neighbourhood.",
+    neighbourhood: "Príncipe Real",
+    description: "A calm, queer-owned café. Good for laptop work or a quiet coffee. Community notice board on the wall. Staff know many regulars by name. Fully accessible. One of the few alcohol-free-friendly options in the neighbourhood.",
     tags: ["Queer-owned", "Sober-friendly", "Accessible", "Community board"],
     rating: "4.9",
     reviews: "29 reviews",
@@ -339,11 +339,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "checkpointlx",
-    cat: "Health",
+    category: "Health",
     typeLabel: "Healthcare",
     name: "CheckpointLx",
-    hood: "Intendente",
-    desc: "Community-run sexual health service. Staff are experienced with queer and trans clients. No judgment, no assumptions about bodies or practices. Free and anonymous. See the sexual health page for full details.",
+    neighbourhood: "Intendente",
+    description: "Community-run sexual health service. Staff are experienced with queer and trans clients. No judgment, no assumptions about bodies or practices. Free and anonymous. See the sexual health page for full details.",
     tags: ["Trans-experienced staff", "Free", "Anonymous"],
     rating: "4.9",
     reviews: "84 reviews",
@@ -406,11 +406,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "barbearia-mouraria",
-    cat: "Services",
+    category: "Services",
     typeLabel: "Services",
     name: "Barbearia Mouraria",
-    hood: "Mouraria",
-    desc: "A barbershop with community roots. Explicitly welcoming to trans and non-binary people — staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
+    neighbourhood: "Mouraria",
+    description: "A barbershop with community roots. Explicitly welcoming to trans and non-binary people — staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
     tags: ["Trans-welcoming", "No gendered pricing", "Walk-in welcome"],
     rating: "4.8",
     reviews: "22 reviews",
@@ -473,11 +473,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "zdb",
-    cat: "Arts",
+    category: "Arts",
     typeLabel: "Arts",
     name: "ZDB — Zé dos Bois",
-    hood: "Bairro Alto",
-    desc: "Arts venue with a long history of hosting queer artists and events. Programming is consistently intersectional. Welcomes community events, hosts several regular queer club nights, and has always been a safe space for queerness in Lisbon.",
+    neighbourhood: "Bairro Alto",
+    description: "Arts venue with a long history of hosting queer artists and events. Programming is consistently intersectional. Welcomes community events, hosts several regular queer club nights, and has always been a safe space for queerness in Lisbon.",
     tags: ["Queer programming", "Community events", "Accessible"],
     rating: "4.8",
     reviews: "41 reviews",
@@ -544,11 +544,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
   {
     status: "verified",
     slug: "copenhagen-coffee-lab",
-    cat: "Cafe",
+    category: "Cafe",
     typeLabel: "Café",
     name: "Copenhagen Coffee Lab",
-    hood: "Cais do Sodré",
-    desc: "Queer-staffed, relaxed, and consistently respectful. Gender-neutral bathroom. A go-to for community members who want somewhere quiet and welcoming for a first date or a meeting. No alcohol, sober-friendly.",
+    neighbourhood: "Cais do Sodré",
+    description: "Queer-staffed, relaxed, and consistently respectful. Gender-neutral bathroom. A go-to for community members who want somewhere quiet and welcoming for a first date or a meeting. No alcohol, sober-friendly.",
     tags: ["Sober-friendly", "Queer staff", "Gender-neutral bathroom"],
     rating: "4.7",
     reviews: "18 reviews",
@@ -614,10 +614,10 @@ export const REMOVED_SPACES: RemovedSpace[] = [
   {
     status: "removed",
     slug: "bar-atlas",
-    cat: "Bar",
+    category: "Bar",
     typeLabel: "Bar",
     name: "Bar Atlas",
-    hood: "Santos",
+    neighbourhood: "Santos",
     reason:
       "Door staff refused entry to a trans member, then management defended it.",
     removedDate: "8 May 2026",
@@ -652,10 +652,10 @@ export const REMOVED_SPACES: RemovedSpace[] = [
   {
     status: "removed",
     slug: "clube-vertigo",
-    cat: "Club",
+    category: "Club",
     typeLabel: "Club",
     name: "Clube Vértigo",
-    hood: "Cais do Sodré",
+    neighbourhood: "Cais do Sodré",
     reason: "A pattern of selective, racialised door policy at queer nights.",
     removedDate: "21 Mar 2026",
     listedSince: "June 2023",
@@ -687,10 +687,10 @@ export const REMOVED_SPACES: RemovedSpace[] = [
   {
     status: "removed",
     slug: "cafe-norte",
-    cat: "Cafe",
+    category: "Cafe",
     typeLabel: "Café",
     name: "Café Norte",
-    hood: "Saldanha",
+    neighbourhood: "Saldanha",
     reason: "New owners; repeated misgendering and no response to three flags.",
     removedDate: "2 Feb 2026",
     listedSince: "September 2022",

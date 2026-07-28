@@ -9,11 +9,11 @@ import styles from "./DeleteAccountPage.module.css";
 
 /** The two mutually-exclusive account-off-ramp cards (deactivate / delete). */
 export function DeleteOptionCards({
-  opt,
-  setOpt,
+  option,
+  setOption,
 }: {
-  opt: DeleteOption;
-  setOpt: (o: DeleteOption) => void;
+  option: DeleteOption;
+  setOption: (option: DeleteOption) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -21,18 +21,18 @@ export function DeleteOptionCards({
       <div
         className={[
           styles.optCard,
-          opt === "deactivate" && styles.optCardSelected,
+          option === "deactivate" && styles.optCardSelected,
         ]
           .filter(Boolean)
           .join(" ")}
         role="button"
         tabIndex={0}
-        aria-pressed={opt === "deactivate"}
-        onClick={() => setOpt("deactivate")}
+        aria-pressed={option === "deactivate"}
+        onClick={() => setOption("deactivate")}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setOpt("deactivate");
+            setOption("deactivate");
           }
         }}
       >
@@ -63,18 +63,18 @@ export function DeleteOptionCards({
         className={[
           styles.optCard,
           styles.optCardDanger,
-          opt === "delete" && styles.optCardSelected,
+          option === "delete" && styles.optCardSelected,
         ]
           .filter(Boolean)
           .join(" ")}
         role="button"
         tabIndex={0}
-        aria-pressed={opt === "delete"}
-        onClick={() => setOpt("delete")}
+        aria-pressed={option === "delete"}
+        onClick={() => setOption("delete")}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setOpt("delete");
+            setOption("delete");
           }
         }}
       >

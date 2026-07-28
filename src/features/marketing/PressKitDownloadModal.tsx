@@ -10,7 +10,7 @@ import styles from "./MarketingModal.module.css";
 export interface PreviewRow {
   ic: string;
   title: string;
-  desc: string;
+  description: string;
 }
 
 export function PressKitDownloadModal({
@@ -104,7 +104,7 @@ export function PressKitDownloadModal({
                     <div className={styles.previewIc}>{r.ic}</div>
                     <div className={styles.previewInfo}>
                       <b>{r.title}</b>
-                      <span>{r.desc}</span>
+                      <span>{r.description}</span>
                     </div>
                   </div>
                 ))}

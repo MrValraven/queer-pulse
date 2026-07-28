@@ -58,10 +58,10 @@ export function LibraryPage() {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     return guides.filter((guide) => {
-      const matchCat = cat === "all" || guide.cat === cat;
+      const matchCat = cat === "all" || guide.category === cat;
       const matchQuery =
         !q ||
-        `${guide.title} ${guide.desc} ${guide.catLabel}`
+        `${guide.title} ${guide.description} ${guide.categoryLabel}`
           .toLowerCase()
           .includes(q);
       return matchCat && matchQuery;
@@ -154,11 +154,11 @@ export function LibraryPage() {
                   className={res.card}
                   delay={Math.min(index, 8) * 60}
                 >
-                  <span className={s.resMeta}>{guide.catLabel}</span>
+                  <span className={s.resMeta}>{guide.categoryLabel}</span>
                   <div className={res.cardName} style={{ fontSize: 19 }}>
                     {guide.title}
                   </div>
-                  <div className={res.cardSpec}>{guide.desc}</div>
+                  <div className={res.cardSpec}>{guide.description}</div>
                   <div className={res.cardFoot}>
                     <span className={res.cardLoc}>{guide.meta}</span>
                     <Link to={guide.to} className={res.cardCta}>

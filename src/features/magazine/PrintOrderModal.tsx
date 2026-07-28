@@ -18,11 +18,11 @@ const ISSUE_LABEL = "Issue 09 · On Health";
 export function PrintOrderModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const [stage, setStage] = useState<Stage>("compose");
-  const [qty, setQty] = useState(1);
+  const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState("");
   useScrollLock();
 
-  const total = 12 * qty;
+  const total = 12 * quantity;
   const valid = /\S+@\S+\.\S+/.test(email);
 
   const placeOrder = () => {
@@ -73,7 +73,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
               <Translation
                 i18nKey="magazine:printOrder.success.body"
                 components={{ b: <b /> }}
-                values={{ count: qty, issue: ISSUE_LABEL, email }}
+                values={{ count: quantity, issue: ISSUE_LABEL, email }}
               />
             </p>
             <Button size="lg" variant="ghost-dark" onClick={onClose}>
@@ -106,19 +106,19 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
               <div className={styles.stepper}>
                 <button
                   type="button"
-                  onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  disabled={qty <= 1 || stage === "placing"}
+                  onClick={() => setQuantity((previous) => Math.max(1, previous - 1))}
+                  disabled={quantity <= 1 || stage === "placing"}
                   aria-label={t("magazine:printOrder.fewerCopiesAria")}
                 >
                   −
                 </button>
                 <span className={styles.qtyVal} aria-live="polite">
-                  {qty}
+                  {quantity}
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQty((q) => Math.min(10, q + 1))}
-                  disabled={qty >= 10 || stage === "placing"}
+                  onClick={() => setQuantity((previous) => Math.min(10, previous + 1))}
+                  disabled={quantity >= 10 || stage === "placing"}
                   aria-label={t("magazine:printOrder.moreCopiesAria")}
                 >
                   +

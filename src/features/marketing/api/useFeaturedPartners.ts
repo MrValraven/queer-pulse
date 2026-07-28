@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getPartners } from "./partners.api";
 import { cardToPartner } from "./partners.adapters";
-import { FEATURED_PARTNERS_DEMO } from "../forOrganisationsProof.data";
 import type { Partner } from "../partnerDetails.types";
 import type { PartnerTestimonial } from "../partnerDetails.types";
 
@@ -28,7 +27,12 @@ export function useFeaturedPartners(): FeaturedPartnersResult {
   const query = useQuery<Partner[]>({
     queryKey: ["featured-partners", demoMode],
     queryFn: async () => {
-      if (demoMode) return FEATURED_PARTNERS_DEMO;
+      if (demoMode) {
+        const { FEATURED_PARTNERS_DEMO } = await import(
+          "../forOrganisationsProof.data"
+        );
+        return FEATURED_PARTNERS_DEMO;
+      }
       const page = await getPartners({ featured: true });
       return page.items.map(cardToPartner);
     },

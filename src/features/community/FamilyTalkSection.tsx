@@ -39,7 +39,7 @@ export function FamilyTalkSection() {
                   <div className={styles.talkCard} key={c.name}>
                     <div
                       className={styles.tcAv}
-                      style={{ background: c.bg, color: c.color }}
+                      style={{ background: c.background, color: c.color }}
                     >
                       {c.initials}
                     </div>

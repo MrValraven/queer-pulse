@@ -6,7 +6,6 @@ import {
   type PartnerApplicationDTO,
   type TriagePartnerApplicationDto,
 } from "./partners.api";
-import { MOCK_PARTNER_APPLICATIONS } from "./partnerApplications.mock.data";
 
 export type { PartnerApplicationDTO } from "./partners.api";
 export {
@@ -24,7 +23,12 @@ export function usePartnerApplications() {
   return useQuery<PartnerApplicationDTO[]>({
     queryKey: ["partner-applications", demoMode],
     queryFn: async () => {
-      if (demoMode) return MOCK_PARTNER_APPLICATIONS;
+      if (demoMode) {
+        const { MOCK_PARTNER_APPLICATIONS } = await import(
+          "./partnerApplications.mock.data"
+        );
+        return MOCK_PARTNER_APPLICATIONS;
+      }
       return getPartnerApplications();
     },
   });

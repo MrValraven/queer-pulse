@@ -59,7 +59,7 @@ export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListi
     hood: dto.area || dto.city,
     beds: "", // backend has no `beds` field — rendered minimally (documented gap)
     avail: dto.availableFrom ?? "Available now",
-    desc: dto.blurb,
+    description: dto.blurb,
     price: `€${dto.rentEuros.toLocaleString()}`,
     period: "month",
     image: dto.gallery[0],

@@ -1,6 +1,6 @@
 export interface App {
   icon: string;
-  iconBg: string;
+  iconBackground: string;
   iconColor: string;
   name: string;
   audienceKey: string;
@@ -12,7 +12,7 @@ export interface App {
 export const APPS: App[] = [
   {
     icon: "Gr",
-    iconBg: "rgba(232,119,90,.15)",
+    iconBackground: "rgba(232,119,90,.15)",
     iconColor: "var(--accent-ink)",
     name: "Grindr",
     audienceKey: "community:dating.app.grindr.audience",
@@ -26,7 +26,7 @@ export const APPS: App[] = [
   },
   {
     icon: "Sc",
-    iconBg: "rgba(45,27,61,.1)",
+    iconBackground: "rgba(45,27,61,.1)",
     iconColor: "var(--plum)",
     name: "Scruff",
     audienceKey: "community:dating.app.scruff.audience",
@@ -40,7 +40,7 @@ export const APPS: App[] = [
   },
   {
     icon: "HER",
-    iconBg: "rgba(74,140,111,.14)",
+    iconBackground: "rgba(74,140,111,.14)",
     iconColor: "var(--jade)",
     name: "HER",
     audienceKey: "community:dating.app.her.audience",
@@ -54,7 +54,7 @@ export const APPS: App[] = [
   },
   {
     icon: "Fe",
-    iconBg: "rgba(122,82,184,.14)",
+    iconBackground: "rgba(122,82,184,.14)",
     iconColor: "var(--violet)",
     name: "Feeld",
     audienceKey: "community:dating.app.feeld.audience",
@@ -69,7 +69,7 @@ export const APPS: App[] = [
   },
   {
     icon: "Ho",
-    iconBg: "rgba(232,119,90,.15)",
+    iconBackground: "rgba(232,119,90,.15)",
     iconColor: "var(--accent-ink)",
     name: "Hornet",
     audienceKey: "community:dating.app.hornet.audience",
@@ -83,7 +83,7 @@ export const APPS: App[] = [
   },
   {
     icon: "OK",
-    iconBg: "rgba(45,27,61,.08)",
+    iconBackground: "rgba(45,27,61,.08)",
     iconColor: "var(--plum)",
     name: "OkCupid",
     audienceKey: "community:dating.app.okcupid.audience",
@@ -97,24 +97,24 @@ export const APPS: App[] = [
   },
 ];
 
-export const CULTURE: { num: string; titleKey: string; textKey: string }[] = [
+export const CULTURE: { number: string; titleKey: string; textKey: string }[] = [
   {
-    num: "01",
+    number: "01",
     titleKey: "community:dating.culture.smallCommunity.title",
     textKey: "community:dating.culture.smallCommunity.text",
   },
   {
-    num: "02",
+    number: "02",
     titleKey: "community:dating.culture.slowerPace.title",
     textKey: "community:dating.culture.slowerPace.text",
   },
   {
-    num: "03",
+    number: "03",
     titleKey: "community:dating.culture.languageGap.title",
     textKey: "community:dating.culture.languageGap.text",
   },
   {
-    num: "04",
+    number: "04",
     titleKey: "community:dating.culture.eventsMatter.title",
     textKey: "community:dating.culture.eventsMatter.text",
   },

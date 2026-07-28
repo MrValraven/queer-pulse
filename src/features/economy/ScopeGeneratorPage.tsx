@@ -123,7 +123,7 @@ export function ScopeGeneratorPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:scopeTool.sub")}
+      subtitle={t("economy:scopeTool.sub")}
       form={<ScopeForm scope={scope} onChange={update} />}
       preview={<ScopePreview scope={scope} issuer={issuer} />}
       actions={actions}

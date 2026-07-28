@@ -76,15 +76,15 @@ export function cardToPartner(dto: PartnerCardDTO): Partner {
   const tint = TINT_CSS[tintForSlug(dto.slug)];
   return {
     slug: dto.slug,
-    av: orgInitials(dto.name),
+    avatar: orgInitials(dto.name),
     logo: dto.logo,
-    bg: tint.bg,
+    background: tint.bg,
     color: tint.color,
     region: dto.region,
     regionLabel: dto.regionLabel,
     name: dto.name,
     city: dto.city,
-    desc: dto.desc,
+    description: dto.desc,
     tags: dto.tags ?? [],
     featured: dto.featured,
     testimonial: toTestimonial(dto),

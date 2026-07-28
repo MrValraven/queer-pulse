@@ -27,9 +27,9 @@ export function SoberHonestSection(_props: SoberHonestSectionProps) {
           </div>
           <div className={styles.stats}>
             {STATS.map((s) => (
-              <div className={styles.stat} key={s.nKey}>
-                <div className={styles.n}>{t(s.nKey)}</div>
-                <div className={styles.l}>{t(s.lKey)}</div>
+              <div className={styles.stat} key={s.numberKey}>
+                <div className={styles.n}>{t(s.numberKey)}</div>
+                <div className={styles.l}>{t(s.labelKey)}</div>
               </div>
             ))}
           </div>
@@ -60,9 +60,9 @@ export function SoberVenuesSection({
         <div className={styles.venueGrid}>
           {VENUES.map((v) => (
             <div className={styles.venueCard} key={v.name}>
-              <div className={styles.vcHood}>{v.hood}</div>
+              <div className={styles.vcHood}>{v.neighbourhood}</div>
               <div className={styles.vcName}>{v.name}</div>
-              <div className={styles.vcDesc}>{v.desc}</div>
+              <div className={styles.vcDesc}>{v.description}</div>
               <div className={styles.vcTags}>
                 {v.tags.map((t) => (
                   <span key={t} className={styles.vcTag}>
@@ -102,9 +102,9 @@ export function SoberVoicesSection() {
               <div className={styles.voiceWho}>
                 <div
                   className={styles.voiceAv}
-                  style={{ background: v.avBg, color: v.avCol }}
+                  style={{ background: v.avatarBackground, color: v.avatarColor }}
                 >
-                  {v.av}
+                  {v.avatar}
                 </div>
                 <div>
                   <div className={styles.voiceName}>{v.name}</div>
@@ -140,7 +140,7 @@ export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
             {RECOVERY_OPTS.map((o) => (
               <div className={styles.recOpt} key={o.titleKey}>
                 <div className={styles.recTitle}>{t(o.titleKey)}</div>
-                <div className={styles.recDesc}>{t(o.descKey)}</div>
+                <div className={styles.recDesc}>{t(o.descriptionKey)}</div>
                 <Link to={linkMap[o.linkKey]!} className={styles.recLink}>
                   {t(o.linkLabelKey)}
                 </Link>

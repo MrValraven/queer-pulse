@@ -53,7 +53,7 @@ export interface ArchiveIssue {
   date: Date;
   issueNumber: number;
   articleCount: number;
-  bg: string;
+  background: string;
 }
 
 export interface Letter {
@@ -319,28 +319,28 @@ export const ARCHIVE: ArchiveIssue[] = [
     date: new Date(2026, 4, 1),
     issueNumber: 17,
     articleCount: 8,
-    bg: "var(--plum)",
+    background: "var(--plum)",
   },
   {
     title: "What Solidarity Actually Costs",
     date: new Date(2026, 3, 1),
     issueNumber: 16,
     articleCount: 7,
-    bg: "var(--jade)",
+    background: "var(--jade)",
   },
   {
     title: "Bodies in Translation",
     date: new Date(2026, 2, 1),
     issueNumber: 15,
     articleCount: 9,
-    bg: "var(--accent-ink)",
+    background: "var(--accent-ink)",
   },
   {
     title: "The Queer City Guide",
     date: new Date(2026, 1, 1),
     issueNumber: 14,
     articleCount: 6,
-    bg: "#1E3A5F",
+    background: "#1E3A5F",
   },
 ];
 

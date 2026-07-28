@@ -38,7 +38,7 @@ function AboutPane({ profile }: { profile: CompanyProfile }) {
         {profile.values.map((value) => (
           <div key={value.title} className={styles.val}>
             <h4>{value.title}</h4>
-            <p>{value.desc}</p>
+            <p>{value.description}</p>
           </div>
         ))}
       </div>
@@ -130,7 +130,7 @@ function ReviewsPane({
               <div className={styles.revBarTrack}>
                 <span
                   className={styles.revBarFill}
-                  style={{ width: `${bar.pct}%` }}
+                  style={{ width: `${bar.percent}%` }}
                 />
               </div>
               <span>

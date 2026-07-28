@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiHeart, FiCornerUpLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Post } from "./community.model";
 import { photoOf } from "./communityPeople";
@@ -17,6 +18,7 @@ export interface HubPost {
  *  community for the full, interactive version). */
 export function HubPulseCard({ item }: { item: HubPost }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { post, communityName, communitySlug } = item;
   const reactionTotal = post.reactions.reduce((sum, r) => sum + r.count, 0);
   return (
@@ -33,7 +35,7 @@ export function HubPulseCard({ item }: { item: HubPost }) {
         <Avatar
           initials={post.author.initials}
           tint={post.author.tint}
-          src={photoOf(post.author)}
+          src={photoOf(post.author, demoMode)}
           size={36}
           alt={post.author.name}
         />

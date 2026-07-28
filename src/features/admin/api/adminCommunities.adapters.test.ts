@@ -89,7 +89,7 @@ describe("cardDtoToCommunity", () => {
     expect(community.members).toBe("3,180");
   });
 
-  it("passes the health score and breakdown through positionally as bd", () => {
+  it("passes the health score and breakdown through positionally as breakdown", () => {
     const community = cardDtoToCommunity(
       {
         ...baseCardDto,
@@ -105,12 +105,12 @@ describe("cardDtoToCommunity", () => {
       fmt,
     );
     expect(community.health).toBe(88);
-    expect(community.bd).toEqual([82, 96, null, 84]);
+    expect(community.breakdown).toEqual([82, 96, null, 84]);
   });
 
-  it("carries a null sentiment through to bd[2] rather than defaulting it to 0", () => {
+  it("carries a null sentiment through to breakdown[2] rather than defaulting it to 0", () => {
     const community = cardDtoToCommunity(baseCardDto, translate, fmt);
-    expect(community.bd[2]).toBeNull();
+    expect(community.breakdown[2]).toBeNull();
   });
 
   it("substitutes an eight-zero sparkline when the API returns an empty one", () => {
@@ -142,7 +142,7 @@ describe("cardDtoToCommunity", () => {
 
   it("defaults mods and queue to empty arrays on the card path", () => {
     const community = cardDtoToCommunity(baseCardDto, translate, fmt);
-    expect(community.mods).toEqual([]);
+    expect(community.moderators).toEqual([]);
     expect(community.queue).toEqual([]);
   });
 });
@@ -171,15 +171,15 @@ describe("detailDtoToCommunity", () => {
       translate,
       fmt,
     );
-    expect(community.mods).toHaveLength(2);
-    expect(community.mods[0]).toEqual({
+    expect(community.moderators).toHaveLength(2);
+    expect(community.moderators[0]).toEqual({
       initials: "IM",
       name: "Inês Martins",
       pronouns: "",
       tone: expect.any(String),
       role: "Founded the community",
     });
-    expect(community.mods[1]?.role).toBe("Moderator since Jun 2024");
+    expect(community.moderators[1]?.role).toBe("Moderator since Jun 2024");
   });
 
   it("maps the scoped queue onto the QueueItem view shape", () => {
@@ -203,9 +203,9 @@ describe("detailDtoToCommunity", () => {
     );
     expect(community.queue).toHaveLength(1);
     const queueItem = community.queue[0]!;
-    expect(queueItem.sev).toBe("jade");
-    expect(queueItem.catTone).toBe("jade");
-    expect(queueItem.catLabel).toBe("Spam");
+    expect(queueItem.severity).toBe("jade");
+    expect(queueItem.categoryTone).toBe("jade");
+    expect(queueItem.categoryLabel).toBe("Spam");
     // No `detail` text on this fixture, so the title falls back to the
     // reason's human label.
     expect(queueItem.title).toBe("Spam or self-promotion");
@@ -215,7 +215,7 @@ describe("detailDtoToCommunity", () => {
   it("carries an overdue queue item's status into meta, still untranslated", () => {
     const community = detailDtoToCommunity(baseDetailDto, translate, fmt);
     const queueItem = community.queue[0]!;
-    expect(queueItem.sev).toBe("coral");
+    expect(queueItem.severity).toBe("coral");
     expect(queueItem.title).toBe(
       "Repeated unwanted DMs after being asked to stop",
     );

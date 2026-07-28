@@ -181,7 +181,7 @@ export function ColourSection() {
             <div
               className={styles.swatchChip}
               style={{
-                background: s.bg,
+                background: s.background,
                 border: s.border ? "1px solid rgba(45,27,61,.10)" : undefined,
               }}
             />
@@ -258,7 +258,7 @@ export function TeamSection() {
             </div>
             <h4>{member.name}</h4>
             <div className={styles.teamRole}>{member.role}</div>
-            <p>{member.desc}</p>
+            <p>{member.description}</p>
             <div className={styles.teamLangs}>{member.langs}</div>
             <div className={styles.teamContact}>
               <a href={`mailto:${member.email}`}>{member.email}</a>
@@ -365,7 +365,7 @@ export function DownloadsSection() {
   const downloads = useMemo(() => buildDownloads(t), [t]);
   const [open, setOpen] = useState<number | null>(null);
   const d = open !== null ? downloads[open] : null;
-  const asset = d ? assetFor(t, d.ic, d.title, d.desc) : null;
+  const asset = d ? assetFor(t, d.ic, d.title, d.description) : null;
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -395,7 +395,7 @@ export function DownloadsSection() {
             </div>
             <div className={styles.dlInfo}>
               <b>{dl.title}</b>
-              <span>{dl.desc}</span>
+              <span>{dl.description}</span>
             </div>
             <div className={styles.dlArrow}>↓</div>
           </button>
@@ -411,10 +411,10 @@ export function DownloadsSection() {
             <Translation
               i18nKey="marketing:pressKit.downloads.modal.lead"
               components={{ b: <b /> }}
-              values={{ desc: d.desc, filename: asset.filename }}
+              values={{ desc: d.description, filename: asset.filename }}
             />
           }
-          rows={[{ ic: d.ic, title: asset.filename, desc: d.desc }]}
+          rows={[{ ic: d.ic, title: asset.filename, description: d.description }]}
           asset={asset}
           buttonLabel={t("marketing:pressKit.downloads.modal.buttonLabel", {
             format: asset.filename.split(".").pop()?.toUpperCase() ?? "",

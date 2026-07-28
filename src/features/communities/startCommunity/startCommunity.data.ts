@@ -264,35 +264,35 @@ export const ACCESS_OPTIONS: AccessOption[] = [
 export interface FeatureOption {
   id: string;
   labelKey: string;
-  descKey: string;
+  descriptionKey: string;
   locked?: boolean;
 }
 export const FEATURE_OPTIONS: FeatureOption[] = [
   {
     id: "discussion",
     labelKey: "communities:start.feature.discussion.label",
-    descKey: "communities:start.feature.discussion.desc",
+    descriptionKey: "communities:start.feature.discussion.desc",
     locked: true,
   },
   {
     id: "events",
     labelKey: "communities:start.feature.events.label",
-    descKey: "communities:start.feature.events.desc",
+    descriptionKey: "communities:start.feature.events.desc",
   },
   {
     id: "rooms",
     labelKey: "communities:start.feature.rooms.label",
-    descKey: "communities:start.feature.rooms.desc",
+    descriptionKey: "communities:start.feature.rooms.desc",
   },
   {
     id: "roster",
     labelKey: "communities:start.feature.roster.label",
-    descKey: "communities:start.feature.roster.desc",
+    descriptionKey: "communities:start.feature.roster.desc",
   },
   {
     id: "library",
     labelKey: "communities:start.feature.library.label",
-    descKey: "communities:start.feature.library.desc",
+    descriptionKey: "communities:start.feature.library.desc",
   },
 ];
 
@@ -308,20 +308,20 @@ export const RULE_PRESET_KEYS: string[] = [
 /** The enforcement ladder, shown as static context on the Tone chapter. */
 export interface LadderStep {
   titleKey: string;
-  descKey: string;
+  descriptionKey: string;
 }
 export const ENFORCEMENT_LADDER: LadderStep[] = [
   {
     titleKey: "communities:start.ladder.quietWord.title",
-    descKey: "communities:start.ladder.quietWord.desc",
+    descriptionKey: "communities:start.ladder.quietWord.desc",
   },
   {
     titleKey: "communities:start.ladder.reminder.title",
-    descKey: "communities:start.ladder.reminder.desc",
+    descriptionKey: "communities:start.ladder.reminder.desc",
   },
   {
     titleKey: "communities:start.ladder.pause.title",
-    descKey: "communities:start.ladder.pause.desc",
+    descriptionKey: "communities:start.ladder.pause.desc",
   },
 ];
 

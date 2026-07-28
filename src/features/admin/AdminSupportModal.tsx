@@ -20,13 +20,13 @@ export function AdminSupportModal({
   const [note, setNote] = useState("");
 
   const firstWord = community.name.split(/\s+/)[0];
-  const modFirsts = community.mods.map((m) => firstName(m.name)).join(" & ");
+  const modFirsts = community.moderators.map((m) => firstName(m.name)).join(" & ");
 
   const options: { titleKey: string; sub: string }[] = [
     {
       titleKey: "admin:communities.support.option.message.title",
       sub:
-        community.mods.length > 0
+        community.moderators.length > 0
           ? t("admin:communities.support.option.message.sub", {
               names: modFirsts,
             })

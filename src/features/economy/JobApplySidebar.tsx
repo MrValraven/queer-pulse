@@ -49,7 +49,7 @@ export function JobApplySidebar({
             {job.logo}
           </div>
           <div>
-            <div className={styles.sideName}>{job.org}</div>
+            <div className={styles.sideName}>{job.organization}</div>
             <div className={styles.sideRole}>{job.detail.category}</div>
           </div>
         </div>

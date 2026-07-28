@@ -57,6 +57,7 @@ function PulsePost({
   onReplyPost?: (id: string, text: string, onDone?: () => void) => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [reactions, setReactions] = useState(post.reactions);
   const [showReply, setShowReply] = useState(false);
   const [replyDraft, setReplyDraft] = useState("");
@@ -102,7 +103,7 @@ function PulsePost({
         <Avatar
           initials={post.author.initials}
           tint={post.author.tint}
-          src={photoOf(post.author)}
+          src={photoOf(post.author, demoMode)}
           size={40}
           alt={post.author.name}
         />

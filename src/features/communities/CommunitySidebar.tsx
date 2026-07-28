@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useConnect } from "../../app/providers/ConnectProvider";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
@@ -28,13 +29,14 @@ export function CommunitySidebar({
   related: Community[];
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
   const org = detail.organiser;
   const orgAvatar = (
     <Avatar
       initials={org.initials}
       tint={org.tint}
-      src={photoOf(org)}
+      src={photoOf(org, demoMode)}
       size={48}
       alt={org.name}
     />

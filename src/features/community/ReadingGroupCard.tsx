@@ -51,7 +51,7 @@ export function ReadingGroupCard({
       </div>
       <div className={styles.gcBody}>
         <div className={styles.gcName}>{g.name}</div>
-        <div className={styles.gcDesc}>{g.desc}</div>
+        <div className={styles.gcDesc}>{g.description}</div>
         <div className={styles.gcMeta}>
           <span
             className={[
@@ -67,7 +67,7 @@ export function ReadingGroupCard({
             {g.where}
           </span>
           <span className={styles.gm}>{g.frequency}</span>
-          <span className={styles.gm}>{g.lang}</span>
+          <span className={styles.gm}>{g.language}</span>
         </div>
       </div>
       <div className={styles.gcFoot}>

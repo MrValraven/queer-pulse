@@ -169,7 +169,7 @@ export function appealDtoToView(dto: AppealDTO): Appeal {
       by: dto.original.by,
       when: dto.original.when,
       reason: dto.original.reason,
-      cat: "coral",
+      category: "coral",
     },
     argument: dto.argument,
     supporters: [],

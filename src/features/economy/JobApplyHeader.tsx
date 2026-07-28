@@ -6,11 +6,11 @@ import styles from "./JobApplyPage.module.css";
 export function JobApplyHeader({
   job,
   deadlineFull,
-  pct,
+  percent,
 }: {
   job: Job;
   deadlineFull: string;
-  pct: number;
+  percent: number;
 }) {
   const { t } = useTranslation();
   return (
@@ -22,7 +22,7 @@ export function JobApplyHeader({
         <h1 className={styles.h1}>
           <Translation
             i18nKey="economy:jobApply.header.title"
-            values={{ org: job.org }}
+            values={{ org: job.organization }}
             components={{ em: <em /> }}
           />
         </h1>
@@ -41,13 +41,13 @@ export function JobApplyHeader({
 
       <div className={styles.prog}>
         <div className={styles.progPct}>
-          <em>{pct}</em>%
+          <em>{percent}</em>%
         </div>
         <div className={styles.progLbl}>
           {t("economy:jobApply.header.progressLabel")}
         </div>
         <div className={styles.progBar}>
-          <span style={{ width: `${pct}%` }} />
+          <span style={{ width: `${percent}%` }} />
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { FiCheck, FiX, FiFlag, FiUserPlus, FiShield } from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { LivingCommunity } from "./community.model";
 import { photoOf } from "./communityPeople";
@@ -29,6 +30,7 @@ export function ModJoinRequests({
   onResolve: (id: string, name: string, approved: boolean) => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <>
       <div className={detail.secLbl}>
@@ -51,7 +53,7 @@ export function ModJoinRequests({
             <Avatar
               initials={r.person.initials}
               tint={r.person.tint}
-              src={photoOf(r.person)}
+              src={photoOf(r.person, demoMode)}
               size={42}
               alt={r.person.name}
             />
@@ -168,6 +170,7 @@ export function ModMemberManagement({
   onRemove: (slug: string | undefined, name: string) => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <>
       <div className={detail.secLbl} style={{ marginTop: 32 }}>
@@ -182,7 +185,7 @@ export function ModMemberManagement({
             <Avatar
               initials={m.initials}
               tint={m.tint}
-              src={photoOf(m)}
+              src={photoOf(m, demoMode)}
               size={38}
               alt={m.name}
             />

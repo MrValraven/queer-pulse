@@ -27,7 +27,7 @@ import type {
 // equivalent of the mock's "community descriptions" / "report titles,
 // previews" — see the file banner in `catalogs/en/admin.ts`) and are
 // deliberately left untranslated, exactly like `AdminCommunityDetailTabs.tsx`'s
-// `ReportRow` already documents for `item.catLabel/title/meta`.
+// `ReportRow` already documents for `item.categoryLabel/title/meta`.
 //
 // Locale-threading fix (Task 7 review, applied in Task 8): `members`,
 // `founded`, and a moderator's "since" date are locale-sensitive numbers/dates,
@@ -167,7 +167,7 @@ const QUEUE_CATEGORY_LABEL: Partial<Record<ReasonCode, string>> = {
 
 const QUEUE_SEVERITY_TONE: Record<
   AdminCommunityQueueItemDTO["severity"],
-  QueueItem["sev"]
+  QueueItem["severity"]
 > = {
   emergency: "danger",
   high: "coral",
@@ -210,9 +210,9 @@ function queueItemDtoToQueueItem(
 ): QueueItem {
   const severityTone = QUEUE_SEVERITY_TONE[queueItemDto.severity];
   return {
-    sev: severityTone,
-    catTone: severityTone,
-    catLabel:
+    severity: severityTone,
+    categoryTone: severityTone,
+    categoryLabel:
       QUEUE_CATEGORY_LABEL[queueItemDto.reasonCode as ReasonCode] ?? "Report",
     title: queueItemTitle(queueItemDto),
     meta: queueItemMeta(queueItemDto),
@@ -232,30 +232,30 @@ export function cardDtoToCommunity(
     tone: cardDto.tone,
     tag: cardDto.tag,
     // The card endpoint carries no description — only the detail endpoint does.
-    desc: "",
+    description: "",
     members: formatMemberCount(cardDto.memberCount, fmt),
     activity: translate(ACTIVITY_LABEL_KEY[cardDto.activityLabel]),
-    activePct: cardDto.activePercentage,
+    activePercent: cardDto.activePercentage,
     reports: cardDto.openReportCount,
     // Not a genuinely missing field: the backend's own
     // `toAdminCommunityDetail` derives `resolvedPercentage` from exactly this
     // nested value (admin-communities-response.ts), so the card already
     // carries it under a different name.
-    resolvedPct: cardDto.healthBreakdown.reportResolution,
+    resolvedPercent: cardDto.healthBreakdown.reportResolution,
     health: cardDto.healthScore,
     // The card endpoint carries no founding date — only the detail endpoint does.
     founded: "",
     spark: sparklineFrom(cardDto.activitySparkline),
-    bd: healthBreakdownToTuple(cardDto.healthBreakdown),
+    breakdown: healthBreakdownToTuple(cardDto.healthBreakdown),
     // Neither the card nor the detail endpoint expose a "who can join"
     // policy string yet — there is no backend field for it at all.
     join: "",
     // Neither endpoint exposes a code-of-care summary yet — no backend field.
     code: "",
-    vis: CARD_PATH_VISIBILITY_PLACEHOLDER,
+    visibility: CARD_PATH_VISIBILITY_PLACEHOLDER,
     support: cardDto.needsSupport,
     // The card endpoint carries no moderator roster.
-    mods: [],
+    moderators: [],
     // The card endpoint carries no scoped report queue.
     queue: [],
   };
@@ -269,14 +269,14 @@ export function detailDtoToCommunity(
 ): Community {
   return {
     ...cardDtoToCommunity(detailDto, translate, fmt),
-    desc: detailDto.description,
-    resolvedPct: detailDto.resolvedPercentage,
+    description: detailDto.description,
+    resolvedPercent: detailDto.resolvedPercentage,
     founded: monthYearLabel(detailDto.foundedAt, fmt),
-    vis: detailDto.visibility,
+    visibility: detailDto.visibility,
     // Still no backend field for either of these — see the card-path comment.
     join: "",
     code: "",
-    mods: detailDto.moderators.map((moderatorDto) =>
+    moderators: detailDto.moderators.map((moderatorDto) =>
       moderatorDtoToModerator(moderatorDto, translate, fmt),
     ),
     queue: detailDto.scopedQueue.map((queueItemDto) =>

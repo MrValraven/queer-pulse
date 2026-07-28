@@ -7,7 +7,7 @@ export function useGatheringForm() {
   const [type, setType] = useState("");
   const [typeIcon, setTypeIcon] = useState<IconType | null>(null);
   const [title, setTitle] = useState("");
-  const [desc, setDesc] = useState("");
+  const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("19:00");
   const [endTime, setEndTime] = useState("22:00");
@@ -48,8 +48,8 @@ export function useGatheringForm() {
     typeIcon,
     title,
     setTitle,
-    desc,
-    setDesc,
+    description,
+    setDescription,
     date,
     setDate,
     time,

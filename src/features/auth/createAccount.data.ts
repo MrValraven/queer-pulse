@@ -29,16 +29,16 @@ export const VIS_OPTS = [
   {
     value: "open",
     labelKey: "auth:createAccount.visibility.open.label",
-    subKey: "auth:createAccount.visibility.open.sub",
+    subtitleKey: "auth:createAccount.visibility.open.sub",
   },
   {
     value: "network",
     labelKey: "auth:createAccount.visibility.network.label",
-    subKey: "auth:createAccount.visibility.network.sub",
+    subtitleKey: "auth:createAccount.visibility.network.sub",
   },
   {
     value: "private",
     labelKey: "auth:createAccount.visibility.private.label",
-    subKey: "auth:createAccount.visibility.private.sub",
+    subtitleKey: "auth:createAccount.visibility.private.sub",
   },
 ] as const;

@@ -76,7 +76,7 @@ export function RsvpPage() {
                   <div key={detail.labelKey} className={styles.detail}>
                     <span
                       className={styles.detailIcon}
-                      style={{ background: detail.bg }}
+                      style={{ background: detail.background }}
                     >
                       <detail.icon />
                     </span>

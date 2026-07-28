@@ -46,7 +46,7 @@ export function VolunteerOpportunityMain({
               </div>
               <div>
                 <b>{task.title}</b>
-                <span>{task.desc}</span>
+                <span>{task.description}</span>
               </div>
             </div>
           ))}
@@ -95,7 +95,7 @@ export function VolunteerOpportunityMain({
             <Link to={MEMBER} className={styles.teamPill} key={m.name}>
               <div
                 className={styles.av}
-                style={{ background: m.bg, color: m.color }}
+                style={{ background: m.background, color: m.color }}
               >
                 {m.initials}
               </div>

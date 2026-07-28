@@ -64,38 +64,38 @@ export const LEGAL: TransHubStep[] = [
 ];
 
 export const RESOURCES: {
-  catKey: string;
+  categoryKey: string;
   catColor: string;
   catBg: string;
   titleKey: string;
-  descKey: string;
+  descriptionKey: string;
 }[] = [
   {
-    catKey: "resources:transHub.resources.cat.guide",
+    categoryKey: "resources:transHub.resources.cat.guide",
     catColor: "var(--accent-ink)",
     catBg: "rgba(232,119,90,.1)",
     titleKey: "resources:transHub.resource.snsGuide.title",
-    descKey: "resources:transHub.resource.snsGuide.desc",
+    descriptionKey: "resources:transHub.resource.snsGuide.desc",
   },
   {
-    catKey: "resources:transHub.resources.cat.checklist",
+    categoryKey: "resources:transHub.resources.cat.checklist",
     catColor: "var(--jade)",
     catBg: "rgba(74,140,111,.12)",
     titleKey: "resources:transHub.resource.docChecklist.title",
-    descKey: "resources:transHub.resource.docChecklist.desc",
+    descriptionKey: "resources:transHub.resource.docChecklist.desc",
   },
   {
-    catKey: "resources:transHub.resources.cat.directory",
+    categoryKey: "resources:transHub.resources.cat.directory",
     catColor: "var(--plum)",
     catBg: "rgba(45,27,61,.08)",
     titleKey: "resources:transHub.resource.clinicians.title",
-    descKey: "resources:transHub.resource.clinicians.desc",
+    descriptionKey: "resources:transHub.resource.clinicians.desc",
   },
   {
-    catKey: "resources:transHub.resources.cat.peerSupport",
+    categoryKey: "resources:transHub.resources.cat.peerSupport",
     catColor: "var(--violet)",
     catBg: "rgba(155,111,212,.1)",
     titleKey: "resources:transHub.resource.peerCircle.title",
-    descKey: "resources:transHub.resource.peerCircle.desc",
+    descriptionKey: "resources:transHub.resource.peerCircle.desc",
   },
 ];

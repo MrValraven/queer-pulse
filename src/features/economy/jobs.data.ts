@@ -21,10 +21,10 @@ export interface JobDetail {
 
 export interface Job {
   slug: string;
-  cat: string;
+  category: string;
   qr: boolean;
   qrLabel: string;
-  org: string;
+  organization: string;
   logo: string;
   logoBg: string;
   logoText: string;
@@ -34,7 +34,7 @@ export interface Job {
   salary: string;
   /** Applications close on this date; `null` = an open-ended listing. */
   deadline: Date | null;
-  desc: string;
+  description: string;
   tags: string[];
   detail: JobDetail;
 }
@@ -42,10 +42,10 @@ export interface Job {
 export const JOBS: Job[] = [
   {
     slug: "junior-graphic-designer",
-    cat: "design",
+    category: "design",
     qr: true,
     qrLabel: "Queer-run",
-    org: "Atelier Pulso",
+    organization: "Atelier Pulso",
     logo: "AP",
     logoBg: "rgba(var(--accent-rgb),.14)",
     logoText: "var(--accent-ink)",
@@ -54,7 +54,7 @@ export const JOBS: Job[] = [
     location: "Príncipe Real · In-person",
     salary: "€1,200–1,500/mo",
     deadline: new Date(2026, 5, 30),
-    desc: "Inês is building out her studio. Looking for a junior designer who cares about type, editorial systems, and making beautiful things. Training provided.",
+    description: "Inês is building out her studio. Looking for a junior designer who cares about type, editorial systems, and making beautiful things. Training provided.",
     tags: ["Graphic design", "Type", "Branding"],
     detail: {
       category: "Design",
@@ -92,10 +92,10 @@ export const JOBS: Job[] = [
   },
   {
     slug: "community-outreach-coordinator",
-    cat: "community",
+    category: "community",
     qr: true,
     qrLabel: "Queer-led",
-    org: "A national LGBTQ+ rights organisation",
+    organization: "A national LGBTQ+ rights organisation",
     logo: "LR",
     logoBg: "rgba(var(--violet-rgb),.12)",
     logoText: "var(--violet)",
@@ -104,7 +104,7 @@ export const JOBS: Job[] = [
     location: "Lisbon · In-person",
     salary: "€1,100–1,300/mo",
     deadline: new Date(2026, 6, 15),
-    desc: "Coordinate our community outreach programmes across Lisbon. Manage volunteers, build partnerships. Portuguese required.",
+    description: "Coordinate our community outreach programmes across Lisbon. Manage volunteers, build partnerships. Portuguese required.",
     tags: ["Community", "Outreach", "Advocacy"],
     detail: {
       category: "Community",
@@ -139,10 +139,10 @@ export const JOBS: Job[] = [
   },
   {
     slug: "backend-engineer",
-    cat: "tech",
+    category: "tech",
     qr: false,
     qrLabel: "Queer-inclusive",
-    org: "A Lisbon Fintech",
+    organization: "A Lisbon Fintech",
     logo: "FT",
     logoBg: "rgba(var(--plum-rgb),.08)",
     logoText: "var(--plum)",
@@ -151,7 +151,7 @@ export const JOBS: Job[] = [
     location: "Marvila · Hybrid",
     salary: "€2,800–3,800/mo",
     deadline: null,
-    desc: "Growing Lisbon fintech with a strong LGBTQ+ ERG and a genuine commitment to inclusion. Looking for a mid-level backend engineer.",
+    description: "Growing Lisbon fintech with a strong LGBTQ+ ERG and a genuine commitment to inclusion. Looking for a mid-level backend engineer.",
     tags: ["Backend", "Rust", "Go", "Fintech"],
     detail: {
       category: "Tech",
@@ -186,10 +186,10 @@ export const JOBS: Job[] = [
   },
   {
     slug: "programme-coordinator",
-    cat: "arts",
+    category: "arts",
     qr: true,
     qrLabel: "Queer-run",
-    org: "Rainbow Arts Collective",
+    organization: "Rainbow Arts Collective",
     logo: "RA",
     logoBg: "rgba(var(--accent-rgb),.1)",
     logoText: "var(--accent-ink)",
@@ -198,7 +198,7 @@ export const JOBS: Job[] = [
     location: "Lisbon · Flexible",
     salary: "€700/mo",
     deadline: new Date(2026, 5, 20),
-    desc: "Help coordinate Rainbow Arts Collective exhibitions, events, and residencies. 20 hours per week.",
+    description: "Help coordinate Rainbow Arts Collective exhibitions, events, and residencies. 20 hours per week.",
     tags: ["Arts admin", "Programming", "Events"],
     detail: {
       category: "Arts & Culture",
@@ -233,10 +233,10 @@ export const JOBS: Job[] = [
   },
   {
     slug: "peer-support-facilitator",
-    cat: "care",
+    category: "care",
     qr: true,
     qrLabel: "Community org",
-    org: "Opus Diversus",
+    organization: "Opus Diversus",
     logo: "OD",
     logoBg: "rgba(var(--jade-rgb),.12)",
     logoText: "var(--jade)",
@@ -245,7 +245,7 @@ export const JOBS: Job[] = [
     location: "Lisbon · In-person",
     salary: "€900/mo",
     deadline: null,
-    desc: "Facilitate peer support groups for LGBTQ+ people in Lisbon. Lived experience matters more than formal qualifications.",
+    description: "Facilitate peer support groups for LGBTQ+ people in Lisbon. Lived experience matters more than formal qualifications.",
     tags: ["Mental health", "Peer support", "Facilitation"],
     detail: {
       category: "Care",
@@ -280,10 +280,10 @@ export const JOBS: Job[] = [
   },
   {
     slug: "bookseller",
-    cat: "food",
+    category: "food",
     qr: true,
     qrLabel: "Queer-run",
-    org: "Livraria Devagar",
+    organization: "Livraria Devagar",
     logo: "LB",
     logoBg: "rgba(var(--accent-rgb),.1)",
     logoText: "var(--accent-ink)",
@@ -292,7 +292,7 @@ export const JOBS: Job[] = [
     location: "Anjos · In-person",
     salary: "€800/mo",
     deadline: new Date(2026, 6, 15),
-    desc: "Opening September 2026. We're looking for someone who loves queer literature and wants to help build something new in Anjos.",
+    description: "Opening September 2026. We're looking for someone who loves queer literature and wants to help build something new in Anjos.",
     tags: ["Bookshop", "Retail", "Community"],
     detail: {
       category: "Food & Retail",
@@ -341,7 +341,7 @@ export const JOB_FILTERS = [
 export const EMPLOYERS = [
   {
     logo: "AP",
-    bg: "rgba(var(--accent-rgb),.12)",
+    background: "rgba(var(--accent-rgb),.12)",
     text: "var(--accent-ink)",
     name: "Atelier Pulso",
     type: "Design studio · Príncipe Real",
@@ -352,7 +352,7 @@ export const EMPLOYERS = [
   },
   {
     logo: "QP",
-    bg: "rgba(var(--jade-rgb),.12)",
+    background: "rgba(var(--jade-rgb),.12)",
     text: "var(--jade)",
     name: "QueerPulse",
     type: "Community platform · Lisbon",
@@ -363,7 +363,7 @@ export const EMPLOYERS = [
   },
   {
     logo: "LR",
-    bg: "rgba(var(--violet-rgb),.1)",
+    background: "rgba(var(--violet-rgb),.1)",
     text: "var(--violet)",
     name: "A national LGBTQ+ rights organisation",
     type: "NGO · Lisbon",
@@ -374,7 +374,7 @@ export const EMPLOYERS = [
   },
   {
     logo: "OD",
-    bg: "rgba(var(--plum-rgb),.08)",
+    background: "rgba(var(--plum-rgb),.08)",
     text: "var(--plum)",
     name: "Opus Diversus",
     type: "Mental health · Lisbon",
@@ -385,7 +385,7 @@ export const EMPLOYERS = [
   },
   {
     logo: "LB",
-    bg: "rgba(var(--accent-rgb),.1)",
+    background: "rgba(var(--accent-rgb),.1)",
     text: "var(--accent-ink)",
     name: "Livraria Devagar",
     type: "Bookshop · Anjos",

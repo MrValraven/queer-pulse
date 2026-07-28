@@ -40,13 +40,13 @@ export function DeleteAccountSection() {
   const cancelDeletion = useCancelDeletion();
   const getDeletion = useGetDeletionRequest();
 
-  const [opt, setOpt] = useState<DeleteOption>("deactivate");
+  const [option, setOption] = useState<DeleteOption>("deactivate");
   const [phrase, setPhrase] = useState("");
   const [flowOpen, setFlowOpen] = useState(false);
   const [pending, setPending] = useState<DeletionRequest | null>(null);
   const [cancelling, setCancelling] = useState(false);
 
-  const content = DELETE_CONTENT[opt];
+  const content = DELETE_CONTENT[option];
   const confirmPhrase = content.phraseKey ? t(content.phraseKey) : null;
   const phraseMatch = confirmPhrase ? phrase === confirmPhrase : true;
   const canSubmit = phraseMatch;
@@ -80,13 +80,13 @@ export function DeleteAccountSection() {
   // gate; a password box that the server discards only looked like one.
   const runAction = useCallback(async () => {
     const { reauthToken } = await reauth();
-    if (opt === "delete") {
+    if (option === "delete") {
       const req = await requestDeletion(reauthToken);
       setPending(req);
     } else {
       await deactivate(reauthToken);
     }
-  }, [reauth, opt, requestDeletion, deactivate]);
+  }, [reauth, option, requestDeletion, deactivate]);
 
   async function handleCancel() {
     setCancelling(true);
@@ -133,9 +133,9 @@ export function DeleteAccountSection() {
       </h1>
       <p className={styles.pageSub}>{t("settings:deleteAccount.page.sub")}</p>
 
-      <DeleteOptionCards opt={opt} setOpt={setOpt} />
+      <DeleteOptionCards option={option} setOption={setOption} />
 
-      {opt === "deactivate" && (
+      {option === "deactivate" && (
         <div className={styles.pauseStrip}>
           <svg className={styles.pauseStripIcon} viewBox="0 0 20 20">
             <circle cx="10" cy="10" r="8" />
@@ -167,12 +167,12 @@ export function DeleteAccountSection() {
 
       <div className={styles.whatHappens}>
         <div className={styles.whTitle}>
-          {t(`settings:deleteAccount.whatHappens.title.${opt}`)}
+          {t(`settings:deleteAccount.whatHappens.title.${option}`)}
         </div>
         <div className={styles.whList}>
-          {content.wh.map((item, i) => (
+          {content.whatHappens.map((item, i) => (
             <div key={i} className={styles.whRow}>
-              <div className={styles.whDot} style={{ background: item.col }} />
+              <div className={styles.whDot} style={{ background: item.color }} />
               <div className={styles.whText}>
                 <Translation
                   i18nKey={item.textKey}
@@ -227,7 +227,7 @@ export function DeleteAccountSection() {
 
       {flowOpen && (
         <DestructiveActionFlow
-          content={destructiveFlow[opt]}
+          content={destructiveFlow[option]}
           action={runAction}
           onDone={signOut}
           onClose={() => setFlowOpen(false)}

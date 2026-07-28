@@ -9,7 +9,7 @@ export function DatingAppCard({ app }: { app: App }) {
       <div className={styles.appTop}>
         <div
           className={styles.appIcon}
-          style={{ background: app.iconBg, color: app.iconColor }}
+          style={{ background: app.iconBackground, color: app.iconColor }}
         >
           {app.icon}
         </div>

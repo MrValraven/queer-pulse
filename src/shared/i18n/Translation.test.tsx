@@ -16,6 +16,7 @@ vi.mock("./catalogs", async (importOriginal) => {
     "fixture.richPlural_other": "<strong>{count}</strong> people are coming",
   };
   return {
+    ...actual,
     catalogs: {
       en: {
         ...actual.catalogs.en,

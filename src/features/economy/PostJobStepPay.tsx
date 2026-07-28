@@ -94,13 +94,13 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             on={state.hidePay}
             onToggle={() => patch({ hidePay: !state.hidePay })}
             name={t("economy:postJob.step3.hidePay.name")}
-            desc={t("economy:postJob.step3.hidePay.desc")}
+            description={t("economy:postJob.step3.hidePay.desc")}
           />
           <SwitchRow
             on={state.barter}
             onToggle={() => patch({ barter: !state.barter })}
             name={t("economy:postJob.step3.barter.name")}
-            desc={t("economy:postJob.step3.barter.desc")}
+            description={t("economy:postJob.step3.barter.desc")}
           />
         </div>
 

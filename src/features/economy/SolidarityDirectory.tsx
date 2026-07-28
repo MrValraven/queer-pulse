@@ -56,10 +56,10 @@ export function SolidarityDirectory() {
   const q = query.toLowerCase();
 
   const items = PRACTITIONERS.filter((p) => {
-    if (cat !== "all" && p.cat !== cat) return false;
+    if (cat !== "all" && p.category !== cat) return false;
     if (q) {
       const hay =
-        `${p.name}${p.spec}${p.hood}${p.tags.join(" ")}${p.desc}`.toLowerCase();
+        `${p.name}${p.spec}${p.hood}${p.tags.join(" ")}${p.description}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -190,7 +190,7 @@ export function SolidarityDirectory() {
                           {practitioner.scaleNote}
                         </div>
                       </div>
-                      <div className={styles.pcDesc}>{practitioner.desc}</div>
+                      <div className={styles.pcDesc}>{practitioner.description}</div>
                       <div className={styles.pcTags}>
                         {practitioner.tags.map((tag) => (
                           <span key={tag} className={styles.ptag}>

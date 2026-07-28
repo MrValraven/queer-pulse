@@ -51,7 +51,7 @@ export function Popover({
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
 
   useLayoutEffect(() => {
     if (!open || !wrapRef.current || !popRef.current) return;
@@ -60,7 +60,7 @@ export function Popover({
     let left = align === "right" ? r.right - pw : r.left;
     if (left + pw > window.innerWidth - 12) left = window.innerWidth - pw - 12;
     if (left < 12) left = 12;
-    setPos({ top: r.bottom + 6, left });
+    setPosition({ top: r.bottom + 6, left });
   }, [open, align]);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export function Popover({
             ref={popRef}
             className={styles.pop}
             style={
-              pos ? { top: pos.top, left: pos.left } : { visibility: "hidden" }
+              position ? { top: position.top, left: position.left } : { visibility: "hidden" }
             }
             role="menu"
           >

@@ -52,15 +52,15 @@ export function StartHere() {
         </SectionHead>
         <div className={styles.lessons}>
           {lessons.map((lesson) => (
-            <Link key={lesson.n} to={lesson.to} className={styles.lesson}>
+            <Link key={lesson.number} to={lesson.to} className={styles.lesson}>
               <div className={styles.lessonN}>
-                <em>{lesson.n}</em>
+                <em>{lesson.number}</em>
               </div>
               <h3>{lesson.title}</h3>
               <p>{lesson.body}</p>
               <div className={styles.lessonMeta}>
                 <span>{lesson.read}</span>
-                <span>{lesson.langs}</span>
+                <span>{lesson.languages}</span>
               </div>
             </Link>
           ))}
@@ -102,10 +102,10 @@ export function CommonQuestions() {
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? -1 : i)}
                 >
-                  <span>{faq.q}</span>
+                  <span>{faq.question}</span>
                   <FiChevronDown aria-hidden className={styles.qChevron} />
                 </button>
-                {isOpen && <div className={styles.qA}>{faq.a}</div>}
+                {isOpen && <div className={styles.qA}>{faq.answer}</div>}
               </div>
             );
           })}
@@ -138,7 +138,7 @@ export function VoiceRooms() {
             <Link key={i} to={room.to} className={styles.gr2}>
               <div className={styles.grInfo}>
                 <h4>{room.title}</h4>
-                <div className={styles.grSub}>{room.sub}</div>
+                <div className={styles.grSub}>{room.subtitle}</div>
                 <div className={styles.grMeta}>{room.meta}</div>
               </div>
               <span className={styles.grArrow} aria-hidden>

@@ -108,6 +108,8 @@ export const connect: Catalog = {
   // Modal de contacto (ConnectModal)
   "modal.close": "Fechar",
   "modal.loading": "A carregar…",
+  "modal.error":
+    "Não conseguimos carregar este membro agora. Fecha e tenta novamente daqui a pouco.",
 
   // Formulário de contacto (ConnectForm)
   "form.title": "Diz <em>olá.</em>",

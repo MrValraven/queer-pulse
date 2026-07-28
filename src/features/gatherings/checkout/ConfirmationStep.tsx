@@ -67,13 +67,13 @@ export function ConfirmationStep() {
       <div className={s["co-conf-detail"]}>
         <DetailRow
           icon={<FiCalendar />}
-          bg="rgba(var(--accent-rgb),.1)"
+          background="rgba(var(--accent-rgb),.1)"
           label={t("gatherings:checkout.confirm.dateLabel")}
           value={EVENT.dateLong}
         />
         <DetailRow
           icon={<FiMapPin />}
-          bg="rgba(var(--jade-rgb),.1)"
+          background="rgba(var(--jade-rgb),.1)"
           label={t("gatherings:checkout.confirm.locationLabel")}
           value={t("gatherings:checkout.confirm.locationValue", {
             neighbourhood: "Mouraria",
@@ -81,7 +81,7 @@ export function ConfirmationStep() {
         />
         <DetailRow
           icon={<FiUser />}
-          bg="rgba(45,27,61,.07)"
+          background="rgba(45,27,61,.07)"
           label={t("gatherings:checkout.confirm.hostGuestsLabel")}
           value={`${EVENT.hostName} · ${seats}`}
         />
@@ -113,18 +113,18 @@ export function ConfirmationStep() {
 
 function DetailRow({
   icon,
-  bg,
+  background,
   label,
   value,
 }: {
   icon: React.ReactNode;
-  bg: string;
+  background: string;
   label: string;
   value: string;
 }) {
   return (
     <div className={s["co-cd-row"]}>
-      <div className={s["co-cd-ic"]} style={{ background: bg }}>
+      <div className={s["co-cd-ic"]} style={{ background }}>
         {icon}
       </div>
       <div>

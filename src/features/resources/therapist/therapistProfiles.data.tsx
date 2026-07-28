@@ -20,7 +20,7 @@ export interface TherapistProfile {
   pills: { label: string; tone?: "lang" | "accept" }[];
   /** Date credentials were last checked by QueerPulse Wellbeing. */
   vettedOn: string;
-  specialisms: { initial: string; title: string; desc: string }[];
+  specialisms: { initial: string; title: string; description: string }[];
   approach: { titlePlain: string; titleEm: string; paragraphs: ReactNode[] };
   vouches: {
     initials: string;
@@ -121,32 +121,32 @@ export const THERAPIST_PROFILES: Record<string, TherapistProfile> = {
       {
         initial: "T",
         title: "Trans & non-binary",
-        desc: "Identity, transition support, letter-writing, gender dysphoria",
+        description: "Identity, transition support, letter-writing, gender dysphoria",
       },
       {
         initial: "A",
         title: "Anxiety & minority stress",
-        desc: "Persistent low-grade fear, hypervigilance, social anxiety",
+        description: "Persistent low-grade fear, hypervigilance, social anxiety",
       },
       {
         initial: "R",
         title: "Relationships",
-        desc: "Couple work (any structure), polyamory, breakup, attachment",
+        description: "Couple work (any structure), polyamory, breakup, attachment",
       },
       {
         initial: "F",
         title: "Family & coming-out",
-        desc: "Estrangement, reconciliation, mixed-faith families",
+        description: "Estrangement, reconciliation, mixed-faith families",
       },
       {
         initial: "G",
         title: "Grief",
-        desc: "Bereavement, identity loss, friendship loss after coming out",
+        description: "Bereavement, identity loss, friendship loss after coming out",
       },
       {
         initial: "M",
         title: "Migration stress",
-        desc: "Adapting to Lisbon, integration, longing for elsewhere",
+        description: "Adapting to Lisbon, integration, longing for elsewhere",
       },
     ],
     approach: {
@@ -283,32 +283,32 @@ export const THERAPIST_PROFILES: Record<string, TherapistProfile> = {
       {
         initial: "T",
         title: "Trauma",
-        desc: "Acute and complex trauma, EMDR, the slow accumulated kind",
+        description: "Acute and complex trauma, EMDR, the slow accumulated kind",
       },
       {
         initial: "M",
         title: "Minority stress",
-        desc: "Hypervigilance, burnout from being the only one in the room",
+        description: "Hypervigilance, burnout from being the only one in the room",
       },
       {
         initial: "I",
         title: "Identity",
-        desc: "Who you are when nobody needs you to perform it",
+        description: "Who you are when nobody needs you to perform it",
       },
       {
         initial: "R",
         title: "Relational work",
-        desc: "Attachment, trust after it's been broken, chosen family",
+        description: "Attachment, trust after it's been broken, chosen family",
       },
       {
         initial: "C",
         title: "Coming out later",
-        desc: "At 40, at 60 — untangling a life built around a secret",
+        description: "At 40, at 60 — untangling a life built around a secret",
       },
       {
         initial: "G",
         title: "Grief",
-        desc: "Bereavement, estrangement, the losses that came with honesty",
+        description: "Bereavement, estrangement, the losses that came with honesty",
       },
     ],
     approach: {
@@ -441,32 +441,32 @@ export const THERAPIST_PROFILES: Record<string, TherapistProfile> = {
       {
         initial: "E",
         title: "Expat adjustment",
-        desc: "The disorientation of rebuilding a life in a second language",
+        description: "The disorientation of rebuilding a life in a second language",
       },
       {
         initial: "A",
         title: "Anxiety",
-        desc: "Social anxiety, spirals, the hum that won't switch off",
+        description: "Social anxiety, spirals, the hum that won't switch off",
       },
       {
         initial: "R",
         title: "Relationships",
-        desc: "Long-distance, cross-cultural couples, new-city dating fatigue",
+        description: "Long-distance, cross-cultural couples, new-city dating fatigue",
       },
       {
         initial: "F",
         title: "Family at a distance",
-        desc: "Coming out across time zones — duty, guilt, silence",
+        description: "Coming out across time zones — duty, guilt, silence",
       },
       {
         initial: "I",
         title: "Identity across cultures",
-        desc: "Being differently queer in each language you speak",
+        description: "Being differently queer in each language you speak",
       },
       {
         initial: "B",
         title: "Burnout",
-        desc: "Remote work, visa stress, the pressure to make the move worth it",
+        description: "Remote work, visa stress, the pressure to make the move worth it",
       },
     ],
     approach: {
@@ -585,32 +585,32 @@ export const THERAPIST_PROFILES: Record<string, TherapistProfile> = {
       {
         initial: "S",
         title: "Sexuality",
-        desc: "Orientation, desire, the questions without tidy names",
+        description: "Orientation, desire, the questions without tidy names",
       },
       {
         initial: "D",
         title: "Depression",
-        desc: "The flat months, low energy, the version of you that went quiet",
+        description: "The flat months, low energy, the version of you that went quiet",
       },
       {
         initial: "F",
         title: "Family & coming out",
-        desc: "Estrangement, reconciliation, conditional love",
+        description: "Estrangement, reconciliation, conditional love",
       },
       {
         initial: "C",
         title: "Couples & structures",
-        desc: "Any configuration — monogamous or not, named or not",
+        description: "Any configuration — monogamous or not, named or not",
       },
       {
         initial: "R",
         title: "Religious recovery",
-        desc: "Faith that hurt, faith you miss, or both at once",
+        description: "Faith that hurt, faith you miss, or both at once",
       },
       {
         initial: "Q",
         title: "Questioning",
-        desc: "You don't need a label to book a session",
+        description: "You don't need a label to book a session",
       },
     ],
     approach: {
@@ -742,32 +742,32 @@ export const THERAPIST_PROFILES: Record<string, TherapistProfile> = {
       {
         initial: "R",
         title: "Race & queerness",
-        desc: "Holding both without ranking them, in rooms that ask you to",
+        description: "Holding both without ranking them, in rooms that ask you to",
       },
       {
         initial: "T",
         title: "Trauma",
-        desc: "Racial trauma, complex trauma, EMDR where it serves",
+        description: "Racial trauma, complex trauma, EMDR where it serves",
       },
       {
         initial: "D",
         title: "Displacement",
-        desc: "Migration, diaspora, homesickness for places that hurt you",
+        description: "Migration, diaspora, homesickness for places that hurt you",
       },
       {
         initial: "I",
         title: "Intersectionality",
-        desc: "The whole of you, not the intake-form version",
+        description: "The whole of you, not the intake-form version",
       },
       {
         initial: "F",
         title: "Faith & culture",
-        desc: "Communities you love that don't always love you back",
+        description: "Communities you love that don't always love you back",
       },
       {
         initial: "B",
         title: "Belonging",
-        desc: "Building home in a body and a city that both take work",
+        description: "Building home in a body and a city that both take work",
       },
     ],
     approach: {
@@ -895,32 +895,32 @@ export const THERAPIST_PROFILES: Record<string, TherapistProfile> = {
       {
         initial: "C",
         title: "Coming out",
-        desc: "At any age — including the ones nobody makes films about",
+        description: "At any age — including the ones nobody makes films about",
       },
       {
         initial: "P",
         title: "Couples & relationships",
-        desc: "Any structure; opening up, closing, starting over",
+        description: "Any structure; opening up, closing, starting over",
       },
       {
         initial: "T",
         title: "Trans & non-binary",
-        desc: "Transition support, and the renegotiations that ripple outward",
+        description: "Transition support, and the renegotiations that ripple outward",
       },
       {
         initial: "G",
         title: "Gestalt work",
-        desc: "What's happening right now — in the room, in your body",
+        description: "What's happening right now — in the room, in your body",
       },
       {
         initial: "F",
         title: "Family fallout",
-        desc: "Parents, siblings, the phone calls you rehearse",
+        description: "Parents, siblings, the phone calls you rehearse",
       },
       {
         initial: "S",
         title: "Second adolescence",
-        desc: "Dating for the first time at 35, and other honest chaos",
+        description: "Dating for the first time at 35, and other honest chaos",
       },
     ],
     approach: {

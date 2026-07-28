@@ -942,4 +942,83 @@ export const settings: Catalog = {
     "Cada integração tem um âmbito restrito — nenhuma consegue ler as tuas mensagens diretas, rascunhos, faturação ou associações a comunidades.",
   "integrationsModal.connectedTag": "Ligada",
   "integrationsModal.connectCta": "Ligar",
+
+  // ── SecurityPage.tsx — divulgação de vulnerabilidades ────────────────────
+  // Os créditos do mural (SecurityPage HALL) são registos de atribuição — nomes
+  // dos investigadores e o tipo/data da vulnerabilidade — e ficam em inglês,
+  // como os restantes valores de registo indicados no topo deste ficheiro.
+  "security.hero.eyebrow": "Divulgação de vulnerabilidades",
+  "security.hero.titleTop": "Encontraste algo?",
+  "security.hero.titleEm": "Diz-nos.",
+  "security.hero.sub":
+    "Levamos a segurança a sério. Se encontraste uma vulnerabilidade no QueerPulse, queremos saber. Esta página explica como comunicá-la, o que esperar e como tratamos as divulgações.",
+
+  "security.commitment.eyebrow": "O nosso compromisso",
+  "security.commitment.title": "Não <em>penalizamos</em> a boa fé.",
+  "security.commitment.body1":
+    "Os investigadores de segurança que comunicam vulnerabilidades de boa fé não sofrerão qualquer ação legal da nossa parte. Não contactaremos a tua entidade patronal, o teu fornecedor de internet nem as autoridades, a menos que uses o teu acesso para prejudicar membros. Acreditamos que a investigação de segurança torna toda a gente mais segura, e ficamos gratos quando alguém dedica tempo a comunicar o que encontra.",
+  "security.commitment.body2":
+    "Pedimos-te que nos dês um prazo razoável para corrigir um problema antes de o divulgares publicamente. Em troca, comprometemo-nos a confirmar a receção da tua comunicação em 48 horas, a manter-te a par do progresso e a creditar-te nos nossos agradecimentos de segurança, se assim o quiseres.",
+
+  "security.scope.eyebrow": "Âmbito",
+  "security.scope.title": "O que está <em>no âmbito.</em>",
+  "security.scope.inLabel": "No âmbito",
+  "security.scope.outLabel": "Fora do âmbito",
+  "security.scope.in.1": "queerpulse.pt e *.queerpulse.pt",
+  "security.scope.in.2": "Autenticação e gestão de sessões",
+  "security.scope.in.3": "Acesso a dados e escalada de privilégios",
+  "security.scope.in.4": "XSS armazenado e refletido",
+  "security.scope.in.5": "CSRF em endpoints autenticados",
+  "security.scope.in.6": "Injeção de SQL",
+  "security.scope.in.7": "Referências diretas a objetos inseguras",
+  "security.scope.in.8": "Exposição de dados sensíveis",
+  "security.scope.out.1": "Ataques de negação de serviço",
+  "security.scope.out.2": "Engenharia social da nossa equipa",
+  "security.scope.out.3": "Ataques físicos à infraestrutura",
+  "security.scope.out.4": "Spam ou contorno dos limites de tráfego",
+  "security.scope.out.5":
+    "Infraestrutura de terceiros (Hetzner, Postmark, Backblaze)",
+  "security.scope.out.6": "Clickjacking em páginas não sensíveis",
+  "security.scope.out.7": "Cabeçalhos de segurança em falta (apenas comunicação)",
+
+  "security.process.eyebrow": "Processo",
+  "security.process.title": "O que acontece <em>depois de comunicares.</em>",
+  "security.process.step1.title": "Confirmação",
+  "security.process.step1.text":
+    "Confirmamos a receção em 48 horas e avisamos-te de que estamos a analisar. Atribuímos um número de referência para podermos acompanhá-la em conjunto.",
+  "security.process.step1.note": "Objetivo: 48 horas",
+  "security.process.step2.title": "Avaliação",
+  "security.process.step2.text":
+    "Investigamos e avaliamos a gravidade. Mantemos-te a par e poderemos colocar perguntas de seguimento. Se não conseguirmos reproduzir o problema, explicamos-te porquê.",
+  "security.process.step2.note": "Objetivo: 5 dias úteis",
+  "security.process.step3.title": "Correção",
+  "security.process.step3.text":
+    "Para vulnerabilidades confirmadas, corrigimos e implementamos uma atualização. O prazo depende da gravidade — os problemas críticos são tratados como emergências.",
+  "security.process.step3.note":
+    "Crítico: <72h · Elevado: <7 dias · Médio/Baixo: próxima versão",
+  "security.process.step4.title": "Divulgação",
+  "security.process.step4.text":
+    "Coordenamos contigo um calendário de divulgação. Creditamos-te nos nossos agradecimentos de segurança, a não ser que prefiras o anonimato.",
+  "security.process.step4.note": "Por omissão: divulgação coordenada a 90 dias",
+
+  "security.ack.eyebrow": "Agradecimentos",
+  "security.ack.title": "<em>Investigadores</em> de segurança que ajudaram.",
+  "security.ack.body":
+    "Estamos gratos aos seguintes investigadores que divulgaram vulnerabilidades de forma responsável. (Listados com autorização.)",
+
+  "security.report.titleTop": "Comunicar uma",
+  "security.report.titleEm": "vulnerabilidade",
+  "security.report.body":
+    "Cifra a tua comunicação com a nossa chave PGP e envia-nos um email. Inclui os passos para reproduzir, o impacto potencial e qualquer prova de conceito.",
+  "security.report.cta": "Enviar email à equipa de segurança",
+  "security.pgp.label": "Chave pública PGP",
+  "security.pgp.copyCta": "Copiar chave",
+  "security.pgp.copied": "Chave PGP copiada.",
+  "security.pgp.copyFailed": "Falha ao copiar — seleciona e copia manualmente.",
+
+  "security.outro.titleTop": "A segurança é",
+  "security.outro.titleEm": "trabalho de comunidade.",
+  "security.outro.sub":
+    "Obrigado a todas as pessoas que ajudam a manter o QueerPulse seguro.",
+  "security.outro.cta": "Contactar a equipa de segurança",
 };

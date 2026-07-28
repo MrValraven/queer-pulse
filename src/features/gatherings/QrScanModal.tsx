@@ -79,7 +79,7 @@ export function QrScanModal({
           <div className={styles.guestRow}>
             <span
               className={styles.guestAv}
-              style={{ background: scanned.bg, color: scanned.color }}
+              style={{ background: scanned.background, color: scanned.color }}
             >
               {scanned.initials}
             </span>

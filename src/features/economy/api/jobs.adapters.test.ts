@@ -158,8 +158,8 @@ describe("jobCardToJob", () => {
   it("maps card fields and derives cat slug + logo + qrLabel", () => {
     const job = jobCardToJob(card, t);
     expect(job.slug).toBe("designer-role");
-    expect(job.org).toBe("Atelier Pulso");
-    expect(job.cat).toBe("arts"); // "Arts & Culture" → first token
+    expect(job.organization).toBe("Atelier Pulso");
+    expect(job.category).toBe("arts"); // "Arts & Culture" → first token
     expect(job.logo).toBe("AP");
     expect(job.qr).toBe(true);
     expect(job.qrLabel).toBe("Queer-run"); // derived from queerRun when null
@@ -174,7 +174,7 @@ describe("jobCardToJob", () => {
       { ...card, company: null, title: "Solo Studio" },
       t,
     );
-    expect(job.org).toBe("");
+    expect(job.organization).toBe("");
     expect(job.logo).toBe("SS");
     expect(job.qrLabel).toBe("Queer-run");
   });

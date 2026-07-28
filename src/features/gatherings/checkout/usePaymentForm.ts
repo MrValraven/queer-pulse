@@ -18,14 +18,14 @@ import {
 } from "./checkout.validation";
 
 export interface CardFields {
-  num: string;
+  number: string;
   exp: string;
   cvc: string;
   name: string;
   saveCard: boolean;
 }
 
-type ErrorKey = "num" | "exp" | "cvc" | "name" | "postal" | "phone";
+type ErrorKey = "number" | "exp" | "cvc" | "name" | "postal" | "phone";
 
 export function usePaymentForm() {
   const {
@@ -40,7 +40,7 @@ export function usePaymentForm() {
   const { t } = useTranslation();
 
   const [card, setCard] = useState<CardFields>({
-    num: "",
+    number: "",
     exp: "",
     cvc: "",
     name: "",
@@ -54,7 +54,7 @@ export function usePaymentForm() {
   const [processing, setProcessing] = useState(false);
   const [payError, setPayError] = useState("");
 
-  const brand: CardBrand = detectBrand(card.num);
+  const brand: CardBrand = detectBrand(card.number);
   const usingNewCard = !usingSaved || savedCardRemoved;
 
   function setErr(key: ErrorKey, bad: boolean) {
@@ -62,8 +62,8 @@ export function usePaymentForm() {
   }
 
   // Card input handlers apply formatting + switch to the "new card" path.
-  const onNum = (v: string) => {
-    setCard((c) => ({ ...c, num: fmtCardNumber(v) }));
+  const onNumber = (v: string) => {
+    setCard((c) => ({ ...c, number: fmtCardNumber(v) }));
     selectNewCard();
   };
   const onExp = (v: string) => {
@@ -87,7 +87,7 @@ export function usePaymentForm() {
     if (!validPostal(postal)) return false;
     if (!usingNewCard) return true;
     return (
-      validCardNumber(card.num) &&
+      validCardNumber(card.number) &&
       validExpiry(card.exp) &&
       validCvc(card.cvc) &&
       validName(card.name)
@@ -113,8 +113,8 @@ export function usePaymentForm() {
     } else setErr("postal", false);
 
     if (usingNewCard) {
-      const n = validCardNumber(card.num);
-      setErr("num", !n);
+      const n = validCardNumber(card.number);
+      setErr("number", !n);
       const e = validExpiry(card.exp);
       setErr("exp", !e);
       const c = validCvc(card.cvc);
@@ -154,7 +154,7 @@ export function usePaymentForm() {
     }
     if (method === "mbway") return run(null);
     if (method === "multibanco") return run(null);
-    run(usingNewCard ? card.num : null);
+    run(usingNewCard ? card.number : null);
   }
 
   function express(label: string) {
@@ -186,7 +186,7 @@ export function usePaymentForm() {
     setCountry,
     setVatOpen,
     setSaveCard: (v: boolean) => setCard((c) => ({ ...c, saveCard: v })),
-    onNum,
+    onNumber,
     onExp,
     onCvc,
     onName,

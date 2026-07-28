@@ -4,8 +4,8 @@ import { TestProviders } from "../../test/TestProviders";
 import { AdminHealthModal } from "./AdminHealthModal";
 import { COMMUNITIES } from "./adminCommunities.data";
 
-function renderModal(bd: [number, number, number | null, number]) {
-  const community = { ...COMMUNITIES[0]!, bd };
+function renderModal(breakdown: [number, number, number | null, number]) {
+  const community = { ...COMMUNITIES[0]!, breakdown };
   return render(
     <TestProviders>
       <AdminHealthModal

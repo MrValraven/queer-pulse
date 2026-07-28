@@ -1,5 +1,4 @@
-import { PARTNERS_A } from "./partnerDetails.dataA";
-import { PARTNERS_B } from "./partnerDetails.dataB";
+import { PARTNERS } from "./partnerDetails.data";
 import type { Partner } from "./partnerDetails.types";
 
 export type {
@@ -14,7 +13,7 @@ export type {
   Partner,
 } from "./partnerDetails.types";
 
-export const PARTNERS: Partner[] = [...PARTNERS_A, ...PARTNERS_B];
+export { PARTNERS };
 
 export function getPartner(slug: string | undefined): Partner | undefined {
   return PARTNERS.find((p) => p.slug === slug);

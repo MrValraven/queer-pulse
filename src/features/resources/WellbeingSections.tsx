@@ -162,8 +162,8 @@ export function CrisisSection() {
               <div className={styles.cardName} style={{ fontSize: 18 }}>
                 {item.name}
               </div>
-              <div className={styles.cardSpec}>{t(item.descKey)}</div>
-              <div className={styles.crisisNum}>{item.num}</div>
+              <div className={styles.cardSpec}>{t(item.descriptionKey)}</div>
+              <div className={styles.crisisNum}>{item.number}</div>
               <div className={styles.crisisHours}>{t(item.hoursKey)}</div>
             </Reveal>
           ))}
@@ -201,7 +201,7 @@ export function HarmReductionSection() {
               <div className={styles.cardName} style={{ fontSize: 18 }}>
                 {t(item.titleKey)}
               </div>
-              <div className={styles.cardSpec}>{t(item.descKey)}</div>
+              <div className={styles.cardSpec}>{t(item.descriptionKey)}</div>
             </Reveal>
           ))}
         </div>

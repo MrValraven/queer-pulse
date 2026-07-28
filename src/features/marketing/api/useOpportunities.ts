@@ -2,10 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getOpportunities, type Cause, type Commit } from "./volunteering.api";
 import { cardToOpportunity } from "./volunteering.adapters";
-import {
-  VOLUNTEER_OPPORTUNITIES,
-  type VolunteerOpportunity,
-} from "../volunteerOpportunities";
+import type { VolunteerOpportunity } from "../volunteerOpportunities";
 
 export interface OpportunitiesResult {
   /** All opportunities fetched so far, flattened across loaded pages. */
@@ -50,6 +47,9 @@ export function useOpportunities(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
+        const { VOLUNTEER_OPPORTUNITIES } = await import(
+          "../volunteerOpportunities"
+        );
         return {
           items: VOLUNTEER_OPPORTUNITIES,
           total: VOLUNTEER_OPPORTUNITIES.length,

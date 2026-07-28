@@ -138,13 +138,13 @@ export function PostOpportunityCoreFields({
       <FormField
         label={t("marketing:postOpportunity.core.descLabel")}
         required
-        error={errorFor("desc")}
+        error={errorFor("description")}
         helper={t("marketing:postOpportunity.core.descHelper")}
       >
         <textarea
           rows={3}
-          value={state.desc}
-          onChange={(e) => set("desc", e.target.value)}
+          value={state.description}
+          onChange={(e) => set("description", e.target.value)}
           placeholder={t("marketing:postOpportunity.core.descPlaceholder")}
         />
       </FormField>

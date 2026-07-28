@@ -46,7 +46,7 @@ export function TestingTab() {
           <div
             key={c.title}
             className={styles.infoCard}
-            style={{ background: c.bg, borderColor: c.border }}
+            style={{ background: c.background, borderColor: c.border }}
           >
             <div className={styles.infoIcon}>
               <c.icon />
@@ -91,7 +91,7 @@ export function TestingTab() {
                   {c.typeLabel}
                 </div>
                 <div className={styles.ccName}>{c.name}</div>
-                <div className={styles.ccDesc}>{c.desc}</div>
+                <div className={styles.ccDesc}>{c.description}</div>
                 <div className={styles.ccMeta}>
                   {c.meta.map((m) => (
                     <span key={m.text}>
@@ -255,7 +255,7 @@ export function PrepTab() {
             <div className={styles.psNum}>{i + 1}</div>
             <div className={styles.psBody}>
               <div className={styles.psTitle}>{s.title}</div>
-              <div className={styles.psDesc}>{s.desc}</div>
+              <div className={styles.psDesc}>{s.description}</div>
               {s.note && <div className={styles.psNote}>{s.note}</div>}
             </div>
           </div>

@@ -6,12 +6,12 @@ export function SwitchRow({
   on,
   onToggle,
   name,
-  desc,
+  description,
 }: {
   on: boolean;
   onToggle: () => void;
   name: string;
-  desc: string;
+  description: string;
 }) {
   return (
     <button
@@ -29,7 +29,7 @@ export function SwitchRow({
       />
       <span>
         <span className={styles.switchName}>{name}</span>
-        <span className={styles.switchDesc}>{desc}</span>
+        <span className={styles.switchDesc}>{description}</span>
       </span>
     </button>
   );

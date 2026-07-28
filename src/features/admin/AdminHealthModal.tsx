@@ -109,7 +109,7 @@ export function AdminHealthModal({
       </p>
       <div className={styles.bdList}>
         {BREAKDOWN_META.map((signalMeta, signalIndex) => {
-          const value = community.bd[signalIndex]!;
+          const value = community.breakdown[signalIndex]!;
           const isMeasured = value !== null;
           return (
             <div key={signalMeta.id} className={styles.bdRow}>
@@ -123,7 +123,7 @@ export function AdminHealthModal({
                   {t(`admin:${signalMeta.nameKey}`)}
                 </div>
                 <div className={styles.bdDesc}>
-                  {t(`admin:${signalMeta.descKey}`)}
+                  {t(`admin:${signalMeta.descriptionKey}`)}
                 </div>
               </div>
               {isMeasured ? (

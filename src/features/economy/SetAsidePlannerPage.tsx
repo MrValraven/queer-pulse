@@ -55,7 +55,7 @@ export function SetAsidePlannerPage() {
           components={{ em: <em /> }}
         />
       }
-      sub={t("economy:setAside.sub")}
+      subtitle={t("economy:setAside.sub")}
       form={
         <SetAsideForm
           gross={gross}

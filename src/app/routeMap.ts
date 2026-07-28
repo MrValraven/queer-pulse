@@ -330,29 +330,3 @@ export const personaPath = (handle: string) => `/p/${handle}`;
 /** A linked persona nested under its owner's main profile. */
 export const nestedPersonaPath = (ownerSlug: string, slug: string) =>
   `/members/${ownerSlug}/${slug}`;
-
-/** Known top-level routes that should render real (or placeholder) pages. */
-export const KNOWN_ROUTE_SLUGS: string[] = [
-  "members",
-  "communities",
-  "forum",
-  "calendar",
-  "events",
-  "gatherings",
-  "profile",
-  "messages",
-  "search",
-  "changemakers",
-  "parents",
-  "coming-out",
-  "activism",
-  "host",
-  "safety",
-  // Mega-nav targets (placeholder pages)
-  "member-directory-filter",
-  "connections",
-  "dating",
-  "reading-groups",
-  "family",
-  "economy",
-];

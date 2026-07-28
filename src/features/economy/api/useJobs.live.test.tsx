@@ -65,8 +65,8 @@ describe("useJobs (live mode via MSW)", () => {
     const job = jobs[0]!;
     // The DTO ran through jobCardToJob: derived cat slug, logo, salary string.
     expect(job.slug).toBe("brand-designer");
-    expect(job.org).toBe("Atelier Pulso");
-    expect(job.cat).toBe("arts");
+    expect(job.organization).toBe("Atelier Pulso");
+    expect(job.category).toBe("arts");
     expect(job.logo).toBe("AP");
     expect(job.salary).toBe("€2,200/mo");
     // `deadline` is a real Date now, not a pre-formatted string — the i18n sweep

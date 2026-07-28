@@ -72,6 +72,10 @@ export const notifications: Catalog = {
   "page.dayEarlier": "Earlier",
   "page.empty.title": "All caught up",
   "page.empty.description": "No notifications in this category.",
+  "page.error.title": "We couldn't load your notifications",
+  "page.error.description":
+    "Something went wrong reaching the server. This isn't an empty inbox — try again in a moment.",
+  "page.error.retry": "Try again",
 
   // Filter tabs (data.tsx's notificationTabs + the link-style Mentions tab)
   "tabs.all": "All",

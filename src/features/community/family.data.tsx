@@ -17,7 +17,7 @@ export interface InfoCard {
 }
 export interface Review {
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   /** Named social worker/agency/clinic being reviewed — content, not translated. */
   name: string;
@@ -52,43 +52,43 @@ export interface Tab {
 
 export const SITUATIONS: {
   nameKey: string;
-  descKey: string;
+  descriptionKey: string;
   toKey: string;
   tab: TabId;
 }[] = [
   {
     nameKey: "family.situation.twoWomen.name",
-    descKey: "family.situation.twoWomen.desc",
+    descriptionKey: "family.situation.twoWomen.desc",
     toKey: "family.situation.twoWomen.to",
     tab: "ivf",
   },
   {
     nameKey: "family.situation.twoMen.name",
-    descKey: "family.situation.twoMen.desc",
+    descriptionKey: "family.situation.twoMen.desc",
     toKey: "family.situation.twoMen.to",
     tab: "adoption",
   },
   {
     nameKey: "family.situation.singleWoman.name",
-    descKey: "family.situation.singleWoman.desc",
+    descriptionKey: "family.situation.singleWoman.desc",
     toKey: "family.situation.singleWoman.to",
     tab: "ivf",
   },
   {
     nameKey: "family.situation.singleMan.name",
-    descKey: "family.situation.singleMan.desc",
+    descriptionKey: "family.situation.singleMan.desc",
     toKey: "family.situation.singleMan.to",
     tab: "adoption",
   },
   {
     nameKey: "family.situation.transParent.name",
-    descKey: "family.situation.transParent.desc",
+    descriptionKey: "family.situation.transParent.desc",
     toKey: "family.situation.transParent.to",
     tab: "legal",
   },
   {
     nameKey: "family.situation.lookingForCoparent.name",
-    descKey: "family.situation.lookingForCoparent.desc",
+    descriptionKey: "family.situation.lookingForCoparent.desc",
     toKey: "family.situation.lookingForCoparent.to",
     tab: "coparenting",
   },
@@ -96,7 +96,7 @@ export const SITUATIONS: {
 
 export const TALK_CARDS: {
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   /** Named parent(s) sharing their own experience — content, not translated. */
   name: string;
@@ -105,7 +105,7 @@ export const TALK_CARDS: {
 }[] = [
   {
     initials: "MR",
-    bg: "rgba(232,119,90,.25)",
+    background: "rgba(232,119,90,.25)",
     color: "var(--accent)",
     name: "Marta & Raquel",
     detail: "IVF via SNS · Two children · Arroios",
@@ -113,7 +113,7 @@ export const TALK_CARDS: {
   },
   {
     initials: "JP",
-    bg: "rgba(74,140,111,.25)",
+    background: "rgba(74,140,111,.25)",
     color: "var(--jade)",
     name: "João & Pedro",
     detail: "Adoption · Domestic · Mouraria",
@@ -121,7 +121,7 @@ export const TALK_CARDS: {
   },
   {
     initials: "TS",
-    bg: "rgba(122,82,184,.2)",
+    background: "rgba(122,82,184,.2)",
     color: "var(--violet)",
     name: "Tomás",
     detail: "Trans dad · IVF · Solo parent · Graça",
@@ -172,7 +172,7 @@ export const TABS: Tab[] = [
     reviews: [
       {
         initials: "CM",
-        bg: "rgba(74,140,111,.15)",
+        background: "rgba(74,140,111,.15)",
         color: "var(--jade)",
         name: "Carla Matos",
         context: "Social worker · SCML Lisboa",
@@ -182,7 +182,7 @@ export const TABS: Tab[] = [
       },
       {
         initials: "FA",
-        bg: "rgba(232,119,90,.15)",
+        background: "rgba(232,119,90,.15)",
         color: "var(--accent-ink)",
         name: "Fundação Ajuda",
         context: "Adoption agency · Lisbon",
@@ -192,7 +192,7 @@ export const TABS: Tab[] = [
       },
       {
         initials: "RN",
-        bg: "rgba(45,27,61,.1)",
+        background: "rgba(45,27,61,.1)",
         color: "var(--plum)",
         name: "Rita Nunes",
         context: "Independent social worker",
@@ -249,7 +249,7 @@ export const TABS: Tab[] = [
     reviews: [
       {
         initials: "CF",
-        bg: "rgba(74,140,111,.15)",
+        background: "rgba(74,140,111,.15)",
         color: "var(--jade)",
         name: "Clínica Ferticare",
         context: "Private · Marquês de Pombal",
@@ -259,7 +259,7 @@ export const TABS: Tab[] = [
       },
       {
         initials: "IM",
-        bg: "rgba(232,119,90,.15)",
+        background: "rgba(232,119,90,.15)",
         color: "var(--accent-ink)",
         name: "Instituto Marquesa",
         context: "Private · Cascais",

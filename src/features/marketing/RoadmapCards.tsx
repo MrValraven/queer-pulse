@@ -11,7 +11,7 @@ export function ShippedCard({ item }: { item: ShippedItem }) {
     <article className={styles.rmCard}>
       <div className={styles.rcCat}>{item.category}</div>
       <h3 className={styles.rcName}>{item.name}</h3>
-      <p className={styles.rcDesc}>{item.desc}</p>
+      <p className={styles.rcDesc}>{item.description}</p>
       <div className={styles.rcFooter}>
         <span className={styles.rcDate}>{item.date}</span>
         {item.requested && (
@@ -30,7 +30,7 @@ export function BuildingCard({ item }: { item: BuildingItem }) {
     <article className={`${styles.rmCard} ${styles.inProgress}`}>
       <div className={styles.rcCat}>{item.category}</div>
       <h3 className={styles.rcName}>{item.name}</h3>
-      <p className={styles.rcDesc}>{item.desc}</p>
+      <p className={styles.rcDesc}>{item.description}</p>
       {item.requested && (
         <div className={styles.rcFooter} style={{ marginBottom: 4 }}>
           <span className={styles.rcRequested}>
@@ -82,7 +82,7 @@ export function PlannedCard({ item }: { item: PlannedItem }) {
     <article className={`${styles.rmCard} ${styles.plannedCard}`}>
       <div className={styles.rcCat}>{item.category}</div>
       <h3 className={styles.rcName}>{item.name}</h3>
-      <p className={styles.rcDesc}>{item.desc}</p>
+      <p className={styles.rcDesc}>{item.description}</p>
       <div className={styles.voteRow}>
         {item.hot ? (
           <span className={styles.hotTag}>

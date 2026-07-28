@@ -43,13 +43,13 @@ export function ToggleList({ children }: { children: ReactNode }) {
 
 export function ToggleRow({
   title,
-  desc,
+  description,
   defaultChecked,
   comingSoon,
   onChange,
 }: {
   title: string;
-  desc?: string;
+  description?: string;
   defaultChecked?: boolean;
   /** Flags a control with no backend behind it yet: shows a badge, disables the toggle. */
   comingSoon?: boolean;
@@ -64,7 +64,7 @@ export function ToggleRow({
         <div className={styles.toggleTitle}>
           {title} {comingSoon && <ComingSoon />}
         </div>
-        {desc && <div className={styles.toggleDesc}>{desc}</div>}
+        {description && <div className={styles.toggleDesc}>{description}</div>}
       </div>
       <div
         className={comingSoon ? styles.comingSoonControl : undefined}
@@ -87,7 +87,7 @@ export function ToggleRow({
 
 export function SelectRow({
   title,
-  desc,
+  description,
   options,
   defaultValue,
   value,
@@ -95,7 +95,7 @@ export function SelectRow({
   onChange,
 }: {
   title: string;
-  desc: string;
+  description: string;
   /** Plain strings when value === label, or `{ value, label }` when they differ. */
   options: (string | { value: string; label: string })[];
   defaultValue?: string;
@@ -117,7 +117,7 @@ export function SelectRow({
         <div className={styles.toggleTitle}>
           <span id={titleId}>{title}</span> {comingSoon && <ComingSoon />}
         </div>
-        <div className={styles.toggleDesc}>{desc}</div>
+        <div className={styles.toggleDesc}>{description}</div>
       </div>
       <select
         className={styles.select}
@@ -138,14 +138,14 @@ export function SelectRow({
 
 export function DataCard({
   title,
-  desc,
-  btn,
+  description,
+  button,
   onClick,
   to,
 }: {
   title: string;
-  desc: string;
-  btn: string;
+  description: string;
+  button: string;
   onClick?: () => void;
   to?: string;
 }) {
@@ -153,15 +153,15 @@ export function DataCard({
     <div className={styles.dataCard}>
       <div className={styles.dcText}>
         <div className={styles.dcTitle}>{title}</div>
-        <div className={styles.dcDesc}>{desc}</div>
+        <div className={styles.dcDesc}>{description}</div>
       </div>
       {to ? (
         <Link to={to} className={styles.dcBtn}>
-          {btn}
+          {button}
         </Link>
       ) : (
         <button type="button" className={styles.dcBtn} onClick={onClick}>
-          {btn}
+          {button}
         </button>
       )}
     </div>

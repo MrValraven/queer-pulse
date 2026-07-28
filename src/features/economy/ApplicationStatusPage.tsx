@@ -43,12 +43,12 @@ export function ApplicationStatusPage() {
   const [open, setOpen] = useState<OpenModal | null>(null);
   const [comparing, setComparing] = useState(false);
 
-  const byCat = (cat: Cat) => apps.filter((a) => a.cat === cat);
-  const offers = apps.filter((a) => a.cat === "offer" && a.offer);
+  const byCat = (cat: Cat) => apps.filter((a) => a.category === cat);
+  const offers = apps.filter((a) => a.category === "offer" && a.offer);
   const canCompare = offers.length >= 2;
   const count = (cat: Cat) => byCat(cat).length;
   const activeCount = count("active");
-  const sentCount = apps.filter((a) => a.cat !== "draft").length;
+  const sentCount = apps.filter((a) => a.category !== "draft").length;
 
   const tabs: { id: Cat | "all"; labelKey: string; count: number }[] = [
     {
@@ -112,7 +112,7 @@ export function ApplicationStatusPage() {
           {
             id: tab,
             compare: tab === "offer",
-            items: apps.filter((a) => a.cat === tab),
+            items: apps.filter((a) => a.category === tab),
           },
         ];
 

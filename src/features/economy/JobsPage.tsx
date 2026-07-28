@@ -50,8 +50,8 @@ function JobCard({ job }: { job: Job }) {
       kind: "job",
       title: job.title,
       href: `${routes.jobs}/${job.slug}`,
-      meta: `${job.org} · ${job.location}`,
-      description: job.desc,
+      meta: `${job.organization} · ${job.location}`,
+      description: job.description,
     });
     showToast(
       t(
@@ -75,7 +75,7 @@ function JobCard({ job }: { job: Job }) {
           <div className={styles.title}>{job.title}</div>
           <div className={styles.salary}>{job.salary}</div>
         </div>
-        <div className={styles.org}>{job.org}</div>
+        <div className={styles.org}>{job.organization}</div>
         <div className={styles.tags}>
           {job.tags.map((tag) => (
             <span key={tag} className={styles.tag}>
@@ -84,12 +84,12 @@ function JobCard({ job }: { job: Job }) {
           ))}
         </div>
         <SafetyBadges
-          signals={safetyFor(job.org)}
+          signals={safetyFor(job.organization)}
           affiliation={affiliationFromLabel(job.qr)}
           affiliationLabel={job.qrLabel}
           compact
         />
-        <div className={styles.desc}>{job.desc}</div>
+        <div className={styles.desc}>{job.description}</div>
         <div className={styles.meta}>
           <span>{job.type}</span>
           <span className={styles.dot} />
@@ -187,14 +187,14 @@ export function JobsPage() {
   );
   const byCat = useMemo(
     () =>
-      filter === "all" ? allJobs : allJobs.filter((j) => j.cat === filter),
+      filter === "all" ? allJobs : allJobs.filter((j) => j.category === filter),
     [filter, allJobs],
   );
   const verifiedOnly = safeOnly && !showAll;
   const visible = useMemo(
     () =>
       verifiedOnly
-        ? byCat.filter((j) => safetyFor(j.org)?.verifiedSafe)
+        ? byCat.filter((j) => safetyFor(j.organization)?.verifiedSafe)
         : byCat,
     [byCat, verifiedOnly],
   );

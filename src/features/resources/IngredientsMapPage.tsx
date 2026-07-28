@@ -39,7 +39,7 @@ export function IngredientsMapPage() {
         }
         lead={t("resources:ingredientsMap.hero.lead")}
         anchors={AREAS.map((a) => ({
-          label: t(a.hoodKey),
+          label: t(a.neighbourhoodKey),
           href: `#${a.anchorId}`,
         }))}
       />
@@ -61,7 +61,7 @@ export function IngredientsMapPage() {
               id={area.anchorId}
             >
               <Reveal as="div" className={styles.mapGroupLabel}>
-                {t(area.hoodKey)}
+                {t(area.neighbourhoodKey)}
               </Reveal>
               <div className={styles.grid}>
                 {area.spots.map((s, i) => (

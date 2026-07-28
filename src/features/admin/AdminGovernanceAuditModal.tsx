@@ -35,13 +35,13 @@ export function AdminGovernanceAuditModal({
     >
       <div className={styles.entryMod}>
         <AdminAvatar
-          initials={entry.modInitials}
-          tone={entry.modTone}
+          initials={entry.moderatorInitials}
+          tone={entry.moderatorTone}
           size="md"
-          src={portrait(entry.modName)}
+          src={portrait(entry.moderatorName)}
         />
         <div className={styles.entryModTx}>
-          <span className={styles.entryModName}>{entry.modName}</span>
+          <span className={styles.entryModName}>{entry.moderatorName}</span>
           <span className={styles.entryModWhen}>
             {t("admin:governance.audit.entryModal.actedWhen", {
               when: entry.when,

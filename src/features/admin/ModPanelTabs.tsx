@@ -11,6 +11,7 @@ import {
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   useReviewJoinRequest,
   useSetMemberRole,
@@ -27,6 +28,7 @@ import styles from "./ModPanel.module.css";
 
 export function RequestsTab({ living }: { living: LivingCommunity }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const reviewRequest = useReviewJoinRequest(living.slug);
   // Intentional: snapshot the prop into local state once, then mutate locally as
@@ -104,7 +106,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
             <Avatar
               initials={r.person.initials}
               tint={r.person.tint}
-              src={photoOf(r.person)}
+              src={photoOf(r.person, demoMode)}
               size={42}
               alt={r.person.name}
             />
@@ -241,6 +243,7 @@ const ROLE_FILTER_KEYS = [
 
 export function MembersTab({ living }: { living: LivingCommunity }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const setMemberRole = useSetMemberRole(living.slug);
   const [promoted, setPromoted] = useState<string[]>([]);
@@ -321,7 +324,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
             <Avatar
               initials={m.initials}
               tint={m.tint}
-              src={photoOf(m)}
+              src={photoOf(m, demoMode)}
               size={38}
               alt={m.name}
             />

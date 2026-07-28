@@ -47,10 +47,10 @@ export function LevelCard() {
       <div className={styles.levelLadder}>
         {levelLadder.map((pill) => (
           <div
-            key={pill.num}
+            key={pill.number}
             className={`${styles.llPill} ${styles[pill.state]}`}
           >
-            {pill.num} · {pill.name}
+            {pill.number} · {pill.name}
           </div>
         ))}
       </div>
@@ -67,7 +67,7 @@ function BadgeCard({ badge, locked }: { badge: Badge; locked?: boolean }) {
       <div className={`${styles.badgeIconWrap} ${tintClass[badge.tint]}`}>
         {badge.icon}
       </div>
-      <div className={styles.badgeCat}>{badge.cat}</div>
+      <div className={styles.badgeCat}>{badge.category}</div>
       <div className={styles.badgeName}>{badge.name}</div>
       <div className={styles.badgeWhen}>{badge.when}</div>
       <div className={`${styles.rarityBar} ${rarityClass[badge.rarity]}`} />
@@ -202,7 +202,7 @@ function PerkRow({ row }: { row: PerkLadderRow }) {
       className={`${styles.perkRow} ${row.state === "current" ? styles.perkRowCurrent : ""}`}
     >
       <div className={`${styles.prLevelCol} ${colClass}`}>
-        <div className={styles.prlNum}>{row.num}</div>
+        <div className={styles.prlNum}>{row.number}</div>
         <div className={styles.prlName}>{row.name}</div>
       </div>
       <div className={styles.prPerks}>
@@ -241,7 +241,7 @@ export function PerksLadder() {
       </div>
       <div className={styles.perksLadder}>
         {perks.ladder.map((row) => (
-          <PerkRow key={row.num} row={row} />
+          <PerkRow key={row.number} row={row} />
         ))}
       </div>
       <div className={styles.redeemWrap}>

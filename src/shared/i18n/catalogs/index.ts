@@ -1,5 +1,16 @@
 import type { Catalog, Language, Namespace } from "../types";
 
+// --- English: fully eager -----------------------------------------------
+//
+// EN is the resolver's universal fallback (see `I18nProvider`): every key
+// resolves against the active language first, then against EN. Keeping the
+// whole EN catalog statically imported means that fallback is *always*
+// synchronously available, so a not-yet-loaded lazy namespace degrades to a
+// real English string rather than flashing the raw key. It's also read
+// synchronously by adapter/parity tests. EN therefore stays eager on purpose;
+// splitting it too would need a Suspense boundary or a route→namespace preload
+// map to preserve that no-raw-key guarantee.
+
 import { common as enCommon } from "./en/common";
 import { nav as enNav } from "./en/nav";
 import { footer as enFooter } from "./en/footer";
@@ -33,114 +44,185 @@ import { social as enSocial } from "./en/social";
 import { pages as enPages } from "./en/pages";
 import { shared as enShared } from "./en/shared";
 
+// --- Portuguese: shell eager, everything else lazy ----------------------
+//
+// Only the handful of namespaces the app shell paints (nav, footer, the
+// `common` default namespace, `shared`, and the `system`/404 pages) are
+// statically imported, so a Portuguese visitor gets a correct shell on first
+// paint. Every other PT namespace ships as its own on-demand chunk via
+// `ptNamespaceLoaders` and is fetched the first time a route asks for one of
+// its keys. English visitors never download any of it.
+
 import { common as ptCommon } from "./pt/common";
 import { nav as ptNav } from "./pt/nav";
 import { footer as ptFooter } from "./pt/footer";
-import { auth as ptAuth } from "./pt/auth";
-import { subprofiles as ptSubprofiles } from "./pt/subprofiles";
-import { gatherings as ptGatherings } from "./pt/gatherings";
-import { homepage as ptHomepage } from "./pt/homepage";
-import { marketing as ptMarketing } from "./pt/marketing";
-import { members as ptMembers } from "./pt/members";
-import { magazine as ptMagazine } from "./pt/magazine";
-import { communities as ptCommunities } from "./pt/communities";
-import { community as ptCommunity } from "./pt/community";
-import { resources as ptResources } from "./pt/resources";
-import { economy as ptEconomy } from "./pt/economy";
-import { studio as ptStudio } from "./pt/studio";
-import { cinema as ptCinema } from "./pt/cinema";
-import { settings as ptSettings } from "./pt/settings";
-import { admin as ptAdmin } from "./pt/admin";
-import { system as ptSystem } from "./pt/system";
-import { safety as ptSafety } from "./pt/safety";
-import { feed as ptFeed } from "./pt/feed";
-import { forum as ptForum } from "./pt/forum";
-import { topics as ptTopics } from "./pt/topics";
-import { governance as ptGovernance } from "./pt/governance";
-import { myevents as ptMyevents } from "./pt/myevents";
-import { connect as ptConnect } from "./pt/connect";
-import { messages as ptMessages } from "./pt/messages";
-import { culture as ptCulture } from "./pt/culture";
-import { notifications as ptNotifications } from "./pt/notifications";
-import { social as ptSocial } from "./pt/social";
-import { pages as ptPages } from "./pt/pages";
 import { shared as ptShared } from "./pt/shared";
+import { system as ptSystem } from "./pt/system";
+
+const en: Record<Namespace, Catalog> = {
+  common: enCommon,
+  nav: enNav,
+  footer: enFooter,
+  auth: enAuth,
+  subprofiles: enSubprofiles,
+  gatherings: enGatherings,
+  homepage: enHomepage,
+  marketing: enMarketing,
+  members: enMembers,
+  magazine: enMagazine,
+  communities: enCommunities,
+  community: enCommunity,
+  resources: enResources,
+  economy: enEconomy,
+  studio: enStudio,
+  cinema: enCinema,
+  settings: enSettings,
+  admin: enAdmin,
+  system: enSystem,
+  safety: enSafety,
+  feed: enFeed,
+  forum: enForum,
+  topics: enTopics,
+  governance: enGovernance,
+  myevents: enMyevents,
+  connect: enConnect,
+  messages: enMessages,
+  culture: enCulture,
+  notifications: enNotifications,
+  social: enSocial,
+  pages: enPages,
+  shared: enShared,
+};
 
 /**
- * The full catalog registry, keyed `language → namespace → catalog`.
+ * Shared read-only stand-in for a PT namespace that hasn't loaded yet. Reading
+ * a key off it returns `undefined`, so the resolver falls through to EN — a
+ * real translation, never a raw key. It's replaced (in provider state) by the
+ * real catalog once its chunk resolves; frozen so nothing mutates it by
+ * accident in the meantime.
+ */
+const PENDING_CATALOG: Catalog = Object.freeze({});
+
+/**
+ * Namespaces the app shell renders. These stay eagerly bundled for both
+ * languages so nav/footer/404 paint correctly before any lazy chunk arrives.
+ */
+export const SHELL_NAMESPACES = [
+  "common",
+  "nav",
+  "footer",
+  "shared",
+  "system",
+] as const satisfies readonly Namespace[];
+
+/**
+ * Lazy loaders for every non-shell PT namespace, keyed by namespace. Each value
+ * is a `() => import(...)` that resolves the namespace's catalog, so Vite emits
+ * one chunk per namespace and the provider can fetch them on demand. A
+ * namespace is "lazy" iff it has an entry here.
+ */
+export const ptNamespaceLoaders: Partial<
+  Record<Namespace, () => Promise<Catalog>>
+> = {
+  auth: () => import("./pt/auth").then((module) => module.auth),
+  subprofiles: () =>
+    import("./pt/subprofiles").then((module) => module.subprofiles),
+  gatherings: () => import("./pt/gatherings").then((module) => module.gatherings),
+  homepage: () => import("./pt/homepage").then((module) => module.homepage),
+  marketing: () => import("./pt/marketing").then((module) => module.marketing),
+  members: () => import("./pt/members").then((module) => module.members),
+  magazine: () => import("./pt/magazine").then((module) => module.magazine),
+  communities: () =>
+    import("./pt/communities").then((module) => module.communities),
+  community: () => import("./pt/community").then((module) => module.community),
+  resources: () => import("./pt/resources").then((module) => module.resources),
+  economy: () => import("./pt/economy").then((module) => module.economy),
+  studio: () => import("./pt/studio").then((module) => module.studio),
+  cinema: () => import("./pt/cinema").then((module) => module.cinema),
+  settings: () => import("./pt/settings").then((module) => module.settings),
+  admin: () => import("./pt/admin").then((module) => module.admin),
+  safety: () => import("./pt/safety").then((module) => module.safety),
+  feed: () => import("./pt/feed").then((module) => module.feed),
+  forum: () => import("./pt/forum").then((module) => module.forum),
+  topics: () => import("./pt/topics").then((module) => module.topics),
+  governance: () => import("./pt/governance").then((module) => module.governance),
+  myevents: () => import("./pt/myevents").then((module) => module.myevents),
+  connect: () => import("./pt/connect").then((module) => module.connect),
+  messages: () => import("./pt/messages").then((module) => module.messages),
+  culture: () => import("./pt/culture").then((module) => module.culture),
+  notifications: () =>
+    import("./pt/notifications").then((module) => module.notifications),
+  social: () => import("./pt/social").then((module) => module.social),
+  pages: () => import("./pt/pages").then((module) => module.pages),
+};
+
+const pt: Record<Namespace, Catalog> = {
+  // Shell: eager.
+  common: ptCommon,
+  nav: ptNav,
+  footer: ptFooter,
+  shared: ptShared,
+  system: ptSystem,
+  // Everything else: a pending stand-in until its chunk resolves. The provider
+  // swaps the real catalog in (via state) once `ptNamespaceLoaders` delivers it.
+  auth: PENDING_CATALOG,
+  subprofiles: PENDING_CATALOG,
+  gatherings: PENDING_CATALOG,
+  homepage: PENDING_CATALOG,
+  marketing: PENDING_CATALOG,
+  members: PENDING_CATALOG,
+  magazine: PENDING_CATALOG,
+  communities: PENDING_CATALOG,
+  community: PENDING_CATALOG,
+  resources: PENDING_CATALOG,
+  economy: PENDING_CATALOG,
+  studio: PENDING_CATALOG,
+  cinema: PENDING_CATALOG,
+  settings: PENDING_CATALOG,
+  admin: PENDING_CATALOG,
+  safety: PENDING_CATALOG,
+  feed: PENDING_CATALOG,
+  forum: PENDING_CATALOG,
+  topics: PENDING_CATALOG,
+  governance: PENDING_CATALOG,
+  myevents: PENDING_CATALOG,
+  connect: PENDING_CATALOG,
+  messages: PENDING_CATALOG,
+  culture: PENDING_CATALOG,
+  notifications: PENDING_CATALOG,
+  social: PENDING_CATALOG,
+  pages: PENDING_CATALOG,
+};
+
+/**
+ * The catalog registry, keyed `language → namespace → catalog`.
  *
- * Scaling note: these are statically imported so every namespace ships in the
- * main bundle. If the bundle grows heavy, switch the inner value to a lazy
- * `() => import(...)` and load per-route — the resolver only depends on the
- * `Record<Namespace, Catalog>` shape, so that change stays local to this file.
+ * `en` is complete and eager. `pt` carries its shell namespaces eagerly and a
+ * {@link PENDING_CATALOG} placeholder for each lazy namespace until the
+ * provider loads the real one via {@link ptNamespaceLoaders}. The shape stays
+ * `Record<Language, Record<Namespace, Catalog>>` so existing synchronous
+ * consumers (the resolver's EN fallback, adapter tests) are unaffected.
  */
 export const catalogs: Record<Language, Record<Namespace, Catalog>> = {
-  en: {
-    common: enCommon,
-    nav: enNav,
-    footer: enFooter,
-    auth: enAuth,
-    subprofiles: enSubprofiles,
-    gatherings: enGatherings,
-    homepage: enHomepage,
-    marketing: enMarketing,
-    members: enMembers,
-    magazine: enMagazine,
-    communities: enCommunities,
-    community: enCommunity,
-    resources: enResources,
-    economy: enEconomy,
-    studio: enStudio,
-    cinema: enCinema,
-    settings: enSettings,
-    admin: enAdmin,
-    system: enSystem,
-    safety: enSafety,
-    feed: enFeed,
-    forum: enForum,
-    topics: enTopics,
-    governance: enGovernance,
-    myevents: enMyevents,
-    connect: enConnect,
-    messages: enMessages,
-    culture: enCulture,
-    notifications: enNotifications,
-    social: enSocial,
-    pages: enPages,
-    shared: enShared,
-  },
-  pt: {
-    common: ptCommon,
-    nav: ptNav,
-    footer: ptFooter,
-    auth: ptAuth,
-    subprofiles: ptSubprofiles,
-    gatherings: ptGatherings,
-    homepage: ptHomepage,
-    marketing: ptMarketing,
-    members: ptMembers,
-    magazine: ptMagazine,
-    communities: ptCommunities,
-    community: ptCommunity,
-    resources: ptResources,
-    economy: ptEconomy,
-    studio: ptStudio,
-    cinema: ptCinema,
-    settings: ptSettings,
-    admin: ptAdmin,
-    system: ptSystem,
-    safety: ptSafety,
-    feed: ptFeed,
-    forum: ptForum,
-    topics: ptTopics,
-    governance: ptGovernance,
-    myevents: ptMyevents,
-    connect: ptConnect,
-    messages: ptMessages,
-    culture: ptCulture,
-    notifications: ptNotifications,
-    social: ptSocial,
-    pages: ptPages,
-    shared: ptShared,
-  },
+  en,
+  pt,
 };
+
+const ptLoads = new Map<Namespace, Promise<Catalog>>();
+
+/**
+ * Load a single PT namespace on demand, caching the in-flight/settled promise so
+ * concurrent callers and re-renders share one fetch. Namespaces without a lazy
+ * loader (the eager shell) resolve immediately to their already-present catalog.
+ */
+export function loadPtNamespace(namespace: Namespace): Promise<Catalog> {
+  const cached = ptLoads.get(namespace);
+  if (cached) return cached;
+
+  const loader = ptNamespaceLoaders[namespace];
+  const load = loader
+    ? loader()
+    : Promise.resolve(catalogs.pt[namespace]);
+  ptLoads.set(namespace, load);
+  return load;
+}

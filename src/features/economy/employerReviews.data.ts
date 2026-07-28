@@ -18,7 +18,7 @@ export const HOW = [
 
 export interface Bar {
   label: string;
-  pct: number;
+  percent: number;
   score: string;
   accent?: boolean;
 }
@@ -27,7 +27,7 @@ export interface Review {
   meta: string[];
 }
 export interface Company {
-  av: string;
+  avatar: string;
   avBg: string;
   avColor: string;
   name: string;
@@ -46,7 +46,7 @@ export interface Company {
 
 export const COMPANIES: Company[] = [
   {
-    av: "LX",
+    avatar: "LX",
     avBg: "rgba(var(--jade-rgb),.15)",
     avColor: "var(--jade)",
     name: "Lisbon Tech Hub",
@@ -54,9 +54,9 @@ export const COMPANIES: Company[] = [
     score: "7.8",
     reviewCount: 14,
     bars: [
-      { label: "Safe to be out", pct: 82, score: "8.2" },
-      { label: "Trans inclusion", pct: 72, score: "7.2", accent: true },
-      { label: "HR awareness", pct: 78, score: "7.8" },
+      { label: "Safe to be out", percent: 82, score: "8.2" },
+      { label: "Trans inclusion", percent: 72, score: "7.2", accent: true },
+      { label: "HR awareness", percent: 78, score: "7.8" },
     ],
     quote:
       '"Generally good. The team is fine — leadership is still catching up. They have an ERG but it needs more budget and teeth."',
@@ -77,7 +77,7 @@ export const COMPANIES: Company[] = [
     ],
   },
   {
-    av: "NV",
+    avatar: "NV",
     avBg: "rgba(var(--plum-rgb),.1)",
     avColor: "var(--plum)",
     name: "Nova Ventures",
@@ -86,9 +86,9 @@ export const COMPANIES: Company[] = [
     scoreColor: "var(--accent-ink)",
     reviewCount: 8,
     bars: [
-      { label: "Safe to be out", pct: 40, score: "4.0", accent: true },
-      { label: "Trans inclusion", pct: 28, score: "2.8", accent: true },
-      { label: "HR awareness", pct: 52, score: "5.2", accent: true },
+      { label: "Safe to be out", percent: 40, score: "4.0", accent: true },
+      { label: "Trans inclusion", percent: 28, score: "2.8", accent: true },
+      { label: "HR awareness", percent: 52, score: "5.2", accent: true },
     ],
     quote:
       '"Pride month branding. Zero follow-through. I was out for two years and not once did a manager acknowledge it in any way that felt real."',
@@ -109,7 +109,7 @@ export const COMPANIES: Company[] = [
     ],
   },
   {
-    av: "MC",
+    avatar: "MC",
     avBg: "rgba(var(--jade-rgb),.12)",
     avColor: "var(--jade)",
     name: "Marvila Creative",
@@ -118,9 +118,9 @@ export const COMPANIES: Company[] = [
     reviewCount: 6,
     queerRun: true,
     bars: [
-      { label: "Safe to be out", pct: 94, score: "9.4" },
-      { label: "Trans inclusion", pct: 90, score: "9.0" },
-      { label: "HR awareness", pct: 88, score: "8.8" },
+      { label: "Safe to be out", percent: 94, score: "9.4" },
+      { label: "Trans inclusion", percent: 90, score: "9.0" },
+      { label: "HR awareness", percent: 88, score: "8.8" },
     ],
     quote:
       '"Genuinely queer-led culture. My pronouns were on my contract. No one made a big deal of it — it was just how it worked there."',

@@ -15,7 +15,7 @@ const SHOWN = 2;
 
 export function ScopedQueuePane({ community }: { community: Community }) {
   const { t } = useTranslation();
-  const { queue, resolvedPct } = community;
+  const { queue, resolvedPercent } = community;
 
   if (queue.length === 0) {
     return (
@@ -31,7 +31,7 @@ export function ScopedQueuePane({ community }: { community: Community }) {
             />
           </h3>
           <p className={styles.calmText}>
-            {t("admin:communities.queue.emptyText", { pct: resolvedPct })}
+            {t("admin:communities.queue.emptyText", { pct: resolvedPercent })}
           </p>
         </div>
       </div>
@@ -57,22 +57,22 @@ export function ScopedQueuePane({ community }: { community: Community }) {
 
 function ReportRow({ item }: { item: QueueItem }) {
   const { t } = useTranslation();
-  const catTone =
-    item.catTone === "danger"
+  const categoryTone =
+    item.categoryTone === "danger"
       ? "danger"
-      : item.catTone === "jade"
+      : item.categoryTone === "jade"
         ? "jade"
         : "coral";
   return (
     <div className={styles.reportRow}>
       <span
-        className={`${styles.severity} ${styles[`sev_${item.sev}`]}`}
+        className={`${styles.severity} ${styles[`sev_${item.severity}`]}`}
         aria-hidden
       />
       <div className={styles.reportBody}>
-        {/* item.catLabel/title/meta: report content, mirrors API-fetched
+        {/* item.categoryLabel/title/meta: report content, mirrors API-fetched
             report text in live mode — left in English per the scope rule. */}
-        <AdminCat tone={catTone}>{item.catLabel}</AdminCat>
+        <AdminCat tone={categoryTone}>{item.categoryLabel}</AdminCat>
         <div className={styles.reportTitle}>{item.title}</div>
         <div className={styles.reportMeta}>{item.meta}</div>
       </div>
@@ -90,7 +90,7 @@ export function MembersPane({ community }: { community: Community }) {
   const { demoMode } = useDemoMode();
   return (
     <div className={styles.pane}>
-      {community.mods.map((m) => (
+      {community.moderators.map((m) => (
         <div key={m.name} className={styles.memberRow}>
           <AdminAvatar
             initials={m.initials}

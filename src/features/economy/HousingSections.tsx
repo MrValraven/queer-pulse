@@ -122,11 +122,11 @@ export function HousingTips() {
           {TIPS.map((tip, tipIndex) => (
             <Reveal
               as="div"
-              key={tip.num}
+              key={tip.number}
               className={styles.tipCard}
               delay={tipIndex * 55}
             >
-              <div className={styles.tipNum}>{tip.num}</div>
+              <div className={styles.tipNum}>{tip.number}</div>
               <div className={styles.tipTitle}>{t(tip.titleKey)}</div>
               <div className={styles.tipText}>{t(tip.textKey)}</div>
             </Reveal>

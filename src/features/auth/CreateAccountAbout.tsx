@@ -100,7 +100,7 @@ export function AboutAndVisibility({
               />
               <div className={styles.visOptText}>
                 <span>{t(opt.labelKey)}</span>
-                <small>{t(opt.subKey)}</small>
+                <small>{t(opt.subtitleKey)}</small>
               </div>
             </label>
           ))}

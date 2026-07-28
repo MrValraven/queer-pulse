@@ -124,7 +124,7 @@ export function NewsletterArchivePage() {
                   </div>
                   <Button
                     variant="primary"
-                    to={`${routes.newsletterArchive}/${latest.num}`}
+                    to={`${routes.newsletterArchive}/${latest.number}`}
                   >
                     {t("magazine:newsletterArchive.readInBrowserCta")}
                   </Button>

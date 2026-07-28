@@ -110,7 +110,7 @@ export function ForOrganisationsPage() {
                   <div className={styles.partnerType}>{partner.tier}</div>
                   <div className={styles.partnerName}>{partner.name}</div>
                   <div className={styles.partnerSince}>{partner.since}</div>
-                  <p>{partner.desc}</p>
+                  <p>{partner.description}</p>
                   <span className={styles.arrow}>
                     {t("marketing:forOrgs.proof.viewCta")}
                   </span>

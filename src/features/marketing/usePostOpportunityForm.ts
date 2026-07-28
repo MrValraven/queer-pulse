@@ -7,7 +7,7 @@ import type {
 
 export interface TaskRow {
   title: string;
-  desc: string;
+  description: string;
 }
 export interface CommitmentRow {
   label: string;
@@ -22,7 +22,7 @@ export interface PostOpportunityState {
   time: string;
   location: string;
   skills: string;
-  desc: string;
+  description: string;
   spotsTotal: string;
   applyRole: string;
   why: string;
@@ -43,7 +43,7 @@ const EMPTY: PostOpportunityState = {
   time: "",
   location: "",
   skills: "",
-  desc: "",
+  description: "",
   spotsTotal: "",
   applyRole: "",
   why: "",
@@ -52,7 +52,7 @@ const EMPTY: PostOpportunityState = {
   team: "",
   partnerSlug: "",
   handle: "",
-  tasks: [{ title: "", desc: "" }],
+  tasks: [{ title: "", description: "" }],
   commitments: [{ label: "", detail: "" }],
 };
 
@@ -69,14 +69,14 @@ const splitCommas = (s: string) =>
 
 /** Fields that must be filled before the form can submit. */
 export type RequiredField =
-  "org" | "role" | "time" | "location" | "desc" | "spotsTotal";
+  "org" | "role" | "time" | "location" | "description" | "spotsTotal";
 
 const REQUIRED: RequiredField[] = [
   "org",
   "role",
   "time",
   "location",
-  "desc",
+  "description",
   "spotsTotal",
 ];
 
@@ -104,7 +104,7 @@ export function usePostOpportunityForm() {
       tasks: s.tasks.map((t, idx) => (idx === i ? { ...t, ...patch } : t)),
     }));
   const addTask = () =>
-    setState((s) => ({ ...s, tasks: [...s.tasks, { title: "", desc: "" }] }));
+    setState((s) => ({ ...s, tasks: [...s.tasks, { title: "", description: "" }] }));
   const removeTask = (i: number) =>
     setState((s) => ({ ...s, tasks: s.tasks.filter((_, idx) => idx !== i) }));
 
@@ -148,7 +148,7 @@ export function usePostOpportunityForm() {
     const team = splitCommas(state.team);
     const tasks = state.tasks
       .filter((t) => t.title.trim())
-      .map((t) => ({ title: t.title.trim(), desc: t.desc.trim() }));
+      .map((t) => ({ title: t.title.trim(), desc: t.description.trim() }));
     const commitments = state.commitments
       .filter((c) => c.label.trim())
       .map((c) => ({ label: c.label.trim(), detail: c.detail.trim() }));
@@ -159,7 +159,7 @@ export function usePostOpportunityForm() {
       commit: state.commit,
       time: state.time.trim(),
       location: state.location.trim(),
-      desc: state.desc.trim(),
+      desc: state.description.trim(),
       spotsTotal: spotsNum,
       applyRole: state.applyRole.trim() || `${role} · ${org}`,
       ...(skills.length ? { skills } : {}),

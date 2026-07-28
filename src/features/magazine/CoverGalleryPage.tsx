@@ -17,7 +17,7 @@ interface Cover {
   tint: Tint;
   title: React.ReactNode;
   meta: string;
-  num: string;
+  number: string;
 }
 const COVERS: Cover[] = [
   {
@@ -28,7 +28,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Spring · Jun 2026 · 84pp",
-    num: "09",
+    number: "09",
   },
   {
     tint: "b",
@@ -38,7 +38,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Winter · Mar 2026 · 72pp",
-    num: "08",
+    number: "08",
   },
   {
     tint: "c",
@@ -48,7 +48,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Autumn · Dec 2025 · 68pp",
-    num: "07",
+    number: "07",
   },
   {
     tint: "a",
@@ -58,7 +58,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Summer · Sep 2025 · 80pp",
-    num: "06",
+    number: "06",
   },
   {
     tint: "e",
@@ -68,7 +68,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Spring · Jun 2025 · 76pp",
-    num: "05",
+    number: "05",
   },
   {
     tint: "b",
@@ -78,7 +78,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Winter · Mar 2025 · 64pp",
-    num: "04",
+    number: "04",
   },
   {
     tint: "c",
@@ -88,7 +88,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Autumn · Dec 2024 · 60pp",
-    num: "03",
+    number: "03",
   },
   {
     tint: "d",
@@ -98,7 +98,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Summer · Sep 2024 · 56pp",
-    num: "02",
+    number: "02",
   },
   {
     tint: "a",
@@ -108,7 +108,7 @@ const COVERS: Cover[] = [
       </>
     ),
     meta: "Inaugural · Jun 2024 · 48pp",
-    num: "01",
+    number: "01",
   },
 ];
 const TINT_CLASS: Record<Tint, string> = {
@@ -120,10 +120,10 @@ const TINT_CLASS: Record<Tint, string> = {
 };
 
 const STATS = [
-  { n: <em>9</em>, l: "Covers · one per quarter since launch" },
-  { n: "8", l: "Different cover artists" },
-  { n: <em>~620</em>, l: "Avg pages printed per issue" },
-  { n: "Riso", l: "Printed at Editora Anjos · 3 colours max" },
+  { value: <em>9</em>, label: "Covers · one per quarter since launch" },
+  { value: "8", label: "Different cover artists" },
+  { value: <em>~620</em>, label: "Avg pages printed per issue" },
+  { value: "Riso", label: "Printed at Editora Anjos · 3 colours max" },
 ];
 
 const ILLUS: {
@@ -267,28 +267,28 @@ export function CoverGalleryPage() {
             ? Array.from({ length: COVERS.length }).map((_, i) => (
                 <CoverTileSkeleton key={i} />
               ))
-            : COVERS.map((c, i) => (
+            : COVERS.map((cover, index) => (
                 <FadeIn
                   as={Link}
                   to={ISSUE}
                   className={styles.tile}
-                  key={c.num}
-                  delay={Math.min(i, 8) * 60}
+                  key={cover.number}
+                  delay={Math.min(index, 8) * 60}
                 >
                   <div
-                    className={`${styles.img} ${styles[TINT_CLASS[c.tint]]}`}
+                    className={`${styles.img} ${styles[TINT_CLASS[cover.tint]]}`}
                   >
                     <div className={styles.num}>
-                      №<em>{c.num}</em>
+                      №<em>{cover.number}</em>
                     </div>
                   </div>
                   <div className={styles.tileInfo}>
                     <div className="left">
-                      <b>{c.title}</b>
-                      <span>{c.meta}</span>
+                      <b>{cover.title}</b>
+                      <span>{cover.meta}</span>
                     </div>
                     <div className="right">
-                      №<em>{c.num}</em>
+                      №<em>{cover.number}</em>
                     </div>
                   </div>
                 </FadeIn>
@@ -297,10 +297,10 @@ export function CoverGalleryPage() {
 
         <section className={styles.stats}>
           <div className={styles.statsInner}>
-            {STATS.map((s, i) => (
-              <div className={styles.cgs} key={i}>
-                <b>{s.n}</b>
-                <span>{s.l}</span>
+            {STATS.map((stat, index) => (
+              <div className={styles.cgs} key={index}>
+                <b>{stat.value}</b>
+                <span>{stat.label}</span>
               </div>
             ))}
           </div>

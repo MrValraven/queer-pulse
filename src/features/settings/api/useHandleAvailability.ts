@@ -6,7 +6,9 @@ import {
   type HandleCheck,
   type HandleReason,
 } from "./handles.api";
-import { checkHandleDemo } from "./handles.data";
+// `handles.data` (and its heavy `MEMBERS` dependency) is the demo-only mock
+// registry — pulled in via dynamic import inside the demo branch below so it
+// stays out of the live bundle.
 
 export type HandleStatus = "idle" | "checking" | "available" | "unavailable";
 
@@ -66,9 +68,13 @@ export function useHandleAvailability(
     let cancelled = false;
     const timer = setTimeout(async () => {
       try {
-        const check = demoMode
-          ? checkHandleDemo(normalized)
-          : await checkHandle(normalized);
+        let check: HandleCheck;
+        if (demoMode) {
+          const { checkHandleDemo } = await import("./handles.data");
+          check = checkHandleDemo(normalized);
+        } else {
+          check = await checkHandle(normalized);
+        }
         if (!cancelled) {
           setRemote({ name: normalized, result: toAvailability(check) });
         }

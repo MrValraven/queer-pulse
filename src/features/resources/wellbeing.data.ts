@@ -36,26 +36,26 @@ export const THERAPISTS = [
 
 /**
  * i18n Pattern A. Real-world helpline names (SOS Voz Amiga, ILGA Portugal,
- * Rede ex aequo) are proper nouns and stay untranslated; `descKey`/`hoursKey`
+ * Rede ex aequo) are proper nouns and stay untranslated; `descriptionKey`/`hoursKey`
  * are chrome. Flagged for native review — crisis-line accuracy matters.
  */
 export const CRISIS = [
   {
     name: "SOS Voz Amiga",
-    descKey: "resources:wellbeing.crisis.sosVozAmiga.desc",
-    num: "213 544 545",
+    descriptionKey: "resources:wellbeing.crisis.sosVozAmiga.desc",
+    number: "213 544 545",
     hoursKey: "resources:wellbeing.crisis.sosVozAmiga.hours",
   },
   {
     name: "ILGA Portugal",
-    descKey: "resources:wellbeing.crisis.ilga.desc",
-    num: "218 873 918",
+    descriptionKey: "resources:wellbeing.crisis.ilga.desc",
+    number: "218 873 918",
     hoursKey: "resources:wellbeing.crisis.ilga.hours",
   },
   {
     name: "Rede ex aequo",
-    descKey: "resources:wellbeing.crisis.redeExAequo.desc",
-    num: "redeexaequo.pt",
+    descriptionKey: "resources:wellbeing.crisis.redeExAequo.desc",
+    number: "redeexaequo.pt",
     hoursKey: "resources:wellbeing.crisis.redeExAequo.hours",
   },
 ];
@@ -64,19 +64,19 @@ export const CRISIS = [
 export const HARM = [
   {
     titleKey: "resources:wellbeing.harm.nightlife.title",
-    descKey: "resources:wellbeing.harm.nightlife.desc",
+    descriptionKey: "resources:wellbeing.harm.nightlife.desc",
   },
   {
     titleKey: "resources:wellbeing.harm.drugsAlcohol.title",
-    descKey: "resources:wellbeing.harm.drugsAlcohol.desc",
+    descriptionKey: "resources:wellbeing.harm.drugsAlcohol.desc",
   },
   {
     titleKey: "resources:wellbeing.harm.sexualHealth.title",
-    descKey: "resources:wellbeing.harm.sexualHealth.desc",
+    descriptionKey: "resources:wellbeing.harm.sexualHealth.desc",
   },
   {
     titleKey: "resources:wellbeing.harm.chemsex.title",
-    descKey: "resources:wellbeing.harm.chemsex.desc",
+    descriptionKey: "resources:wellbeing.harm.chemsex.desc",
   },
 ];
 

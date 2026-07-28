@@ -102,16 +102,16 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
 // ── Attendee view-model (manage / dashboard rows) ───────────────────────────
 
 const AV_TINTS = [
-  { bg: "rgba(74,140,111,.12)", color: "var(--jade)" },
-  { bg: "rgba(232,119,90,.12)", color: "var(--accent-ink)" },
-  { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
+  { background: "rgba(74,140,111,.12)", color: "var(--jade)" },
+  { background: "rgba(232,119,90,.12)", color: "var(--accent-ink)" },
+  { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
 ];
 
 export interface AttendeeRow {
   id: string;
   slug: string;
   initials: string;
-  bg: string;
+  background: string;
   color: string;
   name: string;
   /** The person's own pronouns — content, never translated. */
@@ -166,7 +166,7 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     id: `att-${dto.slug}`,
     slug: dto.slug,
     initials: initialsOf(dto.firstName, dto.lastName),
-    bg: tint.bg,
+    background: tint.background,
     color: tint.color,
     name: `${dto.firstName} ${dto.lastName}`.trim(),
     pronouns: dto.pronouns,
@@ -194,7 +194,7 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
   const capacity = Number.parseInt(form.cap, 10);
   return {
     title: form.title.trim(),
-    description: form.desc.trim(),
+    description: form.description.trim(),
     startAt: combineDateTime(form.date, form.time),
     endAt: form.endTime ? combineDateTime(form.date, form.endTime) : undefined,
     timezone:

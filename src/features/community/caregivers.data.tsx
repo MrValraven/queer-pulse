@@ -22,62 +22,62 @@ export const PERSONA_KEYS = [
 ] as const;
 
 export interface Lesson {
-  n: string;
+  number: string;
   title: ReactNode;
   body: ReactNode;
   read: string;
-  langs: string;
+  languages: string;
   to: string;
 }
 
 interface LessonSource {
-  n: string;
+  number: string;
   titleKey: string;
   bodyKey: string;
   readTimeKey: string;
-  langsKey: string;
+  languagesKey: string;
   to: string;
 }
 
 const LESSON_SOURCES: LessonSource[] = [
   {
-    n: "01",
+    number: "01",
     titleKey: "community:caregivers.lesson.listen.title",
     bodyKey: "community:caregivers.lesson.listen.body",
     readTimeKey: "community:caregivers.lesson.listen.readTime",
-    langsKey: "community:caregivers.lesson.listen.langs",
+    languagesKey: "community:caregivers.lesson.listen.langs",
     to: routes.comingOut,
   },
   {
-    n: "02",
+    number: "02",
     titleKey: "community:caregivers.lesson.wrongThing.title",
     bodyKey: "community:caregivers.lesson.wrongThing.body",
     readTimeKey: "community:caregivers.lesson.wrongThing.readTime",
-    langsKey: "community:caregivers.lesson.wrongThing.langs",
+    languagesKey: "community:caregivers.lesson.wrongThing.langs",
     to: routes.family,
   },
   {
-    n: "03",
+    number: "03",
     titleKey: "community:caregivers.lesson.pronouns.title",
     bodyKey: "community:caregivers.lesson.pronouns.body",
     readTimeKey: "community:caregivers.lesson.pronouns.readTime",
-    langsKey: "community:caregivers.lesson.pronouns.langs",
+    languagesKey: "community:caregivers.lesson.pronouns.langs",
     to: routes.pronounsGuide,
   },
   {
-    n: "04",
+    number: "04",
     titleKey: "community:caregivers.lesson.transitioning.title",
     bodyKey: "community:caregivers.lesson.transitioning.body",
     readTimeKey: "community:caregivers.lesson.transitioning.readTime",
-    langsKey: "community:caregivers.lesson.transitioning.langs",
+    languagesKey: "community:caregivers.lesson.transitioning.langs",
     to: routes.transHealthcare,
   },
   {
-    n: "05",
+    number: "05",
     titleKey: "community:caregivers.lesson.familyPullsAway.title",
     bodyKey: "community:caregivers.lesson.familyPullsAway.body",
     readTimeKey: "community:caregivers.lesson.familyPullsAway.readTime",
-    langsKey: "community:caregivers.lesson.familyPullsAway.langs",
+    languagesKey: "community:caregivers.lesson.familyPullsAway.langs",
     to: routes.parents,
   },
 ];
@@ -85,52 +85,52 @@ const LESSON_SOURCES: LessonSource[] = [
 /** "Start here" — five short reads, each linking to the closest existing guide. */
 export function buildLessons(t: TFunction): Lesson[] {
   return LESSON_SOURCES.map((source) => ({
-    n: source.n,
+    number: source.number,
     title: (
       <Translation i18nKey={source.titleKey} components={{ em: <em /> }} />
     ),
     body: <Translation i18nKey={source.bodyKey} components={{ em: <em /> }} />,
     read: t(source.readTimeKey),
-    langs: t(source.langsKey),
+    languages: t(source.languagesKey),
     to: source.to,
   }));
 }
 
 export interface Faq {
-  q: ReactNode;
-  a: ReactNode;
+  question: ReactNode;
+  answer: ReactNode;
 }
 
 interface FaqSource {
-  qKey: string;
-  aKey: string;
+  questionKey: string;
+  answerKey: string;
 }
 
 const FAQ_SOURCES: FaqSource[] = [
   {
-    qKey: "community:caregivers.faq.childCameOut.q",
-    aKey: "community:caregivers.faq.childCameOut.a",
+    questionKey: "community:caregivers.faq.childCameOut.q",
+    answerKey: "community:caregivers.faq.childCameOut.a",
   },
   {
-    qKey: "community:caregivers.faq.partnerTransitioning.q",
-    aKey: "community:caregivers.faq.partnerTransitioning.a",
+    questionKey: "community:caregivers.faq.partnerTransitioning.q",
+    answerKey: "community:caregivers.faq.partnerTransitioning.a",
   },
   {
-    qKey: "community:caregivers.faq.wrongPronouns.q",
-    aKey: "community:caregivers.faq.wrongPronouns.a",
+    questionKey: "community:caregivers.faq.wrongPronouns.q",
+    answerKey: "community:caregivers.faq.wrongPronouns.a",
   },
   {
-    qKey: "community:caregivers.faq.grandchildQueer.q",
-    aKey: "community:caregivers.faq.grandchildQueer.a",
+    questionKey: "community:caregivers.faq.grandchildQueer.q",
+    answerKey: "community:caregivers.faq.grandchildQueer.a",
   },
 ];
 
 export function buildFaqs(): Faq[] {
   return FAQ_SOURCES.map((source) => ({
-    q: <Translation i18nKey={source.qKey} components={{ em: <em /> }} />,
-    a: (
+    question: <Translation i18nKey={source.questionKey} components={{ em: <em /> }} />,
+    answer: (
       <Translation
-        i18nKey={source.aKey}
+        i18nKey={source.answerKey}
         components={{ em: <em />, strong: <strong /> }}
       />
     ),
@@ -139,14 +139,14 @@ export function buildFaqs(): Faq[] {
 
 export interface Room {
   title: ReactNode;
-  sub: string;
+  subtitle: string;
   meta: string;
   to: string;
 }
 
 interface RoomSource {
   titleKey: string;
-  subKey: string;
+  subtitleKey: string;
   metaKey: string;
   to: string;
 }
@@ -155,25 +155,25 @@ interface RoomSource {
 const ROOM_SOURCES: RoomSource[] = [
   {
     titleKey: "community:caregivers.room.parents.title",
-    subKey: "community:caregivers.room.parents.sub",
+    subtitleKey: "community:caregivers.room.parents.sub",
     metaKey: "community:caregivers.room.parents.meta",
     to: routes.peerSupport,
   },
   {
     titleKey: "community:caregivers.room.partnersOfTrans.title",
-    subKey: "community:caregivers.room.partnersOfTrans.sub",
+    subtitleKey: "community:caregivers.room.partnersOfTrans.sub",
     metaKey: "community:caregivers.room.partnersOfTrans.meta",
     to: routes.peerSupport,
   },
   {
     titleKey: "community:caregivers.room.siblings.title",
-    subKey: "community:caregivers.room.siblings.sub",
+    subtitleKey: "community:caregivers.room.siblings.sub",
     metaKey: "community:caregivers.room.siblings.meta",
     to: routes.peerSupport,
   },
   {
     titleKey: "community:caregivers.room.youthWorkers.title",
-    subKey: "community:caregivers.room.youthWorkers.sub",
+    subtitleKey: "community:caregivers.room.youthWorkers.sub",
     metaKey: "community:caregivers.room.youthWorkers.meta",
     to: routes.peerSupport,
   },
@@ -184,7 +184,7 @@ export function buildRooms(t: TFunction): Room[] {
     title: (
       <Translation i18nKey={source.titleKey} components={{ em: <em /> }} />
     ),
-    sub: t(source.subKey),
+    subtitle: t(source.subtitleKey),
     meta: t(source.metaKey),
     to: source.to,
   }));

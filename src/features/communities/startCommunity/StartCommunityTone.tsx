@@ -85,7 +85,7 @@ export function StepTone({ form }: { form: CommunityForm }) {
             <span className={styles.lsN}>{i + 1}</span>
             <span className={styles.lsT}>
               <b>{t(step.titleKey)}</b>
-              <span>{t(step.descKey)}</span>
+              <span>{t(step.descriptionKey)}</span>
             </span>
           </div>
         ))}

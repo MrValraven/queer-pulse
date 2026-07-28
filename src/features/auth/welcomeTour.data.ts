@@ -63,17 +63,17 @@ export const VISIBILITY_OPTIONS = [
   {
     value: "open",
     titleKey: "auth:tour.visibility.open.title",
-    descKey: "auth:tour.visibility.open.desc",
+    descriptionKey: "auth:tour.visibility.open.desc",
   },
   {
     value: "network",
     titleKey: "auth:tour.visibility.network.title",
-    descKey: "auth:tour.visibility.network.desc",
+    descriptionKey: "auth:tour.visibility.network.desc",
   },
   {
     value: "private",
     titleKey: "auth:tour.visibility.private.title",
-    descKey: "auth:tour.visibility.private.desc",
+    descriptionKey: "auth:tour.visibility.private.desc",
   },
 ];
 
@@ -120,35 +120,35 @@ export const INTERESTS: { icon: IconType; value: string; labelKey: string }[] =
 export const TOUR_COMMUNITIES = [
   {
     name: "Trans & Non-Binary Hub",
-    desc: "Healthcare, legal guides, peer support, and community.",
+    description: "Healthcare, legal guides, peer support, and community.",
   },
   {
     name: "Queer Parent Network",
-    desc: "For LGBTQ+ parents, co-parents, and people navigating parenthood.",
+    description: "For LGBTQ+ parents, co-parents, and people navigating parenthood.",
   },
   {
     name: "Queer & of Colour",
-    desc: "An intersectional space — race and queerness aren't separate.",
+    description: "An intersectional space — race and queerness aren't separate.",
   },
   {
     name: "Queer Elders (50+)",
-    desc: "For members 50 and over. Wisdom, memory, community.",
+    description: "For members 50 and over. Wisdom, memory, community.",
   },
   {
     name: "Queer Youth (18–25)",
-    desc: "Career, city navigation, peer support for younger members.",
+    description: "Career, city navigation, peer support for younger members.",
   },
   {
     name: "Disabled Queers",
-    desc: "Disability, chronic illness, and queerness — both identities belong.",
+    description: "Disability, chronic illness, and queerness — both identities belong.",
   },
   {
     name: "Queer Mental Health Peer Support",
-    desc: "Moderated, confidential. Shared experience, no advice unless asked.",
+    description: "Moderated, confidential. Shared experience, no advice unless asked.",
   },
   {
     name: "Rainbow Arts Collective",
-    desc: "Visual artists, photographers, makers. Monthly crits + group shows.",
+    description: "Visual artists, photographers, makers. Monthly crits + group shows.",
   },
 ];
 
@@ -180,73 +180,73 @@ export const CONNECTIONS = [
 export const EXPLORE_CARDS: {
   icon: IconType;
   nameKey: string;
-  descKey: string;
+  descriptionKey: string;
   href: string;
 }[] = [
   {
     icon: FiUsers,
     nameKey: "auth:tour.exploreCard.members.name",
-    descKey: "auth:tour.exploreCard.members.desc",
+    descriptionKey: "auth:tour.exploreCard.members.desc",
     href: "QueerPulse Homepage.html#discovery",
   },
   {
     icon: FiCalendar,
     nameKey: "auth:tour.exploreCard.gatherings.name",
-    descKey: "auth:tour.exploreCard.gatherings.desc",
+    descriptionKey: "auth:tour.exploreCard.gatherings.desc",
     href: "QueerPulse Homepage.html#gather",
   },
   {
     icon: FaHandshake,
     nameKey: "auth:tour.exploreCard.communities.name",
-    descKey: "auth:tour.exploreCard.communities.desc",
+    descriptionKey: "auth:tour.exploreCard.communities.desc",
     href: "QueerPulse Communities.html",
   },
   {
     icon: FiPenTool,
     nameKey: "auth:tour.exploreCard.culture.name",
-    descKey: "auth:tour.exploreCard.culture.desc",
+    descriptionKey: "auth:tour.exploreCard.culture.desc",
     href: "QueerPulse Culture.html",
   },
   {
     icon: FiBriefcase,
     nameKey: "auth:tour.exploreCard.economy.name",
-    descKey: "auth:tour.exploreCard.economy.desc",
+    descriptionKey: "auth:tour.exploreCard.economy.desc",
     href: "QueerPulse Economy.html",
   },
   {
     icon: FaSeedling,
     nameKey: "auth:tour.exploreCard.queer101.name",
-    descKey: "auth:tour.exploreCard.queer101.desc",
+    descriptionKey: "auth:tour.exploreCard.queer101.desc",
     href: "QueerPulse 101.html",
   },
   {
     icon: FaHandFist,
     nameKey: "auth:tour.exploreCard.volunteer.name",
-    descKey: "auth:tour.exploreCard.volunteer.desc",
+    descriptionKey: "auth:tour.exploreCard.volunteer.desc",
     href: "QueerPulse Volunteer.html",
   },
   {
     icon: FiMapPin,
     nameKey: "auth:tour.exploreCard.arriving.name",
-    descKey: "auth:tour.exploreCard.arriving.desc",
+    descriptionKey: "auth:tour.exploreCard.arriving.desc",
     href: "QueerPulse Arriving.html",
   },
   {
     icon: FaHospital,
     nameKey: "auth:tour.exploreCard.sexualHealth.name",
-    descKey: "auth:tour.exploreCard.sexualHealth.desc",
+    descriptionKey: "auth:tour.exploreCard.sexualHealth.desc",
     href: "QueerPulse Sexual Health.html",
   },
   {
     icon: FiCheckCircle,
     nameKey: "auth:tour.exploreCard.safeSpaces.name",
-    descKey: "auth:tour.exploreCard.safeSpaces.desc",
+    descriptionKey: "auth:tour.exploreCard.safeSpaces.desc",
     href: "QueerPulse Safe Spaces.html",
   },
   {
     icon: FaLeaf,
     nameKey: "auth:tour.exploreCard.sober.name",
-    descKey: "auth:tour.exploreCard.sober.desc",
+    descriptionKey: "auth:tour.exploreCard.sober.desc",
     href: "QueerPulse Sober.html",
   },
 ];

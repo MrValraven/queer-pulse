@@ -14,10 +14,10 @@ import type { TFunction } from "../../shared/i18n/types";
 import { APPS } from "./applicationStatus.data";
 import { MENTORS } from "./mentorship.data";
 
-const activeApps = APPS.filter((a) => a.cat === "active").length;
-const sentApps = APPS.filter((a) => a.cat !== "draft").length;
-const offers = APPS.filter((a) => a.cat === "offer").length;
-const openMentors = MENTORS.filter((m) => m.btn !== "Join waitlist").length;
+const activeApps = APPS.filter((a) => a.category === "active").length;
+const sentApps = APPS.filter((a) => a.category !== "draft").length;
+const offers = APPS.filter((a) => a.category === "offer").length;
+const openMentors = MENTORS.filter((m) => m.button !== "Join waitlist").length;
 
 /**
  * i18n Pattern B. This live one-line summary fuses chrome phrasing with counts

@@ -6,7 +6,7 @@ export type BadgeRarity = "common" | "rare" | "legendary";
 export type BadgeTint = "jade" | "accent" | "plum";
 
 export interface Badge {
-  cat: string;
+  category: string;
   name: string;
   when: string;
   rarity: BadgeRarity;
@@ -27,7 +27,7 @@ export interface LevelInfo {
 }
 
 export interface LadderPill {
-  num: number;
+  number: number;
   name: string;
   state: "done" | "current" | "locked";
 }
@@ -35,7 +35,7 @@ export interface LadderPill {
 export type PerkRowState = "achieved" | "current" | "locked";
 
 export interface PerkLadderRow {
-  num: number;
+  number: number;
   name: string;
   state: PerkRowState;
   perks: string[];
@@ -58,20 +58,20 @@ export const levelInfo: LevelInfo = {
 };
 
 export const levelLadder: LadderPill[] = [
-  { num: 1, name: "Newcomer", state: "done" },
-  { num: 2, name: "Explorer", state: "done" },
-  { num: 3, name: "Regular", state: "done" },
-  { num: 4, name: "Familiar", state: "current" },
-  { num: 5, name: "Trusted", state: "locked" },
-  { num: 6, name: "Anchor", state: "locked" },
-  { num: 7, name: "Pillar", state: "locked" },
+  { number: 1, name: "Newcomer", state: "done" },
+  { number: 2, name: "Explorer", state: "done" },
+  { number: 3, name: "Regular", state: "done" },
+  { number: 4, name: "Familiar", state: "current" },
+  { number: 5, name: "Trusted", state: "locked" },
+  { number: 6, name: "Anchor", state: "locked" },
+  { number: 7, name: "Pillar", state: "locked" },
 ];
 
 export { earnedBadges, lockedBadges } from "./badges.icons";
 
 export const perksLadder: PerkLadderRow[] = [
   {
-    num: 1,
+    number: 1,
     name: "Newcomer",
     state: "achieved",
     status: (
@@ -86,7 +86,7 @@ export const perksLadder: PerkLadderRow[] = [
     ],
   },
   {
-    num: 2,
+    number: 2,
     name: "Explorer",
     state: "achieved",
     status: (
@@ -101,7 +101,7 @@ export const perksLadder: PerkLadderRow[] = [
     ],
   },
   {
-    num: 3,
+    number: 3,
     name: "Regular",
     state: "achieved",
     status: (
@@ -115,7 +115,7 @@ export const perksLadder: PerkLadderRow[] = [
     ],
   },
   {
-    num: 4,
+    number: 4,
     name: "Familiar",
     state: "current",
     status: "Current",
@@ -125,7 +125,7 @@ export const perksLadder: PerkLadderRow[] = [
     ],
   },
   {
-    num: 5,
+    number: 5,
     name: "Trusted",
     state: "locked",
     status: "320 XP away",
@@ -135,7 +135,7 @@ export const perksLadder: PerkLadderRow[] = [
     ],
   },
   {
-    num: 6,
+    number: 6,
     name: "Anchor",
     state: "locked",
     status: "Locked",
@@ -145,7 +145,7 @@ export const perksLadder: PerkLadderRow[] = [
     ],
   },
   {
-    num: 7,
+    number: 7,
     name: "Pillar",
     state: "locked",
     status: "Locked",

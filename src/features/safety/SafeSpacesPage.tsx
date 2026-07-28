@@ -39,7 +39,7 @@ export function SafeSpacesPage() {
   const nomRef = useRef<HTMLDivElement>(null);
 
   const items = verified.filter(
-    (s) => filter === "all" || s.cat === filter,
+    (s) => filter === "all" || s.category === filter,
   );
   const scrollToNominate = () =>
     nomRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });

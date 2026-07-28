@@ -80,29 +80,29 @@ export function buildLogos(): {
 
 export function buildSwatches(
   t: TFunction,
-): { bg: string; name: string; hex: string; meta: string; border?: boolean }[] {
+): { background: string; name: string; hex: string; meta: string; border?: boolean }[] {
   return [
     {
-      bg: "#2D1B3D",
+      background: "#2D1B3D",
       name: "Plum",
       hex: "#2D1B3D",
       meta: t("marketing:pressKit.colour.plum.meta"),
     },
     {
-      bg: "#E8775A",
+      background: "#E8775A",
       name: "Coral",
       hex: "#E8775A",
       meta: t("marketing:pressKit.colour.coral.meta"),
     },
     {
-      bg: "#F7F3EE",
+      background: "#F7F3EE",
       name: "Cream",
       hex: "#F7F3EE",
       meta: t("marketing:pressKit.colour.cream.meta"),
       border: true,
     },
     {
-      bg: "#4A8C6F",
+      background: "#4A8C6F",
       name: "Jade",
       hex: "#4A8C6F",
       meta: t("marketing:pressKit.colour.jade.meta"),
@@ -126,7 +126,7 @@ export function buildTeam(t: TFunction): {
   phCls: string;
   name: ReactNode;
   role: string;
-  desc: ReactNode;
+  description: ReactNode;
   langs: ReactNode;
   email: string;
 }[] {
@@ -140,7 +140,7 @@ export function buildTeam(t: TFunction): {
         </>
       ),
       role: t("marketing:pressKit.team.marta.role"),
-      desc: (
+      description: (
         <Translation
           i18nKey="marketing:pressKit.team.marta.desc"
           components={{ em: <em /> }}
@@ -163,7 +163,7 @@ export function buildTeam(t: TFunction): {
         </>
       ),
       role: t("marketing:pressKit.team.catarina.role"),
-      desc: t("marketing:pressKit.team.catarina.desc"),
+      description: t("marketing:pressKit.team.catarina.desc"),
       langs: (
         <Translation
           i18nKey="marketing:pressKit.team.catarina.langs"
@@ -181,7 +181,7 @@ export function buildTeam(t: TFunction): {
         </>
       ),
       role: t("marketing:pressKit.team.andre.role"),
-      desc: t("marketing:pressKit.team.andre.desc"),
+      description: t("marketing:pressKit.team.andre.desc"),
       langs: (
         <Translation
           i18nKey="marketing:pressKit.team.andre.langs"
@@ -313,43 +313,43 @@ export const COVERAGE: {
 
 export function buildDownloads(
   t: TFunction,
-): { ic: string; icCls: string; title: string; desc: string }[] {
+): { ic: string; icCls: string; title: string; description: string }[] {
   return [
     {
       ic: "ZIP",
       icCls: "dlZip",
       title: t("marketing:pressKit.downloads.completeKit.title"),
-      desc: t("marketing:pressKit.downloads.completeKit.desc"),
+      description: t("marketing:pressKit.downloads.completeKit.desc"),
     },
     {
       ic: "SVG",
       icCls: "",
       title: t("marketing:pressKit.downloads.marksSvg.title"),
-      desc: t("marketing:pressKit.downloads.marksSvg.desc"),
+      description: t("marketing:pressKit.downloads.marksSvg.desc"),
     },
     {
       ic: "PNG",
       icCls: "",
       title: t("marketing:pressKit.downloads.marksPng.title"),
-      desc: t("marketing:pressKit.downloads.marksPng.desc"),
+      description: t("marketing:pressKit.downloads.marksPng.desc"),
     },
     {
       ic: "JPG",
       icCls: "",
       title: t("marketing:pressKit.downloads.photography.title"),
-      desc: t("marketing:pressKit.downloads.photography.desc"),
+      description: t("marketing:pressKit.downloads.photography.desc"),
     },
     {
       ic: "PDF",
       icCls: "",
       title: t("marketing:pressKit.downloads.factSheet.title"),
-      desc: t("marketing:pressKit.downloads.factSheet.desc"),
+      description: t("marketing:pressKit.downloads.factSheet.desc"),
     },
     {
       ic: "PDF",
       icCls: "",
       title: t("marketing:pressKit.downloads.transparency.title"),
-      desc: t("marketing:pressKit.downloads.transparency.desc"),
+      description: t("marketing:pressKit.downloads.transparency.desc"),
     },
   ];
 }

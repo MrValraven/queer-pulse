@@ -171,7 +171,7 @@ export function Queer101Resources() {
               </div>
               <div className={styles.resTitle}>{r.title}</div>
               <div className={styles.resBy}>{r.by}</div>
-              <div className={styles.resDesc}>{t(r.descKey)}</div>
+              <div className={styles.resDesc}>{t(r.descriptionKey)}</div>
             </div>
           ))}
         </div>
@@ -197,7 +197,7 @@ export function Queer101TalkOptions() {
             {TALK.map((item) => (
               <div className={styles.talkOpt} key={item.titleKey}>
                 <div className={styles.talkOptTitle}>{t(item.titleKey)}</div>
-                <div className={styles.talkOptDesc}>{t(item.descKey)}</div>
+                <div className={styles.talkOptDesc}>{t(item.descriptionKey)}</div>
                 <Link to={item.link.href} className={styles.talkOptLink}>
                   {t(item.link.labelKey)}
                 </Link>

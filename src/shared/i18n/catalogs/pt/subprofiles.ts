@@ -15,6 +15,10 @@ export const subprofiles: Catalog = {
   "directory.empty.description":
     "Nada corresponde a isto por agora. Experimenta outro ofício ou limpa a pesquisa para veres toda a gente.",
   "directory.empty.clear": "Limpar filtros",
+  "directory.error.title": "Não conseguimos carregar o diretório",
+  "directory.error.description":
+    "Algo correu mal ao contactar o servidor. Isto não é um diretório vazio — tenta novamente daqui a pouco.",
+  "directory.error.retry": "Tentar novamente",
   "directory.openToCollabsChip": "Aberto a colaborações",
   "directory.tagFilterHeading": "Tags",
   "directory.tagFilterLabel": "Filtrar por tag",

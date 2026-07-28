@@ -29,6 +29,22 @@ export function nextLocalId(): string {
 }
 
 /**
+ * The real server conversation id for `active`, or null while it's still a
+ * just-picked placeholder. A picked-but-not-yet-created recipient uses the
+ * member's slug as its `id` (see `buildRecipientConversation` /
+ * `connectionToRecipient`); a real conversation's id is a server UUID, always
+ * distinct from the counterpart's handle. Live conversation-scoped requests
+ * (message history, realtime join, mark-read) must NOT fire against the
+ * placeholder — the backend validates `/conversations/:id` with `ParseUUIDPipe`,
+ * so a slug returns `400 "Validation failed (uuid is expected)"`. Returning null
+ * keeps those hooks inert until `startConversation` reconciles the real UUID.
+ */
+function realConversationId(conversation: Conversation | null): string | null {
+  if (!conversation) return null;
+  return conversation.id === conversation.slug ? null : conversation.id;
+}
+
+/**
  * All Messages page state, data wiring, and handlers — extracted from
  * `MessagesPage` so the component stays a thin render. Behaviour is unchanged:
  * demo/live dual-mode, realtime join, optimistic send, live conversation
@@ -128,13 +144,19 @@ export function useMessagesController() {
     ? (readWatermarks[active.id] ?? active.otherLastReadAt ?? null)
     : null;
 
+  // Real conversation UUID for the open thread, or null while it's still a
+  // just-picked placeholder (id === slug). The live conversation-scoped hooks
+  // below key off this, not `active.id`, so they never fire against a slug and
+  // trip the backend's `ParseUUIDPipe` before reconciliation lands the UUID.
+  const liveConversationId = demoMode ? null : realConversationId(active);
+
   // Join the open thread's realtime room so the gateway's per-conversation
   // frames (a new message from either side, read receipts) stream in live
   // instead of only appearing after a refresh. Inert in demo mode.
-  useJoinConversation(demoMode ? null : (active?.id ?? null));
+  useJoinConversation(liveConversationId);
 
   // Live message history for the open thread (inert in demo mode).
-  const thread = useMessageThread(demoMode ? null : (active?.id ?? null));
+  const thread = useMessageThread(liveConversationId);
   const hasMoreOlder = demoMode ? false : (thread.hasNextPage ?? false);
   const loadingOlder = demoMode ? false : thread.isFetchingNextPage;
   function loadOlder() {
@@ -143,7 +165,7 @@ export function useMessagesController() {
     }
   }
   const sendMessage = useSendMessage(active?.id ?? null);
-  const markRead = useMarkRead(active?.id ?? null);
+  const markRead = useMarkRead();
   const startConversation = useStartConversation();
   const deleteConversationMutation = useDeleteConversation();
 
@@ -198,7 +220,14 @@ export function useMessagesController() {
     setReadIds((current) => new Set(current).add(id));
     setDraft("");
     setView("thread");
-    if (!demoMode) markRead.mutate();
+    // Mark the thread we're *opening* read — not the render-time `active`,
+    // which is still the previously open thread this synchronous frame. Resolve
+    // the id to its real conversation UUID (skipping just-picked placeholders,
+    // whose id is still the slug) so we never POST /read against a slug.
+    if (demoMode) return;
+    const opened = allThreads.find((thread) => thread.id === id) ?? null;
+    const realId = realConversationId(opened);
+    if (realId) markRead.mutate(realId);
   }
 
   function deleteThread(conversationId: string) {

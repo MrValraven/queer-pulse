@@ -83,7 +83,7 @@ export function coopDtoToFormingCoop(dto: HousingCoopDTO): FormingCoop {
         ? dto.operationalSince
         : undefined,
     operational: dto.operational,
-    desc: dto.description,
+    description: dto.description,
     meta: buildMeta(dto),
     faces: dto.faces,
     cta: { label: CTA_LABEL[dto.ctaKind], kind: dto.ctaKind },

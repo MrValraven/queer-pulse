@@ -11,7 +11,7 @@ import type {
 /**
  * Map a public `SafeSpaceCardDTO` onto the `VerifiedSpace` view model the
  * safe-spaces grid renders. The grid (`SafeSpaceCard`) reads only card-level
- * fields (slug, cat, typeLabel, name, hood, desc, tags, rating, reviews);
+ * fields (slug, category, typeLabel, name, neighbourhood, description, tags, rating, reviews);
  * detail-only fields are filled with empty defaults here because the detail
  * page fetches its own richer payload via `useSafeSpace` — these placeholder
  * values are never rendered by the grid.
@@ -20,11 +20,11 @@ export function verifiedCardDtoToSpace(dto: SafeSpaceCardDTO): VerifiedSpace {
   return {
     status: "verified",
     slug: dto.slug,
-    cat: dto.cat,
+    category: dto.cat,
     typeLabel: dto.typeLabel,
     name: dto.name,
-    hood: dto.hood,
-    desc: dto.desc,
+    neighbourhood: dto.hood,
+    description: dto.desc,
     tags: dto.tags,
     rating: dto.rating,
     reviews: `${dto.reviews} reviews`,
@@ -45,17 +45,17 @@ export function verifiedCardDtoToSpace(dto: SafeSpaceCardDTO): VerifiedSpace {
 /**
  * Map a public `RemovedSpaceCardDTO` onto the `RemovedSpace` view model the
  * removed-spaces grid renders (`SafeSpacesSections`). The grid reads only
- * slug, cat, typeLabel, name, hood, reason, removedDate; detail-only fields
+ * slug, category, typeLabel, name, neighbourhood, reason, removedDate; detail-only fields
  * are filled with empty defaults, populated by the detail fetch instead.
  */
 export function removedCardDtoToSpace(dto: RemovedSpaceCardDTO): RemovedSpace {
   return {
     status: "removed",
     slug: dto.slug,
-    cat: dto.cat,
+    category: dto.cat,
     typeLabel: dto.typeLabel,
     name: dto.name,
-    hood: dto.hood,
+    neighbourhood: dto.hood,
     reason: dto.reason,
     removedDate: dto.removedDate,
     listedSince: dto.listedSince,
@@ -87,11 +87,11 @@ function verifiedDetailDtoToSpace(dto: SafeSpaceDetailDTO): VerifiedSpace {
   return {
     status: "verified",
     slug: dto.slug,
-    cat: dto.cat,
+    category: dto.cat,
     typeLabel: dto.typeLabel,
     name: dto.name,
-    hood: dto.hood,
-    desc: dto.desc,
+    neighbourhood: dto.hood,
+    description: dto.desc,
     tags: dto.tags,
     rating: dto.rating,
     reviews: `${dto.reviews} reviews`,
@@ -112,10 +112,10 @@ function removedDetailDtoToSpace(dto: RemovedSpaceDetailDTO): RemovedSpace {
   return {
     status: "removed",
     slug: dto.slug,
-    cat: dto.cat,
+    category: dto.cat,
     typeLabel: dto.typeLabel,
     name: dto.name,
-    hood: dto.hood,
+    neighbourhood: dto.hood,
     reason: dto.reason,
     removedDate: dto.removedDate,
     listedSince: dto.listedSince,
