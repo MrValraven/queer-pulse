@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
-import { Reveal } from "../../shared/components/ui";
+import { FiCalendar } from "react-icons/fi";
+import { EmptyState, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MEETUPS, OFFERS, RESOURCES, STATS } from "./parents.data";
 import styles from "./ParentNetwork.module.css";
 
@@ -12,6 +14,10 @@ import styles from "./ParentNetwork.module.css";
  */
 export function ParentNetwork() {
   const { t } = useTranslation();
+  // The headline stats and upcoming meetups are demo fiction — live has no
+  // membership counts or events backend yet, so hide the numbers and show an
+  // honest empty calendar rather than inventing gatherings.
+  const { demoMode } = useDemoMode();
   return (
     <>
       <section className={styles.section}>
@@ -28,16 +34,18 @@ export function ParentNetwork() {
           <Reveal as="p" className={styles.leadP} delay={120}>
             {t("community:parentNetwork.lead")}
           </Reveal>
-          <Reveal className={styles.stats} delay={160}>
-            {STATS.map((stat) => (
-              <div key={stat.labelKey}>
-                <div className={styles.statN}>{stat.n}</div>
-                <div className={styles.statL}>
-                  {t(`community:${stat.labelKey}`)}
+          {demoMode && (
+            <Reveal className={styles.stats} delay={160}>
+              {STATS.map((stat) => (
+                <div key={stat.labelKey}>
+                  <div className={styles.statN}>{stat.n}</div>
+                  <div className={styles.statL}>
+                    {t(`community:${stat.labelKey}`)}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Reveal>
+              ))}
+            </Reveal>
+          )}
           <div className={styles.grid} style={{ marginTop: 40 }}>
             {OFFERS.map((offer, index) => (
               <Reveal
@@ -71,27 +79,37 @@ export function ParentNetwork() {
           <Reveal as="p" className={styles.leadP} delay={60}>
             {t("community:parentNetwork.comingUp.lead")}
           </Reveal>
-          <div className={styles.meetups}>
-            {MEETUPS.map((meetup, index) => (
-              <Reveal
-                key={meetup.title}
-                className={styles.meetup}
-                delay={index * 55}
-              >
-                <div className={styles.date}>
-                  <div className={styles.dateDd}>{meetup.dd}</div>
-                  <div className={styles.dateMm}>{meetup.mm}</div>
-                </div>
-                <div className={styles.meetupBody}>
-                  <div className={styles.meetupTitle}>{meetup.title}</div>
-                  <div className={styles.meetupMeta}>{meetup.meta}</div>
-                </div>
-                <span className={styles.meetupTag}>
-                  {t(`community:${meetup.tagKey}`)}
-                </span>
-              </Reveal>
-            ))}
-          </div>
+          {demoMode ? (
+            <div className={styles.meetups}>
+              {MEETUPS.map((meetup, index) => (
+                <Reveal
+                  key={meetup.title}
+                  className={styles.meetup}
+                  delay={index * 55}
+                >
+                  <div className={styles.date}>
+                    <div className={styles.dateDd}>{meetup.dd}</div>
+                    <div className={styles.dateMm}>{meetup.mm}</div>
+                  </div>
+                  <div className={styles.meetupBody}>
+                    <div className={styles.meetupTitle}>{meetup.title}</div>
+                    <div className={styles.meetupMeta}>{meetup.meta}</div>
+                  </div>
+                  <span className={styles.meetupTag}>
+                    {t(`community:${meetup.tagKey}`)}
+                  </span>
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<FiCalendar />}
+              title={t("community:parentNetwork.comingUp.liveEmpty.title")}
+              description={t(
+                "community:parentNetwork.comingUp.liveEmpty.description",
+              )}
+            />
+          )}
 
           <Reveal className={styles.resList} delay={120}>
             {RESOURCES.map((resource) => (

@@ -7,6 +7,8 @@ import { isEmojiOnly, type MessageRun } from "./messageRuns";
 import { renderWithLinks } from "./linkify";
 import { MessageActions } from "./MessageActions";
 import { ReactionChips } from "./ReactionChips";
+import { InlineEditField } from "./InlineEditField";
+import { useLongPress } from "./useLongPress";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -18,7 +20,170 @@ export interface RunParticipant {
   src?: string;
 }
 
-/** Renders one sender run: a single avatar plus a vertical stack of bubbles. */
+interface MessageBubbleProps {
+  message: ChatMessage;
+  index: number;
+  lastIndex: number;
+  isSent: boolean;
+  senderName: string;
+  canDelete: boolean;
+  /** Adds/removes a reaction on `message`; `mine` is whether the signed-in
+   *  member already had that reaction (decides add vs. remove upstream). */
+  onReactionToggle?: (
+    message: ChatMessage,
+    key: MessageReactionKey,
+    mine: boolean,
+  ) => void;
+  /** Opens the report flow for `message`. */
+  onReportMessage?: (message: ChatMessage) => void;
+  /** Opens the delete-confirm flow for `message`. */
+  onDeleteMessage?: (message: ChatMessage) => void;
+  /** Opens the long-press/right-click action overlay for `message`. */
+  onOpenActions?: (
+    message: ChatMessage,
+    origin: { rect: DOMRect },
+    isSent: boolean,
+  ) => void;
+  /** Server id of the message currently showing the inline editor, if any. */
+  editingMessageId?: string | null;
+  /** Saves the inline editor's current text for `message`. */
+  onSubmitEdit?: (message: ChatMessage, nextBody: string) => void;
+  /** Closes the inline editor without saving. */
+  onCancelEdit?: () => void;
+  /** Scrolls to and briefly highlights the quoted original message. */
+  onJumpToMessage?: (messageId: string) => void;
+}
+
+/** One rendered bubble within a run: emoji-only/text body, tombstone
+ *  placeholder, the desktop hover action bar, and reaction chips. Owns its own
+ *  `useLongPress` instance (one per bubble, at component top level) so a touch
+ *  long-press or right-click opens the action overlay. While `editingMessageId`
+ *  matches this message, the bubble content is swapped for an inline editor. */
+function MessageBubble({
+  message,
+  index,
+  lastIndex,
+  isSent,
+  senderName,
+  canDelete,
+  onReactionToggle,
+  onReportMessage,
+  onDeleteMessage,
+  onOpenActions,
+  editingMessageId,
+  onSubmitEdit,
+  onCancelEdit,
+  onJumpToMessage,
+}: MessageBubbleProps) {
+  const { t } = useTranslation();
+  const isLast = index === lastIndex;
+  const longPress = useLongPress(
+    (origin) => onOpenActions?.(message, origin, isSent),
+    { enabled: !!message.id && !message.deletedAt },
+  );
+  const bubbleDomId = message.id ? `message-${message.id}` : undefined;
+
+  if (editingMessageId && editingMessageId === message.id) {
+    return (
+      <div id={bubbleDomId} className={styles.bubbleWrap}>
+        <InlineEditField
+          initialValue={message.text}
+          onSubmit={(nextValue) => onSubmitEdit?.(message, nextValue)}
+          onCancel={() => onCancelEdit?.()}
+        />
+      </div>
+    );
+  }
+
+  const bubbleContent = isEmojiOnly(message.text) ? (
+    <div
+      className={styles.emojiOnly}
+      title={message.time}
+      aria-label={`${senderName}: ${message.text}`}
+    >
+      {message.text}
+    </div>
+  ) : (
+    <div
+      className={[
+        styles.bubble,
+        isSent ? styles.sent : styles.received,
+        index > 0 && styles.groupTop,
+        index < lastIndex && styles.groupBottom,
+        isLast && (isSent ? styles.tailSent : styles.tailReceived),
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      title={message.time}
+      aria-label={`${senderName}: ${message.text}`}
+    >
+      {renderWithLinks(message.text)}
+    </div>
+  );
+
+  // Tombstoned messages (soft-deleted, live mode): the server blanks the
+  // body, so render a muted placeholder — no bubble colour, no action
+  // bar, no reaction chips (nothing left to react to or moderate).
+  if (message.deletedAt) {
+    return <div className={styles.tombstone}>{t("messages:tombstone")}</div>;
+  }
+
+  const reactions = message.reactions ?? [];
+  const hasVisibleReactions = reactions.some((reaction) => reaction.count > 0);
+
+  return (
+    <div id={bubbleDomId} className={styles.bubbleWrap} {...longPress}>
+      {message.replyTo && (
+        <button
+          type="button"
+          className={styles.replyQuote}
+          disabled={message.replyTo.deleted}
+          onClick={() =>
+            !message.replyTo!.deleted && onJumpToMessage?.(message.replyTo!.id)
+          }
+        >
+          <span className={styles.replyQuoteName}>{message.replyTo.senderName}</span>
+          <span className={styles.replyQuoteSnippet}>
+            {message.replyTo.deleted
+              ? t("messages:replyDeleted")
+              : message.replyTo.snippet}
+          </span>
+        </button>
+      )}
+      {bubbleContent}
+      {message.editedAt && !message.deletedAt && (
+        <span className={styles.editedMarker}> · {t("messages:actions.edited")}</span>
+      )}
+      <div
+        className={[
+          styles.messageActionsSlot,
+          isSent && styles.messageActionsSlotSent,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <MessageActions
+          canDelete={canDelete}
+          onReact={(reactionKey) =>
+            onReactionToggle?.(message, reactionKey, false)
+          }
+          onReport={() => onReportMessage?.(message)}
+          onDelete={() => onDeleteMessage?.(message)}
+        />
+      </div>
+      {hasVisibleReactions && (
+        <ReactionChips
+          reactions={reactions}
+          onToggle={(reactionKey, mine) =>
+            onReactionToggle?.(message, reactionKey, mine)
+          }
+        />
+      )}
+    </div>
+  );
+}
+
+/** Renders one sender run: a vertical stack of bubbles. */
 export function MessageRunView({
   run,
   counterpart,
@@ -31,6 +196,11 @@ export function MessageRunView({
   onReportMessage,
   onDeleteMessage,
   viewerIsStaff,
+  onOpenActions,
+  editingMessageId,
+  onSubmitEdit,
+  onCancelEdit,
+  onJumpToMessage,
 }: {
   run: MessageRun;
   counterpart: RunParticipant;
@@ -60,6 +230,24 @@ export function MessageRunView({
   /** True when the signed-in member is an admin/moderator — widens `canDelete`
    *  to any message, not just the member's own. */
   viewerIsStaff?: boolean;
+  /** Opens the long-press/right-click action overlay for `message`. */
+  onOpenActions?: (
+    message: ChatMessage,
+    origin: { rect: DOMRect },
+    isSent: boolean,
+  ) => void;
+  /** Server id of the message currently showing the inline editor, if any. */
+  editingMessageId?: string | null;
+  /** Opens the inline editor for a message. Not consumed within this run —
+   *  the long-press overlay in `ConversationPanel` calls it directly — but
+   *  accepted here so callers can forward all four edit props uniformly. */
+  onBeginEdit?: (message: ChatMessage) => void;
+  /** Saves the inline editor's current text for a message. */
+  onSubmitEdit?: (message: ChatMessage, nextBody: string) => void;
+  /** Closes the inline editor without saving. */
+  onCancelEdit?: () => void;
+  /** Scrolls to and briefly highlights the quoted original message. */
+  onJumpToMessage?: (messageId: string) => void;
 }) {
   const { t } = useTranslation();
   const isSent = run.from === "me";
@@ -78,82 +266,25 @@ export function MessageRunView({
         <Avatar initials={who.initials} tint={who.tint} src={who.src} size={28} />
       </div>
       <div className={styles.runBubbles}>
-        {run.items.map((message, index) => {
-          const isLast = index === lastIndex;
-          const key = message.id ?? `pos-${index}`;
-          const bubbleContent = isEmojiOnly(message.text) ? (
-            <div
-              className={styles.emojiOnly}
-              title={message.time}
-              aria-label={`${senderName}: ${message.text}`}
-            >
-              {message.text}
-            </div>
-          ) : (
-            <div
-              className={[
-                styles.bubble,
-                isSent ? styles.sent : styles.received,
-                index > 0 && styles.groupTop,
-                index < lastIndex && styles.groupBottom,
-                isLast && (isSent ? styles.tailSent : styles.tailReceived),
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              title={message.time}
-              aria-label={`${senderName}: ${message.text}`}
-            >
-              {renderWithLinks(message.text)}
-            </div>
-          );
-
-          // Tombstoned messages (soft-deleted, live mode): the server blanks the
-          // body, so render a muted placeholder — no bubble colour, no action
-          // bar, no reaction chips (nothing left to react to or moderate).
-          if (message.deletedAt) {
-            return (
-              <div key={key} className={styles.tombstone}>
-                {t("messages:tombstone")}
-              </div>
-            );
-          }
-
-          const reactions = message.reactions ?? [];
-          const hasVisibleReactions = reactions.some(
-            (reaction) => reaction.count > 0,
-          );
-
-          return (
-            <div key={key} className={styles.bubbleWrap}>
-              {bubbleContent}
-              <div
-                className={[
-                  styles.messageActionsSlot,
-                  isSent && styles.messageActionsSlotSent,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <MessageActions
-                  canDelete={canDelete}
-                  onReact={(reactionKey) =>
-                    onReactionToggle?.(message, reactionKey, false)
-                  }
-                  onReport={() => onReportMessage?.(message)}
-                  onDelete={() => onDeleteMessage?.(message)}
-                />
-              </div>
-              {hasVisibleReactions && (
-                <ReactionChips
-                  reactions={reactions}
-                  onToggle={(reactionKey, mine) =>
-                    onReactionToggle?.(message, reactionKey, mine)
-                  }
-                />
-              )}
-            </div>
-          );
-        })}
+        {run.items.map((message, index) => (
+          <MessageBubble
+            key={message.id ?? `pos-${index}`}
+            message={message}
+            index={index}
+            lastIndex={lastIndex}
+            isSent={isSent}
+            senderName={senderName}
+            canDelete={canDelete}
+            onReactionToggle={onReactionToggle}
+            onReportMessage={onReportMessage}
+            onDeleteMessage={onDeleteMessage}
+            onOpenActions={onOpenActions}
+            editingMessageId={editingMessageId}
+            onSubmitEdit={onSubmitEdit}
+            onCancelEdit={onCancelEdit}
+            onJumpToMessage={onJumpToMessage}
+          />
+        ))}
         {runTime && <div className={styles.bubbleTime}>{runTime}</div>}
         {isSent && (() => {
           const lastMessage = run.items[lastIndex];

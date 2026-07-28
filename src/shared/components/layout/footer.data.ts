@@ -120,6 +120,10 @@ export const BASE_LINKS: FooterLink[] = [
   },
   { labelKey: "shared:footerData.base.security", href: routes.security },
   { labelKey: "shared:adminNav.items.governance", href: routes.governance },
+  {
+    labelKey: "marketing:roadmap.subpageIndex.changelog.label",
+    href: routes.changelog,
+  },
   { labelKey: "shared:megaNav.about.col.legal.contact", href: routes.contact },
 ];
 

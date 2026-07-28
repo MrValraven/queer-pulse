@@ -27,6 +27,9 @@ export interface RealtimeNotification {
 export interface ServerToClientEvents {
   /** `chat.gateway.ts` → `namespace.to(conversationId).emit('message:new', …)`. */
   "message:new": { conversationId: string; message: MessageResponse };
+  /** `namespace.to(conversationId).emit('message:updated', …)` — a message was
+   *  edited (15-min window) in this conversation. */
+  "message:updated": { conversationId: string; message: MessageResponse };
   /** `namespace.to(conversationId).emit('read', …)`. `lastReadAt` is a Date on
    *  the server; socket.io JSON-serialises it to an ISO string on the wire. */
   read: { conversationId: string; userId: string; lastReadAt: string };

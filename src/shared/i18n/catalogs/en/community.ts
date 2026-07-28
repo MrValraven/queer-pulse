@@ -305,6 +305,12 @@ export const community: Catalog = {
   "creatives.outro.sub":
     "QueerPulse is a space for queer creatives to be found, supported, and commissioned — by each other and the wider community.",
   "creatives.outro.cta": "Add your creative profile",
+  "creatives.hero.liveTitle": "Queer creatives of <em>Lisbon.</em>",
+  "creatives.hero.liveSub":
+    "The showcase is still being built. Soon this is where the community's photographers, musicians, ceramicists and writers will be found, supported, and commissioned.",
+  "creatives.liveEmpty.title": "Creator showcase coming soon",
+  "creatives.liveEmpty.description":
+    "No creative profiles are live yet. Be one of the first — add yours and the community will find you.",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
   "dating.hero.cat": "Dating & Relationships · Lisbon",
@@ -644,6 +650,12 @@ export const community: Catalog = {
   "family.tab.legal.step.willGuardianship.text":
     "Even with full legal parenthood, it's worth having a will specifying guardianship in case of death. A family lawyer can draft this in a few hours.",
   "family.review.starsAriaLabel": "{stars} out of 5",
+  "family.review.liveEmpty.title": "Community reviews coming soon",
+  "family.review.liveEmpty.description":
+    "Members haven't shared reviews of clinics, agencies and social workers here yet. As people go through the process, their recommendations will appear here.",
+  "family.note.liveEmpty.title": "Community stories coming soon",
+  "family.note.liveEmpty.description":
+    "Once members share how their own family came together, their words will show up here.",
 
   "family.talk.heading": "Talk to someone who's <em>been there.</em>",
   "family.talk.body":
@@ -655,6 +667,9 @@ export const community: Catalog = {
     "The Family Building forum thread is where members share current experience, ask questions, and support each other through a process that no guide can fully capture.",
   "family.talk.forumCta.openForumCta": "Open the forum thread",
   "family.talk.forumCta.legalResourcesCta": "Legal resources →",
+  "family.talk.liveEmpty.title": "Parent mentors coming soon",
+  "family.talk.liveEmpty.description":
+    "No peer mentors have offered to share their experience yet. Already raising a family? Put your name forward and help someone just starting out.",
 
   "family.outro.title": "Your family is <em>real.</em>",
   "family.outro.sub":
@@ -685,6 +700,9 @@ export const community: Catalog = {
   "parentNetwork.comingUp.heading": "Coming up <em>soon.</em>",
   "parentNetwork.comingUp.lead":
     "Most months bring a daytime playdate and an evening for the grown-ups. Kids welcome unless we say otherwise.",
+  "parentNetwork.comingUp.liveEmpty.title": "No meetups scheduled yet",
+  "parentNetwork.comingUp.liveEmpty.description":
+    "Nothing is on the calendar right now. Playdates and grown-up evenings will show up here as members organise them.",
   "parentNetwork.tag.playdate": "Playdate",
   "parentNetwork.tag.social": "Social",
   "parentNetwork.tag.workshop": "Workshop",
@@ -726,6 +744,9 @@ export const community: Catalog = {
   "readingGroups.empty.description":
     "Nothing fits this genre and format combination yet — try widening your filters, or start a group around the book you want to read.",
   "readingGroups.empty.clearFiltersCta": "Clear filters",
+  "readingGroups.liveEmpty.title": "No reading groups yet",
+  "readingGroups.liveEmpty.description":
+    "No groups have been listed yet. Be the first — propose one below and gather your people around a book.",
   "readingGroups.outro.title": "Books build <em>community.</em>",
   "readingGroups.outro.sub":
     "QueerPulse reading groups have been running since 2024. Some have turned into friendships, some into collaborations, two into bands.",

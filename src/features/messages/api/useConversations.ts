@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useDeletedConversations } from "../../../app/providers/DeletedConversationsProvider";
 import { conversations as mockConversations, type Conversation } from "../data";
 import { getConversations } from "./messages.api";
 import { conversationToView } from "./messages.adapters";
@@ -11,10 +12,18 @@ import { conversationToView } from "./messages.adapters";
  */
 export function useConversations() {
   const { demoMode } = useDemoMode();
+  const { deletedIds } = useDeletedConversations();
+  // Stable, order-independent token so the demo query re-derives when a chat is
+  // deleted. Live mode never writes deletedIds, so this stays "".
+  const deletedToken = [...deletedIds].sort().join(",");
   return useQuery<Conversation[]>({
-    queryKey: ["conversations", demoMode],
+    queryKey: ["conversations", demoMode, deletedToken],
     queryFn: async () => {
-      if (demoMode) return mockConversations;
+      if (demoMode) {
+        return mockConversations.filter(
+          (conversation) => !deletedIds.has(conversation.id),
+        );
+      }
       const rows = await getConversations();
       return rows.map(conversationToView);
     },
@@ -30,10 +39,18 @@ export function useConversations() {
  */
 export function useUnreadMessages(): number {
   const { demoMode } = useDemoMode();
+  const { deletedIds } = useDeletedConversations();
+  // Stable, order-independent token so the demo query re-derives when a chat is
+  // deleted. Live mode never writes deletedIds, so this stays "".
+  const deletedToken = [...deletedIds].sort().join(",");
   const { data } = useQuery<Conversation[], Error, number>({
-    queryKey: ["conversations", demoMode],
+    queryKey: ["conversations", demoMode, deletedToken],
     queryFn: async () => {
-      if (demoMode) return mockConversations;
+      if (demoMode) {
+        return mockConversations.filter(
+          (conversation) => !deletedIds.has(conversation.id),
+        );
+      }
       const rows = await getConversations();
       return rows.map(conversationToView);
     },

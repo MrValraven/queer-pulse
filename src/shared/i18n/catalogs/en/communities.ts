@@ -24,10 +24,10 @@ export const communities: Catalog = {
   "category.community": "Community",
 
   // ── Discover directory (CommunitiesPage) ──────────────────────────────────
-  "discover.hero.eyebrow": "Community Directory",
+  "discover.hero.eyebrow": "Communities & Collectives",
   "discover.hero.title": "Find your <em>people.</em>",
   "discover.hero.lead":
-    "A living directory of queer communities across Lisbon. Social clubs, arts collectives, activist groups, sports teams, support circles, and professional networks — something for where you are right now.",
+    "A living directory of queer communities and collectives across Lisbon. Social clubs, arts collectives, activist groups, sports teams, support circles, and professional networks — something for where you are right now.",
   "discover.hero.cta": "Go to your hub",
   "discover.empty.none.title": "No communities yet",
   "discover.empty.none.description":
@@ -57,7 +57,7 @@ export const communities: Catalog = {
   "card.stats.posts_other": "{count} posts",
 
   // ── Communities hub (CommunitiesHomePage + digest + feed + sidebar) ───────
-  "hub.eyebrow": "Your communities",
+  "hub.eyebrow": "Your communities & collectives",
   "hub.welcome": "Welcome back, <em>{name}</em>",
   "hub.sub_one": "Here's what's been happening across your {count} community.",
   "hub.sub_other":
@@ -82,7 +82,7 @@ export const communities: Catalog = {
   "hub.pulse.empty.title": "Quiet for now",
   "hub.pulse.empty.description":
     "When your communities post, it shows up here.",
-  "hub.sidebar.yourCommunities": "Your communities",
+  "hub.sidebar.yourCommunities": "Your communities & collectives",
   "hub.sidebar.discoverMore": "Discover more",
   "hub.sidebar.upcoming": "Upcoming in your communities",
   "hub.sidebar.suggestions": "Communities you might like",
@@ -96,7 +96,7 @@ export const communities: Catalog = {
   "common.loading": "Loading…",
 
   // ── Community detail page (hero + sidebar) ────────────────────────────────
-  "detail.breadcrumb": "← Communities",
+  "detail.breadcrumb": "← Communities & Collectives",
   "detail.join.invite": "Join with invite",
   "detail.join.public": "Join community",
   "detail.join.request": "Request to join",
@@ -278,7 +278,7 @@ export const communities: Catalog = {
 
   // ── Start-a-Community wizard: page chrome / progress rail ─────────────────
   "start.hero.back": "Back to your communities",
-  "start.hero.eyebrow": "Communities · found a space",
+  "start.hero.eyebrow": "Communities & Collectives · found a space",
   "start.hero.title": "Start a <em>community.</em>",
   "start.hero.lead":
     "A place for your people to gather — social, support, creative, or something only you can name. <strong>Nothing goes live until you're ready.</strong>",

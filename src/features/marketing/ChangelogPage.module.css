@@ -99,7 +99,7 @@
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--text-strong);
 }
-.community {
+.improvement {
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
@@ -107,14 +107,9 @@
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
 }
-.policy {
-  background: rgba(112, 80, 170, 0.1);
+.infrastructure {
+  background: rgba(var(--violet-rgb), 0.1);
   color: var(--violet);
-}
-.magazine {
-  background: rgba(180, 136, 60, 0.12);
-  /* amber darkened toward ink for legibility on cream */
-  color: color-mix(in srgb, var(--amber) 60%, var(--ink));
 }
 .entryTitle {
   font-size: 16px;

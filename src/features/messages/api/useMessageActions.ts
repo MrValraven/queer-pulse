@@ -1,9 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useDeletedConversations } from "../../../app/providers/DeletedConversationsProvider";
 import type { MessageReactionKey } from "../../../shared/contracts/contracts";
+import type { Conversation } from "../data";
 import {
   addMessageReaction,
+  deleteConversation,
   deleteMessage,
+  editMessage,
   removeMessageReaction,
 } from "./messages.api";
 
@@ -54,6 +58,61 @@ export function useDeleteMessage(conversationId: string | null) {
     onSuccess: () => {
       if (demoMode) return;
       queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+export interface EditMessageInput {
+  messageId: string;
+  body: string;
+}
+
+/** PATCH /conversations/:id/messages/:messageId — edit own message (15-min window). */
+export function useEditMessage(conversationId: string | null) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, EditMessageInput>({
+    mutationFn: async ({ messageId, body }) => {
+      if (demoMode || !conversationId) return;
+      await editMessage(conversationId, messageId, body);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+/** DELETE /conversations/:id — delete a conversation for my account only.
+ *  Live: server sets my clearedAt; the thread drops out of my inbox (and
+ *  reappears only if the other member writes again). Demo: recorded in the
+ *  DeletedConversationsProvider store. Input is the conversation id. */
+export function useDeleteConversation() {
+  const { demoMode } = useDemoMode();
+  const { markDeleted } = useDeletedConversations();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (conversationId) => {
+      if (demoMode) {
+        markDeleted(conversationId);
+        return;
+      }
+      await deleteConversation(conversationId);
+    },
+    onSuccess: (_result, conversationId) => {
+      if (demoMode) {
+        queryClient.invalidateQueries({ queryKey: ["conversations"] });
+        return;
+      }
+      queryClient.setQueriesData<Conversation[]>(
+        { queryKey: ["conversations"] },
+        (previous) =>
+          previous?.filter(
+            (conversation) => conversation.id !== conversationId,
+          ),
+      );
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });

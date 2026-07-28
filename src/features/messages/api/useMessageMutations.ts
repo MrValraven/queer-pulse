@@ -21,10 +21,10 @@ import type { Conversation } from "../data";
 export function useSendMessage(conversationId: string | null) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
-    mutationFn: async (body) => {
+  return useMutation<void, Error, { body: string; replyToId?: string }>({
+    mutationFn: async ({ body, replyToId }) => {
       if (demoMode || !conversationId) return;
-      await sendMessage(conversationId, body);
+      await sendMessage(conversationId, body, replyToId);
     },
     onSuccess: () => {
       if (demoMode) return;

@@ -1681,6 +1681,9 @@ export const marketing: Catalog = {
   "transparency.hero.meta.activeMembers": "Pessoas ativas",
   "transparency.hero.meta.mistakesNamed": "Erros públicos nomeados",
   "transparency.yearSwitch.inProgress": "em curso",
+  "transparency.live.title": "O nosso primeiro relatório de transparência está quase a chegar",
+  "transparency.live.description":
+    "Vamos publicar aqui os números auditados — de onde veio e para onde foi o dinheiro, ações de moderação, pedidos governamentais e os erros que assumimos — assim que fechar o nosso primeiro período de reporte.",
   "transparency.money.title":
     "De onde <em>veio</em> o dinheiro, e para onde <em>foi.</em>",
   "transparency.money.sub":
@@ -1735,17 +1738,102 @@ export const marketing: Catalog = {
   "changelog.hero.sub":
     "Todas as atualizações da QueerPulse, da mais recente para a mais antiga. Publicamos as alterações aqui para saberes sempre o que é diferente e porquê. Nada acontece sem ficar registado.",
   "changelog.filterAria": "Filtrar atualizações por tipo",
-  "changelog.filter.all": "Todas",
+  "changelog.filter.all": "Tudo",
   "changelog.filter.feature": "Funcionalidades",
-  "changelog.filter.community": "Comunidade",
+  "changelog.filter.improvement": "Melhorias",
+  "changelog.filter.infrastructure": "Infraestrutura",
   "changelog.filter.fix": "Correções",
-  "changelog.filter.policy": "Políticas",
-  "changelog.filter.magazine": "Revista",
   "changelog.badge.feature": "Funcionalidade",
-  "changelog.badge.community": "Comunidade",
+  "changelog.badge.improvement": "Melhoria",
+  "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
-  "changelog.badge.policy": "Política",
-  "changelog.badge.magazine": "Revista",
+  "changelog.tag.settings": "Definições de notificações →",
+  "changelog.tag.messages": "Abrir mensagens →",
+  "changelog.tag.communities": "Ver comunidades →",
+  "changelog.tag.subprofiles": "Ver subperfis →",
+  "changelog.tag.housing": "Ver habitação →",
+  "changelog.tag.directory": "Abrir o diretório →",
+  "changelog.tag.cinema": "Visitar o Cinema →",
+  "changelog.tag.forum": "Visitar o fórum →",
+
+  "changelog.entries.mentions.title": "Mencione pessoas e comunidades",
+  "changelog.entries.mentions.body":
+    "Escreva @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades — quem for mencionado recebe uma notificação.",
+  "changelog.entries.push-notifications.title": "Notificações push para mensagens",
+  "changelog.entries.push-notifications.body":
+    "Ative para receber uma notificação no telemóvel quando chega uma nova mensagem direta enquanto está ausente — privado, apenas para mensagens diretas e desativado por predefinição.",
+  "changelog.entries.delete-conversation.title": "Apagar uma conversa",
+  "changelog.entries.delete-conversation.body":
+    "Limpe uma conversa da sua caixa de entrada sem afetar a cópia da outra pessoa, ao estilo do WhatsApp.",
+  "changelog.entries.profile-communities.title": "Destaque as suas comunidades",
+  "changelog.entries.profile-communities.body":
+    "Fixe as comunidades que gere ou de que faz parte no seu perfil, cada uma com um crachá de função.",
+  "changelog.entries.subprofiles-upgrade.title": "Subperfis mais ricos",
+  "changelog.entries.subprofiles-upgrade.body":
+    "Os subperfis ganharam presença e multimédia, pré-visualizações de ligações partilháveis e exportação por código QR e vCard.",
+  "changelog.entries.messaging-upgrades.title": "Melhorias nas mensagens",
+  "changelog.entries.messaging-upgrades.body":
+    "Ações de mensagem por toque longo, edição e resposta, e um fio de conversa mais limpo.",
+  "changelog.entries.housing.title": "Diretórios de habitação e colegas de casa",
+  "changelog.entries.housing.body":
+    "Listagens exclusivas para membros de habitação, colegas de casa e senhorios amigáveis, cada uma com uma pontuação de compatibilidade.",
+  "changelog.entries.routing-cleanup.title": "Limpeza de rotas e caminhos",
+  "changelog.entries.routing-cleanup.body":
+    "Resolução de caminhos públicos em conflito e casos extremos de rotas em toda a aplicação.",
+  "changelog.entries.maps.title": "Mapas interativos",
+  "changelog.entries.maps.body":
+    "O diretório local e os espaços podem agora ser explorados num mapa interativo.",
+  "changelog.entries.genesis.title": "Fluxo de arranque do fundador",
+  "changelog.entries.genesis.body":
+    "Um fluxo Genesis único para configurar o primeiro administrador quando a plataforma é iniciada.",
+  "changelog.entries.pwa-mobile.title": "Instalar como aplicação",
+  "changelog.entries.pwa-mobile.body":
+    "A QueerPulse passou a ser uma aplicação web progressiva com uma interface móvel de aspeto nativo, além de ícones melhorados e metadados para motores de busca.",
+  "changelog.entries.deploy-stability.title": "Estabilização de implementação e compilação",
+  "changelog.entries.deploy-stability.body":
+    "Uma série de correções de implementação, compilação e pré-renderização para que a aplicação seja publicada de forma fiável em produção.",
+  "changelog.entries.performance-staff.title": "Desempenho e crachás de equipa",
+  "changelog.entries.performance-staff.body":
+    "Carregamento de páginas mais rápido, mais rotas de administração e um crachá de equipa QueerPulse nas contas oficiais.",
+  "changelog.entries.accessibility.title": "Acessibilidade e refinamento da interface",
+  "changelog.entries.accessibility.body":
+    "Correções de acessibilidade e uma ronda de melhorias de interface em toda a aplicação.",
+  "changelog.entries.i18n-complete.title": "Tradução completa para português",
+  "changelog.entries.i18n-complete.body":
+    "Toda a interface passou a estar disponível em inglês e português, alternável a partir da navegação.",
+  "changelog.entries.subprofiles.title": "Subperfis",
+  "changelog.entries.subprofiles.body":
+    "Crie várias presenças públicas numa só conta — para a sua arte, o seu negócio ou um projeto.",
+  "changelog.entries.live-backend.title": "Backend em produção",
+  "changelog.entries.live-backend.body":
+    "A aplicação ligou-se ao seu backend real, mantendo o modo de demonstração autónomo a par dos dados em produção, com perfis editáveis.",
+  "changelog.entries.landing.title": "Nova página inicial",
+  "changelog.entries.landing.body":
+    "Uma página inicial redesenhada e uma ronda de refatorações do site de marketing.",
+  "changelog.entries.studio-cinema.title": "Cinema e Estúdio",
+  "changelog.entries.studio-cinema.body":
+    "Novas páginas de direitos do Cinema e páginas de produção do Estúdio juntaram-se à plataforma.",
+  "changelog.entries.tickets.title": "Eventos com bilhete",
+  "changelog.entries.tickets.body":
+    "Pague bilhetes de eventos diretamente na plataforma, com base em dados reais de eventos.",
+  "changelog.entries.business-directory.title": "Diretório de negócios locais",
+  "changelog.entries.business-directory.body":
+    "Um diretório de negócios locais amigáveis, com um fluxo para os proprietários adicionarem o seu.",
+  "changelog.entries.invite-flow.title": "Fluxo de convites",
+  "changelog.entries.invite-flow.body":
+    "Um fluxo de inscrição baseado em convites e uma experiência de integração renovada.",
+  "changelog.entries.moderation-trust.title": "Moderação e rede de confiança",
+  "changelog.entries.moderation-trust.body":
+    "Ferramentas de moderação, gestão de eventos, ferramentas de administração e um grafo de rede de confiança que liga os membros.",
+  "changelog.entries.communities-forum.title": "Comunidades e fórum",
+  "changelog.entries.communities-forum.body":
+    "Comunidades geridas por membros e um fórum de discussão de formato longo foram lançados em conjunto.",
+  "changelog.entries.onboarding.title": "Integração de membros",
+  "changelog.entries.onboarding.body":
+    "Um fluxo de integração guiado para novos membros, com uma experiência de início de sessão mais suave.",
+  "changelog.entries.launch.title": "Lançamento da QueerPulse",
+  "changelog.entries.launch.body":
+    "O primeiro lançamento — a meganavegação da comunidade e o conjunto principal de páginas entraram em funcionamento.",
   "changelog.empty.title": "Ainda nada registado com este filtro",
   "changelog.empty.description":
     "Ainda não houve alterações deste tipo. Limpa o filtro para ver o histórico completo.",

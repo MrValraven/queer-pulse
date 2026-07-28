@@ -6,7 +6,13 @@ import {
   type ComponentType,
   type ReactNode,
 } from "react";
-import { FiCheck, FiX, FiInfo, FiRotateCcw } from "react-icons/fi";
+import {
+  FiCheckCircle,
+  FiXCircle,
+  FiAlertTriangle,
+  FiInfo,
+  FiRotateCcw,
+} from "react-icons/fi";
 import { ToastContext, type ToastType, type ToastAction } from "./toastContext";
 import styles from "./Toast.module.css";
 
@@ -19,8 +25,9 @@ interface ToastItem {
 }
 
 const ICONS: Record<ToastType, ComponentType> = {
-  success: FiCheck,
-  error: FiX,
+  success: FiCheckCircle,
+  error: FiXCircle,
+  warning: FiAlertTriangle,
   info: FiInfo,
 };
 
@@ -65,7 +72,7 @@ function ToastRegion({
             <span className={styles.icon} aria-hidden>
               <Icon />
             </span>
-            {toast.message}
+            <span className={styles.message}>{toast.message}</span>
             {toast.action && (
               <button
                 type="button"

@@ -10,6 +10,7 @@ import {
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ALL_ITEMS, CHIPS, PAGE_SIZE } from "./tag.data";
 import styles from "./TagPage.module.css";
 
@@ -38,6 +39,7 @@ export function TagPageList({
   onResetChip: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [loadingMore, setLoadingMore] = useState(false);
 
@@ -55,6 +57,21 @@ export function TagPageList({
     const topic = CHIPS[activeChip]!;
     return ALL_ITEMS.filter((it) => it.topics.includes(topic));
   }, [activeChip]);
+
+  // ALL_ITEMS is fabricated tagged editorial. Live mode has no published
+  // stories yet, so it shows an honest empty state; the demo mock below is the
+  // demo-mode branch.
+  if (!demoMode) {
+    return (
+      <section className={styles.list}>
+        <EmptyState
+          icon={<FiFileText />}
+          title={t("magazine:tag.list.liveEmptyTitle")}
+          description={t("magazine:tag.list.liveEmptyDescription")}
+        />
+      </section>
+    );
+  }
 
   const filtered = matched.slice(0, visible);
   const remaining = matched.length - filtered.length;

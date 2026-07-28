@@ -12,6 +12,7 @@ import { useSocial } from "../../app/providers/SocialProvider";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
+import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { PlacesSection } from "./PlacesSection";
 import { PublicProfileControl } from "./PublicProfileControl";
@@ -153,6 +154,13 @@ export function ProfilePage() {
               }
             : undefined
         }
+      />
+
+      <ProfileCommunitiesSection
+        isSelf={isSelf}
+        previewing={previewing}
+        otherMember={isSelf ? null : otherMember}
+        firstName={resolvedProfile.first}
       />
 
       {/* "Also as…" — the owner's linked + published personas. Public viewers see

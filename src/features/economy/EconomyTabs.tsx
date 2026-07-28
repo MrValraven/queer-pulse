@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiDollarSign } from "react-icons/fi";
+import { LuSprout } from "react-icons/lu";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { fullName, getMember } from "../members/data/members";
@@ -28,6 +30,7 @@ import styles from "./EconomyPage.module.css";
 
 export function IncubatorTab() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [modal, setModal] = useState<"cohort" | "mentor" | null>(null);
   const [session, setSession] = useState<(typeof INC_MENTORS)[number] | null>(
     null,
@@ -61,26 +64,28 @@ export function IncubatorTab() {
             </Button>
           </div>
         </div>
-        <div className={styles.incStats}>
-          <div className={styles.incStat}>
-            <div className={styles.n}>24</div>
-            <div className={styles.l}>
-              {t("economy:incubator.stats.founders")}
+        {demoMode && (
+          <div className={styles.incStats}>
+            <div className={styles.incStat}>
+              <div className={styles.n}>24</div>
+              <div className={styles.l}>
+                {t("economy:incubator.stats.founders")}
+              </div>
+            </div>
+            <div className={styles.incStat}>
+              <div className={styles.n}>18</div>
+              <div className={styles.l}>
+                {t("economy:incubator.stats.mentors")}
+              </div>
+            </div>
+            <div className={styles.incStat}>
+              <div className={styles.n}>€2.4M</div>
+              <div className={styles.l}>
+                {t("economy:incubator.stats.raised")}
+              </div>
             </div>
           </div>
-          <div className={styles.incStat}>
-            <div className={styles.n}>18</div>
-            <div className={styles.l}>
-              {t("economy:incubator.stats.mentors")}
-            </div>
-          </div>
-          <div className={styles.incStat}>
-            <div className={styles.n}>€2.4M</div>
-            <div className={styles.l}>
-              {t("economy:incubator.stats.raised")}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className={styles.incCols}>
@@ -111,48 +116,56 @@ export function IncubatorTab() {
               components={{ em: <em /> }}
             />
           </h3>
-          <div className={styles.mentorGrid}>
-            {INC_MENTORS.map((m) => {
-              const member = getMember(m.slug);
-              if (!member) return null;
-              return (
-                <div className={styles.mentorCard} key={m.slug}>
-                  <div className={styles.mentorTop}>
-                    <Avatar
-                      initials={member.initials}
-                      tint={member.tint}
-                      src={member.photo}
-                      verified={member.verified}
-                      size={50}
-                    />
-                    <div>
-                      <Link
-                        to={`/members/${member.slug}`}
-                        className={styles.mentorName}
-                      >
-                        {fullName(member)}
-                      </Link>
-                      <div className={styles.mentorRole}>{member.role}</div>
+          {demoMode ? (
+            <div className={styles.mentorGrid}>
+              {INC_MENTORS.map((mentor) => {
+                const member = getMember(mentor.slug);
+                if (!member) return null;
+                return (
+                  <div className={styles.mentorCard} key={mentor.slug}>
+                    <div className={styles.mentorTop}>
+                      <Avatar
+                        initials={member.initials}
+                        tint={member.tint}
+                        src={member.photo}
+                        verified={member.verified}
+                        size={50}
+                      />
+                      <div>
+                        <Link
+                          to={`/members/${member.slug}`}
+                          className={styles.mentorName}
+                        >
+                          {fullName(member)}
+                        </Link>
+                        <div className={styles.mentorRole}>{member.role}</div>
+                      </div>
                     </div>
+                    <div className={styles.mentorTags}>
+                      {mentor.tags.map((tag) => (
+                        <span key={tag} className={styles.mentorTag}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.mentorBtn}
+                      onClick={() => setSession(mentor)}
+                    >
+                      {t("economy:incubator.mentors.requestCta")}
+                    </button>
                   </div>
-                  <div className={styles.mentorTags}>
-                    {m.tags.map((t) => (
-                      <span key={t} className={styles.mentorTag}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    className={styles.mentorBtn}
-                    onClick={() => setSession(m)}
-                  >
-                    {t("economy:incubator.mentors.requestCta")}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<LuSprout />}
+              title={t("economy:incubator.mentors.empty.title")}
+              description={t("economy:incubator.mentors.empty.description")}
+            />
+          )}
         </div>
       </div>
 
@@ -242,6 +255,7 @@ export function FreelanceTab() {
 
 export function SalaryTab() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const [sector, setSector] = useState<Sector | "all">("all");
   const [modal, setModal] = useState(false);
@@ -269,73 +283,90 @@ export function SalaryTab() {
           {t("economy:salary.submitCta")}
         </button>
       </div>
-      <div className={styles.salFilters}>
-        {SAL_FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className={[styles.salChip, sector === f.id && styles.salChipActive]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setSector(f.id)}
-          >
-            {t(f.labelKey)}
-          </button>
-        ))}
-      </div>
-      <div className={styles.salTable}>
-        <div className={styles.salHeader}>
-          <div className={styles.salHcell}>
-            {t("economy:salary.table.role")}
-          </div>
-          <div className={styles.salHcell}>
-            {t("economy:salary.table.annual")}
-          </div>
-          <div className={styles.salHcell}>
-            {t("economy:salary.table.experience")}
-          </div>
-          <div className={`${styles.salHcell} ${styles.salTypeCol}`}>
-            {t("economy:salary.table.type")}
-          </div>
-        </div>
-        {salaries.length === 0 ? (
-          <EmptyState
-            compact
-            icon={<FiDollarSign />}
-            title={t("economy:salary.empty.title")}
-            description={t("economy:salary.empty.description")}
-            action={{
-              label: t("economy:salary.empty.clear"),
-              onClick: () => setSector("all"),
-            }}
-          />
-        ) : (
-          salaries.map((s) => (
-            <div
-              className={styles.salRow}
-              key={`${s.role}-${s.sector}-${s.money}`}
+      {demoMode && (
+        <div className={styles.salFilters}>
+          {SAL_FILTERS.map((filter) => (
+            <button
+              key={filter.id}
+              type="button"
+              className={[
+                styles.salChip,
+                sector === filter.id && styles.salChipActive,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setSector(filter.id)}
             >
-              <div>
-                <div className={styles.salRole}>{s.role}</div>
-                <div className={styles.salSector}>{s.sectorLabel}</div>
-              </div>
-              <div className={`${styles.salCell} ${styles.salMoney}`}>
-                {s.money}
-              </div>
-              <div className={styles.salCell}>
-                <span className={styles.salExp}>{s.exp}</span>
-              </div>
-              <div className={`${styles.salCell} ${styles.salTypeCol}`}>
-                <span
-                  className={`${styles.salBadge} ${styles[BADGE_CLASS[s.type]]}`}
-                >
-                  {s.typeLabel}
-                </span>
-              </div>
+              {t(filter.labelKey)}
+            </button>
+          ))}
+        </div>
+      )}
+      {demoMode ? (
+        <div className={styles.salTable}>
+          <div className={styles.salHeader}>
+            <div className={styles.salHcell}>
+              {t("economy:salary.table.role")}
             </div>
-          ))
-        )}
-      </div>
+            <div className={styles.salHcell}>
+              {t("economy:salary.table.annual")}
+            </div>
+            <div className={styles.salHcell}>
+              {t("economy:salary.table.experience")}
+            </div>
+            <div className={`${styles.salHcell} ${styles.salTypeCol}`}>
+              {t("economy:salary.table.type")}
+            </div>
+          </div>
+          {salaries.length === 0 ? (
+            <EmptyState
+              compact
+              icon={<FiDollarSign />}
+              title={t("economy:salary.empty.title")}
+              description={t("economy:salary.empty.description")}
+              action={{
+                label: t("economy:salary.empty.clear"),
+                onClick: () => setSector("all"),
+              }}
+            />
+          ) : (
+            salaries.map((salary) => (
+              <div
+                className={styles.salRow}
+                key={`${salary.role}-${salary.sector}-${salary.money}`}
+              >
+                <div>
+                  <div className={styles.salRole}>{salary.role}</div>
+                  <div className={styles.salSector}>{salary.sectorLabel}</div>
+                </div>
+                <div className={`${styles.salCell} ${styles.salMoney}`}>
+                  {salary.money}
+                </div>
+                <div className={styles.salCell}>
+                  <span className={styles.salExp}>{salary.exp}</span>
+                </div>
+                <div className={`${styles.salCell} ${styles.salTypeCol}`}>
+                  <span
+                    className={`${styles.salBadge} ${styles[BADGE_CLASS[salary.type]]}`}
+                  >
+                    {salary.typeLabel}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      ) : (
+        <EmptyState
+          icon={<FiDollarSign />}
+          title={t("economy:salary.emptyLive.title")}
+          description={t("economy:salary.emptyLive.description")}
+          action={{
+            label: t("economy:salary.submitLong"),
+            onClick: () => setModal(true),
+          }}
+        />
+      )}
       <div className={styles.salAnon}>{t("economy:salary.disclaimer")}</div>
       <div className={styles.salSubmitBox}>
         <p>{t("economy:salary.helpBody")}</p>

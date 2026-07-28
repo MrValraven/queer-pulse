@@ -1,7 +1,11 @@
 // Calendar month/weekday labels are never hand-rolled — `CalendarGrid` derives
-// them locale-correctly through `useFormat()`. `CALENDAR_TODAY` stays here: a
-// fixed "today" for the prototype's calendar demo, not translatable copy.
-export const CALENDAR_TODAY = new Date(2026, 5, 3);
+// them locale-correctly through `useFormat()`. `CALENDAR_TODAY` is the real
+// current day (normalized to local midnight so day-equality and the "upcoming"
+// filter behave), used to ring today's cell and gate upcoming events.
+export const CALENDAR_TODAY = (() => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+})();
 
 /**
  * A Monday-start reference week (2024-01-01 was a Monday) used only to derive

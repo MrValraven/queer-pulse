@@ -5,7 +5,7 @@ import { HiOutlineQrCode } from "react-icons/hi2";
 import { Avatar, Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
+import { routes, subprofileEditPath } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -107,19 +107,27 @@ export function SubprofileHero({
 
               <div className={styles.actions}>
                 <SubprofileAvailability value={view.availability} accent={accent} />
-                {canMessage && (
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() =>
-                      contact({
-                        slug: view.ownerSlug ?? "",
-                        name: view.ownerName ?? view.displayName,
-                      })
-                    }
-                  >
-                    {t("subprofiles:hero.message")}
+                {isOwnerViewing ? (
+                  // Viewing your own persona behaves like your own profile: no
+                  // "Message" (you can't message yourself) — offer to edit it.
+                  <Button variant="primary" size="md" to={subprofileEditPath(view.id)}>
+                    {t("subprofiles:hero.edit")}
                   </Button>
+                ) : (
+                  canMessage && (
+                    <Button
+                      variant="primary"
+                      size="md"
+                      onClick={() =>
+                        contact({
+                          slug: view.ownerSlug ?? "",
+                          name: view.ownerName ?? view.displayName,
+                        })
+                      }
+                    >
+                      {t("subprofiles:hero.message")}
+                    </Button>
+                  )
                 )}
                 {hasCta && (
                   <Button

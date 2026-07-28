@@ -5,6 +5,7 @@ import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
 import {
@@ -48,6 +49,7 @@ function PractitionerContactButton({
 
 export function SolidarityDirectory() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [cat, setCat] = useState<Cat | "all">("all");
   const [query, setQuery] = useState("");
@@ -65,119 +67,149 @@ export function SolidarityDirectory() {
 
   return (
     <>
-      <div className={styles.filterBar}>
-        <div className={styles.fbInner}>
-          <span className={styles.fbLabel}>
-            {t("economy:solidarityDirectory.professionLabel")}
-          </span>
-          {FILTERS.map((filter) => (
-            <button
-              key={filter.id}
-              type="button"
-              className={[styles.chip, cat === filter.id && styles.chipActive]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setCat(filter.id)}
-            >
-              {t(filter.labelKey)}
-            </button>
-          ))}
-          <div className={styles.fbSep} />
-          <div className={styles.cbSearch}>
-            <input
-              type="text"
-              placeholder={t("economy:solidarityDirectory.searchPlaceholder")}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-          <div className={styles.count}>
-            <Translation
-              i18nKey="economy:solidarityDirectory.count"
-              components={{ b: <b /> }}
-              values={{ count: items.length }}
-            />
+      {demoMode && (
+        <div className={styles.filterBar}>
+          <div className={styles.fbInner}>
+            <span className={styles.fbLabel}>
+              {t("economy:solidarityDirectory.professionLabel")}
+            </span>
+            {FILTERS.map((filter) => (
+              <button
+                key={filter.id}
+                type="button"
+                className={[styles.chip, cat === filter.id && styles.chipActive]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setCat(filter.id)}
+              >
+                {t(filter.labelKey)}
+              </button>
+            ))}
+            <div className={styles.fbSep} />
+            <div className={styles.cbSearch}>
+              <input
+                type="text"
+                placeholder={t("economy:solidarityDirectory.searchPlaceholder")}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </div>
+            <div className={styles.count}>
+              <Translation
+                i18nKey="economy:solidarityDirectory.count"
+                components={{ b: <b /> }}
+                values={{ count: items.length }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
-            {loading &&
-              Array.from({ length: 6 }).map((_, i) => (
-                <SolidaritySkeleton key={i} />
-              ))}
-            {!loading && items.length === 0 && (
+            {!demoMode ? (
               <EmptyState
                 icon={<FiHeart />}
-                title={t("economy:solidarityDirectory.empty.title")}
-                description={t("economy:solidarityDirectory.empty.description")}
-                action={{
-                  label: t("economy:solidarityDirectory.empty.clearFilters"),
-                  onClick: () => {
-                    setCat("all");
-                    setQuery("");
-                  },
-                }}
+                title={t("economy:solidarityDirectory.emptyLive.title")}
+                description={t(
+                  "economy:solidarityDirectory.emptyLive.description",
+                )}
               />
-            )}
-            {!loading &&
-              items.map((p, i) => (
-                <FadeIn
-                  key={p.id}
-                  delay={Math.min(i, 8) * 60}
-                  as="article"
-                  className={styles.pc}
-                >
-                  <div className={styles.pcTop}>
-                    <div
-                      className={styles.pcAv}
-                      style={{
-                        background: TINT_BG[p.tint],
-                        color: TINT_FG[p.tint],
-                      }}
+            ) : (
+              <>
+                {loading &&
+                  Array.from({ length: 6 }).map((_, skeletonIndex) => (
+                    <SolidaritySkeleton key={skeletonIndex} />
+                  ))}
+                {!loading && items.length === 0 && (
+                  <EmptyState
+                    icon={<FiHeart />}
+                    title={t("economy:solidarityDirectory.empty.title")}
+                    description={t(
+                      "economy:solidarityDirectory.empty.description",
+                    )}
+                    action={{
+                      label: t(
+                        "economy:solidarityDirectory.empty.clearFilters",
+                      ),
+                      onClick: () => {
+                        setCat("all");
+                        setQuery("");
+                      },
+                    }}
+                  />
+                )}
+                {!loading &&
+                  items.map((practitioner, practitionerIndex) => (
+                    <FadeIn
+                      key={practitioner.id}
+                      delay={Math.min(practitionerIndex, 8) * 60}
+                      as="article"
+                      className={styles.pc}
                     >
-                      {initials(p.name)}
-                    </div>
-                    <div className={styles.pcMeta}>
-                      <div className={styles.pcName}>{p.name}</div>
-                      <div className={styles.pcSpec}>
-                        {p.spec} · {p.hood}
+                      <div className={styles.pcTop}>
+                        <div
+                          className={styles.pcAv}
+                          style={{
+                            background: TINT_BG[practitioner.tint],
+                            color: TINT_FG[practitioner.tint],
+                          }}
+                        >
+                          {initials(practitioner.name)}
+                        </div>
+                        <div className={styles.pcMeta}>
+                          <div className={styles.pcName}>
+                            {practitioner.name}
+                          </div>
+                          <div className={styles.pcSpec}>
+                            {practitioner.spec} · {practitioner.hood}
+                          </div>
+                        </div>
+                        <span
+                          className={[
+                            styles.pcBadge,
+                            practitioner.isMember
+                              ? styles.badgeMember
+                              : styles.badgeVerified,
+                          ].join(" ")}
+                        >
+                          {practitioner.isMember
+                            ? t("economy:solidarityDirectory.badgeMember")
+                            : t("economy:solidarityDirectory.badgeVerified")}
+                        </span>
                       </div>
-                    </div>
-                    <span
-                      className={[
-                        styles.pcBadge,
-                        p.isMember ? styles.badgeMember : styles.badgeVerified,
-                      ].join(" ")}
-                    >
-                      {p.isMember
-                        ? t("economy:solidarityDirectory.badgeMember")
-                        : t("economy:solidarityDirectory.badgeVerified")}
-                    </span>
-                  </div>
-                  <div className={styles.pcPricing}>
-                    <div className={styles.pcPriceLabel}>
-                      {t("economy:solidarityDirectory.slidingScaleLabel")}
-                    </div>
-                    <div className={styles.pcPriceRange}>{p.range}</div>
-                    <div className={styles.pcPriceNote}>{p.scaleNote}</div>
-                  </div>
-                  <div className={styles.pcDesc}>{p.desc}</div>
-                  <div className={styles.pcTags}>
-                    {p.tags.map((tag) => (
-                      <span key={tag} className={styles.ptag}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className={styles.pcFoot}>
-                    <span className={styles.pcLang}>{p.langs.join(" · ")}</span>
-                    <PractitionerContactButton practitioner={p} />
-                  </div>
-                </FadeIn>
-              ))}
+                      <div className={styles.pcPricing}>
+                        <div className={styles.pcPriceLabel}>
+                          {t("economy:solidarityDirectory.slidingScaleLabel")}
+                        </div>
+                        <div className={styles.pcPriceRange}>
+                          {practitioner.range}
+                        </div>
+                        <div className={styles.pcPriceNote}>
+                          {practitioner.scaleNote}
+                        </div>
+                      </div>
+                      <div className={styles.pcDesc}>{practitioner.desc}</div>
+                      <div className={styles.pcTags}>
+                        {practitioner.tags.map((tag) => (
+                          <span key={tag} className={styles.ptag}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <div className={styles.pcFoot}>
+                        <span className={styles.pcLang}>
+                          {practitioner.langs.join(" · ")}
+                        </span>
+                        <PractitionerContactButton
+                          practitioner={practitioner}
+                        />
+                      </div>
+                    </FadeIn>
+                  ))}
+              </>
+            )}
           </div>
 
           <div className={styles.regStrip}>

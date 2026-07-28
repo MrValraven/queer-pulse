@@ -319,6 +319,8 @@ export const thread = (id: number | string) => `/thread/${id}`;
 /** A community topic (hashtag) feed page. Accepts a bare tag or a "#tag". */
 export const topicPath = (tag: string) =>
   `/topic/${tag.replace(/^#/, "").toLowerCase()}`;
+/** A community's detail page (`/community/:slug`). */
+export const communityPath = (slug: string) => `/community/${slug}`;
 
 /** The owner editor for one subprofile (`/account/subprofiles/:id/edit`). */
 export const subprofileEditPath = (id: string) =>

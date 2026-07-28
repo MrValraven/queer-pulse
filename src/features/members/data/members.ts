@@ -13,6 +13,7 @@ import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBad
 import { routes } from "../../../app/routeMap";
 import type { OpenToEntry } from "../openTo.data";
 import type { WorkLink } from "../workLink.data";
+import type { FeaturedCommunityRef } from "../profileCommunities.types";
 import { REAL_ENTRIES } from "./realMembers";
 
 export interface ShapingItem {
@@ -108,6 +109,9 @@ export interface Member {
   skills: SkillItem[];
   /** Groups, reading circles and collectives the member is part of. */
   groups: GroupItem[];
+  /** Communities the member has chosen to feature on their profile (owner-curated,
+   *  ordered, never includes private-tier communities). Resolved refs for display. */
+  featuredCommunities?: FeaturedCommunityRef[];
   /** Recent public activity across the platform. */
   activity: ActivityItem[];
 }

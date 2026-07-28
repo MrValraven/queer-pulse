@@ -4,6 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ForumAvatar } from "./ForumAuthor";
 import { useProfile } from "../../app/providers/ProfileProvider";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadComposer({
@@ -42,12 +43,12 @@ export function ThreadComposer({
           />
         </span>
       </div>
-      <textarea
-        ref={textareaRef}
+      <MentionTextarea
+        textareaRef={textareaRef}
         className={styles.crTextarea}
         placeholder={t("forum:threadComposer.placeholder")}
         value={reply}
-        onChange={(e) => setReply(e.target.value)}
+        onChange={setReply}
       />
       <div className={styles.crFooter}>
         <Button

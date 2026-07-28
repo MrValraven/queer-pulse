@@ -21,6 +21,8 @@ import {
 import { memberName } from "../members/data/members";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
+import { MentionText } from "../../shared/mentions/MentionText";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { PostActionsMenu } from "./PostActionsMenu";
 import styles from "./ThreadPage.module.css";
 
@@ -232,8 +234,10 @@ export function ThreadReplies({
                           {r.quote.text}
                         </div>
                       )}
-                      {r.body.map((p, j) => (
-                        <p key={j}>{p}</p>
+                      {r.body.map((paragraph, paragraphIndex) => (
+                        <p key={paragraphIndex}>
+                          <MentionText text={paragraph} />
+                        </p>
                       ))}
                       {r.editedAt && (
                         <span className={styles.editedMark}>
@@ -298,11 +302,11 @@ function InlineReplyEditor({
   const trimmed = value.trim();
   return (
     <div className={styles.inlineEdit}>
-      <textarea
+      <MentionTextarea
         className={styles.inlineTextarea}
         aria-label={t("forum:replyEdit.textareaAria")}
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={setValue}
         rows={4}
       />
       <div className={styles.inlineActions}>

@@ -10,12 +10,19 @@ import {
   SkillsSection,
   VisibilitySection,
 } from "./EditProfileSections";
+import { CommunitiesPickerSection } from "./CommunitiesPickerSection";
 import { LinksSection } from "./LinksSection";
 import { UsernameSection } from "./UsernameSection";
 
 /** Section id of a change, so the host can list what was edited on save. */
 export type ProfileSection =
-  "identity" | "pronouns" | "bio" | "links" | "skills" | "visibility";
+  | "identity"
+  | "pronouns"
+  | "bio"
+  | "links"
+  | "skills"
+  | "communities"
+  | "visibility";
 
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
@@ -160,6 +167,7 @@ export function EditProfilePane({
         onRemove={removeTag}
         onKeyDown={handleTagKey}
       />
+      <CommunitiesPickerSection onChange={onChange} />
       <VisibilitySection />
     </>
   );

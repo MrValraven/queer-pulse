@@ -365,6 +365,10 @@ export const system: Catalog = {
   "status.hero.allOperational": "All systems operational",
   "status.hero.title": "Platform <em>status</em>",
   "status.hero.sub": "Updated just now · Refreshes every 60 s",
+  "status.hero.subLive": "Public uptime monitoring is on the way.",
+  "status.live.title": "Live status reporting is coming soon",
+  "status.live.description":
+    "We're setting up public uptime monitoring, service health and incident history. Check back soon.",
   "status.services.sectionEye": "Services",
   "status.serviceStatus.operational": "Operational",
   "status.serviceStatus.degraded": "Degraded",

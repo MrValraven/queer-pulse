@@ -12,6 +12,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -61,6 +62,7 @@ function BarterSkeleton() {
 
 export function BarterPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [mode, setMode] = useState<"all" | Mode>("all");
   const [cat, setCat] = useState("all");
@@ -71,7 +73,10 @@ export function BarterPage() {
 
   const items = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return [...posted, ...BARTERS].filter((b) => {
+    // The seeded board is demo-only fiction. In live mode the exchange starts
+    // empty and fills with what members actually post this session.
+    const seeded = demoMode ? BARTERS : [];
+    return [...posted, ...seeded].filter((b) => {
       if (mode === "offering" && b.mode === "seeking") return false;
       if (mode === "seeking" && b.mode === "offering") return false;
       if (cat !== "all" && b.cat !== cat) return false;
@@ -87,7 +92,7 @@ export function BarterPage() {
       }
       return true;
     });
-  }, [mode, cat, query, posted]);
+  }, [mode, cat, query, posted, demoMode]);
 
   return (
     <PageShell>
@@ -181,21 +186,28 @@ export function BarterPage() {
               ))
             ) : (
               <>
-                {items.length === 0 && (
-                  <EmptyState
-                    icon={<FiRepeat />}
-                    title={t("economy:barter.empty.title")}
-                    description={t("economy:barter.empty.description")}
-                    action={{
-                      label: t("economy:barter.empty.clearFilters"),
-                      onClick: () => {
-                        setMode("all");
-                        setCat("all");
-                        setQuery("");
-                      },
-                    }}
-                  />
-                )}
+                {items.length === 0 &&
+                  (demoMode ? (
+                    <EmptyState
+                      icon={<FiRepeat />}
+                      title={t("economy:barter.empty.title")}
+                      description={t("economy:barter.empty.description")}
+                      action={{
+                        label: t("economy:barter.empty.clearFilters"),
+                        onClick: () => {
+                          setMode("all");
+                          setCat("all");
+                          setQuery("");
+                        },
+                      }}
+                    />
+                  ) : (
+                    <EmptyState
+                      icon={<FiRepeat />}
+                      title={t("economy:barter.emptyLive.title")}
+                      description={t("economy:barter.emptyLive.description")}
+                    />
+                  ))}
                 {items.map((b, index) => (
                   <FadeIn key={b.id} delay={Math.min(index, 8) * 60}>
                     <BarterCard barter={b} />

@@ -30,6 +30,15 @@ export const messages: Catalog = {
     "When you start a chat, it'll live here — a quiet, private space just for you and the people you reach out to.",
   "thread.newMessage": "New message",
   "thread.presenceOnline": "Online now",
+  "thread.menuAria": "Conversation options",
+  "thread.deleteChat": "Delete chat",
+  "deleteChat.confirmTitle": "Delete this chat?",
+  "deleteChat.confirmBody":
+    "It disappears from your inbox and clears your copy. {name} keeps theirs — and if they message you again, the chat comes back with only the new messages.",
+  "deleteChat.confirmBodyGeneric":
+    "It disappears from your inbox and clears your copy. The other member keeps theirs — and if they message you again, the chat comes back with only the new messages.",
+  "deleteChat.confirmCta": "Delete chat",
+  "deleteChat.cancelCta": "Cancel",
 
   // Conversation panel (ConversationPanel)
   "conversation.activeNow": "Active now",
@@ -63,6 +72,19 @@ export const messages: Catalog = {
   "actions.more": "More",
   "actions.report": "Report",
   "actions.delete": "Delete",
+
+  // Long-press/right-click overlay (MessageActionOverlay) — reuses
+  // actions.report/actions.delete above for its own menu items.
+  "actions.menuLabel": "Message actions",
+  "actions.reply": "Reply",
+  "actions.edit": "Edit",
+  "actions.copy": "Copy",
+  "actions.edited": "edited",
+  "actions.editing": "Editing message",
+  "actions.editSave": "Save",
+  "actions.editCancel": "Cancel",
+  "actions.replyingTo": "Replying to {name}",
+  replyDeleted: "Message deleted",
   tombstone: "This message was deleted",
   "delete.confirmTitle": "Delete this message?",
   "delete.confirmBody": "It will be removed for everyone in this chat.",

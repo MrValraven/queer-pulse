@@ -1,11 +1,16 @@
-import { Button } from "../../shared/components/ui";
+import { FiUsers } from "react-icons/fi";
+import { Button, EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { FORUM, LEGAL, MENTORSHIP, TALK_CARDS } from "./family.data";
 import styles from "./FamilyPage.module.css";
 
 export function FamilyTalkSection() {
   const { t } = useTranslation();
+  // The peer-mentor cards are fabricated parents in the prototype. Live has no
+  // mentor directory yet, so gate them behind demo and invite people to sign up.
+  const { demoMode } = useDemoMode();
   return (
     <>
       <section className={styles.talk}>
@@ -29,21 +34,29 @@ export function FamilyTalkSection() {
               </div>
             </div>
             <div className={styles.talkCards}>
-              {TALK_CARDS.map((c) => (
-                <div className={styles.talkCard} key={c.name}>
-                  <div
-                    className={styles.tcAv}
-                    style={{ background: c.bg, color: c.color }}
-                  >
-                    {c.initials}
+              {demoMode ? (
+                TALK_CARDS.map((c) => (
+                  <div className={styles.talkCard} key={c.name}>
+                    <div
+                      className={styles.tcAv}
+                      style={{ background: c.bg, color: c.color }}
+                    >
+                      {c.initials}
+                    </div>
+                    <div>
+                      <div className={styles.tcName}>{c.name}</div>
+                      <div className={styles.tcDetail}>{c.detail}</div>
+                      <div className={styles.tcNote}>{c.note}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className={styles.tcName}>{c.name}</div>
-                    <div className={styles.tcDetail}>{c.detail}</div>
-                    <div className={styles.tcNote}>{c.note}</div>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <EmptyState
+                  icon={<FiUsers />}
+                  title={t("community:family.talk.liveEmpty.title")}
+                  description={t("community:family.talk.liveEmpty.description")}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -67,6 +67,18 @@ export const PROFILE_NAV: ProfileNavItem[] = [
     ),
   },
   {
+    id: "communities",
+    labelKey: "settings:editProfile.nav.communities.label",
+    groupKey: "settings:editProfile.nav.group.profile",
+    icon: (
+      <svg viewBox="0 0 16 16">
+        <circle cx="5.5" cy="6" r="2" />
+        <circle cx="10.5" cy="6" r="2" />
+        <path d="M2 13c0-2 1.6-3.2 3.5-3.2S9 11 9 13M7 13c0-2 1.6-3.2 3.5-3.2S14 11 14 13" />
+      </svg>
+    ),
+  },
+  {
     id: "visibility",
     labelKey: "settings:editProfile.nav.visibility.label",
     groupKey: "settings:editProfile.nav.group.privacy",

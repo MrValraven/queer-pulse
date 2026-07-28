@@ -87,9 +87,12 @@ export interface ProfileDraft {
   /** Whether the member's trust network (vouchers/vouched-for) is hidden
    *  from other members. Admins can still see it for safety. */
   privateNetwork: boolean;
+  /** Ordered slugs of the communities the member has chosen to feature on
+   *  their profile — editable via the featured-communities picker. */
+  featuredCommunities: string[];
 }
 
-function toDraft(m: Member): ProfileDraft {
+export function toDraft(m: Member): ProfileDraft {
   return {
     photo: m.photo,
     first: m.first,
@@ -109,6 +112,7 @@ function toDraft(m: Member): ProfileDraft {
     lookingFor: [...(m.lookingFor ?? [])],
     lookingForPublic: m.lookingForPublic ?? false,
     privateNetwork: m.privateNetwork ?? false,
+    featuredCommunities: (m.featuredCommunities ?? []).map((ref) => ref.slug),
   };
 }
 
@@ -116,7 +120,7 @@ function toDraft(m: Member): ProfileDraft {
  *  is the storage key from `AvatarEditor`'s upload (or `undefined` after a
  *  removal); sending `d.photo || null` lets a removal clear the stored avatar
  *  the same way `SubprofileMetaForm` does for a subprofile's `avatarUrl`. */
-function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
+export function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
   return {
     firstName: d.first.trim(),
     lastName: d.last.trim(),
@@ -135,6 +139,7 @@ function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     lookingFor: d.lookingFor,
     lookingForPublic: d.lookingForPublic,
     privateNetwork: d.privateNetwork,
+    featuredCommunities: d.featuredCommunities,
   };
 }
 
@@ -294,6 +299,12 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       lookingFor: draft.lookingFor,
       lookingForPublic: draft.lookingForPublic,
       privateNetwork: draft.privateNetwork,
+      // Self display (Task 3) always reads live from `draft.featuredCommunities`,
+      // so no ref rebuild is needed here — `useMyCommunityCards` is a hook and
+      // can't be called inside `save`. Keep the prior resolved refs so this
+      // field stays coherent and doesn't flash empty; live mode's next profile
+      // refetch brings the real, freshly-resolved refs anyway.
+      featuredCommunities: prev.featuredCommunities,
     }));
     setIsEditing(false);
     setJustSaved(true);

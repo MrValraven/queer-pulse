@@ -139,8 +139,15 @@ export interface MessageResponse {
   body: string;
   sender: AuthorSummary;
   createdAt: string;
+  editedAt: string | null;
   reactions: ReactionSummary[];
   deletedAt: string | null;
+  replyTo: {
+    id: string;
+    snippet: string;
+    senderName: string;
+    deleted: boolean;
+  } | null;
 }
 
 export interface ConversationResponse {

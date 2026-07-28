@@ -92,6 +92,11 @@ export const magazine: Catalog = {
   "sections.submit.cta": "Propõe um texto",
   "sections.verdict.essential": "Essencial",
   "sections.verdict.recommended": "Recomendado",
+  // Em modo live ainda não há edições publicadas — um "brevemente" honesto
+  // substitui os carrosséis de artigos fictícios (o mock fica no modo demo).
+  "sections.emptyLive.title": "A revista está quase a chegar",
+  "sections.emptyLive.description":
+    "A nossa primeira edição está a caminho. Estamos a juntar ensaios, reportagens, entrevistas e críticas da comunidade — volta em breve, ou propõe-nos algo para publicar.",
 
   // ── ArticlePage ──────────────────────────────────────────────────────────
   "article.notFoundMetaTitle": "Artigo não encontrado — Revista QueerPulse",
@@ -751,6 +756,10 @@ export const magazine: Catalog = {
   "tag.list.loadOlder_one": "Carregar {count} reportagem longa mais antiga",
   "tag.list.loadOlder_other":
     "Carregar {count} reportagens longas mais antigas",
+  // Modo live: ainda não foi publicada nenhuma reportagem com esta etiqueta.
+  "tag.list.liveEmptyTitle": "Ainda não há histórias com esta etiqueta",
+  "tag.list.liveEmptyDescription":
+    "Ainda não há nada arquivado com esta etiqueta. À medida que as histórias forem saindo, juntam-se aqui — volta em breve.",
 
   // ══════════════════ Arquivo da newsletter ═══════════════════════════════
   // O título/dek/meta de cada edição (newsletterArchive.data.tsx YEARS/LATEST,
@@ -768,6 +777,11 @@ export const magazine: Catalog = {
   "newsletterArchive.hero.stats.languages": "Idiomas · EN & PT",
   "newsletterArchive.tabsAriaLabel": "Newsletters",
   "newsletterArchive.readInBrowserCta": "Ler no navegador →",
+  // Modo live: ainda não foi enviada nenhuma edição, por isso o arquivo está
+  // vazio. O formulário de subscrição acima continua a funcionar.
+  "newsletterArchive.emptyLive.title": "O arquivo da newsletter está quase a chegar",
+  "newsletterArchive.emptyLive.description":
+    "Ainda não enviámos a nossa primeira edição. Subscreve acima e recebe-la assim que sair — depois todas as edições ficam aqui.",
   "newsletterArchive.list.emptyTitle": "Ainda não há edições nesta newsletter",
   "newsletterArchive.list.emptyDescription":
     "Ainda não foi enviado nada nesta newsletter. Explora as três — há bastante no arquivo.",

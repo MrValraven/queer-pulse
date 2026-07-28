@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
-import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { FiShield } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -22,8 +23,13 @@ const INVITE = routes.requestInvite;
 
 export function EmployerReviewsPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
-  const [companies, setCompanies] = useState<Company[]>(COMPANIES);
+  // Live mode has no real employer-review backend yet, so the seed stays empty
+  // and the fabricated COMPANIES only populate the demo experience.
+  const [companies, setCompanies] = useState<Company[]>(
+    demoMode ? COMPANIES : [],
+  );
   // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
   const [writeFor, setWriteFor] = useState<string | null>(null);
 
@@ -111,23 +117,35 @@ export function EmployerReviewsPage() {
               </Button>
             </div>
           </div>
-          <div className={styles.companyGrid}>
-            {loading
-              ? Array.from({ length: 6 }).map((_, skeletonIndex) => (
-                  <EmployerReviewSkeleton key={skeletonIndex} />
-                ))
-              : companies.map((company, companyIndex) => (
-                  <FadeIn
-                    key={company.name}
-                    delay={Math.min(companyIndex, 8) * 60}
-                  >
-                    <EmployerReviewCard
-                      company={company}
-                      onWriteReview={() => setWriteFor(company.name)}
-                    />
-                  </FadeIn>
-                ))}
-          </div>
+          {demoMode ? (
+            <div className={styles.companyGrid}>
+              {loading
+                ? Array.from({ length: 6 }).map((_, skeletonIndex) => (
+                    <EmployerReviewSkeleton key={skeletonIndex} />
+                  ))
+                : companies.map((company, companyIndex) => (
+                    <FadeIn
+                      key={company.name}
+                      delay={Math.min(companyIndex, 8) * 60}
+                    >
+                      <EmployerReviewCard
+                        company={company}
+                        onWriteReview={() => setWriteFor(company.name)}
+                      />
+                    </FadeIn>
+                  ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<FiShield />}
+              title={t("economy:employerReviews.emptyLive.title")}
+              description={t("economy:employerReviews.emptyLive.description")}
+              action={{
+                label: t("economy:employerReviews.recent.writeCta"),
+                onClick: () => setWriteFor(""),
+              }}
+            />
+          )}
 
           <div className={styles.verifyBox}>
             <div className={styles.verifyHead}>

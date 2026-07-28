@@ -477,6 +477,7 @@ export const subprofiles: Catalog = {
 
   // Cabeçalho da persona (SubprofileHero)
   "hero.message": "Mensagem",
+  "hero.edit": "Editar persona",
 
   // Controlo de endosso (SubprofileEndorse)
   "hero.endorse.cta": "Endossar",

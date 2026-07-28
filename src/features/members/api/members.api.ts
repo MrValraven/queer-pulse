@@ -6,6 +6,7 @@ import {
   apiDelete,
 } from "../../../shared/api/client";
 import type { VouchRelationship } from "../vouchMember.data";
+import type { CommunityType } from "../../homepage/data/types";
 
 export type Visibility = "open" | "network" | "private";
 
@@ -73,6 +74,18 @@ export interface GroupItemDTO {
   role: string;
 }
 
+/** A community the member has chosen to feature on their profile, resolved for
+ *  display ("Communities"). */
+export interface FeaturedCommunityRefDTO {
+  slug: string;
+  name: string;
+  tagline: string;
+  type: CommunityType;
+  typeLabel: string;
+  countLabel: string;
+  role: "owner" | "mod" | "member";
+}
+
 export type ShapingKind = "film" | "book" | "song" | "moment";
 /** A formative film/book/song/moment ("What shaped me"). */
 export interface ShapingItemDTO {
@@ -124,6 +137,9 @@ export interface ProfileDTO extends MemberCardDTO {
   activity?: ActivityItemDTO[];
   /** Related members ("Also in the room") — nearby in craft or neighbourhood. */
   related?: MemberCardDTO[];
+  /** Communities the member has chosen to feature on their profile, resolved
+   *  for display ("Communities"). */
+  featuredCommunities?: FeaturedCommunityRefDTO[];
   /** True when the viewer only gets the limited card (network/private). */
   limited: boolean;
 }
@@ -201,6 +217,9 @@ export interface UpdateProfileDTO {
    *  from other members. Admins can still see it for safety. */
   privateNetwork?: boolean;
   tags?: string[];
+  /** Ordered slugs of the communities the member has chosen to feature on
+   *  their profile. */
+  featuredCommunities?: string[];
 }
 
 /** Persist edits to the logged-in member's profile. Returns the saved profile. */

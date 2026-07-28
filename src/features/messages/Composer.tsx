@@ -2,7 +2,7 @@
 import { useRef, useLayoutEffect, useEffect, type ChangeEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEmitTyping } from "../../shared/api/realtime";
-import type { Conversation } from "./data";
+import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerProps {
@@ -12,6 +12,10 @@ interface ComposerProps {
   onDraftChange: (value: string) => void;
   onSend: () => void;
   blocked: boolean;
+  /** The message currently being quoted for a reply, or null/absent. */
+  replyDraft?: ChatMessage | null;
+  /** Clears the reply draft (the preview banner's close button). */
+  onCancelReply?: () => void;
 }
 
 /** Bottom composer: severed into a notice bar for official/blocked threads. */
@@ -22,6 +26,8 @@ export function Composer({
   onDraftChange,
   onSend,
   blocked,
+  replyDraft,
+  onCancelReply,
 }: ComposerProps) {
   const { t } = useTranslation();
   const firstName = active.name.split(" ")[0]!;
@@ -88,36 +94,56 @@ export function Composer({
 
   return (
     <div className={styles.composer}>
-      <textarea
-        id="messages-composer"
-        ref={textareaRef}
-        className={styles.composerTa}
-        placeholder={t("messages:conversation.composerPlaceholder", { name: firstName })}
-        value={draft}
-        rows={1}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onKeyDown={(event) => {
-          const isCoarsePointer =
-            typeof window !== "undefined" &&
-            window.matchMedia?.("(pointer: coarse)").matches;
-          if (event.key === "Enter" && !event.shiftKey && !isCoarsePointer) {
-            event.preventDefault();
-            handleSend();
-          }
-        }}
-      />
-      <button
-        type="button"
-        className={[styles.sendBtn, draft.trim() && styles.sendBtnActive].filter(Boolean).join(" ")}
-        onClick={handleSend}
-        aria-label={t("messages:conversation.send")}
-        disabled={!draft.trim()}
-      >
-        <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden>
-          <path d="M2 8l12-6-4 6 4 6-12-6Z" fill="currentColor" />
-        </svg>
-      </button>
+      {replyDraft && (
+        <div className={styles.replyPreview}>
+          <div className={styles.replyPreviewBody}>
+            <span className={styles.replyPreviewName}>
+              {replyDraft.from === "me" ? t("messages:conversation.you") : active.name}
+            </span>
+            <span className={styles.replyPreviewSnippet}>{replyDraft.text}</span>
+          </div>
+          <button
+            type="button"
+            className={styles.replyPreviewClose}
+            aria-label={t("messages:actions.editCancel")}
+            onClick={onCancelReply}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      <div className={styles.composerRow}>
+        <textarea
+          id="messages-composer"
+          ref={textareaRef}
+          className={styles.composerTa}
+          placeholder={t("messages:conversation.composerPlaceholder", { name: firstName })}
+          value={draft}
+          rows={1}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={(event) => {
+            const isCoarsePointer =
+              typeof window !== "undefined" &&
+              window.matchMedia?.("(pointer: coarse)").matches;
+            if (event.key === "Enter" && !event.shiftKey && !isCoarsePointer) {
+              event.preventDefault();
+              handleSend();
+            }
+          }}
+        />
+        <button
+          type="button"
+          className={[styles.sendBtn, draft.trim() && styles.sendBtnActive].filter(Boolean).join(" ")}
+          onClick={handleSend}
+          aria-label={t("messages:conversation.send")}
+          disabled={!draft.trim()}
+        >
+          <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden>
+            <path d="M2 8l12-6-4 6 4 6-12-6Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }

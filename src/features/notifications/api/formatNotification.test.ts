@@ -83,6 +83,29 @@ describe("formatNotification", () => {
     );
   });
 
+  it("formats a mention as a community-category known kind", () => {
+    const result = formatNotification("mention", { actorId: "u1" }, t);
+    expect(result.category).toBe("community");
+    expect(result.kind).toBe("mention");
+  });
+
+  // `mention` is deliberately out of the `KINDS` sweep above: that sweep asserts
+  // `text` never contains the raw kind string, but the natural copy ("You were
+  // *mention*ed…") contains "mention". So it gets the equivalent coverage here,
+  // guarding against a raw-key leak via the `type.mention` key form instead.
+  it("renders non-empty mention copy in both languages, distinct from the fallback", () => {
+    const fallback = formatNotification("something_else", {}, t).text;
+    for (const language of ["en", "pt"] as const) {
+      const localized = makeT(language);
+      const result = formatNotification("mention", { actorId: "u1" }, localized);
+      expect(result.text.trim()).not.toBe("");
+      expect(result.meta.trim()).not.toBe("");
+      expect(result.text).not.toContain("notifications:");
+      expect(result.text).not.toContain("type.mention");
+    }
+    expect(formatNotification("mention", {}, t).text).not.toBe(fallback);
+  });
+
   describe("unknown / future types", () => {
     it("falls back to generic copy instead of a blank row", () => {
       const result = formatNotification("a_type_from_the_future", {}, t);

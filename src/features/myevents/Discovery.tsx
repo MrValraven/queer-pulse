@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { RECOMMENDATIONS } from "./myEvents.data";
@@ -9,10 +10,13 @@ import { RECOMMENDATIONS } from "./myEvents.data";
 /** "You might like" recommendations strip, shown under the upcoming agenda. */
 export function Discovery() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { toast } = useMyEvents();
   const [hidden, setHidden] = useState<Record<string, boolean>>({});
-  const recs = RECOMMENDATIONS.filter((r) => !hidden[r.id]);
-  if (!recs.length) return null;
+  // The recommendations are demo-only fiction — live mode has no backend to
+  // suggest events yet, so the rail is hidden entirely until one exists.
+  const recommendations = RECOMMENDATIONS.filter((r) => !hidden[r.id]);
+  if (!demoMode || !recommendations.length) return null;
 
   const hide = (id: string) => setHidden((h) => ({ ...h, [id]: true }));
 
@@ -27,7 +31,7 @@ export function Discovery() {
         </div>
       </div>
       <div className={sx("disco-grid")}>
-        {recs.map((r) => (
+        {recommendations.map((r) => (
           <div key={r.id} className={sx("disco-card")}>
             <div className={sx("disco-reason")}>
               <svg viewBox="0 0 14 14" fill="currentColor" aria-hidden>

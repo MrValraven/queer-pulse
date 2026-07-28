@@ -3,6 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
   ClubSection,
@@ -17,6 +18,7 @@ import styles from "./CulturePage.module.css";
 
 export function CulturePage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [tab, setTab] = useState<TabKey>("club");
   const [submitOpen, setSubmitOpen] = useState(false);
 
@@ -60,7 +62,7 @@ export function CulturePage() {
         </div>
       </div>
 
-      {tab === "radio" && <CultureRadioPanel />}
+      {tab === "radio" && demoMode && <CultureRadioPanel />}
 
       <Outro
         title={

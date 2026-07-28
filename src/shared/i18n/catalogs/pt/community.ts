@@ -322,6 +322,12 @@ export const community: Catalog = {
   "creatives.outro.sub":
     "A QueerPulse é um espaço para artistas queer serem encontrades, apoiades e contratades — umas pelas outras e pela comunidade em geral.",
   "creatives.outro.cta": "Adicionar o teu perfil criativo",
+  "creatives.hero.liveTitle": "Artistas queer de <em>Lisboa.</em>",
+  "creatives.hero.liveSub":
+    "A montra ainda está a ser construída. Em breve, é aqui que vais encontrar, apoiar e contratar os fotógrafos, músicos, ceramistas e escritores da comunidade.",
+  "creatives.liveEmpty.title": "Montra criativa a chegar em breve",
+  "creatives.liveEmpty.description":
+    "Ainda não há perfis criativos publicados. Sê um dos primeiros — adiciona o teu e a comunidade vai encontrar-te.",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
   "dating.hero.cat": "Namoro e Relações · Lisboa",
@@ -677,6 +683,12 @@ export const community: Catalog = {
   "family.tab.legal.step.willGuardianship.text":
     "Mesmo com parentalidade legal plena, vale a pena ter um testamento que especifique a tutela em caso de morte. Um ou uma advogada de família pode redigir isto em poucas horas.",
   "family.review.starsAriaLabel": "{stars} em 5",
+  "family.review.liveEmpty.title": "Avaliações da comunidade a chegar em breve",
+  "family.review.liveEmpty.description":
+    "Ainda ninguém partilhou avaliações de clínicas, agências e assistentes sociais aqui. À medida que as pessoas passam pelo processo, as suas recomendações vão aparecer aqui.",
+  "family.note.liveEmpty.title": "Histórias da comunidade a chegar em breve",
+  "family.note.liveEmpty.description":
+    "Assim que os membros contarem como a sua própria família se formou, as palavras deles vão aparecer aqui.",
 
   "family.talk.heading": "Fala com quem já <em>passou por isto.</em>",
   "family.talk.body":
@@ -689,6 +701,9 @@ export const community: Catalog = {
     "O tópico do fórum sobre Construir Família é onde a comunidade partilha experiências atuais, faz perguntas e se apoia mutuamente ao longo de um processo que nenhum guia consegue captar por completo.",
   "family.talk.forumCta.openForumCta": "Abrir o tópico do fórum",
   "family.talk.forumCta.legalResourcesCta": "Recursos jurídicos →",
+  "family.talk.liveEmpty.title": "Mentores parentais a chegar em breve",
+  "family.talk.liveEmpty.description":
+    "Ainda ninguém se ofereceu para partilhar a sua experiência. Já estás a criar uma família? Deixa o teu nome e ajuda quem está agora a começar.",
 
   "family.outro.title": "A tua família <em>é real.</em>",
   "family.outro.sub":
@@ -719,6 +734,9 @@ export const community: Catalog = {
   "parentNetwork.comingUp.heading": "Para <em>breve.</em>",
   "parentNetwork.comingUp.lead":
     "A maioria dos meses traz uma manhã de brincadeiras e uma noite para os adultos. Crianças bem-vindas, salvo aviso em contrário.",
+  "parentNetwork.comingUp.liveEmpty.title": "Ainda não há encontros marcados",
+  "parentNetwork.comingUp.liveEmpty.description":
+    "Não há nada no calendário de momento. As brincadeiras e os serões para adultos vão aparecer aqui à medida que os membros os organizam.",
   "parentNetwork.tag.playdate": "Brincadeiras",
   "parentNetwork.tag.social": "Convívio",
   "parentNetwork.tag.workshop": "Workshop",
@@ -761,6 +779,9 @@ export const community: Catalog = {
   "readingGroups.empty.description":
     "Ainda não há nada que corresponda a esta combinação de género e formato — tenta alargar os filtros, ou cria um grupo à volta do livro que queres ler.",
   "readingGroups.empty.clearFiltersCta": "Limpar filtros",
+  "readingGroups.liveEmpty.title": "Ainda não há grupos de leitura",
+  "readingGroups.liveEmpty.description":
+    "Ainda não foi criado nenhum grupo. Sê o primeiro — propõe um aqui em baixo e junta a tua gente à volta de um livro.",
   "readingGroups.outro.title": "Os livros constroem <em>comunidade.</em>",
   "readingGroups.outro.sub":
     "Os grupos de leitura da QueerPulse existem desde 2024. Alguns tornaram-se amizades, outros colaborações, dois tornaram-se bandas.",

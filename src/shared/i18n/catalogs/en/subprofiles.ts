@@ -455,6 +455,7 @@ export const subprofiles: Catalog = {
 
   // Persona hero (SubprofileHero)
   "hero.message": "Message",
+  "hero.edit": "Edit persona",
 
   // Endorse control (SubprofileEndorse)
   "hero.endorse.cta": "Endorse",

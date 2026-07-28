@@ -6,16 +6,26 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { Composer } from "./Composer";
 import { ConversationHeader } from "./ConversationHeader";
+import { ConversationOverlays } from "./ConversationOverlays";
 import { MessageArea } from "./MessageArea";
 import { type RunParticipant } from "./MessageRun";
 import { useMessageScroll } from "./useMessageScroll";
 import { useTypingIndicator } from "./useTypingIndicator";
 import { useUnreadDivider } from "./useUnreadDivider";
-import { useToggleReaction, useDeleteMessage } from "./api/useMessageActions";
-import { DeleteMessageDialog } from "./DeleteMessageDialog";
-import { MessageReportModal } from "./MessageReportModal";
+import {
+  useToggleReaction,
+  useDeleteMessage,
+  useEditMessage,
+} from "./api/useMessageActions";
 import { me, type ChatMessage, type Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
+
+/** Own messages remain editable for 15 minutes after they were sent (client
+ *  gate; the server is the authority and rejects edits past its own window). */
+const EDIT_WINDOW_MS = 15 * 60 * 1000;
+
+/** The message the long-press/right-click action overlay is open for. */
+type ActionOverlayTarget = { message: ChatMessage; rect: DOMRect; isSent: boolean } | null;
 
 interface ConversationPanelProps {
   active: Conversation;
@@ -39,6 +49,12 @@ interface ConversationPanelProps {
   loadingOlder: boolean;
   /** Fetches the next (older) page of history. No-op in demo mode. */
   onLoadOlder: () => void;
+  /** The message currently being quoted for a reply, or null. */
+  replyDraft?: ChatMessage | null;
+  /** Starts (or replaces) the reply draft with `message`. */
+  onSetReply?: (message: ChatMessage) => void;
+  /** Clears the reply draft. */
+  onCancelReply?: () => void;
 }
 
 /** Right-hand conversation pane: header, scrolling message area, composer. Thin
@@ -57,6 +73,9 @@ export function ConversationPanel({
   hasMoreOlder,
   loadingOlder,
   onLoadOlder,
+  replyDraft,
+  onSetReply,
+  onCancelReply,
 }: ConversationPanelProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -64,6 +83,7 @@ export function ConversationPanel({
 
   const toggleReaction = useToggleReaction(active.id);
   const deleteMessage = useDeleteMessage(active.id);
+  const editMessage = useEditMessage(active.id);
   /** Message the report modal is open for (its server id is the report subject). */
   const [reportTarget, setReportTarget] = useState<ChatMessage | null>(null);
   /** Message the delete-confirm dialog is open for. */
@@ -72,6 +92,46 @@ export function ConversationPanel({
     if (deleteTarget?.id) deleteMessage.mutate(deleteTarget.id);
     setDeleteTarget(null);
   }, [deleteTarget, deleteMessage]);
+  const [actionTarget, setActionTarget] = useState<ActionOverlayTarget>(null);
+  /** Server id of the message the inline editor is currently open for. */
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+
+  function beginEdit(message: ChatMessage) {
+    if (message.id) setEditingMessageId(message.id);
+  }
+  function submitEdit(message: ChatMessage, nextBody: string) {
+    const trimmed = nextBody.trim();
+    if (message.id && trimmed && trimmed !== message.text) {
+      editMessage.mutate({ messageId: message.id, body: trimmed });
+    }
+    setEditingMessageId(null);
+  }
+  function cancelEdit() {
+    setEditingMessageId(null);
+  }
+
+  // optimistic/failed messages have no server id yet, so the overlay can't open
+  function openActions(message: ChatMessage, origin: { rect: DOMRect }, isSent: boolean) {
+    if (!message.id) return;
+    setActionTarget({ message, rect: origin.rect, isSent });
+  }
+
+  function copyMessage(message: ChatMessage) {
+    void navigator.clipboard?.writeText(message.text);
+  }
+
+  /** Scrolls to a message by server id (the bubble carries `message-<id>` as
+   *  its DOM id — see `MessageBubble`) and briefly highlights it. No-op if the
+   *  message isn't in the currently loaded/rendered page. */
+  function jumpToMessage(messageId: string) {
+    const node = document.getElementById(`message-${messageId}`);
+    if (!node) return;
+    node.scrollIntoView({ behavior: "smooth", block: "center" });
+    const highlightClass = styles.messageHighlight;
+    if (!highlightClass) return;
+    node.classList.add(highlightClass);
+    window.setTimeout(() => node.classList.remove(highlightClass), 1200);
+  }
   /** Adds/removes a reaction. Live-only: `message.id` is the server id the
    *  mutation needs; demo messages have none, so this is a no-op there. */
   const handleReactionToggle = useCallback(
@@ -89,11 +149,7 @@ export function ConversationPanel({
 
   const flatMessages = messageGroups.flatMap((group) => group.items);
   const messageCount = flatMessages.length;
-  const dividerAnchorMessage = useUnreadDivider(
-    flatMessages,
-    active.id,
-    active.unreadCount ?? 0,
-  );
+  const dividerAnchorMessage = useUnreadDivider(flatMessages, active.id, active.unreadCount ?? 0);
 
   // "Seen": the last message I sent, and whether the counterpart's read
   // watermark has caught up to it — only that message's run shows the label.
@@ -105,14 +161,13 @@ export function ConversationPanel({
     !!counterpartLastReadAt &&
     lastOutbound.at <= counterpartLastReadAt;
 
-  const { areaRef, showJumpPill, handleAreaScroll, jumpToLatest } =
-    useMessageScroll(
-      messageCount,
-      active.id,
-      hasMoreOlder,
-      loadingOlder,
-      onLoadOlder,
-    );
+  const { areaRef, showJumpPill, handleAreaScroll, jumpToLatest } = useMessageScroll(
+    messageCount,
+    active.id,
+    hasMoreOlder,
+    loadingOlder,
+    onLoadOlder,
+  );
   const counterpartTyping = useTypingIndicator(active.id);
 
   const counterpart: RunParticipant = {
@@ -155,6 +210,12 @@ export function ConversationPanel({
         onReportMessage={setReportTarget}
         onDeleteMessage={setDeleteTarget}
         viewerIsStaff={viewerIsStaff}
+        onOpenActions={openActions}
+        editingMessageId={editingMessageId}
+        onBeginEdit={beginEdit}
+        onSubmitEdit={submitEdit}
+        onCancelEdit={cancelEdit}
+        onJumpToMessage={jumpToMessage}
       />
 
       {showJumpPill && (
@@ -176,20 +237,25 @@ export function ConversationPanel({
         onDraftChange={onDraftChange}
         onSend={onSend}
         blocked={blocked}
+        replyDraft={replyDraft}
+        onCancelReply={onCancelReply}
       />
-      {deleteTarget && (
-        <DeleteMessageDialog
-          onConfirm={confirmDelete}
-          onClose={() => setDeleteTarget(null)}
-          pending={deleteMessage.isPending}
-        />
-      )}
-      {reportTarget?.id && (
-        <MessageReportModal
-          messageId={reportTarget.id}
-          onClose={() => setReportTarget(null)}
-        />
-      )}
+      <ConversationOverlays
+        actionTarget={actionTarget}
+        deleteTarget={deleteTarget}
+        reportTarget={reportTarget}
+        viewerIsStaff={viewerIsStaff}
+        editWindowMs={EDIT_WINDOW_MS}
+        onReactionToggle={handleReactionToggle}
+        onSetReply={onSetReply}
+        onBeginEdit={beginEdit}
+        onCopyMessage={copyMessage}
+        setActionTarget={setActionTarget}
+        setDeleteTarget={setDeleteTarget}
+        setReportTarget={setReportTarget}
+        onConfirmDelete={confirmDelete}
+        deletePending={deleteMessage.isPending}
+      />
     </div>
   );
 }

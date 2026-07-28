@@ -1,8 +1,10 @@
+import { FiFeather } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn } from "../../shared/components/ui";
+import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfile } from "../../app/providers/ProfileProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { usePublicProfile } from "../../app/providers/PublicProfileProvider";
@@ -31,6 +33,7 @@ import styles from "./PublicProfilePage.module.css";
  */
 export function PublicProfileOwnPreview() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { profile } = useProfile();
   const { user } = useAuth();
   const { enabled } = usePublicProfile();
@@ -45,6 +48,8 @@ export function PublicProfileOwnPreview() {
       <div className={styles.page}>
         <PublicProfileHead profile={profile} contributions={pub} />
 
+        {demoMode ? (
+          <>
         <div className={styles.stats}>
           {pub.stats.map((s, i) => (
             <FadeIn key={s.labelKey} delay={Math.min(i, 8) * 60}>
@@ -106,6 +111,18 @@ export function PublicProfileOwnPreview() {
             to={routes.gatherings}
           />
         </FadeIn>
+          </>
+        ) : (
+          <EmptyState
+            icon={<FiFeather />}
+            title={t("members:publicProfile.emptyLive.title")}
+            description={t("members:publicProfile.emptyLive.description")}
+            action={{
+              label: t("members:publicProfile.emptyLive.cta"),
+              to: routes.gatherings,
+            }}
+          />
+        )}
 
         <FadeIn delay={300}>
           <LockedSection

@@ -22,7 +22,7 @@ export const nav: Catalog = {
   gatherings: "Convívios",
   forum: "Fórum",
   calendar: "Calendário",
-  communities: "Comunidades",
+  communities: "Comunidades e Coletivos",
   arriving: "Acabaste de chegar a Lisboa?",
   skills: "Competências",
   feed: "Início",

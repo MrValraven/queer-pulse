@@ -44,6 +44,7 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "vouch_received",
   "introduction_made",
   "event_invite",
+  "mention",
 ]);
 
 export function notificationDtoToView(

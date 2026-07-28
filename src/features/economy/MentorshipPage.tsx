@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
+  EmptyState,
   FadeIn,
   Outro,
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -49,6 +51,7 @@ function MentorSkeleton() {
 
 export function MentorshipPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [mode, setMode] = useState<Mode | null>(null);
 
@@ -66,14 +69,16 @@ export function MentorshipPage() {
             />
           </h1>
           <p>{t("economy:mentorship.hero.lead")}</p>
-          <div className={styles.stats}>
-            {STATS.map((s) => (
-              <div key={s.labelKey}>
-                <div className={styles.msN}>{s.n}</div>
-                <div className={styles.msL}>{t(s.labelKey)}</div>
-              </div>
-            ))}
-          </div>
+          {demoMode && (
+            <div className={styles.stats}>
+              {STATS.map((stat) => (
+                <div key={stat.labelKey}>
+                  <div className={styles.msN}>{stat.n}</div>
+                  <div className={styles.msL}>{t(stat.labelKey)}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -141,66 +146,77 @@ export function MentorshipPage() {
               {t("economy:mentorship.strip.sub")}
             </div>
           </div>
-          <div className={styles.mentorGrid}>
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <MentorSkeleton key={i} />
-                ))
-              : MENTORS.map((m, i) => (
-                  <FadeIn key={m.slug} delay={Math.min(i, 8) * 60}>
-                    <Link
-                      to={`${routes.mentorship}/${m.slug}`}
-                      className={styles.mentorCard}
+          {demoMode ? (
+            <div className={styles.mentorGrid}>
+              {loading
+                ? Array.from({ length: 6 }).map((_, skeletonIndex) => (
+                    <MentorSkeleton key={skeletonIndex} />
+                  ))
+                : MENTORS.map((mentor, mentorIndex) => (
+                    <FadeIn
+                      key={mentor.slug}
+                      delay={Math.min(mentorIndex, 8) * 60}
                     >
-                      <div className={styles.mcTop}>
+                      <Link
+                        to={`${routes.mentorship}/${mentor.slug}`}
+                        className={styles.mentorCard}
+                      >
+                        <div className={styles.mcTop}>
+                          <div
+                            className={styles.mcAv}
+                            style={{ background: mentor.bg, color: mentor.color }}
+                          >
+                            {mentor.initials}
+                          </div>
+                          <div>
+                            <div className={styles.mcName}>{mentor.name}</div>
+                            <div className={styles.mcRole}>{mentor.role}</div>
+                          </div>
+                        </div>
+                        <div className={styles.mcAreas}>
+                          {mentor.areas.map((area) => (
+                            <span key={area} className={styles.mcArea}>
+                              {area}
+                            </span>
+                          ))}
+                        </div>
                         <div
-                          className={styles.mcAv}
-                          style={{ background: m.bg, color: m.color }}
+                          className={`${styles.mcCap} ${isWaitlisted(mentor) ? styles.mcCapWait : ""}`}
                         >
-                          {m.initials}
+                          {mentor.cap}
                         </div>
-                        <div>
-                          <div className={styles.mcName}>{m.name}</div>
-                          <div className={styles.mcRole}>{m.role}</div>
-                        </div>
-                      </div>
-                      <div className={styles.mcAreas}>
-                        {m.areas.map((a) => (
-                          <span key={a} className={styles.mcArea}>
-                            {a}
-                          </span>
-                        ))}
-                      </div>
-                      <div
-                        className={`${styles.mcCap} ${isWaitlisted(m) ? styles.mcCapWait : ""}`}
-                      >
-                        {m.cap}
-                      </div>
-                      <span
-                        role="button"
-                        tabIndex={0}
-                        className={styles.mcConnect}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setMode("mentee");
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            e.stopPropagation();
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          className={styles.mcConnect}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
                             setMode("mentee");
-                          }
-                        }}
-                      >
-                        {isWaitlisted(m)
-                          ? t("economy:mentorship.cta.joinWaitlist")
-                          : t("economy:mentorship.cta.requestMatch")}
-                      </span>
-                    </Link>
-                  </FadeIn>
-                ))}
-          </div>
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              setMode("mentee");
+                            }
+                          }}
+                        >
+                          {isWaitlisted(mentor)
+                            ? t("economy:mentorship.cta.joinWaitlist")
+                            : t("economy:mentorship.cta.requestMatch")}
+                        </span>
+                      </Link>
+                    </FadeIn>
+                  ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={<LuTreeDeciduous />}
+              title={t("economy:mentorship.emptyLive.title")}
+              description={t("economy:mentorship.emptyLive.description")}
+            />
+          )}
         </div>
       </section>
 

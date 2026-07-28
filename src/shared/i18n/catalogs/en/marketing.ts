@@ -1632,6 +1632,9 @@ export const marketing: Catalog = {
   "transparency.hero.meta.activeMembers": "Active members",
   "transparency.hero.meta.mistakesNamed": "Public mistakes named",
   "transparency.yearSwitch.inProgress": "in progress",
+  "transparency.live.title": "Our first transparency report is coming soon",
+  "transparency.live.description":
+    "We'll publish audited figures here — where the money came from and went, moderation actions, government requests, and the mistakes we name — once our first reporting period closes.",
   "transparency.money.title":
     "Where the money <em>came from,</em> and where it <em>went.</em>",
   "transparency.money.sub":
@@ -1687,15 +1690,100 @@ export const marketing: Catalog = {
   "changelog.filterAria": "Filter updates by type",
   "changelog.filter.all": "All",
   "changelog.filter.feature": "Features",
-  "changelog.filter.community": "Community",
+  "changelog.filter.improvement": "Improvements",
+  "changelog.filter.infrastructure": "Infrastructure",
   "changelog.filter.fix": "Fixes",
-  "changelog.filter.policy": "Policy",
-  "changelog.filter.magazine": "Magazine",
   "changelog.badge.feature": "Feature",
-  "changelog.badge.community": "Community",
+  "changelog.badge.improvement": "Improvement",
+  "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
-  "changelog.badge.policy": "Policy",
-  "changelog.badge.magazine": "Magazine",
+  "changelog.tag.settings": "Notification settings →",
+  "changelog.tag.messages": "Open messages →",
+  "changelog.tag.communities": "Browse communities →",
+  "changelog.tag.subprofiles": "See subprofiles →",
+  "changelog.tag.housing": "See housing →",
+  "changelog.tag.directory": "Open the directory →",
+  "changelog.tag.cinema": "Visit Cinema →",
+  "changelog.tag.forum": "Visit the forum →",
+
+  "changelog.entries.mentions.title": "Mention people and communities",
+  "changelog.entries.mentions.body":
+    "Type @ to tag a member or c/ to link a community in forum and community replies — anyone you mention gets a notification.",
+  "changelog.entries.push-notifications.title": "Push notifications for messages",
+  "changelog.entries.push-notifications.body":
+    "Opt in to get a phone notification when a new direct message arrives while you're away — private, direct-messages-only, and off by default.",
+  "changelog.entries.delete-conversation.title": "Delete a conversation",
+  "changelog.entries.delete-conversation.body":
+    "Clear a chat from your own inbox without affecting the other person's copy, WhatsApp-style.",
+  "changelog.entries.profile-communities.title": "Showcase your communities",
+  "changelog.entries.profile-communities.body":
+    "Pin the communities you run or belong to on your profile, each with a role badge.",
+  "changelog.entries.subprofiles-upgrade.title": "Richer subprofiles",
+  "changelog.entries.subprofiles-upgrade.body":
+    "Subprofiles gained presence and media, shareable link previews, and QR-code and vCard export.",
+  "changelog.entries.messaging-upgrades.title": "Messaging improvements",
+  "changelog.entries.messaging-upgrades.body":
+    "Long-press message actions, editing and replying, and a cleaner conversation thread.",
+  "changelog.entries.housing.title": "Housing & flatmate directories",
+  "changelog.entries.housing.body":
+    "Member-only listings for housing, flatmates and friendly landlords, each with a compatibility match score.",
+  "changelog.entries.routing-cleanup.title": "Routing & path cleanup",
+  "changelog.entries.routing-cleanup.body":
+    "Resolved conflicting public paths and route edge cases across the app.",
+  "changelog.entries.maps.title": "Interactive maps",
+  "changelog.entries.maps.body":
+    "The local directory and venues can now be explored on an interactive map.",
+  "changelog.entries.genesis.title": "Founder bootstrap flow",
+  "changelog.entries.genesis.body":
+    "A one-time Genesis flow to set up the very first administrator when the platform is stood up.",
+  "changelog.entries.pwa-mobile.title": "Install as an app",
+  "changelog.entries.pwa-mobile.body":
+    "QueerPulse became a progressive web app with a native-feeling mobile interface, plus improved icons and search-engine metadata.",
+  "changelog.entries.deploy-stability.title": "Deploy & build stabilization",
+  "changelog.entries.deploy-stability.body":
+    "A run of deployment, build, and prerendering fixes to get the app shipping reliably in production.",
+  "changelog.entries.performance-staff.title": "Performance & staff badges",
+  "changelog.entries.performance-staff.body":
+    "Faster page loads, expanded admin routes, and a QueerPulse staff badge on official accounts.",
+  "changelog.entries.accessibility.title": "Accessibility & UI polish",
+  "changelog.entries.accessibility.body":
+    "Accessibility fixes and a round of interface refinements across the app.",
+  "changelog.entries.i18n-complete.title": "Full Portuguese translation",
+  "changelog.entries.i18n-complete.body":
+    "The entire interface became available in both English and Portuguese, switchable from the nav.",
+  "changelog.entries.subprofiles.title": "Subprofiles",
+  "changelog.entries.subprofiles.body":
+    "Create multiple public presences under one account — for your art, your business, or a project.",
+  "changelog.entries.live-backend.title": "Live backend",
+  "changelog.entries.live-backend.body":
+    "The app connected to its real backend, keeping the standalone demo mode alongside live data, with editable profiles.",
+  "changelog.entries.landing.title": "New landing page",
+  "changelog.entries.landing.body":
+    "A redesigned landing page and a round of marketing-site refactors.",
+  "changelog.entries.studio-cinema.title": "Cinema & Studio",
+  "changelog.entries.studio-cinema.body":
+    "New Cinema rights pages and Studio production pages joined the platform.",
+  "changelog.entries.tickets.title": "Ticketed events",
+  "changelog.entries.tickets.body":
+    "Pay for event tickets directly on the platform, backed by real event data.",
+  "changelog.entries.business-directory.title": "Local business directory",
+  "changelog.entries.business-directory.body":
+    "A directory of local queer-friendly businesses, with a flow for owners to add their own.",
+  "changelog.entries.invite-flow.title": "Invite flow",
+  "changelog.entries.invite-flow.body":
+    "An invitation-based sign-up flow and a reworked onboarding experience.",
+  "changelog.entries.moderation-trust.title": "Moderation & trust network",
+  "changelog.entries.moderation-trust.body":
+    "Moderation tools, event management, admin tooling, and a trust-network graph connecting members.",
+  "changelog.entries.communities-forum.title": "Communities & forum",
+  "changelog.entries.communities-forum.body":
+    "Member-run communities and a long-form discussion forum launched together.",
+  "changelog.entries.onboarding.title": "Member onboarding",
+  "changelog.entries.onboarding.body":
+    "A guided onboarding flow for new members, with a smoother sign-in experience.",
+  "changelog.entries.launch.title": "QueerPulse launches",
+  "changelog.entries.launch.body":
+    "The first release — the community mega-navigation and the core set of pages went live.",
   "changelog.empty.title": "Nothing logged under that filter yet",
   "changelog.empty.description":
     "No changes of this kind have shipped so far. Clear the filter to see the full history.",

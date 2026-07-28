@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -14,6 +14,7 @@ import { type ChatMessage, type Conversation } from "./data";
 import { buildRecipientConversation } from "./recipient";
 import { useConversations, useUnreadMessages } from "./api/useConversations";
 import { useMessageThread } from "./api/useMessageThread";
+import { useDeleteConversation } from "./api/useMessageActions";
 import {
   useMarkRead,
   useSendMessage,
@@ -56,6 +57,14 @@ export function useMessagesController() {
   const unread = useUnreadMessages();
 
   const [extraThreads, setExtraThreads] = useState<Conversation[]>([]);
+  /** Conversation ids deleted this session, ahead of the async cache prune —
+   *  filtered out of `allThreads` immediately so the deleted thread can't
+   *  flicker back into view (default-select, `active`, `visibleThreads`) while
+   *  the delete mutation is still in flight. */
+  const [locallyDeletedIds, setLocallyDeletedIds] = useState<Set<string>>(
+    new Set(),
+  );
+
   const [activeId, setActiveId] = useState<string>("");
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   /** Live "Seen" watermark per conversation, from the counterpart's `read`
@@ -66,6 +75,9 @@ export function useMessagesController() {
   /** Per-thread optimistic messages sent this session, keyed by conversation id. */
   const [sent, setSent] = useState<Record<string, ChatMessage[]>>({});
   const [composing, setComposing] = useState(false);
+  /** The message currently being quoted for a reply, or null. Only a message
+   *  with a stable server `id` can be replied to (optimistic messages can't). */
+  const [replyDraft, setReplyDraft] = useState<ChatMessage | null>(null);
 
   // Session-started threads first, then the fetched inbox — deduped by id. A
   // just-started conversation lives in `extraThreads` until the inbox refetch
@@ -75,12 +87,12 @@ export function useMessagesController() {
     const seenIds = new Set<string>();
     const merged: Conversation[] = [];
     for (const thread of [...extraThreads, ...baseThreads]) {
-      if (seenIds.has(thread.id)) continue;
+      if (seenIds.has(thread.id) || locallyDeletedIds.has(thread.id)) continue;
       seenIds.add(thread.id);
       merged.push(thread);
     }
     return merged;
-  }, [extraThreads, baseThreads]);
+  }, [extraThreads, baseThreads, locallyDeletedIds]);
 
   // Default the open thread to the first available once threads load. Adjusting
   // state during render (not in an effect) avoids a cascading re-render frame.
@@ -133,6 +145,25 @@ export function useMessagesController() {
   const sendMessage = useSendMessage(active?.id ?? null);
   const markRead = useMarkRead(active?.id ?? null);
   const startConversation = useStartConversation();
+  const deleteConversationMutation = useDeleteConversation();
+
+  // Once the server re-surfaces a locally-deleted thread (the other member
+  // messaged again, so it's back in the fetched inbox), stop suppressing it —
+  // otherwise it would stay hidden until this page remounts. Skip while a
+  // delete is in flight: an unrelated ["conversations"] refetch could resolve
+  // before the server stamps clearedAt and momentarily re-include the thread.
+  useEffect(() => {
+    if (deleteConversationMutation.isPending) return;
+    setLocallyDeletedIds((previous) => {
+      if (previous.size === 0) return previous;
+      let changed = false;
+      const next = new Set(previous);
+      for (const thread of baseThreads) {
+        if (next.delete(thread.id)) changed = true;
+      }
+      return changed ? next : previous;
+    });
+  }, [baseThreads, deleteConversationMutation.isPending]);
 
   // DM severance (spec 03): a blocked counterpart's thread is hidden. Their
   // history stays server-side for moderation; here we just stop surfacing it.
@@ -168,6 +199,25 @@ export function useMessagesController() {
     setDraft("");
     setView("thread");
     if (!demoMode) markRead.mutate();
+  }
+
+  function deleteThread(conversationId: string) {
+    // Optimistically prune from `allThreads` right away — otherwise the
+    // deleted thread stays visible (and can even get re-selected) until the
+    // mutation's async cache invalidation lands.
+    setLocallyDeletedIds((previous) => {
+      const next = new Set(previous);
+      next.add(conversationId);
+      return next;
+    });
+    // Drop any optimistic placeholder row immediately.
+    setExtraThreads((previous) =>
+      previous.filter((thread) => thread.id !== conversationId),
+    );
+    if (activeId === conversationId) {
+      setView("list");
+    }
+    deleteConversationMutation.mutate(conversationId);
   }
 
   function startThread(recipient: Conversation) {
@@ -250,6 +300,27 @@ export function useMessagesController() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingRecipient?.slug]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Notification tap deep-link: the service worker's notificationclick opens
+  // `/messages?c=<conversationId>`. Wait until the inbox actually contains
+  // that conversation (it may still be loading), then open it the same way a
+  // normal thread-row tap does — on mobile the thread pane is gated on
+  // `view === "thread"`, so just setting `activeId` selects the conversation
+  // without ever showing it — and clear the param so it can't re-fire on a
+  // later manual thread switch. Coexists with the pendingRecipient effect
+  // above: that one deep-links to a person (existing-or-new thread via slug),
+  // this one deep-links to an existing conversation by id.
+  useEffect(() => {
+    const conversationId = searchParams.get("c");
+    if (!conversationId) return;
+    const exists = allThreads.some((thread) => thread.id === conversationId);
+    if (!exists) return;
+    openThread(conversationId);
+    setSearchParams({}, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, allThreads, setSearchParams]);
+
   function appendOptimistic(convId: string, message: ChatMessage) {
     setSent((prev) => ({ ...prev, [convId]: [...(prev[convId] ?? []), message] }));
   }
@@ -263,12 +334,17 @@ export function useMessagesController() {
     }));
   }
 
-  function deliver(convId: string, body: string, localId: string) {
+  function deliver(
+    convId: string,
+    body: string,
+    localId: string,
+    replyToId?: string,
+  ) {
     if (demoMode) {
       setStatus(convId, localId, "sent");
       return;
     }
-    sendMessage.mutate(body, {
+    sendMessage.mutate({ body, replyToId }, {
       // Drop only THIS optimistic message (matched by localId) — a concurrent
       // second send in the same thread must survive. The mutation invalidates
       // ["messages", convId], so the authoritative server copy backfills it.
@@ -291,6 +367,17 @@ export function useMessagesController() {
     if (!body || activeBlocked || !active) return;
     const convId = active.id;
     const localId = nextLocalId();
+    const replyTo = replyDraft
+      ? {
+          id: replyDraft.id!,
+          snippet: replyDraft.text.slice(0, 120),
+          senderName:
+            replyDraft.from === "me"
+              ? t("messages:conversation.you")
+              : active.name,
+          deleted: false,
+        }
+      : undefined;
     // Optimistic append — instant feedback in both modes. In live mode the
     // server refetch is authoritative, so clear the optimistic copy on success.
     appendOptimistic(convId, {
@@ -299,9 +386,12 @@ export function useMessagesController() {
       time: t("messages:time.justNow"),
       status: "sending",
       localId,
+      replyTo,
     });
     setDraft("");
-    deliver(convId, body, localId);
+    const replyToId = replyDraft?.id;
+    setReplyDraft(null);
+    deliver(convId, body, localId, replyToId);
   }
 
   function retrySend(message: ChatMessage) {
@@ -325,6 +415,8 @@ export function useMessagesController() {
     setDraft,
     composing,
     setComposing,
+    replyDraft,
+    setReplyDraft,
     active,
     activeBlocked,
     counterpartLastReadAt,
@@ -334,6 +426,8 @@ export function useMessagesController() {
     loadOlder,
     openThread,
     startThread,
+    deleteThread,
+    deletePending: deleteConversationMutation.isPending,
     send,
     retrySend,
   };

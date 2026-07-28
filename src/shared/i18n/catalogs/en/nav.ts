@@ -22,7 +22,7 @@ export const nav: Catalog = {
   gatherings: "Gatherings",
   forum: "Forum",
   calendar: "Calendar",
-  communities: "Communities",
+  communities: "Communities & Collectives",
   arriving: "New to Lisbon?",
   skills: "Skills",
   feed: "Home",

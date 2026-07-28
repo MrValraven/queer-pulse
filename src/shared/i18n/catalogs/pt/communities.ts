@@ -28,10 +28,10 @@ export const communities: Catalog = {
   "category.community": "Comunidade",
 
   // ── Diretório de descoberta (CommunitiesPage) ─────────────────────────────
-  "discover.hero.eyebrow": "Diretório de Comunidades",
+  "discover.hero.eyebrow": "Comunidades e Coletivos",
   "discover.hero.title": "Encontra a tua <em>gente.</em>",
   "discover.hero.lead":
-    "Um diretório vivo de comunidades queer por toda a Lisboa. Clubes sociais, coletivos de artes, grupos de ativismo, equipas desportivas, círculos de apoio e redes profissionais — algo para o momento em que estás agora.",
+    "Um diretório vivo de comunidades e coletivos queer por toda a Lisboa. Clubes sociais, coletivos de artes, grupos de ativismo, equipas desportivas, círculos de apoio e redes profissionais — algo para o momento em que estás agora.",
   "discover.hero.cta": "Ir para o teu hub",
   "discover.empty.none.title": "Ainda sem comunidades",
   "discover.empty.none.description":
@@ -60,7 +60,7 @@ export const communities: Catalog = {
   "card.stats.posts_other": "{count} publicações",
 
   // ── Hub de comunidades (CommunitiesHomePage + digest + feed + sidebar) ───
-  "hub.eyebrow": "As tuas comunidades",
+  "hub.eyebrow": "As tuas comunidades e coletivos",
   "hub.welcome": "Bem-vinde de volta, <em>{name}</em>",
   "hub.sub_one":
     "Isto é o que tem estado a acontecer na tua {count} comunidade.",
@@ -87,7 +87,7 @@ export const communities: Catalog = {
   "hub.pulse.empty.title": "Tudo calmo por agora",
   "hub.pulse.empty.description":
     "Quando as tuas comunidades publicarem algo, aparece aqui.",
-  "hub.sidebar.yourCommunities": "As tuas comunidades",
+  "hub.sidebar.yourCommunities": "As tuas comunidades e coletivos",
   "hub.sidebar.discoverMore": "Descobrir mais",
   "hub.sidebar.upcoming": "A caminho nas tuas comunidades",
   "hub.sidebar.suggestions": "Comunidades que podes gostar",
@@ -103,7 +103,7 @@ export const communities: Catalog = {
   "common.loading": "Loading…",
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
-  "detail.breadcrumb": "← Comunidades",
+  "detail.breadcrumb": "← Comunidades e Coletivos",
   "detail.join.invite": "Junta-te com convite",
   "detail.join.public": "Junta-te à comunidade",
   "detail.join.request": "Pedir para entrar",
@@ -288,7 +288,7 @@ export const communities: Catalog = {
 
   // ── Assistente Começar uma Comunidade: estrutura / barra de progresso ────
   "start.hero.back": "Voltar às tuas comunidades",
-  "start.hero.eyebrow": "Comunidades · fundar um espaço",
+  "start.hero.eyebrow": "Comunidades e Coletivos · fundar um espaço",
   "start.hero.title": "Começa uma <em>comunidade.</em>",
   "start.hero.lead":
     "Um lugar para a tua gente se juntar — social, de apoio, criativo, ou algo que só tu sabes nomear. <strong>Nada fica público até estares pronte.</strong>",

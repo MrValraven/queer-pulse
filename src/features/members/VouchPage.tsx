@@ -1,16 +1,18 @@
 import { useState, type FormEvent } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiShield } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Avatar, Button, Reveal } from "../../shared/components/ui";
+import { Avatar, Button, EmptyState, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CANDIDATE, MEANS } from "./vouch.data";
 import styles from "./VouchPage.module.css";
 
 export function VouchPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const [sent, setSent] = useState(false);
   const [note, setNote] = useState("");
@@ -27,7 +29,17 @@ export function VouchPage() {
       <section className={styles.page}>
         <div className="wrap">
           <div className={styles.inner}>
-            {sent ? (
+            {!demoMode ? (
+              <EmptyState
+                icon={<FiShield />}
+                title={t("members:vouch.page.emptyLive.title")}
+                description={t("members:vouch.page.emptyLive.description")}
+                action={{
+                  label: t("members:vouch.page.emptyLive.cta"),
+                  to: routes.members,
+                }}
+              />
+            ) : sent ? (
               <Reveal className={styles.panel}>
                 <div className={styles.panelIcon}>
                   <FiCheck />

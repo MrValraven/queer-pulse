@@ -41,6 +41,9 @@ export const economy: Catalog = {
   "incubator.programme.title": "Como <em>funciona</em> o programa.",
   "incubator.mentors.title": "Pessoas <em>mentoras</em> atuais.",
   "incubator.mentors.requestCta": "Pedir sessão",
+  "incubator.mentors.empty.title": "O emparelhamento com mentores está a chegar",
+  "incubator.mentors.empty.description":
+    "Assim que a bolsa de mentores da comunidade estiver ativa, vais ser emparelhado com alguém do teu setor aqui mesmo.",
   "incubator.step.apply.title": "Candidatar",
   "incubator.step.apply.desc":
     "Uma candidatura curta — a tua ideia, onde estás, do que precisas. Sem necessidade de pitch deck. Decisão em 3 semanas.",
@@ -132,6 +135,9 @@ export const economy: Catalog = {
   "salary.empty.description":
     "Ainda não há nada partilhado para este setor. Limpa o filtro para ver todas as submissões — ou junta a tua para ajudar a próxima pessoa a negociar.",
   "salary.empty.clear": "Limpar filtros",
+  "salary.emptyLive.title": "O painel de salários está a chegar",
+  "salary.emptyLive.description":
+    "Sê a primeira pessoa a adicionar um salário anónimo e ajuda quem vem a seguir a chegar preparado à negociação.",
   "salary.disclaimer":
     "Todas as entradas são anónimas. Não é guardado nome, email nem empregador. As entradas são revistas por uma pessoa moderadora antes de aparecerem.",
   "salary.helpBody":
@@ -915,6 +921,9 @@ export const economy: Catalog = {
   "employerReviews.recent.browseCta":
     "Ver vagas inclusivas para pessoas queer →",
   "employerReviews.recent.writeCta": "Escrever uma avaliação →",
+  "employerReviews.emptyLive.title": "Avaliações de empregadores em breve",
+  "employerReviews.emptyLive.description":
+    "Ainda não há avaliações publicadas. Sê a primeira pessoa a partilhar como é realmente trabalhar num sítio.",
 
   "employerReviews.verify.title": "Como funciona a <em>verificação</em>",
   "employerReviews.verify.verifiedSafe.label": "Verificada como segura",
@@ -1010,6 +1019,9 @@ export const economy: Catalog = {
   "grants.empty.description":
     "Não há oportunidades nessa categoria neste momento. Limpa o filtro para ver todas as bolsas e residências que a comunidade está a acompanhar.",
   "grants.empty.clearFilters": "Limpar filtros",
+  "grants.emptyLive.title": "O acompanhamento de bolsas está a chegar",
+  "grants.emptyLive.description":
+    "Estamos a construir um feed vivo, mantido pela comunidade, de bolsas e residências para trabalho queer. Volta em breve — ou candidata-te entretanto a uma das nossas Micro Bolsas.",
 
   "grants.guide.title": "Escrever uma <em>candidatura forte</em>",
   "grants.guide.sub":
@@ -1188,6 +1200,9 @@ export const economy: Catalog = {
   "barter.postedDaysAgo_one": "há {count} dia",
   "barter.postedDaysAgo_other": "há {count} dias",
 
+  "barter.emptyLive.title": "Ainda não há trocas publicadas",
+  "barter.emptyLive.description":
+    "Sê a primeira pessoa a oferecer uma competência ou um bem — põe algo em cima da mesa aqui em baixo e deixa que a troca certa te encontre.",
   "barter.empty.title": "Nada corresponde aos teus filtros",
   "barter.empty.description":
     "Ainda não há trocas que encaixem nessa combinação. Tenta alargar a pesquisa — ou publica o que tens para oferecer e deixa que a troca certa te encontre.",
@@ -1557,6 +1572,9 @@ export const economy: Catalog = {
   "mentorship.choose.mentor.for":
     "Para: pessoas com experiência dispostas a partilhá-la →",
 
+  "mentorship.emptyLive.title": "Diretório de mentores em breve",
+  "mentorship.emptyLive.description":
+    "Ainda estamos a construir a rede de mentores. Volta em breve para explorar e ligar-te a mentores da comunidade.",
   "mentorship.strip.title": "Mentores atuais <em>na rede</em>",
   "mentorship.strip.sub":
     "Estas pessoas abriram-se à mentoria. Podes pedir um par através do formulário acima.",
@@ -1642,6 +1660,10 @@ export const economy: Catalog = {
 
   // ── MentorDetailPage (+ header / sections / sidebar / cycle nav) ───────
   "mentorDetail.backToAll": "← Todos os mentores",
+  "mentorDetail.emptyLive.title": "Este perfil de mentor está a chegar",
+  "mentorDetail.emptyLive.description":
+    "O diretório de mentores ainda não está ativo. Volta para explorar a mentoria quando abrir.",
+  "mentorDetail.emptyLive.cta": "Voltar à mentoria",
   "mentorDetail.messageCta": "Enviar mensagem a {firstName}",
   "mentorDetail.cyclePrevious": "← Anterior",
   "mentorDetail.cycleNext": "Seguinte →",
@@ -2173,6 +2195,9 @@ export const economy: Catalog = {
   "solidarityDirectory.empty.description":
     "Ainda ninguém corresponde a essa pesquisa. Tenta outra profissão ou limpa a pesquisa para ver todas as pessoas que oferecem cuidado em escala variável.",
   "solidarityDirectory.empty.clearFilters": "Limpar filtros",
+  "solidarityDirectory.emptyLive.title": "Diretório em breve",
+  "solidarityDirectory.emptyLive.description":
+    "Estamos a verificar profissionais que oferecem tarifários solidários. Em breve vais poder encontrá-los e contactá-los aqui.",
   "solidarityDirectory.register.titleLine1": "Ofereces",
   "solidarityDirectory.register.titleEm": "tarifários solidários?",
   "solidarityDirectory.register.body":

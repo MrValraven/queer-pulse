@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from "react";
-import { FiCheck } from "react-icons/fi";
-import { Avatar, Button } from "../../shared/components/ui";
+import { FiBookOpen, FiBriefcase, FiCheck, FiImage, FiRadio } from "react-icons/fi";
+import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   COMMISSION_CAT_LABEL_KEY,
   COMMISSIONS,
@@ -44,6 +45,7 @@ function SectionHeader({
 
 export function ClubSection() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const fmt = useFormat();
   const [picking, setPicking] = useState(false);
   return (
@@ -63,66 +65,80 @@ export function ClubSection() {
         }
       />
 
-      <div className={styles.picksGrid}>
-        {PICKS.map((pick) => (
-          <article key={pick.title} className={styles.pickCard}>
-            <div className={`${styles.pickCover} ${styles[pick.kind]}`}>
-              <span
-                className={`${styles.pickBadge} ${styles[`badge_${pick.kind}`]}`}
-              >
-                {t(PICK_KIND_LABEL_KEY[pick.kind])}
-              </span>
-              <pick.emoji />
-            </div>
-            <div className={styles.pickBody}>
-              <div className={styles.pickTitle}>{pick.title}</div>
-              <div className={styles.pickAuthor}>{pick.author}</div>
-              <div className={styles.pickMeta}>
-                <span className={styles.pickDisc}>
-                  {t("culture:club.picks.discussing", {
-                    count: pick.discussingCount,
-                  })}
-                </span>
-                <span>·</span>
-                <span>
-                  {t(pick.eventKey, {
-                    date: fmt.date(pick.eventDate, {
-                      day: "numeric",
-                      month: "short",
-                    }),
-                  })}
-                </span>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+      {demoMode ? (
+        <>
+          <div className={styles.picksGrid}>
+            {PICKS.map((pick) => (
+              <article key={pick.title} className={styles.pickCard}>
+                <div className={`${styles.pickCover} ${styles[pick.kind]}`}>
+                  <span
+                    className={`${styles.pickBadge} ${styles[`badge_${pick.kind}`]}`}
+                  >
+                    {t(PICK_KIND_LABEL_KEY[pick.kind])}
+                  </span>
+                  <pick.emoji />
+                </div>
+                <div className={styles.pickBody}>
+                  <div className={styles.pickTitle}>{pick.title}</div>
+                  <div className={styles.pickAuthor}>{pick.author}</div>
+                  <div className={styles.pickMeta}>
+                    <span className={styles.pickDisc}>
+                      {t("culture:club.picks.discussing", {
+                        count: pick.discussingCount,
+                      })}
+                    </span>
+                    <span>·</span>
+                    <span>
+                      {t(pick.eventKey, {
+                        date: fmt.date(pick.eventDate, {
+                          day: "numeric",
+                          month: "short",
+                        }),
+                      })}
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
 
-      <div className={styles.threadHead}>
-        <h3 className={styles.subHead}>
-          <Translation
-            i18nKey="culture:club.discussionsHeading"
-            components={{ em: <em /> }}
-          />
-        </h3>
-        <Button variant="ghost" onClick={() => setPicking(true)}>
-          {t("culture:club.suggestPickCta")}
-        </Button>
-      </div>
-      <div className={styles.threadList}>
-        {THREADS.map((thread) => (
-          <article key={thread.q} className={styles.threadItem}>
-            <Avatar initials={thread.initials} tint={thread.tint} size={36} />
-            <div className={styles.threadBody}>
-              <div className={styles.threadQ}>{thread.q}</div>
-              <div className={styles.threadMeta}>{thread.meta}</div>
-            </div>
-            <div className={styles.threadReplies}>
-              {t("culture:club.replies", { count: thread.replies })}
-            </div>
-          </article>
-        ))}
-      </div>
+          <div className={styles.threadHead}>
+            <h3 className={styles.subHead}>
+              <Translation
+                i18nKey="culture:club.discussionsHeading"
+                components={{ em: <em /> }}
+              />
+            </h3>
+            <Button variant="ghost" onClick={() => setPicking(true)}>
+              {t("culture:club.suggestPickCta")}
+            </Button>
+          </div>
+          <div className={styles.threadList}>
+            {THREADS.map((thread) => (
+              <article key={thread.q} className={styles.threadItem}>
+                <Avatar
+                  initials={thread.initials}
+                  tint={thread.tint}
+                  size={36}
+                />
+                <div className={styles.threadBody}>
+                  <div className={styles.threadQ}>{thread.q}</div>
+                  <div className={styles.threadMeta}>{thread.meta}</div>
+                </div>
+                <div className={styles.threadReplies}>
+                  {t("culture:club.replies", { count: thread.replies })}
+                </div>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : (
+        <EmptyState
+          icon={<FiBookOpen />}
+          title={t("culture:club.emptyLive.title")}
+          description={t("culture:club.emptyLive.description")}
+        />
+      )}
 
       {picking && <SuggestPickModal onClose={() => setPicking(false)} />}
     </section>
@@ -184,6 +200,7 @@ function CommissionCard({ commission }: { commission: Commission }) {
 
 export function CommissionsSection() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [posting, setPosting] = useState(false);
   return (
     <section>
@@ -201,11 +218,19 @@ export function CommissionsSection() {
           </Button>
         }
       />
-      <div className={styles.projBoard}>
-        {COMMISSIONS.map((commission) => (
-          <CommissionCard key={commission.title} commission={commission} />
-        ))}
-      </div>
+      {demoMode ? (
+        <div className={styles.projBoard}>
+          {COMMISSIONS.map((commission) => (
+            <CommissionCard key={commission.title} commission={commission} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={<FiBriefcase />}
+          title={t("culture:commissions.emptyLive.title")}
+          description={t("culture:commissions.emptyLive.description")}
+        />
+      )}
       {posting && <PostProjectModal onClose={() => setPosting(false)} />}
     </section>
   );
@@ -213,6 +238,7 @@ export function CommissionsSection() {
 
 export function ShowcaseSection() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [submitting, setSubmitting] = useState(false);
   return (
     <section>
@@ -230,22 +256,33 @@ export function ShowcaseSection() {
           </Button>
         }
       />
-      <div className={styles.galleryGrid}>
-        {GALLERY.map((item) => (
-          <div
-            key={item.title}
-            className={`${styles.galItem} ${item.feat ? styles.galFeat : ""}`}
-          >
-            <div className={styles.galBg} style={{ background: item.gradient }}>
-              <item.emoji />
+      {demoMode ? (
+        <div className={styles.galleryGrid}>
+          {GALLERY.map((item) => (
+            <div
+              key={item.title}
+              className={`${styles.galItem} ${item.feat ? styles.galFeat : ""}`}
+            >
+              <div
+                className={styles.galBg}
+                style={{ background: item.gradient }}
+              >
+                <item.emoji />
+              </div>
+              <div className={styles.galOverlay}>
+                <div className={styles.goTitle}>{item.title}</div>
+                <div className={styles.goArtist}>{item.artist}</div>
+              </div>
             </div>
-            <div className={styles.galOverlay}>
-              <div className={styles.goTitle}>{item.title}</div>
-              <div className={styles.goArtist}>{item.artist}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={<FiImage />}
+          title={t("culture:showcase.emptyLive.title")}
+          description={t("culture:showcase.emptyLive.description")}
+        />
+      )}
       {submitting && <SubmitWorkModal onClose={() => setSubmitting(false)} />}
     </section>
   );
@@ -253,6 +290,7 @@ export function ShowcaseSection() {
 
 export function RadioIntro() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [submitting, setSubmitting] = useState(false);
   return (
     <section>
@@ -270,6 +308,13 @@ export function RadioIntro() {
           </Button>
         }
       />
+      {!demoMode && (
+        <EmptyState
+          icon={<FiRadio />}
+          title={t("culture:radio.emptyLive.title")}
+          description={t("culture:radio.emptyLive.description")}
+        />
+      )}
       {submitting && (
         <SubmitPlaylistModal onClose={() => setSubmitting(false)} />
       )}

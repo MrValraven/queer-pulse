@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { FiDownload, FiUpload } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ToolPage } from "./tools/ToolPage";
 import { useLocalStorage } from "./tools/useLocalStorage";
 import { RateBoardForm } from "./RateBoardForm";
@@ -53,8 +54,15 @@ function coerceEntry(raw: unknown): RateEntry | null {
 
 export function RateBoardPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const [entries, setEntries] = useLocalStorage<RateEntry[]>(STORAGE_KEY, SEED);
+  // The SEED is demo-only fiction — its median/percentile aggregates would read
+  // as real community data. Live mode starts empty so the stats reflect only
+  // rates members actually enter (RateBoardStats shows an empty state until then).
+  const [entries, setEntries] = useLocalStorage<RateEntry[]>(
+    STORAGE_KEY,
+    demoMode ? SEED : [],
+  );
   const [compareRate, setCompareRate] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 

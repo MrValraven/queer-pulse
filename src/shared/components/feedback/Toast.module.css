@@ -1,20 +1,19 @@
 .container {
   position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 20px;
+  inset-inline-end: 20px;
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   /* Gap lives on .region, not here: an empty live region is still a flex item,
-     so a container gap would leave a permanent 10px hole in the stack. */
+     so a container gap would leave a permanent hole in the stack. */
   gap: 0;
   pointer-events: none;
-  /* width:max-content is load-bearing — with left:50% and no width, shrink-to-fit
-     only offers half the viewport, so toasts would render as narrow towers. */
+  /* width:max-content lets a short toast shrink to its content while inset-inline-end
+     keeps it pinned to the corner; long messages wrap within max-width. */
   width: max-content;
-  max-width: min(560px, calc(100vw - 32px));
+  max-width: min(400px, calc(100vw - 32px));
 }
 
 /* One per politeness level. Both are always in the DOM — a live region created
@@ -23,7 +22,7 @@
 .region {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: 10px;
   width: 100%;
 }
@@ -32,72 +31,98 @@
 }
 
 .toast {
+  /* --toast-accent is the per-type semantic colour, set by the variant classes
+     below and reused for the edge bar, icon and action button. */
+  width: 100%;
   font-family: var(--sans);
   font-size: 14px;
+  line-height: 1.4;
   font-weight: 500;
-  padding: 12px 22px;
-  /* Reads as a pill at single-line height but stays a rounded rect when a long
-     message wraps — --radius-pill would round a multi-line toast into a blob. */
-  border-radius: var(--radius-card);
+  color: var(--ink);
+  background: var(--paper);
+  padding: 13px 16px;
+  border-radius: var(--radius-badge);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  /* Coloured leading edge — the type signal that pairs with the icon so meaning
+     never rides on colour alone. */
+  border-inline-start: 3px solid var(--toast-accent);
   box-shadow: var(--shadow-toast);
-  /* Long messages must wrap rather than run past the viewport on phones;
-     short ones still sit on one line because the container is shrink-to-fit. */
-  max-width: 100%;
   display: flex;
   align-items: center;
-  gap: 9px;
-  animation: qpToastIn 0.32s var(--ease-out) both;
+  gap: 11px;
+  animation: qpToastIn 0.34s var(--ease-out) both;
 }
 
 .leaving {
-  animation: qpToastOut 0.28s ease forwards;
+  animation: qpToastOut 0.26s var(--ease-in) forwards;
 }
 
 .icon {
-  font-size: 15px;
-  font-weight: 700;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--toast-accent) 15%, transparent);
+  color: var(--toast-accent);
+  font-size: 14px;
+}
+.icon svg {
+  display: block;
+}
+
+.message {
+  flex: 1 1 auto;
+  /* Let a long message wrap instead of forcing the toast past its max-width. */
+  min-width: 0;
 }
 
 .action {
   pointer-events: auto;
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-left: 6px;
-  padding: 4px 11px;
-  border: 1px solid currentColor;
+  margin-inline-start: 2px;
+  padding: 5px 12px;
+  border: 1px solid color-mix(in srgb, var(--toast-accent) 42%, transparent);
   border-radius: var(--radius-pill);
-  background: transparent;
-  color: inherit;
+  background: color-mix(in srgb, var(--toast-accent) 10%, transparent);
+  color: var(--toast-accent);
   font: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
-  opacity: 0.85;
-  transition: opacity 0.15s var(--ease, ease);
+  transition: background var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .action:hover {
-    opacity: 1;
+    background: color-mix(in srgb, var(--toast-accent) 18%, transparent);
   }
+}
+.action:focus-visible {
+  outline: 2px solid var(--toast-accent);
+  outline-offset: 2px;
 }
 .action svg {
   width: 13px;
   height: 13px;
 }
 
+/* Per-type accent. Each uses an "-ink" token engineered to stay legible on
+   --paper in both light and dark themes. */
 .success {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
+  --toast-accent: var(--jade-ink);
 }
 .error {
-  background: var(--accent-ink);
-  color: #fff;
+  --toast-accent: var(--danger);
+}
+.warning {
+  --toast-accent: var(--amber-ink);
 }
 .info {
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid rgba(var(--line-rgb), 0.12);
+  --toast-accent: var(--accent-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -109,11 +134,12 @@
 
 /* Local copies of shared keyframes — see src/styles/tokens/effects.css.
    Global keyframes can't be referenced from a CSS module (the animation-name
-   gets scoped to a dangling hash), so each module needs its own copy. */
+   gets scoped to a dangling hash), so each module needs its own copy. Toasts now
+   dock top-right, so they slide in from the edge rather than up from the floor. */
 @keyframes qpToastIn {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.94);
+    transform: translateX(20px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -123,6 +149,6 @@
 @keyframes qpToastOut {
   to {
     opacity: 0;
-    transform: translateY(8px) scale(0.96);
+    transform: translateX(20px) scale(0.97);
   }
 }

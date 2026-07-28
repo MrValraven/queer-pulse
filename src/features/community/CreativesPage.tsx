@@ -4,6 +4,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { ArtGridSkeleton, MusicGridSkeleton } from "./CreativesSkeleton";
 import { ART_WORKS, FEATURED, INVITE, MUSIC_ARTISTS } from "./creatives.data";
@@ -14,6 +15,7 @@ import styles from "./CreativesPage.module.css";
 
 export function CreativesPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const [featuredIdx, setFeaturedIdx] = useState(0);
   const [mode, setMode] = useState<"art" | "music">("art");
@@ -21,12 +23,14 @@ export function CreativesPage() {
   const [activePlayer, setActivePlayer] = useState<string | null>(null);
 
   useEffect(() => {
+    // The rotating spotlight only exists in demo — live has no featured set.
+    if (!demoMode) return;
     const intervalId = window.setInterval(
       () => setFeaturedIdx((i) => (i + 1) % FEATURED.length),
       5000,
     );
     return () => window.clearInterval(intervalId);
-  }, []);
+  }, [demoMode]);
 
   const toggleFilter = (name: string) => {
     if (name === "All") {
@@ -58,77 +62,99 @@ export function CreativesPage() {
       <CreativesHero
         featuredIdx={featuredIdx}
         setFeaturedIdx={setFeaturedIdx}
+        demoMode={demoMode}
       />
 
-      <CreativesTopbar
-        mode={mode}
-        filters={filters}
-        count={count}
-        onSwitchMode={switchMode}
-        onToggleFilter={toggleFilter}
-      />
-
-      <div className={styles.body}>
-        <div className="wrap">
-          {mode === "art" ? (
-            loading ? (
-              <div className={styles.artGrid}>
-                <ArtGridSkeleton />
-              </div>
-            ) : artItems.length === 0 ? (
-              <EmptyState
-                compact
-                icon={<FiSearch />}
-                title={t("community:creatives.empty.art.title")}
-                description={t("community:creatives.empty.art.description")}
-                action={{
-                  label: t("community:creatives.empty.clearFiltersCta"),
-                  onClick: () => setFilters([]),
-                }}
-              />
-            ) : (
-              <div className={styles.artGrid}>
-                {artItems.map((w, i) => (
-                  <FadeIn
-                    key={w.title}
-                    delay={Math.min(i, 8) * 60}
-                    style={{ breakInside: "avoid" }}
-                  >
-                    <ArtCard w={w} />
-                  </FadeIn>
-                ))}
-              </div>
-            )
-          ) : loading ? (
-            <div className={styles.musicGrid}>
-              <MusicGridSkeleton />
-            </div>
-          ) : musicItems.length === 0 ? (
+      {!demoMode ? (
+        // Live mode has no creator directory backend yet — every artist and
+        // artwork here is fabricated demo content keyed to mock members, so
+        // show an honest coming-soon state instead of leaking those personas.
+        <div className={styles.body}>
+          <div className="wrap">
             <EmptyState
-              compact
               icon={<FiSearch />}
-              title={t("community:creatives.empty.music.title")}
-              description={t("community:creatives.empty.music.description")}
+              title={t("community:creatives.liveEmpty.title")}
+              description={t("community:creatives.liveEmpty.description")}
               action={{
-                label: t("community:creatives.empty.clearFiltersCta"),
-                onClick: () => setFilters([]),
+                label: t("community:creatives.outro.cta"),
+                to: INVITE,
               }}
             />
-          ) : (
-            <div className={styles.musicGrid}>
-              {musicItems.map((a, i) => (
-                <FadeIn key={a.id} delay={Math.min(i, 8) * 60}>
-                  <MusicCard
-                    a={a}
-                    active={activePlayer === a.id}
-                    onPlay={() => setActivePlayer(a.id)}
-                  />
-                </FadeIn>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <CreativesTopbar
+            mode={mode}
+            filters={filters}
+            count={count}
+            onSwitchMode={switchMode}
+            onToggleFilter={toggleFilter}
+          />
+
+          <div className={styles.body}>
+            <div className="wrap">
+              {mode === "art" ? (
+                loading ? (
+                  <div className={styles.artGrid}>
+                    <ArtGridSkeleton />
+                  </div>
+                ) : artItems.length === 0 ? (
+                  <EmptyState
+                    compact
+                    icon={<FiSearch />}
+                    title={t("community:creatives.empty.art.title")}
+                    description={t("community:creatives.empty.art.description")}
+                    action={{
+                      label: t("community:creatives.empty.clearFiltersCta"),
+                      onClick: () => setFilters([]),
+                    }}
+                  />
+                ) : (
+                  <div className={styles.artGrid}>
+                    {artItems.map((w, i) => (
+                      <FadeIn
+                        key={w.title}
+                        delay={Math.min(i, 8) * 60}
+                        style={{ breakInside: "avoid" }}
+                      >
+                        <ArtCard w={w} />
+                      </FadeIn>
+                    ))}
+                  </div>
+                )
+              ) : loading ? (
+                <div className={styles.musicGrid}>
+                  <MusicGridSkeleton />
+                </div>
+              ) : musicItems.length === 0 ? (
+                <EmptyState
+                  compact
+                  icon={<FiSearch />}
+                  title={t("community:creatives.empty.music.title")}
+                  description={t("community:creatives.empty.music.description")}
+                  action={{
+                    label: t("community:creatives.empty.clearFiltersCta"),
+                    onClick: () => setFilters([]),
+                  }}
+                />
+              ) : (
+                <div className={styles.musicGrid}>
+                  {musicItems.map((a, i) => (
+                    <FadeIn key={a.id} delay={Math.min(i, 8) * 60}>
+                      <MusicCard
+                        a={a}
+                        active={activePlayer === a.id}
+                        onPlay={() => setActivePlayer(a.id)}
+                      />
+                    </FadeIn>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       <Outro
         title={

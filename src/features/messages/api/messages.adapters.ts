@@ -86,6 +86,8 @@ export function messageToChat(
     at: dto.createdAt,
     reactions: dto.reactions,
     deletedAt: dto.deletedAt ?? undefined,
+    editedAt: dto.editedAt ?? undefined,
+    replyTo: dto.replyTo ?? undefined,
   };
 }
 

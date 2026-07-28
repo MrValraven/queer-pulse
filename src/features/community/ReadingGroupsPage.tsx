@@ -10,6 +10,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -61,6 +62,7 @@ function ReadingGroupCardSkeleton() {
 
 export function ReadingGroupsPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [genre, setGenre] = useState<Genre | "all">("all");
@@ -71,7 +73,10 @@ export function ReadingGroupsPage() {
   const [myGroups, setMyGroups] = useState<Group[]>([]);
   const messages = routes.messages;
 
-  const allGroups = [...myGroups, ...GROUPS];
+  // The curated GROUPS directory is prototype-only editorial content with no
+  // server listing. In live mode only the groups the member proposes this
+  // session appear; the propose flow (ListGroupStrip) works in both modes.
+  const allGroups = demoMode ? [...myGroups, ...GROUPS] : myGroups;
   const items = allGroups.filter(
     (g) =>
       (genre === "all" || g.genre === genre) &&
@@ -167,21 +172,30 @@ export function ReadingGroupsPage() {
               Array.from({ length: 4 }).map((_, i) => (
                 <ReadingGroupCardSkeleton key={i} />
               ))}
-            {!loading && items.length === 0 && (
-              <EmptyState
-                className={styles.empty}
-                icon={<FiBookOpen />}
-                title={t("community:readingGroups.empty.title")}
-                description={t("community:readingGroups.empty.description")}
-                action={{
-                  label: t("community:readingGroups.empty.clearFiltersCta"),
-                  onClick: () => {
-                    setGenre("all");
-                    setFormat("all");
-                  },
-                }}
-              />
-            )}
+            {!loading &&
+              items.length === 0 &&
+              (!demoMode && allGroups.length === 0 ? (
+                <EmptyState
+                  className={styles.empty}
+                  icon={<FiBookOpen />}
+                  title={t("community:readingGroups.liveEmpty.title")}
+                  description={t("community:readingGroups.liveEmpty.description")}
+                />
+              ) : (
+                <EmptyState
+                  className={styles.empty}
+                  icon={<FiBookOpen />}
+                  title={t("community:readingGroups.empty.title")}
+                  description={t("community:readingGroups.empty.description")}
+                  action={{
+                    label: t("community:readingGroups.empty.clearFiltersCta"),
+                    onClick: () => {
+                      setGenre("all");
+                      setFormat("all");
+                    },
+                  }}
+                />
+              ))}
             {!loading &&
               items.map((g, i) => (
                 <FadeIn key={g.id} delay={Math.min(i, 8) * 60}>

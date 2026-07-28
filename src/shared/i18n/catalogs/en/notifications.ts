@@ -42,6 +42,11 @@ export const notifications: Catalog = {
     "An introduction you made for <profile>{name}</profile> went through.",
   "type.introduction_made.meta": "Introduction",
 
+  "type.mention.text": "You were mentioned in a discussion.",
+  "type.mention.textNamed":
+    "<profile>{name}</profile> mentioned you in a discussion.",
+  "type.mention.meta": "Mention",
+
   "type.event_invite.text": "You have an invitation to a gathering.",
   "type.event_invite.textNamed":
     "<profile>{name}</profile> invited you to a gathering.",

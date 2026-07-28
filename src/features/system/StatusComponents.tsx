@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
@@ -32,16 +33,26 @@ function buildBars(id: string): string[] {
 
 export function StatusHero() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  // The "all operational" badge and the "refreshes every 60 s" line are live
+  // status claims with no backend behind them yet — demo-only. Live mode shows
+  // an honest, neutral subtitle instead.
   return (
     <section className={`${styles.hero} wrap`}>
-      <div className={styles.overallBadge} aria-live="polite">
-        <span className={styles.overallDot} aria-hidden />
-        <span className={styles.overallLabel}>
-          {t("system:status.hero.allOperational")}
-        </span>
-      </div>
+      {demoMode && (
+        <div className={styles.overallBadge} aria-live="polite">
+          <span className={styles.overallDot} aria-hidden />
+          <span className={styles.overallLabel}>
+            {t("system:status.hero.allOperational")}
+          </span>
+        </div>
+      )}
       <h1 className={styles.heroTitle}>{t("system:status.hero.title")}</h1>
-      <p className={styles.heroSub}>{t("system:status.hero.sub")}</p>
+      <p className={styles.heroSub}>
+        {demoMode
+          ? t("system:status.hero.sub")
+          : t("system:status.hero.subLive")}
+      </p>
     </section>
   );
 }

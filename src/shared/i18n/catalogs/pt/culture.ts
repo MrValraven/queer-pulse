@@ -34,6 +34,9 @@ export const culture: Catalog = {
   "club.discussionsHeading": "<em>Discussões</em> recentes.",
   "club.replies_one": "{count} resposta",
   "club.replies_other": "{count} respostas",
+  "club.emptyLive.title": "Escolhas e discussões em breve",
+  "club.emptyLive.description":
+    "Quando o clube arrancar, as escolhas do mês e as conversas à volta delas vão viver aqui.",
 
   "commissions.heading": "Encomendas <em>criativas.</em>",
   "commissions.sub":
@@ -46,16 +49,25 @@ export const culture: Catalog = {
   "commissions.cat.film": "Cinema",
   "commissions.expressInterestCta": "Manifestar interesse",
   "commissions.interestSent": "Interesse enviado",
+  "commissions.emptyLive.title": "Encomendas abertas em breve",
+  "commissions.emptyLive.description":
+    "Quando as pessoas começarem a publicar projetos e a procurar colaborações, os apelos vão aparecer aqui.",
 
   "showcase.heading": "Trabalho da <em>comunidade.</em>",
   "showcase.sub":
     "Exposição rotativa — 8 trabalhos exibidos de cada vez. Submissões revistas mensalmente.",
   "showcase.submitWorkCta": "+ Submeter o teu trabalho",
+  "showcase.emptyLive.title": "Trabalhos em destaque em breve",
+  "showcase.emptyLive.description":
+    "A mostra rotativa de trabalhos da comunidade ainda está a ser preparada. Sê a primeira pessoa a submeter o teu.",
 
   "radio.heading": "Rádio da <em>comunidade.</em>",
   "radio.sub":
     "Presença cultural ambiente — com curadoria de DJs rotativos. Sem algoritmo. Sem anúncios.",
   "radio.submitPlaylistCta": "Submeter uma playlist",
+  "radio.emptyLive.title": "Programação de rádio em breve",
+  "radio.emptyLive.description":
+    "A rádio da comunidade ainda não está no ar. Quando alguém da curadoria pegar no primeiro turno, vais ouvi-lo aqui.",
   "radio.curatorLabel": "Curadoria desta semana",
   "radio.curatedBy": "com curadoria de {name}",
   "radio.pastPlaylists": "Playlists anteriores",

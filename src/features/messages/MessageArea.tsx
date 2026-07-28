@@ -41,6 +41,22 @@ export interface MessageAreaProps {
   onReportMessage: (message: ChatMessage) => void;
   onDeleteMessage: (message: ChatMessage) => void;
   viewerIsStaff: boolean;
+  /** Opens the long-press/right-click action overlay for `message`. */
+  onOpenActions?: (
+    message: ChatMessage,
+    origin: { rect: DOMRect },
+    isSent: boolean,
+  ) => void;
+  /** Server id of the message currently showing the inline editor, if any. */
+  editingMessageId?: string | null;
+  /** Opens the inline editor for `message`. */
+  onBeginEdit?: (message: ChatMessage) => void;
+  /** Saves the inline editor's current text for `message`. */
+  onSubmitEdit?: (message: ChatMessage, nextBody: string) => void;
+  /** Closes the inline editor without saving. */
+  onCancelEdit?: () => void;
+  /** Scrolls to and briefly highlights the message with this server id. */
+  onJumpToMessage?: (messageId: string) => void;
 }
 
 /** The scrolling conversation log: older-history spinner, day-grouped runs, and
@@ -61,6 +77,12 @@ export function MessageArea({
   onReportMessage,
   onDeleteMessage,
   viewerIsStaff,
+  onOpenActions,
+  editingMessageId,
+  onBeginEdit,
+  onSubmitEdit,
+  onCancelEdit,
+  onJumpToMessage,
 }: MessageAreaProps) {
   const { t } = useTranslation();
   return (
@@ -110,6 +132,12 @@ export function MessageArea({
                       onReportMessage={onReportMessage}
                       onDeleteMessage={onDeleteMessage}
                       viewerIsStaff={viewerIsStaff}
+                      onOpenActions={onOpenActions}
+                      editingMessageId={editingMessageId}
+                      onBeginEdit={onBeginEdit}
+                      onSubmitEdit={onSubmitEdit}
+                      onCancelEdit={onCancelEdit}
+                      onJumpToMessage={onJumpToMessage}
                     />
                   </Fragment>
                 );

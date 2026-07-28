@@ -18,6 +18,15 @@ export const messages: Catalog = {
     "Quando começares uma conversa, ela fica aqui — um espaço tranquilo e privado só para ti e para quem contactares.",
   "thread.newMessage": "Nova mensagem",
   "thread.presenceOnline": "Online agora",
+  "thread.menuAria": "Opções da conversa",
+  "thread.deleteChat": "Apagar conversa",
+  "deleteChat.confirmTitle": "Apagar esta conversa?",
+  "deleteChat.confirmBody":
+    "Desaparece da tua caixa de entrada e limpa a tua cópia. {name} mantém a dele(a) — e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
+  "deleteChat.confirmBodyGeneric":
+    "Desaparece da tua caixa de entrada e limpa a tua cópia. A outra pessoa mantém a dela — e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
+  "deleteChat.confirmCta": "Apagar conversa",
+  "deleteChat.cancelCta": "Cancelar",
 
   // Painel da conversa (ConversationPanel)
   "conversation.activeNow": "Ativo/a agora",
@@ -52,6 +61,19 @@ export const messages: Catalog = {
   "actions.more": "Mais",
   "actions.report": "Denunciar",
   "actions.delete": "Eliminar",
+
+  // Overlay de pressão longa/clique direito (MessageActionOverlay) — reutiliza
+  // actions.report/actions.delete acima para os seus próprios itens de menu.
+  "actions.menuLabel": "Ações da mensagem",
+  "actions.reply": "Responder",
+  "actions.edit": "Editar",
+  "actions.copy": "Copiar",
+  "actions.edited": "editada",
+  "actions.editing": "A editar mensagem",
+  "actions.editSave": "Guardar",
+  "actions.editCancel": "Cancelar",
+  "actions.replyingTo": "A responder a {name}",
+  replyDeleted: "Mensagem eliminada",
   tombstone: "Esta mensagem foi eliminada",
   "delete.confirmTitle": "Eliminar esta mensagem?",
   "delete.confirmBody": "Será removida para todos nesta conversa.",

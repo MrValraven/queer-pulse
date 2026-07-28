@@ -12,7 +12,10 @@ import styles from "./CalendarPage.module.css";
 
 export function CalendarPage() {
   const { t } = useTranslation();
-  const [view, setView] = useState({ year: 2026, month: 5 });
+  const [view, setView] = useState({
+    year: CALENDAR_TODAY.getFullYear(),
+    month: CALENDAR_TODAY.getMonth(),
+  });
   const [selected, setSelected] = useState<Date | null>(null);
   const { items: calendarEvents, isLoading: loading } = useEvents({
     filter: "upcoming",

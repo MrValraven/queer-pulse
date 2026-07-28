@@ -46,6 +46,9 @@ export const culture: Catalog = {
   "club.discussionsHeading": "Recent <em>discussions.</em>",
   "club.replies_one": "{count} reply",
   "club.replies_other": "{count} replies",
+  "club.emptyLive.title": "Picks and discussions coming soon",
+  "club.emptyLive.description":
+    "Once the club gets going, this month's picks and the conversations around them will live here.",
 
   // ── Commission board ───────────────────────────────────────────────────
   "commissions.heading": "Creative <em>commissions.</em>",
@@ -59,18 +62,27 @@ export const culture: Catalog = {
   "commissions.cat.film": "Film",
   "commissions.expressInterestCta": "Express interest",
   "commissions.interestSent": "Interest sent",
+  "commissions.emptyLive.title": "Open commissions coming soon",
+  "commissions.emptyLive.description":
+    "When members start posting projects and looking for collaborators, their calls will show up here.",
 
   // ── Art showcase ───────────────────────────────────────────────────────
   "showcase.heading": "Member <em>work.</em>",
   "showcase.sub":
     "Rotating exhibition — 8 works shown at a time. Submissions reviewed monthly.",
   "showcase.submitWorkCta": "+ Submit your work",
+  "showcase.emptyLive.title": "Featured work coming soon",
+  "showcase.emptyLive.description":
+    "The rotating showcase of member work is still being set up. Be the first to submit yours.",
 
   // ── Radio ──────────────────────────────────────────────────────────────
   "radio.heading": "Community <em>radio.</em>",
   "radio.sub":
     "Ambient cultural presence — curated by rotating DJs. No algorithm. No ads.",
   "radio.submitPlaylistCta": "Submit a playlist",
+  "radio.emptyLive.title": "Radio schedule coming soon",
+  "radio.emptyLive.description":
+    "Community radio isn't on air yet. When a curator takes the first slot, you'll hear it here.",
   "radio.curatorLabel": "This week's curator",
   "radio.curatedBy": "curated by {name}",
   "radio.pastPlaylists": "Past playlists",

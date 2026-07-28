@@ -377,6 +377,10 @@ export const system: Catalog = {
   "status.hero.allOperational": "Todos os sistemas operacionais",
   "status.hero.title": "Estado da <em>plataforma</em>",
   "status.hero.sub": "Atualizado agora mesmo · Atualiza a cada 60 s",
+  "status.hero.subLive": "A monitorização pública de disponibilidade está a caminho.",
+  "status.live.title": "O relatório de estado em tempo real está quase aí",
+  "status.live.description":
+    "Estamos a preparar a monitorização pública de disponibilidade, o estado dos serviços e o histórico de incidentes. Volta em breve.",
   "status.services.sectionEye": "Serviços",
   "status.serviceStatus.operational": "Operacional",
   "status.serviceStatus.degraded": "Degradado",

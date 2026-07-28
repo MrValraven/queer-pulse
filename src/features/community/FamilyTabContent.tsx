@@ -1,12 +1,18 @@
 import { Link } from "react-router-dom";
 import { FiStar } from "react-icons/fi";
+import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Tab } from "./family.data";
 import styles from "./FamilyPage.module.css";
 
 export function FamilyTabContent({ tab }: { tab: Tab }) {
   const { t } = useTranslation();
+  // The named clinic/social-worker reviews and the member testimonial are
+  // fabricated in the prototype — live has no backend for either yet, so gate
+  // both behind demo and show an honest coming-soon state in live mode.
+  const { demoMode } = useDemoMode();
   return (
     <div className={styles.tabContent}>
       <div className="wrap">
@@ -48,17 +54,24 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
           ))}
         </div>
 
-        {tab.note && (
-          <div className={styles.communityNote}>
-            <div className={styles.cnBar} />
-            <div className={styles.cnBody}>
-              {tab.noteLabelKey && (
-                <strong>{t(`community:${tab.noteLabelKey}`)} </strong>
-              )}
-              {tab.note.quote} — <strong>{tab.note.attribution}</strong>
+        {tab.note &&
+          (demoMode ? (
+            <div className={styles.communityNote}>
+              <div className={styles.cnBar} />
+              <div className={styles.cnBody}>
+                {tab.noteLabelKey && (
+                  <strong>{t(`community:${tab.noteLabelKey}`)} </strong>
+                )}
+                {tab.note.quote} — <strong>{tab.note.attribution}</strong>
+              </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <EmptyState
+              compact
+              title={t("community:family.note.liveEmpty.title")}
+              description={t("community:family.note.liveEmpty.description")}
+            />
+          ))}
 
         {tab.reviewHeadKey && (
           <h2 className={styles.reviewHead}>
@@ -68,7 +81,8 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
             />
           </h2>
         )}
-        {tab.reviews && (
+        {tab.reviews &&
+          (demoMode ? (
           <div className={styles.reviewGrid}>
             {tab.reviews.map((r) => (
               <div className={styles.reviewCard} key={r.name}>
@@ -101,7 +115,13 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
               </div>
             ))}
           </div>
-        )}
+          ) : (
+            <EmptyState
+              icon={<FiStar />}
+              title={t("community:family.review.liveEmpty.title")}
+              description={t("community:family.review.liveEmpty.description")}
+            />
+          ))}
 
         {tab.steps && (
           <div className={styles.processSteps}>

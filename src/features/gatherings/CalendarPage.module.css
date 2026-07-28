@@ -160,7 +160,8 @@
   background: rgba(var(--plum-rgb), 0.02);
 }
 .today {
-  background: rgba(var(--accent-rgb), 0.06);
+  background: rgba(var(--accent-rgb), 0.08);
+  box-shadow: inset 0 0 0 2px var(--accent);
 }
 .hasEvent {
   cursor: pointer;

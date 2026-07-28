@@ -9,7 +9,7 @@ export interface MessageRun {
 
 /**
  * Split a day-group's flat message list into runs — consecutive messages from
- * the same sender collapse into one run so the avatar renders once and inner
+ * the same sender collapse into one run so the timestamp renders once and inner
  * spacing can tighten. A run also breaks when two consecutive messages both have
  * `at` and differ by more than `maxGapMs` (default 15 minutes), and — when
  * `breakBefore` is given — immediately before that exact message object, so the

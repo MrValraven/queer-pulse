@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useHousingCoops } from "./api/useHousingCoops";
@@ -23,6 +24,7 @@ const FACE_TINT: Record<string, string | undefined> = {
 /** Hero: headline + live formation stats card. */
 export function CoopHero() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   return (
     <section className={styles.hero}>
       <div className="wrap">
@@ -49,21 +51,26 @@ export function CoopHero() {
               />
             </Reveal>
           </div>
-          <Reveal className={styles.statsCard} delay={160}>
-            <div className={styles.statsHead}>
-              {t("economy:housingCoop.hero.statsHead")}
-            </div>
-            {COOP_STATS.map((s) => (
-              <div className={styles.statRow} key={s.labelKey}>
-                <span className="k">{t(s.labelKey)}</span>
-                <span className="v">
-                  {s.value}
-                  {s.valueKey && t(s.valueKey)}
-                  {s.em && <em>{s.em}</em>}
-                </span>
+          {/* The formation stats are demo-only fiction — live mode has no
+              aggregate to show yet, so the stat card is hidden (the grid below
+              is separately wired to live data). */}
+          {demoMode && (
+            <Reveal className={styles.statsCard} delay={160}>
+              <div className={styles.statsHead}>
+                {t("economy:housingCoop.hero.statsHead")}
               </div>
-            ))}
-          </Reveal>
+              {COOP_STATS.map((coopStat) => (
+                <div className={styles.statRow} key={coopStat.labelKey}>
+                  <span className="k">{t(coopStat.labelKey)}</span>
+                  <span className="v">
+                    {coopStat.value}
+                    {coopStat.valueKey && t(coopStat.valueKey)}
+                    {coopStat.em && <em>{coopStat.em}</em>}
+                  </span>
+                </div>
+              ))}
+            </Reveal>
+          )}
         </div>
       </div>
     </section>

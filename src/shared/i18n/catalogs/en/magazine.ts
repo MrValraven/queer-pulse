@@ -88,6 +88,11 @@ export const magazine: Catalog = {
   "sections.submit.cta": "Pitch us",
   "sections.verdict.essential": "Essential",
   "sections.verdict.recommended": "Recommended",
+  // Live mode has no published issues yet — an honest "coming soon" replaces
+  // the fabricated article rails (the demo mock stays in demo mode).
+  "sections.emptyLive.title": "The magazine is coming soon",
+  "sections.emptyLive.description":
+    "Our first issue is on the way. We're lining up essays, features, interviews and reviews from the community — check back soon, or pitch us something to run in it.",
 
   // ── ArticlePage ──────────────────────────────────────────────────────────
   "article.notFoundMetaTitle": "Article not found — QueerPulse Magazine",
@@ -739,6 +744,10 @@ export const magazine: Catalog = {
   "tag.list.loadingMore": "Loading older long reads…",
   "tag.list.loadOlder_one": "Load {count} older long read",
   "tag.list.loadOlder_other": "Load {count} older long reads",
+  // Live mode: no tagged long reads have been published yet.
+  "tag.list.liveEmptyTitle": "No tagged stories yet",
+  "tag.list.liveEmptyDescription":
+    "Nothing has been filed under this tag so far. As stories go up, they'll gather here — come back soon.",
 
   // ══════════════════ Newsletter archive ══════════════════════════════════
   // Per-issue title/dek/meta (newsletterArchive.data.tsx YEARS/LATEST, and the
@@ -756,6 +765,11 @@ export const magazine: Catalog = {
   "newsletterArchive.hero.stats.languages": "Languages · EN & PT",
   "newsletterArchive.tabsAriaLabel": "Newsletter streams",
   "newsletterArchive.readInBrowserCta": "Read in browser →",
+  // Live mode: no issues have been sent yet, so the archive is empty. The
+  // subscribe form above still works, so people can be first in line.
+  "newsletterArchive.emptyLive.title": "Newsletter archive coming soon",
+  "newsletterArchive.emptyLive.description":
+    "We haven't sent our first issue yet. Subscribe above and you'll get it the moment it goes out — every issue then lives here.",
   "newsletterArchive.list.emptyTitle": "No issues in this stream",
   "newsletterArchive.list.emptyDescription":
     "Nothing's gone out on this stream yet. Take a look across all three — there's plenty in the archive.",

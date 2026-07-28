@@ -38,6 +38,9 @@ export const economy: Catalog = {
   "incubator.programme.title": "How the programme <em>works.</em>",
   "incubator.mentors.title": "Current <em>mentors.</em>",
   "incubator.mentors.requestCta": "Request session",
+  "incubator.mentors.empty.title": "Mentor matching is coming soon",
+  "incubator.mentors.empty.description":
+    "Once the community mentor pool is live, you'll be matched to someone in your sector right here.",
   "incubator.step.apply.title": "Apply",
   "incubator.step.apply.desc":
     "A short application — your idea, where you are, what you need. No pitch deck required. Decisions in 3 weeks.",
@@ -129,6 +132,9 @@ export const economy: Catalog = {
   "salary.empty.description":
     "Nothing's been shared for this sector so far. Clear the filter to see every submission — or add yours to help the next person negotiate.",
   "salary.empty.clear": "Clear filters",
+  "salary.emptyLive.title": "The salary board is coming soon",
+  "salary.emptyLive.description":
+    "Be the first to add an anonymous salary and help the next person walk into their negotiation prepared.",
   "salary.disclaimer":
     "All entries are anonymous. No name, email, or employer is stored. Entries are reviewed by a moderator before appearing.",
   "salary.helpBody":
@@ -892,6 +898,9 @@ export const economy: Catalog = {
     "Member-written · anonymous · updated continuously",
   "employerReviews.recent.browseCta": "Browse queer-inclusive jobs →",
   "employerReviews.recent.writeCta": "Write a review →",
+  "employerReviews.emptyLive.title": "Employer reviews coming soon",
+  "employerReviews.emptyLive.description":
+    "No reviews have been published yet. Be the first to share what it's really like to work somewhere.",
 
   "employerReviews.verify.title": "How <em>verification</em> works",
   "employerReviews.verify.verifiedSafe.label": "Verified safe",
@@ -985,6 +994,9 @@ export const economy: Catalog = {
   "grants.empty.description":
     "No opportunities fit that category right now. Clear the filter to browse every grant and fellowship members are tracking.",
   "grants.empty.clearFilters": "Clear filters",
+  "grants.emptyLive.title": "Grant tracking is coming soon",
+  "grants.emptyLive.description":
+    "We're building a live, community-maintained feed of grants and fellowships for queer work. Check back soon — or apply for one of our Micro Grants in the meantime.",
 
   "grants.guide.title": "Writing a <em>strong application</em>",
   "grants.guide.sub":
@@ -1169,6 +1181,9 @@ export const economy: Catalog = {
   "barter.empty.description":
     "No swaps fit that combination just yet. Try broadening your search — or post what you're offering and let the right trade find you.",
   "barter.empty.clearFilters": "Clear filters",
+  "barter.emptyLive.title": "No swaps posted yet",
+  "barter.emptyLive.description":
+    "Be the first to offer a skill or item — put something on the table below and let the right trade find you.",
 
   "barter.postStrip.success.title": "It's <em>on the table.</em>",
   "barter.postStrip.success.body":
@@ -1545,6 +1560,9 @@ export const economy: Catalog = {
   "mentorship.choose.mentor.for":
     "For: members with experience they're willing to share →",
 
+  "mentorship.emptyLive.title": "Mentor directory coming soon",
+  "mentorship.emptyLive.description":
+    "We're still building out the mentor network. Check back soon to browse and connect with community mentors.",
   "mentorship.strip.title": "Current mentors in <em>the network</em>",
   "mentorship.strip.sub":
     "These members have opened themselves up to mentoring. You can request a match through the form above.",
@@ -1627,6 +1645,10 @@ export const economy: Catalog = {
 
   // ── MentorDetailPage (+ header / sections / sidebar / cycle nav) ───────
   "mentorDetail.backToAll": "← All mentors",
+  "mentorDetail.emptyLive.title": "This mentor profile is coming soon",
+  "mentorDetail.emptyLive.description":
+    "The mentor directory isn't live yet. Head back to explore mentorship when it opens.",
+  "mentorDetail.emptyLive.cta": "Back to mentorship",
   "mentorDetail.messageCta": "Message {firstName}",
   "mentorDetail.cyclePrevious": "← Previous",
   "mentorDetail.cycleNext": "Next →",
@@ -2181,6 +2203,9 @@ export const economy: Catalog = {
   "solidarityDirectory.empty.description":
     "No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care.",
   "solidarityDirectory.empty.clearFilters": "Clear filters",
+  "solidarityDirectory.emptyLive.title": "Directory coming soon",
+  "solidarityDirectory.emptyLive.description":
+    "We're verifying practitioners who offer solidarity pricing. Soon you'll be able to find and contact them here.",
   "solidarityDirectory.register.titleLine1": "Do you offer",
   "solidarityDirectory.register.titleEm": "solidarity pricing?",
   "solidarityDirectory.register.body":

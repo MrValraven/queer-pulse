@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export type ToastType = "success" | "error" | "info";
+export type ToastType = "success" | "error" | "warning" | "info";
 
 /** Optional action button shown inside a toast (e.g. "Undo"). */
 export interface ToastAction {

@@ -20,6 +20,8 @@ import {
   useRestoreCommunityReply,
 } from "./api/useCommunityMutations";
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
+import { MentionText } from "../../shared/mentions/MentionText";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import styles from "./CommunityDetailPage.module.css";
 
 // The history modal target: the OP post, or a specific reply.
@@ -328,12 +330,12 @@ export function CommunityThread({
           ))}
           <div className={styles.replyBar}>
             <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
-            <textarea
+            <MentionTextarea
               className={styles.replyTa}
               rows={1}
               placeholder={t("communities:detail.thread.replyPlaceholder")}
               value={replyText}
-              onChange={(event) => setReplyText(event.target.value)}
+              onChange={setReplyText}
             />
             <Button
               variant="primary"
@@ -378,11 +380,11 @@ function InlineTextEditor({
   const trimmed = value.trim();
   return (
     <div className={styles.inlineEdit}>
-      <textarea
+      <MentionTextarea
         className={styles.inlineTa}
         aria-label={t("communities:detail.thread.editAria")}
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={setValue}
         rows={3}
       />
       <div className={styles.inlineActions}>
@@ -463,7 +465,7 @@ function ThreadReplyRow({
           />
         ) : (
           <div className={styles.rText}>
-            {reply.text}
+            <MentionText text={reply.text} />
             {reply.editedAt && (
               <span className={styles.editedMark}>
                 {" "}

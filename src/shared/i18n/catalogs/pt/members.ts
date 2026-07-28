@@ -98,6 +98,19 @@ export const members: Catalog = {
   "profile.hero.perksTitle": "Vantagens",
   "profile.hero.perksArrow": "Resgatar as tuas vantagens →",
 
+  // ── Secção de comunidades (ProfileCommunities) ──────────────────────────────
+  "profile.communities.title": "Comunidades",
+  "profile.communities.subtitleSelf":
+    "Comunidades que estás a destacar no teu perfil.",
+  "profile.communities.subtitlePublic": "Comunidades de que {first} faz parte.",
+  "profile.communities.role.owner": "Fundador",
+  "profile.communities.role.mod": "Moderador",
+  "profile.communities.role.member": "Membro",
+  "profile.communities.empty.title": "Destaca as tuas comunidades",
+  "profile.communities.empty.description":
+    "Mostra as comunidades que tens ou de que fazes parte. Escolhe quais destacar em Editar perfil.",
+  "profile.communities.empty.cta": "Escolher comunidades",
+
   // ── Secções de conteúdo do perfil (ProfileContentSections, WorkEditor) ────
   "content.now.title": "Agora",
   "content.now.subtitle": "O que ocupa {first} agora",
@@ -322,6 +335,12 @@ export const members: Catalog = {
   "publicProfile.stat.eventsHosted": "Convívios organizados",
   "publicProfile.stat.yearsOnPlatform": "Ano na QueerPulse",
   "publicProfile.stat.membersReached": "Pessoas alcançadas",
+
+  // ── Estado vazio do perfil público em modo real (sem contribuições) ─────────
+  "publicProfile.emptyLive.title": "A tua história pública começa aqui",
+  "publicProfile.emptyLive.description":
+    "À medida que publicas textos, organizas convívios e recebes avais, tudo isso aparece aqui para o mundo ver. Ainda não há nada público — começa a contribuir para a comunidade.",
+  "publicProfile.emptyLive.cta": "Explorar convívios",
 
   // ── Pesquisa global (SearchPage) ────────────────────────────────────────────
   "search.type.member": "Pessoas",
@@ -569,6 +588,10 @@ export const members: Catalog = {
     "Como conheces {name}, e o que deve saber o conselho?",
   "vouch.page.submitCta": "Enviar o meu aval →",
   "vouch.page.skipCta": "Agora não",
+  "vouch.page.emptyLive.title": "Os convites para avalizar chegam por link",
+  "vouch.page.emptyLive.description":
+    "Quando alguém te pedir para avalizar, recebes um link pessoal que abre o pedido aqui mesmo. De momento não há ninguém à espera do teu aval.",
+  "vouch.page.emptyLive.cta": "Ver membros",
 
   // ── Explicação de porquê avalizar (vouch.data.ts MEANS) ─────────────────────
   "vouch.means.know.title": "Conheces esta pessoa, a sério",
@@ -728,6 +751,10 @@ export const members: Catalog = {
   "collections.newCollection.defaultMeta":
     "Acabada de criar — começa a adicionar guardados",
   "collections.updatedJustNow": "Atualizado agora mesmo",
+  "collections.emptyLive.title": "Ainda não criaste nenhuma coleção",
+  "collections.emptyLive.description":
+    "As coleções são pastas para os artigos, convívios e lugares que guardas. Cria a primeira para começar a agrupar guardados pelo que significam.",
+  "collections.emptyLive.cta": "Criar uma coleção",
 
   // ── Modais de coleções (CollectionsModals) ──────────────────────────────────
   "collections.modal.defaultDialogLabel": "Diálogo",

@@ -8,7 +8,7 @@ import {
   Tag,
   TagRow,
 } from "../../../shared/components/ui";
-import { usePrefersReducedMotion } from "../../../shared/hooks";
+import { usePrefersReducedMotion, useSwipe } from "../../../shared/hooks";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../../shared/staff/MemberStaffBadge";
@@ -163,6 +163,25 @@ function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
     [reducedMotion],
   );
 
+  // Touch-swipe left/right to step between members. Once the visitor takes
+  // control by swiping, stop the auto-rotate so it doesn't pull the card away
+  // mid-browse (`paused` already gates the rotate effect below).
+  const step = useCallback(
+    (delta: number) => {
+      if (items.length <= 1) return;
+      setPaused(true);
+      setView((v) => ({
+        active: (v.active + delta + items.length) % items.length,
+        prev: reducedMotion ? null : v.active,
+      }));
+    },
+    [items.length, reducedMotion],
+  );
+  const swipeHandlers = useSwipe({
+    onSwipeLeft: () => step(1),
+    onSwipeRight: () => step(-1),
+  });
+
   useEffect(() => {
     if (reducedMotion || paused || items.length <= 1) return;
     const id = setTimeout(
@@ -188,7 +207,7 @@ function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className={styles.spot}>
+      <div className={styles.spot} {...swipeHandlers}>
         <SpotlightFace member={current.member} quote={current.quote} />
         {previous && (
           <div

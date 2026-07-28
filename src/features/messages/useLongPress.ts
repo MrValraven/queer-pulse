@@ -1,0 +1,94 @@
+import { useCallback, useEffect, useRef } from "react";
+
+export interface LongPressOrigin {
+  /** Bounding rect of the pressed element, so the overlay can anchor itself. */
+  rect: DOMRect;
+}
+
+export interface UseLongPressHandlers {
+  onPointerDown: (event: React.PointerEvent) => void;
+  onPointerUp: (event: React.PointerEvent) => void;
+  onPointerMove: (event: React.PointerEvent) => void;
+  onPointerLeave: (event: React.PointerEvent) => void;
+  onPointerCancel: (event: React.PointerEvent) => void;
+  onContextMenu: (event: React.MouseEvent) => void;
+}
+
+/**
+ * Fires `onTrigger` on a touch long-press (~450ms, cancelled by movement or an
+ * early release) or a desktop right-click. Returns handlers to spread on the
+ * target element. `enabled: false` makes every handler a no-op (used to skip
+ * optimistic messages that have no server id yet).
+ */
+export function useLongPress(
+  onTrigger: (origin: LongPressOrigin) => void,
+  options?: { enabled?: boolean; delayMs?: number; moveTolerancePx?: number },
+): UseLongPressHandlers {
+  const enabled = options?.enabled ?? true;
+  const delayMs = options?.delayMs ?? 450;
+  const moveTolerancePx = options?.moveTolerancePx ?? 10;
+
+  const timerRef = useRef<number | null>(null);
+  const startPointRef = useRef<{ x: number; y: number } | null>(null);
+
+  const clear = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    startPointRef.current = null;
+  }, []);
+
+  useEffect(() => clear, [clear]);
+
+  const fire = useCallback(
+    (element: Element) => onTrigger({ rect: element.getBoundingClientRect() }),
+    [onTrigger],
+  );
+
+  const onPointerDown = useCallback(
+    (event: React.PointerEvent) => {
+      if (!enabled || event.pointerType === "mouse") return;
+      const element = event.currentTarget as Element;
+      startPointRef.current = { x: event.clientX, y: event.clientY };
+      timerRef.current = window.setTimeout(() => {
+        timerRef.current = null;
+        fire(element);
+      }, delayMs);
+    },
+    [enabled, delayMs, fire],
+  );
+
+  const onPointerMove = useCallback(
+    (event: React.PointerEvent) => {
+      const start = startPointRef.current;
+      if (!start) return;
+      const movedTooFar =
+        Math.abs(event.clientX - start.x) > moveTolerancePx ||
+        Math.abs(event.clientY - start.y) > moveTolerancePx;
+      if (movedTooFar) clear();
+    },
+    [moveTolerancePx, clear],
+  );
+
+  const onContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      if (!enabled) return;
+      event.preventDefault();
+      fire(event.currentTarget as Element);
+    },
+    [enabled, fire],
+  );
+
+  return {
+    onPointerDown,
+    onPointerUp: clear,
+    onPointerMove,
+    onPointerLeave: clear,
+    // The message list is scrollable; the browser cancels an in-progress
+    // pointer once a scroll gesture takes over, so this must clear the timer
+    // the same as a release — otherwise the overlay can pop mid-scroll.
+    onPointerCancel: clear,
+    onContextMenu,
+  };
+}

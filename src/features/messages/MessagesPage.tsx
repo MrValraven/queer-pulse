@@ -22,6 +22,8 @@ export function MessagesPage() {
     setDraft,
     composing,
     setComposing,
+    replyDraft,
+    setReplyDraft,
     active,
     activeBlocked,
     counterpartLastReadAt,
@@ -31,6 +33,8 @@ export function MessagesPage() {
     loadOlder,
     openThread,
     startThread,
+    deleteThread,
+    deletePending,
     send,
     retrySend,
   } = useMessagesController();
@@ -51,6 +55,8 @@ export function MessagesPage() {
             onQueryChange={setQuery}
             onOpen={openThread}
             onCompose={() => setComposing(true)}
+            onDelete={deleteThread}
+            deletePending={deletePending}
           />
         )}
 
@@ -69,6 +75,9 @@ export function MessagesPage() {
               hasMoreOlder={hasMoreOlder}
               loadingOlder={loadingOlder}
               onLoadOlder={loadOlder}
+              replyDraft={replyDraft}
+              onSetReply={setReplyDraft}
+              onCancelReply={() => setReplyDraft(null)}
             />
           ) : (
             <MessagesEmptyPanel />

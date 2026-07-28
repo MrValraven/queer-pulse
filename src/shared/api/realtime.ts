@@ -195,6 +195,10 @@ class RealtimeClient {
       void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
     });
+    socket.on("message:updated", ({ conversationId }) => {
+      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
+      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+    });
 
     // Per-event fan-out to component subscribers (additive — the invalidation
     // handlers above still run for every frame).

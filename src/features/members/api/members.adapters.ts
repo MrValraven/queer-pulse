@@ -213,6 +213,15 @@ export function profileToMember(dto: ProfileDTO): Member {
     // member registry, so live-mode related cards only carry slugs today — the
     // full-card hydration is a documented follow-up (same gap as vouch faces).
     related: (dto.related ?? []).map((r) => r.slug),
+    featuredCommunities: (dto.featuredCommunities ?? []).map((ref) => ({
+      slug: ref.slug,
+      name: ref.name,
+      tagline: ref.tagline,
+      type: ref.type,
+      typeLabel: ref.typeLabel,
+      countLabel: ref.countLabel,
+      role: ref.role,
+    })),
   };
 }
 

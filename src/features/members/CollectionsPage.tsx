@@ -1,10 +1,17 @@
 import { useMemo, useState, type ReactNode } from "react";
+import { FiFolder } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
 import {
   COLLECTIONS,
@@ -155,11 +162,17 @@ function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
 
 export function CollectionsPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const { items: savedItems } = useSaved();
   const loading = useSimulatedLoad();
 
-  const [collections, setCollections] = useState<Collection[]>(COLLECTIONS);
+  // The seeded collections grid + recent unfiled saves are demo fiction; live
+  // mode starts empty and only fills as the member creates collections.
+  const [collections, setCollections] = useState<Collection[]>(
+    demoMode ? COLLECTIONS : [],
+  );
+  const recentSaves = demoMode ? RECENT_SAVES : [];
   // collectionId -> the saved items inside it. Seeded from live saves so the
   // view modal has real content to show, then grown via "Add to collection".
   const [contents, setContents] = useState<Record<string, SavedItem[]>>({});
@@ -250,6 +263,17 @@ export function CollectionsPage() {
 
         <SavedByYou />
 
+        {!loading && collections.length === 0 ? (
+          <EmptyState
+            icon={<FiFolder />}
+            title={t("members:collections.emptyLive.title")}
+            description={t("members:collections.emptyLive.description")}
+            action={{
+              label: t("members:collections.emptyLive.cta"),
+              onClick: () => setModal({ type: "new" }),
+            }}
+          />
+        ) : (
         <div className={styles.grid}>
           {loading ? (
             Array.from({ length: 5 }).map((_, i) => (
@@ -278,27 +302,34 @@ export function CollectionsPage() {
             </>
           )}
         </div>
+        )}
 
-        <div className={styles.secH}>
-          <span>{t("members:collections.recentSaves.heading")}</span>
-          <span className={styles.ct}>
-            {t("members:collections.recentSaves.unfiledCount", { count: 7 })}
-          </span>
-        </div>
-        <div className={styles.recentList}>
-          {loading
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <RecentRowSkeleton key={i} />
-              ))
-            : RECENT_SAVES.map((r, i) => (
-                <FadeIn key={r.id} delay={Math.min(i, 8) * 60}>
-                  <RecentSaveRow
-                    r={r}
-                    onAdd={() => setModal({ type: "add", save: r })}
-                  />
-                </FadeIn>
-              ))}
-        </div>
+        {(loading || recentSaves.length > 0) && (
+          <>
+            <div className={styles.secH}>
+              <span>{t("members:collections.recentSaves.heading")}</span>
+              <span className={styles.ct}>
+                {t("members:collections.recentSaves.unfiledCount", {
+                  count: recentSaves.length,
+                })}
+              </span>
+            </div>
+            <div className={styles.recentList}>
+              {loading
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <RecentRowSkeleton key={i} />
+                  ))
+                : recentSaves.map((r, i) => (
+                    <FadeIn key={r.id} delay={Math.min(i, 8) * 60}>
+                      <RecentSaveRow
+                        r={r}
+                        onAdd={() => setModal({ type: "add", save: r })}
+                      />
+                    </FadeIn>
+                  ))}
+            </div>
+          </>
+        )}
       </div>
 
       {modal?.type === "new" && (

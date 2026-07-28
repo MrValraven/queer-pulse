@@ -227,6 +227,13 @@ export const settings: Catalog = {
     "Quando alguém te pede para se ligar a ti",
   "notifications.messages.sayHello.title": "Recebeste um «Olá»",
   "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
+  "notifications.phonePush.title": "Notificações no telemóvel",
+  "notifications.phonePush.desc":
+    "Recebe um aviso no telemóvel quando alguém te envia mensagem — mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
+  "notifications.phonePush.unsupported":
+    "O teu navegador ainda não consegue mostrar notificações no telemóvel.",
+  "notifications.phonePush.blocked":
+    "As notificações estão bloqueadas. Volta a ativá-las nas definições do navegador e tenta de novo.",
   "notifications.communities.newPost.title":
     "Nova publicação nas minhas comunidades",
   "notifications.communities.newPost.desc":
@@ -375,6 +382,7 @@ export const settings: Catalog = {
   "editProfile.nav.links.label": "Ligações e redes sociais",
   "editProfile.nav.skills.label": "Competências e interesses",
   "editProfile.nav.visibility.label": "Visibilidade dos campos",
+  "editProfile.nav.communities.label": "Comunidades",
   "editProfile.nav.more": "Mais",
   "editProfile.nav.pronounsGuideLink": "Guia de pronomes",
 
@@ -487,6 +495,20 @@ export const settings: Catalog = {
     "Competências e interesses oferecidos",
   "editProfile.visibility.field.link.name": "Ligação",
   "editProfile.visibility.field.link.desc": "URL externo no teu perfil",
+
+  // ── EditProfileSections.tsx — CommunitiesSection ─────────────────────────
+  "editProfile.communities.title": "Comunidades <em>em destaque</em>",
+  "editProfile.communities.sub":
+    "Escolhe até 6 comunidades para mostrar no teu perfil. Comunidades privadas não podem ser destacadas.",
+  "editProfile.communities.counter": "{count} / 6 em destaque",
+  "editProfile.communities.capHint":
+    "Podes destacar até 6. Remove uma para adicionar outra.",
+  "editProfile.communities.emptyHint":
+    "Ainda não estás em comunidades que possas destacar.",
+  "editProfile.communities.feature": "Destacar",
+  "editProfile.communities.featured": "Em destaque",
+  "editProfile.communities.moveUp": "Mover para cima",
+  "editProfile.communities.moveDown": "Mover para baixo",
 
   // ── UsernameSection.tsx ────────────────────────────────────────────────────
   "editProfile.username.title": "O teu <em>nome de utilizador</em>",

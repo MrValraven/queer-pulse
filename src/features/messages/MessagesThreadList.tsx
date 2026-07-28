@@ -1,14 +1,11 @@
+import { useState } from "react";
 import { FiMessageCircle, FiSearch } from "react-icons/fi";
-import {
-  Avatar,
-  EmptyState,
-  FadeIn,
-  SearchInput,
-} from "../../shared/components/ui";
+import { EmptyState, FadeIn, SearchInput } from "../../shared/components/ui";
 import { usePresenceOnline } from "../../shared/api/realtime";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { DeleteConversationDialog } from "./DeleteConversationDialog";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
+import { MessagesThreadRow } from "./MessagesThreadRow";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -21,6 +18,8 @@ export function MessagesThreadList({
   onQueryChange,
   onOpen,
   onCompose,
+  onDelete,
+  deletePending,
 }: {
   loading: boolean;
   threads: Conversation[];
@@ -30,12 +29,17 @@ export function MessagesThreadList({
   onQueryChange: (value: string) => void;
   onOpen: (id: string) => void;
   onCompose: () => void;
+  onDelete: (id: string) => void;
+  deletePending: boolean;
 }) {
   const { t } = useTranslation();
   /** Live online-userId set from realtime presence frames; always empty in
    *  demo mode (no socket) — rows without an `otherParticipantId` fall back
    *  to the static `thread.online` mock flag instead. */
   const online = usePresenceOnline();
+  const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(
+    null,
+  );
   return (
     <div className={styles.threadPanel}>
       <div className={styles.tpTop}>
@@ -107,75 +111,30 @@ export function MessagesThreadList({
             />
           ))}
         {!loading &&
-          threads.map((thread, i) => {
-            const isUnread =
-              thread.unread &&
-              !readIds.has(thread.id) &&
-              thread.id !== activeId;
-            const isOnline =
-              (!!thread.otherParticipantId &&
-                online.has(thread.otherParticipantId)) ||
-              (!thread.otherParticipantId && !!thread.online);
-            return (
-              <FadeIn key={thread.id} delay={Math.min(i, 8) * 60}>
-                <button
-                  type="button"
-                  className={[
-                    styles.threadRow,
-                    thread.id === activeId && styles.threadActive,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => onOpen(thread.id)}
-                >
-                  <div className={styles.trAv}>
-                    <Avatar
-                      initials={thread.initials}
-                      tint={thread.tint}
-                      src={thread.avatarUrl}
-                      size={42}
-                    />
-                    {isOnline && (
-                      <span
-                        className={styles.presenceRing}
-                        title={t("messages:thread.presenceOnline")}
-                      />
-                    )}
-                  </div>
-                  <div className={styles.trBody}>
-                    <div className={styles.trHeader}>
-                      <span className={styles.nameRow}>
-                        <span className={styles.trName}>{thread.name}</span>
-                        <MemberStaffBadge slug={thread.slug} />
-                      </span>
-                      <span className={styles.trTime}>{thread.time}</span>
-                    </div>
-                    <div className={styles.trPreviewRow}>
-                      <div
-                        className={[
-                          styles.trPreview,
-                          isUnread && styles.trPreviewUnread,
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                      >
-                        {thread.preview}
-                      </div>
-                      {isUnread &&
-                        (thread.unreadCount && thread.unreadCount > 0 ? (
-                          <span className={styles.unreadBadge}>
-                            {thread.unreadCount}
-                          </span>
-                        ) : (
-                          <span className={styles.unreadDot} />
-                        ))}
-                    </div>
-                  </div>
-                </button>
-              </FadeIn>
-            );
-          })}
+          threads.map((thread, i) => (
+            <FadeIn key={thread.id} delay={Math.min(i, 8) * 60}>
+              <MessagesThreadRow
+                thread={thread}
+                activeId={activeId}
+                readIds={readIds}
+                online={online}
+                onOpen={onOpen}
+                onRequestDelete={setConfirmDelete}
+              />
+            </FadeIn>
+          ))}
       </div>
+      {confirmDelete && (
+        <DeleteConversationDialog
+          name={confirmDelete.name}
+          pending={deletePending}
+          onClose={() => setConfirmDelete(null)}
+          onConfirm={() => {
+            onDelete(confirmDelete.id);
+            setConfirmDelete(null);
+          }}
+        />
+      )}
     </div>
   );
 }

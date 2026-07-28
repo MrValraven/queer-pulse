@@ -11,6 +11,7 @@ import type { Language } from "../../shared/i18n/types";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import type { Member } from "../members/data/members";
 import { TERMS } from "./settings.data";
+import { PushNotificationRow } from "../push/PushNotificationRow";
 import { SIM_GROUPS, type SimFlow } from "./simulations.data";
 import { SimulationPreviewModal } from "./SimulationPreviewModal";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
@@ -110,6 +111,7 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       </Section>
       <Section label={t("settings:notifications.section.messagesConnections")}>
         <ToggleList>
+          <PushNotificationRow />
           <ToggleRow
             title={t("settings:notifications.messages.newMessage.title")}
             desc={t("settings:notifications.messages.newMessage.desc")}

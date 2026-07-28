@@ -95,6 +95,19 @@ export const members: Catalog = {
   "profile.hero.perksTitle": "Member perks",
   "profile.hero.perksArrow": "Redeem your perks →",
 
+  // ── Communities section (ProfileCommunities) ────────────────────────────────
+  "profile.communities.title": "Communities",
+  "profile.communities.subtitleSelf":
+    "Communities you're featuring on your profile.",
+  "profile.communities.subtitlePublic": "Communities {first} is part of.",
+  "profile.communities.role.owner": "Owner",
+  "profile.communities.role.mod": "Moderator",
+  "profile.communities.role.member": "Member",
+  "profile.communities.empty.title": "Feature your communities",
+  "profile.communities.empty.description":
+    "Show the communities you own or belong to. Pick which ones to highlight in Edit profile.",
+  "profile.communities.empty.cta": "Choose communities",
+
   // ── Profile content sections (ProfileContentSections, WorkEditor) ─────────
   "content.now.title": "Now",
   "content.now.subtitle": "What {first} is in the middle of",
@@ -326,6 +339,12 @@ export const members: Catalog = {
   "publicProfile.stat.eventsHosted": "Events hosted",
   "publicProfile.stat.yearsOnPlatform": "Year on QueerPulse",
   "publicProfile.stat.membersReached": "Members reached",
+
+  // ── Public-profile live empty state (no contributions yet) ──────────────────
+  "publicProfile.emptyLive.title": "Your public story starts here",
+  "publicProfile.emptyLive.description":
+    "As you publish writing, host events and gather vouches, they'll show up here for the wider world to see. Nothing public yet — start contributing to the community.",
+  "publicProfile.emptyLive.cta": "Explore gatherings",
 
   // ── Global search (SearchPage) ──────────────────────────────────────────────
   "search.type.member": "Members",
@@ -566,6 +585,10 @@ export const members: Catalog = {
     "How do you know {name}, and what should the council know?",
   "vouch.page.submitCta": "Send my vouch →",
   "vouch.page.skipCta": "Not right now",
+  "vouch.page.emptyLive.title": "Vouch invitations arrive by link",
+  "vouch.page.emptyLive.description":
+    "When someone asks you to vouch for them, you'll get a personal link that opens their request right here. There's nobody waiting on your vouch at the moment.",
+  "vouch.page.emptyLive.cta": "Browse members",
 
   // ── Why-vouch explainer (vouch.data.ts MEANS) ───────────────────────────────
   "vouch.means.know.title": "You know them, really",
@@ -725,6 +748,10 @@ export const members: Catalog = {
   "collections.toast.created": "Collection created",
   "collections.newCollection.defaultMeta": "Just created — start adding saves",
   "collections.updatedJustNow": "Updated just now",
+  "collections.emptyLive.title": "You haven't created any collections yet",
+  "collections.emptyLive.description":
+    "Collections are folders for the articles, events and places you save. Create your first to start grouping saves by why they matter.",
+  "collections.emptyLive.cta": "Create a collection",
 
   // ── Collections modals (CollectionsModals) ──────────────────────────────────
   "collections.modal.defaultDialogLabel": "Dialog",

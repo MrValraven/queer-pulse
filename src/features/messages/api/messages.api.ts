@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type {
   ConversationResponse,
@@ -39,10 +44,26 @@ export async function getMessages(conversationId: string, cursor?: string) {
 }
 
 /** POST /conversations/:id/messages — send. Rejects a blocked pair with 403. */
-export const sendMessage = (conversationId: string, body: string) =>
+export const sendMessage = (
+  conversationId: string,
+  body: string,
+  replyToId?: string,
+) =>
   apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
     body,
+    ...(replyToId ? { replyToId } : {}),
   });
+
+/** PATCH /conversations/:id/messages/:messageId — edit own message (15-min window). */
+export const editMessage = (
+  conversationId: string,
+  messageId: string,
+  body: string,
+) =>
+  apiPatch<MessageResponse>(
+    `/conversations/${conversationId}/messages/${messageId}`,
+    { body },
+  );
 
 /** POST /conversations — open (or reuse) a DM with a member by handle. */
 export const startConversation = (recipientHandle: string) =>
@@ -83,3 +104,8 @@ export const deleteMessage = (conversationId: string, messageId: string) =>
   apiDelete<{ ok: true }>(
     `/conversations/${conversationId}/messages/${messageId}`,
   );
+
+/** DELETE /conversations/:id — delete the conversation for my account only
+ *  (WhatsApp-style). The other member keeps their copy. */
+export const deleteConversation = (conversationId: string) =>
+  apiDelete<{ ok: true }>(`/conversations/${conversationId}`);

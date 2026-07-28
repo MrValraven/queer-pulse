@@ -227,6 +227,13 @@ export const settings: Catalog = {
     "When someone asks to connect with you",
   "notifications.messages.sayHello.title": '"Say hello" received',
   "notifications.messages.sayHello.desc": "When someone waves at your profile",
+  "notifications.phonePush.title": "Phone notifications",
+  "notifications.phonePush.desc":
+    "Get a nudge on your phone when someone messages you — even when QueerPulse is closed. Add QueerPulse to your home screen first.",
+  "notifications.phonePush.unsupported":
+    "Your browser can’t show phone notifications yet.",
+  "notifications.phonePush.blocked":
+    "Notifications are blocked. Turn them back on in your browser settings, then try again.",
   "notifications.communities.newPost.title": "New post in my communities",
   "notifications.communities.newPost.desc":
     "Activity in communities you've joined",
@@ -371,6 +378,7 @@ export const settings: Catalog = {
   "editProfile.nav.links.label": "Links & social",
   "editProfile.nav.skills.label": "Skills & interests",
   "editProfile.nav.visibility.label": "Field visibility",
+  "editProfile.nav.communities.label": "Communities",
   "editProfile.nav.more": "More",
   "editProfile.nav.pronounsGuideLink": "Pronouns guide",
 
@@ -478,6 +486,20 @@ export const settings: Catalog = {
   "editProfile.visibility.field.skills.desc": "Offered skills and interests",
   "editProfile.visibility.field.link.name": "Link",
   "editProfile.visibility.field.link.desc": "External URL on your profile",
+
+  // ── EditProfileSections.tsx — CommunitiesSection ─────────────────────────
+  "editProfile.communities.title": "Communities <em>you feature</em>",
+  "editProfile.communities.sub":
+    "Pick up to 6 communities to show on your profile. Private communities can't be featured.",
+  "editProfile.communities.counter": "{count} / 6 featured",
+  "editProfile.communities.capHint":
+    "You can feature up to 6. Un-feature one to add another.",
+  "editProfile.communities.emptyHint":
+    "You're not in any communities you can feature yet.",
+  "editProfile.communities.feature": "Feature",
+  "editProfile.communities.featured": "Featured",
+  "editProfile.communities.moveUp": "Move up",
+  "editProfile.communities.moveDown": "Move down",
 
   // ── UsernameSection.tsx ────────────────────────────────────────────────────
   "editProfile.username.title": "Your <em>username</em>",

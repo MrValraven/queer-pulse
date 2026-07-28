@@ -21,6 +21,10 @@ export interface ChatMessage {
   /** ISO timestamp the message was soft-deleted at (live mode). Absent for a
    *  message that hasn't been deleted, and for demo/optimistic messages. */
   deletedAt?: string;
+  /** ISO timestamp of the last edit (live mode). Absent if never edited. */
+  editedAt?: string;
+  /** The quoted message this one replies to (live mode). Absent if not a reply. */
+  replyTo?: { id: string; snippet: string; senderName: string; deleted: boolean };
 }
 
 export interface Conversation {

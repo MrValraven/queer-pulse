@@ -1,9 +1,17 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, Button, ImageSlot, Reveal } from "../../shared/components/ui";
+import { FiBookOpen } from "react-icons/fi";
+import {
+  Avatar,
+  Button,
+  EmptyState,
+  ImageSlot,
+  Reveal,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { memberName } from "../members/data/members";
 import { AuthorLink } from "./AuthorLink";
 import { issueArticlesText } from "./magazineFormat";
@@ -193,6 +201,30 @@ function SubmitBanner() {
 }
 
 export function MagazineSections() {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+
+  // The whole magazine front is fabricated editorial content. Live mode has no
+  // published issue yet, so it shows an honest "coming soon" in place of the
+  // article rails — the demo mock below stays the demo-mode branch.
+  if (!demoMode) {
+    return (
+      <div className={styles.body}>
+        <div className="wrap">
+          <EmptyState
+            icon={<FiBookOpen />}
+            title={t("magazine:sections.emptyLive.title")}
+            description={t("magazine:sections.emptyLive.description")}
+            action={{
+              label: t("magazine:sections.submit.cta"),
+              to: routes.submitStory,
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.body}>
       <div className="wrap">
