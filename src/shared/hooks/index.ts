@@ -1,4 +1,9 @@
 export { useScrollReveal } from "./useScrollReveal";
+export {
+  useIncrementalList,
+  type IncrementalList,
+  type UseIncrementalListOptions,
+} from "./useIncrementalList";
 export { useSimulatedLoad } from "./useSimulatedLoad";
 export { useScrolled } from "./useScrolled";
 export { useCountUp } from "./useCountUp";

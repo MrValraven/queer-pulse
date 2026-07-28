@@ -4,6 +4,34 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        // Split the stable, rarely-changing vendor libraries out of the app
+        // entry chunk so their hashes (and the browser cache) survive app-code
+        // edits. Kept deliberately coarse — a few big-ticket dependencies, not
+        // one chunk per package — so we don't trade cache stability for a flood
+        // of tiny requests. Everything else stays in the default vendor split.
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (
+            /[\\/]node_modules[\\/](react|react-dom|react-router-dom|react-router|scheduler)[\\/]/.test(
+              id,
+            )
+          ) {
+            return "vendor-react";
+          }
+          if (/[\\/]node_modules[\\/]@tanstack[\\/]/.test(id)) {
+            return "vendor-query";
+          }
+          if (/[\\/]node_modules[\\/]socket\.io-client[\\/]/.test(id)) {
+            return "vendor-realtime";
+          }
+          return undefined;
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({

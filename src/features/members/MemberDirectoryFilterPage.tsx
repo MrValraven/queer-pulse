@@ -8,7 +8,12 @@ import {
   ModalSheet,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useCountUp, useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
+import {
+  useCountUp,
+  useIncrementalList,
+  useMediaQuery,
+  useSimulatedLoad,
+} from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -133,6 +138,17 @@ export function MemberDirectoryFilterPage() {
   // over every page fetched so far. Demo mode returns the whole MEMBERS list as a
   // single page, so `hasNextPage` is false and the full mock list renders.
   const shown = filtered;
+
+  // Window the client-rendered slice: a filter run can hold every fetched page
+  // at once, so render a capped batch and reveal more as a sentinel nears the
+  // viewport instead of mounting hundreds of cards up front. The cap resets
+  // whenever `shown` changes identity (any filter/search/sort), so a new result
+  // always starts at the top.
+  const {
+    visible: shownWindowed,
+    sentinelRef,
+    hasMore: hasMoreWindowed,
+  } = useIncrementalList(shown, { initial: 18, step: 18 });
 
   // Keep the profession selection coherent with the chosen fields.
   const applyFilters = (next: FilterState) => {
@@ -288,16 +304,25 @@ export function MemberDirectoryFilterPage() {
                 />
               )
             ) : (
-              <div className={styles.mGrid}>
-                {shown.map((member, i) => (
-                  <FadeIn
-                    key={`${member.slug}-${i}`}
-                    delay={Math.min(i, 9) * 85}
-                  >
-                    <MemberResultCard member={member} />
-                  </FadeIn>
-                ))}
-              </div>
+              <>
+                <div className={styles.mGrid}>
+                  {shownWindowed.map((member, i) => (
+                    <FadeIn
+                      key={`${member.slug}-${i}`}
+                      delay={Math.min(i, 9) * 85}
+                    >
+                      <MemberResultCard member={member} />
+                    </FadeIn>
+                  ))}
+                </div>
+                {hasMoreWindowed && (
+                  <div
+                    ref={sentinelRef}
+                    className={styles.sentinel}
+                    aria-hidden="true"
+                  />
+                )}
+              </>
             )}
 
             {hasNextPage && (

@@ -95,19 +95,48 @@ function MessageBubble({
     );
   }
 
-  const bubbleContent = isEmojiOnly(message.text) ? (
-    <div
-      className={styles.emojiOnly}
-      title={message.time}
-      aria-label={`${senderName}: ${message.text}`}
+  // The quoted-reply block. On a normal text bubble it renders *inside* the
+  // bubble (WhatsApp-style, tucked under the shared radius); a `sent`/`received`
+  // variant recolors the accent so it reads on plum vs. paper. Emoji-only
+  // bubbles have no surface to tuck it into, so it sits above them instead.
+  const replyQuoteNode = message.replyTo && (
+    <button
+      type="button"
+      className={[
+        styles.replyQuote,
+        isSent ? styles.replyQuoteSent : styles.replyQuoteReceived,
+      ].join(" ")}
+      disabled={message.replyTo.deleted}
+      onClick={() =>
+        !message.replyTo!.deleted && onJumpToMessage?.(message.replyTo!.id)
+      }
     >
-      {message.text}
-    </div>
+      <span className={styles.replyQuoteName}>{message.replyTo.senderName}</span>
+      <span className={styles.replyQuoteSnippet}>
+        {message.replyTo.deleted
+          ? t("messages:replyDeleted")
+          : message.replyTo.snippet}
+      </span>
+    </button>
+  );
+
+  const bubbleContent = isEmojiOnly(message.text) ? (
+    <>
+      {replyQuoteNode}
+      <div
+        className={styles.emojiOnly}
+        title={message.time}
+        aria-label={`${senderName}: ${message.text}`}
+      >
+        {message.text}
+      </div>
+    </>
   ) : (
     <div
       className={[
         styles.bubble,
         isSent ? styles.sent : styles.received,
+        message.replyTo && styles.bubbleWithReply,
         index > 0 && styles.groupTop,
         index < lastIndex && styles.groupBottom,
         isLast && (isSent ? styles.tailSent : styles.tailReceived),
@@ -117,6 +146,7 @@ function MessageBubble({
       title={message.time}
       aria-label={`${senderName}: ${message.text}`}
     >
+      {replyQuoteNode}
       {renderWithLinks(message.text)}
     </div>
   );
@@ -133,23 +163,6 @@ function MessageBubble({
 
   return (
     <div id={bubbleDomId} className={styles.bubbleWrap} {...longPress}>
-      {message.replyTo && (
-        <button
-          type="button"
-          className={styles.replyQuote}
-          disabled={message.replyTo.deleted}
-          onClick={() =>
-            !message.replyTo!.deleted && onJumpToMessage?.(message.replyTo!.id)
-          }
-        >
-          <span className={styles.replyQuoteName}>{message.replyTo.senderName}</span>
-          <span className={styles.replyQuoteSnippet}>
-            {message.replyTo.deleted
-              ? t("messages:replyDeleted")
-              : message.replyTo.snippet}
-          </span>
-        </button>
-      )}
       {bubbleContent}
       {message.editedAt && !message.deletedAt && (
         <span className={styles.editedMarker}> · {t("messages:actions.edited")}</span>

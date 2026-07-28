@@ -378,7 +378,19 @@
 @keyframes msgBubbleIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Sent bubbles rise from the composer side (bottom-right); received from the
+   left — a small directional cue that new messages spring from where they came. */
+@keyframes msgBubbleInSent {
+  from {
+    opacity: 0;
+    transform: translate(4px, 8px) scale(0.96);
   }
   to {
     opacity: 1;
@@ -387,30 +399,40 @@
 }
 .bubble,
 .emojiOnly {
-  animation: msgBubbleIn var(--dur-base) var(--ease-out) both;
+  animation: msgBubbleIn var(--dur-base) var(--ease) both;
+  transform-origin: bottom left;
+}
+.sent {
+  animation-name: msgBubbleInSent;
+  transform-origin: bottom right;
 }
 
 .bubble {
-  --bubble-radius: 18px;
-  --bubble-radius-tight: 6px;
+  --bubble-radius: 20px;
+  --bubble-radius-tight: 7px;
   width: fit-content;
   max-width: 100%;
-  padding: 8px 13px;
+  padding: 8px 14px;
   font-size: 0.9375rem;
-  line-height: 1.4;
+  line-height: 1.42;
   border-radius: var(--bubble-radius);
   overflow-wrap: break-word;
+  transition: box-shadow var(--dur-fast) var(--ease);
 }
 .received {
   background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
   color: var(--ink);
-  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.05);
+  box-shadow:
+    0 1px 1px rgba(var(--plum-rgb), 0.04),
+    0 4px 12px -8px rgba(var(--plum-rgb), 0.14);
 }
 .sent {
   background: var(--plum);
-  color: rgba(var(--cream-rgb), 0.96);
-  box-shadow: 0 1px 3px rgba(var(--plum-rgb), 0.22);
+  color: rgba(var(--cream-rgb), 0.97);
+  box-shadow:
+    0 1px 2px rgba(var(--plum-rgb), 0.24),
+    0 6px 16px -10px rgba(var(--plum-rgb), 0.5);
 }
 
 /* ── Grouped-run corner shaping ──
@@ -439,8 +461,8 @@
 }
 
 .emojiOnly {
-  font-size: 2rem;
-  line-height: 1.2;
+  font-size: 2.5rem;
+  line-height: 1.15;
   padding: 2px 4px;
 }
 
@@ -456,7 +478,11 @@
   max-width: min(80%, 46ch);
 }
 
-/* ── Reply quote (tap-to-scroll to the original message) ── */
+/* ── Reply quote (tap-to-scroll to the original message) ──
+   Rendered *inside* the bubble (WhatsApp-style quoted-reply block): a rounded
+   inner panel with a colored accent bar tucked under the bubble's top radius.
+   `Received` accents in plum on a light plum wash; `Sent` accents in a cream
+   tint so it reads against the plum bubble. */
 .replyQuote {
   display: flex;
   flex-direction: column;
@@ -464,19 +490,31 @@
   gap: 1px;
   width: 100%;
   max-width: 100%;
-  margin-block-end: 3px;
-  padding: 5px 9px;
+  margin-block: 0 6px;
+  padding: 5px 10px;
   border: none;
   border-inline-start: 3px solid var(--plum);
-  border-radius: var(--radius-badge);
-  background: rgba(var(--plum-rgb), 0.06);
+  border-radius: 7px;
+  background: rgba(var(--plum-rgb), 0.07);
   text-align: start;
   cursor: pointer;
+  overflow: hidden;
   transition: background var(--dur-fast) var(--ease);
 }
+.replyQuoteReceived {
+  border-inline-start-color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.07);
+}
+.replyQuoteSent {
+  border-inline-start-color: rgba(var(--cream-rgb), 0.85);
+  background: rgba(var(--cream-rgb), 0.16);
+}
 @media (hover: hover) {
-  .replyQuote:hover:not(:disabled) {
-    background: rgba(var(--plum-rgb), 0.1);
+  .replyQuoteReceived:hover:not(:disabled) {
+    background: rgba(var(--plum-rgb), 0.12);
+  }
+  .replyQuoteSent:hover:not(:disabled) {
+    background: rgba(var(--cream-rgb), 0.24);
   }
 }
 .replyQuote:disabled {
@@ -487,10 +525,16 @@
   outline: 2px solid var(--plum);
   outline-offset: 2px;
 }
+.replyQuoteSent:focus-visible {
+  outline-color: rgba(var(--cream-rgb), 0.85);
+}
 .replyQuoteName {
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--plum);
+}
+.replyQuoteSent .replyQuoteName {
+  color: rgba(var(--cream-rgb), 0.96);
 }
 .replyQuoteSnippet {
   max-width: 100%;
@@ -499,6 +543,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.replyQuoteSent .replyQuoteSnippet {
+  color: rgba(var(--cream-rgb), 0.78);
+}
+/* Slightly tighten the bubble top over an inline reply quote. */
+.bubbleWithReply {
+  padding-block-start: 7px;
 }
 
 /* ── Scroll-to-original highlight ── */
@@ -562,6 +613,20 @@
   border-radius: var(--radius-pill);
   padding: 3px;
   box-shadow: var(--shadow-toast);
+  transform: translateY(3px);
+  transition: transform var(--dur-fast) var(--ease);
+}
+/* Subtle rise as the hover bar fades in (opacity is on the slot). */
+.bubbleWrap:hover .messageActions,
+.bubbleWrap:focus-within .messageActions,
+.messageActionsSlot:has(.messageActions[data-open="true"]) .messageActions {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .messageActions {
+    transform: none;
+    transition: none;
+  }
 }
 .messageActionBtn {
   width: 28px;
@@ -681,18 +746,36 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px;
+  padding: 2px 9px;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   background: var(--paper);
   font-size: 0.75rem;
   color: var(--ink-60);
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.06);
+  animation: msgBubbleIn var(--dur-fast) var(--ease) both;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .reactionChip:hover {
     background: rgba(var(--plum-rgb), 0.06);
+    transform: translateY(-1px);
+  }
+}
+.reactionChip:active {
+  transform: scale(0.94);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reactionChip {
+    animation: none;
+  }
+  .reactionChip:hover,
+  .reactionChip:active {
+    transform: none;
   }
 }
 .reactionChip:focus-visible {
@@ -836,7 +919,17 @@
   }
 }
 .sendBtnActive:active {
-  transform: scale(0.94);
+  transform: scale(0.88);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bubble,
+  .emojiOnly,
+  .sent {
+    animation: none;
+  }
+  .sendBtnActive:active {
+    transform: none;
+  }
 }
 
 /* ── Reply preview banner (Composer) ── */
@@ -1124,12 +1217,12 @@
 .overlayColumnAbove {
   transform-origin: bottom;
 }
+/* Horizontal placement (left/right) is anchored to the pressed bubble via inline
+   styles in MessageActionOverlay — only the cross-axis alignment lives here. */
 .overlaySent {
-  inset-inline-end: 8px;
   align-items: flex-end;
 }
 .overlayReceived {
-  inset-inline-start: 8px;
   align-items: flex-start;
 }
 
@@ -1149,10 +1242,10 @@
 .overlayBubble {
   width: fit-content;
   max-width: 100%;
-  padding: 8px 13px;
+  padding: 8px 14px;
   font-size: 0.9375rem;
-  line-height: 1.4;
-  border-radius: 18px;
+  line-height: 1.42;
+  border-radius: 20px;
   overflow-wrap: break-word;
   animation: msgBubbleIn var(--dur-fast) var(--ease-out) both;
 }

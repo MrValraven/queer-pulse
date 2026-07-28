@@ -522,3 +522,9 @@
   text-align: center;
   padding: 24px 0;
 }
+
+/* Zero-height scroll marker for progressive windowing — reveals the next batch
+   of member cards as it nears the viewport. Never occupies visual space. */
+.sentinel {
+  height: 1px;
+}
