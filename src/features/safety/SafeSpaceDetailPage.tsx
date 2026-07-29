@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useSafeSpace } from "./api/useSafeSpaces";
 import { type Tint, type VerifiedSpace, type RemovedSpace } from "./safeSpaces";
+import { SafeSpaceVerifiedAside } from "./SafeSpaceVerifiedAside";
 import { VouchModal } from "./VouchModal";
 import styles from "./SafeSpaceDetailPage.module.css";
 
@@ -33,14 +33,8 @@ function emName(name: string) {
 
 function VerifiedView({ s }: { s: VerifiedSpace }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const [vouchOpen, setVouchOpen] = useState(false);
   const { lead, last } = emName(s.name);
-  const share = () => {
-    if (navigator.clipboard)
-      void navigator.clipboard.writeText(window.location.href);
-    showToast(t("safety:spaces.detail.linkCopiedToast"), "success");
-  };
 
   return (
     <div className={styles.page}>
@@ -185,46 +179,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
           </section>
         </div>
 
-        <aside className={styles.side}>
-          <div className={styles.sideCard}>
-            <h4>{t("safety:spaces.detail.whereTitle")}</h4>
-            <div className={styles.addr}>
-              <b>{s.name}</b>
-              {s.address}
-            </div>
-            <Button
-              variant="ghost"
-              className={styles.sideFull}
-              to={routes.safeSpaces}
-            >
-              {t("safety:spaces.detail.backAllCta")}
-            </Button>
-          </div>
-
-          <div className={styles.sideCard}>
-            <h4>{t("safety:spaces.detail.glanceTitle")}</h4>
-            {s.glance.map((g) => (
-              <div className={styles.sideRow} key={g.label}>
-                <span>{g.label}</span>
-                <b className={g.accent ? styles.accentV : undefined}>
-                  {g.value}
-                </b>
-              </div>
-            ))}
-          </div>
-
-          <div className={[styles.sideCard, styles.sharePlum].join(" ")}>
-            <h4>{t("safety:spaces.detail.shareTitle")}</h4>
-            <p>{t("safety:spaces.detail.shareBody")}</p>
-            <Button
-              variant="ghost-dark"
-              className={styles.sideFull}
-              onClick={share}
-            >
-              {t("safety:spaces.detail.copyLinkCta")}
-            </Button>
-          </div>
-        </aside>
+        <SafeSpaceVerifiedAside space={s} />
       </div>
 
       {vouchOpen && (

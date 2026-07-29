@@ -1,8 +1,6 @@
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiEdit3, FiEye, FiX } from "react-icons/fi";
 import {
-  Button,
   Eyebrow,
   ImageSlot,
   Reveal,
@@ -11,13 +9,12 @@ import {
   TagRow,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { useMemberContact } from "../connect/useMemberContact";
-import { useVouch } from "../../app/providers/useVouch";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
+import { ProfileHeroActions } from "./ProfileHeroActions";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import {
@@ -98,11 +95,8 @@ export function ProfileHero({
   onPreview?: () => void;
 }) {
   const { t } = useTranslation();
-  const { connected, contact } = useMemberContact(profile.slug);
-  const { openVouch, hasVouched, removeVouch } = useVouch();
   const realSelf = self ?? profile.slug === currentUserSlug;
   const isSelf = realSelf && !asVisitor;
-  const vouched = hasVouched(profile.slug);
   const curatorSlug = curatorSlugForName(`${profile.first} ${profile.last}`);
   return (
     <header className={styles.phero}>
@@ -175,89 +169,14 @@ export function ProfileHero({
               self={isSelf}
               onEdit={onEditLinks}
             />
-            <div className={styles.cta}>
-              {isSelf ? (
-                <>
-                  <Button id="profileEditCta" size="lg" onClick={onEdit}>
-                    <FiEdit3 aria-hidden /> {t("members:profile.hero.editCta")}
-                  </Button>
-                  <Button size="lg" variant="ghost" onClick={onPreview}>
-                    <FiEye aria-hidden /> {t("members:profile.hero.previewCta")}
-                  </Button>
-                </>
-              ) : asVisitor ? (
-                // Faithful preview of what a first-time visitor sees — the same
-                // primary + vouch CTAs a real viewer gets, rendered inert so
-                // preview mode doesn't leave an empty, misleading action row.
-                <>
-                  {profile.visibility === "private" ? (
-                    <Button size="lg" variant="ghost" disabled>
-                      {t("members:profile.hero.requestIntroCta")}
-                    </Button>
-                  ) : (
-                    <Button size="lg" disabled>
-                      {t("members:profile.hero.sayHelloCta")}
-                    </Button>
-                  )}
-                  <Button size="lg" variant="ghost" disabled>
-                    {t("members:profile.hero.vouchForCta", {
-                      first: profile.first,
-                    })}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {profile.visibility === "private" ? (
-                    <Button size="lg" variant="ghost" to={routes.invite}>
-                      {t("members:profile.hero.requestIntroCta")}
-                    </Button>
-                  ) : (
-                    <Button
-                      size="lg"
-                      onClick={() =>
-                        contact({
-                          slug: profile.slug,
-                          name: `${profile.first} ${profile.last}`,
-                        })
-                      }
-                    >
-                      {connected
-                        ? t("connect:contact.message")
-                        : t("members:profile.hero.sayHelloCta")}
-                    </Button>
-                  )}
-                  {!realSelf &&
-                    (vouched ? (
-                      <span className={styles.vouchedActions}>
-                        <span className={styles.vouchedTag}>
-                          <FiCheck aria-hidden />{" "}
-                          {t("members:profile.hero.vouchedFor", {
-                            first: profile.first,
-                          })}
-                        </span>
-                        <Button
-                          size="lg"
-                          variant="ghost"
-                          onClick={() => removeVouch(profile.slug)}
-                        >
-                          <FiX aria-hidden />{" "}
-                          {t("members:profile.hero.withdrawVouchCta")}
-                        </Button>
-                      </span>
-                    ) : (
-                      <Button
-                        size="lg"
-                        variant="ghost"
-                        onClick={() => openVouch(profile.slug)}
-                      >
-                        {t("members:profile.hero.vouchForCta", {
-                          first: profile.first,
-                        })}
-                      </Button>
-                    ))}
-                </>
-              )}
-            </div>
+            <ProfileHeroActions
+              profile={profile}
+              isSelf={isSelf}
+              asVisitor={asVisitor}
+              realSelf={realSelf}
+              onEdit={onEdit}
+              onPreview={onPreview}
+            />
             <HeroVouchRow
               profile={profile}
               realSelf={realSelf}

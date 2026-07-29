@@ -14,6 +14,7 @@ const collectionPath = (slug: string) => `${routes.cinemaCollections}/${slug}`;
 
 /** Four-poster mosaic over the plum panel, shared by featured + grid cards. */
 function Mosaic({ posters, tint }: { posters: string[]; tint?: boolean }) {
+  const { t } = useTranslation();
   return (
     <>
       {posters.map((src, i) => (
@@ -23,7 +24,7 @@ function Mosaic({ posters, tint }: { posters: string[]; tint?: boolean }) {
           width="100%"
           height="100%"
           radius={0}
-          placeholder="poster"
+          placeholder={t("cinema:slot.poster")}
         />
       ))}
       <div className={tint ? styles.thumbOverlay : styles.overlay} />

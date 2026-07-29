@@ -1,32 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { FiMessageSquare } from "react-icons/fi";
+import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfile } from "../../app/providers/useProfile";
-import { routes } from "../../app/routeMap";
 import { CATS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
-import {
-  useReply,
-  useEditPost,
-  useDeletePost,
-  useRestorePost,
-  useEditThreadTitle,
-} from "./api/useForumMutations";
+import { useReply } from "./api/useForumMutations";
 import { currentUser } from "../members/data/members";
-import { ReportReplyModal } from "./ReportReplyModal";
-import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
-import { EditOpModal } from "./EditOpModal";
-import { ForumEditHistoryModal } from "./ForumEditHistoryModal";
 import { ThreadOpCard } from "./ThreadOpCard";
 import { ReplySortBar, ThreadReplies } from "./ThreadReplies";
-import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
 import { ThreadComposer } from "./ThreadComposer";
+import { ThreadTopbar } from "./ThreadTopbar";
+import { ThreadNotFoundState } from "./ThreadNotFoundState";
+import { ThreadPageModals } from "./ThreadPageModals";
+import { deriveOpView, useThreadModeration } from "./useThreadModeration";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadPage() {
@@ -49,13 +39,6 @@ export function ThreadPage() {
   // early return it is aliased to a non-optional `thread`.
   const threadData = threadQuery.thread;
   const postReply = useReply(threadData?.slug);
-  // The four id-keyed mutations need a numeric thread id even while `thread`
-  // hasn't resolved yet (live mode, before the fetch settles) — mirroring the
-  // `0` placeholder already used elsewhere before a real id is known.
-  const editPost = useEditPost();
-  const deletePost = useDeletePost();
-  const restorePost = useRestorePost();
-  const editTitle = useEditThreadTitle(threadData?.id ?? 0);
   const loading = demoMode ? simLoading : threadQuery.isLoading;
 
   const [liked, setLiked] = useState(false);
@@ -67,32 +50,17 @@ export function ThreadPage() {
   );
   // Per-reply like toggles, keyed by a stable identity (replies have no id).
   const [likedReplies, setLikedReplies] = useState<Record<string, boolean>>({});
-  const [reportingAuthor, setReportingAuthor] = useState<string | null>(null);
-  const [editingReplyPostId, setEditingReplyPostId] = useState<string | null>(
-    null,
-  );
-  const [editingOp, setEditingOp] = useState(false);
-  // Snapshot of the OP body exactly as EditOpModal was initialized with, so
-  // `saveOpEdit` can tell a genuine body change from a title-only edit even if
-  // `thread.body` itself changes (e.g. a background refetch) while the modal
-  // is open — comparing against a live-recomputed `thread.body.join("\n")`
-  // would misfire in that window.
-  const [editingOpInitialBody, setEditingOpInitialBody] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState<{
-    postId: string;
-    isOp: boolean;
-  } | null>(null);
-  const [historyPostId, setHistoryPostId] = useState<string | null>(null);
-  // Demo-only local overrides for the OP card (live refetches after mutation).
-  const [opOverride, setOpOverride] = useState<{
-    title?: string;
-    body?: string[];
-    deleted?: boolean;
-    editedAt?: string | null;
-  }>({});
   const replyBoxRef = useRef<HTMLTextAreaElement>(null);
 
   const replyKey = (r: Reply) => `${r.name}|${r.time}|${r.body[0] ?? ""}`;
+
+  // Every edit/delete/restore/history concern (state + mutations + handlers).
+  const moderation = useThreadModeration({
+    thread: threadData,
+    demoMode,
+    setLocalReplies,
+    replyKey,
+  });
 
   const toggleReplyLike = (r: Reply) => {
     const key = replyKey(r);
@@ -142,36 +110,12 @@ export function ThreadPage() {
     postReply.mutate(body);
   }
 
-  // Live mode has no thread until the fetch resolves — show a skeleton while it
-  // loads, then a real "not found" state if the slug resolves to nothing. Demo
-  // always has a thread here, so this branch is live-only.
-  if (!threadData) {
-    return (
-      <PageShell>
-        <section className="wrap">
-          <div className={styles.layout}>
-            {loading ? (
-              <ThreadRepliesSkeleton count={4} />
-            ) : (
-              <EmptyState
-                icon={<FiMessageSquare />}
-                title={t("forum:threadPage.notFound.title")}
-                description={t("forum:threadPage.notFound.description")}
-                action={{
-                  label: t("forum:threadPage.notFound.backCta"),
-                  to: routes.forum,
-                }}
-              />
-            )}
-          </div>
-        </section>
-      </PageShell>
-    );
-  }
+  // Live mode has no thread until the fetch resolves — skeleton, then a real
+  // "not found" state. Demo always has a thread, so this branch is live-only.
+  if (!threadData) return <ThreadNotFoundState loading={loading} />;
 
   // Past the guard the thread is resolved — a non-optional alias so the OP
-  // permission logic and the nested edit/delete/restore handlers below can use
-  // it without the optional-chaining the pre-guard hooks needed.
+  // permission logic below can use it without optional-chaining.
   const thread = threadData;
 
   // In demo there are no server flags; ownership is the demo persona. In live,
@@ -179,137 +123,21 @@ export function ThreadPage() {
   const demoOwns = (person: { slug?: string; name?: string }) =>
     demoMode && (person.slug === currentUser.slug || person.name === "You");
 
-  const opAuthorIdentity = { slug: thread.author.slug, name: thread.author.name };
-  const opDeleted = demoMode ? !!opOverride.deleted : !!thread.deleted;
-  const opCanEdit = demoMode
-    ? demoOwns(opAuthorIdentity) && !opDeleted
-    : !!thread.canEdit;
-  const opCanDelete = demoMode
-    ? demoOwns(opAuthorIdentity) && !opDeleted
-    : !!thread.canDelete;
-  const opCanRestore = demoMode
-    ? demoOwns(opAuthorIdentity) && opDeleted
-    : !!thread.canRestore;
-  const opCanViewHistory = demoMode ? false : !!thread.canViewHistory;
-  const opTitle = demoMode ? (opOverride.title ?? thread.title) : thread.title;
-  const opBody = demoMode ? (opOverride.body ?? thread.body) : thread.body;
-  const opEditedAt = demoMode
-    ? (opOverride.editedAt ?? thread.editedAt ?? null)
-    : (thread.editedAt ?? null);
-
-  function saveReplyEdit(postId: string, body: string) {
-    setLocalReplies((prev) =>
-      prev.map((currentReply) =>
-        currentReply.postId === postId ||
-        (demoMode && replyKey(currentReply) === postId)
-          ? { ...currentReply, body: [body], editedAt: new Date().toISOString() }
-          : currentReply,
-      ),
-    );
-    setEditingReplyPostId(null);
-    if (!demoMode)
-      editPost.mutate(
-        { postId, body },
-        { onError: () => showToast(t("forum:toast.error"), "error") },
-      );
-    showToast(t("forum:toast.editSaved"), "success");
-  }
-
-  function doDeletePost(postId: string, isOp: boolean) {
-    const onMutateError = () => showToast(t("forum:toast.error"), "error");
-    if (isOp) {
-      if (demoMode) setOpOverride((prev) => ({ ...prev, deleted: true }));
-      else deletePost.mutate({ postId }, { onError: onMutateError });
-    } else {
-      setLocalReplies((prev) =>
-        prev.map((currentReply) =>
-          currentReply.postId === postId
-            ? { ...currentReply, deleted: true }
-            : currentReply,
-        ),
-      );
-      if (!demoMode) deletePost.mutate({ postId }, { onError: onMutateError });
-    }
-    setConfirmDelete(null);
-    showToast(t("forum:toast.deleted"), "success");
-  }
-
-  function doRestorePost(postId: string, isOp: boolean) {
-    const onMutateError = () => showToast(t("forum:toast.error"), "error");
-    if (isOp) {
-      if (demoMode) setOpOverride((prev) => ({ ...prev, deleted: false }));
-      else restorePost.mutate({ postId }, { onError: onMutateError });
-    } else {
-      setLocalReplies((prev) =>
-        prev.map((currentReply) =>
-          currentReply.postId === postId
-            ? { ...currentReply, deleted: false }
-            : currentReply,
-        ),
-      );
-      if (!demoMode)
-        restorePost.mutate({ postId }, { onError: onMutateError });
-    }
-    showToast(t("forum:toast.restored"), "success");
-  }
-
-  function saveOpEdit(next: { title: string; body: string }) {
-    // `thread` is guaranteed defined by the early-return above, but narrowing
-    // doesn't cross into a nested function's body — re-assert it here.
-    if (!thread) return;
-    if (demoMode) {
-      setOpOverride((prev) => ({
-        ...prev,
-        title: next.title,
-        body: next.body
-          .split("\n")
-          .map((line) => line.trim())
-          .filter(Boolean),
-        editedAt: new Date().toISOString(),
-      }));
-    } else {
-      const onMutateError = () => showToast(t("forum:toast.error"), "error");
-      if (next.title !== thread.title)
-        editTitle.mutate({ title: next.title }, { onError: onMutateError });
-      // Compare against the snapshot EditOpModal was opened with, not a fresh
-      // `thread.body.join("\n")` — the latter can drift from a background
-      // refetch while the modal is open, spuriously firing a body edit when
-      // the member only changed the title. See `editingOpInitialBody` above.
-      if (thread.opPostId && next.body !== editingOpInitialBody)
-        editPost.mutate(
-          { postId: thread.opPostId, body: next.body },
-          { onError: onMutateError },
-        );
-    }
-    setEditingOp(false);
-    showToast(t("forum:toast.editSaved"), "success");
-  }
+  const ownsOp = demoOwns({ slug: thread.author.slug, name: thread.author.name });
+  const {
+    opDeleted,
+    opCanEdit,
+    opCanDelete,
+    opCanRestore,
+    opCanViewHistory,
+    opTitle,
+    opBody,
+    opEditedAt,
+  } = deriveOpView(thread, demoMode, ownsOp, moderation.opOverride);
 
   return (
     <PageShell>
-      <section className={styles.topbar}>
-        <div className="wrap">
-          <div className={styles.topbarInner}>
-            <Link to={routes.forum} className={styles.back}>
-              <svg
-                width={14}
-                height={14}
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <polyline points="10,4 6,8 10,12" />
-              </svg>
-              {t("forum:threadPage.breadcrumbForum")}
-            </Link>
-            <span className={styles.sep} />
-            <span className={styles.topCat}>
-              {catMeta && t(catMeta.nameKey)}
-            </span>
-          </div>
-        </div>
-      </section>
+      <ThreadTopbar categoryName={catMeta ? t(catMeta.nameKey) : undefined} />
 
       <section className="wrap">
         <div className={styles.layout}>
@@ -323,23 +151,19 @@ export function ThreadPage() {
             setLiked={setLiked}
             bookmarked={bookmarked}
             setBookmarked={setBookmarked}
-            onReport={() => setReportingAuthor(thread.author.name)}
+            onReport={() => moderation.setReportingAuthor(thread.author.name)}
             canEdit={opCanEdit}
             canDelete={opCanDelete}
             canRestore={opCanRestore}
             canViewHistory={opCanViewHistory}
             onEdit={() => {
-              setEditingOpInitialBody(opBody.join("\n"));
-              setEditingOp(true);
+              moderation.setEditingOpInitialBody(opBody.join("\n"));
+              moderation.setEditingOp(true);
             }}
-            onDelete={() =>
-              thread.opPostId
-                ? setConfirmDelete({ postId: thread.opPostId, isOp: true })
-                : setOpOverride((prev) => ({ ...prev, deleted: true }))
-            }
-            onRestore={() => doRestorePost(thread.opPostId ?? "", true)}
+            onDelete={() => moderation.onOpDelete(thread.opPostId)}
+            onRestore={() => moderation.doRestorePost(thread.opPostId ?? "", true)}
             onHistory={() =>
-              thread.opPostId && setHistoryPostId(thread.opPostId)
+              thread.opPostId && moderation.setHistoryPostId(thread.opPostId)
             }
           />
 
@@ -361,28 +185,21 @@ export function ThreadPage() {
             isFetchingNextPage={threadQuery.isFetchingNextPage}
             demoMode={demoMode}
             demoOwns={demoOwns}
-            editingReplyPostId={editingReplyPostId}
+            editingReplyPostId={moderation.editingReplyPostId}
             onStartEdit={(replyItem) =>
-              setEditingReplyPostId(replyItem.postId ?? replyKey(replyItem))
+              moderation.setEditingReplyPostId(
+                replyItem.postId ?? replyKey(replyItem),
+              )
             }
-            onCancelEdit={() => setEditingReplyPostId(null)}
-            onSaveEdit={saveReplyEdit}
-            onDelete={(replyItem) =>
-              replyItem.postId
-                ? setConfirmDelete({ postId: replyItem.postId, isOp: false })
-                : setLocalReplies((prev) =>
-                    prev.map((currentReply) =>
-                      replyKey(currentReply) === replyKey(replyItem)
-                        ? { ...currentReply, deleted: true }
-                        : currentReply,
-                    ),
-                  )
-            }
+            onCancelEdit={() => moderation.setEditingReplyPostId(null)}
+            onSaveEdit={moderation.saveReplyEdit}
+            onDelete={moderation.onReplyDelete}
             onRestore={(replyItem) =>
-              replyItem.postId && doRestorePost(replyItem.postId, false)
+              replyItem.postId &&
+              moderation.doRestorePost(replyItem.postId, false)
             }
             onHistory={(replyItem) =>
-              replyItem.postId && setHistoryPostId(replyItem.postId)
+              replyItem.postId && moderation.setHistoryPostId(replyItem.postId)
             }
           />
 
@@ -396,37 +213,29 @@ export function ThreadPage() {
         </div>
       </section>
 
-      {reportingAuthor && (
-        <ReportReplyModal
-          authorName={reportingAuthor}
-          subjectId={String(thread.id)}
-          onClose={() => setReportingAuthor(null)}
-        />
-      )}
-      {editingOp && (
-        <EditOpModal
-          initialTitle={opTitle}
-          initialBody={editingOpInitialBody}
-          busy={editPost.isPending || editTitle.isPending}
-          onSave={saveOpEdit}
-          onClose={() => setEditingOp(false)}
-        />
-      )}
-      {confirmDelete && (
-        <ConfirmDeleteModal
-          busy={deletePost.isPending}
-          onConfirm={() =>
-            doDeletePost(confirmDelete.postId, confirmDelete.isOp)
-          }
-          onClose={() => setConfirmDelete(null)}
-        />
-      )}
-      {historyPostId && (
-        <ForumEditHistoryModal
-          postId={historyPostId}
-          onClose={() => setHistoryPostId(null)}
-        />
-      )}
+      <ThreadPageModals
+        reportingAuthor={moderation.reportingAuthor}
+        threadId={String(thread.id)}
+        onCloseReport={() => moderation.setReportingAuthor(null)}
+        editingOp={moderation.editingOp}
+        opTitle={opTitle}
+        editingOpInitialBody={moderation.editingOpInitialBody}
+        editBusy={moderation.editBusy}
+        onSaveOp={moderation.saveOpEdit}
+        onCloseOp={() => moderation.setEditingOp(false)}
+        confirmDelete={moderation.confirmDelete}
+        deleteBusy={moderation.deleteBusy}
+        onConfirmDelete={() =>
+          moderation.confirmDelete &&
+          moderation.doDeletePost(
+            moderation.confirmDelete.postId,
+            moderation.confirmDelete.isOp,
+          )
+        }
+        onCloseDelete={() => moderation.setConfirmDelete(null)}
+        historyPostId={moderation.historyPostId}
+        onCloseHistory={() => moderation.setHistoryPostId(null)}
+      />
     </PageShell>
   );
 }

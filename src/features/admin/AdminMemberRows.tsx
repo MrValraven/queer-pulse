@@ -44,7 +44,7 @@ export function AdminMemberRows({
               tone={m.tone}
               size="md"
               verified={m.verified}
-              src={portrait(m.name)}
+              src={m.avatarUrl ?? portrait(m.name)}
             />
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
@@ -113,7 +113,12 @@ export function AdminFlaggedRows({ members }: { members: FlaggedMember[] }) {
       {members.map((m, i) => (
         <FadeIn key={m.id} delay={Math.min(i, 8) * 50}>
           <div className={`${styles.row} ${styles.rowFlagged}`}>
-            <AdminAvatar initials={m.initials} tone={m.tone} size="md" />
+            <AdminAvatar
+              initials={m.initials}
+              tone={m.tone}
+              size="md"
+              src={m.avatarUrl ?? undefined}
+            />
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowHandle}>{m.handle}</span>

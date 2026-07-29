@@ -53,6 +53,7 @@ export function MessagesPage() {
     deleteThread,
     deletePending,
     send,
+    sendGif,
     retrySend,
     forwardMessage,
   } = useMessagesController();
@@ -97,6 +98,7 @@ export function MessagesPage() {
               draft={draft}
               onDraftChange={setDraft}
               onSend={send}
+              onSendGif={sendGif}
               blocked={activeBlocked}
               onBack={isMobile ? () => setView("list") : undefined}
               onRetry={retrySend}
@@ -132,8 +134,8 @@ export function MessagesPage() {
       {groupComposing && (
         <NewGroupModal
           onClose={() => setGroupComposing(false)}
-          onCreate={(title, members) => {
-            startGroup(title, members);
+          onCreate={(title, members, avatarUrl) => {
+            startGroup(title, members, avatarUrl);
             setGroupComposing(false);
           }}
         />
@@ -143,7 +145,7 @@ export function MessagesPage() {
           mode="forward"
           onClose={() => setForwardSource(null)}
           onPick={(recipient: Conversation) => {
-            forwardMessage(recipient, forwardSource.text);
+            forwardMessage(recipient, forwardSource.text, forwardSource.attachment);
             setForwardSource(null);
           }}
         />

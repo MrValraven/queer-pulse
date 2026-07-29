@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useRef,
   type ReactNode,
   type PointerEvent as ReactPointerEvent,
@@ -21,6 +22,13 @@ const FOCUSABLE =
  */
 function useDismiss(onClose: () => void) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  // Latest-callback ref so the setup effect can run once on mount (deps `[]`)
+  // without an inline `onClose` re-running the focus-trap + initial focus on
+  // every parent render, which would yank focus back mid-interaction.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
   useScrollLock();
 
   useEffect(() => {
@@ -41,7 +49,7 @@ function useDismiss(onClose: () => void) {
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key !== "Tab" || !dialog) return;
@@ -68,7 +76,7 @@ function useDismiss(onClose: () => void) {
       document.removeEventListener("keydown", onKey);
       previouslyFocused?.focus?.();
     };
-  }, [onClose]);
+  }, []);
 
   return dialogRef;
 }
@@ -100,6 +108,7 @@ export function Modal({
 }: ModalProps) {
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
+  const titleId = useId();
   return (
     <div
       className={styles.scrim}
@@ -116,11 +125,14 @@ export function Modal({
           .join(" ")}
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
       >
         <div className={styles.modalHead}>
           <div className={styles.modalHeadTx}>
             {eyebrow && <div className={styles.modalEyebrow}>{eyebrow}</div>}
-            <h3 className={styles.modalTitle}>{title}</h3>
+            <h3 id={titleId} className={styles.modalTitle}>
+              {title}
+            </h3>
             {sub && <p className={styles.modalSub}>{sub}</p>}
           </div>
           <button

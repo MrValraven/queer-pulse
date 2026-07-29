@@ -16,14 +16,13 @@ import {
   TYPE_CLASS,
   type ClinicType,
 } from "./sexualHealth.data";
+import { TestingNominate } from "./SexualHealthTestingNominate";
 import styles from "./SexualHealthPage.module.css";
 
 export function TestingTab() {
   const { t } = useTranslation();
   const [clinicFilter, setClinicFilter] = useState<ClinicType | "all">("all");
   const [openClinic, setOpenClinic] = useState<string | null>(null);
-  const [nomination, setNomination] = useState("");
-  const [nominated, setNominated] = useState(false);
   const clinics = CLINICS.filter(
     (c) => clinicFilter === "all" || c.type === clinicFilter,
   );
@@ -170,58 +169,13 @@ export function TestingTab() {
         })}
       </div>
 
-      <div className={styles.anonBox}>
-        {nominated ? (
-          <div className={styles.anonDone}>
-            <span className={styles.anonDoneIcon} aria-hidden>
-              <FiCheck />
-            </span>
-            <div className={styles.anonDoneTitle}>
-              <Translation
-                i18nKey="resources:sexualHealth.testing.nominate.doneTitle"
-                components={{ em: <em /> }}
-              />
-            </div>
-            <p className={styles.anonDoneBody}>
-              {t("resources:sexualHealth.testing.nominate.doneBody")}
-            </p>
-            <Button variant="ghost-dark" onClick={() => setNominated(false)}>
-              {t("resources:sexualHealth.testing.nominate.anotherCta")}
-            </Button>
-          </div>
-        ) : (
-          <>
-            <h3>{t("resources:sexualHealth.testing.nominate.title")}</h3>
-            <p>{t("resources:sexualHealth.testing.nominate.body")}</p>
-            <textarea
-              className={styles.anonInput}
-              style={{ minHeight: 52 }}
-              value={nomination}
-              onChange={(e) => setNomination(e.target.value)}
-              placeholder={t(
-                "resources:sexualHealth.testing.nominate.placeholder",
-              )}
-            />
-            <div style={{ marginTop: 12 }}>
-              <Button
-                variant="primary"
-                disabled={nomination.trim().length < 5}
-                onClick={() => {
-                  setNomination("");
-                  setNominated(true);
-                }}
-              >
-                {t("resources:sexualHealth.testing.nominate.submitCta")}
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
+      <TestingNominate />
     </>
   );
 }
 
 export function PrepTab() {
+  const { t } = useTranslation();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   return (
     <>
@@ -231,22 +185,16 @@ export function PrepTab() {
           components={{ em: <em /> }}
         />
       </h2>
-      <p className={styles.sub}>
-        PrEP (pre-exposure prophylaxis) is available free through the SNS for
-        eligible people. When taken correctly it is over 99% effective at
-        preventing HIV. Here's how to access it.
-      </p>
+      <p className={styles.sub}>{t("resources:sexualHealth.prep.lead")}</p>
       <div className={styles.tip}>
         <div className={styles.tipIcon}>
           <FiInfo />
         </div>
         <div className={styles.tipText}>
-          <strong>
-            Portugal was one of the first European countries to make PrEP free.
-          </strong>{" "}
-          You don't need private insurance. The process involves a simple
-          eligibility check, blood tests, and a prescription — the whole pathway
-          takes about 4–6 weeks the first time.
+          <Translation
+            i18nKey="resources:sexualHealth.prep.tip"
+            components={{ strong: <strong /> }}
+          />
         </div>
       </div>
       <div className={styles.prepSteps}>
@@ -301,42 +249,34 @@ export function HivTab() {
           components={{ em: <em /> }}
         />
       </h2>
-      <p className={styles.sub}>
-        Honest, current information. HIV is a manageable condition. With
-        treatment, people with HIV live full, long lives and can't pass the
-        virus on.
-      </p>
+      <p className={styles.sub}>{t("resources:sexualHealth.hiv.lead")}</p>
       <div className={styles.hivBanner}>
         <h3>
-          Undetectable = <em>Untransmittable.</em>
+          <Translation
+            i18nKey="resources:sexualHealth.hiv.uu.title"
+            components={{ em: <em /> }}
+          />
         </h3>
-        <p>
-          U=U is one of the most important facts in sexual health. People living
-          with HIV who are on effective treatment and have an undetectable viral
-          load cannot sexually transmit HIV to their partners. This is
-          scientifically established and endorsed by every major health
-          authority.
-        </p>
+        <p>{t("resources:sexualHealth.hiv.uu.body")}</p>
         <div className={styles.hivStats}>
           <div className={styles.hivStat}>
             <div className={styles.n}>U=U</div>
             <div className={styles.l}>
-              Undetectable = Untransmittable. Confirmed by the CDC, WHO, and
-              400+ health organisations globally.
+              {t("resources:sexualHealth.hiv.uu.stat.uu.label")}
             </div>
           </div>
           <div className={styles.hivStat}>
             <div className={styles.n}>97%</div>
             <div className={styles.l}>
-              of people on treatment in Portugal achieve an undetectable viral
-              load within 6 months.
+              {t("resources:sexualHealth.hiv.uu.stat.rate.label")}
             </div>
           </div>
           <div className={styles.hivStat}>
-            <div className={styles.n}>Free</div>
+            <div className={styles.n}>
+              {t("resources:sexualHealth.hiv.uu.stat.free.value")}
+            </div>
             <div className={styles.l}>
-              HIV treatment (antiretrovirals) is free for all residents through
-              the SNS.
+              {t("resources:sexualHealth.hiv.uu.stat.free.label")}
             </div>
           </div>
         </div>

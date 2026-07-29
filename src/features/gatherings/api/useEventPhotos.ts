@@ -31,6 +31,8 @@ export function useEventPhotos(slug: string) {
 export function useAttachEventPhoto(slug: string) {
   const client = useQueryClient();
   return useMutation({
+    // GatheringPhotosLive toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: (body: { key: string; caption?: string }) =>
       attachEventPhoto(slug, body),
     onSuccess: () =>

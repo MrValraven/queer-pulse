@@ -130,6 +130,7 @@ const baseFlaggedDto: FlaggedMemberDTO = {
   handle: "@anon",
   initials: "A",
   tone: "plum",
+  avatarUrl: null,
   openReportCount: 1,
   topReasonCode: "doxxing",
   moderationState: "frozen",
@@ -224,13 +225,18 @@ const baseDetailDto: AdminMemberDetailDTO = {
     },
   ],
   graph: {
-    center: { initials: "IM", tone: "jade", slug: "ines-martins", avatarUrl: null },
+    center: {
+      initials: "IM",
+      tone: "jade",
+      slug: "ines-martins",
+      avatarUrl: "https://cdn.example.com/ines.jpg",
+    },
     nodes: [
       {
         initials: "TM",
         tone: "violet",
         slug: "theo",
-        avatarUrl: null,
+        avatarUrl: "https://cdn.example.com/theo.jpg",
         direction: "inbound",
       },
     ],
@@ -355,7 +361,9 @@ describe("detailDtoToMember", () => {
     );
     expect(detail.contributions[0]?.when).toMatch(/^[A-Z][a-z]{2} \d{1,2}$/);
   });
+});
 
+describe("detailDtoToMember — moderation timeline & vouch graph", () => {
   it("gives 'no_reports' a dateless, generic meta and a good tone", () => {
     const detail = detailDtoToMember(baseDetailDto, translate, fmt);
     expect(detail.moderationTimeline[0]).toEqual({
@@ -440,12 +448,17 @@ describe("detailDtoToMember", () => {
     expect(detail.moderationTimeline[0]?.title).toBe("Moderation action taken");
   });
 
-  it("drops slug/avatarUrl from the vouch graph's center and nodes, keeping direction", () => {
+  it("keeps avatarUrl on the vouch graph's center and nodes (for real portraits), drops slug, keeps direction", () => {
     const detail = detailDtoToMember(baseDetailDto, translate, fmt);
-    expect(detail.graph.center).toEqual({ initials: "IM", tone: "jade" });
+    expect(detail.graph.center).toEqual({
+      initials: "IM",
+      tone: "jade",
+      avatarUrl: "https://cdn.example.com/ines.jpg",
+    });
     expect(detail.graph.nodes[0]).toEqual({
       initials: "TM",
       tone: "violet",
+      avatarUrl: "https://cdn.example.com/theo.jpg",
       direction: "inbound",
     });
   });

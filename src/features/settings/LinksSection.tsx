@@ -26,7 +26,10 @@ export function LinksSection({
     onChange(links.filter((_, i) => i !== index));
   }
   function add() {
-    onChange([...links, { platform: "website", urlOrHandle: "" }]);
+    onChange([
+      ...links,
+      { id: crypto.randomUUID(), platform: "website", urlOrHandle: "" },
+    ]);
   }
 
   return (
@@ -43,7 +46,10 @@ export function LinksSection({
           const meta = socialPlatform(link.platform);
           const Icon = meta.icon;
           return (
-            <div key={i} className={styles.linkRow}>
+            // Key by the stable minted id where present (added rows) so removing
+            // a middle row doesn't shift each following row's identity and leak
+            // its input focus/IME state; server links without an id keep index.
+            <div key={link.id ?? `loaded:${i}`} className={styles.linkRow}>
               <span className={styles.linkIcon} aria-hidden>
                 <Icon size={17} />
               </span>

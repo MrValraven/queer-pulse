@@ -7,6 +7,8 @@ import type {
   Paginated,
   ReactionSummary,
 } from "../contracts/contracts";
+import { previewForMessage, timeLabel } from "../../features/messages/api/messages.adapters";
+import type { Conversation } from "../../features/messages/data";
 
 // ── Message-thread cache patches ─────────────────────────────────────────────
 // The messages page keeps HTTP authoritative but avoids a blanket
@@ -186,6 +188,68 @@ export function patchMessageStarred(
 ): void {
   patchThread(queryClient, conversationId, (message) =>
     message.id === messageId ? { ...message, starred } : message,
+  );
+}
+
+// ── Conversation-list cache patches ──────────────────────────────────────────
+// The inbox list (`["conversations"]`, `useConversations`) used to be
+// refetched with a blanket `invalidateQueries` on every send and every
+// `message:new` socket frame — including the SENDER's own echo, which the
+// backend broadcasts to the whole room (chat.gateway.ts). That meant every
+// send fired TWO `GET /conversations` round-trips: one from the mutation's
+// `onSuccess`, one from the echo. The frame already carries everything a
+// refetch would have produced (the new `MessageResponse`), so patch the row's
+// `preview`/`time` and move it to the top instead — called from BOTH
+// `useSendMessage.onSuccess` and the `message:new` socket handler. Both fire
+// for the sender's own send; applying the same message twice is harmless
+// (idempotent — same input, same output, just re-affirms the row's position).
+
+/** Patch a conversation-list row's `preview`/`time` from a new message and
+ *  move it to the top (most-recently-active-first, matching the server's own
+ *  `updatedAt DESC` ordering) — instead of `invalidateQueries(["conversations"])`.
+ *  A no-op if the conversation isn't in the cached list yet (a brand-new
+ *  thread is picked up by `conversation:new`'s invalidate instead). */
+export function patchConversationPreview(
+  queryClient: QueryClient,
+  conversationId: string,
+  message: MessageResponse,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) => {
+      if (!previous) return previous;
+      const index = previous.findIndex((c) => c.id === conversationId);
+      if (index === -1) return previous;
+      const conversation = previous[index]!;
+      const updated: Conversation = {
+        ...conversation,
+        preview: previewForMessage(!!conversation.isGroup, message),
+        time: timeLabel(message.createdAt),
+      };
+      const next = previous.slice();
+      next.splice(index, 1);
+      next.unshift(updated);
+      return next;
+    },
+  );
+}
+
+/** Patch a conversation-list row's unread state to zero — used by
+ *  `useMarkRead.onSuccess` instead of `invalidateQueries(["conversations"])`,
+ *  so opening an unread thread (which fires on every thread-open-with-unread)
+ *  doesn't cost a network round-trip. A no-op if the row isn't cached. */
+export function patchConversationRead(
+  queryClient: QueryClient,
+  conversationId: string,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, unread: false, unreadCount: 0 }
+          : conversation,
+      ),
   );
 }
 

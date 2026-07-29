@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { FiCheck, FiFile } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -9,6 +9,10 @@ import styles from "./ApplicationModals.module.css";
 // `./ModalKit` consumers keep their imports unchanged. The submit-flow hook
 // (`useSubmitFlow`) lives in `./modalFlow`.
 export { Sending } from "../../shared/components/ui";
+
+// Focusable-descendant selector for the Tab focus-trap (mirrors Modal.tsx).
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /** Small file glyph used in attachment rows. */
 export function FileIcon() {
@@ -31,12 +35,64 @@ export function ModalShell({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
-  useScrollLock();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  // Latest-callback ref so the focus-setup effect can run once on mount (deps
+  // `[]`) without an inline `onClose` re-running the initial focus + trap on
+  // every parent render, which would yank focus back mid-interaction.
+  const onCloseRef = useRef(onClose);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    onCloseRef.current = onClose;
+  });
+  useScrollLock();
+
+  // Escape-to-close, an initial focus into the dialog, a Tab focus-trap so
+  // keyboard/screen-reader users can't tab out to the inert page behind, and
+  // focus restore to the opener on close. (Mirrors Modal.tsx's useDismiss.)
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const focusables = (): HTMLElement[] =>
+      dialog
+        ? Array.from(
+            dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+          ).filter((element) => element.offsetParent !== null)
+        : [];
+
+    const firstFocusable = focusables()[0];
+    if (firstFocusable) firstFocusable.focus();
+    else dialog?.focus();
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) return;
+      const items = focusables();
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      if (!firstItem || !lastItem) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const activeElement = document.activeElement;
+      if (event.shiftKey && (activeElement === firstItem || activeElement === dialog)) {
+        event.preventDefault();
+        lastItem.focus();
+      } else if (!event.shiftKey && activeElement === lastItem) {
+        event.preventDefault();
+        firstItem.focus();
+      }
+    };
+
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus?.();
+    };
+  }, []);
   return (
     <div
       className={styles.overlay}
@@ -48,6 +104,8 @@ export function ModalShell({
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={[
           styles.modal,
           wide && styles.modalWide,

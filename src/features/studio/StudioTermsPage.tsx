@@ -149,7 +149,7 @@ export function StudioTermsPage() {
           <p className={s.muted}>
             <Translation
               i18nKey="studio:terms.sec.privacy.footnote"
-              components={{ a: <Link to="/studio/settings" /> }}
+              components={{ a: <Link to={routes.studioSettings} /> }}
             />
           </p>
         </section>

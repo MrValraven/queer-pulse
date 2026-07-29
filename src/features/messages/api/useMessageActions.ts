@@ -128,6 +128,8 @@ export function useDeleteConversation() {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
         return;
       }
+      // Patch the row out in place — no invalidate needed, the deletion is a
+      // pure client-side removal with no new server state to fetch.
       queryClient.setQueriesData<Conversation[]>(
         { queryKey: ["conversations"] },
         (previous) =>
@@ -135,7 +137,6 @@ export function useDeleteConversation() {
             (conversation) => conversation.id !== conversationId,
           ),
       );
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }

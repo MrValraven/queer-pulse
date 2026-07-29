@@ -574,49 +574,14 @@
 .swipeReplyHintEnd svg {
   transform: scaleX(-1);
 }
-/* Instagram-style ❤️ pop on a double-tap that ADDS the love reaction. Centered
-   over the bubble, a single scale+fade, transform/opacity only. */
-.heartPop {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-ink);
-  pointer-events: none;
-  z-index: 2;
-  animation: heartPop 600ms var(--ease-out) forwards;
-}
-/* Fill the outline heart so the pop reads as a solid ❤️. */
-.heartPop svg {
-  fill: currentColor;
-}
-@keyframes heartPop {
-  0% {
-    opacity: 0;
-    transform: scale(0.4);
-  }
-  35% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  /* No follow-drag animation and no heart pop under reduced motion — the reply
-     still arms/fires past threshold and the reaction still toggles, just
-     instantly. (The bubble never receives a translate transform in this mode
-     — MessageRun.tsx withholds it — so the reply-hint icon, driven by the
-     same drag progress, is the only visible cue while dragging.) */
+  /* No follow-drag animation under reduced motion — the reply still arms/fires
+     past threshold and the reaction still toggles, just instantly. (The bubble
+     never receives a translate transform in this mode — MessageRun.tsx
+     withholds it — so the reply-hint icon, driven by the same drag progress, is
+     the only visible cue while dragging.) */
   .bubbleWrap {
     transition: none;
-  }
-  .heartPop {
-    animation: none;
-    opacity: 0;
   }
 }
 /* A reaction row is often WIDER than a short sent bubble ("hehe"). The wrap hugs
@@ -694,7 +659,7 @@
 .replyQuoteName {
   font-size: 0.6875rem;
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .replyQuoteSent .replyQuoteName {
   color: var(--cream);
@@ -921,6 +886,14 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-block-start: 4px;
+  /* The chip row hangs below the bubble in normal flow, but `.runBubbles`'s
+     2px inner gap (or `.runs`'s 12px between runs, for a run's last bubble)
+     was only ever tuned for a plain bubble's edge — with a reaction pill
+     sitting right at that boundary, the next row crowded it. A little extra
+     room here (WhatsApp/Telegram give a reacted message the same nudge) only
+     applies to messages that actually have a visible reaction, since this
+     element doesn't render otherwise. */
+  margin-block-end: var(--gap-xs);
 }
 .runSent .reactionChips {
   justify-content: flex-end;
@@ -969,7 +942,7 @@
 .reactionChipMine {
   background: rgba(var(--plum-rgb), 0.12);
   border-color: rgba(var(--plum-rgb), 0.35);
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -1086,27 +1059,101 @@
 .composerRow {
   display: flex;
   align-items: flex-end;
-  gap: 10px;
+  gap: 8px;
+}
+.gifBubble {
+  display: block;
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  border-radius: var(--bubble-radius);
+  overflow: hidden;
+}
+/* Holds the composer's popover controls (GIF + shortcut hint) as a matched
+   pair to the left of the input; also the shared outside-click boundary that
+   Composer uses to dismiss whichever popover is open. */
+.composerControls {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex: none;
+}
+.gifControl {
+  position: relative;
+  flex: none;
+}
+.gifBtn {
+  /* Same 43px square as `.sendBtn` so the two controls read as a matched
+     pair flanking the input, rather than a wide pill next to a circle. */
+  width: 43px;
+  height: 43px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-avatar);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  background: var(--cream);
+  color: var(--text-strong);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .gifBtn:hover {
+    background: var(--paper);
+    border-color: var(--line-strong);
+  }
+}
+.gifBtn:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
 }
 .composerTaWrap {
   flex: 1;
   min-width: 0;
 }
 .composerTa {
+  /* `.wrap` (MentionTextarea's own container) is a plain block, not a flex
+     container, so `flex: 1` on the textarea itself has no effect — a bare
+     <textarea> falls back to its intrinsic ~20-character width otherwise,
+     which is what produced the "small pill" composer. Explicit `width: 100%`
+     is what actually stretches it to fill `.composerTaWrap`. */
+  width: 100%;
   flex: 1;
   min-width: 0;
+  /* A bare <textarea> is inline-block by default, which leaves baseline
+     descender whitespace BELOW it inside `.wrap` — that made the wrapper a few
+     px taller than the field, so the row's `align-items: flex-end` floated the
+     input above the GIF/send buttons. `display: block` removes the descender
+     gap so the field's box is exactly its height and lines up with them. */
+  display: block;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-badge);
-  padding: 11px 14px;
+  padding: 8px 14px;
   font-family: var(--sans);
   /* >=16px so iOS Safari never zooms the viewport when the composer focuses. */
   font-size: 1rem;
   color: var(--ink);
   background: var(--cream);
   resize: none;
-  min-height: 44px;
+  /* One line at line-height:1.5 (24px) + 8px×2 padding + 1.5px×2 border =
+     43px. Must be >= that so a single line never overflows the box before
+     the auto-grow effect (below) runs — a shortfall here is what causes a
+     spurious scrollbar on a short/empty message, especially on first paint. */
+  min-height: 43px;
   max-height: 120px;
-  overflow-y: auto;
+  /* Hidden by default; Composer.tsx's auto-grow effect flips this to `auto`
+     only once content has actually outgrown max-height, so a short message
+     never shows a stray scrollbar (notably iOS Safari's touch-scroll
+     indicator, which can flash on any `overflow: auto` box regardless of
+     whether it truly overflows). */
+  overflow-y: hidden;
   line-height: 1.5;
   transition: border-color var(--dur-fast) var(--ease);
 }
@@ -1116,8 +1163,13 @@
   background: var(--paper);
 }
 .sendBtn {
-  width: 44px;
-  height: 44px;
+  /* Matches `.composerTa`'s single-line min-height (43px). With the row's
+     `align-items: flex-end`, an equal height is what makes the button's centre
+     line up with a single-line input's centre, while still bottom-aligning to
+     the last line once the textarea grows. A shorter button would sit low
+     against the taller input. */
+  width: 43px;
+  height: 43px;
   border-radius: var(--radius-avatar);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.9);
@@ -1178,9 +1230,12 @@
   display: grid;
   grid-template-rows: 0fr;
   margin-block-end: 0;
+  /* Ease-out (decelerate-in) so the row glides open and settles softly — the
+     spring read as steppy here. The height reveal is the ONE motion; the
+     content only fades (see below), so there's no second, conflicting slide. */
   transition:
-    grid-template-rows var(--dur-base) var(--ease),
-    margin-block-end var(--dur-base) var(--ease);
+    grid-template-rows var(--dur-base) var(--ease-out),
+    margin-block-end var(--dur-base) var(--ease-out);
 }
 .replyPreviewWrap[data-open="true"] {
   grid-template-rows: 1fr;
@@ -1197,32 +1252,30 @@
   border-radius: var(--radius-badge);
   border-inline-start: 3px solid var(--plum);
   background: rgba(var(--plum-rgb), 0.06);
-  animation: replyPreviewIn var(--dur-base) var(--ease) both;
+  /* Opacity-only fade, synced to the row's open (no transform) so the text
+     reveals with the height instead of sliding against it. */
+  animation: replyPreviewIn var(--dur-base) var(--ease-out) both;
 }
-/* The content stays mounted (lingering) while the wrapper collapses — swap to
-   the matching exit keyframe so it fades/slides back out in step instead of
-   sitting at full opacity while the row clips away. */
+/* The content stays mounted (lingering) while the wrapper collapses — fade it
+   back out (ease-in) in step so it doesn't sit at full opacity while the row
+   clips away. */
 .replyPreviewWrap[data-open="false"] .replyPreview {
-  animation: replyPreviewOut var(--dur-base) var(--ease) both;
+  animation: replyPreviewOut var(--dur-base) var(--ease-in) both;
 }
 @keyframes replyPreviewIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 @keyframes replyPreviewOut {
   from {
     opacity: 1;
-    transform: none;
   }
   to {
     opacity: 0;
-    transform: translateY(10px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1243,7 +1296,7 @@
 .replyPreviewName {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .replyPreviewSnippet {
   font-size: 0.8125rem;
@@ -1415,6 +1468,32 @@
 :global([data-theme="dark"]) .reactionPicker,
 :global([data-theme="dark"]) .reactionChip {
   border-color: rgba(var(--cream-rgb), 0.14);
+}
+/* Plum-tint washes below use --plum-rgb, which does NOT flip in dark — so on the
+   dark page they collapse to near-invisible. Repaint them with light (cream)
+   channels so the surfaces stay legible (foreground text already uses the
+   theme-flipping --text-strong token). */
+:global([data-theme="dark"]) .pinnedBanner {
+  background: rgba(var(--cream-rgb), 0.05);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .pinnedBanner:hover {
+    background: rgba(var(--cream-rgb), 0.09);
+  }
+}
+:global([data-theme="dark"]) .reactionChipMine {
+  background: rgba(var(--cream-rgb), 0.14);
+  border-color: rgba(var(--cream-rgb), 0.34);
+}
+:global([data-theme="dark"]) .replyQuoteReceived,
+:global([data-theme="dark"]) .replyPreview {
+  border-inline-start-color: rgba(var(--cream-rgb), 0.45);
+  background: rgba(var(--cream-rgb), 0.08);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .replyQuoteReceived:hover:not(:disabled) {
+    background: rgba(var(--cream-rgb), 0.12);
+  }
 }
 
 /* ── Tombstone (soft-deleted message) ── */
@@ -1870,7 +1949,7 @@
 .pinnedBannerIcon {
   flex: none;
   display: inline-flex;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pinnedBannerText {
   min-width: 0;
@@ -1883,7 +1962,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .pinnedBannerSnippet {
   font-size: 13px;

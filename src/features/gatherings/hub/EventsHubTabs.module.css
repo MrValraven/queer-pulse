@@ -1,0 +1,101 @@
+/* Sticky tablist under the hub hero. Frosted cream bar; flips to a dark
+   frost in dark mode because --cream-rgb is intentionally not theme-switched
+   (see tokens/colors.css). z-index sits above page content but below the
+   floating Navbar pill (100). */
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(var(--cream-rgb), 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.08);
+}
+:global([data-theme="dark"]) .sticky {
+  background: rgba(26, 16, 40, 0.86);
+}
+
+.list {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  max-width: var(--maxw-page);
+  margin-inline: auto;
+  padding-inline: var(--wrap-px);
+  padding-block: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+/* The moving pill. Positioned imperatively (inset-inline-start/inline-size)
+   by the component so it always matches the active tab's true box; only its
+   `transform` is ever transitioned (FLIP), so the size/position writes above
+   never animate a layout property. */
+.indicator {
+  position: absolute;
+  inset-block: 10px;
+  inset-inline-start: 0;
+  inline-size: 0;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease);
+  z-index: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition: none;
+  }
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding-inline: 20px;
+  padding-block: 8px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tab:hover {
+    color: var(--text-strong);
+  }
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.tabOn {
+  color: rgba(var(--cream-rgb), 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tabOn:hover {
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

@@ -1,4 +1,9 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
@@ -143,6 +148,9 @@ export function MoreMenu() {
   const c = useMyEvents();
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
+  // The "⋯" trigger that opened the menu lives on the event card (outside this
+  // component), so we capture it on open and restore focus to it on close.
+  const openerRef = useRef<HTMLElement | null>(null);
   const { open, eventId, x, y } = c.moreMenu;
   const { closeMore } = c;
 
@@ -162,18 +170,62 @@ export function MoreMenu() {
     };
   }, [open, closeMore]);
 
+  // APG menu-button contract: on open, remember the trigger and move focus to
+  // the first item; on close, restore focus to the trigger.
+  useEffect(() => {
+    if (open) {
+      openerRef.current = document.activeElement as HTMLElement | null;
+      ref.current
+        ?.querySelector<HTMLButtonElement>('[role="menuitem"]')
+        ?.focus();
+    } else {
+      openerRef.current?.focus();
+    }
+  }, [open]);
+
   const ev = eventId ? c.byId(eventId) : undefined;
   const left = Math.min(
     x,
     (typeof window !== "undefined" ? window.innerWidth : 1200) - 220,
   );
 
+  // Up/Down roving between items, Home/End to the ends. (Escape close +
+  // focus-restore is handled by the document listener + the effect above.)
+  const onMenuKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const items = Array.from(
+      ref.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ??
+        [],
+    );
+    if (items.length === 0) return;
+    event.preventDefault();
+    const currentIndex = items.indexOf(
+      document.activeElement as HTMLButtonElement,
+    );
+    let nextIndex: number;
+    if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = items.length - 1;
+    } else if (event.key === "ArrowDown") {
+      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length;
+    } else {
+      nextIndex =
+        currentIndex < 0
+          ? items.length - 1
+          : (currentIndex - 1 + items.length) % items.length;
+    }
+    items[nextIndex]?.focus();
+  };
+
   return (
     <div
       ref={ref}
       className={`${sx("more-menu")} ${open ? sx("show") : ""}`}
       role="menu"
+      tabIndex={-1}
       style={{ left, top: y }}
+      onKeyDown={onMenuKeyDown}
     >
       {open &&
         ev &&
@@ -185,6 +237,7 @@ export function MoreMenu() {
               key={it.label}
               type="button"
               role="menuitem"
+              tabIndex={-1}
               className={sx(`mm-item${it.danger ? " danger" : ""}`)}
               onClick={it.onClick}
             >

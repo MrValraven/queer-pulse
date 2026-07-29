@@ -18,6 +18,7 @@
    =========================================================== */
 
 import type { TFunction } from "../../../shared/i18n/types";
+import { leadingInitials } from "../../../shared/lib/initials";
 
 export const TOTAL_STEPS = 6;
 
@@ -460,12 +461,7 @@ export function findDuplicates(name: string): SeedPlace[] {
 }
 
 export function initials(name: string): string {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
+  return leadingInitials(name);
 }
 
 const RE = {

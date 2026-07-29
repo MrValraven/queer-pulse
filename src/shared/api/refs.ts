@@ -1,4 +1,5 @@
 import type { AvatarTint } from "../components/ui/Avatar";
+import { initialsFromParts } from "../lib/initials";
 
 /**
  * Shared API primitives used across every domain (communities, companies, jobs,
@@ -39,10 +40,9 @@ export function tintForSlug(slug: string): SlugTint {
   return TINTS[h % TINTS.length]!;
 }
 
-/** Two-letter initials from a first/last name pair. */
-export function initialsOf(first: string, last: string): string {
-  return `${first[0] ?? ""}${last[0] ?? ""}`.toUpperCase();
-}
+/** Two-letter initials from a first/last name pair.
+ *  Thin re-export of the canonical helper, kept for its many existing callers. */
+export const initialsOf = initialsFromParts;
 
 /** A member reference normalized for rendering an avatar + display name. */
 export interface Person {

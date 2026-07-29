@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import { leadingInitials } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { Author, AuthorArticle } from "../authorContent.data";
 import type { Article } from "../data/articles";
@@ -31,9 +32,7 @@ export function tintFor(seed: string): AvatarTint {
 
 /** "Sofia Andrade" -> "SA"; falls back to "QP" for an empty name. */
 export function initialsFor(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  const initials = `${parts[0]?.[0] ?? ""}${parts[1]?.[0] ?? ""}`.toUpperCase();
-  return initials || "QP";
+  return leadingInitials(name, { fallback: "QP" });
 }
 
 /**

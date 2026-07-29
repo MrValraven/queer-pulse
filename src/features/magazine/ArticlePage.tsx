@@ -21,12 +21,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
-import {
-  articles,
-  defaultArticleId,
-  isPullQuote,
-  relationReason,
-} from "./data/articles";
+import { defaultArticleId, isPullQuote, relationReason } from "./data/articles";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
 import { useArticle } from "./api/useArticle";
@@ -77,11 +72,13 @@ export function ArticlePage() {
   const simLoading = useSimulatedLoad();
   const id = params.get("id") ?? defaultArticleId;
   const { data, isLoading } = useArticle(id);
-  // NEVER fall back to the mock registry in live — that leaked demo articles
-  // into production. Demo resolves the id against the mock; live uses only the
-  // fetched article (null until it resolves, or if the slug 404s).
-  const article = demoMode ? (articles[id] ?? null) : (data?.article ?? null);
-  const loading = demoMode ? simLoading : isLoading;
+  // The hook resolves the article in both modes — demo from the code-split mock
+  // registry (dynamically imported, never statically bundled into live), live
+  // from GET /magazine/articles/:slug. It never leaks demo articles into live.
+  const article = data?.article ?? null;
+  // Demo also waits on the hook now (the mock loads on a microtask), so gate on
+  // the query too — otherwise the simulated beat can clear before it resolves.
+  const loading = demoMode ? simLoading || isLoading : isLoading;
 
   if (!article) {
     // Live mode has no article until the fetch resolves — show a skeleton while
@@ -110,11 +107,7 @@ export function ArticlePage() {
     );
   }
 
-  const related = demoMode
-    ? (articles[id]?.related ?? [])
-        .map((relatedId) => articles[relatedId])
-        .filter((value): value is NonNullable<typeof value> => Boolean(value))
-    : (data?.related ?? []);
+  const related = data?.related ?? [];
 
   // First plain-text paragraph doubles as the saved-card blurb.
   const blurb = article.body.find(

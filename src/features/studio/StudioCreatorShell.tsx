@@ -3,13 +3,8 @@ import { Link, NavLink } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { NAV } from "./StudioCreatorShell.data";
 import s from "./creator.module.css";
-
-const NAV = [
-  { labelKey: "studio:creator.nav.dashboard", to: "/studio/dashboard" },
-  { labelKey: "studio:creator.nav.newRelease", to: routes.studioUpload },
-  { labelKey: "studio:creator.nav.payouts", to: routes.studioPayouts },
-];
 
 /** Dark creator back-office frame: sticky topbar + sub-nav. */
 export function StudioCreatorShell({ children }: { children: ReactNode }) {

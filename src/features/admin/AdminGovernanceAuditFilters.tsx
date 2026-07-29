@@ -2,7 +2,6 @@ import { FiSearch, FiDownload } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  AUDIT_MODERATORS,
   AUDIT_ACTION_IDS,
   AUDIT_RANGE_IDS,
   type AuditFilterState,
@@ -13,10 +12,12 @@ export function AdminGovernanceAuditFilters({
   filters,
   onChange,
   onExport,
+  moderators,
 }: {
   filters: AuditFilterState;
   onChange: (next: AuditFilterState) => void;
   onExport: () => void;
+  moderators: { id: string; name: string }[];
 }) {
   const { t } = useTranslation();
   const set = <K extends keyof AuditFilterState>(
@@ -28,7 +29,10 @@ export function AdminGovernanceAuditFilters({
   // label is the only chrome string in this list.
   const moderatorOptions = [
     { value: "all", label: t("admin:governance.audit.allModerators") },
-    ...AUDIT_MODERATORS.map((name) => ({ value: name, label: name })),
+    ...moderators.map((moderator) => ({
+      value: moderator.id,
+      label: moderator.name,
+    })),
   ];
   const actionOptions = [
     { value: "all", label: t("admin:governance.audit.allActions") },

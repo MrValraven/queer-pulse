@@ -86,8 +86,13 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
           <div className={styles.sheetTitle}>
             {t("resources:microGrants.apply.modalTitle")}
           </div>
-          <button type="button" className={styles.close} onClick={onClose}>
-            <FiX />
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label={t("shared:modal.close")}
+          >
+            <FiX aria-hidden />
           </button>
         </div>
 

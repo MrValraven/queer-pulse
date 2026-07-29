@@ -121,6 +121,7 @@ function SmallCallCard({ call }: { call: SmallCall }) {
 }
 
 function PastFilmCard({ film }: { film: PastFilm }) {
+  const { t } = useTranslation();
   return (
     <Link to={routes.film} className={styles.pf}>
       <div className={styles.pfPoster}>
@@ -129,7 +130,7 @@ function PastFilmCard({ film }: { film: PastFilm }) {
           tint={film.tint}
           width="100%"
           height="100%"
-          placeholder="poster"
+          placeholder={t("cinema:slot.poster")}
           style={{ position: "absolute", inset: 0 }}
         />
         <span className={styles.pfGrant}>{film.grant}</span>

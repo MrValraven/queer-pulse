@@ -114,7 +114,7 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
               i18nKey="studio:help.faq.tipNotesPrivate.a"
               components={{
                 strong: <strong />,
-                a: <Link to="/studio/settings" />,
+                a: <Link to={routes.studioSettings} />,
               }}
             />
           ),
@@ -156,7 +156,7 @@ export function buildHelpSections(t: TFunction): HelpSection[] {
           a: (
             <Translation
               i18nKey="studio:help.faq.cancel.a"
-              components={{ a: <Link to="/studio/settings" /> }}
+              components={{ a: <Link to={routes.studioSettings} /> }}
             />
           ),
         },

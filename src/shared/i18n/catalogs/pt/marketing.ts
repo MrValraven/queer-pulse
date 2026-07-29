@@ -1780,7 +1780,52 @@ export const marketing: Catalog = {
   "changelog.tag.forum": "Visitar o fórum →",
   "changelog.tag.profile": "Abrir o seu perfil →",
   "changelog.tag.gatherings": "Ver encontros →",
+  "changelog.tag.events": "Abrir o Events Hub →",
 
+  "changelog.entries.chat-shortcuts.title": "Atalhos de menção no chat",
+  "changelog.entries.chat-shortcuts.body":
+    "Um novo botão “?” no compositor de mensagens mostra todos os atalhos de menção de relance — @ para um membro, c/ para uma comunidade, # para um tópico, b/ para um negócio, e/ para um evento, t/ para um tópico do fórum. Toca num deles e o símbolo é inserido logo na tua mensagem, abrindo as sugestões enquanto escreves. E, para não sobrecarregar o ecrã, só há um popover aberto de cada vez no compositor.",
+
+  "changelog.entries.events-hub.title": "Uma casa só para os eventos",
+  "changelog.entries.events-hub.body":
+    "Eventos, Encontros e Calendário são agora um único Events Hub — Destaques, Explorar e um calendário completo juntos, com fotos reais do que aí vem. Os mesmos eventos, mais fáceis de encontrar.",
+
+  "changelog.entries.gifs-in-chat.title": "Envia GIFs no chat",
+  "changelog.entries.gifs-in-chat.body":
+    "Diz-lo com um GIF. Há um novo botão de GIF no compositor de mensagens — procura ou vê o que está em tendência, toca num e ele segue direto para a conversa (tanto em DMs como em grupos). Com tecnologia KLIPY e filtro de conteúdo seguro ativado por predefinição.",
+
+  "changelog.entries.privacy-and-speed.title":
+    "Mais privacidade e uma app mais ágil",
+  "changelog.entries.privacy-and-speed.body":
+    "Uma ronda de privacidade, velocidade e mensagens. As personas e subperfis que definiu como privados passam a manter-se totalmente privados, e as pessoas que bloqueou deixam de aparecer no diretório de colegas de casa. Editar ou apagar uma mensagem passa a atualizar de imediato, sem aquele piscar de recarregamento. E a própria aplicação está mais leve, por isso as páginas — e as imagens que o recebem no topo — carregam um pouco mais depressa.",
+
+  "changelog.entries.leaner-prerendering.title":
+    "Compilações do site mais leves e rápidas",
+  "changelog.entries.leaner-prerendering.body":
+    "Nos bastidores: passamos a pré-gerar apenas a página pública essencial para os motores de busca, em vez do site inteiro, e deixamos de criar uma cópia separada de cada perfil. As compilações usam menos dados e mantêm-se rápidas, e os motores de busca continuam a encontrar todas as páginas públicas através do mapa do site. Não é preciso fazer nada.",
+
+  "changelog.entries.admin-governance-real-data.title":
+    "Painéis de governança agora com dados reais",
+  "changelog.entries.admin-governance-real-data.body":
+    "A área de governança de administração — os valores financeiros e o gráfico trimestral, o registo de decisões e o histórico de moderação — passa a ler dados reais da plataforma em vez de valores fixos, para que a equipa veja as finanças e o histórico de moderação reais da comunidade.",
+
+  "changelog.entries.sign-in-fix.title": "Iniciar sessão volta a funcionar",
+  "changelog.entries.sign-in-fix.body":
+    "Uma incompatibilidade entre a aplicação e o servidor impedia o início de sessão de concluir. Já está corrigido — iniciar sessão, terminar sessão e manter-se ligado voltam a funcionar sem problemas.",
+  "changelog.entries.accessibility-mobile-polish.title":
+    "Mais fácil de tocar, mais fácil de navegar",
+  "changelog.entries.accessibility-mobile-polish.body":
+    "Os botões pequenos passam a ter áreas de toque maiores no telemóvel, as ações que só apareciam ao passar o rato podem ser alcançadas com o teclado, e os formulários de compra e de candidatura suportam preenchimento automático do nome e do email.",
+  "changelog.entries.platform-hardening.title": "Reforços nos bastidores",
+  "changelog.entries.platform-hardening.body":
+    "Nos bastidores: a API passa a ser versionada com documentação publicada, as listas longas ficam limitadas com segurança para as páginas se manterem rápidas, e as denúncias ganham proteção contra spam. Não é preciso fazer nada — fica tudo simplesmente rápido e estável.",
+  "changelog.entries.composer-reaction-polish.title":
+    "Caixa de mensagem mais ampla e reações mais arrumadas",
+  "changelog.entries.composer-reaction-polish.body":
+    "A caixa de mensagem passa agora a ocupar toda a largura do compositor e, no telemóvel, fica encostada sem uma barra de deslocação a mais quando a mensagem é curta — crescendo apenas à medida que escreve. As reações também passam a comportar-se como deve ser: tocar num emoji com que já reagiu remove-o, em vez de empilhar o mesmo vezes sem conta.",
+  "changelog.entries.chat-mentions.title": "Mencione pessoas e lugares no chat",
+  "changelog.entries.chat-mentions.body":
+    "Escreva @ para um membro, ou c/ b/ e/ t/ # para uma comunidade, negócio, encontro, tópico de fórum ou tema — escolha das sugestões e vira uma ligação tocável, numa mensagem direta ou num grupo. Funciona enquanto escreve e enquanto edita uma mensagem. As suas conversas continuam privadas: as menções apenas ligam, nunca notificam ninguém.",
   "changelog.entries.group-chats.title": "Conversas de grupo",
   "changelog.entries.group-chats.body":
     "Crie um grupo com as pessoas que quer lá dentro, dê-lhe um nome e mostre quem é quem. Os administradores podem adicionar ou remover membros e arrumar a informação do grupo, vê quem já leu uma mensagem, e uma bolha de escrita aparece quando alguém está a escrever.",
@@ -1812,6 +1857,10 @@ export const marketing: Catalog = {
     "Cada denúncia recebe uma decisão real",
   "changelog.entries.moderation-actions.body":
     "Abrir uma denúncia na fila de moderação passa a mostrar sempre o conjunto completo de ações — ocultar, avisar, restringir, remover e mais, cada uma com um motivo que a pessoa vai ler — em vez de a fechar em silêncio. O título da fila também reflete o número real de denúncias em espera.",
+  "changelog.entries.listing-preview-and-ask.title":
+    "Pré-visualize um anúncio, faça uma pergunta",
+  "changelog.entries.listing-preview-and-ask.body":
+    "Os moderadores podem agora pré-visualizar um negócio submetido tal como ficará publicado e enviar uma pergunta que chega ao autor como mensagem direta.",
   "changelog.entries.business-map-pin.title": "Coloque o seu negócio no mapa",
   "changelog.entries.business-map-pin.body":
     "A listar um negócio? Cole uma ligação do Google Maps para marcar um ponto, e os anúncios ativos passam a aparecer no mapa local. As novas submissões passam por uma fila de moderação antes de ficarem visíveis.",
@@ -1986,6 +2035,7 @@ export const marketing: Catalog = {
   "pressArchive.loadingMore": "A carregar peças mais antigas…",
   "pressArchive.loadMoreCta": "Carregar cobertura mais antiga",
   "pressArchive.endOfArchive": "É este o arquivo completo — de 2022 até hoje.",
+  "pressArchive.noResults": "Nenhuma cobertura corresponde a esses filtros ainda.",
 
   // ── Voluntariado — chrome da página. Nomes/funções/descrições/competências
   //    das organizações vêm da API de oportunidades em direto (ou do seu

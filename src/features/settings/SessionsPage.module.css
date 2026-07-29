@@ -252,6 +252,13 @@
     background: rgba(var(--accent-rgb), 0.04);
   }
 }
+/* Keyboard parity: mirror the hover emphasis on focus (keeps the global
+   :focus-visible ring). */
+.action:focus-visible {
+  color: var(--accent-ink);
+  border-color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.04);
+}
 .actionCurrent {
   color: var(--ink-40);
   cursor: not-allowed;

@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { TFunction } from "../../../shared/i18n/types";
+import { formatDate } from "../../../shared/lib/date";
+import { initialsFromName } from "../../../shared/lib/initials";
 import {
   getJoinRequests,
   type JoinRequestDTO,
@@ -30,14 +32,6 @@ export interface JoinRequestView {
 
 const TONES: AvatarTone[] = ["coral", "jade", "violet", "amber", "plum"];
 
-/** First letters of the first two words of the applicant's own free-text name. */
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return `${first}${last}`.toUpperCase();
-}
-
 /** Stable tone from a string id (deterministic across renders). */
 function toneFor(id: string): AvatarTone {
   let h = 0;
@@ -61,14 +55,14 @@ function appliedLine(iso: string, t: TFunction): string {
 
 /** The 18+ self-attestation as a line a reviewer can act on. */
 function ageLine(dto: JoinRequestDTO, t: TFunction, locale: string): string {
-  const at = new Date(dto.ageAttestedAt);
-  if (Number.isNaN(at.getTime())) {
+  const attestedAt = new Date(dto.ageAttestedAt);
+  if (Number.isNaN(attestedAt.getTime())) {
     return t("admin:members.verify.ageAttestedUnknown", {
       version: dto.termsVersion,
     });
   }
   return t("admin:members.verify.ageAttested", {
-    date: at.toLocaleDateString(locale, {
+    date: formatDate(attestedAt, locale, {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -86,7 +80,7 @@ export function dtoToView(
   return {
     id: dto.id,
     name,
-    initials: initialsOf(name) || "?",
+    initials: initialsFromName(name, "?"),
     tone: toneFor(dto.id),
     email: dto.email,
     city: dto.city,

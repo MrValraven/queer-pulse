@@ -121,29 +121,31 @@ export function MembersTab({
                 />
               </div>
             ))
-          : members.map((m, i) => {
-              const photo = photoOf(m, demoMode);
+          : members.map((member, memberIndex) => {
+              const photo = photoOf(member, demoMode);
               return (
                 <FadeIn
                   as={Link}
                   to={MEMBER}
                   className={styles.mCard}
-                  key={i}
-                  delay={Math.min(i, 8) * 60}
+                  key={member.slug ?? `${member.name}-${member.initials}`}
+                  delay={Math.min(memberIndex, 8) * 60}
                 >
-                  <div className={[styles.mAv, AV_CLASS[m.tint]].join(" ")}>
+                  <div
+                    className={[styles.mAv, AV_CLASS[member.tint]].join(" ")}
+                  >
                     {photo ? (
                       <img
                         src={resolveAvatarSrc(photo)}
-                        alt={m.name}
+                        alt={member.name}
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      m.initials
+                      member.initials
                     )}
                   </div>
-                  <div className={styles.mName}>{m.name}</div>
-                  <div className={styles.mRole}>{m.role}</div>
+                  <div className={styles.mName}>{member.name}</div>
+                  <div className={styles.mRole}>{member.role}</div>
                 </FadeIn>
               );
             })}
@@ -188,6 +190,7 @@ export function ForumTab({
     const heading = text.length > 70 ? `${text.slice(0, 67)}…` : text;
     setExtraThreads((prev) => [
       {
+        id: crypto.randomUUID(),
         votes: 0,
         title: heading,
         author: { initials: "Me", name: "You", tint: "plum" },
@@ -235,10 +238,17 @@ export function ForumTab({
   return (
     <div>
       {extraThreads.map((thread, index) => (
-        <CommunityThread data={thread} slug={slug} key={`local-${index}`} />
+        <CommunityThread
+          data={thread}
+          slug={slug}
+          key={thread.id ?? `local-${index}`}
+        />
       ))}
       {threads.map((thread, index) => (
-        <FadeIn key={thread.id ?? index} delay={Math.min(index, 8) * 60}>
+        <FadeIn
+          key={thread.id ?? `thread-${index}`}
+          delay={Math.min(index, 8) * 60}
+        >
           <CommunityThread data={thread} slug={slug} />
         </FadeIn>
       ))}

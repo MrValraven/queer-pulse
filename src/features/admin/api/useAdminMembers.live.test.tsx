@@ -138,6 +138,7 @@ describe("useAdminFlagged (live mode via MSW)", () => {
             handle: "@anon_9001",
             initials: "A",
             tone: "amber",
+            avatarUrl: "https://cdn.example.com/anon-9001.jpg",
             openReportCount: 2,
             topReasonCode: "spam",
             moderationState: "limited",

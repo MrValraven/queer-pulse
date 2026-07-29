@@ -29,6 +29,8 @@ export function useModAction() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, ModActionVars>({
+    // useModerationQueue toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, action, reasonCode, note, duration }) => {
       if (demoMode) return;
       await actOnReport(id, { action, reasonCode, note, duration });
@@ -52,6 +54,8 @@ export function useModBulkAction() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, ModBulkVars>({
+    // useModerationQueue toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ ids, action, reasonCode, note }) => {
       if (demoMode) return;
       await bulkActOnReports({ ids, action, reasonCode, note });

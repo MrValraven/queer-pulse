@@ -244,6 +244,12 @@ export default defineConfig([
     ],
     rules: { "local/no-emoji": "off" },
   },
+  // Message reactions ARE emoji by design (WhatsApp/Slack-style ❤️😂👍) — the
+  // glyphs are the feature's data, not chrome, so react-icons doesn't apply.
+  {
+    files: ["src/features/messages/reactionKeys.ts"],
+    rules: { "local/no-emoji": "off" },
+  },
   // routes.tsx is a flat route registry, not a component — the line limit doesn't apply.
   {
     files: ["src/app/routes.tsx"],

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
@@ -54,7 +55,8 @@ export function AdminHousingCoopsPage() {
     if (!deleteTarget) return;
     const name = deleteTarget.name;
     deleteCoop.mutate(deleteTarget.id, {
-      onSuccess: () => showToast(`${name} was removed`, "info"),
+      onSuccess: () =>
+        showToast(t("admin:housingCoop.toast.removed", { name }), "info"),
       onError: (error) =>
         showToast(describeError("Couldn't remove that co-op", error), "error"),
     });
@@ -64,9 +66,10 @@ export function AdminHousingCoopsPage() {
   return (
     <AdminShell
       title={
-        <>
-          Housing <em>co-ops</em>
-        </>
+        <Translation
+          i18nKey="admin:housingCoop.title"
+          components={{ em: <em /> }}
+        />
       }
       breadcrumb={[
         { label: t("admin:common.adminBreadcrumb"), to: routes.admin },
@@ -74,20 +77,21 @@ export function AdminHousingCoopsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow="Local economy"
+          eyebrow={t("admin:housingCoop.header.eyebrow")}
           title={
-            <>
-              Housing <em>co-ops</em>
-            </>
+            <Translation
+              i18nKey="admin:housingCoop.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="Every co-op on the platform, published or still forming — create one, keep the details current, and clear the join-request queue below."
+          sub={t("admin:housingCoop.header.sub")}
           actions={
             <Button
               variant="primary"
               size="md"
               onClick={() => setFormMode({ kind: "create" })}
             >
-              New co-op
+              {t("admin:housingCoop.newCta")}
             </Button>
           }
         />
@@ -107,14 +111,14 @@ export function AdminHousingCoopsPage() {
         <div className={styles.notice}>
           <p className={styles.noticeText}>
             {forbidden
-              ? "This panel is for admins only."
-              : "The co-op list couldn't load right now — please try again."}
+              ? t("admin:common.panelForbidden")
+              : t("admin:housingCoop.loadError")}
           </p>
         </div>
       ) : coops.length === 0 ? (
         <div className={styles.empty}>
           <p className={styles.emptyText}>
-            No co-ops yet — create the first one below.
+            {t("admin:housingCoop.empty")}
           </p>
         </div>
       ) : (
@@ -137,22 +141,23 @@ export function AdminHousingCoopsPage() {
 
       {deleteTarget && (
         <AdminModal
-          title={`Remove ${deleteTarget.name}?`}
+          title={t("admin:housingCoop.delete.title", {
+            name: deleteTarget.name,
+          })}
           onClose={() => setDeleteTarget(null)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
-                Cancel
+                {t("admin:common.cancel")}
               </Button>
               <Button variant="danger" onClick={confirmDelete}>
-                Remove co-op
+                {t("admin:housingCoop.delete.confirmCta")}
               </Button>
             </>
           }
         >
           <p className={styles.deleteConfirmBody}>
-            This removes it from the public directory and the admin list.
-            Join requests already submitted for it stay on record.
+            {t("admin:housingCoop.delete.body")}
           </p>
         </AdminModal>
       )}

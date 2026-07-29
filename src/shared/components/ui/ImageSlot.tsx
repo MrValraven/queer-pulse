@@ -20,6 +20,14 @@ interface ImageSlotProps {
   initials?: string;
   className?: string;
   style?: CSSProperties;
+  /** Defaults to "lazy" (unchanged for existing call sites). Set to "eager" for
+   *  an above-the-fold/LCP-candidate image — `loading="lazy"` on an LCP image
+   *  delays it unnecessarily (see web.dev's Optimize LCP guidance). */
+  loading?: "lazy" | "eager";
+  /** Passthrough for the DOM `fetchpriority` attribute (React 19 exposes it as
+   *  the camelCase `fetchPriority` prop). Pair with `loading="eager"` on the
+   *  one genuine above-the-fold hero per page — never on a grid/list thumbnail. */
+  fetchPriority?: "high" | "auto";
 }
 
 /**
@@ -39,6 +47,8 @@ export function ImageSlot({
   initials,
   className,
   style,
+  loading = "lazy",
+  fetchPriority,
 }: ImageSlotProps) {
   const { t } = useTranslation();
   const borderRadius = shape === "circle" ? "50%" : radius;
@@ -63,7 +73,8 @@ export function ImageSlot({
         <img
           src={resolvedSrc}
           alt={alt}
-          loading="lazy"
+          loading={loading}
+          fetchPriority={fetchPriority}
           decoding="async"
           referrerPolicy="no-referrer"
         />

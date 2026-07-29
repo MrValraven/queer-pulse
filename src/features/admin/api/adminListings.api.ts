@@ -4,7 +4,8 @@ import type { Paginated } from "../../../shared/api/refs";
 import type { ListingStatus } from "../../marketing/listBusiness/listBusiness.data";
 import type { ListingDTO } from "../../marketing/listBusiness/api/listings.api";
 
-/** One row in the moderation queue — the subset the admin page renders. */
+/** One row in the moderation queue — the subset the admin page renders, plus
+ *  the full listing (`detail`) so the preview drawer needs no second fetch. */
 export interface ListingQueueRow {
   ref: string;
   slug: string;
@@ -14,6 +15,8 @@ export interface ListingQueueRow {
   submitterName: string;
   submitterSlug: string;
   createdAt: string;
+  /** The full listing, for the moderation preview drawer. */
+  detail: ListingDTO;
 }
 
 /** Map a backend listing to the queue row shape. */
@@ -30,6 +33,7 @@ export function listingDtoToQueueRow(dto: ListingDTO): ListingQueueRow {
       : "",
     submitterSlug: submitter?.slug ?? "",
     createdAt: dto.createdAt,
+    detail: dto,
   };
 }
 

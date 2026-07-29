@@ -1,4 +1,5 @@
 import { FiExternalLink } from "react-icons/fi";
+import { safeHref } from "../../shared/lib/safeHref";
 import {
   Button,
   Eyebrow,
@@ -29,6 +30,8 @@ export function SubprofileSpotlight({
   const { t } = useTranslation();
   const { tint, on } = ACCENT_TOKENS[accent];
   const hasImage = Boolean(item.imageUrl);
+  // Guard the member-supplied URL: only a safe http(s)/mailto scheme is rendered.
+  const spotlightHref = safeHref(item.url);
 
   return (
     <div className={`wrap ${styles.wrap}`}>
@@ -67,11 +70,11 @@ export function SubprofileSpotlight({
               ))}
             </TagRow>
           )}
-          {item.url && (
+          {spotlightHref && (
             <Button
               variant="primary"
               size="md"
-              href={item.url}
+              href={spotlightHref}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.cta}

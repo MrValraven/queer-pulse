@@ -31,6 +31,9 @@ export interface WorkItem {
 }
 /** A social / web link the member surfaces on their profile. */
 export interface SocialLink {
+  /** Stable client-side id for editable-list keying (minted when a row is added
+   * in the editor). Optional: links loaded from the server may not carry one. */
+  id?: string;
   /** Platform key (matches an option in `socialLinks.data`), e.g. "instagram", "website". */
   platform: string;
   /** The URL or @handle the member entered. */
@@ -761,7 +764,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     last: "Quintela",
     role: "Portrait Photographer",
     hood: "Cais do Sodré",
-    tags: ["Portrait", "Analog film", "Darkroom", "Medium format"],
+    tags: ["Portrait", "Analog film", "Studio", "Medium format"],
     visibility: "open",
     initials: "AQ",
     tint: "jade",
@@ -769,7 +772,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1547646034-d37a03ebaba3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: false,
     since: "2025",
-    bio: "I shoot portraits on film — mostly medium format, mostly natural light, mostly people who have never liked having their photograph taken. I have a darkroom in Cais do Sodré that smells like fixer and old wood. Come and visit.",
+    bio: "I shoot portraits on film — mostly medium format, mostly natural light, mostly people who have never liked having their photograph taken. I have a studio in Cais do Sodré that smells like fixer and old wood. Come and visit.",
     now: "Offering free portrait sessions for trans and nonbinary community members. No agenda, just a good photo.",
     openTo: [
       { kind: "preset", id: "commissions" },
@@ -804,12 +807,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     related: ["sofia", "ines", "diogo"],
     skills: [
       { name: "Portrait sessions", meta: "Free · trans & nonbinary members" },
-      { name: "Darkroom lessons", meta: "Trade · analog film" },
+      { name: "Film developing lessons", meta: "Trade · analog film" },
       { name: "Editorial photography", meta: "Available · zines & covers" },
     ],
     groups: [
       { name: "Analog Lisboa", role: "Collective · Organiser" },
-      { name: "Cais do Sodré Darkroom", role: "Studio · Member" },
+      { name: "Cais do Sodré Film Studio", role: "Studio · Member" },
       { name: "Portrait Exchange", role: "Barter collective · Member" },
     ],
     activity: [
@@ -2302,7 +2305,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     now: "Editing a year-long photo essay on Lisbon's last few queer dance floors before they're sold off.",
     openTo: [
       { kind: "custom", label: "Venues to document before they close" },
-      { kind: "custom", label: "A darkroom share" },
+      { kind: "custom", label: "A studio space to share" },
       { kind: "custom", label: "Subjects who want honest portraits" },
     ],
     work: [
@@ -2351,7 +2354,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         meta: "Available · for community events",
       },
       { name: "Film portraits", meta: "Trade · or sliding scale" },
-      { name: "Darkroom developing", meta: "Trade · share my chemistry" },
+      { name: "Film developing", meta: "Trade · share my chemistry" },
     ],
     groups: [
       { name: "Marvila Film Collective", role: "Member" },

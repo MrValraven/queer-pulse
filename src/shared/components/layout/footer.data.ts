@@ -21,8 +21,11 @@ export const COLUMNS: FooterColumn[] = [
   {
     headingKey: "shared:megaNav.community.title",
     links: [
-      { labelKey: "nav:gatherings", href: "#gather" },
-      { labelKey: "nav:calendar", href: routes.calendar },
+      { labelKey: "nav:gatherings", href: routes.events },
+      {
+        labelKey: "nav:calendar",
+        href: `${routes.events}?view=calendar`,
+      },
       { labelKey: "nav:forum", href: routes.forum },
       { labelKey: "nav:communities", href: routes.communities },
       {

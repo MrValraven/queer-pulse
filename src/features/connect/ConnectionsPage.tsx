@@ -1,10 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiInfo, FiUserPlus } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -22,6 +20,7 @@ import { useConnectionsList } from "./api/useConnectionsList";
 import { useConnectionCounts } from "./api/useConnectionCounts";
 import { useConnectionActions } from "./api/useConnectionActions";
 import { ConnectionsAllTab } from "./ConnectionsAllTab";
+import { ConnectionsHeader } from "./ConnectionsHeader";
 import { ConnectionsTabs, type ConnectionsTab } from "./ConnectionsTabs";
 import {
   BlockedPanel,
@@ -157,36 +156,7 @@ export function ConnectionsPage() {
   return (
     <PageShell>
       <div className={styles.page}>
-        <header className={styles.head}>
-          <div className={styles.headText}>
-            <div className={styles.eyebrow}>{t("connect:page.eyebrow")}</div>
-            <h1 className={styles.h1}>
-              <Translation
-                i18nKey="connect:page.title"
-                components={{ em: <em /> }}
-              />
-            </h1>
-            <p className={styles.lead}>{t("connect:page.lead")}</p>
-          </div>
-          <div className={styles.headActions}>
-            <Button variant="primary" to={routes.invite}>
-              <FiUserPlus />
-              {t("connect:page.inviteCta")}
-            </Button>
-          </div>
-        </header>
-
-        <div className={styles.langNote}>
-          <span>
-            <FiInfo />
-          </span>
-          <span>
-            <Translation
-              i18nKey="connect:page.note"
-              components={{ b: <b /> }}
-            />
-          </span>
-        </div>
+        <ConnectionsHeader />
 
         <ConnectionsTabs tabs={tabs} active={tab} onSelect={setTab} />
 

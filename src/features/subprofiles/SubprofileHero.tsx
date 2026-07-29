@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { initialsFromName } from "../../shared/lib/initials";
+import { safeHref } from "../../shared/lib/safeHref";
 import { Link } from "react-router-dom";
 import { FiArrowUpRight } from "react-icons/fi";
 import { HiOutlineQrCode } from "react-icons/hi2";
@@ -20,15 +22,6 @@ import { SubprofileShare } from "./SubprofileShare";
 import { SubprofileShareCard } from "./SubprofileShareCard";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileHero.module.css";
-
-/** Up to two initials from a display name, for the avatar fallback. */
-function initialsFrom(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
 
 /**
  * Rich public persona hero: cover banner, accent-tinted identity, structured
@@ -52,7 +45,9 @@ export function SubprofileHero({
 
   const accent = view.accent ?? DEFAULT_ACCENT;
   const { tint, on } = ACCENT_TOKENS[accent];
-  const hasCta = Boolean(view.ctaLabel && view.ctaUrl);
+  // Guard the member-supplied CTA URL: React won't strip a `javascript:` scheme,
+  // so only render the link when it's a safe http(s)/mailto target.
+  const ctaHref = safeHref(view.ctaUrl);
   const ctaVariant = canMessage ? "ghost" : "primary";
 
   const linkedToOwner =
@@ -70,8 +65,16 @@ export function SubprofileHero({
     linkedToOwner && viewerSlug && viewerSlug === view.ownerSlug,
   );
 
-  const coverStyle = view.coverUrl
-    ? { backgroundImage: `url(${view.coverUrl})` }
+  // Guard the member-supplied cover URL the same way as the CTA link. Beyond
+  // the http(s) scheme check, reject anything containing `)` or whitespace so a
+  // crafted value can't break out of the CSS `url(...)` and inject styling. An
+  // off-origin image would otherwise let a persona owner harvest the IP and
+  // User-Agent of everyone who views the subprofile. Fall back to the gradient.
+  const safeCoverUrl = safeHref(view.coverUrl);
+  const coverUrl =
+    safeCoverUrl && !/[)\s]/.test(safeCoverUrl) ? safeCoverUrl : null;
+  const coverStyle = coverUrl
+    ? { backgroundImage: `url(${coverUrl})` }
     : undefined;
 
   return (
@@ -84,14 +87,14 @@ export function SubprofileHero({
         }}
       >
         <div
-          className={`${styles.cover} ${view.coverUrl ? "" : styles.coverGradient}`}
+          className={`${styles.cover} ${coverUrl ? "" : styles.coverGradient}`}
           style={coverStyle}
         />
         <div className="wrap">
           <Reveal className={styles.heroInner}>
             <div className={styles.avatarRing}>
               <Avatar
-                initials={initialsFrom(view.displayName)}
+                initials={initialsFromName(view.displayName, "?")}
                 src={view.avatarUrl ?? undefined}
                 tint="plum"
                 size={104}
@@ -129,11 +132,11 @@ export function SubprofileHero({
                     </Button>
                   )
                 )}
-                {hasCta && (
+                {ctaHref && view.ctaLabel && (
                   <Button
                     variant={ctaVariant}
                     size="md"
-                    href={view.ctaUrl}
+                    href={ctaHref}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

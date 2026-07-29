@@ -27,6 +27,8 @@ export function useSubmitReview(slug: string) {
   const queryClient = useQueryClient();
 
   return useMutation<Review, Error, SubmitReviewInput>({
+    // DirectoryReviewForm toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (input) => {
       if (demoMode) {
         const demoReview: Review = {

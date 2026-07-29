@@ -142,7 +142,7 @@ const LISTINGS: Listing[] = [
     budgetRange: 850,
     movein: "Mid-July",
     moveinKey: "jul",
-    note: "Big room going in my flat in Cais do Sodré, five minutes from the river and from my darkroom. I shoot portraits on film so the hours bend a bit, but I respect a shared home completely. Sociable when you want it, invisible when you don't.",
+    note: "Big room going in my flat in Cais do Sodré, five minutes from the river and from my studio. I shoot portraits on film so the hours bend a bit, but I respect a shared home completely. Sociable when you want it, invisible when you don't.",
     tags: ["Sociable", "Late nights fine", "Pets welcome", "Night owl"],
   },
 ];

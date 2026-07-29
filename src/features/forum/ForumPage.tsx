@@ -1,11 +1,8 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn } from "../../shared/components/ui";
+import { FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { SELF_AUTHOR, selfAuthorFromProfile, type Thread } from "./forum.data";
@@ -16,6 +13,8 @@ import { EditTitleModal } from "./EditTitleModal";
 import { FirstPostPrompt } from "./FirstPostPrompt";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
+import { ForumHero } from "./ForumHero";
+import { ForumLoadMore } from "./ForumLoadMore";
 import { useToast } from "../../shared/components/feedback/useToast";
 // DEMO-ONLY persona — read ONLY inside the `demoMode` branch of `canEditThread`
 // below; the live branch must use solely the DTO's `thread.canEdit` flag.
@@ -181,30 +180,7 @@ export function ForumPage() {
 
   return (
     <PageShell>
-      <section className={styles.hero}>
-        <div className="wrap">
-          <div className={styles.heroRow}>
-            <div>
-              <div className={styles.cat}>{t("forum:hero.eyebrow")}</div>
-              <h1>
-                <Translation
-                  i18nKey="forum:hero.title"
-                  components={{ em: <em /> }}
-                />
-              </h1>
-              <p>
-                {t("forum:hero.lead")}{" "}
-                <Link to={routes.communities} className={styles.heroLink}>
-                  {t("forum:hero.findCommunitiesCta")}
-                </Link>
-              </p>
-            </div>
-            <Button className={styles.newBtn} onClick={() => openCompose()}>
-              {t("forum:newPostCta")}
-            </Button>
-          </div>
-        </div>
-      </section>
+      <ForumHero onNewPost={() => openCompose()} />
 
       <section className={styles.body}>
         <div className="wrap">
@@ -239,20 +215,11 @@ export function ForumPage() {
                 onEditTitle={(thread) => setEditingTitleThreadId(thread.id)}
               />
 
-              {hasNextPage && (
-                <div className={styles.loadMore}>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    disabled={isFetchingNextPage}
-                    onClick={fetchNextPage}
-                  >
-                    {isFetchingNextPage
-                      ? t("forum:threadList.loadingMore")
-                      : t("forum:threadList.loadMoreCta")}
-                  </Button>
-                </div>
-              )}
+              <ForumLoadMore
+                hasNextPage={hasNextPage}
+                fetchNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
             </div>
           </div>
         </div>

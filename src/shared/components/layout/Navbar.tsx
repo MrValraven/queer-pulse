@@ -125,7 +125,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
           .filter(Boolean)
           .join(" ")}
       >
-        <Brand to={loggedIn ? "/feed" : "/"} />
+        <Brand to={loggedIn ? routes.feed : routes.homepage} />
 
         <div className={styles.links}>
           <MegaNav />

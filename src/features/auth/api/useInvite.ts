@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { formatDate } from "../../../shared/lib/date";
 import { getMember } from "../../members/data/members";
+import { initialsFromParts } from "../../../shared/lib/initials";
 import { getInvite, type InviteDTO } from "./invite.api";
 
 /** Page-ready, presentation-normalized invite (status + the inviter's details). */
@@ -29,18 +31,12 @@ const DEMO_NOTE =
 const DEMO_VOUCH =
   "They’re exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.";
 
-function initialsOf(first: string, last: string): string {
-  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
-}
-
 function formatExpiry(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const parsedDate = new Date(iso);
+  if (Number.isNaN(parsedDate.getTime())) return "";
+  // Default `formatDate` options are day / long-month / year — the exact shape
+  // this line hand-rolled — pinned to en-GB so the invite reads "12 June 2026".
+  return formatDate(parsedDate, "en-GB");
 }
 
 function dtoToView(dto: InviteDTO): InviteView {
@@ -52,7 +48,7 @@ function dtoToView(dto: InviteDTO): InviteView {
       slug: inviter.slug,
       name: `${inviter.firstName} ${inviter.lastName}`,
       firstName: inviter.firstName,
-      initials: initialsOf(inviter.firstName, inviter.lastName),
+      initials: initialsFromParts(inviter.firstName, inviter.lastName),
       photo: inviter.avatarUrl ?? undefined,
       since: inviter.memberSince,
     },

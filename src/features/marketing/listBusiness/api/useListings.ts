@@ -88,6 +88,9 @@ export function useListingMutations() {
     Error,
     CreateListingDto
   >({
+    // ListingWizard awaits addListing (→ this mutateAsync) and toasts its own
+    // error in a catch, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return null;
       const res = await createListing(dto);
@@ -133,12 +136,36 @@ export function useUpdateListing() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<ListingDTO | null, Error, { ref: string; draft: ListingDraft }>({
+    // useEditListingSave re-throws so ListingWizard toasts via showSaveError, so
+    // silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ ref, draft }) => {
       if (demoMode) return null;
       return updateListing(ref, draft);
     },
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
       if (demoMode) return;
+      // Optimistically patch the cached "my listings" rows with the server's
+      // fresh record so the account grid shows the edit instantly — the
+      // invalidation below refetches to reconcile, but react-query keeps
+      // serving the stale cached list until that lands, which would otherwise
+      // flash the pre-edit version. Fuzzy key match covers both the paged
+      // `useMyListings` and the all-pages `useAllMyListings` caches.
+      if (data) {
+        const patched = listingDtoToPending(data);
+        queryClient.setQueriesData<MyListingsResult>(
+          { queryKey: ["listings", "mine"] },
+          (prev) =>
+            prev
+              ? {
+                  ...prev,
+                  items: prev.items.map((item) =>
+                    item.ref === patched.ref ? patched : item,
+                  ),
+                }
+              : prev,
+        );
+      }
       void queryClient.invalidateQueries({ queryKey: ["listings"] });
       void queryClient.invalidateQueries({ queryKey: ["listings", "detail", variables.ref] });
       // Refresh the public directory + map so a moved/cleared pin updates.

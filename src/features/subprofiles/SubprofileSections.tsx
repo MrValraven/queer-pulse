@@ -1,4 +1,6 @@
 import { FiExternalLink } from "react-icons/fi";
+import { initialsFromName } from "../../shared/lib/initials";
+import { safeHref } from "../../shared/lib/safeHref";
 import { Link } from "react-router-dom";
 import {
   Avatar,
@@ -16,16 +18,6 @@ import type {
 } from "./api/subprofiles.adapters";
 import { collaboratorHref } from "./collaborators.data";
 import styles from "./SubprofileSections.module.css";
-
-/** Up to two initials from a display name, for the avatar fallback (mirrors
- *  `SubprofileAffiliations`' local helper — no shared util for this yet). */
-function initialsFrom(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
 
 /** Credit row for an item's collaborators — a small "with" label plus each
  *  collaborator as an avatar+name link (member profile or persona page).
@@ -48,7 +40,7 @@ function ItemCollaborators({
               to={collaboratorHref(collaborator)}
             >
               <Avatar
-                initials={initialsFrom(collaborator.name)}
+                initials={initialsFromName(collaborator.name, "?")}
                 src={collaborator.avatarUrl ?? undefined}
                 alt={collaborator.name}
                 size={22}
@@ -120,10 +112,10 @@ function ItemCard({
           </TagRow>
         )}
         <ItemCollaborators collaborators={item.collaborators} />
-        {shows(section, item, "url") && (
+        {shows(section, item, "url") && safeHref(item.url) && (
           <a
             className={styles.visit}
-            href={item.url}
+            href={safeHref(item.url) ?? undefined}
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -140,18 +132,23 @@ function ItemCard({
 function LinksRow({ section }: { section: SubprofileSectionView }) {
   return (
     <ul className={styles.linksRow}>
-      {section.items.map((item) => (
-        <li key={`${item.title}::${item.url}`}>
-          <a
-            className={styles.linkPill}
-            href={item.url}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {item.title} <FiExternalLink aria-hidden />
-          </a>
-        </li>
-      ))}
+      {section.items.map((item) => {
+        // Skip any member-supplied link whose scheme isn't safe to render.
+        const linkHref = safeHref(item.url);
+        if (!linkHref) return null;
+        return (
+          <li key={`${item.title}::${item.url}`}>
+            <a
+              className={styles.linkPill}
+              href={linkHref}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {item.title} <FiExternalLink aria-hidden />
+            </a>
+          </li>
+        );
+      })}
     </ul>
   );
 }

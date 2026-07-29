@@ -2,12 +2,17 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useScrollLock, usePrefersReducedMotion } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { MessageActionMenu } from "./MessageActionMenu";
 import { ReactionPicker } from "./ReactionPicker";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { renderWithLinks } from "./linkify";
 import styles from "./MessagesPage.module.css";
+
+// Focusable-descendant selector for the Tab focus-trap (mirrors Modal.tsx).
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export interface MessageActionOverlayProps {
   /** The bubble body, rendered read-only in the lifted clone. */
@@ -70,16 +75,55 @@ export function MessageActionOverlay({
   onReport,
   onClose,
 }: MessageActionOverlayProps) {
+  const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const menuRef = useRef<HTMLDivElement>(null);
+  const columnRef = useRef<HTMLDivElement>(null);
   useScrollLock();
 
-  // Close on Escape; move focus into the menu; restore on unmount.
+  // Close on Escape; move focus into the menu; trap Tab within the dialog so
+  // keyboard/screen-reader users can't reach the inert message list behind it;
+  // restore focus on unmount. (Trap mirrors the Modal.tsx pattern.)
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
     menuRef.current?.focus();
+
+    const focusableItems = (): HTMLElement[] => {
+      const column = columnRef.current;
+      return column
+        ? Array.from(
+            column.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+          ).filter((element) => element.offsetParent !== null)
+        : [];
+    };
+
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const column = columnRef.current;
+      if (!column) return;
+      const items = focusableItems();
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      const activeElement = document.activeElement;
+      if (!firstItem || !lastItem) {
+        event.preventDefault();
+        menuRef.current?.focus();
+        return;
+      }
+      if (
+        event.shiftKey &&
+        (activeElement === firstItem || activeElement === column || activeElement === menuRef.current)
+      ) {
+        event.preventDefault();
+        lastItem.focus();
+      } else if (!event.shiftKey && activeElement === lastItem) {
+        event.preventDefault();
+        firstItem.focus();
+      }
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -114,6 +158,7 @@ export function MessageActionOverlay({
       role="presentation"
     >
       <div
+        ref={columnRef}
         className={[
           styles.overlayColumn,
           openBelow ? styles.overlayColumnBelow : styles.overlayColumnAbove,
@@ -127,7 +172,9 @@ export function MessageActionOverlay({
           ...horizontalStyle,
         }}
         onClick={(event) => event.stopPropagation()}
-        role="presentation"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("messages:actions.overlayLabel")}
       >
         <div className={styles.overlayReactions}>
           <ReactionPicker onPick={(key) => runThenClose(() => onReact(key))()} />

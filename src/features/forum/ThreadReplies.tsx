@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiStar, FiHeart, FiMessageSquare } from "react-icons/fi";
-import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
+import { FiMessageSquare } from "react-icons/fi";
+import { Button, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -11,14 +10,10 @@ import {
   type Reply,
   type ReplySortId,
 } from "./forum.data";
-import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
-import { authorHref, memberPath } from "./forumAuthor.helpers";
+import { memberPath } from "./forumAuthor.helpers";
 import { memberName } from "../members/data/members";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
-import { MentionText } from "../../shared/mentions/MentionText";
-import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
-import { PostActionsMenu } from "./PostActionsMenu";
+import { ThreadReplyItem } from "./ThreadReplyItem";
 import styles from "./ThreadPage.module.css";
 
 /** Names the moderator who published an official QueerPulse post, linking to
@@ -132,138 +127,28 @@ export function ThreadReplies({
         />
       )}
       {!loading &&
-        replies.map((r, i) => {
-          const isLiked = !!likedReplies[replyKey(r)];
-          const replyIdentity = r.postId ?? replyKey(r);
-          const isEditing = editingReplyPostId === replyIdentity;
-          const canEdit = demoMode ? demoOwns(r) && !r.deleted : !!r.canEdit;
-          const canDelete = demoMode
-            ? demoOwns(r) && !r.deleted
-            : !!r.canDelete;
-          const canRestore = demoMode
-            ? demoOwns(r) && !!r.deleted
-            : !!r.canRestore;
-          const canViewHistory = demoMode ? false : !!r.canViewHistory;
-          return (
-            <FadeIn
-              key={replyKey(r)}
-              delay={Math.min(i, 8) * 60}
-              className={[styles.reply, r.helpful && styles.replyHighlighted]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <ProfileLink
-                to={authorHref(r)}
-                name={r.name}
-                official={r.official}
-                className={styles.avLink}
-              >
-                <ForumAvatar
-                  className={styles.replyAv}
-                  style={{ background: r.background, color: r.color }}
-                  person={{
-                    slug: r.slug,
-                    photo: r.photo,
-                    initials: r.avatar,
-                    name: r.name,
-                  }}
-                />
-              </ProfileLink>
-              <div>
-                <div className={styles.replyTop}>
-                  <span className={styles.replyName}>
-                    <ProfileLink
-                      to={authorHref(r)}
-                      name={r.name}
-                      official={r.official}
-                      className={styles.authorLink}
-                    >
-                      {r.name}
-                    </ProfileLink>
-                  </span>
-                  <MemberStaffBadge slug={r.slug} />
-                  {r.official && <OfficialBadge />}
-                  {r.isOP && (
-                    <span className={styles.opBadge}>
-                      {t("forum:replies.opBadge")}
-                    </span>
-                  )}
-                  {r.helpful && (
-                    <span className={styles.helpfulBadge}>
-                      <FiStar /> {t("forum:replies.mostHelpfulBadge")}
-                    </span>
-                  )}
-                  <span className={styles.replyTime}>{r.time}</span>
-                  <span className={styles.replyMenu}>
-                    <PostActionsMenu
-                      canEdit={canEdit}
-                      canDelete={canDelete}
-                      canRestore={canRestore}
-                      canViewHistory={canViewHistory}
-                      onEdit={() => onStartEdit(r)}
-                      onDelete={() => onDelete(r)}
-                      onRestore={() => onRestore(r)}
-                      onHistory={() => onHistory(r)}
-                    />
-                  </span>
-                </div>
-                {r.official && r.mod && <ModeratorByline mod={r.mod} />}
-                {r.deleted ? (
-                  <div className={styles.replyBody}>
-                    <p className={styles.tombstone}>
-                      {t("forum:tombstone.body")}
-                    </p>
-                  </div>
-                ) : isEditing ? (
-                  <InlineReplyEditor
-                    initial={r.body.join("\n")}
-                    onCancel={onCancelEdit}
-                    onSave={(next) => onSaveEdit(replyIdentity, next)}
-                  />
-                ) : (
-                  <>
-                    <div className={styles.replyBody}>
-                      {r.quote && (
-                        <div className={styles.quote}>
-                          <cite>{r.quote.cite}</cite>
-                          {r.quote.text}
-                        </div>
-                      )}
-                      {r.body.map((paragraph, paragraphIndex) => (
-                        <p key={paragraphIndex}>
-                          <MentionText text={paragraph} />
-                        </p>
-                      ))}
-                      {r.editedAt && (
-                        <span className={styles.editedMark}>
-                          {t("forum:edited.mark")}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      aria-pressed={isLiked}
-                      aria-label={
-                        isLiked
-                          ? t("forum:replies.unlikeAria")
-                          : t("forum:replies.likeAria")
-                      }
-                      className={[
-                        styles.replyReact,
-                        isLiked && styles.replyReactOn,
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() => toggleReplyLike(r)}
-                    >
-                      <FiHeart /> {r.reactions + (isLiked ? 1 : 0)}
-                    </button>
-                  </>
-                )}
-              </div>
-            </FadeIn>
-          );
-        })}
+        replies.map((currentReply, replyIndex) => (
+          <ThreadReplyItem
+            key={replyKey(currentReply)}
+            reply={currentReply}
+            index={replyIndex}
+            replyKey={replyKey}
+            isLiked={!!likedReplies[replyKey(currentReply)]}
+            toggleReplyLike={toggleReplyLike}
+            demoMode={demoMode}
+            demoOwns={demoOwns}
+            isEditing={
+              editingReplyPostId ===
+              (currentReply.postId ?? replyKey(currentReply))
+            }
+            onStartEdit={onStartEdit}
+            onCancelEdit={onCancelEdit}
+            onSaveEdit={onSaveEdit}
+            onDelete={onDelete}
+            onRestore={onRestore}
+            onHistory={onHistory}
+          />
+        ))}
 
       {!loading && hasNextPage && (
         <div className={styles.loadMore}>
@@ -279,44 +164,6 @@ export function ThreadReplies({
           </Button>
         </div>
       )}
-    </div>
-  );
-}
-
-function InlineReplyEditor({
-  initial,
-  onCancel,
-  onSave,
-}: {
-  initial: string;
-  onCancel: () => void;
-  onSave: (next: string) => void;
-}) {
-  const { t } = useTranslation();
-  const [value, setValue] = useState(initial);
-  const trimmed = value.trim();
-  return (
-    <div className={styles.inlineEdit}>
-      <MentionTextarea
-        className={styles.inlineTextarea}
-        aria-label={t("forum:replyEdit.textareaAria")}
-        value={value}
-        onChange={setValue}
-        rows={4}
-      />
-      <div className={styles.inlineActions}>
-        <Button variant="ghost" type="button" onClick={onCancel}>
-          {t("forum:replyEdit.cancel")}
-        </Button>
-        <Button
-          variant="primary"
-          type="button"
-          disabled={!trimmed || trimmed === initial}
-          onClick={() => onSave(trimmed)}
-        >
-          {t("forum:replyEdit.save")}
-        </Button>
-      </div>
     </div>
   );
 }

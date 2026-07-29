@@ -59,7 +59,7 @@ export function WatchPage() {
               width="100%"
               height="100%"
               radius={0}
-              placeholder="film frame · cinematic still"
+              placeholder={t("cinema:slot.filmFrame")}
               style={{ position: "absolute", inset: 0 }}
             />
 

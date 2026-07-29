@@ -33,6 +33,8 @@ export function useCreateEvent() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<{ slug?: string }, Error, CreateEventDto>({
+    // CreateGatheringPage toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return {};
       const res = await createEvent(dto);

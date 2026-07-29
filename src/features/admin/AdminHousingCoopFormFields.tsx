@@ -1,4 +1,5 @@
 import { AdminCheckLine } from "./ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CoopFormDraft } from "./adminHousingCoopForm.utils";
 import styles from "./AdminHousingCoopsPage.module.css";
 
@@ -7,12 +8,13 @@ interface FieldsProps {
   onChange: (patch: Partial<CoopFormDraft>) => void;
 }
 
-const PHASE_OPTIONS: { value: CoopFormDraft["phase"]; label: string }[] = [
-  { value: "forming", label: "Forming — finding the people" },
-  { value: "legal", label: "Legal incorporation" },
-  { value: "finance", label: "Finance & structure" },
-  { value: "property", label: "Finding the property" },
-  { value: "daily", label: "Daily life — operational" },
+// `value` is the canonical stored id; `labelKey` resolves via t() at render.
+const PHASE_OPTIONS: { value: CoopFormDraft["phase"]; labelKey: string }[] = [
+  { value: "forming", labelKey: "housingCoop.phaseOption.forming" },
+  { value: "legal", labelKey: "housingCoop.phaseOption.legal" },
+  { value: "finance", labelKey: "housingCoop.phaseOption.finance" },
+  { value: "property", labelKey: "housingCoop.phaseOption.property" },
+  { value: "daily", labelKey: "housingCoop.phaseOption.daily" },
 ];
 
 /** Identity, location, household count, phase, and the public description. */
@@ -20,10 +22,11 @@ export function AdminHousingCoopIdentityFields({
   draft,
   onChange,
 }: FieldsProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.fieldGroup}>
       <label className={styles.fieldLabel} htmlFor="coop-slug">
-        Slug
+        {t("admin:housingCoop.field.slug")}
       </label>
       <input
         id="coop-slug"
@@ -34,7 +37,7 @@ export function AdminHousingCoopIdentityFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-name">
-        Name
+        {t("admin:housingCoop.field.name")}
       </label>
       <input
         id="coop-name"
@@ -45,7 +48,7 @@ export function AdminHousingCoopIdentityFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-name-em">
-        Name — emphasised word
+        {t("admin:housingCoop.field.nameEm")}
       </label>
       <input
         id="coop-name-em"
@@ -54,12 +57,11 @@ export function AdminHousingCoopIdentityFields({
         onChange={(event) => onChange({ nameEm: event.target.value })}
       />
       <p className={styles.fieldHint}>
-        The one word styled in italic coral on the public card. Leave blank
-        for none.
+        {t("admin:housingCoop.field.nameEmHint")}
       </p>
 
       <label className={styles.fieldLabel} htmlFor="coop-city">
-        City
+        {t("admin:housingCoop.field.city")}
       </label>
       <input
         id="coop-city"
@@ -70,7 +72,7 @@ export function AdminHousingCoopIdentityFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-area">
-        Area
+        {t("admin:housingCoop.field.area")}
       </label>
       <input
         id="coop-area"
@@ -81,7 +83,7 @@ export function AdminHousingCoopIdentityFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-household-count">
-        Households
+        {t("admin:housingCoop.field.households")}
       </label>
       <input
         id="coop-household-count"
@@ -95,7 +97,7 @@ export function AdminHousingCoopIdentityFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-phase">
-        Phase
+        {t("admin:housingCoop.field.phase")}
       </label>
       <select
         id="coop-phase"
@@ -107,13 +109,13 @@ export function AdminHousingCoopIdentityFields({
       >
         {PHASE_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {t(`admin:${option.labelKey}`)}
           </option>
         ))}
       </select>
 
       <label className={styles.fieldLabel} htmlFor="coop-description">
-        Description
+        {t("admin:housingCoop.field.description")}
       </label>
       <textarea
         id="coop-description"
@@ -126,10 +128,11 @@ export function AdminHousingCoopIdentityFields({
   );
 }
 
-const CTA_OPTIONS: { value: CoopFormDraft["ctaKind"]; label: string }[] = [
-  { value: "join", label: "Join the co-op" },
-  { value: "updates", label: "Get updates" },
-  { value: "mentor", label: "Talk to a mentor" },
+// `value` is the canonical stored id; `labelKey` resolves via t() at render.
+const CTA_OPTIONS: { value: CoopFormDraft["ctaKind"]; labelKey: string }[] = [
+  { value: "join", labelKey: "housingCoop.ctaOption.join" },
+  { value: "updates", labelKey: "housingCoop.ctaOption.updates" },
+  { value: "mentor", labelKey: "housingCoop.ctaOption.mentor" },
 ];
 
 /** Timeline, progress, money, and the visibility toggles. */
@@ -137,10 +140,11 @@ export function AdminHousingCoopEconomicsFields({
   draft,
   onChange,
 }: FieldsProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.fieldGroup}>
       <label className={styles.fieldLabel} htmlFor="coop-progress">
-        Progress (%)
+        {t("admin:housingCoop.field.progress")}
       </label>
       <input
         id="coop-progress"
@@ -153,12 +157,12 @@ export function AdminHousingCoopEconomicsFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-forming-since">
-        Forming since
+        {t("admin:housingCoop.field.formingSince")}
       </label>
       <input
         id="coop-forming-since"
         className={styles.textInput}
-        placeholder="e.g. 2025-03-01"
+        placeholder={t("admin:housingCoop.field.formingSincePlaceholder")}
         value={draft.formingSince}
         onChange={(event) =>
           onChange({ formingSince: event.target.value })
@@ -166,12 +170,12 @@ export function AdminHousingCoopEconomicsFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-operational-since">
-        Operational since
+        {t("admin:housingCoop.field.operationalSince")}
       </label>
       <input
         id="coop-operational-since"
         className={styles.textInput}
-        placeholder="e.g. 2026-01-01"
+        placeholder={t("admin:housingCoop.field.operationalSincePlaceholder")}
         value={draft.operationalSince}
         onChange={(event) =>
           onChange({ operationalSince: event.target.value })
@@ -179,7 +183,7 @@ export function AdminHousingCoopEconomicsFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-share-amount">
-        Share amount (EUR)
+        {t("admin:housingCoop.field.shareAmount")}
       </label>
       <input
         id="coop-share-amount"
@@ -193,7 +197,7 @@ export function AdminHousingCoopEconomicsFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-monthly">
-        Monthly (EUR)
+        {t("admin:housingCoop.field.monthly")}
       </label>
       <input
         id="coop-monthly"
@@ -205,7 +209,7 @@ export function AdminHousingCoopEconomicsFields({
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-cta-kind">
-        Call to action
+        {t("admin:housingCoop.field.cta")}
       </label>
       <select
         id="coop-cta-kind"
@@ -217,7 +221,7 @@ export function AdminHousingCoopEconomicsFields({
       >
         {CTA_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {t(`admin:${option.labelKey}`)}
           </option>
         ))}
       </select>
@@ -226,20 +230,20 @@ export function AdminHousingCoopEconomicsFields({
         <AdminCheckLine
           checked={draft.operational}
           onChange={(checked) => onChange({ operational: checked })}
-          title="Operational"
-          sub="The co-op has moved in and is running day to day."
+          title={t("admin:housingCoop.toggle.operational.title")}
+          sub={t("admin:housingCoop.toggle.operational.sub")}
         />
         <AdminCheckLine
           checked={draft.sharesAreTarget}
           onChange={(checked) => onChange({ sharesAreTarget: checked })}
-          title="Share amount is a target"
-          sub="Show the share amount as a goal, not a fixed price."
+          title={t("admin:housingCoop.toggle.sharesAreTarget.title")}
+          sub={t("admin:housingCoop.toggle.sharesAreTarget.sub")}
         />
         <AdminCheckLine
           checked={draft.published}
           onChange={(checked) => onChange({ published: checked })}
-          title="Published"
-          sub="Visible in the public housing directory."
+          title={t("admin:housingCoop.toggle.published.title")}
+          sub={t("admin:housingCoop.toggle.published.sub")}
         />
       </div>
     </div>

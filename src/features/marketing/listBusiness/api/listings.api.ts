@@ -89,3 +89,11 @@ export const deleteListing = (ref: string) =>
  */
 export const setListingStatus = (ref: string, status: ListingStatus) =>
   apiPatch<ListingDTO>(`/listings/${ref}/status`, { status });
+
+/**
+ * POST /listings/:ref/question — a moderator asks the submitter a question.
+ * Sends the text to the submitter as a DM and moves the listing to `question`
+ * status. Moderator-only: NOT called from the member client.
+ */
+export const askListingQuestion = (ref: string, body: string) =>
+  apiPost<ListingDTO>(`/listings/${ref}/question`, { body });

@@ -9,7 +9,6 @@ import { FiPause } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
-import { routes } from "../../app/routeMap";
 import { logError } from "../../shared/observability/logger";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,6 +16,7 @@ import { DELETE_CONTENT, type DeleteOption } from "./deleteAccount.data";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
 import { buildDestructiveFlow } from "./destructiveFlows.data";
 import {
+  DeleteConfirmForm,
   DeleteOptionCards,
   DeletePendingBanner,
 } from "./DeleteAccountSections";
@@ -184,46 +184,14 @@ export function DeleteAccountSection() {
         </div>
       </div>
 
-      <form className={styles.confirmForm} onSubmit={handleSubmit}>
-        {content.phraseKey && (
-          <div>
-            <div className={styles.cfLabel}>
-              <Translation
-                i18nKey="settings:deleteAccount.confirm.typeLabel"
-                components={{
-                  strong: <strong className={styles.confirmPhrase} />,
-                }}
-                values={{ phrase: confirmPhrase ?? "" }}
-              />
-            </div>
-            <input
-              className={[
-                styles.cfInput,
-                content.isDanger && styles.cfInputDanger,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              type="text"
-              value={phrase}
-              onChange={(e) => setPhrase(e.target.value)}
-            />
-            <div className={styles.cfHint}>{t(content.confirmHintKey)}</div>
-          </div>
-        )}
-        <div className={styles.formActions}>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={!canSubmit}
-            className={content.isDanger ? styles.btnDanger : undefined}
-          >
-            {t(content.btnLabelKey)}
-          </Button>
-          <Button variant="ghost" to={routes.settings}>
-            {t("settings:deleteAccount.confirm.cancelBtn")}
-          </Button>
-        </div>
-      </form>
+      <DeleteConfirmForm
+        content={content}
+        phrase={phrase}
+        setPhrase={setPhrase}
+        confirmPhrase={confirmPhrase}
+        canSubmit={canSubmit}
+        onSubmit={handleSubmit}
+      />
 
       {flowOpen && (
         <DestructiveActionFlow

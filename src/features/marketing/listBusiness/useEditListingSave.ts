@@ -35,9 +35,9 @@ export function useEditListingSave({
     await updateListingMutation.mutateAsync({ ref: editRef as string, draft });
     showToast(t("marketing:listBusiness.edit.saved"), "success");
     if (editStatus === "live" && editSlug) {
-      navigate(`${routes.directory}/${editSlug}`);
+      void navigate(`${routes.directory}/${editSlug}`);
     } else {
-      navigate(routes.accountProfile);
+      void navigate(routes.accountProfile);
     }
   };
 

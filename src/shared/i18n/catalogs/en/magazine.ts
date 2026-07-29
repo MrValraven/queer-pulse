@@ -720,6 +720,9 @@ export const magazine: Catalog = {
   "story.outro.safety.title": "Read it and think it sounds <em>right?</em>",
   "story.outro.safety.sub":
     "We're not for everyone. But if this resonates, you might be for us.",
+  // Byline author for the safety piece — the platform team, not an individual
+  // writer, so it is chrome and translated (read time and date stay editorial).
+  "story.safety.byline": "The QueerPulse team",
 
   // ══════════════════ TagPage (Long reads section) ═══════════════════════════
   // Per-piece kicker/title/dek/byline (TagPageHero featured + TagPageList

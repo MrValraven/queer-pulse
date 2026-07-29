@@ -12,6 +12,8 @@ export function useSuggestLandlord() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<LandlordDetailDTO | null, Error, CreateLandlordBody>({
+    // SuggestLandlordModal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 800));

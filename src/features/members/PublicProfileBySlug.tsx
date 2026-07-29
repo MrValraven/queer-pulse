@@ -9,21 +9,13 @@ import {
 import { PageMeta } from "../../shared/seo";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { leadingInitials } from "../../shared/lib/initials";
 import { routes } from "../../app/routeMap";
 import { usePublicProfileBySlug } from "./api/usePublicProfile";
 import { PublicProfileLinks, PublicProfileWork } from "./PublicProfileParts";
 import styles from "./PublicProfilePage.module.css";
 
 /** Two initials from a display name, for the avatar fallback. */
-function initialsOf(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
-
 /**
  * A member's public profile, addressed by slug — the one member surface meant to
  * be readable, and indexable, without a session.
@@ -92,7 +84,7 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
       <div className={styles.page}>
         <header className={styles.publicHead}>
           <Avatar
-            initials={initialsOf(profile.displayName)}
+            initials={leadingInitials(profile.displayName)}
             src={profile.avatarUrl ?? undefined}
             alt=""
             size={92}

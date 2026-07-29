@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useStepGate } from "../../../shared/hooks/useWizardForm";
 import {
   allSocialsValid,
   emailValid,
@@ -249,10 +250,7 @@ export function useListingForm(initial?: ListingDraft) {
     return m;
   }, [draft]);
 
-  const canAdvance = useCallback(
-    (step: number) => (missing[step]?.length ?? 0) === 0,
-    [missing],
-  );
+  const canAdvance = useStepGate(missing);
 
   return {
     draft,

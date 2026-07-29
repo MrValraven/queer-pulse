@@ -23,6 +23,15 @@ export function useUnreadDivider(
     anchor: ChatMessage | null;
   }>({ threadId: "", count: 0, anchor: null });
 
+  // This hook DELIBERATELY reads and writes the ref during render. It latches
+  // state ACROSS renders — freeze the unread count the first time a thread
+  // renders (before openThread's mark-read zeroes it), then pin the anchor
+  // message object once enough history is present and never recompute it — and
+  // must return that anchor synchronously on the SAME render that consumes it.
+  // Deferring these writes into an effect would compute the anchor a render too
+  // late and change behavior. The writes are guarded (thread-change reset, and a
+  // one-shot `anchor === null` latch) so they are idempotent and cannot loop.
+  /* eslint-disable react-hooks/refs -- intentional, guarded cross-render latch that must be computed synchronously during render; see note above. */
   if (dividerRef.current.threadId !== activeId) {
     dividerRef.current = { threadId: activeId, count: unreadCount, anchor: null };
   }
@@ -35,4 +44,5 @@ export function useUnreadDivider(
       flatMessages[flatMessages.length - dividerRef.current.count] ?? null;
   }
   return dividerRef.current.anchor ?? undefined;
+  /* eslint-enable react-hooks/refs */
 }

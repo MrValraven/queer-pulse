@@ -57,6 +57,7 @@ export function AdminShell({
             <FiSearch aria-hidden />
             <input
               type="text"
+              aria-label={resolvedSearchPlaceholder}
               placeholder={resolvedSearchPlaceholder}
               onKeyDown={(e) => {
                 if (e.key === "Enter")

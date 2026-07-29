@@ -43,6 +43,8 @@ export function useEndorsement(subprofileId: string) {
   };
 
   const endorse = useMutation<EndorsementResult, Error, EndorseVariables>({
+    // SubprofileEndorse toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ currentEndorsementCount, note }) => {
       if (demoMode) {
         const { mockSetEndorsed } = await import("../data/subprofiles.data");
@@ -59,6 +61,8 @@ export function useEndorsement(subprofileId: string) {
   });
 
   const withdraw = useMutation<EndorsementResult, Error, WithdrawVariables>({
+    // SubprofileEndorse toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ currentEndorsementCount }) => {
       if (demoMode) {
         const { mockSetEndorsed } = await import("../data/subprofiles.data");

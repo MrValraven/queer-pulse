@@ -6,6 +6,7 @@ import {
   type Pitch,
   type TriageVerdict,
 } from "./editorDashboard.data";
+import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./EditorDashboardPage.module.css";
 
 const cx = (...c: (string | false | undefined)[]) =>
@@ -18,15 +19,6 @@ const TINT_CLASS = {
 } as const;
 
 const HIDDEN = PITCH_TOTAL - PITCHES.length;
-
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 /** Pitch triage inbox — quick Yes/Maybe/No + checkbox select for bulk. */
 export function EditorPitchInbox({
@@ -125,7 +117,7 @@ function PitchRow({
         })}
       />
       <span className={cx(styles.pitchAv, TINT_CLASS[p.tint])}>
-        {initials(p.name)}
+        {leadingInitials(p.name)}
       </span>
       <div className={styles.pitchInfo}>
         <b>

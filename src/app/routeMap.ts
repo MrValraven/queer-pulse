@@ -276,6 +276,7 @@ export const routes = {
   studioCouncil: "/studio/council",
   studioAbout: "/studio/about",
   studioAccessibility: "/studio/accessibility",
+  studioSettings: "/studio/settings",
   studioTerms: "/studio/terms",
   studioHelp: "/studio/help",
   studioPress: "/studio/press",

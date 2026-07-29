@@ -1,6 +1,6 @@
 // src/features/messages/MessageActions.tsx
 import { useEffect, useRef, useState } from "react";
-import { FiMoreHorizontal, FiSmile } from "react-icons/fi";
+import { FiCornerUpLeft, FiMoreHorizontal, FiSmile } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { ReactionPicker } from "./ReactionPicker";
@@ -8,6 +8,10 @@ import styles from "./MessagesPage.module.css";
 
 export interface MessageActionsProps {
   onReact: (key: MessageReactionKey) => void;
+  /** Quotes this message in the composer — the same action the overlay's
+   *  "Reply" item and swipe-to-reply run. Omitted when the message can't be
+   *  replied to (optimistic/not-yet-acked or deleted), which hides the button. */
+  onReply?: () => void;
   /** Opens the full action overlay (Reply / Edit / Copy / Delete / Report) —
    *  the same sheet long-press (touch) and right-click (desktop) open. Wiring
    *  the "More" button to it gives keyboard and mouse users every action, not
@@ -18,12 +22,13 @@ export interface MessageActionsProps {
 
 /**
  * Small floating action bar shown on bubble hover (desktop) and reachable by
- * keyboard (revealed via `:focus-within` in `MessageRun`). A "React" button
- * opens the emoji picker popover; a "More" button opens the full action
- * overlay. `data-open` on the root lets the CSS keep the bar visible while the
- * picker is open, even after the pointer leaves.
+ * keyboard (revealed via `:focus-within` in `MessageRun`). An optional "Reply"
+ * button quotes the message directly; a "React" button opens the emoji picker
+ * popover; a "More" button opens the full action overlay. `data-open` on the
+ * root lets the CSS keep the bar visible while the picker is open, even after
+ * the pointer leaves.
  */
-export function MessageActions({ onReact, onOpenOverlay }: MessageActionsProps) {
+export function MessageActions({ onReact, onReply, onOpenOverlay }: MessageActionsProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -52,6 +57,19 @@ export function MessageActions({ onReact, onOpenOverlay }: MessageActionsProps) 
       ref={rootRef}
       data-open={pickerOpen ? "true" : undefined}
     >
+      {onReply && (
+        <button
+          type="button"
+          className={styles.messageActionBtn}
+          aria-label={t("messages:actions.reply")}
+          onClick={() => {
+            setPickerOpen(false);
+            onReply();
+          }}
+        >
+          <FiCornerUpLeft aria-hidden />
+        </button>
+      )}
       <button
         type="button"
         className={styles.messageActionBtn}

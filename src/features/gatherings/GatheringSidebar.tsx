@@ -7,6 +7,7 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { initialsFromParts } from "../../shared/lib/initials";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
@@ -62,8 +63,10 @@ function resolveHost(
     slug: gathering.hostSlug,
     first: gathering.hostFirst ?? "",
     last: gathering.hostLast ?? "",
-    initials:
-      `${gathering.hostFirst?.[0] ?? ""}${gathering.hostLast?.[0] ?? ""}`.toUpperCase(),
+    initials: initialsFromParts(
+      gathering.hostFirst ?? "",
+      gathering.hostLast ?? "",
+    ),
     tint: "plum",
     photo: gathering.hostAvatarUrl ?? undefined,
     role: "",

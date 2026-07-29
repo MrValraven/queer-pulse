@@ -13,7 +13,9 @@ interface LocationPickerMapProps {
 }
 
 // CSS-module class access is `string | undefined` (noUncheckedIndexedAccess);
-// resolve the class we assign imperatively to a plain string once.
+// resolve the classes we assign imperatively to plain strings once. maplibre
+// positions the wrapper; the teardrop + its animations live on the inner pin.
+const PICKER_WRAP_CLASS = s.pickerPinWrap ?? "";
 const PICKER_PIN_CLASS = s.pickerPin ?? "";
 
 /** Reusable draggable-marker picker for the Lisbon map. Reuses the warm-recoloured
@@ -88,11 +90,20 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
       markerRef.current.setLngLat(lngLat);
     } else {
       const element = document.createElement("div");
-      element.className = PICKER_PIN_CLASS;
+      element.className = PICKER_WRAP_CLASS;
+      const pin = document.createElement("div");
+      pin.className = PICKER_PIN_CLASS;
+      element.appendChild(pin);
       const marker = new maplibregl.Marker({ element, draggable: true, anchor: "bottom" })
         .setLngLat(lngLat)
         .addTo(map);
+      // Lift the teardrop off its shadow while dragging; the CSS keys off the
+      // data attribute so the rotate/lift transforms stay in the stylesheet.
+      marker.on("dragstart", () => {
+        element.dataset.dragging = "true";
+      });
       marker.on("dragend", () => {
+        delete element.dataset.dragging;
         const next = marker.getLngLat();
         onChangeRef.current(next.lat, next.lng);
       });

@@ -39,6 +39,9 @@ export interface AdminMember {
   tone: AvatarTone;
   pronoun: string;
   verified: boolean;
+  /** The member's own profile photo (live mode). When absent, the row falls
+   *  back to the demo `portrait(name)` lookup and then to initials. */
+  avatarUrl?: string | null;
   /** Open reports against this member, when not verified. */
   openReportsCount?: number;
   /** tone for the status chip */
@@ -60,6 +63,9 @@ export interface FlaggedMember {
   handle: string;
   initials: string;
   tone: AvatarTone;
+  /** The member's own profile photo (live mode). Fixtures omit it, so the row
+   *  falls back to initials. */
+  avatarUrl?: string | null;
   /** left category chip: a fixed reason id ("doxxing"/"spam") or a real
    *  per-member report count (`{ count }`), never a baked English string. */
   category:
@@ -103,7 +109,7 @@ export interface MemberDetail {
   /** central node + surrounding bubbles for the vouch graph, each tagged with
    *  its direction (who trusts the member vs. who the member vouches for) */
   graph: {
-    center: { initials: string; tone: AvatarTone };
+    center: { initials: string; tone: AvatarTone; avatarUrl?: string | null };
     nodes: GraphNode[];
   };
 }

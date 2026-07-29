@@ -8,53 +8,18 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { StudioTipModal } from "./StudioTipModal";
-import { SET, TRACKS, HERO_ART, type TrackCard } from "./studioPage.data";
+import {
+  SET,
+  TRACKS,
+  HERO_ART,
+  HERO_TRACK,
+  HERO_STATS,
+  WEDNESDAY_SET,
+  RECAP_AVATARS,
+  type TrackCard,
+} from "./studioPage.data";
 import { routes } from "../../app/routeMap";
 import styles from "./studio.module.css";
-
-const HERO_TRACK = {
-  id: "post:studio-carta-para-a-santa",
-  kind: "post" as const,
-  title: "Carta para a santa",
-  titlePre: "Carta para a ",
-  titleEm: "santa",
-  href: "/studio",
-  meta: "Mariana Sol",
-  artist: "Mariana Sol",
-  album: "Cidade dos santos",
-  year: "2026",
-  place: "Sintra",
-  description:
-    "A letter to the saint who never wrote back — solo voice and piano, in one take.",
-};
-
-/** Live-session stats — mock numbers only; the surrounding sentences are chrome. */
-const HERO_STATS = {
-  onAirTrack: 6,
-  listeningNow: 312,
-  trackTotal: 11,
-  duration: "4:18",
-  audioFormat: "Flac · 24/48",
-  perPlayAmount: 0.05,
-};
-
-const WEDNESDAY_SET = {
-  titlePre: "Vespertina, ",
-  titleEm: "vol. iv",
-  description:
-    "Twelve tracks for the hour between sunset and the second bottle.",
-  curator: "Sara Marques",
-  listeners: 312,
-  sustainers: 89,
-  casual: 223,
-  cities: 41,
-  ledgerPaidArtists: 11940,
-  ledgerPlays: "202k",
-  ledgerArtistShare: 0.803,
-  ledgerPerPlay: 0.05,
-};
-
-const RECAP_AVATARS = ["JR", "RT", "SC", "YR", "PL", "DO"];
 
 const tagClass: Record<TrackCard["tag"], string> = {
   free: styles.tagFree!,

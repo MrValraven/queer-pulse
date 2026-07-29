@@ -1,13 +1,7 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import {
-  Link,
-  useNavigate,
-  useParams,
-  UNSAFE_NavigationContext,
-} from "react-router-dom";
-import { FiAlertTriangle, FiUserX } from "react-icons/fi";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button, EmptyState, Spinner } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -23,13 +17,19 @@ import { PlacesSection } from "./PlacesSection";
 import { PublicProfileControl } from "./PublicProfileControl";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
+import { useProfileEditGuard } from "./useProfileEditGuard";
+import {
+  ProfileLoadingState,
+  ProfileErrorState,
+  ProfileBlockedState,
+  ProfileNotFoundState,
+} from "./ProfileStateScreens";
 import styles from "./ProfilePage.module.css";
 import editStyles from "./ProfileEdit.module.css";
 
 export function ProfilePage() {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const navigate = useNavigate();
   const {
     profile: liveProfile,
     isEditing,
@@ -68,158 +68,15 @@ export function ProfilePage() {
 
   const selfView = isSelf && !previewing;
 
-  // Block in-app navigation away from a dirty edit; confirm before discarding.
-  // The app mounts a plain <BrowserRouter> (not a data router), so react-router's
-  // useBlocker isn't available — instead we wrap the router's navigator so a
-  // push/replace mid-edit prompts first. (Hard unloads are covered separately below.)
-  const { navigator } = useContext(UNSAFE_NavigationContext);
-  const guardActive = isEditing && isDirty;
-  useEffect(() => {
-    if (!guardActive) return;
-    // View push/replace as reassignable function properties (not the interface's
-    // bound methods) so we can wrap then restore them — the cast also sidesteps
-    // the unbound-method / readonly-assignment lint on those method signatures.
-    const historyNavigator = navigator as unknown as {
-      push: (...args: unknown[]) => void;
-      replace: (...args: unknown[]) => void;
-    };
-    const originalPush = historyNavigator.push;
-    const originalReplace = historyNavigator.replace;
-    const confirmLeave = () => {
-      if (!window.confirm(t("members:profileEdit.discardConfirm"))) return false;
-      cancelEditing();
-      return true;
-    };
-    // Intentionally wrap + later restore the router navigator. This mutates a
-    // value from useContext, which react-hooks/immutability forbids — but that's
-    // the whole technique: UNSAFE_NavigationContext is React Router's sanctioned
-    // escape hatch for blocking navigation under a plain <BrowserRouter>, and the
-    // compiler can't model the wrap/restore. Scope the disable to this region.
-    /* eslint-disable react-hooks/immutability */
-    historyNavigator.push = (...args) => {
-      if (confirmLeave()) originalPush.apply(historyNavigator, args);
-    };
-    historyNavigator.replace = (...args) => {
-      if (confirmLeave()) originalReplace.apply(historyNavigator, args);
-    };
-    return () => {
-      historyNavigator.push = originalPush;
-      historyNavigator.replace = originalReplace;
-    };
-    /* eslint-enable react-hooks/immutability */
-  }, [guardActive, navigator, cancelEditing, t]);
+  useProfileEditGuard({ isEditing, isDirty, cancelEditing });
 
-  // Warn on hard unload (tab close / refresh) while there are unsaved edits.
-  useEffect(() => {
-    if (!(isEditing && isDirty)) return;
-    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warnBeforeUnload);
-    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
-  }, [isEditing, isDirty]);
-
-  // Restore focus to the Edit CTA when leaving edit mode (the editable hero that
-  // held focus unmounts, so focus would otherwise fall to <body>).
-  const wasEditing = useRef(false);
-  useEffect(() => {
-    if (wasEditing.current && !isEditing) {
-      document.getElementById("profileEditCta")?.focus();
-    }
-    wasEditing.current = isEditing;
-  }, [isEditing]);
-
-  if (isSelf && isProfileLoading) {
-    return (
-      <PageShell>
-        <div className={styles.stateWrap} role="status" aria-live="polite">
-          <Spinner />
-          <span>{t("members:profile.loading")}</span>
-        </div>
-      </PageShell>
-    );
-  }
-
+  if (isSelf && isProfileLoading) return <ProfileLoadingState />;
   if (isSelf && isProfileError) {
-    return (
-      <PageShell>
-        <div className={styles.stateWrap}>
-          <EmptyState
-            className={styles.stateEmpty}
-            icon={<FiAlertTriangle />}
-            title={t("members:profile.loadError.title")}
-            description={t("members:profile.loadError.description")}
-            action={{
-              label: t("members:profile.loadError.retryAction"),
-              onClick: retryProfile,
-            }}
-            secondaryAction={{
-              label: t("members:profile.goBack"),
-              onClick: () => void navigate(-1),
-            }}
-          />
-        </div>
-      </PageShell>
-    );
+    return <ProfileErrorState onRetry={retryProfile} />;
   }
-
-  if (!isSelf && isLoading) {
-    return (
-      <PageShell>
-        <div className={styles.stateWrap} role="status" aria-live="polite">
-          <Spinner />
-          <span>{t("members:profile.loading")}</span>
-        </div>
-      </PageShell>
-    );
-  }
-
-  if (blocked) {
-    return (
-      <PageShell>
-        <div className={styles.stateWrap}>
-          <EmptyState
-            className={styles.stateEmpty}
-            icon={<FiUserX />}
-            title={t("members:profile.blocked.title")}
-            description={t("members:profile.blocked.description")}
-            action={{
-              label: t("members:profile.blocked.manageAction"),
-              to: routes.connections,
-            }}
-            secondaryAction={{
-              label: t("members:profile.goBack"),
-              onClick: () => void navigate(-1),
-            }}
-          />
-        </div>
-      </PageShell>
-    );
-  }
-
-  if (!isSelf && !otherMember) {
-    return (
-      <PageShell>
-        <div className={styles.stateWrap}>
-          <EmptyState
-            className={styles.stateEmpty}
-            icon={<FiUserX />}
-            title={t("members:profile.notFound.title")}
-            description={t("members:profile.notFound.description")}
-            action={{
-              label: t("members:profile.notFound.backAction"),
-              to: routes.members,
-            }}
-            secondaryAction={{
-              label: t("members:profile.goBack"),
-              onClick: () => void navigate(-1),
-            }}
-          />
-        </div>
-      </PageShell>
-    );
-  }
+  if (!isSelf && isLoading) return <ProfileLoadingState />;
+  if (blocked) return <ProfileBlockedState />;
+  if (!isSelf && !otherMember) return <ProfileNotFoundState />;
 
   // At this point: isSelf → profile = liveProfile (always non-null from ProfileProvider);
   // !isSelf → otherMember is non-null (guarded by the not-found early-return above).

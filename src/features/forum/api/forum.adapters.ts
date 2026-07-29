@@ -1,4 +1,5 @@
 import { tintForSlug, type SlugTint } from "../../../shared/api/refs";
+import { initialsFromName } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Reply, Thread } from "../forum.data";
@@ -37,11 +38,6 @@ const SOFT: Record<SlugTint, { background: string; color: string }> = {
   jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
   plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
 };
-
-function initials(name: string): string {
-  const p = name.trim().split(/\s+/);
-  return `${p[0]?.[0] ?? ""}${p.length > 1 ? (p.at(-1)?.[0] ?? "") : ""}`.toUpperCase();
-}
 
 function relative(iso: string, t: TFunction, fmt: Formatters): string {
   const d = new Date(iso);
@@ -83,7 +79,7 @@ export function threadToCard(
     title: dto.title,
     excerpt: "",
     author: {
-      initials: initials(dto.author.displayName),
+      initials: initialsFromName(dto.author.displayName),
       name: dto.author.displayName,
       background: s.background,
       color: s.color,
@@ -112,7 +108,7 @@ export function postToReply(
   const tint = tintForSlug(slug);
   const soft = SOFT[tint];
   return {
-    avatar: initials(dto.author.displayName),
+    avatar: initialsFromName(dto.author.displayName),
     background: soft.background,
     color: soft.color,
     name: dto.author.displayName,

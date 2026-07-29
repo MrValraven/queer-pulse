@@ -18,6 +18,12 @@ export interface CopyLinkRowProps {
   copiedToast: string;
   /** Toast shown when the clipboard API refuses (permissions, insecure origin). */
   errorToast: string;
+  /**
+   * Accessible name for the read-only URL field (there's no visible `<label>`).
+   * Defaults to `copyLabel` so the field is never nameless; pass a more precise
+   * label (e.g. "Invite link") when the caller has one.
+   */
+  fieldLabel?: string;
   className?: string;
 }
 
@@ -37,6 +43,7 @@ export function CopyLinkRow({
   copiedLabel,
   copiedToast,
   errorToast,
+  fieldLabel,
   className,
 }: CopyLinkRowProps) {
   const { showToast } = useToast();
@@ -59,6 +66,7 @@ export function CopyLinkRow({
         className={styles.field}
         type="text"
         readOnly
+        aria-label={fieldLabel ?? copyLabel}
         value={display ?? value}
       />
       <button

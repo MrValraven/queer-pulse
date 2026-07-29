@@ -2,19 +2,11 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type Tint } from "./directoryPlaces";
 import { useDirectoryPlace } from "./api/useDirectory";
 import { useAllMyListings } from "./listBusiness/api/useListings";
 import { routes } from "../../app/routeMap";
-import { DirectorySpaceMain } from "./DirectorySpaceMain";
-import { DirectorySpaceAside } from "./DirectorySpaceAside";
+import { DirectorySpaceView } from "./DirectorySpaceView";
 import s from "./DirectorySpacePage.module.css";
-
-const GCELL: Record<Tint, string> = {
-  coral: "",
-  jade: s.gCellJade!,
-  plum: s.gCellPlum!,
-};
 
 export function DirectorySpacePage() {
   const { t } = useTranslation();
@@ -64,22 +56,9 @@ export function DirectorySpacePage() {
               </Link>
             )}
           </div>
-          <div className={s.gallery}>
-            {place.gallery.map((cap, i) => (
-              <div key={i} className={[s.gCell, GCELL[place.tint]].join(" ")}>
-                <span className={s.gCap}>{cap}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
-
-      <div className={s.page}>
-        <div className={s.grid}>
-          <DirectorySpaceMain place={place} />
-          <DirectorySpaceAside place={place} />
-        </div>
-      </div>
+      <DirectorySpaceView place={place} />
     </PageShell>
   );
 }

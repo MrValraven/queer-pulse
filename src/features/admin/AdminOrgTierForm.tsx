@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
@@ -35,6 +36,7 @@ export function AdminOrgTierForm({
   tier: OrgTierAdminDTO | null;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const createOrgTier = useCreateOrgTier();
   const updateOrgTier = useUpdateOrgTier();
@@ -57,7 +59,10 @@ export function AdminOrgTierForm({
         { id: tier.id, body },
         {
           onSuccess: () => {
-            showToast(`${draft.name} was updated`, "success");
+            showToast(
+              t("admin:orgTier.toast.updated", { name: draft.name }),
+              "success",
+            );
             onClose();
           },
           onError: (error) =>
@@ -67,7 +72,10 @@ export function AdminOrgTierForm({
     } else {
       createOrgTier.mutate(body, {
         onSuccess: () => {
-          showToast(`${draft.name} was created`, "success");
+          showToast(
+            t("admin:orgTier.toast.created", { name: draft.name }),
+            "success",
+          );
           onClose();
         },
         onError: (error) =>
@@ -78,14 +86,22 @@ export function AdminOrgTierForm({
 
   return (
     <AdminModal
-      eyebrow={isEditing ? "Edit tier" : "New tier"}
-      title={isEditing ? draft.name || "Edit tier" : "Create a partnership tier"}
+      eyebrow={
+        isEditing
+          ? t("admin:orgTier.form.editEyebrow")
+          : t("admin:orgTier.newCta")
+      }
+      title={
+        isEditing
+          ? draft.name || t("admin:orgTier.form.editTitle")
+          : t("admin:orgTier.form.createTitle")
+      }
       onClose={onClose}
       wide
       footer={
         <>
           <Button variant="ghost" type="button" onClick={onClose}>
-            Cancel
+            {t("admin:common.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -93,7 +109,9 @@ export function AdminOrgTierForm({
             form={FORM_ID}
             disabled={saving}
           >
-            {isEditing ? "Save changes" : "Create tier"}
+            {isEditing
+              ? t("admin:common.saveChanges")
+              : t("admin:orgTier.form.createCta")}
           </Button>
         </>
       }

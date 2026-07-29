@@ -36,6 +36,8 @@ export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
           radius={16}
           placeholder="cover · Cidade dos santos"
           style={{ position: "absolute", inset: 0 }}
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
       <div>

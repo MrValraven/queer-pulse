@@ -44,11 +44,15 @@ export interface ChatMessage {
   from: "me" | "them";
   text: string;
   time?: string;
-  /** `"system"` renders a centred event pill (see `systemEvent`); absent/`"user"`
-   *  is an ordinary bubble. */
-  kind?: "user" | "system";
+  /** `"system"` renders a centred event pill (see `systemEvent`); `"gif"`
+   *  renders an inline GIF image (see `attachment`); absent/`"user"` is an
+   *  ordinary bubble. */
+  kind?: "user" | "system" | "gif";
   /** Resolved system event for a `kind: "system"` message. */
   systemEvent?: ChatSystemEvent;
+  /** Provider-hosted GIF for a `kind:"gif"` bubble (rendered as an inline image).
+   *  Absent for text/system messages. `text` holds a "GIF" fallback. */
+  attachment?: import("../../shared/api/gifs").GifAttachment;
   /** GROUP threads only — the sender's identity for per-run attribution (name
    *  label + avatar above a received run). Absent in DMs, where the header
    *  already identifies the single counterpart. */

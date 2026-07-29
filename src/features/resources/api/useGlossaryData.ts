@@ -39,7 +39,7 @@ export function useGlossaryData(): GlossaryDataResult {
     queryKey: ["resources", "glossary", demoMode],
     queryFn: async () => {
       if (demoMode) {
-        const { BLOCKS } = await import("../glossary.data");
+        const { BLOCKS } = await import("../glossary.mock");
         return BLOCKS;
       }
       const terms = await getGlossaryTerms({});

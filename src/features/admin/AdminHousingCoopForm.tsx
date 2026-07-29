@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
@@ -31,6 +32,7 @@ export function AdminHousingCoopForm({
   coop: HousingCoopDTO | null;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const createCoop = useCreateCoop();
   const updateCoop = useUpdateCoop();
@@ -53,7 +55,10 @@ export function AdminHousingCoopForm({
         { id: coop.id, body },
         {
           onSuccess: () => {
-            showToast(`${draft.name} was updated`, "success");
+            showToast(
+              t("admin:housingCoop.toast.updated", { name: draft.name }),
+              "success",
+            );
             onClose();
           },
           onError: (error) =>
@@ -63,7 +68,10 @@ export function AdminHousingCoopForm({
     } else {
       createCoop.mutate(body, {
         onSuccess: () => {
-          showToast(`${draft.name} was created`, "success");
+          showToast(
+            t("admin:housingCoop.toast.created", { name: draft.name }),
+            "success",
+          );
           onClose();
         },
         onError: (error) =>
@@ -74,14 +82,22 @@ export function AdminHousingCoopForm({
 
   return (
     <AdminModal
-      eyebrow={isEditing ? "Edit co-op" : "New co-op"}
-      title={isEditing ? draft.name || "Edit co-op" : "Create a housing co-op"}
+      eyebrow={
+        isEditing
+          ? t("admin:housingCoop.form.editEyebrow")
+          : t("admin:housingCoop.newCta")
+      }
+      title={
+        isEditing
+          ? draft.name || t("admin:housingCoop.form.editTitle")
+          : t("admin:housingCoop.form.createTitle")
+      }
       onClose={onClose}
       wide
       footer={
         <>
           <Button variant="ghost" type="button" onClick={onClose}>
-            Cancel
+            {t("admin:common.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -89,7 +105,9 @@ export function AdminHousingCoopForm({
             form={FORM_ID}
             disabled={saving}
           >
-            {isEditing ? "Save changes" : "Create co-op"}
+            {isEditing
+              ? t("admin:common.saveChanges")
+              : t("admin:housingCoop.form.createCta")}
           </Button>
         </>
       }

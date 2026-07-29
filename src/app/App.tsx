@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactNode } from "react";
+import { Suspense, type ComponentType, type ReactNode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../shared/api/queryClient";
@@ -32,7 +32,7 @@ import { CommunityEditsProvider } from "./providers/CommunityEditsProvider";
 import { DeletedConversationsProvider } from "./providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
 import { WorkshopsProvider } from "./providers/WorkshopsProvider";
-import { CommandPalette } from "../features/members/CommandPalette";
+import { lazyNamed } from "./routeHelpers";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
 import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
 import { QueryErrorToastBridge } from "../shared/components/feedback/QueryErrorToastBridge";
@@ -42,6 +42,15 @@ import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { ScrollManager } from "./ScrollManager";
 import { AppRoutes } from "./routes";
 import { useVisualViewportKeyboard } from "../shared/hooks";
+
+// Lazy so the demo mock corpus its search data hook pulls in (members +
+// gatherings mock data, thousands of lines) leaves the entry chunk; it
+// self-fetches its data once opened, so deferring the chunk doesn't change
+// when results appear.
+const CommandPalette = lazyNamed(
+  () => import("../features/members/CommandPalette"),
+  "CommandPalette",
+);
 
 type ProviderComponent = ComponentType<{ children: ReactNode }>;
 
@@ -148,7 +157,9 @@ export function App() {
           <ScrollManager />
           <DataProviders>
             <AppRoutes />
-            <CommandPalette />
+            <Suspense fallback={null}>
+              <CommandPalette />
+            </Suspense>
           </DataProviders>
           <RoomLoader />
           <ConsentBanner />

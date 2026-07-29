@@ -5,36 +5,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useToast } from "../../../shared/components/feedback/useToast";
-import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { useFormat } from "../../../shared/i18n/format";
 import {
-  EVENT_ARRIVAL_DATE,
-  MAX_SEATS,
   MEMBER_RATE,
-  OPEN_SEAT_INDICES,
   PROMO_RATE,
   STORE_KEY,
   TIER_MAP,
-  VALID_PROMOS,
   normalizeSeatPick,
   type TierId,
 } from "./checkout.data";
 import {
-  generateRef,
-  makeMultibancoRef,
-  validEmail,
-} from "./checkout.validation";
-import {
   CheckoutContext,
   type CheckoutState,
-  type CheckoutStep,
-  type Guest,
   type Pricing,
-  type StepDir,
-  type Visibility,
-  type PayMethod,
 } from "./checkoutContext";
+import { useCheckoutActions } from "./useCheckoutActions";
 
 const MEMBER_EMAIL = "alex.rivera@example.com";
 
@@ -63,16 +47,6 @@ const INITIAL: CheckoutState = {
   firstTimerDismissed: false,
 };
 
-function emptyGuest(): Guest {
-  return { gift: false, name: "", pron: "", dietary: "", email: "", note: "" };
-}
-
-function syncGuests(guests: Guest[], qty: number): Guest[] {
-  const next = guests.slice(0, Math.max(0, qty - 1));
-  while (next.length < qty - 1) next.push(emptyGuest());
-  return next;
-}
-
 function loadState(): CheckoutState {
   try {
     const raw = localStorage.getItem(STORE_KEY);
@@ -97,12 +71,12 @@ function loadState(): CheckoutState {
  * body stays under the per-component line limit. */
 function computePricing(
   tier: TierId,
-  qty: number,
+  quantity: number,
   isGuest: boolean,
   promo: string | null,
 ): Pricing {
   const unit = TIER_MAP[tier].price;
-  const subtotal = unit * qty;
+  const subtotal = unit * quantity;
   const memberDisc = isGuest ? 0 : subtotal * MEMBER_RATE;
   const afterMember = subtotal - memberDisc;
   const promoDisc = promo ? afterMember * PROMO_RATE : 0;
@@ -116,9 +90,6 @@ function computePricing(
 }
 
 export function CheckoutProvider({ children }: { children: ReactNode }) {
-  const { showToast } = useToast();
-  const { t } = useTranslation();
-  const fmt = useFormat();
   const [state, setState] = useState<CheckoutState>(loadState);
 
   useEffect(() => {
@@ -130,7 +101,7 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
   }, [state]);
 
   const patch = useCallback((partial: Partial<CheckoutState>) => {
-    setState((s) => ({ ...s, ...partial }));
+    setState((current) => ({ ...current, ...partial }));
   }, []);
 
   const pricing = useMemo<Pricing>(
@@ -140,181 +111,23 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
 
   const email = state.isGuest ? state.guestEmail.trim() : MEMBER_EMAIL;
 
-  const setTier = useCallback((id: TierId) => patch({ tier: id }), [patch]);
+  const actions = useCheckoutActions(state, setState, patch);
 
-  const changeQty = useCallback((delta: number) => {
-    setState((s) => {
-      const qty = Math.max(1, Math.min(MAX_SEATS, s.qty + delta));
-      return {
-        ...s,
-        qty,
-        guests: syncGuests(s.guests, qty),
-        seatPick: normalizeSeatPick(s.seatPick, qty),
-      };
-    });
-  }, []);
-
-  const toggleGuest = useCallback(
-    () => patch({ isGuest: !state.isGuest }),
-    [patch, state.isGuest],
+  // Stabilize the context value so its 24 consumers only re-render when a
+  // field they actually read changes, not on every provider re-render:
+  // `state` changes on every real update, but `pricing`/`email`/`patch`/
+  // `actions` are each already memoized/stable, so a parent-driven re-render
+  // with none of these changing now produces the same `value` reference.
+  const value = useMemo(
+    () => ({
+      ...state,
+      pricing,
+      email,
+      patch,
+      ...actions,
+    }),
+    [state, pricing, email, patch, actions],
   );
-
-  const applyPromo = useCallback(
-    (code: string): "ok" | "invalid" | "empty" => {
-      const val = code.trim().toUpperCase();
-      if (!val) return "empty";
-      if (VALID_PROMOS.includes(val)) {
-        patch({ promo: val });
-        showToast(
-          t("gatherings:checkout.promo.appliedToast", {
-            percent: fmt.number(PROMO_RATE, { style: "percent" }),
-          }),
-          "success",
-        );
-        return "ok";
-      }
-      return "invalid";
-    },
-    [patch, showToast, t, fmt],
-  );
-
-  const removePromo = useCallback(() => patch({ promo: null }), [patch]);
-
-  const setVisibility = useCallback(
-    (v: Visibility) => {
-      patch({ visibility: v });
-      showToast(
-        t(
-          v === "private"
-            ? "gatherings:checkout.summary.visibilityPrivateToast"
-            : "gatherings:checkout.summary.visibilityPublicToast",
-        ),
-        "info",
-      );
-    },
-    [patch, showToast, t],
-  );
-
-  const pickSeat = useCallback((seatIdx: number) => {
-    setState((s) => {
-      if (!OPEN_SEAT_INDICES.includes(seatIdx)) return s;
-      const cur = normalizeSeatPick(s.seatPick, s.qty);
-      if (cur.includes(seatIdx)) return s; // already the party's — no-op
-      // You take the chosen setting; any guest keeps their seat.
-      const next = [seatIdx, ...cur.slice(1)];
-      return { ...s, seatPick: next };
-    });
-  }, []);
-
-  const setMethod = useCallback((m: PayMethod) => {
-    setState((s) => ({
-      ...s,
-      method: m,
-      mbRef: m === "multibanco" && !s.mbRef ? makeMultibancoRef() : s.mbRef,
-    }));
-  }, []);
-
-  const selectSaved = useCallback(() => {
-    setState((s) => (s.savedCardRemoved ? s : { ...s, usingSaved: true }));
-  }, []);
-  const selectNewCard = useCallback(
-    () => patch({ usingSaved: false }),
-    [patch],
-  );
-  const removeSavedCard = useCallback(() => {
-    patch({ savedCardRemoved: true, usingSaved: false });
-    showToast(t("gatherings:checkout.card.removedToast"), "info");
-  }, [patch, showToast, t]);
-
-  const setCoc = useCallback(
-    (agreed: boolean) => patch({ cocAgreed: agreed }),
-    [patch],
-  );
-
-  const toggleReminder = useCallback((k: "email" | "sms" | "none") => {
-    setState((s) => {
-      if (k === "none")
-        return { ...s, reminders: { email: false, sms: false } };
-      return { ...s, reminders: { ...s.reminders, [k]: !s.reminders[k] } };
-    });
-  }, []);
-
-  const updateGuest = useCallback(
-    (i: number, field: keyof Guest, value: string | boolean) => {
-      setState((s) => {
-        const guests = s.guests.map((g, idx) =>
-          idx === i ? { ...g, [field]: value } : g,
-        );
-        return { ...s, guests };
-      });
-    },
-    [],
-  );
-
-  const goStep = useCallback((n: CheckoutStep, dir: StepDir = "forward") => {
-    setState((s) => (n === s.step ? s : { ...s, step: n, dir }));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-  const tryGoStep2 = useCallback((): boolean => {
-    if (state.isGuest && !validEmail(state.guestEmail.trim())) {
-      showToast(
-        t("gatherings:checkout.validation.guestEmailRequired"),
-        "error",
-      );
-      return false;
-    }
-    setState((s) => ({ ...s, reachedStep2: true, step: 2, dir: "forward" }));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    return true;
-  }, [state.isGuest, state.guestEmail, showToast, t]);
-
-  const confirmPayment = useCallback(() => {
-    setState((s) => ({
-      ...s,
-      paid: true,
-      ref: generateRef(),
-      step: 3,
-      dir: "forward",
-    }));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    showToast(
-      t("gatherings:checkout.payment.confirmedToast", {
-        date: fmt.date(EVENT_ARRIVAL_DATE, { day: "numeric", month: "long" }),
-      }),
-      "success",
-    );
-  }, [showToast, t, fmt]);
-
-  const dismissFirstTimer = useCallback(
-    () => patch({ firstTimerDismissed: true }),
-    [patch],
-  );
-
-  const value = {
-    ...state,
-    pricing,
-    email,
-    patch,
-    setTier,
-    changeQty,
-    toggleGuest,
-    applyPromo,
-    removePromo,
-    setVisibility,
-    pickSeat,
-    setMethod,
-    selectSaved,
-    selectNewCard,
-    removeSavedCard,
-    setCoc,
-    toggleReminder,
-    updateGuest,
-    goStep,
-    tryGoStep2,
-    confirmPayment,
-    dismissFirstTimer,
-  };
 
   return (
     <CheckoutContext.Provider value={value}>

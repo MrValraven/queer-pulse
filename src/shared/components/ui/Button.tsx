@@ -1,8 +1,4 @@
-import type {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  ReactNode,
-} from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 import { Link, type LinkProps } from "react-router-dom";
 import styles from "./Button.module.css";
 
@@ -26,7 +22,7 @@ interface BaseProps {
 }
 
 type ButtonAsButton = BaseProps &
-  Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps> & {
+  Omit<ComponentPropsWithRef<"button">, keyof BaseProps> & {
     to?: undefined;
     href?: undefined;
   };
@@ -38,7 +34,7 @@ type ButtonAsLink = BaseProps &
   };
 
 type ButtonAsAnchor = BaseProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps> & {
+  Omit<ComponentPropsWithRef<"a">, keyof BaseProps> & {
     href: string;
     to?: undefined;
   };
@@ -89,8 +85,10 @@ export function Button({
     );
   }
 
+  // Default to type="button" so a <Button> inside a <form> doesn't silently
+  // submit it; callers opt into submit via type="submit" (rest wins).
   return (
-    <button className={cls} {...rest}>
+    <button type="button" className={cls} {...rest}>
       {children}
     </button>
   );

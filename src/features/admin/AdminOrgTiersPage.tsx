@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
@@ -55,7 +56,8 @@ export function AdminOrgTiersPage() {
     if (!deleteTarget) return;
     const name = deleteTarget.name;
     deleteOrgTier.mutate(deleteTarget.id, {
-      onSuccess: () => showToast(`${name} was removed`, "info"),
+      onSuccess: () =>
+        showToast(t("admin:orgTier.toast.removed", { name }), "info"),
       onError: (error) =>
         showToast(describeError("Couldn't remove that tier", error), "error"),
     });
@@ -65,9 +67,10 @@ export function AdminOrgTiersPage() {
   return (
     <AdminShell
       title={
-        <>
-          Partnership <em>tiers</em>
-        </>
+        <Translation
+          i18nKey="admin:orgTier.title"
+          components={{ em: <em /> }}
+        />
       }
       breadcrumb={[
         { label: t("admin:common.adminBreadcrumb"), to: routes.admin },
@@ -75,20 +78,21 @@ export function AdminOrgTiersPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow="Partnerships"
+          eyebrow={t("admin:partners.header.eyebrow")}
           title={
-            <>
-              Partnership <em>tiers</em>
-            </>
+            <Translation
+              i18nKey="admin:orgTier.title"
+              components={{ em: <em /> }}
+            />
           }
-          sub="Every tier on the For Organisations page, published or still in draft — create one, keep the pricing and copy current, and control what's live."
+          sub={t("admin:orgTier.header.sub")}
           actions={
             <Button
               variant="primary"
               size="md"
               onClick={() => setFormMode({ kind: "create" })}
             >
-              New tier
+              {t("admin:orgTier.newCta")}
             </Button>
           }
         />
@@ -108,14 +112,14 @@ export function AdminOrgTiersPage() {
         <div className={styles.notice}>
           <p className={styles.noticeText}>
             {forbidden
-              ? "This panel is for admins only."
-              : "The tier list couldn't load right now — please try again."}
+              ? t("admin:common.panelForbidden")
+              : t("admin:orgTier.loadError")}
           </p>
         </div>
       ) : tiers.length === 0 ? (
         <div className={styles.empty}>
           <p className={styles.emptyText}>
-            No tiers yet — create the first one below.
+            {t("admin:orgTier.empty")}
           </p>
         </div>
       ) : (
@@ -136,22 +140,23 @@ export function AdminOrgTiersPage() {
 
       {deleteTarget && (
         <AdminModal
-          title={`Remove ${deleteTarget.name}?`}
+          title={t("admin:orgTier.delete.title", {
+            name: deleteTarget.name,
+          })}
           onClose={() => setDeleteTarget(null)}
           footer={
             <>
               <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
-                Cancel
+                {t("admin:common.cancel")}
               </Button>
               <Button variant="danger" onClick={confirmDelete}>
-                Remove tier
+                {t("admin:orgTier.delete.confirmCta")}
               </Button>
             </>
           }
         >
           <p className={styles.deleteConfirmBody}>
-            This removes it from the public partnership tiers list and the
-            admin panel. This cannot be undone.
+            {t("admin:orgTier.delete.body")}
           </p>
         </AdminModal>
       )}

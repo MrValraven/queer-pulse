@@ -21,6 +21,9 @@ export function useCreateChangemakerNomination() {
     Error,
     CreateChangemakerNominationDto
   >({
+    // NominateChangemakerSection toasts its own error, so silence the global
+    // duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) {
         return null;

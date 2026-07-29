@@ -1,5 +1,6 @@
 import { memberRefToPerson, type Person } from "../../../shared/api/refs";
 import { createFormatters, type Formatters } from "../../../shared/i18n/format";
+import { orgBadgeInitials } from "../../../shared/lib/initials";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { CompanyProfile } from "../companies.data";
 import type { Job } from "../jobs.data";
@@ -23,11 +24,7 @@ const FALLBACK_FORMATTERS: Formatters = createFormatters("en");
 
 /** Two-letter logo mark from a company name ("Atelier Pulso" → "AP"). */
 export function logoFromName(name: string): string {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return `${words[0]![0] ?? ""}${words[1]![0] ?? ""}`.toUpperCase();
-  }
-  return (words[0] ?? "").slice(0, 2).toUpperCase() || "?";
+  return orgBadgeInitials(name, "?");
 }
 
 // Prototype-only: the poster picks a currency *symbol* (see `CURRENCIES` in

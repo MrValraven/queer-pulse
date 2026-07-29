@@ -21,6 +21,9 @@ export function useCreateCommissionInterest() {
     Error,
     CreateCommissionInterestDto
   >({
+    // CommissionInterestModal toasts its own error, so silence the global
+    // duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) {
         await new Promise((r) => setTimeout(r, 1000));

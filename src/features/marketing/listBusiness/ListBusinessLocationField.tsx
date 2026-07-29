@@ -107,7 +107,7 @@ export function ListBusinessLocationField({
           </div>
           <Button
             variant="ghost"
-            onClick={handleFindOnMap}
+            onClick={() => void handleFindOnMap()}
             disabled={linkStatus === "resolving" || mapLink.trim().length === 0}
           >
             {linkStatus === "resolving"

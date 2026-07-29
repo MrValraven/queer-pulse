@@ -3,34 +3,26 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminModal, AdminChip, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
-import type { AuditEntry } from "./adminGovernance.data";
+import type { AuditRowView } from "./api/useAdminAudit";
 import styles from "./AdminGovernancePage.module.css";
 
 export function AdminGovernanceAuditModal({
   entry,
   onClose,
 }: {
-  entry: AuditEntry;
+  entry: AuditRowView;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   return (
     <AdminModal
       eyebrow={t("admin:governance.audit.entryModal.eyebrow")}
-      title={entry.action}
+      title={entry.actionLabel}
       onClose={onClose}
       footer={
-        <>
-          <Button variant="ghost" to={entry.link.to} onClick={onClose}>
-            {t("admin:governance.audit.entryModal.openLinkCta", {
-              label: entry.link.label,
-            })}{" "}
-            →
-          </Button>
-          <Button variant="primary" onClick={onClose}>
-            {t("admin:common.close")}
-          </Button>
-        </>
+        <Button variant="primary" onClick={onClose}>
+          {t("admin:common.close")}
+        </Button>
       }
     >
       <div className={styles.entryMod}>
@@ -48,7 +40,7 @@ export function AdminGovernanceAuditModal({
             })}
           </span>
         </div>
-        <AdminChip tone={entry.actionTone}>{entry.action}</AdminChip>
+        <AdminChip tone={entry.actionTone}>{entry.actionLabel}</AdminChip>
       </div>
 
       <dl className={styles.entryDl}>

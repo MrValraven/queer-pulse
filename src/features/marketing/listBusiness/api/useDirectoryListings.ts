@@ -34,10 +34,21 @@ export function useDirectoryListings() {
     if (demoMode) return local;
     // Live: optimistic additions first, then server rows, deduped by ref and
     // with anything withdrawn this session filtered out.
+    //
+    // The `local` overlay only holds optimistic *additions* the server hasn't
+    // returned yet. Once the server also has a ref, its row is authoritative
+    // and freshest — so an overlay entry for a ref the server already returns
+    // is stale (e.g. a listing created then edited this session: the edit
+    // PATCHes the server but never touches `local`) and must be dropped, or it
+    // shadows the edited server row and the account page shows the old version.
+    const serverRefs = new Set(serverItems.map((item) => item.ref));
     const seen = new Set<string>();
     const merged: PendingListing[] = [];
     for (const l of [...local, ...serverItems]) {
       if (withdrawn.has(l.ref) || seen.has(l.ref)) continue;
+      const isStaleLocalOverlay =
+        !serverItems.includes(l) && serverRefs.has(l.ref);
+      if (isStaleLocalOverlay) continue;
       seen.add(l.ref);
       merged.push(l);
     }

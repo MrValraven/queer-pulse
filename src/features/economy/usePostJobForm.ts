@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useWizardForm } from "../../shared/hooks/useWizardForm";
 import type { CompanyProfile } from "./companies.data";
 import type { Job } from "./jobs.data";
 
@@ -102,7 +103,9 @@ function parseFormDeadline(d: string): Date | null {
 
 export function usePostJobForm() {
   const [state, setState] = useState<PostJobState>(readDraft);
-  const [step, setStep] = useState(0);
+  // Step index + navigation come from the shared wizard hook; gating stays in
+  // the composer, which shows inline errors before allowing a step forward.
+  const wizard = useWizardForm({ stepCount: STEP_LABEL_KEYS.length });
   const [justSaved, setJustSaved] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -238,8 +241,8 @@ export function usePostJobForm() {
 
   return {
     state,
-    step,
-    setStep,
+    step: wizard.currentStepIndex,
+    setStep: wizard.goToStep,
     patch,
     toggleIn,
     payLabel,

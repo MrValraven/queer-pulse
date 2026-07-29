@@ -512,6 +512,10 @@ export interface CalendarEvent {
   priceMin?: number;
   /** Sliding-scale ceiling. Absent = a single fixed `priceMin`. */
   priceMax?: number;
+  /** Cover artwork; when absent the card shows a tinted placeholder. */
+  coverImageUrl?: string;
+  /** Going/RSVP count, used only to weight highlight curation. */
+  attendeeCount?: number;
 }
 
 const ACCENT = "var(--accent)";
@@ -540,6 +544,9 @@ export const calendarEvents: CalendarEvent[] = [
     ticketed: true,
     priceMin: 6,
     priceMax: 18,
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 42,
   },
   {
     date: new Date(2026, 5, 10, 18, 30),
@@ -549,6 +556,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Arroios",
     to: gatheringPath("trans-hub-meetup"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 28,
   },
   {
     date: new Date(2026, 5, 12, 18, 0),
@@ -558,6 +568,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Príncipe Real",
     to: gatheringPath("skills-exchange-intro"),
     kind: "event",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 19,
   },
   {
     date: new Date(2026, 5, 14, 19, 0),
@@ -569,6 +582,9 @@ export const calendarEvents: CalendarEvent[] = [
     kind: "event",
     ticketed: true,
     priceMin: 10,
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 61,
   },
   {
     date: new Date(2026, 5, 17, 10, 30),
@@ -578,6 +594,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Estrela",
     to: gatheringPath("queer-parent-network"),
     kind: "event",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 15,
   },
   {
     date: new Date(2026, 5, 18, 18, 30),
@@ -587,6 +606,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Intendente",
     to: "/event",
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 5, 20, 18, 0),
@@ -596,6 +617,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Mouraria",
     to: gatheringPath("trans-mutual-aid"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1524230572899-a752b3835840?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 24,
   },
   {
     date: new Date(2026, 5, 21, 15, 0),
@@ -605,6 +629,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Graça",
     to: gatheringPath("studio-visit"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 12,
   },
   {
     date: new Date(2026, 5, 24, 17, 0),
@@ -614,6 +641,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Chiado",
     to: gatheringPath("queer-elders-social"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 20,
   },
   {
     date: new Date(2026, 5, 25, 20, 0),
@@ -625,6 +655,9 @@ export const calendarEvents: CalendarEvent[] = [
     kind: "gathering",
     ticketed: true,
     priceMin: 8,
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 55,
   },
   {
     date: new Date(2026, 5, 26, 19, 0),
@@ -634,6 +667,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Online",
     to: gatheringPath("wellbeing-ama"),
     kind: "event",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 5, 28, 9, 0),
@@ -643,6 +678,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Tejo path",
     to: gatheringPath("queer-runners-run"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 33,
   },
   {
     date: new Date(2026, 6, 2, 8, 30),
@@ -654,6 +692,9 @@ export const calendarEvents: CalendarEvent[] = [
     kind: "event",
     ticketed: true,
     priceMin: 15,
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 38,
   },
   {
     date: new Date(2026, 6, 5, 17, 0),
@@ -663,6 +704,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Arroios",
     to: gatheringPath("queer-youth-gathering"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 26,
   },
   {
     date: new Date(2026, 6, 7, 18, 0),
@@ -672,6 +716,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Lisbon",
     to: "/event",
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 6, 9, 18, 30),
@@ -681,6 +727,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Online",
     to: gatheringPath("disability-access-talk"),
     kind: "event",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 6, 11, 14, 0),
@@ -690,6 +738,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Intendente",
     to: gatheringPath("legal-clinic"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 6, 14, 19, 0),
@@ -699,6 +749,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Príncipe Real",
     to: gatheringPath("queer-choir-rehearsal"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 22,
   },
   {
     date: new Date(2026, 6, 16, 19, 0),
@@ -708,6 +761,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Online",
     to: gatheringPath("resource-library-launch"),
     kind: "event",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1487956382158-bb926046304a?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 6, 19, 18, 30),
@@ -717,6 +772,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Estrela",
     to: "/event",
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 6, 22, 12, 0),
@@ -726,6 +783,8 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Online",
     to: gatheringPath("micro-grants-office-hours"),
     kind: "event",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200&auto=format&fit=crop",
   },
   {
     date: new Date(2026, 6, 26, 17, 30),
@@ -735,6 +794,9 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Intendente",
     to: gatheringPath("queer-of-colour-gathering"),
     kind: "gathering",
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop",
+    attendeeCount: 31,
   },
 ];
 

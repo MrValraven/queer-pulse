@@ -1246,9 +1246,25 @@ export const resources: Catalog = {
   "sexualHealth.testing.nominate.submitCta": "Enviar nomeação",
 
   "sexualHealth.prep.title": "PrEP em <em>Portugal.</em>",
+  "sexualHealth.prep.lead":
+    "A PrEP (profilaxia pré-exposição) está disponível gratuitamente através do SNS para quem cumpre os critérios. Tomada corretamente, tem uma eficácia superior a 99% na prevenção do VIH. Eis como lhe aceder.",
+  "sexualHealth.prep.tip":
+    "<strong>Portugal foi um dos primeiros países europeus a tornar a PrEP gratuita.</strong> Não precisas de seguro privado. O processo envolve uma verificação simples de elegibilidade, análises ao sangue e uma prescrição — todo o percurso demora cerca de 4 a 6 semanas da primeira vez.",
   "sexualHealth.prep.faqTitle": "Perguntas <em>frequentes.</em>",
 
   "sexualHealth.hiv.title": "VIH — o que precisas de <em>saber.</em>",
+  "sexualHealth.hiv.lead":
+    "Informação honesta e atual. O VIH é uma condição controlável. Com tratamento, as pessoas com VIH vivem vidas longas e plenas e não transmitem o vírus.",
+  "sexualHealth.hiv.uu.title": "Indetetável = <em>Intransmissível.</em>",
+  "sexualHealth.hiv.uu.body":
+    "I=I é um dos factos mais importantes na saúde sexual. As pessoas que vivem com VIH, em tratamento eficaz e com carga viral indetetável, não conseguem transmitir sexualmente o VIH às suas parcerias. Isto está cientificamente estabelecido e é reconhecido por todas as principais autoridades de saúde.",
+  "sexualHealth.hiv.uu.stat.uu.label":
+    "Indetetável = Intransmissível. Confirmado pelo CDC, pela OMS e por mais de 400 organizações de saúde em todo o mundo.",
+  "sexualHealth.hiv.uu.stat.rate.label":
+    "das pessoas em tratamento em Portugal atingem uma carga viral indetetável em 6 meses.",
+  "sexualHealth.hiv.uu.stat.free.value": "Grátis",
+  "sexualHealth.hiv.uu.stat.free.label":
+    "O tratamento do VIH (antirretrovirais) é gratuito para todas as pessoas residentes através do SNS.",
   "sexualHealth.hiv.findServicesCta": "Encontrar serviços de apoio ao VIH",
 
   "sexualHealth.guides.title": "Guias e <em>perguntas.</em>",
@@ -1283,6 +1299,7 @@ export const resources: Catalog = {
   "microGrants.hero.stat.pot.label": "no fundo deste trimestre",
   "microGrants.hero.fundBar.roundLabel":
     "Ronda de financiamento do 2.º trimestre de 2026",
+  "microGrants.hero.fundBar.goalLabel": "meta",
 
   "microGrants.how.01.title": "A comunidade contribui",
   "microGrants.how.01.body":
@@ -1305,6 +1322,8 @@ export const resources: Catalog = {
   "microGrants.round.meta.amountLabel": "por projeto",
   "microGrants.round.meta.deadlineLabel": "prazo de candidatura",
   "microGrants.round.meta.decisionLabel": "até à decisão",
+  "microGrants.round.meta.deadlineValue": "30 de junho de 2026",
+  "microGrants.round.meta.decisionValue": "3 – 4 semanas",
   "microGrants.round.criteriaTitle": "Critérios",
   "microGrants.criteria.member":
     "És uma pessoa da QueerPulse em situação regular",

@@ -1,6 +1,7 @@
 import type {
   PointerEvent as ReactPointerEvent,
   MouseEvent as ReactMouseEvent,
+  KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import type { VouchPerson } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
@@ -21,6 +22,7 @@ interface NodeProps {
   onPointerEnter: (e: ReactPointerEvent<SVGGElement>) => void;
   onPointerLeave: () => void;
   onDoubleClick: (e: ReactMouseEvent<SVGGElement>) => void;
+  onKeyDown: (e: ReactKeyboardEvent<SVGGElement>) => void;
 }
 
 /** A single node in the trust graph: halo, disc, identity glyph, verified tick, name. */
@@ -39,6 +41,7 @@ export function VouchGraphNode({
   onPointerEnter,
   onPointerLeave,
   onDoubleClick,
+  onKeyDown,
 }: NodeProps) {
   const verified = !!person.verified;
   const showPhoto = !!photo && !person.private;
@@ -48,7 +51,7 @@ export function VouchGraphNode({
       ref={nodeRef}
       className={className}
       role="button"
-      tabIndex={-1}
+      tabIndex={0}
       aria-label={person.role ? `${person.name}, ${person.role}` : person.name}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -56,6 +59,7 @@ export function VouchGraphNode({
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       onDoubleClick={onDoubleClick}
+      onKeyDown={onKeyDown}
     >
       {/* inner group carries the entrance animation; positioning lives on the outer <g> */}
       <g className={styles.nodeInner}>

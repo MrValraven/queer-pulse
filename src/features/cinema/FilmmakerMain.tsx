@@ -41,7 +41,7 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
                   width="100%"
                   height="100%"
                   radius={12}
-                  placeholder="poster"
+                  placeholder={t("cinema:slot.poster")}
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span

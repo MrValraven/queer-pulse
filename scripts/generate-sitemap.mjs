@@ -3,14 +3,18 @@
  * Build-time sitemap generator for QueerPulse.
  *
  * Emits `public/sitemap.xml` listing ONLY public routes. Wired into `build`
- * (before `vite build`, which copies `public/` verbatim into `dist/`), so the
- * shipped sitemap can never disagree with the prerendered set — both derive
- * from QUIET_PUBLIC_PATHS in ./publicPaths.mjs.
+ * (before `vite build`, which copies `public/` verbatim into `dist/`).
+ *
+ * The sitemap lists the FULL public surface (QUIET_PUBLIC_PATHS + dynamic
+ * personas). It deliberately DIVERGES from the prerendered set: prerendering
+ * bakes only PRERENDER_PATHS (a minimal subset — see ./prerender.mjs) to save
+ * build data, but the sitemap costs nothing per URL, so it keeps advertising
+ * every public page to search engines (Googlebot renders JS and finds them).
  *
  * The public path list and the gated-path check both live in
- * `./publicPaths.mjs` (shared with the prerenderer), which is in turn a mirror
- * of `src/app/authGate.ts` (GATED_PATTERNS / PUBLIC_EXCEPTIONS). If you change
- * authGate, mirror it in publicPaths.mjs.
+ * `./publicPaths.mjs`, which is in turn a mirror of `src/app/authGate.ts`
+ * (GATED_PATTERNS / PUBLIC_EXCEPTIONS). If you change authGate, mirror it in
+ * publicPaths.mjs.
  */
 
 import { writeFileSync } from "node:fs";

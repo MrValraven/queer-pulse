@@ -1,5 +1,6 @@
 import type { HousingListing, Poster, Tint } from "../housingListings";
 import type { HousingListingDTO } from "./housingListing.api";
+import { initialsFromParts } from "../../../shared/lib/initials";
 
 // Values copied verbatim from the housingListings.ts fixture (per type).
 const TYPE_STYLE: Record<
@@ -12,10 +13,6 @@ const TYPE_STYLE: Record<
   studio: { tint: "plum", typeColor: "rgba(var(--violet-rgb),.1)", typeText: "var(--violet)" },
 };
 
-function initials(first: string, last: string): string {
-  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
-}
-
 function posterFrom(lister: HousingListingDTO["lister"]): Poster {
   if (!lister) {
     return {
@@ -25,7 +22,7 @@ function posterFrom(lister: HousingListingDTO["lister"]): Poster {
   }
   const full = `${lister.firstName} ${lister.lastName}`.trim();
   return {
-    initials: initials(lister.firstName, lister.lastName),
+    initials: initialsFromParts(lister.firstName, lister.lastName),
     name: `${lister.firstName} ${lister.lastName.charAt(0)}.`.trim(),
     fullName: full,
     tint: "coral",

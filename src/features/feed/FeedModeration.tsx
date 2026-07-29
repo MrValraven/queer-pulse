@@ -17,6 +17,7 @@ import { SAFETY_EMAIL } from "./feed.data";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import {
   reasonsFor,
+  REASON_LABEL_KEYS,
   type ReasonCode,
   type ReportSubjectType,
 } from "../safety/reportReasons";
@@ -363,7 +364,7 @@ export function ReportModal({
                     checked={reason === r.code}
                     onChange={() => setReason(r.code)}
                   />
-                  {r.label}
+                  {t(REASON_LABEL_KEYS[r.code])}
                 </label>
               ))}
             </div>

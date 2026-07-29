@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import type { Member } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import { initialsFromParts } from "../../../shared/lib/initials";
 import {
   OPEN_TO_PRESETS,
   type OpenToEntry,
@@ -103,9 +104,8 @@ export function tintForSlug(slug: string): AvatarTint {
   return TINTS[h % TINTS.length]!;
 }
 
-export function initialsOf(first: string, last: string): string {
-  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
-}
+/** Thin re-export of the canonical helper, kept for its many existing callers. */
+export const initialsOf = initialsFromParts;
 
 /** Map a directory card DTO to the prototype's Member shape, defaulting the rest. */
 export function cardToMember(dto: MemberCardDTO): Member {

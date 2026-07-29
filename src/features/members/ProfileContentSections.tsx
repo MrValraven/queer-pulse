@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
 import { useMemberContact } from "../connect/useMemberContact";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -310,27 +311,30 @@ export function ActivitySection({ profile }: { profile: MemberProfile }) {
 
 export function RelatedSection({ profile }: { profile: MemberProfile }) {
   const { t } = useTranslation();
-  // Live mode: the backend returns pre-resolved related cards. Demo mode: resolve
-  // the `related` slugs against the mock registry (real members aren't in it, so
-  // `relatedCards` is preferred whenever it's populated).
+  const { demoMode } = useDemoMode();
+  // Live mode: the backend returns pre-resolved related cards; unresolved `related`
+  // slugs render nothing (real members aren't in the mock registry). Demo mode only:
+  // resolve the `related` slugs against the mock registry as a fallback.
   const relatedMembers: RelatedMember[] = profile.relatedCards?.length
     ? profile.relatedCards
-    : profile.related.flatMap((relatedSlug) => {
-        const registryMember = memberProfiles[relatedSlug];
-        if (!registryMember) return [];
-        return [
-          {
-            slug: relatedSlug,
-            first: registryMember.first,
-            last: registryMember.last,
-            role: registryMember.role,
-            hood: registryMember.hood,
-            initials: registryMember.initials,
-            tint: registryMember.tint,
-            avatarUrl: registryMember.photo,
-          },
-        ];
-      });
+    : demoMode
+      ? profile.related.flatMap((relatedSlug) => {
+          const registryMember = memberProfiles[relatedSlug];
+          if (!registryMember) return [];
+          return [
+            {
+              slug: relatedSlug,
+              first: registryMember.first,
+              last: registryMember.last,
+              role: registryMember.role,
+              hood: registryMember.hood,
+              initials: registryMember.initials,
+              tint: registryMember.tint,
+              avatarUrl: registryMember.photo,
+            },
+          ];
+        })
+      : [];
   if (relatedMembers.length === 0) return null;
   return (
     <Section

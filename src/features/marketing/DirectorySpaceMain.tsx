@@ -33,9 +33,11 @@ const Dash = () => (
 
 interface Props {
   place: DirectoryPlace;
+  /** Moderation preview: hide the interactive review form (read-only view). */
+  preview?: boolean;
 }
 
-export function DirectorySpaceMain({ place }: Props) {
+export function DirectorySpaceMain({ place, preview = false }: Props) {
   const { t } = useTranslation();
   const words = place.name.split(" ");
   const last = words.pop();
@@ -183,7 +185,7 @@ export function DirectorySpaceMain({ place }: Props) {
         <p className={s.subLine}>
           {t("marketing:directory.detail.reviewsSub")}
         </p>
-        <DirectoryReviewForm slug={place.slug} />
+        {!preview && <DirectoryReviewForm slug={place.slug} />}
         {place.reviews.map((review) => (
           <div key={review.name} className={s.rev}>
             <div className={s.revHead}>

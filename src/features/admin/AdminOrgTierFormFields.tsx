@@ -1,4 +1,5 @@
 import { AdminCheckLine } from "./ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { OrgTierFormDraft } from "./adminOrgTierForm.utils";
 import type { OrgTierCtaType } from "../marketing/api/orgTiers.api";
 import styles from "./AdminOrgTiersPage.module.css";
@@ -10,10 +11,11 @@ interface FieldsProps {
 
 /** Name, price, and the copy fields (dek, bullets, footnote). */
 export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.fieldGroup}>
       <label className={styles.fieldLabel} htmlFor="tier-name">
-        Name
+        {t("admin:orgTier.field.name")}
       </label>
       <input
         id="tier-name"
@@ -24,29 +26,29 @@ export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
       />
 
       <label className={styles.fieldLabel} htmlFor="tier-price-display">
-        Price
+        {t("admin:orgTier.field.price")}
       </label>
       <input
         id="tier-price-display"
         className={styles.textInput}
-        placeholder="e.g. €2.4k or Custom"
+        placeholder={t("admin:orgTier.field.priceDisplay.placeholder")}
         value={draft.priceDisplay}
         onChange={(event) => onChange({ priceDisplay: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="tier-price-period">
-        Price period
+        {t("admin:orgTier.field.pricePeriod")}
       </label>
       <input
         id="tier-price-period"
         className={styles.textInput}
-        placeholder="e.g. per year"
+        placeholder={t("admin:orgTier.field.pricePeriod.placeholder")}
         value={draft.pricePeriod}
         onChange={(event) => onChange({ pricePeriod: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="tier-dek">
-        Dek
+        {t("admin:orgTier.field.dek")}
       </label>
       <textarea
         id="tier-dek"
@@ -57,7 +59,7 @@ export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
       />
 
       <label className={styles.fieldLabel} htmlFor="tier-bullets">
-        Bullets
+        {t("admin:orgTier.field.bullets")}
       </label>
       <textarea
         id="tier-bullets"
@@ -66,10 +68,12 @@ export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
         value={draft.bullets}
         onChange={(event) => onChange({ bullets: event.target.value })}
       />
-      <p className={styles.fieldHint}>One bullet per line.</p>
+      <p className={styles.fieldHint}>
+        {t("admin:orgTier.field.bulletsHint")}
+      </p>
 
       <label className={styles.fieldLabel} htmlFor="tier-footnote">
-        Footnote
+        {t("admin:orgTier.field.footnote")}
       </label>
       <textarea
         id="tier-footnote"
@@ -82,18 +86,20 @@ export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
   );
 }
 
-const CTA_OPTIONS: { value: OrgTierCtaType; label: string }[] = [
-  { value: "toast", label: "Toast — informational only" },
-  { value: "link", label: "Link — navigates to a target" },
-  { value: "propose", label: "Propose — opens the enquiry flow" },
+// `value` is the canonical stored id; `labelKey` resolves via t() at render.
+const CTA_OPTIONS: { value: OrgTierCtaType; labelKey: string }[] = [
+  { value: "toast", labelKey: "orgTier.ctaOption.toast" },
+  { value: "link", labelKey: "orgTier.ctaOption.link" },
+  { value: "propose", labelKey: "orgTier.ctaOption.propose" },
 ];
 
 /** Call-to-action config, sort order, and the visibility toggles. */
 export function AdminOrgTierCtaFields({ draft, onChange }: FieldsProps) {
+  const { t } = useTranslation();
   return (
     <div className={styles.fieldGroup}>
       <label className={styles.fieldLabel} htmlFor="tier-cta-type">
-        Call to action
+        {t("admin:orgTier.field.cta")}
       </label>
       <select
         id="tier-cta-type"
@@ -105,13 +111,13 @@ export function AdminOrgTierCtaFields({ draft, onChange }: FieldsProps) {
       >
         {CTA_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {t(`admin:${option.labelKey}`)}
           </option>
         ))}
       </select>
 
       <label className={styles.fieldLabel} htmlFor="tier-cta-label">
-        CTA label
+        {t("admin:orgTier.field.ctaLabel")}
       </label>
       <input
         id="tier-cta-label"
@@ -121,18 +127,18 @@ export function AdminOrgTierCtaFields({ draft, onChange }: FieldsProps) {
       />
 
       <label className={styles.fieldLabel} htmlFor="tier-cta-target">
-        CTA target
+        {t("admin:orgTier.field.ctaTarget")}
       </label>
       <input
         id="tier-cta-target"
         className={styles.textInput}
-        placeholder="Only used when the call to action is a link"
+        placeholder={t("admin:orgTier.field.ctaTarget.placeholder")}
         value={draft.ctaTarget}
         onChange={(event) => onChange({ ctaTarget: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="tier-sort-order">
-        Sort order
+        {t("admin:orgTier.field.sortOrder")}
       </label>
       <input
         id="tier-sort-order"
@@ -146,14 +152,14 @@ export function AdminOrgTierCtaFields({ draft, onChange }: FieldsProps) {
         <AdminCheckLine
           checked={draft.featured}
           onChange={(checked) => onChange({ featured: checked })}
-          title="Featured"
-          sub="Highlighted as the recommended tier."
+          title={t("admin:orgTier.toggle.featured.title")}
+          sub={t("admin:orgTier.toggle.featured.sub")}
         />
         <AdminCheckLine
           checked={draft.published}
           onChange={(checked) => onChange({ published: checked })}
-          title="Published"
-          sub="Visible on the For Organisations page."
+          title={t("admin:orgTier.toggle.published.title")}
+          sub={t("admin:orgTier.toggle.published.sub")}
         />
       </div>
     </div>

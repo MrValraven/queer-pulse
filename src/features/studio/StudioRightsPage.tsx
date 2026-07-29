@@ -5,6 +5,7 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { routes } from "../../app/routeMap";
 import { StudioShell } from "./StudioShell";
 import { StudioTakedownModal } from "./StudioTakedownModal";
 import { PROMISES, RELEASES, type Release } from "./studioRights.data";
@@ -164,7 +165,7 @@ export function StudioRightsPage() {
           <p>
             <Translation
               i18nKey="studio:rights.leavingCoop.body"
-              components={{ em: <em />, a: <Link to="/studio/settings" /> }}
+              components={{ em: <em />, a: <Link to={routes.studioSettings} /> }}
             />
           </p>
         </div>

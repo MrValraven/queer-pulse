@@ -3,6 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MEMBERS_HERE } from "./directorySpace.data";
 import s from "./DirectorySpacePage.module.css";
 
@@ -14,10 +15,13 @@ const TINT: Record<Tint, string> = {
 
 interface Props {
   place: DirectoryPlace;
+  /** Moderation preview: render contact/nav CTAs as inert (read-only view). */
+  preview?: boolean;
 }
 
-export function DirectorySpaceAside({ place }: Props) {
+export function DirectorySpaceAside({ place, preview = false }: Props) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const igUrl = place.social.instagram
     ? `https://instagram.com/${place.social.instagram.replace(/^@/, "")}`
     : undefined;
@@ -122,9 +126,11 @@ export function DirectorySpaceAside({ place }: Props) {
               {t("marketing:directory.detail.getInTouch")}
             </Button>
           ) : null}
-          <Button variant="ghost" className={s.ctaBtn} to={routes.directory}>
-            {t("marketing:directory.detail.backToDirectory")}
-          </Button>
+          {!preview && (
+            <Button variant="ghost" className={s.ctaBtn} to={routes.directory}>
+              {t("marketing:directory.detail.backToDirectory")}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -157,20 +163,25 @@ export function DirectorySpaceAside({ place }: Props) {
         )}
       </div>
 
-      <div className={s.sideCard}>
-        <h4>{t("marketing:directory.detail.membersHereLately")}</h4>
-        <div className={s.whoHere}>
-          {MEMBERS_HERE.map((member) => (
-            <div key={member.initials} className={s.whoRow}>
-              <span className={[s.whoAv, TINT[member.tint]].join(" ")}>
-                {member.initials}
-              </span>
-              <Link to={routes.members}>{member.name}</Link>
-              <span className={s.whoWhen}>{t(member.whenKey)}</span>
-            </div>
-          ))}
+      {/* "Members here lately" is a fabricated demo roster (directorySpace.data)
+          with no per-place backing from the API — show it only in demo so real
+          business pages never display invented visitors. */}
+      {demoMode && (
+        <div className={s.sideCard}>
+          <h4>{t("marketing:directory.detail.membersHereLately")}</h4>
+          <div className={s.whoHere}>
+            {MEMBERS_HERE.map((member) => (
+              <div key={member.initials} className={s.whoRow}>
+                <span className={[s.whoAv, TINT[member.tint]].join(" ")}>
+                  {member.initials}
+                </span>
+                <Link to={routes.members}>{member.name}</Link>
+                <span className={s.whoWhen}>{t(member.whenKey)}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {place.upcoming && place.upcoming.length > 0 && (
         <div className={s.sideCard}>

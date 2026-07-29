@@ -130,6 +130,8 @@ export function useSubprofileMutations() {
   };
 
   const create = useMutation<SubprofileDTO, Error, CreateSubprofileDTO>({
+    // NewSubprofileModal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (!demoMode) return createSubprofile(dto);
       const { mockMineSubprofiles } = await import("../data/subprofiles.data");
@@ -143,6 +145,9 @@ export function useSubprofileMutations() {
     Error,
     { id: string; dto: UpdateSubprofileDTO }
   >({
+    // SubprofileMetaForm / NewSubprofileModal toast their own error, so silence
+    // the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, dto }) => {
       if (!demoMode) return updateSubprofile(id, dto);
       const { mockSubprofileById } = await import("../data/subprofiles.data");
@@ -158,6 +163,9 @@ export function useSubprofileMutations() {
     Error,
     { id: string; section: SubprofileSection; items: SubprofileItemInputDTO[] }
   >({
+    // SubprofileSectionEditor / NewSubprofileModal toast their own error, so
+    // silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, section, items }) => {
       if (!demoMode) return replaceSubprofileSection(id, section, items);
       const { mockSubprofileById, resolveCollaboratorsDemo } = await import(
@@ -175,6 +183,9 @@ export function useSubprofileMutations() {
     Error,
     { id: string; items: SocialLinkDTO[] }
   >({
+    // SubprofileSocialLinksEditor toasts its own error, so silence the global
+    // duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, items }) => {
       if (!demoMode) return replaceSocialLinks(id, items);
       const { mockSubprofileById } = await import("../data/subprofiles.data");
@@ -186,6 +197,9 @@ export function useSubprofileMutations() {
   });
 
   const publish = useMutation<SubprofileDTO, Error, string>({
+    // SubprofilePublishPanel toasts its own error (and handles PublishUnmetError
+    // as a checklist), so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (id) => {
       if (!demoMode) {
         try {
@@ -225,6 +239,8 @@ export function useSubprofileMutations() {
   });
 
   const unpublish = useMutation<SubprofileDTO, Error, string>({
+    // SubprofilePublishPanel toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (id) => {
       if (!demoMode) return unpublishSubprofile(id);
       const { mockSubprofileById } = await import("../data/subprofiles.data");
@@ -240,6 +256,8 @@ export function useSubprofileMutations() {
   });
 
   const remove = useMutation<{ ok: true }, Error, string>({
+    // MySubprofilesPage toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (id) => (demoMode ? { ok: true } : deleteSubprofile(id)),
     onSuccess: invalidateAll,
   });

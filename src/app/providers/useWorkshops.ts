@@ -1,43 +1,20 @@
-import { createContext, useContext, useMemo } from "react";
+import { useMemo } from "react";
 import {
   WORKSHOPS,
   type Workshop,
 } from "../../features/economy/workshops.data";
-import { type WorkshopDraft } from "../../features/economy/addWorkshop.build";
 import { useWorkshops as useWorkshopsQuery } from "../../features/economy/api/useWorkshops";
-import { type WorkshopRsvpStore } from "../../features/economy/api/workshopRsvp.hooks";
 import { useDemoMode } from "./DemoModeProvider";
+import { useWorkshopsActions, type WorkshopsActions } from "./workshopsContext";
 
-/**
- * The session overlay: workshops listed, edited or deleted in this browser
- * session, plus the mutators. Deliberately carries NO catalogue and no query
- * state — those come from `useWorkshops()`, the composition hook below.
- */
-export interface WorkshopsContextValue {
-  /** Workshops listed in this session, newest first. */
-  added: Workshop[];
-  /** Session-local edits, by workshop id. */
-  edited: Record<string, Workshop>;
-  /** Ids deleted in this session. */
-  removed: string[];
-  /**
-   * List a workshop from the form draft. Resolves the created workshop, or
-   * `null` when the write failed — callers must not show a success panel on
-   * `null`.
-   */
-  addWorkshop: (draft: WorkshopDraft) => Promise<Workshop | null>;
-  /**
-   * Edit a workshop you host. Resolves the updated workshop, or `null` when the
-   * write failed — callers must not show a success state on `null`.
-   */
-  updateWorkshop: (id: string, draft: WorkshopDraft) => Promise<Workshop | null>;
-  /** Delete a workshop you host. Resolves false when the write failed. */
-  deleteWorkshop: (id: string) => Promise<boolean>;
-}
-
-/** Overlay + bookings: everything a component can do without reading the
- *  catalogue, and therefore without triggering GET /workshops. */
-export type WorkshopsActions = WorkshopsContextValue & WorkshopRsvpStore;
+// The session-overlay Context + its types (`WorkshopsContextValue`,
+// `WorkshopsActions`, `WorkshopsContext`, `useWorkshopsActions`) live in
+// `workshopsContext.ts`, not here — `WorkshopsProvider` (always mounted at the
+// app root) only needs those, and this file's own top-level `WORKSHOPS` import
+// (below, for the demo-mode total) must not ride along into the entry chunk
+// just because the Provider needs the Context object. Re-exported here so
+// existing `useWorkshopsActions` importers of this module keep working.
+export { useWorkshopsActions, type WorkshopsActions };
 
 /** The catalogue joined to the overlay — the shape readers have always had. */
 export interface WorkshopsValue extends WorkshopsActions {
@@ -51,21 +28,6 @@ export interface WorkshopsValue extends WorkshopsActions {
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
   getWorkshop: (id: string) => Workshop | undefined;
-}
-
-export const WorkshopsContext = createContext<WorkshopsActions | null>(null);
-
-/**
- * The session overlay and mutators, with NO catalogue subscription — so calling
- * this never triggers GET /workshops. Use it from anything that acts on a
- * workshop (RSVP, edit, delete) rather than rendering the catalogue.
- */
-export function useWorkshopsActions(): WorkshopsActions {
-  const ctx = useContext(WorkshopsContext);
-  if (!ctx) {
-    throw new Error("useWorkshops must be used within WorkshopsProvider");
-  }
-  return ctx;
 }
 
 /**

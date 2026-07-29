@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { FiSmartphone, FiMonitor, FiExternalLink, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SimFlow } from "./simulations.data";
 import styles from "./SimulationPreviewModal.module.css";
 
@@ -18,6 +19,7 @@ export function SimulationPreviewModal({
   onClose: () => void;
 }) {
   useScrollLock();
+  const { t } = useTranslation();
   const [device, setDevice] = useState<Device>("desktop");
 
   useEffect(() => {
@@ -43,18 +45,22 @@ export function SimulationPreviewModal({
         className={styles.modal}
         role="dialog"
         aria-modal="true"
-        aria-label={`Preview: ${flow.title}`}
+        aria-label={t("settings:previewModal.ariaLabel", {
+          title: flow.title,
+        })}
       >
         <header className={styles.bar}>
           <div className={styles.title}>
-            <span className={styles.kicker}>Preview</span>
+            <span className={styles.kicker}>
+              {t("settings:previewModal.kicker")}
+            </span>
             {flow.title}
           </div>
           <div className={styles.controls}>
             <div
               className={styles.deviceToggle}
               role="group"
-              aria-label="Preview width"
+              aria-label={t("settings:previewModal.deviceGroupAriaLabel")}
             >
               <button
                 type="button"
@@ -67,7 +73,7 @@ export function SimulationPreviewModal({
                 onClick={() => setDevice("mobile")}
                 aria-pressed={device === "mobile"}
               >
-                <FiSmartphone aria-hidden /> Mobile
+                <FiSmartphone aria-hidden /> {t("settings:previewModal.mobile")}
               </button>
               <button
                 type="button"
@@ -80,17 +86,18 @@ export function SimulationPreviewModal({
                 onClick={() => setDevice("desktop")}
                 aria-pressed={device === "desktop"}
               >
-                <FiMonitor aria-hidden /> Desktop
+                <FiMonitor aria-hidden /> {t("settings:previewModal.desktop")}
               </button>
             </div>
             <Link to={`${flow.to}?from=sim`} className={styles.openFull}>
-              <FiExternalLink aria-hidden /> Open full screen
+              <FiExternalLink aria-hidden />{" "}
+              {t("settings:previewModal.openFullScreen")}
             </Link>
             <button
               type="button"
               className={styles.close}
               onClick={onClose}
-              aria-label="Close preview"
+              aria-label={t("settings:previewModal.closeAriaLabel")}
             >
               <FiX aria-hidden />
             </button>

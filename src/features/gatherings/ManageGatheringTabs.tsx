@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiSend } from "react-icons/fi";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, Tabs } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -182,6 +182,7 @@ function AttendeesTab({ slug }: { slug: string }) {
         <input
           className={styles.attSearch}
           type="text"
+          aria-label={t("gatherings:manage.attendees.searchPlaceholder")}
           placeholder={t("gatherings:manage.attendees.searchPlaceholder")}
         />
         <Button
@@ -239,8 +240,8 @@ function AttendeesTab({ slug }: { slug: string }) {
               </div>
             </div>
             <div className={styles.attActions}>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 aria-label={t("gatherings:manage.attendees.removeAria", {
                   name: attendee.name,
                 })}
@@ -253,7 +254,7 @@ function AttendeesTab({ slug }: { slug: string }) {
                 }
               >
                 {t("gatherings:manage.attendees.removeCta")}
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -286,8 +287,8 @@ function AttendeesTab({ slug }: { slug: string }) {
               </div>
             </div>
             <div className={styles.attActions}>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 aria-label={t("gatherings:manage.attendees.promoteAria", {
                   name: attendee.name,
                 })}
@@ -302,7 +303,7 @@ function AttendeesTab({ slug }: { slug: string }) {
                 }
               >
                 {t("gatherings:manage.attendees.promoteCta")}
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -521,13 +522,13 @@ export function ManageGatheringSidebar({
           </div>
           <div className={styles.shareRow}>
             <div className={styles.shareUrl}>{SHARE_URL}</div>
-            <button
-              type="button"
+            <Button
+              variant="primary"
               className={styles.copyBtn}
               onClick={onCopyLink}
             >
               {t("gatherings:manage.sidebar.copyCta")}
-            </button>
+            </Button>
           </div>
           <Link className={styles.sbViewLink} to={GATHERING}>
             {t("gatherings:manage.sidebar.viewListingCta")} →
@@ -557,6 +558,8 @@ interface ManageGatheringTabsProps {
   onUpdateDescription: (value: string) => void;
 }
 
+const TAB_ORDER: Tab[] = ["overview", "attendees", "messages", "settings"];
+
 const TAB_LABEL_KEYS: Record<Tab, string> = {
   overview: "gatherings:manage.tabs.overview",
   attendees: "gatherings:manage.tabs.attendees",
@@ -577,22 +580,16 @@ export function ManageGatheringTabs({
   const [tab, setTab] = useState<Tab>(initialTab);
   return (
     <div>
-      <div className={styles.tabBar}>
-        {(["overview", "attendees", "messages", "settings"] as Tab[]).map(
-          (tabId) => (
-            <button
-              key={tabId}
-              type="button"
-              className={[styles.tabBtn, tab === tabId && styles.tabBtnActive]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setTab(tabId)}
-            >
-              {t(TAB_LABEL_KEYS[tabId])}
-            </button>
-          ),
-        )}
-      </div>
+      <Tabs
+        variant="underline"
+        className={styles.tabBar}
+        tabs={TAB_ORDER.map((tabId) => ({
+          id: tabId,
+          label: t(TAB_LABEL_KEYS[tabId]),
+        }))}
+        active={tab}
+        onChange={(id) => setTab(id as Tab)}
+      />
       {tab === "overview" && (
         <OverviewTab
           details={details}

@@ -9,6 +9,7 @@ import { useSubmitPartnerForm } from "./useSubmitPartnerForm";
 import { useSubmitPartnerApplication } from "./api/useSubmitPartnerApplication";
 import { SubmitPartnerFields } from "./SubmitPartnerFields";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { APPLY_TIPS } from "./submitPartnerApplication.data";
 import styles from "./SubmitPartnerApplicationPage.module.css";
 
@@ -43,32 +44,34 @@ export function SubmitPartnerApplicationPage() {
       <section className={styles.section}>
         <div className="wrap">
           <div className={styles.head}>
-            <div className={styles.eye}>Partners · Apply</div>
+            <div className={styles.eye}>
+              {t("marketing:submitPartner.hero.eyebrow")}
+            </div>
             <h1 className={styles.title}>
-              Apply to <em>partner.</em>
+              <Translation
+                i18nKey="marketing:submitPartner.hero.title"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.sub}>
-              QueerPulse partnerships are operational, not promotional. Tell us
-              who you are and what you do — honestly — and we'll read every
-              word.
+              {t("marketing:submitPartner.hero.sub")}
             </p>
           </div>
 
           {submitted ? (
             <FadeIn className={styles.successWrap}>
               <SuccessPanel
-                title="Application"
-                em="received."
-                closeLabel="Back to partners →"
+                title={t("marketing:submitPartner.success.title")}
+                em={t("marketing:submitPartner.success.em")}
+                closeLabel={t("marketing:submitPartner.success.closeLabel")}
                 onClose={() => void navigate(routes.partners)}
                 steps={[
-                  "It's pending review with the partnerships team",
-                  "We read every application, not just the tidy ones",
-                  "We'll be in touch — a yes, a not-yet, or a question",
+                  t("marketing:submitPartner.success.step1"),
+                  t("marketing:submitPartner.success.step2"),
+                  t("marketing:submitPartner.success.step3"),
                 ]}
               >
-                Thank you for reaching out. Your application is in — nothing
-                goes live until we've talked it through with you.
+                {t("marketing:submitPartner.success.body")}
               </SuccessPanel>
             </FadeIn>
           ) : (
@@ -84,10 +87,12 @@ export function SubmitPartnerApplicationPage() {
                     disabled={submitApp.isPending}
                     aria-busy={submitApp.isPending}
                   >
-                    {submitApp.isPending ? "Sending…" : "Submit application →"}
+                    {submitApp.isPending
+                      ? t("marketing:submitPartner.actions.sending")
+                      : t("marketing:submitPartner.actions.submit")}
                   </Button>
                   <Button variant="ghost" to={routes.partners}>
-                    Cancel
+                    {t("marketing:submitPartner.actions.cancel")}
                   </Button>
                 </div>
               </form>

@@ -2,13 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiSearch, FiCornerDownLeft } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks/useScrollLock";
-import { Avatar } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { memberAvatar } from "./data/members";
 import { linkToPath, routes } from "../../app/routeMap";
-import { TYPE_ICON, TYPE_LABEL_KEY, type SearchItem } from "./search.data";
+import { type SearchItem } from "./search.data";
+import { CommandPaletteResults } from "./CommandPaletteResults";
 import { useSearchData } from "./api/useSearchData";
 import styles from "./CommandPalette.module.css";
 
@@ -141,13 +139,21 @@ export function CommandPalette() {
             role="combobox"
             aria-expanded
             aria-controls="qp-cmd-results"
+            // Voice the active row to screen readers as Arrow keys move it. The
+            // ids match the `qp-cmd-option-${index}` scheme on each listbox row;
+            // only point at one while the results list is actually rendered.
+            aria-activedescendant={
+              !comingSoon && results.length > 0
+                ? `qp-cmd-option-${activeIndex}`
+                : undefined
+            }
             placeholder={t("members:commandPalette.placeholder")}
             value={query}
             readOnly={comingSoon}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
           />
-          <kbd className={styles.kbd}>esc</kbd>
+          <kbd className={styles.kbd}>{t("members:commandPalette.escKey")}</kbd>
         </div>
 
         {comingSoon ? (
@@ -166,77 +172,15 @@ export function CommandPalette() {
             </p>
           </div>
         ) : (
-          <>
-            {!q && (
-              <div className={styles.recents}>
-                {recents.slice(0, 5).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    className={styles.recentChip}
-                    onClick={() => setQuery(r)}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <ul className={styles.results} id="qp-cmd-results" role="listbox">
-              {results.length === 0 && (
-                <li className={styles.noResults}>
-                  {t("members:commandPalette.noMatches")}
-                </li>
-              )}
-              {results.map((item, i) => {
-                const Icon = TYPE_ICON[item.t];
-                const avatar = item.slug ? memberAvatar(item.slug) : undefined;
-                return (
-                  <li
-                    key={`${item.t}-${item.name}`}
-                    role="option"
-                    aria-selected={i === activeIndex}
-                  >
-                    <button
-                      type="button"
-                      className={[
-                        styles.row,
-                        i === activeIndex && styles.rowActive,
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onMouseEnter={() => setActive(i)}
-                      onClick={() => goToItem(item)}
-                    >
-                      {avatar ? (
-                        <Avatar
-                          initials={avatar.initials}
-                          tint={avatar.tint}
-                          src={avatar.photo}
-                          alt={item.name}
-                          size={34}
-                        />
-                      ) : (
-                        <span className={styles.rowIcon} aria-hidden>
-                          <Icon />
-                        </span>
-                      )}
-                      <span className={styles.rowBody}>
-                        <span className={styles.nameRow}>
-                          <span className={styles.rowName}>{item.name}</span>
-                          <MemberStaffBadge slug={item.slug} />
-                        </span>
-                        <span className={styles.rowSub}>{item.sub}</span>
-                      </span>
-                      <span className={styles.rowType}>
-                        {t(TYPE_LABEL_KEY[item.t])}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </>
+          <CommandPaletteResults
+            q={q}
+            recents={recents}
+            setQuery={setQuery}
+            results={results}
+            activeIndex={activeIndex}
+            setActive={setActive}
+            goToItem={goToItem}
+          />
         )}
 
         {!comingSoon && (

@@ -28,6 +28,31 @@ export const messages: Catalog = {
   "deleteChat.confirmCta": "Apagar conversa",
   "deleteChat.cancelCta": "Cancelar",
 
+  // GIF picker (Composer + GifPicker)
+  "gif.open": "Enviar um GIF",
+  "gif.panelLabel": "Seletor de GIF",
+  "gif.searchPlaceholder": "Procurar GIFs",
+  "gif.loading": "A carregar GIFs…",
+  "gif.empty": "Nenhum GIF encontrado",
+  "gif.error": "Não foi possível carregar os GIFs — tenta de novo",
+  "gif.loadMore": "Ver mais",
+  "gif.poweredBy": "Com tecnologia KLIPY",
+  "gif.comingSoonTitle": "Os GIFs estão a chegar",
+  "gif.comingSoonHint": "Estamos a preparar a pesquisa de GIFs — volta em breve para dar movimento às tuas mensagens.",
+
+  // Atalhos — o "?" no compositor que lista os símbolos de menção. Tocar numa
+  // linha insere o símbolo na mensagem para abrir a sugestão automática.
+  "shortcuts.open": "Atalhos",
+  "shortcuts.panelLabel": "Atalhos de menção",
+  "shortcuts.title": "Atalhos",
+  "shortcuts.hint": "Escreve um símbolo e depois um nome para o ligar.",
+  "shortcuts.member": "Mencionar um membro",
+  "shortcuts.community": "Ligar uma comunidade",
+  "shortcuts.topic": "Etiquetar um tópico",
+  "shortcuts.business": "Ligar um negócio",
+  "shortcuts.event": "Ligar um evento",
+  "shortcuts.thread": "Ligar um tópico do fórum",
+
   // Pesquisa na caixa de entrada (MessagesSearchResults) — uma caixa, dois tipos
   // de correspondência: conversas por nome e mensagens pelo texto. `{query}` é o
   // termo escrito.
@@ -93,6 +118,8 @@ export const messages: Catalog = {
   // Overlay de pressão longa/clique direito (MessageActionOverlay) — reutiliza
   // actions.report/actions.delete acima para os seus próprios itens de menu.
   "actions.menuLabel": "Ações da mensagem",
+  "actions.overlayLabel": "Opções da mensagem",
+  "actions.reactionsLabel": "Reagir à mensagem",
   "actions.reply": "Responder",
   "actions.forward": "Reencaminhar",
   // Mostrado acima de uma bolha cujo conteúdo foi reencaminhado de outra conversa.
@@ -181,8 +208,6 @@ export const messages: Catalog = {
   "group.promote": "Tornar admin",
   "group.demote": "Remover admin",
   "group.remove": "Remover",
-  "group.avatarPlaceholder": "URL da foto do grupo (opcional)",
-  "group.avatarAria": "URL da foto do grupo",
   "group.avatarLabel": "Foto do grupo",
   // Recibo de grupo "Visto por N" (plural CLDR: _one / _other) — a linha sob a
   // própria mensagem e o título da folha.

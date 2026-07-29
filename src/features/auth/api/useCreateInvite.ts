@@ -20,6 +20,8 @@ export interface CreatedInvite {
 export function useCreateInvite() {
   const { demoMode } = useDemoMode();
   return useMutation<CreatedInvite, Error, CreateInvitePayload>({
+    // InviteLinkPanel toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (payload) => {
       if (demoMode) {
         return {

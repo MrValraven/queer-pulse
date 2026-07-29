@@ -1,0 +1,12 @@
+/* EventsHubPage — page-level rhythm only; every section (hero, tabs, each
+   view) owns its own styles.
+
+   `--hub-tabs-h` is the real rendered height of EventsHubTabs' sticky bar:
+   `.list` padding-block 10px + 10px around its 44px-tall `.tab` pill = 64px
+   = 4rem (see EventsHubTabs.module.css). Scoping it here, on the hub root,
+   lets any sticky content further down the tree (BrowseView's month
+   subheads) stick just below the tabs bar instead of both targeting
+   `inset-block-start: 0` and overlapping/scrolling underneath it. */
+.root {
+  --hub-tabs-h: 4rem;
+}

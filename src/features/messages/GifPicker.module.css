@@ -1,0 +1,114 @@
+.panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: min(340px, calc(100vw - 32px));
+  max-height: 360px;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  /* Fixed plum shadow (matches --shadow-* tokens) — NOT --ink-rgb, which flips
+     to a light channel in dark mode and would cast a white glow around the panel. */
+  box-shadow: 0 4px 14px rgba(45, 27, 61, 0.22);
+  overflow: hidden;
+  animation: gifPanelIn var(--dur-fast) var(--ease);
+}
+@keyframes gifPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+.search {
+  margin: 10px;
+  padding: 9px 12px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--cream);
+}
+.search:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 10px 10px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.tile {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: var(--radius-badge);
+  overflow: hidden;
+  background: var(--cream);
+  aspect-ratio: 1 / 1;
+}
+.tileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.state {
+  padding: 16px;
+  text-align: center;
+  color: rgba(var(--ink-rgb), 0.6);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+}
+.comingSoon {
+  padding: 18px 16px 4px;
+  text-align: center;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+}
+.comingSoonHint {
+  padding: 0 16px 18px;
+  text-align: center;
+  color: rgba(var(--ink-rgb), 0.6);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+.loadMore {
+  display: block;
+  margin: 10px auto 4px;
+  padding: 7px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  cursor: pointer;
+}
+.attribution {
+  padding: 7px 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: rgba(var(--ink-rgb), 0.5);
+  text-align: right;
+}

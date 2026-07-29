@@ -27,6 +27,9 @@ export function LocalBusinessCard({
   index: number;
 }) {
   const { t } = useTranslation();
+  // Unmapped categories (e.g. one the backend added the client hasn't mapped)
+  // fall back to the raw id rather than passing `undefined` to `t`, which crashes.
+  const categoryLabelKey = CAT_LABEL_KEYS[place.cat];
   return (
     <FadeIn
       as={Link}
@@ -51,7 +54,9 @@ export function LocalBusinessCard({
       </div>
       <div>
         <div className={s.name}>{place.name}</div>
-        <div className={s.cat}>{t(CAT_LABEL_KEYS[place.cat]!)}</div>
+        <div className={s.cat}>
+          {categoryLabelKey ? t(categoryLabelKey) : place.cat}
+        </div>
         <div className={s.hood}>
           <FiMapPin /> {place.hood}
         </div>

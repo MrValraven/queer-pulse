@@ -1,5 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import type { AvatarTone } from "./ui";
+import { portrait } from "./adminPeople.data";
 import type {
   GraphNode,
   MemberDetail,
@@ -103,6 +105,13 @@ export function VouchGraphPreview({
         <ArrowMarker id="vgArrowIn" fill="rgba(var(--plum-rgb), .5)" />
         <ArrowMarker id="vgArrowOut" fill="rgba(var(--accent-rgb), .65)" />
         <ArrowMarker id="vgArrowMutual" fill="rgba(var(--jade-rgb), .65)" />
+        {/* circular clips so node portraits render as discs, not squares */}
+        <clipPath id={`vgPreviewClip${NODE_R}`}>
+          <circle r={NODE_R} />
+        </clipPath>
+        <clipPath id={`vgPreviewClip${CENTER_R}`}>
+          <circle r={CENTER_R} />
+        </clipPath>
       </defs>
 
       {placed.map((p, i) => {
@@ -131,9 +140,23 @@ export function VouchGraphPreview({
       })}
 
       {placed.map((p, i) => (
-        <PreviewNode key={i} avatar={p.node} x={p.x} y={p.y} r={NODE_R} />
+        <PreviewNode
+          key={i}
+          avatar={p.node}
+          x={p.x}
+          y={p.y}
+          r={NODE_R}
+          src={p.node.avatarUrl ?? undefined}
+        />
       ))}
-      <PreviewNode avatar={graph.center} x={CX} y={CY} r={CENTER_R} focus />
+      <PreviewNode
+        avatar={graph.center}
+        x={CX}
+        y={CY}
+        r={CENTER_R}
+        focus
+        src={graph.center.avatarUrl ?? portrait(name)}
+      />
     </svg>
   );
 }
@@ -160,15 +183,35 @@ function PreviewNode({
   y,
   r,
   focus = false,
+  src,
 }: {
   avatar: VouchAvatar;
   x: number;
   y: number;
   r: number;
   focus?: boolean;
+  /** portrait URL, when the member has one — else falls back to initials */
+  src?: string;
 }) {
   const ink = AVATAR_TONE_INK[avatar.tone];
   const strokeWidth = focus ? 2.5 : 2;
+  const photo = resolveAvatarSrc(src, r * 2);
+  if (photo) {
+    return (
+      <g transform={`translate(${x} ${y})`}>
+        <image
+          href={photo}
+          x={-r}
+          y={-r}
+          width={r * 2}
+          height={r * 2}
+          clipPath={`url(#vgPreviewClip${r})`}
+          preserveAspectRatio="xMidYMid slice"
+        />
+        <circle r={r} fill="none" stroke={ink.stroke} strokeWidth={strokeWidth} />
+      </g>
+    );
+  }
   return (
     <g transform={`translate(${x} ${y})`}>
       <circle r={r} fill={ink.fill} stroke={ink.stroke} strokeWidth={strokeWidth} />

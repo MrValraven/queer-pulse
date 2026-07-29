@@ -12,8 +12,11 @@ function splitName(name: string): { first: string; last: string } {
   return { first: parts[0] ?? "", last: parts.length > 1 ? parts.at(-1)! : "" };
 }
 
-/** "9:14 PM" / weekday / date label the thread rows + bubbles show. */
-function timeLabel(iso: string): string {
+/** "9:14 PM" / weekday / date label the thread rows + bubbles show. Exported
+ *  for `patchConversationPreview` (`shared/api/messageCache.ts`), which needs
+ *  the same formatting to patch a socket/send frame into the inbox row's
+ *  `time` field without a `["conversations"]` refetch. */
+export function timeLabel(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   const now = new Date();
@@ -62,6 +65,17 @@ function groupPreview(last: MessageResponse | null): string {
   const first = last.sender.displayName.trim().split(/\s+/)[0] ?? "";
   if (last.kind === "system") return `${first} ${last.body}`.trim();
   return first ? `${first}: ${last.body}` : last.body;
+}
+
+/** Inbox-row preview text for a just-sent/received message, matching group vs
+ *  DM formatting. Exported for `patchConversationPreview`
+ *  (`shared/api/messageCache.ts`), which patches a live socket/send frame into
+ *  the `["conversations"]` cache in place instead of refetching. */
+export function previewForMessage(
+  isGroup: boolean,
+  message: MessageResponse,
+): string {
+  return isGroup ? groupPreview(message) : message.body;
 }
 
 /** ConversationResponse (group) → the inbox `Conversation` row. */
@@ -162,7 +176,13 @@ export function messageToChat(
     canPin: dto.canPin,
     // System message → a centred event pill. The system message's sender IS the
     // actor (see `postSystemMessage`), so `isMe` doubles as "the actor is you".
-    kind: dto.kind === "system" ? "system" : undefined,
+    kind:
+      dto.kind === "system"
+        ? "system"
+        : dto.kind === "gif"
+          ? "gif"
+          : undefined,
+    attachment: dto.attachment ?? undefined,
     systemEvent: dto.systemEvent
       ? {
           type: dto.systemEvent.type,

@@ -78,7 +78,7 @@ export function Avatar({
           <svg width={9} height={9} viewBox="0 0 24 24" fill="none" aria-hidden>
             <polyline
               points="20 6 9 17 4 12"
-              stroke="#fff"
+              style={{ stroke: "var(--paper)" }}
               strokeWidth={3}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -108,7 +108,10 @@ export function AvatarStack({
     >
       {avatars.map((avatar, index) => (
         <Avatar
-          key={index}
+          // Stable key: photo URL is unique per avatar (so Avatar's internal
+          // imgFailed state can't bleed to the wrong row on reorder/filter);
+          // photo-less entries render no <img> so an index tiebreak is harmless.
+          key={avatar.src ?? `${avatar.initials}-${index}`}
           initials={avatar.initials}
           tint={avatar.tint}
           src={avatar.src}

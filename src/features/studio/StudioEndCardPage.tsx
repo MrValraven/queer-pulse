@@ -1,42 +1,13 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import {
+  DOT_COORDS,
+  HAIRLINE_PAIRS,
+  SPINE_COUNT,
+  JADE_BARS,
+} from "./StudioEndCardPage.data";
 import styles from "./StudioEndCardPage.module.css";
-
-/* Fixed constellation dot coordinates (in the 1920×1080 frame). */
-const DOT_COORDS: ReadonlyArray<readonly [number, number]> = [
-  [300, 180],
-  [470, 120],
-  [640, 230],
-  [250, 330],
-  [560, 360],
-  [1300, 160],
-  [1480, 250],
-  [1660, 150],
-  [1380, 330],
-  [1620, 360],
-  [920, 120],
-  [1050, 250],
-  [760, 310],
-];
-
-/* Hairline pairs — indices into DOT_COORDS. */
-const HAIRLINE_PAIRS: ReadonlyArray<readonly [number, number]> = [
-  [0, 1],
-  [1, 2],
-  [0, 3],
-  [2, 4],
-  [5, 6],
-  [6, 7],
-  [5, 8],
-  [7, 9],
-  [10, 11],
-  [11, 12],
-];
-
-const SPINE_COUNT = 150;
-/* The two bars near the middle rendered in jade-light. */
-const JADE_BARS = new Set([96, 97]);
 
 export function StudioEndCardPage() {
   const { t } = useTranslation();

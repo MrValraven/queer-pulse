@@ -45,6 +45,7 @@ function AboutSection({ fields, setField }: SectionProps) {
         <FormField label={t("economy:jobApply.fullName")} required>
           <input
             type="text"
+            autoComplete="name"
             value={fields.name}
             onChange={(e) => setField("name", e.target.value)}
           />
@@ -64,6 +65,7 @@ function AboutSection({ fields, setField }: SectionProps) {
         <FormField label={t("economy:jobApply.email")} required>
           <input
             type="email"
+            autoComplete="email"
             value={fields.email}
             onChange={(e) => setField("email", e.target.value)}
           />

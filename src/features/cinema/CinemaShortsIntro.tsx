@@ -59,7 +59,7 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
           tint="coral"
           width="100%"
           height="100%"
-          placeholder="spotlight poster"
+          placeholder={t("cinema:slot.spotlightPoster")}
           style={{ position: "absolute", inset: 0 }}
         />
         <span className={styles.spBadge}>

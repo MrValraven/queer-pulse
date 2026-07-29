@@ -1,5 +1,15 @@
 import { API_BASE_URL } from "./config";
 
+// The backend serves its domain API under a URI version prefix
+// (`app.enableVersioning({ type: URI, defaultVersion: '1' })`). Every call made
+// through the generic `request()` builder below is prefixed with this so it
+// resolves to `/v1/...`. The two DIRECT `fetch()` calls in this file —
+// `/csrf-token` and `/auth/refresh` — deliberately DO NOT use this prefix:
+// their backend controllers are `@Version(VERSION_NEUTRAL)` and keep answering
+// at their original unversioned paths (they're referenced outside this builder,
+// so their URLs are fixed). Bumping the API version = change this one constant.
+const API_VERSION_PREFIX = "/v1";
+
 /** Normalized API failure carrying the HTTP status. */
 export class ApiError extends Error {
   status: number;
@@ -185,7 +195,7 @@ async function request<T>(
     if (csrfToken) headers["X-CSRF-Token"] = csrfToken;
   }
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
+  const res = await fetch(`${API_BASE_URL}${API_VERSION_PREFIX}${path}`, {
     method,
     credentials: "include",
     headers,

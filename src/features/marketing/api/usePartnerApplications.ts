@@ -48,6 +48,9 @@ export function useTriagePartnerApplication() {
     Error,
     { id: string; action: TriagePartnerApplicationDto["action"]; note?: string }
   >({
+    // AdminPartnerApplicationsPage toasts its own error, so silence the global
+    // duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, action, note }) => {
       if (demoMode) return null;
       return triagePartnerApplication(id, {

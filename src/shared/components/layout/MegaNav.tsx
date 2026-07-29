@@ -2,16 +2,13 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { FiChevronDown } from "react-icons/fi";
 import { NAV_MENUS, filterMenus } from "./navMenus";
-import { Button } from "../ui";
-import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useTranslation } from "../../i18n/useTranslation";
+import { MegaNavPanel } from "./MegaNavPanel";
 import styles from "./MegaNav.module.css";
 
 export function MegaNav() {
@@ -94,14 +91,20 @@ export function MegaNav() {
     }
   };
 
+  // Latest-ref so the listener effect re-runs only on openKey (its real trigger),
+  // not on every render where closeAndRestore is re-created, without suppressing
+  // the deps lint.
+  const closeAndRestoreRef = useRef(closeAndRestore);
+  useEffect(() => {
+    closeAndRestoreRef.current = closeAndRestore;
+  });
   useEffect(() => {
     if (!openKey) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeAndRestore();
+      if (event.key === "Escape") closeAndRestoreRef.current();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openKey]);
 
   const activeMenu = menus.find((menu) => menu.key === openKey) ?? null;
@@ -133,91 +136,22 @@ export function MegaNav() {
           >
             {t(menu.titleKey)}
             <span className={styles.chevron} aria-hidden>
-              ▾
+              <FiChevronDown />
             </span>
           </button>
         ))}
       </div>
 
-      {activeMenu &&
-        createPortal(
-          <>
-            <div
-              className={styles.overlay}
-              role="presentation"
-              onClick={closeMenu}
-            />
-            <div
-              id="mega-panel"
-              role="region"
-              aria-label={t("shared:megaNav.panelAria", {
-                menu: t(activeMenu.titleKey),
-              })}
-              className={styles.panel}
-              style={{ "--nudge-x": `${nudgeX}px` } as CSSProperties}
-              onMouseEnter={cancelClose}
-              onMouseLeave={scheduleClose}
-            >
-              <div
-                key={activeMenu.key}
-                className={styles.inner}
-                style={{ "--enter-x": enterX } as CSSProperties}
-              >
-                {activeMenu.feature && (
-                  <Link
-                    to={linkToPath(activeMenu.feature.href)}
-                    className={styles.feature}
-                    onClick={closeMenu}
-                  >
-                    <span className={styles.featureEyebrow}>
-                      {t(activeMenu.feature.eyebrowKey)}
-                    </span>
-                    <span className={styles.featureTitle}>
-                      {t(activeMenu.feature.titleKey)}
-                    </span>
-                    <span className={styles.featureBody}>
-                      {t(activeMenu.feature.bodyKey)}
-                    </span>
-                    <span className={styles.featureCta}>
-                      {t(activeMenu.feature.ctaKey)}
-                      <span aria-hidden>→</span>
-                    </span>
-                  </Link>
-                )}
-                {activeMenu.columns.map((column) => (
-                  <div className={styles.col} key={column.headKey}>
-                    <div className={styles.colHead}>{t(column.headKey)}</div>
-                    {column.links.map((link) => (
-                      <Link
-                        key={link.labelKey}
-                        to={linkToPath(link.href)}
-                        className={[
-                          styles.link,
-                          link.featured && styles.linkFeatured,
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                        onClick={closeMenu}
-                      >
-                        {t(link.labelKey)}
-                      </Link>
-                    ))}
-                    {column.cta && (
-                      <Button
-                        to={linkToPath(column.cta.href)}
-                        className={styles.cta}
-                        onClick={closeMenu}
-                      >
-                        {t(column.cta.labelKey)}
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>,
-          document.body,
-        )}
+      {activeMenu && (
+        <MegaNavPanel
+          activeMenu={activeMenu}
+          nudgeX={nudgeX}
+          enterX={enterX}
+          onClose={closeMenu}
+          onPanelMouseEnter={cancelClose}
+          onPanelMouseLeave={scheduleClose}
+        />
+      )}
     </>
   );
 }

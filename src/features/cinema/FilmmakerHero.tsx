@@ -24,8 +24,10 @@ export function FilmmakerHero({ filmmaker, onTip }: FilmmakerHeroProps) {
               width="100%"
               height="100%"
               radius={22}
-              placeholder="filmmaker portrait · 3:4"
+              placeholder={t("cinema:slot.filmmakerPortrait")}
               style={{ position: "absolute", inset: 0 }}
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
 

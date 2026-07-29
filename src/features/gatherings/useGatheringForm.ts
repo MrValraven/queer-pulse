@@ -20,8 +20,14 @@ export function useGatheringForm() {
   const [access, setAccess] = useState<Set<string>>(new Set());
   const [accessNotes, setAccessNotes] = useState("");
   const [free, setFree] = useState(false);
+  const [solPrice, setSolPrice] = useState("0");
   const [stdPrice, setStdPrice] = useState("10");
   const [supPrice, setSupPrice] = useState("18");
+  // Per-tier available spots (were uncontrolled defaultValue-only inputs whose
+  // values never reached form state — anything the organiser typed was dropped).
+  const [solSpots, setSolSpots] = useState("3");
+  const [stdSpots, setStdSpots] = useState("8");
+  const [supSpots, setSupSpots] = useState("5");
   const [included, setIncluded] = useState("");
   const [bring, setBring] = useState("");
   const [checks, setChecks] = useState<boolean[]>([false, false, false]);
@@ -73,10 +79,18 @@ export function useGatheringForm() {
     setAccessNotes,
     free,
     setFree,
+    solPrice,
+    setSolPrice,
     stdPrice,
     setStdPrice,
     supPrice,
     setSupPrice,
+    solSpots,
+    setSolSpots,
+    stdSpots,
+    setStdSpots,
+    supSpots,
+    setSupSpots,
     included,
     setIncluded,
     bring,

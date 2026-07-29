@@ -1438,4 +1438,37 @@ export const gatherings: Catalog = {
   "checkout.timeline.arrive.title": "Chegas e comemos",
   "checkout.timeline.arrive.body":
     "Vem como és. {host} trata do resto — três horas sem pressa, juntos.",
+
+  // ── Events Hub (EventsHubPage + hub/*) ────────────────────────────────────
+  "hub.tabs.highlights": "Destaques",
+  "hub.tabs.browse": "Explorar",
+  "hub.tabs.calendar": "Calendário",
+  "hub.hero.eyebrow": "O que há",
+  "hub.hero.title": "Encontra a tua gente esta semana",
+  "hub.hero.subtitle":
+    "Cada convívio, evento e motivo para saíres de casa — tudo num só lugar.",
+  "hub.hero.tagline.0": "A tua gente já está aqui.",
+  "hub.hero.tagline.1": "Há sempre alguém novo para conhecer.",
+  "hub.hero.tagline.2": "Vem como és.",
+  "hub.hero.tagline.3": "Salas pequenas, grandes boas-vindas.",
+  "hub.hero.seeAll": "Vê tudo",
+  "hub.hero.rsvp": "Dá uma vista de olhos",
+  "hub.bucket.tonight": "Hoje à noite",
+  "hub.bucket.weekend": "Este fim de semana",
+  "hub.bucket.week": "Esta semana",
+  "hub.bucket.later": "Em breve",
+  "hub.highlights.heading": "Vale a pena aparecer",
+  "hub.browse.heading": "Tudo o que há",
+  "hub.browse.loadMore": "Mostrar mais",
+  "hub.browse.empty": "Nada com esse filtro — experimenta outro.",
+  "hub.calendar.heading": "O mês de relance",
+  "hub.host.title": "Estás a <em>organizar</em> algo?",
+  "hub.host.body":
+    "Um jantar, uma leitura, um protesto, uma festa — seja o que for que organizes, ajudamos a que te encontrem.",
+  "hub.host.cta": "Organiza um encontro",
+  "hub.ways.heading": "Formas de te juntares",
+  "hub.empty.title": "Ainda nada no calendário.",
+  "hub.empty.body": "Aparecem coisas novas por aqui a toda a hora — podias organizar a primeira.",
+  "hub.card.cta": "Vê",
+  "hub.loading": "A ver o que há…",
 };

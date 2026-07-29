@@ -20,6 +20,8 @@ export interface CoopJoinRequestInput {
 export function useSubmitCoopJoinRequest() {
   const { demoMode } = useDemoMode();
   return useMutation<{ id: string } | null, Error, CoopJoinRequestInput>({
+    // JoinCoopModal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ slug, name, householdSize, note }) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 650));

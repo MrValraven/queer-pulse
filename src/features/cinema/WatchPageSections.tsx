@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { films } from "./data";
@@ -26,11 +27,76 @@ const FACTS_LABEL_KEYS: Record<string, string> = {
   Captions: "cinema:film.facts.captions",
 };
 
+// Focusable-descendant selector for the Tab focus-trap (mirrors Modal.tsx).
+const WATCH_OVERLAY_FOCUSABLE =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
   const { t } = useTranslation();
+  const cardRef = useRef<HTMLDivElement>(null);
+  // Latest-callback ref so the focus-setup effect runs once on mount (deps `[]`)
+  // without an inline `onDismiss` re-running the initial focus + trap on every
+  // parent render, which would yank focus back mid-interaction.
+  const onDismissRef = useRef(onDismiss);
+  useEffect(() => {
+    onDismissRef.current = onDismiss;
+  });
+  useScrollLock();
+
+  // Content-advisory dialog contract: Escape-to-dismiss, an initial focus into
+  // the card, a Tab focus-trap so keyboard/screen-reader users can't tab out to
+  // the inert page behind, and focus restore on close. (Mirrors Modal.tsx.)
+  useEffect(() => {
+    const card = cardRef.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const focusables = (): HTMLElement[] =>
+      card
+        ? Array.from(
+            card.querySelectorAll<HTMLElement>(WATCH_OVERLAY_FOCUSABLE),
+          ).filter((element) => element.offsetParent !== null)
+        : [];
+
+    const firstFocusable = focusables()[0];
+    if (firstFocusable) firstFocusable.focus();
+    else card?.focus();
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onDismissRef.current();
+        return;
+      }
+      if (event.key !== "Tab" || !card) return;
+      const items = focusables();
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      if (!firstItem || !lastItem) {
+        event.preventDefault();
+        card.focus();
+        return;
+      }
+      const activeElement = document.activeElement;
+      if (event.shiftKey && (activeElement === firstItem || activeElement === card)) {
+        event.preventDefault();
+        lastItem.focus();
+      } else if (!event.shiftKey && activeElement === lastItem) {
+        event.preventDefault();
+        firstItem.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      previouslyFocused?.focus?.();
+    };
+  }, []);
+
   return (
     <div className={styles.overlay}>
       <div
+        ref={cardRef}
+        tabIndex={-1}
         className={styles.overlayCard}
         role="dialog"
         aria-modal="true"
@@ -342,7 +408,7 @@ export function WatchBelow() {
                     width="100%"
                     height="100%"
                     radius={10}
-                    placeholder="poster"
+                    placeholder={t("cinema:slot.poster")}
                     style={{ position: "absolute", inset: 0 }}
                   />
                 </div>

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useRequiredFieldValidation } from "../../shared/hooks/useWizardForm";
 import type {
   Cause,
   Commit,
@@ -88,7 +89,6 @@ const REQUIRED: RequiredField[] = [
  */
 export function usePostOpportunityForm() {
   const [state, setState] = useState<PostOpportunityState>(EMPTY);
-  const [touched, setTouched] = useState(false);
 
   const set = useCallback(
     <K extends keyof PostOpportunityState>(
@@ -126,17 +126,25 @@ export function usePostOpportunityForm() {
       commitments: s.commitments.filter((_, idx) => idx !== i),
     }));
 
-  const missing = REQUIRED.filter((f) => !String(state[f]).trim());
-  const spotsNum = Number.parseInt(state.spotsTotal, 10);
-  const spotsValid = Number.isFinite(spotsNum) && spotsNum > 0;
-  const valid = missing.length === 0 && spotsValid;
+  const requiredValidation = useRequiredFieldValidation({
+    values: state,
+    requiredFields: REQUIRED,
+    buildError: () => "This field is required.",
+  });
+  const spotsNumber = Number.parseInt(state.spotsTotal, 10);
+  const spotsValid = Number.isFinite(spotsNumber) && spotsNumber > 0;
+  const valid = requiredValidation.isValid && spotsValid;
 
-  const errorFor = (f: RequiredField): string | null => {
-    if (!touched) return null;
-    if (f === "spotsTotal" && state.spotsTotal.trim() && !spotsValid) {
+  const errorFor = (field: RequiredField): string | null => {
+    if (
+      field === "spotsTotal" &&
+      state.spotsTotal.trim() &&
+      !spotsValid &&
+      requiredValidation.hasBeenSubmitted
+    ) {
       return "Enter a number of spots greater than zero.";
     }
-    return missing.includes(f) ? "This field is required." : null;
+    return requiredValidation.errorFor(field);
   };
 
   const toDto = (): CreateOpportunityDto => {
@@ -160,7 +168,7 @@ export function usePostOpportunityForm() {
       time: state.time.trim(),
       location: state.location.trim(),
       desc: state.description.trim(),
-      spotsTotal: spotsNum,
+      spotsTotal: spotsNumber,
       applyRole: state.applyRole.trim() || `${role} · ${org}`,
       ...(skills.length ? { skills } : {}),
       ...(why.length ? { why } : {}),
@@ -187,7 +195,7 @@ export function usePostOpportunityForm() {
     removeCommitment,
     valid,
     errorFor,
-    markTouched: () => setTouched(true),
+    markTouched: requiredValidation.markSubmitted,
     toDto,
   };
 }

@@ -25,6 +25,7 @@
 .rowMain {
   flex: 1 1 auto;
   min-width: 0;
+  cursor: pointer;
 }
 
 .rowTop {
@@ -52,4 +53,19 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+}
+
+.previewTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Contains the live-page preview inside the drawer body so its own cover/grid
+   layout scrolls within the modal rather than fighting the page. */
+.previewFrame {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: var(--cream);
 }

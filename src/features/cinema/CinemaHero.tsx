@@ -105,8 +105,10 @@ export function CinemaCover() {
           width="100%"
           height="100%"
           radius={0}
-          placeholder="cover film · poster"
+          placeholder={t("cinema:slot.coverFilm")}
           style={{ position: "absolute", inset: 0 }}
+          loading="eager"
+          fetchPriority="high"
         />
         <div className={styles.cvOverlay} />
         <div className={styles.cvMarks}>

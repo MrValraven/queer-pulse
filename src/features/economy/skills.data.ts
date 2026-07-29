@@ -44,8 +44,8 @@ export const SKILLS: Skill[] = [
     type: "offering",
     member: "andre",
     skill: "Film photography — getting started",
-    description: "Practical session: choosing a camera, loading film, developing your first roll. In the darkroom in Cais do Sodré.",
-    tags: ["Analog", "Darkroom", "Photography"],
+    description: "Practical session: choosing a camera, loading film, developing your first roll. In the studio in Cais do Sodré.",
+    tags: ["Analog", "Film", "Photography"],
     category: "creative",
   },
   {

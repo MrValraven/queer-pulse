@@ -23,17 +23,9 @@ import {
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { currentUser, fullName } from "../../../features/members/data/members";
 import { useTranslation } from "../../i18n/useTranslation";
+import { initialsFromName } from "../../lib/initials";
 import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
 import styles from "./AccountMenu.module.css";
-
-/** Initials from a name, e.g. "Tiago Costa" -> "TC". */
-function nameInitials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 0) return "";
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({
@@ -53,22 +45,36 @@ export function AccountMenu({
   placement?: "default" | "rail";
 }) {
   const { signOut, user } = useAuth();
-  // Prefer the live/demo signed-in user; fall back to props, then the mock.
+  const { demoMode, available, toggle } = useDemoMode();
+  // Prefer the live/demo signed-in user, then props. The mock persona
+  // ("Tiago") is a DEMO fixture — only fall back to it in demo mode, never in
+  // live, where a missing profile falls back to the account email instead so
+  // the demo identity can't leak into a real session.
   const profile = user?.profile;
+  const profileName = profile
+    ? `${profile.firstName} ${profile.lastName}`.trim()
+    : undefined;
   const name =
     nameProp ??
-    (profile
-      ? `${profile.firstName} ${profile.lastName}`.trim()
-      : fullName(currentUser));
-  const photo = photoProp ?? profile?.avatarUrl ?? currentUser.photo;
+    profileName ??
+    (demoMode ? fullName(currentUser) : (user?.email ?? ""));
+  const photo =
+    photoProp ??
+    profile?.avatarUrl ??
+    (demoMode ? currentUser.photo : undefined);
   const initials =
-    initialsProp ?? (profile ? nameInitials(name) : currentUser.initials);
-  const { demoMode, available, toggle } = useDemoMode();
+    initialsProp ??
+    (profile
+      ? initialsFromName(name)
+      : demoMode
+        ? currentUser.initials
+        : initialsFromName(name));
   const { role, setRole, canSwitch } = useTeamRole();
   const { navMode, setNavMode } = useNavMode();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -77,7 +83,11 @@ export function AccountMenu({
         setOpen(false);
     }
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      // Escape closes and restores focus to the trigger.
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
     }
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -94,10 +104,10 @@ export function AccountMenu({
         // sits on the right and also opens the menu.
         <div className={styles.railTrigger}>
           <button
+            ref={triggerRef}
             type="button"
             className={styles.railMain}
             onClick={() => setOpen((o) => !o)}
-            aria-haspopup="menu"
             aria-expanded={open}
           >
             <Avatar
@@ -114,7 +124,6 @@ export function AccountMenu({
               type="button"
               className={styles.railMini}
               onClick={() => setOpen((o) => !o)}
-              aria-haspopup="menu"
               aria-expanded={open}
               aria-label={t("shared:accountMenu.ariaLabel")}
             >
@@ -129,10 +138,10 @@ export function AccountMenu({
         </div>
       ) : (
         <button
+          ref={triggerRef}
           type="button"
           className={styles.trigger}
           onClick={() => setOpen((o) => !o)}
-          aria-haspopup="menu"
           aria-expanded={open}
         >
           <Avatar
@@ -143,7 +152,12 @@ export function AccountMenu({
             size={28}
           />
           <span className={styles.name}>{name.split(" ")[0]}</span>
-          <ChevronIcon open={open} />
+          <FiChevronDown
+            aria-hidden
+            className={[styles.chevron, open && styles.chevronOpen]
+              .filter(Boolean)
+              .join(" ")}
+          />
         </button>
       )}
 
@@ -209,7 +223,6 @@ function AccountMenuPanel({
       className={[styles.menu, placement === "rail" && styles.menuRail]
         .filter(Boolean)
         .join(" ")}
-      role="menu"
     >
       <div className={styles.header}>
         <Avatar
@@ -233,7 +246,6 @@ function AccountMenuPanel({
               <Tooltip key={action.to} label={actionLabel}>
                 <Link
                   to={action.to}
-                  role="menuitem"
                   className={styles.headerIcon}
                   aria-label={actionLabel}
                   onClick={onClose}
@@ -257,7 +269,6 @@ function AccountMenuPanel({
                   <Link
                     key={item.to}
                     to={item.to}
-                    role="menuitem"
                     className={styles.item}
                     onClick={onClose}
                   >
@@ -293,8 +304,7 @@ function AccountMenuPanel({
 
       <div className={styles.footer}>
         <Link
-          to="/"
-          role="menuitem"
+          to={routes.homepage}
           className={`${styles.item} ${styles.signOut}`}
           onClick={() => {
             onSignOut();
@@ -328,7 +338,6 @@ function RoleLinks({
       <>
         <Link
           to={routes.magazineEditor}
-          role="menuitem"
           className={styles.item}
           onClick={onNavigate}
         >
@@ -339,7 +348,6 @@ function RoleLinks({
         </Link>
         <Link
           to={routes.admin}
-          role="menuitem"
           className={styles.item}
           onClick={onNavigate}
         >
@@ -355,7 +363,6 @@ function RoleLinks({
     return (
       <Link
         to={modPanel(DEMO_MOD_SLUG)}
-        role="menuitem"
         className={styles.item}
         onClick={onNavigate}
       >
@@ -396,8 +403,7 @@ function AccountMenuControls({
       <div className={styles.divider} />
       <button
         type="button"
-        role="menuitemcheckbox"
-        aria-checked={demoMode}
+        aria-pressed={demoMode}
         className={styles.populate}
         disabled={!available}
         onClick={() => toggle()}
@@ -476,28 +482,5 @@ function AccountMenuControls({
         ))}
       </div>
     </>
-  );
-}
-
-function ChevronIcon({ open }: { open: boolean }) {
-  return (
-    <svg
-      className={[styles.chevron, open && styles.chevronOpen]
-        .filter(Boolean)
-        .join(" ")}
-      width={14}
-      height={14}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M6 9l6 6 6-6"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

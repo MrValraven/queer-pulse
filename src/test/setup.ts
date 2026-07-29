@@ -14,9 +14,9 @@ expect.extend(axeMatchers);
 // Declaration merging: the type parameter must match @vitest/expect's own
 // `interface Matchers<T = any>` exactly, or TS rejects the merge.
 declare module "vitest" {
-  /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type */
+  /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type */
   interface Matchers<T = any> extends axeMatchers.AxeMatchers {}
-  /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type */
+  /* eslint-enable @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type */
 }
 
 // ── jsdom polyfills ──────────────────────────────────────────────────────────

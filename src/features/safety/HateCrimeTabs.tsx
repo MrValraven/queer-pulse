@@ -158,7 +158,9 @@ function HateCrimeSidebar() {
           {t("safety:hateCrime.sidebar.legalTitle")}
         </div>
         <div className={styles.sbcItem}>
-          <div className={styles.sbcOrg}>ILGA Portugal</div>
+          <div className={styles.sbcOrg}>
+            {t("safety:hateCrime.sidebar.ilga.org")}
+          </div>
           <div className={styles.sbcRole}>
             {t("safety:hateCrime.sidebar.ilga.role")}
           </div>

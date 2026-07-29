@@ -89,6 +89,7 @@ export function cardDtoToMember(
     tone: cardDto.tone,
     pronoun: cardDto.pronouns ?? "",
     verified: cardDto.verified,
+    avatarUrl: cardDto.avatarUrl,
     openReportsCount: cardDto.openReportCount || undefined,
     statusTone: cardDto.verified ? "jade" : "coral",
     newThisWeek:
@@ -158,6 +159,7 @@ export function flaggedDtoToMember(
     handle: flaggedDto.handle,
     initials: flaggedDto.initials,
     tone: flaggedDto.tone,
+    avatarUrl: flaggedDto.avatarUrl,
     category,
     categoryTone: FLAGGED_CATEGORY_TONE[category.kind],
     meta: metaSegments.join(" · "),
@@ -386,8 +388,13 @@ function moderationEntryDtoToEntry(
 function vouchAvatarDtoToAvatar(vouchAvatarDto: VouchAvatarDTO): {
   initials: string;
   tone: AvatarTone;
+  avatarUrl: string | null;
 } {
-  return { initials: vouchAvatarDto.initials, tone: vouchAvatarDto.tone };
+  return {
+    initials: vouchAvatarDto.initials,
+    tone: vouchAvatarDto.tone,
+    avatarUrl: vouchAvatarDto.avatarUrl,
+  };
 }
 
 /** Graph node = a vouch avatar plus which way the vouch runs. */
@@ -395,6 +402,7 @@ function graphNodeDtoToNode(graphNodeDto: VouchGraphNodeDTO): GraphNode {
   return {
     initials: graphNodeDto.initials,
     tone: graphNodeDto.tone,
+    avatarUrl: graphNodeDto.avatarUrl,
     direction: graphNodeDto.direction,
   };
 }

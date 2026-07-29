@@ -1,0 +1,132 @@
+/* BrowseView — org filter chips + month-grouped, infinite event list. */
+
+.body {
+  background: var(--cream);
+  padding-block: 8px 96px;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 32px);
+  color: var(--text-strong);
+  letter-spacing: var(--ls-heading);
+  margin-block: 0 24px;
+}
+
+/* ── Filter chips ── */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block-end: 40px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-block: 9px;
+  padding-inline: 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+  }
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+
+.chipActive {
+  background: var(--plum);
+  color: rgb(var(--cream-rgb));
+  border-color: var(--line-strong);
+}
+
+.chipDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ── Month groups ── */
+.monthGroup {
+  margin-block-end: 44px;
+}
+
+.monthHeading {
+  position: sticky;
+  /* Sticks just below the EventsHubTabs bar (also `position: sticky`,
+     `top: 0`) instead of scrolling underneath it — see
+     EventsHubPage.module.css `.root { --hub-tabs-h }`. Falls back to 0 for
+     any context that renders BrowseView without the hub root's custom
+     property in scope. */
+  inset-block-start: var(--hub-tabs-h, 0);
+  z-index: 1;
+  background: var(--cream);
+  padding-block: 6px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(22px, 3vw, 30px);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+}
+
+/* ── Rows ──
+   `EventPosterCard variant="list"` is parent-sized (no intrinsic width of its
+   own) and would otherwise sit inside a shrink-to-fit flex item and collapse
+   to 0-width. `.rows` is a column flex context; its default cross-axis
+   `align-items: stretch` forces each `.row` to the container's full width,
+   and `.row` repeats the width explicitly so the fix holds even if this
+   markup is ever moved into a different layout parent. */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+
+.row > * {
+  width: 100%;
+}
+
+.sentinel {
+  block-size: 1px;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

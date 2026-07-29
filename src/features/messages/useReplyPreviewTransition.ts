@@ -40,6 +40,7 @@ export function useReplyPreviewTransition(
     if (replyDraft) {
       // Arming a reply (or swapping targets while already open) is instant —
       // only clearing to nothing animates out.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional exit-animation sync: on arm/swap we mirror replyDraft into the always-mounted preview immediately, while the setTimeout branch below defers the clear by EXIT_ANIMATION_MS. The mount-through-exit lag cannot be derived during render.
       setPreviewMessage(replyDraft);
       return;
     }

@@ -72,13 +72,17 @@ export function MicroGrantsPage() {
                     </span>
                   </div>
                   <div className={styles.rcm}>
-                    <strong>30 June 2026</strong>
+                    <strong>
+                      {t("resources:microGrants.round.meta.deadlineValue")}
+                    </strong>
                     <span>
                       {t("resources:microGrants.round.meta.deadlineLabel")}
                     </span>
                   </div>
                   <div className={styles.rcm}>
-                    <strong>3 – 4 weeks</strong>
+                    <strong>
+                      {t("resources:microGrants.round.meta.decisionValue")}
+                    </strong>
                     <span>
                       {t("resources:microGrants.round.meta.decisionLabel")}
                     </span>

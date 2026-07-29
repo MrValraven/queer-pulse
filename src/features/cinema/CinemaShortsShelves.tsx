@@ -55,7 +55,7 @@ export function ContinueWatching() {
                   width="100%"
                   height="100%"
                   radius={12}
-                  placeholder="poster"
+                  placeholder={t("cinema:slot.poster")}
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <div className={styles.cwPlay}>
@@ -111,7 +111,7 @@ export function Programmes({ shelf }: { shelf: ShortsShelf }) {
               tint={p.tint}
               width="100%"
               height="100%"
-              placeholder="programme cover"
+              placeholder={t("cinema:slot.programmeCover")}
               style={{ position: "absolute", inset: 0 }}
             />
             <span

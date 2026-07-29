@@ -197,6 +197,19 @@ export const cinema: Catalog = {
   "film.relation.sameForm": "Mesmo formato · {format}",
   "film.relation.curatorsPick": "Escolha da curadoria",
 
+  // ── Legendas de placeholder partilhadas do ImageSlot — rótulos da própria
+  // plataforma mostrados no quadro de imagem vazio/falhado (o src do slot é
+  // uma capa real em ambos os modos; esta é a legenda de recurso quando a
+  // imagem não carrega). ────────────────────────────────────────────────────
+  "slot.poster": "cartaz",
+  "slot.coverFilm": "filme de capa · cartaz",
+  "slot.programmeCover": "capa da programação",
+  "slot.spotlightPoster": "cartaz em destaque",
+  "slot.curatorPortrait": "retrato da curadoria · 3:4",
+  "slot.filmPoster": "cartaz do filme · 3:4",
+  "slot.filmmakerPortrait": "retrato de cineasta · 3:4",
+  "slot.filmFrame": "fotograma do filme · imagem cinematográfica",
+
   // ── Página do filme (FilmPage.tsx, FilmHero*.tsx, FilmBody.tsx) — só chrome;
   // título/sinopse/biografias da equipa/citação da curadoria/data do evento
   // são conteúdo deste filme e ficam em inglês ───────────────────────────────

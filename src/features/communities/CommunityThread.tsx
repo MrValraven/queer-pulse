@@ -303,9 +303,9 @@ export function CommunityThread({
           ) : (
             <p className={styles.postText}>{opBody}</p>
           )}
-          {replies.map((threadReply, index) => (
+          {replies.map((threadReply) => (
             <ThreadReplyRow
-              key={threadReply.id ?? `local-${index}`}
+              key={threadReply.id ?? `${threadReply.name}:${threadReply.text}`}
               reply={threadReply}
               demoMode={demoMode}
               editing={!!threadReply.id && editingReplyId === threadReply.id}

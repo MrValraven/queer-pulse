@@ -64,9 +64,20 @@ self.addEventListener("push", (event) => {
   );
 });
 
+// Only navigate to a same-origin relative path. The push payload's `url` is
+// attacker-influenceable, so a value like `https://evil.example` or a
+// protocol-relative `//evil.example` must never reach navigate()/openWindow().
+// Mirrors the app's `safeNext` guard: accept only a single leading "/".
+function safeNotificationPath(raw: unknown): string {
+  const fallback = "/messages";
+  if (typeof raw !== "string") return fallback;
+  if (!raw.startsWith("/") || raw.startsWith("//")) return fallback;
+  return raw;
+}
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url ?? "/messages";
+  const targetUrl = safeNotificationPath(event.notification.data?.url);
   event.waitUntil(
     self.clients
       .matchAll({ type: "window", includeUncontrolled: true })

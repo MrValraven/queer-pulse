@@ -100,7 +100,7 @@ export const SEARCH_DATA: SearchItem[] = [
     name: memberName("andre"),
     sub: "Portrait Photographer · Cais do Sodré",
     href: "/members/andre",
-    kw: "photography analog portrait darkroom",
+    kw: "photography analog portrait studio",
     slug: "andre",
   },
   {

@@ -113,13 +113,18 @@ export function normalizeName(name: string): string {
     .toLowerCase();
 }
 
-export function businessToLocal(place: DirectoryPlace): LocalPlace {
-  // Prefer the pin the owner placed when listing; fall back to the hand-placed
-  // BUSINESS_COORDS table for legacy slugs that predate stored coordinates.
+export function businessToLocal(
+  place: DirectoryPlace,
+  demoMode: boolean,
+): LocalPlace {
+  // Prefer the pin the owner placed when listing. The hand-placed BUSINESS_COORDS
+  // table is demo-only seed data — consulting it in live mode would give a real
+  // listing without stored coordinates fake coords on a slug collision.
   const listedCoords =
     place.latitude != null && place.longitude != null
       ? { latitude: place.latitude, longitude: place.longitude }
       : null;
+  const fallbackCoords = demoMode ? BUSINESS_COORDS[place.slug] ?? null : null;
   return {
     id: `business:${place.slug}`,
     kind: "business",
@@ -130,7 +135,7 @@ export function businessToLocal(place: DirectoryPlace): LocalPlace {
       HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
       `business "${place.name}"`,
     ),
-    coords: listedCoords ?? BUSINESS_COORDS[place.slug] ?? null,
+    coords: listedCoords ?? fallbackCoords,
     detailPath: `${routes.directory}/${place.slug}`,
     source: place,
   };

@@ -8,7 +8,6 @@ import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminGovernanceFinances } from "./AdminGovernanceFinances";
 import { AdminGovernancePolicy } from "./AdminGovernancePolicy";
 import { AdminGovernanceAudit } from "./AdminGovernanceAudit";
-import { AUDIT_TOTAL } from "./adminGovernance.data";
 
 export function AdminGovernancePage() {
   const { t } = useTranslation();
@@ -21,7 +20,6 @@ export function AdminGovernancePage() {
     {
       id: "audit",
       label: t("admin:governance.tabs.audit"),
-      count: AUDIT_TOTAL,
     },
   ];
 

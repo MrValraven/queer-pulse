@@ -1,9 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  WORKSHOPS,
-  type Workshop,
-} from "../../features/economy/workshops.data";
+import type { Workshop } from "../../features/economy/workshops.data";
 import {
   applyWorkshopDraft,
   buildWorkshop,
@@ -22,12 +19,12 @@ import { useWorkshopRsvpStore } from "../../features/economy/api/workshopRsvp.ho
 import {
   currentUser,
   currentUserSlug,
-} from "../../features/members/data/members";
+} from "../../features/members/data/demoCurrentUser";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { logError } from "../../shared/observability/logger";
 import { useDemoMode } from "./DemoModeProvider";
-import { WorkshopsContext, type WorkshopsActions } from "./useWorkshops";
+import { WorkshopsContext, type WorkshopsActions } from "./workshopsContext";
 
 /**
  * The provider holds only the session overlay — workshops listed, edited or
@@ -111,10 +108,15 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
         // edit rather than from the original. The last fallback is the fixture
         // itself: in demo the catalogue query resolves to exactly `WORKSHOPS`,
         // so this is the same row it used to find via the query result.
-        const current =
-          edited[id] ??
-          added.find((w) => w.id === id) ??
-          WORKSHOPS.find((w) => w.id === id);
+        // `WORKSHOPS` is dynamically imported (this branch only runs in demo
+        // mode, and `updateWorkshop` is already async) so this always-mounted
+        // provider's entry chunk doesn't carry the workshops fixture data for
+        // members who never open the editor in demo mode.
+        let current = edited[id] ?? added.find((w) => w.id === id);
+        if (!current) {
+          const { WORKSHOPS } = await import("../../features/economy/workshops.data");
+          current = WORKSHOPS.find((w) => w.id === id);
+        }
         if (!current) return null;
         const next = applyWorkshopDraft(current, draft, t, fmt);
         setEdited((prev) => ({ ...prev, [id]: next }));

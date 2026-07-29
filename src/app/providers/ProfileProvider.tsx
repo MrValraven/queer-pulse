@@ -6,7 +6,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { currentUser, type Member } from "../../features/members/data/members";
+import { currentUser } from "../../features/members/data/demoCurrentUser";
+import type { Member } from "../../features/members/data/members";
 import { useAuth } from "./authContext";
 import { useDemoMode } from "./DemoModeProvider";
 import type { AuthUser } from "../../features/auth/api/auth.api";

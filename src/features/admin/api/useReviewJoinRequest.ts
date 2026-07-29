@@ -46,6 +46,8 @@ export function useReviewJoinRequest() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<JoinRequestDTO, Error, ReviewJoinRequestVars>({
+    // AdminVerifyQueue toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, status }) => {
       if (demoMode) {
         return {

@@ -13,14 +13,15 @@ export function StorySafetyPage() {
     <PageShell>
       <div className={styles.hero}>
         <div className="wrap">
-          {/* Content: category tag, headline, byline, read time and date are
-              this piece's own editorial fields — kept in English. */}
+          {/* Content: category tag, headline, read time and date are this
+              piece's own editorial fields — kept in English. The byline names
+              the platform team (not an individual writer), so it is chrome. */}
           <div className={styles.cat}>On Building</div>
           <h1>
             Why we stayed <em>invite-only:</em> safety as a feature, not a gate.
           </h1>
           <div className={styles.byline}>
-            <span>The QueerPulse team</span>
+            <span>{t("magazine:story.safety.byline")}</span>
             <span className={styles.sep} />
             <span>3 min read</span>
             <span className={styles.sep} />

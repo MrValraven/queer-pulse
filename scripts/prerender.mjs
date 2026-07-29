@@ -1,12 +1,18 @@
 /**
- * Build-time prerender for the quiet public surface.
+ * Build-time prerender for the ESSENTIAL public pages.
  *
  * WHY: QueerPulse is a client-rendered SPA. Googlebot renders JavaScript on a
  * deferred best-effort basis, but the AI retrieval crawlers we deliberately
  * allow (OAI-SearchBot, Claude-SearchBot, PerplexityBot) do NOT execute
  * JavaScript at all — without this pass they receive an empty <div id="root">.
  *
- * HOW: serve dist/ on an ephemeral port, visit each quiet public path in a
+ * SCOPE: only PRERENDER_PATHS (a minimal subset of the public surface —
+ * currently the homepage alone) is baked, to save build time and data. Every
+ * other public page (policies, about, the /local guides, /p/:handle personas)
+ * stays in the sitemap and is served as a normal SPA route — see
+ * ./publicPaths.mjs and ./generate-sitemap.mjs for that deliberate split.
+ *
+ * HOW: serve dist/ on an ephemeral port, visit each prerendered path in a
  * headless Chromium, and write the settled DOM to dist/<path>/index.html.
  * The browser binary is NOT a dependency of `pnpm install` — it is a separate
  * download into $HOME/.cache/ms-playwright, so `pnpm build` runs
@@ -33,9 +39,9 @@ import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import { chromium } from "@playwright/test";
 import {
-  QUIET_PUBLIC_PATHS,
+  PRERENDER_PATHS,
   assertNoGatedPaths,
-  fetchSubprofilePublicPaths,
+  assertPrerenderSubset,
 } from "./publicPaths.mjs";
 
 const DIST_DIRECTORY = "dist";
@@ -75,11 +81,11 @@ function createDistServer(shellHtml) {
       response.end(body);
     } catch {
       // Serve the ORIGINAL shell captured before the loop started, never a
-      // re-read of dist/index.html. "/" is the first path we prerender and it
-      // overwrites dist/index.html — so a re-read would hand every subsequent
-      // page the prerendered homepage as its shell, and since <JsonLd> only
-      // appends, all 66 of them would ship the homepage's Organization schema
-      // on top of their own. Snapshotting also makes output order-independent.
+      // re-read of dist/index.html. "/" overwrites dist/index.html, so a re-read
+      // would hand any subsequent page the prerendered homepage as its shell —
+      // and since <JsonLd> only appends, they would ship the homepage's
+      // Organization schema on top of their own. The snapshot keeps this correct
+      // and order-independent even if PRERENDER_PATHS grows beyond the homepage.
       response.writeHead(200, { "Content-Type": CONTENT_TYPES[".html"] });
       response.end(shellHtml);
     }
@@ -92,22 +98,24 @@ function listen(server) {
   });
 }
 
-/** dist/resources/trans-healthcare/index.html — "/" maps to dist/index.html. */
+/** "/" maps to dist/index.html; "/about" -> dist/about/index.html, etc. */
 function outputPathFor(publicPath) {
   if (publicPath === "/") return join(DIST_DIRECTORY, "index.html");
   return join(DIST_DIRECTORY, publicPath, "index.html");
 }
 
 // --- Guard before any I/O ---------------------------------------------------
-assertNoGatedPaths(QUIET_PUBLIC_PATHS);
+// PRERENDER_PATHS must be a subset of the vetted public surface AND ungated.
+assertPrerenderSubset();
+assertNoGatedPaths(PRERENDER_PATHS);
 
 // --- Environment contract ---------------------------------------------------
 // src/shared/api/config.ts THROWS at module load in a production build that has
 // neither VITE_API_URL nor VITE_DEMO=1 — deliberately, so a mis-configured build
 // cannot silently serve mock data as real community content. If that happens
-// here React never mounts, no page ever signals ready, and all 67 paths burn the
-// full ready-timeout before failing. That is a very expensive way to discover a
-// missing env var, so check it up front and say so plainly.
+// here React never mounts, no page ever signals ready, and every prerendered
+// path burns the full ready-timeout before failing. That is a very expensive way
+// to discover a missing env var, so check it up front and say so plainly.
 const apiUrl = (process.env.VITE_API_URL ?? "").trim();
 const isDemoBuild = process.env.VITE_DEMO === "1";
 
@@ -130,19 +138,16 @@ if (isDemoBuild) {
   );
 }
 
-// Dynamic persona pages (/p/:handle) — fetched from the backend. Demo builds
-// have no API to ask, so they skip dynamic paths entirely; a live build's
-// fetch never throws (returns [] + warns on any failure), so a build machine
-// that can't reach the API still produces the static quiet surface.
-const dynamicEntries = isDemoBuild ? [] : await fetchSubprofilePublicPaths(apiUrl);
-const dynamicPersonaPaths = dynamicEntries.map((entry) => entry.path);
-assertNoGatedPaths(dynamicPersonaPaths);
-const allPublicPaths = [...QUIET_PUBLIC_PATHS, ...dynamicPersonaPaths];
+// Only the essential subset is prerendered (PRERENDER_PATHS — currently the
+// homepage alone). Dynamic persona pages (/p/:handle) are intentionally NOT
+// prerendered: their count is unbounded, so baking one HTML file per published
+// persona is the main data cost this trim removes. They remain in the sitemap
+// (see generate-sitemap.mjs) and are served as SPA routes.
+const allPublicPaths = [...PRERENDER_PATHS];
 
-// A handful of indexed pages read live data (the glossary, the guide library,
-// partners, volunteer opportunities). With a real VITE_API_URL they will fetch
-// during this pass, so the build machine needs to be able to reach the API — or
-// those pages bake in their empty-state fallback.
+// If PRERENDER_PATHS ever grows to include an API-backed page, note it will
+// FETCH during this pass with a real VITE_API_URL — so the build machine must
+// reach the API or the page bakes in its empty-state fallback.
 console.log(
   `[prerender] mode: ${isDemoBuild ? "DEMO (mock data)" : `live API ${apiUrl}`}`,
 );
@@ -218,5 +223,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `[prerender] Wrote ${allPublicPaths.length} pages (${QUIET_PUBLIC_PATHS.length} static + ${dynamicPersonaPaths.length} persona).`,
+  `[prerender] Wrote ${allPublicPaths.length} essential page(s): ${allPublicPaths.join(", ")}.`,
 );

@@ -6,7 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
 import { EventCard } from "./CalendarGrid";
-import styles from "./CalendarPage.module.css";
+import styles from "./CalendarSidebar.module.css";
 
 export function CalendarSidebar({
   selected,

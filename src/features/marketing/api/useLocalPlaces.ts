@@ -20,7 +20,9 @@ export function useLocalPlaces(): LocalPlace[] {
   const businesses = useDirectoryPlaces();
 
   return useMemo(() => {
-    const businessLocals = businesses.map(businessToLocal);
+    const businessLocals = businesses.map((business) =>
+      businessToLocal(business, demoMode),
+    );
     if (!demoMode) return businessLocals;
     const venueLocals = VENUES.map(venueToLocal);
     return mergeLocalPlaces(businessLocals, venueLocals);

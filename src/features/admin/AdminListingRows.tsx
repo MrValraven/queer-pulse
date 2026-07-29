@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminChip, type AdminTone } from "./ui";
 import { useSetListingStatus } from "./api/useSetListingStatus";
+import { AskQuestionModal } from "./AskQuestionModal";
 import type { ListingQueueRow } from "./api/adminListings.api";
 import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data";
 import styles from "./AdminListingsPage.module.css";
@@ -15,19 +17,14 @@ const STATUS_TONE: Record<ListingStatus, AdminTone> = {
   live: "jade",
 };
 
-/** Linear lifecycle: the status one step forward, or null at the end. */
-const NEXT_STATUS: Record<ListingStatus, ListingStatus | null> = {
-  review: "question",
-  question: "live",
-  live: null,
-};
-
 export function AdminListingRows({
   rows,
   onStatusChanged,
+  onOpen,
 }: {
   rows: ListingQueueRow[];
   onStatusChanged: (ref: string, status: ListingStatus) => void;
+  onOpen: (row: ListingQueueRow) => void;
 }) {
   const { t } = useTranslation();
   if (rows.length === 0) {
@@ -37,7 +34,11 @@ export function AdminListingRows({
     <div className={styles.rows}>
       {rows.map((row, index) => (
         <FadeIn key={row.ref} delay={Math.min(index, 8) * 50}>
-          <AdminListingRow row={row} onStatusChanged={onStatusChanged} />
+          <AdminListingRow
+            row={row}
+            onStatusChanged={onStatusChanged}
+            onOpen={onOpen}
+          />
         </FadeIn>
       ))}
     </div>
@@ -47,14 +48,16 @@ export function AdminListingRows({
 function AdminListingRow({
   row,
   onStatusChanged,
+  onOpen,
 }: {
   row: ListingQueueRow;
   onStatusChanged: (ref: string, status: ListingStatus) => void;
+  onOpen: (row: ListingQueueRow) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const setStatus = useSetListingStatus();
-  const nextStatus = NEXT_STATUS[row.status];
+  const [asking, setAsking] = useState(false);
 
   function moveTo(status: ListingStatus) {
     setStatus.mutate(
@@ -75,42 +78,80 @@ function AdminListingRow({
   }
 
   return (
-    <div className={styles.row}>
-      <div className={styles.rowMain}>
-        <div className={styles.rowTop}>
-          <span className={styles.rowName}>{row.name}</span>
-          <AdminChip tone={STATUS_TONE[row.status]} dot>
-            {t(`admin:adminListings.status.${row.status}`)}
-          </AdminChip>
+    <>
+      <div className={styles.row}>
+        <div
+          className={styles.rowMain}
+          role="button"
+          tabIndex={0}
+          onClick={() => onOpen(row)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              onOpen(row);
+            }
+          }}
+        >
+          <div className={styles.rowTop}>
+            <span className={styles.rowName}>{row.name}</span>
+            <AdminChip tone={STATUS_TONE[row.status]} dot>
+              {t(`admin:adminListings.status.${row.status}`)}
+            </AdminChip>
+          </div>
+          <div className={styles.rowMeta}>
+            {row.ref} ·{" "}
+            {row.submitterName || t("admin:adminListings.unknownSubmitter")}
+            {row.hood ? ` · ${row.hood}` : ""}
+          </div>
         </div>
-        <div className={styles.rowMeta}>
-          {row.ref} ·{" "}
-          {row.submitterName || t("admin:adminListings.unknownSubmitter")}
-          {row.hood ? ` · ${row.hood}` : ""}
-        </div>
-      </div>
-      <div className={styles.rowActions}>
-        {nextStatus && (
-          <Button
-            variant="jade"
-            size="md"
-            onClick={() => moveTo(nextStatus)}
-            disabled={setStatus.isPending}
-          >
-            {t(`admin:adminListings.advance.${nextStatus}`)}
-          </Button>
-        )}
-        {row.status !== "review" && (
+        <div className={styles.rowActions}>
           <Button
             variant="ghost"
             size="md"
-            onClick={() => moveTo("review")}
+            onClick={() => onOpen(row)}
             disabled={setStatus.isPending}
           >
-            {t("admin:adminListings.sendBackCta")}
+            {t("admin:adminListings.viewCta")}
           </Button>
-        )}
+          {row.status === "review" && (
+            <Button
+              variant="jade"
+              size="md"
+              onClick={() => setAsking(true)}
+              disabled={setStatus.isPending}
+            >
+              {t("admin:adminListings.advance.question")}
+            </Button>
+          )}
+          {row.status !== "live" && (
+            <Button
+              variant="jade"
+              size="md"
+              onClick={() => moveTo("live")}
+              disabled={setStatus.isPending}
+            >
+              {t("admin:adminListings.advance.live")}
+            </Button>
+          )}
+          {row.status !== "review" && (
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={() => moveTo("review")}
+              disabled={setStatus.isPending}
+            >
+              {t("admin:adminListings.sendBackCta")}
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+      {asking && (
+        <AskQuestionModal
+          row={row}
+          onClose={() => setAsking(false)}
+          onAsked={(ref) => onStatusChanged(ref, "question")}
+        />
+      )}
+    </>
   );
 }

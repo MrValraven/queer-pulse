@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
-import { FiCheck, FiClock } from "react-icons/fi";
+import { Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button, SkeletonLine } from "../../shared/components/ui";
+import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -16,7 +15,7 @@ import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
 import { useJoinCommunity } from "./api/useCommunityMutations";
-import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
+import { CommunityDetailHero } from "./CommunityDetailHero";
 import { LivingHubTabs } from "./LivingHubTabs";
 import { FallbackHubTabs } from "./FallbackHubTabs";
 import { CommunitySidebar } from "./CommunitySidebar";
@@ -119,51 +118,20 @@ export function CommunityDetailPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
-        <div className={`wrap ${styles.heroInner}`}>
-          <Link to={routes.communities} className={styles.breadcrumb}>
-            {t("communities:detail.breadcrumb")}
-          </Link>
-          <div className={styles.typeBadge}>
-            <span className={styles.dot} />
-            {detail.badge}
-          </div>
-          <h1 className={styles.h1}>{community.name}</h1>
-          <p className={styles.heroSub}>{community.description}</p>
-          <div className={styles.heroMeta}>
-            <span>{community.count}</span>
-            <span className={styles.metaSep} />
-            <span>{detail.founded}</span>
-            <span className={styles.metaSep} />
-            <span>{detail.cadence}</span>
-          </div>
-          <div className={styles.actRow}>
-            {joined ? (
-              <Button variant="jade" onClick={() => slug && leave(slug)}>
-                <FiCheck aria-hidden /> {t("communities:detail.joined")}
-              </Button>
-            ) : requested ? (
-              <Button variant="ghost" disabled>
-                <FiClock aria-hidden /> {t("communities:detail.requested")}
-              </Button>
-            ) : (
-              <Button variant="primary" onClick={() => setJoining(true)}>
-                {joinLabel}
-              </Button>
-            )}
-            {canEdit && (
-              <Button variant="ghost" onClick={() => setEditing(true)}>
-                {t("communities:edit.cta")}
-              </Button>
-            )}
-            <CommunityHeroAvatars
-              avatars={heroAvatars}
-              memberNum={memberNum}
-              hasCount={hasCount}
-            />
-          </div>
-        </div>
-      </div>
+      <CommunityDetailHero
+        community={community}
+        detail={detail}
+        joined={joined}
+        requested={requested}
+        joinLabel={joinLabel}
+        canEdit={canEdit}
+        heroAvatars={heroAvatars}
+        memberNum={memberNum}
+        hasCount={hasCount}
+        onJoin={() => setJoining(true)}
+        onLeave={() => slug && leave(slug)}
+        onEdit={() => setEditing(true)}
+      />
 
       <div className={styles.body}>
         <div className="wrap">

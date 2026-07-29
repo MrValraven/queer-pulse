@@ -1,30 +1,17 @@
 import { useState, type FormEvent } from "react";
-import { FiCheck, FiLock } from "react-icons/fi";
+import { FiLock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { ModalShell, SuccessPanel, Sending } from "../economy/ModalKit";
 import { useSubmitFlow } from "../economy/modalFlow";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { DonateModalSummary } from "./DonateModalSummary";
+import { DonateModalFields } from "./DonateModalFields";
 import modal from "../economy/ApplicationModals.module.css";
 import styles from "./DonateModal.module.css";
 
 const FEE_RATE = 0.03;
-
-function formatCard(raw: string) {
-  return raw
-    .replace(/\D/g, "")
-    .slice(0, 16)
-    .replace(/(.{4})/g, "$1 ")
-    .trim();
-}
-
-function formatExpiry(raw: string) {
-  const digits = raw.replace(/\D/g, "").slice(0, 4);
-  return digits.length > 2
-    ? `${digits.slice(0, 2)} / ${digits.slice(2)}`
-    : digits;
-}
 
 export function DonateModal({
   amount,
@@ -94,137 +81,28 @@ export function DonateModal({
           </h2>
           <p className={modal.sub}>{t("marketing:donateModal.sub")}</p>
 
-          <div className={modal.panel}>
-            <div className={modal.rows}>
-              <div className={modal.row}>
-                <span className={modal.rowK}>
-                  {t(
-                    monthly
-                      ? "marketing:donateModal.row.monthlyGift"
-                      : "marketing:donateModal.row.oneOffGift",
-                  )}
-                </span>
-                <span className={modal.rowV}>
-                  {monthly
-                    ? t("marketing:donateModal.amount.monthly", {
-                        amount: fmt.currency(amount),
-                      })
-                    : fmt.currency(amount)}
-                </span>
-              </div>
-              {coverFee && (
-                <div className={modal.row}>
-                  <span className={modal.rowK}>
-                    {t("marketing:donateModal.row.feeCovered")}
-                  </span>
-                  <span className={modal.rowV}>{fmt.currency(fee)}</span>
-                </div>
-              )}
-              <div className={modal.row}>
-                <span className={modal.rowK}>
-                  {t("marketing:donateModal.row.chargedToday")}
-                </span>
-                <span className={modal.rowV}>
-                  {monthly
-                    ? t("marketing:donateModal.amount.monthly", {
-                        amount: fmt.currency(total),
-                      })
-                    : fmt.currency(total)}
-                </span>
-              </div>
-            </div>
-          </div>
+          <DonateModalSummary
+            amount={amount}
+            fee={fee}
+            total={total}
+            monthly={monthly}
+            coverFee={coverFee}
+            setCoverFee={setCoverFee}
+            feePct={Math.round(FEE_RATE * 100)}
+          />
 
-          <button
-            type="button"
-            className={`${modal.checkRow} ${coverFee ? modal.checkRowOn : ""}`}
-            onClick={() => setCoverFee((v) => !v)}
-            aria-pressed={coverFee}
-          >
-            <span className={modal.checkBox}>
-              {coverFee && <FiCheck size={14} aria-hidden />}
-            </span>
-            <span className={modal.checkText}>
-              <span className={modal.checkLabel}>
-                {t("marketing:donateModal.checkLabel", {
-                  pct: Math.round(FEE_RATE * 100),
-                })}
-              </span>
-              <span className={modal.checkHint}>
-                {t("marketing:donateModal.checkHint", {
-                  amount: fmt.currency(amount),
-                })}
-              </span>
-            </span>
-          </button>
-
-          <div className={modal.field}>
-            <label htmlFor="dn-name">
-              {t("marketing:donateModal.field.nameOnCard")}
-            </label>
-            <input
-              id="dn-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t("marketing:donateModal.field.namePlaceholder")}
-              autoComplete="cc-name"
-            />
-          </div>
-          <div className={modal.field}>
-            <label htmlFor="dn-email">
-              {t("marketing:donateModal.field.emailReceipt")}
-            </label>
-            <input
-              id="dn-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
-          </div>
-          <div className={modal.field}>
-            <label htmlFor="dn-card">
-              {t("marketing:donateModal.field.cardNumber")}
-            </label>
-            <input
-              id="dn-card"
-              inputMode="numeric"
-              value={card}
-              onChange={(e) => setCard(formatCard(e.target.value))}
-              placeholder="4242 4242 4242 4242"
-              autoComplete="cc-number"
-            />
-          </div>
-          <div className={modal.fieldRow}>
-            <div className={modal.field}>
-              <label htmlFor="dn-exp">
-                {t("marketing:donateModal.field.expiry")}
-              </label>
-              <input
-                id="dn-exp"
-                value={expiry}
-                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                placeholder="MM / YY"
-                autoComplete="cc-exp"
-              />
-            </div>
-            <div className={modal.field}>
-              <label htmlFor="dn-cvc">
-                {t("marketing:donateModal.field.cvc")}
-              </label>
-              <input
-                id="dn-cvc"
-                inputMode="numeric"
-                value={cvc}
-                onChange={(e) =>
-                  setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))
-                }
-                placeholder="123"
-                autoComplete="cc-csc"
-              />
-            </div>
-          </div>
+          <DonateModalFields
+            name={name}
+            setName={setName}
+            email={email}
+            setEmail={setEmail}
+            card={card}
+            setCard={setCard}
+            expiry={expiry}
+            setExpiry={setExpiry}
+            cvc={cvc}
+            setCvc={setCvc}
+          />
 
           <Button
             type="submit"

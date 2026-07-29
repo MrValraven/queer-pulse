@@ -2922,4 +2922,8 @@ export const economy: Catalog = {
   "requestSession.looksGood":
     "Está bem. As pessoas mentoras costumam responder dentro de alguns dias.",
   "requestSession.sendCta": "Enviar pedido",
+
+  // ── companies.data.tsx — títulos estruturais dentro do "Sobre" de cada empresa ─
+  "company.about.howWeWorkHeading": "Como trabalhamos",
+  "company.about.whatWeLookForHeading": "O que procuramos",
 };

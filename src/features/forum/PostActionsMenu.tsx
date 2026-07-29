@@ -1,4 +1,10 @@
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./PostActionsMenu.module.css";
@@ -14,6 +20,13 @@ interface PostActionsMenuProps {
   onHistory: () => void;
 }
 
+interface MenuAction {
+  key: string;
+  label: string;
+  run: () => void;
+  danger?: boolean;
+}
+
 export function PostActionsMenu({
   canEdit,
   canDelete,
@@ -27,6 +40,8 @@ export function PostActionsMenu({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
 
   useEffect(() => {
@@ -39,27 +54,94 @@ export function PostActionsMenu({
         setOpen(false);
       }
     };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
     document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
 
+  // APG menu-button contract: focus the first item when the menu opens.
+  useEffect(() => {
+    if (!open) return;
+    menuRef.current
+      ?.querySelector<HTMLButtonElement>('[role="menuitem"]')
+      ?.focus();
+  }, [open]);
+
   if (!canEdit && !canDelete && !canRestore && !canViewHistory) return null;
+
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
 
   const runAndClose = (action: () => void) => () => {
     setOpen(false);
     action();
   };
 
+  const actions: MenuAction[] = [
+    canEdit && {
+      key: "edit",
+      label: t("forum:postMenu.edit"),
+      run: onEdit,
+    },
+    canViewHistory && {
+      key: "history",
+      label: t("forum:postMenu.history"),
+      run: onHistory,
+    },
+    canRestore && {
+      key: "restore",
+      label: t("forum:postMenu.restore"),
+      run: onRestore,
+    },
+    canDelete && {
+      key: "delete",
+      label: t("forum:postMenu.delete"),
+      run: onDelete,
+      danger: true,
+    },
+  ].filter((action): action is MenuAction => Boolean(action));
+
+  // Up/Down roving, Home/End to ends, Escape closes and restores focus.
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+      return;
+    }
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const items = Array.from(
+      menuRef.current?.querySelectorAll<HTMLButtonElement>(
+        '[role="menuitem"]',
+      ) ?? [],
+    );
+    if (items.length === 0) return;
+    event.preventDefault();
+    const currentIndex = items.indexOf(
+      document.activeElement as HTMLButtonElement,
+    );
+    let nextIndex: number;
+    if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = items.length - 1;
+    } else if (event.key === "ArrowDown") {
+      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length;
+    } else {
+      nextIndex =
+        currentIndex < 0
+          ? items.length - 1
+          : (currentIndex - 1 + items.length) % items.length;
+    }
+    items[nextIndex]?.focus();
+  };
+
   return (
     <div ref={containerRef} className={styles.container}>
       <button
+        ref={triggerRef}
         type="button"
         className={styles.trigger}
         aria-label={t("forum:postMenu.ariaLabel")}
@@ -71,47 +153,28 @@ export function PostActionsMenu({
         <FiMoreHorizontal aria-hidden />
       </button>
       {open && (
-        <div id={menuId} role="menu" className={styles.menu}>
-          {canEdit && (
+        <div
+          id={menuId}
+          ref={menuRef}
+          role="menu"
+          tabIndex={-1}
+          className={styles.menu}
+          onKeyDown={onMenuKeyDown}
+        >
+          {actions.map((action) => (
             <button
+              key={action.key}
               type="button"
               role="menuitem"
-              className={styles.item}
-              onClick={runAndClose(onEdit)}
+              tabIndex={-1}
+              className={
+                action.danger ? `${styles.item} ${styles.danger}` : styles.item
+              }
+              onClick={runAndClose(action.run)}
             >
-              {t("forum:postMenu.edit")}
+              {action.label}
             </button>
-          )}
-          {canViewHistory && (
-            <button
-              type="button"
-              role="menuitem"
-              className={styles.item}
-              onClick={runAndClose(onHistory)}
-            >
-              {t("forum:postMenu.history")}
-            </button>
-          )}
-          {canRestore && (
-            <button
-              type="button"
-              role="menuitem"
-              className={styles.item}
-              onClick={runAndClose(onRestore)}
-            >
-              {t("forum:postMenu.restore")}
-            </button>
-          )}
-          {canDelete && (
-            <button
-              type="button"
-              role="menuitem"
-              className={`${styles.item} ${styles.danger}`}
-              onClick={runAndClose(onDelete)}
-            >
-              {t("forum:postMenu.delete")}
-            </button>
-          )}
+          ))}
         </div>
       )}
     </div>

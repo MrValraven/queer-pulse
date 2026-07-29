@@ -321,7 +321,8 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 className={styles.tierInput}
                 type="number"
                 min={0}
-                defaultValue="0"
+                value={form.solPrice}
+                onChange={(e) => form.setSolPrice(e.target.value)}
                 aria-label={t(
                   "gatherings:create.step4.tier.solidarity.priceAria",
                 )}
@@ -332,7 +333,8 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 className={styles.tierInput}
                 type="number"
                 min={0}
-                defaultValue="3"
+                value={form.solSpots}
+                onChange={(e) => form.setSolSpots(e.target.value)}
                 aria-label={t(
                   "gatherings:create.step4.tier.solidarity.spotsAria",
                 )}
@@ -368,7 +370,8 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 className={styles.tierInput}
                 type="number"
                 min={0}
-                defaultValue="8"
+                value={form.stdSpots}
+                onChange={(e) => form.setStdSpots(e.target.value)}
                 aria-label={t(
                   "gatherings:create.step4.tier.standard.spotsAria",
                 )}
@@ -401,7 +404,8 @@ export function PricingStep({ form }: { form: GatheringForm }) {
                 className={styles.tierInput}
                 type="number"
                 min={0}
-                defaultValue="5"
+                value={form.supSpots}
+                onChange={(e) => form.setSupSpots(e.target.value)}
                 aria-label={t(
                   "gatherings:create.step4.tier.supporter.spotsAria",
                 )}

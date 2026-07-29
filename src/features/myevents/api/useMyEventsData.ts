@@ -63,7 +63,7 @@ export function useMyEventsData(): MyEventsDataResult {
         // Demo mock is code-split: the registry loads only when the demo
         // dashboard actually mounts, never on the eager import path.
         const { INITIAL_EVENTS, INITIAL_NOTIFS } = await import(
-          "../myEvents.data"
+          "../myEvents.mock"
         );
         return { events: INITIAL_EVENTS, notifs: INITIAL_NOTIFS };
       }

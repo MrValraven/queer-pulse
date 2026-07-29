@@ -1,0 +1,61 @@
+/* Layout glue only — MonthGrid / AllUpcomingEvents keep their own styles
+   (CalendarGrid.module.css) and CalendarSidebar keeps its own
+   (CalendarSidebar.module.css). */
+
+.section {
+  background: var(--cream);
+  padding-block: 40px 100px;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  margin-bottom: 28px;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ink-60);
+  font-weight: 500;
+}
+
+.legDot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-avatar);
+  flex: none;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 36px;
+  align-items: flex-start;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

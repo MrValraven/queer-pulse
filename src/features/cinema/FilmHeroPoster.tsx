@@ -26,8 +26,10 @@ export function FilmHeroPoster() {
           width="100%"
           height="100%"
           radius={18}
-          placeholder="film poster · 3:4"
+          placeholder={t("cinema:slot.filmPoster")}
           style={{ position: "absolute", inset: 0 }}
+          loading="eager"
+          fetchPriority="high"
         />
         <Link to={routes.cinemaWatch} className={styles.playFab}>
           <span className={styles.playCircle}>

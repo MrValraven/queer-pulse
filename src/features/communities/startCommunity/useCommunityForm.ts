@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useStepGate } from "../../../shared/hooks/useWizardForm";
 import { useAuth } from "../../../app/providers/authContext";
 import type { AuthUser } from "../../auth/api/auth.api";
+import { initialsFromParts } from "../../../shared/lib/initials";
 import {
   RULE_PRESET_KEYS,
   type CommunityDraft,
@@ -16,8 +18,7 @@ import {
 export function ownerStewardFrom(user: AuthUser | null): Steward {
   const firstName = user?.profile.firstName ?? "";
   const lastName = user?.profile.lastName ?? "";
-  const initials =
-    `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || "?";
+  const initials = initialsFromParts(firstName, lastName) || "?";
   return {
     key: "owner",
     name: `${firstName} ${lastName}`.trim(),
@@ -180,10 +181,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
     return s;
   }, [draft]);
 
-  const canAdvance = useCallback(
-    (step: number) => (missing[step]?.length ?? 0) === 0,
-    [missing],
-  );
+  const canAdvance = useStepGate(missing);
 
   return {
     draft,

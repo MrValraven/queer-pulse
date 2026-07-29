@@ -80,6 +80,7 @@ export function ReportsByTypeChart({
       legend={legend}
       loading={loading}
     >
+      {/* eslint-disable-next-line react-hooks/refs -- tip.containerRef is visx's callback ref (useTooltipInPortal); this ATTACHES it via the ref attribute and never reads ref.current during render. */}
       <div ref={tip.containerRef} className={chartStyles.plot}>
         <ResponsiveChart aspect={640 / 240}>
           {(width, height) => {
@@ -193,6 +194,7 @@ export function ReportsByTypeChart({
             );
           }}
         </ResponsiveChart>
+        {/* eslint-disable-next-line react-hooks/refs -- passing the memoized visx tooltip bundle (which holds the callback ref) to ChartTooltip, which renders it through a portal; not a during-render ref.current read. */}
         <ChartTooltip tip={tip}>
           {(data) => (
             <>
@@ -234,6 +236,7 @@ export function MemberGrowthChart({
       loading={loading}
       skeletonHeight={180}
     >
+      {/* eslint-disable-next-line react-hooks/refs -- tip.containerRef is visx's callback ref (useTooltipInPortal); this ATTACHES it via the ref attribute and never reads ref.current during render. */}
       <div ref={tip.containerRef} className={chartStyles.plot}>
         <ResponsiveChart aspect={360 / 220}>
           {(width, height) => {
@@ -364,6 +367,7 @@ export function MemberGrowthChart({
             );
           }}
         </ResponsiveChart>
+        {/* eslint-disable-next-line react-hooks/refs -- passing the memoized visx tooltip bundle (which holds the callback ref) to ChartTooltip, which renders it through a portal; not a during-render ref.current read. */}
         <ChartTooltip tip={tip}>
           {(data) => (
             <>
@@ -427,6 +431,7 @@ export function ResponseTimeChart({
       skeletonHeight={180}
       empty={buckets === null ? t("admin:dashboard.notMeasuredYet") : false}
     >
+      {/* eslint-disable-next-line react-hooks/refs -- tip.containerRef is visx's callback ref (useTooltipInPortal); this ATTACHES it via the ref attribute and never reads ref.current during render. */}
       <div ref={tip.containerRef} className={chartStyles.plot}>
         <ResponsiveChart aspect={360 / 220}>
           {(width, height) => {
@@ -551,6 +556,7 @@ export function ResponseTimeChart({
             );
           }}
         </ResponsiveChart>
+        {/* eslint-disable-next-line react-hooks/refs -- passing the memoized visx tooltip bundle (which holds the callback ref) to ChartTooltip, which renders it through a portal; not a during-render ref.current read. */}
         <ChartTooltip tip={tip}>
           {(data) => (
             <>

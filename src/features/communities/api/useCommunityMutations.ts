@@ -39,6 +39,9 @@ export function useCreatePost(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, CreatePostDto>({
+    // DiscussionTab / CommunityTabs toast their own error, so silence the
+    // global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return;
       await createPost(slug, dto);
@@ -55,6 +58,8 @@ export function useUpdatePost(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string; dto: UpdatePostDto }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, dto }) => {
       if (demoMode) return;
       await updatePost(slug, id, dto);
@@ -70,6 +75,8 @@ export function useReact(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string; key: ReactionKey }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, key }) => {
       if (demoMode) return;
       await reactToPost(slug, id, key);
@@ -85,6 +92,8 @@ export function useUnreact(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string; key: ReactionKey }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, key }) => {
       if (demoMode) return;
       await unreactToPost(slug, id, key);
@@ -100,6 +109,8 @@ export function useReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string; text: string }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, text }) => {
       if (demoMode) return;
       await replyToPost(slug, id, text);
@@ -199,6 +210,8 @@ export function useCreateCommunity() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<CommunityDetailDTO | null, Error, CreateCommunityDto>({
+    // StartCommunityPage toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return null;
       return createCommunity(dto);
@@ -243,6 +256,8 @@ export function useDeleteCommunityPost(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id }) => {
       if (demoMode) return;
       await deleteCommunityPost(slug, id);
@@ -259,6 +274,8 @@ export function useRestoreCommunityPost(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { id: string }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id }) => {
       if (demoMode) return;
       await restoreCommunityPost(slug, id);
@@ -275,6 +292,8 @@ export function useEditCommunityReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { postId: string; replyId: string; text: string }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ postId, replyId, text }) => {
       if (demoMode) return;
       await editCommunityReply(slug, postId, replyId, text);
@@ -291,6 +310,8 @@ export function useDeleteCommunityReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { postId: string; replyId: string }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ postId, replyId }) => {
       if (demoMode) return;
       await deleteCommunityReply(slug, postId, replyId);
@@ -307,6 +328,8 @@ export function useRestoreCommunityReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { postId: string; replyId: string }>({
+    // CommunityThread toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ postId, replyId }) => {
       if (demoMode) return;
       await restoreCommunityReply(slug, postId, replyId);

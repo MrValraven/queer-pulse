@@ -27,6 +27,8 @@ export interface JoinRequestVars {
 export function useCreateJoinRequest() {
   const { demoMode } = useDemoMode();
   return useMutation<CreateJoinRequestResult, Error, JoinRequestVars>({
+    // RequestInviteForm toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ name, email, city, message }) => {
       if (demoMode) {
         return {

@@ -5,6 +5,8 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_CHIPS, VIS_FIELDS } from "./editProfile.data";
+import { leadingInitials } from "../../shared/lib/initials";
+import { safeHref } from "../../shared/lib/safeHref";
 import styles from "./EditProfilePage.module.css";
 
 interface IdentitySectionProps {
@@ -30,12 +32,11 @@ export function IdentitySection({
   onRemove,
 }: IdentitySectionProps) {
   const { t } = useTranslation();
-  const initials = displayName
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = leadingInitials(displayName);
+  // Guard the photo URL before dropping it into CSS `url(...)`: only an http(s)
+  // link with no `)` / whitespace, otherwise fall back to the initials tile.
+  const safePhoto = safeHref(photo);
+  const photoUrl = safePhoto && !/[)\s]/.test(safePhoto) ? safePhoto : null;
 
   return (
     <div className={styles.section} id="identity">
@@ -52,9 +53,9 @@ export function IdentitySection({
         <div
           className={styles.photoAv}
           style={
-            photo
+            photoUrl
               ? {
-                  backgroundImage: `url(${photo})`,
+                  backgroundImage: `url(${photoUrl})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   color: "transparent",
@@ -62,7 +63,7 @@ export function IdentitySection({
               : undefined
           }
         >
-          {photo ? "" : initials}
+          {photoUrl ? "" : initials}
         </div>
         <div>
           <div className={styles.photoActions}>

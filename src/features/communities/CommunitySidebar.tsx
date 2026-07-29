@@ -10,6 +10,7 @@ import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Tint } from "./communityDetails";
 import { photoOf } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
+import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./CommunityDetailPage.module.css";
 
 const GATHERING = routes.gatherings;
@@ -123,11 +124,7 @@ export function CommunitySidebar({
             <div
               className={[styles.sbRelIc, AV_CLASS[relTint(c.type)]].join(" ")}
             >
-              {c.name
-                .split(" ")
-                .map((w) => w[0])
-                .slice(0, 2)
-                .join("")}
+              {leadingInitials(c.name)}
             </div>
             <div>
               <div className={styles.sbRelName}>{c.name}</div>

@@ -20,6 +20,9 @@ export function useCreateJob() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<{ slug?: string }, Error, CreateJobDto>({
+    // PostJobComposer awaits mutateAsync and toasts its own error in a catch;
+    // the global MutationCache handler still fires, so silence its duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return {};
       const res = await createJob(dto);
@@ -62,6 +65,9 @@ export function useApplyToJob(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, CreateJobApplicationDto>({
+    // JobApplyPage toasts its own error (incl. the 409 "already applied"), so
+    // silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return;
       await applyToJob(slug, dto);

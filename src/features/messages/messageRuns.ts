@@ -106,8 +106,13 @@ export function isEmojiOnly(text: string): boolean {
   // The whole string must be emoji constituents only: pictographs, skin-tone
   // modifiers, regional indicators, keycap bases (0-9 # *), the keycap combiner,
   // ZWJ, variation selectors, and whitespace.
+  // The keycap combiner (U+20E3), variation selector (U+FE0F) and ZWJ (U+200D)
+  // are kept as standalone alternatives rather than inside the character class:
+  // a combining mark sitting next to the keycap bases (0-9 # *) inside a class
+  // reads as a single combined glyph (no-misleading-character-class). As bare
+  // single-code-point alternatives under the `+` the match set is identical.
   const onlyEmoji =
-    /^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\p{Regional_Indicator}|[0-9#*\u{20E3}\u{FE0F}\u{200D}\s])+$/u;
+    /^(?:\p{Extended_Pictographic}|\p{Emoji_Modifier}|\p{Regional_Indicator}|[0-9#*]|\u{20E3}|\u{FE0F}|\u{200D}|\s)+$/u;
   if (!onlyEmoji.test(trimmed)) return false;
   // Cap at a short burst of code points — long emoji strings stay in a bubble.
   // Multi-codepoint emoji (flags = 2, keycaps = 3, ZWJ families = 7+) each count

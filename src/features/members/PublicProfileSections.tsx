@@ -231,8 +231,12 @@ export function PublicList({
         <span className={styles.secMeta}>{meta}</span>
       </div>
       <div className={styles.list}>
-        {cards.map((card, i) => (
-          <Link key={i} to={to} className={styles.card}>
+        {cards.map((card) => (
+          <Link
+            key={`${card.kicker}-${card.meta}`}
+            to={to}
+            className={styles.card}
+          >
             <div className={styles.cardKicker}>{card.kicker}</div>
             <div className={styles.cardTitle}>{card.title}</div>
             <div className={styles.cardMeta}>{card.meta}</div>

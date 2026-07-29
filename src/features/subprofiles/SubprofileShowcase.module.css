@@ -1,0 +1,375 @@
+/* "Also working as" — a featured persona (the hero) beside a switch list. The
+   list previews personas into the hero; the hero is the one link that opens the
+   persona page. Past a threshold the list becomes a filterable, collapsed index
+   (see SubprofileSwitchList). Every colour comes from the persona's accent. */
+
+.showcase {
+  display: grid;
+  gap: var(--gap-grid);
+}
+
+/* Hero left, switch list right on wider viewports; stacked below. */
+@media (min-width: 760px) {
+  .split {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+}
+
+/* ── Featured hero (SubprofileFeatureCard) ─────────────────────────────────── */
+
+.feature {
+  position: relative;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: clamp(20px, 3vw, 30px);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      140px 140px at 88% -12%,
+      color-mix(in srgb, var(--accent-tint) 26%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--accent-tint) 12%, var(--paper));
+  transition:
+    border-color var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .feature:hover {
+    border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -20px rgba(var(--line-rgb), 0.5);
+  }
+}
+/* Focus lands on the inner heading link; lift the ring to the whole card. */
+.feature:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .feature,
+  .feature:hover {
+    transition: none;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.featureInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .featureInner {
+    animation: featureIn var(--dur-base) var(--ease);
+  }
+}
+@keyframes featureIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.featureTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.featureAvatar {
+  flex: none;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0 0 4px color-mix(in srgb, var(--accent-tint) 40%, var(--paper));
+}
+
+.kindBadge {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-tint);
+  color: var(--accent-on);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.featureName {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.12;
+  color: var(--ink);
+}
+
+/* Block-link technique (Adrian Roselli / Inclusive Components): the real <a> is
+   only on the name, and its ::after stretches the hitbox across the whole card,
+   so assistive tech announces one concise link — not the whole card's text. */
+.featureLink {
+  color: inherit;
+  text-decoration: none;
+}
+.featureLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.featureTagline {
+  margin: 2px 0 0;
+  max-width: 46ch;
+  color: var(--ink-60);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.featureFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.metaGroup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.metaChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.metaChip svg {
+  font-size: 0.95em;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--accent-tint);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-tint) 22%, transparent);
+}
+
+.viewCue {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.viewCue svg {
+  transition: transform var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .feature:hover .viewCue svg {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewCue svg {
+    transition: none;
+  }
+  .feature:hover .viewCue svg {
+    transform: none;
+  }
+}
+
+/* ── Switch list (SubprofileSwitchList) ────────────────────────────────────── */
+
+.switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.switchHead {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-pill);
+  padding: 5px 12px;
+  cursor: pointer;
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .chip:hover {
+    border-color: rgba(var(--line-rgb), 0.2);
+  }
+}
+.chip[aria-pressed="true"] {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}
+
+.switchList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px 8px 10px;
+  text-align: left;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: var(--sans);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    border-color: color-mix(in srgb, var(--accent-tint) 40%, transparent);
+    background: color-mix(in srgb, var(--accent-tint) 5%, var(--paper));
+  }
+}
+.row[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--accent-tint) 60%, transparent);
+  background: color-mix(in srgb, var(--accent-tint) 9%, var(--paper));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
+}
+.row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: border-color var(--dur-base) var(--ease);
+  }
+}
+
+.rowAvatar {
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-tint) 30%, var(--paper));
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.rowName {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowKind {
+  font-size: 0.76rem;
+  color: var(--ink-60);
+}
+
+.rowActive {
+  flex: none;
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-tint);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-tint) 22%, transparent);
+}
+
+.more {
+  align-self: flex-start;
+  margin-top: 2px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 2px;
+  transition: color var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .more:hover {
+    color: var(--accent);
+  }
+}
+.more:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .more {
+    transition: none;
+  }
+}

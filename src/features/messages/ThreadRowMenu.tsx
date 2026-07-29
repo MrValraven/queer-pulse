@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./MessagesPage.module.css";
@@ -14,6 +14,8 @@ export function ThreadRowMenu({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const itemRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -25,20 +27,38 @@ export function ThreadRowMenu({
         setOpen(false);
       }
     }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
     document.addEventListener("pointerdown", onDocumentPointerDown);
-    document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("pointerdown", onDocumentPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
+
+  // APG menu-button contract: move focus into the menu when it opens.
+  useEffect(() => {
+    if (open) itemRef.current?.focus();
+  }, [open]);
+
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  // Escape closes and restores focus to the trigger. Home/End/Arrows keep the
+  // single item focused so the keyboard contract holds if items are ever added.
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      close();
+    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      itemRef.current?.focus();
+    }
+  };
 
   return (
     <div className={styles.rowMenu} ref={containerRef}>
       <button
+        ref={triggerRef}
         type="button"
         className={styles.rowMenuTrigger}
         aria-haspopup="menu"
@@ -52,10 +72,17 @@ export function ThreadRowMenu({
         <FiMoreHorizontal aria-hidden />
       </button>
       {open && (
-        <div className={styles.rowMenuPopover} role="menu">
+        <div
+          className={styles.rowMenuPopover}
+          role="menu"
+          tabIndex={-1}
+          onKeyDown={onMenuKeyDown}
+        >
           <button
+            ref={itemRef}
             type="button"
             role="menuitem"
+            tabIndex={-1}
             className={styles.rowMenuItemDanger}
             onClick={(event) => {
               event.stopPropagation();

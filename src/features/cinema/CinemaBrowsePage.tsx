@@ -75,7 +75,7 @@ function FilmCard({
           width="100%"
           height="100%"
           radius={14}
-          placeholder="poster"
+          placeholder={t("cinema:slot.poster")}
           style={{ position: "absolute", inset: 0 }}
         />
         <span className={`${styles.fcBadge} ${accessClass[film.access]}`}>

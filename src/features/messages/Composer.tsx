@@ -1,10 +1,14 @@
 // src/features/messages/Composer.tsx
-import { useRef, useLayoutEffect, useEffect } from "react";
+import { useRef, useLayoutEffect, useEffect, useState } from "react";
+import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEmitTyping } from "../../shared/api/realtime";
 import { useReplyPreviewTransition } from "./useReplyPreviewTransition";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { MentionText } from "../../shared/mentions/MentionText";
+import { GifComposerButton } from "./GifComposerButton";
+import { MentionHintButton } from "./MentionHintButton";
+import type { GifAttachment } from "../../shared/api/gifs";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -19,6 +23,9 @@ interface ComposerProps {
   replyDraft?: ChatMessage | null;
   /** Clears the reply draft (the preview banner's close button). */
   onCancelReply?: () => void;
+  /** Sends a picked GIF as its own message. When absent, the GIF button is
+   *  hidden (e.g. surfaces that don't wire the picker). */
+  onSendGif?: (attachment: GifAttachment) => void;
 }
 
 /** Bottom composer: severed into a notice bar for official/blocked threads. */
@@ -31,6 +38,7 @@ export function Composer({
   blocked,
   replyDraft,
   onCancelReply,
+  onSendGif,
 }: ComposerProps) {
   const { t } = useTranslation();
   const firstName = active.name.split(" ")[0]!;
@@ -41,6 +49,13 @@ export function Composer({
   // instead of snapping away — see the hook for why the wrapper below is
   // always rendered rather than conditionally on `replyDraft`.
   const { previewMessage, open: replyPreviewOpen } = useReplyPreviewTransition(replyDraft);
+  // Exactly one composer popover (GIF picker or the shortcut hint) is open at a
+  // time — a single source of truth keeps them mutually exclusive so we never
+  // stack two floating panels over the thread. `null` = both closed.
+  const [openPopover, setOpenPopover] = useState<"gif" | "shortcuts" | null>(null);
+  // Wraps both popover controls (and their panels) so one outside-click/Esc
+  // handler can close whichever is open — see the effect below.
+  const popoverGroupRef = useRef<HTMLDivElement>(null);
   /** Idle timer that emits `typing:false` ~3s after the last keystroke; also
    *  cleared (and re-armed) on send/blur so we never emit a late false-then-true. */
   const typingIdleTimerRef = useRef<number | undefined>(undefined);
@@ -58,6 +73,12 @@ export function Composer({
     node.style.height = "auto";
     const borderY = node.offsetHeight - node.clientHeight;
     node.style.height = `${node.scrollHeight + borderY}px`;
+    // Only let the box scroll internally once CSS `max-height` has actually
+    // clamped it (scrollHeight > clientHeight at that point) — otherwise
+    // overflow stays hidden, so a short/empty single-line draft never shows
+    // a stray scrollbar (or, on iOS Safari, a momentary touch-scroll
+    // indicator on a box that isn't really scrollable).
+    node.style.overflowY = node.scrollHeight > node.clientHeight ? "auto" : "hidden";
   }, [draft]);
 
   // Never leave a stale idle timer running past this component's lifetime
@@ -65,6 +86,48 @@ export function Composer({
   useEffect(() => {
     return () => window.clearTimeout(typingIdleTimerRef.current);
   }, []);
+
+  // Dismiss the open popover on a pointer down outside the controls group, or
+  // on Escape. Both controls share `popoverGroupRef`, so clicking one button
+  // toggles rather than double-firing, and clicking the input/thread closes.
+  useEffect(() => {
+    if (!openPopover) return;
+    function onPointerDown(event: PointerEvent) {
+      if (popoverGroupRef.current && !popoverGroupRef.current.contains(event.target as Node)) {
+        setOpenPopover(null);
+      }
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpenPopover(null);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [openPopover]);
+
+  /** Drops a mention sigil into the draft (with a leading space when needed so
+   *  the sigil sits at a word boundary — where `detectTrigger` fires), then
+   *  focuses the input with the caret at the end so typeahead opens as the
+   *  member types. Closes the popover so the screen stays uncluttered. */
+  function insertShortcut(sigil: string) {
+    const needsSpace = draft.length > 0 && !/\s$/.test(draft);
+    const next = `${draft}${needsSpace ? " " : ""}${sigil}`;
+    onDraftChange(next);
+    setOpenPopover(null);
+    requestAnimationFrame(() => {
+      const node = textareaRef.current;
+      if (!node) return;
+      node.focus();
+      node.setSelectionRange(node.value.length, node.value.length);
+    });
+  }
+
+  function togglePopover(which: "gif" | "shortcuts") {
+    setOpenPopover((current) => (current === which ? null : which));
+  }
 
   /** Enter-to-send and the send button both funnel through here so a send
    *  always clears the idle timer and tells the counterpart we've stopped. */
@@ -157,12 +220,27 @@ export function Composer({
               aria-label={t("messages:actions.editCancel")}
               onClick={onCancelReply}
             >
-              ✕
+              <FiX aria-hidden />
             </button>
           </div>
         )}
       </div>
       <div className={styles.composerRow}>
+        <div className={styles.composerControls} ref={popoverGroupRef}>
+          {onSendGif && (
+            <GifComposerButton
+              onSendGif={onSendGif}
+              open={openPopover === "gif"}
+              onToggle={() => togglePopover("gif")}
+              onClose={() => setOpenPopover(null)}
+            />
+          )}
+          <MentionHintButton
+            open={openPopover === "shortcuts"}
+            onToggle={() => togglePopover("shortcuts")}
+            onInsert={insertShortcut}
+          />
+        </div>
         <MentionTextarea
           id="messages-composer"
           wrapClassName={styles.composerTaWrap}
@@ -184,7 +262,7 @@ export function Composer({
           disabled={!draft.trim()}
         >
           <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden>
-            <path d="M2 8l12-6-4 6 4 6-12-6Z" fill="currentColor" />
+            <path d="M14 8l-12-6 4 6-4 6 12-6Z" fill="currentColor" />
           </svg>
         </button>
       </div>

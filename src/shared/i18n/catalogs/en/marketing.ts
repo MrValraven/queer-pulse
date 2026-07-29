@@ -1729,7 +1729,52 @@ export const marketing: Catalog = {
   "changelog.tag.forum": "Visit the forum →",
   "changelog.tag.profile": "Open your profile →",
   "changelog.tag.gatherings": "See gatherings →",
+  "changelog.tag.events": "Open the Events Hub →",
 
+  "changelog.entries.chat-shortcuts.title": "Mention shortcuts in chat",
+  "changelog.entries.chat-shortcuts.body":
+    "A new “?” button in the message composer shows every mention shortcut at a glance — @ for a member, c/ for a community, # for a topic, b/ for a business, e/ for an event, t/ for a thread. Tap one and it drops the sigil straight into your message so the suggestions open as you type. And to keep things tidy, only one composer popover is ever open at a time.",
+
+  "changelog.entries.events-hub.title": "One home for events",
+  "changelog.entries.events-hub.body":
+    "Events, Gatherings, and Calendar are now a single Events Hub — Highlights, Browse, and a full calendar together, with real photos for what's coming up. Same events, easier to find.",
+
+  "changelog.entries.gifs-in-chat.title": "Send GIFs in chat",
+  "changelog.entries.gifs-in-chat.body":
+    "Say it with a GIF. There's a new GIF button in the message composer — search or browse what's trending, tap one, and it sends straight into your chat (in DMs and group chats alike). Powered by KLIPY, with safe-content filtering on by default.",
+
+  "changelog.entries.privacy-and-speed.title":
+    "Stronger privacy and a snappier app",
+  "changelog.entries.privacy-and-speed.body":
+    "A round of privacy, speed and messaging polish. Personas and subprofiles you've set to private now stay fully private, and people you've blocked no longer turn up in the flatmate directory. Editing or deleting a message updates right away, with no reload flicker. And the app itself is lighter, so pages — and the images that greet you at the top — load a little quicker.",
+
+  "changelog.entries.leaner-prerendering.title":
+    "Leaner, faster site builds",
+  "changelog.entries.leaner-prerendering.body":
+    "Behind the scenes: we now pre-build only the essential public page for search engines instead of the whole site, and we no longer bake a separate copy of every profile. Builds use less data and stay quick, and search engines still find every public page through the sitemap. Nothing to do on your end.",
+
+  "changelog.entries.admin-governance-real-data.title":
+    "Governance dashboards now run on real data",
+  "changelog.entries.admin-governance-real-data.body":
+    "The admin governance area — its finance figures and quarter-by-quarter chart, the policy decision log, and the moderation audit trail — now reads live from the platform instead of placeholder numbers, so the team sees the community's real finances and moderation history.",
+
+  "changelog.entries.sign-in-fix.title": "Signing in works again",
+  "changelog.entries.sign-in-fix.body":
+    "A mismatch between the app and the server was stopping sign-in from completing. That's fixed — logging in, signing out, and staying signed in all work smoothly again.",
+  "changelog.entries.accessibility-mobile-polish.title":
+    "Easier to tap, easier to navigate",
+  "changelog.entries.accessibility-mobile-polish.body":
+    "Small buttons now have bigger touch areas on phones, actions that used to appear only on hover can be reached with the keyboard, and checkout and application forms support autofill for your name and email.",
+  "changelog.entries.platform-hardening.title": "Under-the-hood hardening",
+  "changelog.entries.platform-hardening.body":
+    "Behind the scenes: the API is now versioned with published documentation, long lists are safely bounded so pages stay fast, and reporting has spam protection. Nothing to do on your end — things just stay quick and stable.",
+  "changelog.entries.composer-reaction-polish.title":
+    "A roomier message box and tidier reactions",
+  "changelog.entries.composer-reaction-polish.body":
+    "The message box now stretches to fill the width of the composer, and on phones it sits flush without a stray scrollbar when your message is short — growing only as you type. Reactions also behave properly now: tapping an emoji you've already reacted with removes it instead of stacking the same one over and over.",
+  "changelog.entries.chat-mentions.title": "Mention people and places in chat",
+  "changelog.entries.chat-mentions.body":
+    "Type @ for a member, or c/ b/ e/ t/ # for a community, business, gathering, thread or topic — pick from the suggestions and it turns into a tappable link, in a direct message or a group. Works while you're writing and while you're editing a message. Your chats stay private: mentions only link, they never notify anyone.",
   "changelog.entries.group-chats.title": "Group chats",
   "changelog.entries.group-chats.body":
     "Start a group with the people you want in it, name it, and share who's who. Admins can add or remove members and tidy up the group info, you can see who's read a message, and a typing bubble shows when someone's writing.",
@@ -1761,6 +1806,10 @@ export const marketing: Catalog = {
     "Every report gets a real decision",
   "changelog.entries.moderation-actions.body":
     "Opening a report in the moderation queue now always shows the full set of actions — hide, warn, restrict, remove and more, each with a reason the member reads — instead of quietly closing it. The queue's headline also reflects the real number of reports waiting.",
+  "changelog.entries.listing-preview-and-ask.title":
+    "Preview a listing, ask a question",
+  "changelog.entries.listing-preview-and-ask.body":
+    "Moderators can now preview a submitted business exactly as it'll appear live, and ask the submitter a question that reaches them as a direct message.",
   "changelog.entries.business-map-pin.title": "Put your business on the map",
   "changelog.entries.business-map-pin.body":
     "Listing a business? Paste a Google Maps link to drop a pin, and live listings now show up on the local map. New submissions pass through a moderation queue before they appear.",
@@ -1934,6 +1983,7 @@ export const marketing: Catalog = {
   "pressArchive.loadingMore": "Loading older pieces…",
   "pressArchive.loadMoreCta": "Load older coverage",
   "pressArchive.endOfArchive": "That's the whole archive — 2022 to today.",
+  "pressArchive.noResults": "No coverage matches those filters yet.",
 
   // ── Volunteering — page chrome. Org names/roles/descriptions/skills come
   //    from the live opportunities API (or its demo mock) — left English;

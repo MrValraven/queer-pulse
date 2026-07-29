@@ -19,7 +19,7 @@ import {
 import {
   currentUser,
   currentUserSlug,
-} from "../../features/members/data/members";
+} from "../../features/members/data/demoCurrentUser";
 
 function getInitialLoggedIn(): boolean {
   if (typeof window === "undefined") return true;

@@ -5,6 +5,11 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://vite.dev/config/
 export default defineConfig({
   build: {
+    // "hidden" emits .map files alongside the bundle but omits the
+    // //# sourceMappingURL comment, so browsers/devtools don't fetch them —
+    // yet a monitor (e.g. Sentry) can still resolve production stack traces
+    // back to original source. Readable traces without shipping maps to users.
+    sourcemap: "hidden",
     rollupOptions: {
       output: {
         // Split the stable, rarely-changing vendor libraries out of the app
@@ -26,6 +31,17 @@ export default defineConfig({
           }
           if (/[\\/]node_modules[\\/]socket\.io-client[\\/]/.test(id)) {
             return "vendor-realtime";
+          }
+          // maplibre-gl (WebGL map renderer) and the @visx/* charting family
+          // are individually heavy and each reachable from more than one lazy
+          // route (map picker + directory map view; analytics/charts) — give
+          // them their own cacheable buckets instead of letting them land in
+          // (and duplicate across) the default vendor split.
+          if (/[\\/]node_modules[\\/]maplibre-gl[\\/]/.test(id)) {
+            return "vendor-maplibre";
+          }
+          if (/[\\/]node_modules[\\/]@visx[\\/]/.test(id)) {
+            return "vendor-visx";
           }
           return undefined;
         },

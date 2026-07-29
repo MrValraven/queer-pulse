@@ -57,6 +57,7 @@ export interface FlaggedMemberDTO {
   handle: string;
   initials: string;
   tone: BadgeTone;
+  avatarUrl: string | null;
   openReportCount: number;
   topReasonCode: string | null;
   moderationState: ModerationState;

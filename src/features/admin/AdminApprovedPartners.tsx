@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { AdminToggle } from "./ui";
@@ -21,6 +22,7 @@ import styles from "./AdminPartnerApplicationsPage.module.css";
  * admin-only.
  */
 export function AdminApprovedPartners() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { data, isLoading, isError, error } = useAdminPartners();
   const updatePartner = useUpdatePartnerAdmin();
@@ -49,7 +51,7 @@ export function AdminApprovedPartners() {
   return (
     <div className={styles.featuredSection}>
       <h2 className={styles.sectionTitle}>
-        Featured partners &amp; testimonials
+        {t("admin:approvedPartners.title")}
       </h2>
 
       {isLoading ? (
@@ -65,12 +67,14 @@ export function AdminApprovedPartners() {
       ) : isError ? (
         <div className={styles.notice}>
           <p className={styles.noticeText}>
-            The partner list couldn't load right now — please try again.
+            {t("admin:approvedPartners.loadError")}
           </p>
         </div>
       ) : partners.length === 0 ? (
         <div className={styles.empty}>
-          <p className={styles.emptyText}>No approved partners yet.</p>
+          <p className={styles.emptyText}>
+            {t("admin:approvedPartners.empty")}
+          </p>
         </div>
       ) : (
         <div className={styles.rows}>
@@ -81,21 +85,26 @@ export function AdminApprovedPartners() {
                   <div className={styles.rowTop}>
                     <span className={styles.rowName}>{partner.name}</span>
                     {partner.featured && (
-                      <span className={styles.featuredTag}>Featured</span>
+                      <span className={styles.featuredTag}>
+                        {t("admin:common.featured")}
+                      </span>
                     )}
                   </div>
                   <div className={styles.rowMeta}>
                     {partner.testimonialQuote
                       ? `"${partner.testimonialQuote}" — ${
-                          partner.testimonialAuthor ?? "Unattributed"
+                          partner.testimonialAuthor ??
+                          t("admin:approvedPartners.unattributed")
                         }`
-                      : "No testimonial yet"}
+                      : t("admin:approvedPartners.noTestimonial")}
                   </div>
                 </div>
                 <AdminToggle
                   checked={partner.featured}
                   onChange={() => toggleFeatured(partner)}
-                  label={`Featured — ${partner.name}`}
+                  label={t("admin:common.featuredToggleLabel", {
+                    name: partner.name,
+                  })}
                 />
                 <div className={styles.rowActions}>
                   <Button
@@ -103,7 +112,7 @@ export function AdminApprovedPartners() {
                     size="md"
                     onClick={() => setEditingPartner(partner)}
                   >
-                    Edit testimonial
+                    {t("admin:approvedPartners.editCta")}
                   </Button>
                 </div>
               </div>

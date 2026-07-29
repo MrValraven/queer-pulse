@@ -143,6 +143,7 @@ export const settings: Catalog = {
 
   "interests.lookingFor.heading": "O que procuras aqui?",
   "interests.lookingFor.helper": "Seleciona quantas quiseres.",
+  "interests.lookingFor.showOnProfile": "Mostrar no meu perfil o que procuro",
   "interests.life.heading": "Um pouco sobre a tua vida",
   "interests.life.note": "(privado — ajuda com sugestões locais)",
   "interests.life.cityLabel": "Cidade / região",

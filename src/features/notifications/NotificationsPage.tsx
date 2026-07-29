@@ -1,25 +1,17 @@
-import {
-  useMemo,
-  useState,
-  type KeyboardEvent,
-  type MouseEvent,
-} from "react";
+import { useMemo, useState } from "react";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { Avatar, FadeIn, Tabs } from "../../shared/components/ui";
+import { Tabs } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
-import { linkToPath } from "../../app/routeMap";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { MentionsPanel } from "./MentionsPanel";
+import { NotificationItem } from "./NotificationItem";
 import { useNotifications } from "./api/useNotifications";
 import { useMentions } from "./api/useMentions";
 import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
 import { useMarkAllRead } from "./api/useMarkAllRead";
 import { notificationTabs, type NotifType, type Notification } from "./data";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./NotificationsPage.module.css";
 
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
@@ -36,7 +28,6 @@ export function NotificationsPage() {
   const { data: mentionDays = [] } = useMentions();
   const markReadMutation = useMarkNotificationRead();
   const markAllReadMutation = useMarkAllRead();
-  const navigate = useNavigate();
   const { showToast } = useToast();
   const [filter, setFilter] = useState<"all" | NotifType | "mentions">("all");
   const [readIds, setReadIds] = useState<Set<NotificationId>>(new Set());
@@ -90,135 +81,16 @@ export function NotificationsPage() {
     showToast(toast, "success");
   }
 
-  function renderItem(notification: Notification, index: number) {
-    const isUnread = notification.unread && !readIds.has(notification.id);
-    // A click/keypress that landed on the avatar or the inline profile link
-    // (both render as <a>) is that link's own navigation — the actor
-    // profile — and must not be overridden by the row's source deep-link.
-    function activateRow(target: EventTarget | null) {
-      markRead(notification.id);
-      const clickedLink = (target as HTMLElement).closest?.("a");
-      if (notification.sourceHref && !clickedLink) {
-        void navigate(linkToPath(notification.sourceHref));
-      }
-    }
-    return (
-      <FadeIn
-        key={notification.id}
-        delay={Math.min(index, 8) * 60}
-        className={[styles.item, isUnread && styles.unread]
-          .filter(Boolean)
-          .join(" ")}
-        onClick={(event: MouseEvent<HTMLElement>) => activateRow(event.target)}
-        // Only a row with a source deep-link is keyboard-operable — a row
-        // with none stays a plain (mark-read-on-click) div, same as before
-        // this field existed.
-        role={notification.sourceHref ? "button" : undefined}
-        tabIndex={notification.sourceHref ? 0 : undefined}
-        aria-label={
-          notification.sourceHref
-            ? `${
-                typeof notification.text === "string"
-                  ? notification.text
-                  : notification.meta
-              } — ${t("notifications:actions.viewThread")}`
-            : undefined
-        }
-        onKeyDown={
-          notification.sourceHref
-            ? (event: KeyboardEvent<HTMLElement>) => {
-                if (event.key !== "Enter" && event.key !== " ") return;
-                // Space's default is page scroll; Enter has no default to guard
-                // here, but preventDefault is harmless on it.
-                event.preventDefault();
-                activateRow(event.target);
-              }
-            : undefined
-        }
-      >
-        {isUnread && <span className={styles.unreadDot} aria-hidden />}
-        {notification.avatar ? (
-          notification.actor ? (
-            <Link
-              to={linkToPath(notification.actor.href)}
-              className={styles.avatarLink}
-              aria-label={notification.actor.name}
-            >
-              <Avatar
-                initials={notification.avatar.initials}
-                tint={notification.avatar.tint}
-                src={notification.avatar.src}
-                size={40}
-              />
-            </Link>
-          ) : (
-            <Avatar
-              initials={notification.avatar.initials}
-              tint={notification.avatar.tint}
-              src={notification.avatar.src}
-              size={40}
-            />
-          )
-        ) : (
-          <span
-            className={styles.icon}
-            style={{ background: notification.icon?.background }}
-          >
-            {notification.icon && <notification.icon.Glyph />}
-          </span>
-        )}
-        <MemberStaffBadge slug={notification.actorSlug} />
-        <div className={styles.body}>
-          <div className={styles.text}>
-            {notification.actor?.textKey ? (
-              <Translation
-                i18nKey={notification.actor.textKey}
-                components={{
-                  profile: (
-                    <Link
-                      to={linkToPath(notification.actor.href)}
-                      className={styles.actorLink}
-                    />
-                  ),
-                }}
-                values={{ name: notification.actor.name }}
-              />
-            ) : (
-              notification.text
-            )}
-          </div>
-          <div className={styles.meta}>{notification.meta}</div>
-          {notification.actions && (
-            <div className={styles.itemActions}>
-              {notification.actions.map((action) => (
-                <button
-                  type="button"
-                  key={action.label}
-                  className={[
-                    styles.btn,
-                    action.variant === "primary"
-                      ? styles.btnPrimary
-                      : styles.btnGhost,
-                  ].join(" ")}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    if (action.resolve) {
-                      resolve(notification.id, action.resolve.toast);
-                    } else if (action.href !== "#") {
-                      void navigate(linkToPath(action.href));
-                    }
-                  }}
-                >
-                  {action.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className={styles.time}>{notification.time}</div>
-      </FadeIn>
-    );
-  }
+  const renderItem = (notification: Notification, index: number) => (
+    <NotificationItem
+      key={notification.id}
+      notification={notification}
+      index={index}
+      isUnread={notification.unread && !readIds.has(notification.id)}
+      onMarkRead={markRead}
+      onResolve={resolve}
+    />
+  );
 
   return (
     <AppShell unreadCount={unreadCount}>

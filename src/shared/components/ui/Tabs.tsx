@@ -1,3 +1,4 @@
+import { useRef, type KeyboardEvent } from "react";
 import styles from "./Tabs.module.css";
 
 export interface Tab {
@@ -27,6 +28,41 @@ export function Tabs({
   tint?: "light" | "dark";
   className?: string;
 }) {
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // APG tablist keyboard contract (automatic activation): roving tabIndex plus
+  // Arrow/Home/End move focus AND select, so keyboard users can traverse tabs.
+  const moveTo = (index: number) => {
+    const nextIndex = (index + tabs.length) % tabs.length;
+    const nextTab = tabs[nextIndex];
+    if (!nextTab) return;
+    onChange(nextTab.id);
+    tabRefs.current[nextIndex]?.focus();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    switch (event.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        event.preventDefault();
+        moveTo(index + 1);
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        event.preventDefault();
+        moveTo(index - 1);
+        break;
+      case "Home":
+        event.preventDefault();
+        moveTo(0);
+        break;
+      case "End":
+        event.preventDefault();
+        moveTo(tabs.length - 1);
+        break;
+    }
+  };
+
   return (
     <div
       className={[
@@ -39,23 +75,31 @@ export function Tabs({
         .join(" ")}
       role="tablist"
     >
-      {tabs.map((t) => (
-        <button
-          key={t.id}
-          type="button"
-          role="tab"
-          aria-selected={active === t.id}
-          className={[styles.tab, active === t.id && styles.tabOn]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => onChange(t.id)}
-        >
-          {t.label}
-          {t.count != null && (
-            <span className={styles.tabCount}>{t.count}</span>
-          )}
-        </button>
-      ))}
+      {tabs.map((tab, index) => {
+        const isActive = active === tab.id;
+        return (
+          <button
+            key={tab.id}
+            ref={(node) => {
+              tabRefs.current[index] = node;
+            }}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            tabIndex={isActive ? 0 : -1}
+            className={[styles.tab, isActive && styles.tabOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => onChange(tab.id)}
+            onKeyDown={(event) => handleKeyDown(event, index)}
+          >
+            {tab.label}
+            {tab.count != null && (
+              <span className={styles.tabCount}>{tab.count}</span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }

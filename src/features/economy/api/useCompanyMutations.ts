@@ -17,6 +17,8 @@ export function useCreateCompany() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<{ slug: string } | null, Error, CreateCompanyDto>({
+    // AffiliateCompanyModal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return null;
       const res = await createCompany(dto);
@@ -38,6 +40,9 @@ export function useCreateReview(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, CreateReviewDto>({
+    // CompanyReviewModal toasts its own error (incl. the 409 "already reviewed"),
+    // so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return;
       await createReview(slug, dto);

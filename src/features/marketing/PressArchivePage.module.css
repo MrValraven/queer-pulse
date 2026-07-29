@@ -267,3 +267,8 @@
   color: var(--ink-40);
   font-style: italic;
 }
+.empty {
+  padding: 40px 4px;
+  color: var(--ink-60);
+  font-size: 15px;
+}

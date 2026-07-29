@@ -36,6 +36,8 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
             radius={16}
             placeholder="cover · track 6"
             style={{ position: "absolute", inset: 0 }}
+            loading="eager"
+            fetchPriority="high"
           />
         </div>
         <div className={ss.heroInfo}>

@@ -1,11 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  FiCheck,
-  FiChevronDown,
-  FiChevronRight,
-  FiSend,
-  FiUsers,
-} from "react-icons/fi";
+import { FiCheck, FiSend, FiUsers } from "react-icons/fi";
 import { MdQrCodeScanner } from "react-icons/md";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -17,9 +11,9 @@ import {
   PEAK_ARRIVAL_END,
   PEAK_ARRIVAL_START,
   RECENT,
-  WAITLIST,
   type Guest,
 } from "./gatheringDashboard.data";
+import { GuestWaitlist } from "./GuestWaitlist";
 import { QrScanModal } from "./QrScanModal";
 import styles from "./GatheringDashboardPage.module.css";
 
@@ -159,10 +153,8 @@ export function GuestListCard({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
   const [filter, setFilter] = useState<"all" | "in" | "pending">("all");
   const [query, setQuery] = useState("");
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   const visible = useMemo(
     () =>
@@ -289,61 +281,7 @@ export function GuestListCard({
           ))}
         </div>
 
-        <div
-          className={styles.waitlistToggle}
-          onClick={() => setWaitlistOpen((open) => !open)}
-          role="button"
-          tabIndex={0}
-          aria-expanded={waitlistOpen}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              setWaitlistOpen((open) => !open);
-            }
-          }}
-        >
-          <span>{waitlistOpen ? <FiChevronDown /> : <FiChevronRight />}</span>{" "}
-          {t("gatherings:dashboard.guestList.waitlistToggle", {
-            count: WAITLIST.length,
-          })}
-        </div>
-        {waitlistOpen && (
-          <div>
-            {WAITLIST.map((waitlisted) => (
-              <div className={styles.attRow} key={waitlisted.name}>
-                <div
-                  className={styles.attAv}
-                  style={{ background: waitlisted.background, color: waitlisted.color }}
-                >
-                  {waitlisted.initials}
-                </div>
-                <div className={styles.attInfo}>
-                  <div className={styles.attName}>{waitlisted.name}</div>
-                  <div className={styles.attMeta}>
-                    {waitlisted.pronouns} ·{" "}
-                    {t("gatherings:dashboard.waitlist.position", {
-                      position: waitlisted.waitlistPosition,
-                    })}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className={styles.promoteBtn}
-                  onClick={() =>
-                    showToast(
-                      t("gatherings:dashboard.guestList.promotedToast", {
-                        name: waitlisted.name.split(" ")[0]!,
-                      }),
-                      "success",
-                    )
-                  }
-                >
-                  {t("gatherings:dashboard.guestList.promoteCta")}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        <GuestWaitlist />
       </div>
     </div>
   );

@@ -216,6 +216,11 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* Absorb the free vertical space and scroll internally so a tall nav list
+     never pushes the footer / user card off the fixed-height sidebar. */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 .navHead {
   padding: 6px 12px 8px;

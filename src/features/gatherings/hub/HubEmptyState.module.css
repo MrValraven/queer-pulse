@@ -1,0 +1,117 @@
+/* Shared Events Hub empty state — warm dashed panel + spot illustration.
+   Mirrors the shared `EmptyState` primitive's panel language (dashed border,
+   soft tinted gradient) but swaps its icon-in-a-circle for the hub's own
+   spark-calendar art. */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding-block: 56px;
+  padding-inline: 32px;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--accent-rgb), 0.06),
+    rgba(var(--jade-rgb), 0.03)
+  );
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-card);
+}
+
+.compact {
+  padding-block: 40px;
+  padding-inline: 24px;
+  gap: 10px;
+}
+
+.art {
+  width: min(180px, 70%);
+  height: auto;
+  margin-block-end: 4px;
+}
+
+.compact .art {
+  width: min(130px, 55%);
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.35rem;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.body {
+  color: var(--ink-60);
+  max-width: 42ch;
+  margin: 0;
+  line-height: var(--lh-body);
+}
+
+.actions {
+  margin-block-start: 8px;
+}
+
+/* Spark ring + mark: the only moving part of the illustration — a slow,
+   subtle "something's about to happen" pulse on transform/opacity only. */
+.spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hubSparkPulse 2.4s var(--ease-std) infinite;
+}
+
+@keyframes hubSparkPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+}
+
+/* ── Vibey loading line ── */
+.loadingLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-60);
+  font-size: var(--text-body-sm);
+  margin: 0 0 20px;
+}
+
+.loadingDot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+  animation: hubLoadingPulse 1.6s var(--ease-std) infinite;
+}
+
+@keyframes hubLoadingPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark {
+    animation: none;
+  }
+  .loadingDot {
+    animation: none;
+    opacity: 0.85;
+  }
+}

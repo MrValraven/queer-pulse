@@ -49,7 +49,9 @@ export function MicroGrantsHero() {
         <div className={styles.fundBarWrap}>
           <div className={styles.fundBarLabel}>
             <span>{t("resources:microGrants.hero.fundBar.roundLabel")}</span>
-            <span>€3,200 / €4,000 goal</span>
+            <span>
+              €3,200 / €4,000 {t("resources:microGrants.hero.fundBar.goalLabel")}
+            </span>
           </div>
           <div className={styles.fundBar}>
             <div className={styles.fundBarFill} />

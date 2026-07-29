@@ -12,7 +12,7 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
       slug: "ines",
       firstName: "Inês",
       lastName: "",
-    } as ListingDTO["submittedBy"],
+    },
     createdAt: "2026-07-01T00:00:00.000Z",
     path: "claim",
     verify: "",
@@ -48,7 +48,7 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     consentOuting: true,
     consentGuide: true,
     ...overrides,
-  } as ListingDTO;
+  };
 }
 
 describe("dtoToDraft", () => {

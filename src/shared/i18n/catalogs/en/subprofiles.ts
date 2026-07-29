@@ -39,6 +39,13 @@ export const subprofiles: Catalog = {
   "alsoAs.subtitleSelf": "The professional personas you've linked here.",
   "alsoAs.subtitleEmpty": "Another side of your work can live here.",
   "alsoAs.manage": "Manage subprofiles →",
+  "alsoAs.viewPersona": "View persona",
+  "alsoAs.switchLabel": "Switch preview",
+  "alsoAs.previewLabel": "Preview another persona",
+  "alsoAs.filterLabel": "Filter by craft",
+  "alsoAs.filterAll": "All",
+  "alsoAs.showAll": "Show all ({count} more)",
+  "alsoAs.showFewer": "Show fewer",
   "alsoAs.empty.title": "Add a professional subprofile",
   "alsoAs.empty.description":
     "Show another side of your work — your music, your code, your writing — linked here or standing on its own.",

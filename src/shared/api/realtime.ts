@@ -13,6 +13,9 @@ import type { QueryClient } from "@tanstack/react-query";
 import { io, type Socket } from "socket.io-client";
 import { queryClient } from "./queryClient";
 import {
+  patchConversationPreview,
+  patchMessageDelete,
+  patchMessageEdit,
   patchMessagePinned,
   patchMessageReactionCounts,
   reconcileConversationHistory,
@@ -243,9 +246,13 @@ class RealtimeClient {
     // frames below only carry ids, so those still invalidate (see each note).
     socket.on("message:new", ({ conversationId, message }) => {
       upsertMessage(this.qc, conversationId, message);
-      // Inbox previews + unread badges live in a small, separate list; refresh
-      // them (the thread itself is already patched above).
-      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+      // The frame carries the full new message, so patch the inbox row's
+      // preview/time in place (and move it to the top) instead of refetching
+      // the whole list. This fires for the SENDER's own send too (the backend
+      // echoes to the whole room) — harmless, since `useSendMessage.onSuccess`
+      // already applied the identical patch; the second application is a
+      // no-op re-affirmation, not a second network round-trip.
+      patchConversationPreview(this.qc, conversationId, message);
       // We received it → ack delivery so the SENDER's tick advances to a double
       // check. Only the joined (open) thread streams `message:new`, so this only
       // fires for a conversation the member is present in — exactly when
@@ -253,9 +260,18 @@ class RealtimeClient {
       // harmless self-watermark advance (never rendered against our own bubbles).
       this.scheduleDeliveredAck(conversationId);
     });
-    socket.on("read", () => {
-      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
-    });
+    // A `read` frame is a watermark update, not new content. Our OWN read is
+    // already patched into the cache by `useMarkRead.onSuccess` (zeroes the
+    // unread count locally, no refetch); this frame would just be the
+    // self-echo of that. The COUNTERPART's read of our sent messages doesn't
+    // change our own unread count either, and the list row's
+    // `otherLastReadAt` is only a cold-load fallback seed for the "Seen" tick
+    // (see messages.adapters.ts) — the LIVE tick comes from the separate
+    // `useReadFrames`/`onRead` subscription in useMessageReceipts.ts, which
+    // already ignores our own userId there too. So there is genuinely nothing
+    // to patch into `["conversations"]` for either side of this frame —
+    // deliberately no handler here (was a redundant blanket invalidate that
+    // doubled the GET /conversations fired by useMarkRead's own mutation).
     socket.on("notification:new", () => {
       void this.qc.invalidateQueries({ queryKey: ["notifications"] });
     });
@@ -276,9 +292,24 @@ class RealtimeClient {
       if (this.myUserId && userId === this.myUserId) return;
       patchMessageReactionCounts(this.qc, conversationId, messageId, reactions);
     });
-    socket.on("message:deleted", ({ conversationId }) => {
-      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
-      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+    // A message was soft-deleted (author or staff). The frame only carries the
+    // id, not a deletedAt timestamp, so patch the tombstone in place using "now"
+    // — the same approximation `useDeleteMessage.onSuccess` already uses for the
+    // acting user's own optimistic patch (messageCache.ts's `patchMessageDelete`
+    // sets body/reactions from the delete, and `deletedAt` only needs to be
+    // truthy for the tombstone to render). No own-echo skip needed: like
+    // `message:new` above (and unlike `reaction`'s delta), this is an idempotent
+    // SET, so re-applying the deleting user's own already-patched tombstone is a
+    // harmless no-op. There's no last-message id on a cached conversation row to
+    // check whether this message was the inbox preview, so the preview is left
+    // alone here — it self-corrects on the next `["conversations"]` fetch.
+    socket.on("message:deleted", ({ conversationId, messageId }) => {
+      patchMessageDelete(
+        this.qc,
+        conversationId,
+        messageId,
+        new Date().toISOString(),
+      );
     });
     // A message was pinned/unpinned. Pins are SHARED, so patch the message's pin
     // state into the thread cache (in-bubble indicator flips) and refresh only
@@ -294,9 +325,19 @@ class RealtimeClient {
         queryKey: ["conversation-pins", conversationId],
       });
     });
-    socket.on("message:updated", ({ conversationId }) => {
-      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
-      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+    // A message was edited (15-min window). The frame carries the full updated
+    // message, so patch body + editedAt in place instead of refetching the whole
+    // thread — mirrors `patchMessageEdit`'s use in `useEditMessage.onSuccess`.
+    // Same idempotent-SET / no-own-echo-skip / preview-left-alone reasoning as
+    // `message:deleted` above.
+    socket.on("message:updated", ({ conversationId, message }) => {
+      patchMessageEdit(
+        this.qc,
+        conversationId,
+        message.id,
+        message.body,
+        message.editedAt ?? new Date().toISOString(),
+      );
     });
 
     // Per-event fan-out to component subscribers (additive — the invalidation
@@ -419,7 +460,15 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   // a separate effect below pushes later changes onto the live client.
   const myUserId = user?.id ?? null;
   const myUserIdRef = useRef(myUserId);
-  myUserIdRef.current = myUserId;
+  // Keep the ref pointing at the latest committed user id so the connect effect
+  // below can seed a freshly-built client without taking `user` as a socket
+  // dependency. Written in an effect (not during render — react-hooks/refs) and
+  // declared BEFORE the connect effect so that on a login commit which flips
+  // `active` and `myUserId` together, this runs first and the ref is already
+  // current when the connect effect reads it.
+  useEffect(() => {
+    myUserIdRef.current = myUserId;
+  }, [myUserId]);
   const [connected, setConnected] = useState(false);
   const [demand, setDemand] = useState(0);
   const clientRef = useRef<RealtimeClient | null>(null);
@@ -572,6 +621,12 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     ],
   );
 
+  // `value` is a memoized bundle of stable callbacks that close over refs but
+  // only dereference them when INVOKED (inside event handlers / effects), never
+  // during render — so handing it to the context Provider is not a during-render
+  // ref read. This is a `.ts` module (no JSX), hence createElement rather than
+  // <Provider value={value}>, which the rule would not have flagged.
+  // eslint-disable-next-line react-hooks/refs -- see above: passing a memoized callback bundle to the context Provider, not reading ref.current during render.
   return createElement(RealtimeContext.Provider, { value }, children);
 }
 

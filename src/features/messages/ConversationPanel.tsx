@@ -1,52 +1,26 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
 import { usePresenceOnline } from "../../shared/api/realtime";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { Composer } from "./Composer";
+import { ConversationGroupModals } from "./ConversationGroupModals";
 import { ConversationHeader } from "./ConversationHeader";
 import { ConversationOverlays } from "./ConversationOverlays";
 import { ConversationPinnedBanner } from "./ConversationPinnedBanner";
-import { GroupInfoModal } from "./GroupInfoModal";
-import { GroupSeenBySheet } from "./GroupSeenBySheet";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { useGroupIndicators } from "./useGroupIndicators";
 import { MessageArea } from "./MessageArea";
 import { type RunParticipant } from "./MessageRun";
 import { useJumpToMessage } from "./useJumpToMessage";
+import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useSearchJump } from "./useSearchJump";
 import { useMessageScroll } from "./useMessageScroll";
 import { useTypingIndicator } from "./useTypingIndicator";
 import { useUnreadDivider } from "./useUnreadDivider";
-import {
-  useToggleReaction,
-  useDeleteMessage,
-  useEditMessage,
-} from "./api/useMessageActions";
 import { useConversationPinStar } from "./useConversationPinStar";
-import { type LongPressOrigin } from "./useLongPress";
 import { type ChatMessage, type Conversation, type GroupMemberView } from "./data";
+import type { GifAttachment } from "../../shared/api/gifs";
 import styles from "./MessagesPage.module.css";
-
-/** Own messages remain editable for 15 minutes after they were sent (client
- *  gate; the server is the authority and rejects edits past its own window). */
-const EDIT_WINDOW_MS = 15 * 60 * 1000;
-
-/** The message the long-press/right-click action menu is open for. `source`
- *  decides the surface — touch long-press → full-screen overlay; desktop
- *  right-click/keyboard → compact context menu at `point`. */
-type ActionOverlayTarget =
-  | {
-      message: ChatMessage;
-      rect: DOMRect;
-      isSent: boolean;
-      /** Snapshotted at open time (the edit window is time-relative — computing
-       *  it during render would be an impure, drifting value). */
-      canEdit: boolean;
-      source: "touch" | "pointer";
-      point?: { x: number; y: number };
-    }
-  | null;
 
 interface ConversationPanelProps {
   active: Conversation;
@@ -62,6 +36,8 @@ interface ConversationPanelProps {
   draft: string;
   onDraftChange: (value: string) => void;
   onSend: () => void;
+  /** Sends a picked GIF as its own message (from the composer's GIF picker). */
+  onSendGif?: (attachment: GifAttachment) => void;
   /** True when the counterpart is blocked — the composer is severed. */
   blocked?: boolean;
   /** Mobile only — returns to the conversation list. Absent on desktop. */
@@ -124,6 +100,7 @@ export function ConversationPanel({
   draft,
   onDraftChange,
   onSend,
+  onSendGif,
   blocked = false,
   onBack,
   onRetry,
@@ -154,59 +131,31 @@ export function ConversationPanel({
   /** Whether the "Seen by" sheet is open (groups only). */
   const [seenBySheetOpen, setSeenBySheetOpen] = useState(false);
 
-  const toggleReaction = useToggleReaction(active.id);
-  const deleteMessage = useDeleteMessage(active.id);
-  const editMessage = useEditMessage(active.id);
   // Pin (shared) + star (private) wiring lives in its own hook to keep this
   // component under the size cap.
   const { pinnedMessages, onTogglePin, onToggleStar } =
     useConversationPinStar(active);
-  /** Message the report modal is open for (its server id is the report subject). */
-  const [reportTarget, setReportTarget] = useState<ChatMessage | null>(null);
-  /** Message the delete-confirm dialog is open for. */
-  const [deleteTarget, setDeleteTarget] = useState<ChatMessage | null>(null);
-  const confirmDelete = useCallback(() => {
-    if (deleteTarget?.id) deleteMessage.mutate(deleteTarget.id);
-    setDeleteTarget(null);
-  }, [deleteTarget, deleteMessage]);
-  const [actionTarget, setActionTarget] = useState<ActionOverlayTarget>(null);
-  /** Server id of the message the inline editor is currently open for. */
-  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
 
-  function beginEdit(message: ChatMessage) {
-    if (message.id) setEditingMessageId(message.id);
-  }
-  function submitEdit(message: ChatMessage, nextBody: string) {
-    const trimmed = nextBody.trim();
-    if (message.id && trimmed && trimmed !== message.text) {
-      editMessage.mutate({ messageId: message.id, body: trimmed });
-    }
-    setEditingMessageId(null);
-  }
-  function cancelEdit() {
-    setEditingMessageId(null);
-  }
-
-  // optimistic/failed messages have no server id yet, so the menu can't open
-  function openActions(message: ChatMessage, origin: LongPressOrigin, isSent: boolean) {
-    if (!message.id) return;
-    const canEdit =
-      isSent &&
-      !!message.at &&
-      Date.now() - new Date(message.at).getTime() < EDIT_WINDOW_MS;
-    setActionTarget({
-      message,
-      rect: origin.rect,
-      isSent,
-      canEdit,
-      source: origin.source,
-      point: origin.point,
-    });
-  }
-
-  function copyMessage(message: ChatMessage) {
-    void navigator.clipboard?.writeText(message.text);
-  }
+  // The long-press/right-click action menu — action overlay + delete-confirm +
+  // report-modal + inline-edit state and the reaction toggle — lives in its own
+  // hook to keep this component under the size cap.
+  const {
+    actionTarget,
+    setActionTarget,
+    deleteTarget,
+    setDeleteTarget,
+    reportTarget,
+    setReportTarget,
+    editingMessageId,
+    confirmDelete,
+    beginEdit,
+    submitEdit,
+    cancelEdit,
+    openActions,
+    copyMessage,
+    handleReactionToggle,
+    deletePending,
+  } = useMessageActionMenu(active.id);
 
   // The single scroll-to + highlight mechanism, reused by the reply-quote jump
   // below AND the cross-inbox-search jump effect — no second scroll/highlight
@@ -217,15 +166,6 @@ export function ConversationPanel({
   // once its thread is open (retry-until-rendered, then give up). Extracted to a
   // hook to keep this component under the line cap.
   useSearchJump(jumpToMessageId, jumpToMessage, onJumpHandled);
-  /** Adds/removes a reaction. Live-only: `message.id` is the server id the
-   *  mutation needs; demo messages have none, so this is a no-op there. */
-  const handleReactionToggle = useCallback(
-    (message: ChatMessage, key: MessageReactionKey, mine: boolean) => {
-      if (!message.id) return;
-      toggleReaction.mutate({ messageId: message.id, key, mine });
-    },
-    [toggleReaction],
-  );
 
   const online = usePresenceOnline();
   const isCounterpartOnline =
@@ -336,6 +276,7 @@ export function ConversationPanel({
         draft={draft}
         onDraftChange={onDraftChange}
         onSend={onSend}
+        onSendGif={onSendGif}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}
@@ -356,33 +297,24 @@ export function ConversationPanel({
         setDeleteTarget={setDeleteTarget}
         setReportTarget={setReportTarget}
         onConfirmDelete={confirmDelete}
-        deletePending={deleteMessage.isPending}
+        deletePending={deletePending}
       />
-      {groupInfoOpen && active.isGroup && (
-        <GroupInfoModal
-          active={active}
-          myUserId={myUserId ?? null}
-          onClose={() => setGroupInfoOpen(false)}
-          onLeave={() => {
-            onLeaveGroup?.(active.id);
-            setGroupInfoOpen(false);
-          }}
-          leaving={leavePending}
-          managing={groupManaging}
-          onAddMembers={(picks) => onAddGroupMembers?.(active.id, picks)}
-          onRemoveMember={(member) => onRemoveGroupMember?.(active.id, member)}
-          onChangeMemberRole={(member, role) =>
-            onChangeGroupMemberRole?.(active.id, member, role)
-          }
-          onUpdateInfo={(changes) => onUpdateGroupInfo?.(active.id, changes)}
-        />
-      )}
-      {seenBySheetOpen && active.isGroup && (
-        <GroupSeenBySheet
-          entries={groupSeenBy}
-          onClose={() => setSeenBySheetOpen(false)}
-        />
-      )}
+      <ConversationGroupModals
+        active={active}
+        groupInfoOpen={groupInfoOpen}
+        seenBySheetOpen={seenBySheetOpen}
+        onCloseGroupInfo={() => setGroupInfoOpen(false)}
+        onCloseSeenBy={() => setSeenBySheetOpen(false)}
+        myUserId={myUserId}
+        groupSeenBy={groupSeenBy}
+        onLeaveGroup={onLeaveGroup}
+        leavePending={leavePending}
+        groupManaging={groupManaging}
+        onAddGroupMembers={onAddGroupMembers}
+        onRemoveGroupMember={onRemoveGroupMember}
+        onChangeGroupMemberRole={onChangeGroupMemberRole}
+        onUpdateGroupInfo={onUpdateGroupInfo}
+      />
     </div>
   );
 }

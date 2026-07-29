@@ -48,6 +48,9 @@ export function useAffiliations(subprofileId: string) {
   };
 
   const replace = useMutation<SubprofileDTO, Error, AffiliationInputDTO[]>({
+    // SubprofileAffiliationsEditor toasts its own error, so silence the global
+    // duplicate.
+    meta: { silentError: true },
     mutationFn: async (items) => {
       if (!demoMode) return replaceAffiliations(subprofileId, items);
       const { mockSubprofileById } = await import("../data/subprofiles.data");

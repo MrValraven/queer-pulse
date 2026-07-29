@@ -47,7 +47,7 @@ export const MEMBER_TABS: BottomTab[] = [
     labelKey: "nav:events",
     href: routes.events,
     icon: FiCalendar,
-    matchPrefixes: [routes.events, routes.calendar],
+    matchPrefixes: [routes.events, routes.calendar, routes.gatherings],
   },
   {
     key: "messages",
@@ -71,7 +71,7 @@ export const PUBLIC_TABS: BottomTab[] = [
     labelKey: "nav:events",
     href: routes.events,
     icon: FiCalendar,
-    matchPrefixes: [routes.events, routes.calendar],
+    matchPrefixes: [routes.events, routes.calendar, routes.gatherings],
   },
   {
     key: "places",

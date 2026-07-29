@@ -1,18 +1,10 @@
 import { Link } from "react-router-dom";
+import { initialsFromName } from "../../shared/lib/initials";
 import { Avatar, Reveal, SectionHead } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AFFILIATION_ROLE_KEYS, affiliationHref } from "./affiliations.data";
 import type { AffiliationDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileAffiliations.module.css";
-
-/** Up to two initials from a display name, for the avatar fallback. */
-function initialsFrom(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
 
 function AffiliationCard({ affiliation }: { affiliation: AffiliationDTO }) {
   const { t } = useTranslation();
@@ -21,7 +13,7 @@ function AffiliationCard({ affiliation }: { affiliation: AffiliationDTO }) {
   return (
     <Link className={styles.card} to={affiliationHref(affiliation)}>
       <Avatar
-        initials={initialsFrom(affiliation.name)}
+        initials={initialsFromName(affiliation.name, "?")}
         src={affiliation.imageUrl ?? undefined}
         alt={affiliation.name}
         tint="plum"

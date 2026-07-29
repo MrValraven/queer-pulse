@@ -30,7 +30,7 @@ export function useMentions() {
     queryFn: async () => {
       if (demoMode) {
         // Code-split: the demo mock is only pulled into the bundle in demo mode.
-        const { buildMentionDays } = await import("../mentions.data");
+        const { buildMentionDays } = await import("../mentions.mock");
         return buildMentionDays(t, fmt);
       }
       return [];

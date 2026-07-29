@@ -3,6 +3,7 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
+import { safeHref } from "../../shared/lib/safeHref";
 import { useAttachEventPhoto, useEventPhotos } from "./api/useEventPhotos";
 import styles from "./GatheringPhotosPage.module.css";
 
@@ -94,7 +95,7 @@ export function GatheringPhotosLive({
             <a
               key={photo.id}
               className={styles.pic}
-              href={photo.url}
+              href={safeHref(photo.url) ?? undefined}
               target="_blank"
               rel="noreferrer"
             >

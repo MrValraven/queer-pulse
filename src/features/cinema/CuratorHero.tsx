@@ -1,8 +1,10 @@
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CuratorProfile } from "./cinemaCurator.data";
 import styles from "./CinemaCuratorPage.module.css";
 
 export function CuratorHero({ curator }: { curator: CuratorProfile }) {
+  const { t } = useTranslation();
   return (
     <section className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
@@ -15,8 +17,10 @@ export function CuratorHero({ curator }: { curator: CuratorProfile }) {
               width="100%"
               height="100%"
               radius={20}
-              placeholder="curator portrait · 3:4"
+              placeholder={t("cinema:slot.curatorPortrait")}
               style={{ position: "absolute", inset: 0 }}
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>

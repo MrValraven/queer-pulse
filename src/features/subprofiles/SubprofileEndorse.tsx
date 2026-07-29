@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { initialsFromName } from "../../shared/lib/initials";
 import { useQuery } from "@tanstack/react-query";
 import { FiCheck, FiPlus } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
@@ -11,15 +12,6 @@ import { useEndorsement } from "./api/useEndorsement";
 import styles from "./SubprofileEndorse.module.css";
 
 const MAX_CLUSTER_FACES = 5;
-
-/** Up to two initials from a display name, for the avatar fallback. */
-function initialsFrom(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
 
 /**
  * The persona's endorse control: a one-tap Endorse/Endorsed toggle, the live
@@ -130,7 +122,7 @@ export function SubprofileEndorse({
             {endorsers.slice(0, MAX_CLUSTER_FACES).map((endorser) => (
               <Avatar
                 key={endorser.slug}
-                initials={initialsFrom(endorser.name)}
+                initials={initialsFromName(endorser.name, "?")}
                 src={endorser.avatarUrl ?? undefined}
                 alt={endorser.name}
                 title={endorser.name}

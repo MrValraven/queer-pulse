@@ -27,7 +27,7 @@ import { routes } from "../app/routeMap";
 const AXE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["marketing homepage (PageShell + Navbar + Footer)", routes.homepage],
   ["members directory (filters + card grid)", routes.members],
-  ["events listing (AppShell + cards)", routes.events],
+  ["events hub (PageShell + hero + tabs + cards)", routes.events],
   ["magazine (long-form editorial markup)", routes.magazine],
   ["settings (form controls via FormField)", routes.settings],
   ["about (static prose page)", routes.about],

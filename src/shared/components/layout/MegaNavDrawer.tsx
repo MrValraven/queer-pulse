@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiChevronDown } from "react-icons/fi";
 import { NAV_MENUS, filterMenus } from "./navMenus";
 import { Button } from "../ui";
 import { linkToPath } from "../../../app/routeMap";
@@ -36,7 +37,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
             >
               {t(menu.titleKey)}
               <span className={styles.sectionChevron} aria-hidden>
-                ▾
+                <FiChevronDown />
               </span>
             </button>
             {isOpen && (

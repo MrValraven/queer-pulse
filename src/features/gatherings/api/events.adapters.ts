@@ -6,6 +6,7 @@ import {
   type SpotsLabel,
 } from "../data";
 import type { GatheringForm } from "../useGatheringForm";
+import { initialsFromParts } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type {
@@ -64,7 +65,7 @@ function priceRange(price?: string): { priceMin?: number; priceMax?: number } {
   };
 }
 
-/** GET /events card → the EventsPage / calendar `CalendarEvent` shape. */
+/** GET /events card → the Events Hub / calendar `CalendarEvent` shape. */
 export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
   const org = dto.org ?? (dto.host ? "Community" : "QueerPulse");
   return {
@@ -77,6 +78,10 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
     kind: dto.host ? "gathering" : "event",
     ticketed: dto.ticketed,
     ...priceRange(dto.price),
+    ...(dto.coverImageUrl ? { coverImageUrl: dto.coverImageUrl } : {}),
+    ...(typeof dto.goingCount === "number"
+      ? { attendeeCount: dto.goingCount }
+      : {}),
   };
 }
 
@@ -124,10 +129,6 @@ export interface AttendeeRow {
   waitlistPosition?: number;
 }
 
-function initialsOf(first: string, last: string): string {
-  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
-}
-
 /**
  * Compose an attendee's meta line — "she/her · RSVP'd 2 Jun".
  *
@@ -166,7 +167,7 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
   return {
     id: `att-${dto.slug}`,
     slug: dto.slug,
-    initials: initialsOf(dto.firstName, dto.lastName),
+    initials: initialsFromParts(dto.firstName, dto.lastName),
     background: tint.background,
     color: tint.color,
     name: `${dto.firstName} ${dto.lastName}`.trim(),

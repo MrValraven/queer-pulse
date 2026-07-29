@@ -4,6 +4,7 @@ import { Button, ImageSlot } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { initialsFromParts } from "../../shared/lib/initials";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUpdateProfile } from "../members/api/useUpdateProfile";
@@ -18,7 +19,7 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
 
   const googlePhoto = user?.profile.avatarUrl ?? undefined;
   const initials = user
-    ? `${user.profile.firstName.charAt(0)}${user.profile.lastName.charAt(0)}`.toUpperCase()
+    ? initialsFromParts(user.profile.firstName, user.profile.lastName)
     : "S";
 
   // A locally-previewable image the member just picked, plus the storage `key`

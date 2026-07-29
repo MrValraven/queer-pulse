@@ -280,6 +280,7 @@ export const safety: Catalog = {
   "hateCrime.sidebar.apav.role": "Confidencial, 24h",
   "hateCrime.sidebar.sosRacismo": "SOS Racismo (também cobre identidade)",
   "hateCrime.sidebar.legalTitle": "Jurídico e defesa de direitos",
+  "hateCrime.sidebar.ilga.org": "ILGA Portugal",
   "hateCrime.sidebar.ilga.role":
     "Acompanhamento jurídico gratuito, monitorização de crimes de ódio",
   "hateCrime.sidebar.ilga.anon": "Denúncia anónima",

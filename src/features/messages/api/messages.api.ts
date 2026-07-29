@@ -12,6 +12,7 @@ import type {
   Paginated,
   StarredMessagesResponse,
 } from "../../../shared/contracts/contracts";
+import type { GifAttachment } from "../../../shared/api/gifs";
 
 // ── Messages DTOs + raw calls ────────────────────────────────────────────────
 // Shapes come straight from src/shared/contracts/contracts.ts (the SDK target).
@@ -54,12 +55,15 @@ export const sendMessage = (
   replyToId?: string,
   clientMessageId?: string,
   forwarded?: boolean,
+  attachment?: GifAttachment,
+  kind?: "user" | "gif",
 ) =>
   apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
     body,
     ...(replyToId ? { replyToId } : {}),
     ...(clientMessageId ? { clientMessageId } : {}),
     ...(forwarded ? { forwarded: true } : {}),
+    ...(kind === "gif" && attachment ? { kind: "gif", attachment } : {}),
   });
 
 /** GET /conversations/:id/pins — the conversation's SHARED pinned messages,

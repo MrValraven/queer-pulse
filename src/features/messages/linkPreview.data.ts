@@ -40,7 +40,7 @@ const SEEDED: Record<string, Omit<LinkPreviewResponse, "url">> = {
 /** A colocated mock preview for demo mode, derived from `url`. Never null — the
  *  demo card always renders so the feature is visible in the prototype. */
 export function demoLinkPreview(url: string): LinkPreviewResponse {
-  let host = "";
+  let host: string;
   try {
     host = new URL(url).hostname.replace(/^www\./, "");
   } catch {

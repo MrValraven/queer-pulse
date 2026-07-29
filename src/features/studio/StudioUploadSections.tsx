@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { FiPlus, FiCheck } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button } from "../../shared/components/ui";
@@ -13,11 +13,11 @@ import { routes } from "../../app/routeMap";
 import s from "./creator.module.css";
 
 interface Collaborator {
-  av: string;
-  nm: string;
-  sub: string;
+  avatar: string;
+  name: string;
+  subtitle: string;
   role: string;
-  pct: string;
+  percent: string;
   tone?: string;
   onTrack?: string;
 }
@@ -246,7 +246,7 @@ export function SplitsTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.nm}>
+            <tr key={row.name}>
               <td>
                 <div className={s.splitWho}>
                   <span
@@ -260,11 +260,11 @@ export function SplitsTable({
                         : undefined
                     }
                   >
-                    {row.av}
+                    {row.avatar}
                   </span>
                   <span className={s.nm}>
-                    {row.nm}
-                    <small>{row.sub}</small>
+                    {row.name}
+                    <small>{row.subtitle}</small>
                   </span>
                 </div>
               </td>
@@ -273,7 +273,7 @@ export function SplitsTable({
               </td>
               <td>
                 <span className={s.splitPct}>
-                  <em>{row.pct}</em>%
+                  <em>{row.percent}</em>%
                 </span>
                 {row.onTrack && (
                   <small
@@ -307,6 +307,7 @@ export function SplitsTable({
         <div className={s.collabForm}>
           <input
             ref={handleRef}
+            aria-label={t("studio:upload.splits.handlePlaceholder")}
             placeholder={t("studio:upload.splits.handlePlaceholder")}
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
@@ -355,6 +356,9 @@ function MetadataStep({
   onSubmit: () => void;
 }) {
   const { t } = useTranslation();
+  const titleFieldId = useId();
+  const yearFieldId = useId();
+  const genreFieldId = useId();
   return (
     <div className={s.card}>
       <div className={s.cardH}>
@@ -367,17 +371,26 @@ function MetadataStep({
         <div className={s.cardSub}>{t("studio:upload.metadata.sub")}</div>
       </div>
       <div className={s.field}>
-        <label>{t("studio:upload.metadata.field.title")}</label>
+        <label htmlFor={titleFieldId}>
+          {t("studio:upload.metadata.field.title")}
+        </label>
         {/* Defaults below prefill this artist's own release — content. */}
-        <input type="text" defaultValue="Cidade dos santos" />
+        <input id={titleFieldId} type="text" defaultValue="Cidade dos santos" />
       </div>
       <div className={s.field}>
-        <label>{t("studio:upload.metadata.field.year")}</label>
-        <input type="text" defaultValue="2026" />
+        <label htmlFor={yearFieldId}>
+          {t("studio:upload.metadata.field.year")}
+        </label>
+        <input id={yearFieldId} type="text" defaultValue="2026" />
       </div>
       <div className={s.field}>
-        <label>{t("studio:upload.metadata.field.genre")}</label>
-        <select defaultValue={t("studio:upload.metadata.genre.fado")}>
+        <label htmlFor={genreFieldId}>
+          {t("studio:upload.metadata.field.genre")}
+        </label>
+        <select
+          id={genreFieldId}
+          defaultValue={t("studio:upload.metadata.genre.fado")}
+        >
           <option>{t("studio:upload.metadata.genre.fado")}</option>
           <option>{t("studio:upload.metadata.genre.electronic")}</option>
           <option>{t("studio:upload.metadata.genre.folk")}</option>
@@ -432,11 +445,11 @@ export function UploadMainCol() {
     setCollaborators((prev) => [
       ...prev,
       {
-        av: initials,
-        nm: handle,
-        sub: t("studio:upload.splits.invitedSubLabel"),
+        avatar: initials,
+        name: handle,
+        subtitle: t("studio:upload.splits.invitedSubLabel"),
         role: t("studio:upload.splits.invitedRole"),
-        pct: "0",
+        percent: "0",
         tone: "jade",
       },
     ]);

@@ -1,4 +1,48 @@
 import type { ListingQueueRow } from "./api/adminListings.api";
+import type { ListingDTO } from "../marketing/listBusiness/api/listings.api";
+
+/** Build a demo ListingDTO with sensible defaults, overridden per fixture. */
+function demoListing(overrides: Partial<ListingDTO> & Pick<
+  ListingDTO,
+  "ref" | "slug" | "name" | "hood" | "status"
+>): ListingDTO {
+  return {
+    path: "claim",
+    verify: "",
+    badge: "owned",
+    evidence: "",
+    cats: ["food"],
+    price: "€€",
+    blurb: "",
+    tagline: "",
+    whatItIs: [],
+    tags: [],
+    goodFor: [],
+    langs: ["pt", "en"],
+    address: "",
+    geocoded: false,
+    latitude: null,
+    longitude: null,
+    hours: {},
+    hoursNote: "",
+    social: { instagram: "", website: "", email: "", phone: "" },
+    photos: { wide: null, d1: null, d2: null, vibe: null },
+    alt: { wide: "", d1: "", d2: "", vibe: "" },
+    rel: "own",
+    ownerName: "",
+    ownerRole: "",
+    ownerBio: "",
+    visibility: "public",
+    linkToProfile: true,
+    contactEmail: "",
+    notify: [],
+    consentOuting: false,
+    consentGuide: false,
+    submittedBy: null,
+    createdAt: overrides.createdAt ?? "2026-07-28T10:00:00.000Z",
+    ...overrides,
+  };
+}
 
 /** Demo-only moderation queue. Moderator/Admin endpoint 403s for anyone else,
  * so this fabricated data must never appear as platform truth in live mode. */
@@ -12,6 +56,36 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterName: "Tiago Costa",
     submitterSlug: "tiago",
     createdAt: "2026-07-28T10:00:00.000Z",
+    detail: demoListing({
+      ref: "QPL-2026-0007",
+      slug: "maison-du-tiago",
+      name: "Maison Du Tiago",
+      hood: "Príncipe Real",
+      status: "review",
+      createdAt: "2026-07-28T10:00:00.000Z",
+      cats: ["food"],
+      price: "€€€",
+      blurb:
+        "A candle-lit natural-wine room in Príncipe Real, cooking a short seasonal menu for people who want to linger.",
+      tagline: "The little wine room that wants you to stay one more glass.",
+      whatItIs: [
+        { id: "wit-d1", text:
+          "Maison Du Tiago is a small natural-wine bar and kitchen — a handful of tables, an opinionated list, and a menu that changes with the market." },
+        { id: "wit-d2", text:
+          "It's built for the slow evening: a second date, a birthday for six, or a Tuesday that quietly becomes something. Tell the room what you like and let them pour." },
+      ],
+      tags: ["Natural wine", "Small plates", "Step-free entrance"],
+      goodFor: ["A great second date", "Natural wine guidance", "Celebrating something"],
+      hoursNote: "Evenings, Tue–Sun. Closed Mondays.",
+      social: { instagram: "@maisondutiago", website: "maisondutiago.pt", email: "ola@maisondutiago.pt", phone: "" },
+      alt: { wide: "The wine room", d1: "The bar", d2: "Small plates", vibe: "Príncipe Real window" },
+      address: "R. da Escola Politécnica 60 · Príncipe Real",
+      ownerName: "Tiago Costa",
+      ownerRole: "Owner · host",
+      ownerBio: "Left a restaurant kitchen to open the room he wanted to drink in.",
+      visibility: "public",
+      linkToProfile: true,
+    }),
   },
   {
     ref: "QPL-2026-0006",
@@ -22,6 +96,36 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterName: "Inês Marques",
     submitterSlug: "ines",
     createdAt: "2026-07-27T14:30:00.000Z",
+    detail: demoListing({
+      ref: "QPL-2026-0006",
+      slug: "casa-viva",
+      name: "Casa Viva",
+      hood: "Arroios",
+      status: "question",
+      createdAt: "2026-07-27T14:30:00.000Z",
+      cats: ["culture"],
+      price: "€",
+      blurb:
+        "A community culture house in Arroios — readings, workshops, and a free-entry programme that bets on queer artists early.",
+      tagline: "A house that keeps the door — and the programme — open.",
+      whatItIs: [
+        { id: "wit-c1", text:
+          "Casa Viva is an artist-run culture house: a reading room, a small hall for workshops and launches, and a programme that leans toward emerging queer and feminist work." },
+        { id: "wit-c2", text:
+          "Entry is free wherever it can be, and the space is often someone's first-ever public reading. It works hand in hand with the neighbourhood." },
+      ],
+      tags: ["Events space", "Free entry", "Step-free"],
+      goodFor: ["Readings and launches", "A first public reading", "Meeting other makers"],
+      hoursNote: "Open Wed–Sun afternoons. Event nights run later.",
+      social: { instagram: "@casaviva.lisboa", website: "casaviva.pt", email: "ola@casaviva.pt", phone: "" },
+      alt: { wide: "The hall", d1: "Reading room", d2: "Workshop night", vibe: "Arroios courtyard" },
+      address: "R. de Arroios 120 · Arroios",
+      ownerName: "Inês Marques",
+      ownerRole: "Founder",
+      ownerBio: "Runs Casa Viva as a quietly social place rather than a sealed venue.",
+      visibility: "public",
+      linkToProfile: true,
+    }),
   },
   {
     ref: "QPL-2026-0005",
@@ -32,5 +136,35 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     submitterName: "Rui Tavares",
     submitterSlug: "rui",
     createdAt: "2026-07-25T09:15:00.000Z",
+    detail: demoListing({
+      ref: "QPL-2026-0005",
+      slug: "cafe-aurora",
+      name: "Café Aurora",
+      hood: "Graça",
+      status: "live",
+      createdAt: "2026-07-25T09:15:00.000Z",
+      cats: ["food"],
+      price: "€",
+      blurb:
+        "A sunlit corner café in Graça — good coffee, better pastéis, and a room that never makes anyone feel like a question mark.",
+      tagline: "Your morning table in Graça, held for you.",
+      whatItIs: [
+        { id: "wit-a1", text:
+          "Café Aurora is a small neighbourhood café that got adopted by the community for the simplest reason: it's reliably, unremarkably kind to everyone who walks in." },
+        { id: "wit-a2", text:
+          "A galão, a warm pastel de nata, and staff who remember your order. Sometimes the bar is exactly that." },
+      ],
+      tags: ["Café · pastelaria", "Daily", "Ground floor"],
+      goodFor: ["A no-stress neighbourhood coffee", "Bringing visiting family", "Cheap, excellent pastéis"],
+      hoursNote: "Open daily, early. Closes by evening.",
+      social: { instagram: "@cafeaurora.graca", website: "", email: "", phone: "+351 21 887 4400" },
+      alt: { wide: "The counter", d1: "Tiled interior", d2: "Pastéis tray", vibe: "Graça street tables" },
+      address: "R. da Graça 42 · Graça",
+      ownerName: "Rui Tavares",
+      ownerRole: "Owner",
+      ownerBio: "Third-generation café owner who put the neighbourhood first.",
+      visibility: "public",
+      linkToProfile: true,
+    }),
   },
 ];

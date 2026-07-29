@@ -7,6 +7,7 @@ import { useSocial } from "../../app/providers/useSocial";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { ConnectionView } from "../connect/connections.data";
+import { GroupAvatarField } from "./GroupAvatarField";
 import styles from "./NewMessageModal.module.css";
 
 /** One picked group member (identity only; the server/demo fills history). */
@@ -19,16 +20,24 @@ export interface GroupMemberPick {
 
 interface NewGroupModalProps {
   onClose: () => void;
-  /** Fired with the group name + picked members when the creator confirms. */
-  onCreate: (title: string, members: GroupMemberPick[]) => void;
+  /**
+   * Fired with the group name, picked members, and an optional avatar storage
+   * key when the creator confirms.
+   */
+  onCreate: (
+    title: string,
+    members: GroupMemberPick[],
+    avatarUrl?: string,
+  ) => void;
 }
 
 /**
- * Create-group picker: a group name + a MULTI-select of the member's accepted
- * connections. Reuses the same connection pool + drain-all-pages behaviour as
- * `NewMessageModal` (so search sees every connection) — this is the sibling the
- * feature spec allows. Avatar upload is deferred (Phase 1); the group opens with
- * a default initials avatar.
+ * Create-group picker: an optional group photo + a group name + a MULTI-select
+ * of the member's accepted connections. Reuses the same connection pool +
+ * drain-all-pages behaviour as `NewMessageModal` (so search sees every
+ * connection) — this is the sibling the feature spec allows. The photo reuses
+ * the shared presign upload pipeline via {@link GroupAvatarField}; skipping it
+ * opens the group with a default initials avatar.
  */
 export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
   useScrollLock();
@@ -36,6 +45,7 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
   const { isBlocked } = useSocial();
   const [query, setQuery] = useState("");
   const [title, setTitle] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [selected, setSelected] = useState<Map<string, GroupMemberPick>>(
     new Map(),
   );
@@ -112,6 +122,11 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
           </button>
         </div>
         <p className={styles.sub}>{t("messages:group.newSub")}</p>
+        <GroupAvatarField
+          currentAvatarUrl={avatarUrl || undefined}
+          groupName={title.trim()}
+          onChange={setAvatarUrl}
+        />
         <input
           className={styles.groupNameField}
           value={title}
@@ -175,7 +190,13 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
           <Button
             variant="primary"
             disabled={!canCreate}
-            onClick={() => onCreate(title.trim(), [...selected.values()])}
+            onClick={() =>
+              onCreate(
+                title.trim(),
+                [...selected.values()],
+                avatarUrl.trim() || undefined,
+              )
+            }
           >
             {t("messages:group.createCta", { count: selected.size })}
           </Button>

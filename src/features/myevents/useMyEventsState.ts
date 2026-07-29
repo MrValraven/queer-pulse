@@ -4,14 +4,16 @@ import type { ToastAction } from "../../shared/components/feedback/toastContext"
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import type { MyEvent, Notif, Pill, Prefs } from "./myEvents.types";
-import type { MyEventsValue, MoreMenuState } from "./MyEventsContext";
-import { DEFAULT_PREFS, PILLS } from "./myEvents.data";
-import { inPill, parseDate, timeStr } from "./myEvents.helpers";
+import type { MyEvent, Notif, Pill } from "./myEvents.types";
+import type { MyEventsValue } from "./MyEventsContext";
+import { PILLS } from "./myEvents.data";
+import { inPill, parseDate } from "./myEvents.helpers";
 import { useMyEventsCalendar } from "./useMyEventsCalendar";
 import { useMyEventsToolbar } from "./useMyEventsToolbar";
 import { useMyEventsSelection } from "./useMyEventsSelection";
 import { useMyEventsSafety } from "./useMyEventsSafety";
+import { useMyEventsModals } from "./useMyEventsModals";
+import { useMyEventsRsvp } from "./useMyEventsRsvp";
 import { useMyEventsData } from "./api/useMyEventsData";
 
 /** Central state + actions for the My Events dashboard. */
@@ -56,7 +58,6 @@ export function useMyEventsState(): MyEventsValue {
   const [pastShown, setPastShown] = useState(5);
   const [loading, setLoading] = useState(true);
   const loadTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const removeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const focusTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const startLoad = useCallback((delay: number) => {
@@ -76,10 +77,9 @@ export function useMyEventsState(): MyEventsValue {
     const t = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(t);
   }, [demoMode, dataLoading]);
-  // Clear the pending soft-remove timer on unmount so it can't fire late.
+  // Clear the pending focus timer on unmount so it can't fire late.
   useEffect(
     () => () => {
-      clearTimeout(removeTimer.current);
       clearTimeout(focusTimer.current);
     },
     [],
@@ -100,27 +100,8 @@ export function useMyEventsState(): MyEventsValue {
     t,
   });
 
-  // notifications + modals + menu
+  // notifications
   const [notifOpen, setNotifOpen] = useState(false);
-  const [confirm, setConfirm] = useState({ open: false, title: "", meta: "" });
-  const [details, setDetails] = useState<{
-    open: boolean;
-    eventId: string | null;
-  }>({ open: false, eventId: null });
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [scope, setScope] = useState<{
-    open: boolean;
-    eventId: string | null;
-    title: string;
-  }>({ open: false, eventId: null, title: "" });
-  const [moreMenu, setMoreMenu] = useState<MoreMenuState>({
-    open: false,
-    eventId: null,
-    x: 0,
-    y: 0,
-  });
-  const [prefs, setPrefs] = useState<Prefs>(DEFAULT_PREFS);
-  const [removingId, setRemovingId] = useState<string | null>(null);
   const [offline, setOffline] = useState(false);
 
   // deep-link focus
@@ -173,141 +154,22 @@ export function useMyEventsState(): MyEventsValue {
   const clearDay = useCallback(() => setSelectedDate(null), []);
   const loadMorePast = useCallback(() => setPastShown((n) => n + 5), []);
 
-  // ── soft remove with undo ─────────────────────────
-  const softRemove = useCallback(
-    (id: string, msg: string) => {
-      const ev = events.find((e) => e.id === id);
-      if (!ev) return;
-      const idx = events.indexOf(ev);
-      setRemovingId(id);
-      clearTimeout(removeTimer.current);
-      removeTimer.current = setTimeout(() => {
-        setRemovingId(null);
-        setEvents((prev) => prev.filter((e) => e.id !== id));
-        toastAction(msg, {
-          label: t("myevents:bulk.undoCta"),
-          onClick: () => {
-            setEvents((prev) => {
-              const copy = prev.slice();
-              copy.splice(Math.min(idx, copy.length), 0, ev);
-              return copy;
-            });
-            toast(t("myevents:bulk.broughtBackToast"), "info");
-          },
-        });
-      }, 200);
-    },
-    [events, t, toast, toastAction],
-  );
+  // modals + preferences + more-menu (focused sub-hook)
+  const modals = useMyEventsModals({ toast, t });
+  const { closeMore, prefs } = modals;
 
-  // ── rsvp lifecycle ────────────────────────────────
-  const patch = useCallback((id: string, fn: (e: MyEvent) => MyEvent) => {
-    setEvents((prev) => prev.map((e) => (e.id === id ? fn(e) : e)));
-  }, []);
-
-  const toggleReminder = useCallback(
-    (id: string) => {
-      const ev = byId(id);
-      if (!ev) return;
-      const next = !ev.reminder;
-      patch(id, (e) => ({ ...e, reminder: next }));
-      toast(
-        next
-          ? t("myevents:toast.reminderSet", { lead: prefs.reminderLead })
-          : t("myevents:toast.reminderOff"),
-        "info",
-      );
-    },
-    [byId, patch, prefs.reminderLead, t, toast],
-  );
-
-  const setMaybe = useCallback(
-    (id: string) => {
-      patch(id, (e) => ({ ...e, maybe: true }));
-      setMoreMenu((m) => ({ ...m, open: false }));
-      toast(t("myevents:toast.markedMaybe"), "info");
-    },
-    [patch, t, toast],
-  );
-  const setGoing = useCallback(
-    (id: string) => {
-      patch(id, (e) => ({ ...e, maybe: false }));
-      setMoreMenu((m) => ({ ...m, open: false }));
-      toast(t("myevents:toast.fullyIn"), "success");
-    },
-    [patch, t, toast],
-  );
-
-  const rsvpSaved = useCallback(
-    (id: string) => {
-      patch(id, (e) => ({
-        ...e,
-        category: "going",
-        whoText: `${e.going} going`,
-        who: [["YOU", "coral"]],
-      }));
-      toast(t("myevents:toast.rsvpGoing"), "success");
-    },
-    [patch, t, toast],
-  );
-
-  const acceptInvite = useCallback(
-    (id: string) => {
-      const ev = byId(id);
-      if (!ev) return;
-      const dt = parseDate(ev.date);
-      setConfirm({
-        open: true,
-        title: ev.title,
-        meta: `${fmt.date(dt, { weekday: "long", day: "numeric", month: "long" })} · ${timeStr(ev)} · ${ev.venue}`,
-      });
-      patch(id, (e) => ({
-        ...e,
-        category: "going",
-        whoText: `${e.going} going`,
-        who: [["YOU", "coral"]],
-      }));
-    },
-    [byId, fmt, patch],
-  );
-  const closeConfirm = useCallback(
-    () => setConfirm((c) => ({ ...c, open: false })),
-    [],
-  );
-  const declineInvite = useCallback(
-    (id: string) => softRemove(id, t("myevents:toast.invitationDeclined")),
-    [softRemove, t],
-  );
-
-  const cantGo = useCallback(
-    (id: string) => {
-      const ev = byId(id);
-      if (ev?.series) {
-        setScope({ open: true, eventId: id, title: ev.title });
-        return;
-      }
-      softRemove(id, t("myevents:toast.placeReleased"));
-    },
-    [byId, softRemove, t],
-  );
-  const leaveWaitlist = useCallback(
-    (id: string) => softRemove(id, t("myevents:toast.leftWaitlist")),
-    [softRemove, t],
-  );
-  const closeScope = useCallback(
-    () => setScope((s) => ({ ...s, open: false })),
-    [],
-  );
-  const scopeChoice = useCallback(
-    (which: "one" | "all") => {
-      const id = scope.eventId;
-      setScope((s) => ({ ...s, open: false }));
-      if (!id) return;
-      if (which === "one") softRemove(id, t("myevents:toast.skippedThisOne"));
-      else softRemove(id, t("myevents:toast.leftWholeSeries"));
-    },
-    [scope.eventId, softRemove, t],
-  );
+  // rsvp lifecycle + confirm/scope modals (focused sub-hook)
+  const rsvp = useMyEventsRsvp({
+    events,
+    setEvents,
+    byId,
+    toast,
+    toastAction,
+    t,
+    fmt,
+    reminderLead: prefs.reminderLead,
+    closeMore,
+  });
 
   // ── notifications ─────────────────────────────────
   const markAllRead = useCallback(
@@ -355,42 +217,6 @@ export function useMyEventsState(): MyEventsValue {
     [notifs, goToEvent],
   );
 
-  // ── details + settings ────────────────────────────
-  const openDetails = useCallback(
-    (id: string) => setDetails({ open: true, eventId: id }),
-    [],
-  );
-  const closeDetails = useCallback(
-    () => setDetails((d) => ({ ...d, open: false })),
-    [],
-  );
-  const openSettings = useCallback(() => setSettingsOpen(true), []);
-  const closeSettings = useCallback(() => setSettingsOpen(false), []);
-  const setPref = useCallback(
-    (key: keyof Prefs, value: Prefs[keyof Prefs]) =>
-      setPrefs((p) => ({ ...p, [key]: value })),
-    [],
-  );
-  const saveSettings = useCallback(
-    (next: Partial<Prefs>) => {
-      setPrefs((p) => ({ ...p, ...next }));
-      setSettingsOpen(false);
-      toast(t("myevents:toast.preferencesSaved"), "success");
-    },
-    [t, toast],
-  );
-
-  // ── more menu ─────────────────────────────────────
-  const openMore = useCallback(
-    (eventId: string, x: number, y: number) =>
-      setMoreMenu({ open: true, eventId, x, y }),
-    [],
-  );
-  const closeMore = useCallback(
-    () => setMoreMenu((m) => ({ ...m, open: false })),
-    [],
-  );
-
   // ── safety flows (report + block live in a focused sub-hook) ──
   const safety = useMyEventsSafety({ byId, toast, closeMore, t });
 
@@ -411,37 +237,12 @@ export function useMyEventsState(): MyEventsValue {
     ...cal,
     ...tb,
     ...selection,
-    toggleReminder,
-    setMaybe,
-    setGoing,
-    rsvpSaved,
-    acceptInvite,
-    declineInvite,
-    cantGo,
-    leaveWaitlist,
-    softRemove,
-    removingId,
+    ...rsvp,
     markAllRead,
     notifGo,
     notifOpen,
     setNotifOpen,
-    confirm,
-    closeConfirm,
-    details,
-    openDetails,
-    closeDetails,
-    settingsOpen,
-    openSettings,
-    closeSettings,
-    scope,
-    closeScope,
-    scopeChoice,
-    prefs,
-    setPref,
-    saveSettings,
-    moreMenu,
-    openMore,
-    closeMore,
+    ...modals,
     ...safety,
     focusId,
     offline,

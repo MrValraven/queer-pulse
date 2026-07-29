@@ -403,7 +403,7 @@ const ANDRE_LENS: DemoSubprofile = {
   avatarUrl:
     "https://images.unsplash.com/photo-1519638831568-d9897f54ed69?q=80&w=800&auto=format&fit=crop",
   tagline: "Analog portraiture, queer bodies, medium format",
-  bio: "GRAIN is a darkroom practice photographing queer and trans community on film. Slow, consensual, tender portraits — no rush, no flash.",
+  bio: "GRAIN is a film photography practice photographing queer and trans community. Slow, consensual, tender portraits — no rush, no flash.",
   coverUrl:
     "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?q=80&w=1600&auto=format&fit=crop",
   accent: "amber",

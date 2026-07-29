@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type Dispatch,
+  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type RefObject,
@@ -570,6 +571,15 @@ export function useVouchCanvas({
     onDoubleClick: (e: ReactMouseEvent<SVGGElement>) => {
       e.preventDefault();
       onRecenter(id);
+    },
+    // Keyboard parity for the focusable node: Enter/Space activate the node the
+    // same way a pointer double-click does (recenter, which also selects it and
+    // guards private members with a toast).
+    onKeyDown: (e: ReactKeyboardEvent<SVGGElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onRecenter(id);
+      }
     },
   });
   const edgeHandlers = (edge: VouchEdge) => ({

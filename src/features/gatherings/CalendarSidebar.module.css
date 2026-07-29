@@ -1,0 +1,88 @@
+/* Selected-day sidebar, shared by CalendarSidebar.tsx.
+   Split out of the old CalendarPage.module.css when the standalone
+   Calendar page was absorbed into the Events Hub (CalendarView tab). */
+
+.side {
+  position: sticky;
+  top: 96px;
+}
+
+@media (width <= 860px) {
+  .side {
+    position: static;
+  }
+}
+
+.csHead {
+  margin-bottom: 18px;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+.csSelectedDay {
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.eventList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emptyDay {
+  padding: 12px 0;
+  font-size: 14px;
+  color: var(--ink-40);
+}
+
+.subStrip {
+  margin-top: 32px;
+  padding: 24px 26px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.subStrip h3 {
+  margin-bottom: 10px;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+.subStrip p {
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+.subForm {
+  display: flex;
+  gap: 8px;
+}
+
+.subInput {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.subInput:focus {
+  border-color: var(--accent);
+}

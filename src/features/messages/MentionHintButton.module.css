@@ -1,0 +1,146 @@
+.control {
+  position: relative;
+  flex: none;
+}
+
+/* Matches the 43px square of `.gifBtn`/`.sendBtn` (MessagesPage.module.css)
+   so the composer controls read as a matched row. */
+.btn {
+  width: 43px;
+  height: 43px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-avatar);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  background: var(--cream);
+  color: var(--text-strong);
+  font-size: 1.25rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--paper);
+    border-color: var(--line-strong);
+  }
+}
+.btn:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+}
+
+/* Popover — same surface treatment as the GIF picker panel, opening above. */
+.panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: min(260px, calc(100vw - 32px));
+  /* Never taller than the space above the composer, so opening upward can't
+     cover the conversation header / app nav — scroll instead of overlapping. */
+  max-height: min(60vh, 420px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  /* Fixed plum shadow (matches --shadow-* tokens) — NOT --ink-rgb, which flips
+     to a light channel in dark mode and would cast a white glow around the panel. */
+  box-shadow: 0 4px 14px rgba(45, 27, 61, 0.22);
+  animation: hintPanelIn var(--dur-fast) var(--ease);
+}
+
+.title {
+  margin: 0 0 6px;
+  padding: 0 6px;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-soft, var(--ink));
+  opacity: 0.7;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 6px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-badge);
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: var(--cream);
+  }
+}
+.row:focus-visible {
+  outline: none;
+  background: var(--cream);
+}
+
+.sigil {
+  flex: none;
+  min-width: 34px;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-badge);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 0.95);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.label {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+}
+
+.hint {
+  margin: 8px 6px 2px;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: var(--text-soft, var(--ink));
+  opacity: 0.7;
+}
+
+@keyframes hintPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

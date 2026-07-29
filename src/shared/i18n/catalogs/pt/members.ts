@@ -119,6 +119,10 @@ export const members: Catalog = {
   "content.now.title": "Agora",
   "content.now.subtitle": "O que ocupa {first} agora",
   "content.now.openLabel": "Disponível para",
+  "content.lookingFor.title": "À procura de",
+  "content.lookingFor.subtitle": "O que {first} procura aqui",
+  "content.lookingFor.visibleHint": "Visível no teu perfil",
+  "content.lookingFor.privateHint": "Só tu podes ver isto",
   "content.work.title": "Trabalho em destaque",
   "content.work.subtitle": "Só alguns trabalhos, não um portefólio completo",
   "content.board.title": "No quadro de trocas",
@@ -205,6 +209,12 @@ export const members: Catalog = {
   "profileEdit.openTo.addLabel": "Adicionar algo para que estás disponível",
   "profileEdit.openTo.removeLabel": "Remover {label}",
 
+  // ── À procura de (LookingForEditor) ─────────────────────────────────────────
+  "profileEdit.lookingFor.heading": "O que procuras aqui?",
+  "profileEdit.lookingFor.helper": "Seleciona as que quiseres.",
+  "profileEdit.lookingFor.toggleLabel":
+    "Mostrar no meu perfil o que procuro",
+
   // ── Barra de edição (ProfileEditBar) ────────────────────────────────────────
   "profileEdit.bar.unsaved":
     "Estás a editar o teu perfil — alterações por guardar",
@@ -232,7 +242,7 @@ export const members: Catalog = {
   "profileEdit.board.subtitle": "O que estás a pedir e a oferecer agora",
   "profileEdit.board.add": "Adicionar ao quadro",
   "profileEdit.board.kindLabel": "A pedir ou a oferecer",
-  "profileEdit.board.titlePlaceholder": "ex.: Uma câmara escura emprestada",
+  "profileEdit.board.titlePlaceholder": "ex.: Um estúdio emprestado",
   "profileEdit.board.titleLabel": "O que procuras ou ofereces",
   "profileEdit.board.removeLabel": "Remover {title}",
 
@@ -604,6 +614,7 @@ export const members: Catalog = {
 
   // ── Paleta de comandos (CommandPalette) ─────────────────────────────────────
   "commandPalette.ariaLabel": "Pesquisar na QueerPulse",
+  "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Pesquisar pessoas, convívios, comunidades…",
   "commandPalette.comingSoonBody":
     "A pesquisa em direto está a ser ligada à comunidade. Por agora está em repouso — ativa <em>{toggleName}</em> para explorares a demonstração.",
@@ -870,6 +881,11 @@ export const members: Catalog = {
     "Anúncios que adicionaste ao diretório. Cada um é revisto pela equipa da comunidade antes de ficar ativo.",
   "places.refLabel": "Ref. · {ref}",
   "places.editCta": "Editar",
+  "places.deleteCta": "Eliminar",
+  "places.deleteConfirm": "Eliminar <b>{name}</b> definitivamente? Não pode ser anulado.",
+  "places.deleteCancel": "Manter",
+  "places.deleteYes": "Eliminar anúncio",
+  "places.deleted": "Anúncio eliminado.",
   "places.viewListingCta": "Ver anúncio →",
   "places.awaitingReview": "Aguarda revisão",
   "places.empty.title": "Ainda sem espaços",

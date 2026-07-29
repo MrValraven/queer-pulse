@@ -123,7 +123,8 @@
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
 }
-.pauseBtn:hover {
+.pauseBtn:hover,
+.pauseBtn:focus-visible {
   color: var(--text);
   border-color: rgba(var(--cream-rgb), 0.2);
 }
@@ -141,7 +142,8 @@
     background 0.18s var(--ease),
     border-color 0.18s var(--ease);
 }
-.endBtn:hover {
+.endBtn:hover,
+.endBtn:focus-visible {
   background: rgba(var(--accent-rgb), 0.12);
   border-color: var(--accent);
 }
@@ -197,7 +199,8 @@
 .dev:last-of-type {
   margin-bottom: 0;
 }
-.dev:hover {
+.dev:hover,
+.dev:focus-visible {
   border-color: rgba(var(--cream-rgb), 0.2);
 }
 .dev.on {
@@ -503,7 +506,8 @@
   font-style: normal;
   color: var(--jade-light);
 }
-.tab:hover {
+.tab:hover,
+.tab:focus-visible {
   color: var(--text-60);
 }
 .tab.active {

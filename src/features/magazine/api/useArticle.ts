@@ -36,7 +36,7 @@ export function useArticle(id: string) {
       if (demoMode) {
         // Demo-only mock registry — dynamically imported so it never ships in
         // the live bundle (live mode fetches from the API below).
-        const { articles } = await import("../data/articles");
+        const { articles } = await import("../data/articles.mock");
         const article = articles[id] ?? null;
         const related = article
           ? article.related

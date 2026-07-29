@@ -1,0 +1,480 @@
+/* EventPosterCard — poster-forward event card (Shotgun-inspired).
+   Reuses the Studio `.heroArt` pattern: aspect-ratio frame + overflow-hidden +
+   an absolutely-positioned ImageSlot fill, topped with a plum scrim so cream
+   overlay text always clears AA regardless of the underlying artwork. */
+
+.link {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-card);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+}
+
+/* ── Overlay variants (lead / featured) ── */
+.lead,
+.featured {
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: rgba(var(--plum-rgb), 0.06);
+  box-shadow: 0 18px 40px -26px rgba(var(--plum-rgb), 0.45);
+}
+
+.lead .frame {
+  aspect-ratio: 4 / 5;
+}
+
+.featured .frame {
+  aspect-ratio: 3 / 4;
+}
+
+.frame img,
+.thumb img {
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.88) 0%,
+    rgba(var(--plum-rgb), 0.25) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Second, deeper gradient — cross-faded in on hover/focus so the overlay text
+   pops without animating `background` (opacity-only stays compositor-cheap). */
+.scrimHover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.94) 0%,
+    rgba(var(--plum-rgb), 0.4) 50%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-std);
+  pointer-events: none;
+}
+
+.ribbon {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-start: var(--gap-sm);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgb(var(--cream-rgb));
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+/* "See it →" affordance — featured overlay corner pill. Visible by default
+   (touch/no-hover devices keep it as a static, always-on affordance); only
+   hover-capable + fine-pointer devices hide it at rest and reveal it on
+   hover/focus, so nothing here is a dead, hover-only promise on a phone. */
+.cta {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-end: var(--gap-sm);
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: rgb(var(--cream-rgb));
+  color: var(--plum);
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* "See it →" affordance — list row, trailing edge. Invisible at rest on every
+   device (list rows stay calm/dense); only revealed on hover-capable + fine
+   pointer hover, or on keyboard focus (any device) — never a dead affordance
+   since touch users simply never see a promise that can't fire. */
+.listCta {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.1);
+  color: var(--plum);
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) * 0.8);
+  color: rgb(var(--cream-rgb));
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+}
+
+.dateChip {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 0.16);
+  border: 1px solid rgba(var(--cream-rgb), 0.3);
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  white-space: nowrap;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: var(--ls-heading);
+  line-height: var(--lh-title);
+  color: rgb(var(--cream-rgb));
+}
+
+.lead .title {
+  font-size: clamp(24px, 2.6vw, 34px);
+}
+
+.featured .title {
+  font-size: clamp(19px, 1.8vw, 24px);
+}
+
+.titleList {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+}
+
+.lead .meta,
+.featured .meta {
+  color: rgba(var(--cream-rgb), 0.85);
+}
+
+.list .meta,
+.compact .meta {
+  color: var(--ink-60);
+}
+
+.metaItem {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.pricePillScrim,
+.pricePill {
+  align-self: flex-start;
+  margin-block-start: 2px;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 700;
+}
+
+.pricePillScrim {
+  background: rgba(var(--cream-rgb), 0.18);
+  border: 1px solid rgba(var(--cream-rgb), 0.32);
+  color: rgb(var(--cream-rgb));
+}
+
+.pricePill {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade-ink);
+}
+
+/* ── Kind badges — opaque fills so they read over any artwork or surface ── */
+.kindEvent,
+.kindEventScrim,
+.kindGathering,
+.kindGatheringScrim {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.kindEvent {
+  background: var(--plum);
+  color: rgb(var(--cream-rgb));
+}
+
+.kindGathering {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+}
+
+.kindEventScrim {
+  background: rgb(var(--cream-rgb));
+  color: var(--plum);
+}
+
+.kindGatheringScrim {
+  background: rgba(var(--cream-rgb), 0.2);
+  border: 1px solid rgba(var(--cream-rgb), 0.4);
+  color: rgb(var(--cream-rgb));
+}
+
+/* ── List variant — thumb beside text, nothing overlaid ── */
+.list {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 10px;
+  border-radius: var(--radius-card);
+  transition:
+    transform var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+.list .thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: clamp(88px, 22vw, 128px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+.listBody {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.listBody .titleList {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Compact variant — calendar sidebar rows ── */
+.compact {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: 7px 8px;
+  border-radius: var(--radius-badge);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.compact .thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+.compactBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.compactTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.compactTime {
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+@media (hover: hover) {
+  .lead:hover,
+  .featured:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .list:hover {
+    transform: translateY(-2px);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+
+  .compact:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+
+  .lead:hover .frame img,
+  .featured:hover .frame img,
+  .list:hover .thumb img,
+  .compact:hover .thumb img {
+    transform: scale(1.04);
+  }
+
+  /* A little personality on the overlay poster cards: the ribbon pops and the
+     scrim deepens so the title pulls forward. `list` stays out of this — it's
+     a dense row and only gets the calmer lift/tint above. */
+  .lead:hover .ribbon,
+  .featured:hover .ribbon {
+    transform: scale(1.08);
+  }
+
+  .lead:hover .scrimHover,
+  .featured:hover .scrimHover {
+    opacity: 1;
+  }
+}
+
+/* "See it →" reveal — only on devices that can actually hover with a precise
+   pointer. Base `.cta`/`.listCta` rules above already cover touch (visible-by-
+   default / omitted, respectively); this block layers the hide-then-reveal
+   motion on top for mouse/trackpad users. */
+@media (hover: hover) and (pointer: fine) {
+  .cta {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .featured:hover .cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .listCta {
+    transform: translateX(8px);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .list:hover .listCta {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Keyboard focus must reveal the affordance on every device, hover-capable or
+   not — unconditional (not inside a `hover` media query). */
+.featured:focus-visible .cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.list:focus-visible .listCta {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lead,
+  .featured,
+  .list,
+  .compact,
+  .frame img,
+  .thumb img,
+  .ribbon,
+  .scrimHover,
+  .cta,
+  .listCta {
+    transition: none;
+  }
+
+  .lead:hover,
+  .featured:hover,
+  .list:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .lead:hover .ribbon,
+  .featured:hover .ribbon {
+    transform: none;
+  }
+
+  .featured:hover .cta,
+  .featured:focus-visible .cta,
+  .list:hover .listCta,
+  .list:focus-visible .listCta {
+    transform: none;
+  }
+
+  .lead:hover .frame img,
+  .featured:hover .frame img,
+  .list:hover .thumb img,
+  .compact:hover .thumb img {
+    transform: none;
+  }
+}

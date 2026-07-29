@@ -170,9 +170,20 @@ export interface MessageResponse {
     senderName: string;
     deleted: boolean;
   } | null;
-  /** `user` (an ordinary bubble) or `system` (a rendered event pill). Every DM
-   *  message is `user`, so the existing bubble path is unchanged. */
-  kind: "user" | "system";
+  /** `user` (an ordinary bubble), `system` (a rendered event pill), or `gif`
+   *  (an inline-image bubble). Every DM message is `user`, so the existing
+   *  bubble path is unchanged. */
+  kind: "user" | "system" | "gif";
+  /** Provider-hosted GIF for a `kind:"gif"` message, else null. The client
+   *  renders it as an inline image; `body` carries a "GIF" text fallback so
+   *  previews/notifications keep working. */
+  attachment: {
+    url: string;
+    previewUrl: string;
+    width: number;
+    height: number;
+    provider: string;
+  } | null;
   /** Resolved system event for a `system` message (else null). Actor/target come
    *  back as DISPLAY NAMES (never user ids); the client renders bilingual
    *  templates. `value` carries a scalar the event needs (e.g. a new title). */

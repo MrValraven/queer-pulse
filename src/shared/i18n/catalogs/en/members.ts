@@ -238,7 +238,7 @@ export const members: Catalog = {
     "What you're asking for and offering right now",
   "profileEdit.board.add": "Add to the board",
   "profileEdit.board.kindLabel": "Looking or offering",
-  "profileEdit.board.titlePlaceholder": "e.g. A darkroom to borrow",
+  "profileEdit.board.titlePlaceholder": "e.g. A studio to borrow",
   "profileEdit.board.titleLabel": "What you're looking for or offering",
   "profileEdit.board.removeLabel": "Remove {title}",
 
@@ -603,6 +603,7 @@ export const members: Catalog = {
 
   // ── Command palette (CommandPalette) ────────────────────────────────────────
   "commandPalette.ariaLabel": "Search QueerPulse",
+  "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Search members, gatherings, communities…",
   "commandPalette.comingSoonBody":
     "Live search is being wired to the community. For now it's resting — turn on <em>{toggleName}</em> to explore the demo.",
@@ -867,6 +868,11 @@ export const members: Catalog = {
     "Listings you've added to the directory. Each is read by the community team before it goes live.",
   "places.refLabel": "Ref · {ref}",
   "places.editCta": "Edit",
+  "places.deleteCta": "Delete",
+  "places.deleteConfirm": "Delete <b>{name}</b> for good? This can't be undone.",
+  "places.deleteCancel": "Keep it",
+  "places.deleteYes": "Delete listing",
+  "places.deleted": "Listing deleted.",
   "places.viewListingCta": "View listing →",
   "places.awaitingReview": "Awaiting review",
   "places.empty.title": "No places yet",

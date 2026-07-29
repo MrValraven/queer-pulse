@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { AdminChip } from "./ui";
@@ -16,6 +17,7 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * mutation actually persisted anywhere (it's a no-op in demo mode).
  */
 export function AdminHousingJoinRequests() {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const { data, isLoading, isError } = useAdminJoinRequests();
   const triage = useTriageJoinRequest();
@@ -41,17 +43,18 @@ export function AdminHousingJoinRequests() {
 
   return (
     <div className={styles.joinRequests}>
-      <h2 className={styles.sectionTitle}>Join requests</h2>
+      <h2 className={styles.sectionTitle}>
+        {t("admin:housingRequests.title")}
+      </h2>
       {isError ? (
         <div className={styles.notice}>
           <p className={styles.noticeText}>
-            The join-request queue couldn't load right now — please try
-            again.
+            {t("admin:housingRequests.loadError")}
           </p>
         </div>
       ) : requests.length === 0 ? (
         <p className={styles.emptyText}>
-          Nothing waiting on you — every request has been triaged.
+          {t("admin:housingRequests.empty")}
         </p>
       ) : (
         <div className={styles.rows}>
@@ -62,11 +65,14 @@ export function AdminHousingJoinRequests() {
                   <div className={styles.rowTop}>
                     <span className={styles.rowName}>{request.name}</span>
                     <AdminChip tone="plum" dot>
-                      {request.coop?.name ?? "Unknown co-op"}
+                      {request.coop?.name ??
+                        t("admin:housingRequests.unknownCoop")}
                     </AdminChip>
                   </div>
                   <div className={styles.rowMeta}>
-                    {request.householdSize} in the household
+                    {t("admin:housingRequests.householdSize", {
+                      size: request.householdSize,
+                    })}
                     {request.note ? ` · "${request.note}"` : ""}
                   </div>
                 </div>
@@ -76,14 +82,14 @@ export function AdminHousingJoinRequests() {
                     size="md"
                     onClick={() => decide(request, "declined")}
                   >
-                    Decline
+                    {t("admin:housingRequests.declineCta")}
                   </Button>
                   <Button
                     variant="jade"
                     size="md"
                     onClick={() => decide(request, "accepted")}
                   >
-                    Accept
+                    {t("admin:housingRequests.acceptCta")}
                   </Button>
                 </div>
               </div>

@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { FiClock, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDirectoryListings } from "../marketing/listBusiness/api/useDirectoryListings";
 import { routes } from "../../app/routeMap";
-import { EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState } from "../../shared/components/ui";
 import {
   initials,
   type ListingStatus,
@@ -29,13 +31,21 @@ const STATUS_LABEL_KEY: Record<ListingStatus, string> = {
 function PlacesCard({
   place,
   isSelf,
+  onRemove,
 }: {
   place: MemberPlace;
   isSelf: boolean;
+  /** Owner-only delete; absent when the caller can't manage this listing
+   *  (visitor view, demo mode, or a registry place with no ref). */
+  onRemove?: () => void;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const isLive = place.status === "live";
+  // A live listing addresses its own ref for edit/delete; both need the same
+  // owner + live-mode + real-ref gate, so compute it once.
+  const canManage = isSelf && Boolean(place.ref) && !demoMode;
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   return (
     <article className={styles.card}>
@@ -60,35 +70,68 @@ function PlacesCard({
         )}
       </div>
       {place.blurb && <p className={styles.blurb}>{place.blurb}</p>}
-      <div className={styles.foot}>
-        {isSelf && place.ref && (
-          <span className={styles.ref}>
-            {t("members:places.refLabel", { ref: place.ref })}
-          </span>
-        )}
-        <div className={styles.footActions}>
-          {isSelf && place.ref && !demoMode && (
-            <Link
-              to={routes.listBusinessEdit.replace(":ref", place.ref)}
-              className={styles.editLink}
-            >
-              {t("members:places.editCta")}
-            </Link>
-          )}
-          {isLive ? (
-            <Link
-              to={`${routes.directory}/${place.slug}`}
-              className={styles.viewLink}
-            >
-              {t("members:places.viewListingCta")}
-            </Link>
-          ) : (
-            <span className={styles.pending}>
-              {t("members:places.awaitingReview")}
+      {confirmingDelete && canManage && onRemove ? (
+        <div
+          className={styles.confirm}
+          role="alertdialog"
+          aria-label={t("members:places.deleteCta")}
+        >
+          <p className={styles.confirmText}>
+            <Translation
+              i18nKey="members:places.deleteConfirm"
+              components={{ b: <b /> }}
+              values={{ name: place.name }}
+            />
+          </p>
+          <div className={styles.confirmActions}>
+            <Button variant="ghost" onClick={() => setConfirmingDelete(false)}>
+              {t("members:places.deleteCancel")}
+            </Button>
+            <Button variant="primary" onClick={onRemove}>
+              {t("members:places.deleteYes")}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.foot}>
+          {isSelf && place.ref && (
+            <span className={styles.ref}>
+              {t("members:places.refLabel", { ref: place.ref })}
             </span>
           )}
+          <div className={styles.footActions}>
+            {canManage && place.ref && (
+              <Link
+                to={routes.listBusinessEdit.replace(":ref", place.ref)}
+                className={styles.editLink}
+              >
+                {t("members:places.editCta")}
+              </Link>
+            )}
+            {canManage && onRemove && (
+              <button
+                type="button"
+                className={styles.deleteBtn}
+                onClick={() => setConfirmingDelete(true)}
+              >
+                {t("members:places.deleteCta")}
+              </button>
+            )}
+            {isLive ? (
+              <Link
+                to={`${routes.directory}/${place.slug}`}
+                className={styles.viewLink}
+              >
+                {t("members:places.viewListingCta")}
+              </Link>
+            ) : (
+              <span className={styles.pending}>
+                {t("members:places.awaitingReview")}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </article>
   );
 }
@@ -108,7 +151,8 @@ export function PlacesSection({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { submitted } = useDirectoryListings();
+  const { showToast } = useToast();
+  const { submitted, withdrawListing } = useDirectoryListings();
   // Visitor source: demo → static registry, live → GET /directory/by-member/:slug.
   const visitorPlaces = useMemberListings(memberSlug);
   // Owner source: this member's own submissions from GET /listings/mine.
@@ -173,7 +217,19 @@ export function PlacesSection({
       </div>
       <div className={styles.grid}>
         {places.map((place) => (
-          <PlacesCard key={place.key} place={place} isSelf={isSelf} />
+          <PlacesCard
+            key={place.key}
+            place={place}
+            isSelf={isSelf}
+            onRemove={
+              isSelf && place.ref && !demoMode
+                ? () => {
+                    withdrawListing(place.ref as string);
+                    showToast(t("members:places.deleted"), "info");
+                  }
+                : undefined
+            }
+          />
         ))}
       </div>
     </section>

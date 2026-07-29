@@ -1,4 +1,22 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+
+/**
+ * Structural sub-headings inside each company's `about` block. They are UI
+ * chrome (the same two labels repeat across every profile), not editorial
+ * prose, so they are translated. Rendered as components because `about` is a
+ * `ReactNode` mounted inside the React tree (CompanyTabs' AboutPane), which
+ * lets these read the active locale via `useTranslation`.
+ */
+function HowWeWorkHeading() {
+  const { t } = useTranslation();
+  return <h3>{t("economy:company.about.howWeWorkHeading")}</h3>;
+}
+
+function WhatWeLookForHeading() {
+  const { t } = useTranslation();
+  return <h3>{t("economy:company.about.whatWeLookForHeading")}</h3>;
+}
 
 export interface CompanyBadge {
   label: string;
@@ -116,7 +134,7 @@ const PROFILES: CompanyProfile[] = [
           team" and "print team", we have a studio of people who care equally
           about both.
         </p>
-        <h3>How we work</h3>
+        <HowWeWorkHeading />
         <p>
           Four-day week, year-round. Generous time off (<strong>28 days</strong>{" "}
           + bank holidays + your birthday). Sliding-scale compensation: same
@@ -124,7 +142,7 @@ const PROFILES: CompanyProfile[] = [
           presence in our work and quiet about it externally — we don't put
           rainbow logos on anything.
         </p>
-        <h3>What we look for</h3>
+        <WhatWeLookForHeading />
         <p>
           Curiosity. People who can <strong>show their reasoning</strong>, not
           just their output. We hire portfolio-blind for first-round — your CV
@@ -257,7 +275,7 @@ const PROFILES: CompanyProfile[] = [
           one is asked to carry the hard parts alone. The pay is NGO pay, and we
           are honest about that up front.
         </p>
-        <h3>How we work</h3>
+        <HowWeWorkHeading />
         <p>
           Permanent contracts after a probation period, <strong>25 days</strong>{" "}
           holiday plus public holidays, and a genuine training budget.
@@ -369,7 +387,7 @@ const PROFILES: CompanyProfile[] = [
           moment, not for a clinical CV. Training is provided, and no one runs a
           group alone before they're ready.
         </p>
-        <h3>How we work</h3>
+        <HowWeWorkHeading />
         <p>
           Part-time and flexible around fixed group times.{" "}
           <strong>Ongoing clinical supervision</strong> for everyone on the
@@ -478,7 +496,7 @@ const PROFILES: CompanyProfile[] = [
           This is retail — tills, shelves, slow afternoons — but it's also
           community work. The right person will love both halves equally.
         </p>
-        <h3>How we work</h3>
+        <HowWeWorkHeading />
         <p>
           Founding roles with genuine ownership.{" "}
           <strong>Staff discount, first read of the new stock</strong>, and a
@@ -582,7 +600,7 @@ const PROFILES: CompanyProfile[] = [
           the employers on this board — pay transparency, real inclusion, honest
           hiring — we hold ourselves to first.
         </p>
-        <h3>How we work</h3>
+        <HowWeWorkHeading />
         <p>
           Remote-first with a Lisbon anchor.{" "}
           <strong>Transparent salary bands</strong>, four weeks off, and

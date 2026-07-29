@@ -11,6 +11,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import { currentUserSlug } from "../members/data/members";
+import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import { itemsToInputDto } from "./api/subprofiles.adapters";
 import {
@@ -77,6 +79,11 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
   const { create, update, replaceSection } = useSubprofileMutations();
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { demoMode } = useDemoMode();
+  // The vanity-URL preview shows the signed-in member's own slug. The mock
+  // "tiago" seed is only used as a demo-mode fallback if there's no session.
+  const ownerSlug = user?.profile.slug ?? (demoMode ? currentUserSlug : "you");
   const [kind, setKind] = useState<SubprofileKind | null>(null);
   const [displayName, setDisplayName] = useState("");
   // The address holds its own value only once the owner types a custom one;
@@ -230,7 +237,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
           <>
             {t("subprofiles:metaForm.livesAt")}{" "}
             <span className={styles.pathPreview}>
-              /members/{currentUserSlug}/{normalizedSlug || "…"}
+              /members/{ownerSlug}/{normalizedSlug || "…"}
             </span>
           </>
         }

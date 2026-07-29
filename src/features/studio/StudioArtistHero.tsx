@@ -42,6 +42,8 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
           placeholder="Mariana Sol"
           initials="MS"
           style={{ position: "absolute", inset: 0 }}
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
       <div>

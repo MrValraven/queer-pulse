@@ -1244,9 +1244,25 @@ export const resources: Catalog = {
   "sexualHealth.testing.nominate.submitCta": "Submit nomination",
 
   "sexualHealth.prep.title": "PrEP in <em>Portugal.</em>",
+  "sexualHealth.prep.lead":
+    "PrEP (pre-exposure prophylaxis) is available free through the SNS for eligible people. When taken correctly it is over 99% effective at preventing HIV. Here's how to access it.",
+  "sexualHealth.prep.tip":
+    "<strong>Portugal was one of the first European countries to make PrEP free.</strong> You don't need private insurance. The process involves a simple eligibility check, blood tests, and a prescription — the whole pathway takes about 4–6 weeks the first time.",
   "sexualHealth.prep.faqTitle": "Common <em>questions.</em>",
 
   "sexualHealth.hiv.title": "HIV — what you need to <em>know.</em>",
+  "sexualHealth.hiv.lead":
+    "Honest, current information. HIV is a manageable condition. With treatment, people with HIV live full, long lives and can't pass the virus on.",
+  "sexualHealth.hiv.uu.title": "Undetectable = <em>Untransmittable.</em>",
+  "sexualHealth.hiv.uu.body":
+    "U=U is one of the most important facts in sexual health. People living with HIV who are on effective treatment and have an undetectable viral load cannot sexually transmit HIV to their partners. This is scientifically established and endorsed by every major health authority.",
+  "sexualHealth.hiv.uu.stat.uu.label":
+    "Undetectable = Untransmittable. Confirmed by the CDC, WHO, and 400+ health organisations globally.",
+  "sexualHealth.hiv.uu.stat.rate.label":
+    "of people on treatment in Portugal achieve an undetectable viral load within 6 months.",
+  "sexualHealth.hiv.uu.stat.free.value": "Free",
+  "sexualHealth.hiv.uu.stat.free.label":
+    "HIV treatment (antiretrovirals) is free for all residents through the SNS.",
   "sexualHealth.hiv.findServicesCta": "Find HIV support services",
 
   "sexualHealth.guides.title": "Guides & <em>questions.</em>",
@@ -1281,6 +1297,7 @@ export const resources: Catalog = {
   "microGrants.hero.stat.projects.label": "projects funded",
   "microGrants.hero.stat.pot.label": "in this quarter's pot",
   "microGrants.hero.fundBar.roundLabel": "Q2 2026 funding round",
+  "microGrants.hero.fundBar.goalLabel": "goal",
 
   "microGrants.how.01.title": "Members contribute",
   "microGrants.how.01.body":
@@ -1302,6 +1319,8 @@ export const resources: Catalog = {
   "microGrants.round.meta.amountLabel": "per project",
   "microGrants.round.meta.deadlineLabel": "application deadline",
   "microGrants.round.meta.decisionLabel": "to decision",
+  "microGrants.round.meta.deadlineValue": "30 June 2026",
+  "microGrants.round.meta.decisionValue": "3 – 4 weeks",
   "microGrants.round.criteriaTitle": "Criteria",
   "microGrants.criteria.member": "You are a QueerPulse member in good standing",
   "microGrants.criteria.benefit":

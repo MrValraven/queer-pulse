@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
@@ -24,6 +25,7 @@ export function AdminPartnerTestimonialModal({
   partner: PartnerApplicationDTO;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const updatePartner = useUpdatePartnerAdmin();
   const [quote, setQuote] = useState(partner.testimonialQuote ?? "");
@@ -47,13 +49,16 @@ export function AdminPartnerTestimonialModal({
       },
       {
         onSuccess: () => {
-          showToast(`${partner.name}'s testimonial was updated`, "success");
+          showToast(
+            t("admin:partnerTestimonial.updatedToast", { name: partner.name }),
+            "success",
+          );
           onClose();
         },
         onError: (error) =>
           showToast(
             error instanceof ApiError && error.status === 409
-              ? "A quote needs an author — add one before saving"
+              ? t("admin:partnerTestimonial.quoteNeedsAuthor")
               : describeError("Couldn't save that testimonial", error),
             "error",
           ),
@@ -63,13 +68,13 @@ export function AdminPartnerTestimonialModal({
 
   return (
     <AdminModal
-      eyebrow="Testimonial"
+      eyebrow={t("admin:partnerTestimonial.eyebrow")}
       title={partner.name}
       onClose={onClose}
       footer={
         <>
           <Button variant="ghost" type="button" onClick={onClose}>
-            Cancel
+            {t("admin:common.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -77,7 +82,7 @@ export function AdminPartnerTestimonialModal({
             form={FORM_ID}
             disabled={updatePartner.isPending || quoteWithoutAuthor}
           >
-            Save changes
+            {t("admin:common.saveChanges")}
           </Button>
         </>
       }
@@ -88,7 +93,7 @@ export function AdminPartnerTestimonialModal({
         onSubmit={handleSubmit}
       >
         <label className={styles.fieldLabel} htmlFor="testimonial-quote">
-          Quote
+          {t("admin:partnerTestimonial.quote")}
         </label>
         <textarea
           id="testimonial-quote"
@@ -99,7 +104,7 @@ export function AdminPartnerTestimonialModal({
         />
 
         <label className={styles.fieldLabel} htmlFor="testimonial-author">
-          Author
+          {t("admin:partnerTestimonial.author")}
         </label>
         <input
           id="testimonial-author"
@@ -109,7 +114,7 @@ export function AdminPartnerTestimonialModal({
         />
 
         <label className={styles.fieldLabel} htmlFor="testimonial-role">
-          Role
+          {t("admin:partnerTestimonial.role")}
         </label>
         <input
           id="testimonial-role"
@@ -120,7 +125,7 @@ export function AdminPartnerTestimonialModal({
 
         {quoteWithoutAuthor && (
           <p className={styles.fieldHint}>
-            Add an author before saving a quote.
+            {t("admin:partnerTestimonial.authorRequiredHint")}
           </p>
         )}
       </form>

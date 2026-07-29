@@ -5,6 +5,7 @@ import { DeleteMessageDialog } from "./DeleteMessageDialog";
 import { MessageActionOverlay } from "./MessageActionOverlay";
 import { MessageContextMenu } from "./MessageContextMenu";
 import { MessageReportModal } from "./MessageReportModal";
+import { findReactionMine } from "./reactionKeys";
 import type { ChatMessage } from "./data";
 
 type ActionTarget =
@@ -102,7 +103,12 @@ export function ConversationOverlays({
             canPin: !!message.canPin,
             pinned: !!message.pinnedAt,
             starred: !!message.starred,
-            onReact: (key: MessageReactionKey) => onReactionToggle(message, key, false),
+            // Read the member's actual prior reaction state for this key —
+            // never hardcode `false`, or re-picking a reaction you already
+            // have would "add" it again instead of toggling it off (see
+            // findReactionMine).
+            onReact: (key: MessageReactionKey) =>
+              onReactionToggle(message, key, findReactionMine(message.reactions, key)),
             onReply: () => onSetReply?.(message),
             onForward: () => onForward(message),
             onTogglePin: () => onTogglePin(message),

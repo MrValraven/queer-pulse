@@ -59,6 +59,9 @@ export function useUpdatePlatformSettings() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, UpdatePlatformSettingsInput>({
+    // AdminSettingsAccess + LockdownBanner toast their own error, so silence the
+    // global duplicate.
+    meta: { silentError: true },
     mutationFn: async (input) => {
       if (demoMode) return;
       await updatePlatformSettings(input);

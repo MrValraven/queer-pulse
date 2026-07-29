@@ -30,6 +30,8 @@ export function useUpdateBot() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, BotEdits>({
+    // AdminBotEditorDrawer toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async (edits) => {
       if (demoMode) return;
       await updateBotProfile(edits.userId, edits.profile);

@@ -192,6 +192,18 @@ export const cinema: Catalog = {
   "film.relation.sameForm": "Same form · {format}",
   "film.relation.curatorsPick": "Curator's pick",
 
+  // ── Shared ImageSlot placeholder captions — platform-authored labels shown
+  // in the empty/failed image frame (the slot's own src is a real cover in
+  // both modes; this is the load-failure fallback caption). ─────────────────
+  "slot.poster": "poster",
+  "slot.coverFilm": "cover film · poster",
+  "slot.programmeCover": "programme cover",
+  "slot.spotlightPoster": "spotlight poster",
+  "slot.curatorPortrait": "curator portrait · 3:4",
+  "slot.filmPoster": "film poster · 3:4",
+  "slot.filmmakerPortrait": "filmmaker portrait · 3:4",
+  "slot.filmFrame": "film frame · cinematic still",
+
   // ── Film page (FilmPage.tsx, FilmHero*.tsx, FilmBody.tsx) — chrome only;
   // film title/synopsis/crew bios/curator quote/event date are this film's own
   // content and stay English ─────────────────────────────────────────────────

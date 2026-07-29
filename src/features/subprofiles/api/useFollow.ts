@@ -39,6 +39,8 @@ export function useFollow(subprofileId: string) {
   };
 
   const follow = useMutation<FollowResult, Error, FollowVariables>({
+    // SubprofileFollow toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ currentFollowerCount }) => {
       if (demoMode) {
         const { mockSetFollowing } = await import("../data/subprofiles.data");
@@ -55,6 +57,8 @@ export function useFollow(subprofileId: string) {
   });
 
   const unfollow = useMutation<FollowResult, Error, UnfollowVariables>({
+    // SubprofileFollow toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ currentFollowerCount }) => {
       if (demoMode) {
         const { mockSetFollowing } = await import("../data/subprofiles.data");

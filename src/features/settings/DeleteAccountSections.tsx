@@ -1,11 +1,16 @@
+import { type FormEvent } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import type { DeleteOption } from "./deleteAccount.data";
+import { DELETE_CONTENT, type DeleteOption } from "./deleteAccount.data";
 import type { DeletionRequest } from "./api/account.api";
 import styles from "./DeleteAccountPage.module.css";
+
+/** The per-option copy block driving the delete/deactivate confirmation UI. */
+type DeleteContent = (typeof DELETE_CONTENT)[DeleteOption];
 
 /** The two mutually-exclusive account-off-ramp cards (deactivate / delete). */
 export function DeleteOptionCards({
@@ -148,5 +153,66 @@ export function DeletePendingBanner({
         </Button>
       </div>
     </div>
+  );
+}
+
+/** The typed-phrase confirmation box plus submit / cancel actions. */
+export function DeleteConfirmForm({
+  content,
+  phrase,
+  setPhrase,
+  confirmPhrase,
+  canSubmit,
+  onSubmit,
+}: {
+  content: DeleteContent;
+  phrase: string;
+  setPhrase: (value: string) => void;
+  confirmPhrase: string | null;
+  canSubmit: boolean;
+  onSubmit: (event: FormEvent) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <form className={styles.confirmForm} onSubmit={onSubmit}>
+      {content.phraseKey && (
+        <div>
+          <div className={styles.cfLabel}>
+            <Translation
+              i18nKey="settings:deleteAccount.confirm.typeLabel"
+              components={{
+                strong: <strong className={styles.confirmPhrase} />,
+              }}
+              values={{ phrase: confirmPhrase ?? "" }}
+            />
+          </div>
+          <input
+            className={[
+              styles.cfInput,
+              content.isDanger && styles.cfInputDanger,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            type="text"
+            value={phrase}
+            onChange={(event) => setPhrase(event.target.value)}
+          />
+          <div className={styles.cfHint}>{t(content.confirmHintKey)}</div>
+        </div>
+      )}
+      <div className={styles.formActions}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!canSubmit}
+          className={content.isDanger ? styles.btnDanger : undefined}
+        >
+          {t(content.btnLabelKey)}
+        </Button>
+        <Button variant="ghost" to={routes.settings}>
+          {t("settings:deleteAccount.confirm.cancelBtn")}
+        </Button>
+      </div>
+    </form>
   );
 }

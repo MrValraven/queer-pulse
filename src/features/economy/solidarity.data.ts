@@ -1,4 +1,5 @@
 import { memberName } from "../members/data/members";
+import { leadingInitials } from "../../shared/lib/initials";
 
 export type Cat =
   "therapy" | "legal" | "medical" | "dental" | "vet" | "finance" | "body";
@@ -243,9 +244,5 @@ export const FILTERS: { id: Cat | "all"; labelKey: string }[] = [
 ];
 
 export function initials(name: string) {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2);
+  return leadingInitials(name);
 }

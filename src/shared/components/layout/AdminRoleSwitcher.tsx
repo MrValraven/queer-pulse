@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import { useTeamRole } from "../../../features/admin/adminRole";
 import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../feedback/useToast";
+import { initialsFromParts } from "../../lib/initials";
 import { useTranslation } from "../../i18n/useTranslation";
 import { modPanel } from "../../../app/routeMap";
 import { STEWARDED, ADMIN_PROFILE } from "./adminNav.data";
@@ -55,14 +56,22 @@ export function AdminRoleSwitcher() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node))
+    const onDown = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node))
         setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      // Escape closes and restores focus to the trigger (APG menu button).
+      if (event.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
@@ -70,6 +79,45 @@ export function AdminRoleSwitcher() {
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
+
+  // Move focus into the menu (first item) when it opens.
+  useEffect(() => {
+    if (open)
+      menuRef.current
+        ?.querySelector<HTMLButtonElement>(
+          '[role="menuitem"], [role="menuitemradio"]',
+        )
+        ?.focus();
+  }, [open]);
+
+  // Up/Down roving between the role/community options, Home/End to the ends.
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const items = Array.from(
+      menuRef.current?.querySelectorAll<HTMLButtonElement>(
+        '[role="menuitem"], [role="menuitemradio"]',
+      ) ?? [],
+    );
+    if (items.length === 0) return;
+    event.preventDefault();
+    const currentIndex = items.indexOf(
+      document.activeElement as HTMLButtonElement,
+    );
+    let nextIndex: number;
+    if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = items.length - 1;
+    } else if (event.key === "ArrowDown") {
+      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length;
+    } else {
+      nextIndex =
+        currentIndex < 0
+          ? items.length - 1
+          : (currentIndex - 1 + items.length) % items.length;
+    }
+    items[nextIndex]?.focus();
+  };
 
   const isAdmin = role === "admin";
   const roleLabel = isAdmin
@@ -82,7 +130,7 @@ export function AdminRoleSwitcher() {
   // Live mode shows the signed-in member's own initials; demo keeps the fixture.
   const profile = user?.profile;
   const initials = profile
-    ? `${profile.firstName.charAt(0)}${profile.lastName.charAt(0)}`.toUpperCase()
+    ? initialsFromParts(profile.firstName, profile.lastName)
     : ADMIN_PROFILE.initials;
 
   if (!canSwitch) {
@@ -98,9 +146,11 @@ export function AdminRoleSwitcher() {
   return (
     <div className={styles.switch} ref={ref}>
       <button
+        ref={triggerRef}
         type="button"
         className={styles.switchBtn}
         onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
         aria-expanded={open}
       >
         <RoleChip initials={initials} role={roleLabel} scope={scopeLabel} />
@@ -113,13 +163,20 @@ export function AdminRoleSwitcher() {
       </button>
 
       {open && (
-        <div className={styles.switchMenu} role="menu">
+        <div
+          className={styles.switchMenu}
+          role="menu"
+          tabIndex={-1}
+          ref={menuRef}
+          onKeyDown={onMenuKeyDown}
+        >
           <div className={styles.switchSep}>
             {t("shared:adminRoleSwitcher.yourRoles")}
           </div>
           <button
             type="button"
             role="menuitemradio"
+            tabIndex={-1}
             aria-checked={isAdmin}
             className={[styles.switchOpt, isAdmin && styles.switchOptOn]
               .filter(Boolean)
@@ -157,6 +214,7 @@ export function AdminRoleSwitcher() {
               key={c.name}
               type="button"
               role="menuitem"
+              tabIndex={-1}
               className={styles.switchOpt}
               onClick={() => {
                 setRole("moderator");

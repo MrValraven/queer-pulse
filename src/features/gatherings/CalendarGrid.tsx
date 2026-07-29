@@ -7,7 +7,7 @@ import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
 import { CALENDAR_TODAY, WEEKDAY_REFERENCE } from "./calendar.data";
 import { sameDay } from "./calendarGrid.helpers";
-import styles from "./CalendarPage.module.css";
+import styles from "./CalendarGrid.module.css";
 
 export function EventCardSkeleton() {
   return (

@@ -1,69 +1,52 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiInbox } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { AdminChip, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
-import {
-  AUDIT_ENTRIES,
-  AUDIT_TOTAL,
-  AUDIT_PAGE_SIZE,
-  DEFAULT_AUDIT_FILTERS,
-  type AuditEntry,
-  type AuditFilterState,
-} from "./adminGovernance.data";
+import { DEFAULT_AUDIT_FILTERS, type AuditFilterState } from "./adminGovernance.data";
+import { useAdminAudit, type AuditRowView } from "./api/useAdminAudit";
 import { AdminGovernanceAuditFilters } from "./AdminGovernanceAuditFilters";
 import { AdminGovernanceAuditModal } from "./AdminGovernanceAuditModal";
 import styles from "./AdminGovernancePage.module.css";
 
-function matches(e: AuditEntry, f: AuditFilterState): boolean {
-  if (f.moderator !== "all" && e.moderatorName !== f.moderator) return false;
-  if (f.action !== "all" && e.type !== f.action) return false;
-  if (f.range !== "all" && e.range !== f.range) return false;
-  if (f.query.trim()) {
-    const q = f.query.trim().toLowerCase();
-    if (!`${e.reason} ${e.subject}`.toLowerCase().includes(q)) return false;
-  }
-  return true;
-}
+const PAGE_SIZE = 8;
 
 export function AdminGovernanceAudit() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const loading = useSimulatedLoad(1100);
   const { showToast } = useToast();
   const [filters, setFilters] = useState<AuditFilterState>(
     DEFAULT_AUDIT_FILTERS,
   );
   const [page, setPage] = useState(1);
-  const [open, setOpen] = useState<AuditEntry | null>(null);
+  const [open, setOpen] = useState<AuditRowView | null>(null);
 
-  const filtered = useMemo(
-    () => AUDIT_ENTRIES.filter((e) => matches(e, filters)),
-    [filters],
+  const { items, total, moderators, pageCount, loading } = useAdminAudit(
+    filters,
+    page,
+    PAGE_SIZE,
   );
-  const pageCount = Math.max(1, Math.ceil(filtered.length / AUDIT_PAGE_SIZE));
-  const safePage = Math.min(page, pageCount);
-  const start = (safePage - 1) * AUDIT_PAGE_SIZE;
-  const rows = filtered.slice(start, start + AUDIT_PAGE_SIZE);
 
   const changeFilters = (next: AuditFilterState) => {
     setFilters(next);
     setPage(1);
   };
 
-  const totalDisplay = fmt.number(AUDIT_TOTAL);
+  const totalDisplay = fmt.number(total);
   const metaLabel =
-    filtered.length === 0
-      ? t("admin:governance.audit.metaZero", { total: totalDisplay })
-      : t("admin:governance.audit.metaMatch", {
-          count: filtered.length,
-          total: totalDisplay,
-        });
+    total === 0
+      ? t("admin:governance.audit.metaZero")
+      : t("admin:governance.audit.metaMatch", { count: total });
+
+  // `pageCount` can shrink (filters narrow the result set, or a live refetch
+  // returns fewer rows) after `page` was already advanced past it — clamp so
+  // the pager and the visible slice never point past the last real page.
+  const safePage = Math.min(page, pageCount);
+  const start = (safePage - 1) * PAGE_SIZE;
 
   return (
     <FadeIn>
@@ -80,6 +63,7 @@ export function AdminGovernanceAudit() {
       <AdminGovernanceAuditFilters
         filters={filters}
         onChange={changeFilters}
+        moderators={moderators}
         onExport={() =>
           showToast(
             t("admin:governance.audit.exportToast", { total: totalDisplay }),
@@ -109,27 +93,27 @@ export function AdminGovernanceAudit() {
           </div>
 
           {loading ? (
-            Array.from({ length: AUDIT_PAGE_SIZE }).map((_, i) => (
-              <SkeletonRow key={i} />
+            Array.from({ length: PAGE_SIZE }).map((_, index) => (
+              <SkeletonRow key={index} />
             ))
-          ) : filtered.length === 0 ? (
+          ) : total === 0 ? (
             <EmptyState />
           ) : (
-            rows.map((e, i) => (
-              <FadeIn key={e.id} delay={i * 45}>
-                <AuditRow entry={e} onOpen={() => setOpen(e)} />
+            items.map((entry, index) => (
+              <FadeIn key={entry.id} delay={index * 45}>
+                <AuditRow entry={entry} onOpen={() => setOpen(entry)} />
               </FadeIn>
             ))
           )}
         </div>
 
-        {!loading && filtered.length > 0 && (
+        {!loading && total > 0 && (
           <Pager
             page={safePage}
             pageCount={pageCount}
             start={start + 1}
-            end={start + rows.length}
-            total={filtered.length}
+            end={start + items.length}
+            total={total}
             onPage={setPage}
           />
         )}
@@ -146,7 +130,7 @@ function AuditRow({
   entry,
   onOpen,
 }: {
-  entry: AuditEntry;
+  entry: AuditRowView;
   onOpen: () => void;
 }) {
   return (
@@ -155,9 +139,9 @@ function AuditRow({
       role="row"
       tabIndex={0}
       onClick={onOpen}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
           onOpen();
         }
       }}
@@ -172,7 +156,7 @@ function AuditRow({
         {entry.moderatorName}
       </span>
       <span role="cell">
-        <AdminChip tone={entry.actionTone}>{entry.action}</AdminChip>
+        <AdminChip tone={entry.actionTone}>{entry.actionLabel}</AdminChip>
       </span>
       <span className={styles.auditSubject} role="cell">
         {entry.subject}
@@ -200,7 +184,7 @@ function Pager({
   start: number;
   end: number;
   total: number;
-  onPage: (p: number) => void;
+  onPage: (page: number) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -210,10 +194,8 @@ function Pager({
         {t("admin:governance.audit.pagerMeta", {
           start,
           end,
-          total: fmt.number(AUDIT_TOTAL),
+          total: fmt.number(total),
         })}
-        {total !== AUDIT_TOTAL &&
-          t("admin:governance.audit.pagerMatch", { count: total })}
       </span>
       <div className={styles.pagerNav}>
         <button
@@ -225,17 +207,20 @@ function Pager({
         >
           <FiChevronLeft />
         </button>
-        {Array.from({ length: pageCount }).map((_, i) => (
+        {Array.from({ length: pageCount }).map((_, index) => (
           <button
-            key={i}
+            key={index}
             type="button"
-            className={[styles.pagerNum, page === i + 1 && styles.pagerNumOn]
+            className={[
+              styles.pagerNum,
+              page === index + 1 && styles.pagerNumOn,
+            ]
               .filter(Boolean)
               .join(" ")}
-            aria-current={page === i + 1 ? "page" : undefined}
-            onClick={() => onPage(i + 1)}
+            aria-current={page === index + 1 ? "page" : undefined}
+            onClick={() => onPage(index + 1)}
           >
-            {i + 1}
+            {index + 1}
           </button>
         ))}
         <button
@@ -254,7 +239,6 @@ function Pager({
 
 function EmptyState() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   return (
     <div className={styles.auditEmpty}>
       <span className={styles.auditEmptyIco} aria-hidden>
@@ -264,9 +248,7 @@ function EmptyState() {
         {t("admin:governance.audit.emptyTitle")}
       </h3>
       <p className={styles.auditEmptyText}>
-        {t("admin:governance.audit.emptyText", {
-          total: fmt.number(AUDIT_TOTAL),
-        })}
+        {t("admin:governance.audit.emptyText")}
       </p>
     </div>
   );

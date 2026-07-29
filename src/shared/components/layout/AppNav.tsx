@@ -10,11 +10,11 @@ import { AccountMenu } from "./AccountMenu";
 import styles from "./AppNav.module.css";
 
 const APP_LINKS = [
-  { labelKey: "shared:appNav.links.home", to: "/feed" },
-  { labelKey: "nav:members", to: "/members" },
+  { labelKey: "shared:appNav.links.home", to: routes.feed },
+  { labelKey: "nav:members", to: routes.members },
   { labelKey: "shared:appNav.links.subprofiles", to: routes.subprofiles },
-  { labelKey: "nav:communities", to: "/communities" },
-  { labelKey: "shared:appNav.links.messages", to: "/messages" },
+  { labelKey: "nav:communities", to: routes.communities },
+  { labelKey: "shared:appNav.links.messages", to: routes.messages },
 ];
 
 /** Logged-in navigation: brand, app links, notifications bell, profile + messages. */
@@ -33,7 +33,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
         .filter(Boolean)
         .join(" ")}
     >
-      <Link to="/feed" className={styles.brand}>
+      <Link to={routes.feed} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
         <Translation
           i18nKey="shared:brand.wordmark"
@@ -68,7 +68,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
         </button>
 
         <Link
-          to="/notifications"
+          to={routes.notifications}
           className={styles.bell}
           aria-label={t("nav:notifications")}
         >
@@ -91,7 +91,7 @@ export function AppNav({ unreadCount }: { unreadCount?: number }) {
         </Link>
 
         <AccountMenu />
-        <Button to="/messages">{t("shared:appNav.links.messages")}</Button>
+        <Button to={routes.messages}>{t("shared:appNav.links.messages")}</Button>
       </div>
     </nav>
   );

@@ -40,6 +40,31 @@ export const messages: Catalog = {
   "deleteChat.confirmCta": "Delete chat",
   "deleteChat.cancelCta": "Cancel",
 
+  // GIF picker (Composer + GifPicker)
+  "gif.open": "Send a GIF",
+  "gif.panelLabel": "GIF picker",
+  "gif.searchPlaceholder": "Search GIFs",
+  "gif.loading": "Loading GIFs…",
+  "gif.empty": "No GIFs found",
+  "gif.error": "Couldn't load GIFs — try again",
+  "gif.loadMore": "Load more",
+  "gif.poweredBy": "Powered by KLIPY",
+  "gif.comingSoonTitle": "GIFs are coming soon",
+  "gif.comingSoonHint": "We're wiring up GIF search — check back soon to add a little motion to your messages.",
+
+  // Shortcut hint — the "?" affordance in the composer that lists the mention
+  // sigils. Tapping a row drops its sigil into the draft so typeahead opens.
+  "shortcuts.open": "Shortcuts",
+  "shortcuts.panelLabel": "Mention shortcuts",
+  "shortcuts.title": "Shortcuts",
+  "shortcuts.hint": "Type a sigil, then a name to link it.",
+  "shortcuts.member": "Mention a member",
+  "shortcuts.community": "Link a community",
+  "shortcuts.topic": "Tag a topic",
+  "shortcuts.business": "Link a business",
+  "shortcuts.event": "Link an event",
+  "shortcuts.thread": "Link a thread",
+
   // Inbox search (MessagesSearchResults) — one box, two kinds of match:
   // conversations by name and messages by body. `{query}` is the term typed.
   "search.conversationsLabel": "Conversations",
@@ -103,6 +128,8 @@ export const messages: Catalog = {
   // Long-press/right-click overlay (MessageActionOverlay) — reuses
   // actions.report/actions.delete above for its own menu items.
   "actions.menuLabel": "Message actions",
+  "actions.overlayLabel": "Message options",
+  "actions.reactionsLabel": "React to message",
   "actions.reply": "Reply",
   "actions.forward": "Forward",
   // Shown above a bubble whose content was forwarded from another chat.
@@ -191,8 +218,6 @@ export const messages: Catalog = {
   "group.promote": "Make admin",
   "group.demote": "Remove admin",
   "group.remove": "Remove",
-  "group.avatarPlaceholder": "Group photo URL (optional)",
-  "group.avatarAria": "Group photo URL",
   "group.avatarLabel": "Group photo",
   // "Seen by N" group receipt (CLDR plural: _one / _other) — the receipt line
   // under an own message and the sheet heading.

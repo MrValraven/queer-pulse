@@ -1,6 +1,5 @@
 // src/features/messages/MessageRun.tsx
-import { useRef, useState, type KeyboardEvent } from "react";
-import { FiHeart } from "react-icons/fi";
+import { useRef, type KeyboardEvent } from "react";
 import { Avatar } from "../../shared/components/ui";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { usePrefersReducedMotion } from "../../shared/hooks";
@@ -12,6 +11,7 @@ import { MentionText } from "../../shared/mentions/MentionText";
 import { LinkPreview } from "./LinkPreview";
 import { MessageActions } from "./MessageActions";
 import { ReactionChips } from "./ReactionChips";
+import { findReactionMine } from "./reactionKeys";
 import { InlineEditField } from "./InlineEditField";
 import type { LongPressOrigin } from "./useLongPress";
 import { useMessageGestures } from "./useMessageGestures";
@@ -208,6 +208,35 @@ function MessageBubbleBody({
     </button>
   );
 
+  // A GIF renders as an inline image (no text-bubble chrome, like the emoji-only
+  // case). Rendered BEFORE the emoji/text branches so a gif never falls through
+  // to text. Reply-quote/forwarded labels still apply. The meta sits below (not
+  // floating), since a GIF has no coloured bubble to tuck it into.
+  if (message.kind === "gif" && message.attachment) {
+    const { url, width, height } = message.attachment;
+    return (
+      <>
+        {forwardedNode}
+        {replyQuoteNode}
+        <img
+          className={styles.gifBubble}
+          src={url}
+          width={width || undefined}
+          height={height || undefined}
+          loading="lazy"
+          alt={message.text}
+        />
+        {isLast && (
+          <MessageMeta
+            time={message.time}
+            isSent={isSent}
+            metaStatus={metaStatus}
+            floating={false}
+          />
+        )}
+      </>
+    );
+  }
   // The meta (time + status tick) rides only on the run's LAST bubble; grouped
   // bubbles above it keep their exact time reachable via each bubble's `title`.
   if (isEmojiOnly(message.text)) {
@@ -330,11 +359,6 @@ function MessageBubble({
   const canInteract = canOpenOverlay && !message.deletedAt;
   const reactions = message.reactions ?? [];
   const hasVisibleReactions = reactions.some((reaction) => reaction.count > 0);
-  // Instagram-style ❤️ pop, shown briefly only when a double-tap ADDS the love
-  // reaction (never on removal). Reduced motion skips the flourish; the reaction
-  // still toggles.
-  const [heartPop, setHeartPop] = useState(false);
-
   function openOverlayFromBubble() {
     const node = wrapRef.current;
     if (!node) return;
@@ -355,15 +379,12 @@ function MessageBubble({
     }
   }
   // Double-tap/double-click → toggle ❤️ through the EXISTING reaction handler
-  // (no second reaction path); pop only on add.
+  // (no second reaction path). WhatsApp-style: the feedback is simply the
+  // reaction chip landing under the bubble (it has its own subtle entrance),
+  // with no separate overlay flourish.
   function quickReact() {
-    const loveMine =
-      reactions.find((reaction) => reaction.key === "love")?.mine ?? false;
+    const loveMine = findReactionMine(reactions, "love");
     onReactionToggle?.(message, "love", loveMine);
-    if (!loveMine && !reducedMotion) {
-      setHeartPop(true);
-      window.setTimeout(() => setHeartPop(false), 600);
-    }
   }
 
   const gestures = useMessageGestures({
@@ -442,11 +463,6 @@ function MessageBubble({
           </svg>
         </span>
       )}
-      {heartPop && (
-        <span className={styles.heartPop} aria-hidden="true">
-          <FiHeart size={44} />
-        </span>
-      )}
       <MessageBubbleBody
         message={message}
         index={index}
@@ -474,8 +490,14 @@ function MessageBubble({
       >
         <MessageActions
           onReact={(reactionKey) =>
-            onReactionToggle?.(message, reactionKey, false)
+            // Actual prior state, not a hardcoded `false` — otherwise
+            // re-picking a reaction you already have "adds" it again instead
+            // of toggling it off.
+            onReactionToggle?.(message, reactionKey, findReactionMine(reactions, reactionKey))
           }
+          // Same gate as swipe-to-reply: only a server-acked, non-deleted
+          // message can be quoted, so the button hides until then.
+          onReply={canInteract && onReply ? () => onReply(message) : undefined}
           onOpenOverlay={openOverlayFromBubble}
         />
       </div>

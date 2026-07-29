@@ -15,6 +15,15 @@ export const admin: Catalog = {
   "common.close": "Close",
   "common.back": "Back",
   "common.undo": "Undo",
+  "common.edit": "Edit",
+  "common.delete": "Delete",
+  "common.featured": "Featured",
+  "common.saveChanges": "Save changes",
+  // Shared 403 copy for the admin editor panels (org tiers, housing co-ops).
+  "common.panelForbidden": "This panel is for admins only.",
+  // Toggle aria-labels shared by the org-tier and housing-coop row lists.
+  "common.featuredToggleLabel": "Featured — {name}",
+  "common.publishedToggleLabel": "Published — {name}",
   // Breadcrumb root for the top-level admin panel (used by pages nested one
   // level below /admin, e.g. the partner-applications queue).
   "common.adminBreadcrumb": "Admin",
@@ -373,6 +382,23 @@ export const admin: Catalog = {
   "adminListings.advance.live": "Publish live",
   "adminListings.sendBackCta": "Back to review",
   "adminListings.toast.moved": "{name} moved to {status}.",
+  "adminListings.viewCta": "View & preview",
+  "adminListings.preview.sub":
+    "Exactly how this listing will look once it's live in the directory.",
+  "adminListings.ask.eyebrow": "Ask a question",
+  "adminListings.ask.title": "Ask about {name}",
+  "adminListings.ask.sub": "We'll send this to {name} as a message.",
+  "adminListings.ask.label": "Your question",
+  "adminListings.ask.helper":
+    "Keep it warm and specific — they'll get it as a direct message and can reply right there.",
+  "adminListings.ask.placeholder":
+    "Hi! Before we publish this, could you confirm…",
+  "adminListings.ask.send": "Send question",
+  "adminListings.ask.cancel": "Cancel",
+  "adminListings.ask.sent": "Your question is on its way to {name}.",
+  "adminListings.ask.action": "send your question",
+  "adminListings.ask.noSubmitter":
+    "This listing has no member to contact — there's no one to send a question to.",
 
   // ── Moderation ─────────────────────────────────────────────────────────────
   "moderation.title": "Moderation · <em>triage</em>",
@@ -763,6 +789,8 @@ export const admin: Catalog = {
   "governance.finances.foot.sources": "Sustainers, grants & one-offs",
   "governance.finances.foot.reserve": "Held in the community reserve",
   "governance.finances.foot.solidarityRate": "Members on free or reduced rate",
+  "governance.finances.empty":
+    "No published finance report yet — figures will appear here once one is published.",
 
   "governance.ledger.moderatorHonoraria": "Moderator honoraria",
   "governance.ledger.platformTools": "Platform & tools",
@@ -803,7 +831,7 @@ export const admin: Catalog = {
   "governance.mrrPanel.breakdown.magazine": "Magazine",
   "governance.mrrPanel.readCta": "Read the constitution",
 
-  "governance.policy.versionsTitle": "Code of Care <em>versions</em>",
+  "governance.policy.versionsTitle": "Policy <em>decision log</em>",
   "governance.policy.versionsSub":
     "Every change to how we keep each other safe, dated and open.",
   "governance.policy.seeDiffCta": "See what changed",
@@ -828,8 +856,8 @@ export const admin: Catalog = {
     "Proposed by the Trans & Friends moderators · voted on by the whole community at the Annual Assembly.",
 
   "governance.audit.title": "Every action, <em>on the record</em>",
-  "governance.audit.metaZero": "0 of {total} entries",
-  "governance.audit.metaMatch": "{count} match · {total} total",
+  "governance.audit.metaZero": "No entries match these filters.",
+  "governance.audit.metaMatch": "{count} entries",
   "governance.audit.exportToast": "Exported {total} entries as CSV",
   "governance.audit.exportCta": "Export CSV",
   "governance.audit.columns.moderator": "Moderator",
@@ -845,20 +873,24 @@ export const admin: Catalog = {
   "governance.audit.allModerators": "All moderators",
   "governance.audit.allActions": "All actions",
   "governance.audit.allTime": "All time",
-  "governance.audit.actionType.removed": "Removed",
-  "governance.audit.actionType.restricted": "Restricted",
-  "governance.audit.actionType.warned": "Warned",
-  "governance.audit.actionType.dismissed": "Dismissed",
-  "governance.audit.actionType.verified": "Verified",
-  "governance.audit.actionType.appeal": "Appeal",
-  "governance.audit.actionType.policy": "Policy",
-  "governance.audit.actionType.froze": "Froze",
+  "governance.audit.actionType.dismiss": "Dismissed",
+  "governance.audit.actionType.warn": "Warned",
+  "governance.audit.actionType.hide_content": "Content hidden",
+  "governance.audit.actionType.remove_content": "Content removed",
+  "governance.audit.actionType.restrict": "Restricted",
+  "governance.audit.actionType.suspend": "Suspended",
+  "governance.audit.actionType.ban": "Banned",
+  "governance.audit.actionType.shield": "Shielded",
+  "governance.audit.actionType.escalate": "Escalated",
+  "governance.audit.actionType.appeal_upheld": "Appeal upheld",
+  "governance.audit.actionType.appeal_overturned": "Appeal overturned",
+  "governance.audit.actionType.suspension_lifted": "Suspension lifted",
   "governance.audit.range.today": "Today",
-  "governance.audit.range.thisWeek": "This week",
-  "governance.audit.range.thisQuarter": "This quarter",
+  "governance.audit.range.week": "This week",
+  "governance.audit.range.quarter": "This quarter",
   "governance.audit.emptyTitle": "No entries match",
   "governance.audit.emptyText":
-    "Try widening your filters — the full log holds {total} actions going back to 2023.",
+    "No moderation actions match these filters yet. Try widening them.",
   "governance.audit.pagerMeta": "Showing {start}–{end} of {total} entries",
   "governance.audit.pagerMatch": " ({count} match)",
   "governance.audit.prevPage": "Previous page",
@@ -1223,4 +1255,156 @@ export const admin: Catalog = {
   "bots.saved": "Saved — {name} is up to date.",
   "bots.saveFailed": "That didn't save — check your connection and try again.",
   "bots.usernameTaken": "That handle is already taken.",
+
+  // ── Partnership tiers (/admin/org-tiers) — page, form, fields, rows ────────
+  // Tier/partner NAMES stay English — DTO content served by the API. Eyebrow
+  // "Partnerships" reuses partners.header.eyebrow.
+  "orgTier.title": "Partnership <em>tiers</em>",
+  "orgTier.header.sub":
+    "Every tier on the For Organisations page, published or still in draft — create one, keep the pricing and copy current, and control what's live.",
+  "orgTier.newCta": "New tier",
+  "orgTier.form.editEyebrow": "Edit tier",
+  "orgTier.form.editTitle": "Edit tier",
+  "orgTier.form.createTitle": "Create a partnership tier",
+  "orgTier.form.createCta": "Create tier",
+  "orgTier.loadError":
+    "The tier list couldn't load right now — please try again.",
+  "orgTier.empty": "No tiers yet — create the first one below.",
+  "orgTier.delete.title": "Remove {name}?",
+  "orgTier.delete.confirmCta": "Remove tier",
+  "orgTier.delete.body":
+    "This removes it from the public partnership tiers list and the admin panel. This cannot be undone.",
+  "orgTier.toast.updated": "{name} was updated",
+  "orgTier.toast.created": "{name} was created",
+  "orgTier.toast.removed": "{name} was removed",
+  "orgTier.field.name": "Name",
+  "orgTier.field.price": "Price",
+  "orgTier.field.pricePeriod": "Price period",
+  // "Dek" is the descriptive standfirst line under the tier name — rendered as
+  // "Subtítulo" in pt-PT (there is no common pt term for "dek").
+  "orgTier.field.dek": "Dek",
+  "orgTier.field.bullets": "Bullets",
+  "orgTier.field.bulletsHint": "One bullet per line.",
+  "orgTier.field.footnote": "Footnote",
+  "orgTier.field.cta": "Call to action",
+  "orgTier.field.ctaLabel": "CTA label",
+  "orgTier.field.ctaTarget": "CTA target",
+  "orgTier.field.sortOrder": "Sort order",
+  // CTA-behaviour option labels; the stored value is a canonical id
+  // (toast/link/propose), never this label.
+  "orgTier.ctaOption.toast": "Toast — informational only",
+  "orgTier.ctaOption.link": "Link — navigates to a target",
+  "orgTier.ctaOption.propose": "Propose — opens the enquiry flow",
+  "orgTier.toggle.featured.sub": "Highlighted as the recommended tier.",
+  "orgTier.toggle.published.sub": "Visible on the For Organisations page.",
+
+  // ── AdminOrgTierFormFields.tsx — For-Organisations tier editor ─────────────
+  "orgTier.field.priceDisplay.placeholder": "e.g. €2.4k or Custom",
+  "orgTier.field.pricePeriod.placeholder": "e.g. per year",
+  "orgTier.field.ctaTarget.placeholder":
+    "Only used when the call to action is a link",
+  "orgTier.toggle.featured.title": "Featured",
+  "orgTier.toggle.published.title": "Published",
+
+  // ── Approved partners (featured-flag + testimonial editor) ─────────────────
+  // Partner names, testimonial quotes/authors stay English — DTO content.
+  "approvedPartners.title": "Featured partners & testimonials",
+  "approvedPartners.loadError":
+    "The partner list couldn't load right now — please try again.",
+  "approvedPartners.empty": "No approved partners yet.",
+  "approvedPartners.noTestimonial": "No testimonial yet",
+  "approvedPartners.unattributed": "Unattributed",
+  "approvedPartners.editCta": "Edit testimonial",
+
+  // ── AdminPartnerTestimonialModal.tsx ──────────────────────────────────────
+  "partnerTestimonial.eyebrow": "Testimonial",
+  "partnerTestimonial.quote": "Quote",
+  "partnerTestimonial.author": "Author",
+  "partnerTestimonial.role": "Role",
+  "partnerTestimonial.authorRequiredHint":
+    "Add an author before saving a quote.",
+  "partnerTestimonial.quoteNeedsAuthor":
+    "A quote needs an author — add one before saving",
+  "partnerTestimonial.updatedToast": "{name}'s testimonial was updated",
+
+  // ── Housing co-ops (/admin/housing) — page, form, fields, rows ─────────────
+  // Co-op NAMES / cities stay English — DTO content served by the API.
+  "housingCoop.title": "Housing <em>co-ops</em>",
+  "housingCoop.header.eyebrow": "Local economy",
+  "housingCoop.header.sub":
+    "Every co-op on the platform, published or still forming — create one, keep the details current, and clear the join-request queue below.",
+  "housingCoop.newCta": "New co-op",
+  "housingCoop.form.editEyebrow": "Edit co-op",
+  "housingCoop.form.editTitle": "Edit co-op",
+  "housingCoop.form.createTitle": "Create a housing co-op",
+  "housingCoop.form.createCta": "Create co-op",
+  "housingCoop.loadError":
+    "The co-op list couldn't load right now — please try again.",
+  "housingCoop.empty": "No co-ops yet — create the first one below.",
+  "housingCoop.delete.title": "Remove {name}?",
+  "housingCoop.delete.confirmCta": "Remove co-op",
+  "housingCoop.delete.body":
+    "This removes it from the public directory and the admin list. Join requests already submitted for it stay on record.",
+  "housingCoop.toast.updated": "{name} was updated",
+  "housingCoop.toast.created": "{name} was created",
+  "housingCoop.toast.removed": "{name} was removed",
+  "housingCoop.field.slug": "Slug",
+  "housingCoop.field.name": "Name",
+  "housingCoop.field.nameEm": "Name — emphasised word",
+  "housingCoop.field.nameEmHint":
+    "The one word styled in italic coral on the public card. Leave blank for none.",
+  "housingCoop.field.city": "City",
+  "housingCoop.field.area": "Area",
+  "housingCoop.field.households": "Households",
+  "housingCoop.field.phase": "Phase",
+  "housingCoop.field.description": "Description",
+  "housingCoop.field.progress": "Progress (%)",
+  "housingCoop.field.formingSince": "Forming since",
+  "housingCoop.field.formingSincePlaceholder": "e.g. 2025-03-01",
+  "housingCoop.field.operationalSince": "Operational since",
+  "housingCoop.field.operationalSincePlaceholder": "e.g. 2026-01-01",
+  "housingCoop.field.shareAmount": "Share amount (EUR)",
+  "housingCoop.field.monthly": "Monthly (EUR)",
+  "housingCoop.field.cta": "Call to action",
+  // Phase select option labels (long form). Stored value is a canonical id.
+  "housingCoop.phaseOption.forming": "Forming — finding the people",
+  "housingCoop.phaseOption.legal": "Legal incorporation",
+  "housingCoop.phaseOption.finance": "Finance & structure",
+  "housingCoop.phaseOption.property": "Finding the property",
+  "housingCoop.phaseOption.daily": "Daily life — operational",
+  // Phase badge labels (short form, on the admin row). Same canonical ids.
+  "housingCoop.phaseBadge.forming": "Forming",
+  "housingCoop.phaseBadge.legal": "Legal",
+  "housingCoop.phaseBadge.finance": "Finance",
+  "housingCoop.phaseBadge.property": "Property",
+  "housingCoop.phaseBadge.daily": "Daily life",
+  // CTA-kind option labels. Stored value is a canonical id.
+  "housingCoop.ctaOption.join": "Join the co-op",
+  "housingCoop.ctaOption.updates": "Get updates",
+  "housingCoop.ctaOption.mentor": "Talk to a mentor",
+  "housingCoop.toggle.operational.sub":
+    "The co-op has moved in and is running day to day.",
+  "housingCoop.toggle.sharesAreTarget.sub":
+    "Show the share amount as a goal, not a fixed price.",
+  "housingCoop.toggle.published.sub":
+    "Visible in the public housing directory.",
+  "housingCoop.row.households_one": "{count} household",
+  "housingCoop.row.households_other": "{count} households",
+
+  // ── AdminHousingCoopFormFields.tsx — housing co-op editor ──────────────────
+  "housingCoop.toggle.operational.title": "Operational",
+  "housingCoop.toggle.sharesAreTarget.title": "Share amount is a target",
+  "housingCoop.toggle.published.title": "Published",
+
+  // ── AdminHousingJoinRequests.tsx — cross-coop join-request triage ──────────
+  // Applicant names, co-op names, notes stay English — DTO content.
+  "housingRequests.title": "Join requests",
+  "housingRequests.loadError":
+    "The join-request queue couldn't load right now — please try again.",
+  "housingRequests.empty":
+    "Nothing waiting on you — every request has been triaged.",
+  "housingRequests.unknownCoop": "Unknown co-op",
+  "housingRequests.householdSize": "{size} in the household",
+  "housingRequests.declineCta": "Decline",
+  "housingRequests.acceptCta": "Accept",
 };

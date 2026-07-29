@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { formatDate } from "../../../shared/lib/date";
 import type { Membership } from "../membership.types";
 import { getMyCommunities } from "./communities.api";
 
@@ -16,9 +17,9 @@ const EMPTY: Record<string, Membership> = {};
  * sidebar. Month + year matches the demo shape (a join date needs no day).
  */
 function joinedLabel(iso: string, locale: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString(locale, { month: "short", year: "numeric" });
+  const parsedDate = new Date(iso);
+  if (Number.isNaN(parsedDate.getTime())) return iso;
+  return formatDate(parsedDate, locale, { month: "short", year: "numeric" });
 }
 
 /**

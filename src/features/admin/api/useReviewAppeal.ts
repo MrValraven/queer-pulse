@@ -18,6 +18,8 @@ export function useReviewAppeal() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, ReviewAppealVars>({
+    // useModerationQueue toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ id, decision, note }) => {
       if (demoMode) return;
       await reviewAppeal(id, { decision, note });

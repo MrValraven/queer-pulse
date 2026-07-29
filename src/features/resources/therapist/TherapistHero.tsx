@@ -76,6 +76,8 @@ export function TherapistHero({
           height={220}
           tint="coral"
           placeholder={`Portrait: ${therapist.name}`}
+          loading="eager"
+          fetchPriority="high"
         />
         <div>
           <div className={styles.eyebrow}>{profile.eyebrow}</div>

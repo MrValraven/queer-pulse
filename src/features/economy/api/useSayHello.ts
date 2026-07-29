@@ -12,6 +12,8 @@ export interface SayHelloInput {
 export function useSayHello() {
   const { demoMode } = useDemoMode();
   return useMutation<{ conversationId: string } | null, Error, SayHelloInput>({
+    // FlatmateCard toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
     mutationFn: async ({ slug, body }) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 500));

@@ -3,15 +3,17 @@
  * codebase never imports a vendor SDK directly — it calls `captureException`
  * and friends here.
  *
- * NOTE: `@sentry/react` is intentionally NOT yet a dependency, so these are
- * build-safe no-ops. Activating monitoring is a one-file change:
- *   1. `pnpm add @sentry/react`
- *   2. implement the TODOs below (init/capture/user) against it
- *   3. add the Sentry Vite plugin for source-map upload, gated on
- *      `process.env.SENTRY_AUTH_TOKEN`
- * Everything is gated on a DSN being present, a production build, AND analytics
- * consent (spec 07) via `setMonitoringConsent`, so nothing runs until a member
- * opts in.
+ * INTENTIONAL NOT-YET-WIRED STUB. `@sentry/react` is deliberately NOT a
+ * dependency yet, so every function below is a total, side-effect-free no-op
+ * that can never throw — imports and calls are safe from any entry point today.
+ * Consent + gating (DSN present, production build, analytics consent via spec
+ * 07's `setMonitoringConsent`) are already tracked here so that, once a real
+ * monitor is wired, nothing can run until a member opts in.
+ *
+ * Activating monitoring is a self-contained change: add the SDK, implement
+ * these four functions against it (behind the existing `enabled` gate), and add
+ * a source-map upload step to the build. No caller needs to change — none of
+ * these functions returns a value, so behaviour stays identical when wired.
  */
 
 type Extra = Record<string, unknown>;
@@ -26,23 +28,19 @@ let enabled = false;
 /** Called by the ConsentProvider (spec 07) once analytics consent is known. */
 export function setMonitoringConsent(granted: boolean): void {
   enabled = granted && Boolean(DSN) && import.meta.env.PROD;
-  // TODO(spec-01): when @sentry/react is installed, init or close the client
-  // here so it only ever runs behind consent.
+  // No-op stub: nothing to init/close until a real monitor is wired.
 }
 
-/** Single init entry point, called from main.tsx before render. No-op for now. */
+/** Single init entry point, called from main.tsx before render. No-op stub. */
 export function initObservability(): void {
-  // TODO(spec-01): Sentry.init({ dsn: DSN, environment: import.meta.env.MODE,
-  //   release: import.meta.env.VITE_RELEASE, tracesSampleRate: 0.1,
-  //   replaysSessionSampleRate: 0, replaysOnErrorSampleRate: 0,
-  //   beforeSend: scrubPII }) — but only after setMonitoringConsent(true).
+  // No-op stub: intentionally does nothing until a real monitor is wired.
   void DSN;
 }
 
-/** Report an error to the monitor (no-op until wired / until consent). */
+/** Report an error to the monitor. No-op stub until wired / until consent. */
 export function captureException(error: unknown, extra?: Extra): void {
   if (!enabled) return;
-  // TODO(spec-01): Sentry.captureException(error, { extra })
+  // No-op stub: swallow the report until a real monitor is wired.
   void error;
   void extra;
 }
@@ -50,6 +48,6 @@ export function captureException(error: unknown, extra?: Extra): void {
 /** Attach an opaque, non-PII user id (never email/handle). Null clears it. */
 export function setMonitoringUser(hashedId: string | null): void {
   if (!enabled) return;
-  // TODO(spec-01): Sentry.setUser(hashedId ? { id: hashedId } : null)
+  // No-op stub: intentionally does nothing until a real monitor is wired.
   void hashedId;
 }

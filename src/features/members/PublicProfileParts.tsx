@@ -1,5 +1,6 @@
 import { FiExternalLink } from "react-icons/fi";
 import { FadeIn, ImageSlot } from "../../shared/components/ui";
+import { safeHref } from "../../shared/lib/safeHref";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   PublicProfileLinkDTO,
@@ -30,19 +31,24 @@ export function PublicProfileLinks({
         <h2>{t("members:publicBySlug.linksHeading")}</h2>
       </div>
       <ul className={styles.linkList}>
-        {links.map((link) => (
-          <li key={`${link.label}-${link.url}`}>
-            <a
-              className={styles.publicLink}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-            >
-              <span>{link.label}</span>
-              <FiExternalLink aria-hidden />
-            </a>
-          </li>
-        ))}
+        {links.map((link) => {
+          // Skip any member-supplied link whose scheme isn't safe to render.
+          const linkHref = safeHref(link.url);
+          if (!linkHref) return null;
+          return (
+            <li key={`${link.label}-${link.url}`}>
+              <a
+                className={styles.publicLink}
+                href={linkHref}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                <span>{link.label}</span>
+                <FiExternalLink aria-hidden />
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </FadeIn>
   );

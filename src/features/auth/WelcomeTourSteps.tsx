@@ -144,14 +144,14 @@ export function TourInterests({ onNext, onBack }: StepProps) {
   }
   return (
     <>
-      <div className={styles.eye}>Your world</div>
+      <div className={styles.eye}>{t("auth:tour.interests.eyebrow")}</div>
       <h2 className={styles.h}>
-        What matters <em>to you?</em>
+        <Translation
+          i18nKey="auth:tour.interests.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.p}>
-        We use this to suggest connections, gatherings, and communities. Select
-        as many as you like.
-      </p>
+      <p className={styles.p}>{t("auth:tour.interests.body")}</p>
       <div className={styles.intGrid}>
         {INTERESTS.map((interest) => {
           const label = t(interest.labelKey);
@@ -174,15 +174,16 @@ export function TourInterests({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>Continue →</Button>
+        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
       </div>
     </>
   );
 }
 
 export function TourCommunities({ onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const [joined, setJoined] = useState<Set<string>>(new Set());
   function toggle(name: string) {
     setJoined((current) => {
@@ -194,14 +195,14 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
   }
   return (
     <>
-      <div className={styles.eye}>Your spaces</div>
+      <div className={styles.eye}>{t("auth:tour.communities.eyebrow")}</div>
       <h2 className={styles.h}>
-        Which communities <em>call to you?</em>
+        <Translation
+          i18nKey="auth:tour.communities.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.p}>
-        Join now or explore later — you can always change this. Your choices are
-        private.
-      </p>
+      <p className={styles.p}>{t("auth:tour.communities.body")}</p>
       <div className={styles.commList}>
         {TOUR_COMMUNITIES.map((community) => (
           <label
@@ -228,26 +229,27 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>Continue →</Button>
+        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
       </div>
     </>
   );
 }
 
 export function TourConnections({ onNext, onBack }: StepProps) {
+  const { t } = useTranslation();
   const [sent, setSent] = useState<Set<string>>(new Set());
   return (
     <>
-      <div className={styles.eye}>First connections</div>
+      <div className={styles.eye}>{t("auth:tour.connections.eyebrow")}</div>
       <h2 className={styles.h}>
-        Three people worth <em>saying hello to.</em>
+        <Translation
+          i18nKey="auth:tour.connections.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.p}>
-        These are members who often welcome new arrivals. A quick message goes a
-        long way.
-      </p>
+      <p className={styles.p}>{t("auth:tour.connections.body")}</p>
       <div className={styles.sugGrid}>
         {CONNECTIONS.map((person) => {
           const isSent = sent.has(person.name);
@@ -272,10 +274,10 @@ export function TourConnections({ onNext, onBack }: StepProps) {
               >
                 {isSent ? (
                   <>
-                    Sent <FiCheck />
+                    {t("auth:tour.connections.sent")} <FiCheck />
                   </>
                 ) : (
-                  "Say hello"
+                  t("auth:tour.connections.sayHello")
                 )}
               </button>
             </div>
@@ -284,9 +286,9 @@ export function TourConnections({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          ← Back
+          {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>Continue →</Button>
+        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
       </div>
     </>
   );
@@ -296,14 +298,14 @@ export function TourExplore() {
   const { t } = useTranslation();
   return (
     <>
-      <div className={styles.eye}>You're all set</div>
+      <div className={styles.eye}>{t("auth:tour.explore.eyebrow")}</div>
       <h2 className={styles.h}>
-        Welcome to the <em>community.</em>
+        <Translation
+          i18nKey="auth:tour.explore.heading"
+          components={{ em: <em /> }}
+        />
       </h2>
-      <p className={styles.p}>
-        You're officially in. Here's where to go first — there's no right
-        answer, just what calls to you.
-      </p>
+      <p className={styles.p}>{t("auth:tour.explore.body")}</p>
       <div className={styles.exploreGrid}>
         {EXPLORE_CARDS.map((card) => (
           <Link
@@ -320,7 +322,7 @@ export function TourExplore() {
         ))}
       </div>
       <Button to={routes.homepage} className={styles.goBtn}>
-        Go to QueerPulse →
+        {t("auth:tour.explore.cta")}
       </Button>
     </>
   );

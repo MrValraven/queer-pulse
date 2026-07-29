@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { initialsFromName } from "../../shared/lib/initials";
 import { FiArrowRight, FiLink2 } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { linkToPath } from "../../app/routeMap";
@@ -7,15 +8,6 @@ import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { AccentKey, SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
-
-/** Up to two initials from a display name, for the avatar fallback. */
-function initialsFrom(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
 
 /**
  * Expressive "artist card" for a standalone persona. Reused by the persona
@@ -53,7 +45,7 @@ export function SubprofileCard({
     >
       <div className={styles.header} aria-hidden />
       <Avatar
-        initials={initialsFrom(card.displayName)}
+        initials={initialsFromName(card.displayName, "?")}
         src={card.avatarUrl ?? undefined}
         tint="plum"
         size={60}

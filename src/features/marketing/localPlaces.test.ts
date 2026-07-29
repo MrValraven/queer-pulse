@@ -22,7 +22,7 @@ describe("businessToLocal", () => {
     const atelier = DIRECTORY_PLACES.find(
       (place) => place.slug === "atelier-pulso",
     )!;
-    const local = businessToLocal(atelier);
+    const local = businessToLocal(atelier, true);
     expect(local.id).toBe("business:atelier-pulso");
     expect(local.kind).toBe("business");
     expect(local.category).toBe("design");
@@ -35,7 +35,7 @@ describe("businessToLocal", () => {
     const supper = DIRECTORY_PLACES.find(
       (place) => place.slug === "queer-supper-club",
     )!;
-    expect(businessToLocal(supper).coords).toBeNull();
+    expect(businessToLocal(supper, true).coords).toBeNull();
   });
 });
 
@@ -55,7 +55,7 @@ describe("venueToLocal", () => {
 
 describe("mergeLocalPlaces", () => {
   it("folds a name-matched venue's geo/vibe/been-here into the business and drops the venue", () => {
-    const businesses = DIRECTORY_PLACES.map(businessToLocal);
+    const businesses = DIRECTORY_PLACES.map((place) => businessToLocal(place, true));
     const venues = VENUES.map(venueToLocal);
     const merged = mergeLocalPlaces(businesses, venues);
 
@@ -71,7 +71,7 @@ describe("mergeLocalPlaces", () => {
   });
 
   it("passes venues with no business twin through unchanged", () => {
-    const businesses = DIRECTORY_PLACES.map(businessToLocal);
+    const businesses = DIRECTORY_PLACES.map((place) => businessToLocal(place, true));
     const venues = VENUES.map(venueToLocal);
     const merged = mergeLocalPlaces(businesses, venues);
 
@@ -83,6 +83,7 @@ describe("mergeLocalPlaces", () => {
   it("keeps a business's own coords if it has them, even when a twin exists", () => {
     const business = businessToLocal(
       DIRECTORY_PLACES.find((place) => place.slug === "atelier-pulso")!,
+      true,
     );
     const twin = {
       ...business,
@@ -98,7 +99,7 @@ describe("mergeLocalPlaces", () => {
 
 describe("filterLocalPlaces", () => {
   const places = mergeLocalPlaces(
-    DIRECTORY_PLACES.map(businessToLocal),
+    DIRECTORY_PLACES.map((place) => businessToLocal(place, true)),
     VENUES.map(venueToLocal),
   );
 

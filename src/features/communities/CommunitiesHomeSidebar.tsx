@@ -6,6 +6,7 @@ import type { Community } from "../homepage/data/types";
 import type { CommunityEvent } from "./community.model";
 import type { CommunityRole } from "./membership.types";
 import { RoleBadge } from "./CommunityBadges";
+import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./CommunitiesHomePage.module.css";
 
 export interface MyCommunity {
@@ -18,14 +19,6 @@ export interface UpcomingItem {
   event: CommunityEvent;
   name: string;
   slug: string;
-}
-
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("");
 }
 
 export function CommunitiesHomeSidebar({
@@ -50,7 +43,7 @@ export function CommunitiesHomeSidebar({
             to={`/community/${c.slug}`}
             className={styles.sbRow}
           >
-            <div className={styles.sbIc}>{initials(c.name)}</div>
+            <div className={styles.sbIc}>{leadingInitials(c.name)}</div>
             <div className={styles.sbRowMain}>
               <div className={styles.sbName}>
                 {c.name} <RoleBadge role={c.role} />

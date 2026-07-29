@@ -10,6 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/useProfile";
+import { initialsFromName } from "../../shared/lib/initials";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaShareUrlForOwner } from "./personaLinks.data";
 import { SubprofileShareCard } from "./SubprofileShareCard";
@@ -40,14 +41,6 @@ function toPublicView(
     viewerEndorsed: false,
     viewerFollowing: false,
   };
-}
-
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  const first = parts[0]![0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1]![0] ?? "") : "";
-  return (first + last).toUpperCase();
 }
 
 /**
@@ -84,7 +77,7 @@ export function MySubprofileRow({
     <>
       <article className={styles.row}>
         <Avatar
-          initials={initialsOf(subprofile.displayName)}
+          initials={initialsFromName(subprofile.displayName, "?")}
           src={subprofile.avatarUrl ?? undefined}
           tint="plum"
           size={52}

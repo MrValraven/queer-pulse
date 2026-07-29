@@ -4,6 +4,8 @@ import {
   type Person,
 } from "../../../shared/api/refs";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import { orgBadgeInitials } from "../../../shared/lib/initials";
+import { formatDate } from "../../../shared/lib/date";
 import type {
   PartnerApplicationDTO,
   PartnerCardDTO,
@@ -34,14 +36,6 @@ const TINT_CSS: Record<
   plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
 };
 
-/** Two-letter org initials for the card avatar ("Community Arts Space" → "CA"). */
-function orgInitials(name: string): string {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return `${words[0]![0] ?? ""}${words[1]![0] ?? ""}`.toUpperCase();
-  }
-  return (name.slice(0, 2) || "QP").toUpperCase();
-}
 
 /** Build the testimonial view-model, or null when the partner has no quote. */
 function toTestimonial(dto: PartnerCardDTO): PartnerTestimonial | null {
@@ -50,7 +44,7 @@ function toTestimonial(dto: PartnerCardDTO): PartnerTestimonial | null {
     quote: dto.testimonialQuote,
     author: dto.testimonialAuthor,
     role: dto.testimonialRole ?? "",
-    initials: orgInitials(dto.testimonialAuthor),
+    initials: orgBadgeInitials(dto.testimonialAuthor),
   };
 }
 
@@ -76,7 +70,7 @@ export function cardToPartner(dto: PartnerCardDTO): Partner {
   const tint = TINT_CSS[tintForSlug(dto.slug)];
   return {
     slug: dto.slug,
-    avatar: orgInitials(dto.name),
+    avatar: orgBadgeInitials(dto.name),
     logo: dto.logo,
     background: tint.bg,
     color: tint.color,
@@ -178,10 +172,10 @@ export interface PartnerApplicationView {
 /** Format an ISO timestamp to a short "6 Jul 2026"; "" when absent/invalid. */
 function shortDate(iso: string): string {
   if (!iso) return "";
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime())
+  const parsedDate = new Date(iso);
+  return Number.isNaN(parsedDate.getTime())
     ? ""
-    : d.toLocaleDateString(undefined, {
+    : formatDate(parsedDate, undefined, {
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -204,7 +198,7 @@ export function applicationToView(
     id: dto.id,
     slug: dto.slug,
     name: dto.name,
-    initials: orgInitials(dto.name),
+    initials: orgBadgeInitials(dto.name),
     logo: dto.logo,
     tint: tintForSlug(dto.slug || dto.id),
     regionLabel: dto.regionLabel,

@@ -21,6 +21,15 @@ export const admin: Catalog = {
   "common.close": "Fechar",
   "common.back": "Voltar",
   "common.undo": "Desfazer",
+  "common.edit": "Editar",
+  "common.delete": "Eliminar",
+  "common.featured": "Em destaque",
+  "common.saveChanges": "Guardar alterações",
+  // Texto de 403 partilhado pelos painéis de edição (escalões, cooperativas).
+  "common.panelForbidden": "Este painel é apenas para administração.",
+  // aria-labels dos interruptores partilhados pelas listas de linhas.
+  "common.featuredToggleLabel": "Em destaque — {name}",
+  "common.publishedToggleLabel": "Publicado — {name}",
   // Raiz do breadcrumb do painel de administração (usado por páginas um nível
   // abaixo de /admin, p. ex. a fila de candidaturas a parceiro).
   "common.adminBreadcrumb": "Administração",
@@ -376,6 +385,23 @@ export const admin: Catalog = {
   "adminListings.advance.live": "Publicar",
   "adminListings.sendBackCta": "Voltar a revisão",
   "adminListings.toast.moved": "{name} movido para {status}.",
+  "adminListings.viewCta": "Ver e pré-visualizar",
+  "adminListings.preview.sub":
+    "Exatamente como esta página ficará quando estiver publicada no diretório.",
+  "adminListings.ask.eyebrow": "Fazer uma pergunta",
+  "adminListings.ask.title": "Perguntar sobre {name}",
+  "adminListings.ask.sub": "Vamos enviar isto a {name} como mensagem.",
+  "adminListings.ask.label": "A tua pergunta",
+  "adminListings.ask.helper":
+    "Sê caloroso/a e específico/a — a pessoa recebe como mensagem direta e pode responder ali mesmo.",
+  "adminListings.ask.placeholder":
+    "Olá! Antes de publicarmos, podias confirmar…",
+  "adminListings.ask.send": "Enviar pergunta",
+  "adminListings.ask.cancel": "Cancelar",
+  "adminListings.ask.sent": "A tua pergunta está a caminho de {name}.",
+  "adminListings.ask.action": "enviar a tua pergunta",
+  "adminListings.ask.noSubmitter":
+    "Esta página não tem nenhum membro associado — não há a quem enviar a pergunta.",
 
   // ── Moderação ──────────────────────────────────────────────────────────────
   "moderation.title": "Moderação · <em>triagem</em>",
@@ -770,6 +796,8 @@ export const admin: Catalog = {
   "governance.finances.foot.reserve": "Guardado na reserva da comunidade",
   "governance.finances.foot.solidarityRate":
     "Pessoas com tarifa gratuita ou reduzida",
+  "governance.finances.empty":
+    "Ainda sem relatório financeiro publicado — os valores aparecem aqui assim que um for publicado.",
 
   "governance.ledger.moderatorHonoraria": "Honorários de moderação",
   "governance.ledger.platformTools": "Plataforma e ferramentas",
@@ -810,7 +838,7 @@ export const admin: Catalog = {
   "governance.mrrPanel.breakdown.magazine": "Revista",
   "governance.mrrPanel.readCta": "Ler a constituição",
 
-  "governance.policy.versionsTitle": "Versões do <em>Código de Cuidado</em>",
+  "governance.policy.versionsTitle": "Registo de <em>decisões</em>",
   "governance.policy.versionsSub":
     "Cada mudança em como nos protegemos, datada e aberta.",
   "governance.policy.seeDiffCta": "Ver o que mudou",
@@ -835,8 +863,8 @@ export const admin: Catalog = {
     "Proposto pelas pessoas moderadoras de Trans & Friends · votado por toda a comunidade na Assembleia Anual.",
 
   "governance.audit.title": "Cada ação, <em>registada</em>",
-  "governance.audit.metaZero": "0 de {total} entradas",
-  "governance.audit.metaMatch": "{count} correspondem · {total} no total",
+  "governance.audit.metaZero": "Nenhuma entrada corresponde a estes filtros.",
+  "governance.audit.metaMatch": "{count} entradas",
   "governance.audit.exportToast": "Exportadas {total} entradas em CSV",
   "governance.audit.exportCta": "Exportar CSV",
   "governance.audit.columns.moderator": "Pessoa moderadora",
@@ -852,20 +880,24 @@ export const admin: Catalog = {
   "governance.audit.allModerators": "Todas as pessoas moderadoras",
   "governance.audit.allActions": "Todas as ações",
   "governance.audit.allTime": "Todo o período",
-  "governance.audit.actionType.removed": "Remoção",
-  "governance.audit.actionType.restricted": "Restrição",
-  "governance.audit.actionType.warned": "Aviso",
-  "governance.audit.actionType.dismissed": "Rejeição",
-  "governance.audit.actionType.verified": "Verificação",
-  "governance.audit.actionType.appeal": "Recurso",
-  "governance.audit.actionType.policy": "Política",
-  "governance.audit.actionType.froze": "Congelamento",
+  "governance.audit.actionType.dismiss": "Rejeição",
+  "governance.audit.actionType.warn": "Aviso",
+  "governance.audit.actionType.hide_content": "Conteúdo ocultado",
+  "governance.audit.actionType.remove_content": "Conteúdo removido",
+  "governance.audit.actionType.restrict": "Restrição",
+  "governance.audit.actionType.suspend": "Suspensão",
+  "governance.audit.actionType.ban": "Banimento",
+  "governance.audit.actionType.shield": "Proteção",
+  "governance.audit.actionType.escalate": "Encaminhado",
+  "governance.audit.actionType.appeal_upheld": "Recurso deferido",
+  "governance.audit.actionType.appeal_overturned": "Recurso revertido",
+  "governance.audit.actionType.suspension_lifted": "Suspensão levantada",
   "governance.audit.range.today": "Hoje",
-  "governance.audit.range.thisWeek": "Esta semana",
-  "governance.audit.range.thisQuarter": "Este trimestre",
+  "governance.audit.range.week": "Esta semana",
+  "governance.audit.range.quarter": "Este trimestre",
   "governance.audit.emptyTitle": "Nenhuma entrada corresponde",
   "governance.audit.emptyText":
-    "Tenta alargar os filtros — o registo completo tem {total} ações desde 2023.",
+    "Nenhuma ação de moderação corresponde a estes filtros. Tenta alargá-los.",
   "governance.audit.pagerMeta": "A mostrar {start}–{end} de {total} entradas",
   "governance.audit.pagerMatch": " ({count} correspondem)",
   "governance.audit.prevPage": "Página anterior",
@@ -1238,4 +1270,156 @@ export const admin: Catalog = {
   "bots.saved": "Guardado — {name} está atualizada.",
   "bots.saveFailed": "Não foi possível guardar — verifica a ligação e tenta de novo.",
   "bots.usernameTaken": "Esse identificador já está a ser usado.",
+
+  // ── Escalões de parceria (/admin/org-tiers) — página, formulário, linhas ───
+  // NOMES de escalões/parceiros ficam em inglês — conteúdo DTO da API. O
+  // eyebrow "Parcerias" reutiliza partners.header.eyebrow.
+  "orgTier.title": "Escalões de <em>parceria</em>",
+  "orgTier.header.sub":
+    "Todos os escalões da página Para Organizações, publicados ou ainda em rascunho — cria um, mantém os preços e o texto atualizados, e controla o que está publicado.",
+  "orgTier.newCta": "Novo escalão",
+  "orgTier.form.editEyebrow": "Editar escalão",
+  "orgTier.form.editTitle": "Editar escalão",
+  "orgTier.form.createTitle": "Criar um escalão de parceria",
+  "orgTier.form.createCta": "Criar escalão",
+  "orgTier.loadError":
+    "A lista de escalões não carregou de momento — tenta novamente.",
+  "orgTier.empty": "Ainda não há escalões — cria o primeiro abaixo.",
+  "orgTier.delete.title": "Remover {name}?",
+  "orgTier.delete.confirmCta": "Remover escalão",
+  "orgTier.delete.body":
+    "Isto remove-o da lista pública de escalões de parceria e do painel de administração. Não pode ser desfeito.",
+  "orgTier.toast.updated": "{name} foi atualizado",
+  "orgTier.toast.created": "{name} foi criado",
+  "orgTier.toast.removed": "{name} foi removido",
+  "orgTier.field.name": "Nome",
+  "orgTier.field.price": "Preço",
+  "orgTier.field.pricePeriod": "Período do preço",
+  // "Dek" é a linha descritiva por baixo do nome do escalão — sem termo pt
+  // comum, fica "Subtítulo".
+  "orgTier.field.dek": "Subtítulo",
+  "orgTier.field.bullets": "Tópicos",
+  "orgTier.field.bulletsHint": "Um tópico por linha.",
+  "orgTier.field.footnote": "Nota de rodapé",
+  "orgTier.field.cta": "Botão de ação",
+  "orgTier.field.ctaLabel": "Texto do botão de ação",
+  "orgTier.field.ctaTarget": "Destino do botão de ação",
+  "orgTier.field.sortOrder": "Ordem",
+  // Etiquetas de opção do comportamento do botão; o valor guardado é um id
+  // canónico (toast/link/propose), nunca esta etiqueta.
+  "orgTier.ctaOption.toast": "Brinde — apenas informativo",
+  "orgTier.ctaOption.link": "Ligação — navega para um destino",
+  "orgTier.ctaOption.propose": "Propor — abre o fluxo de contacto",
+  "orgTier.toggle.featured.sub": "Destacado como o escalão recomendado.",
+  "orgTier.toggle.published.sub": "Visível na página Para Organizações.",
+
+  // ── AdminOrgTierFormFields.tsx — editor de escalões para organizações ──────
+  "orgTier.field.priceDisplay.placeholder": "ex.: 2,4 mil € ou Personalizado",
+  "orgTier.field.pricePeriod.placeholder": "ex.: por ano",
+  "orgTier.field.ctaTarget.placeholder":
+    "Usado apenas quando o botão de ação é uma ligação",
+  "orgTier.toggle.featured.title": "Em destaque",
+  "orgTier.toggle.published.title": "Publicado",
+
+  // ── Parceiros aprovados (editor de destaque + testemunho) ──────────────────
+  // Nomes de parceiros, citações/autoria dos testemunhos ficam em inglês (DTO).
+  "approvedPartners.title": "Parceiros em destaque e testemunhos",
+  "approvedPartners.loadError":
+    "A lista de parceiros não carregou de momento — tenta novamente.",
+  "approvedPartners.empty": "Ainda não há parceiros aprovados.",
+  "approvedPartners.noTestimonial": "Ainda sem testemunho",
+  "approvedPartners.unattributed": "Sem atribuição",
+  "approvedPartners.editCta": "Editar testemunho",
+
+  // ── AdminPartnerTestimonialModal.tsx ──────────────────────────────────────
+  "partnerTestimonial.eyebrow": "Testemunho",
+  "partnerTestimonial.quote": "Citação",
+  "partnerTestimonial.author": "Autoria",
+  "partnerTestimonial.role": "Cargo",
+  "partnerTestimonial.authorRequiredHint":
+    "Adiciona uma autoria antes de guardar uma citação.",
+  "partnerTestimonial.quoteNeedsAuthor":
+    "Uma citação precisa de autoria — adiciona uma antes de guardar",
+  "partnerTestimonial.updatedToast": "O testemunho de {name} foi atualizado",
+
+  // ── Cooperativas de habitação (/admin/housing) — página, formulário, linhas ─
+  // NOMES / cidades das cooperativas ficam em inglês — conteúdo DTO da API.
+  "housingCoop.title": "Cooperativas de <em>habitação</em>",
+  "housingCoop.header.eyebrow": "Economia local",
+  "housingCoop.header.sub":
+    "Todas as cooperativas na plataforma, publicadas ou ainda em formação — cria uma, mantém os detalhes atualizados, e trata da fila de pedidos de adesão abaixo.",
+  "housingCoop.newCta": "Nova cooperativa",
+  "housingCoop.form.editEyebrow": "Editar cooperativa",
+  "housingCoop.form.editTitle": "Editar cooperativa",
+  "housingCoop.form.createTitle": "Criar uma cooperativa de habitação",
+  "housingCoop.form.createCta": "Criar cooperativa",
+  "housingCoop.loadError":
+    "A lista de cooperativas não carregou de momento — tenta novamente.",
+  "housingCoop.empty": "Ainda não há cooperativas — cria a primeira abaixo.",
+  "housingCoop.delete.title": "Remover {name}?",
+  "housingCoop.delete.confirmCta": "Remover cooperativa",
+  "housingCoop.delete.body":
+    "Isto remove-a do diretório público e da lista de administração. Os pedidos de adesão já submetidos ficam registados.",
+  "housingCoop.toast.updated": "{name} foi atualizada",
+  "housingCoop.toast.created": "{name} foi criada",
+  "housingCoop.toast.removed": "{name} foi removida",
+  "housingCoop.field.slug": "Slug",
+  "housingCoop.field.name": "Nome",
+  "housingCoop.field.nameEm": "Nome — palavra a destacar",
+  "housingCoop.field.nameEmHint":
+    "A única palavra em itálico coral no cartão público. Deixa em branco para nenhuma.",
+  "housingCoop.field.city": "Cidade",
+  "housingCoop.field.area": "Zona",
+  "housingCoop.field.households": "Agregados",
+  "housingCoop.field.phase": "Fase",
+  "housingCoop.field.description": "Descrição",
+  "housingCoop.field.progress": "Progresso (%)",
+  "housingCoop.field.formingSince": "Em formação desde",
+  "housingCoop.field.formingSincePlaceholder": "ex.: 2025-03-01",
+  "housingCoop.field.operationalSince": "Operacional desde",
+  "housingCoop.field.operationalSincePlaceholder": "ex.: 2026-01-01",
+  "housingCoop.field.shareAmount": "Valor da quota (EUR)",
+  "housingCoop.field.monthly": "Mensalidade (EUR)",
+  "housingCoop.field.cta": "Botão de ação",
+  // Etiquetas de opção da fase (forma longa). O valor guardado é um id canónico.
+  "housingCoop.phaseOption.forming": "Em formação — a reunir pessoas",
+  "housingCoop.phaseOption.legal": "Constituição legal",
+  "housingCoop.phaseOption.finance": "Finanças e estrutura",
+  "housingCoop.phaseOption.property": "À procura do imóvel",
+  "housingCoop.phaseOption.daily": "Vida diária — operacional",
+  // Etiquetas da fase (forma curta, na linha de administração). Mesmos ids.
+  "housingCoop.phaseBadge.forming": "Em formação",
+  "housingCoop.phaseBadge.legal": "Legal",
+  "housingCoop.phaseBadge.finance": "Finanças",
+  "housingCoop.phaseBadge.property": "Imóvel",
+  "housingCoop.phaseBadge.daily": "Vida diária",
+  // Etiquetas de opção do botão de ação. O valor guardado é um id canónico.
+  "housingCoop.ctaOption.join": "Juntar-te à cooperativa",
+  "housingCoop.ctaOption.updates": "Receber novidades",
+  "housingCoop.ctaOption.mentor": "Falar com uma pessoa mentora",
+  "housingCoop.toggle.operational.sub":
+    "A cooperativa já se mudou e funciona no dia a dia.",
+  "housingCoop.toggle.sharesAreTarget.sub":
+    "Mostra o valor da quota como meta, não como preço fixo.",
+  "housingCoop.toggle.published.sub":
+    "Visível no diretório público de habitação.",
+  "housingCoop.row.households_one": "{count} agregado",
+  "housingCoop.row.households_other": "{count} agregados",
+
+  // ── AdminHousingCoopFormFields.tsx — editor de cooperativa de habitação ────
+  "housingCoop.toggle.operational.title": "Operacional",
+  "housingCoop.toggle.sharesAreTarget.title": "O valor da quota é uma meta",
+  "housingCoop.toggle.published.title": "Publicado",
+
+  // ── AdminHousingJoinRequests.tsx — triagem de pedidos de adesão ────────────
+  // Nomes de candidatos, nomes de cooperativas, notas ficam em inglês (DTO).
+  "housingRequests.title": "Pedidos de adesão",
+  "housingRequests.loadError":
+    "A fila de pedidos de adesão não carregou de momento — tenta novamente.",
+  "housingRequests.empty":
+    "Nada à tua espera — todos os pedidos foram tratados.",
+  "housingRequests.unknownCoop": "Cooperativa desconhecida",
+  "housingRequests.householdSize": "{size} no agregado",
+  "housingRequests.declineCta": "Recusar",
+  "housingRequests.acceptCta": "Aceitar",
 };

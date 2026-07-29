@@ -9,6 +9,7 @@ import { routes } from "../../app/routeMap";
 import { FiStar } from "react-icons/fi";
 import { useRespondInvite } from "./api/useEventMutations";
 import { DEMO_GATHERING_SLUGS, manageGatheringPath } from "./data";
+import { CoHostInviteDetails } from "./CoHostInviteDetails";
 import styles from "./CoHostInvitePage.module.css";
 
 /** Placeholder invite id for this static co-host invitation. */
@@ -43,69 +44,6 @@ const EVENT_HOOD_SUFFIX = " · Anjos";
 const PERSONAL_QUOTE_P1 =
   "\"I'd love to do this with you. You're calmer than I am about the front-door bit and you know Sandra and Rui. I'll bring the doctor, the pharmacist, and the kettle — ";
 const PERSONAL_QUOTE_EM = "can you bring the room?";
-const OUTCLAUSE_REST =
-  "— no shame, no penalty, just send Anika a one-line message. We've all had a Thursday go sideways.";
-
-const ROLES = [
-  {
-    ic: "G",
-    title: "Greet at the door, 18:30 — 19:30",
-    description: "Check names against the RSVP list. Anika will join you by 19:00.",
-    permKey: "gatherings:cohostInvite.permRequired",
-    permCls: "permYes",
-  },
-  {
-    ic: "R",
-    title: "Manage the room flow",
-    description: "Walk between Dr. Pereira and the pharmacist's tables so neither gets a queue.",
-    permKey: "gatherings:cohostInvite.permRequired",
-    permCls: "permYes",
-  },
-  {
-    ic: "M",
-    title: "Co-moderate questions",
-    description: "If a public Q&A breaks out, you and Anika tag-team it.",
-    permKey: "gatherings:cohostInvite.permRequired",
-    permCls: "permYes",
-  },
-  {
-    ic: "P",
-    title: "Edit the event page",
-    description: "Add/remove RSVPs, change time, send updates, post a recap after.",
-    permKey: "gatherings:cohostInvite.permGranted",
-    permCls: "permYes",
-  },
-  {
-    ic: "F",
-    title: "Access the host fund",
-    description: "€60 spending budget for tea/coffee, small first-aid kit, and after-snacks.",
-    permKey: "gatherings:cohostInvite.permHostOnly",
-    permCls: "permNo",
-  },
-  {
-    ic: "C",
-    title: "Cancel the event",
-    description: "This stays with Anika as the lead host.",
-    permKey: "gatherings:cohostInvite.permHostOnly",
-    permCls: "permNo",
-  },
-];
-
-const COMMITMENTS = [
-  {
-    b: "~ 30 min prep",
-    s: "Read the runbook, message Anika once before. That's it.",
-  },
-  {
-    b: "2.5 hours on the night",
-    s: "Arrive 30 min early, stay 15 min after for tidy-up.",
-  },
-  { b: "~ 15 min after", s: "Write a short recap. Anika handles the post." },
-  {
-    b: "One ask post-event",
-    s: "If a follow-up question comes in, you'll see it & can reply.",
-  },
-];
 
 export function CoHostInvitePage() {
   const { t } = useTranslation();
@@ -229,51 +167,7 @@ export function CoHostInvitePage() {
           </p>
         </div>
 
-        <div className={styles.roleCard}>
-          <h3>
-            <Translation
-              i18nKey="gatherings:cohostInvite.rolesTitle"
-              components={{ em: <em /> }}
-            />
-          </h3>
-          <div>
-            {ROLES.map((r) => (
-              <div className={styles.roleRow} key={r.title}>
-                <div className={styles.roleIc}>{r.ic}</div>
-                <div className={styles.roleText}>
-                  <b>{r.title}</b>
-                  <span>{r.description}</span>
-                </div>
-                <div className={`${styles.rolePerm} ${styles[r.permCls]}`}>
-                  {t(r.permKey, { host: HOST_NAME })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.commitCard}>
-          <h3>
-            <Translation
-              i18nKey="gatherings:cohostInvite.commitTitle"
-              components={{ em: <em /> }}
-            />
-          </h3>
-          <p className={styles.commitSub}>
-            {t("gatherings:cohostInvite.commitSub")}
-          </p>
-          <div className={styles.commitGrid}>
-            {COMMITMENTS.map((c) => (
-              <div className={styles.commit} key={c.b}>
-                <b>{c.b}</b>
-                <span>{c.s}</span>
-              </div>
-            ))}
-          </div>
-          <p className={styles.outclause}>
-            <b>{t("gatherings:cohostInvite.outclauseBold")}</b> {OUTCLAUSE_REST}
-          </p>
-        </div>
+        <CoHostInviteDetails host={HOST_NAME} />
 
         <div className={styles.actions}>
           <button

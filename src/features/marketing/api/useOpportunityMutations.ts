@@ -20,6 +20,9 @@ export function useCreateOpportunity() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<{ slug?: string }, Error, CreateOpportunityDto>({
+    // PostVolunteerOpportunityPage toasts its own error, so silence the global
+    // duplicate.
+    meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) {
         // Preserve the "publishing…" beat, no network.

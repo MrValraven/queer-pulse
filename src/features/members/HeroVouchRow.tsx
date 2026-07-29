@@ -137,13 +137,14 @@ export function HeroVouchRow({
                 const anonName = t("members:hero.vouch.anonymous");
                 return (
                   // Named faces are <Link>s (focusable); an anonymous face has no
-                  // destination, so make the span itself focusable + named so the
-                  // voucher-name tooltip is reachable by keyboard and on touch.
+                  // destination and performs no action, so it stays a plain,
+                  // non-interactive span and is kept OUT of the tab order
+                  // (jsx-a11y/no-noninteractive-tabindex). Its name remains
+                  // accessible via this aria-label and the Avatar's own alt text.
                   <span
                     key={`anon-${index}`}
                     className={styles.vouchFace}
                     style={stackStyle}
-                    tabIndex={0}
                     aria-label={anonName}
                   >
                     <span className={styles.vouchTip}>

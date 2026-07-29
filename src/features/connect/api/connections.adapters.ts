@@ -1,3 +1,4 @@
+import { formatDate } from "../../../shared/lib/date";
 import { initialsOf, tintForSlug } from "../../members/api/members.adapters";
 import type { ConnectionMeta, ConnectionView } from "../connections.data";
 import type { TabId } from "../connections.data";
@@ -45,7 +46,7 @@ export function monthYear(iso: string | null): string | undefined {
   if (!iso) return undefined;
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return undefined;
-  return date.toLocaleDateString(undefined, {
+  return formatDate(date, undefined, {
     month: "short",
     year: "numeric",
   });

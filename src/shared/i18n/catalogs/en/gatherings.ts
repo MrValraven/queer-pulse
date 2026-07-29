@@ -1389,4 +1389,37 @@ export const gatherings: Catalog = {
   "checkout.timeline.arrive.title": "You arrive & we eat",
   "checkout.timeline.arrive.body":
     "Come as you are. {host} handles the rest — three unhurried hours together.",
+
+  // ── Events Hub (EventsHubPage + hub/*) ────────────────────────────────────
+  "hub.tabs.highlights": "Highlights",
+  "hub.tabs.browse": "Browse",
+  "hub.tabs.calendar": "Calendar",
+  "hub.hero.eyebrow": "What's on",
+  "hub.hero.title": "Find your people this week",
+  "hub.hero.subtitle":
+    "Every gathering, event, and reason to leave the house — all in one place.",
+  "hub.hero.tagline.0": "Your people are already here.",
+  "hub.hero.tagline.1": "There's always someone new to meet.",
+  "hub.hero.tagline.2": "Come as you are.",
+  "hub.hero.tagline.3": "Small rooms, big welcomes.",
+  "hub.hero.seeAll": "See everything",
+  "hub.hero.rsvp": "Take a look",
+  "hub.bucket.tonight": "Tonight",
+  "hub.bucket.weekend": "This weekend",
+  "hub.bucket.week": "This week",
+  "hub.bucket.later": "Coming up",
+  "hub.highlights.heading": "Worth showing up for",
+  "hub.browse.heading": "Everything that's on",
+  "hub.browse.loadMore": "Show more",
+  "hub.browse.empty": "Nothing matches that filter — try another.",
+  "hub.calendar.heading": "The month at a glance",
+  "hub.host.title": "Hosting <em>something</em>?",
+  "hub.host.body":
+    "A supper, a reading, a protest, a party — whatever you're hosting, we'll help people find it.",
+  "hub.host.cta": "Host a gathering",
+  "hub.ways.heading": "Ways to gather",
+  "hub.empty.title": "Nothing on the calendar yet.",
+  "hub.empty.body": "New gatherings turn up here all the time — you could host the first.",
+  "hub.card.cta": "See it",
+  "hub.loading": "Finding what's on…",
 };

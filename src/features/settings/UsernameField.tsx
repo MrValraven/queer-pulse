@@ -1,4 +1,4 @@
-import { useEffect, useId, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 import { FiAlertCircle, FiCheck, FiLoader } from "react-icons/fi";
 import { normalizeHandle } from "../../shared/handles";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -54,11 +54,19 @@ export function UsernameField({
   const availability = useHandleAvailability(value, { currentName });
   const { status, reason } = availability;
 
+  // Notify the parent when the availability *verdict* changes. The callback and
+  // the availability object are read through latest-refs so the effect's deps
+  // stay honest ([status, reason]) without re-firing on every render or when the
+  // parent passes a fresh inline onStatusChange.
+  const onStatusChangeRef = useRef(onStatusChange);
+  const availabilityRef = useRef(availability);
   useEffect(() => {
-    onStatusChange?.(availability);
-    // Re-run only when the verdict changes, not on every render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, reason, onStatusChange]);
+    onStatusChangeRef.current = onStatusChange;
+    availabilityRef.current = availability;
+  });
+  useEffect(() => {
+    onStatusChangeRef.current?.(availabilityRef.current);
+  }, [status, reason]);
 
   const isSelf =
     value.trim().length > 0 &&

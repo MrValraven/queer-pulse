@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import { apiGet, apiPatch } from "../../../shared/api/client";
 import type { ReasonCode, ReportSubjectType } from "../../safety/reportReasons";
 
 /**
@@ -172,9 +172,9 @@ export const getModReport = (id: string) =>
 export const actOnReport = (id: string, body: ModActionInput) =>
   apiPatch<ModReportDTO>(`/mod/reports/${encodeURIComponent(id)}`, body);
 
-/** Apply one action to many reports. */
+/** Apply one action to many reports. Backend expects PATCH (was POST). */
 export const bulkActOnReports = (body: ModBulkInput) =>
-  apiPost<{ updated: string[] }>("/mod/reports/bulk", body);
+  apiPatch<{ updated: string[] }>("/mod/reports/bulk", body);
 
 /** Immutable audit log for a report. */
 export const getReportAudit = (reportId: string) =>

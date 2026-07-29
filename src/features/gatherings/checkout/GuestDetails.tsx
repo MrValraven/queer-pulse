@@ -48,6 +48,7 @@ export function GuestDetails() {
                       className={s["co-in"]}
                       id={`gmail${i}`}
                       type="email"
+                      autoComplete={`section-guest${guestNumber} email`}
                       value={g.email}
                       onChange={(e) => updateGuest(i, "email", e.target.value)}
                       placeholder={t(
@@ -86,6 +87,7 @@ export function GuestDetails() {
                       <input
                         className={s["co-in"]}
                         id={`gname${i}`}
+                        autoComplete={`section-guest${guestNumber} name`}
                         value={g.name}
                         onChange={(e) => updateGuest(i, "name", e.target.value)}
                         placeholder={t(

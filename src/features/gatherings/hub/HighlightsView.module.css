@@ -1,0 +1,98 @@
+/* Highlights tab of the Events Hub. The full-bleed plum host CTA lives
+   outside `.wrap` (see `HostCtaBanner`, which reuses `Outro`) — never nest a
+   plum band's background inside this module's constrained container. */
+
+.section {
+  padding-block: 48px 0;
+}
+
+/* Featured grid — `EventPosterCard` is parent-sized for the `featured`
+   variant: it has no intrinsic width of its own, so this track MUST carry
+   real min widths or every card renders at 0 width. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(240px, 30vw, 300px), 1fr));
+  gap: var(--gap-grid);
+  margin-block-start: 32px;
+}
+
+/* ── Ways to gather — a condensed strip. Whitespace-grouped (gap only, no
+   card boxes/borders) so it reads lighter than the full landing-page grid
+   this data also feeds. ── */
+.waysSection {
+  padding-block: 24px 72px;
+}
+
+.waysHeading {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.2vw, 26px);
+  color: var(--text-strong);
+  letter-spacing: var(--ls-heading);
+  margin: 0 0 28px;
+}
+
+.waysGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px var(--gap-grid);
+}
+
+.wayItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.wayIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 38px;
+  block-size: 38px;
+  flex-shrink: 0;
+  border-radius: var(--radius-badge);
+  font-size: 18px;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.wayCopy {
+  min-width: 0;
+}
+
+.wayTitle {
+  font-weight: 700;
+  font-size: var(--text-body);
+  color: var(--text-strong);
+  margin: 0 0 3px;
+}
+
+.wayBody {
+  font-size: var(--text-body-sm);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  margin: 0;
+}
+
+.wayLink {
+  display: inline-block;
+  margin-block-start: 8px;
+  padding-block: 3px;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.wayLink:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: var(--radius-tag);
+}
+
+@media (hover: hover) {
+  .wayLink:hover {
+    text-decoration: underline;
+  }
+}

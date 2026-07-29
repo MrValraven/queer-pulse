@@ -13,6 +13,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
+  useRemoveMember,
   useReviewJoinRequest,
   useSetMemberRole,
 } from "../communities/api/useCommunityMutations";
@@ -246,6 +247,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const setMemberRole = useSetMemberRole(living.slug);
+  const removeMemberMutation = useRemoveMember(living.slug);
   const [promoted, setPromoted] = useState<string[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
   const [roleFilter, setRoleFilter] = useState<"all" | "mod" | "member">("all");
@@ -268,7 +270,11 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
     showToast(t("admin:modPanel.members.demotedToast", { name }), "info");
   };
   const removeMember = (slug: string | undefined, name: string) => {
+    // Local list hides the row immediately; the DELETE is the real change and
+    // its invalidation refetches the roster (same optimistic pattern as
+    // promote/demote above).
     setRemoved((p) => [...p, memberKey(slug, name)]);
+    if (slug) removeMemberMutation.mutate(slug);
     showToast(t("admin:modPanel.members.removedToast", { name }), "info");
   };
 

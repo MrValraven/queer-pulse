@@ -5,6 +5,7 @@
    =========================================================== */
 
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import { leadingInitials } from "../../../shared/lib/initials";
 import type { CommunityType } from "../../homepage/data/types";
 import type { AccessTier } from "../membership.types";
 
@@ -352,14 +353,7 @@ export function slugify(s: string): string {
 }
 
 export function initialsOf(name: string): string {
-  return (
-    name
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((w) => w[0]?.toUpperCase() ?? "")
-      .join("") || "•"
-  );
+  return leadingInitials(name, { fallback: "•" });
 }
 
 /** Build a reference like QP-C-0003 from a numeric seed. */

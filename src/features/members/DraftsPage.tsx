@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
@@ -14,10 +14,10 @@ import { DraftsHeader } from "./DraftsHeader";
 import { DraftsControls } from "./DraftsControls";
 import { DraftRow } from "./DraftRow";
 import { DraftsBulkBar } from "./DraftsBulkBar";
+import { DraftsTabs } from "./DraftsTabs";
 import {
   DRAFTS,
   DRAFT_ACTION_LABEL_KEY,
-  DRAFT_TABS,
   buildKeptMeta,
   countByCategory,
   selectDrafts,
@@ -107,11 +107,6 @@ export function DraftsPage() {
   // draft that still exists, not just the ones currently visible.
   const selectedIds = base.filter((d) => selected.has(d.id)).map((d) => d.id);
 
-  const selectAllRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (selectAllRef.current) selectAllRef.current.indeterminate = someSelected;
-  }, [someSelected]);
-
   function toggleSelect(id: string, checked: boolean) {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -185,43 +180,16 @@ export function DraftsPage() {
           onSort={setSort}
         />
 
-        <div
-          className={styles.tabs}
-          role="tablist"
-          aria-label={t("members:drafts.tabsAriaLabel")}
-        >
-          {DRAFT_TABS.map((tab) => (
-            <button
-              type="button"
-              key={tab.key}
-              role="tab"
-              aria-selected={category === tab.key}
-              className={`${styles.tab} ${category === tab.key ? styles.active : ""}`}
-              onClick={() => setCategory(tab.key)}
-            >
-              {t(tab.labelKey)}{" "}
-              <span className={styles.tabCount}>{counts[tab.key]}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.selectAll}>
-          <input
-            ref={selectAllRef}
-            type="checkbox"
-            className={styles.cbx}
-            checked={allSelected}
-            onChange={(e) => toggleSelectAll(e.target.checked)}
-            aria-label={t("members:drafts.selectAllAriaLabel")}
-          />
-          <span>{t("members:drafts.selectAll")}</span>
-          <span className={styles.visCount}>
-            {t("members:drafts.visibleCount", {
-              visible: visible.length,
-              count: base.length,
-            })}
-          </span>
-        </div>
+        <DraftsTabs
+          category={category}
+          onCategory={setCategory}
+          counts={counts}
+          allSelected={allSelected}
+          someSelected={someSelected}
+          onToggleAll={toggleSelectAll}
+          visibleCount={visible.length}
+          totalCount={base.length}
+        />
 
         {loading ? (
           Array.from({ length: 4 }).map((_, i) => <DraftRowSkeleton key={i} />)

@@ -110,8 +110,13 @@ export function isGatedPath(pathname) {
 }
 
 /**
- * The quiet public surface — the ONLY paths that are prerendered and listed in
- * the sitemap.
+ * The quiet public surface — the full set of ungated paths listed in the
+ * sitemap. A curated SUBSET of these is prerendered to static HTML
+ * (PRERENDER_PATHS, below); the rest are served as normal SPA routes. The
+ * sitemap and the prerendered set deliberately DIVERGE: the sitemap costs no
+ * build data, so it keeps advertising every public page to search engines
+ * (Googlebot renders JS and finds them), while prerendering is kept minimal to
+ * save build time and data.
  *
  * Scope decision (see docs/superpowers/specs/2026-07-20-seo-and-ai-discoverability-design.md):
  * QueerPulse deliberately does NOT index the magazine, cinema, studio, activism,
@@ -162,6 +167,43 @@ export const QUIET_PUBLIC_PATHS = [
   "/local/arriving",
   "/local/visas",
 ];
+
+/**
+ * The ESSENTIAL subset that is prerendered to static HTML at build time.
+ *
+ * Prerendering runs a headless Chromium against the production bundle and bakes
+ * the settled DOM for each path — real build-time + data cost that grows with
+ * every path. Everything in QUIET_PUBLIC_PATHS that is NOT listed here is still
+ * public, still in the sitemap, and still reachable — just served as a normal
+ * SPA route with no prebaked HTML. The only thing an omitted page loses is a
+ * crawlable snapshot for the JS-less AI retrieval crawlers (OAI-SearchBot,
+ * Claude-SearchBot, PerplexityBot); JS-executing crawlers (Googlebot) are
+ * unaffected.
+ *
+ * Kept deliberately minimal (homepage only): it is the single most valuable
+ * page to serve as static HTML to a JS-less crawler. Dynamic persona pages
+ * (/p/:handle) are intentionally NOT prerendered — their count is unbounded.
+ *
+ * Every entry MUST also appear in QUIET_PUBLIC_PATHS (assertPrerenderSubset
+ * enforces this) — so a page can never be prerendered without being a known,
+ * ungated, sitemap-listed public path.
+ */
+export const PRERENDER_PATHS = ["/"];
+
+/**
+ * Throw if PRERENDER_PATHS contains anything not in QUIET_PUBLIC_PATHS. Keeps
+ * the prerendered set honest: it can only ever be a subset of the vetted public
+ * surface, never a path that is gated or otherwise unlisted.
+ */
+export function assertPrerenderSubset() {
+  const surface = new Set(QUIET_PUBLIC_PATHS);
+  const strays = PRERENDER_PATHS.filter((candidatePath) => !surface.has(candidatePath));
+  if (strays.length > 0) {
+    throw new Error(
+      `PRERENDER_PATHS contains paths not in QUIET_PUBLIC_PATHS:\n  ${strays.join("\n  ")}`,
+    );
+  }
+}
 
 /**
  * Throw if any path is gated. Lists every offender rather than the first, so a

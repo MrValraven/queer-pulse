@@ -46,19 +46,11 @@ export function ProfileThemeProvider({ children }: { children: ReactNode }) {
     setDraft((prev) => ({ ...prev, ...patch }));
   }, []);
 
-  const commit = useCallback(() => {
-    setDraft((current) => {
-      setTheme(current);
-      return current;
-    });
-  }, []);
+  // Read render-scope state directly rather than nesting one setter inside the
+  // other's updater — an updater must be pure, and StrictMode double-invokes it.
+  const commit = useCallback(() => setTheme(draft), [draft]);
 
-  const discard = useCallback(() => {
-    setTheme((current) => {
-      setDraft(current);
-      return current;
-    });
-  }, []);
+  const discard = useCallback(() => setDraft(theme), [theme]);
 
   const value = useMemo(
     () => ({ theme, draft, updateDraft, commit, discard }),

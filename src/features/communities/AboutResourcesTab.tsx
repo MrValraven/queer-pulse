@@ -5,16 +5,9 @@ import type { CommunityDetail } from "./communityDetails";
 import type { CommunityResource, LivingCommunity } from "./community.model";
 import { sisterCommunities } from "./communityConnections";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { leadingInitials } from "../../shared/lib/initials";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
-
-function initials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("");
-}
 
 const RESOURCE_ICON: Record<CommunityResource["kind"], IconType> = {
   link: FiLink,
@@ -97,7 +90,7 @@ export function AboutResourcesTab({
                 key={community.slug}
               >
                 <span className={styles.sisterIc}>
-                  {initials(community.name)}
+                  {leadingInitials(community.name)}
                 </span>
                 <span className={styles.sisterMain}>
                   <span className={styles.sisterName}>{community.name}</span>

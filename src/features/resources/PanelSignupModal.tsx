@@ -51,6 +51,7 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
             </span>
             <input
               className={styles.input}
+              autoComplete="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={t("resources:microGrants.panel.namePlaceholder")}
@@ -62,6 +63,7 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
             <input
               className={styles.input}
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t("resources:microGrants.panel.emailPlaceholder")}

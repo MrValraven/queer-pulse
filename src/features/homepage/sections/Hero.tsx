@@ -11,31 +11,30 @@ export function Hero() {
     <header className={styles.hero} id="top">
       <div className="wrap">
         <div className={styles.inner}>
-          <Reveal>
-            <Eyebrow live className={styles.eyebrow}>
-              {t("homepage:hero.eyebrow")}
-            </Eyebrow>
-          </Reveal>
+          {/* Above-the-fold on mount (this is the homepage's LCP element) — rendered
+              directly instead of via <Reveal> so first paint isn't gated behind an
+              IntersectionObserver + up to 900ms opacity/transform transition. */}
+          <Eyebrow live className={styles.eyebrow}>
+            {t("homepage:hero.eyebrow")}
+          </Eyebrow>
 
-          <Reveal as="h1" className={styles.title} delay={60}>
+          <h1 className={styles.title}>
             <Translation
               i18nKey="homepage:hero.title"
               components={{ em: <em /> }}
             />
-          </Reveal>
+          </h1>
 
-          <Reveal as="p" className={styles.sub} delay={120}>
-            {t("homepage:hero.sub")}
-          </Reveal>
+          <p className={styles.sub}>{t("homepage:hero.sub")}</p>
 
-          <Reveal className={styles.cta} delay={180}>
+          <div className={styles.cta}>
             <Button size="lg" to={routes.requestInvite}>
               {t("homepage:hero.requestInviteCta")}
             </Button>
             <Button size="lg" variant="ghost" href="#discovery">
               {t("homepage:hero.exploreMembersCta")}
             </Button>
-          </Reveal>
+          </div>
 
           <Reveal as="p" className={styles.note} delay={220}>
             <span className={styles.liveDot} aria-hidden />

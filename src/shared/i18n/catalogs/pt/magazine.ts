@@ -731,6 +731,7 @@ export const magazine: Catalog = {
   "story.outro.safety.title": "Leste e parece-te <em>certo?</em>",
   "story.outro.safety.sub":
     "Não somos para todas as pessoas. Mas se isto faz sentido para ti, talvez sejas para nós.",
+  "story.safety.byline": "A equipa da QueerPulse",
 
   // ══════════════════ TagPage (secção Reportagens longas) ═══════════════════
   // O kicker/título/dek/assinatura de cada peça (TagPageHero destacada +

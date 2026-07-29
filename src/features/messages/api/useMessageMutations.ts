@@ -1,7 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { upsertMessage } from "../../../shared/api/messageCache";
+import {
+  patchConversationPreview,
+  patchConversationRead,
+  upsertMessage,
+} from "../../../shared/api/messageCache";
 import type { MessageResponse } from "../../../shared/contracts/contracts";
+import type { GifAttachment } from "../../../shared/api/gifs";
 import {
   addGroupMembers,
   changeGroupMemberRole,
@@ -30,7 +35,11 @@ import type { Conversation } from "../data";
  *  id is passed at mutate time — not bound at hook creation — so the offline
  *  outbox can replay a pending message to ANY thread, not just the open one. On
  *  success the server row is patched straight into the thread cache (deduped
- *  against our optimistic bubble by that same client id) instead of refetching. */
+ *  against our optimistic bubble by that same client id) instead of refetching,
+ *  and the inbox row's preview/time is patched the same way — NOT invalidated.
+ *  (The backend also echoes `message:new` back to the sender's own socket;
+ *  `patchConversationPreview` is idempotent so that second application is a
+ *  harmless no-op, not a second `GET /conversations`.) */
 export function useSendMessage() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -43,6 +52,8 @@ export function useSendMessage() {
       replyToId?: string;
       clientMessageId?: string;
       forwarded?: boolean;
+      attachment?: GifAttachment;
+      kind?: "user" | "gif";
     }
   >({
     mutationFn: async ({
@@ -51,6 +62,8 @@ export function useSendMessage() {
       replyToId,
       clientMessageId,
       forwarded,
+      attachment,
+      kind,
     }) => {
       if (demoMode) return null;
       return sendMessage(
@@ -59,12 +72,14 @@ export function useSendMessage() {
         replyToId,
         clientMessageId,
         forwarded,
+        attachment,
+        kind,
       );
     },
     onSuccess: (message, { conversationId }) => {
       if (demoMode || !message) return;
       upsertMessage(queryClient, conversationId, message);
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      patchConversationPreview(queryClient, conversationId, message);
     },
   });
 }
@@ -219,7 +234,12 @@ export function useUpdateGroup() {
  *  target conversation id is passed at mutate time, not bound when the hook
  *  runs: `openThread` fires this synchronously right after `setActiveId`, when
  *  the render-time `active` is still the *previous* thread — binding the id at
- *  creation would mark the wrong conversation read. */
+ *  creation would mark the wrong conversation read. Fires on every
+ *  thread-open-with-unread, so the success patch zeroes the row's unread state
+ *  in place rather than invalidating — the server frame carries no new data an
+ *  invalidate would have picked up (we already know it's now read: we're the
+ *  one who just read it), and the counterpart's `read` socket frame carries no
+ *  cache-worthy state either (see `realtime.ts`'s `message:new`/`read` notes). */
 export function useMarkRead() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -228,9 +248,9 @@ export function useMarkRead() {
       if (demoMode || !conversationId) return;
       await markConversationRead(conversationId, new Date().toISOString());
     },
-    onSuccess: () => {
+    onSuccess: (_result, conversationId) => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      patchConversationRead(queryClient, conversationId);
     },
   });
 }

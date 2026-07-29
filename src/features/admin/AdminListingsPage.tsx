@@ -6,8 +6,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminListingRows } from "./AdminListingRows";
+import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
 import { useAdminListings } from "./api/useAdminListings";
 import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data";
+import type { ListingQueueRow } from "./api/adminListings.api";
 import styles from "./AdminListingsPage.module.css";
 
 type StatusFilter = ListingStatus | "all";
@@ -28,6 +30,7 @@ export function AdminListingsPage() {
   const [statusOverrides, setStatusOverrides] = useState<
     Record<string, ListingStatus>
   >({});
+  const [openRow, setOpenRow] = useState<ListingQueueRow | null>(null);
 
   const visibleRows = useMemo(() => {
     const withOverrides = rows.map((row) => {
@@ -86,9 +89,23 @@ export function AdminListingsPage() {
           <AdminListingRows
             rows={visibleRows}
             onStatusChanged={handleStatusChanged}
+            onOpen={setOpenRow}
           />
         )}
       </FadeIn>
+
+      {openRow && (
+        <ListingPreviewDrawer
+          row={
+            // reflect any just-applied status override in the drawer too
+            statusOverrides[openRow.ref]
+              ? { ...openRow, status: statusOverrides[openRow.ref]! }
+              : openRow
+          }
+          onClose={() => setOpenRow(null)}
+          onStatusChanged={handleStatusChanged}
+        />
+      )}
     </AdminShell>
   );
 }

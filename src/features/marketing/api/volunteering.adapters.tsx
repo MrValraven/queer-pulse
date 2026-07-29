@@ -1,4 +1,6 @@
 import { memberRefToPerson, type Person } from "../../../shared/api/refs";
+import { formatDate } from "../../../shared/lib/date";
+import { orgBadgeInitials } from "../../../shared/lib/initials";
 import type {
   Cause,
   OpportunityCardDTO,
@@ -59,15 +61,6 @@ const TEAM_TINTS = [
   { bg: "rgba(45,27,61,.10)", color: "var(--plum)" },
 ];
 
-/** Two-letter org initials for the card avatar ("ILGA Portugal" → "IL"). */
-function orgInitials(org: string): string {
-  const words = org.trim().split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return `${words[0]![0] ?? ""}${words[1]![0] ?? ""}`.toUpperCase();
-  }
-  return (org.slice(0, 2) || "QP").toUpperCase();
-}
-
 const commitLabel = (c: OpportunityCardDTO["commit"]) =>
   c === "low" ? "Low commitment" : "Medium commitment";
 
@@ -104,7 +97,7 @@ export function cardToOpportunity(
   return {
     slug: dto.slug,
     org: dto.org,
-    avatar: orgInitials(dto.org),
+    avatar: orgBadgeInitials(dto.org),
     background: tint.bg,
     color: tint.color,
     role: dto.role,
@@ -209,7 +202,7 @@ export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
   const person = memberRefToPerson(dto.member);
   const tint = TEAM_TINTS[i % TEAM_TINTS.length]!;
   const when = dto.createdAt
-    ? new Date(dto.createdAt).toLocaleDateString(undefined, {
+    ? formatDate(new Date(dto.createdAt), undefined, {
         day: "numeric",
         month: "short",
       })

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useRequiredFieldValidation } from "../../shared/hooks/useWizardForm";
 import type { TFunction } from "../../shared/i18n/types";
 import type { CreatePartnerApplicationDto, Region } from "./api/partners.api";
 import {
@@ -7,6 +8,7 @@ import {
   EYEBROW_PREFIX,
   MAX_TAGS,
 } from "./submitPartnerApplication.data";
+import { leadingInitials } from "../../shared/lib/initials";
 
 export interface SubmitPartnerState {
   name: string;
@@ -52,13 +54,7 @@ function buildEmptyState(): SubmitPartnerState {
  * "Casa T" → "CT"; "Casa Trans Lisboa" → "CTL".
  */
 function deriveInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 3)
-    .map((word) => word[0]!.toUpperCase())
-    .join("")
-    .slice(0, 5);
+  return leadingInitials(name, { wordCount: 3 });
 }
 
 /** Fields that must be filled before the application can be submitted. */
@@ -79,7 +75,6 @@ const REQUIRED: RequiredField[] = ["name", "orgType", "city", "tagline", "descri
  */
 export function useSubmitPartnerForm(t: TFunction) {
   const [state, setState] = useState<SubmitPartnerState>(buildEmptyState);
-  const [touched, setTouched] = useState(false);
 
   const set = useCallback(
     <K extends keyof SubmitPartnerState>(
@@ -115,15 +110,13 @@ export function useSubmitPartnerForm(t: TFunction) {
     });
   }, []);
 
-  const missing = REQUIRED.filter((field) => !String(state[field]).trim());
-  const valid = missing.length === 0;
-
-  const errorFor = (field: RequiredField): string | null => {
-    if (!touched) return null;
-    return missing.includes(field)
-      ? t("marketing:submitPartner.fields.requiredError")
-      : null;
-  };
+  const requiredValidation = useRequiredFieldValidation({
+    values: state,
+    requiredFields: REQUIRED,
+    buildError: () => t("marketing:submitPartner.fields.requiredError"),
+  });
+  const valid = requiredValidation.isValid;
+  const errorFor = requiredValidation.errorFor;
 
   const toDto = (): CreatePartnerApplicationDto => {
     const tags = Array.from(state.tags);
@@ -170,7 +163,7 @@ export function useSubmitPartnerForm(t: TFunction) {
     tagsFull: state.tags.size >= MAX_TAGS,
     valid,
     errorFor,
-    markTouched: () => setTouched(true),
+    markTouched: requiredValidation.markSubmitted,
     toDto,
   };
 }

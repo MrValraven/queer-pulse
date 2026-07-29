@@ -1,37 +1,37 @@
-import { useState } from "react";
-import { FiCheck, FiInfo } from "react-icons/fi";
-import { FadeIn } from "../../shared/components/ui";
+import { FiInfo } from "react-icons/fi";
+import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { AdminChip } from "./ui";
 import {
-  CARE_VERSIONS,
-  PRINCIPLE_KEYS,
-  type CareVersion,
-} from "./adminGovernance.data";
-import { AdminGovernanceDiffModal } from "./AdminGovernanceDiffModal";
+  useGovernanceOverview,
+  type DecisionView,
+  type PrincipleView,
+} from "../governance/api/useGovernanceOverview";
 import styles from "./AdminGovernancePage.module.css";
 
 export function AdminGovernancePolicy() {
-  const [diffOpen, setDiffOpen] = useState(false);
+  const { decisions, principles, loading } = useGovernanceOverview();
 
   return (
     <FadeIn>
       <div className={styles.govGrid}>
-        <VersionTimeline onSeeDiff={() => setDiffOpen(true)} />
+        <DecisionTimeline decisions={decisions} loading={loading} />
         <div className={styles.policyRail}>
-          <PrinciplesCard />
+          <PrinciplesCard principles={principles} loading={loading} />
           <TransparencyNote />
         </div>
       </div>
-      {diffOpen && (
-        <AdminGovernanceDiffModal onClose={() => setDiffOpen(false)} />
-      )}
     </FadeIn>
   );
 }
 
-function VersionTimeline({ onSeeDiff }: { onSeeDiff: () => void }) {
+function DecisionTimeline({
+  decisions,
+  loading,
+}: {
+  decisions: DecisionView[];
+  loading: boolean;
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.ledgerCard}>
@@ -46,59 +46,45 @@ function VersionTimeline({ onSeeDiff }: { onSeeDiff: () => void }) {
           {t("admin:governance.policy.versionsSub")}
         </p>
       </div>
-      <ol className={styles.timeline}>
-        {CARE_VERSIONS.map((v) => (
-          <TimelineItem key={v.version} v={v} onSeeDiff={onSeeDiff} />
-        ))}
-      </ol>
+      {loading ? (
+        <div className={styles.timeline}>
+          <SkeletonLine height={16} width="70%" style={{ marginBottom: 10 }} />
+          <SkeletonLine height={16} width="85%" style={{ marginBottom: 10 }} />
+          <SkeletonLine height={16} width="60%" />
+        </div>
+      ) : (
+        <ol className={styles.timeline}>
+          {decisions.map((decision) => (
+            <DecisionTimelineItem key={decision.leadKey} decision={decision} />
+          ))}
+        </ol>
+      )}
     </div>
   );
 }
 
-function TimelineItem({
-  v,
-  onSeeDiff,
-}: {
-  v: CareVersion;
-  onSeeDiff: () => void;
-}) {
+function DecisionTimelineItem({ decision }: { decision: DecisionView }) {
   const { t } = useTranslation();
   return (
-    <li
-      className={[styles.tlItem, v.current && styles.tlItemOn]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <span
-        className={[styles.tlDot, v.current && styles.tlDotOn]
-          .filter(Boolean)
-          .join(" ")}
-        aria-hidden
-      />
+    <li className={styles.tlItem}>
+      <span className={styles.tlDot} aria-hidden />
       <div className={styles.tlBody}>
         <div className={styles.tlHead}>
-          <span className={styles.tlVersion}>{v.version}</span>
-          {/* v.badge/date/note: versioned policy-changelog content, mirrors
-              API-fetched history in live mode — left in English per scope rule. */}
-          {v.badge && <AdminChip tone={v.badgeTone}>{v.badge}</AdminChip>}
-          <span className={styles.tlDate}>{v.date}</span>
+          <span className={styles.tlVersion}>{t(decision.leadKey)}</span>
         </div>
-        <p className={styles.tlNote}>{v.note}</p>
-        {v.current && (
-          <button
-            type="button"
-            className={styles.tlDiffLink}
-            onClick={onSeeDiff}
-          >
-            {t("admin:governance.policy.seeDiffCta")} →
-          </button>
-        )}
+        <p className={styles.tlNote}>{t(decision.bodyKey)}</p>
       </div>
     </li>
   );
 }
 
-function PrinciplesCard() {
+function PrinciplesCard({
+  principles,
+  loading,
+}: {
+  principles: PrincipleView[];
+  loading: boolean;
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.card}>
@@ -110,16 +96,23 @@ function PrinciplesCard() {
           />
         </h2>
       </div>
-      <ul className={styles.principles}>
-        {PRINCIPLE_KEYS.map((key) => (
-          <li key={key} className={styles.principle}>
-            <span className={styles.principleIco} aria-hidden>
-              <FiCheck />
-            </span>
-            {t(`admin:${key}`)}
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <div className={styles.principles}>
+          <SkeletonLine height={14} width="90%" style={{ marginBottom: 8 }} />
+          <SkeletonLine height={14} width="75%" />
+        </div>
+      ) : (
+        <ul className={styles.principles}>
+          {principles.map((principle) => (
+            <li key={principle.titleKey} className={styles.principle}>
+              <span className={styles.principleIco} aria-hidden>
+                <principle.icon />
+              </span>
+              {t(principle.titleKey)}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
