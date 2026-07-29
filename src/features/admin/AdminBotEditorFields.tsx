@@ -3,27 +3,8 @@ import type { SocialLinkDTO } from "../members/api/members.api";
 import { Avatar, Button } from "../../shared/components/ui";
 import { initialsOf } from "../../shared/api/refs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { createSocialRow, type SocialRow } from "./adminBotEditor.helpers";
 import styles from "./AdminBotEditor.module.css";
-
-/**
- * A social link while it's being edited. Carries a stable client-only `id` so
- * React keys survive reorder/removal (an array index misplaces focus when a
- * middle row is deleted). The `id` is stripped before the list is sent to the
- * API — see `AdminBotEditorDrawer`'s save.
- */
-export interface SocialRow extends SocialLinkDTO {
-  id: string;
-}
-
-let nextSocialRowId = 0;
-
-/** Wrap a social link (default: an empty row) with a fresh stable id. */
-export function createSocialRow(
-  social: SocialLinkDTO = { platform: "", urlOrHandle: "" },
-): SocialRow {
-  nextSocialRowId += 1;
-  return { id: `social-${nextSocialRowId}`, ...social };
-}
 
 export interface BotFormState {
   firstName: string;

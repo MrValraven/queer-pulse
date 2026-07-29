@@ -12,7 +12,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
+import { useSaved, type SavedItem } from "../../app/providers/useSaved";
 import {
   COLLECTIONS,
   RECENT_SAVES,

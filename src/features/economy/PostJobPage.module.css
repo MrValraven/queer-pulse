@@ -197,12 +197,12 @@
 .textarea {
   width: 100%;
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(45, 27, 61, 0.14);
   border-radius: 10px;
-  padding: 11px 13px;
+  padding: 10px 13px;
   transition:
     border-color 0.15s var(--ease),
     box-shadow 0.15s var(--ease);

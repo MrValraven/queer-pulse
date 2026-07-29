@@ -1,16 +1,14 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CultureModals.module.css";
 
-// Consolidated into the shared UI/hooks layer — re-exported here so existing
-// `./CultureModalKit` consumers keep their imports unchanged. (All call sites
-// invoke `submit()` with no args, so the shared `submit(onComplete?, ms)`
-// signature is a drop-in.)
+// Consolidated into the shared UI layer — re-exported here so existing
+// `./CultureModalKit` consumers keep their imports unchanged. The hooks
+// (`useSubmitFlow`, `useChipSet`) live in `./cultureModalKit.hooks`.
 export { Sending } from "../../shared/components/ui";
-export { useSubmitFlow } from "../../shared/hooks";
 
 /** Shared bottom-sheet frame: backdrop, close button, scroll lock. */
 export function ModalShell({
@@ -150,17 +148,4 @@ export function ChipSelect({
       })}
     </div>
   );
-}
-
-/** Small hook for the chip-select Set state. */
-export function useChipSet() {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const toggle = (value: string) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(value)) next.delete(value);
-      else next.add(value);
-      return next;
-    });
-  return { selected, toggle };
 }

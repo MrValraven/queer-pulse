@@ -73,7 +73,7 @@ export function useMyEventsSelection({
   const bulkCancel = useCallback(() => {
     const ids = Object.keys(selected).filter((id) => {
       const e = events.find((x) => x.id === id);
-      return e && (e.cat === "going" || e.cat === "waitlisted");
+      return e && (e.category === "going" || e.category === "waitlisted");
     });
     if (!ids.length) {
       toast(t("myevents:bulk.needsCommittedToast"), "info");

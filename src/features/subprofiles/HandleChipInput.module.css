@@ -41,6 +41,7 @@
 }
 
 .chipRemove {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -51,6 +52,12 @@
   background: transparent;
   color: inherit;
   cursor: pointer;
+}
+/* Expand the tap target to 44px without growing the visible 20px ink. */
+.chipRemove::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
 }
 @media (hover: hover) {
   .chipRemove:hover {
@@ -64,7 +71,7 @@
 
 .input {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);

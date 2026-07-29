@@ -3,7 +3,7 @@ import { FiUser } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import type {
   AccentKey,
   AvailabilityKey,
@@ -154,7 +154,7 @@ export function SubprofileMetaForm({
       <div className={styles.formActions}>
         <Button
           variant="primary"
-          onClick={save}
+          onClick={() => void save()}
           disabled={update.isPending || nameMissing || handleBlocked}
         >
           {update.isPending

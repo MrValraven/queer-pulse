@@ -33,6 +33,30 @@ export interface ChangelogYear {
   entries: ChangelogEntry[];
 }
 
+/** A single day's worth of entries, for grouping the timeline by date. */
+export interface ChangelogDay {
+  date: string;
+  entries: ChangelogEntry[];
+}
+
+/**
+ * Collapse an already date-ordered list into day groups, so the timeline shows
+ * each date once with its entries stacked beneath it. Consecutive entries that
+ * share a `date` are folded together, preserving order.
+ */
+export function groupEntriesByDay(entries: ChangelogEntry[]): ChangelogDay[] {
+  const days: ChangelogDay[] = [];
+  for (const entry of entries) {
+    const currentDay = days[days.length - 1];
+    if (currentDay && currentDay.date === entry.date) {
+      currentDay.entries.push(entry);
+    } else {
+      days.push({ date: entry.date, entries: [entry] });
+    }
+  }
+  return days;
+}
+
 /** Badge label per category. */
 export const TYPE_BADGE_KEYS: Record<ChangelogCategory, string> = {
   feature: "marketing:changelog.badge.feature",
@@ -68,6 +92,123 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
   {
     year: "2026",
     entries: [
+      {
+        id: "group-chats",
+        category: "feature",
+        date: "29 Jul 2026",
+        ...entryKeys("group-chats"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "message-search",
+        category: "feature",
+        date: "29 Jul 2026",
+        ...entryKeys("message-search"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "link-previews",
+        category: "feature",
+        date: "29 Jul 2026",
+        ...entryKeys("link-previews"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "forward-pin-star",
+        category: "feature",
+        date: "29 Jul 2026",
+        ...entryKeys("forward-pin-star"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "read-receipts",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("read-receipts"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "message-gestures",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("message-gestures"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "message-drafts",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("message-drafts"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "offline-outbox",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("offline-outbox"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "typing-indicator",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("typing-indicator"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "moderation-actions",
+        category: "fix",
+        date: "29 Jul 2026",
+        ...entryKeys("moderation-actions"),
+      },
+      {
+        id: "business-map-pin",
+        category: "feature",
+        date: "29 Jul 2026",
+        ...entryKeys("business-map-pin"),
+        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+      },
+      {
+        id: "profile-editing",
+        category: "feature",
+        date: "29 Jul 2026",
+        ...entryKeys("profile-editing"),
+        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+      },
+      {
+        id: "profile-communities-save",
+        category: "fix",
+        date: "29 Jul 2026",
+        ...entryKeys("profile-communities-save"),
+        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+      },
+      {
+        id: "mention-types",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("mention-types"),
+        tag: { labelKey: "marketing:changelog.tag.forum", to: routes.forum },
+      },
+      {
+        id: "clear-errors",
+        category: "improvement",
+        date: "29 Jul 2026",
+        ...entryKeys("clear-errors"),
+      },
+      {
+        id: "messaging-reactions",
+        category: "fix",
+        date: "29 Jul 2026",
+        ...entryKeys("messaging-reactions"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "event-photos",
+        category: "feature",
+        date: "28 Jul 2026",
+        ...entryKeys("event-photos"),
+        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+      },
       {
         id: "mentions",
         category: "feature",

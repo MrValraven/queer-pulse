@@ -28,7 +28,7 @@ export function OpenToEditor({
   const [input, setInput] = useState("");
 
   const selectedIds = new Set(
-    entries.filter(isPreset).map((entry) => entry.id as OpenToId),
+    entries.filter(isPreset).map((entry) => entry.id),
   );
   const customs = entries.filter((entry) => entry.kind === "custom");
 

@@ -86,9 +86,13 @@ export function useModerationQueue() {
   const dataOpen = data?.open;
   const dataAppeals = data?.appeals;
   useEffect(() => {
+    // Re-seeds from the react-query result (each live refetch resyncs to server truth).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (dataOpen) setOpen(dataOpen);
   }, [dataOpen]);
   useEffect(() => {
+    // Re-seeds from the react-query result (each live refetch resyncs to server truth).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (dataAppeals) setAppeals(dataAppeals);
   }, [dataAppeals]);
 
@@ -171,13 +175,10 @@ export function useModerationQueue() {
     );
   };
 
-  const openReport = (r: ModReport) => {
-    if (!r.detail) {
-      resolveReport(r.id, { verb: "actioned" });
-      return;
-    }
-    setSelected(r);
-  };
+  // Opening a report never resolves it — it presents the decision drawer (the
+  // action grid + reason + member-facing note). The drawer fetches / falls back
+  // to context on its own when the list item carries no `detail`.
+  const openReport = (r: ModReport) => setSelected(r);
 
   const togglePick = (id: string) =>
     setPicked((prev) => {

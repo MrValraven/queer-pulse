@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
-import type { Application } from "./applicationStatus.data";
+import type { Application } from "./applicationStatus.types";
 import { COMPARE_ROWS } from "./compareOffers.data";
 import styles from "./CompareOffersModal.module.css";
 

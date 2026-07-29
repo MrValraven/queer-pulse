@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useProfile } from "../../../app/providers/ProfileProvider";
+import { useProfile } from "../../../app/providers/useProfile";
 import type { DirectoryPlace, Review } from "../directoryPlaces";
 import { submitReview, type SubmitReviewInput } from "./directory.api";
 import { DIRECTORY_KEY } from "./useDirectory";

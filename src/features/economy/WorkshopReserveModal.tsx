@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { useSubmitFlow } from "./modalFlow";
 import type { Workshop } from "./workshops.data";
 import styles from "./ApplicationModals.module.css";
 

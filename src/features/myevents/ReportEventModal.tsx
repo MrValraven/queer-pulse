@@ -19,7 +19,7 @@ export function ReportEventModal() {
   const { report, byId, submitReport, closeReport } = useMyEvents();
   const [reason, setReason] = useState<number | null>(null);
   const [note, setNote] = useState("");
-  const ev = report.evId ? byId(report.evId) : undefined;
+  const ev = report.eventId ? byId(report.eventId) : undefined;
 
   return (
     <>

@@ -59,7 +59,7 @@
 }
 .viewing select {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-strong);
   border: 1.5px solid rgba(45, 27, 61, 0.18);
@@ -208,7 +208,7 @@
 .searchBox input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(45, 27, 61, 0.14);

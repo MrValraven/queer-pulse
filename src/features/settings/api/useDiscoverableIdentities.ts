@@ -64,6 +64,8 @@ export function useDiscoverableIdentities(
     // existing switches on screen while it resolves — flashing them away and
     // back would read as "your disclosures were dropped".
     if (!loadedOnce.current) setLoading(true);
+    // Resets before the async GET /discoverable-identities read resolves below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(false);
     getDiscoverableIdentities()
       .then((dto) => {

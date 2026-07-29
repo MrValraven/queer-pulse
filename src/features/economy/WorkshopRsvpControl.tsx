@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
+import { useWorkshopsActions } from "../../app/providers/useWorkshops";
 import type { WorkshopWithRsvp } from "./api/workshops.adapters";
 import styles from "./WorkshopPage.module.css";
 

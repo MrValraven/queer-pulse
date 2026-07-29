@@ -4,7 +4,7 @@ import { routes } from "../../app/routeMap";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";

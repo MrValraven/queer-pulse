@@ -15,7 +15,6 @@ import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
 import { NOT_FOUND } from "./subprofilePage.data";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPath } from "./personaLinks.data";
-import type { AccentKey } from "./api/subprofiles.api";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import styles from "./SubprofilePage.module.css";
 
@@ -62,7 +61,7 @@ export function SubprofilePage() {
             }}
             secondaryAction={{
               label: <>← {t(NOT_FOUND.backLabelKey)}</>,
-              onClick: () => navigate(-1),
+              onClick: () => void navigate(-1),
             }}
           />
         </div>
@@ -87,7 +86,7 @@ export function SubprofilePage() {
       {data.featured && (
         <SubprofileSpotlight
           item={data.featured}
-          accent={(data.accent as AccentKey | null) ?? DEFAULT_ACCENT}
+          accent={data.accent ?? DEFAULT_ACCENT}
         />
       )}
 

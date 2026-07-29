@@ -379,9 +379,9 @@
 .mmTextarea {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
-  padding: 12px 15px;
+  padding: 11px 15px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   width: 100%;

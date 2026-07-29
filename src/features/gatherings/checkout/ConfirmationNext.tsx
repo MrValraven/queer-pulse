@@ -205,7 +205,7 @@ function NextActions() {
 
   function copyShare() {
     const link = `https://queerpulse.pt${gatheringPath("supper-club-13")}`;
-    navigator.clipboard
+    void navigator.clipboard
       ?.writeText(link)
       .then(() =>
         showToast(t("gatherings:checkout.confirm.shareLinkToast"), "success"),

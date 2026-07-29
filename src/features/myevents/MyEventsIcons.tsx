@@ -91,7 +91,7 @@ export const Icons: Record<string, ReactNode> = {
       />
     </>,
   ),
-  msg: mk(
+  message: mk(
     <path
       d="M2 4.5A1.5 1.5 0 0 1 3.5 3h9A1.5 1.5 0 0 1 14 4.5v5A1.5 1.5 0 0 1 12.5 11H6l-3 2.5V11H3.5A1.5 1.5 0 0 1 2 9.5Z"
       strokeLinejoin="round"

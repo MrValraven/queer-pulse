@@ -159,12 +159,13 @@
 .select {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
-  padding: 9px 14px;
+  padding: 8px 14px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   cursor: pointer;
+  touch-action: manipulation;
 }
 .select:focus:not(:focus-visible) {
   outline: none;
@@ -192,9 +193,9 @@
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   margin-bottom: 14px;
@@ -349,9 +350,9 @@
 .input {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
-  padding: 13px 16px;
+  padding: 12px 16px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   width: 100%;
@@ -371,7 +372,7 @@
 /* Save bar */
 .saveBar {
   position: fixed;
-  bottom: 24px;
+  bottom: calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset));
   left: 50%;
   transform: translateX(-50%);
   z-index: 90;

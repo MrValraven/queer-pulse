@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FiPlay } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
@@ -29,7 +29,14 @@ import {
   PHOTOS_VENUE,
   PICS,
 } from "./gatheringPhotos.data";
-import { DEMO_GATHERING_SLUGS, gatheringRecapPath } from "./data";
+import {
+  DEMO_GATHERING_SLUGS,
+  gatheringPath,
+  gatheringRecapPath,
+} from "./data";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useEvent } from "./api/useEvent";
+import { GatheringPhotosLive } from "./GatheringPhotosLive";
 import styles from "./GatheringPhotosPage.module.css";
 
 function PhotoSkeleton({ span }: { span?: string }) {
@@ -229,6 +236,11 @@ function GatheringPhotosFooter() {
 }
 
 export function GatheringPhotosPage() {
+  // All hooks run every render (Rules of Hooks) — the demo-only view state
+  // below is simply unused in the live branch.
+  const { slug: routeParam } = useParams();
+  const { demoMode } = useDemoMode();
+  const { data: eventData } = useEvent(routeParam);
   const [chip, setChip] = useState(0);
   const [viewer, setViewer] = useState<{
     index: number;
@@ -236,6 +248,38 @@ export function GatheringPhotosPage() {
   } | null>(null);
   const [downloading, setDownloading] = useState(false);
   const loading = useSimulatedLoad();
+
+  // Live mode: real photos for this event, gated by the backend to
+  // participants. The prototype hero/controls/footer are demo-only chrome, so
+  // live renders a minimal header (real event title) + the live mosaic; the
+  // upload control is shown to organizers (host or cohost) via the detail's
+  // server-decided `viewerIsOrganizer`.
+  if (!demoMode) {
+    const gathering = eventData?.gathering;
+    // Organizer = host or cohost, decided server-side (`EventDetail.isOrganizer`).
+    const canUpload = Boolean(gathering?.viewerIsOrganizer);
+    return (
+      <PageShell>
+        <section className={styles.hero}>
+          <div className={styles.heroInner}>
+            {gathering && (
+              <Link
+                to={gatheringPath(gathering.slug)}
+                className={styles.back}
+              >
+                ← {gathering.title}
+              </Link>
+            )}
+            <h1 className={styles.h1}>{gathering?.title ?? ""}</h1>
+          </div>
+        </section>
+        <GatheringPhotosLive
+          slug={gathering?.slug ?? ""}
+          canUpload={canUpload}
+        />
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell>

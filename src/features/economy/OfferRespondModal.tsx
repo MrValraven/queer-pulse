@@ -4,12 +4,12 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import type { Application } from "./applicationStatus.types";
 import {
-  type Application,
   acceptedOfferPatch,
   declinedOfferPatch,
   offerRevertPatch,
-} from "./applicationStatus.data";
+} from "./applicationStatus.patches";
 import styles from "./ApplicationModals.module.css";
 
 /** Respond to an offer: accept or decline — both change card state. */

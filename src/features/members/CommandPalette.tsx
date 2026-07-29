@@ -82,7 +82,7 @@ export function CommandPalette() {
     // "coming soon" notice, so there's nothing to open on the full /search page.
     if (comingSoon) return;
     const trimmed = query.trim();
-    navigate(
+    void navigate(
       trimmed
         ? `${routes.search}?q=${encodeURIComponent(trimmed)}`
         : routes.search,
@@ -92,7 +92,7 @@ export function CommandPalette() {
 
   const goToItem = useCallback(
     (item: SearchItem) => {
-      navigate(linkToPath(item.href));
+      void navigate(linkToPath(item.href));
       close();
     },
     [navigate, close],

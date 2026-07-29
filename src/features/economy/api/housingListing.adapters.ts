@@ -1,4 +1,3 @@
-import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { HousingListing, Poster, Tint } from "../housingListings";
 import type { HousingListingDTO } from "./housingListing.api";
 
@@ -29,7 +28,7 @@ function posterFrom(lister: HousingListingDTO["lister"]): Poster {
     initials: initials(lister.firstName, lister.lastName),
     name: `${lister.firstName} ${lister.lastName.charAt(0)}.`.trim(),
     fullName: full,
-    tint: "coral" as AvatarTint,
+    tint: "coral",
     memberSince: "",
     responseTime: "within a day",
     bio: "",

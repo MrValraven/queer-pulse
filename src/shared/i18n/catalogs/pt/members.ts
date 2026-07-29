@@ -72,6 +72,10 @@ export const members: Catalog = {
   "profile.notFound.description":
     "Pode ter sido definido como privado, a pessoa pode ter saído, ou este link pode estar desatualizado. Não foi nada que tenhas feito.",
   "profile.notFound.backAction": "Voltar a Pessoas",
+  "profile.loadError.title": "Não conseguimos carregar o teu perfil",
+  "profile.loadError.description":
+    "Algo correu mal ao obter o teu perfil. Verifica a tua ligação e tenta novamente.",
+  "profile.loadError.retryAction": "Tentar novamente",
   "profile.backToRoom": "← Voltar à sala",
   "profile.previewBanner":
     "Estás a pré-visualizar o teu perfil como <strong>visitante</strong>.",
@@ -171,6 +175,11 @@ export const members: Catalog = {
   "profileEdit.addTagLabel": "Adicionar uma etiqueta",
   "profileEdit.removeTagLabel": "Remover {tag}",
   "profileEdit.visibilityGroupLabel": "Visibilidade do perfil",
+  "profileEdit.discardConfirm":
+    "Tens alterações por guardar. Descartá-las e sair da edição?",
+  "profileEdit.validation.nameRequired": "Introduz o teu nome próprio.",
+  "profileEdit.validation.invalidUrl":
+    "Isto não parece um link ou identificador válido.",
 
   // ── Campo de biografia curta (ProfileShortBioField) ────────────────────────
   "profileEdit.shortBio.label": "Biografia curta",
@@ -219,9 +228,38 @@ export const members: Catalog = {
   // ── Editor de trabalho (WorkEditor) ─────────────────────────────────────────
   "profileEdit.work.add": "Adicionar trabalho",
 
+  // ── Editor do quadro de trocas (BoardEditor) ────────────────────────────────
+  "profileEdit.board.subtitle": "O que estás a pedir e a oferecer agora",
+  "profileEdit.board.add": "Adicionar ao quadro",
+  "profileEdit.board.kindLabel": "A pedir ou a oferecer",
+  "profileEdit.board.titlePlaceholder": "ex.: Uma câmara escura emprestada",
+  "profileEdit.board.titleLabel": "O que procuras ou ofereces",
+  "profileEdit.board.removeLabel": "Remover {title}",
+
+  // ── Editor de competências (SkillsEditor) ───────────────────────────────────
+  "profileEdit.skills.subtitle":
+    "Aquilo em que podes ajudar — e trocar no quadro de trocas",
+  "profileEdit.skills.add": "Adicionar",
+  "profileEdit.skills.namePlaceholder": "Uma competência ou serviço…",
+  "profileEdit.skills.nameLabel": "Competência ou serviço",
+  "profileEdit.skills.metaPlaceholder": "Detalhe (opcional)",
+  "profileEdit.skills.metaLabel": "Detalhe da competência",
+  "profileEdit.skills.removeLabel": "Remover {name}",
+
+  // ── Editor de grupos (GroupsEditor) ─────────────────────────────────────────
+  "profileEdit.groups.subtitle":
+    "Grupos, círculos e coletivos de que fazes parte",
+  "profileEdit.groups.add": "Adicionar um grupo",
+  "profileEdit.groups.namePlaceholder": "Nome do grupo ou círculo",
+  "profileEdit.groups.nameLabel": "Nome do grupo",
+  "profileEdit.groups.rolePlaceholder": "O teu papel",
+  "profileEdit.groups.roleLabel": "O teu papel",
+  "profileEdit.groups.removeLabel": "Remover {name}",
+
   // ── Linha de avais no cabeçalho (HeroVouchRow) ─────────────────────────────
   "hero.vouch.namesPlusYou": "{names}, e tu",
   "hero.vouch.youOnly": "tu",
+  "hero.vouch.anonymous": "Anónimo",
   "hero.vouch.by": "Quem avaliza: <b>{names}</b>.",
   "hero.vouch.onlyNumberMatters": "É o único número que importa aqui.",
   "hero.vouch.emptySelf":
@@ -831,6 +869,7 @@ export const members: Catalog = {
   "places.selfSubtitle":
     "Anúncios que adicionaste ao diretório. Cada um é revisto pela equipa da comunidade antes de ficar ativo.",
   "places.refLabel": "Ref. · {ref}",
+  "places.editCta": "Editar",
   "places.viewListingCta": "Ver anúncio →",
   "places.awaitingReview": "Aguarda revisão",
   "places.empty.title": "Ainda sem espaços",

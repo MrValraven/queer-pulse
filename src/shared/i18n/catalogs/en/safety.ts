@@ -21,6 +21,10 @@ export const safety: Catalog = {
   // ── Shared across ReportPage.tsx / HateCrimePage.tsx (HubBackLink label) ─
   "nav.safetyGuideLabel": "Safety Guide",
 
+  // ── Quick exit (fixed escape hatch on high-stakes safety pages) ──────────
+  "quickExit.label": "Quick exit",
+  "quickExit.aria": "Quick exit — leave this page now for a neutral site",
+
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title": "Report a concern to the QueerPulse safety team",
   "report.meta.description":

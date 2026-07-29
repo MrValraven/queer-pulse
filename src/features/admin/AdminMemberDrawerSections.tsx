@@ -4,7 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminChip } from "./ui";
-import { VouchGraphPreview } from "./VouchGraphPreview";
+import { VouchGraphPreview, VouchGraphLegend } from "./VouchGraphPreview";
 import {
   SEALED_IDENTITY,
   type MemberDetail,
@@ -65,6 +65,7 @@ export function MemberOverviewSections({
         >
           <VouchGraphPreview graph={detail.graph} name={memberName} />
         </div>
+        <VouchGraphLegend nodes={detail.graph.nodes} />
         <div className={styles.graphNoteRow}>
           <p className={styles.dHint}>{detail.graphNote}</p>
           <Button variant="ghost" size="md" onClick={onOpenNetwork}>

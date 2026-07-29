@@ -45,7 +45,7 @@ export function VerificationNeededPage() {
     setStage("verifying");
     timers.current.push(setTimeout(() => setStage("success"), 1100));
     timers.current.push(
-      setTimeout(() => navigate(routes.settings), 2700),
+      setTimeout(() => void navigate(routes.settings), 2700),
     );
   }
 
@@ -65,7 +65,7 @@ export function VerificationNeededPage() {
   if (stage === "success") {
     return (
       <AuthLayout>
-        <SuccessPanel onContinue={() => navigate(routes.settings)} />
+        <SuccessPanel onContinue={() => void navigate(routes.settings)} />
       </AuthLayout>
     );
   }

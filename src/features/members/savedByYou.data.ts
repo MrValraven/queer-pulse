@@ -1,4 +1,4 @@
-import type { SavedKind } from "../../app/providers/SavedProvider";
+import type { SavedKind } from "../../app/providers/useSaved";
 
 /** Card display config for each saved-item kind. `labelKey`/`readKey` are
  *  catalog keys — a small, closed platform-defined vocabulary (chrome),

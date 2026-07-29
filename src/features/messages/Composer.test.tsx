@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { useState } from "react";
 import { expect, it } from "vitest";
 import { Composer } from "./Composer";
 import type { Conversation } from "./data";
@@ -7,7 +8,7 @@ const convo = { id: "c1", name: "Alina C.", initials: "AC", tint: "plum" } as Co
 
 it("grows the textarea height with content", () => {
   const Wrapper = () => {
-    const [draft, setDraft] = require("react").useState("");
+    const [draft, setDraft] = useState("");
     return (
       <Composer
         active={convo}
@@ -20,7 +21,7 @@ it("grows the textarea height with content", () => {
     );
   };
   render(<Wrapper />);
-  const textarea = screen.getByRole("textbox") as HTMLTextAreaElement;
+  const textarea = screen.getByRole("textbox");
   // jsdom reports scrollHeight 0; assert the handler sets an explicit inline height.
   Object.defineProperty(textarea, "scrollHeight", { value: 84, configurable: true });
   fireEvent.input(textarea, { target: { value: "line1\nline2\nline3" } });

@@ -43,6 +43,8 @@ export function useIncrementalList<Item>(
   // window at the top so the reader is never dropped part-way through a fresh
   // set (and stale-high caps don't defeat the windowing on the next result).
   useEffect(() => {
+    // Resets the reveal window when the source list identity changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleCount(initial);
   }, [items, initial]);
 

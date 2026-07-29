@@ -33,9 +33,10 @@ export function useCreateCoop() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
+    meta: { silentError: true }, // AdminHousingCoopForm toasts locally
   });
 }
 
@@ -55,9 +56,10 @@ export function useUpdateCoop() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
+    meta: { silentError: true }, // AdminHousingCoopForm + AdminHousingCoopsPage toast locally
   });
 }
 
@@ -72,12 +74,13 @@ export function useDeleteCoop() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({
         queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY],
       });
     },
+    meta: { silentError: true }, // AdminHousingCoopsPage toasts locally
   });
 }
 
@@ -106,11 +109,12 @@ export function useTriageJoinRequest() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY],
       });
-      queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
+    meta: { silentError: true }, // AdminHousingJoinRequests toasts locally
   });
 }

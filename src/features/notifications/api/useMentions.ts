@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
-import { buildMentionDays } from "../mentions.data";
 import type { Mention } from "../mentions.data";
 
 export interface MentionDay {
@@ -29,7 +28,11 @@ export function useMentions() {
   return useQuery<MentionDay[]>({
     queryKey: ["mentions", demoMode, language],
     queryFn: async () => {
-      if (demoMode) return buildMentionDays(t, fmt);
+      if (demoMode) {
+        // Code-split: the demo mock is only pulled into the bundle in demo mode.
+        const { buildMentionDays } = await import("../mentions.data");
+        return buildMentionDays(t, fmt);
+      }
       return [];
     },
   });

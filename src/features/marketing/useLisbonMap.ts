@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, {
   type Map as MapLibreMap,
   type GeoJSONSource,
-  type MapGeoJSONFeature,
 } from "maplibre-gl";
 import type {
   FeatureCollection,
@@ -126,12 +125,12 @@ export function useLisbonMap({
             pushSelected(map, selectedFreguesia);
             setReady(true);
           };
-          map.once("idle", reveal);
+          void map.once("idle", reveal);
           revealTimer = setTimeout(reveal, 3000);
 
           // Parish interactions (fills are WebGL; pins handle their own clicks).
           map.on("click", "freguesia-fill", (event) => {
-            const feature = event.features?.[0] as MapGeoJSONFeature | undefined;
+            const feature = event.features?.[0];
             const name = feature?.properties?.name as string | undefined;
             if (name) selectFreguesiaRef.current(name);
           });
@@ -182,6 +181,10 @@ export function useLisbonMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !readyRef.current) return;
+    // `getSource` is generic (`<T extends Source = Source>`); without the
+    // assertion `T` defaults to the base `Source`, which lacks `setData`. The
+    // assertion supplies the concrete `GeoJSONSource` this label layer uses.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const source = map.getSource("freguesia-labels") as GeoJSONSource | undefined;
     source?.setData(buildLabelCollection(counts));
   }, [counts]);

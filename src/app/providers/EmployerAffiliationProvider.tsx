@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -18,35 +16,12 @@ import {
 } from "../../features/economy/api/useEmployerAffiliationQuery";
 import { useDemoMode } from "./DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
-
-export type { EmployerAffiliation };
-
-/**
- * The overlay's tri-state. This is the load-bearing type of phase 3.
- *
- * - `EmployerAffiliation` — a local value: the demo store's contents, or a live
- *   optimistic value awaiting/holding a server confirmation.
- * - `null` — an explicit "no affiliation": the demo store is empty, or the
- *   member just cleared it optimistically.
- * - `undefined` — **no local decision at all; defer to the server query.**
- *
- * The third arm is what the old single-slot design lacked, and why it could not
- * be scoped. With only `T | null`, an optimistic clear and a cold start look
- * identical, so server truth would immediately paper back over the clear.
- */
-export type AffiliationOverlay = EmployerAffiliation | null | undefined;
-
-interface EmployerAffiliationOverlayValue {
-  overlay: AffiliationOverlay;
-  /** Grant (or switch) the member's employer affiliation. */
-  affiliate: (companySlug: string, role: string) => void;
-  clearAffiliation: () => void;
-}
+import {
+  EmployerAffiliationContext,
+  type AffiliationOverlay,
+} from "./useEmployerAffiliationOverlay";
 
 const STORAGE_KEY = "qp-employer-affiliation";
-
-const EmployerAffiliationContext =
-  createContext<EmployerAffiliationOverlayValue | null>(null);
 
 function readInitial(): EmployerAffiliation | null {
   if (typeof window === "undefined") return null;
@@ -187,20 +162,4 @@ export function EmployerAffiliationProvider({
       {children}
     </EmployerAffiliationContext.Provider>
   );
-}
-
-/**
- * Raw overlay access. **Not for pages** — it exposes the tri-state, which is an
- * implementation detail of the merge. Consumers use
- * `useEmployerAffiliation()` (read) or `useEmployerAffiliationActions()`
- * (write-only), both from `src/features/economy/api/useEmployerAffiliation.ts`.
- */
-export function useEmployerAffiliationOverlay() {
-  const ctx = useContext(EmployerAffiliationContext);
-  if (!ctx) {
-    throw new Error(
-      "useEmployerAffiliationOverlay must be used within EmployerAffiliationProvider",
-    );
-  }
-  return ctx;
 }

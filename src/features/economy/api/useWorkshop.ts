@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useWorkshops } from "../../../app/providers/WorkshopsProvider";
+import { useWorkshops } from "../../../app/providers/useWorkshops";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getWorkshop } from "./workshops.api";

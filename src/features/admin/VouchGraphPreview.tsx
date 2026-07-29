@@ -1,6 +1,11 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AvatarTone } from "./ui";
-import type { MemberDetail, VouchAvatar } from "./adminMembers.data";
+import type {
+  GraphNode,
+  MemberDetail,
+  VouchAvatar,
+  VouchDirection,
+} from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
 const W = 360;
@@ -33,13 +38,44 @@ const AVATAR_TONE_INK: Record<AvatarTone, { fill: string; stroke: string }> = {
 };
 
 /**
+ * Per-direction edge styling. Both a colour AND a line weight/dash differ, so
+ * the three kinds stay distinguishable without relying on colour alone. The
+ * arrowhead points the way the vouch runs: `inbound` (someone trusts the
+ * member) points at the centre, `outbound` (the member vouches for them)
+ * points at the node, `mutual` has one at each end.
+ */
+const EDGE_STYLE: Record<
+  VouchDirection,
+  { className: string | undefined; markerStart?: string; markerEnd?: string }
+> = {
+  inbound: { className: styles.previewEdge, markerStart: "url(#vgArrowIn)" },
+  outbound: {
+    className: styles.previewEdgeOutbound,
+    markerEnd: "url(#vgArrowOut)",
+  },
+  mutual: {
+    className: styles.previewEdgeMutual,
+    markerStart: "url(#vgArrowMutual)",
+    markerEnd: "url(#vgArrowMutual)",
+  },
+};
+
+/** Direction order for the legend — strongest signal (mutual) first. */
+const LEGEND_ORDER: VouchDirection[] = ["mutual", "inbound", "outbound"];
+
+const LEGEND_SWATCH_CLASS: Record<VouchDirection, string | undefined> = {
+  mutual: styles.legendMutual,
+  inbound: styles.legendInbound,
+  outbound: styles.legendOutbound,
+};
+
+/**
  * A static thumbnail of a member's direct vouch network, built straight from
- * the drawer's own `detail.graph` (a real center + up to `MAX` voucher
- * avatars from the backend). Unlike the full-screen modal — which still
- * renders the `adminVouchGraph.data` fixture network — this preview has no
- * per-edge mutual/withdrawn detail or portraits, since the backend graph
- * summary only carries `{ initials, tone }` per node. Same visual language
- * (radial layout, curved connectors) as before, but real for every member.
+ * the drawer's own `detail.graph` (a real centre + up to `MAX` avatars from
+ * the backend). Each edge is tagged with its direction, so the preview shows
+ * both who trusts the member AND who the member vouches for, told apart by
+ * colour, line style, and arrowhead. Same radial visual language as the
+ * full-screen modal, but real for every member.
  */
 export function VouchGraphPreview({
   graph,
@@ -63,6 +99,12 @@ export function VouchGraphPreview({
       role="img"
       aria-label={t("admin:vouchGraph.preview.ariaLabel", { name, count: n })}
     >
+      <defs>
+        <ArrowMarker id="vgArrowIn" fill="rgba(var(--plum-rgb), .5)" />
+        <ArrowMarker id="vgArrowOut" fill="rgba(var(--accent-rgb), .65)" />
+        <ArrowMarker id="vgArrowMutual" fill="rgba(var(--jade-rgb), .65)" />
+      </defs>
+
       {placed.map((p, i) => {
         const dx = p.x - CX,
           dy = p.y - CY;
@@ -75,11 +117,14 @@ export function VouchGraphPreview({
           y2 = p.y - uy * NODE_R;
         const cx = (x1 + x2) / 2 + (-dy / len) * 14;
         const cy = (y1 + y2) / 2 + (dx / len) * 14;
+        const edge = EDGE_STYLE[p.node.direction];
         return (
           <path
             key={i}
-            className={styles.previewEdge}
+            className={edge.className}
             fill="none"
+            markerStart={edge.markerStart}
+            markerEnd={edge.markerEnd}
             d={`M${x1} ${y1}Q${cx} ${cy} ${x2} ${y2}`}
           />
         );
@@ -90,6 +135,22 @@ export function VouchGraphPreview({
       ))}
       <PreviewNode avatar={graph.center} x={CX} y={CY} r={CENTER_R} focus />
     </svg>
+  );
+}
+
+function ArrowMarker({ id, fill }: { id: string; fill: string }) {
+  return (
+    <marker
+      id={id}
+      viewBox="0 0 10 10"
+      refX={8}
+      refY={5}
+      markerWidth={6}
+      markerHeight={6}
+      orient="auto-start-reverse"
+    >
+      <path d="M0 0 L10 5 L0 10 z" fill={fill} />
+    </marker>
   );
 }
 
@@ -120,5 +181,33 @@ function PreviewNode({
         {avatar.initials}
       </text>
     </g>
+  );
+}
+
+/**
+ * A key for the preview's directional edges — only the directions actually
+ * present in the graph are listed, so a member with no outbound vouches shows
+ * a plain "who trusts them" legend.
+ */
+export function VouchGraphLegend({ nodes }: { nodes: GraphNode[] }) {
+  const { t } = useTranslation();
+  const present = LEGEND_ORDER.filter((direction) =>
+    nodes.some((node) => node.direction === direction),
+  );
+  if (present.length < 2) return null;
+  return (
+    <ul className={styles.previewLegend}>
+      {present.map((direction) => (
+        <li key={direction} className={styles.previewLegendItem}>
+          <span
+            className={[styles.legendSwatch, LEGEND_SWATCH_CLASS[direction]]
+              .filter(Boolean)
+              .join(" ")}
+            aria-hidden
+          />
+          {t(`admin:vouchGraph.preview.legend.${direction}`)}
+        </li>
+      ))}
+    </ul>
   );
 }

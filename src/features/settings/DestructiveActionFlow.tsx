@@ -140,7 +140,7 @@ export function DestructiveActionFlow({
                 <Button variant="ghost" onClick={onClose}>
                   {t("settings:destructiveFlow.error.close")}
                 </Button>
-                <Button variant="primary" onClick={run}>
+                <Button variant="primary" onClick={() => void run()}>
                   {t("settings:destructiveFlow.error.tryAgain")}
                 </Button>
               </div>
@@ -159,7 +159,7 @@ export function DestructiveActionFlow({
                 <Button variant="ghost" onClick={onClose}>
                   {t("settings:destructiveFlow.confirm.notNow")}
                 </Button>
-                <Button variant="primary" onClick={run}>
+                <Button variant="primary" onClick={() => void run()}>
                   {content.confirmLabel}
                 </Button>
               </div>

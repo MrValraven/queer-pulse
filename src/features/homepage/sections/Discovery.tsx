@@ -74,7 +74,13 @@ function SpotlightFace({ member, quote }: Spotlight) {
     >
       <div className={styles.featPhoto}>
         {portrait ? (
-          <img src={portrait} alt={member.name} referrerPolicy="no-referrer" />
+          <img
+            src={portrait}
+            alt={member.name}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+          />
         ) : (
           <span className={styles.photoFallback} aria-hidden>
             {member.initials}

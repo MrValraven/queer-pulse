@@ -1,6 +1,6 @@
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
-import type { ChatMessage, Conversation } from "../data";
+import type { ChatMessage, Conversation, GroupMemberView } from "../data";
 import type { ConversationResponse, MessageResponse } from "./messages.api";
 
 // Map the backend DTOs onto the EXISTING messages view-models (../data.ts) so
@@ -47,8 +47,69 @@ function dayLabel(iso: string): string {
   });
 }
 
+/** Group avatar initials from a title ("Pride Brunch Crew" → "PB"). */
+function groupInitials(title: string): string {
+  const words = title.trim().split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return (words[0]![0]! + words[1]![0]!).toUpperCase();
+  return title.trim().slice(0, 2).toUpperCase();
+}
+
+/** Inbox preview for a group's last message: sender first name prefixed for a
+ *  member message ("Ana: …"), or the system fallback body prefixed with the
+ *  actor ("Ana created the group"). Empty when the group has no messages. */
+function groupPreview(last: MessageResponse | null): string {
+  if (!last) return "";
+  const first = last.sender.displayName.trim().split(/\s+/)[0] ?? "";
+  if (last.kind === "system") return `${first} ${last.body}`.trim();
+  return first ? `${first}: ${last.body}` : last.body;
+}
+
+/** ConversationResponse (group) → the inbox `Conversation` row. */
+function groupConversationToView(dto: ConversationResponse): Conversation {
+  const title = dto.title ?? "Group";
+  const members: GroupMemberView[] = dto.members.map((member) => {
+    const { first, last } = splitName(member.name);
+    return {
+      id: member.id,
+      slug: member.handle,
+      name: member.name,
+      initials: initialsOf(first, last),
+      tint: tintForSlug(member.handle),
+      avatarUrl: member.avatarUrl ?? undefined,
+      role: member.role,
+      lastReadAt: member.lastReadAt ?? undefined,
+      deliveredAt: member.deliveredAt ?? undefined,
+    };
+  });
+  return {
+    id: dto.id,
+    isGroup: true,
+    initials: groupInitials(title),
+    tint: "plum",
+    avatarUrl: dto.avatarUrl ?? undefined,
+    name: title,
+    pronouns: "",
+    connectedSince: "",
+    time: timeLabel(dto.updatedAt),
+    preview: groupPreview(dto.lastMessage),
+    unread: dto.unreadCount > 0,
+    unreadCount: dto.unreadCount,
+    members,
+    memberCount: dto.memberCount,
+    hasLeft: dto.hasLeft ?? false,
+    myRole: dto.myRole ?? undefined,
+    // SERVER-AUTHORITATIVE capability flags — the management UI gates on these.
+    canAddMembers: dto.canAddMembers ?? false,
+    canRemoveMembers: dto.canRemoveMembers ?? false,
+    canRename: dto.canRename ?? false,
+    canManageRoles: dto.canManageRoles ?? false,
+    messages: [],
+  };
+}
+
 /** ConversationResponse → the inbox `Conversation` row (messages filled later). */
 export function conversationToView(dto: ConversationResponse): Conversation {
+  if (dto.kind === "group") return groupConversationToView(dto);
   const p = dto.otherParticipant;
   const name = p?.displayName ?? "QueerPulse Team";
   const { first, last } = splitName(name);
@@ -67,6 +128,7 @@ export function conversationToView(dto: ConversationResponse): Conversation {
     preview: dto.lastMessage?.body ?? "",
     unread: dto.unreadCount > 0,
     otherLastReadAt: dto.otherLastReadAt ?? undefined,
+    otherDeliveredAt: dto.otherDeliveredAt ?? undefined,
     otherParticipantId: dto.otherParticipantId ?? undefined,
     official: !p,
     messages: [],
@@ -78,16 +140,44 @@ export function messageToChat(
   dto: MessageResponse,
   myHandle: string | null,
 ): ChatMessage {
+  const isMe = !!myHandle && dto.sender.handle === myHandle;
   return {
     id: dto.id,
-    from: myHandle && dto.sender.handle === myHandle ? "me" : "them",
+    from: isMe ? "me" : "them",
     text: dto.body,
     time: timeLabel(dto.createdAt),
     at: dto.createdAt,
     reactions: dto.reactions,
     deletedAt: dto.deletedAt ?? undefined,
+    deliveredAt: dto.deliveredAt ?? undefined,
     editedAt: dto.editedAt ?? undefined,
+    // Carry the sender's client id onto the server-derived bubble so the
+    // controller can dedupe an optimistic outbox entry that shares it (the
+    // socket copy can land a beat before the send mutation drops the optimistic).
+    localId: dto.clientMessageId ?? undefined,
     replyTo: dto.replyTo ?? undefined,
+    forwarded: dto.forwarded || undefined,
+    pinnedAt: dto.pinnedAt ?? undefined,
+    starred: dto.starred || undefined,
+    canPin: dto.canPin,
+    // System message → a centred event pill. The system message's sender IS the
+    // actor (see `postSystemMessage`), so `isMe` doubles as "the actor is you".
+    kind: dto.kind === "system" ? "system" : undefined,
+    systemEvent: dto.systemEvent
+      ? {
+          type: dto.systemEvent.type,
+          actorName: dto.systemEvent.actorName,
+          targetName: dto.systemEvent.targetName,
+          value: dto.systemEvent.value,
+          actorIsMe: isMe,
+        }
+      : undefined,
+    // Group attribution: the sender's identity so a received run in a group can
+    // show a name label + avatar. Harmlessly carried in DMs too (ignored there).
+    senderName: dto.sender.displayName,
+    senderHandle: dto.sender.handle || undefined,
+    senderTint: dto.sender.handle ? tintForSlug(dto.sender.handle) : undefined,
+    senderAvatar: dto.sender.avatarUrl ?? undefined,
   };
 }
 

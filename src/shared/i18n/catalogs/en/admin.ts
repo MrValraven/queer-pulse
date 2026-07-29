@@ -196,7 +196,7 @@ export const admin: Catalog = {
   "members.drawer.removeCta": "Remove member…",
   "members.drawer.reasonRequiredToast": "A reason is required before removal",
   "members.drawer.glanceTitle": "At a glance",
-  "members.drawer.graphTitle": "Vouch graph — who trusts them",
+  "members.drawer.graphTitle": "Vouch graph — trust both ways",
   "members.drawer.graphAriaLabel": "Open the full trust network",
   "members.drawer.exploreCta": "Explore network",
   "members.drawer.communitiesTitle": "Communities",
@@ -279,6 +279,10 @@ export const admin: Catalog = {
     "{count} member vouches for {name}. A mutual graph is a sign of trust — not a metric to optimise.",
   "members.detail.graphNote_other":
     "{count} members vouch for {name}. A mutual graph is a sign of trust — not a metric to optimise.",
+  "members.detail.graphNoteMutual_one":
+    "{count} member vouches for {name}, who vouches for {given} in return. A mutual graph is a sign of trust — not a metric to optimise.",
+  "members.detail.graphNoteMutual_other":
+    "{count} members vouch for {name}, who vouches for {given} in return. A mutual graph is a sign of trust — not a metric to optimise.",
   "members.detail.removeBody":
     "This ends {name}'s membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.",
   "members.communities.role.owner": "owner",
@@ -350,10 +354,34 @@ export const admin: Catalog = {
   "adminSafeSpaces.modal.savingCta": "Saving…",
   "adminSafeSpaces.modal.savedToast": "{name}'s safe space profile was saved",
 
+  // ── Directory listings queue ──────────────────────────────────────────────
+  "adminListings.title": "Directory <em>listings</em>",
+  "adminListings.header.eyebrow": "Moderation",
+  "adminListings.header.title": "Review <em>submissions</em>",
+  "adminListings.header.sub":
+    "Every place a member has added to the directory. Move a listing forward when it's ready, or send it back with a quick question.",
+  "adminListings.empty": "Nothing in this queue right now.",
+  "adminListings.unknownSubmitter": "Unknown member",
+  "adminListings.filter.all": "All",
+  "adminListings.filter.review": "In review",
+  "adminListings.filter.question": "Quick question",
+  "adminListings.filter.live": "Live",
+  "adminListings.status.review": "In review",
+  "adminListings.status.question": "Quick question",
+  "adminListings.status.live": "Live",
+  "adminListings.advance.question": "Ask a question",
+  "adminListings.advance.live": "Publish live",
+  "adminListings.sendBackCta": "Back to review",
+  "adminListings.toast.moved": "{name} moved to {status}.",
+
   // ── Moderation ─────────────────────────────────────────────────────────────
   "moderation.title": "Moderation · <em>triage</em>",
   "moderation.header.eyebrow": "Moderation queue",
-  "moderation.header.title": "Two need you <em>first</em>.",
+  // Headline is derived from the real open-queue count (`q.counts.open`),
+  // mirroring the dashboard header's `_one`/`_other` pattern — never a baked number.
+  "moderation.header.title_one": "One needs you <em>first</em>.",
+  "moderation.header.title_other": "{count} need you <em>first</em>.",
+  "moderation.header.titleClear": "Nobody's <em>waiting</em>.",
   "moderation.header.sub":
     "Reports are ordered by who's most at risk — not by what arrived first. Outing and doxxing always rise to the top, with a tighter 1-hour clock. Every action records a reason the member will read.",
   "moderation.tabs.open": "Open",
@@ -415,6 +443,11 @@ export const admin: Catalog = {
   "moderation.reportDrawer.threadTitle": "Surrounding thread",
   "moderation.reportDrawer.flaggedTag": "Flagged",
   "moderation.reportDrawer.peopleTitle": "People involved",
+  "moderation.reportDrawer.contextLoading": "Loading the report's context",
+  "moderation.reportDrawer.limitedContext":
+    "This report came in without the full thread attached. You can still act on the summary below.",
+  "moderation.reportDrawer.reporterRole": "Reporter",
+  "moderation.reportDrawer.reportedRole": "Reported",
   "moderation.reportDrawer.auditTitle": "Action history",
   "moderation.reportDrawer.auditEmpty":
     "No actions recorded yet. Every decision you make is logged here.",
@@ -1055,6 +1088,9 @@ export const admin: Catalog = {
     "Trust network for {name}: {count} direct vouch connection",
   "vouchGraph.preview.ariaLabel_other":
     "Trust network for {name}: {count} direct vouch connections",
+  "vouchGraph.preview.legend.inbound": "Trusts them",
+  "vouchGraph.preview.legend.outbound": "They vouch for",
+  "vouchGraph.preview.legend.mutual": "Mutual",
 
   // ── Platform settings (/admin/settings) ───────────────────────────────────
   "settings.breadcrumb": "Settings",

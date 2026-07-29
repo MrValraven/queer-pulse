@@ -6,12 +6,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { thread as threadPath } from "../../app/routeMap";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
-import {
-  ForumAvatar,
-  ProfileSpanLink,
-  OfficialBadge,
-  authorHref,
-} from "./ForumAuthor";
+import { ForumAvatar, ProfileSpanLink, OfficialBadge } from "./ForumAuthor";
+import { authorHref } from "./forumAuthor.helpers";
 import { ForumThreadListSkeleton } from "./ForumSkeleton";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "./PostActionsMenu";
@@ -101,8 +97,8 @@ export function ForumThreadList({
       {!loading &&
         threads.map((thread, idx) => {
           const isVoted = voted.has(thread.id);
-          const catMeta = CATS.find((c) => c.id === thread.cat);
-          const cs = CAT_STYLE[thread.cat];
+          const catMeta = CATS.find((c) => c.id === thread.category);
+          const cs = CAT_STYLE[thread.category];
           return (
             <FadeIn key={thread.id} delay={Math.min(idx, 8) * 60}>
               <div className={styles.threadRow}>
@@ -154,7 +150,7 @@ export function ForumThreadList({
                     )}
                     <span
                       className={styles.catBadge}
-                      style={{ background: cs?.bg, color: cs?.color }}
+                      style={{ background: cs?.background, color: cs?.color }}
                     >
                       {catMeta && <catMeta.icon />}{" "}
                       {catMeta && t(catMeta.nameKey)}
@@ -170,24 +166,24 @@ export function ForumThreadList({
                   <div className={styles.threadMeta}>
                     <ProfileSpanLink
                       to={authorHref(thread.author)}
-                      name={thread.author.n}
+                      name={thread.author.name}
                       official={thread.author.official}
                       className={styles.tmWho}
                     >
                       <ForumAvatar
                         className={styles.tmAv}
                         style={{
-                          background: thread.author.t,
-                          color: thread.author.tt,
+                          background: thread.author.background,
+                          color: thread.author.color,
                         }}
                         person={{
                           slug: thread.author.slug,
                           photo: thread.author.photo,
-                          initials: thread.author.i,
-                          name: thread.author.n,
+                          initials: thread.author.initials,
+                          name: thread.author.name,
                         }}
                       />
-                      <span className={styles.tmAuthor}>{thread.author.n}</span>
+                      <span className={styles.tmAuthor}>{thread.author.name}</span>
                       <MemberStaffBadge slug={thread.author.slug} />
                       {thread.author.official && <OfficialBadge />}
                     </ProfileSpanLink>

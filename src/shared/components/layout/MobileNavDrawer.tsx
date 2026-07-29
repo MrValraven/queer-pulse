@@ -7,7 +7,7 @@ import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import { MegaNavDrawer } from "./MegaNavDrawer";
-import { ACCOUNT_ITEMS } from "./AccountMenu";
+import { ACCOUNT_ITEMS } from "./accountMenu.data";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import styles from "./MobileNavDrawer.module.css";
 

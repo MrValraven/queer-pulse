@@ -115,7 +115,11 @@ export function RateBoardPage() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        mergeImported(JSON.parse(String(reader.result)));
+        mergeImported(
+          JSON.parse(
+            typeof reader.result === "string" ? reader.result : "null",
+          ),
+        );
       } catch {
         showToast(t("economy:rateBoard.readErrorToast"), "error");
       }

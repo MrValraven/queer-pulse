@@ -36,8 +36,8 @@ export function useEndorsement(subprofileId: string) {
   const queryClient = useQueryClient();
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["subprofile"] });
-    queryClient.invalidateQueries({
+    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    void queryClient.invalidateQueries({
       queryKey: ["subprofile", "endorsers", subprofileId],
     });
   };

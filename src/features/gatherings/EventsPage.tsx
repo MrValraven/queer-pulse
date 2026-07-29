@@ -28,7 +28,7 @@ function EventCard({ event }: { event: CalendarEvent }) {
   function buyTicket(e: React.SyntheticEvent) {
     e.preventDefault();
     e.stopPropagation();
-    navigate(routes.checkout);
+    void navigate(routes.checkout);
   }
 
   return (

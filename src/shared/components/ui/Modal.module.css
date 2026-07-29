@@ -20,7 +20,9 @@
 .modal {
   width: 100%;
   max-width: 520px;
-  max-height: min(86vh, 760px);
+  /* svh, not vh: vh is the large viewport, so a full-height dialog overshoots
+     under the mobile address bar. */
+  max-height: min(86svh, 760px);
   display: flex;
   flex-direction: column;
   background: var(--cream);
@@ -117,6 +119,9 @@
   background: rgba(26, 26, 31, 0.55);
   backdrop-filter: blur(4px);
   animation: scrimIn 0.28s var(--ease, ease);
+  /* Lift the bottom-anchored sheet above the on-screen keyboard (the overlap is
+     published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
+  padding-block-end: var(--keyboard-inset, 0px);
 }
 @media (min-width: 720px) {
   .overlay {
@@ -128,11 +133,16 @@
   position: relative;
   width: 100%;
   max-width: 560px;
-  max-height: 92vh;
+  /* svh so the sheet never runs under the mobile address bar. */
+  max-height: 92svh;
   overflow-y: auto;
+  /* Keep an over-scroll from chaining to the page behind the sheet. */
+  overscroll-behavior: contain;
   background: var(--cream);
   border-radius: 28px 28px 0 0;
-  padding: 44px 32px 40px;
+  /* Clear the iOS home indicator (and, in standalone, the installed tab bar
+     sits below this z-index so the scrim covers it). */
+  padding: 44px 32px max(40px, env(safe-area-inset-bottom));
   box-shadow: 0 -20px 60px -30px rgba(0, 0, 0, 0.5);
   animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
@@ -143,6 +153,31 @@
     box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.55);
   }
 }
+/* Drag-to-dismiss handle — a visible affordance that the sheet is draggable,
+   and the pointer surface the drag starts from. Hidden on desktop, where the
+   sheet is a centered dialog. */
+.grabber {
+  /* Sticky (not absolute) so it stays visible as the sheet content scrolls;
+     the negative top margin lifts it up into the sheet's top padding, and
+     margin-inline auto keeps it centered. */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 40px;
+  height: 5px;
+  margin: -32px auto 14px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.18);
+  /* The sheet owns this vertical gesture; don't let it scroll the page. */
+  touch-action: none;
+  cursor: grab;
+}
+@media (min-width: 720px) {
+  .grabber {
+    display: none;
+  }
+}
+
 .sheetWide {
   max-width: 760px;
 }

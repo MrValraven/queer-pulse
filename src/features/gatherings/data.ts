@@ -52,6 +52,9 @@ export interface GatheringDetail {
   /** Catalog key for the RSVP button — chrome, varies by event kind. */
   ctaKey: string;
   body: string;
+  /** Live mode only: true when the viewer is the host or a cohost. Drives
+   *  organizer-only affordances (e.g. the photo-album upload control). */
+  viewerIsOrganizer?: boolean;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {
@@ -482,7 +485,7 @@ export function resolveGathering(param: string | undefined): GatheringDetail {
         return gatheringDetails[slug]!;
     }
     const base = param.replace(/-[a-z0-9]+$/i, "");
-    if (gatheringDetails[base]) return gatheringDetails[base]!;
+    if (gatheringDetails[base]) return gatheringDetails[base];
   }
   return gatheringDetails[defaultGatheringSlug]!;
 }

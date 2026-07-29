@@ -43,7 +43,7 @@
 
 .brand {
   position: fixed;
-  top: 24px;
+  top: max(24px, env(safe-area-inset-top));
   left: 28px;
   z-index: 10;
   text-decoration: none;

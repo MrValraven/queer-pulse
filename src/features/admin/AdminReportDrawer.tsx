@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiAlertTriangle, FiShield, FiInfo, FiClock } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -16,6 +16,7 @@ import {
   type ReportDetail,
 } from "./adminModeration.data";
 import { useReportAudit } from "./api/useReportAudit";
+import { useModReportDetail } from "./api/useModReportDetail";
 import type { ReasonCode } from "../safety/reportReasons";
 import type { ResolveOpts } from "./useModerationQueue";
 import styles from "./AdminModerationPage.module.css";
@@ -146,6 +147,84 @@ function ReportAudit({ reportId }: { reportId: string }) {
   );
 }
 
+/** Placeholder while the single-report detail is being fetched (live mode). */
+function ReportContextLoading() {
+  const { t } = useTranslation();
+  return (
+    <section
+      className={styles.dSec}
+      aria-busy="true"
+      aria-label={t("admin:moderation.reportDrawer.contextLoading")}
+    >
+      <SkeletonLine height={14} width="40%" />
+      <SkeletonLine height={64} style={{ marginTop: 12, borderRadius: 10 }} />
+      <SkeletonLine height={48} style={{ marginTop: 12, borderRadius: 10 }} />
+    </section>
+  );
+}
+
+/** Minimal context assembled from the report's own summary, shown when no rich
+ *  detail is attached — so a moderator can still act on an honest summary
+ *  rather than the report auto-resolving out from under them. */
+function ReportContextFallback({ report }: { report: ModReport }) {
+  const { t } = useTranslation();
+  const anonReporter = report.reporterName === "anonymous";
+  const reportedInitials =
+    (report.reportedName.replace(/^@/, "")[0] ?? "?").toUpperCase();
+  return (
+    <>
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.reportDrawer.contentTitle")}
+        </h3>
+        <p className={styles.dContentAuthor}>{report.reportedName}</p>
+        <blockquote className={styles.dExcerpt}>{report.preview}</blockquote>
+        <p className={styles.dTransparency}>
+          <FiInfo aria-hidden />{" "}
+          {t("admin:moderation.reportDrawer.limitedContext")}
+        </p>
+      </section>
+
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.reportDrawer.peopleTitle")}
+        </h3>
+        <div className={styles.dPeople}>
+          <div className={styles.dPerson}>
+            <AdminAvatar
+              initials={
+                anonReporter ? "?" : (report.reporterName[0] ?? "?").toUpperCase()
+              }
+              tone={anonReporter ? "anon" : "plum"}
+              size="md"
+            />
+            <div className={styles.dPersonTx}>
+              <span className={styles.dPersonName}>{report.reporterName}</span>
+              <span className={styles.dPersonMeta}>
+                {t("admin:moderation.reportDrawer.reporterRole")}
+              </span>
+            </div>
+          </div>
+          <div className={styles.dPerson}>
+            <AdminAvatar
+              initials={reportedInitials}
+              tone="coral"
+              size="md"
+              src={portrait(report.reportedName)}
+            />
+            <div className={styles.dPersonTx}>
+              <span className={styles.dPersonName}>{report.reportedName}</span>
+              <span className={styles.dPersonMeta}>
+                {t("admin:moderation.reportDrawer.reportedRole")}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
 export function AdminReportDrawer({
   report,
   onClose,
@@ -161,9 +240,9 @@ export function AdminReportDrawer({
   const [action, setAction] = useState<string | null>(null);
   const [reason, setReason] = useState<ReasonCode | null>(null);
   const [note, setNote] = useState("");
+  const { detail, loading } = useModReportDetail(report);
 
   const sev = SEVERITY[report.severity];
-  const detail = report.detail!;
 
   const handleConfirm = () => {
     if (!action) {
@@ -233,7 +312,13 @@ export function AdminReportDrawer({
         </div>
       }
     >
-      <ReportContext detail={detail} />
+      {loading ? (
+        <ReportContextLoading />
+      ) : detail ? (
+        <ReportContext detail={detail} />
+      ) : (
+        <ReportContextFallback report={report} />
+      )}
 
       {/* Action grid */}
       <section className={styles.dSec}>

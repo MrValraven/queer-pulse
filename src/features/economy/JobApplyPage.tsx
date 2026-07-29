@@ -165,7 +165,7 @@ export function JobApplyPage() {
                 title={t("economy:jobApply.success.title")}
                 em={job.organization}
                 closeLabel={t("economy:jobApply.success.closeLabel")}
-                onClose={() => navigate(routes.applicationStatus)}
+                onClose={() => void navigate(routes.applicationStatus)}
                 steps={[
                   t("economy:jobApply.success.step1", { org: job.organization }),
                   t("economy:jobApply.success.step2"),

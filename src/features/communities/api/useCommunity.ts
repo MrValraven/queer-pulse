@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
-import { useCommunityEdits } from "../../../app/providers/CommunityEditsProvider";
+import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
+import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
   getCommunity,
   type JoinRequestStatus,
@@ -21,7 +21,8 @@ import {
   type EditableCommunityFields,
 } from "./communities.adapters";
 import { useAllCommunities, useCreatedDetail } from "../useAllCommunities";
-import { getCommunityDetail, type CommunityDetail } from "../communityDetails";
+import type { CommunityDetail } from "../communityDetails";
+import { getCommunityDetail } from "../communityDetail.lookup";
 import { getLiving } from "../livingCommunities.data";
 import type { Community } from "../../homepage/data/types";
 import type { LivingCommunity } from "../community.model";

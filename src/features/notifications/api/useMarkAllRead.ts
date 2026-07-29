@@ -16,7 +16,7 @@ export function useMarkAllRead() {
       await markAllNotificationsRead();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 }

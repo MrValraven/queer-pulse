@@ -20,13 +20,12 @@ import {
   type GrowthPoint,
   type DistBucket,
 } from "./adminDashboard.data";
+import { ChartTooltip, GrowthSpike } from "./AdminDashboardChartParts";
 import {
-  ChartTooltip,
-  GrowthSpike,
   growthLegendItems,
   growthPointTip,
   type GrowthTip,
-} from "./AdminDashboardChartParts";
+} from "./adminDashboardChart.helpers";
 import { chartMax } from "./api/adminOverview.adapters";
 import styles from "./AdminDashboardPage.module.css";
 import chartStyles from "../../shared/components/charts/charts.module.css";
@@ -72,7 +71,7 @@ export function ReportsByTypeChart({
   );
 
   const weekLabel = (week: string) =>
-    WEEK_LABEL_KEYS[week] ? t(WEEK_LABEL_KEYS[week]!) : week;
+    WEEK_LABEL_KEYS[week] ? t(WEEK_LABEL_KEYS[week]) : week;
 
   return (
     <ChartFrame

@@ -6,6 +6,19 @@ import { NetworkFirst } from "workbox-strategies";
 
 declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 
+// The app registers with registerType: "prompt", so a waiting worker sits idle
+// until the user accepts the update toast. That toast's Reload button calls
+// updateServiceWorker(true), which posts { type: "SKIP_WAITING" } to this
+// worker. Without this listener the message is ignored: the worker never
+// activates, controllerchange never fires, and the page never reloads — the
+// button appears to do nothing. Activating here lets the new build take over
+// and the plugin's controllerchange handler reload the page.
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    void self.skipWaiting();
+  }
+});
+
 cleanupOutdatedCaches();
 
 // directoryIndex: null keeps "/" from being served out of the precached

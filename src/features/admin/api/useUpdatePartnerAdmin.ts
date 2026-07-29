@@ -29,9 +29,10 @@ export function useUpdatePartnerAdmin() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_PARTNERS_KEY] });
-      queryClient.invalidateQueries({ queryKey: ["partners"] });
-      queryClient.invalidateQueries({ queryKey: ["featured-partners"] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_PARTNERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: ["partners"] });
+      void queryClient.invalidateQueries({ queryKey: ["featured-partners"] });
     },
+    meta: { silentError: true }, // AdminApprovedPartners + AdminPartnerTestimonialModal toast locally
   });
 }

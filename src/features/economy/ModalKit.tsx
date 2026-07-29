@@ -5,10 +5,10 @@ import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
 
-// Consolidated into the shared UI/hooks layer — re-exported here so existing
-// `./ModalKit` consumers keep their imports unchanged.
+// Consolidated into the shared UI layer — re-exported here so existing
+// `./ModalKit` consumers keep their imports unchanged. The submit-flow hook
+// (`useSubmitFlow`) lives in `./modalFlow`.
 export { Sending } from "../../shared/components/ui";
-export { useSubmitFlow, type FlowStatus } from "../../shared/hooks";
 
 /** Small file glyph used in attachment rows. */
 export function FileIcon() {

@@ -3,7 +3,7 @@ import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AppCardSkeleton } from "./ApplicationStatusSkeleton";
 import { AppCard } from "./ApplicationStatusCard";
-import type { Application, ActionKind } from "./applicationStatus.data";
+import type { Application, ActionKind } from "./applicationStatus.types";
 import styles from "./ApplicationStatusPage.module.css";
 
 export interface Group {

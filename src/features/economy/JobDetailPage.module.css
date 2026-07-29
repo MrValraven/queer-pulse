@@ -372,8 +372,8 @@
 .textarea {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14px;
-  padding: 10px 13px;
+  font-size: 16px;
+  padding: 9px 13px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   color: var(--ink);

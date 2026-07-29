@@ -36,7 +36,7 @@ export function HealthSection() {
             ))
           : health.map((stat) => (
               <div key={stat.labelKey} className={styles.statCard}>
-                <div className={styles.statN}>{stat.n}</div>
+                <div className={styles.statN}>{stat.value}</div>
                 <div className={styles.statL}>{t(stat.labelKey)}</div>
                 <div
                   className={[
@@ -119,7 +119,7 @@ export function CouncilSection() {
           <div key={seat.name} className={styles.acItem}>
             <div
               className={styles.acAv}
-              style={{ background: seat.bg, color: seat.color }}
+              style={{ background: seat.background, color: seat.color }}
             >
               {seat.initials}
             </div>

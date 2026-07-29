@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useConnect } from "../../app/providers/ConnectProvider";
-import { useConnectionsHydrated } from "../../app/providers/ConnectionsProvider";
+import { useConnect } from "../../app/providers/useConnect";
+import { useConnectionsHydrated } from "../../app/providers/useConnections";
 import { routes } from "../../app/routeMap";
 
 /**
@@ -19,7 +19,7 @@ export function useMemberContact(slug: string) {
   const contact = useCallback(
     (member: { slug: string; name: string }, reason?: string) => {
       if (isConnected(member.slug)) {
-        navigate(routes.messages, {
+        void navigate(routes.messages, {
           state: { to: { slug: member.slug, name: member.name } },
         });
       } else {

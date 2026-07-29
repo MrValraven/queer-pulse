@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useCommunityEdits } from "../../../app/providers/CommunityEditsProvider";
+import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
   createCommunity,
   createPost,
@@ -44,8 +44,8 @@ export function useCreatePost(slug: string) {
       await createPost(slug, dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
     },
   });
 }
@@ -60,7 +60,7 @@ export function useUpdatePost(slug: string) {
       await updatePost(slug, id, dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -75,7 +75,7 @@ export function useReact(slug: string) {
       await reactToPost(slug, id, key);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -90,7 +90,7 @@ export function useUnreact(slug: string) {
       await unreactToPost(slug, id, key);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -105,7 +105,7 @@ export function useReply(slug: string) {
       await replyToPost(slug, id, text);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -121,11 +121,11 @@ export function useJoinCommunity(slug: string) {
       return joinCommunity(slug, note);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
-      queryClient.invalidateQueries({ queryKey: ["communities"] });
-      queryClient.invalidateQueries({ queryKey: ["roster", slug] });
-      queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
-      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -144,9 +144,9 @@ export function useReviewJoinRequest(slug: string) {
       await reviewJoinRequest(slug, id, action);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
-      queryClient.invalidateQueries({ queryKey: ["roster", slug] });
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
     },
   });
 }
@@ -161,9 +161,9 @@ export function useRemoveMember(slug: string) {
       await removeMember(slug, memberSlug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["roster", slug] });
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
-      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -185,9 +185,9 @@ export function useSetMemberRole(slug: string) {
       await setMemberRole(slug, memberSlug, role);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["roster", slug] });
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
-      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -204,8 +204,8 @@ export function useCreateCommunity() {
       return createCommunity(dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communities"] });
-      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -231,9 +231,9 @@ export function useUpdateCommunity() {
     },
     onSuccess: (_data, { slug }) => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["community", slug] });
-      queryClient.invalidateQueries({ queryKey: ["communities"] });
-      queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }
@@ -249,7 +249,7 @@ export function useDeleteCommunityPost(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -265,7 +265,7 @@ export function useRestoreCommunityPost(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -281,7 +281,7 @@ export function useEditCommunityReply(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -297,7 +297,7 @@ export function useDeleteCommunityReply(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }
@@ -313,7 +313,7 @@ export function useRestoreCommunityReply(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
     },
   });
 }

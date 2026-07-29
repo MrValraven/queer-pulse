@@ -53,7 +53,7 @@ export function MyEventsBody() {
         onClose={c.closeDetails}
         label={t("myevents:modal.rsvpDetailsLabel")}
       >
-        <RsvpDetailsModal key={c.details.evId ?? "none"} />
+        <RsvpDetailsModal key={c.details.eventId ?? "none"} />
       </ModalShell>
       <ModalShell
         open={c.settingsOpen}
@@ -75,7 +75,7 @@ export function MyEventsBody() {
         onClose={c.closeReport}
         label={t("myevents:modal.reportLabel")}
       >
-        <ReportEventModal key={c.report.evId ?? "none"} />
+        <ReportEventModal key={c.report.eventId ?? "none"} />
       </ModalShell>
       <ModalShell
         open={c.block.open}
@@ -83,7 +83,7 @@ export function MyEventsBody() {
         label={t("myevents:modal.blockLabel")}
         narrow
       >
-        <BlockHostConfirm key={c.block.evId ?? "none"} />
+        <BlockHostConfirm key={c.block.eventId ?? "none"} />
       </ModalShell>
       <MoreMenu />
       <BulkBar />

@@ -1,5 +1,5 @@
 import { ChipSelect, Toggle } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LOOKING_FOR } from "../settings/interests.data";
 import { Section } from "./ProfileSections";

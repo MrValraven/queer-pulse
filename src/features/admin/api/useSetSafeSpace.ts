@@ -61,7 +61,7 @@ export function useSetSafeSpace() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: [ADMIN_SAFE_SPACE_CANDIDATES_KEY],
       });
     },

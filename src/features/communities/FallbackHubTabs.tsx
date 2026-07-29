@@ -44,6 +44,8 @@ export function FallbackHubTabs({
   const [tabLoading, setTabLoading] = useState(false);
   useEffect(() => {
     if (tab === "about") {
+      // Simulated tab-load skeleton timer, cleared on unmount / tab change below.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTabLoading(false);
       return;
     }

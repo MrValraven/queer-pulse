@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
+import { usePostedJobs } from "../../app/providers/usePostedJobs";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
 import { useCreateJob } from "./api/useJobMutations";
@@ -128,7 +128,7 @@ export function PostJobComposer({
         <button
           type="button"
           className={styles.back}
-          onClick={() => navigate(routes.jobs)}
+          onClick={() => void navigate(routes.jobs)}
         >
           <FiChevronLeft aria-hidden /> {t("economy:postJob.topbar.back")}
         </button>
@@ -188,7 +188,7 @@ export function PostJobComposer({
                 <Button
                   variant="primary"
                   disabled={!form.canPublish || createJob.isPending}
-                  onClick={publish}
+                  onClick={() => void publish()}
                 >
                   {createJob.isPending
                     ? t("economy:postJob.nav.publishing")

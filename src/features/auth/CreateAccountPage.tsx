@@ -67,7 +67,7 @@ export function CreateAccountPage() {
     // an invite sign-up had already consumed. Clear the stashed code so it
     // can't leak into a later flow, and move on.
     consumePendingInvite();
-    navigate(routes.onboarding);
+    void navigate(routes.onboarding);
   }
 
   return (

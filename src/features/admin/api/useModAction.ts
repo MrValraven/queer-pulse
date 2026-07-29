@@ -35,7 +35,7 @@ export function useModAction() {
     },
     onSettled: () => {
       if (!demoMode)
-        queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
+        void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
     },
   });
 }
@@ -58,7 +58,7 @@ export function useModBulkAction() {
     },
     onSettled: () => {
       if (!demoMode)
-        queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
+        void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
     },
   });
 }

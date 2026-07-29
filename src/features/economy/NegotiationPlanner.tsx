@@ -4,14 +4,14 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { useSubmitFlow } from "./modalFlow";
+import type { Application, NegotiationAngle } from "./applicationStatus.types";
 import {
-  type Application,
-  type NegotiationAngle,
   negotiationAngles,
   NEGOTIATION_LEVERS,
   NEGOTIATION_PRINCIPLE_KEYS,
-} from "./applicationStatus.data";
+} from "./applicationStatus.patches";
 import styles from "./ApplicationModals.module.css";
 
 /** A single selectable strategy card in the planner. */
@@ -180,7 +180,7 @@ export function NegotiationPlanner({
           className={styles.back}
           disabled={sending}
           onClick={() => {
-            navigator.clipboard?.writeText(draft);
+            void navigator.clipboard?.writeText(draft);
             showToast(t("economy:negotiate.copiedToast"), "success");
           }}
         >

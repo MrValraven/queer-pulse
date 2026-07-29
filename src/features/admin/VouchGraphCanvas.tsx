@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from "react";
 import { FiRotateCcw } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useTrustGraph } from "./trustGraph/TrustGraphContext";
+import { useTrustGraph } from "./trustGraph/useTrustGraph";
 import { TONE } from "./trustGraph/trustGraphModel";
 import type { VouchEdge } from "./trustGraph/trustGraphModel";
 import { useVouchCanvas } from "./useVouchCanvas";

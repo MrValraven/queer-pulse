@@ -54,6 +54,12 @@
   color: var(--text-strong);
   transition: background var(--dur-base) var(--ease);
 }
+/* Extend the tap target to 44px without growing the 38px visual circle. */
+.bell::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+}
 @media (hover: hover) {
   .bell:hover {
     background: rgba(var(--plum-rgb), 0.06);
@@ -163,6 +169,7 @@
 }
 
 .themeToggle {
+  position: relative;
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -176,6 +183,12 @@
   transition:
     background var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease);
+}
+/* Extend the tap target to 44px without growing the 38px visual circle. */
+.themeToggle::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
 }
 @media (hover: hover) {
   .themeToggle:hover {

@@ -28,7 +28,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
     useMyEvents();
   return (
     <div className={sx("ev-actions")}>
-      {ev.cat === "going" &&
+      {ev.category === "going" &&
         (ev.cancelled ? (
           <Button variant="ghost" to={GATHERING}>
             {t("myevents:side.findSimilar")}
@@ -46,7 +46,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
           </>
         ))}
 
-      {ev.cat === "hosting" && (
+      {ev.category === "hosting" && (
         <>
           <Button variant="primary" to={MANAGE}>
             {t("myevents:side.manageCta")}
@@ -57,13 +57,13 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         </>
       )}
 
-      {ev.cat === "waitlisted" && (
+      {ev.category === "waitlisted" && (
         <Link className={sx("ev-link")} to={detailPath(ev)}>
           {t("myevents:side.eventDetailsCta")}
         </Link>
       )}
 
-      {ev.cat === "past" && (
+      {ev.category === "past" && (
         <>
           {ev.photos ? (
             <Link className={sx("ev-link")} to={PHOTOS}>
@@ -86,7 +86,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         </>
       )}
 
-      {ev.cat === "saved" && (
+      {ev.category === "saved" && (
         <>
           {ev.soldOut ? (
             <Button
@@ -114,7 +114,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         </>
       )}
 
-      {ev.cat === "invite" && (
+      {ev.category === "invite" && (
         <div className={sx("invite-row")}>
           <Button variant="jade" onClick={() => acceptInvite(ev.id)}>
             {t("myevents:side.acceptCta")}
@@ -125,7 +125,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         </div>
       )}
 
-      {ev.cat === "sent" && (
+      {ev.category === "sent" && (
         <Link className={sx("ev-link")} to={MANAGE}>
           {t("myevents:side.manageInviteCta")}
         </Link>
@@ -211,7 +211,7 @@ export function EventTools({
       </ToolBtn>
     ) : null;
 
-  if (ev.cat === "going") {
+  if (ev.category === "going") {
     if (ev.cancelled) return null;
     return (
       <div className={sx("card-tools")}>
@@ -236,7 +236,7 @@ export function EventTools({
       </div>
     );
   }
-  if (ev.cat === "hosting") {
+  if (ev.category === "hosting") {
     return (
       <div className={sx("card-tools")}>
         {Bell}
@@ -251,7 +251,7 @@ export function EventTools({
       </div>
     );
   }
-  if (ev.cat === "waitlisted") {
+  if (ev.category === "waitlisted") {
     return (
       <div className={sx("card-tools")}>
         {Bell}
@@ -263,7 +263,7 @@ export function EventTools({
       </div>
     );
   }
-  if (ev.cat === "past") {
+  if (ev.category === "past") {
     return (
       <div className={sx("card-tools")}>
         {ev.noShow ? (
@@ -291,7 +291,7 @@ export function EventTools({
       </div>
     );
   }
-  if (ev.cat === "saved") {
+  if (ev.category === "saved") {
     return (
       <div className={sx("card-tools")}>
         {Bell}
@@ -299,18 +299,18 @@ export function EventTools({
       </div>
     );
   }
-  if (ev.cat === "invite") {
+  if (ev.category === "invite") {
     return (
       <div className={sx("card-tools")}>
         <ToolBtn onClick={() => c.toast(t("myevents:tools.askQuestionToast"))}>
-          {Icons.msg}
+          {Icons.message}
           {t("myevents:tools.askQuestion")}
         </ToolBtn>
         {MoreBtn}
       </div>
     );
   }
-  if (ev.cat === "sent") {
+  if (ev.category === "sent") {
     return (
       <div className={sx("card-tools")}>
         <ToolBtn

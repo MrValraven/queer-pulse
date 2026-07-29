@@ -23,7 +23,7 @@ function Dots({ events }: { events: MyEvent[] }) {
   const seen = new Set<string>();
   const cls: string[] = [];
   events.forEach((e) => {
-    const c = dotClass(e.cat);
+    const c = dotClass(e.category);
     if (!seen.has(c)) {
       seen.add(c);
       cls.push(c);
@@ -140,7 +140,7 @@ export function CalendarGrid({
                 {evs.length ? (
                   evs.map((e) => (
                     <div key={e.id} className={sx("cw-ev")}>
-                      <span className={sx(`cal-dot ${dotClass(e.cat)}`)} />
+                      <span className={sx(`cal-dot ${dotClass(e.category)}`)} />
                       {e.start} · {e.title}
                     </div>
                   ))
@@ -179,7 +179,7 @@ export function CalendarGrid({
   const startOffset = (first.getDay() + 6) % 7;
   const days = new Date(viewY, viewM + 1, 0).getDate();
   const cells: (number | null)[] = [
-    ...Array(startOffset).fill(null),
+    ...Array<null>(startOffset).fill(null),
     ...Array.from({ length: days }, (_, i) => i + 1),
   ];
 
@@ -252,7 +252,7 @@ export function CalendarGrid({
       >
         {peek?.items.map((x) => (
           <div key={x.id} className={sx("cpk-row")}>
-            <span className={sx(`cpk-dot ${dotClass(x.cat)}`)} />
+            <span className={sx(`cpk-dot ${dotClass(x.category)}`)} />
             <span>{x.title}</span>
           </div>
         ))}

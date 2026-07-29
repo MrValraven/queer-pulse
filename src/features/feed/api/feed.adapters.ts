@@ -43,9 +43,7 @@ export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
   const actor = item.actor;
   const slug = actor?.handle ?? "";
   const name = actor?.displayName ?? "A member";
-  const tint = slug
-    ? (tintForSlug(slug) as FeedPost["authorTint"])
-    : AUTHOR_TINTS[0];
+  const tint = slug ? tintForSlug(slug) : AUTHOR_TINTS[0];
   return {
     id: item.id,
     slug,

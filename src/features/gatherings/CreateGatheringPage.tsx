@@ -52,7 +52,7 @@ export function CreateGatheringPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const back = () => {
-    if (step === 1) navigate(routes.host);
+    if (step === 1) void navigate(routes.host);
     else setStep((s) => s - 1);
   };
 

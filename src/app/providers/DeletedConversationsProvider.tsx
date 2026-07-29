@@ -1,23 +1,8 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { useDemoMode } from "./DemoModeProvider";
+import { DeletedConversationsContext } from "./useDeletedConversations";
 
 const STORAGE_KEY = "qp.demo.deletedConversations";
-
-interface DeletedConversationsContextValue {
-  /** Conversation ids the user deleted for themselves — DEMO source of truth only. */
-  deletedIds: Set<string>;
-  markDeleted: (conversationId: string) => void;
-}
-
-const DeletedConversationsContext =
-  createContext<DeletedConversationsContextValue | null>(null);
 
 function readStored(): string[] {
   try {
@@ -83,14 +68,4 @@ export function DeletedConversationsProvider({
       {children}
     </DeletedConversationsContext.Provider>
   );
-}
-
-export function useDeletedConversations() {
-  const context = useContext(DeletedConversationsContext);
-  if (!context) {
-    throw new Error(
-      "useDeletedConversations must be used within DeletedConversationsProvider",
-    );
-  }
-  return context;
 }

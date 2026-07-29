@@ -71,6 +71,8 @@ export interface EventDetailDTO extends EventCardDTO {
   guidelines?: string;
   /** Sliding-scale / ticket tiers, if the event is ticketed. */
   tiers?: { name: string; desc?: string; price: string }[];
+  /** True when the viewer is the host or a cohost (organizer-only actions). */
+  isOrganizer?: boolean;
 }
 
 export interface AttendeeDTO {
@@ -193,3 +195,31 @@ export interface EventInviteDTO {
 
 /** GET /event-invites — the caller's own pending event invitations. */
 export const getEventInvites = () => apiGet<EventInviteDTO[]>("/event-invites");
+
+// ── Event photos (gathering album) ──────────────────────────────────────────
+// Backend `EventPhotoView`. `url` is a short-lived presigned GET the browser
+// renders directly; `uploader` reuses the member-ref shape (`EventHostDTO`).
+
+/** One photo from GET /events/:slug/photos. */
+export interface EventPhotoDTO {
+  id: string;
+  url: string;
+  uploader: EventHostDTO | null;
+  caption: string | null;
+  /** ISO 8601 — when the photo was attached. */
+  createdAt: string;
+}
+
+/** GET /events/:slug/photos — participants only (host/cohosts/going). */
+export const getEventPhotos = (slug: string) =>
+  apiGet<{ photos: EventPhotoDTO[] }>(`/events/${slug}/photos`);
+
+/** POST /events/:slug/photos — organizers only. `key` is a presigned-upload key. */
+export const attachEventPhoto = (
+  slug: string,
+  body: { key: string; caption?: string },
+) => apiPost<EventPhotoDTO>(`/events/${slug}/photos`, body);
+
+/** DELETE /events/:slug/photos/:id — the uploader or an organizer. */
+export const deleteEventPhoto = (slug: string, id: string) =>
+  apiDelete<{ ok: true }>(`/events/${slug}/photos/${id}`);

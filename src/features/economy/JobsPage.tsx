@@ -14,11 +14,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { deadlineText } from "./api/jobs.adapters";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
-import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
+import { useWorkProfile } from "../../app/providers/useWorkProfile";
+import { usePostedJobs } from "../../app/providers/usePostedJobs";
 import { JOBS, JOB_FILTERS, type Job } from "./jobs.data";
 import { useJobs } from "./api/useJobs";
 import { JobsEmployers } from "./JobsEmployers";
@@ -39,7 +39,7 @@ function JobCard({ job }: { job: Job }) {
   function apply(e: SyntheticEvent) {
     e.preventDefault();
     e.stopPropagation();
-    navigate(`${routes.jobs}/${job.slug}/apply`);
+    void navigate(`${routes.jobs}/${job.slug}/apply`);
   }
 
   function save(e: SyntheticEvent) {
@@ -253,7 +253,7 @@ export function JobsPage() {
             <button
               type="button"
               className={styles.postBtn}
-              onClick={() => navigate(routes.postJob)}
+              onClick={() => void navigate(routes.postJob)}
             >
               {t("economy:jobs.postCta")}
             </button>

@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -12,6 +10,7 @@ import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { logError } from "../../shared/observability/logger";
+import { describeError } from "../../shared/api/errorMessage";
 import { useSessionBootstrapSettled } from "../../shared/api/useSessionBootstrap";
 import {
   blockMember,
@@ -22,6 +21,10 @@ import {
   unmuteMember,
   type BlockOptions,
 } from "../../features/social/api/social.api";
+import {
+  SocialContext,
+  type SocialContextValue,
+} from "./useSocial";
 
 interface SocialState {
   following: string[];
@@ -29,24 +32,6 @@ interface SocialState {
   blocked: string[];
 }
 
-interface SocialContextValue {
-  /** Slugs the user has blocked, most-recent first. */
-  blocked: string[];
-  /** Slugs the user has muted, most-recent first. */
-  muted: string[];
-  isFollowing: (slug: string) => boolean;
-  /** Toggle follow; returns the new state (true = now following). */
-  toggleFollow: (slug: string) => boolean;
-  isMuted: (slug: string) => boolean;
-  /** Toggle mute; returns the new state (true = now muted). */
-  toggleMute: (slug: string) => boolean;
-  isBlocked: (slug: string) => boolean;
-  /** Toggle block; returns the new state (true = now blocked). Opts feed the
-   *  live `POST /blocks/:slug` body (reason / "also report"). */
-  toggleBlock: (slug: string, opts?: BlockOptions) => boolean;
-}
-
-const SocialContext = createContext<SocialContextValue | null>(null);
 const STORAGE_KEY = "qp.social.v1";
 
 function readInitial(): SocialState {
@@ -54,11 +39,19 @@ function readInitial(): SocialState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return empty;
-    const parsed = JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
+    const record =
+      typeof parsed === "object" && parsed !== null
+        ? (parsed as Record<string, unknown>)
+        : {};
+    const asSlugList = (value: unknown): string[] =>
+      Array.isArray(value)
+        ? value.filter((item): item is string => typeof item === "string")
+        : [];
     return {
-      following: Array.isArray(parsed?.following) ? parsed.following : [],
-      muted: Array.isArray(parsed?.muted) ? parsed.muted : [],
-      blocked: Array.isArray(parsed?.blocked) ? parsed.blocked : [],
+      following: asSlugList(record.following),
+      muted: asSlugList(record.muted),
+      blocked: asSlugList(record.blocked),
     };
   } catch {
     return empty;
@@ -166,8 +159,8 @@ export function SocialProvider({ children }: { children: ReactNode }) {
           .then(() => {
             // Blocking severs connections server-side — refresh those surfaces.
             if (key === "blocked") {
-              queryClient.invalidateQueries({ queryKey: ["connections"] });
-              queryClient.invalidateQueries({ queryKey: ["members"] });
+              void queryClient.invalidateQueries({ queryKey: ["connections"] });
+              void queryClient.invalidateQueries({ queryKey: ["members"] });
             }
           })
           .catch((err) => {
@@ -180,9 +173,12 @@ export function SocialProvider({ children }: { children: ReactNode }) {
                   : { ...prev, [key]: [slug, ...prev[key]] },
             );
             showToast(
-              key === "blocked"
-                ? "We couldn't update that block. Please try again."
-                : "We couldn't update that. Please try again.",
+              describeError(
+                key === "blocked"
+                  ? "We couldn't update that block"
+                  : "We couldn't update that",
+                err,
+              ),
               "error",
             );
           });
@@ -241,12 +237,4 @@ export function SocialProvider({ children }: { children: ReactNode }) {
   return (
     <SocialContext.Provider value={value}>{children}</SocialContext.Provider>
   );
-}
-
-export function useSocial() {
-  const ctx = useContext(SocialContext);
-  if (!ctx) {
-    throw new Error("useSocial must be used within SocialProvider");
-  }
-  return ctx;
 }

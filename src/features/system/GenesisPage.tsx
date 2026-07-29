@@ -6,6 +6,7 @@ import { inviteLink } from "../../app/routeMap";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
+import { reasonFor } from "../../shared/api/errorMessage";
 import {
   claimGenesisAdmin,
   mintGenesisInvite,
@@ -17,7 +18,7 @@ type Outcome =
   | { kind: "working" }
   | { kind: "closed" }
   | { kind: "rejected" }
-  | { kind: "failed" }
+  | { kind: "failed"; reason?: string }
   | { kind: "claimed" }
   | { kind: "demo" };
 
@@ -61,14 +62,14 @@ export function GenesisPage() {
     setOutcome({ kind: "working" });
     try {
       const invite = await mintGenesisInvite();
-      navigate(inviteLink(invite.code));
+      void navigate(inviteLink(invite.code));
     } catch (error) {
       // A 404 is the designed "already used, or the kill switch is off" answer,
       // not a fault — it must not read as a broken page.
       setOutcome(
         error instanceof ApiError && error.status === 404
           ? { kind: "closed" }
-          : { kind: "failed" },
+          : { kind: "failed", reason: reasonFor(error) ?? undefined },
       );
     }
   };
@@ -89,7 +90,7 @@ export function GenesisPage() {
       setOutcome(
         error instanceof ApiError && error.status === 403
           ? { kind: "rejected" }
-          : { kind: "failed" },
+          : { kind: "failed", reason: reasonFor(error) ?? undefined },
       );
     }
   };
@@ -107,7 +108,7 @@ export function GenesisPage() {
             <p className={styles.lead}>
               You're in. Claim admin to finish bootstrapping the platform.
             </p>
-            <Button onClick={handleClaim} disabled={working}>
+            <Button onClick={() => void handleClaim()} disabled={working}>
               Claim admin
             </Button>
           </>
@@ -117,7 +118,7 @@ export function GenesisPage() {
               Generate the founding invite. You'll join through the normal
               invite flow, invited by QueerPulse.
             </p>
-            <Button onClick={handleGenerate} disabled={working}>
+            <Button onClick={() => void handleGenerate()} disabled={working}>
               Generate invite
             </Button>
           </>
@@ -130,7 +131,9 @@ export function GenesisPage() {
           <p className={styles.notice}>This account cannot claim genesis.</p>
         )}
         {outcome.kind === "failed" && (
-          <p className={styles.notice}>Something went wrong. Try again.</p>
+          <p className={styles.notice}>
+            {outcome.reason ?? "Something went wrong. Try again."}
+          </p>
         )}
         {outcome.kind === "claimed" && (
           <p className={styles.notice}>You are now an admin.</p>

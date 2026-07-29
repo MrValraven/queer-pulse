@@ -47,6 +47,34 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> mentioned you in a discussion.",
   "type.mention.meta": "Mention",
 
+  // `mention` rows branch by `payload.entityKind` — what was actually
+  // @-mentioned, not who. The plain `type.mention.*` above covers a member
+  // (and any older row from before `entityKind` existed); these cover the
+  // rest.
+  "type.mention.community.text":
+    "Your community c/{entityRef} was mentioned in a discussion.",
+  "type.mention.community.textNamed":
+    "<profile>{name}</profile> mentioned your community c/{entityRef}.",
+  "type.mention.community.meta": "Community mention",
+
+  "type.mention.business.text":
+    "Your business b/{entityRef} was mentioned in a discussion.",
+  "type.mention.business.textNamed":
+    "<profile>{name}</profile> mentioned your business b/{entityRef}.",
+  "type.mention.business.meta": "Business mention",
+
+  "type.mention.event.text":
+    "Your gathering e/{entityRef} was mentioned in a discussion.",
+  "type.mention.event.textNamed":
+    "<profile>{name}</profile> mentioned your gathering e/{entityRef}.",
+  "type.mention.event.meta": "Gathering mention",
+
+  "type.mention.thread.text":
+    "Your thread t/{entityRef} was mentioned in a discussion.",
+  "type.mention.thread.textNamed":
+    "<profile>{name}</profile> mentioned your thread t/{entityRef}.",
+  "type.mention.thread.meta": "Thread mention",
+
   "type.event_invite.text": "You have an invitation to a gathering.",
   "type.event_invite.textNamed":
     "<profile>{name}</profile> invited you to a gathering.",

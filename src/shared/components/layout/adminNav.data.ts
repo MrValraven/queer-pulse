@@ -10,6 +10,7 @@ import {
   FiMapPin,
   FiLayers,
   FiCpu,
+  FiFileText,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -56,6 +57,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.safeSpaces",
     to: routes.adminSafeSpaces,
     icon: FiMapPin,
+  },
+  {
+    labelKey: "shared:adminNav.items.listings",
+    to: routes.adminListings,
+    icon: FiFileText,
   },
   {
     labelKey: "community:changemakers.admin.navLabel",

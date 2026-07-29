@@ -26,7 +26,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     showToast(t("studio:signin.in.signedInToast"), "success");
-    setTimeout(() => navigate(routes.studio), 900);
+    setTimeout(() => void navigate(routes.studio), 900);
   }
 
   function handleGoogle() {
@@ -34,7 +34,7 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
     setGoogleLoading(true);
     setTimeout(() => {
       showToast(t("studio:signin.in.signedInGoogleToast"), "success");
-      navigate(routes.studio);
+      void navigate(routes.studio);
     }, 1100);
   }
 
@@ -134,7 +134,7 @@ function JoinPane({ onSwitch }: { onSwitch: () => void }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    navigate(routes.studioCheckout);
+    void navigate(routes.studioCheckout);
   }
 
   const canSubmit = EMAIL_RE.test(email.trim());

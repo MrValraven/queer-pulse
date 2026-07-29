@@ -274,7 +274,7 @@ export function AffiliateCompanyModal({
           variant="primary"
           size="lg"
           disabled={busy || (adding ? !canCreate : !slug)}
-          onClick={confirm}
+          onClick={() => void confirm()}
         >
           {busy ? (
             <Sending

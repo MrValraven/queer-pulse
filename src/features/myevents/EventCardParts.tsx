@@ -34,7 +34,7 @@ export function AvStack({ who }: { who?: AvatarSpec[] }) {
 export function EventMeta({ ev, links }: { ev: MyEvent; links: boolean }) {
   const { t } = useTranslation();
   const { toast } = useMyEvents();
-  const timeLabel = timeStr(ev) + (ev.tz ? ` ${ev.tz}` : "");
+  const timeLabel = timeStr(ev) + (ev.timezone ? ` ${ev.timezone}` : "");
   return (
     <div className={sx("ev-meta")}>
       <span>{timeLabel}</span>
@@ -111,7 +111,7 @@ export function FriendsLine({ ev }: { ev: MyEvent }) {
 export function SoonBar({ ev }: { ev: MyEvent }) {
   const { t } = useTranslation();
   const { toast } = useMyEvents();
-  if (!isToday(ev) || !COMMITTED[ev.cat] || ev.cancelled) return null;
+  if (!isToday(ev) || !COMMITTED[ev.category] || ev.cancelled) return null;
   const lab = soonLabel(ev, t);
   if (!lab) return null;
   return (

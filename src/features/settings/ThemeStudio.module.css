@@ -220,9 +220,9 @@
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
-  padding: 9px 12px;
+  padding: 8px 12px;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   cursor: pointer;

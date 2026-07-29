@@ -29,7 +29,7 @@ export function useCreateThread() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["forum-threads"] });
+      void queryClient.invalidateQueries({ queryKey: ["forum-threads"] });
     },
   });
 }
@@ -49,7 +49,7 @@ export function useReply(slug: string | undefined) {
       if (demoMode) return;
       // Refetch the posts so the optimistic "You" reply reconciles with the
       // server record. Keyed by prefix — every language/param variant refetches.
-      queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
+      void queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
     },
   });
 }
@@ -76,8 +76,8 @@ export function useVote() {
  * practice is the one thread page currently on screen.
  */
 function invalidateThread(queryClient: ReturnType<typeof useQueryClient>) {
-  queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
-  queryClient.invalidateQueries({ queryKey: ["forum-thread-meta"] });
+  void queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
+  void queryClient.invalidateQueries({ queryKey: ["forum-thread-meta"] });
 }
 
 /** PATCH /forum/posts/:id — author edits a body. Demo is a no-op (ThreadPage

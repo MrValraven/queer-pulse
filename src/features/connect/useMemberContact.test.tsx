@@ -6,10 +6,10 @@ const openConnect = vi.fn();
 const navigate = vi.fn();
 let connectedSlugs: string[] = [];
 
-vi.mock("../../app/providers/ConnectProvider", () => ({
+vi.mock("../../app/providers/useConnect", () => ({
   useConnect: () => ({ openConnect }),
 }));
-vi.mock("../../app/providers/ConnectionsProvider", () => ({
+vi.mock("../../app/providers/useConnections", () => ({
   useConnectionsHydrated: () => ({
     isConnected: (slug: string) => connectedSlugs.includes(slug),
   }),

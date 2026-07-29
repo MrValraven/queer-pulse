@@ -133,6 +133,8 @@ export function ListGroupStrip({
               id="ss-book"
               className={styles.ssInput}
               type="text"
+              autoComplete="off"
+              enterKeyHint="next"
               placeholder={t(
                 "community:readingGroups.listGroup.bookPlaceholder",
               )}
@@ -149,6 +151,8 @@ export function ListGroupStrip({
               id="ss-why"
               className={styles.ssInput}
               type="text"
+              autoComplete="off"
+              enterKeyHint="next"
               placeholder={t(
                 "community:readingGroups.listGroup.whyPlaceholder",
               )}

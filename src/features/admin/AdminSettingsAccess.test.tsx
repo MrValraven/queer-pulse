@@ -193,9 +193,13 @@ describe("AdminSettingsAccess", () => {
     // call — this mirrors real react-query timing and means a test assertion
     // taken immediately after the click can catch a stray optimistic flip if
     // one were ever added.
-    mutate.mockImplementation((_input, opts) => {
-      Promise.resolve().then(() => opts.onError(new Error("network down")));
-    });
+    mutate.mockImplementation(
+      (_input: unknown, opts: { onError: (error: Error) => void }) => {
+        void Promise.resolve().then(() =>
+          opts.onError(new Error("network down")),
+        );
+      },
+    );
     renderAccess();
     const toggle = screen.getByRole("switch", {
       name: "New account registration",

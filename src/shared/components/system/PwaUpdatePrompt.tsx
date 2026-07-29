@@ -40,7 +40,13 @@ export function PwaUpdatePrompt() {
     const translate = translateFunctionRef.current;
     showToast(translate("nav:updateAvailable"), "info", UPDATE_TOAST_MS, {
       label: translate("nav:updateReload"),
-      onClick: () => updateServiceWorker(true),
+      onClick: () => {
+        // Immediate feedback: the swap (skipWaiting → controllerchange →
+        // reload) takes a beat, so surface an "Updating…" toast that holds
+        // until the page reloads. Without it a tap looks like it did nothing.
+        showToast(translate("nav:updating"), "info", UPDATE_TOAST_MS);
+        void updateServiceWorker(true);
+      },
     });
   }, [needRefresh, showToast, updateServiceWorker]);
 

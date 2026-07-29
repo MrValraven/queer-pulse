@@ -1,4 +1,5 @@
 import { ApiError } from "./client";
+import { reasonFor } from "./errorMessage";
 import { logError } from "../observability/logger";
 
 type ToastType = "success" | "error" | "info";
@@ -32,13 +33,14 @@ function messageFor(error: unknown): string | null {
       (error.data as { code?: string } | null)?.code === "PLATFORM_LOCKED"
     )
       return null; // PlatformLockProvider owns this (maintenance screen)
-    if (error.status === 403) return "You don't have access to that.";
     if (error.status === 404) return null; // pages own their empty state
     if (error.status >= 500)
       return "Something went wrong on our end — please try again.";
-    return error.message || "Something went wrong.";
+    if (error.status === 403)
+      return reasonFor(error) ?? "You don't have access to that.";
+    return reasonFor(error) ?? "Something went wrong.";
   }
-  return "Something went wrong — please try again.";
+  return reasonFor(error) ?? "Something went wrong — please try again.";
 }
 
 /** QueryCache onError: log always; toast only unexpected 5xx (pages own the rest).
@@ -65,10 +67,11 @@ export function handleMutationError(
   error: unknown,
   _variables: unknown,
   _onMutateResult: unknown,
-  mutation: { options: { mutationKey?: unknown } },
+  mutation: { options: { mutationKey?: unknown; meta?: { silentError?: boolean } } },
 ): void {
   logError(error, { mutationKey: mutation.options.mutationKey });
   if (demo.current) return;
+  if (mutation.options.meta?.silentError) return; // a component owns this write's error UI
   const msg = messageFor(error);
   if (msg) emit?.(msg, "error", 6000);
 }

@@ -6,7 +6,7 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
-import type { WorkItem } from "./data/members";
+import type { RelatedMember, WorkItem } from "./data/members";
 import { SHAPING_META } from "./profileSections.data";
 import { Section } from "./ProfileSections";
 import { openToLabel, reasonValue } from "./openTo.data";
@@ -310,41 +310,61 @@ export function ActivitySection({ profile }: { profile: MemberProfile }) {
 
 export function RelatedSection({ profile }: { profile: MemberProfile }) {
   const { t } = useTranslation();
-  if (profile.related.length === 0) return null;
+  // Live mode: the backend returns pre-resolved related cards. Demo mode: resolve
+  // the `related` slugs against the mock registry (real members aren't in it, so
+  // `relatedCards` is preferred whenever it's populated).
+  const relatedMembers: RelatedMember[] = profile.relatedCards?.length
+    ? profile.relatedCards
+    : profile.related.flatMap((relatedSlug) => {
+        const registryMember = memberProfiles[relatedSlug];
+        if (!registryMember) return [];
+        return [
+          {
+            slug: relatedSlug,
+            first: registryMember.first,
+            last: registryMember.last,
+            role: registryMember.role,
+            hood: registryMember.hood,
+            initials: registryMember.initials,
+            tint: registryMember.tint,
+            avatarUrl: registryMember.photo,
+          },
+        ];
+      });
+  if (relatedMembers.length === 0) return null;
   return (
     <Section
       title={t("members:content.related.title")}
       subtitle={t("members:content.related.subtitle")}
     >
       <div className={styles.relGrid}>
-        {profile.related.map((relSlug) => {
-          const related = memberProfiles[relSlug];
-          if (!related) return null;
-          return (
-            <Link
-              key={relSlug}
-              to={`/members/${relSlug}`}
-              className={styles.relCard}
-            >
-              <Avatar
-                initials={related.initials}
-                tint={related.tint}
-                size={46}
-              />
-              <div>
-                <div className={styles.relName}>
-                  <span className={styles.nameRow}>
-                    {related.first} {related.last}
-                    <MemberStaffBadge slug={relSlug} />
-                  </span>
-                </div>
-                <div className={styles.relRole}>
-                  {related.role.split("·")[0]!.trim()} · {related.hood}
-                </div>
+        {relatedMembers.map((relatedMember) => (
+          <Link
+            key={relatedMember.slug}
+            to={`/members/${relatedMember.slug}`}
+            className={styles.relCard}
+          >
+            <Avatar
+              initials={relatedMember.initials}
+              tint={relatedMember.tint}
+              src={relatedMember.avatarUrl}
+              alt={`${relatedMember.first} ${relatedMember.last}`}
+              size={46}
+            />
+            <div>
+              <div className={styles.relName}>
+                <span className={styles.nameRow}>
+                  {relatedMember.first} {relatedMember.last}
+                  <MemberStaffBadge slug={relatedMember.slug} />
+                </span>
               </div>
-            </Link>
-          );
-        })}
+              <div className={styles.relRole}>
+                {relatedMember.role.split("·")[0]!.trim()}
+                {relatedMember.hood ? ` · ${relatedMember.hood}` : ""}
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </Section>
   );

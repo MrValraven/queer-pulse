@@ -9,6 +9,7 @@ import {
   buildBreadcrumbSchema,
 } from "../../shared/seo";
 import { HateCrimePanel } from "./HateCrimeTabs";
+import { QuickExit } from "./QuickExit";
 import styles from "./HateCrimePage.module.css";
 
 const LEGAL = routes.legal;
@@ -70,6 +71,8 @@ export function HateCrimePage() {
           {t("safety:hateCrime.outro.legalCta")}
         </Button>
       </Outro>
+
+      <QuickExit />
     </PageShell>
   );
 }

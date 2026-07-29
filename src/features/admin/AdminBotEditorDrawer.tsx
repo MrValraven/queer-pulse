@@ -10,9 +10,9 @@ import { useAdminBotProfile } from "./api/useAdminBots";
 import { useUpdateBot } from "./api/useUpdateBot";
 import {
   AdminBotEditorFields,
-  createSocialRow,
   type BotFormState,
 } from "./AdminBotEditorFields";
+import { createSocialRow } from "./adminBotEditor.helpers";
 import type { AdminBotSummaryDTO } from "./api/adminBots.api";
 import styles from "./AdminBotEditor.module.css";
 
@@ -173,7 +173,7 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
           setForm={updateForm}
           avatarPreview={avatarPreview}
           uploading={uploading}
-          onPickAvatar={handlePickAvatar}
+          onPickAvatar={(file) => void handlePickAvatar(file)}
           usernameError={usernameError}
         />
       )}

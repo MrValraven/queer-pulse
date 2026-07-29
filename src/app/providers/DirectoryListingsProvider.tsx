@@ -1,37 +1,13 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import {
   makeRef,
   slugify,
   type ListingDraft,
-  type ListingStatus,
   type PendingListing,
 } from "../../features/marketing/listBusiness/listBusiness.data";
 import { useListingMutations } from "../../features/marketing/listBusiness/api/useListings";
 import { useDemoMode } from "./DemoModeProvider";
-
-interface DirectoryListingsActions {
-  /** Demo: the full store. Live: session-local optimistic additions only. */
-  local: PendingListing[];
-  /** Live-only tombstones: refs withdrawn this session. */
-  withdrawn: Set<string>;
-  /** Persist a draft as a pending listing; returns the created record. */
-  addListing: (draft: ListingDraft, submittedBy: string) => PendingListing;
-  /** Remove a pending listing by reference. */
-  withdrawListing: (ref: string) => void;
-  /** Move a listing along its review status (used by the prototype flip). */
-  setStatus: (ref: string, status: ListingStatus) => void;
-}
-
-const DirectoryListingsContext = createContext<DirectoryListingsActions | null>(
-  null,
-);
+import { DirectoryListingsContext } from "./useDirectoryListingsActions";
 
 /**
  * Store for member-submitted directory listings (pending review).
@@ -68,7 +44,19 @@ export function DirectoryListingsProvider({
   const [withdrawn, setWithdrawn] = useState<Set<string>>(() => new Set());
 
   const addListing = useCallback(
-    (draft: ListingDraft, submittedBy: string) => {
+    async (draft: ListingDraft, submittedBy: string): Promise<PendingListing> => {
+      if (!demoMode) {
+        // Live: persist and adopt the server's real record so the success
+        // screen shows the persisted QPL ref and true status, not a
+        // client-fabricated one. Invalidation (in the mutation) refreshes
+        // GET /listings/mine; the dedup-by-ref merge prevents a double.
+        const persisted = await createListing.mutateAsync(draft);
+        if (persisted) {
+          setLocal((prev) => [persisted, ...prev]);
+          return persisted;
+        }
+      }
+      // Demo: optimistic local record with a client-side sequence ref.
       const ref = makeRef(seq);
       const listing: PendingListing = {
         ...draft,
@@ -79,9 +67,6 @@ export function DirectoryListingsProvider({
       };
       setLocal((prev) => [listing, ...prev]);
       setSeq((n) => n + 1);
-      // Live: persist to the backend; invalidation refreshes the server list.
-      // The returned record above is the caller's synchronous optimistic copy.
-      if (!demoMode) createListing.mutate(draft);
       return listing;
     },
     [seq, demoMode, createListing],
@@ -98,16 +83,9 @@ export function DirectoryListingsProvider({
     [demoMode, withdrawMutation],
   );
 
-  const setStatus = useCallback((ref: string, status: ListingStatus) => {
-    // Demo: flip the local status as the prototype does. Live: no-op —
-    // moderation is server-only via PATCH /listings/:ref/status; members
-    // cannot self-transition their own listings.
-    setLocal((prev) => prev.map((l) => (l.ref === ref ? { ...l, status } : l)));
-  }, []);
-
   const value = useMemo(
-    () => ({ local, withdrawn, addListing, withdrawListing, setStatus }),
-    [local, withdrawn, addListing, withdrawListing, setStatus],
+    () => ({ local, withdrawn, addListing, withdrawListing }),
+    [local, withdrawn, addListing, withdrawListing],
   );
 
   return (
@@ -115,21 +93,4 @@ export function DirectoryListingsProvider({
       {children}
     </DirectoryListingsContext.Provider>
   );
-}
-
-/**
- * Overlay state + mutators only. **No query subscription** — a consumer that
- * only writes (ListBusinessPage) must use this, not `useDirectoryListings`,
- * or it re-subscribes GET /listings/mine and reintroduces the eager request
- * this refactor removed. Nothing visibly breaks if you get this wrong; only
- * `src/test/requestBudget.test.tsx` catches it.
- */
-export function useDirectoryListingsActions(): DirectoryListingsActions {
-  const ctx = useContext(DirectoryListingsContext);
-  if (!ctx) {
-    throw new Error(
-      "useDirectoryListingsActions must be used within a DirectoryListingsProvider",
-    );
-  }
-  return ctx;
 }

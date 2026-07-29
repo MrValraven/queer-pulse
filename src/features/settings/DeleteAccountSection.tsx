@@ -116,7 +116,7 @@ export function DeleteAccountSection() {
         </p>
         <DeletePendingBanner
           request={pending}
-          onCancel={handleCancel}
+          onCancel={() => void handleCancel()}
           cancelling={cancelling}
         />
       </>

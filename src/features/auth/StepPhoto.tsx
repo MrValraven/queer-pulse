@@ -89,7 +89,7 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
             type="file"
             accept="image/*"
             className={styles.photoInput}
-            onChange={handleFile}
+            onChange={(event) => void handleFile(event)}
             disabled={uploading || saving}
             aria-label={t("auth:onboarding.stepPhoto.uploadAriaLabel")}
           />
@@ -115,7 +115,7 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
         )}
       </div>
       <div className={styles.nav}>
-        <Button onClick={handleContinue} disabled={uploading || saving}>
+        <Button onClick={() => void handleContinue()} disabled={uploading || saving}>
           {t("auth:onboarding.stepPhoto.continue")}
         </Button>
         <SkipLink onSkip={onNext} />

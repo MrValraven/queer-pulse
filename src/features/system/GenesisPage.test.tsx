@@ -3,10 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../shared/api/client";
+import type { GenesisInviteDTO } from "../../shared/api/genesis.api";
 import { GenesisPage } from "./GenesisPage";
 
-const mintGenesisInvite = vi.fn();
-const claimGenesisAdmin = vi.fn();
+const mintGenesisInvite = vi.fn<() => Promise<GenesisInviteDTO>>();
+const claimGenesisAdmin = vi.fn<() => Promise<void>>();
 const navigate = vi.fn();
 const refresh = vi.fn();
 let loggedIn = false;

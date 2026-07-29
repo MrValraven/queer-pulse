@@ -1,4 +1,9 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type ReactNode,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../hooks";
 import { useTranslation } from "../../i18n/useTranslation";
@@ -160,6 +165,45 @@ export function ModalSheet({
 }: ModalSheetProps) {
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
+  // Drag-to-dismiss for the mobile sheet. Touch-only (mouse is ignored so the
+  // desktop centered dialog is untouched); a downward drag past the threshold
+  // closes, anything shorter springs back. The transform is written directly to
+  // the sheet element to stay off the React render path during the drag.
+  const dragStartYRef = useRef<number | null>(null);
+
+  const handleGrabberPointerDown = (event: ReactPointerEvent) => {
+    if (event.pointerType === "mouse") return;
+    dragStartYRef.current = event.clientY;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const handleGrabberPointerMove = (event: ReactPointerEvent) => {
+    const sheet = dialogRef.current;
+    if (dragStartYRef.current === null || !sheet) return;
+    const dragDistance = Math.max(0, event.clientY - dragStartYRef.current);
+    sheet.style.transition = "none";
+    sheet.style.transform = `translateY(${dragDistance}px)`;
+  };
+  const handleGrabberPointerEnd = (event: ReactPointerEvent) => {
+    const sheet = dialogRef.current;
+    if (dragStartYRef.current === null || !sheet) return;
+    const dragDistance = event.clientY - dragStartYRef.current;
+    dragStartYRef.current = null;
+    if (dragDistance > 120) {
+      onClose();
+      return;
+    }
+    // Under threshold: spring back to rest instead of snapping instantly.
+    // (Reduced-motion collapses this transition via the global base.css rule.)
+    sheet.style.transition = "transform var(--dur-base, 0.24s) var(--ease)";
+    sheet.style.transform = "translateY(0)";
+    const clearInlineDragStyles = () => {
+      sheet.style.transition = "";
+      sheet.style.transform = "";
+      sheet.removeEventListener("transitionend", clearInlineDragStyles);
+    };
+    sheet.addEventListener("transitionend", clearInlineDragStyles);
+  };
+
   return (
     <div
       className={styles.overlay}
@@ -184,14 +228,24 @@ export function ModalSheet({
         aria-label={ariaLabel}
       >
         {!success && (
-          <button
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("shared:modal.close")}
-          >
-            <FiX />
-          </button>
+          <>
+            <div
+              className={styles.grabber}
+              aria-hidden
+              onPointerDown={handleGrabberPointerDown}
+              onPointerMove={handleGrabberPointerMove}
+              onPointerUp={handleGrabberPointerEnd}
+              onPointerCancel={handleGrabberPointerEnd}
+            />
+            <button
+              type="button"
+              className={styles.close}
+              onClick={onClose}
+              aria-label={t("shared:modal.close")}
+            >
+              <FiX />
+            </button>
+          </>
         )}
         {children}
       </div>

@@ -104,7 +104,7 @@ export function SafetyBadges({
           // mode); the default is chrome and resolves through the catalog.
           label={affiliationLabel ?? t(aff.labelKey)}
           blurb={t(aff.blurbKey)}
-          tone={affiliation as "run" | "friendly"}
+          tone={affiliation}
           compact={compact}
         />
       )}

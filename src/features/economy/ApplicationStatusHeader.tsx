@@ -1,6 +1,6 @@
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { Cat } from "./applicationStatus.data";
+import type { Cat } from "./applicationStatus.types";
 import styles from "./ApplicationStatusPage.module.css";
 
 export function ApplicationStatusHeader({

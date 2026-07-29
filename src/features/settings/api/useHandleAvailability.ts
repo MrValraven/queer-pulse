@@ -66,28 +66,30 @@ export function useHandleAvailability(
   useEffect(() => {
     if (!needsRemote) return;
     let cancelled = false;
-    const timer = setTimeout(async () => {
-      try {
-        let check: HandleCheck;
-        if (demoMode) {
-          const { checkHandleDemo } = await import("./handles.data");
-          check = checkHandleDemo(normalized);
-        } else {
-          check = await checkHandle(normalized);
+    const timer = setTimeout(() => {
+      void (async () => {
+        try {
+          let check: HandleCheck;
+          if (demoMode) {
+            const { checkHandleDemo } = await import("./handles.data");
+            check = checkHandleDemo(normalized);
+          } else {
+            check = await checkHandle(normalized);
+          }
+          if (!cancelled) {
+            setRemote({ name: normalized, result: toAvailability(check) });
+          }
+        } catch {
+          // Network hiccup: treat as unavailable so save stays blocked rather
+          // than letting a possibly-taken handle through.
+          if (!cancelled) {
+            setRemote({
+              name: normalized,
+              result: { status: "unavailable", reason: "taken" },
+            });
+          }
         }
-        if (!cancelled) {
-          setRemote({ name: normalized, result: toAvailability(check) });
-        }
-      } catch {
-        // Network hiccup: treat as unavailable so save stays blocked rather
-        // than letting a possibly-taken handle through.
-        if (!cancelled) {
-          setRemote({
-            name: normalized,
-            result: { status: "unavailable", reason: "taken" },
-          });
-        }
-      }
+      })();
     }, 350);
     return () => {
       cancelled = true;

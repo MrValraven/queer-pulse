@@ -18,7 +18,7 @@ export function ConfirmationStep() {
   const hasNotes = !!(dietary.trim() || access.trim());
 
   function copyRef() {
-    if (ref) navigator.clipboard?.writeText(ref);
+    if (ref) void navigator.clipboard?.writeText(ref);
     showToast(t("gatherings:checkout.confirm.refCopiedToast"), "success");
   }
 

@@ -73,7 +73,7 @@ export interface AppErrorEnvelope {
   error: {
     code: AppErrorCode;
     message: string;
-    details?: { field: string; issue: string }[] | unknown;
+    details?: { field: string; issue: string }[] | Record<string, unknown>;
     correlationId: string;
     statusCode: number;
   };

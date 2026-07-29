@@ -25,8 +25,9 @@ export const subprofiles: Catalog = {
 
   // Afinidades do cartão do diretório (SubprofileCard)
   "card.openToCollabs": "Aberto a colaborações",
-  "card.socialCount_one": "{count} link social",
-  "card.socialCount_other": "{count} links sociais",
+  "card.linkCount_one": "{count} link",
+  "card.linkCount_other": "{count} links",
+  "card.view": "Ver",
 
   // Bloco "Também como…" no perfil principal (ProfileSubprofilesSection)
   "alsoAs.title": "Também a trabalhar como",

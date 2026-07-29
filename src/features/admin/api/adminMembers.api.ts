@@ -18,6 +18,15 @@ export interface VouchAvatarDTO {
   avatarUrl: string | null;
 }
 
+/** Which way a vouch runs relative to the center member: `inbound` = they
+ *  vouched FOR the member, `outbound` = the member vouched FOR them, `mutual`
+ *  = both. */
+export type VouchDirection = "inbound" | "outbound" | "mutual";
+
+export interface VouchGraphNodeDTO extends VouchAvatarDTO {
+  direction: VouchDirection;
+}
+
 export interface AdminMemberCardDTO {
   id: string;
   slug: string;
@@ -75,12 +84,13 @@ export interface AdminMemberDetailDTO {
   verified: boolean;
   avatarUrl: string | null;
   vouchCount: number;
+  outboundVouchCount: number;
   joinedAt: string;
   openReportCount: number;
   communities: { name: string; role: "owner" | "mod" | "member" }[];
   contributions: { kind: string; detail: string | null; at: string }[];
   moderationTimeline: AdminMemberModerationEntryDTO[];
-  graph: { center: VouchAvatarDTO; nodes: VouchAvatarDTO[] };
+  graph: { center: VouchAvatarDTO; nodes: VouchGraphNodeDTO[] };
 }
 
 /** Paginated member grid for the admin panel, optionally filtered. Admin-only — 403s otherwise. */

@@ -41,6 +41,7 @@ import { ConsentBanner } from "../shared/components/consent/ConsentBanner";
 import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { ScrollManager } from "./ScrollManager";
 import { AppRoutes } from "./routes";
+import { useVisualViewportKeyboard } from "../shared/hooks";
 
 type ProviderComponent = ComponentType<{ children: ReactNode }>;
 
@@ -134,6 +135,9 @@ const DataProviders = composeProviders([
 ]);
 
 export function App() {
+  // Publish the on-screen-keyboard overlap as --keyboard-inset app-wide, so any
+  // bottom-anchored composer or sheet can lift above the keyboard on iOS.
+  useVisualViewportKeyboard();
   return (
     <RootProviders>
       {/* App-level boundary: inside ToastProvider/Theme (RootProviders) so the

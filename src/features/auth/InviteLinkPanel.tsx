@@ -97,7 +97,7 @@ export function InviteLinkPanel() {
       <div className={styles.actions}>
         <Button
           type="button"
-          onClick={generate}
+          onClick={() => void generate()}
           disabled={generating || Boolean(quotaError)}
           aria-busy={generating}
         >

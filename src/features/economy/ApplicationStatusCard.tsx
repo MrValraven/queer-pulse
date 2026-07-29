@@ -5,9 +5,8 @@ import {
   BADGE_CLASS,
   STAGE_CLASS,
   LOGO_CLASS,
-  type Application,
-  type ActionKind,
 } from "./applicationStatus.data";
+import type { Application, ActionKind } from "./applicationStatus.types";
 import styles from "./ApplicationStatusPage.module.css";
 
 /** A single application row: logo, details, stage tracker, badge, and actions. */

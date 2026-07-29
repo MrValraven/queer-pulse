@@ -4,7 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { usePublicProfile } from "../../app/providers/PublicProfileProvider";
+import { usePublicProfile } from "../../app/providers/usePublicProfile";
 import type { EligibilityCriterion } from "./publicFigure";
 import styles from "./PublicProfileControl.module.css";
 
@@ -127,6 +127,7 @@ export function PublicProfileControl() {
             </span>
             <span
               className={`${styles.status} ${enabled ? styles.statusOn : ""}`}
+              aria-live="polite"
             >
               {enabled
                 ? t("members:publicProfile.control.statusOn")

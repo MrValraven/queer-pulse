@@ -337,6 +337,8 @@
   width: min(540px, 94vw);
   display: flex;
   flex-direction: column;
+  padding-block-start: max(0px, env(safe-area-inset-top));
+  padding-block-end: max(0px, env(safe-area-inset-bottom));
   background: var(--cream);
   box-shadow: -24px 0 60px -30px rgba(0, 0, 0, 0.5);
   animation: adminDrawerIn 0.32s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));

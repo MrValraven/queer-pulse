@@ -20,7 +20,7 @@ export function useCreatePost() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["feed"] });
+      void queryClient.invalidateQueries({ queryKey: ["feed"] });
     },
   });
 }

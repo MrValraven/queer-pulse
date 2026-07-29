@@ -7,8 +7,8 @@ export const messages: Catalog = {
   // Lista de conversas (MessagesThreadList)
   "thread.title": "Mensagens",
   "thread.composeTooltip": "Nova mensagem",
-  "thread.searchPlaceholder": "Pesquisar conversas…",
-  "thread.searchAria": "Pesquisar conversas",
+  "thread.searchPlaceholder": "Pesquisar mensagens e pessoas…",
+  "thread.searchAria": "Pesquisar mensagens e conversas",
   "thread.emptySearchTitle": "Nenhuma conversa encontrada",
   "thread.emptySearchDescription":
     "Ninguém corresponde a “{query}”. Tenta outro nome.",
@@ -28,6 +28,18 @@ export const messages: Catalog = {
   "deleteChat.confirmCta": "Apagar conversa",
   "deleteChat.cancelCta": "Cancelar",
 
+  // Pesquisa na caixa de entrada (MessagesSearchResults) — uma caixa, dois tipos
+  // de correspondência: conversas por nome e mensagens pelo texto. `{query}` é o
+  // termo escrito.
+  "search.conversationsLabel": "Conversas",
+  "search.messagesLabel": "Mensagens",
+  "search.searching": "A procurar nas tuas mensagens…",
+  "search.keepTyping": "Continua a escrever para pesquisar as tuas mensagens…",
+  "search.noMessages": "Nenhuma mensagem corresponde a “{query}”.",
+  "search.emptyTitle": "Ainda não há correspondências",
+  "search.emptyDescription":
+    "Nada na tua caixa de entrada corresponde a “{query}”. Tenta outra palavra, ou o nome de alguém.",
+
   // Painel da conversa (ConversationPanel)
   "conversation.activeNow": "Ativo/a agora",
   "conversation.officialMeta":
@@ -36,7 +48,15 @@ export const messages: Catalog = {
   "conversation.viewProfile": "Ver perfil",
   "conversation.you": "Tu",
   "conversation.newMessages": "Novas mensagens",
+  // Pílula "saltar para o fim" com contagem (plural CLDR: _one / _other).
+  "conversation.newMessagesCount_one": "{count} mensagem nova",
+  "conversation.newMessagesCount_other": "{count} mensagens novas",
   "conversation.unreadDivider": "Novas mensagens",
+  // Rótulo só para leitores de ecrã do separador de não lidas.
+  "conversation.unreadDividerAria": "As mensagens novas começam aqui",
+  // Anúncio só para leitores de ecrã de uma mensagem recém-chegada (região
+  // "polite"). `snippet` é o texto da mensagem, sem espaços à volta.
+  "conversation.newMessageAnnouncement": "Nova mensagem de {name}: {snippet}",
   "conversation.loadingOlder": "A carregar mensagens anteriores…",
   "conversation.typing": "{name} está a escrever…",
   "conversation.officialNotice":
@@ -44,6 +64,9 @@ export const messages: Catalog = {
   "conversation.blockedNotice":
     "Bloqueaste {name}. Desbloqueia esta pessoa a partir do perfil dela para enviares uma mensagem.",
   "conversation.composerPlaceholder": "Mensagem para {name}…",
+  "conversation.composerGroupPlaceholder": "Mensagem para o grupo…",
+  "conversation.leftGroupNotice":
+    "Saíste deste grupo. O histórico fica aqui, mas já não podes enviar mensagens novas.",
   "conversation.send": "Enviar",
   "conversation.backToList": "Voltar às conversas",
   "conversation.emptyPanelTitle": "As tuas mensagens ficam aqui",
@@ -51,8 +74,13 @@ export const messages: Catalog = {
     "Escolhe uma conversa à esquerda, ou começa uma nova — um espaço tranquilo e privado só para ti e para quem contactares.",
   "day.today": "Hoje",
   "day.yesterday": "Ontem",
+  // Rótulo só para leitores de ecrã do separador de dia; `day` é o cabeçalho
+  // visível ("Hoje"/"Ontem" localizado ou uma data).
+  "day.separatorLabel": "Mensagens de {day}",
   "time.justNow": "Agora mesmo",
   "status.sending": "A enviar…",
+  "status.sent": "Enviada",
+  "status.delivered": "Entregue",
   "status.retry": "Não entregue · Tentar de novo",
   "status.seen": "Visto",
 
@@ -66,6 +94,13 @@ export const messages: Catalog = {
   // actions.report/actions.delete acima para os seus próprios itens de menu.
   "actions.menuLabel": "Ações da mensagem",
   "actions.reply": "Responder",
+  "actions.forward": "Reencaminhar",
+  // Mostrado acima de uma bolha cujo conteúdo foi reencaminhado de outra conversa.
+  "actions.forwardedLabel": "Reencaminhada",
+  "actions.pin": "Fixar",
+  "actions.unpin": "Desafixar",
+  "actions.star": "Guardar",
+  "actions.unstar": "Remover",
   "actions.edit": "Editar",
   "actions.copy": "Copiar",
   "actions.edited": "editada",
@@ -81,6 +116,33 @@ export const messages: Catalog = {
   "delete.cancelCta": "Cancelar",
   "report.title": "Denunciar esta mensagem",
 
+  // Pré-visualização de link (LinkPreview) — o corpo do cartão é conteúdo da
+  // página remota e mantém-se como obtido; só o rótulo para leitor de ecrã é
+  // traduzido aqui.
+  "linkPreview.aria": "Pré-visualização do link: {title}",
+  "linkPreview.ariaGeneric": "Pré-visualização do link de {site}",
+
+  // Faixa de mensagens fixadas (ConversationPinnedBanner) + indicadores na bolha
+  "pinned.bannerLabel": "Mensagem fixada",
+  // Várias fixadas: mostra a posição na pilha, ex. "Fixada · 1/3".
+  "pinned.bannerCounted": "Fixada · {index}/{total}",
+  "pinned.jumpAria": "Ir para a mensagem fixada: {snippet}",
+  "pinned.indicator": "Fixada",
+  "starred.indicator": "Guardada",
+
+  // Escolha de destinatário para reencaminhar (NewMessageModal, modo reencaminhar)
+  "forward.title": "Reencaminhar para…",
+  "forward.sub": "Escolhe uma ligação para reencaminhar esta mensagem.",
+
+  // Vista de mensagens guardadas (StarredMessagesModal)
+  "starred.title": "Mensagens guardadas",
+  "starred.open": "Mensagens guardadas",
+  "starred.close": "Fechar",
+  "starred.sub": "Mensagens que guardaste — só tu as vês.",
+  "starred.loading": "A carregar as tuas mensagens guardadas…",
+  "starred.empty":
+    "Ainda não guardaste nada. Guarda uma mensagem para a manteres aqui.",
+
   // Escolha de destinatário para nova mensagem (NewMessageModal)
   "newMessage.title": "Nova mensagem",
   "newMessage.close": "Fechar",
@@ -90,4 +152,59 @@ export const messages: Catalog = {
   "newMessage.loading": "A carregar as tuas ligações…",
   "newMessage.none": "Ainda não tens ligações.",
   "newMessage.empty": "Nenhuma ligação corresponde a “{query}”.",
+
+  // Conversas em grupo (#17) — escolha de criação (NewGroupModal), cabeçalho +
+  // info do grupo (ConversationHeader / GroupInfoModal), aviso de saída.
+  "group.newTooltip": "Novo grupo",
+  "group.newTitle": "Novo grupo",
+  "group.newSub": "Dá um nome ao grupo e escolhe quem entra.",
+  "group.namePlaceholder": "Nome do grupo",
+  "group.nameAria": "Nome do grupo",
+  "group.searchPlaceholder": "Pesquisar ligações para adicionar…",
+  "group.searchAria": "Pesquisar ligações para adicionar",
+  "group.createCta": "Criar grupo ({count})",
+  "group.info": "Informações do grupo",
+  "group.infoTitle": "Informações do grupo",
+  // Subtítulo com contagem de membros (plural CLDR: _one / _other).
+  "group.memberCount_one": "{count} membro",
+  "group.memberCount_other": "{count} membros",
+  "group.roleOwner": "Dono/a",
+  "group.roleAdmin": "Admin",
+  "group.leave": "Sair do grupo",
+  "group.leaving": "A sair…",
+  // Gestão do grupo (#17 Fase 2) — ações da lista, editar, adicionar membros.
+  "group.edit": "Editar grupo",
+  "group.add": "Adicionar membros",
+  "group.addTitle": "Adicionar membros",
+  "group.addCta": "Adicionar ({count})",
+  "group.addNone": "Não há mais ligações para adicionar.",
+  "group.promote": "Tornar admin",
+  "group.demote": "Remover admin",
+  "group.remove": "Remover",
+  "group.avatarPlaceholder": "URL da foto do grupo (opcional)",
+  "group.avatarAria": "URL da foto do grupo",
+  "group.avatarLabel": "Foto do grupo",
+  // Recibo de grupo "Visto por N" (plural CLDR: _one / _other) — a linha sob a
+  // própria mensagem e o título da folha.
+  "group.seenByCount_one": "Visto por {count}",
+  "group.seenByCount_other": "Visto por {count}",
+  "group.seenByTitle_one": "Visto por {count} pessoa",
+  "group.seenByTitle_other": "Visto por {count} pessoas",
+  // Rótulos de "está a escrever" em grupo (um só reutiliza conversation.typing).
+  "group.typingTwo": "{first} e {second} estão a escrever…",
+  "group.typingMany": "Várias pessoas estão a escrever…",
+  "group.typingSomeone": "Alguém está a escrever…",
+
+  // Mensagens de sistema (pílulas de evento centradas — SystemMessagePill).
+  // Os nomes de autor/alvo chegam já resolvidos do servidor (ou do mock demo).
+  "system.groupCreatedYou": "Criaste o grupo",
+  "system.groupCreated": "{actor} criou o grupo",
+  "system.memberAddedYou": "Adicionaste {target}",
+  "system.memberAdded": "{actor} adicionou {target}",
+  "system.memberRemovedYou": "Removeste {target}",
+  "system.memberRemoved": "{actor} removeu {target}",
+  "system.memberLeftYou": "Saíste",
+  "system.memberLeft": "{actor} saiu",
+  "system.groupRenamedYou": "Mudaste o nome do grupo para “{value}”",
+  "system.groupRenamed": "{actor} mudou o nome do grupo para “{value}”",
 };

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EditProfilePane, type ProfileSection } from "./EditProfilePane";
@@ -101,7 +101,7 @@ export function EditProfilePage() {
             <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>
               {t("settings:editProfile.saveBar.discard")}
             </Button>
-            <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+            <Button variant="primary" onClick={() => void handleSave()} disabled={isSaving}>
               {isSaving
                 ? t("settings:editProfile.saveBar.saving")
                 : t("settings:editProfile.saveBar.save")}

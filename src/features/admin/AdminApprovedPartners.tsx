@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { describeError } from "../../shared/api/errorMessage";
 import { AdminToggle } from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useAdminPartners } from "./api/useAdminPartners";
@@ -34,9 +35,9 @@ export function AdminApprovedPartners() {
     updatePartner.mutate(
       { id: partner.id, dto: { featured: !partner.featured } },
       {
-        onError: () =>
+        onError: (error) =>
           showToast(
-            "Couldn't update that partner — please try again",
+            describeError("Couldn't update that partner", error),
             "error",
           ),
       },

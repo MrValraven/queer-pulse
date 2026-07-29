@@ -39,39 +39,49 @@ function jumpToField(anchor: string) {
 export function WizardChrome({
   step,
   savedAt,
+  isEdit = false,
 }: {
   step: number;
   savedAt: number | null;
+  /** Edit mode never renders StepPath (step 0) — drop its pill so it doesn't
+   *  show as a completed step that isn't actually reachable. */
+  isEdit?: boolean;
 }) {
   const { t } = useTranslation();
-  const fill = (step / (TOTAL_STEPS - 1)) * 100;
+  const baseStep = isEdit ? 1 : 0; // wizard step index that pills[0] maps to
+  const pills = isEdit ? PILL_LABEL_KEYS.slice(1) : PILL_LABEL_KEYS;
+  const lastStep = TOTAL_STEPS - 1;
+  const fill = ((step - baseStep) / (lastStep - baseStep)) * 100;
   return (
     <div className={styles.wizTop}>
       <div className={styles.pills}>
-        {PILL_LABEL_KEYS.map((labelKey, i) => {
+        {pills.map((labelKey, index) => {
+          const actualStep = index + baseStep; // the real wizard step this pill maps to
           const cls =
-            i < step ? styles.wpDone : i === step ? styles.wpActive : undefined;
+            actualStep < step
+              ? styles.wpDone
+              : actualStep === step
+                ? styles.wpActive
+                : undefined;
           const label = t(labelKey);
           const ariaKey =
-            i < step
+            actualStep < step
               ? "marketing:listBusiness.wizard.stepAriaDone"
-              : i === step
+              : actualStep === step
                 ? "marketing:listBusiness.wizard.stepAriaCurrent"
                 : "marketing:listBusiness.wizard.stepAria";
           return (
             <Fragment key={labelKey}>
               <div
                 className={[styles.wp, cls].filter(Boolean).join(" ")}
-                aria-label={t(ariaKey, { number: i + 1, label })}
+                aria-label={t(ariaKey, { number: index + 1, label })}
               >
                 <span className={styles.wpN} aria-hidden>
-                  {i < step ? <FiCheck size={13} /> : i + 1}
+                  {actualStep < step ? <FiCheck size={13} /> : index + 1}
                 </span>
                 <span className={styles.wpL}>{label}</span>
               </div>
-              {i < PILL_LABEL_KEYS.length - 1 && (
-                <span className={styles.wpBar} />
-              )}
+              {index < pills.length - 1 && <span className={styles.wpBar} />}
             </Fragment>
           );
         })}
@@ -134,12 +144,37 @@ export function PaneHeader({
   sub: ReactNode;
 }) {
   return (
-    <>
+    <div className={styles.paneHead}>
       <h2 className={styles.paneH2}>
         {title} {em && <em>{em}</em>}
       </h2>
       <p className={styles.paneSub}>{sub}</p>
-    </>
+    </div>
+  );
+}
+
+/** Sending-in-flight status panel shown while the listing submits/saves.
+ *  Edit mode PATCHes and stays Live — no moderation queue — so it gets its
+ *  own copy instead of the create flow's "sent to the team" wording. */
+export function SendingPanel({ isEdit = false }: { isEdit?: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.page}>
+      <div className={styles.statusPanel}>
+        <div className={styles.statusInner}>
+          <div className={styles.sending}>
+            <div className={styles.ring} />
+            <p>
+              {t(
+                isEdit
+                  ? "marketing:listBusiness.edit.saving"
+                  : "marketing:listBusiness.sending",
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -147,12 +182,16 @@ export function PaneHeader({
 export function PaneActions({
   onBack,
   backLabel,
+  hideBack = false,
   onNext,
   nextLabel,
   missing,
 }: {
   onBack: () => void;
   backLabel?: string;
+  /** Edit mode's step 1 has nowhere to go back to (StepPath is locked away)
+   *  — hide the Back button instead of rendering a dead-end no-op. */
+  hideBack?: boolean;
   onNext: () => void;
   nextLabel: string;
   missing: MissingField[];
@@ -160,6 +199,9 @@ export function PaneActions({
   const { t } = useTranslation();
   const blocked = missing.length > 0;
   const back = backLabel ?? t("marketing:listBusiness.paneActions.back");
+  const actionsCls = [styles.paneActions, hideBack && styles.paneActionsEnd]
+    .filter(Boolean)
+    .join(" ");
   return (
     <div className={styles.paneFooter}>
       {blocked && (
@@ -190,10 +232,12 @@ export function PaneActions({
           </span>
         </div>
       )}
-      <div className={styles.paneActions}>
-        <Button variant="ghost" onClick={onBack}>
-          {back}
-        </Button>
+      <div className={actionsCls}>
+        {!hideBack && (
+          <Button variant="ghost" onClick={onBack}>
+            {back}
+          </Button>
+        )}
         <Button
           variant="primary"
           onClick={onNext}

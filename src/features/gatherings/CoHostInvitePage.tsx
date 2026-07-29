@@ -122,7 +122,7 @@ export function CoHostInvitePage() {
       3500,
     );
     setTimeout(
-      () => navigate(manageGatheringPath(DEMO_GATHERING_SLUGS.coHostInvite)),
+      () => void navigate(manageGatheringPath(DEMO_GATHERING_SLUGS.coHostInvite)),
       1300,
     );
   };
@@ -133,7 +133,7 @@ export function CoHostInvitePage() {
       "info",
       3000,
     );
-    setTimeout(() => navigate(NOTIFICATIONS), 1300);
+    setTimeout(() => void navigate(NOTIFICATIONS), 1300);
   };
 
   return (

@@ -128,7 +128,7 @@ export function AdminMembersPage() {
                   <Button
                     variant="ghost"
                     size="md"
-                    onClick={() => fetchNextPage()}
+                    onClick={() => void fetchNextPage()}
                     disabled={isFetchingNextPage}
                   >
                     {t("admin:members.loadMore")}

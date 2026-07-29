@@ -7,7 +7,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { routes } from "../../app/routeMap";
 import { CATS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
@@ -102,11 +102,13 @@ export function ThreadPage() {
   // Reset the local reply list and per-reply likes whenever the thread changes
   // (including once the live fetch resolves and replies first appear).
   useEffect(() => {
+    // Resets the reply list when the thread's async fetch resolves or changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalReplies(threadData?.replies ?? []);
     setLikedReplies({});
   }, [threadData?.replies]);
 
-  const catMeta = CATS.find((c) => c.id === threadData?.cat);
+  const catMeta = CATS.find((c) => c.id === threadData?.category);
 
   const replies = useMemo(() => {
     if (sort === "newest") return [...localReplies].reverse();
@@ -123,8 +125,8 @@ export function ThreadPage() {
     setLocalReplies((prev) => [
       ...prev,
       {
-        av: profile.initials,
-        bg: "var(--plum)",
+        avatar: profile.initials,
+        background: "var(--plum)",
         color: "var(--cream)",
         name: "You",
         slug: profile.slug,
@@ -177,7 +179,7 @@ export function ThreadPage() {
   const demoOwns = (person: { slug?: string; name?: string }) =>
     demoMode && (person.slug === currentUser.slug || person.name === "You");
 
-  const opAuthorIdentity = { slug: thread.author.slug, name: thread.author.n };
+  const opAuthorIdentity = { slug: thread.author.slug, name: thread.author.name };
   const opDeleted = demoMode ? !!opOverride.deleted : !!thread.deleted;
   const opCanEdit = demoMode
     ? demoOwns(opAuthorIdentity) && !opDeleted
@@ -321,7 +323,7 @@ export function ThreadPage() {
             setLiked={setLiked}
             bookmarked={bookmarked}
             setBookmarked={setBookmarked}
-            onReport={() => setReportingAuthor(thread.author.n)}
+            onReport={() => setReportingAuthor(thread.author.name)}
             canEdit={opCanEdit}
             canDelete={opCanDelete}
             canRestore={opCanRestore}
@@ -385,7 +387,7 @@ export function ThreadPage() {
           />
 
           <ThreadComposer
-            authorName={thread.author.n}
+            authorName={thread.author.name}
             reply={reply}
             setReply={setReply}
             onPost={addReply}

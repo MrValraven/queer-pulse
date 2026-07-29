@@ -131,6 +131,23 @@
 :global([data-theme="dark"]) .mapCanvas {
   filter: saturate(0.92) brightness(0.82);
 }
+/* Draggable pin for LocationPickerMap.tsx — a teardrop in the brand accent
+   (matches BRAND.accent in lisbonMapStyle.ts, since WebGL/maplibre markers are
+   plain DOM and can use the token directly). */
+.pickerPin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  box-shadow: 0 2px 6px rgba(var(--plum-rgb), 0.3);
+  cursor: grab;
+}
+.pickerPin:active {
+  cursor: grabbing;
+}
+
 .mapError {
   position: absolute;
   inset: 0;

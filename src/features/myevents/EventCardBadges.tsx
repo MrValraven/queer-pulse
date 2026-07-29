@@ -12,7 +12,7 @@ export function StatusBadges({ ev }: { ev: MyEvent }) {
 }
 
 function badgeContent(ev: MyEvent, t: TFunction) {
-  switch (ev.cat) {
+  switch (ev.category) {
     case "going":
       return (
         <>
@@ -131,7 +131,7 @@ function badgeContent(ev: MyEvent, t: TFunction) {
 /** The attendee / status footer line, varying by category. */
 export function EventFoot({ ev }: { ev: MyEvent }) {
   const { t } = useTranslation();
-  if (ev.cat === "going") {
+  if (ev.category === "going") {
     if (ev.cancelled) return null;
     return (
       <div className={sx("ev-foot")}>
@@ -140,7 +140,7 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
       </div>
     );
   }
-  if (ev.cat === "hosting") {
+  if (ev.category === "hosting") {
     const footWho =
       ev.cohost && ev.cohosts ? [...ev.cohosts, ...(ev.who || [])] : ev.who;
     const footText =
@@ -154,7 +154,7 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
       </div>
     );
   }
-  if (ev.cat === "waitlisted") {
+  if (ev.category === "waitlisted") {
     return (
       <div className={sx("ev-foot")}>
         <span className={sx("ev-foot-text")}>
@@ -167,7 +167,7 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
       </div>
     );
   }
-  if (ev.cat === "invite") {
+  if (ev.category === "invite") {
     return (
       <div className={sx("ev-foot")}>
         <span className={sx("ev-foot-text")}>
@@ -180,7 +180,7 @@ export function EventFoot({ ev }: { ev: MyEvent }) {
       </div>
     );
   }
-  if (ev.cat === "sent") {
+  if (ev.category === "sent") {
     return (
       <div className={sx("ev-foot")}>
         <span className={sx("ev-foot-text")}>

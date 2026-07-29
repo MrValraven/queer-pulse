@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toDraft, draftToUpdateDto } from "./ProfileProvider";
+import { toDraft, draftToUpdateDto } from "./useProfile";
 import type { Member } from "../../features/members/data/members";
 
 const BASE = {
@@ -27,7 +27,7 @@ describe("ProfileProvider featuredCommunities plumbing", () => {
     const draft = {
       ...toDraft(BASE),
       featuredCommunities: ["a", "b"],
-    } as ReturnType<typeof toDraft>;
+    };
     expect(draftToUpdateDto(draft).featuredCommunities).toEqual(["a", "b"]);
   });
 });

@@ -13,7 +13,6 @@ import {
   getGovernanceOverview,
   type GovernanceOverviewResponseDTO,
 } from "./governance.api";
-import { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } from "../governance.data";
 
 // ── View model ──────────────────────────────────────────────────────────────
 // The section components render this directly. Both demo and live converge on
@@ -22,7 +21,7 @@ import { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } from "../governance.dat
 // adapter), never in the components.
 
 export interface HealthStatView {
-  n: string;
+  value: string;
   up: boolean;
   labelKey: string;
   trendKey: string;
@@ -36,7 +35,7 @@ export interface CouncilSeatView {
   name: string;
   initials: string;
   roleKey: string;
-  bg: string;
+  background: string;
   color: string;
 }
 export interface PrincipleView {
@@ -69,45 +68,52 @@ const ICON_BY_KEY: Record<string, IconType> = {
   accessible: MdAccessible,
 };
 
-// Tint-key → avatar `{bg,color}`, mirroring `COUNCIL`'s inline palette.
+// Tint-key → avatar `{background,color}`, mirroring `COUNCIL`'s inline palette.
 const TINT_BY_KEY = {
-  jade: { bg: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  violet: { bg: "rgba(122,82,184,.12)", color: "var(--violet)" },
-  plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
-} satisfies Record<string, { bg: string; color: string }>;
+  jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
+  violet: { background: "rgba(122,82,184,.12)", color: "var(--violet)" },
+  plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
+} satisfies Record<string, { background: string; color: string }>;
 
 // Demo mode reshapes the page's own mocks (which already carry full i18n keys,
 // icon components, and inline colours) into the view model — byte-for-byte the
-// same demo experience, no network.
-const DEMO: Omit<GovernanceOverviewResult, "loading"> = {
-  health: HEALTH.map((stat) => ({
-    n: stat.n,
-    up: stat.up,
-    labelKey: stat.labelKey,
-    trendKey: stat.trendKey,
-    trendValues: stat.trendValues,
-  })),
-  moderationSteps: STEPS.map((step) => ({
-    titleKey: step.titleKey,
-    textKey: step.textKey,
-  })),
-  council: COUNCIL.map((seat) => ({
-    name: seat.name,
-    initials: seat.i,
-    roleKey: seat.roleKey,
-    bg: seat.bg,
-    color: seat.color,
-  })),
-  principles: PRINCIPLES.map((principle) => ({
-    icon: principle.icon,
-    titleKey: principle.titleKey,
-    textKey: principle.textKey,
-  })),
-  decisions: DECISIONS.map((decision) => ({
-    leadKey: decision.leadKey,
-    bodyKey: decision.bodyKey,
-  })),
-};
+// same demo experience, no network. The `governance.data` mock is imported on
+// demand inside the demo queryFn (see below) so it never ships in the live
+// bundle.
+async function buildDemo(): Promise<Omit<GovernanceOverviewResult, "loading">> {
+  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } = await import(
+    "../governance.data"
+  );
+  return {
+    health: HEALTH.map((stat) => ({
+      value: stat.value,
+      up: stat.up,
+      labelKey: stat.labelKey,
+      trendKey: stat.trendKey,
+      trendValues: stat.trendValues,
+    })),
+    moderationSteps: STEPS.map((step) => ({
+      titleKey: step.titleKey,
+      textKey: step.textKey,
+    })),
+    council: COUNCIL.map((seat) => ({
+      name: seat.name,
+      initials: seat.initials,
+      roleKey: seat.roleKey,
+      background: seat.background,
+      color: seat.color,
+    })),
+    principles: PRINCIPLES.map((principle) => ({
+      icon: principle.icon,
+      titleKey: principle.titleKey,
+      textKey: principle.textKey,
+    })),
+    decisions: DECISIONS.map((decision) => ({
+      leadKey: decision.leadKey,
+      bodyKey: decision.bodyKey,
+    })),
+  };
+}
 
 const EMPTY: Omit<GovernanceOverviewResult, "loading"> = {
   health: [],
@@ -125,7 +131,7 @@ function fromDto(
 ): Omit<GovernanceOverviewResult, "loading"> {
   return {
     health: dto.health.map((stat) => ({
-      n: stat.n,
+      value: stat.n,
       up: stat.up,
       labelKey: `governance:health.stat.${stat.key}.label`,
       trendKey: `governance:health.trend.${stat.trendKey}`,
@@ -163,19 +169,15 @@ function fromDto(
 export function useGovernanceOverview(): GovernanceOverviewResult {
   const { demoMode } = useDemoMode();
 
-  const query = useQuery<GovernanceOverviewResponseDTO>({
+  const query = useQuery<Omit<GovernanceOverviewResult, "loading">>({
     queryKey: ["governance-overview", demoMode],
-    enabled: !demoMode,
-    queryFn: () => getGovernanceOverview(),
+    queryFn: async () =>
+      demoMode ? buildDemo() : fromDto(await getGovernanceOverview()),
   });
-
-  if (demoMode) {
-    return { ...DEMO, loading: false };
-  }
 
   if (!query.data) {
     return { ...EMPTY, loading: query.isPending };
   }
 
-  return { ...fromDto(query.data), loading: false };
+  return { ...query.data, loading: false };
 }

@@ -51,6 +51,21 @@ export interface GroupItem {
   name: string;
   role: string;
 }
+/** A resolved "Also in the room" related member, carrying enough to render a
+ *  card without a registry lookup. In live mode the backend returns these
+ *  (from the profile's `related` cards); in demo mode the mock registry is
+ *  resolved at render time from the `related` slug list instead. */
+export interface RelatedMember {
+  slug: string;
+  first: string;
+  last: string;
+  role: string;
+  hood: string;
+  initials: string;
+  tint: AvatarTint;
+  /** Real profile photo URL when the related member has one. */
+  avatarUrl?: string;
+}
 /** A recent public action, linking to where it happened. */
 export interface ActivityItem {
   icon: IconType;
@@ -103,7 +118,13 @@ export interface Member {
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];
   voucherNames: string;
+  /** Demo mode: slugs of related members, resolved against the mock registry at
+   *  render time. Live mode leaves this empty and populates `relatedCards`. */
   related: string[];
+  /** Live mode: pre-resolved related-member cards from the backend. When present
+   *  and non-empty, "Also in the room" renders from these instead of resolving
+   *  `related` slugs through the mock registry (which is empty for real members). */
+  relatedCards?: RelatedMember[];
   shapings: Partial<Record<"film" | "book" | "song" | "moment", ShapingItem>>;
   /** Skills/services offered on the barter board. */
   skills: SkillItem[];
@@ -3380,7 +3401,7 @@ const ENTRIES: Record<string, Omit<Member, "id">> = {
 /** The registry, keyed by slug, with a stable numeric `id` assigned by order. */
 export const MEMBERS: Record<string, Member> = Object.fromEntries(
   Object.entries(ENTRIES).map(([slug, m], i) => [slug, { id: i + 1, ...m }]),
-) as Record<string, Member>;
+);
 
 export const defaultProfileSlug = "ines";
 

@@ -94,9 +94,11 @@
   min-width: 220px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
-  padding: 11px 16px;
+  padding: 10px 16px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  /* >=16px so iOS Safari never zooms on focus (this class out-specifies the
+     global input floor, so it must set 16px itself). */
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.2s;
@@ -353,9 +355,9 @@
 .psInput {
   border: 1.5px solid rgba(var(--cream-rgb), 0.18);
   border-radius: 10px;
-  padding: 11px 14px;
+  padding: 10px 14px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
 }

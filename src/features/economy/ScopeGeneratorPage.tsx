@@ -92,7 +92,7 @@ export function ScopeGeneratorPage() {
     setScope((prev) => ({ ...prev, ...patch }));
 
   const copyText = () => {
-    navigator.clipboard?.writeText(
+    void navigator.clipboard?.writeText(
       toPlainText(scope, issuer.name, t, fmt.currency),
     );
     showToast(t("economy:toolPage.copiedToast"), "success");

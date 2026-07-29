@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { AvatarTone } from "./ui";
-import { useTrustGraph } from "./trustGraph/TrustGraphContext";
+import { useTrustGraph } from "./trustGraph/useTrustGraph";
 import {
   TONE,
   monthDate,

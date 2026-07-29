@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useMemo, type ReactNode } from "react";
 import { useLocalStorage } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,44 +12,12 @@ import {
   dtoToSavedItem,
   savedItemToBody,
 } from "../../features/members/api/saved.api";
+import {
+  SavedContext,
+  type SavedItem,
+  type SavedKind,
+} from "./useSaved";
 
-export type SavedKind =
-  | "article"
-  | "film"
-  | "job"
-  | "post"
-  | "event"
-  | "group"
-  | "housing"
-  | "flatmate"
-  | "landlord";
-
-export interface SavedItem {
-  /** Stable unique id, conventionally `${kind}:${slug}`. */
-  id: string;
-  kind: SavedKind;
-  title: string;
-  /** Original design href or router path; pass through linkToPath() when rendering. */
-  href?: string;
-  /** Small supporting line (author, org, neighbourhood…). */
-  meta?: string;
-  /** One- to two-line blurb shown on the saved card. */
-  description?: string;
-  /** Short read/length pill, e.g. "6 min". Falls back to a "N min" parsed from meta. */
-  readTime?: string;
-}
-
-interface SavedContextValue {
-  items: SavedItem[];
-  isSaved: (id: string) => boolean;
-  /** Toggle an item; returns the new saved state (true = now saved). */
-  toggleSave: (item: SavedItem) => boolean;
-  save: (item: SavedItem) => void;
-  unsave: (id: string) => void;
-  byKind: (kind: SavedKind) => SavedItem[];
-}
-
-const SavedContext = createContext<SavedContextValue | null>(null);
 const STORAGE_KEY = "qp.saved.v1";
 
 const isSavedItemArray = (v: unknown): v is SavedItem[] => Array.isArray(v);
@@ -209,12 +170,4 @@ export function SavedProvider({ children }: { children: ReactNode }) {
   return (
     <SavedContext.Provider value={value}>{children}</SavedContext.Provider>
   );
-}
-
-export function useSaved() {
-  const ctx = useContext(SavedContext);
-  if (!ctx) {
-    throw new Error("useSaved must be used within SavedProvider");
-  }
-  return ctx;
 }

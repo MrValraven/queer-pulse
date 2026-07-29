@@ -5,7 +5,6 @@ import type {
   PriorReports,
   ReportChip,
   ResolvedItem,
-  Severity,
 } from "../adminModeration.data";
 import type { AdminTone } from "../ui";
 import type {
@@ -93,7 +92,7 @@ function priorLine(count: number): PriorReports | undefined {
 }
 
 export function modReportDtoToView(dto: ModReportDTO): ModReport {
-  const severity = dto.severity as Severity;
+  const severity = dto.severity;
   const category = CATEGORY[dto.reasonCode] ?? "Report";
   const chips: ReportChip[] = [
     {
@@ -145,7 +144,7 @@ export function modReportDtoToView(dto: ModReportDTO): ModReport {
 }
 
 export function appealDtoToView(dto: AppealDTO): Appeal {
-  const severity = dto.severity as Severity;
+  const severity = dto.severity;
   return {
     id: dto.id,
     severity,
@@ -208,7 +207,7 @@ function closedLabel(iso: string): string {
 }
 
 export function resolvedDtoToView(dto: ModReportDTO): ResolvedItem {
-  const severity = dto.severity as Severity;
+  const severity = dto.severity;
   const chips: ReportChip[] = [
     { tone: CHIP_TONE[dto.severity], labelKey: "admin:moderation.chip.resolved" },
   ];

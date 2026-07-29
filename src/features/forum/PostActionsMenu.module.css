@@ -6,17 +6,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: none;
   background: transparent;
   color: var(--plum);
   cursor: pointer;
+  touch-action: manipulation;
   transition: background-color 0.15s var(--ease);
 }
-.trigger:hover {
-  background: rgba(45, 27, 61, 0.08);
+@media (hover: hover) {
+  .trigger:hover {
+    background: rgba(45, 27, 61, 0.08);
+  }
 }
 .menu {
   position: absolute;
@@ -31,8 +34,10 @@
   box-shadow: 0 12px 32px rgba(45, 27, 61, 0.14);
 }
 .item {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
+  min-height: 44px;
   padding: 9px 12px;
   border: none;
   border-radius: 8px;
@@ -41,9 +46,12 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
+  touch-action: manipulation;
 }
-.item:hover {
-  background: rgba(45, 27, 61, 0.06);
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(45, 27, 61, 0.06);
+  }
 }
 .danger {
   color: var(--danger);

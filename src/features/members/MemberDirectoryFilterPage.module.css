@@ -153,7 +153,7 @@
 .range input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);

@@ -1,7 +1,10 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  /* Above the installed-PWA BottomTabBar (z-index 100) — as a bottom sheet on
+     mobile its action row sits where the tab bar is, and must render over it.
+     Matches the other forum/community sheet overlays. */
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,12 +14,37 @@
 .dialog {
   width: 100%;
   max-width: 480px;
-  max-height: 85vh;
+  max-height: 85svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 24px;
   background: var(--paper);
   border: 1px solid rgba(45, 27, 61, 0.09);
   border-radius: 16px;
+}
+
+/* Bottom sheet on phones — in reach, clear of the notch/home indicator. */
+@media (max-width: 860px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+    padding-block-end: var(--keyboard-inset, 0px);
+  }
+  .dialog {
+    max-width: none;
+    border-radius: 16px 16px 0 0;
+    max-height: 92svh;
+    padding-block-end: max(24px, env(safe-area-inset-bottom));
+  }
+  .dialog::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(45, 27, 61, 0.18);
+    margin: 0 auto 16px;
+  }
 }
 .title {
   margin: 0 0 8px;

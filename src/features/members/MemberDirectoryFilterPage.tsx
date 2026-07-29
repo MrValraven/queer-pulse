@@ -1,13 +1,5 @@
-import { useId, useMemo, useState } from "react";
-import { FiSearch, FiSliders, FiUsers } from "react-icons/fi";
+import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  ModalSheet,
-  SkeletonLine,
-} from "../../shared/components/ui";
 import {
   useCountUp,
   useIncrementalList,
@@ -16,71 +8,34 @@ import {
 } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { Translation } from "../../shared/i18n/Translation";
 import {
   EMPTY_FILTERS,
-  SORTS,
-  SORT_LABEL_KEY,
   SORT_PARAM,
   appliedChips,
   matchesFilters,
   reconcileProfessions,
   sortMembers,
-  type AppliedChip,
   type FilterState,
   type SortKey,
 } from "./memberDirectoryFilter.data";
 import { useMembers } from "./api/useMembers";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { FiltersSidebar } from "./MemberFilterCards";
 import {
-  FiltersSidebar,
-  MemberResultCard,
-  MemberResultSkeleton,
-} from "./MemberFilterCards";
+  MemberDirectoryHeader,
+  MemberFiltersSheet,
+  MemberHeaderSkeleton,
+  MemberResultsColumn,
+} from "./MemberDirectorySections";
 import styles from "./MemberDirectoryFilterPage.module.css";
-
-/** Remove one value from whichever filter group a chip belongs to. */
-function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
-  const drop = (arr: string[]) => arr.filter((v) => v !== chip.value);
-  switch (chip.group) {
-    case "openTo":
-      return { ...filters, openTo: drop(filters.openTo) };
-    case "hood":
-      return { ...filters, hoods: drop(filters.hoods) };
-    case "discipline":
-      return { ...filters, disciplines: drop(filters.disciplines) };
-    case "profession":
-      return { ...filters, professions: drop(filters.professions) };
-    case "identity":
-      return { ...filters, identities: drop(filters.identities) };
-    case "language":
-      return { ...filters, languages: drop(filters.languages) };
-  }
-}
-
-/** Placeholder for the page header — mirrors the eyebrow / h1 / lead rhythm so
- *  the real header swaps in with no layout shift. */
-function MemberHeaderSkeleton() {
-  return (
-    <div className={styles.head} aria-busy="true" aria-hidden="true">
-      <SkeletonLine width={200} height={11} style={{ marginBottom: 14 }} />
-      <SkeletonLine width="70%" height={48} style={{ marginBottom: 16 }} />
-      <SkeletonLine width="100%" height={13} style={{ marginTop: 4 }} />
-      <SkeletonLine width="45%" height={13} style={{ marginTop: 8 }} />
-    </div>
-  );
-}
 
 export function MemberDirectoryFilterPage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("Recently joined");
-  const sortLabelId = useId();
   // Below the grid's single-column breakpoint the filter sidebar would stack as a
   // tall wall above the results; there it collapses into a bottom-sheet opened
   // from a "Filters" button instead. Matches the 860px grid breakpoint below.
@@ -122,7 +77,9 @@ export function MemberDirectoryFilterPage() {
   // and the live cards carry no ranking fields to re-sort by anyway (they'd all
   // tie and scramble the server order). See `useMembers` / the directory API.
   const filtered = useMemo(() => {
-    const matched = sourceMembers.filter((m) => matchesFilters(m, filters));
+    const matched = sourceMembers.filter((member) =>
+      matchesFilters(member, filters),
+    );
     return demoMode ? sortMembers(matched, sort) : matched;
   }, [sourceMembers, filters, sort, demoMode]);
 
@@ -160,40 +117,21 @@ export function MemberDirectoryFilterPage() {
     showToast(t("members:directory.toast.filtersCleared"), "info");
   };
 
+  const resetAll = () => {
+    applyFilters(EMPTY_FILTERS);
+    setSort("Recently joined");
+  };
+
   return (
     <PageShell>
       <div className={styles.page}>
         {loading ? (
           <MemberHeaderSkeleton />
         ) : (
-          <FadeIn as="header" className={styles.head}>
-            <div className={styles.eyebrow}>
-              {t("members:directory.eyebrow")}
-            </div>
-            <h1 className={styles.h1}>
-              {t("members:directory.findPrefix")}
-              <em>
-                <span
-                  className={styles.tally}
-                  style={{
-                    minWidth: `${fmt.number(totalMembers).length}ch`,
-                  }}
-                >
-                  {fmt.number(countedTotal)}
-                </span>{" "}
-                {t("members:directory.memberCountSuffix", {
-                  count: totalMembers,
-                })}
-              </em>{" "}
-              {t("members:directory.findSuffix")}
-            </h1>
-            <p className={styles.lead}>
-              <Translation
-                i18nKey="members:directory.lead"
-                components={{ b: <b /> }}
-              />
-            </p>
-          </FadeIn>
+          <MemberDirectoryHeader
+            totalMembers={totalMembers}
+            countedTotal={countedTotal}
+          />
         )}
 
         <div className={styles.grid}>
@@ -207,170 +145,40 @@ export function MemberDirectoryFilterPage() {
             />
           )}
 
-          <div>
-            <div className={styles.topRow}>
-              <div className={styles.count}>
-                {t("members:directory.showingPrefix")}{" "}
-                <b>
-                  <em>{fmt.number(filtered.length)}</em>
-                </b>{" "}
-                {t("members:directory.showingOf")} {fmt.number(totalMembers)}{" "}
-                {t("members:directory.memberCountLabel", {
-                  count: totalMembers,
-                })}
-              </div>
-              <div className={styles.topControls}>
-                {isMobile && (
-                  <button
-                    type="button"
-                    className={styles.filtersBtn}
-                    onClick={() => setFiltersOpen(true)}
-                  >
-                    <FiSliders aria-hidden />
-                    {t("members:directory.filtersCta")}
-                    {chips.length > 0 && (
-                      <span className={styles.filtersBtnCount}>
-                        {fmt.number(chips.length)}
-                      </span>
-                    )}
-                  </button>
-                )}
-                <div className={styles.sort}>
-                  <span id={sortLabelId} className={styles.sortLabel}>
-                    {t("members:directory.sortLabel")}
-                  </span>
-                  <select
-                    value={sort}
-                    aria-labelledby={sortLabelId}
-                    onChange={(e) => setSort(e.target.value as SortKey)}
-                  >
-                    {SORTS.map((s) => (
-                      <option key={s} value={s}>
-                        {t(SORT_LABEL_KEY[s])}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {chips.length > 0 && (
-              <div className={styles.appliedRow}>
-                {chips.map((chip) => (
-                  <span
-                    key={`${chip.group}:${chip.value}`}
-                    className={styles.applied}
-                  >
-                    {chip.label}
-                    <button
-                      type="button"
-                      aria-label={t("members:directory.removeChipLabel", {
-                        label: chip.label,
-                      })}
-                      onClick={() => applyFilters(removeChip(filters, chip))}
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {loading ? (
-              <div className={styles.mGrid}>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <MemberResultSkeleton key={i} />
-                ))}
-              </div>
-            ) : shown.length === 0 ? (
-              hasActiveFilters ? (
-                <EmptyState
-                  icon={<FiSearch />}
-                  title={t("members:directory.emptyFiltered.title")}
-                  description={t("members:directory.emptyFiltered.description")}
-                  action={{
-                    label: t("members:directory.clearFiltersCta"),
-                    onClick: () => {
-                      applyFilters(EMPTY_FILTERS);
-                      setSort("Recently joined");
-                    },
-                  }}
-                />
-              ) : (
-                <EmptyState
-                  icon={<FiUsers />}
-                  title={t("members:directory.emptyAll.title")}
-                  description={t("members:directory.emptyAll.description")}
-                />
-              )
-            ) : (
-              <>
-                <div className={styles.mGrid}>
-                  {shownWindowed.map((member, i) => (
-                    <FadeIn
-                      key={`${member.slug}-${i}`}
-                      delay={Math.min(i, 9) * 85}
-                    >
-                      <MemberResultCard member={member} />
-                    </FadeIn>
-                  ))}
-                </div>
-                {hasMoreWindowed && (
-                  <div
-                    ref={sentinelRef}
-                    className={styles.sentinel}
-                    aria-hidden="true"
-                  />
-                )}
-              </>
-            )}
-
-            {hasNextPage && (
-              <div className={styles.loadMore}>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={isFetchingNextPage}
-                  onClick={fetchNextPage}
-                >
-                  {isFetchingNextPage
-                    ? t("members:directory.loadingMore")
-                    : t("members:directory.loadMoreCta")}
-                </Button>
-              </div>
-            )}
-          </div>
+          <MemberResultsColumn
+            filters={filters}
+            sort={sort}
+            onSort={setSort}
+            chips={chips}
+            onApplyFilters={applyFilters}
+            onResetAll={resetAll}
+            isMobile={isMobile}
+            onOpenFilters={() => setFiltersOpen(true)}
+            loading={loading}
+            shown={shown}
+            shownWindowed={shownWindowed}
+            sentinelRef={sentinelRef}
+            hasMoreWindowed={hasMoreWindowed}
+            hasActiveFilters={hasActiveFilters}
+            totalMembers={totalMembers}
+            filteredCount={filtered.length}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            onFetchNextPage={fetchNextPage}
+          />
         </div>
       </div>
 
       {isMobile && filtersOpen && (
-        <ModalSheet
+        <MemberFiltersSheet
+          filters={filters}
+          members={sourceMembers}
+          appliedCount={chips.length}
+          filteredCount={filtered.length}
+          onApplyFilters={applyFilters}
+          onClearAll={clearAllFilters}
           onClose={() => setFiltersOpen(false)}
-          ariaLabel={t("members:directory.filtersSheetLabel")}
-        >
-          <h2 className={styles.sheetTitle}>
-            {t("members:directory.filtersSheetLabel")}
-          </h2>
-          <FiltersSidebar
-            inSheet
-            filters={filters}
-            members={sourceMembers}
-            appliedCount={chips.length}
-            onChange={applyFilters}
-            onClearAll={clearAllFilters}
-          />
-          <div className={styles.sheetFoot}>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => setFiltersOpen(false)}
-            >
-              {t("members:directory.showResultsCta", {
-                count: filtered.length,
-              })}
-            </Button>
-          </div>
-        </ModalSheet>
+        />
       )}
     </PageShell>
   );

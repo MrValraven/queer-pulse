@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { useVouch } from "../../app/providers/VouchProvider";
+import { useVouch } from "../../app/providers/useVouch";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -112,7 +112,9 @@ export function HeroVouchRow({
   // empty), which also fixes the stray leading comma the old live path showed.
   const baseNames = demoMode
     ? profile.voucherNames
-    : baseFaces.map((f) => f.name).join(", ");
+    : baseFaces
+        .map((f) => (f.anonymous ? t("members:hero.vouch.anonymous") : f.name))
+        .join(", ");
   const namesText = !youFace
     ? baseNames
     : baseFaces.length > 0
@@ -124,31 +126,61 @@ export function HeroVouchRow({
       {faces.length > 0 ? (
         <>
           <div className={styles.vouchFaces}>
-            {faces.map((face, index) => (
-              <Link
-                key={face.slug}
-                to={`/members/${face.slug}`}
-                className={styles.vouchFace}
-                style={{
-                  marginLeft: index === 0 ? 0 : -12,
-                  zIndex: faces.length - index,
-                }}
-              >
-                <span className={styles.vouchTip}>
-                  <span className={styles.nameRow}>
-                    {face.name}
-                    <MemberStaffBadge slug={face.slug} />
+            {faces.map((face, index) => {
+              const stackStyle = {
+                marginLeft: index === 0 ? 0 : -12,
+                zIndex: faces.length - index,
+              };
+              // An anonymous voucher has no slug — render an un-linked face with
+              // a generic name so the identity is never exposed or navigable.
+              if (face.anonymous) {
+                const anonName = t("members:hero.vouch.anonymous");
+                return (
+                  // Named faces are <Link>s (focusable); an anonymous face has no
+                  // destination, so make the span itself focusable + named so the
+                  // voucher-name tooltip is reachable by keyboard and on touch.
+                  <span
+                    key={`anon-${index}`}
+                    className={styles.vouchFace}
+                    style={stackStyle}
+                    tabIndex={0}
+                    aria-label={anonName}
+                  >
+                    <span className={styles.vouchTip}>
+                      <span className={styles.nameRow}>{anonName}</span>
+                    </span>
+                    <Avatar
+                      initials={face.initials}
+                      tint={face.tint}
+                      size={52}
+                      alt={anonName}
+                    />
                   </span>
-                </span>
-                <Avatar
-                  initials={face.initials}
-                  tint={face.tint}
-                  size={52}
-                  src={face.avatarUrl}
-                  alt={face.name}
-                />
-              </Link>
-            ))}
+                );
+              }
+              return (
+                <Link
+                  key={face.slug}
+                  to={`/members/${face.slug}`}
+                  className={styles.vouchFace}
+                  style={stackStyle}
+                >
+                  <span className={styles.vouchTip}>
+                    <span className={styles.nameRow}>
+                      {face.name}
+                      <MemberStaffBadge slug={face.slug} />
+                    </span>
+                  </span>
+                  <Avatar
+                    initials={face.initials}
+                    tint={face.tint}
+                    size={52}
+                    src={face.avatarUrl}
+                    alt={face.name}
+                  />
+                </Link>
+              );
+            })}
           </div>
           <div className={styles.vouchText}>
             <Translation

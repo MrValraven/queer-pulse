@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { ChipSelect, ComingSoon, Toggle } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {

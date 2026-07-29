@@ -59,7 +59,7 @@ function priceRange(price?: string): { priceMin?: number; priceMax?: number } {
   if (!nums?.length) return {};
   const [min, max] = nums;
   return {
-    priceMin: Number(min!.replace(",", ".")),
+    priceMin: Number(min.replace(",", ".")),
     ...(max ? { priceMax: Number(max.replace(",", ".")) } : {}),
   };
 }
@@ -96,6 +96,7 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     spots: spotsLabel(dto),
     ctaKey: "gatherings:cta.rsvp",
     body: dto.description ?? "",
+    viewerIsOrganizer: dto.isOrganizer ?? false,
   };
 }
 

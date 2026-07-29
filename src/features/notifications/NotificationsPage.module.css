@@ -82,6 +82,13 @@
   transition: background 0.18s;
   cursor: pointer;
   position: relative;
+  /* Dependency-free "virtualization": skip rendering rows while they're
+     offscreen so a long inbox stays smooth on a low-end phone. The `auto`
+     keyword lets the browser remember each row's real height after first
+     paint; the placeholder below is only used before that. No modal/dropdown
+     descends from a row, so the always-on paint containment is safe here. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 80px;
 }
 @media (hover: hover) {
   .item:hover {

@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useDeletedConversations } from "../../../app/providers/DeletedConversationsProvider";
+import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
+import {
+  patchMessageDelete,
+  patchMessageEdit,
+  patchMessageReaction,
+} from "../../../shared/api/messageCache";
 import type { MessageReactionKey } from "../../../shared/contracts/contracts";
 import type { Conversation } from "../data";
 import {
@@ -39,9 +44,11 @@ export function useToggleReaction(conversationId: string | null) {
         await addMessageReaction(conversationId, messageId, key);
       }
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
+    // Patch the single chip in place — we know the delta (`mine` is the prior
+    // state, so the new state is its inverse) — instead of refetching the page.
+    onSuccess: (_result, { messageId, key, mine }) => {
+      if (demoMode || !conversationId) return;
+      patchMessageReaction(queryClient, conversationId, messageId, key, !mine);
     },
   });
 }
@@ -55,10 +62,17 @@ export function useDeleteMessage(conversationId: string | null) {
       if (demoMode || !conversationId) return;
       await deleteMessage(conversationId, messageId);
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    // Patch the tombstone in place (keeps the slot, blanks body/reactions);
+    // still invalidate the inbox, whose last-message preview may now change.
+    onSuccess: (_result, messageId) => {
+      if (demoMode || !conversationId) return;
+      patchMessageDelete(
+        queryClient,
+        conversationId,
+        messageId,
+        new Date().toISOString(),
+      );
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }
@@ -77,10 +91,18 @@ export function useEditMessage(conversationId: string | null) {
       if (demoMode || !conversationId) return;
       await editMessage(conversationId, messageId, body);
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    // Patch the new body + edited stamp in place; still invalidate the inbox,
+    // whose last-message preview may now show the edited text.
+    onSuccess: (_result, { messageId, body }) => {
+      if (demoMode || !conversationId) return;
+      patchMessageEdit(
+        queryClient,
+        conversationId,
+        messageId,
+        body,
+        new Date().toISOString(),
+      );
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }
@@ -103,7 +125,7 @@ export function useDeleteConversation() {
     },
     onSuccess: (_result, conversationId) => {
       if (demoMode) {
-        queryClient.invalidateQueries({ queryKey: ["conversations"] });
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
         return;
       }
       queryClient.setQueriesData<Conversation[]>(
@@ -113,7 +135,7 @@ export function useDeleteConversation() {
             (conversation) => conversation.id !== conversationId,
           ),
       );
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }

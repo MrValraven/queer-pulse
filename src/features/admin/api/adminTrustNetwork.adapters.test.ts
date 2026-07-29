@@ -40,7 +40,10 @@ describe("trustNetworkDtoToData", () => {
   it("spreads a scene anchor per distinct scene", () => {
     const data = trustNetworkDtoToData(DTO);
     expect(data.sceneAnchor["c1"]).toEqual(
-      expect.objectContaining({ x: expect.any(Number), y: expect.any(Number) }),
+      expect.objectContaining({
+        x: expect.any(Number) as unknown as number,
+        y: expect.any(Number) as unknown as number,
+      }),
     );
   });
 });

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
-import { useDirectoryListingsActions } from "../../../../app/providers/DirectoryListingsProvider";
+import { useDirectoryListingsActions } from "../../../../app/providers/useDirectoryListingsActions";
 import type { PendingListing } from "../listBusiness.data";
-import { useMyListings } from "./useListings";
+import { useAllMyListings } from "./useListings";
 
 /**
  * The member's submitted listings: the app-wide optimistic overlay layered
@@ -17,14 +17,15 @@ import { useMyListings } from "./useListings";
  * `useDirectoryListingsActions` instead — calling this hook to reach the
  * mutators would re-subscribe the query and undo the fix.
  *
- * Page 1 only, as before: `useMyListings()` defaults to `page = 1` and this
- * surface has never paginated.
+ * All pages: `useAllMyListings()` accumulates every page of GET
+ * /listings/mine, so an owner with more than one page of listings still sees
+ * every one of them (and the card Edit link) on their account grid.
  */
 export function useDirectoryListings() {
   const { demoMode } = useDemoMode();
-  const { local, withdrawn, addListing, withdrawListing, setStatus } =
+  const { local, withdrawn, addListing, withdrawListing } =
     useDirectoryListingsActions();
-  const { items: serverItems } = useMyListings().data ?? {
+  const { items: serverItems } = useAllMyListings().data ?? {
     items: [],
     total: 0,
   };
@@ -43,5 +44,5 @@ export function useDirectoryListings() {
     return merged;
   }, [demoMode, local, serverItems, withdrawn]);
 
-  return { submitted, addListing, withdrawListing, setStatus };
+  return { submitted, addListing, withdrawListing };
 }

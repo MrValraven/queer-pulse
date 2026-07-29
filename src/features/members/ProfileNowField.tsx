@@ -1,5 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { InlineTextarea } from "./profileEditControls";
 import { OpenToEditor } from "./OpenToEditor";
 import styles from "./ProfileEdit.module.css";

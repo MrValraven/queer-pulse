@@ -240,9 +240,9 @@
   min-width: 180px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 11px;
-  padding: 9px 14px;
+  padding: 8px 14px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   outline: none;

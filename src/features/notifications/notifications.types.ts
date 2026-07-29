@@ -41,6 +41,15 @@ export interface Notification {
    * `<profile>{name}</profile>` slot; absent when no personalized copy exists.
    */
   actor?: { name: string; href: string; textKey?: string };
+  /**
+   * Deep-link to the discussion the notification originated from (a forum
+   * thread or a community post), derived from the backend payload's `source`
+   * + slug fields. Absent when the payload carries no usable source (e.g. a
+   * non-mention row, or a community flat-post/reply payload that has no
+   * `communitySlug`) — the row then falls back to just the actor link, same
+   * as before this field existed.
+   */
+  sourceHref?: string;
   text: ReactNode;
   meta: string;
   time: string;

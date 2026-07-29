@@ -16,9 +16,11 @@
   width: 100%;
   max-width: 560px;
   padding: 44px 48px 48px;
+  padding-block-end: max(48px, env(safe-area-inset-bottom));
   position: relative;
-  max-height: 92vh;
+  max-height: 92svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   animation: modalUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
   transition: background-color 0.45s var(--ease);
 }
@@ -36,6 +38,7 @@
 @media (max-width: 560px) {
   .modal {
     padding: 36px 24px 32px;
+    padding-block-end: max(32px, env(safe-area-inset-bottom));
   }
 }
 .close {
@@ -116,7 +119,7 @@
 .field textarea,
 .field select {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);

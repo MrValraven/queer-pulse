@@ -1,12 +1,8 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
-import {
-  ForumAvatar,
-  ProfileLink,
-  OfficialBadge,
-  authorHref,
-} from "./ForumAuthor";
+import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
+import { authorHref } from "./forumAuthor.helpers";
 import { ModeratorByline } from "./ThreadReplies";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "./PostActionsMenu";
@@ -53,26 +49,26 @@ export function ThreadOpCard({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const catMeta = CATS.find((c) => c.id === thread.cat);
-  const catColor = CAT_STYLE[thread.cat]?.color ?? "var(--plum)";
+  const catMeta = CATS.find((c) => c.id === thread.category);
+  const catColor = CAT_STYLE[thread.category]?.color ?? "var(--plum)";
 
   return (
     <div className={styles.opCard}>
       <div className={styles.opHead}>
         <ProfileLink
           to={authorHref(thread.author)}
-          name={thread.author.n}
+          name={thread.author.name}
           official={thread.author.official}
           className={styles.avLink}
         >
           <ForumAvatar
             className={styles.opAv}
-            style={{ background: thread.author.t, color: thread.author.tt }}
+            style={{ background: thread.author.background, color: thread.author.color }}
             person={{
               slug: thread.author.slug,
               photo: thread.author.photo,
-              initials: thread.author.i,
-              name: thread.author.n,
+              initials: thread.author.initials,
+              name: thread.author.name,
             }}
           />
         </ProfileLink>
@@ -80,11 +76,11 @@ export function ThreadOpCard({
           <div className={styles.opName}>
             <ProfileLink
               to={authorHref(thread.author)}
-              name={thread.author.n}
+              name={thread.author.name}
               official={thread.author.official}
               className={styles.authorLink}
             >
-              {thread.author.n}
+              {thread.author.name}
             </ProfileLink>
             <MemberStaffBadge slug={thread.author.slug} />
             {thread.author.official && <OfficialBadge />}

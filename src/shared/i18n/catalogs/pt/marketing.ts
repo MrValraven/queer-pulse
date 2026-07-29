@@ -1273,6 +1273,8 @@ export const marketing: Catalog = {
   "listBusiness.sending": "A enviar o teu lugar à equipa…",
   "listBusiness.toast.submitted":
     "O teu anúncio está com a equipa da comunidade",
+  "listBusiness.toast.submitError":
+    "Não conseguimos enviar o teu espaço agora. Os teus dados ficaram guardados — tenta de novo.",
   "listBusiness.toast.withdrawn": "Anúncio retirado",
   // Passo 0 — percurso
   "listBusiness.step0.title": "Como é que",
@@ -1421,8 +1423,19 @@ export const marketing: Catalog = {
     "Rua e número chega — colocamos o pino a partir daí.",
   "listBusiness.step3.addressPlaceholder":
     "R. Antero de Quental 26, 1170-024 Lisboa",
+  "listBusiness.step3.mapLinkLabel": "Link do Google Maps",
+  "listBusiness.step3.mapLinkHelper":
+    "Abre o teu espaço no Google Maps, toca em Partilhar e cola o link — colocamos o pino por ti.",
+  "listBusiness.step3.mapLinkPlaceholder": "https://maps.app.goo.gl/…",
   "listBusiness.step3.findOnMap": "Encontrar no mapa",
+  "listBusiness.step3.resolving": "A localizar…",
+  "listBusiness.step3.resolveError":
+    "Não conseguimos ler esse link. Cola um link de um local do Google Maps e tenta de novo.",
+  "listBusiness.step3.unsupportedLinkDemo":
+    "No modo demo, cola o link completo google.com/maps/… — os links curtos precisam do site em produção.",
   "listBusiness.step3.pinPlaced": "Pino colocado perto de {place}",
+  "listBusiness.step3.usePlaceName": "Usar “{place}” como morada",
+  "listBusiness.step3.mapAria": "Mapa — arrasta o pino para definir o local exato.",
   "listBusiness.step3.hoursHeading": "Horário de funcionamento *",
   "listBusiness.step3.hasOpenHours": "Tem horas de abertura",
   "listBusiness.step3.allClosed": "Tudo fechado",
@@ -1601,8 +1614,6 @@ export const marketing: Catalog = {
   "listBusiness.success.withdraw": "Retirar",
   "listBusiness.success.reference":
     "Referência · <b>{ref}</b>  ·  guarda-a algures",
-  "listBusiness.success.demoFlip":
-    "Protótipo · pré-visualizar estados de revisão:",
   // Etiquetas dos chips de "o que falta"
   "listBusiness.missing.path": "como conheces o lugar",
   "listBusiness.missing.verify": "uma forma de verificar",
@@ -1615,6 +1626,7 @@ export const marketing: Catalog = {
   "listBusiness.missing.tagline": "um lema",
   "listBusiness.missing.whatItIs": "o que é",
   "listBusiness.missing.address": "uma morada",
+  "listBusiness.missing.pin": "um pino no mapa",
   "listBusiness.missing.hours": "o horário",
   "listBusiness.missing.social": "links de contacto válidos",
   "listBusiness.missing.rel": "a tua ligação",
@@ -1653,6 +1665,17 @@ export const marketing: Catalog = {
   "listBusiness.fullPreview.findIt": "Onde fica",
   "listBusiness.fullPreview.whoRunsIt": "Quem o gere",
   "listBusiness.fullPreview.instagramPrefix": "Instagram · {handle}",
+
+  "listBusiness.edit.title": "Editar o teu anúncio",
+  "listBusiness.edit.saveCta": "Guardar alterações",
+  "listBusiness.edit.saving": "A guardar as alterações…",
+  "listBusiness.edit.saved": "O teu anúncio foi atualizado.",
+  "listBusiness.edit.saveError":
+    "Não conseguimos guardar as alterações. Tenta de novo.",
+  "listBusiness.edit.discardConfirm":
+    "Descartar as alterações não guardadas a este anúncio?",
+  "listBusiness.edit.notAllowed":
+    "Só podes editar um anúncio que tenhas submetido.",
 
   // ── Etiqueta partilhada de regresso ao hub (secção Governação) ─────────
   "hub.governanceLabel": "Governação",
@@ -1755,7 +1778,62 @@ export const marketing: Catalog = {
   "changelog.tag.directory": "Abrir o diretório →",
   "changelog.tag.cinema": "Visitar o Cinema →",
   "changelog.tag.forum": "Visitar o fórum →",
+  "changelog.tag.profile": "Abrir o seu perfil →",
+  "changelog.tag.gatherings": "Ver encontros →",
 
+  "changelog.entries.group-chats.title": "Conversas de grupo",
+  "changelog.entries.group-chats.body":
+    "Crie um grupo com as pessoas que quer lá dentro, dê-lhe um nome e mostre quem é quem. Os administradores podem adicionar ou remover membros e arrumar a informação do grupo, vê quem já leu uma mensagem, e uma bolha de escrita aparece quando alguém está a escrever.",
+  "changelog.entries.message-search.title": "Procure nas suas mensagens",
+  "changelog.entries.message-search.body":
+    "À procura daquela morada, daquela data, daquilo que alguém disse? Pesquise em todas as suas conversas e salte diretamente para lá.",
+  "changelog.entries.link-previews.title": "As ligações abrem-se",
+  "changelog.entries.link-previews.body":
+    "Partilhe uma ligação e ela desdobra-se num cartão de pré-visualização — título, imagem e tudo — para que as pessoas vejam para onde vai antes de tocar.",
+  "changelog.entries.forward-pin-star.title": "Reencaminhe, fixe e marque",
+  "changelog.entries.forward-pin-star.body":
+    "Passe uma mensagem para outra conversa, fixe as que um grupo está sempre a revisitar, e marque com estrela as que quer voltar a encontrar — as mensagens marcadas ficam só para si.",
+  "changelog.entries.read-receipts.title": "Recibos de entrega e de leitura",
+  "changelog.entries.read-receipts.body":
+    "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida — para saber onde a sua mensagem chegou.",
+  "changelog.entries.message-gestures.title": "Deslize para responder, toque para reagir",
+  "changelog.entries.message-gestures.body":
+    "Deslize uma mensagem para o lado para lhe responder, e toque duas vezes para reagir — os gestos rápidos que os seus polegares já conhecem.",
+  "changelog.entries.message-drafts.title": "Os seus rascunhos esperam por si",
+  "changelog.entries.message-drafts.body":
+    "Meia mensagem que ainda não enviou? Guardamo-la para aquela conversa, por isso continua lá quando voltar.",
+  "changelog.entries.offline-outbox.title": "Envios que não se perdem",
+  "changelog.entries.offline-outbox.body":
+    "Tocou em enviar sem rede? A sua mensagem fica em fila e parte assim que voltar a ter ligação — nada desaparece pelo caminho.",
+  "changelog.entries.typing-indicator.title": "Bolha de escrita e cuidado com o leitor de ecrã",
+  "changelog.entries.typing-indicator.body":
+    "Uma bolha suave mostra quando a outra pessoa está a escrever, e uma ronda de trabalho no leitor de ecrã torna toda a conversa mais fácil de acompanhar sem olhar.",
+  "changelog.entries.moderation-actions.title":
+    "Cada denúncia recebe uma decisão real",
+  "changelog.entries.moderation-actions.body":
+    "Abrir uma denúncia na fila de moderação passa a mostrar sempre o conjunto completo de ações — ocultar, avisar, restringir, remover e mais, cada uma com um motivo que a pessoa vai ler — em vez de a fechar em silêncio. O título da fila também reflete o número real de denúncias em espera.",
+  "changelog.entries.business-map-pin.title": "Coloque o seu negócio no mapa",
+  "changelog.entries.business-map-pin.body":
+    "A listar um negócio? Cole uma ligação do Google Maps para marcar um ponto, e os anúncios ativos passam a aparecer no mapa local. As novas submissões passam por uma fila de moderação antes de ficarem visíveis.",
+  "changelog.entries.profile-editing.title": "Edite o seu perfil no lugar",
+  "changelog.entries.profile-editing.body":
+    "O seu quadro, competências e grupos passam a ser editáveis diretamente no perfil, com proteção contra alterações não guardadas para nunca perder uma edição por engano.",
+  "changelog.entries.profile-communities-save.title":
+    "Comunidades em destaque que ficam",
+  "changelog.entries.profile-communities-save.body":
+    "As comunidades que fixa no seu perfil passam a ficar guardadas — entre sessões e dispositivos — e aparecem para quem visita, cada uma com a sua função.",
+  "changelog.entries.mention-types.title": "Mais formas de mencionar",
+  "changelog.entries.mention-types.body":
+    "As menções vão agora além de pessoas e comunidades — tópicos, negócios, eventos e discussões — e os donos e responsáveis são notificados quando são referidos.",
+  "changelog.entries.clear-errors.title": "Mensagens de erro mais claras",
+  "changelog.entries.clear-errors.body":
+    "Quando algo não pode ser guardado, passamos a dizer exatamente o que correu mal em vez de um genérico «algo correu mal».",
+  "changelog.entries.messaging-reactions.title": "Reações a mensagens mais fluidas",
+  "changelog.entries.messaging-reactions.body":
+    "As reações atualizam-se instantaneamente para todos na conversa, e as suas mensagens enviadas já não mudam de posição quando reage a elas.",
+  "changelog.entries.event-photos.title": "Galerias de fotos de eventos",
+  "changelog.entries.event-photos.body":
+    "Organizadores e participantes podem partilhar fotos num encontro, visíveis apenas para quem esteve presente.",
   "changelog.entries.mentions.title": "Mencione pessoas e comunidades",
   "changelog.entries.mentions.body":
     "Escreva @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades — quem for mencionado recebe uma notificação.",
@@ -2494,6 +2572,8 @@ export const marketing: Catalog = {
   "directory.days.friday": "Sexta-feira",
   "directory.days.saturday": "Sábado",
   "directory.days.sunday": "Domingo",
+
+  "directory.editThisListing": "Editar este anúncio",
 
   // ── Arriving (guia para quem chega a Lisboa) — apenas chrome da página e
   //    das secções. As descrições de bairros, organizações e comunidades

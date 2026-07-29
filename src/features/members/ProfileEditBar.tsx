@@ -3,8 +3,8 @@ import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
-import { useEscapeToCancel } from "./profileEditControls";
+import { useProfile } from "../../app/providers/useProfile";
+import { useEscapeToCancel } from "./useEscapeToCancel";
 import styles from "./ProfileEdit.module.css";
 
 /**
@@ -14,9 +14,16 @@ import styles from "./ProfileEdit.module.css";
  */
 export function ProfileEditBar() {
   const { t } = useTranslation();
-  const { isEditing, justSaved, isSaving, saveError, save, cancelEditing } =
-    useProfile();
-  useEscapeToCancel(cancelEditing, isEditing);
+  const {
+    isEditing,
+    justSaved,
+    isSaving,
+    saveError,
+    isDirty,
+    save,
+    requestCancel,
+  } = useProfile();
+  useEscapeToCancel(isEditing);
 
   // Keep the saved banner mounted for one beat after `justSaved` clears so it can
   // animate out instead of popping out of place.
@@ -36,20 +43,22 @@ export function ProfileEditBar() {
     return (
       <div className={styles.saveBar}>
         <span className={styles.unsavedLabel}>
-          <span className={styles.unsavedDot} aria-hidden />
           {saveError ? (
             <span className={styles.saveError} role="alert">
               {saveError}
             </span>
-          ) : (
-            t("members:profileEdit.bar.unsaved")
-          )}
+          ) : isDirty ? (
+            <>
+              <span className={styles.unsavedDot} aria-hidden />
+              {t("members:profileEdit.bar.unsaved")}
+            </>
+          ) : null}
         </span>
         <div className={styles.saveActions}>
-          <Button variant="ghost" onClick={cancelEditing} disabled={isSaving}>
+          <Button variant="ghost" onClick={requestCancel} disabled={isSaving}>
             {t("members:profileEdit.bar.discard")}
           </Button>
-          <Button variant="primary" onClick={save} disabled={isSaving}>
+          <Button variant="primary" onClick={() => void save()} disabled={isSaving}>
             {isSaving
               ? t("members:profileEdit.bar.saving")
               : saveError

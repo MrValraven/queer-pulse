@@ -52,8 +52,11 @@
   position: fixed;
   top: 72px;
   left: 50%;
-  width: calc(100% - 40px);
-  max-width: 1180px;
+  /* Size the panel to its content so a 2-column menu is genuinely narrower than
+     a 3-column one (and a filtered logged-out menu shrinks to fit), instead of
+     every panel sprawling to the same fixed width. Capped to the viewport. */
+  width: fit-content;
+  max-width: min(1180px, calc(100vw - 40px));
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 20px;
@@ -151,10 +154,12 @@
 }
 
 .col {
-  flex: 1;
+  /* grow:0 stops a sparse column from stretching to match a full one; shrink:1
+     still lets columns compress on small laptops when the panel hits its cap. */
+  flex: 0 1 190px;
   padding: 0 26px;
   border-right: 1px solid rgba(var(--line-rgb), 0.07);
-  min-width: 140px;
+  min-width: 150px;
 }
 .col:first-child {
   padding-left: 4px;

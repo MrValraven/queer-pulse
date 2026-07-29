@@ -309,9 +309,9 @@ export function draftToCreateDto(draft: CommunityDraft): CreateCommunityDto {
   return {
     name: draft.name.trim(),
     purpose: draft.purpose.trim(),
-    type: (draft.type || "social") as CommunityType,
+    type: draft.type || "social",
     whoFor: draft.whoFor.trim(),
-    accessTier: (draft.accessTier || "public") as AccessTier,
+    accessTier: draft.accessTier || "public",
     rosterVisible: draft.rosterVisible,
     features: draft.features,
     rules: draft.rules,
@@ -435,9 +435,9 @@ export function draftToUpdateDto(draft: CommunityDraft): UpdateCommunityDto {
   return {
     name: draft.name.trim(),
     purpose: draft.purpose.trim(),
-    type: (draft.type || "social") as CommunityType,
+    type: draft.type || "social",
     whoFor: draft.whoFor.trim(),
-    accessTier: (draft.accessTier || "public") as AccessTier,
+    accessTier: draft.accessTier || "public",
     rosterVisible: draft.rosterVisible,
     features: draft.features,
     rules: draft.rules,

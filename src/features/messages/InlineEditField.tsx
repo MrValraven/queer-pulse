@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import styles from "./MessagesPage.module.css";
 
 export interface InlineEditFieldProps {
@@ -49,14 +50,15 @@ export function InlineEditField({
 
   return (
     <div className={styles.editField}>
-      <textarea
-        ref={textareaRef}
+      <MentionTextarea
+        textareaRef={textareaRef}
         className={styles.editTextarea}
         value={value}
-        onChange={(event) => setValue(event.target.value)}
-        onKeyDown={handleKeyDown}
         rows={2}
         aria-label={t("messages:actions.editing")}
+        placement="above"
+        onChange={setValue}
+        onKeyDown={handleKeyDown}
       />
       <div className={styles.editFieldActions}>
         <Button variant="ghost" onClick={onCancel}>

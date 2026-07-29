@@ -6,12 +6,13 @@ import {
   Eyebrow,
   ImageSlot,
   Reveal,
+  SkeletonLine,
   Tag,
   TagRow,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
-import { useVouch } from "../../app/providers/VouchProvider";
+import { useVouch } from "../../app/providers/useVouch";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
@@ -33,6 +34,9 @@ import {
 import { LookingForEditor } from "./LookingForEditor";
 import { SocialLinksRow } from "./SocialLinksRow";
 import { WorkEditor } from "./WorkEditor";
+import { BoardEditor } from "./BoardEditor";
+import { SkillsEditor } from "./SkillsEditor";
+import { GroupsEditor } from "./GroupsEditor";
 import styles from "./ProfilePage.module.css";
 
 function CheckIcon() {
@@ -112,6 +116,7 @@ export function ProfileHero({
               height={430}
               radius={20}
               placeholder={`${profile.first} ${profile.last}`}
+              alt={`${profile.first} ${profile.last}`}
             />
             {profile.verified && (
               <span className={styles.vbadgeLg}>
@@ -173,35 +178,54 @@ export function ProfileHero({
             <div className={styles.cta}>
               {isSelf ? (
                 <>
-                  <Button size="lg" onClick={onEdit}>
+                  <Button id="profileEditCta" size="lg" onClick={onEdit}>
                     <FiEdit3 aria-hidden /> {t("members:profile.hero.editCta")}
                   </Button>
                   <Button size="lg" variant="ghost" onClick={onPreview}>
                     <FiEye aria-hidden /> {t("members:profile.hero.previewCta")}
                   </Button>
                 </>
+              ) : asVisitor ? (
+                // Faithful preview of what a first-time visitor sees — the same
+                // primary + vouch CTAs a real viewer gets, rendered inert so
+                // preview mode doesn't leave an empty, misleading action row.
+                <>
+                  {profile.visibility === "private" ? (
+                    <Button size="lg" variant="ghost" disabled>
+                      {t("members:profile.hero.requestIntroCta")}
+                    </Button>
+                  ) : (
+                    <Button size="lg" disabled>
+                      {t("members:profile.hero.sayHelloCta")}
+                    </Button>
+                  )}
+                  <Button size="lg" variant="ghost" disabled>
+                    {t("members:profile.hero.vouchForCta", {
+                      first: profile.first,
+                    })}
+                  </Button>
+                </>
               ) : (
                 <>
-                  {!asVisitor &&
-                    (profile.visibility === "private" ? (
-                      <Button size="lg" variant="ghost" to={routes.invite}>
-                        {t("members:profile.hero.requestIntroCta")}
-                      </Button>
-                    ) : (
-                      <Button
-                        size="lg"
-                        onClick={() =>
-                          contact({
-                            slug: profile.slug,
-                            name: `${profile.first} ${profile.last}`,
-                          })
-                        }
-                      >
-                        {connected
-                          ? t("connect:contact.message")
-                          : t("members:profile.hero.sayHelloCta")}
-                      </Button>
-                    ))}
+                  {profile.visibility === "private" ? (
+                    <Button size="lg" variant="ghost" to={routes.invite}>
+                      {t("members:profile.hero.requestIntroCta")}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="lg"
+                      onClick={() =>
+                        contact({
+                          slug: profile.slug,
+                          name: `${profile.first} ${profile.last}`,
+                        })
+                      }
+                    >
+                      {connected
+                        ? t("connect:contact.message")
+                        : t("members:profile.hero.sayHelloCta")}
+                    </Button>
+                  )}
                   {!realSelf &&
                     (vouched ? (
                       <span className={styles.vouchedActions}>
@@ -254,7 +278,18 @@ export function ProfileHero({
  */
 function HeroRecognition() {
   const { t } = useTranslation();
-  const { level, badges, perks } = useRecognition();
+  const { level, badges, perks, hasRealData } = useRecognition();
+  // Until real recognition data lands in live mode, skeleton the chips rather
+  // than flash the demo placeholder's fictional level/badge/perk counts.
+  if (!hasRealData) {
+    return (
+      <div className={styles.heroRecog} aria-hidden>
+        <SkeletonLine width={128} height={26} />
+        <SkeletonLine width={92} height={26} />
+        <SkeletonLine width={108} height={26} />
+      </div>
+    );
+  }
   const totalBadges = badges.earnedCount + badges.discoverCount;
   return (
     <div className={styles.heroRecog}>
@@ -281,40 +316,79 @@ function HeroRecognition() {
   );
 }
 
+/** The editable profile lists surfaced as inline editors while in edit mode. */
+export interface ProfileContentEdit {
+  work: MemberProfile["work"];
+  skills: MemberProfile["skills"];
+  groups: MemberProfile["groups"];
+  board: MemberProfile["board"];
+  update: (
+    patch: Partial<{
+      work: MemberProfile["work"];
+      skills: MemberProfile["skills"];
+      groups: MemberProfile["groups"];
+      board: MemberProfile["board"];
+    }>,
+  ) => void;
+}
+
 export function ProfileContent({
   profile,
   isSelf,
-  workEdit,
+  edit,
 }: {
   profile: MemberProfile;
   isSelf?: boolean;
-  /** When set (edit mode), the work section becomes an editor bound to the draft. */
-  workEdit?: {
-    work: MemberProfile["work"];
-    onChange: (next: MemberProfile["work"]) => void;
-  };
+  /** When set (edit mode), the editable sections become inline editors bound to
+   *  the draft. Sections with no editor (Shapings, Activity, Related) are hidden
+   *  while editing rather than shown read-only with no affordance. */
+  edit?: ProfileContentEdit;
 }) {
   return (
     <div className="wrap">
       {/* While editing, the Now editor lives in the hero — showing the committed
           card here too would just be a stale second copy of the same field. */}
-      {!workEdit && <NowSection profile={profile} isSelf={isSelf} />}
-      {workEdit ? (
+      {!edit && <NowSection profile={profile} isSelf={isSelf} />}
+      {edit ? (
         <LookingForEditor />
       ) : (
         <LookingForSection profile={profile} isSelf={isSelf} />
       )}
-      {workEdit ? (
-        <WorkEditor work={workEdit.work} onChange={workEdit.onChange} />
+      {edit ? (
+        <WorkEditor
+          work={edit.work}
+          onChange={(work) => edit.update({ work })}
+        />
       ) : (
         <SelectedWorkSection profile={profile} />
       )}
-      <BoardSection profile={profile} />
-      <SkillsSection profile={profile} />
-      <GroupsSection profile={profile} />
-      <ShapingsSection profile={profile} />
-      <ActivitySection profile={profile} />
-      <RelatedSection profile={profile} />
+      {edit ? (
+        <BoardEditor
+          board={edit.board}
+          onChange={(board) => edit.update({ board })}
+        />
+      ) : (
+        <BoardSection profile={profile} />
+      )}
+      {edit ? (
+        <SkillsEditor
+          skills={edit.skills}
+          onChange={(skills) => edit.update({ skills })}
+        />
+      ) : (
+        <SkillsSection profile={profile} />
+      )}
+      {edit ? (
+        <GroupsEditor
+          groups={edit.groups}
+          onChange={(groups) => edit.update({ groups })}
+        />
+      ) : (
+        <GroupsSection profile={profile} />
+      )}
+      {!edit && <ShapingsSection profile={profile} />}
+      {!edit && <ActivitySection profile={profile} />}
+      {!edit && <RelatedSection profile={profile} />}
     </div>
   );
 }

@@ -46,6 +46,49 @@ export function groupIntoRuns(
 }
 
 /**
+ * One block of a rendered timeline: either a same-sender `run` of ordinary
+ * bubbles, or a standalone `system` message (rendered as a centred pill). System
+ * messages never join a sender run — they break the flow on both sides.
+ */
+export type TimelineItem =
+  | { kind: "run"; run: MessageRun }
+  | { kind: "system"; message: ChatMessage };
+
+/**
+ * Splits a day-group's flat list into ordered timeline blocks: contiguous
+ * non-system messages are grouped into sender runs (via `groupIntoRuns`, so the
+ * gap/`breakBefore` semantics are shared, not re-implemented), and each
+ * `kind: "system"` message becomes its own centred-pill block. Order is
+ * preserved; a group with no system messages yields exactly the runs
+ * `groupIntoRuns` would produce.
+ */
+export function buildTimeline(
+  items: ChatMessage[],
+  maxGapMs = 15 * 60_000,
+  breakBefore?: ChatMessage,
+): TimelineItem[] {
+  const blocks: TimelineItem[] = [];
+  let segment: ChatMessage[] = [];
+  const flushSegment = () => {
+    if (segment.length === 0) return;
+    for (const run of groupIntoRuns(segment, maxGapMs, breakBefore)) {
+      blocks.push({ kind: "run", run });
+    }
+    segment = [];
+  };
+  for (const message of items) {
+    if (message.kind === "system") {
+      flushSegment();
+      blocks.push({ kind: "system", message });
+    } else {
+      segment.push(message);
+    }
+  }
+  flushSegment();
+  return blocks;
+}
+
+/**
  * True when a message body is only emoji (plus whitespace / ZWJ / variation
  * selectors) and short — those render without a bubble, at a larger glyph size,
  * per modern chat convention. Handles pictographs, skin-tone modifiers, ZWJ

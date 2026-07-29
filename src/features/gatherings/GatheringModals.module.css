@@ -30,7 +30,7 @@
   max-width: 520px;
   padding: 34px 36px 38px;
   position: relative;
-  max-height: 90vh;
+  max-height: 90svh;
   overflow-y: auto;
   animation: modalUp 0.4s var(--ease);
 }

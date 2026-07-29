@@ -1,0 +1,51 @@
+/* Fixed thumb-zone escape hatch for high-stakes safety pages. Sits in the
+   lower-right reach arc, clears the notch/home-indicator via env(), and clears
+   the installed bottom tab bar via --bottom-inset (0 in a browser tab). */
+.quickExit {
+  position: fixed;
+  z-index: 300;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, calc(var(--bottom-inset, 0px) + env(safe-area-inset-bottom)));
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--plum);
+  box-shadow: var(--shadow-toast);
+  touch-action: manipulation;
+  transition:
+    transform 0.15s var(--ease),
+    background 0.2s var(--ease);
+}
+.quickExit svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.4;
+}
+@media (hover: hover) and (pointer: fine) {
+  .quickExit:hover {
+    transform: translateY(-1px);
+    background: var(--accent);
+  }
+}
+.quickExit:active {
+  transform: translateY(0) scale(0.97);
+}
+.quickExit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .quickExit {
+    transition: none;
+  }
+}

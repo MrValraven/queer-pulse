@@ -59,6 +59,7 @@ export function BillingFields({ pf }: { pf: PaymentForm }) {
             type="text"
             inputMode="numeric"
             autoComplete="postal-code"
+            enterKeyHint="done"
             placeholder="1100-000"
             value={pf.postal}
             onChange={(e) => {

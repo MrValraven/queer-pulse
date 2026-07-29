@@ -49,13 +49,11 @@ const TITLE_KEYS: Record<ListingStatus, { text: string; em: string }> = {
 
 export function ListBusinessSuccess({
   listing,
-  onSetStage,
   onEdit,
   onWithdraw,
   onAnother,
 }: {
   listing: PendingListing;
-  onSetStage: (s: ListingStatus) => void;
   onEdit: () => void;
   onWithdraw: () => void;
   onAnother: () => void;
@@ -166,22 +164,6 @@ export function ListBusinessSuccess({
             components={{ b: <b /> }}
             values={{ ref: listing.ref }}
           />
-        </div>
-
-        <div className={styles.demoFlip}>
-          <span>{t("marketing:listBusiness.success.demoFlip")}</span>
-          {STAGES.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              className={
-                listing.status === s.id ? styles.demoFlipOn : undefined
-              }
-              onClick={() => onSetStage(s.id)}
-            >
-              {t(s.labelKey)}
-            </button>
-          ))}
         </div>
       </div>
     </div>

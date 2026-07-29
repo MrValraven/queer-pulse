@@ -106,7 +106,10 @@ describe("usePrefersReducedMotion integration", () => {
     expect(screen.getByText("full")).toBeInTheDocument();
 
     // Async act so the MutationObserver microtask (which fires the state update)
-    // is flushed inside act.
+    // is flushed inside act. The callback body is synchronous, but the async
+    // signature is required: only the async form of `act` awaits pending
+    // microtasks, which is the whole point here.
+    // eslint-disable-next-line @typescript-eslint/require-await
     await act(async () => {
       screen.getByRole("button").click();
     });

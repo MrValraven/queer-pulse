@@ -1,3 +1,8 @@
+/* eslint-disable react-refresh/only-export-components --
+   useDemoMode is imported in 261 files across the app (it gates the
+   demo/live data path in every feature). Splitting the hook into its own
+   module would churn all 261 import sites for a dev-only fast-refresh
+   benefit, so the app-wide toggle stays colocated with its provider. */
 import {
   createContext,
   useCallback,

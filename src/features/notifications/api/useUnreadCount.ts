@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getUnreadCount } from "./notifications.api";
-import { DEMO_UNREAD_IDS } from "../notificationsList.data";
 
 /**
  * Unread notification count for the nav bell badge.
@@ -18,7 +17,11 @@ export function useUnreadCount(): number {
   const { data } = useQuery<number>({
     queryKey: ["notifications", "unread-count", demoMode],
     queryFn: async () => {
-      if (demoMode) return DEMO_UNREAD_IDS.length;
+      if (demoMode) {
+        // Code-split: the demo mock is only pulled into the bundle in demo mode.
+        const { DEMO_UNREAD_IDS } = await import("../notificationsList.data");
+        return DEMO_UNREAD_IDS.length;
+      }
       return getUnreadCount();
     },
     // The nav bell shouldn't hard-fail the app if the count can't load.

@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -13,38 +11,12 @@ import {
   SEED_SENT,
 } from "../../features/connect/connections.data";
 import { useDemoMode } from "./DemoModeProvider";
-import { useAcceptedConnections } from "../../features/connect/api/useAcceptedConnections";
+import {
+  ConnectionsContext,
+  type ConnectionsState,
+  type ConnectionsStore,
+} from "./useConnections";
 
-interface ConnectionsState {
-  /** Member slugs you're connected to (accepted). */
-  connected: string[];
-  /** Member slugs who've asked to connect with you. */
-  incoming: string[];
-  /** Member slugs you've sent a request to (awaiting reply). */
-  sent: string[];
-}
-
-interface ConnectionsContextValue extends ConnectionsState {
-  isConnected: (slug: string) => boolean;
-  isPending: (slug: string) => boolean;
-  isIncoming: (slug: string) => boolean;
-  /** Accept an incoming request: moves the slug from `incoming` to `connected`. */
-  accept: (slug: string) => void;
-  /** Politely decline: drops the slug from `incoming`. */
-  decline: (slug: string) => void;
-  /** Withdraw a sent request: drops the slug from `sent`. */
-  withdraw: (slug: string) => void;
-  /** Send a connection request. No-op if already connected or already sent. */
-  sendRequest: (slug: string) => void;
-}
-
-/** Internal: the context value plus the hydration setter. Most callers consume
- *  only ConnectionsContextValue; useConnectionsHydrated needs setConnected. */
-interface ConnectionsStore extends ConnectionsContextValue {
-  setConnected: (slugs: string[]) => void;
-}
-
-const ConnectionsContext = createContext<ConnectionsStore | null>(null);
 const STORAGE_KEY = "qp.connections.v1";
 
 function seedState(): ConnectionsState {
@@ -65,15 +37,19 @@ function readInitial(): ConnectionsState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return seed;
-    const parsed = JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
+    const record =
+      typeof parsed === "object" && parsed !== null
+        ? (parsed as Record<string, unknown>)
+        : {};
+    const asSlugList = (value: unknown): string[] | null =>
+      Array.isArray(value)
+        ? value.filter((item): item is string => typeof item === "string")
+        : null;
     return {
-      connected: Array.isArray(parsed?.connected)
-        ? parsed.connected
-        : seed.connected,
-      incoming: Array.isArray(parsed?.incoming)
-        ? parsed.incoming
-        : seed.incoming,
-      sent: Array.isArray(parsed?.sent) ? parsed.sent : seed.sent,
+      connected: asSlugList(record.connected) ?? seed.connected,
+      incoming: asSlugList(record.incoming) ?? seed.incoming,
+      sent: asSlugList(record.sent) ?? seed.sent,
     };
   } catch {
     return seed;
@@ -179,35 +155,4 @@ export function ConnectionsProvider({ children }: { children: ReactNode }) {
       {children}
     </ConnectionsContext.Provider>
   );
-}
-
-export function useConnections() {
-  const ctx = useContext(ConnectionsContext);
-  if (!ctx) {
-    throw new Error("useConnections must be used within ConnectionsProvider");
-  }
-  return ctx;
-}
-
-/**
- * The connections store hydrated from the server's accepted-connection slugs.
- * Subscribe here wherever you need a reliable `isConnected(slug)` in live mode
- * (every member-contact button). `useConnections()` alone is demo-only truth:
- * in live it starts empty. Hydration replaces `connected` wholesale — the server
- * is authoritative; `undefined` (demo / logged-out / in-flight / failed) leaves
- * the seeded/empty list alone. Safe from several subscribers at once: react-query
- * hands them all the same `data` reference, so the effect only re-runs on a new
- * fetch result.
- */
-export function useConnectionsHydrated(): ConnectionsContextValue {
-  const store = useConnections() as ConnectionsStore;
-  const { setConnected } = store;
-  const { data: serverConnected } = useAcceptedConnections();
-
-  useEffect(() => {
-    if (!serverConnected) return;
-    setConnected(serverConnected);
-  }, [serverConnected, setConnected]);
-
-  return store;
 }

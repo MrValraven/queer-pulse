@@ -129,6 +129,14 @@
   .layout {
     grid-template-columns: 1fr;
   }
+  /* Safety-first: lift the emergency / report contacts above the reporting
+     guide on a phone so at-risk visitors reach "who to call now" without
+     scrolling past the whole article. */
+  .sidebar {
+    order: -1;
+    position: static;
+    top: auto;
+  }
 }
 
 .preamble {

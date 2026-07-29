@@ -55,25 +55,25 @@ function buildItems(
       onClick: share,
     },
   ];
-  if (ev.cat === "going" || ev.cat === "saved" || ev.cat === "hosting")
+  if (ev.category === "going" || ev.category === "saved" || ev.category === "hosting")
     items.push({
       icon: Icons.invite,
       label: translate("myevents:moreMenu.inviteFriend"),
       onClick: go(routes.invite),
     });
-  if (ev.cat !== "past" && ev.cat !== "hosting" && ev.cat !== "sent")
+  if (ev.category !== "past" && ev.category !== "hosting" && ev.category !== "sent")
     items.push({
-      icon: Icons.msg,
+      icon: Icons.message,
       label: translate("myevents:moreMenu.messageHost"),
       onClick: go(routes.messages),
     });
-  if (COMMITTED[ev.cat])
+  if (COMMITTED[ev.category])
     items.push({
       icon: Icons.chat,
       label: translate("myevents:moreMenu.openGroupChat"),
       onClick: go(routes.messages),
     });
-  if (ev.cat === "going" && !ev.cancelled) {
+  if (ev.category === "going" && !ev.cancelled) {
     items.push(
       ev.maybe
         ? {
@@ -111,7 +111,7 @@ function buildItems(
       ),
     });
   }
-  if (ev.cat === "past" && ev.connect)
+  if (ev.category === "past" && ev.connect)
     items.push({
       icon: Icons.connect,
       label: translate("myevents:moreMenu.connectWithMet"),
@@ -119,7 +119,7 @@ function buildItems(
         translate("myevents:moreMenu.connectWithMetToast"),
       ),
     });
-  if (ev.cat !== "hosting" && ev.cat !== "sent") {
+  if (ev.category !== "hosting" && ev.category !== "sent") {
     items.push("sep");
     items.push({
       icon: Icons.report,
@@ -143,7 +143,7 @@ export function MoreMenu() {
   const c = useMyEvents();
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
-  const { open, evId, x, y } = c.moreMenu;
+  const { open, eventId, x, y } = c.moreMenu;
   const { closeMore } = c;
 
   useEffect(() => {
@@ -162,7 +162,7 @@ export function MoreMenu() {
     };
   }, [open, closeMore]);
 
-  const ev = evId ? c.byId(evId) : undefined;
+  const ev = eventId ? c.byId(eventId) : undefined;
   const left = Math.min(
     x,
     (typeof window !== "undefined" ? window.innerWidth : 1200) - 220,
@@ -177,7 +177,7 @@ export function MoreMenu() {
     >
       {open &&
         ev &&
-        buildItems(ev, c, navigate, t).map((it, i) =>
+        buildItems(ev, c, (path) => void navigate(path), t).map((it, i) =>
           it === "sep" ? (
             <div key={`s${i}`} className={sx("mm-sep")} />
           ) : (

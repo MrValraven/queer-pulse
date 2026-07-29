@@ -56,9 +56,9 @@ export function useTriagePartnerApplication() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["partner-applications"] });
+      void queryClient.invalidateQueries({ queryKey: ["partner-applications"] });
       // An approval turns into a public partner → refresh the public listing too.
-      queryClient.invalidateQueries({ queryKey: ["partners"] });
+      void queryClient.invalidateQueries({ queryKey: ["partners"] });
     },
   });
 }

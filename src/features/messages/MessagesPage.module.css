@@ -1,6 +1,9 @@
 .app {
   display: flex;
-  height: calc(100svh - 104px);
+  /* Subtract the on-screen keyboard overlap (published by
+     useVisualViewportKeyboard) so the composer stays visible above the keyboard
+     on iOS; 0px when no keyboard is open. */
+  height: calc(100svh - 104px - var(--keyboard-inset, 0px));
   margin-top: 92px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
@@ -24,6 +27,11 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
+}
+.tpHeadActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 .tpTitle {
   font-family: var(--serif);
@@ -66,6 +74,7 @@
   gap: 10px;
   padding: 13px 16px;
   cursor: pointer;
+  touch-action: manipulation;
   transition: background 0.15s, padding-inline-end var(--ease);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
   width: 100%;
@@ -279,10 +288,29 @@
 .area {
   flex: 1;
   overflow-y: auto;
+  /* Backstop: the conversation log scrolls vertically only. A hover bar or
+     reaction picker anchored to a right-hugging sent bubble must never be able
+     to widen the log and hand the page a horizontal scrollbar. `clip` (not
+     `hidden`) keeps this from becoming a programmatic scroll container. */
+  overflow-x: clip;
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+/* Visually-hidden but screen-reader-available (the scoped new-message live
+   region). Standard clip-rect technique — no layout impact. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .loadingOlder {
   text-align: center;
@@ -316,10 +344,8 @@
 .runs {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
-  max-width: 760px;
-  margin-inline: auto;
 }
 .daySep {
   display: flex;
@@ -355,13 +381,46 @@
   height: 1px;
   background: rgba(var(--accent-rgb), 0.4);
 }
-/* ── Message runs ── */
+/* ── System messages (group events) ──
+   A centred pill in the flow, styled like the day separator's label so system
+   events read as chrome, not a member's bubble. */
+.systemRow {
+  display: flex;
+  justify-content: center;
+  margin-block: 2px;
+}
+.systemPill {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink-40);
+  background: rgba(var(--plum-rgb), 0.05);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  text-align: center;
+  max-width: 80%;
+}
+/* Sender name above a received run in a GROUP thread (WhatsApp-style). Own runs
+   and every DM run never render this. */
+.runSenderName {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+  margin: 0 0 2px 2px;
+}
+/* ── Message runs ──
+   A received run is [avatar][bubbles]; a sent run is bubbles only (no own
+   avatar in a 1:1 — see MessageRun). `gap` keeps the counterpart avatar off the
+   bubble/reaction chips, and top alignment pins the avatar beside the run's
+   FIRST bubble so a reaction row added under the LAST bubble can never drag it
+   down onto the chips. */
 .run {
   display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 .runAvatar {
   flex: none;
-  align-self: flex-end;
 }
 .runBubbles {
   display: flex;
@@ -410,6 +469,9 @@
 .bubble {
   --bubble-radius: 20px;
   --bubble-radius-tight: 7px;
+  /* flow-root contains the right-floated in-bubble meta (time + status tick) so
+     the bubble's height always includes it and long text wraps around it. */
+  display: flow-root;
   width: fit-content;
   max-width: 100%;
   padding: 8px 14px;
@@ -476,6 +538,104 @@
   flex-direction: column;
   width: fit-content;
   max-width: min(80%, 46ch);
+  /* Swipe-to-reply follows a horizontal drag with a transform; keep vertical
+     panning native (the list scrolls) by claiming only the horizontal axis, so
+     the browser hands us those pointer moves without also scrolling sideways. */
+  touch-action: pan-y;
+  /* Snap-back after a swipe releases (transform-only, ease-out). Suppressed
+     while actively following the finger via `.bubbleWrapSwiping`. */
+  transition: transform 250ms var(--ease-out);
+}
+/* Following the finger: no transition, so the bubble tracks 1:1. */
+.bubbleWrapSwiping {
+  transition: none;
+}
+/* Reply-hint icon revealed in the gutter being uncovered as a bubble slides
+   under a swipe. Opacity + scale are driven inline by swipe progress; colour
+   is the muted meta ink so it reads on cream. Default (received bubbles,
+   swiping right) sits in the LEFT gutter; `.swipeReplyHintEnd` (sent bubbles,
+   swiping left) mirrors it to the RIGHT gutter with the icon flipped to point
+   the other way. */
+.swipeReplyHint {
+  position: absolute;
+  inset-inline-start: -30px;
+  top: 50%;
+  translate: 0 -50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-40);
+  pointer-events: none;
+}
+.swipeReplyHintEnd {
+  inset-inline-start: auto;
+  inset-inline-end: -30px;
+}
+.swipeReplyHintEnd svg {
+  transform: scaleX(-1);
+}
+/* Instagram-style ❤️ pop on a double-tap that ADDS the love reaction. Centered
+   over the bubble, a single scale+fade, transform/opacity only. */
+.heartPop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+  pointer-events: none;
+  z-index: 2;
+  animation: heartPop 600ms var(--ease-out) forwards;
+}
+/* Fill the outline heart so the pop reads as a solid ❤️. */
+.heartPop svg {
+  fill: currentColor;
+}
+@keyframes heartPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No follow-drag animation and no heart pop under reduced motion — the reply
+     still arms/fires past threshold and the reaction still toggles, just
+     instantly. (The bubble never receives a translate transform in this mode
+     — MessageRun.tsx withholds it — so the reply-hint icon, driven by the
+     same drag progress, is the only visible cue while dragging.) */
+  .bubbleWrap {
+    transition: none;
+  }
+  .heartPop {
+    animation: none;
+    opacity: 0;
+  }
+}
+/* A reaction row is often WIDER than a short sent bubble ("hehe"). The wrap hugs
+   its widest child and is right-anchored (`.runSent .runBubbles`), so without
+   this the bubble — a fixed-width item that falls back to flex-start — gets
+   dragged leftward the moment wider chips appear (the "moves right-to-left on
+   react" bug). Anchor a sent wrap's children to the right so the bubble stays
+   pinned to the panel edge and the chips extend leftward instead. Received runs
+   are already left-anchored (wrap grows rightward), so they need no change. */
+.runSent .bubbleWrap {
+  align-items: flex-end;
+}
+/* The bubble is a focusable keyboard entry point to the action overlay (Enter /
+   Menu key). Show a clear focus ring; focus-within already reveals the hover
+   action bar for the same keyboard path. */
+.bubbleWrap:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+  border-radius: var(--radius-badge);
 }
 
 /* ── Reply quote (tap-to-scroll to the original message) ──
@@ -506,8 +666,11 @@
   background: rgba(var(--plum-rgb), 0.07);
 }
 .replyQuoteSent {
-  border-inline-start-color: rgba(var(--cream-rgb), 0.85);
-  background: rgba(var(--cream-rgb), 0.16);
+  /* A coral accent bar + a more opaque cream wash reads cleanly as a nested
+     quote against the plum bubble (the old 0.16 cream wash was muddy and the
+     cream bar disappeared into the bubble). */
+  border-inline-start-color: var(--accent);
+  background: rgba(var(--cream-rgb), 0.22);
 }
 @media (hover: hover) {
   .replyQuoteReceived:hover:not(:disabled) {
@@ -534,7 +697,7 @@
   color: var(--plum);
 }
 .replyQuoteSent .replyQuoteName {
-  color: rgba(var(--cream-rgb), 0.96);
+  color: var(--cream);
 }
 .replyQuoteSnippet {
   max-width: 100%;
@@ -545,7 +708,7 @@
   white-space: nowrap;
 }
 .replyQuoteSent .replyQuoteSnippet {
-  color: rgba(var(--cream-rgb), 0.78);
+  color: rgba(var(--cream-rgb), 0.86);
 }
 /* Slightly tighten the bubble top over an inline reply quote. */
 .bubbleWithReply {
@@ -581,11 +744,30 @@
   transition: opacity var(--dur-fast) var(--ease);
   z-index: 3;
 }
-/* Sent bubbles hug the right edge of the panel — open the bar toward the
-   center instead, so it can't spill past the viewport. */
+/* Bridge the 6px gap between the bubble top and the lifted action bar so the
+   pointer can travel up onto the buttons without ever leaving `.bubbleWrap`'s
+   hover region (which would fade the bar out mid-transit and make it
+   unclickable). Sits below the bar, so it never covers the buttons. */
+.messageActionsSlot::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: 8px;
+}
+/* Sent bubbles hug the right edge of the panel — anchor the bar to the bubble's
+   right edge and open it inward (leftward). A short sent bubble ("hehe") is
+   still pinned to the panel edge, so opening the bar/picker rightward from the
+   bubble's *left* would spill past the viewport and force horizontal scroll. */
 .messageActionsSlotSent {
-  inset-inline-end: auto;
-  inset-inline-start: 6px;
+  inset-inline-end: 6px;
+  inset-inline-start: auto;
+}
+/* Sent-side reaction picker opens from the bar's right edge (leftward), same
+   reason — inset-inline-start: 0 would push it off the right of the screen. */
+.messageActionsSlotSent .reactionPickerPopover {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
 }
 @media (hover: hover) {
   .bubbleWrap:hover .messageActionsSlot {
@@ -670,8 +852,8 @@
   animation: msgBubbleIn var(--dur-fast) var(--ease-out) both;
 }
 .reactionPickerBtn {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   background: none;
@@ -681,6 +863,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  touch-action: manipulation;
   transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
@@ -753,6 +936,7 @@
   font-size: 0.75rem;
   color: var(--ink-60);
   cursor: pointer;
+  touch-action: manipulation;
   box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.06);
   animation: msgBubbleIn var(--dur-fast) var(--ease) both;
   transition:
@@ -789,21 +973,52 @@
   font-weight: 600;
 }
 
-.bubbleTime {
-  font-size: 0.6875rem;
-  color: var(--ink-40);
-  margin-block-start: 3px;
+/* ── In-bubble meta (WhatsApp-style time + send-status tick) ──
+   Rendered only on the LAST bubble of a run. In a text bubble it floats to the
+   bottom-right (`.bubbleMeta`) and the message text wraps around it; below an
+   emoji-only message (no surface to tuck into) it sits as its own small line
+   (`.bubbleMetaBelow`). Colour adapts: on a plum sent bubble the meta is cream,
+   on a paper received bubble / on the page (emoji) it is muted ink. */
+.bubbleMeta {
+  float: inline-end;
+  margin-inline-start: 8px;
+  /* nudge to sit on the bubble's bottom baseline beside the last text line */
+  translate: 0 4px;
 }
-.runSent .bubbleTime {
-  text-align: end;
+.bubbleMeta,
+.bubbleMetaBelow {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.625rem;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
 }
-
-.msgStatus {
-  font-size: 0.6875rem;
-  color: var(--ink-40);
+.bubbleMetaBelow {
   margin-block-start: 2px;
 }
-.runSent .msgStatus { text-align: end; }
+.runSent .bubbleMetaBelow {
+  align-self: flex-end;
+}
+.bubbleMetaReceived {
+  color: var(--ink-40);
+}
+.bubbleMetaSent {
+  color: rgba(var(--cream-rgb), 0.75);
+}
+.metaTick {
+  display: inline-flex;
+  align-items: center;
+}
+/* The ladder's ticks: the sending clock, the single-check "sent", and the
+   double-check "delivered" all inherit the muted meta ink (`.bubbleMetaSent` /
+   `.bubbleMetaReceived`). Only the final "seen" rung recolours to jade
+   (success) — it reads on plum, paper, and cream. */
+.metaTickSeen {
+  color: var(--jade);
+}
+
 .retryBtn {
   font-size: 0.6875rem;
   color: var(--accent-ink);
@@ -833,7 +1048,7 @@
   border-radius: var(--radius-badge);
   padding: 11px 14px;
   font-family: var(--sans);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--ink);
   background: var(--paper);
   resize: none;
@@ -861,7 +1076,10 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  /* No flex `gap` — the reply-preview banner is always in the DOM (see
+     `.replyPreviewWrap`) and supplies its own `margin-block-end` only while
+     open, so no permanent gap appears when it's collapsed to nothing. */
+  gap: 0;
   flex: none;
   background: var(--paper);
 }
@@ -870,6 +1088,10 @@
   align-items: flex-end;
   gap: 10px;
 }
+.composerTaWrap {
+  flex: 1;
+  min-width: 0;
+}
 .composerTa {
   flex: 1;
   min-width: 0;
@@ -877,7 +1099,8 @@
   border-radius: var(--radius-badge);
   padding: 11px 14px;
   font-family: var(--sans);
-  font-size: 0.9375rem;
+  /* >=16px so iOS Safari never zooms the viewport when the composer focuses. */
+  font-size: 1rem;
   color: var(--ink);
   background: var(--cream);
   resize: none;
@@ -904,6 +1127,7 @@
   align-items: center;
   justify-content: center;
   flex: none;
+  touch-action: manipulation;
   transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
   opacity: 0.4;
 }
@@ -924,24 +1148,91 @@
 @media (prefers-reduced-motion: reduce) {
   .bubble,
   .emojiOnly,
-  .sent {
+  .sent,
+  .jumpPill,
+  .typingBubble {
     animation: none;
+  }
+  /* Static, clearly-visible dots — the indicator still communicates "typing"
+     without the bounce for motion-sensitive users. */
+  .typingDot {
+    animation: none;
+    transform: none;
+    opacity: 0.7;
   }
   .sendBtnActive:active {
     transform: none;
   }
 }
 
-/* ── Reply preview banner (Composer) ── */
+/* ── Reply preview banner (Composer) ──
+   `.replyPreviewWrap` is ALWAYS in the DOM — even with nothing to reply to —
+   so its grid-row/margin transition always has a real "closed" state already
+   painted to animate from; toggling `data-open` (never mount/unmount timing)
+   drives both the entrance and the exit. The banner's own content
+   (`.replyPreview`) mounts/unmounts with the reply target and plays its own
+   enter/exit keyframe in step — `useReplyPreviewTransition` keeps the content
+   mounted through the exit animation instead of vanishing instantly when the
+   reply is dismissed or cleared after send. */
+.replyPreviewWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-block-end: 0;
+  transition:
+    grid-template-rows var(--dur-base) var(--ease),
+    margin-block-end var(--dur-base) var(--ease);
+}
+.replyPreviewWrap[data-open="true"] {
+  grid-template-rows: 1fr;
+  margin-block-end: 8px;
+}
 .replyPreview {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  min-height: 0;
+  overflow: hidden;
   padding: 6px 10px;
   border-radius: var(--radius-badge);
   border-inline-start: 3px solid var(--plum);
   background: rgba(var(--plum-rgb), 0.06);
+  animation: replyPreviewIn var(--dur-base) var(--ease) both;
+}
+/* The content stays mounted (lingering) while the wrapper collapses — swap to
+   the matching exit keyframe so it fades/slides back out in step instead of
+   sitting at full opacity while the row clips away. */
+.replyPreviewWrap[data-open="false"] .replyPreview {
+  animation: replyPreviewOut var(--dur-base) var(--ease) both;
+}
+@keyframes replyPreviewIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes replyPreviewOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .replyPreviewWrap {
+    transition: none;
+  }
+  .replyPreview,
+  .replyPreviewWrap[data-open="false"] .replyPreview {
+    animation: none;
+  }
 }
 .replyPreviewBody {
   display: flex;
@@ -987,12 +1278,88 @@
   outline-offset: 2px;
 }
 
+/* ── In-list typing indicator ──
+   Rendered at the bottom of the message log as an incoming bubble on the left,
+   mirroring a received run: [avatar][bubble] with the same gap + top alignment.
+   The bubble reuses the received surface + a tail corner beside the avatar. */
 .typingRow {
-  padding: 4px 20px;
-  font-size: 0.75rem;
-  color: var(--ink-40);
-  font-style: italic;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
+.typingBubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 13px 15px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
+  border-radius: 20px;
+  border-end-start-radius: 7px;
+  box-shadow:
+    0 1px 1px rgba(var(--plum-rgb), 0.04),
+    0 4px 12px -8px rgba(var(--plum-rgb), 0.14);
+  animation: msgBubbleIn var(--dur-base) var(--ease) both;
+  transform-origin: bottom left;
+}
+.typingDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-40);
+  /* transform/opacity only, staggered; disabled under reduced motion below. */
+  animation: typingDotBounce 1.3s var(--ease-std) infinite;
+}
+.typingDot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.typingDot:nth-child(3) {
+  animation-delay: 0.32s;
+}
+@keyframes typingDotBounce {
+  0%,
+  55%,
+  100% {
+    transform: none;
+    opacity: 0.4;
+  }
+  27% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+/* Group typing label (WHO is typing) shown before the dots inside the bubble. */
+.typingLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-40);
+  margin-inline-end: 2px;
+}
+
+/* Group "Seen by N" receipt under the caller's latest message — right-aligned to
+   sit under an own (right-side) bubble; tappable to open the read list. */
+.groupSeenByLine {
+  display: block;
+  margin: 2px 4px 4px auto;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--jade);
+  background: none;
+  border: none;
+  padding: 2px 2px;
+  cursor: pointer;
+  text-align: right;
+}
+.groupSeenByLine:hover {
+  text-decoration: underline;
+}
+.groupSeenByLine:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 .officialBar {
   padding: 14px 16px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
@@ -1036,7 +1403,8 @@
 :global([data-theme="dark"]) .officialBar {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
-:global([data-theme="dark"]) .received {
+:global([data-theme="dark"]) .received,
+:global([data-theme="dark"]) .typingBubble {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .sent {
@@ -1094,7 +1462,7 @@
   border-radius: var(--radius-badge);
   padding: 11px 14px;
   font-family: var(--sans);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--ink);
   background: var(--cream);
   resize: vertical;
@@ -1127,14 +1495,15 @@
 .rowMenuTrigger {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 999px;
   background: transparent;
   color: var(--ink);
   opacity: 0;
   cursor: pointer;
+  touch-action: manipulation;
   transition: opacity var(--ease), background var(--ease);
 }
 
@@ -1285,6 +1654,39 @@
   color: var(--danger);
 }
 
+/* ── Desktop right-click / keyboard context menu (MessageContextMenu) ──
+   The native-feeling counterpart to the touch overlay: a compact reaction row
+   + action menu pinned at the cursor (fixed-position; JS clamps left/top into
+   the viewport and sets transform-origin so it grows from the pointer). No
+   backdrop and no lifted bubble clone — the page stays visible behind it. */
+.contextMenu {
+  position: fixed;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: min(280px, 82vw);
+  animation: msgContextMenuIn var(--dur-fast) var(--ease-out) both;
+}
+.contextMenu[data-reduced-motion="true"] {
+  animation: none;
+}
+@keyframes msgContextMenuIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contextMenu {
+    animation: none;
+  }
+}
+
 @keyframes overlayBackdropFade {
   from {
     opacity: 0;
@@ -1300,4 +1702,217 @@
   .overlayMenu {
     animation: none;
   }
+}
+
+/* ── Inbox search (conversation-name matches + message-body hits) ── */
+.searchResults {
+  display: flex;
+  flex-direction: column;
+}
+.searchSection {
+  padding-block: 6px 10px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
+}
+.searchSection:last-child {
+  border-bottom: none;
+}
+.searchSectionLabel {
+  padding: 10px 16px 6px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.searchStatus {
+  padding: 6px 16px 10px;
+  font-size: 0.85rem;
+  color: var(--ink-60);
+}
+.hitGroup {
+  padding-block: 2px 6px;
+}
+.hitGroupHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: start;
+  color: var(--text-strong);
+}
+.hitGroupName {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hitRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 7px 16px 7px 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: start;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .hitRow:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.hitRow:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: -2px;
+}
+.hitHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.hitSender {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-60);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hitTime {
+  flex: none;
+  font-size: 0.72rem;
+  color: var(--ink-40);
+}
+.hitSnippet {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text-strong);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.searchMark {
+  background: rgba(var(--accent-rgb), 0.22);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+  font-weight: 600;
+}
+
+/* ── Forward / Pin / Star (feature #18) ──────────────────────────────────── */
+
+/* Header star button — opens the "Starred messages" view. Sits beside the
+   view-profile link; matches the icon-button affordances used elsewhere. */
+.ctbIconBtn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  color: var(--ink-40);
+  border-radius: var(--radius-avatar);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .ctbIconBtn:hover {
+    background: rgba(var(--plum-rgb), 0.07);
+    color: var(--text-strong);
+  }
+}
+.ctbIconBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+/* Pinned-messages banner — a compact, tappable strip under the header. */
+.pinnedBanner {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: start;
+  padding: 8px 22px;
+  border: none;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--plum-rgb), 0.04);
+  color: var(--text-strong);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .pinnedBanner:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+  }
+}
+.pinnedBanner:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: -2px;
+}
+.pinnedBannerIcon {
+  flex: none;
+  display: inline-flex;
+  color: var(--plum);
+}
+.pinnedBannerText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.pinnedBannerLabel {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--plum);
+}
+.pinnedBannerSnippet {
+  font-size: 13px;
+  color: var(--ink-40);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* "Forwarded" label above a forwarded bubble's body. */
+.forwardedLabel {
+  display: block;
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 600;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+/* In-bubble pin (shared) + star (owner-only) indicators. */
+.messageMarks {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: 6px;
+  vertical-align: middle;
+}
+.messageMark {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-40);
 }

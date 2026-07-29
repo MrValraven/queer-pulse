@@ -98,6 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // session is known synchronously, so there's nothing to "check".
   useEffect(() => {
     if (!demoMode) return;
+    // Mirrors the localStorage-driven mock session (loggedIn) into auth state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChecking(false);
     setUser(loggedIn ? DEMO_USER : null);
   }, [demoMode, loggedIn]);
@@ -115,6 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setLoggedIn(false);
     });
+    // Reset before the async /auth/me bootstrap round trip resolves below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAuthError(null);
     setChecking(true);
     bootstrapCsrf()
@@ -168,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoggedIn(false);
       return;
     }
-    postLogout().finally(() => {
+    void postLogout().finally(() => {
       setUser(null);
       setLoggedIn(false);
     });

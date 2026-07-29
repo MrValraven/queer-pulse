@@ -42,7 +42,7 @@ export function BlockMutePage() {
             muteDur={muteDur}
             onMuteDur={setMuteDur}
             onContinue={() => setState(chosen === "mute" ? "muted" : "blocked")}
-            onCancel={() => navigate(-1)}
+            onCancel={() => void navigate(-1)}
           />
         )}
 

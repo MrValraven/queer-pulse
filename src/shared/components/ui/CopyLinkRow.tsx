@@ -64,7 +64,7 @@ export function CopyLinkRow({
       <button
         type="button"
         className={`${styles.copyBtn} ${copied ? styles.copyBtnDone : ""}`}
-        onClick={copy}
+        onClick={() => void copy()}
         aria-label={copied ? copiedToast : copyLabel}
       >
         {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}

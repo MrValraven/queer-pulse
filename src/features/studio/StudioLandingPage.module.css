@@ -39,6 +39,7 @@
   backdrop-filter: blur(18px) saturate(1.4);
   border-bottom: 1px solid var(--line);
   padding: 18px 36px;
+  padding-block-start: max(18px, env(safe-area-inset-top));
   display: flex;
   align-items: center;
   gap: 28px;

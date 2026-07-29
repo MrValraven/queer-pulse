@@ -1,5 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { directoryBlurb, isBlurbBorrowedFromBio } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
 import card from "./MemberDirectoryFilterPage.module.css";

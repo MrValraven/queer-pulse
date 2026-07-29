@@ -8,7 +8,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
+import { usePostedJobs } from "../../app/providers/usePostedJobs";
 import { JOBS } from "./jobs.data";
 import { useJob } from "./api/useJob";
 import { JobDetailSkeleton } from "./JobDetailSkeleton";

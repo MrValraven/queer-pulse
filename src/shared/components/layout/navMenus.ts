@@ -248,11 +248,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.resources.col.health.wellbeingHub",
             href: routes.wellbeing,
           },
-        ],
-      },
-      {
-        headKey: "shared:megaNav.resources.col.safety.head",
-        links: [
           {
             labelKey: "shared:megaNav.resources.col.safety.safetyGuide",
             href: routes.safety,
@@ -326,18 +321,13 @@ export const NAV_MENUS: MegaMenu[] = [
         ],
       },
       {
-        headKey: "shared:megaNav.culture.col.screenSound.head",
+        headKey: "shared:megaNav.culture.col.makers.head",
         links: [
           {
             labelKey: "shared:megaNav.culture.col.screenSound.cinema",
             href: routes.cinema,
             featured: true,
           },
-        ],
-      },
-      {
-        headKey: "shared:megaNav.culture.col.makers.head",
-        links: [
           {
             labelKey: "shared:megaNav.culture.col.makers.studio",
             href: routes.studio,

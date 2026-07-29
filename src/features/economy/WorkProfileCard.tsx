@@ -1,7 +1,7 @@
 import { Avatar, Button, VisibilityBadge } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { fullName, type Member } from "../members/data/members";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./WorkHubPage.module.css";

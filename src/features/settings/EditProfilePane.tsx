@@ -1,6 +1,6 @@
 import { useState, type KeyboardEvent } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {

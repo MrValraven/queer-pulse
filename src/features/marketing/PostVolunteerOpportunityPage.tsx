@@ -30,7 +30,7 @@ export function PostVolunteerOpportunityPage() {
         // Live mode returns a slug → jump to the new listing. Demo mode returns
         // no slug → show the plum success panel (never hits the network).
         if (res.slug) {
-          navigate(`${routes.volunteer}/opportunity/${res.slug}`);
+          void navigate(`${routes.volunteer}/opportunity/${res.slug}`);
         } else {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -67,7 +67,7 @@ export function PostVolunteerOpportunityPage() {
                 title={t("marketing:postOpportunity.success.title")}
                 em={t("marketing:postOpportunity.success.em")}
                 closeLabel={t("marketing:postOpportunity.success.closeLabel")}
-                onClose={() => navigate(routes.volunteer)}
+                onClose={() => void navigate(routes.volunteer)}
                 steps={[
                   t("marketing:postOpportunity.success.step1"),
                   t("marketing:postOpportunity.success.step2"),

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
+import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Membership } from "../membership.types";
 import { getMyCommunities } from "./communities.api";

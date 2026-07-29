@@ -9,7 +9,7 @@ import {
   LockedBadges,
   PerksLadder,
 } from "./BadgesSections";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import styles from "./BadgesPage.module.css";
 
 export function BadgesPage() {

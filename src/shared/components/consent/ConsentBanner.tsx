@@ -3,7 +3,7 @@ import { Button } from "../ui";
 import { Translation } from "../../i18n/Translation";
 import { useTranslation } from "../../i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { useConsent } from "../../../app/providers/ConsentProvider";
+import { useConsent } from "../../../app/providers/useConsent";
 import styles from "./Consent.module.css";
 
 /**

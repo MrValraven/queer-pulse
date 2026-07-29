@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
-import {
-  type Application,
-  type Recruiter,
-  type ThreadEntry,
-  followedUpPatch,
-} from "./applicationStatus.data";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { useSubmitFlow } from "./modalFlow";
+import type {
+  Application,
+  Recruiter,
+  ThreadEntry,
+} from "./applicationStatus.types";
+import { followedUpPatch } from "./applicationStatus.patches";
 import styles from "./ApplicationModals.module.css";
 
 export type MsgVariant = "message" | "followup" | "conversation";

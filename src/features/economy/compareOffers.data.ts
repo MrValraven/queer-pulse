@@ -1,4 +1,4 @@
-import type { Application } from "./applicationStatus.data";
+import type { Application } from "./applicationStatus.types";
 
 /** Each scalar field compared across offers, in display order. */
 export const COMPARE_ROWS: {

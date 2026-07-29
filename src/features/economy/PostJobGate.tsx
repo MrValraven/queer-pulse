@@ -45,7 +45,7 @@ export function PostJobGate({
           <Button
             variant="ghost-dark"
             size="lg"
-            onClick={() => navigate(routes.jobs)}
+            onClick={() => void navigate(routes.jobs)}
           >
             {t("economy:postJob.gate.backCta")}
           </Button>

@@ -29,7 +29,7 @@ export function StudioShell({
               <button
                 type="button"
                 aria-label={t("studio:shell.back")}
-                onClick={() => navigate(-1)}
+                onClick={() => void navigate(-1)}
               >
                 <svg
                   viewBox="0 0 14 14"
@@ -44,7 +44,7 @@ export function StudioShell({
               <button
                 type="button"
                 aria-label={t("studio:shell.forward")}
-                onClick={() => navigate(1)}
+                onClick={() => void navigate(1)}
               >
                 <svg
                   viewBox="0 0 14 14"

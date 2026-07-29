@@ -42,6 +42,34 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> mencionou-te numa discussão.",
   "type.mention.meta": "Menção",
 
+  // As notificações "mention" ramificam consoante `payload.entityKind` — o
+  // que foi mencionado, não quem. O "type.mention.*" acima cobre uma pessoa
+  // (e qualquer registo antigo de antes de existir `entityKind`); estas
+  // cobrem o resto.
+  "type.mention.community.text":
+    "A tua comunidade c/{entityRef} foi mencionada numa discussão.",
+  "type.mention.community.textNamed":
+    "<profile>{name}</profile> mencionou a tua comunidade c/{entityRef}.",
+  "type.mention.community.meta": "Menção de comunidade",
+
+  "type.mention.business.text":
+    "O teu negócio b/{entityRef} foi mencionado numa discussão.",
+  "type.mention.business.textNamed":
+    "<profile>{name}</profile> mencionou o teu negócio b/{entityRef}.",
+  "type.mention.business.meta": "Menção de negócio",
+
+  "type.mention.event.text":
+    "O teu convívio e/{entityRef} foi mencionado numa discussão.",
+  "type.mention.event.textNamed":
+    "<profile>{name}</profile> mencionou o teu convívio e/{entityRef}.",
+  "type.mention.event.meta": "Menção de convívio",
+
+  "type.mention.thread.text":
+    "O teu tópico t/{entityRef} foi mencionado numa discussão.",
+  "type.mention.thread.textNamed":
+    "<profile>{name}</profile> mencionou o teu tópico t/{entityRef}.",
+  "type.mention.thread.meta": "Menção de tópico",
+
   "type.event_invite.text": "Tens um convite para um convívio.",
   "type.event_invite.textNamed":
     "<profile>{name}</profile> convidou-te para um convívio.",

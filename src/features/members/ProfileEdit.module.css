@@ -23,7 +23,7 @@
 }
 .inlineInput::placeholder {
   color: var(--ink-40);
-  opacity: 0.7;
+  opacity: 1;
 }
 @media (hover: hover) {
   .inlineInput:hover {
@@ -273,6 +273,7 @@
   color: var(--ink);
 }
 .tagRemove {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -286,6 +287,16 @@
   transition:
     background 0.15s var(--ease),
     color 0.15s var(--ease);
+}
+/* Expand the touch target to ≥44px without enlarging the ink or the pill. */
+.tagRemove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
 }
 @media (hover: hover) {
   .tagRemove:hover {
@@ -534,6 +545,7 @@
   font-size: 14px;
 }
 .linkRemove {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -548,6 +560,16 @@
   transition:
     background 0.15s var(--ease),
     color 0.15s var(--ease);
+}
+/* Expand the touch target to ≥44px without enlarging the ink. */
+.linkRemove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
 }
 @media (hover: hover) {
   .linkRemove:hover {
@@ -695,7 +717,7 @@
   right: 0;
   bottom: 0;
   z-index: 95;
-  padding: 16px clamp(20px, 5vw, 64px);
+  padding: 16px clamp(20px, 5vw, 64px) calc(16px + env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -770,7 +792,7 @@
 .previewBar {
   position: fixed;
   left: 50%;
-  bottom: 22px;
+  bottom: calc(22px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 95;
   display: flex;
@@ -857,4 +879,49 @@
     animation: none;
     transition: none;
   }
+}
+
+/* ---- Accessibility: iOS input-zoom, touch targets, focus rings ------------ */
+
+/* Under 16px iOS zooms the page on focus. Raise the small inline inputs to 16px
+   on phones only; desktop sizing above is untouched. Fields already ≥16px
+   (.shortBioInput 18, .bioInput 17, .nowInput 16, .nameInput clamp≥30,
+   .workTitleInput 18) are intentionally left alone. */
+@media (max-width: 640px) {
+  .hoodInput,
+  .openToInput,
+  .customPronoun,
+  .tagInput,
+  .linkSelect,
+  .linkInput,
+  .workCatInput,
+  .workLinkInput,
+  .workYearInput {
+    font-size: 16px;
+  }
+}
+
+/* Give the pill / segment / icon controls a comfortable ≥44px touch height on
+   coarse (touch) pointers, without changing desktop density. */
+@media (pointer: coarse) {
+  .chip,
+  .openToChip,
+  .segment,
+  .avatarBtn {
+    min-height: 44px;
+  }
+}
+
+/* A shared, consistent focus ring for the pill/icon buttons that otherwise
+   rely on the UA default — mirrors the inline-input focus token in this file. */
+.chip:focus-visible,
+.openToChip:focus-visible,
+.segment:focus-visible,
+.tagAdd:focus-visible,
+.tagRemove:focus-visible,
+.linkRemove:focus-visible,
+.avatarBtn:focus-visible,
+.workRemove:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
 }

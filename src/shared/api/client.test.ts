@@ -23,9 +23,18 @@ function res(status: number, body: unknown = {}, statusText = ""): Response {
     ok: status >= 200 && status < 300,
     status,
     statusText,
-    json: async () => body,
-    text: async () => (status === 204 ? "" : JSON.stringify(body)),
+    json: () => Promise.resolve(body),
+    text: () => Promise.resolve(status === 204 ? "" : JSON.stringify(body)),
   } as unknown as Response;
+}
+
+/** The request URL as a string, for matching in fetch stubs. client.ts always
+ *  calls fetch with a string, so this is exact; the URL/Request arms just satisfy
+ *  the `typeof fetch` signature without stringifying a base object. */
+function requestUrl(input: string | URL | Request): string {
+  if (typeof input === "string") return input;
+  if (input instanceof URL) return input.href;
+  return input.url;
 }
 
 async function loadClient(base = "http://api.test"): Promise<ClientModule> {
@@ -73,7 +82,7 @@ describe("probeBackend", () => {
   it("returns server with status on a 5xx response", async () => {
     const { probeBackend } = await loadClient();
     vi.stubGlobal("navigator", { onLine: true });
-    stubFetch(vi.fn(async () => res(503)));
+    stubFetch(vi.fn(() => Promise.resolve(res(503))));
     expect(await probeBackend()).toEqual({
       ok: false,
       reason: "server",
@@ -84,18 +93,14 @@ describe("probeBackend", () => {
   it("returns unreachable when fetch throws", async () => {
     const { probeBackend } = await loadClient();
     vi.stubGlobal("navigator", { onLine: true });
-    stubFetch(
-      vi.fn(async () => {
-        throw new Error("network down");
-      }),
-    );
+    stubFetch(vi.fn(() => Promise.reject(new Error("network down"))));
     expect(await probeBackend()).toEqual({ ok: false, reason: "unreachable" });
   });
 
   it("returns ok on a 2xx response", async () => {
     const { probeBackend } = await loadClient();
     vi.stubGlobal("navigator", { onLine: true });
-    stubFetch(vi.fn(async () => res(200, { csrfToken: "x" })));
+    stubFetch(vi.fn(() => Promise.resolve(res(200, { csrfToken: "x" }))));
     expect(await probeBackend()).toEqual({ ok: true });
   });
 });
@@ -104,10 +109,10 @@ describe("ensureCsrf", () => {
   it("fetches the token once and caches it (no second network call)", async () => {
     const { ensureCsrf, apiPost } = await loadClient();
     const fetchFn = stubFetch(
-      vi.fn(async (url: string | URL | Request) => {
-        if (String(url).includes("/csrf-token"))
-          return res(200, { csrfToken: "tok-1" });
-        return res(200, {}); // the POST
+      vi.fn((url: string | URL | Request) => {
+        if (requestUrl(url).includes("/csrf-token"))
+          return Promise.resolve(res(200, { csrfToken: "tok-1" }));
+        return Promise.resolve(res(200, {})); // the POST
       }),
     );
 
@@ -133,9 +138,10 @@ describe("ensureCsrf", () => {
   it("swallows a thrown fetch and leaves the token unset", async () => {
     const { ensureCsrf, apiPost } = await loadClient();
     const fetchFn = stubFetch(
-      vi.fn(async (url: string | URL | Request) => {
-        if (String(url).includes("/csrf-token")) throw new Error("unreachable");
-        return res(200, {});
+      vi.fn((url: string | URL | Request) => {
+        if (requestUrl(url).includes("/csrf-token"))
+          return Promise.reject(new Error("unreachable"));
+        return Promise.resolve(res(200, {}));
       }),
     );
 
@@ -159,19 +165,21 @@ describe("single-flight refresh on 401", () => {
     let refreshCalls = 0;
     let dataCalls = 0;
     const fetchFn = stubFetch(
-      vi.fn(async (url: string | URL | Request) => {
-        const u = String(url);
-        if (u.includes("/auth/refresh")) {
+      vi.fn((url: string | URL | Request) => {
+        const requestedUrl = requestUrl(url);
+        if (requestedUrl.includes("/auth/refresh")) {
           refreshCalls++;
-          return res(200, {});
+          return Promise.resolve(res(200, {}));
         }
-        if (u.includes("/thing")) {
+        if (requestedUrl.includes("/thing")) {
           dataCalls++;
           // The first two hits are the concurrent initial requests → 401;
           // the retries (after refresh) → 200.
-          return dataCalls <= 2 ? res(401) : res(200, { id: dataCalls });
+          return Promise.resolve(
+            dataCalls <= 2 ? res(401) : res(200, { id: dataCalls }),
+          );
         }
-        return res(200, {});
+        return Promise.resolve(res(200, {}));
       }),
     );
 
@@ -191,9 +199,10 @@ describe("single-flight refresh on 401", () => {
     const lost = vi.fn();
     setOnAuthLost(lost);
     stubFetch(
-      vi.fn(async (url: string | URL | Request) => {
-        if (String(url).includes("/auth/refresh")) return res(401); // refresh fails
-        return res(401); // data 401
+      vi.fn((url: string | URL | Request) => {
+        if (requestUrl(url).includes("/auth/refresh"))
+          return Promise.resolve(res(401)); // refresh fails
+        return Promise.resolve(res(401)); // data 401
       }),
     );
 
@@ -212,16 +221,18 @@ describe("403 stale-CSRF retry", () => {
     let csrfCalls = 0;
     let postCalls = 0;
     const fetchFn = stubFetch(
-      vi.fn(async (url: string | URL | Request) => {
-        const u = String(url);
-        if (u.includes("/csrf-token")) {
+      vi.fn((url: string | URL | Request) => {
+        const requestedUrl = requestUrl(url);
+        if (requestedUrl.includes("/csrf-token")) {
           csrfCalls++;
-          return res(200, { csrfToken: `tok-${csrfCalls}` });
+          return Promise.resolve(res(200, { csrfToken: `tok-${csrfCalls}` }));
         }
         postCalls++;
-        return postCalls === 1
-          ? res(403, { message: "invalid csrf token" })
-          : res(200, { ok: true });
+        return Promise.resolve(
+          postCalls === 1
+            ? res(403, { message: "invalid csrf token" })
+            : res(200, { ok: true }),
+        );
       }),
     );
 
@@ -239,11 +250,11 @@ describe("403 stale-CSRF retry", () => {
     const { apiPost, ApiError } = await loadClient();
     let postCalls = 0;
     stubFetch(
-      vi.fn(async (url: string | URL | Request) => {
-        if (String(url).includes("/csrf-token"))
-          return res(200, { csrfToken: "tok" });
+      vi.fn((url: string | URL | Request) => {
+        if (requestUrl(url).includes("/csrf-token"))
+          return Promise.resolve(res(200, { csrfToken: "tok" }));
         postCalls++;
-        return res(403, { message: "You have hit your quota" });
+        return Promise.resolve(res(403, { message: "You have hit your quota" }));
       }),
     );
 
@@ -255,7 +266,9 @@ describe("403 stale-CSRF retry", () => {
 describe("request behaviours", () => {
   it("does not fetch a CSRF token for safe verbs (GET)", async () => {
     const { apiGet } = await loadClient();
-    const fetchFn = stubFetch(vi.fn(async () => res(200, { hi: true })));
+    const fetchFn = stubFetch(
+      vi.fn(() => Promise.resolve(res(200, { hi: true }))),
+    );
     await apiGet("/thing");
     expect(
       fetchFn.mock.calls.some((c) => String(c[0]).includes("/csrf-token")),
@@ -265,10 +278,12 @@ describe("request behaviours", () => {
   it("resolves undefined on 204 No Content", async () => {
     const { apiDelete } = await loadClient();
     stubFetch(
-      vi.fn(async (url: string | URL | Request) =>
-        String(url).includes("/csrf-token")
-          ? res(200, { csrfToken: "t" })
-          : res(204),
+      vi.fn((url: string | URL | Request) =>
+        Promise.resolve(
+          requestUrl(url).includes("/csrf-token")
+            ? res(200, { csrfToken: "t" })
+            : res(204),
+        ),
       ),
     );
     await expect(apiDelete("/thing")).resolves.toBeUndefined();
@@ -277,10 +292,12 @@ describe("request behaviours", () => {
   it("joins an array error message with commas", async () => {
     const { apiPost, ApiError } = await loadClient();
     stubFetch(
-      vi.fn(async (url: string | URL | Request) =>
-        String(url).includes("/csrf-token")
-          ? res(200, { csrfToken: "t" })
-          : res(400, { message: ["name required", "email required"] }),
+      vi.fn((url: string | URL | Request) =>
+        Promise.resolve(
+          requestUrl(url).includes("/csrf-token")
+            ? res(200, { csrfToken: "t" })
+            : res(400, { message: ["name required", "email required"] }),
+        ),
       ),
     );
     await expect(apiPost("/thing")).rejects.toMatchObject({
@@ -296,14 +313,14 @@ describe("request behaviours", () => {
   it("falls back to statusText when the error body is not JSON", async () => {
     const { apiGet } = await loadClient();
     stubFetch(
-      vi.fn(async () => ({
-        ok: false,
-        status: 500,
-        statusText: "Internal Server Error",
-        json: async () => {
-          throw new Error("not json");
-        },
-      })) as unknown as typeof fetch,
+      vi.fn(() =>
+        Promise.resolve({
+          ok: false,
+          status: 500,
+          statusText: "Internal Server Error",
+          json: () => Promise.reject(new Error("not json")),
+        }),
+      ) as unknown as typeof fetch,
     );
     await expect(apiGet("/thing")).rejects.toMatchObject({
       status: 500,

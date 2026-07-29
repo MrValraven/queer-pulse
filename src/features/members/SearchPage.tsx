@@ -295,6 +295,7 @@ export function SearchPage() {
               <input
                 className={styles.barInput}
                 type="text"
+                enterKeyHint="search"
                 placeholder={t("members:search.hero.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}

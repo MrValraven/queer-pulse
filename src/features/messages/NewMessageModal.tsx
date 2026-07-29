@@ -3,7 +3,7 @@ import { FiX } from "react-icons/fi";
 import { Avatar, SearchInput } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSocial } from "../../app/providers/SocialProvider";
+import { useSocial } from "../../app/providers/useSocial";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { ConnectionView } from "../connect/connections.data";
@@ -13,6 +13,9 @@ import styles from "./NewMessageModal.module.css";
 interface NewMessageModalProps {
   onClose: () => void;
   onPick: (recipient: Conversation) => void;
+  /** "forward" swaps the title/subtitle to the forward-a-message framing; the
+   *  picker (accepted connections) and pick behaviour are otherwise identical. */
+  mode?: "new" | "forward";
 }
 
 /**
@@ -38,9 +41,14 @@ function connectionToRecipient(view: ConnectionView): Conversation {
 }
 
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
-export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
+export function NewMessageModal({
+  onClose,
+  onPick,
+  mode = "new",
+}: NewMessageModalProps) {
   useScrollLock();
   const { t } = useTranslation();
+  const isForward = mode === "forward";
   const { isBlocked } = useSocial();
   const [query, setQuery] = useState("");
 
@@ -100,7 +108,9 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
       >
         <div className={styles.head}>
           <h2 id="new-message-title" className={styles.title}>
-            {t("messages:newMessage.title")}
+            {isForward
+              ? t("messages:forward.title")
+              : t("messages:newMessage.title")}
           </h2>
           <button
             type="button"
@@ -111,7 +121,11 @@ export function NewMessageModal({ onClose, onPick }: NewMessageModalProps) {
             <FiX />
           </button>
         </div>
-        <p className={styles.sub}>{t("messages:newMessage.sub")}</p>
+        <p className={styles.sub}>
+          {isForward
+            ? t("messages:forward.sub")
+            : t("messages:newMessage.sub")}
+        </p>
         <SearchInput
           className={styles.searchField}
           value={query}

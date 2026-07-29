@@ -8,7 +8,9 @@ export { useSimulatedLoad } from "./useSimulatedLoad";
 export { useScrolled } from "./useScrolled";
 export { useCountUp } from "./useCountUp";
 export { useMediaQuery } from "./useMediaQuery";
+export { useDebouncedValue } from "./useDebouncedValue";
 export { usePrefersReducedMotion } from "./usePrefersReducedMotion";
+export { useVisualViewportKeyboard } from "./useVisualViewportKeyboard";
 export { useSwipe, type UseSwipeHandlers } from "./useSwipe";
 export { useScrollLock } from "./useScrollLock";
 export { useFocusOnMount } from "./useFocusOnMount";
@@ -20,3 +22,4 @@ export {
   type InstallPromptApi,
   type InstallPlatform,
 } from "./useInstallPrompt";
+export { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";

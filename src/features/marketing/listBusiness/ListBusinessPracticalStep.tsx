@@ -1,9 +1,9 @@
-import { FiCheck, FiMapPin } from "react-icons/fi";
-import { Button, FormField } from "../../../shared/components/ui";
+import { FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR, DAYS, validateSocials } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
+import { ListBusinessLocationField } from "./ListBusinessLocationField";
 import styles from "./ListBusinessPage.module.css";
 
 const SOCIALS: {
@@ -45,74 +45,20 @@ export function StepPractical({ form }: { form: ListingForm }) {
   const anyOpen = DAYS.some((d) => draft.hours[d.id]?.open);
 
   return (
-    <>
+    <div className={styles.stepBody}>
       <PaneHeader
         title={t("marketing:listBusiness.step3.title")}
         em={t("marketing:listBusiness.step3.em")}
         sub={t("marketing:listBusiness.step3.sub")}
       />
 
-      <FormField
-        id={ANCHOR.address}
-        label={t("marketing:listBusiness.step3.addressLabel")}
-        required
-        helper={t("marketing:listBusiness.step3.addressHelper")}
-      >
-        <div className={styles.geoRow}>
-          <div>
-            <input
-              type="text"
-              maxLength={120}
-              placeholder={t("marketing:listBusiness.step3.addressPlaceholder")}
-              value={draft.address}
-              onChange={(e) =>
-                set({ address: e.target.value, geocoded: false })
-              }
-            />
-          </div>
-          <Button
-            variant="ghost"
-            onClick={() => set({ geocoded: draft.address.trim().length > 0 })}
-          >
-            {t("marketing:listBusiness.step3.findOnMap")}
-          </Button>
-        </div>
-      </FormField>
-      {draft.geocoded && (
-        <>
-          <div className={styles.mapBox}>
-            {/* Decorative stand-in map illustration (no real geocoding in the
-                prototype); flat greys are intentional, not themed surfaces. */}
-            <svg
-              viewBox="0 0 600 260"
-              preserveAspectRatio="xMidYMid slice"
-              aria-hidden
-            >
-              <rect width="600" height="260" fill="#e9e5db" />
-              <path d="M0 80 L600 96 L600 108 L0 92 Z" fill="#d9d3c5" />
-              <path d="M0 168 L600 184 L600 196 L0 180 Z" fill="#d9d3c5" />
-              <path d="M150 0 L168 260 L182 260 L164 0 Z" fill="#d9d3c5" />
-              <path d="M400 0 L418 260 L432 260 L414 0 Z" fill="#d9d3c5" />
-              <rect x="240" y="104" width="70" height="64" fill="#cfc8b5" />
-              <circle cx="300" cy="132" r="26" fill="#b8d4b1" opacity=".7" />
-            </svg>
-            <span className={styles.pin}>
-              <FiMapPin size={28} fill="currentColor" stroke="var(--paper)" />
-            </span>
-          </div>
-          <div className={styles.mapStatus}>
-            <FiCheck size={13} />{" "}
-            {t("marketing:listBusiness.step3.pinPlaced", {
-              place: draft.address.split(",")[0] ?? "",
-            })}
-          </div>
-        </>
-      )}
+      <ListBusinessLocationField draft={draft} set={set} />
 
       <h3 className={styles.groupH}>
         {t("marketing:listBusiness.step3.hoursHeading")}
       </h3>
-      <div className={styles.hoursTools}>
+      <div className={styles.hoursSection}>
+        <div className={styles.hoursTools}>
         <span
           className={[
             styles.openNow,
@@ -187,8 +133,12 @@ export function StepPractical({ form }: { form: ListingForm }) {
             </div>
           );
         })}
+        </div>
       </div>
-      <FormField label={t("marketing:listBusiness.step3.hoursNoteLabel")}>
+      <FormField
+        className={styles.lbField}
+        label={t("marketing:listBusiness.step3.hoursNoteLabel")}
+      >
         <input
           type="text"
           maxLength={80}
@@ -211,6 +161,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
           return (
             <FormField
               key={s.key}
+              className={styles.lbField}
               error={!valid && s.errKey ? t(s.errKey) : undefined}
             >
               <input
@@ -224,6 +175,6 @@ export function StepPractical({ form }: { form: ListingForm }) {
           );
         })}
       </div>
-    </>
+    </div>
   );
 }

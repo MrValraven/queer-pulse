@@ -17,6 +17,9 @@ export interface DirectoryCardDTO {
   av: string;
   owned: boolean;
   memberFirst: string | null;
+  // Map pin the owner placed while listing. null ⇒ list-only (no pin).
+  latitude: number | null;
+  longitude: number | null;
 }
 
 /** GET /directory — every live directory listing (public), optionally filtered. */
@@ -57,6 +60,14 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`. */
   upcoming: { startAt: string; title: string }[];
 }
+
+/**
+ * GET /directory/by-member/:slug — a member's publicly-live directory listings
+ * (public, no auth). Returns `[]` for unknown members. Same redacted card DTO
+ * the public grid uses, so visitors can see the places a member runs.
+ */
+export const getListingsByMember = (slug: string) =>
+  apiGet<DirectoryCardDTO[]>(`/directory/by-member/${encodeURIComponent(slug)}`);
 
 /** GET /directory/:slug — one live directory listing by slug (public). */
 export const getDirectorySpace = (slug: string) =>

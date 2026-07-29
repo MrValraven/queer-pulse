@@ -5,7 +5,7 @@ import { EmptyState, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { routes } from "../../app/routeMap";
 import { NEXT_ACTIONS, STATUS_CARDS, workStatusLine } from "./work.data";
 import { WorkNextActions } from "./WorkNextActions";

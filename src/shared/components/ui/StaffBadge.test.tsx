@@ -3,6 +3,11 @@ import { describe, expect, it } from "vitest";
 import { I18nProvider } from "../../../app/providers/I18nProvider";
 import { StaffBadge } from "./StaffBadge";
 
+// `role` on <StaffBadge> is the component's own prop (StaffRole = "admin" |
+// "moderator"), NOT a DOM ARIA role. jsx-a11y/aria-role misreads the JSX
+// attribute name and flags these valid props as invalid ARIA roles.
+/* eslint-disable jsx-a11y/aria-role */
+
 describe("StaffBadge", () => {
   it("shows the long label at lg size for an admin", () => {
     render(<StaffBadge role="admin" size="lg" />, { wrapper: I18nProvider });

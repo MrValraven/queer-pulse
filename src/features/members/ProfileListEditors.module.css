@@ -1,0 +1,67 @@
+/* --- board / skills / groups editors -------------------------------------- */
+/* Shared layout for the row- and chip-based profile list editors. Colours,
+   inputs and chips come from ProfilePage/ProfileEdit CSS modules (imported
+   read-only); this file only adds the row scaffolding those editors need. */
+
+/* Vertical stack of editable rows (board, groups). */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+/* One editable row: a lead control (kind toggle) + growing fields + remove. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* The fields area of a row — lets its inputs share the remaining width. */
+.rowFields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+/* A text input that should take up the free space in its row/fields. */
+.grow {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+/* A narrower input that grows less (e.g. a role beside a group name). */
+.growSecondary {
+  flex: 1 1 9rem;
+  min-width: 0;
+}
+
+/* Keeps a lead control (the board kind toggle) from shrinking. */
+.rowLead {
+  flex: none;
+}
+
+/* Add-row affordance sits under the list, left-aligned. */
+.addRow {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* Skills add bar: name + optional detail + an Add button, wrapping. */
+.addBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Muted detail shown after a skill's name inside its chip. */
+.chipMeta {
+  color: var(--ink-40);
+  font-weight: 400;
+}

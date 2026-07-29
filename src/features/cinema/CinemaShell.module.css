@@ -8,7 +8,9 @@
 
 .nav {
   position: fixed;
-  top: 18px;
+  /* Move the whole floating pill down to clear the notch/Dynamic Island in
+     standalone (padding alone left the pill's top edge under the inset). */
+  top: max(18px, env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;

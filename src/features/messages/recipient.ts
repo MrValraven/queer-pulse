@@ -1,4 +1,3 @@
-import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import type { Conversation } from "./data";
 
 /**
@@ -22,7 +21,7 @@ export function buildRecipientConversation(
     id: slug,
     slug,
     initials,
-    tint: "plum" as AvatarTint,
+    tint: "plum",
     avatarUrl,
     name,
     pronouns: "",

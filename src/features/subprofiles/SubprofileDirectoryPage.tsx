@@ -45,7 +45,7 @@ export function SubprofileDirectoryPage() {
     kind,
     query,
   });
-  const cards = data ?? [];
+  const cards = useMemo(() => data ?? [], [data]);
 
   const availableTags = useMemo(() => computeAvailableTags(cards), [cards]);
 
@@ -120,7 +120,7 @@ export function SubprofileDirectoryPage() {
               description={t("subprofiles:directory.error.description")}
               action={{
                 label: t("subprofiles:directory.error.retry"),
-                onClick: () => refetch(),
+                onClick: () => void refetch(),
               }}
             />
           ) : visibleCards.length === 0 ? (

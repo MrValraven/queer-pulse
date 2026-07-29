@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildExports } from "./SettingsPanes";
+import { buildExports } from "./settingsExports.helpers";
 import { currentUser } from "../members/data/members";
 
 describe("buildExports", () => {

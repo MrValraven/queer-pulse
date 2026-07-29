@@ -28,62 +28,54 @@ export const TAB_KEYS: { id: TabId; labelKey: string }[] = [
   { id: "law", labelKey: "safety:hateCrime.tab.law" },
 ];
 
-/**
- * i18n Pattern B. Every field is platform-authored guidance chrome, so
- * `buildPanels` takes `t` and is memoized in `HateCrimeTabs.tsx` via
- * `useMemo(() => buildPanels(t, links), [t])`. `sectionHead` nodes carry the
- * coral `<em>` idiom and so are built with `<Translation>` rather than `t()`.
- */
-export function buildPanels(
-  t: TFunction,
-  links: { MENTAL: string; FORUM: string; LEGAL: string },
-): Record<TabId, Block[]> {
-  const { MENTAL, FORUM } = links;
-  const tag = (labelKey: string, kind: TagKind) => ({
-    label: t(labelKey),
-    kind,
-  });
+/** Shared tag factory — a small `{ label, kind }` record built through `t`. */
+function tag(t: TFunction, labelKey: string, kind: TagKind) {
+  return { label: t(labelKey), kind };
+}
 
-  return {
-    immediate: [
+function buildImmediatePanel(t: TFunction): Block[] {
+  return [
       { kind: "preamble", text: t("safety:hateCrime.immediate.preamble") },
       {
         kind: "step",
         number: 1,
         title: t("safety:hateCrime.immediate.step1.title"),
         description: t("safety:hateCrime.immediate.step1.desc"),
-        tag: tag("safety:hateCrime.tag.immediate", "immediate"),
+        tag: tag(t, "safety:hateCrime.tag.immediate", "immediate"),
       },
       {
         kind: "step",
         number: 2,
         title: t("safety:hateCrime.immediate.step2.title"),
         description: t("safety:hateCrime.immediate.step2.desc"),
-        tag: tag("safety:hateCrime.tag.immediate", "immediate"),
+        tag: tag(t, "safety:hateCrime.tag.immediate", "immediate"),
       },
       {
         kind: "step",
         number: 3,
         title: t("safety:hateCrime.immediate.step3.title"),
         description: t("safety:hateCrime.immediate.step3.desc"),
-        tag: tag("safety:hateCrime.tag.ifHurt", "immediate"),
+        tag: tag(t, "safety:hateCrime.tag.ifHurt", "immediate"),
       },
       {
         kind: "step",
         number: 4,
         title: t("safety:hateCrime.immediate.step4.title"),
         description: t("safety:hateCrime.immediate.step4.desc"),
-        tag: tag("safety:hateCrime.tag.recommended", "recommended"),
+        tag: tag(t, "safety:hateCrime.tag.recommended", "recommended"),
       },
       {
         kind: "step",
         number: 5,
         title: t("safety:hateCrime.immediate.step5.title"),
         description: t("safety:hateCrime.immediate.step5.desc"),
-        tag: tag("safety:hateCrime.tag.recommended", "recommended"),
+        tag: tag(t, "safety:hateCrime.tag.recommended", "recommended"),
       },
-    ],
-    document: [
+  ];
+}
+
+function buildDocumentPanel(t: TFunction): Block[] {
+  return [
       { kind: "preamble", text: t("safety:hateCrime.document.preamble") },
       {
         kind: "sectionHead",
@@ -123,7 +115,7 @@ export function buildPanels(
         number: 5,
         title: t("safety:hateCrime.document.step5.title"),
         description: t("safety:hateCrime.document.step5.desc"),
-        tag: tag("safety:hateCrime.tag.ifApplicable", "optional"),
+        tag: tag(t, "safety:hateCrime.tag.ifApplicable", "optional"),
       },
       {
         kind: "sectionHead",
@@ -135,8 +127,11 @@ export function buildPanels(
         ),
       },
       { kind: "note", text: t("safety:hateCrime.document.note") },
-    ],
-    report: [
+  ];
+}
+
+function buildReportPanel(t: TFunction): Block[] {
+  return [
       { kind: "preamble", text: t("safety:hateCrime.report.preamble") },
       {
         kind: "sectionHead",
@@ -158,14 +153,14 @@ export function buildPanels(
         number: 2,
         title: t("safety:hateCrime.report.police.step2.title"),
         description: t("safety:hateCrime.report.police.step2.desc"),
-        tag: tag("safety:hateCrime.tag.important", "immediate"),
+        tag: tag(t, "safety:hateCrime.tag.important", "immediate"),
       },
       {
         kind: "step",
         number: 3,
         title: t("safety:hateCrime.report.police.step3.title"),
         description: t("safety:hateCrime.report.police.step3.desc"),
-        tag: tag("safety:hateCrime.tag.stronglyRecommended", "recommended"),
+        tag: tag(t, "safety:hateCrime.tag.stronglyRecommended", "recommended"),
       },
       {
         kind: "sectionHead",
@@ -181,7 +176,7 @@ export function buildPanels(
         number: 1,
         title: t("safety:hateCrime.report.ilga.step1.title"),
         description: t("safety:hateCrime.report.ilga.step1.desc"),
-        tag: tag("safety:hateCrime.tag.anonOptionAvailable", "recommended"),
+        tag: tag(t, "safety:hateCrime.tag.anonOptionAvailable", "recommended"),
       },
       {
         kind: "step",
@@ -209,10 +204,17 @@ export function buildPanels(
         number: 2,
         title: t("safety:hateCrime.report.eu.step2.title"),
         description: t("safety:hateCrime.report.eu.step2.desc"),
-        tag: tag("safety:hateCrime.tag.afterDomesticProcess", "optional"),
+        tag: tag(t, "safety:hateCrime.tag.afterDomesticProcess", "optional"),
       },
-    ],
-    support: [
+  ];
+}
+
+function buildSupportPanel(
+  t: TFunction,
+  links: { MENTAL: string; FORUM: string },
+): Block[] {
+  const { MENTAL, FORUM } = links;
+  return [
       { kind: "preamble", text: t("safety:hateCrime.support.preamble") },
       {
         kind: "sectionHead",
@@ -267,8 +269,11 @@ export function buildPanels(
         description: t("safety:hateCrime.support.step5.desc"),
         link: { label: t("safety:hateCrime.support.forumCta"), href: FORUM },
       },
-    ],
-    law: [
+  ];
+}
+
+function buildLawPanel(t: TFunction): Block[] {
+  return [
       { kind: "preamble", text: t("safety:hateCrime.law.preamble") },
       {
         kind: "def",
@@ -293,6 +298,26 @@ export function buildPanels(
         h4: t("safety:hateCrime.law.def4.h4"),
         paragraphs: [t("safety:hateCrime.law.def4.para1")],
       },
-    ],
+  ];
+}
+
+/**
+ * i18n Pattern B. Every field is platform-authored guidance chrome, so
+ * `buildPanels` takes `t` and is memoized in `HateCrimeTabs.tsx` via
+ * `useMemo(() => buildPanels(t, links), [t])`. `sectionHead` nodes carry the
+ * coral `<em>` idiom and so are built with `<Translation>` rather than `t()`.
+ * Each tab's blocks are composed by a dedicated sub-builder; this function only
+ * assembles them into the record in the original key order.
+ */
+export function buildPanels(
+  t: TFunction,
+  links: { MENTAL: string; FORUM: string; LEGAL: string },
+): Record<TabId, Block[]> {
+  return {
+    immediate: buildImmediatePanel(t),
+    document: buildDocumentPanel(t),
+    report: buildReportPanel(t),
+    support: buildSupportPanel(t, links),
+    law: buildLawPanel(t),
   };
 }

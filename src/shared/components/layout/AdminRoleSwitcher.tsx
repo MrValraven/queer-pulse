@@ -161,7 +161,7 @@ export function AdminRoleSwitcher() {
               onClick={() => {
                 setRole("moderator");
                 setOpen(false);
-                navigate(modPanel(COMMUNITY_SLUGS[i] ?? ""));
+                void navigate(modPanel(COMMUNITY_SLUGS[i] ?? ""));
               }}
             >
               <span

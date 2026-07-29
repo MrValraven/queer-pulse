@@ -29,8 +29,9 @@ export const subprofiles: Catalog = {
 
   // Directory card affordances (SubprofileCard)
   "card.openToCollabs": "Open to collabs",
-  "card.socialCount_one": "{count} social link",
-  "card.socialCount_other": "{count} social links",
+  "card.linkCount_one": "{count} link",
+  "card.linkCount_other": "{count} links",
+  "card.view": "View",
 
   // Main-profile "Also as…" block (ProfileSubprofilesSection)
   "alsoAs.title": "Also working as",

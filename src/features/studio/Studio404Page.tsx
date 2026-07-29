@@ -57,7 +57,7 @@ export function Studio404Page() {
             <button
               type="button"
               className={styles.btGhost}
-              onClick={() => navigate(-1)}
+              onClick={() => void navigate(-1)}
             >
               ← {t("studio:error404.goBackCta")}
             </button>

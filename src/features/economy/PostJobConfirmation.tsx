@@ -41,7 +41,7 @@ export function PostJobConfirmation({
         <Button
           variant="primary"
           size="lg"
-          onClick={() => navigate(`${routes.jobs}/${job.slug}`)}
+          onClick={() => void navigate(`${routes.jobs}/${job.slug}`)}
         >
           {t("economy:postJob.confirm.viewListing")}
         </Button>
@@ -101,7 +101,7 @@ export function PostJobConfirmation({
             <Button
               variant="ghost"
               size="md"
-              onClick={() => navigate(routes.applicationStatus)}
+              onClick={() => void navigate(routes.applicationStatus)}
             >
               {t("economy:postJob.confirm.responses.openManager")}
             </Button>

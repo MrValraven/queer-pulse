@@ -533,7 +533,7 @@
 .replyTa {
   flex: 1;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   padding: 9px 13px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
@@ -567,7 +567,7 @@
 .npTa {
   flex: 1;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   border: none;
   background: transparent;
   outline: none;

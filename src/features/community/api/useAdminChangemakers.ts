@@ -115,8 +115,8 @@ export function useUpdateDirectoryStats() {
   >({
     mutationFn: async (body) => (demoMode ? null : updateDirectoryStats(body)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_KEY });
-      queryClient.invalidateQueries({ queryKey: STATS_KEY });
+      void queryClient.invalidateQueries({ queryKey: ADMIN_KEY });
+      void queryClient.invalidateQueries({ queryKey: STATS_KEY });
     },
   });
 }

@@ -2,7 +2,22 @@ import { FiPlus, FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
 import { SOCIAL_PLATFORMS, socialPlatform } from "./socialLinks.data";
+import { useRowKeys } from "./useRowKeys";
 import styles from "./ProfileEdit.module.css";
+
+/**
+ * Advisory-only sniff test: a non-empty value is "fine" when it reads like an
+ * @handle or a URL-ish string (a scheme, or a dotted host with no whitespace).
+ * Empty is never an error. This never blocks editing — it only surfaces a hint.
+ */
+function looksLikeLinkOrHandle(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  if (trimmed.startsWith("@")) return true;
+  if (/\s/.test(trimmed)) return false;
+  if (/^https?:\/\//i.test(trimmed)) return true;
+  return trimmed.includes(".");
+}
 
 /** Platform display label: every entry except the generic fallback is a
  *  proper platform name (Instagram, GitHub, …) and stays untranslated in
@@ -30,23 +45,39 @@ export function SocialLinksEditor({
   onChange: (next: SocialLink[]) => void;
 }) {
   const { t } = useTranslation();
+  const { keys, appendKey, removeKeyAt } = useRowKeys(links.length);
   function update(index: number, patch: Partial<SocialLink>) {
-    onChange(links.map((l, i) => (i === index ? { ...l, ...patch } : l)));
+    onChange(
+      links.map((link, rowIndex) =>
+        rowIndex === index ? { ...link, ...patch } : link,
+      ),
+    );
   }
   function remove(index: number) {
-    onChange(links.filter((_, i) => i !== index));
+    removeKeyAt(index);
+    onChange(links.filter((_, rowIndex) => rowIndex !== index));
   }
   function add() {
+    appendKey();
     onChange([...links, { platform: "website", urlOrHandle: "" }]);
   }
 
   return (
     <div className={styles.linksEditor}>
-      {links.map((link, i) => {
+      {links.map((link, index) => {
         const meta = socialPlatform(link.platform);
         const Icon = meta.icon;
+        const rowKey = keys[index];
+        const isInvalid = !looksLikeLinkOrHandle(link.urlOrHandle);
+        const errorId = `${rowKey}-error`;
         return (
-          <div key={i} className={styles.linkRow}>
+          <div
+            key={rowKey}
+            className={styles.linkRow}
+            // Allow the advisory hint (below) to wrap onto its own line without
+            // shrinking the inputs — .linkRow is a non-wrapping flex row.
+            style={isInvalid ? { flexWrap: "wrap" } : undefined}
+          >
             <span className={styles.linkIcon} aria-hidden>
               <Icon size={16} />
             </span>
@@ -54,11 +85,11 @@ export function SocialLinksEditor({
               className={styles.linkSelect}
               value={link.platform}
               aria-label={t("members:social.platformLabel")}
-              onChange={(e) => update(i, { platform: e.target.value })}
+              onChange={(event) => update(index, { platform: event.target.value })}
             >
-              {SOCIAL_PLATFORMS.map((p) => (
-                <option key={p.key} value={p.key}>
-                  {platformLabel(p.key, p.label, t)}
+              {SOCIAL_PLATFORMS.map((platform) => (
+                <option key={platform.key} value={platform.key}>
+                  {platformLabel(platform.key, platform.label, t)}
                 </option>
               ))}
             </select>
@@ -69,7 +100,11 @@ export function SocialLinksEditor({
               aria-label={t("members:social.linkFor", {
                 platform: platformLabel(meta.key, meta.label, t),
               })}
-              onChange={(e) => update(i, { urlOrHandle: e.target.value })}
+              aria-invalid={isInvalid || undefined}
+              aria-describedby={isInvalid ? errorId : undefined}
+              onChange={(event) =>
+                update(index, { urlOrHandle: event.target.value })
+              }
             />
             <button
               type="button"
@@ -77,10 +112,26 @@ export function SocialLinksEditor({
               aria-label={t("members:social.removeLinkFor", {
                 platform: platformLabel(meta.key, meta.label, t),
               })}
-              onClick={() => remove(i)}
+              onClick={() => remove(index)}
             >
               <FiX size={15} />
             </button>
+            {isInvalid && (
+              <span
+                id={errorId}
+                role="alert"
+                // No CSS-module class for this advisory hint (module.css is owned
+                // elsewhere); tokens-only inline style mirrors `.saveError`.
+                style={{
+                  flexBasis: "100%",
+                  color: "var(--accent-ink)",
+                  fontSize: "12.5px",
+                  fontWeight: 600,
+                }}
+              >
+                {t("members:profileEdit.validation.invalidUrl")}
+              </span>
+            )}
           </div>
         );
       })}

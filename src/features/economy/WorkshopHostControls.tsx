@@ -5,7 +5,7 @@ import { Button, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
+import { useWorkshopsActions } from "../../app/providers/useWorkshops";
 import { AddWorkshopModal } from "./AddWorkshopModal";
 import type { WorkshopWithRsvp } from "./api/workshops.adapters";
 import styles from "./WorkshopPage.module.css";
@@ -75,7 +75,7 @@ export function WorkshopHostControls({
     setConfirming(false);
     showToast(t("economy:deleteWorkshop.toast"), "success");
     // This page is about to 404 for its own host — send them back to the board.
-    navigate(routes.skills);
+    void navigate(routes.skills);
   };
 
   return (

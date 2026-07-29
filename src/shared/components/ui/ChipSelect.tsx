@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import styles from "./ChipSelect.module.css";
 
@@ -138,17 +138,4 @@ export function ChipSelect({
       })}
     </div>
   );
-}
-
-/** Set-backed selection state for `<ChipSelect>`. */
-export function useChipSet(initial: readonly string[] = []) {
-  const [selected, setSelected] = useState<Set<string>>(() => new Set(initial));
-  const toggle = (value: string) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(value)) next.delete(value);
-      else next.add(value);
-      return next;
-    });
-  return { selected, toggle, setSelected };
 }

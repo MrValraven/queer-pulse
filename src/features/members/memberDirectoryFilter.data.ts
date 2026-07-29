@@ -852,14 +852,14 @@ export function appliedChips(
   const chips: AppliedChip[] = [];
   f.openTo.forEach((value) =>
     chips.push({
-      label: OPEN_TO_LABEL_KEY[value] ? t(OPEN_TO_LABEL_KEY[value]!) : value,
+      label: OPEN_TO_LABEL_KEY[value] ? t(OPEN_TO_LABEL_KEY[value]) : value,
       group: "openTo",
       value,
     }),
   );
   f.hoods.forEach((value) =>
     chips.push({
-      label: HOOD_LABEL_KEY[value] ? t(HOOD_LABEL_KEY[value]!) : value,
+      label: HOOD_LABEL_KEY[value] ? t(HOOD_LABEL_KEY[value]) : value,
       group: "hood",
       value,
     }),
@@ -867,7 +867,7 @@ export function appliedChips(
   f.disciplines.forEach((value) =>
     chips.push({
       label: DISCIPLINE_LABEL_KEY[value]
-        ? t(DISCIPLINE_LABEL_KEY[value]!)
+        ? t(DISCIPLINE_LABEL_KEY[value])
         : value,
       group: "discipline",
       value,
@@ -876,7 +876,7 @@ export function appliedChips(
   f.professions.forEach((value) =>
     chips.push({
       label: PROFESSION_LABEL_KEY[value]
-        ? t(PROFESSION_LABEL_KEY[value]!)
+        ? t(PROFESSION_LABEL_KEY[value])
         : value,
       group: "profession",
       value,
@@ -884,7 +884,7 @@ export function appliedChips(
   );
   f.identities.forEach((value) =>
     chips.push({
-      label: IDENTITY_LABEL_KEY[value] ? t(IDENTITY_LABEL_KEY[value]!) : value,
+      label: IDENTITY_LABEL_KEY[value] ? t(IDENTITY_LABEL_KEY[value]) : value,
       group: "identity",
       value,
     }),

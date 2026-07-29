@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../communities/api/useMyCommunities";
 import { communities } from "../homepage/data/communities";
 import { getLiving } from "../communities/livingCommunities.data";
 import type { HubPost } from "../communities/HubPulseCard";
-import { useSocial } from "../../app/providers/SocialProvider";
+import { useSocial } from "../../app/providers/useSocial";
 import {
   FEED_POST,
   FEED_TAB_COPY,

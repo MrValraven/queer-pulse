@@ -21,6 +21,8 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     av: dto.av,
     tint: dto.tint,
     desc: dto.blurb,
+    latitude: dto.latitude,
+    longitude: dto.longitude,
     // detail-only fields — unused by the grid, filled by the detail fetch
     tagline: "",
     pills: [],
@@ -64,6 +66,8 @@ export function detailDtoToPlace(
     av: dto.av,
     tint: dto.tint,
     desc: dto.blurb,
+    latitude: dto.latitude,
+    longitude: dto.longitude,
     tagline: dto.tagline,
     pills: dto.pills,
     rating: dto.rating,

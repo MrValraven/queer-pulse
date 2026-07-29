@@ -8,6 +8,7 @@
   justify-content: center;
   backdrop-filter: blur(4px);
   padding: 24px 16px 0;
+  padding-block-end: var(--keyboard-inset, 0px);
 }
 .modal {
   background: var(--paper);
@@ -15,10 +16,24 @@
   width: 100%;
   max-width: 560px;
   padding: 44px 48px 48px;
+  padding-block-end: max(48px, env(safe-area-inset-bottom));
   position: relative;
-  max-height: 92vh;
+  max-height: 92svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   animation: connectUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+/* Grabber affordance — signals the sheet is draggable/dismissable. */
+.grabber {
+  /* Sticky so it stays visible as the sheet scrolls. */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.18);
+  margin: -26px auto 20px;
 }
 @keyframes connectUp {
   from {
@@ -30,10 +45,10 @@
 }
 .close {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 36px;
-  height: 36px;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
@@ -43,6 +58,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {

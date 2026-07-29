@@ -76,7 +76,10 @@ async function fetchCsrf(): Promise<void> {
     const res = await fetch(`${API_BASE_URL}/csrf-token`, {
       credentials: "include",
     });
-    if (res.ok) csrfToken = (await res.json()).csrfToken ?? null;
+    if (res.ok) {
+      const body = (await res.json()) as { csrfToken?: string | null };
+      csrfToken = body.csrfToken ?? null;
+    }
   } catch {
     /* backend unreachable — leave token null; mutations will surface the error */
   }
@@ -200,11 +203,11 @@ async function request<T>(
     let message = res.statusText;
     let data: unknown;
     try {
-      const j = await res.json();
-      data = j;
-      message = Array.isArray(j.message)
-        ? j.message.join(", ")
-        : (j.message ?? message);
+      const parsed = (await res.json()) as { message?: string | string[] };
+      data = parsed;
+      message = Array.isArray(parsed.message)
+        ? parsed.message.join(", ")
+        : (parsed.message ?? message);
     } catch {
       /* non-JSON error body */
     }

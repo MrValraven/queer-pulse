@@ -2,24 +2,12 @@ import { FiCheck } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  CATEGORIES,
-  COMMITMENTS,
-  FORMATS,
-  CONTACT_METHODS,
-  optionLabel,
-} from "./postJob.data";
+import { CONTACT_METHODS } from "./postJob.data";
+import { buildReviewRows } from "./postJobReview.data";
 import { routes } from "../../app/routeMap";
 import type { CompanyProfile } from "./companies.data";
 import type { PostJobForm } from "./usePostJobForm";
 import styles from "./PostJobPage.module.css";
-
-interface Row {
-  k: string;
-  v: string;
-  step: number;
-  empty?: boolean;
-}
 
 export function PostJobStepReview({
   form,
@@ -31,102 +19,10 @@ export function PostJobStepReview({
   onEdit: (step: number) => void;
 }) {
   const { t } = useTranslation();
-  const { state, patch, toggleIn, payLabel } = form;
+  const { state, patch, toggleIn } = form;
   const showEmail = state.contacts.includes("Email");
   const showLink = state.contacts.includes("External link");
-  const dash = t("economy:postJob.step5.dash");
-
-  const rows: Row[] = [
-    {
-      k: t("economy:postJob.field.title"),
-      v: state.title || dash,
-      step: 1,
-      empty: !state.title,
-    },
-    {
-      k: t("economy:postJob.field.category"),
-      v: optionLabel(CATEGORIES, state.category, t),
-      step: 0,
-    },
-    {
-      k: t("economy:postJob.field.arrangement"),
-      v: `${optionLabel(COMMITMENTS, state.commitment, t)} · ${optionLabel(FORMATS, state.format, t)}`,
-      step: 0,
-    },
-    ...(state.seniority !== "Any level"
-      ? [{ k: t("economy:postJob.field.level"), v: state.seniority, step: 0 }]
-      : []),
-    ...(form.needsCity
-      ? [
-          {
-            k: t("economy:postJob.field.where"),
-            v: state.city || dash,
-            step: 0,
-            empty: !state.city,
-          },
-        ]
-      : []),
-    {
-      k: t("economy:postJob.field.description"),
-      v: state.description
-        ? state.description.slice(0, 90) +
-          (state.description.length > 90 ? "…" : "")
-        : dash,
-      step: 1,
-      empty: !state.description,
-    },
-    {
-      k: t("economy:postJob.field.pay"),
-      v: payLabel || t("economy:postJob.step5.notSpecified"),
-      step: 2,
-      empty: !payLabel,
-    },
-    ...(state.benefits.length
-      ? [
-          {
-            k: t("economy:postJob.field.perks"),
-            v: state.benefits.join(", "),
-            step: 2,
-          },
-        ]
-      : []),
-    ...(state.inclusivity.length
-      ? [
-          {
-            k: t("economy:postJob.field.thisSpaceIs"),
-            v: state.inclusivity.join(", "),
-            step: 3,
-          },
-        ]
-      : []),
-    ...(state.tags.length
-      ? [
-          {
-            k: t("economy:postJob.field.skills"),
-            v: state.tags.join(", "),
-            step: 3,
-          },
-        ]
-      : []),
-    ...(state.screening.filter(Boolean).length
-      ? [
-          {
-            k: t("economy:postJob.field.screening"),
-            v: t("economy:postJob.step5.questionCount", {
-              count: state.screening.filter(Boolean).length,
-            }),
-            step: 3,
-          },
-        ]
-      : []),
-    { k: t("economy:postJob.field.postingAs"), v: company.nameText, step: 3 },
-    {
-      k: t("economy:postJob.field.respondVia"),
-      v: state.contacts.join(", ") || dash,
-      step: 4,
-      empty: !state.contacts.length,
-    },
-  ];
+  const rows = buildReviewRows(form, company, t);
 
   return (
     <>

@@ -60,7 +60,13 @@ export function ImageSlot({
   return (
     <div className={cls} style={{ width, height, borderRadius, ...style }}>
       {src ? (
-        <img src={resolvedSrc} alt={alt} referrerPolicy="no-referrer" />
+        <img
+          src={resolvedSrc}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          referrerPolicy="no-referrer"
+        />
       ) : initials ? (
         <span className={styles.initials} style={{ fontSize: 22 }}>
           {initials}

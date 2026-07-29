@@ -74,13 +74,13 @@ export function soonLabel(ev: MyEvent, t: TFunction): string | null {
 
 /** Another committed event overlapping this one on the same day, if any. */
 export function conflictFor(ev: MyEvent, events: MyEvent[]): MyEvent | null {
-  if (!COMMITTED[ev.cat] || ev.cancelled) return null;
+  if (!COMMITTED[ev.category] || ev.cancelled) return null;
   const s = atTime(ev, "start");
   const e = atTime(ev, "end");
   for (const o of events) {
     if (
       o.id === ev.id ||
-      !COMMITTED[o.cat] ||
+      !COMMITTED[o.category] ||
       o.cancelled ||
       o.date !== ev.date
     )
@@ -96,21 +96,21 @@ export function inPill(ev: MyEvent, p: Pill): boolean {
   switch (p) {
     case "upcoming":
       return (
-        (ev.cat === "going" ||
-          ev.cat === "hosting" ||
-          ev.cat === "waitlisted") &&
+        (ev.category === "going" ||
+          ev.category === "hosting" ||
+          ev.category === "waitlisted") &&
         future
       );
     case "going":
-      return ev.cat === "going" && future;
+      return ev.category === "going" && future;
     case "hosting":
-      return ev.cat === "hosting";
+      return ev.category === "hosting";
     case "waitlisted":
-      return ev.cat === "waitlisted";
+      return ev.category === "waitlisted";
     case "past":
-      return ev.cat === "past";
+      return ev.category === "past";
     case "saved":
-      return ev.cat === "saved" || ev.cat === "invite" || ev.cat === "sent";
+      return ev.category === "saved" || ev.category === "invite" || ev.category === "sent";
     default:
       return false;
   }
@@ -139,12 +139,12 @@ export function yearInsights(events: MyEvent[]): YearInsights {
   const year = TODAY.getFullYear();
   const attendedEvents = events.filter(
     (ev) =>
-      ev.cat === "past" &&
+      ev.category === "past" &&
       !ev.noShow &&
       parseDate(ev.date).getFullYear() === year,
   );
   const hosted = events.filter(
-    (ev) => ev.cat === "hosting" && parseDate(ev.date).getFullYear() === year,
+    (ev) => ev.category === "hosting" && parseDate(ev.date).getFullYear() === year,
   ).length;
 
   // Top circle: the community you attended most often this year.
@@ -184,12 +184,12 @@ export function yearInsights(events: MyEvent[]): YearInsights {
 }
 
 /** Dot class for a calendar cell, by category. */
-export function dotClass(cat: string): string {
-  return cat === "going"
+export function dotClass(category: string): string {
+  return category === "going"
     ? "going"
-    : cat === "hosting"
+    : category === "hosting"
       ? "hosting"
-      : cat === "past"
+      : category === "past"
         ? "past"
         : "pending";
 }

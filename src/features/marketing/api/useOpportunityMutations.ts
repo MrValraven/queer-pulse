@@ -30,7 +30,7 @@ export function useCreateOpportunity() {
       return { slug: res.slug };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["opportunities"] });
+      void queryClient.invalidateQueries({ queryKey: ["opportunities"] });
     },
   });
 }
@@ -45,8 +45,8 @@ export function useCloseOpportunity(slug: string) {
       await closeOpportunity(slug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
-      queryClient.invalidateQueries({ queryKey: ["opportunities"] });
+      void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["opportunities"] });
     },
   });
 }
@@ -69,8 +69,8 @@ export function useSignup(slug: string) {
       await signUpForOpportunity(slug, vars.note);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
+      void queryClient.invalidateQueries({
         queryKey: ["opportunity-signups", slug],
       });
     },
@@ -87,8 +87,8 @@ export function useWithdrawSignup(slug: string) {
       await withdrawSignup(slug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
+      void queryClient.invalidateQueries({
         queryKey: ["opportunity-signups", slug],
       });
     },

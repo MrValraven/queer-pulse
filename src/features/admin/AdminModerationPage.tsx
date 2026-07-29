@@ -37,10 +37,18 @@ export function AdminModerationPage() {
         <AdminPageHeader
           eyebrow={t("admin:moderation.header.eyebrow")}
           title={
-            <Translation
-              i18nKey="admin:moderation.header.title"
-              components={{ em: <em /> }}
-            />
+            q.counts.open === 0 ? (
+              <Translation
+                i18nKey="admin:moderation.header.titleClear"
+                components={{ em: <em /> }}
+              />
+            ) : (
+              <Translation
+                i18nKey="admin:moderation.header.title"
+                components={{ em: <em /> }}
+                values={{ count: q.counts.open }}
+              />
+            )
           }
           sub={t("admin:moderation.header.sub")}
         />

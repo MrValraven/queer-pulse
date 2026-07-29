@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -171,6 +170,9 @@ export function TagEditor({
       const choice = highlight > -1 ? matches[highlight] : matches[0];
       if (choice) add(choice);
     } else if (event.key === "Escape") {
+      // Escape clears the local input; stop it here so the window-level
+      // Escape-to-cancel listener doesn't also discard the whole edit session.
+      event.stopPropagation();
       setInput("");
       setHighlight(-1);
     } else if (event.key === "Backspace" && !input && tags.length) {
@@ -272,7 +274,30 @@ export function VisibilityPicker({
   onChange: (v: VisibilityMode) => void;
 }) {
   const { t } = useTranslation();
-  const active = VISIBILITY_OPTIONS.find((o) => o.value === value);
+  const active = VISIBILITY_OPTIONS.find((option) => option.value === value);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Arrow keys move selection between radio options (wrapping around) and carry
+  // focus with them — the standard ARIA radiogroup keyboard model.
+  function handleKey(
+    event: KeyboardEvent<HTMLButtonElement>,
+    currentIndex: number,
+  ) {
+    let nextIndex = -1;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (currentIndex + 1) % VISIBILITY_OPTIONS.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex =
+        (currentIndex - 1 + VISIBILITY_OPTIONS.length) %
+        VISIBILITY_OPTIONS.length;
+    }
+    const nextOption = VISIBILITY_OPTIONS[nextIndex];
+    if (!nextOption) return;
+    event.preventDefault();
+    onChange(nextOption.value);
+    optionRefs.current[nextIndex]?.focus();
+  }
+
   return (
     <div>
       <div
@@ -280,32 +305,30 @@ export function VisibilityPicker({
         role="radiogroup"
         aria-label={t("members:profileEdit.visibilityGroupLabel")}
       >
-        {VISIBILITY_OPTIONS.map((o) => (
-          <button
-            key={o.value}
-            type="button"
-            role="radio"
-            aria-checked={value === o.value}
-            className={`${styles.segment} ${value === o.value ? styles.segmentActive : ""}`}
-            onClick={() => onChange(o.value)}
-          >
-            {t(o.labelKey)}
-          </button>
-        ))}
+        {VISIBILITY_OPTIONS.map((option, index) => {
+          const isChecked = value === option.value;
+          return (
+            <button
+              key={option.value}
+              ref={(element) => {
+                optionRefs.current[index] = element;
+              }}
+              type="button"
+              role="radio"
+              aria-checked={isChecked}
+              // Roving tabindex: only the checked option is in the tab order;
+              // a fallback keeps the first option reachable if none matches.
+              tabIndex={isChecked || (!active && index === 0) ? 0 : -1}
+              className={`${styles.segment} ${isChecked ? styles.segmentActive : ""}`}
+              onClick={() => onChange(option.value)}
+              onKeyDown={(event) => handleKey(event, index)}
+            >
+              {t(option.labelKey)}
+            </button>
+          );
+        })}
       </div>
       {active && <p className={styles.visHint}>{t(active.hintKey)}</p>}
     </div>
   );
-}
-
-/** Discards the editor on Escape while `enabled` — used by the edit bar. */
-export function useEscapeToCancel(onCancel: () => void, enabled: boolean) {
-  useEffect(() => {
-    if (!enabled) return;
-    function onKey(e: globalThis.KeyboardEvent) {
-      if (e.key === "Escape") onCancel();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onCancel, enabled]);
 }

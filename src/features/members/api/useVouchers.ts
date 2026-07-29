@@ -6,12 +6,17 @@ import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 
 /** A single voucher face rendered on a profile's "Vouched for by…" row. */
 export interface VoucherFace {
-  /** Member slug the face links to (`/members/:slug`). */
+  /**
+   * Member slug the face links to (`/members/:slug`). Empty for an anonymous
+   * voucher — the face must not be linked in that case.
+   */
   slug: string;
   name: string;
   initials: string;
   tint: AvatarTint;
   avatarUrl?: string;
+  /** The voucher vouched anonymously; render an un-linked, un-named face. */
+  anonymous?: boolean;
 }
 
 /**
@@ -52,13 +57,26 @@ export function useVouchers(slug: string | undefined) {
         });
       }
       const res = await getVouchers(slug);
-      return res.vouchers.map((v) => ({
-        slug: v.slug,
-        name: `${v.firstName} ${v.lastName}`,
-        initials: initialsOf(v.firstName, v.lastName),
-        tint: tintForSlug(v.slug),
-        avatarUrl: v.avatarUrl ?? undefined,
-      }));
+      return res.vouchers.map((v) => {
+        // Anonymous vouchers come back shielded (empty slug/name). Render a
+        // generic, un-linked face instead of a broken link to `/members/`.
+        if (v.anonymous) {
+          return {
+            slug: "",
+            name: "",
+            initials: "?",
+            tint: "plum" as AvatarTint,
+            anonymous: true,
+          };
+        }
+        return {
+          slug: v.slug,
+          name: `${v.firstName} ${v.lastName}`,
+          initials: initialsOf(v.firstName, v.lastName),
+          tint: tintForSlug(v.slug),
+          avatarUrl: v.avatarUrl ?? undefined,
+        };
+      });
     },
   });
 }

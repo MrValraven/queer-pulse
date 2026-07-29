@@ -38,7 +38,7 @@ function VerifiedView({ s }: { s: VerifiedSpace }) {
   const { lead, last } = emName(s.name);
   const share = () => {
     if (navigator.clipboard)
-      navigator.clipboard.writeText(window.location.href);
+      void navigator.clipboard.writeText(window.location.href);
     showToast(t("safety:spaces.detail.linkCopiedToast"), "success");
   };
 

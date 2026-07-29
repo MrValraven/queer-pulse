@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useProfile } from "../../app/providers/ProfileProvider";
-import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
+import { useProfile } from "../../app/providers/useProfile";
+import { useProfileTheme } from "../../app/providers/useProfileTheme";
 import { useScrollLock } from "../../shared/hooks";
 import { AppShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
@@ -159,21 +159,23 @@ export function SettingsPage() {
               type="button"
               className={styles.saveBtn}
               disabled={isSaving}
-              onClick={async () => {
-                if (openedRef.current) {
-                  const ok = await save();
-                  if (!ok) {
-                    showToast(
-                      t("settings:page.saveBar.saveErrorToast"),
-                      "error",
-                    );
-                    return;
+              onClick={() =>
+                void (async () => {
+                  if (openedRef.current) {
+                    const ok = await save();
+                    if (!ok) {
+                      showToast(
+                        t("settings:page.saveBar.saveErrorToast"),
+                        "error",
+                      );
+                      return;
+                    }
                   }
-                }
-                commitTheme();
-                setDirty(false);
-                showToast(t("settings:page.saveBar.savedToast"), "success");
-              }}
+                  commitTheme();
+                  setDirty(false);
+                  showToast(t("settings:page.saveBar.savedToast"), "success");
+                })()
+              }
             >
               {t("settings:page.saveBar.save")}
             </button>

@@ -46,6 +46,7 @@
   align-items: center;
   gap: 20px;
   padding: 16px 30px;
+  padding-block-start: max(16px, env(safe-area-inset-top));
   background: rgba(26, 16, 40, 0.86);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);

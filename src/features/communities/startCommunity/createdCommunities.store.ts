@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import type { CommunityType } from "../../homepage/data/types";
 import {
   makeRef,
   slugify,
@@ -45,7 +44,7 @@ export function createCommunityRecord(
   draft: CommunityDraft,
   ownerSlug: string,
 ): CreatedCommunity {
-  const type = (draft.type || "social") as CommunityType;
+  const type = draft.type || "social";
   const community: CreatedCommunity = {
     ...draft,
     type,

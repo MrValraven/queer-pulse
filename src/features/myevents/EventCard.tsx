@@ -30,11 +30,11 @@ export function EventCard({ ev }: { ev: MyEvent }) {
   const dt = parseDate(ev.date);
   const soon = !!(
     isToday(ev) &&
-    COMMITTED[ev.cat] &&
+    COMMITTED[ev.category] &&
     !ev.cancelled &&
     soonLabel(ev, t)
   );
-  const showExtras = ev.cat !== "past" && ev.cat !== "sent";
+  const showExtras = ev.category !== "past" && ev.category !== "sent";
   const isOn = !!selected[ev.id];
   const focused = focusId === ev.id;
 
@@ -48,7 +48,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
   }, [focused, reduce]);
 
   const cardCls = sx(
-    `ev-card ${ev.cat}${ev.cancelled ? " cancelled" : ""}${soon ? " soon" : ""}${removingId === ev.id ? " removing" : ""}${focused ? " flash" : ""}`,
+    `ev-card ${ev.category}${ev.cancelled ? " cancelled" : ""}${soon ? " soon" : ""}${removingId === ev.id ? " removing" : ""}${focused ? " flash" : ""}`,
   );
 
   return (
@@ -80,7 +80,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
         <SoonBar ev={ev} />
         <StatusBadges ev={ev} />
         <div className={sx("ev-name")}>{ev.title}</div>
-        <EventMeta ev={ev} links={ev.cat !== "past"} />
+        <EventMeta ev={ev} links={ev.category !== "past"} />
         {showExtras && (
           <>
             <AccessRow ev={ev} />
@@ -91,7 +91,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
             {isToday(ev) && <DayOfPanel ev={ev} show={dayofShown} />}
           </>
         )}
-        {ev.cat === "going" && !ev.cancelled && <FriendsLine ev={ev} />}
+        {ev.category === "going" && !ev.cancelled && <FriendsLine ev={ev} />}
         <EventFoot ev={ev} />
         <EventTools
           ev={ev}

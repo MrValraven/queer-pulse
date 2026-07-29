@@ -98,7 +98,7 @@ export function PwaPromptPage() {
 
   function snooze() {
     showToast(t("system:pwaPrompt.toast.snoozed"), "info");
-    setTimeout(() => navigate(-1), 900);
+    setTimeout(() => void navigate(-1), 900);
   }
 
   return (
@@ -179,7 +179,7 @@ export function PwaPromptPage() {
 
         <div className={styles.actions}>
           <Button
-            onClick={install}
+            onClick={() => void install()}
             className={styles.installBtn}
             disabled={isInstalled}
           >

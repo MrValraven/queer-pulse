@@ -9,7 +9,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaShareUrlForOwner } from "./personaLinks.data";
 import { SubprofileShareCard } from "./SubprofileShareCard";
@@ -113,7 +113,7 @@ export function MySubprofileRow({
           </div>
         </div>
         <div className={styles.rowActions}>
-          <Button variant="ghost" onClick={handleShare}>
+          <Button variant="ghost" onClick={() => void handleShare()}>
             <FiShare2 aria-hidden /> {t("subprofiles:share.cta")}
           </Button>
           <Button variant="ghost" onClick={() => setShareCardOpen(true)}>

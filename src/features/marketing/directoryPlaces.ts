@@ -62,6 +62,9 @@ export interface DirectoryPlace {
     phone?: string;
   };
   address: string;
+  /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
+  latitude?: number | null;
+  longitude?: number | null;
   upcoming?: { when: string; title: string }[];
   reviews: Review[];
 }

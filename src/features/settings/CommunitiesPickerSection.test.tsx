@@ -52,7 +52,7 @@ vi.mock("../../app/providers/ProfileProvider", () => ({
     saveError: null,
     startEditing: vi.fn(),
     cancelEditing: vi.fn(),
-    save: vi.fn(async () => true),
+    save: vi.fn(() => Promise.resolve(true)),
     updateDraft,
   }),
 }));

@@ -255,7 +255,7 @@ export function SessionsPage() {
         </p>
 
         {!loading && !failed && (
-          <BulkRow others={others} onSignOutAll={handleSignOutAll} />
+          <BulkRow others={others} onSignOutAll={() => void handleSignOutAll()} />
         )}
 
         <div className={styles.sectionH}>
@@ -281,7 +281,7 @@ export function SessionsPage() {
           ) : (
             activeSessions.map((s, i) => (
               <FadeIn key={s.id} delay={Math.min(i, 8) * 60}>
-                <SessionCard session={s} onSignOut={handleSignOut} />
+                <SessionCard session={s} onSignOut={(sessionId) => void handleSignOut(sessionId)} />
               </FadeIn>
             ))
           )}

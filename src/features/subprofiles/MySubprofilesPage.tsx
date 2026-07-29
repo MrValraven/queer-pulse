@@ -117,7 +117,7 @@ export function MySubprofilesPage() {
               </Button>
               <Button
                 variant="danger"
-                onClick={confirmDelete}
+                onClick={() => void confirmDelete()}
                 disabled={remove.isPending}
               >
                 {remove.isPending

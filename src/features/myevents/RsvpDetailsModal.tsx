@@ -19,7 +19,7 @@ export function RsvpDetailsModal() {
   const [guest, setGuest] = useState(false);
   const [vis, setVis] = useState<Visibility>(VIS_DEFAULT);
   const [quiet, setQuiet] = useState(false);
-  const ev = details.evId ? byId(details.evId) : undefined;
+  const ev = details.eventId ? byId(details.eventId) : undefined;
 
   const visLabel: Record<Visibility, string> = {
     everyone: t("myevents:rsvpModal.visibility.everyone"),

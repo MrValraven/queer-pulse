@@ -1,7 +1,7 @@
 import { useState, type KeyboardEvent, type SyntheticEvent } from "react";
 import { Link } from "react-router-dom";
 import { FiBookmark, FiCheck, FiClock, FiFlag, FiMapPin } from "react-icons/fi";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";

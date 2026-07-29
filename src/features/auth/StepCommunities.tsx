@@ -49,7 +49,7 @@ function CommunityJoinCard({ community }: { community: Community }) {
         className={[styles.ccJoin, isMember && styles.ccJoinActive]
           .filter(Boolean)
           .join(" ")}
-        onClick={handleJoin}
+        onClick={() => void handleJoin()}
         disabled={joinCommunity.isPending}
       >
         {status === "requested" ? (

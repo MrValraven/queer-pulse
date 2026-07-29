@@ -18,6 +18,7 @@ import {
 import type { WorkLink, WorkRefEntity } from "../workLink.data";
 import type {
   ActivityKind,
+  BoardItemDTO,
   GroupMembershipDTO,
   MemberCardDTO,
   OpenToEntryDTO,
@@ -202,17 +203,30 @@ export function profileToMember(dto: ProfileDTO): Member {
         s.kind,
         { title: s.title, note: s.note },
       ]),
-    ) as Member["shapings"],
+    ),
     activity: (dto.activity ?? []).map((a) => ({
       icon: ACTIVITY_ICONS[a.kind] ?? FiFileText,
       title: a.title,
       sub: a.sub,
       to: a.to,
     })),
-    // Registry-resolved faces ("Also in the room") still hydrate from the mock
-    // member registry, so live-mode related cards only carry slugs today — the
-    // full-card hydration is a documented follow-up (same gap as vouch faces).
-    related: (dto.related ?? []).map((r) => r.slug),
+    // "Also in the room": the backend already returns full related-member
+    // cards, so we resolve them here into `relatedCards` (name, hood, avatar,
+    // derived initials/tint) rather than throwing away everything but the slug.
+    // `related` (slugs) is left empty in live mode — the demo path uses it to
+    // resolve against the mock registry, but real members aren't in that
+    // registry, so RelatedSection prefers `relatedCards` when present.
+    related: [],
+    relatedCards: (dto.related ?? []).map((related) => ({
+      slug: related.slug,
+      first: related.firstName,
+      last: related.lastName,
+      role: related.tagline ?? "",
+      hood: related.location ?? "",
+      initials: initialsOf(related.firstName, related.lastName),
+      tint: tintForSlug(related.slug),
+      avatarUrl: related.avatarUrl ?? undefined,
+    })),
     featuredCommunities: (dto.featuredCommunities ?? []).map((ref) => ({
       slug: ref.slug,
       name: ref.name,
@@ -243,7 +257,18 @@ export function workToDto(work: Member["work"]): WorkItemDTO[] {
 }
 
 export function skillsToDto(skills: Member["skills"]): SkillItemDTO[] {
-  return skills.map((s) => ({ name: s.name, meta: s.meta }));
+  return skills.map((skill) => ({ name: skill.name, meta: skill.meta }));
+}
+
+/** Map the member's barter-board posts to the PUT /profiles/me/board `items`
+ *  DTOs. `BoardItem` is already structurally the wire shape, so this is a plain
+ *  pass-through kept for symmetry with the other list adapters. */
+export function boardToDto(board: Member["board"]): BoardItemDTO[] {
+  return board.map((post) => ({
+    kind: post.kind,
+    title: post.title,
+    slug: post.slug,
+  }));
 }
 
 /** `Member.groups` carries a group `name` (not a slug); the endpoint keys on a

@@ -5,8 +5,12 @@ import { usePushSubscription } from "./usePushSubscription";
 vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: false }),
 }));
-const subscribePush = vi.fn().mockResolvedValue({ ok: true });
-const unsubscribePush = vi.fn().mockResolvedValue({ ok: true });
+const subscribePush = vi.fn((..._args: unknown[]) =>
+  Promise.resolve({ ok: true }),
+);
+const unsubscribePush = vi.fn((..._args: unknown[]) =>
+  Promise.resolve({ ok: true }),
+);
 vi.mock("./push.api", () => ({
   subscribePush: (...args: unknown[]) => subscribePush(...args),
   unsubscribePush: (...args: unknown[]) => unsubscribePush(...args),

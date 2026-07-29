@@ -108,15 +108,15 @@ export function buildAgenda(
     const groups: AgendaGroup[] = [
       {
         label: t("myevents:agenda.invitesWaiting"),
-        events: list.filter((e) => e.cat === "invite"),
+        events: list.filter((e) => e.category === "invite"),
       },
       {
         label: t("myevents:agenda.savedForLater"),
-        events: list.filter((e) => e.cat === "saved"),
+        events: list.filter((e) => e.category === "saved"),
       },
       {
         label: t("myevents:agenda.invitesSent"),
-        events: list.filter((e) => e.cat === "sent"),
+        events: list.filter((e) => e.category === "sent"),
       },
     ].filter((g) => g.events.length);
     return { ...empty, groups };
@@ -139,9 +139,9 @@ export function buildAgenda(
       going: t("myevents:agenda.going"),
       waitlisted: t("myevents:agenda.waitlisted"),
     };
-    groups = (["hosting", "going", "waitlisted"] as const).map((cat) => ({
-      label: labels[cat]!,
-      events: list.filter((e) => e.cat === cat).sort(byDateAsc),
+    groups = (["hosting", "going", "waitlisted"] as const).map((category) => ({
+      label: labels[category]!,
+      events: list.filter((e) => e.category === category).sort(byDateAsc),
     }));
   } else {
     const sorted = [...list].sort(byDateAsc);

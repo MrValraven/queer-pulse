@@ -113,7 +113,7 @@ export function SubprofilePublishPanel({
           {isPublished && (
             <Button
               variant="ghost"
-              onClick={onUnpublish}
+              onClick={() => void onUnpublish()}
               disabled={unpublish.isPending}
             >
               {unpublish.isPending
@@ -123,7 +123,7 @@ export function SubprofilePublishPanel({
           )}
           <Button
             variant="primary"
-            onClick={onPublish}
+            onClick={() => void onPublish()}
             disabled={publish.isPending}
           >
             {publish.isPending

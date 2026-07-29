@@ -39,10 +39,10 @@ export function useUpdateBot() {
       await replaceBotSocials(edits.userId, edits.socials);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "bots"] });
-      queryClient.invalidateQueries({ queryKey: ["admin", "bot"] });
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      void queryClient.invalidateQueries({ queryKey: ["admin", "bots"] });
+      void queryClient.invalidateQueries({ queryKey: ["admin", "bot"] });
+      void queryClient.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient.invalidateQueries({ queryKey: ["members"] });
     },
   });
 }

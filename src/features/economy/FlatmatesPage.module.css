@@ -175,12 +175,12 @@
 }
 .fSelect {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
-  padding: 8px 30px 8px 15px;
+  padding: 7px 30px 7px 15px;
   cursor: pointer;
   transition: border-color 0.2s var(--ease);
 }
@@ -653,9 +653,9 @@
 .textarea {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 12px;
-  padding: 12px 15px;
+  padding: 11px 15px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   width: 100%;

@@ -1,4 +1,9 @@
-import { useMemo, useState } from "react";
+import {
+  useMemo,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
@@ -87,6 +92,16 @@ export function NotificationsPage() {
 
   function renderItem(notification: Notification, index: number) {
     const isUnread = notification.unread && !readIds.has(notification.id);
+    // A click/keypress that landed on the avatar or the inline profile link
+    // (both render as <a>) is that link's own navigation — the actor
+    // profile — and must not be overridden by the row's source deep-link.
+    function activateRow(target: EventTarget | null) {
+      markRead(notification.id);
+      const clickedLink = (target as HTMLElement).closest?.("a");
+      if (notification.sourceHref && !clickedLink) {
+        void navigate(linkToPath(notification.sourceHref));
+      }
+    }
     return (
       <FadeIn
         key={notification.id}
@@ -94,7 +109,32 @@ export function NotificationsPage() {
         className={[styles.item, isUnread && styles.unread]
           .filter(Boolean)
           .join(" ")}
-        onClick={() => markRead(notification.id)}
+        onClick={(event: MouseEvent<HTMLElement>) => activateRow(event.target)}
+        // Only a row with a source deep-link is keyboard-operable — a row
+        // with none stays a plain (mark-read-on-click) div, same as before
+        // this field existed.
+        role={notification.sourceHref ? "button" : undefined}
+        tabIndex={notification.sourceHref ? 0 : undefined}
+        aria-label={
+          notification.sourceHref
+            ? `${
+                typeof notification.text === "string"
+                  ? notification.text
+                  : notification.meta
+              } — ${t("notifications:actions.viewThread")}`
+            : undefined
+        }
+        onKeyDown={
+          notification.sourceHref
+            ? (event: KeyboardEvent<HTMLElement>) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                // Space's default is page scroll; Enter has no default to guard
+                // here, but preventDefault is harmless on it.
+                event.preventDefault();
+                activateRow(event.target);
+              }
+            : undefined
+        }
       >
         {isUnread && <span className={styles.unreadDot} aria-hidden />}
         {notification.avatar ? (
@@ -165,7 +205,7 @@ export function NotificationsPage() {
                     if (action.resolve) {
                       resolve(notification.id, action.resolve.toast);
                     } else if (action.href !== "#") {
-                      navigate(linkToPath(action.href));
+                      void navigate(linkToPath(action.href));
                     }
                   }}
                 >
@@ -245,7 +285,7 @@ export function NotificationsPage() {
                 type="button"
                 className={[styles.btn, styles.btnPrimary].join(" ")}
                 style={{ marginTop: 14 }}
-                onClick={() => refetch()}
+                onClick={() => void refetch()}
               >
                 {t("notifications:page.error.retry")}
               </button>

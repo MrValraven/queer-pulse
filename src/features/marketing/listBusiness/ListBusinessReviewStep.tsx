@@ -117,7 +117,7 @@ export function StepReview({
   const { t } = useTranslation();
   const { draft, set } = form;
   return (
-    <>
+    <div className={styles.stepBody}>
       <PaneHeader
         title={t("marketing:listBusiness.step5.title")}
         em={t("marketing:listBusiness.step5.em")}
@@ -277,6 +277,6 @@ export function StepReview({
           />
         </p>
       </div>
-    </>
+    </div>
   );
 }

@@ -71,6 +71,7 @@ export function JoinModal({
         aria-label={t("communities:join.ariaLabel", { name: community.name })}
         className={styles.modal}
       >
+        <div className={styles.grabber} aria-hidden />
         <button
           type="button"
           className={styles.close}

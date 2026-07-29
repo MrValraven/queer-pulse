@@ -21,14 +21,22 @@ function read(): StoredDraft | null {
 /**
  * Autosaves the wizard to localStorage (debounced) and exposes any saved draft
  * found on mount so the page can offer a "resume" banner.
+ *
+ * `enabled` (default `true`) gates the whole hook — pass `false` in edit mode
+ * so an owner editing an existing listing never reads, overwrites, or offers
+ * to resume the localStorage "new draft" slot used by the create flow.
  */
-export function useListingDraft(draft: ListingDraft, step: number) {
+export function useListingDraft(
+  draft: ListingDraft,
+  step: number,
+  enabled = true,
+) {
   // Snapshot what was on disk at mount — used only for the resume banner.
-  const [saved] = useState<StoredDraft | null>(() => read());
+  const [saved] = useState<StoredDraft | null>(() => (enabled ? read() : null));
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Don't autosave until the user has actually started (path chosen).
-  const started = draft.path !== "";
+  const started = enabled && draft.path !== "";
 
   useEffect(() => {
     if (!started) return;

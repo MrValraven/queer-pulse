@@ -17,6 +17,8 @@ export function ConnectSentPanel({
   const [secondsLeft, setSecondsLeft] = useState(AUTO_CLOSE_SECONDS);
 
   useEffect(() => {
+    // Resets the auto-close countdown driven by the interval/timeout cleared below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSecondsLeft(AUTO_CLOSE_SECONDS);
     const tick = window.setInterval(() => {
       setSecondsLeft((s) => (s > 1 ? s - 1 : 0));

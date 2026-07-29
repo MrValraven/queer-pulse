@@ -6,6 +6,12 @@
   margin: 0 auto;
   padding: 18px 16px 0;
 }
+.coverTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
 .back {
   font-size: 13px;
   color: var(--ink-40);
@@ -20,6 +26,25 @@
 @media (hover: hover) {
   .back:hover {
     color: var(--text-strong);
+  }
+}
+.ownerEdit {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .ownerEdit:hover {
+    background: rgba(var(--accent-rgb), 0.18);
   }
 }
 .gallery {

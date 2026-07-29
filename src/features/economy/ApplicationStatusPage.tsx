@@ -6,12 +6,8 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import {
-  APPS,
-  type Application,
-  type Cat,
-  type ActionKind,
-} from "./applicationStatus.data";
+import { APPS } from "./applicationStatus.data";
+import type { Application, Cat, ActionKind } from "./applicationStatus.types";
 import { ApplicationModal } from "./ApplicationModals";
 import { CompareOffersModal } from "./CompareOffersModal";
 import {

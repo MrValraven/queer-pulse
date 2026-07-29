@@ -23,9 +23,35 @@
   padding: 28px 30px;
   width: 100%;
   max-width: 520px;
-  max-height: 90vh;
+  max-height: 90svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   animation: rise 0.24s var(--ease);
+}
+
+/* On phones this centre dialog becomes a bottom sheet: in the thumb arc, clears
+   the notch/home indicator, and reads as draggable via the grabber. */
+@media (max-width: 860px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+    padding-block-end: var(--keyboard-inset, 0px);
+  }
+  .dialog {
+    max-width: none;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    max-height: 92svh;
+    padding-block-end: max(28px, env(safe-area-inset-bottom));
+  }
+  .dialog:not(.dialogConfirm)::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(var(--plum-rgb), 0.18);
+    margin: 0 auto 18px;
+  }
 }
 @keyframes rise {
   from {
@@ -73,7 +99,7 @@
   border-radius: 12px;
   padding: 11px 14px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   outline: none;

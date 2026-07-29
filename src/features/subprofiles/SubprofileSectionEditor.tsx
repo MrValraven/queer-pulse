@@ -178,7 +178,7 @@ export function SubprofileSectionEditor({
             </p>
           )}
         </div>
-        <Button variant="primary" onClick={save} disabled={saving || !dirty}>
+        <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>
           {saving
             ? t("subprofiles:sectionEditor.saving")
             : t("subprofiles:sectionEditor.save")}

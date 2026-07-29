@@ -9,6 +9,7 @@ import {
   buildBreadcrumbSchema,
 } from "../../shared/seo";
 import { ModerationLogSection, ReportFormSection } from "./ReportSections";
+import { QuickExit } from "./QuickExit";
 import s from "./ReportPage.module.css";
 
 export function ReportPage() {
@@ -47,6 +48,8 @@ export function ReportPage() {
 
       <ReportFormSection />
       <ModerationLogSection />
+
+      <QuickExit />
     </PageShell>
   );
 }

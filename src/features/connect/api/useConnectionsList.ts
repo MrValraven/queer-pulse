@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useConnections } from "../../../app/providers/ConnectionsProvider";
-import { useSocial } from "../../../app/providers/SocialProvider";
-import { useVouchActions } from "../../../app/providers/VouchProvider";
+import { useConnections } from "../../../app/providers/useConnections";
+import { useSocial } from "../../../app/providers/useSocial";
+import { useVouchActions } from "../../../app/providers/useVouch";
 import {
   CONNECTION_META,
   connectionViews,

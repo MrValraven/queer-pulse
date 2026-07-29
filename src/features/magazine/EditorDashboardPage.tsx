@@ -121,7 +121,7 @@ export function EditorDashboardPage() {
     pieceIds,
     focusedId,
     setFocusedId,
-    onOpen: () => navigate(routes.issue),
+    onOpen: () => void navigate(routes.issue),
     onChase: (id) => {
       const piece = state.pieces.find((p) => p.id === id);
       if (piece) openChase(piece);
@@ -151,7 +151,7 @@ export function EditorDashboardPage() {
               <EditorNeedsStrip
                 pieces={state.pieces}
                 me={state.me}
-                onOpen={() => navigate(routes.issue)}
+                onOpen={() => void navigate(routes.issue)}
                 onChase={openChase}
               />
             </FadeIn>

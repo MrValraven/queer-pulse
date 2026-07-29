@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import {
@@ -55,6 +55,8 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
   // Brief skeleton swap whenever the active stream changes, so the list
   // transitions instead of hard-cutting.
   useEffect(() => {
+    // Skeleton-swap timer on stream change, cleared on unmount below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSwapping(true);
     const t = setTimeout(() => setSwapping(false), 450);
     return () => clearTimeout(t);
@@ -112,7 +114,7 @@ export function NewsletterArchiveList({ stream, onClearStream }: Props) {
       {YEARS.slice(0, shownYears).map((year, yearIndex) => (
         <div key={yearIndex}>
           <div className={styles.year}>
-            <h3>{year.label as ReactNode}</h3>
+            <h3>{year.label}</h3>
             <div className={styles.yearMeta}>{year.meta}</div>
           </div>
           {year.rows

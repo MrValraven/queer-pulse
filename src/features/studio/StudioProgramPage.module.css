@@ -631,7 +631,7 @@
 /* ── Publish bar ── */
 .publishBar {
   position: sticky;
-  bottom: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
   justify-content: space-between;

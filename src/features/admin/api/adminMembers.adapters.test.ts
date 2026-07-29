@@ -202,6 +202,7 @@ const baseDetailDto: AdminMemberDetailDTO = {
   verified: true,
   avatarUrl: null,
   vouchCount: 21,
+  outboundVouchCount: 0,
   joinedAt: "2023-03-15T00:00:00Z",
   openReportCount: 0,
   communities: [
@@ -224,7 +225,15 @@ const baseDetailDto: AdminMemberDetailDTO = {
   ],
   graph: {
     center: { initials: "IM", tone: "jade", slug: "ines-martins", avatarUrl: null },
-    nodes: [{ initials: "TM", tone: "violet", slug: "theo", avatarUrl: null }],
+    nodes: [
+      {
+        initials: "TM",
+        tone: "violet",
+        slug: "theo",
+        avatarUrl: null,
+        direction: "inbound",
+      },
+    ],
   },
 };
 
@@ -431,9 +440,23 @@ describe("detailDtoToMember", () => {
     expect(detail.moderationTimeline[0]?.title).toBe("Moderation action taken");
   });
 
-  it("drops slug/avatarUrl from the vouch graph's center and nodes", () => {
+  it("drops slug/avatarUrl from the vouch graph's center and nodes, keeping direction", () => {
     const detail = detailDtoToMember(baseDetailDto, translate, fmt);
     expect(detail.graph.center).toEqual({ initials: "IM", tone: "jade" });
-    expect(detail.graph.nodes[0]).toEqual({ initials: "TM", tone: "violet" });
+    expect(detail.graph.nodes[0]).toEqual({
+      initials: "TM",
+      tone: "violet",
+      direction: "inbound",
+    });
+  });
+
+  it("notes both vouch directions once the member has vouched for others", () => {
+    const detail = detailDtoToMember(
+      { ...baseDetailDto, vouchCount: 21, outboundVouchCount: 3 },
+      translate,
+      fmt,
+    );
+    expect(detail.graphNote).toContain("21");
+    expect(detail.graphNote).toContain("3");
   });
 });

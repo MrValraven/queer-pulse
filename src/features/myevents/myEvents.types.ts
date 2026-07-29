@@ -1,6 +1,6 @@
 /** Domain types for the My Events dashboard (all mock/static). */
 
-export type EventCat =
+export type EventCategory =
   "going" | "hosting" | "waitlisted" | "past" | "saved" | "invite" | "sent";
 
 /** Avatar tints used by the stacked attendee avatars. */
@@ -23,7 +23,7 @@ export interface DayOf {
 
 export interface MyEvent {
   id: string;
-  cat: EventCat;
+  category: EventCategory;
   /** Slug of the gathering detail page this event links to (see gatherings/data.ts). */
   slug?: string;
   title: string;
@@ -40,7 +40,7 @@ export interface MyEvent {
   review?: boolean;
   blocked?: boolean;
   online?: boolean;
-  tz?: string;
+  timezone?: string;
   ticket?: boolean;
   sliding?: boolean;
   paid?: string;
@@ -90,7 +90,7 @@ export interface Notif {
   bold: string;
   tail?: string;
   time: string;
-  evId: string;
+  eventId: string;
   unread: boolean;
 }
 

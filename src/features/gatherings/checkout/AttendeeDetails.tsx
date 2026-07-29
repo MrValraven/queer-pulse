@@ -24,6 +24,7 @@ export function AttendeeDetails() {
             type="email"
             inputMode="email"
             autoComplete="email"
+            enterKeyHint="next"
             value={guestEmail}
             onChange={(e) => {
               patch({ guestEmail: e.target.value });

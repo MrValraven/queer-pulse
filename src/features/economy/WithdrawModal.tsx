@@ -2,8 +2,10 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
-import { type Application, withdrawnPatch } from "./applicationStatus.data";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { useSubmitFlow } from "./modalFlow";
+import type { Application } from "./applicationStatus.types";
+import { withdrawnPatch } from "./applicationStatus.patches";
 import { WITHDRAW_REASONS } from "./applicationModals.data";
 import styles from "./ApplicationModals.module.css";
 

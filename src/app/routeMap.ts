@@ -60,6 +60,7 @@ export const routes = {
   adminChangemakers: "/admin/changemakers",
   adminModeration: "/admin/moderation",
   adminSafeSpaces: "/admin/safe-spaces",
+  adminListings: "/admin/listings",
   adminGovernance: "/admin/governance",
   adminHousingCoops: "/admin/housing",
   adminOrgTiers: "/admin/org-tiers",
@@ -170,6 +171,7 @@ export const routes = {
   legal: "/safety/legal",
   library: "/resources/library",
   listBusiness: "/local/directory/list",
+  listBusinessEdit: "/local/directory/list/:ref/edit",
   magazine: "/magazine",
   magazineEditor: "/magazine/editor",
   map: "/local/map",
@@ -321,6 +323,8 @@ export const topicPath = (tag: string) =>
   `/topic/${tag.replace(/^#/, "").toLowerCase()}`;
 /** A community's detail page (`/community/:slug`). */
 export const communityPath = (slug: string) => `/community/${slug}`;
+/** A business's detail page in the local directory (`/local/directory/:slug`). */
+export const businessPath = (slug: string) => `${routes.directory}/${slug}`;
 
 /** The owner editor for one subprofile (`/account/subprofiles/:id/edit`). */
 export const subprofileEditPath = (id: string) =>

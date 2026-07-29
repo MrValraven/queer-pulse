@@ -5,7 +5,7 @@
 }
 .progressBar {
   position: fixed;
-  top: 0;
+  top: max(0px, env(safe-area-inset-top));
   left: 0;
   right: 0;
   height: 4px;
@@ -19,7 +19,7 @@
 }
 .progressLabel {
   position: fixed;
-  top: 14px;
+  top: max(14px, env(safe-area-inset-top));
   right: 24px;
   font-size: 12px;
   font-weight: 600;
@@ -28,7 +28,7 @@
 }
 .brand {
   position: fixed;
-  top: 22px;
+  top: max(22px, env(safe-area-inset-top));
   left: 28px;
   z-index: 20;
   display: flex;
@@ -494,6 +494,10 @@
   justify-content: center;
 }
 .back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   text-align: center;
   font-size: 13.5px;
   color: var(--ink-40);

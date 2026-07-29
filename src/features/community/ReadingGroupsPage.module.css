@@ -378,7 +378,7 @@
 }
 .ssInput {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.14);

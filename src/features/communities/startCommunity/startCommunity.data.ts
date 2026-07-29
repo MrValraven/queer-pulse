@@ -369,5 +369,5 @@ export function makeRef(seq: number): string {
 
 /** Avatar tint fallback (Community/Member tint union is a superset of ours). */
 export function toAvatarTint(t: TintKey): AvatarTint {
-  return t as AvatarTint;
+  return t;
 }

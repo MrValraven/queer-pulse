@@ -59,7 +59,7 @@ export function CreativesHero({
         <div className={styles.heroBadges}>
           {f.badges.map((b) => (
             <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-              {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]!) : b}
+              {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]) : b}
             </span>
           ))}
         </div>

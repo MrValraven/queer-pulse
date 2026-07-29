@@ -32,6 +32,8 @@ function blankDraft(): ListingDraft {
     langs: [],
     address: "",
     geocoded: false,
+    latitude: null,
+    longitude: null,
     hours: emptyHours(),
     hoursNote: "",
     social: { instagram: "", website: "", email: "", phone: "" },
@@ -212,6 +214,8 @@ export function useListingForm(initial?: ListingDraft) {
     const s3: MissingField[] = [];
     if (!draft.address.trim())
       add(s3, "marketing:listBusiness.missing.address", ANCHOR.address);
+    if (draft.latitude === null || draft.longitude === null)
+      add(s3, "marketing:listBusiness.missing.pin", ANCHOR.address);
     if (!DAYS.some((d) => draft.hours[d.id]?.open))
       add(s3, "marketing:listBusiness.missing.hours", ANCHOR.hours);
     if (!allSocialsValid(draft.social))

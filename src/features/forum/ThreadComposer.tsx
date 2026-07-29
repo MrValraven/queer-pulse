@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ForumAvatar } from "./ForumAuthor";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import styles from "./ThreadPage.module.css";
 

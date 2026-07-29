@@ -7,10 +7,8 @@ import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import type { WorkshopDraft } from "./addWorkshop.build";
 import { workshopToDraft } from "./api/workshops.adapters";
 import type { Workshop } from "./workshops.data";
-import {
-  EMPTY_WORKSHOP_DRAFT,
-  WorkshopDraftFields,
-} from "./WorkshopDraftFields";
+import { WorkshopDraftFields } from "./WorkshopDraftFields";
+import { EMPTY_WORKSHOP_DRAFT } from "./workshopDraft.data";
 import { useAddWorkshopFlow } from "./useAddWorkshopFlow";
 import styles from "./ApplicationModals.module.css";
 

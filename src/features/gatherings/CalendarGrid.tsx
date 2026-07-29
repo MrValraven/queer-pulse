@@ -6,11 +6,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
 import { CALENDAR_TODAY, WEEKDAY_REFERENCE } from "./calendar.data";
+import { sameDay } from "./calendarGrid.helpers";
 import styles from "./CalendarPage.module.css";
-
-export function sameDay(a: Date, b: Date) {
-  return a.toDateString() === b.toDateString();
-}
 
 export function EventCardSkeleton() {
   return (
@@ -34,13 +31,13 @@ export function EventCard({ event }: { event: CalendarEvent }) {
   return (
     <div
       className={styles.eventCard}
-      onClick={() => navigate(event.to)}
+      onClick={() => void navigate(event.to)}
       role="link"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          navigate(event.to);
+          void navigate(event.to);
         }
       }}
     >

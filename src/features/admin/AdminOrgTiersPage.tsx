@@ -3,6 +3,7 @@ import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { describeError } from "../../shared/api/errorMessage";
 import { AdminPageHeader, AdminModal } from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
@@ -44,8 +45,8 @@ export function AdminOrgTiersPage() {
     updateOrgTier.mutate(
       { id: tier.id, body: { published: !tier.published } },
       {
-        onError: () =>
-          showToast("Couldn't update that tier — please try again", "error"),
+        onError: (error) =>
+          showToast(describeError("Couldn't update that tier", error), "error"),
       },
     );
   }
@@ -55,8 +56,8 @@ export function AdminOrgTiersPage() {
     const name = deleteTarget.name;
     deleteOrgTier.mutate(deleteTarget.id, {
       onSuccess: () => showToast(`${name} was removed`, "info"),
-      onError: () =>
-        showToast("Couldn't remove that tier — please try again", "error"),
+      onError: (error) =>
+        showToast(describeError("Couldn't remove that tier", error), "error"),
     });
     setDeleteTarget(null);
   }

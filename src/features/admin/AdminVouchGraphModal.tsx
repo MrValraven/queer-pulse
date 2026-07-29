@@ -9,7 +9,8 @@ import { VouchGraphCanvas } from "./VouchGraphCanvas";
 import { VouchGraphInspector } from "./VouchGraphInspector";
 import { useVouchGraph, type VouchMode } from "./useVouchGraph";
 import { useTrustNetwork } from "./api/useTrustNetwork";
-import { TrustGraphProvider, useTrustGraph } from "./trustGraph/TrustGraphContext";
+import { TrustGraphProvider } from "./trustGraph/TrustGraphContext";
+import { useTrustGraph } from "./trustGraph/useTrustGraph";
 import { monthDateFromValue } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 

@@ -132,7 +132,7 @@ export function SubprofileItemEditor({
                 onChange={(e) =>
                   onChange({
                     [field]: e.target.value,
-                  } as Partial<SubprofileItemView>)
+                  })
                 }
               />
             ) : (
@@ -142,7 +142,7 @@ export function SubprofileItemEditor({
                 onChange={(e) =>
                   onChange({
                     [field]: e.target.value,
-                  } as Partial<SubprofileItemView>)
+                  })
                 }
               />
             )}

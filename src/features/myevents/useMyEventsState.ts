@@ -30,7 +30,7 @@ export function useMyEventsState(): MyEventsValue {
   );
 
   // Demo mode returns the page's own mock registry; live mode fetches from
-  // GET /events (per cat-bearing filter) + GET /event-invites. Either way the
+  // GET /events (per category-bearing filter) + GET /event-invites. Either way the
   // result lands here as a flat list, then every RSVP/bulk/notification
   // action below keeps mutating it locally exactly as before.
   const {
@@ -40,7 +40,11 @@ export function useMyEventsState(): MyEventsValue {
   } = useMyEventsData();
   const [events, setEvents] = useState<MyEvent[]>(sourceEvents);
   const [notifs, setNotifs] = useState<Notif[]>(sourceNotifs);
+  // Syncs to the data hook's source (live GET /events refetch resyncs to server).
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setEvents(sourceEvents), [sourceEvents]);
+  // Syncs to the data hook's source (live GET /event-invites refetch resyncs).
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setNotifs(sourceNotifs), [sourceNotifs]);
   const byId = useCallback(
     (id: string) => events.find((e) => e.id === id),
@@ -64,6 +68,8 @@ export function useMyEventsState(): MyEventsValue {
   // simulated beat in demo mode, or once the live GET /events fetch resolves.
   useEffect(() => {
     if (!demoMode) {
+      // Mirrors the live GET /events fetch's loading flag.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(dataLoading);
       return;
     }
@@ -99,17 +105,17 @@ export function useMyEventsState(): MyEventsValue {
   const [confirm, setConfirm] = useState({ open: false, title: "", meta: "" });
   const [details, setDetails] = useState<{
     open: boolean;
-    evId: string | null;
-  }>({ open: false, evId: null });
+    eventId: string | null;
+  }>({ open: false, eventId: null });
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [scope, setScope] = useState<{
     open: boolean;
-    evId: string | null;
+    eventId: string | null;
     title: string;
-  }>({ open: false, evId: null, title: "" });
+  }>({ open: false, eventId: null, title: "" });
   const [moreMenu, setMoreMenu] = useState<MoreMenuState>({
     open: false,
-    evId: null,
+    eventId: null,
     x: 0,
     y: 0,
   });
@@ -236,7 +242,7 @@ export function useMyEventsState(): MyEventsValue {
     (id: string) => {
       patch(id, (e) => ({
         ...e,
-        cat: "going",
+        category: "going",
         whoText: `${e.going} going`,
         who: [["YOU", "coral"]],
       }));
@@ -257,7 +263,7 @@ export function useMyEventsState(): MyEventsValue {
       });
       patch(id, (e) => ({
         ...e,
-        cat: "going",
+        category: "going",
         whoText: `${e.going} going`,
         who: [["YOU", "coral"]],
       }));
@@ -277,7 +283,7 @@ export function useMyEventsState(): MyEventsValue {
     (id: string) => {
       const ev = byId(id);
       if (ev?.series) {
-        setScope({ open: true, evId: id, title: ev.title });
+        setScope({ open: true, eventId: id, title: ev.title });
         return;
       }
       softRemove(id, t("myevents:toast.placeReleased"));
@@ -294,13 +300,13 @@ export function useMyEventsState(): MyEventsValue {
   );
   const scopeChoice = useCallback(
     (which: "one" | "all") => {
-      const id = scope.evId;
+      const id = scope.eventId;
       setScope((s) => ({ ...s, open: false }));
       if (!id) return;
       if (which === "one") softRemove(id, t("myevents:toast.skippedThisOne"));
       else softRemove(id, t("myevents:toast.leftWholeSeries"));
     },
-    [scope.evId, softRemove, t],
+    [scope.eventId, softRemove, t],
   );
 
   // ── notifications ─────────────────────────────────
@@ -309,19 +315,19 @@ export function useMyEventsState(): MyEventsValue {
     [],
   );
   const goToEvent = useCallback(
-    (evId: string) => {
-      const ev = byId(evId);
+    (eventId: string) => {
+      const ev = byId(eventId);
       if (!ev) return;
       const dt = parseDate(ev.date);
       setViewY(dt.getFullYear());
       setViewM(dt.getMonth());
       setCalViewRaw("month");
       setPillState(
-        ev.cat === "past"
+        ev.category === "past"
           ? "past"
-          : ev.cat === "saved" || ev.cat === "invite" || ev.cat === "sent"
+          : ev.category === "saved" || ev.category === "invite" || ev.category === "sent"
             ? "saved"
-            : ev.cat === "waitlisted"
+            : ev.category === "waitlisted"
               ? "waitlisted"
               : "upcoming",
       );
@@ -330,7 +336,7 @@ export function useMyEventsState(): MyEventsValue {
       if (typeof window !== "undefined" && window.innerWidth <= 700)
         setMobileView("list");
       // Flag the target card so it can scroll into view + flash, then clear.
-      setFocusId(evId);
+      setFocusId(eventId);
       clearTimeout(focusTimer.current);
       focusTimer.current = setTimeout(() => setFocusId(null), 1800);
     },
@@ -344,14 +350,14 @@ export function useMyEventsState(): MyEventsValue {
         ns.map((x, j) => (j === i ? { ...x, unread: false } : x)),
       );
       setNotifOpen(false);
-      goToEvent(n.evId);
+      goToEvent(n.eventId);
     },
     [notifs, goToEvent],
   );
 
   // ── details + settings ────────────────────────────
   const openDetails = useCallback(
-    (id: string) => setDetails({ open: true, evId: id }),
+    (id: string) => setDetails({ open: true, eventId: id }),
     [],
   );
   const closeDetails = useCallback(
@@ -376,8 +382,8 @@ export function useMyEventsState(): MyEventsValue {
 
   // ── more menu ─────────────────────────────────────
   const openMore = useCallback(
-    (evId: string, x: number, y: number) =>
-      setMoreMenu({ open: true, evId, x, y }),
+    (eventId: string, x: number, y: number) =>
+      setMoreMenu({ open: true, eventId, x, y }),
     [],
   );
   const closeMore = useCallback(

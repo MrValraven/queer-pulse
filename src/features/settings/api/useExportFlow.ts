@@ -130,20 +130,22 @@ export function useExportFlow() {
         });
         setJob(created);
         if (created.status === "queued" || created.status === "processing") {
-          pollRef.current = window.setInterval(async () => {
-            try {
-              const next = await getExportJob(created.jobId);
-              setJob(next);
-              if (next.status !== "queued" && next.status !== "processing") {
+          pollRef.current = window.setInterval(() => {
+            void (async () => {
+              try {
+                const next = await getExportJob(created.jobId);
+                setJob(next);
+                if (next.status !== "queued" && next.status !== "processing") {
+                  stopPoll();
+                }
+              } catch (err) {
+                logError(err, { where: "useExportFlow.poll" });
                 stopPoll();
+                setJob((j) =>
+                  j ? { ...j, status: "failed", error: "Lost contact" } : j,
+                );
               }
-            } catch (err) {
-              logError(err, { where: "useExportFlow.poll" });
-              stopPoll();
-              setJob((j) =>
-                j ? { ...j, status: "failed", error: "Lost contact" } : j,
-              );
-            }
+            })();
           }, 3000);
         }
       } catch (err) {

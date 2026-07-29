@@ -1,12 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { FiCheck, FiLock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import {
-  ModalShell,
-  SuccessPanel,
-  Sending,
-  useSubmitFlow,
-} from "../economy/ModalKit";
+import { ModalShell, SuccessPanel, Sending } from "../economy/ModalKit";
+import { useSubmitFlow } from "../economy/modalFlow";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";

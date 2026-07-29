@@ -5,7 +5,7 @@ import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { usePostedJobs } from "../../app/providers/PostedJobsProvider";
+import { usePostedJobs } from "../../app/providers/usePostedJobs";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { COMPANY_PROFILES, type CompanyReview } from "./companies.data";
 import { JOBS } from "./jobs.data";

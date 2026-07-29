@@ -140,7 +140,7 @@ export function GatheringRecapPage() {
         accept="image/*"
         hidden
         onChange={(e) => {
-          handleFile(e.target.files?.[0]);
+          void handleFile(e.target.files?.[0]);
           e.target.value = "";
         }}
       />

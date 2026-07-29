@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useDeletedConversations } from "../../../app/providers/DeletedConversationsProvider";
+import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
 import { conversations as mockConversations, type Conversation } from "../data";
 import { getConversations } from "./messages.api";
 import { conversationToView } from "./messages.adapters";

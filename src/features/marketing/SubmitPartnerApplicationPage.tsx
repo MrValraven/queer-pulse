@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, FadeIn, SuccessPanel } from "../../shared/components/ui";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { describeError } from "../../shared/api/errorMessage";
 import { routes } from "../../app/routeMap";
 import { useSubmitPartnerForm } from "./useSubmitPartnerForm";
 import { useSubmitPartnerApplication } from "./api/useSubmitPartnerApplication";
@@ -25,9 +26,9 @@ export function SubmitPartnerApplicationPage() {
 
     submitApp.mutate(form.toDto(), {
       onSuccess: () => window.scrollTo({ top: 0, behavior: "smooth" }),
-      onError: () =>
+      onError: (error) =>
         showToast(
-          "Couldn't send your application — please try again.",
+          describeError("Couldn't send your application", error),
           "error",
         ),
     });
@@ -59,7 +60,7 @@ export function SubmitPartnerApplicationPage() {
                 title="Application"
                 em="received."
                 closeLabel="Back to partners →"
-                onClose={() => navigate(routes.partners)}
+                onClose={() => void navigate(routes.partners)}
                 steps={[
                   "It's pending review with the partnerships team",
                   "We read every application, not just the tidy ones",

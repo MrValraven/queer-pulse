@@ -29,6 +29,8 @@ export function SubprofileQR({ url, ariaLabel, size = 220 }: SubprofileQRProps) 
 
   useEffect(() => {
     let cancelled = false;
+    // Async QR generation (qrcode.toString promise); cancelled via cleanup below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState({ status: "loading" });
 
     QRCode.toString(url, {

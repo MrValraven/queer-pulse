@@ -2,6 +2,7 @@ import { FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WorkItem } from "./data/members";
 import { WorkItemEditor } from "./WorkItemEditor";
+import { useRowKeys } from "./useRowKeys";
 import { Section } from "./ProfileSections";
 import styles from "./ProfilePage.module.css";
 import editStyles from "./ProfileEdit.module.css";
@@ -21,13 +22,20 @@ export function WorkEditor({
   onChange: (next: WorkItem[]) => void;
 }) {
   const { t } = useTranslation();
+  const { keys, appendKey, removeKeyAt } = useRowKeys(work.length);
   function update(index: number, patch: Partial<WorkItem>) {
-    onChange(work.map((w, i) => (i === index ? { ...w, ...patch } : w)));
+    onChange(
+      work.map((item, rowIndex) =>
+        rowIndex === index ? { ...item, ...patch } : item,
+      ),
+    );
   }
   function remove(index: number) {
-    onChange(work.filter((_, i) => i !== index));
+    removeKeyAt(index);
+    onChange(work.filter((_, rowIndex) => rowIndex !== index));
   }
   function add() {
+    appendKey();
     onChange([...work, { category: "", title: "", year: "" }]);
   }
 
@@ -39,7 +47,7 @@ export function WorkEditor({
       <div className={styles.workGrid}>
         {work.map((item, index) => (
           <WorkItemEditor
-            key={index}
+            key={keys[index]}
             item={item}
             index={index}
             onChange={(patch) => update(index, patch)}

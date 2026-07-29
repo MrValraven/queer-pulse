@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSocial } from "../../app/providers/SocialProvider";
+import { useSocial } from "../../app/providers/useSocial";
 import { routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Author } from "./authorContent.data";

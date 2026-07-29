@@ -144,7 +144,7 @@ export function CompanyReviewModal({
           />
         </SuccessPanel>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(event) => void handleSubmit(event)}>
           <div className={shell.eyebrow}>
             {t("economy:company.reviews.writeReview")}
           </div>

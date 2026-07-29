@@ -6,7 +6,10 @@
 
 .co-page {
   padding: 96px 0 120px;
-  min-height: 100vh;
+  /* svh/dvh, not vh: vh is the large viewport, so the pay screen ran under the
+     mobile address bar and home indicator. */
+  min-height: 100svh;
+  min-height: 100dvh;
 }
 
 /* Progress */
@@ -407,8 +410,8 @@
 }
 .co-step-btn {
   all: unset;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -416,6 +419,7 @@
   font-size: 20px;
   color: var(--text-strong);
   transition: background 0.15s;
+  touch-action: manipulation;
 }
 .co-step-btn:hover {
   background: rgba(45, 27, 61, 0.05);
@@ -511,8 +515,8 @@
 .co-select {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14px;
-  padding: 11px 14px;
+  font-size: 16px;
+  padding: 10px 14px;
   border: 1.5px solid rgba(45, 27, 61, 0.12);
   border-radius: 10px;
   color: var(--ink);
@@ -1412,18 +1416,23 @@
   background: var(--paper);
   border-top: 1px solid rgba(45, 27, 61, 0.1);
   padding: 12px 20px;
+  padding-block-end: calc(max(12px, env(safe-area-inset-bottom)) + var(--bottom-inset));
   align-items: center;
   justify-content: space-between;
   z-index: 50;
   box-shadow: 0 -8px 24px -10px rgba(45, 27, 61, 0.15);
   gap: 12px;
+  touch-action: manipulation;
 }
 @media (max-width: 760px) {
   .co-mobile-bar {
     display: flex;
   }
   .co-page {
-    padding-bottom: 90px;
+    /* Clears the fixed pay bar. The installed-PWA tab-bar reserve is already
+       applied once by standalone.css on main[data-page-main], so don't add
+       var(--bottom-inset) again here (that double-counted the tab bar). */
+    padding-bottom: calc(90px + env(safe-area-inset-bottom));
   }
 }
 .co-mb-total {
@@ -1462,6 +1471,7 @@
   font-size: 13px;
   font-weight: 600;
   padding: 9px 20px;
+  padding-block-start: max(9px, env(safe-area-inset-top));
   align-items: center;
   justify-content: center;
   gap: 9px;

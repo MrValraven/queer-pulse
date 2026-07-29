@@ -23,7 +23,8 @@
 .input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14.5px;
+  /* >=16px so iOS Safari never zooms the viewport on focus. */
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);

@@ -507,9 +507,11 @@
   border-radius: 28px 28px 0 0;
   width: 100%;
   max-width: 740px;
-  max-height: 90vh;
+  max-height: 90svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0 0 40px;
+  padding-block-end: max(40px, env(safe-area-inset-bottom));
   animation: mgUp 0.38s cubic-bezier(0.22, 0.68, 0.16, 1);
 }
 @keyframes mgUp {
@@ -623,7 +625,7 @@
 .textarea,
 .select {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);

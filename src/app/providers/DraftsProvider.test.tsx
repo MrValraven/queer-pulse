@@ -31,6 +31,7 @@ async function loadLiveDrafts(getDrafts: ReturnType<typeof vi.fn>) {
     "../../shared/components/feedback/ToastProvider"
   );
   const mod = await import("./DraftsProvider");
+  const hooks = await import("./useDrafts");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -49,7 +50,7 @@ async function loadLiveDrafts(getDrafts: ReturnType<typeof vi.fn>) {
       </I18nProvider>
     </QueryClientProvider>
   );
-  return { ...mod, wrapper };
+  return { ...mod, ...hooks, wrapper };
 }
 
 beforeEach(() => {
@@ -71,12 +72,14 @@ describe("DraftsProvider (live mode)", () => {
   });
 
   it("useDrafts fetches and hydrates the store", async () => {
-    const getDrafts = vi.fn(async () => ({
-      items: [DTO],
-      total: 1,
-      page: 1,
-      pageSize: 20,
-    }));
+    const getDrafts = vi.fn(() =>
+      Promise.resolve({
+        items: [DTO],
+        total: 1,
+        page: 1,
+        pageSize: 20,
+      }),
+    );
     const { useDrafts, wrapper } = await loadLiveDrafts(getDrafts);
 
     const { result } = renderHook(() => useDrafts(), { wrapper });

@@ -290,7 +290,7 @@ export function getMemberInfo(b: Barter): {
   return {
     name: b.name ?? "—",
     initials: b.initials ?? "?",
-    tint: (b.tint ?? "jade") as AvatarTint,
+    tint: b.tint ?? "jade",
     hood: b.hood ?? "",
   };
 }

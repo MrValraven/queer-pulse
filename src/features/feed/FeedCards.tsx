@@ -9,9 +9,9 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { Avatar, EmptyState } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useConnect } from "../../app/providers/useConnect";
 import { useMemberContact } from "../connect/useMemberContact";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { useFocusOnMount } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";

@@ -138,7 +138,7 @@
 }
 .repFields input {
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);

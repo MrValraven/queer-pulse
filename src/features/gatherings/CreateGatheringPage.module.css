@@ -139,12 +139,12 @@
 .textarea,
 .select {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 11px;
-  padding: 11px 14px;
+  padding: 10px 14px;
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -247,12 +247,12 @@
 }
 .tierInput {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 9px;
-  padding: 8px 11px;
+  padding: 7px 11px;
   outline: none;
   text-align: right;
   transition: border-color 0.2s var(--ease);

@@ -47,6 +47,13 @@ export interface UploadLimit {
  */
 export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   avatar: { maxBytes: 5 * MB, maxLabel: "5 MB", minWidth: 200, minHeight: 200 },
+  // A group chat's photo — same constraints as a member avatar.
+  "group-avatar": {
+    maxBytes: 5 * MB,
+    maxLabel: "5 MB",
+    minWidth: 200,
+    minHeight: 200,
+  },
   "gathering-photo": {
     maxBytes: 5 * MB,
     maxLabel: "5 MB",

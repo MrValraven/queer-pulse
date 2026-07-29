@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FiBookmark, FiMapPin } from "react-icons/fi";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";

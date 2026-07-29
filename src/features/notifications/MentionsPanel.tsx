@@ -114,7 +114,7 @@ function MentionRow({
       type === "openArticle" ||
       type === "openPost"
     ) {
-      navigate(m.whereTo ?? routes.forum);
+      void navigate(m.whereTo ?? routes.forum);
     } else {
       showToast(
         t("notifications:mentions.row.genericToast", {

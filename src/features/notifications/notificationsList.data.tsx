@@ -24,12 +24,11 @@ import type { Notification } from "./notifications.types";
  * around an interpolated name/title, and the relative "time ago" labels are
  * computed through `fmt.relativeTime`/`fmt.date` rather than hand-rolled.
  */
-export function buildNotifications(
+function buildUnreadNotifications(
   t: TFunction,
   fmt: Formatters,
 ): Notification[] {
   const dinnerDate = new Date(2026, 5, 14);
-  const reportDate = new Date(2026, 5, 20);
   const meetingTime = new Date();
   meetingTime.setHours(19, 0, 0, 0);
 
@@ -220,6 +219,16 @@ export function buildNotifications(
       meta: t("notifications:list.7.meta"),
       time: fmt.relativeTime(-2, "day"),
     },
+  ];
+}
+
+function buildReadNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): Notification[] {
+  const reportDate = new Date(2026, 5, 20);
+
+  return [
     {
       id: 8,
       type: "platform",
@@ -335,6 +344,22 @@ export function buildNotifications(
         },
       ],
     },
+  ];
+}
+
+/**
+ * Composes the demo feed from its two order-preserving sections — the unread
+ * rows (ids 1–7) followed by the already-read rows (ids 8–12). Splitting the
+ * builder by read-state keeps each section small while yielding the identical
+ * array the single builder produced before.
+ */
+export function buildNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): Notification[] {
+  return [
+    ...buildUnreadNotifications(t, fmt),
+    ...buildReadNotifications(t, fmt),
   ];
 }
 

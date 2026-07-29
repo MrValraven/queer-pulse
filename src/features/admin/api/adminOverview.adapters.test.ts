@@ -377,7 +377,7 @@ describe("overviewToReportChart", () => {
     const { series } = overviewToReportChart(baseDto);
     expect(series).toBe(REPORT_SERIES);
     expect(series[3]?.labelKey).toBe("admin:dashboard.charts.series.other");
-    expect(translate(series[3]!.labelKey)).toBe("Other");
+    expect(translate(series[3].labelKey)).toBe("Other");
   });
 });
 

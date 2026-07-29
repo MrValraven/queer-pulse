@@ -1234,6 +1234,8 @@ export const marketing: Catalog = {
   "listBusiness.next.continue": "Continue →",
   "listBusiness.sending": "Sending your place to the team…",
   "listBusiness.toast.submitted": "Your listing is with the community team",
+  "listBusiness.toast.submitError":
+    "We couldn't send your listing just now. Your details are saved — try again.",
   "listBusiness.toast.withdrawn": "Listing withdrawn",
   // Step 0 — path
   "listBusiness.step0.title": "How do you",
@@ -1376,8 +1378,19 @@ export const marketing: Catalog = {
     "Street and number is enough — we'll place the pin from there.",
   "listBusiness.step3.addressPlaceholder":
     "R. Antero de Quental 26, 1170-024 Lisboa",
+  "listBusiness.step3.mapLinkLabel": "Google Maps link",
+  "listBusiness.step3.mapLinkHelper":
+    "Open your place in Google Maps, tap Share, and paste the link — we'll drop the pin for you.",
+  "listBusiness.step3.mapLinkPlaceholder": "https://maps.app.goo.gl/…",
   "listBusiness.step3.findOnMap": "Find on map",
+  "listBusiness.step3.resolving": "Finding…",
+  "listBusiness.step3.resolveError":
+    "We couldn't read that link. Paste a Google Maps place link and try again.",
+  "listBusiness.step3.unsupportedLinkDemo":
+    "In demo mode, paste the full google.com/maps/… link — short links need the live site.",
   "listBusiness.step3.pinPlaced": "Pin placed near {place}",
+  "listBusiness.step3.usePlaceName": "Use “{place}” as the address",
+  "listBusiness.step3.mapAria": "Map — drag the pin to set the exact spot.",
   "listBusiness.step3.hoursHeading": "Opening hours *",
   "listBusiness.step3.hasOpenHours": "Has open hours",
   "listBusiness.step3.allClosed": "All closed",
@@ -1555,7 +1568,6 @@ export const marketing: Catalog = {
   "listBusiness.success.withdraw": "Withdraw",
   "listBusiness.success.reference":
     "Reference · <b>{ref}</b>  ·  keep it somewhere",
-  "listBusiness.success.demoFlip": "Prototype · preview review states:",
   // "What's still needed" chip labels
   "listBusiness.missing.path": "how you know the place",
   "listBusiness.missing.verify": "a way to verify",
@@ -1568,6 +1580,7 @@ export const marketing: Catalog = {
   "listBusiness.missing.tagline": "a tagline",
   "listBusiness.missing.whatItIs": "what it is",
   "listBusiness.missing.address": "an address",
+  "listBusiness.missing.pin": "a map pin",
   "listBusiness.missing.hours": "opening hours",
   "listBusiness.missing.social": "valid contact links",
   "listBusiness.missing.rel": "your connection",
@@ -1605,6 +1618,15 @@ export const marketing: Catalog = {
   "listBusiness.fullPreview.findIt": "Find it",
   "listBusiness.fullPreview.whoRunsIt": "Who runs it",
   "listBusiness.fullPreview.instagramPrefix": "Instagram · {handle}",
+
+  "listBusiness.edit.title": "Edit your listing",
+  "listBusiness.edit.saveCta": "Save changes",
+  "listBusiness.edit.saving": "Saving your changes…",
+  "listBusiness.edit.saved": "Your listing is updated.",
+  "listBusiness.edit.saveError": "We couldn't save your changes. Try again.",
+  "listBusiness.edit.discardConfirm":
+    "Discard your unsaved changes to this listing?",
+  "listBusiness.edit.notAllowed": "You can only edit a listing you submitted.",
 
   // ── Shared hub back-link label (Governance section) ────────────────────
   "hub.governanceLabel": "Governance",
@@ -1705,7 +1727,62 @@ export const marketing: Catalog = {
   "changelog.tag.directory": "Open the directory →",
   "changelog.tag.cinema": "Visit Cinema →",
   "changelog.tag.forum": "Visit the forum →",
+  "changelog.tag.profile": "Open your profile →",
+  "changelog.tag.gatherings": "See gatherings →",
 
+  "changelog.entries.group-chats.title": "Group chats",
+  "changelog.entries.group-chats.body":
+    "Start a group with the people you want in it, name it, and share who's who. Admins can add or remove members and tidy up the group info, you can see who's read a message, and a typing bubble shows when someone's writing.",
+  "changelog.entries.message-search.title": "Search your messages",
+  "changelog.entries.message-search.body":
+    "Looking for that address, that date, that thing someone said? Search across all your conversations and jump straight to it.",
+  "changelog.entries.link-previews.title": "Links open up",
+  "changelog.entries.link-previews.body":
+    "Share a link and it unfurls into a preview card — title, image and all — so people can see where it goes before they tap.",
+  "changelog.entries.forward-pin-star.title": "Forward, pin and star",
+  "changelog.entries.forward-pin-star.body":
+    "Pass a message along to another chat, pin the ones a group keeps coming back to, and star the ones you want to find again — starred messages stay just for you.",
+  "changelog.entries.read-receipts.title": "Delivered and read receipts",
+  "changelog.entries.read-receipts.body":
+    "Ticks now tell the whole story: sent, delivered to their phone, and read — so you know where your message got to.",
+  "changelog.entries.message-gestures.title": "Swipe to reply, tap to react",
+  "changelog.entries.message-gestures.body":
+    "Swipe a message sideways to reply to it, and double-tap to react — the quick gestures your thumbs already know.",
+  "changelog.entries.message-drafts.title": "Your drafts wait for you",
+  "changelog.entries.message-drafts.body":
+    "Half a message you didn't send yet? We keep it saved for that conversation, so it's still there when you come back.",
+  "changelog.entries.offline-outbox.title": "Sends that don't get lost",
+  "changelog.entries.offline-outbox.body":
+    "Tapped send with no signal? Your message waits in line and goes out the moment you're back online — nothing vanishes on the way.",
+  "changelog.entries.typing-indicator.title": "Typing bubble and screen-reader polish",
+  "changelog.entries.typing-indicator.body":
+    "A gentle bubble shows when the other person is writing, and a round of screen-reader work makes the whole chat easier to follow without looking.",
+  "changelog.entries.moderation-actions.title":
+    "Every report gets a real decision",
+  "changelog.entries.moderation-actions.body":
+    "Opening a report in the moderation queue now always shows the full set of actions — hide, warn, restrict, remove and more, each with a reason the member reads — instead of quietly closing it. The queue's headline also reflects the real number of reports waiting.",
+  "changelog.entries.business-map-pin.title": "Put your business on the map",
+  "changelog.entries.business-map-pin.body":
+    "Listing a business? Paste a Google Maps link to drop a pin, and live listings now show up on the local map. New submissions pass through a moderation queue before they appear.",
+  "changelog.entries.profile-editing.title": "Edit your profile in place",
+  "changelog.entries.profile-editing.body":
+    "Your board, skills and groups are now editable right on your profile, with unsaved-change protection so you never lose an edit by accident.",
+  "changelog.entries.profile-communities-save.title":
+    "Featured communities that stay put",
+  "changelog.entries.profile-communities-save.body":
+    "The communities you pin to your profile now save for keeps — across sessions and devices — and show for everyone who visits, with your role on each.",
+  "changelog.entries.mention-types.title": "More ways to mention",
+  "changelog.entries.mention-types.body":
+    "Mentions now reach beyond people and communities to topics, businesses, events and threads — owners and stewards get notified when they're tagged.",
+  "changelog.entries.clear-errors.title": "Clearer error messages",
+  "changelog.entries.clear-errors.body":
+    "When something can't be saved, we now tell you exactly what went wrong instead of a generic “something went wrong.”",
+  "changelog.entries.messaging-reactions.title": "Smoother message reactions",
+  "changelog.entries.messaging-reactions.body":
+    "Reactions update instantly for everyone in the chat, and your sent messages no longer shift position when you react to them.",
+  "changelog.entries.event-photos.title": "Event photo galleries",
+  "changelog.entries.event-photos.body":
+    "Organizers and attendees can share photos on a gathering, visible only to the people who were actually there.",
   "changelog.entries.mentions.title": "Mention people and communities",
   "changelog.entries.mentions.body":
     "Type @ to tag a member or c/ to link a community in forum and community replies — anyone you mention gets a notification.",
@@ -2421,6 +2498,8 @@ export const marketing: Catalog = {
   "directory.days.friday": "Friday",
   "directory.days.saturday": "Saturday",
   "directory.days.sunday": "Sunday",
+
+  "directory.editThisListing": "Edit this listing",
 
   // ── Arriving (new-to-Lisbon guide) — page/section chrome only. Neighbourhood
   //    blurbs, org descriptions, community-group blurbs (`arrivingPage.data.ts`,

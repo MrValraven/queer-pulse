@@ -23,7 +23,7 @@ export function useCreateCompany() {
       return { slug: res.slug };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
+      void queryClient.invalidateQueries({ queryKey: ["companies"] });
     },
   });
 }
@@ -43,8 +43,8 @@ export function useCreateReview(slug: string) {
       await createReview(slug, dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["company-reviews", slug] });
-      queryClient.invalidateQueries({ queryKey: ["company", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["company-reviews", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["company", slug] });
     },
   });
 }

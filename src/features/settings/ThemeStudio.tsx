@@ -6,7 +6,7 @@ import {
   type CoverStyle,
   type PatternKey,
 } from "./profileTheme.data";
-import { useProfileTheme } from "../../app/providers/ProfileThemeProvider";
+import { useProfileTheme } from "../../app/providers/useProfileTheme";
 import { currentUser, fullName } from "../members/data/members";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ThemeStudio.module.css";

@@ -105,6 +105,8 @@ export function ComposeThreadModal({
                 ref={titleRef}
                 className={styles.input}
                 type="text"
+                autoComplete="off"
+                enterKeyHint="next"
                 placeholder={t("forum:compose.titlePlaceholder")}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}

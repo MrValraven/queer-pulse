@@ -1,61 +1,23 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import {
-  BADGE_OPTIONS,
-  type CoverStyle,
-  type PatternKey,
-} from "../../features/settings/profileTheme.data";
+  ProfileThemeContext,
+  DEFAULT_PROFILE_THEME,
+  type ProfileThemeSettings,
+} from "./useProfileTheme";
 
-/** The profile-theme choices the logged-in member can personalise. */
-export interface ProfileThemeSettings {
-  /** Index into FLAG_SWATCHES. */
-  flag: number;
-  coverStyle: CoverStyle;
-  pattern: PatternKey;
-  showBadges: boolean;
-  showLevel: boolean;
-  badge: string;
-}
-
-export const DEFAULT_PROFILE_THEME: ProfileThemeSettings = {
-  flag: 0,
-  coverStyle: "stripe",
-  pattern: "none",
-  showBadges: true,
-  showLevel: true,
-  // Stable id, never the translated label (see profileTheme.data.ts).
-  badge: BADGE_OPTIONS[0]!.id,
-};
-
-interface ProfileThemeContextValue {
-  /** The committed theme — what the profile + directory card should render. */
-  theme: ProfileThemeSettings;
-  /** The in-progress edit shown in the Settings picker + live preview. */
-  draft: ProfileThemeSettings;
-  updateDraft: (patch: Partial<ProfileThemeSettings>) => void;
-  /** Persist the draft as the committed theme. */
-  commit: () => void;
-  /** Throw away unsaved edits, resetting the draft to the committed theme. */
-  discard: () => void;
-}
-
-const ProfileThemeContext = createContext<ProfileThemeContextValue | null>(
-  null,
-);
 const STORAGE_KEY = "qp.profileTheme.v1";
 
 function readInitial(): ProfileThemeSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_PROFILE_THEME;
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as Partial<ProfileThemeSettings>;
     return { ...DEFAULT_PROFILE_THEME, ...parsed };
   } catch {
     return DEFAULT_PROFILE_THEME;
@@ -108,13 +70,4 @@ export function ProfileThemeProvider({ children }: { children: ReactNode }) {
       {children}
     </ProfileThemeContext.Provider>
   );
-}
-
-export function useProfileTheme(): ProfileThemeContextValue {
-  const ctx = useContext(ProfileThemeContext);
-  if (!ctx)
-    throw new Error(
-      "useProfileTheme must be used within a ProfileThemeProvider",
-    );
-  return ctx;
 }

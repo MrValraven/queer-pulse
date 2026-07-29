@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { describeError } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import {
   useCreateOrgTier,
@@ -59,8 +60,8 @@ export function AdminOrgTierForm({
             showToast(`${draft.name} was updated`, "success");
             onClose();
           },
-          onError: () =>
-            showToast("Couldn't save those changes — please try again", "error"),
+          onError: (error) =>
+            showToast(describeError("Couldn't save those changes", error), "error"),
         },
       );
     } else {
@@ -69,8 +70,8 @@ export function AdminOrgTierForm({
           showToast(`${draft.name} was created`, "success");
           onClose();
         },
-        onError: () =>
-          showToast("Couldn't create that tier — please try again", "error"),
+        onError: (error) =>
+          showToast(describeError("Couldn't create that tier", error), "error"),
       });
     }
   }

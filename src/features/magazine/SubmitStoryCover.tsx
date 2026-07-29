@@ -72,7 +72,7 @@ export function SubmitStoryCover({
         accept="image/png,image/jpeg,image/webp"
         hidden
         onChange={(e) => {
-          pick(e.target.files?.[0]);
+          void pick(e.target.files?.[0]);
           e.target.value = "";
         }}
       />
@@ -83,6 +83,10 @@ export function SubmitStoryCover({
             className={styles.coverImg}
             src={cover.previewUrl}
             alt={t("magazine:submitStory.cover.previewAlt")}
+            loading="lazy"
+            decoding="async"
+            width={640}
+            height={200}
           />
           <div className={styles.coverMeta}>
             <div className={styles.coverName}>{cover.name}</div>

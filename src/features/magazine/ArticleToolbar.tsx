@@ -8,7 +8,7 @@ import {
 } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import styles from "./ArticleToolbar.module.css";
 
@@ -161,7 +161,7 @@ export function ArticleToolbar({
       <button
         type="button"
         className={styles.action}
-        onClick={share}
+        onClick={() => void share()}
         aria-label={t("magazine:toolbar.copyLinkAriaLabel")}
       >
         <FiShare2 aria-hidden />

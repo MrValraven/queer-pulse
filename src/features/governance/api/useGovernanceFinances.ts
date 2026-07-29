@@ -8,16 +8,7 @@ import {
   type FinanceStatDTO,
   type GovernanceFinanceResponseDTO,
 } from "./governance.api";
-import {
-  EVENTS,
-  EXPENSE,
-  FINANCE_PARTNERS,
-  FIN_STATS,
-  INCOME,
-  RESERVE_CURRENT,
-  RESERVE_TARGET,
-  type FinLine,
-} from "../governance.data";
+import type { FinLine } from "../governance.data";
 
 export interface GovernanceFinancesResult {
   stats: FinanceStatDTO[];
@@ -30,19 +21,33 @@ export interface GovernanceFinancesResult {
   loading: boolean;
 }
 
-// The frontend's `EVENTS` mock is a `[title, body][]` tuple array (a JSX
-// shorthand for `<strong>{title}</strong> {body}`) — reshaped here to match
-// the backend's named `{title,body}` response shape, so demo and live render
-// through the same component.
-const DEMO_EVENT_NOTES: FinanceEventNoteDTO[] = EVENTS.map(([title, body]) => ({
-  title,
-  body,
-}));
-
-const DEMO_RESERVE: FinanceReserveDTO = {
-  current: RESERVE_CURRENT,
-  target: RESERVE_TARGET,
-};
+// Demo mode reshapes the page's own mocks into the backend response shape so
+// demo and live render through the same component. The `governance.data` mock
+// is imported on demand inside the demo queryFn (see below) so it never ships
+// in the live bundle. In particular the `EVENTS` mock is a `[title, body][]`
+// tuple array (a JSX shorthand for `<strong>{title}</strong> {body}`), reshaped
+// to the backend's named `{title,body}` response shape.
+async function buildDemoFinances(): Promise<GovernanceFinanceResponseDTO> {
+  const {
+    EVENTS,
+    EXPENSE,
+    FINANCE_PARTNERS,
+    FIN_STATS,
+    INCOME,
+    RESERVE_CURRENT,
+    RESERVE_TARGET,
+  } = await import("../governance.data");
+  return {
+    quarter: "",
+    stats: FIN_STATS,
+    income: INCOME,
+    expense: EXPENSE,
+    eventNotes: EVENTS.map(([title, body]) => ({ title, body })),
+    reserve: { current: RESERVE_CURRENT, target: RESERVE_TARGET },
+    partners: FINANCE_PARTNERS,
+    publishedAt: "",
+  };
+}
 
 const EMPTY: GovernanceFinancesResult = {
   stats: [],
@@ -69,21 +74,9 @@ export function useGovernanceFinances(): GovernanceFinancesResult {
 
   const query = useQuery<GovernanceFinanceResponseDTO>({
     queryKey: ["governance-finances", demoMode],
-    enabled: !demoMode,
-    queryFn: () => getGovernanceFinances(),
+    queryFn: async () =>
+      demoMode ? buildDemoFinances() : getGovernanceFinances(),
   });
-
-  if (demoMode) {
-    return {
-      stats: FIN_STATS,
-      income: INCOME,
-      expense: EXPENSE,
-      eventNotes: DEMO_EVENT_NOTES,
-      reserve: DEMO_RESERVE,
-      partners: FINANCE_PARTNERS,
-      loading: false,
-    };
-  }
 
   if (!query.data) {
     return { ...EMPTY, loading: query.isPending };

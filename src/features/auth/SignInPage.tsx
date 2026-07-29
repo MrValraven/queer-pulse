@@ -178,7 +178,7 @@ export function SignInPage() {
     setProbeError(null);
     if (demoMode) {
       signIn(dest);
-      navigate(dest);
+      await navigate(dest);
       return;
     }
     setBusy(true);
@@ -240,7 +240,7 @@ export function SignInPage() {
       <button
         type="button"
         className={styles.google}
-        onClick={attemptSignIn}
+        onClick={() => void attemptSignIn()}
         disabled={busy}
       >
         <svg width={18} height={18} viewBox="0 0 18 18" aria-hidden>

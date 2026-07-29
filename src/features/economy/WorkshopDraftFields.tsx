@@ -152,16 +152,3 @@ export function WorkshopDraftFields({
     </>
   );
 }
-
-/** A blank listing, with the defaults the prototype shipped. */
-export const EMPTY_WORKSHOP_DRAFT: WorkshopDraft = {
-  title: "",
-  blurb: "",
-  about: "",
-  category: "creative",
-  mode: "In-person",
-  weeks: "6",
-  size: "8",
-  price: "150",
-  venue: "",
-};

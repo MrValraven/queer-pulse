@@ -25,7 +25,7 @@ export function BoilerplateSection() {
   const boiler = useMemo(() => buildBoiler(t), [t]);
   const [copied, setCopied] = useState<string | null>(null);
   const copy = (id: string, text: string) => {
-    if (navigator.clipboard) navigator.clipboard.writeText(text);
+    if (navigator.clipboard) void navigator.clipboard.writeText(text);
     setCopied(id);
     setTimeout(() => setCopied(null), 1600);
   };

@@ -619,6 +619,14 @@
   stroke: rgba(var(--jade-rgb), 0.55);
   stroke-width: 2.5;
 }
+/* member vouched FOR this node — accent, dashed so it reads apart from the
+   solid plum inbound edges even without colour */
+.previewEdgeOutbound {
+  stroke: rgba(var(--accent-rgb), 0.5);
+  stroke-width: 1.75;
+  stroke-dasharray: 3 4;
+  stroke-linecap: round;
+}
 .previewEdgeWithdrawn {
   stroke: rgba(var(--danger-rgb), 0.4);
   stroke-dasharray: 2 5;
@@ -627,6 +635,37 @@
   font-family: var(--serif);
   font-weight: 600;
   text-anchor: middle;
+}
+
+/* key for the preview's directional edges */
+.previewLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 14px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.previewLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+.legendSwatch {
+  width: 16px;
+  height: 0;
+  flex: none;
+}
+.legendInbound {
+  border-top: 2px solid rgba(var(--plum-rgb), 0.55);
+}
+.legendMutual {
+  border-top: 3px solid rgba(var(--jade-rgb), 0.6);
+}
+.legendOutbound {
+  border-top: 2px dashed rgba(var(--accent-rgb), 0.7);
 }
 
 .graphEdge {

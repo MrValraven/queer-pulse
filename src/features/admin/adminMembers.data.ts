@@ -11,6 +11,17 @@ export interface VouchAvatar {
   avatarUrl?: string | null;
 }
 
+/** Which way a vouch runs relative to the center member: `inbound` = they
+ *  vouched FOR the member, `outbound` = the member vouched FOR them, `mutual`
+ *  = both. Drives how the drawer preview tells the two apart. */
+export type VouchDirection = "inbound" | "outbound" | "mutual";
+
+/** A node in the drawer trust-graph preview — a vouch avatar plus its
+ *  direction relative to the member at the centre. */
+export interface GraphNode extends VouchAvatar {
+  direction: VouchDirection;
+}
+
 /**
  * i18n note: the status CHIP LABEL is derived, never stored — `verified`
  * (already a canonical boolean) plus `openReportsCount` (a real per-member
@@ -89,10 +100,11 @@ export interface MemberDetail {
   contributions: ContributionItem[];
   moderationTimeline: ModerationEntry[];
   removeBody: string;
-  /** central node + surrounding bubbles for the vouch graph */
+  /** central node + surrounding bubbles for the vouch graph, each tagged with
+   *  its direction (who trusts the member vs. who the member vouches for) */
   graph: {
     center: { initials: string; tone: AvatarTone };
-    nodes: VouchAvatar[];
+    nodes: GraphNode[];
   };
 }
 
@@ -246,7 +258,7 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
       { labelKey: "admin:members.glance.reportsAgainst", value: "0" },
     ],
     graphNote:
-      "21 members vouch for Inês. A dense, mutual graph is a sign of deeply-held trust — not a metric to game.",
+      "21 members vouch for Inês, who vouches for 3 in return. A dense, mutual graph is a sign of deeply-held trust — not a metric to game.",
     communities: [
       { label: "Trans & Friends · moderator", tone: "jade" },
       { label: "Queer Creatives", tone: "violet" },
@@ -285,21 +297,26 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
     ],
     removeBody:
       "This ends Inês Martins's membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.",
+    // Mutual + outbound listed first so the preview's node cap can never drop
+    // a whole direction (mirrors the backend's interleave in getDetail).
     graph: {
       center: { initials: "IM", tone: "jade" },
       nodes: [
-        { initials: "TM", tone: "violet" },
-        { initials: "AL", tone: "coral" },
-        { initials: "DO", tone: "coral" },
-        { initials: "SA", tone: "amber" },
-        { initials: "KS", tone: "plum" },
-        { initials: "MV", tone: "coral" },
-        { initials: "NL", tone: "violet" },
-        { initials: "RA", tone: "jade" },
-        { initials: "PE", tone: "plum" },
-        { initials: "YC", tone: "jade" },
-        { initials: "JO", tone: "amber" },
-        { initials: "BR", tone: "violet" },
+        // Vouch for each other.
+        { initials: "SA", tone: "amber", direction: "mutual" },
+        { initials: "DO", tone: "coral", direction: "mutual" },
+        // Inês vouched for them.
+        { initials: "MV", tone: "coral", direction: "outbound" },
+        { initials: "JO", tone: "amber", direction: "outbound" },
+        // Trust Inês.
+        { initials: "TM", tone: "violet", direction: "inbound" },
+        { initials: "AL", tone: "coral", direction: "inbound" },
+        { initials: "KS", tone: "plum", direction: "inbound" },
+        { initials: "NL", tone: "violet", direction: "inbound" },
+        { initials: "RA", tone: "jade", direction: "inbound" },
+        { initials: "PE", tone: "plum", direction: "inbound" },
+        { initials: "YC", tone: "jade", direction: "inbound" },
+        { initials: "BR", tone: "violet", direction: "inbound" },
       ],
     },
   },
@@ -347,9 +364,12 @@ export function detailFor(member: AdminMember): MemberDetail {
     removeBody: `This ends ${member.name}'s membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.`,
     graph: {
       center: { initials: member.initials, tone: member.tone },
+      // Row avatars are the people who vouched FOR this member — all inbound.
       nodes: member.vouchedBy.length
-        ? member.vouchedBy
-        : [{ initials: "?", tone: "anon" }],
+        ? member.vouchedBy.map(
+            (avatar): GraphNode => ({ ...avatar, direction: "inbound" }),
+          )
+        : [{ initials: "?", tone: "anon", direction: "inbound" }],
     },
   };
 }

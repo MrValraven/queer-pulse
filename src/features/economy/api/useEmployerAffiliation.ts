@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import {
   useEmployerAffiliationOverlay,
   type EmployerAffiliation,
-} from "../../../app/providers/EmployerAffiliationProvider";
+} from "../../../app/providers/useEmployerAffiliationOverlay";
 import { useEmployerAffiliationQuery } from "./useEmployerAffiliationQuery";
 
 export interface EmployerAffiliationActions {

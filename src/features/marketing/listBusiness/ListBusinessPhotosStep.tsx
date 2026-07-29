@@ -87,7 +87,7 @@ export function StepPhotosYou({
   const { t } = useTranslation();
   const { draft, set, setAlt, toggleIn } = form;
   return (
-    <>
+    <div className={styles.stepBody}>
       <PaneHeader
         title={t("marketing:listBusiness.step4.title")}
         em={t("marketing:listBusiness.step4.em")}
@@ -95,6 +95,7 @@ export function StepPhotosYou({
       />
 
       <FormField
+        className={styles.lbField}
         label={t("marketing:listBusiness.step4.photosLabel")}
         helper={t("marketing:listBusiness.step4.photosHelper")}
       >
@@ -132,6 +133,7 @@ export function StepPhotosYou({
       </h3>
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.rel}
         label={t("marketing:listBusiness.step4.relLabel")}
         required
@@ -146,6 +148,7 @@ export function StepPhotosYou({
 
       <div className={styles.twoCol}>
         <FormField
+          className={styles.lbField}
           id={ANCHOR.ownerName}
           label={t("marketing:listBusiness.step4.ownerNameLabel")}
           required
@@ -159,6 +162,7 @@ export function StepPhotosYou({
           />
         </FormField>
         <FormField
+          className={styles.lbField}
           id={ANCHOR.ownerRole}
           label={t("marketing:listBusiness.step4.ownerRoleLabel")}
           required
@@ -174,6 +178,7 @@ export function StepPhotosYou({
       </div>
 
       <FormField
+        className={styles.lbField}
         label={t("marketing:listBusiness.step4.ownerBioLabel")}
         labelAside={`${draft.ownerBio.length} / 220`}
       >
@@ -185,7 +190,11 @@ export function StepPhotosYou({
         />
       </FormField>
 
-      <FormField label={t("marketing:listBusiness.step4.visLabel")} required>
+      <FormField
+        className={styles.lbField}
+        label={t("marketing:listBusiness.step4.visLabel")}
+        required
+      >
         <RadioStack
           options={VIS}
           value={draft.visibility}
@@ -194,7 +203,10 @@ export function StepPhotosYou({
         />
       </FormField>
 
-      <FormField label={t("marketing:listBusiness.step4.linkProfileLabel")}>
+      <FormField
+        className={styles.lbField}
+        label={t("marketing:listBusiness.step4.linkProfileLabel")}
+      >
         <div className={styles.memToggle}>
           <div className={styles.mtTxt}>
             <b>{t("marketing:listBusiness.step4.linkProfileTitle")}</b>
@@ -216,6 +228,7 @@ export function StepPhotosYou({
         {t("marketing:listBusiness.step4.loopHeading")}
       </h3>
       <FormField
+        className={styles.lbField}
         id={ANCHOR.contactEmail}
         label={t("marketing:listBusiness.step4.contactEmailLabel")}
         required
@@ -231,7 +244,10 @@ export function StepPhotosYou({
         />
       </FormField>
 
-      <FormField label={t("marketing:listBusiness.step4.notifyLabel")}>
+      <FormField
+        className={styles.lbField}
+        label={t("marketing:listBusiness.step4.notifyLabel")}
+      >
         <div className={styles.stack}>
           {NOTIFY.map((n) => (
             <CheckLine
@@ -253,6 +269,6 @@ export function StepPhotosYou({
           />
         </p>
       </div>
-    </>
+    </div>
   );
 }

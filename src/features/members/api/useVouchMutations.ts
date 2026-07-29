@@ -41,9 +41,9 @@ export function useVouchMutations({
     // Refresh the vouchee's profile + the directory so counts update, and the
     // "Vouched for by…" face row so the server's authoritative voucher list
     // replaces the optimistic "+ you" face rather than lingering beside it.
-    queryClient.invalidateQueries({ queryKey: ["profile"] });
-    queryClient.invalidateQueries({ queryKey: ["members"] });
-    queryClient.invalidateQueries({ queryKey: ["vouchers"] });
+    void queryClient.invalidateQueries({ queryKey: ["profile"] });
+    void queryClient.invalidateQueries({ queryKey: ["members"] });
+    void queryClient.invalidateQueries({ queryKey: ["vouchers"] });
     // A vouch can cross a status threshold (promotion); a withdrawal can drop
     // back below it. Pick up the new status claim. (No-op in demo.)
     void refresh();

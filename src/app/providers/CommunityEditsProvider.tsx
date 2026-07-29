@@ -1,23 +1,7 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { UpdateCommunityDto } from "../../features/communities/api/communities.api";
 import { useDemoMode } from "./DemoModeProvider";
-
-interface CommunityEditsContextValue {
-  /** Merged edit patch per community slug — DEMO source of truth only. */
-  overrides: Record<string, UpdateCommunityDto>;
-  overrideFor: (slug: string) => UpdateCommunityDto | undefined;
-  applyOverride: (slug: string, patch: UpdateCommunityDto) => void;
-}
-
-const CommunityEditsContext =
-  createContext<CommunityEditsContextValue | null>(null);
+import { CommunityEditsContext } from "./useCommunityEdits";
 
 /**
  * Session-level store for owner/mod edits to community info — the DEMO source of
@@ -63,14 +47,4 @@ export function CommunityEditsProvider({ children }: { children: ReactNode }) {
       {children}
     </CommunityEditsContext.Provider>
   );
-}
-
-export function useCommunityEdits() {
-  const context = useContext(CommunityEditsContext);
-  if (!context) {
-    throw new Error(
-      "useCommunityEdits must be used within CommunityEditsProvider",
-    );
-  }
-  return context;
 }

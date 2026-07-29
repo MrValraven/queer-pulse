@@ -10,7 +10,7 @@
   background: var(--bg);
   color: var(--text);
   min-height: 100svh;
-  padding-bottom: 92px;
+  padding-bottom: calc(92px + env(safe-area-inset-bottom));
   /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
@@ -200,6 +200,7 @@
   align-items: center;
   gap: 16px;
   padding: 18px 32px;
+  padding-block-start: max(18px, env(safe-area-inset-top));
   position: sticky;
   top: 0;
   z-index: 20;
@@ -960,7 +961,7 @@
   left: 0;
   right: 0;
   z-index: 120;
-  height: 80px;
+  height: calc(80px + env(safe-area-inset-bottom));
   background: rgba(18, 9, 32, 0.94);
   backdrop-filter: blur(16px);
   border-top: 1px solid var(--line);
@@ -969,6 +970,7 @@
   align-items: center;
   gap: 20px;
   padding: 0 22px;
+  padding-block-end: max(0px, env(safe-area-inset-bottom));
 }
 .fpL {
   display: flex;

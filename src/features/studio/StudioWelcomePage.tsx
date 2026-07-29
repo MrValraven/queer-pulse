@@ -245,7 +245,7 @@ export function StudioWelcomePage() {
 
   function finish() {
     showToast(t("studio:welcome.readyToast"), "success");
-    navigate(routes.studio);
+    void navigate(routes.studio);
   }
 
   return (

@@ -73,7 +73,7 @@ export function ManageGatheringPage() {
       )
     ) {
       cancelEvent.mutate();
-      navigate(gatheringCancelledPath(MANAGE_SLUG));
+      void navigate(gatheringCancelledPath(MANAGE_SLUG));
     }
   };
 

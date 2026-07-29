@@ -11,13 +11,8 @@ import {
   type Reply,
   type ReplySortId,
 } from "./forum.data";
-import {
-  ForumAvatar,
-  ProfileLink,
-  OfficialBadge,
-  authorHref,
-  memberPath,
-} from "./ForumAuthor";
+import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
+import { authorHref, memberPath } from "./forumAuthor.helpers";
 import { memberName } from "../members/data/members";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
@@ -165,11 +160,11 @@ export function ThreadReplies({
               >
                 <ForumAvatar
                   className={styles.replyAv}
-                  style={{ background: r.bg, color: r.color }}
+                  style={{ background: r.background, color: r.color }}
                   person={{
                     slug: r.slug,
                     photo: r.photo,
-                    initials: r.av,
+                    initials: r.avatar,
                     name: r.name,
                   }}
                 />

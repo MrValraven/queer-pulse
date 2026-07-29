@@ -1,5 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { DIRECTORY_BLURB_MAX_CHARS } from "./directoryBlurb";
 import { DirectoryCardPreview } from "./DirectoryCardPreview";
 import { InlineTextarea } from "./profileEditControls";

@@ -39,7 +39,7 @@ export function useCreateEvent() {
       return { slug: res.slug };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 }
@@ -54,8 +54,8 @@ export function useUpdateEvent(slug: string) {
       await updateEvent(slug, dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event", slug] });
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 }
@@ -70,8 +70,8 @@ export function useCancelEvent(slug: string) {
       await cancelEvent(slug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event", slug] });
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 }
@@ -107,9 +107,9 @@ export function useRsvp(slug: string) {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["event"] });
-      queryClient.invalidateQueries({ queryKey: ["attendees"] });
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: ["event"] });
+      void queryClient.invalidateQueries({ queryKey: ["attendees"] });
+      void queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 }
@@ -139,9 +139,9 @@ export function useUnrsvp(slug: string) {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["event"] });
-      queryClient.invalidateQueries({ queryKey: ["attendees"] });
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: ["event"] });
+      void queryClient.invalidateQueries({ queryKey: ["attendees"] });
+      void queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 }
@@ -156,7 +156,7 @@ export function useAddCohost(slug: string) {
       await addCohost(slug, cohostSlug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
     },
   });
 }
@@ -171,7 +171,7 @@ export function useRemoveCohost(slug: string) {
       await removeCohost(slug, cohostSlug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
     },
   });
 }
@@ -186,7 +186,7 @@ export function useInviteMembers(slug: string) {
       await inviteToEvent(slug, slugs);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["attendees", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["attendees", slug] });
     },
   });
 }
@@ -202,7 +202,7 @@ export function useRespondInvite() {
         await respondInvite(id, action);
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["events"] });
+        void queryClient.invalidateQueries({ queryKey: ["events"] });
       },
     },
   );

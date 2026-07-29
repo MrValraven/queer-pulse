@@ -287,6 +287,7 @@ const AdminModerationPage = lazyNamed(() => import("../features/admin/AdminModer
 const AdminMembersPage = lazyNamed(() => import("../features/admin/AdminMembersPage"), "AdminMembersPage");
 const AdminBotsPage = lazyNamed(() => import("../features/admin/AdminBotsPage"), "AdminBotsPage");
 const AdminSafeSpacesPage = lazyNamed(() => import("../features/admin/AdminSafeSpacesPage"), "AdminSafeSpacesPage");
+const AdminListingsPage = lazyNamed(() => import("../features/admin/AdminListingsPage"), "AdminListingsPage");
 const AdminChangemakersPage = lazyNamed(() => import("../features/admin/AdminChangemakersPage"), "AdminChangemakersPage");
 const AdminCommunitiesPage = lazyNamed(() => import("../features/admin/AdminCommunitiesPage"), "AdminCommunitiesPage");
 const AdminCommunityModPage = lazyNamed(() => import("../features/admin/AdminCommunityModPage"), "AdminCommunityModPage");
@@ -297,11 +298,8 @@ const AdminHousingCoopsPage = lazyNamed(() => import("../features/admin/AdminHou
 const AdminOrgTiersPage = lazyNamed(() => import("../features/admin/AdminOrgTiersPage"), "AdminOrgTiersPage");
 const AdminSettingsPage = lazyNamed(() => import("../features/admin/AdminSettingsPage"), "AdminSettingsPage");
 import { routes } from "./routeMap";
-import {
-  LEGACY_REDIRECTS,
-  ParamRedirect,
-  MemberProfileRedirect,
-} from "./routes.redirects";
+import { ParamRedirect, MemberProfileRedirect } from "./routes.redirects";
+import { LEGACY_REDIRECTS } from "./routes.redirects.data";
 import { useAuthGateRedirect, isGatedPath, isGuestOnlyPath } from "./authGate";
 import { useAuth } from "./providers/authContext";
 
@@ -892,6 +890,14 @@ export function AppRoutes() {
           />
           <Route path={routes.directory} element={<DirectoryPage />} />
           <Route path={routes.listBusiness} element={<ListBusinessPage />} />
+          {/* Owner "edit listing" flow reuses ListBusinessPage as a create/edit
+              gate that reads :ref. More static segments than `:slug` below, so
+              react-router's route ranking resolves it correctly regardless of
+              declaration order. */}
+          <Route
+            path={routes.listBusinessEdit}
+            element={<ListBusinessPage />}
+          />
           <Route path={`${routes.venue}/:id`} element={<VenueDetailPage />} />
           <Route
             path={`${routes.directory}/:slug`}
@@ -986,6 +992,7 @@ export function AppRoutes() {
             path={routes.adminSafeSpaces}
             element={<AdminSafeSpacesPage />}
           />
+          <Route path={routes.adminListings} element={<AdminListingsPage />} />
           <Route
             path={routes.adminChangemakers}
             element={<AdminChangemakersPage />}

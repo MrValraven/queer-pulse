@@ -10,12 +10,12 @@ interface SafetyDeps {
 }
 
 export interface MyEventsSafety {
-  report: { open: boolean; evId: string | null };
-  openReport: (evId: string) => void;
+  report: { open: boolean; eventId: string | null };
+  openReport: (eventId: string) => void;
   closeReport: () => void;
   submitReport: () => void;
-  block: { open: boolean; evId: string | null; host: string };
-  openBlock: (evId: string) => void;
+  block: { open: boolean; eventId: string | null; host: string };
+  openBlock: (eventId: string) => void;
   closeBlock: () => void;
   confirmBlock: () => void;
 }
@@ -27,20 +27,20 @@ export function useMyEventsSafety({
   closeMore,
   t,
 }: SafetyDeps): MyEventsSafety {
-  const [report, setReport] = useState<{ open: boolean; evId: string | null }>({
+  const [report, setReport] = useState<{ open: boolean; eventId: string | null }>({
     open: false,
-    evId: null,
+    eventId: null,
   });
   const [block, setBlock] = useState<{
     open: boolean;
-    evId: string | null;
+    eventId: string | null;
     host: string;
-  }>({ open: false, evId: null, host: "" });
+  }>({ open: false, eventId: null, host: "" });
 
   const openReport = useCallback(
-    (evId: string) => {
+    (eventId: string) => {
       closeMore();
-      setReport({ open: true, evId });
+      setReport({ open: true, eventId });
     },
     [closeMore],
   );
@@ -53,10 +53,10 @@ export function useMyEventsSafety({
     toast(t("myevents:reportModal.sentToast"), "success");
   }, [t, toast]);
   const openBlock = useCallback(
-    (evId: string) => {
-      const ev = byId(evId);
+    (eventId: string) => {
+      const ev = byId(eventId);
       closeMore();
-      setBlock({ open: true, evId, host: ev?.community ?? "" });
+      setBlock({ open: true, eventId, host: ev?.community ?? "" });
     },
     [byId, closeMore],
   );

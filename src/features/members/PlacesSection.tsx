@@ -2,6 +2,7 @@ import { FiClock, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDirectoryListings } from "../marketing/listBusiness/api/useDirectoryListings";
 import { routes } from "../../app/routeMap";
 import { EmptyState } from "../../shared/components/ui";
@@ -9,6 +10,7 @@ import {
   initials,
   type ListingStatus,
 } from "../marketing/listBusiness/listBusiness.data";
+import { useMemberListings } from "./api/useMemberListings";
 import {
   mergePlaces,
   registryPlacesForMember,
@@ -32,6 +34,7 @@ function PlacesCard({
   isSelf: boolean;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const isLive = place.status === "live";
 
   return (
@@ -63,18 +66,28 @@ function PlacesCard({
             {t("members:places.refLabel", { ref: place.ref })}
           </span>
         )}
-        {isLive ? (
-          <Link
-            to={`${routes.directory}/${place.slug}`}
-            className={styles.viewLink}
-          >
-            {t("members:places.viewListingCta")}
-          </Link>
-        ) : (
-          <span className={styles.pending}>
-            {t("members:places.awaitingReview")}
-          </span>
-        )}
+        <div className={styles.footActions}>
+          {isSelf && place.ref && !demoMode && (
+            <Link
+              to={routes.listBusinessEdit.replace(":ref", place.ref)}
+              className={styles.editLink}
+            >
+              {t("members:places.editCta")}
+            </Link>
+          )}
+          {isLive ? (
+            <Link
+              to={`${routes.directory}/${place.slug}`}
+              className={styles.viewLink}
+            >
+              {t("members:places.viewListingCta")}
+            </Link>
+          ) : (
+            <span className={styles.pending}>
+              {t("members:places.awaitingReview")}
+            </span>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -94,8 +107,11 @@ export function PlacesSection({
   firstName: string;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { submitted } = useDirectoryListings();
-  const registry = registryPlacesForMember(memberSlug);
+  // Visitor source: demo → static registry, live → GET /directory/by-member/:slug.
+  const visitorPlaces = useMemberListings(memberSlug);
+  // Owner source: this member's own submissions from GET /listings/mine.
   const mine: MemberPlace[] = submitted
     .filter(
       (listing) => listing.submittedBy === memberSlug && listing.linkToProfile,
@@ -109,7 +125,12 @@ export function PlacesSection({
       blurb: listing.blurb,
       ref: listing.ref,
     }));
-  const places = mergePlaces(registry, mine, isSelf);
+  // The static registry is a mock — only a base in demo, never for a real
+  // member in live mode (that would leak a demo persona's places).
+  const ownerRegistry = demoMode ? registryPlacesForMember(memberSlug) : [];
+  const places = isSelf
+    ? mergePlaces(ownerRegistry, mine, true)
+    : visitorPlaces;
 
   // Visitors see nothing rather than an empty shell; the owner gets a prompt.
   if (places.length === 0 && !isSelf) return null;

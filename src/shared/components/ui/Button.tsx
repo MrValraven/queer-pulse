@@ -75,7 +75,7 @@ export function Button({
 
   if ("to" in rest && rest.to !== undefined) {
     return (
-      <Link className={cls} {...(rest as LinkProps)}>
+      <Link className={cls} {...rest}>
         {children}
       </Link>
     );
@@ -83,17 +83,14 @@ export function Button({
 
   if ("href" in rest && rest.href !== undefined) {
     return (
-      <a className={cls} {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}>
+      <a className={cls} {...rest}>
         {children}
       </a>
     );
   }
 
   return (
-    <button
-      className={cls}
-      {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
-    >
+    <button className={cls} {...rest}>
       {children}
     </button>
   );

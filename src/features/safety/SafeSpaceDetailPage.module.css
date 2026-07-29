@@ -153,6 +153,13 @@
   .grid {
     grid-template-columns: 1fr;
   }
+  /* Safety-first: lift the address / verification / report card above the
+     write-ups on a phone rather than burying it beneath them. */
+  .side {
+    order: -1;
+    position: static;
+    top: auto;
+  }
 }
 .sec {
   margin-bottom: 44px;

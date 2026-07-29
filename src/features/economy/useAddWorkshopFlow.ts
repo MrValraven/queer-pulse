@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
+import { useWorkshopsActions } from "../../app/providers/useWorkshops";
 import type { WorkshopDraft } from "./addWorkshop.build";
 import type { Workshop } from "./workshops.data";
 

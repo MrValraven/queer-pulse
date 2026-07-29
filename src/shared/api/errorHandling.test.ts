@@ -175,4 +175,46 @@ describe("handleMutationError", () => {
     );
     expect(emit).not.toHaveBeenCalled();
   });
+
+  it("surfaces a specific 4xx reason to the mutation toast", () => {
+    handleMutationError(
+      new ApiError(409, "That name is taken"),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      "That name is taken",
+      "error",
+      6000,
+    );
+  });
+
+  it("falls back to the generic 4xx string for a bare status word", () => {
+    handleMutationError(
+      new ApiError(400, "Bad Request"),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      "Something went wrong.",
+      "error",
+      6000,
+    );
+  });
+
+  it("surfaces a specific 403 reason instead of the access generic", () => {
+    handleMutationError(
+      new ApiError(403, "You are blocked from this community"),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      "You are blocked from this community",
+      "error",
+      6000,
+    );
+  });
 });

@@ -4,7 +4,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useWorkshopsActions } from "../../app/providers/WorkshopsProvider";
+import { useWorkshopsActions } from "../../app/providers/useWorkshops";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { WorkshopWithRsvp } from "./api/workshops.adapters";
 import { WorkshopRsvpControl } from "./WorkshopRsvpControl";

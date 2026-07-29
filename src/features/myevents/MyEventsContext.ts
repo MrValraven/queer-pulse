@@ -13,7 +13,7 @@ import type {
 
 export interface MoreMenuState {
   open: boolean;
-  evId: string | null;
+  eventId: string | null;
   x: number;
   y: number;
 }
@@ -92,13 +92,13 @@ export interface MyEventsValue {
   // modals
   confirm: { open: boolean; title: string; meta: string };
   closeConfirm: () => void;
-  details: { open: boolean; evId: string | null };
+  details: { open: boolean; eventId: string | null };
   openDetails: (id: string) => void;
   closeDetails: () => void;
   settingsOpen: boolean;
   openSettings: () => void;
   closeSettings: () => void;
-  scope: { open: boolean; evId: string | null; title: string };
+  scope: { open: boolean; eventId: string | null; title: string };
   closeScope: () => void;
   scopeChoice: (which: "one" | "all") => void;
 
@@ -109,15 +109,15 @@ export interface MyEventsValue {
 
   // more menu
   moreMenu: MoreMenuState;
-  openMore: (evId: string, x: number, y: number) => void;
+  openMore: (eventId: string, x: number, y: number) => void;
   closeMore: () => void;
 
   // safety flows
-  report: { open: boolean; evId: string | null };
+  report: { open: boolean; eventId: string | null };
   openReport: (id: string) => void;
   closeReport: () => void;
   submitReport: () => void;
-  block: { open: boolean; evId: string | null; host: string };
+  block: { open: boolean; eventId: string | null; host: string };
   openBlock: (id: string) => void;
   closeBlock: () => void;
   confirmBlock: () => void;

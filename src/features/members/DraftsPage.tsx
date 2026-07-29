@@ -8,7 +8,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { useDrafts } from "../../app/providers/DraftsProvider";
+import { useDrafts } from "../../app/providers/useDrafts";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { DraftsHeader } from "./DraftsHeader";
 import { DraftsControls } from "./DraftsControls";
@@ -167,7 +167,7 @@ export function DraftsPage() {
     else if (action.keeps) {
       setKept((prev) => new Set(prev).add(draft.id));
       showToast(t("members:drafts.toast.kept"), "success");
-    } else if (draft.href) navigate(draft.href);
+    } else if (draft.href) void navigate(draft.href);
     else {
       const actionLabelKey = DRAFT_ACTION_LABEL_KEY[action.label];
       showToast(actionLabelKey ? t(actionLabelKey) : action.label, "info");

@@ -5,15 +5,13 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
+import {
+  APPEAL_REFERENCE,
+  SUBMITTED_DATE,
+  EXPECTED_DATE,
+  DECIDED_DATE,
+} from "./appealPanels.data";
 import s from "./flows.module.css";
-
-/** Mock appeal record — the live-mode equivalent of a fetched appeal; only
- * the surrounding chrome (labels, dates formatted via `useFormat()`) is
- * translated. The reference id is an opaque code, not language content. */
-export const APPEAL_REFERENCE = "QP-APP-2847";
-export const SUBMITTED_DATE = new Date(2026, 5, 4);
-export const EXPECTED_DATE = new Date(2026, 5, 11);
-export const DECIDED_DATE = new Date(2026, 5, 9);
 
 export function AppealTimeline({ stage }: { stage: "pending" | "done" }) {
   const { t } = useTranslation();

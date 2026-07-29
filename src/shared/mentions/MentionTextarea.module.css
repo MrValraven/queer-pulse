@@ -14,6 +14,19 @@
   box-shadow: 0 12px 32px rgba(45, 27, 61, 0.12);
   max-height: 260px;
   overflow-y: auto;
+  /* Grow gently down from the anchored top edge rather than popping in. */
+  transform-origin: top center;
+  animation: mentionMenuIn var(--dur-fast) var(--ease-out);
+}
+@keyframes mentionMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 .option {
   display: flex;
@@ -46,3 +59,25 @@
 }
 .name { font-weight: 600; font-size: 14px; }
 .handle { margin-left: auto; color: var(--muted-ink, var(--plum)); font-size: 12px; opacity: 0.7; }
+.menuAbove {
+  top: auto;
+  bottom: calc(100% + 4px);
+  transform-origin: bottom center;
+  animation: mentionMenuInUp var(--dur-fast) var(--ease-out);
+}
+@keyframes mentionMenuInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menuAbove {
+    animation: none;
+  }
+}

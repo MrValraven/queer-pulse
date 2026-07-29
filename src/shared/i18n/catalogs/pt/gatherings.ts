@@ -411,6 +411,10 @@ export const gatherings: Catalog = {
   // Photos (gathering photo album)
   "photos.chipAll": "Todas",
   "photos.backToRecap": "Voltar ao resumo",
+  "photos.addCta": "Adicionar fotos",
+  "photos.uploadingCta": "A enviar…",
+  "photos.emptyLive": "Ainda não há fotos.",
+  "photos.uploadError": "Não foi possível enviar essa foto. Tenta novamente.",
   "photos.albumLabel_one": "Álbum de fotos · {count} foto",
   "photos.albumLabel_other": "Álbum de fotos · {count} fotos",
   "photos.hostedBy": "Organizado por",

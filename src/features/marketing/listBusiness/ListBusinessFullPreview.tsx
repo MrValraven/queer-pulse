@@ -35,7 +35,7 @@ export function ListBusinessFullPreview({
     draft.social.website,
     draft.social.email,
     draft.social.phone,
-  ].filter(Boolean) as string[];
+  ].filter(Boolean);
 
   return (
     <Modal

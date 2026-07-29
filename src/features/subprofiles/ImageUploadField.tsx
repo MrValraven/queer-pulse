@@ -119,7 +119,7 @@ export function ImageUploadField({
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) pick(f);
+          if (f) void pick(f);
           e.target.value = "";
         }}
       />

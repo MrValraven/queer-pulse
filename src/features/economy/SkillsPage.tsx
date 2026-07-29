@@ -7,7 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useWorkshops } from "../../app/providers/WorkshopsProvider";
+import { useWorkshops } from "../../app/providers/useWorkshops";
 import { SKILLS, SKILL_FILTERS } from "./skills.data";
 import { SkillSkeleton } from "./SkillCard";
 import { SkillsSection } from "./SkillsSection";

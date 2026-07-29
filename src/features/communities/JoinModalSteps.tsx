@@ -49,6 +49,9 @@ export function JoinStepIntro({
           <input
             className={styles.input}
             type="text"
+            autoComplete="off"
+            autoCapitalize="characters"
+            enterKeyHint="next"
             placeholder={t("communities:join.intro.invitePlaceholder")}
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value)}

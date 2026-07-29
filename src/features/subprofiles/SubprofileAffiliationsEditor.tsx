@@ -136,7 +136,7 @@ export function SubprofileAffiliationsEditor({
             </p>
           )}
         </div>
-        <Button variant="primary" onClick={save} disabled={saving || !dirty}>
+        <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>
           {saving
             ? t("subprofiles:affiliationsEditor.saving")
             : t("subprofiles:affiliationsEditor.save")}

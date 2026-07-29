@@ -5,11 +5,10 @@ import type {
   LogoTint,
 } from "./applicationStatus.types";
 
-// Types now live in ./applicationStatus.types and the state-transition /
-// negotiation helpers in ./applicationStatus.patches. Both are re-exported so
-// existing importers of ./applicationStatus.data keep working unchanged.
-export * from "./applicationStatus.types";
-export * from "./applicationStatus.patches";
+// Types live in ./applicationStatus.types and the state-transition / negotiation
+// helpers in ./applicationStatus.patches. Import those symbols directly from
+// their own modules — this file no longer re-exports them (a compat barrel that
+// mixes value + type re-exports here trips react-refresh/only-export-components).
 
 export const BADGE_CLASS: Record<BadgeKind, string> = {
   "in-review": "badgeInReview",

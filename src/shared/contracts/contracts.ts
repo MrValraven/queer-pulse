@@ -142,12 +142,69 @@ export interface MessageResponse {
   editedAt: string | null;
   reactions: ReactionSummary[];
   deletedAt: string | null;
+  /** Set on the viewer's OWN outgoing message once the recipient's delivered
+   *  watermark has reached it — the ISO of that watermark (an upper bound on
+   *  arrival). Null when not yet delivered, and for received messages. Drives
+   *  the "double check"; distinct from `deletedAt` and outranked by the read
+   *  ("seen") watermark. */
+  deliveredAt: string | null;
+  /** The sender's client-generated idempotency id, echoed back so an optimistic
+   *  outbox bubble reconciles against its server row by the same key. Null for
+   *  server-originated or legacy messages. */
+  clientMessageId: string | null;
+  /** True when this message was created by forwarding — the bubble renders a
+   *  subtle "Forwarded" label. Only the body is carried on a forward. */
+  forwarded: boolean;
+  /** ISO timestamp the message was pinned in the conversation (SHARED — both
+   *  participants see the same value), else null. Drives the pin indicator + the
+   *  pinned-messages banner. */
+  pinnedAt: string | null;
+  /** Whether THIS viewer has privately starred (bookmarked) the message. Scoped
+   *  to the caller — never reflects the other participant's stars. */
+  starred: boolean;
+  /** Server-authoritative: whether this viewer may pin/unpin this message. */
+  canPin: boolean;
   replyTo: {
     id: string;
     snippet: string;
     senderName: string;
     deleted: boolean;
   } | null;
+  /** `user` (an ordinary bubble) or `system` (a rendered event pill). Every DM
+   *  message is `user`, so the existing bubble path is unchanged. */
+  kind: "user" | "system";
+  /** Resolved system event for a `system` message (else null). Actor/target come
+   *  back as DISPLAY NAMES (never user ids); the client renders bilingual
+   *  templates. `value` carries a scalar the event needs (e.g. a new title). */
+  systemEvent: {
+    type:
+      | "group_created"
+      | "member_added"
+      | "member_removed"
+      | "member_left"
+      | "group_renamed";
+    actorName: string;
+    targetName: string | null;
+    value: string | null;
+  } | null;
+}
+
+export type ConversationRole = "owner" | "admin" | "member";
+
+/** One member of a GROUP conversation (empty for DMs). `id` is the user id. */
+export interface ConversationMemberSummary {
+  id: string;
+  /** Profile handle (slug) — member link + avatar tint seed. */
+  handle: string;
+  name: string;
+  avatarUrl: string | null;
+  role: ConversationRole;
+  /** This member's read watermark (ISO), else null — the client computes
+   *  "Seen by N" by comparing it against a message's timestamp (no per-message
+   *  receipts fetch). */
+  lastReadAt?: string | null;
+  /** This member's delivered watermark (ISO), else null (one rung below read). */
+  deliveredAt?: string | null;
 }
 
 export interface ConversationResponse {
@@ -160,9 +217,78 @@ export interface ConversationResponse {
   /** The OTHER participant's read watermark (ISO), for "Seen" receipts. Null for
    *  official/group threads or a counterpart who has never read. */
   otherLastReadAt: string | null;
+  /** The OTHER participant's delivered watermark (ISO), for the "double check".
+   *  Mirrors `otherLastReadAt` one rung down; null for official/group threads or
+   *  a counterpart whose device hasn't acked anything yet. */
+  otherDeliveredAt: string | null;
   /** The other participant's user id — used only client-side to correlate
    *  presence (`presence` events key by userId). Null for official/group. */
   otherParticipantId: string | null;
+  /** `direct` (1:1 DM / official) or `group` (member-created, titled,
+   *  multi-participant). DMs stay `direct` and render exactly as before. */
+  kind: "direct" | "group";
+  /** Group name (null for DMs — their name is the counterpart's). */
+  title: string | null;
+  /** Group avatar URL (null for DMs). */
+  avatarUrl: string | null;
+  /** Active member count for a group; 0 for DMs. */
+  memberCount: number;
+  /** Group member roster (empty for DMs). */
+  members: ConversationMemberSummary[];
+  /** For a group: whether THIS caller has left it. Absent/false for DMs. */
+  hasLeft?: boolean;
+  /** This caller's own standing in the group. Null/absent for DMs. */
+  myRole?: ConversationRole | null;
+  /** SERVER-AUTHORITATIVE group-management capability flags — the client gates
+   *  its management UI on these; every mutation re-checks the role server-side.
+   *  All false/absent for DMs and a member who has left. */
+  canAddMembers?: boolean;
+  canRemoveMembers?: boolean;
+  canRename?: boolean;
+  canManageRoles?: boolean;
+}
+
+// --- Message search (cross-inbox body search) ---
+
+/** One cross-conversation message-search hit (GET /messages/search). `snippet`
+ *  is a server-windowed excerpt around the match — the full body is never sent.
+ *  Mirrors the backend `MessageSearchHit` field-for-field. */
+export interface MessageSearchHit {
+  id: string;
+  conversationId: string;
+  snippet: string;
+  sender: AuthorSummary;
+  createdAt: string;
+}
+
+/** Per-conversation grouping metadata for search hits: the counterpart (null for
+ *  the official/welcome thread) and `isOfficial` so the client renders the right
+ *  name/avatar without a second request. */
+export interface MessageSearchConversationGroup {
+  conversationId: string;
+  otherParticipant: AuthorSummary | null;
+  isOfficial: boolean;
+}
+
+/** GET /messages/search response: the echoed (trimmed) query, flat hits
+ *  newest-first, and the conversation metadata to group them under. */
+export interface MessageSearchResponse {
+  query: string;
+  hits: MessageSearchHit[];
+  conversations: MessageSearchConversationGroup[];
+}
+
+/** One starred-message row (GET /messages/starred) — a search-hit shape plus
+ *  `starredAt` (when the viewer bookmarked it). Mirrors backend `StarredMessageHit`. */
+export interface StarredMessageHit extends MessageSearchHit {
+  starredAt: string;
+}
+
+/** GET /messages/starred response: the caller's starred messages newest-star-first,
+ *  plus the per-conversation grouping metadata (reused from search). */
+export interface StarredMessagesResponse {
+  items: StarredMessageHit[];
+  conversations: MessageSearchConversationGroup[];
 }
 
 export interface GatheringResponse {
@@ -442,4 +568,20 @@ export interface DataExportResponse {
 export interface DeletionRequestResponse {
   state: "scheduled" | "cancelled" | "completed";
   scheduledFor: string;
+}
+
+// --- Link previews (messaging unfurls) ---
+
+/**
+ * Server-side unfurl of a URL pasted into a message. Every field is nullable:
+ * a URL that yields no usable metadata (or one the SSRF-hardened backend
+ * declines to fetch) comes back all-null, and the client renders NOTHING rather
+ * than a broken card. Mirrors the backend `LinkPreviewResponse` field-for-field.
+ */
+export interface LinkPreviewResponse {
+  url: string;
+  siteName: string | null;
+  title: string | null;
+  description: string | null;
+  imageUrl: string | null;
 }

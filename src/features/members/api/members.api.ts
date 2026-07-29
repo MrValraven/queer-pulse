@@ -151,6 +151,12 @@ export interface VoucherDTO {
   avatarUrl?: string | null;
   note?: string;
   createdAt: string;
+  /**
+   * When true, this voucher vouched anonymously and the backend has shielded
+   * their identity: `slug`/`firstName`/`lastName`/`avatarUrl` are empty. Render
+   * an un-linked "Anonymous" face, never a link to `/members/`.
+   */
+  anonymous?: boolean;
 }
 export interface VouchersResponse {
   count: number;
@@ -242,6 +248,10 @@ export const replaceWork = (items: WorkItemDTO[]) =>
 /** Replace the member's skills & offerings (≤100). PUT /profiles/me/skills. */
 export const replaceSkills = (items: SkillItemDTO[]) =>
   apiPut<ProfileDTO>("/profiles/me/skills", { items });
+
+/** Replace the member's barter-board posts (≤100). PUT /profiles/me/board. */
+export const replaceBoard = (items: BoardItemDTO[]) =>
+  apiPut<ProfileDTO>("/profiles/me/board", { items });
 
 /** Replace the member's formative films/books/songs/moments (≤4). PUT /profiles/me/shapings. */
 export const replaceShapings = (items: ShapingItemDTO[]) =>

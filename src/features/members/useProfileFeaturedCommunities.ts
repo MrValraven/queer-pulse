@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useMyCommunityCards } from "./useMyCommunityCards";
 import type { FeaturedCommunityRef } from "./profileCommunities.types";
 import type { Member } from "./data/members";

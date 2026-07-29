@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useSocial } from "../../app/providers/SocialProvider";
+import { useSocial } from "../../app/providers/useSocial";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CREW } from "./filmPage.data";

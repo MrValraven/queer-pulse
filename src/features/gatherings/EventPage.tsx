@@ -25,6 +25,7 @@ import {
   HERO_IMAGE,
 } from "./eventPage.data";
 import { EventRsvpCard } from "./EventRsvpCard";
+import { EventRsvpStickyBar } from "./EventRsvpStickyBar";
 import { JoinVouchCallout } from "./JoinVouchCallout";
 import styles from "./EventPage.module.css";
 
@@ -158,7 +159,7 @@ export function EventPage() {
               </div>
             </div>
 
-            <div className={styles.aside}>
+            <div className={styles.aside} id="event-rsvp-aside">
               <EventRsvpCard />
 
               <div className={styles.membersOnly}>
@@ -183,6 +184,8 @@ export function EventPage() {
           </div>
         </div>
       </div>
+
+      <EventRsvpStickyBar targetId="event-rsvp-aside" />
     </PageShell>
   );
 }

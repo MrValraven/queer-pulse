@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { describeError } from "../../shared/api/errorMessage";
 import { AdminChip } from "./ui";
 import { useAdminJoinRequests } from "./api/useAdminHousingCoops";
 import { useTriageJoinRequest } from "./api/useAdminHousingMutations";
@@ -30,8 +31,8 @@ export function AdminHousingJoinRequests() {
       {
         onSuccess: () =>
           setResolved((current) => new Set(current).add(request.id)),
-        onError: () =>
-          showToast("Couldn't save that decision — please try again", "error"),
+        onError: (error) =>
+          showToast(describeError("Couldn't save that decision", error), "error"),
       },
     );
   }

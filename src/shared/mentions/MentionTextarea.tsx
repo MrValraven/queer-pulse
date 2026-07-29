@@ -11,22 +11,45 @@ interface MentionTextareaProps {
   rows?: number;
   "aria-label"?: string;
   textareaRef?: RefObject<HTMLTextAreaElement | null>;
+  id?: string;
+  wrapClassName?: string;
+  placement?: "below" | "above";
+  onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onBlur?: () => void;
 }
 
 const MAX_SUGGESTIONS = 6;
+
+const SIGIL_BY_KIND: Record<Suggestion["kind"], string> = {
+  member: "@",
+  community: "c/",
+  topic: "#",
+  business: "b/",
+  event: "e/",
+  thread: "t/",
+};
 
 export function MentionTextarea(props: MentionTextareaProps) {
   const { value, onChange, textareaRef } = props;
   const internalRef = useRef<HTMLTextAreaElement | null>(null);
   const ref = textareaRef ?? internalRef;
-  const { members, communities } = useMentionSuggestions();
+  const { members, communities, topics, businesses, events, threads } =
+    useMentionSuggestions();
   const [active, setActive] = useState(0);
   const [trigger, setTrigger] = useState<ReturnType<typeof detectTrigger>>(null);
   // Stable base id for the aria-combobox wiring below (one per instance).
   const listboxId = useId();
   const optionId = (index: number) => `${listboxId}-option-${index}`;
 
-  const pool: Suggestion[] = trigger?.kind === "community" ? communities : members;
+  const poolByKind: Record<Suggestion["kind"], Suggestion[]> = {
+    member: members,
+    community: communities,
+    topic: topics,
+    business: businesses,
+    event: events,
+    thread: threads,
+  };
+  const pool: Suggestion[] = trigger ? poolByKind[trigger.kind] : [];
   // Lowercase the query once, not per candidate.
   const query = trigger ? trigger.query.toLowerCase() : "";
   const matches = trigger
@@ -56,7 +79,7 @@ export function MentionTextarea(props: MentionTextareaProps) {
   function insert(item: Suggestion) {
     if (!trigger) return;
     const caret = ref.current?.selectionStart ?? value.length;
-    const sigil = item.kind === "community" ? "c/" : "@";
+    const sigil = SIGIL_BY_KIND[item.kind];
     const before = value.slice(0, trigger.start);
     const after = value.slice(caret);
     const token = `${sigil}${item.slug} `;
@@ -75,7 +98,10 @@ export function MentionTextarea(props: MentionTextareaProps) {
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (!trigger || matches.length === 0) return;
+    if (!trigger || matches.length === 0) {
+      props.onKeyDown?.(event);
+      return;
+    }
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setActive((current) => (current + 1) % matches.length);
@@ -92,8 +118,9 @@ export function MentionTextarea(props: MentionTextareaProps) {
   }
 
   return (
-    <div className={styles.wrap}>
+    <div className={[styles.wrap, props.wrapClassName].filter(Boolean).join(" ")}>
       <textarea
+        id={props.id}
         ref={ref}
         className={props.className}
         rows={props.rows}
@@ -107,10 +134,19 @@ export function MentionTextarea(props: MentionTextareaProps) {
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        onBlur={() => requestAnimationFrame(() => setTrigger(null))}
+        onBlur={() => {
+          props.onBlur?.();
+          requestAnimationFrame(() => setTrigger(null));
+        }}
       />
       {open && (
-        <ul className={styles.menu} role="listbox" id={listboxId}>
+        <ul
+          className={[styles.menu, props.placement === "above" && styles.menuAbove]
+            .filter(Boolean)
+            .join(" ")}
+          role="listbox"
+          id={listboxId}
+        >
           {matches.map((item, index) => (
             <li key={`${item.kind}-${item.slug}`}>
               <button
@@ -136,7 +172,7 @@ export function MentionTextarea(props: MentionTextareaProps) {
                 )}
                 <span className={styles.name}>{item.name}</span>
                 <span className={styles.handle}>
-                  {item.kind === "community" ? "c/" : "@"}
+                  {SIGIL_BY_KIND[item.kind]}
                   {item.slug}
                 </span>
               </button>

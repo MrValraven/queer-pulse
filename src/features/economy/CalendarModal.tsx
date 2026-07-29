@@ -2,8 +2,9 @@ import { useState } from "react";
 import { FiDownload, FiCalendar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel, useSubmitFlow } from "./ModalKit";
-import { type Application } from "./applicationStatus.data";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { useSubmitFlow } from "./modalFlow";
+import { type Application } from "./applicationStatus.types";
 import styles from "./ApplicationModals.module.css";
 
 /** Build and download a calendar invite for the interview. */

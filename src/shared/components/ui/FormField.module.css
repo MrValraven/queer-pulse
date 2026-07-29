@@ -37,7 +37,9 @@
 .field textarea,
 .field select {
   font-family: var(--sans);
-  font-size: 15.5px;
+  /* >=16px so iOS Safari never zooms the viewport on focus. Density is held by
+     the padding below, not a smaller font. */
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   /* 0.16 measured 1.37:1. A form control's boundary is a UI component under

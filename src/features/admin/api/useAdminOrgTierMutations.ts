@@ -23,9 +23,10 @@ export function useCreateOrgTier() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
     },
+    meta: { silentError: true }, // AdminOrgTierForm toasts locally
   });
 }
 
@@ -44,9 +45,10 @@ export function useUpdateOrgTier() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
     },
+    meta: { silentError: true }, // AdminOrgTierForm + AdminOrgTiersPage toast locally
   });
 }
 
@@ -60,8 +62,9 @@ export function useDeleteOrgTier() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
-      queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
     },
+    meta: { silentError: true }, // AdminOrgTiersPage toasts locally
   });
 }

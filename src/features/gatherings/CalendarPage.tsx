@@ -6,7 +6,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { calendarLegend } from "./data";
 import { useEvents } from "./api/useEvents";
 import { CALENDAR_TODAY } from "./calendar.data";
-import { MonthGrid, AllUpcomingEvents, sameDay } from "./CalendarGrid";
+import { MonthGrid, AllUpcomingEvents } from "./CalendarGrid";
+import { sameDay } from "./calendarGrid.helpers";
 import { CalendarSidebar } from "./CalendarSidebar";
 import styles from "./CalendarPage.module.css";
 

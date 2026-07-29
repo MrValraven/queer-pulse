@@ -172,13 +172,14 @@ describe("detailDtoToCommunity", () => {
       fmt,
     );
     expect(community.moderators).toHaveLength(2);
-    expect(community.moderators[0]).toEqual({
+    const founder = community.moderators[0];
+    expect(founder).toMatchObject({
       initials: "IM",
       name: "Inês Martins",
       pronouns: "",
-      tone: expect.any(String),
       role: "Founded the community",
     });
+    expect(typeof founder?.tone).toBe("string");
     expect(community.moderators[1]?.role).toBe("Moderator since Jun 2024");
   });
 

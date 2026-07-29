@@ -1,20 +1,23 @@
 .card {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  height: 100%;
   min-width: 0;
-  padding: 16px 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
+  overflow: clip;
   transition:
     border-color var(--dur-base) var(--ease),
-    transform var(--dur-base) var(--ease);
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 @media (hover: hover) {
   .card:hover {
-    border-color: rgba(var(--accent-rgb), 0.4);
+    border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
     transform: translateY(-2px);
+    box-shadow: 0 10px 24px -18px rgba(var(--line-rgb), 0.5);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -23,24 +26,53 @@
   }
   .card:hover {
     transform: none;
+    box-shadow: none;
   }
 }
 
+/* Soft accent wash — a low-opacity tint plus one faint orb, so each persona
+   reads as its own colour without a solid block (house rule: decorative colour
+   is a wash, never a fill). */
+.header {
+  height: 72px;
+  flex: none;
+  background:
+    radial-gradient(
+      92px 92px at 82% -12%,
+      color-mix(in srgb, var(--accent-tint) 28%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--accent-tint) 12%, var(--paper));
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
+}
+
+/* Portrait cut-out: half in the wash, half on paper, ringed to lift it off
+   the header. The ring hairline picks up the persona accent. */
 .avatar {
   flex: none;
+  position: relative;
+  z-index: 1;
+  margin-block-start: -34px;
+  margin-inline-start: 20px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0 0 4px color-mix(in srgb, var(--accent-tint) 40%, var(--paper));
 }
 
 .body {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
+  padding: 10px 20px 18px;
 }
 
 .kindBadge {
   align-self: flex-start;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent-tint);
   color: var(--accent-on);
   font-size: 0.68rem;
@@ -50,9 +82,10 @@
 }
 
 .name {
+  margin-block-start: 2px;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   line-height: 1.2;
   color: var(--ink);
 }
@@ -61,18 +94,28 @@
   color: var(--ink-60);
   font-size: 0.9rem;
   line-height: 1.4;
-  /* Keep list cards tidy: cap the tagline to two lines */
+  /* Keep cards tidy and equal-height: cap the tagline to two lines */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.affordances {
+/* Anchored to the card foot so footers line up across a row. */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-start: auto;
+  padding-block-start: 12px;
+}
+
+.meta {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 2px;
+  min-width: 0;
 }
 
 .availabilityChip {
@@ -96,11 +139,43 @@
 .socialChip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--ink-60);
 }
 .socialChip svg {
   font-size: 0.95em;
+}
+
+.view {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-40);
+  transition: color var(--dur-base) var(--ease);
+}
+.view svg {
+  font-size: 0.95em;
+  transition: transform var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .card:hover .view {
+    color: var(--accent-ink);
+  }
+  .card:hover .view svg {
+    transform: translateX(2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view,
+  .view svg {
+    transition: none;
+  }
+  .card:hover .view svg {
+    transform: none;
+  }
 }

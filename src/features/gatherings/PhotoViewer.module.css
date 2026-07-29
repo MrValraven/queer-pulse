@@ -94,7 +94,7 @@
 .frame {
   position: relative;
   width: min(72vw, 880px);
-  height: min(70vh, 620px);
+  height: min(70svh, 620px);
   border-radius: var(--radius-card, 22px);
   display: flex;
   align-items: flex-end;
@@ -184,7 +184,7 @@
 @media (max-width: 640px) {
   .frame {
     width: 86vw;
-    height: 56vh;
+    height: 56svh;
   }
   .nav {
     width: 40px;

@@ -2,14 +2,8 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import {
-  ModalShell,
-  SuccessPanel,
-  Sending,
-  ChipSelect,
-  useChipSet,
-  useSubmitFlow,
-} from "./CultureModalKit";
+import { ModalShell, SuccessPanel, Sending, ChipSelect } from "./CultureModalKit";
+import { useChipSet, useSubmitFlow } from "./cultureModalKit.hooks";
 import {
   PICK_KINDS,
   PICK_KIND_OPTION_LABEL_KEY,

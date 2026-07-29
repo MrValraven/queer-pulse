@@ -146,7 +146,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
         }
       }
       onClose();
-      navigate(`/account/subprofiles/${created.id}/edit`);
+      void navigate(`/account/subprofiles/${created.id}/edit`);
     } catch {
       showToast(t("subprofiles:newModal.toastError"), "error");
     }
@@ -169,7 +169,7 @@ export function NewSubprofileModal({ onClose }: { onClose: () => void }) {
           </Button>
           <Button
             variant="primary"
-            onClick={submit}
+            onClick={() => void submit()}
             disabled={!ready || create.isPending}
           >
             {create.isPending

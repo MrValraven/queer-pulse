@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useCreatedCommunities } from "./startCommunity/createdCommunities.store";
-import { useCommunityEdits } from "../../app/providers/CommunityEditsProvider";
+import { useCommunityEdits } from "../../app/providers/useCommunityEdits";
 import { applyCommunityOverride } from "./api/communities.adapters";
 import { communities } from "../homepage/data/communities";
 import type { Community } from "../homepage/data/types";

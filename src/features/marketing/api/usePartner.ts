@@ -26,7 +26,7 @@ export function usePartner(slug: string | undefined) {
     queryFn: async () => {
       if (!slug) return { partner: undefined, notFound: true };
       if (demoMode) {
-        const { getPartner: getMockPartner } = await import("../partnerDetails");
+        const { getPartner: getMockPartner } = await import("../partnerLookup");
         const partner = getMockPartner(slug);
         return { partner, notFound: !partner };
       }

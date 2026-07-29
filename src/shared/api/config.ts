@@ -19,7 +19,9 @@
  */
 export const demoConfigured: boolean = import.meta.env.VITE_DEMO === "1";
 
-const rawApiUrl: string = (import.meta.env.VITE_API_URL ?? "").trim();
+const rawApiUrl: string = (
+  (import.meta.env.VITE_API_URL as string | undefined) ?? ""
+).trim();
 
 // Fail loudly at boot rather than degrade into a convincing fake. A production
 // build with no backend is only legitimate when it's a deliberate demo build.

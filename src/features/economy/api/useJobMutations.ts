@@ -26,10 +26,10 @@ export function useCreateJob() {
       return { slug: res.slug };
     },
     onSuccess: (_res, dto) => {
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
+      void queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      void queryClient.invalidateQueries({ queryKey: ["companies"] });
       if (dto.companySlug) {
-        queryClient.invalidateQueries({
+        void queryClient.invalidateQueries({
           queryKey: ["company", dto.companySlug],
         });
       }
@@ -47,8 +47,8 @@ export function useCloseJob(slug: string) {
       await closeJob(slug);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["job", slug] });
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      void queryClient.invalidateQueries({ queryKey: ["job", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
 }
@@ -67,8 +67,8 @@ export function useApplyToJob(slug: string) {
       await applyToJob(slug, dto);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["job", slug] });
-      queryClient.invalidateQueries({ queryKey: ["my-applications"] });
+      void queryClient.invalidateQueries({ queryKey: ["job", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["my-applications"] });
     },
   });
 }

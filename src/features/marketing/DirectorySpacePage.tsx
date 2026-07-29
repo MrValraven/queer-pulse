@@ -4,6 +4,7 @@ import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Tint } from "./directoryPlaces";
 import { useDirectoryPlace } from "./api/useDirectory";
+import { useAllMyListings } from "./listBusiness/api/useListings";
 import { routes } from "../../app/routeMap";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DirectorySpaceAside } from "./DirectorySpaceAside";
@@ -19,6 +20,11 @@ export function DirectorySpacePage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const { place, isLoading } = useDirectoryPlace(slug);
+  // Owner detection: match the viewer's own listings against this slug. The
+  // query is disabled in demo/logged-out, so `mine` is undefined there and
+  // the edit control simply never renders — no extra guard needed.
+  const { data: mine } = useAllMyListings();
+  const owned = mine?.items.find((listing) => listing.slug === slug);
 
   // In live mode the fetch is async: hold the layout while it's in flight
   // rather than redirecting on the initial undefined. Only redirect once the
@@ -45,9 +51,19 @@ export function DirectorySpacePage() {
     <PageShell>
       <div className={s.cover}>
         <div className={s.coverInner}>
-          <Link to={routes.directory} className={s.back}>
-            {t("marketing:directory.detail.backCta")}
-          </Link>
+          <div className={s.coverTop}>
+            <Link to={routes.directory} className={s.back}>
+              {t("marketing:directory.detail.backCta")}
+            </Link>
+            {owned && (
+              <Link
+                to={routes.listBusinessEdit.replace(":ref", owned.ref)}
+                className={s.ownerEdit}
+              >
+                {t("marketing:directory.editThisListing")}
+              </Link>
+            )}
+          </div>
           <div className={s.gallery}>
             {place.gallery.map((cap, i) => (
               <div key={i} className={[s.gCell, GCELL[place.tint]].join(" ")}>

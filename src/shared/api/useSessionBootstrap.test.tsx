@@ -43,7 +43,9 @@ async function loadHook(opts: {
   getBootstrapImpl?: () => Promise<typeof payload>;
 }) {
   vi.resetModules();
-  const getBootstrap = vi.fn(opts.getBootstrapImpl ?? (async () => payload));
+  const getBootstrap = vi.fn(
+    opts.getBootstrapImpl ?? (() => Promise.resolve(payload)),
+  );
   vi.doMock("./bootstrap.api", () => ({ getBootstrap }));
   vi.doMock("../../app/providers/DemoModeProvider", () => ({
     useDemoMode: () => ({ demoMode: opts.demoMode }),
@@ -175,9 +177,8 @@ describe("useSessionBootstrapSettled", () => {
     const { useSessionBootstrapSettled } = await loadHook({
       demoMode: false,
       loggedIn: true,
-      getBootstrapImpl: async () => {
-        throw new Error("bootstrap unavailable (404/500)");
-      },
+      getBootstrapImpl: () =>
+        Promise.reject(new Error("bootstrap unavailable (404/500)")),
     });
     const client = new QueryClient({
       defaultOptions: { queries: { retry: false } },

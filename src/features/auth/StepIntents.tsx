@@ -60,7 +60,7 @@ export function StepIntents({ onNext, onBack, stepLabel }: StepProps) {
       )}
       <div className={styles.nav}>
         <Button
-          onClick={handleContinue}
+          onClick={() => void handleContinue()}
           disabled={!hasSelection || updateProfile.isPending}
         >
           {t("auth:onboarding.stepIntents.continue")}

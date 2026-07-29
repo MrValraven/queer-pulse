@@ -125,7 +125,7 @@ div.backBar {
   margin-top: 16px;
 }
 .pronoun {
-  color: var(--ink-40);
+  color: var(--ink-60);
   font-weight: 400;
 }
 .curatorLink {
@@ -162,7 +162,7 @@ div.backBar {
   flex: none;
 }
 .muted {
-  color: var(--ink-40);
+  color: var(--ink-60);
 }
 .bio {
   font-size: 17px;
@@ -263,6 +263,15 @@ div.backBar {
 }
 @media (hover: hover) {
   .vouchFace:hover .vouchTip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+/* Touch has no hover: reveal the tip while the avatar is tapped/held or focused
+   (a tap focuses the focusable face). CSS-only — no TSX change. */
+@media (pointer: coarse) {
+  .vouchFace:focus .vouchTip,
+  .vouchFace:active .vouchTip {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
@@ -417,7 +426,7 @@ div.backBar {
 }
 .workYear {
   font-size: 13px;
-  color: var(--ink-40);
+  color: var(--ink-60);
 }
 .workCardLink {
   display: block;
@@ -719,7 +728,7 @@ button.socialChip {
 }
 .groupType {
   font-size: 13px;
-  color: var(--ink-40);
+  color: var(--ink-60);
 }
 
 /* Recent activity */
@@ -817,5 +826,19 @@ button.socialChip {
 @media (hover: hover) {
   .heroRecogChip.jade:hover {
     background: rgba(var(--jade-rgb), 0.18);
+  }
+}
+
+/* ---- Touch targets: comfortable ≥44px hit height on touch pointers -------- */
+/* Scoped to coarse pointers so desktop density is unchanged. inline-flex lets
+   min-height take effect on the otherwise-inline chips. */
+@media (pointer: coarse) {
+  .heroRecogChip,
+  .openChipAction,
+  .socialChip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
   }
 }

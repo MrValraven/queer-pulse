@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { normalizeHandle } from "../../shared/handles";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -99,7 +99,7 @@ export function UsernameSection() {
       />
 
       <div className={styles.usernameActions}>
-        <Button variant="primary" onClick={save} disabled={!canSave}>
+        <Button variant="primary" onClick={() => void save()} disabled={!canSave}>
           {saving
             ? t("settings:editProfile.username.saving")
             : t("settings:editProfile.username.save")}

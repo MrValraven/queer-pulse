@@ -123,7 +123,7 @@ function guardNumericComparison(comparison: unknown[]): FilterNode {
 
 function makeFilterNullSafe(node: FilterNode): FilterNode {
   if (!Array.isArray(node)) return node;
-  const operator = node[0];
+  const operator = (node as unknown[])[0];
   if (typeof operator === "string" && COMPARISON_OPERATORS.has(operator)) {
     return guardNumericComparison(node);
   }

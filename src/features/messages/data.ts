@@ -1,18 +1,77 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
-import type { ReactionSummary } from "../../shared/contracts/contracts";
+import type {
+  ConversationRole,
+  ReactionSummary,
+} from "../../shared/contracts/contracts";
+
+/** The resolved system-event a `kind: "system"` message renders as a centred
+ *  pill. Names are already resolved (never user ids); the pill text is built
+ *  bilingually on the client from `type` + these names. */
+export interface ChatSystemEvent {
+  type:
+    | "group_created"
+    | "member_added"
+    | "member_removed"
+    | "member_left"
+    | "group_renamed";
+  actorName: string;
+  targetName?: string | null;
+  value?: string | null;
+  /** True when the signed-in member is the actor — lets the pill read "You
+   *  created the group" rather than the actor's name. */
+  actorIsMe?: boolean;
+}
+
+/** One member of a GROUP thread, for the header/info roster + bubble avatars. */
+export interface GroupMemberView {
+  /** User id (live) — correlates presence + the leave/remove/role calls. Absent in demo. */
+  id?: string;
+  name: string;
+  initials: string;
+  tint: AvatarTint;
+  avatarUrl?: string;
+  role: ConversationRole;
+  /** Profile slug (live) for the member link. Absent for demo/unknown. */
+  slug?: string;
+  /** This member's read watermark (ISO) — drives "Seen by N" (a member has seen
+   *  a message when this is at-or-after its timestamp). Absent = never read. */
+  lastReadAt?: string;
+  /** This member's delivered watermark (ISO), one rung below read. */
+  deliveredAt?: string;
+}
 
 export interface ChatMessage {
   from: "me" | "them";
   text: string;
   time?: string;
+  /** `"system"` renders a centred event pill (see `systemEvent`); absent/`"user"`
+   *  is an ordinary bubble. */
+  kind?: "user" | "system";
+  /** Resolved system event for a `kind: "system"` message. */
+  systemEvent?: ChatSystemEvent;
+  /** GROUP threads only — the sender's identity for per-run attribution (name
+   *  label + avatar above a received run). Absent in DMs, where the header
+   *  already identifies the single counterpart. */
+  senderName?: string;
+  senderHandle?: string;
+  senderTint?: AvatarTint;
+  senderAvatar?: string;
   /** Stable server id (live mode) for React keys. Absent for demo/optimistic
    *  messages, which fall back to a positional key. */
   id?: string;
   /** ISO timestamp (live mode) used to break same-sender runs across large time
    *  gaps. Absent in demo (mock groups are day-bucketed and need no gap logic). */
   at?: string;
-  /** Delivery state of an optimistic (this-session) send. Absent for server/history messages. */
-  status?: "sending" | "sent" | "failed";
+  /** Delivery state of an optimistic (this-session) send. Absent for server/history
+   *  messages, whose state is derived from `at` + the counterpart's watermarks.
+   *  `"delivered"`/`"seen"` are only ever set by the DEMO simulation (which has no
+   *  server and no watermarks), advancing the local ladder on a timer. */
+  status?: "sending" | "sent" | "delivered" | "seen" | "failed";
+  /** ISO of the recipient's delivered watermark once it has reached this OWN
+   *  outgoing message (live mode, from the DTO) — renders the "double check" on
+   *  non-final own bubbles too. Absent when not yet delivered / for received or
+   *  demo messages. Distinct from `deletedAt`. */
+  deliveredAt?: string;
   /** Client id for an optimistic message, so a failed one can be found + retried. */
   localId?: string;
   /** Per-key reaction counts + whether the signed-in member reacted (live mode).
@@ -25,6 +84,17 @@ export interface ChatMessage {
   editedAt?: string;
   /** The quoted message this one replies to (live mode). Absent if not a reply. */
   replyTo?: { id: string; snippet: string; senderName: string; deleted: boolean };
+  /** True when this message was created by forwarding — renders a "Forwarded"
+   *  label on the bubble. Absent/false otherwise. */
+  forwarded?: boolean;
+  /** ISO timestamp the message is pinned in the conversation (SHARED, live).
+   *  Absent when not pinned — drives the in-bubble pin indicator. */
+  pinnedAt?: string;
+  /** Whether the signed-in member has privately starred this message (live).
+   *  Absent/false otherwise — drives the owner-only star indicator. */
+  starred?: boolean;
+  /** Server-authoritative: whether the viewer may pin/unpin this message (live). */
+  canPin?: boolean;
 }
 
 export interface Conversation {
@@ -48,9 +118,29 @@ export interface Conversation {
   unreadCount?: number;
   /** Counterpart's read watermark (ISO, live). Drives the "Seen" receipt. */
   otherLastReadAt?: string;
+  /** Counterpart's delivered watermark (ISO, live). Drives the "double check". */
+  otherDeliveredAt?: string;
   /** Counterpart's user id (live) — correlates presence events. */
   otherParticipantId?: string;
   official?: boolean;
+  /** True for a GROUP thread — swaps the header/inbox to group framing (title +
+   *  member-count subtitle, per-sender attribution, "Group info"). Absent = DM. */
+  isGroup?: boolean;
+  /** Group roster (read-only in Phase 1). Absent for DMs. */
+  members?: GroupMemberView[];
+  /** Active member count for a group (header subtitle). Absent for DMs. */
+  memberCount?: number;
+  /** For a group: whether the signed-in member has left it (composer severed). */
+  hasLeft?: boolean;
+  /** The signed-in member's own role in a group. Absent for DMs. */
+  myRole?: ConversationRole;
+  /** SERVER-AUTHORITATIVE group-management capability flags — the management UI
+   *  gates on these; the server re-checks the caller's role on every mutation.
+   *  Absent/false for DMs and a member who has left. */
+  canAddMembers?: boolean;
+  canRemoveMembers?: boolean;
+  canRename?: boolean;
+  canManageRoles?: boolean;
   messages: { day: string; items: ChatMessage[] }[];
 }
 
@@ -64,6 +154,82 @@ export interface Conversation {
 export const me = { initials: "", tint: "default" as AvatarTint };
 
 export const conversations: Conversation[] = [
+  {
+    id: "brunch-crew",
+    initials: "PB",
+    tint: "coral",
+    name: "Pride Brunch Crew",
+    pronouns: "",
+    connectedSince: "",
+    time: "Now",
+    // Group previews are prefixed with the sender's first name (see the live
+    // adapter); the demo bakes the same shape in.
+    preview: "Anika: The terrace is booked for 11am — see you all there!",
+    unread: true,
+    unreadCount: 3,
+    isGroup: true,
+    memberCount: 4,
+    // The signed-in demo member ("Tiago Costa") owns this group, so the demo
+    // shows the full management surface (add/remove/rename/roles). The two
+    // members with a `lastReadAt` past the last own message drive a demo
+    // "Seen by 2" receipt; Kai (no watermark) hasn't caught up.
+    myRole: "owner",
+    canAddMembers: true,
+    canRemoveMembers: true,
+    canRename: true,
+    canManageRoles: true,
+    members: [
+      { name: "Tiago Costa", initials: "TC", tint: "plum", role: "owner", slug: "tiago" },
+      { name: "Anika Kovač", initials: "AK", tint: "coral", role: "member", slug: "anika", lastReadAt: "2026-07-29T10:00:00.000Z" },
+      { name: "Jordan Park", initials: "JP", tint: "jade", role: "admin", slug: "jordan", lastReadAt: "2026-07-29T10:00:00.000Z" },
+      { name: "Kai Larsson", initials: "KL", tint: "plum", role: "member", slug: "kai" },
+    ],
+    messages: [
+      {
+        day: "Today",
+        items: [
+          {
+            from: "me",
+            text: "created the group",
+            kind: "system",
+            systemEvent: {
+              type: "group_created",
+              actorName: "You",
+              actorIsMe: true,
+            },
+          },
+          {
+            from: "them",
+            text: "So excited for this! What time are we thinking?",
+            senderName: "Anika Kovač",
+            senderHandle: "anika",
+            senderTint: "coral",
+          },
+          {
+            from: "them",
+            text: "Late morning works best for me — 11ish?",
+            senderName: "Jordan Park",
+            senderHandle: "jordan",
+            senderTint: "jade",
+          },
+          {
+            from: "me",
+            text: "11am it is. I'll confirm the terrace booking.",
+            at: "2026-07-29T09:00:00.000Z",
+          },
+          {
+            from: "them",
+            text: "The terrace is booked for 11am — see you all there!",
+            senderName: "Anika Kovač",
+            senderHandle: "anika",
+            senderTint: "coral",
+            time: "Just now",
+            reactions: [{ key: "love", count: 2, mine: true }],
+          },
+        ],
+      },
+    ],
+  },
   {
     id: "anika",
     slug: "anika",
@@ -90,14 +256,17 @@ export const conversations: Conversation[] = [
           },
           {
             from: "them",
-            text: "Yes — I'd recommend booking by email rather than phone, she's quicker to respond. I can send you her contact if you like?",
+            text: "Yes — I'd recommend booking by email rather than phone, she's quicker to respond. You can request a first appointment here: https://clinicadomarques.pt/book",
           },
         ],
       },
       {
         day: "Today",
         items: [
-          { from: "me", text: "That would be amazing, yes please" },
+          {
+            from: "me",
+            text: "That would be amazing, yes please — and I saw the brunch is confirmed: https://queerpulse.example/pride-brunch",
+          },
           {
             from: "them",
             text: "Thanks for the recommendation! I'll reach out to her this week — really appreciate you taking the time.",

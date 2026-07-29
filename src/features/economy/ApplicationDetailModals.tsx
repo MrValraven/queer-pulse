@@ -4,7 +4,7 @@ import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
-import type { Application } from "./applicationStatus.data";
+import type { Application } from "./applicationStatus.types";
 import { ModalShell, FileIcon } from "./ModalKit";
 import styles from "./ApplicationModals.module.css";
 

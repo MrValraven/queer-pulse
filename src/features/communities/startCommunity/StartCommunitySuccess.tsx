@@ -24,7 +24,7 @@ export function StartCommunitySuccess({
       title={t("communities:start.success.title")}
       em={t("communities:start.success.em")}
       closeLabel={t("communities:start.success.closeLabel")}
-      onClose={() => navigate(`/community/${community.slug}`)}
+      onClose={() => void navigate(`/community/${community.slug}`)}
       steps={[
         <Translation
           key="live"

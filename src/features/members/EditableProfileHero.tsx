@@ -4,7 +4,7 @@ import type { ImageSlotTint } from "../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { AvatarEditor } from "./AvatarEditor";
 import {
   InlineText,
@@ -36,25 +36,44 @@ export function EditableProfileHero({
 }) {
   const { t } = useTranslation();
   const { profile, draft, updateDraft } = useProfile();
+  const heroRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
-    if (!focusLinks) return;
     const raf = requestAnimationFrame(() => {
-      const el = linksRef.current;
-      if (!el) return;
-      el.scrollIntoView({
-        behavior: reduced ? "auto" : "smooth",
-        block: "center",
-      });
-      el.querySelector<HTMLElement>("select, input, button")?.focus();
+      if (focusLinks) {
+        const linksField = linksRef.current;
+        if (!linksField) return;
+        linksField.scrollIntoView({
+          behavior: reduced ? "auto" : "smooth",
+          block: "center",
+        });
+        linksField.querySelector<HTMLElement>("select, input, button")?.focus();
+        return;
+      }
+      // General enter-edit: land focus on the first editable field (the name),
+      // skipping the avatar's hidden file input, so keyboard users don't drop to
+      // <body> when the read-only hero swaps out for this editor.
+      const fields = heroRef.current?.querySelectorAll<HTMLElement>(
+        'input:not([type="file"]), select, textarea',
+      );
+      const firstVisibleField = fields
+        ? Array.from(fields).find((field) => field.offsetParent !== null)
+        : undefined;
+      firstVisibleField?.focus();
     });
     return () => cancelAnimationFrame(raf);
   }, [focusLinks, reduced]);
 
   return (
-    <header className={base.phero}>
+    <header className={base.phero} ref={heroRef}>
+      {/* Keeps a top-level heading on the edit view — the name is otherwise two
+          inputs, which would leave the page starting at <h2>. */}
+      <h1 className="visuallyHidden">
+        {`${draft.first} ${draft.last}`.trim() ||
+          t("members:profileEdit.field.name")}
+      </h1>
       <div className="wrap">
         <div className={base.pheroGrid}>
           <Reveal className={base.portraitWrap}>

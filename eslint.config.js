@@ -103,18 +103,33 @@ const localPlugin = {
 };
 
 export default defineConfig([
-  globalIgnores(["dist", "coverage"]),
+  globalIgnores(["dist", "coverage", ".superpowers"]),
   {
     files: ["**/*.{ts,tsx}"],
     plugins: { local: localPlugin, "jsx-a11y": jsxA11y },
     extends: [
       js.configs.recommended,
-      tseslint.configs.recommended,
+      // Type-aware linting (parity with the backend, which runs
+      // recommendedTypeChecked). This is what makes rules like
+      // no-floating-promises / no-misused-promises possible — they need the
+      // type checker to know a value is a Promise. Without it, floating
+      // promises in this async-handler-heavy codebase went completely
+      // undetected. See the rule tuning below for how the noisier
+      // type-aware rules are handled.
+      tseslint.configs.recommendedTypeChecked,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
     languageOptions: {
       globals: globals.browser,
+      parserOptions: {
+        // projectService resolves each file to the tsconfig that includes it
+        // (tsconfig.app.json for src, tsconfig.test.json for the *.test files).
+        // Files in no project (root config files, e2e, sw.ts) are handled by the
+        // disableTypeChecked override block at the end of this config.
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     rules: {
       // 0. Accessibility. Every jsx-a11y recommended rule, forced to "warn"
@@ -123,12 +138,52 @@ export default defineConfig([
       //    218 warnings, dominated by click-events-have-key-events (81) and
       //    no-static-element-interactions (68) — the same div-with-onClick
       //    pattern counted twice, so ~81 real sites, not 149.
-      //    KNOWN FALSE POSITIVES: all 15 `anchor-has-content` hits are the
+      //    KNOWN FALSE POSITIVES: the `anchor-has-content` hits were the
       //    `<Translation components={{ a: <a href="…" /> }}>` idiom — those
       //    anchors are element *templates* that React clones with children at
       //    render time. The rule can't see that. Don't "fix" them by adding
-      //    dummy children.
+      //    dummy children. (Current jsx-a11y no longer flags them: 0 hits.)
+      //    UPDATE (2026-07-29): the 218/81/68 figures above are the historical
+      //    introduction baseline. That tail has since been largely cleared —
+      //    the current count is 7 (5 aria-role, 1 click-events-have-key-events,
+      //    1 no-static-element-interactions). Run `pnpm lint:a11y` for the live
+      //    breakdown. With the tail this small, promoting these rules to
+      //    "error" (blocking new a11y debt) is now realistic.
       ...jsxA11yWarnings,
+      // --- Type-aware rules (from recommendedTypeChecked) ------------------
+      // The two promise-safety rules are the reason type-aware linting was
+      // turned on. Both have been driven to zero and are hard errors: a
+      // floating promise in a React handler swallows rejections silently, and
+      // an async function passed where a void one is expected (onClick, form
+      // handlers) is the same bug wearing a different hat. Keep them at zero.
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": "error",
+      // any-typed access. Mirrors the backend's tuning exactly: `any` itself is
+      // allowed (too much untyped third-party surface to ban outright), and the
+      // "unsafe-*" family that flags reads/calls THROUGH an `any` stays visible
+      // as a warning rather than blocking CI. Promote as the tail is typed out.
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-argument": "warn",
+      "@typescript-eslint/no-unsafe-assignment": "warn",
+      "@typescript-eslint/no-unsafe-member-access": "warn",
+      "@typescript-eslint/no-unsafe-call": "warn",
+      "@typescript-eslint/no-unsafe-return": "warn",
+      // Lower-value type-aware rules kept as warnings (baselines at
+      // introduction: no-unnecessary-type-assertion ~46, require-await ~30,
+      // no-base-to-string ~11). Real but not correctness-critical; surfaced,
+      // not gated. no-unnecessary-type-assertion is deliberately NOT an error:
+      // its autofix is unreliable here because eslint's bundled TypeScript and
+      // the build's TypeScript disagree on a few load-bearing assertions (e.g.
+      // mapbox GeoJSONSource casts in useLisbonMap.ts that `tsc -b` requires but
+      // eslint reports as redundant). Warn, review by hand, don't auto-strip.
+      "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+      "@typescript-eslint/require-await": "warn",
+      "@typescript-eslint/no-base-to-string": "warn",
+      // A `T | unknown` union collapses to `unknown` (one real hit today:
+      // AppErrorEnvelope.details in shared/contracts/errors.ts). A legit smell,
+      // but it lives in a shared API contract where tightening the type could
+      // ripple to every consumer — surface it, don't gate on it.
+      "@typescript-eslint/no-redundant-type-constituents": "warn",
       // Underscore-prefixed args/vars are intentional throwaways.
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -193,5 +248,17 @@ export default defineConfig([
   {
     files: ["src/app/routes.tsx"],
     rules: { "max-lines-per-function": "off" },
+  },
+  // Files outside every tsconfig project — root config files, Playwright e2e,
+  // and the webworker sw.ts (excluded from tsconfig.app for its own lib). The
+  // type-aware parser can't resolve them to a project, so turn projectService
+  // off here and drop the type-checked rules for these files only. They keep
+  // all the syntactic rules.
+  {
+    files: ["*.config.ts", "e2e/**/*.ts", "src/sw.ts"],
+    extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: {
+      parserOptions: { projectService: false, program: null },
+    },
   },
 ]);

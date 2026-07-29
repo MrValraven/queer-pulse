@@ -70,6 +70,10 @@ export const members: Catalog = {
   "profile.notFound.description":
     "It may have been set to private, the member might have left, or this link could be out of date. Nothing's wrong on your end.",
   "profile.notFound.backAction": "Back to Members",
+  "profile.loadError.title": "We couldn't load your profile",
+  "profile.loadError.description":
+    "Something went wrong fetching your profile. Check your connection and try again.",
+  "profile.loadError.retryAction": "Try again",
   "profile.backToRoom": "← Back to the room",
   "profile.previewBanner":
     "You're previewing your profile as a <strong>visitor</strong>.",
@@ -172,6 +176,11 @@ export const members: Catalog = {
   "profileEdit.addTagLabel": "Add a tag",
   "profileEdit.removeTagLabel": "Remove {tag}",
   "profileEdit.visibilityGroupLabel": "Profile visibility",
+  "profileEdit.discardConfirm":
+    "You have unsaved changes. Discard them and leave editing?",
+  "profileEdit.validation.nameRequired": "Please enter your first name.",
+  "profileEdit.validation.invalidUrl":
+    "That doesn't look like a valid link or handle.",
 
   // ── Short bio field (ProfileShortBioField) ─────────────────────────────────
   "profileEdit.shortBio.label": "Short bio",
@@ -224,9 +233,39 @@ export const members: Catalog = {
   // ── Work editor (WorkEditor) ────────────────────────────────────────────────
   "profileEdit.work.add": "Add work",
 
+  // ── Board editor (BoardEditor) ──────────────────────────────────────────────
+  "profileEdit.board.subtitle":
+    "What you're asking for and offering right now",
+  "profileEdit.board.add": "Add to the board",
+  "profileEdit.board.kindLabel": "Looking or offering",
+  "profileEdit.board.titlePlaceholder": "e.g. A darkroom to borrow",
+  "profileEdit.board.titleLabel": "What you're looking for or offering",
+  "profileEdit.board.removeLabel": "Remove {title}",
+
+  // ── Skills editor (SkillsEditor) ────────────────────────────────────────────
+  "profileEdit.skills.subtitle":
+    "What you can help with — and swap on the barter board",
+  "profileEdit.skills.add": "Add",
+  "profileEdit.skills.namePlaceholder": "A skill or service…",
+  "profileEdit.skills.nameLabel": "Skill or service",
+  "profileEdit.skills.metaPlaceholder": "Detail (optional)",
+  "profileEdit.skills.metaLabel": "Skill detail",
+  "profileEdit.skills.removeLabel": "Remove {name}",
+
+  // ── Groups editor (GroupsEditor) ────────────────────────────────────────────
+  "profileEdit.groups.subtitle":
+    "Groups, circles and collectives you're part of",
+  "profileEdit.groups.add": "Add a group",
+  "profileEdit.groups.namePlaceholder": "Group or circle name",
+  "profileEdit.groups.nameLabel": "Group name",
+  "profileEdit.groups.rolePlaceholder": "Your role",
+  "profileEdit.groups.roleLabel": "Your role",
+  "profileEdit.groups.removeLabel": "Remove {name}",
+
   // ── Hero vouch row (HeroVouchRow) ───────────────────────────────────────────
   "hero.vouch.namesPlusYou": "{names}, plus you",
   "hero.vouch.youOnly": "you",
+  "hero.vouch.anonymous": "Anonymous",
   "hero.vouch.by": "Vouched for by <b>{names}</b>.",
   "hero.vouch.onlyNumberMatters": "That's the only number that matters here.",
   "hero.vouch.emptySelf":
@@ -827,6 +866,7 @@ export const members: Catalog = {
   "places.selfSubtitle":
     "Listings you've added to the directory. Each is read by the community team before it goes live.",
   "places.refLabel": "Ref · {ref}",
+  "places.editCta": "Edit",
   "places.viewListingCta": "View listing →",
   "places.awaitingReview": "Awaiting review",
   "places.empty.title": "No places yet",

@@ -110,6 +110,18 @@
   transition:
     box-shadow 0.2s,
     transform 0.2s var(--ease);
+  /* Dependency-free "virtualization": skip rendering offscreen feed cards so a
+     long feed stays smooth on a low-end phone. The `auto` keyword lets the
+     browser remember each card's real height after first paint; the placeholder
+     below is only the pre-paint estimate (post cards dominate and run tallest
+     with the footer + empty-reply state, so it's weighted toward them).
+     Note: content-visibility applies paint containment even while onscreen,
+     which would trap PostCard's fixed-overlay modals (Report / Block) inside the
+     card — so those two overlays are portaled to <body> in FeedModeration.tsx.
+     The MoreMenu dropdown is already clipped by this card's `overflow: hidden`,
+     so it is unaffected. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
 }
 @media (hover: hover) {
   .card:hover {
@@ -365,7 +377,9 @@
   font-family: var(--sans);
   font-weight: 600;
   transition: color 0.2s;
-  padding: 0;
+  min-height: 44px;
+  padding: 8px 6px;
+  touch-action: manipulation;
 }
 @media (hover: hover) {
   .postAction:hover {
@@ -397,14 +411,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   border: none;
   background: none;
   color: var(--ink-40);
   cursor: pointer;
   font-size: 18px;
+  touch-action: manipulation;
   transition:
     background 0.18s,
     color 0.18s;
@@ -417,7 +432,7 @@
 }
 .menu {
   position: absolute;
-  top: 36px;
+  top: 48px;
   right: 0;
   z-index: 20;
   min-width: 188px;
@@ -477,7 +492,7 @@
 .composerInput {
   width: 100%;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: 1rem;
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
@@ -613,7 +628,7 @@
 .detail {
   width: 100%;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: 1rem;
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);

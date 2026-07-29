@@ -1,6 +1,6 @@
 import type { IconType } from "react-icons";
 import { FiBell, FiCalendar, FiMessageCircle, FiUsers } from "react-icons/fi";
-import { routes } from "../../../app/routeMap";
+import { communityPath, routes, thread } from "../../../app/routeMap";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -79,13 +79,24 @@ export function notificationDtoToView(
   if (dto.actor) {
     const name = actorName(dto.actor);
     const href = `${routes.members}/${dto.actor.slug}`;
+    // `mention` rows branch their copy by `payload.entityKind` (who/what was
+    // actually @-mentioned — member/community/business/event/thread). No
+    // `entityKind` (older rows) or `entityKind === "member"` keeps the flat
+    // `mention.textNamed` key; every other kind, mirrors
+    // `formatNotification`'s `mentionKeyFor`.
+    const entityKind = (dto.payload as { entityKind?: string } | null)
+      ?.entityKind;
+    const namedKey =
+      kind === "mention" && entityKind && entityKind !== "member"
+        ? `mention.${entityKind}`
+        : kind;
     view.actorSlug = dto.actor.slug;
     view.actor = {
       name,
       href,
       textKey:
         kind && PERSONALIZED_KINDS.has(kind)
-          ? `notifications:type.${kind}.textNamed`
+          ? `notifications:type.${namedKey}.textNamed`
           : undefined,
     };
     view.avatar = {
@@ -97,7 +108,41 @@ export function notificationDtoToView(
     view.icon = undefined;
   }
 
+  view.sourceHref = sourceHrefFromPayload(dto.payload);
+
   return view;
+}
+
+/**
+ * Deep-link to the thread/discussion a notification originated from, built
+ * from `payload.source` + its slug field — `thread(threadSlug)` for a forum
+ * mention, `communityPath(communitySlug)` for a community one. `payload` is
+ * `Record<string, unknown>` (server-trusted but untyped on this side), so
+ * every field is read defensively.
+ *
+ * Returns `undefined` — never a broken link — whenever the needed slug is
+ * missing. In particular, the community FLAT post/reply paths
+ * (`createFlatPost`/`addFlatReply`) write a payload with `postId` but no
+ * `communitySlug`; those rows fall back to no source href (the row still
+ * shows the actor link) rather than inventing one.
+ */
+function sourceHrefFromPayload(
+  payload: Record<string, unknown> | null | undefined,
+): string | undefined {
+  if (!payload) return undefined;
+  if (payload.source === "forum") {
+    const threadSlug = payload.threadSlug;
+    return typeof threadSlug === "string" && threadSlug
+      ? thread(threadSlug)
+      : undefined;
+  }
+  if (payload.source === "community") {
+    const communitySlug = payload.communitySlug;
+    return typeof communitySlug === "string" && communitySlug
+      ? communityPath(communitySlug)
+      : undefined;
+  }
+  return undefined;
 }
 
 /** "Inês Tavares" from the actor's name parts, trimmed of a missing half. */

@@ -3,10 +3,22 @@ import type { Dispatch, SetStateAction } from "react";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { DeleteMessageDialog } from "./DeleteMessageDialog";
 import { MessageActionOverlay } from "./MessageActionOverlay";
+import { MessageContextMenu } from "./MessageContextMenu";
 import { MessageReportModal } from "./MessageReportModal";
 import type { ChatMessage } from "./data";
 
-type ActionTarget = { message: ChatMessage; rect: DOMRect; isSent: boolean } | null;
+type ActionTarget =
+  | {
+      message: ChatMessage;
+      rect: DOMRect;
+      isSent: boolean;
+      /** Snapshotted at open time (see ConversationPanel). */
+      canEdit: boolean;
+      /** touch long-press → full-screen overlay; pointer → cursor context menu. */
+      source: "touch" | "pointer";
+      point?: { x: number; y: number };
+    }
+  | null;
 
 export interface ConversationOverlaysProps {
   /** Message the long-press/right-click action overlay is open for. */
@@ -16,14 +28,17 @@ export interface ConversationOverlaysProps {
   /** Message the report modal is open for (its server id is the report subject). */
   reportTarget: ChatMessage | null;
   viewerIsStaff: boolean;
-  /** Own messages remain editable for this long after they were sent (client
-   *  gate; the server is the authority and rejects edits past its own window). */
-  editWindowMs: number;
   onReactionToggle: (message: ChatMessage, key: MessageReactionKey, mine: boolean) => void;
   /** Starts (or replaces) the reply draft with `message`. */
   onSetReply?: (message: ChatMessage) => void;
   onBeginEdit: (message: ChatMessage) => void;
   onCopyMessage: (message: ChatMessage) => void;
+  /** Opens the forward recipient picker seeded with `message`. */
+  onForward: (message: ChatMessage) => void;
+  /** Pins/unpins `message` (SHARED). */
+  onTogglePin: (message: ChatMessage) => void;
+  /** Stars/unstars `message` (PRIVATE). */
+  onToggleStar: (message: ChatMessage) => void;
   /** Opens/closes the action overlay — passed straight through from `useState`. */
   setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
   /** Opens/closes the delete-confirm dialog — passed straight through from `useState`. */
@@ -45,11 +60,13 @@ export function ConversationOverlays({
   deleteTarget,
   reportTarget,
   viewerIsStaff,
-  editWindowMs,
   onReactionToggle,
   onSetReply,
   onBeginEdit,
   onCopyMessage,
+  onForward,
+  onTogglePin,
+  onToggleStar,
   setActionTarget,
   setDeleteTarget,
   setReportTarget,
@@ -71,27 +88,40 @@ export function ConversationOverlays({
           onClose={() => setReportTarget(null)}
         />
       )}
-      {actionTarget && (
-        <MessageActionOverlay
-          text={actionTarget.message.text}
-          isSent={actionTarget.isSent}
-          anchorRect={actionTarget.rect}
-          canEdit={
-            actionTarget.isSent &&
-            !!actionTarget.message.at &&
-            Date.now() - new Date(actionTarget.message.at).getTime() < editWindowMs
-          }
-          canDelete={actionTarget.isSent || viewerIsStaff}
-          canReport={!actionTarget.isSent}
-          onReact={(key) => onReactionToggle(actionTarget.message, key, false)}
-          onReply={() => onSetReply?.(actionTarget.message)}
-          onEdit={() => onBeginEdit(actionTarget.message)}
-          onCopy={() => onCopyMessage(actionTarget.message)}
-          onDelete={() => setDeleteTarget(actionTarget.message)}
-          onReport={() => setReportTarget(actionTarget.message)}
-          onClose={() => setActionTarget(null)}
-        />
-      )}
+      {actionTarget &&
+        (() => {
+          const { message, isSent, rect, canEdit, source, point } = actionTarget;
+          // Same permission gating and handlers feed both surfaces — only the
+          // presentation differs (touch overlay vs. desktop context menu).
+          const shared = {
+            canEdit,
+            canDelete: isSent || viewerIsStaff,
+            canReport: !isSent,
+            // Pin is server-gated via the DTO `canPin`; pinned/starred reflect
+            // the message's current SHARED/PRIVATE state.
+            canPin: !!message.canPin,
+            pinned: !!message.pinnedAt,
+            starred: !!message.starred,
+            onReact: (key: MessageReactionKey) => onReactionToggle(message, key, false),
+            onReply: () => onSetReply?.(message),
+            onForward: () => onForward(message),
+            onTogglePin: () => onTogglePin(message),
+            onToggleStar: () => onToggleStar(message),
+            onEdit: () => onBeginEdit(message),
+            onCopy: () => onCopyMessage(message),
+            onDelete: () => setDeleteTarget(message),
+            onReport: () => setReportTarget(message),
+            onClose: () => setActionTarget(null),
+          };
+          return source === "touch" ? (
+            <MessageActionOverlay text={message.text} isSent={isSent} anchorRect={rect} {...shared} />
+          ) : (
+            <MessageContextMenu
+              anchor={point ?? { x: isSent ? rect.right : rect.left, y: rect.top }}
+              {...shared}
+            />
+          );
+        })()}
     </>
   );
 }

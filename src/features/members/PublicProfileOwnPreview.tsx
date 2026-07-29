@@ -5,9 +5,9 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
-import { usePublicProfile } from "../../app/providers/PublicProfileProvider";
+import { usePublicProfile } from "../../app/providers/usePublicProfile";
 import {
   PublicList,
   LockedSection,

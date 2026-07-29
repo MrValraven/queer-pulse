@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
-import { useSocial } from "../../app/providers/SocialProvider";
+import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";

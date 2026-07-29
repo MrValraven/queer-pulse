@@ -9,7 +9,7 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useConnect } from "../../app/providers/useConnect";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NominateChangemakerSection } from "./NominateChangemakerSection";

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { describeError } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useUpdatePartnerAdmin } from "./api/useUpdatePartnerAdmin";
@@ -53,7 +54,7 @@ export function AdminPartnerTestimonialModal({
           showToast(
             error instanceof ApiError && error.status === 409
               ? "A quote needs an author — add one before saving"
-              : "Couldn't save that testimonial — please try again",
+              : describeError("Couldn't save that testimonial", error),
             "error",
           ),
       },

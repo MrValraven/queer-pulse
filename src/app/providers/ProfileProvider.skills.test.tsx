@@ -1,7 +1,8 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import { ProfileProvider, useProfile } from "./ProfileProvider";
+import { ProfileProvider } from "./ProfileProvider";
+import { useProfile } from "./useProfile";
 import { currentUser } from "../../features/members/data/members";
 
 function wrapper({ children }: { children: React.ReactNode }) {
@@ -29,7 +30,7 @@ describe("ProfileProvider skills draft", () => {
       }),
     );
     await act(async () => {
-      result.current.save();
+      await result.current.save();
     });
     expect(result.current.profile.skills).toEqual([
       { name: "Bike repair", meta: "" },

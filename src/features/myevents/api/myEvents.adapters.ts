@@ -3,7 +3,7 @@ import type {
   EventFilter,
   EventInviteDTO,
 } from "../../gatherings/api/events.api";
-import type { EventCat, MyEvent } from "../myEvents.types";
+import type { EventCategory, MyEvent } from "../myEvents.types";
 
 // Map each backend DTO onto the EXISTING mock view-model type (`MyEvent`) the
 // dashboard already renders and mutates locally. Fields the prototype invents
@@ -12,12 +12,12 @@ import type { EventCat, MyEvent } from "../myEvents.types";
 // optional, so nothing renders blank or throws.
 
 /**
- * The dashboard's `cat` buckets map 1:1 onto the backend's `EventFilter`
+ * The dashboard's `category` buckets map 1:1 onto the backend's `EventFilter`
  * dimension (GET /events?filter=…) — "going"/"hosting"/"waitlisted"/"past"/
  * "saved" mean the same thing on both sides. "upcoming" is a client-derived
- * pill (see `inPill`), never a `cat` value, so it's excluded here.
+ * pill (see `inPill`), never a `category` value, so it's excluded here.
  */
-const FILTER_TO_CAT: Partial<Record<EventFilter, EventCat>> = {
+const FILTER_TO_CATEGORY: Partial<Record<EventFilter, EventCategory>> = {
   going: "going",
   hosting: "hosting",
   waitlisted: "waitlisted",
@@ -44,7 +44,7 @@ export function eventCardToMyEvent(
   const end = dto.endAt ? splitIso(dto.endAt).time : undefined;
   return {
     id: dto.slug,
-    cat: FILTER_TO_CAT[filter] ?? "going",
+    category: FILTER_TO_CATEGORY[filter] ?? "going",
     slug: dto.slug,
     title: dto.title,
     date,
@@ -55,7 +55,7 @@ export function eventCardToMyEvent(
     going: dto.goingCount ?? 0,
     waitlist: dto.waitlistCount,
     online: dto.isOnline,
-    tz: dto.timezone,
+    timezone: dto.timezone,
     ticket: dto.ticketed,
     paid: dto.price,
     spotsLeft: dto.spotsLeft,
@@ -67,7 +67,7 @@ export function eventCardToMyEvent(
   };
 }
 
-/** GET /event-invites entry → `MyEvent` (the "invite" cat, under the Saved pill).
+/** GET /event-invites entry → `MyEvent` (the "invite" category, under the Saved pill).
  *  The backend's invite row nests a lean event summary (no attendee counts /
  *  org label yet — those are fetched via GET /events/:slug once opened), so
  *  those fields are left undefined rather than faked. */
@@ -76,7 +76,7 @@ export function eventInviteToMyEvent(dto: EventInviteDTO): MyEvent {
   const { date, time } = splitIso(ev?.startAt);
   return {
     id: dto.id,
-    cat: "invite",
+    category: "invite",
     slug: ev?.slug,
     title: ev?.title ?? "Event invitation",
     date,

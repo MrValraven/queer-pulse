@@ -246,13 +246,38 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
-  padding: 32px 34px;
+  padding: 38px 40px;
   box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
 }
 @media (max-width: 520px) {
   .pane {
-    padding: 24px 20px;
+    padding: 26px 20px;
   }
+}
+
+/* Vertical rhythm for a step's body. Every top-level element in a step —
+   FormFields (via .lbField, which neutralises FormField's own 16px margin) and
+   the custom blocks below — is a direct child, so this single gap is the one
+   spacer and nothing double-spaces. PaneActions sits OUTSIDE .stepBody (it's
+   rendered by the page after the step) and keeps its own footer divider. */
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.stepBody .lbField {
+  /* Out-specifies FormField's own `.field { margin-bottom: 16px }` (0,2,0 vs
+     0,1,0) so the flex gap alone drives field-to-field rhythm — locally, with
+     the shared FormField left untouched. */
+  margin-bottom: 0;
+}
+
+/* Serif title + sub kept as one flex child so h2→sub stays tight while the
+   whole header sits one gap-step above the first field. */
+.paneHead {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 .paneH2 {
   font-family: var(--serif);
@@ -260,7 +285,6 @@
   font-size: 27px;
   color: var(--text-strong);
   letter-spacing: -0.012em;
-  margin-bottom: 6px;
 }
 .paneH2 em {
   font-style: italic;
@@ -270,7 +294,6 @@
   font-size: 14.5px;
   color: var(--ink-60);
   line-height: 1.65;
-  margin-bottom: 26px;
   max-width: 56ch;
 }
 .groupH {
@@ -279,9 +302,18 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-strong);
-  margin: 28px 0 14px;
+  margin: 0;
   padding-top: 22px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+/* Tightly-coupled sub-groups that should hug rather than take a full gap step:
+   the map + its "pin placed" caption, the hours toolbar + day grid. */
+.mapWrap,
+.hoursSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* ===== Generic field bits the steps reuse ===== */
@@ -371,7 +403,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 14px 10px;
+  padding: 16px 10px;
   line-height: 1.15;
 }
 .priceSym {
@@ -407,12 +439,13 @@
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 16px;
-  padding: 22px;
+  padding: 24px;
   cursor: pointer;
   transition:
-    border-color 0.22s var(--ease),
-    background 0.22s var(--ease),
-    transform 0.22s var(--ease);
+    border-color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .pathCard:not(.pathCardOn):hover {
@@ -467,11 +500,10 @@
   display: flex;
   gap: 12px;
   align-items: flex-start;
-  padding: 14px 16px;
+  padding: 15px 17px;
   background: rgba(var(--accent-rgb), 0.06);
   border: 1px solid rgba(var(--accent-rgb), 0.18);
   border-radius: 13px;
-  margin-top: 18px;
 }
 .consent svg {
   color: var(--accent-ink);
@@ -489,7 +521,6 @@
 }
 
 .dupNotice {
-  margin-top: 10px;
   border: 1px solid rgba(var(--accent-rgb), 0.3);
   background: rgba(var(--accent-rgb), 0.06);
   border-radius: 13px;
@@ -552,7 +583,6 @@
 
 /* ===== Reveal block (evidence) ===== */
 .revealBlock {
-  margin-top: 12px;
   padding: 16px 18px;
   background: rgba(var(--jade-rgb), 0.05);
   border: 1px dashed rgba(var(--jade-rgb), 0.3);
@@ -589,14 +619,15 @@
 .radioOpt,
 .verifyOpt {
   text-align: left;
-  padding: 15px 17px;
+  padding: 17px 18px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 13px;
   cursor: pointer;
   background: transparent;
   transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
+    border-color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
   width: 100%;
 }
 @media (hover: hover) {
@@ -829,7 +860,6 @@
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 12px;
 }
 .openNow {
   font-size: 12px;
@@ -926,7 +956,7 @@
 }
 .htimes input {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
@@ -956,7 +986,6 @@
   flex: 1;
 }
 .mapBox {
-  margin-top: 12px;
   aspect-ratio: 16 / 7;
   border-radius: 14px;
   overflow: hidden;
@@ -980,16 +1009,39 @@
   font-size: 12.5px;
   color: var(--jade);
   font-weight: 600;
-  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
+}
+.mapStatusError {
+  font-size: 12.5px;
+  font-weight: 600;
+  /* Matches FormField's own .error token (WCAG 3.3.1 contrast-vetted), so a
+     link-resolve failure reads with the same weight as a field error. */
+  color: var(--accent-text);
+}
+.usePlaceNameChip {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border: 1px solid rgba(var(--plum-rgb), 0.2);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--plum);
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .usePlaceNameChip:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
 }
 .onlineHint {
   font-size: 12.5px;
   color: var(--ink-40);
   line-height: 1.5;
-  margin-bottom: 12px;
 }
 
 /* ===== Gallery ===== */
@@ -1041,7 +1093,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 18px;
+  padding: 18px 20px;
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.18);
   border-radius: 14px;
@@ -1062,7 +1114,7 @@
 /* ===== Pane footer (needed bar + actions) ===== */
 .paneFooter {
   padding-top: 24px;
-  margin-top: 8px;
+  margin-top: 22px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .paneActions {
@@ -1071,6 +1123,11 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 14px;
+}
+/* When Back is hidden (edit mode's first step), Next sits alone on the right
+   instead of drifting to flex-start. */
+.paneActionsEnd {
+  justify-content: flex-end;
 }
 .neededBar {
   display: flex;
@@ -1164,7 +1221,7 @@
 
 /* ===== Review recap ===== */
 .recapGroup {
-  margin-bottom: 22px;
+  margin-bottom: 0;
 }
 .recapHead {
   font-size: 11px;
@@ -1233,7 +1290,6 @@
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 12px;
   padding: 14px 16px;
-  margin-bottom: 22px;
 }
 .sbK {
   font-size: 10.5px;
@@ -1262,7 +1318,6 @@
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.18);
   border-radius: 12px;
-  margin-bottom: 22px;
 }
 .vlAv {
   width: 30px;
@@ -1295,7 +1350,6 @@
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.18);
   border-radius: 14px;
-  margin-bottom: 22px;
 }
 .submitNote .ic {
   width: 34px;
@@ -1323,7 +1377,6 @@
   display: flex;
   flex-direction: column;
   gap: 11px;
-  margin-bottom: 22px;
 }
 .flagOuting {
   border-left: 3px solid var(--accent);
@@ -1981,45 +2034,195 @@
   color: rgba(var(--cream-rgb), 0.78);
   font-weight: 700;
 }
-.demoFlip {
-  margin-top: 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.demoFlip span {
-  font-size: 11px;
-  color: rgba(var(--cream-rgb), 0.5);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-.demoFlip button {
-  font-size: 12px;
-  color: rgba(var(--cream-rgb), 0.7);
-  background: transparent;
-  border: 1px solid rgba(var(--cream-rgb), 0.2);
-  border-radius: 999px;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition:
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .demoFlip button:hover {
-    border-color: rgba(var(--cream-rgb), 1);
-    color: rgba(var(--cream-rgb), 1);
+
+/* =========================================================================
+   Motion polish — refined & subtle. Every keyframe below is opt-in via
+   `prefers-reduced-motion: no-preference`, so with reduced motion elements
+   render in their natural (visible) resting state and nothing moves.
+   Keyframes are local copies — a CSS module can't reference the global ones
+   in src/styles/tokens/effects.css (the name gets scoped to a dead hash).
+   ========================================================================= */
+
+@keyframes lbFieldIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
-.demoFlip button:focus-visible {
-  outline: 2px solid var(--cream);
-  outline-offset: 2px;
+@keyframes lbFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.demoFlip .demoFlipOn {
-  background: rgba(var(--cream-rgb), 0.14);
-  color: rgba(var(--cream-rgb), 1);
-  border-color: rgba(var(--cream-rgb), 0.4);
+@keyframes lbBarIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes lbPop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Gentle halo breathing on the current tracker dot. */
+@keyframes lbDotPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 9px rgba(var(--accent-rgb), 0.08);
+  }
+}
+/* Small fade + scale for pills/chips appearing (a 10px slide reads as a jump
+   on a small element). */
+@keyframes lbPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* --- Staggered step entrance: each top-level element rises in sequence.
+     Replays on every step change because the step (and thus .stepBody)
+     remounts. Snappy: 260ms each, delays capped so a long step still
+     finishes fast. --- */
+  .stepBody > * {
+    animation: lbFieldIn 260ms var(--ease-out) both;
+  }
+  .stepBody > *:nth-child(1) {
+    animation-delay: 20ms;
+  }
+  .stepBody > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .stepBody > *:nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .stepBody > *:nth-child(4) {
+    animation-delay: 140ms;
+  }
+  .stepBody > *:nth-child(5) {
+    animation-delay: 180ms;
+  }
+  .stepBody > *:nth-child(6) {
+    animation-delay: 220ms;
+  }
+  .stepBody > *:nth-child(7) {
+    animation-delay: 260ms;
+  }
+  .stepBody > *:nth-child(n + 8) {
+    animation-delay: 300ms;
+  }
+
+  /* --- "What's still needed" bar drops in when validation blocks. --- */
+  .neededBar {
+    animation: lbBarIn 260ms var(--ease-out) both;
+  }
+
+  /* --- Wizard chrome --- */
+  .wpDone .wpN {
+    animation: lbPop 300ms var(--ease);
+  }
+  .draftStatus {
+    animation: lbFadeIn 300ms var(--ease-out) both;
+  }
+  .draftBanner {
+    animation: lbBarIn 320ms var(--ease-out) both;
+  }
+
+  /* --- Live preview: new nodes glide in as data is entered. React keeps
+     existing nodes across keystrokes, so only freshly-mounted pieces animate
+     (new tags, chips, what-it-is lines, badges, sections). --- */
+  .dirBadge,
+  .dirTags span,
+  .pdChips span,
+  .pdWit li,
+  .pdSec {
+    animation: lbFieldIn 300ms var(--ease-out) both;
+  }
+
+  /* --- Form-side "add" interactions: a new what-it-is line rises in, a new
+     tag pops in. Keyed by id, so only the freshly-added element animates. --- */
+  .witLine {
+    animation: lbFieldIn var(--dur-base) var(--ease-out) both;
+  }
+  .tagPill {
+    animation: lbPopIn var(--dur-base) var(--ease-out) both;
+  }
+
+  /* --- Opening-hours: toggling a day (or "mark all closed" / "copy Monday")
+     swaps the day's fixed 1fr cell between the two time inputs and the "Closed"
+     label. Only the content changes, so cross-fade whichever mounts — no layout
+     shift, just a soft change instead of a snap. The OPEN/CLOSED pill colour
+     already transitions on .htg. --- */
+  .htimes input,
+  .htimes .dash,
+  .closedLbl {
+    animation: lbFadeIn var(--dur-fast) var(--ease-out) both;
+  }
+
+  /* --- Success panel cascade (statusCheck keeps its own checkPop). --- */
+  .tk {
+    animation: lbFieldIn 320ms var(--ease-out) both;
+  }
+  .tk:nth-child(1) {
+    animation-delay: 0.35s;
+  }
+  .tk:nth-child(2) {
+    animation-delay: 0.48s;
+  }
+  .tk:nth-child(3) {
+    animation-delay: 0.61s;
+  }
+  .tkCurrent .tkDot {
+    animation: lbDotPulse 2.4s var(--ease-std) 0.9s infinite;
+  }
+  .statusTitle {
+    animation: lbFieldIn 360ms var(--ease-out) 0.28s both;
+  }
+  .bizEcho {
+    animation: lbFieldIn 360ms var(--ease-out) 0.38s both;
+  }
+  .statusNote {
+    animation: lbFieldIn 360ms var(--ease-out) 0.7s both;
+  }
+  .statusActions {
+    animation: lbFieldIn 360ms var(--ease-out) 0.82s both;
+  }
+  .statusMeta {
+    animation: lbFieldIn 340ms var(--ease-out) 0.92s both;
+  }
+
+  /* --- Directory-card empty→filled cross-fade. --- */
+  .dirCard {
+    transition:
+      border-color 0.35s var(--ease),
+      background 0.35s var(--ease);
+  }
 }

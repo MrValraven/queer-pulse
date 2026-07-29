@@ -197,7 +197,7 @@ export const admin: Catalog = {
   "members.drawer.reasonRequiredToast":
     "É necessário um motivo antes de remover",
   "members.drawer.glanceTitle": "Resumo rápido",
-  "members.drawer.graphTitle": "Rede de avais — quem confia nesta pessoa",
+  "members.drawer.graphTitle": "Rede de avais — confiança nos dois sentidos",
   "members.drawer.graphAriaLabel": "Abrir a rede de confiança completa",
   "members.drawer.exploreCta": "Explorar rede",
   "members.drawer.communitiesTitle": "Comunidades",
@@ -281,6 +281,10 @@ export const admin: Catalog = {
     "{count} pessoa avaliza {name}. Uma rede mútua é sinal de confiança — não uma métrica para otimizar.",
   "members.detail.graphNote_other":
     "{count} pessoas avalizam {name}. Uma rede mútua é sinal de confiança — não uma métrica para otimizar.",
+  "members.detail.graphNoteMutual_one":
+    "{count} pessoa avaliza {name}, que avaliza {given} em troca. Uma rede mútua é sinal de confiança — não uma métrica para otimizar.",
+  "members.detail.graphNoteMutual_other":
+    "{count} pessoas avalizam {name}, que avaliza {given} em troca. Uma rede mútua é sinal de confiança — não uma métrica para otimizar.",
   "members.detail.removeBody":
     "Isto encerra a participação de {name} na comunidade, oculta o conteúdo dessa pessoa e essa pessoa é notificada com o teu motivo e o direito a recurso. Os avais que deu a outras pessoas continuam válidos. Fica registado no registo de auditoria em teu nome.",
   "members.communities.role.owner": "responsável",
@@ -353,10 +357,34 @@ export const admin: Catalog = {
   "adminSafeSpaces.modal.savedToast":
     "O perfil de espaço seguro de {name} foi guardado",
 
+  // ── Fila de espaços do diretório ──────────────────────────────────────────
+  "adminListings.title": "Espaços do <em>diretório</em>",
+  "adminListings.header.eyebrow": "Moderação",
+  "adminListings.header.title": "Rever <em>submissões</em>",
+  "adminListings.header.sub":
+    "Todos os espaços que alguém adicionou ao diretório. Avança um espaço quando estiver pronto, ou devolve-o com uma pergunta rápida.",
+  "adminListings.empty": "Nada nesta fila de momento.",
+  "adminListings.unknownSubmitter": "Membro desconhecido",
+  "adminListings.filter.all": "Todos",
+  "adminListings.filter.review": "Em revisão",
+  "adminListings.filter.question": "Pergunta rápida",
+  "adminListings.filter.live": "Publicado",
+  "adminListings.status.review": "Em revisão",
+  "adminListings.status.question": "Pergunta rápida",
+  "adminListings.status.live": "Publicado",
+  "adminListings.advance.question": "Fazer uma pergunta",
+  "adminListings.advance.live": "Publicar",
+  "adminListings.sendBackCta": "Voltar a revisão",
+  "adminListings.toast.moved": "{name} movido para {status}.",
+
   // ── Moderação ──────────────────────────────────────────────────────────────
   "moderation.title": "Moderação · <em>triagem</em>",
   "moderation.header.eyebrow": "Fila de moderação",
-  "moderation.header.title": "Duas precisam de ti <em>primeiro</em>.",
+  // Título derivado do número real de denúncias em aberto (`q.counts.open`),
+  // como o cabeçalho do painel — nunca um número fixo.
+  "moderation.header.title_one": "Uma precisa de ti <em>primeiro</em>.",
+  "moderation.header.title_other": "{count} precisam de ti <em>primeiro</em>.",
+  "moderation.header.titleClear": "Ninguém à <em>espera</em>.",
   "moderation.header.sub":
     "As denúncias são ordenadas por quem está mais em risco — não pela ordem de chegada. Outing e doxxing sobem sempre ao topo, com um prazo mais apertado de 1 hora. Cada ação regista um motivo que a pessoa vai ler.",
   "moderation.tabs.open": "Em aberto",
@@ -420,6 +448,11 @@ export const admin: Catalog = {
   "moderation.reportDrawer.threadTitle": "Conversa em redor",
   "moderation.reportDrawer.flaggedTag": "Sinalizado",
   "moderation.reportDrawer.peopleTitle": "Pessoas envolvidas",
+  "moderation.reportDrawer.contextLoading": "A carregar o contexto da denúncia",
+  "moderation.reportDrawer.limitedContext":
+    "Esta denúncia chegou sem a conversa completa anexada. Podes na mesma agir a partir do resumo abaixo.",
+  "moderation.reportDrawer.reporterRole": "Quem denunciou",
+  "moderation.reportDrawer.reportedRole": "Denunciado",
   "moderation.reportDrawer.auditTitle": "Histórico de ações",
   "moderation.reportDrawer.auditEmpty":
     "Ainda não há ações registadas. Cada decisão tua fica registada aqui.",
@@ -1068,6 +1101,9 @@ export const admin: Catalog = {
     "Rede de confiança de {name}: {count} ligação de aval direta",
   "vouchGraph.preview.ariaLabel_other":
     "Rede de confiança de {name}: {count} ligações de aval diretas",
+  "vouchGraph.preview.legend.inbound": "Confiam nesta pessoa",
+  "vouchGraph.preview.legend.outbound": "Esta pessoa avaliza",
+  "vouchGraph.preview.legend.mutual": "Mútuo",
 
   // ── Definições da plataforma (/admin/settings) ────────────────────────────
   "settings.breadcrumb": "Definições",

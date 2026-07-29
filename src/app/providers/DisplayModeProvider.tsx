@@ -63,6 +63,8 @@ export function DisplayModeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!matchesBrowserQuery) return;
     window.localStorage.removeItem(INSTALLED_KEY);
+    // Reacts to the external browser media-query signal, clearing the fallback.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStickyInstalled(false);
   }, [matchesBrowserQuery]);
 

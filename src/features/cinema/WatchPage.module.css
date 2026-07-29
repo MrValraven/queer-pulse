@@ -19,6 +19,7 @@
   background: rgba(14, 8, 32, 0.86);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+  padding-block-start: max(14px, env(safe-area-inset-top));
 }
 .brand {
   display: flex;

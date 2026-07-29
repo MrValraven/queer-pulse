@@ -7,7 +7,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { useCommunityMembership } from "../../../app/providers/CommunityMembershipProvider";
+import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { useCreateCommunity } from "../api/useCommunityMutations";
@@ -118,7 +118,7 @@ export function StartCommunityPage() {
     if (!demoMode) {
       create.mutate(draftToCreateDto(draft), {
         onSuccess: (dto) => {
-          if (dto) navigate(`/community/${dto.slug}`);
+          if (dto) void navigate(`/community/${dto.slug}`);
         },
         onError: () => {
           showToast(t("communities:start.toast.createError"), "error");
@@ -141,7 +141,7 @@ export function StartCommunityPage() {
   };
 
   const back = () => {
-    if (step === 0) navigate(routes.communitiesHome);
+    if (step === 0) void navigate(routes.communitiesHome);
     else goToStep(step - 1);
   };
 

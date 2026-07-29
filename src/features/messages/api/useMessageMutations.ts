@@ -1,9 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { upsertMessage } from "../../../shared/api/messageCache";
+import type { MessageResponse } from "../../../shared/contracts/contracts";
 import {
+  addGroupMembers,
+  changeGroupMemberRole,
+  createGroup,
+  leaveGroup,
   markConversationRead,
+  removeGroupMember,
   sendMessage,
   startConversation,
+  updateGroup,
   type ConversationResponse,
 } from "./messages.api";
 import { conversationToView } from "./messages.adapters";
@@ -17,19 +25,46 @@ import type { Conversation } from "../data";
  * 403 — the composer is already severed client-side (SocialProvider.isBlocked).
  */
 
-/** POST /conversations/:id/messages. */
-export function useSendMessage(conversationId: string | null) {
+/** POST /conversations/:id/messages. `clientMessageId` is the sender's
+ *  idempotency key (see the outbox in `useMessagesController`). The conversation
+ *  id is passed at mutate time — not bound at hook creation — so the offline
+ *  outbox can replay a pending message to ANY thread, not just the open one. On
+ *  success the server row is patched straight into the thread cache (deduped
+ *  against our optimistic bubble by that same client id) instead of refetching. */
+export function useSendMessage() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { body: string; replyToId?: string }>({
-    mutationFn: async ({ body, replyToId }) => {
-      if (demoMode || !conversationId) return;
-      await sendMessage(conversationId, body, replyToId);
+  return useMutation<
+    MessageResponse | null,
+    Error,
+    {
+      conversationId: string;
+      body: string;
+      replyToId?: string;
+      clientMessageId?: string;
+      forwarded?: boolean;
+    }
+  >({
+    mutationFn: async ({
+      conversationId,
+      body,
+      replyToId,
+      clientMessageId,
+      forwarded,
+    }) => {
+      if (demoMode) return null;
+      return sendMessage(
+        conversationId,
+        body,
+        replyToId,
+        clientMessageId,
+        forwarded,
+      );
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    onSuccess: (message, { conversationId }) => {
+      if (demoMode || !message) return;
+      upsertMessage(queryClient, conversationId, message);
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }
@@ -47,7 +82,135 @@ export function useStartConversation() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+/** POST /conversations/group — create a group. Returns the opened thread view
+ *  (null in demo, where the controller builds the local mock group instead). */
+export function useCreateGroup() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    Conversation | null,
+    Error,
+    { title: string; memberHandles: string[]; avatarUrl?: string }
+  >({
+    mutationFn: async ({ title, memberHandles, avatarUrl }) => {
+      if (demoMode) return null;
+      const dto = await createGroup(title, memberHandles, avatarUrl);
+      return conversationToView(dto);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+/** POST /conversations/:id/leave — leave a group. Demo is a local no-op (the
+ *  controller marks the thread left in memory). */
+export function useLeaveGroup() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (conversationId) => {
+      if (demoMode || !conversationId) return;
+      await leaveGroup(conversationId);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+/**
+ * Group management (feature #17 Phase 2). Each live mutation calls the API — the
+ * SERVER re-checks the caller's role on every one, so the client's can-flags are
+ * only a UI hint — then invalidates `["conversations"]` (the realtime layer also
+ * fans a refetch to affected members). Demo mode is a local no-op: the returned
+ * null tells the controller to simulate the change on the in-memory mock group.
+ * Live mutations return the updated group view so the controller patches it in
+ * without waiting for the refetch.
+ */
+export function useAddGroupMembers() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    Conversation | null,
+    Error,
+    { conversationId: string; memberHandles: string[] }
+  >({
+    mutationFn: async ({ conversationId, memberHandles }) => {
+      if (demoMode) return null;
+      return conversationToView(await addGroupMembers(conversationId, memberHandles));
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+export function useRemoveGroupMember() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    Conversation | null,
+    Error,
+    { conversationId: string; userId: string }
+  >({
+    mutationFn: async ({ conversationId, userId }) => {
+      if (demoMode) return null;
+      return conversationToView(await removeGroupMember(conversationId, userId));
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+export function useChangeGroupMemberRole() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    Conversation | null,
+    Error,
+    { conversationId: string; userId: string; role: "admin" | "member" }
+  >({
+    mutationFn: async ({ conversationId, userId, role }) => {
+      if (demoMode) return null;
+      return conversationToView(
+        await changeGroupMemberRole(conversationId, userId, role),
+      );
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+export function useUpdateGroup() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    Conversation | null,
+    Error,
+    { conversationId: string; title?: string; avatarUrl?: string }
+  >({
+    mutationFn: async ({ conversationId, title, avatarUrl }) => {
+      if (demoMode) return null;
+      return conversationToView(
+        await updateGroup(conversationId, { title, avatarUrl }),
+      );
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }
@@ -67,7 +230,7 @@ export function useMarkRead() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 }

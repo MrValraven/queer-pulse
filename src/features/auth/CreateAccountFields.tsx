@@ -54,6 +54,7 @@ export function AccountFields({
           <input
             type="text"
             placeholder={t("auth:createAccount.field.firstName.placeholder")}
+            autoComplete="given-name"
             value={first}
             onChange={(e) => setFirst(e.target.value)}
             onBlur={() => touch("first")}
@@ -68,6 +69,7 @@ export function AccountFields({
           <input
             type="text"
             placeholder={t("auth:createAccount.field.lastName.placeholder")}
+            autoComplete="family-name"
             value={last}
             onChange={(e) => setLast(e.target.value)}
             onBlur={() => touch("last")}
@@ -79,7 +81,12 @@ export function AccountFields({
         label={t("auth:createAccount.field.email.label")}
         helper={t("auth:createAccount.field.email.helper")}
       >
-        <input type="email" value={user?.email ?? ""} disabled />
+        <input
+          type="email"
+          autoComplete="email"
+          value={user?.email ?? ""}
+          disabled
+        />
       </FormField>
     </div>
   );

@@ -1,33 +1,33 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
   type ReactNode,
 } from "react";
-import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
-import {
-  currentUser,
-  type Member,
-  type SkillItem,
-  type SocialLink,
-  type WorkItem,
-} from "../../features/members/data/members";
-import type { OpenToEntry } from "../../features/members/openTo.data";
+import { currentUser, type Member } from "../../features/members/data/members";
 import { useAuth } from "./authContext";
 import { useDemoMode } from "./DemoModeProvider";
 import type { AuthUser } from "../../features/auth/api/auth.api";
 import { useUpdateProfile } from "../../features/members/api/useUpdateProfile";
-import { useUpdateProfileLists } from "../../features/members/api/useUpdateProfileLists";
+import {
+  useUpdateProfileLists,
+  type ProfileLists,
+} from "../../features/members/api/useUpdateProfileLists";
 import { useMemberProfile } from "../../features/members/api/useMemberProfile";
-import type {
-  ProfileDTO,
-  UpdateProfileDTO,
-} from "../../features/members/api/members.api";
+import type { ProfileDTO } from "../../features/members/api/members.api";
 import { useSessionBootstrapSettled } from "../../shared/api/useSessionBootstrap";
+import { reasonFor } from "../../shared/api/errorMessage";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  ProfileContext,
+  toDraft,
+  draftToUpdateDto,
+  isDraftDirty,
+  type ProfileContextValue,
+  type ProfileDraft,
+} from "./useProfile";
 
 /**
  * The logged-in member's profile: the authenticated user's identity fields (real
@@ -58,119 +58,8 @@ function profileFromAuth(
   };
 }
 
-/** The editable subset of the logged-in member's profile. */
-export interface ProfileDraft {
-  photo?: string;
-  first: string;
-  last: string;
-  role: string;
-  pronouns: string;
-  hood: string;
-  bio: string;
-  /** Free-text "what I'm in the middle of" status, shown in the profile's Now card. */
-  now: string;
-  /** What the member is open to — the chips under the Now status. */
-  openTo: OpenToEntry[];
-  tags: string[];
-  visibility: VisibilityMode;
-  /** Social / web links — persisted on save via PUT /profiles/me/socials. */
-  socials: SocialLink[];
-  /** Selected work — persisted on save via PUT /profiles/me/work. */
-  work: WorkItem[];
-  /** Skills offered — persisted on save via PUT /profiles/me/skills. */
-  skills: SkillItem[];
-  /** Private Settings → Interests preferences — not shown on the profile. */
-  identities: string[];
-  lookingFor: string[];
-  /** Whether `lookingFor` is shown on the profile to other viewers. */
-  lookingForPublic: boolean;
-  /** Whether the member's trust network (vouchers/vouched-for) is hidden
-   *  from other members. Admins can still see it for safety. */
-  privateNetwork: boolean;
-  /** Ordered slugs of the communities the member has chosen to feature on
-   *  their profile — editable via the featured-communities picker. */
-  featuredCommunities: string[];
-}
-
-export function toDraft(m: Member): ProfileDraft {
-  return {
-    photo: m.photo,
-    first: m.first,
-    last: m.last,
-    role: m.role,
-    pronouns: m.pronouns ?? "",
-    hood: m.hood,
-    bio: m.bio,
-    now: m.now,
-    openTo: m.openTo.map((entry) => ({ ...entry })),
-    tags: [...m.tags],
-    visibility: m.visibility,
-    socials: (m.socials ?? []).map((s) => ({ ...s })),
-    work: m.work.map((w) => ({ ...w })),
-    skills: m.skills.map((s) => ({ ...s })),
-    identities: [...(m.identities ?? [])],
-    lookingFor: [...(m.lookingFor ?? [])],
-    lookingForPublic: m.lookingForPublic ?? false,
-    privateNetwork: m.privateNetwork ?? false,
-    featuredCommunities: (m.featuredCommunities ?? []).map((ref) => ref.slug),
-  };
-}
-
-/** Map the editable draft to the backend's PATCH /profiles/me payload. `d.photo`
- *  is the storage key from `AvatarEditor`'s upload (or `undefined` after a
- *  removal); sending `d.photo || null` lets a removal clear the stored avatar
- *  the same way `SubprofileMetaForm` does for a subprofile's `avatarUrl`. */
-export function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
-  return {
-    firstName: d.first.trim(),
-    lastName: d.last.trim(),
-    pronouns: d.pronouns.trim(),
-    tagline: d.role.trim(),
-    bio: d.bio.trim(),
-    location: d.hood.trim(),
-    avatarUrl: d.photo || null,
-    visibility: d.visibility,
-    now: d.now.trim(),
-    // `OpenToEntry` is structurally the wire shape (OpenToId ⊆ string), so the
-    // draft entries pass straight through — customs keep the member's words.
-    openTo: d.openTo,
-    tags: d.tags,
-    identities: d.identities,
-    lookingFor: d.lookingFor,
-    lookingForPublic: d.lookingForPublic,
-    privateNetwork: d.privateNetwork,
-    featuredCommunities: d.featuredCommunities,
-  };
-}
-
-interface ProfileContextValue {
-  /** Committed, live profile of the logged-in member — what their own hero renders. */
-  profile: Member;
-  isEditing: boolean;
-  draft: ProfileDraft;
-  /** True for a few seconds after a save, to drive the confirmation banner. */
-  justSaved: boolean;
-  /**
-   * Increments once per successful save. A save signal for state that lives
-   * OUTSIDE react-query and so can't be reached by `invalidateQueries` — see
-   * `useDiscoverableIdentities`, whose server-derived `available` list is a
-   * function of the `identities` this save just persisted.
-   */
-  savedVersion: number;
-  /** True while the save request is in flight (live mode). */
-  isSaving: boolean;
-  /** Set when a save fails so the edit bar can surface it; cleared on retry. */
-  saveError: string | null;
-  startEditing: () => void;
-  cancelEditing: () => void;
-  /** Persists the draft; resolves `true` on success, `false` on failure. */
-  save: () => Promise<boolean>;
-  updateDraft: (patch: Partial<ProfileDraft>) => void;
-}
-
-const ProfileContext = createContext<ProfileContextValue | null>(null);
-
 export function ProfileProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
   const bootstrapSettled = useSessionBootstrapSettled();
@@ -185,10 +74,22 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   // members' profiles app-wide, and gating it globally would needlessly delay
   // every profile page; passing `undefined` here only holds off this
   // own-profile call, since the hook already disables on a falsy slug.
-  const { data: ownProfile } = useMemberProfile(
+  const {
+    data: ownProfile,
+    isError: ownProfileErrored,
+    refetch: refetchOwnProfile,
+  } = useMemberProfile(
     demoMode || !bootstrapSettled ? undefined : user?.profile.slug,
   );
   const base = (!demoMode && ownProfile?.member) || currentUser;
+
+  // Live mode only: the own-profile fetch hasn't landed yet (and hasn't errored),
+  // so `base` is still the mock `currentUser`. The page uses this to skeleton the
+  // self view instead of flashing mock bio/work/tags as if they were real. Demo
+  // mode is never "loading" — the mock IS the source of truth there.
+  const isProfileLoading =
+    !demoMode && !ownProfileErrored && !ownProfile?.member;
+  const isProfileError = !demoMode && ownProfileErrored;
 
   // The base member (mock vs fetched) and the auth identity, merged. Stable
   // across renders so the re-seed effect only fires when one actually changes.
@@ -213,6 +114,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     if (seed === lastSeed.current) return;
     lastSeed.current = seed;
     if (isEditing) return;
+    // Re-seeds from the async /auth/me + own-profile fetch when it resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(seed);
     setDraft(toDraft(seed));
   }, [seed, isEditing]);
@@ -243,29 +146,43 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const save = useCallback(async (): Promise<boolean> => {
     setSaveError(null);
+    // Validate before persisting: a blank first name used to silently revert to
+    // the previous value on save. Surface it instead so the member knows why.
+    if (!draft.first.trim()) {
+      setSaveError(t("members:profileEdit.validation.nameRequired"));
+      return false;
+    }
     // Set (live mode) once the PATCH resolves; stays undefined in demo mode,
     // where `persistProfile` is a no-op and never touches the network.
     let savedProfile: ProfileDTO | undefined;
     try {
       // Persist to the backend first (no-op in demo mode); only commit the live
       // profile and show the confirmation once it actually succeeds. The core
-      // fields go through PATCH /profiles/me; the editable draft lists (work,
-      // socials, skills) persist via PUT /profiles/me/*; the still-untouched
-      // lists (groups, shapings) re-send from the committed profile
-      // (idempotent full-replace).
+      // fields go through PATCH /profiles/me; each editable draft list persists
+      // via its own PUT /profiles/me/* — but ONLY the lists the member actually
+      // changed this session, so an untouched list is never full-replaced (which
+      // also avoids re-deriving group slugs from names on every save).
+      const sameAsCommitted = (next: unknown, committed: unknown) =>
+        JSON.stringify(next) === JSON.stringify(committed);
+      const changedLists: ProfileLists = {};
+      if (!sameAsCommitted(draft.work, profile.work))
+        changedLists.work = draft.work;
+      if (!sameAsCommitted(draft.skills, profile.skills))
+        changedLists.skills = draft.skills;
+      if (!sameAsCommitted(draft.board, profile.board))
+        changedLists.board = draft.board;
+      if (!sameAsCommitted(draft.groups, profile.groups))
+        changedLists.groups = draft.groups;
+      if (!sameAsCommitted(draft.shapings, profile.shapings))
+        changedLists.shapings = draft.shapings;
+      if (!sameAsCommitted(draft.socials ?? [], profile.socials ?? []))
+        changedLists.socials = draft.socials;
+
       savedProfile = await persistProfile(draftToUpdateDto(draft));
-      await persistLists({
-        work: draft.work,
-        skills: draft.skills,
-        groups: profile.groups,
-        shapings: profile.shapings,
-        socials: draft.socials,
-      });
+      await persistLists(changedLists);
     } catch (err) {
       setSaveError(
-        err instanceof Error && err.message
-          ? err.message
-          : "We couldn't save your profile. Please try again.",
+        reasonFor(err) ?? "We couldn't save your profile. Please try again.",
       );
       return false;
     }
@@ -295,6 +212,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       socials: draft.socials.filter((s) => s.urlOrHandle.trim()),
       work: draft.work,
       skills: draft.skills,
+      board: draft.board,
+      groups: draft.groups,
+      shapings: draft.shapings,
       identities: draft.identities,
       lookingFor: draft.lookingFor,
       lookingForPublic: draft.lookingForPublic,
@@ -312,7 +232,35 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     if (savedTimer.current) clearTimeout(savedTimer.current);
     savedTimer.current = setTimeout(() => setJustSaved(false), 5000);
     return true;
-  }, [draft, persistProfile, persistLists, profile.groups, profile.shapings]);
+  }, [
+    draft,
+    persistProfile,
+    persistLists,
+    profile.work,
+    profile.skills,
+    profile.board,
+    profile.groups,
+    profile.shapings,
+    profile.socials,
+    t,
+  ]);
+
+  // Draft ≠ committed profile — drives the unsaved-changes indicator, the
+  // navigation guard, and confirm-on-discard.
+  const isDirty = useMemo(
+    () => isEditing && isDraftDirty(draft, profile),
+    [isEditing, draft, profile],
+  );
+
+  const requestCancel = useCallback(() => {
+    if (isDirty && !window.confirm(t("members:profileEdit.discardConfirm")))
+      return;
+    cancelEditing();
+  }, [isDirty, cancelEditing, t]);
+
+  const retryProfile = useCallback(() => {
+    void refetchOwnProfile();
+  }, [refetchOwnProfile]);
 
   const value = useMemo<ProfileContextValue>(
     () => ({
@@ -323,8 +271,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       savedVersion,
       isSaving,
       saveError,
+      isDirty,
+      isProfileLoading,
+      isProfileError,
+      retryProfile,
       startEditing,
       cancelEditing,
+      requestCancel,
       save,
       updateDraft,
     }),
@@ -336,8 +289,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       savedVersion,
       isSaving,
       saveError,
+      isDirty,
+      isProfileLoading,
+      isProfileError,
+      retryProfile,
       startEditing,
       cancelEditing,
+      requestCancel,
       save,
       updateDraft,
     ],
@@ -346,10 +304,4 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   return (
     <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
   );
-}
-
-export function useProfile(): ProfileContextValue {
-  const ctx = useContext(ProfileContext);
-  if (!ctx) throw new Error("useProfile must be used within a ProfileProvider");
-  return ctx;
 }

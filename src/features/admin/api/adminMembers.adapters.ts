@@ -7,6 +7,7 @@ import type {
   DrawerStat,
   FlaggedMember,
   FlaggedStatusId,
+  GraphNode,
   MemberDetail,
   ModerationEntry,
   VouchAvatar,
@@ -18,6 +19,7 @@ import type {
   FlaggedMemberDTO,
   ModerationState,
   VouchAvatarDTO,
+  VouchGraphNodeDTO,
 } from "./adminMembers.api";
 
 /**
@@ -205,12 +207,19 @@ function glanceFor(
   ];
 }
 
-/** "21 members vouch for Inês." — composed (never fabricated: only the real
- *  `vouchCount` and the member's own first name go into the sentence). */
+/** "21 members vouch for Inês" — or, once the member has vouched for others,
+ *  "…, who vouches for 3 in return". Composed (never fabricated: only the real
+ *  inbound `vouchCount`, outbound `outboundVouchCount`, and the member's own
+ *  first name go into the sentence). Plurals key off the inbound count. */
 function graphNoteFor(detailDto: AdminMemberDetailDTO, t: TFunction): string {
   const firstName = detailDto.name.split(" ")[0] || detailDto.name;
-  return t("admin:members.detail.graphNote", {
+  const noteKey =
+    detailDto.outboundVouchCount > 0
+      ? "admin:members.detail.graphNoteMutual"
+      : "admin:members.detail.graphNote";
+  return t(noteKey, {
     count: detailDto.vouchCount,
+    given: detailDto.outboundVouchCount,
     name: firstName,
   });
 }
@@ -381,6 +390,15 @@ function vouchAvatarDtoToAvatar(vouchAvatarDto: VouchAvatarDTO): {
   return { initials: vouchAvatarDto.initials, tone: vouchAvatarDto.tone };
 }
 
+/** Graph node = a vouch avatar plus which way the vouch runs. */
+function graphNodeDtoToNode(graphNodeDto: VouchGraphNodeDTO): GraphNode {
+  return {
+    initials: graphNodeDto.initials,
+    tone: graphNodeDto.tone,
+    direction: graphNodeDto.direction,
+  };
+}
+
 /** GET /admin/members/:id → the drawer's `MemberDetail`. */
 export function detailDtoToMember(
   detailDto: AdminMemberDetailDTO,
@@ -405,7 +423,7 @@ export function detailDtoToMember(
     removeBody: removeBodyFor(detailDto, t),
     graph: {
       center: vouchAvatarDtoToAvatar(detailDto.graph.center),
-      nodes: detailDto.graph.nodes.map(vouchAvatarDtoToAvatar),
+      nodes: detailDto.graph.nodes.map(graphNodeDtoToNode),
     },
   };
 }

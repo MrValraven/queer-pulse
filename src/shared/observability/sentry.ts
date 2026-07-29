@@ -16,7 +16,9 @@
 
 type Extra = Record<string, unknown>;
 
-const DSN: string | undefined = import.meta.env.VITE_SENTRY_DSN;
+const DSN: string | undefined = import.meta.env.VITE_SENTRY_DSN as
+  | string
+  | undefined;
 
 /** Flipped on only when DSN + PROD + analytics consent all hold. */
 let enabled = false;

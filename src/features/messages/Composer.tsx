@@ -1,7 +1,10 @@
 // src/features/messages/Composer.tsx
-import { useRef, useLayoutEffect, useEffect, type ChangeEvent } from "react";
+import { useRef, useLayoutEffect, useEffect } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEmitTyping } from "../../shared/api/realtime";
+import { useReplyPreviewTransition } from "./useReplyPreviewTransition";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
+import { MentionText } from "../../shared/mentions/MentionText";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -33,6 +36,11 @@ export function Composer({
   const firstName = active.name.split(" ")[0]!;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emitTyping = useEmitTyping();
+  // Keeps the reply-preview banner's content mounted through its collapse/
+  // fade-out so dismissing it (✕ or post-send clear) actually animates
+  // instead of snapping away — see the hook for why the wrapper below is
+  // always rendered rather than conditionally on `replyDraft`.
+  const { previewMessage, open: replyPreviewOpen } = useReplyPreviewTransition(replyDraft);
   /** Idle timer that emits `typing:false` ~3s after the last keystroke; also
    *  cleared (and re-armed) on send/blur so we never emit a late false-then-true. */
   const typingIdleTimerRef = useRef<number | undefined>(undefined);
@@ -41,11 +49,15 @@ export function Composer({
   const lastTypingSentRef = useRef(0);
 
   // Sync height to content up to the CSS max-height (120px), then let it scroll.
+  // With `box-sizing: border-box`, `scrollHeight` excludes the borders, so
+  // adding the top+bottom border back keeps the box from under-sizing by ~3px
+  // and showing a spurious scrollbar on a single line.
   useLayoutEffect(() => {
     const node = textareaRef.current;
     if (!node) return;
     node.style.height = "auto";
-    node.style.height = `${node.scrollHeight}px`;
+    const borderY = node.offsetHeight - node.clientHeight;
+    node.style.height = `${node.scrollHeight + borderY}px`;
   }, [draft]);
 
   // Never leave a stale idle timer running past this component's lifetime
@@ -68,8 +80,8 @@ export function Composer({
     emitTyping(conversationId, false);
   }
 
-  function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    onDraftChange(event.target.value);
+  function handleChange(nextValue: string) {
+    onDraftChange(nextValue);
     const now = Date.now();
     if (now - lastTypingSentRef.current > 2000) {
       emitTyping(conversationId, true);
@@ -79,6 +91,21 @@ export function Composer({
     typingIdleTimerRef.current = window.setTimeout(() => {
       emitTyping(conversationId, false);
     }, 3000);
+  }
+
+  /** Enter-to-send (desktop, non-touch) — passed through to `MentionTextarea`,
+   *  which invokes this only when the mention suggestion popup is closed, so
+   *  Enter with the popup open still inserts the highlighted mention instead. */
+  function handleComposerKeyDown(
+    event: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) {
+    const isCoarsePointer =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(pointer: coarse)").matches;
+    if (event.key === "Enter" && !event.shiftKey && !isCoarsePointer) {
+      event.preventDefault();
+      handleSend();
+    }
   }
 
   if (active.official) {
@@ -91,46 +118,63 @@ export function Composer({
       </div>
     );
   }
+  // A member who LEFT a group keeps read access but the composer is severed
+  // (the server also rejects a post from a left member).
+  if (active.isGroup && active.hasLeft) {
+    return (
+      <div className={styles.officialBar}>
+        {t("messages:conversation.leftGroupNotice")}
+      </div>
+    );
+  }
+  const composerPlaceholder = active.isGroup
+    ? t("messages:conversation.composerGroupPlaceholder")
+    : t("messages:conversation.composerPlaceholder", { name: firstName });
 
   return (
     <div className={styles.composer}>
-      {replyDraft && (
-        <div className={styles.replyPreview}>
-          <div className={styles.replyPreviewBody}>
-            <span className={styles.replyPreviewName}>
-              {replyDraft.from === "me" ? t("messages:conversation.you") : active.name}
-            </span>
-            <span className={styles.replyPreviewSnippet}>{replyDraft.text}</span>
+      {/* Always mounted (even with nothing to reply to) so the grid-row/margin
+          transition below always has a real "closed" state to animate from —
+          `previewMessage` lags the exit animation, see the hook. */}
+      <div className={styles.replyPreviewWrap} data-open={replyPreviewOpen}>
+        {previewMessage && (
+          <div className={styles.replyPreview}>
+            <div className={styles.replyPreviewBody}>
+              <span className={styles.replyPreviewName}>
+                {previewMessage.from === "me"
+                  ? t("messages:conversation.you")
+                  : active.isGroup
+                    ? (previewMessage.senderName ?? active.name)
+                    : active.name}
+              </span>
+              <span className={styles.replyPreviewSnippet}>
+                <MentionText text={previewMessage.text} />
+              </span>
+            </div>
+            <button
+              type="button"
+              className={styles.replyPreviewClose}
+              aria-label={t("messages:actions.editCancel")}
+              onClick={onCancelReply}
+            >
+              ✕
+            </button>
           </div>
-          <button
-            type="button"
-            className={styles.replyPreviewClose}
-            aria-label={t("messages:actions.editCancel")}
-            onClick={onCancelReply}
-          >
-            ✕
-          </button>
-        </div>
-      )}
+        )}
+      </div>
       <div className={styles.composerRow}>
-        <textarea
+        <MentionTextarea
           id="messages-composer"
-          ref={textareaRef}
+          wrapClassName={styles.composerTaWrap}
           className={styles.composerTa}
-          placeholder={t("messages:conversation.composerPlaceholder", { name: firstName })}
+          placeholder={composerPlaceholder}
           value={draft}
           rows={1}
+          textareaRef={textareaRef}
+          placement="above"
           onChange={handleChange}
           onBlur={handleBlur}
-          onKeyDown={(event) => {
-            const isCoarsePointer =
-              typeof window !== "undefined" &&
-              window.matchMedia?.("(pointer: coarse)").matches;
-            if (event.key === "Enter" && !event.shiftKey && !isCoarsePointer) {
-              event.preventDefault();
-              handleSend();
-            }
-          }}
+          onKeyDown={handleComposerKeyDown}
         />
         <button
           type="button"

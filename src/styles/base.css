@@ -65,6 +65,26 @@ img {
   max-width: 100%;
 }
 
+/* Global input font-size floor. On iOS Safari, focusing a control under 16px
+   zooms the viewport. This low-specificity rule protects any input/textarea/
+   select that doesn't set its own font-size; controls with an explicit
+   class-scoped font-size (FormField, SearchInput, feature modules) out-specify
+   it and set >=16px themselves. */
+input,
+textarea,
+select {
+  font-size: max(16px, 1rem);
+}
+
+/* Drop the legacy ~300ms tap delay and double-tap-to-zoom on interactive
+   controls (page pinch-zoom is unaffected — that's why this isn't blanket). */
+button,
+a,
+summary,
+[role="button"] {
+  touch-action: manipulation;
+}
+
 /* Centered content wrapper used by every section */
 .wrap {
   max-width: var(--maxw);

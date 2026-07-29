@@ -124,7 +124,7 @@ export function RequestInviteForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate>
+    <form ref={formRef} onSubmit={(event) => void handleSubmit(event)} noValidate>
       <RequestInviteFields
         first={first}
         setFirst={setFirst}

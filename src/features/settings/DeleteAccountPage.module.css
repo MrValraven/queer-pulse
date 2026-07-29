@@ -399,9 +399,9 @@
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.15);
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   transition: border-color 0.2s;

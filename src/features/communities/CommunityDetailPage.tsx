@@ -6,7 +6,7 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { JoinModal } from "./JoinModal";
 import { EditCommunityModal } from "./EditCommunityModal";
 import type { Person } from "./communityDetails";

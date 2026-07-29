@@ -13,12 +13,39 @@
 
 .dialog {
   width: min(440px, 100%);
+  max-height: 85svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card, 22px);
   padding: 28px;
   box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.22);
   animation: qpRevealIn var(--dur-slow) var(--ease-out);
+}
+
+/* Bottom sheet on phones — in reach, clear of the notch/home indicator. */
+@media (max-width: 860px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+    padding-block-end: var(--keyboard-inset, 0px);
+  }
+  .dialog {
+    width: 100%;
+    border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
+    max-height: 92svh;
+    padding-block-end: max(28px, env(safe-area-inset-bottom));
+  }
+  .dialog:not(.dialogConfirm)::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(var(--plum-rgb), 0.18);
+    margin: 0 auto 18px;
+  }
 }
 
 .dialogConfirm {

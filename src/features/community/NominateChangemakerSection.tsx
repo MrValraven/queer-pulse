@@ -64,6 +64,8 @@ export function NominateChangemakerSection() {
           <input
             className={styles.nomInput}
             type="text"
+            autoComplete="off"
+            enterKeyHint="send"
             placeholder={t("community:changemakers.nominate.namePlaceholder")}
             value={nominee}
             onChange={(e) => setNominee(e.target.value)}

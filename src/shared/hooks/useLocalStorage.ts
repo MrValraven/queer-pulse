@@ -18,7 +18,7 @@ export function useLocalStorage<T>(
     try {
       const raw = localStorage.getItem(key);
       if (raw != null) {
-        const parsed = JSON.parse(raw);
+        const parsed: unknown = JSON.parse(raw);
         if (!validate || validate(parsed)) return parsed as T;
       }
     } catch {

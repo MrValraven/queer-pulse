@@ -103,6 +103,7 @@ export function ConnectModal({
       }}
     >
       <div className={`${styles.modal} ${plum ? styles.modalSent : ""}`}>
+        {!plum && <div className={styles.grabber} aria-hidden />}
         {phase !== "sending" && (
           <button
             type="button"
@@ -141,7 +142,9 @@ export function ConnectModal({
             initialReason={reason}
             sending={phase === "sending"}
             error={error}
-            onSubmit={handleSubmit}
+            onSubmit={(message, submittedReason) =>
+              void handleSubmit(message, submittedReason)
+            }
             onClose={onClose}
           />
         )}

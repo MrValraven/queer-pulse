@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -12,18 +10,9 @@ import type { Job } from "../../features/economy/jobs.data";
 import { closeJob } from "../../features/economy/api/jobs.api";
 import { useDemoMode } from "./DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
-
-interface PostedJobsContextValue {
-  /** Jobs published in this session. Demo-mode source for the board, the job
-   *  detail page and the company page; see the provider docblock. */
-  postedJobs: Job[];
-  addJob: (job: Job) => void;
-  removeJob: (slug: string) => void;
-}
+import { PostedJobsContext } from "./usePostedJobs";
 
 const STORAGE_KEY = "qp-posted-jobs";
-
-const PostedJobsContext = createContext<PostedJobsContextValue | null>(null);
 
 function readInitial(): Job[] {
   if (typeof window === "undefined") return [];
@@ -88,7 +77,7 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
       if (demoMode) return;
       closeJob(slug)
         .then(() => {
-          queryClient.invalidateQueries({ queryKey: ["jobs"] });
+          void queryClient.invalidateQueries({ queryKey: ["jobs"] });
         })
         .catch((err) => {
           logError(err);
@@ -114,12 +103,4 @@ export function PostedJobsProvider({ children }: { children: ReactNode }) {
       {children}
     </PostedJobsContext.Provider>
   );
-}
-
-export function usePostedJobs() {
-  const ctx = useContext(PostedJobsContext);
-  if (!ctx) {
-    throw new Error("usePostedJobs must be used within PostedJobsProvider");
-  }
-  return ctx;
 }

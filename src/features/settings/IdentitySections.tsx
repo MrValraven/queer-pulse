@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { ChipSelect, Toggle } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDiscoverableIdentities } from "./api/useDiscoverableIdentities";

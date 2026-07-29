@@ -38,7 +38,7 @@
 }
 .brand {
   position: fixed;
-  top: 24px;
+  top: max(24px, env(safe-area-inset-top));
   left: 28px;
   z-index: 10;
   display: flex;
@@ -363,7 +363,7 @@
 .field textarea,
 .field select {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
@@ -774,7 +774,7 @@
 
 @media (max-width: 500px) {
   .brand {
-    top: 18px;
+    top: max(18px, env(safe-area-inset-top));
     left: 18px;
   }
   .card {

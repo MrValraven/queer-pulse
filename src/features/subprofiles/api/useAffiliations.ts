@@ -43,8 +43,8 @@ export function useAffiliations(subprofileId: string) {
   const queryClient = useQueryClient();
 
   const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-    queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
   };
 
   const replace = useMutation<SubprofileDTO, Error, AffiliationInputDTO[]>({

@@ -325,12 +325,12 @@
 }
 .input {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: rgba(var(--plum-rgb), 0.04);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
-  padding: 10px 13px;
+  padding: 9px 13px;
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -354,6 +354,7 @@
     transform 0.2s;
   width: 100%;
   box-shadow: 0 6px 18px -8px rgba(var(--accent-rgb), 0.7);
+  touch-action: manipulation;
 }
 @media (hover: hover) {
   .rsvpBtn:hover {
@@ -471,9 +472,55 @@
   line-height: 1.55;
 }
 
+/* Sticky RSVP reach bar — only ≤860px, where the aside drops below a long
+   description; mirrors the checkout .co-mobile-bar pattern (safe-area + tab-bar). */
+.rsvpStickyBar {
+  display: none;
+}
+.rsvpStickyBarInfo {
+  min-width: 0;
+}
+.rsvpStickyBarPrice {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.rsvpStickyBarNote {
+  font-size: 12px;
+  color: var(--ink-40);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
+  }
+  .body {
+    /* Clears the fixed RSVP bar. The installed-PWA tab-bar reserve is already
+       applied once by standalone.css on main[data-page-main], so don't add
+       var(--bottom-inset) again here. */
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  }
+  .rsvpStickyBar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--paper);
+    border-top: 1px solid rgba(var(--line-rgb), 0.1);
+    padding: 12px 20px;
+    padding-block-end: calc(
+      max(12px, env(safe-area-inset-bottom)) + var(--bottom-inset)
+    );
+    box-shadow: 0 -8px 24px -10px rgba(var(--plum-rgb), 0.15);
+    touch-action: manipulation;
   }
 }
 

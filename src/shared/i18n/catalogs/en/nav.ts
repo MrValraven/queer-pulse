@@ -16,6 +16,7 @@ export const nav: Catalog = {
   primary: "Primary",
   updateAvailable: "A new version of QueerPulse is ready.",
   updateReload: "Reload",
+  updating: "Updating…",
 
   // Primary destinations
   members: "Members",

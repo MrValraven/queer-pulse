@@ -16,23 +16,28 @@ import { routes } from "../../app/routeMap";
 import {
   CHANGELOG_DATA,
   FILTERS,
+  groupEntriesByDay,
   TYPE_BADGE_KEYS,
   type ChangelogCategory,
 } from "./changelog.data";
 import styles from "./ChangelogPage.module.css";
 
-function EntrySkeleton() {
-  // Mirrors a real .entry row: 120px date column + title/body block.
+function DaySkeleton() {
+  // Mirrors a real day group: 120px date column + two stacked entry blocks.
   return (
-    <div className={styles.entry} aria-hidden>
+    <div className={styles.dayGroup} aria-hidden>
       <SkeletonLine width={90} height={13} style={{ marginTop: 3 }} />
-      <div>
-        <div className={styles.entryHead}>
-          <SkeletonLine width={72} height={18} style={{ borderRadius: 6 }} />
-          <SkeletonLine width="50%" height={16} />
-        </div>
-        <SkeletonLine width="100%" height={14.5} style={{ marginTop: 8 }} />
-        <SkeletonLine width="92%" height={14.5} style={{ marginTop: 6 }} />
+      <div className={styles.dayEntries}>
+        {Array.from({ length: 2 }).map((_, i) => (
+          <div className={styles.entry} key={i}>
+            <div className={styles.entryHead}>
+              <SkeletonLine width={72} height={18} style={{ borderRadius: 6 }} />
+              <SkeletonLine width="50%" height={16} />
+            </div>
+            <SkeletonLine width="100%" height={14.5} style={{ marginTop: 8 }} />
+            <SkeletonLine width="92%" height={14.5} style={{ marginTop: 6 }} />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -82,8 +87,8 @@ export function ChangelogPage() {
               <div className={styles.year} aria-hidden>
                 <SkeletonLine width={120} height={32} />
               </div>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <EntrySkeleton key={i} />
+              {Array.from({ length: 3 }).map((_, i) => (
+                <DaySkeleton key={i} />
               ))}
             </div>
           ) : CHANGELOG_DATA.every((yearBlock) =>
@@ -108,39 +113,44 @@ export function ChangelogPage() {
                   (entry) => filter === "all" || entry.category === filter,
                 );
                 if (entries.length === 0) return null;
+                const days = groupEntriesByDay(entries);
                 return (
                   <div className={styles.yearBlock} key={yearBlock.year}>
                     <div className={styles.year}>
                       <em>{yearBlock.year}</em>
                     </div>
-                    {entries.map((entry) => (
-                      <FadeIn
-                        className={styles.entry}
-                        key={entry.id}
-                        delay={Math.min(row++, 8) * 60}
-                      >
-                        <div className={styles.date}>{entry.date}</div>
-                        <div>
-                          <div className={styles.entryHead}>
-                            <span
-                              className={`${styles.badge} ${styles[entry.category]}`}
+                    {days.map((day) => (
+                      <div className={styles.dayGroup} key={day.date}>
+                        <div className={styles.date}>{day.date}</div>
+                        <div className={styles.dayEntries}>
+                          {day.entries.map((entry) => (
+                            <FadeIn
+                              className={styles.entry}
+                              key={entry.id}
+                              delay={Math.min(row++, 8) * 60}
                             >
-                              {t(TYPE_BADGE_KEYS[entry.category])}
-                            </span>
-                            <div className={styles.entryTitle}>
-                              {t(entry.titleKey)}
-                            </div>
-                          </div>
-                          <div className={styles.entryBody}>
-                            <p>{t(entry.bodyKey)}</p>
-                          </div>
-                          {entry.tag && (
-                            <Link className={styles.tag} to={entry.tag.to}>
-                              {t(entry.tag.labelKey)}
-                            </Link>
-                          )}
+                              <div className={styles.entryHead}>
+                                <span
+                                  className={`${styles.badge} ${styles[entry.category]}`}
+                                >
+                                  {t(TYPE_BADGE_KEYS[entry.category])}
+                                </span>
+                                <div className={styles.entryTitle}>
+                                  {t(entry.titleKey)}
+                                </div>
+                              </div>
+                              <div className={styles.entryBody}>
+                                <p>{t(entry.bodyKey)}</p>
+                              </div>
+                              {entry.tag && (
+                                <Link className={styles.tag} to={entry.tag.to}>
+                                  {t(entry.tag.labelKey)}
+                                </Link>
+                              )}
+                            </FadeIn>
+                          ))}
                         </div>
-                      </FadeIn>
+                      </div>
                     ))}
                   </div>
                 );

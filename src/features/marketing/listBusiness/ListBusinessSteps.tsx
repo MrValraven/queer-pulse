@@ -51,7 +51,7 @@ export function StepPath({
   const { t } = useTranslation();
   const { draft, pickPath, set } = form;
   return (
-    <>
+    <div className={styles.stepBody}>
       <PaneHeader
         title={t("marketing:listBusiness.step0.title")}
         em={t("marketing:listBusiness.step0.em")}
@@ -145,7 +145,35 @@ export function StepPath({
           />
         </p>
       </div>
-    </>
+    </div>
+  );
+}
+
+/** Directory look-alikes surfaced under the name field so people don't
+ *  re-list an existing place. */
+function DuplicateNotice({
+  dups,
+}: {
+  dups: ReturnType<typeof findDuplicates>;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.dupNotice} role="alert">
+      <div className={styles.dnHead}>
+        {t("marketing:listBusiness.step1.dupHead")}
+      </div>
+      {dups.map((m) => (
+        <div key={m.name} className={styles.dupMatch}>
+          <span className={styles.dmAv}>{initials(m.name)}</span>
+          <span className={styles.dmInfo}>
+            <b>{m.name}</b>
+            <span>
+              {catLabel(t, m.cat)} · {m.hood}
+            </span>
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -155,7 +183,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
   const { draft, set, toggleCat, pickBadge } = form;
   const dups = findDuplicates(draft.name);
   return (
-    <>
+    <div className={styles.stepBody}>
       <PaneHeader
         title={t("marketing:listBusiness.step1.title")}
         em={t("marketing:listBusiness.step1.em")}
@@ -163,6 +191,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       />
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.name}
         label={t("marketing:listBusiness.step1.nameLabel")}
         required
@@ -176,26 +205,10 @@ export function StepBasics({ form }: { form: ListingForm }) {
           onChange={(e) => set({ name: e.target.value })}
         />
       </FormField>
-      {dups.length > 0 && (
-        <div className={styles.dupNotice} role="alert">
-          <div className={styles.dnHead}>
-            {t("marketing:listBusiness.step1.dupHead")}
-          </div>
-          {dups.map((m) => (
-            <div key={m.name} className={styles.dupMatch}>
-              <span className={styles.dmAv}>{initials(m.name)}</span>
-              <span className={styles.dmInfo}>
-                <b>{m.name}</b>
-                <span>
-                  {catLabel(t, m.cat)} · {m.hood}
-                </span>
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+      {dups.length > 0 && <DuplicateNotice dups={dups} />}
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.cats}
         label={t("marketing:listBusiness.step1.catsLabel")}
         required
@@ -227,6 +240,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.hood}
         label={t("marketing:listBusiness.step1.hoodLabel")}
         required
@@ -247,6 +261,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.badge}
         label={t("marketing:listBusiness.step1.badgeLabel")}
         required
@@ -311,6 +326,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       )}
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.price}
         label={t("marketing:listBusiness.step1.priceLabel")}
         required
@@ -342,6 +358,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.blurb}
         label={t("marketing:listBusiness.step1.blurbLabel")}
         required
@@ -355,7 +372,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
           onChange={(e) => set({ blurb: e.target.value })}
         />
       </FormField>
-    </>
+    </div>
   );
 }
 
@@ -370,7 +387,7 @@ export function StepStory({ form }: { form: ListingForm }) {
     setTagInput("");
   };
   return (
-    <>
+    <div className={styles.stepBody}>
       <PaneHeader
         title={t("marketing:listBusiness.step2.title")}
         em={t("marketing:listBusiness.step2.em")}
@@ -378,6 +395,7 @@ export function StepStory({ form }: { form: ListingForm }) {
       />
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.tagline}
         label={t("marketing:listBusiness.step2.taglineLabel")}
         required
@@ -398,6 +416,7 @@ export function StepStory({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        className={styles.lbField}
         id={ANCHOR.whatItIs}
         label={t("marketing:listBusiness.step2.witLabel")}
         required
@@ -435,7 +454,10 @@ export function StepStory({ form }: { form: ListingForm }) {
         </div>
       </FormField>
 
-      <FormField label={t("marketing:listBusiness.step2.tagsLabel")}>
+      <FormField
+        className={styles.lbField}
+        label={t("marketing:listBusiness.step2.tagsLabel")}
+      >
         <div className={styles.tagInputWrap}>
           <input
             type="text"
@@ -478,6 +500,7 @@ export function StepStory({ form }: { form: ListingForm }) {
       </FormField>
 
       <FormField
+        className={styles.lbField}
         label={t("marketing:listBusiness.step2.goodForLabel")}
         helper={t("marketing:listBusiness.step2.goodForHelper")}
       >
@@ -505,7 +528,10 @@ export function StepStory({ form }: { form: ListingForm }) {
         </div>
       </FormField>
 
-      <FormField label={t("marketing:listBusiness.step2.langsLabel")}>
+      <FormField
+        className={styles.lbField}
+        label={t("marketing:listBusiness.step2.langsLabel")}
+      >
         <div
           className={styles.chipRow}
           role="group"
@@ -529,6 +555,6 @@ export function StepStory({ form }: { form: ListingForm }) {
           })}
         </div>
       </FormField>
-    </>
+    </div>
   );
 }

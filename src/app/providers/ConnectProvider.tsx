@@ -1,20 +1,6 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { ConnectModal } from "../../features/connect/ConnectModal";
-
-interface ConnectContextValue {
-  /** Open the Connect modal. Pass a member slug to address it, and a reason to
-   *  preselect (`open:<id>` | `custom:<label>` | a generic REASONS id). */
-  openConnect: (slug?: string, reason?: string) => void;
-}
-
-const ConnectContext = createContext<ConnectContextValue | null>(null);
+import { ConnectContext } from "./useConnect";
 
 export function ConnectProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{
@@ -40,12 +26,4 @@ export function ConnectProvider({ children }: { children: ReactNode }) {
       )}
     </ConnectContext.Provider>
   );
-}
-
-export function useConnect() {
-  const ctx = useContext(ConnectContext);
-  if (!ctx) {
-    throw new Error("useConnect must be used within ConnectProvider");
-  }
-  return ctx;
 }

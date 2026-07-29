@@ -6,7 +6,8 @@ import { ToolPage } from "./tools/ToolPage";
 import { usePrintDocument } from "./tools/usePrintDocument";
 import { useIssuer } from "./tools/useIssuer";
 import { ContractForm } from "./ContractForm";
-import { ContractPreview, contractToText } from "./ContractPreview";
+import { ContractPreview } from "./ContractPreview";
+import { contractToText } from "./contract.helpers";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -57,7 +58,7 @@ export function ContractGeneratorPage() {
   }, []);
 
   const copyText = useCallback(() => {
-    navigator.clipboard?.writeText(contractToText(ctx, selected, lang));
+    void navigator.clipboard?.writeText(contractToText(ctx, selected, lang));
     showToast(t("economy:toolPage.copiedToast"), "success");
   }, [ctx, selected, lang, showToast, t]);
 

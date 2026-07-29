@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   FiMoreHorizontal,
   FiFlag,
@@ -11,7 +12,7 @@ import { useScrollLock } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { useSocial } from "../../app/providers/SocialProvider";
+import { useSocial } from "../../app/providers/useSocial";
 import { SAFETY_EMAIL } from "./feed.data";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import {
@@ -166,7 +167,10 @@ export function BlockConfirmModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
+  // Portaled to <body> so the fixed-position overlay stays full-screen: the
+  // feed card now carries `content-visibility: auto`, whose always-on paint
+  // containment would otherwise trap this overlay inside the card.
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -246,7 +250,8 @@ export function BlockConfirmModal({
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -298,7 +303,10 @@ export function ReportModal({
     );
   };
 
-  return (
+  // Portaled to <body> so the fixed-position overlay stays full-screen: the
+  // feed card now carries `content-visibility: auto`, whose always-on paint
+  // containment would otherwise trap this overlay inside the card.
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -383,6 +391,7 @@ export function ReportModal({
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

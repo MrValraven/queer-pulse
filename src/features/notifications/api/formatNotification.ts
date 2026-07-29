@@ -83,6 +83,25 @@ function interpolationTokens(payload: unknown): TranslateOptions {
 }
 
 /**
+ * Resolve the i18n subkey a `mention` notification's copy lives under.
+ *
+ * `mention` rows carry `payload.entityKind` (`member | community | business |
+ * event | thread`, written by the backend) identifying what was actually
+ * @-mentioned. The flat `mention.*` keys stay the **member** variant — both
+ * because that's the plain "you were mentioned" case and for backward
+ * compatibility with rows created before `entityKind` existed (no field →
+ * falls through to `mention`). Any other kind branches to its own
+ * `mention.<entityKind>.*` keys. Non-`mention` types pass through unchanged.
+ */
+function mentionKeyFor(type: string, payload: unknown): string {
+  if (type !== "mention") return type;
+  const entityKind = (payload as { entityKind?: string } | null)?.entityKind;
+  return entityKind && entityKind !== "member"
+    ? `mention.${entityKind}`
+    : "mention";
+}
+
+/**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
  * formatting lives on the frontend at all: it keeps the API language-neutral
@@ -98,7 +117,7 @@ export function formatNotification(
   t: TFunction,
 ): FormattedNotification {
   const known = isKnownKind(type);
-  const key = known ? type : FALLBACK_KEY;
+  const key = known ? mentionKeyFor(type, payload) : FALLBACK_KEY;
   const tokens = interpolationTokens(payload);
   return {
     text: t(`notifications:type.${key}.text`, tokens),

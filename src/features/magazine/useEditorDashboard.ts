@@ -109,7 +109,7 @@ function reducer(state: DashState, action: Action): DashState {
     case "setQuery":
       return { ...state, q: action.q };
     case "setFilter":
-      return { ...state, [action.key]: action.value } as DashState;
+      return { ...state, [action.key]: action.value };
     case "toggleMyQueue":
       return { ...state, myQueue: !state.myQueue };
     case "reset":

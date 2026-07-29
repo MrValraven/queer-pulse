@@ -23,7 +23,7 @@ export function listingDtoToPending(dto: ListingDTO): PendingListing {
     ref: dto.ref,
     slug: dto.slug,
     status: dto.status,
-    submittedBy: dto.submittedBy.slug,
+    submittedBy: dto.submittedBy?.slug ?? "",
     photos: Object.fromEntries(
       PHOTO_KEYS.map((photoKey) => [photoKey, dto.photos[photoKey] ?? ""]),
     ) as Record<PhotoKey, string>,

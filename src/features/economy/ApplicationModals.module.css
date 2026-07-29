@@ -36,6 +36,9 @@
   .modal {
     padding: 36px 24px 32px;
   }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 .modalSuccess {
   background: var(--plum);
@@ -138,12 +141,12 @@
 .field textarea,
 .field select {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 12px;
-  padding: 13px 15px;
+  padding: 11px 15px;
   transition:
     border-color var(--dur-base) var(--ease),
     box-shadow var(--dur-base) var(--ease);

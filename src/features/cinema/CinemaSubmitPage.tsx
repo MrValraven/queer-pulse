@@ -95,7 +95,7 @@ export function CinemaSubmitPage() {
   };
 
   const back = () => {
-    if (step === 0) navigate(routes.cinema);
+    if (step === 0) void navigate(routes.cinema);
     else goTo(step - 1);
   };
 
@@ -239,7 +239,7 @@ function SubmitDone({ onAnother }: { onAnother: () => void }) {
       <SuccessPanel
         title={t("cinema:submit.success.title")}
         em={t("cinema:submit.success.em")}
-        onClose={() => navigate(routes.cinema)}
+        onClose={() => void navigate(routes.cinema)}
         closeLabel={t("cinema:submit.success.closeLabel")}
         steps={[
           t("cinema:submit.success.step1"),

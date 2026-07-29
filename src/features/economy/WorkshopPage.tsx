@@ -11,7 +11,6 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useWorkshop } from "./api/useWorkshop";
-import type { WorkshopWithRsvp } from "./api/workshops.adapters";
 import {
   WorkshopAbout,
   WorkshopNeeds,
@@ -32,10 +31,7 @@ export function WorkshopPage() {
   // `WorkshopRsvpFields`). The field is absent in demo mode, where the booking
   // lives in the provider's session store instead — hence `Partial`, and hence
   // every reader passing a seed alongside it.
-  const { workshop, isLoading } = useWorkshop(id) as {
-    workshop: WorkshopWithRsvp | undefined;
-    isLoading: boolean;
-  };
+  const { workshop, isLoading } = useWorkshop(id);
 
   // Don't flash "not found" at someone who deep-linked while the fetch is out.
   if (isLoading) {

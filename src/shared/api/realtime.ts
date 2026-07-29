@@ -12,6 +12,12 @@ import {
 import type { QueryClient } from "@tanstack/react-query";
 import { io, type Socket } from "socket.io-client";
 import { queryClient } from "./queryClient";
+import {
+  patchMessagePinned,
+  patchMessageReactionCounts,
+  reconcileConversationHistory,
+  upsertMessage,
+} from "./messageCache";
 import { API_BASE_URL, apiAvailable } from "./config";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -33,6 +39,11 @@ import type {
 //
 // Reconnection is socket.io's job (Engine.IO backoff + heartbeat). There is
 // deliberately no hand-rolled retry/ping here.
+
+/** How long to coalesce inbound messages before emitting a single delivered ack
+ *  for a conversation. The ack is a "received up to now" watermark, so a burst
+ *  collapses to one cheap frame instead of one per message. */
+const DELIVERED_ACK_DEBOUNCE_MS = 500;
 
 /** socket.io wants event maps as listener signatures; ours are payload types. */
 type ServerListeners = {
@@ -66,14 +77,35 @@ class RealtimeClient {
    *  registered directly in `connect()` below. */
   private typingHandlers = new Set<(frame: ServerToClientEvents["typing"]) => void>();
   private readHandlers = new Set<(frame: ServerToClientEvents["read"]) => void>();
+  private deliveredHandlers = new Set<
+    (frame: ServerToClientEvents["message:delivered"]) => void
+  >();
   private presenceHandlers = new Set<(online: ReadonlySet<string>) => void>();
+  /** Per-conversation debounce timers for the outbound delivered ack — an
+   *  inbound burst coalesces into one "received up to now" frame. */
+  private deliveredAckTimers = new Map<string, number>();
   /** The current set of online user ids, maintained from `presence` (single
    *  add/remove) and `presence:snapshot` (full replace) frames. */
   private onlineUserIds = new Set<string>();
+  /** False until the first successful `connect`. A later `connect` is therefore
+   *  a genuine RECONNECT — the socket buffered nothing while it was down, so we
+   *  reconcile the open thread's history since its last known message. */
+  private hasConnectedBefore = false;
+  /** The signed-in member's user id, used to skip the echo of our OWN reaction
+   *  (already patched optimistically by the mutation) so the frame's absolute
+   *  counts never double-apply on top of that local delta. */
+  private myUserId: string | null;
 
-  constructor(url: string, qc: QueryClient) {
+  constructor(url: string, qc: QueryClient, myUserId: string | null) {
     this.url = url;
     this.qc = qc;
+    this.myUserId = myUserId;
+  }
+
+  /** Update the known user id after (re)auth — the client outlives an auth
+   *  refresh, and the reaction-echo skip must key off the current member. */
+  setMyUserId(myUserId: string | null): void {
+    this.myUserId = myUserId;
   }
 
   onStatus(cb: (connected: boolean) => void): () => void {
@@ -100,6 +132,28 @@ class RealtimeClient {
   }
   offRead(handler: (frame: ServerToClientEvents["read"]) => void): void {
     this.readHandlers.delete(handler);
+  }
+  onDelivered(
+    handler: (frame: ServerToClientEvents["message:delivered"]) => void,
+  ): () => void {
+    this.deliveredHandlers.add(handler);
+    return () => this.deliveredHandlers.delete(handler);
+  }
+  offDelivered(
+    handler: (frame: ServerToClientEvents["message:delivered"]) => void,
+  ): void {
+    this.deliveredHandlers.delete(handler);
+  }
+  /** Coalesce a delivered ack for `conversationId`: schedule one "received up to
+   *  now" frame and let a burst of inbound messages fold into it. Cheap no-op if
+   *  an ack is already pending or the socket is down. */
+  private scheduleDeliveredAck(conversationId: string): void {
+    if (this.deliveredAckTimers.has(conversationId)) return;
+    const timer = window.setTimeout(() => {
+      this.deliveredAckTimers.delete(conversationId);
+      this.socket?.emit("delivered", { conversationId });
+    }, DELIVERED_ACK_DEBOUNCE_MS);
+    this.deliveredAckTimers.set(conversationId, timer);
   }
   onPresence(handler: (online: ReadonlySet<string>) => void): () => void {
     this.presenceHandlers.add(handler);
@@ -140,7 +194,15 @@ class RealtimeClient {
         socket.emit("conversation:join", {
           conversationId: this.activeConversationId,
         });
+        // On a RECONNECT (not the first connect, whose initial page load already
+        // covers history), backfill anything missed during the gap: the socket
+        // redelivers nothing, so fetch messages since the last known id and merge
+        // (dedup by id) rather than trusting the transport or refetching page 1.
+        if (this.hasConnectedBefore) {
+          void reconcileConversationHistory(this.qc, this.activeConversationId);
+        }
       }
+      this.hasConnectedBefore = true;
     });
     socket.on("disconnect", (reason) => {
       this.emit(false);
@@ -174,13 +236,22 @@ class RealtimeClient {
       }
     });
 
-    // Cache patching. Invalidation (rather than hand-merging into cursor pages)
-    // keeps HTTP authoritative and avoids drift.
-    socket.on("message:new", ({ conversationId }) => {
-      void this.qc.invalidateQueries({
-        queryKey: ["messages", conversationId],
-      });
+    // Cache patching. An inbound message carries the full MessageResponse, so we
+    // patch it straight into the thread cache (upsert, deduped by id AND by the
+    // sender's clientMessageId — which reconciles our own optimistic bubble)
+    // instead of refetching the whole page. The reaction / updated / deleted
+    // frames below only carry ids, so those still invalidate (see each note).
+    socket.on("message:new", ({ conversationId, message }) => {
+      upsertMessage(this.qc, conversationId, message);
+      // Inbox previews + unread badges live in a small, separate list; refresh
+      // them (the thread itself is already patched above).
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+      // We received it → ack delivery so the SENDER's tick advances to a double
+      // check. Only the joined (open) thread streams `message:new`, so this only
+      // fires for a conversation the member is present in — exactly when
+      // "delivered" is true. Throttled; acking the echo of our own send is a
+      // harmless self-watermark advance (never rendered against our own bubbles).
+      this.scheduleDeliveredAck(conversationId);
     });
     socket.on("read", () => {
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
@@ -188,12 +259,40 @@ class RealtimeClient {
     socket.on("notification:new", () => {
       void this.qc.invalidateQueries({ queryKey: ["notifications"] });
     });
-    socket.on("reaction", ({ conversationId }) => {
-      void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
+    // A new conversation (a group) the member was just added to — their inbox
+    // doesn't know about it yet, so refetch the list. The member isn't in the
+    // conversation room, so this user-room frame is how the group first appears.
+    socket.on("conversation:new", () => {
+      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+    });
+    // A reaction changed on a message in this room. The frame carries the
+    // authoritative per-key counts, so patch them in place (deduped by message
+    // id) instead of refetching the whole thread — a full invalidate here would
+    // flicker the list and churn the scroll anchor for every reaction (the very
+    // thing messageCache.ts avoids elsewhere). Skip the echo of our OWN reaction:
+    // its optimistic patch already applied, and re-applying absolute counts we
+    // already reflect is redundant (and would fight a mid-flight local delta).
+    socket.on("reaction", ({ conversationId, messageId, userId, reactions }) => {
+      if (this.myUserId && userId === this.myUserId) return;
+      patchMessageReactionCounts(this.qc, conversationId, messageId, reactions);
     });
     socket.on("message:deleted", ({ conversationId }) => {
       void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+    });
+    // A message was pinned/unpinned. Pins are SHARED, so patch the message's pin
+    // state into the thread cache (in-bubble indicator flips) and refresh only
+    // the conversation's pinned-messages list — no blanket thread invalidation.
+    socket.on("message:pinned", ({ conversationId, messageId, pinned }) => {
+      patchMessagePinned(
+        this.qc,
+        conversationId,
+        messageId,
+        pinned ? new Date().toISOString() : null,
+      );
+      void this.qc.invalidateQueries({
+        queryKey: ["conversation-pins", conversationId],
+      });
     });
     socket.on("message:updated", ({ conversationId }) => {
       void this.qc.invalidateQueries({ queryKey: ["messages", conversationId] });
@@ -207,6 +306,13 @@ class RealtimeClient {
     });
     socket.on("read", (frame) => {
       for (const handler of this.readHandlers) handler(frame);
+    });
+    // Delivered receipt: the counterpart's device acked receipt up to
+    // `deliveredAt`. Fan out to subscribers (the controller advances its
+    // delivered watermark for the tick); no cache invalidation — it's a cheap,
+    // render-only signal, mirroring how `read` drives "Seen".
+    socket.on("message:delivered", (frame) => {
+      for (const handler of this.deliveredHandlers) handler(frame);
     });
     socket.on("presence", ({ userId, online }) => {
       if (online) this.onlineUserIds.add(userId);
@@ -242,8 +348,13 @@ class RealtimeClient {
     this.activeConversationId = null;
     this.typingHandlers.clear();
     this.readHandlers.clear();
+    this.deliveredHandlers.clear();
     this.presenceHandlers.clear();
     this.onlineUserIds.clear();
+    for (const timer of this.deliveredAckTimers.values()) {
+      window.clearTimeout(timer);
+    }
+    this.deliveredAckTimers.clear();
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;
@@ -265,6 +376,11 @@ interface RealtimeContextValue {
   /** Subscribe to `read` frames (additive to the cache invalidation the
    *  provider already runs for `read`). Survives socket re-creation. */
   onRead: (handler: (frame: ServerToClientEvents["read"]) => void) => () => void;
+  /** Subscribe to `message:delivered` frames (the "double check" watermark).
+   *  Survives socket re-creation; no-op in demo/logged-out mode. */
+  onDelivered: (
+    handler: (frame: ServerToClientEvents["message:delivered"]) => void,
+  ) => () => void;
   /** Subscribe to the live online-user-id set; primed immediately with the
    *  current snapshot. Survives socket re-creation. */
   onPresence: (handler: (online: ReadonlySet<string>) => void) => () => void;
@@ -279,6 +395,7 @@ const RealtimeContext = createContext<RealtimeContextValue>({
   joinConversation: () => {},
   onTyping: () => () => {},
   onRead: () => () => {},
+  onDelivered: () => () => {},
   onPresence: () => () => {},
   emitTyping: () => {},
 });
@@ -294,8 +411,15 @@ const RealtimeContext = createContext<RealtimeContextValue>({
  * consumer releases its demand. Reconnection in between is socket.io's.
  */
 export function RealtimeProvider({ children }: { children: ReactNode }) {
-  const { loggedIn } = useAuth();
+  const { loggedIn, user } = useAuth();
   const { demoMode } = useDemoMode();
+  // The signed-in user id, for the reaction-echo skip. Held in a ref so the
+  // connect effect can seed a freshly-built client without taking `user` as a
+  // dependency (which would needlessly rebuild the socket on any auth refresh);
+  // a separate effect below pushes later changes onto the live client.
+  const myUserId = user?.id ?? null;
+  const myUserIdRef = useRef(myUserId);
+  myUserIdRef.current = myUserId;
   const [connected, setConnected] = useState(false);
   const [demand, setDemand] = useState(0);
   const clientRef = useRef<RealtimeClient | null>(null);
@@ -310,10 +434,14 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const handlersRef = useRef<{
     typing: Set<(frame: ServerToClientEvents["typing"]) => void>;
     read: Set<(frame: ServerToClientEvents["read"]) => void>;
+    delivered: Set<
+      (frame: ServerToClientEvents["message:delivered"]) => void
+    >;
     presence: Set<(online: ReadonlySet<string>) => void>;
   }>({
     typing: new Set(),
     read: new Set(),
+    delivered: new Set(),
     presence: new Set(),
   });
 
@@ -358,6 +486,18 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const onDelivered = useCallback(
+    (handler: (frame: ServerToClientEvents["message:delivered"]) => void) => {
+      handlersRef.current.delivered.add(handler);
+      clientRef.current?.onDelivered(handler);
+      return () => {
+        handlersRef.current.delivered.delete(handler);
+        clientRef.current?.offDelivered(handler);
+      };
+    },
+    [],
+  );
+
   const onPresence = useCallback(
     (handler: (online: ReadonlySet<string>) => void) => {
       handlersRef.current.presence.add(handler);
@@ -378,7 +518,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     if (!active) return;
     const url = realtimeUrl();
     if (!url) return;
-    const client = new RealtimeClient(url, queryClient);
+    const client = new RealtimeClient(url, queryClient, myUserIdRef.current);
     clientRef.current = client;
     // Re-apply the desired thread onto the new client: a consumer may have asked
     // to join before this client existed (demand bump and connect race across
@@ -391,6 +531,9 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     // own handler sets, but the provider's `handlersRef` outlives it.
     handlersRef.current.typing.forEach((handler) => client.onTyping(handler));
     handlersRef.current.read.forEach((handler) => client.onRead(handler));
+    handlersRef.current.delivered.forEach((handler) =>
+      client.onDelivered(handler),
+    );
     handlersRef.current.presence.forEach((handler) => client.onPresence(handler));
     return () => {
       off();
@@ -400,9 +543,33 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     };
   }, [active]);
 
+  // Keep the live client's known user id in sync with auth (it outlives a token
+  // refresh), so the reaction-echo skip always keys off the current member.
+  useEffect(() => {
+    clientRef.current?.setMyUserId(myUserId);
+  }, [myUserId]);
+
   const value = useMemo<RealtimeContextValue>(
-    () => ({ connected, request, joinConversation, onTyping, onRead, onPresence, emitTyping }),
-    [connected, request, joinConversation, onTyping, onRead, onPresence, emitTyping],
+    () => ({
+      connected,
+      request,
+      joinConversation,
+      onTyping,
+      onRead,
+      onDelivered,
+      onPresence,
+      emitTyping,
+    }),
+    [
+      connected,
+      request,
+      joinConversation,
+      onTyping,
+      onRead,
+      onDelivered,
+      onPresence,
+      emitTyping,
+    ],
   );
 
   return createElement(RealtimeContext.Provider, { value }, children);
@@ -466,6 +633,19 @@ export function useReadFrames(
 ): void {
   const { onRead } = useRealtime();
   useEffect(() => onRead(handler), [onRead, handler]);
+}
+
+/**
+ * Subscribe to `message:delivered` frames for as long as the calling component
+ * is mounted — the counterpart's "double check" watermark. A no-op in
+ * demo/logged-out/no-backend runs (no socket). `handler` must be memoized by the
+ * caller (e.g. `useCallback`) — a new function identity every render resubscribes.
+ */
+export function useDeliveredFrames(
+  handler: (frame: ServerToClientEvents["message:delivered"]) => void,
+): void {
+  const { onDelivered } = useRealtime();
+  useEffect(() => onDelivered(handler), [onDelivered, handler]);
 }
 
 /**

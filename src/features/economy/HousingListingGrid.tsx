@@ -1,7 +1,7 @@
 import type { KeyboardEvent, SyntheticEvent } from "react";
 import { FiBookmark, FiHome } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useSaved } from "../../app/providers/SavedProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import {
   Avatar,

@@ -83,9 +83,3 @@ export interface CommunityDetail {
 }
 
 export { COMMUNITY_DETAILS };
-
-export function getCommunityDetail(
-  slug: string | undefined,
-): CommunityDetail | undefined {
-  return slug ? COMMUNITY_DETAILS[slug] : undefined;
-}

@@ -23,8 +23,9 @@
   max-width: 620px;
   padding: 40px 44px 36px;
   position: relative;
-  max-height: 92vh;
+  max-height: 92svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   animation: pop 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
 }
 @keyframes pop {
@@ -356,15 +357,17 @@
   line-height: 1.6;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 860px) {
   .overlay {
     align-items: flex-end;
     padding: 0;
+    padding-block-end: var(--keyboard-inset, 0px);
   }
   .modal {
     border-radius: 26px 26px 0 0;
     padding: 36px 24px 28px;
-    max-height: 94vh;
+    padding-block-end: max(28px, env(safe-area-inset-bottom));
+    max-height: 94svh;
   }
   .head {
     flex-direction: column;

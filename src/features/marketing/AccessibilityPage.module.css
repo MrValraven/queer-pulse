@@ -508,8 +508,10 @@
   width: 100%;
   max-width: 520px;
   padding: 30px 34px 48px;
-  max-height: 90vh;
+  padding-block-end: max(48px, env(safe-area-inset-bottom));
+  max-height: 90svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   position: relative;
   animation: accUp 0.38s cubic-bezier(0.22, 0.68, 0.16, 1);
 }
@@ -578,7 +580,7 @@
   border-radius: 12px;
   padding: 12px 15px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   width: 100%;

@@ -6,7 +6,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useWorkProfile } from "../../app/providers/WorkProfileProvider";
+import { useWorkProfile } from "../../app/providers/useWorkProfile";
 import {
   IdentitySection,
   ShowUpAtWorkSection,

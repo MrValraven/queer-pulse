@@ -155,7 +155,7 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
         <Button
           onClick={() => {
             clearInviteWelcome();
-            navigate(routes.feed);
+            void navigate(routes.feed);
           }}
         >
           {t("auth:onboarding.stepDone.cta")}

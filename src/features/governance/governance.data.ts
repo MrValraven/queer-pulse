@@ -45,52 +45,52 @@ export const GOVERNING_DOCS = [
 /**
  * i18n Pattern A/B. The quarterly health snapshot has no backend of its own
  * (unlike the finances section below) — it's hardcoded identically in demo and
- * live, so it's chrome, not fetched content. `n`/`up` stay plain data; `trend`
- * was a fused chrome+datum string ("↑ 38 this quarter") in the original, so it
- * now carries a key + optional interpolation values instead — see
+ * live, so it's chrome, not fetched content. `value`/`up` stay plain data;
+ * `trend` was a fused chrome+datum string ("↑ 38 this quarter") in the original,
+ * so it now carries a key + optional interpolation values instead — see
  * `buildHealthStats(t)` in GovernanceSections.tsx.
  */
 export const HEALTH: {
-  n: string;
+  value: string;
   labelKey: string;
   trendKey: string;
   trendValues?: { count: number };
   up: boolean;
 }[] = [
   {
-    n: "247",
+    value: "247",
     labelKey: "governance:health.stat.activeMembers.label",
     trendKey: "governance:health.trend.upThisQuarter",
     trendValues: { count: 38 },
     up: true,
   },
   {
-    n: "96%",
+    value: "96%",
     labelKey: "governance:health.stat.retention.label",
     trendKey: "governance:health.trend.steady",
     up: false,
   },
   {
-    n: "12",
+    value: "12",
     labelKey: "governance:health.stat.reportsFiled.label",
     trendKey: "governance:health.trend.allResolved",
     up: false,
   },
   {
-    n: "3",
+    value: "3",
     labelKey: "governance:health.stat.membersRemoved.label",
     trendKey: "governance:health.trend.cocViolations",
     up: false,
   },
   {
-    n: "34",
+    value: "34",
     labelKey: "governance:health.stat.gatheringsHosted.label",
     trendKey: "governance:health.trend.upVsQ1",
     trendValues: { count: 8 },
     up: true,
   },
   {
-    n: "1",
+    value: "1",
     labelKey: "governance:health.stat.appealUpheld.label",
     trendKey: "governance:health.trend.ofFiled",
     trendValues: { count: 2 },
@@ -125,31 +125,31 @@ export const STEPS = [
  */
 export const COUNCIL = [
   {
-    i: MEMBERS.mariana!.initials,
+    initials: MEMBERS.mariana!.initials,
     name: memberName("mariana"),
     roleKey: "governance:council.psychologistChair",
-    bg: "rgba(74,140,111,.15)",
+    background: "rgba(74,140,111,.15)",
     color: "var(--jade)",
   },
   {
-    i: MEMBERS["raquel-baptista"]!.initials,
+    initials: MEMBERS["raquel-baptista"]!.initials,
     name: memberName("raquel-baptista"),
     roleKey: "governance:council.lawyerLegalAdvisor",
-    bg: "rgba(122,82,184,.12)",
+    background: "rgba(122,82,184,.12)",
     color: "var(--violet)",
   },
   {
-    i: MEMBERS["catarina-vaz"]!.initials,
+    initials: MEMBERS["catarina-vaz"]!.initials,
     name: memberName("catarina-vaz"),
     roleKey: "governance:council.housingActivist",
-    bg: "rgba(45,27,61,.1)",
+    background: "rgba(45,27,61,.1)",
     color: "var(--plum)",
   },
   {
-    i: MEMBERS.jonas!.initials,
+    initials: MEMBERS.jonas!.initials,
     name: memberName("jonas"),
     roleKey: "governance:council.healthcareAdvocate",
-    bg: "rgba(74,140,111,.12)",
+    background: "rgba(74,140,111,.12)",
     color: "var(--jade)",
   },
 ];

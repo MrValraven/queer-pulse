@@ -13,7 +13,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { useCommunityMembership } from "../../app/providers/CommunityMembershipProvider";
+import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community, CommunityType } from "../homepage/data/types";
 import { useCommunities } from "./api/useCommunities";

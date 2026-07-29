@@ -94,7 +94,7 @@ export const DEFAULT_PREFS: Prefs = {
 export const INITIAL_EVENTS: MyEvent[] = [
   {
     id: "bookclub",
-    cat: "going",
+    category: "going",
     slug: "stone-butch-blues",
     title: "Queer Book Club — “Stone Butch Blues”",
     date: "2026-06-29",
@@ -130,7 +130,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "picnic",
-    cat: "hosting",
+    category: "hosting",
     slug: "trans-joy-picnic",
     title: "Trans Joy Picnic",
     date: "2026-06-30",
@@ -151,7 +151,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "supper",
-    cat: "waitlisted",
+    category: "waitlisted",
     slug: "sober-queers-supper",
     title: "Sober Queers Supper Club",
     date: "2026-07-05",
@@ -168,7 +168,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "karaoke",
-    cat: "going",
+    category: "going",
     slug: "queer-karaoke-night",
     maybe: true,
     title: "Queer Karaoke Night",
@@ -189,7 +189,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "film",
-    cat: "going",
+    category: "going",
     slug: "queer-film-tangerine",
     title: "Queer Film Night — “Tangerine”",
     date: "2026-07-02",
@@ -214,7 +214,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "brunch",
-    cat: "going",
+    category: "going",
     slug: "drag-brunch-tia-maria",
     title: "Drag Brunch with Tia Maria",
     date: "2026-07-04",
@@ -238,7 +238,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "craft",
-    cat: "going",
+    category: "going",
     slug: "queer-craft-market",
     title: "Queer Craft Market",
     date: "2026-07-04",
@@ -258,7 +258,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "workshop",
-    cat: "going",
+    category: "going",
     cancelled: true,
     title: "Zine-making Workshop",
     date: "2026-07-07",
@@ -271,7 +271,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "aid",
-    cat: "going",
+    category: "going",
     slug: "mutual-aid-groceries",
     title: "Mutual Aid Circle — June groceries run",
     date: "2026-07-11",
@@ -290,7 +290,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "poly",
-    cat: "hosting",
+    category: "hosting",
     slug: "poly-open-discussion",
     title: "Poly & Open Relationships Discussion Circle",
     date: "2026-07-18",
@@ -298,7 +298,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
     end: "21:00",
     venue: "Online · Zoom",
     online: true,
-    tz: "WEST",
+    timezone: "WEST",
     going: 7,
     waitlist: 0,
     reminder: true,
@@ -316,7 +316,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "mixer",
-    cat: "hosting",
+    category: "hosting",
     slug: "newcomers-mixer-july",
     review: true,
     title: "Newcomers Mixer — July",
@@ -334,7 +334,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "kickoff",
-    cat: "past",
+    category: "past",
     title: "Pride Kickoff Mixer",
     date: "2026-06-20",
     start: "19:00",
@@ -350,7 +350,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "sapphic",
-    cat: "past",
+    category: "past",
     title: "Sapphic Sundays — slow afternoon",
     date: "2026-06-14",
     start: "16:00",
@@ -363,7 +363,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "potluck",
-    cat: "past",
+    category: "past",
     noShow: true,
     title: "Midsummer Potluck",
     date: "2026-06-11",
@@ -375,7 +375,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "reading8",
-    cat: "past",
+    category: "past",
     title: "Reading Group #8 — “The Dispossessed”",
     date: "2026-06-08",
     start: "19:00",
@@ -387,7 +387,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "quiz",
-    cat: "past",
+    category: "past",
     title: "Sapphic Pub Quiz",
     date: "2026-06-02",
     start: "20:00",
@@ -399,7 +399,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "workshop2",
-    cat: "past",
+    category: "past",
     title: "Consent & Communication Workshop",
     date: "2026-05-28",
     start: "18:00",
@@ -410,7 +410,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "hike",
-    cat: "saved",
+    category: "saved",
     title: "Lesbian Hiking Day — Sintra hills",
     date: "2026-07-12",
     start: "09:30",
@@ -423,7 +423,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "ball",
-    cat: "saved",
+    category: "saved",
     soldOut: true,
     title: "Summer Vogue Ball",
     date: "2026-07-25",
@@ -437,7 +437,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "comedy",
-    cat: "invite",
+    category: "invite",
     title: "Queer Comedy Open Mic",
     date: "2026-07-09",
     start: "20:30",
@@ -453,7 +453,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
   },
   {
     id: "femmedinner",
-    cat: "sent",
+    category: "sent",
     title: "Trans Femme Dinner",
     date: "2026-07-15",
     start: "19:30",
@@ -495,7 +495,7 @@ export const INITIAL_NOTIFS: Notif[] = [
     bold: "Queer Film Night",
     tail: " moved to 20:00 — it was 19:30.",
     time: "2 hours ago",
-    evId: "film",
+    eventId: "film",
     unread: true,
   },
   {
@@ -504,7 +504,7 @@ export const INITIAL_NOTIFS: Notif[] = [
     bold: "Sober Queers Supper Club",
     tail: " — you’re #3 in line.",
     time: "Yesterday",
-    evId: "supper",
+    eventId: "supper",
     unread: true,
   },
   {
@@ -512,7 +512,7 @@ export const INITIAL_NOTIFS: Notif[] = [
     bold: "Rita F.",
     tail: " invited you to Queer Comedy Open Mic.",
     time: "Yesterday",
-    evId: "comedy",
+    eventId: "comedy",
     unread: true,
   },
   {
@@ -520,7 +520,7 @@ export const INITIAL_NOTIFS: Notif[] = [
     bold: "Zine-making Workshop",
     tail: " was cancelled by the host.",
     time: "Yesterday",
-    evId: "workshop",
+    eventId: "workshop",
     unread: false,
   },
   {
@@ -529,7 +529,7 @@ export const INITIAL_NOTIFS: Notif[] = [
     bold: "Trans Joy Picnic",
     tail: ".",
     time: "2 days ago",
-    evId: "picnic",
+    eventId: "picnic",
     unread: false,
   },
   {
@@ -538,7 +538,7 @@ export const INITIAL_NOTIFS: Notif[] = [
     bold: "Drag Brunch",
     tail: " is confirmed.",
     time: "3 days ago",
-    evId: "brunch",
+    eventId: "brunch",
     unread: false,
   },
 ];

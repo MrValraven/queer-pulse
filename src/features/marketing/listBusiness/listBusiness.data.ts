@@ -31,6 +31,16 @@ export const PILL_LABEL_KEYS = [
   "marketing:listBusiness.wizard.pill.review",
 ];
 
+/** i18n key for the PaneActions "next" button, indexed by wizard step. */
+export const NEXT_LABEL_KEYS = [
+  "marketing:listBusiness.next.basics",
+  "marketing:listBusiness.next.story",
+  "marketing:listBusiness.next.practical",
+  "marketing:listBusiness.next.photos",
+  "marketing:listBusiness.next.review",
+  "marketing:listBusiness.next.send",
+];
+
 /* ---------- Field anchors ----------
    Stable DOM ids for each required field, so a "what's still needed" chip
    can scroll + focus the exact field it names. Shared by the form (which
@@ -384,6 +394,8 @@ export interface ListingDraft {
   langs: string[];
   address: string;
   geocoded: boolean;
+  latitude: number | null;
+  longitude: number | null;
   hours: Record<string, DayHours>; // keyed by DAYS id
   hoursNote: string;
   social: {

@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useConnections } from "../../../app/providers/ConnectionsProvider";
-import { useSocial } from "../../../app/providers/SocialProvider";
+import { useConnections } from "../../../app/providers/useConnections";
+import { useSocial } from "../../../app/providers/useSocial";
 import {
   removeConnection,
   respondConnection,
@@ -39,8 +39,8 @@ export function useConnectionActions() {
   const { toggleBlock } = useSocial();
 
   const invalidate = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ["connections"] });
-    queryClient.invalidateQueries({ queryKey: ["members"] });
+    void queryClient.invalidateQueries({ queryKey: ["connections"] });
+    void queryClient.invalidateQueries({ queryKey: ["members"] });
   }, [queryClient]);
 
   const patch = useCallback(

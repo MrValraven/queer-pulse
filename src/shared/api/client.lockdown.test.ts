@@ -20,8 +20,8 @@ function res(status: number, body: unknown = {}, statusText = ""): Response {
     ok: status >= 200 && status < 300,
     status,
     statusText,
-    json: async () => body,
-    text: async () => (status === 204 ? "" : JSON.stringify(body)),
+    json: () => Promise.resolve(body),
+    text: () => Promise.resolve(status === 204 ? "" : JSON.stringify(body)),
   } as unknown as Response;
 }
 
@@ -47,13 +47,15 @@ describe("platform lockdown detection", () => {
     const locked = vi.fn();
     setOnPlatformLocked(locked);
     stubFetch(
-      vi.fn(async () =>
-        res(503, {
-          statusCode: 503,
-          error: "Service Unavailable",
-          code: "PLATFORM_LOCKED",
-          message: "Down for maintenance",
-        }),
+      vi.fn(() =>
+        Promise.resolve(
+          res(503, {
+            statusCode: 503,
+            error: "Service Unavailable",
+            code: "PLATFORM_LOCKED",
+            message: "Down for maintenance",
+          }),
+        ),
       ),
     );
 
@@ -67,12 +69,14 @@ describe("platform lockdown detection", () => {
     const locked = vi.fn();
     setOnPlatformLocked(locked);
     stubFetch(
-      vi.fn(async () =>
-        res(503, {
-          statusCode: 503,
-          error: "Service Unavailable",
-          code: "PLATFORM_LOCKED",
-        }),
+      vi.fn(() =>
+        Promise.resolve(
+          res(503, {
+            statusCode: 503,
+            error: "Service Unavailable",
+            code: "PLATFORM_LOCKED",
+          }),
+        ),
       ),
     );
 
@@ -84,7 +88,9 @@ describe("platform lockdown detection", () => {
     const { apiGet, setOnPlatformLocked, ApiError } = await loadClient();
     const locked = vi.fn();
     setOnPlatformLocked(locked);
-    stubFetch(vi.fn(async () => res(503, { message: "Upstream timed out" })));
+    stubFetch(
+      vi.fn(() => Promise.resolve(res(503, { message: "Upstream timed out" }))),
+    );
 
     await expect(apiGet("/thing")).rejects.toBeInstanceOf(ApiError);
     await expect(apiGet("/thing")).rejects.toMatchObject({ status: 503 });
@@ -95,7 +101,7 @@ describe("platform lockdown detection", () => {
     const { apiGet, setOnPlatformLocked, ApiError } = await loadClient();
     const locked = vi.fn();
     setOnPlatformLocked(locked);
-    stubFetch(vi.fn(async () => res(403, { message: "Forbidden" })));
+    stubFetch(vi.fn(() => Promise.resolve(res(403, { message: "Forbidden" }))));
 
     await expect(apiGet("/thing")).rejects.toBeInstanceOf(ApiError);
     expect(locked).not.toHaveBeenCalled();
@@ -104,8 +110,8 @@ describe("platform lockdown detection", () => {
   it("still throws ApiError even when no callback has been registered", async () => {
     const { apiGet, ApiError } = await loadClient();
     stubFetch(
-      vi.fn(async () =>
-        res(503, { code: "PLATFORM_LOCKED", message: "Locked" }),
+      vi.fn(() =>
+        Promise.resolve(res(503, { code: "PLATFORM_LOCKED", message: "Locked" })),
       ),
     );
 

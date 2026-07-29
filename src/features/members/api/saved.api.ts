@@ -1,10 +1,7 @@
 import { apiGet, apiPut, apiDelete } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { Paginated } from "../../../shared/api/refs";
-import type {
-  SavedItem,
-  SavedKind,
-} from "../../../app/providers/SavedProvider";
+import type { SavedItem, SavedKind } from "../../../app/providers/useSaved";
 
 // ── Backend DTO ─────────────────────────────────────────────────────────────
 // The saved-items contract (spec 09). Mirrors the client-side SavedItem plus a

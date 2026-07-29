@@ -1,10 +1,12 @@
 // src/features/messages/MessageActionOverlay.tsx
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useScrollLock, usePrefersReducedMotion } from "../../shared/hooks";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
+import { MessageActionMenu } from "./MessageActionMenu";
 import { ReactionPicker } from "./ReactionPicker";
+import { MentionText } from "../../shared/mentions/MentionText";
+import { renderWithLinks } from "./linkify";
 import styles from "./MessagesPage.module.css";
 
 export interface MessageActionOverlayProps {
@@ -20,8 +22,17 @@ export interface MessageActionOverlayProps {
   canDelete: boolean;
   /** NOT own message. */
   canReport: boolean;
+  /** May pin/unpin this message (server-authoritative). */
+  canPin: boolean;
+  /** Message is currently pinned (SHARED). */
+  pinned: boolean;
+  /** Viewer has privately starred it. */
+  starred: boolean;
   onReact: (key: MessageReactionKey) => void;
   onReply: () => void;
+  onForward: () => void;
+  onTogglePin: () => void;
+  onToggleStar: () => void;
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
@@ -45,15 +56,20 @@ export function MessageActionOverlay({
   canEdit,
   canDelete,
   canReport,
+  canPin,
+  pinned,
+  starred,
   onReact,
   onReply,
+  onForward,
+  onTogglePin,
+  onToggleStar,
   onEdit,
   onCopy,
   onDelete,
   onReport,
   onClose,
 }: MessageActionOverlayProps) {
-  const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const menuRef = useRef<HTMLDivElement>(null);
   useScrollLock();
@@ -111,6 +127,7 @@ export function MessageActionOverlay({
           ...horizontalStyle,
         }}
         onClick={(event) => event.stopPropagation()}
+        role="presentation"
       >
         <div className={styles.overlayReactions}>
           <ReactionPicker onPick={(key) => runThenClose(() => onReact(key))()} />
@@ -119,63 +136,27 @@ export function MessageActionOverlay({
         <div
           className={[styles.overlayBubble, isSent ? styles.sent : styles.received].join(" ")}
         >
-          {text}
+          <MentionText text={text} renderText={renderWithLinks} />
         </div>
 
-        <div
-          ref={menuRef}
-          className={styles.overlayMenu}
-          role="menu"
-          tabIndex={-1}
-          aria-label={t("messages:actions.menuLabel")}
-        >
-          <button
-            type="button"
-            className={styles.overlayMenuItem}
-            role="menuitem"
-            onClick={runThenClose(onReply)}
-          >
-            {t("messages:actions.reply")}
-          </button>
-          {canEdit && (
-            <button
-              type="button"
-              className={styles.overlayMenuItem}
-              role="menuitem"
-              onClick={runThenClose(onEdit)}
-            >
-              {t("messages:actions.edit")}
-            </button>
-          )}
-          <button
-            type="button"
-            className={styles.overlayMenuItem}
-            role="menuitem"
-            onClick={runThenClose(onCopy)}
-          >
-            {t("messages:actions.copy")}
-          </button>
-          {canDelete && (
-            <button
-              type="button"
-              className={[styles.overlayMenuItem, styles.overlayMenuItemDanger].join(" ")}
-              role="menuitem"
-              onClick={runThenClose(onDelete)}
-            >
-              {t("messages:actions.delete")}
-            </button>
-          )}
-          {canReport && (
-            <button
-              type="button"
-              className={styles.overlayMenuItem}
-              role="menuitem"
-              onClick={runThenClose(onReport)}
-            >
-              {t("messages:actions.report")}
-            </button>
-          )}
-        </div>
+        <MessageActionMenu
+          menuRef={menuRef}
+          canEdit={canEdit}
+          canDelete={canDelete}
+          canReport={canReport}
+          canPin={canPin}
+          pinned={pinned}
+          starred={starred}
+          onReply={onReply}
+          onForward={onForward}
+          onTogglePin={onTogglePin}
+          onToggleStar={onToggleStar}
+          onEdit={onEdit}
+          onCopy={onCopy}
+          onDelete={onDelete}
+          onReport={onReport}
+          onClose={onClose}
+        />
       </div>
     </div>,
     document.body,

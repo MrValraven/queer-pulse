@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, FilterChips, Outro, Reveal } from "../../shared/components/ui";
@@ -10,8 +10,16 @@ import { useLocalPlaces } from "./api/useLocalPlaces";
 import { filterLocalPlaces } from "./localPlaces";
 import { LocalFilterBar } from "./LocalFilterBar";
 import { DirectoryListView } from "./DirectoryListView";
-import { DirectoryMapView } from "./DirectoryMapView";
+import { MapLoading } from "./MapLoading";
 import s from "./DirectoryPage.module.css";
+
+// Code-split the map view (pulls in maplibre-gl) so it stays off the entry
+// chunk — it's only fetched when the visitor switches to the map tab.
+const DirectoryMapView = lazy(() =>
+  import("./DirectoryMapView").then((module) => ({
+    default: module.DirectoryMapView,
+  })),
+);
 
 export function DirectoryPage() {
   const { t } = useTranslation();
@@ -93,7 +101,9 @@ export function DirectoryPage() {
           loading={loading}
         />
       ) : (
-        <DirectoryMapView places={filtered} loading={loading} />
+        <Suspense fallback={<MapLoading ready={false} />}>
+          <DirectoryMapView places={filtered} loading={loading} />
+        </Suspense>
       )}
 
       <section className={s.content}>

@@ -95,8 +95,8 @@ export function useWorkshopRsvpStore(): WorkshopRsvpStore {
   // so both caches are stale the moment a seat changes hands.
   const invalidate = useCallback(
     (id: string) => {
-      queryClient.invalidateQueries({ queryKey: ["workshops"] });
-      queryClient.invalidateQueries({ queryKey: ["workshop", id] });
+      void queryClient.invalidateQueries({ queryKey: ["workshops"] });
+      void queryClient.invalidateQueries({ queryKey: ["workshop", id] });
     },
     [queryClient],
   );

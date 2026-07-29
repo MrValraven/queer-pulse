@@ -26,7 +26,7 @@ export function ArtCard({ w }: { w: ArtWork }) {
           <div className={styles.artBadges}>
             {w.badges.map((b) => (
               <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-                {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]!) : b}
+                {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]) : b}
               </span>
             ))}
           </div>
@@ -80,7 +80,7 @@ export function MusicCard({
         <div className={styles.mcBadges}>
           {a.badges.map((b) => (
             <span key={b} className={`${styles.badge} ${badgeClass(b)}`}>
-              {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]!) : b}
+              {BADGE_LABEL_KEYS[b] ? t(BADGE_LABEL_KEYS[b]) : b}
             </span>
           ))}
         </div>

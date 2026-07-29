@@ -55,20 +55,20 @@
   font-style: italic;
   color: var(--accent);
 }
-.entry {
+.dayGroup {
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 28px;
-  padding: 24px 0;
+  padding: 28px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
-.entry:last-child {
+.dayGroup:last-child {
   border-bottom: none;
 }
 @media (max-width: 560px) {
-  .entry {
+  .dayGroup {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 10px;
   }
 }
 .date {
@@ -77,6 +77,16 @@
   color: var(--ink-40);
   padding-top: 3px;
   white-space: nowrap;
+  align-self: start;
+}
+.dayEntries {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 0;
+}
+.entry {
+  min-width: 0;
 }
 .entryHead {
   display: flex;

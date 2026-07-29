@@ -131,6 +131,26 @@
 .filterBar::-webkit-scrollbar {
   display: none;
 }
+/* Edge fade so off-screen filters read as scrollable — scoped to narrow screens
+   where the strip actually overflows (no permanent dimmed edge when it fits). */
+@media (max-width: 680px) {
+  .filterBar {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black 22px,
+      black calc(100% - 22px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black 22px,
+      black calc(100% - 22px),
+      transparent 100%
+    );
+  }
+}
 .fbInner {
   display: flex;
   align-items: center;
@@ -170,6 +190,7 @@
     border-color 0.18s var(--ease);
   white-space: nowrap;
   font-family: var(--sans);
+  touch-action: manipulation;
 }
 @media (hover: hover) {
   .chip:not(.chipActive):hover {
@@ -190,12 +211,12 @@
 .cbSearch input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
-  padding: 8px 15px;
+  padding: 7px 15px;
   transition: border-color 0.2s var(--ease);
   box-sizing: border-box;
 }

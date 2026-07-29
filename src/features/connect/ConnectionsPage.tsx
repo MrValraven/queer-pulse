@@ -9,9 +9,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useConnections } from "../../app/providers/ConnectionsProvider";
-import { useSocial } from "../../app/providers/SocialProvider";
-import { useVouch } from "../../app/providers/VouchProvider";
+import { useConnections } from "../../app/providers/useConnections";
+import { useSocial } from "../../app/providers/useSocial";
+import { useVouch } from "../../app/providers/useVouch";
 import {
   CONNECTION_META,
   vouchNoteKey,
@@ -200,7 +200,7 @@ export function ConnectionsPage() {
             // Every card here is an accepted connection, so "Message" deep-links
             // straight into that person's chat (same state shape MessagesPage reads).
             onMessage={(slug, name) =>
-              navigate(routes.messages, { state: { to: { slug, name } } })
+              void navigate(routes.messages, { state: { to: { slug, name } } })
             }
           />
         )}

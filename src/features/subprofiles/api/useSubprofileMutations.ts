@@ -125,8 +125,8 @@ export function useSubprofileMutations() {
   const queryClient = useQueryClient();
 
   const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-    queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
   };
 
   const create = useMutation<SubprofileDTO, Error, CreateSubprofileDTO>({

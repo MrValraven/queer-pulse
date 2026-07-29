@@ -3,6 +3,13 @@ import { useCallback, useEffect, useRef } from "react";
 export interface LongPressOrigin {
   /** Bounding rect of the pressed element, so the overlay can anchor itself. */
   rect: DOMRect;
+  /** Which input opened the menu. A touch long-press wants the full-screen
+   *  lifted-bubble overlay; a desktop right-click wants a compact context menu
+   *  at the cursor — the consumer branches on this. */
+  source: "touch" | "pointer";
+  /** Cursor position (viewport coords) for a right-click, so the context menu
+   *  can anchor at the pointer. Absent for touch long-press. */
+  point?: { x: number; y: number };
 }
 
 export interface UseLongPressHandlers {
@@ -42,18 +49,19 @@ export function useLongPress(
   useEffect(() => clear, [clear]);
 
   const fire = useCallback(
-    (element: Element) => onTrigger({ rect: element.getBoundingClientRect() }),
+    (element: Element, source: "touch" | "pointer", point?: { x: number; y: number }) =>
+      onTrigger({ rect: element.getBoundingClientRect(), source, point }),
     [onTrigger],
   );
 
   const onPointerDown = useCallback(
     (event: React.PointerEvent) => {
       if (!enabled || event.pointerType === "mouse") return;
-      const element = event.currentTarget as Element;
+      const element = event.currentTarget;
       startPointRef.current = { x: event.clientX, y: event.clientY };
       timerRef.current = window.setTimeout(() => {
         timerRef.current = null;
-        fire(element);
+        fire(element, "touch");
       }, delayMs);
     },
     [enabled, delayMs, fire],
@@ -75,7 +83,10 @@ export function useLongPress(
     (event: React.MouseEvent) => {
       if (!enabled) return;
       event.preventDefault();
-      fire(event.currentTarget as Element);
+      fire(event.currentTarget, "pointer", {
+        x: event.clientX,
+        y: event.clientY,
+      });
     },
     [enabled, fire],
   );

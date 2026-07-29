@@ -6,7 +6,7 @@ import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
-import type { SavedItem } from "../../app/providers/SavedProvider";
+import type { SavedItem } from "../../app/providers/useSaved";
 import {
   privacyLabel,
   type Collection,

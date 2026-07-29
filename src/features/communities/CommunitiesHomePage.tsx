@@ -5,7 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { useProfile } from "../../app/providers/ProfileProvider";
+import { useProfile } from "../../app/providers/useProfile";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
 import {

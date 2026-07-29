@@ -151,7 +151,7 @@
 .search input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
@@ -185,6 +185,12 @@
   align-items: center;
   justify-content: center;
 }
+/* Expand the tap target to 44px without growing the visible 22px ink. */
+.searchClear::after {
+  content: "";
+  position: absolute;
+  inset: -11px;
+}
 .searchClear svg {
   width: 12px;
   height: 12px;
@@ -213,7 +219,7 @@
 }
 .sort select {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-strong);
   background: var(--paper);

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useConnect } from "../../app/providers/ConnectProvider";
+import { useConnect } from "../../app/providers/useConnect";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";

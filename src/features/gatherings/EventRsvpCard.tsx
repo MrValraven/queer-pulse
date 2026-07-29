@@ -176,7 +176,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
                   joinWaitlist();
                 } else {
                   rsvp.mutate("going");
-                  navigate(routes.checkout);
+                  void navigate(routes.checkout);
                 }
               }}
               disabled={!canSubmit}

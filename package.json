@@ -8,6 +8,7 @@
     "build": "tsc -b && pnpm sitemap && vite build && pnpm prerender:browser && pnpm prerender",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint:a11y": "node scripts/report-a11y.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",

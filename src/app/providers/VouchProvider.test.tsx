@@ -22,6 +22,10 @@ async function loadLiveVouch(getGivenVouches: ReturnType<typeof vi.fn>) {
 
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const mod = await import("./VouchProvider");
+  // `useVouch` / `useVouchActions` live in the colocated hook module, which
+  // `VouchProvider` imports the shared context from. After `vi.resetModules()`
+  // both are re-instantiated together, so they share one fresh context.
+  const hooks = await import("./useVouch");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -32,7 +36,7 @@ async function loadLiveVouch(getGivenVouches: ReturnType<typeof vi.fn>) {
       </DemoModeProvider>
     </QueryClientProvider>
   );
-  return { ...mod, wrapper };
+  return { ...mod, ...hooks, wrapper };
 }
 
 beforeEach(() => {
@@ -52,10 +56,9 @@ describe("VouchProvider (live mode)", () => {
   });
 
   it("useVouch fetches and hydrates the persisted list", async () => {
-    const getGivenVouches = vi.fn(async () => [
-      { slug: "ana-lopes" },
-      { slug: "rui-mendes" },
-    ]);
+    const getGivenVouches = vi.fn(() =>
+      Promise.resolve([{ slug: "ana-lopes" }, { slug: "rui-mendes" }]),
+    );
     const { useVouch, wrapper } = await loadLiveVouch(getGivenVouches);
 
     const { result } = renderHook(() => useVouch(), { wrapper });

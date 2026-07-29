@@ -26,7 +26,8 @@ async function loadLiveSaved(client: QueryClient) {
     useAuth: () => ({ loggedIn: true, user: { profile: { slug: "tiago-costa" } } }),
   }));
 
-  const { SavedProvider, useSaved } = await import("./SavedProvider");
+  const { SavedProvider } = await import("./SavedProvider");
+  const { useSaved } = await import("./useSaved");
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const { I18nProvider } = await import("./I18nProvider");
   const { ToastProvider } = await import(
@@ -71,7 +72,8 @@ async function loadLiveSavedBootstrapError(client: QueryClient) {
     useAuth: () => ({ loggedIn: true, user: { profile: { slug: "tiago-costa" } } }),
   }));
 
-  const { SavedProvider, useSaved } = await import("./SavedProvider");
+  const { SavedProvider } = await import("./SavedProvider");
+  const { useSaved } = await import("./useSaved");
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const { I18nProvider } = await import("./I18nProvider");
   const { ToastProvider } = await import(

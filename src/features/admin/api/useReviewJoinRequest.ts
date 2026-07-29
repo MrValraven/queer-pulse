@@ -59,7 +59,7 @@ export function useReviewJoinRequest() {
       return reviewJoinRequest(id, status);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["join-requests"] });
+      void queryClient.invalidateQueries({ queryKey: ["join-requests"] });
     },
   });
 }

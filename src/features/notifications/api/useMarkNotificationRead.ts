@@ -16,7 +16,7 @@ export function useMarkNotificationRead() {
       await markNotificationRead(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      void queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 }

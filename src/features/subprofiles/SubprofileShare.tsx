@@ -43,7 +43,7 @@ export function SubprofileShare({ view }: { view: PublicSubprofileView }) {
       size="md"
       className={styles.shareButton}
       aria-label={t("subprofiles:share.ariaLabel")}
-      onClick={handleShare}
+      onClick={() => void handleShare()}
     >
       <FiShare2 aria-hidden />
       {t("subprofiles:share.cta")}

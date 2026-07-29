@@ -8,7 +8,9 @@ import { toPage } from "../../../shared/api/pagination";
 import type {
   ConversationResponse,
   MessageResponse,
+  MessageSearchResponse,
   Paginated,
+  StarredMessagesResponse,
 } from "../../../shared/contracts/contracts";
 
 // ── Messages DTOs + raw calls ────────────────────────────────────────────────
@@ -43,16 +45,61 @@ export async function getMessages(conversationId: string, cursor?: string) {
   return toPage(res);
 }
 
-/** POST /conversations/:id/messages — send. Rejects a blocked pair with 403. */
+/** POST /conversations/:id/messages — send. Rejects a blocked pair with 403.
+ *  `clientMessageId` is the sender's idempotency key — the server dedupes on it,
+ *  so a retry (or the HTTP + WS dual path) returns the same message, never two. */
 export const sendMessage = (
   conversationId: string,
   body: string,
   replyToId?: string,
+  clientMessageId?: string,
+  forwarded?: boolean,
 ) =>
   apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
     body,
     ...(replyToId ? { replyToId } : {}),
+    ...(clientMessageId ? { clientMessageId } : {}),
+    ...(forwarded ? { forwarded: true } : {}),
   });
+
+/** GET /conversations/:id/pins — the conversation's SHARED pinned messages,
+ *  newest-pin-first. */
+export const getPinnedMessages = (conversationId: string) =>
+  apiGet<MessageResponse[]>(`/conversations/${conversationId}/pins`);
+
+/** POST /conversations/:id/messages/:messageId/pin — pin a message (shared). */
+export const pinMessage = (conversationId: string, messageId: string) =>
+  apiPost<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/pin`,
+    {},
+  );
+
+/** DELETE /conversations/:id/messages/:messageId/pin — unpin a message (shared). */
+export const unpinMessage = (conversationId: string, messageId: string) =>
+  apiDelete<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/pin`,
+  );
+
+/** POST /conversations/:id/messages/:messageId/star — privately bookmark a message. */
+export const starMessage = (conversationId: string, messageId: string) =>
+  apiPost<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/star`,
+    {},
+  );
+
+/** DELETE /conversations/:id/messages/:messageId/star — remove my star. */
+export const unstarMessage = (conversationId: string, messageId: string) =>
+  apiDelete<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/star`,
+  );
+
+/** GET /messages/starred — my starred messages, newest-star-first. */
+export async function getStarredMessages(
+  limit?: number,
+): Promise<StarredMessagesResponse> {
+  const qs = limit ? `?limit=${limit}` : "";
+  return apiGet<StarredMessagesResponse>(`/messages/starred${qs}`);
+}
 
 /** PATCH /conversations/:id/messages/:messageId — edit own message (15-min window). */
 export const editMessage = (
@@ -68,6 +115,68 @@ export const editMessage = (
 /** POST /conversations — open (or reuse) a DM with a member by handle. */
 export const startConversation = (recipientHandle: string) =>
   apiPost<ConversationResponse>("/conversations", { recipientHandle });
+
+/** POST /conversations/group — create a group thread. Members are addressed by
+ *  handle (slug); the caller becomes owner. Each member must be a connection and
+ *  not blocked (server-enforced). Returns the new group's ConversationResponse. */
+export const createGroup = (
+  title: string,
+  memberHandles: string[],
+  avatarUrl?: string,
+) =>
+  apiPost<ConversationResponse>("/conversations/group", {
+    title,
+    memberHandles,
+    ...(avatarUrl ? { avatarUrl } : {}),
+  });
+
+/** POST /conversations/:id/leave — the caller leaves a group (keeps history). */
+export const leaveGroup = (conversationId: string) =>
+  apiPost<{ ok: true }>(`/conversations/${conversationId}/leave`, {});
+
+/** POST /conversations/:id/members — owner/admin adds members by handle. Each
+ *  must be a connection + not blocked (server-enforced). Returns the group DTO. */
+export const addGroupMembers = (conversationId: string, memberHandles: string[]) =>
+  apiPost<ConversationResponse>(`/conversations/${conversationId}/members`, {
+    memberHandles,
+  });
+
+/** DELETE /conversations/:id/members/:userId — owner/admin removes a member
+ *  (owner can't be removed; only owner removes an admin). Returns the group DTO. */
+export const removeGroupMember = (conversationId: string, userId: string) =>
+  apiDelete<ConversationResponse>(
+    `/conversations/${conversationId}/members/${userId}`,
+  );
+
+/** PATCH /conversations/:id/members/:userId/role — OWNER promotes/demotes a
+ *  member (`admin` | `member`). Returns the group DTO. */
+export const changeGroupMemberRole = (
+  conversationId: string,
+  userId: string,
+  role: "admin" | "member",
+) =>
+  apiPatch<ConversationResponse>(
+    `/conversations/${conversationId}/members/${userId}/role`,
+    { role },
+  );
+
+/** PATCH /conversations/:id — owner/admin edits a group's title/avatar. A title
+ *  change posts a `group_renamed` pill server-side. Returns the group DTO. */
+export const updateGroup = (
+  conversationId: string,
+  changes: { title?: string; avatarUrl?: string },
+) => apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
+
+/** GET /messages/search?q= — cross-conversation body search, scoped server-side
+ *  to the caller's conversations and floored by their `clearedAt`. */
+export async function searchMessages(
+  query: string,
+  limit?: number,
+): Promise<MessageSearchResponse> {
+  const params = new URLSearchParams({ q: query });
+  if (limit) params.set("limit", String(limit));
+  return apiGet<MessageSearchResponse>(`/messages/search?${params.toString()}`);
+}
 
 /** POST /conversations/:id/read — clear unread up to `lastReadAt`. */
 export const markConversationRead = (

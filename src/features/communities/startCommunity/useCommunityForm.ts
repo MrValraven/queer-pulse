@@ -59,6 +59,8 @@ export function useCommunityForm(initial?: CommunityDraft) {
   // steward seeded at init may start as a placeholder; keep the locked owner
   // entry in sync once the real session (or a demo→live switch) lands.
   useEffect(() => {
+    // Syncs the locked owner steward once the async /auth/me session resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDraft((d) => {
       const current = d.stewards.find((s) => s.key === "owner");
       if (

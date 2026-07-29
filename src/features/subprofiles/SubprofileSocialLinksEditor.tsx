@@ -168,7 +168,7 @@ export function SubprofileSocialLinksEditor({
             </p>
           )}
         </div>
-        <Button variant="primary" onClick={save} disabled={saving || !dirty}>
+        <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>
           {saving
             ? t("subprofiles:socialEditor.saving")
             : t("subprofiles:socialEditor.save")}

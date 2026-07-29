@@ -35,7 +35,7 @@ export function useFollow(subprofileId: string) {
   const queryClient = useQueryClient();
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
   };
 
   const follow = useMutation<FollowResult, Error, FollowVariables>({

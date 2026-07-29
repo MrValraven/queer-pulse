@@ -54,4 +54,33 @@ describe("parseMentions", () => {
   it("returns an empty array for an empty string", () => {
     expect(parseMentions("")).toEqual([]);
   });
+
+  it("linkifies a #topic", () => {
+    expect(parseMentions("join #housing now")).toEqual([
+      { kind: "text", value: "join " },
+      { kind: "topic", slug: "housing" },
+      { kind: "text", value: " now" },
+    ]);
+  });
+
+  it("linkifies a b/business", () => {
+    expect(parseMentions("try b/purple-door")).toEqual([
+      { kind: "text", value: "try " },
+      { kind: "business", slug: "purple-door" },
+    ]);
+  });
+
+  it("linkifies e/event and t/thread", () => {
+    expect(parseMentions("e/pride-picnic see t/intro-thread")).toEqual([
+      { kind: "event", slug: "pride-picnic" },
+      { kind: "text", value: " see " },
+      { kind: "thread", slug: "intro-thread" },
+    ]);
+  });
+
+  it("does NOT match a # inside a word", () => {
+    expect(parseMentions("C#sharp rocks")).toEqual([
+      { kind: "text", value: "C#sharp rocks" },
+    ]);
+  });
 });

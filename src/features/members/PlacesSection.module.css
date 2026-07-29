@@ -24,7 +24,7 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 16px;
 }
 .card {
@@ -119,14 +119,21 @@
   font-weight: 600;
   letter-spacing: 0.02em;
 }
-.viewLink {
+.footActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.viewLink,
+.editLink {
   font-size: 13px;
   font-weight: 700;
   color: var(--text-strong);
   text-decoration: none;
 }
 @media (hover: hover) {
-  .viewLink:hover {
+  .viewLink:hover,
+  .editLink:hover {
     color: var(--accent-ink);
   }
 }

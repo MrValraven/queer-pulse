@@ -17,7 +17,7 @@ function scriptContents(): string[] {
 describe("JsonLd", () => {
   it("injects the schema into head as valid JSON", () => {
     render(<JsonLd schema={buildOrganizationSchema()} />);
-    const parsed = JSON.parse(scriptContents()[0]!);
+    const parsed = JSON.parse(scriptContents()[0]!) as Record<string, unknown>;
     expect(parsed["@context"]).toBe("https://schema.org");
     expect(parsed["@type"]).toBe("Organization");
     expect(parsed.name).toBe("QueerPulse");

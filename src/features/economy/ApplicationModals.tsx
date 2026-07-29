@@ -1,4 +1,4 @@
-import { type Application, type ActionKind } from "./applicationStatus.data";
+import { type Application, type ActionKind } from "./applicationStatus.types";
 import {
   SubmissionModal,
   CompanyModal,

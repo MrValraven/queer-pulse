@@ -119,6 +119,14 @@
   transition:
     background 0.4s var(--ease),
     border-color 0.4s var(--ease);
+  /* Dependency-free "virtualization": skip offscreen mention cards so a long
+     mentions thread stays smooth. `auto` keyword = browser remembers the real
+     height after first paint; the placeholder is only the pre-paint estimate.
+     The row's only overlay-ish content (inline reply composer) is in-flow, and
+     RSVP feedback is a global toast, so the always-on paint containment is
+     safe here. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
 }
 .row.unread {
   background: rgba(var(--accent-rgb), 0.04);

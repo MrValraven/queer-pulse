@@ -62,7 +62,7 @@ export function NotFoundPage() {
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     if (query.trim())
-      navigate(routes.search + "?q=" + encodeURIComponent(query.trim()));
+      void navigate(routes.search + "?q=" + encodeURIComponent(query.trim()));
   }
 
   return (
@@ -86,7 +86,7 @@ export function NotFoundPage() {
 
           <div className={styles.actions}>
             <Button to="/">{t("system:notFound.homeCta")}</Button>
-            <Button variant="ghost" onClick={() => navigate(-1)}>
+            <Button variant="ghost" onClick={() => void navigate(-1)}>
               {t("system:notFound.backCta")}
             </Button>
           </div>

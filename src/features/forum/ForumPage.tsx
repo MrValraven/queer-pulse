@@ -76,10 +76,10 @@ export function ForumPage() {
     // twice (matched on category + title). Demo never refetches, so its
     // optimistic posts are kept as the record.
     const serverKeys = new Set(
-      threadsQuery.threads.map((thread) => `${thread.cat}::${thread.title}`),
+      threadsQuery.threads.map((thread) => `${thread.category}::${thread.title}`),
     );
     const optimistic = extraThreads.filter(
-      (thread) => !serverKeys.has(`${thread.cat}::${thread.title}`),
+      (thread) => !serverKeys.has(`${thread.category}::${thread.title}`),
     );
     return [...optimistic, ...threadsQuery.threads];
   }, [extraThreads, threadsQuery.threads]);
@@ -89,7 +89,7 @@ export function ForumPage() {
   // is only touched inside this demoMode branch.
   const canEditThread = (thread: Thread): boolean =>
     demoMode
-      ? thread.author.slug === currentUser.slug || thread.author.n === "You"
+      ? thread.author.slug === currentUser.slug || thread.author.name === "You"
       : !!thread.canEdit;
 
   const editingThread =
@@ -120,12 +120,12 @@ export function ForumPage() {
   // stay truthful and update live when a member publishes a new one.
   const counts = useMemo(() => {
     const by: Record<string, number> = {};
-    for (const t of allThreads) by[t.cat] = (by[t.cat] ?? 0) + 1;
+    for (const t of allThreads) by[t.category] = (by[t.category] ?? 0) + 1;
     return by;
   }, [allThreads]);
 
   const threads = useMemo(() => {
-    const filtered = allThreads.filter((t) => cat === "all" || t.cat === cat);
+    const filtered = allThreads.filter((t) => cat === "all" || t.category === cat);
     if (sort === "new") return [...filtered].sort((a, b) => b.id - a.id);
     return [...filtered].sort(
       (a, b) =>
@@ -144,7 +144,7 @@ export function ForumPage() {
     setExtraThreads((prev) => [
       {
         id,
-        cat: postCat,
+        category: postCat,
         title,
         excerpt,
         author,

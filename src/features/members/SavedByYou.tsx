@@ -4,7 +4,7 @@ import { FaBookmark } from "react-icons/fa6";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSaved, type SavedItem } from "../../app/providers/SavedProvider";
+import { useSaved, type SavedItem } from "../../app/providers/useSaved";
 import { linkToPath, routes } from "../../app/routeMap";
 import { KIND_CARD, type KindCard } from "./savedByYou.data";
 import styles from "./SavedByYou.module.css";

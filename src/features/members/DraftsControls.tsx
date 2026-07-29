@@ -35,6 +35,7 @@ export function DraftsControls({
         </svg>
         <input
           type="text"
+          enterKeyHint="search"
           value={query}
           onChange={(e) => onQuery(e.target.value)}
           placeholder={t("members:drafts.controls.searchPlaceholder")}
