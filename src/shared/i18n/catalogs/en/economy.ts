@@ -410,6 +410,8 @@ export const economy: Catalog = {
   "jobDetail.sidebar.category": "Category",
   "jobDetail.sidebar.deadline": "Deadline",
   "jobDetail.sidebar.applyCta": "Apply now →",
+  "jobDetail.report.cta": "Report this job",
+  "jobDetail.report.ariaLabel": "Report {name}",
 
   // ── HousingPage / HousingBoard / HousingSections ───────────────────────
   "housing.meta.title": "LGBTQ+ housing and flatmates board in Lisbon",
@@ -612,15 +614,15 @@ export const economy: Catalog = {
   // ── ReportListingModal ─────────────────────────────────────────────────
   "housingListing.report": "Report",
   "housingListing.reportAriaLabel": "Report {title}",
-  "housingListing.reportModal.ariaLabel": "Report this listing",
-  "housingListing.reportModal.eyebrow": "Report this listing",
+  "housingListing.reportModal.ariaLabel": "Report",
+  "housingListing.reportModal.eyebrow": "Report to our team",
   "housingListing.reportModal.title": "What's wrong with <em>{title}?</em>",
   "housingListing.reportModal.lead":
-    "Reports help us keep the housing board trustworthy. Tell us what's going on — specifics help the review team. Your name is never shared with the lister.",
+    "Reports help us keep QueerPulse trustworthy. Tell us what's going on — specifics help the review team. Your name is never shared with whoever you're reporting.",
   "housingListing.reportModal.concernLabel": "What's the concern?",
   "housingListing.reportModal.detailLabel": "Tell us more",
   "housingListing.reportModal.detailPlaceholder":
-    "What made this listing feel unsafe, discriminatory, or untrustworthy? Be as specific as you're comfortable with.",
+    "What made this feel unsafe, discriminatory, or untrustworthy? Be as specific as you're comfortable with.",
   "housingListing.reportModal.charsRemaining_one":
     "{count} more character to submit",
   "housingListing.reportModal.charsRemaining_other":
@@ -628,14 +630,14 @@ export const economy: Catalog = {
   "housingListing.reportModal.charsCount_one": "{count} character",
   "housingListing.reportModal.charsCount_other": "{count} characters",
   "housingListing.reportModal.confidentialNote":
-    "Reports are confidential. Moderators see your name; the lister never does. In an emergency, call <strong>112</strong> first.",
+    "Reports are confidential. Moderators see your name; the person or party you report never does. In an emergency, call <strong>112</strong> first.",
   "housingListing.reportModal.cancelCta": "Cancel",
   "housingListing.reportModal.submitting": "Submitting…",
   "housingListing.reportModal.submitCta": "Submit report",
   "housingListing.reportModal.success.title": "Report",
   "housingListing.reportModal.success.em": "received.",
   "housingListing.reportModal.success.body":
-    "Thank you. A moderator will review {title}. We may contact you for more detail, but we'll never share your report with the lister.",
+    "Thank you. A moderator will review {title}. We may contact you for more detail, but we'll never share your report with whoever you reported.",
   "housingListing.reportModal.doneCta": "Done",
 
   // ── ContactRequestModal (shared "reach out" flow) ──────────────────────
@@ -815,6 +817,8 @@ export const economy: Catalog = {
   "company.sidebar.hiringContactTitle": "Hiring contact",
   "company.sidebar.messagePerson": "Message {name}",
   "company.sidebar.sendMessage": "Send a message",
+  "company.report.cta": "Report this company",
+  "company.report.ariaLabel": "Report {name}",
 
   "company.tabs.about": "About",
   "company.tabs.jobs": "Jobs",
@@ -898,7 +902,7 @@ export const economy: Catalog = {
     "Member-written · anonymous · updated continuously",
   "employerReviews.recent.browseCta": "Browse queer-inclusive jobs →",
   "employerReviews.recent.writeCta": "Write a review →",
-  "employerReviews.emptyLive.title": "Employer reviews coming soon",
+  "employerReviews.emptyLive.title": "No employers reviewed yet",
   "employerReviews.emptyLive.description":
     "No reviews have been published yet. Be the first to share what it's really like to work somewhere.",
 

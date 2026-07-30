@@ -707,6 +707,9 @@
   align-items: flex-end;
   justify-content: center;
   backdrop-filter: blur(4px);
+  /* Lift the sheet above the on-screen keyboard on iOS (see
+     useVisualViewportKeyboard) so the submit button isn't hidden behind it. */
+  padding-block-end: var(--keyboard-inset, 0px);
 }
 .modal {
   background: var(--paper);
@@ -714,7 +717,9 @@
   width: 100%;
   max-width: 560px;
   padding: 32px 36px 44px;
-  max-height: 90vh;
+  /* svh, not vh: vh is the large viewport, so 90vh overflows under mobile
+     browser chrome and pushes actions off-screen. */
+  max-height: 90svh;
   overflow-y: auto;
   animation: econUp 0.38s cubic-bezier(0.22, 0.68, 0.16, 1);
 }

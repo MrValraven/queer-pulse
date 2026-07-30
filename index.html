@@ -15,6 +15,21 @@
       name="description"
       content="QueerPulse — a quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon."
     />
+    <!-- Paired theme-color: the browser toolbar tint follows the OS colour
+         scheme. Light keeps the brand plum chrome; dark matches the app's dark
+         page background (--cream in [data-theme="dark"], #0E0820) so the toolbar
+         blends instead of glowing plum over a near-black UI. A bare fallback is
+         kept last for engines that ignore the media attribute. -->
+    <meta
+      name="theme-color"
+      content="#2D1B3D"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#0E0820"
+      media="(prefers-color-scheme: dark)"
+    />
     <meta name="theme-color" content="#2D1B3D" />
 
     <!-- Installed-app presentation. `black-translucent` lets the page extend

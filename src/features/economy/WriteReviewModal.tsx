@@ -1,54 +1,17 @@
 import { useState, type FormEvent } from "react";
-import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { ReviewStarRating } from "./ReviewStarRating";
 import { useSubmitFlow } from "./modalFlow";
 import type { Company, Review } from "./employerReviews.data";
-import styles from "./WriteReviewModal.module.css";
 import shell from "./ApplicationModals.module.css";
 
 export interface SubmittedReview {
   /** Company the review is about. */
   companyName: string;
   review: Review;
-}
-
-/** Star rating picker, 1–5. */
-function StarRating({
-  value,
-  onChange,
-}: {
-  value: number;
-  onChange: (n: number) => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div
-      className={styles.stars}
-      role="radiogroup"
-      aria-label={t("economy:companyReview.overallRatingAriaLabel")}
-    >
-      {[1, 2, 3, 4, 5].map((starValue) => (
-        <button
-          key={starValue}
-          type="button"
-          role="radio"
-          aria-checked={value === starValue}
-          aria-label={t("economy:companyReview.starAriaLabel", {
-            count: starValue,
-          })}
-          className={[styles.star, starValue <= value && styles.starOn]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => onChange(starValue)}
-        >
-          <FiStar size={26} aria-hidden />
-        </button>
-      ))}
-    </div>
-  );
 }
 
 /**
@@ -139,7 +102,7 @@ export function WriteReviewModal({
 
           <div className={shell.field}>
             <label>{t("economy:companyReview.overallRatingAriaLabel")}</label>
-            <StarRating value={rating} onChange={setRating} />
+            <ReviewStarRating value={rating} onChange={setRating} />
           </div>
 
           <div className={shell.field}>

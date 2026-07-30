@@ -20,6 +20,7 @@ import { SubprofileEndorse } from "./SubprofileEndorse";
 import { SubprofileFollow } from "./SubprofileFollow";
 import { SubprofileShare } from "./SubprofileShare";
 import { SubprofileShareCard } from "./SubprofileShareCard";
+import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileHero.module.css";
 
@@ -183,6 +184,18 @@ export function SubprofileHero({
               )}
 
               {view.bio && <p className={styles.bio}>{view.bio}</p>}
+
+              {!isOwnerViewing && (
+                <ReportSubjectControl
+                  subjectType="subprofile"
+                  subjectId={view.slug}
+                  subjectName={view.displayName}
+                  label={t("subprofiles:hero.report.cta")}
+                  ariaLabel={t("subprofiles:hero.report.ariaLabel", {
+                    name: view.displayName,
+                  })}
+                />
+              )}
             </div>
           </Reveal>
         </div>

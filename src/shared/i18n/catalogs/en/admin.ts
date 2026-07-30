@@ -398,6 +398,30 @@ export const admin: Catalog = {
   "adminListings.ask.action": "send your question",
   "adminListings.ask.noSubmitter":
     "This listing has no member to contact — there's no one to send a question to.",
+  "adminListings.view.queue": "Submissions",
+  "adminListings.view.editSuggestions": "Edit suggestions",
+
+  // ── Edit suggestions ─────────────────────────────────────────────────────────
+  "editSuggestions.empty": "No corrections in this filter right now.",
+  "editSuggestions.field.hours": "Hours",
+  "editSuggestions.field.address": "Address",
+  "editSuggestions.field.phone": "Phone number",
+  "editSuggestions.field.website": "Website",
+  "editSuggestions.field.description": "Description",
+  "editSuggestions.field.other": "Something else",
+  "editSuggestions.filter.pending": "Pending",
+  "editSuggestions.filter.accepted": "Accepted",
+  "editSuggestions.filter.dismissed": "Dismissed",
+  "editSuggestions.filter.all": "All",
+  "editSuggestions.status.pending": "Pending",
+  "editSuggestions.status.accepted": "Accepted",
+  "editSuggestions.status.dismissed": "Dismissed",
+  "editSuggestions.acceptCta": "Accept",
+  "editSuggestions.dismissCta": "Dismiss",
+  "editSuggestions.submittedBy": "Suggested by {name}",
+  "editSuggestions.unknownSubmitter": "an unknown member",
+  "editSuggestions.toast.accepted": "Accepted the correction for {name}.",
+  "editSuggestions.toast.dismissed": "Dismissed the correction for {name}.",
 
   // ── Moderation ─────────────────────────────────────────────────────────────
   "moderation.title": "Moderation · <em>triage</em>",
@@ -1509,9 +1533,13 @@ export const admin: Catalog = {
   "roadmap.heroStats.moveDownAriaLabel": "Move stat down",
   "roadmap.heroStats.jadeToggle.title": "Highlight in jade",
   "roadmap.heroStats.toast.saved": "Hero stats saved.",
-  // Auto-fill labels — English doesn't inflect these by count, so each is a
-  // single bare key (unlike the PT catalog's shipped/planned _one/_other).
-  "roadmap.heroStats.autofill.shipped": "{count} shipped",
+  // Auto-fill labels — the labels are rendered with a { count } so i18next
+  // resolves the plural form; English doesn't inflect these, so the _one and
+  // _other forms carry identical copy (the PT catalog inflects them). "building"
+  // stays a single bare key since "in progress" reads the same at any count.
+  "roadmap.heroStats.autofill.shipped_one": "{count} shipped",
+  "roadmap.heroStats.autofill.shipped_other": "{count} shipped",
   "roadmap.heroStats.autofill.building": "{count} in progress",
-  "roadmap.heroStats.autofill.planned": "{count} planned",
+  "roadmap.heroStats.autofill.planned_one": "{count} planned",
+  "roadmap.heroStats.autofill.planned_other": "{count} planned",
 };

@@ -3,6 +3,8 @@ import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
+import { DemoModeProvider } from "../../app/providers/DemoModeProvider";
+import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
 
@@ -12,7 +14,11 @@ function renderMain(node: ReactNode) {
   });
   return render(
     <QueryClientProvider client={queryClient}>
-      <I18nProvider>{node}</I18nProvider>
+      <I18nProvider>
+        <DemoModeProvider>
+          <ToastProvider>{node}</ToastProvider>
+        </DemoModeProvider>
+      </I18nProvider>
     </QueryClientProvider>,
   );
 }

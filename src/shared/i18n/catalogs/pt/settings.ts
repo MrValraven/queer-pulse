@@ -382,7 +382,6 @@ export const settings: Catalog = {
   "editProfile.nav.bio.label": "Biografia e ocupação",
   "editProfile.nav.links.label": "Ligações e redes sociais",
   "editProfile.nav.skills.label": "Competências e interesses",
-  "editProfile.nav.visibility.label": "Visibilidade dos campos",
   "editProfile.nav.communities.label": "Comunidades",
   "editProfile.nav.more": "Mais",
   "editProfile.nav.pronounsGuideLink": "Guia de pronomes",
@@ -429,13 +428,7 @@ export const settings: Catalog = {
   "editProfile.pronouns.writeOwnPlaceholder": "Ou escreve os teus…",
   "editProfile.pronouns.hint":
     "Podes selecionar várias etiquetas acima. Os pronomes só são mostrados no teu perfil — não em meta tags nem em URLs.",
-  "editProfile.pronouns.chosenNameLabel": "Nome escolhido",
-  "editProfile.pronouns.chosenNameOptional":
-    "se for diferente do nome de apresentação",
-  "editProfile.pronouns.chosenNamePlaceholder":
-    "Nome a usar em todas as comunicações",
-  "editProfile.pronouns.chosenNameHint":
-    "Usado nos emails que enviamos e em qualquer comunicação da plataforma.",
+  "editProfile.pronouns.removeCustomAriaLabel": "Remover {pronoun}",
 
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
   "editProfile.bio.title": "Biografia <em>e ocupação</em>",
@@ -444,9 +437,6 @@ export const settings: Catalog = {
   "editProfile.bio.label": "Biografia",
   "editProfile.bio.placeholder": "Algumas frases sobre ti…",
   "editProfile.bio.occupationLabel": "Ocupação",
-  "editProfile.bio.organisationLabel": "Organização",
-  "editProfile.bio.organisationOptional": "opcional",
-  "editProfile.bio.organisationPlaceholder": "Onde trabalhas ou estudas",
 
   // ── LinksSection.tsx ──────────────────────────────────────────────────────
   "editProfile.links.title": "Ligações <em>e redes sociais</em>",
@@ -468,34 +458,6 @@ export const settings: Catalog = {
   "editProfile.skills.interestsLabel": "Interesses",
   "editProfile.skills.interestsPlaceholder":
     "ex.: Política de habitação, Cinema, Culinária…",
-
-  // ── EditProfileSections.tsx — VisibilitySection (cosmético, comingSoon) ──
-  "editProfile.visibility.title": "Visibilidade <em>dos campos</em>",
-  "editProfile.visibility.sub":
-    "A visibilidade por campo estará disponível brevemente. Por agora, usa o separador Visibilidade para definir quem pode ver todo o teu perfil.",
-  "editProfile.visibility.alwaysOn": "Sempre ativo",
-  "editProfile.visibility.optionMembers": "Pessoas",
-  "editProfile.visibility.optionConnectionsOnly": "Só ligações",
-  "editProfile.visibility.optionHidden": "Oculto",
-  "editProfile.visibility.field.displayName.name": "Nome de apresentação",
-  "editProfile.visibility.field.displayName.desc":
-    "Sempre público dentro da QueerPulse",
-  "editProfile.visibility.field.photo.name": "Foto",
-  "editProfile.visibility.field.photo.desc": "Foto de perfil",
-  "editProfile.visibility.field.pronouns.name": "Pronomes",
-  "editProfile.visibility.field.pronouns.desc":
-    "Forma como preferes que te tratem",
-  "editProfile.visibility.field.bio.name": "Biografia",
-  "editProfile.visibility.field.bio.desc": "O teu texto de apresentação",
-  "editProfile.visibility.field.occupation.name": "Ocupação",
-  "editProfile.visibility.field.occupation.desc": "Cargo e organização",
-  "editProfile.visibility.field.location.name": "Localização",
-  "editProfile.visibility.field.location.desc": "Bairro em Lisboa",
-  "editProfile.visibility.field.skills.name": "Competências",
-  "editProfile.visibility.field.skills.desc":
-    "Competências e interesses oferecidos",
-  "editProfile.visibility.field.link.name": "Ligação",
-  "editProfile.visibility.field.link.desc": "URL externo no teu perfil",
 
   // ── EditProfileSections.tsx — CommunitiesSection ─────────────────────────
   "editProfile.communities.title": "Comunidades <em>em destaque</em>",

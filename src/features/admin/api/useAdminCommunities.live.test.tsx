@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 import { http, HttpResponse } from "msw";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
-import { API } from "../../../test/msw/handlers";
+import { API, API_V1 } from "../../../test/msw/handlers";
 import { TestProviders } from "../../../test/TestProviders";
 import { COMMUNITIES } from "../adminCommunities.data";
 // Statically imported (unlike the live-mode hook below, which is re-imported
@@ -105,7 +105,7 @@ describe("useAdminCommunities (live mode via MSW)", () => {
 
   it("returns an empty array when the platform has no communities", async () => {
     server.use(
-      http.get(`${API}/admin/communities`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/admin/communities`, () => HttpResponse.json([])),
     );
 
     const { useAdminCommunities: useAdminCommunitiesLive, wrapper } =

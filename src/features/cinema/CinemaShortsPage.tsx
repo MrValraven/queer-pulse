@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -25,6 +27,12 @@ import styles from "./CinemaShortsPage.module.css";
 
 /** Made Here — the community catalogue of member-made queer short films. */
 export function CinemaShortsPage() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return <CinemaComingSoon />;
+  return <DemoCinemaShortsPage />;
+}
+
+function DemoCinemaShortsPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [saved, setSaved] = useState<string[]>([]);

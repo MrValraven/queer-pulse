@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 import { http, HttpResponse } from "msw";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
-import { API } from "../../../test/msw/handlers";
+import { API, API_V1 } from "../../../test/msw/handlers";
 import { TestProviders } from "../../../test/TestProviders";
 import { MEMBERS } from "../adminMembers.data";
 // Statically imported (unlike the live-mode hooks below, which are
@@ -85,7 +85,7 @@ async function loadLive() {
 describe("useAdminMembers (live mode via MSW)", () => {
   it("fetches GET /admin/members and returns adapted members", async () => {
     server.use(
-      http.get(`${API}/admin/members`, () =>
+      http.get(`${API_V1}/admin/members`, () =>
         HttpResponse.json({
           items: [
             {
@@ -130,7 +130,7 @@ describe("useAdminMembers (live mode via MSW)", () => {
 describe("useAdminFlagged (live mode via MSW)", () => {
   it("fetches GET /admin/members/flagged and returns adapted members", async () => {
     server.use(
-      http.get(`${API}/admin/members/flagged`, () =>
+      http.get(`${API_V1}/admin/members/flagged`, () =>
         HttpResponse.json([
           {
             id: "anon_9001",

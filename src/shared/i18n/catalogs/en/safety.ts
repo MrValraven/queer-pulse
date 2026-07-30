@@ -177,6 +177,8 @@ export const safety: Catalog = {
     "<strong>Note:</strong> If you share communities, {name} will still appear in member lists — but won't be able to interact with you directly.",
   "blockMute.choose.continueCta": "Continue",
   "blockMute.choose.cancelCta": "Cancel",
+  "blockMute.choose.liveDurationNote":
+    "A mute lasts until you unmute — timed mutes are a demo-only preview.",
 
   "blockMute.muted.title": "You've <em>muted</em> {name}",
   "blockMute.muted.sub":
@@ -198,6 +200,27 @@ export const safety: Catalog = {
   "blockMute.blocked.undoCta": "Undo — unblock {name}",
   "blockMute.blocked.reportNote":
     "Need to report harmful behaviour? <link>File a report →</link>",
+
+  // ── ProfileSafetyMenu.tsx / BlockMemberModal.tsx (block/mute from a profile) ──
+  "profileMenu.ariaLabel": "Safety actions for {name}",
+  "profileMenu.mute": "Mute {name}",
+  "profileMenu.unmute": "Unmute {name}",
+  "profileMenu.block": "Block {name}",
+  "profileMenu.unblock": "Unblock {name}",
+  "profileMenu.mutedToast": "You muted {name}. Their posts are hidden from you.",
+  "profileMenu.unmutedToast": "You unmuted {name}.",
+  "profileMenu.unblockedToast": "You unblocked {name}.",
+  "profileMenu.blockedToast": "You blocked {name}.",
+  "profileMenu.blockedReportedToast":
+    "You blocked {name} and sent a report to the moderation team.",
+  "blockModal.title": "Block {name}?",
+  "blockModal.body":
+    "Blocking severs any connection between you. {name} won't be able to view your profile, message you, or find you in search — and neither of you can connect with the other. You can unblock later.",
+  "blockModal.reportCheckbox": "Also report {name} to the moderation team",
+  "blockModal.reasonLabel": "Reason (optional)",
+  "blockModal.reasonPlaceholder": "Add any context for the moderation team…",
+  "blockModal.cancelCta": "Cancel",
+  "blockModal.confirmCta": "Block {name}",
 
   // ── AppealOutcomePage.tsx ──────────────────────────────────────────────
   "appeal.state.pending": "Pending",

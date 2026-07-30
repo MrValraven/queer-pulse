@@ -1133,4 +1133,43 @@ export const cinema: Catalog = {
   "watch.below.splitLegend.filmmaker": "Quem fez o filme",
   "watch.below.splitLegend.payments": "Pagamentos",
   "watch.below.splitLegend.hosting": "Alojamento",
+
+  // ── Live mode (catálogo real + leitor) ─────────────────────────────────────
+  "live.catalog.title": "O programa, a passar agora",
+  "live.catalog.lead":
+    "Todos os filmes abaixo estão disponíveis para membros com sessão iniciada.",
+  "live.viewCount": "{count} visualizações",
+  "live.finished": "Visto",
+  "live.resumeAt": "{percent}% visto",
+  "live.signIn.title": "Inicia sessão para ver",
+  "live.signIn.description":
+    "O cinema está aberto a membros com sessão iniciada. Inicia sessão para ver o programa.",
+  "live.signIn.cta": "Iniciar sessão",
+  "live.empty.title": "O programa está calmo neste momento",
+  "live.empty.description":
+    "Ainda não há filmes a passar. Volta em breve — há títulos novos todas as semanas.",
+  "live.error.title": "O programa não carregou",
+  "live.error.description":
+    "Algo correu mal ao carregar o catálogo. Tenta novamente daqui a pouco.",
+  "live.pick.title": "Escolhe um filme para ver",
+  "live.pick.description":
+    "Escolhe um título do programa para começar a ver.",
+  "live.pick.cta": "Explorar o programa",
+  "live.notFound.title": "Este filme não está disponível",
+  "live.notFound.description":
+    "Pode ter sido despublicado, ou a ligação está desatualizada.",
+  "live.notFound.cta": "Explorar o programa",
+  "live.playCta": "Reproduzir filme",
+  "live.resumeCta": "Continuar a ver",
+  "live.playbackError": "Não foi possível iniciar este filme. Tenta novamente.",
+
+  // ── Marcador de posição em modo live (CinemaComingSoon) ────────────────────
+  // Aparece nas secções do Cinema ainda sem backend (coleções, curtas
+  // "feitas aqui", perfis de realizadores/curadores, convites abertos, detalhe
+  // de filme). Browse e Watch estão ativos, por isso apontamos para o catálogo.
+  "comingSoon.title": "Esta bobina ainda está na montagem",
+  "comingSoon.description":
+    "As coleções, os perfis de realizadores e os convites abertos ainda estão em produção. Os filmes já estão ativos — explora o catálogo e carrega em play.",
+  "comingSoon.browseCta": "Explorar filmes",
+  "comingSoon.backHome": "Voltar ao início",
 };

@@ -1787,4 +1787,13 @@ export const studio: Catalog = {
   "offAir.hero.replayAria": "Repetir o acalanto",
   "offAir.hero.replayingToast": "A repetir {title}",
   "offAir.hero.paidOutSuffix": "{amount} pagos · repete quando quiseres",
+
+  // ── Marcador de posição em modo live (StudioComingSoonPage) ────────────────
+  // Aparece em todas as rotas /studio/* quando o modo demo está desligado —
+  // o Studio ainda não tem backend e não pode mostrar valores inventados.
+  "comingSoon.title": "O Studio ainda está a <em>afinar</em>",
+  "comingSoon.description":
+    "A nossa plataforma de música em cooperativa — páginas de artistas, sessões ao vivo, pagamentos e o fundo de solidariedade — ainda não abriu ao público. Estamos a construí-la à vista de todes e chega aqui em breve.",
+  "comingSoon.exploreCulture": "Explorar a Cultura",
+  "comingSoon.backHome": "Voltar ao início",
 };

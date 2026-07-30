@@ -25,7 +25,18 @@ export interface Owner {
   first: string;
 }
 
+/** The listing owner's single public reply to a review, shown beneath it.
+ * Mirrors the backend's `ReviewOwnerReplyDTO` — absent/`null` until the owner
+ * posts one via `PATCH /listings/:ref/reviews/:reviewId/reply`. */
+export interface ReviewOwnerReply {
+  text: string;
+  at: string;
+}
+
 export interface Review {
+  /** Stable id — the review's uuid PK live, a `<slug>-review-<n>` token in the
+   * demo fixture. Targets `useReplyToReview`'s PATCH endpoint. */
+  id: string;
   initials: string;
   name: string;
   tint: Tint;
@@ -33,6 +44,7 @@ export interface Review {
   stars: number;
   text: string;
   helpful: number;
+  ownerReply?: ReviewOwnerReply | null;
 }
 
 export interface DirectoryPlace {
@@ -74,8 +86,23 @@ export interface DirectoryPlace {
    * templated `hoursRows(hoursType)` fallback renders instead. */
   hours?: Record<string, DayHours>;
   langs?: string[];
-  upcoming?: { when: string; title: string }[];
+  /** `slug` deep-links to the Events Hub (`/events/:slug`); `id` is the DB PK,
+   * present when the source event carries one. `startAt` is the raw ISO
+   * start (local floating time, no timezone offset) — present on live data
+   * and seeded on demo fixtures — and powers the add-to-calendar links;
+   * absent means the calendar affordance is skipped gracefully. */
+  upcoming?: {
+    when: string;
+    title: string;
+    slug: string;
+    id?: string;
+    startAt?: string;
+  }[];
   reviews: Review[];
+  /** Count of members who saved this listing — backend-only field. Absent for
+   * most demo places (the "hidden when absent" path); a few carry a seeded
+   * value so the trust signal is visible in demo mode too. */
+  savedCount?: number;
 }
 
 const C: Tint = "coral";
@@ -132,6 +159,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. da Escola Politécnica 84 · Príncipe Real",
     reviews: [
       {
+        id: "atelier-pulso-review-1",
         initials: MEMBERS.andre!.initials,
         name: memberName("andre"),
         tint: J,
@@ -141,6 +169,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 12,
       },
       {
+        id: "atelier-pulso-review-2",
         initials: "LB",
         name: "Livraria Bertha",
         tint: P,
@@ -165,6 +194,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Twelve seats, one long table, and the best night out you can have sitting down.",
     pills: ["Supper club", "Monthly · ticketed", "€€€", "Dietary-friendly"],
     rating: { score: "5.0", count: 41 },
+    savedCount: 27,
     gallery: [
       "The long table",
       "Open kitchen",
@@ -198,14 +228,24 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       {
         when: "Sat 21 Jun · 20:00",
         title: "June dinner — early summer, the market decides",
+        // Maps to the real demo gathering "Queer Supper Club №12" (same
+        // host, Tomás) so the deep link resolves to a real event page
+        // instead of gatheringDetails' silent default fallback.
+        slug: "supper-club-12",
+        startAt: "2026-06-21T20:00:00",
       },
       {
         when: "Sat 19 Jul · 20:00",
         title: "July dinner — stone fruit & the grill",
+        // No second demo supper-club slug exists; "sober-queers-supper" is
+        // the closest distinct supper-club-themed demo gathering.
+        slug: "sober-queers-supper",
+        startAt: "2026-07-19T20:00:00",
       },
     ],
     reviews: [
       {
+        id: "queer-supper-club-review-1",
         initials: MEMBERS.carla!.initials,
         name: memberName("carla"),
         tint: C,
@@ -215,6 +255,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 28,
       },
       {
+        id: "queer-supper-club-review-2",
         initials: MEMBERS.kai!.initials,
         name: memberName("kai"),
         tint: J,
@@ -274,6 +315,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. da Senhora do Monte 12 · Graça",
     reviews: [
       {
+        id: "estudio-beatriz-pinto-review-1",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: J,
@@ -283,6 +325,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 9,
       },
       {
+        id: "estudio-beatriz-pinto-review-2",
         initials: "BA",
         name: "Bairro Alto Studio",
         tint: J,
@@ -341,10 +384,17 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "R. do Benformoso 140 · Intendente",
     upcoming: [
-      { when: "Thu 12 Jun · 19:00", title: "Peer-support drop-in (open)" },
+      {
+        when: "Thu 12 Jun · 19:00",
+        title: "Peer-support drop-in (open)",
+        // Closest real demo gathering: an open, no-agenda peer meetup.
+        slug: "trans-hub-meetup",
+        startAt: "2026-06-12T19:00:00",
+      },
     ],
     reviews: [
       {
+        id: "opus-diversus-review-1",
         initials: MEMBERS.anika!.initials,
         name: memberName("anika"),
         tint: C,
@@ -354,6 +404,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 33,
       },
       {
+        id: "opus-diversus-review-2",
         initials: MEMBERS.jonas!.initials,
         name: memberName("jonas"),
         tint: J,
@@ -435,11 +486,22 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       {
         when: "Fri 13 Jun · 19:00",
         title: "Reading — new queer poetry in translation",
+        // No dedicated demo "reading" gathering; the closest distinct
+        // literary demo event is the book club.
+        slug: "queer-book-club",
+        startAt: "2026-06-13T19:00:00",
       },
-      { when: "Sun 22 Jun · 17:00", title: 'Book club · "Stone Butch Blues"' },
+      {
+        when: "Sun 22 Jun · 17:00",
+        title: 'Book club · "Stone Butch Blues"',
+        // Exact match: gatheringDetails has a "Stone Butch Blues" book club.
+        slug: "stone-butch-blues",
+        startAt: "2026-06-22T17:00:00",
+      },
     ],
     reviews: [
       {
+        id: "livraria-bertha-review-1",
         initials: MEMBERS["sofia-castano"]!.initials,
         name: memberName("sofia-castano"),
         tint: P,
@@ -449,6 +511,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 17,
       },
       {
+        id: "livraria-bertha-review-2",
         initials: MEMBERS.nuno!.initials,
         name: memberName("nuno"),
         tint: J,
@@ -502,6 +565,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. do Capelão 18 · Mouraria",
     reviews: [
       {
+        id: "cafe-mouraria-velha-review-1",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: J,
@@ -511,6 +575,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 14,
       },
       {
+        id: "cafe-mouraria-velha-review-2",
         initials: MEMBERS.tomas!.initials,
         name: memberName("tomas"),
         tint: C,
@@ -564,6 +629,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. da Atalaia 90 · Bairro Alto",
     reviews: [
       {
+        id: "bairro-alto-studio-review-1",
         initials: MEMBERS.kai!.initials,
         name: memberName("kai"),
         tint: J,
@@ -573,6 +639,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 10,
       },
       {
+        id: "bairro-alto-studio-review-2",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: C,
@@ -627,6 +694,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "Largo do Intendente 8 · Intendente",
     reviews: [
       {
+        id: "espaco-intendente-review-1",
         initials: MEMBERS.nuno!.initials,
         name: memberName("nuno"),
         tint: J,
@@ -636,6 +704,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 13,
       },
       {
+        id: "espaco-intendente-review-2",
         initials: MEMBERS.carla!.initials,
         name: memberName("carla"),
         tint: C,
@@ -659,6 +728,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Natural wine, small plates, and a room that wants you to stay one more glass.",
     pills: ["Wine bar · small plates", "Evenings", "€€€", "Ground floor"],
     rating: { score: "4.8", count: 49 },
+    savedCount: 18,
     gallery: ["The bar", "Small plates", "Wine wall", "Arroios corner"],
     whatItIs: [
       "A Farinha is a queer-owned natural wine bar and small-plates kitchen in Arroios — a short, seasonal menu, a long, opinionated wine list, and staff who actually want to talk you through it.",
@@ -711,6 +781,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     langs: ["pt", "en"],
     reviews: [
       {
+        id: "a-farinha-review-1",
         initials: MEMBERS.anika!.initials,
         name: memberName("anika"),
         tint: C,
@@ -720,6 +791,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 16,
       },
       {
+        id: "a-farinha-review-2",
         initials: MEMBERS["sofia-castano"]!.initials,
         name: memberName("sofia-castano"),
         tint: P,
@@ -778,6 +850,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. Nova do Carvalho 30 · Cais do Sodré",
     reviews: [
       {
+        id: "studio-andre-quintela-review-1",
         initials: MEMBERS.kai!.initials,
         name: memberName("kai"),
         tint: J,
@@ -787,6 +860,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 19,
       },
       {
+        id: "studio-andre-quintela-review-2",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: C,
@@ -850,6 +924,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "Calçada da Estrela 40 · Estrela",
     reviews: [
       {
+        id: "clinica-da-estrela-review-1",
         initials: MEMBERS.jonas!.initials,
         name: memberName("jonas"),
         tint: J,
@@ -859,6 +934,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 24,
       },
       {
+        id: "clinica-da-estrela-review-2",
         initials: MEMBERS.anika!.initials,
         name: memberName("anika"),
         tint: C,
@@ -914,10 +990,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       {
         when: "Sat 28 Jun · 18:00",
         title: "Opening — group show, eight emerging artists",
+        // Closest real demo gathering with an emerging-artists showcase feel.
+        slug: "portfolio-night",
+        startAt: "2026-06-28T18:00:00",
       },
     ],
     reviews: [
       {
+        id: "galeria-lume-review-1",
         initials: MEMBERS.luisa!.initials,
         name: memberName("luisa"),
         tint: J,
@@ -927,6 +1007,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 12,
       },
       {
+        id: "galeria-lume-review-2",
         initials: MEMBERS.beatriz!.initials,
         name: memberName("beatriz"),
         tint: P,
@@ -950,6 +1031,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "A barbershop where the cut you ask for is the cut you get — no negotiation.",
     pills: ["Barbershop", "Walk-in & booking", "€€", "Ground floor"],
     rating: { score: "5.0", count: 71 },
+    savedCount: 41,
     gallery: [
       "The chairs",
       "Mirror wall",
@@ -985,6 +1067,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. do Século 120 · Príncipe Real",
     reviews: [
       {
+        id: "navalha-review-1",
         initials: MEMBERS.kai!.initials,
         name: memberName("kai"),
         tint: J,
@@ -994,6 +1077,27 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 41,
       },
       {
+        id: "navalha-review-3",
+        initials: MEMBERS.rita!.initials,
+        name: memberName("rita"),
+        tint: P,
+        byline: "she/her · loyal regular",
+        stars: 5,
+        text: "Told them I wanted to look like the drawing I'd sketched of myself and somehow they got it right on the first try. This is the only barbershop I recommend to trans friends without a caveat.",
+        helpful: 30,
+      },
+      {
+        id: "navalha-review-4",
+        initials: MEMBERS.carla!.initials,
+        name: memberName("carla"),
+        tint: C,
+        byline: "she/her · quarterly",
+        stars: 4,
+        text: "Booked online, in the chair five minutes later, out with the best fade I've had in Lisbon. Docking one star only because a Saturday walk-in queue got long — book ahead if you can.",
+        helpful: 22,
+      },
+      {
+        id: "navalha-review-2",
         initials: MEMBERS.nuno!.initials,
         name: memberName("nuno"),
         tint: P,
@@ -1001,6 +1105,26 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         stars: 5,
         text: "Same price as my old place, none of the awkwardness, twice the skill. Never going anywhere else.",
         helpful: 13,
+      },
+      {
+        id: "navalha-review-5",
+        initials: MEMBERS.andre!.initials,
+        name: memberName("andre"),
+        tint: J,
+        byline: "he/him · booked before a shoot",
+        stars: 5,
+        text: "Went in for a trim and mentioned I had a portrait session the next day. Vasco kept the shape, sharpened the edges, and it still looked like me in every frame.",
+        helpful: 5,
+      },
+      {
+        id: "navalha-review-6",
+        initials: MEMBERS.diogo!.initials,
+        name: memberName("diogo"),
+        tint: J,
+        byline: "he/they · first visit",
+        stars: 3,
+        text: "The cut itself was solid, and nobody blinked when I said \"no, shorter than that.\" Felt a little rushed near the end though — would've liked five more minutes on the beard line.",
+        helpful: 2,
       },
     ],
   },
@@ -1048,6 +1172,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. dos Lagares 9 · Mouraria",
     reviews: [
       {
+        id: "salao-mouraria-review-1",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: J,
@@ -1057,6 +1182,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 9,
       },
       {
+        id: "salao-mouraria-review-2",
         initials: MEMBERS["sofia-castano"]!.initials,
         name: memberName("sofia-castano"),
         tint: C,
@@ -1115,6 +1241,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. do Forno do Tijolo 22 · Intendente",
     reviews: [
       {
+        id: "studio-cabelo-review-1",
         initials: MEMBERS.anika!.initials,
         name: memberName("anika"),
         tint: C,
@@ -1124,6 +1251,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 18,
       },
       {
+        id: "studio-cabelo-review-2",
         initials: MEMBERS.kai!.initials,
         name: memberName("kai"),
         tint: J,
@@ -1183,6 +1311,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. da Boavista 64 · Cais do Sodré",
     reviews: [
       {
+        id: "academia-livre-review-1",
         initials: MEMBERS.jonas!.initials,
         name: memberName("jonas"),
         tint: J,
@@ -1192,6 +1321,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 27,
       },
       {
+        id: "academia-livre-review-2",
         initials: MEMBERS.nuno!.initials,
         name: memberName("nuno"),
         tint: P,
@@ -1250,6 +1380,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. da Rosa 200 · Bairro Alto",
     reviews: [
       {
+        id: "corpo-livre-review-1",
         initials: MEMBERS.rita!.initials,
         name: memberName("rita"),
         tint: C,
@@ -1259,6 +1390,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 20,
       },
       {
+        id: "corpo-livre-review-2",
         initials: MEMBERS["sofia-castano"]!.initials,
         name: memberName("sofia-castano"),
         tint: J,
@@ -1319,10 +1451,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       {
         when: "Sun 15 Jun · 10:00",
         title: "Open capoeira roda — all levels, free",
+        // Closest real demo gathering: free, all-levels group movement.
+        slug: "queer-runners-run",
+        startAt: "2026-06-15T10:00:00",
       },
     ],
     reviews: [
       {
+        id: "movimento-review-1",
         initials: MEMBERS.kai!.initials,
         name: memberName("kai"),
         tint: J,
@@ -1332,6 +1468,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 15,
       },
       {
+        id: "movimento-review-2",
         initials: MEMBERS.tomas!.initials,
         name: memberName("tomas"),
         tint: C,

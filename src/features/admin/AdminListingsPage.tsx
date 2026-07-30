@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminListingRows } from "./AdminListingRows";
 import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
+import { EditSuggestionsSection } from "./EditSuggestionsSection";
 import { useAdminListings } from "./api/useAdminListings";
 import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data";
 import type { ListingQueueRow } from "./api/adminListings.api";
@@ -15,6 +16,9 @@ import styles from "./AdminListingsPage.module.css";
 type StatusFilter = ListingStatus | "all";
 const FILTERS: StatusFilter[] = ["all", "review", "question", "live"];
 
+type ViewTab = "queue" | "editSuggestions";
+const VIEWS: ViewTab[] = ["queue", "editSuggestions"];
+
 /**
  * Moderator queue for member-submitted directory listings: filter by review
  * status and move a listing review → quick question → live (or back). Live
@@ -22,6 +26,7 @@ const FILTERS: StatusFilter[] = ["all", "review", "question", "live"];
  */
 export function AdminListingsPage() {
   const { t } = useTranslation();
+  const [view, setView] = useState<ViewTab>("queue");
   const [filter, setFilter] = useState<StatusFilter>("all");
   const statusArg = filter === "all" ? undefined : filter;
   const { rows, isLoading } = useAdminListings();
@@ -73,26 +78,43 @@ export function AdminListingsPage() {
 
       <FadeIn delay={60}>
         <AdminTabs
-          tabs={FILTERS.map((value) => ({
+          tabs={VIEWS.map((value) => ({
             id: value,
-            label: t(`admin:adminListings.filter.${value}`),
+            label: t(`admin:adminListings.view.${value}`),
           }))}
-          active={filter}
-          onChange={(value) => setFilter(value as StatusFilter)}
+          active={view}
+          onChange={(value) => setView(value as ViewTab)}
         />
       </FadeIn>
 
-      <FadeIn delay={80}>
-        {isLoading ? (
-          <ListingRowsSkeleton />
-        ) : (
-          <AdminListingRows
-            rows={visibleRows}
-            onStatusChanged={handleStatusChanged}
-            onOpen={setOpenRow}
-          />
-        )}
-      </FadeIn>
+      {view === "queue" ? (
+        <>
+          <FadeIn delay={70}>
+            <AdminTabs
+              tabs={FILTERS.map((value) => ({
+                id: value,
+                label: t(`admin:adminListings.filter.${value}`),
+              }))}
+              active={filter}
+              onChange={(value) => setFilter(value as StatusFilter)}
+            />
+          </FadeIn>
+
+          <FadeIn delay={80}>
+            {isLoading ? (
+              <ListingRowsSkeleton />
+            ) : (
+              <AdminListingRows
+                rows={visibleRows}
+                onStatusChanged={handleStatusChanged}
+                onOpen={setOpenRow}
+              />
+            )}
+          </FadeIn>
+        </>
+      ) : (
+        <EditSuggestionsSection />
+      )}
 
       {openRow && (
         <ListingPreviewDrawer

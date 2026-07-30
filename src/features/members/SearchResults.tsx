@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { Avatar, Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { linkToPath } from "../../app/routeMap";
+import { memberRowAvatar } from "./searchAvatar";
+import { linkToPath, routes } from "../../app/routeMap";
 import {
   TYPE_BG,
   TYPE_ICON,
@@ -47,11 +48,22 @@ function SkeletonGroup() {
 function ResultCard({ item }: { item: SearchItem }) {
   const { t } = useTranslation();
   const TypeIcon = TYPE_ICON[item.t];
+  const avatar = memberRowAvatar(item);
   return (
     <Link to={linkToPath(item.href)} className={styles.card}>
-      <div className={styles.cardIcon} style={{ background: TYPE_BG[item.t] }}>
-        <TypeIcon />
-      </div>
+      {avatar ? (
+        <Avatar
+          initials={avatar.initials}
+          tint={avatar.tint}
+          src={avatar.photo}
+          alt={item.name}
+          size={42}
+        />
+      ) : (
+        <div className={styles.cardIcon} style={{ background: TYPE_BG[item.t] }}>
+          <TypeIcon />
+        </div>
+      )}
       <div className={styles.cardBody}>
         <div className={styles.cardType}>{t(TYPE_LABEL_KEY[item.t])}</div>
         <div className={styles.nameRow}>
@@ -64,29 +76,26 @@ function ResultCard({ item }: { item: SearchItem }) {
   );
 }
 
-/** Live-mode placeholder — search isn't wired to the backend yet. */
-function SearchComingSoon() {
+/** Live-mode logged-out state — search requires a session. */
+function SearchSignInPrompt() {
   const { t } = useTranslation();
   return (
     <div className={styles.comingSoon}>
       <span className={styles.comingSoonBadge}>
-        {t("members:search.comingSoon.badge")}
+        {t("members:search.signInRequired.badge")}
       </span>
       <h2 className={styles.comingSoonTitle}>
         <Translation
-          i18nKey="members:search.comingSoon.title"
+          i18nKey="members:search.signInRequired.title"
           components={{ em: <em /> }}
         />
       </h2>
       <p className={styles.comingSoonText}>
-        <Translation
-          i18nKey="members:search.comingSoon.body"
-          components={{ b: <b /> }}
-          values={{
-            toggleName: t("shared:accountMenu.controls.populatePlatform"),
-          }}
-        />
+        {t("members:search.signInRequired.body")}
       </p>
+      <Button variant="primary" to={routes.signIn}>
+        {t("nav:signIn")}
+      </Button>
     </div>
   );
 }
@@ -157,8 +166,12 @@ function BrowseView({
         label={t(TYPE_LABEL_KEY.member)}
       />
       <Group
-        items={searchData.filter((d) => d.t === "gathering")}
-        label={t("members:search.upcomingGatherings")}
+        items={searchData.filter((d) => d.t === "event")}
+        label={t("members:search.upcomingEvents")}
+      />
+      <Group
+        items={searchData.filter((d) => d.t === "page")}
+        label={t(TYPE_LABEL_KEY.page)}
       />
     </>
   );
@@ -236,9 +249,12 @@ function HitsView({
     const types: ResultType[] = [
       "topic",
       "member",
-      "gathering",
       "community",
+      "event",
+      "forum",
+      "business",
       "board",
+      "page",
     ];
     return (
       <>
@@ -263,12 +279,12 @@ function HitsView({
   );
 }
 
-/** Search results body: coming-soon, loading skeletons, browse, or query hits. */
+/** Search results body: sign-in prompt, loading skeletons, browse, or query hits. */
 export function SearchResults({
   query,
   tab,
   setQuery,
-  comingSoon,
+  signInRequired,
   loading,
   searchData,
   recents,
@@ -276,13 +292,13 @@ export function SearchResults({
   query: string;
   tab: ResultType | "all";
   setQuery: (value: string) => void;
-  comingSoon: boolean;
+  signInRequired: boolean;
   loading: boolean;
   searchData: SearchItem[];
   recents: string[];
 }) {
   const q = query.trim().toLowerCase();
-  if (comingSoon) return <SearchComingSoon />;
+  if (signInRequired) return <SearchSignInPrompt />;
   if (loading) {
     return (
       <>

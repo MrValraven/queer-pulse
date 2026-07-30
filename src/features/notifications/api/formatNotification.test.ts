@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
-import { catalogs } from "../../../shared/i18n/catalogs";
+import { beforeAll, describe, expect, it } from "vitest";
+import { catalogs, loadPtNamespace } from "../../../shared/i18n/catalogs";
 import { parseKey, resolveEntry } from "../../../shared/i18n/translate";
 import type {
+  Catalog,
   Language,
   TFunction,
   TranslateOptions,
@@ -12,14 +13,29 @@ import {
 } from "./formatNotification";
 
 /**
+ * The resolved `notifications` catalog per language. EN is eager, but PT's
+ * `notifications` namespace is now lazily loaded (see catalogs/index.ts), so
+ * `catalogs.pt.notifications` is an empty placeholder until its chunk resolves.
+ * `beforeAll` swaps the real PT catalog in the same way the provider does.
+ */
+const resolvedCatalogs: Record<Language, Catalog> = {
+  en: catalogs.en.notifications,
+  pt: catalogs.pt.notifications,
+};
+
+beforeAll(async () => {
+  resolvedCatalogs.pt = await loadPtNamespace("notifications");
+});
+
+/**
  * A `t` bound to the real catalogs, so these tests fail if a key is missing
  * from `catalogs/<lang>/notifications.ts` rather than passing against a stub.
  * Mirrors the provider's resolution: `namespace:path` → catalog entry.
  */
 function makeT(language: Language): TFunction {
   return (key: string, options?: TranslateOptions) => {
-    const { namespace, path } = parseKey(key);
-    const catalog = catalogs[language][namespace as "notifications"];
+    const { path } = parseKey(key);
+    const catalog = resolvedCatalogs[language];
     const hit = resolveEntry(catalog, path, language, options);
     // Surface a miss loudly instead of silently returning the key.
     if (hit === undefined) throw new Error(`missing key: ${key}`);

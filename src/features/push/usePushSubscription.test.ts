@@ -1,6 +1,13 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { usePushSubscription } from "./usePushSubscription";
+
+// `usePushSubscription` reads VITE_VAPID_PUBLIC_KEY at module-eval time into a
+// frozen const, and `enable()` bails early without one. So the module is
+// (re)imported per test AFTER the env is stubbed — mirroring realtime.test's
+// config-const pattern — rather than statically imported once.
+async function loadUsePushSubscription() {
+  return (await import("./usePushSubscription")).usePushSubscription;
+}
 
 vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: false }),
@@ -20,6 +27,10 @@ const subscribe = vi.fn();
 const getSubscription = vi.fn();
 
 beforeEach(() => {
+  vi.resetModules();
+  // A valid URL-safe base64 key so `urlBase64ToUint8Array` decodes without
+  // throwing; its exact value is irrelevant (the subscribe mock ignores it).
+  vi.stubEnv("VITE_VAPID_PUBLIC_KEY", "dGVzdGtleQ");
   subscribePush.mockClear();
   vi.stubGlobal("Notification", {
     permission: "default",
@@ -46,12 +57,14 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("usePushSubscription", () => {
-  it("reports supported when serviceWorker + PushManager + Notification exist", () => {
+  it("reports supported when serviceWorker + PushManager + Notification exist", async () => {
+    const usePushSubscription = await loadUsePushSubscription();
     const { result } = renderHook(() => usePushSubscription());
     expect(result.current.supported).toBe(true);
   });
 
   it("enable() requests permission, subscribes, and POSTs to the backend", async () => {
+    const usePushSubscription = await loadUsePushSubscription();
     const { result } = renderHook(() => usePushSubscription());
     await act(async () => {
       await result.current.enable();

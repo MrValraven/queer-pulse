@@ -7,6 +7,9 @@
   align-items: flex-end;
   justify-content: center;
   backdrop-filter: blur(4px);
+  /* Lift the sheet above the on-screen keyboard on iOS (see
+     useVisualViewportKeyboard) so the submit button isn't hidden behind it. */
+  padding-block-end: var(--keyboard-inset, 0px);
 }
 .modal {
   background: var(--paper);
@@ -14,7 +17,9 @@
   width: 100%;
   max-width: 540px;
   position: relative;
-  max-height: 90vh;
+  /* svh, not vh: vh is the large viewport, so 90vh overflows under mobile
+     browser chrome and pushes actions off-screen. */
+  max-height: 90svh;
   overflow: hidden;
   display: flex;
   flex-direction: column;

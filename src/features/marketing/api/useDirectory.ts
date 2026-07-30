@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useDirectoryListingsActions } from "../../../app/providers/useDirectoryListingsActions";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -7,7 +8,11 @@ import {
   getPlace,
   type DirectoryPlace,
 } from "../directoryPlaces";
-import { cardDtoToPlace, detailDtoToPlace } from "./directory.adapters";
+import {
+  cardDtoToPlace,
+  detailDtoToPlace,
+  submittedToPlace,
+} from "./directory.adapters";
 import { getDirectory, getDirectorySpace } from "./directory.api";
 
 export const DIRECTORY_KEY = "directory";
@@ -39,8 +44,11 @@ export function useDirectoryPlaces(): DirectoryPlace[] {
 
 /**
  * A single directory place by slug, for the detail page
- * (`/local/directory/:slug`). Demo resolves against the mock registry; live
- * fetches the public `GET /directory/:slug` and adapts it.
+ * (`/local/directory/:slug`). Demo resolves against the mock registry, then
+ * falls back to the member's own submitted-listings overlay (so a demo
+ * user's wizard-created listing is viewable and its owner-only affordances —
+ * "Edit this listing", replying to reviews — are reachable); live fetches the
+ * public `GET /directory/:slug` and adapts it.
  *
  * Returns `{ place, isLoading }` rather than a bare value: the live fetch is
  * async, so the detail page must distinguish "still loading" (show a skeleton)
@@ -54,12 +62,28 @@ export function useDirectoryPlace(slug: string | undefined): {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
   const fmt = useFormat();
+  // Hook-safe: read the demo/session listings overlay at the hook's top
+  // level (never inside queryFn). `local` is the whole demo store — same
+  // source `useDirectoryListings`' `submitted` reads in demo mode — and, in
+  // live mode, only ever a same-session optimistic overlay never consulted
+  // below (the demo branch is the sole caller of `demoPlace`).
+  const { local: submittedListings } = useDirectoryListingsActions();
+
+  // Fixture-first, then the member's own submitted listing for that slug.
+  // Kept synchronous to match `getPlace`'s existing demo pattern.
+  const demoPlace = (): DirectoryPlace | undefined => {
+    const fixture = getPlace(slug);
+    if (fixture) return fixture;
+    const submitted = submittedListings.find((listing) => listing.slug === slug);
+    return submitted ? submittedToPlace(submitted) : undefined;
+  };
+
   const query = useQuery<DirectoryPlace | undefined>({
     queryKey: [DIRECTORY_KEY, "detail", slug, demoMode, language],
     enabled: slug !== undefined,
-    initialData: demoMode ? getPlace(slug) : undefined,
+    initialData: demoMode ? demoPlace() : undefined,
     queryFn: async () => {
-      if (demoMode) return getPlace(slug);
+      if (demoMode) return demoPlace();
       if (slug === undefined) return undefined;
       try {
         return detailDtoToPlace(await getDirectorySpace(slug), fmt);

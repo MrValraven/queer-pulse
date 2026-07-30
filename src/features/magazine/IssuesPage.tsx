@@ -7,9 +7,18 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./IssuesPage.module.css";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useIssues } from "./api/useIssues";
+
+/** Skeleton tiles to show while the live archive loads and no rows exist yet. */
+const ARCHIVE_SKELETON_COUNT = 8;
 
 const ISSUE = routes.issue;
 /** The hardcoded "current issue" showcase below never varies by mode — see
@@ -299,13 +308,18 @@ function ArchiveSection({
   onView,
   issuesList,
   loading,
+  errored,
+  onRetry,
 }: {
   view: "grid" | "list";
   onView: (view: "grid" | "list") => void;
   issuesList: Issue[];
   loading: boolean;
+  errored: boolean;
+  onRetry: () => void;
 }) {
   const { t } = useTranslation();
+  const skeletonCount = issuesList.length || ARCHIVE_SKELETON_COUNT;
   return (
     <section className={styles.arch}>
       <div className={styles.archH}>
@@ -333,10 +347,24 @@ function ArchiveSection({
         </div>
       </div>
 
-      {view === "grid" ? (
+      {errored ? (
+        <EmptyState
+          title={t("magazine:issues.archiveErrorTitle")}
+          description={t("magazine:issues.archiveErrorBody")}
+          action={{
+            label: t("magazine:issues.archiveRetryCta"),
+            onClick: onRetry,
+          }}
+        />
+      ) : !loading && issuesList.length === 0 ? (
+        <EmptyState
+          title={t("magazine:issues.archiveEmptyTitle")}
+          description={t("magazine:issues.archiveEmptyBody")}
+        />
+      ) : view === "grid" ? (
         <div className={styles.grid}>
           {loading
-            ? Array.from({ length: issuesList.length }).map((_, index) => (
+            ? Array.from({ length: skeletonCount }).map((_, index) => (
                 <IssueTileSkeleton key={index} />
               ))
             : issuesList.map((issue, index) => (
@@ -370,7 +398,7 @@ function ArchiveSection({
       ) : (
         <div className={styles.list}>
           {loading
-            ? Array.from({ length: issuesList.length }).map((_, index) => (
+            ? Array.from({ length: skeletonCount }).map((_, index) => (
                 <IssueRowSkeleton key={index} />
               ))
             : issuesList.map((issue, index) => (
@@ -402,9 +430,17 @@ function ArchiveSection({
 
 export function IssuesPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const loading = useSimulatedLoad();
-  const { data: liveIssues } = useIssues();
-  const issuesList = liveIssues ?? ISSUES;
+  const { demoMode } = useDemoMode();
+  const simulatedLoad = useSimulatedLoad();
+  const { data: liveIssues, isLoading, isError, refetch } = useIssues();
+
+  // Demo mode renders the page's own ISSUES mock — the hook returns `null` in
+  // demo precisely so we can tell a demo fallback apart from a live query that
+  // is still pending or has failed. Live mode shows ONLY real data (never the
+  // mock), with a real loading skeleton and a real error state.
+  const issuesList = demoMode ? ISSUES : (liveIssues ?? []);
+  const loading = demoMode ? simulatedLoad : isLoading;
+  const errored = !demoMode && isError;
 
   return (
     <PageShell>
@@ -417,6 +453,8 @@ export function IssuesPage() {
           onView={setView}
           issuesList={issuesList}
           loading={loading}
+          errored={errored}
+          onRetry={() => void refetch()}
         />
       </div>
     </PageShell>

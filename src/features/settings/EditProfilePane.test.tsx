@@ -18,13 +18,4 @@ describe("EditProfilePane", () => {
       screen.queryByDisplayValue(/Former housing rights lawyer/),
     ).not.toBeInTheDocument();
   });
-
-  it("flags coming-soon sub-fields", () => {
-    render(
-      <TestProviders>
-        <EditProfilePane onChange={() => {}} />
-      </TestProviders>,
-    );
-    expect(screen.getAllByText("Coming soon").length).toBeGreaterThan(0);
-  });
 });

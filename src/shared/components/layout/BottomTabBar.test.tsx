@@ -58,12 +58,13 @@ describe("BottomTabBar visibility", () => {
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 
-  it("renders the public slots when installed on mobile", () => {
+  it("renders the tab slots when installed on mobile", () => {
     renderBar();
     const bar = screen.getByRole("navigation");
-    // Three public links plus the More button — no sign-in tab, because the
-    // installed-mode app bar already carries sign-in.
-    expect(bar.querySelectorAll("a")).toHaveLength(3);
+    // TestProviders mounts a logged-in demo session, so the bar renders the four
+    // MEMBER_TABS (feed / events / messages / members) plus the More button.
+    // There is never a sign-in tab — the installed-mode app bar owns sign-in.
+    expect(bar.querySelectorAll("a")).toHaveLength(4);
     expect(screen.getByRole("button", { name: /more/i })).toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: /sign in/i }),

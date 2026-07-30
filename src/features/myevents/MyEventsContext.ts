@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type { ReasonCode } from "../safety/reportReasons";
 import type {
   MyEvent,
   Notif,
@@ -116,7 +117,7 @@ export interface MyEventsValue {
   report: { open: boolean; eventId: string | null };
   openReport: (id: string) => void;
   closeReport: () => void;
-  submitReport: () => void;
+  submitReport: (reasonCode: ReasonCode, detail: string) => void;
   block: { open: boolean; eventId: string | null; host: string };
   openBlock: (id: string) => void;
   closeBlock: () => void;

@@ -10,11 +10,14 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { COMPANIES, HOW, type Company } from "./employerReviews.data";
 import { EmployerReviewCard } from "./EmployerReviewCard";
 import { EmployerReviewSkeleton } from "./EmployerReviewSkeleton";
+import { EmployerGrid } from "./EmployerGrid";
 import {
   EmployerVerifyBox,
   EmployerWriteBox,
 } from "./EmployerReviewsSections";
 import { WriteReviewModal, type SubmittedReview } from "./WriteReviewModal";
+import { LiveWriteReviewModal } from "./LiveWriteReviewModal";
+import { useCompanies } from "./api/useCompanies";
 import styles from "./EmployerReviewsPage.module.css";
 
 const INVITE = routes.requestInvite;
@@ -23,11 +26,13 @@ export function EmployerReviewsPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
-  // Live mode has no real employer-review backend yet, so the seed stays empty
-  // and the fabricated COMPANIES only populate the demo experience.
+  // Demo renders the fabricated COMPANIES through EmployerReviewCard; live pulls
+  // real employers from GET /companies and links each through to its CompanyPage
+  // (where the full profile + reviews — and its own review flow — live).
   const [companies, setCompanies] = useState<Company[]>(
     demoMode ? COMPANIES : [],
   );
+  const liveEmployers = useCompanies();
   // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
   const [writeFor, setWriteFor] = useState<string | null>(null);
 
@@ -133,7 +138,7 @@ export function EmployerReviewsPage() {
                     </FadeIn>
                   ))}
             </div>
-          ) : (
+          ) : liveEmployers.items.length === 0 ? (
             <EmptyState
               icon={<FiShield />}
               title={t("economy:employerReviews.emptyLive.title")}
@@ -142,6 +147,13 @@ export function EmployerReviewsPage() {
                 label: t("economy:employerReviews.recent.writeCta"),
                 onClick: () => setWriteFor(""),
               }}
+            />
+          ) : (
+            <EmployerGrid
+              employers={liveEmployers.items}
+              hasNextPage={liveEmployers.hasNextPage}
+              fetchNextPage={liveEmployers.fetchNextPage}
+              isFetchingNextPage={liveEmployers.isFetchingNextPage}
             />
           )}
 
@@ -165,14 +177,21 @@ export function EmployerReviewsPage() {
         </Button>
       </Outro>
 
-      {writeFor !== null && (
-        <WriteReviewModal
-          companies={companies}
-          initialCompany={writeFor || undefined}
-          onClose={() => setWriteFor(null)}
-          onSubmit={addReview}
-        />
-      )}
+      {writeFor !== null &&
+        (demoMode ? (
+          <WriteReviewModal
+            companies={companies}
+            initialCompany={writeFor || undefined}
+            onClose={() => setWriteFor(null)}
+            onSubmit={addReview}
+          />
+        ) : (
+          <LiveWriteReviewModal
+            companies={liveEmployers.items}
+            initialSlug={writeFor || undefined}
+            onClose={() => setWriteFor(null)}
+          />
+        ))}
     </PageShell>
   );
 }

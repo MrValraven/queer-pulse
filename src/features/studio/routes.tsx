@@ -40,10 +40,20 @@ const StudioProgramPage = lazyNamed(() => import("./StudioProgramPage"), "Studio
 const StudioBroadcastPage = lazyNamed(() => import("./StudioBroadcastPage"), "StudioBroadcastPage");
 const StudioWelcomePage = lazyNamed(() => import("./StudioWelcomePage"), "StudioWelcomePage");
 const StudioWithdrawnPage = lazyNamed(() => import("./StudioWithdrawnPage"), "StudioWithdrawnPage");
+const StudioComingSoonPage = lazyNamed(() => import("./StudioComingSoonPage"), "StudioComingSoonPage");
 
 /** The music studio (creator platform): catalogue, upload/payouts, live sets,
- *  moderation council/triage, the public shopfront, and its own state screens. */
-export function studioRoutes() {
+ *  moderation council/triage, the public shopfront, and its own state screens.
+ *
+ *  Studio is a demo-only showcase — it has no backend and every page renders
+ *  fabricated `*.data.ts` content (payouts, tips, broadcast/fund figures). So
+ *  in LIVE mode (`demoMode === false`) the entire `/studio/*` surface resolves
+ *  to a single honest coming-soon page instead of presenting invented numbers
+ *  as real. See `docs/superpowers/specs/2026-07-30-studio-live-mode-gate-design.md`. */
+export function studioRoutes(demoMode: boolean) {
+  if (!demoMode) {
+    return <Route path="/studio/*" element={<StudioComingSoonPage />} />;
+  }
   return (
     <>
       <Route path={routes.studio} element={<StudioPage />} />

@@ -61,12 +61,16 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   address: string;
   rating: { score: string; count: number };
   reviews: Review[];
-  /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`. */
-  upcoming: { startAt: string; title: string }[];
+  /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`.
+   * `id`/`slug` deep-link into the Events Hub (`/events/:slug`). */
+  upcoming: { id: string; slug: string; startAt: string; title: string }[];
   photos: PhotoSetView;
   alt: Record<PhotoKey, string>;
   hours: Record<string, DayHours>;
   langs: string[];
+  /** Count of members who saved this listing. Drives the "Saved by N members"
+   * trust signal on the detail page. */
+  savedCount: number;
 }
 
 /**

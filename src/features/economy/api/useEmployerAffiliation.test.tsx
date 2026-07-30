@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { server } from "../../../test/msw/server";
-import { API } from "../../../test/msw/handlers";
+import { API, API_V1 } from "../../../test/msw/handlers";
 
 const STORAGE_KEY = "qp-employer-affiliation";
 
@@ -120,7 +120,7 @@ describe("useEmployerAffiliation (demo mode)", () => {
 describe("useEmployerAffiliation (live mode via MSW)", () => {
   it("returns server truth when no local decision has been made", async () => {
     server.use(
-      http.get(`${API}/me/affiliation`, () =>
+      http.get(`${API_V1}/me/affiliation`, () =>
         HttpResponse.json({
           companySlug: "atelier-pulso",
           company: { nameText: "Atelier Pulso" },
@@ -146,7 +146,7 @@ describe("useEmployerAffiliation (live mode via MSW)", () => {
       JSON.stringify({ companySlug: "old-employer", role: "Founder" }),
     );
     server.use(
-      http.get(`${API}/me/affiliation`, () => HttpResponse.json(null)),
+      http.get(`${API_V1}/me/affiliation`, () => HttpResponse.json(null)),
     );
     const { useEmployerAffiliation, wrapper } = await loadLive();
     const { result } = renderHook(() => useEmployerAffiliation(), { wrapper });
@@ -159,7 +159,7 @@ describe("useEmployerAffiliation (live mode via MSW)", () => {
 
   it("keeps an optimistic clear even though the server still says otherwise", async () => {
     server.use(
-      http.get(`${API}/me/affiliation`, () =>
+      http.get(`${API_V1}/me/affiliation`, () =>
         HttpResponse.json({
           companySlug: "atelier-pulso",
           company: { nameText: "Atelier Pulso" },
@@ -167,7 +167,7 @@ describe("useEmployerAffiliation (live mode via MSW)", () => {
           status: "active",
         }),
       ),
-      http.delete(`${API}/me/affiliation`, () => new HttpResponse(null, { status: 204 })),
+      http.delete(`${API_V1}/me/affiliation`, () => new HttpResponse(null, { status: 204 })),
     );
     const { useEmployerAffiliation, wrapper } = await loadLive();
     const { result } = renderHook(() => useEmployerAffiliation(), { wrapper });

@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -20,6 +22,12 @@ import {
 import styles from "./CinemaCollectionsPage.module.css";
 
 export function CinemaCollectionsPage() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return <CinemaComingSoon />;
+  return <DemoCinemaCollectionsPage />;
+}
+
+function DemoCinemaCollectionsPage() {
   const { t } = useTranslation();
   const loading = useSimulatedLoad();
   const [active, setActive] = useState("All");

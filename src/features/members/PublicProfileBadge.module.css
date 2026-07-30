@@ -6,6 +6,11 @@
   align-items: center;
   justify-content: center;
   flex: none;
+  /* Drop the star from the name's vertical centre toward its baseline, scaled to
+     the name's own font size (var set on .heroNameRow) so it holds across the
+     responsive clamp. Kept in a var so :hover can compose its lift on top. */
+  --drop: calc(var(--name-fs, 40px) * 0.18);
+  transform: translateY(var(--drop));
   width: 38px;
   height: 38px;
   border-radius: 999px;
@@ -23,7 +28,7 @@
   background: var(--amber);
   color: var(--plum);
   border-color: var(--amber);
-  transform: translateY(-1px);
+  transform: translateY(calc(var(--drop) - 1px));
 }
 .badge:focus-visible {
   outline: 2px solid var(--accent);

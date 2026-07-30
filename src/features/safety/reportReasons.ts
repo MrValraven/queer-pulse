@@ -19,7 +19,13 @@ export type ReportSubjectType =
   | "community"
   | "housing"
   | "flatmate"
-  | "landlord";
+  | "landlord"
+  | "listing"
+  | "event"
+  | "business"
+  | "company"
+  | "job"
+  | "subprofile";
 
 export type ReasonCode =
   | "outing"
@@ -153,6 +159,78 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "harassment",
     "impersonation",
+    "spam",
+    "other",
+  ],
+  // Business-directory listing (`src/features/marketing/listBusiness`), mirrors
+  // the backend's `ReportSubjectType.Listing` reason set exactly — no new
+  // codes: `housing_scam`'s "Scam or fake listing" label covers a listing
+  // that doesn't exist / is fraudulent, `spam` covers self-promotion abuse,
+  // `venue_safety` covers a safety incident at the business, `discrimination`
+  // covers discriminatory or otherwise inappropriate content/practices, and
+  // `other` (with free-text detail) covers inaccurate/outdated info.
+  listing: [
+    "housing_scam",
+    "spam",
+    "venue_safety",
+    "discrimination",
+    "other",
+  ],
+  // An event (`src/features/myevents` report-an-event flow). No new codes:
+  // `hate_speech` and `harassment` cover an abusive/threatening event or
+  // its promotion, `discrimination` covers an exclusionary event, `spam`
+  // covers self-promotion abuse, `venue_safety` covers a harassment or
+  // safety incident at the gathering, `off_topic` covers "this shouldn't be
+  // here", and `other` (free-text detail) covers anything else. Mirrors the
+  // backend `ReportSubjectType.Event` reason set exactly.
+  event: [
+    "hate_speech",
+    "harassment",
+    "discrimination",
+    "venue_safety",
+    "spam",
+    "off_topic",
+    "other",
+  ],
+  // A business-directory business/company/job posting (`src/features/economy`).
+  // Same shape as `listing` — `housing_scam`'s "Scam or fake listing" label
+  // covers a fake/fraudulent business, `spam` covers self-promotion abuse,
+  // `venue_safety` covers a safety incident, `discrimination` covers
+  // discriminatory content/practices, and `other` covers inaccurate info.
+  business: [
+    "housing_scam",
+    "spam",
+    "venue_safety",
+    "discrimination",
+    "other",
+  ],
+  // An employer/company profile. `housing_scam` ("Scam or fake listing")
+  // covers a fake company, `discrimination` a discriminatory employer,
+  // `harassment` targeted abuse, `spam` self-promotion abuse, `other` else.
+  company: [
+    "housing_scam",
+    "discrimination",
+    "harassment",
+    "spam",
+    "other",
+  ],
+  // A job posting. `housing_scam` ("Scam or fake listing") covers a fake/
+  // fraudulent job, `spam` self-promotion abuse, `discrimination` a
+  // discriminatory ad, `harassment` targeted abuse, `other` anything else.
+  job: [
+    "housing_scam",
+    "spam",
+    "discrimination",
+    "harassment",
+    "other",
+  ],
+  // A member subprofile / persona (`src/features/subprofiles`). Person-shaped
+  // like `member`/`flatmate`: `harassment`, `impersonation` (a persona
+  // impersonating someone), `discrimination`, `spam`, and `other`.
+  subprofile: [
+    "harassment",
+    "impersonation",
+    "discrimination",
     "spam",
     "other",
   ],

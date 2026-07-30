@@ -20,7 +20,12 @@ import { server } from "../../../test/msw/server";
  * chips above and saved had no switch until a full page reload.
  */
 
+// The backend ORIGIN — what the client reads as its base from VITE_API_URL.
 const API = "http://api.test";
+// That origin under the client's URI version prefix. The client prefixes every
+// call through its generic `request()` builder with `/v1`, so the handler must
+// be registered there to match the real GET it fires (see client.ts).
+const API_V1 = `${API}/v1`;
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterEach(() => server.resetHandlers());
@@ -55,7 +60,7 @@ describe("useDiscoverableIdentities (live mode via MSW)", () => {
     ];
     let reads = 0;
     server.use(
-      http.get(`${API}/me/discoverable-identities`, () =>
+      http.get(`${API_V1}/me/discoverable-identities`, () =>
         HttpResponse.json(responses[Math.min(reads++, 1)]),
       ),
     );

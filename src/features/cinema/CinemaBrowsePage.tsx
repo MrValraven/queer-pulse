@@ -6,7 +6,9 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaShell } from "./CinemaShell";
+import { CinemaLiveCatalog } from "./CinemaLiveCatalog";
 import { CinemaBrowseGridSkeleton } from "./CinemaBrowseSkeleton";
 import { CinemaBrowseSidebar, SortDropdown } from "./CinemaBrowseControls";
 import {
@@ -118,7 +120,18 @@ function FilmCard({
   );
 }
 
+/**
+ * The browse/programme catalogue. Demo mode keeps the full mock experience
+ * (rich filters, sort, curator notes) below; live mode renders the real
+ * catalog from GET /cinema/titles via `CinemaLiveCatalog`.
+ */
 export function CinemaBrowsePage() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return <CinemaLiveCatalog />;
+  return <DemoCinemaBrowsePage />;
+}
+
+function DemoCinemaBrowsePage() {
   const loading = useSimulatedLoad();
   const [filters, setFilters] = useState<BrowseFilters>(emptyFilters);
   const [sort, setSort] = useState<SortKey>("curated");

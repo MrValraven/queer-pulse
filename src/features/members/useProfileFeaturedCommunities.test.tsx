@@ -27,7 +27,7 @@ const ELIGIBLE_COMMUNITY_CARDS: FeaturedCommunityRef[] = [
 vi.mock("./useMyCommunityCards", () => ({
   useMyCommunityCards: () => ELIGIBLE_COMMUNITY_CARDS,
 }));
-vi.mock("../../app/providers/ProfileProvider", () => ({
+vi.mock("../../app/providers/useProfile", () => ({
   useProfile: () => ({
     draft: { featuredCommunities: ["trans-hub", "queer-runners", "ghost"] },
   }),

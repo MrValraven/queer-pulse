@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 import { http, HttpResponse } from "msw";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
-import { API } from "../../../test/msw/handlers";
+import { API, API_V1 } from "../../../test/msw/handlers";
 import { TestProviders } from "../../../test/TestProviders";
 import {
   METRICS,
@@ -152,7 +152,7 @@ async function loadLive() {
 describe("useAdminOverview (live mode via MSW)", () => {
   it("fetches GET /admin/overview and returns the adapted dashboard shape", async () => {
     server.use(
-      http.get(`${API}/admin/overview`, () =>
+      http.get(`${API_V1}/admin/overview`, () =>
         HttpResponse.json(MINIMAL_OVERVIEW_DTO),
       ),
     );
@@ -180,7 +180,7 @@ describe("useAdminOverview (live mode via MSW)", () => {
     expect(overview!.reportWeeks).toHaveLength(8);
     expect(overview!.reportWeeks[7]!.week).toBe("this");
     expect(overview!.reportWeeks[6]!.week).toBe("last");
-    expect(overview!.reportSeries).toBe(REPORT_SERIES);
+    expect(overview!.reportSeries).toEqual(REPORT_SERIES);
 
     // 4 · member growth — passed through 1:1 with null churn preserved.
     expect(overview!.memberGrowth).toHaveLength(2);

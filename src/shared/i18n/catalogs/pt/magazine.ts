@@ -188,6 +188,13 @@ export const magazine: Catalog = {
   "issues.archiveHeading": "O <em>arquivo</em> completo",
   "issues.viewCoversCta": "Capas",
   "issues.viewListCta": "Lista",
+  "issues.archiveErrorTitle": "Não conseguimos carregar o arquivo.",
+  "issues.archiveErrorBody":
+    "Algo nos interrompeu a caminho das edições anteriores. Tenta novamente.",
+  "issues.archiveRetryCta": "Tentar de novo",
+  "issues.archiveEmptyTitle": "Ainda não há edições para mostrar.",
+  "issues.archiveEmptyBody":
+    "O arquivo ainda está a ser preparado — as primeiras edições chegam em breve.",
 
   // ── AuthorPage ───────────────────────────────────────────────────────────
   "author.notFoundTitle": "Não conseguimos encontrar esta pessoa autora.",

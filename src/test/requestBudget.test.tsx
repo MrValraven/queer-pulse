@@ -12,7 +12,7 @@ import {
   vi,
 } from "vitest";
 import { server } from "./msw/server";
-import { API } from "./msw/handlers";
+import { API, API_V1 } from "./msw/handlers";
 import { queryClient as productionQueryClient } from "../shared/api/queryClient";
 
 /**
@@ -115,7 +115,7 @@ const EMPTY_PAGE = { items: [], total: 0, page: 1, pageSize: 0 };
  */
 function registerSessionHandlers() {
   server.use(
-    http.get(`${API}/auth/me`, () =>
+    http.get(`${API_V1}/auth/me`, () =>
       HttpResponse.json({
         id: "demo",
         email: "demo-member@queerpulse.test",
@@ -136,7 +136,7 @@ function registerSessionHandlers() {
     // ["profile", false, SLUG] before SocialProvider/ProfileProvider's own
     // queries turn `enabled` on, so — under a client with a nonzero
     // `staleTime` — those three never fire their own request.
-    http.get(`${API}/me/bootstrap`, () =>
+    http.get(`${API_V1}/me/bootstrap`, () =>
       HttpResponse.json({
         profile: {
           slug: SLUG,
@@ -156,7 +156,7 @@ function registerSessionHandlers() {
     // fires on any route once the mocked member is signed in — including
     // PageShell marketing routes: Navbar renders the bell itself whenever
     // `loggedIn` is true, it isn't an AppShell-only affordance.
-    http.get(`${API}/notifications/unread-count`, () =>
+    http.get(`${API_V1}/notifications/unread-count`, () =>
       HttpResponse.json({ count: 0 }),
     ),
     // ConsentProvider (src/app/providers/ConsentProvider.tsx) sits app-wide in
@@ -168,7 +168,7 @@ function registerSessionHandlers() {
     // unconditional fetch is defensible product behaviour. It therefore
     // belongs in this shared, route-agnostic handler set, mirrored by
     // SESSION_REQUEST_BUDGET below.
-    http.get(`${API}/consent/me`, () =>
+    http.get(`${API_V1}/consent/me`, () =>
       HttpResponse.json({
         categories: { necessary: true, analytics: false, monitoring: false },
         policyVersion: "3.3",
@@ -187,12 +187,43 @@ function registerSessionHandlers() {
  * why each entry (in particular `/consent/me`) belongs here.
  */
 const SESSION_REQUEST_BUDGET = [
-  "/auth/me",
-  "/consent/me",
+  // Unversioned: `/csrf-token` is one of the two DIRECT `fetch()` calls in the
+  // client (`@Version(VERSION_NEUTRAL)` on the backend), so it stays off the
+  // `/v1` prefix — see `src/shared/api/client.ts` and the `handlers.ts` barrel.
   "/csrf-token",
-  "/me/bootstrap",
-  "/notifications/unread-count",
+  // Everything else routes through the client's generic `request()` builder,
+  // which prefixes `/v1` (the backend runs `enableVersioning({ type: URI })`),
+  // so the observed pathname carries it. Registered under `API_V1` above.
+  "/v1/auth/me",
+  "/v1/consent/me",
+  "/v1/me/bootstrap",
+  "/v1/notifications/unread-count",
 ];
+
+/**
+ * The one non-session endpoint that ALSO fires on every live-mode route once a
+ * member is signed in — confirmed by observation (it appears on all three
+ * routes below), but added to the app AFTER this test's original
+ * prediction-based budget was written, so it wasn't captured then.
+ *
+ * `/v1/conversations` is the DM inbox, fetched by `useUnreadMessages()`
+ * (`src/features/messages/api/useConversations.ts`) to render the nav's
+ * unread-messages badge. It mounts on every route via the desktop `Navbar`
+ * `MessagesLink` / `SidebarFooter`, and — because `src/test/setup.ts` stubs
+ * `matchMedia` to `matches: false` (i.e. the DESKTOP branch) — that badge
+ * renders in this harness, so the fetch fires here too. NOTE it has no
+ * react-query `enabled` gate: in live mode it fetches the whole inbox for a
+ * badge count on every route. That is a real app-wide eager fetch (flagged for
+ * the maintainer), not a test artifact — this guard now covers it. Its handler
+ * resolves an empty array, the zero-state shape the badge needs.
+ */
+function registerAppWideHandlers() {
+  server.use(
+    http.get(`${API_V1}/conversations`, () => HttpResponse.json([])),
+  );
+}
+
+const APP_WIDE_REQUEST_BUDGET = ["/v1/conversations"];
 
 /**
  * Mirrors `src/shared/api/queryClient.ts`'s query defaults — importantly
@@ -247,12 +278,16 @@ describe("request budget (live mode)", () => {
     "/feed fires exactly its known request budget — no new eager provider slips in unnoticed",
     async () => {
       registerSessionHandlers();
-      // FeedPage's own data: its cross-community membership map, and the feed
-      // itself. Previously part of registerFeedRouteHandlers; kept local now
-      // that the shared helper is route-agnostic.
+      registerAppWideHandlers();
+      // FeedPage's own data, all feed-specific (none fires on the other routes
+      // below): the feed itself (`/feed`), the viewer's cross-community
+      // membership map (`/me/communities` via `useMyCommunities()` in
+      // `useFeedPage`), and the sidebar's upcoming-events rail (`/events` via
+      // `useEvents({ filter: "upcoming" })`).
       server.use(
-        http.get(`${API}/me/communities`, () => HttpResponse.json([])),
-        http.get(`${API}/feed`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/feed`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/events`, () => HttpResponse.json([])),
       );
 
       const seen = await renderRouteLive("/feed");
@@ -260,20 +295,6 @@ describe("request budget (live mode)", () => {
       // Exact equality is load-bearing (see file header): a `toContain` or
       // subset check would let a new eager provider add a request without this
       // test ever noticing — precisely the regression this guards against.
-      //
-      // This list is the REAL observed set, not a sketch. `/feed` sits under
-      // the full app-wide provider stack (src/test/TestProviders.tsx mirrors
-      // src/app/App.tsx's DataProviders), and most of those providers still
-      // owned an eager live-mode fetch of their own before phases 2-5 scoped
-      // each one to its actual reader.
-      //
-      // TASK 5 AUDIT (re-run against the current code, not assumed): grepped
-      // every provider Task 4 flagged as still-unscoped
-      // (`/me/work-preferences`, `/me/jobs`, `/me/public-profile`,
-      // `/me/affiliation`, `/me/vouches/given`, `/me/drafts`) and confirmed
-      // none of their providers calls `useQuery` any more — see
-      // `registerSessionHandlers`'s docblock above. The six-endpoint budget
-      // below is therefore CONFIRMED, not provisional.
       //
       // `/blocks`, `/mutes` and `/profiles/${SLUG}` are CONFIRMED ABSENT:
       // `useSessionBootstrapSettled` holds `blocksQuery`/`mutesQuery`/the
@@ -288,7 +309,13 @@ describe("request budget (live mode)", () => {
       // hook in features/marketing/listBusiness/api/) owns the query. Its sole
       // reader is PlacesSection on /account/profile — see that test below.
       expect(seen).toEqual(
-        [...SESSION_REQUEST_BUDGET, "/feed", "/me/communities"].sort(),
+        [
+          ...SESSION_REQUEST_BUDGET,
+          ...APP_WIDE_REQUEST_BUDGET,
+          "/v1/events",
+          "/v1/feed",
+          "/v1/me/communities",
+        ].sort(),
       );
     },
     15000,
@@ -298,6 +325,7 @@ describe("request budget (live mode)", () => {
     "/local/directory/list does not fire /listings/mine — ListBusinessPage is a write-only consumer",
     async () => {
       registerSessionHandlers();
+      registerAppWideHandlers();
       const seen = await renderRouteLive("/local/directory/list");
 
       // The load-bearing assertion is the ABSENCE of /listings/mine.
@@ -309,26 +337,22 @@ describe("request budget (live mode)", () => {
       // "simplifies" it back to `useDirectoryListings`, nothing visibly
       // breaks — the page still works, the request just comes back. This is
       // the only test that catches it.
-      expect(seen).not.toContain("/listings/mine");
+      expect(seen).not.toContain("/v1/listings/mine");
 
-      // PREDICTION, NOT OBSERVED — the task brief's own array for this route
-      // was stale (pre-phase-2-5, listing six provider endpoints that no
-      // longer fire app-wide at all). This replacement was derived by reading
-      // ListBusinessPage.tsx's full render tree (PageShell → Navbar; the
-      // wizard steps/preview/success components) and confirming no component
-      // in it calls any read/composition hook beyond
-      // useDirectoryListingsActions. It is a marketing route under PageShell,
-      // not AppShell, but Navbar renders the same notifications bell for a
-      // signed-in visitor regardless of shell — so /notifications/unread-count
-      // is expected here too, unlike a naive "PageShell has no AppNav" guess
-      // would suggest.
-      //
-      // MAINTAINER: run `pnpm test -- src/test/requestBudget.test.tsx`, and
-      // replace this array with the actually-observed set — after confirming
-      // every entry in the observed set is a request this route legitimately
-      // needs. Do not paper over a failure by adding this array's entries
-      // without checking why they fired.
-      expect(seen).toEqual([...SESSION_REQUEST_BUDGET].sort());
+      // OBSERVED (see file header): ListBusinessPage is a PageShell marketing
+      // wizard whose own render tree fires no read beyond
+      // `useDirectoryListingsActions` (a write-only overlay). Everything it
+      // requests therefore comes from the shared session layer plus the
+      // app-wide DM badge (`/v1/conversations`) — nothing route-specific —
+      // which is exactly what makes it a clean guard that no eager read has
+      // crept into the listing wizard. In particular the profile-page reads
+      // (`/v1/communities`, `/v1/connections/accepted`,
+      // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire
+      // here: they are subscribed by member-profile components, not by this
+      // page or the shared chrome.
+      expect(seen).toEqual(
+        [...SESSION_REQUEST_BUDGET, ...APP_WIDE_REQUEST_BUDGET].sort(),
+      );
     },
     15000,
   );
@@ -337,19 +361,31 @@ describe("request budget (live mode)", () => {
     "/account/profile fires /listings/mine — PlacesSection is the reader that owns it",
     async () => {
       registerSessionHandlers();
+      registerAppWideHandlers();
       server.use(
-        http.get(`${API}/listings/mine`, () => HttpResponse.json(EMPTY_PAGE)),
+        // ProfilePage self-view reads subscribed by the profile's own sections
+        // (each traced in the assertion comment below): the viewer's
+        // communities + membership map (ProfileCommunitiesSection), accepted
+        // connections (member-contact affordance), and the owner's directory
+        // listings.
+        http.get(`${API_V1}/communities`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/connections/accepted`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/directory/by-member/${SLUG}`, () =>
+          HttpResponse.json([]),
+        ),
+        http.get(`${API_V1}/listings/mine`, () => HttpResponse.json(EMPTY_PAGE)),
         // The following four are route-scoped composition-hook reads
         // PlacesSection's siblings pull in on the self view of /account/profile
         // — see the comment on the assertion below for how each was found.
-        http.get(`${API}/me/public-profile`, () =>
+        http.get(`${API_V1}/me/public-profile`, () =>
           HttpResponse.json({ enabled: false }),
         ),
-        http.get(`${API}/me/vouches/given`, () => HttpResponse.json([])),
-        http.get(`${API}/profiles/${SLUG}/subprofiles`, () =>
+        http.get(`${API_V1}/me/vouches/given`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/profiles/${SLUG}/subprofiles`, () =>
           HttpResponse.json([]),
         ),
-        http.get(`${API}/profiles/${SLUG}/recognition`, () =>
+        http.get(`${API_V1}/profiles/${SLUG}/recognition`, () =>
           HttpResponse.json({
             level: {
               level: 1,
@@ -365,7 +401,7 @@ describe("request budget (live mode)", () => {
             perks: { availableCount: 0, groups: [], ladder: [] },
           }),
         ),
-        http.get(`${API}/members/${SLUG}/vouchers`, () =>
+        http.get(`${API_V1}/members/${SLUG}/vouchers`, () =>
           HttpResponse.json({ vouchers: [] }),
         ),
         // ProfileHero (src/features/members/ProfileSections.tsx) renders
@@ -373,7 +409,7 @@ describe("request budget (live mode)", () => {
         // GET /platform/staff (enabled when logged in). Response shape is
         // PlatformStaffRowDTO[]; an empty array means the mocked member
         // holds no staff role, which is all this test needs.
-        http.get(`${API}/platform/staff`, () => HttpResponse.json([])),
+        http.get(`${API_V1}/platform/staff`, () => HttpResponse.json([])),
       );
 
       const seen = await renderRouteLive("/account/profile");
@@ -383,67 +419,46 @@ describe("request budget (live mode)", () => {
       // hook, which subscribes useMyListings. A guard that only asserted the
       // request's absence on other routes would be satisfied by a hook that
       // never fetches at all.
-      expect(seen).toContain("/listings/mine");
+      expect(seen).toContain("/v1/listings/mine");
 
-      // PREDICTION, NOT OBSERVED — the task brief's own array for this route
-      // was stale in the other direction from /local/directory/list: it named
-      // six provider endpoints that no longer fire app-wide (correct that some
-      // fire HERE, wrong about which, and silent on several requests this
-      // route's OWN components pull in that no provider-level grep would ever
-      // surface).
-      //
-      // This replacement was derived by reading ProfilePage.tsx's self-view,
-      // non-editing render tree component by component:
+      // OBSERVED (see file header). Beyond the shared session + app-wide +
+      // PageShell chrome layers, ProfilePage's own self-view render tree pulls
+      // in these route-specific reads, each traced to its component:
       //   - PublicProfileControl → usePublicProfile() → GET /me/public-profile
       //   - ProfileHero/HeroVouchRow → useVouch() → useGivenVouches() →
       //     GET /me/vouches/given
       //   - ProfileSubprofilesSection → useProfileSubprofiles(selfSlug) →
-      //     GET /profiles/{slug}/subprofiles
+      //     GET /profiles/{slug}/subprofiles  (+ the app-wide /subprofiles/mine
+      //     served by the shared subprofiles barrel handler)
       //   - ProfileHero's HeroRecognition chips (isSelf only) →
-      //     useRecognition() → GET /profiles/{slug}/recognition — NOTE: this
-      //     hook defaults its `target` to the signed-in user's own slug rather
-      //     than leaving it undefined, so even the OWNER's own view hits the
-      //     `/profiles/:slug/...` form, never `/me/recognition`. Confirmed by
-      //     reading useRecognition.ts's `target = slug ?? user?.profile.slug`.
+      //     useRecognition() → GET /profiles/{slug}/recognition — this hook
+      //     defaults its `target` to the signed-in user's own slug, so even the
+      //     OWNER's own view hits the `/profiles/:slug/...` form, never
+      //     `/me/recognition` (see useRecognition.ts's
+      //     `target = slug ?? user?.profile.slug`).
       //   - HeroVouchRow → useVouchers(profile.slug) →
       //     GET /members/{slug}/vouchers (a THIRD, distinct vouch-related
       //     endpoint from /me/vouches/given and vouch mutations — do not
       //     conflate the three)
+      //   - ProfileHero → MemberStaffBadge → useStaffRole()/useStaffMap() →
+      //     GET /platform/staff (self-view staff badge, confirmed intended)
       //   - PlacesSection → useDirectoryListings() → GET /listings/mine
-      // None of these three new endpoints (subprofiles, recognition,
-      // members/:slug/vouchers) appear anywhere in the task brief; they were
-      // only found by reading the actual component tree, exactly the risk the
-      // brief warned about ("ProfilePage in particular may fire route-specific
-      // reads ... not visible from the provider list alone").
-      //
-      // MAINTAINER: run `pnpm test -- src/test/requestBudget.test.tsx`, and
-      // replace this array with the actually-observed set — after confirming
-      // every entry in the observed set is a request this route legitimately
-      // needs, and that the five `server.use()` handlers above actually match
-      // what each endpoint's real response shape needs (they were written
-      // from the DTO types, not from a passing run). Do not paper over a
-      // failure by adding this array's entries without checking why they
-      // fired.
       expect(seen).toEqual(
         [
           ...SESSION_REQUEST_BUDGET,
-          "/listings/mine",
-          "/me/public-profile",
-          "/me/vouches/given",
-          `/members/${SLUG}/vouchers`,
-          // /platform/staff: this is genuinely NEW eager-request behaviour,
-          // not pre-existing at HEAD (see
-          // .superpowers/sdd/investigate-requestBudget.md §4). It comes from
-          // MemberStaffBadge, rendered by ProfileHero
-          // (src/features/members/ProfileSections.tsx) via useStaffRole()'s
-          // useStaffMap(). The maintainer has confirmed the self-view staff
-          // badge is intended product behaviour, so it belongs in this
-          // route's budget — unlike /consent/me, this one is route-specific
-          // (only /account/profile renders ProfileHero), so it stays local
-          // to this array rather than joining SESSION_REQUEST_BUDGET.
-          "/platform/staff",
-          `/profiles/${SLUG}/recognition`,
-          `/profiles/${SLUG}/subprofiles`,
+          ...APP_WIDE_REQUEST_BUDGET,
+          "/v1/communities",
+          "/v1/connections/accepted",
+          `/v1/directory/by-member/${SLUG}`,
+          "/v1/listings/mine",
+          "/v1/me/communities",
+          "/v1/me/public-profile",
+          "/v1/me/vouches/given",
+          `/v1/members/${SLUG}/vouchers`,
+          "/v1/platform/staff",
+          `/v1/profiles/${SLUG}/recognition`,
+          `/v1/profiles/${SLUG}/subprofiles`,
+          "/v1/subprofiles/mine",
         ].sort(),
       );
     },

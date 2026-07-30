@@ -33,8 +33,10 @@ export function useRoadmapVote() {
       targetId: string;
     }) => castRoadmapVote(targetType, targetId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["roadmap", false] });
-      queryClient.invalidateQueries({ queryKey: ["roadmap-my-votes", false] });
+      void queryClient.invalidateQueries({ queryKey: ["roadmap", false] });
+      void queryClient.invalidateQueries({
+        queryKey: ["roadmap-my-votes", false],
+      });
     },
   });
   return { demoMode, vote: mutation.mutate, pending: mutation.isPending };

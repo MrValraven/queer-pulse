@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaLiveWatch } from "./CinemaLiveWatch";
 import {
   WatchOverlay,
   WatchPlayState,
@@ -14,7 +16,21 @@ import { PLAYER_STILL } from "./watchPage.data";
 import styles from "./WatchPage.module.css";
 import { routes } from "../../app/routeMap";
 
+/**
+ * The watch page. Demo mode keeps the byte-for-byte mock player below; live
+ * mode streams a real catalog title (deep-linked as `?title=<id>`) through the
+ * signed-URL playback flow.
+ */
 export function WatchPage() {
+  const { demoMode } = useDemoMode();
+  const [searchParams] = useSearchParams();
+  if (!demoMode) {
+    return <CinemaLiveWatch titleId={searchParams.get("title")} />;
+  }
+  return <DemoWatchPage />;
+}
+
+function DemoWatchPage() {
   const { t } = useTranslation();
   const [showOverlay, setShowOverlay] = useState(true);
   const [cc, setCc] = useState(true);

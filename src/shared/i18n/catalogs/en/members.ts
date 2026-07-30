@@ -393,17 +393,21 @@ export const members: Catalog = {
   "search.type.member": "Members",
   "search.type.gathering": "Gatherings",
   "search.type.community": "Communities",
+  "search.type.event": "Events",
+  "search.type.forum": "Forum",
+  "search.type.business": "Businesses",
   "search.type.board": "Board",
   "search.type.topic": "Topics",
   "search.type.page": "Pages",
   "search.type.all": "All",
-  "search.comingSoon.badge": "Coming soon",
-  "search.comingSoon.title": "Search is <em>almost here.</em>",
-  "search.comingSoon.body":
-    "We're wiring live search to the community — members, gatherings, communities, and board posts, all in one place. For now it's resting. Turn on <b>{toggleName}</b> to explore the demo.",
+  // ── Sign-in prompt (SearchResults) — shown to logged-out members in live mode ──
+  "search.signInRequired.badge": "Sign in",
+  "search.signInRequired.title": "Search is for <em>members</em>",
+  "search.signInRequired.body":
+    "Sign in to search people, communities, events, the forum, and local businesses.",
   "search.recentSearches": "Recent searches",
   "search.browseTopics": "Browse topics",
-  "search.upcomingGatherings": "Upcoming gatherings",
+  "search.upcomingEvents": "Upcoming events",
   "search.jumpTo": "Jump to <b>{name}</b>",
   "search.resultCount_one": `<b>{count}</b> result for "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> results for "<b>{query}</b>"`,
@@ -609,8 +613,7 @@ export const members: Catalog = {
   "commandPalette.ariaLabel": "Search QueerPulse",
   "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Search members, gatherings, communities…",
-  "commandPalette.comingSoonBody":
-    "Live search is being wired to the community. For now it's resting — turn on <em>{toggleName}</em> to explore the demo.",
+  "commandPalette.signInBody": "Sign in to search across QueerPulse.",
   "commandPalette.noMatches": "No matches — try another word.",
   "commandPalette.seeAllResults": "See all results for “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Open full search",
@@ -845,6 +848,8 @@ export const members: Catalog = {
   "savedByYou.kind.flatmate.cta": "View profile",
   "savedByYou.kind.landlord.label": "Landlord",
   "savedByYou.kind.landlord.cta": "View landlord",
+  "savedByYou.kind.listing.label": "Business",
+  "savedByYou.kind.listing.cta": "View listing",
 
   // ── Saved-by-you chrome (SavedByYou) ─────────────────────────────────────────
   "savedByYou.removeAriaLabel": "Remove {title} from saved",

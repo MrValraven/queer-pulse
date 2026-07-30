@@ -1,4 +1,6 @@
+import { createElement, type ReactNode } from "react";
 import { renderHook } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
 import { useSearchData } from "./useSearchData";
 import { SEARCH_DATA } from "../search.data";
@@ -15,21 +17,33 @@ vi.mock("../../../app/providers/DemoModeProvider", () => ({
   }),
 }));
 
+const authState = { loggedIn: false, checking: false };
+vi.mock("../../../app/providers/authContext", () => ({
+  useAuth: () => ({
+    loggedIn: authState.loggedIn,
+    checking: authState.checking,
+  }),
+}));
+
+// No JSX here — this file is `.ts`, not `.tsx`.
+const wrapper = ({ children }: { children: ReactNode }) =>
+  createElement(QueryClientProvider, { client: new QueryClient() }, children);
+
 describe("useSearchData", () => {
   it("serves the mock corpus in demo mode", () => {
     demoState.demoMode = true;
-    const { result } = renderHook(() => useSearchData());
-    expect(result.current.comingSoon).toBe(false);
+    const { result } = renderHook(() => useSearchData(""), { wrapper });
+    expect(result.current.signInRequired).toBe(false);
     expect(result.current.data).toBe(SEARCH_DATA);
-    expect(result.current.data.length).toBeGreaterThan(0);
     expect(result.current.recents.length).toBeGreaterThan(0);
   });
 
-  it("returns no data and flags coming-soon in live mode", () => {
+  it("requires sign-in when logged out in live mode", () => {
     demoState.demoMode = false;
-    const { result } = renderHook(() => useSearchData());
-    expect(result.current.comingSoon).toBe(true);
+    authState.loggedIn = false;
+    authState.checking = false;
+    const { result } = renderHook(() => useSearchData("design"), { wrapper });
+    expect(result.current.signInRequired).toBe(true);
     expect(result.current.data).toEqual([]);
-    expect(result.current.recents).toEqual([]);
   });
 });

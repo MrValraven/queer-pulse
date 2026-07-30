@@ -28,6 +28,51 @@
     color: var(--text-strong);
   }
 }
+
+/* ── Breadcrumb trail (Directory › category › place name) ─────────────────── */
+.breadcrumb {
+  min-width: 0;
+  padding-bottom: 14px;
+}
+.breadcrumbList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 8px;
+  list-style: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+.breadcrumbList li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.breadcrumbList li:not(:last-child)::after {
+  content: "›";
+  color: var(--ink-40);
+  font-weight: 400;
+}
+.breadcrumbList li:last-child {
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.breadcrumbList a {
+  color: var(--ink-40);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .breadcrumbList a:hover {
+    color: var(--text-strong);
+  }
+}
 .ownerEdit {
   font-size: 12px;
   font-weight: 700;
@@ -569,6 +614,149 @@
   stroke: var(--accent);
 }
 
+.ratingDist {
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ratingDistSummary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.ratingDistScore {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--text-strong);
+}
+.ratingDistCount {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.ratingDistBars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ratingDistRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ratingDistLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  width: 26px;
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.ratingDistLabel svg {
+  width: 11px;
+  height: 11px;
+  color: var(--accent);
+}
+.ratingDistTrack {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.07);
+  overflow: hidden;
+}
+.ratingDistFill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+.ratingDistTotal {
+  width: 22px;
+  flex: none;
+  text-align: right;
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ratingDistFill {
+    transition: none;
+  }
+}
+
+/* ── Review sort + star-filter controls ──────────────────────────────────── */
+.revControls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.revSort {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.revSortLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.revSortSelect {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease);
+}
+.revSortSelect:hover {
+  border-color: var(--line-strong);
+}
+:global([data-theme="dark"]) .revSortSelect {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+.revFilterCount {
+  margin-inline-start: 6px;
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+.revEmpty {
+  font-size: 14px;
+  color: var(--ink-40);
+  padding: 18px 4px;
+}
+.revEmptyReset {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .rev {
   padding: 20px 22px;
   background: var(--paper);
@@ -626,12 +814,127 @@
   font-weight: 600;
 }
 
+/* ── Owner reply block + inline composer ──────────────────────────────────── */
+.ownerReply {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: rgba(var(--plum-rgb), 0.06);
+  border-left: 3px solid var(--plum);
+  border-radius: 0 12px 12px 0;
+}
+.ownerReplyHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.ownerReplyTitle {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--plum);
+}
+.ownerReplyDate {
+  font-size: 12px;
+  color: var(--ink-40);
+  flex: none;
+}
+.ownerReplyText {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.replyToggle {
+  margin-top: 10px;
+  padding: 4px 0;
+  font-size: 13px;
+}
+.replyComposer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.replyInput {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 12px;
+  resize: vertical;
+}
+.replyInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.replyComposerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .side {
   position: sticky;
   top: 90px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* ── Primary action bar (Directions / Call / Share / Save) ───────────────────
+   Desktop: an ordinary card, first in the aside column, above the map.
+   Mobile: pinned to the bottom of the viewport for one-handed reach — see the
+   760px override below, which mirrors BottomTabBar's fixed + safe-area-inset
+   pattern. PageShell always mounts BottomTabBar (it self-gates on
+   isInstalled && isMobile), so in an installed standalone PWA that bar sits
+   fixed at bottom:0, z-index:100, opaque, on TOP of a naive `bottom: 0` bar.
+   `--bottom-inset` (0 in an ordinary browser tab; the tab bar's full occupied
+   height in standalone — see standalone.css) raises us clear of it, same
+   precedent as QuickExit.module.css / Consent.module.css. */
+.actionBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 18px;
+}
+.actionBarBtn {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+@media (max-width: 760px) {
+  .actionBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--bottom-inset, 0);
+    z-index: 60;
+    gap: 8px;
+    padding: 10px 12px max(env(safe-area-inset-bottom), 8px);
+    background: var(--paper);
+    border: none;
+    border-top: 1px solid rgba(var(--line-rgb), 0.09);
+    border-radius: 0;
+    box-shadow: 0 -8px 24px rgba(var(--plum-rgb), 0.1);
+  }
+  .actionBarBtn {
+    flex-basis: 0;
+  }
+  /* Clear the fixed bar so page content (and the footer) never sits under it.
+     The installed-PWA tab-bar reserve is already applied once by
+     standalone.css on main[data-page-main] (same pattern as EventPage's
+     .rsvpStickyBar) — don't add var(--bottom-inset) again here. */
+  .page {
+    padding-bottom: calc(80px + 60px + env(safe-area-inset-bottom));
+  }
 }
 .sideCard {
   background: var(--paper);
@@ -679,6 +982,21 @@
   color: var(--ink);
   line-height: 1.55;
   margin-bottom: 12px;
+}
+.savedSignal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-bottom: 10px;
+}
+.savedSignal svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--accent);
+  stroke: none;
+  flex: none;
 }
 .contactRow {
   display: flex;
@@ -821,6 +1139,50 @@
 .upRow b {
   color: var(--text-strong);
 }
+.upTitle {
+  color: var(--text-strong);
+  font-weight: 600;
+  text-decoration: none;
+}
+.upTitle:hover {
+  text-decoration: underline;
+}
+.upCalendarRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  color: var(--ink-40);
+  font-size: 12px;
+}
+.upCalendarRow svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+.upCalendarLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.upCalendarLink:hover {
+  text-decoration: underline;
+}
+.upCalendarLink svg {
+  width: 11px;
+  height: 11px;
+}
 
 /* tints */
 .tCoral {
@@ -906,4 +1268,35 @@
 .reviewSignIn a {
   color: var(--accent-ink);
   font-weight: 600;
+}
+
+/* ── "More like this" related places row ─────────────────────────────────── */
+.related {
+  max-width: var(--maxw-page);
+  margin: 0 auto;
+  padding: 28px 28px 64px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.relatedTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+  margin: 0 0 20px;
+}
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+@media (max-width: 900px) {
+  .relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .relatedGrid {
+    grid-template-columns: 1fr;
+  }
 }

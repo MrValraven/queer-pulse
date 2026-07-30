@@ -1094,4 +1094,43 @@ export const cinema: Catalog = {
   "watch.below.splitLegend.filmmaker": "Filmmaker",
   "watch.below.splitLegend.payments": "Payments",
   "watch.below.splitLegend.hosting": "Hosting",
+
+  // ── Live mode (real catalog + player) ──────────────────────────────────────
+  "live.catalog.title": "The programme, streaming now",
+  "live.catalog.lead":
+    "Every film below is playable right now for signed-in members.",
+  "live.viewCount": "{count} views",
+  "live.finished": "Watched",
+  "live.resumeAt": "{percent}% watched",
+  "live.signIn.title": "Sign in to watch",
+  "live.signIn.description":
+    "The cinema is open to signed-in members. Sign in to stream the programme.",
+  "live.signIn.cta": "Sign in",
+  "live.empty.title": "The programme is quiet right now",
+  "live.empty.description":
+    "No films are streaming yet. Check back soon — new titles land every week.",
+  "live.error.title": "The programme didn't load",
+  "live.error.description":
+    "Something went wrong loading the catalogue. Please try again in a moment.",
+  "live.pick.title": "Pick a film to watch",
+  "live.pick.description":
+    "Choose a title from the programme to start watching.",
+  "live.pick.cta": "Browse the programme",
+  "live.notFound.title": "This film isn't available",
+  "live.notFound.description":
+    "It may have been unpublished, or the link is out of date.",
+  "live.notFound.cta": "Browse the programme",
+  "live.playCta": "Play film",
+  "live.resumeCta": "Resume watching",
+  "live.playbackError": "This film couldn't start. Please try again.",
+
+  // ── Live-mode placeholder (CinemaComingSoon) ──────────────────────────────
+  // Shown for the Cinema sections not wired to the backend yet (collections,
+  // made-here shorts, filmmaker/curator profiles, open calls, film detail).
+  // Browse and Watch are live, so this points people to the real catalogue.
+  "comingSoon.title": "This reel is still in the edit",
+  "comingSoon.description":
+    "Collections, filmmaker profiles and open calls are still in production. The films themselves are live, though — browse the catalogue and press play.",
+  "comingSoon.browseCta": "Browse films",
+  "comingSoon.backHome": "Back to home",
 };

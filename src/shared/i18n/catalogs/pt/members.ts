@@ -398,17 +398,21 @@ export const members: Catalog = {
   "search.type.member": "Pessoas",
   "search.type.gathering": "Convívios",
   "search.type.community": "Comunidades",
+  "search.type.event": "Eventos",
+  "search.type.forum": "Fórum",
+  "search.type.business": "Negócios",
   "search.type.board": "Quadro",
   "search.type.topic": "Tópicos",
   "search.type.page": "Páginas",
   "search.type.all": "Tudo",
-  "search.comingSoon.badge": "Brevemente",
-  "search.comingSoon.title": "A pesquisa está <em>quase a chegar.</em>",
-  "search.comingSoon.body":
-    "Estamos a ligar a pesquisa em direto à comunidade — pessoas, convívios, comunidades e publicações no quadro, tudo num só lugar. Por agora está em repouso. Ativa <b>{toggleName}</b> para explorares a demonstração.",
+  // ── Aviso de início de sessão (SearchResults) — para quem não tem sessão iniciada em modo real ──
+  "search.signInRequired.badge": "Entrar",
+  "search.signInRequired.title": "A pesquisa é para <em>membros</em>",
+  "search.signInRequired.body":
+    "Inicia sessão para pesquisar pessoas, comunidades, eventos, o fórum e negócios locais.",
   "search.recentSearches": "Pesquisas recentes",
   "search.browseTopics": "Explorar tópicos",
-  "search.upcomingGatherings": "Próximos convívios",
+  "search.upcomingEvents": "Próximos eventos",
   "search.jumpTo": "Ir para <b>{name}</b>",
   "search.resultCount_one": `<b>{count}</b> resultado para "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
@@ -620,8 +624,7 @@ export const members: Catalog = {
   "commandPalette.ariaLabel": "Pesquisar na QueerPulse",
   "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Pesquisar pessoas, convívios, comunidades…",
-  "commandPalette.comingSoonBody":
-    "A pesquisa em direto está a ser ligada à comunidade. Por agora está em repouso — ativa <em>{toggleName}</em> para explorares a demonstração.",
+  "commandPalette.signInBody": "Inicia sessão para pesquisar em toda a QueerPulse.",
   "commandPalette.noMatches": "Sem resultados — tenta outra palavra.",
   "commandPalette.seeAllResults":
     "Ver todos os resultados para “<b>{query}</b>”",
@@ -858,6 +861,8 @@ export const members: Catalog = {
   "savedByYou.kind.flatmate.cta": "Ver perfil",
   "savedByYou.kind.landlord.label": "Pessoa proprietária",
   "savedByYou.kind.landlord.cta": "Ver pessoa proprietária",
+  "savedByYou.kind.listing.label": "Negócio",
+  "savedByYou.kind.listing.cta": "Ver anúncio",
 
   // ── Chrome de guardados por ti (SavedByYou) ─────────────────────────────────
   "savedByYou.removeAriaLabel": "Remover {title} dos guardados",

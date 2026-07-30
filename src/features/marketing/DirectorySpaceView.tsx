@@ -13,17 +13,22 @@ import s from "./DirectorySpacePage.module.css";
 export function DirectorySpaceView({
   place,
   preview = false,
+  ownerRef,
 }: {
   place: DirectoryPlace;
   preview?: boolean;
+  /** The viewer's own ref for this listing, present only when they own it.
+   * Threaded to `DirectorySpaceMain` to show owner-reply compose controls;
+   * never passed by the moderation preview, so that path stays read-only. */
+  ownerRef?: string;
 }) {
   return (
     <>
       <DirectoryGallery place={place} />
       <div className={s.page}>
         <div className={s.grid}>
-          <DirectorySpaceMain place={place} preview={preview} />
-          <DirectorySpaceAside place={place} preview={preview} />
+          <DirectorySpaceMain place={place} preview={preview} ownerRef={ownerRef} />
+          <DirectorySpaceAside place={place} preview={preview} ownerRef={ownerRef} />
         </div>
       </div>
     </>

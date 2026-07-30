@@ -1,4 +1,6 @@
 import { Link, useParams } from "react-router-dom";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,6 +14,12 @@ import styles from "./CinemaCollectionPage.module.css";
 import { routes } from "../../app/routeMap";
 
 export function CinemaCollectionPage() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return <CinemaComingSoon />;
+  return <DemoCinemaCollectionPage />;
+}
+
+function DemoCinemaCollectionPage() {
   const { slug = "" } = useParams();
   const { t } = useTranslation();
   const data = collectionDetails[slug];

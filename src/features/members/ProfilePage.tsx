@@ -8,6 +8,7 @@ import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
@@ -43,6 +44,7 @@ export function ProfilePage() {
   } = useProfile();
   const { user } = useAuth();
   const { isBlocked } = useSocial();
+  const { demoMode } = useDemoMode();
   const [previewing, setPreviewing] = useState(false);
   // When entering edit mode from the "Add/Edit links" affordance, jump the editor
   // straight to the Links section instead of landing at the top of the form.
@@ -53,7 +55,11 @@ export function ProfilePage() {
     startEditing();
   }
 
-  const selfSlug = user?.profile.slug ?? currentUserSlug;
+  // In live mode, an unauthenticated visitor has no slug — never fall back to
+  // the demo persona (`currentUserSlug` === "tiago"), or a logged-out visitor
+  // to /members/tiago would be mis-detected as viewing their own profile.
+  const selfSlug =
+    user?.profile.slug ?? (demoMode ? currentUserSlug : undefined);
   const isSelf = !slug || slug === selfSlug;
   // A blocked member's profile is walled off. (The blocked-by direction is
   // enforced server-side in live mode: the fetch 403s → the not-found wall.)
@@ -114,7 +120,7 @@ export function ProfilePage() {
           only linked personas (the hook enforces this); self view adds a manage
           link and a create prompt when empty. Preview counts as a public view. */}
       <ProfileSubprofilesSection
-        ownerSlug={isSelf ? selfSlug : (slug ?? "")}
+        ownerSlug={isSelf ? (selfSlug ?? "") : (slug ?? "")}
         isSelf={selfView}
       />
 
@@ -142,7 +148,7 @@ export function ProfilePage() {
       />
 
       <PlacesSection
-        memberSlug={isSelf ? selfSlug : (slug ?? "")}
+        memberSlug={isSelf ? (selfSlug ?? "") : (slug ?? "")}
         isSelf={selfView}
         firstName={resolvedProfile.first}
       />

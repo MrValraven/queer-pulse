@@ -26,6 +26,20 @@ const ioMock = vi.hoisted(() =>
 
 vi.mock("socket.io-client", () => ({ io: ioMock }));
 
+// The cache layer is mocked so the `message:new` handler's cache-patching can be
+// asserted directly (it upserts the message + patches the inbox preview now,
+// rather than blanket-invalidating queries). Every export realtime.ts imports
+// is provided so its other frame handlers still resolve.
+vi.mock("./messageCache", () => ({
+  upsertMessage: vi.fn(),
+  patchConversationPreview: vi.fn(),
+  patchMessageDelete: vi.fn(),
+  patchMessageEdit: vi.fn(),
+  patchMessagePinned: vi.fn(),
+  patchMessageReactionCounts: vi.fn(),
+  reconcileConversationHistory: vi.fn(),
+}));
+
 vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({
     demoMode: state.demoMode,
@@ -178,17 +192,37 @@ describe("cache invalidation", () => {
     return { handler: call?.[1] as (data: unknown) => void, spy };
   }
 
-  it("message:new refreshes that thread and the conversation list", async () => {
-    const { handler, spy } = await wire("message:new");
-    handler({ conversationId: "c-1" });
-    expect(spy).toHaveBeenCalledWith({ queryKey: ["messages", "c-1"] });
-    expect(spy).toHaveBeenCalledWith({ queryKey: ["conversations"] });
+  it("message:new patches the open thread and the inbox preview in place", async () => {
+    const mod = await loadRealtime();
+    // Same module graph as `mod` (loadRealtime resets modules first), so these
+    // are the very mock fns realtime.ts's handler calls.
+    const messageCache = await import("./messageCache");
+    mount(mod);
+    const call = socket.on.mock.calls.find((c) => c[0] === "message:new");
+    const handler = call?.[1] as (data: unknown) => void;
+    const message = { id: "m-1" };
+    handler({ conversationId: "c-1", message });
+    // The frame carries the full message, so it's upserted into the thread cache
+    // and the inbox row's preview is patched — not a blanket refetch of either.
+    expect(messageCache.upsertMessage).toHaveBeenCalledWith(
+      expect.anything(),
+      "c-1",
+      message,
+    );
+    expect(messageCache.patchConversationPreview).toHaveBeenCalledWith(
+      expect.anything(),
+      "c-1",
+      message,
+    );
   });
 
-  it("read refreshes the conversation list", async () => {
+  it("read is a watermark-only frame and does NOT refetch the conversation list", async () => {
+    // A `read` frame is deliberately not a cache invalidation: the sender's own
+    // read is already patched by useMarkRead, and the counterpart's read doesn't
+    // change our unread count. So it must not fire a `["conversations"]` refetch.
     const { handler, spy } = await wire("read");
     handler({ conversationId: "c-1", userId: "u-1", lastReadAt: "2026-07-16" });
-    expect(spy).toHaveBeenCalledWith({ queryKey: ["conversations"] });
+    expect(spy).not.toHaveBeenCalledWith({ queryKey: ["conversations"] });
   });
 
   it("notification:new refreshes notifications", async () => {

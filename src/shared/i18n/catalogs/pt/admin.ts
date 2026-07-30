@@ -401,6 +401,31 @@ export const admin: Catalog = {
   "adminListings.ask.action": "enviar a tua pergunta",
   "adminListings.ask.noSubmitter":
     "Esta página não tem nenhum membro associado — não há a quem enviar a pergunta.",
+  "adminListings.view.queue": "Submissões",
+  "adminListings.view.editSuggestions": "Sugestões de edição",
+
+  // ── Sugestões de edição ──────────────────────────────────────────────────────
+  "editSuggestions.empty": "Sem correções neste filtro, por agora.",
+  "editSuggestions.field.hours": "Horário",
+  "editSuggestions.field.address": "Morada",
+  "editSuggestions.field.phone": "Número de telefone",
+  "editSuggestions.field.website": "Site",
+  "editSuggestions.field.description": "Descrição",
+  "editSuggestions.field.other": "Outra coisa",
+  "editSuggestions.filter.pending": "Pendentes",
+  "editSuggestions.filter.accepted": "Aceites",
+  "editSuggestions.filter.dismissed": "Descartadas",
+  "editSuggestions.filter.all": "Todas",
+  "editSuggestions.status.pending": "Pendente",
+  "editSuggestions.status.accepted": "Aceite",
+  "editSuggestions.status.dismissed": "Descartada",
+  "editSuggestions.acceptCta": "Aceitar",
+  "editSuggestions.dismissCta": "Descartar",
+  "editSuggestions.submittedBy": "Sugerido por {name}",
+  "editSuggestions.unknownSubmitter": "um membro desconhecido",
+  "editSuggestions.toast.accepted": "Correção de {name} aceite.",
+  "editSuggestions.toast.dismissed": "Correção de {name} descartada.",
+
 
   // ── Moderação ──────────────────────────────────────────────────────────────
   "moderation.title": "Moderação · <em>triagem</em>",

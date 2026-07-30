@@ -1,5 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FiFilm } from "react-icons/fi";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaComingSoon } from "./CinemaComingSoon";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -14,6 +16,12 @@ import { CinemaCuratorSkeleton } from "./CinemaCuratorSkeleton";
 import styles from "./CinemaCuratorPage.module.css";
 
 export function CinemaCuratorPage() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return <CinemaComingSoon />;
+  return <DemoCinemaCuratorPage />;
+}
+
+function DemoCinemaCuratorPage() {
   const { slug = "" } = useParams();
   const { t } = useTranslation();
   const curator = CURATORS[slug];

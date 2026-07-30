@@ -1,0 +1,45 @@
+.warn {
+  margin: 0 0 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(45, 27, 61, 0.06);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  color: var(--ink);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+.reportRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.reportRow input {
+  margin-top: 3px;
+  flex: 0 0 auto;
+  accent-color: var(--plum);
+  width: 18px;
+  height: 18px;
+}
+.reasonField {
+  margin-top: 16px;
+}
+.reasonInput {
+  width: 100%;
+  min-height: 84px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.reasonInput:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 1px;
+}

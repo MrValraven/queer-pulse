@@ -70,7 +70,9 @@ describe("useVouchMember (live mode via MSW)", () => {
   it("POSTs /members/:slug/vouch with the relationship + note + anonymous payload", async () => {
     let receivedBody: unknown;
     server.use(
-      http.post(`${API}/members/marco-vieira/vouch`, async ({ request }) => {
+      // The API client prefixes every `request()`-based call with `/v1` (URI
+      // versioning); the MSW handler must match that versioned path.
+      http.post(`${API}/v1/members/marco-vieira/vouch`, async ({ request }) => {
         receivedBody = await request.json();
         return HttpResponse.json({ vouchCount: 7 });
       }),

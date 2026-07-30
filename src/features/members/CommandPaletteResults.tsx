@@ -1,7 +1,7 @@
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { memberAvatar } from "./data/members";
+import { memberRowAvatar } from "./searchAvatar";
 import { TYPE_ICON, TYPE_LABEL_KEY, type SearchItem } from "./search.data";
 import styles from "./CommandPalette.module.css";
 
@@ -49,7 +49,7 @@ export function CommandPaletteResults({
         )}
         {results.map((item, i) => {
           const Icon = TYPE_ICON[item.t];
-          const avatar = item.slug ? memberAvatar(item.slug) : undefined;
+          const avatar = memberRowAvatar(item);
           return (
             <li
               key={`${item.t}-${item.name}`}

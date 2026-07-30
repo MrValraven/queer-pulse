@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from "react";
-import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -7,46 +6,10 @@ import { ApiError } from "../../shared/api/client";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { ReviewStarRating } from "./ReviewStarRating";
 import { useCreateReview } from "./api/useCompanyMutations";
 import type { CompanyReview } from "./companies.data";
-import styles from "./WriteReviewModal.module.css";
 import shell from "./ApplicationModals.module.css";
-
-/** Star rating picker, 1–5. */
-function StarRating({
-  value,
-  onChange,
-}: {
-  value: number;
-  onChange: (n: number) => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div
-      className={styles.stars}
-      role="radiogroup"
-      aria-label={t("economy:companyReview.overallRatingAriaLabel")}
-    >
-      {[1, 2, 3, 4, 5].map((starValue) => (
-        <button
-          key={starValue}
-          type="button"
-          role="radio"
-          aria-checked={value === starValue}
-          aria-label={t("economy:companyReview.starAriaLabel", {
-            count: starValue,
-          })}
-          className={[styles.star, starValue <= value && styles.starOn]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => onChange(starValue)}
-        >
-          <FiStar size={26} aria-hidden />
-        </button>
-      ))}
-    </div>
-  );
-}
 
 /**
  * Write a review for a single company. Demo prepends the review to local state
@@ -171,7 +134,7 @@ export function CompanyReviewModal({
 
           <div className={shell.field}>
             <label>{t("economy:companyReview.overallRatingAriaLabel")}</label>
-            <StarRating value={rating} onChange={setRating} />
+            <ReviewStarRating value={rating} onChange={setRating} />
           </div>
 
           <div className={shell.field}>

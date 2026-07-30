@@ -84,10 +84,18 @@ export function SubprofileShowcase({
   const nextIndex = active
     ? personas.findIndex((persona) => persona.slug === active.slug)
     : -1;
+  // Reading the previous committed index during render is deliberate: the slide
+  // direction must be COMMITTED to the DOM to trigger the CSS animation, so the
+  // ref is updated in the effect below (after commit), never during render. A
+  // during-render setState would discard the direction-bearing render and
+  // collapse every transition to "none". Read once into a local here so the
+  // direction expression itself stays ref-free.
+  // eslint-disable-next-line react-hooks/refs -- holds the last committed index; see above
+  const previousIndex = previousIndexRef.current;
   const direction: "up" | "down" | "none" =
-    nextIndex > previousIndexRef.current
+    nextIndex > previousIndex
       ? "down"
-      : nextIndex < previousIndexRef.current
+      : nextIndex < previousIndex
         ? "up"
         : "none";
   // Written in an effect, not during render: StrictMode double-invokes the

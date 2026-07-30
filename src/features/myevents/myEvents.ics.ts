@@ -1,7 +1,7 @@
 import type { MyEvent } from "./myEvents.types";
 
 /** RFC5545 text escaping: backslash, comma, semicolon, and newlines. */
-function escapeText(s: string): string {
+export function escapeText(s: string): string {
   return s
     .replace(/\\/g, "\\\\")
     .replace(/;/g, "\\;")

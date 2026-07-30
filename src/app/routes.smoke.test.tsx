@@ -75,16 +75,29 @@ describe("route smoke tests (demo mode)", () => {
         </TestProviders>,
       );
 
-      // Wait for the lazy chunk to resolve (Suspense fallback clears).
+      // Wait for the lazy chunk (and any redirect hop) to resolve: the Suspense
+      // fallback clears AND real content has mounted into the body. Both
+      // conditions live inside the same waitFor — rather than asserting body
+      // length once, after — to close a race on REDIRECT routes like
+      // /calendar → /events?view=calendar: the intermediate <Navigate> renders
+      // no "Loading…" text, so a bare "Loading… is absent" wait can pass in the
+      // brief window after the redirect but before the redirected lazy page
+      // begins loading, when the body is still momentarily empty.
       await waitFor(
-        () => expect(screen.queryByText("Loading…")).not.toBeInTheDocument(),
+        () => {
+          expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+          // Something actually rendered into the document body.
+          expect(document.body.textContent?.trim().length ?? 0).toBeGreaterThan(
+            0,
+          );
+        },
         { timeout: 10000 },
       );
 
-      // The page mounted instead of the branded crash panel.
+      // The page mounted instead of the branded crash panel. (A crash also
+      // fills the body, so this is asserted after content settles, not folded
+      // into the wait above.)
       expect(screen.queryByText(ERROR_FALLBACK)).not.toBeInTheDocument();
-      // Something actually rendered into the document body.
-      expect(document.body.textContent?.trim().length ?? 0).toBeGreaterThan(0);
     },
     15000,
   );

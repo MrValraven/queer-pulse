@@ -106,6 +106,8 @@ div.backBar {
   gap: 14px;
   /* Keep the star glued to the name's line rather than wrapping beneath it. */
   flex-wrap: nowrap;
+  /* Mirrors .name's font-size so the star's baseline nudge can scale with it. */
+  --name-fs: clamp(38px, 5.2vw, 70px);
 }
 .name {
   font-family: var(--serif);
@@ -215,6 +217,14 @@ div.backBar {
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 28px;
+}
+/* Wraps the primary CTA row and the safety overflow menu so the "⋯" button
+   sits beside the visitor CTAs, bottom-aligned, and wraps below on narrow. */
+.heroActionsRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .vouchedActions {
   display: inline-flex;

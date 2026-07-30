@@ -386,6 +386,14 @@ export const myevents: Catalog = {
   "settingsModal.title": "How your events <em>reach you</em>",
   "settingsModal.comingSoonNote":
     "A preview of what's coming — you'll be able to set these once they're live.",
+  "settingsModal.pushLiveNote":
+    "Reminder timing and phone push are live — choose when you're reminded and turn on push to get it on your phone. The rest is a preview of what's coming.",
+  "settingsModal.pushLiveDesc":
+    "On this device — a notification when an event you're going to is about to start.",
+  "settingsModal.pushUnsupported":
+    "This browser doesn't support push notifications.",
+  "settingsModal.pushBlocked":
+    "Notifications are blocked in your browser settings.",
   "settingsModal.remindBefore": "Remind me before an event",
   "settingsModal.lead.hour": "1 hour",
   "settingsModal.lead.day": "1 day",

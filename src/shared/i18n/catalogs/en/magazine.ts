@@ -183,6 +183,13 @@ export const magazine: Catalog = {
   "issues.archiveHeading": "The full <em>archive</em>",
   "issues.viewCoversCta": "Covers",
   "issues.viewListCta": "List",
+  "issues.archiveErrorTitle": "We couldn't load the archive.",
+  "issues.archiveErrorBody":
+    "Something interrupted us on the way to the back issues. Give it another try.",
+  "issues.archiveRetryCta": "Try again",
+  "issues.archiveEmptyTitle": "No issues to show yet.",
+  "issues.archiveEmptyBody":
+    "The archive is still being set — the first editions will land here soon.",
 
   // ── AuthorPage ───────────────────────────────────────────────────────────
   "author.notFoundTitle": "We couldn't find that writer.",

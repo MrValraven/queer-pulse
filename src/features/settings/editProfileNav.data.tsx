@@ -78,17 +78,6 @@ export const PROFILE_NAV: ProfileNavItem[] = [
       </svg>
     ),
   },
-  {
-    id: "visibility",
-    labelKey: "settings:editProfile.nav.visibility.label",
-    groupKey: "settings:editProfile.nav.group.privacy",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" />
-        <circle cx="8" cy="8" r="2" />
-      </svg>
-    ),
-  },
 ];
 
 /** Catalog key for each section id's human-readable label, used in the save

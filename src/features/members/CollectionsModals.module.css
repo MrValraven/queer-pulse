@@ -6,6 +6,9 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
+  /* Lift above the on-screen keyboard on iOS (see useVisualViewportKeyboard),
+     keeping the 24px gutter as the floor when the keyboard is closed. */
+  padding-block-end: max(24px, var(--keyboard-inset, 0px));
   background: rgba(var(--plum-rgb), 0.5);
   backdrop-filter: blur(3px);
   animation: fade 0.2s var(--ease);
@@ -19,7 +22,8 @@
   position: relative;
   width: 100%;
   max-width: 520px;
-  max-height: 86vh;
+  /* svh, not vh: vh is the large viewport and overflows under mobile chrome. */
+  max-height: 86svh;
   overflow-y: auto;
   background: var(--cream);
   border-radius: var(--radius-card);

@@ -1,0 +1,54 @@
+/* Mirrors MessagesPage.module.css's report-form treatment (label/textarea)
+ * so this modal's form reads consistently with the app's other small
+ * "flag something" forms, plus a native select for the field picker. */
+.field {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block: 12px 6px;
+}
+
+.select {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+.select:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 96px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text-strong);
+  background: var(--cream);
+  resize: vertical;
+}
+
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
+.counter {
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  margin-block-start: 6px;
+  text-align: right;
+}

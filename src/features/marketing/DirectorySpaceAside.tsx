@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
@@ -7,6 +8,12 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MEMBERS_HERE } from "./directorySpace.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { LocationMiniMap } from "./LocationMiniMap";
+import { DirectoryActionBar } from "./DirectoryActionBar";
+import { DirectoryMapPlaceholder } from "./DirectoryMapPlaceholder";
+import { DirectoryLanguages } from "./DirectoryLanguages";
+import { DirectoryAccess } from "./DirectoryAccess";
+import { DirectoryAsideFooter } from "./DirectoryAsideFooter";
+import { DirectoryUpcoming } from "./DirectoryUpcoming";
 import s from "./DirectorySpacePage.module.css";
 
 const TINT: Record<Tint, string> = {
@@ -19,9 +26,17 @@ interface Props {
   place: DirectoryPlace;
   /** Moderation preview: render contact/nav CTAs as inert (read-only view). */
   preview?: boolean;
+  /** The viewer's own ref for this listing, present only when they own it.
+   * Gates `DirectorySuggestEditControl` off for owners (they use "Edit this
+   * listing" instead); never passed by the moderation preview. */
+  ownerRef?: string;
 }
 
-export function DirectorySpaceAside({ place, preview = false }: Props) {
+export function DirectorySpaceAside({
+  place,
+  preview = false,
+  ownerRef,
+}: Props) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const igUrl = place.social.instagram
@@ -38,6 +53,7 @@ export function DirectorySpaceAside({ place, preview = false }: Props) {
 
   return (
     <aside className={s.side}>
+      <DirectoryActionBar place={place} preview={preview} />
       <div className={s.sideCard}>
         <div className={s.map}>
           {coords ? (
@@ -49,25 +65,7 @@ export function DirectorySpaceAside({ place, preview = false }: Props) {
               })}
             />
           ) : (
-            <>
-              <svg
-                viewBox="0 0 300 300"
-                preserveAspectRatio="xMidYMid slice"
-                aria-hidden="true"
-              >
-                <rect width="300" height="300" fill="#e9e5db" />
-                <path d="M0 80 L300 100 L300 110 L0 90 Z" fill="#d9d3c5" />
-                <path d="M0 180 L300 200 L300 210 L0 190 Z" fill="#d9d3c5" />
-                <path d="M80 0 L100 300 L110 300 L90 0 Z" fill="#d9d3c5" />
-                <path d="M200 0 L220 300 L230 300 L210 0 Z" fill="#d9d3c5" />
-                <circle cx="160" cy="148" r="20" fill="#b8d4b1" opacity=".7" />
-              </svg>
-              <div className={s.pin}>
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2C7 2 3 6 3 11c0 7 9 11 9 11s9-4 9-11c0-5-4-9-9-9z" />
-                </svg>
-              </div>
-            </>
+            <DirectoryMapPlaceholder />
           )}
         </div>
         <div className={s.addr}>
@@ -84,6 +82,14 @@ export function DirectorySpaceAside({ place, preview = false }: Props) {
           </strong>
           {place.address}
         </div>
+        {place.savedCount != null && place.savedCount > 0 && (
+          <div className={s.savedSignal}>
+            <FiHeart aria-hidden />
+            {t("marketing:directory.detail.savedByMembers", {
+              count: place.savedCount,
+            })}
+          </div>
+        )}
         {place.social.phone && (
           <div className={s.contactRow}>
             <svg viewBox="0 0 24 24">
@@ -130,6 +136,8 @@ export function DirectorySpaceAside({ place, preview = false }: Props) {
             <a href={`mailto:${place.social.email}`}>{place.social.email}</a>
           </div>
         )}
+        <DirectoryLanguages langs={place.langs} />
+        <DirectoryAccess place={place} />
         <div className={s.cta}>
           {place.social.website ? (
             <Button
@@ -208,15 +216,15 @@ export function DirectorySpaceAside({ place, preview = false }: Props) {
       {place.upcoming && place.upcoming.length > 0 && (
         <div className={s.sideCard}>
           <h4>{t("marketing:directory.detail.upcomingHere")}</h4>
-          {place.upcoming.map((upcomingEvent) => (
-            <p key={upcomingEvent.title} className={s.upRow}>
-              <b>{upcomingEvent.when}</b>
-              <br />
-              {upcomingEvent.title}
-            </p>
-          ))}
+          <DirectoryUpcoming
+            upcoming={place.upcoming}
+            placeName={place.name}
+            preview={preview}
+          />
         </div>
       )}
+
+      <DirectoryAsideFooter place={place} preview={preview} ownerRef={ownerRef} />
     </aside>
   );
 }

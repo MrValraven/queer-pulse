@@ -32,6 +32,7 @@ export function useSubmitReview(slug: string) {
     mutationFn: async (input) => {
       if (demoMode) {
         const demoReview: Review = {
+          id: crypto.randomUUID(),
           initials: profile.initials ?? "",
           name: `${profile.first} ${profile.last}`.trim(),
           tint: "coral",

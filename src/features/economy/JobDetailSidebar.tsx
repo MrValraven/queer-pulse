@@ -7,6 +7,7 @@ import { routes } from "../../app/routeMap";
 import type { Job } from "./jobs.data";
 import { postedText } from "./api/jobs.adapters";
 import { COMPANY_SLUG_BY_NAME } from "./companies.data";
+import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import styles from "./JobDetailPage.module.css";
 
 export function JobDetailSidebar({
@@ -88,6 +89,16 @@ export function JobDetailSidebar({
       <div className={styles.noteCard}>
         <p>{d.reviewerNote}</p>
       </div>
+
+      <ReportSubjectControl
+        subjectType="job"
+        subjectId={job.slug}
+        subjectName={job.title}
+        label={t("economy:jobDetail.report.cta")}
+        ariaLabel={t("economy:jobDetail.report.ariaLabel", {
+          name: job.title,
+        })}
+      />
     </aside>
   );
 }

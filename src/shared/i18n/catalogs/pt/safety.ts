@@ -188,6 +188,8 @@ export const safety: Catalog = {
     "<strong>Nota:</strong> Se partilharem comunidades, {name} vai continuar a aparecer nas listas de pessoas — mas não vai conseguir interagir diretamente contigo.",
   "blockMute.choose.continueCta": "Continuar",
   "blockMute.choose.cancelCta": "Cancelar",
+  "blockMute.choose.liveDurationNote":
+    "Um silenciamento dura até o desfazeres — os silenciamentos temporizados são uma pré-visualização só de demonstração.",
 
   "blockMute.muted.title": "<em>Silenciaste</em> {name}",
   "blockMute.muted.sub":
@@ -209,6 +211,29 @@ export const safety: Catalog = {
   "blockMute.blocked.undoCta": "Desfazer — desbloquear {name}",
   "blockMute.blocked.reportNote":
     "Precisas de denunciar um comportamento prejudicial? <link>Fazer uma denúncia →</link>",
+
+  // ── ProfileSafetyMenu.tsx / BlockMemberModal.tsx (bloquear/silenciar a partir de um perfil) ──
+  "profileMenu.ariaLabel": "Ações de segurança para {name}",
+  "profileMenu.mute": "Silenciar {name}",
+  "profileMenu.unmute": "Dessilenciar {name}",
+  "profileMenu.block": "Bloquear {name}",
+  "profileMenu.unblock": "Desbloquear {name}",
+  "profileMenu.mutedToast":
+    "Silenciaste {name}. As publicações desta pessoa ficam escondidas de ti.",
+  "profileMenu.unmutedToast": "Dessilenciaste {name}.",
+  "profileMenu.unblockedToast": "Desbloqueaste {name}.",
+  "profileMenu.blockedToast": "Bloqueaste {name}.",
+  "profileMenu.blockedReportedToast":
+    "Bloqueaste {name} e enviaste uma denúncia à equipa de moderação.",
+  "blockModal.title": "Bloquear {name}?",
+  "blockModal.body":
+    "Bloquear corta qualquer ligação entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa — e nenhum de vocês consegue estabelecer ligação com o outro. Podes desbloquear mais tarde.",
+  "blockModal.reportCheckbox": "Denunciar também {name} à equipa de moderação",
+  "blockModal.reasonLabel": "Motivo (opcional)",
+  "blockModal.reasonPlaceholder":
+    "Acrescenta qualquer contexto para a equipa de moderação…",
+  "blockModal.cancelCta": "Cancelar",
+  "blockModal.confirmCta": "Bloquear {name}",
 
   // ── AppealOutcomePage.tsx ──────────────────────────────────────────────
   "appeal.state.pending": "Pendente",

@@ -1,10 +1,12 @@
-import { type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
-import { Button, ComingSoon } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PRONOUN_CHIPS, VIS_FIELDS } from "./editProfile.data";
+import { PRONOUN_CHIPS } from "./editProfile.data";
+import { useUploadImage } from "../members/api/useUploadImage";
+import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { leadingInitials } from "../../shared/lib/initials";
 import { safeHref } from "../../shared/lib/safeHref";
 import styles from "./EditProfilePage.module.css";
@@ -17,6 +19,8 @@ interface IdentitySectionProps {
   googlePhoto?: string;
   onNameChange: (v: string) => void;
   onLocationChange: (v: string) => void;
+  /** Called with the persistable storage key once an uploaded photo resolves. */
+  onPhotoChange: (storageKey: string) => void;
   onUseGooglePhoto: () => void;
   onRemove: () => void;
 }
@@ -28,15 +32,62 @@ export function IdentitySection({
   googlePhoto,
   onNameChange,
   onLocationChange,
+  onPhotoChange,
   onUseGooglePhoto,
   onRemove,
 }: IdentitySectionProps) {
   const { t } = useTranslation();
   const initials = leadingInitials(displayName);
-  // Guard the photo URL before dropping it into CSS `url(...)`: only an http(s)
-  // link with no `)` / whitespace, otherwise fall back to the initials tile.
-  const safePhoto = safeHref(photo);
-  const photoUrl = safePhoto && !/[)\s]/.test(safePhoto) ? safePhoto : null;
+  const uploadAvatar = useUploadImage("avatar");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  // A freshly picked photo shows instantly via this local object URL; `photo`
+  // (the persisted storage key / resolved URL) stays the value to submit.
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  function clearPreview() {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+  }
+
+  async function handlePickPhoto(file: File) {
+    setUploadError(null);
+    setUploadProgress(0);
+    setUploading(true);
+    try {
+      const { key, previewUrl: newPreviewUrl } = await uploadAvatar(file, {
+        onProgress: (percent) => setUploadProgress(percent),
+      });
+      // One photo at a time here — the previous local preview is now stale.
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(newPreviewUrl);
+      onPhotoChange(key);
+    } catch (error) {
+      setUploadError(
+        error instanceof ImageProcessingError
+          ? t(error.i18nKey, error.values)
+          : t("members:avatar.error.generic"),
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  // Guard the photo URL before dropping it into CSS `url(...)`. A local preview
+  // is a blob: URL we created ourselves (safe, but `safeHref` only passes
+  // http(s)/mailto), so it bypasses the guard; a persisted `photo` still must
+  // be an http(s) link with no `)` / whitespace, else fall back to initials.
+  const displayedPhoto = previewUrl ?? photo;
+  const safePhoto = safeHref(displayedPhoto);
+  const photoUrl = previewUrl
+    ? previewUrl
+    : safePhoto && !/[)\s]/.test(safePhoto)
+      ? safePhoto
+      : null;
 
   return (
     <div className={styles.section} id="identity">
@@ -67,20 +118,23 @@ export function IdentitySection({
         </div>
         <div>
           <div className={styles.photoActions}>
-            <span className={styles.uploadAction}>
-              <Button
-                variant="ghost"
-                disabled
-                style={{ fontSize: "13.5px", padding: "9px 18px" }}
-              >
-                {t("settings:editProfile.identity.uploadPhoto")}
-              </Button>
-              <ComingSoon />
-            </span>
+            <Button
+              variant="ghost"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              style={{ fontSize: "13.5px", padding: "9px 18px" }}
+            >
+              {uploading
+                ? t("members:avatar.uploading", { percent: uploadProgress })
+                : t("settings:editProfile.identity.uploadPhoto")}
+            </Button>
             {photo ? (
               <Button
                 variant="ghost"
-                onClick={onRemove}
+                onClick={() => {
+                  clearPreview();
+                  onRemove();
+                }}
                 style={{
                   fontSize: "13.5px",
                   padding: "9px 18px",
@@ -92,13 +146,25 @@ export function IdentitySection({
             ) : googlePhoto ? (
               <Button
                 variant="ghost"
-                onClick={onUseGooglePhoto}
+                onClick={() => {
+                  clearPreview();
+                  onUseGooglePhoto();
+                }}
                 style={{ fontSize: "13.5px", padding: "9px 18px" }}
               >
                 {t("settings:editProfile.identity.useGooglePhoto")}
               </Button>
             ) : null}
           </div>
+          {uploadError && (
+            <div
+              role="alert"
+              className={styles.photoHint}
+              style={{ color: "var(--coral)" }}
+            >
+              {uploadError}
+            </div>
+          )}
           <div className={styles.photoHint}>
             {photo
               ? t("settings:editProfile.identity.photoHint.default")
@@ -108,6 +174,17 @@ export function IdentitySection({
           </div>
         </div>
       </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void handlePickPhoto(file);
+          e.target.value = "";
+        }}
+      />
       <div className={styles.field}>
         <div className={styles.fieldLabel}>
           {t("settings:editProfile.identity.displayNameLabel")}
@@ -151,6 +228,17 @@ interface PronounsSectionProps {
 
 export function PronounsSection({ selected, onToggle }: PronounsSectionProps) {
   const { t } = useTranslation();
+  const [customInput, setCustomInput] = useState("");
+  // Anything selected that is not one of the preset chips is a written-in set.
+  const customPronouns = selected.filter((p) => !PRONOUN_CHIPS.includes(p));
+
+  function addCustom() {
+    const trimmed = customInput.trim();
+    setCustomInput("");
+    if (!trimmed || selected.includes(trimmed)) return;
+    onToggle(trimmed);
+  }
+
   return (
     <div className={styles.section} id="pronouns">
       <h2 className={styles.sectionTitle}>
@@ -187,33 +275,52 @@ export function PronounsSection({ selected, onToggle }: PronounsSectionProps) {
           ))}
         </div>
         <div className={styles.fieldLabel} style={{ marginTop: "10px" }}>
-          {t("settings:editProfile.pronouns.writeOwnLabel")} <ComingSoon />
+          {t("settings:editProfile.pronouns.writeOwnLabel")}
         </div>
-        <input
-          className={styles.fieldInput}
-          type="text"
-          placeholder={t("settings:editProfile.pronouns.writeOwnPlaceholder")}
-          disabled
-        />
+        {customPronouns.length > 0 && (
+          <div className={styles.skillsDisplay}>
+            {customPronouns.map((p) => (
+              <span key={p} className={styles.skillTag}>
+                {p}
+                <button
+                  type="button"
+                  className={styles.skillTagRemove}
+                  aria-label={t(
+                    "settings:editProfile.pronouns.removeCustomAriaLabel",
+                    { pronoun: p },
+                  )}
+                  onClick={() => onToggle(p)}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div className={styles.skillInputRow}>
+          <input
+            className={styles.fieldInput}
+            type="text"
+            placeholder={t("settings:editProfile.pronouns.writeOwnPlaceholder")}
+            value={customInput}
+            onChange={(e) => setCustomInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addCustom();
+              }
+            }}
+          />
+          <Button
+            variant="ghost"
+            onClick={addCustom}
+            style={{ whiteSpace: "nowrap" }}
+          >
+            {t("settings:editProfile.skills.add")}
+          </Button>
+        </div>
         <div className={styles.fieldHint}>
           {t("settings:editProfile.pronouns.hint")}
-        </div>
-      </div>
-      <div className={styles.field}>
-        <div className={styles.fieldLabel}>
-          {t("settings:editProfile.pronouns.chosenNameLabel")} <ComingSoon />{" "}
-          <span className={styles.fieldOptional}>
-            {t("settings:editProfile.pronouns.chosenNameOptional")}
-          </span>
-        </div>
-        <input
-          className={styles.fieldInput}
-          type="text"
-          placeholder={t("settings:editProfile.pronouns.chosenNamePlaceholder")}
-          disabled
-        />
-        <div className={styles.fieldHint}>
-          {t("settings:editProfile.pronouns.chosenNameHint")}
         </div>
       </div>
     </div>
@@ -264,32 +371,16 @@ export function BioSection({
           placeholder={t("settings:editProfile.bio.placeholder")}
         />
       </div>
-      <div className={styles.fieldRow}>
-        <div className={styles.field}>
-          <div className={styles.fieldLabel}>
-            {t("settings:editProfile.bio.occupationLabel")}
-          </div>
-          <input
-            className={styles.fieldInput}
-            type="text"
-            value={occupation}
-            onChange={(e) => onOccupationChange(e.target.value)}
-          />
+      <div className={styles.field}>
+        <div className={styles.fieldLabel}>
+          {t("settings:editProfile.bio.occupationLabel")}
         </div>
-        <div className={styles.field}>
-          <div className={styles.fieldLabel}>
-            {t("settings:editProfile.bio.organisationLabel")} <ComingSoon />{" "}
-            <span className={styles.fieldOptional}>
-              {t("settings:editProfile.bio.organisationOptional")}
-            </span>
-          </div>
-          <input
-            className={styles.fieldInput}
-            type="text"
-            placeholder={t("settings:editProfile.bio.organisationPlaceholder")}
-            disabled
-          />
-        </div>
+        <input
+          className={styles.fieldInput}
+          type="text"
+          value={occupation}
+          onChange={(e) => onOccupationChange(e.target.value)}
+        />
       </div>
     </div>
   );
@@ -404,55 +495,6 @@ export function SkillsSection({
             </span>
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-export function VisibilitySection() {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.section} id="visibility">
-      <h2 className={styles.sectionTitle}>
-        <Translation
-          i18nKey="settings:editProfile.visibility.title"
-          components={{ em: <em /> }}
-        />{" "}
-        <ComingSoon />
-      </h2>
-      <p className={styles.sectionSub}>
-        {t("settings:editProfile.visibility.sub")}
-      </p>
-      <div className={styles.visPanel}>
-        {VIS_FIELDS.map((f) => (
-          <div key={f.nameKey} className={styles.visRow}>
-            <div>
-              <div className={styles.visFieldName}>{t(f.nameKey)}</div>
-              <div className={styles.visFieldDesc}>{t(f.descKey)}</div>
-            </div>
-            {f.locked ? (
-              <span className={styles.visAlwaysOn}>
-                {t("settings:editProfile.visibility.alwaysOn")}
-              </span>
-            ) : (
-              <select
-                className={styles.visSelect}
-                defaultValue={f.defaultVal}
-                disabled
-              >
-                <option value="members">
-                  {t("settings:editProfile.visibility.optionMembers")}
-                </option>
-                <option value="connectionsOnly">
-                  {t("settings:editProfile.visibility.optionConnectionsOnly")}
-                </option>
-                <option value="hidden">
-                  {t("settings:editProfile.visibility.optionHidden")}
-                </option>
-              </select>
-            )}
-          </div>
-        ))}
       </div>
     </div>
   );

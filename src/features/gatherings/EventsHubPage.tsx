@@ -61,19 +61,26 @@ export function EventsHubPage() {
       <div className={styles.root}>
         <EventsHubHero lead={lead} now={now} onSeeAll={() => setView("browse")} />
         <EventsHubTabs active={view} onChange={setView} />
-        {view === "highlights" && (
-          <HighlightsView events={items} now={now} isLoading={isLoading} />
-        )}
-        {view === "browse" && (
-          <BrowseView
-            events={items}
-            isLoading={isLoading}
-            hasNextPage={hasNextPage}
-            fetchNextPage={fetchNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
-        )}
-        {view === "calendar" && <CalendarView events={items} now={now} />}
+        <div
+          role="tabpanel"
+          id={`events-hub-panel-${view}`}
+          aria-labelledby={`events-hub-tab-${view}`}
+          tabIndex={0}
+        >
+          {view === "highlights" && (
+            <HighlightsView events={items} now={now} isLoading={isLoading} />
+          )}
+          {view === "browse" && (
+            <BrowseView
+              events={items}
+              isLoading={isLoading}
+              hasNextPage={hasNextPage}
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          )}
+          {view === "calendar" && <CalendarView events={items} now={now} />}
+        </div>
       </div>
     </PageShell>
   );

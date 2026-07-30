@@ -2435,6 +2435,12 @@ button.cal-cell.has {
 .set-preview {
   opacity: 0.55;
 }
+/* A single live control that is momentarily unavailable (push unsupported,
+   blocked at the OS/browser level, or mid-request) — dimmed like the preview
+   block but rendered inert rather than faked. */
+.set-control-off {
+  opacity: 0.55;
+}
 
 /* toggle rows (settings/details) */
 .set-row {

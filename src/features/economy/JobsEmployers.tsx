@@ -1,10 +1,8 @@
-import { FaRainbow } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { Button, SectionHead } from "../../shared/components/ui";
+import { SectionHead } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { useCompanies } from "./api/useCompanies";
+import { EmployerGrid } from "./EmployerGrid";
 
 import styles from "./JobsPage.module.css";
 
@@ -38,51 +36,12 @@ export function JobsEmployers() {
           }
           subtitle={t("economy:jobs.employers.subtitle")}
         />
-        <div className={styles.empGrid}>
-          {employers.map((emp) => (
-            <Link
-              key={emp.slug ?? emp.name}
-              to={emp.slug ? `${routes.company}/${emp.slug}` : routes.jobs}
-              className={styles.empCard}
-            >
-              <div
-                className={styles.empLogo}
-                style={{ background: emp.background, color: emp.text }}
-              >
-                {emp.logo}
-              </div>
-              <div className={styles.empName}>{emp.name}</div>
-              <div className={styles.empType}>{emp.type}</div>
-              <span
-                className={styles.empBadge}
-                style={{ background: emp.badgeBg, color: emp.badgeText }}
-              >
-                {emp.qr ? (
-                  <>
-                    <FaRainbow />{" "}
-                  </>
-                ) : (
-                  ""
-                )}
-                {emp.badge}
-              </span>
-            </Link>
-          ))}
-        </div>
-        {hasNextPage && (
-          <div className={styles.loadMore}>
-            <Button
-              type="button"
-              variant="ghost"
-              disabled={isFetchingNextPage}
-              onClick={fetchNextPage}
-            >
-              {isFetchingNextPage
-                ? t("economy:jobs.employers.loadingMore")
-                : t("economy:jobs.employers.loadMoreCta")}
-            </Button>
-          </div>
-        )}
+        <EmployerGrid
+          employers={employers}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
       </div>
     </section>
   );

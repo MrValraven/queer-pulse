@@ -9,12 +9,14 @@ import {
   TagRow,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileHeroActions } from "./ProfileHeroActions";
+import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
 import { PublicProfileBadge } from "./PublicProfileBadge";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
@@ -95,7 +97,12 @@ export function ProfileHero({
   onPreview?: () => void;
 }) {
   const { t } = useTranslation();
-  const realSelf = self ?? profile.slug === currentUserSlug;
+  const { demoMode } = useDemoMode();
+  // Prefer the `self` prop resolved by the page against the authenticated user.
+  // Only the demo prototype may re-derive self from the hardcoded persona slug —
+  // in live mode the user's slug isn't `currentUserSlug`, so that comparison
+  // would wrongly flag another member's profile as your own.
+  const realSelf = self ?? (demoMode && profile.slug === currentUserSlug);
   const isSelf = realSelf && !asVisitor;
   const curatorSlug = curatorSlugForName(`${profile.first} ${profile.last}`);
   return (
@@ -193,14 +200,24 @@ export function ProfileHero({
               self={isSelf}
               onEdit={onEditLinks}
             />
-            <ProfileHeroActions
-              profile={profile}
-              isSelf={isSelf}
-              asVisitor={asVisitor}
-              realSelf={realSelf}
-              onEdit={onEdit}
-              onPreview={onPreview}
-            />
+            <div className={styles.heroActionsRow}>
+              <ProfileHeroActions
+                profile={profile}
+                isSelf={isSelf}
+                asVisitor={asVisitor}
+                realSelf={realSelf}
+                onEdit={onEdit}
+                onPreview={onPreview}
+              />
+              {/* Safety controls only on another member's profile — never your
+                  own (realSelf covers both self view and self-as-visitor preview). */}
+              {!realSelf && (
+                <ProfileSafetyMenu
+                  slug={profile.slug}
+                  firstName={profile.first}
+                />
+              )}
+            </div>
             <HeroVouchRow
               profile={profile}
               realSelf={realSelf}

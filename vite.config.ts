@@ -74,6 +74,38 @@ export default defineConfig({
         display: "standalone",
         theme_color: "#2d1b3d",
         background_color: "#f7f3ee",
+        // Discoverable in app stores / install dialogs that surface categories.
+        categories: ["social", "lifestyle"],
+        // Long-press / jump-list quick actions from the installed icon. Paths
+        // mirror routeMap.ts — keep in sync if those slugs change. Icons are
+        // intentionally omitted (the app icon is a poor per-shortcut glyph);
+        // engines fall back gracefully.
+        shortcuts: [
+          {
+            name: "Events",
+            short_name: "Events",
+            description: "Browse and RSVP to what's happening",
+            url: "/events",
+          },
+          {
+            name: "Messages",
+            short_name: "Messages",
+            description: "Open your conversations",
+            url: "/messages",
+          },
+          {
+            name: "Community feed",
+            short_name: "Feed",
+            description: "See the latest from your community",
+            url: "/feed",
+          },
+          {
+            name: "Local directory",
+            short_name: "Directory",
+            description: "Find queer-owned places and spaces",
+            url: "/local/directory",
+          },
+        ],
         icons: [
           {
             src: "/icons/icon-192-v2.png",

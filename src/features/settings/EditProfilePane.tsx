@@ -8,7 +8,6 @@ import {
   IdentitySection,
   PronounsSection,
   SkillsSection,
-  VisibilitySection,
 } from "./EditProfileSections";
 import { CommunitiesPickerSection } from "./CommunitiesPickerSection";
 import { LinksSection } from "./LinksSection";
@@ -21,8 +20,7 @@ export type ProfileSection =
   | "bio"
   | "links"
   | "skills"
-  | "communities"
-  | "visibility";
+  | "communities";
 
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
@@ -57,6 +55,11 @@ export function EditProfilePane({
     if (!googlePhoto) return;
     updateDraft({ photo: googlePhoto });
     showToast(t("settings:editProfile.toast.photoRestored"), "success");
+    onChange("identity");
+  }
+
+  function handlePhotoChange(storageKey: string) {
+    updateDraft({ photo: storageKey });
     onChange("identity");
   }
 
@@ -132,6 +135,7 @@ export function EditProfilePane({
           updateDraft({ hood: v });
           onChange("identity");
         }}
+        onPhotoChange={handlePhotoChange}
         onUseGooglePhoto={handleUseGooglePhoto}
         onRemove={handleRemovePhoto}
       />
@@ -168,7 +172,6 @@ export function EditProfilePane({
         onKeyDown={handleTagKey}
       />
       <CommunitiesPickerSection onChange={onChange} />
-      <VisibilitySection />
     </>
   );
 }

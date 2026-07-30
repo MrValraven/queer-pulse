@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import type { CompanyProfile } from "./companies.data";
 import styles from "./CompanyPage.module.css";
 
@@ -73,6 +74,16 @@ export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
           {messageLabel}
         </Button>
       </div>
+
+      <ReportSubjectControl
+        subjectType="company"
+        subjectId={profile.slug}
+        subjectName={profile.nameText}
+        label={t("economy:company.report.cta")}
+        ariaLabel={t("economy:company.report.ariaLabel", {
+          name: profile.nameText,
+        })}
+      />
     </aside>
   );
 }

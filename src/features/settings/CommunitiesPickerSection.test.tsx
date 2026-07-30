@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { CommunitiesPickerSection } from "./CommunitiesPickerSection";
@@ -36,12 +35,16 @@ const updateDraft = vi.fn(
     if (patch.featuredCommunities) draftFeaturedSlugs = patch.featuredCommunities;
   },
 );
-vi.mock("../../app/providers/ProfileProvider", () => ({
-  // TestProviders wraps children in the real `ProfileProvider` component, and
-  // also mounts `PublicProfileProvider`, which itself calls `useProfile()` for
-  // the committed `profile` (not the draft) — so the mock must supply a
-  // realistic full context value, not just what our own component reads.
-  ProfileProvider: ({ children }: { children: ReactNode }) => <>{children}</>,
+vi.mock("../../app/providers/useProfile", async (importOriginal) => ({
+  // `useProfile` now lives in `useProfile.ts` (both this component and
+  // `PublicProfileProvider` import it there). Keep the module's real exports
+  // (`ProfileContext`, `toDraft`, …) so the real `ProfileProvider` that
+  // TestProviders mounts still works; override only the `useProfile` hook the
+  // component reads. It must supply a realistic full context value, not just
+  // what our own component reads, since PublicProfileProvider also calls it.
+  ...(await importOriginal<
+    typeof import("../../app/providers/useProfile")
+  >()),
   useProfile: () => ({
     profile: currentUser,
     isEditing: true,

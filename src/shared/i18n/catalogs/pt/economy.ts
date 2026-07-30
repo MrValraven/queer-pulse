@@ -421,6 +421,8 @@ export const economy: Catalog = {
   "jobDetail.sidebar.category": "Categoria",
   "jobDetail.sidebar.deadline": "Prazo",
   "jobDetail.sidebar.applyCta": "Candidatar agora →",
+  "jobDetail.report.cta": "Denunciar esta vaga",
+  "jobDetail.report.ariaLabel": "Denunciar {name}",
 
   // ── HousingPage / HousingBoard / HousingSections ───────────────────────
   "housing.meta.title": "Quadro de habitação e colegas de casa em Lisboa",
@@ -629,15 +631,15 @@ export const economy: Catalog = {
   // ── ReportListingModal ─────────────────────────────────────────────────
   "housingListing.report": "Denunciar",
   "housingListing.reportAriaLabel": "Denunciar {title}",
-  "housingListing.reportModal.ariaLabel": "Denunciar este anúncio",
-  "housingListing.reportModal.eyebrow": "Denunciar este anúncio",
+  "housingListing.reportModal.ariaLabel": "Denunciar",
+  "housingListing.reportModal.eyebrow": "Denunciar à nossa equipa",
   "housingListing.reportModal.title": "O que se passa com <em>{title}?</em>",
   "housingListing.reportModal.lead":
-    "As denúncias ajudam-nos a manter o quadro de habitação fiável. Conta-nos o que se passa — detalhes ajudam a equipa de revisão. O teu nome nunca é partilhado com a pessoa anunciante.",
+    "As denúncias ajudam-nos a manter o QueerPulse fiável. Conta-nos o que se passa — detalhes ajudam a equipa de revisão. O teu nome nunca é partilhado com quem denuncias.",
   "housingListing.reportModal.concernLabel": "Qual é a preocupação?",
   "housingListing.reportModal.detailLabel": "Conta-nos mais",
   "housingListing.reportModal.detailPlaceholder":
-    "O que fez este anúncio parecer inseguro, discriminatório, ou pouco fiável? Sê tão específique quanto te sintas confortável.",
+    "O que fez isto parecer inseguro, discriminatório, ou pouco fiável? Sê tão específique quanto te sintas confortável.",
   "housingListing.reportModal.charsRemaining_one":
     "Falta {count} carácter para submeter",
   "housingListing.reportModal.charsRemaining_other":
@@ -645,14 +647,14 @@ export const economy: Catalog = {
   "housingListing.reportModal.charsCount_one": "{count} carácter",
   "housingListing.reportModal.charsCount_other": "{count} carateres",
   "housingListing.reportModal.confidentialNote":
-    "As denúncias são confidenciais. As pessoas moderadoras veem o teu nome; a pessoa anunciante nunca o vê. Em caso de emergência, liga primeiro para o <strong>112</strong>.",
+    "As denúncias são confidenciais. As pessoas moderadoras veem o teu nome; a pessoa ou entidade que denuncias nunca o vê. Em caso de emergência, liga primeiro para o <strong>112</strong>.",
   "housingListing.reportModal.cancelCta": "Cancelar",
   "housingListing.reportModal.submitting": "A submeter…",
   "housingListing.reportModal.submitCta": "Submeter denúncia",
   "housingListing.reportModal.success.title": "Denúncia",
   "housingListing.reportModal.success.em": "recebida.",
   "housingListing.reportModal.success.body":
-    "Obrigade. Uma pessoa moderadora vai rever {title}. Podemos contactar-te para mais detalhe, mas nunca partilharemos a tua denúncia com a pessoa anunciante.",
+    "Obrigade. Uma pessoa moderadora vai rever {title}. Podemos contactar-te para mais detalhe, mas nunca partilharemos a tua denúncia com quem denunciaste.",
   "housingListing.reportModal.doneCta": "Concluído",
 
   // ── ContactRequestModal (fluxo partilhado de "contactar") ──────────────
@@ -836,6 +838,8 @@ export const economy: Catalog = {
   "company.sidebar.hiringContactTitle": "Contacto de recrutamento",
   "company.sidebar.messagePerson": "Enviar mensagem a {name}",
   "company.sidebar.sendMessage": "Enviar mensagem",
+  "company.report.cta": "Denunciar esta empresa",
+  "company.report.ariaLabel": "Denunciar {name}",
 
   "company.tabs.about": "Sobre",
   "company.tabs.jobs": "Vagas",
@@ -921,7 +925,7 @@ export const economy: Catalog = {
   "employerReviews.recent.browseCta":
     "Ver vagas inclusivas para pessoas queer →",
   "employerReviews.recent.writeCta": "Escrever uma avaliação →",
-  "employerReviews.emptyLive.title": "Avaliações de empregadores em breve",
+  "employerReviews.emptyLive.title": "Ainda sem empregadores avaliados",
   "employerReviews.emptyLive.description":
     "Ainda não há avaliações publicadas. Sê a primeira pessoa a partilhar como é realmente trabalhar num sítio.",
 

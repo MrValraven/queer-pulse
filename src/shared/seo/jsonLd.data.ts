@@ -6,6 +6,7 @@
  * plain objects so they are trivially unit-testable and carry no React
  * dependency.
  */
+import type { DirectoryPlace } from "../../features/marketing/directoryPlaces";
 import { SITE_ORIGIN, defaultMeta, toAbsoluteUrl } from "./seo.data";
 
 export interface FaqEntry {
@@ -70,6 +71,34 @@ export interface BreadcrumbSchema {
   }>;
 }
 
+export interface LocalBusinessSchema {
+  "@context": "https://schema.org";
+  "@type": "LocalBusiness";
+  name: string;
+  description: string;
+  url: string;
+  address: {
+    "@type": "PostalAddress";
+    streetAddress: string;
+    addressLocality: string;
+    addressRegion: string;
+    addressCountry: string;
+  };
+  geo?: {
+    "@type": "GeoCoordinates";
+    latitude: number;
+    longitude: number;
+  };
+  image?: string;
+  telephone?: string;
+  aggregateRating?: {
+    "@type": "AggregateRating";
+    ratingValue: string;
+    reviewCount: number;
+  };
+  priceRange?: string;
+}
+
 /** Site-level identity. Render once, on the homepage. */
 export function buildOrganizationSchema(): OrganizationSchema {
   return {
@@ -112,6 +141,58 @@ export function buildMedicalWebPageSchema(
     url: toAbsoluteUrl(input.path),
     publisher: { "@type": "Organization", name: defaultMeta.siteName },
   };
+}
+
+/**
+ * For a directory listing's own detail page. Fields the listing hasn't filled
+ * in (coordinates, a photo, a phone number, reviews, a price-range pill) are
+ * omitted entirely rather than emitted as null — an empty `aggregateRating`
+ * would falsely claim a rating for a place with zero reviews.
+ */
+export function buildLocalBusinessSchema(
+  place: DirectoryPlace,
+  canonicalUrl: string,
+): LocalBusinessSchema {
+  const schema: LocalBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: place.name,
+    description: place.tagline || place.desc,
+    url: canonicalUrl,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: place.address,
+      addressLocality: place.hood,
+      addressRegion: "Lisbon",
+      addressCountry: "PT",
+    },
+  };
+
+  if (place.latitude != null && place.longitude != null) {
+    schema.geo = {
+      "@type": "GeoCoordinates",
+      latitude: place.latitude,
+      longitude: place.longitude,
+    };
+  }
+
+  const image = place.photos?.wide;
+  if (image) schema.image = image;
+
+  if (place.social.phone) schema.telephone = place.social.phone;
+
+  if (place.rating.count > 0) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: place.rating.score,
+      reviewCount: place.rating.count,
+    };
+  }
+
+  const priceRangePill = place.pills.find((pill) => /^€+$/.test(pill));
+  if (priceRangePill) schema.priceRange = priceRangePill;
+
+  return schema;
 }
 
 export function buildBreadcrumbSchema(trail: BreadcrumbStep[]): BreadcrumbSchema {

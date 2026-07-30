@@ -6,13 +6,22 @@ import {
   FiClipboard,
   FiHash,
   FiLayers,
+  FiMessageSquare,
+  FiShoppingBag,
 } from "react-icons/fi";
 import { routes, topicPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { memberName } from "./data/members";
 import { TOPICS } from "../topics/topics.data";
 export type ResultType =
-  "member" | "gathering" | "community" | "board" | "topic" | "page";
+  | "member"
+  | "community"
+  | "event"
+  | "forum"
+  | "business"
+  | "topic"
+  | "page"
+  | "board";
 
 export interface SearchItem {
   t: ResultType;
@@ -22,14 +31,33 @@ export interface SearchItem {
   kw: string;
   /** Member slug, so the palette can show the member's avatar (member rows only). */
   slug?: string;
+  /** Live member avatar URL (member rows only). Demo rows resolve avatars from the local registry. */
+  avatarUrl?: string;
 }
 
-/** Topic (hashtag) rows, derived from the topics feature's source of truth. */
+/**
+ * Build a topic (hashtag) search row from a topic's tag + post count. Shared by
+ * the demo corpus (mock `TOPICS`) and the live palette, which feeds real
+ * `GET /topics` rows through the same shape — so live search shows real post
+ * counts instead of the mock ones.
+ */
+export function topicResponseToSearchItem(topic: {
+  tag: string;
+  totalPosts: number;
+}): SearchItem {
+  return {
+    t: "topic",
+    name: `#${topic.tag}`,
+    sub: `${topic.totalPosts} posts · curated`,
+    href: topicPath(topic.tag),
+    kw: [topic.tag, "hashtag", "topic"].join(" "),
+  };
+}
+
+/** Topic (hashtag) rows for DEMO mode, derived from the mock topics registry. */
 const TOPIC_SEARCH_ITEMS: SearchItem[] = Object.values(TOPICS).map((topic) => ({
-  t: "topic",
-  name: `#${topic.tag}`,
-  sub: `${topic.totalPosts} posts · curated`,
-  href: topicPath(topic.tag),
+  ...topicResponseToSearchItem(topic),
+  // Demo rows also match on related-topic tags for richer local filtering.
   kw: [
     topic.tag,
     ...topic.relatedTopics.map((r) => r.tag),
@@ -38,8 +66,9 @@ const TOPIC_SEARCH_ITEMS: SearchItem[] = Object.values(TOPICS).map((topic) => ({
   ].join(" "),
 }));
 
-export const SEARCH_DATA: SearchItem[] = [
-  // Quick destinations — the persona directory + the owner's subprofile dashboard.
+// Quick destinations — the persona directory + the owner's subprofile dashboard.
+// Real navigation targets, so they're safe (and identical) in demo and live.
+export const PAGE_SEARCH_ITEMS: SearchItem[] = [
   {
     t: "page",
     name: "Browse subprofiles",
@@ -54,7 +83,16 @@ export const SEARCH_DATA: SearchItem[] = [
     href: routes.subprofilesDashboard,
     kw: "subprofiles personas manage dashboard professional",
   },
+];
+
+/** Curated, non-user items safe to show in BOTH demo and live (no persona leak). */
+export const STATIC_SEARCH_ITEMS: SearchItem[] = [
+  ...PAGE_SEARCH_ITEMS,
   ...TOPIC_SEARCH_ITEMS,
+];
+
+export const SEARCH_DATA: SearchItem[] = [
+  ...STATIC_SEARCH_ITEMS,
   {
     t: "member",
     name: memberName("ines"),
@@ -128,28 +166,28 @@ export const SEARCH_DATA: SearchItem[] = [
     slug: "diogo",
   },
   {
-    t: "gathering",
+    t: "event",
     name: "Queer Supper Club №12",
     sub: "Mouraria · 6 Jun — 8 seats left",
     href: gatheringPath("supper-club-12"),
     kw: "food social supper dinner",
   },
   {
-    t: "gathering",
+    t: "event",
     name: "Portfolio Night: Designers & Photographers",
     sub: "Príncipe Real · 14 Jun — 32 going",
     href: gatheringPath("portfolio-night"),
     kw: "design photography portfolio mixer",
   },
   {
-    t: "gathering",
+    t: "event",
     name: "Inside Beatriz's Ceramics Studio",
     sub: "Graça · 21 Jun — 3 spots left",
     href: gatheringPath("studio-visit"),
     kw: "craft ceramics studio visit",
   },
   {
-    t: "gathering",
+    t: "event",
     name: "Founders & Builders Breakfast",
     sub: "Marvila · 2 Jul",
     href: gatheringPath("founders-breakfast"),
@@ -250,16 +288,20 @@ export const SEARCH_DATA: SearchItem[] = [
 
 export const TYPE_BG: Record<ResultType, string> = {
   member: "rgba(45,27,61,.08)",
-  gathering: "rgba(74,140,111,.1)",
+  event: "rgba(74,140,111,.1)",
   community: "rgba(232,119,90,.1)",
+  forum: "rgba(122,82,184,.1)",
+  business: "rgba(74,140,111,.1)",
   board: "rgba(122,82,184,.1)",
   topic: "rgba(232,119,90,.1)",
   page: "rgba(74,140,111,.1)",
 };
 export const TYPE_ICON: Record<ResultType, IconType> = {
   member: FiUser,
-  gathering: FiCalendar,
+  event: FiCalendar,
   community: FiUsers,
+  forum: FiMessageSquare,
+  business: FiShoppingBag,
   board: FiClipboard,
   topic: FiHash,
   page: FiLayers,
@@ -269,8 +311,10 @@ export const TYPE_ICON: Record<ResultType, IconType> = {
  *  consuming component. */
 export const TYPE_LABEL_KEY: Record<ResultType, string> = {
   member: "members:search.type.member",
-  gathering: "members:search.type.gathering",
+  event: "members:search.type.event",
   community: "members:search.type.community",
+  forum: "members:search.type.forum",
+  business: "members:search.type.business",
   board: "members:search.type.board",
   topic: "members:search.type.topic",
   page: "members:search.type.page",
@@ -285,9 +329,10 @@ export const RECENTS = [
 ];
 export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
   { id: "all", labelKey: "members:search.type.all" },
-  { id: "topic", labelKey: "members:search.type.topic" },
   { id: "member", labelKey: "members:search.type.member" },
-  { id: "gathering", labelKey: "members:search.type.gathering" },
   { id: "community", labelKey: "members:search.type.community" },
-  { id: "board", labelKey: "members:search.type.board" },
+  { id: "event", labelKey: "members:search.type.event" },
+  { id: "forum", labelKey: "members:search.type.forum" },
+  { id: "business", labelKey: "members:search.type.business" },
+  { id: "topic", labelKey: "members:search.type.topic" },
 ];

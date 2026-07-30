@@ -49,7 +49,9 @@ describe("reasonFor", () => {
 describe("describeError", () => {
   it("frames the reason when there is one", () => {
     expect(describeError("Couldn't save that co-op", new ApiError(409, "That name is taken"))).toBe(
-      "Couldn't save that co-op — that name is taken.",
+      // The reason's own casing is preserved verbatim (only a single trailing
+      // period is trimmed) — `describeError` never lower-cases the first letter.
+      "Couldn't save that co-op — That name is taken.",
     );
   });
 

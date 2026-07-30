@@ -1740,6 +1740,65 @@ export const marketing: Catalog = {
   "changelog.tag.members": "Meet the members →",
   "changelog.tag.events": "Open the Events Hub →",
   "changelog.tag.roadmap": "Open the roadmap →",
+  "changelog.tag.magazine": "Open the magazine →",
+  "changelog.tag.safety": "See our safety approach →",
+  "changelog.tag.editProfile": "Edit your profile →",
+  "changelog.tag.employerReviews": "Read employer reviews →",
+  "changelog.tag.studio": "Visit the Studio →",
+  "changelog.tag.search": "Try global search →",
+
+  "changelog.entries.search-member-avatars.title":
+    "See who you're searching for",
+  "changelog.entries.search-member-avatars.body":
+    "Member results in search (⌘K and the search page) now show each person's profile photo instead of a generic icon — so you can recognise the face you're looking for at a glance.",
+  "changelog.entries.search-real-topics.title":
+    "Search now shows real results",
+  "changelog.entries.search-real-topics.body":
+    "Search (⌘K and the search page) no longer falls back to sample topics with made-up post counts. It now pulls the real trending topics and live post counts, alongside real people, communities, events, forum threads, and businesses.",
+  "changelog.entries.global-search.title": "Search across QueerPulse",
+  "changelog.entries.global-search.body":
+    "Search across people, communities, events, the forum, and local businesses — from anywhere with ⌘K or the search page.",
+  "changelog.entries.studio-coming-soon.title":
+    "Studio is now an honest preview",
+  "changelog.entries.studio-coming-soon.body":
+    "The co-op music Studio is still in the workshop, so it no longer shows placeholder payouts and figures as if they were real. Explore it fully in demo mode; live visitors now get a clear “coming soon” instead.",
+  "changelog.entries.cinema-honest-live.title":
+    "Cinema is honest about what's live",
+  "changelog.entries.cinema-honest-live.body":
+    "The film catalogue and playback are real, so the parts still in production — collections, filmmaker profiles, open calls — now say “coming soon” in live instead of showing placeholder content. Explore it all in demo mode.",
+  "changelog.entries.cinema-live-streaming.title":
+    "Cinema now streams real films",
+  "changelog.entries.cinema-live-streaming.body":
+    "Cinema is live: browse the real programme and press play to stream the film, and it resumes right where you left off next time you come back.",
+  "changelog.entries.employer-reviews-live.title":
+    "Employer reviews, for real",
+  "changelog.entries.employer-reviews-live.body":
+    "The employer reviews page now shows real queer-inclusive employers — open any company for its full profile and reviews, and write your own anonymous review of a place you've worked.",
+  "changelog.entries.block-mute-from-profile.title":
+    "Block or mute straight from a profile",
+  "changelog.entries.block-mute-from-profile.body":
+    "A new safety menu in the profile header lets you mute someone (quietly hiding their posts) instantly, or block them after a quick confirm — with the option to also report them at the same time.",
+  "changelog.entries.event-push-reminders.title":
+    "Set when your event reminders arrive",
+  "changelog.entries.event-push-reminders.body":
+    "Event preferences now let you choose how far ahead you're reminded — an hour, a day, or a week before — and turn on a phone push so the reminder reaches you wherever you are.",
+  "changelog.entries.report-more-surfaces.title":
+    "Report anything that doesn't feel right",
+  "changelog.entries.report-more-surfaces.body":
+    "You can now report an event, a business, a company, a job posting, or a member's public persona — a discreet “Report” link opens the same confidential flow used everywhere else, and events are now actually filed to the safety team instead of just acknowledged.",
+  "changelog.entries.profile-photo-pronouns.title":
+    "Your face, your words",
+  "changelog.entries.profile-photo-pronouns.body":
+    "Edit Profile now lets you upload a custom photo — with an instant preview — instead of only using your Google picture, and you can write in your own pronouns alongside the presets. We also cleared out the “coming soon” placeholders that couldn't do anything yet.",
+  "changelog.entries.mobile-form-keyboard.title":
+    "Forms stay above the keyboard on phones",
+  "changelog.entries.mobile-form-keyboard.body":
+    "On iOS, opening the keyboard inside an enquiry or sign-up dialog no longer hides the submit button behind it — the sheet lifts to stay in view. We also added long-press app shortcuts to the installed icon and tidied up tooltips for touch.",
+
+  "changelog.entries.magazine-real-content.title":
+    "The magazine shows real issues, always",
+  "changelog.entries.magazine-real-content.body":
+    "The magazine archive and writer pages now load real editions with a proper loading and error state — so you'll never see placeholder prototype content if something is slow or goes wrong.",
 
   "changelog.entries.community-roadmap.title":
     "The roadmap is now yours to shape",
@@ -1753,6 +1812,20 @@ export const marketing: Catalog = {
   "changelog.entries.business-page-live.title": "Business pages come to life",
   "changelog.entries.business-page-live.body":
     "Every business page now shows the venue's real photos in a gallery you can open full-screen, plus its real opening hours with a live “Open now / Closed” status — so you know what a place looks like and whether it's open before you go.",
+
+  "changelog.entries.business-actions.title":
+    "Save, share, and get directions",
+  "changelog.entries.business-actions.body":
+    "Every business page now has an action bar — get directions, call, share, or save a place to your list in one tap. Saved spots show how many members have saved them too, a quiet trust signal, not a leaderboard.",
+
+  "changelog.entries.business-reviews-trust.title": "Reviews that go both ways",
+  "changelog.entries.business-reviews-trust.body":
+    "Business owners can now reply to reviews, and every page shows a star-rating breakdown so you can see the full picture, not just the average. If something's off, you can report a listing or suggest an edit — both go straight to our moderators.",
+
+  "changelog.entries.business-discovery.title":
+    "Find your way around the directory",
+  "changelog.entries.business-discovery.body":
+    "Business pages now show related places nearby, a clear path back to the directory, and the languages spoken on-site. Upcoming events link straight to their event page, where you can add them to your calendar.",
 
   "changelog.entries.directory-filters-upgrade.title":
     "The business directory got a lot easier to filter",
@@ -2598,6 +2671,9 @@ export const marketing: Catalog = {
     "Join the network and get access to the full directory, member recommendations, and a community that knows the city.",
   "directory.outro.cta": "Request an invite",
   "directory.detail.backCta": "← Directory",
+  "directory.detail.breadcrumbAria": "Breadcrumb",
+  "directory.detail.breadcrumbHome": "Directory",
+  "directory.detail.relatedTitle": "More {category} nearby",
   "directory.detail.badge.verifiedOwned": "Verified queer-owned",
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} reviews",
@@ -2611,6 +2687,8 @@ export const marketing: Catalog = {
   "directory.detail.closedNow": "Closed",
   "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
   "directory.detail.reviewsSub": "Sorted by most helpful.",
+  "directory.detail.ratingBreakdown": "Rating breakdown",
+  "directory.detail.starsCount": "{stars} stars, {count} reviews",
   "directory.detail.review.formTitle": "Been here? Leave a review",
   "directory.detail.review.starsAria": "Your rating",
   "directory.detail.review.starAria": "{count} out of 5 stars",
@@ -2624,22 +2702,82 @@ export const marketing: Catalog = {
   "directory.detail.review.signInPrompt":
     "Sign in to leave a review of this space.",
   "directory.detail.review.signInCta": "Sign in",
+  "directory.detail.reply.ownerResponseTitle": "Response from the owner",
+  "directory.detail.reply.replyCta": "Reply",
+  "directory.detail.reply.editReplyCta": "Edit reply",
+  "directory.detail.reply.placeholder": "Write a public reply to this review…",
+  "directory.detail.reply.save": "Save reply",
+  "directory.detail.reply.cancel": "Cancel",
+  "directory.detail.reply.savingLabel": "Saving…",
+  "directory.detail.reply.successToast": "Your reply is up.",
+  "directory.detail.reply.errorToast":
+    "Couldn't post your reply. Please try again.",
   "directory.detail.helpful": "<b>{count}</b> members found this helpful",
+  "directory.detail.reviews.sortLabel": "Sort",
+  "directory.detail.reviews.sortHelpful": "Most helpful",
+  "directory.detail.reviews.sortHighest": "Highest rated",
+  "directory.detail.reviews.sortLowest": "Lowest rated",
+  "directory.detail.reviews.sortedByHelpful": "Sorted by most helpful.",
+  "directory.detail.reviews.sortedByHighest": "Sorted by highest rated.",
+  "directory.detail.reviews.sortedByLowest": "Sorted by lowest rated.",
+  "directory.detail.reviews.filterAria": "Filter reviews by star rating",
+  "directory.detail.reviews.filterAll": "All ratings",
+  "directory.detail.reviews.filterStars_one": "{count} star",
+  "directory.detail.reviews.filterStars_other": "{count} stars",
+  "directory.detail.reviews.noStarReviews": "No {count}-star reviews yet.",
   "directory.detail.visitWebsite": "Visit website →",
   "directory.detail.getInTouch": "Get in touch →",
   "directory.detail.backToDirectory": "Back to directory",
+  "directory.detail.reportCta": "Report this listing",
+  "directory.detail.reportAriaLabel": "Report {name}",
+  "directory.detail.suggestEdit.cta": "Suggest an edit",
+  "directory.detail.suggestEdit.ariaLabel": "Suggest an edit for {name}",
+  "directory.detail.suggestEdit.title": "Suggest an edit",
+  "directory.detail.suggestEdit.sub":
+    "Spot something off? Let the owner know what to fix — they'll see it, not the whole directory.",
+  "directory.detail.suggestEdit.fieldLabel": "What needs a second look?",
+  "directory.detail.suggestEdit.field.hours": "Hours",
+  "directory.detail.suggestEdit.field.address": "Address",
+  "directory.detail.suggestEdit.field.phone": "Phone number",
+  "directory.detail.suggestEdit.field.website": "Website",
+  "directory.detail.suggestEdit.field.description": "Description",
+  "directory.detail.suggestEdit.field.other": "Something else",
+  "directory.detail.suggestEdit.messageLabel": "What should change?",
+  "directory.detail.suggestEdit.messagePlaceholder":
+    "Tell them what's outdated or wrong, and what it should say instead.",
+  "directory.detail.suggestEdit.submit": "Send suggestion",
+  "directory.detail.suggestEdit.submitting": "Sending…",
+  "directory.detail.suggestEdit.cancel": "Cancel",
+  "directory.detail.suggestEdit.successToast":
+    "Thanks — we'll pass it along to the owner.",
+  "directory.detail.suggestEdit.errorToast":
+    "Couldn't send your suggestion. Please try again.",
   "directory.detail.mapAria": "Map showing where {name} is",
+  "directory.detail.languagesLabel": "Languages",
+  "directory.detail.accessLabel": "Access",
   "directory.detail.whoRunsIt": "Who runs it",
   "directory.detail.onQueerPulse": "On QueerPulse",
   "directory.detail.communityVouched": "Community-vouched",
   "directory.detail.viewProfile": "View {name}'s profile →",
+  "directory.detail.savedByMembers_one": "Saved by {count} member",
+  "directory.detail.savedByMembers_other": "Saved by {count} members",
   "directory.detail.membersHereLately": "Members here lately",
   "directory.detail.upcomingHere": "Upcoming here",
+  "directory.detail.upcoming.addToCalendar": "Add to calendar:",
+  "directory.detail.upcoming.googleCalendar": "Google Calendar",
+  "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.galleryAria": "Photos of {name}",
   "directory.detail.viewPhoto": "View photo",
   "directory.detail.lightboxClose": "Close",
   "directory.detail.prevPhoto": "Previous photo",
   "directory.detail.nextPhoto": "Next photo",
+  "directory.detail.action.directions": "Directions",
+  "directory.detail.action.call": "Call",
+  "directory.detail.action.share": "Share",
+  "directory.detail.action.save": "Save",
+  "directory.detail.action.saved": "Saved",
+  "directory.detail.action.linkCopied": "Link copied",
+  "directory.detail.action.shareError": "Couldn't share — try copying the link",
   "directory.relative.yesterday": "Yesterday",
   "directory.relative.twoDaysAgo": "2 days ago",
   "directory.relative.threeDaysAgo": "3 days ago",

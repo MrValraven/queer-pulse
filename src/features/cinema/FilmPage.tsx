@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaComingSoon } from "./CinemaComingSoon";
 import { PageShell } from "../../shared/components/layout";
 import { ImageSlot, Tag } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,6 +15,14 @@ import { routes } from "../../app/routeMap";
 const related = films.filter((f) => f.id !== "cascais").slice(0, 4);
 
 export function FilmPage() {
+  const { demoMode } = useDemoMode();
+  // Mock film-detail page; the live catalogue links straight to /cinema/watch,
+  // so this is only reachable via legacy links. Show coming-soon in live.
+  if (!demoMode) return <CinemaComingSoon />;
+  return <DemoFilmPage />;
+}
+
+function DemoFilmPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (

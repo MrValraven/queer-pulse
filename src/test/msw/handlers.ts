@@ -9,10 +9,22 @@ import { handleHandlers } from "./handles.handlers";
 /**
  * MSW handlers for the few LIVE-mode suites. They double as executable
  * documentation of the shapes the frontend assumes from the NestJS backend —
- * if the real contract drifts, update these. Base URL matches the `VITE_API_URL`
- * the live suites stub in (`http://api.test`).
+ * if the real contract drifts, update these.
+ *
+ * `API` is the backend ORIGIN — it matches the `VITE_API_URL` the live suites
+ * stub in (`http://api.test`), so it's what tests pass to `vi.stubEnv`.
+ *
+ * `API_V1` is that origin under the client's URI version prefix (`/v1`). The
+ * client (`src/shared/api/client.ts`) prefixes every call made through its
+ * generic `request()` builder with `/v1` (the backend runs
+ * `enableVersioning({ type: URI, defaultVersion: '1' })`), so a handler for a
+ * domain endpoint must be registered under `API_V1` to match the real request.
+ * The two DIRECT `fetch()` calls in the client — `/csrf-token` and
+ * `/auth/refresh` — are `@Version(VERSION_NEUTRAL)` and stay UNversioned, so
+ * their handlers below stay under bare `API`.
  */
 export const API = "http://api.test";
+export const API_V1 = `${API}/v1`;
 
 const jobCard: JobCardDTO = {
   slug: "brand-designer",
@@ -81,7 +93,7 @@ export const handlers = [
     `${API}/auth/refresh`,
     () => new HttpResponse(null, { status: 200 }),
   ),
-  http.get(`${API}/jobs`, () => {
+  http.get(`${API_V1}/jobs`, () => {
     const body: Paginated<JobCardDTO> = {
       items: [jobCard],
       total: 1,
@@ -90,12 +102,12 @@ export const handlers = [
     };
     return HttpResponse.json(body);
   }),
-  http.get(`${API}/admin/communities`, () =>
+  http.get(`${API_V1}/admin/communities`, () =>
     HttpResponse.json<AdminCommunityCardDTO[]>([adminCommunityCard]),
   ),
-  http.get(`${API}/admin/bots`, () =>
+  http.get(`${API_V1}/admin/bots`, () =>
     HttpResponse.json<AdminBotSummaryDTO[]>([adminBotSummary]),
   ),
-  ...subprofileHandlers(API),
-  ...handleHandlers(API),
+  ...subprofileHandlers(API_V1),
+  ...handleHandlers(API_V1),
 ];

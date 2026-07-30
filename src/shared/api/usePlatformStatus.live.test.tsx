@@ -29,7 +29,12 @@ import { server } from "../../test/msw/server";
  * useJobs.live.test.tsx).
  */
 
+// The backend ORIGIN — what the client reads as its base from VITE_API_URL.
 const API = "http://api.test";
+// That origin under the client's URI version prefix. The client prefixes every
+// call through its generic `request()` builder with `/v1`, so the handler must
+// be registered there to match the real GET it fires (see client.ts).
+const API_V1 = `${API}/v1`;
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterEach(() => server.resetHandlers());
@@ -65,7 +70,7 @@ describe("usePlatformStatus (live mode via MSW)", () => {
   it("fails open on a broken endpoint: no retry, and `data` stays undefined", async () => {
     let calls = 0;
     server.use(
-      http.get(`${API}/platform-status`, () => {
+      http.get(`${API_V1}/platform-status`, () => {
         calls += 1;
         return new HttpResponse(null, { status: 500 });
       }),
@@ -87,7 +92,7 @@ describe("usePlatformStatus (live mode via MSW)", () => {
 
   it("returns the server's flags when the endpoint answers", async () => {
     server.use(
-      http.get(`${API}/platform-status`, () =>
+      http.get(`${API_V1}/platform-status`, () =>
         HttpResponse.json({
           registrationOpen: false,
           joinRequestsOpen: true,
@@ -111,7 +116,7 @@ describe("usePlatformStatus (live mode via MSW)", () => {
   it("carries meta.silentError, so a flaky read never toasts at a visitor", async () => {
     let calls = 0;
     server.use(
-      http.get(`${API}/platform-status`, () => {
+      http.get(`${API_V1}/platform-status`, () => {
         calls += 1;
         return new HttpResponse(null, { status: 500 });
       }),

@@ -7,16 +7,19 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TABS, type ResultType } from "./search.data";
 import { SearchResults } from "./SearchResults";
 import { useSearchData } from "./api/useSearchData";
+import { pushRecent } from "./searchRecents";
 import styles from "./SearchPage.module.css";
 
 export function SearchPage() {
   const { t } = useTranslation();
   // The query lives in the URL (?q=…) so it's shareable, bookmarkable, and can be
   // pre-filled by the global ⌘K command palette.
-  const loading = useSimulatedLoad();
-  const { data: searchData, recents, comingSoon } = useSearchData();
+  const simulatedLoad = useSimulatedLoad();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
+  const { data: searchData, recents, signInRequired, loading } =
+    useSearchData(query);
+  const showLoading = loading || simulatedLoad;
   const setQuery = (value: string) =>
     setSearchParams(value ? { q: value } : {}, { replace: true });
   const [tab, setTab] = useState<ResultType | "all">("all");
@@ -32,7 +35,7 @@ export function SearchPage() {
               components={{ em: <em /> }}
             />
           </h1>
-          {!comingSoon && (
+          {!signInRequired && (
             <div className={styles.barWrap}>
               <svg
                 width="20"
@@ -53,6 +56,11 @@ export function SearchPage() {
                 placeholder={t("members:search.hero.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && query.trim()) {
+                    pushRecent(query.trim());
+                  }
+                }}
               />
               <span className={styles.shortcut}>⌘K</span>
             </div>
@@ -62,7 +70,7 @@ export function SearchPage() {
 
       <div className={styles.body}>
         <div className="wrap">
-          {!comingSoon && (
+          {!signInRequired && (
             <div className={styles.tabs}>
               {TABS.map((tabOption) => (
                 <button
@@ -85,8 +93,8 @@ export function SearchPage() {
             query={query}
             tab={tab}
             setQuery={setQuery}
-            comingSoon={comingSoon}
-            loading={loading}
+            signInRequired={signInRequired}
+            loading={showLoading}
             searchData={searchData}
             recents={recents}
           />

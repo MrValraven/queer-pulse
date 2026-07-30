@@ -8,6 +8,7 @@ import { linkToPath, routes } from "../../app/routeMap";
 import { type SearchItem } from "./search.data";
 import { CommandPaletteResults } from "./CommandPaletteResults";
 import { useSearchData } from "./api/useSearchData";
+import { pushRecent } from "./searchRecents";
 import styles from "./CommandPalette.module.css";
 
 const MAX_RESULTS = 8;
@@ -64,7 +65,7 @@ export function CommandPalette() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const { data: searchData, recents, comingSoon } = useSearchData();
+  const { data: searchData, recents, signInRequired } = useSearchData(query);
 
   const q = query.trim().toLowerCase();
   const results = useMemo(() => {
@@ -76,24 +77,26 @@ export function CommandPalette() {
   const activeIndex = Math.min(active, Math.max(0, results.length - 1));
 
   const goToAll = useCallback(() => {
-    // Search has no backend yet in live mode — the palette only shows the
-    // "coming soon" notice, so there's nothing to open on the full /search page.
-    if (comingSoon) return;
+    // Search requires a session in live mode — a logged-out user only sees
+    // the sign-in notice, so there's nothing to open on the full /search page.
+    if (signInRequired) return;
     const trimmed = query.trim();
+    pushRecent(trimmed);
     void navigate(
       trimmed
         ? `${routes.search}?q=${encodeURIComponent(trimmed)}`
         : routes.search,
     );
     close();
-  }, [comingSoon, query, navigate, close]);
+  }, [signInRequired, query, navigate, close]);
 
   const goToItem = useCallback(
     (item: SearchItem) => {
+      pushRecent(query.trim());
       void navigate(linkToPath(item.href));
       close();
     },
-    [navigate, close],
+    [query, navigate, close],
   );
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -143,32 +146,26 @@ export function CommandPalette() {
             // ids match the `qp-cmd-option-${index}` scheme on each listbox row;
             // only point at one while the results list is actually rendered.
             aria-activedescendant={
-              !comingSoon && results.length > 0
+              !signInRequired && results.length > 0
                 ? `qp-cmd-option-${activeIndex}`
                 : undefined
             }
             placeholder={t("members:commandPalette.placeholder")}
             value={query}
-            readOnly={comingSoon}
+            readOnly={signInRequired}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
           />
           <kbd className={styles.kbd}>{t("members:commandPalette.escKey")}</kbd>
         </div>
 
-        {comingSoon ? (
+        {signInRequired ? (
           <div className={styles.comingSoon}>
             <span className={styles.comingSoonBadge}>
-              {t("members:search.comingSoon.badge")}
+              {t("members:search.signInRequired.badge")}
             </span>
             <p className={styles.comingSoonText}>
-              <Translation
-                i18nKey="members:commandPalette.comingSoonBody"
-                components={{ em: <em /> }}
-                values={{
-                  toggleName: t("shared:accountMenu.controls.populatePlatform"),
-                }}
-              />
+              {t("members:commandPalette.signInBody")}
             </p>
           </div>
         ) : (
@@ -183,7 +180,7 @@ export function CommandPalette() {
           />
         )}
 
-        {!comingSoon && (
+        {!signInRequired && (
           <button type="button" className={styles.footer} onClick={goToAll}>
             <FiCornerDownLeft aria-hidden />
             {query.trim() ? (

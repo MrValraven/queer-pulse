@@ -54,6 +54,29 @@ if (!win.IntersectionObserver) win.IntersectionObserver = MockObserver;
 if (!win.ResizeObserver) win.ResizeObserver = MockObserver;
 if (!win.scrollTo) win.scrollTo = () => {};
 
+// jsdom implements Element but not its layout-dependent scroll methods, so a
+// component that calls `someRef.scrollTo(...)` on a real DOM node (e.g.
+// FeaturedSpotlightCard's scroller in Discovery.tsx) throws
+// "element.scrollTo is not a function" and trips the route error boundary.
+// Stub it as a no-op on the prototype so every element inherits it. Only
+// assigned when absent, mirroring the guarded window stubs above.
+if (!Element.prototype.scrollTo) {
+  Element.prototype.scrollTo = () => {};
+}
+
+// jsdom ships `URL` but not the blob-URL helpers, so any component that turns a
+// File/Blob into a preview URL (e.g. the list-a-business photo-upload wizard on
+// /local/directory/list) throws "window.URL.createObjectURL is not a function"
+// and trips the route error boundary. Stub the pair: a deterministic fake URL
+// out, a no-op revoke. Guarded so a real implementation (or a per-test stub)
+// wins.
+if (!URL.createObjectURL) {
+  URL.createObjectURL = () => "blob:jsdom/stub";
+}
+if (!URL.revokeObjectURL) {
+  URL.revokeObjectURL = () => {};
+}
+
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();

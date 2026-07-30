@@ -1,4 +1,3 @@
-import { FiStar } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -6,25 +5,11 @@ import {
   hoursRows,
   openStatus,
   realHoursRows,
-  type Tint,
 } from "./directoryPlaces";
-import { CAT_LABEL_KEYS, STAR_SLOTS } from "./directorySpace.data";
-import { DirectoryReviewForm } from "./DirectoryReviewForm";
+import { CAT_LABEL_KEYS } from "./directorySpace.data";
+import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
+import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
-
-const TINT: Record<Tint, string> = {
-  coral: s.tCoral!,
-  jade: s.tJade!,
-  plum: s.tPlum!,
-};
-
-const Stars = ({ score, className }: { score: number; className?: string }) => (
-  <span className={[s.starRow, className].filter(Boolean).join(" ")}>
-    {STAR_SLOTS.map((n) => (
-      <FiStar key={n} className={n <= score ? s.starOn : undefined} />
-    ))}
-  </span>
-);
 
 const Check = () => (
   <svg viewBox="0 0 24 24">
@@ -41,9 +26,13 @@ interface Props {
   place: DirectoryPlace;
   /** Moderation preview: hide the interactive review form (read-only view). */
   preview?: boolean;
+  /** The viewer's own ref for this listing, present only when they own it —
+   * see `DirectorySpacePage`. Threaded down to show owner-reply compose
+   * controls; undefined (non-owner, or preview) keeps reviews read-only. */
+  ownerRef?: string;
 }
 
-export function DirectorySpaceMain({ place, preview = false }: Props) {
+export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) {
   const { t } = useTranslation();
   const words = place.name.split(" ");
   const last = words.pop();
@@ -197,41 +186,11 @@ export function DirectorySpaceMain({ place, preview = false }: Props) {
         )}
       </section>
 
-      <section className={s.sec}>
-        <h2>
-          <Translation
-            i18nKey="marketing:directory.detail.reviewsTitle"
-            components={{ em: <em /> }}
-            values={{ count: place.rating.count }}
-          />
-        </h2>
-        <p className={s.subLine}>
-          {t("marketing:directory.detail.reviewsSub")}
-        </p>
-        {!preview && <DirectoryReviewForm slug={place.slug} />}
-        {place.reviews.map((review) => (
-          <div key={review.name} className={s.rev}>
-            <div className={s.revHead}>
-              <div className={[s.revAv, TINT[review.tint]].join(" ")}>
-                {review.initials}
-              </div>
-              <div>
-                <div className={s.revName}>{review.name}</div>
-                <div className={s.revByline}>{review.byline}</div>
-              </div>
-              <Stars score={review.stars} className={s.revStars} />
-            </div>
-            <div className={s.revText}>{review.text}</div>
-            <div className={s.revHelpful}>
-              <Translation
-                i18nKey="marketing:directory.detail.helpful"
-                components={{ b: <b /> }}
-                values={{ count: review.helpful }}
-              />
-            </div>
-          </div>
-        ))}
-      </section>
+      <DirectoryReviewsSection
+        place={place}
+        preview={preview}
+        ownerRef={ownerRef}
+      />
     </div>
   );
 }

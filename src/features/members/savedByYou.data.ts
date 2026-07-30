@@ -62,4 +62,11 @@ export const KIND_CARD: Record<SavedKind, KindCard> = {
     variant: "job",
     readKey: "members:savedByYou.kind.landlord.cta",
   },
+  // Reuses the "job" colour variant — a business-directory listing is the
+  // same "board listing" family as housing/flatmate/landlord above.
+  listing: {
+    labelKey: "members:savedByYou.kind.listing.label",
+    variant: "job",
+    readKey: "members:savedByYou.kind.listing.cta",
+  },
 };

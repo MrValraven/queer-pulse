@@ -377,7 +377,6 @@ export const settings: Catalog = {
   "editProfile.nav.bio.label": "Bio & occupation",
   "editProfile.nav.links.label": "Links & social",
   "editProfile.nav.skills.label": "Skills & interests",
-  "editProfile.nav.visibility.label": "Field visibility",
   "editProfile.nav.communities.label": "Communities",
   "editProfile.nav.more": "More",
   "editProfile.nav.pronounsGuideLink": "Pronouns guide",
@@ -422,12 +421,7 @@ export const settings: Catalog = {
   "editProfile.pronouns.writeOwnPlaceholder": "Or write your own…",
   "editProfile.pronouns.hint":
     "You can select multiple chips above. Pronouns are shown on your profile only — not in meta tags or URLs.",
-  "editProfile.pronouns.chosenNameLabel": "Chosen name",
-  "editProfile.pronouns.chosenNameOptional": "if different from display name",
-  "editProfile.pronouns.chosenNamePlaceholder":
-    "Name to use in all communications",
-  "editProfile.pronouns.chosenNameHint":
-    "Used in emails from us and in any platform communications.",
+  "editProfile.pronouns.removeCustomAriaLabel": "Remove {pronoun}",
 
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
   "editProfile.bio.title": "Bio <em>& occupation</em>",
@@ -436,9 +430,6 @@ export const settings: Catalog = {
   "editProfile.bio.label": "Bio",
   "editProfile.bio.placeholder": "A few sentences about you…",
   "editProfile.bio.occupationLabel": "Occupation",
-  "editProfile.bio.organisationLabel": "Organisation",
-  "editProfile.bio.organisationOptional": "optional",
-  "editProfile.bio.organisationPlaceholder": "Where you work or study",
 
   // ── LinksSection.tsx ──────────────────────────────────────────────────────
   "editProfile.links.title": "Links <em>& social</em>",
@@ -459,33 +450,6 @@ export const settings: Catalog = {
   "editProfile.skills.interestsLabel": "Interests",
   "editProfile.skills.interestsPlaceholder":
     "e.g. Housing policy, Film, Cooking…",
-
-  // ── EditProfileSections.tsx — VisibilitySection (cosmetic, comingSoon) ───
-  "editProfile.visibility.title": "Field <em>visibility</em>",
-  "editProfile.visibility.sub":
-    "Per-field visibility is coming soon. For now, use the Visibility tab to set who can see your whole profile.",
-  "editProfile.visibility.alwaysOn": "Always on",
-  "editProfile.visibility.optionMembers": "Members",
-  "editProfile.visibility.optionConnectionsOnly": "Connections only",
-  "editProfile.visibility.optionHidden": "Hidden",
-  "editProfile.visibility.field.displayName.name": "Display name",
-  "editProfile.visibility.field.displayName.desc":
-    "Always public within QueerPulse",
-  "editProfile.visibility.field.photo.name": "Photo",
-  "editProfile.visibility.field.photo.desc": "Profile picture",
-  "editProfile.visibility.field.pronouns.name": "Pronouns",
-  "editProfile.visibility.field.pronouns.desc":
-    "How you'd like to be addressed",
-  "editProfile.visibility.field.bio.name": "Bio",
-  "editProfile.visibility.field.bio.desc": "Your introduction text",
-  "editProfile.visibility.field.occupation.name": "Occupation",
-  "editProfile.visibility.field.occupation.desc": "Job title and organisation",
-  "editProfile.visibility.field.location.name": "Location",
-  "editProfile.visibility.field.location.desc": "Neighbourhood in Lisbon",
-  "editProfile.visibility.field.skills.name": "Skills",
-  "editProfile.visibility.field.skills.desc": "Offered skills and interests",
-  "editProfile.visibility.field.link.name": "Link",
-  "editProfile.visibility.field.link.desc": "External URL on your profile",
 
   // ── EditProfileSections.tsx — CommunitiesSection ─────────────────────────
   "editProfile.communities.title": "Communities <em>you feature</em>",

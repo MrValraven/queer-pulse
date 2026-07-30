@@ -1791,6 +1791,65 @@ export const marketing: Catalog = {
   "changelog.tag.members": "Conhecer os membros →",
   "changelog.tag.events": "Abrir o Events Hub →",
   "changelog.tag.roadmap": "Abrir o roteiro →",
+  "changelog.tag.magazine": "Abrir a revista →",
+  "changelog.tag.safety": "Ver a nossa abordagem à segurança →",
+  "changelog.tag.editProfile": "Editar o teu perfil →",
+  "changelog.tag.employerReviews": "Ler avaliações de empregadores →",
+  "changelog.tag.studio": "Visitar o Studio →",
+  "changelog.tag.search": "Experimentar a pesquisa global →",
+
+  "changelog.entries.search-member-avatars.title":
+    "Veja quem está a procurar",
+  "changelog.entries.search-member-avatars.body":
+    "Os resultados de membros na pesquisa (⌘K e a página de pesquisa) mostram agora a foto de perfil de cada pessoa em vez de um ícone genérico — assim reconhece de relance o rosto que procura.",
+  "changelog.entries.search-real-topics.title":
+    "A pesquisa mostra agora resultados reais",
+  "changelog.entries.search-real-topics.body":
+    "A pesquisa (⌘K e a página de pesquisa) já não recorre a tópicos de exemplo com contagens de publicações inventadas. Passa a mostrar os tópicos reais em destaque e as contagens de publicações reais, a par de pessoas, comunidades, eventos, tópicos do fórum e negócios reais.",
+  "changelog.entries.global-search.title": "Pesquisa em toda a QueerPulse",
+  "changelog.entries.global-search.body":
+    "Pesquisa pessoas, comunidades, eventos, o fórum e negócios locais — de qualquer lugar, com ⌘K ou a página de pesquisa.",
+  "changelog.entries.studio-coming-soon.title":
+    "O Studio é agora uma pré-visualização honesta",
+  "changelog.entries.studio-coming-soon.body":
+    "O Studio de música em cooperativa ainda está na oficina, por isso deixou de mostrar pagamentos e números de exemplo como se fossem reais. Explora-o por inteiro no modo demo; em modo live passas a ver um claro “em breve”.",
+  "changelog.entries.cinema-honest-live.title":
+    "O Cinema é honesto sobre o que está ativo",
+  "changelog.entries.cinema-honest-live.body":
+    "O catálogo de filmes e a reprodução são reais, por isso as partes ainda em produção — coleções, perfis de realizadores, convites abertos — passam a dizer “em breve” em modo live em vez de mostrar conteúdo de exemplo. Explora tudo no modo demo.",
+  "changelog.entries.cinema-live-streaming.title":
+    "O Cinema agora transmite filmes reais",
+  "changelog.entries.cinema-live-streaming.body":
+    "O Cinema está ativo: explora o programa real e carrega em play para ver o filme — e da próxima vez retoma exatamente de onde paraste.",
+  "changelog.entries.employer-reviews-live.title":
+    "Avaliações de empregadores, a sério",
+  "changelog.entries.employer-reviews-live.body":
+    "A página de avaliações de empregadores mostra agora empregadores inclusivos reais — abre qualquer empresa para ver o perfil completo e as avaliações, e escreve a tua própria avaliação anónima de um sítio onde trabalhaste.",
+  "changelog.entries.block-mute-from-profile.title":
+    "Bloqueia ou silencia diretamente a partir do perfil",
+  "changelog.entries.block-mute-from-profile.body":
+    "Um novo menu de segurança no cabeçalho do perfil permite silenciar alguém (escondendo discretamente as publicações) de imediato, ou bloquear após uma confirmação rápida — com a opção de também denunciar ao mesmo tempo.",
+  "changelog.entries.event-push-reminders.title":
+    "Escolhe quando chegam os teus lembretes de eventos",
+  "changelog.entries.event-push-reminders.body":
+    "As preferências de eventos passam a deixar-te escolher com que antecedência és lembrado — uma hora, um dia ou uma semana antes — e ativar um push no telemóvel para o lembrete te chegar onde estiveres.",
+  "changelog.entries.report-more-surfaces.title":
+    "Denuncia tudo o que não te parecer certo",
+  "changelog.entries.report-more-surfaces.body":
+    "Passas a poder denunciar um evento, um negócio, uma empresa, uma vaga ou a persona pública de um membro — um link discreto “Denunciar” abre o mesmo fluxo confidencial usado no resto da plataforma, e as denúncias de eventos passam a ser realmente enviadas à equipa de segurança, em vez de apenas confirmadas.",
+  "changelog.entries.profile-photo-pronouns.title":
+    "A tua cara, as tuas palavras",
+  "changelog.entries.profile-photo-pronouns.body":
+    "Editar Perfil passa a deixar-te carregar uma foto personalizada — com pré-visualização instantânea — em vez de usares só a imagem do Google, e podes escrever os teus próprios pronomes ao lado das opções predefinidas. Também retirámos os marcadores “brevemente” que ainda não faziam nada.",
+  "changelog.entries.mobile-form-keyboard.title":
+    "Os formulários ficam acima do teclado no telemóvel",
+  "changelog.entries.mobile-form-keyboard.body":
+    "No iOS, abrir o teclado dentro de um formulário de contacto ou de inscrição já não esconde o botão de submeter por trás dele — a janela sobe para continuar visível. Adicionámos também atalhos de toque prolongado no ícone da app instalada e melhorámos as dicas de ajuda para toque.",
+
+  "changelog.entries.magazine-real-content.title":
+    "A revista mostra sempre edições reais",
+  "changelog.entries.magazine-real-content.body":
+    "O arquivo da revista e as páginas de autoria passam a carregar edições reais com um estado de carregamento e de erro próprios — por isso nunca verás conteúdo de protótipo se algo estiver lento ou correr mal.",
 
   "changelog.entries.community-roadmap.title":
     "O roteiro é agora feito contigo",
@@ -1804,6 +1863,19 @@ export const marketing: Catalog = {
   "changelog.entries.business-page-live.title": "As páginas de negócios ganham vida",
   "changelog.entries.business-page-live.body":
     "Cada página de negócio mostra agora as fotografias reais do espaço numa galeria que podes abrir em ecrã inteiro, além do horário de funcionamento real com um estado “Aberto agora / Encerrado” em tempo real — para saberes o aspeto de um lugar e se está aberto antes de ir.",
+
+  "changelog.entries.business-actions.title": "Guarda, partilha e chega lá",
+  "changelog.entries.business-actions.body":
+    "Cada página de negócio tem agora uma barra de ações — pede direções, liga, partilha ou guarda o lugar na tua lista com um toque. Os lugares guardados mostram quantos membros também os guardaram, um sinal de confiança discreto, não uma tabela de classificação.",
+
+  "changelog.entries.business-reviews-trust.title":
+    "Avaliações que funcionam nos dois sentidos",
+  "changelog.entries.business-reviews-trust.body":
+    "Quem tem um negócio já pode responder às avaliações, e cada página mostra a distribuição de estrelas para veres o panorama completo, não só a média. Se algo estiver errado, podes denunciar uma ficha ou sugerir uma correção — ambas seguem diretamente para a nossa moderação.",
+
+  "changelog.entries.business-discovery.title": "Orienta-te no diretório",
+  "changelog.entries.business-discovery.body":
+    "As páginas de negócio mostram agora locais parecidos por perto, um caminho claro de volta ao diretório e os idiomas falados no espaço. Os próximos eventos ligam diretamente à página do evento, onde podes adicioná-los ao teu calendário.",
 
   "changelog.entries.directory-filters-upgrade.title":
     "O diretório de negócios ficou muito mais fácil de filtrar",
@@ -2670,6 +2742,9 @@ export const marketing: Catalog = {
     "Junta-te à rede e tem acesso ao diretório completo, recomendações da comunidade, e a uma comunidade que conhece a cidade.",
   "directory.outro.cta": "Pedir um convite",
   "directory.detail.backCta": "← Diretório",
+  "directory.detail.breadcrumbAria": "Trilho de navegação",
+  "directory.detail.breadcrumbHome": "Diretório",
+  "directory.detail.relatedTitle": "Mais {category} por perto",
   "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} avaliações",
@@ -2685,6 +2760,8 @@ export const marketing: Catalog = {
   "directory.detail.reviewsTitle":
     "Avaliações da comunidade · <em>{count}</em>",
   "directory.detail.reviewsSub": "Ordenado por mais úteis.",
+  "directory.detail.ratingBreakdown": "Distribuição das avaliações",
+  "directory.detail.starsCount": "{stars} estrelas, {count} avaliações",
   "directory.detail.review.formTitle": "Já cá estiveste? Deixa uma avaliação",
   "directory.detail.review.starsAria": "A tua avaliação",
   "directory.detail.review.starAria": "{count} de 5 estrelas",
@@ -2698,22 +2775,84 @@ export const marketing: Catalog = {
   "directory.detail.review.signInPrompt":
     "Inicia sessão para avaliar este espaço.",
   "directory.detail.review.signInCta": "Iniciar sessão",
+  "directory.detail.reply.ownerResponseTitle": "Resposta de quem gere este espaço",
+  "directory.detail.reply.replyCta": "Responder",
+  "directory.detail.reply.editReplyCta": "Editar resposta",
+  "directory.detail.reply.placeholder": "Escreve uma resposta pública a esta avaliação…",
+  "directory.detail.reply.save": "Guardar resposta",
+  "directory.detail.reply.cancel": "Cancelar",
+  "directory.detail.reply.savingLabel": "A guardar…",
+  "directory.detail.reply.successToast": "A tua resposta está publicada.",
+  "directory.detail.reply.errorToast":
+    "Não foi possível publicar a tua resposta. Tenta novamente.",
   "directory.detail.helpful": "<b>{count}</b> pessoas acharam isto útil",
+  "directory.detail.reviews.sortLabel": "Ordenar",
+  "directory.detail.reviews.sortHelpful": "Mais úteis",
+  "directory.detail.reviews.sortHighest": "Melhor avaliadas",
+  "directory.detail.reviews.sortLowest": "Pior avaliadas",
+  "directory.detail.reviews.sortedByHelpful": "Ordenado por mais úteis.",
+  "directory.detail.reviews.sortedByHighest":
+    "Ordenado por melhor avaliadas.",
+  "directory.detail.reviews.sortedByLowest": "Ordenado por pior avaliadas.",
+  "directory.detail.reviews.filterAria": "Filtrar avaliações por número de estrelas",
+  "directory.detail.reviews.filterAll": "Todas as avaliações",
+  "directory.detail.reviews.filterStars_one": "{count} estrela",
+  "directory.detail.reviews.filterStars_other": "{count} estrelas",
+  "directory.detail.reviews.noStarReviews":
+    "Ainda não há avaliações de {count} estrelas.",
   "directory.detail.visitWebsite": "Visitar o site →",
   "directory.detail.getInTouch": "Entrar em contacto →",
   "directory.detail.backToDirectory": "Voltar ao diretório",
+  "directory.detail.reportCta": "Denunciar este negócio",
+  "directory.detail.reportAriaLabel": "Denunciar {name}",
+  "directory.detail.suggestEdit.cta": "Sugerir uma correção",
+  "directory.detail.suggestEdit.ariaLabel": "Sugerir uma correção para {name}",
+  "directory.detail.suggestEdit.title": "Sugerir uma correção",
+  "directory.detail.suggestEdit.sub":
+    "Reparaste em algo que não bate certo? Diz à pessoa responsável o que corrigir — só ela vê, não o diretório todo.",
+  "directory.detail.suggestEdit.fieldLabel": "O que precisa de atenção?",
+  "directory.detail.suggestEdit.field.hours": "Horário",
+  "directory.detail.suggestEdit.field.address": "Morada",
+  "directory.detail.suggestEdit.field.phone": "Número de telefone",
+  "directory.detail.suggestEdit.field.website": "Site",
+  "directory.detail.suggestEdit.field.description": "Descrição",
+  "directory.detail.suggestEdit.field.other": "Outra coisa",
+  "directory.detail.suggestEdit.messageLabel": "O que deve mudar?",
+  "directory.detail.suggestEdit.messagePlaceholder":
+    "Conta o que está desatualizado ou errado, e o que devia dizer em vez disso.",
+  "directory.detail.suggestEdit.submit": "Enviar sugestão",
+  "directory.detail.suggestEdit.submitting": "A enviar…",
+  "directory.detail.suggestEdit.cancel": "Cancelar",
+  "directory.detail.suggestEdit.successToast":
+    "Obrigada — vamos passar isto a quem gere este espaço.",
+  "directory.detail.suggestEdit.errorToast":
+    "Não foi possível enviar a tua sugestão. Tenta novamente.",
   "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
+  "directory.detail.languagesLabel": "Idiomas",
+  "directory.detail.accessLabel": "Acessibilidade",
   "directory.detail.whoRunsIt": "Quem gere isto",
   "directory.detail.onQueerPulse": "Na QueerPulse",
   "directory.detail.communityVouched": "Avalizado pela comunidade",
   "directory.detail.viewProfile": "Ver o perfil de {name} →",
+  "directory.detail.savedByMembers_one": "Guardado por {count} membro",
+  "directory.detail.savedByMembers_other": "Guardado por {count} membros",
   "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
   "directory.detail.upcomingHere": "Próximos eventos aqui",
+  "directory.detail.upcoming.addToCalendar": "Adicionar ao calendário:",
+  "directory.detail.upcoming.googleCalendar": "Google Calendário",
+  "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.galleryAria": "Fotos de {name}",
   "directory.detail.viewPhoto": "Ver foto",
   "directory.detail.lightboxClose": "Fechar",
   "directory.detail.prevPhoto": "Foto anterior",
   "directory.detail.nextPhoto": "Foto seguinte",
+  "directory.detail.action.directions": "Como chegar",
+  "directory.detail.action.call": "Ligar",
+  "directory.detail.action.share": "Partilhar",
+  "directory.detail.action.save": "Guardar",
+  "directory.detail.action.saved": "Guardado",
+  "directory.detail.action.linkCopied": "Link copiado",
+  "directory.detail.action.shareError": "Não foi possível partilhar — tenta copiar o link",
   "directory.relative.yesterday": "Ontem",
   "directory.relative.twoDaysAgo": "há 2 dias",
   "directory.relative.threeDaysAgo": "há 3 dias",

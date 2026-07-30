@@ -1770,4 +1770,13 @@ export const studio: Catalog = {
   "offAir.hero.replayAria": "Replay the night-cap",
   "offAir.hero.replayingToast": "Replaying {title}",
   "offAir.hero.paidOutSuffix": "{amount} paid out · replay any time",
+
+  // ── Live-mode placeholder (StudioComingSoonPage) ──────────────────────────
+  // Shown for every /studio/* route when demo mode is off, since Studio has no
+  // backend yet and must not present invented payouts/figures as real.
+  "comingSoon.title": "The Studio is <em>still tuning up</em>",
+  "comingSoon.description":
+    "Our co-op music platform — artist pages, live sets, payouts and the solidarity fund — isn't open to the public yet. We're building it in the open and it'll land here soon.",
+  "comingSoon.exploreCulture": "Explore Culture",
+  "comingSoon.backHome": "Back to home",
 };

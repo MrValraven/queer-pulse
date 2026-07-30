@@ -4,9 +4,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import {
-  MEMBER_FIRST_NAME,
-  MEMBER_FULL_NAME,
   MUTE_DURATIONS,
+  type BlockMuteTarget,
   type MuteDurationId,
 } from "./blockMute.data";
 import s from "./flows.module.css";
@@ -16,6 +15,8 @@ function durationLabel(t: (key: string) => string, id: MuteDurationId) {
 }
 
 export function BlockMuteChoose({
+  target,
+  timedMuteAllowed,
   chosen,
   onChoose,
   muteDur,
@@ -23,6 +24,10 @@ export function BlockMuteChoose({
   onContinue,
   onCancel,
 }: {
+  target: BlockMuteTarget;
+  /** In live mode with a real target the backend has no timed mute, so only
+   *  "until I unmute" is offered; the demo explainer keeps the timed choices. */
+  timedMuteAllowed: boolean;
   chosen: "mute" | "block" | null;
   onChoose: (c: "mute" | "block") => void;
   muteDur: MuteDurationId;
@@ -31,15 +36,15 @@ export function BlockMuteChoose({
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
-  const name = MEMBER_FIRST_NAME;
+  const name = target.firstName;
 
   return (
     <div className={`${s.card} ${s.screenIn}`}>
       <div className={s.memberRow}>
-        <div className={s.memAv}>SR</div>
+        <div className={s.memAv}>{target.initials}</div>
         <div>
-          <div className={s.memName}>{MEMBER_FULL_NAME}</div>
-          <div className={s.memMeta}>she/her · Lisbon</div>
+          <div className={s.memName}>{target.fullName}</div>
+          {target.meta && <div className={s.memMeta}>{target.meta}</div>}
         </div>
       </div>
 
@@ -94,23 +99,30 @@ export function BlockMuteChoose({
             <div className={s.subLabel} style={{ marginTop: 14 }}>
               {t("safety:blockMute.choose.durationLabel")}
             </div>
-            <div className={s.durationRow}>
-              {MUTE_DURATIONS.map((d) => (
-                <button
-                  type="button"
-                  key={d.id}
-                  className={[s.durBtn, muteDur === d.id && s.durBtnActive]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onMuteDur(d.id);
-                  }}
-                >
-                  {t(d.labelKey)}
-                </button>
-              ))}
-            </div>
+            {timedMuteAllowed ? (
+              <div className={s.durationRow}>
+                {MUTE_DURATIONS.map((d) => (
+                  <button
+                    type="button"
+                    key={d.id}
+                    className={[s.durBtn, muteDur === d.id && s.durBtnActive]
+                      .filter(Boolean)
+                      .join(" ")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onMuteDur(d.id);
+                    }}
+                  >
+                    {t(d.labelKey)}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              // Live backend has no timed mute — a real mute lasts until unmute.
+              <div className={s.warnBox}>
+                {t("safety:blockMute.choose.liveDurationNote")}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -162,14 +174,16 @@ export function BlockMuteChoose({
 }
 
 export function BlockMuteMuted({
+  target,
   muteDur,
   onUndo,
 }: {
+  target: BlockMuteTarget;
   muteDur: MuteDurationId;
   onUndo: () => void;
 }) {
   const { t } = useTranslation();
-  const name = MEMBER_FIRST_NAME;
+  const name = target.firstName;
 
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>
@@ -223,9 +237,15 @@ export function BlockMuteMuted({
   );
 }
 
-export function BlockMuteBlocked({ onUndo }: { onUndo: () => void }) {
+export function BlockMuteBlocked({
+  target,
+  onUndo,
+}: {
+  target: BlockMuteTarget;
+  onUndo: () => void;
+}) {
   const { t } = useTranslation();
-  const name = MEMBER_FIRST_NAME;
+  const name = target.firstName;
 
   return (
     <div className={`${s.card} ${s.center} ${s.screenIn}`}>

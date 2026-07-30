@@ -1,5 +1,7 @@
 import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { CinemaComingSoon } from "./CinemaComingSoon";
 import { FiFilm } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, Outro } from "../../shared/components/ui";
@@ -13,6 +15,12 @@ import { FilmmakerAside } from "./FilmmakerAside";
 import styles from "./CinemaFilmmakerPage.module.css";
 
 export function CinemaFilmmakerPage() {
+  const { demoMode } = useDemoMode();
+  if (!demoMode) return <CinemaComingSoon />;
+  return <DemoCinemaFilmmakerPage />;
+}
+
+function DemoCinemaFilmmakerPage() {
   const { slug = "" } = useParams();
   const { t } = useTranslation();
   const filmmaker = FILMMAKERS[slug];

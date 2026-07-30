@@ -8,6 +8,7 @@ import { routes } from "./routeMap";
 import { LEGACY_REDIRECTS } from "./routes.redirects.data";
 import { useAuthGateRedirect, isGatedPath, isGuestOnlyPath } from "./authGate";
 import { useAuth } from "./providers/authContext";
+import { useDemoMode } from "./providers/DemoModeProvider";
 
 // Per-feature route groups. Each feature owns its own <Route> registrations in
 // `src/features/<feature>/routes.tsx`; this file is the thin composition root
@@ -53,6 +54,7 @@ export function AppRoutes() {
   const { checking } = useAuth();
   const gateRedirect = useAuthGateRedirect();
   const { pathname } = useLocation();
+  const { demoMode } = useDemoMode();
   // While the live session is still being determined, hold gated routes on the
   // branded loader — showing the page (or bouncing to sign-in) prematurely would
   // flash. Guest-only auth screens are held too, so a signed-in member reloading
@@ -91,7 +93,7 @@ export function AppRoutes() {
           {authRoutes()}
           {economyRoutes()}
           {cinemaRoutes()}
-          {studioRoutes()}
+          {studioRoutes(demoMode)}
           {forumRoutes()}
           {settingsRoutes()}
           {systemRoutes()}
