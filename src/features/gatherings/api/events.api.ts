@@ -11,7 +11,11 @@ import { toItemsPage } from "../../../shared/api/pagination";
 // actually render are typed richly; everything else is optional and defaulted
 // gracefully in the adapters.
 
-export type EventVisibility = "open" | "network" | "private";
+// Must mirror the backend `EventVisibility` enum exactly — the create/update
+// endpoints validate `@IsEnum(EventVisibility)` with `forbidNonWhitelisted`, so
+// any value outside this set is a 400. (The earlier "open"|"network"|"private"
+// labels matched nothing on the server and silently failed every create.)
+export type EventVisibility = "public" | "members" | "invite_only";
 export type EventStatus = "draft" | "published" | "cancelled";
 export type RsvpStatus = "going" | "maybe" | "waitlisted" | "invited";
 

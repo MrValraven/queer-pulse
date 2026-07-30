@@ -13,6 +13,7 @@ import {
   TOTAL_STEPS,
   accessLabelKey,
 } from "./createGathering.data";
+import { gatheringPath } from "./data";
 import { useGatheringForm } from "./useGatheringForm";
 import { useCreateEvent } from "./api/useEventMutations";
 import { formToCreateEventDto } from "./api/events.adapters";
@@ -30,25 +31,49 @@ export function CreateGatheringPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
+  // The slug the backend assigns on a successful create — used to send the
+  // organiser to their real gathering page (null in demo, where nothing is
+  // persisted, so the CTA falls back to the events board).
+  const [createdSlug, setCreatedSlug] = useState<string | null>(null);
   const form = useGatheringForm();
   const createEvent = useCreateEvent();
 
   const isSuccess = step === 6;
   const fill = ((step - 1) / TOTAL_STEPS) * 100;
-  const canPublish = step !== TOTAL_STEPS || form.allChecked;
+  // Step 2 needs a real future date before the organiser can continue; the
+  // final step needs all three confirmations (and no in-flight publish).
+  const dateStepBlocked = step === 2 && !form.dateValid;
+  const publishBlocked =
+    step === TOTAL_STEPS && (!form.allChecked || createEvent.isPending);
+  const nextDisabled = dateStepBlocked || publishBlocked;
+  const nextHint = dateStepBlocked
+    ? t("gatherings:create.nav.dateHint")
+    : step === TOTAL_STEPS && !form.allChecked
+      ? t("gatherings:create.nav.publishHint")
+      : undefined;
 
   const next = () => {
     if (step === TOTAL_STEPS) {
-      if (!form.allChecked) return;
+      if (!form.allChecked || createEvent.isPending) return;
+      // Only celebrate on a real success. The old code advanced to the success
+      // step and toasted "published" synchronously, before the request settled,
+      // so a rejected create (e.g. a 400) still showed the success panel and its
+      // CTA. Now the success step and toast fire from onSuccess; a failure keeps
+      // the organiser on the review step with an error toast so they can retry.
       createEvent.mutate(formToCreateEventDto(form), {
+        onSuccess: ({ slug }) => {
+          if (slug) setCreatedSlug(slug);
+          setStep(6);
+          showToast(t("gatherings:create.toast.published"), "success");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        },
         onError: () =>
           showToast(t("gatherings:create.toast.publishError"), "error"),
       });
-      setStep(6);
-      showToast(t("gatherings:create.toast.published"), "success");
-    } else {
-      setStep((s) => s + 1);
+      return;
     }
+    if (dateStepBlocked) return;
+    setStep((s) => s + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const back = () => {
@@ -142,7 +167,14 @@ export function CreateGatheringPage() {
                     <Button to={routes.gatherings} variant="ghost-dark">
                       {t("gatherings:create.success.viewCta")} →
                     </Button>
-                    <Button to={routes.event} variant="primary">
+                    <Button
+                      to={
+                        createdSlug
+                          ? gatheringPath(createdSlug)
+                          : routes.gatherings
+                      }
+                      variant="primary"
+                    >
                       {t("gatherings:create.success.eventCta")} →
                     </Button>
                   </div>
@@ -162,12 +194,8 @@ export function CreateGatheringPage() {
                     type="button"
                     className={styles.next}
                     onClick={next}
-                    disabled={!canPublish}
-                    title={
-                      !canPublish
-                        ? t("gatherings:create.nav.publishHint")
-                        : undefined
-                    }
+                    disabled={nextDisabled}
+                    title={nextHint}
                   >
                     {step === TOTAL_STEPS ? (
                       <>{t("gatherings:create.nav.publish")} →</>

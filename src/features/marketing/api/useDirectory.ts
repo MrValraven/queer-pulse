@@ -14,6 +14,7 @@ import {
   submittedToPlace,
 } from "./directory.adapters";
 import { getDirectory, getDirectorySpace } from "./directory.api";
+import { ApiError } from "../../../shared/api/client";
 
 export const DIRECTORY_KEY = "directory";
 
@@ -24,6 +25,12 @@ export const DIRECTORY_KEY = "directory";
  * hits the network. Live mode fetches the public `GET /directory` (every live
  * listing) and adapts each card — so with "Populate platform" OFF the page
  * shows real businesses, and the fabricated fixture only appears in demo.
+ *
+ * Always fetches the unfiltered grand total — the directory page's "Verified
+ * safe spaces" chip is applied client-side (alongside category/query/vibe) so
+ * its "X of Y" count stays meaningful. `getDirectory`'s `safe` param remains a
+ * valid, separately-usable API capability (the backend also boosts verified
+ * listings first by default) for any caller that wants server-side filtering.
  *
  * Returns a plain array (page keeps its own `useSimulatedLoad` skeleton), so
  * this stays a drop-in for the previous synchronous read point.
@@ -50,14 +57,19 @@ export function useDirectoryPlaces(): DirectoryPlace[] {
  * "Edit this listing", replying to reviews — are reachable); live fetches the
  * public `GET /directory/:slug` and adapts it.
  *
- * Returns `{ place, isLoading }` rather than a bare value: the live fetch is
- * async, so the detail page must distinguish "still loading" (show a skeleton)
- * from "settled, not found" (redirect) instead of redirecting on the initial
- * undefined. A 404 resolves to `undefined` with `isLoading` false.
+ * Returns `{ place, isLoading, isError, refetch }` rather than a bare value:
+ * the live fetch is async, so the detail page must distinguish "still loading"
+ * (show a skeleton), "settled, not found" (redirect), and "the read failed"
+ * (show an error state) instead of redirecting on the initial undefined. Only a
+ * genuine 404 resolves to `undefined` (not found) with `isLoading` false; any
+ * other failure (5xx, network) propagates so `isError` is true and the page can
+ * offer a retry rather than a misleading not-found redirect.
  */
 export function useDirectoryPlace(slug: string | undefined): {
   place: DirectoryPlace | undefined;
   isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
 } {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
@@ -87,11 +99,20 @@ export function useDirectoryPlace(slug: string | undefined): {
       if (slug === undefined) return undefined;
       try {
         return detailDtoToPlace(await getDirectorySpace(slug), fmt);
-      } catch {
-        // 404 (or any read failure) → treat as not found; the page redirects.
-        return undefined;
+      } catch (error) {
+        // Only a real 404 means "no such listing" → resolve to undefined so the
+        // page redirects to the directory. Any other failure (5xx, network)
+        // re-throws so the query enters its error state and the page can offer
+        // a retry, rather than falsely claiming the listing doesn't exist.
+        if (error instanceof ApiError && error.status === 404) return undefined;
+        throw error;
       }
     },
   });
-  return { place: query.data, isLoading: query.isLoading };
+  return {
+    place: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

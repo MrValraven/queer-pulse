@@ -40,8 +40,6 @@ import { connect as enConnect } from "./en/connect";
 import { messages as enMessages } from "./en/messages";
 import { culture as enCulture } from "./en/culture";
 import { notifications as enNotifications } from "./en/notifications";
-import { social as enSocial } from "./en/social";
-import { pages as enPages } from "./en/pages";
 import { shared as enShared } from "./en/shared";
 
 // --- Portuguese: shell eager, everything else lazy ----------------------
@@ -89,8 +87,6 @@ const en: Record<Namespace, Catalog> = {
   messages: enMessages,
   culture: enCulture,
   notifications: enNotifications,
-  social: enSocial,
-  pages: enPages,
   shared: enShared,
 };
 
@@ -152,8 +148,6 @@ export const ptNamespaceLoaders: Partial<
   culture: () => import("./pt/culture").then((module) => module.culture),
   notifications: () =>
     import("./pt/notifications").then((module) => module.notifications),
-  social: () => import("./pt/social").then((module) => module.social),
-  pages: () => import("./pt/pages").then((module) => module.pages),
 };
 
 const pt: Record<Namespace, Catalog> = {
@@ -190,8 +184,6 @@ const pt: Record<Namespace, Catalog> = {
   messages: PENDING_CATALOG,
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
-  social: PENDING_CATALOG,
-  pages: PENDING_CATALOG,
 };
 
 /**

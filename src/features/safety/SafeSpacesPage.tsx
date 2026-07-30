@@ -1,13 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { FiMapPin } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FilterChips,
-  Outro,
-} from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -16,12 +9,7 @@ import {
   buildBreadcrumbSchema,
 } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
-import { type Category } from "./safeSpaces";
 import { useSafeSpaces } from "./api/useSafeSpaces";
-import { FILTERS } from "./safeSpacesPage.data";
-import { FlagModal } from "./FlagModal";
-import { SafeSpaceCard } from "./SafeSpaceCard";
-import { SafeSpaceCardSkeleton } from "./SafeSpaceCardSkeleton";
 import {
   BadgeExplainer,
   HowSection,
@@ -32,15 +20,9 @@ import styles from "./SafeSpacesPage.module.css";
 
 export function SafeSpacesPage() {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { verified, removed, stats, isLoading } = useSafeSpaces();
-  const [filter, setFilter] = useState<Category | "all">("all");
-  const [flagging, setFlagging] = useState<string | null>(null);
+  const { removed, stats } = useSafeSpaces();
   const nomRef = useRef<HTMLDivElement>(null);
 
-  const items = verified.filter(
-    (s) => filter === "all" || s.category === filter,
-  );
   const scrollToNominate = () =>
     nomRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
   const pageTitle = t("safety:spaces.meta.title");
@@ -104,56 +86,25 @@ export function SafeSpacesPage() {
                 {t("safety:spaces.dir.updated")}
               </div>
             </div>
-            <button
-              type="button"
-              className={styles.nominateBtn}
-              onClick={scrollToNominate}
-            >
-              {t("safety:spaces.dir.nominateCta")}
-            </button>
           </div>
 
-          <FilterChips
-            className={styles.filters}
-            label={t("safety:spaces.dir.filterAria")}
-            options={FILTERS.map((f) => ({
-              value: f.id,
-              label: t(f.labelKey),
-            }))}
-            value={filter}
-            onChange={(v) => setFilter(v as Category | "all")}
-          />
-
-          <div className={styles.grid} aria-busy={isLoading}>
-            {isLoading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <SafeSpaceCardSkeleton key={i} />
-                ))
-              : items.map((s, i) => (
-                  <SafeSpaceCard
-                    key={s.name}
-                    s={s}
-                    onFlag={() => setFlagging(s.name)}
-                    delay={Math.min(i, 8) * 60}
-                  />
-                ))}
+          <div className={styles.browseCta}>
+            <p className={styles.browseCtaLead}>
+              {t("safety:spaces.dir.browseLead")}
+            </p>
+            <div className={styles.browseCtaActions}>
+              <Button
+                to={`${routes.directory}?safe=verified`}
+                variant="primary"
+                size="lg"
+              >
+                {t("safety:spaces.dir.browseCta")}
+              </Button>
+              <Button variant="ghost" size="lg" onClick={scrollToNominate}>
+                {t("safety:spaces.dir.nominateCta")}
+              </Button>
+            </div>
           </div>
-
-          {!isLoading && items.length === 0 && (
-            <EmptyState
-              icon={<FiMapPin />}
-              title={t("safety:spaces.empty.title")}
-              description={t("safety:spaces.empty.description")}
-              action={{
-                label: t("safety:spaces.empty.clearCta"),
-                onClick: () => setFilter("all"),
-              }}
-              secondaryAction={{
-                label: t("safety:spaces.empty.nominateCta"),
-                onClick: scrollToNominate,
-              }}
-            />
-          )}
         </div>
       </div>
 
@@ -177,19 +128,6 @@ export function SafeSpacesPage() {
           {t("safety:spaces.outro.soberCta")}
         </Button>
       </Outro>
-
-      {flagging && (
-        <FlagModal
-          spaceName={flagging}
-          onClose={() => setFlagging(null)}
-          onSubmitted={(reason) =>
-            showToast(
-              t("safety:spaces.flagToast", { reason: reason.toLowerCase() }),
-              "success",
-            )
-          }
-        />
-      )}
     </PageShell>
   );
 }

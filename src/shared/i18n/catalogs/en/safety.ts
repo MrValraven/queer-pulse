@@ -106,6 +106,8 @@ export const safety: Catalog = {
 
   "report.toast.chooseCategory": "Choose what you're reporting first.",
   "report.toast.received": "Report received — we'll follow up within 24 hours.",
+  "report.toast.submitError":
+    "Couldn't send your report — it didn't reach us. Check your connection and try again.",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -132,6 +134,8 @@ export const safety: Catalog = {
   "flag.success.body":
     "Thank you. A moderator will read your report. <b>Three independent flags trigger an immediate review and temporary suspension of the badge</b> — your report counts toward that. We may contact you for detail, but never the venue.",
   "flag.success.doneCta": "Done",
+  "flag.error":
+    "Couldn't send that flag — it didn't reach us. Check your connection and try again.",
   "flag.form.eyebrow": "Flag a safe space",
   "flag.form.title": "What happened at <em>{spaceName}?</em>",
   "flag.form.lead":
@@ -261,6 +265,32 @@ export const safety: Catalog = {
   "appeal.upheld.contactNote":
     "If you believe this is in error, you can contact our Trust team directly.",
   "appeal.upheld.contactCta": "Message the Trust team →",
+
+  // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
+  "appealSubmit.kicker": "Appeal a decision",
+  "appealSubmit.heading": "Tell us what we <em>got wrong</em>",
+  "appealSubmit.lead":
+    "A different moderator than the one who made the decision will read this. Be specific — what happened, and why the decision doesn't sit right with you.",
+  "appealSubmit.form.reasonLabel": "Your appeal",
+  "appealSubmit.form.reasonHelper":
+    "The more context you give, the more there is to reconsider. At least a sentence or two.",
+  "appealSubmit.form.reasonPlaceholder":
+    "Walk us through what happened from your side…",
+  "appealSubmit.form.charCount": "{count} / {max}",
+  "appealSubmit.form.submitCta": "Submit appeal",
+  "appealSubmit.form.submitting": "Sending…",
+  "appealSubmit.form.ladderCta": "Read the community ladder",
+  "appealSubmit.notice":
+    "<b>While your appeal is reviewed,</b> the original decision stays in place. You'll hear back by email — usually within a few days.",
+  "appealSubmit.foot":
+    "Every appeal, and how it was decided, is logged in our <a>transparency record</a>.",
+  "appealSubmit.errorFrame": "Couldn't file your appeal",
+  "appealSubmit.success.title": "Your appeal is <em>in</em>",
+  "appealSubmit.success.sub":
+    "A moderator who wasn't involved in the original decision will review it. We'll email you the moment there's an outcome.",
+  "appealSubmit.success.filedLabel": "Filed",
+  "appealSubmit.success.trackCta": "Track this appeal",
+  "appealSubmit.success.howCta": "How moderation works",
 
   // ── HateCrimePage.tsx ──────────────────────────────────────────────────
   "hateCrime.meta.title":
@@ -488,6 +518,9 @@ export const safety: Catalog = {
   "spaces.dir.updated": "Last updated June 2025 · Member-maintained",
   "spaces.dir.nominateCta": "+ Nominate a space",
   "spaces.dir.filterAria": "Filter spaces by category",
+  "spaces.dir.browseLead":
+    "Every verified space now lives in the local directory, filtered to just the ones that earned the badge.",
+  "spaces.dir.browseCta": "Browse verified spaces",
   "spaces.empty.title": "No verified spaces in this category yet",
   "spaces.empty.description":
     "The list grows as members visit and review places. Try another category — or nominate somewhere you already trust, and we'll get it reviewed.",
@@ -498,7 +531,6 @@ export const safety: Catalog = {
     "Every review, every flag, every nomination makes this list more useful for everyone. It only works because the community maintains it.",
   "spaces.outro.safetyCta": "Safety & reporting",
   "spaces.outro.soberCta": "Sober & social",
-  "spaces.flagToast": "Flag submitted — {reason}",
 
   // ── SafeSpacesSections.tsx ─────────────────────────────────────────────
   "spaces.badge.visualNameLine1": "Community",
@@ -526,7 +558,7 @@ export const safety: Catalog = {
   "spaces.nominate.lead":
     "You've found somewhere that genuinely feels safe. Tell us about it. We do the rest.",
   "spaces.nominate.flagNote":
-    "You can also flag a verified space that's changed — use the flag button on any listing, or contact us directly.",
+    "Noticed a verified space that's changed for the worse? Report it from its listing in the local directory, or contact us directly — either way, it gets reviewed.",
   "spaces.nominate.namePlaceholder": "Space name",
   "spaces.nominate.addressPlaceholder": "Address or neighbourhood",
   "spaces.nominate.typeSelect.placeholder": "Type of space",
@@ -549,6 +581,10 @@ export const safety: Catalog = {
   "spaces.nominate.thanks.subInfo":
     "Here's what happens next: we acknowledge every nomination within <strong>48 hours</strong>. Then three verified members visit independently and review it against the criteria before a volunteer panel decides. We'll keep you posted.",
   "spaces.nominate.anotherCta": "Nominate another space",
+  "spaces.nominate.comingSoon.badge": "Coming soon",
+  "spaces.nominate.comingSoon.title": "Nominations are <em>coming soon.</em>",
+  "spaces.nominate.comingSoon.body":
+    "We're still building the review pipeline behind space nominations. Switch on the demo platform to preview the full flow, or check back soon.",
 
   // ── SafeSpaceCard.tsx ──────────────────────────────────────────────────
   "spaces.card.verifiedBadge": "Verified",

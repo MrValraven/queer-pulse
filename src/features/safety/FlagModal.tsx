@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -55,6 +56,7 @@ export function FlagModal({
   onSubmitted?: (reason: string, detail: string) => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const reasons = useMemo(
     () =>
       SUBJECT_REASONS.venue.map((code) => ({
@@ -101,8 +103,9 @@ export function FlagModal({
         },
         onError: (err) => {
           logError(err, { scope: "safety.flagVenue" });
-          onSubmitted?.(label(reason), detail.trim());
-          setDone(true);
+          // Don't count a flag that never reached us or show the success panel:
+          // surface an honest error and keep the form filled in to retry.
+          showToast(t("safety:flag.error"), "error");
         },
       },
     );

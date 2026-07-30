@@ -78,7 +78,12 @@ export function SubprofileEditorPage() {
             </div>
           </div>
 
-          <SubprofileMetaForm subprofile={subprofile} />
+          {/* Keyed on the subprofile id so the form remounts (re-running its
+              useState initializers) when a different persona loads or the
+              underlying record's identity changes — otherwise its ~13 derived
+              fields stay stale after a refetch. Field edits within one persona
+              don't change the key, so typing isn't interrupted. */}
+          <SubprofileMetaForm key={subprofile.id} subprofile={subprofile} />
 
           <SubprofileSocialLinksEditor subprofile={subprofile} />
 

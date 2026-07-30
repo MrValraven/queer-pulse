@@ -57,6 +57,11 @@ export function AdminMemberRows({
                         count: m.openReportsCount ?? 0,
                       })}
                 </AdminChip>
+                {m.role !== "member" && (
+                  <AdminChip tone={m.role === "admin" ? "violet" : "plum"}>
+                    {t(`admin:members.role.value.${m.role}`)}
+                  </AdminChip>
+                )}
               </div>
               <div className={styles.rowMeta}>{m.meta}</div>
             </div>

@@ -57,26 +57,37 @@ export function DiscussionTab({
     const text = newPost.trim();
     if (!text) return;
     const heading = text.length > 70 ? `${text.slice(0, 67)}…` : text;
-    setExtra((prev) => [
-      {
-        votes: 0,
-        title: heading,
-        author: { initials: "Me", name: "You", tint: "plum" },
-        time: t("communities:common.justNow"),
-        replyCount: 0,
-        post: text,
-        replies: [],
-      },
-      ...prev,
-    ]);
+    // Tag the optimistic entry with a temp id so an errored live POST can roll
+    // back exactly this post (and nothing typed since) instead of leaving a
+    // phantom thread behind.
+    const optimisticId = `optimistic-${Date.now()}`;
+    const optimisticThread: ThreadData = {
+      id: optimisticId,
+      votes: 0,
+      title: heading,
+      author: { initials: "Me", name: "You", tint: "plum" },
+      time: t("communities:common.justNow"),
+      replyCount: 0,
+      post: text,
+      replies: [],
+    };
+    setExtra((prev) => [optimisticThread, ...prev]);
     setNewPost("");
     showToast(t("communities:detail.discussion.startedToast"), "success");
     if (demoMode) return;
     createPost.mutate(
       { body: text },
       {
+        // On success the refetched page carries the real post, so drop all
+        // optimistic entries.
         onSuccess: () => setExtra([]),
-        onError: () => showToast(t("communities:common.error"), "error"),
+        // On error, remove just this optimistic post so no phantom thread lingers.
+        onError: () => {
+          setExtra((prev) =>
+            prev.filter((thread) => thread.id !== optimisticId),
+          );
+          showToast(t("communities:common.error"), "error");
+        },
       },
     );
   }

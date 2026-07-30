@@ -8,6 +8,20 @@ import {
   FiLayers,
   FiMessageSquare,
   FiShoppingBag,
+  FiMapPin,
+  FiBell,
+  FiSettings,
+  FiBookmark,
+  FiLink,
+  FiBookOpen,
+  FiLifeBuoy,
+  FiFilm,
+  FiMusic,
+  FiHome,
+  FiInfo,
+  FiMap,
+  FiFileText,
+  FiShield,
 } from "react-icons/fi";
 import { routes, topicPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
@@ -29,6 +43,10 @@ export interface SearchItem {
   sub: string;
   href: string;
   kw: string;
+  /** Per-row icon override (page rows only), so each destination reads at a
+   *  glance instead of every page sharing the generic `TYPE_ICON.page`. Falls
+   *  back to the type icon when unset. */
+  icon?: IconType;
   /** Member slug, so the palette can show the member's avatar (member rows only). */
   slug?: string;
   /** Live member avatar URL (member rows only). Demo rows resolve avatars from the local registry. */
@@ -66,14 +84,123 @@ const TOPIC_SEARCH_ITEMS: SearchItem[] = Object.values(TOPICS).map((topic) => ({
   ].join(" "),
 }));
 
-// Quick destinations — the persona directory + the owner's subprofile dashboard.
-// Real navigation targets, so they're safe (and identical) in demo and live.
+// Quick destinations — real navigation targets, so they're safe (and identical)
+// in demo and live. With no query typed these become a jump-to launcher; each
+// carries its own `icon` so the "Pages" group reads at a glance. Grouped by
+// intent below (core places → your account → discovery), but one flat list.
 export const PAGE_SEARCH_ITEMS: SearchItem[] = [
+  // — Core destinations —
+  {
+    t: "page",
+    name: "Members",
+    sub: "Find people in the community",
+    href: routes.members,
+    icon: FiUsers,
+    kw: "members people directory find profiles neighbours",
+  },
+  {
+    t: "page",
+    name: "Communities",
+    sub: "Groups to join and belong to",
+    href: routes.communities,
+    icon: FiUsers,
+    kw: "communities groups circles join belong collectives",
+  },
+  {
+    t: "page",
+    name: "Events",
+    sub: "What's coming up near you",
+    href: routes.events,
+    icon: FiCalendar,
+    kw: "events gatherings calendar rsvp meetups happenings",
+  },
+  {
+    t: "page",
+    name: "Forum",
+    sub: "Conversations across the community",
+    href: routes.forum,
+    icon: FiMessageSquare,
+    kw: "forum discussions threads talk conversations posts",
+  },
+  {
+    t: "page",
+    name: "Local directory",
+    sub: "Queer-friendly places and businesses",
+    href: routes.directory,
+    icon: FiMapPin,
+    kw: "local directory businesses places venues shops map spaces",
+  },
+  {
+    t: "page",
+    name: "Verified safe spaces",
+    sub: "Places reviewed and vouched for by the community",
+    href: `${routes.directory}?safe=verified`,
+    icon: FiShield,
+    kw: "safe spaces verified trust badge",
+  },
+  {
+    t: "page",
+    name: "Messages",
+    sub: "Your direct conversations",
+    href: routes.messages,
+    icon: FiMessageSquare,
+    kw: "messages dms chat inbox conversations",
+  },
+  {
+    t: "page",
+    name: "Notifications",
+    sub: "What you've missed",
+    href: routes.notifications,
+    icon: FiBell,
+    kw: "notifications alerts activity updates mentions",
+  },
+  // — Your account —
+  {
+    t: "page",
+    name: "My profile",
+    sub: "How others see you",
+    href: routes.accountProfile,
+    icon: FiUser,
+    kw: "profile me account my page bio avatar",
+  },
+  {
+    t: "page",
+    name: "Settings",
+    sub: "Account, privacy and preferences",
+    href: routes.settings,
+    icon: FiSettings,
+    kw: "settings preferences privacy account notifications options",
+  },
+  {
+    t: "page",
+    name: "Saved",
+    sub: "Everything you've bookmarked",
+    href: routes.collections,
+    icon: FiBookmark,
+    kw: "saved bookmarks collections favourites starred",
+  },
+  {
+    t: "page",
+    name: "My events",
+    sub: "What you're going to",
+    href: routes.myEvents,
+    icon: FiCalendar,
+    kw: "my events rsvps going tickets attending",
+  },
+  {
+    t: "page",
+    name: "Connections",
+    sub: "The people you're linked with",
+    href: routes.connections,
+    icon: FiLink,
+    kw: "connections friends network links followers contacts",
+  },
   {
     t: "page",
     name: "Browse subprofiles",
     sub: "The persona directory",
     href: routes.subprofiles,
+    icon: FiLayers,
     kw: "subprofiles personas directory professional developer musician writer",
   },
   {
@@ -81,7 +208,81 @@ export const PAGE_SEARCH_ITEMS: SearchItem[] = [
     name: "My subprofiles",
     sub: "Your professional personas",
     href: routes.subprofilesDashboard,
+    icon: FiLayers,
     kw: "subprofiles personas manage dashboard professional",
+  },
+  // — Discovery —
+  {
+    t: "page",
+    name: "Magazine",
+    sub: "Stories, culture and voices",
+    href: routes.magazine,
+    icon: FiBookOpen,
+    kw: "magazine articles stories culture reading zine essays",
+  },
+  {
+    t: "page",
+    name: "Resources",
+    sub: "Guides, support and care",
+    href: routes.resources,
+    icon: FiLifeBuoy,
+    kw: "resources guides support help care health library",
+  },
+  {
+    t: "page",
+    name: "Cinema",
+    sub: "Queer film, watched together",
+    href: routes.cinema,
+    icon: FiFilm,
+    kw: "cinema film movies watch screenings shorts",
+  },
+  {
+    t: "page",
+    name: "Studio",
+    sub: "Music from the community",
+    href: routes.studio,
+    icon: FiMusic,
+    kw: "studio music sound tracks artists albums",
+  },
+  {
+    t: "page",
+    name: "Housing",
+    sub: "Homes, flatmates and co-ops",
+    href: routes.housing,
+    icon: FiHome,
+    kw: "housing homes flatmates rooms rent coop landlords",
+  },
+  {
+    t: "page",
+    name: "About",
+    sub: "What QueerPulse is and who's behind it",
+    href: routes.about,
+    icon: FiInfo,
+    kw: "about mission story team info what is queerpulse",
+  },
+  {
+    t: "page",
+    name: "Roadmap",
+    sub: "What we're building next",
+    href: routes.roadmap,
+    icon: FiMap,
+    kw: "roadmap upcoming plans features vote ideas future",
+  },
+  {
+    t: "page",
+    name: "Changelog",
+    sub: "What's new lately",
+    href: routes.changelog,
+    icon: FiFileText,
+    kw: "changelog updates releases new shipped history whats new",
+  },
+  {
+    t: "page",
+    name: "Governance",
+    sub: "How decisions get made",
+    href: routes.governance,
+    icon: FiShield,
+    kw: "governance policy transparency finances decisions constitution",
   },
 ];
 
@@ -335,4 +536,5 @@ export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
   { id: "forum", labelKey: "members:search.type.forum" },
   { id: "business", labelKey: "members:search.type.business" },
   { id: "topic", labelKey: "members:search.type.topic" },
+  { id: "page", labelKey: "members:search.type.page" },
 ];

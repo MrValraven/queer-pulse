@@ -231,7 +231,7 @@ export const FILMMAKERS: Record<string, Filmmaker> = {
     ],
     links: [
       { label: "View QueerPulse profile", to: routes.members },
-      { label: "In Creatives directory", to: routes.creatives },
+      { label: "In the creatives directory", to: routes.subprofiles },
     ],
   },
 };

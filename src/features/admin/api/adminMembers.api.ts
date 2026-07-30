@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPatch } from "../../../shared/api/client";
 
 /**
  * Admin members panel (`/admin/members`, admin-only). Mirrors the backend's
@@ -10,6 +10,9 @@ import { apiGet } from "../../../shared/api/client";
 
 export type BadgeTone = "plum" | "coral" | "jade" | "violet" | "amber";
 export type ModerationState = "under_review" | "frozen" | "limited";
+
+/** The member's platform role — mirrors the backend `UserRole` enum values. */
+export type MemberRole = "member" | "moderator" | "admin";
 
 export interface VouchAvatarDTO {
   initials: string;
@@ -35,6 +38,7 @@ export interface AdminMemberCardDTO {
   tone: BadgeTone;
   pronouns: string | null;
   verified: boolean;
+  role: MemberRole;
   openReportCount: number;
   joinedAt: string;
   tagline: string | null;
@@ -83,6 +87,8 @@ export interface AdminMemberDetailDTO {
   tone: BadgeTone;
   pronouns: string | null;
   verified: boolean;
+  role: MemberRole;
+  isSystem: boolean;
   avatarUrl: string | null;
   vouchCount: number;
   outboundVouchCount: number;
@@ -117,3 +123,18 @@ export const getAdminFlagged = () =>
 /** One member's detail view, including their moderation timeline and vouch graph. */
 export const getAdminMember = (memberId: string) =>
   apiGet<AdminMemberDetailDTO>(`/admin/members/${memberId}`);
+
+/** The shape returned after a role change, so the roster/drawer can patch in
+ *  place. Mirrors the backend `AdminMemberRoleDTO`. */
+export interface AdminMemberRoleDTO {
+  id: string;
+  slug: string;
+  role: MemberRole;
+  isSystem: boolean;
+}
+
+/** Grant or revoke `moderator` / `admin` on one member. Admin-only; the backend
+ *  enforces the guardrails (no self-change, no house account, never the last
+ *  admin) and 403/409s otherwise. */
+export const patchAdminMemberRole = (memberId: string, role: MemberRole) =>
+  apiPatch<AdminMemberRoleDTO>(`/admin/members/${memberId}/role`, { role });

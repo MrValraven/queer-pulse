@@ -2,6 +2,7 @@ import { type DirectoryPlace } from "./directoryPlaces";
 import { DirectoryGallery } from "./DirectoryGallery";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DirectorySpaceAside } from "./DirectorySpaceAside";
+import { DirectorySpaceTrust } from "./DirectorySpaceTrust";
 import s from "./DirectorySpacePage.module.css";
 
 /**
@@ -30,6 +31,10 @@ export function DirectorySpaceView({
           <DirectorySpaceMain place={place} preview={preview} ownerRef={ownerRef} />
           <DirectorySpaceAside place={place} preview={preview} ownerRef={ownerRef} />
         </div>
+        {/* Read-only moderation preview never shows the interactive "add a
+            vouch" trigger, matching how the review form/contact CTAs above
+            are already gated off for `preview`. */}
+        {!preview && <DirectorySpaceTrust place={place} />}
       </div>
     </>
   );

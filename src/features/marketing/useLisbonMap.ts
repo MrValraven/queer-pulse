@@ -171,29 +171,32 @@ export function useLisbonMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-render the venue pins for the current filter.
+  // Re-render the venue pins for the current filter. Depends on `ready` so a
+  // filter change made *during* the 1–3s map load (when this bailed early) is
+  // re-applied the moment the map becomes ready, instead of being dropped.
   useEffect(() => {
-    if (!readyRef.current) return;
+    if (!ready) return;
     markerManagerRef.current?.render(venues);
-  }, [venues]);
+  }, [venues, ready]);
 
   // Push counts into the label source.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !readyRef.current) return;
+    if (!map || !ready) return;
     // `getSource` is generic (`<T extends Source = Source>`); without the
     // assertion `T` defaults to the base `Source`, which lacks `setData`. The
     // assertion supplies the concrete `GeoJSONSource` this label layer uses.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     const source = map.getSource("freguesia-labels") as GeoJSONSource | undefined;
     source?.setData(buildLabelCollection(counts));
-  }, [counts]);
+  }, [counts, ready]);
 
   // Reflect the selected parish highlight and ease the camera to it (back to
-  // the full city when cleared).
+  // the full city when cleared). Depends on `ready` so a selection made during
+  // the map load is re-applied once ready rather than silently dropped.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !readyRef.current) return;
+    if (!map || !ready) return;
     pushSelected(map, selectedFreguesia);
     const bounds = selectedFreguesia ? freguesiaBounds(selectedFreguesia) : null;
     if (bounds) {
@@ -201,13 +204,13 @@ export function useLisbonMap({
     } else if (!selectedFreguesia) {
       map.fitBounds(LISBON_BOUNDS, { padding: 24, duration: 700 });
     }
-  }, [selectedFreguesia]);
+  }, [selectedFreguesia, ready]);
 
   // Reflect the selected venue pin.
   useEffect(() => {
-    if (!readyRef.current) return;
+    if (!ready) return;
     markerManagerRef.current?.setSelected(selectedVenueId);
-  }, [selectedVenueId]);
+  }, [selectedVenueId, ready]);
 
   return { containerRef, failed, ready };
 }

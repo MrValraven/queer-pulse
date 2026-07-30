@@ -48,7 +48,7 @@ export function CommandPaletteResults({
           </li>
         )}
         {results.map((item, i) => {
-          const Icon = TYPE_ICON[item.t];
+          const Icon = item.icon ?? TYPE_ICON[item.t];
           const avatar = memberRowAvatar(item);
           return (
             <li

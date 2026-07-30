@@ -14,6 +14,10 @@ interface ImageSlotProps {
   radius?: number;
   width?: number | string;
   height?: number | string;
+  /** Explicit pixel width to request from resizable (Google) image hosts.
+   *  Defaults to 2× a numeric `width`, else 256. Set this on a full-width slot
+   *  (`width="100%"`) whose 256 default would otherwise fetch a blurry crop. */
+  srcSize?: number;
   /** Caption shown in the empty placeholder frame. */
   placeholder?: string;
   /** Initials shown (e.g. for avatar-style slots) when there is no image. */
@@ -43,6 +47,7 @@ export function ImageSlot({
   radius = 16,
   width = "100%",
   height = 200,
+  srcSize,
   placeholder,
   initials,
   className,
@@ -56,7 +61,7 @@ export function ImageSlot({
   // other src — Unsplash covers, magazine art — passes through unchanged.
   const resolvedSrc = resolveAvatarSrc(
     src,
-    typeof width === "number" ? Math.round(width * 2) : 256,
+    srcSize ?? (typeof width === "number" ? Math.round(width * 2) : 256),
   );
   const cls = [
     styles.slot,

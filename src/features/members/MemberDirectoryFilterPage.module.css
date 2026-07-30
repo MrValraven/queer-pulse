@@ -58,6 +58,17 @@
   grid-template-columns: 280px 1fr;
   gap: 36px;
   align-items: flex-start;
+  /* The sidebar track + gutter ease to 0 so the results reclaim the width
+     smoothly instead of the layout snapping when filters are hidden. */
+  transition:
+    grid-template-columns 0.34s var(--ease),
+    gap 0.34s var(--ease);
+}
+/* Filters hidden on desktop → the sidebar track collapses to 0 (the .filtersCol
+   wrapper clips its 280px content) and the results span the full width. */
+.gridFull {
+  grid-template-columns: 0 1fr;
+  gap: 0;
 }
 @media (max-width: 860px) {
   .grid {
@@ -77,12 +88,35 @@
   }
 }
 
-.filters {
+/* The grid item AND the sticky/clipping container. Sticky lives here (not on an
+   ancestor) so overflow:hidden can clip the collapsing content without breaking
+   stick-to-viewport. Its width follows the grid track (280px → 0). */
+.filtersCol {
   position: sticky;
   top: 90px;
+  min-width: 0;
+  overflow: hidden;
+}
+.filters {
+  /* Rigid width so the cards keep their layout (no text reflow) while the
+     column clips them during the collapse. */
+  width: 280px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  transition:
+    opacity 0.26s var(--ease),
+    transform 0.34s var(--ease);
+}
+.filtersColHidden .filters {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid,
+  .filters {
+    transition: none;
+  }
 }
 /* Same filter stack, rendered inside the mobile filters sheet: no sticky offset,
    and it flows naturally within the sheet's own scroll. */
@@ -104,6 +138,76 @@
   text-transform: uppercase;
   color: var(--ink-40);
   margin-bottom: 10px;
+}
+/* Collapsible filter-group header: a full-width button holding the title, an
+   optional active-count badge, and a chevron. Reuses the .filterCard shell. */
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  text-align: left;
+}
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.sectionCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+.sectionChevron {
+  margin-left: auto;
+  color: var(--ink-40);
+  font-size: 11px;
+  line-height: 1;
+  transition: transform 0.2s var(--ease);
+}
+.sectionChevronOpen {
+  transform: rotate(180deg);
+}
+/* Height-animated collapse without measuring: the wrapper is a 1-row grid
+   whose track eases between 0fr (collapsed) and 1fr (its content's height). */
+.sectionBodyWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s var(--ease);
+}
+.sectionBodyWrapOpen {
+  grid-template-rows: 1fr;
+}
+.sectionBody {
+  /* Clipped so the content doesn't spill while the track is < its height.
+     Top padding lives inside the clipped box, so the 12px gap fades in with
+     the body rather than holding open space when collapsed. */
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sectionChevron,
+  .sectionBodyWrap {
+    transition: none;
+  }
 }
 .filterRow {
   display: flex;
@@ -255,9 +359,8 @@
   cursor: pointer;
 }
 
-/* Mobile-only trigger that opens the filters bottom-sheet. Hidden on desktop,
-   where the sidebar sits inline. Pushed to the left of the sort control by the
-   topRow's space-between. */
+/* Opens the filters sheet on mobile; toggles the sidebar on desktop.
+   Pushed to the left of the sort control by the topRow's space-between. */
 .filtersBtn {
   display: inline-flex;
   align-items: center;

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { logError } from "../../shared/observability/logger";
@@ -38,6 +39,7 @@ export function ReportListingModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const reasons = useMemo(
     () =>
       SUBJECT_REASONS[subjectType].map((code) => ({
@@ -67,7 +69,9 @@ export function ReportListingModal({
         onSuccess: () => setDone(true),
         onError: (err) => {
           logError(err, { scope: "economy.reportListing" });
-          setDone(true);
+          // Never show "report received" for a report that didn't land —
+          // surface an honest error and keep the form filled in to retry.
+          showToast(t("economy:housingListing.reportModal.error"), "error");
         },
       },
     );

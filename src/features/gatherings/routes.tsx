@@ -8,6 +8,7 @@ const GatheringRecapPage = lazyNamed(() => import("./GatheringRecapPage"), "Gath
 const GatheringCancelledPage = lazyNamed(() => import("./GatheringCancelledPage"), "GatheringCancelledPage");
 const GatheringDashboardPage = lazyNamed(() => import("./GatheringDashboardPage"), "GatheringDashboardPage");
 const ManageGatheringPage = lazyNamed(() => import("./ManageGatheringPage"), "ManageGatheringPage");
+const GatheringManageComingSoon = lazyNamed(() => import("./GatheringManageComingSoon"), "GatheringManageComingSoon");
 const GatheringPhotosPage = lazyNamed(() => import("./GatheringPhotosPage"), "GatheringPhotosPage");
 const CoHostInvitePage = lazyNamed(() => import("./CoHostInvitePage"), "CoHostInvitePage");
 const EventPage = lazyNamed(() => import("./EventPage"), "EventPage");
@@ -17,8 +18,13 @@ const HostPage = lazyNamed(() => import("./HostPage"), "HostPage");
 const CreateGatheringPage = lazyNamed(() => import("./CreateGatheringPage"), "CreateGatheringPage");
 
 /** The gatherings surface: calendar, events, a gathering's detail + management
- *  sub-pages, RSVP/checkout, hosting, and the gatherings index. */
-export function gatheringRoutes() {
+ *  sub-pages, RSVP/checkout, hosting, and the gatherings index.
+ *
+ *  The `/manage` dashboard is a demo-only prototype fixed to a single mock
+ *  gathering (it fires edit/cancel mutations at a hardcoded slug), so in LIVE
+ *  mode it resolves to an honest coming-soon instead — no real mutation can
+ *  target that hardcoded slug. Every other route here is really wired. */
+export function gatheringRoutes(demoMode: boolean) {
   return (
     <>
       <Route
@@ -43,7 +49,9 @@ export function gatheringRoutes() {
       />
       <Route
         path={`${routes.gatherings}/:slug/manage`}
-        element={<ManageGatheringPage />}
+        element={
+          demoMode ? <ManageGatheringPage /> : <GatheringManageComingSoon />
+        }
       />
       <Route
         path={`${routes.gatherings}/:slug/photos`}

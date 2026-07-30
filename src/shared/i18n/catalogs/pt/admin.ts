@@ -219,6 +219,27 @@ export const admin: Catalog = {
     "Restrição aplicada a {name} · {duration} · {scope} — aviso enviado",
   "members.drawer.restrictionUndoneToast": "Restrição anulada.",
 
+  // ── Membros: gestão de papéis (conceder/remover moderador e admin) ────────
+  "members.role.sectionTitle": "Papel e permissões",
+  "members.role.currentLabel": "Papel atual",
+  "members.role.description":
+    "Moderadores podem agir sobre denúncias e moderar conteúdo em toda a plataforma. Admins podem fazer tudo, incluindo gerir quem tem estes papéis.",
+  "members.role.value.member": "Membro",
+  "members.role.value.moderator": "Moderador",
+  "members.role.value.admin": "Admin",
+  "members.role.setAs.member": "Tornar membro",
+  "members.role.setAs.moderator": "Tornar moderador",
+  "members.role.setAs.admin": "Tornar admin",
+  "members.role.selfNote":
+    "Não podes mudar o teu próprio papel — pede a outro admin para o fazer.",
+  "members.role.systemNote":
+    "Esta é a conta oficial da QueerPulse. O papel dela é fixo e não pode ser alterado aqui.",
+  "members.role.updatedToast": "{name} é agora {role}.",
+  "members.role.demoteConfirm.title": "Remover admin de {name}?",
+  "members.role.demoteConfirm.body":
+    "{name} vai perder acesso a todas as ferramentas de admin de imediato. Podes restaurar mais tarde. Isto fica registado no histórico de auditoria em teu nome.",
+  "members.role.demoteConfirm.confirmCta": "Remover admin",
+
   "members.timeline.title": "Histórico de moderação — a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
 

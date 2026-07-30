@@ -407,6 +407,12 @@ export interface ForumPostResponse {
   canDelete: boolean;
   canRestore: boolean;
   canViewHistory: boolean;
+  /** A moderator `remove_content` takedown (distinct from an author's own
+   *  delete). Optional: absent on older responses / demo. */
+  moderationRemoved?: boolean;
+  /** A moderator `hide_content` takedown — only ever present in a moderator's
+   *  own view (members never receive a hidden post). */
+  moderationHidden?: boolean;
 }
 
 export interface ForumPostHistoryEntry {

@@ -1,13 +1,13 @@
 import type { Catalog } from "../../types";
 
 /**
- * Community — English source catalog. Covers 8 pages: Caregivers, Change
- * Makers (+ story), Coming Out, Creatives, Dating, Family (+ Parent
+ * Community — English source catalog. Covers 7 pages: Caregivers, Change
+ * Makers (+ story), Coming Out, Dating, Family (+ Parent
  * Network), Reading Groups.
  *
  * Scope-rule notes: change-maker profile bios/quotes/bylines, reading-group
- * listing fields (book/author/desc/where/frequency/lang), music/art artist
- * bios, dating "member quote" testimonials, and family "From the community"
+ * listing fields (book/author/desc/where/frequency/lang),
+ * dating "member quote" testimonials, and family "From the community"
  * review quotes + attributions are all mock member/editorial *content* — in
  * live mode they arrive over the wire as someone's own words — and are left
  * untranslated by design. Everything else here is platform-authored chrome.
@@ -260,57 +260,6 @@ export const community: Catalog = {
     "Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready — and leave the moment you are.",
   "comingOut.outro.enterCta": "Enter the space →",
   "comingOut.outro.communitiesCta": "See all communities",
-
-  // ── Creatives directory (CreativesPage.tsx + sub-components) ──────────────
-  "creatives.hero.eyebrow": "Featured this week",
-  "creatives.hero.dotAriaLabel": "Featured {index}",
-  "creatives.mode.art": "Visual Art",
-  "creatives.mode.music": "Music",
-  "creatives.filter.all": "All",
-  "creatives.filter.photography": "Photography",
-  "creatives.filter.ceramics": "Ceramics",
-  "creatives.filter.typography": "Typography",
-  "creatives.filter.film": "Film",
-  "creatives.filter.illustration": "Illustration",
-  "creatives.filter.textile": "Textile",
-  "creatives.filter.mural": "Mural",
-  "creatives.filter.electronic": "Electronic",
-  "creatives.filter.folk": "Folk",
-  "creatives.filter.jazz": "Jazz",
-  "creatives.filter.rnb": "R&B",
-  "creatives.badge.commission": "Commission open",
-  "creatives.badge.exhibition": "Exhibition",
-  "creatives.badge.openCall": "Open call",
-  "creatives.badge.liveSets": "Live sets",
-  "creatives.badge.bookingsOpen": "Bookings open",
-  "creatives.badge.collab": "Collab",
-  "creatives.count.works_one": "{count} work",
-  "creatives.count.works_other": "{count} works",
-  "creatives.count.artists_one": "{count} artist",
-  "creatives.count.artists_other": "{count} artists",
-  "creatives.card.viewProfileCta": "View profile →",
-  "creatives.card.viewProfileCtaShort": "View profile",
-  "creatives.card.artistPhoto": "artist photo",
-  "creatives.player.playAriaLabel": "Play",
-  "creatives.player.seekAriaLabel": "Seek through the track",
-  "creatives.player.seekValueText": "{{percent}}% through the track",
-  "creatives.empty.art.title": "Nothing matches your filters",
-  "creatives.empty.art.description":
-    "No works fit these tags right now. Clear them to see everything the community has shared.",
-  "creatives.empty.music.title": "Nothing matches your filters",
-  "creatives.empty.music.description":
-    "No artists fit these tags right now. Clear them to hear everyone in the room.",
-  "creatives.empty.clearFiltersCta": "Clear filters",
-  "creatives.outro.title": "Your work <em>belongs here.</em>",
-  "creatives.outro.sub":
-    "QueerPulse is a space for queer creatives to be found, supported, and commissioned — by each other and the wider community.",
-  "creatives.outro.cta": "Add your creative profile",
-  "creatives.hero.liveTitle": "Queer creatives of <em>Lisbon.</em>",
-  "creatives.hero.liveSub":
-    "The showcase is still being built. Soon this is where the community's photographers, musicians, ceramicists and writers will be found, supported, and commissioned.",
-  "creatives.liveEmpty.title": "Creator showcase coming soon",
-  "creatives.liveEmpty.description":
-    "No creative profiles are live yet. Be one of the first — add yours and the community will find you.",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
   "dating.hero.cat": "Dating & Relationships · Lisbon",

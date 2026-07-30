@@ -68,9 +68,14 @@ export function ListingWizard(props: ListingWizardProps) {
   const [showBanner, setShowBanner] = useState(Boolean(saved));
   useEditUnsavedGuard(isEdit, draft, props.initialDraft, phase === "form");
 
-  // Guard against setState after the page unmounts mid-send.
+  // Guard against setState after the page unmounts mid-send. Reset on setup so
+  // StrictMode's mount→cleanup→remount doesn't leave the ref stuck at false
+  // (which would swallow the success transition and spin the loader forever).
   const mountedRef = useRef(true);
-  useEffect(() => () => { mountedRef.current = false; }, []);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
 

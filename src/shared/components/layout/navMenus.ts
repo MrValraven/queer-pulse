@@ -112,7 +112,7 @@ export const NAV_MENUS: MegaMenu[] = [
       eyebrowKey: "shared:megaNav.community.featurePublic.eyebrow",
       titleKey: "shared:megaNav.community.featurePublic.title",
       bodyKey: "shared:megaNav.community.featurePublic.body",
-      href: routes.activism,
+      href: routes.volunteer,
       ctaKey: "shared:megaNav.community.featurePublic.cta",
     },
     columns: [
@@ -124,6 +124,10 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.members,
           },
           { labelKey: "nav:forum", href: routes.forum },
+          {
+            labelKey: "shared:megaNav.community.col.organise.changeMakers",
+            href: routes.changemakers,
+          },
         ],
       },
       {
@@ -134,22 +138,11 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.events,
           },
           { labelKey: "nav:communities", href: routes.communities },
-        ],
-      },
-      {
-        headKey: "shared:megaNav.community.col.organise.head",
-        links: [
           {
-            labelKey: "shared:megaNav.community.col.organise.volunteer",
+            // Activism folded into Volunteering: one entry, the Volunteer page
+            // is the entry point; the activism guide is reached from there.
+            labelKey: "shared:megaNav.community.col.organise.activismVolunteering",
             href: routes.volunteer,
-          },
-          {
-            labelKey: "shared:megaNav.community.col.organise.activism",
-            href: routes.activism,
-          },
-          {
-            labelKey: "shared:megaNav.community.col.organise.changeMakers",
-            href: routes.changemakers,
           },
         ],
       },
@@ -176,6 +169,12 @@ export const NAV_MENUS: MegaMenu[] = [
     columns: [
       {
         headKey: "shared:megaNav.lisbon.col.discover.head",
+        // Directory vs. safe-spaces reads as complementary, not two competing
+        // catalogs: the directory (featured) is the single browse surface for
+        // local spaces — it now carries the verified badge + `?safe=verified`
+        // filter directly — while safe-spaces is the trust hub explaining how
+        // verification works and which spaces were delisted. See the copy in
+        // `shared:megaNav.lisbon.{feature,featurePublic,col.discover}.*`.
         links: [
           {
             labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
@@ -323,10 +322,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.culture.col.makers.studio",
             href: routes.studio,
             featured: true,
-          },
-          {
-            labelKey: "shared:megaNav.culture.col.makers.creatives",
-            href: routes.creatives,
           },
           {
             labelKey: "shared:megaNav.culture.col.makers.platforms",

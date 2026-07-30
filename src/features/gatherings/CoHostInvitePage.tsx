@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
@@ -51,6 +52,12 @@ export function CoHostInvitePage() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const respondInvite = useRespondInvite();
+  // Hold the post-toast redirect timer so a late fire can't navigate() after
+  // the user has already left this page.
+  const redirectTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  useEffect(() => () => clearTimeout(redirectTimerRef.current), []);
 
   const accept = () => {
     respondInvite.mutate({ id: INVITE_ID, action: "accept" });
@@ -59,7 +66,7 @@ export function CoHostInvitePage() {
       "success",
       3500,
     );
-    setTimeout(
+    redirectTimerRef.current = setTimeout(
       () => void navigate(manageGatheringPath(DEMO_GATHERING_SLUGS.coHostInvite)),
       1300,
     );
@@ -71,7 +78,7 @@ export function CoHostInvitePage() {
       "info",
       3000,
     );
-    setTimeout(() => void navigate(NOTIFICATIONS), 1300);
+    redirectTimerRef.current = setTimeout(() => void navigate(NOTIFICATIONS), 1300);
   };
 
   return (

@@ -20,6 +20,7 @@ import {
   type ConversationResponse,
 } from "./messages.api";
 import { conversationToView } from "./messages.adapters";
+import { UNREAD_COUNT_KEY } from "./useConversations";
 import type { Conversation } from "../data";
 
 /**
@@ -251,6 +252,9 @@ export function useMarkRead() {
     onSuccess: (_result, conversationId) => {
       if (demoMode) return;
       patchConversationRead(queryClient, conversationId);
+      // Reading a thread clears its unread → refresh the cheap nav DM badge
+      // (its own isolated key, so the list patch above doesn't touch it).
+      void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
     },
   });
 }

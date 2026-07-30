@@ -218,6 +218,27 @@ export const admin: Catalog = {
     "Restricted · {duration} · {scope} — {name} notified",
   "members.drawer.restrictionUndoneToast": "Restriction reversed.",
 
+  // ── Members: role management (grant/revoke moderator & admin) ─────────────
+  "members.role.sectionTitle": "Role & permissions",
+  "members.role.currentLabel": "Current role",
+  "members.role.description":
+    "Moderators can act on reports and moderate content across the platform. Admins can do everything, including managing who holds these roles.",
+  "members.role.value.member": "Member",
+  "members.role.value.moderator": "Moderator",
+  "members.role.value.admin": "Admin",
+  "members.role.setAs.member": "Set as member",
+  "members.role.setAs.moderator": "Make moderator",
+  "members.role.setAs.admin": "Make admin",
+  "members.role.selfNote":
+    "You can't change your own role — ask another admin to do it.",
+  "members.role.systemNote":
+    "This is the QueerPulse house account. Its role is fixed and can't be changed here.",
+  "members.role.updatedToast": "{name} is now {role}.",
+  "members.role.demoteConfirm.title": "Remove admin from {name}?",
+  "members.role.demoteConfirm.body":
+    "{name} will lose access to every admin tool right away. You can restore it later. This is recorded in the audit log under your name.",
+  "members.role.demoteConfirm.confirmCta": "Remove admin",
+
   "members.timeline.title": "Moderation history — for & against",
   "members.timeline.auditLinkCta": "Every entry in the audit log",
 

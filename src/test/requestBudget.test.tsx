@@ -159,6 +159,13 @@ function registerSessionHandlers() {
     http.get(`${API_V1}/notifications/unread-count`, () =>
       HttpResponse.json({ count: 0 }),
     ),
+    // Sibling of the bell: the nav DM badge (`useUnreadMessages()`) now fetches
+    // this cheap dedicated count on every route once the mocked member is signed
+    // in (active), instead of pulling the whole `GET /conversations` inbox as it
+    // once did. One request no matter how many nav surfaces mount it.
+    http.get(`${API_V1}/conversations/unread-count`, () =>
+      HttpResponse.json({ count: 0 }),
+    ),
     // ConsentProvider (src/app/providers/ConsentProvider.tsx) sits app-wide in
     // RootProviders and fires `fetchMyConsent()` unconditionally on mount in
     // live mode — gated only on `apiAvailable && !demoMode`, no login check.
@@ -198,24 +205,29 @@ const SESSION_REQUEST_BUDGET = [
   "/v1/consent/me",
   "/v1/me/bootstrap",
   "/v1/notifications/unread-count",
+  "/v1/conversations/unread-count",
 ];
 
 /**
- * The one non-session endpoint that ALSO fires on every live-mode route once a
- * member is signed in — confirmed by observation (it appears on all three
- * routes below), but added to the app AFTER this test's original
- * prediction-based budget was written, so it wasn't captured then.
+ * The nav's unread-messages badge (`useUnreadMessages()` in
+ * `src/features/messages/api/useConversations.ts`) mounts on every route via
+ * the desktop `Navbar` `MessagesLink` / `SidebarFooter`, and — because
+ * `src/test/setup.ts` stubs `matchMedia` to `matches: false` (the DESKTOP
+ * branch) — it renders in this harness. It used to fire `GET /conversations`
+ * (the whole DM inbox) app-wide just to derive a count.
  *
- * `/v1/conversations` is the DM inbox, fetched by `useUnreadMessages()`
- * (`src/features/messages/api/useConversations.ts`) to render the nav's
- * unread-messages badge. It mounts on every route via the desktop `Navbar`
- * `MessagesLink` / `SidebarFooter`, and — because `src/test/setup.ts` stubs
- * `matchMedia` to `matches: false` (i.e. the DESKTOP branch) — that badge
- * renders in this harness, so the fetch fires here too. NOTE it has no
- * react-query `enabled` gate: in live mode it fetches the whole inbox for a
- * badge count on every route. That is a real app-wide eager fetch (flagged for
- * the maintainer), not a test artifact — this guard now covers it. Its handler
- * resolves an empty array, the zero-state shape the badge needs.
+ * That eager over-fetch has been FIXED by giving messaging its own cheap
+ * server-side count: `useUnreadMessages()` now fetches `GET
+ * /conversations/unread-count` (mirroring `/notifications/unread-count`) once
+ * the member is signed in and active — a single small count, never the full
+ * inbox. That request is a session/chrome path, so it lives in
+ * `registerSessionHandlers()` + `SESSION_REQUEST_BUDGET` alongside the bell's
+ * count, NOT here. So the full-list `GET /conversations` must NOT appear in any
+ * route's budget below. The handler is still registered as a defensive net: if
+ * the badge ever regresses to pulling the whole inbox, `onUnhandledRequest:
+ * "error"` would fail loudly on an unregistered call rather than exposing the
+ * regression only as an extra expected entry — but the assertions no longer
+ * spread it in, so its RETURN, not just its absence, is what a regression trips.
  */
 function registerAppWideHandlers() {
   server.use(
@@ -223,7 +235,16 @@ function registerAppWideHandlers() {
   );
 }
 
-const APP_WIDE_REQUEST_BUDGET = ["/v1/conversations"];
+/**
+ * Deliberately EMPTY: the DM-badge fetch that used to live here no longer pulls
+ * the full `/v1/conversations` inbox — it fetches the cheap
+ * `/v1/conversations/unread-count`, which is a session path (see
+ * `SESSION_REQUEST_BUDGET`). So there is no non-session endpoint that fires on
+ * every route. Kept as a named constant so each route's expected array still
+ * documents that it accounts for the "app-wide" layer, and so re-adding an
+ * app-wide read has one obvious home.
+ */
+const APP_WIDE_REQUEST_BUDGET: string[] = [];
 
 /**
  * Mirrors `src/shared/api/queryClient.ts`'s query defaults — importantly
@@ -342,10 +363,11 @@ describe("request budget (live mode)", () => {
       // OBSERVED (see file header): ListBusinessPage is a PageShell marketing
       // wizard whose own render tree fires no read beyond
       // `useDirectoryListingsActions` (a write-only overlay). Everything it
-      // requests therefore comes from the shared session layer plus the
-      // app-wide DM badge (`/v1/conversations`) — nothing route-specific —
-      // which is exactly what makes it a clean guard that no eager read has
-      // crept into the listing wizard. In particular the profile-page reads
+      // requests therefore comes from the shared session layer alone —
+      // nothing route-specific, and (since the DM badge is now gated off in
+      // live mode) nothing app-wide either — which is exactly what makes it a
+      // clean guard that no eager read has crept into the listing wizard. In
+      // particular the profile-page reads
       // (`/v1/communities`, `/v1/connections/accepted`,
       // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire
       // here: they are subscribed by member-profile components, not by this

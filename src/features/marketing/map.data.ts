@@ -11,7 +11,15 @@ import {
   FiPenTool,
   FiCpu,
 } from "react-icons/fi";
-import { FaWineGlass } from "react-icons/fa6";
+import {
+  FaWineGlass,
+  FaMartiniGlass,
+  FaUtensils,
+  FaHeartPulse,
+  FaPeopleGroup,
+  FaMasksTheater,
+  FaDumbbell,
+} from "react-icons/fa6";
 
 export interface Venue {
   id: string;
@@ -452,17 +460,32 @@ export const TYPE_ICON: Record<string, IconType> = {
   barbershop: FiScissors,
   gym: FiActivity,
 };
-/** Icon per unified business category (mirrors TYPE_ICON, for the unified map's business pins). */
+/** Icon per unified category — every Local map pin + filter chip keys off this.
+ *  Distinct, evocative glyphs (no duplicates) so each category reads at pin size. */
 export const CATEGORY_ICON: Record<string, IconType> = {
-  food: FiCoffee,
+  nightlife: FaMartiniGlass,
+  food: FaUtensils,
+  health: FaHeartPulse,
+  space: FaPeopleGroup,
+  culture: FaMasksTheater,
   design: FiPenTool,
-  health: FiPlusCircle,
-  space: FiUsers,
-  culture: FiBookOpen,
   tech: FiCpu,
   grooming: FiScissors,
-  fitness: FiActivity,
-  nightlife: FiMusic,
+  fitness: FaDumbbell,
+};
+/** Fill colour per unified category — the CSS var mirrors these (--cat-*),
+ *  driven by `data-category` on pins + chips. Kept here as the JS-side legend
+ *  source (e.g. tests / any inline need). Values match tokens/colors.css. */
+export const CATEGORY_COLOR: Record<string, string> = {
+  nightlife: "var(--cat-nightlife)",
+  food: "var(--cat-food)",
+  health: "var(--cat-health)",
+  space: "var(--cat-space)",
+  culture: "var(--cat-culture)",
+  design: "var(--cat-design)",
+  tech: "var(--cat-tech)",
+  grooming: "var(--cat-grooming)",
+  fitness: "var(--cat-fitness)",
 };
 export const VIBE_BG: Record<string, string> = {
   mixed: "rgba(45,27,61,.06)",

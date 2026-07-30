@@ -1,11 +1,12 @@
 import { useId } from "react";
+import { FiShield } from "react-icons/fi";
 import { FilterChips } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LOCAL_CATEGORIES, LOCAL_CATEGORY_LABEL_KEYS } from "./localPlaces";
-import { VIBES, VIBE_LABEL_KEYS } from "./map.data";
+import { CATEGORY_ICON, VIBES, VIBE_LABEL_KEYS } from "./map.data";
 import s from "./LocalFilterBar.module.css";
 
-/** Shared filter bar for the Local page (both list + map views): search + unified category chips + secondary vibe chips. */
+/** Shared filter bar for the Local page (both list + map views): search + unified category chips + secondary vibe chips + the verified-safe-spaces toggle. */
 export function LocalFilterBar({
   category,
   onCategoryChange,
@@ -14,6 +15,8 @@ export function LocalFilterBar({
   onQueryChange,
   vibes,
   onToggleVibe,
+  safeOnly,
+  onToggleSafeOnly,
 }: {
   category: string;
   onCategoryChange: (value: string) => void;
@@ -23,27 +26,48 @@ export function LocalFilterBar({
   onQueryChange: (value: string) => void;
   vibes: string[];
   onToggleVibe: (vibe: string) => void;
+  /** Whether the "Verified safe spaces" filter (`?safe=verified`) is active. */
+  safeOnly: boolean;
+  onToggleSafeOnly: () => void;
 }) {
   const { t } = useTranslation();
   const vibeLabelId = useId();
-  const withCount = (value: string, label: string) => {
-    const count = categoryCounts[value] ?? 0;
+  const count = (value: string) => (
+    <span className={s.count} aria-hidden>
+      {categoryCounts[value] ?? 0}
+    </span>
+  );
+  // Each category chip leads with a colour swatch that mirrors its map pin
+  // (category fill + white icon), so the filter bar doubles as a live legend.
+  const categoryChip = (categoryId: string, label: string) => {
+    const Icon = CATEGORY_ICON[categoryId];
     return {
-      value,
+      value: categoryId,
       label: (
         <>
+          {Icon && (
+            <span className={s.catSwatch} data-category={categoryId} aria-hidden>
+              <Icon />
+            </span>
+          )}
           {label}
-          <span className={s.count} aria-hidden>
-            {count}
-          </span>
+          {count(categoryId)}
         </>
       ),
     };
   };
   const categoryOptions = [
-    withCount("all", t("marketing:directory.cat.all")),
+    {
+      value: "all",
+      label: (
+        <>
+          {t("marketing:directory.cat.all")}
+          {count("all")}
+        </>
+      ),
+    },
     ...LOCAL_CATEGORIES.map((categoryId) =>
-      withCount(categoryId, t(LOCAL_CATEGORY_LABEL_KEYS[categoryId]!)),
+      categoryChip(categoryId, t(LOCAL_CATEGORY_LABEL_KEYS[categoryId]!)),
     ),
   ];
   return (
@@ -75,6 +99,21 @@ export function LocalFilterBar({
           value={category}
           onChange={onCategoryChange}
         />
+        <div
+          className={s.safeRow}
+          role="group"
+          aria-label={t("marketing:local.filter.verifiedSafeSpaces")}
+        >
+          <button
+            type="button"
+            aria-pressed={safeOnly}
+            className={[s.chip, safeOnly && s.chipOn].filter(Boolean).join(" ")}
+            onClick={onToggleSafeOnly}
+          >
+            <FiShield aria-hidden />
+            {t("marketing:local.filter.verifiedSafeSpaces")}
+          </button>
+        </div>
         <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
           <span className={s.vibeLabel} id={vibeLabelId}>
             {t("marketing:local.filter.vibeLabel")}

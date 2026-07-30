@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -20,6 +25,9 @@ import {
   getAdminFlagged,
   getAdminMember,
   getAdminMembers,
+  patchAdminMemberRole,
+  type AdminMemberRoleDTO,
+  type MemberRole,
 } from "./adminMembers.api";
 
 interface AdminMembersPageVM {
@@ -139,6 +147,47 @@ export function useAdminMember(member: AdminMember | null) {
       }
       if (member === null) return undefined;
       return detailDtoToMember(await getAdminMember(member.id), t, fmt);
+    },
+  });
+}
+
+/**
+ * Grant or revoke `moderator` / `admin` on one member.
+ *
+ * Demo mode never touches the network — it resolves a synthetic success DTO so
+ * the operator can see the flow without mutating fixtures (the roster's demo
+ * data is regenerated on every render from `MEMBERS`, so there is nothing to
+ * persist). Live mode calls `PATCH /admin/members/:id/role`, where the backend
+ * enforces every guardrail (no self-change, no house account, never the last
+ * admin) and answers 403/409 with a specific reason — surfaced by the global
+ * mutation-error toast (`handleMutationError`), so failures are never silent
+ * and never faked into success.
+ *
+ * On success both the roster (`useAdminMembers`) and the open drawer
+ * (`useAdminMember`) are invalidated via the shared `["admin-members"]` key
+ * prefix, so the new role shows everywhere without a manual patch.
+ */
+export function useUpdateMemberRole() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    AdminMemberRoleDTO,
+    unknown,
+    { memberId: string; slug: string; role: MemberRole; isSystem: boolean }
+  >({
+    mutationKey: ["admin-members", "update-role"],
+    mutationFn: async ({ memberId, slug, role, isSystem }) => {
+      if (demoMode) {
+        return { id: memberId, slug, role, isSystem };
+      }
+      return patchAdminMemberRole(memberId, role);
+    },
+    onSuccess: () => {
+      // Demo mode holds its roster in fixtures, not the cache — invalidating
+      // would refetch nothing and needlessly churn. Live mode re-reads both the
+      // roster and the drawer detail off the same key prefix.
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },
   });
 }

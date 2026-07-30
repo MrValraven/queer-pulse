@@ -61,7 +61,7 @@ export function InvoiceIssuerFields({
             type="email"
             value={issuer.email}
             onChange={(e) => updateIssuer({ email: e.target.value })}
-            placeholder="you@example.com"
+            placeholder={t("economy:invoiceTool.issuer.emailPlaceholder")}
           />
         </div>
       </div>

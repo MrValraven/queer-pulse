@@ -1,4 +1,5 @@
 import type { AvatarTone } from "./ui";
+import type { MemberRole } from "./api/adminMembers.api";
 import { portraitByInitials } from "./adminVouchGraph.data";
 
 /* ── Types ────────────────────────────────────────────────── */
@@ -39,6 +40,9 @@ export interface AdminMember {
   tone: AvatarTone;
   pronoun: string;
   verified: boolean;
+  /** The member's platform role — drives the role badge on the row and the
+   *  role control in the drawer. */
+  role: MemberRole;
   /** The member's own profile photo (live mode). When absent, the row falls
    *  back to the demo `portrait(name)` lookup and then to initials. */
   avatarUrl?: string | null;
@@ -100,6 +104,11 @@ export interface ModerationEntry {
 
 export interface MemberDetail {
   id: string;
+  /** The member's current platform role, for the drawer's role control. */
+  role: MemberRole;
+  /** A non-human house account — its role can't be changed, so the control is
+   *  disabled with an explanation. */
+  isSystem: boolean;
   glance: DrawerStat[];
   graphNote: string;
   communities: { label: string; tone: CommTone }[];
@@ -135,6 +144,7 @@ export const MEMBERS: AdminMember[] = [
     tone: "jade",
     pronoun: "she/her",
     verified: true,
+    role: "admin",
     statusTone: "jade",
     newThisWeek: false,
     meta: "Joined Mar 2023 · Founder, Maré Records · Trans & Friends · Queer Creatives",
@@ -153,6 +163,7 @@ export const MEMBERS: AdminMember[] = [
     tone: "coral",
     pronoun: "they/them",
     verified: true,
+    role: "member",
     statusTone: "jade",
     newThisWeek: false,
     meta: "Joined Jun 2025 · Illustrator · Queer Creatives",
@@ -170,6 +181,7 @@ export const MEMBERS: AdminMember[] = [
     tone: "violet",
     pronoun: "he/him",
     verified: false,
+    role: "member",
     openReportsCount: 1,
     statusTone: "coral",
     newThisWeek: false,
@@ -188,6 +200,7 @@ export const MEMBERS: AdminMember[] = [
     tone: "amber",
     pronoun: "she/they",
     verified: true,
+    role: "moderator",
     statusTone: "jade",
     newThisWeek: false,
     meta: "Joined Jan 2024 · Nurse · mutual aid lead · Trans & Friends",
@@ -205,6 +218,7 @@ export const MEMBERS: AdminMember[] = [
     tone: "plum",
     pronoun: "xe/xem",
     verified: true,
+    role: "member",
     statusTone: "jade",
     newThisWeek: true,
     meta: "Joined Nov 2025 · DJ · night-life · Queer Creatives",
@@ -258,6 +272,8 @@ export const FLAGGED: FlaggedMember[] = [
 export const MEMBER_DETAIL: Record<string, MemberDetail> = {
   ines: {
     id: "ines",
+    role: "admin",
+    isSystem: false,
     glance: [
       { labelKey: "admin:members.glance.vouches", value: "21" },
       { labelKey: "admin:members.glance.memberFor", value: "3yr" },
@@ -335,6 +351,8 @@ export function detailFor(member: AdminMember): MemberDetail {
   const first = member.name.split(" ")[0];
   return {
     id: member.id,
+    role: member.role,
+    isSystem: false,
     glance: [
       {
         labelKey: "admin:members.glance.vouches",

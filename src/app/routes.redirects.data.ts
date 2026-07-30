@@ -37,7 +37,8 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/story-safety", routes.storySafety],
   ["/submit-story", routes.submitStory],
   ["/pitches", routes.pitchTracker],
-  ["/creatives", routes.creatives],
+  // Creatives showcase retired → create a creative subprofile instead.
+  ["/creatives", routes.subprofilesDashboard],
   ["/culture", routes.culture],
   // Resources
   ["/wellbeing", routes.wellbeing],
@@ -98,6 +99,9 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/platforms", routes.platforms],
   ["/donate", routes.donate],
   ["/volunteer", routes.volunteer],
+  // Activism merged into Volunteering: the standalone /activism page is now the
+  // "organising guide" nested under Volunteer. Keep the old top-level URL alive.
+  ["/activism", routes.activism],
   ["/governance", routes.governance],
   ["/partners", routes.partners],
   // Policies

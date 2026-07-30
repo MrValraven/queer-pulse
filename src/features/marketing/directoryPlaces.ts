@@ -78,6 +78,11 @@ export interface DirectoryPlace {
   /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
   latitude?: number | null;
   longitude?: number | null;
+  /** Safe-space verification state, threaded from the live directory card DTO.
+   * Absent for demo places and submitted drafts (no live safe-space data). */
+  safeSpaceStatus?: "none" | "verified" | "removed";
+  /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise/absent. */
+  safeSpaceTier?: number | null;
   /** Real uploaded images (URL per slot, null when empty). Absent for demo
    * places, which fall back to the `gallery` caption blocks. */
   photos?: Record<PhotoKey, string | null>;
@@ -103,6 +108,33 @@ export interface DirectoryPlace {
    * most demo places (the "hidden when absent" path); a few carry a seeded
    * value so the trust signal is visible in demo mode too. */
   savedCount?: number;
+  /**
+   * Safe-space trust block — present alongside `safeSpaceStatus`/
+   * `safeSpaceTier` when this listing has ever been a verified/removed safe
+   * space; absent for demo places, submitted drafts, and never-reviewed live
+   * listings. `safeSpaceVouches` are RAW (no `initials`/`tint` — see
+   * `directorySafeSpace.adapters.ts`, which derives those client-side for the
+   * reused safety detail components).
+   */
+  safeSpaceVerifier?: string | null;
+  safeSpaceReVerifiedAt?: string | null;
+  safeSpaceSub?: string | null;
+  safeSpacePromises?: { title: string; desc: string }[];
+  safeSpaceVouches?: {
+    name: string;
+    byline: string;
+    text: string;
+    when: string;
+  }[];
+  safeSpaceRemoval?: {
+    reason: string;
+    removedDate: string;
+    listedSince: string;
+    flags: number;
+    reasonLong: string[];
+    timeline: { date: string; event: string }[];
+    whatNow: string;
+  } | null;
 }
 
 const C: Tint = "coral";
@@ -482,6 +514,44 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       Sun: { open: true, from: "12:00", to: "18:00" },
     },
     langs: ["pt", "en"],
+    safeSpaceStatus: "verified",
+    safeSpaceTier: 2,
+    safeSpaceVerifier: "Mod team · 2 visits",
+    safeSpaceReVerifiedAt: "12 May 2026",
+    safeSpaceSub:
+      "A queer-run bookshop that keeps the section you came for at the front — verified for how it treats the people who walk in, not just what's on the shelves.",
+    safeSpacePromises: [
+      {
+        title: "Queer & feminist titles, front and centre.",
+        desc: "Not a shamefaced shelf in the corner — the front table, curated by booksellers who've actually read the books.",
+      },
+      {
+        title: "A safe room for readings & launches.",
+        desc: "Staff watch the room during events and will step in on harassment without waiting to be asked.",
+      },
+      {
+        title: "Names & pronouns honoured.",
+        desc: "On a reservation, a book order, or just a chat at the till — you're called what you ask to be called.",
+      },
+      {
+        title: "Incidents reported to moderation within 48h.",
+        desc: "The collective has a direct line to QueerPulse moderation for anything that happens on-site.",
+      },
+    ],
+    safeSpaceVouches: [
+      {
+        name: memberName("sofia-castano"),
+        byline: "she/her · regular",
+        text: "Ran a trans-lit book club here for a year. The collective gave us the back room for free and never once made it feel like a favour.",
+        when: "Vouched 3 May 2026",
+      },
+      {
+        name: memberName("nuno"),
+        byline: "he/him · 4 visits",
+        text: "Came for one book, stayed for a launch I didn't know was happening. Nobody's ever made me feel like I was taking up space.",
+        when: "Vouched 19 Apr 2026",
+      },
+    ],
     upcoming: [
       {
         when: "Fri 13 Jun · 19:00",
@@ -779,6 +849,44 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       Sun: { open: true, from: "16:00", to: "23:00" },
     },
     langs: ["pt", "en"],
+    safeSpaceStatus: "verified",
+    safeSpaceTier: 3,
+    safeSpaceVerifier: "Mod team · 3 visits",
+    safeSpaceReVerifiedAt: "27 Apr 2026",
+    safeSpaceSub:
+      "A queer-owned wine bar in Arroios, verified for hospitality that holds up on a packed Friday as well as a slow Tuesday.",
+    safeSpacePromises: [
+      {
+        title: "Staff intervene, every time.",
+        desc: "Marco and Renato brief every hire to step in on harassment without waiting to be asked — they'll walk a customer out before they walk you out.",
+      },
+      {
+        title: "A table for the awkward first date.",
+        desc: "Tell them it's a first meeting and they'll seat you somewhere calm and check in without hovering.",
+      },
+      {
+        title: "Gender-neutral bathroom.",
+        desc: "Single-stall, no gendered door, kept clean through a full service.",
+      },
+      {
+        title: "Incidents reported to moderation within 48h.",
+        desc: "Anything that happens here reaches the QueerPulse moderation team within two days.",
+      },
+    ],
+    safeSpaceVouches: [
+      {
+        name: memberName("anika"),
+        byline: "she/her · regular",
+        text: "Told Renato it was a nervous first date and he sat us in the quiet corner without making a thing of it. Checked on us twice, perfectly.",
+        when: "Vouched 9 Apr 2026",
+      },
+      {
+        name: memberName("sofia-castano"),
+        byline: "she/her · 3 visits",
+        text: "Brought my mother here to test the waters. She relaxed within ten minutes — that's the room doing its job.",
+        when: "Vouched 22 Mar 2026",
+      },
+    ],
     reviews: [
       {
         id: "a-farinha-review-1",

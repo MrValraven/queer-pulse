@@ -25,6 +25,9 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
   const upsertFlatmateProfile = useUpsertFlatmateProfile();
 
   const handleSubmit = (body: UpsertFlatmateProfileBody) => {
+    // Guard against a rapid double-click firing two POSTs while the first is
+    // still in flight.
+    if (upsertFlatmateProfile.isPending) return;
     upsertFlatmateProfile.mutate(body, {
       onSuccess: () => setSubmitted(true),
       onError: () =>
@@ -91,6 +94,7 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
             initial={myProfile}
             onSubmit={handleSubmit}
             onClose={onClose}
+            submitting={upsertFlatmateProfile.isPending}
           />
         )}
       </div>

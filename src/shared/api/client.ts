@@ -10,6 +10,15 @@ import { API_BASE_URL } from "./config";
 // so their URLs are fixed). Bumping the API version = change this one constant.
 const API_VERSION_PREFIX = "/v1";
 
+// Fail-fast ceiling for every call made through `request()`. A hung backend must
+// never strand the UI on an infinite skeleton — worst of all a hung
+// `GET /auth/me`, which holds EVERY gated route behind the AuthLoader forever.
+// 15s is generous for our JSON endpoints (the only bytes `request()` ever
+// carries — binary uploads PUT straight to storage via XHR, never through here;
+// see features/members/api/useUploadImage.ts) yet far short of "never". Callers
+// with a legitimately long-running endpoint can pass a per-call override.
+const DEFAULT_TIMEOUT_MS = 15_000;
+
 /** Normalized API failure carrying the HTTP status. */
 export class ApiError extends Error {
   status: number;
@@ -187,6 +196,7 @@ async function request<T>(
   path: string,
   body?: unknown,
   retry = true,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
 ): Promise<T> {
   const headers: Record<string, string> = {};
   if (body !== undefined) headers["Content-Type"] = "application/json";
@@ -195,16 +205,41 @@ async function request<T>(
     if (csrfToken) headers["X-CSRF-Token"] = csrfToken;
   }
 
-  const res = await fetch(`${API_BASE_URL}${API_VERSION_PREFIX}${path}`, {
-    method,
-    credentials: "include",
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  // Fail-fast: abort the fetch if the backend doesn't answer within the ceiling,
+  // so a hang surfaces as a real error instead of an eternal pending promise. A
+  // FRESH controller + timer is created here per call, which means the recursive
+  // retries below each get their own full window (never a share of an
+  // already-aborted signal), and the timer is always cleared in `finally` so a
+  // fast response never leaks a pending timeout.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}${API_VERSION_PREFIX}${path}`, {
+      method,
+      credentials: "include",
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    // A timeout abort becomes a distinct 408 so the react-query layer and the
+    // global error handler treat a hung backend as a genuine failure. It is kept
+    // clear of the 401-refresh and 403-CSRF retry paths below (which key off an
+    // HTTP status we never received here), so a timeout can never be misread as
+    // an auth-refresh loop or a CSRF retry. Any other throw is a real network
+    // fault (offline / DNS / CORS) and propagates unchanged.
+    if (controller.signal.aborted) {
+      throw new ApiError(408, "Request timed out");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (res.status === 401 && retry) {
     const ok = await refreshOnce();
-    if (ok) return request<T>(method, path, body, false);
+    if (ok) return request<T>(method, path, body, false, timeoutMs);
     onAuthLost?.();
     throw new ApiError(401, "Not authenticated");
   }
@@ -232,7 +267,7 @@ async function request<T>(
     ) {
       csrfToken = null;
       await ensureCsrf();
-      return request<T>(method, path, body, false);
+      return request<T>(method, path, body, false, timeoutMs);
     }
 
     // Platform lockdown. 503 rather than 403 precisely so it is distinguishable
@@ -257,11 +292,17 @@ async function request<T>(
   return (text ? JSON.parse(text) : undefined) as T;
 }
 
-export const apiGet = <T>(path: string) => request<T>("GET", path);
-export const apiPost = <T>(path: string, body?: unknown) =>
-  request<T>("POST", path, body);
-export const apiPatch = <T>(path: string, body?: unknown) =>
-  request<T>("PATCH", path, body);
-export const apiPut = <T>(path: string, body?: unknown) =>
-  request<T>("PUT", path, body);
-export const apiDelete = <T>(path: string) => request<T>("DELETE", path);
+// The optional trailing `timeoutMs` is a per-call override of DEFAULT_TIMEOUT_MS
+// for the rare legitimately long-running endpoint; omitting it (the norm) keeps
+// the 15s ceiling. Passing `undefined` still falls through to the default, so
+// the addition is fully backward-compatible with every existing call site.
+export const apiGet = <T>(path: string, timeoutMs?: number) =>
+  request<T>("GET", path, undefined, true, timeoutMs);
+export const apiPost = <T>(path: string, body?: unknown, timeoutMs?: number) =>
+  request<T>("POST", path, body, true, timeoutMs);
+export const apiPatch = <T>(path: string, body?: unknown, timeoutMs?: number) =>
+  request<T>("PATCH", path, body, true, timeoutMs);
+export const apiPut = <T>(path: string, body?: unknown, timeoutMs?: number) =>
+  request<T>("PUT", path, body, true, timeoutMs);
+export const apiDelete = <T>(path: string, timeoutMs?: number) =>
+  request<T>("DELETE", path, undefined, true, timeoutMs);

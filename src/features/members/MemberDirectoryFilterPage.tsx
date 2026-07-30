@@ -3,6 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import {
   useCountUp,
   useIncrementalList,
+  useLocalStorage,
   useMediaQuery,
   useSimulatedLoad,
 } from "../../shared/hooks";
@@ -21,6 +22,11 @@ import {
 import { useMembers } from "./api/useMembers";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { FiltersSidebar } from "./MemberFilterCards";
+import {
+  ALL_SECTIONS_COLLAPSED,
+  isSectionOpenMap,
+  type SectionKey,
+} from "./FilterSection";
 import {
   MemberDirectoryHeader,
   MemberFiltersSheet,
@@ -41,6 +47,21 @@ export function MemberDirectoryFilterPage() {
   // from a "Filters" button instead. Matches the 860px grid breakpoint below.
   const isMobile = useMediaQuery("(max-width: 860px)");
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // View-only preferences (which sections are open, whether the whole desktop
+  // panel is shown) persist across visits. They are SEPARATE from `filters` —
+  // hiding the panel never clears a selection.
+  const [panelOpen, setPanelOpen] = useLocalStorage<boolean>(
+    "qp.members.filtersPanelOpen",
+    true,
+    (value): value is boolean => typeof value === "boolean",
+  );
+  const [sectionsOpen, setSectionsOpen] = useLocalStorage<
+    Record<SectionKey, boolean>
+  >("qp.members.filterSections", ALL_SECTIONS_COLLAPSED, isSectionOpenMap);
+
+  const toggleSection = (key: SectionKey) =>
+    setSectionsOpen((prev) => ({ ...prev, [key]: !prev[key] }));
 
   // Identity selections go to `identities=`, NOT `tags=`. They used to be sent
   // as tags, which the backend matched against `profiles.tags` — a skills
@@ -77,10 +98,19 @@ export function MemberDirectoryFilterPage() {
   // and the live cards carry no ranking fields to re-sort by anyway (they'd all
   // tie and scramble the server order). See `useMembers` / the directory API.
   const filtered = useMemo(() => {
+    // Live mode: the server does the filtering (identities travel through the
+    // query key; other facets are a documented no-op the thin card DTO can't
+    // satisfy). The DTO adapter defaults those facet fields to empty arrays, so
+    // re-running `matchesFilters` here would match nothing and empty the
+    // directory for ANY facet selection — trust the server and render its page
+    // as-is.
+    if (!demoMode) return sourceMembers;
+    // Demo mode holds the whole mock list, which carries every facet field, so
+    // it filters and sorts entirely in the browser.
     const matched = sourceMembers.filter((member) =>
       matchesFilters(member, filters),
     );
-    return demoMode ? sortMembers(matched, sort) : matched;
+    return sortMembers(matched, sort);
   }, [sourceMembers, filters, sort, demoMode]);
 
   const chips = useMemo(() => appliedChips(filters, t), [filters, t]);
@@ -134,15 +164,34 @@ export function MemberDirectoryFilterPage() {
           />
         )}
 
-        <div className={styles.grid}>
+        <div
+          className={[styles.grid, !isMobile && !panelOpen && styles.gridFull]
+            .filter(Boolean)
+            .join(" ")}
+        >
           {!isMobile && (
-            <FiltersSidebar
-              filters={filters}
-              members={sourceMembers}
-              appliedCount={chips.length}
-              onChange={applyFilters}
-              onClearAll={clearAllFilters}
-            />
+            /* Kept mounted so the sidebar can slide/fade out rather than pop.
+               The column is the sticky, clipping container (grid track eases to
+               0), and `inert` drops the hidden filters from tab/AT reach. */
+            <div
+              className={[
+                styles.filtersCol,
+                !panelOpen && styles.filtersColHidden,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              inert={!panelOpen || undefined}
+            >
+              <FiltersSidebar
+                filters={filters}
+                members={sourceMembers}
+                appliedCount={chips.length}
+                onChange={applyFilters}
+                onClearAll={clearAllFilters}
+                sectionsOpen={sectionsOpen}
+                onToggleSection={toggleSection}
+              />
+            </div>
           )}
 
           <MemberResultsColumn
@@ -153,6 +202,8 @@ export function MemberDirectoryFilterPage() {
             onApplyFilters={applyFilters}
             onResetAll={resetAll}
             isMobile={isMobile}
+            panelOpen={panelOpen}
+            onTogglePanel={() => setPanelOpen((prev) => !prev)}
             onOpenFilters={() => setFiltersOpen(true)}
             loading={loading}
             shown={shown}
@@ -175,6 +226,8 @@ export function MemberDirectoryFilterPage() {
           members={sourceMembers}
           appliedCount={chips.length}
           filteredCount={filtered.length}
+          sectionsOpen={sectionsOpen}
+          onToggleSection={toggleSection}
           onApplyFilters={applyFilters}
           onClearAll={clearAllFilters}
           onClose={() => setFiltersOpen(false)}

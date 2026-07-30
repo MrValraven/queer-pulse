@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -22,17 +22,23 @@ function SignInPane({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
+  // Hold the post-toast redirect timer so it can't fire navigate() after the
+  // user has already left this pane / the page unmounted.
+  const redirectTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  useEffect(() => () => clearTimeout(redirectTimerRef.current), []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     showToast(t("studio:signin.in.signedInToast"), "success");
-    setTimeout(() => void navigate(routes.studio), 900);
+    redirectTimerRef.current = setTimeout(() => void navigate(routes.studio), 900);
   }
 
   function handleGoogle() {
     if (googleLoading) return;
     setGoogleLoading(true);
-    setTimeout(() => {
+    redirectTimerRef.current = setTimeout(() => {
       showToast(t("studio:signin.in.signedInGoogleToast"), "success");
       void navigate(routes.studio);
     }, 1100);

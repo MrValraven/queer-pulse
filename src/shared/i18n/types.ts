@@ -38,8 +38,6 @@ export type Namespace =
   | "messages"
   | "culture"
   | "notifications"
-  | "social"
-  | "pages"
   | "shared";
 
 /** Flat key → translated string. Keys are dot paths, e.g. `signIn.title`. */

@@ -3,11 +3,13 @@ import { FiLock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { ModalShell, SuccessPanel, Sending } from "../economy/ModalKit";
 import { useSubmitFlow } from "../economy/modalFlow";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { DonateModalSummary } from "./DonateModalSummary";
 import { DonateModalFields } from "./DonateModalFields";
+import { DonateComingSoon } from "./DonateComingSoon";
 import modal from "../economy/ApplicationModals.module.css";
 import styles from "./DonateModal.module.css";
 
@@ -23,6 +25,7 @@ export function DonateModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const fmt = useFormat();
   const { submit, sending, done } = useSubmitFlow();
   const [name, setName] = useState("");
@@ -49,8 +52,10 @@ export function DonateModal({
   }
 
   return (
-    <ModalShell onClose={onClose} success={done}>
-      {done ? (
+    <ModalShell onClose={onClose} success={done || !demoMode}>
+      {!demoMode ? (
+        <DonateComingSoon />
+      ) : done ? (
         <SuccessPanel
           title={t("marketing:donateModal.success.title")}
           em={t(

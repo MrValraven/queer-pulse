@@ -36,7 +36,10 @@ function joinedLabel(iso: string, locale: string): string {
  * which seeds the mock flagships and records demo joins — unchanged behaviour,
  * and no network.
  */
-export function useMyCommunities(): Record<string, Membership> {
+export function useMyCommunities(
+  options: { enabled?: boolean } = {},
+): Record<string, Membership> {
+  const { enabled = true } = options;
   const { demoMode } = useDemoMode();
   const { memberships } = useCommunityMembership();
   const { language } = useTranslation();
@@ -45,7 +48,9 @@ export function useMyCommunities(): Record<string, Membership> {
     // `language` is in the key because the joined labels below are locale-
     // formatted — switching language must re-derive them.
     queryKey: ["my-communities", language],
-    enabled: !demoMode,
+    // Live-only fetch; callers may additionally gate it via `options.enabled`
+    // (e.g. a profile viewing another member doesn't consume this map).
+    enabled: !demoMode && enabled,
     queryFn: async () => {
       const rows = await getMyCommunities();
       return Object.fromEntries(

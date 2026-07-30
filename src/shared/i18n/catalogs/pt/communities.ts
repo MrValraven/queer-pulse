@@ -98,7 +98,7 @@ export const communities: Catalog = {
   "common.timeAgo": "há {time}",
   "common.justNow": "agora mesmo",
   // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
-  "common.error": "Something went wrong. Try again in a moment.",
+  "common.error": "Algo correu mal. Tenta de novo daqui a um instante.",
   // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
   "common.loading": "Loading…",
 

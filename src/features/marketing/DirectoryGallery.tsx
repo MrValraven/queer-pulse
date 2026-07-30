@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
 import { type PhotoKey } from "./listBusiness/listBusiness.data";
@@ -73,10 +74,12 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
             aria-label={hero!.alt || viewPhotoLabel}
           >
             <img
-              src={hero!.url}
+              src={resolveAvatarSrc(hero!.url, 1600)}
               alt={hero!.alt}
-              loading="lazy"
+              loading="eager"
+              fetchPriority="high"
               decoding="async"
+              referrerPolicy="no-referrer"
             />
           </button>
           {rest.length > 0 && (
@@ -90,10 +93,11 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
                   aria-label={shot.alt || viewPhotoLabel}
                 >
                   <img
-                    src={shot.url}
+                    src={resolveAvatarSrc(shot.url, 400)}
                     alt={shot.alt}
                     loading="lazy"
                     decoding="async"
+                    referrerPolicy="no-referrer"
                   />
                 </button>
               ))}

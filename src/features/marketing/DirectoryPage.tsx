@@ -31,6 +31,7 @@ export function DirectoryPage() {
     query,
     sort,
     vibes,
+    safe,
     filtered,
     categoryCounts,
     mappableCount,
@@ -40,6 +41,7 @@ export function DirectoryPage() {
     setQuery,
     setSort,
     toggleVibe,
+    setSafe,
     clearFilters,
   } = useDirectoryFilters(places);
   const hasActiveFilters = activeFilters.length > 0;
@@ -69,6 +71,8 @@ export function DirectoryPage() {
         onQueryChange={setQuery}
         vibes={vibes}
         onToggleVibe={toggleVibe}
+        safeOnly={safe === "verified"}
+        onToggleSafeOnly={() => setSafe(safe !== "verified")}
       />
 
       <DirectoryResultsHeader

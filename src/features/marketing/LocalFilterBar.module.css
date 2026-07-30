@@ -39,7 +39,8 @@
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 
-.vibeRow {
+.vibeRow,
+.safeRow {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -55,6 +56,9 @@
   margin-right: 2px;
 }
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 500;
@@ -83,6 +87,54 @@
 .vibe.chipOn {
   background: var(--jade);
   border-color: var(--jade);
+}
+
+/* Category legend swatch inside each category chip — a colour fill + white icon
+   mirroring that category's map pin, so the filter bar reads as a live legend.
+   Self-contained fill keeps it legible on the plum active chip and in dark mode
+   alike (theme-stable, like the pins). One fill per category → --cat-* tokens. */
+.catSwatch {
+  display: grid;
+  place-items: center;
+  inline-size: 19px;
+  block-size: 19px;
+  border-radius: 50%;
+  color: #fff;
+  flex: none;
+  margin-inline-start: -3px; /* pull toward the chip edge; gap handles the label */
+}
+/* [data-category] lifts specificity above the shared `.chip svg` (14px) rule. */
+.catSwatch[data-category] svg {
+  inline-size: 11px;
+  block-size: 11px;
+}
+.catSwatch[data-category="nightlife"] {
+  background: var(--cat-nightlife);
+}
+.catSwatch[data-category="food"] {
+  background: var(--cat-food);
+}
+.catSwatch[data-category="health"] {
+  background: var(--cat-health);
+}
+.catSwatch[data-category="space"] {
+  background: var(--cat-space);
+  box-shadow: inset 0 0 0 1px rgba(var(--cream-rgb), 0.5); /* plum-on-plum active edge */
+}
+.catSwatch[data-category="culture"] {
+  background: var(--cat-culture);
+}
+.catSwatch[data-category="design"] {
+  background: var(--cat-design);
+}
+.catSwatch[data-category="tech"] {
+  background: var(--cat-tech);
+}
+.catSwatch[data-category="grooming"] {
+  background: var(--cat-grooming);
+}
+.catSwatch[data-category="fitness"] {
+  background: var(--cat-fitness);
 }
 
 /* Live count inside each category chip — dimmed so the label stays primary. */

@@ -49,6 +49,16 @@ export function useGatheringForm() {
   const allChecked = checks.every(Boolean);
   const checkedCount = checks.filter(Boolean).length;
 
+  // A gathering must have a real start that's still in the future: the backend
+  // rejects both a missing date and a past one, so the wizard gates step 2 on
+  // this. Mirrors the adapter's `time || "19:00"` fallback so the check matches
+  // exactly what gets submitted.
+  const startAt = date ? new Date(`${date}T${time || "19:00"}`) : null;
+  const dateValid =
+    !!startAt &&
+    !Number.isNaN(startAt.getTime()) &&
+    startAt.getTime() > Date.now();
+
   return {
     type,
     typeIcon,
@@ -98,6 +108,7 @@ export function useGatheringForm() {
     checks,
     allChecked,
     checkedCount,
+    dateValid,
     selectType,
     toggleAccess,
     toggleCheck,

@@ -28,6 +28,8 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     desc: dto.blurb,
     latitude: dto.latitude,
     longitude: dto.longitude,
+    safeSpaceStatus: dto.safeSpaceStatus ?? "none",
+    safeSpaceTier: dto.safeSpaceTier ?? null,
     // detail-only fields — unused by the grid, filled by the detail fetch
     tagline: "",
     pills: [],
@@ -73,6 +75,14 @@ export function detailDtoToPlace(
     desc: dto.blurb,
     latitude: dto.latitude,
     longitude: dto.longitude,
+    safeSpaceStatus: dto.safeSpaceStatus ?? "none",
+    safeSpaceTier: dto.safeSpaceTier ?? null,
+    safeSpaceVerifier: dto.safeSpaceVerifier,
+    safeSpaceReVerifiedAt: dto.safeSpaceReVerifiedAt,
+    safeSpaceSub: dto.safeSpaceSub,
+    safeSpacePromises: dto.safeSpacePromises,
+    safeSpaceVouches: dto.safeSpaceVouches,
+    safeSpaceRemoval: dto.safeSpaceRemoval,
     tagline: dto.tagline,
     pills: dto.pills,
     rating: dto.rating,
@@ -112,10 +122,14 @@ export function detailDtoToPlace(
 
 const DIRECTORY_TINTS: Tint[] = ["coral", "jade", "plum"];
 
-/** Deterministic per-listing tint from its slug, so a place keeps the same
+/** Deterministic tint from a string (a listing slug, or — for vouches, which
+ * carry no slug — the voucher's name), so the same input keeps the same
  * colour across renders. Mirrors the backend's `tintForSlug`
- * (queerpulse-backend/src/listings/listing-response.ts). */
-function tintForSlug(slug: string): Tint {
+ * (queerpulse-backend/src/listings/listing-response.ts), which the backend
+ * itself keys on `vouch.name` for the safe-spaces hub's own vouches
+ * (`toSafeSpaceDetail`) — exported so `directorySafeSpace.adapters.ts` can
+ * derive the same tint client-side for the directory detail's RAW vouches. */
+export function tintForSlug(slug: string): Tint {
   let hash = 0;
   for (const char of slug) {
     hash = (hash + char.charCodeAt(0)) % DIRECTORY_TINTS.length;

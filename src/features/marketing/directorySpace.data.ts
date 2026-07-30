@@ -1,16 +1,9 @@
 import { type Tint } from "./directoryPlaces";
 
-/** i18n Pattern A — resolved via `t()` by DirectorySpaceMain.tsx and DirectoryPage.tsx. */
-export const CAT_LABEL_KEYS: Record<string, string> = {
-  food: "marketing:directory.cat.food",
-  design: "marketing:directory.cat.design",
-  health: "marketing:directory.cat.health",
-  space: "marketing:directory.cat.space",
-  culture: "marketing:directory.cat.culture",
-  tech: "marketing:directory.cat.tech",
-  grooming: "marketing:directory.cat.grooming",
-  fitness: "marketing:directory.cat.fitness",
-};
+/* Category labels are now resolved through the single `categoryLabel` helper in
+ * localPlaces.ts (slug-keyed `LOCAL_CATEGORY_LABEL_KEYS`), which normalizes
+ * legacy display-string categories too. The former local `CAT_LABEL_KEYS`
+ * duplicate lived here — removed to keep one source of truth. */
 
 /**
  * "Members here lately" is mock activity content, but `whenKey` (relative

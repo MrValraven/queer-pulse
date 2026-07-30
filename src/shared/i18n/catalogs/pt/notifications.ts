@@ -91,6 +91,66 @@ export const notifications: Catalog = {
   "type.event_cancelled.text": "Um convívio em que vais estar foi cancelado.",
   "type.event_cancelled.meta": "Atualização de convívio",
 
+  // Cobertura alargada de notificações. As personalizadas têm o campo
+  // `<profile>{name}</profile>` em `textNamed`; as geradas pelo sistema
+  // (pedido aprovado/recusado, registo aprovado, denúncia/recurso/roteiro) não
+  // têm autor e por isso só têm `.text` genérico.
+  "type.event_rsvp.text": "Alguém confirmou presença no teu convívio.",
+  "type.event_rsvp.textNamed":
+    "<profile>{name}</profile> confirmou presença no teu convívio.",
+  "type.event_rsvp.meta": "Presença em convívio",
+
+  "type.community_reply.text": "Alguém respondeu à tua publicação.",
+  "type.community_reply.textNamed":
+    "<profile>{name}</profile> respondeu à tua publicação.",
+  "type.community_reply.meta": "Resposta",
+
+  "type.forum_thread_reply.text": "Alguém respondeu ao teu tópico.",
+  "type.forum_thread_reply.textNamed":
+    "<profile>{name}</profile> respondeu ao teu tópico.",
+  "type.forum_thread_reply.meta": "Resposta",
+
+  "type.join_request_received.text":
+    "Alguém pediu para entrar na tua comunidade.",
+  "type.join_request_received.textNamed":
+    "<profile>{name}</profile> pediu para entrar na tua comunidade.",
+  "type.join_request_received.meta": "Pedido de entrada",
+
+  "type.join_request_approved.text":
+    "Estás dentro — o teu pedido para entrar foi aprovado.",
+  "type.join_request_approved.meta": "Pedido de entrada",
+
+  "type.join_request_declined.text":
+    "O teu pedido para entrar não foi aceite desta vez.",
+  "type.join_request_declined.meta": "Pedido de entrada",
+
+  "type.job_application.text": "Alguém candidatou-se à tua oferta de trabalho.",
+  "type.job_application.textNamed":
+    "<profile>{name}</profile> candidatou-se à tua oferta de trabalho.",
+  "type.job_application.meta": "Candidatura",
+
+  "type.listing_approved.text": "O teu registo de negócio já está no ar.",
+  "type.listing_approved.meta": "Registo aprovado",
+
+  "type.report_resolved.text": "Demos seguimento a uma denúncia que fizeste.",
+  "type.report_resolved.meta": "Atualização de denúncia",
+
+  "type.appeal_resolved.text": "Há uma decisão sobre o teu recurso.",
+  "type.appeal_resolved.meta": "Atualização de recurso",
+
+  "type.invite_accepted.text": "Alguém que convidaste acabou de entrar.",
+  "type.invite_accepted.textNamed":
+    "<profile>{name}</profile> entrou com o teu convite.",
+  "type.invite_accepted.meta": "Convite aceite",
+
+  "type.listing_review.text": "Alguém avaliou o teu negócio.",
+  "type.listing_review.textNamed":
+    "<profile>{name}</profile> avaliou o teu negócio.",
+  "type.listing_review.meta": "Nova avaliação",
+
+  "type.roadmap_status.text": "Há novidades sobre uma ideia que partilhaste.",
+  "type.roadmap_status.meta": "Atualização do roteiro",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 

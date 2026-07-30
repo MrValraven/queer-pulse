@@ -47,7 +47,7 @@ function SkeletonGroup() {
 
 function ResultCard({ item }: { item: SearchItem }) {
   const { t } = useTranslation();
-  const TypeIcon = TYPE_ICON[item.t];
+  const TypeIcon = item.icon ?? TYPE_ICON[item.t];
   const avatar = memberRowAvatar(item);
   return (
     <Link to={linkToPath(item.href)} className={styles.card}>
@@ -121,10 +121,12 @@ function BrowseView({
   searchData,
   recents,
   setQuery,
+  tab,
 }: {
   searchData: SearchItem[];
   recents: string[];
   setQuery: (value: string) => void;
+  tab: ResultType | "all";
 }) {
   const { t } = useTranslation();
   return (
@@ -157,22 +159,33 @@ function BrowseView({
           ))}
         </div>
       </div>
-      <Group
-        items={searchData.filter((d) => d.t === "topic")}
-        label={t("members:search.browseTopics")}
-      />
-      <Group
-        items={searchData.filter((d) => d.t === "member").slice(0, 6)}
-        label={t(TYPE_LABEL_KEY.member)}
-      />
-      <Group
-        items={searchData.filter((d) => d.t === "event")}
-        label={t("members:search.upcomingEvents")}
-      />
-      <Group
-        items={searchData.filter((d) => d.t === "page")}
-        label={t(TYPE_LABEL_KEY.page)}
-      />
+      {tab === "all" ? (
+        <>
+          <Group
+            items={searchData.filter((d) => d.t === "topic")}
+            label={t("members:search.browseTopics")}
+          />
+          <Group
+            items={searchData.filter((d) => d.t === "member").slice(0, 6)}
+            label={t(TYPE_LABEL_KEY.member)}
+          />
+          <Group
+            items={searchData.filter((d) => d.t === "event")}
+            label={t("members:search.upcomingEvents")}
+          />
+          <Group
+            items={searchData.filter((d) => d.t === "page")}
+            label={t(TYPE_LABEL_KEY.page)}
+          />
+        </>
+      ) : (
+        // A specific tab is selected with no query: show that type's full list,
+        // so e.g. the Pages tab becomes a complete jump-to launcher.
+        <Group
+          items={searchData.filter((d) => d.t === tab)}
+          label={t(TYPE_LABEL_KEY[tab])}
+        />
+      )}
     </>
   );
 }
@@ -309,7 +322,12 @@ export function SearchResults({
   }
   if (!q) {
     return (
-      <BrowseView searchData={searchData} recents={recents} setQuery={setQuery} />
+      <BrowseView
+        searchData={searchData}
+        recents={recents}
+        setQuery={setQuery}
+        tab={tab}
+      />
     );
   }
   return <HitsView query={query} q={q} tab={tab} searchData={searchData} />;

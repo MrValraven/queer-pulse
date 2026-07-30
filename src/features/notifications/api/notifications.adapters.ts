@@ -1,6 +1,11 @@
 import type { IconType } from "react-icons";
 import { FiBell, FiCalendar, FiMessageCircle, FiUsers } from "react-icons/fi";
-import { communityPath, routes, thread } from "../../../app/routeMap";
+import {
+  businessPath,
+  communityPath,
+  routes,
+  thread,
+} from "../../../app/routeMap";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -46,6 +51,17 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "event_invite",
   "mention",
   "forum_reply",
+  // Coverage-sweep kinds that carry a member actor (and so a `textNamed`
+  // variant). The system-driven ones (join_request_approved/declined,
+  // listing_approved, report_resolved, appeal_resolved, roadmap_status) resolve
+  // no actor and keep their generic `.text`.
+  "event_rsvp",
+  "community_reply",
+  "forum_thread_reply",
+  "join_request_received",
+  "job_application",
+  "invite_accepted",
+  "listing_review",
 ]);
 
 export function notificationDtoToView(
@@ -142,6 +158,36 @@ function sourceHrefFromPayload(
     return typeof communitySlug === "string" && communitySlug
       ? communityPath(communitySlug)
       : undefined;
+  }
+  // Coverage-sweep sources — each deep-links to the entity the notification is
+  // about. A missing slug falls back to no href (the row still shows its text /
+  // actor link) rather than inventing a broken link.
+  if (payload.source === "event") {
+    const eventSlug = payload.eventSlug;
+    return typeof eventSlug === "string" && eventSlug
+      ? `${routes.gatherings}/${eventSlug}`
+      : undefined;
+  }
+  if (payload.source === "job") {
+    const jobSlug = payload.jobSlug;
+    return typeof jobSlug === "string" && jobSlug
+      ? `${routes.jobs}/${jobSlug}`
+      : undefined;
+  }
+  if (payload.source === "listing") {
+    const listingSlug = payload.listingSlug;
+    return typeof listingSlug === "string" && listingSlug
+      ? businessPath(listingSlug)
+      : undefined;
+  }
+  // Roadmap idea status → the public roadmap; appeal outcome → the member's
+  // appeal-outcome page. Neither needs a slug. A resolved report has no
+  // member-facing detail page, so it deliberately yields no deep-link.
+  if (payload.source === "roadmap") {
+    return routes.roadmap;
+  }
+  if (payload.source === "appeal") {
+    return routes.appealOutcome;
   }
   return undefined;
 }

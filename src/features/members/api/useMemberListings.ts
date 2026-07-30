@@ -18,7 +18,7 @@ import { registryPlacesForMember, type MemberPlace } from "../places.data";
 export function useMemberListings(memberSlug: string): MemberPlace[] {
   const { demoMode } = useDemoMode();
   const query = useQuery<MemberPlace[]>({
-    queryKey: ["memberListings", memberSlug],
+    queryKey: ["memberListings", demoMode, memberSlug],
     enabled: !demoMode && memberSlug.length > 0,
     initialData: demoMode ? registryPlacesForMember(memberSlug) : undefined,
     queryFn: async () => {

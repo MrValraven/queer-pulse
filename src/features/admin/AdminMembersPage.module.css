@@ -445,6 +445,33 @@
   line-height: 1.5;
 }
 
+/* Role & permissions control */
+.roleCurrentRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.roleCurrentLabel {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.roleActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.roleConfirmBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
 /* At a glance grid */
 .glanceGrid {
   display: grid;

@@ -134,6 +134,28 @@ export function VolunteerPage() {
         </div>
       </PageHero>
 
+      <section className={s.guideWrap} aria-label={t("marketing:volunteer.guide.eyebrow")}>
+        <div className="wrap">
+          <div className={s.guide}>
+            <div className={s.guideText}>
+              <span className={s.guideEyebrow}>
+                {t("marketing:volunteer.guide.eyebrow")}
+              </span>
+              <h2 className={s.guideTitle}>
+                <Translation
+                  i18nKey="marketing:volunteer.guide.title"
+                  components={{ em: <em /> }}
+                />
+              </h2>
+              <p className={s.guideBody}>{t("marketing:volunteer.guide.body")}</p>
+            </div>
+            <Button to={routes.activism} variant="ghost-dark">
+              {t("marketing:volunteer.guide.cta")}
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <section className={s.body}>
         <div className="wrap">
           <div className={s.filters}>

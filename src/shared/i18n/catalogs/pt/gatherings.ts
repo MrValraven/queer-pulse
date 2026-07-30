@@ -526,6 +526,7 @@ export const gatherings: Catalog = {
   "create.nav.cancel": "Cancelar",
   "create.nav.back": "Voltar",
   "create.nav.publishHint": "Confirma as três caixas acima para publicar",
+  "create.nav.dateHint": "Escolhe uma data e hora no futuro para continuar",
   "create.nav.publish": "Publicar convívio",
   "create.nav.continue": "Continuar",
   "create.sidebar.tipLabel": "Dica para esta etapa",
@@ -549,6 +550,8 @@ export const gatherings: Catalog = {
   "create.step2.sub":
     "A localização só é partilhada com quem confirmou presença — não aparece no anúncio público.",
   "create.step2.dateLabel": "Data",
+  "create.step2.dateRequired":
+    "Escolhe uma data e hora de início no futuro para as pessoas se poderem organizar.",
   "create.step2.timeLabel": "Hora",
   "create.step2.endTimeLabel": "Hora de fim (opcional)",
   "create.step2.hoodLabel": "Bairro",
@@ -830,6 +833,13 @@ export const gatherings: Catalog = {
   "manage.cancelConfirm_other":
     "Cancelar {title}? {count} pessoas vão ser avisadas.",
   "manage.linkCopiedToast": "Link copiado!",
+
+  // ── Manage: live-mode coming-soon (host tools not wired yet) ─────────────────
+  "manageComingSoon.title": "As ferramentas de anfitrião <em>chegam em breve</em>",
+  "manageComingSoon.description":
+    "Gerir um encontro por aqui ainda não está disponível. Podes continuar a explorar e a confirmar presença no que está a acontecer — o painel de anfitrião chega em breve.",
+  "manageComingSoon.browseCta": "Explorar encontros",
+  "manageComingSoon.backHome": "Voltar ao início",
 
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Vão",

@@ -14,6 +14,7 @@ import { directoryBlurb } from "./directoryBlurb";
 import { MemberCardBody } from "./MemberCardBody";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import {
+  EMPTY_FILTERS,
   HOOD_LABEL_KEY,
   IDENTITY_OPTIONS,
   LANGUAGES,
@@ -24,6 +25,7 @@ import {
   type MemberCard,
 } from "./memberDirectoryFilter.data";
 import { FilterProfessions } from "./FilterProfessions";
+import { FilterSection, type SectionKey } from "./FilterSection";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Toggle a value within a string[] immutably. */
@@ -37,6 +39,8 @@ export function FiltersSidebar({
   appliedCount,
   onChange,
   onClearAll,
+  sectionsOpen,
+  onToggleSection,
   inSheet = false,
 }: {
   filters: FilterState;
@@ -45,6 +49,8 @@ export function FiltersSidebar({
   appliedCount: number;
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
+  sectionsOpen: Record<SectionKey, boolean>;
+  onToggleSection: (key: SectionKey) => void;
   /** Rendered inside the mobile filters sheet — drops the sticky desktop
    *  positioning so the cards flow naturally in the scrolling sheet. */
   inSheet?: boolean;
@@ -60,8 +66,12 @@ export function FiltersSidebar({
   );
   return (
     <aside className={inSheet ? styles.filtersSheet : styles.filters}>
-      <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.openToTitle")}</h4>
+      <FilterSection
+        title={t("members:directory.filter.openToTitle")}
+        open={sectionsOpen.openTo}
+        onToggle={() => onToggleSection("openTo")}
+        activeCount={filters.openTo.length}
+      >
         {OPEN_TO_OPTIONS.map((option) => (
           <label key={option.id} className={styles.filterRow}>
             <input
@@ -80,10 +90,15 @@ export function FiltersSidebar({
             )}
           </label>
         ))}
-      </div>
+      </FilterSection>
 
-      <div className={styles.filterCard}>
-        <h4 id={`${uid}-hoods`}>{t("members:directory.filter.hoodTitle")}</h4>
+      <FilterSection
+        title={t("members:directory.filter.hoodTitle")}
+        headingId={`${uid}-hoods`}
+        open={sectionsOpen.hoods}
+        onToggle={() => onToggleSection("hoods")}
+        activeCount={filters.hoods.length}
+      >
         <ChipSelect
           labelledBy={`${uid}-hoods`}
           options={NEIGHBOURHOODS.map((o) => ({
@@ -97,12 +112,21 @@ export function FiltersSidebar({
             onChange({ ...filters, hoods: toggle(filters.hoods, value) })
           }
         />
-      </div>
+      </FilterSection>
 
-      <FilterProfessions filters={filters} onChange={onChange} />
+      <FilterProfessions
+        filters={filters}
+        onChange={onChange}
+        sectionsOpen={sectionsOpen}
+        onToggleSection={onToggleSection}
+      />
 
-      <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.identityTitle")}</h4>
+      <FilterSection
+        title={t("members:directory.filter.identityTitle")}
+        open={sectionsOpen.identities}
+        onToggle={() => onToggleSection("identities")}
+        activeCount={filters.identities.length}
+      >
         {IDENTITY_OPTIONS.map((option) => (
           <label key={option.id} className={styles.filterRow}>
             <input
@@ -121,10 +145,19 @@ export function FiltersSidebar({
             )}
           </label>
         ))}
-      </div>
+      </FilterSection>
 
-      <div className={styles.filterCard}>
-        <h4>{t("members:directory.filter.ageTitle")}</h4>
+      <FilterSection
+        title={t("members:directory.filter.ageTitle")}
+        open={sectionsOpen.age}
+        onToggle={() => onToggleSection("age")}
+        activeCount={
+          filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
+          filters.yearsTo !== EMPTY_FILTERS.yearsTo
+            ? 1
+            : 0
+        }
+      >
         <div className={styles.range}>
           <input
             type="number"
@@ -160,12 +193,15 @@ export function FiltersSidebar({
             components={{ em: <em /> }}
           />
         </p>
-      </div>
+      </FilterSection>
 
-      <div className={styles.filterCard}>
-        <h4 id={`${uid}-languages`}>
-          {t("members:directory.filter.languagesTitle")}
-        </h4>
+      <FilterSection
+        title={t("members:directory.filter.languagesTitle")}
+        headingId={`${uid}-languages`}
+        open={sectionsOpen.languages}
+        onToggle={() => onToggleSection("languages")}
+        activeCount={filters.languages.length}
+      >
         <ChipSelect
           labelledBy={`${uid}-languages`}
           options={LANGUAGES.map((o) => o.label)}
@@ -177,7 +213,7 @@ export function FiltersSidebar({
             })
           }
         />
-      </div>
+      </FilterSection>
 
       <div className={styles.clearRow}>
         <button type="button" onClick={onClearAll}>

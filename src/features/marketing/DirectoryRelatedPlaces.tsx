@@ -1,7 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlaces } from "./api/useDirectory";
 import { LocalBusinessCard } from "./LocalBusinessCard";
-import { CAT_LABEL_KEYS } from "./directorySpace.data";
+import { categoryLabel, normalizeCategory } from "./localPlaces";
 import { type DirectoryPlace } from "./directoryPlaces";
 import s from "./DirectorySpacePage.module.css";
 
@@ -24,9 +24,11 @@ export function DirectoryRelatedPlaces({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const places = useDirectoryPlaces();
 
+  const placeCategory = normalizeCategory(place.cat);
   const sameCategory = places.filter(
     (candidate) =>
-      candidate.slug !== place.slug && candidate.cat === place.cat,
+      candidate.slug !== place.slug &&
+      normalizeCategory(candidate.cat) === placeCategory,
   );
 
   // Too few peers in the same category to fill a row — widen the pool to
@@ -57,14 +59,13 @@ export function DirectoryRelatedPlaces({ place }: { place: DirectoryPlace }) {
   const shortlist = sorted.slice(0, MAX_RELATED);
   if (shortlist.length < 1) return null;
 
-  const categoryLabelKey = CAT_LABEL_KEYS[place.cat];
-  const categoryLabel = categoryLabelKey ? t(categoryLabelKey) : place.cat;
+  const categoryText = categoryLabel(t, place.cat);
 
   return (
     <section className={s.related}>
       <h2 className={s.relatedTitle}>
         {t("marketing:directory.detail.relatedTitle", {
-          category: categoryLabel,
+          category: categoryText,
         })}
       </h2>
       <div className={s.relatedGrid}>

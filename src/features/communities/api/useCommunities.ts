@@ -41,10 +41,16 @@ interface CommunitiesPageVM {
  */
 export function useCommunities(
   params: CommunitiesQuery = {},
+  options: { enabled?: boolean } = {},
 ): CommunitiesResult {
+  const { enabled = true } = options;
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<CommunitiesPageVM>({
     queryKey: ["communities", demoMode, params],
+    // Callers may gate this fetch off when its result isn't consumed (e.g. a
+    // profile viewing another member). Demo mode's queryFn is a local no-network
+    // read, but gating it too keeps the discarded-path behaviour consistent.
+    enabled,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {

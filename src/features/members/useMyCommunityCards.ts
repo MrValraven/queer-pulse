@@ -10,7 +10,20 @@ import type { FeaturedCommunityRef } from "./profileCommunities.types";
  * registry for display metadata. A membership whose community is not loaded
  * (or is private) is skipped — a ref needs a name/tagline to render.
  */
-export function useMyCommunityCards(): FeaturedCommunityRef[] {
+/**
+ * PERF (over-fetch fix): the caller passes `enabled` so this hook's two live
+ * reads (`GET /me/communities`, `GET /communities`) only fire when their result
+ * is actually consumed. On another member's profile the sole consumer
+ * (`useProfileFeaturedCommunities`) never reads this list, so it passes
+ * `enabled: false` and neither request goes out — previously both fired and were
+ * discarded. When disabled the underlying queries stay idle, so `memberships`
+ * and `items` resolve to their empty defaults and this returns `[]`. Defaults to
+ * `true` for the editor consumer (`CommunitiesPickerSection`) that always needs
+ * the list.
+ */
+export function useMyCommunityCards(
+  enabled: boolean = true,
+): FeaturedCommunityRef[] {
   /**
    * LIVE-MODE LIMITATION: the join set below (`items` from `useCommunities`)
    * is the paginated Discover community list, not a full registry — in this
@@ -25,8 +38,8 @@ export function useMyCommunityCards(): FeaturedCommunityRef[] {
    * page. Do not "fix" this with a client-side pagination-draining loop;
    * the proper fix is backend-side and out of scope for this repo.
    */
-  const memberships = useMyCommunities();
-  const { items } = useCommunities();
+  const memberships = useMyCommunities({ enabled });
+  const { items } = useCommunities({}, { enabled });
 
   return useMemo(() => {
     const communityBySlug = new Map(

@@ -68,6 +68,8 @@ export const shared: Catalog = {
     "We couldn't load your account — QueerPulse's server hit an error ({status}). It's on us, not you. Try again in a moment.",
   "auth.error.network":
     "We couldn't reach QueerPulse to load your account. Check your connection and try again in a moment.",
+  "auth.error.expired":
+    "Your session expired — please sign in again to pick up where you left off.",
 
   // Provider-level fallback error toasts (ProfileProvider.tsx / SocialProvider.tsx)
   "profile.saveError": "We couldn't save your profile. Please try again.",
@@ -223,25 +225,39 @@ export const shared: Catalog = {
   "megaNav.community.col.gather.events": "Events",
   "megaNav.community.col.gather.hostGathering": "Host a gathering",
   "megaNav.community.col.organise.head": "Organise",
-  "megaNav.community.col.organise.volunteer": "Volunteer",
-  "megaNav.community.col.organise.activism": "Activism",
+  "megaNav.community.col.organise.activismVolunteering":
+    "Activism & Volunteering",
   "megaNav.community.col.organise.changeMakers": "Change Makers",
 
   // MegaNav — Lisbon
   "megaNav.lisbon.title": "Lisbon",
   "megaNav.lisbon.feature.eyebrow": "Lisbon",
-  "megaNav.lisbon.feature.title": "Queer-owned Lisbon.",
+  // Reframed (Task 11): the directory is the single browse surface for local
+  // spaces (verified badge + `?safe=verified` filter live there now), so this
+  // promo is the primary "find a place" CTA — not a duplicate of the safe-spaces
+  // copy below.
+  "megaNav.lisbon.feature.title": "Find your local spaces.",
   "megaNav.lisbon.feature.body":
-    "Bars, clinics, salons, and shops that welcome you — found and vouched for by the community.",
-  "megaNav.lisbon.feature.cta": "Browse the directory",
+    "Bars, clinics, salons, and shops that welcome you — every listing reviewed, with verified spaces clearly badged.",
+  "megaNav.lisbon.feature.cta": "Browse local spaces",
   "megaNav.lisbon.featurePublic.eyebrow": "Lisbon",
-  "megaNav.lisbon.featurePublic.title": "Places that welcome you.",
+  // Reframed (Task 11): safe-spaces is the trust hub (how verification works +
+  // the delisting wall), not a second directory — this stand-in promo (shown to
+  // logged-out visitors when the directory is gated) now sells that explainer
+  // instead of repeating "places that welcome you" from the feature above.
+  "megaNav.lisbon.featurePublic.title": "How we verify local spaces.",
   "megaNav.lisbon.featurePublic.body":
-    "Bars, clinics, and community spaces vouched for as safe by the people who go there.",
-  "megaNav.lisbon.featurePublic.cta": "Find safe spaces",
+    "Every listing is reviewed before it earns the verified badge — see how it works, and which spaces have been delisted.",
+  "megaNav.lisbon.featurePublic.cta": "See how verification works",
   "megaNav.lisbon.col.discover.head": "Discover",
-  "megaNav.lisbon.col.discover.businessDirectory": "Business Directory",
-  "megaNav.lisbon.col.discover.safeSpaces": "Safe Spaces",
+  // Reframed (Task 11): "Local directory" (was "Business Directory") to match
+  // the directory's new role as the single browse surface, and to read the same
+  // as the "Local directory" global-search entry (search.data.ts).
+  "megaNav.lisbon.col.discover.businessDirectory": "Local directory",
+  // Reframed (Task 11): "How verification works" (was "Safe Spaces") so this
+  // reads as the trust hub, complementary to the directory above rather than a
+  // second competing catalog.
+  "megaNav.lisbon.col.discover.safeSpaces": "How verification works",
   "megaNav.lisbon.col.discover.partners": "Partners",
   "megaNav.lisbon.col.livingHere.head": "Living here",
   "megaNav.lisbon.col.livingHere.housing": "Housing",
@@ -282,7 +298,6 @@ export const shared: Catalog = {
   "megaNav.culture.col.screenSound.cinema": "Cinema · queer film",
   "megaNav.culture.col.makers.head": "Makers & Scene",
   "megaNav.culture.col.makers.studio": "Studio · queer music",
-  "megaNav.culture.col.makers.creatives": "Creatives",
   "megaNav.culture.col.makers.platforms": "Platforms",
   "megaNav.culture.col.makers.readingGroups": "Reading Groups",
   "megaNav.culture.col.makers.lisbonScene": "Lisbon scene & radio",

@@ -35,6 +35,17 @@ export async function getConversations(): Promise<ConversationResponse[]> {
   return Array.isArray(res) ? res : (res?.data ?? []);
 }
 
+/**
+ * GET /conversations/unread-count — the count of conversations with unread
+ * messages, for the nav DM badge. Cheap counterpart to `getConversations`, so
+ * the app-wide badge never pulls the whole inbox. Mirrors
+ * `/notifications/unread-count`.
+ */
+export async function getConversationsUnreadCount(): Promise<number> {
+  const res = await apiGet<{ count: number }>("/conversations/unread-count");
+  return res?.count ?? 0;
+}
+
 /** GET /conversations/:id/messages?cursor= — cursor page of history. */
 export async function getMessages(conversationId: string, cursor?: string) {
   const q = new URLSearchParams();

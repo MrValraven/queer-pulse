@@ -8,6 +8,7 @@ import {
   professionsForFields,
   type FilterState,
 } from "./memberDirectoryFilter.data";
+import { FilterSection, type SectionKey } from "./FilterSection";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Toggle a value within a string[] immutably. */
@@ -25,9 +26,13 @@ function toggle(arr: string[], value: string): string[] {
 export function FilterProfessions({
   filters,
   onChange,
+  sectionsOpen,
+  onToggleSection,
 }: {
   filters: FilterState;
   onChange: (next: FilterState) => void;
+  sectionsOpen: Record<SectionKey, boolean>;
+  onToggleSection: (key: SectionKey) => void;
 }) {
   const { t } = useTranslation();
   const uid = useId();
@@ -50,10 +55,13 @@ export function FilterProfessions({
 
   return (
     <>
-      <div className={styles.filterCard}>
-        <h4 id={`${uid}-fields`}>
-          {t("members:directory.filter.whatTheyDoTitle")}
-        </h4>
+      <FilterSection
+        title={t("members:directory.filter.whatTheyDoTitle")}
+        headingId={`${uid}-fields`}
+        open={sectionsOpen.fields}
+        onToggle={() => onToggleSection("fields")}
+        activeCount={filters.disciplines.length}
+      >
         <SearchInput
           className={styles.searchField}
           placeholder={t("members:directory.filter.searchPlaceholder")}
@@ -81,9 +89,15 @@ export function FilterProfessions({
             <em>{t("members:directory.filter.noFieldMatch", { query })}</em>
           </p>
         )}
-      </div>
+      </FilterSection>
 
-      <ProfessionFilterCard filters={filters} onChange={onChange} query={query} />
+      <ProfessionFilterCard
+        filters={filters}
+        onChange={onChange}
+        query={query}
+        open={sectionsOpen.professions}
+        onToggle={() => onToggleSection("professions")}
+      />
     </>
   );
 }
@@ -99,10 +113,14 @@ function ProfessionFilterCard({
   filters,
   onChange,
   query,
+  open,
+  onToggle,
 }: {
   filters: FilterState;
   onChange: (next: FilterState) => void;
   query: string;
+  open: boolean;
+  onToggle: () => void;
 }) {
   const { t } = useTranslation();
   const uid = useId();
@@ -171,11 +189,13 @@ function ProfessionFilterCard({
   const selectedProfessions = new Set(filters.professions);
 
   return (
-    <div className={styles.filterCard}>
-      <h4 id={`${uid}-professions`}>
-        {t("members:directory.filter.professionTitle")}
-      </h4>
-
+    <FilterSection
+      title={t("members:directory.filter.professionTitle")}
+      headingId={`${uid}-professions`}
+      open={open}
+      onToggle={onToggle}
+      activeCount={filters.professions.length}
+    >
       {q ? (
         professionGroups.length > 0 ? (
           <div className={styles.professionGroups}>
@@ -227,6 +247,6 @@ function ProfessionFilterCard({
           <em>{professionNote}</em>
         </p>
       )}
-    </div>
+    </FilterSection>
   );
 }

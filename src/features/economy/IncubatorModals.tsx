@@ -68,7 +68,7 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@email.com"
+              placeholder={t("economy:incubatorApply.emailPlaceholder")}
             />
           </div>
           <div className={styles.field}>
@@ -175,7 +175,7 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@email.com"
+              placeholder={t("economy:mentorSignup.emailPlaceholder")}
             />
           </div>
           <div className={styles.field}>

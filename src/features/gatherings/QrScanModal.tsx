@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiX, FiCheck } from "react-icons/fi";
 import { MdQrCodeScanner } from "react-icons/md";
 import { Button } from "../../shared/components/ui";
@@ -30,6 +30,12 @@ export function QrScanModal({
   }, [onClose]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState<Guest | null>(null);
+  // Hold the simulated-scan timer so it can't check a guest in after the modal
+  // has closed / unmounted.
+  const scanTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  useEffect(() => () => clearTimeout(scanTimerRef.current), []);
 
   const pending = guests.filter((g) => g.status === "pending");
 
@@ -37,7 +43,7 @@ export function QrScanModal({
     if (pending.length === 0 || scanning) return;
     setScanning(true);
     const guest = pending[Math.floor(Math.random() * pending.length)]!;
-    window.setTimeout(() => {
+    scanTimerRef.current = setTimeout(() => {
       onCheckIn(guest.name);
       setScanned(guest);
       setScanning(false);

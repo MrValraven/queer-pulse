@@ -8,7 +8,8 @@ import { useToast } from "./useToast";
 function errorSignature(
   error: NonNullable<ReturnType<typeof useAuth>["authError"]>,
 ): string {
-  return error.kind === "server" ? `server:${error.status}` : "network";
+  if (error.kind === "server") return `server:${error.status}`;
+  return error.kind; // "network" | "expired"
 }
 
 /**
@@ -36,7 +37,9 @@ export function AuthErrorToast() {
     const message =
       authError.kind === "server"
         ? t("shared:auth.error.server", { status: authError.status })
-        : t("shared:auth.error.network");
+        : authError.kind === "expired"
+          ? t("shared:auth.error.expired")
+          : t("shared:auth.error.network");
     showToast(message, "error", 6000);
   }, [authError, showToast, t]);
 

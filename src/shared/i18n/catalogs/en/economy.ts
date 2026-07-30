@@ -506,6 +506,8 @@ export const economy: Catalog = {
   "housingModal.message.note":
     "For your safety, keep the conversation on QueerPulse until you've met. Never send a deposit before viewing the place in person.",
   "housingModal.message.send": "Send message",
+  "housingModal.message.error":
+    "Couldn't send your message — it didn't go through. Check your connection and try again.",
   "housingModal.message.draftNamed":
     'Hi {name}, I\'m interested in "{listingTitle}". Is it still available? A bit about me: ',
   "housingModal.message.draftGeneric":
@@ -556,6 +558,8 @@ export const economy: Catalog = {
     "Listings are reviewed before they appear. Never ask for a deposit before someone has viewed the place in person.",
   "listSpace.submitting": "Submitting…",
   "listSpace.submitCta": "Submit listing",
+  "listSpace.error":
+    "Couldn't submit your listing — it didn't go through. Check your connection and try again.",
 
   // ── SuggestLandlordModal ────────────────────────────────────────────────
   "suggestLandlord.ariaLabel": "Suggest a landlord",
@@ -639,6 +643,8 @@ export const economy: Catalog = {
   "housingListing.reportModal.success.body":
     "Thank you. A moderator will review {title}. We may contact you for more detail, but we'll never share your report with whoever you reported.",
   "housingListing.reportModal.doneCta": "Done",
+  "housingListing.reportModal.error":
+    "Couldn't send your report — it didn't reach us. Check your connection and try again.",
 
   // ── ContactRequestModal (shared "reach out" flow) ──────────────────────
   "contactRequest.defaultTitle": "Send a",
@@ -2271,6 +2277,7 @@ export const economy: Catalog = {
   "invoiceTool.issuer.namePlaceholder": "Your name or studio",
   "invoiceTool.issuer.nifLabel": "NIF",
   "invoiceTool.issuer.emailLabel": "Email",
+  "invoiceTool.issuer.emailPlaceholder": "you@example.com",
   "invoiceTool.issuer.addressLabel": "Address",
   "invoiceTool.issuer.addressPlaceholder": "Street, postcode, city",
   "invoiceTool.issuer.ibanLabel": "IBAN",
@@ -2862,6 +2869,7 @@ export const economy: Catalog = {
   "incubatorApply.nameLabel": "Your name *",
   "incubatorApply.namePlaceholder": "First and last",
   "incubatorApply.emailLabel": "Email *",
+  "incubatorApply.emailPlaceholder": "you@email.com",
   "incubatorApply.pitchLabel": "What are you building? *",
   "incubatorApply.pitchPlaceholder":
     "A couple of sentences on your idea, where you are, and what you most need help with.",
@@ -2885,6 +2893,7 @@ export const economy: Catalog = {
   "mentorSignup.nameLabel": "Your name *",
   "mentorSignup.namePlaceholder": "First and last",
   "mentorSignup.emailLabel": "Email *",
+  "mentorSignup.emailPlaceholder": "you@email.com",
   "mentorSignup.expertiseLabel": "Where can you help? *",
   "mentorSignup.expertisePlaceholder":
     "e.g. Product, fundraising, legal, hiring",

@@ -9,6 +9,7 @@ import s from "./venueMarker.module.css";
 const CLASS = {
   pin: s.pin ?? "",
   pinSelected: s.pinSelected ?? "",
+  pinHead: s.pinHead ?? "",
   pinIcon: s.pinIcon ?? "",
   pinLabel: s.pinLabel ?? "",
   pinName: s.pinName ?? "",
@@ -153,10 +154,17 @@ function createVenuePin(
   const button = document.createElement("button");
   button.type = "button";
   button.className = selected ? `${CLASS.pin} ${CLASS.pinSelected}` : CLASS.pin;
-  button.dataset.type = venue.type;
+  // `venue.type` carries the unified category (see localPlaceToMarker); it drives
+  // the teardrop's fill + icon colour via `.pin[data-category="…"]` in the CSS.
+  button.dataset.category = venue.type;
   button.setAttribute("aria-label", ariaLabel);
+  // The rotated `.pinHead` is the teardrop; the icon inside it counter-rotates so
+  // it stays upright. The tip sits at the box bottom, matching the marker's
+  // `anchor: "bottom"` so it points exactly at the coordinate.
   button.innerHTML =
-    `<span class="${CLASS.pinIcon}" aria-hidden="true">${ICON_SVG[venue.type] ?? ""}</span>` +
+    `<span class="${CLASS.pinHead}" aria-hidden="true">` +
+    `<span class="${CLASS.pinIcon}">${ICON_SVG[venue.type] ?? ""}</span>` +
+    `</span>` +
     `<span class="${CLASS.pinLabel}">` +
     `<span class="${CLASS.pinName}">${escapeHtml(venue.name)}</span>` +
     `<span class="${CLASS.pinAddress}">${escapeHtml(venue.address)}</span>` +
@@ -308,7 +316,8 @@ export function createVenueMarkerManager(
             anchor.id === selectedId,
             getLabels().venuePin(anchor.name, anchor.type),
           );
-          const marker = new maplibregl.Marker({ element })
+          // Teardrop tip points at the coordinate; round clusters stay centred.
+          const marker = new maplibregl.Marker({ element, anchor: "bottom" })
             .setLngLat([anchor.longitude, anchor.latitude])
             .addTo(map);
           markers.set(key, marker);

@@ -18,6 +18,7 @@ import {
   type SortKey,
   type MemberCard,
 } from "./memberDirectoryFilter.data";
+import { type SectionKey } from "./FilterSection";
 import {
   FiltersSidebar,
   MemberResultCard,
@@ -101,6 +102,8 @@ export interface MemberResultsColumnProps {
   onApplyFilters: (filters: FilterState) => void;
   onResetAll: () => void;
   isMobile: boolean;
+  panelOpen: boolean;
+  onTogglePanel: () => void;
   onOpenFilters: () => void;
   loading: boolean;
   shown: MemberCard[];
@@ -125,6 +128,8 @@ export function MemberResultsColumn({
   onApplyFilters,
   onResetAll,
   isMobile,
+  panelOpen,
+  onTogglePanel,
   onOpenFilters,
   loading,
   shown,
@@ -154,21 +159,22 @@ export function MemberResultsColumn({
           {t("members:directory.memberCountLabel", { count: totalMembers })}
         </div>
         <div className={styles.topControls}>
-          {isMobile && (
-            <button
-              type="button"
-              className={styles.filtersBtn}
-              onClick={onOpenFilters}
-            >
-              <FiSliders aria-hidden />
-              {t("members:directory.filtersCta")}
-              {chips.length > 0 && (
-                <span className={styles.filtersBtnCount}>
-                  {fmt.number(chips.length)}
-                </span>
-              )}
-            </button>
-          )}
+          <button
+            type="button"
+            className={styles.filtersBtn}
+            aria-expanded={isMobile ? undefined : panelOpen}
+            onClick={isMobile ? onOpenFilters : onTogglePanel}
+          >
+            <FiSliders aria-hidden />
+            {!isMobile && panelOpen
+              ? t("members:directory.hideFiltersCta")
+              : t("members:directory.filtersCta")}
+            {chips.length > 0 && (
+              <span className={styles.filtersBtnCount}>
+                {fmt.number(chips.length)}
+              </span>
+            )}
+          </button>
           <div className={styles.sort}>
             <span id={sortLabelId} className={styles.sortLabel}>
               {t("members:directory.sortLabel")}
@@ -280,6 +286,8 @@ export function MemberFiltersSheet({
   members,
   appliedCount,
   filteredCount,
+  sectionsOpen,
+  onToggleSection,
   onApplyFilters,
   onClearAll,
   onClose,
@@ -288,6 +296,8 @@ export function MemberFiltersSheet({
   members: MemberCard[];
   appliedCount: number;
   filteredCount: number;
+  sectionsOpen: Record<SectionKey, boolean>;
+  onToggleSection: (key: SectionKey) => void;
   onApplyFilters: (filters: FilterState) => void;
   onClearAll: () => void;
   onClose: () => void;
@@ -306,6 +316,8 @@ export function MemberFiltersSheet({
         filters={filters}
         members={members}
         appliedCount={appliedCount}
+        sectionsOpen={sectionsOpen}
+        onToggleSection={onToggleSection}
         onChange={onApplyFilters}
         onClearAll={onClearAll}
       />

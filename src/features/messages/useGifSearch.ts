@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   gifProvider,
   isGifProviderConfigured,
@@ -23,8 +23,18 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
   const [error, setError] = useState(false);
   const [nextPage, setNextPage] = useState<number | null>(null);
   const trimmedQuery = query.trim();
+  // Monotonic id of the most-recently-issued request. Every fetch (the search
+  // effect below AND loadMore) claims the next id up front; a resolved response
+  // only applies if it is still the current one. This discards an older page
+  // that resolves after a newer request — a paginated loadMore that lands after
+  // the query changed, or two loadMores racing — instead of clobbering newer
+  // results (or appending a stale page onto a different query).
+  const requestIdRef = useRef(0);
 
   useEffect(() => {
+    // Claim an id for this effect run so any loadMore still in flight from the
+    // previous query is discarded when its response lands.
+    const requestId = ++requestIdRef.current;
     if (demoMode) {
       const lowerQuery = trimmedQuery.toLowerCase();
       setResults(
@@ -57,18 +67,18 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
         : gifProvider.featured();
       request
         .then((page) => {
-          if (cancelled) return;
+          if (cancelled || requestIdRef.current !== requestId) return;
           setResults(page.results);
           setNextPage(page.nextPage);
         })
         .catch(() => {
-          if (cancelled) return;
+          if (cancelled || requestIdRef.current !== requestId) return;
           setError(true);
           setResults([]);
           setNextPage(null);
         })
         .finally(() => {
-          if (!cancelled) setLoading(false);
+          if (!cancelled && requestIdRef.current === requestId) setLoading(false);
         });
     }, 300);
     return () => {
@@ -79,17 +89,27 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
 
   function loadMore() {
     if (demoMode || nextPage === null || loading) return;
+    // Claim an id for this page fetch; if the query changes (the search effect
+    // bumps the id) or another request supersedes it before this resolves, the
+    // stale page is dropped rather than appended to a newer result set.
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     const request = trimmedQuery
       ? gifProvider.search(trimmedQuery, nextPage)
       : gifProvider.featured(nextPage);
     request
       .then((page) => {
+        if (requestIdRef.current !== requestId) return;
         setResults((previous) => [...previous, ...page.results]);
         setNextPage(page.nextPage);
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (requestIdRef.current !== requestId) return;
+        setError(true);
+      })
+      .finally(() => {
+        if (requestIdRef.current === requestId) setLoading(false);
+      });
   }
 
   return {

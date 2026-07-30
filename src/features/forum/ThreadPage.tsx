@@ -52,10 +52,12 @@ export function ThreadPage() {
   );
   // Per-reply like toggles, keyed by a stable identity.
   const [likedReplies, setLikedReplies] = useState<Record<string, boolean>>({});
-  // Nested-replies UI state (collapse + inline reply composer targeting);
-  // resets its own state when `threadData?.replies` changes, in step with
-  // `localReplies`/`likedReplies` below.
-  const nestedReplies = useNestedReplyComposer(threadData?.replies);
+  // Nested-replies UI state (collapse + inline reply composer targeting).
+  // Keyed on the thread's stable slug — NOT `threadData?.replies` — so a
+  // background refetch (which mints a fresh replies array with the same
+  // content) doesn't wipe an in-progress inline draft; the state still resets
+  // when the user navigates to a genuinely different thread.
+  const nestedReplies = useNestedReplyComposer(threadData?.slug);
   const replyBoxRef = useRef<HTMLTextAreaElement>(null);
 
   const replyKey = (replyItem: Reply) => replyItem.id;

@@ -108,7 +108,8 @@
   padding: 13px 16px;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background 0.15s, padding-inline-end var(--ease);
+  transition: background var(--dur-fast) var(--ease),
+    padding-inline-end var(--dur-fast) var(--ease);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
   width: 100%;
   text-align: left;
@@ -1756,7 +1757,8 @@
   opacity: 0;
   cursor: pointer;
   touch-action: manipulation;
-  transition: opacity var(--ease), background var(--ease);
+  transition: opacity var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 
 .threadRowWrap:hover .rowMenuTrigger,
@@ -1785,6 +1787,27 @@
   border-radius: 12px;
   background: var(--paper);
   box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.16);
+  /* Grows from the trigger it hangs off, so it reads as attached to this row
+     rather than snapping on top of the next one. */
+  transform-origin: top right;
+  animation: rowMenuIn var(--dur-fast) var(--ease);
+}
+
+@keyframes rowMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowMenuPopover {
+    animation: none;
+  }
 }
 
 .rowMenuItemDanger {

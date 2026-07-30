@@ -222,6 +222,7 @@ export const marketing: Catalog = {
   "accessibility.accomModal.closeCta": "Close",
 
   // ── Activism ───────────────────────────────────────────────────────────
+  "activism.backToVolunteer": "Back to Volunteering",
   "activism.hero.eyebrow": "Activism",
   "activism.hero.title": "Community care is <em>political.</em>",
   "activism.hero.sub":
@@ -1746,7 +1747,93 @@ export const marketing: Catalog = {
   "changelog.tag.employerReviews": "Read employer reviews →",
   "changelog.tag.studio": "Visit the Studio →",
   "changelog.tag.search": "Try global search →",
+  "changelog.tag.donate": "See where money goes →",
+  "changelog.tag.volunteer": "Find a way in →",
+  "changelog.tag.notifications": "Open your notifications →",
 
+  "changelog.entries.safe-spaces-in-directory.title":
+    "Verified safe spaces now live in the directory",
+  "changelog.entries.safe-spaces-in-directory.body":
+    "The verified badge now shows right on the card in the local directory, a “Verified safe spaces” filter narrows the list to just the ones that earned it, and verified listings rank first. Open any listing to see the full trust block — what verification means for that space and when it was last reviewed. And /local/safe-spaces is now the verification hub: what the badge means, how the review process actually works, and an honest, public record of every space that's lost it.",
+
+  "changelog.entries.session-refresh-csrf-race.title":
+    "Smoother session refresh after a token expires",
+  "changelog.entries.session-refresh-csrf-race.body":
+    "When your session had quietly expired, refreshing the page could briefly flash a “session expired” state before signing you right back in. We fixed a race in how the app renews your session, so it renews cleanly on the first try — no flicker, no wasted request.",
+
+  "changelog.entries.directory-category-unify.title":
+    "Directory categories that match everywhere",
+  "changelog.entries.directory-category-unify.body":
+    "A place you add now shows the right coloured pin on the map and the right category on its card and filter — the “list a business” wizard and the directory finally speak the same category language. Nightlife is now a category you can pick when listing, too.",
+
+  "changelog.entries.messages-badge-count.title":
+    "A faster, accurate unread-messages badge",
+  "changelog.entries.messages-badge-count.body":
+    "The unread count on your messages icon now stays right on every page without quietly loading your whole inbox in the background each time you navigate. It updates live as messages arrive and as you read them.",
+
+  "changelog.entries.notifications-coverage.title":
+    "Notifications for the things that were quietly slipping by",
+  "changelog.entries.notifications-coverage.body":
+    "Your bell now tells you when someone RSVPs to your gathering, replies to your post or thread, asks to join your community (and when a request is decided), applies to your job, reviews your business, when a business listing is approved, when someone you invited joins, when a report or appeal you filed is resolved, and when an idea you shared on the roadmap changes status. Each one links straight to what it's about.",
+
+  "changelog.entries.members-collapsible-filters.title":
+    "Collapsible filters on the members directory",
+  "changelog.entries.members-collapsible-filters.body":
+    "The members directory filters are now tidy collapsible sections with a show/hide toggle, so you can clear space for results — your selections stay applied while filters are hidden, and your view is remembered next time. Opening a section and hiding the whole sidebar now glide smoothly instead of snapping.",
+  "changelog.entries.activism-volunteer-merge.title":
+    "Activism and Volunteering are now one place",
+  "changelog.entries.activism-volunteer-merge.body":
+    "We merged the Activism and Volunteer pages into a single home. Volunteering is now the front door — browse real opportunities in Lisbon, filter by cause or commitment, and start with a couple of free hours. If you want to go deeper, our guide to organising better is one tap away from there. The nav, footer, and sidebar now carry a single “Activism & Volunteering” link instead of two, and the old /activism address still works.",
+  "changelog.entries.spaces-map-pins.title":
+    "Map pins now show what kind of space each place is",
+  "changelog.entries.spaces-map-pins.body":
+    "On the Local directory map, every pin is now a coloured teardrop with an icon for its category — a martini glass for nightlife, a fork and knife for food, a heart for health, and so on — so you can read the map at a glance instead of tapping each dot. The category filter chips carry the same colour and icon, so the filter bar doubles as a legend.",
+  "changelog.entries.creatives-subprofile.title":
+    "The Creatives showcase is now a creative subprofile",
+  "changelog.entries.creatives-subprofile.body":
+    "The standalone Creatives directory has been retired. Showing your art, music, or other creative work now lives with subprofiles — the same place you build any linked persona — so a creative profile is part of who you are on QueerPulse rather than a separate list. The old /magazine/creatives link now takes you straight to your subprofiles, where you can add a creative one.",
+  "changelog.entries.moderation-takedowns.title":
+    "Moderator hide and remove now actually take content down",
+  "changelog.entries.moderation-takedowns.body":
+    "When a moderator hides or removes reported content, it now really disappears from public view. Hidden content is withheld from members while staff can still see it; removed content shows a clear \"removed by a moderator\" tombstone where a deleted post already would. Applied across forum posts and replies, community posts and replies, communities, events, and business listings — recorded in the same step as the moderator's decision so it can never be logged without taking effect.",
+  "changelog.entries.gathering-create-fix.title":
+    "Creating a gathering works again — and lands on your event",
+  "changelog.entries.gathering-create-fix.body":
+    "Publishing a new gathering was quietly failing on the server, yet the wizard still showed the celebration screen as if it had worked — and its \"See your event\" button opened a stray sample page. Both are fixed: a gathering now actually publishes, the success screen only appears once it has, and \"See your event\" takes you straight to your real gathering. If a publish ever fails, you'll see a clear message and stay on the review step to try again. The wizard now also asks for a date and start time in the future before you can move on, so a gathering can't be created without one.",
+  "changelog.entries.directory-photos-crisp.body":
+    "Cover photos on business listings — and the preview while you're adding one — were loading at a low resolution and looking blurry when shown large. They now load crisp at full size. We also nudged the listing header down so the breadcrumb and the owner's Edit button no longer tuck under the floating navigation.",
+  "changelog.entries.admin-role-management.title":
+    "Admins can promote moderators and admins from the dashboard",
+  "changelog.entries.admin-role-management.body":
+    "Making someone a moderator or admin used to mean editing the database by hand. Now an admin can grant or revoke those roles right from a member's detail in the admin dashboard — with the guardrails that matter built in: you can't change your own role, the house account is off-limits, and the platform will never let you remove its last admin. Every change is written to the audit log.",
+  "changelog.entries.appeal-submission.title":
+    "You can now appeal a moderation decision",
+  "changelog.entries.appeal-submission.body":
+    "A suspended or banned account was able to read about appeals but had no way to file one. Now a member under any moderation decision — a warning, a removal, a suspension, a ban — can submit an appeal directly from their account screen, and it goes straight to a moderator who wasn't involved in the original call. One open appeal at a time; the original decision stands while it's reviewed.",
+  "changelog.entries.honest-report-failures.title":
+    "Safety reports tell you the truth when they don't send",
+  "changelog.entries.honest-report-failures.body":
+    "When a report, flag, or safe-space concern can't reach us — a dropped connection, a server hiccup — you now see an honest error and your words stay in the form to try again, instead of a false \"received\". If we say a report landed, it landed. This also covers messaging a housing lister and listing a space.",
+  "changelog.entries.directory-filters-and-accurate-recognition.title":
+    "Member filters that actually filter, and honest badges & perks",
+  "changelog.entries.directory-filters-and-accurate-recognition.body":
+    "Picking a filter in the member directory now returns the people who match instead of emptying the page. Your Badges and Perks pages also show a proper loading, empty, or try-again state while your recognition loads — no more placeholder counts standing in for the real thing.",
+  "changelog.entries.navigation-resilience.title":
+    "Back keeps your place, and the app rides out updates",
+  "changelog.entries.navigation-resilience.body":
+    "Hitting back after opening something from a list now drops you exactly where you were scrolled to, instead of jumping to the top. If your session quietly expires we tell you so you can sign back in, and when a new version ships mid-visit the app quietly refreshes itself instead of showing an error.",
+  "changelog.entries.search-page-launcher.title":
+    "Jump anywhere from search",
+  "changelog.entries.search-page-launcher.body":
+    "Search (⌘K and the search page) now doubles as a launcher: start typing — or just open it — to jump straight to Members, Communities, Events, Messages, your profile, Settings, the Magazine and more, each with its own icon. A new Pages tab lists every destination in one place.",
+  "changelog.entries.donate-honest-live.title":
+    "Donations are honest about being pre-launch",
+  "changelog.entries.donate-honest-live.body":
+    "The donate flow no longer collects card details for a payment that couldn't actually be taken. Until secure payments are wired up, it says so plainly and points to exactly where community money goes.",
+  "changelog.entries.gathering-manage-coming-soon.title":
+    "Host dashboard is an honest preview",
+  "changelog.entries.gathering-manage-coming-soon.body":
+    "The gathering host dashboard was a demo prototype, so in live mode it now shows a clear “coming soon” instead of acting on placeholder data. Browsing and RSVPs are fully live; explore the host tools in demo mode.",
   "changelog.entries.search-member-avatars.title":
     "See who you're searching for",
   "changelog.entries.search-member-avatars.body":
@@ -2165,6 +2252,11 @@ export const marketing: Catalog = {
   "volunteer.hero.note":
     "Every organisation below has been vetted by the QueerPulse community",
   "volunteer.hero.postCta": "Post an opportunity",
+  "volunteer.guide.eyebrow": "New to organising?",
+  "volunteer.guide.title": "Want to do <em>more</em> than a shift?",
+  "volunteer.guide.body":
+    "Our guide to organising better walks you from showing up once to bringing a skill — no experience needed.",
+  "volunteer.guide.cta": "Read the activism guide →",
   "volunteer.empty.noneTitle": "No opportunities posted yet",
   "volunteer.empty.noneDescription":
     "No organisations have posted roles here yet. If yours is looking for hands, be the first to put out the call.",
@@ -2437,6 +2529,7 @@ export const marketing: Catalog = {
   "donateModal.field.nameOnCard": "Name on card",
   "donateModal.field.namePlaceholder": "Alex Rivera",
   "donateModal.field.emailReceipt": "Email for receipt",
+  "donateModal.field.emailPlaceholder": "you@example.com",
   "donateModal.field.cardNumber": "Card number",
   "donateModal.field.expiry": "Expiry",
   "donateModal.field.cvc": "CVC",
@@ -2453,6 +2546,10 @@ export const marketing: Catalog = {
     "Your {amount} / month goes straight to mutual aid, gatherings, and paying queer creatives fairly. Cancel anytime from your account — no questions asked.",
   "donateModal.success.bodyOneOff":
     "Your {amount} goes straight to mutual aid, gatherings, and paying queer creatives fairly. We'll email your receipt shortly.",
+  "donateModal.comingSoon.title": "Giving isn't <em>live yet</em>",
+  "donateModal.comingSoon.body":
+    "We're still setting up secure payments, so we can't take donations here just yet — nothing was charged. In the meantime, you can see exactly where every pound of community money goes.",
+  "donateModal.comingSoon.figuresCta": "See where the money goes",
 
   // ── Contact — page chrome. All platform-authored form/routing copy.
   "contact.meta.title": "Contact QueerPulse: general, safety, press, partners",
@@ -2661,6 +2758,7 @@ export const marketing: Catalog = {
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
   "directory.card.viewDetails": "View details →",
+  "directory.card.verifiedBadge": "Verified safe space",
   "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
   "directory.submitStrip.body":
     "If you run or know a queer-owned or queer-friendly business in Lisbon that belongs in this directory, tell us. We review every suggestion before it goes live.",
@@ -2755,6 +2853,7 @@ export const marketing: Catalog = {
   "directory.detail.mapAria": "Map showing where {name} is",
   "directory.detail.languagesLabel": "Languages",
   "directory.detail.accessLabel": "Access",
+  "directory.detail.trust.lastVerifiedLabel": "Last verified",
   "directory.detail.whoRunsIt": "Who runs it",
   "directory.detail.onQueerPulse": "On QueerPulse",
   "directory.detail.communityVouched": "Community-vouched",
@@ -3094,6 +3193,7 @@ export const marketing: Catalog = {
   "local.filter.categoryAria": "Filter by category",
   "local.filter.vibeLabel": "Vibe",
   "local.filter.vibeVenueNote": "Vibe filters apply to venues",
+  "local.filter.verifiedSafeSpaces": "Verified safe spaces",
   "local.venue.back": "Back to the map",
   "local.venue.address": "Address",
   "local.venue.hours": "Hours",

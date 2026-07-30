@@ -9,6 +9,7 @@ import {
   ModerationTimeline,
   SealedIdentity,
 } from "./AdminMemberDrawerSections";
+import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
 import { MessageModal, RestrictModal } from "./AdminMemberModals";
 import { portrait } from "./adminPeople.data";
 import { useAdminMember } from "./api/useAdminMembers";
@@ -123,6 +124,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           <DrawerBodySkeleton />
         ) : (
           <>
+            <AdminMemberRoleControl member={member} detail={detail} />
             <MemberOverviewSections
               detail={detail}
               memberName={member.name}

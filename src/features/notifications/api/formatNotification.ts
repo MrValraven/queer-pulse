@@ -19,7 +19,22 @@ export type NotificationKind =
   | "event_cancelled"
   | "introduction_made"
   | "mention"
-  | "forum_reply";
+  | "forum_reply"
+  // Platform-wide coverage sweep (mirrors the backend `notifications_type_enum`
+  // additions in `AddMissingNotificationTypes1785004000000`).
+  | "event_rsvp"
+  | "community_reply"
+  | "forum_thread_reply"
+  | "join_request_received"
+  | "join_request_approved"
+  | "join_request_declined"
+  | "job_application"
+  | "listing_approved"
+  | "report_resolved"
+  | "appeal_resolved"
+  | "invite_accepted"
+  | "listing_review"
+  | "roadmap_status";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -41,6 +56,19 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   event_reminder: "events",
   waitlist_promoted: "events",
   event_cancelled: "events",
+  event_rsvp: "events",
+  community_reply: "community",
+  forum_thread_reply: "community",
+  join_request_received: "community",
+  join_request_approved: "community",
+  join_request_declined: "community",
+  invite_accepted: "community",
+  listing_review: "community",
+  job_application: "platform",
+  listing_approved: "platform",
+  report_resolved: "platform",
+  appeal_resolved: "platform",
+  roadmap_status: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */

@@ -3,7 +3,8 @@ import { FiMapPin } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { CAT_LABEL_KEYS } from "./directorySpace.data";
+import { SafeSpaceBadge } from "../safety/SafeSpaceBadge";
+import { categoryLabel } from "./localPlaces";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
 import s from "./DirectoryPage.module.css";
 
@@ -27,9 +28,6 @@ export function LocalBusinessCard({
   index: number;
 }) {
   const { t } = useTranslation();
-  // Unmapped categories (e.g. one the backend added the client hasn't mapped)
-  // fall back to the raw id rather than passing `undefined` to `t`, which crashes.
-  const categoryLabelKey = CAT_LABEL_KEYS[place.cat];
   return (
     <FadeIn
       as={Link}
@@ -44,19 +42,24 @@ export function LocalBusinessCard({
         >
           {place.av}
         </span>
-        <span className={`${s.badge} ${place.owned ? s.owned : s.friendly}`}>
-          {t(
-            place.owned
-              ? "marketing:directory.badge.queerOwned"
-              : "marketing:directory.badge.friendly",
+        <div className={s.badges}>
+          <span className={`${s.badge} ${place.owned ? s.owned : s.friendly}`}>
+            {t(
+              place.owned
+                ? "marketing:directory.badge.queerOwned"
+                : "marketing:directory.badge.friendly",
+            )}
+          </span>
+          {place.safeSpaceStatus === "verified" && (
+            <SafeSpaceBadge
+              label={t("marketing:directory.card.verifiedBadge")}
+            />
           )}
-        </span>
+        </div>
       </div>
       <div>
         <div className={s.name}>{place.name}</div>
-        <div className={s.cat}>
-          {categoryLabelKey ? t(categoryLabelKey) : place.cat}
-        </div>
+        <div className={s.cat}>{categoryLabel(t, place.cat)}</div>
         <div className={s.hood}>
           <FiMapPin /> {place.hood}
         </div>

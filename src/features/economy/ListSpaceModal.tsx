@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CreateHousingListingBody } from "./api/housingListing.api";
@@ -16,6 +17,7 @@ const SPACE_TYPES = [
 
 export function ListSpaceModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [title, setTitle] = useState("");
   const [area, setArea] = useState("");
   const [rent, setRent] = useState("");
@@ -37,7 +39,9 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
     };
     submitListing.mutate(body, {
       onSuccess: () => setDone(true),
-      onError: () => setDone(true),
+      // Don't show the success panel for a listing that didn't go through —
+      // keep the form filled in so the member can retry.
+      onError: () => showToast(t("economy:listSpace.error"), "error"),
     });
   };
 

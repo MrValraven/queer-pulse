@@ -96,6 +96,7 @@ describe("useAdminMembers (live mode via MSW)", () => {
               tone: "coral",
               pronouns: "he/him",
               verified: true,
+              role: "member",
               openReportCount: 0,
               joinedAt: "2024-05-01T00:00:00.000Z",
               tagline: "Photographer",

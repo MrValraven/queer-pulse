@@ -93,7 +93,7 @@ export function AccountBannedPage() {
         </div>
 
         <div className={styles.actions}>
-          <Button to={routes.report}>
+          <Button to={routes.appealSubmit}>
             {t("system:accountBanned.actions.appealCta")}
           </Button>
           <Button variant="ghost" to={routes.dataExport}>

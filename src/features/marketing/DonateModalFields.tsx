@@ -64,7 +64,7 @@ export function DonateModalFields({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
+          placeholder={t("marketing:donateModal.field.emailPlaceholder")}
           autoComplete="email"
         />
       </div>

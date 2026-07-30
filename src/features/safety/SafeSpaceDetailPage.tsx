@@ -1,29 +1,15 @@
-import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
+import { routes, businessPath } from "../../app/routeMap";
 import { useSafeSpace } from "./api/useSafeSpaces";
-import { type Tint, type VerifiedSpace, type RemovedSpace } from "./safeSpaces";
-import { SafeSpaceVerifiedAside } from "./SafeSpaceVerifiedAside";
-import { VouchModal } from "./VouchModal";
+import { type RemovedSpace } from "./safeSpaces";
 import styles from "./SafeSpaceDetailPage.module.css";
 
-const TINT: Record<Tint, string | undefined> = {
-  coral: styles.tCoral,
-  jade: styles.tJade,
-  plum: styles.tPlum,
-};
 const SAFETY = routes.safety;
 const VERIFIED_COUNT = 47;
-
-const Tick = () => (
-  <svg viewBox="0 0 24 24">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
 
 function emName(name: string) {
   const words = name.split(" ");
@@ -31,164 +17,12 @@ function emName(name: string) {
   return { lead: words.join(" "), last };
 }
 
-function VerifiedView({ s }: { s: VerifiedSpace }) {
-  const { t } = useTranslation();
-  const [vouchOpen, setVouchOpen] = useState(false);
-  const { lead, last } = emName(s.name);
-
-  return (
-    <div className={styles.page}>
-      <Link to={routes.safeSpaces} className={styles.back}>
-        {t("safety:spaces.detail.backLink")}
-      </Link>
-
-      <div className={styles.trustBanner}>
-        <div className={styles.seal}>
-          <Tick />
-        </div>
-        <div>
-          <h3>
-            {s.tier > 0
-              ? t("safety:spaces.detail.trust.title", { tier: s.tier })
-              : t("safety:spaces.detail.trust.titleNoTier")}
-          </h3>
-          <p>
-            <Translation
-              i18nKey="safety:spaces.detail.trust.body"
-              values={{ date: s.reVerified, verifier: s.verifier }}
-              components={{ strong: <strong /> }}
-            />
-          </p>
-        </div>
-      </div>
-
-      <header className={styles.hero}>
-        <div>
-          <div className={styles.eyebrow}>{s.eyebrow}</div>
-          <h1 className={styles.h1}>
-            {lead && `${lead} `}
-            <em>{last}.</em>
-          </h1>
-          <p className={styles.sub}>{s.sub}</p>
-          <div className={styles.meta}>
-            {s.metaPills.map((p) => (
-              <span
-                key={p.label}
-                className={[styles.pill, p.accent && styles.pillAccent]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {p.label}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className={styles.heroImg}>{s.name}</div>
-      </header>
-
-      <div className={styles.grid}>
-        <div>
-          <section className={styles.sec}>
-            <h2>
-              <Translation
-                i18nKey="safety:spaces.detail.relyTitle"
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <p className={styles.secSub}>{t("safety:spaces.detail.relySub")}</p>
-            <div className={styles.promises}>
-              {s.promises.map((p) => (
-                <div className={styles.promise} key={p.title}>
-                  <div className={styles.check}>
-                    <Tick />
-                  </div>
-                  <div>
-                    <b>{p.title}</b>
-                    <span>{p.desc}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className={styles.sec}>
-            <h2>
-              <Translation
-                i18nKey="safety:spaces.detail.vouchedTitle"
-                values={{ count: s.vouches.length }}
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <p className={styles.secSub}>
-              {t("safety:spaces.detail.vouchedSub")}{" "}
-              <Button
-                variant="ghost"
-                className={styles.vouchTrigger}
-                onClick={() => setVouchOpen(true)}
-              >
-                {t("safety:spaces.detail.addVouchCta")}
-              </Button>
-            </p>
-            <div className={styles.vouchRow}>
-              {s.vouches.map((v) => (
-                <div className={styles.vouch} key={v.name + v.when}>
-                  <div className={styles.vouchHead}>
-                    <div className={[styles.vouchAv, TINT[v.tint]].join(" ")}>
-                      {v.initials}
-                    </div>
-                    <div>
-                      <div className={styles.vouchName}>
-                        <Link to={routes.members}>{v.name}</Link>
-                      </div>
-                      <div className={styles.vouchByline}>{v.byline}</div>
-                    </div>
-                  </div>
-                  <div className={styles.vouchText}>{v.text}</div>
-                  <div className={styles.vouchWhen}>{v.when}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className={styles.sec}>
-            <h2>
-              <Translation
-                i18nKey="safety:spaces.detail.incidentTitle"
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <div className={styles.incident}>
-              <h3>{t("safety:spaces.detail.dangerTitle")}</h3>
-              <p>
-                <Translation
-                  i18nKey="safety:spaces.detail.dangerBody"
-                  components={{ strong: <strong /> }}
-                />
-              </p>
-              <Link to={SAFETY}>
-                {t("safety:spaces.detail.emergencyGuideCta")}
-              </Link>
-            </div>
-            <div className={[styles.incident, styles.incidentPlum].join(" ")}>
-              <h3>{t("safety:spaces.detail.offTitle")}</h3>
-              <p>{t("safety:spaces.detail.offBody")}</p>
-              <Link to={SAFETY}>
-                {t("safety:spaces.detail.quietReportCta")}
-              </Link>
-            </div>
-          </section>
-        </div>
-
-        <SafeSpaceVerifiedAside space={s} />
-      </div>
-
-      {vouchOpen && (
-        <VouchModal spaceName={s.name} onClose={() => setVouchOpen(false)} />
-      )}
-    </div>
-  );
-}
-
+/**
+ * The delisting accountability narrative for a safe space removed for a
+ * safety violation — reason, timeline, "what now". This stays on the safety
+ * hub rather than merging into the directory: a removed space isn't a live
+ * directory listing, so `DirectorySpacePage` has nothing to show for it.
+ */
 function RemovedView({ s }: { s: RemovedSpace }) {
   const { t } = useTranslation();
   const { lead, last } = emName(s.name);
@@ -315,6 +149,18 @@ function RemovedView({ s }: { s: RemovedSpace }) {
   );
 }
 
+/**
+ * Branching detail page for `/local/safe-spaces/:slug` (and the legacy
+ * `/safe-space/:slug` alias). A safe space is either:
+ *  - REMOVED: delisted for a safety violation — keeps its accountability
+ *    narrative here on the hub (`RemovedView`), since it's not a live
+ *    directory listing.
+ *  - verified (or any other live listing): redirects to the merged
+ *    directory detail (`businessPath`), which renders the trust section
+ *    inline as of Task 7 — `VerifiedView`'s old markup lives there now via
+ *    the extracted `SafeSpaceTrustBanner`/`SafeSpacePromisesList`/
+ *    `SafeSpaceVouchesList`/`SafeSpaceVerifiedAside` components.
+ */
 export function SafeSpaceDetailPage() {
   const { slug } = useParams();
   const { space, isLoading } = useSafeSpace(slug);
@@ -334,13 +180,13 @@ export function SafeSpaceDetailPage() {
 
   if (!space) return <Navigate to={routes.safeSpaces} replace />;
 
-  return (
-    <PageShell>
-      {space.kind === "verified" ? (
-        <VerifiedView s={space.data} />
-      ) : (
+  if (space.kind === "removed") {
+    return (
+      <PageShell>
         <RemovedView s={space.data} />
-      )}
-    </PageShell>
-  );
+      </PageShell>
+    );
+  }
+
+  return <Navigate to={businessPath(slug ?? "")} replace />;
 }

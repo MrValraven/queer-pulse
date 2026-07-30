@@ -82,7 +82,7 @@ export function AppRoutes() {
           {messagesRoutes()}
           {notificationsRoutes()}
           {communitiesRoutes()}
-          {gatheringRoutes()}
+          {gatheringRoutes(demoMode)}
           {magazineRoutes()}
           {topicRoutes()}
           {cultureRoutes()}

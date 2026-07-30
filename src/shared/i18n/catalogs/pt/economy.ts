@@ -521,6 +521,8 @@ export const economy: Catalog = {
   "housingModal.message.note":
     "Para tua segurança, mantém a conversa dentro da QueerPulse até se terem conhecido pessoalmente. Nunca envies um depósito antes de visitar o espaço.",
   "housingModal.message.send": "Enviar mensagem",
+  "housingModal.message.error":
+    "Não foi possível enviar a tua mensagem — não foi entregue. Verifica a ligação e tenta novamente.",
   "housingModal.message.draftNamed":
     'Olá, {name}! Tenho interesse em "{listingTitle}". Ainda está disponível? Um pouco sobre mim: ',
   "housingModal.message.draftGeneric":
@@ -573,6 +575,8 @@ export const economy: Catalog = {
     "Os anúncios são revistos antes de aparecerem. Nunca peças um depósito antes de a pessoa visitar o espaço pessoalmente.",
   "listSpace.submitting": "A submeter…",
   "listSpace.submitCta": "Submeter anúncio",
+  "listSpace.error":
+    "Não foi possível submeter o teu anúncio — não foi entregue. Verifica a ligação e tenta novamente.",
 
   // ── SuggestLandlordModal ────────────────────────────────────────────────
   "suggestLandlord.ariaLabel": "Sugerir uma pessoa proprietária",
@@ -656,6 +660,8 @@ export const economy: Catalog = {
   "housingListing.reportModal.success.body":
     "Obrigade. Uma pessoa moderadora vai rever {title}. Podemos contactar-te para mais detalhe, mas nunca partilharemos a tua denúncia com quem denunciaste.",
   "housingListing.reportModal.doneCta": "Concluído",
+  "housingListing.reportModal.error":
+    "Não foi possível enviar a tua denúncia — não chegou até nós. Verifica a ligação e tenta novamente.",
 
   // ── ContactRequestModal (fluxo partilhado de "contactar") ──────────────
   "contactRequest.defaultTitle": "Enviar um",
@@ -2265,6 +2271,7 @@ export const economy: Catalog = {
   "invoiceTool.issuer.namePlaceholder": "O teu nome ou estúdio",
   "invoiceTool.issuer.nifLabel": "NIF",
   "invoiceTool.issuer.emailLabel": "Email",
+  "invoiceTool.issuer.emailPlaceholder": "tu@exemplo.com",
   "invoiceTool.issuer.addressLabel": "Morada",
   "invoiceTool.issuer.addressPlaceholder": "Rua, código postal, cidade",
   "invoiceTool.issuer.ibanLabel": "IBAN",
@@ -2873,6 +2880,7 @@ export const economy: Catalog = {
   "incubatorApply.nameLabel": "O teu nome *",
   "incubatorApply.namePlaceholder": "Nome e apelido",
   "incubatorApply.emailLabel": "Email *",
+  "incubatorApply.emailPlaceholder": "tu@exemplo.com",
   "incubatorApply.pitchLabel": "O que estás a construir? *",
   "incubatorApply.pitchPlaceholder":
     "Algumas frases sobre a tua ideia, em que ponto estás, e onde mais precisas de ajuda.",
@@ -2896,6 +2904,7 @@ export const economy: Catalog = {
   "mentorSignup.nameLabel": "O teu nome *",
   "mentorSignup.namePlaceholder": "Nome e apelido",
   "mentorSignup.emailLabel": "Email *",
+  "mentorSignup.emailPlaceholder": "tu@exemplo.com",
   "mentorSignup.expertiseLabel": "Em que podes ajudar? *",
   "mentorSignup.expertisePlaceholder":
     "ex.: Produto, angariação de fundos, jurídico, contratação",

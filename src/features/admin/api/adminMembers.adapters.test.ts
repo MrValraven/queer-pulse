@@ -53,6 +53,7 @@ const baseCardDto: AdminMemberCardDTO = {
   tone: "jade",
   pronouns: "she/her",
   verified: true,
+  role: "member",
   openReportCount: 0,
   // Day 15, not day 1: an exact-match assertion on the derived "Mar 2023"
   // must not be sensitive to the test machine's timezone offset rolling a
@@ -201,6 +202,8 @@ const baseDetailDto: AdminMemberDetailDTO = {
   tone: "jade",
   pronouns: "she/her",
   verified: true,
+  role: "admin",
+  isSystem: false,
   avatarUrl: null,
   vouchCount: 21,
   outboundVouchCount: 0,

@@ -31,5 +31,9 @@ export function useReportProgress(titleId: string) {
   return useMutation<ReportProgressResultDTO, Error, number>({
     mutationFn: (positionSeconds: number) =>
       reportCinemaProgress(titleId, positionSeconds),
+    // Best-effort background save fired periodically mid-playback; a failed
+    // report must never surface a toast over the film. The global mutation
+    // error handler skips toasting when `meta.silentError` is set.
+    meta: { silentError: true },
   });
 }

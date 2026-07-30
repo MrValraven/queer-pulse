@@ -21,16 +21,18 @@ export const COLUMNS: FooterColumn[] = [
   {
     headingKey: "shared:megaNav.community.title",
     links: [
-      { labelKey: "nav:gatherings", href: routes.events },
+      // People
       { labelKey: "nav:forum", href: routes.forum },
-      { labelKey: "nav:communities", href: routes.communities },
       {
         labelKey: "shared:megaNav.community.col.organise.changeMakers",
         href: routes.changemakers,
       },
+      // Gather
+      { labelKey: "nav:gatherings", href: routes.events },
+      { labelKey: "nav:communities", href: routes.communities },
       {
-        labelKey: "shared:megaNav.community.col.organise.activism",
-        href: routes.activism,
+        labelKey: "shared:megaNav.community.col.organise.activismVolunteering",
+        href: routes.volunteer,
       },
     ],
   },

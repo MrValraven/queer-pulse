@@ -12,6 +12,13 @@ interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   verified?: boolean;
   /** Optional photo; falls back to initials when absent. */
   src?: string;
+  /**
+   * The person's full name, used as the image's `alt` text so a screen reader
+   * announces *who* the avatar shows rather than the meaningless initials. When
+   * a visible name label already sits beside the avatar, omit this (and `alt`)
+   * so the image is treated as decorative (`alt=""`) instead of double-reading.
+   */
+  name?: string;
   alt?: string;
 }
 
@@ -21,6 +28,7 @@ export function Avatar({
   size = 40,
   verified = false,
   src,
+  name,
   alt,
   className,
   ...rest
@@ -62,7 +70,10 @@ export function Avatar({
         {resolvedSrc && !imgFailed ? (
           <img
             src={resolvedSrc}
-            alt={alt ?? initials}
+            // Prefer an explicit alt, then the person's name. Never the
+            // initials — read aloud, "M R" is noise. With neither, the avatar
+            // is decorative (a visible name label sits beside it) → alt="".
+            alt={alt ?? name ?? ""}
             referrerPolicy="no-referrer"
             onError={() => setImgFailed(true)}
           />

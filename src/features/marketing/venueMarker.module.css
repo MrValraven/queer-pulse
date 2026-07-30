@@ -4,25 +4,39 @@
    element we hand it; our animated transforms live on the inner .pin button so
    they never fight the map's positioning. */
 
+/* The interactive container. Carries the hover/selected/entrance transforms
+   (never rotated), so they compose cleanly with the head's teardrop rotation.
+   Sized so the centred, rotated head's tip lands at the box's bottom-centre —
+   which is the marker's `anchor: "bottom"`, i.e. the exact coordinate.
+   `transform-origin: bottom` keeps the tip pinned while the pin scales. */
 .pin {
   position: relative;
   display: grid;
   place-items: center;
-  inline-size: 34px;
-  block-size: 34px;
+  inline-size: 42px;
+  block-size: 42px;
   padding: 0;
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-avatar);
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow:
-    0 2px 6px rgba(var(--plum-rgb), 0.22),
-    0 1px 2px rgba(var(--plum-rgb), 0.18);
+  border: 0;
+  background: none;
   cursor: pointer;
-  transition:
-    transform var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+  transform-origin: bottom center;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+/* The teardrop itself: a rounded square with one sharp corner, rotated so the
+   corner points straight down. A fixed white ring + plum drop-shadow (which
+   follows the teardrop silhouette) keep it legible on any basemap tile. */
+.pinHead {
+  display: grid;
+  place-items: center;
+  inline-size: 30px;
+  block-size: 30px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--ink); /* fallback; real fill comes from [data-category] */
+  box-shadow: inset 0 0 0 2px #fff;
+  transform: rotate(-45deg);
+  filter: drop-shadow(0 2px 5px rgba(var(--plum-rgb), 0.4));
+  transition: box-shadow var(--dur-fast) var(--ease);
 }
 
 /* Staggered drop-in for pins/clusters on the map's first paint (List→Map).
@@ -41,43 +55,54 @@
   border-radius: inherit;
 }
 
+/* Counter-rotate the icon so it sits upright inside the rotated head. White
+   on the category fill — a fixed value that stays legible in both themes. */
 .pinIcon {
   display: grid;
   place-items: center;
+  color: #fff;
+  transform: rotate(45deg);
   pointer-events: none;
 }
 .pinIcon svg {
-  inline-size: 16px;
-  block-size: 16px;
+  inline-size: 15px;
+  block-size: 15px;
 }
 
-/* Type colours mirror TYPE_FG in map.data.ts (the established venue-type
-   palette). The two non-token hues match TYPE_FG's existing raw values. */
-.pin[data-type="bar"] .pinIcon,
-.pin[data-type="bookshop"] .pinIcon {
-  color: var(--accent-ink);
+/* One fill per unified category, mirroring CATEGORY_COLOR / the --cat-* tokens.
+   Each fill carries the white icon at ≥4.5:1; the icon + label mean colour is
+   never the sole signal. */
+.pin[data-category="nightlife"] .pinHead {
+  background: var(--cat-nightlife);
 }
-.pin[data-type="club"] .pinIcon {
-  color: var(--plum);
+.pin[data-category="food"] .pinHead {
+  background: var(--cat-food);
 }
-.pin[data-type="café"] .pinIcon,
-.pin[data-type="clinic"] .pinIcon,
-.pin[data-type="community space"] .pinIcon {
-  color: var(--jade);
+.pin[data-category="health"] .pinHead {
+  background: var(--cat-health);
 }
-.pin[data-type="sauna"] .pinIcon {
-  color: var(--ink-60);
+.pin[data-category="space"] .pinHead {
+  background: var(--cat-space);
 }
-.pin[data-type="barbershop"] .pinIcon {
-  color: #9a6820; /* mirrors TYPE_FG.barbershop */
+.pin[data-category="culture"] .pinHead {
+  background: var(--cat-culture);
 }
-.pin[data-type="gym"] .pinIcon {
-  color: #3a5ea0; /* mirrors TYPE_FG.gym */
+.pin[data-category="design"] .pinHead {
+  background: var(--cat-design);
+}
+.pin[data-category="tech"] .pinHead {
+  background: var(--cat-tech);
+}
+.pin[data-category="grooming"] .pinHead {
+  background: var(--cat-grooming);
+}
+.pin[data-category="fitness"] .pinHead {
+  background: var(--cat-fitness);
 }
 
 /* Name + street, revealed only when the pin is selected. Text sits on the fixed
    plum pill, so it uses stable light values (a documented map-marker exception,
-   like the dark-mode block below). */
+   like the fixed teardrop fills above). */
 .pinLabel {
   position: absolute;
   inset-block-end: calc(100% + 7px);
@@ -115,24 +140,31 @@
 @media (hover: hover) and (pointer: fine) {
   .pin:hover {
     transform: translateY(-3px) scale(1.08);
-    box-shadow: var(--shadow-accent);
     z-index: 2;
+  }
+  .pin:hover .pinHead {
+    filter: drop-shadow(0 6px 12px rgba(var(--plum-rgb), 0.45));
   }
 }
 
 .pin:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  border-radius: var(--radius-badge);
   z-index: 3;
 }
 
+/* Selected: lift + scale on the container, an accent halo + lifted shadow on the
+   head (the ring follows the teardrop silhouette). The inset white ring stays. */
 .pinSelected {
-  transform: scale(1.18);
-  border-color: var(--accent);
-  box-shadow:
-    0 0 0 3px rgba(var(--accent-rgb), 0.35),
-    0 8px 20px -8px rgba(var(--plum-rgb), 0.5);
+  transform: scale(1.16);
   z-index: 4;
+}
+.pinSelected .pinHead {
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    0 0 0 4px rgba(var(--accent-rgb), 0.4);
+  filter: drop-shadow(0 8px 16px rgba(var(--plum-rgb), 0.5));
 }
 .pinSelected .pinLabel {
   opacity: 1;
@@ -182,16 +214,9 @@
   outline-offset: 2px;
 }
 
-/* Dark mode: the basemap only dims (it isn't a true dark style), and the chip
-   sits on a fixed surface. Pin the marker surface to a stable light value so the
-   type-coloured icons keep their contrast in both themes — the standard "markers
-   stay light" map convention. Fixed values are intentional here (no light-neutral
-   token survives the dark-mode flip), in the spirit of TYPE_FG's fixed hues. */
-:global([data-theme="dark"]) .pin {
-  background: #f4eff8;
-  border-color: rgba(45, 27, 61, 0.16);
-  color: #1a1a1f;
-}
+/* No dark-mode override needed: the teardrop's category fill, white icon, and
+   white ring are all fixed values (the standard "markers stay light" map
+   convention), so contrast holds in both themes as the basemap dims. */
 
 /* Local copy of the shared drop-in keyframe — a CSS Module can't reference the
    global @keyframes in effects.css (the name gets scoped to a dangling hash).
@@ -212,6 +237,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pin,
+  .pinHead,
   .pinLabel,
   .cluster {
     transition: none;

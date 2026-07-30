@@ -206,7 +206,9 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
     venue: isOnline ? undefined : form.venue.trim() || form.hood || undefined,
     isOnline,
     capacity: Number.isFinite(capacity) ? capacity : undefined,
-    visibility: "network",
+    // The wizard has no public/private control; gatherings default to
+    // members-only (visible to the network), the backend's "members" value.
+    visibility: "members",
     status: "published",
   };
 }

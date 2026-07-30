@@ -32,6 +32,26 @@ export interface Recognition {
   };
 }
 
+/** A zeroed Recognition used in live mode while the fetch is in flight or has
+ *  errored — so field access never throws, yet nothing fictional (the demo
+ *  fixtures) is ever presented as the member's real level/badges/perks.
+ *  Callers gate on the hook's `isLoading`/`isError`/`hasRealData` flags to
+ *  render loading/error/empty states rather than this placeholder. */
+export const emptyRecognition: Recognition = {
+  level: {
+    level: 0,
+    name: "",
+    xp: 0,
+    xpMax: 0,
+    percent: 0,
+    xpToNext: 0,
+    nextName: "",
+  },
+  levelLadder: [],
+  badges: { earned: [], locked: [], earnedCount: 0, discoverCount: 0 },
+  perks: { groups: [], ladder: [], availableCount: 0 },
+};
+
 function badgeFromDto(b: BadgeDTO): Badge {
   return {
     category: b.cat,

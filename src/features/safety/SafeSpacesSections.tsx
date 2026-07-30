@@ -1,10 +1,11 @@
 import { useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, ComingSoon } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { RemovedSpace } from "./safeSpaces";
 import { CRITERIA, HOW, NOMINATE_TYPE_KEYS } from "./safeSpacesPage.data";
 import styles from "./SafeSpacesPage.module.css";
@@ -266,11 +267,36 @@ function NominateForm({
   );
 }
 
+/**
+ * Live-mode placeholder for the nomination form — nominating a space has no
+ * backend yet, so live mode shows this honest notice instead of a form that
+ * would fake a submission. Demo mode still renders the full `NominateForm` /
+ * `NominateThanks` flow below.
+ */
+function NominateComingSoon() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.nomThanks}>
+      <ComingSoon label={t("safety:spaces.nominate.comingSoon.badge")} />
+      <h3 className={styles.nomThanksTitle}>
+        <Translation
+          i18nKey="safety:spaces.nominate.comingSoon.title"
+          components={{ em: <em /> }}
+        />
+      </h3>
+      <p className={styles.nomThanksText}>
+        {t("safety:spaces.nominate.comingSoon.body")}
+      </p>
+    </div>
+  );
+}
+
 export function NominateSection({
   sectionRef,
 }: {
   sectionRef: RefObject<HTMLDivElement | null>;
 }) {
+  const { demoMode } = useDemoMode();
   const [nominated, setNominated] = useState(false);
   const [nomName, setNomName] = useState("");
 
@@ -278,7 +304,9 @@ export function NominateSection({
     <div className={styles.nomSection} ref={sectionRef}>
       <div className="wrap">
         <div className={styles.nomBox}>
-          {nominated ? (
+          {!demoMode ? (
+            <NominateComingSoon />
+          ) : nominated ? (
             <NominateThanks
               nomName={nomName}
               onReset={() => {

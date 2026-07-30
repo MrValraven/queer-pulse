@@ -116,6 +116,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setOnAuthLost(() => {
       setUser(null);
       setLoggedIn(false);
+      // An involuntary sign-out mid-visit (refresh failed after a 401). Surface
+      // it so the member hears "your session expired" rather than silently
+      // finding themselves logged out. A user-initiated signOut() never sets
+      // this, so the two stay distinct.
+      setAuthError({ kind: "expired" });
     });
     // Reset before the async /auth/me bootstrap round trip resolves below.
     // eslint-disable-next-line react-hooks/set-state-in-effect

@@ -90,6 +90,7 @@ export function ListingPhotoField({
         tint={tint}
         radius={14}
         height={height}
+        srcSize={wide ? 1280 : 640}
         src={displayValue || undefined}
         placeholder={placeholder}
       />

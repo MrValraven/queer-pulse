@@ -37,6 +37,7 @@ export function useDirectoryFilters(places: LocalPlace[]) {
     () => searchParams.get("vibe")?.split(",").filter(Boolean) ?? [],
     [searchParams],
   );
+  const safe = searchParams.get("safe") === "verified" ? "verified" : null;
 
   const mutateParams = useCallback(
     (mutate: (params: URLSearchParams) => void, push = false) => {
@@ -90,12 +91,17 @@ export function useDirectoryFilters(places: LocalPlace[]) {
     },
     [vibes, setParam],
   );
+  const setSafe = useCallback(
+    (next: boolean) => setParam("safe", "verified", !next),
+    [setParam],
+  );
   const clearFilters = useCallback(
     () =>
       mutateParams((params) => {
         params.delete("cat");
         params.delete("q");
         params.delete("vibe");
+        params.delete("safe");
       }),
     [mutateParams],
   );
@@ -103,22 +109,27 @@ export function useDirectoryFilters(places: LocalPlace[]) {
   const filtered = useMemo(
     () =>
       sortLocalPlaces(
-        filterLocalPlaces(places, { category, query, vibes }),
+        filterLocalPlaces(places, { category, query, vibes, safe }),
         sort,
       ),
-    [places, category, query, vibes, sort],
+    [places, category, query, vibes, safe, sort],
   );
 
-  // Chip counts reflect the query + vibe filters but NOT the category, so each
-  // chip shows how many places it would surface right now.
+  // Chip counts reflect the query + vibe + safe filters but NOT the category,
+  // so each chip shows how many places it would surface right now.
   const categoryCounts = useMemo(() => {
-    const base = filterLocalPlaces(places, { category: "all", query, vibes });
+    const base = filterLocalPlaces(places, {
+      category: "all",
+      query,
+      vibes,
+      safe,
+    });
     const counts: Record<string, number> = { all: base.length };
     for (const place of base) {
       counts[place.category] = (counts[place.category] ?? 0) + 1;
     }
     return counts;
-  }, [places, query, vibes]);
+  }, [places, query, vibes, safe]);
 
   const mappableCount = useMemo(
     () => filtered.filter((place) => place.coords !== null).length,
@@ -141,6 +152,13 @@ export function useDirectoryFilters(places: LocalPlace[]) {
         onRemove: () => toggleVibe(vibe),
       });
     });
+    if (safe === "verified") {
+      list.push({
+        key: "safe",
+        label: t("marketing:local.filter.verifiedSafeSpaces"),
+        onRemove: () => setSafe(false),
+      });
+    }
     if (query.trim()) {
       list.push({
         key: "query",
@@ -149,7 +167,7 @@ export function useDirectoryFilters(places: LocalPlace[]) {
       });
     }
     return list;
-  }, [category, vibes, query, t, setCategory, toggleVibe, setQuery]);
+  }, [category, vibes, safe, query, t, setCategory, toggleVibe, setSafe, setQuery]);
 
   return {
     view,
@@ -157,6 +175,7 @@ export function useDirectoryFilters(places: LocalPlace[]) {
     query,
     sort,
     vibes,
+    safe,
     filtered,
     categoryCounts,
     mappableCount,
@@ -166,6 +185,7 @@ export function useDirectoryFilters(places: LocalPlace[]) {
     setQuery,
     setSort,
     toggleVibe,
+    setSafe,
     clearFilters,
   };
 }

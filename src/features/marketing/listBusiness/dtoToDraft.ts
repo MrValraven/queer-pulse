@@ -1,5 +1,6 @@
 import type { ListingDraft, PhotoKey } from "./listBusiness.data";
 import type { ListingDTO } from "./api/listings.api";
+import { normalizeCategory } from "../localPlaces";
 
 const PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
@@ -18,7 +19,9 @@ export function dtoToDraft(dto: ListingDTO): ListingDraft {
     path: dto.path,
     verify: dto.verify,
     name: dto.name,
-    cats: dto.cats,
+    // Canonicalize legacy display-string categories to slugs so the wizard chip
+    // pre-selects, and a re-save writes the slug (fully healing the stored row).
+    cats: dto.cats.map(normalizeCategory),
     hood: dto.hood,
     badge: dto.badge,
     evidence: dto.evidence,

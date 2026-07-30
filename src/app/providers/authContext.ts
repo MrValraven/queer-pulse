@@ -10,9 +10,15 @@ import type {
  * message — `AuthProvider` sits above `I18nProvider` in the provider tree, so
  * it cannot call `t()` itself. `AuthErrorToast` (below `I18nProvider`)
  * resolves this into the active language via `shared:auth.error.*`.
+ *
+ * `expired` is an *involuntary* sign-out: a request 401'd and the token refresh
+ * failed, so the session ended mid-visit. It's distinct from a user-initiated
+ * logout (which raises no error) and from a plain not-signed-in 401 at boot.
  */
 export type AuthErrorCode =
-  { kind: "server"; status: number } | { kind: "network" };
+  | { kind: "server"; status: number }
+  | { kind: "network" }
+  | { kind: "expired" };
 
 export interface AuthContextValue {
   loggedIn: boolean;

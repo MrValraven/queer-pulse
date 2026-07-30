@@ -1,6 +1,15 @@
 .cover {
   padding-top: 24px;
 }
+/* The page's top cover (breadcrumb + owner "edit" action) is the first thing in
+   <main>, so it must reserve the floating Navbar's band (--nav-top +
+   --nav-height ≈ 80px) itself — otherwise the breadcrumb and the EDIT THIS
+   LISTING button render underneath the fixed pill nav. Every other page hero
+   reserves this band the same way (see PageHero / standalone.css). The gallery
+   cover below keeps the small `.cover` padding. */
+.coverHead {
+  padding-top: calc(var(--nav-top) + var(--nav-height) + 24px);
+}
 .coverInner {
   max-width: 1180px;
   margin: 0 auto;
@@ -1268,6 +1277,16 @@
 .reviewSignIn a {
   color: var(--accent-ink);
   font-weight: 600;
+}
+
+/* ── Inline safe-space trust section (reuses the safety feature's own
+   .grid for its internal two-column layout — see DirectorySpaceTrust.tsx).
+   Sits inside this page's existing .page container (not a second one), so
+   it only needs a section-level top divider, not its own max-width/padding. */
+.trustSection {
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  padding-top: 32px;
+  margin-top: 8px;
 }
 
 /* ── "More like this" related places row ─────────────────────────────────── */

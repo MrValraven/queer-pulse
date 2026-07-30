@@ -35,7 +35,11 @@ export function useProfileFeaturedCommunities({
   otherMember: Member | null;
 }): FeaturedCommunityRef[] {
   const { draft } = useProfile();
-  const eligibleCommunityCards = useMyCommunityCards();
+  // Only the self view reads this list (the non-self branch returns the public
+  // DTO's pre-vetted refs). Gate the eligible-communities queries on `isSelf`
+  // so viewing another member's profile no longer fires — then discards —
+  // `GET /me/communities` + `GET /communities`.
+  const eligibleCommunityCards = useMyCommunityCards(isSelf);
 
   return useMemo(() => {
     if (!isSelf) {

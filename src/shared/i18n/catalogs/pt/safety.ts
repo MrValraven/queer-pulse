@@ -116,6 +116,8 @@ export const safety: Catalog = {
   "report.toast.chooseCategory": "Escolhe primeiro o que estás a denunciar.",
   "report.toast.received":
     "Denúncia recebida — entraremos em contacto no prazo de 24 horas.",
+  "report.toast.submitError":
+    "Não foi possível enviar a tua denúncia — não chegou até nós. Verifica a ligação e tenta novamente.",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -143,6 +145,8 @@ export const safety: Catalog = {
   "flag.success.body":
     "Obrigade. Uma pessoa moderadora vai ler a tua denúncia. <b>Três sinalizações independentes desencadeiam uma revisão imediata e a suspensão temporária do emblema</b> — a tua denúncia conta para isso. Podemos contactar-te para mais detalhe, mas nunca o espaço.",
   "flag.success.doneCta": "Concluído",
+  "flag.error":
+    "Não foi possível enviar essa sinalização — não chegou até nós. Verifica a ligação e tenta novamente.",
   "flag.form.eyebrow": "Sinalizar um espaço seguro",
   "flag.form.title": "O que aconteceu em <em>{spaceName}?</em>",
   "flag.form.lead":
@@ -274,6 +278,32 @@ export const safety: Catalog = {
   "appeal.upheld.contactNote":
     "Se acreditares que isto é um erro, podes contactar diretamente a nossa equipa de Confiança.",
   "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança →",
+
+  // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
+  "appealSubmit.kicker": "Contestar uma decisão",
+  "appealSubmit.heading": "Diz-nos o que <em>correu mal</em>",
+  "appealSubmit.lead":
+    "Um moderador diferente do que tomou a decisão vai ler isto. Sê específico — o que aconteceu, e porque é que a decisão não te parece justa.",
+  "appealSubmit.form.reasonLabel": "O teu recurso",
+  "appealSubmit.form.reasonHelper":
+    "Quanto mais contexto deres, mais há para reconsiderar. Pelo menos uma frase ou duas.",
+  "appealSubmit.form.reasonPlaceholder":
+    "Explica-nos o que aconteceu do teu lado…",
+  "appealSubmit.form.charCount": "{count} / {max}",
+  "appealSubmit.form.submitCta": "Enviar recurso",
+  "appealSubmit.form.submitting": "A enviar…",
+  "appealSubmit.form.ladderCta": "Ler a escala da comunidade",
+  "appealSubmit.notice":
+    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. Vais ter resposta por email — normalmente dentro de alguns dias.",
+  "appealSubmit.foot":
+    "Todos os recursos, e como foram decididos, ficam registados no nosso <a>registo de transparência</a>.",
+  "appealSubmit.errorFrame": "Não foi possível registar o teu recurso",
+  "appealSubmit.success.title": "O teu recurso <em>entrou</em>",
+  "appealSubmit.success.sub":
+    "Um moderador que não esteve envolvido na decisão original vai analisá-lo. Enviamos-te um email assim que houver um resultado.",
+  "appealSubmit.success.filedLabel": "Registado",
+  "appealSubmit.success.trackCta": "Acompanhar este recurso",
+  "appealSubmit.success.howCta": "Como funciona a moderação",
 
   // ── HateCrimePage.tsx ──────────────────────────────────────────────────
   "hateCrime.meta.title":
@@ -504,6 +534,9 @@ export const safety: Catalog = {
     "Última atualização em junho de 2025 · Mantido pela comunidade",
   "spaces.dir.nominateCta": "+ Nomear um espaço",
   "spaces.dir.filterAria": "Filtrar espaços por categoria",
+  "spaces.dir.browseLead":
+    "Todos os espaços verificados estão agora no diretório local, filtrados apenas para os que conquistaram o emblema.",
+  "spaces.dir.browseCta": "Ver espaços verificados",
   "spaces.empty.title": "Ainda não há espaços verificados nesta categoria",
   "spaces.empty.description":
     "A lista cresce à medida que as pessoas visitam e avaliam espaços. Experimenta outra categoria — ou nomeia um lugar em que já confies, e nós tratamos de o fazer avaliar.",
@@ -514,7 +547,6 @@ export const safety: Catalog = {
     "Cada avaliação, cada sinalização, cada nomeação torna esta lista mais útil para todas as pessoas. Só funciona porque a comunidade a mantém.",
   "spaces.outro.safetyCta": "Segurança e denúncias",
   "spaces.outro.soberCta": "Sóbrie e social",
-  "spaces.flagToast": "Sinalização submetida — {reason}",
 
   // ── SafeSpacesSections.tsx ─────────────────────────────────────────────
   "spaces.badge.visualNameLine1": "Comunidade",
@@ -542,7 +574,7 @@ export const safety: Catalog = {
   "spaces.nominate.lead":
     "Encontraste um lugar que realmente parece seguro. Conta-nos sobre ele. Nós tratamos do resto.",
   "spaces.nominate.flagNote":
-    "Também podes sinalizar um espaço verificado que tenha mudado — usa o botão de sinalização em qualquer ficha, ou contacta-nos diretamente.",
+    "Reparaste que um espaço verificado deixou de estar à altura? Denuncia-o a partir da ficha no diretório local, ou contacta-nos diretamente — de qualquer forma, será avaliado.",
   "spaces.nominate.namePlaceholder": "Nome do espaço",
   "spaces.nominate.addressPlaceholder": "Morada ou bairro",
   "spaces.nominate.typeSelect.placeholder": "Tipo de espaço",
@@ -566,6 +598,10 @@ export const safety: Catalog = {
   "spaces.nominate.thanks.subInfo":
     "Aqui está o que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntáries decidir. Vamos manter-te informade.",
   "spaces.nominate.anotherCta": "Nomear outro espaço",
+  "spaces.nominate.comingSoon.badge": "Brevemente",
+  "spaces.nominate.comingSoon.title": "As nomeações estão <em>a chegar em breve.</em>",
+  "spaces.nominate.comingSoon.body":
+    "Ainda estamos a construir o processo de revisão por trás das nomeações de espaços. Ative a plataforma de demonstração para pré-visualizar o fluxo completo, ou volte em breve.",
 
   // ── SafeSpaceCard.tsx ──────────────────────────────────────────────────
   "spaces.card.verifiedBadge": "Verificado",

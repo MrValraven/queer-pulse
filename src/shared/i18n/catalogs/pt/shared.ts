@@ -58,6 +58,8 @@ export const shared: Catalog = {
     "Não conseguimos carregar a tua conta — o servidor da QueerPulse teve um erro ({status}). A responsabilidade é nossa, não tua. Tenta outra vez daqui a pouco.",
   "auth.error.network":
     "Não conseguimos contactar a QueerPulse para carregar a tua conta. Verifica a tua ligação e tenta outra vez daqui a pouco.",
+  "auth.error.expired":
+    "A tua sessão expirou — inicia sessão outra vez para continuares de onde ficaste.",
 
   // Provider-level fallback error toasts
   "profile.saveError": "Não conseguimos guardar o teu perfil. Tenta outra vez.",
@@ -213,25 +215,25 @@ export const shared: Catalog = {
   "megaNav.community.col.gather.events": "Eventos",
   "megaNav.community.col.gather.hostGathering": "Organizar um convívio",
   "megaNav.community.col.organise.head": "Organizar",
-  "megaNav.community.col.organise.volunteer": "Voluntariado",
-  "megaNav.community.col.organise.activism": "Ativismo",
+  "megaNav.community.col.organise.activismVolunteering":
+    "Ativismo e Voluntariado",
   "megaNav.community.col.organise.changeMakers": "Agentes de mudança",
 
   // MegaNav — Lisbon
   "megaNav.lisbon.title": "Lisboa",
   "megaNav.lisbon.feature.eyebrow": "Lisboa",
-  "megaNav.lisbon.feature.title": "Uma Lisboa queer.",
+  "megaNav.lisbon.feature.title": "Encontra os teus espaços locais.",
   "megaNav.lisbon.feature.body":
-    "Bares, clínicas, salões e lojas que te acolhem — encontrados e avalizados pela comunidade.",
-  "megaNav.lisbon.feature.cta": "Explorar o diretório",
+    "Bares, clínicas, salões e lojas que te acolhem — todos revistos, com os espaços verificados bem identificados.",
+  "megaNav.lisbon.feature.cta": "Explorar espaços locais",
   "megaNav.lisbon.featurePublic.eyebrow": "Lisboa",
-  "megaNav.lisbon.featurePublic.title": "Sítios que te acolhem.",
+  "megaNav.lisbon.featurePublic.title": "Como verificamos os espaços locais.",
   "megaNav.lisbon.featurePublic.body":
-    "Bares, clínicas e espaços comunitários avalizados como seguros por quem lá vai.",
-  "megaNav.lisbon.featurePublic.cta": "Encontrar espaços seguros",
+    "Cada espaço é revisto antes de receber o selo de verificado — vê como funciona, e quais foram removidos.",
+  "megaNav.lisbon.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.lisbon.col.discover.head": "Descobrir",
-  "megaNav.lisbon.col.discover.businessDirectory": "Diretório de negócios",
-  "megaNav.lisbon.col.discover.safeSpaces": "Espaços seguros",
+  "megaNav.lisbon.col.discover.businessDirectory": "Diretório local",
+  "megaNav.lisbon.col.discover.safeSpaces": "Como funciona a verificação",
   "megaNav.lisbon.col.discover.partners": "Parceiros",
   "megaNav.lisbon.col.livingHere.head": "Viver aqui",
   "megaNav.lisbon.col.livingHere.housing": "Habitação",
@@ -272,7 +274,6 @@ export const shared: Catalog = {
   "megaNav.culture.col.screenSound.cinema": "Cinema · filme queer",
   "megaNav.culture.col.makers.head": "Criação e cena",
   "megaNav.culture.col.makers.studio": "Studio · música queer",
-  "megaNav.culture.col.makers.creatives": "Pessoas criativas",
   "megaNav.culture.col.makers.platforms": "Plataformas",
   "megaNav.culture.col.makers.readingGroups": "Grupos de leitura",
   "megaNav.culture.col.makers.lisbonScene": "Cena e rádio de Lisboa",

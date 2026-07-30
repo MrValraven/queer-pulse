@@ -130,7 +130,9 @@ export function ReportFormSection() {
         onSuccess: done,
         onError: (err) => {
           logError(err, { scope: "safety.reportPage" });
-          done();
+          // Never tell a reporter "received" when the report didn't land —
+          // surface an honest error and leave the form filled in to retry.
+          showToast(t("safety:report.toast.submitError"), "error");
         },
       },
     );

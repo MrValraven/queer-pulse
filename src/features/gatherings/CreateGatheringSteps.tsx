@@ -90,9 +90,17 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           <input
             className={styles.input}
             type="date"
+            min={new Date().toISOString().slice(0, 10)}
+            required
+            aria-invalid={!form.dateValid}
             value={form.date}
             onChange={(e) => form.setDate(e.target.value)}
           />
+          {!form.dateValid && (
+            <p className={styles.hint}>
+              {t("gatherings:create.step2.dateRequired")}
+            </p>
+          )}
         </div>
         <div>
           <label className={styles.label}>

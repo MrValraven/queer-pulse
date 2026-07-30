@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
@@ -81,6 +81,12 @@ export function PwaPromptPage() {
   const [platform, setPlatform] = useState<Platform>(detectPlatform);
   const { canInstall, promptInstall } = useInstallPrompt();
   const { isInstalled } = useDisplayMode();
+  // Hold the snooze redirect timer so it can't fire navigate(-1) after the
+  // page has already unmounted.
+  const snoozeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  useEffect(() => () => clearTimeout(snoozeTimerRef.current), []);
 
   const { titleKey, stepKeys } = INSTRUCTIONS[platform];
 
@@ -98,7 +104,7 @@ export function PwaPromptPage() {
 
   function snooze() {
     showToast(t("system:pwaPrompt.toast.snoozed"), "info");
-    setTimeout(() => void navigate(-1), 900);
+    snoozeTimerRef.current = setTimeout(() => void navigate(-1), 900);
   }
 
   return (

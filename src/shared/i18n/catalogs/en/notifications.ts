@@ -95,6 +95,65 @@ export const notifications: Catalog = {
     "A gathering you're going to has been cancelled.",
   "type.event_cancelled.meta": "Gathering update",
 
+  // Platform-wide coverage sweep. Personalized kinds carry a
+  // `<profile>{name}</profile>` `textNamed` slot; the system-driven ones
+  // (join approved/declined, listing approved, report/appeal/roadmap updates)
+  // have no actor and so only a generic `.text`.
+  "type.event_rsvp.text": "Someone RSVP'd to your gathering.",
+  "type.event_rsvp.textNamed":
+    "<profile>{name}</profile> RSVP'd to your gathering.",
+  "type.event_rsvp.meta": "Gathering RSVP",
+
+  "type.community_reply.text": "Someone replied to your post.",
+  "type.community_reply.textNamed":
+    "<profile>{name}</profile> replied to your post.",
+  "type.community_reply.meta": "Reply",
+
+  "type.forum_thread_reply.text": "Someone replied to your thread.",
+  "type.forum_thread_reply.textNamed":
+    "<profile>{name}</profile> replied to your thread.",
+  "type.forum_thread_reply.meta": "Reply",
+
+  "type.join_request_received.text": "Someone asked to join your community.",
+  "type.join_request_received.textNamed":
+    "<profile>{name}</profile> asked to join your community.",
+  "type.join_request_received.meta": "Join request",
+
+  "type.join_request_approved.text":
+    "You're in — your request to join was approved.",
+  "type.join_request_approved.meta": "Join request",
+
+  "type.join_request_declined.text":
+    "Your request to join wasn't accepted this time.",
+  "type.join_request_declined.meta": "Join request",
+
+  "type.job_application.text": "Someone applied to your job posting.",
+  "type.job_application.textNamed":
+    "<profile>{name}</profile> applied to your job posting.",
+  "type.job_application.meta": "Job application",
+
+  "type.listing_approved.text": "Your business listing is live.",
+  "type.listing_approved.meta": "Listing approved",
+
+  "type.report_resolved.text": "We've followed up on a report you filed.",
+  "type.report_resolved.meta": "Report update",
+
+  "type.appeal_resolved.text": "There's a decision on your appeal.",
+  "type.appeal_resolved.meta": "Appeal update",
+
+  "type.invite_accepted.text": "Someone you invited just joined.",
+  "type.invite_accepted.textNamed":
+    "<profile>{name}</profile> joined on your invite.",
+  "type.invite_accepted.meta": "Invite accepted",
+
+  "type.listing_review.text": "Someone reviewed your business.",
+  "type.listing_review.textNamed":
+    "<profile>{name}</profile> reviewed your business.",
+  "type.listing_review.meta": "New review",
+
+  "type.roadmap_status.text": "There's an update on an idea you shared.",
+  "type.roadmap_status.meta": "Roadmap update",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 

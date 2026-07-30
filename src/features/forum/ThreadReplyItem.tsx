@@ -151,7 +151,13 @@ export function ThreadReplyItem({
         {reply.official && reply.mod && <ModeratorByline mod={reply.mod} />}
         {reply.deleted ? (
           <div className={styles.replyBody}>
-            <p className={styles.tombstone}>{t("forum:tombstone.body")}</p>
+            <p className={styles.tombstone}>
+              {t(
+                reply.removedByModerator
+                  ? "forum:tombstone.removedByModerator"
+                  : "forum:tombstone.body",
+              )}
+            </p>
           </div>
         ) : isEditing ? (
           <InlineReplyEditor

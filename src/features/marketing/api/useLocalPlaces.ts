@@ -14,6 +14,11 @@ import { useDirectoryPlaces } from "./useDirectory";
  * useDirectoryPlaces (demo mock / live API). Venues are demo-only and merged in
  * by name (business canonical), so live mode shows businesses alone — no mock
  * venues leak into production.
+ *
+ * Always returns the full (unfiltered) set — the "Verified safe spaces" chip
+ * (like category/query/vibe) is applied client-side in `useDirectoryFilters`'s
+ * `filtered`, so the results header's "X of Y" total stays the grand total
+ * instead of collapsing to "X of X" once the chip is on.
  */
 export function useLocalPlaces(): LocalPlace[] {
   const { demoMode } = useDemoMode();

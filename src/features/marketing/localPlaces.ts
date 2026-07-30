@@ -1,10 +1,15 @@
 import { routes } from "../../app/routeMap";
+import type { TFunction } from "../../shared/i18n/types";
 import type { DirectoryPlace } from "./directoryPlaces";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { FREGUESIAS } from "./freguesias.data";
 
 export type LocalKind = "business" | "venue";
+
+/** Safe-space verification state, mirrored from the directory card DTO.
+ * "none" = never reviewed. */
+export type SafeSpaceStatus = "none" | "verified" | "removed";
 
 export interface Coords {
   latitude: number;
@@ -29,6 +34,11 @@ export interface LocalPlace {
   /** Venue-only extras; undefined for businesses without a venue twin. */
   vibe?: string[];
   beenHere?: number;
+  /** Safe-space verification state, from the live directory card DTO.
+   * Undefined for demo-only venues — never synthesize this for a venue. */
+  safeSpaceStatus?: SafeSpaceStatus;
+  /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise/absent. */
+  safeSpaceTier?: number | null;
   /** Pre-lowered haystack for the search box — name + area + category + blurb
    *  + tags, so a query matches more than just the name. */
   searchText: string;
@@ -112,6 +122,41 @@ export const LOCAL_CATEGORIES = [
   "nightlife",
 ] as const;
 
+/**
+ * Legacy wizard display strings → canonical slug. Early listings stored the
+ * visible label ("Food & drink") as the category, which matches no map/filter
+ * slug and paints a black pin. This heals those rows at read time so no DB
+ * migration is needed; new places are written as slugs directly.
+ */
+const CATEGORY_LABEL_TO_SLUG: Record<string, string> = {
+  "food & drink": "food",
+  "design & craft": "design",
+  "health & care": "health",
+  spaces: "space",
+  culture: "culture",
+  tech: "tech",
+  "barbershop & salon": "grooming",
+  "gym & fitness": "fitness",
+  nightlife: "nightlife",
+};
+
+const CANONICAL_CATEGORIES: ReadonlySet<string> = new Set(LOCAL_CATEGORIES);
+
+/**
+ * Canonicalize any category token to a unified slug. Accepts already-canonical
+ * slugs (pass through), the legacy wizard display strings, and folded venue
+ * types. Unknown values return unchanged so the `var(--ink)` pin fallback still
+ * guards genuinely unmapped data.
+ */
+export function normalizeCategory(value: string): string {
+  if (!value) return value;
+  if (CANONICAL_CATEGORIES.has(value)) return value;
+  const key = value.trim().toLowerCase();
+  return (
+    CATEGORY_LABEL_TO_SLUG[key] ?? VENUE_TYPE_TO_CATEGORY[key] ?? value
+  );
+}
+
 /** Normalize a name for cross-dataset matching: fold diacritics + trim + lowercase. */
 export function normalizeName(name: string): string {
   return name
@@ -137,7 +182,7 @@ export function businessToLocal(
     id: `business:${place.slug}`,
     kind: "business",
     name: place.name,
-    category: place.cat,
+    category: normalizeCategory(place.cat),
     neighbourhood: place.hood,
     freguesia: warnIfUnknownFreguesia(
       HOOD_TO_FREGUESIA[place.hood] ?? place.hood,
@@ -145,6 +190,8 @@ export function businessToLocal(
     ),
     coords: listedCoords ?? fallbackCoords,
     detailPath: `${routes.directory}/${place.slug}`,
+    safeSpaceStatus: place.safeSpaceStatus ?? "none",
+    safeSpaceTier: place.safeSpaceTier ?? null,
     searchText: buildSearchText([
       place.name,
       place.hood,
@@ -222,10 +269,23 @@ export const LOCAL_CATEGORY_LABEL_KEYS: Record<string, string> = {
   nightlife: "marketing:local.cat.nightlife",
 };
 
+/**
+ * The one way to render a category label. Canonicalizes the token first, so it
+ * resolves both unified slugs and any legacy display-string value; falls back
+ * to the raw value for genuinely unknown tokens.
+ */
+export function categoryLabel(t: TFunction, category: string): string {
+  const slug = normalizeCategory(category);
+  const key = LOCAL_CATEGORY_LABEL_KEYS[slug];
+  return key ? t(key) : category;
+}
+
 export interface LocalFilters {
   category: string;
   query: string;
   vibes: string[];
+  /** `"verified"` restricts to safe-space-verified places; `null`/absent = no restriction. */
+  safe?: "verified" | null;
 }
 
 /**
@@ -233,7 +293,9 @@ export interface LocalFilters {
  * `searchText` haystack (name + area + category + blurb + tags), not just the
  * name. Vibes are **pass-through**: only venues carry vibe data, so a selected
  * vibe narrows venues while businesses (no vibe) always stay visible — instead
- * of silently deleting every business the moment a vibe is picked.
+ * of silently deleting every business the moment a vibe is picked. `safe` is a
+ * hard filter like category: demo-only venues never carry `safeSpaceStatus`
+ * (undefined), so they're naturally excluded once it's active.
  */
 export function filterLocalPlaces(
   places: LocalPlace[],
@@ -255,6 +317,9 @@ export function filterLocalPlaces(
       ) {
         return false;
       }
+    }
+    if (filters.safe === "verified" && place.safeSpaceStatus !== "verified") {
+      return false;
     }
     return true;
   });

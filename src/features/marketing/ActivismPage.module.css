@@ -19,12 +19,33 @@
   line-height: 1.55;
 }
 
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 28px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition: color 0.18s var(--ease);
+}
+.backLink svg {
+  width: 15px;
+  height: 15px;
+}
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--text-strong);
+  }
+}
+
 .layout {
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 56px;
   align-items: start;
-  padding: 56px 0 80px;
+  padding: 24px 0 80px;
 }
 .nav {
   position: sticky;

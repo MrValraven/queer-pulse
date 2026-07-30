@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
  * out of ThreadPage for the same reason `useThreadModeration` was — keeping
  * the page component itself well under the line budget.
  *
- * `resetKey` mirrors ThreadPage's own reply-list reset effect: pass the same
- * value that identifies "a different thread's replies just loaded" (e.g.
- * `threadData?.replies`) and this hook clears its own state in step, so a
- * newly-loaded thread never inherits a stale collapse/reply-target from the
- * previous one.
+ * `resetKey` must be a STABLE identifier for "which thread is open" — e.g.
+ * `threadData?.slug`, NOT the replies array. Keying on the array reference
+ * would reset the composer on every background refetch (react-query mints a
+ * fresh array with the same content), wiping any in-progress inline draft.
+ * Keyed on the slug, the state clears only when the user opens a genuinely
+ * different thread, so a newly-loaded thread never inherits a stale
+ * collapse/reply-target from the previous one.
  */
 export function useNestedReplyComposer(resetKey: unknown) {
   const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());

@@ -5,19 +5,21 @@ import { useMediaQuery, usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
-import { type Venue } from "./map.data";
 import { type VenueMarkerData } from "./venueMarker";
 import { LisbonMap } from "./LisbonMap";
 import { LocalPlaceCard } from "./LocalPlaceCard";
 import s from "./localMap.module.css";
 
-/** Adapt a coords-having LocalPlace to the map's marker shape. Venue pins keep their venue-type icon; business pins use their category icon. */
+/** Adapt a coords-having LocalPlace to the map's marker shape. Every pin keys off
+ *  the unified `category` (venue types fold into it upstream), so bars + clubs
+ *  read as one "nightlife" pin, community spaces + listed spaces as one "space"
+ *  pin — one coherent icon/colour legend across the whole map. */
 function localPlaceToMarker(place: LocalPlace): VenueMarkerData {
   const coords = place.coords!;
   return {
     id: place.id,
     name: place.name,
-    type: place.kind === "venue" ? (place.source as Venue).type : place.category,
+    type: place.category,
     address: place.neighbourhood,
     latitude: coords.latitude,
     longitude: coords.longitude,

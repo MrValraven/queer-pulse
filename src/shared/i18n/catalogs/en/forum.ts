@@ -176,6 +176,7 @@ export const forum: Catalog = {
   "edited.mark": "(edited)",
   "tombstone.body": "This post was deleted.",
   "tombstone.author": "[deleted]",
+  "tombstone.removedByModerator": "This post was removed by a moderator.",
 
   // ── Inline reply edit ────────────────────────────────────────────────────
   "replyEdit.save": "Save",

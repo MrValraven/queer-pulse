@@ -454,6 +454,7 @@ export const members: Catalog = {
   "directory.loadingMore": "A carregar…",
   "directory.loadMoreCta": "Carregar mais pessoas",
   "directory.filtersCta": "Filtros",
+  "directory.hideFiltersCta": "Ocultar filtros",
   "directory.filtersSheetLabel": "Filtrar pessoas",
   "directory.showResultsCta_one": "Ver {count} pessoa",
   "directory.showResultsCta_other": "Ver {count} pessoas",
@@ -917,6 +918,13 @@ export const members: Catalog = {
     "Cada nível dá acesso a novas vantagens da comunidade.",
   "badges.xpToNextLevel":
     "{xp} / {xpMax} XP para o Nível {nextLevel} · {nextName}",
+  "badges.loading": "A carregar os teus emblemas…",
+  "badges.errorTitle": "Não conseguimos carregar os teus emblemas",
+  "badges.errorDescription":
+    "Algo correu mal ao aceder ao teu reconhecimento. Tenta novamente daqui a pouco.",
+  "badges.emptyTitle": "Ainda sem emblemas",
+  "badges.emptyDescription":
+    "Aparece, organiza e participa — os teus primeiros emblemas surgem aqui à medida que avanças.",
 
   // ── Chrome da página de vantagens (PerksPage, PerksSections) ───────────────
   "perks.page.backToBadges": "← Emblemas e nível",
@@ -925,6 +933,13 @@ export const members: Catalog = {
     "{count} vantagem disponível para resgatar",
   "perks.page.availableToRedeem_other":
     "{count} vantagens disponíveis para resgatar",
+  "perks.page.loading": "A carregar as tuas vantagens…",
+  "perks.page.errorTitle": "Não conseguimos carregar as tuas vantagens",
+  "perks.page.errorDescription":
+    "Algo correu mal ao aceder ao teu reconhecimento. Tenta novamente daqui a pouco.",
+  "perks.page.emptyTitle": "Ainda sem vantagens",
+  "perks.page.emptyDescription":
+    "Sobe de nível e os teus benefícios de membro aparecem aqui para resgatar.",
   "perks.sidebar.yourLevelTitle": "O teu nível",
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",

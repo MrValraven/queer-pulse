@@ -19,6 +19,7 @@
 
 import type { TFunction } from "../../../shared/i18n/types";
 import { leadingInitials } from "../../../shared/lib/initials";
+import { LOCAL_CATEGORIES, categoryLabel } from "../localPlaces";
 
 export const TOTAL_STEPS = 6;
 
@@ -80,32 +81,16 @@ export interface MissingField {
    a `_LABEL_KEYS` lookup resolved with `t()` only at render, so a language
    switch can never rewrite already-entered draft data. */
 
-export const CATS = [
-  "Food & drink",
-  "Design & craft",
-  "Health & care",
-  "Spaces",
-  "Culture",
-  "Tech",
-  "Barbershop & Salon",
-  "Gym & Fitness",
-] as const;
+/* Categories are the unified directory slugs (LOCAL_CATEGORIES) — the same
+ * vocabulary the map pins, category filter, and backend hours template key off.
+ * The wizard stores the slug verbatim, so a new listing is born map-correct.
+ * "nightlife" is included so the choosable set equals the displayed set. */
+export const CATS = LOCAL_CATEGORIES;
 
-export const CAT_LABEL_KEYS: Record<string, string> = {
-  "Food & drink": "marketing:listBusiness.cat.foodDrink",
-  "Design & craft": "marketing:listBusiness.cat.designCraft",
-  "Health & care": "marketing:listBusiness.cat.healthCare",
-  Spaces: "marketing:listBusiness.cat.spaces",
-  Culture: "marketing:listBusiness.cat.culture",
-  Tech: "marketing:listBusiness.cat.tech",
-  "Barbershop & Salon": "marketing:listBusiness.cat.barbershopSalon",
-  "Gym & Fitness": "marketing:listBusiness.cat.gymFitness",
-};
-
-/** Display label for a stored category id. Falls back to the id itself. */
+/** Display label for a stored category slug. Delegates to the single directory
+ * helper, which also heals any legacy display-string category. */
 export function catLabel(t: TFunction, id: string): string {
-  const key = CAT_LABEL_KEYS[id];
-  return key ? t(key) : id;
+  return categoryLabel(t, id);
 }
 
 export interface PriceBand {
@@ -323,29 +308,14 @@ export interface SeedPlace {
   badge: OwnerBadge;
 }
 export const SEED: SeedPlace[] = [
-  { name: "Café Beirão", cat: "Food & drink", hood: "Anjos", badge: "owned" },
-  {
-    name: "Clínica do Largo",
-    cat: "Health & care",
-    hood: "Anjos",
-    badge: "friendly",
-  },
-  { name: "Livraria Rosa", cat: "Culture", hood: "Graça", badge: "owned" },
-  {
-    name: "Estúdio Marvila",
-    cat: "Design & craft",
-    hood: "Marvila",
-    badge: "owned",
-  },
-  {
-    name: "Barbearia Lux",
-    cat: "Barbershop & Salon",
-    hood: "Arroios",
-    badge: "friendly",
-  },
+  { name: "Café Beirão", cat: "food", hood: "Anjos", badge: "owned" },
+  { name: "Clínica do Largo", cat: "health", hood: "Anjos", badge: "friendly" },
+  { name: "Livraria Rosa", cat: "culture", hood: "Graça", badge: "owned" },
+  { name: "Estúdio Marvila", cat: "design", hood: "Marvila", badge: "owned" },
+  { name: "Barbearia Lux", cat: "grooming", hood: "Arroios", badge: "friendly" },
   {
     name: "Ginásio Corpo Livre",
-    cat: "Gym & Fitness",
+    cat: "fitness",
     hood: "Alvalade",
     badge: "owned",
   },

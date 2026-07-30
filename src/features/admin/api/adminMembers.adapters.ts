@@ -89,6 +89,7 @@ export function cardDtoToMember(
     tone: cardDto.tone,
     pronoun: cardDto.pronouns ?? "",
     verified: cardDto.verified,
+    role: cardDto.role,
     avatarUrl: cardDto.avatarUrl,
     openReportsCount: cardDto.openReportCount || undefined,
     statusTone: cardDto.verified ? "jade" : "coral",
@@ -415,6 +416,8 @@ export function detailDtoToMember(
 ): MemberDetail {
   return {
     id: detailDto.id,
+    role: detailDto.role,
+    isSystem: detailDto.isSystem,
     glance: glanceFor(detailDto, t),
     graphNote: graphNoteFor(detailDto, t),
     communities: detailDto.communities.map((communityDto) =>

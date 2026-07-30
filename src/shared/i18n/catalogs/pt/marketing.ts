@@ -235,6 +235,7 @@ export const marketing: Catalog = {
   "accessibility.accomModal.closeCta": "Fechar",
 
   // ── Ativismo ───────────────────────────────────────────────────────────
+  "activism.backToVolunteer": "Voltar a Voluntariado",
   "activism.hero.eyebrow": "Ativismo",
   "activism.hero.title": "Cuidar da comunidade é <em>político.</em>",
   "activism.hero.sub":
@@ -1797,7 +1798,93 @@ export const marketing: Catalog = {
   "changelog.tag.employerReviews": "Ler avaliações de empregadores →",
   "changelog.tag.studio": "Visitar o Studio →",
   "changelog.tag.search": "Experimentar a pesquisa global →",
+  "changelog.tag.donate": "Ver para onde vai o dinheiro →",
+  "changelog.tag.volunteer": "Encontra o teu caminho →",
+  "changelog.tag.notifications": "Abrir as tuas notificações →",
 
+  "changelog.entries.safe-spaces-in-directory.title":
+    "Espaços seguros verificados, agora dentro do diretório",
+  "changelog.entries.safe-spaces-in-directory.body":
+    "O emblema de verificação aparece agora diretamente no cartão, dentro do diretório local, um filtro de “Espaços seguros verificados” mostra só os que o conquistaram, e os espaços verificados aparecem sempre primeiro na lista. Abre qualquer ficha para veres o bloco de confiança completo — o que a verificação significa para aquele espaço e quando foi avaliado pela última vez. E o /local/safe-spaces é agora o centro da verificação: o que o emblema significa, como funciona mesmo o processo de avaliação, e um registo honesto e público de todos os espaços que o perderam.",
+
+  "changelog.entries.session-refresh-csrf-race.title":
+    "Renovação de sessão mais suave quando o acesso expira",
+  "changelog.entries.session-refresh-csrf-race.body":
+    "Quando a tua sessão tinha expirado em silêncio, recarregar a página podia mostrar por um instante um estado de “sessão expirada” antes de te voltar a autenticar. Corrigimos uma condição de corrida na forma como a app renova a tua sessão, para que renove de forma limpa à primeira — sem oscilação e sem pedidos desperdiçados.",
+
+  "changelog.entries.directory-category-unify.title":
+    "Categorias do diretório coerentes em todo o lado",
+  "changelog.entries.directory-category-unify.body":
+    "Um espaço que adicionas mostra agora o pin da cor certa no mapa e a categoria certa no cartão e no filtro — o assistente de “listar um negócio” e o diretório passam finalmente a falar a mesma língua de categorias. A vida noturna também passa a ser uma categoria que podes escolher ao listar.",
+
+  "changelog.entries.messages-badge-count.title":
+    "Um contador de mensagens por ler mais rápido e certo",
+  "changelog.entries.messages-badge-count.body":
+    "O número de mensagens por ler no ícone de mensagens mantém-se agora correto em todas as páginas sem carregar silenciosamente a tua caixa de entrada inteira sempre que navegas. Atualiza-se em tempo real à medida que chegam mensagens e à medida que as lês.",
+
+  "changelog.entries.notifications-coverage.title":
+    "Notificações para o que andava a passar despercebido",
+  "changelog.entries.notifications-coverage.body":
+    "O teu sino avisa-te agora quando alguém confirma presença no teu convívio, responde à tua publicação ou tópico, pede para entrar na tua comunidade (e quando um pedido é decidido), se candidata à tua oferta de trabalho, avalia o teu negócio, quando um registo de negócio é aprovado, quando alguém que convidaste entra, quando uma denúncia ou recurso que apresentaste é resolvido, e quando uma ideia que partilhaste no roteiro muda de estado. Cada uma leva-te diretamente ao que lhe diz respeito.",
+
+  "changelog.entries.gathering-create-fix.title":
+    "Criar um convívio volta a funcionar — e leva-te ao teu evento",
+  "changelog.entries.gathering-create-fix.body":
+    "Publicar um novo convívio estava a falhar silenciosamente no servidor, mas o assistente mostrava na mesma o ecrã de celebração como se tivesse resultado — e o botão «Ver a página do teu evento» abria uma página de exemplo perdida. Ambos estão corrigidos: um convívio passa mesmo a ser publicado, o ecrã de sucesso só aparece depois de o ser, e «Ver a página do teu evento» leva-te diretamente ao teu convívio real. Se alguma publicação falhar, verás uma mensagem clara e ficas no passo de revisão para tentar de novo. O assistente passa também a pedir uma data e hora de início no futuro antes de avançares, para que nenhum convívio seja criado sem elas.",
+  "changelog.entries.members-collapsible-filters.title":
+    "Filtros recolhíveis no diretório de membros",
+  "changelog.entries.members-collapsible-filters.body":
+    "Os filtros do diretório de membros agora são secções recolhíveis com um botão para mostrar/ocultar, libertando espaço para os resultados — as tuas seleções continuam aplicadas enquanto os filtros estão ocultos, e a tua vista fica guardada para a próxima visita. Abrir uma secção e ocultar a barra lateral inteira agora deslizam suavemente em vez de saltar.",
+  "changelog.entries.activism-volunteer-merge.title":
+    "Ativismo e Voluntariado são agora um só lugar",
+  "changelog.entries.activism-volunteer-merge.body":
+    "Juntámos as páginas de Ativismo e Voluntariado num único sítio. O Voluntariado é agora a porta de entrada — vê oportunidades reais em Lisboa, filtra por causa ou compromisso e começa com um par de horas livres. Se quiseres ir mais fundo, o nosso guia para organizar melhor fica a um toque de distância. A navegação, o rodapé e a barra lateral passam a ter uma única ligação «Ativismo e Voluntariado» em vez de duas, e o antigo endereço /activism continua a funcionar.",
+  "changelog.entries.spaces-map-pins.title":
+    "Os pinos do mapa mostram agora que tipo de espaço é cada lugar",
+  "changelog.entries.spaces-map-pins.body":
+    "No mapa do diretório Local, cada pino é agora uma gota colorida com um ícone da sua categoria — um copo de martini para a vida noturna, um garfo e faca para comida, um coração para saúde, e por aí fora —, para leres o mapa num relance em vez de tocares em cada ponto. Os filtros de categoria têm a mesma cor e ícone, por isso a barra de filtros funciona também como legenda.",
+  "changelog.entries.creatives-subprofile.title":
+    "A montra Criativa é agora um subperfil criativo",
+  "changelog.entries.creatives-subprofile.body":
+    "O diretório Criativo autónomo foi descontinuado. Mostrar a tua arte, música ou outro trabalho criativo passa a viver nos subperfis — o mesmo sítio onde constróis qualquer persona ligada —, por isso um perfil criativo faz parte de quem és na QueerPulse, em vez de ser uma lista à parte. O antigo link /magazine/creatives leva-te agora diretamente aos teus subperfis, onde podes adicionar um criativo.",
+  "changelog.entries.moderation-takedowns.title":
+    "Ocultar e remover da moderação passam mesmo a retirar o conteúdo",
+  "changelog.entries.moderation-takedowns.body":
+    "Quando um moderador oculta ou remove conteúdo denunciado, este desaparece agora realmente da vista pública. O conteúdo oculto fica retido para os membros, mas a equipa continua a vê-lo; o conteúdo removido mostra uma marca clara de \"removido por um moderador\", onde uma publicação eliminada já apareceria. Aplicado a publicações e respostas do fórum, publicações e respostas de comunidades, comunidades, eventos e fichas de negócios — registado no mesmo passo da decisão do moderador, para que nunca possa ficar registado sem produzir efeito.",
+  "changelog.entries.directory-photos-crisp.body":
+    "As fotos de capa das fichas de negócios — e a pré-visualização enquanto adicionas uma — carregavam em baixa resolução e ficavam desfocadas quando mostradas em tamanho grande. Passam agora a carregar nítidas em tamanho real. Também descemos o cabeçalho da ficha para que o caminho de navegação e o botão Editar do proprietário deixem de ficar por baixo da navegação flutuante.",
+  "changelog.entries.admin-role-management.title":
+    "Os admins podem promover moderadores e admins a partir do painel",
+  "changelog.entries.admin-role-management.body":
+    "Tornar alguém moderador ou admin implicava editar a base de dados à mão. Agora um admin pode conceder ou remover esses papéis diretamente no detalhe de um membro no painel de administração — com as proteções que importam já incluídas: não podes mudar o teu próprio papel, a conta oficial está fora de alcance e a plataforma nunca te deixa remover o último admin. Cada alteração fica registada no histórico de auditoria.",
+  "changelog.entries.appeal-submission.title":
+    "Já podes contestar uma decisão de moderação",
+  "changelog.entries.appeal-submission.body":
+    "Uma conta suspensa ou banida conseguia ler sobre recursos mas não tinha forma de apresentar um. Agora, qualquer membro sob uma decisão de moderação — um aviso, uma remoção, uma suspensão, um banimento — pode enviar um recurso diretamente do ecrã da sua conta, e este vai para um moderador que não esteve envolvido na decisão original. Um recurso em aberto de cada vez; a decisão original mantém-se enquanto é analisado.",
+  "changelog.entries.honest-report-failures.title":
+    "As denúncias de segurança dizem-te a verdade quando não são enviadas",
+  "changelog.entries.honest-report-failures.body":
+    "Quando uma denúncia, sinalização ou preocupação sobre um espaço seguro não chega até nós — uma ligação em falha, um problema no servidor — passas a ver um erro honesto e as tuas palavras ficam no formulário para tentares de novo, em vez de um falso «recebida». Se dizemos que uma denúncia chegou, chegou mesmo. Isto abrange também enviar mensagem a quem anuncia alojamento e anunciar um espaço.",
+  "changelog.entries.directory-filters-and-accurate-recognition.title":
+    "Filtros de membros que filtram mesmo, e emblemas e vantagens honestos",
+  "changelog.entries.directory-filters-and-accurate-recognition.body":
+    "Escolher um filtro no diretório de membros passa a mostrar quem corresponde, em vez de esvaziar a página. As páginas de Emblemas e Vantagens também apresentam um estado próprio de carregamento, vazio ou de tentar novamente enquanto o teu reconhecimento carrega — sem contagens fictícias a fazer de conta que são reais.",
+  "changelog.entries.navigation-resilience.title":
+    "O voltar atrás guarda o teu lugar, e a app aguenta as atualizações",
+  "changelog.entries.navigation-resilience.body":
+    "Ao voltares atrás depois de abrires algo de uma lista, ficas exatamente onde tinhas o scroll, em vez de saltar para o topo. Se a tua sessão expirar sem aviso, dizemos-te para poderes iniciar sessão outra vez, e quando sai uma versão nova a meio da visita a app atualiza-se sozinha em vez de mostrar um erro.",
+  "changelog.entries.search-page-launcher.title":
+    "Salta para qualquer lado a partir da pesquisa",
+  "changelog.entries.search-page-launcher.body":
+    "A pesquisa (⌘K e a página de pesquisa) passa a funcionar também como atalho: começa a escrever — ou simplesmente abre-a — para saltar direto para Membros, Comunidades, Eventos, Mensagens, o teu perfil, Definições, a Revista e muito mais, cada um com o seu ícone. Um novo separador Páginas reúne todos os destinos num só lugar.",
+  "changelog.entries.donate-honest-live.title":
+    "As doações são honestas sobre o pré-lançamento",
+  "changelog.entries.donate-honest-live.body":
+    "O fluxo de doação deixou de recolher dados do cartão para um pagamento que não podia mesmo ser cobrado. Até os pagamentos seguros estarem prontos, di-lo claramente e mostra exatamente para onde vai o dinheiro da comunidade.",
+  "changelog.entries.gathering-manage-coming-soon.title":
+    "O painel de anfitrião é uma pré-visualização honesta",
+  "changelog.entries.gathering-manage-coming-soon.body":
+    "O painel de anfitrião de encontros era um protótipo de demonstração, por isso em modo ao vivo mostra agora um claro “em breve” em vez de agir sobre dados de exemplo. Explorar e confirmar presença estão totalmente ativos; explora as ferramentas de anfitrião em modo de demonstração.",
   "changelog.entries.search-member-avatars.title":
     "Veja quem está a procurar",
   "changelog.entries.search-member-avatars.body":
@@ -2216,6 +2303,11 @@ export const marketing: Catalog = {
   "volunteer.hero.note":
     "Todas as organizações abaixo foram avaliadas pela comunidade QueerPulse",
   "volunteer.hero.postCta": "Publicar uma oportunidade",
+  "volunteer.guide.eyebrow": "Novo no ativismo?",
+  "volunteer.guide.title": "Queres fazer <em>mais</em> do que um turno?",
+  "volunteer.guide.body":
+    "O nosso guia para organizar melhor leva-te de aparecer uma vez a trazer uma competência — sem experiência necessária.",
+  "volunteer.guide.cta": "Ler o guia de ativismo →",
   "volunteer.empty.noneTitle": "Ainda não há oportunidades publicadas",
   "volunteer.empty.noneDescription":
     "Ainda nenhuma organização publicou vagas aqui. Se a tua precisa de ajuda, sê a primeira a lançar o convite.",
@@ -2499,6 +2591,7 @@ export const marketing: Catalog = {
   "donateModal.field.nameOnCard": "Nome no cartão",
   "donateModal.field.namePlaceholder": "Ana Silva",
   "donateModal.field.emailReceipt": "Email para o recibo",
+  "donateModal.field.emailPlaceholder": "tu@exemplo.com",
   "donateModal.field.cardNumber": "Número do cartão",
   "donateModal.field.expiry": "Validade",
   "donateModal.field.cvc": "CVC",
@@ -2515,6 +2608,10 @@ export const marketing: Catalog = {
     "Os teus {amount} / mês vão diretamente para a ajuda mútua, os encontros, e para pagar de forma justa as pessoas criativas queer da comunidade. Cancela quando quiseres a partir da tua conta — sem perguntas.",
   "donateModal.success.bodyOneOff":
     "Os teus {amount} vão diretamente para a ajuda mútua, os encontros, e para pagar de forma justa as pessoas criativas queer da comunidade. Enviamos o recibo por email em breve.",
+  "donateModal.comingSoon.title": "As doações ainda <em>não estão ativas</em>",
+  "donateModal.comingSoon.body":
+    "Ainda estamos a preparar os pagamentos seguros, por isso ainda não podemos aceitar doações aqui — não foi cobrado nada. Entretanto, podes ver exatamente para onde vai cada euro da comunidade.",
+  "donateModal.comingSoon.figuresCta": "Ver para onde vai o dinheiro",
 
   // ── Contacto — chrome da página. Todo o conteúdo é escrito pela plataforma
   //    (formulário/vias de contacto).
@@ -2731,6 +2828,7 @@ export const marketing: Catalog = {
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
   "directory.card.viewDetails": "Ver detalhes →",
+  "directory.card.verifiedBadge": "Espaço seguro verificado",
   "directory.submitStrip.title":
     "Conheces um lugar que devia estar <em>aqui?</em>",
   "directory.submitStrip.body":
@@ -2830,6 +2928,7 @@ export const marketing: Catalog = {
   "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
   "directory.detail.languagesLabel": "Idiomas",
   "directory.detail.accessLabel": "Acessibilidade",
+  "directory.detail.trust.lastVerifiedLabel": "Última verificação",
   "directory.detail.whoRunsIt": "Quem gere isto",
   "directory.detail.onQueerPulse": "Na QueerPulse",
   "directory.detail.communityVouched": "Avalizado pela comunidade",
@@ -3177,6 +3276,7 @@ export const marketing: Catalog = {
   "local.filter.categoryAria": "Filtrar por categoria",
   "local.filter.vibeLabel": "Ambiente",
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
+  "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
   "local.venue.back": "Voltar ao mapa",
   "local.venue.address": "Morada",
   "local.venue.hours": "Horário",

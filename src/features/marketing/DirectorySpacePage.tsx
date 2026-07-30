@@ -1,13 +1,14 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
+import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlace } from "./api/useDirectory";
 import { useDirectoryListings } from "./listBusiness/api/useDirectoryListings";
 import { routes, businessPath } from "../../app/routeMap";
 import { DirectorySpaceView } from "./DirectorySpaceView";
 import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
-import { CAT_LABEL_KEYS } from "./directorySpace.data";
+import { categoryLabel, normalizeCategory } from "./localPlaces";
 import { PageMeta } from "../../shared/seo/PageMeta";
 import { JsonLd } from "../../shared/seo/JsonLd";
 import { buildLocalBusinessSchema } from "../../shared/seo/jsonLd.data";
@@ -23,7 +24,7 @@ function clampDescription(text: string): string {
 export function DirectorySpacePage() {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const { place, isLoading } = useDirectoryPlace(slug);
+  const { place, isLoading, isError, refetch } = useDirectoryPlace(slug);
   // Owner detection: match the viewer's own listings against this slug.
   // `useDirectoryListings` is the same demo-aware "is this mine" source
   // `PlacesSection` reads (the session overlay in demo, overlay + GET
@@ -53,10 +54,23 @@ export function DirectorySpacePage() {
       </PageShell>
     );
   }
+  // The read failed for a reason OTHER than "no such listing" (5xx, network):
+  // offer a retry instead of a misleading redirect to the directory.
+  if (isError) {
+    return (
+      <PageShell>
+        <ErrorFallback onReset={refetch} level="route" />
+      </PageShell>
+    );
+  }
+  // Settled with no matching listing (a genuine 404 or demo miss) → not found.
   if (!place) return <Navigate to={routes.directory} replace />;
 
   const canonicalPath = businessPath(place.slug);
-  const categoryLabelKey = CAT_LABEL_KEYS[place.cat];
+  // Canonical slug for the filter link so the directory chip matches, plus the
+  // resolved label (heals legacy display-string categories too).
+  const categorySlug = normalizeCategory(place.cat);
+  const categoryText = categoryLabel(t, place.cat);
 
   return (
     <PageShell>
@@ -70,7 +84,7 @@ export function DirectorySpacePage() {
       <JsonLd
         schema={buildLocalBusinessSchema(place, toAbsoluteUrl(canonicalPath))}
       />
-      <div className={s.cover}>
+      <div className={s.coverHead}>
         <div className={s.coverInner}>
           <div className={s.coverTop}>
             <nav
@@ -84,13 +98,9 @@ export function DirectorySpacePage() {
                   </Link>
                 </li>
                 <li>
-                  {categoryLabelKey ? (
-                    <Link to={`${routes.directory}?cat=${place.cat}`}>
-                      {t(categoryLabelKey)}
-                    </Link>
-                  ) : (
-                    <span>{place.cat}</span>
-                  )}
+                  <Link to={`${routes.directory}?cat=${categorySlug}`}>
+                    {categoryText}
+                  </Link>
                 </li>
                 <li aria-current="page">{place.name}</li>
               </ol>

@@ -89,6 +89,7 @@ export function MessageModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const firstName = firstNameOf(toName);
   const [text, setText] = useState(() =>
     firstName
@@ -108,7 +109,10 @@ export function MessageModal({
       { ref: listingRef, body: text.trim() },
       {
         onSuccess: () => setDone(true),
-        onError: () => setDone(true),
+        onError: () =>
+          // Don't show "sent" for a message that didn't go through — leave the
+          // draft in place so the member can retry.
+          showToast(t("economy:housingModal.message.error"), "error"),
       },
     );
   };

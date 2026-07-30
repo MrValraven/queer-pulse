@@ -515,6 +515,7 @@ export const gatherings: Catalog = {
   "create.nav.cancel": "Cancel",
   "create.nav.back": "Back",
   "create.nav.publishHint": "Confirm all three boxes above to publish",
+  "create.nav.dateHint": "Pick a date and time in the future to continue",
   "create.nav.publish": "Publish gathering",
   "create.nav.continue": "Continue",
   "create.sidebar.tipLabel": "Tip for this step",
@@ -538,6 +539,8 @@ export const gatherings: Catalog = {
   "create.step2.sub":
     "The location is only shared with confirmed attendees — not shown on the public listing.",
   "create.step2.dateLabel": "Date",
+  "create.step2.dateRequired":
+    "Pick a date and start time in the future so people can plan to come.",
   "create.step2.timeLabel": "Time",
   "create.step2.endTimeLabel": "End time (optional)",
   "create.step2.hoodLabel": "Neighbourhood",
@@ -805,6 +808,13 @@ export const gatherings: Catalog = {
   "manage.cancelConfirm_other":
     "Cancel {title}? All {count} attendees will be notified.",
   "manage.linkCopiedToast": "Link copied!",
+
+  // ── Manage: live-mode coming-soon (host tools not wired yet) ─────────────────
+  "manageComingSoon.title": "Host tools are <em>coming soon</em>",
+  "manageComingSoon.description":
+    "Managing a gathering from here isn't live yet. You can still browse and RSVP to what's happening — the hosting dashboard lands soon.",
+  "manageComingSoon.browseCta": "Browse gatherings",
+  "manageComingSoon.backHome": "Back to home",
 
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Going",

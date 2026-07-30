@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
+import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GalleryShot } from "./DirectoryGallery";
 import styles from "./DirectorySpacePage.module.css";
@@ -166,9 +167,10 @@ export function DirectoryLightbox({
         )}
 
         <img
-          src={shot.url}
+          src={resolveAvatarSrc(shot.url, 2000)}
           alt={shot.alt}
           decoding="async"
+          referrerPolicy="no-referrer"
           className={styles.lightboxImg}
         />
 

@@ -6,6 +6,11 @@
   cursor: pointer;
   border-radius: var(--radius-pill);
   padding: 11px 20px;
+  /* WCAG 2.5.5 / mobile: a tap target must be at least 44×44px. The default
+     (md) padding + 14.5px line only reaches ~37–40px, so pin a 44px floor.
+     Content stays centred via inline-flex + align-items; the lg variant's
+     natural height already clears 44px, so this never shrinks it. */
+  min-height: 44px;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;

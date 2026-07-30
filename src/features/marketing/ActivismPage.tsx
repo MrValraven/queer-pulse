@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { linkToPath } from "../../app/routeMap";
+import { linkToPath, routes } from "../../app/routeMap";
 import { ACTIVISM_NAV, CONVICTION_ITEMS } from "./activism.data";
 import {
   StartSection,
@@ -78,6 +80,9 @@ export function ActivismPage() {
       </PageHero>
 
       <div className="wrap">
+        <Link to={routes.volunteer} className={s.backLink}>
+          <FiArrowLeft aria-hidden /> {t("marketing:activism.backToVolunteer")}
+        </Link>
         <div className={s.layout}>
           <nav className={s.nav}>
             <div className={s.navLabel}>

@@ -182,6 +182,7 @@ export const forum: Catalog = {
   "edited.mark": "(editado)",
   "tombstone.body": "Esta publicação foi eliminada.",
   "tombstone.author": "[eliminado]",
+  "tombstone.removedByModerator": "Esta publicação foi removida por um moderador.",
 
   // ── Inline reply edit ────────────────────────────────────────────────────
   "replyEdit.save": "Guardar",

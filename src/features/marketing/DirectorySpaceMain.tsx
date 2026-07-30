@@ -6,7 +6,7 @@ import {
   openStatus,
   realHoursRows,
 } from "./directoryPlaces";
-import { CAT_LABEL_KEYS } from "./directorySpace.data";
+import { categoryLabel } from "./localPlaces";
 import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
 import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
@@ -45,7 +45,7 @@ export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) 
     <div>
       <header className={s.head}>
         <div className={s.eyebrow}>
-          {t(CAT_LABEL_KEYS[place.cat]!)} · {place.hood} · Lisbon
+          {categoryLabel(t, place.cat)} · {place.hood} · Lisbon
         </div>
         <h1 className={s.h1}>
           {lead && `${lead} `}

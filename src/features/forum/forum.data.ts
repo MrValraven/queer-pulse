@@ -72,6 +72,9 @@ export interface Reply {
   editedAt?: string | null;
   /** True when the post is a soft-tombstone ("[deleted]"). */
   deleted?: boolean;
+  /** True when the tombstone is a moderator `remove_content` takedown (as
+   *  opposed to an author's own delete) — renders a distinct tombstone line. */
+  removedByModerator?: boolean;
   canEdit?: boolean;
   canDelete?: boolean;
   canRestore?: boolean;
@@ -109,6 +112,7 @@ export interface Thread {
   opPostId?: string;
   editedAt?: string | null;
   deleted?: boolean;
+  removedByModerator?: boolean;
   canEdit?: boolean;
   canDelete?: boolean;
   canRestore?: boolean;

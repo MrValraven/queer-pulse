@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import {
@@ -24,6 +25,7 @@ export interface MessageReportModalProps {
  *  same `/reports` endpoint. */
 export function MessageReportModal({ messageId, onClose }: MessageReportModalProps) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const reasons = useMemo(
     () =>
       SUBJECT_REASONS.message.map((code) => ({
@@ -53,7 +55,9 @@ export function MessageReportModal({ messageId, onClose }: MessageReportModalPro
         onSuccess: () => setDone(true),
         onError: (error) => {
           logError(error, { scope: "messages.reportMessage" });
-          setDone(true);
+          // Never tell a reporter "received" when the report didn't land —
+          // surface an honest error and keep the form filled in to retry.
+          showToast(t("safety:flag.error"), "error");
         },
       },
     );

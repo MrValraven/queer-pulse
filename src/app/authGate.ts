@@ -56,6 +56,8 @@ const GATED_PATTERNS: string[] = [
   "/gatherings/*",
   "/rsvp",
   "/rsvp-ticket",
+  // Ticket checkout for a gathering — a member-only purchase flow.
+  "/checkout",
   "/host",
   "/create-gathering",
   // Forum

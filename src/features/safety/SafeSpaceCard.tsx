@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { VerifiedSpace } from "./safeSpaces";
 import { TYPE_CLASS } from "./safeSpacesPage.data";
+import { SafeSpaceBadge } from "./SafeSpaceBadge";
 import styles from "./SafeSpacesPage.module.css";
 
 export function SafeSpaceCard({
@@ -33,10 +34,7 @@ export function SafeSpaceCard({
         <div className={`${styles.venueType} ${styles[TYPE_CLASS[s.category]]}`}>
           {s.typeLabel}
         </div>
-        <div className={styles.verifiedBadge}>
-          <div className={styles.vbDot} />
-          {t("safety:spaces.card.verifiedBadge")}
-        </div>
+        <SafeSpaceBadge label={t("safety:spaces.card.verifiedBadge")} />
       </div>
       <div className={styles.name}>{s.name}</div>
       <div className={styles.hood}>

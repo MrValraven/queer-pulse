@@ -12,17 +12,22 @@ export function PostProfileForm({
   initial,
   onSubmit,
   onClose,
+  submitting = false,
 }: {
   /** The caller's existing profile (live, edit mode) — null/undefined for a
    * fresh, empty create form (demo always passes null). */
   initial?: FlatmateProfileDTO | null;
   onSubmit: (body: UpsertFlatmateProfileBody) => void;
   onClose: () => void;
+  /** True while the upsert mutation is in flight — disables submit so a rapid
+   * double-click can't fire a second POST. */
+  submitting?: boolean;
 }) {
   const { t } = useTranslation();
   const form = usePostProfileFormState(initial);
 
   const handleSubmit = () => {
+    if (submitting) return;
     const body = form.buildBody();
     if (body) onSubmit(body);
   };
@@ -38,7 +43,7 @@ export function PostProfileForm({
         <Button
           type="button"
           variant="primary"
-          disabled={!form.canSubmit}
+          disabled={!form.canSubmit || submitting}
           onClick={handleSubmit}
         >
           {t("economy:postProfileForm.submitCta")}

@@ -447,6 +447,7 @@ export const members: Catalog = {
   "directory.loadingMore": "Loading…",
   "directory.loadMoreCta": "Load more members",
   "directory.filtersCta": "Filters",
+  "directory.hideFiltersCta": "Hide filters",
   "directory.filtersSheetLabel": "Filter members",
   "directory.showResultsCta_one": "Show {count} member",
   "directory.showResultsCta_other": "Show {count} members",
@@ -904,12 +905,26 @@ export const members: Catalog = {
   "badges.perksUnlockHeading": "What your level <em>unlocks</em>",
   "badges.perksUnlockSub": "Each level grants new access and member benefits.",
   "badges.xpToNextLevel": "{xp} / {xpMax} XP to Level {nextLevel} · {nextName}",
+  "badges.loading": "Loading your badges…",
+  "badges.errorTitle": "We couldn't load your badges",
+  "badges.errorDescription":
+    "Something went wrong reaching your recognition. Please try again in a moment.",
+  "badges.emptyTitle": "No badges yet",
+  "badges.emptyDescription":
+    "Show up, host, and take part — your first badges land here as you go.",
 
   // ── Perks page chrome (PerksPage, PerksSections) ────────────────────────────
   "perks.page.backToBadges": "← Badges & level",
   "perks.page.title": "Your <em>bonuses</em>",
   "perks.page.availableToRedeem_one": "{count} perk available to redeem",
   "perks.page.availableToRedeem_other": "{count} perks available to redeem",
+  "perks.page.loading": "Loading your perks…",
+  "perks.page.errorTitle": "We couldn't load your perks",
+  "perks.page.errorDescription":
+    "Something went wrong reaching your recognition. Please try again in a moment.",
+  "perks.page.emptyTitle": "No perks yet",
+  "perks.page.emptyDescription":
+    "Level up and your member benefits will show up here to redeem.",
   "perks.sidebar.yourLevelTitle": "Your level",
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} to Level {nextLevel}",

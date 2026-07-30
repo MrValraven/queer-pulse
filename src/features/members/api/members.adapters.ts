@@ -141,8 +141,12 @@ export function cardToMember(dto: MemberCardDTO): Member {
 }
 
 /** Map the thin GET /members card DTO to the directory's rich MemberCard.
- *  Filter-only fields the API doesn't provide are defaulted (live-mode filters
- *  on those dimensions are no-ops — a documented known gap). */
+ *  Filter-only fields the API doesn't provide are defaulted to empty. These
+ *  empties are SAFE only because live mode no longer re-filters client-side
+ *  (see MemberDirectoryFilterPage): identity filtering happens server-side via
+ *  the query, and the other facets are a documented no-op in live. Never
+ *  re-introduce a `matchesFilters` pass over these fields in live — it would
+ *  match nothing and empty the directory on any facet selection. */
 export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
   return {
     slug: dto.slug,

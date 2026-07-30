@@ -253,6 +253,19 @@ class RealtimeClient {
       // already applied the identical patch; the second application is a
       // no-op re-affirmation, not a second network round-trip.
       patchConversationPreview(this.qc, conversationId, message);
+      // A new message may bump the nav DM badge (its own isolated key
+      // `["conversations-unread-count"]`, mirrored from useConversations.ts, not
+      // touched by the list patch above). Only invalidate for a NON-active
+      // conversation: a message in the thread the member has OPEN will be marked
+      // read (useMarkRead already refreshes the badge), and the member's OWN send
+      // always targets the open thread — so both are skipped here, avoiding a
+      // wasted count refetch on every send while still catching genuine new
+      // unread in another thread.
+      if (conversationId !== this.activeConversationId) {
+        void this.qc.invalidateQueries({
+          queryKey: ["conversations-unread-count"],
+        });
+      }
       // We received it → ack delivery so the SENDER's tick advances to a double
       // check. Only the joined (open) thread streams `message:new`, so this only
       // fires for a conversation the member is present in — exactly when
@@ -280,6 +293,10 @@ class RealtimeClient {
     // conversation room, so this user-room frame is how the group first appears.
     socket.on("conversation:new", () => {
       void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+      // A brand-new thread may already carry unread messages → refresh the badge.
+      void this.qc.invalidateQueries({
+        queryKey: ["conversations-unread-count"],
+      });
     });
     // A reaction changed on a message in this room. The frame carries the
     // authoritative per-key counts, so patch them in place (deduped by message

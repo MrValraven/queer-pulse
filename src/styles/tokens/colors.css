@@ -65,6 +65,22 @@
   --violet: #7a52b8;
   --violet-rgb: 122, 82, 184;
 
+  /* ── Local directory category colours (map pins + filter-chip legend) ──
+     One fixed, theme-stable fill per unified category, each dark enough to
+     carry a white icon (≥4.5:1 on white). Fixed values are intentional — like
+     the map-marker TYPE_FG hues, a coloured pin must keep its contrast in both
+     themes, so these do NOT flip in dark mode. Distinct hues + the paired icon
+     mean colour is never the sole signal. */
+  --cat-nightlife: #d5431e; /* coral-red — alias of --accent-fill (4.52:1) */
+  --cat-food: #b45309; /* amber — 5.02:1 */
+  --cat-health: #458267; /* jade — alias of --jade-fill (4.52:1) */
+  --cat-space: #2d1b3d; /* plum — alias of --plum (14.6:1) */
+  --cat-culture: #6d46a8; /* violet — 5.30:1 (fixed, deeper than --violet) */
+  --cat-design: #be185d; /* rose — 5.94:1 */
+  --cat-tech: #3a5ea0; /* slate blue — 5.44:1 */
+  --cat-grooming: #9a6820; /* bronze — 4.71:1 (mirrors TYPE_FG.barbershop) */
+  --cat-fitness: #0f766e; /* teal — 5.30:1 */
+
   /* ── Ink (text) ── */
   --ink: #1a1a1f;
   --ink-rgb:

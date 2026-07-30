@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { DECLINE_CARD } from "./checkout.data";
@@ -53,6 +53,12 @@ export function usePaymentForm() {
   const [errors, setErrors] = useState<Partial<Record<ErrorKey, boolean>>>({});
   const [processing, setProcessing] = useState(false);
   const [payError, setPayError] = useState("");
+  // Hold the simulated-processing timer so confirmPayment() can't fire after
+  // the member has abandoned checkout (component unmounted).
+  const processTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  useEffect(() => () => clearTimeout(processTimerRef.current), []);
 
   const brand: CardBrand = detectBrand(card.number);
   const usingNewCard = !usingSaved || savedCardRemoved;
@@ -129,7 +135,7 @@ export function usePaymentForm() {
   function run(declineCheck: string | null) {
     setPayError("");
     setProcessing(true);
-    setTimeout(() => {
+    processTimerRef.current = setTimeout(() => {
       const declined = declineCheck?.replace(/\s/g, "") === DECLINE_CARD;
       setProcessing(false);
       if (declined) {

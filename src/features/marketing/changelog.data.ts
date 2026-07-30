@@ -93,6 +93,178 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "safe-spaces-in-directory",
+        category: "feature",
+        date: "30 Jul 2026",
+        ...entryKeys("safe-spaces-in-directory"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "session-refresh-csrf-race",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("session-refresh-csrf-race"),
+      },
+      {
+        id: "directory-category-unify",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("directory-category-unify"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "messages-badge-count",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("messages-badge-count"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "notifications-coverage",
+        category: "feature",
+        date: "30 Jul 2026",
+        ...entryKeys("notifications-coverage"),
+        tag: {
+          labelKey: "marketing:changelog.tag.notifications",
+          to: routes.notifications,
+        },
+      },
+      {
+        id: "members-collapsible-filters",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("members-collapsible-filters"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "activism-volunteer-merge",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("activism-volunteer-merge"),
+        tag: {
+          labelKey: "marketing:changelog.tag.volunteer",
+          to: routes.volunteer,
+        },
+      },
+      {
+        id: "spaces-map-pins",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("spaces-map-pins"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "creatives-subprofile",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("creatives-subprofile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "gathering-create-fix",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("gathering-create-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "moderation-takedowns",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("moderation-takedowns"),
+      },
+      {
+        id: "directory-photos-crisp",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("directory-photos-crisp"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "admin-role-management",
+        category: "infrastructure",
+        date: "30 Jul 2026",
+        ...entryKeys("admin-role-management"),
+      },
+      {
+        id: "appeal-submission",
+        category: "feature",
+        date: "30 Jul 2026",
+        ...entryKeys("appeal-submission"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safety",
+          to: routes.appealSubmit,
+        },
+      },
+      {
+        id: "honest-report-failures",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("honest-report-failures"),
+        tag: { labelKey: "marketing:changelog.tag.safety", to: routes.report },
+      },
+      {
+        id: "directory-filters-and-accurate-recognition",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("directory-filters-and-accurate-recognition"),
+        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+      },
+      {
+        id: "navigation-resilience",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("navigation-resilience"),
+      },
+      {
+        id: "search-page-launcher",
+        category: "improvement",
+        date: "30 Jul 2026",
+        ...entryKeys("search-page-launcher"),
+        tag: { labelKey: "marketing:changelog.tag.search", to: routes.search },
+      },
+      {
+        id: "donate-honest-live",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("donate-honest-live"),
+        tag: { labelKey: "marketing:changelog.tag.donate", to: routes.donate },
+      },
+      {
+        id: "gathering-manage-coming-soon",
+        category: "fix",
+        date: "30 Jul 2026",
+        ...entryKeys("gathering-manage-coming-soon"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.events,
+        },
+      },
+      {
         id: "search-member-avatars",
         category: "improvement",
         date: "30 Jul 2026",

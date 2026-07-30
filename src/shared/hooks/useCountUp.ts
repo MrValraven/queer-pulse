@@ -34,7 +34,6 @@ export function useCountUp(
     // First run animates from `from`; a later target change animates from
     // wherever the count currently sits so it ticks to the new value.
     const startValue = animatedToRef.current === null ? from : valueRef.current;
-    animatedToRef.current = target;
 
     let frame = 0;
     const start = performance.now();
@@ -45,7 +44,15 @@ export function useCountUp(
       const next = Math.round(startValue + (target - startValue) * eased);
       valueRef.current = next;
       setValue(next);
-      if (progress < 1) frame = requestAnimationFrame(tick);
+      if (progress < 1) {
+        frame = requestAnimationFrame(tick);
+      } else {
+        // Mark "settled on this target" only once the animation actually
+        // completes — not up front. Otherwise StrictMode's mount→cleanup→mount
+        // cycle cancels the first frame, and the re-run sees `animatedToRef`
+        // already equal to `target` and bails, freezing the count at `from`.
+        animatedToRef.current = target;
+      }
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);

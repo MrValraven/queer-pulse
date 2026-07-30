@@ -128,7 +128,13 @@ export function ThreadOpCard({
       <h1 className={styles.opTitle}>{title}</h1>
       <div className={styles.opBody}>
         {deleted ? (
-          <p className={styles.tombstone}>{t("forum:tombstone.body")}</p>
+          <p className={styles.tombstone}>
+            {t(
+              thread.removedByModerator
+                ? "forum:tombstone.removedByModerator"
+                : "forum:tombstone.body",
+            )}
+          </p>
         ) : (
           body.map((paragraph, index) => (
             <p key={index}>

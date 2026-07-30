@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
+import { EmptyState, Spinner } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -22,7 +23,44 @@ function StarIcon() {
 
 export function PerksPage() {
   const { t } = useTranslation();
-  const { level, perks } = useRecognition();
+  // Gate the recognition-driven surfaces on the hook's real-data flags so live
+  // mode shows loading/error/empty states instead of the zeroed placeholder
+  // (and never the demo fixtures). Demo mode always has real data.
+  const recognition = useRecognition();
+  const { level, perks } = recognition;
+  const perksEmpty = perks.groups.length === 0;
+
+  let body;
+  if (recognition.isLoading) {
+    body = (
+      <div className={styles.stateWrap} role="status" aria-live="polite">
+        <Spinner />
+        <span>{t("members:perks.page.loading")}</span>
+      </div>
+    );
+  } else if (recognition.isError) {
+    body = (
+      <EmptyState
+        title={t("members:perks.page.errorTitle")}
+        description={t("members:perks.page.errorDescription")}
+      />
+    );
+  } else if (perksEmpty) {
+    body = (
+      <EmptyState
+        title={t("members:perks.page.emptyTitle")}
+        description={t("members:perks.page.emptyDescription")}
+      />
+    );
+  } else {
+    body = (
+      <div className={styles.layout}>
+        <PerkGroups />
+        <PerksSidebar />
+      </div>
+    );
+  }
+
   return (
     <AppShell>
       <div className={styles.page}>
@@ -39,25 +77,24 @@ export function PerksPage() {
               components={{ em: <em /> }}
             />
           </h1>
-          <div className={styles.phStatusRow}>
-            <span className={styles.levelChip}>
-              <StarIcon />
-              {t("members:profile.hero.levelLabel", {
-                number: level.level,
-              })}{" "}
-              · {level.name}
-            </span>
-            <span className={styles.perksAvail}>
-              {t("members:perks.page.availableToRedeem", {
-                count: perks.availableCount,
-              })}
-            </span>
-          </div>
+          {recognition.hasRealData && (
+            <div className={styles.phStatusRow}>
+              <span className={styles.levelChip}>
+                <StarIcon />
+                {t("members:profile.hero.levelLabel", {
+                  number: level.level,
+                })}{" "}
+                · {level.name}
+              </span>
+              <span className={styles.perksAvail}>
+                {t("members:perks.page.availableToRedeem", {
+                  count: perks.availableCount,
+                })}
+              </span>
+            </div>
+          )}
 
-          <div className={styles.layout}>
-            <PerkGroups />
-            <PerksSidebar />
-          </div>
+          {body}
         </div>
       </div>
     </AppShell>
