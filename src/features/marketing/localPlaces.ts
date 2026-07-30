@@ -29,8 +29,16 @@ export interface LocalPlace {
   /** Venue-only extras; undefined for businesses without a venue twin. */
   vibe?: string[];
   beenHere?: number;
+  /** Pre-lowered haystack for the search box — name + area + category + blurb
+   *  + tags, so a query matches more than just the name. */
+  searchText: string;
   /** Original record, for kind-specific card rendering. */
   source: DirectoryPlace | Venue;
+}
+
+/** Join the searchable parts of a place into one lowercased haystack. */
+function buildSearchText(parts: (string | undefined)[]): string {
+  return parts.filter(Boolean).join(" ").toLowerCase();
 }
 
 /** Informal directory `hood` → official parish used by the map + sidebar. */
@@ -137,6 +145,13 @@ export function businessToLocal(
     ),
     coords: listedCoords ?? fallbackCoords,
     detailPath: `${routes.directory}/${place.slug}`,
+    searchText: buildSearchText([
+      place.name,
+      place.hood,
+      place.cat,
+      place.desc,
+      place.pills?.join(" "),
+    ]),
     source: place,
   };
 }
@@ -153,6 +168,13 @@ export function venueToLocal(venue: Venue): LocalPlace {
     detailPath: `${routes.venue}/${venue.id}`,
     vibe: venue.vibe,
     beenHere: venue.beenHere,
+    searchText: buildSearchText([
+      venue.name,
+      venue.bairro,
+      venue.type,
+      venue.note,
+      venue.vibe?.join(" "),
+    ]),
     source: venue,
   };
 }
@@ -180,6 +202,7 @@ export function mergeLocalPlaces(
       coords: business.coords ?? twin.coords,
       vibe: twin.vibe,
       beenHere: twin.beenHere,
+      searchText: buildSearchText([business.searchText, twin.searchText]),
     };
   });
 
@@ -205,7 +228,13 @@ export interface LocalFilters {
   vibes: string[];
 }
 
-/** Shared filter for both list + map views. Vibe-less places drop out once any vibe is selected. */
+/**
+ * Shared filter for both list + map views. The query matches the full
+ * `searchText` haystack (name + area + category + blurb + tags), not just the
+ * name. Vibes are **pass-through**: only venues carry vibe data, so a selected
+ * vibe narrows venues while businesses (no vibe) always stay visible — instead
+ * of silently deleting every business the moment a vibe is picked.
+ */
 export function filterLocalPlaces(
   places: LocalPlace[],
   filters: LocalFilters,
@@ -215,21 +244,40 @@ export function filterLocalPlaces(
     if (filters.category !== "all" && place.category !== filters.category) {
       return false;
     }
-    if (
-      normalizedQuery &&
-      !(
-        place.name.toLowerCase().includes(normalizedQuery) ||
-        place.neighbourhood.toLowerCase().includes(normalizedQuery)
-      )
-    ) {
+    if (normalizedQuery && !place.searchText.includes(normalizedQuery)) {
       return false;
     }
-    if (
-      filters.vibes.length > 0 &&
-      !filters.vibes.some((vibe) => (place.vibe ?? []).includes(vibe))
-    ) {
-      return false;
+    if (filters.vibes.length > 0) {
+      const placeVibes = place.vibe ?? [];
+      if (
+        placeVibes.length > 0 &&
+        !filters.vibes.some((vibe) => placeVibes.includes(vibe))
+      ) {
+        return false;
+      }
     }
     return true;
   });
+}
+
+/** Sort options for the list. "default" keeps the curated data order. */
+export type LocalSort = "default" | "name" | "hood";
+
+/** Sort a filtered list. "default" is a no-op (returns the input untouched). */
+export function sortLocalPlaces(
+  places: LocalPlace[],
+  sort: LocalSort,
+): LocalPlace[] {
+  if (sort === "default") return places;
+  const sorted = [...places];
+  if (sort === "name") {
+    sorted.sort((first, second) => first.name.localeCompare(second.name));
+  } else {
+    sorted.sort(
+      (first, second) =>
+        first.neighbourhood.localeCompare(second.neighbourhood) ||
+        first.name.localeCompare(second.name),
+    );
+  }
+  return sorted;
 }

@@ -2,41 +2,81 @@ import { type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
 import styles from "./Controls.module.css";
 
-/** Segmented pill control — one value selected at a time. */
+/** One segment: a bare `value` string, or an object carrying a display label
+ *  and/or a leading icon. */
+export interface SegmentOption {
+  value: string;
+  /** Visible label. Defaults to `value` when omitted. */
+  label?: ReactNode;
+  /** Leading icon rendered before the label. */
+  icon?: ReactNode;
+}
+
+function normalizeSegments(
+  options: readonly (string | SegmentOption)[],
+): SegmentOption[] {
+  return options.map((option) =>
+    typeof option === "string" ? { value: option, label: option } : option,
+  );
+}
+
+/** Segmented pill control — one value selected at a time. Options may be plain
+ *  strings, or objects with an icon + label (e.g. a List/Map view switcher). */
 export function SegmentedControl({
   options,
   value,
   onChange,
   fullWidth = false,
   className,
+  disabledOptions,
+  label,
 }: {
-  options: string[];
+  options: readonly (string | SegmentOption)[];
   value: string;
   onChange: (value: string) => void;
   /** Stretch segments to fill the row (rounded-rect tray) instead of a content-width pill. */
   fullWidth?: boolean;
   className?: string;
+  /** Options that render dimmed + non-interactive (native `disabled`). Omit for
+   *  the common all-enabled case; existing callers are unaffected. */
+  disabledOptions?: string[];
+  /** Accessible name for the group — a bare `role="group"` is announced without
+   *  a purpose. Omit only when a visible heading already names the control. */
+  label?: string;
 }) {
+  const segments = normalizeSegments(options);
   return (
     <div
       className={[styles.seg, fullWidth && styles.segFull, className]
         .filter(Boolean)
         .join(" ")}
       role="group"
+      aria-label={label}
     >
-      {options.map((o) => (
-        <button
-          key={o}
-          type="button"
-          aria-pressed={value === o}
-          className={[styles.segBtn, value === o && styles.segOn]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => onChange(o)}
-        >
-          {o}
-        </button>
-      ))}
+      {segments.map((segment) => {
+        const isDisabled = disabledOptions?.includes(segment.value) ?? false;
+        return (
+          <button
+            key={segment.value}
+            type="button"
+            aria-pressed={value === segment.value}
+            disabled={isDisabled}
+            className={[styles.segBtn, value === segment.value && styles.segOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => {
+              if (!isDisabled) onChange(segment.value);
+            }}
+          >
+            {segment.icon && (
+              <span className={styles.segIcon} aria-hidden>
+                {segment.icon}
+              </span>
+            )}
+            {segment.label ?? segment.value}
+          </button>
+        );
+      })}
     </div>
   );
 }

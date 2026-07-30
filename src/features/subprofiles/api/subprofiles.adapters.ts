@@ -101,6 +101,19 @@ export interface PublicSubprofileView {
   viewerFollowing: boolean;
 }
 
+/** Per-persona owner-only metadata (status/visibility/position/id), threaded
+ *  alongside a `PublicSubprofileView` in self view rather than merged into
+ *  it — `PublicSubprofileView` has no `status`/`visibility`/`position` and
+ *  giving it optional copies would blur which shape callers are holding.
+ *  Built by `ProfileSubprofilesSection` from the raw owner `SubprofileView[]`
+ *  and read by `SubprofileShowcase`/`SubprofileSwitchList`/`SubprofileFeatureCard`. */
+export interface SubprofileOwnerMeta {
+  id: string;
+  status: SubprofileStatus;
+  visibility: Visibility;
+  position: number;
+}
+
 // ── DTO → view model ─────────────────────────────────────────────────────────
 
 function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
@@ -210,6 +223,45 @@ export function publicSubprofileToView(
     viewerEndorsed: dto.viewerEndorsed,
     followerCount: dto.followerCount,
     viewerFollowing: dto.viewerFollowing,
+  };
+}
+
+/** Adapt an owner (self-view) `SubprofileView` into the `PublicSubprofileView`
+ *  shape `SubprofileShowcase`/`SubprofileFeatureCard` already know how to
+ *  render, so self and public views share one rendering pipeline instead of
+ *  a messy type merge. Owner-only fields (`status`/`visibility`/`position`)
+ *  don't carry across here — they travel separately as `SubprofileOwnerMeta`
+ *  (see `ProfileSubprofilesSection`). Viewer-relative fields the owner has no
+ *  concept of *as a visitor* (endorsed/following) default to `false`; the
+ *  card renders `isOwnerViewing` instead of reading these when self. */
+export function ownerViewToShowcaseView(
+  view: SubprofileView,
+  selfOwnerSlug: string,
+): PublicSubprofileView {
+  return {
+    id: view.id,
+    kind: view.kind,
+    slug: view.slug,
+    handle: view.handle,
+    displayName: view.displayName,
+    avatarUrl: view.avatarUrl,
+    tagline: view.tagline,
+    bio: view.bio,
+    coverUrl: view.coverUrl,
+    accent: view.accent,
+    availability: view.availability,
+    ctaLabel: view.ctaLabel,
+    ctaUrl: view.ctaUrl,
+    socialLinks: view.socialLinks,
+    linkVisibility: view.linkVisibility,
+    ownerSlug: selfOwnerSlug,
+    sections: view.sections,
+    featured: view.featured,
+    affiliations: view.affiliations,
+    endorsementCount: view.endorsementCount,
+    viewerEndorsed: false,
+    followerCount: view.followerCount,
+    viewerFollowing: false,
   };
 }
 

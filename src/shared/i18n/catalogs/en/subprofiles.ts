@@ -38,17 +38,25 @@ export const subprofiles: Catalog = {
   "alsoAs.subtitlePublic": "Professional personas linked to this profile.",
   "alsoAs.subtitleSelf": "The professional personas you've linked here.",
   "alsoAs.subtitleEmpty": "Another side of your work can live here.",
-  "alsoAs.manage": "Manage subprofiles →",
-  "alsoAs.viewPersona": "View persona",
-  "alsoAs.switchLabel": "Switch preview",
-  "alsoAs.previewLabel": "Preview another persona",
+  "alsoAs.viewPersona": "Visit",
+  "alsoAs.switchLabel": "More sides",
+  "alsoAs.previewLabel": "See another side",
+  "alsoAs.count_one": "{count} side",
+  "alsoAs.count_other": "{count} sides",
+  "alsoAs.announce": "Now showing {name}",
+  "alsoAs.featuredEyebrow": "Featured",
+  "alsoAs.addAnother": "Add another side",
+  "alsoAs.edit": "Edit",
+  "alsoAs.moveUp": "Move up",
+  "alsoAs.moveDown": "Move down",
+  "alsoAs.expandCard": "Show details",
   "alsoAs.filterLabel": "Filter by craft",
   "alsoAs.filterAll": "All",
   "alsoAs.showAll": "Show all ({count} more)",
   "alsoAs.showFewer": "Show fewer",
-  "alsoAs.empty.title": "Add a professional subprofile",
+  "alsoAs.empty.title": "Show more of what you <em>make</em>",
   "alsoAs.empty.description":
-    "Show another side of your work — your music, your code, your writing — linked here or standing on its own.",
+    "Your music, your code, your writing — linked here or standing on its own.",
   "alsoAs.empty.cta": "Create a subprofile",
 
   // Nav + command palette
@@ -355,12 +363,30 @@ export const subprofiles: Catalog = {
   "newModal.addressPlaceholder": "e.g. poetry",
   "newModal.toastError": "We couldn't start that one — try again.",
 
+  // Duplicate a persona — start-method picker (StartMethodPicker) and
+  // copy-source/mode picker (CopySourcePicker, CopyModePreview), both used
+  // from the create flow when the owner already has other personas.
+  "start.label": "How do you want to start?",
+  "start.helper": "Pick a starting point — you can change everything later.",
+  "start.copyDisabledHelper":
+    "Create a persona first, then you can copy it here.",
+  "start.template": "From a template",
+  "start.blank": "Blank",
+  "start.copy": "Copy an existing one",
+  "copy.noSources": "You don't have any personas to copy yet.",
+  "copy.sourceLabel": "Choose a persona to copy",
+  "copy.modeLabel": "What to copy",
+  "copy.modeFull": "Everything",
+  "copy.modeContent": "Content only",
+  "copy.summaryCounts": "{items} items · {links} links",
+  "copy.summaryAffiliations": "{affiliations} affiliations",
+  "copy.summaryIdentity": "· plus name, bio & style",
+  "copy.summaryNoIdentity": "· identity left blank",
+
   // Starter templates (Phase 4a) — create-time picker (NewSubprofileModal)
   // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
   // Section-item copy reads as friendly, editable placeholders — a creator
   // is meant to replace them with their own work, not keep them as-is.
-  "template.startFromTemplate": "Start from a template",
-  "template.startBlank": "Start from scratch",
   "template.helper":
     "Templates fill your sections with a couple of example items and a suggested tagline — everything's yours to edit or clear.",
   "template.insertExamples": "Insert examples",

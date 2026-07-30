@@ -6,7 +6,6 @@ import {
   type SetStateAction,
 } from "react";
 import type { ChatMessage, Conversation } from "./data";
-import { loadDraft } from "./drafts";
 import { realConversationId } from "./useMessagesController.helpers";
 import type { useMarkRead } from "./api/useMessageMutations";
 import type { useDeleteConversation } from "./api/useMessageActions";
@@ -20,7 +19,6 @@ interface ThreadNavDeps {
   activeId: string;
   setActiveId: Dispatch<SetStateAction<string>>;
   setReadIds: Dispatch<SetStateAction<Set<string>>>;
-  setDraft: Dispatch<SetStateAction<string>>;
   setView: Dispatch<SetStateAction<"list" | "thread">>;
   setReplyDraft: Dispatch<SetStateAction<ChatMessage | null>>;
   setQuery: Dispatch<SetStateAction<string>>;
@@ -50,7 +48,6 @@ export function useMessageThreadNav({
   activeId,
   setActiveId,
   setReadIds,
-  setDraft,
   setView,
   setReplyDraft,
   setQuery,
@@ -90,9 +87,8 @@ export function useMessageThreadNav({
     if (activeId !== id) setReplyDraft(null);
     setActiveId(id);
     setReadIds((current) => new Set(current).add(id));
-    // Restore any draft typed-but-unsent for the thread we're opening (empty
-    // string when none was persisted), instead of blanking the composer.
-    setDraft(loadDraft(id));
+    // The composer (keyed on the open thread's id) seeds its own persisted
+    // draft on mount — nothing to restore here.
     setView("thread");
     // Mark the thread we're *opening* read — not the render-time `active`,
     // which is still the previously open thread this synchronous frame. Resolve

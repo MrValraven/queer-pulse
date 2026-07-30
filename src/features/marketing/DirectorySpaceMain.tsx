@@ -1,7 +1,13 @@
 import { FiStar } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type DirectoryPlace, hoursRows, type Tint } from "./directoryPlaces";
+import {
+  type DirectoryPlace,
+  hoursRows,
+  openStatus,
+  realHoursRows,
+  type Tint,
+} from "./directoryPlaces";
 import { CAT_LABEL_KEYS, STAR_SLOTS } from "./directorySpace.data";
 import { DirectoryReviewForm } from "./DirectoryReviewForm";
 import s from "./DirectorySpacePage.module.css";
@@ -42,7 +48,8 @@ export function DirectorySpaceMain({ place, preview = false }: Props) {
   const words = place.name.split(" ");
   const last = words.pop();
   const lead = words.join(" ");
-  const rows = hoursRows(place.hoursType);
+  const hasRealHours = place.hours != null && Object.keys(place.hours).length > 0;
+  const rows = hasRealHours ? realHoursRows(place.hours!) : hoursRows(place.hoursType);
   const todayIdx = (new Date().getDay() + 6) % 7;
 
   return (
@@ -134,7 +141,23 @@ export function DirectorySpaceMain({ place, preview = false }: Props) {
       <section className={s.sec}>
         <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
         <p className={s.subLine}>{place.hoursNote}</p>
-        {place.hoursType === "appointment" ? (
+        {hasRealHours &&
+          (() => {
+            const status = openStatus(place.hours, new Date());
+            if (status.state === "unknown") return null;
+            return (
+              <span
+                className={status.state === "open" ? s.openChip : s.closedChip}
+              >
+                {t(
+                  status.state === "open"
+                    ? "marketing:directory.detail.openNow"
+                    : "marketing:directory.detail.closedNow",
+                )}
+              </span>
+            );
+          })()}
+        {!hasRealHours && place.hoursType === "appointment" ? (
           <div className={s.apptNote}>
             <div className={s.featureIc}>
               <svg viewBox="0 0 24 24">

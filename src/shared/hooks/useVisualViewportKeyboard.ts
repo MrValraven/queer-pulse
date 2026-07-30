@@ -11,6 +11,15 @@ import { useEffect } from "react";
  * engines that already shrink the layout viewport for the keyboard (Chromium
  * with `interactive-widget=resizes-content`), the overlap resolves to ~0px and
  * this hook is inert. It also no-ops where `visualViewport` is unavailable.
+ *
+ * Only `visualViewport`'s `resize` event schedules a recompute — that's what
+ * fires on keyboard open/close, which is the only thing this var needs to
+ * track. `scroll` fires continuously during iOS momentum scrolling and
+ * address-bar show/hide without the keyboard's overlap actually changing, so
+ * listening to it too only bought a style write (and the `.app` reflow it
+ * triggers) on every tick for no visual benefit. Every recompute is also
+ * coalesced through `requestAnimationFrame` (at most one write per frame) and
+ * skipped entirely when the value hasn't changed.
  */
 export function useVisualViewportKeyboard(): void {
   useEffect(() => {
@@ -18,23 +27,35 @@ export function useVisualViewportKeyboard(): void {
     if (!visualViewport) return;
 
     const documentElement = document.documentElement;
-    const updateKeyboardInset = () => {
-      const keyboardOverlap = Math.max(
+    let pendingAnimationFrameId: number | null = null;
+    let lastWrittenKeyboardOverlapPx = -1;
+
+    const applyKeyboardInset = () => {
+      pendingAnimationFrameId = null;
+      const keyboardOverlapPx = Math.max(
         0,
         window.innerHeight - visualViewport.height - visualViewport.offsetTop,
       );
+      if (keyboardOverlapPx === lastWrittenKeyboardOverlapPx) return;
+      lastWrittenKeyboardOverlapPx = keyboardOverlapPx;
       documentElement.style.setProperty(
         "--keyboard-inset",
-        `${keyboardOverlap}px`,
+        `${keyboardOverlapPx}px`,
       );
     };
 
-    updateKeyboardInset();
-    visualViewport.addEventListener("resize", updateKeyboardInset);
-    visualViewport.addEventListener("scroll", updateKeyboardInset);
+    const scheduleKeyboardInsetUpdate = () => {
+      if (pendingAnimationFrameId !== null) return;
+      pendingAnimationFrameId = window.requestAnimationFrame(applyKeyboardInset);
+    };
+
+    applyKeyboardInset();
+    visualViewport.addEventListener("resize", scheduleKeyboardInsetUpdate);
     return () => {
-      visualViewport.removeEventListener("resize", updateKeyboardInset);
-      visualViewport.removeEventListener("scroll", updateKeyboardInset);
+      visualViewport.removeEventListener("resize", scheduleKeyboardInsetUpdate);
+      if (pendingAnimationFrameId !== null) {
+        window.cancelAnimationFrame(pendingAnimationFrameId);
+      }
       documentElement.style.removeProperty("--keyboard-inset");
     };
   }, []);

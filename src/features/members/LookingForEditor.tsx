@@ -6,9 +6,11 @@ import { Section } from "./ProfileSections";
 import styles from "./ProfilePage.module.css";
 
 /**
- * Edit-mode twin of `LookingForSection`. The chips edit `draft.lookingFor`
- * (same field the Settings → Interests pane edits) and the switch edits
- * `draft.lookingForPublic`. Persisted with the rest of the draft on save.
+ * Edit-mode editor for the member's "here for" intent. The chips edit
+ * `draft.lookingFor` (same field the Settings → Interests pane edits) and the
+ * switch edits `draft.lookingForPublic`. The read view renders this intent as
+ * the "Here for" line in the profile hero (see `ProfileHero`). Persisted with
+ * the rest of the draft on save.
  */
 export function LookingForEditor() {
   const { t } = useTranslation();

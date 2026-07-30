@@ -153,3 +153,66 @@
   font-family: var(--sans);
   color: var(--ink-40);
 }
+
+/* ── Copy-source picker (New-subprofile modal, copy flow) ───────────────────── */
+.sourceList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+.sourceBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--sans);
+  text-align: start;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .sourceBtn:hover {
+    border-color: var(--line-strong);
+  }
+}
+.sourceBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.sourceBtnOn {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.sourceMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.sourceEmpty {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-40);
+  margin: 0 0 20px;
+}
+
+/* ── Copy-mode preview (New-subprofile modal, copy flow) ─────────────────── */
+.copySummary {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-40);
+  margin: 8px 0 0;
+}

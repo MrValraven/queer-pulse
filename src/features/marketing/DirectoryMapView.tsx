@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
-import { FiX } from "react-icons/fi";
-import { SkeletonLine } from "../../shared/components/ui";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { FiArrowDown, FiSearch, FiX } from "react-icons/fi";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { useMediaQuery, usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
@@ -54,11 +55,19 @@ function VenueCardSkeleton() {
 export function DirectoryMapView({
   places,
   loading,
+  hasActiveFilters,
+  onClearFilters,
 }: {
   places: LocalPlace[];
   loading: boolean;
+  hasActiveFilters: boolean;
+  onClearFilters: () => void;
 }) {
   const { t } = useTranslation();
+  const isMobile = useMediaQuery("(max-width: 880px)");
+  const reducedMotion = usePrefersReducedMotion();
+  const sidebarRef = useRef<HTMLElement | null>(null);
+  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [selectedFreguesia, setSelectedFreguesia] = useState<string | null>(
     null,
   );
@@ -101,30 +110,53 @@ export function DirectoryMapView({
     return grouped;
   }, [items, selectedFreguesia]);
 
+  const scrollBehavior: ScrollBehavior = reducedMotion ? "auto" : "smooth";
+
   function selectFreguesia(name: string | null) {
     setSelectedFreguesia(name);
     setExpandedId(null);
   }
-  function selectPlace(placeId: string) {
-    setExpandedId(placeId);
-  }
+  // Tapping a map pin expands its card; on mobile the list sits below the map,
+  // so bring the card into view rather than leaving the tap feel like a no-op.
+  const selectPlace = useCallback(
+    (placeId: string) => {
+      setExpandedId(placeId);
+      if (!isMobile) return;
+      requestAnimationFrame(() => {
+        cardRefs.current
+          .get(placeId)
+          ?.scrollIntoView({ behavior: scrollBehavior, block: "center" });
+      });
+    },
+    [isMobile, scrollBehavior],
+  );
   function toggleExpand(placeId: string) {
     setExpandedId((current) => (current === placeId ? null : placeId));
   }
   function markBeen(placeId: string, currentBeen: number) {
     setBeen((current) => ({ ...current, [placeId]: currentBeen + 1 }));
   }
+  function jumpToList() {
+    sidebarRef.current?.scrollIntoView({ behavior: scrollBehavior });
+  }
 
   const renderCard = (place: LocalPlace, index: number) => (
-    <LocalPlaceCard
+    <div
       key={place.id}
-      place={place}
-      index={index}
-      expandedId={expandedId}
-      been={been}
-      onToggleExpand={toggleExpand}
-      onMarkBeen={markBeen}
-    />
+      ref={(node) => {
+        if (node) cardRefs.current.set(place.id, node);
+        else cardRefs.current.delete(place.id);
+      }}
+    >
+      <LocalPlaceCard
+        place={place}
+        index={index}
+        expandedId={expandedId}
+        been={been}
+        onToggleExpand={toggleExpand}
+        onMarkBeen={markBeen}
+      />
+    </div>
   );
 
   return (
@@ -139,7 +171,17 @@ export function DirectoryMapView({
           onSelectVenue={selectPlace}
         />
 
-        <aside className={s.sidebar}>
+        {/* Mobile-only: the map stacks above a long list — offer a jump down so
+            the map isn't a dead-end scroll. Hidden on desktop (side-by-side). */}
+        <button type="button" className={s.jumpToList} onClick={jumpToList}>
+          <FiArrowDown aria-hidden />
+          <Translation
+            i18nKey="marketing:map.jumpToList"
+            values={{ count: items.length }}
+          />
+        </button>
+
+        <aside className={s.sidebar} ref={sidebarRef}>
           <div className={s.sbTop}>
             <div>
               <div className={s.sbHeading}>
@@ -165,7 +207,19 @@ export function DirectoryMapView({
           </div>
 
           {!loading && items.length === 0 && (
-            <div className={s.empty}>{t("marketing:map.sidebar.empty")}</div>
+            <EmptyState
+              compact
+              icon={<FiSearch />}
+              title={t("marketing:map.sidebar.empty")}
+              action={
+                hasActiveFilters
+                  ? {
+                      label: t("marketing:directory.clearFilters"),
+                      onClick: onClearFilters,
+                    }
+                  : undefined
+              }
+            />
           )}
 
           {loading

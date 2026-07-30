@@ -156,6 +156,8 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
                   <Avatar
                     initials={person.initials}
                     tint={person.tint}
+                    src={person.photo}
+                    alt={person.name}
                     size={40}
                   />
                   <div className={styles.rowBody}>

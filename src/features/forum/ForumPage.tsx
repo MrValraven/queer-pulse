@@ -1,244 +1,79 @@
-import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useAuth } from "../../app/providers/authContext";
-import { SELF_AUTHOR, selfAuthorFromProfile, type Thread } from "./forum.data";
-import { useThreads } from "./api/useForum";
-import { useCreateThread, useEditThreadTitle } from "./api/useForumMutations";
-import { ComposeThreadModal, type NewThreadInput } from "./ComposeThreadModal";
+import { ComposeThreadModal } from "./ComposeThreadModal";
 import { EditTitleModal } from "./EditTitleModal";
 import { FirstPostPrompt } from "./FirstPostPrompt";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
 import { ForumHero } from "./ForumHero";
 import { ForumLoadMore } from "./ForumLoadMore";
-import { useToast } from "../../shared/components/feedback/useToast";
-// DEMO-ONLY persona — read ONLY inside the `demoMode` branch of `canEditThread`
-// below; the live branch must use solely the DTO's `thread.canEdit` flag.
-import { currentUser } from "../members/data/members";
+import { useForumPageState } from "./useForumPageState";
 import styles from "./ForumPage.module.css";
 
-const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
-
 export function ForumPage() {
-  const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const { user } = useAuth();
-  const simLoading = useSimulatedLoad();
-  const [cat, setCat] = useState("all");
-  // Thread source: demo returns the full mock as one terminal page, live pages
-  // through GET /forum/threads via the "Load more" button below the list.
-  const threadsQuery = useThreads(cat);
-  const { hasNextPage, fetchNextPage, isFetchingNextPage } = threadsQuery;
-  const createThread = useCreateThread();
-  const loading = demoMode ? simLoading : threadsQuery.isLoading;
-  const [sort, setSort] = useState<"top" | "new">("top");
-  const [voted, setVoted] = useState<Set<number>>(new Set());
-  const [composing, setComposing] = useState(false);
-  const [composeSeed, setComposeSeed] = useState("");
-  const [extraThreads, setExtraThreads] = useState<Thread[]>([]);
-  const { showToast } = useToast();
-  const [editingTitleThreadId, setEditingTitleThreadId] = useState<
-    number | null
-  >(null);
-  const editThreadTitle = useEditThreadTitle(editingTitleThreadId ?? 0);
-  const [promptDismissed, setPromptDismissed] = useState(
-    () =>
-      typeof localStorage !== "undefined" &&
-      localStorage.getItem(PROMPT_DISMISSED_KEY) === "1",
-  );
-
-  // Show the first-post invitation only to members who haven't posted this
-  // session and haven't waved it away before (dismissal persists across reloads).
-  const showFirstPostPrompt = !promptDismissed && extraThreads.length === 0;
-
-  function dismissPrompt() {
-    setPromptDismissed(true);
-    try {
-      localStorage.setItem(PROMPT_DISMISSED_KEY, "1");
-    } catch {
-      // Private mode / storage disabled — session-only dismissal is fine.
-    }
-  }
-
-  function openCompose(seed = "") {
-    setComposeSeed(seed);
-    setComposing(true);
-  }
-
-  const allThreads = useMemo(() => {
-    // Once the server-persisted copy of a just-posted thread comes back in the
-    // refetched list, drop the local optimistic copy so the post doesn't render
-    // twice (matched on category + title). Demo never refetches, so its
-    // optimistic posts are kept as the record.
-    const serverKeys = new Set(
-      threadsQuery.threads.map((thread) => `${thread.category}::${thread.title}`),
-    );
-    const optimistic = extraThreads.filter(
-      (thread) => !serverKeys.has(`${thread.category}::${thread.title}`),
-    );
-    return [...optimistic, ...threadsQuery.threads];
-  }, [extraThreads, threadsQuery.threads]);
-
-  // Live: author-only edit right comes from the DTO flag on the card.
-  // Demo: the persona owns threads it authored ("You" / its slug). currentUser
-  // is only touched inside this demoMode branch.
-  const canEditThread = (thread: Thread): boolean =>
-    demoMode
-      ? thread.author.slug === currentUser.slug || thread.author.name === "You"
-      : !!thread.canEdit;
-
-  const editingThread =
-    editingTitleThreadId != null
-      ? allThreads.find((thread) => thread.id === editingTitleThreadId)
-      : undefined;
-
-  function saveThreadTitle(title: string) {
-    if (demoMode) {
-      // Demo edit only ever targets locally-composed threads (in extraThreads);
-      // seeded THREADS are never authored by the demo persona.
-      setExtraThreads((prev) =>
-        prev.map((thread) =>
-          thread.id === editingTitleThreadId ? { ...thread, title } : thread,
-        ),
-      );
-    } else {
-      editThreadTitle.mutate(
-        { title },
-        { onError: () => showToast(t("forum:toast.error"), "error") },
-      );
-    }
-    setEditingTitleThreadId(null);
-    showToast(t("forum:toast.editSaved"), "success");
-  }
-
-  // Sidebar post counts derived from the real threads (members' posts), so they
-  // stay truthful and update live when a member publishes a new one.
-  const counts = useMemo(() => {
-    const by: Record<string, number> = {};
-    for (const t of allThreads) by[t.category] = (by[t.category] ?? 0) + 1;
-    return by;
-  }, [allThreads]);
-
-  const threads = useMemo(() => {
-    const filtered = allThreads.filter((t) => cat === "all" || t.category === cat);
-    if (sort === "new") return [...filtered].sort((a, b) => b.id - a.id);
-    return [...filtered].sort(
-      (a, b) =>
-        (b.pinned ? 1000 : 0) + b.upvotes - ((a.pinned ? 1000 : 0) + a.upvotes),
-    );
-  }, [allThreads, cat, sort]);
-
-  function publishThread({ title, body, cat: postCat }: NewThreadInput) {
-    const id = Date.now();
-    const excerpt = body.length > 160 ? `${body.slice(0, 157)}…` : body;
-    // Live posts are authored by the REAL session user — never the mock
-    // `SELF_AUTHOR` ("Tiago Costa" demo persona), which would otherwise leak into
-    // production. Demo keeps the scripted "You" persona.
-    const author =
-      demoMode || !user ? SELF_AUTHOR : selfAuthorFromProfile(user.profile);
-    setExtraThreads((prev) => [
-      {
-        id,
-        category: postCat,
-        title,
-        excerpt,
-        author,
-        posted: "just now",
-        views: 1,
-        upvotes: 1,
-        comments: 0,
-        tags: [],
-        body: body
-          .split("\n")
-          .map((p) => p.trim())
-          .filter(Boolean),
-        replies: [],
-      },
-      ...prev,
-    ]);
-    // Surface the new post regardless of current filter/sort.
-    setCat("all");
-    setSort("new");
-    // Once they've posted, the first-post invitation has done its job — for good.
-    dismissPrompt();
-    // Live mode persists; demo mode no-ops (the local thread above is the record).
-    createThread.mutate({ title, body, category: postCat });
-  }
-
-  function toggleVote(id: number) {
-    setVoted((cur) => {
-      const next = new Set(cur);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
+  const page = useForumPageState();
 
   return (
     <PageShell>
-      <ForumHero onNewPost={() => openCompose()} />
+      <ForumHero onNewPost={() => page.openCompose()} />
 
       <section className={styles.body}>
         <div className="wrap">
           <div className={styles.layout}>
             <ForumSidebar
-              cat={cat}
-              setCat={setCat}
-              counts={counts}
-              totalCount={allThreads.length}
+              cat={page.cat}
+              setCat={page.setCat}
+              counts={page.counts}
+              totalCount={page.allThreads.length}
             />
             <div>
-              {showFirstPostPrompt && (
+              {page.showFirstPostPrompt && (
                 <FadeIn>
                   <FirstPostPrompt
-                    onWrite={() => openCompose()}
-                    onPickStarter={(text) => openCompose(text)}
-                    onDismiss={dismissPrompt}
+                    onWrite={() => page.openCompose()}
+                    onPickStarter={(text) => page.openCompose(text)}
+                    onDismiss={page.dismissPrompt}
                   />
                 </FadeIn>
               )}
               <ForumThreadList
-                loading={loading}
-                threads={threads}
-                sort={sort}
-                setSort={setSort}
-                voted={voted}
-                toggleVote={toggleVote}
-                filtered={cat !== "all"}
-                onShowAll={() => setCat("all")}
-                onCompose={() => openCompose()}
-                canEditThread={canEditThread}
-                onEditTitle={(thread) => setEditingTitleThreadId(thread.id)}
+                loading={page.loading}
+                threads={page.threads}
+                sort={page.sort}
+                setSort={page.setSort}
+                voted={page.voted}
+                toggleVote={page.toggleVote}
+                filtered={page.cat !== "all"}
+                onShowAll={() => page.setCat("all")}
+                onCompose={() => page.openCompose()}
+                canEditThread={page.canEditThread}
+                onEditTitle={(thread) => page.setEditingTitleThreadId(thread.id)}
               />
 
               <ForumLoadMore
-                hasNextPage={hasNextPage}
-                fetchNextPage={fetchNextPage}
-                isFetchingNextPage={isFetchingNextPage}
+                hasNextPage={page.hasNextPage}
+                fetchNextPage={page.fetchNextPage}
+                isFetchingNextPage={page.isFetchingNextPage}
               />
             </div>
           </div>
         </div>
       </section>
 
-      {composing && (
+      {page.composing && (
         <ComposeThreadModal
-          initialTitle={composeSeed}
-          onClose={() => setComposing(false)}
-          onPublish={publishThread}
+          initialTitle={page.composeSeed}
+          onClose={page.closeCompose}
+          onPublish={page.publishThread}
         />
       )}
 
-      {editingThread && (
+      {page.editingThread && (
         <EditTitleModal
-          initialTitle={editingThread.title}
-          busy={editThreadTitle.isPending}
-          onSave={saveThreadTitle}
-          onClose={() => setEditingTitleThreadId(null)}
+          initialTitle={page.editingThread.title}
+          busy={page.editingTitleThreadIsBusy}
+          onSave={page.saveThreadTitle}
+          onClose={page.closeEditTitle}
         />
       )}
     </PageShell>

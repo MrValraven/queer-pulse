@@ -22,7 +22,12 @@ export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";
 export { useChipSet } from "./useChipSet";
 export { SearchInput } from "./SearchInput";
 export { Tabs, type Tab } from "./Tabs";
-export { SegmentedControl, Toggle, CheckLine } from "./Controls";
+export {
+  SegmentedControl,
+  Toggle,
+  CheckLine,
+  type SegmentOption,
+} from "./Controls";
 export { Badge, CategoryLabel, type BadgeTone } from "./Badge";
 export {
   StaffBadge,

@@ -1,4 +1,5 @@
 import { MEMBERS, memberName } from "../members/data/members";
+import type { DayHours, PhotoKey } from "./listBusiness/listBusiness.data";
 
 export type Tint = "coral" | "jade" | "plum";
 export type HoursType =
@@ -65,6 +66,14 @@ export interface DirectoryPlace {
   /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
   latitude?: number | null;
   longitude?: number | null;
+  /** Real uploaded images (URL per slot, null when empty). Absent for demo
+   * places, which fall back to the `gallery` caption blocks. */
+  photos?: Record<PhotoKey, string | null>;
+  alt?: Record<PhotoKey, string>;
+  /** Real per-weekday hours keyed by `DAYS` id (`Mon`..`Sun`). Absent → the
+   * templated `hoursRows(hoursType)` fallback renders instead. */
+  hours?: Record<string, DayHours>;
+  langs?: string[];
   upcoming?: { when: string; title: string }[];
   reviews: Review[];
 }
@@ -401,6 +410,27 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       email: "ola@livrariabertha.pt",
     },
     address: "R. da Imprensa Nacional 48 · Príncipe Real",
+    photos: {
+      wide: "https://images.unsplash.com/photo-1521123845560-14093637aa7d?q=80&w=1600&auto=format&fit=crop",
+      d1: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop",
+      d2: null,
+      vibe: "https://images.unsplash.com/photo-1526243741027-444d633d7365?q=80&w=1200&auto=format&fit=crop",
+    },
+    alt: {
+      wide: "Shelves of books at Livraria Bertha",
+      d1: "The queer and feminist front table",
+      d2: "",
+      vibe: "A reading in progress among the stacks",
+    },
+    hours: {
+      Tue: { open: true, from: "11:00", to: "19:00" },
+      Wed: { open: true, from: "11:00", to: "19:00" },
+      Thu: { open: true, from: "11:00", to: "19:00" },
+      Fri: { open: true, from: "11:00", to: "21:00" },
+      Sat: { open: true, from: "10:00", to: "21:00" },
+      Sun: { open: true, from: "12:00", to: "18:00" },
+    },
+    langs: ["pt", "en"],
     upcoming: [
       {
         when: "Fri 13 Jun · 19:00",
@@ -658,6 +688,27 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       phone: "+351 21 099 8877",
     },
     address: "R. de Arroios 142 · Arroios",
+    photos: {
+      wide: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=1600&auto=format&fit=crop",
+      d1: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
+      d2: null,
+      vibe: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
+    },
+    alt: {
+      wide: "The bar at A Farinha",
+      d1: "Small plates on the counter",
+      d2: "",
+      vibe: "A full room on a Friday night",
+    },
+    hours: {
+      Tue: { open: true, from: "18:00", to: "00:00" },
+      Wed: { open: true, from: "18:00", to: "00:00" },
+      Thu: { open: true, from: "18:00", to: "01:00" },
+      Fri: { open: true, from: "18:00", to: "02:00" },
+      Sat: { open: true, from: "18:00", to: "02:00" },
+      Sun: { open: true, from: "16:00", to: "23:00" },
+    },
+    langs: ["pt", "en"],
     reviews: [
       {
         initials: MEMBERS.anika!.initials,
@@ -1395,4 +1446,73 @@ export function hoursRows(
     const val = hoursByType[type][i] ?? null;
     return { dayKey, val, closed: val === null };
   });
+}
+
+/**
+ * Rows from a listing's REAL per-weekday hours (keyed by DAYS id `Mon`..`Sun`),
+ * shaped like `hoursRows` (lowercase english `dayKey`, Monday first) so the
+ * detail page renders them through the same loop and day-label i18n keys.
+ */
+export function realHoursRows(
+  hours: Record<string, DayHours>,
+): { dayKey: string; val: string | null; closed: boolean }[] {
+  const dayIds = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+  return dayIds.map((dayId, index) => {
+    const day = hours[dayId];
+    const isOpen = day?.open === true;
+    return {
+      dayKey: dayKeys[index]!,
+      val: isOpen ? `${day.from} — ${day.to}` : null,
+      closed: !isOpen,
+    };
+  });
+}
+
+const DAY_IDS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
+
+/** `index` is always taken mod 7, so the lookup is provably in range. */
+function dayIdAt(index: number): (typeof DAY_IDS)[number] {
+  return DAY_IDS[index]!;
+}
+
+function minutesOf(hourMinute: string): number {
+  const parts = hourMinute.split(":");
+  const hour = Number(parts[0]);
+  const minute = Number(parts[1]);
+  return hour * 60 + minute;
+}
+
+/**
+ * Live open/closed state from real per-weekday hours. Returns `unknown` when no
+ * hours are set (the page then hides the status chip). A window whose `to` is
+ * less than or equal to `from` is treated as closing after midnight, so a late
+ * bar reads correctly in the small hours of the next day.
+ */
+export function openStatus(
+  hours: Record<string, DayHours> | undefined,
+  now: Date,
+): { state: "open" | "closed" | "unknown" } {
+  if (!hours || Object.keys(hours).length === 0) return { state: "unknown" };
+  const todayIndex = (now.getDay() + 6) % 7; // 0 = Monday
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const todayId = dayIdAt(todayIndex);
+  const today = hours[todayId];
+  if (today?.open) {
+    const from = minutesOf(today.from);
+    const to = minutesOf(today.to);
+    if (to > from ? nowMinutes >= from && nowMinutes < to : nowMinutes >= from) {
+      return { state: "open" };
+    }
+  }
+  // Yesterday's after-midnight window may still be running.
+  const yesterdayId = dayIdAt((todayIndex + 6) % 7);
+  const yesterday = hours[yesterdayId];
+  if (yesterday?.open) {
+    const from = minutesOf(yesterday.from);
+    const to = minutesOf(yesterday.to);
+    if (to <= from && nowMinutes < to) return { state: "open" };
+  }
+  return { state: "closed" };
 }

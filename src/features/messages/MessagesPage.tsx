@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AppShell } from "../../shared/components/layout";
+import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
 import { ConversationPanel } from "./ConversationPanel";
 import { MessagesEmptyPanel } from "./MessagesEmptyPanel";
 import { MessagesThreadList } from "./MessagesThreadList";
@@ -18,20 +19,17 @@ export function MessagesPage() {
     loading,
     unread,
     visibleThreads,
+    forwardableGroups,
     activeId,
     readIds,
     query,
     setQuery,
-    draft,
-    setDraft,
     composing,
     setComposing,
     replyDraft,
     setReplyDraft,
     active,
     activeBlocked,
-    counterpartLastReadAt,
-    counterpartDeliveredAt,
     messageGroups,
     hasMoreOlder,
     loadingOlder,
@@ -69,8 +67,9 @@ export function MessagesPage() {
   const showThread = !isMobile || view === "thread";
 
   return (
-    <AppShell unreadCount={unread}>
-      <div className={styles.app}>
+    <AppShell unreadCount={unread} fullHeight>
+      <MentionNamesProvider>
+        <div className={styles.app}>
         {showList && (
           <MessagesThreadList
             loading={loading}
@@ -92,11 +91,7 @@ export function MessagesPage() {
           (active ? (
             <ConversationPanel
               active={active}
-              counterpartLastReadAt={counterpartLastReadAt}
-              counterpartDeliveredAt={counterpartDeliveredAt}
               messageGroups={messageGroups}
-              draft={draft}
-              onDraftChange={setDraft}
               onSend={send}
               onSendGif={sendGif}
               blocked={activeBlocked}
@@ -124,7 +119,8 @@ export function MessagesPage() {
           ) : (
             <MessagesEmptyPanel />
           ))}
-      </div>
+        </div>
+      </MentionNamesProvider>
       {composing && (
         <NewMessageModal
           onClose={() => setComposing(false)}
@@ -143,6 +139,7 @@ export function MessagesPage() {
       {forwardSource && (
         <NewMessageModal
           mode="forward"
+          groups={forwardableGroups}
           onClose={() => setForwardSource(null)}
           onPick={(recipient: Conversation) => {
             forwardMessage(recipient, forwardSource.text, forwardSource.attachment);

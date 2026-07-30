@@ -147,6 +147,7 @@ export const shared: Catalog = {
   "adminNav.items.orgTiers": "Partnership tiers",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
   "adminNav.items.governance": "Governance",
+  "adminNav.items.roadmap": "Roadmap",
   "adminNav.items.systemAccounts": "System accounts",
 
   // BackToSettingsLink
@@ -240,7 +241,6 @@ export const shared: Catalog = {
   "megaNav.lisbon.featurePublic.cta": "Find safe spaces",
   "megaNav.lisbon.col.discover.head": "Discover",
   "megaNav.lisbon.col.discover.businessDirectory": "Business Directory",
-  "megaNav.lisbon.col.discover.spacesMap": "Spaces Map",
   "megaNav.lisbon.col.discover.safeSpaces": "Safe Spaces",
   "megaNav.lisbon.col.discover.partners": "Partners",
   "megaNav.lisbon.col.livingHere.head": "Living here",

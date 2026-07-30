@@ -6,7 +6,7 @@ export type UploadContentType =
 
 /** Which surface an upload belongs to — drives per-kind size/dimension limits. */
 export type UploadKind =
-  "avatar" | "work-image" | "story-cover" | "gathering-photo" | "group-avatar";
+  "avatar" | "work-image" | "story-cover" | "gathering-photo" | "group-avatar" | "listing-photo";
 
 /**
  * ============================================================================
@@ -50,6 +50,10 @@ export type UploadKind =
  *   4. Resize / re-encode per kind (avatar 512², cover 1600px) to WebP/AVIF with
  *      a JPEG fallback.
  *   5. Private-by-default bucket; presign grants write to a single key only.
+ *
+ *   NOTE: `listing-photo` is a new kind (added 2026-07-30) — same presign flow,
+ *   EXIF strip, virus scan, and private bucket as the others; cap 5 MB, min
+ *   1200×600. Resize target: 1600px wide WebP/AVIF.
  */
 export interface PresignRequest {
   kind: UploadKind;

@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
-import { usePresenceOnline } from "../../shared/api/realtime";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Composer } from "./Composer";
+import { useIsOnline } from "../../shared/api/realtime";
+import { ConversationComposerDock } from "./ConversationComposerDock";
 import { ConversationGroupModals } from "./ConversationGroupModals";
 import { ConversationHeader } from "./ConversationHeader";
 import { ConversationOverlays } from "./ConversationOverlays";
@@ -15,7 +14,7 @@ import { useJumpToMessage } from "./useJumpToMessage";
 import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useSearchJump } from "./useSearchJump";
 import { useMessageScroll } from "./useMessageScroll";
-import { useTypingIndicator } from "./useTypingIndicator";
+import { useMessageReceipts } from "./useMessageReceipts";
 import { useUnreadDivider } from "./useUnreadDivider";
 import { useConversationPinStar } from "./useConversationPinStar";
 import { type ChatMessage, type Conversation, type GroupMemberView } from "./data";
@@ -24,18 +23,10 @@ import styles from "./MessagesPage.module.css";
 
 interface ConversationPanelProps {
   active: Conversation;
-  /** Max lastReadAt the counterpart has acknowledged for this thread, from a
-   *  live `read` frame or the conversation's `otherLastReadAt`; null when
-   *  unknown (always null in demo mode) — "Seen" then never renders. */
-  counterpartLastReadAt: string | null;
-  /** Max deliveredAt the counterpart's device has acked for this thread (live
-   *  frame or `otherDeliveredAt`); null when unknown / demo. Drives the "double
-   *  check" one rung below "Seen". */
-  counterpartDeliveredAt: string | null;
   messageGroups: { day: string; items: ChatMessage[] }[];
-  draft: string;
-  onDraftChange: (value: string) => void;
-  onSend: () => void;
+  /** Sends `body` (the composer's own current text) as a new message. The
+   *  panel no longer owns a draft — the `Composer` below does. */
+  onSend: (body: string) => void;
   /** Sends a picked GIF as its own message (from the composer's GIF picker). */
   onSendGif?: (attachment: GifAttachment) => void;
   /** True when the counterpart is blocked — the composer is severed. */
@@ -94,11 +85,7 @@ interface ConversationPanelProps {
  *  header/log render in their own components. */
 export function ConversationPanel({
   active,
-  counterpartLastReadAt,
-  counterpartDeliveredAt,
   messageGroups,
-  draft,
-  onDraftChange,
   onSend,
   onSendGif,
   blocked = false,
@@ -123,7 +110,6 @@ export function ConversationPanel({
   onUpdateGroupInfo,
   groupManaging = false,
 }: ConversationPanelProps) {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const viewerIsStaff = user?.role === "admin" || user?.role === "moderator";
   /** Whether the group-info / management view is open (groups only). */
@@ -167,22 +153,45 @@ export function ConversationPanel({
   // hook to keep this component under the line cap.
   useSearchJump(jumpToMessageId, jumpToMessage, onJumpHandled);
 
-  const online = usePresenceOnline();
+  // Presence for JUST this counterpart — a selector hook that only re-renders
+  // this panel when THEIR own online status flips, not on every presence frame
+  // for every other member (see `useIsOnline`).
+  const counterpartOnline = useIsOnline(active.otherParticipantId);
   const isCounterpartOnline =
-    (!!active.otherParticipantId && online.has(active.otherParticipantId)) ||
+    (!!active.otherParticipantId && counterpartOnline) ||
     (!active.otherParticipantId && !!active.online);
 
-  const flatMessages = messageGroups.flatMap((group) => group.items);
+  // Live read-receipt ("Seen") + delivered watermarks for the open thread —
+  // computed HERE rather than in the controller, so a receipt frame re-renders
+  // only this panel (and its children), never the page's thread list beside it.
+  const { counterpartLastReadAt, counterpartDeliveredAt } = useMessageReceipts(
+    myUserId ?? null,
+    active,
+  );
+
+  const flatMessages = useMemo(
+    () => messageGroups.flatMap((group) => group.items),
+    [messageGroups],
+  );
   const messageCount = flatMessages.length;
   // Inbound-only tally for the jump-pill count — a reader's own sends never count as "new".
-  const inboundCount = flatMessages.filter((message) => message.from === "them").length;
+  const inboundCount = useMemo(
+    () => flatMessages.filter((message) => message.from === "them").length,
+    [flatMessages],
+  );
   const dividerAnchorMessage = useUnreadDivider(flatMessages, active.id, active.unreadCount ?? 0);
 
   // "Seen": the last message I sent, and whether the counterpart's read
-  // watermark has caught up to it — only that message's run shows the label.
-  const lastOutbound = [...flatMessages]
-    .reverse()
-    .find((message) => message.from === "me");
+  // watermark has caught up to it — only that message's run shows the label. A
+  // single backward walk (not a copy+reverse of the whole history, which grows
+  // unbounded as the thread does) finds it in the fewest steps.
+  const lastOutbound = useMemo(() => {
+    for (let index = flatMessages.length - 1; index >= 0; index -= 1) {
+      const candidate = flatMessages[index]!;
+      if (candidate.from === "me") return candidate;
+    }
+    return undefined;
+  }, [flatMessages]);
   const seenActive =
     !!lastOutbound?.at &&
     !!counterpartLastReadAt &&
@@ -195,8 +204,14 @@ export function ConversationPanel({
     !!counterpartDeliveredAt &&
     lastOutbound.at <= counterpartDeliveredAt;
 
-  const { areaRef, showJumpPill, newMessagesCount, handleAreaScroll, jumpToLatest } =
-    useMessageScroll(
+  const {
+    areaRef,
+    contentRef,
+    showJumpPill,
+    newMessagesCount,
+    handleAreaScroll,
+    jumpToLatest,
+  } = useMessageScroll(
       messageCount,
       inboundCount,
       active.id,
@@ -204,25 +219,34 @@ export function ConversationPanel({
       loadingOlder,
       onLoadOlder,
     );
-  const { typing: counterpartTyping, typingUserIds } = useTypingIndicator(
-    active.id,
+
+  // GROUP-only "Seen by N" (the aggregated typing label lives inside
+  // `TypingIndicatorRow` now — mounted by `MessageArea` itself, driven by its
+  // own `useTypingIndicator` subscription — so a typing frame never reaches
+  // this panel at all).
+  const { groupSeenBy } = useGroupIndicators(active, lastOutbound, {
+    id: myUserId ?? null,
+    slug: user?.profile?.slug,
+  });
+
+  // Memoized on the counterpart's actual identity fields (not `active` itself,
+  // which also carries fast-changing bits like `hasLeft`) so this object's
+  // reference stays stable across unrelated re-renders — `MessageRunView` and
+  // `MessageBubble` are `React.memo`'d, and an unstable object prop here would
+  // defeat that on every panel render.
+  const counterpart: RunParticipant = useMemo(
+    () => ({
+      initials: active.initials,
+      tint: active.tint,
+      src: active.avatarUrl,
+    }),
+    [active.initials, active.tint, active.avatarUrl],
   );
 
-  // GROUP-only "Seen by N" + aggregated typing label (DMs return empty/undefined
-  // and keep their existing single-name typing + jade "Seen" tick paths).
-  const { groupSeenBy, typingLabel } = useGroupIndicators(
-    active,
-    lastOutbound,
-    typingUserIds,
-    counterpartTyping,
-    { id: myUserId ?? null, slug: user?.profile?.slug },
-  );
-
-  const counterpart: RunParticipant = {
-    initials: active.initials,
-    tint: active.tint,
-    src: active.avatarUrl,
-  };
+  // Stable identity for the same reason as `counterpart` above — passed to
+  // `MessageArea`, which isn't itself memoized, but keeping every callback
+  // prop stable is cheap and consistent with the rest of this panel.
+  const onOpenSeenBy = useCallback(() => setSeenBySheetOpen(true), []);
 
   return (
     <div className={styles.convoPanel}>
@@ -238,6 +262,7 @@ export function ConversationPanel({
 
       <MessageArea
         areaRef={areaRef}
+        contentRef={contentRef}
         messageGroups={messageGroups}
         loadingOlder={loadingOlder}
         onScroll={handleAreaScroll}
@@ -245,11 +270,10 @@ export function ConversationPanel({
         counterpart={counterpart}
         counterpartName={active.name}
         isGroup={active.isGroup}
-        counterpartTyping={counterpartTyping}
-        typingLabel={typingLabel}
-        showTypingText={!!active.isGroup}
+        conversationId={active.id}
+        groupMembers={active.members}
         groupSeenBy={groupSeenBy}
-        onOpenSeenBy={() => setSeenBySheetOpen(true)}
+        onOpenSeenBy={onOpenSeenBy}
         onRetry={onRetry}
         seenActive={seenActive}
         deliveredActive={deliveredActive}
@@ -264,22 +288,16 @@ export function ConversationPanel({
         onJumpToMessage={jumpToMessage}
       />
 
-      {showJumpPill && (
-        <button type="button" className={styles.jumpPill} onClick={jumpToLatest}>
-          {`${t("messages:conversation.newMessagesCount", { count: newMessagesCount })} ↓`}
-        </button>
-      )}
-
-      <Composer
+      <ConversationComposerDock
         active={active}
-        conversationId={active.id}
-        draft={draft}
-        onDraftChange={onDraftChange}
         onSend={onSend}
         onSendGif={onSendGif}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}
+        showJumpPill={showJumpPill}
+        newMessagesCount={newMessagesCount}
+        onJumpToLatest={jumpToLatest}
       />
       <ConversationOverlays
         actionTarget={actionTarget}

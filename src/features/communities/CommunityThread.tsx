@@ -22,6 +22,7 @@ import {
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
+import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
 import styles from "./CommunityDetailPage.module.css";
 
 // The history modal target: the OP post, or a specific reply.
@@ -289,63 +290,69 @@ export function CommunityThread({
         onHistoryOp={() => data.id && setHistoryTarget({ postId: data.id })}
       />
       {open && (
-        <div className={styles.thBody}>
-          {opDeleted ? (
-            <p className={styles.tombstone}>
-              {t("communities:detail.thread.tombstone")}
-            </p>
-          ) : editingOp ? (
-            <InlineTextEditor
-              initial={opBody}
-              onCancel={() => setEditingOp(false)}
-              onSave={saveOpEdit}
-            />
-          ) : (
-            <p className={styles.postText}>{opBody}</p>
-          )}
-          {replies.map((threadReply) => (
-            <ThreadReplyRow
-              key={threadReply.id ?? `${threadReply.name}:${threadReply.text}`}
-              reply={threadReply}
-              demoMode={demoMode}
-              editing={!!threadReply.id && editingReplyId === threadReply.id}
-              onStartEdit={() =>
-                threadReply.id && setEditingReplyId(threadReply.id)
-              }
-              onCancelEdit={() => setEditingReplyId(null)}
-              onSaveEdit={(text) =>
-                threadReply.id && saveReplyEdit(threadReply.id, text)
-              }
-              onDelete={() =>
-                threadReply.id &&
-                setConfirmDelete({ kind: "reply", replyId: threadReply.id })
-              }
-              onRestore={() => threadReply.id && runRestoreReply(threadReply.id)}
-              onHistory={() =>
-                threadReply.id &&
-                data.id &&
-                setHistoryTarget({ postId: data.id, replyId: threadReply.id })
-              }
-            />
-          ))}
-          <div className={styles.replyBar}>
-            <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
-            <MentionTextarea
-              className={styles.replyTa}
-              rows={1}
-              placeholder={t("communities:detail.thread.replyPlaceholder")}
-              value={replyText}
-              onChange={setReplyText}
-            />
-            <Button
-              variant="primary"
-              onClick={postReply}
-              style={{ padding: "9px 16px", fontSize: 13 }}
-            >
-              {t("communities:detail.thread.replyCta")}
-            </Button>
+        <MentionNamesProvider>
+          <div className={styles.thBody}>
+            {opDeleted ? (
+              <p className={styles.tombstone}>
+                {t("communities:detail.thread.tombstone")}
+              </p>
+            ) : editingOp ? (
+              <InlineTextEditor
+                initial={opBody}
+                onCancel={() => setEditingOp(false)}
+                onSave={saveOpEdit}
+              />
+            ) : (
+              <p className={styles.postText}>
+                <MentionText text={opBody} />
+              </p>
+            )}
+            {replies.map((threadReply) => (
+              <ThreadReplyRow
+                key={threadReply.id ?? `${threadReply.name}:${threadReply.text}`}
+                reply={threadReply}
+                demoMode={demoMode}
+                editing={!!threadReply.id && editingReplyId === threadReply.id}
+                onStartEdit={() =>
+                  threadReply.id && setEditingReplyId(threadReply.id)
+                }
+                onCancelEdit={() => setEditingReplyId(null)}
+                onSaveEdit={(text) =>
+                  threadReply.id && saveReplyEdit(threadReply.id, text)
+                }
+                onDelete={() =>
+                  threadReply.id &&
+                  setConfirmDelete({ kind: "reply", replyId: threadReply.id })
+                }
+                onRestore={() =>
+                  threadReply.id && runRestoreReply(threadReply.id)
+                }
+                onHistory={() =>
+                  threadReply.id &&
+                  data.id &&
+                  setHistoryTarget({ postId: data.id, replyId: threadReply.id })
+                }
+              />
+            ))}
+            <div className={styles.replyBar}>
+              <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
+              <MentionTextarea
+                className={styles.replyTa}
+                rows={1}
+                placeholder={t("communities:detail.thread.replyPlaceholder")}
+                value={replyText}
+                onChange={setReplyText}
+              />
+              <Button
+                variant="primary"
+                onClick={postReply}
+                style={{ padding: "9px 16px", fontSize: 13 }}
+              >
+                {t("communities:detail.thread.replyCta")}
+              </Button>
+            </div>
           </div>
-        </div>
+        </MentionNamesProvider>
       )}
       {confirmDelete && (
         <ConfirmDeleteModal

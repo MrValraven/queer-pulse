@@ -46,8 +46,6 @@ export const admin: Catalog = {
     "Nothing's flagged urgent — work down the queue at your own pace. You're holding the whole network steady.",
   "dashboard.header.subClear":
     "Every open item has a human decision attached. Go rest — the network's safe in your hands.",
-  "dashboard.header.digestCta": "Weekly digest",
-  "dashboard.header.digestToast": "The weekly digest would open in a new tab",
   "dashboard.header.moderationCta": "Open moderation",
 
   "dashboard.metrics.activeMembers.label": "Active members",
@@ -329,7 +327,8 @@ export const admin: Catalog = {
   "adminSafeSpaces.status.removed": "Removed",
   "adminSafeSpaces.markCta": "Mark as safe space",
   "adminSafeSpaces.unmarkCta": "Unmark",
-  "adminSafeSpaces.editCta": "Edit profile",
+  "adminSafeSpaces.viewCta": "View page",
+  "adminSafeSpaces.editCta": "Edit safe space",
   "adminSafeSpaces.toast.marked": "{name} was marked as a safe space",
   "adminSafeSpaces.toast.unmarked": "{name} was unmarked as a safe space",
 
@@ -1407,4 +1406,112 @@ export const admin: Catalog = {
   "housingRequests.householdSize": "{size} in the household",
   "housingRequests.declineCta": "Decline",
   "housingRequests.acceptCta": "Accept",
+
+  // ── Roadmap (/admin/roadmap) — board, idea queue, hero stats ───────────────
+  "roadmap.title": "Roadmap · <em>what's next</em>",
+  "roadmap.header.eyebrow": "Roadmap",
+  "roadmap.header.title": "Shape the <em>roadmap</em>",
+  "roadmap.header.sub":
+    "Manage the shipped/building/planned board, triage member ideas, and edit the public page's hero stats.",
+  "roadmap.loading": "Loading the roadmap…",
+  "roadmap.tabs.board": "Board",
+  "roadmap.tabs.ideas": "Ideas",
+  "roadmap.tabs.heroStats": "Hero stats",
+
+  // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
+  // AdminRoadmapItemModalFields.tsx — the shipped/building/planned kanban.
+  "roadmap.board.column.shipped": "Shipped",
+  "roadmap.board.column.building": "Building now",
+  "roadmap.board.column.planned": "Planned",
+  "roadmap.board.empty": "Nothing in this column yet.",
+  "roadmap.board.addItemCta": "Add item",
+  "roadmap.board.toast.removed": "{name} removed from the roadmap.",
+  "roadmap.board.toast.updated": "{name} saved.",
+  "roadmap.board.toast.created": "{name} added to the roadmap.",
+  "roadmap.board.delete.title": "Remove {name}?",
+  "roadmap.board.delete.body":
+    "This takes it off the roadmap for good — members won't see it in any column anymore.",
+  "roadmap.board.delete.confirmCta": "Remove item",
+  "roadmap.board.modal.createEyebrow": "New item",
+  "roadmap.board.modal.editEyebrow": "Edit item",
+  "roadmap.board.modal.createTitle": "Add a roadmap item",
+  "roadmap.board.modal.createCta": "Add item",
+  "roadmap.board.field.column": "Column",
+  "roadmap.board.field.category": "Category",
+  "roadmap.board.field.name": "Name",
+  "roadmap.board.field.description": "Description",
+  "roadmap.board.field.date": "Date",
+  "roadmap.board.field.date.placeholder": "e.g. July 2026",
+  "roadmap.board.field.requested.title": "Member requested",
+  "roadmap.board.field.requested.sub":
+    'Shows a "Member requested" tag on the public card.',
+  "roadmap.board.field.stage": "Stage",
+  "roadmap.board.field.stage.placeholder": "e.g. In design",
+  "roadmap.board.field.eta": "ETA",
+  "roadmap.board.field.eta.placeholder": "e.g. Q4 2026",
+  "roadmap.board.field.progress": "Progress (%)",
+  "roadmap.board.field.votes": "Starting votes",
+  "roadmap.board.field.hot.title": "Most wanted",
+  "roadmap.board.field.hot.sub":
+    "Highlights this item as most wanted on the public page.",
+  "roadmap.board.item.etaLabel": "ETA {eta}",
+  "roadmap.board.item.progressLabel": "{progress}% done",
+  "roadmap.board.item.votesLabel": "{votes} votes",
+  "roadmap.board.item.liveVotesLabel": "{count} live",
+  "roadmap.board.item.moveUpAriaLabel": "Move {name} up",
+  "roadmap.board.item.moveDownAriaLabel": "Move {name} down",
+  "roadmap.board.item.requestedTag": "Member requested",
+  "roadmap.board.item.hotTag": "Most wanted",
+
+  // AdminRoadmapIdeasQueue.tsx, AdminRoadmapIdeaRows.tsx — member-submitted
+  // idea triage + the published Top-ideas list the public page reads.
+  "roadmap.ideas.pending.title": "Pending review",
+  "roadmap.ideas.pending.empty": "Nothing waiting — every idea's been triaged.",
+  "roadmap.ideas.published.title": "Published",
+  "roadmap.ideas.published.empty": "Nothing published yet.",
+  "roadmap.ideas.fromMemberTag": "From a member",
+  "roadmap.ideas.submittedLabel": "Submitted {date}",
+  "roadmap.ideas.promoteCta": "Promote",
+  "roadmap.ideas.dismissCta": "Dismiss",
+  "roadmap.ideas.addPlaceholder": "Add an idea to the published list…",
+  "roadmap.ideas.addAriaLabel": "New idea text",
+  "roadmap.ideas.addCta": "Add idea",
+  "roadmap.ideas.moveUpAriaLabel": 'Move "{text}" up',
+  "roadmap.ideas.moveDownAriaLabel": 'Move "{text}" down',
+  "roadmap.ideas.editAriaLabel": 'Edit "{text}"',
+  "roadmap.ideas.tallyLabel_one": "{count} vote",
+  "roadmap.ideas.tallyLabel_other": "{count} votes",
+  "roadmap.ideas.toast.promoted": "Idea promoted to the published list.",
+  "roadmap.ideas.toast.dismissed": "Idea dismissed.",
+  "roadmap.ideas.toast.removed": "Idea removed.",
+  "roadmap.ideas.toast.updated": "Idea saved.",
+  "roadmap.ideas.toast.added": "Idea added.",
+  // Shared confirm dialog (IdeaQueueConfirmModal) — `kind` is "dismiss" or
+  // "delete", interpolated into the key (`roadmap.ideas.${kind}.*`).
+  "roadmap.ideas.dismiss.title": "Dismiss this idea?",
+  "roadmap.ideas.dismiss.body":
+    "It moves out of the pending queue without being published. The member who submitted it won't be notified.",
+  "roadmap.ideas.dismiss.confirmCta": "Dismiss idea",
+  "roadmap.ideas.delete.title": "Remove this idea?",
+  "roadmap.ideas.delete.body":
+    "This takes it off the public roadmap page for good.",
+  "roadmap.ideas.delete.confirmCta": "Remove idea",
+
+  // AdminRoadmapHeroStats.tsx — editable chip row for the public page's hero.
+  "roadmap.heroStats.empty":
+    "No stat chips yet — add one below or auto-fill from item counts.",
+  "roadmap.heroStats.autofillCta": "Auto-fill from item counts",
+  "roadmap.heroStats.addCta": "Add stat",
+  "roadmap.heroStats.removeRowCta": "Remove",
+  "roadmap.heroStats.labelPlaceholder": "e.g. 12 shipped this year",
+  "roadmap.heroStats.labelAriaLabel": "Stat label",
+  "roadmap.heroStats.moveUpAriaLabel": "Move stat up",
+  "roadmap.heroStats.moveDownAriaLabel": "Move stat down",
+  "roadmap.heroStats.jadeToggle.title": "Highlight in jade",
+  "roadmap.heroStats.toast.saved": "Hero stats saved.",
+  // Auto-fill labels — English doesn't inflect these by count, so each is a
+  // single bare key (unlike the PT catalog's shipped/planned _one/_other).
+  "roadmap.heroStats.autofill.shipped": "{count} shipped",
+  "roadmap.heroStats.autofill.building": "{count} in progress",
+  "roadmap.heroStats.autofill.planned": "{count} planned",
 };

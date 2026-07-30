@@ -12,6 +12,15 @@ import { PostActionsMenu } from "./PostActionsMenu";
 import { ModeratorByline } from "./ThreadReplies";
 import styles from "./ThreadPage.module.css";
 
+/** Nested-replies collapse affordance for one reply. `count` is the number of
+ *  descendant replies hidden while `collapsed` is true (ThreadReplyNode owns
+ *  the actual show/hide of the subtree; this only renders the toggle). */
+export interface ThreadReplyCollapseProps {
+  collapsed: boolean;
+  count: number;
+  onToggle: () => void;
+}
+
 export function ThreadReplyItem({
   reply,
   index,
@@ -27,6 +36,8 @@ export function ThreadReplyItem({
   onDelete,
   onRestore,
   onHistory,
+  onReply,
+  collapse,
 }: {
   reply: Reply;
   index: number;
@@ -42,6 +53,12 @@ export function ThreadReplyItem({
   onDelete: (reply: Reply) => void;
   onRestore: (reply: Reply) => void;
   onHistory: (reply: Reply) => void;
+  /** Nested-replies feature: renders a "Reply" action next to the like button
+   *  when provided. Omitted call sites (none left) keep today's behaviour. */
+  onReply?: (reply: Reply) => void;
+  /** Nested-replies feature: renders a compact collapse/expand toggle near the
+   *  author line when the reply has descendants. */
+  collapse?: ThreadReplyCollapseProps;
 }) {
   const { t } = useTranslation();
   const replyIdentity = reply.postId ?? replyKey(reply);
@@ -79,6 +96,24 @@ export function ThreadReplyItem({
       </ProfileLink>
       <div>
         <div className={styles.replyTop}>
+          {collapse && (
+            <button
+              type="button"
+              className={styles.collapseToggle}
+              aria-expanded={!collapse.collapsed}
+              aria-label={t(
+                collapse.collapsed
+                  ? "forum:replies.expandAria"
+                  : "forum:replies.collapseAria",
+              )}
+              onClick={collapse.onToggle}
+            >
+              {collapse.collapsed ? "+" : "–"}
+            </button>
+          )}
+          {collapse?.collapsed && (
+            <span className={styles.collapsedCount}>{collapse.count}</span>
+          )}
           <span className={styles.replyName}>
             <ProfileLink
               to={authorHref(reply)}
@@ -144,21 +179,32 @@ export function ThreadReplyItem({
                 </span>
               )}
             </div>
-            <button
-              type="button"
-              aria-pressed={isLiked}
-              aria-label={
-                isLiked
-                  ? t("forum:replies.unlikeAria")
-                  : t("forum:replies.likeAria")
-              }
-              className={[styles.replyReact, isLiked && styles.replyReactOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => toggleReplyLike(reply)}
-            >
-              <FiHeart /> {reply.reactions + (isLiked ? 1 : 0)}
-            </button>
+            <div className={styles.replyActions}>
+              <button
+                type="button"
+                aria-pressed={isLiked}
+                aria-label={
+                  isLiked
+                    ? t("forum:replies.unlikeAria")
+                    : t("forum:replies.likeAria")
+                }
+                className={[styles.replyReact, isLiked && styles.replyReactOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => toggleReplyLike(reply)}
+              >
+                <FiHeart /> {reply.reactions + (isLiked ? 1 : 0)}
+              </button>
+              {onReply && (
+                <button
+                  type="button"
+                  className={styles.replyReplyBtn}
+                  onClick={() => onReply(reply)}
+                >
+                  {t("forum:replies.reply")}
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>

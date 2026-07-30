@@ -8,8 +8,10 @@ export interface TypingState {
   /** True while at least one other participant is typing in the open thread. */
   typing: boolean;
   /** The user ids currently typing (a DM has at most one; a group may have
-   *  several). The gateway broadcasts `typing` to everyone in the room EXCEPT the
-   *  sender, so these are always OTHER people — never the signed-in member. */
+   *  several). Always OTHER people — never the signed-in member: the gateway
+   *  excludes the sender's whole `user:<id>` room (not just their socket, which
+   *  would still echo to their other devices), and the realtime client drops any
+   *  self-frame that slips through. See realtime.ts's `typing` handler. */
   typingUserIds: string[];
 }
 

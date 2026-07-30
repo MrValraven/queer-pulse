@@ -1,14 +1,23 @@
-import { Fragment, useEffect, useRef, useState, type RefObject } from "react";
-import { Avatar } from "../../shared/components/ui";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { MessageRunView, type RunParticipant } from "./MessageRun";
 import { buildTimeline } from "./messageRuns";
 import { SystemMessagePill } from "./SystemMessagePill";
+import { TypingIndicatorRow } from "./TypingIndicatorRow";
 import type { LongPressOrigin } from "./useLongPress";
 import type { SeenByEntry } from "./groupReceipts";
-import type { ChatMessage } from "./data";
+import type { ChatMessage, GroupMemberView } from "./data";
 import styles from "./MessagesPage.module.css";
 
 /**
@@ -28,6 +37,127 @@ function dayHeading(day: string, t: TFunction): string {
  *  live-region announcer treats them as unannounceable (undefined). */
 function messageKey(message: ChatMessage): string | undefined {
   return message.id ?? message.at;
+}
+
+/** Every stable identity a message may be known under across its lifetime: the
+ *  server id, the client-generated `localId` (set while an optimistic send is
+ *  still in flight), and the ISO timestamp as a last resort. A message keeps
+ *  ALL of these once acquired (an acked optimistic send gains an `id` but
+ *  keeps its original `localId`) — `useMessageNewness` below treats a message
+ *  as new only when NONE of its current identities have been seen before, so
+ *  gaining an `id` on ack never makes an already-on-screen bubble "new" again. */
+function messageIdentities(message: ChatMessage): string[] {
+  return [message.id, message.localId, message.at].filter(
+    (identity): identity is string => !!identity,
+  );
+}
+
+/** Composite identity for one reaction chip on a message — only meaningful
+ *  once the message has a server id (reactions don't exist on demo/optimistic
+ *  messages, see `ChatMessage.reactions`). */
+function reactionIdentity(message: ChatMessage, key: string): string | undefined {
+  return message.id ? `${message.id}::reaction::${key}` : undefined;
+}
+
+/** Every message + reaction-chip identity currently in `messageGroups`, as a
+ *  fresh `Set` (a plain value, never a persisted mutable reference — safe to
+ *  compute directly in a render body). */
+function collectAllIdentities(
+  messageGroups: { day: string; items: ChatMessage[] }[],
+): Set<string> {
+  const identities = new Set<string>();
+  for (const group of messageGroups) {
+    for (const message of group.items) {
+      for (const identity of messageIdentities(message)) {
+        identities.add(identity);
+      }
+      for (const reaction of message.reactions ?? []) {
+        if (reaction.count <= 0) continue;
+        const identity = reactionIdentity(message, reaction.key);
+        if (identity) identities.add(identity);
+      }
+    }
+  }
+  return identities;
+}
+
+/**
+ * Tracks which message + reaction-chip identities have already been on
+ * screen for this conversation, so the `msgBubbleIn` entrance plays ONLY for
+ * a genuinely new arrival — never for the whole thread on open/switch (which
+ * would animate 20-50 bubbles/chips at once, a "swarm"), and never replayed
+ * for a message/chip an unrelated re-render happens to touch again.
+ *
+ * Two layers, deliberately split so neither needs a ref read/write in the
+ * render body (`react-hooks/refs` disallows that outright):
+ *  - `baseSeenSet` (real state) is everything that was ALREADY on screen the
+ *    moment we most recently arrived at `conversationId`. Reseeded via
+ *    React's sanctioned "adjust state while rendering" idiom (matching
+ *    `useFeedPage.tsx`'s `prevDemo` pattern) — calling `setState` directly in
+ *    the render body when `conversationId` has changed causes React to
+ *    re-render immediately with the corrected value BEFORE any child (a
+ *    bubble's own mount-time `playEntrance` decision) ever sees it, so even
+ *    the FIRST paint of a freshly opened thread treats every message/chip in
+ *    it as already-known. Because this only changes on an actual thread
+ *    switch, `isNewMessage`/`isNewReaction`'s `useCallback` reference below
+ *    stays stable across ordinary new-message arrivals within the same
+ *    thread — passing them to the memoized `MessageRunView`/`MessageBubble`
+ *    tree doesn't defeat that memoization on every message.
+ *  - `accumulatedRef` (a plain ref) layers in everything that has arrived
+ *    SINCE the thread settled — written only inside the `useLayoutEffect`s
+ *    below, never at the top level of render, and read only from inside the
+ *    `useCallback` bodies (which run later, as event/render-prop callbacks,
+ *    not synchronously in this hook's own render flow) — the same shape
+ *    `useMessageScroll`'s `handleAreaScroll` already uses for `areaRef`.
+ */
+function useMessageNewness(
+  conversationId: string,
+  messageGroups: { day: string; items: ChatMessage[] }[],
+) {
+  const [settledConversationId, setSettledConversationId] = useState(conversationId);
+  const [baseSeenSet, setBaseSeenSet] = useState(() => collectAllIdentities(messageGroups));
+  if (conversationId !== settledConversationId) {
+    setSettledConversationId(conversationId);
+    setBaseSeenSet(collectAllIdentities(messageGroups));
+  }
+
+  const accumulatedRef = useRef<Set<string>>(new Set());
+
+  // Thread switch: drop whatever the PREVIOUS conversation accumulated — it's
+  // for a different set of message ids and would just grow this ref forever
+  // across a long session otherwise. Declared before the mark-effect below so
+  // it clears first within the same commit when both fire together.
+  useLayoutEffect(() => {
+    accumulatedRef.current = new Set();
+  }, [conversationId]);
+
+  useLayoutEffect(() => {
+    for (const identity of collectAllIdentities(messageGroups)) {
+      accumulatedRef.current.add(identity);
+    }
+  }, [messageGroups]);
+
+  const isNewMessage = useCallback(
+    (message: ChatMessage): boolean => {
+      const identities = messageIdentities(message);
+      if (identities.length === 0) return false;
+      return identities.every(
+        (identity) => !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity),
+      );
+    },
+    [baseSeenSet],
+  );
+
+  const isNewReaction = useCallback(
+    (message: ChatMessage, key: MessageReactionKey): boolean => {
+      const identity = reactionIdentity(message, key);
+      if (!identity) return false;
+      return !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity);
+    },
+    [baseSeenSet],
+  );
+
+  return { isNewMessage, isNewReaction };
 }
 
 /**
@@ -91,6 +221,10 @@ function useNewIncomingAnnouncement(
 
 export interface MessageAreaProps {
   areaRef: RefObject<HTMLDivElement | null>;
+  /** Wraps the day-groups + typing row as ONE stable node for
+   *  `useMessageScroll`'s resize-follow `ResizeObserver` to watch — see that
+   *  hook's `contentRef` comment. */
+  contentRef: RefObject<HTMLDivElement | null>;
   messageGroups: { day: string; items: ChatMessage[] }[];
   loadingOlder: boolean;
   onScroll: () => void;
@@ -100,17 +234,12 @@ export interface MessageAreaProps {
   counterpartName: string;
   /** GROUP thread → received runs carry per-sender name + avatar attribution. */
   isGroup?: boolean;
-  /** True while the counterpart is typing — renders an in-list typing bubble at
-   *  the bottom of the log (reuses the signal from `useTypingIndicator`; always
-   *  false in demo mode without the socket, but demo simulates it live). */
-  counterpartTyping?: boolean;
-  /** Resolved typing label ("Ana is typing…" / "Ana and Bea are typing…" /
-   *  "Several people are typing…") — the typing bubble's accessible name, and
-   *  (for groups) shown as visible text above the dots. */
-  typingLabel?: string;
-  /** GROUP → show `typingLabel` as visible text (a group needs to name WHO is
-   *  typing; a DM's single counterpart is already named by the header). */
-  showTypingText?: boolean;
+  /** The open thread's id — passed straight through to `TypingIndicatorRow`,
+   *  which subscribes to typing frames internally so they never re-render
+   *  this component or the log above it. */
+  conversationId: string;
+  /** GROUP roster, forwarded to `TypingIndicatorRow` to resolve WHO is typing. */
+  groupMembers?: GroupMemberView[];
   /** GROUP "Seen by N": members who've seen the last outbound message. Rendered
    *  as a tappable receipt under that message; empty → nothing shown. */
   groupSeenBy?: SeenByEntry[];
@@ -153,6 +282,7 @@ export interface MessageAreaProps {
  *  the unread divider. Scroll behaviour is owned by the parent via `areaRef`. */
 export function MessageArea({
   areaRef,
+  contentRef,
   messageGroups,
   loadingOlder,
   onScroll,
@@ -160,9 +290,8 @@ export function MessageArea({
   counterpart,
   counterpartName,
   isGroup,
-  counterpartTyping,
-  typingLabel,
-  showTypingText,
+  conversationId,
+  groupMembers,
   groupSeenBy,
   onOpenSeenBy,
   onRetry,
@@ -183,6 +312,25 @@ export function MessageArea({
     messageGroups,
     counterpartName,
     t,
+  );
+  // Gates each bubble/reaction-chip entrance to a genuine first arrival —
+  // see `useMessageNewness` above.
+  const { isNewMessage, isNewReaction } = useMessageNewness(
+    conversationId,
+    messageGroups,
+  );
+  // Each day-group's timeline (sender runs + system pills), built once per
+  // `messageGroups`/`dividerAnchorMessage` change instead of on every render —
+  // `messageGroups` is already a stable memoized reference upstream, and
+  // `dividerAnchorMessage` is a latched ref value, so this only re-walks the
+  // messages when the thread's actual content changes.
+  const timeline = useMemo(
+    () =>
+      messageGroups.map((group) => ({
+        day: group.day,
+        blocks: buildTimeline(group.items, undefined, dividerAnchorMessage),
+      })),
+    [messageGroups, dividerAnchorMessage],
   );
   return (
     <>
@@ -213,7 +361,13 @@ export function MessageArea({
             {t("messages:conversation.loadingOlder")}
           </div>
         )}
-        {messageGroups.map((group) => (
+        {/* The ONE node `useMessageScroll`'s resize-follow ResizeObserver
+            watches (see its `contentRef` comment) — a plain in-flow wrapper,
+            so its own box grows with any descendant (a late image, an added
+            reaction, an expanding inline edit), unlike `.area` itself, whose
+            `overflow-y: auto` box never changes size. */}
+        <div className={styles.areaContent} ref={contentRef}>
+        {timeline.map((group) => (
           <div key={group.day} className={styles.dayGroup}>
             <div
               className={styles.daySep}
@@ -227,7 +381,7 @@ export function MessageArea({
               </span>
             </div>
             <div className={styles.runs} role="list">
-            {buildTimeline(group.items, undefined, dividerAnchorMessage).map(
+            {group.blocks.map(
               (block, index) => {
                 // A system block anchors on its own message; a run block on its
                 // first bubble — either can carry the unread divider before it.
@@ -285,6 +439,8 @@ export function MessageArea({
                         onSubmitEdit={onSubmitEdit}
                         onCancelEdit={onCancelEdit}
                         onJumpToMessage={onJumpToMessage}
+                        isNewMessage={isNewMessage}
+                        isNewReaction={isNewReaction}
                       />
                     )}
                     {/* Group "Seen by N": a tappable receipt under the run that
@@ -316,40 +472,19 @@ export function MessageArea({
         {/* In-list typing indicator: styled as an incoming bubble on the left
             (same avatar + alignment as a received run) so the signal lives
             inside the conversation flow (WhatsApp/Signal-style) instead of only
-            above the composer. It renders at the very bottom of the log, so it
+            above the composer. Rendered at the very bottom of the log, so it
             grows the content and the scroll hook's ResizeObserver keeps a
-            pinned reader anchored to it. The polite live region announces the
-            counterpart typing once (dots are decorative → aria-hidden). */}
-        {counterpartTyping && (
-          <div className={styles.typingRow}>
-            <div className={styles.runAvatar}>
-              <Avatar
-                initials={counterpart.initials}
-                tint={counterpart.tint}
-                src={counterpart.src}
-                size={28}
-              />
-            </div>
-            <div
-              className={styles.typingBubble}
-              role="status"
-              aria-live="polite"
-              aria-label={
-                typingLabel ??
-                t("messages:conversation.typing", {
-                  name: counterpartName.split(" ")[0],
-                })
-              }
-            >
-              {showTypingText && typingLabel && (
-                <span className={styles.typingLabel}>{typingLabel}</span>
-              )}
-              <span className={styles.typingDot} aria-hidden="true" />
-              <span className={styles.typingDot} aria-hidden="true" />
-              <span className={styles.typingDot} aria-hidden="true" />
-            </div>
-          </div>
-        )}
+            pinned reader anchored to it. It subscribes to typing frames
+            INTERNALLY, so a typing frame re-renders only this leaf — never this
+            component or the log above it. */}
+        <TypingIndicatorRow
+          conversationId={conversationId}
+          counterpart={counterpart}
+          counterpartName={counterpartName}
+          isGroup={isGroup}
+          members={groupMembers}
+        />
+        </div>
       </div>
     </>
   );

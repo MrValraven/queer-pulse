@@ -20,7 +20,6 @@
 .count {
   font-size: 13.5px;
   color: var(--ink-40);
-  margin-bottom: 20px;
 }
 .count b {
   color: var(--text-strong);
@@ -182,8 +181,130 @@
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 
-.viewToggle {
+/* Shared results header: "showing X of Y" on the left, sort + List/Map switcher
+   on the right; an active-filters row below. Wraps on narrow screens. */
+.resultsHeader {
+  padding: 22px 0 0;
+}
+.resultsRow {
   display: flex;
-  justify-content: center;
-  padding: 20px 16px 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+}
+.countNote {
+  color: var(--ink-40);
+}
+.resultsControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Sort — a native select styled to the token system for a familiar control. */
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.sortLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.sortSelect {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease);
+}
+.sortSelect:hover {
+  border-color: var(--line-strong);
+}
+:global([data-theme="dark"]) .sortSelect {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+
+/* Active filters — removable chips + Clear all. */
+.activeRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.activeLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.activeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 999px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.activeChip svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.7;
+}
+@media (hover: hover) {
+  .activeChip:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
+}
+.clearAll {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: none;
+  border: none;
+  padding: 5px 6px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (hover: hover) {
+  .clearAll:hover {
+    color: var(--text-strong);
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

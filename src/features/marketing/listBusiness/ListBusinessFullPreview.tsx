@@ -5,6 +5,7 @@ import {
   initials,
   PRICES,
   type ListingDraft,
+  type PhotoKey,
 } from "./listBusiness.data";
 import { ListBusinessPreviewDetails } from "./ListBusinessPreviewDetails";
 import styles from "./ListBusinessPage.module.css";
@@ -13,10 +14,12 @@ import styles from "./ListBusinessPage.module.css";
 export function ListBusinessFullPreview({
   draft,
   userName,
+  photoPreviews,
   onClose,
 }: {
   draft: ListingDraft;
   userName: string;
+  photoPreviews: Record<PhotoKey, string>;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -74,6 +77,7 @@ export function ListBusinessFullPreview({
             tint="coral"
             radius={16}
             height={200}
+            src={photoPreviews.wide || draft.photos.wide || undefined}
             placeholder={t("marketing:listBusiness.step4.gallery.wide")}
             alt={draft.alt.wide}
           />
@@ -81,6 +85,7 @@ export function ListBusinessFullPreview({
             tint="jade"
             radius={16}
             height={120}
+            src={photoPreviews.d1 || draft.photos.d1 || undefined}
             placeholder={t("marketing:listBusiness.step4.gallery.detail")}
             alt={draft.alt.d1}
           />
@@ -88,6 +93,7 @@ export function ListBusinessFullPreview({
             tint="plum"
             radius={16}
             height={120}
+            src={photoPreviews.d2 || draft.photos.d2 || undefined}
             placeholder={t("marketing:listBusiness.step4.gallery.detail")}
             alt={draft.alt.d2}
           />
@@ -95,6 +101,7 @@ export function ListBusinessFullPreview({
             tint="coral"
             radius={16}
             height={120}
+            src={photoPreviews.vibe || draft.photos.vibe || undefined}
             placeholder={t("marketing:listBusiness.step4.gallery.vibe")}
             alt={draft.alt.vibe}
           />

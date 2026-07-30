@@ -108,6 +108,8 @@ export function postToReply(
   const tint = tintForSlug(slug);
   const soft = SOFT[tint];
   return {
+    id: dto.id,
+    parentPostId: dto.parentPostId ?? null,
     avatar: initialsFromName(dto.author.displayName),
     background: soft.background,
     color: soft.color,

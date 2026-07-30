@@ -5,7 +5,6 @@ import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { buildRecipientConversation } from "./recipient";
-import { loadDraft } from "./drafts";
 import {
   buildDemoGroupConversation,
   nextLocalId,
@@ -22,7 +21,6 @@ interface CreationDeps {
   setExtraThreads: Dispatch<SetStateAction<Conversation[]>>;
   setActiveId: Dispatch<SetStateAction<string>>;
   setReadIds: Dispatch<SetStateAction<Set<string>>>;
-  setDraft: Dispatch<SetStateAction<string>>;
   setView: Dispatch<SetStateAction<"list" | "thread">>;
   setLocallyDeletedIds: Dispatch<SetStateAction<Set<string>>>;
   startConversation: ReturnType<typeof useStartConversation>;
@@ -72,7 +70,6 @@ export function useMessageCreation({
   setExtraThreads,
   setActiveId,
   setReadIds,
-  setDraft,
   setView,
   setLocallyDeletedIds,
   startConversation,
@@ -94,7 +91,8 @@ export function useMessageCreation({
     if (existingThread) {
       setActiveId(existingThread.id);
       setReadIds((current) => new Set(current).add(existingThread.id));
-      setDraft(loadDraft(existingThread.id));
+      // The composer (keyed on the open thread's id) seeds its own persisted
+      // draft on mount — nothing to restore here.
       setView("thread");
       return;
     }
@@ -111,7 +109,6 @@ export function useMessageCreation({
     );
     setActiveId(recipient.id);
     setReadIds((current) => new Set(current).add(recipient.id));
-    setDraft(loadDraft(recipient.id));
     setView("thread");
     if (demoMode || !recipient.slug) return;
     startConversation.mutate(recipient.slug, {
@@ -221,6 +218,16 @@ export function useMessageCreation({
       localId,
       forwarded: true,
     };
+    // Group target: the conversation already exists (real UUID in live, mock id
+    // in demo), so there is nothing to materialize — append + deliver on the
+    // group's own id, exactly like an existing DM thread. `deliver` no-ops the
+    // network in demo and rides the normal idempotent outbox in live.
+    if (recipient.isGroup) {
+      appendOptimistic(recipient.id, optimistic);
+      openThread(recipient.id);
+      deliver(recipient.id, text, localId, undefined, true, attachment);
+      return;
+    }
     const existing = allThreads.find(
       (thread) => thread.slug && thread.slug === recipient.slug,
     );

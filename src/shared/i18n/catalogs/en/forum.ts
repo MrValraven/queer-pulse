@@ -151,6 +151,14 @@ export const forum: Catalog = {
   "replies.loadingMore": "Loading…",
   "replies.loadMoreCta": "Load more replies",
 
+  // ── Nested replies (reply action + collapse/expand + continue thread) ──
+  "replies.reply": "Reply",
+  "replies.collapseAria": "Collapse thread",
+  "replies.expandAria": "Expand thread",
+  "replies.continueThread": "Continue this thread ({count})",
+  "replies.hiddenCount_one": "{count} hidden reply",
+  "replies.hiddenCount_other": "{count} hidden replies",
+
   // ── ForumAuthor ─────────────────────────────────────────────────────────
   "author.officialTitle": "Official QueerPulse account",
   "author.officialBadge": "Official",

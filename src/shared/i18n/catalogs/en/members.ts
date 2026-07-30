@@ -116,10 +116,6 @@ export const members: Catalog = {
   "content.now.title": "Now",
   "content.now.subtitle": "What {first} is in the middle of",
   "content.now.openLabel": "Open to",
-  "content.lookingFor.title": "Looking for",
-  "content.lookingFor.subtitle": "What {first} is here for",
-  "content.lookingFor.visibleHint": "Shown on your profile",
-  "content.lookingFor.privateHint": "Only you can see this",
   "content.work.title": "Selected work",
   "content.work.subtitle": "A few things, not a portfolio dump",
   "content.board.title": "On the board",
@@ -273,6 +269,11 @@ export const members: Catalog = {
   "hero.vouch.emptyOther":
     "No vouches for {first} yet. If you know them, yours could be the first.",
 
+  // ── "Here for" intent line (ProfileHero) ────────────────────────────────────
+  "hero.hereFor.label": "Here for",
+  "hero.hereFor.hintPublic": "shown on your profile",
+  "hero.hereFor.hintPrivate": "only you can see this",
+
   // ── Public profile page (PublicProfilePage) ─────────────────────────────────
   // ── /public-profile/:slug — the logged-out, indexable public profile ──────
   // The not-found copy is load-bearing: an unpublished profile, a deactivated
@@ -334,7 +335,7 @@ export const members: Catalog = {
   "publicProfile.head.ctaNote":
     "{firstName}'s full profile, posts, and direct-message access open up once you're a member.",
 
-  // ── Public profile control (PublicProfileControl) ──────────────────────────
+  // ── Public profile control (PublicProfileModal) ──────────────────────────
   "publicProfile.control.locked.eyebrow": "Public profile · locked",
   "publicProfile.control.locked.title":
     "A public profile is something you <em>grow into.</em>",
@@ -359,6 +360,9 @@ export const members: Catalog = {
     "Saved — we'll turn this on when public profiles open",
   "publicProfile.control.toast.failed":
     "We couldn't save that — your preference is unchanged. Try again in a moment.",
+
+  // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
+  "publicProfile.badge.label": "Go public",
 
   // ── Public-eligibility criteria (publicFigure.ts) ───────────────────────────
   "publicProfile.eligibility.contributes.label": "Contributes publicly",

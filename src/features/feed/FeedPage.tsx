@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   FiInbox,
   FiUsers,
@@ -7,7 +6,6 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { routes } from "../../app/routeMap";
 import {
   SkeletonAvatar,
   SkeletonLine,
@@ -56,14 +54,11 @@ function FeedGreeting({
   greeting,
   dateLine,
   first,
-  populated,
 }: {
   greeting: string;
   dateLine: string;
   first: string;
-  populated: boolean;
 }) {
-  const { t } = useTranslation();
   return (
     <div className={styles.greetingRow}>
       <div>
@@ -72,20 +67,6 @@ function FeedGreeting({
         </div>
         <div className={styles.greetingDate}>{dateLine}</div>
       </div>
-      <Link to={routes.messages} className={styles.msgChip}>
-        <svg width={13} height={13} viewBox="0 0 13 13" fill="none" aria-hidden>
-          <path
-            d="M1 2.5h11v7H1zM1 2.5l5.5 4 5.5-4"
-            stroke="var(--jade)"
-            strokeWidth={1.4}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {populated
-          ? t("feed:greeting.newMessages", { count: 2 })
-          : t("feed:greeting.messagesLink")}
-      </Link>
     </div>
   );
 }
@@ -275,12 +256,7 @@ export function FeedPage() {
     <AppShell unreadCount={demoMode ? 3 : 0}>
       <div className={styles.page}>
         <div className="wrap">
-          <FeedGreeting
-            greeting={greeting}
-            dateLine={dateLine}
-            first={first}
-            populated={demoMode}
-          />
+          <FeedGreeting greeting={greeting} dateLine={dateLine} first={first} />
 
           <div className={styles.layout}>
             <div>

@@ -68,7 +68,7 @@ beforeEach(() => {
  *  branch) and one `member_joined` with a real actor. */
 const MINIMAL_OVERVIEW_DTO: AdminOverviewDTO = {
   stats: {
-    activeMembers: { value: 9120, growthPercent: null, netNewThisWeek: 40 },
+    activeMembers: { value: 9120, growthPercent: null, netNewThisMonth: 40 },
     openReports: { value: 5, oldestOpenHours: null, emergencies: 1 },
     medianResponseHours: null,
     sustainerMrr: null,

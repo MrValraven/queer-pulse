@@ -22,10 +22,6 @@ export const COLUMNS: FooterColumn[] = [
     headingKey: "shared:megaNav.community.title",
     links: [
       { labelKey: "nav:gatherings", href: routes.events },
-      {
-        labelKey: "nav:calendar",
-        href: `${routes.events}?view=calendar`,
-      },
       { labelKey: "nav:forum", href: routes.forum },
       { labelKey: "nav:communities", href: routes.communities },
       {
@@ -41,10 +37,6 @@ export const COLUMNS: FooterColumn[] = [
   {
     headingKey: "shared:footerData.col.lisbonLife.head",
     links: [
-      {
-        labelKey: "shared:megaNav.lisbon.col.discover.spacesMap",
-        href: `${routes.directory}?view=map`,
-      },
       {
         labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
         href: routes.directory,

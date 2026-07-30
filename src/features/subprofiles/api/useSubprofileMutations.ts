@@ -5,10 +5,13 @@ import {
   createSubprofile,
   deleteSubprofile,
   publishSubprofile,
+  replaceAffiliations as replaceAffiliationsApi,
   replaceSocialLinks,
   replaceSubprofileSection,
   unpublishSubprofile,
   updateSubprofile,
+  type AffiliationDTO,
+  type AffiliationInputDTO,
   type CollaboratorDTO,
   type CreateSubprofileDTO,
   type SocialLinkDTO,
@@ -114,6 +117,19 @@ function applySection(
   return { ...dto, items: [...otherSectionItems, ...replacedItems] };
 }
 
+/** Demo affiliations resolve: a fresh persona has no prior affiliations, so a
+ *  copied entry falls back to its slug as the placeholder name (same rule as
+ *  useAffiliations' demoResolveAffiliation for genuinely-new entries). */
+function demoResolveCopiedAffiliation(item: AffiliationInputDTO): AffiliationDTO {
+  return {
+    targetType: item.targetType,
+    targetSlug: item.targetSlug,
+    role: item.role,
+    name: item.targetSlug,
+    imageUrl: null,
+  };
+}
+
 /**
  * All owner mutations for subprofiles. Each branches demo↔live: demo resolves
  * optimistically from the mock registry with no network; live calls the API.
@@ -196,6 +212,24 @@ export function useSubprofileMutations() {
     onSuccess: invalidateAll,
   });
 
+  const replaceAffiliations = useMutation<
+    SubprofileDTO,
+    Error,
+    { id: string; items: AffiliationInputDTO[] }
+  >({
+    // SubprofileAffiliationsEditor / DuplicateMutations toast their own error,
+    // so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({ id, items }) => {
+      if (!demoMode) return replaceAffiliationsApi(id, items);
+      const { mockSubprofileById } = await import("../data/subprofiles.data");
+      const current = mockSubprofileById(id);
+      if (!current) throw new Error("Subprofile not found");
+      return { ...current, affiliations: items.map(demoResolveCopiedAffiliation) };
+    },
+    onSuccess: invalidateAll,
+  });
+
   const publish = useMutation<SubprofileDTO, Error, string>({
     // SubprofilePublishPanel toasts its own error (and handles PublishUnmetError
     // as a checklist), so silence the global duplicate.
@@ -267,6 +301,7 @@ export function useSubprofileMutations() {
     update,
     replaceSection,
     replaceSocials,
+    replaceAffiliations,
     publish,
     unpublish,
     remove,

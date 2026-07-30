@@ -178,19 +178,31 @@ export const system: Catalog = {
   "interestsEditor.options.techWork": "Tech & work",
   "interestsEditor.options.wellbeing": "Wellbeing",
 
-  // ── InviteExpiredPage.tsx ─────────────────────────────────────────────────
-  "inviteExpired.eyebrow": "Invite expired",
-  "inviteExpired.heading": "This link has <em>timed out.</em>",
-  "inviteExpired.lead":
-    "Invites stay live for 14 days. Yours was sent a while ago, so the slot we held for you has rotated back into the pool.",
-  "inviteExpired.details.invitedAs": "Invited as",
-  "inviteExpired.details.sent": "Sent",
-  "inviteExpired.details.expired": "Expired",
-  "inviteExpired.details.vouchedBy": "Vouched by",
-  "inviteExpired.actions.resendCta": "Ask {name} to re-send →",
-  "inviteExpired.actions.freshInviteCta": "Request a fresh invite",
-  "inviteExpired.foot.alreadyMember": "Already a member? <a>Sign in</a>",
-  "inviteExpired.foot.needHelp": "Need help? <a>Ask the team</a>",
+  // ── InviteExpiredPage.tsx (invite state: expired / used / revoked / not found) ─
+  "inviteState.expired.eyebrow": "Invite expired",
+  "inviteState.expired.heading": "This link has <em>timed out.</em>",
+  "inviteState.expired.lead":
+    "Invites stay live for a while, and yours was sent a bit too long ago — so the slot we held for you has rotated back into the pool. The quickest way in is a fresh nudge from the person who vouched for you.",
+  "inviteState.used.eyebrow": "Invite already used",
+  "inviteState.used.heading": "This invite has <em>already been opened.</em>",
+  "inviteState.used.lead":
+    "Someone has already joined with this link — most likely you, on another device. If that was you, just sign in. If it wasn't, let the team know and we'll take a look.",
+  "inviteState.revoked.eyebrow": "Invite withdrawn",
+  "inviteState.revoked.heading": "This invite was <em>called back.</em>",
+  "inviteState.revoked.lead":
+    "The person who sent this invite, or a community steward, withdrew it before it was used. No harm done — you can ask for a new one whenever you're ready.",
+  "inviteState.notFound.eyebrow": "Invite not found",
+  "inviteState.notFound.heading": "We couldn't <em>place this link.</em>",
+  "inviteState.notFound.lead":
+    "This invite link doesn't match anything on our side. It may have been mistyped or cut short when it was shared. Ask for a fresh one and we'll get you in.",
+  "inviteState.details.expiredOn": "Expired",
+  "inviteState.details.vouchedBy": "Vouched by",
+  "inviteState.actions.resend": "Ask {name} to re-send →",
+  "inviteState.actions.requestNew": "Request a fresh invite",
+  "inviteState.actions.signIn": "Sign in",
+  "inviteState.actions.contact": "Talk to the team",
+  "inviteState.foot.alreadyMember": "Already a member? <a>Sign in</a>",
+  "inviteState.foot.needHelp": "Need help? <a>Ask the team</a>",
 
   // ── InviteLandingPage.tsx / InviteLandingViews.tsx / inviteLanding.data.ts ─
   "inviteLanding.loader.verifying": "Verifying your invite code…",

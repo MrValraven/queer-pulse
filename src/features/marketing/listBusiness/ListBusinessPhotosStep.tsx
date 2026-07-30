@@ -1,10 +1,5 @@
 import { FiShield } from "react-icons/fi";
-import {
-  CheckLine,
-  FormField,
-  ImageSlot,
-  Toggle,
-} from "../../../shared/components/ui";
+import { CheckLine, FormField, Toggle } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -15,28 +10,11 @@ import {
   type OptionRow,
   type OwnerRel,
   type OwnerVisibility,
-  type PhotoKey,
 } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
+import { ListingPhotoGallery } from "./ListingPhotoGallery";
 import styles from "./ListBusinessPage.module.css";
-
-const GALLERY: { key: PhotoKey; wide?: boolean; captionKey: string }[] = [
-  {
-    key: "wide",
-    wide: true,
-    captionKey: "marketing:listBusiness.step4.gallery.wide",
-  },
-  { key: "d1", captionKey: "marketing:listBusiness.step4.gallery.detail" },
-  { key: "d2", captionKey: "marketing:listBusiness.step4.gallery.detail" },
-  { key: "vibe", captionKey: "marketing:listBusiness.step4.gallery.vibe" },
-];
-const ALT_LABEL_KEYS: Record<PhotoKey, string> = {
-  wide: "marketing:listBusiness.step4.alt.wide",
-  d1: "marketing:listBusiness.step4.alt.d1",
-  d2: "marketing:listBusiness.step4.alt.d2",
-  vibe: "marketing:listBusiness.step4.alt.vibe",
-};
 
 function RadioStack({
   options,
@@ -80,12 +58,14 @@ function RadioStack({
 export function StepPhotosYou({
   form,
   userName,
+  uploadPhoto,
 }: {
   form: ListingForm;
   userName: string;
+  uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
-  const { draft, set, setAlt, toggleIn } = form;
+  const { draft, set, toggleIn } = form;
   return (
     <div className={styles.stepBody}>
       <PaneHeader
@@ -99,33 +79,7 @@ export function StepPhotosYou({
         label={t("marketing:listBusiness.step4.photosLabel")}
         helper={t("marketing:listBusiness.step4.photosHelper")}
       >
-        <div className={styles.galGrid}>
-          {GALLERY.map((g) => (
-            <ImageSlot
-              key={g.key}
-              className={g.wide ? styles.galWide : undefined}
-              tint="coral"
-              radius={14}
-              height={g.wide ? 150 : 110}
-              placeholder={t(g.captionKey)}
-              alt={draft.alt[g.key]}
-            />
-          ))}
-        </div>
-        <div className={styles.altList}>
-          {GALLERY.map((g) => (
-            <div key={g.key} className={styles.altRow}>
-              <span className={styles.altK}>{t(ALT_LABEL_KEYS[g.key])}</span>
-              <input
-                type="text"
-                maxLength={100}
-                placeholder={t("marketing:listBusiness.step4.altPlaceholder")}
-                value={draft.alt[g.key]}
-                onChange={(e) => setAlt(g.key, e.target.value)}
-              />
-            </div>
-          ))}
-        </div>
+        <ListingPhotoGallery form={form} uploadPhoto={uploadPhoto} />
       </FormField>
 
       <h3 className={styles.groupH}>

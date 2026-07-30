@@ -4,6 +4,7 @@ import { CATS, CAT_STYLE, type Thread } from "./forum.data";
 import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
 import { authorHref } from "./forumAuthor.helpers";
 import { ModeratorByline } from "./ThreadReplies";
+import { MentionText } from "../../shared/mentions/MentionText";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "./PostActionsMenu";
 import styles from "./ThreadPage.module.css";
@@ -129,7 +130,11 @@ export function ThreadOpCard({
         {deleted ? (
           <p className={styles.tombstone}>{t("forum:tombstone.body")}</p>
         ) : (
-          body.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+          body.map((paragraph, index) => (
+            <p key={index}>
+              <MentionText text={paragraph} />
+            </p>
+          ))
         )}
       </div>
       <div className={styles.opTags}>

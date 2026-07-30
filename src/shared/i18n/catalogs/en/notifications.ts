@@ -75,6 +75,11 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> mentioned your thread t/{entityRef}.",
   "type.mention.thread.meta": "Thread mention",
 
+  "type.forum_reply.text": "Someone replied to your comment.",
+  "type.forum_reply.textNamed":
+    "<profile>{name}</profile> replied to your comment.",
+  "type.forum_reply.meta": "Reply",
+
   "type.event_invite.text": "You have an invitation to a gathering.",
   "type.event_invite.textNamed":
     "<profile>{name}</profile> invited you to a gathering.",

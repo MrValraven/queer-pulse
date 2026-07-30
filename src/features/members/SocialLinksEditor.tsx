@@ -1,22 +1,26 @@
 import { FiPlus, FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
-import { SOCIAL_PLATFORMS, socialPlatform } from "./socialLinks.data";
+import { SOCIAL_PLATFORMS, socialHref, socialPlatform } from "./socialLinks.data";
 import { useRowKeys } from "./useRowKeys";
 import styles from "./ProfileEdit.module.css";
 
 /**
- * Advisory-only sniff test: a non-empty value is "fine" when it reads like an
- * @handle or a URL-ish string (a scheme, or a dotted host with no whitespace).
- * Empty is never an error. This never blocks editing — it only surfaces a hint.
+ * Advisory-only sniff test: a non-empty value is "fine" when it would resolve to
+ * a real link for this platform. We defer to `socialHref` — the same builder
+ * read-mode uses — so a bare handle like "mrvalraven" on a platform with an
+ * `hrefPrefix` (Instagram, X, …) is correctly accepted, not flagged. The lone
+ * extra allowance is an @-address on prefix-less platforms (e.g. a Mastodon
+ * "@you@instance"), which read-mode renders as a plain, readable chip rather
+ * than a link. Empty is never an error; this never blocks editing — it only
+ * surfaces a hint.
  */
-function looksLikeLinkOrHandle(value: string): boolean {
+function looksLikeLinkOrHandle(platform: string, value: string): boolean {
   const trimmed = value.trim();
   if (!trimmed) return true;
-  if (trimmed.startsWith("@")) return true;
   if (/\s/.test(trimmed)) return false;
-  if (/^https?:\/\//i.test(trimmed)) return true;
-  return trimmed.includes(".");
+  if (socialHref(platform, trimmed)) return true;
+  return trimmed.startsWith("@");
 }
 
 /** Platform display label: every entry except the generic fallback is a
@@ -68,7 +72,7 @@ export function SocialLinksEditor({
         const meta = socialPlatform(link.platform);
         const Icon = meta.icon;
         const rowKey = keys[index];
-        const isInvalid = !looksLikeLinkOrHandle(link.urlOrHandle);
+        const isInvalid = !looksLikeLinkOrHandle(link.platform, link.urlOrHandle);
         const errorId = `${rowKey}-error`;
         return (
           <div

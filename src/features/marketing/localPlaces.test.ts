@@ -124,31 +124,44 @@ describe("filterLocalPlaces", () => {
     );
   });
 
-  it("matches query against name and neighbourhood, case-insensitively", () => {
+  it("matches the query against the full searchText haystack, case-insensitively", () => {
     const result = filterLocalPlaces(places, {
       category: "all",
-      query: "mouraria",
+      query: "Mouraria",
+      vibes: [],
+    });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every((place) => place.searchText.includes("mouraria"))).toBe(
+      true,
+    );
+  });
+
+  it("broadens beyond the name — a word from the blurb still matches", () => {
+    // "sliding scale" appears in descriptions, never in a place name.
+    const result = filterLocalPlaces(places, {
+      category: "all",
+      query: "sliding scale",
       vibes: [],
     });
     expect(result.length).toBeGreaterThan(0);
     expect(
-      result.every(
-        (place) =>
-          place.name.toLowerCase().includes("mouraria") ||
-          place.neighbourhood.toLowerCase().includes("mouraria"),
-      ),
+      result.some((place) => !place.name.toLowerCase().includes("sliding")),
     ).toBe(true);
   });
 
-  it("keeps only places matching a selected vibe (excludes vibe-less businesses)", () => {
+  it("passes vibe-less businesses through while narrowing venues to the vibe", () => {
     const result = filterLocalPlaces(places, {
       category: "all",
       query: "",
-      vibes: ["trans-centred"],
+      vibes: ["mixed"],
     });
-    expect(result.length).toBeGreaterThan(0);
+    // Every venue kept matches the selected vibe…
     expect(
-      result.every((place) => (place.vibe ?? []).includes("trans-centred")),
+      result
+        .filter((place) => place.kind === "venue")
+        .every((place) => (place.vibe ?? []).includes("mixed")),
     ).toBe(true);
+    // …and vibe-less businesses are still present, not silently dropped.
+    expect(result.some((place) => place.kind === "business")).toBe(true);
   });
 });

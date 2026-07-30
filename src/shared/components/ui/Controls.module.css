@@ -10,6 +10,10 @@
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .segBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   padding: 6px 14px;
   border: none;
   border-radius: 999px;
@@ -23,9 +27,24 @@
     background 0.16s var(--ease),
     color 0.16s var(--ease);
 }
+.segIcon {
+  display: inline-flex;
+  font-size: 15px;
+  /* Nudge optical alignment: icon glyphs sit slightly low against the label. */
+  margin-top: -1px;
+}
 @media (hover: hover) {
   .segBtn:hover {
     color: var(--text-strong);
+  }
+}
+.segBtn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .segBtn:disabled:hover {
+    color: var(--ink-60);
   }
 }
 .segOn {

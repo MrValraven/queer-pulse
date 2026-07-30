@@ -1,13 +1,8 @@
-import { type DirectoryPlace, type Tint } from "./directoryPlaces";
+import { type DirectoryPlace } from "./directoryPlaces";
+import { DirectoryGallery } from "./DirectoryGallery";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DirectorySpaceAside } from "./DirectorySpaceAside";
 import s from "./DirectorySpacePage.module.css";
-
-const GCELL: Record<Tint, string> = {
-  coral: "",
-  jade: s.gCellJade!,
-  plum: s.gCellPlum!,
-};
 
 /**
  * The public directory detail body: cover gallery + two-column grid. Shared by
@@ -24,20 +19,7 @@ export function DirectorySpaceView({
 }) {
   return (
     <>
-      <div className={s.cover}>
-        <div className={s.coverInner}>
-          <div className={s.gallery}>
-            {place.gallery.map((caption, index) => (
-              <div
-                key={index}
-                className={[s.gCell, GCELL[place.tint]].join(" ")}
-              >
-                <span className={s.gCap}>{caption}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <DirectoryGallery place={place} />
       <div className={s.page}>
         <div className={s.grid}>
           <DirectorySpaceMain place={place} preview={preview} />

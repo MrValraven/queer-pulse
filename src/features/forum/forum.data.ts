@@ -43,6 +43,10 @@ export const CAT_STYLE: Record<string, { background: string; color: string }> = 
 };
 
 export interface Reply {
+  /** Stable identity for tree assembly. Live = backend post id; demo = seeded/generated id. */
+  id: string;
+  /** Parent comment id, or null for a top-level comment (reply to the thread/OP). */
+  parentPostId: string | null;
   avatar: string;
   background: string;
   color: string;
@@ -252,6 +256,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("rita", {
+        id: "reply-thread1-rita",
+        parentPostId: null,
         time: "6 weeks ago",
         helpful: true,
         body: [
@@ -261,6 +267,8 @@ export const THREADS: Thread[] = [
         reactions: 14,
       }),
       qpReply("mariana", {
+        id: "reply-thread1-mariana",
+        parentPostId: null,
         time: "6 weeks ago",
         isOP: true,
         quote: {
@@ -273,6 +281,8 @@ export const THREADS: Thread[] = [
         reactions: 5,
       }),
       reply("tomas", {
+        id: "reply-thread1-tomas",
+        parentPostId: null,
         time: "3 weeks ago",
         body: [
           "Could we get a Portuguese translation of the legal-rights section? Happy to draft it if someone can review.",
@@ -301,6 +311,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("daniel-oliveira", {
+        id: "reply-thread2-daniel-oliveira",
+        parentPostId: null,
         time: "5 weeks ago",
         helpful: true,
         body: [
@@ -309,6 +321,8 @@ export const THREADS: Thread[] = [
         reactions: 19,
       }),
       reply("mariana", {
+        id: "reply-thread2-mariana",
+        parentPostId: null,
         time: "4 weeks ago",
         body: [
           "Adding a data point: the Lapa centro de saúde was genuinely good for me. The GP had clearly worked with trans patients before and didn't make me explain the basics.",
@@ -316,6 +330,8 @@ export const THREADS: Thread[] = [
         reactions: 11,
       }),
       reply("jonas", {
+        id: "reply-thread2-jonas",
+        parentPostId: null,
         time: "4 weeks ago",
         isOP: true,
         body: [
@@ -344,6 +360,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("carla", {
+        id: "reply-thread3-carla",
+        parentPostId: null,
         time: "3 weeks ago",
         body: [
           "Hi all — Carla, illustrator, moved here from Madrid in January. Still figuring out the city but the welcome here has been real. Looking for studio-share leads and people to draw with.",
@@ -351,6 +369,8 @@ export const THREADS: Thread[] = [
         reactions: 12,
       }),
       reply("diogo", {
+        id: "reply-thread3-diogo",
+        parentPostId: null,
         time: "3 weeks ago",
         body: [
           "Diogo, sound engineer, Lisbon born and back after six years in Berlin. Here for the music thread and to find collaborators. Say hi if you make anything noisy.",
@@ -358,6 +378,8 @@ export const THREADS: Thread[] = [
         reactions: 8,
       }),
       reply("bilal-kaya", {
+        id: "reply-thread3-bilal-kaya",
+        parentPostId: null,
         time: "2 weeks ago",
         body: [
           "Bilal, they/them, just arrived from Beirut. Nervous and excited. Grateful this exists.",
@@ -385,6 +407,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("ines", {
+        id: "reply-thread5-ines",
+        parentPostId: null,
         time: "4 days ago",
         helpful: true,
         body: [
@@ -393,6 +417,8 @@ export const THREADS: Thread[] = [
         reactions: 13,
       }),
       reply("rui-fernandes", {
+        id: "reply-thread5-rui-fernandes",
+        parentPostId: null,
         time: "3 days ago",
         body: [
           "Would absolutely come. Suggestion: keep one slot a quarter for Portuguese-language queer cinema specifically — there is more of it than people think and it never gets screened.",
@@ -400,6 +426,8 @@ export const THREADS: Thread[] = [
         reactions: 7,
       }),
       reply("sofia", {
+        id: "reply-thread5-sofia",
+        parentPostId: null,
         time: "3 days ago",
         isOP: true,
         quote: {
@@ -431,13 +459,22 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("catarina-vaz", {
+        id: "reply-thread6-catarina-vaz",
+        parentPostId: null,
         time: "5 days ago",
         body: [
           "A daytime space. Everything queer here is nocturnal and built around drinking. I want somewhere to sit with a coffee and a laptop at 3pm and not be the only one.",
         ],
         reactions: 17,
       }),
+      // Nested demo seed (Task 4): jordan is a direct reply to catarina-vaz's
+      // daytime-space idea ("Seconding the daytime idea…"), and diogo's closing
+      // OP reply is a direct reply to jordan's café-library suggestion — a
+      // natural depth-2 chain (catarina-vaz -> jordan -> diogo) with no copy
+      // changes needed.
       reply("jordan", {
+        id: "reply-thread6-jordan",
+        parentPostId: "reply-thread6-catarina-vaz",
         time: "5 days ago",
         helpful: true,
         body: [
@@ -446,6 +483,8 @@ export const THREADS: Thread[] = [
         reactions: 15,
       }),
       reply("diogo", {
+        id: "reply-thread6-diogo",
+        parentPostId: "reply-thread6-jordan",
         time: "4 days ago",
         isOP: true,
         body: [
@@ -474,6 +513,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("catarina-melo", {
+        id: "reply-thread8-catarina-melo",
+        parentPostId: null,
         time: "2 weeks ago",
         helpful: true,
         body: [
@@ -482,6 +523,8 @@ export const THREADS: Thread[] = [
         reactions: 16,
       }),
       reply("luisa", {
+        id: "reply-thread8-luisa",
+        parentPostId: null,
         time: "12 days ago",
         body: [
           "Adding the obvious one people forget: the QueerPulse housing board has flatshares that never touch the public portals. I found my room there in a week after a month of portal misery.",
@@ -510,6 +553,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("sara-pinheiro", {
+        id: "reply-thread16-sara-pinheiro",
+        parentPostId: null,
         time: "11 days ago",
         helpful: true,
         body: [
@@ -518,6 +563,8 @@ export const THREADS: Thread[] = [
         reactions: 18,
       }),
       reply("daniel-oliveira", {
+        id: "reply-thread16-daniel-oliveira",
+        parentPostId: null,
         time: "9 days ago",
         body: [
           "For the private-bridge section — worth noting a couple of the endocrinologists listed will coordinate with your SNS team so you are not running two parallel records. Ask before booking.",
@@ -544,6 +591,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("kai", {
+        id: "reply-thread11-kai",
+        parentPostId: null,
         time: "2 days ago",
         body: [
           '"Tchindas" — a documentary from Cabo Verde, warm, funny, and almost never screened here. Would be a perfect opener.',
@@ -551,6 +600,8 @@ export const THREADS: Thread[] = [
         reactions: 9,
       }),
       reply("mariana-costa", {
+        id: "reply-thread11-mariana-costa",
+        parentPostId: null,
         time: "1 day ago",
         helpful: true,
         body: [
@@ -559,6 +610,8 @@ export const THREADS: Thread[] = [
         reactions: 11,
       }),
       reply("sofia", {
+        id: "reply-thread11-sofia",
+        parentPostId: null,
         time: "22h ago",
         isOP: true,
         body: [
@@ -586,6 +639,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("andre", {
+        id: "reply-thread13-andre",
+        parentPostId: null,
         time: "7 days ago",
         body: [
           'I came in through a member sponsor with zero "professional" credentials and it changed my year. So I am living proof the middle path works — it just currently depends on knowing the right person, which is the problem you are naming.',
@@ -593,6 +648,8 @@ export const THREADS: Thread[] = [
         reactions: 14,
       }),
       reply("fatima", {
+        id: "reply-thread13-fatima",
+        parentPostId: null,
         time: "7 days ago",
         helpful: true,
         body: [
@@ -601,6 +658,8 @@ export const THREADS: Thread[] = [
         reactions: 22,
       }),
       reply("catarina-vaz", {
+        id: "reply-thread13-catarina-vaz",
+        parentPostId: null,
         time: "6 days ago",
         isOP: true,
         quote: {
@@ -633,6 +692,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("ines-fonseca", {
+        id: "reply-thread18-ines-fonseca",
+        parentPostId: null,
         time: "3 days ago",
         body: [
           "Applied for €120 toward materials for a binder-sewing workshop. Whatever the panel decides, thank you for making the process this painless — the no-forms part is why I actually applied.",
@@ -640,6 +701,8 @@ export const THREADS: Thread[] = [
         reactions: 10,
       }),
       reply("nuno", {
+        id: "reply-thread18-nuno",
+        parentPostId: null,
         time: "2 days ago",
         body: [
           "Topped up €30. Got a €150 emergency grant in February that covered a locksmith when I was locked out the week I arrived. Paying it forward.",
@@ -667,6 +730,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("anika", {
+        id: "reply-thread15-anika",
+        parentPostId: null,
         time: "22h ago",
         helpful: true,
         body: [
@@ -675,6 +740,8 @@ export const THREADS: Thread[] = [
         reactions: 15,
       }),
       reply("tomas-mendes", {
+        id: "reply-thread15-tomas-mendes",
+        parentPostId: null,
         time: "18h ago",
         body: [
           "Not applying but — if you need someone to build a few shelves before September, I do carpentry and I will trade it for a launch-night invite. Serious offer.",
@@ -682,6 +749,8 @@ export const THREADS: Thread[] = [
         reactions: 8,
       }),
       reply("ines", {
+        id: "reply-thread15-ines",
+        parentPostId: null,
         time: "15h ago",
         isOP: true,
         body: [
@@ -710,6 +779,8 @@ export const THREADS: Thread[] = [
     ],
     replies: [
       reply("raquel-baptista", {
+        id: "reply-thread19-raquel-baptista",
+        parentPostId: null,
         time: "6 days ago",
         helpful: true,
         body: [
@@ -718,6 +789,8 @@ export const THREADS: Thread[] = [
         reactions: 16,
       }),
       reply("sofia-castano", {
+        id: "reply-thread19-sofia-castano",
+        parentPostId: null,
         time: "5 days ago",
         body: [
           'Less smooth at a smaller office outside the city — got asked for a "medical document" that the law explicitly does not require. I printed the statute, brought it back, and they processed it without comment. Know the law before you go.',
@@ -725,6 +798,8 @@ export const THREADS: Thread[] = [
         reactions: 12,
       }),
       reply("catarina-vaz", {
+        id: "reply-thread19-catarina-vaz",
+        parentPostId: null,
         time: "5 days ago",
         isOP: true,
         body: [

@@ -5,6 +5,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useDirectoryListingsActions } from "../../../app/providers/useDirectoryListingsActions";
 import { useProfile } from "../../../app/providers/useProfile";
+import { useUploadImage } from "../../members/api/useUploadImage";
 import {
   TOTAL_STEPS,
   type ListingDraft,
@@ -56,6 +57,7 @@ export function ListingWizard(props: ListingWizardProps) {
   });
   const form = useListingForm(props.initialDraft);
   const { draft } = form;
+  const uploadPhoto = useUploadImage("listing-photo");
   // Edit mode seeds past the type/path step (StepPath never shows again).
   const [step, setStep] = useState(isEdit ? 1 : 0);
   const [phase, setPhase] = useState<Phase>("form");
@@ -179,6 +181,7 @@ export function ListingWizard(props: ListingWizardProps) {
             goToStep={goToStep}
             onBack={back}
             onNext={() => void next()}
+            uploadPhoto={uploadPhoto}
           />
         )}
 

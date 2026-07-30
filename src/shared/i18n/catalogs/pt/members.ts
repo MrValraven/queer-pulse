@@ -119,10 +119,6 @@ export const members: Catalog = {
   "content.now.title": "Agora",
   "content.now.subtitle": "O que ocupa {first} agora",
   "content.now.openLabel": "Disponível para",
-  "content.lookingFor.title": "À procura de",
-  "content.lookingFor.subtitle": "O que {first} procura aqui",
-  "content.lookingFor.visibleHint": "Visível no teu perfil",
-  "content.lookingFor.privateHint": "Só tu podes ver isto",
   "content.work.title": "Trabalho em destaque",
   "content.work.subtitle": "Só alguns trabalhos, não um portefólio completo",
   "content.board.title": "No quadro de trocas",
@@ -277,6 +273,11 @@ export const members: Catalog = {
   "hero.vouch.emptyOther":
     "Ainda ninguém avalizou {first}. Se conheces esta pessoa, o teu pode ser o primeiro.",
 
+  // ── Linha de intenção "Aqui para" (ProfileHero) ─────────────────────────────
+  "hero.hereFor.label": "Aqui para",
+  "hero.hereFor.hintPublic": "visível no teu perfil",
+  "hero.hereFor.hintPrivate": "só tu consegues ver",
+
   // ── Página de perfil público (PublicProfilePage) ────────────────────────────
   // ── /public-profile/:slug — o perfil público, visível sem sessão ──────────
   // O texto de "não encontrado" é essencial: um perfil não publicado, uma
@@ -338,7 +339,7 @@ export const members: Catalog = {
   "publicProfile.head.ctaNote":
     "O perfil completo de {firstName}, publicações e acesso a mensagens diretas abrem assim que te tornares parte da comunidade.",
 
-  // ── Controlo do perfil público (PublicProfileControl) ──────────────────────
+  // ── Controlo do perfil público (PublicProfileModal) ──────────────────────
   "publicProfile.control.locked.eyebrow": "Perfil público · bloqueado",
   "publicProfile.control.locked.title":
     "Um perfil público é algo em que <em>cresces aos poucos.</em>",
@@ -364,6 +365,9 @@ export const members: Catalog = {
     "Guardado — vamos ativar isto quando os perfis públicos abrirem",
   "publicProfile.control.toast.failed":
     "Não conseguimos guardar — a tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
+
+  // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
+  "publicProfile.badge.label": "Ficar público",
 
   // ── Critérios de elegibilidade pública (publicFigure.ts) ───────────────────
   "publicProfile.eligibility.contributes.label": "Contribui publicamente",

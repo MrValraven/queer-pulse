@@ -12,7 +12,7 @@ interface EmptyStateAction {
 interface EmptyStateProps {
   /** Icon element (react-icons), shown in a tinted circle. */
   icon?: ReactNode;
-  title: string;
+  title: ReactNode;
   description?: ReactNode;
   /** Primary call-to-action that helps the user recover or move on. */
   action?: EmptyStateAction;

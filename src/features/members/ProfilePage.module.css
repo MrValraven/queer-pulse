@@ -100,6 +100,13 @@ div.backBar {
 .eyebrow {
   margin-bottom: 18px;
 }
+.heroNameRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  /* Keep the star glued to the name's line rather than wrapping beneath it. */
+  flex-wrap: nowrap;
+}
 .name {
   font-family: var(--serif);
   font-weight: 400;
@@ -170,6 +177,38 @@ div.backBar {
   line-height: 1.65;
   max-width: 52ch;
   margin-top: 22px;
+}
+
+/* "Here for" hero intent line — deliberately smaller/lighter than the tag row
+   below the bio (.tag), with a micro-label prefix, so the two rows never read
+   as the same kind of thing. */
+.hereFor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 8px;
+  margin-top: 14px;
+}
+.hereForLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.hereForChip {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-tag);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.hereForHint {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-style: italic;
 }
 .cta {
   display: flex;
@@ -375,17 +414,6 @@ div.backBar {
 .openChipAction:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-.lookingForChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.lookingForHint {
-  margin-top: 10px;
-  font-size: 0.85rem;
-  color: var(--ink-60);
 }
 
 .lookingForHelper {

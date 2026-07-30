@@ -16,13 +16,16 @@ interface NewMessageModalProps {
   /** "forward" swaps the title/subtitle to the forward-a-message framing; the
    *  picker (accepted connections) and pick behaviour are otherwise identical. */
   mode?: "new" | "forward";
+  /** Forward mode only: the caller's active group conversations, shown as a
+   *  second "Groups" section below People. Omitted (empty) in "new" mode. */
+  groups?: Conversation[];
 }
 
 /**
  * A connection → the seed of a fresh thread. Only identity fields matter here;
  * the real history (messages, unread, timestamps) is filled by the server once
- * the thread opens (or stays empty in demo). Mirrors the messages view-model
- * (initials + tint, no photo) so a picked recipient renders like any thread.
+ * the thread opens (or stays empty in demo). Carries the connection's photo so
+ * the picker shows real avatars, with initials + tint as the fallback.
  */
 function connectionToRecipient(view: ConnectionView): Conversation {
   return {
@@ -30,6 +33,7 @@ function connectionToRecipient(view: ConnectionView): Conversation {
     slug: view.slug,
     initials: view.initials,
     tint: view.tint,
+    avatarUrl: view.photo,
     name: view.name,
     pronouns: view.pron ?? "",
     connectedSince: view.meta.since ?? "",
@@ -40,11 +44,47 @@ function connectionToRecipient(view: ConnectionView): Conversation {
   };
 }
 
+interface GroupPickRowProps {
+  group: Conversation;
+  onPick: (recipient: Conversation) => void;
+}
+
+/** A single row in the forward picker's Groups section. */
+function GroupPickRow({ group, onPick }: GroupPickRowProps) {
+  const { t } = useTranslation();
+  return (
+    <li>
+      <button
+        type="button"
+        className={styles.row}
+        onClick={() => onPick(group)}
+      >
+        <Avatar
+          initials={group.initials}
+          tint={group.tint}
+          src={group.avatarUrl}
+          alt={group.name}
+          size={40}
+        />
+        <div className={styles.rowBody}>
+          <span className={styles.rowName}>{group.name}</span>
+          <span className={styles.rowMeta}>
+            {t("messages:group.memberCount", {
+              count: group.memberCount ?? group.members?.length ?? 0,
+            })}
+          </span>
+        </div>
+      </button>
+    </li>
+  );
+}
+
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
 export function NewMessageModal({
   onClose,
   onPick,
   mode = "new",
+  groups = [],
 }: NewMessageModalProps) {
   useScrollLock();
   const { t } = useTranslation();
@@ -92,6 +132,16 @@ export function NewMessageModal({
       : candidates;
   }, [query, candidates]);
 
+  const groupResults = useMemo(() => {
+    const trimmedQuery = query.trim().toLowerCase();
+    const activeGroups = groups.filter((group) => group.isGroup);
+    return trimmedQuery
+      ? activeGroups.filter((group) =>
+          group.name.toLowerCase().includes(trimmedQuery),
+        )
+      : activeGroups;
+  }, [query, groups]);
+
   return (
     <div
       className={styles.overlay}
@@ -134,6 +184,11 @@ export function NewMessageModal({
           ariaLabel={t("messages:newMessage.searchAria")}
         />
         <ul className={styles.list}>
+          {groupResults.length > 0 && people.length > 0 && (
+            <li className={styles.sectionLabel} aria-hidden="true">
+              {t("messages:forward.sectionPeople")}
+            </li>
+          )}
           {people.map((person) => (
             <li key={person.id}>
               <button
@@ -144,6 +199,8 @@ export function NewMessageModal({
                 <Avatar
                   initials={person.initials}
                   tint={person.tint}
+                  src={person.avatarUrl}
+                  alt={person.name}
                   size={40}
                 />
                 <div className={styles.rowBody}>
@@ -156,19 +213,34 @@ export function NewMessageModal({
               </button>
             </li>
           ))}
+          {groupResults.length > 0 && (
+            <li className={styles.sectionLabel} aria-hidden="true">
+              {t("messages:forward.sectionGroups")}
+            </li>
+          )}
+          {groupResults.map((group) => (
+            <GroupPickRow key={group.id} group={group} onPick={onPick} />
+          ))}
           {loading && candidates.length === 0 && (
             <li className={styles.empty}>
               {t("messages:newMessage.loading")}
             </li>
           )}
-          {!loading && candidates.length === 0 && (
+          {/* The connections-empty notices are People-section copy, so suppress
+              them when the Groups section is carrying the list (forward mode with
+              groups but no matching people) — otherwise "you haven't connected
+              with anyone yet" reads oddly under a populated Groups list. */}
+          {!loading && candidates.length === 0 && groupResults.length === 0 && (
             <li className={styles.empty}>{t("messages:newMessage.none")}</li>
           )}
-          {!loading && candidates.length > 0 && people.length === 0 && (
-            <li className={styles.empty}>
-              {t("messages:newMessage.empty", { query })}
-            </li>
-          )}
+          {!loading &&
+            candidates.length > 0 &&
+            people.length === 0 &&
+            groupResults.length === 0 && (
+              <li className={styles.empty}>
+                {t("messages:newMessage.empty", { query })}
+              </li>
+            )}
         </ul>
       </div>
     </div>

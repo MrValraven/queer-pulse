@@ -4,7 +4,7 @@ import type { Member } from "./data/members";
  *  checklist so eligibility reads as something you grow into, not a mystery.
  *  `labelKey`/`hintKey` are catalog keys, not raw strings: this is a small,
  *  platform-defined checklist (chrome), resolved through `t()` by the
- *  consuming component (`PublicProfileControl.tsx`), which is the only place
+ *  consuming component (`PublicProfileModal.tsx`), which is the only place
  *  with access to the translation function — this evaluator stays a pure,
  *  React-free function. */
 export interface EligibilityCriterion {

@@ -135,6 +135,7 @@ export const shared: Catalog = {
   "adminNav.items.partnerships": "Parcerias",
   "adminNav.items.orgTiers": "Níveis de parceria",
   "adminNav.items.governance": "Governação",
+  "adminNav.items.roadmap": "Roteiro",
   "adminNav.items.systemAccounts": "Contas de sistema",
 
   // BackToSettingsLink
@@ -230,7 +231,6 @@ export const shared: Catalog = {
   "megaNav.lisbon.featurePublic.cta": "Encontrar espaços seguros",
   "megaNav.lisbon.col.discover.head": "Descobrir",
   "megaNav.lisbon.col.discover.businessDirectory": "Diretório de negócios",
-  "megaNav.lisbon.col.discover.spacesMap": "Mapa de espaços",
   "megaNav.lisbon.col.discover.safeSpaces": "Espaços seguros",
   "megaNav.lisbon.col.discover.partners": "Parceiros",
   "megaNav.lisbon.col.livingHere.head": "Viver aqui",

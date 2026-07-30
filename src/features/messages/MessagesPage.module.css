@@ -1,11 +1,39 @@
+/* A true single-viewport app shell — `AppShell`'s `fullHeight` prop drops the
+   marketing Footer for this route (see AppShell.tsx), so `.app` is the page's
+   ONLY scroll surface; nothing stacks below it that could give the page a
+   second, competing scroll.
+   `--messages-top-offset` is the real height of whatever sits above `.app`:
+   by default (a browser tab, any width) that's the floating pill Navbar
+   (`--nav-top` + `--nav-height`) plus a small breathing gap; the override
+   below swaps it for the installed-PWA app-bar's own real height once that
+   bar (not the pill) is what's actually on screen. `--bottom-inset` is the
+   existing token standalone.css already publishes for exactly this purpose
+   (0px in a browser tab; the tab bar's total occupied height, home-indicator
+   inset included, once installed) — reusing it here is what keeps the
+   composer clear of `BottomTabBar` instead of hiding behind it.
+   `--keyboard-inset` (useVisualViewportKeyboard) still subtracts the
+   on-screen keyboard's overlap on top of both. */
 .app {
   display: flex;
-  /* Subtract the on-screen keyboard overlap (published by
-     useVisualViewportKeyboard) so the composer stays visible above the keyboard
-     on iOS; 0px when no keyboard is open. */
-  height: calc(100svh - 104px - var(--keyboard-inset, 0px));
-  margin-top: 92px;
+  --messages-top-offset: calc(var(--nav-top) + var(--nav-height) + 12px);
+  margin-top: var(--messages-top-offset);
+  height: calc(
+    100svh - var(--messages-top-offset) - var(--bottom-inset) -
+      var(--keyboard-inset, 0px)
+  );
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+/* Installed PWA (≤860px — the same condition BottomTabBar/`.appBar` gate on):
+   the floating pill is replaced by the slim app-bar strip, so clear THAT
+   bar's real height instead of the pill's. (`main[data-page-main]
+   [data-shell="full-height"]` in standalone.css zeroes the generic hero-band
+   margin for this route, so this is the ONLY top-offset math in play here —
+   nothing stacks on top of it, which is what previously doubled the gap on
+   some devices and let it undershoot on others.) */
+@media (max-width: 860px) {
+  :global([data-display-mode="standalone"]) .app {
+    --messages-top-offset: calc(var(--app-bar-h) + env(safe-area-inset-top));
+  }
 }
 
 /* Thread list */
@@ -67,6 +95,11 @@
 .threadList {
   flex: 1;
   overflow-y: auto;
+  /* This is the inbox's own scroller — reaching its top/bottom must not chain
+     into the page behind it (there is no page behind it on this route, but
+     iOS still surfaces the rubber-band/pull-to-refresh gesture without this). */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .threadRow {
   display: flex;
@@ -94,6 +127,10 @@
   .threadRow:hover {
     background: rgba(var(--plum-rgb), 0.03);
   }
+}
+/* Immediate tap feedback on touch (no hover state exists there). */
+.threadRow:active {
+  background: rgba(var(--plum-rgb), 0.08);
 }
 .threadActive {
   background: rgba(var(--plum-rgb), 0.06);
@@ -220,6 +257,10 @@
     background: rgba(var(--plum-rgb), 0.07);
   }
 }
+.backBtn:active {
+  background: rgba(var(--plum-rgb), 0.12);
+  transform: scale(0.92);
+}
 @media (max-width: 768px) {
   .backBtn {
     display: flex;
@@ -262,7 +303,9 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  min-height: 40px;
+  /* 44px comfort floor (was 40px) — this sits in the top-right one-handed
+     reach corner, so it's worth the extra pixels. */
+  min-height: 44px;
   padding: 8px 14px;
   margin-inline-end: -6px;
   border-radius: var(--radius-pill);
@@ -280,6 +323,9 @@
     background: rgba(var(--accent-rgb), 0.1);
   }
 }
+.ctbLink:active {
+  background: rgba(var(--accent-rgb), 0.16);
+}
 .ctbLink:focus-visible {
   outline: 2px solid var(--accent-ink);
   outline-offset: 2px;
@@ -293,6 +339,11 @@
      to widen the log and hand the page a horizontal scrollbar. `clip` (not
      `hidden`) keeps this from becoming a programmatic scroll container. */
   overflow-x: clip;
+  /* Reaching the top/bottom of the log must not chain into the page behind it
+     (there is none on this route, but iOS still surfaces rubber-band/
+     pull-to-refresh without this) or leak momentum past the composer. */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
@@ -318,9 +369,34 @@
   color: var(--ink-40);
   padding-block: 8px;
 }
+/* A single stable in-flow wrapper around the day-groups + typing row — the
+   ONE node `useMessageScroll`'s resize-follow observer watches. Mirrors
+   `.area`'s own column/gap so day-groups keep the exact same rhythm as before
+   this wrapper existed (`.area` is a flex column too, so without matching
+   `display`/`gap` here this single child would collapse that spacing). */
+.areaContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* Wraps the composer so `.jumpPill` (below) can anchor to ITS real top edge —
+   see the comment there for why. Just a passthrough box (no sizing of its
+   own): `.composer` keeps its normal flex-column height inside it. */
+.composerDock {
+  position: relative;
+  flex: none;
+}
 .jumpPill {
   position: absolute;
-  inset-block-end: 84px;
+  /* Anchored to `.composerDock`'s own top edge — i.e. the composer's real,
+     current top edge — instead of a fixed guess at its height. A hardcoded
+     px offset from the panel's bottom (the old `inset-block-end: 84px`) drifts
+     out of sync the moment the composer grows past one line or the
+     reply-preview banner opens, either overlapping the composer or floating
+     with an odd gap above it; `100%` of `.composerDock`'s own box tracks its
+     real height live, no JS required. */
+  inset-block-end: 100%;
+  margin-block-end: 10px;
   inset-inline: 0;
   margin-inline: auto;
   width: max-content;
@@ -334,7 +410,11 @@
   cursor: pointer;
   box-shadow: var(--shadow-toast);
   z-index: 2;
-  animation: msgBubbleIn var(--dur-base) var(--ease-out) both;
+  /* A plain fade + rise, not `msgBubbleIn` — that keyframe's `scale(0.96)`
+     reads oddly on a horizontally-centered pill (it was tuned for a
+     bottom-anchored bubble's directional origin, not a floating, centered
+     control), so this pill gets its own non-scaling entrance instead. */
+  animation: jumpPillIn var(--dur-base) var(--ease-out) both;
 }
 .dayGroup {
   display: flex;
@@ -456,14 +536,36 @@
     transform: none;
   }
 }
+/* Plain fade + rise (no scale) — used by controls that float centered rather
+   than growing from a bottom corner (the jump-to-latest pill). */
+@keyframes jumpPillIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 .bubble,
 .emojiOnly {
-  animation: msgBubbleIn var(--dur-base) var(--ease) both;
   transform-origin: bottom left;
 }
 .sent {
-  animation-name: msgBubbleInSent;
   transform-origin: bottom right;
+}
+/* Entrance plays ONLY for a genuinely new bubble — see `playEntrance` in
+   MessageRun.tsx, frozen at this exact bubble's own mount so a later
+   re-render (a status-tick update, a sibling's reaction) can never retrigger
+   it. Applied as its own modifier class rather than unconditionally on
+   `.bubble`/`.emojiOnly` so opening/switching a thread SNAPS every
+   already-there bubble into place instead of animating a 20-50-bubble swarm. */
+.bubbleEnter {
+  animation: msgBubbleIn var(--dur-base) var(--ease) both;
+}
+.sent.bubbleEnter {
+  animation-name: msgBubbleInSent;
 }
 
 .bubble {
@@ -542,13 +644,45 @@
      panning native (the list scrolls) by claiming only the horizontal axis, so
      the browser hands us those pointer moves without also scrolling sideways. */
   touch-action: pan-y;
+  /* This is the long-press/right-click overlay's trigger surface. Without
+     these, a touch long-press also fires the OS text-selection loupe and the
+     iOS "Copy · Look Up" callout at the same time as the custom overlay, and
+     the two visibly fight. The bubble's text is still reachable read-only —
+     Copy lives in the action overlay/menu (`onCopy`) — so suppressing native
+     selection here loses nothing. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  /* Not a `<button>`/`[role="button"]` (deliberately — see the component's own
+     comment), so the global tap-highlight reset in base.css doesn't reach it;
+     it has its own `:active`/long-press press states below, so the default
+     grey/blue UA highlight box would only fight those. */
+  -webkit-tap-highlight-color: transparent;
   /* Snap-back after a swipe releases (transform-only, ease-out). Suppressed
-     while actively following the finger via `.bubbleWrapSwiping`. */
+     while actively following the finger via `.bubbleWrapSwiping`. Also the
+     transition a tap-press/long-press-hold scale (below) rides on. */
   transition: transform 250ms var(--ease-out);
 }
-/* Following the finger: no transition, so the bubble tracks 1:1. */
+/* Immediate (<100ms) tap-down feedback, any pointer type — the bubble is a
+   focusable, pressable composite widget (Enter/long-press/right-click all
+   open the same overlay) with no built-in `<button>` press state. */
+.bubbleWrap:active {
+  transform: scale(0.985);
+}
+/* A touch long-press's "growing" cue for the whole hold (set/cleared by
+   `useLongPress` via a plain DOM attribute, not React state, so a hold never
+   re-renders the bubble subtree) — supersedes the plain tap-down `:active`
+   dip above for as long as the press is live, then the overlay opens. */
+.bubbleWrap[data-long-press-active="true"] {
+  transform: scale(1.03);
+}
+/* Following the finger: no transition, so the bubble tracks 1:1. `will-change`
+   is scoped to exactly this class — created only for the duration of an
+   active drag (see `useMessageGestures`'s `swiping` state) and torn down the
+   instant it releases, rather than sitting permanently on every bubble. */
 .bubbleWrapSwiping {
   transition: none;
+  will-change: transform;
 }
 /* Reply-hint icon revealed in the gutter being uncovered as a bubble slides
    under a swipe. Opacity + scale are driven inline by swipe progress; colour
@@ -680,22 +814,35 @@
   padding-block-start: 7px;
 }
 
-/* ── Scroll-to-original highlight ── */
+/* ── Scroll-to-original highlight ──
+   An absolutely-positioned ring on `::after` whose OPACITY animates, instead
+   of animating `box-shadow` directly on the bubble (a paint property — every
+   frame repaints the whole bubble). The ring's own box-shadow is static; only
+   its opacity moves, so the browser can composite it on its own layer.
+   `.messageHighlight` is applied to `.bubbleWrap` (already `position:
+   relative`), which the ring insets to exactly. */
 .messageHighlight {
   border-radius: var(--radius-badge);
-  animation: messageHighlightFlash 1.2s var(--ease-out);
+}
+.messageHighlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-badge);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.4);
+  opacity: 1;
+  pointer-events: none;
+  animation: messageHighlightFlash 1.2s var(--ease-out) forwards;
 }
 @keyframes messageHighlightFlash {
-  0% {
-    box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.4);
-  }
-  100% {
-    box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0);
+  to {
+    opacity: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .messageHighlight {
+  .messageHighlight::after {
     animation: none;
+    opacity: 0;
   }
 }
 
@@ -911,11 +1058,17 @@
   cursor: pointer;
   touch-action: manipulation;
   box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.06);
-  animation: msgBubbleIn var(--dur-fast) var(--ease) both;
   transition:
     background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
     transform var(--dur-fast) var(--ease);
+}
+/* Pop-in plays ONLY for a genuinely new chip (see `ReactionChip`'s
+   `playEntrance`, frozen at its own mount) — an incremented count on an
+   already-visible chip re-renders the SAME instance and must not re-pop it,
+   and opening/switching a thread must not pop every pre-existing chip. */
+.reactionChipEnter {
+  animation: msgBubbleIn var(--dur-fast) var(--ease) both;
 }
 @media (hover: hover) {
   .reactionChip:hover {
@@ -927,7 +1080,7 @@
   transform: scale(0.94);
 }
 @media (prefers-reduced-motion: reduce) {
-  .reactionChip {
+  .reactionChipEnter {
     animation: none;
   }
   .reactionChip:hover,
@@ -1068,6 +1221,14 @@
   height: auto;
   border-radius: var(--bubble-radius);
   overflow: hidden;
+  /* `aspect-ratio` is set inline per-message (see MessageRun.tsx) from the
+     attachment's real width/height, falling back to a plain 1:1 box when the
+     provider's dimensions are missing/zero — reserving the bubble's final
+     size BEFORE the GIF decodes, so it doesn't jump in height on load (which
+     would also nudge the resize-follow scroll right after the entrance has
+     already played). `object-fit` covers the fallback case, where the real
+     image's ratio won't exactly match the assumed 1:1 box. */
+  object-fit: cover;
 }
 /* Holds the composer's popover controls (GIF + shortcut hint) as a matched
    pair to the left of the input; also the shared outside-click boundary that
@@ -1083,10 +1244,11 @@
   flex: none;
 }
 .gifBtn {
-  /* Same 43px square as `.sendBtn` so the two controls read as a matched
-     pair flanking the input, rather than a wide pill next to a circle. */
-  width: 43px;
-  height: 43px;
+  /* Same 44px square as `.sendBtn` so the two controls read as a matched
+     pair flanking the input, rather than a wide pill next to a circle — 44px
+     (was 43) is also the touch-target comfort floor. */
+  width: 44px;
+  height: 44px;
   padding: 0;
   display: flex;
   align-items: center;
@@ -1143,10 +1305,13 @@
   background: var(--cream);
   resize: none;
   /* One line at line-height:1.5 (24px) + 8px×2 padding + 1.5px×2 border =
-     43px. Must be >= that so a single line never overflows the box before
-     the auto-grow effect (below) runs — a shortfall here is what causes a
-     spurious scrollbar on a short/empty message, especially on first paint. */
-  min-height: 43px;
+     43px; bumped to the 44px touch-target floor (matching `.sendBtn`/
+     `.gifBtn`, which the row's `align-items: flex-end` centres against this
+     field's height) — must be >= the natural 43px so a single line never
+     overflows the box before the auto-grow effect (below) runs, which is what
+     causes a spurious scrollbar on a short/empty message, especially on first
+     paint. */
+  min-height: 44px;
   max-height: 120px;
   /* Hidden by default; Composer.tsx's auto-grow effect flips this to `auto`
      only once content has actually outgrown max-height, so a short message
@@ -1163,13 +1328,13 @@
   background: var(--paper);
 }
 .sendBtn {
-  /* Matches `.composerTa`'s single-line min-height (43px). With the row's
-     `align-items: flex-end`, an equal height is what makes the button's centre
-     line up with a single-line input's centre, while still bottom-aligning to
-     the last line once the textarea grows. A shorter button would sit low
-     against the taller input. */
-  width: 43px;
-  height: 43px;
+  /* Matches `.composerTa`'s single-line min-height (44px — the touch-target
+     floor). With the row's `align-items: flex-end`, an equal height is what
+     makes the button's centre line up with a single-line input's centre,
+     while still bottom-aligning to the last line once the textarea grows. A
+     shorter button would sit low against the taller input. */
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-avatar);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.9);
@@ -1198,9 +1363,7 @@
   transform: scale(0.88);
 }
 @media (prefers-reduced-motion: reduce) {
-  .bubble,
-  .emojiOnly,
-  .sent,
+  .bubbleEnter,
   .jumpPill,
   .typingBubble {
     animation: none;
@@ -1339,6 +1502,16 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  opacity: 1;
+  /* Fades out in place rather than vanishing instantly — `TypingIndicatorRow`
+     keeps the row mounted for exactly this transition's duration before
+     actually removing it, so a flickering typing signal never restarts
+     `.typingBubble`'s entrance or the dot-bounce loop (both live on nodes
+     that stay mounted throughout the fade). */
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.typingRowHiding {
+  opacity: 0;
 }
 .typingBubble {
   display: inline-flex;
@@ -1899,8 +2072,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  /* 44px comfort floor (was 40px) — top-right one-handed reach corner. */
+  width: 44px;
+  height: 44px;
   border: none;
   background: none;
   color: var(--ink-40);
@@ -1915,6 +2089,10 @@
     background: rgba(var(--plum-rgb), 0.07);
     color: var(--text-strong);
   }
+}
+.ctbIconBtn:active {
+  background: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
 }
 .ctbIconBtn:focus-visible {
   outline: 2px solid var(--plum);
@@ -1941,6 +2119,9 @@
   .pinnedBanner:hover {
     background: rgba(var(--plum-rgb), 0.08);
   }
+}
+.pinnedBanner:active {
+  background: rgba(var(--plum-rgb), 0.13);
 }
 .pinnedBanner:focus-visible {
   outline: 2px solid var(--plum);

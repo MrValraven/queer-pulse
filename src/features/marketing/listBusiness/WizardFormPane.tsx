@@ -22,6 +22,7 @@ export function WizardFormPane({
   goToStep,
   onBack,
   onNext,
+  uploadPhoto,
 }: {
   mode: "create" | "edit";
   form: ListingForm;
@@ -33,6 +34,7 @@ export function WizardFormPane({
   goToStep: (n: number) => void;
   onBack: () => void;
   onNext: () => void;
+  uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
   const isEdit = mode === "edit";
@@ -55,7 +57,9 @@ export function WizardFormPane({
             {step === 1 && <StepBasics form={form} />}
             {step === 2 && <StepStory form={form} />}
             {step === 3 && <StepPractical form={form} />}
-            {step === 4 && <StepPhotosYou form={form} userName={userName} />}
+            {step === 4 && (
+              <StepPhotosYou form={form} userName={userName} uploadPhoto={uploadPhoto} />
+            )}
             {step === 5 && (
               <StepReview
                 form={form}
@@ -79,7 +83,11 @@ export function WizardFormPane({
           </div>
         </div>
 
-        <ListBusinessPreview draft={draft} userName={userName} />
+        <ListBusinessPreview
+          draft={draft}
+          userName={userName}
+          photoPreviews={form.photoPreviews}
+        />
       </div>
     </div>
   );

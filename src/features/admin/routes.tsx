@@ -12,6 +12,7 @@ const AdminChangemakersPage = lazyNamed(() => import("./AdminChangemakersPage"),
 const AdminCommunitiesPage = lazyNamed(() => import("./AdminCommunitiesPage"), "AdminCommunitiesPage");
 const AdminCommunityModPage = lazyNamed(() => import("./AdminCommunityModPage"), "AdminCommunityModPage");
 const AdminGovernancePage = lazyNamed(() => import("./AdminGovernancePage"), "AdminGovernancePage");
+const AdminRoadmapPage = lazyNamed(() => import("./AdminRoadmapPage"), "AdminRoadmapPage");
 const ModPanelPage = lazyNamed(() => import("./ModPanelPage"), "ModPanelPage");
 const AdminPartnerApplicationsPage = lazyNamed(() => import("./AdminPartnerApplicationsPage"), "AdminPartnerApplicationsPage");
 const AdminHousingCoopsPage = lazyNamed(() => import("./AdminHousingCoopsPage"), "AdminHousingCoopsPage");
@@ -46,6 +47,7 @@ export function adminRoutes() {
       />
       <Route path={routes.adminOrgTiers} element={<AdminOrgTiersPage />} />
       <Route path={routes.adminGovernance} element={<AdminGovernancePage />} />
+      <Route path={routes.adminRoadmap} element={<AdminRoadmapPage />} />
       <Route path={routes.adminSettings} element={<AdminSettingsPage />} />
       <Route
         path={`${routes.adminCommunities}/:slug/mod`}

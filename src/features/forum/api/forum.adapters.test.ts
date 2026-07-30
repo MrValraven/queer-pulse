@@ -12,6 +12,7 @@ function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
   return {
     id: "post-42",
     threadId: "thread-1",
+    parentPostId: null,
     author: { handle: "rita", displayName: "Rita V", avatarUrl: null },
     body: "hello world",
     voteCount: 3,

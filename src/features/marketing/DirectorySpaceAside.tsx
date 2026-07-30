@@ -5,6 +5,8 @@ import { type DirectoryPlace, type Tint } from "./directoryPlaces";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MEMBERS_HERE } from "./directorySpace.data";
+import { BUSINESS_COORDS } from "./businessCoords";
+import { LocationMiniMap } from "./LocationMiniMap";
 import s from "./DirectorySpacePage.module.css";
 
 const TINT: Record<Tint, string> = {
@@ -26,27 +28,47 @@ export function DirectorySpaceAside({ place, preview = false }: Props) {
     ? `https://instagram.com/${place.social.instagram.replace(/^@/, "")}`
     : undefined;
 
+  // Live listings carry their pin on the DTO; demo places have it hand-placed
+  // in BUSINESS_COORDS by slug (same fallback order as localPlaces.ts). When
+  // neither exists (location-less listings) we keep the decorative placeholder.
+  const coords =
+    place.latitude != null && place.longitude != null
+      ? { latitude: place.latitude, longitude: place.longitude }
+      : BUSINESS_COORDS[place.slug];
+
   return (
     <aside className={s.side}>
       <div className={s.sideCard}>
         <div className={s.map}>
-          <svg
-            viewBox="0 0 300 300"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden="true"
-          >
-            <rect width="300" height="300" fill="#e9e5db" />
-            <path d="M0 80 L300 100 L300 110 L0 90 Z" fill="#d9d3c5" />
-            <path d="M0 180 L300 200 L300 210 L0 190 Z" fill="#d9d3c5" />
-            <path d="M80 0 L100 300 L110 300 L90 0 Z" fill="#d9d3c5" />
-            <path d="M200 0 L220 300 L230 300 L210 0 Z" fill="#d9d3c5" />
-            <circle cx="160" cy="148" r="20" fill="#b8d4b1" opacity=".7" />
-          </svg>
-          <div className={s.pin}>
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2C7 2 3 6 3 11c0 7 9 11 9 11s9-4 9-11c0-5-4-9-9-9z" />
-            </svg>
-          </div>
+          {coords ? (
+            <LocationMiniMap
+              latitude={coords.latitude}
+              longitude={coords.longitude}
+              ariaLabel={t("marketing:directory.detail.mapAria", {
+                name: place.name,
+              })}
+            />
+          ) : (
+            <>
+              <svg
+                viewBox="0 0 300 300"
+                preserveAspectRatio="xMidYMid slice"
+                aria-hidden="true"
+              >
+                <rect width="300" height="300" fill="#e9e5db" />
+                <path d="M0 80 L300 100 L300 110 L0 90 Z" fill="#d9d3c5" />
+                <path d="M0 180 L300 200 L300 210 L0 190 Z" fill="#d9d3c5" />
+                <path d="M80 0 L100 300 L110 300 L90 0 Z" fill="#d9d3c5" />
+                <path d="M200 0 L220 300 L230 300 L210 0 Z" fill="#d9d3c5" />
+                <circle cx="160" cy="148" r="20" fill="#b8d4b1" opacity=".7" />
+              </svg>
+              <div className={s.pin}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2C7 2 3 6 3 11c0 7 9 11 9 11s9-4 9-11c0-5-4-9-9-9z" />
+                </svg>
+              </div>
+            </>
+          )}
         </div>
         <div className={s.addr}>
           <strong

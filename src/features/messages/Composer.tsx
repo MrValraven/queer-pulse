@@ -8,6 +8,7 @@ import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { GifComposerButton } from "./GifComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
+import { clearDraft, loadDraft, saveDraft } from "./drafts";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -15,9 +16,10 @@ import styles from "./MessagesPage.module.css";
 interface ComposerProps {
   active: Conversation;
   conversationId: string;
-  draft: string;
-  onDraftChange: (value: string) => void;
-  onSend: () => void;
+  /** Sends `body` (the composer's own current text) as a new message. The
+   *  composer owns the draft and clears itself in the same frame it calls
+   *  this — the caller never reads or writes draft text. */
+  onSend: (body: string) => void;
   blocked: boolean;
   /** The message currently being quoted for a reply, or null/absent. */
   replyDraft?: ChatMessage | null;
@@ -28,12 +30,20 @@ interface ComposerProps {
   onSendGif?: (attachment: GifAttachment) => void;
 }
 
-/** Bottom composer: severed into a notice bar for official/blocked threads. */
+/**
+ * Bottom composer: severed into a notice bar for official/blocked threads.
+ *
+ * Owns the new-message draft text itself (mounted with `key={active.id}` by
+ * the caller so it resets per thread) — a keystroke here never bubbles state
+ * up to the page, so it can't re-render the thread list or the message log.
+ * Seeds from, and persists to, the same per-conversation `drafts.ts` store a
+ * thread switch used to rely on the controller for; unrelated to the
+ * message-edit inline editor, which owns its own local text entirely (see
+ * `InlineEditField`) and is untouched by this component.
+ */
 export function Composer({
   active,
   conversationId,
-  draft,
-  onDraftChange,
   onSend,
   blocked,
   replyDraft,
@@ -44,6 +54,11 @@ export function Composer({
   const firstName = active.name.split(" ")[0]!;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emitTyping = useEmitTyping();
+  // The new-message draft, local to this component instance. Seeded once from
+  // the persisted per-conversation store; the caller remounts this component
+  // (via `key={active.id}`) on thread switch, so this lazy initializer re-runs
+  // per thread instead of needing an effect to resync it.
+  const [draft, setDraft] = useState(() => loadDraft(conversationId));
   // Keeps the reply-preview banner's content mounted through its collapse/
   // fade-out so dismissing it (✕ or post-send clear) actually animates
   // instead of snapping away — see the hook for why the wrapper below is
@@ -115,7 +130,8 @@ export function Composer({
   function insertShortcut(sigil: string) {
     const needsSpace = draft.length > 0 && !/\s$/.test(draft);
     const next = `${draft}${needsSpace ? " " : ""}${sigil}`;
-    onDraftChange(next);
+    setDraft(next);
+    saveDraft(conversationId, next);
     setOpenPopover(null);
     requestAnimationFrame(() => {
       const node = textareaRef.current;
@@ -130,12 +146,18 @@ export function Composer({
   }
 
   /** Enter-to-send and the send button both funnel through here so a send
-   *  always clears the idle timer and tells the counterpart we've stopped. */
+   *  always clears the idle timer and tells the counterpart we've stopped.
+   *  Clears the composer's own text (and its persisted draft) in the same
+   *  frame the message is handed up, so the input empties instantly. */
   function handleSend() {
+    const body = draft.trim();
+    if (!body) return;
     window.clearTimeout(typingIdleTimerRef.current);
     emitTyping(conversationId, false);
     lastTypingSentRef.current = 0;
-    onSend();
+    onSend(body);
+    setDraft("");
+    clearDraft(conversationId);
   }
 
   function handleBlur() {
@@ -144,7 +166,8 @@ export function Composer({
   }
 
   function handleChange(nextValue: string) {
-    onDraftChange(nextValue);
+    setDraft(nextValue);
+    saveDraft(conversationId, nextValue);
     const now = Date.now();
     if (now - lastTypingSentRef.current > 2000) {
       emitTyping(conversationId, true);

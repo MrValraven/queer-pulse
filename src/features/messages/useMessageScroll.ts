@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { isNearBottom } from "./useStickToBottom";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 
@@ -30,6 +30,14 @@ export function useMessageScroll(
   onLoadOlder: () => void,
 ) {
   const areaRef = useRef<HTMLDivElement>(null);
+  /** A single stable wrapper around the day-groups + typing row (see
+   *  `MessageArea`'s `.areaContent`) — the ONE node the resize-follow effect
+   *  below observes. `areaRef`'s own box is fixed (`overflow-y: auto`), so it
+   *  never reports a growing bubble; a plain in-flow wrapper's box grows with
+   *  any descendant, so observing just this one node (instead of re-observing
+   *  every child on every new message) catches every resize for the whole
+   *  life of the thread. */
+  const contentRef = useRef<HTMLDivElement>(null);
   /** Inbound messages that arrived while the reader was scrolled up; 0 when
    *  they're at the bottom. Shown on the jump-to-latest pill. */
   const [newMessagesCount, setNewMessagesCount] = useState(0);
@@ -49,8 +57,11 @@ export function useMessageScroll(
 
   /** Pin to the bottom. `animate` requests a smooth glide (honouring
    *  prefers-reduced-motion — reduced-motion readers always get an instant
-   *  jump, no animation); the thread-switch/new-message pins pass false so they
-   *  snap like WhatsApp, only the resize-follow and pill-tap animate. */
+   *  jump, no animation); every pin passes `false` (an instant WhatsApp-style
+   *  snap) EXCEPT the explicit pill tap (`jumpToLatest`), which is a
+   *  user-initiated jump across potentially many messages and reads better as
+   *  a glide. Thread-switch, new-message, and resize-follow are all instant —
+   *  the reader should never watch a growing thread glide into place. */
   function scrollToBottom(element: HTMLDivElement, animate: boolean) {
     if (animate && !prefersReducedMotionNow()) {
       element.scrollTo({ top: element.scrollHeight, behavior: "smooth" });
@@ -119,34 +130,40 @@ export function useMessageScroll(
   }, [messageCount, inboundCount]);
 
   // Stick-to-bottom must survive a *resize* of already-rendered content — a
-  // late-loading image, an added reaction chip, an expanding inline edit — none
-  // of which change `messageCount`, so the effect above never fires for them. A
-  // ResizeObserver re-pins a reader who WAS at the bottom (read off
-  // `atBottomRef`, never a post-resize re-measure). It never fights the two
-  // other paths: during an older-history load the reader is at the TOP, so
-  // `atBottomRef` is false and this stays inert; and it only ever pins toward
-  // the bottom, never toward a prepend.
+  // late-loading image, an added reaction chip, an expanding inline edit —
+  // none of which change `messageCount`, so the effect above never fires for
+  // them. A ResizeObserver re-pins a reader who WAS at the bottom (read off
+  // `atBottomRef`, never a post-resize re-measure), and does it INSTANTLY —
+  // WhatsApp-style, a pinned reader's viewport should snap as content grows,
+  // not glide, and a smooth scroll here would otherwise compete with (and get
+  // visibly interrupted by) the very next resize a moment later. It never
+  // fights the two other paths: during an older-history load the reader is at
+  // the TOP, so `atBottomRef` is false and this stays inert; and it only ever
+  // pins toward the bottom, never toward a prepend.
   useLayoutEffect(() => {
-    const element = areaRef.current;
-    if (!element || typeof ResizeObserver === "undefined") return;
+    const area = areaRef.current;
+    const content = contentRef.current;
+    if (!area || !content || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() => {
       if (!atBottomRef.current) return;
-      if (isNearBottom(element, 1)) return; // already flush to the bottom
-      scrollToBottom(element, true);
+      if (isNearBottom(area, 1)) return; // already flush to the bottom
+      scrollToBottom(area, false);
     });
-    // The scroll container's own box is fixed (only its scrollHeight changes),
-    // so a growing bubble is observable only on the child day-group that holds
-    // it — observe the container AND its element children. Re-subscribing on
-    // every thread switch / new day keeps the observed set current; within a
-    // thread, an image/reaction resize fires on an already-observed child.
-    observer.observe(element);
-    for (const child of Array.from(element.children)) {
-      observer.observe(child);
-    }
+    // ONE stable node for the whole panel's lifetime (see `contentRef`'s
+    // comment) — no re-subscribing per message. `MessageArea` itself isn't
+    // remounted per thread, so `content` doesn't actually change across a
+    // switch either; re-running on `activeId` is a cheap, defensive refresh
+    // rather than a requirement.
+    observer.observe(content);
     return () => observer.disconnect();
-  }, [activeId, messageCount]);
+  }, [activeId]);
 
-  function handleAreaScroll() {
+  // Stabilized: `ConversationPanel` re-renders more often than this hook's own
+  // logic changes (a receipt tick, a thread-unrelated state update), and this
+  // callback is handed to `MessageArea` as `onScroll` — an unstable reference
+  // there is harmless today (`MessageArea` isn't itself `React.memo`'d), but
+  // keeping it stable costs nothing and matches the rest of this pane.
+  const handleAreaScroll = useCallback(() => {
     const element = areaRef.current;
     if (!element) return;
     if (isNearBottom(element)) {
@@ -165,16 +182,17 @@ export function useMessageScroll(
       pendingAnchorRef.current = element.scrollHeight - element.scrollTop;
       onLoadOlder();
     }
-  }
+  }, [hasMoreOlder, loadingOlder, onLoadOlder]);
 
-  function jumpToLatest() {
+  const jumpToLatest = useCallback(() => {
     const element = areaRef.current;
     if (element) scrollToBottom(element, true);
     setNewMessagesCount(0);
-  }
+  }, []);
 
   return {
     areaRef,
+    contentRef,
     showJumpPill: newMessagesCount > 0,
     newMessagesCount,
     handleAreaScroll,

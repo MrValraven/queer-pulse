@@ -34,16 +34,18 @@ export function useCreateThread() {
   });
 }
 
-/** POST /forum/threads/:slug/posts — ThreadComposer reply. Takes the thread's
- *  backend slug directly (from the loaded thread), so it works on a deep link
- *  too. Demo passes `undefined` and the mutation no-ops. */
+/** POST /forum/threads/:slug/posts — ThreadComposer / inline reply. Takes the
+ *  thread's backend slug directly (from the loaded thread), so it works on a
+ *  deep link too. Demo passes `undefined` and the mutation no-ops.
+ *  `parentPostId` nests the reply under an existing post; omit/null for a
+ *  top-level reply to the thread. */
 export function useReply(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
-    mutationFn: async (body) => {
+  return useMutation<void, Error, { body: string; parentPostId?: string | null }>({
+    mutationFn: async ({ body, parentPostId }) => {
       if (demoMode || !slug) return;
-      await replyToThread(slug, body);
+      await replyToThread(slug, body, parentPostId);
     },
     onSuccess: () => {
       if (demoMode) return;

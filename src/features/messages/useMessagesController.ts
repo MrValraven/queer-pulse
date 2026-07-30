@@ -10,7 +10,7 @@ import {
 } from "../../shared/api/realtime";
 import { type ChatMessage, type Conversation } from "./data";
 import { clearOutbox, loadOutbox } from "./outbox";
-import { clearDrafts, loadDraft } from "./drafts";
+import { clearDrafts } from "./drafts";
 import { useConversations, useUnreadMessages } from "./api/useConversations";
 import { useMessageThread } from "./api/useMessageThread";
 import { useDeleteConversation } from "./api/useMessageActions";
@@ -29,7 +29,6 @@ import {
   mergeOptimisticGroups,
   realConversationId,
 } from "./useMessagesController.helpers";
-import { useMessageReceipts } from "./useMessageReceipts";
 import { useMessageThreadNav } from "./useMessageThreadNav";
 import { useMessageSending } from "./useMessageSending";
 import { useMessageCreation } from "./useMessageCreation";
@@ -42,9 +41,12 @@ export { nextLocalId } from "./useMessagesController.helpers";
  * `MessagesPage` so the component stays a thin render. Behaviour is unchanged:
  * demo/live dual-mode, realtime join, optimistic send, live conversation
  * reconciliation, deep-link "Message <member>", and the mobile list↔thread
- * `view` toggle all live here. Cohesive sub-concerns (read receipts, thread
- * navigation, optimistic send + outbox, thread/group creation, group
- * management) live in colocated `useMessage*` sub-hooks called below.
+ * `view` toggle all live here. Cohesive sub-concerns (thread navigation,
+ * optimistic send + outbox, thread/group creation, group management) live in
+ * colocated `useMessage*` sub-hooks called below. Read receipts and the
+ * per-thread typing indicator are deliberately NOT here — they live inside
+ * `ConversationPanel`/`MessageArea` so a receipt or typing frame re-renders
+ * only the open conversation, never this page's thread list.
  */
 export function useMessagesController() {
   const { t } = useTranslation();
@@ -83,7 +85,6 @@ export function useMessagesController() {
   const [activeId, setActiveId] = useState<string>("");
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState("");
-  const [draft, setDraft] = useState("");
   /** Per-thread optimistic messages, keyed by conversation id. Hydrated from the
    *  PERSISTED outbox (localStorage) so a send in flight — or a demo message —
    *  survives a reload; live `sending`/`failed` entries are replayed on mount. */
@@ -100,8 +101,10 @@ export function useMessagesController() {
     setSent({});
     clearOutbox();
     // Drafts are equally mode-scoped: a draft typed in demo must not surface in
-    // a real session (nor vice-versa). Wipe the store and the live draft state.
-    setDraft("");
+    // a real session (nor vice-versa). Wipe the persisted store — the composer
+    // itself remounts (its `key` is the newly-selected thread's id, which is
+    // never the same string across a demo↔live flip) so its in-memory text
+    // resets too.
     clearDrafts();
     // Session-scoped group state must not cross the boundary either.
     setLeftGroupIds(new Set());
@@ -128,13 +131,11 @@ export function useMessagesController() {
 
   // Default the open thread to the first available once threads load. Adjusting
   // state during render (not in an effect) avoids a cascading re-render frame.
-  // Hydrate that thread's persisted draft too — this auto-select path never
-  // runs through `openThread`, so without it the first thread's saved draft
-  // would stay hidden (and the change-handler's next save would overwrite it).
+  // The composer (keyed on the thread id) seeds its own persisted draft on
+  // mount, so there's nothing to hydrate here.
   if (!activeId && allThreads.length > 0) {
     const firstThreadId = allThreads[0]!.id;
     setActiveId(firstThreadId);
-    setDraft(loadDraft(firstThreadId));
   }
 
   const rawActive = useMemo(
@@ -149,12 +150,6 @@ export function useMessagesController() {
         ? { ...rawActive, hasLeft: true }
         : rawActive,
     [rawActive, leftGroupIds],
-  );
-
-  // Live read-receipt ("Seen") + delivered watermarks for the open thread.
-  const { counterpartLastReadAt, counterpartDeliveredAt } = useMessageReceipts(
-    myUserId,
-    active,
   );
 
   // Real conversation UUID for the open thread, or null while it's still a
@@ -200,6 +195,15 @@ export function useMessagesController() {
     );
   }, [allThreads, query, isBlocked]);
 
+  // Active group chats the member can forward INTO — every group they still
+  // belong to (owner, admin, or member), never one they've left. Search inside
+  // the forward picker filters this further; unfiltered here so opening the
+  // picker always shows the full set regardless of the inbox search box.
+  const forwardableGroups = useMemo(
+    () => allThreads.filter((thread) => thread.isGroup && !thread.hasLeft),
+    [allThreads],
+  );
+
   const activeBlocked = active?.slug ? isBlocked(active.slug) : false;
 
   /** Base history (mock groups in demo, fetched groups in live) + session sends. */
@@ -217,7 +221,6 @@ export function useMessagesController() {
     activeId,
     setActiveId,
     setReadIds,
-    setDraft,
     setView,
     setReplyDraft,
     setQuery,
@@ -228,28 +231,20 @@ export function useMessagesController() {
   });
   const { openThread } = navigation;
 
-  // Optimistic send + the offline outbox (operates on `sent`/`draft` above).
+  // Optimistic send + the offline outbox (operates on `sent` above; the
+  // composer's own draft text is passed straight into `send`/`sendGif`).
   const sending = useMessageSending({
     sent,
     setSent,
     active,
     activeBlocked,
-    draft,
-    setDraftState: setDraft,
     replyDraft,
     setReplyDraft,
     demoMode,
     t,
     sendMessage,
   });
-  const {
-    send,
-    sendGif,
-    retrySend,
-    setDraft: changeDraft,
-    appendOptimistic,
-    deliver,
-  } = sending;
+  const { send, sendGif, retrySend, appendOptimistic, deliver } = sending;
 
   // Thread + group creation, forwarding, and the deep-link effects.
   const creation = useMessageCreation({
@@ -262,7 +257,6 @@ export function useMessagesController() {
     setExtraThreads,
     setActiveId,
     setReadIds,
-    setDraft,
     setView,
     setLocallyDeletedIds,
     startConversation,
@@ -294,20 +288,17 @@ export function useMessagesController() {
     loading,
     unread,
     visibleThreads,
+    forwardableGroups,
     activeId,
     readIds,
     query,
     setQuery,
-    draft,
-    setDraft: changeDraft,
     composing,
     setComposing,
     replyDraft,
     setReplyDraft,
     active,
     activeBlocked,
-    counterpartLastReadAt,
-    counterpartDeliveredAt,
     messageGroups,
     hasMoreOlder,
     loadingOlder,

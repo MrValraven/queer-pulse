@@ -132,18 +132,26 @@ export function MessageActionOverlay({
     };
   }, [onClose]);
 
+  // With the on-screen keyboard up, `window.innerHeight`/`innerWidth` still
+  // report the LAYOUT viewport (unchanged by the keyboard), not what's
+  // actually visible — using them here placed the sheet as if the keyboard
+  // weren't covering the bottom of the screen. `visualViewport` reports the
+  // true visible area cross-browser; falling back to `window.inner*` where
+  // it's unavailable keeps this correct everywhere `visualViewport` isn't.
+  const visibleHeight = window.visualViewport?.height ?? window.innerHeight;
+  const visibleWidth = window.visualViewport?.width ?? window.innerWidth;
   // Anchor the sheet to the pressed bubble; flip above when low in the viewport.
-  const openBelow = anchorRect.bottom < window.innerHeight * 0.6;
+  const openBelow = anchorRect.bottom < visibleHeight * 0.6;
   // Anchor horizontally to the bubble too, not the viewport edge: on desktop the
   // conversation panel starts ~360px in, so pinning received menus to the left
   // viewport edge left them detached from the bubble. Received aligns its start
   // edge to the bubble's left; sent aligns its end edge to the bubble's right —
   // each clamped so the column never spills off either side.
-  const columnMaxWidth = Math.min(320, window.innerWidth * 0.82);
+  const columnMaxWidth = Math.min(320, visibleWidth * 0.82);
   const edgeGap = 8;
-  const maxInset = Math.max(edgeGap, window.innerWidth - columnMaxWidth - edgeGap);
+  const maxInset = Math.max(edgeGap, visibleWidth - columnMaxWidth - edgeGap);
   const horizontalStyle = isSent
-    ? { right: Math.min(maxInset, Math.max(edgeGap, window.innerWidth - anchorRect.right)) }
+    ? { right: Math.min(maxInset, Math.max(edgeGap, visibleWidth - anchorRect.right)) }
     : { left: Math.min(maxInset, Math.max(edgeGap, anchorRect.left)) };
   const runThenClose = (action: () => void) => () => {
     action();
@@ -168,7 +176,7 @@ export function MessageActionOverlay({
           top: openBelow ? anchorRect.top : undefined,
           bottom: openBelow
             ? undefined
-            : window.innerHeight - anchorRect.bottom,
+            : visibleHeight - anchorRect.bottom,
           ...horizontalStyle,
         }}
         onClick={(event) => event.stopPropagation()}

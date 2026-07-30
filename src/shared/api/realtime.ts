@@ -343,6 +343,11 @@ class RealtimeClient {
     // Per-event fan-out to component subscribers (additive — the invalidation
     // handlers above still run for every frame).
     socket.on("typing", (frame) => {
+      // Skip the echo of our OWN typing. The gateway already excludes the
+      // sender's `user:<id>` room, but a member signed in on two devices must
+      // never see themselves typing even if that frame reaches us (older
+      // backend, future broadcast path) — mirrors the reaction echo-skip above.
+      if (this.myUserId && frame.userId === this.myUserId) return;
       for (const handler of this.typingHandlers) handler(frame);
     });
     socket.on("read", (frame) => {
@@ -714,6 +719,44 @@ export function usePresenceOnline(): ReadonlySet<string> {
   const [online, setOnline] = useState<ReadonlySet<string>>(new Set());
   useEffect(() => onPresence((next) => setOnline(new Set(next))), [onPresence]);
   return online;
+}
+
+/**
+ * Whether ONE specific participant is currently online, kept in sync with
+ * `presence` / `presence:snapshot` frames — a per-id selector over the same
+ * feed `usePresenceOnline` exposes as a whole set.
+ *
+ * Every presence change still notifies this hook's subscription (the client
+ * only tracks one online-user-id set, not a per-id feed), but the functional
+ * `setState` update below returns the SAME `previous` boolean whenever this
+ * particular id's membership hasn't changed, and React bails out of
+ * re-rendering when a state update resolves to the same value (`Object.is`).
+ * So a caller like a thread-list row or the open conversation's header only
+ * re-renders when the id it actually cares about flips — not on every other
+ * member's presence flip, unlike consuming `usePresenceOnline()`'s whole set
+ * directly. Returns `false` for a `null`/`undefined` id (e.g. a just-picked
+ * recipient placeholder with no resolved participant yet).
+ */
+export function useIsOnline(participantId: string | null | undefined): boolean {
+  const { onPresence } = useRealtime();
+  const [isOnline, setIsOnline] = useState(false);
+  useEffect(() => {
+    if (!participantId) {
+      // Resets to false when the caller's id goes away (e.g. a just-picked
+      // recipient placeholder with no resolved participant yet) — not a
+      // response to an external event, so there's nothing to subscribe to.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsOnline(false);
+      return;
+    }
+    return onPresence((online) => {
+      setIsOnline((previous) => {
+        const next = online.has(participantId);
+        return next === previous ? previous : next;
+      });
+    });
+  }, [participantId, onPresence]);
+  return participantId ? isOnline : false;
 }
 
 /**

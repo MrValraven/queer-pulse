@@ -8,6 +8,22 @@
   gap: var(--gap-grid);
 }
 
+/* Screen-reader/switch-control-only content — the "Now showing…" aria-live
+   announce sits here, visually hidden but still perceivable by assistive
+   tech even when the hero it describes has scrolled off-screen. No shared
+   equivalent exists yet in src/shared, so this stays local to the module. */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Hero left, switch list right on wider viewports; stacked below. */
 @media (min-width: 760px) {
   .split {
@@ -16,25 +32,46 @@
   }
 }
 
+/* A lone persona has no switch list beside it — without a cap the hero
+   stretches to the full section width, which reads awkwardly for a single
+   card. Capped only on wider viewports; below the mobile breakpoint this
+   component doesn't even render (see `SubprofileShowcaseMobile`). */
+@media (min-width: 760px) {
+  .solo {
+    max-width: 32rem;
+  }
+}
+
+/* "Add another side", shown under a lone hero in self view (there's no
+   switch-list header to host it next to — see `.addAnother` below for the
+   equivalent when a switch list exists). */
+.soloAddAnother {
+  align-self: flex-start;
+}
+
 /* ── Featured hero (SubprofileFeatureCard) ─────────────────────────────────── */
 
 .feature {
-  position: relative;
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: clamp(20px, 3vw, 30px);
-  overflow: hidden;
   background:
     radial-gradient(
-      140px 140px at 88% -12%,
+      140px 140px at 88% 4%,
       color-mix(in srgb, var(--accent-tint) 26%, transparent),
       transparent 70%
     ),
     color-mix(in srgb, var(--accent-tint) 12%, var(--paper));
+  /* --accent-tint/--accent-on are registered via @property in effects.css
+     (syntax: "<color>") specifically so this recolor can ease like any other
+     transition — a deliberate, plan-sanctioned exception to the
+     transform/opacity-only rule, scoped to this accent handoff. */
   transition:
     border-color var(--dur-base) var(--ease),
     transform var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease);
+    box-shadow var(--dur-base) var(--ease),
+    --accent-tint var(--dur-base) var(--ease-std),
+    --accent-on var(--dur-base) var(--ease-std);
 }
 @media (hover: hover) {
   .feature:hover {
@@ -43,11 +80,9 @@
     box-shadow: 0 12px 30px -20px rgba(var(--line-rgb), 0.5);
   }
 }
-/* Focus lands on the inner heading link; lift the ring to the whole card. */
-.feature:focus-within {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
+/* Reduced motion: `transition: none` drops the --accent-tint/--accent-on
+   eases too (they're part of the same shorthand above) — the accent still
+   changes correctly, it just lands instantly instead of easing. */
 @media (prefers-reduced-motion: reduce) {
   .feature,
   .feature:hover {
@@ -61,30 +96,35 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--gap-sm);
+  width: 100%;
   min-width: 0;
 }
+
+/* Directional cross-fade: the incoming persona slides in from the direction
+   of the row picked in the switch list (down when moving to a later
+   persona, up when moving to an earlier one). `direction === "none"`
+   (unchanged index, or first render) gets no motion — nothing to imply a
+   direction from. */
 @media (prefers-reduced-motion: no-preference) {
-  .featureInner {
-    animation: featureIn var(--dur-base) var(--ease);
+  .featureInner[data-direction="down"] {
+    animation: qpPersonaInDown var(--dur-base) var(--ease);
+  }
+  .featureInner[data-direction="up"] {
+    animation: qpPersonaInUp var(--dur-base) var(--ease);
   }
 }
-@keyframes featureIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+
+.cover {
+  width: 100%;
 }
 
 .featureTop {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 4px;
+  width: 100%;
+  min-width: 0;
 }
 
 .featureAvatar {
@@ -93,6 +133,14 @@
   box-shadow:
     0 0 0 3px var(--paper),
     0 0 0 4px color-mix(in srgb, var(--accent-tint) 40%, var(--paper));
+}
+
+.featureTopMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
 }
 
 .kindBadge {
@@ -106,6 +154,36 @@
   text-transform: uppercase;
 }
 
+.handle {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-40);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.ownerControlsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-inline-start: auto;
+  flex: none;
+}
+
+/* Self-view status/visibility badges (SubprofileOwnerBadges), shown near the
+   kind badge on the hero and inline in a switch-list row. The component
+   itself renders nothing when neither prop is set (the public path), so
+   this only ever appears with content. */
+.ownerBadges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
 .featureName {
   margin: 0;
   font-family: var(--serif);
@@ -115,89 +193,126 @@
   color: var(--ink);
 }
 
-/* Block-link technique (Adrian Roselli / Inclusive Components): the real <a> is
-   only on the name, and its ::after stretches the hitbox across the whole card,
-   so assistive tech announces one concise link — not the whole card's text. */
+/* Name link: a normal, independently-focusable link (not a card-wide stretched
+   hitbox — see the component doc comment). The explicit "Visit" button in the
+   footer repeats this destination as a clearly-labelled control. */
 .featureLink {
   color: inherit;
   text-decoration: none;
 }
-.featureLink::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+@media (hover: hover) {
+  .featureLink:hover {
+    text-decoration: underline;
+  }
+}
+.featureLink:focus-visible {
+  outline: 2px solid var(--accent-tint);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .featureTagline {
-  margin: 2px 0 0;
+  margin: 0;
   max-width: 46ch;
   color: var(--ink-60);
   font-size: 0.95rem;
   line-height: 1.45;
 }
 
-.featureFoot {
+/* ── Featured-work strip (SubprofileFeaturedStrip) ─────────────────────────── */
+
+.featuredStrip {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  margin-top: 12px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  background: color-mix(in srgb, var(--accent-tint) 6%, var(--paper));
+  color: inherit;
+  text-decoration: none;
+}
+a.featuredStripLink {
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  a.featuredStripLink:hover {
+    border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
+    background: color-mix(in srgb, var(--accent-tint) 12%, var(--paper));
+  }
+}
+a.featuredStripLink:focus-visible {
+  outline: 2px solid var(--accent-tint);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  a.featuredStripLink {
+    transition: none;
+  }
 }
 
-.metaGroup {
+.featuredStripThumb {
+  flex: none;
+}
+
+.featuredStripBody {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 1px;
   min-width: 0;
 }
 
-.metaChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ink-60);
+.featuredStripEyebrow {
+  font-size: 0.64rem;
 }
-.metaChip svg {
+
+.featuredStripTitle {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.featuredStripIcon {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--ink-40);
   font-size: 0.95em;
 }
 
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex: none;
-  background: var(--accent-tint);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-tint) 22%, transparent);
+/* ── Affiliations ("Part of") ───────────────────────────────────────────────── */
+
+.affiliations {
+  gap: 6px;
 }
 
-.viewCue {
-  display: inline-flex;
+/* ── Footer: social proof (left) + actions (right) ─────────────────────────── */
+
+.footer {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  flex: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent-ink);
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  width: 100%;
+  margin-top: 4px;
 }
-.viewCue svg {
-  transition: transform var(--dur-base) var(--ease);
-}
-@media (hover: hover) {
-  .feature:hover .viewCue svg {
-    transform: translateX(3px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .viewCue svg {
-    transition: none;
-  }
-  .feature:hover .viewCue svg {
-    transform: none;
-  }
+
+.footerLeft,
+.footerRight {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  min-width: 0;
 }
 
 /* ── Switch list (SubprofileSwitchList) ────────────────────────────────────── */
@@ -207,6 +322,16 @@
   flex-direction: column;
   gap: 10px;
   min-width: 0;
+}
+
+/* Header row: the count/label on the left, self view's "Add another side"
+   link on the right — wraps rather than clipping on narrow split columns. */
+.switchHeadRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
 }
 
 .switchHead {
@@ -219,13 +344,21 @@
   color: var(--ink-40);
 }
 
+.addAnother {
+  flex: none;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--gap-xs);
 }
 
 .chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   font-family: var(--sans);
   font-size: 0.8rem;
   font-weight: 600;
@@ -233,16 +366,24 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-pill);
-  padding: 5px 12px;
+  padding-block: 12px;
+  padding-inline: 12px;
   cursor: pointer;
+  touch-action: manipulation;
   transition:
     color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease);
+    border-color var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .chip:hover {
     border-color: rgba(var(--line-rgb), 0.2);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .chip:active {
+    transform: scale(0.98);
   }
 }
 .chip[aria-pressed="true"] {
@@ -280,18 +421,30 @@
   cursor: pointer;
   color: var(--ink);
   font-family: var(--sans);
+  touch-action: manipulation;
+  /* --accent-tint/--accent-on: same sanctioned @property color-transition
+     exception as `.feature` above, so a row's own accent (and its active
+     indicator) eases in rather than snapping. */
   transition:
     border-color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease),
-    transform var(--dur-base) var(--ease);
+    transform var(--dur-base) var(--ease),
+    --accent-tint var(--dur-base) var(--ease-std),
+    --accent-on var(--dur-base) var(--ease-std);
 }
 @media (hover: hover) {
   .row:hover {
     border-color: color-mix(in srgb, var(--accent-tint) 40%, transparent);
     background: color-mix(in srgb, var(--accent-tint) 5%, var(--paper));
+    transform: translateX(2px);
   }
 }
-.row[aria-pressed="true"] {
+@media (prefers-reduced-motion: no-preference) {
+  .row:active {
+    transform: scale(0.98);
+  }
+}
+.row[aria-selected="true"] {
   border-color: color-mix(in srgb, var(--accent-tint) 60%, transparent);
   background: color-mix(in srgb, var(--accent-tint) 9%, var(--paper));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
@@ -300,9 +453,30 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+/* Reduced motion: only border-color keeps a (subtle, non-transform) transition;
+   this shorthand replaces the base list, so --accent-tint/--accent-on also
+   drop their ease here and land instantly at the correct value. */
 @media (prefers-reduced-motion: reduce) {
   .row {
     transition: border-color var(--dur-base) var(--ease);
+  }
+}
+
+/* One-time entrance for a row that's genuinely new to the list (a filter
+   pick or "show all" — see `useNewlyVisibleSlugs`), staggered via
+   `--row-fade-delay`. Applied to the SAME `<button>` that renders every
+   other row — never a different wrapper element — so the row's identity at
+   its React key never changes; if it did, the node would remount on exactly
+   the render that flips this class off (selection), stealing DOM focus off
+   the tab a keyboard user just activated. The class is removed on the next
+   render (once the row folds into `seenSlugs`), which simply drops the
+   already-finished animation, no replay. First-paint rows never get this
+   class — the parent `Reveal` already owns first-paint entrance. */
+@media (prefers-reduced-motion: no-preference) {
+  .rowEntering {
+    animation: qpGridIn var(--dur-base) var(--ease-out);
+    animation-delay: var(--row-fade-delay, 0ms);
+    animation-fill-mode: both;
   }
 }
 
@@ -335,6 +509,20 @@
   color: var(--ink-60);
 }
 
+/* Self-view per-row status/visibility (SubprofileOwnerBadges, compact). */
+.rowBadges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 1px;
+}
+
+/* Always rendered (not conditional on selection) so it can animate between
+   states rather than pop in/out — a plain opacity/scale tween, no FLIP
+   needed for a handful of rows. `aria-selected` on the row itself is the
+   real, programmatic carrier of "which one is active"; this dot is a
+   decorative reinforcement (`aria-hidden`), never the only signal. */
 .rowActive {
   flex: none;
   margin-left: auto;
@@ -343,9 +531,25 @@
   border-radius: 50%;
   background: var(--accent-tint);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-tint) 22%, transparent);
+  opacity: 0;
+  transform: scale(0.4);
+}
+.rowActive[data-active="true"] {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rowActive {
+    transition:
+      opacity var(--dur-base) var(--ease),
+      transform var(--dur-base) var(--ease);
+  }
 }
 
 .more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   align-self: flex-start;
   margin-top: 2px;
   font-family: var(--sans);
@@ -355,12 +559,21 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px 2px;
-  transition: color var(--dur-base) var(--ease);
+  padding-block: 12px;
+  padding-inline: 2px;
+  touch-action: manipulation;
+  transition:
+    color var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .more:hover {
     color: var(--accent);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .more:active {
+    transform: scale(0.98);
   }
 }
 .more:focus-visible {
@@ -371,5 +584,141 @@
 @media (prefers-reduced-motion: reduce) {
   .more {
     transition: none;
+  }
+}
+
+/* ── Mobile accordion (SubprofileShowcaseMobile / SubprofileMobileRow) ─────── */
+/* Below 760px there is no hero/switch-list split — one column of rows, each
+   expanding in place to the full feature card. Stacked gap is tighter than
+   `--gap-grid` (the desktop hero-vs-list gap) since these rows are siblings
+   of the same kind, not distinct regions. */
+
+.mobileAccordion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.mobileRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileSummary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  text-align: left;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  color: var(--ink);
+  font-family: var(--sans);
+  cursor: pointer;
+  touch-action: manipulation;
+  /* --accent-tint/--accent-on: same sanctioned @property color-transition
+     exception used by `.feature`/`.row` above. */
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    --accent-tint var(--dur-base) var(--ease-std),
+    --accent-on var(--dur-base) var(--ease-std);
+}
+@media (hover: hover) {
+  .mobileSummary:hover {
+    border-color: color-mix(in srgb, var(--accent-tint) 40%, transparent);
+    background: color-mix(in srgb, var(--accent-tint) 5%, var(--paper));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mobileSummary:active {
+    transform: scale(0.98);
+  }
+}
+.mobileRow[data-expanded="true"] .mobileSummary {
+  border-color: color-mix(in srgb, var(--accent-tint) 60%, transparent);
+  background: color-mix(in srgb, var(--accent-tint) 9%, var(--paper));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
+}
+.mobileSummary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobileSummary {
+    transition: border-color var(--dur-base) var(--ease);
+  }
+}
+
+.mobileSummaryAvatar {
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-tint) 30%, var(--paper));
+}
+
+.mobileSummaryMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.mobileSummaryName {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileSummaryMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mobileSummaryKind {
+  font-size: 0.76rem;
+  color: var(--ink-60);
+}
+
+/* Self-view status/visibility, shown compact right in the collapsed summary
+   (SubprofileOwnerBadges) — same pattern as `.rowBadges` on desktop. */
+.mobileSummaryBadges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+/* Detail region: mounted only while expanded (see SubprofileMobileRow), so
+   there is no height to animate — just a fade/translate reveal on mount,
+   transform/opacity only, dropped entirely under reduced motion. */
+.mobileDetail {
+  margin-top: var(--gap-xs);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .mobileDetail {
+    animation: qpMobileDetailIn var(--dur-base) var(--ease-out);
+  }
+}
+@keyframes qpMobileDetailIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

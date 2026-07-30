@@ -394,6 +394,8 @@ export interface ForumThreadResponse {
 export interface ForumPostResponse {
   id: string;
   threadId: string;
+  /** Parent comment id, or null for a top-level comment (reply to the thread/OP). */
+  parentPostId: string | null;
   author: AuthorSummary;
   body: string;
   voteCount: number;

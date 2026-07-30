@@ -70,6 +70,11 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> mencionou o teu tópico t/{entityRef}.",
   "type.mention.thread.meta": "Menção de tópico",
 
+  "type.forum_reply.text": "Alguém respondeu ao teu comentário.",
+  "type.forum_reply.textNamed":
+    "<profile>{name}</profile> respondeu ao teu comentário.",
+  "type.forum_reply.meta": "Resposta",
+
   "type.event_invite.text": "Tens um convite para um convívio.",
   "type.event_invite.textNamed":
     "<profile>{name}</profile> convidou-te para um convívio.",

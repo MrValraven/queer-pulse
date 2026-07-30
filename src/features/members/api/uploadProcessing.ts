@@ -73,6 +73,13 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // Listing gallery photo — landscape, matches the "≥1200px wide · under 5MB" hint.
+  "listing-photo": {
+    maxBytes: 5 * MB,
+    maxLabel: "5 MB",
+    minWidth: 1200,
+    minHeight: 600,
+  },
 };
 
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */

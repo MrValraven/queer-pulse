@@ -52,8 +52,6 @@ export const admin: Catalog = {
     "Nada está sinalizado como urgente — trabalha a fila ao teu ritmo. Estás a manter toda a rede estável.",
   "dashboard.header.subClear":
     "Cada item aberto tem uma decisão humana associada. Vai descansar — a rede está segura nas tuas mãos.",
-  "dashboard.header.digestCta": "Resumo semanal",
-  "dashboard.header.digestToast": "O resumo semanal abriria num novo separador",
   "dashboard.header.moderationCta": "Abrir moderação",
 
   "dashboard.metrics.activeMembers.label": "Pessoas ativas",
@@ -331,7 +329,8 @@ export const admin: Catalog = {
   "adminSafeSpaces.status.removed": "Removido",
   "adminSafeSpaces.markCta": "Marcar como espaço seguro",
   "adminSafeSpaces.unmarkCta": "Desmarcar",
-  "adminSafeSpaces.editCta": "Editar perfil",
+  "adminSafeSpaces.viewCta": "Ver página",
+  "adminSafeSpaces.editCta": "Editar espaço seguro",
   "adminSafeSpaces.toast.marked": "{name} foi marcado como espaço seguro",
   "adminSafeSpaces.toast.unmarked": "{name} foi desmarcado como espaço seguro",
 
@@ -1422,4 +1421,114 @@ export const admin: Catalog = {
   "housingRequests.householdSize": "{size} no agregado",
   "housingRequests.declineCta": "Recusar",
   "housingRequests.acceptCta": "Aceitar",
+
+  // ── Roteiro (/admin/roadmap) — quadro, fila de ideias, estatísticas ────────
+  "roadmap.title": "Roteiro · <em>o que vem a seguir</em>",
+  "roadmap.header.eyebrow": "Roteiro",
+  "roadmap.header.title": "Molda o <em>roteiro</em>",
+  "roadmap.header.sub":
+    "Gere o quadro lançado/em construção/planeado, tria ideias de membros e edita as estatísticas da página pública.",
+  "roadmap.loading": "A carregar o roteiro…",
+  "roadmap.tabs.board": "Quadro",
+  "roadmap.tabs.ideas": "Ideias",
+  "roadmap.tabs.heroStats": "Estatísticas",
+
+  // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
+  // AdminRoadmapItemModalFields.tsx — o quadro lançado/em construção/planeado.
+  "roadmap.board.column.shipped": "Lançado",
+  "roadmap.board.column.building": "Em construção",
+  "roadmap.board.column.planned": "Planeado",
+  "roadmap.board.empty": "Ainda não há nada nesta coluna.",
+  "roadmap.board.addItemCta": "Adicionar item",
+  "roadmap.board.toast.removed": "{name} foi removido do roteiro.",
+  "roadmap.board.toast.updated": "{name} foi guardado.",
+  "roadmap.board.toast.created": "{name} foi adicionado ao roteiro.",
+  "roadmap.board.delete.title": "Remover {name}?",
+  "roadmap.board.delete.body":
+    "Isto remove-o do roteiro definitivamente — deixa de aparecer em qualquer coluna.",
+  "roadmap.board.delete.confirmCta": "Remover item",
+  "roadmap.board.modal.createEyebrow": "Novo item",
+  "roadmap.board.modal.editEyebrow": "Editar item",
+  "roadmap.board.modal.createTitle": "Adicionar um item ao roteiro",
+  "roadmap.board.modal.createCta": "Adicionar item",
+  "roadmap.board.field.column": "Coluna",
+  "roadmap.board.field.category": "Categoria",
+  "roadmap.board.field.name": "Nome",
+  "roadmap.board.field.description": "Descrição",
+  "roadmap.board.field.date": "Data",
+  "roadmap.board.field.date.placeholder": "ex.: julho de 2026",
+  "roadmap.board.field.requested.title": "Pedido por membros",
+  "roadmap.board.field.requested.sub":
+    'Mostra a etiqueta "Pedido por membros" no cartão público.',
+  "roadmap.board.field.stage": "Fase",
+  "roadmap.board.field.stage.placeholder": "ex.: Em desenho",
+  "roadmap.board.field.eta": "Previsão",
+  "roadmap.board.field.eta.placeholder": "ex.: T4 2026",
+  "roadmap.board.field.progress": "Progresso (%)",
+  "roadmap.board.field.votes": "Votos iniciais",
+  "roadmap.board.field.hot.title": "Mais pedido",
+  "roadmap.board.field.hot.sub":
+    "Destaca este item como o mais pedido na página pública.",
+  "roadmap.board.item.etaLabel": "Previsão {eta}",
+  "roadmap.board.item.progressLabel": "{progress}% concluído",
+  "roadmap.board.item.votesLabel": "{votes} votos",
+  "roadmap.board.item.liveVotesLabel": "{count} ao vivo",
+  "roadmap.board.item.moveUpAriaLabel": "Mover {name} para cima",
+  "roadmap.board.item.moveDownAriaLabel": "Mover {name} para baixo",
+  "roadmap.board.item.requestedTag": "Pedido por membros",
+  "roadmap.board.item.hotTag": "Mais pedido",
+
+  // AdminRoadmapIdeasQueue.tsx, AdminRoadmapIdeaRows.tsx — triagem de ideias
+  // submetidas por membros + a lista publicada que a página pública lê.
+  "roadmap.ideas.pending.title": "Por rever",
+  "roadmap.ideas.pending.empty": "Nada à espera — todas as ideias foram triadas.",
+  "roadmap.ideas.published.title": "Publicadas",
+  "roadmap.ideas.published.empty": "Ainda não há nada publicado.",
+  "roadmap.ideas.fromMemberTag": "De um membro",
+  "roadmap.ideas.submittedLabel": "Submetida a {date}",
+  "roadmap.ideas.promoteCta": "Promover",
+  "roadmap.ideas.dismissCta": "Rejeitar",
+  "roadmap.ideas.addPlaceholder": "Adicionar uma ideia à lista publicada…",
+  "roadmap.ideas.addAriaLabel": "Texto da nova ideia",
+  "roadmap.ideas.addCta": "Adicionar ideia",
+  "roadmap.ideas.moveUpAriaLabel": 'Mover "{text}" para cima',
+  "roadmap.ideas.moveDownAriaLabel": 'Mover "{text}" para baixo',
+  "roadmap.ideas.editAriaLabel": 'Editar "{text}"',
+  "roadmap.ideas.tallyLabel_one": "{count} voto",
+  "roadmap.ideas.tallyLabel_other": "{count} votos",
+  "roadmap.ideas.toast.promoted": "Ideia promovida para a lista publicada.",
+  "roadmap.ideas.toast.dismissed": "Ideia rejeitada.",
+  "roadmap.ideas.toast.removed": "Ideia removida.",
+  "roadmap.ideas.toast.updated": "Ideia guardada.",
+  "roadmap.ideas.toast.added": "Ideia adicionada.",
+  // Diálogo de confirmação partilhado (IdeaQueueConfirmModal) — `kind` é
+  // "dismiss" ou "delete", interpolado na chave (`roadmap.ideas.${kind}.*`).
+  "roadmap.ideas.dismiss.title": "Rejeitar esta ideia?",
+  "roadmap.ideas.dismiss.body":
+    "Sai da fila de pendentes sem ser publicada. A pessoa que a submeteu não é notificada.",
+  "roadmap.ideas.dismiss.confirmCta": "Rejeitar ideia",
+  "roadmap.ideas.delete.title": "Remover esta ideia?",
+  "roadmap.ideas.delete.body":
+    "Isto remove-a da página pública do roteiro definitivamente.",
+  "roadmap.ideas.delete.confirmCta": "Remover ideia",
+
+  // AdminRoadmapHeroStats.tsx — lista editável de estatísticas do hero público.
+  "roadmap.heroStats.empty":
+    "Ainda não há estatísticas — adiciona uma abaixo ou preenche a partir das contagens.",
+  "roadmap.heroStats.autofillCta": "Preencher a partir das contagens",
+  "roadmap.heroStats.addCta": "Adicionar estatística",
+  "roadmap.heroStats.removeRowCta": "Remover",
+  "roadmap.heroStats.labelPlaceholder": "ex.: 12 lançados este ano",
+  "roadmap.heroStats.labelAriaLabel": "Texto da estatística",
+  "roadmap.heroStats.moveUpAriaLabel": "Mover estatística para cima",
+  "roadmap.heroStats.moveDownAriaLabel": "Mover estatística para baixo",
+  "roadmap.heroStats.jadeToggle.title": "Destacar em jade",
+  "roadmap.heroStats.toast.saved": "Estatísticas guardadas.",
+  // Etiquetas de preenchimento automático — "lançado"/"planeado" concordam em
+  // número (_one/_other); "em curso" é invariável, por isso fica só a chave base.
+  "roadmap.heroStats.autofill.shipped_one": "{count} lançado",
+  "roadmap.heroStats.autofill.shipped_other": "{count} lançados",
+  "roadmap.heroStats.autofill.building": "{count} em curso",
+  "roadmap.heroStats.autofill.planned_one": "{count} planeado",
+  "roadmap.heroStats.autofill.planned_other": "{count} planeados",
 };

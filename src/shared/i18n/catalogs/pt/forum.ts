@@ -157,6 +157,14 @@ export const forum: Catalog = {
   "replies.loadingMore": "A carregar…",
   "replies.loadMoreCta": "Carregar mais respostas",
 
+  // ── Respostas encadeadas (ação responder + recolher/expandir + continuar) ─
+  "replies.reply": "Responder",
+  "replies.collapseAria": "Recolher conversa",
+  "replies.expandAria": "Expandir conversa",
+  "replies.continueThread": "Continuar esta conversa ({count})",
+  "replies.hiddenCount_one": "{count} resposta escondida",
+  "replies.hiddenCount_other": "{count} respostas escondidas",
+
   // ── ForumAuthor ─────────────────────────────────────────────────────────
   "author.officialTitle": "Conta oficial do QueerPulse",
   "author.officialBadge": "Oficial",

@@ -9,6 +9,7 @@ import {
   langLabel,
   PRICES,
   type ListingDraft,
+  type PhotoKey,
 } from "./listBusiness.data";
 import { ListBusinessFullPreview } from "./ListBusinessFullPreview";
 import styles from "./ListBusinessPage.module.css";
@@ -25,9 +26,11 @@ function hoursLine(draft: ListingDraft): string | null {
 export function ListBusinessPreview({
   draft,
   userName,
+  photoPreviews,
 }: {
   draft: ListingDraft;
   userName: string;
+  photoPreviews: Record<PhotoKey, string>;
 }) {
   const { t } = useTranslation();
   const [showFull, setShowFull] = useState(false);
@@ -210,6 +213,7 @@ export function ListBusinessPreview({
         <ListBusinessFullPreview
           draft={draft}
           userName={userName}
+          photoPreviews={photoPreviews}
           onClose={() => setShowFull(false)}
         />
       )}

@@ -1,21 +1,38 @@
-import { useMemo, useState } from "react";
-import { Avatar } from "../../shared/components/ui";
-import { initialsFromName } from "../../shared/lib/initials";
+import { useMemo, useState, type KeyboardEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { SubprofileFilterChips } from "./SubprofileFilterChips";
+import { SubprofileSwitchHeader } from "./SubprofileSwitchHeader";
+import { SubprofileSwitchRow } from "./SubprofileSwitchRow";
+import { useNewlyVisibleSlugs } from "./useNewlyVisibleSlugs";
 import type { SubprofileKind } from "./api/subprofiles.api";
-import type { PublicSubprofileView } from "./api/subprofiles.adapters";
+import type {
+  PublicSubprofileView,
+  SubprofileOwnerMeta,
+} from "./api/subprofiles.adapters";
 import styles from "./SubprofileShowcase.module.css";
 
+/** A row genuinely appearing for the first time (never rendered by this list
+ *  before, per `useNewlyVisibleSlugs`) gets a small staggered reveal (capped
+ *  so a long list doesn't crawl in) when it's newly shown by a filter pick
+ *  or "show all". Rows already on screen never re-animate, and first paint
+ *  never uses this at all — `SubprofileShowcase` already sits inside the
+ *  profile page's section-level `Reveal`, so animating rows again on mount
+ *  would be a double entrance. */
+const STAGGER_STEP_MS = 60;
+const STAGGER_CAP = 8;
+
 /**
- * The list beside the featured hero. Each row is a toggle that previews its
- * persona into the hero (it does not navigate — the hero is the one opener), so
- * this reads as a Slack/Figma-style identity switcher, not a wall of links.
+ * The list beside the featured hero — a vertical `tablist`: each row is a
+ * `tab` that previews its persona into the hero `tabpanel` (it does not
+ * navigate — the hero is the one opener), so this reads as a Slack/Figma-
+ * style identity switcher, not a wall of links. Roving tabindex: only the
+ * selected row is in the Tab order; Arrow/Home/End move both focus and
+ * selection among the currently visible rows.
  *
- * When `asIndex` is set (the owner has many personas), the list gains a craft
- * filter and collapses to `collapsedRows` with a "show all" toggle — the
- * research-backed way to scale past ~6 without resorting to tabs or a carousel.
+ * When `asIndex` is set (the owner has many personas), the list gains a
+ * craft filter (a separate `group`, not part of the tablist) and collapses
+ * to `collapsedRows` with a "show all" toggle — the research-backed way to
+ * scale past ~6 without resorting to tabs or a carousel.
  */
 export function SubprofileSwitchList({
   personas,
@@ -23,12 +40,28 @@ export function SubprofileSwitchList({
   onSelect,
   asIndex,
   collapsedRows,
+  heroId,
+  tabId,
+  isSelf = false,
+  ownerMetaBySlug,
 }: {
   personas: PublicSubprofileView[];
   activeSlug: string;
   onSelect: (slug: string) => void;
   asIndex: boolean;
   collapsedRows: number;
+  /** Id of the hero panel every tab controls (`aria-controls`). */
+  heroId: string;
+  /** Derives a row's tab id from its persona slug — shared with the hero's
+   *  `aria-labelledby` so the two stay in lockstep. */
+  tabId: (slug: string) => string;
+  /** Self view: the header shows a count ("4 sides") instead of the generic
+   *  "More sides" label, gains an "Add another side" link, and each row
+   *  shows its status/visibility. `false` on the public path (the default). */
+  isSelf?: boolean;
+  /** Per-persona owner-only metadata (status/visibility), keyed by slug —
+   *  only ever passed in self view. */
+  ownerMetaBySlug?: Map<string, SubprofileOwnerMeta>;
 }) {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<SubprofileKind | "all">("all");
@@ -55,79 +88,90 @@ export function SubprofileSwitchList({
   const showToggle =
     asIndex && filter === "all" && personas.length > collapsedRows;
 
+  // Tells a row that's genuinely new to `visible` (never rendered by this
+  // list before) apart from one already on screen — see the hook doc for
+  // why that distinction matters for the stagger below.
+  const isNewRow = useNewlyVisibleSlugs(visible);
+
+  function selectFilter(nextFilter: SubprofileKind | "all") {
+    setFilter(nextFilter);
+    if (nextFilter !== "all") setExpanded(true);
+  }
+
+  function toggleExpanded() {
+    setExpanded((value) => !value);
+  }
+
+  // Roving-tabindex keyboard model: only the selected tab is reachable by
+  // Tab; Arrow/Home/End move both the DOM focus and the selection among the
+  // rows currently visible (matches the WAI-ARIA APG tablist "automatic
+  // activation" pattern — there's no separate activate step here, picking a
+  // row always previews it).
+  function handleTablistKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const currentIndex = visible.findIndex((persona) => persona.slug === activeSlug);
+    if (currentIndex === -1) return;
+
+    let nextIndex: number;
+    switch (event.key) {
+      case "ArrowDown":
+        nextIndex = Math.min(currentIndex + 1, visible.length - 1);
+        break;
+      case "ArrowUp":
+        nextIndex = Math.max(currentIndex - 1, 0);
+        break;
+      case "Home":
+        nextIndex = 0;
+        break;
+      case "End":
+        nextIndex = visible.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    const nextPersona = visible[nextIndex];
+    if (!nextPersona || nextPersona.slug === activeSlug) return;
+    onSelect(nextPersona.slug);
+    document.getElementById(tabId(nextPersona.slug))?.focus();
+  }
+
   return (
     <div className={styles.switcher}>
-      <p className={styles.switchHead}>{t("subprofiles:alsoAs.switchLabel")}</p>
+      <SubprofileSwitchHeader count={personas.length} isSelf={isSelf} />
 
       {asIndex && kinds.length > 1 && (
-        <div
-          className={styles.filters}
-          role="group"
-          aria-label={t("subprofiles:alsoAs.filterLabel")}
-        >
-          <button
-            type="button"
-            className={styles.chip}
-            aria-pressed={filter === "all"}
-            onClick={() => setFilter("all")}
-          >
-            {t("subprofiles:alsoAs.filterAll")}
-          </button>
-          {kinds.map((kind) => (
-            <button
-              key={kind}
-              type="button"
-              className={styles.chip}
-              aria-pressed={filter === kind}
-              onClick={() => {
-                setFilter(kind);
-                setExpanded(true);
-              }}
-            >
-              {t(KIND_LABEL_KEYS[kind])}
-            </button>
-          ))}
-        </div>
+        <SubprofileFilterChips
+          kinds={kinds}
+          filter={filter}
+          onSelect={selectFilter}
+        />
       )}
 
       <div
         className={styles.switchList}
-        role="group"
+        role="tablist"
+        aria-orientation="vertical"
         aria-label={t("subprofiles:alsoAs.previewLabel")}
+        onKeyDown={handleTablistKeyDown}
       >
-        {visible.map((persona) => {
-          const accent = persona.accent ?? DEFAULT_ACCENT;
-          const { tint, on } = ACCENT_TOKENS[accent];
-          const isSelected = persona.slug === activeSlug;
-          return (
-            <button
-              key={persona.slug}
-              type="button"
-              className={styles.row}
-              aria-pressed={isSelected}
-              style={{
-                ["--accent-tint" as string]: tint,
-                ["--accent-on" as string]: on,
-              }}
-              onClick={() => onSelect(persona.slug)}
-            >
-              <Avatar
-                initials={initialsFromName(persona.displayName, "?")}
-                src={persona.avatarUrl ?? undefined}
-                tint="plum"
-                size={38}
-                className={styles.rowAvatar}
-              />
-              <span className={styles.rowMain}>
-                <span className={styles.rowName}>{persona.displayName}</span>
-                <span className={styles.rowKind}>
-                  {t(KIND_LABEL_KEYS[persona.kind])}
-                </span>
-              </span>
-              {isSelected && <span className={styles.rowActive} aria-hidden />}
-            </button>
-          );
-        })}
+        {visible.map((persona, index) => (
+          <SubprofileSwitchRow
+            key={persona.slug}
+            persona={persona}
+            isSelected={persona.slug === activeSlug}
+            heroId={heroId}
+            tabId={tabId}
+            onSelect={onSelect}
+            status={ownerMetaBySlug?.get(persona.slug)?.status}
+            visibility={ownerMetaBySlug?.get(persona.slug)?.visibility}
+            staggerDelay={
+              isNewRow(persona.slug)
+                ? Math.min(index, STAGGER_CAP) * STAGGER_STEP_MS
+                : undefined
+            }
+          />
+        ))}
       </div>
 
       {showToggle && (
@@ -135,7 +179,7 @@ export function SubprofileSwitchList({
           type="button"
           className={styles.more}
           aria-expanded={expanded}
-          onClick={() => setExpanded((value) => !value)}
+          onClick={toggleExpanded}
         >
           {expanded
             ? t("subprofiles:alsoAs.showFewer")

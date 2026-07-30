@@ -133,14 +133,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.community.col.gather.events",
             href: routes.events,
           },
-          {
-            labelKey: "nav:calendar",
-            href: `${routes.events}?view=calendar`,
-          },
-          {
-            labelKey: "shared:megaNav.community.col.gather.hostGathering",
-            href: routes.host,
-          },
           { labelKey: "nav:communities", href: routes.communities },
         ],
       },
@@ -189,10 +181,6 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
             href: routes.directory,
             featured: true,
-          },
-          {
-            labelKey: "shared:megaNav.lisbon.col.discover.spacesMap",
-            href: `${routes.directory}?view=map`,
           },
           {
             labelKey: "shared:megaNav.lisbon.col.discover.safeSpaces",

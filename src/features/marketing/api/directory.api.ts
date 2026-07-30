@@ -1,5 +1,9 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
 import type { HoursType, Owner, Review, Tint } from "../directoryPlaces";
+import type { DayHours, PhotoKey } from "../listBusiness/listBusiness.data";
+
+/** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
+export type PhotoSetView = Record<PhotoKey, string | null>;
 
 /**
  * A directory grid card from the public `GET /directory` endpoint. Mirrors the
@@ -59,6 +63,10 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   reviews: Review[];
   /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`. */
   upcoming: { startAt: string; title: string }[];
+  photos: PhotoSetView;
+  alt: Record<PhotoKey, string>;
+  hours: Record<string, DayHours>;
+  langs: string[];
 }
 
 /**

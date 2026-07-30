@@ -184,19 +184,31 @@ export const system: Catalog = {
   "interestsEditor.options.techWork": "Tecnologia e trabalho",
   "interestsEditor.options.wellbeing": "Bem-estar",
 
-  // ── InviteExpiredPage.tsx ─────────────────────────────────────────────────
-  "inviteExpired.eyebrow": "Convite expirado",
-  "inviteExpired.heading": "Esta ligação <em>expirou.</em>",
-  "inviteExpired.lead":
-    "Os convites ficam válidos durante 14 dias. O teu foi enviado há algum tempo, por isso o lugar que reservámos para ti voltou para a bolsa geral.",
-  "inviteExpired.details.invitedAs": "Convite para",
-  "inviteExpired.details.sent": "Enviado",
-  "inviteExpired.details.expired": "Expirado",
-  "inviteExpired.details.vouchedBy": "Aval de",
-  "inviteExpired.actions.resendCta": "Pedir a {name} para reenviar →",
-  "inviteExpired.actions.freshInviteCta": "Pedir um novo convite",
-  "inviteExpired.foot.alreadyMember": "Já és da comunidade? <a>Entrar</a>",
-  "inviteExpired.foot.needHelp": "Precisas de ajuda? <a>Falar com a equipa</a>",
+  // ── InviteExpiredPage.tsx (estado do convite: expirado / usado / cancelado / inválido) ─
+  "inviteState.expired.eyebrow": "Convite expirado",
+  "inviteState.expired.heading": "Esta ligação <em>expirou.</em>",
+  "inviteState.expired.lead":
+    "Os convites ficam válidos durante algum tempo, e o teu foi enviado há demasiado tempo — por isso o lugar que reservámos para ti voltou para a bolsa geral. A forma mais rápida de entrar é um novo empurrão de quem te avalizou.",
+  "inviteState.used.eyebrow": "Convite já usado",
+  "inviteState.used.heading": "Este convite <em>já foi aberto.</em>",
+  "inviteState.used.lead":
+    "Alguém já entrou com esta ligação — muito provavelmente tu, noutro dispositivo. Se foste tu, é só entrar. Se não foste, avisa a equipa e nós vamos verificar.",
+  "inviteState.revoked.eyebrow": "Convite retirado",
+  "inviteState.revoked.heading": "Este convite foi <em>anulado.</em>",
+  "inviteState.revoked.lead":
+    "Quem enviou este convite, ou um moderador da comunidade, retirou-o antes de ser usado. Não faz mal — podes pedir um novo sempre que quiseres.",
+  "inviteState.notFound.eyebrow": "Convite não encontrado",
+  "inviteState.notFound.heading": "Não conseguimos <em>reconhecer esta ligação.</em>",
+  "inviteState.notFound.lead":
+    "Esta ligação de convite não corresponde a nada do nosso lado. Pode ter sido mal copiada ou cortada ao ser partilhada. Pede um novo convite e nós tratamos de te pôr lá dentro.",
+  "inviteState.details.expiredOn": "Expirou",
+  "inviteState.details.vouchedBy": "Aval de",
+  "inviteState.actions.resend": "Pedir a {name} para reenviar →",
+  "inviteState.actions.requestNew": "Pedir um novo convite",
+  "inviteState.actions.signIn": "Entrar",
+  "inviteState.actions.contact": "Falar com a equipa",
+  "inviteState.foot.alreadyMember": "Já és da comunidade? <a>Entrar</a>",
+  "inviteState.foot.needHelp": "Precisas de ajuda? <a>Falar com a equipa</a>",
 
   // ── InviteLandingPage.tsx / InviteLandingViews.tsx / inviteLanding.data.ts ─
   "inviteLanding.loader.verifying": "A verificar o teu código de convite…",

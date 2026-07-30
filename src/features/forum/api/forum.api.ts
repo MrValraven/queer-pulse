@@ -53,9 +53,18 @@ export interface CreateThreadDto {
 export const createThread = (dto: CreateThreadDto) =>
   apiPost<ForumThreadResponse>("/forum/threads", dto);
 
-/** POST /forum/threads/:slug/posts — ThreadComposer reply. */
-export const replyToThread = (slug: string, body: string) =>
-  apiPost<ForumPostResponse>(`/forum/threads/${slug}/posts`, { body });
+/** POST /forum/threads/:slug/posts — ThreadComposer reply. `parentPostId`
+ *  nests the reply under an existing post (nested-replies feature); omitted
+ *  (or null) for a top-level reply to the thread. */
+export const replyToThread = (
+  slug: string,
+  body: string,
+  parentPostId?: string | null,
+) =>
+  apiPost<ForumPostResponse>(`/forum/threads/${slug}/posts`, {
+    body,
+    ...(parentPostId ? { parentPostId } : {}),
+  });
 
 /** POST /forum/posts/:id/vote — upvote toggle. `value` is +1 / 0. */
 export const votePost = (id: string, value: number) =>

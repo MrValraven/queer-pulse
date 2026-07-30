@@ -136,7 +136,7 @@ export function overviewToMetrics(
       ...ACTIVE_MEMBERS_FIXTURE,
       value: dto.stats.activeMembers.value,
       trend: activeMembersTrend(dto.stats.activeMembers.growthPercent, fmt),
-      footValues: { count: dto.stats.activeMembers.netNewThisWeek },
+      footValues: { count: dto.stats.activeMembers.netNewThisMonth },
     },
     {
       ...OPEN_REPORTS_FIXTURE,

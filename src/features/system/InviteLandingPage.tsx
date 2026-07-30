@@ -81,7 +81,7 @@ export function InviteLandingPage() {
 
   // Bad, used, expired or revoked code → the expired/invalid screen.
   if (isError || !invite || invite.status !== "valid")
-    return <InviteExpiredPage />;
+    return <InviteExpiredPage invite={invite ?? undefined} />;
 
   if (joined) return <OnboardingPage />;
 

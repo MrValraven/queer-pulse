@@ -77,11 +77,31 @@
     transform var(--dur-slow) var(--ease),
     box-shadow var(--dur-slow) var(--ease);
 }
-/* Crossfade context: the outgoing member dissolves over the incoming one. */
+/* Native horizontal scroll-snap carousel. The finger-follow + snap runs on the
+   browser's compositor — every member is a real, equal-height slide in normal
+   flow, so nothing is recreated or resized as you swipe (no flicker, no shift).
+   `overflow-y: hidden` means a vertical drag scrolls the page, not the card. */
 .spot {
   position: relative;
   flex: 1;
   display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge */
+}
+.spot::-webkit-scrollbar {
+  display: none; /* WebKit — the dots are the affordance */
+}
+.slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 /* Photo-forward split: big portrait | content. */
 .face {
@@ -93,22 +113,6 @@
 @media (max-width: 560px) {
   .face {
     grid-template-columns: 1fr;
-  }
-}
-/* Outgoing member sits on top and fades away, revealing the new one beneath. */
-.spotOverlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  pointer-events: none;
-  animation: faceOut var(--dur-base) var(--ease-std) both;
-}
-@keyframes faceOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
   }
 }
 /* Rotation indicators / manual controls */
@@ -283,8 +287,16 @@
   color: var(--ink-60);
   margin: 16px 0 0;
   max-width: 42ch;
-  /* Hold ~2 lines so the card doesn't jump as the spotlight rotates. */
-  min-height: 3em;
+  /* Fixed 3-line box so EVERY member's card is the same height. Quotes vary
+     from ~2 to ~4 lines; without this the card resizes as the spotlight
+     rotates — or, more visibly, as a swipe commits to a different-height
+     member — repositioning the content beneath it. */
+  min-height: calc(1.5em * 3);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
 }
 .featTags {
   margin-top: 16px;

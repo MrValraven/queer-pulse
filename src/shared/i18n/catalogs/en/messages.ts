@@ -169,7 +169,9 @@ export const messages: Catalog = {
 
   // Forward picker (NewMessageModal, forward mode)
   "forward.title": "Forward to…",
-  "forward.sub": "Pick a connection to forward this message to.",
+  "forward.sub": "Pick a connection or group to forward this message to.",
+  "forward.sectionPeople": "People",
+  "forward.sectionGroups": "Groups",
 
   // Starred messages view (StarredMessagesModal)
   "starred.title": "Starred messages",

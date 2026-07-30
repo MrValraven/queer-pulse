@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { useState } from "react";
 import { expect, it } from "vitest";
 import { Composer } from "./Composer";
 import type { Conversation } from "./data";
@@ -7,20 +6,9 @@ import type { Conversation } from "./data";
 const convo = { id: "c1", name: "Alina C.", initials: "AC", tint: "plum" } as Conversation;
 
 it("grows the textarea height with content", () => {
-  const Wrapper = () => {
-    const [draft, setDraft] = useState("");
-    return (
-      <Composer
-        active={convo}
-        conversationId={convo.id}
-        draft={draft}
-        onDraftChange={setDraft}
-        onSend={() => {}}
-        blocked={false}
-      />
-    );
-  };
-  render(<Wrapper />);
+  // The composer owns its own draft text now (no controlled `draft`/
+  // `onDraftChange` props) — nothing to seed from a wrapper.
+  render(<Composer active={convo} conversationId={convo.id} onSend={() => {}} blocked={false} />);
   const textarea = screen.getByRole("textbox");
   // jsdom reports scrollHeight 0; assert the handler sets an explicit inline height.
   Object.defineProperty(textarea, "scrollHeight", { value: 84, configurable: true });

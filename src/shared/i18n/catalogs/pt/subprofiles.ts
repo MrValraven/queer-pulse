@@ -24,7 +24,7 @@ export const subprofiles: Catalog = {
   "directory.tagFilterLabel": "Filtrar por tag",
 
   // Afinidades do cartão do diretório (SubprofileCard)
-  "card.openToCollabs": "Aberto a colaborações",
+  "card.openToCollabs": "Aberto a colaborar",
   "card.linkCount_one": "{count} link",
   "card.linkCount_other": "{count} links",
   "card.view": "Ver",
@@ -34,17 +34,25 @@ export const subprofiles: Catalog = {
   "alsoAs.subtitlePublic": "Personas profissionais ligadas a este perfil.",
   "alsoAs.subtitleSelf": "As personas profissionais que ligaste aqui.",
   "alsoAs.subtitleEmpty": "Outro lado do teu trabalho pode viver aqui.",
-  "alsoAs.manage": "Gerir subperfis →",
-  "alsoAs.viewPersona": "Ver persona",
-  "alsoAs.switchLabel": "Trocar pré-visualização",
-  "alsoAs.previewLabel": "Pré-visualizar outra persona",
+  "alsoAs.viewPersona": "Visitar",
+  "alsoAs.switchLabel": "Outros lados",
+  "alsoAs.previewLabel": "Ver outro lado",
+  "alsoAs.count_one": "{count} lado",
+  "alsoAs.count_other": "{count} lados",
+  "alsoAs.announce": "A mostrar {name}",
+  "alsoAs.featuredEyebrow": "Destaque",
+  "alsoAs.addAnother": "Adicionar outro lado",
+  "alsoAs.edit": "Editar",
+  "alsoAs.moveUp": "Mover para cima",
+  "alsoAs.moveDown": "Mover para baixo",
+  "alsoAs.expandCard": "Ver detalhes",
   "alsoAs.filterLabel": "Filtrar por ofício",
   "alsoAs.filterAll": "Todas",
   "alsoAs.showAll": "Ver todas (mais {count})",
   "alsoAs.showFewer": "Ver menos",
-  "alsoAs.empty.title": "Adiciona um subperfil profissional",
+  "alsoAs.empty.title": "Mostra mais do que <em>fazes</em>",
   "alsoAs.empty.description":
-    "Mostra outro lado do teu trabalho — a tua música, o teu código, a tua escrita — ligado aqui ou por si só.",
+    "A tua música, o teu código, a tua escrita — ligado aqui ou por si só.",
   "alsoAs.empty.cta": "Criar um subperfil",
 
   // Navegação + paleta de comandos
@@ -367,13 +375,31 @@ export const subprofiles: Catalog = {
   "newModal.toastError":
     "Não conseguimos começar essa agora — tenta outra vez.",
 
+  // Duplicar uma persona — seletor de método inicial (StartMethodPicker) e
+  // seletor de fonte/modo de cópia (CopySourcePicker, CopyModePreview),
+  // usados no fluxo de criação quando já existem outras personas.
+  "start.label": "Como queres começar?",
+  "start.helper": "Escolhe um ponto de partida — depois podes mudar tudo.",
+  "start.copyDisabledHelper":
+    "Cria primeiro uma persona para depois a poderes copiar aqui.",
+  "start.template": "A partir de um modelo",
+  "start.blank": "Em branco",
+  "start.copy": "Copiar uma existente",
+  "copy.noSources": "Ainda não tens nenhuma persona para copiar.",
+  "copy.sourceLabel": "Escolhe uma persona para copiar",
+  "copy.modeLabel": "O que copiar",
+  "copy.modeFull": "Tudo",
+  "copy.modeContent": "Só o conteúdo",
+  "copy.summaryCounts": "{items} itens · {links} links",
+  "copy.summaryAffiliations": "{affiliations} afiliações",
+  "copy.summaryIdentity": "· mais nome, biografia e estilo",
+  "copy.summaryNoIdentity": "· identidade em branco",
+
   // Modelos iniciais (Fase 4a) — seletor no momento de criação
   // (NewSubprofileModal) e o botão "Inserir exemplos" no editor
   // (SubprofileSectionEditor). O texto dos exemplos lê-se como um
   // preenchimento simpático e editável — a ideia é que a pessoa o substitua
   // pelo seu próprio trabalho, não que o mantenha tal como está.
-  "template.startFromTemplate": "Começar a partir de um modelo",
-  "template.startBlank": "Começar do zero",
   "template.helper":
     "Os modelos preenchem as tuas secções com alguns exemplos e sugerem uma frase de apresentação — tudo pode ser editado ou apagado.",
   "template.insertExamples": "Inserir exemplos",

@@ -77,12 +77,17 @@ select {
 }
 
 /* Drop the legacy ~300ms tap delay and double-tap-to-zoom on interactive
-   controls (page pinch-zoom is unaffected — that's why this isn't blanket). */
+   controls (page pinch-zoom is unaffected — that's why this isn't blanket).
+   Also drop the default grey/blue tap-highlight box: it's mis-clipped on any
+   rounded control (a pill button, a bubble, a card row) and every one of
+   these already ships its own `:active`/`:hover` press feedback, so the UA
+   highlight only ever fights it, never adds anything. */
 button,
 a,
 summary,
 [role="button"] {
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Centered content wrapper used by every section */

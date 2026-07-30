@@ -3,6 +3,10 @@ import { FiArrowUp, FiStar, FiZap } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { BuildingItem, PlannedItem, ShippedItem } from "./roadmap.data";
+import {
+  useMyRoadmapVotes,
+  useRoadmapVote,
+} from "./api/useRoadmapMutations";
 import styles from "./RoadmapPage.module.css";
 
 export function ShippedCard({ item }: { item: ShippedItem }) {
@@ -66,16 +70,26 @@ export function BuildingCard({ item }: { item: BuildingItem }) {
 export function PlannedCard({ item }: { item: PlannedItem }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [voted, setVoted] = useState(false);
+  const myVotes = useMyRoadmapVotes();
+  const { demoMode, vote: castVote } = useRoadmapVote();
+  const [justVoted, setJustVoted] = useState(false);
 
-  const count = item.votes + (voted ? 1 : 0);
+  const voted = justVoted || myVotes.has(item.id);
+  const count = item.votes + (demoMode && justVoted ? 1 : 0);
 
   function toggleVote() {
-    setVoted((prev) => {
-      if (!prev)
-        showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
-      return !prev;
-    });
+    if (voted) return;
+    setJustVoted(true);
+    showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
+    if (!demoMode) {
+      castVote(
+        { targetType: "item", targetId: item.id },
+        // Roll back the optimistic "voted" state on failure so the button
+        // re-enables and the member can retry (the global error toast
+        // already fires since this mutation doesn't set meta.silentError).
+        { onError: () => setJustVoted(false) },
+      );
+    }
   }
 
   return (
@@ -96,6 +110,7 @@ export function PlannedCard({ item }: { item: PlannedItem }) {
           className={`${styles.voteBtn} ${voted ? styles.voted : ""}`}
           onClick={toggleVote}
           aria-pressed={voted}
+          disabled={voted}
         >
           <FiArrowUp aria-hidden /> <span>{count}</span>{" "}
           {t("marketing:roadmap.card.votesSuffix")}

@@ -1,14 +1,14 @@
-import { lazy, Suspense, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button, FilterChips, Outro, Reveal } from "../../shared/components/ui";
+import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useLocalPlaces } from "./api/useLocalPlaces";
-import { filterLocalPlaces } from "./localPlaces";
+import { useDirectoryFilters } from "./useDirectoryFilters";
 import { LocalFilterBar } from "./LocalFilterBar";
+import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
 import { DirectoryListView } from "./DirectoryListView";
 import { MapLoading } from "./MapLoading";
 import s from "./DirectoryPage.module.css";
@@ -23,38 +23,26 @@ const DirectoryMapView = lazy(() =>
 
 export function DirectoryPage() {
   const { t } = useTranslation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const view = searchParams.get("view") === "map" ? "map" : "list";
   const places = useLocalPlaces();
   const loading = useSimulatedLoad();
-  const [category, setCategory] = useState("all");
-  const [query, setQuery] = useState("");
-  const [vibes, setVibes] = useState<string[]>([]);
-
-  const filtered = useMemo(
-    () => filterLocalPlaces(places, { category, query, vibes }),
-    [places, category, query, vibes],
-  );
-
-  function selectView(next: string) {
-    setSearchParams(
-      (current) => {
-        const params = new URLSearchParams(current);
-        if (next === "map") params.set("view", "map");
-        else params.delete("view");
-        return params;
-      },
-      { replace: false },
-    );
-  }
-
-  function toggleVibe(vibe: string) {
-    setVibes((current) =>
-      current.includes(vibe)
-        ? current.filter((entry) => entry !== vibe)
-        : [...current, vibe],
-    );
-  }
+  const {
+    view,
+    category,
+    query,
+    sort,
+    vibes,
+    filtered,
+    categoryCounts,
+    mappableCount,
+    activeFilters,
+    selectView,
+    setCategory,
+    setQuery,
+    setSort,
+    toggleVibe,
+    clearFilters,
+  } = useDirectoryFilters(places);
+  const hasActiveFilters = activeFilters.length > 0;
 
   return (
     <PageShell>
@@ -73,25 +61,27 @@ export function DirectoryPage() {
         </div>
       </PageHero>
 
-      <div className={s.viewToggle}>
-        <FilterChips
-          label={t("marketing:local.view.toggleAria")}
-          options={[
-            { value: "list", label: t("marketing:local.view.list") },
-            { value: "map", label: t("marketing:local.view.map") },
-          ]}
-          value={view}
-          onChange={selectView}
-        />
-      </div>
-
       <LocalFilterBar
         category={category}
         onCategoryChange={setCategory}
+        categoryCounts={categoryCounts}
         query={query}
         onQueryChange={setQuery}
         vibes={vibes}
         onToggleVibe={toggleVibe}
+      />
+
+      <DirectoryResultsHeader
+        shown={filtered.length}
+        total={places.length}
+        mappableCount={mappableCount}
+        loading={loading}
+        view={view}
+        onViewChange={selectView}
+        sort={sort}
+        onSortChange={setSort}
+        activeFilters={activeFilters}
+        onClearFilters={clearFilters}
       />
 
       {view === "list" ? (
@@ -99,10 +89,17 @@ export function DirectoryPage() {
           places={filtered}
           total={places.length}
           loading={loading}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={clearFilters}
         />
       ) : (
         <Suspense fallback={<MapLoading ready={false} />}>
-          <DirectoryMapView places={filtered} loading={loading} />
+          <DirectoryMapView
+            places={filtered}
+            loading={loading}
+            hasActiveFilters={hasActiveFilters}
+            onClearFilters={clearFilters}
+          />
         </Suspense>
       )}
 

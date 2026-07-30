@@ -45,6 +45,7 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "introduction_made",
   "event_invite",
   "mention",
+  "forum_reply",
 ]);
 
 export function notificationDtoToView(

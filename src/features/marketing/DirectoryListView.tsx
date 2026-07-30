@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Reveal, SkeletonLine } from "../../shared/components/ui";
+import { FiMapPin, FiSearch } from "react-icons/fi";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
+import { routes } from "../../app/routeMap";
 import { type LocalPlace } from "./localPlaces";
 import { LocalPlaceCard } from "./LocalPlaceCard";
 import s from "./DirectoryPage.module.css";
@@ -30,15 +31,19 @@ function DirectoryCardSkeleton() {
   );
 }
 
-/** The unified Local list: business cards + venue cards, sharing one grid + count. */
+/** The unified Local list: business cards + venue cards, sharing one grid. */
 export function DirectoryListView({
   places,
   total,
   loading,
+  hasActiveFilters,
+  onClearFilters,
 }: {
   places: LocalPlace[];
   total: number;
   loading: boolean;
+  hasActiveFilters: boolean;
+  onClearFilters: () => void;
 }) {
   const { t } = useTranslation();
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -51,36 +56,47 @@ export function DirectoryListView({
     setBeen((current) => ({ ...current, [placeId]: currentBeen + 1 }));
   }
 
+  // Two distinct empties: nothing listed yet vs. filtered down to nothing.
+  // The second offers Clear filters as the primary escape hatch.
+  const listBusinessAction = {
+    label: t("marketing:directory.submitStrip.cta"),
+    to: routes.listBusiness,
+  };
+  const emptyState =
+    hasActiveFilters && total > 0 ? (
+      <EmptyState
+        icon={<FiSearch />}
+        title={t("marketing:directory.empty.title")}
+        description={t("marketing:directory.empty.body")}
+        action={{
+          label: t("marketing:directory.clearFilters"),
+          onClick: onClearFilters,
+        }}
+        secondaryAction={listBusinessAction}
+      />
+    ) : (
+      <EmptyState
+        icon={<FiMapPin />}
+        title={t("marketing:directory.noListings.title")}
+        description={t("marketing:directory.noListings.body")}
+        action={listBusinessAction}
+      />
+    );
+
   return (
     <section className={s.content}>
       <div className="wrap">
-        <Reveal className={s.count}>
-          {loading ? (
-            <>{t("marketing:directory.loading")}</>
-          ) : (
-            <Translation
-              i18nKey="marketing:directory.count"
-              components={{ b: <b /> }}
-              values={{ shown: places.length, total }}
-            />
-          )}
-        </Reveal>
-        <div className={s.grid}>
-          {loading &&
-            Array.from({ length: 6 }).map((_, index) => (
+        {loading ? (
+          <div className={s.grid}>
+            {Array.from({ length: 6 }).map((_, index) => (
               <DirectoryCardSkeleton key={index} />
             ))}
-          {!loading && places.length === 0 && (
-            <div className={s.empty}>
-              {t(
-                total === 0
-                  ? "marketing:directory.noListings"
-                  : "marketing:directory.empty",
-              )}
-            </div>
-          )}
-          {!loading &&
-            places.map((place, index) => (
+          </div>
+        ) : places.length === 0 ? (
+          emptyState
+        ) : (
+          <div className={s.grid}>
+            {places.map((place, index) => (
               <LocalPlaceCard
                 key={place.id}
                 place={place}
@@ -91,7 +107,8 @@ export function DirectoryListView({
                 onMarkBeen={markBeen}
               />
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

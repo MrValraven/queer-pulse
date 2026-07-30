@@ -1,19 +1,19 @@
 import { FiCheck, FiTrendingUp } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, SkeletonCard, SubpageIndex } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
+import { useRoadmap } from "./api/useRoadmap";
 import { BuildingCard, PlannedCard, ShippedCard } from "./RoadmapCards";
 import { HowWeDecide, SubmitIdea, TopIdeas } from "./RoadmapSections";
-import { BUILDING, HERO_STATS, PLANNED, SHIPPED } from "./roadmap.data";
 import styles from "./RoadmapPage.module.css";
 
 export function RoadmapPage() {
   const { t } = useTranslation();
-  const loading = useSimulatedLoad();
+  const { heroStats, shipped, building, planned, topIdeas, loading } =
+    useRoadmap();
   const pageTitle = t("marketing:roadmap.meta.title");
   const pageDescription = t("marketing:roadmap.meta.description");
 
@@ -39,12 +39,12 @@ export function RoadmapPage() {
           </h1>
           <p className={styles.heroSub}>{t("marketing:roadmap.hero.sub")}</p>
           <div className={styles.heroStats}>
-            {HERO_STATS.map((s) => (
+            {heroStats.map((stat) => (
               <span
-                key={s.label}
-                className={`${styles.statChip} ${s.jade ? styles.jade : ""}`}
+                key={stat.label}
+                className={`${styles.statChip} ${stat.jade ? styles.jade : ""}`}
               >
-                {s.label}
+                {stat.label}
               </span>
             ))}
           </div>
@@ -64,8 +64,8 @@ export function RoadmapPage() {
                 ? Array.from({ length: 3 }).map((_, i) => (
                     <SkeletonCard key={i} />
                   ))
-                : SHIPPED.map((item, i) => (
-                    <FadeIn key={item.name} delay={i * 60}>
+                : shipped.map((item, i) => (
+                    <FadeIn key={item.id} delay={i * 60}>
                       <ShippedCard item={item} />
                     </FadeIn>
                   ))}
@@ -82,8 +82,8 @@ export function RoadmapPage() {
                 ? Array.from({ length: 3 }).map((_, i) => (
                     <SkeletonCard key={i} />
                   ))
-                : BUILDING.map((item, i) => (
-                    <FadeIn key={item.name} delay={i * 60}>
+                : building.map((item, i) => (
+                    <FadeIn key={item.id} delay={i * 60}>
                       <BuildingCard item={item} />
                     </FadeIn>
                   ))}
@@ -100,7 +100,7 @@ export function RoadmapPage() {
                 ? Array.from({ length: 3 }).map((_, i) => (
                     <SkeletonCard key={i} />
                   ))
-                : PLANNED.map((item, i) => (
+                : planned.map((item, i) => (
                     <FadeIn key={item.id} delay={i * 60}>
                       <PlannedCard item={item} />
                     </FadeIn>
@@ -120,7 +120,7 @@ export function RoadmapPage() {
             </p>
             <div className={styles.shapeGrid}>
               <SubmitIdea />
-              <TopIdeas />
+              <TopIdeas ideas={topIdeas} />
             </div>
           </section>
 

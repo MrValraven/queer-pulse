@@ -108,7 +108,6 @@ export function MessagesSearchResults({
   threads,
   activeId,
   readIds,
-  online,
   onOpen,
   onRequestDelete,
   onSelectResult,
@@ -118,7 +117,6 @@ export function MessagesSearchResults({
   threads: Conversation[];
   activeId: string;
   readIds: Set<string>;
-  online: ReadonlySet<string>;
   onOpen: (id: string) => void;
   onRequestDelete: (thread: Conversation) => void;
   onSelectResult: (conversationId: string, messageId?: string) => void;
@@ -164,7 +162,6 @@ export function MessagesSearchResults({
               thread={thread}
               activeId={activeId}
               readIds={readIds}
-              online={online}
               onOpen={onOpen}
               onRequestDelete={onRequestDelete}
             />

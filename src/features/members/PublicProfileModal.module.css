@@ -1,0 +1,115 @@
+/* Public-profile control content, housed in the shared Modal (paper surface). */
+.list {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+.crit {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+.critMark {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(45, 27, 61, 0.05);
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.critMark svg {
+  width: 14px;
+  height: 14px;
+  color: var(--cream);
+  stroke-width: 2.4;
+}
+.critMet .critMark {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.critDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(45, 27, 61, 0.3);
+}
+.critText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.critLabel {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: rgba(45, 27, 61, 0.5);
+}
+.critMet .critLabel {
+  color: var(--plum);
+}
+.critHint {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(45, 27, 61, 0.55);
+}
+
+.progress {
+  font-size: 13.5px;
+  color: rgba(45, 27, 61, 0.66);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Honest scope note — quiet reassurance, jade rule (unlocked state). */
+.notYet {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(45, 27, 61, 0.7);
+  max-width: 60ch;
+  text-wrap: pretty;
+  border-left: 2px solid var(--jade);
+  padding-left: 14px;
+  margin: 0 0 20px;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px;
+  background: rgba(45, 27, 61, 0.04);
+  border: 1px solid rgba(45, 27, 61, 0.1);
+  border-radius: 14px;
+}
+.switchText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.switchLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.status {
+  font-size: 13px;
+  color: rgba(45, 27, 61, 0.62);
+  line-height: 1.5;
+}
+.statusOn {
+  color: var(--jade);
+}
+
+@media (max-width: 560px) {
+  .switchRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+}

@@ -540,7 +540,11 @@
   box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
 }
 .linkInput {
-  flex: 1 1 auto;
+  /* Zero flex-basis (not `auto`) so the input ignores its inherited
+     width:100% and grows only via flex-grow. Otherwise, when a row wraps to
+     surface the advisory hint, the 100% basis forces the input onto its own
+     line and the whole row cascades downward. */
+  flex: 1 1 0;
   min-width: 0;
   font-size: 14px;
 }

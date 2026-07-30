@@ -1,34 +1,42 @@
+import { memo } from "react";
 import { Avatar } from "../../shared/components/ui";
+import { useIsOnline } from "../../shared/api/realtime";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { ThreadRowMenu } from "./ThreadRowMenu";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
-/** One inbox row: the row `<button>` (avatar + body, unchanged markup) plus a
- *  sibling `<ThreadRowMenu>` — split out of `MessagesThreadList` to keep each
- *  component under the 200-line cap. */
-export function MessagesThreadRow({
+/**
+ * One inbox row: the row `<button>` (avatar + body, unchanged markup) plus a
+ * sibling `<ThreadRowMenu>` — split out of `MessagesThreadList` to keep each
+ * component under the 200-line cap.
+ *
+ * Wrapped in `React.memo`: subscribes to presence via `useIsOnline` itself
+ * (a per-participant selector, not the whole online set) so a row only
+ * re-renders on its OWN presence flip, and every other prop here is already a
+ * primitive or a stable callback — so an unrelated row's presence change, or
+ * an unrelated re-render of the list above, skips this row entirely.
+ */
+function MessagesThreadRowImpl({
   thread,
   activeId,
   readIds,
-  online,
   onOpen,
   onRequestDelete,
 }: {
   thread: Conversation;
   activeId: string;
   readIds: Set<string>;
-  /** Live online-userId set from realtime presence frames. */
-  online: ReadonlySet<string>;
   onOpen: (id: string) => void;
   onRequestDelete: (thread: Conversation) => void;
 }) {
   const { t } = useTranslation();
   const isUnread =
     thread.unread && !readIds.has(thread.id) && thread.id !== activeId;
+  const presenceOnline = useIsOnline(thread.otherParticipantId);
   const isOnline =
-    (!!thread.otherParticipantId && online.has(thread.otherParticipantId)) ||
+    (!!thread.otherParticipantId && presenceOnline) ||
     (!thread.otherParticipantId && !!thread.online);
 
   return (
@@ -88,3 +96,5 @@ export function MessagesThreadRow({
     </div>
   );
 }
+
+export const MessagesThreadRow = memo(MessagesThreadRowImpl);

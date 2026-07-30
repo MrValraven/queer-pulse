@@ -4,7 +4,12 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { TOP_IDEAS, type IdeaItem } from "./roadmap.data";
+import type { IdeaItem } from "./roadmap.data";
+import {
+  useMyRoadmapVotes,
+  useRoadmapVote,
+  useSubmitRoadmapIdea,
+} from "./api/useRoadmapMutations";
 import styles from "./RoadmapPage.module.css";
 
 const DECISION_KEYS = [
@@ -28,6 +33,7 @@ const DECISION_KEYS = [
 export function SubmitIdea() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { submit: submitIdea } = useSubmitRoadmapIdea();
   const [value, setValue] = useState("");
 
   function submit() {
@@ -35,8 +41,15 @@ export function SubmitIdea() {
       showToast(t("marketing:roadmap.submitIdea.toast.empty"), "error");
       return;
     }
-    showToast(t("marketing:roadmap.submitIdea.toast.submitted"), "success");
-    setValue("");
+    submitIdea(value.trim(), {
+      onSuccess: () => {
+        showToast(t("marketing:roadmap.submitIdea.toast.submitted"), "success");
+        setValue("");
+      },
+      onError: () => {
+        showToast(t("marketing:roadmap.submitIdea.toast.error"), "error");
+      },
+    });
   }
 
   return (
@@ -62,21 +75,44 @@ export function SubmitIdea() {
   );
 }
 
+export interface TopIdeasProps {
+  /** Live/demo-resolved ideas from `useRoadmap()`. `RoadmapPage` is the only
+   *  caller and always supplies this from the hook. */
+  ideas: IdeaItem[];
+}
+
 function IdeaRow({ idea }: { idea: IdeaItem }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [voted, setVoted] = useState(false);
+  const myVotes = useMyRoadmapVotes();
+  const { demoMode, vote: castVote } = useRoadmapVote();
+  const [justVoted, setJustVoted] = useState(false);
+
+  const voted = justVoted || myVotes.has(idea.id);
 
   function vote() {
     if (voted) return;
-    setVoted(true);
+    setJustVoted(true);
+    if (demoMode) {
+      showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
+      return;
+    }
+    castVote(
+      { targetType: "idea", targetId: idea.id },
+      // Roll back the optimistic "voted" state on failure so the button
+      // re-enables and the member can retry (the global error toast already
+      // fires since this mutation doesn't set meta.silentError).
+      { onError: () => setJustVoted(false) },
+    );
     showToast(t("marketing:roadmap.topIdeas.toast.voted"), "success");
   }
 
   return (
     <div className={styles.ideaRow}>
       <div className={styles.ideaText}>{idea.text}</div>
-      <div className={styles.ideaVotes}>{idea.votes + (voted ? 1 : 0)}</div>
+      <div className={styles.ideaVotes}>
+        {idea.votes + (demoMode && justVoted ? 1 : 0)}
+      </div>
       <button
         type="button"
         className={`${styles.ideaVoteBtn} ${voted ? styles.voted : ""}`}
@@ -93,7 +129,7 @@ function IdeaRow({ idea }: { idea: IdeaItem }) {
   );
 }
 
-export function TopIdeas() {
+export function TopIdeas({ ideas }: TopIdeasProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.shapeCard}>
@@ -101,8 +137,8 @@ export function TopIdeas() {
         {t("marketing:roadmap.topIdeas.title")}
       </h3>
       <div className={styles.topIdeas}>
-        {TOP_IDEAS.map((idea) => (
-          <IdeaRow key={idea.text} idea={idea} />
+        {ideas.map((idea) => (
+          <IdeaRow key={idea.id} idea={idea} />
         ))}
       </div>
     </div>

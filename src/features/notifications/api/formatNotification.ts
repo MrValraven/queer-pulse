@@ -18,7 +18,8 @@ export type NotificationKind =
   | "waitlist_promoted"
   | "event_cancelled"
   | "introduction_made"
-  | "mention";
+  | "mention"
+  | "forum_reply";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -33,6 +34,7 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   vouch_received: "community",
   introduction_made: "community",
   mention: "community",
+  forum_reply: "community",
   promoted_to_member: "platform",
   new_message: "messages",
   event_invite: "events",

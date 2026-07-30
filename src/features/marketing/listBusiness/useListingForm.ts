@@ -57,6 +57,21 @@ function blankDraft(): ListingDraft {
 export function useListingForm(initial?: ListingDraft) {
   const [draft, setDraft] = useState<ListingDraft>(initial ?? blankDraft());
 
+  // Display-only preview values (blob for uploads, URL for pastes). Kept OUT of
+  // `draft`/`ListingDraft` on purpose: `CreateListingDto = ListingDraft` and the
+  // whole draft is POSTed, so anything in it would leak to the API. Every
+  // display site renders `photoPreviews[key] || draft.photos[key]`.
+  const [photoPreviews, setPhotoPreviews] = useState<Record<PhotoKey, string>>({
+    wide: "",
+    d1: "",
+    d2: "",
+    vibe: "",
+  });
+
+  const setPhotoPreview = useCallback((key: PhotoKey, value: string) => {
+    setPhotoPreviews((previews) => ({ ...previews, [key]: value }));
+  }, []);
+
   /** Patch one or more top-level fields. */
   const set = useCallback((patch: Partial<ListingDraft>) => {
     setDraft((d) => ({ ...d, ...patch }));
@@ -64,6 +79,7 @@ export function useListingForm(initial?: ListingDraft) {
 
   const reset = useCallback((next?: ListingDraft) => {
     setDraft(next ?? blankDraft());
+    setPhotoPreviews({ wide: "", d1: "", d2: "", vibe: "" });
   }, []);
 
   const pickPath = useCallback((path: ListingPath) => {
@@ -254,6 +270,8 @@ export function useListingForm(initial?: ListingDraft) {
 
   return {
     draft,
+    photoPreviews,
+    setPhotoPreview,
     set,
     reset,
     pickPath,

@@ -1,5 +1,5 @@
 // src/features/messages/MessageRun.tsx
-import { useRef, type KeyboardEvent } from "react";
+import { memo, useRef, useState, type KeyboardEvent } from "react";
 import { Avatar } from "../../shared/components/ui";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { usePrefersReducedMotion } from "../../shared/hooks";
@@ -17,11 +17,6 @@ import type { LongPressOrigin } from "./useLongPress";
 import { useMessageGestures } from "./useMessageGestures";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
-
-/** How far a swipe must travel (px) for the reply-hint arrow to reach full
- *  opacity — matches the hook's trigger threshold so the arrow reads "armed"
- *  right as a release would fire the reply. */
-const SWIPE_HINT_FULL_PX = 56;
 
 /** Avatar identity for one side of the conversation. */
 export interface RunParticipant {
@@ -71,6 +66,16 @@ interface MessageBubbleProps {
   onCancelEdit?: () => void;
   /** Scrolls to and briefly highlights the quoted original message. */
   onJumpToMessage?: (messageId: string) => void;
+  /** True only for a message that is genuinely arriving for the first time
+   *  this session (never for the whole thread on open/switch, and never
+   *  replayed for a message already on screen) — gates the `msgBubbleIn`
+   *  entrance. Read exactly once, at this bubble's own mount (see
+   *  `playEntrance` below), so it can never be retriggered by a later,
+   *  unrelated re-render (a status-tick update, a sibling reaction). */
+  isNewMessage?: (message: ChatMessage) => boolean;
+  /** Same freshness gate, scoped to one reaction key on this message — an
+   *  incremented count on an already-visible chip must not re-pop it. */
+  isNewReaction?: (message: ChatMessage, key: MessageReactionKey) => boolean;
 }
 
 /** i18n key per rung, so the tick carries a text alternative ("Sent"/"Read"/…). */
@@ -163,6 +168,7 @@ function MessageBubbleBody({
   senderName,
   metaStatus,
   onJumpToMessage,
+  playEntrance,
 }: {
   message: ChatMessage;
   index: number;
@@ -172,6 +178,9 @@ function MessageBubbleBody({
   senderName: string;
   metaStatus: MetaStatus;
   onJumpToMessage?: (messageId: string) => void;
+  /** Gates the `msgBubbleIn`/`msgBubbleInSent` entrance — true only for a
+   *  genuinely new arrival (see `MessageBubbleImpl`'s `playEntrance` state). */
+  playEntrance: boolean;
 }) {
   const { t } = useTranslation();
   // A subtle "Forwarded" label above the body (WhatsApp-style) when this message
@@ -214,6 +223,13 @@ function MessageBubbleBody({
   // floating), since a GIF has no coloured bubble to tuck it into.
   if (message.kind === "gif" && message.attachment) {
     const { url, width, height } = message.attachment;
+    // Reserve the bubble's final box BEFORE the image decodes. The provider's
+    // per-item dimensions are sometimes missing/zero (see demoGifs mapping
+    // uncertainty), in which case a plain 1:1 fallback keeps the jump small
+    // and predictable — without it the bubble has no intrinsic height at all
+    // until decode, which also nudges the resize-follow scroll (item 4) right
+    // after the entrance has already played.
+    const aspectRatio = width > 0 && height > 0 ? width / height : 1;
     return (
       <>
         {forwardedNode}
@@ -223,6 +239,7 @@ function MessageBubbleBody({
           src={url}
           width={width || undefined}
           height={height || undefined}
+          style={{ aspectRatio: String(aspectRatio) }}
           loading="lazy"
           alt={message.text}
         />
@@ -245,7 +262,9 @@ function MessageBubbleBody({
         {forwardedNode}
         {replyQuoteNode}
         <div
-          className={styles.emojiOnly}
+          className={[styles.emojiOnly, playEntrance && styles.bubbleEnter]
+            .filter(Boolean)
+            .join(" ")}
           title={message.time}
           aria-label={`${senderName}: ${message.text}`}
         >
@@ -267,6 +286,7 @@ function MessageBubbleBody({
       className={[
         styles.bubble,
         isSent ? styles.sent : styles.received,
+        playEntrance && styles.bubbleEnter,
         message.replyTo && styles.bubbleWithReply,
         index > 0 && styles.groupTop,
         index < lastIndex && styles.groupBottom,
@@ -331,7 +351,7 @@ function MessageMarks({
  *  swipe → reply (reuses `onReply`), a double-tap/double-click → ❤️ (reuses
  *  `onReactionToggle`). While `editingMessageId` matches, the content is swapped
  *  for the inline editor. */
-function MessageBubble({
+function MessageBubbleImpl({
   message,
   index,
   lastIndex,
@@ -345,6 +365,8 @@ function MessageBubble({
   onSubmitEdit,
   onCancelEdit,
   onJumpToMessage,
+  isNewMessage,
+  isNewReaction,
 }: MessageBubbleProps) {
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
@@ -352,7 +374,18 @@ function MessageBubble({
   // First http(s) link in the body → a compact unfurl card below the bubble.
   const previewUrl = firstLinkUrl(message.text);
   const wrapRef = useRef<HTMLDivElement>(null);
+  // Owned here (not by the gesture hook) so the hook's own return value never
+  // bundles a ref alongside `swiping` — see `useMessageGestures`'s `hintRef`
+  // option doc for why that matters to `react-hooks/refs`.
+  const hintRef = useRef<HTMLSpanElement>(null);
   const bubbleDomId = message.id ? `message-${message.id}` : undefined;
+  // Decided ONCE, at this exact bubble instance's own mount — a lazy `useState`
+  // initializer runs exactly once per instance, so a later re-render (a
+  // status-tick update, a sibling's reaction) can never flip this back on or
+  // cut the entrance short. `isNewMessage` reflects the newness set as of
+  // JUST BEFORE this render (see `MessageArea`'s tracker), which is exactly
+  // right the one time this call matters: right as the bubble is created.
+  const [playEntrance] = useState(() => isNewMessage?.(message) ?? false);
   // A message with a server id can open the action overlay; give its bubble a
   // guaranteed keyboard entry point (Enter), mirroring long-press / right-click.
   const canOpenOverlay = !!message.id;
@@ -397,11 +430,13 @@ function MessageBubble({
     // Received (left-aligned) bubbles swipe right to reply; sent (own,
     // right-aligned) bubbles swipe left — always away from where they sit.
     replyDirection: isSent ? "left" : "right",
+    // The hook writes the follow-transform/hint-progress straight to these
+    // same nodes — no React state, no per-frame re-render of this bubble's
+    // subtree.
+    bubbleRef: wrapRef,
+    hintRef,
+    reducedMotion,
   });
-  // Reduced motion: the drag still arms/fires a reply (swipeOffset keeps
-  // updating in the hook), but the bubble itself doesn't visibly follow the
-  // finger — only the reply-hint icon (driven by the same offset) cues progress.
-  const swipeTransform = !reducedMotion && gestures.swipeOffset;
 
   if (editingMessageId && editingMessageId === message.id) {
     return (
@@ -433,7 +468,6 @@ function MessageBubble({
       className={[styles.bubbleWrap, gestures.swiping && styles.bubbleWrapSwiping]
         .filter(Boolean)
         .join(" ")}
-      style={swipeTransform ? { transform: `translateX(${swipeTransform}px)` } : undefined}
       {...gestures.handlers}
       /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
       tabIndex={canOpenOverlay ? 0 : undefined}
@@ -442,27 +476,25 @@ function MessageBubble({
     >
       {/* Reply-hint icon revealed on the side being uncovered as the bubble
           swipes toward `replyDirection` (right for received, left for sent) —
-          fades AND scales in with drag progress. Driven by `swipeOffset`
-          directly (not a CSS transition), so it still cues progress under
+          fades AND scales in with drag progress. Always mounted (invisible at
+          rest, opacity 0 below) so `useMessageGestures` has a stable node to
+          write opacity/scale progress to DIRECTLY on every pointer move — no
+          React state, no re-render, per frame. Still cues progress under
           reduced motion even though the bubble itself doesn't visibly move. */}
-      {gestures.swipeOffset !== 0 && (
-        <span
-          className={[styles.swipeReplyHint, isSent && styles.swipeReplyHintEnd]
-            .filter(Boolean)
-            .join(" ")}
-          style={{
-            opacity: Math.min(1, Math.abs(gestures.swipeOffset) / SWIPE_HINT_FULL_PX),
-            transform: `scale(${Math.min(1, Math.abs(gestures.swipeOffset) / SWIPE_HINT_FULL_PX)})`,
-          }}
-          aria-hidden="true"
-        >
-          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-            stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 5 4 10l5 5" />
-            <path d="M4 10h8a4 4 0 0 1 4 4v1" />
-          </svg>
-        </span>
-      )}
+      <span
+        ref={hintRef}
+        className={[styles.swipeReplyHint, isSent && styles.swipeReplyHintEnd]
+          .filter(Boolean)
+          .join(" ")}
+        style={{ opacity: 0 }}
+        aria-hidden="true"
+      >
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 5 4 10l5 5" />
+          <path d="M4 10h8a4 4 0 0 1 4 4v1" />
+        </svg>
+      </span>
       <MessageBubbleBody
         message={message}
         index={index}
@@ -472,6 +504,7 @@ function MessageBubble({
         senderName={senderName}
         metaStatus={metaStatus ?? null}
         onJumpToMessage={onJumpToMessage}
+        playEntrance={playEntrance}
       />
       {message.editedAt && !message.deletedAt && (
         <span className={styles.editedMarker}> · {t("messages:actions.edited")}</span>
@@ -507,11 +540,20 @@ function MessageBubble({
           onToggle={(reactionKey, mine) =>
             onReactionToggle?.(message, reactionKey, mine)
           }
+          isNewReaction={(reactionKey) => isNewReaction?.(message, reactionKey) ?? false}
         />
       )}
     </div>
   );
 }
+
+/** One rendered bubble, memoized — a run can hold many bubbles, and once its
+ *  callback/object props are stabilized upstream (see `ConversationPanel`'s
+ *  `counterpart` memo and `useMessageActionMenu`/`useMessageSending`'s
+ *  `useCallback`-wrapped handlers), an unrelated re-render higher up the tree
+ *  (a typing frame, a receipt tick on a DIFFERENT run) no longer re-renders
+ *  every bubble in the log. */
+const MessageBubble = memo(MessageBubbleImpl);
 
 /** Resolve the honest send-status tick for an OWN outgoing message. Precedence,
  *  highest first: failed (→ null; its own retry row renders) > seen > delivered
@@ -546,7 +588,7 @@ function initialsFromName(name: string): string {
 }
 
 /** Renders one sender run: a vertical stack of bubbles. */
-export function MessageRunView({
+function MessageRunViewImpl({
   run,
   counterpart,
   selfName,
@@ -562,6 +604,8 @@ export function MessageRunView({
   onSubmitEdit,
   onCancelEdit,
   onJumpToMessage,
+  isNewMessage,
+  isNewReaction,
 }: {
   run: MessageRun;
   counterpart: RunParticipant;
@@ -611,6 +655,11 @@ export function MessageRunView({
   onCancelEdit?: () => void;
   /** Scrolls to and briefly highlights the quoted original message. */
   onJumpToMessage?: (messageId: string) => void;
+  /** True only for a message genuinely arriving for the first time this
+   *  session — gates each bubble's entrance (see `MessageBubbleImpl`). */
+  isNewMessage?: (message: ChatMessage) => boolean;
+  /** Same freshness gate, scoped to one reaction key on a message. */
+  isNewReaction?: (message: ChatMessage, key: MessageReactionKey) => boolean;
 }) {
   const { t } = useTranslation();
   const isSent = run.from === "me";
@@ -682,6 +731,8 @@ export function MessageRunView({
             onSubmitEdit={onSubmitEdit}
             onCancelEdit={onCancelEdit}
             onJumpToMessage={onJumpToMessage}
+            isNewMessage={isNewMessage}
+            isNewReaction={isNewReaction}
           />
         ))}
         {/* Time + sending/seen ticks now live in the last bubble's meta; only the
@@ -699,3 +750,15 @@ export function MessageRunView({
     </div>
   );
 }
+
+/**
+ * A same-sender run, memoized — `MessageArea` renders one of these per block
+ * in the timeline. `run` is a stable reference once `MessageArea` memoizes its
+ * timeline build (see `buildTimeline`'s `useMemo` there) and `counterpart` is
+ * memoized upstream in `ConversationPanel`; every callback prop below is
+ * itself `useCallback`-stabilized (the action-menu handlers, `onSetReply`'s
+ * `setState`, `useJumpToMessage`). So a re-render caused by something outside
+ * this run (a typing frame, a receipt tick on a DIFFERENT run, the jump-pill
+ * count) skips every run whose own props didn't change.
+ */
+export const MessageRunView = memo(MessageRunViewImpl);

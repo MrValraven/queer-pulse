@@ -3,6 +3,7 @@ import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage, type UploadKind } from "../members/api/useUploadImage";
+import { ImageProcessingError } from "../members/api/uploadProcessing";
 import styles from "./SubprofileEditor.module.css";
 
 interface ImageUploadFieldProps {
@@ -50,10 +51,13 @@ export function ImageUploadField({
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(newPreviewUrl);
       onChange(key);
-    } catch (err) {
+    } catch (uploadFailure) {
+      // `ImageProcessingError.message` IS the raw catalog key (its constructor
+      // does `super(i18nKey)`), so resolve it through `t()` rather than dumping
+      // "members:upload.error.tooSmall" into the alert.
       setError(
-        err instanceof Error && err.message
-          ? err.message
+        uploadFailure instanceof ImageProcessingError
+          ? t(uploadFailure.i18nKey, uploadFailure.values)
           : t("subprofiles:imageUpload.error"),
       );
     } finally {

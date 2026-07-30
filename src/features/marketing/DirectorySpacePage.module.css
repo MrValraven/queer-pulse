@@ -93,6 +93,198 @@
   }
 }
 
+/* ── Real photo gallery (replaces the tinted caption gallery above when a
+   place has uploaded photos) ─────────────────────────────────────────────── */
+.photoGallery {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.photoHero {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  cursor: zoom-in;
+  background: none;
+}
+.photoHero img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .photoHero:hover img {
+    transform: scale(1.02);
+  }
+}
+.thumbGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.thumb {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: zoom-in;
+  background: none;
+}
+.thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .thumb:hover img {
+    transform: scale(1.04);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photoHero img,
+  .thumb img {
+    transition: none;
+  }
+  .photoHero:hover img,
+  .thumb:hover img {
+    transform: none;
+  }
+}
+@media (max-width: 760px) {
+  .thumbGrid {
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  }
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--plum-rgb), 0.86);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: lightboxFade 0.25s var(--ease);
+}
+@keyframes lightboxFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox {
+    animation: none;
+  }
+}
+.lightboxBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: default;
+}
+.lightboxTopbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 18px 24px;
+}
+.lightboxCounter {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(var(--cream-rgb), 0.7);
+  margin-right: auto;
+}
+.lightboxClose {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(var(--cream-rgb), 0.12);
+  border: none;
+  cursor: pointer;
+  color: rgba(var(--cream-rgb), 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  transition: background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .lightboxClose:hover {
+    background: rgba(var(--cream-rgb), 0.24);
+  }
+}
+.lightboxStage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 100%;
+}
+.lightboxImg {
+  display: block;
+  max-width: min(84vw, 1000px);
+  max-height: 78svh;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  object-fit: contain;
+}
+.lightboxNav {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(var(--cream-rgb), 0.12);
+  border: none;
+  cursor: pointer;
+  color: rgba(var(--cream-rgb), 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  transition: background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .lightboxNav:hover {
+    background: rgba(var(--cream-rgb), 0.24);
+  }
+}
+@media (max-width: 640px) {
+  .lightboxNav {
+    width: 40px;
+    height: 40px;
+  }
+  .lightboxImg {
+    max-width: 90vw;
+    max-height: 60svh;
+  }
+}
+
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
@@ -338,6 +530,25 @@
 }
 .hoursClosed {
   color: var(--ink-40);
+}
+.openChip,
+.closedChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+}
+.openChip {
+  background: var(--jade);
+  color: var(--cream);
+}
+.closedChip {
+  background: rgba(var(--line-rgb), 0.12);
+  color: var(--ink-60);
 }
 .apptNote {
   background: var(--paper);

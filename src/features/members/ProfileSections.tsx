@@ -15,13 +15,13 @@ import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileHeroActions } from "./ProfileHeroActions";
+import { PublicProfileBadge } from "./PublicProfileBadge";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import {
   ActivitySection,
   BoardSection,
   GroupsSection,
-  LookingForSection,
   NowSection,
   RelatedSection,
   SelectedWorkSection,
@@ -124,9 +124,12 @@ export function ProfileHero({
             <Eyebrow live className={styles.eyebrow}>
               {t(VISIBILITY_LABEL_KEY[profile.visibility])}
             </Eyebrow>
-            <h1 className={styles.name}>
-              {profile.first} <em>{profile.last}</em>
-            </h1>
+            <div className={styles.heroNameRow}>
+              <h1 className={styles.name}>
+                {profile.first} <em>{profile.last}</em>
+              </h1>
+              {isSelf && <PublicProfileBadge />}
+            </div>
             <div className={styles.role}>
               <span>
                 {profile.role}
@@ -158,6 +161,27 @@ export function ProfileHero({
               )}
             </div>
             {isSelf && <HeroRecognition />}
+            {profile.lookingFor &&
+              profile.lookingFor.length > 0 &&
+              (isSelf || profile.lookingForPublic) && (
+                <div className={styles.hereFor}>
+                  <span className={styles.hereForLabel}>
+                    {t("members:hero.hereFor.label")}
+                  </span>
+                  {profile.lookingFor.map((intentLabel) => (
+                    <span key={intentLabel} className={styles.hereForChip}>
+                      {intentLabel}
+                    </span>
+                  ))}
+                  {isSelf && (
+                    <span className={styles.hereForHint}>
+                      {profile.lookingForPublic
+                        ? t("members:hero.hereFor.hintPublic")
+                        : t("members:hero.hereFor.hintPrivate")}
+                    </span>
+                  )}
+                </div>
+              )}
             <p className={styles.bio}>{profile.bio}</p>
             <TagRow style={{ marginTop: 20 }}>
               {profile.tags.map((tag) => (
@@ -268,11 +292,7 @@ export function ProfileContent({
       {/* While editing, the Now editor lives in the hero — showing the committed
           card here too would just be a stale second copy of the same field. */}
       {!edit && <NowSection profile={profile} isSelf={isSelf} />}
-      {edit ? (
-        <LookingForEditor />
-      ) : (
-        <LookingForSection profile={profile} isSelf={isSelf} />
-      )}
+      {edit && <LookingForEditor />}
       {edit ? (
         <WorkEditor
           work={edit.work}

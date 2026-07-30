@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
 
+/** Set on the pressed element for the whole duration of a touch long-press
+ *  hold (see `onPointerDown`/`clear` below) — a plain DOM attribute, not React
+ *  state, so a hold never re-renders the bubble subtree. Consumers cue the
+ *  hold visually off this attribute (e.g. `.bubbleWrap[data-long-press-active
+ *  ="true"]` in MessagesPage.module.css). */
+const PRESS_ACTIVE_ATTRIBUTE = "data-long-press-active";
+
 export interface LongPressOrigin {
   /** Bounding rect of the pressed element, so the overlay can anchor itself. */
   rect: DOMRect;
@@ -37,6 +44,10 @@ export function useLongPress(
 
   const timerRef = useRef<number | null>(null);
   const startPointRef = useRef<{ x: number; y: number } | null>(null);
+  /** The element currently mid-hold, so `clear()` can drop its pressed
+   *  attribute regardless of which handler (release, cancel, move-past-
+   *  tolerance, leave) ends the hold. */
+  const pressedElementRef = useRef<Element | null>(null);
 
   const clear = useCallback(() => {
     if (timerRef.current !== null) {
@@ -44,6 +55,8 @@ export function useLongPress(
       timerRef.current = null;
     }
     startPointRef.current = null;
+    pressedElementRef.current?.removeAttribute(PRESS_ACTIVE_ATTRIBUTE);
+    pressedElementRef.current = null;
   }, []);
 
   useEffect(() => clear, [clear]);
@@ -59,8 +72,20 @@ export function useLongPress(
       if (!enabled || event.pointerType === "mouse") return;
       const element = event.currentTarget;
       startPointRef.current = { x: event.clientX, y: event.clientY };
+      // Cue the hold immediately — a scale/elevation grow on the pressed
+      // bubble (see the CSS attribute selector) — rather than nothing
+      // visible until the overlay pops ~450ms later, which read as dead/
+      // laggy.
+      pressedElementRef.current = element;
+      element.setAttribute(PRESS_ACTIVE_ATTRIBUTE, "true");
       timerRef.current = window.setTimeout(() => {
         timerRef.current = null;
+        element.removeAttribute(PRESS_ACTIVE_ATTRIBUTE);
+        pressedElementRef.current = null;
+        // Feature-detected haptic tick confirming the hold engaged — a no-op
+        // (not an error) anywhere the Vibration API is unsupported, notably
+        // iOS Safari.
+        if ("vibrate" in navigator) navigator.vibrate(10);
         fire(element, "touch");
       }, delayMs);
     },

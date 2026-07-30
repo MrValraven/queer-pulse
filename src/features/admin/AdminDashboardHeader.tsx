@@ -1,5 +1,4 @@
 import { Button, SkeletonLine } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -18,7 +17,6 @@ export function AdminDashboardHeader({
   triage,
   loading,
 }: AdminDashboardHeaderProps) {
-  const { showToast } = useToast();
   const { t } = useTranslation();
   const fmt = useFormat();
 
@@ -93,14 +91,6 @@ export function AdminDashboardHeader({
         )}
       </div>
       <div className={styles.phActions}>
-        <Button
-          variant="ghost"
-          onClick={() =>
-            showToast(t("admin:dashboard.header.digestToast"), "info")
-          }
-        >
-          {t("admin:dashboard.header.digestCta")}
-        </Button>
         <Button variant="primary" to={routes.adminModeration}>
           {t("admin:dashboard.header.moderationCta")} →
         </Button>

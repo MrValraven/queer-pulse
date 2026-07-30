@@ -38,6 +38,11 @@
   margin: 0;
 }
 
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
 .desc {
   color: var(--ink-60);
   max-width: 42ch;

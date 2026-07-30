@@ -84,3 +84,18 @@
   background: var(--jade);
   border-color: var(--jade);
 }
+
+/* Live count inside each category chip — dimmed so the label stays primary. */
+.count {
+  margin-inline-start: 6px;
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+/* "Vibe filters apply to venues" — shown only while a vibe is active. */
+.vibeNote {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-style: italic;
+}

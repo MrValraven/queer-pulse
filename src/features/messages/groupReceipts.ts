@@ -1,4 +1,5 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, GroupMemberView } from "./data";
 
 /** One "seen by" entry — a member whose read watermark has caught a message. */
@@ -61,4 +62,31 @@ export function resolveTyperNames(
     .map((id) => members.find((member) => member.id === id))
     .filter((member): member is GroupMemberView => !!member)
     .map((member) => member.name.split(" ")[0] ?? member.name);
+}
+
+/**
+ * The GROUP typing label ("Ana is typing…" / "Ana and Bea are typing…" /
+ * "Several people are typing…"), resolved from the live typing user ids
+ * against the roster; `undefined` when no one is typing (DM callers fall back
+ * to their own single-name label instead of calling this at all).
+ */
+export function resolveGroupTypingLabel(
+  typingUserIds: string[],
+  anyTyping: boolean,
+  members: GroupMemberView[] | undefined,
+  t: TFunction,
+): string | undefined {
+  if (!anyTyping) return undefined;
+  const typerNames = resolveTyperNames(typingUserIds, members);
+  if (typerNames.length >= 3) return t("messages:group.typingMany");
+  if (typerNames.length === 2) {
+    return t("messages:group.typingTwo", {
+      first: typerNames[0]!,
+      second: typerNames[1]!,
+    });
+  }
+  if (typerNames.length === 1) {
+    return t("messages:conversation.typing", { name: typerNames[0]! });
+  }
+  return t("messages:group.typingSomeone");
 }

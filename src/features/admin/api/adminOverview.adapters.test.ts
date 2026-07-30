@@ -70,7 +70,7 @@ const reportChartWeeks: AdminOverviewDTO["reportsByType"]["weeks"] =
 
 const baseDto: AdminOverviewDTO = {
   stats: {
-    activeMembers: { value: 8500, growthPercent: 3.87, netNewThisWeek: 340 },
+    activeMembers: { value: 8500, growthPercent: 3.87, netNewThisMonth: 340 },
     openReports: { value: 19, oldestOpenHours: 5, emergencies: 1 },
     medianResponseHours: null,
     sustainerMrr: null,

@@ -142,6 +142,20 @@
   text-align: center;
 }
 
+.sectionLabel {
+  padding: 12px 4px 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  list-style: none;
+}
+
+.sectionLabel:first-child {
+  padding-top: 4px;
+}
+
 :global([data-theme="dark"]) .dialog {
   border-color: rgba(var(--cream-rgb), 0.12);
 }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiMessageCircle } from "react-icons/fi";
 import { EmptyState, FadeIn, SearchInput } from "../../shared/components/ui";
-import { usePresenceOnline } from "../../shared/api/realtime";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
 import { MessagesSearchResults } from "./MessagesSearchResults";
@@ -41,10 +40,6 @@ export function MessagesThreadList({
   deletePending: boolean;
 }) {
   const { t } = useTranslation();
-  /** Live online-userId set from realtime presence frames; always empty in
-   *  demo mode (no socket) — rows without an `otherParticipantId` fall back
-   *  to the static `thread.online` mock flag instead. */
-  const online = usePresenceOnline();
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(
     null,
   );
@@ -133,7 +128,6 @@ export function MessagesThreadList({
             threads={threads}
             activeId={activeId}
             readIds={readIds}
-            online={online}
             onOpen={onOpen}
             onRequestDelete={setConfirmDelete}
             onSelectResult={onSelectResult}
@@ -154,13 +148,12 @@ export function MessagesThreadList({
         )}
         {!loading &&
           !query.trim() &&
-          threads.map((thread, i) => (
-            <FadeIn key={thread.id} delay={Math.min(i, 8) * 60}>
+          threads.map((thread, index) => (
+            <FadeIn key={thread.id} delay={Math.min(index, 8) * 60}>
               <MessagesThreadRow
                 thread={thread}
                 activeId={activeId}
                 readIds={readIds}
-                online={online}
                 onOpen={onOpen}
                 onRequestDelete={setConfirmDelete}
               />

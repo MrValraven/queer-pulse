@@ -10,13 +10,15 @@ import { CATS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
 import { useReply } from "./api/useForumMutations";
 import { currentUser } from "../members/data/members";
-import { ThreadOpCard } from "./ThreadOpCard";
-import { ReplySortBar, ThreadReplies } from "./ThreadReplies";
-import { ThreadComposer } from "./ThreadComposer";
+import { buildReplyTree } from "./buildReplyTree";
+import { ThreadOpSection } from "./ThreadOpSection";
+import { ThreadReplySection } from "./ThreadReplySection";
 import { ThreadTopbar } from "./ThreadTopbar";
 import { ThreadNotFoundState } from "./ThreadNotFoundState";
 import { ThreadPageModals } from "./ThreadPageModals";
 import { deriveOpView, useThreadModeration } from "./useThreadModeration";
+import { useNestedReplyComposer } from "./useNestedReplyComposer";
+import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadPage() {
@@ -48,11 +50,15 @@ export function ThreadPage() {
   const [localReplies, setLocalReplies] = useState<Reply[]>(
     threadData?.replies ?? [],
   );
-  // Per-reply like toggles, keyed by a stable identity (replies have no id).
+  // Per-reply like toggles, keyed by a stable identity.
   const [likedReplies, setLikedReplies] = useState<Record<string, boolean>>({});
+  // Nested-replies UI state (collapse + inline reply composer targeting);
+  // resets its own state when `threadData?.replies` changes, in step with
+  // `localReplies`/`likedReplies` below.
+  const nestedReplies = useNestedReplyComposer(threadData?.replies);
   const replyBoxRef = useRef<HTMLTextAreaElement>(null);
 
-  const replyKey = (r: Reply) => `${r.name}|${r.time}|${r.body[0] ?? ""}`;
+  const replyKey = (replyItem: Reply) => replyItem.id;
 
   // Every edit/delete/restore/history concern (state + mutations + handlers).
   const moderation = useThreadModeration({
@@ -67,8 +73,9 @@ export function ThreadPage() {
     setLikedReplies((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // Reset the local reply list and per-reply likes whenever the thread changes
-  // (including once the live fetch resolves and replies first appear).
+  // Reset the local reply list and per-reply likes whenever the thread
+  // changes (including once the live fetch resolves and replies first
+  // appear). `nestedReplies` resets itself in step (see its own effect).
   useEffect(() => {
     // Resets the reply list when the thread's async fetch resolves or changes.
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -78,21 +85,20 @@ export function ThreadPage() {
 
   const catMeta = CATS.find((c) => c.id === threadData?.category);
 
-  const replies = useMemo(() => {
-    if (sort === "newest") return [...localReplies].reverse();
-    if (sort === "mostHelpful")
-      return [...localReplies].sort(
-        (a, b) =>
-          Number(b.helpful ?? 0) - Number(a.helpful ?? 0) ||
-          b.reactions - a.reactions,
-      );
-    return localReplies;
-  }, [localReplies, sort]);
+  const replyTree = useMemo(
+    () => buildReplyTree(localReplies, sort),
+    [localReplies, sort],
+  );
 
-  function addReply(body: string) {
+  function addReply(body: string, parentPostId: string | null = null) {
     setLocalReplies((prev) => [
       ...prev,
       {
+        // Client-generated id; live mode reconciles against the server's real
+        // post id once `postReply` resolves. `parentPostId` nests this reply
+        // under an existing post, or null for a top-level thread reply.
+        id: crypto.randomUUID(),
+        parentPostId,
         avatar: profile.initials,
         background: "var(--plum)",
         color: "var(--cream)",
@@ -104,10 +110,11 @@ export function ThreadPage() {
         reactions: 0,
       },
     ]);
-    setReply("");
+    if (parentPostId != null) nestedReplies.cancelReply();
+    else setReply("");
     showToast(t("forum:threadPage.replyPostedToast"), "success");
     // Live mode persists; demo mode no-ops (local reply above is the record).
-    postReply.mutate(body);
+    postReply.mutate({ body, parentPostId });
   }
 
   // Live mode has no thread until the fetch resolves — skeleton, then a real
@@ -124,118 +131,74 @@ export function ThreadPage() {
     demoMode && (person.slug === currentUser.slug || person.name === "You");
 
   const ownsOp = demoOwns({ slug: thread.author.slug, name: thread.author.name });
-  const {
-    opDeleted,
-    opCanEdit,
-    opCanDelete,
-    opCanRestore,
-    opCanViewHistory,
-    opTitle,
-    opBody,
-    opEditedAt,
-  } = deriveOpView(thread, demoMode, ownsOp, moderation.opOverride);
+  const opView = deriveOpView(thread, demoMode, ownsOp, moderation.opOverride);
 
   return (
     <PageShell>
-      <ThreadTopbar categoryName={catMeta ? t(catMeta.nameKey) : undefined} />
+      <MentionNamesProvider>
+        <ThreadTopbar categoryName={catMeta ? t(catMeta.nameKey) : undefined} />
 
-      <section className="wrap">
-        <div className={styles.layout}>
-          <ThreadOpCard
-            thread={thread}
-            title={opTitle}
-            body={opBody}
-            editedAt={opEditedAt}
-            deleted={opDeleted}
-            liked={liked}
-            setLiked={setLiked}
-            bookmarked={bookmarked}
-            setBookmarked={setBookmarked}
-            onReport={() => moderation.setReportingAuthor(thread.author.name)}
-            canEdit={opCanEdit}
-            canDelete={opCanDelete}
-            canRestore={opCanRestore}
-            canViewHistory={opCanViewHistory}
-            onEdit={() => {
-              moderation.setEditingOpInitialBody(opBody.join("\n"));
-              moderation.setEditingOp(true);
-            }}
-            onDelete={() => moderation.onOpDelete(thread.opPostId)}
-            onRestore={() => moderation.doRestorePost(thread.opPostId ?? "", true)}
-            onHistory={() =>
-              thread.opPostId && moderation.setHistoryPostId(thread.opPostId)
-            }
-          />
+        <section className="wrap">
+          <div className={styles.layout}>
+            <ThreadOpSection
+              thread={thread}
+              opView={opView}
+              liked={liked}
+              setLiked={setLiked}
+              bookmarked={bookmarked}
+              setBookmarked={setBookmarked}
+              moderation={moderation}
+            />
 
-          <ReplySortBar
-            count={localReplies.length}
-            sort={sort}
-            setSort={setSort}
-          />
+            <ThreadReplySection
+              sort={sort}
+              setSort={setSort}
+              count={localReplies.length}
+              loading={loading}
+              nodes={replyTree}
+              replyKey={replyKey}
+              likedReplies={likedReplies}
+              toggleReplyLike={toggleReplyLike}
+              hasNextPage={threadQuery.hasNextPage}
+              fetchNextPage={threadQuery.fetchNextPage}
+              isFetchingNextPage={threadQuery.isFetchingNextPage}
+              demoMode={demoMode}
+              demoOwns={demoOwns}
+              moderation={moderation}
+              nestedReplies={nestedReplies}
+              authorName={thread.author.name}
+              reply={reply}
+              setReply={setReply}
+              onPost={addReply}
+              textareaRef={replyBoxRef}
+            />
+          </div>
+        </section>
 
-          <ThreadReplies
-            loading={loading}
-            replies={replies}
-            replyKey={replyKey}
-            likedReplies={likedReplies}
-            toggleReplyLike={toggleReplyLike}
-            onFocusComposer={() => replyBoxRef.current?.focus()}
-            hasNextPage={threadQuery.hasNextPage}
-            fetchNextPage={threadQuery.fetchNextPage}
-            isFetchingNextPage={threadQuery.isFetchingNextPage}
-            demoMode={demoMode}
-            demoOwns={demoOwns}
-            editingReplyPostId={moderation.editingReplyPostId}
-            onStartEdit={(replyItem) =>
-              moderation.setEditingReplyPostId(
-                replyItem.postId ?? replyKey(replyItem),
-              )
-            }
-            onCancelEdit={() => moderation.setEditingReplyPostId(null)}
-            onSaveEdit={moderation.saveReplyEdit}
-            onDelete={moderation.onReplyDelete}
-            onRestore={(replyItem) =>
-              replyItem.postId &&
-              moderation.doRestorePost(replyItem.postId, false)
-            }
-            onHistory={(replyItem) =>
-              replyItem.postId && moderation.setHistoryPostId(replyItem.postId)
-            }
-          />
-
-          <ThreadComposer
-            authorName={thread.author.name}
-            reply={reply}
-            setReply={setReply}
-            onPost={addReply}
-            textareaRef={replyBoxRef}
-          />
-        </div>
-      </section>
-
-      <ThreadPageModals
-        reportingAuthor={moderation.reportingAuthor}
-        threadId={String(thread.id)}
-        onCloseReport={() => moderation.setReportingAuthor(null)}
-        editingOp={moderation.editingOp}
-        opTitle={opTitle}
-        editingOpInitialBody={moderation.editingOpInitialBody}
-        editBusy={moderation.editBusy}
-        onSaveOp={moderation.saveOpEdit}
-        onCloseOp={() => moderation.setEditingOp(false)}
-        confirmDelete={moderation.confirmDelete}
-        deleteBusy={moderation.deleteBusy}
-        onConfirmDelete={() =>
-          moderation.confirmDelete &&
-          moderation.doDeletePost(
-            moderation.confirmDelete.postId,
-            moderation.confirmDelete.isOp,
-          )
-        }
-        onCloseDelete={() => moderation.setConfirmDelete(null)}
-        historyPostId={moderation.historyPostId}
-        onCloseHistory={() => moderation.setHistoryPostId(null)}
-      />
+        <ThreadPageModals
+          reportingAuthor={moderation.reportingAuthor}
+          threadId={String(thread.id)}
+          onCloseReport={() => moderation.setReportingAuthor(null)}
+          editingOp={moderation.editingOp}
+          opTitle={opView.opTitle}
+          editingOpInitialBody={moderation.editingOpInitialBody}
+          editBusy={moderation.editBusy}
+          onSaveOp={moderation.saveOpEdit}
+          onCloseOp={() => moderation.setEditingOp(false)}
+          confirmDelete={moderation.confirmDelete}
+          deleteBusy={moderation.deleteBusy}
+          onConfirmDelete={() =>
+            moderation.confirmDelete &&
+            moderation.doDeletePost(
+              moderation.confirmDelete.postId,
+              moderation.confirmDelete.isOp,
+            )
+          }
+          onCloseDelete={() => moderation.setConfirmDelete(null)}
+          historyPostId={moderation.historyPostId}
+          onCloseHistory={() => moderation.setHistoryPostId(null)}
+        />
+      </MentionNamesProvider>
     </PageShell>
   );
 }

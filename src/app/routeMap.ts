@@ -62,6 +62,7 @@ export const routes = {
   adminSafeSpaces: "/admin/safe-spaces",
   adminListings: "/admin/listings",
   adminGovernance: "/admin/governance",
+  adminRoadmap: "/admin/roadmap",
   adminHousingCoops: "/admin/housing",
   adminOrgTiers: "/admin/org-tiers",
   adminPartnerApplications: "/admin/partner-applications",

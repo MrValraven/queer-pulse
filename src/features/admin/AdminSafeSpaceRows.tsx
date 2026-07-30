@@ -1,6 +1,7 @@
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { businessPath } from "../../app/routeMap";
 import { AdminChip, type AdminTone } from "./ui";
 import { useSetSafeSpace } from "./api/useSetSafeSpace";
 import type {
@@ -104,6 +105,15 @@ function AdminSafeSpaceRow({
           {isVerified
             ? t("admin:adminSafeSpaces.unmarkCta")
             : t("admin:adminSafeSpaces.markCta")}
+        </Button>
+        <Button
+          variant="ghost"
+          size="md"
+          to={businessPath(candidate.slug)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t("admin:adminSafeSpaces.viewCta")}
         </Button>
         <Button variant="ghost" size="md" onClick={() => onEdit(candidate)}>
           {t("admin:adminSafeSpaces.editCta")}

@@ -1484,6 +1484,14 @@ export const marketing: Catalog = {
   "listBusiness.step4.alt.vibe": "Ambiente · texto alternativo",
   "listBusiness.step4.altPlaceholder":
     "Descreve para quem é cega ou tem baixa visão",
+  "listBusiness.step4.photo.upload": "Carregar",
+  "listBusiness.step4.photo.change": "Trocar",
+  "listBusiness.step4.photo.uploading": "A carregar…",
+  "listBusiness.step4.photo.remove": "Remover foto",
+  "listBusiness.step4.photo.urlPlaceholder": "ou cola o link de uma imagem",
+  "listBusiness.step4.photo.urlInvalid": "Isto não parece o link de uma imagem",
+  "listBusiness.step4.photo.uploadError":
+    "Não foi possível carregar essa imagem — tenta novamente",
   "listBusiness.step4.aboutYouHeading": "Um pouco sobre ti",
   "listBusiness.step4.relLabel": "A tua ligação ao lugar",
   "listBusiness.step4.relAria": "A tua ligação",
@@ -1780,7 +1788,67 @@ export const marketing: Catalog = {
   "changelog.tag.forum": "Visitar o fórum →",
   "changelog.tag.profile": "Abrir o seu perfil →",
   "changelog.tag.gatherings": "Ver encontros →",
+  "changelog.tag.members": "Conhecer os membros →",
   "changelog.tag.events": "Abrir o Events Hub →",
+  "changelog.tag.roadmap": "Abrir o roteiro →",
+
+  "changelog.entries.community-roadmap.title":
+    "O roteiro é agora feito contigo",
+  "changelog.entries.community-roadmap.body":
+    "Vê o que já foi lançado, o que está em construção e o que está planeado — depois vota no que mais importa para ti, ou submete a tua própria ideia. Lemos todas as sugestões; a equipa cura o que avança no roteiro.",
+
+  "changelog.entries.listing-photos.title": "Fotos na tua ficha de negócio",
+  "changelog.entries.listing-photos.body":
+    "O formulário de registo de negócio já aceita fotos — carrega um ficheiro ou cola o link de uma imagem e vê em tempo real como a tua ficha vai ficar antes de publicar.",
+
+  "changelog.entries.business-page-live.title": "As páginas de negócios ganham vida",
+  "changelog.entries.business-page-live.body":
+    "Cada página de negócio mostra agora as fotografias reais do espaço numa galeria que podes abrir em ecrã inteiro, além do horário de funcionamento real com um estado “Aberto agora / Encerrado” em tempo real — para saberes o aspeto de um lugar e se está aberto antes de ir.",
+
+  "changelog.entries.directory-filters-upgrade.title":
+    "O diretório de negócios ficou muito mais fácil de filtrar",
+  "changelog.entries.directory-filters-upgrade.body":
+    "Encontrar um lugar ficou mais suave. A pesquisa olha para descrições e etiquetas, não só para os nomes; cada categoria mostra uma contagem ao vivo; podes ordenar A–Z ou por bairro; e os filtros ficam no link, por isso um diretório filtrado é partilhável e sobrevive a um refresh. Escolher um ambiente já não faz desaparecer todos os negócios, os filtros ativos aparecem como chips removíveis com um Limpar tudo, os resultados vazios explicam-se, e o mapa é mais fácil de usar no telemóvel.",
+  "changelog.entries.public-profile-badge.title":
+    "O \"Ficar público\" agora vive no teu perfil",
+  "changelog.entries.public-profile-badge.body":
+    "O controlo de perfil público passou para um selo discreto ao lado do teu nome — toca nele para veres como os perfis públicos se desbloqueiam, ou para ativares o teu quando fores elegível. Só aparece no teu próprio perfil.",
+
+  "changelog.entries.here-for-hero.title": "\"Aqui para\" agora abre o teu perfil",
+  "changelog.entries.here-for-hero.body":
+    "O teu \"Aqui para\" — o que procuras na QueerPulse — está agora logo no topo do perfil, ao lado do nome e da bio, em vez de mais abaixo na página. Mais fácil de ver à primeira vista, e continua tão fácil manter privado, se for essa a tua escolha.",
+
+  "changelog.entries.directory-view-switcher.title": "Uma troca Lista / Mapa mais clara",
+  "changelog.entries.directory-view-switcher.body":
+    "Alternar entre a lista e o mapa no diretório de negócios ficou mais fácil de encontrar. Os dois botões passaram a ser um único seletor com etiquetas e ícones, ao lado da contagem de resultados — para se ler claramente como \"escolher uma vista\" e não como mais um filtro, mantendo-se compacto e fácil de tocar no telemóvel.",
+
+  "changelog.entries.profile-links-fix.title": "Links de perfil que se comportam",
+  "changelog.entries.profile-links-fix.body":
+    "Adicionar links sociais ao teu perfil ficou mais suave. Um nome de utilizador simples, como o teu handle do Instagram, é aceite tal como está — acabou o aviso \"isto não parece um link válido\" quando claramente é — e as linhas já não se desmontam quando aparece uma dica; o campo mantém-se no sítio e a dica fica bem alinhada por baixo.",
+
+  "changelog.entries.subprofiles-showcase.title": "Um \"Também a trabalhar como\" mais rico",
+  "changelog.entries.subprofiles-showcase.body":
+    "Os outros lados do teu trabalho mostram agora mais de quem és — trabalho em destaque, links, disponibilidade e o número de seguidores e endossos, tudo no cartão. No telemóvel é uma vista de um só toque, pensada para um ecrã mais pequeno, e se és dono das personas tens badges de visibilidade e uma forma rápida de editar direto da vitrine.",
+
+  "changelog.entries.real-directory-map.title": "Um mapa a sério em cada página do diretório",
+  "changelog.entries.real-directory-map.body":
+    "Abre um negócio ou espaço no diretório e a localização passa a aparecer num mapa real e interativo — o mesmo mapa quente de Lisboa que já conheces da vista de mapa e de quando registas um negócio — marcado no ponto exato onde o dono o colocou. O antigo mapa decorativo desapareceu.",
+
+  "changelog.entries.reply-threads.title": "Responde a qualquer comentário no fórum",
+  "changelog.entries.reply-threads.body":
+    "As respostas passam agora a poder ter as suas próprias respostas. Responde diretamente a qualquer comentário e a tua entra logo ali por baixo, para as conversas longas se ramificarem em vez de se amontoarem numa lista só. As conversas mais profundas recolhem-se numa única linha — toca para expandir quando quiseres ver o resto.",
+
+  "changelog.entries.copy-subprofile.title": "Duplica um perfil já existente",
+  "changelog.entries.copy-subprofile.body":
+    "A criar um subperfil novo? Duplica um que já tenhas — leva tudo contigo, ou só o conteúdo — e ajusta a partir daí.",
+
+  "changelog.entries.smoother-chat.title": "Chat mais suave e reativo",
+  "changelog.entries.smoother-chat.body":
+    "As mensagens passam a parecer mais rápidas e serenas em qualquer dispositivo. Escrever já não faz a conversa tremer, o deslizar-para-responder acompanha o teu dedo, e as mensagens novas assentam no lugar em vez de a conversa toda animar de uma vez. No telemóvel, manter uma mensagem premida abre as ações de forma limpa (sem lutar com o menu de seleção de texto), o chat preenche o ecrã como uma só superfície sem a página a saltar por trás, e os toques dão resposta imediata, com uma leve vibração ao premir sem soltar.",
+
+  "changelog.entries.invite-state-page.title": "Página de convite mais clara",
+  "changelog.entries.invite-state-page.body":
+    "Quando uma ligação de convite não pode ser usada, a página passa a mostrar o convite real — quem te avalizou e quando expirou — em vez de uma mensagem genérica. Também distingue um convite que expirou, um que já foi usado e um que foi retirado, e encaminha-te para o passo certo em cada caso.",
 
   "changelog.entries.chat-shortcuts.title": "Atalhos de menção no chat",
   "changelog.entries.chat-shortcuts.body":
@@ -1838,6 +1906,20 @@ export const marketing: Catalog = {
   "changelog.entries.forward-pin-star.title": "Reencaminhe, fixe e marque",
   "changelog.entries.forward-pin-star.body":
     "Passe uma mensagem para outra conversa, fixe as que um grupo está sempre a revisitar, e marque com estrela as que quer voltar a encontrar — as mensagens marcadas ficam só para si.",
+  "changelog.entries.safe-space-view-page.title":
+    "Pré-visualize espaços seguros antes de verificar",
+  "changelog.entries.safe-space-view-page.body":
+    "A ferramenta de revisão de Espaços seguros passa a ter um botão “Ver página” em cada listagem, abrindo a sua página pública num novo separador para que a moderação veja um espaço por inteiro antes de o marcar como verificado.",
+  "changelog.entries.swipe-members-highlight.title":
+    "Deslize pelos membros em destaque",
+  "changelog.entries.swipe-members-highlight.body":
+    "Na página inicial, o cartão de membro em destaque agora acompanha o seu dedo — deslize para a esquerda ou direita no telemóvel para passar entre membros, e ele encaixa no seguinte.",
+  "changelog.entries.mention-names.title": "As menções mostram nomes reais",
+  "changelog.entries.mention-names.body":
+    "Menciona uma pessoa, comunidade ou lugar numa conversa, tópico do fórum ou discussão de comunidade e agora aparece o nome — Tiago Costa, não @tiago-costa. Toca e continuas a ir para o sítio certo; passa o cursor para ver o identificador.",
+  "changelog.entries.forward-to-groups.title": "Reencaminha mensagens para os teus grupos",
+  "changelog.entries.forward-to-groups.body":
+    "O reencaminhamento agora chega às tuas conversas de grupo, não só às mensagens individuais. Mantém premida qualquer mensagem, escolhe Reencaminhar e seleciona qualquer grupo de que fazes parte.",
   "changelog.entries.read-receipts.title": "Recibos de entrega e de leitura",
   "changelog.entries.read-receipts.body":
     "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida — para saber onde a sua mensagem chegou.",
@@ -1992,7 +2074,8 @@ export const marketing: Catalog = {
     "O que tornaria a QueerPulse melhor para ti?",
   "roadmap.submitIdea.cta": "Submeter ideia",
   "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
-  "roadmap.submitIdea.toast.submitted": "Ideia submetida — obrigado",
+  "roadmap.submitIdea.toast.submitted": "Obrigado — enviámos à equipa para revisão",
+  "roadmap.submitIdea.toast.error": "Não foi possível submeter a tua ideia — tenta de novo",
   "roadmap.topIdeas.title": "Ideias mais pedidas",
   "roadmap.topIdeas.voted": "Votado",
   "roadmap.topIdeas.vote": "Votar",
@@ -2557,9 +2640,21 @@ export const marketing: Catalog = {
   "directory.cat.fitness": "Ginásio e Fitness",
   "directory.loading": "A carregar lugares…",
   "directory.count": "A mostrar <b>{shown}</b> de {total} lugares",
-  "directory.empty": "Nenhum lugar corresponde — tenta um filtro mais amplo.",
-  "directory.noListings":
-    "Ainda não há lugares — sê o primeiro a adicionar um abaixo.",
+  "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
+  "directory.empty.body":
+    "Tenta uma categoria mais ampla, menos ambientes ou outra pesquisa — ou limpa os filtros para ver tudo.",
+  "directory.noListings.title": "Ainda não há lugares",
+  "directory.noListings.body":
+    "Este diretório cresce a partir da comunidade. Se tens ou conheces um lugar queer-owned ou queer-friendly em Lisboa, sê o primeiro a adicioná-lo.",
+  "directory.clearFilters": "Limpar filtros",
+  "directory.clearAll": "Limpar tudo",
+  "directory.activeFilters": "Filtrado por",
+  "directory.removeFilter": "Remover filtro",
+  "directory.onMap": "{count} no mapa",
+  "directory.sort.label": "Ordenar",
+  "directory.sort.default": "Em destaque",
+  "directory.sort.name": "A–Z",
+  "directory.sort.hood": "Por bairro",
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
@@ -2585,6 +2680,8 @@ export const marketing: Catalog = {
   "directory.detail.hoursTitle": "Horário",
   "directory.detail.today": "Hoje",
   "directory.detail.hoursClosed": "Encerrado",
+  "directory.detail.openNow": "Aberto agora",
+  "directory.detail.closedNow": "Encerrado",
   "directory.detail.reviewsTitle":
     "Avaliações da comunidade · <em>{count}</em>",
   "directory.detail.reviewsSub": "Ordenado por mais úteis.",
@@ -2605,12 +2702,18 @@ export const marketing: Catalog = {
   "directory.detail.visitWebsite": "Visitar o site →",
   "directory.detail.getInTouch": "Entrar em contacto →",
   "directory.detail.backToDirectory": "Voltar ao diretório",
+  "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
   "directory.detail.whoRunsIt": "Quem gere isto",
   "directory.detail.onQueerPulse": "Na QueerPulse",
   "directory.detail.communityVouched": "Avalizado pela comunidade",
   "directory.detail.viewProfile": "Ver o perfil de {name} →",
   "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
   "directory.detail.upcomingHere": "Próximos eventos aqui",
+  "directory.detail.galleryAria": "Fotos de {name}",
+  "directory.detail.viewPhoto": "Ver foto",
+  "directory.detail.lightboxClose": "Fechar",
+  "directory.detail.prevPhoto": "Foto anterior",
+  "directory.detail.nextPhoto": "Foto seguinte",
   "directory.relative.yesterday": "Ontem",
   "directory.relative.twoDaysAgo": "há 2 dias",
   "directory.relative.threeDaysAgo": "há 3 dias",
@@ -2913,6 +3016,7 @@ export const marketing: Catalog = {
   "map.sidebar.venueCount_other": "<b>{count}</b> espaços",
   "map.sidebar.clear": "Limpar",
   "map.sidebar.empty": "Nenhum espaço corresponde a estes filtros.",
+  "map.jumpToList": "Ver a lista · {count}",
   "map.venueCard.beenCount_one": "<b>{count}</b> pessoa já esteve aqui",
   "map.venueCard.beenCount_other": "<b>{count}</b> pessoas já estiveram aqui",
   "map.venueCard.beenThere": "Já estiveste aqui",
@@ -2933,6 +3037,7 @@ export const marketing: Catalog = {
   "local.filter.searchPlaceholder": "Procurar espaços e locais…",
   "local.filter.categoryAria": "Filtrar por categoria",
   "local.filter.vibeLabel": "Ambiente",
+  "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.venue.back": "Voltar ao mapa",
   "local.venue.address": "Morada",
   "local.venue.hours": "Horário",

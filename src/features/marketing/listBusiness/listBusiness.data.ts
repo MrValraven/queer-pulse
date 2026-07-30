@@ -498,6 +498,20 @@ export function emailValid(v: string): boolean {
   return RE.email.test(v.trim());
 }
 
+/** True when `value` can be rendered directly as an `<img src>` — an http(s),
+ *  data, or blob URL. Guards the paste-a-URL field from non-image schemes. */
+export function isPastableImageUrl(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  // Only `https://` — this is the value that gets PERSISTED into `photos`, so it
+  // must satisfy the backend's `@IsImageReference` (queerpulse-backend
+  // `common/validators/is-image-reference.decorator.ts`), which accepts only a
+  // storage key or an `https://` URL and refuses `http:`/`data:`/`blob:`
+  // (mixed-content downgrade + stored-XSS defence). Uploaded photos persist a
+  // storage key via `useUploadImage` and never reach this guard.
+  return /^https:\/\//i.test(trimmed);
+}
+
 /** Build a reference like QPL-2026-0007 from a numeric seed. */
 export function makeRef(seq: number): string {
   return `QPL-2026-${String(seq).padStart(4, "0")}`;

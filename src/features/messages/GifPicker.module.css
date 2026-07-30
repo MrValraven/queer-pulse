@@ -50,6 +50,11 @@
   flex: 1;
   overflow-y: auto;
   padding: 0 10px 10px;
+  /* This is a scroller inside a popover panel — reaching its top/bottom must
+     not chain into the message log scrolling behind it or trigger iOS
+     rubber-band/pull-to-refresh. */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .grid {
   display: grid;

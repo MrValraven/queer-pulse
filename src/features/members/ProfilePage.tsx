@@ -14,7 +14,6 @@ import { ProfileHero, ProfileContent } from "./ProfileSections";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { PlacesSection } from "./PlacesSection";
-import { PublicProfileControl } from "./PublicProfileControl";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
 import { useProfileEditGuard } from "./useProfileEditGuard";
@@ -141,8 +140,6 @@ export function ProfilePage() {
         otherMember={isSelf ? null : otherMember}
         firstName={resolvedProfile.first}
       />
-
-      {selfView && !isEditing && <PublicProfileControl />}
 
       <PlacesSection
         memberSlug={isSelf ? selfSlug : (slug ?? "")}

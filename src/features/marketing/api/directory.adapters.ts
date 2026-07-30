@@ -79,6 +79,10 @@ export function detailDtoToPlace(
     owner: dto.owner,
     social: dto.social,
     address: dto.address,
+    photos: dto.photos,
+    alt: dto.alt,
+    hours: dto.hours,
+    langs: dto.langs,
     reviews: dto.reviews,
     upcoming: dto.upcoming.map((event) => {
       const startAt = new Date(event.startAt);

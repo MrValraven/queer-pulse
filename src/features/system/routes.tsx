@@ -31,7 +31,7 @@ export function systemRoutes() {
         path={routes.accountSuspended}
         element={<AccountSuspendedPage />}
       />
-      <Route path={routes.inviteExpired} element={<InviteExpiredPage />} />
+      <Route path={routes.inviteExpired} element={<InviteExpiredPage preview />} />
       <Route path={routes.pendingReview} element={<PendingReviewPage />} />
       <Route
         path={routes.verificationNeeded}

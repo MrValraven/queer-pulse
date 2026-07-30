@@ -159,7 +159,9 @@ export const messages: Catalog = {
 
   // Escolha de destinatário para reencaminhar (NewMessageModal, modo reencaminhar)
   "forward.title": "Reencaminhar para…",
-  "forward.sub": "Escolhe uma ligação para reencaminhar esta mensagem.",
+  "forward.sub": "Escolhe uma ligação ou grupo para reencaminhar esta mensagem.",
+  "forward.sectionPeople": "Pessoas",
+  "forward.sectionGroups": "Grupos",
 
   // Vista de mensagens guardadas (StarredMessagesModal)
   "starred.title": "Mensagens guardadas",

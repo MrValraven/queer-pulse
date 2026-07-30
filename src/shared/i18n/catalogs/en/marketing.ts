@@ -1438,6 +1438,14 @@ export const marketing: Catalog = {
   "listBusiness.step4.alt.vibe": "Vibe · alt text",
   "listBusiness.step4.altPlaceholder":
     "Describe it for blind & low-vision members",
+  "listBusiness.step4.photo.upload": "Upload",
+  "listBusiness.step4.photo.change": "Change",
+  "listBusiness.step4.photo.uploading": "Uploading…",
+  "listBusiness.step4.photo.remove": "Remove photo",
+  "listBusiness.step4.photo.urlPlaceholder": "or paste an image URL",
+  "listBusiness.step4.photo.urlInvalid": "That doesn't look like an image URL",
+  "listBusiness.step4.photo.uploadError":
+    "Couldn't upload that image — try again",
   "listBusiness.step4.aboutYouHeading": "A little about you",
   "listBusiness.step4.relLabel": "Your connection to the place",
   "listBusiness.step4.relAria": "Your connection",
@@ -1729,7 +1737,67 @@ export const marketing: Catalog = {
   "changelog.tag.forum": "Visit the forum →",
   "changelog.tag.profile": "Open your profile →",
   "changelog.tag.gatherings": "See gatherings →",
+  "changelog.tag.members": "Meet the members →",
   "changelog.tag.events": "Open the Events Hub →",
+  "changelog.tag.roadmap": "Open the roadmap →",
+
+  "changelog.entries.community-roadmap.title":
+    "The roadmap is now yours to shape",
+  "changelog.entries.community-roadmap.body":
+    "See what's shipped, what's building, and what's planned — then vote for what matters most to you, or submit an idea of your own. We read every suggestion; the team curates what moves onto the roadmap.",
+
+  "changelog.entries.listing-photos.title": "Photos on your business listing",
+  "changelog.entries.listing-photos.body":
+    "The list-a-business form now takes photos — upload a file or paste an image URL, and see a live preview of how your listing will look before you publish.",
+
+  "changelog.entries.business-page-live.title": "Business pages come to life",
+  "changelog.entries.business-page-live.body":
+    "Every business page now shows the venue's real photos in a gallery you can open full-screen, plus its real opening hours with a live “Open now / Closed” status — so you know what a place looks like and whether it's open before you go.",
+
+  "changelog.entries.directory-filters-upgrade.title":
+    "The business directory got a lot easier to filter",
+  "changelog.entries.directory-filters-upgrade.body":
+    "Finding a place is smoother now. Search looks inside descriptions and tags, not just names; each category shows a live count; you can sort A–Z or by neighbourhood; and your filters live in the link, so a filtered directory is shareable and survives a refresh. Picking a vibe no longer makes every business disappear, active filters show as removable chips with a Clear-all, empty results explain themselves, and the map is easier to use on a phone.",
+  "changelog.entries.public-profile-badge.title":
+    "\"Go public\" now lives on your profile",
+  "changelog.entries.public-profile-badge.body":
+    "Your public-profile control moved into a quiet badge next to your name — tap it to see how public profiles unlock, or to switch yours on once you're eligible. It only ever shows on your own profile.",
+
+  "changelog.entries.here-for-hero.title": "\"Here for\" now leads your profile",
+  "changelog.entries.here-for-hero.body":
+    "Your \"Here for\" intent — what you're looking for on QueerPulse — now sits right at the top of your profile, next to your name and bio, instead of further down the page. Easier to spot at a glance, and just as easy to keep private if that's how you like it.",
+
+  "changelog.entries.directory-view-switcher.title": "A clearer List / Map switch",
+  "changelog.entries.directory-view-switcher.body":
+    "Switching between the list and the map on the business directory is easier to spot now. The two buttons became a single labelled toggle with icons, sitting beside the results count — so it clearly reads as \"pick a view\" rather than another filter, and it stays compact and tappable on a phone.",
+
+  "changelog.entries.profile-links-fix.title": "Profile links that behave",
+  "changelog.entries.profile-links-fix.body":
+    "Adding social links to your profile is smoother now. A plain username like your Instagram handle is accepted as-is — no more \"that doesn't look like a valid link\" warning when it clearly is — and the rows no longer break apart when a hint appears; the field stays put and the hint sits neatly below it.",
+
+  "changelog.entries.subprofiles-showcase.title": "A richer \"Also working as\"",
+  "changelog.entries.subprofiles-showcase.body":
+    "Your other professional sides now show off more of who you are — featured work, links, availability, and follower and endorsement counts, right on the card. On mobile it's a one-tap view built for a smaller screen, and if you own the personas you get visibility badges and a quick way to edit right from the showcase.",
+
+  "changelog.entries.real-directory-map.title": "A real map on every directory listing",
+  "changelog.entries.real-directory-map.body":
+    "Open a business or space in the directory and its location now shows on a real, interactive map — the same warm Lisbon map you already know from the map view and from listing a business — pinned to the exact spot the owner placed. The old decorative placeholder is gone.",
+
+  "changelog.entries.reply-threads.title": "Reply to any comment in the forum",
+  "changelog.entries.reply-threads.body":
+    "Replies can now have their own replies. Answer directly under any comment and yours nests right there, so long conversations branch out instead of piling into one flat list. Deep threads collapse into a single line — tap to expand when you want the rest.",
+
+  "changelog.entries.copy-subprofile.title": "Copy an existing persona",
+  "changelog.entries.copy-subprofile.body":
+    "Starting a new subprofile? Copy one you already have — bring over everything, or just the content — and tweak from there.",
+
+  "changelog.entries.smoother-chat.title": "Smoother, more responsive chat",
+  "changelog.entries.smoother-chat.body":
+    "Messages now feel faster and calmer on every device. Typing no longer stutters the conversation, swipe-to-reply glides under your finger, and new messages settle into place instead of the whole thread animating at once. On phones, holding a message opens the actions cleanly (no more fighting the text-selection popup), the chat fills the screen as one surface without the page bouncing behind it, and taps give instant feedback with a gentle buzz on long-press.",
+
+  "changelog.entries.invite-state-page.title": "A clearer invite link page",
+  "changelog.entries.invite-state-page.body":
+    "When an invite link can't be used, the page now shows the real invite — who vouched for you and when it lapsed — instead of a generic message. It also tells apart an invite that timed out, one that was already used, and one that was withdrawn, and points you to the right next step for each.",
 
   "changelog.entries.chat-shortcuts.title": "Mention shortcuts in chat",
   "changelog.entries.chat-shortcuts.body":
@@ -1787,6 +1855,20 @@ export const marketing: Catalog = {
   "changelog.entries.forward-pin-star.title": "Forward, pin and star",
   "changelog.entries.forward-pin-star.body":
     "Pass a message along to another chat, pin the ones a group keeps coming back to, and star the ones you want to find again — starred messages stay just for you.",
+  "changelog.entries.safe-space-view-page.title":
+    "Preview safe spaces before verifying",
+  "changelog.entries.safe-space-view-page.body":
+    "The Safe spaces review tool now has a “View page” button on each listing, opening its public page in a new tab so moderators can see a space in full before marking it verified.",
+  "changelog.entries.swipe-members-highlight.title":
+    "Swipe through featured members",
+  "changelog.entries.swipe-members-highlight.body":
+    "On the homepage, the featured member card now follows your finger — swipe left or right on your phone to move between members, and it snaps to the next one.",
+  "changelog.entries.mention-names.title": "Mentions show real names",
+  "changelog.entries.mention-names.body":
+    "Mention a person, community or place in a chat, forum thread or community discussion and it now reads as their name — Tiago Costa, not @tiago-costa. Tap it and you still land in the right place; hover to see the handle.",
+  "changelog.entries.forward-to-groups.title": "Forward messages to your groups",
+  "changelog.entries.forward-to-groups.body":
+    "Forwarding now reaches your group chats, not just one-to-one messages. Long-press any message, pick Forward, and choose any group you're part of.",
   "changelog.entries.read-receipts.title": "Delivered and read receipts",
   "changelog.entries.read-receipts.body":
     "Ticks now tell the whole story: sent, delivered to their phone, and read — so you know where your message got to.",
@@ -1941,7 +2023,8 @@ export const marketing: Catalog = {
     "What would make QueerPulse better for you?",
   "roadmap.submitIdea.cta": "Submit idea",
   "roadmap.submitIdea.toast.empty": "Write a few words first",
-  "roadmap.submitIdea.toast.submitted": "Idea submitted — thank you",
+  "roadmap.submitIdea.toast.submitted": "Thanks — sent to the team for review",
+  "roadmap.submitIdea.toast.error": "Couldn't submit your idea — try again",
   "roadmap.topIdeas.title": "Most requested ideas",
   "roadmap.topIdeas.voted": "Voted",
   "roadmap.topIdeas.vote": "Vote",
@@ -2486,9 +2569,21 @@ export const marketing: Catalog = {
   "directory.cat.fitness": "Gym & Fitness",
   "directory.loading": "Loading places…",
   "directory.count": "Showing <b>{shown}</b> of {total} places",
-  "directory.empty": "No places match — try a broader filter.",
-  "directory.noListings":
-    "No places listed yet — be the first to add one below.",
+  "directory.empty.title": "No places match those filters",
+  "directory.empty.body":
+    "Try a broader category, fewer vibes, or a different search — or clear the filters to see everything.",
+  "directory.noListings.title": "No places listed yet",
+  "directory.noListings.body":
+    "This directory grows from the community. If you run or know a queer-owned or queer-friendly place in Lisbon, be the first to add it.",
+  "directory.clearFilters": "Clear filters",
+  "directory.clearAll": "Clear all",
+  "directory.activeFilters": "Filtered by",
+  "directory.removeFilter": "Remove filter",
+  "directory.onMap": "{count} on map",
+  "directory.sort.label": "Sort",
+  "directory.sort.default": "Featured",
+  "directory.sort.name": "A–Z",
+  "directory.sort.hood": "By neighbourhood",
   "directory.badge.queerOwned": "Queer-owned",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
@@ -2512,6 +2607,8 @@ export const marketing: Catalog = {
   "directory.detail.hoursTitle": "Hours",
   "directory.detail.today": "Today",
   "directory.detail.hoursClosed": "Closed",
+  "directory.detail.openNow": "Open now",
+  "directory.detail.closedNow": "Closed",
   "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
   "directory.detail.reviewsSub": "Sorted by most helpful.",
   "directory.detail.review.formTitle": "Been here? Leave a review",
@@ -2531,12 +2628,18 @@ export const marketing: Catalog = {
   "directory.detail.visitWebsite": "Visit website →",
   "directory.detail.getInTouch": "Get in touch →",
   "directory.detail.backToDirectory": "Back to directory",
+  "directory.detail.mapAria": "Map showing where {name} is",
   "directory.detail.whoRunsIt": "Who runs it",
   "directory.detail.onQueerPulse": "On QueerPulse",
   "directory.detail.communityVouched": "Community-vouched",
   "directory.detail.viewProfile": "View {name}'s profile →",
   "directory.detail.membersHereLately": "Members here lately",
   "directory.detail.upcomingHere": "Upcoming here",
+  "directory.detail.galleryAria": "Photos of {name}",
+  "directory.detail.viewPhoto": "View photo",
+  "directory.detail.lightboxClose": "Close",
+  "directory.detail.prevPhoto": "Previous photo",
+  "directory.detail.nextPhoto": "Next photo",
   "directory.relative.yesterday": "Yesterday",
   "directory.relative.twoDaysAgo": "2 days ago",
   "directory.relative.threeDaysAgo": "3 days ago",
@@ -2829,6 +2932,7 @@ export const marketing: Catalog = {
   "map.sidebar.venueCount_other": "<b>{count}</b> places",
   "map.sidebar.clear": "Clear",
   "map.sidebar.empty": "No places match these filters.",
+  "map.jumpToList": "View the list · {count}",
   "map.venueCard.beenCount_one": "<b>{count}</b> person been here",
   "map.venueCard.beenCount_other": "<b>{count}</b> people been here",
   "map.venueCard.beenThere": "Been there",
@@ -2851,6 +2955,7 @@ export const marketing: Catalog = {
   "local.filter.searchPlaceholder": "Search places and venues…",
   "local.filter.categoryAria": "Filter by category",
   "local.filter.vibeLabel": "Vibe",
+  "local.filter.vibeVenueNote": "Vibe filters apply to venues",
   "local.venue.back": "Back to the map",
   "local.venue.address": "Address",
   "local.venue.hours": "Hours",

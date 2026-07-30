@@ -13,7 +13,8 @@ import {
 import { memberPath } from "./forumAuthor.helpers";
 import { memberName } from "../members/data/members";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
-import { ThreadReplyItem } from "./ThreadReplyItem";
+import { ThreadReplyNode } from "./ThreadReplyNode";
+import { type ReplyNode } from "./buildReplyTree";
 import styles from "./ThreadPage.module.css";
 
 /** Names the moderator who published an official QueerPulse post, linking to
@@ -72,7 +73,7 @@ export function ReplySortBar({
 
 export function ThreadReplies({
   loading,
-  replies,
+  nodes,
   replyKey,
   likedReplies,
   toggleReplyLike,
@@ -89,9 +90,19 @@ export function ThreadReplies({
   onDelete,
   onRestore,
   onHistory,
+  collapsedIds,
+  onToggleCollapse,
+  activeReplyTargetId,
+  onStartReply,
+  onCancelReply,
+  onPostReply,
+  inlineDraft,
+  setInlineDraft,
 }: {
   loading: boolean;
-  replies: Reply[];
+  /** Reply tree, already sorted (see buildReplyTree) — top-level nodes only;
+   *  each node recurses into its own children. */
+  nodes: ReplyNode[];
   replyKey: (r: Reply) => string;
   likedReplies: Record<string, boolean>;
   toggleReplyLike: (r: Reply) => void;
@@ -109,12 +120,20 @@ export function ThreadReplies({
   onDelete: (reply: Reply) => void;
   onRestore: (reply: Reply) => void;
   onHistory: (reply: Reply) => void;
+  collapsedIds: Set<string>;
+  onToggleCollapse: (id: string) => void;
+  activeReplyTargetId: string | null;
+  onStartReply: (reply: Reply) => void;
+  onCancelReply: () => void;
+  onPostReply: (body: string) => void;
+  inlineDraft: string;
+  setInlineDraft: (value: string) => void;
 }) {
   const { t } = useTranslation();
   return (
     <div>
       {loading && <ThreadRepliesSkeleton count={3} />}
-      {!loading && replies.length === 0 && (
+      {!loading && nodes.length === 0 && (
         <EmptyState
           compact
           icon={<FiMessageSquare />}
@@ -127,26 +146,31 @@ export function ThreadReplies({
         />
       )}
       {!loading &&
-        replies.map((currentReply, replyIndex) => (
-          <ThreadReplyItem
-            key={replyKey(currentReply)}
-            reply={currentReply}
-            index={replyIndex}
+        nodes.map((topLevelNode, topLevelIndex) => (
+          <ThreadReplyNode
+            key={topLevelNode.reply.id}
+            node={topLevelNode}
+            index={topLevelIndex}
             replyKey={replyKey}
-            isLiked={!!likedReplies[replyKey(currentReply)]}
+            likedReplies={likedReplies}
             toggleReplyLike={toggleReplyLike}
             demoMode={demoMode}
             demoOwns={demoOwns}
-            isEditing={
-              editingReplyPostId ===
-              (currentReply.postId ?? replyKey(currentReply))
-            }
+            editingReplyPostId={editingReplyPostId}
             onStartEdit={onStartEdit}
             onCancelEdit={onCancelEdit}
             onSaveEdit={onSaveEdit}
             onDelete={onDelete}
             onRestore={onRestore}
             onHistory={onHistory}
+            collapsedIds={collapsedIds}
+            onToggleCollapse={onToggleCollapse}
+            activeReplyTargetId={activeReplyTargetId}
+            onStartReply={onStartReply}
+            onCancelReply={onCancelReply}
+            onPostReply={onPostReply}
+            inlineDraft={inlineDraft}
+            setInlineDraft={setInlineDraft}
           />
         ))}
 

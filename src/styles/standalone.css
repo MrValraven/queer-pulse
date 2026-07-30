@@ -54,4 +54,18 @@
   html[data-display-mode="standalone"] .site-footer {
     display: none;
   }
+
+  /* A `fullHeight` AppShell route (see AppShell.tsx — currently only Messages)
+     sizes its own top/bottom offsets directly from the real app-bar/tab-bar
+     tokens, so it must NOT also receive the generic hero-band margin-top /
+     tab-bar padding-bottom above: those two mechanisms stacking (rather than
+     one replacing the other) is what previously left the composer hidden
+     behind the tab bar with a doubled top gap on some devices. The extra
+     attribute makes this selector strictly more specific than the plain
+     `main[data-page-main]` rules above, so it always wins regardless of
+     source order. */
+  html[data-display-mode="standalone"] main[data-page-main][data-shell="full-height"] {
+    margin-top: 0;
+    padding-bottom: 0;
+  }
 }

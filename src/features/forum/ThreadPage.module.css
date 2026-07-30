@@ -277,6 +277,40 @@
 .replyMenu {
   margin-left: auto;
 }
+
+/* ── Nested replies (collapse toggle + hidden-branch count) ── */
+.collapseToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 24px;
+  min-height: 24px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-40);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .collapseToggle:hover {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+.collapsedCount {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
 .inlineEdit {
   margin: 8px 0;
 }
@@ -327,6 +361,14 @@
   font-size: 12.5px;
   margin-bottom: 3px;
 }
+/* Wraps the like + reply actions with `gap` (not per-child margins) so the
+ * row's own top spacing is set once, here, instead of on each button. */
+.replyActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
 .replyReact {
   display: inline-flex;
   align-items: center;
@@ -339,7 +381,6 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  margin-top: 4px;
   transition:
     color var(--dur-fast) var(--ease-std),
     transform var(--dur-fast) var(--ease-std);
@@ -359,6 +400,22 @@
   fill: var(--accent);
   stroke: var(--accent);
   transform: scale(1.12);
+}
+.replyReplyBtn {
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: var(--sans);
+  color: var(--ink-40);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-std);
+}
+@media (hover: hover) {
+  .replyReplyBtn:hover {
+    color: var(--accent-ink);
+  }
 }
 
 .compose {
@@ -464,10 +521,88 @@
   .replyHighlighted {
     padding: 16px 14px;
   }
+  .branchToggle,
+  .continueThread {
+    min-height: 44px;
+  }
 }
 
 .loadMore {
   display: flex;
   justify-content: center;
   margin-top: 12px;
+}
+
+/* ── Nested replies: indent, thread-line, collapse/continue affordances ── */
+
+/* One reply + its subtree. Depth 0 stays flush-left (no line, no indent —
+ * the indent itself is applied inline via marginLeft, clamped in TSX). */
+.replyNode {
+  position: relative;
+}
+
+/* Left rail marking "this is a reply to the item above/left of it," drawn
+ * only past depth 0. Reuses the same hairline token as every other border
+ * in this file (`--line-rgb`), just at a slightly lower opacity so a long
+ * thread's rails stay quiet rather than competing with content. */
+.threadLine {
+  padding-left: 14px;
+}
+.threadLine::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(var(--line-rgb), 0.09);
+}
+
+/* Full-width ghost bar standing in for a hidden or deferred subtree. Margin
+ * on the left roughly aligns it under the reply's own text column (avatar
+ * width + gap, matching `.reply`'s grid-template-columns above). */
+.branchToggle,
+.continueThread {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 4px 54px;
+  padding: 8px 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .branchToggle:hover,
+  .continueThread:hover {
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+
+/* Inline reply composer, mounted directly beneath the reply it targets. */
+.inlineCompose {
+  margin: 10px 0 10px 54px;
+}
+.inlineCompose .compose {
+  margin-top: 0;
+}
+.inlineCancel {
+  margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapseToggle,
+  .replyReplyBtn,
+  .branchToggle,
+  .continueThread {
+    transition: none;
+  }
 }
