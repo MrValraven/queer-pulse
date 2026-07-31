@@ -1751,6 +1751,10 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Find a way in →",
   "changelog.tag.notifications": "Open your notifications →",
 
+  "changelog.entries.review-author-avatars.title":
+    "See who left a review",
+  "changelog.entries.review-author-avatars.body":
+    "Reviews on a space's directory page now show the reviewer's photo, and their name links straight to their profile — so a warm note from someone in the community is one tap away from finding out more about them. Reviews from non-members still read exactly as before, just without the link.",
   "changelog.entries.verification-in-context.title":
     "How verification works now lives where you're browsing",
   "changelog.entries.verification-in-context.body":

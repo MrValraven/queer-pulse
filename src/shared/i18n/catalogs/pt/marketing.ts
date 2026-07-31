@@ -1802,6 +1802,10 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Encontra o teu caminho →",
   "changelog.tag.notifications": "Abrir as tuas notificações →",
 
+  "changelog.entries.review-author-avatars.title":
+    "Vê quem deixou uma avaliação",
+  "changelog.entries.review-author-avatars.body":
+    "As avaliações na página de um espaço no diretório mostram agora a foto de quem escreveu, e o nome liga diretamente ao perfil da pessoa — por isso uma nota calorosa de alguém da comunidade fica a um toque de saberes mais sobre ela. As avaliações de quem não é membro continuam iguais, apenas sem a ligação.",
   "changelog.entries.verification-in-context.title":
     "A verificação passa a estar onde estás a explorar",
   "changelog.entries.verification-in-context.body":

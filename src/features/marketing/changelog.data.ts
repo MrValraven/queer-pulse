@@ -93,6 +93,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "review-author-avatars",
+        category: "feature",
+        date: "31 Jul 2026",
+        ...entryKeys("review-author-avatars"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "verification-in-context",
         category: "improvement",
         date: "31 Jul 2026",

@@ -164,10 +164,15 @@
   cursor: zoom-in;
   background: none;
 }
+/* Header band, not a full-bleed poster: a viewport-relative height keeps the
+   hero a balanced banner (min 260 on short/mobile screens, ~42vh mid, capped
+   at 440 so it never dominates the page on tall displays) instead of the old
+   16/10 aspect ratio that rendered ~737px tall at the 1180px container width.
+   object-fit: cover fills the band and crops rather than letterboxing. */
 .photoHero img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: clamp(260px, 42vh, 440px);
   object-fit: cover;
   transition: transform 0.3s var(--ease);
 }
@@ -780,22 +785,34 @@
   margin-bottom: 10px;
   flex-wrap: wrap;
 }
-.revAv {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: 12px;
+/* Author block (avatar + name/byline). As a router <Link> it deep-links to the
+   reviewer's profile; as a plain <div> (seeded/non-member reviews) it's just a
+   layout row. Same flex layout for both so the two render identically. */
+.revAuthor {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: none;
+  gap: 12px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+}
+.revAuthor:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .revName {
   font-size: 14px;
   font-weight: 700;
   color: var(--text-strong);
+  transition: color 0.18s var(--ease);
+}
+/* Only the linked variant reacts to hover — the reviewer's name is the click
+   target for their profile. */
+@media (hover: hover) {
+  a.revAuthor:hover .revName {
+    color: var(--accent-ink);
+  }
 }
 .revByline {
   font-size: 12.5px;
@@ -855,9 +872,14 @@
   line-height: 1.6;
   text-wrap: pretty;
 }
+/* The owner Reply / Edit-reply action is a ghost <Button>. Only override the
+   size to read as a quiet, compact pill — NOT the horizontal padding: zeroing
+   it (the old `4px 0`) collapsed the pill's border-radius onto the label, so
+   the outline rendered as a cramped circle clipping the text. Keep the
+   button's own 44px min-height tap target; just tighten the type + gutters. */
 .replyToggle {
-  margin-top: 10px;
-  padding: 4px 0;
+  margin-top: 12px;
+  padding: 8px 18px;
   font-size: 13px;
 }
 .replyComposer {

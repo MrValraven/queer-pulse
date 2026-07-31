@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { Avatar } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { DirectoryPlace, Tint } from "./directoryPlaces";
+import type { DirectoryPlace } from "./directoryPlaces";
 import { DirectoryRatingDistribution } from "./DirectoryRatingDistribution";
 import { DirectoryReviewControls } from "./DirectoryReviewControls";
 import { DirectoryReviewForm } from "./DirectoryReviewForm";
@@ -10,12 +12,6 @@ import type { ReviewSort, ReviewStarFilter } from "./reviewSort";
 import { countByStar, sortAndFilterReviews } from "./reviewSort";
 import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
-
-const TINT: Record<Tint, string> = {
-  coral: s.tCoral!,
-  jade: s.tJade!,
-  plum: s.tPlum!,
-};
 
 /** Below this many reviews, sort/filter controls would sit over a couple of
  *  cards and add clutter rather than value — keep the plain backend-ordered
@@ -121,33 +117,54 @@ export function DirectoryReviewsSection({
           </button>
         </p>
       ) : (
-        displayedReviews.map((review) => (
-          <div key={review.id} className={s.rev}>
-            <div className={s.revHead}>
-              <div className={[s.revAv, TINT[review.tint]].join(" ")}>
-                {review.initials}
-              </div>
+        displayedReviews.map((review) => {
+          // Avatar + name/byline. The name label is visible beside the avatar,
+          // so `Avatar` gets no `name` (avoids a redundant SR announcement).
+          const author = (
+            <>
+              <Avatar
+                initials={review.initials}
+                tint={review.tint}
+                src={review.avatarUrl ?? undefined}
+                size={36}
+              />
               <div>
                 <div className={s.revName}>{review.name}</div>
                 <div className={s.revByline}>{review.byline}</div>
               </div>
-              <Stars score={review.stars} className={s.revStars} />
-            </div>
-            <div className={s.revText}>{review.text}</div>
-            <div className={s.revHelpful}>
-              <Translation
-                i18nKey="marketing:directory.detail.helpful"
-                components={{ b: <b /> }}
-                values={{ count: review.helpful }}
+            </>
+          );
+          return (
+            <div key={review.id} className={s.rev}>
+              <div className={s.revHead}>
+                {review.authorSlug ? (
+                  <Link
+                    to={`/members/${review.authorSlug}`}
+                    className={s.revAuthor}
+                  >
+                    {author}
+                  </Link>
+                ) : (
+                  <div className={s.revAuthor}>{author}</div>
+                )}
+                <Stars score={review.stars} className={s.revStars} />
+              </div>
+              <div className={s.revText}>{review.text}</div>
+              <div className={s.revHelpful}>
+                <Translation
+                  i18nKey="marketing:directory.detail.helpful"
+                  components={{ b: <b /> }}
+                  values={{ count: review.helpful }}
+                />
+              </div>
+              <DirectoryReviewReply
+                review={review}
+                ownerRef={ownerRef}
+                slug={place.slug}
               />
             </div>
-            <DirectoryReviewReply
-              review={review}
-              ownerRef={ownerRef}
-              slug={place.slug}
-            />
-          </div>
-        ))
+          );
+        })
       )}
     </section>
   );

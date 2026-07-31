@@ -45,6 +45,13 @@ export interface Review {
   text: string;
   helpful: number;
   ownerReply?: ReviewOwnerReply | null;
+  /** Reviewer's profile photo (member-authored reviews). Absent/null → the
+   * tinted `initials` avatar is shown instead. */
+  avatarUrl?: string | null;
+  /** Reviewer's profile slug (member-authored reviews). When set, the name
+   * links to `/members/:authorSlug`; absent/null → plain-text name (seeded or
+   * non-member review). */
+  authorSlug?: string | null;
 }
 
 export interface DirectoryPlace {
@@ -1588,6 +1595,29 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
   },
 ];
+
+// Enrich every member-authored review with its author's profile slug + photo so
+// the demo renders the same clickable name + avatar the live backend serves
+// (see `toReviewDTO` in the backend). The review literals above are written as
+// `name: memberName(slug)`, so a name→member index resolves the author without
+// touching each entry. Reviews from non-members (partners, walk-ins keyed by a
+// bare `initials`/`name`) simply don't match and stay unlinked, as intended.
+(() => {
+  const byName = new Map(
+    Object.values(MEMBERS).map((member) => [
+      memberName(member.slug),
+      member,
+    ]),
+  );
+  for (const place of DIRECTORY_PLACES) {
+    for (const review of place.reviews) {
+      const member = byName.get(review.name);
+      if (!member) continue;
+      review.authorSlug = member.slug;
+      review.avatarUrl = member.photo ?? null;
+    }
+  }
+})();
 
 export function getPlace(slug: string | undefined): DirectoryPlace | undefined {
   return slug ? DIRECTORY_PLACES.find((p) => p.slug === slug) : undefined;
