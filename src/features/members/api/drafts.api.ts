@@ -1,9 +1,4 @@
-import {
-  apiGet,
-  apiPost,
-  apiPatch,
-  apiDelete,
-} from "../../../shared/api/client";
+import { apiGet, apiPost, apiDelete } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { Paginated } from "../../../shared/api/refs";
 import type { Draft } from "../drafts.data";
@@ -40,9 +35,6 @@ export async function getDrafts(page?: number): Promise<Paginated<DraftDTO>> {
 
 export const createDraft = (dto: DraftDTO) =>
   apiPost<DraftDTO>("/me/drafts", dto);
-
-export const updateDraft = (id: string, dto: Partial<DraftDTO>) =>
-  apiPatch<DraftDTO>(`/me/drafts/${id}`, dto);
 
 export const deleteDraft = (id: string) => apiDelete<void>(`/me/drafts/${id}`);
 

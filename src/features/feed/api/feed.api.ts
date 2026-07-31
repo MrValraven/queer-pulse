@@ -40,10 +40,6 @@ export async function getFeed(tab: FeedTab, cursor?: string) {
   return toPage(res);
 }
 
-/** POST /community-posts — publish a new post (optionally into a community). */
-export const createPost = (body: string, communitySlug?: string) =>
-  apiPost<{ id: string }>("/community-posts", { body, communitySlug });
-
 /** POST /community-posts/:id/like — like/unlike toggle. */
 export const likePost = (id: string, liked: boolean) =>
   apiPost<{ liked: boolean; likeCount: number }>(

@@ -1802,6 +1802,10 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Encontra o teu caminho →",
   "changelog.tag.notifications": "Abrir as tuas notificações →",
 
+  "changelog.entries.verification-in-context.title":
+    "A verificação passa a estar onde estás a explorar",
+  "changelog.entries.verification-in-context.body":
+    "“Como funciona a verificação” já não é um link escondido na navegação de topo. Passa a haver uma explicação curta no próprio diretório local — proposto, avaliado, reavaliado todos os anos — e uma linha discreta dentro de cada espaço verificado que remete para a história completa. O centro dos espaços seguros continua lá para os critérios completos e o registo de remoções; agora chega-se a ele em contexto, quando o emblema está mesmo à tua frente.",
   "changelog.entries.safe-spaces-in-directory.title":
     "Espaços seguros verificados, agora dentro do diretório",
   "changelog.entries.safe-spaces-in-directory.body":
@@ -1831,6 +1835,10 @@ export const marketing: Catalog = {
     "Criar um convívio volta a funcionar — e leva-te ao teu evento",
   "changelog.entries.gathering-create-fix.body":
     "Publicar um novo convívio estava a falhar silenciosamente no servidor, mas o assistente mostrava na mesma o ecrã de celebração como se tivesse resultado — e o botão «Ver a página do teu evento» abria uma página de exemplo perdida. Ambos estão corrigidos: um convívio passa mesmo a ser publicado, o ecrã de sucesso só aparece depois de o ser, e «Ver a página do teu evento» leva-te diretamente ao teu convívio real. Se alguma publicação falhar, verás uma mensagem clara e ficas no passo de revisão para tentar de novo. O assistente passa também a pedir uma data e hora de início no futuro antes de avançares, para que nenhum convívio seja criado sem elas.",
+  "changelog.entries.directory-collapsible-filters.title":
+    "Filtros mais arrumados no diretório de espaços",
+  "changelog.entries.directory-collapsible-filters.body":
+    "A pesquisa e os botões de categoria continuam em destaque, enquanto os refinamentos de espaços seguros e de ambiente passam a ficar recolhidos atrás de um único botão “Refinar”, para que a barra deixe de sobrecarregar a página. Um contador no botão continua a indicar quando há filtros ocultos ativos, as tuas escolhas permanecem aplicadas, e a gaveta desliza suavemente ao abrir e fechar em vez de saltar — com a tua preferência de aberto/fechado guardada para a próxima visita.",
   "changelog.entries.members-collapsible-filters.title":
     "Filtros recolhíveis no diretório de membros",
   "changelog.entries.members-collapsible-filters.body":
@@ -2834,6 +2842,20 @@ export const marketing: Catalog = {
   "directory.submitStrip.body":
     "Se tens ou conheces um negócio queer ou queer-friendly em Lisboa que pertence a este diretório, conta-nos. Revemos todas as sugestões antes de as publicar.",
   "directory.submitStrip.cta": "Regista o teu negócio",
+  "directory.verify.eyebrow": "Verificado pela comunidade",
+  "directory.verify.title": "Como funciona a <em>verificação.</em>",
+  "directory.verify.lead":
+    "O selo de verificação não é auto-declarado. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada espaço é reavaliado todos os anos — por isso também o pode perder.",
+  "directory.verify.cta": "Ver a história de confiança completa",
+  "directory.verify.pillar.nominate.title": "Proposto por membros",
+  "directory.verify.pillar.nominate.body":
+    "Qualquer membro pode propor um espaço para avaliação.",
+  "directory.verify.pillar.review.title": "Avaliado de forma independente",
+  "directory.verify.pillar.review.body":
+    "Membros verificados visitam-no e avaliam-no segundo os mesmos critérios — casas de banho, pessoal, acessibilidade e avaliações reais.",
+  "directory.verify.pillar.recheck.title": "Reavaliado todos os anos",
+  "directory.verify.pillar.recheck.body":
+    "Nenhum selo é permanente. Qualquer membro pode sinalizar um espaço, e o selo pode ser retirado.",
   "directory.outro.title":
     "Acabaste de chegar a Lisboa? <em>Não estás a começar do zero.</em>",
   "directory.outro.sub":
@@ -2929,6 +2951,9 @@ export const marketing: Catalog = {
   "directory.detail.languagesLabel": "Idiomas",
   "directory.detail.accessLabel": "Acessibilidade",
   "directory.detail.trust.lastVerifiedLabel": "Última verificação",
+  "directory.detail.trust.howLine":
+    "Este espaço cumpre os mesmos critérios que qualquer espaço verificado.",
+  "directory.detail.trust.howLink": "Como funciona a verificação →",
   "directory.detail.whoRunsIt": "Quem gere isto",
   "directory.detail.onQueerPulse": "Na QueerPulse",
   "directory.detail.communityVouched": "Avalizado pela comunidade",
@@ -3274,6 +3299,7 @@ export const marketing: Catalog = {
   "local.card.seeFullDetails": "Ver detalhes",
   "local.filter.searchPlaceholder": "Procurar espaços e locais…",
   "local.filter.categoryAria": "Filtrar por categoria",
+  "local.filter.refine": "Refinar",
   "local.filter.vibeLabel": "Ambiente",
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",

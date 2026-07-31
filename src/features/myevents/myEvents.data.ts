@@ -15,45 +15,6 @@ export const TODAY = new Date(2026, 5, 29);
 TODAY.setHours(0, 0, 0, 0);
 export const NOW = new Date(2026, 5, 29, 16, 30);
 
-export const MON = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-export const MONFULL = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-export const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-export const DOWFULL = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
 /** Avatar tint inline-styles, keyed by tint name. */
 export const TINT_STYLE: Record<string, { background: string; color: string }> =
   {

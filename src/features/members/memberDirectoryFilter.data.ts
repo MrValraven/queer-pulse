@@ -695,13 +695,6 @@ function buildMembers(): MemberCard[] {
  *  page of these at a time. */
 export const MEMBERS: MemberCard[] = buildMembers();
 
-/** Total directory population — the real registry size, not a vanity figure.
- *  Drives the hero count and the "of N members" line. */
-export const TOTAL_MEMBERS = MEMBERS.length;
-
-/** How many cards are shown per page. */
-export const PAGE_SIZE = 12;
-
 // "Recently active" is deliberately absent: the backend tracks no last-active
 // timestamp, so in live mode it could only ever be a no-op (which is exactly the
 // "sort does nothing" bug it caused). Sorting is server-side in live mode, so a

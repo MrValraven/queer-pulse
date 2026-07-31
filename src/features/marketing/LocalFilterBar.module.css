@@ -151,3 +151,83 @@
   color: var(--ink-40);
   font-style: italic;
 }
+
+/* "Refine" toggle: reveals the secondary safe-spaces + vibe filters so the bar
+   stays uncluttered by default. A pill sitting under the category chips. */
+.refineToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.refineToggle svg {
+  width: 15px;
+  height: 15px;
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .refineToggle:hover {
+    border-color: var(--line-strong);
+    color: var(--text-strong);
+  }
+}
+/* Count of active-but-hidden refinements, so a collapsed drawer still signals
+   that filters are applied. */
+.refineCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+.refineChevron {
+  color: var(--ink-40);
+  font-size: 11px;
+  line-height: 1;
+  transition: transform 0.2s var(--ease);
+}
+.refineChevronOpen {
+  transform: rotate(180deg);
+}
+/* Height-animated collapse without measuring: a 1-row grid whose track eases
+   between 0fr (collapsed) and 1fr (its content's height). */
+.refineWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s var(--ease);
+}
+.refineWrapOpen {
+  grid-template-rows: 1fr;
+}
+.refineBody {
+  /* Clipped so nothing spills while the track is < its height; a BFC so the
+     first row's top margin stays inside (and thus collapses to nothing when
+     the drawer is shut) rather than leaking above the toggle. */
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .refineChevron,
+  .refineWrap {
+    transition: none;
+  }
+}

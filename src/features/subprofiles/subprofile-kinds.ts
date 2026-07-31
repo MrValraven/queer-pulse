@@ -53,12 +53,6 @@ export const sectionsForKind = (k: SubprofileKind): SubprofileSection[] => [
   "links",
 ];
 
-/** Whether `section` is one this `kind` exposes (content section or 'links'). */
-export const isSectionAllowed = (
-  k: SubprofileKind,
-  s: SubprofileSection,
-): boolean => sectionsForKind(k).includes(s);
-
 /** 'links' is universal but not a "content" section (excluded from the ≥3 check). */
 export const isContentSection = (s: SubprofileSection): boolean =>
   s !== "links";

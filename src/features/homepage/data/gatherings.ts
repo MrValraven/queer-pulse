@@ -1,18 +1,5 @@
 import type { Gathering } from "./types";
 
-// Lisbon neighbourhood names are proper nouns and read identically in both
-// catalogs (see the gatherings feature's `HOOD_KEYS` for the same call).
-export const neighbourhoods: string[] = [
-  "Príncipe Real",
-  "Alfama",
-  "Marvila",
-  "Mouraria",
-  "Graça",
-  "Cais do Sodré",
-  "Arroios",
-  "Bairro Alto",
-];
-
 export const gatherings: Gathering[] = [
   {
     id: "supper-club-12",

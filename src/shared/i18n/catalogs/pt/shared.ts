@@ -233,7 +233,6 @@ export const shared: Catalog = {
   "megaNav.lisbon.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.lisbon.col.discover.head": "Descobrir",
   "megaNav.lisbon.col.discover.businessDirectory": "Diretório local",
-  "megaNav.lisbon.col.discover.safeSpaces": "Como funciona a verificação",
   "megaNav.lisbon.col.discover.partners": "Parceiros",
   "megaNav.lisbon.col.livingHere.head": "Viver aqui",
   "megaNav.lisbon.col.livingHere.housing": "Habitação",

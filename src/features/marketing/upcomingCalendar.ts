@@ -7,6 +7,7 @@
  * of re-implementing it. */
 
 import { escapeText } from "../myevents/myEvents.ics";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 
 export interface CalendarEventInput {
   title: string;
@@ -88,15 +89,5 @@ export function downloadUpcomingIcs(
   input: CalendarEventInput,
   filename: string,
 ): void {
-  const blob = new Blob([buildIcs(input)], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+  downloadBlob(filename, buildIcs(input), "text/calendar;charset=utf-8");
 }

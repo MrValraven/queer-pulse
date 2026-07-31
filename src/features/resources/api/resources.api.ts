@@ -51,15 +51,9 @@ export async function getResources(
   return toItemsPage(res);
 }
 
-export const getResource = (slug: string) =>
-  apiGet<ResourceResponseDTO>(`/resources/${slug}`);
-
 export function getGlossaryTerms(params: { category?: string } = {}) {
   const q = new URLSearchParams();
   if (params.category) q.set("category", params.category);
   const qs = q.toString();
   return apiGet<GlossaryTermResponseDTO[]>(`/glossary${qs ? `?${qs}` : ""}`);
 }
-
-export const getGlossaryTerm = (slug: string) =>
-  apiGet<GlossaryTermResponseDTO>(`/glossary/${slug}`);

@@ -27,18 +27,3 @@ export function Badge({
     </span>
   );
 }
-
-/** Stronger, square-cornered category label. */
-export function CategoryLabel({
-  tone = "coral",
-  children,
-}: {
-  tone?: "danger" | "coral" | "jade";
-  children: ReactNode;
-}) {
-  return (
-    <span className={[styles.cat, styles[`cat_${tone}`]].join(" ")}>
-      {children}
-    </span>
-  );
-}

@@ -33,23 +33,4 @@ export const NOTE = {
   },
 };
 
-export type ReceiptDetailKey =
-  | "receiptNo"
-  | "dateTime"
-  | "from"
-  | "method"
-  | "postedToLedger"
-  | "visibility";
-
-/** Labels are catalog keys (chrome); values below are rendered per-field in
- * the component, since several need Date formatting or content interleaving. */
-export const DETAIL_LABEL_KEYS: ReceiptDetailKey[] = [
-  "receiptNo",
-  "dateTime",
-  "from",
-  "method",
-  "postedToLedger",
-  "visibility",
-];
-
 export type { ReactNode };

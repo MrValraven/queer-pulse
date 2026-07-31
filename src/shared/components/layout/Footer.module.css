@@ -80,6 +80,14 @@
   grid-template-columns: repeat(4, max-content);
   gap: 28px 44px;
 }
+/* Cap each column so a long label wraps to a second line instead of widening
+   the whole column. Short labels (English) stay under the cap, so the columns
+   still shrink to their content and hug the right; longer labels (Portuguese,
+   e.g. "Acabaste de chegar a Lisboa?") wrap rather than pushing the four-column
+   block past the page width and dropping it below the brand. */
+.col {
+  max-width: 150px;
+}
 .col h2 {
   font-size: 12px;
   letter-spacing: 0.1em;
@@ -204,6 +212,11 @@
 @media (max-width: 620px) {
   .cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Two fluid columns already constrain width here — let them fill their track
+     instead of the desktop 150px cap. */
+  .col {
+    max-width: none;
   }
   .base {
     justify-content: flex-start;

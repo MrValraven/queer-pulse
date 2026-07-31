@@ -35,12 +35,6 @@ export interface IdeaItem {
   votes: number;
 }
 
-export interface DecisionItem {
-  tone: "jade" | "accent" | "plum";
-  title: string;
-  description: string;
-}
-
 export const HERO_STATS: { label: string; jade?: boolean }[] = [
   { label: "12 shipped this year", jade: true },
   { label: "4 in progress" },
@@ -173,22 +167,4 @@ export const TOP_IDEAS: IdeaItem[] = [
   { id: "idea-sub-communities", text: "Sub-communities within communities", votes: 22 },
   { id: "idea-recurring-gatherings", text: "Recurring gatherings (monthly series)", votes: 18 },
   { id: "idea-ticket-splitting", text: "Shared event costs / ticket splitting", votes: 15 },
-];
-
-export const DECISIONS: DecisionItem[] = [
-  {
-    tone: "jade",
-    title: "Member votes",
-    description: "The features you vote for rise to the top. We look at this weekly.",
-  },
-  {
-    tone: "accent",
-    title: "Safety first",
-    description: "Every feature is reviewed for how it could be misused in a community like this.",
-  },
-  {
-    tone: "plum",
-    title: "Small team, careful pace",
-    description: "We're two engineers and a designer. We'd rather build slowly and get it right.",
-  },
 ];

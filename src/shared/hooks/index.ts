@@ -11,7 +11,6 @@ export { useMediaQuery } from "./useMediaQuery";
 export { useDebouncedValue } from "./useDebouncedValue";
 export { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 export { useVisualViewportKeyboard } from "./useVisualViewportKeyboard";
-export { useSwipe, type UseSwipeHandlers } from "./useSwipe";
 export { useScrollLock } from "./useScrollLock";
 export { useFocusOnMount } from "./useFocusOnMount";
 export { useLocalStorage } from "./useLocalStorage";

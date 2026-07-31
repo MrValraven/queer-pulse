@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
 import { type DirectoryPlace } from "./directoryPlaces";
 import {
   directoryTrustToAsideData,
@@ -68,6 +70,13 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
 
         <SafeSpaceVerifiedAside space={asideData} showBackLink={false} />
       </div>
+
+      <p className={s.trustHowLine}>
+        {t("marketing:directory.detail.trust.howLine")}{" "}
+        <Link className={s.trustHowLink} to={routes.safeSpaces}>
+          {t("marketing:directory.detail.trust.howLink")}
+        </Link>
+      </p>
 
       {vouchOpen && (
         <VouchModal

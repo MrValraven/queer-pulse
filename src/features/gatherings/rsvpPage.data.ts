@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import { FiCalendar, FiMapPin, FiUser } from "react-icons/fi";
 import { memberName } from "../members/data/members";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 
 /**
  * `value` is either plain organizer-authored content (location, host name —
@@ -95,17 +96,11 @@ export function downloadIcs() {
     "END:VEVENT",
     "END:VCALENDAR",
   ];
-  const blob = new Blob([lines.join("\r\n")], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "queerpulse-reading-group-8.ics";
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-  URL.revokeObjectURL(url);
+  downloadBlob(
+    "queerpulse-reading-group-8.ics",
+    lines.join("\r\n"),
+    "text/calendar;charset=utf-8",
+  );
 }
 
 /**

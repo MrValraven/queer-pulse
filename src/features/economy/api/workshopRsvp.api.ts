@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiPost } from "../../../shared/api/client";
 
 /**
  * Reservations for a workshop.
@@ -26,14 +26,6 @@ export interface WorkshopRsvpResultDTO {
   spotsTotal: number;
 }
 
-/** The repo-standard member ref the attendees route returns. */
-export interface WorkshopAttendeeDTO {
-  slug: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl: string | null;
-}
-
 /** POST /workshops/:slug/rsvp — takes a seat, or joins the queue when full. */
 export const rsvpToWorkshop = (slug: string) =>
   apiPost<WorkshopRsvpResultDTO>(`/workshops/${slug}/rsvp`, {});
@@ -41,12 +33,3 @@ export const rsvpToWorkshop = (slug: string) =>
 /** DELETE /workshops/:slug/rsvp — gives the seat back. 204, no body. */
 export const cancelWorkshopRsvp = (slug: string) =>
   apiDelete<void>(`/workshops/${slug}/rsvp`);
-
-/**
- * GET /workshops/:slug/attendees — the host and fellow attendees only.
- *
- * Anyone else gets a 403 by design, so this must not be called speculatively:
- * only render it behind `isHost` or a confirmed booking.
- */
-export const getWorkshopAttendees = (slug: string) =>
-  apiGet<WorkshopAttendeeDTO[]>(`/workshops/${slug}/attendees`);

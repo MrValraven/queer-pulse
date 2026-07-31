@@ -1,10 +1,7 @@
-import { routes } from "../../app/routeMap";
 import { MEMBERS } from "../members/data/members";
 import type { AvatarTint } from "../../shared/components/ui";
 
 export type TabId = "all" | "incoming" | "sent" | "blocked" | "vouched";
-
-export const MESSAGES = routes.messages;
 
 /** Path to a member's public profile. */
 export function profilePath(slug: string): string {

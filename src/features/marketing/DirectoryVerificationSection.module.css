@@ -1,0 +1,92 @@
+.section {
+  padding-block: 8px 0;
+}
+
+/* Soft plum panel — the same low-opacity treatment as the submit strip, so the
+   two bands at the foot of the directory read as one calm family. */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(28px, 5vw, 56px);
+  align-items: center;
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-card);
+  padding: clamp(28px, 4vw, 44px);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 32px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 46ch;
+}
+
+.pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pillarTitle {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.pillarBody {
+  margin-top: 3px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 44ch;
+}
+
+@media (max-width: 780px) {
+  .panel {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}

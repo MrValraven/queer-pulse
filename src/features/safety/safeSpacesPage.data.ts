@@ -1,15 +1,5 @@
 import type { IconType } from "react-icons";
 import { FiCheck, FiRotateCcw } from "react-icons/fi";
-import type { Category } from "./safeSpaces";
-
-export const TYPE_CLASS: Record<Category, string> = {
-  Bar: "typeBar",
-  Club: "typeClub",
-  Cafe: "typeCafe",
-  Health: "typeHealth",
-  Services: "typeServices",
-  Arts: "typeArts",
-};
 
 export const CRITERIA: { icon: IconType; leadKey: string; restKey: string }[] =
   [
@@ -81,16 +71,6 @@ export const HOW: { number: string; titleKey: string; descriptionKey: string }[]
     titleKey: "safety:spaces.how.step6.title",
     descriptionKey: "safety:spaces.how.step6.desc",
   },
-];
-
-export const FILTERS: { id: Category | "all"; labelKey: string }[] = [
-  { id: "all", labelKey: "safety:spaces.filter.all" },
-  { id: "Bar", labelKey: "safety:spaces.filter.bar" },
-  { id: "Club", labelKey: "safety:spaces.filter.club" },
-  { id: "Cafe", labelKey: "safety:spaces.filter.cafe" },
-  { id: "Health", labelKey: "safety:spaces.filter.health" },
-  { id: "Services", labelKey: "safety:spaces.filter.services" },
-  { id: "Arts", labelKey: "safety:spaces.filter.arts" },
 ];
 
 /** i18n Pattern A — the nomination form's "Type of space" <select> options,

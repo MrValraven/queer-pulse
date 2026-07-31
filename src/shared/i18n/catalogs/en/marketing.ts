@@ -1751,6 +1751,14 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Find a way in →",
   "changelog.tag.notifications": "Open your notifications →",
 
+  "changelog.entries.verification-in-context.title":
+    "How verification works now lives where you're browsing",
+  "changelog.entries.verification-in-context.body":
+    "“How verification works” is no longer a link buried in the top navigation. Instead there's a short explainer right on the local directory — nominated, reviewed, re-checked every year — and a quiet line inside each verified listing that points to the full story. The safe-spaces hub is still there for the complete criteria and delisting record; it's just reached in context now, when the badge is actually in front of you.",
+  "changelog.entries.directory-collapsible-filters.title":
+    "Tidier filters on the spaces directory",
+  "changelog.entries.directory-collapsible-filters.body":
+    "Search and the category chips stay front and centre, while the safe-spaces and vibe refinements now tuck behind a single “Refine” toggle so the bar no longer crowds the page. A count on the toggle still tells you when hidden filters are active, your choices stay applied, and the drawer glides open and closed instead of snapping — with your open/closed preference remembered next time.",
   "changelog.entries.safe-spaces-in-directory.title":
     "Verified safe spaces now live in the directory",
   "changelog.entries.safe-spaces-in-directory.body":
@@ -2763,6 +2771,20 @@ export const marketing: Catalog = {
   "directory.submitStrip.body":
     "If you run or know a queer-owned or queer-friendly business in Lisbon that belongs in this directory, tell us. We review every suggestion before it goes live.",
   "directory.submitStrip.cta": "List your business",
+  "directory.verify.eyebrow": "Community verified",
+  "directory.verify.title": "How verification <em>works.</em>",
+  "directory.verify.lead":
+    "The verified badge isn't self-declared. A member puts a space forward, others visit and review it against a fixed set of criteria, and every listing is re-checked each year — so a space can lose it, too.",
+  "directory.verify.cta": "See the full trust story",
+  "directory.verify.pillar.nominate.title": "Member-nominated",
+  "directory.verify.pillar.nominate.body":
+    "Any member can put a space forward for review.",
+  "directory.verify.pillar.review.title": "Independently reviewed",
+  "directory.verify.pillar.review.body":
+    "Verified members visit and assess it against the same criteria — bathrooms, staff, accessibility, and real reviews.",
+  "directory.verify.pillar.recheck.title": "Re-checked every year",
+  "directory.verify.pillar.recheck.body":
+    "No badge is permanent. Any member can flag a space, and it can be pulled.",
   "directory.outro.title":
     "New to Lisbon? <em>You're not starting from zero.</em>",
   "directory.outro.sub":
@@ -2854,6 +2876,9 @@ export const marketing: Catalog = {
   "directory.detail.languagesLabel": "Languages",
   "directory.detail.accessLabel": "Access",
   "directory.detail.trust.lastVerifiedLabel": "Last verified",
+  "directory.detail.trust.howLine":
+    "This space meets the same criteria as every verified space.",
+  "directory.detail.trust.howLink": "How verification works →",
   "directory.detail.whoRunsIt": "Who runs it",
   "directory.detail.onQueerPulse": "On QueerPulse",
   "directory.detail.communityVouched": "Community-vouched",
@@ -3191,6 +3216,7 @@ export const marketing: Catalog = {
   "local.card.seeFullDetails": "See full details",
   "local.filter.searchPlaceholder": "Search places and venues…",
   "local.filter.categoryAria": "Filter by category",
+  "local.filter.refine": "Refine",
   "local.filter.vibeLabel": "Vibe",
   "local.filter.vibeVenueNote": "Vibe filters apply to venues",
   "local.filter.verifiedSafeSpaces": "Verified safe spaces",

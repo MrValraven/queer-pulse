@@ -93,6 +93,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "verification-in-context",
+        category: "improvement",
+        date: "31 Jul 2026",
+        ...entryKeys("verification-in-context"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "directory-collapsible-filters",
+        category: "improvement",
+        date: "31 Jul 2026",
+        ...entryKeys("directory-collapsible-filters"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "safe-spaces-in-directory",
         category: "feature",
         date: "30 Jul 2026",

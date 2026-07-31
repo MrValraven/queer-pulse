@@ -106,15 +106,6 @@ export const SIMPLIFIED_COEFFICIENTS = {
 /** Start-of-activity reduction (Art. 31.º n.º 10): ×0.5 year 1, ×0.75 year 2. */
 export const SIMPLIFIED_STARTUP_FACTORS = { year1: 0.5, year2: 0.75 } as const;
 
-/**
- * The 15%-justification rule (n.º 13) for the 0.75/0.35 coefficients uses a
- * fixed specific deduction. UNCERTAIN: sources disagree whether this is the
- * frozen €4,104 or the IAS-indexed value (€4,462.15 for 2025 income). We store
- * the statutory €4,104 and document the conflict; revisit before shipping any
- * calculator that depends on it (sub-project 2).
- */
-export const SIMPLIFIED_SPECIFIC_DEDUCTION = 4104;
-
 /* ── Segurança Social (independent workers) ─────────────────────────────── */
 /**
  * 21.4% for freelancers, 25.2% for ENI. Base = 70% of services income (÷3 for
@@ -131,10 +122,6 @@ export const SS_MIN_MONTHLY = 20;
 export const SS_RATE_EMPLOYEE = 0.11;
 /** Categoria A specific deduction (dedução específica) on employment income — €4,104. */
 export const CAT_A_SPECIFIC_DEDUCTION = 4104;
-
-/** Indexante dos Apoios Sociais. Max SS base = 12 × IAS. */
-export const IAS_2025 = 522.5;
-export const IAS_2026 = 537.13;
 
 /* ── First-year / new-registrant benefits ───────────────────────────────── */
 /**

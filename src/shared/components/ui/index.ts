@@ -1,5 +1,4 @@
 export { Button, type ButtonVariant, type ButtonSize } from "./Button";
-export { Card, CardDivider } from "./Card";
 export { Tag, TagRow, KindChip, type ChipKind } from "./Tag";
 export { Avatar, AvatarStack, type AvatarTint } from "./Avatar";
 export { Eyebrow } from "./Eyebrow";
@@ -28,7 +27,7 @@ export {
   CheckLine,
   type SegmentOption,
 } from "./Controls";
-export { Badge, CategoryLabel, type BadgeTone } from "./Badge";
+export { Badge, type BadgeTone } from "./Badge";
 export {
   StaffBadge,
   type StaffRole,

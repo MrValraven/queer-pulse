@@ -6,6 +6,7 @@ import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import type { Application } from "./applicationStatus.types";
 import { ModalShell, FileIcon } from "./ModalKit";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import styles from "./ApplicationModals.module.css";
 
 /** Simulate downloading an attachment by generating a small placeholder file. */
@@ -24,15 +25,9 @@ function downloadAttachment(
     `This is a simulated download from the QueerPulse prototype. In a live`,
     `product this would be the real file you submitted with your application.`,
   ].join("\n");
-  const url = URL.createObjectURL(new Blob([body], { type: "text/plain" }));
-  const a = document.createElement("a");
-  a.href = url;
   // Keep the original extension where there is one, else default to .txt.
-  a.download = /\.[a-z0-9]+$/i.test(fileName) ? fileName : `${fileName}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  const filename = /\.[a-z0-9]+$/i.test(fileName) ? fileName : `${fileName}.txt`;
+  downloadBlob(filename, body, "text/plain");
 }
 
 /** Read-only view of what was submitted for an application. */

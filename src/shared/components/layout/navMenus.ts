@@ -169,21 +169,19 @@ export const NAV_MENUS: MegaMenu[] = [
     columns: [
       {
         headKey: "shared:megaNav.lisbon.col.discover.head",
-        // Directory vs. safe-spaces reads as complementary, not two competing
-        // catalogs: the directory (featured) is the single browse surface for
-        // local spaces — it now carries the verified badge + `?safe=verified`
-        // filter directly — while safe-spaces is the trust hub explaining how
-        // verification works and which spaces were delisted. See the copy in
-        // `shared:megaNav.lisbon.{feature,featurePublic,col.discover}.*`.
+        // The directory (featured) is the single browse surface for local
+        // spaces — it now carries the verified badge + `?safe=verified` filter
+        // directly. "How verification works" is deliberately NOT a nav link:
+        // the safe-spaces hub is a trust *destination* reached in context —
+        // from the explainer section on the directory page and from the line
+        // inside each verified listing's trust block — not a top-level entry.
+        // The logged-out `featurePublic` promo still spotlights it. See the
+        // copy in `shared:megaNav.lisbon.{feature,featurePublic,col.discover}.*`.
         links: [
           {
             labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
             href: routes.directory,
             featured: true,
-          },
-          {
-            labelKey: "shared:megaNav.lisbon.col.discover.safeSpaces",
-            href: routes.safeSpaces,
           },
           {
             labelKey: "shared:megaNav.lisbon.col.discover.partners",

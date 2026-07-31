@@ -472,7 +472,7 @@ export const safety: Catalog = {
   "hateCrime.law.def4.para1":
     "Tens o direito de pedir outro agente. Podes escalar dentro da PSP para uma chefia. Podes contactar a Inspeção-Geral da Administração Interna (IGAI) para apresentar queixa sobre a conduta policial. O acompanhamento da ILGA Portugal ajuda a prevenir esta situação. A tua denúncia não pode ser recusada — tens direito a um comprovativo (número de NUIPC) quando apresentas uma queixa formal.",
 
-  // ── safeSpacesPage.data.ts — CRITERIA / HOW / FILTERS ──────────────────
+  // ── safeSpacesPage.data.ts — CRITERIA / HOW ──────────────────
   "spaces.criteria.genderNeutral.lead": "Casas de banho neutras em género",
   "spaces.criteria.genderNeutral.rest": " disponíveis ou claramente acessíveis",
   "spaces.criteria.staffIntervene.lead": "A equipa intervém",
@@ -510,13 +510,6 @@ export const safety: Catalog = {
   "spaces.how.step6.desc":
     "Se algo mudar — um incidente, uma mudança de ambiente — qualquer pessoa pode sinalizar a ficha. Três sinalizações desencadeiam uma revisão imediata e a suspensão temporária do emblema.",
 
-  "spaces.filter.all": "Todos os espaços",
-  "spaces.filter.bar": "Bares",
-  "spaces.filter.club": "Clubes",
-  "spaces.filter.cafe": "Cafés",
-  "spaces.filter.health": "Saúde",
-  "spaces.filter.services": "Serviços",
-  "spaces.filter.arts": "Artes",
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Espaços seguros LGBTQ+ verificados em Lisboa",
@@ -602,10 +595,6 @@ export const safety: Catalog = {
   "spaces.nominate.comingSoon.title": "As nomeações estão <em>a chegar em breve.</em>",
   "spaces.nominate.comingSoon.body":
     "Ainda estamos a construir o processo de revisão por trás das nomeações de espaços. Ative a plataforma de demonstração para pré-visualizar o fluxo completo, ou volte em breve.",
-
-  // ── SafeSpaceCard.tsx ──────────────────────────────────────────────────
-  "spaces.card.verifiedBadge": "Verificado",
-  "spaces.card.flagCta": "Sinalizar",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "← Espaços seguros",

@@ -66,12 +66,6 @@ export const replyToThread = (
     ...(parentPostId ? { parentPostId } : {}),
   });
 
-/** POST /forum/posts/:id/vote — upvote toggle. `value` is +1 / 0. */
-export const votePost = (id: string, value: number) =>
-  apiPost<{ voteCount: number; myVote: number }>(`/forum/posts/${id}/vote`, {
-    value,
-  });
-
 /** PATCH /forum/posts/:id — author edits a post body. */
 export const editPost = (id: string, body: string) =>
   apiPatch<ForumPostResponse>(`/forum/posts/${id}`, { body });

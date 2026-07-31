@@ -45,7 +45,6 @@ export const FORMAT_OPTIONS: { value: string; labelKey: string }[] = [
   { value: "Series", labelKey: "cinema:format.series" },
   { value: "Experimental", labelKey: "cinema:format.experimental" },
 ];
-export const FORMATS = FORMAT_OPTIONS.map((f) => f.value);
 
 export const MADE_BY_OPTIONS: { value: string; labelKey: string }[] = [
   { value: "Trans filmmakers", labelKey: "cinema:browse.madeBy.trans" },
@@ -57,7 +56,6 @@ export const MADE_BY_OPTIONS: { value: string; labelKey: string }[] = [
   },
   { value: "QP members", labelKey: "cinema:browse.madeBy.qpMembers" },
 ];
-export const MADE_BY = MADE_BY_OPTIONS.map((m) => m.value);
 
 /**
  * "Made by" tags per film. Not on the shared film record, so kept here as a
@@ -104,7 +102,6 @@ export const COUNTRY_OPTIONS: {
   },
   { value: "Egypt", labelKey: "cinema:browse.country.egypt", codes: ["EG"] },
 ];
-export const COUNTRIES = COUNTRY_OPTIONS.map((c) => c.value);
 
 export const ACCESSIBILITY_OPTIONS: { value: string; labelKey: string }[] = [
   {
@@ -124,7 +121,6 @@ export const ACCESSIBILITY_OPTIONS: { value: string; labelKey: string }[] = [
     labelKey: "cinema:browse.accessibility.signLanguage",
   },
 ];
-export const ACCESSIBILITY = ACCESSIBILITY_OPTIONS.map((a) => a.value);
 
 /** Maps an accessibility label to the `subs` substring(s) that satisfy it. */
 const ACCESS_NEEDLE: Record<string, string[]> = {
@@ -142,7 +138,6 @@ export const MOOD_OPTIONS: { value: string; labelKey: string }[] = [
   { value: "Healing", labelKey: "cinema:browse.mood.healing" },
   { value: "Joyful", labelKey: "cinema:browse.mood.joyful" },
 ];
-export const MOODS = MOOD_OPTIONS.map((m) => m.value);
 
 export interface BrowseFilters {
   access: Set<Access>;

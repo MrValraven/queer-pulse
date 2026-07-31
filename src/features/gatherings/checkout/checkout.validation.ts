@@ -1,9 +1,5 @@
 /* Card / field validation + input formatting for the checkout. */
 
-export function eur(n: number): string {
-  return "€" + n.toFixed(2);
-}
-
 export function fmtCardNumber(v: string): string {
   const digits = v.replace(/\D/g, "").slice(0, 16);
   return digits.match(/.{1,4}/g)?.join(" ") ?? digits;

@@ -1,7 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { downloadBlob } from "./downloadBlob";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import {
   ALLOC,
   GOV_STATS,

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext } from "react";
 import {
   type ConsentCategories,
   type ConsentSource,
@@ -32,26 +32,4 @@ export function useConsent(): ConsentValue {
   const ctx = useContext(ConsentContext);
   if (!ctx) throw new Error("useConsent must be used within ConsentProvider");
   return ctx;
-}
-
-/**
- * The seam spec 01 must use: runs `effect` only once the given category is
- * granted, and tears it down when consent is withdrawn. Never initialises a
- * tracker/monitor pre-consent.
- */
-export function useConsentedEffect(
-  category: OptInCategory,
-  effect: () => void | (() => void),
-): void {
-  const { consent, status } = useConsent();
-  const granted = status === "set" && consent[category];
-  const effectRef = useRef(effect);
-  // Keep the latest effect without mutating the ref during render.
-  useEffect(() => {
-    effectRef.current = effect;
-  });
-  useEffect(() => {
-    if (!granted) return;
-    return effectRef.current();
-  }, [granted]);
 }

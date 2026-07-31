@@ -40,7 +40,3 @@ export const ORGS: Org[] = [
     href: "https://ilga-portugal.pt",
   },
 ];
-
-export const VERIFY_NOTE = [
-  "Before engaging with any organisation, have a look at how recent and active their channels are, and ask the group if anyone has dealt with them directly. The community's lived experience is the best vetting there is — and if you have it, share it.",
-];

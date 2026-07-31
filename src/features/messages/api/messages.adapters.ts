@@ -216,8 +216,3 @@ export function groupMessages(
   }
   return groups;
 }
-
-/** Sum unread across conversations for the nav badge. */
-export function unreadTotal(convos: ConversationResponse[]): number {
-  return convos.reduce((n, c) => n + (c.unreadCount ?? 0), 0);
-}

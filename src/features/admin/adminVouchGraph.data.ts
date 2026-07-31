@@ -60,16 +60,6 @@ export interface ToneInk {
   fill: string;
 }
 
-/** Per-tone SVG fill/stroke, token-backed (no hex). */
-export const TONE: Record<VouchTone, ToneInk> = {
-  coral: { stroke: "var(--accent-ink)", fill: "rgba(var(--accent-rgb), .16)" },
-  jade: { stroke: "var(--jade)", fill: "rgba(var(--jade-rgb), .18)" },
-  violet: { stroke: "var(--violet)", fill: "rgba(var(--violet-rgb), .16)" },
-  amber: { stroke: "var(--amber)", fill: "rgba(var(--amber-rgb), .24)" },
-  plum: { stroke: "var(--plum)", fill: "rgba(var(--plum-rgb), .10)" },
-  danger: { stroke: "var(--danger)", fill: "rgba(var(--danger-rgb), .12)" },
-};
-
 export interface VouchPerson {
   id: string;
   name: string;
@@ -468,52 +458,10 @@ export function neighbors(id: string, includeWithdrawn = false): string[] {
   return out.filter((v, i, a) => a.indexOf(v) === i);
 }
 
-export function edgeWeight(e: VouchEdge): number {
-  const s = personById[e.from]?.standing;
-  return s === "trusted" ? 1 : s === "warned" ? 0.6 : 0.4;
-}
-
 /** months-since-epoch number for an 'YYYY-MM' string */
 export function ym(date: string): number {
   const [y, m] = date.split("-");
   return parseInt(y!, 10) * 12 + parseInt(m!, 10);
-}
-
-export const T_MIN = ym("2023-01");
-export const T_MAX = ym("2026-07");
-
-/** every inbound voucher is itself new or flagged → trust isolation */
-export function isIsolated(id: string): boolean {
-  const inbound = EDGES.filter((e) => e.to === id && !e.withdrawn);
-  if (inbound.length === 0) return false;
-  return inbound.every((e) => {
-    const s = personById[e.from]?.standing;
-    return s === "new" || s === "flagged";
-  });
-}
-
-export function findEdge(a: string, b: string): VouchEdge | undefined {
-  return EDGES.find(
-    (e) => (e.from === a && e.to === b) || (e.from === b && e.to === a),
-  );
-}
-
-/** BFS shortest trust path between two members (inclusive of withdrawn edges) */
-export function shortestPath(a: string, b: string): string[] | null {
-  const queue: string[][] = [[a]];
-  const seen = new Set<string>([a]);
-  while (queue.length) {
-    const path = queue.shift()!;
-    const last = path[path.length - 1]!;
-    if (last === b) return path;
-    for (const nb of neighbors(last, true)) {
-      if (!seen.has(nb)) {
-        seen.add(nb);
-        queue.push(path.concat([nb]));
-      }
-    }
-  }
-  return null;
 }
 
 /** 'YYYY-MM' → the first of that month as a real `Date`, for `fmt.date()`. */
@@ -526,17 +474,6 @@ export function monthStr(value: number): string {
   const y = Math.floor((value - 1) / 12);
   const m = ((value - 1) % 12) + 1;
   return `${y}-${m < 10 ? "0" : ""}${m}`;
-}
-
-/** months-since-epoch number → a real `Date`, for `fmt.date()`. */
-export function monthDateFromValue(value: number): Date {
-  return monthDate(monthStr(value));
-}
-
-/** node radius: focus is largest, ring accounts smallest */
-export function nodeRadius(id: string, focusId: string): number {
-  if (id === focusId) return 30;
-  return personById[id]!.scene === "ring" ? 15 : 20;
 }
 
 /** portrait for a network member by initials, or undefined (→ initials fallback).
@@ -556,7 +493,6 @@ export function portraitByInitials(initials: string): string | undefined {
 // already declares its own (unrelated) local `Scene` interface above.
 
 import {
-  createTrustGraph,
   ymValue,
   type Scene as TrustScene,
   type TrustGraphData,
@@ -613,5 +549,3 @@ export const DEMO_TRUST_GRAPH_DATA: TrustGraphData = {
   tMax: Math.max(...DEMO_EDGES.map((e) => ymValue(e.date))),
   truncated: false,
 };
-
-export const DEMO_TRUST_GRAPH = createTrustGraph(DEMO_TRUST_GRAPH_DATA);

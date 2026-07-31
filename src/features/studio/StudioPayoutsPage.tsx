@@ -8,21 +8,8 @@ import {
   PayoutsList,
   PayoutsSidebar,
 } from "./StudioPayoutsSections";
+import { downloadCsv } from "../../shared/lib/downloadBlob";
 import s from "./creator.module.css";
-
-function downloadCsv(filename: string, rows: string[][]) {
-  const escape = (cell: string) => `"${cell.replace(/"/g, '""')}"`;
-  const csv = rows.map((r) => r.map(escape).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
 
 export function StudioPayoutsPage() {
   const { t } = useTranslation();

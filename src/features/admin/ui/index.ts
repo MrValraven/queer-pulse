@@ -10,4 +10,3 @@ export {
   AdminCheckLine,
   type AdminSegOption,
 } from "./AdminControls";
-export { default as adminUiStyles } from "./adminUi.module.css";

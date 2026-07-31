@@ -1289,6 +1289,27 @@
   margin-top: 8px;
 }
 
+/* Quiet footnote under the trust block: the badge here is the same standard
+   applied everywhere, with a way out to the full explanation. */
+.trustHowLine {
+  margin-top: 24px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+.trustHowLink {
+  color: var(--accent-ink);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .trustHowLink:hover {
+    border-bottom-color: currentColor;
+  }
+}
+
 /* ── "More like this" related places row ─────────────────────────────────── */
 .related {
   max-width: var(--maxw-page);

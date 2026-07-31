@@ -93,8 +93,6 @@ export function getArticles(
 export const getArticle = (slug: string) =>
   apiGet<ArticleDTO>(`/magazine/articles/${slug}`);
 
-export const getAuthors = () => apiGet<AuthorDTO[]>("/magazine/authors");
-
 export const getAuthor = (slug: string) =>
   apiGet<AuthorDTO>(`/magazine/authors/${slug}`);
 

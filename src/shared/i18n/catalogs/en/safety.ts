@@ -457,7 +457,7 @@ export const safety: Catalog = {
   "hateCrime.law.def4.para1":
     "You have the right to ask for a different officer. You can escalate within the PSP to a supervisor. You can contact the Inspeção-Geral da Administração Interna (IGAI) to complain about police conduct. ILGA Portugal accompaniment helps prevent this situation. Your report cannot be refused — you are entitled to a receipt (NUIPC number) when you make a formal complaint.",
 
-  // ── safeSpacesPage.data.ts — CRITERIA / HOW / FILTERS ──────────────────
+  // ── safeSpacesPage.data.ts — CRITERIA / HOW ──────────────────
   "spaces.criteria.genderNeutral.lead": "Gender-neutral bathrooms",
   "spaces.criteria.genderNeutral.rest": " available or clearly accessible",
   "spaces.criteria.staffIntervene.lead": "Staff intervene",
@@ -495,13 +495,6 @@ export const safety: Catalog = {
   "spaces.how.step6.desc":
     "If something changes — an incident, a shift in atmosphere — any member can flag the listing. Three flags trigger an immediate review and temporary suspension of the badge.",
 
-  "spaces.filter.all": "All spaces",
-  "spaces.filter.bar": "Bars",
-  "spaces.filter.club": "Clubs",
-  "spaces.filter.cafe": "Cafés",
-  "spaces.filter.health": "Healthcare",
-  "spaces.filter.services": "Services",
-  "spaces.filter.arts": "Arts",
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Verified LGBTQ+ safe spaces in Lisbon",
@@ -585,10 +578,6 @@ export const safety: Catalog = {
   "spaces.nominate.comingSoon.title": "Nominations are <em>coming soon.</em>",
   "spaces.nominate.comingSoon.body":
     "We're still building the review pipeline behind space nominations. Switch on the demo platform to preview the full flow, or check back soon.",
-
-  // ── SafeSpaceCard.tsx ──────────────────────────────────────────────────
-  "spaces.card.verifiedBadge": "Verified",
-  "spaces.card.flagCta": "Flag",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "← Safe spaces",

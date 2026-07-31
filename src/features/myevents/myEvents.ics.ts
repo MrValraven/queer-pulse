@@ -1,4 +1,5 @@
 import type { MyEvent } from "./myEvents.types";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 
 /** RFC5545 text escaping: backslash, comma, semicolon, and newlines. */
 export function escapeText(s: string): string {
@@ -38,16 +39,5 @@ export function toICS(events: MyEvent[]): string {
 
 /** Trigger a client-side download of an .ics file for the given events. */
 export function downloadICS(filename: string, events: MyEvent[]): void {
-  if (typeof document === "undefined") return;
-  const blob = new Blob([toICS(events)], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  downloadBlob(filename, toICS(events), "text/calendar;charset=utf-8");
 }

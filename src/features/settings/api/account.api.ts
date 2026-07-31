@@ -160,13 +160,6 @@ export interface SubmitDsarDto {
   reauthToken: string;
 }
 
-/** POST /account/dsar — file a data-subject request; returns a real reference. */
-export const submitDsar = (dto: SubmitDsarDto) =>
-  apiPost<DsarRequest>("/account/dsar", dto);
-
-/** GET /account/dsar — the member's real request history. */
-export const listDsar = () => apiGet<DsarRequest[]>("/account/dsar");
-
 /* ── Sessions (spec 08 territory — referenced here for the security email) ── */
 
 /**

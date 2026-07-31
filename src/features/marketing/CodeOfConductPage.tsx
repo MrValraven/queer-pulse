@@ -4,7 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
-import { downloadBlob } from "./downloadBlob";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./CodeOfConductPage.module.css";

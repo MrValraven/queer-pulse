@@ -14,7 +14,6 @@ import { ResumeModal } from "./ResumeModal";
 // Shared modal primitives live in ./ModalKit; the individual application
 // modals were split into their own files. Re-exported here so existing
 // importers of ./ApplicationModals keep working unchanged.
-export { FileIcon, ModalShell } from "./ModalKit";
 export { MessageModal, type MsgVariant } from "./MessageModals";
 export { CalendarModal } from "./CalendarModal";
 export { WithdrawModal } from "./WithdrawModal";

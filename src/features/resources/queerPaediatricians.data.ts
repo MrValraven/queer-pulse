@@ -36,8 +36,3 @@ export const PROVIDERS: Provider[] = [
     checked: "Checked Apr 2026",
   },
 ];
-
-export const HOW_IT_WORKS = [
-  "Peer-maintained and peer-verified: only parents in the network add names, and only ones they actually see. We re-check entries regularly and date them so you know how current they are.",
-  "A name here means a family in the community trusts them — not that we have vetted their clinical record. Always use your own judgement, and tell us if your experience differs so the list stays honest.",
-];

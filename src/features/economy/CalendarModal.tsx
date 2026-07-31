@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiDownload, FiCalendar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useSubmitFlow } from "./modalFlow";
 import { type Application } from "./applicationStatus.types";
@@ -23,14 +24,11 @@ function downloadIcs(app: Application) {
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
-  const url = URL.createObjectURL(new Blob([body], { type: "text/calendar" }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${app.companyName.replace(/\s+/g, "-")}-interview.ics`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+  downloadBlob(
+    `${app.companyName.replace(/\s+/g, "-")}-interview.ics`,
+    body,
+    "text/calendar",
+  );
 }
 
 /** A pre-filled Google Calendar "create event" link. */

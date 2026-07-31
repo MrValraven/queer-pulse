@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DISB, DISB_MORE } from "./studioSolidarityFund.data";
+import { downloadCsv } from "../../shared/lib/downloadBlob";
 import s from "./funding.module.css";
 
 const tagClass: Record<string, string> = {
@@ -38,20 +39,6 @@ function DisbursementRowSkeleton() {
       <div className={s.skel} style={{ width: 56, height: 18 }} />
     </div>
   );
-}
-
-function downloadCsv(filename: string, rows: string[][]) {
-  const escape = (cell: string) => `"${cell.replace(/"/g, '""')}"`;
-  const csv = rows.map((r) => r.map(escape).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 export function StudioFundLog() {

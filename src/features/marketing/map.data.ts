@@ -473,20 +473,6 @@ export const CATEGORY_ICON: Record<string, IconType> = {
   grooming: FiScissors,
   fitness: FaDumbbell,
 };
-/** Fill colour per unified category — the CSS var mirrors these (--cat-*),
- *  driven by `data-category` on pins + chips. Kept here as the JS-side legend
- *  source (e.g. tests / any inline need). Values match tokens/colors.css. */
-export const CATEGORY_COLOR: Record<string, string> = {
-  nightlife: "var(--cat-nightlife)",
-  food: "var(--cat-food)",
-  health: "var(--cat-health)",
-  space: "var(--cat-space)",
-  culture: "var(--cat-culture)",
-  design: "var(--cat-design)",
-  tech: "var(--cat-tech)",
-  grooming: "var(--cat-grooming)",
-  fitness: "var(--cat-fitness)",
-};
 export const VIBE_BG: Record<string, string> = {
   mixed: "rgba(45,27,61,.06)",
   "masc-leaning": "rgba(45,27,61,.09)",

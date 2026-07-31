@@ -19,29 +19,6 @@ export interface LetterBlock {
 }
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-export const HAS = new Set([
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "V",
-  "W",
-]);
 
 /** UI copy in both languages, toggled with the EN/PT switch. */
 export const GLOSSARY_COPY = {

@@ -8,10 +8,6 @@ export interface ArchivePiece {
   tint: ImageSlotTint;
 }
 
-export const INTRO = [
-  "A living, community-held archive of QTIPOC life in Lisbon — photo essays, written pieces, recordings, and documents, kept by us and for us. Nothing here is extracted; everything is contributed, credited, and held with care.",
-];
-
 export const PIECES: ArchivePiece[] = [
   {
     title: "Supper & Sounds, Mouraria",

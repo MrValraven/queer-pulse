@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPatch } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { CreateCompanyDto } from "./companies.api";
@@ -120,8 +120,6 @@ export interface CreateJobDto {
   agreement: boolean;
 }
 
-export type UpdateJobDto = Partial<CreateJobDto>;
-
 export interface CreateJobApplicationDto {
   answers: JobApplicationAnswer[];
   coverNote?: string;
@@ -149,19 +147,8 @@ export const getJob = (slug: string) => apiGet<JobDetailDTO>(`/jobs/${slug}`);
 export const createJob = (dto: CreateJobDto) =>
   apiPost<JobDetailDTO>("/jobs", dto);
 
-export const updateJob = (slug: string, dto: UpdateJobDto) =>
-  apiPatch<JobDetailDTO>(`/jobs/${slug}`, dto);
-
 export const closeJob = (slug: string) =>
   apiPost<JobDetailDTO>(`/jobs/${slug}/close`);
 
 export const applyToJob = (slug: string, dto: CreateJobApplicationDto) =>
   apiPost<JobApplicationDTO>(`/jobs/${slug}/applications`, dto);
-
-/** GET /jobs/:slug/applications — poster-only. */
-export const getJobApplications = (slug: string) =>
-  apiGet<JobApplicationDTO[]>(`/jobs/${slug}/applications`);
-
-/** GET /me/applications — the viewer's own applications. */
-export const getMyApplications = () =>
-  apiGet<JobApplicationDTO[]>("/me/applications");

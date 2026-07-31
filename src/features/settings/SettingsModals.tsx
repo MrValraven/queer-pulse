@@ -2,9 +2,10 @@ import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
+import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import styles from "./SettingsModal.module.css";
 
 /** Shared modal shell with overlay click-to-close, ESC and a close button. */
@@ -94,135 +95,6 @@ function SuccessPanel({
   );
 }
 
-type Phase = "form" | "saving" | "done" | "error";
-
-/* ── Suggest an edit (terminology) ────────────────────────────────── */
-export function SuggestEditModal({
-  term,
-  onClose,
-}: {
-  term: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const [phase, setPhase] = useState<Phase>("form");
-  const [suggestion, setSuggestion] = useState("");
-  const [why, setWhy] = useState("");
-  const suggestionRef = useFocusOnMount<HTMLTextAreaElement>();
-  const valid = suggestion.trim().length > 2;
-
-  useEffect(() => {
-    if (phase !== "saving") return;
-    const saveTimer = setTimeout(() => setPhase("done"), 1100);
-    return () => clearTimeout(saveTimer);
-  }, [phase]);
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!valid) return;
-    setPhase("saving");
-  }
-
-  return (
-    <ModalShell
-      label={t("settings:modals.suggestEdit.ariaLabel", { term })}
-      onClose={onClose}
-    >
-      {phase === "done" ? (
-        <SuccessPanel
-          title={
-            <Translation
-              i18nKey="settings:modals.suggestEdit.success.title"
-              components={{ em: <em /> }}
-            />
-          }
-          onClose={onClose}
-        >
-          <Translation
-            i18nKey="settings:modals.suggestEdit.success.body"
-            components={{ strong: <strong /> }}
-            values={{ term }}
-          />
-        </SuccessPanel>
-      ) : (
-        <form onSubmit={submit}>
-          <div className={styles.eye}>
-            {t("settings:modals.suggestEdit.eyebrow")}
-          </div>
-          <h2 className={styles.title}>
-            <Translation
-              i18nKey="settings:modals.suggestEdit.title"
-              components={{ em: <em /> }}
-              values={{ term }}
-            />
-          </h2>
-          <p className={styles.desc}>{t("settings:modals.suggestEdit.desc")}</p>
-          <div className={styles.fields}>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="sugg">
-                {t("settings:modals.suggestEdit.wordingLabel")}{" "}
-                <span className={styles.req}>*</span>
-              </label>
-              <textarea
-                id="sugg"
-                ref={suggestionRef}
-                className={styles.input}
-                rows={3}
-                value={suggestion}
-                onChange={(e) => setSuggestion(e.target.value)}
-                placeholder={t(
-                  "settings:modals.suggestEdit.wordingPlaceholder",
-                  { term },
-                )}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="why">
-                {t("settings:modals.suggestEdit.whyLabel")}{" "}
-                <span className={styles.hint}>
-                  {t("settings:modals.suggestEdit.optional")}
-                </span>
-              </label>
-              <textarea
-                id="why"
-                className={styles.input}
-                rows={2}
-                value={why}
-                onChange={(e) => setWhy(e.target.value)}
-                placeholder={t("settings:modals.suggestEdit.whyPlaceholder")}
-              />
-            </div>
-          </div>
-          <div className={styles.actions}>
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={!valid || phase === "saving"}
-            >
-              {phase === "saving" ? (
-                <>
-                  <Spinner /> {t("settings:modals.suggestEdit.sending")}
-                </>
-              ) : (
-                t("settings:modals.suggestEdit.send")
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              type="button"
-              onClick={onClose}
-              disabled={phase === "saving"}
-            >
-              {t("settings:modals.suggestEdit.cancel")}
-            </Button>
-          </div>
-        </form>
-      )}
-    </ModalShell>
-  );
-}
-
 /* ── Data export (simulated, with mock Blob download) ─────────────── */
 export function DataExportModal({
   title,
@@ -245,17 +117,7 @@ export function DataExportModal({
   }, []);
 
   function download() {
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadBlob(filename, JSON.stringify(payload, null, 2), "application/json");
   }
 
   return (

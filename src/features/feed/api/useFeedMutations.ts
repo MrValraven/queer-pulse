@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { createPost, likePost, replyToPost } from "./feed.api";
+import { likePost, replyToPost } from "./feed.api";
 
 /**
  * Feed write flows. Each branches on `demoMode`: demo is a no-op (the card keeps
@@ -8,22 +8,6 @@ import { createPost, likePost, replyToPost } from "./feed.api";
  * community-posts endpoint then invalidates the feed. The realtime layer
  * additionally prepends new items from other sessions.
  */
-
-/** POST /community-posts — compose a new post. */
-export function useCreatePost() {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  return useMutation<void, Error, { body: string; communitySlug?: string }>({
-    mutationFn: async ({ body, communitySlug }) => {
-      if (demoMode) return;
-      await createPost(body, communitySlug);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["feed"] });
-    },
-  });
-}
 
 /** POST /community-posts/:id/like — like/unlike. `liked` is the target state. */
 export function useLikePost() {

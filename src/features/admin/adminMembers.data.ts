@@ -123,11 +123,6 @@ export interface MemberDetail {
   };
 }
 
-/* ── Verification pending badge ──────────────────────────── */
-
-/** The tab badge reads 11 even though only 3 cards are shown (per design). */
-export const VERIFY_PENDING_COUNT = 11;
-
 /** Vanity total shown in the admin members header in demo mode. Also doubles
  *  as the demo `pageSize`, so `page * pageSize === total` after page 1 and
  *  `getNextPageParam` yields `undefined` — demo mode never fetches a page 2. */

@@ -10,6 +10,7 @@ import { useDirectoryFilters } from "./useDirectoryFilters";
 import { LocalFilterBar } from "./LocalFilterBar";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
 import { DirectoryListView } from "./DirectoryListView";
+import { DirectoryVerificationSection } from "./DirectoryVerificationSection";
 import { MapLoading } from "./MapLoading";
 import s from "./DirectoryPage.module.css";
 
@@ -106,6 +107,8 @@ export function DirectoryPage() {
           />
         </Suspense>
       )}
+
+      <DirectoryVerificationSection />
 
       <section className={s.content}>
         <div className="wrap">

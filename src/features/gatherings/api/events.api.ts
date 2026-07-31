@@ -224,6 +224,3 @@ export const attachEventPhoto = (
   body: { key: string; caption?: string },
 ) => apiPost<EventPhotoDTO>(`/events/${slug}/photos`, body);
 
-/** DELETE /events/:slug/photos/:id — the uploader or an organizer. */
-export const deleteEventPhoto = (slug: string, id: string) =>
-  apiDelete<{ ok: true }>(`/events/${slug}/photos/${id}`);

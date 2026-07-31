@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPatch } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { JobCardDTO } from "./jobs.api";
@@ -88,8 +88,6 @@ export interface CreateCompanyDto {
   handle?: string;
 }
 
-export type UpdateCompanyDto = Partial<CreateCompanyDto>;
-
 export interface CreateReviewDto {
   title: string;
   stars: number; // 1..5
@@ -114,9 +112,6 @@ export const getCompany = (slug: string) =>
 
 export const createCompany = (dto: CreateCompanyDto) =>
   apiPost<CompanyDetailDTO>("/companies", dto);
-
-export const updateCompany = (slug: string, dto: UpdateCompanyDto) =>
-  apiPatch<CompanyDetailDTO>(`/companies/${slug}`, dto);
 
 export async function getCompanyReviews(
   slug: string,

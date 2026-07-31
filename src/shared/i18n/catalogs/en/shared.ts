@@ -254,10 +254,6 @@ export const shared: Catalog = {
   // the directory's new role as the single browse surface, and to read the same
   // as the "Local directory" global-search entry (search.data.ts).
   "megaNav.lisbon.col.discover.businessDirectory": "Local directory",
-  // Reframed (Task 11): "How verification works" (was "Safe Spaces") so this
-  // reads as the trust hub, complementary to the directory above rather than a
-  // second competing catalog.
-  "megaNav.lisbon.col.discover.safeSpaces": "How verification works",
   "megaNav.lisbon.col.discover.partners": "Partners",
   "megaNav.lisbon.col.livingHere.head": "Living here",
   "megaNav.lisbon.col.livingHere.housing": "Housing",

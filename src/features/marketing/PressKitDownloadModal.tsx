@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { downloadBlob } from "./downloadBlob";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { type PressAsset } from "./pressKitAssets.data";
 import styles from "./MarketingModal.module.css";
 

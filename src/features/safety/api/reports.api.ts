@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiPost } from "../../../shared/api/client";
 import type {
   ReasonCode,
   ReasonOption,
@@ -49,20 +49,5 @@ export interface ReportDTO {
 /** Create a report from any surface. Reporter may be anonymous. */
 export const createReport = (body: CreateReportInput) =>
   apiPost<ReportDTO>("/reports", body);
-
-/** DTO for one option in the server-owned reason taxonomy. */
-export interface ReasonOptionDTO {
-  code: ReasonCode;
-  label: string;
-}
-
-/**
- * The reason taxonomy for a subject type. Live mode renders these instead of the
- * old hardcoded per-surface arrays; demo mode uses the colocated `reasonsFor`.
- */
-export const getReportReasons = (subjectType: ReportSubjectType) =>
-  apiGet<ReasonOptionDTO[]>(
-    `/reports/reasons?subjectType=${encodeURIComponent(subjectType)}`,
-  );
 
 export type { ReasonOption };

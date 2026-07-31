@@ -4,7 +4,6 @@
    narrative wizard that founds a member-owned community.
    =========================================================== */
 
-import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import { leadingInitials } from "../../../shared/lib/initials";
 import type { CommunityType } from "../../homepage/data/types";
 import type { AccessTier } from "../membership.types";
@@ -208,16 +207,6 @@ export function typeLabelFor(type: CommunityType | ""): string {
   );
 }
 
-/** Chrome counterpart of {@link typeLabelFor}, for the wizard's own preview/
- *  confirm screens (translated), as distinct from the plain-string
- *  `typeLabel` used post-creation. */
-export function typeBadgeKeyFor(type: CommunityType | ""): string {
-  return (
-    CATEGORY_OPTIONS.find((c) => c.type === type)?.badgeKey ??
-    "communities:start.category.fallbackBadge"
-  );
-}
-
 /* ---------- Access tiers ---------- */
 
 export interface AccessOption {
@@ -359,9 +348,4 @@ export function initialsOf(name: string): string {
 /** Build a reference like QP-C-0003 from a numeric seed. */
 export function makeRef(seq: number): string {
   return `QP-C-${String(seq).padStart(4, "0")}`;
-}
-
-/** Avatar tint fallback (Community/Member tint union is a superset of ours). */
-export function toAvatarTint(t: TintKey): AvatarTint {
-  return t;
 }

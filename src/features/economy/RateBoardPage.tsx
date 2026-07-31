@@ -9,6 +9,7 @@ import { RateBoardForm } from "./RateBoardForm";
 import { RateBoardStats } from "./RateBoardStats";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import {
   SEED,
   type Experience,
@@ -71,17 +72,11 @@ export function RateBoardPage() {
   }
 
   function handleExport() {
-    const blob = new Blob([JSON.stringify(entries, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "queerpulse-rate-board.json";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadBlob(
+      "queerpulse-rate-board.json",
+      JSON.stringify(entries, null, 2),
+      "application/json",
+    );
     showToast(t("economy:rateBoard.exportedToast"), "success");
   }
 

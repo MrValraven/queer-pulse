@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost, apiPut } from "../../../shared/api/client";
+import { apiGet, apiPost, apiPut } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 
@@ -54,17 +54,11 @@ export async function getFlatmateProfiles(
   return toItemsPage(res);
 }
 
-export const getFlatmateProfile = (slug: string) =>
-  apiGet<FlatmateProfileDTO>(`/flatmate-directory/${slug}`);
-
 export const getMyFlatmateProfile = () =>
   apiGet<FlatmateProfileDTO | null>("/flatmate-profiles/mine");
 
 export const upsertFlatmateProfile = (body: UpsertFlatmateProfileBody) =>
   apiPut<FlatmateProfileDTO>("/flatmate-profiles/mine", body);
-
-export const deleteFlatmateProfile = () =>
-  apiDelete<void>("/flatmate-profiles/mine");
 
 export const sayHello = (slug: string, body: { body?: string }) =>
   apiPost<{ conversationId: string }>(

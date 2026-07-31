@@ -38,12 +38,6 @@ export function irsTax(taxable: number, year: TaxYear): number {
   return tax;
 }
 
-/** Effective IRS rate (tax / taxable), 0 when taxable is 0. */
-export function effectiveIrsRate(taxable: number, year: TaxYear): number {
-  if (!(taxable > 0)) return 0;
-  return irsTax(taxable, year) / taxable;
-}
-
 /**
  * Regime-simplificado taxable income = coefficient × gross, with the
  * start-of-activity reduction in year 1 (×0.5) / year 2 (×0.75).

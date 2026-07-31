@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   applyToJob,
-  closeJob,
   createJob,
   type CreateJobApplicationDto,
   type CreateJobDto,
@@ -36,22 +35,6 @@ export function useCreateJob() {
           queryKey: ["company", dto.companySlug],
         });
       }
-    },
-  });
-}
-
-/** POST /jobs/:slug/close — take a listing down. */
-export function useCloseJob(slug: string) {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  return useMutation<void, Error, void>({
-    mutationFn: async () => {
-      if (demoMode) return;
-      await closeJob(slug);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["job", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
 }

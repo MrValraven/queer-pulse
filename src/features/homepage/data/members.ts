@@ -58,24 +58,3 @@ export const members: Member[] = [
     "Venture Builder & Dancer",
   ),
 ];
-
-export const memberFilters: {
-  value: "all" | Member["category"];
-  label: string;
-}[] = [
-  { value: "all", label: "Everyone" },
-  { value: "design", label: "Design" },
-  { value: "tech", label: "Tech" },
-  { value: "film", label: "Film & Photo" },
-  { value: "music", label: "Music" },
-  { value: "food", label: "Food" },
-  { value: "craft", label: "Craft" },
-  { value: "care", label: "Care" },
-];
-
-/** Visibility helper copy used on member cards. */
-export const visibilitySay: Record<Member["visibility"], string> = {
-  open: "Open to new people",
-  network: "Reachable via network",
-  private: "Keeping it quiet",
-};

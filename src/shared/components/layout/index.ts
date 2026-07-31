@@ -3,7 +3,6 @@ export { Sidebar } from "./Sidebar";
 export { Footer } from "./Footer";
 export { PageShell } from "./PageShell";
 export { PageHero } from "./PageHero";
-export { AppNav } from "./AppNav";
 export { AppShell } from "./AppShell";
 export { BackToSettingsLink } from "./BackToSettingsLink";
 export { SystemStateShell } from "./SystemStateShell";

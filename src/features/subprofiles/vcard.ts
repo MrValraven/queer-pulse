@@ -1,4 +1,5 @@
 import { toAbsoluteUrl } from "../../shared/seo";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { socialHref } from "../../shared/social/socialPlatforms";
 import { personaShareUrl } from "./personaLinks.data";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
@@ -55,15 +56,6 @@ export function buildVCard(view: PublicSubprofileView): string {
  *  `.vcf` file, named after the persona's slug/handle. Client-only — no
  *  network round-trip, works identically in demo and live mode. */
 export function downloadVCard(view: PublicSubprofileView): void {
-  const blob = new Blob([buildVCard(view)], { type: "text/vcard" });
-  const objectUrl = URL.createObjectURL(blob);
-
-  const anchor = document.createElement("a");
-  anchor.href = objectUrl;
-  anchor.download = `${view.slug || view.handle || "persona"}.vcf`;
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-
-  URL.revokeObjectURL(objectUrl);
+  const filename = `${view.slug || view.handle || "persona"}.vcf`;
+  downloadBlob(filename, buildVCard(view), "text/vcard");
 }

@@ -7,7 +7,6 @@ import {
   editThreadTitle,
   replyToThread,
   restorePost,
-  votePost,
   type CreateThreadDto,
 } from "./forum.api";
 import { slugForThreadId } from "./forum.adapters";
@@ -52,17 +51,6 @@ export function useReply(slug: string | undefined) {
       // Refetch the posts so the optimistic "You" reply reconciles with the
       // server record. Keyed by prefix — every language/param variant refetches.
       void queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
-    },
-  });
-}
-
-/** POST /forum/posts/:id/vote — upvote toggle on a post. */
-export function useVote() {
-  const { demoMode } = useDemoMode();
-  return useMutation<void, Error, { postId: string; value: number }>({
-    mutationFn: async ({ postId, value }) => {
-      if (demoMode) return;
-      await votePost(postId, value);
     },
   });
 }

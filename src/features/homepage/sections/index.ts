@@ -1,6 +1,5 @@
 export { Hero } from "./Hero";
 export { Manifesto } from "./Manifesto";
-export { TrustStrip } from "./TrustStrip";
 export { PainPoints } from "./PainPoints";
 export { Discovery } from "./Discovery";
 export { Gatherings } from "./Gatherings";

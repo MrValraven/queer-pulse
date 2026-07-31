@@ -3,15 +3,12 @@ import { FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { FiMessageSquare } from "react-icons/fi";
 import type { TFunction } from "../../shared/i18n/types";
 import {
-  appHost,
   inviteFullUrlFor,
   inviteUrlFor,
 } from "../../shared/lib/inviteUrl";
 
 export const INVITE_CODE = "QP-7F3K-2026";
 
-/** Bare domain of the running app — `queerpulse.com` in prod, `localhost:5173` in dev. */
-export const INVITE_DOMAIN = appHost();
 // Link construction lives in shared/lib/inviteUrl so there is exactly one place
 // that knows the invite path, and it reads it from the route map. Re-exported
 // here because this module is the invite feature's established entry point.
@@ -19,7 +16,6 @@ export { inviteUrlFor, inviteFullUrlFor };
 
 /** Preview link shown before the invite is persisted (uses the sample code). */
 export const INVITE_URL = inviteUrlFor(INVITE_CODE);
-export const INVITE_FULL_URL = inviteFullUrlFor(INVITE_CODE);
 
 /** Description shown in the preview card when the member hasn't written a note.
  *  Chrome — authored by the platform, not the member — so it routes through `t()`. */

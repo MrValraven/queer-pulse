@@ -45,19 +45,3 @@ export const WAYS: {
     ctaKey: "gatherings:landing.ways.recap.cta",
   },
 ];
-
-/**
- * Lisbon neighbourhood names are proper nouns and read identically in both
- * catalogs — they route through keys anyway so the rail stays uniform and the
- * one non-place entry ("Online") has somewhere to live.
- */
-export const HOOD_KEYS = [
-  "gatherings:hood.principeReal",
-  "gatherings:hood.alfama",
-  "gatherings:hood.marvila",
-  "gatherings:hood.mouraria",
-  "gatherings:hood.graca",
-  "gatherings:hood.caisDoSodre",
-  "gatherings:hood.arroios",
-  "gatherings:hood.bairroAlto",
-];

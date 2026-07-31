@@ -1,3 +1,5 @@
+import { downloadBlob } from "../../shared/lib/downloadBlob";
+
 /** Static event details used to build the .ics calendar file. Mock data. */
 export interface IcsEvent {
   title: string;
@@ -66,15 +68,5 @@ export function downloadIcs(
   event: IcsEvent,
   filename = "queerpulse-event.ics",
 ) {
-  const blob = new Blob([buildIcs(event)], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  downloadBlob(filename, buildIcs(event), "text/calendar;charset=utf-8");
 }

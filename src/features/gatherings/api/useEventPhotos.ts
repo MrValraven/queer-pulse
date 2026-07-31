@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   attachEventPhoto,
-  deleteEventPhoto,
   getEventPhotos,
   type EventPhotoDTO,
 } from "./events.api";
@@ -35,16 +34,6 @@ export function useAttachEventPhoto(slug: string) {
     meta: { silentError: true },
     mutationFn: (body: { key: string; caption?: string }) =>
       attachEventPhoto(slug, body),
-    onSuccess: () =>
-      client.invalidateQueries({ queryKey: ["event-photos"] }),
-  });
-}
-
-/** Remove a photo (uploader or organizer, enforced server-side). */
-export function useDeleteEventPhoto(slug: string) {
-  const client = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => deleteEventPhoto(slug, id),
     onSuccess: () =>
       client.invalidateQueries({ queryKey: ["event-photos"] }),
   });

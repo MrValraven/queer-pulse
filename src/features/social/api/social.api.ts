@@ -31,14 +31,6 @@ export interface MuteDTO {
   createdAt: string;
 }
 
-/** Directional block status between the actor and one member. */
-export interface BlockStatus {
-  /** The actor has blocked this member. */
-  blocking: boolean;
-  /** This member has blocked the actor (never leaks *who* to the other side). */
-  blockedBy: boolean;
-}
-
 /** Optional context when creating a block (drives the "also report" affordance). */
 export interface BlockOptions {
   reason?: string;
@@ -60,10 +52,6 @@ export const blockMember = (slug: string, body?: BlockOptions) =>
 /** DELETE /blocks/:slug — unblock. Does not restore any severed connection. */
 export const unblockMember = (slug: string) =>
   apiDelete<void>(`/blocks/${encodeURIComponent(slug)}`);
-
-/** GET /blocks/:slug — am I blocking / blocked-by this member? */
-export const getBlockStatus = (slug: string) =>
-  apiGet<BlockStatus>(`/blocks/${encodeURIComponent(slug)}`);
 
 /** GET /mutes — members the actor has muted, newest first. */
 export async function getMutes(page?: number) {

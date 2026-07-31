@@ -3,6 +3,8 @@
    callers build with `t()` — this stays a plain function so it's easy to test
    without an i18n context. */
 
+import { downloadBlob } from "../../../shared/lib/downloadBlob";
+
 export function googleCalendarUrl(): string {
   return (
     "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" +
@@ -25,10 +27,5 @@ export function downloadIcs(description: string): void {
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
-  a.download = "supper-club-13.ics";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  downloadBlob("supper-club-13.ics", ics, "text/calendar");
 }

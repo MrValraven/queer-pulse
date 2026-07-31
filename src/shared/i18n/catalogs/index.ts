@@ -100,18 +100,6 @@ const en: Record<Namespace, Catalog> = {
 const PENDING_CATALOG: Catalog = Object.freeze({});
 
 /**
- * Namespaces the app shell renders. These stay eagerly bundled for both
- * languages so nav/footer/404 paint correctly before any lazy chunk arrives.
- */
-export const SHELL_NAMESPACES = [
-  "common",
-  "nav",
-  "footer",
-  "shared",
-  "system",
-] as const satisfies readonly Namespace[];
-
-/**
  * Lazy loaders for every non-shell PT namespace, keyed by namespace. Each value
  * is a `() => import(...)` that resolves the namespace's catalog, so Vite emits
  * one chunk per namespace and the provider can fetch them on demand. A
