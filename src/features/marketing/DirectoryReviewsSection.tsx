@@ -82,9 +82,11 @@ export function DirectoryReviewsSection({
       </h2>
       <p className={s.subLine}>
         {t(
-          showControls
-            ? SORTED_BY_KEYS[sort]
-            : "marketing:directory.detail.reviewsSub",
+          place.reviews.length === 0
+            ? "marketing:directory.detail.reviews.emptySub"
+            : showControls
+              ? SORTED_BY_KEYS[sort]
+              : "marketing:directory.detail.reviewsSub",
         )}
       </p>
       {place.reviews.length > 0 && (
@@ -147,7 +149,13 @@ export function DirectoryReviewsSection({
                 ) : (
                   <div className={s.revAuthor}>{author}</div>
                 )}
-                <Stars score={review.stars} className={s.revStars} />
+                <Stars
+                  score={review.stars}
+                  className={s.revStars}
+                  label={t("marketing:directory.detail.reviews.ratingAria", {
+                    count: review.stars,
+                  })}
+                />
               </div>
               <div className={s.revText}>{review.text}</div>
               <div className={s.revHelpful}>

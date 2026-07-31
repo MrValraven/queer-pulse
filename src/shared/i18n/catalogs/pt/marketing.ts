@@ -1802,6 +1802,10 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Encontra o teu caminho →",
   "changelog.tag.notifications": "Abrir as tuas notificações →",
 
+  "changelog.entries.directory-detail-polish.title":
+    "Uma página de espaço mais rigorosa e mais útil",
+  "changelog.entries.directory-detail-polish.body":
+    "As páginas de negócios do diretório receberam uma ronda de correções e pequenas adições: o “Aberto agora” passa a ser calculado pelo relógio do próprio espaço (e não pelo fuso horário do teu dispositivo), a linha de localização e os dados de pesquisa deixam de assumir que tudo fica em Lisboa, os links dos sites abrem sempre corretamente e as classificações por estrelas são lidas corretamente por leitores de ecrã. Quem não tem sessão iniciada pode agora guardar um espaço (pedimos que inicies sessão), quem gere um negócio pode reivindicar o seu registo, e um link errado ou removido mostra uma verdadeira página de “não encontrado” em vez de te devolver silenciosamente ao diretório.",
   "changelog.entries.review-author-avatars.title":
     "Vê quem deixou uma avaliação",
   "changelog.entries.review-author-avatars.body":
@@ -2924,9 +2928,15 @@ export const marketing: Catalog = {
   "directory.detail.reviews.filterStars_other": "{count} estrelas",
   "directory.detail.reviews.noStarReviews":
     "Ainda não há avaliações de {count} estrelas.",
+  "directory.detail.reviews.ratingAria": "Classificado com {count} em 5 estrelas",
   "directory.detail.visitWebsite": "Visitar o site →",
   "directory.detail.getInTouch": "Entrar em contacto →",
   "directory.detail.backToDirectory": "Voltar ao diretório",
+  "directory.detail.claimCta": "És tu que geres este espaço? Reivindica-o →",
+  "directory.detail.notFound.title": "Não encontrámos este espaço",
+  "directory.detail.notFound.body":
+    "Este negócio pode ter sido removido, ou o link pode estar desatualizado. Todos os outros lugares abertos a nós continuam no diretório.",
+  "directory.detail.notFound.cta": "Explorar o diretório",
   "directory.detail.reportCta": "Denunciar este negócio",
   "directory.detail.reportAriaLabel": "Denunciar {name}",
   "directory.detail.suggestEdit.cta": "Sugerir uma correção",
@@ -2981,6 +2991,7 @@ export const marketing: Catalog = {
   "directory.detail.action.saved": "Guardado",
   "directory.detail.action.linkCopied": "Link copiado",
   "directory.detail.action.shareError": "Não foi possível partilhar — tenta copiar o link",
+  "directory.detail.action.saveSignIn": "Inicia sessão para guardar este espaço",
   "directory.relative.yesterday": "Ontem",
   "directory.relative.twoDaysAgo": "há 2 dias",
   "directory.relative.threeDaysAgo": "há 3 dias",

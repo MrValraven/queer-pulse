@@ -148,11 +148,21 @@
 }
 
 /* ── Real photo gallery (replaces the tinted caption gallery above when a
-   place has uploaded photos) ─────────────────────────────────────────────── */
+   place has uploaded photos) ─────────────────────────────────────────────────
+   A compact split: the main photo on the left, the remaining shots stacked in
+   a clickable column on the right (each opens the lightbox). This keeps the
+   hero from dominating the page the way a full-bleed banner did — the eye gets
+   the place AND a sense of the space in one glance. There are at most four
+   photo slots, so the right column never holds more than three thumbnails. */
 .photoGallery {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+/* Only one photo → the hero spans the full width on its own. */
+.photoGalleryFull {
+  grid-template-columns: 1fr;
 }
 .photoHero {
   display: block;
@@ -164,15 +174,10 @@
   cursor: zoom-in;
   background: none;
 }
-/* Header band, not a full-bleed poster: a viewport-relative height keeps the
-   hero a balanced banner (min 260 on short/mobile screens, ~42vh mid, capped
-   at 440 so it never dominates the page on tall displays) instead of the old
-   16/10 aspect ratio that rendered ~737px tall at the 1180px container width.
-   object-fit: cover fills the band and crops rather than letterboxing. */
 .photoHero img {
   display: block;
   width: 100%;
-  height: clamp(260px, 42vh, 440px);
+  height: clamp(300px, 42vh, 460px);
   object-fit: cover;
   transition: transform 0.3s var(--ease);
 }
@@ -181,17 +186,24 @@
     transform: scale(1.02);
   }
 }
-.thumbGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
+.thumbCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+/* Each thumbnail splits the hero's height evenly (the grid stretches this
+   column to match). */
+.thumbCol .thumb {
+  flex: 1 1 0;
+  min-height: 0;
 }
 .thumb {
   display: block;
   width: 100%;
   padding: 0;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: zoom-in;
   background: none;
@@ -199,7 +211,7 @@
 .thumb img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.3s var(--ease);
 }
@@ -218,9 +230,24 @@
     transform: none;
   }
 }
-@media (max-width: 760px) {
-  .thumbGrid {
-    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+/* Narrow screens: stack the hero on top and lay the thumbnails out in a row
+   beneath it, where aspect-ratio (not the hero height) drives their size. */
+@media (max-width: 640px) {
+  .photoGallery {
+    grid-template-columns: 1fr;
+  }
+  .photoHero img {
+    height: clamp(220px, 56vw, 340px);
+  }
+  .thumbCol {
+    flex-direction: row;
+  }
+  .thumbCol .thumb {
+    flex: 1 1 0;
+  }
+  .thumbCol .thumb img {
+    height: auto;
+    aspect-ratio: 4 / 3;
   }
 }
 
@@ -361,10 +388,29 @@
   }
 }
 
-.head {
-  padding-bottom: 26px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
-  margin-bottom: 32px;
+/* ── Identity header (full-width, above the gallery) ─────────────────────────
+   Name/eyebrow/tagline/meta on the left; the primary actions inline on the
+   right, aligned to the top of the name. On narrow viewports the row wraps and
+   the actions drop below (on phones they become the fixed bottom bar, out of
+   flow entirely — see `.actionBar`). */
+.identity {
+  padding-top: 8px;
+}
+.spaceHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 48px);
+  flex-wrap: wrap;
+  padding-bottom: 24px;
+}
+.spaceHeadIdentity {
+  flex: 1 1 min(100%, 460px);
+  min-width: 0;
+}
+.spaceHeadActions {
+  flex: 0 0 auto;
+  width: min(320px, 100%);
 }
 .eyebrow {
   font-size: 11px;
@@ -396,9 +442,12 @@
   margin-bottom: 22px;
   max-width: 55ch;
 }
-.pills {
+/* One consolidated at-a-glance row: badge + the place's own pills + rating (or
+   the "New" chip). Everything a visitor needs to size up the place, together. */
+.metaRow {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
 .pill {
@@ -435,14 +484,17 @@
   text-transform: uppercase;
   font-size: 11px;
 }
-.ratingRow {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+/* Empty-state trust chip: a brand-new listing reads as "New", not as a hollow
+   zero-star rating. */
+.newChip {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: 8px;
+  padding: 5px 11px;
 }
 .rating {
   display: flex;
@@ -1013,6 +1065,31 @@
   color: var(--ink);
   line-height: 1.55;
   margin-bottom: 12px;
+}
+.addrName {
+  display: block;
+  color: var(--plum);
+  font-family: var(--serif);
+  font-size: 17px;
+  margin-bottom: 3px;
+}
+.claimLink {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .claimLink:hover {
+    text-decoration: underline;
+  }
+}
+.notFound {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 64px 20px 96px;
 }
 .savedSignal {
   display: flex;

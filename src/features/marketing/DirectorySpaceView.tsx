@@ -1,4 +1,5 @@
 import { type DirectoryPlace } from "./directoryPlaces";
+import { DirectorySpaceHeader } from "./DirectorySpaceHeader";
 import { DirectoryGallery } from "./DirectoryGallery";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DirectorySpaceAside } from "./DirectorySpaceAside";
@@ -25,6 +26,9 @@ export function DirectorySpaceView({
 }) {
   return (
     <>
+      {/* Name/identity first, then the photos — the place introduces itself
+          before it shows off. Both are full-width above the two-column body. */}
+      <DirectorySpaceHeader place={place} preview={preview} />
       <DirectoryGallery place={place} />
       <div className={s.page}>
         <div className={s.grid}>

@@ -2,13 +2,17 @@ import { Link } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type DirectoryPlace, type Tint } from "./directoryPlaces";
+import {
+  type DirectoryPlace,
+  type Tint,
+  websiteHref,
+  websiteLabel,
+} from "./directoryPlaces";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MEMBERS_HERE } from "./directorySpace.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { LocationMiniMap } from "./LocationMiniMap";
-import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectoryMapPlaceholder } from "./DirectoryMapPlaceholder";
 import { DirectoryLanguages } from "./DirectoryLanguages";
 import { DirectoryAccess } from "./DirectoryAccess";
@@ -51,9 +55,15 @@ export function DirectorySpaceAside({
       ? { latitude: place.latitude, longitude: place.longitude }
       : BUSINESS_COORDS[place.slug];
 
+  // Some listings arrive with no real street address — often the venue name
+  // repeated into the field. Show the address line only when it adds something
+  // the bold name above it doesn't already say.
+  const address = place.address?.trim();
+  const showAddress =
+    !!address && address.toLowerCase() !== place.name.trim().toLowerCase();
+
   return (
     <aside className={s.side}>
-      <DirectoryActionBar place={place} preview={preview} />
       <div className={s.sideCard}>
         <div className={s.map}>
           {coords ? (
@@ -69,18 +79,8 @@ export function DirectorySpaceAside({
           )}
         </div>
         <div className={s.addr}>
-          <strong
-            style={{
-              display: "block",
-              color: "var(--plum)",
-              fontFamily: "var(--serif)",
-              fontSize: 17,
-              marginBottom: 3,
-            }}
-          >
-            {place.name}
-          </strong>
-          {place.address}
+          <strong className={s.addrName}>{place.name}</strong>
+          {showAddress && place.address}
         </div>
         {place.savedCount != null && place.savedCount > 0 && (
           <div className={s.savedSignal}>
@@ -92,7 +92,7 @@ export function DirectorySpaceAside({
         )}
         {place.social.phone && (
           <div className={s.contactRow}>
-            <svg viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24" aria-hidden>
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 5.15 8.81 19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.07 2h3a2 2 0 0 1 2 1.72c.16.93.4 1.83.7 2.7" />
             </svg>
             <a href={`tel:${place.social.phone.replace(/\s/g, "")}`}>
@@ -102,22 +102,22 @@ export function DirectorySpaceAside({
         )}
         {place.social.website && (
           <div className={s.contactRow}>
-            <svg viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24" aria-hidden>
               <circle cx={12} cy={12} r={10} />
               <path d="M2 12h20M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20" />
             </svg>
             <a
-              href={`https://${place.social.website}`}
+              href={websiteHref(place.social.website)}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {place.social.website}
+              {websiteLabel(place.social.website)}
             </a>
           </div>
         )}
         {igUrl && (
           <div className={s.contactRow}>
-            <svg viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24" aria-hidden>
               <rect x={2} y={2} width={20} height={20} rx={5} />
               <circle cx={12} cy={12} r={4} />
               <line x1={17.5} y1={6.5} x2={17.5} y2={6.5} />
@@ -129,7 +129,7 @@ export function DirectorySpaceAside({
         )}
         {place.social.email && (
           <div className={s.contactRow}>
-            <svg viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24" aria-hidden>
               <rect x={2} y={4} width={20} height={16} rx={2} />
               <polyline points="22,6 12,13 2,6" />
             </svg>
@@ -143,7 +143,7 @@ export function DirectorySpaceAside({
             <Button
               variant="primary"
               className={s.ctaBtn}
-              href={`https://${place.social.website}`}
+              href={websiteHref(place.social.website)}
             >
               {t("marketing:directory.detail.visitWebsite")}
             </Button>
@@ -185,11 +185,23 @@ export function DirectorySpaceAside({
         </span>
         <p className={s.ownerBio}>{place.owner.bio}</p>
         {place.owner.inQueerPulse && (
-          <Button variant="ghost" className={s.ctaBtn} to={routes.members}>
+          <Button
+            variant="ghost"
+            className={s.ctaBtn}
+            to={place.member ? `${routes.members}/${place.member}` : routes.members}
+          >
             {t("marketing:directory.detail.viewProfile", {
               name: place.owner.first,
             })}
           </Button>
+        )}
+        {/* Non-owners who actually run this place get a way in: the list-a-
+            business wizard's existing "claim" path. Hidden for the owner (they
+            already have "Edit this listing") and in the read-only preview. */}
+        {!ownerRef && !preview && (
+          <Link to={routes.listBusiness} className={s.claimLink}>
+            {t("marketing:directory.detail.claimCta")}
+          </Link>
         )}
       </div>
 

@@ -61,7 +61,12 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
     <div className={styles.cover}>
       <div className={styles.coverInner}>
         <div
-          className={styles.photoGallery}
+          className={[
+            styles.photoGallery,
+            rest.length === 0 && styles.photoGalleryFull,
+          ]
+            .filter(Boolean)
+            .join(" ")}
           role="group"
           aria-label={t("marketing:directory.detail.galleryAria", {
             name: place.name,
@@ -74,7 +79,7 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
             aria-label={hero!.alt || viewPhotoLabel}
           >
             <img
-              src={resolveAvatarSrc(hero!.url, 1600)}
+              src={resolveAvatarSrc(hero!.url, 1400)}
               alt={hero!.alt}
               loading="eager"
               fetchPriority="high"
@@ -83,7 +88,7 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
             />
           </button>
           {rest.length > 0 && (
-            <div className={styles.thumbGrid}>
+            <div className={styles.thumbCol}>
               {rest.map((shot, index) => (
                 <button
                   key={shot.url}
@@ -93,7 +98,7 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
                   aria-label={shot.alt || viewPhotoLabel}
                 >
                   <img
-                    src={resolveAvatarSrc(shot.url, 400)}
+                    src={resolveAvatarSrc(shot.url, 500)}
                     alt={shot.alt}
                     loading="lazy"
                     decoding="async"

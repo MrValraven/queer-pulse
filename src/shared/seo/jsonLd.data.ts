@@ -96,6 +96,12 @@ export interface LocalBusinessSchema {
     ratingValue: string;
     reviewCount: number;
   };
+  openingHoursSpecification?: {
+    "@type": "OpeningHoursSpecification";
+    dayOfWeek: string;
+    opens: string;
+    closes: string;
+  }[];
   priceRange?: string;
 }
 
@@ -163,7 +169,7 @@ export function buildLocalBusinessSchema(
       "@type": "PostalAddress",
       streetAddress: place.address,
       addressLocality: place.hood,
-      addressRegion: "Lisbon",
+      addressRegion: place.city ?? "Lisbon",
       addressCountry: "PT",
     },
   };
@@ -191,6 +197,30 @@ export function buildLocalBusinessSchema(
 
   const priceRangePill = place.pills.find((pill) => /^€+$/.test(pill));
   if (priceRangePill) schema.priceRange = priceRangePill;
+
+  // Real per-weekday hours (live listings) surface as an
+  // OpeningHoursSpecification so the rich result can show open/closed times.
+  // Templated `hoursType` fallbacks carry no concrete times, so they're skipped.
+  if (place.hours) {
+    const DAY_OF_WEEK: Record<string, string> = {
+      Mon: "Monday",
+      Tue: "Tuesday",
+      Wed: "Wednesday",
+      Thu: "Thursday",
+      Fri: "Friday",
+      Sat: "Saturday",
+      Sun: "Sunday",
+    };
+    const spec = Object.entries(place.hours)
+      .filter(([, day]) => day?.open && day.from && day.to)
+      .map(([id, day]) => ({
+        "@type": "OpeningHoursSpecification" as const,
+        dayOfWeek: DAY_OF_WEEK[id] ?? id,
+        opens: day.from,
+        closes: day.to,
+      }));
+    if (spec.length > 0) schema.openingHoursSpecification = spec;
+  }
 
   return schema;
 }

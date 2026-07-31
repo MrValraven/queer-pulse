@@ -1751,6 +1751,10 @@ export const marketing: Catalog = {
   "changelog.tag.volunteer": "Find a way in →",
   "changelog.tag.notifications": "Open your notifications →",
 
+  "changelog.entries.directory-detail-polish.title":
+    "A more accurate, more useful place page",
+  "changelog.entries.directory-detail-polish.body":
+    "Directory listings got a round of fixes and small additions: “Open now” is now worked out on the venue's own clock (not your device's timezone), the location line and search data no longer assume every place is in Lisbon, website links always open correctly, and star ratings read properly to screen readers. Signed-out visitors can now save a place (we'll ask you to sign in), people who run a venue can claim its listing, and a mistyped or removed listing shows a real “not found” page instead of quietly bouncing you back to the directory.",
   "changelog.entries.review-author-avatars.title":
     "See who left a review",
   "changelog.entries.review-author-avatars.body":
@@ -2801,8 +2805,10 @@ export const marketing: Catalog = {
   "directory.detail.badge.verifiedOwned": "Verified queer-owned",
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} reviews",
+  "directory.detail.newBadge": "New",
   "directory.detail.whatItIsTitle": "What it <em>actually is.</em>",
   "directory.detail.goodForTitle": "What members say it's <em>good for</em>",
+  "directory.detail.offersTitle": "What this place <em>offers</em>",
   "directory.detail.goodForSub": "Aggregated from {count} reviews.",
   "directory.detail.hoursTitle": "Hours",
   "directory.detail.today": "Today",
@@ -2811,6 +2817,8 @@ export const marketing: Catalog = {
   "directory.detail.closedNow": "Closed",
   "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
   "directory.detail.reviewsSub": "Sorted by most helpful.",
+  "directory.detail.reviews.emptySub":
+    "No reviews yet — be the first to leave one.",
   "directory.detail.ratingBreakdown": "Rating breakdown",
   "directory.detail.starsCount": "{stars} stars, {count} reviews",
   "directory.detail.review.formTitle": "Been here? Leave a review",
@@ -2849,9 +2857,15 @@ export const marketing: Catalog = {
   "directory.detail.reviews.filterStars_one": "{count} star",
   "directory.detail.reviews.filterStars_other": "{count} stars",
   "directory.detail.reviews.noStarReviews": "No {count}-star reviews yet.",
+  "directory.detail.reviews.ratingAria": "Rated {count} out of 5 stars",
   "directory.detail.visitWebsite": "Visit website →",
   "directory.detail.getInTouch": "Get in touch →",
   "directory.detail.backToDirectory": "Back to directory",
+  "directory.detail.claimCta": "Do you run this place? Claim it →",
+  "directory.detail.notFound.title": "We couldn't find this place",
+  "directory.detail.notFound.body":
+    "This listing may have been taken down, or the link might be out of date. Everywhere else that's open to us is still in the directory.",
+  "directory.detail.notFound.cta": "Browse the directory",
   "directory.detail.reportCta": "Report this listing",
   "directory.detail.reportAriaLabel": "Report {name}",
   "directory.detail.suggestEdit.cta": "Suggest an edit",
@@ -2906,6 +2920,7 @@ export const marketing: Catalog = {
   "directory.detail.action.saved": "Saved",
   "directory.detail.action.linkCopied": "Link copied",
   "directory.detail.action.shareError": "Couldn't share — try copying the link",
+  "directory.detail.action.saveSignIn": "Sign in to save this space",
   "directory.relative.yesterday": "Yesterday",
   "directory.relative.twoDaysAgo": "2 days ago",
   "directory.relative.threeDaysAgo": "3 days ago",

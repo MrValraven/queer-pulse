@@ -5,7 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
 import { useSaved } from "../../app/providers/useSaved";
-import { businessPath } from "../../app/routeMap";
+import { businessPath, routes } from "../../app/routeMap";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { BUSINESS_COORDS } from "./businessCoords";
 import s from "./DirectorySpacePage.module.css";
@@ -121,7 +121,7 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
         <FiShare2 aria-hidden />
         {t("marketing:directory.detail.action.share")}
       </Button>
-      {user && (
+      {user ? (
         <Button
           variant={saved ? "jade" : "ghost"}
           className={s.actionBarBtn}
@@ -137,6 +137,19 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
           {saved
             ? t("marketing:directory.detail.action.saved")
             : t("marketing:directory.detail.action.save")}
+        </Button>
+      ) : (
+        // Logged-out visitors still see Save — clicking routes them to sign-in
+        // (there's no local session to save into) rather than hiding the
+        // affordance and the sign-in nudge entirely.
+        <Button
+          variant="ghost"
+          className={s.actionBarBtn}
+          to={routes.signIn}
+          aria-label={t("marketing:directory.detail.action.saveSignIn")}
+        >
+          <FiHeart aria-hidden style={{ fill: "none" }} />
+          {t("marketing:directory.detail.action.save")}
         </Button>
       )}
     </div>

@@ -1,6 +1,7 @@
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { FiMapPin } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlace } from "./api/useDirectory";
@@ -63,8 +64,31 @@ export function DirectorySpacePage() {
       </PageShell>
     );
   }
-  // Settled with no matching listing (a genuine 404 or demo miss) → not found.
-  if (!place) return <Navigate to={routes.directory} replace />;
+  // Settled with no matching listing (a genuine 404 or demo miss). Show an
+  // honest not-found state — a stale or mistyped link deserves an explanation
+  // and a way back, not a silent bounce to the directory that leaves the
+  // visitor wondering what happened. `noIndex` keeps the miss out of search.
+  if (!place) {
+    return (
+      <PageShell>
+        <PageMeta
+          title={`${t("marketing:directory.detail.notFound.title")} — QueerPulse`}
+          noIndex
+        />
+        <div className={s.notFound}>
+          <EmptyState
+            icon={<FiMapPin />}
+            title={t("marketing:directory.detail.notFound.title")}
+            description={t("marketing:directory.detail.notFound.body")}
+            action={{
+              label: t("marketing:directory.detail.notFound.cta"),
+              to: routes.directory,
+            }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
 
   const canonicalPath = businessPath(place.slug);
   // Canonical slug for the filter link so the directory chip matches, plus the

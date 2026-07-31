@@ -82,6 +82,13 @@ export interface DirectoryPlace {
     phone?: string;
   };
   address: string;
+  /** City the venue sits in — drives the location eyebrow and the JSON-LD
+   * `addressRegion`. Absent on demo places (all Lisbon) → callers default to
+   * Lisbon rather than mislabel a listing. */
+  city?: string;
+  /** IANA timezone the venue's `hours` are expressed in, so "Open now" is
+   * correct regardless of the visitor's own timezone. Absent → Europe/Lisbon. */
+  timezone?: string;
   /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
   latitude?: number | null;
   longitude?: number | null;
@@ -1764,6 +1771,61 @@ function minutesOf(hourMinute: string): number {
  * less than or equal to `from` is treated as closing after midnight, so a late
  * bar reads correctly in the small hours of the next day.
  */
+/**
+ * The current wall-clock time in a venue's timezone, returned as a `Date` whose
+ * LOCAL getters (`getHours`, `getDay`, …) already reflect that zone. Feeding
+ * this into `openStatus` / the hours-table "today" highlight makes them read the
+ * venue's clock, not the visitor's browser timezone — so a Lisbon bar open till
+ * 2am doesn't show "Closed" to someone browsing from New York. Defaults to
+ * Europe/Lisbon, where the directory lives.
+ */
+export function zonedNow(timeZone = "Europe/Lisbon"): Date {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+  }).formatToParts(new Date());
+  const partValue = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value);
+  const hour = partValue("hour") % 24; // Intl can emit "24" at midnight
+  return new Date(
+    partValue("year"),
+    partValue("month") - 1,
+    partValue("day"),
+    hour,
+    partValue("minute"),
+  );
+}
+
+/**
+ * A user-entered website (`example.com`, `https://example.com/`, `www.…`)
+ * turned into a safe absolute href. Prefixes `https://` only when no scheme is
+ * already present, so a value the owner saved WITH one isn't doubled into the
+ * broken `https://https://…`.
+ */
+export function websiteHref(raw: string): string {
+  const trimmed = raw.trim();
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
+/**
+ * The website reduced to a clean hostname for display — scheme, `www.`, and any
+ * path stripped, so a long URL like `https://shotgun.live/en/venues/drama-bar`
+ * reads simply as `shotgun.live` in the contact row (the link still points at
+ * the full URL). Falls back to the trimmed input if it can't be parsed.
+ */
+export function websiteLabel(raw: string): string {
+  return raw
+    .trim()
+    .replace(/^https?:\/\//i, "")
+    .replace(/^www\./i, "")
+    .replace(/\/.*$/, "");
+}
+
 export function openStatus(
   hours: Record<string, DayHours> | undefined,
   now: Date,

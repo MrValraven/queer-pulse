@@ -5,10 +5,9 @@ import {
   hoursRows,
   openStatus,
   realHoursRows,
+  zonedNow,
 } from "./directoryPlaces";
-import { categoryLabel } from "./localPlaces";
 import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
-import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
 
 const Check = () => (
@@ -34,58 +33,19 @@ interface Props {
 
 export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) {
   const { t } = useTranslation();
-  const words = place.name.split(" ");
-  const last = words.pop();
-  const lead = words.join(" ");
   const hasRealHours = place.hours != null && Object.keys(place.hours).length > 0;
   const rows = hasRealHours ? realHoursRows(place.hours!) : hoursRows(place.hoursType);
-  const todayIdx = (new Date().getDay() + 6) % 7;
+  // Evaluate "today" and open/closed against the VENUE's clock, not the
+  // visitor's browser timezone (Europe/Lisbon by default) — see `zonedNow`.
+  const venueNow = zonedNow(place.timezone);
+  const todayIdx = (venueNow.getDay() + 6) % 7;
+  // With no reviews yet, the "what members say" framing (and its
+  // "aggregated from N reviews" line) claims a consensus that doesn't exist —
+  // present the same checklist honestly as what the place declares it offers.
+  const hasReviews = place.rating.count > 0;
 
   return (
     <div>
-      <header className={s.head}>
-        <div className={s.eyebrow}>
-          {categoryLabel(t, place.cat)} · {place.hood} · Lisbon
-        </div>
-        <h1 className={s.h1}>
-          {lead && `${lead} `}
-          <em>{last}.</em>
-        </h1>
-        <p className={s.tagline}>{place.tagline}</p>
-        <div className={s.pills}>
-          <span
-            className={[s.pill, place.owned ? s.verified : s.friendlyPill].join(
-              " ",
-            )}
-          >
-            {t(
-              place.owned
-                ? "marketing:directory.detail.badge.verifiedOwned"
-                : "marketing:directory.detail.badge.friendly",
-            )}
-          </span>
-          {place.pills.map((p) => (
-            <span key={p} className={s.pill}>
-              {p}
-            </span>
-          ))}
-        </div>
-        <div className={s.ratingRow}>
-          <div className={s.rating}>
-            <Stars
-              score={Math.round(Number(place.rating.score))}
-              className={s.stars}
-            />
-            <b>{place.rating.score}</b>
-            <span>
-              {t("marketing:directory.detail.reviewsCount", {
-                count: place.rating.count,
-              })}
-            </span>
-          </div>
-        </div>
-      </header>
-
       <section className={s.sec}>
         <h2>
           <Translation
@@ -101,15 +61,21 @@ export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) 
       <section className={s.sec}>
         <h2>
           <Translation
-            i18nKey="marketing:directory.detail.goodForTitle"
+            i18nKey={
+              hasReviews
+                ? "marketing:directory.detail.goodForTitle"
+                : "marketing:directory.detail.offersTitle"
+            }
             components={{ em: <em /> }}
           />
         </h2>
-        <p className={s.subLine}>
-          {t("marketing:directory.detail.goodForSub", {
-            count: place.rating.count,
-          })}
-        </p>
+        {hasReviews && (
+          <p className={s.subLine}>
+            {t("marketing:directory.detail.goodForSub", {
+              count: place.rating.count,
+            })}
+          </p>
+        )}
         <div className={s.features}>
           {place.goodFor.map((feature) => (
             <div
@@ -132,7 +98,7 @@ export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) 
         <p className={s.subLine}>{place.hoursNote}</p>
         {hasRealHours &&
           (() => {
-            const status = openStatus(place.hours, new Date());
+            const status = openStatus(place.hours, venueNow);
             if (status.state === "unknown") return null;
             return (
               <span
