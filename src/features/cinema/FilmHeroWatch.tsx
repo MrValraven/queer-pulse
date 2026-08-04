@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight, FiPlay } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/useSaved";
@@ -67,6 +68,7 @@ export function FilmHeroWatch() {
       </div>
       <div className={styles.wbActions}>
         <Button size="lg" to={routes.cinemaWatch}>
+          <FiPlay aria-hidden />{" "}
           {t("cinema:film.watch.mainCta", { duration: "1h 32m" })}
         </Button>
         <span
@@ -160,7 +162,8 @@ export function FilmHeroWatch() {
             }}
           />{" "}
           <Link to={routes.governance}>
-            {t("cinema:film.split.readDeedCta")}
+            {t("cinema:film.split.readDeedCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { COC_KEYS } from "./checkout.data";
@@ -40,9 +41,16 @@ export function CodeOfCare() {
             type="button"
             onClick={() => setOpen((o) => !o)}
           >
-            {open
-              ? `${t("gatherings:checkout.coc.hide")} ←`
-              : `${t("gatherings:checkout.coc.whatsThat")} →`}
+            {open ? (
+              <>
+                {t("gatherings:checkout.coc.hide")} <FiArrowLeft aria-hidden />
+              </>
+            ) : (
+              <>
+                {t("gatherings:checkout.coc.whatsThat")}{" "}
+                <FiArrowRight aria-hidden />
+              </>
+            )}
           </button>
           <div className={s["co-coc-body"]}>
             <ul className={s["co-coc-list"]}>

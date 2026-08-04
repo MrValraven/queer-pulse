@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SPLIT, CREDITS } from "./studioTrack.data";
@@ -94,7 +95,8 @@ export function StudioTrackSidebar() {
           <small>6 pages · piano + voice · CC-BY-NC · Mariana Sol</small>
         </div>
         <Link to={routes.studioSheetStore}>
-          {t("studio:track.sidebar.downloadCta")} →
+          {t("studio:track.sidebar.downloadCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

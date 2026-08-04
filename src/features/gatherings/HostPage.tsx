@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -51,7 +52,8 @@ export function HostPage() {
         sub={t("gatherings:host.outro.sub")}
       >
         <Button to={routes.createGathering} size="lg">
-          {t("gatherings:host.createGatheringCta")} →
+          {t("gatherings:host.createGatheringCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { FiPlus } from "react-icons/fi";
+import { FiArrowLeft, FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ModalShell, Sending } from "./ModalKit";
@@ -114,6 +114,7 @@ function AddCompanyBlock({
         className={styles.back}
         onClick={() => setAdding(false)}
       >
+        <FiArrowLeft aria-hidden />{" "}
         {t("economy:affiliateCompanyModal.addCompany.pickExisting")}
       </button>
     </>

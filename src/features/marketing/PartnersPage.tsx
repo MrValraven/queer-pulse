@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiMapPin } from "react-icons/fi";
+import { FiArrowRight, FiMapPin } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -152,7 +152,8 @@ export function PartnersPage() {
                         ))}
                       </div>
                       <div className={s.foot}>
-                        {t("marketing:partners.card.viewCta")}
+                        {t("marketing:partners.card.viewCta")}{" "}
+                        <FiArrowRight aria-hidden />
                       </div>
                     </Link>
                   </FadeIn>

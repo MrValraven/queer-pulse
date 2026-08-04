@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -81,7 +82,7 @@ export function RequestInviteSent({
               fontWeight: 500,
             }}
           >
-            {t("auth:requestInvite.sent.backHome")}
+            <FiArrowLeft aria-hidden /> {t("auth:requestInvite.sent.backHome")}
           </Link>
         </div>
       </div>

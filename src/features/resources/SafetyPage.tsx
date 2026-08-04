@@ -16,6 +16,7 @@ import {
 import { routes } from "../../app/routeMap";
 import styles from "./SafetyPage.module.css";
 import { SAFETY_SUBPAGES } from "./safety.data";
+import { ResourceHero } from "./ResourceHero";
 
 export function SafetyPage() {
   const { t } = useTranslation();
@@ -40,18 +41,19 @@ export function SafetyPage() {
           { name: pageTitle, path: routes.safety },
         ])}
       />
-      <header className={styles.hero}>
-        <div className="wrap">
-          <div className={styles.cat}>{t("resources:safety.hero.cat")}</div>
-          <h1>
-            <Translation
-              i18nKey="resources:safety.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.intro}>{t("resources:safety.hero.intro")}</p>
-        </div>
-      </header>
+      <ResourceHero
+        tone="light"
+        eyebrowVariant="label"
+        eyebrowColor="var(--accent)"
+        eyebrow={t("resources:safety.hero.cat")}
+        title={
+          <Translation
+            i18nKey="resources:safety.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        lead={t("resources:safety.hero.intro")}
+      />
 
       <div className={styles.content}>
         <Reveal as="section" className={styles.section}>

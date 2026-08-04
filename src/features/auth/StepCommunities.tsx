@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import { Button, SkeletonCard } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -112,7 +112,7 @@ export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
           label={t("auth:onboarding.stepCommunities.skip")}
         />
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:onboarding.stepCommunities.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepCommunities.back")}
         </button>
       </div>
     </>

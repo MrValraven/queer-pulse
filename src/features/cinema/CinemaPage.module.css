@@ -300,6 +300,29 @@
   }
 }
 
+/* Cinema section divider — the local overrides layered onto the shared
+   <SectionHead dark>: the 2px cream rule, the lighter 32px title, and the
+   muted cream link (vs SectionHead's coral) that reads on the dark island. */
+.cinemaSectionHead {
+  align-items: baseline;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
+  margin-bottom: 32px;
+}
+.cinemaSectionHead h2 {
+  font-weight: 300;
+  font-size: 32px;
+}
+.cinemaSectionHead a {
+  font-size: 13px;
+  color: rgba(var(--cream-rgb), 0.55);
+}
+@media (hover: hover) {
+  .cinemaSectionHead a:hover {
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+
 .prog {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

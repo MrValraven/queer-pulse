@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiFilm } from "react-icons/fi";
+import { FiArrowLeft, FiFilm } from "react-icons/fi";
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./WatchPage.module.css";
@@ -19,6 +19,7 @@ export function WatchShell({ children }: { children: ReactNode }) {
         </Link>
         <div className={styles.navLinks}>
           <Link to={routes.cinemaBrowse}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("cinema:watch.nav.backToFilm")}
           </Link>
           <Link to={routes.cinema}>{t("cinema:watch.nav.cinemaHome")}</Link>

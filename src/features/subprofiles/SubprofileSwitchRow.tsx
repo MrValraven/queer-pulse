@@ -1,5 +1,4 @@
-import { Avatar } from "../../shared/components/ui";
-import { initialsFromName } from "../../shared/lib/initials";
+import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
@@ -56,23 +55,23 @@ export function SubprofileSwitchRow({
 
   const rowContent = (
     <>
-      <Avatar
-        initials={initialsFromName(persona.displayName, "?")}
-        src={persona.avatarUrl ?? undefined}
+      {/* Avatar + display name + kind line reuse the shared identity block
+          (fixed persona plum tint). No `to` — this row is itself a
+          `<button role="tab">`, so a nested link is disallowed; the kind label
+          is the single-line secondary. The owner badges and the active-state
+          indicator stay row-local siblings around it. */}
+      <MemberIdentity
+        person={{ name: persona.displayName, avatarUrl: persona.avatarUrl ?? undefined }}
         tint="plum"
         size={38}
-        className={styles.rowAvatar}
+        secondary={t(KIND_LABEL_KEYS[persona.kind])}
       />
-      <span className={styles.rowMain}>
-        <span className={styles.rowName}>{persona.displayName}</span>
-        <span className={styles.rowKind}>{t(KIND_LABEL_KEYS[persona.kind])}</span>
-        <SubprofileOwnerBadges
-          status={status}
-          visibility={visibility}
-          compact
-          className={styles.rowBadges}
-        />
-      </span>
+      <SubprofileOwnerBadges
+        status={status}
+        visibility={visibility}
+        compact
+        className={styles.rowBadges}
+      />
       <span className={styles.rowActive} data-active={isSelected} aria-hidden />
     </>
   );

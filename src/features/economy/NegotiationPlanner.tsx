@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck, FiCopy, FiTrendingUp } from "react-icons/fi";
+import { FiCheck, FiCopy, FiTrendingUp, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -199,7 +199,10 @@ export function NegotiationPlanner({
           {sending ? (
             <Sending label={t("economy:negotiate.sendingLabel")} />
           ) : (
-            t("economy:negotiate.sendCta")
+            <>
+              {t("economy:negotiate.sendCta")}{" "}
+              <FiArrowRight aria-hidden />
+            </>
           )}
         </Button>
       </div>

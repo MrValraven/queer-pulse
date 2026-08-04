@@ -56,20 +56,20 @@ export const magazine: Catalog = {
 
   // ── MagazineSections ─────────────────────────────────────────────────────
   "sections.features.title": "This month's <em>features</em>",
-  "sections.features.allCta": "All this month's features →",
+  "sections.features.allCta": "All this month's features",
   "sections.essayOfMonthKicker": "Essay of the month",
   "sections.readEssayCta": "Read the essay",
   "sections.essays.title": "<em>Essays</em>",
-  "sections.essays.allCta": "All essays →",
+  "sections.essays.allCta": "All essays",
   "sections.interviews.title": "<em>Interviews</em>",
-  "sections.interviews.allCta": "All interviews →",
+  "sections.interviews.allCta": "All interviews",
   "sections.reviews.title": "<em>Reviews</em>",
-  "sections.reviews.allCta": "All reviews →",
+  "sections.reviews.allCta": "All reviews",
   "sections.communityLife.title": "Community <em>life</em>",
-  "sections.communityLife.allCta": "All community life →",
+  "sections.communityLife.allCta": "All community life",
   "sections.letters.title": "Letters to the <em>editors</em>",
   "sections.archive.title": "Past <em>issues</em>",
-  "sections.archive.allCta": "All past issues →",
+  "sections.archive.allCta": "All past issues",
   "sections.submit.title": "Write for <em>the magazine.</em>",
   "sections.submit.body":
     "We publish essays, features, reviews, interviews, and criticism from community members. No formal credentials required — just something worth saying.",
@@ -89,7 +89,7 @@ export const magazine: Catalog = {
     "The article may have moved, or the link may be incomplete.",
   "article.notFoundCta": "Back to the magazine",
   "article.pageTitleSuffix": " — QueerPulse Magazine",
-  "article.backToMagazine": "← Magazine",
+  "article.backToMagazine": "Magazine",
   "article.relatedHeading": "Keep <em>reading</em>",
 
   // ── relationReason() (data/articles.tsx) ────────────────────────────────
@@ -199,7 +199,7 @@ export const magazine: Catalog = {
   "deck.editor.backToDashboard": "Back to dashboard",
 
   // ── Issue chrome — shared by IssueCover, IssueContents, IssuesPage ────────
-  "issue.backToAllIssues": "← All issues",
+  "issue.backToAllIssues": "All issues",
   "issue.currentPill": "Current",
   "issue.badge": "Issue <em>{number}</em>",
   "issue.stats.featuresCount_one": "{count} feature",
@@ -213,7 +213,7 @@ export const magazine: Catalog = {
   "issue.stats.publishedPrefix": "Published",
   "issue.coverAlt": "Issue {number} cover",
   "issue.letterEyebrow": "Editor's letter",
-  "issue.readCta": "Read issue {number} →",
+  "issue.readCta": "Read issue {number}",
   "issue.orderPrintCta": "Order print · {price}",
   // Live mode: shown when there is no published issue to read yet.
   "issue.emptyLiveTitle": "This issue isn't out yet",
@@ -284,9 +284,9 @@ export const magazine: Catalog = {
   "author.work.featuredImageAlt": "Hero image for {name}'s featured story",
   "author.work.featuredImagePlaceholder": "Featured story",
   "author.work.selectedWorkHeading": "Selected work",
-  "author.work.allArticlesCta_one": "All {count} article →",
-  "author.work.allArticlesCta_other": "All {count} articles →",
-  "author.work.seeAllPicksCta": "See all picks →",
+  "author.work.allArticlesCta_one": "All {count} article",
+  "author.work.allArticlesCta_other": "All {count} articles",
+  "author.work.seeAllPicksCta": "See all picks",
   "author.work.findElsewhereHeading": "Find {name} <em>elsewhere</em>",
 
   // ══════════════════ Editor dashboard (staff-only) ════════════════════════
@@ -399,7 +399,7 @@ export const magazine: Catalog = {
   "editor.pitchInbox.subhead": "avg response 6 days · triage in bulk ↓",
   "editor.pitchInbox.emptyMatch": "No pitches match “{query}”",
   "editor.pitchInbox.selectAria": "Select pitch from {name}",
-  "editor.pitchInbox.showMore": "Show {count} more pitches →",
+  "editor.pitchInbox.showMore": "Show {count} more pitches",
   "editor.pitchInbox.yes": "Yes",
   "editor.pitchInbox.maybe": "Maybe",
   "editor.pitchInbox.no": "No",
@@ -480,13 +480,13 @@ export const magazine: Catalog = {
   "editor.sideCards.toInvoice": "to invoice",
   "editor.sideCards.matching": "Matching: {names}",
   "editor.sideCards.noContributorMatch": "No contributor matches",
-  "editor.sideCards.seeContributorProfiles": "See contributor profiles →",
+  "editor.sideCards.seeContributorProfiles": "See contributor profiles",
   "editor.sideCards.recentActivity": "Recent activity",
   "editor.sideCards.quickActions": "Quick actions",
-  "editor.sideCards.sendPitchDecisions": "→ Send pitch decisions in bulk",
-  "editor.sideCards.emailContributorsWaiting": "→ Email contributors waiting",
-  "editor.sideCards.previewIssueLayout": "→ Preview issue layout",
-  "editor.sideCards.exportContributorList": "→ Export contributor list (CSV)",
+  "editor.sideCards.sendPitchDecisions": "Send pitch decisions in bulk",
+  "editor.sideCards.emailContributorsWaiting": "Email contributors waiting",
+  "editor.sideCards.previewIssueLayout": "Preview issue layout",
+  "editor.sideCards.exportContributorList": "Export contributor list (CSV)",
 
   // ── EditorDecksSection ──────────────────────────────────────────────────
   "editor.decks.title": "Interactive decks",
@@ -764,7 +764,7 @@ export const magazine: Catalog = {
   "printOrder.emailFieldHelper":
     "We only use this to tell you when your copy ships.",
   "printOrder.emailPlaceholder": "you@example.com",
-  "printOrder.cancelCta": "← Cancel",
+  "printOrder.cancelCta": "Cancel",
   "printOrder.placingCta": "Placing your order…",
   "printOrder.placeCta": "Place order — €{total}",
 
@@ -777,7 +777,7 @@ export const magazine: Catalog = {
   // closing Outro CTAs are platform chrome, translated below.
   "story.wordsBy": "Words by",
   "story.moreHeading": "More from <em>the community</em>",
-  "story.viewProfileCta": "View profile →",
+  "story.viewProfileCta": "View profile",
   "story.outro.studio.title":
     "Want to be part of what <em>gets written about next?</em>",
   "story.outro.studio.sub":

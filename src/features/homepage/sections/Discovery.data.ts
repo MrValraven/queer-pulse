@@ -7,6 +7,10 @@
  * own voice.
  */
 
+import { routes } from "../../../app/routeMap";
+import { members } from "../data/members";
+import type { Member } from "../data/types";
+
 export interface FeaturedSpotlight {
   /** Member slug (key into the members registry). */
   key: string;
@@ -50,3 +54,28 @@ export const featuredSpotlights: FeaturedSpotlight[] = [
 
 /** Members shown in the compact stack beside the featured card. */
 export const highlightRowKeys = ["tomas", "beatriz", "mariana", "andre"];
+
+/** A featured member paired with the line they wrote for their spotlight. */
+export type Spotlight = { member: Member; quote: string };
+
+const byKey = new Map(members.map((member) => [member.key, member] as const));
+
+/**
+ * The featured spotlights resolved to real registry members. Curation keys that
+ * no longer match a member are dropped so the carousel never renders a blank.
+ */
+export const spotlights: Spotlight[] = featuredSpotlights
+  .map((entry) => {
+    const member = byKey.get(entry.key);
+    return member ? { member, quote: entry.quote } : undefined;
+  })
+  .filter((entry): entry is Spotlight => Boolean(entry));
+
+/** The compact-stack members resolved to real registry members. */
+export const rows: Member[] = highlightRowKeys
+  .map((key) => byKey.get(key))
+  .filter((member): member is Member => Boolean(member));
+
+/** Route to a member's public profile. */
+export const profilePath = (member: Member) =>
+  `${routes.members}/${member.key}`;

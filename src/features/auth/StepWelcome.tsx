@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -109,7 +110,7 @@ export function StepWelcome({
       <div className={styles.nav}>
         <Button onClick={onNext}>{t("auth:onboarding.stepWelcome.cta")}</Button>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:onboarding.stepWelcome.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepWelcome.back")}
         </button>
       </div>
     </>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiBookmark } from "react-icons/fi";
+import { FiArrowRight, FiBookmark } from "react-icons/fi";
 import { FaBookmark } from "react-icons/fa6";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -80,7 +80,8 @@ function SaveCard({
         <div className={styles.footer}>
           {item.href ? (
             <Link to={linkToPath(item.href)} className={styles.readLink}>
-              {t(cfg.readKey)} →
+              {t(cfg.readKey)}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           ) : (
             <span />

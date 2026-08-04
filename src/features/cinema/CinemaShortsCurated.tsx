@@ -1,8 +1,10 @@
+import { SectionHead } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { getShort, shortFilms, type ShortsShelf } from "./cinemaShorts.data";
-import { SecDiv, ShortGrid } from "./CinemaShortsParts";
+import { ShortGrid } from "./CinemaShortsParts";
+import styles from "./CinemaShortsPage.module.css";
 
 const madeHere = `${routes.cinemaBrowse}?f=made-here`;
 
@@ -25,20 +27,22 @@ export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
 
   return (
     <>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.newThisWeek.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.newThisWeek.sub")}
-        actionTo={madeHere}
-        actionLabel={t("cinema:shorts.shelf.newThisWeek.cta")}
+        subtitle={t("cinema:shorts.shelf.newThisWeek.sub")}
+        linkTo={madeHere}
+        linkLabel={t("cinema:shorts.shelf.newThisWeek.cta")}
       />
       <ShortGrid films={newThisWeek} shelf={shelf} />
 
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.becauseYouTipped.title"
@@ -46,9 +50,9 @@ export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.becauseYouTipped.sub", { maker: "Rui" })}
-        actionTo={`${routes.cinemaFilmmaker}/rui-almeida`}
-        actionLabel={t("cinema:shorts.shelf.becauseYouTipped.cta", {
+        subtitle={t("cinema:shorts.shelf.becauseYouTipped.sub", { maker: "Rui" })}
+        linkTo={`${routes.cinemaFilmmaker}/rui-almeida`}
+        linkLabel={t("cinema:shorts.shelf.becauseYouTipped.cta", {
           maker: "Rui",
         })}
       />
@@ -67,29 +71,31 @@ export function CuratedTail({ shelf }: { shelf: ShortsShelf }) {
 
   return (
     <>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.firstFilm.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.firstFilm.sub")}
-        actionTo={madeHere}
-        actionLabel={t("cinema:shorts.shelf.firstFilm.cta")}
+        subtitle={t("cinema:shorts.shelf.firstFilm.sub")}
+        linkTo={madeHere}
+        linkLabel={t("cinema:shorts.shelf.firstFilm.cta")}
       />
       <ShortGrid films={debuts} shelf={shelf} />
 
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.mostTipped.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.mostTipped.sub")}
-        actionTo={madeHere}
-        actionLabel={t("cinema:shorts.shelf.mostTipped.cta")}
+        subtitle={t("cinema:shorts.shelf.mostTipped.sub")}
+        linkTo={madeHere}
+        linkLabel={t("cinema:shorts.shelf.mostTipped.cta")}
       />
       <ShortGrid films={mostTipped} shelf={shelf} />
     </>

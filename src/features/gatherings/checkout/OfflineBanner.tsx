@@ -1,34 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { OfflineBanner as SharedOfflineBanner } from "../../../shared/components/ui";
+import { useOnlineStatus } from "../../../shared/hooks";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { cx } from "./cx";
-import s from "./checkout.module.css";
 
 export function OfflineBanner() {
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const [offline, setOffline] = useState(
-    () => typeof navigator !== "undefined" && !navigator.onLine,
-  );
+  const offline = !useOnlineStatus();
 
+  // Announce reconnection once, on the offline → online transition only.
+  const wasOffline = useRef(offline);
   useEffect(() => {
-    const goOnline = () => {
-      setOffline(false);
+    if (wasOffline.current && !offline) {
       showToast(t("gatherings:checkout.offline.backOnlineToast"), "success");
-    };
-    const goOffline = () => setOffline(true);
-    window.addEventListener("online", goOnline);
-    window.addEventListener("offline", goOffline);
-    return () => {
-      window.removeEventListener("online", goOnline);
-      window.removeEventListener("offline", goOffline);
-    };
-  }, [showToast, t]);
+    }
+    wasOffline.current = offline;
+  }, [offline, showToast, t]);
 
   return (
-    <div className={cx(s["co-offline"], offline && s.show)} role="status">
-      <span className={s["co-off-dot"]} aria-hidden />
-      {t("gatherings:checkout.offline.bannerText")}
-    </div>
+    <SharedOfflineBanner
+      offline={offline}
+      message={t("gatherings:checkout.offline.bannerText")}
+      showDot
+      role="status"
+    />
   );
 }

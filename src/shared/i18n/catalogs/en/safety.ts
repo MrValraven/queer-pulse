@@ -102,7 +102,7 @@ export const safety: Catalog = {
   "report.modLog.stat.removed": "members removed",
   "report.modLog.stat.appeals": "appeals received",
   "report.modLog.stat.reversed": "decision reversed on appeal",
-  "report.modLog.viewReportCta": "View full report →",
+  "report.modLog.viewReportCta": "View full report",
 
   "report.toast.chooseCategory": "Choose what you're reporting first.",
   "report.toast.received": "Report received — we'll follow up within 24 hours.",
@@ -191,7 +191,7 @@ export const safety: Catalog = {
   "blockMute.muted.postsComments": "Posts & comments",
   "blockMute.muted.durationLabel": "Duration",
   "blockMute.muted.notifiedLabel": "{name} notified?",
-  "blockMute.muted.manageLink": "Manage muted members →",
+  "blockMute.muted.manageLink": "Manage muted members",
   "blockMute.muted.undoCta": "Undo — unmute {name}",
 
   "blockMute.blocked.title": "You've <em>blocked</em> {name}",
@@ -200,10 +200,10 @@ export const safety: Catalog = {
   "blockMute.blocked.visibleLabel": "Profile visible to them",
   "blockMute.blocked.messageLabel": "Can they message you",
   "blockMute.blocked.notifiedLabel": "{name} notified?",
-  "blockMute.blocked.manageLink": "Manage blocked members →",
+  "blockMute.blocked.manageLink": "Manage blocked members",
   "blockMute.blocked.undoCta": "Undo — unblock {name}",
   "blockMute.blocked.reportNote":
-    "Need to report harmful behaviour? <link>File a report →</link>",
+    "Need to report harmful behaviour? <link>File a report</link>",
 
   // ── ProfileSafetyMenu.tsx / BlockMemberModal.tsx (block/mute from a profile) ──
   "profileMenu.ariaLabel": "Safety actions for {name}",
@@ -242,7 +242,7 @@ export const safety: Catalog = {
   "appeal.pending.expectedLabel": "Expected response",
   "appeal.pending.info":
     "<strong>While your appeal is under review:</strong> the original decision remains in place, but no further action will be taken. The outcome shows up right here — check back on this page, or sign in and open your appeals to see where it stands.",
-  "appeal.pending.govLink": "How moderation works →",
+  "appeal.pending.govLink": "How moderation works",
 
   "appeal.overturned.title": "Your appeal was <em>successful</em>",
   "appeal.overturned.sub":
@@ -264,7 +264,7 @@ export const safety: Catalog = {
     "<strong>Going forward:</strong> the account warning remains on your record for 90 days and will not affect your ability to participate in most community activities. Repeated violations may result in further review.",
   "appeal.upheld.contactNote":
     "If you believe this is in error, you can contact our Trust team directly.",
-  "appeal.upheld.contactCta": "Message the Trust team →",
+  "appeal.upheld.contactCta": "Message the Trust team",
 
   // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
   "appealSubmit.kicker": "Appeal a decision",
@@ -331,10 +331,10 @@ export const safety: Catalog = {
   "hateCrime.sidebar.ilgaEurope.org": "ILGA Europe",
   "hateCrime.sidebar.ilgaEurope.role": "EU-level legal support",
   "hateCrime.sidebar.onTitle": "On QueerPulse",
-  "hateCrime.sidebar.legalResourcesCta": "Legal Resources →",
-  "hateCrime.sidebar.mentalHealthCta": "Mental Health →",
-  "hateCrime.sidebar.solidarityCta": "Solidarity Pricing →",
-  "hateCrime.sidebar.reportCta": "Report to QueerPulse →",
+  "hateCrime.sidebar.legalResourcesCta": "Legal Resources",
+  "hateCrime.sidebar.mentalHealthCta": "Mental Health",
+  "hateCrime.sidebar.solidarityCta": "Solidarity Pricing",
+  "hateCrime.sidebar.reportCta": "Report to QueerPulse",
 
   // ── hateCrime.data.tsx — tag chips ─────────────────────────────────────
   "hateCrime.tag.immediate": "Immediate",
@@ -429,7 +429,7 @@ export const safety: Catalog = {
   "hateCrime.support.step3.title": "QueerPulse Mental Health directory",
   "hateCrime.support.step3.desc":
     "Sliding-scale therapists with experience in trauma and identity-based violence. You do not have to wait to feel better — early support makes a real difference.",
-  "hateCrime.support.directoryCta": "See the directory →",
+  "hateCrime.support.directoryCta": "See the directory",
   "hateCrime.support.longerTermHeading": "Longer <em>term</em>",
   "hateCrime.support.step4.title": "Peer support groups",
   "hateCrime.support.step4.desc":
@@ -437,7 +437,7 @@ export const safety: Catalog = {
   "hateCrime.support.step5.title": "You do not have to process it alone",
   "hateCrime.support.step5.desc":
     "The QueerPulse forum has a private, moderated space for people who have experienced discrimination or violence. You can share as much or as little as you want.",
-  "hateCrime.support.forumCta": "Go to the forum →",
+  "hateCrime.support.forumCta": "Go to the forum",
 
   // ── hateCrime.data.tsx — "Portuguese law" tab ──────────────────────────
   "hateCrime.law.preamble":
@@ -546,7 +546,7 @@ export const safety: Catalog = {
   "spaces.removed.step4":
     "<span>Public reason</span> — every removal is recorded openly, never quietly.",
   "spaces.removed.card.badge": "Removed",
-  "spaces.removed.card.whyLink": "Why it was removed →",
+  "spaces.removed.card.whyLink": "Why it was removed",
   "spaces.nominate.title": "Nominate a <em>space.</em>",
   "spaces.nominate.lead":
     "You've found somewhere that genuinely feels safe. Tell us about it. We do the rest.",
@@ -580,7 +580,7 @@ export const safety: Catalog = {
     "We're still building the review pipeline behind space nominations. Switch on the demo platform to preview the full flow, or check back soon.",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
-  "spaces.detail.backLink": "← Safe spaces",
+  "spaces.detail.backLink": "Safe spaces",
   "spaces.detail.trust.title": "Verified safe space · Tier {tier}",
   "spaces.detail.trust.titleNoTier": "Verified safe space",
   "spaces.detail.trust.body":
@@ -592,16 +592,16 @@ export const safety: Catalog = {
   "spaces.detail.vouchedTitle_other": "Vouched by <em>{count} members</em>",
   "spaces.detail.vouchedSub":
     "Independent safety reviews from verified members.",
-  "spaces.detail.addVouchCta": "Add yours →",
+  "spaces.detail.addVouchCta": "Add yours",
   "spaces.detail.incidentTitle": "If something happens <em>here</em>",
   "spaces.detail.dangerTitle": "You're in immediate danger",
   "spaces.detail.dangerBody":
     "Tell any staff member you need help leaving — verified spaces will escort you out, no questions asked. If you can, also call <strong>112</strong>.",
-  "spaces.detail.emergencyGuideCta": "Emergency guide →",
+  "spaces.detail.emergencyGuideCta": "Emergency guide",
   "spaces.detail.offTitle": "Something felt off (not urgent)",
   "spaces.detail.offBody":
     "Even small things matter — they're how we know when a space slips. File a quiet report; moderators read every one and the venue is told without your name attached.",
-  "spaces.detail.quietReportCta": "File a quiet report →",
+  "spaces.detail.quietReportCta": "File a quiet report",
   "spaces.detail.whereTitle": "Where",
   "spaces.detail.backAllCta": "Back to all spaces",
   "spaces.detail.glanceTitle": "At a glance",
@@ -623,11 +623,11 @@ export const safety: Catalog = {
   "spaces.detail.hadExperienceTitle": "Had an experience here?",
   "spaces.detail.hadExperienceBody":
     "The record stays open. If something happened to you here, telling us still helps — it informs any future re-review.",
-  "spaces.detail.fileReportCta": "File a report →",
+  "spaces.detail.fileReportCta": "File a report",
   "spaces.detail.lookingForTitle": "Looking for somewhere safe?",
   "spaces.detail.lookingForBody":
     "This space is delisted, but {count}+ verified spaces across Lisbon are not. Find one near you.",
-  "spaces.detail.seeVerifiedCta": "See verified spaces →",
+  "spaces.detail.seeVerifiedCta": "See verified spaces",
 
   // ── VouchModal.tsx ─────────────────────────────────────────────────────
   "vouchModal.ariaLabel": "Vouch for this space",

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { STATS, VENUES, VOICES, RECOVERY_OPTS } from "./soberPage.data";
@@ -75,7 +76,8 @@ export function SoberVenuesSection({
         </div>
         <div className={styles.seeAll}>
           <Link to={safeSpacesPath} className={styles.seeAllLink}>
-            {t("resources:sober.venues.seeAllCta")}
+            {t("resources:sober.venues.seeAllCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>
@@ -142,7 +144,8 @@ export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
                 <div className={styles.recTitle}>{t(o.titleKey)}</div>
                 <div className={styles.recDesc}>{t(o.descriptionKey)}</div>
                 <Link to={linkMap[o.linkKey]!} className={styles.recLink}>
-                  {t(o.linkLabelKey)}
+                  {t(o.linkLabelKey)}{" "}
+                  <FiArrowRight aria-hidden />
                 </Link>
               </div>
             ))}

@@ -1,5 +1,5 @@
+import { BulkActionBar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
 /** Floating action bar shown while selecting events. */
@@ -13,31 +13,24 @@ export function BulkBar() {
     bulkCancel,
     closeBulk,
   } = useMyEvents();
-  const show = selectMode && selectedCount > 0;
+
   return (
-    <div className={`${sx("bulkbar")} ${show ? sx("show") : ""}`}>
-      <span className={sx("bulk-count")}>
-        {t("myevents:bulk.selected", { count: selectedCount })}
-      </span>
-      <div className={sx("bulk-actions")}>
-        <button type="button" className={sx("bulk-act")} onClick={bulkAddCal}>
-          {t("myevents:bulk.addToCalendar")}
-        </button>
-        <button type="button" className={sx("bulk-act")} onClick={bulkExport}>
-          {t("myevents:bulk.export")}
-        </button>
-        <button type="button" className={sx("bulk-act")} onClick={bulkCancel}>
-          {t("myevents:bulk.cancelRsvps")}
-        </button>
-      </div>
-      <button
-        type="button"
-        className={sx("bulk-close")}
-        aria-label={t("myevents:bulk.doneAria")}
-        onClick={closeBulk}
-      >
-        ×
-      </button>
-    </div>
+    <BulkActionBar
+      count={selectMode ? selectedCount : 0}
+      label={t("myevents:bulk.selected", { count: selectedCount })}
+      ariaLabel={t("myevents:bulk.selected", { count: selectedCount })}
+      onClear={closeBulk}
+      clearLabel={t("myevents:bulk.doneAria")}
+    >
+      <Button variant="ghost-dark" onClick={bulkAddCal}>
+        {t("myevents:bulk.addToCalendar")}
+      </Button>
+      <Button variant="ghost-dark" onClick={bulkExport}>
+        {t("myevents:bulk.export")}
+      </Button>
+      <Button variant="ghost-dark" onClick={bulkCancel}>
+        {t("myevents:bulk.cancelRsvps")}
+      </Button>
+    </BulkActionBar>
   );
 }

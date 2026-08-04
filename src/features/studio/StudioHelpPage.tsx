@@ -7,6 +7,7 @@ import {
   FiMail,
   FiMessageCircle,
   FiCheckCircle,
+  FiArrowRight,
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -63,7 +64,7 @@ function ContactCardItem({ card }: { card: ContactCard }) {
       <p>{card.body}</p>
       {card.to ? (
         <Link to={card.to} className={s.bt}>
-          {card.action}
+          {card.action} <FiArrowRight aria-hidden />
         </Link>
       ) : (
         <button

@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -60,11 +61,13 @@ export function MentorDetailSidebar({
         </h4>
         <div className={styles.moreLinks}>
           <Link to={routes.messages}>
+            <FiArrowRight aria-hidden />{" "}
             {t("economy:mentorDetail.sidebar.askQuestion", {
               firstName: first,
             })}
           </Link>
           <Link to={routes.mentorship}>
+            <FiArrowRight aria-hidden />{" "}
             {t("economy:mentorDetail.sidebar.browseAll")}
           </Link>
         </div>

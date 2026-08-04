@@ -80,7 +80,7 @@ export const marketing: Catalog = {
   "accessibility.meta.title": "Accessible queer spaces in Lisbon, reviewed",
   "accessibility.meta.description":
     "Real accessibility information for queer venues in Lisbon, reviewed by disabled community members rather than guessed at — plus how to request an accommodation directly.",
-  "accessibility.backLabel": "← Help",
+  "accessibility.backLabel": "Help",
   "accessibility.category": "Accessibility",
   "accessibility.hero.title": "Access <em>shouldn't be a maybe.</em>",
   "accessibility.hero.sub":
@@ -305,7 +305,7 @@ export const marketing: Catalog = {
   "activism.volunteer.title": "Open <em>roles</em>",
   "activism.volunteer.p1":
     "Current volunteer opportunities from our partner organisations, updated regularly.",
-  "activism.volunteer.expressInterestCta": "Express interest →",
+  "activism.volunteer.expressInterestCta": "Express interest",
   "activism.volunteer.seeAllCta": "See all volunteer roles",
   "activism.outro.title": "Pick a rung. <em>Start today.</em>",
   "activism.outro.sub":
@@ -316,7 +316,7 @@ export const marketing: Catalog = {
   "coc.meta.title": "QueerPulse's Code of Conduct: what's enforceable",
   "coc.meta.description":
     "The binding Code of Conduct QueerPulse enforces — six commitments members make, what counts as harm, how reports are handled, and how to appeal a decision.",
-  "coc.hero.backLabel": "← Governance",
+  "coc.hero.backLabel": "Governance",
   "coc.hero.eyebrow": "Code of Conduct · in effect since {date}",
   "coc.hero.title": "How we treat <em>each other here.</em>",
   "coc.hero.dek":
@@ -512,7 +512,7 @@ export const marketing: Catalog = {
   "cookies.toast.saved": "Cookie preferences saved",
 
   // ── Data Subject Access Requests (DSAR) ───────────────────────────────
-  "dsar.backToPrivacyLabel": "← Privacy Policy",
+  "dsar.backToPrivacyLabel": "Privacy Policy",
   "dsar.eyebrow": "Data rights",
   "dsar.h1": "Exercise your <em>data rights.</em>",
   "dsar.lead":
@@ -795,7 +795,7 @@ export const marketing: Catalog = {
   "partners.section.title": "Our <em>partners</em>",
   "partners.section.sub":
     "Filter isn't available yet — here's the full roster.",
-  "partners.card.viewCta": "View profile →",
+  "partners.card.viewCta": "View profile",
   "partners.loadingMore": "Loading more partners…",
   "partners.loadMoreCta": "Load more partners",
   "partners.why.title": "Why we <em>partner</em>",
@@ -1274,19 +1274,19 @@ export const marketing: Catalog = {
     "<b>You have a saved draft.</b> Pick up where you left off?",
   "listBusiness.draftBanner.startFresh": "Start fresh",
   "listBusiness.draftBanner.resume": "Resume draft",
-  "listBusiness.paneActions.back": "← Back",
+  "listBusiness.paneActions.back": "Back",
   "listBusiness.paneActions.cancel": "Cancel",
   "listBusiness.paneActions.neededLabel": "A few things left",
   "listBusiness.paneActions.jumpToAria": "Jump to {label}",
   "listBusiness.paneActions.blockedTitle":
     "Fill the required fields to continue",
-  "listBusiness.next.basics": "Next: the basics →",
-  "listBusiness.next.story": "Next: the story →",
-  "listBusiness.next.practical": "Next: practical →",
-  "listBusiness.next.photos": "Next: photos & you →",
-  "listBusiness.next.review": "Review your listing →",
-  "listBusiness.next.send": "Send it to the team →",
-  "listBusiness.next.continue": "Continue →",
+  "listBusiness.next.basics": "Next: the basics",
+  "listBusiness.next.story": "Next: the story",
+  "listBusiness.next.practical": "Next: practical",
+  "listBusiness.next.photos": "Next: photos & you",
+  "listBusiness.next.review": "Review your listing",
+  "listBusiness.next.send": "Send it to the team",
+  "listBusiness.next.continue": "Continue",
   "listBusiness.sending": "Sending your place to the team…",
   "listBusiness.toast.submitted": "Your listing is with the community team",
   "listBusiness.toast.submitError":
@@ -1661,7 +1661,7 @@ export const marketing: Catalog = {
   "listBusiness.success.keepIt": "Keep it",
   "listBusiness.success.yesWithdraw": "Yes, withdraw",
   "listBusiness.success.backToDirectory": "Back to the directory",
-  "listBusiness.success.viewOnProfile": "View on your profile →",
+  "listBusiness.success.viewOnProfile": "View on your profile",
   "listBusiness.success.editSubmission": "Edit submission",
   "listBusiness.success.listAnother": "List another place",
   "listBusiness.success.withdraw": "Withdraw",
@@ -1704,7 +1704,7 @@ export const marketing: Catalog = {
   "listBusiness.preview.hours": "Hours",
   "listBusiness.preview.roleShown": "Role shown · name private",
   "listBusiness.preview.yourRole": "Your role",
-  "listBusiness.preview.fullCta": "Preview the full page →",
+  "listBusiness.preview.fullCta": "Preview the full page",
   "listBusiness.preview.fullDisabledTitle":
     "Add a name first to preview the full page",
   "listBusiness.preview.foot":
@@ -1821,32 +1821,53 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Improvement",
   "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
-  "changelog.tag.settings": "Notification settings →",
-  "changelog.tag.messages": "Open messages →",
-  "changelog.tag.communities": "Browse communities →",
-  "changelog.tag.subprofiles": "See subprofiles →",
-  "changelog.tag.housing": "See housing →",
-  "changelog.tag.directory": "Open the directory →",
-  "changelog.tag.cinema": "Visit Cinema →",
-  "changelog.tag.forum": "Visit the forum →",
-  "changelog.tag.profile": "Open your profile →",
-  "changelog.tag.gatherings": "See gatherings →",
-  "changelog.tag.members": "Meet the members →",
-  "changelog.tag.events": "Open the Events Hub →",
-  "changelog.tag.roadmap": "Open the roadmap →",
-  "changelog.tag.magazine": "Open the magazine →",
-  "changelog.tag.safety": "See our safety approach →",
-  "changelog.tag.editProfile": "Edit your profile →",
-  "changelog.tag.employerReviews": "Read employer reviews →",
-  "changelog.tag.studio": "Visit the Studio →",
-  "changelog.tag.search": "Try global search →",
-  "changelog.tag.donate": "See where money goes →",
-  "changelog.tag.volunteer": "Find a way in →",
-  "changelog.tag.notifications": "Open your notifications →",
-  "changelog.tag.connections": "Open your connections →",
-  "changelog.tag.trustNetwork": "Open the trust network →",
-  "changelog.tag.invite": "Invite someone →",
-  "changelog.tag.imprint": "Read the legal notice →",
+  "changelog.tag.settings": "Notification settings",
+  "changelog.tag.messages": "Open messages",
+  "changelog.tag.communities": "Browse communities",
+  "changelog.tag.subprofiles": "See subprofiles",
+  "changelog.tag.housing": "See housing",
+  "changelog.tag.directory": "Open the directory",
+  "changelog.tag.cinema": "Visit Cinema",
+  "changelog.tag.forum": "Visit the forum",
+  "changelog.tag.profile": "Open your profile",
+  "changelog.tag.gatherings": "See gatherings",
+  "changelog.tag.members": "Meet the members",
+  "changelog.tag.events": "Open the Events Hub",
+  "changelog.tag.roadmap": "Open the roadmap",
+  "changelog.tag.magazine": "Open the magazine",
+  "changelog.tag.safety": "See our safety approach",
+  "changelog.tag.editProfile": "Edit your profile",
+  "changelog.tag.employerReviews": "Read employer reviews",
+  "changelog.tag.studio": "Visit the Studio",
+  "changelog.tag.search": "Try global search",
+  "changelog.tag.donate": "See where money goes",
+  "changelog.tag.volunteer": "Find a way in",
+  "changelog.tag.notifications": "Open your notifications",
+  "changelog.tag.connections": "Open your connections",
+  "changelog.tag.trustNetwork": "Open the trust network",
+  "changelog.tag.invite": "Invite someone",
+  "changelog.tag.imprint": "Read the legal notice",
+  "changelog.tag.feed": "Open your feed",
+
+  "changelog.entries.icons-not-text-symbols.title":
+    "Crisper icons in place of text symbols",
+  "changelog.entries.icons-not-text-symbols.body":
+    "Across the platform, the little directional and status marks — the “next” and “back” arrows on buttons and links, dropdown carets, the drag handles, the clock and play marks — are now drawn with proper icons instead of typed-in text characters. They render sharply and identically on every device and font, line up neatly with their labels, and read correctly to screen readers. Purely a polish and accessibility pass; nothing about what the buttons do has changed.",
+
+  "changelog.entries.message-alerts-out-of-notifications.title":
+    "New-message alerts moved out of the notifications centre",
+  "changelog.entries.message-alerts-out-of-notifications.body":
+    "Your Notifications tab no longer fills up with “You have a new message” rows. New direct messages now show only where you'd expect them — the unread count on the message icon and, if you've opted in, a push notification. Nothing changed about the messages themselves; the notifications centre is just quieter and focused on the things you can't already see in your inbox.",
+
+  "changelog.entries.shared-ui-consistency.title":
+    "Smoother, more consistent dialogs and forms",
+  "changelog.entries.shared-ui-consistency.body":
+    "We rebuilt dozens of pop-ups, confirmations, pickers and forms on one shared set of building blocks. In practice that means every dialog now traps keyboard focus, closes on Escape in the right order when several are open, and returns you exactly where you were — so the whole app feels tidier and works better with a keyboard or screen reader. No feature moved; things just behave the same way everywhere now.",
+
+  "changelog.entries.balanced-feed-grid.title":
+    "A more balanced home feed",
+  "changelog.entries.balanced-feed-grid.body":
+    "Your home feed now lays its cards out as a tidy grid instead of one tall stack. Light cards — new members, saved reads, gathering recaps — sit two or more to a row on a wide screen, so you see more people at a glance and the People tab reads like a proper directory. Richer cards like posts, community pulse and gatherings still take the full width where the extra room helps. On a phone it all folds back to a single column.",
 
   "changelog.entries.moderation-outcome-notifications.title":
     "You'll now hear the outcome of a moderation decision",
@@ -1923,6 +1944,11 @@ export const marketing: Catalog = {
   "changelog.entries.smoother-mobile-navigation.body":
     "Getting around QueerPulse on a phone should feel like moving, not loading. The bottom tab bar now stays with you in the browser too, not only once you've installed the app, and pages settle into place with a smooth transition instead of snapping. Each tab remembers exactly where you left it, and tapping the one you're already on carries you straight back to the top. Swipe in from the left edge of the screen to go back, and pull down on your feed, events, members, messages or notifications to refresh with a quick tug instead of a reload.",
 
+  "changelog.entries.no-sideways-scroll-on-mobile.title":
+    "Pages scroll top-to-bottom on your phone again",
+  "changelog.entries.no-sideways-scroll-on-mobile.body":
+    "On some phones a page could drift sideways and feel stuck — everything looked too wide and cramped, and the whole screen slid left and right instead of scrolling up and down. That's fixed across the app. Long links, handles and words now wrap onto the next line instead of stretching a card past the edge of the screen, and the page is held to your phone's width so it only ever scrolls the way it should: down.",
+
   "changelog.entries.no-placeholder-people-in-live.title":
     "Live mode now shows only real people",
   "changelog.entries.no-placeholder-people-in-live.body":
@@ -1937,7 +1963,7 @@ export const marketing: Catalog = {
     "Resend an invite that ran out — and share it with a QR code",
   "changelog.entries.invite-resend-and-qr.body":
     "An invite that expired before your friend got to it no longer means starting over. Open your sent invites, tap “Send again” on the expired one, and the same link comes back to life for another week. Every invite you generate now also comes with a QR code, so someone can join by scanning it straight from your phone — across a table or at an event, no link to copy. And if an invite was addressed to a different email, or the person who invited you is no longer on QueerPulse, you'll now get a clear, kind explanation instead of a puzzling error.",
-  "changelog.entries.invite-resend-and-qr.tag": "Invite someone →",
+  "changelog.entries.invite-resend-and-qr.tag": "Invite someone",
 
   "changelog.entries.smoother-onboarding-first-minutes.title":
     "A gentler welcome for your first few minutes",
@@ -1948,13 +1974,13 @@ export const marketing: Catalog = {
     "Events opens at the top",
   "changelog.entries.events-open-at-top.body":
     "Opening Events (or any tab) now always starts you at the top of the page. It used to drop you back at wherever you'd last scrolled to, which on the tall Events cover left you stranded mid-page. Pressing your browser's Back button still returns you to exactly where you were.",
-  "changelog.entries.events-open-at-top.tag": "Browse events →",
+  "changelog.entries.events-open-at-top.tag": "Browse events",
 
   "changelog.entries.chat-header-tap-to-profile.title":
     "A calmer chat header",
   "changelog.entries.chat-header-tap-to-profile.body":
     "The top of a conversation now works the way you'd expect: tap the person's name or photo to open their profile — no separate button needed. The layout is tidier too, with the info and starred-messages controls gathered into one neat pair in the corner instead of floating out of place.",
-  "changelog.entries.chat-header-tap-to-profile.tag": "Open messages →",
+  "changelog.entries.chat-header-tap-to-profile.tag": "Open messages",
 
   "changelog.entries.sheet-close-scroll-jump-fix.title":
     "No more jumping back to the top",
@@ -2632,7 +2658,7 @@ export const marketing: Catalog = {
   "volunteer.guide.title": "Want to do <em>more</em> than a shift?",
   "volunteer.guide.body":
     "Our guide to organising better walks you from showing up once to bringing a skill — no experience needed.",
-  "volunteer.guide.cta": "Read the activism guide →",
+  "volunteer.guide.cta": "Read the activism guide",
   "volunteer.empty.noneTitle": "No opportunities posted yet",
   "volunteer.empty.noneDescription":
     "No organisations have posted roles here yet. If yours is looking for hands, be the first to put out the call.",
@@ -2643,13 +2669,13 @@ export const marketing: Catalog = {
   "volunteer.empty.clearCta": "Clear filters",
   "volunteer.card.commitLow": "Low commitment",
   "volunteer.card.commitMedium": "Medium commitment",
-  "volunteer.card.expressInterest": "Express interest →",
+  "volunteer.card.expressInterest": "Express interest",
   "volunteer.loadingMore": "Loading more opportunities…",
   "volunteer.loadMoreCta": "Load more opportunities",
   "volunteer.outro.title": "Want to connect <em>more deeply?</em>",
   "volunteer.outro.sub":
     "Find the change makers already working on the causes you care about.",
-  "volunteer.outro.cta": "Meet the change makers →",
+  "volunteer.outro.cta": "Meet the change makers",
   "volunteer.signups.title": "Who's signed up",
   "volunteer.signups.loading": "Loading signups…",
   "volunteer.signups.empty":
@@ -2680,7 +2706,7 @@ export const marketing: Catalog = {
     "Couldn't post your opportunity — please try again.",
   "postOpportunity.success.title": "Your opportunity is",
   "postOpportunity.success.em": "posted.",
-  "postOpportunity.success.closeLabel": "View the volunteer board →",
+  "postOpportunity.success.closeLabel": "View the volunteer board",
   "postOpportunity.success.step1": "It's live on the volunteer board now",
   "postOpportunity.success.step2": "Members can sign up from the listing",
   "postOpportunity.success.step3":
@@ -2688,7 +2714,7 @@ export const marketing: Catalog = {
   "postOpportunity.success.body":
     "Thank you for making room for someone to help. Interested volunteers can now find your role and express interest.",
   "postOpportunity.actions.posting": "Posting…",
-  "postOpportunity.actions.submit": "Post opportunity →",
+  "postOpportunity.actions.submit": "Post opportunity",
   "postOpportunity.actions.cancel": "Cancel",
   "postOpportunity.tip1.title": "Be honest about the ask",
   "postOpportunity.tip1.body":
@@ -2792,7 +2818,7 @@ export const marketing: Catalog = {
   //    data files, flagged in the sweep report as future work. Everything
   //    else on this page (headings, buttons, static labels) is chrome and is
   //    translated below.
-  "volunteerDetail.backCta": "← All volunteer opportunities",
+  "volunteerDetail.backCta": "All volunteer opportunities",
   "volunteerDetail.error.alreadySignedUp":
     "You've already signed up for this role.",
   "volunteerDetail.error.full":
@@ -2814,15 +2840,15 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.spotsFilled": "Spots filled",
   "volunteerDetail.sidebar.roleFull": "This role is full",
   "volunteerDetail.sidebar.sending": "Sending your application…",
-  "volunteerDetail.sidebar.applyCta": "Apply →",
+  "volunteerDetail.sidebar.applyCta": "Apply",
   "volunteerDetail.sidebar.askTeam": "Ask the team",
   "volunteerDetail.sidebar.footNote":
-    "Returning volunteers: <a>use last year's profile →</a> · skips the screen.",
+    "Returning volunteers: <a>use last year's profile</a> · skips the screen.",
   "volunteerDetail.sidebar.partnershipLabel": "In partnership with",
-  "volunteerDetail.sidebar.partnershipLink": "About the partnership →",
+  "volunteerDetail.sidebar.partnershipLink": "About the partnership",
   "volunteerDetail.sidebar.notRightFit": "Not the right fit?",
   "volunteerDetail.sidebar.otherWays": "Other ways to help right now:",
-  "volunteerDetail.sidebar.fundInstead": "→ Fund this work instead",
+  "volunteerDetail.sidebar.fundInstead": "Fund this work instead",
 
   // ── Partner Detail — page chrome. About/joint-work/timeline/how-we-work
   //    copy, stats, and contact details are each partner org's own content
@@ -2830,7 +2856,7 @@ export const marketing: Catalog = {
   //    Partners listing page.
   "partnerDetail.loadError":
     "We couldn't load this partner just now. Please try again.",
-  "partnerDetail.backCta": "← All partners",
+  "partnerDetail.backCta": "All partners",
   "partnerDetail.tab.about": "About",
   "partnerDetail.tab.work": "Joint work",
   "partnerDetail.tab.timeline": "Timeline",
@@ -2840,7 +2866,7 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.becomeTitle": "Become a partner",
   "partnerDetail.sidebar.becomeBody":
     "Are you an org that ought to be operationally connected to QueerPulse? We're small and slow about this — write to us.",
-  "partnerDetail.sidebar.becomeCta": "Get in touch →",
+  "partnerDetail.sidebar.becomeCta": "Get in touch",
 
   // ── Donate — page chrome. All platform-authored (amounts/allocation/trust
   //    copy are QueerPulse's own fixed figures, not fetched user content).
@@ -2857,8 +2883,8 @@ export const marketing: Catalog = {
   "donate.amounts.mostChosen": "most chosen",
   "donate.amounts.sustainsMember": "sustains a member",
   "donate.amounts.fundsGathering": "funds a gathering",
-  "donate.giveCta.monthly": "Give {amount} / month →",
-  "donate.giveCta.oneOff": "Give {amount} →",
+  "donate.giveCta.monthly": "Give {amount} / month",
+  "donate.giveCta.oneOff": "Give {amount}",
   "donate.allocation.title": "Where it <em>actually goes.</em>",
   "donate.allocation.lead":
     "Not overheads and salaries for people you'll never meet. Here's the real split.",
@@ -2974,7 +3000,7 @@ export const marketing: Catalog = {
   "contact.form.messageLabel": "Your message",
   "contact.form.messagePlaceholder":
     "Write naturally. There's no template and no word count.",
-  "contact.form.sendCta": "Send →",
+  "contact.form.sendCta": "Send",
   "contact.outro.title": "Built in Lisbon, <em>with care.</em>",
   "contact.outro.sub":
     "QueerPulse is a small, member-supported network. Your feedback helps keep it good.",
@@ -3020,7 +3046,7 @@ export const marketing: Catalog = {
   "forOrgs.proof.title": "Already working <em>with us</em>",
   "forOrgs.proof.sub":
     "Four representative partners, each at a different tier. Full list lives on Partners.",
-  "forOrgs.proof.viewCta": "View partner →",
+  "forOrgs.proof.viewCta": "View partner",
   "forOrgs.tiers.title": "What we <em>do offer</em>",
   "forOrgs.tiers.sub":
     "Three tiers, each a different kind of relationship. All include the basics: pre-listing review, transparent funding disclosure, and the ability for either side to disagree publicly.",
@@ -3041,7 +3067,7 @@ export const marketing: Catalog = {
     "For: 20+ person organisations actively hiring queer talent. Sliding scale for under-50-person teams.",
   "forOrgs.tiers.employer.reviewCta": "Start the review",
   "forOrgs.tiers.employer.reviewToast": "Opening the review form…",
-  "forOrgs.tiers.employer.exampleCta": "See an example company profile →",
+  "forOrgs.tiers.employer.exampleCta": "See an example company profile",
   "forOrgs.tiers.partner.name": "Operational <em>partner</em>",
   "forOrgs.tiers.partner.price": "By <em>arrangement</em>",
   "forOrgs.tiers.partner.pricePeriod": "reciprocal · usually unpaid",
@@ -3143,7 +3169,7 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Queer-owned",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
-  "directory.card.viewDetails": "View details →",
+  "directory.card.viewDetails": "View details",
   "directory.card.verifiedBadge": "Verified safe space",
   "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
   "directory.submitStrip.body":
@@ -3168,7 +3194,7 @@ export const marketing: Catalog = {
   "directory.outro.sub":
     "Join the network and get access to the full directory, member recommendations, and a community that knows the city.",
   "directory.outro.cta": "Request an invite",
-  "directory.detail.backCta": "← Directory",
+  "directory.detail.backCta": "Directory",
   "directory.detail.breadcrumbAria": "Breadcrumb",
   "directory.detail.breadcrumbHome": "Directory",
   "directory.detail.relatedTitle": "More {category} nearby",
@@ -3228,10 +3254,10 @@ export const marketing: Catalog = {
   "directory.detail.reviews.filterStars_other": "{count} stars",
   "directory.detail.reviews.noStarReviews": "No {count}-star reviews yet.",
   "directory.detail.reviews.ratingAria": "Rated {count} out of 5 stars",
-  "directory.detail.visitWebsite": "Visit website →",
-  "directory.detail.getInTouch": "Get in touch →",
+  "directory.detail.visitWebsite": "Visit website",
+  "directory.detail.getInTouch": "Get in touch",
   "directory.detail.backToDirectory": "Back to directory",
-  "directory.detail.claimCta": "Do you run this place? Claim it →",
+  "directory.detail.claimCta": "Do you run this place? Claim it",
   "directory.detail.notFound.title": "We couldn't find this place",
   "directory.detail.notFound.body":
     "This listing may have been taken down, or the link might be out of date. Everywhere else that's open to us is still in the directory.",
@@ -3306,11 +3332,11 @@ export const marketing: Catalog = {
   "directory.detail.trust.lastVerifiedLabel": "Last verified",
   "directory.detail.trust.howLine":
     "This space meets the same criteria as every verified space.",
-  "directory.detail.trust.howLink": "How verification works →",
+  "directory.detail.trust.howLink": "How verification works",
   "directory.detail.whoRunsIt": "Who runs it",
   "directory.detail.onQueerPulse": "On QueerPulse",
   "directory.detail.communityVouched": "Community-vouched",
-  "directory.detail.viewProfile": "View {name}'s profile →",
+  "directory.detail.viewProfile": "View {name}'s profile",
   "directory.detail.savedByMembers_one": "Saved by {count} member",
   "directory.detail.savedByMembers_other": "Saved by {count} members",
   "directory.detail.membersHereLately": "Members here lately",
@@ -3377,16 +3403,16 @@ export const marketing: Catalog = {
   "arriving.firstStep.title": "Come to something <em>in person.</em>",
   "arriving.firstStep.intro":
     "Everything on this page is useful. But the best thing you can do is show up to a gathering. Next one coming up:",
-  "arriving.firstStep.rsvpCta": "I'll be there →",
+  "arriving.firstStep.rsvpCta": "I'll be there",
   "arriving.commQuick.eyebrow": "Where to start",
   "arriving.commQuick.title": "Three communities for <em>new arrivals.</em>",
   "arriving.commQuick.intro":
     "Not sure where to begin? These three communities are particularly welcoming to people who are new to Lisbon.",
-  "arriving.commQuick.browseCta": "Browse all communities →",
+  "arriving.commQuick.browseCta": "Browse all communities",
   "arriving.outro.title": "Ready to meet <em>the community?</em>",
   "arriving.outro.sub":
     "Request an invite to QueerPulse and get access to the full network — members, gatherings, board, and everything else on this page.",
-  "arriving.outro.cta": "Request an invite →",
+  "arriving.outro.cta": "Request an invite",
 
   // ── Visas & Residency — page/section chrome + the visa/legal guidance
   //    itself (platform-authored, ships in the bundle, no `api/` fetch —
@@ -3411,23 +3437,23 @@ export const marketing: Catalog = {
   "visas.routePicker.euCitizen.name": "EU / EEA citizen",
   "visas.routePicker.euCitizen.desc":
     "Free movement applies. Registration is simple but required.",
-  "visas.routePicker.euCitizen.cta": "EU Citizens →",
+  "visas.routePicker.euCitizen.cta": "EU Citizens",
   "visas.routePicker.remoteWorker.name": "Remote worker / passive income",
   "visas.routePicker.remoteWorker.desc":
     "Living on savings, rental income, freelance, or remote employment.",
-  "visas.routePicker.remoteWorker.cta": "D7 Visa →",
+  "visas.routePicker.remoteWorker.cta": "D7 Visa",
   "visas.routePicker.digitalNomad.name": "Digital nomad",
   "visas.routePicker.digitalNomad.desc":
     "Working remotely for a non-Portuguese employer, higher income.",
-  "visas.routePicker.digitalNomad.cta": "Digital Nomad (D8) →",
+  "visas.routePicker.digitalNomad.cta": "Digital Nomad (D8)",
   "visas.routePicker.jobOffer.name": "Job offer in Portugal",
   "visas.routePicker.jobOffer.desc":
     "You have or are seeking employment with a Portuguese entity.",
-  "visas.routePicker.jobOffer.cta": "Work Visas →",
+  "visas.routePicker.jobOffer.cta": "Work Visas",
   "visas.routePicker.partner.name": "Joining a partner here",
   "visas.routePicker.partner.desc":
     "Your partner is in Portugal already or moving with you.",
-  "visas.routePicker.partner.cta": "Bringing a Partner →",
+  "visas.routePicker.partner.cta": "Bringing a Partner",
 
   "visas.tabs.eu.label": "EU Citizens",
   "visas.tabs.eu.headTitle": "EU & EEA <em>citizens</em>",
@@ -3447,7 +3473,7 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card3.body":
     "If you're an EU citizen and your partner is not, they can join you in Portugal under EU free movement rules — including same-sex spouses and registered partners. The EU Court of Justice (Coman ruling, 2018) established that EU member states must recognise same-sex spouses for free movement purposes even if they don't have same-sex marriage domestically.",
   "visas.tabs.eu.card3.tag": "Full partner rights",
-  "visas.tabs.eu.card3.link": "Partner visa details →",
+  "visas.tabs.eu.card3.link": "Partner visa details",
 
   "visas.tabs.d7.label": "D7 — Passive Income",
   "visas.tabs.d7.headTitle": "D7 — <em>Passive Income Visa</em>",
@@ -3466,7 +3492,7 @@ export const marketing: Catalog = {
   "visas.tabs.d7.card3.title": "IFICI tax regime",
   "visas.tabs.d7.card3.body":
     "Portugal replaced the NHR scheme at the end of 2023 with the IFICI regime (informally called NHR 2.0). It's now targeted at qualifying professions (tech, research, arts). General D7 holders no longer qualify automatically. Your income will be taxed as a standard resident. Get tax advice before moving.",
-  "visas.tabs.d7.card3.link": "Tax advice contacts →",
+  "visas.tabs.d7.card3.link": "Tax advice contacts",
   "visas.tabs.d7.step1.title":
     "Apply at the Portuguese consulate in your country",
   "visas.tabs.d7.step1.text":
@@ -3500,7 +3526,7 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card3.title": "Tax treatment",
   "visas.tabs.d8.card3.body":
     "D8 holders working in qualifying tech or research roles may qualify for the IFICI regime (20% flat income tax for up to 10 years). This is not automatic — you must apply and your profession must qualify. Check with a tax specialist before assuming you'll benefit.",
-  "visas.tabs.d8.card3.link": "Tax advice →",
+  "visas.tabs.d8.card3.link": "Tax advice",
 
   "visas.tabs.work.label": "Work Visas",
   "visas.tabs.work.headTitle": "Work <em>visas</em>",
@@ -3538,7 +3564,7 @@ export const marketing: Catalog = {
   "visas.tabs.partner.card3.body":
     "The 2018 EU Court of Justice ruling (Coman v. Romania) established that EU member states must recognise same-sex spouses of EU citizens for the purposes of free movement — even countries that don't have same-sex marriage. This means an EU citizen can bring their same-sex spouse to Portugal regardless of their home country's stance.",
   "visas.tabs.partner.card3.tag": "EU court protection",
-  "visas.tabs.partner.card3.link": "Talk to an immigration lawyer →",
+  "visas.tabs.partner.card3.link": "Talk to an immigration lawyer",
   "visas.tabs.partner.card4.eyebrow": "Family reunification",
   "visas.tabs.partner.card4.title": "The process for partners",
   "visas.tabs.partner.card4.body":
@@ -3562,7 +3588,7 @@ export const marketing: Catalog = {
   "visas.tabs.citizenship.card3.title": "A2 requirement",
   "visas.tabs.citizenship.card3.body":
     "The Portuguese language requirement for citizenship is A2 (basic) — conversational rather than fluent. You can demonstrate this via an approved CAPLE or CIPLE test, or by showing Portuguese-medium education. The community forum has recommendations for Portuguese teachers who are queer-friendly.",
-  "visas.tabs.citizenship.card3.link": "Language learning resources →",
+  "visas.tabs.citizenship.card3.link": "Language learning resources",
 
   "visas.ground.title": "On the <em>ground</em>",
   "visas.ground.sub": "Practical first steps regardless of your visa route.",
@@ -3590,11 +3616,11 @@ export const marketing: Catalog = {
   "visas.lawyers.title": "Community-reviewed <em>immigration lawyers</em>",
   "visas.lawyers.emptyBody":
     "We're building a community-reviewed directory of LGBTQ+-friendly immigration lawyers. It isn't ready yet — until it is, the best recommendations come from members who've been through the process. Ask in the visa forum thread.",
-  "visas.lawyers.forumCta": "Ask the visa forum thread →",
+  "visas.lawyers.forumCta": "Ask the visa forum thread",
 
   "visas.outro.title": "You're building a life <em>here.</em>",
   "visas.outro.sub": "The paperwork is temporary. The community is permanent.",
-  "visas.outro.settlingCta": "Settling in guide →",
+  "visas.outro.settlingCta": "Settling in guide",
   "visas.outro.askCta": "Ask the community",
 
   // ── Map (queer Lisbon city guide) — page/filter/sidebar chrome. Venue
@@ -3835,7 +3861,7 @@ export const marketing: Catalog = {
   "resourceLibrary.empty": "No resources match — try a broader filter.",
   "resourceLibrary.cost.free": "Free",
   "resourceLibrary.cost.sliding": "Sliding scale",
-  "resourceLibrary.card.openGuide": "Open guide →",
+  "resourceLibrary.card.openGuide": "Open guide",
   "resourceLibrary.card.visitSite": "Visit site ↗",
   "resourceLibrary.outro.title": "Know something <em>missing?</em>",
   "resourceLibrary.outro.sub":
@@ -3875,7 +3901,7 @@ export const marketing: Catalog = {
   "platforms.outro.title": "Something missing? <em>Tell us.</em>",
   "platforms.outro.sub":
     "Know a platform, resource, or community that should be here? Suggest it and we'll add it to the directory.",
-  "platforms.outro.cta": "Suggest a platform →",
+  "platforms.outro.cta": "Suggest a platform",
 
   // ── Submit Partner Application — "Apply to partner" form chrome
   //    (`SubmitPartnerApplicationPage.tsx`, `SubmitPartnerFields.tsx`,
@@ -3890,7 +3916,7 @@ export const marketing: Catalog = {
     "QueerPulse partnerships are operational, not promotional. Tell us who you are and what you do — honestly — and we'll read every word.",
   "submitPartner.success.title": "Application",
   "submitPartner.success.em": "received.",
-  "submitPartner.success.closeLabel": "Back to partners →",
+  "submitPartner.success.closeLabel": "Back to partners",
   "submitPartner.success.step1":
     "It's pending review with the partnerships team",
   "submitPartner.success.step2":
@@ -3900,7 +3926,7 @@ export const marketing: Catalog = {
   "submitPartner.success.body":
     "Thank you for reaching out. Your application is in — nothing goes live until we've talked it through with you.",
   "submitPartner.actions.sending": "Sending…",
-  "submitPartner.actions.submit": "Submit application →",
+  "submitPartner.actions.submit": "Submit application",
   "submitPartner.actions.cancel": "Cancel",
   "submitPartner.error.toast":
     "Couldn't send your application — please try again.",

@@ -1,3 +1,4 @@
+import { routes } from "../../../app/routeMap";
 import { memberName } from "../../members/data/members";
 import type { Article } from "./articles";
 
@@ -309,6 +310,321 @@ export const articles: Record<string, Article> = {
         collaborations started in queues. You cannot engineer that. You can only
         stay and let it happen.
       </>,
+    ],
+  },
+
+  // ── First-person community stories (migrated from the standalone Story*
+  // showcase pages). Editorial content by mock personas; demo-only, like the
+  // rest of this registry. Each closes with the shared Outro CTA band. ────────
+  "studio-principe-real": {
+    id: "studio-principe-real",
+    kicker: "Field Notes",
+    section: "Field Notes",
+    title: (
+      <>
+        How a Príncipe Real studio became a quiet home for{" "}
+        <em>queer designers</em>
+      </>
+    ),
+    byline: memberName("ines"),
+    role: null,
+    date: "June 2026",
+    readTime: "6 min",
+    initials: "IT",
+    tint: "jade",
+    imgDesc:
+      "A working design studio in Príncipe Real — mismatched desks, plants, queer creatives at work",
+    authorBio: `${memberName("ines")} designs identities and editorial systems for cultural institutions and small presses. She has run her studio in Príncipe Real since 2020.`,
+    tags: ["Design", "Community", "Príncipe Real"],
+    related: ["supper-club-mouraria", "invite-only-safety"],
+    outro: {
+      titleKey: "magazine:story.outro.studio.title",
+      subKey: "magazine:story.outro.studio.sub",
+      ctaLabelKey: "common:cta.requestInvite",
+      ctaTo: routes.requestInvite,
+    },
+    body: [
+      "Six years ago it was a dusty first-floor flat with bad wiring, a view of someone else's laundry, and a landlord who answered exactly half of our emails. Today it's where half of Lisbon's queer design scene passes through — and nobody there is performing for an algorithm.",
+      "I moved the studio into Príncipe Real in 2020, just before everything closed. The timing was accidental and probably lucky: the neighbourhood emptied out, rents dropped briefly to something almost survivable, and I signed a lease I couldn't really afford on a space I couldn't really see the point of yet.",
+      {
+        kind: "quote",
+        text: "The studio didn't become a community because I planned it that way. It became one because there was nowhere else to go, and then because people kept coming back.",
+        cite: memberName("ines"),
+      },
+      "The first person who wasn't me to work there was André — a photographer who needed a corner to edit in and was between flats. Then came a week when two designers from Porto were in the city and needed desks. Then a sound designer who said she'd stay for a month and left after a year to open her own place two streets away.",
+      {
+        kind: "image",
+        alt: "The studio at Rua de São Marçal",
+        tint: "jade",
+        caption: (
+          <>
+            The studio at Rua de São Marçal, photographed by {memberName("andre")}
+            . The plants are mostly alive.
+          </>
+        ),
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            What "community" actually <em>means</em>
+          </>
+        ),
+      },
+      "I'm suspicious of the word community when it comes from a brand. But I don't have a better word for what the studio became. It wasn't a collective — nobody had a stake in the space or shared the costs except me. It wasn't a co-working space — there were no memberships, no hot desks, no branded mugs. It was just a room where queer creative people worked, ate lunch, complained about clients, and occasionally fell asleep on the sofa.",
+      "What made it feel different from other studios I'd been in was the absence of the things studios usually have: hierarchy, competition, the quiet performance of being-busy-enough. Nobody was there to network. Most people were there because they needed somewhere to be, and the somewhere happened to be warm and not hostile to who they were.",
+      {
+        kind: "quote",
+        text: "Nobody was performing productivity. Nobody was networking. They were just people who needed a room, and happened to be queer, and happened to end up in mine.",
+        cite: memberName("ines"),
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            The thing about <em>safety</em>
+          </>
+        ),
+      },
+      "I think about this a lot: what makes a creative space feel safe for queer people? It's not rainbow flags. It's not a policy on the wall. It's something harder to name — a quality of attention, maybe. The sense that you don't have to explain yourself before you're allowed to work. That you won't have to perform normalcy to earn the right to use the printer.",
+      "The studio never had a policy. What it had was: everyone who came was brought by someone who already knew the room. That's it. Not a vetting process — just the slow accumulation of people who vouched for each other, who said \"this person is good, you should meet them,\" and meant it.",
+      "Which is, I think, also what QueerPulse is trying to do. Not a platform, not a network in the LinkedIn sense, but a room — one that keeps its shape because people take care of it.",
+      {
+        kind: "heading",
+        text: (
+          <>
+            What the studio is <em>now</em>
+          </>
+        ),
+      },
+      "It's louder than it was. There are more plants. Someone hung a print of a Lotte Reiniger silhouette animation that I didn't choose but have grown to love. On Fridays there's usually something going on that I didn't organise — a critique session, a long lunch, sometimes someone playing music quietly on a laptop while they work on something they're not ready to show anyone.",
+      "I still work there every day. I still sign the lease. But the studio stopped feeling like mine a long time ago, and that's the best thing that ever happened to it.",
+    ],
+  },
+  "supper-club-mouraria": {
+    id: "supper-club-mouraria",
+    kicker: "Profiles",
+    section: "Profiles",
+    title: (
+      <>
+        Leaving the startup grind for a supper club <em>in Mouraria</em>
+      </>
+    ),
+    byline: memberName("sofia"),
+    role: null,
+    date: "May 2026",
+    readTime: "4 min",
+    initials: "SA",
+    tint: "coral",
+    imgDesc:
+      "A host prepping in a small Mouraria kitchen before an intimate supper club, twelve chairs stacked",
+    authorBio: `${memberName("sofia")} makes documentaries about people who wouldn't think to be documented. She is currently in post-production on a 28-minute film about Lisbon's disappearing tascas.`,
+    tags: ["Food", "Community", "Mouraria"],
+    related: ["studio-principe-real", "invite-only-safety"],
+    outro: {
+      titleKey: "magazine:story.outro.tomas.title",
+      subKey: "magazine:story.outro.tomas.sub",
+      ctaLabelKey: "common:cta.requestInvite",
+      ctaTo: routes.requestInvite,
+    },
+    body: [
+      "Tomás Beto's apartment smells like vinegar and something fermenting in a jar he won't tell me about. There are twelve chairs stacked in the corner, a whiteboard with a menu written in pencil, and a cat asleep on a pile of linen napkins. In three hours, strangers will sit down at his dining table and eat whatever he decides to cook.",
+      "This is Queer Supper Club №12. Tomás has been doing this for just over two years — hosting intimate dinners for members of the QueerPulse community out of his apartment in Mouraria. No fixed menu. No Instagram. Twelve seats, and a waiting list that he mostly ignores in favour of people he's heard about through the network.",
+      "Until 2023, he was a product manager at a fintech startup in Parque das Nações, commuting forty minutes each way, managing a team of eight, and making a salary that looked good on paper. He left in March of that year, with no plan except a fermentation kit and a kitchen he'd been under-using for years.",
+      {
+        kind: "quote",
+        text: "I wasn't unhappy. I was just completely disconnected from anything that felt like mine. The job was fine. The money was fine. But I'd go to work and come home and go to a bar and nothing felt like it had anything to do with who I actually was.",
+        cite: memberName("tomas"),
+      },
+      "We talked for two hours on a Tuesday afternoon, between his prep work. The conversation ranged from the politics of food to how he sources his wine to why he thinks queer hospitality is a fundamentally different project from hospitality in general.",
+      {
+        kind: "image",
+        alt: "Tomás in his kitchen, February 2026",
+        tint: "coral",
+        caption:
+          "Tomás in his kitchen before supper club №11, February 2026. Photographed by André Quintela.",
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            On leaving the job and <em>what came next</em>
+          </>
+        ),
+      },
+      {
+        kind: "qa",
+        answererInitials: "TB",
+        question:
+          "Was there a moment when you decided you were going to do this, or did it happen gradually?",
+        answer:
+          "There was a moment, but it wasn't dramatic. I was at a work dinner — one of those dinners where you're meant to network but everyone is tired — and I looked at the food and thought, this is the worst meal I've had in months, and I'm surrounded by people who don't notice. That was it. Not quitting because I was miserable. Quitting because I'd become someone who ate bad food at a networking dinner and thought it was fine.",
+      },
+      {
+        kind: "qa",
+        answererInitials: "TB",
+        question: "What was the first supper club like?",
+        answer:
+          "Terrifying. Eight people, not twelve — I didn't trust myself for twelve yet. A friend of mine from Graça, Sofia's flatmate at the time, spread the word through the queer community. Everyone who came was a stranger to me. The menu was overambitious. The bread was bad. But the conversation was — it was the best dinner I'd had in years. People talked about things. Real things. I went to bed at 2am and thought, okay, this is what I'm doing.",
+      },
+      {
+        kind: "qa",
+        answererInitials: "TB",
+        question:
+          "Why specifically a queer supper club? Why not just a supper club?",
+        answer:
+          "Because the room is different. Not every dinner, and not obviously — but there's something about sitting down with a table full of people who have all, in different ways, had to think carefully about who they are. It changes the texture of a conversation. People are less performative. They're less interested in impressing and more interested in connecting. That might be a romantic reading, but it's what I've found to be true.",
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            On queer hospitality and <em>why it's different</em>
+          </>
+        ),
+      },
+      "I ask Tomás what he means by queer hospitality. He's quiet for a moment, stirring something on the stove.",
+      {
+        kind: "qa",
+        answererInitials: "TB",
+        question:
+          'You\'ve described what you do as "queer hospitality" in a few conversations I\'ve heard about. What do you mean by that?',
+        answer:
+          "I mean hospitality that isn't interested in performing abundance. A lot of high-end food culture is about showing you how much — how many courses, how rare the ingredients, how impressive the technique. I'm more interested in the feeling of the room. Are people comfortable? Is there space for a difficult conversation if someone needs one? Is the food good enough that it doesn't get in the way of why we're all here? Queer spaces, at their best, do this. They prioritise the feeling of being together over the feeling of being seen.",
+      },
+      {
+        kind: "quote",
+        text: "Hospitality is the art of making someone feel like they don't have to earn their place at the table. That's not a political position. It's just what I'm trying to do.",
+        cite: memberName("tomas"),
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            On the network and <em>finding the community</em>
+          </>
+        ),
+      },
+      {
+        kind: "qa",
+        answererInitials: "TB",
+        question: "How did you find QueerPulse?",
+        answer:
+          "Sofia vouched for me. We met at a film screening in Alfama — she was working on a documentary about the neighbourhood and I was there as a guest of someone I barely knew. We ended up talking for three hours. She was the first person in a long time who asked me what I was working on and actually listened to the answer. She told me about QueerPulse a week later. I joined and immediately found four people I wanted to cook for.",
+      },
+      {
+        kind: "qa",
+        answererInitials: "TB",
+        question:
+          "What has the network given you that you couldn't get elsewhere?",
+        answer:
+          "Access to people without the social overhead. In a regular networking context, I'd have to explain myself — what I do, why I left the job, why the supper club, whether it makes money. Here, I can just say I run a supper club in Mouraria and people understand what that means and why it matters. The shorthand exists. That's rare.",
+      },
+      "Supper Club №12 is tonight. Tomás won't tell me the menu. \"If I tell you, you'll be disappointed when I change it at the last minute,\" he says, and goes back to the vinegar and the jar and the cat on the napkins. I leave with the feeling that something good is about to happen in this apartment, and that the city is lucky to have it.",
+    ],
+  },
+  "invite-only-safety": {
+    id: "invite-only-safety",
+    kicker: "On Building",
+    section: "On Building",
+    title: (
+      <>
+        Why we stayed <em>invite-only:</em> safety as a feature, not a gate.
+      </>
+    ),
+    byline: "The QueerPulse Team",
+    role: null,
+    date: "April 2026",
+    readTime: "3 min",
+    initials: "QP",
+    tint: "plum",
+    imgDesc:
+      "A small, warmly lit room set for a few people — an intentional gathering, not a crowd",
+    authorBio:
+      "QueerPulse was built by a small group of queer professionals in Lisbon who kept asking each other why there wasn't a space like this already. Questions, concerns, and feedback are always welcome at hello@queerpulse.pt.",
+    tags: ["On Building", "Safety", "Community"],
+    related: ["studio-principe-real", "supper-club-mouraria"],
+    outro: {
+      titleKey: "magazine:story.outro.safety.title",
+      subKey: "magazine:story.outro.safety.sub",
+      ctaLabelKey: "common:cta.requestInvite",
+      ctaTo: routes.requestInvite,
+    },
+    body: [
+      {
+        kind: "paragraph",
+        lead: true,
+        text: "Every platform we've looked at that started with a strong community ethos eventually opened up, scaled past the point where anyone knew anyone, and became something that felt less like a room and more like a corridor. We decided early that we didn't want to do that. Here's why.",
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            The growth trap and <em>why we're not in it</em>
+          </>
+        ),
+      },
+      "Growth is the default assumption of anyone building software. More users, more value. More value, more funding. More funding, more users. The loop is self-reinforcing and, for most platforms, it's also the beginning of the end of what made them worth building in the first place.",
+      "We're not anti-growth. We're pro-quality. Those two things are in tension in most contexts. We believe they don't have to be — but only if you're willing to say no to growth when it comes at the cost of what the space is for.",
+      {
+        kind: "quote",
+        text: "A room that holds everyone holds no one in particular. We wanted to build something that holds specific people, carefully, on purpose.",
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            The specific problem with <em>queer spaces online</em>
+          </>
+        ),
+      },
+      "Queer people online face a particular set of risks that most platforms weren't designed with in mind. Outing. Harassment from organised bad-faith actors. The exhausting performance of being visible in environments that don't guarantee safety. The slow-motion experience of watching a space you trusted fill up with people who are there to observe or exploit rather than participate.",
+      "Open sign-up, even with robust moderation, doesn't solve this. Moderation is reactive. By the time a harmful actor is moderated out, the damage — the chilling effect on members who saw what happened — is already done. The only effective preventative measure we've found is: someone who is already in the room has to say that this person belongs here, and put their name to it.",
+      "That's vouching. It's not a perfect system. People vouch for people who turn out to be wrong for the community. But it means every harmful incident has a traceable origin, and it means people think before they invite. That second thing is underrated.",
+      {
+        kind: "stats",
+        items: [
+          {
+            value: <em>0</em>,
+            label: "open sign-up. Every member is introduced by another.",
+          },
+          {
+            value: "24h",
+            label: "response time for any safety concern sent to the team.",
+          },
+          {
+            value: <em>3</em>,
+            label:
+              "visibility settings. Private is always a real option, never a punishment.",
+          },
+        ],
+      },
+      {
+        kind: "heading",
+        text: (
+          <>
+            What "safety as a feature" <em>actually means</em>
+          </>
+        ),
+      },
+      "It means we build safety in at the structural level, not the policy level. Policies are things you write and hope people read. Structure is what shapes behaviour whether or not anyone reads anything.",
+      "The invite-only structure means the person who introduced you is accountable, in a mild but real way, for your presence in the room. The visibility settings mean you can participate at the level you're comfortable with — not just \"public or private\" but a genuine spectrum. The absence of follower counts and public metrics means there's no incentive to perform rather than participate.",
+      "None of this is unprecedented. Some of the best communities in the world operate this way. It just isn't the default in tech, because the default in tech is designed to maximise engagement, and engaged users generate data, and data generates revenue. We're not optimising for that.",
+      {
+        kind: "heading",
+        text: (
+          <>
+            The cost of staying <em>small</em>
+          </>
+        ),
+      },
+      "There are real costs. People who should be in this room aren't yet, because they don't know anyone who's already here, or because they're in a situation where asking for an invitation feels exposing. We think about this a lot. We're trying to build ways in for people who arrive at the edge of the network without a prior connection — community events, open gatherings, a waitlist that we work through ourselves. We're not satisfied with where we are on this.",
+      "The other cost is slower growth, and with it slower revenue. We're a small operation funded by membership and by the occasional partnership with organisations we trust. We're not going to scale our way out of needing to think carefully about these tradeoffs. That's okay. We'd rather be smaller and right than larger and compromised.",
+      {
+        kind: "quote",
+        text: 'The question we ask ourselves isn\'t "how do we grow?" It\'s "are the right people finding us, and when they do, is the room worth entering?"',
+      },
+      "So far, we think it is. We'll keep asking.",
     ],
   },
 };

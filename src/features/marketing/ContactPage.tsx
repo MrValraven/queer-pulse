@@ -1,6 +1,12 @@
 import { useState } from "react";
 import type { IconType } from "react-icons";
-import { FiMail, FiShield, FiFileText, FiUsers } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiMail,
+  FiShield,
+  FiFileText,
+  FiUsers,
+} from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -91,7 +97,9 @@ export function ContactPage() {
                   <div>
                     <h3>{t(r.titleKey)}</h3>
                     <p>{t(r.descKey)}</p>
-                    <span className={s.rLink}>{r.email} →</span>
+                    <span className={s.rLink}>
+                      {r.email} <FiArrowRight aria-hidden />
+                    </span>
                   </div>
                 </a>
               ))}
@@ -211,7 +219,8 @@ export function ContactPage() {
                   disabled={!valid}
                   style={{ width: "100%", justifyContent: "center" }}
                 >
-                  {t("marketing:contact.form.sendCta")}
+                  {t("marketing:contact.form.sendCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Button>
               </form>
             )}

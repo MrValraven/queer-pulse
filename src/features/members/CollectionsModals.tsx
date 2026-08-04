@@ -1,6 +1,13 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiFolder, FiPlus, FiX } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiCheck,
+  FiFolder,
+  FiPlus,
+  FiX,
+} from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -145,10 +152,12 @@ export function NewCollectionModal({
         </div>
         <div className={styles.foot}>
           <button type="button" className={styles.back} onClick={onClose}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("members:collections.modal.newCollection.cancel")}
           </button>
           <Button type="submit" disabled={!canCreate}>
-            {t("members:collections.modal.newCollection.submit")}
+            {t("members:collections.modal.newCollection.submit")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </form>
@@ -302,7 +311,7 @@ export function AddToCollectionModal({
       </div>
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>
-          {t("members:collections.modal.add.cancel")}
+          <FiArrowLeft aria-hidden /> {t("members:collections.modal.add.cancel")}
         </button>
       </div>
     </Modal>

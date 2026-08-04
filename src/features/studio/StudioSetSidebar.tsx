@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -142,7 +143,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           showToast(t("studio:setSubmission.sidebar.submittedToast"), "success")
         }
       >
-        {t("studio:setSubmission.sidebar.submitCta")}
+        {t("studio:setSubmission.sidebar.submitCta")} <FiArrowRight aria-hidden />
       </button>
     </div>
   );

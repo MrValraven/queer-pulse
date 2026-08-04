@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -210,7 +211,8 @@ export function CoopGrid({
           </h2>
           {coops.length > 0 && (
             <button type="button" className={styles.all} onClick={onSeeAll}>
-              {t("economy:housingCoop.grid.seeAll")}
+              {t("economy:housingCoop.grid.seeAll")}{" "}
+              <FiArrowRight aria-hidden />
             </button>
           )}
         </div>
@@ -262,7 +264,8 @@ export function CoopTemplates() {
               </div>
               <div className={styles.tpMeta}>{t(template.metaKey)}</div>
               <div className={styles.tpCta}>
-                {t("economy:housingCoop.templates.read")}
+                {t("economy:housingCoop.templates.read")}{" "}
+                <FiArrowRight aria-hidden />
               </div>
             </Link>
           ))}

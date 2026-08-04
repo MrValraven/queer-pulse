@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FACTS } from "./filmPage.data";
 import { FilmHeroPoster } from "./FilmHeroPoster";
@@ -62,7 +63,9 @@ export function FilmHero() {
               Co-hosted with Casa do Comum.{" "}
               <em>Live captions in EN &amp; PT.</em>
             </div>
-            <Link to={routes.rsvp}>{t("cinema:film.hero.rsvpCta")}</Link>
+            <Link to={routes.rsvp}>
+              {t("cinema:film.hero.rsvpCta")} <FiArrowRight aria-hidden />
+            </Link>
           </div>
 
           <div className={styles.facts}>

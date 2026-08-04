@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiShield } from "react-icons/fi";
+import { FiArrowRight, FiShield } from "react-icons/fi";
 import { FormField } from "../../../../shared/components/ui";
 import { describeError } from "../../../../shared/api/errorMessage";
 import { useToast } from "../../../../shared/components/feedback/useToast";
@@ -72,7 +72,8 @@ export function HeroStatsView({
             actually jump to the Public preview tab. Styled as a plain note,
             not a control, so it doesn't read as a dead link. */}
         <span className={styles.previewHint}>
-          {t("admin:roadmap.heroStatsView.previewLinkCta")}
+          {t("admin:roadmap.heroStatsView.previewLinkCta")}{" "}
+          <FiArrowRight aria-hidden />
         </span>
       </header>
 

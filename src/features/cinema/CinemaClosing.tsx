@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -28,7 +29,8 @@ export function LiveSection() {
         </h2>
         <div className="sub">{t("cinema:live.lead")}</div>
         <Link to={routes.calendar} className="all">
-          {t("cinema:live.fullCalendarCta")}
+          {t("cinema:live.fullCalendarCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div className={styles.liveList}>
@@ -91,7 +93,8 @@ export function LedgerSection() {
         <p>{t("cinema:ledger.body")}</p>
         <div className={styles.ledgerActions}>
           <Button to={routes.cinemaSubmit}>
-            {t("cinema:ledger.submitCta")}
+            {t("cinema:ledger.submitCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
           <Button variant="ghost-dark" to={routes.cinemaMembership}>
             {t("cinema:ledger.sustainCta", { price: fmt.currency(7) })}
@@ -100,7 +103,8 @@ export function LedgerSection() {
             {t("cinema:ledger.readDeedCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.cinemaRights}>
-            {t("cinema:ledger.rightsCta")}
+            {t("cinema:ledger.rightsCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>
@@ -169,7 +173,8 @@ export function OpenCallsStrip() {
         </p>
       </div>
       <Button variant="ghost-dark" to={routes.cinemaOpenCalls}>
-        {t("cinema:openCallsStrip.cta")}
+        {t("cinema:openCallsStrip.cta")}{" "}
+        <FiArrowRight aria-hidden />
       </Button>
     </div>
   );
@@ -193,7 +198,8 @@ export function AboutStrip() {
         <p>{t("cinema:aboutStrip.body")}</p>
       </div>
       <Button variant="ghost-dark" to={routes.cinemaAbout}>
-        {t("cinema:aboutStrip.cta")}
+        {t("cinema:aboutStrip.cta")}{" "}
+        <FiArrowRight aria-hidden />
       </Button>
     </div>
   );

@@ -1,7 +1,6 @@
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Button, ModalSheet } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CultureModals.module.css";
 
@@ -10,7 +9,13 @@ import styles from "./CultureModals.module.css";
 // (`useSubmitFlow`, `useChipSet`) live in `./cultureModalKit.hooks`.
 export { Sending } from "../../shared/components/ui";
 
-/** Shared bottom-sheet frame: backdrop, close button, scroll lock. */
+/**
+ * Shared bottom-sheet frame for the culture form/success modals. A thin wrapper
+ * over the shared <ModalSheet>, which brings scroll-lock, click-out, Escape via
+ * the shared modal stack, a Tab focus-trap and focus-restore (the a11y the
+ * hand-rolled shell used to omit). `success` switches to the plum surface;
+ * culture's own <SuccessPanel> renders flat inside it.
+ */
 export function ModalShell({
   onClose,
   success,
@@ -24,41 +29,14 @@ export function ModalShell({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
-  useScrollLock();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <ModalSheet
+      onClose={onClose}
+      success={success}
+      ariaLabel={label ?? t("culture:modal.dialogAriaLabel")}
     >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={label ?? t("culture:modal.dialogAriaLabel")}
-        className={[styles.modal, success && styles.modalSuccess]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("culture:modal.close")}
-        >
-          ×
-        </button>
-        {children}
-      </div>
-    </div>
+      {children}
+    </ModalSheet>
   );
 }
 
@@ -105,47 +83,6 @@ export function SuccessPanel({
           {t("culture:modal.done")}
         </Button>
       </div>
-    </div>
-  );
-}
-
-/** Multi-select pill row used inside the modal forms. `options` stay stable
- * English ids (the `Set<string>` selection state never changes with
- * language); `optionLabel` resolves each option's translated display text —
- * i18n Pattern A's label-key indirection applied to a generic component. */
-export function ChipSelect({
-  options,
-  selected,
-  onToggle,
-  optionLabel,
-  labelledBy,
-}: {
-  options: readonly string[];
-  selected: Set<string>;
-  onToggle: (value: string) => void;
-  optionLabel?: (option: string) => string;
-  /** `id` of the visible field label that names this group — without it the
-   *  group is announced as an anonymous "group". */
-  labelledBy?: string;
-}) {
-  return (
-    <div className={styles.chips} role="group" aria-labelledby={labelledBy}>
-      {options.map((opt) => {
-        const on = selected.has(opt);
-        return (
-          <button
-            key={opt}
-            type="button"
-            aria-pressed={on}
-            className={[styles.chip, on && styles.chipOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => onToggle(opt)}
-          >
-            {optionLabel ? optionLabel(opt) : opt}
-          </button>
-        );
-      })}
     </div>
   );
 }

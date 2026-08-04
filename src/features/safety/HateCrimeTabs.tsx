@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import {
   type TabId,
   type TagKind,
@@ -106,7 +107,7 @@ export function HateCrimePanel() {
                       )}
                       {b.link && (
                         <Link to={b.link.href} className={styles.hcsLink}>
-                          {b.link.label}
+                          {b.link.label} <FiArrowRight aria-hidden />
                         </Link>
                       )}
                     </div>
@@ -194,22 +195,26 @@ function HateCrimeSidebar() {
         </div>
         <div className={styles.sbcItem}>
           <Link to={LEGAL} className={styles.sbcLink}>
-            {t("safety:hateCrime.sidebar.legalResourcesCta")}
+            {t("safety:hateCrime.sidebar.legalResourcesCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={styles.sbcItem}>
           <Link to={MENTAL} className={styles.sbcLink}>
-            {t("safety:hateCrime.sidebar.mentalHealthCta")}
+            {t("safety:hateCrime.sidebar.mentalHealthCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.solidarity} className={styles.sbcLink}>
-            {t("safety:hateCrime.sidebar.solidarityCta")}
+            {t("safety:hateCrime.sidebar.solidarityCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.report} className={styles.sbcLink}>
-            {t("safety:hateCrime.sidebar.reportCta")}
+            {t("safety:hateCrime.sidebar.reportCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

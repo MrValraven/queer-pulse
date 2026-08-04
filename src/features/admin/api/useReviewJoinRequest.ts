@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   reviewJoinRequest,
   type JoinRequestDTO,
 } from "../../auth/api/joinRequest.api";
 import { JOIN_REQUESTS, demoInviteCode } from "./joinRequests.data";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface ReviewJoinRequestVars {
   id: string;
@@ -45,21 +46,22 @@ function demoRow(id: string): JoinRequestDTO {
 export function useReviewJoinRequest() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<JoinRequestDTO, Error, ReviewJoinRequestVars>({
+  return useDemoAwareMutation<JoinRequestDTO, Error, ReviewJoinRequestVars>({
+    demoMode,
+    demoLatencyMs: 0,
     // AdminVerifyQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, status }) => {
-      if (demoMode) {
-        return {
-          ...demoRow(id),
-          status,
-          reviewedAt: new Date().toISOString(),
-          reviewedBy: "demo-moderator",
-          inviteCode: status === "approved" ? demoInviteCode(id) : null,
-        };
-      }
-      return reviewJoinRequest(id, status);
-    },
+    demoResult: ({ id, status }) => ({
+      ...demoRow(id),
+      status,
+      reviewedAt: new Date().toISOString(),
+      reviewedBy: "demo-moderator",
+      inviteCode: status === "approved" ? demoInviteCode(id) : null,
+    }),
+    live: ({ id, status }) => reviewJoinRequest(id, status),
+    // Invalidates in BOTH modes: the demo queue is served by a mock queryFn that
+    // re-derives from the (now updated) registry on refetch, so the reviewed row
+    // must drop there too — hence onSuccess, not onLiveSuccess.
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["join-requests"] });
     },

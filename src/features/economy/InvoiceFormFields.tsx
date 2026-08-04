@@ -5,6 +5,7 @@ import {
   RETENTION_DISPENSA_NOTE,
 } from "./tax.constants";
 import { type InvoiceClient } from "./invoice.data";
+import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvoiceGeneratorPage.module.css";
 
@@ -22,77 +23,52 @@ export function InvoiceIssuerFields({
         {t("economy:invoiceTool.issuer.legend")}
       </legend>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="iss-name">
-          {t("economy:invoiceTool.issuer.nameLabel")}
-        </label>
+      <FormField label={t("economy:invoiceTool.issuer.nameLabel")}>
         <input
-          id="iss-name"
-          className={styles.rcInput}
           type="text"
           value={issuer.name}
           onChange={(e) => updateIssuer({ name: e.target.value })}
           placeholder={t("economy:invoiceTool.issuer.namePlaceholder")}
         />
-      </div>
+      </FormField>
 
       <div className={styles.rcRow}>
-        <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="iss-nif">
-            {t("economy:invoiceTool.issuer.nifLabel")}
-          </label>
+        <FormField label={t("economy:invoiceTool.issuer.nifLabel")}>
           <input
-            id="iss-nif"
-            className={styles.rcInput}
             type="text"
             inputMode="numeric"
             value={issuer.nif}
             onChange={(e) => updateIssuer({ nif: e.target.value })}
             placeholder="123456789"
           />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="iss-email">
-            {t("economy:invoiceTool.issuer.emailLabel")}
-          </label>
+        </FormField>
+        <FormField label={t("economy:invoiceTool.issuer.emailLabel")}>
           <input
-            id="iss-email"
-            className={styles.rcInput}
             type="email"
             value={issuer.email}
             onChange={(e) => updateIssuer({ email: e.target.value })}
             placeholder={t("economy:invoiceTool.issuer.emailPlaceholder")}
           />
-        </div>
+        </FormField>
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="iss-address">
-          {t("economy:invoiceTool.issuer.addressLabel")}
-        </label>
+      <FormField label={t("economy:invoiceTool.issuer.addressLabel")}>
         <input
-          id="iss-address"
-          className={styles.rcInput}
           type="text"
           value={issuer.address}
           onChange={(e) => updateIssuer({ address: e.target.value })}
           placeholder={t("economy:invoiceTool.issuer.addressPlaceholder")}
         />
-      </div>
+      </FormField>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="iss-iban">
-          {t("economy:invoiceTool.issuer.ibanLabel")}
-        </label>
+      <FormField label={t("economy:invoiceTool.issuer.ibanLabel")}>
         <input
-          id="iss-iban"
-          className={styles.rcInput}
           type="text"
           value={issuer.iban ?? ""}
           onChange={(e) => updateIssuer({ iban: e.target.value })}
           placeholder="PT50 0000 0000 0000 0000 0000 0"
         />
-      </div>
+      </FormField>
     </fieldset>
   );
 }
@@ -111,48 +87,33 @@ export function InvoiceClientFields({
         {t("economy:invoiceTool.client.legend")}
       </legend>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="cl-name">
-          {t("economy:invoiceTool.client.nameLabel")}
-        </label>
+      <FormField label={t("economy:invoiceTool.client.nameLabel")}>
         <input
-          id="cl-name"
-          className={styles.rcInput}
           type="text"
           value={client.name}
           onChange={(e) => setClient({ name: e.target.value })}
           placeholder={t("economy:invoiceTool.client.namePlaceholder")}
         />
-      </div>
+      </FormField>
 
       <div className={styles.rcRow}>
-        <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="cl-nif">
-            {t("economy:invoiceTool.client.nifLabel")}
-          </label>
+        <FormField label={t("economy:invoiceTool.client.nifLabel")}>
           <input
-            id="cl-nif"
-            className={styles.rcInput}
             type="text"
             inputMode="numeric"
             value={client.nif}
             onChange={(e) => setClient({ nif: e.target.value })}
             placeholder={t("economy:invoiceTool.optional")}
           />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="cl-address">
-            {t("economy:invoiceTool.client.addressLabel")}
-          </label>
+        </FormField>
+        <FormField label={t("economy:invoiceTool.client.addressLabel")}>
           <input
-            id="cl-address"
-            className={styles.rcInput}
             type="text"
             value={client.address}
             onChange={(e) => setClient({ address: e.target.value })}
             placeholder={t("economy:invoiceTool.optional")}
           />
-        </div>
+        </FormField>
       </div>
     </fieldset>
   );
@@ -194,54 +155,34 @@ export function InvoiceMetaFields({
         {t("economy:invoiceTool.meta.legend")}
       </legend>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="inv-no">
-          {t("economy:invoiceTool.meta.numberLabel")}
-        </label>
+      <FormField label={t("economy:invoiceTool.meta.numberLabel")}>
         <input
-          id="inv-no"
-          className={styles.rcInput}
           type="text"
           value={invoiceNumber}
           onChange={(e) => setInvoiceNumber(e.target.value)}
           placeholder="FR 2026/001"
         />
-      </div>
+      </FormField>
 
       <div className={styles.rcRow}>
-        <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="inv-issue">
-            {t("economy:invoiceTool.meta.issueDateLabel")}
-          </label>
+        <FormField label={t("economy:invoiceTool.meta.issueDateLabel")}>
           <input
-            id="inv-issue"
-            className={styles.rcInput}
             type="date"
             value={issueDate}
             onChange={(e) => setIssueDate(e.target.value)}
           />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="inv-due">
-            {t("economy:invoiceTool.meta.dueDateLabel")}
-          </label>
+        </FormField>
+        <FormField label={t("economy:invoiceTool.meta.dueDateLabel")}>
           <input
-            id="inv-due"
-            className={styles.rcInput}
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-        </div>
+        </FormField>
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="inv-iva">
-          {t("economy:invoiceTool.meta.ivaRateLabel")}
-        </label>
+      <FormField label={t("economy:invoiceTool.meta.ivaRateLabel")}>
         <select
-          id="inv-iva"
-          className={styles.rcSelect}
           value={ivaRate}
           disabled={exempt53}
           onChange={(e) => setIvaRate(Number(e.target.value))}
@@ -252,7 +193,7 @@ export function InvoiceMetaFields({
             </option>
           ))}
         </select>
-      </div>
+      </FormField>
 
       <label className={styles.check} htmlFor="inv-exempt">
         <input

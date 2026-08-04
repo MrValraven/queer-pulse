@@ -26,7 +26,7 @@ export const system: Catalog = {
   "notFound.sub":
     "A página que procuras não existe, mudou de sítio, ou exige que tenhas sessão iniciada. Acontece. Aqui tens alguns sítios para onde ir.",
   "notFound.homeCta": "Ir para a página inicial",
-  "notFound.backCta": "← Voltar",
+  "notFound.backCta": "Voltar",
   "notFound.linksTitle": "Ou experimenta uma destas opções",
   "notFound.links.magazine.label": "Revista",
   "notFound.links.magazine.sub": "Edição de junho de 2026",
@@ -76,7 +76,7 @@ export const system: Catalog = {
   "accountBanned.actions.appealCta": "Apresentar o recurso",
   "accountBanned.actions.eraseCta": "Pedir a eliminação total dos dados",
   "accountBanned.foot":
-    "Se achas que isto resultou de denúncias falsas coordenadas, inclui no recurso os nomes que suspeitas — investigamos isto com cuidado. <a>Relê o Código de Conduta →</a>",
+    "Se achas que isto resultou de denúncias falsas coordenadas, inclui no recurso os nomes que suspeitas — investigamos isto com cuidado. <a>Relê o Código de Conduta</a>",
 
   // ── AccountLockedPage.tsx ─────────────────────────────────────────────────
   "accountLocked.kicker": "Conta bloqueada · temporário",
@@ -128,7 +128,7 @@ export const system: Catalog = {
   "accountSuspended.actions.messageModCta":
     "Enviar mensagem à equipa de moderação",
   "accountSuspended.foot":
-    "{percent}% dos recursos são revertidos. Publicamos este número todos os anos. <a>Ver as estatísticas de moderação de 2025 →</a>",
+    "{percent}% dos recursos são revertidos. Publicamos este número todos os anos. <a>Ver as estatísticas de moderação de 2025</a>",
 
   // ── GeoRestrictedPage.tsx ─────────────────────────────────────────────────
   "geoRestricted.eyebrow": "Região restrita",
@@ -143,17 +143,17 @@ export const system: Catalog = {
   "geoRestricted.can.readArticles.label":
     "Ler todos os artigos públicos e a revista",
   "geoRestricted.can.readArticles.detail":
-    "O arquivo editorial completo está aberto · <a>explorar →</a>",
+    "O arquivo editorial completo está aberto · <a>explorar</a>",
   "geoRestricted.can.resources.label":
     "Explorar recursos internacionais verificados",
   "geoRestricted.can.resources.detail":
-    "Linhas de apoio, apoio jurídico queer-friendly e contactos de emergência em 14 outros países · <a>biblioteca de recursos →</a>",
+    "Linhas de apoio, apoio jurídico queer-friendly e contactos de emergência em 14 outros países · <a>biblioteca de recursos</a>",
   "geoRestricted.can.askUs.label": "Pede-nos para abrir o acesso aqui",
   "geoRestricted.can.askUs.detail":
-    "Diz-nos onde estás (não precisas do teu nome) e o que ajudaria · <a>escreve à equipa →</a>",
+    "Diz-nos onde estás (não precisas do teu nome) e o que ajudaria · <a>escreve à equipa</a>",
   "geoRestricted.detect":
     "Detetado: <b>Portugal · Lisboa</b> · esta é uma demonstração da vista de região restrita.",
-  "geoRestricted.goHome": "Ir para o início →",
+  "geoRestricted.goHome": "Ir para o início",
 
   // ── InterestsEditorModal.tsx + interestsEditor.data.ts ───────────────────
   "interestsEditor.closeAria": "Fechar",
@@ -272,7 +272,7 @@ export const system: Catalog = {
   "maintenance.affected.mobile": "Aplicação móvel · mesma implementação",
   "maintenance.affected.email":
     "Notificações por email · em fila, enviadas depois",
-  "maintenance.actions.statusCta": "Estado em direto →",
+  "maintenance.actions.statusCta": "Estado em direto",
   "maintenance.meta.line1":
     "Acompanha em <a>status.queerpulse.app</a> · publicamos sempre uma retrospetiva pública.",
   "maintenance.meta.line2":
@@ -316,7 +316,7 @@ export const system: Catalog = {
     "Convite enviado · ativa-se no prazo de 14 dias",
   "pendingReview.timeline.step4.desc":
     "Vais receber uma ligação de utilização única para ativar a tua conta",
-  "pendingReview.actions.magazineCta": "Ler a revista →",
+  "pendingReview.actions.magazineCta": "Ler a revista",
   "pendingReview.actions.vouchCta": "Pedir um aval a alguém da comunidade",
   "pendingReview.actions.updateInterestsCta": "Atualizar os meus interesses",
   "pendingReview.foot.knowMember":

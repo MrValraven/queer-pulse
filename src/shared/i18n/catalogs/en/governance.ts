@@ -187,7 +187,7 @@ export const governance: Catalog = {
   "sections.raise.textareaPlaceholder":
     "Describe what happened, or what's wrong, in as much detail as you're comfortable with…",
   "sections.raise.emailPlaceholder": "Your email (so we can update you)",
-  "sections.raise.submitCta": "Submit →",
+  "sections.raise.submitCta": "Submit",
   "sections.raise.submittedToast":
     "Submitted — we'll be in touch within 48 hours",
   // Live mode: there's no backend to receive a concern yet, so we don't claim

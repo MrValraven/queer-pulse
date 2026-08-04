@@ -11,7 +11,7 @@ export const communities: Community[] = [
     description:
       "Monthly casual meetups across the city. No agenda, no networking pressure — just queer people being in the same room.",
     count: "340 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "rainbow-arts",
@@ -22,7 +22,7 @@ export const communities: Community[] = [
     description:
       "An open studio collective for queer visual artists and makers. Monthly crits, shared resources, and group shows.",
     count: "128 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "trans-mutual-aid",
@@ -33,7 +33,7 @@ export const communities: Community[] = [
     description:
       "Peer support, resource sharing, and practical help for trans people in Lisbon. Run by and for the community.",
     count: "89 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "queer-runners",
@@ -44,7 +44,7 @@ export const communities: Community[] = [
     description:
       "Weekly runs along the Tejo and through the city's parks. All paces welcome — inclusive, social, no performance pressure.",
     count: "214 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "queer-parents",
@@ -55,7 +55,7 @@ export const communities: Community[] = [
     description:
       "For LGBTQ+ parents, co-parents, and people navigating parenthood. Often overlooked in queer spaces — not here.",
     count: "62 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "coming-out",
@@ -66,7 +66,7 @@ export const communities: Community[] = [
     description:
       "A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. Additional privacy controls apply.",
     count: "Members only",
-    joinLabel: "Enter →",
+    joinLabel: "Enter",
     dashed: true,
     privateBadge: true,
   },
@@ -79,7 +79,7 @@ export const communities: Community[] = [
     description:
       "Healthcare navigation, legal guides, peer support, and community — a dedicated space, not an afterthought in a broader network.",
     count: "147 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "queer-elders",
@@ -90,7 +90,7 @@ export const communities: Community[] = [
     description:
       "For LGBTQ+ members 50 and over. Enormous lived wisdom, long memories, and a community that sees and genuinely honours you.",
     count: "38 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "queer-youth",
@@ -101,7 +101,7 @@ export const communities: Community[] = [
     description:
       "Career starting points, city navigation, and peer support for members 18–25 — the community we all needed and mostly didn't have at that age.",
     count: "93 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "queer-poc",
@@ -112,7 +112,7 @@ export const communities: Community[] = [
     description:
       "An intersectional space for queer people of colour in Lisbon. Race and queerness aren't separate conversations — not here.",
     count: "76 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
   {
     slug: "disabled-queers",
@@ -123,6 +123,6 @@ export const communities: Community[] = [
     description:
       "Disability, chronic illness, and queerness intersect in ways most platforms ignore. Both identities belong here — fully, not partially.",
     count: "44 members",
-    joinLabel: "Join →",
+    joinLabel: "Join",
   },
 ];

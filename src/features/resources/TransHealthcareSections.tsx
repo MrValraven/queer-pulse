@@ -1,33 +1,38 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CONTACTS, type Path } from "./transHealthcare.data";
+import { ResourceHero } from "./ResourceHero";
 import styles from "./TransHealthcarePage.module.css";
 
 export function TransHealthcareHero() {
   const { t } = useTranslation();
   return (
-    <header className={styles.hero}>
-      <div className="wrap">
-        <div className={styles.eye}>
-          {t("resources:transHealthcare.hero.eyebrow")}
-        </div>
-        <h1 className={styles.title}>
+    <ResourceHero
+      eyebrowVariant="label"
+      eyebrowColor="var(--jade)"
+      eyebrow={t("resources:transHealthcare.hero.eyebrow")}
+      titleWeight="light"
+      title={
+        <>
           {t("resources:transHealthcare.hero.titleLine1")}
           <br />
           <Translation
             i18nKey="resources:transHealthcare.hero.titleLine2"
             components={{ em: <em /> }}
           />
-        </h1>
-        <p className={styles.sub}>{t("resources:transHealthcare.hero.sub")}</p>
+        </>
+      }
+      lead={t("resources:transHealthcare.hero.sub")}
+      extras={
         <p className={styles.disclaimer}>
           {t("resources:transHealthcare.hero.disclaimer")}
         </p>
-      </div>
-    </header>
+      }
+    />
   );
 }
 
@@ -96,7 +101,8 @@ export function TransHealthcareSidebar() {
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.solidarity} className={styles.sbcLink}>
-            {t("resources:transHealthcare.sidebar.solidarityCta")}
+            {t("resources:transHealthcare.sidebar.solidarityCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
           <div className={styles.sbcRole}>
             {t("resources:transHealthcare.sidebar.solidarityRole")}
@@ -104,7 +110,8 @@ export function TransHealthcareSidebar() {
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.legal} className={styles.sbcLink}>
-            {t("resources:transHealthcare.sidebar.legalCta")}
+            {t("resources:transHealthcare.sidebar.legalCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
           <div className={styles.sbcRole}>
             {t("resources:transHealthcare.sidebar.legalRole")}
@@ -112,7 +119,8 @@ export function TransHealthcareSidebar() {
         </div>
         <div className={styles.sbcItem}>
           <Link to={routes.mentalHealth} className={styles.sbcLink}>
-            {t("resources:transHealthcare.sidebar.mentalHealthCta")}
+            {t("resources:transHealthcare.sidebar.mentalHealthCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
           <div className={styles.sbcRole}>
             {t("resources:transHealthcare.sidebar.mentalHealthRole")}

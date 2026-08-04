@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -13,24 +12,6 @@ const HOST = linkToPath("QueerPulse Host.html");
 export function MyEventsHeader() {
   const { t } = useTranslation();
   const { openSettings, notifOpen, setNotifOpen, unreadCount } = useMyEvents();
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!notifOpen) return;
-    function onDown(e: PointerEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node))
-        setNotifOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setNotifOpen(false);
-    }
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [notifOpen, setNotifOpen]);
 
   return (
     <div className={sx("ev-head")}>
@@ -46,7 +27,7 @@ export function MyEventsHeader() {
           </h1>
           <p className={sx("ev-sub")}>{t("myevents:page.sub")}</p>
         </div>
-        <div className={sx("ev-head-actions")} ref={ref}>
+        <div className={sx("ev-head-actions")}>
           <button
             type="button"
             className={sx("gear-btn")}

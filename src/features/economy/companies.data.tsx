@@ -234,7 +234,7 @@ const PROFILES: CompanyProfile[] = [
       { initials: "RV" },
     ],
     teamCount: 7,
-    membersLabel: "View all 7 members →",
+    membersLabel: "View all 7 members",
     hiringContact: {
       name: "Inês Mateus",
       role: "Founder & design director — handles all hiring personally.",
@@ -348,7 +348,7 @@ const PROFILES: CompanyProfile[] = [
       { initials: "LG", tone: "jade" },
     ],
     teamCount: 5,
-    membersLabel: "View all 5 members →",
+    membersLabel: "View all 5 members",
     hiringContact: {
       name: "Programmes team",
       role: "Applications are read by the programmes team, not a recruiter.",
@@ -458,7 +458,7 @@ const PROFILES: CompanyProfile[] = [
       { initials: "VN" },
     ],
     teamCount: 4,
-    membersLabel: "View all 4 members →",
+    membersLabel: "View all 4 members",
     hiringContact: {
       name: "The Opus Diversus team",
       role: "We read every application ourselves and reply to all of them.",
@@ -557,7 +557,7 @@ const PROFILES: CompanyProfile[] = [
       { initials: "GA", tone: "plum" },
     ],
     teamCount: 3,
-    membersLabel: "View all 3 members →",
+    membersLabel: "View all 3 members",
     hiringContact: {
       name: "The founders",
       role: "Tell us about a book that mattered to you — that's what we read first.",
@@ -673,7 +673,7 @@ const PROFILES: CompanyProfile[] = [
       { initials: "PW", tone: "plum" },
     ],
     teamCount: 6,
-    membersLabel: "View all 6 members →",
+    membersLabel: "View all 6 members",
     hiringContact: {
       name: "The QueerPulse team",
       role: "First review is by the team you'd join, never a recruiter.",

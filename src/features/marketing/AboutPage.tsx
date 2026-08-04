@@ -14,6 +14,7 @@ import {
   WHO_PULL_KEY,
   WHY_PARAGRAPH_KEYS,
 } from "./about.data";
+import { MarketingSection } from "./MarketingSection";
 import m from "./marketing.module.css";
 import s from "./AboutPage.module.css";
 
@@ -44,147 +45,133 @@ export function AboutPage() {
         sub={t("marketing:about.hero.sub")}
       />
 
-      <section className={m.section}>
-        <div className="wrap">
-          <Reveal as="div" className={m.sectionEyebrow}>
-            {t("marketing:about.why.eyebrow")}
-          </Reveal>
-          <div className={s.originGrid}>
-            <div>
-              <Reveal as="h2" className={m.sectionTitle} delay={60}>
-                <Translation
-                  i18nKey="marketing:about.why.title"
-                  components={{ em: <em /> }}
-                />
-              </Reveal>
-              <Reveal as="div" className={s.body} delay={120}>
-                {WHY_PARAGRAPH_KEYS.map((key) => (
-                  <p key={key}>{t(key)}</p>
-                ))}
-              </Reveal>
-            </div>
-            <Reveal className={s.pull} delay={80}>
-              {t(PULL_QUOTE_KEY)}
+      <MarketingSection eyebrow={t("marketing:about.why.eyebrow")}>
+        <div className={s.originGrid}>
+          <div>
+            <Reveal as="h2" className={m.sectionTitle} delay={60}>
+              <Translation
+                i18nKey="marketing:about.why.title"
+                components={{ em: <em /> }}
+              />
+            </Reveal>
+            <Reveal as="div" className={s.body} delay={120}>
+              {WHY_PARAGRAPH_KEYS.map((key) => (
+                <p key={key}>{t(key)}</p>
+              ))}
             </Reveal>
           </div>
+          <Reveal className={s.pull} delay={80}>
+            {t(PULL_QUOTE_KEY)}
+          </Reveal>
         </div>
-      </section>
+      </MarketingSection>
 
-      <section className={m.section} style={{ paddingTop: 0 }}>
-        <div className="wrap">
-          <Reveal as="div" className={m.sectionEyebrow}>
-            {t("marketing:about.difference.eyebrow")}
-          </Reveal>
-          <Reveal as="h2" className={m.sectionTitle} delay={60}>
-            <Translation
-              i18nKey="marketing:about.difference.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <div className={s.contrastGrid}>
-            <Reveal className={s.contrastCol} delay={80}>
-              <div className={s.contrastLabel}>
-                <FiX className={s.contrastIconThem} aria-hidden />
-                {t("marketing:about.contrast.them.label")}
-              </div>
-              <ul className={s.contrastList}>
-                {CONTRAST_THEM_KEYS.map((key) => (
-                  <li key={key} className={s.contrastItem}>
-                    <FiX className={s.contrastIconThem} aria-hidden />
-                    <span>{t(key)}</span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal className={s.contrastColOurs} delay={140}>
-              <div className={s.contrastLabelOurs}>
-                <FiCheck className={s.contrastIconUs} aria-hidden />
-                {t("marketing:about.contrast.us.label")}
-              </div>
-              <ul className={s.contrastList}>
-                {CONTRAST_US_KEYS.map((key) => (
-                  <li key={key} className={s.contrastItemOurs}>
-                    <FiCheck className={s.contrastIconUs} aria-hidden />
-                    <span>{t(key)}</span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      <section className={m.section} style={{ paddingTop: 0 }}>
-        <div className="wrap">
-          <Reveal as="div" className={m.sectionEyebrow}>
-            {t("marketing:about.beliefs.eyebrow")}
-          </Reveal>
-          <Reveal as="h2" className={m.sectionTitle} delay={60}>
-            <Translation
-              i18nKey="marketing:about.beliefs.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <div className={s.valuesGrid}>
-            {VALUES.map((v, i) => (
-              <Reveal
-                key={v.titleKey}
-                className={s.valCard}
-                delay={Math.min(i, 8) * 60}
-              >
-                <div className={s.valTitle}>{t(v.titleKey)}</div>
-                <div className={s.valText}>{t(v.bodyKey)}</div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={m.section} style={{ paddingTop: 0 }}>
-        <div className="wrap">
-          <Reveal as="div" className={m.sectionEyebrow}>
-            {t("marketing:about.who.eyebrow")}
-          </Reveal>
-          <div className={s.originGrid}>
-            <div>
-              <Reveal as="h2" className={m.sectionTitle} delay={60}>
-                <Translation
-                  i18nKey="marketing:about.who.title"
-                  components={{ em: <em /> }}
-                />
-              </Reveal>
-              <Reveal as="div" className={s.body} delay={120}>
-                {WHO_PARAGRAPH_KEYS.map((key) => (
-                  <p key={key}>{t(key)}</p>
-                ))}
-              </Reveal>
+      <MarketingSection
+        flush
+        eyebrow={t("marketing:about.difference.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:about.difference.title"
+            components={{ em: <em /> }}
+          />
+        }
+      >
+        <div className={s.contrastGrid}>
+          <Reveal className={s.contrastCol} delay={80}>
+            <div className={s.contrastLabel}>
+              <FiX className={s.contrastIconThem} aria-hidden />
+              {t("marketing:about.contrast.them.label")}
             </div>
-            <Reveal className={s.pull} delay={80}>
-              {t(WHO_PULL_KEY)}
+            <ul className={s.contrastList}>
+              {CONTRAST_THEM_KEYS.map((key) => (
+                <li key={key} className={s.contrastItem}>
+                  <FiX className={s.contrastIconThem} aria-hidden />
+                  <span>{t(key)}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal className={s.contrastColOurs} delay={140}>
+            <div className={s.contrastLabelOurs}>
+              <FiCheck className={s.contrastIconUs} aria-hidden />
+              {t("marketing:about.contrast.us.label")}
+            </div>
+            <ul className={s.contrastList}>
+              {CONTRAST_US_KEYS.map((key) => (
+                <li key={key} className={s.contrastItemOurs}>
+                  <FiCheck className={s.contrastIconUs} aria-hidden />
+                  <span>{t(key)}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </MarketingSection>
+
+      <MarketingSection
+        flush
+        eyebrow={t("marketing:about.beliefs.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:about.beliefs.title"
+            components={{ em: <em /> }}
+          />
+        }
+      >
+        <div className={s.valuesGrid}>
+          {VALUES.map((value, index) => (
+            <Reveal
+              key={value.titleKey}
+              className={s.valCard}
+              delay={Math.min(index, 8) * 60}
+            >
+              <div className={s.valTitle}>{t(value.titleKey)}</div>
+              <div className={s.valText}>{t(value.bodyKey)}</div>
+            </Reveal>
+          ))}
+        </div>
+      </MarketingSection>
+
+      <MarketingSection flush eyebrow={t("marketing:about.who.eyebrow")}>
+        <div className={s.originGrid}>
+          <div>
+            <Reveal as="h2" className={m.sectionTitle} delay={60}>
+              <Translation
+                i18nKey="marketing:about.who.title"
+                components={{ em: <em /> }}
+              />
+            </Reveal>
+            <Reveal as="div" className={s.body} delay={120}>
+              {WHO_PARAGRAPH_KEYS.map((key) => (
+                <p key={key}>{t(key)}</p>
+              ))}
             </Reveal>
           </div>
-
-          <Reveal className={s.contactStrip} delay={60}>
-            <div className={s.csText}>
-              <h3>
-                <Translation
-                  i18nKey="marketing:about.contactStrip.title"
-                  components={{ em: <em /> }}
-                />
-              </h3>
-              <p>{t("marketing:about.contactStrip.body")}</p>
-            </div>
-            <div className={s.csActions}>
-              <Button to={routes.contact}>
-                {t("marketing:about.contactStrip.contactCta")}
-              </Button>
-              <Button variant="ghost" to={routes.governance}>
-                {t("marketing:about.contactStrip.governanceCta")}
-              </Button>
-            </div>
+          <Reveal className={s.pull} delay={80}>
+            {t(WHO_PULL_KEY)}
           </Reveal>
         </div>
-      </section>
+
+        <Reveal className={s.contactStrip} delay={60}>
+          <div className={s.csText}>
+            <h3>
+              <Translation
+                i18nKey="marketing:about.contactStrip.title"
+                components={{ em: <em /> }}
+              />
+            </h3>
+            <p>{t("marketing:about.contactStrip.body")}</p>
+          </div>
+          <div className={s.csActions}>
+            <Button to={routes.contact}>
+              {t("marketing:about.contactStrip.contactCta")}
+            </Button>
+            <Button variant="ghost" to={routes.governance}>
+              {t("marketing:about.contactStrip.governanceCta")}
+            </Button>
+          </div>
+        </Reveal>
+      </MarketingSection>
 
       <Outro
         title={

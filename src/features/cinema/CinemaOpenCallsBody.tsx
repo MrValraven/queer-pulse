@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -199,7 +200,8 @@ export function CinemaOpenCallsBody() {
               />
             </h2>
             <Link to={routes.cinemaBrowse} className={styles.allLink}>
-              {t("cinema:openCalls.body.allFundedCta")}
+              {t("cinema:openCalls.body.allFundedCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           </div>
           <div className={styles.pastGrid}>

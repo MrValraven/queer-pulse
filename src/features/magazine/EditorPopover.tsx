@@ -20,14 +20,9 @@ import {
   type Editor,
   type Stage,
 } from "./editorDashboard.data";
+import { cx } from "../../shared/lib/cx";
+import { editorDot } from "./editorStatus";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
-
-function editorDot(ed: Editor): string | undefined {
-  return ed === "Marta" ? styles.edMarta : styles.edSara;
-}
 
 interface TriggerCtx {
   open: boolean;

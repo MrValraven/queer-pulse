@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -99,7 +100,7 @@ export function StudioOpenCallCard({ call: c }: Props) {
             className={`${s.bt} ${s.btP}`}
             onClick={() => setOpen((v) => !v)}
           >
-            {t("studio:calls.card.applyCta")}
+            {t("studio:calls.card.applyCta")} <FiArrowRight aria-hidden />
           </button>
         </div>
       </div>

@@ -530,6 +530,39 @@ export const MENTEE_AREAS: MatchArea[] = [
     labelKey: "economy:mentorship.matchArea.legalRightsIssues",
   },
 ];
+/** A single control in a match-flow step: a text/email input, a select, or a
+ *  textarea. The controls stay placeholder-labelled (as the prototype's form
+ *  is), so `placeholderKey` supplies both the placeholder and the aria-label. */
+export type MatchFieldKind = "text" | "email" | "select" | "textarea";
+
+export interface MatchField {
+  kind: MatchFieldKind;
+  /** i18n key used for both the placeholder and the accessible name. */
+  placeholderKey: string;
+  /** Option label keys for a `select` (the placeholder is the empty option). */
+  optionKeys?: string[];
+  rows?: number;
+}
+
+export interface MatchStep {
+  eyebrowKey: string;
+  titleKey: string;
+  /** Sub-copy shown before the step content. */
+  leadKey?: string;
+  /** Sub-copy shown after the step content. */
+  trailingKey?: string;
+  /** Multi-select area chips for this step. */
+  areas?: MatchArea[];
+  /** Text/select/textarea controls for this step. */
+  fields?: MatchField[];
+}
+
+export interface MatchFlow {
+  steps: MatchStep[];
+  /** i18n key for the toast fired once the flow is submitted. */
+  toastKey: string;
+}
+
 export const MENTOR_AREAS: MatchArea[] = [
   {
     id: "career-direction",
@@ -564,3 +597,103 @@ export const MENTOR_AREAS: MatchArea[] = [
     labelKey: "economy:mentorship.matchArea.legalRightsNavigation",
   },
 ];
+
+/** The two match ladders (mentee: 3 steps, mentor: 2), described as data so a
+ *  single renderer drives both instead of two hand-written ladders. */
+export const MATCH_FLOWS: Record<Mode, MatchFlow> = {
+  mentee: {
+    toastKey: "economy:mentorship.mentee.toastSubmitted",
+    steps: [
+      {
+        eyebrowKey: "economy:mentorship.mentee.step1.eyebrow",
+        titleKey: "economy:mentorship.mentee.step1.title",
+        leadKey: "economy:mentorship.mentee.step1.sub",
+        areas: MENTEE_AREAS,
+      },
+      {
+        eyebrowKey: "economy:mentorship.mentee.step2.eyebrow",
+        titleKey: "economy:mentorship.mentee.step2.title",
+        fields: [
+          {
+            kind: "text",
+            placeholderKey: "economy:mentorship.mentee.step2.namePlaceholder",
+          },
+          {
+            kind: "text",
+            placeholderKey: "economy:mentorship.mentee.step2.rolePlaceholder",
+          },
+          {
+            kind: "select",
+            placeholderKey:
+              "economy:mentorship.mentee.step2.frequencyPlaceholder",
+            optionKeys: [
+              "economy:mentorship.mentee.step2.frequency.monthly",
+              "economy:mentorship.mentee.step2.frequency.twiceMonthly",
+              "economy:mentorship.mentee.step2.frequency.asNeeded",
+            ],
+          },
+          {
+            kind: "textarea",
+            placeholderKey: "economy:mentorship.mentee.step2.notePlaceholder",
+            rows: 3,
+          },
+        ],
+      },
+      {
+        eyebrowKey: "economy:mentorship.mentee.step3.eyebrow",
+        titleKey: "economy:mentorship.mentee.step3.title",
+        trailingKey: "economy:mentorship.mentee.step3.sub",
+        fields: [
+          {
+            kind: "email",
+            placeholderKey: "economy:mentorship.mentee.step3.emailPlaceholder",
+          },
+        ],
+      },
+    ],
+  },
+  mentor: {
+    toastKey: "economy:mentorship.mentor.toastSubmitted",
+    steps: [
+      {
+        eyebrowKey: "economy:mentorship.mentor.step1.eyebrow",
+        titleKey: "economy:mentorship.mentor.step1.title",
+        leadKey: "economy:mentorship.mentor.step1.sub",
+        areas: MENTOR_AREAS,
+      },
+      {
+        eyebrowKey: "economy:mentorship.mentor.step2.eyebrow",
+        titleKey: "economy:mentorship.mentor.step2.title",
+        fields: [
+          {
+            kind: "text",
+            placeholderKey: "economy:mentorship.mentor.step2.namePlaceholder",
+          },
+          {
+            kind: "select",
+            placeholderKey:
+              "economy:mentorship.mentor.step2.menteesPlaceholder",
+            optionKeys: [
+              "economy:mentorship.mentor.step2.mentees.one",
+              "economy:mentorship.mentor.step2.mentees.two",
+              "economy:mentorship.mentor.step2.mentees.three",
+            ],
+          },
+          {
+            kind: "select",
+            placeholderKey: "economy:mentorship.mentor.step2.formatPlaceholder",
+            optionKeys: [
+              "economy:mentorship.mentor.step2.format.inPersonLisbon",
+              "economy:mentorship.mentor.step2.format.video",
+              "economy:mentorship.mentor.step2.format.either",
+            ],
+          },
+          {
+            kind: "email",
+            placeholderKey: "economy:mentorship.mentor.step2.emailPlaceholder",
+          },
+        ],
+      },
+    ],
+  },
+};

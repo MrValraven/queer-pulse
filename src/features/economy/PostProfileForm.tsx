@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -46,7 +47,8 @@ export function PostProfileForm({
           disabled={!form.canSubmit || submitting}
           onClick={handleSubmit}
         >
-          {t("economy:postProfileForm.submitCta")}
+          {t("economy:postProfileForm.submitCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <Button type="button" variant="ghost" onClick={onClose}>
           {t("economy:housingModal.cancel")}

@@ -1,4 +1,4 @@
-import { sx } from "./myEvents.styles";
+import { OfflineBanner as SharedOfflineBanner } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
 
@@ -7,8 +7,6 @@ export function OfflineBanner() {
   const { t } = useTranslation();
   const { offline } = useMyEvents();
   return (
-    <div className={`${sx("offline-banner")} ${offline ? sx("show") : ""}`}>
-      {t("myevents:offline.banner")}
-    </div>
+    <SharedOfflineBanner offline={offline} message={t("myevents:offline.banner")} />
   );
 }

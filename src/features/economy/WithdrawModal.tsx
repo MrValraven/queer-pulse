@@ -1,4 +1,4 @@
-import { FiAlertTriangle } from "react-icons/fi";
+import { FiAlertTriangle, FiArrowLeft } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -84,6 +84,7 @@ export function WithdrawModal({
               onClick={onClose}
               disabled={sending}
             >
+              <FiArrowLeft aria-hidden />{" "}
               {t("economy:withdraw.keepIt")}
             </button>
             <Button size="lg" type="submit" disabled={sending}>

@@ -1,5 +1,11 @@
 import { FiActivity } from "react-icons/fi";
-import { FadeIn, Button, SkeletonLine } from "../../shared/components/ui";
+import {
+  FadeIn,
+  Button,
+  SkeletonLine,
+  StatGrid,
+  StatTile,
+} from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks/useCountUp";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -76,13 +82,13 @@ export function AdminGovernanceFinances() {
 
   return (
     <>
-      <div className={styles.statGrid}>
-        {stats.map((s, i) => (
-          <FadeIn key={s.labelKey} delay={i * 70}>
-            <FinanceStatCard stat={s} />
+      <StatGrid columns={4} className={styles.statGrid}>
+        {stats.map((stat, index) => (
+          <FadeIn key={stat.labelKey} delay={index * 70}>
+            <FinanceStatCard stat={stat} />
           </FadeIn>
         ))}
-      </div>
+      </StatGrid>
 
       <FadeIn delay={120}>
         <AdminGovernanceChart history={history} />
@@ -132,25 +138,29 @@ function FinanceStatCard({ stat }: { stat: FinanceStat }) {
   const fmt = useFormat();
   const { labelKey, value, prefix, suffix, comma, jade, footKey, footValues } =
     stat;
-  const n = useCountUp(value, { durationMs: 1200 });
-  const display = comma ? fmt.number(n) : String(n);
+  const countValue = useCountUp(value, { durationMs: 1200 });
+  const display = comma ? fmt.number(countValue) : String(countValue);
 
   return (
-    <div className={styles.statCard}>
-      <span className={styles.statLabel}>{t(`admin:${labelKey}`)}</span>
-      <span
-        className={[styles.statNum, jade && styles.statNumJade]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {prefix}
-        {display}
-        {suffix && <small>{suffix}</small>}
-      </span>
-      <span className={styles.statFoot}>
-        {t(`admin:${footKey}`, footValues)}
-      </span>
-    </div>
+    <StatTile
+      label={<span className={styles.statLabel}>{t(`admin:${labelKey}`)}</span>}
+      value={
+        <span
+          className={[styles.statNum, jade && styles.statNumJade]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {prefix}
+          {display}
+          {suffix && <small>{suffix}</small>}
+        </span>
+      }
+      hint={
+        <span className={styles.statFoot}>
+          {t(`admin:${footKey}`, footValues)}
+        </span>
+      }
+    />
   );
 }
 

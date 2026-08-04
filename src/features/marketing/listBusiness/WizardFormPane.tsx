@@ -83,6 +83,7 @@ export function WizardFormPane({
               }
               onNext={onNext}
               nextLabel={nextLabel}
+              nextArrow={!(step === 5 && isEdit)}
               missing={form.missing[step] ?? []}
             />
           </div>

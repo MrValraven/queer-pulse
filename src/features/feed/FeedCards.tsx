@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  FiArrowRight,
   FiBookmark,
   FiCheck,
   FiHeart,
@@ -120,7 +121,9 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
             </span>
           </div>
           <div className={styles.nmMeta}>{meta}</div>
-          <div className={styles.nmBio}>{bio}</div>
+          {/* Live members may have no summary; skip the bio row entirely rather
+              than leave its margin as dead space in the compact grid card. */}
+          {bio && <div className={styles.nmBio}>{bio}</div>}
           {!item && (
             <div className={styles.nmChips}>
               <span className={styles.nmChip}>Film</span>
@@ -140,7 +143,7 @@ export function NewMemberCard({ item }: { item?: FeedItem } = {}) {
                 : t("feed:action.connect")}
             </button>
             <Link to={profileLink} className={styles.linkBtn}>
-              {t("feed:action.viewProfile")}
+              {t("feed:action.viewProfile")} <FiArrowRight aria-hidden />
             </Link>
           </div>
         </div>
@@ -392,7 +395,7 @@ export function SavedArticleCard() {
         QueerPulse Magazine · Issue 17 · 6 min read
       </div>
       <Link className={styles.savedLink} to={routes.article}>
-        {t("feed:action.continueReading")}
+        {t("feed:action.continueReading")} <FiArrowRight aria-hidden />
       </Link>
     </article>
   );
@@ -411,7 +414,7 @@ export function RecapCard() {
         className={styles.savedLink}
         to={gatheringRecapPath(DEMO_GATHERING_SLUGS.recap)}
       >
-        {t("feed:action.readRecap")}
+        {t("feed:action.readRecap")} <FiArrowRight aria-hidden />
       </Link>
     </article>
   );

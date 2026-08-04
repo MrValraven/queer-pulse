@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -104,7 +105,8 @@ export function ReviewStep({ hold }: Props) {
           onClick={() => tryGoStep2()}
           style={{ padding: "13px 28px", fontSize: 15 }}
         >
-          {t("gatherings:checkout.review.continueCta")} →
+          {t("gatherings:checkout.review.continueCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </>

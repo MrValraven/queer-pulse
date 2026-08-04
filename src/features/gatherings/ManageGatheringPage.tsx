@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
@@ -124,7 +125,8 @@ export function ManageGatheringPage() {
                   className={styles.actionBtn}
                   to={gatheringDashboardPath(MANAGE_SLUG)}
                 >
-                  {t("gatherings:manage.actions.dayOfDashboard")} →
+                  {t("gatherings:manage.actions.dayOfDashboard")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Button>
               </div>
             </div>

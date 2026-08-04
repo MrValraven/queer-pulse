@@ -1,4 +1,11 @@
-import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
+import { FiArrowRight } from "react-icons/fi";
+import {
+  Button,
+  Reveal,
+  SkeletonLine,
+  StatGrid,
+  StatTile,
+} from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -171,8 +178,10 @@ export function FinancesSection() {
   const fmt = useFormat();
   const { stats, income, expense, eventNotes, reserve, partners, loading } =
     useGovernanceFinances();
-  const totalIncome = stats.find((s) => s.l === "Total income this quarter")?.n;
-  const totalExpense = stats.find((s) => s.l === "Total expenditure")?.n;
+  const totalIncome = stats.find(
+    (stat) => stat.l === "Total income this quarter",
+  )?.n;
+  const totalExpense = stats.find((stat) => stat.l === "Total expenditure")?.n;
 
   return (
     <Reveal as="section" className={styles.section} id="finances">
@@ -188,35 +197,31 @@ export function FinancesSection() {
       <div className={styles.prose}>
         <p>{t("governance:sections.finances.intro")}</p>
       </div>
-      <div
-        className={styles.statGrid}
-        style={{ gridTemplateColumns: "repeat(2,1fr)", marginTop: 24 }}
-      >
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className={styles.statCard} aria-hidden>
-                <SkeletonLine width="60%" height={26} />
-                <SkeletonLine
-                  width="80%"
-                  height={13}
-                  style={{ marginTop: 8 }}
+      <div style={{ marginTop: 24 }}>
+        <StatGrid columns={2}>
+          {loading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <StatTile
+                  key={index}
+                  value={<SkeletonLine width="60%" height={26} />}
+                  label={<SkeletonLine width="80%" height={13} />}
                 />
-              </div>
-            ))
-          : stats.map((s) => (
-              <div key={s.l} className={styles.statCard}>
-                <div className={styles.statN}>{s.n}</div>
-                <div className={styles.statL}>{s.l}</div>
-                <div
-                  className={[
-                    styles.statTrend,
-                    s.up ? styles.trendUp : styles.trendOk,
-                  ].join(" ")}
-                >
-                  {s.trend}
-                </div>
-              </div>
-            ))}
+              ))
+            : stats.map((stat) => (
+                <StatTile
+                  key={stat.l}
+                  value={stat.n}
+                  label={stat.l}
+                  hint={
+                    <span
+                      className={stat.up ? styles.trendUp : styles.trendOk}
+                    >
+                      {stat.trend}
+                    </span>
+                  }
+                />
+              ))}
+        </StatGrid>
       </div>
       <div className={styles.finCols}>
         <div>
@@ -402,7 +407,8 @@ export function RaiseSection() {
             aria-label={t("governance:sections.raise.emailPlaceholder")}
           />
           <Button type="submit">
-            {t("governance:sections.raise.submitCta")}
+            {t("governance:sections.raise.submitCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </form>
       </div>

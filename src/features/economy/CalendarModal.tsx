@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiDownload, FiCalendar } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiCalendar, FiDownload } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
@@ -105,6 +105,7 @@ export function CalendarModal({
               onClick={onClose}
               disabled={sending}
             >
+              <FiArrowLeft aria-hidden />{" "}
               {t("economy:calendar.close")}
             </button>
             <div className={styles.calBtns}>
@@ -153,7 +154,8 @@ export function CalendarModal({
                       style={{ marginRight: 6 }}
                       aria-hidden
                     />{" "}
-                    {t("economy:calendar.googleLabel")}
+                    {t("economy:calendar.googleLabel")}{" "}
+                    <FiArrowRight aria-hidden />
                   </>
                 )}
               </Button>

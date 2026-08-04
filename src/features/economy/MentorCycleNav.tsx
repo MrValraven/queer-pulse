@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Mentor } from "./mentorship.data";
 import styles from "./MentorDetailPage.module.css";
@@ -27,6 +28,7 @@ export function MentorCycleNav({
     >
       <Link to={`${base}/${previous.slug}`} className={styles.cycleBtn}>
         <span className={styles.cycleDir}>
+          <FiArrowLeft aria-hidden />{" "}
           {t("economy:mentorDetail.cyclePrevious")}
         </span>
         <span className={styles.cycleName}>{previous.name}</span>
@@ -39,7 +41,8 @@ export function MentorCycleNav({
         className={`${styles.cycleBtn} ${styles.next}`}
       >
         <span className={styles.cycleDir}>
-          {t("economy:mentorDetail.cycleNext")}
+          {t("economy:mentorDetail.cycleNext")}{" "}
+          <FiArrowRight aria-hidden />
         </span>
         <span className={styles.cycleName}>{next.name}</span>
       </Link>

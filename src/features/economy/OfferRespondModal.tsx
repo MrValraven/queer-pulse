@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -171,7 +171,10 @@ export function OfferRespondModal({
           {pending === "accept" ? (
             <Sending label={t("economy:offer.acceptingLabel")} />
           ) : (
-            t("economy:offer.acceptCta")
+            <>
+              {t("economy:offer.acceptCta")}{" "}
+              <FiArrowRight aria-hidden />
+            </>
           )}
         </Button>
       </div>

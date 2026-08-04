@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { FiClock } from "react-icons/fi";
+import { FiArrowRight, FiClock } from "react-icons/fi";
 import {
   EmptyState,
   FadeIn,
@@ -144,7 +144,8 @@ export function ChangelogPage() {
                               </div>
                               {entry.tag && (
                                 <Link className={styles.tag} to={entry.tag.to}>
-                                  {t(entry.tag.labelKey)}
+                                  {t(entry.tag.labelKey)}{" "}
+                                  <FiArrowRight aria-hidden />
                                 </Link>
                               )}
                             </FadeIn>

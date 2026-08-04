@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { FiChevronDown } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -233,8 +234,11 @@ export function SentInvitesList() {
         onClick={() => setOpen((wasOpen) => !wasOpen)}
       >
         <span>{t("auth:invite.sentList.label")}</span>
-        <span className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}>
-          ▾
+        <span
+          className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}
+          aria-hidden
+        >
+          <FiChevronDown />
         </span>
       </button>
       {open && (

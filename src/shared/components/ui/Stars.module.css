@@ -1,0 +1,9 @@
+/* Stars — read-only rating row. Coral fill via currentColor. Tokens only. */
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--accent);
+  line-height: 1;
+  flex: none;
+}

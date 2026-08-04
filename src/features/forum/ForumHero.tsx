@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -32,7 +33,7 @@ export function ForumHero({
             <p>
               {t("forum:hero.lead")}{" "}
               <Link to={routes.communities} className={styles.heroLink}>
-                {t("forum:hero.findCommunitiesCta")}
+                {t("forum:hero.findCommunitiesCta")} <FiArrowRight aria-hidden />
               </Link>
             </p>
           </div>

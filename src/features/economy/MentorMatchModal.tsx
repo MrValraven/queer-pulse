@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FiClock } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Button, Stepper } from "../../shared/components/ui";
+import { useScrollLock, useWizardForm } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type Mode } from "./mentorship.data";
-import {
-  MenteeSteps,
-  MentorSteps,
-  MentorMatchSuccess,
-} from "./MentorMatchSteps";
+import { MATCH_FLOWS, type Mode } from "./mentorship.data";
+import { MentorMatchStep, MentorMatchSuccess } from "./MentorMatchSteps";
 import styles from "./MentorshipPage.module.css";
 
 export function MentorMatchModal({
@@ -21,17 +18,20 @@ export function MentorMatchModal({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
-  const [step, setStep] = useState(1);
 
-  const total = mode === "mentee" ? 3 : 2;
-  const done = step > total;
-  const fill = done ? 100 : (step / total) * 100;
+  const flow = MATCH_FLOWS[mode];
+  const wizard = useWizardForm({ stepCount: flow.steps.length });
+  const stepLabel = t("economy:mentorship.match.stepOf", {
+    step: wizard.currentStepIndex + 1,
+    total: flow.steps.length,
+  });
 
   return (
     <div
@@ -76,27 +76,34 @@ export function MentorMatchModal({
               {t("economy:comingSoon.close")}
             </Button>
           </div>
+        ) : wizard.isDone ? (
+          <MentorMatchSuccess mode={mode} onClose={onClose} />
         ) : (
           <>
-            <div className={styles.mmBar}>
-              <div
-                className={styles.mmFill}
-                style={{ transform: `scaleX(${fill / 100})` }}
-              />
-            </div>
-            <div className={styles.mmLabel}>
-              {done
-                ? t("economy:mentorship.match.done")
-                : t("economy:mentorship.match.stepOf", { step, total })}
-            </div>
+            <Stepper
+              steps={flow.steps.map((step) => ({
+                key: step.eyebrowKey,
+                ariaLabel: t(step.eyebrowKey),
+              }))}
+              current={wizard.currentStepIndex}
+              size="sm"
+              marker="number"
+              ariaLabel={stepLabel}
+            />
+            <div className={styles.mmLabel}>{stepLabel}</div>
 
-            {done ? (
-              <MentorMatchSuccess mode={mode} onClose={onClose} />
-            ) : mode === "mentee" ? (
-              <MenteeSteps step={step} setStep={setStep} />
-            ) : (
-              <MentorSteps step={step} setStep={setStep} />
-            )}
+            <MentorMatchStep
+              mode={mode}
+              stepIndex={wizard.currentStepIndex}
+              isFirstStep={wizard.isFirstStep}
+              isLastStep={wizard.isLastStep}
+              isSending={wizard.isSending}
+              onBack={wizard.goToPreviousStep}
+              onContinue={wizard.goToNextStep}
+              onSubmit={() =>
+                wizard.submit(() => showToast(t(flow.toastKey), "success"))
+              }
+            />
           </>
         )}
       </div>

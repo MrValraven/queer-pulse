@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { PageShell } from "../../shared/components/layout";
+import { PageHero } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useConsent } from "../../app/providers/useConsent";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
-import { COOKIE_CATEGORIES } from "./cookies.data";
-import styles from "./CookiesPage.module.css";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
+import { LegalDoc } from "./LegalDoc";
+import { CookieCategoryCards } from "./CookieCategoryCards";
+import { CookieConsentSummary } from "./CookieConsentSummary";
 
 export function CookiesPage() {
   const { showToast } = useToast();
@@ -41,13 +37,16 @@ export function CookiesPage() {
 
   const toggleFor: Record<
     string,
-    { value: boolean; set: (v: boolean) => void }
+    { value: boolean; set: (value: boolean) => void }
   > = {
     analytics: { value: analytics, set: setAnalytics },
   };
 
   function save() {
-    setConsent({ analytics, monitoring: consent.monitoring }, "preference_center");
+    setConsent(
+      { analytics, monitoring: consent.monitoring },
+      "preference_center",
+    );
     showToast(t("marketing:cookies.toast.saved"), "success");
   }
   function acceptAll() {
@@ -62,7 +61,7 @@ export function CookiesPage() {
   }
 
   return (
-    <PageShell>
+    <>
       <PageMeta title={pageTitle} description={pageDescription} />
       <JsonLd
         schema={buildBreadcrumbSchema([
@@ -70,157 +69,45 @@ export function CookiesPage() {
           { name: pageTitle, path: routes.cookies },
         ])}
       />
-      <header className={styles.hero}>
-        <div className={styles.eyebrow}>{t("marketing:cookies.eyebrow")}</div>
-        <h1 className={styles.h1}>
-          <Translation
-            i18nKey="marketing:cookies.h1"
-            components={{ em: <em /> }}
-          />
-        </h1>
-        <p className={styles.sub}>{t("marketing:cookies.sub")}</p>
-      </header>
-
-      <div className={styles.body}>
-        <div className={styles.layout}>
-          <div className={styles.group}>
-            {COOKIE_CATEGORIES.map((cat) => {
-              const toggle = toggleFor[cat.id];
-              return (
-                <div key={cat.id} className={styles.card}>
-                  <div className={styles.cardHead}>
-                    <div>
-                      <div className={styles.cardTitle}>{t(cat.titleKey)}</div>
-                      {cat.required && (
-                        <div className={styles.cardReq}>
-                          {t("marketing:cookies.alwaysOn")}
-                        </div>
-                      )}
-                    </div>
-                    <label className={styles.toggle}>
-                      {/* The switch's only visible name sits in .cardTitle,
-                          which is not associated with the control — so the
-                          label carries it for assistive tech. */}
-                      <span className="visuallyHidden">{t(cat.titleKey)}</span>
-                      <input
-                        type="checkbox"
-                        checked={cat.required ? true : (toggle?.value ?? false)}
-                        disabled={cat.required}
-                        onChange={(e) => toggle?.set(e.target.checked)}
-                      />
-                      <span className={styles.toggleTrack} />
-                      <span className={styles.toggleThumb} />
-                    </label>
-                  </div>
-                  <p className={styles.cardBody}>{t(cat.bodyKey)}</p>
-                  <div className={styles.rowHead}>
-                    <span className={styles.colLabel}>
-                      {t("marketing:cookies.columns.name")}
-                    </span>
-                    <span className={styles.colLabel}>
-                      {t("marketing:cookies.columns.expires")}
-                    </span>
-                    <span className={styles.colLabel}>
-                      {t("marketing:cookies.columns.provider")}
-                    </span>
-                  </div>
-                  <div className={styles.list}>
-                    {cat.cookies.map((cookie) => (
-                      <div key={cookie.name} className={styles.row}>
-                        <span className={styles.ckName}>{cookie.name}</span>
-                        <span className={styles.ckExp}>
-                          {t(cookie.expiresKey)}
-                        </span>
-                        <span className={styles.ckType}>{cookie.provider}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-
-            <div className={styles.noAds}>
-              <div className={styles.noAdsTitle}>
-                {t("marketing:cookies.noAds.title")}
-              </div>
-              <p>{t("marketing:cookies.noAds.body")}</p>
-            </div>
-          </div>
-
-          <aside className={styles.sidebar}>
-            <div className={styles.summary}>
-              <h3>
-                <Translation
-                  i18nKey="marketing:cookies.summary.title"
-                  components={{ em: <em /> }}
-                />
-              </h3>
-              <div className={styles.sumRow}>
-                <span className={styles.sumName}>
-                  {t("marketing:cookies.summary.essential")}
-                </span>
-                <span className={`${styles.sumVal} ${styles.sumReq}`}>
-                  {t("marketing:cookies.alwaysOn")}
-                </span>
-              </div>
-              <div className={styles.sumRow}>
-                <span className={styles.sumName}>
-                  {t("marketing:cookies.summary.functional")}
-                </span>
-                <span className={`${styles.sumVal} ${styles.sumReq}`}>
-                  {t("marketing:cookies.alwaysOn")}
-                </span>
-              </div>
-              <div className={styles.sumRow}>
-                <span className={styles.sumName}>
-                  {t("marketing:cookies.summary.analytics")}
-                </span>
-                <span
-                  className={`${styles.sumVal} ${analytics ? styles.sumOn : styles.sumOff}`}
-                >
-                  {analytics
-                    ? t("marketing:cookies.summary.on")
-                    : t("marketing:cookies.summary.off")}
-                </span>
-              </div>
-              <div className={styles.actions}>
-                <Button variant="primary" onClick={save}>
-                  {t("marketing:cookies.actions.save")}
-                </Button>
-                <Button variant="ghost" onClick={acceptAll}>
-                  {t("marketing:cookies.actions.acceptAll")}
-                </Button>
-                <Button variant="ghost" onClick={essentialOnly}>
-                  {t("marketing:cookies.actions.essentialOnly")}
-                </Button>
-              </div>
-            </div>
-            <div className={styles.info}>
+      <LegalDoc
+        hero={
+          <PageHero
+            plum={false}
+            eyebrow={t("marketing:cookies.eyebrow")}
+            title={
               <Translation
-                i18nKey="marketing:cookies.info"
-                components={{
-                  settingsLink: <Link to={routes.settings} />,
-                  privacyLink: <Link to={routes.privacy} />,
-                }}
+                i18nKey="marketing:cookies.h1"
+                components={{ em: <em /> }}
               />
-            </div>
-          </aside>
-        </div>
-      </div>
-
-      <Outro
-        title={
-          <Translation
-            i18nKey="marketing:cookies.outro.title"
-            components={{ em: <em /> }}
+            }
+            sub={t("marketing:cookies.sub")}
           />
         }
-        sub={t("marketing:cookies.outro.sub")}
-      >
-        <Button variant="ghost-dark" size="lg" to={routes.privacy}>
-          {t("marketing:cookies.outro.cta")}
-        </Button>
-      </Outro>
-    </PageShell>
+        body={<CookieCategoryCards toggleFor={toggleFor} />}
+        aside={
+          <CookieConsentSummary
+            analytics={analytics}
+            onSave={save}
+            onAcceptAll={acceptAll}
+            onEssentialOnly={essentialOnly}
+          />
+        }
+        related={
+          <Outro
+            title={
+              <Translation
+                i18nKey="marketing:cookies.outro.title"
+                components={{ em: <em /> }}
+              />
+            }
+            sub={t("marketing:cookies.outro.sub")}
+          >
+            <Button variant="ghost-dark" size="lg" to={routes.privacy}>
+              {t("marketing:cookies.outro.cta")}
+            </Button>
+          </Outro>
+        }
+      />
+    </>
   );
 }

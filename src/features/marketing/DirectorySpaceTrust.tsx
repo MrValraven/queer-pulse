@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type DirectoryPlace } from "./directoryPlaces";
@@ -74,7 +75,8 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
       <p className={s.trustHowLine}>
         {t("marketing:directory.detail.trust.howLine")}{" "}
         <Link className={s.trustHowLink} to={routes.safeSpaces}>
-          {t("marketing:directory.detail.trust.howLink")}
+          {t("marketing:directory.detail.trust.howLink")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </p>
 

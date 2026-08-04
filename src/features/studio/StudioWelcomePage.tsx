@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -95,7 +96,8 @@ function StepFollow({
           />
         </span>
         <Button variant="primary" onClick={onNext}>
-          {t("studio:welcome.nextCta")} →
+          {t("studio:welcome.nextCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>
@@ -149,7 +151,8 @@ function StepTip({
           {t("studio:welcome.skipCta")}
         </button>
         <Button variant="primary" onClick={onNext}>
-          {t("studio:welcome.nextCta")} →
+          {t("studio:welcome.nextCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>
@@ -208,7 +211,8 @@ function StepPrivacy({
           {t("studio:welcome.skipCta")}
         </button>
         <Button variant="jade" onClick={onFinish}>
-          {t("studio:welcome.enterRoomCta")} →
+          {t("studio:welcome.enterRoomCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

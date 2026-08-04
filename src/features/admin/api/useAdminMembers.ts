@@ -1,10 +1,10 @@
 import {
   useInfiniteQuery,
-  useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -171,23 +171,25 @@ export function useAdminMember(member: AdminMember | null) {
 export function useUpdateMemberRole() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
+  return useDemoAwareMutation<
     AdminMemberRoleDTO,
     unknown,
     { memberId: string; slug: string; role: MemberRole; isSystem: boolean }
   >({
+    demoMode,
+    demoLatencyMs: 0,
     mutationKey: ["admin-members", "update-role"],
-    mutationFn: async ({ memberId, slug, role, isSystem }) => {
-      if (demoMode) {
-        return { id: memberId, slug, role, isSystem };
-      }
-      return patchAdminMemberRole(memberId, role);
-    },
-    onSuccess: () => {
-      // Demo mode holds its roster in fixtures, not the cache — invalidating
-      // would refetch nothing and needlessly churn. Live mode re-reads both the
-      // roster and the drawer detail off the same key prefix.
-      if (demoMode) return;
+    demoResult: ({ memberId, slug, role, isSystem }) => ({
+      id: memberId,
+      slug,
+      role,
+      isSystem,
+    }),
+    live: ({ memberId, role }) => patchAdminMemberRole(memberId, role),
+    // Demo mode holds its roster in fixtures, not the cache — invalidating would
+    // refetch nothing and needlessly churn. Live mode re-reads both the roster
+    // and the drawer detail off the same key prefix.
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },
   });
@@ -206,14 +208,15 @@ export function useUpdateMemberRole() {
 export function useLiftSuspension() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, unknown, { memberId: string }>({
+  return useDemoAwareMutation<void, unknown, { memberId: string }>({
+    demoMode,
+    demoLatencyMs: 0,
     mutationKey: ["admin-members", "lift-suspension"],
-    mutationFn: async ({ memberId }) => {
-      if (demoMode) return;
+    demoResult: () => undefined,
+    live: async ({ memberId }) => {
       await liftUserSuspension(memberId);
     },
-    onSuccess: () => {
-      if (demoMode) return;
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },
   });

@@ -1,33 +1,8 @@
-.hero {
-  padding: 140px 0 56px;
-}
-.heroInner {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(56px, 9vw, 128px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.92;
-  margin-bottom: 22px;
-  max-width: 14ch;
-}
-.h1 em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent);
+/* Below-title hero extras rendered as PageHero children; PageHero owns the
+   eyebrow + title, so this only needs to restore the gap the title used to
+   provide via its bottom margin. */
+.heroExtra {
+  margin-top: 20px;
 }
 .dek {
   font-size: 17px;

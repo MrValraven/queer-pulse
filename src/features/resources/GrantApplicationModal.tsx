@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiClock, FiSun, FiX } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiClock, FiSun, FiX } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -246,14 +246,20 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
         {step <= TOTAL_STEPS && (
           <div className={styles.footer}>
             <button type="button" className={styles.back} onClick={back}>
-              {step === 1
-                ? t("resources:microGrants.apply.cancelCta")
-                : t("resources:microGrants.apply.backCta")}
+              {step === 1 ? (
+                t("resources:microGrants.apply.cancelCta")
+              ) : (
+                <>
+                  <FiArrowLeft aria-hidden />{" "}
+                  {t("resources:microGrants.apply.backCta")}
+                </>
+              )}
             </button>
             <button type="button" className={styles.next} onClick={next}>
               {step === TOTAL_STEPS
                 ? t("resources:microGrants.apply.submitCta")
-                : t("resources:microGrants.apply.continueCta")}
+                : t("resources:microGrants.apply.continueCta")}{" "}
+              <FiArrowRight aria-hidden />
             </button>
           </div>
         )}

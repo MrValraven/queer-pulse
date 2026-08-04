@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from "react";
-import { FiRotateCcw } from "react-icons/fi";
+import { FiMaximize, FiRotateCcw } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useTrustGraph } from "./trustGraph/useTrustGraph";
 import { TONE } from "./trustGraph/trustGraphModel";
@@ -211,7 +211,7 @@ export function VouchGraphCanvas({
           onClick={c.fit}
           aria-label={t("admin:vouchGraph.canvas.fitToView")}
         >
-          ⊡
+          <FiMaximize aria-hidden />
         </button>
         <button
           type="button"

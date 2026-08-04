@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaLiveWatch } from "./CinemaLiveWatch";
-import {
-  WatchOverlay,
-  WatchPlayState,
-  WatchControls,
-  WatchSidePanel,
-  WatchBelow,
-} from "./WatchPageSections";
+import { WatchOverlay } from "./WatchOverlay";
+import { WatchControls, WatchPlayState } from "./WatchControls";
+import { WatchSidePanel } from "./WatchSidePanel";
+import { WatchBelow } from "./WatchBelow";
 import { PLAYER_STILL } from "./watchPage.data";
 import styles from "./WatchPage.module.css";
 import { routes } from "../../app/routeMap";
@@ -45,7 +43,9 @@ function DemoWatchPage() {
           <span className={styles.cin}>Cinema</span>
         </Link>
         <div className={styles.navLinks}>
-          <Link to={routes.film}>{t("cinema:watch.nav.backToFilm")}</Link>
+          <Link to={routes.film}>
+            <FiArrowLeft aria-hidden /> {t("cinema:watch.nav.backToFilm")}
+          </Link>
           <Link to={routes.cinema}>{t("cinema:watch.nav.cinemaHome")}</Link>
         </div>
         <div className={styles.navRight}>

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { BackToSettingsLink } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
@@ -89,7 +90,8 @@ export function MaintenancePage() {
 
         <div className={styles.actions}>
           <Button to={routes.status}>
-            {t("system:maintenance.actions.statusCta")}
+            {t("system:maintenance.actions.statusCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
 

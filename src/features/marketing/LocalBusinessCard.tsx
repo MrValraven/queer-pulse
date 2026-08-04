@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiMapPin } from "react-icons/fi";
+import { FiArrowRight, FiMapPin } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -74,7 +74,8 @@ export function LocalBusinessCard({
           <span />
         )}
         <span className={s.visit}>
-          {t("marketing:directory.card.viewDetails")}
+          {t("marketing:directory.card.viewDetails")}{" "}
+          <FiArrowRight aria-hidden />
         </span>
       </div>
     </FadeIn>

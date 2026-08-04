@@ -1,9 +1,7 @@
 // src/features/messages/StarredMessagesModal.tsx
-import { useEffect, useMemo } from "react";
-import { FiX } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
+import { useMemo } from "react";
+import { Avatar, Modal } from "../../shared/components/ui";
 import { initialsOf, tintForSlug } from "../../shared/api/refs";
-import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageSearchConversationGroup } from "../../shared/contracts/contracts";
 import { useStarredMessages } from "./api/useMessagePinStar";
@@ -36,7 +34,6 @@ function groupIdentity(group: MessageSearchConversationGroup | undefined) {
  * highlights the original. Empty in demo mode (stars need a server message id).
  */
 export function StarredMessagesModal({ onClose, onPick }: StarredMessagesModalProps) {
-  useScrollLock();
   const { t } = useTranslation();
   const { data, isLoading } = useStarredMessages(true);
   const items = data?.items ?? [];
@@ -49,74 +46,43 @@ export function StarredMessagesModal({ onClose, onPick }: StarredMessagesModalPr
     return map;
   }, [data]);
 
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
+    <Modal
+      title={t("messages:starred.title")}
+      sub={t("messages:starred.sub")}
+      onClose={onClose}
     >
-      <div
-        className={styles.dialog}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="starred-messages-title"
-      >
-        <div className={styles.head}>
-          <h2 id="starred-messages-title" className={styles.title}>
-            {t("messages:starred.title")}
-          </h2>
-          <button
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("messages:starred.close")}
-          >
-            <FiX />
-          </button>
-        </div>
-        <p className={styles.sub}>{t("messages:starred.sub")}</p>
-        <ul className={styles.list}>
-          {items.map((item) => {
-            const identity = groupIdentity(groupsById.get(item.conversationId));
-            return (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  className={styles.row}
-                  onClick={() => onPick(item.conversationId, item.id)}
-                >
-                  <Avatar
-                    initials={identity.initials}
-                    tint={identity.tint}
-                    src={identity.avatarUrl}
-                    size={40}
-                  />
-                  <div className={styles.rowBody}>
-                    <span className={styles.rowName}>{identity.name}</span>
-                    <span className={styles.rowMeta}>{item.snippet}</span>
-                  </div>
-                </button>
-              </li>
-            );
-          })}
-          {isLoading && items.length === 0 && (
-            <li className={styles.empty}>{t("messages:starred.loading")}</li>
-          )}
-          {!isLoading && items.length === 0 && (
-            <li className={styles.empty}>{t("messages:starred.empty")}</li>
-          )}
-        </ul>
-      </div>
-    </div>
+      <ul className={styles.list}>
+        {items.map((item) => {
+          const identity = groupIdentity(groupsById.get(item.conversationId));
+          return (
+            <li key={item.id}>
+              <button
+                type="button"
+                className={styles.row}
+                onClick={() => onPick(item.conversationId, item.id)}
+              >
+                <Avatar
+                  initials={identity.initials}
+                  tint={identity.tint}
+                  src={identity.avatarUrl}
+                  size={40}
+                />
+                <div className={styles.rowBody}>
+                  <span className={styles.rowName}>{identity.name}</span>
+                  <span className={styles.rowMeta}>{item.snippet}</span>
+                </div>
+              </button>
+            </li>
+          );
+        })}
+        {isLoading && items.length === 0 && (
+          <li className={styles.empty}>{t("messages:starred.loading")}</li>
+        )}
+        {!isLoading && items.length === 0 && (
+          <li className={styles.empty}>{t("messages:starred.empty")}</li>
+        )}
+      </ul>
+    </Modal>
   );
 }

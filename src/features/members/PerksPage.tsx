@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, Spinner } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -66,7 +67,7 @@ export function PerksPage() {
       <div className={styles.page}>
         <div className="wrap">
           <Link to={routes.badges} className={styles.backLink}>
-            {t("members:perks.page.backToBadges")}
+            <FiArrowLeft aria-hidden /> {t("members:perks.page.backToBadges")}
           </Link>
           <div className={styles.phEyebrow}>
             {t("members:profile.hero.perksTitle")}

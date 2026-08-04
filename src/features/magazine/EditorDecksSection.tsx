@@ -4,10 +4,8 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useEditorDecks, type EditorDeckRow } from "./api/useEditorDecks";
+import { cx } from "../../shared/lib/cx";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
 
 /** The "Decks" section: interactive slide-deck pieces, separate from the prose pipeline. */
 export function EditorDecksSection() {

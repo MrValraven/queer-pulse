@@ -1,12 +1,12 @@
 import { useState } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { LuSprout, LuTreeDeciduous } from "react-icons/lu";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { Button, Sending } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  MENTEE_AREAS,
-  MENTOR_AREAS,
+  MATCH_FLOWS,
   type MatchArea,
+  type MatchField,
   type Mode,
 } from "./mentorship.data";
 import styles from "./MentorshipPage.module.css";
@@ -45,6 +45,40 @@ function CheckGrid({ options }: { options: MatchArea[] }) {
   );
 }
 
+/** One placeholder-labelled control (input / select / textarea) in a step. */
+function MatchFieldControl({ field }: { field: MatchField }) {
+  const { t } = useTranslation();
+  const label = t(field.placeholderKey);
+  if (field.kind === "select") {
+    return (
+      <select className={styles.mmSelect} aria-label={label} defaultValue="">
+        <option value="">{label}</option>
+        {field.optionKeys?.map((optionKey) => (
+          <option key={optionKey}>{t(optionKey)}</option>
+        ))}
+      </select>
+    );
+  }
+  if (field.kind === "textarea") {
+    return (
+      <textarea
+        className={styles.mmTextarea}
+        rows={field.rows}
+        aria-label={label}
+        placeholder={label}
+      />
+    );
+  }
+  return (
+    <input
+      className={styles.mmInput}
+      type={field.kind}
+      aria-label={label}
+      placeholder={label}
+    />
+  );
+}
+
 export function MentorMatchSuccess({
   mode,
   onClose,
@@ -75,282 +109,84 @@ export function MentorMatchSuccess({
   );
 }
 
-export function MenteeSteps({
-  step,
-  setStep,
+/**
+ * One step of a match ladder, driven by the per-mode `MATCH_FLOWS` config so a
+ * single renderer serves both the mentee (3-step) and mentor (2-step) ladders.
+ * Navigation and the submit lifecycle are owned by the parent's `useWizardForm`.
+ */
+export function MentorMatchStep({
+  mode,
+  stepIndex,
+  isFirstStep,
+  isLastStep,
+  isSending,
+  onBack,
+  onContinue,
+  onSubmit,
 }: {
-  step: number;
-  setStep: (s: number) => void;
+  mode: Mode;
+  stepIndex: number;
+  isFirstStep: boolean;
+  isLastStep: boolean;
+  isSending: boolean;
+  onBack: () => void;
+  onContinue: () => void;
+  onSubmit: () => void;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const step = MATCH_FLOWS[mode].steps[stepIndex];
+  if (!step) return null;
   return (
     <>
-      {step === 1 && (
-        <>
-          <div className={styles.mmEye}>
-            {t("economy:mentorship.mentee.step1.eyebrow")}
-          </div>
-          <div className={styles.mmTitle}>
-            {t("economy:mentorship.mentee.step1.title")}
-          </div>
-          <p className={styles.mmDesc}>
-            {t("economy:mentorship.mentee.step1.sub")}
-          </p>
-          <CheckGrid options={MENTEE_AREAS} />
-          <div className={styles.mmNav}>
-            <span />
-            <Button
-              type="button"
-              variant="primary"
-              className={styles.mmContinue}
-              onClick={() => setStep(2)}
-            >
-              {t("economy:mentorship.nav.continue")}
-            </Button>
-          </div>
-        </>
+      <div className={styles.mmEye}>{t(step.eyebrowKey)}</div>
+      <div className={styles.mmTitle}>{t(step.titleKey)}</div>
+      {step.leadKey && <p className={styles.mmDesc}>{t(step.leadKey)}</p>}
+      {step.areas && <CheckGrid options={step.areas} />}
+      {step.fields && (
+        <div className={styles.mmFields}>
+          {step.fields.map((field) => (
+            <MatchFieldControl key={field.placeholderKey} field={field} />
+          ))}
+        </div>
       )}
-      {step === 2 && (
-        <>
-          <div className={styles.mmEye}>
-            {t("economy:mentorship.mentee.step2.eyebrow")}
-          </div>
-          <div className={styles.mmTitle}>
-            {t("economy:mentorship.mentee.step2.title")}
-          </div>
-          <div className={styles.mmFields}>
-            <input
-              className={styles.mmInput}
-              type="text"
-              aria-label={t("economy:mentorship.mentee.step2.namePlaceholder")}
-              placeholder={t("economy:mentorship.mentee.step2.namePlaceholder")}
-            />
-            <input
-              className={styles.mmInput}
-              type="text"
-              aria-label={t("economy:mentorship.mentee.step2.rolePlaceholder")}
-              placeholder={t("economy:mentorship.mentee.step2.rolePlaceholder")}
-            />
-            <select
-              className={styles.mmSelect}
-              aria-label={t(
-                "economy:mentorship.mentee.step2.frequencyPlaceholder",
-              )}
-              defaultValue=""
-            >
-              <option value="">
-                {t("economy:mentorship.mentee.step2.frequencyPlaceholder")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentee.step2.frequency.monthly")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentee.step2.frequency.twiceMonthly")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentee.step2.frequency.asNeeded")}
-              </option>
-            </select>
-            <textarea
-              className={styles.mmTextarea}
-              rows={3}
-              aria-label={t("economy:mentorship.mentee.step2.notePlaceholder")}
-              placeholder={t("economy:mentorship.mentee.step2.notePlaceholder")}
-            />
-          </div>
-          <div className={styles.mmNav}>
-            <button
-              type="button"
-              className={styles.mmBack}
-              onClick={() => setStep(1)}
-            >
-              {t("economy:mentorship.nav.back")}
-            </button>
-            <Button
-              type="button"
-              variant="primary"
-              className={styles.mmContinue}
-              onClick={() => setStep(3)}
-            >
-              {t("economy:mentorship.nav.continue")}
-            </Button>
-          </div>
-        </>
+      {step.trailingKey && (
+        <p className={styles.mmDesc}>{t(step.trailingKey)}</p>
       )}
-      {step === 3 && (
-        <>
-          <div className={styles.mmEye}>
-            {t("economy:mentorship.mentee.step3.eyebrow")}
-          </div>
-          <div className={styles.mmTitle}>
-            {t("economy:mentorship.mentee.step3.title")}
-          </div>
-          <div className={styles.mmFields}>
-            <input
-              className={styles.mmInput}
-              type="email"
-              aria-label={t("economy:mentorship.mentee.step3.emailPlaceholder")}
-              placeholder={t(
-                "economy:mentorship.mentee.step3.emailPlaceholder",
-              )}
-            />
-          </div>
-          <p className={styles.mmDesc}>
-            {t("economy:mentorship.mentee.step3.sub")}
-          </p>
-          <div className={styles.mmNav}>
-            <button
-              type="button"
-              className={styles.mmBack}
-              onClick={() => setStep(2)}
-            >
-              {t("economy:mentorship.nav.back")}
-            </button>
-            <Button
-              type="button"
-              variant="primary"
-              className={styles.mmContinue}
-              onClick={() => {
-                setStep(4);
-                showToast(
-                  t("economy:mentorship.mentee.toastSubmitted"),
-                  "success",
-                );
-              }}
-            >
-              {t("economy:mentorship.nav.submit")}
-            </Button>
-          </div>
-        </>
-      )}
-    </>
-  );
-}
-
-export function MentorSteps({
-  step,
-  setStep,
-}: {
-  step: number;
-  setStep: (s: number) => void;
-}) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  return (
-    <>
-      {step === 1 && (
-        <>
-          <div className={styles.mmEye}>
-            {t("economy:mentorship.mentor.step1.eyebrow")}
-          </div>
-          <div className={styles.mmTitle}>
-            {t("economy:mentorship.mentor.step1.title")}
-          </div>
-          <p className={styles.mmDesc}>
-            {t("economy:mentorship.mentor.step1.sub")}
-          </p>
-          <CheckGrid options={MENTOR_AREAS} />
-          <div className={styles.mmNav}>
-            <span />
-            <Button
-              type="button"
-              variant="primary"
-              className={styles.mmContinue}
-              onClick={() => setStep(2)}
-            >
-              {t("economy:mentorship.nav.continue")}
-            </Button>
-          </div>
-        </>
-      )}
-      {step === 2 && (
-        <>
-          <div className={styles.mmEye}>
-            {t("economy:mentorship.mentor.step2.eyebrow")}
-          </div>
-          <div className={styles.mmTitle}>
-            {t("economy:mentorship.mentor.step2.title")}
-          </div>
-          <div className={styles.mmFields}>
-            <input
-              className={styles.mmInput}
-              type="text"
-              aria-label={t("economy:mentorship.mentor.step2.namePlaceholder")}
-              placeholder={t("economy:mentorship.mentor.step2.namePlaceholder")}
-            />
-            <select
-              className={styles.mmSelect}
-              aria-label={t(
-                "economy:mentorship.mentor.step2.menteesPlaceholder",
-              )}
-              defaultValue=""
-            >
-              <option value="">
-                {t("economy:mentorship.mentor.step2.menteesPlaceholder")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentor.step2.mentees.one")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentor.step2.mentees.two")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentor.step2.mentees.three")}
-              </option>
-            </select>
-            <select
-              className={styles.mmSelect}
-              aria-label={t("economy:mentorship.mentor.step2.formatPlaceholder")}
-              defaultValue=""
-            >
-              <option value="">
-                {t("economy:mentorship.mentor.step2.formatPlaceholder")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentor.step2.format.inPersonLisbon")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentor.step2.format.video")}
-              </option>
-              <option>
-                {t("economy:mentorship.mentor.step2.format.either")}
-              </option>
-            </select>
-            <input
-              className={styles.mmInput}
-              type="email"
-              aria-label={t("economy:mentorship.mentor.step2.emailPlaceholder")}
-              placeholder={t(
-                "economy:mentorship.mentor.step2.emailPlaceholder",
-              )}
-            />
-          </div>
-          <div className={styles.mmNav}>
-            <button
-              type="button"
-              className={styles.mmBack}
-              onClick={() => setStep(1)}
-            >
-              {t("economy:mentorship.nav.back")}
-            </button>
-            <Button
-              type="button"
-              variant="primary"
-              className={styles.mmContinue}
-              onClick={() => {
-                setStep(3);
-                showToast(
-                  t("economy:mentorship.mentor.toastSubmitted"),
-                  "success",
-                );
-              }}
-            >
-              {t("economy:mentorship.nav.submit")}
-            </Button>
-          </div>
-        </>
-      )}
+      <div className={styles.mmNav}>
+        {isFirstStep ? (
+          <span />
+        ) : (
+          <button
+            type="button"
+            className={styles.mmBack}
+            onClick={onBack}
+          >
+            <FiArrowLeft aria-hidden />{" "}
+            {t("economy:mentorship.nav.back")}
+          </button>
+        )}
+        <Button
+          type="button"
+          variant="primary"
+          className={styles.mmContinue}
+          disabled={isSending}
+          onClick={isLastStep ? onSubmit : onContinue}
+        >
+          {isSending ? (
+            <Sending label={t("economy:resume.submittingLabel")} />
+          ) : isLastStep ? (
+            <>
+              {t("economy:mentorship.nav.submit")}{" "}
+              <FiArrowRight aria-hidden />
+            </>
+          ) : (
+            <>
+              {t("economy:mentorship.nav.continue")}{" "}
+              <FiArrowRight aria-hidden />
+            </>
+          )}
+        </Button>
+      </div>
     </>
   );
 }

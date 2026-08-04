@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Therapist } from "../mentalHealth.data";
@@ -116,7 +117,8 @@ export function TherapistSections({
               className={styles.vouchLink}
               onClick={() => setVouching(true)}
             >
-              {t("resources:therapistProfilePage.vouches.addCta")}
+              {t("resources:therapistProfilePage.vouches.addCta")}{" "}
+              <FiArrowRight aria-hidden />
             </button>
           </div>
         </div>

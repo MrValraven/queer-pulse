@@ -59,20 +59,20 @@ export const magazine: Catalog = {
 
   // ── MagazineSections ─────────────────────────────────────────────────────
   "sections.features.title": "As <em>reportagens</em> deste mês",
-  "sections.features.allCta": "Todas as reportagens deste mês →",
+  "sections.features.allCta": "Todas as reportagens deste mês",
   "sections.essayOfMonthKicker": "Ensaio do mês",
   "sections.readEssayCta": "Ler o ensaio",
   "sections.essays.title": "<em>Ensaios</em>",
-  "sections.essays.allCta": "Todos os ensaios →",
+  "sections.essays.allCta": "Todos os ensaios",
   "sections.interviews.title": "<em>Entrevistas</em>",
-  "sections.interviews.allCta": "Todas as entrevistas →",
+  "sections.interviews.allCta": "Todas as entrevistas",
   "sections.reviews.title": "<em>Críticas</em>",
-  "sections.reviews.allCta": "Todas as críticas →",
+  "sections.reviews.allCta": "Todas as críticas",
   "sections.communityLife.title": "Vida <em>da comunidade</em>",
-  "sections.communityLife.allCta": "Toda a vida da comunidade →",
+  "sections.communityLife.allCta": "Toda a vida da comunidade",
   "sections.letters.title": "Cartas <em>à redação</em>",
   "sections.archive.title": "Edições <em>anteriores</em>",
-  "sections.archive.allCta": "Todas as edições anteriores →",
+  "sections.archive.allCta": "Todas as edições anteriores",
   "sections.submit.title": "Escreve para <em>a revista.</em>",
   "sections.submit.body":
     "Publicamos ensaios, reportagens, críticas, entrevistas e opinião de pessoas da comunidade. Não é preciso qualquer credencial formal — só algo que valha a pena dizer.",
@@ -92,7 +92,7 @@ export const magazine: Catalog = {
     "O artigo pode ter mudado de sítio, ou o link pode estar incompleto.",
   "article.notFoundCta": "Voltar à revista",
   "article.pageTitleSuffix": " — Revista QueerPulse",
-  "article.backToMagazine": "← Revista",
+  "article.backToMagazine": "Revista",
   "article.relatedHeading": "Continua a <em>ler</em>",
 
   // ── relationReason() (data/articles.tsx) ────────────────────────────────
@@ -204,7 +204,7 @@ export const magazine: Catalog = {
   "deck.editor.backToDashboard": "Voltar ao painel",
 
   // ── Issue chrome — partilhado por IssueCover, IssueContents, IssuesPage ──
-  "issue.backToAllIssues": "← Todas as edições",
+  "issue.backToAllIssues": "Todas as edições",
   "issue.currentPill": "Atual",
   "issue.badge": "Edição <em>{number}</em>",
   "issue.stats.featuresCount_one": "{count} reportagem",
@@ -218,7 +218,7 @@ export const magazine: Catalog = {
   "issue.stats.publishedPrefix": "Publicado a",
   "issue.coverAlt": "Capa da edição {number}",
   "issue.letterEyebrow": "Carta da direção editorial",
-  "issue.readCta": "Ler a edição {number} →",
+  "issue.readCta": "Ler a edição {number}",
   "issue.orderPrintCta": "Encomendar a versão impressa · {price}",
   // Modo live: apresentado quando ainda não há uma edição publicada para ler.
   "issue.emptyLiveTitle": "Esta edição ainda não saiu",
@@ -291,9 +291,9 @@ export const magazine: Catalog = {
     "Imagem principal da história em destaque de {name}",
   "author.work.featuredImagePlaceholder": "História em destaque",
   "author.work.selectedWorkHeading": "Trabalho selecionado",
-  "author.work.allArticlesCta_one": "Todos os {count} artigo →",
-  "author.work.allArticlesCta_other": "Todos os {count} artigos →",
-  "author.work.seeAllPicksCta": "Ver todas as escolhas →",
+  "author.work.allArticlesCta_one": "Todos os {count} artigo",
+  "author.work.allArticlesCta_other": "Todos os {count} artigos",
+  "author.work.seeAllPicksCta": "Ver todas as escolhas",
   "author.work.findElsewhereHeading": "Encontra {name} <em>noutros sítios</em>",
 
   // ══════════════════ Painel de edição (uso interno) ═══════════════════════
@@ -408,7 +408,7 @@ export const magazine: Catalog = {
   "editor.pitchInbox.subhead": "resposta média em 6 dias · triagem em lote ↓",
   "editor.pitchInbox.emptyMatch": "Nenhuma proposta corresponde a “{query}”",
   "editor.pitchInbox.selectAria": "Selecionar proposta de {name}",
-  "editor.pitchInbox.showMore": "Mostrar mais {count} propostas →",
+  "editor.pitchInbox.showMore": "Mostrar mais {count} propostas",
   "editor.pitchInbox.yes": "Sim",
   "editor.pitchInbox.maybe": "Talvez",
   "editor.pitchInbox.no": "Não",
@@ -492,17 +492,17 @@ export const magazine: Catalog = {
   "editor.sideCards.noContributorMatch":
     "Nenhuma pessoa colaboradora corresponde",
   "editor.sideCards.seeContributorProfiles":
-    "Ver perfis de pessoas colaboradoras →",
+    "Ver perfis de pessoas colaboradoras",
   "editor.sideCards.recentActivity": "Atividade recente",
   "editor.sideCards.quickActions": "Ações rápidas",
   "editor.sideCards.sendPitchDecisions":
-    "→ Enviar decisões de propostas em lote",
+    "Enviar decisões de propostas em lote",
   "editor.sideCards.emailContributorsWaiting":
-    "→ Enviar email às pessoas colaboradoras em espera",
+    "Enviar email às pessoas colaboradoras em espera",
   "editor.sideCards.previewIssueLayout":
-    "→ Pré-visualizar a paginação da edição",
+    "Pré-visualizar a paginação da edição",
   "editor.sideCards.exportContributorList":
-    "→ Exportar lista de pessoas colaboradoras (CSV)",
+    "Exportar lista de pessoas colaboradoras (CSV)",
 
   // ── EditorDecksSection ──────────────────────────────────────────────────
   "editor.decks.title": "Decks interativos",
@@ -776,7 +776,7 @@ export const magazine: Catalog = {
   "printOrder.emailFieldHelper":
     "Só o usamos para te avisar quando o teu exemplar for enviado.",
   "printOrder.emailPlaceholder": "tu@exemplo.com",
-  "printOrder.cancelCta": "← Cancelar",
+  "printOrder.cancelCta": "Cancelar",
   "printOrder.placingCta": "A colocar a tua encomenda…",
   "printOrder.placeCta": "Fazer encomenda — {total} €",
 
@@ -789,7 +789,7 @@ export const magazine: Catalog = {
   // os CTAs finais do Outro são chrome, traduzidos abaixo.
   "story.wordsBy": "Texto de",
   "story.moreHeading": "Mais <em>da comunidade</em>",
-  "story.viewProfileCta": "Ver perfil →",
+  "story.viewProfileCta": "Ver perfil",
   "story.outro.studio.title":
     "Queres fazer parte do que <em>vai ser escrito a seguir?</em>",
   "story.outro.studio.sub":

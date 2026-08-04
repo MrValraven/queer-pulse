@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { reviewAppeal } from "./moderation.api";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface ReviewAppealVars {
   id: string;
@@ -17,16 +18,17 @@ export interface ReviewAppealVars {
 export function useReviewAppeal() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, ReviewAppealVars>({
+  return useDemoAwareMutation<void, Error, ReviewAppealVars>({
+    demoMode,
+    demoLatencyMs: 0,
     // useModerationQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, decision, note }) => {
-      if (demoMode) return;
+    demoResult: () => undefined,
+    live: async ({ id, decision, note }) => {
       await reviewAppeal(id, { decision, note });
     },
-    onSettled: () => {
-      if (!demoMode)
-        void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
     },
   });
 }

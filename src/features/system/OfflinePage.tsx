@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { StatusCard } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -97,8 +99,9 @@ export function OfflinePage() {
 
   return (
     <SystemStateShell mutedBrand>
-      <div className={styles.card}>
-        <div className={styles.ic}>
+      <StatusCard
+        tone="plum"
+        icon={
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -111,22 +114,21 @@ export function OfflinePage() {
             <line x1="12" y1="20" x2="12.01" y2="20" />
             <line x1="2" y1="2" x2="22" y2="22" />
           </svg>
-        </div>
-
-        <div className={styles.eyebrow}>{t("system:offline.eyebrow")}</div>
-        <h1 className={styles.h1}>
+        }
+        kicker={t("system:offline.eyebrow")}
+        heading={
           <Translation
             i18nKey="system:offline.h1"
             components={{ em: <em /> }}
           />
-        </h1>
-        <p className={styles.lead}>
+        }
+        lead={
           <Translation
             i18nKey="system:offline.lead"
             components={{ b: <b /> }}
           />
-        </p>
-
+        }
+      >
         <div className={styles.cached}>
           <h3 className={styles.cachedTitle}>{t("system:offline.tryTitle")}</h3>
           <div className={styles.cachedList}>
@@ -137,7 +139,9 @@ export function OfflinePage() {
                   <b>{item.label}</b>
                   <span>{item.sub}</span>
                 </div>
-                <span className={styles.cachedArrow}>→</span>
+                <span className={styles.cachedArrow} aria-hidden>
+                  <FiArrowRight />
+                </span>
               </Link>
             ))}
           </div>
@@ -161,7 +165,7 @@ export function OfflinePage() {
               : t("system:offline.retryCta")}
           </button>
         </div>
-      </div>
+      </StatusCard>
     </SystemStateShell>
   );
 }

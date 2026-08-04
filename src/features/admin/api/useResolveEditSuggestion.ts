@@ -1,14 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { logInfo } from "../../../shared/observability/logger";
 import {
   patchEditSuggestionStatus,
   type EditSuggestionDTO,
 } from "./editSuggestions.api";
 import { EDIT_SUGGESTIONS_KEY } from "./useEditSuggestions";
-
-/** How long demo mode pretends the round-trip takes, to keep the UX honest. */
-const DEMO_LATENCY_MS = 400;
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface ResolveEditSuggestionVars {
   suggestion: EditSuggestionDTO;
@@ -25,20 +22,14 @@ export interface ResolveEditSuggestionVars {
 export function useResolveEditSuggestion() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<EditSuggestionDTO, Error, ResolveEditSuggestionVars>({
-    mutationFn: async ({ suggestion, status }) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.editSuggestion.resolve (demo — no network)", {
-          id: suggestion.id,
-          status,
-        });
-        return { ...suggestion, status };
-      }
-      return patchEditSuggestionStatus(suggestion.id, status);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<EditSuggestionDTO, Error, ResolveEditSuggestionVars>({
+    demoMode,
+    logLabel: "admin.editSuggestion.resolve",
+    logContext: ({ suggestion, status }) => ({ id: suggestion.id, status }),
+    demoResult: ({ suggestion, status }) => ({ ...suggestion, status }),
+    live: ({ suggestion, status }) =>
+      patchEditSuggestionStatus(suggestion.id, status),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [EDIT_SUGGESTIONS_KEY] });
     },
   });

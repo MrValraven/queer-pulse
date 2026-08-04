@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { FeatureHelp, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberName } from "../members/data/members";
@@ -56,7 +57,8 @@ export function MagazineCover() {
             className={styles.csRead}
             to={`${routes.article}?id=city-changed`}
           >
-            {t("magazine:cover.readFullFeatureCta")} <span>→</span>
+            {t("magazine:cover.readFullFeatureCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

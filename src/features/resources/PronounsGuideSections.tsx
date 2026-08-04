@@ -1,5 +1,6 @@
 import { useState, type ReactElement, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiChevronDown } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -118,7 +119,9 @@ export function FaqList() {
               onClick={() => setOpen(isOpen ? null : faqIndex)}
             >
               <span className={styles.faqQText}>{t(faq.qKey)}</span>
-              <span className={styles.faqArrow}>▼</span>
+              <span className={styles.faqArrow} aria-hidden>
+                <FiChevronDown />
+              </span>
             </button>
             <div
               id={`pronoun-faq-${faqIndex}`}

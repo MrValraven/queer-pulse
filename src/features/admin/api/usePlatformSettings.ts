@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   DEMO_PLATFORM_SETTINGS,
@@ -12,6 +12,7 @@ import {
   type PlatformSettingsDTO,
   type UpdatePlatformSettingsInput,
 } from "./platformSettings.api";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 const SETTINGS_KEY = "platform-settings";
 const CHANGES_KEY = "platform-setting-changes";
@@ -58,16 +59,17 @@ export function usePlatformSettingChanges() {
 export function useUpdatePlatformSettings() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, UpdatePlatformSettingsInput>({
+  return useDemoAwareMutation<void, Error, UpdatePlatformSettingsInput>({
+    demoMode,
+    demoLatencyMs: 0,
     // AdminSettingsAccess + LockdownBanner toast their own error, so silence the
     // global duplicate.
     meta: { silentError: true },
-    mutationFn: async (input) => {
-      if (demoMode) return;
+    demoResult: () => undefined,
+    live: async (input) => {
       await updatePlatformSettings(input);
     },
-    onSettled: () => {
-      if (demoMode) return;
+    onLiveSettled: () => {
       void queryClient.invalidateQueries({ queryKey: [SETTINGS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [CHANGES_KEY] });
     },

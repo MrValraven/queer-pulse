@@ -450,12 +450,6 @@
   line-height: 1.65;
   margin: 14px 0 24px;
 }
-.modalBtns {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
 @media (max-width: 880px) {
   .page {
     grid-template-columns: 1fr;

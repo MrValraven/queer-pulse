@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -64,7 +65,8 @@ export function CuratorAside({ curator }: { curator: CuratorProfile }) {
           {t("cinema:curator.aside.proposeBody")}
         </div>
         <Button variant="ghost" to={routes.contact} style={{ width: "100%" }}>
-          {t("cinema:curator.aside.proposeCta")}
+          {t("cinema:curator.aside.proposeCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </aside>

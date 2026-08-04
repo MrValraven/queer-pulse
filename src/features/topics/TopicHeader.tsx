@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -45,7 +46,7 @@ export function TopicHeader({ topic }: { topic: Topic }) {
         </Button>
         {topic.resources && (
           <Button variant="ghost" to={linkToPath(topic.resources.href)}>
-            {topic.resources.ctaLabel}
+            {topic.resources.ctaLabel} <FiArrowRight aria-hidden />
           </Button>
         )}
       </div>

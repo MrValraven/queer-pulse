@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -77,7 +78,8 @@ export function JobDetailBody({ job }: { job: Job }) {
             to={`${routes.company}/${companySlug}`}
             style={{ marginTop: 16 }}
           >
-            {t("economy:jobDetail.section.viewCompany")}
+            {t("economy:jobDetail.section.viewCompany")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         )}
       </div>
@@ -93,7 +95,8 @@ export function JobDetailBody({ job }: { job: Job }) {
           <div className={styles.safetyBlock}>
             <SafetyBadges signals={safetyFor(job.organization)} />
             <Button variant="ghost" to={routes.employerReviews}>
-              {t("economy:jobDetail.section.safetyReviews")}
+              {t("economy:jobDetail.section.safetyReviews")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

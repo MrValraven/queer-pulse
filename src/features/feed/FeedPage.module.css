@@ -83,6 +83,24 @@
   flex-direction: column;
   gap: 10px;
 }
+/* The feed items lay out as a responsive grid so light cards (new members,
+   saved links, recaps) pack two-or-more to a row instead of each stretching
+   the full column and leaving dead space. `auto-fill` + `minmax` reflows
+   intrinsically — two-up at desktop feed-column width, one column on a phone —
+   with no device breakpoints. Rich cards (posts, community pulse, gatherings)
+   and the empty/error/pager rows opt back into a full-width row via .spanFull. */
+.grid {
+  display: grid;
+  /* `min(300px, 100%)` clamps the column floor to the container on very narrow
+     phones, so the 300px minimum can never push the track past the viewport and
+     spawn a horizontal scrollbar. */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 10px;
+  align-items: start;
+}
+.spanFull {
+  grid-column: 1 / -1;
+}
 /* Infinite-scroll pager below the live feed (FeedLoadMore). Also the
    IntersectionObserver sentinel node — its own height keeps the observer's
    generous rootMargin from clamping to zero. */

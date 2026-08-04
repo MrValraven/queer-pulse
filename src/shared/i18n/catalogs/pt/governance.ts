@@ -194,7 +194,7 @@ export const governance: Catalog = {
   "sections.raise.textareaPlaceholder":
     "Descreve o que aconteceu, ou o que está errado, com o detalhe que te for confortável…",
   "sections.raise.emailPlaceholder": "O teu email (para te podermos atualizar)",
-  "sections.raise.submitCta": "Submeter →",
+  "sections.raise.submitCta": "Submeter",
   "sections.raise.submittedToast":
     "Submetido — entraremos em contacto no prazo de 48 horas",
   "sections.raise.comingSoonToast":

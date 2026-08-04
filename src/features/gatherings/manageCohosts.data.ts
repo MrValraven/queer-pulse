@@ -5,6 +5,7 @@ export interface CohostCandidate {
   slug: string;
   name: string;
   role: string;
+  pronouns?: string;
   initials: string;
   tint: Member["tint"];
   photo?: string;
@@ -16,6 +17,7 @@ function toCandidate(member: Member): CohostCandidate {
     slug: member.slug,
     name: `${member.first} ${member.last}`,
     role: member.role,
+    pronouns: member.pronouns,
     initials: member.initials,
     tint: member.tint,
     photo: member.photo,

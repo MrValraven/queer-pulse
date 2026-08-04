@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { FiArrowRight, FiHeart } from "react-icons/fi";
 import {
   Avatar,
   Button,
+  EmptyState,
   FilterChips,
   Reveal,
 } from "../../shared/components/ui";
@@ -16,33 +18,6 @@ import {
 import { useTherapists } from "./api/useTherapists";
 import { TherapistProfileModal } from "./TherapistProfileModal";
 import styles from "./MentalHealthPage.module.css";
-
-/** Live-mode placeholder — the therapist directory isn't wired to the backend yet. */
-function TherapistsComingSoon() {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.comingSoon}>
-      <span className={styles.comingSoonBadge}>
-        {t("resources:mentalHealth.therapists.comingSoon.badge")}
-      </span>
-      <h3 className={styles.comingSoonTitle}>
-        <Translation
-          i18nKey="resources:mentalHealth.therapists.comingSoon.title"
-          components={{ em: <em /> }}
-        />
-      </h3>
-      <p className={styles.comingSoonText}>
-        <Translation
-          i18nKey="resources:mentalHealth.therapists.comingSoon.body"
-          components={{ b: <b /> }}
-          values={{
-            toggleName: t("shared:accountMenu.controls.populatePlatform"),
-          }}
-        />
-      </p>
-    </div>
-  );
-}
 
 export function TherapistSection() {
   const { t } = useTranslation();
@@ -68,7 +43,24 @@ export function TherapistSection() {
           <p>{t("resources:mentalHealth.therapists.lead")}</p>
         </Reveal>
         {comingSoon ? (
-          <TherapistsComingSoon />
+          <EmptyState
+            icon={<FiHeart />}
+            title={
+              <Translation
+                i18nKey="resources:mentalHealth.therapists.comingSoon.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={
+              <Translation
+                i18nKey="resources:mentalHealth.therapists.comingSoon.body"
+                components={{ b: <b /> }}
+                values={{
+                  toggleName: t("shared:accountMenu.controls.populatePlatform"),
+                }}
+              />
+            }
+          />
         ) : (
           <>
         <div className={styles.thFilter}>
@@ -148,7 +140,8 @@ export function TherapistSection() {
               <div className={styles.tcFoot}>
                 <span className={styles.tcFormat}>{therapist.format}</span>
                 <span className={styles.tcContact}>
-                  {t("resources:mentalHealth.therapists.viewProfileCta")}
+                  {t("resources:mentalHealth.therapists.viewProfileCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </span>
               </div>
             </Reveal>
@@ -250,7 +243,8 @@ export function SnsSection({
               {t("resources:mentalHealth.sns.peer.joinCta")}
             </Button>
             <Button to={mentorship} variant="ghost-dark">
-              {t("resources:mentalHealth.sns.peer.mentorCta")}
+              {t("resources:mentalHealth.sns.peer.mentorCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </Reveal>

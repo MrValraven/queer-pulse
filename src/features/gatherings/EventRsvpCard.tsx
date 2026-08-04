@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -190,7 +191,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               {isFull
                 ? t("gatherings:event.rsvp.joinWaitlistCta")
                 : t("gatherings:event.rsvp.reserveCta")}{" "}
-              →
+              <FiArrowRight aria-hidden />
             </button>
           </div>
           <div className={styles.note}>

@@ -1,58 +1,5 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(var(--plum-rgb), 0.42);
-  backdrop-filter: blur(3px);
-  animation: qpToastIn var(--dur-base) var(--ease-out);
-}
-
-.dialog {
-  width: min(440px, 100%);
-  max-height: 85svh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: var(--radius-card, 22px);
-  padding: 28px;
-  box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.22);
-  animation: qpRevealIn var(--dur-slow) var(--ease-out);
-}
-
-/* Bottom sheet on phones — in reach, clear of the notch/home indicator. */
-@media (max-width: 860px) {
-  .overlay {
-    align-items: flex-end;
-    padding: 0;
-    padding-block-end: var(--keyboard-inset, 0px);
-  }
-  .dialog {
-    width: 100%;
-    border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
-    max-height: 92svh;
-    padding-block-end: max(28px, env(safe-area-inset-bottom));
-  }
-  .dialog:not(.dialogConfirm)::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 4px;
-    border-radius: 999px;
-    background: rgba(var(--plum-rgb), 0.18);
-    margin: 0 auto 18px;
-  }
-}
-
-.dialogConfirm {
-  background: var(--plum);
-  border-color: transparent;
-  text-align: center;
-}
+/* Body styling on top of the shared <ModalSheet> — the sheet owns the overlay,
+   scroll-lock, focus-trap, grabber and close chrome. Tokens only. */
 
 .title {
   font-family: var(--serif);
@@ -127,28 +74,11 @@
   margin-top: 22px;
 }
 
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid rgba(var(--cream-rgb), 0.45);
-  border-top-color: rgba(var(--cream-rgb), 1);
-  margin-right: 8px;
-  vertical-align: -2px;
-  animation: qpSpin 0.7s linear infinite;
-}
-
-@keyframes qpSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .spinner {
-    animation: none;
-  }
+/* Plum success panel — the <ModalSheet success> variant supplies the plum
+   surface (padding 0), so this wrapper brings the panel's own padding. */
+.confirm {
+  padding: 44px 32px;
+  text-align: center;
 }
 
 .confirmIcon {
@@ -189,28 +119,4 @@
   display: flex;
   justify-content: center;
   margin-top: 22px;
-}
-
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
-   Global keyframes can't be referenced from a CSS module (the animation-name
-   gets scoped to a dangling hash), so each module needs its own copy. */
-@keyframes qpRevealIn {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes qpToastIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }

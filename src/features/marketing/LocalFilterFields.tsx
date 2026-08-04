@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { FiShield, FiSliders } from "react-icons/fi";
+import { FiChevronDown, FiShield, FiSliders } from "react-icons/fi";
 import { FilterChips } from "../../shared/components/ui";
 import { useLocalStorage } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -136,7 +136,7 @@ export function LocalFilterFields({
             .join(" ")}
           aria-hidden
         >
-          ▾
+          <FiChevronDown />
         </span>
       </button>
       {/* Body stays mounted so it can animate open AND closed. The grid-rows

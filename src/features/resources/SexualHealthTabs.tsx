@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiInfo, FiMapPin, FiStar } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiInfo, FiMapPin, FiStar } from "react-icons/fi";
 import { Button, EmptyState, FilterChips } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -309,11 +309,13 @@ export function HivTab() {
             {c.link &&
               (c.link.external ? (
                 <a href={c.link.href} className={styles.infoLink}>
-                  {c.link.label}
+                  {c.link.label}{" "}
+                  <FiArrowRight aria-hidden />
                 </a>
               ) : (
                 <Link to={c.link.href} className={styles.infoLink}>
-                  {c.link.label}
+                  {c.link.label}{" "}
+                  <FiArrowRight aria-hidden />
                 </Link>
               ))}
           </div>
@@ -347,10 +349,14 @@ export function GuidesTab() {
             <div className={styles.infoBody}>{g.body}</div>
             {g.link &&
               (g.link.href === "#" ? (
-                <span className={styles.infoLink}>{g.link.label}</span>
+                <span className={styles.infoLink}>
+                  {g.link.label}{" "}
+                  <FiArrowRight aria-hidden />
+                </span>
               ) : (
                 <Link to={g.link.href} className={styles.infoLink}>
-                  {g.link.label}
+                  {g.link.label}{" "}
+                  <FiArrowRight aria-hidden />
                 </Link>
               ))}
           </div>

@@ -1,52 +1,7 @@
 .page {
   background: var(--cream);
 }
-.hero {
-  padding: 140px 0 56px;
-}
-.heroInner {
-  max-width: var(--maxw-page);
-  margin: 0 auto;
-  padding: 0 28px;
-}
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(54px, 8.5vw, 118px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.92;
-  margin-bottom: 22px;
-  max-width: 12ch;
-}
-.h1 em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent);
-}
-.dek {
-  font-size: 17px;
-  color: var(--ink-60);
-  line-height: 1.7;
-  max-width: 54ch;
-}
-.dek b {
-  color: var(--text-strong);
-  font-weight: 600;
-}
-.dek em {
-  font-style: italic;
-  color: var(--accent-ink);
-}
-
+/* Hero migrated to the shared <ResourceHero tone="light" titleScale="display" />. */
 .searchRow {
   background: var(--paper);
   border-top: 1px solid rgba(var(--line-rgb), 0.1);

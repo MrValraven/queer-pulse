@@ -1,5 +1,5 @@
 import { FiCheck, FiTrendingUp } from "react-icons/fi";
-import { PageShell } from "../../shared/components/layout";
+import { PageHero, PageShell } from "../../shared/components/layout";
 import { FadeIn, SkeletonCard, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -40,36 +40,31 @@ export function RoadmapPage() {
           { name: pageTitle, path: routes.roadmap },
         ])}
       />
-      <header className={styles.hero}>
-        <div className="wrap">
-          <div className={styles.eyebrow}>
-            {t("marketing:roadmap.hero.eyebrow")}
-          </div>
-          <h1 className={styles.heroTitle}>
-            <Translation
-              i18nKey="marketing:roadmap.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.heroSub}>{t("marketing:roadmap.hero.sub")}</p>
-          <div className={styles.heroStats}>
-            {heroStats.map((stat) => (
-              <div
-                key={stat.label}
-                className={`${styles.statTile} ${stat.jade ? styles.jade : ""}`}
-              >
-                {stat.value && (
-                  <div className={styles.statValue}>{stat.value}</div>
-                )}
-                <div className={styles.statLabel}>{stat.label}</div>
-                {stat.note && (
-                  <div className={styles.statNote}>{stat.note}</div>
-                )}
-              </div>
-            ))}
-          </div>
+      <PageHero
+        eyebrow={t("marketing:roadmap.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:roadmap.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("marketing:roadmap.hero.sub")}
+      >
+        <div className={styles.heroStats}>
+          {heroStats.map((stat) => (
+            <div
+              key={stat.label}
+              className={`${styles.statTile} ${stat.jade ? styles.jade : ""}`}
+            >
+              {stat.value && (
+                <div className={styles.statValue}>{stat.value}</div>
+              )}
+              <div className={styles.statLabel}>{stat.label}</div>
+              {stat.note && <div className={styles.statNote}>{stat.note}</div>}
+            </div>
+          ))}
         </div>
-      </header>
+      </PageHero>
 
       <div className={styles.body}>
         <div className="wrap">

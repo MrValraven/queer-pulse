@@ -1,4 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -59,7 +60,7 @@ export function Studio404Page() {
               className={styles.btGhost}
               onClick={() => void navigate(-1)}
             >
-              ← {t("studio:error404.goBackCta")}
+              <FiArrowLeft aria-hidden /> {t("studio:error404.goBackCta")}
             </button>
           </div>
 

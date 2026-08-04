@@ -14,6 +14,7 @@ import {
 } from "../../shared/seo";
 import { NameTable, WhereGrid, FaqList } from "./PronounsGuideSections";
 import { PRONOUN_FAQS } from "./pronounsGuide.data";
+import { ResourceHero } from "./ResourceHero";
 import styles from "./PronounsGuidePage.module.css";
 
 /**
@@ -50,22 +51,19 @@ export function PronounsGuidePage() {
           { name: pageTitle, path: "/resources/pronouns-guide" },
         ])}
       />
-      <header className={styles.hero}>
-        <div className={styles.heroInner}>
-          <div className={styles.heroEye}>
-            {t("resources:pronounsGuide.hero.eyebrow")}
-          </div>
-          <h1 className={styles.heroH}>
-            <Translation
-              i18nKey="resources:pronounsGuide.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.heroSub}>
-            {t("resources:pronounsGuide.hero.sub")}
-          </p>
-        </div>
-      </header>
+      <ResourceHero
+        eyebrowVariant="label"
+        eyebrowColor="var(--jade)"
+        eyebrow={t("resources:pronounsGuide.hero.eyebrow")}
+        titleWeight="light"
+        title={
+          <Translation
+            i18nKey="resources:pronounsGuide.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        lead={t("resources:pronounsGuide.hero.sub")}
+      />
 
       <div className={styles.body}>
         <div className={styles.layout}>

@@ -97,10 +97,10 @@
   opacity: 0.8;
   margin-bottom: 9px;
 }
-.step::before {
-  content: "→";
+.stepArrow {
   color: var(--accent);
   flex: none;
+  margin-top: 0.2em;
 }
 
 /* ---- Editor + sidebar layout ---- */

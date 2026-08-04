@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PageShell } from "../../shared/components/layout";
+import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -42,42 +42,44 @@ export function AccessibilityPage() {
           { name: pageTitle, path: routes.accessibility },
         ])}
       />
-      <div className={styles.hero}>
-        <div className="wrap">
-          <HubBackLink
-            to={routes.help}
-            label={t("marketing:accessibility.backLabel")}
-          />
-          <div className={styles.cat}>
+      <PageHero
+        plum={false}
+        eyebrow={
+          <>
+            <span style={{ textTransform: "none", letterSpacing: "normal" }}>
+              <HubBackLink
+                to={routes.help}
+                label={t("marketing:accessibility.backLabel")}
+              />
+            </span>
             {t("marketing:accessibility.category")}
-          </div>
-          <h1>
-            <Translation
-              i18nKey="marketing:accessibility.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.heroSub}>
-            {t("marketing:accessibility.hero.sub")}
-          </p>
-          <div className={styles.heroActions}>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => setAccomOpen(true)}
-            >
-              {t("marketing:accessibility.hero.accomCta")}
-            </Button>
-            <Button href="#spaces" variant="ghost">
-              {t("marketing:accessibility.hero.spacesCta")} ↓
-            </Button>
-          </div>
-          <div className={styles.heroNote}>
-            <span className={styles.dot} />
-            {t("marketing:accessibility.hero.note")}
-          </div>
+          </>
+        }
+        title={
+          <Translation
+            i18nKey="marketing:accessibility.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("marketing:accessibility.hero.sub")}
+      >
+        <div className={styles.heroActions}>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => setAccomOpen(true)}
+          >
+            {t("marketing:accessibility.hero.accomCta")}
+          </Button>
+          <Button href="#spaces" variant="ghost">
+            {t("marketing:accessibility.hero.spacesCta")} ↓
+          </Button>
         </div>
-      </div>
+        <div className={styles.heroNote}>
+          <span className={styles.dot} />
+          {t("marketing:accessibility.hero.note")}
+        </div>
+      </PageHero>
 
       <AccessibleSpacesSection
         loading={loading}

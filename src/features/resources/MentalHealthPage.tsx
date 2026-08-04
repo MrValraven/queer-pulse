@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -15,6 +15,7 @@ import {
   ExperiencesSection,
   SnsSection,
 } from "./MentalHealthSections";
+import { ResourceHero } from "./ResourceHero";
 import styles from "./MentalHealthPage.module.css";
 
 const FORUM = routes.forum;
@@ -40,22 +41,20 @@ export function MentalHealthPage() {
           { name: pageTitle, path: "/resources/mental-health" },
         ])}
       />
-      <div className={styles.hero}>
-        <div className="wrap">
-          <Reveal as="div" className={styles.cat}>
-            {t("resources:mentalHealth.hero.cat")}
-          </Reveal>
-          <Reveal as="h1" delay={60}>
-            <Translation
-              i18nKey="resources:mentalHealth.hero.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.heroSub} delay={120}>
-            {t("resources:mentalHealth.hero.sub")}
-          </Reveal>
-        </div>
-      </div>
+      <ResourceHero
+        tone="light"
+        eyebrowVariant="label"
+        eyebrowColor="var(--jade)"
+        eyebrow={t("resources:mentalHealth.hero.cat")}
+        titleWeight="light"
+        title={
+          <Translation
+            i18nKey="resources:mentalHealth.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        lead={t("resources:mentalHealth.hero.sub")}
+      />
 
       <div className={styles.crisisBar}>
         <div className="wrap">

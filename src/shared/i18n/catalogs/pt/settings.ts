@@ -512,7 +512,7 @@ export const settings: Catalog = {
   // vindos de GET /account/sessions — ficam em inglês) ─────────────────────
   "sessions.ago.justNow": "agora mesmo",
   "sessions.ago.unknown": "desconhecido",
-  "sessions.backToSecurity": "← Segurança",
+  "sessions.backToSecurity": "Segurança",
   "sessions.eyebrow": "Segurança · Sessões ativas",
   "sessions.h1": "Onde tens <em>sessão iniciada</em> agora mesmo.",
   "sessions.lead":
@@ -562,6 +562,7 @@ export const settings: Catalog = {
   "dataExport.outro.cta": "Contacta-nos",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────
+  "dataExport.steps.aria": "Progresso da exportação",
   "dataExport.steps.step1.label": "Escolhe o que exportar",
   "dataExport.steps.step1.desc":
     "Seleciona os tipos de dados que queres incluir no teu arquivo.",
@@ -882,7 +883,7 @@ export const settings: Catalog = {
   "themeStudio.badge.sustainer": "Apoiante (Raro)",
   "themeStudio.badge.regular": "Regular (Raro)",
   "themeStudio.badge.vouch": "Aval (Raro)",
-  "themeStudio.backToProfile": "← O meu perfil",
+  "themeStudio.backToProfile": "O meu perfil",
   "themeStudio.saveTheme": "Guardar tema",
   "themeStudio.toast.saved": "Tema guardado",
 
@@ -947,6 +948,7 @@ export const settings: Catalog = {
   "security.scope.out.7": "Cabeçalhos de segurança em falta (apenas comunicação)",
 
   "security.process.eyebrow": "Processo",
+  "security.process.aria": "O que acontece depois de comunicares",
   "security.process.title": "O que acontece <em>depois de comunicares.</em>",
   "security.process.step1.title": "Confirmação",
   "security.process.step1.text":

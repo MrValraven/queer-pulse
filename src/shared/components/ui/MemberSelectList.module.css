@@ -1,0 +1,81 @@
+/* MemberSelectList — search + selectable member rows. Tokens only. */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.16s var(--ease);
+}
+/* MemberIdentity is the first child — let it take the free width so the
+   checkbox stays pinned to the trailing edge. */
+.row > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+@media (hover: hover) {
+  .row:hover:not(:disabled) {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+.row:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: -2px;
+}
+.row:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.rowSelected {
+  background: rgba(var(--jade-rgb), 0.09);
+}
+@media (hover: hover) {
+  .rowSelected:hover:not(:disabled) {
+    background: rgba(var(--jade-rgb), 0.12);
+  }
+}
+.check {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.28);
+  display: grid;
+  place-items: center;
+  color: var(--paper);
+  transition:
+    background 0.16s var(--ease),
+    border-color 0.16s var(--ease);
+}
+.checkOn {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.check svg {
+  width: 14px;
+  height: 14px;
+}
+.empty {
+  margin: 0;
+  padding: 24px 10px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}

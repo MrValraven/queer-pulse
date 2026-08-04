@@ -1,8 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { logInfo } from "../../../shared/observability/logger";
 import type { ListingStatus } from "../../marketing/listBusiness/listBusiness.data";
 import { recordDemoListingMutation } from "../adminListings.data";
 import {
@@ -11,10 +10,7 @@ import {
   type BulkListingResultDTO,
 } from "./adminListings.api";
 import { ADMIN_LISTINGS_KEY, patchListingInCache } from "./useAdminListings";
-
-/** How long demo mode pretends the round-trip takes, matching the single-row
- *  mutations (`useSetListingStatus`/`useRemoveListing`). */
-const DEMO_LATENCY_MS = 400;
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 interface BulkStatusVars {
   refs: string[];
@@ -32,8 +28,9 @@ interface BulkRemoveVars {
  * or removes every currently-selected queue row in one action. Dual-mode like
  * every other listings mutation:
  *
- * - Demo mode never hits the network. It waits out the same `DEMO_LATENCY_MS`
- *   as a single-row mutation, then for EACH ref calls `recordDemoListingMutation`
+ * - Demo mode never hits the network. It waits out the same demo latency as a
+ *   single-row mutation (the `demoAwareMutation` default), then for EACH ref
+ *   calls `recordDemoListingMutation`
  *   (the demo-session overlay that survives a not-yet-fetched status tab) and
  *   `patchListingInCache` (the instant same-tab cache patch) — exactly the pair
  *   `useSetListingStatus`/`useRemoveListing` call per row, just looped, so a
@@ -74,59 +71,57 @@ export function useBulkListingAction() {
     );
   }
 
-  const setStatusMutation = useMutation<
+  const setStatusMutation = useDemoAwareMutation<
     BulkListingResultDTO,
     Error,
     BulkStatusVars
   >({
-    mutationFn: async ({ refs, status, reason }) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.listing.bulkSetStatus (demo — no network)", {
-          refs,
+    demoMode,
+    logLabel: "admin.listing.bulkSetStatus",
+    logContext: ({ refs, status }) => ({ refs, status }),
+    // The per-ref registry record + cache patch IS the demo optimistic update
+    // (looped, unlike the single-row hooks), so it belongs in `demoResult`.
+    demoResult: ({ refs, status }) => {
+      for (const ref of refs) {
+        recordDemoListingMutation(ref, { status });
+        patchListingInCache(queryClient, demoMode, ref, (row) => ({
+          ...row,
           status,
-        });
-        for (const ref of refs) {
-          recordDemoListingMutation(ref, { status });
-          patchListingInCache(queryClient, demoMode, ref, (row) => ({
-            ...row,
-            status,
-          }));
-        }
-        return { updated: refs, failed: [] };
+        }));
       }
-      return bulkSetListingStatus(refs, status, reason);
+      return { updated: refs, failed: [] };
     },
+    live: ({ refs, status, reason }) =>
+      bulkSetListingStatus(refs, status, reason),
     onSuccess: (result) => {
-      if (!demoMode) {
-        void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
-      }
       reportOutcome(result);
+    },
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
     },
   });
 
-  const removeMutation = useMutation<
+  const removeMutation = useDemoAwareMutation<
     BulkListingResultDTO,
     Error,
     BulkRemoveVars
   >({
-    mutationFn: async ({ refs, reason }) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.listing.bulkRemove (demo — no network)", { refs });
-        for (const ref of refs) {
-          recordDemoListingMutation(ref, { removed: true });
-          patchListingInCache(queryClient, demoMode, ref, () => null);
-        }
-        return { updated: refs, failed: [] };
+    demoMode,
+    logLabel: "admin.listing.bulkRemove",
+    logContext: ({ refs }) => ({ refs }),
+    demoResult: ({ refs }) => {
+      for (const ref of refs) {
+        recordDemoListingMutation(ref, { removed: true });
+        patchListingInCache(queryClient, demoMode, ref, () => null);
       }
-      return bulkRemoveListings(refs, reason);
+      return { updated: refs, failed: [] };
     },
+    live: ({ refs, reason }) => bulkRemoveListings(refs, reason),
     onSuccess: (result) => {
-      if (!demoMode) {
-        void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
-      }
       reportOutcome(result);
+    },
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
     },
   });
 

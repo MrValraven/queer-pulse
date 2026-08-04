@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -142,7 +142,10 @@ export function StudioSheetCheckout() {
             {t("studio:sheet.checkout.downloadingLabel")}
           </>
         ) : (
-          t("studio:sheet.checkout.payCta", { amount: fmt.currency(total) })
+          <>
+            {t("studio:sheet.checkout.payCta", { amount: fmt.currency(total) })}{" "}
+            <FiArrowRight aria-hidden />
+          </>
         )}
       </button>
       <div className={s.chNote}>

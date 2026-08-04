@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { FiFilm } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiFilm } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { PageShell } from "../../shared/components/layout";
@@ -60,6 +60,7 @@ function DemoCinemaCuratorPage() {
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>{name}</span>
             <Link to={routes.cinemaAbout} className={styles.crumbBack}>
+              <FiArrowLeft aria-hidden />{" "}
               {t("cinema:curator.crumb.backCta")}
             </Link>
           </div>
@@ -93,7 +94,8 @@ function DemoCinemaCuratorPage() {
         sub={curator.outroSub}
       >
         <Button size="lg" to={curator.leadCollectionTo}>
-          {t("cinema:curator.outro.openCollectionCta")}
+          {t("cinema:curator.outro.openCollectionCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

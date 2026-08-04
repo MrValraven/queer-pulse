@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -120,7 +121,8 @@ export function SeatQuantity() {
             onClick={joinWaitlist}
             style={{ padding: "10px 20px" }}
           >
-            {t("gatherings:checkout.seats.waitlistSubmitCta")} →
+            {t("gatherings:checkout.seats.waitlistSubmitCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>

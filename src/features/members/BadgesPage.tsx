@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { EmptyState, Spinner } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -64,7 +65,7 @@ export function BadgesPage() {
           <div className={styles.pageHeader}>
             <div>
               <Link to={routes.accountProfile} className={styles.backLink}>
-                {t("members:badges.backToProfile")}
+                <FiArrowLeft aria-hidden /> {t("members:badges.backToProfile")}
               </Link>
               <h1 className={styles.phTitle}>
                 <Translation

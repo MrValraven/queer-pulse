@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from "react";
+import { FiChevronDown } from "react-icons/fi";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** The collapsible filter groups on the members directory. Order here is the
@@ -88,7 +89,7 @@ export function FilterSection({
             .join(" ")}
           aria-hidden
         >
-          ▾
+          <FiChevronDown />
         </span>
       </button>
       {/* Body stays mounted so its height can animate open AND closed. The

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck, FiStar } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiStar } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -84,7 +84,8 @@ export function HostCard() {
             onClick={send}
             style={{ padding: "9px 18px", fontSize: 13.5 }}
           >
-            {t("gatherings:checkout.host.sendCta")} →
+            {t("gatherings:checkout.host.sendCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>

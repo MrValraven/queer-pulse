@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { FiX } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Avatar, Modal } from "../../shared/components/ui";
 import { activeLocale } from "../../shared/i18n/locale";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SeenByEntry } from "./groupReceipts";
@@ -26,63 +23,31 @@ interface GroupSeenBySheetProps {
  * the "Seen by N" receipt under an own group message. Read-only.
  */
 export function GroupSeenBySheet({ entries, onClose }: GroupSeenBySheetProps) {
-  useScrollLock();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
+    <Modal
+      title={t("messages:group.seenByTitle", { count: entries.length })}
+      onClose={onClose}
     >
-      <div
-        className={styles.dialog}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="seen-by-title"
-      >
-        <div className={styles.head}>
-          <h2 id="seen-by-title" className={styles.title}>
-            {t("messages:group.seenByTitle", { count: entries.length })}
-          </h2>
-          <button
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("messages:newMessage.close")}
-          >
-            <FiX />
-          </button>
-        </div>
-        <ul className={styles.list}>
-          {entries.map((entry) => (
-            <li key={entry.id ?? entry.name} className={styles.row}>
-              <Avatar
-                initials={entry.initials}
-                tint={entry.tint}
-                src={entry.avatarUrl}
-                size={40}
-              />
-              <div className={styles.rowBody}>
-                <span className={styles.rowName}>{entry.name}</span>
-              </div>
-              {readTime(entry.at) && (
-                <span className={styles.roleBadge}>{readTime(entry.at)}</span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+      <ul className={styles.list}>
+        {entries.map((entry) => (
+          <li key={entry.id ?? entry.name} className={styles.row}>
+            <Avatar
+              initials={entry.initials}
+              tint={entry.tint}
+              src={entry.avatarUrl}
+              size={40}
+            />
+            <div className={styles.rowBody}>
+              <span className={styles.rowName}>{entry.name}</span>
+            </div>
+            {readTime(entry.at) && (
+              <span className={styles.roleBadge}>{readTime(entry.at)}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Modal>
   );
 }

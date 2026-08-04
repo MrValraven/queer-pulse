@@ -1,6 +1,5 @@
-import { Button } from "../../shared/components/ui";
+import { ConfirmDialog, Eyebrow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminModal } from "./ui";
 import styles from "./AdminSettingsPage.module.css";
 
 /**
@@ -8,8 +7,8 @@ import styles from "./AdminSettingsPage.module.css";
  * every member, which should not be a stray click on a switch — so it states
  * the blast radius and shows the exact message members will see.
  *
- * Disabling confirms too, but lightly: the copy is shorter and the button is
- * not destructive-styled, because reopening is the safe direction.
+ * Disabling confirms too, but lightly: the copy is shorter and the tone is the
+ * default (non-destructive), because reopening is the safe direction.
  */
 export function AdminSettingsConfirm({
   mode,
@@ -24,28 +23,20 @@ export function AdminSettingsConfirm({
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
-  const k = `admin:settings.confirm.${mode}`;
+  const keyPrefix = `admin:settings.confirm.${mode}`;
 
   return (
-    <AdminModal
-      eyebrow={t(`${k}.eyebrow`)}
-      title={t(`${k}.title`)}
+    <ConfirmDialog
+      open
       onClose={onCancel}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onCancel}>
-            {t("admin:common.cancel")}
-          </Button>
-          <Button
-            variant={mode === "enable" ? "danger" : "primary"}
-            onClick={onConfirm}
-          >
-            {t(`${k}.cta`)}
-          </Button>
-        </>
-      }
+      onConfirm={onConfirm}
+      title={t(`${keyPrefix}.title`)}
+      tone={mode === "enable" ? "destructive" : "default"}
+      confirmLabel={t(`${keyPrefix}.cta`)}
+      cancelLabel={t("admin:common.cancel")}
     >
-      <p className={styles.confirmBody}>{t(`${k}.body`)}</p>
+      <Eyebrow>{t(`${keyPrefix}.eyebrow`)}</Eyebrow>
+      <p className={styles.confirmBody}>{t(`${keyPrefix}.body`)}</p>
       {mode === "enable" && (
         <>
           <p className={styles.confirmLabel}>
@@ -57,6 +48,6 @@ export function AdminSettingsConfirm({
           </p>
         </>
       )}
-    </AdminModal>
+    </ConfirmDialog>
   );
 }

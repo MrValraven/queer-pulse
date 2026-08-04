@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Tab } from "./visas.data";
@@ -58,10 +59,12 @@ export function VisasTabContent({
                         textDecoration: "underline",
                       }}
                     >
-                      {t(card.link.labelKey)}
+                      {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                     </button>
                   ) : (
-                    <Link to={card.link.href}>{t(card.link.labelKey)}</Link>
+                    <Link to={card.link.href}>
+                      {t(card.link.labelKey)} <FiArrowRight aria-hidden />
+                    </Link>
                   )}
                 </div>
               )}

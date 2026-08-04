@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
   SkeletonAvatar,
@@ -6,6 +7,7 @@ import {
   TagRow,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { useMemberContact } from "../connect/useMemberContact";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -50,14 +52,15 @@ export function SkillCard({ skill }: { skill: Skill }) {
           tabIndex={0}
           className={styles.reach}
           onClick={reachOut}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              reachOut();
-            }
-          }}
+          onKeyDown={(event) => activateOnKey(event, reachOut)}
         >
-          {connected ? t("connect:contact.message") : "Reach out →"}
+          {connected ? (
+            t("connect:contact.message")
+          ) : (
+            <>
+              Reach out <FiArrowRight aria-hidden />
+            </>
+          )}
         </span>
       </div>
     </div>

@@ -34,34 +34,6 @@ function buildUnreadNotifications(
 
   return [
     {
-      id: 1,
-      type: "messages",
-      unread: true,
-      avatar: { initials: "IT", tint: "jade" },
-      actorSlug: "ines",
-      text: (
-        <Translation
-          i18nKey="notifications:list.1.text"
-          components={{ strong: <strong /> }}
-          values={{ name: memberName("ines") }}
-        />
-      ),
-      meta: t("notifications:list.1.meta"),
-      time: fmt.relativeTime(-2, "minute"),
-      actions: [
-        {
-          label: t("notifications:actions.reply"),
-          variant: "primary",
-          href: routes.messages,
-        },
-        {
-          label: t("notifications:actions.viewThread"),
-          variant: "ghost",
-          href: routes.messages,
-        },
-      ],
-    },
-    {
       id: 2,
       type: "events",
       unread: true,
@@ -126,8 +98,10 @@ function buildUnreadNotifications(
       ],
     },
     {
+      // A forum @-mention (see list.4 copy / "Forum · Mention" meta), not a DM —
+      // it was mislabeled `messages` before that category was retired.
       id: 4,
-      type: "messages",
+      type: "community",
       unread: true,
       avatar: { initials: "SA", tint: "jade" },
       actorSlug: "sofia",
@@ -277,33 +251,6 @@ function buildReadNotifications(
       ],
     },
     {
-      id: 10,
-      type: "messages",
-      unread: false,
-      avatar: { initials: "RF", tint: "jade" },
-      actorSlug: "rui-fernandes",
-      text: (
-        <Translation
-          i18nKey="notifications:list.10.text"
-          components={{ strong: <strong /> }}
-          values={{
-            name: "Rui Fernandes",
-            event: "Archive Night",
-            day: fmt.date(new Date(2026, 5, 19), { weekday: "long" }),
-          }}
-        />
-      ),
-      meta: t("notifications:list.10.meta"),
-      time: fmt.relativeTime(-5, "day"),
-      actions: [
-        {
-          label: t("notifications:actions.readMessage"),
-          variant: "ghost",
-          href: routes.messages,
-        },
-      ],
-    },
-    {
       id: 11,
       type: "community",
       unread: false,
@@ -349,9 +296,9 @@ function buildReadNotifications(
 
 /**
  * Composes the demo feed from its two order-preserving sections — the unread
- * rows (ids 1–7) followed by the already-read rows (ids 8–12). Splitting the
- * builder by read-state keeps each section small while yielding the identical
- * array the single builder produced before.
+ * rows (ids 2–7) followed by the already-read rows (ids 8, 9, 11, 12).
+ * Splitting the builder by read-state keeps each section small. (Ids 1 and 10
+ * were private-message rows, removed when the "messages" category was retired.)
  */
 export function buildNotifications(
   t: TFunction,
@@ -365,4 +312,4 @@ export function buildNotifications(
 
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
-export const DEMO_UNREAD_IDS = [1, 2, 3, 4, 5, 6, 7];
+export const DEMO_UNREAD_IDS = [2, 3, 4, 5, 6, 7];

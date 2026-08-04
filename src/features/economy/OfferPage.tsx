@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiClipboard } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiClipboard } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
@@ -99,7 +99,12 @@ export function OfferPage() {
               title={t("economy:offerBoard.comingSoon.title")}
               description={t("economy:offerBoard.comingSoon.body")}
               action={{
-                label: t("economy:offerBoard.backLink"),
+                label: (
+                  <>
+                    <FiArrowLeft aria-hidden />{" "}
+                    {t("economy:offerBoard.backLink")}
+                  </>
+                ),
                 to: routes.economy,
               }}
             />
@@ -114,7 +119,10 @@ export function OfferPage() {
       <div className={styles.page}>
         <div className="wrap">
           <div className={styles.backLink}>
-            <a href="/#board">{t("economy:offerBoard.backLink")}</a>
+            <a href="/#board">
+              <FiArrowLeft aria-hidden />{" "}
+              {t("economy:offerBoard.backLink")}
+            </a>
           </div>
           <div className={styles.grid}>
             <div>
@@ -136,9 +144,14 @@ export function OfferPage() {
                   variant="primary"
                   size="lg"
                 >
-                  {connected
-                    ? t("connect:contact.message")
-                    : t("economy:offerBoard.respondCta", { name: owner.first })}
+                  {connected ? (
+                    t("connect:contact.message")
+                  ) : (
+                    <>
+                      {t("economy:offerBoard.respondCta", { name: owner.first })}{" "}
+                      <FiArrowRight aria-hidden />
+                    </>
+                  )}
                 </Button>
                 <Button to={profile} variant="ghost" size="lg">
                   {t("economy:offerBoard.seeProfileCta")}

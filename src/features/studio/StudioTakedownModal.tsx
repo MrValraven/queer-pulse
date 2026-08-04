@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -77,7 +78,7 @@ export function StudioTakedownModal({
             className={`${s.bt} ${s.btConfirm}`}
             onClick={onConfirm}
           >
-            {t("studio:rights.modal.confirmCta")}
+            {t("studio:rights.modal.confirmCta")} <FiArrowRight aria-hidden />
           </button>
           <button type="button" className={s.bt} onClick={onClose}>
             {t("studio:rights.modal.cancelCta")}

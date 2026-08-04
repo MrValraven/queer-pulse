@@ -1,0 +1,40 @@
+/* DetailRows — key/value list. Tokens only. */
+.list {
+  margin: 0;
+  padding: 0;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 0;
+  font-size: 13.5px;
+  border-bottom: 1px dashed rgba(var(--line-rgb), 0.1);
+}
+.row:last-child {
+  border-bottom: none;
+}
+.label {
+  margin: 0;
+  color: var(--ink-60);
+}
+.value {
+  margin: 0;
+  color: var(--text-strong);
+  font-weight: 700;
+  text-align: right;
+}
+.value em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Dense — the safety summary-box variant: no gap, no divider, lighter value. */
+.dense .row {
+  gap: 0;
+  padding: 7px 0;
+  border-bottom: none;
+}
+.dense .value {
+  font-weight: 600;
+}

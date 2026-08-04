@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { FiMonitor } from "react-icons/fi";
+import { FiArrowLeft, FiMonitor } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -237,7 +237,7 @@ export function SessionsPage() {
     <AppShell>
       <div className={styles.page}>
         <Link to={routes.security} className={styles.back}>
-          {t("settings:sessions.backToSecurity")}
+          <FiArrowLeft aria-hidden /> {t("settings:sessions.backToSecurity")}
         </Link>
 
         <div className={styles.eyebrow}>{t("settings:sessions.eyebrow")}</div>

@@ -1,5 +1,5 @@
-import { FiStar } from "react-icons/fi";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { FiArrowRight, FiStar } from "react-icons/fi";
+import { Button, ImageSlot, Stars } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Landlord, Tint } from "./landlords";
 import { LandlordActions } from "./LandlordActions";
@@ -10,19 +10,6 @@ const TINT: Record<Tint, string | undefined> = {
   jade: s.tJade,
   plum: s.tPlum,
 };
-
-function Stars({ count }: { count: number }) {
-  return (
-    <>
-      {Array.from({ length: 5 }, (_, starIndex) => (
-        <FiStar
-          key={starIndex}
-          className={starIndex < count ? s.starOn : undefined}
-        />
-      ))}
-    </>
-  );
-}
 
 interface LandlordHeroProps {
   landlord: Landlord;
@@ -57,7 +44,7 @@ export function LandlordHero({
         <h1 className={s.name}>{landlord.name}</h1>
         <div className={s.metaLine}>
           <span className={s.stars}>
-            <Stars count={Math.round(landlord.stars)} />
+            <Stars value={landlord.stars} />
           </span>
           <span>{landlord.hood}</span>
         </div>
@@ -131,7 +118,7 @@ export function LandlordRecommendations({ landlord }: { landlord: Landlord }) {
                 <div className={s.recWhen}>{recommendation.when}</div>
               </div>
               <span className={s.recStars}>
-                <Stars count={recommendation.stars} />
+                <Stars value={recommendation.stars} />
               </span>
             </div>
             <div className={s.recText}>{recommendation.text}</div>
@@ -196,7 +183,8 @@ export function LandlordSidebar({
           style={{ marginTop: 14 }}
           onClick={onRequestIntro}
         >
-          {t("economy:landlordPage.sidebar.requestIntro")}
+          {t("economy:landlordPage.sidebar.requestIntro")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </aside>

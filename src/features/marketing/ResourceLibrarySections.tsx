@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
@@ -126,7 +127,10 @@ export function ResourceCard({
       </div>
       <div className={s.cardFoot}>
         {resource.internal ? (
-          t("marketing:resourceLibrary.card.openGuide")
+          <>
+            {t("marketing:resourceLibrary.card.openGuide")}{" "}
+            <FiArrowRight aria-hidden />
+          </>
         ) : (
           <span className={s.ext}>
             {t("marketing:resourceLibrary.card.visitSite")}

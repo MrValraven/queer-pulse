@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { FiBookmark, FiMapPin } from "react-icons/fi";
+import { FiArrowLeft, FiMapPin } from "react-icons/fi";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn, FeatureHelp } from "../../shared/components/ui";
+import { FadeIn, FeatureHelp, SaveButton } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -40,6 +40,7 @@ export function HousingListingPage() {
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("economy:housingListing.back")}
           </Link>
           <HousingListingSkeleton />
@@ -61,6 +62,7 @@ export function HousingListingPage() {
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("economy:housingListing.back")}
           </Link>
           <HousingListingError onRetry={() => void refetch()} />
@@ -107,7 +109,8 @@ export function HousingListingPage() {
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>
-          {t("economy:housingListing.back")}
+          <FiArrowLeft aria-hidden />{" "}
+            {t("economy:housingListing.back")}
         </Link>
 
         <FadeIn>
@@ -134,28 +137,15 @@ export function HousingListingPage() {
               >
                 {typeLabel}
               </span>
-              <Button
-                variant="ghost"
-                className={s.saveBtn}
-                onClick={handleToggleSave}
-                aria-pressed={saved}
-                aria-label={t(
-                  saved
-                    ? "economy:housingListing.unsaveAriaLabel"
-                    : "economy:housingListing.saveAriaLabel",
-                  { title: listing.title },
-                )}
-              >
-                <FiBookmark
-                  aria-hidden
-                  style={{ fill: saved ? "currentColor" : "none" }}
-                />
-                {t(
+              <SaveButton
+                saved={saved}
+                onToggle={handleToggleSave}
+                label={t(
                   saved
                     ? "economy:housingListing.saved"
                     : "economy:housingListing.save",
                 )}
-              </Button>
+              />
             </div>
             <h1 className={s.title}>
               {listing.title} <FeatureHelp id="housing.listing" />

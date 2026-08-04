@@ -1,4 +1,4 @@
-import { FiUsers } from "react-icons/fi";
+import { FiArrowRight, FiUsers } from "react-icons/fi";
 import { Button, EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -29,7 +29,8 @@ export function FamilyTalkSection() {
                   {t("community:family.talk.findMentorCta")}
                 </Button>
                 <Button to={FORUM} variant="ghost-dark" size="lg">
-                  {t("community:family.talk.networkCta")}
+                  {t("community:family.talk.networkCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Button>
               </div>
             </div>
@@ -79,7 +80,8 @@ export function FamilyTalkSection() {
                 {t("community:family.talk.forumCta.openForumCta")}
               </Button>
               <Button to={LEGAL} variant="ghost">
-                {t("community:family.talk.forumCta.legalResourcesCta")}
+                {t("community:family.talk.forumCta.legalResourcesCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             </div>
           </div>

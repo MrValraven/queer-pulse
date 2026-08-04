@@ -1,4 +1,4 @@
-import { FiMessageCircle } from "react-icons/fi";
+import { FiChevronUp, FiMessageCircle } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "../forum/PostActionsMenu";
@@ -66,12 +66,14 @@ export function CommunityThreadHead({
           className={[styles.vbtn, voted && styles.vbtnVoted]
             .filter(Boolean)
             .join(" ")}
+          aria-label={t("communities:detail.thread.upvoteAria")}
+          aria-pressed={voted}
           onClick={(event) => {
             event.stopPropagation();
             onToggleVote();
           }}
         >
-          ▲
+          <FiChevronUp aria-hidden />
         </button>
         <span className={styles.vnum}>{voteCount}</span>
       </div>

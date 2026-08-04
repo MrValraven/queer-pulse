@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, Button, ImageSlot } from "../../shared/components/ui";
-import { FiBookmark, FiLock } from "react-icons/fi";
+import { FiArrowLeft, FiBookmark, FiLock } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useSaved } from "../../app/providers/useSaved";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -66,7 +66,7 @@ export function EventPage() {
       <div className={styles.hero}>
         <div className="wrap">
           <Link to={routes.calendar} className={styles.back}>
-            {t("gatherings:common.backToGatherings")}
+            <FiArrowLeft aria-hidden /> {t("gatherings:common.backToGatherings")}
           </Link>
           <div className={styles.type}>{EVENT_TYPE_LABEL}</div>
           <h1 className={styles.title}>

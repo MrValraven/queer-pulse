@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -66,7 +66,8 @@ export function BarterPostStrip({
           </h3>
           <p>{t("economy:barter.postStrip.success.body")}</p>
           <Button variant="ghost-dark" onClick={postAnother}>
-            {t("economy:barter.postStrip.success.postAnother")}
+            {t("economy:barter.postStrip.success.postAnother")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       ) : (
@@ -102,7 +103,8 @@ export function BarterPostStrip({
               onChange={(e) => setWantText(e.target.value)}
             />
             <Button type="submit" disabled={!canPost}>
-              {t("economy:barter.postStrip.submitCta")}
+              {t("economy:barter.postStrip.submitCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </form>
         </>

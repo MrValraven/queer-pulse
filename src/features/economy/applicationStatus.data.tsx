@@ -61,7 +61,7 @@ export const APPS: Application[] = [
     ),
     badge: { kind: "in-review", label: "In review", pulse: true },
     actions: [
-      { label: "Message recruiter →", kind: "message" },
+      { label: "Message recruiter", kind: "message", arrow: true },
       { label: "View submission", kind: "submission", muted: true },
     ],
     recruiter: {
@@ -126,7 +126,7 @@ export const APPS: Application[] = [
     ),
     badge: { kind: "interview", label: "Interview", pulse: true },
     actions: [
-      { label: "Add to calendar →", kind: "calendar" },
+      { label: "Add to calendar", kind: "calendar", arrow: true },
       { label: "View company", kind: "company", muted: true },
     ],
     thread: [
@@ -199,7 +199,7 @@ export const APPS: Application[] = [
     ),
     badge: { kind: "offer", label: "Offer · respond" },
     actions: [
-      { label: "Respond to offer →", kind: "offer", solid: true },
+      { label: "Respond to offer", kind: "offer", solid: true, arrow: true },
       { label: "Open conversation", kind: "conversation", muted: true },
       { label: "Negotiate help", kind: "negotiate", muted: true },
     ],
@@ -287,7 +287,7 @@ export const APPS: Application[] = [
     ),
     badge: { kind: "offer", label: "Offer · respond" },
     actions: [
-      { label: "Respond to offer →", kind: "offer", solid: true },
+      { label: "Respond to offer", kind: "offer", solid: true, arrow: true },
       { label: "Negotiate help", kind: "negotiate", muted: true },
     ],
     recruiter: {
@@ -339,7 +339,7 @@ export const APPS: Application[] = [
     ),
     badge: { kind: "attention", label: "Overdue · 11 days", pulse: true },
     actions: [
-      { label: "Follow up →", kind: "followup" },
+      { label: "Follow up", kind: "followup", arrow: true },
       { label: "Withdraw", kind: "withdraw", muted: true },
     ],
     recruiter: {
@@ -375,7 +375,7 @@ export const APPS: Application[] = [
       </>
     ),
     badge: { kind: "in-review", label: "Just sent", pulse: true },
-    actions: [{ label: "View details →", kind: "submission" }],
+    actions: [{ label: "View details", kind: "submission", arrow: true }],
     submission: {
       date: "Submitted 25 Jun, 18:40",
       role: "UX Researcher · 12-month contract",
@@ -413,7 +413,7 @@ export const APPS: Application[] = [
       </>
     ),
     badge: { kind: "rejected", label: "Closed · 21 May" },
-    actions: [{ label: "Read their note →", kind: "note" }],
+    actions: [{ label: "Read their note", kind: "note", arrow: true }],
     note: {
       from: "Rui · Solar Lisboa",
       body: "Sofia — this was genuinely close. Your editorial work was the strongest in the round, and the panel kept coming back to your type choices. We chose a candidate with more motion experience because the role leans 60% into animation this year. Please apply again when we open the print-led brief in the autumn — I'll personally flag your name. Thank you for the care you put into the task.",
@@ -458,7 +458,7 @@ export const APPS: Application[] = [
       </>
     ),
     badge: { kind: "draft", label: "Draft · 60%" },
-    actions: [{ label: "Resume application →", kind: "resume" }],
+    actions: [{ label: "Resume application", kind: "resume", arrow: true }],
     draft: {
       percent: 60,
       deadline: "Closes 18 June 2026",

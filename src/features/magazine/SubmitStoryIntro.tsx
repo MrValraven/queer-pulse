@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -45,6 +46,7 @@ export function SubmitStoryIntro() {
         </div>
         {STEP_KEYS.map((stepKey) => (
           <div key={stepKey} className={styles.step}>
+            <FiArrowRight className={styles.stepArrow} aria-hidden />
             {t(stepKey)}
           </div>
         ))}

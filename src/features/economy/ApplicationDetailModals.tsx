@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -155,7 +154,8 @@ export function CompanyModal({
 
       <div className={styles.foot}>
         <Button variant="ghost" to={routes.directory} onClick={onClose}>
-          {t("economy:applicationStatus.company.viewDirectory")}
+          {t("economy:applicationStatus.company.viewDirectory")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <Button size="lg" onClick={onClose}>
           {t("economy:applicationStatus.close")}
@@ -174,50 +174,20 @@ export function NoteModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  useScrollLock();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
   const n = app.note;
+  const fromLabel = t("economy:applicationStatus.note.from", {
+    company: app.companyName,
+  });
   return (
-    <div
-      className={styles.overlay}
-      // Backdrop click is a mouse-only shortcut; Esc and the close button
-      // already provide the keyboard path, so this div is not interactive.
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={`${styles.modal} ${styles.readModal}`}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="note-modal-title"
-      >
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("economy:applicationStatus.close")}
-        >
-          ×
-        </button>
-        <div id="note-modal-title" className={styles.readEyebrow}>
-          {t("economy:applicationStatus.note.from", {
-            company: app.companyName,
-          })}
-        </div>
-        <p className={styles.readBody}>“{n?.body}”</p>
-        <div className={styles.readFrom}>— {n?.from}</div>
-        <div className={styles.readFoot}>
-          <Button size="lg" variant="ghost-dark" onClick={onClose}>
-            {t("economy:applicationStatus.close")}
-          </Button>
-        </div>
+    <ModalShell onClose={onClose} ariaLabel={fromLabel} className={styles.readModal}>
+      <div className={styles.readEyebrow}>{fromLabel}</div>
+      <p className={styles.readBody}>“{n?.body}”</p>
+      <div className={styles.readFrom}>— {n?.from}</div>
+      <div className={styles.readFoot}>
+        <Button size="lg" variant="ghost-dark" onClick={onClose}>
+          {t("economy:applicationStatus.close")}
+        </Button>
       </div>
-    </div>
+    </ModalShell>
   );
 }

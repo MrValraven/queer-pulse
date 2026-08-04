@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiStar } from "react-icons/fi";
+import { FiArrowRight, FiStar } from "react-icons/fi";
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -46,7 +46,8 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
               {card.link && (
                 <div className={styles.icLink}>
                   <Link to={card.link.href}>
-                    {t(`community:${card.link.labelKey}`)}
+                    {t(`community:${card.link.labelKey}`)}{" "}
+                    <FiArrowRight aria-hidden />
                   </Link>
                 </div>
               )}

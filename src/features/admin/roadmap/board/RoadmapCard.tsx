@@ -1,4 +1,5 @@
 import { useEffect, useRef, type KeyboardEvent, type MouseEvent } from "react";
+import { MdDragIndicator } from "react-icons/md";
 import { AdminChip } from "../../ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { usePrefersReducedMotion } from "../../../../shared/hooks";
@@ -151,7 +152,7 @@ export function RoadmapCard({
           aria-hidden
           title={t("admin:roadmap.board.gripAriaLabel")}
         >
-          ≡
+          <MdDragIndicator />
         </span>
         <AdminChip tone="plum" className={styles.categoryChip}>
           {categoryLabel}

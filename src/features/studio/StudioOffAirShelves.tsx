@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { linkToPath, routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -48,7 +49,8 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
           </h2>
           <div style={rowNote}>{t("studio:offAir.carryOn.sub")}</div>
           <Link to={routes.studioLibrary} style={rowLink}>
-            {t("studio:offAir.libraryCta")} →
+            {t("studio:offAir.libraryCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         {loading ? (
@@ -108,7 +110,8 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
           </h2>
           <div style={rowNote}>{t("studio:offAir.quietHours.sub")}</div>
           <Link to={routes.studioSearch} style={rowLink}>
-            {t("studio:offAir.allCta")} →
+            {t("studio:offAir.allCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         {loading ? (

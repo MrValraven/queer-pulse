@@ -1,5 +1,10 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
-import { FiAlertCircle, FiArrowRight, FiCheck } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiArrowLeft,
+  FiArrowRight,
+  FiCheck,
+} from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
 import { Translation } from "../../../shared/i18n/Translation";
@@ -253,6 +258,7 @@ export function PaneActions({
   hideBack = false,
   onNext,
   nextLabel,
+  nextArrow = true,
   missing,
 }: {
   onBack: () => void;
@@ -262,10 +268,16 @@ export function PaneActions({
   hideBack?: boolean;
   onNext: () => void;
   nextLabel: string;
+  /** Whether the "next" button carries a forward arrow (false for the
+   *  edit-mode "Save" action, which isn't a step-forward affordance). */
+  nextArrow?: boolean;
   missing: MissingField[];
 }) {
   const { t } = useTranslation();
   const blocked = missing.length > 0;
+  // A custom backLabel (e.g. step 0's "Cancel") isn't a step-back affordance,
+  // so the back arrow only rides the default "Back".
+  const isDefaultBack = backLabel === undefined;
   const back = backLabel ?? t("marketing:listBusiness.paneActions.back");
   const actionsCls = [styles.paneActions, hideBack && styles.paneActionsEnd]
     .filter(Boolean)
@@ -303,7 +315,13 @@ export function PaneActions({
       <div className={actionsCls}>
         {!hideBack && (
           <Button variant="ghost" onClick={onBack}>
-            {back}
+            {isDefaultBack ? (
+              <>
+                <FiArrowLeft aria-hidden /> {back}
+              </>
+            ) : (
+              back
+            )}
           </Button>
         )}
         <Button
@@ -317,6 +335,12 @@ export function PaneActions({
           }
         >
           {nextLabel}
+          {nextArrow && (
+            <>
+              {" "}
+              <FiArrowRight aria-hidden />
+            </>
+          )}
         </Button>
       </div>
     </div>

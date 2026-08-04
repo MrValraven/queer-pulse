@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -61,7 +62,7 @@ export function PartnerDetailPage() {
         <div className={s.page}>
           <p className={s.error}>{t("marketing:partnerDetail.loadError")}</p>
           <Button variant="ghost" to={routes.partners}>
-            {t("marketing:partnerDetail.backCta")}
+            <FiArrowLeft aria-hidden /> {t("marketing:partnerDetail.backCta")}
           </Button>
         </div>
       </PageShell>
@@ -74,7 +75,7 @@ export function PartnerDetailPage() {
     <PageShell>
       <div className={s.page}>
         <Link to={routes.partners} className={s.back}>
-          {t("marketing:partnerDetail.backCta")}
+          <FiArrowLeft aria-hidden /> {t("marketing:partnerDetail.backCta")}
         </Link>
 
         <header className={s.hero}>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiPlay, FiShare2 } from "react-icons/fi";
-import { Avatar, FadeIn, ImageSlot } from "../../shared/components/ui";
+import { Avatar, FadeIn, ImageSlot, SectionHead } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -11,7 +11,7 @@ import {
   programmes,
   type ShortsShelf,
 } from "./cinemaShorts.data";
-import { SecDiv, ShortTitle } from "./CinemaShortsParts";
+import { SplitTitle, PosterSlot } from "./CinemaAtoms";
 import styles from "./CinemaShortsPage.module.css";
 
 /** Pick-up-where-you-left-off rail. Hidden when nothing is in progress. */
@@ -29,16 +29,17 @@ export function ContinueWatching() {
 
   return (
     <div>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.continueWatching.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.continueWatching.sub")}
-        actionTo={routes.cinemaWatch}
-        actionLabel={t("cinema:shorts.shelf.continueWatching.cta")}
+        subtitle={t("cinema:shorts.shelf.continueWatching.sub")}
+        linkTo={routes.cinemaWatch}
+        linkLabel={t("cinema:shorts.shelf.continueWatching.cta")}
       />
       <div className={styles.rail}>
         {items.map(({ film, pct }) => {
@@ -50,14 +51,7 @@ export function ContinueWatching() {
               className={styles.cwCard}
             >
               <div className={styles.cwPoster}>
-                <ImageSlot
-                  tint={film.tint}
-                  width="100%"
-                  height="100%"
-                  radius={12}
-                  placeholder={t("cinema:slot.poster")}
-                  style={{ position: "absolute", inset: 0 }}
-                />
+                <PosterSlot tint={film.tint} radius={12} />
                 <div className={styles.cwPlay}>
                   <span>
                     <FiPlay aria-hidden />
@@ -68,7 +62,11 @@ export function ContinueWatching() {
                 </div>
               </div>
               <div className={styles.cwTitle}>
-                <ShortTitle film={film} />
+                <SplitTitle
+                  pre={film.titlePre}
+                  em={film.titleEm}
+                  post={film.titlePost}
+                />
               </div>
               <div className={styles.cwLeft}>
                 {t("cinema:shorts.shelf.continueWatching.minutesLeft", {
@@ -89,16 +87,17 @@ export function Programmes({ shelf }: { shelf: ShortsShelf }) {
   const { t } = useTranslation();
   return (
     <>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.programmes.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.programmes.sub")}
-        actionTo={routes.cinemaCollections}
-        actionLabel={t("cinema:shorts.shelf.programmes.cta")}
+        subtitle={t("cinema:shorts.shelf.programmes.sub")}
+        linkTo={routes.cinemaCollections}
+        linkLabel={t("cinema:shorts.shelf.programmes.cta")}
       />
       <div className={styles.progGrid}>
         {programmes.map((p) => (
@@ -153,16 +152,17 @@ export function MeetTheMakers() {
   const { t } = useTranslation();
   return (
     <>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.shelf.meetMakers.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.shelf.meetMakers.sub")}
-        actionTo={routes.cinemaBrowse}
-        actionLabel={t("cinema:shorts.shelf.meetMakers.cta")}
+        subtitle={t("cinema:shorts.shelf.meetMakers.sub")}
+        linkTo={routes.cinemaBrowse}
+        linkLabel={t("cinema:shorts.shelf.meetMakers.cta")}
       />
       <div className={styles.makersRow}>
         {makers.map((m, i) => (

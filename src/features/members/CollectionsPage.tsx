@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { FiFolder } from "react-icons/fi";
+import { FiArrowRight, FiFolder } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import {
   Button,
@@ -154,7 +154,7 @@ function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
         <span>{r.saved}</span>
       </div>
       <span className={styles.recentAdd}>
-        {t("members:collections.recentSaves.addCta")}
+        {t("members:collections.recentSaves.addCta")} <FiArrowRight aria-hidden />
       </span>
     </button>
   );

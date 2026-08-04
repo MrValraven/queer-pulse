@@ -1,5 +1,6 @@
 import { type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn, SuccessPanel } from "../../shared/components/ui";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -63,7 +64,12 @@ export function SubmitPartnerApplicationPage() {
               <SuccessPanel
                 title={t("marketing:submitPartner.success.title")}
                 em={t("marketing:submitPartner.success.em")}
-                closeLabel={t("marketing:submitPartner.success.closeLabel")}
+                closeLabel={
+                  <>
+                    {t("marketing:submitPartner.success.closeLabel")}{" "}
+                    <FiArrowRight aria-hidden />
+                  </>
+                }
                 onClose={() => void navigate(routes.partners)}
                 steps={[
                   t("marketing:submitPartner.success.step1"),
@@ -90,6 +96,7 @@ export function SubmitPartnerApplicationPage() {
                     {submitApp.isPending
                       ? t("marketing:submitPartner.actions.sending")
                       : t("marketing:submitPartner.actions.submit")}
+                    {!submitApp.isPending && <FiArrowRight aria-hidden />}
                   </Button>
                   <Button variant="ghost" to={routes.partners}>
                     {t("marketing:submitPartner.actions.cancel")}

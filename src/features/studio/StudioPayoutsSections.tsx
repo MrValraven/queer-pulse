@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { FiZap, FiSettings } from "react-icons/fi";
+import { FiZap, FiSettings, FiArrowRight } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -117,7 +117,7 @@ export function PayoutsList({
               onExport();
             }}
           >
-            {t("studio:payouts.list.exportCsv")}
+            {t("studio:payouts.list.exportCsv")} <FiArrowRight aria-hidden />
           </button>
         </div>
         {loading

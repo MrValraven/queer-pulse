@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiHeart, FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiHeart, FiPlus } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -150,7 +150,7 @@ export function VolunteerPage() {
               <p className={s.guideBody}>{t("marketing:volunteer.guide.body")}</p>
             </div>
             <Button to={routes.activism} variant="ghost-dark">
-              {t("marketing:volunteer.guide.cta")}
+              {t("marketing:volunteer.guide.cta")} <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>
@@ -245,7 +245,8 @@ export function VolunteerPage() {
                             className={s.express}
                             to={`${routes.volunteer}/opportunity/${o.slug}`}
                           >
-                            {t("marketing:volunteer.card.expressInterest")}
+                            {t("marketing:volunteer.card.expressInterest")}{" "}
+                            <FiArrowRight aria-hidden />
                           </Link>
                         </div>
                       </div>
@@ -281,7 +282,7 @@ export function VolunteerPage() {
         sub={t("marketing:volunteer.outro.sub")}
       >
         <Button size="lg" to={routes.changemakers}>
-          {t("marketing:volunteer.outro.cta")}
+          {t("marketing:volunteer.outro.cta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

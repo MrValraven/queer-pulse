@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
@@ -77,7 +78,8 @@ export function CalendarSidebar({
             color: "var(--accent-ink)",
           }}
         >
-          {t("gatherings:calendar.hostCta")} →
+          {t("gatherings:calendar.hostCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

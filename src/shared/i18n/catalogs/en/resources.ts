@@ -84,12 +84,12 @@ export const resources: Catalog = {
   "legal.workplace.complaint.body":
     "The ACT (Autoridade para as Condições do Trabalho) handles workplace discrimination complaints. You can report anonymously. We have a step-by-step guide and template complaint letter.",
 
-  "legal.link.readGuide": "Read the full guide →",
-  "legal.link.getTemplate": "Get the template →",
-  "legal.link.findSupport": "Find support →",
-  "legal.link.transHubGuide": "Trans Hub guide →",
-  "legal.link.reportRefusal": "Report a refusal →",
-  "legal.link.prepGuide": "PrEP access guide →",
+  "legal.link.readGuide": "Read the full guide",
+  "legal.link.getTemplate": "Get the template",
+  "legal.link.findSupport": "Find support",
+  "legal.link.transHubGuide": "Trans Hub guide",
+  "legal.link.reportRefusal": "Report a refusal",
+  "legal.link.prepGuide": "PrEP access guide",
 
   "legal.housing.title": "Housing <em>rights</em>",
   "legal.housing.lead":
@@ -120,7 +120,7 @@ export const resources: Catalog = {
   "legal.lawyers.title": "Queer-friendly <em>lawyers</em>",
   "legal.lawyers.lead":
     "Vetted by community members, with specific experience in LGBTQ+ cases in Portugal. Initial consultations are free for QueerPulse members.",
-  "legal.lawyers.requestConsultationCta": "Request consultation →",
+  "legal.lawyers.requestConsultationCta": "Request consultation",
 
   "legal.outro.title": "You have <em>rights.</em>",
   "legal.outro.sub":
@@ -355,19 +355,19 @@ export const resources: Catalog = {
   "queer101.talk.peerSupport.title": "Peer support group",
   "queer101.talk.peerSupport.desc":
     "A moderated, confidential space within QueerPulse. Shared experience, no advice unless asked. Meets weekly.",
-  "queer101.talk.peerSupport.cta": "Join the group →",
+  "queer101.talk.peerSupport.cta": "Join the group",
   "queer101.talk.oneToOne.title": "One-to-one conversation",
   "queer101.talk.oneToOne.desc":
     "Request a conversation with a community member who's offered to talk to people newly exploring their identity.",
-  "queer101.talk.oneToOne.cta": "Find a conversation partner →",
+  "queer101.talk.oneToOne.cta": "Find a conversation partner",
   "queer101.talk.therapy.title": "Queer-affirming therapy",
   "queer101.talk.therapy.desc":
     "A directory of therapists in Lisbon who specialise in LGBTQ+ clients, compiled and reviewed by the community.",
-  "queer101.talk.therapy.cta": "Find a therapist →",
+  "queer101.talk.therapy.cta": "Find a therapist",
   "queer101.talk.askAnon.title": "Ask anonymously",
   "queer101.talk.askAnon.desc":
     "Submit a question anonymously to the community forum. Answered by real people, not bots.",
-  "queer101.talk.askAnon.cta": "Ask the forum →",
+  "queer101.talk.askAnon.cta": "Ask the forum",
 
   "queer101.outro.title": "You're welcome <em>here.</em>",
   "queer101.outro.sub":
@@ -540,7 +540,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.accepting": "Accepting",
   "mentalHealth.therapists.waitlist": "Waitlist",
   "mentalHealth.therapists.viewProfileAriaLabel": "View {name}'s profile",
-  "mentalHealth.therapists.viewProfileCta": "View profile →",
+  "mentalHealth.therapists.viewProfileCta": "View profile",
   "mentalHealth.therapists.comingSoon.badge": "Coming soon",
   "mentalHealth.therapists.comingSoon.title":
     "The directory is <em>almost here.</em>",
@@ -591,13 +591,13 @@ export const resources: Catalog = {
   "mentalHealth.sns.peer.body":
     "The mental health peer support group meets monthly. Members share experiences, recommend resources, and support each other — no professional facilitation, just honest conversation.",
   "mentalHealth.sns.peer.joinCta": "Join the group",
-  "mentalHealth.sns.peer.mentorCta": "Find a peer mentor →",
+  "mentalHealth.sns.peer.mentorCta": "Find a peer mentor",
 
   // ── TherapistProfileModal + TherapistProfileBody ────────────────────────
   // therapist.bio/approach/training/firstSession stay English (mock content,
   // fetched from the API in live mode); everything below is platform chrome.
   "mentalHealth.therapistModal.profileAriaLabel": "{name} — profile",
-  "mentalHealth.therapistModal.sayHelloCta": "Say hello →",
+  "mentalHealth.therapistModal.sayHelloCta": "Say hello",
   "mentalHealth.therapistModal.sentTitle": "Message sent to {name}.",
   "mentalHealth.therapistModal.sentText":
     "They'll reply directly to your email if it feels like a fit. No notifications, no pressure.",
@@ -615,7 +615,7 @@ export const resources: Catalog = {
   "mentalHealth.therapistProfile.section.howIWork": "How I work",
   "mentalHealth.therapistProfile.section.training": "Training & qualifications",
   "mentalHealth.therapistProfile.section.firstSession": "Your first session",
-  "mentalHealth.therapistProfile.seeFullProfileCta": "See full profile →",
+  "mentalHealth.therapistProfile.seeFullProfileCta": "See full profile",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
   "wellbeing.meta.title":
@@ -647,9 +647,9 @@ export const resources: Catalog = {
   "wellbeing.therapists.title": "Queer-affirming <em>therapists in Lisbon</em>",
   "wellbeing.therapists.lead":
     "Vetted by community members. Each therapist listed has been recommended by at least two QueerPulse members. We do not charge listing fees. Want to add someone? <a>Get in touch.</a>",
-  "wellbeing.therapists.requestIntroCta": "Request intro →",
+  "wellbeing.therapists.requestIntroCta": "Request intro",
   "wellbeing.therapists.applyPrompt": "Are you a queer-affirming therapist?",
-  "wellbeing.therapists.applyCta": "Apply to be listed →",
+  "wellbeing.therapists.applyCta": "Apply to be listed",
 
   "wellbeing.peer.title": "You don't have to <em>hold it alone.</em>",
   "wellbeing.peer.body":
@@ -697,9 +697,9 @@ export const resources: Catalog = {
   // below is platform chrome around that content.
   "therapistProfilePage.backLink": "Therapist directory",
   "therapistProfilePage.verified.body_one":
-    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouch in the last 12 months. <a>How we vet →</a>",
+    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouch in the last 12 months. <a>How we vet</a>",
   "therapistProfilePage.verified.body_other":
-    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouches in the last 12 months. <a>How we vet →</a>",
+    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouches in the last 12 months. <a>How we vet</a>",
   "therapistProfilePage.sendMessageCta": "Send a message",
 
   "therapistProfilePage.worksWith.title": "What {name} <em>works with</em>",
@@ -715,7 +715,7 @@ export const resources: Catalog = {
     "Anonymised by the vouching member. The clinic doesn't see who said what.",
   "therapistProfilePage.vouches.addPrompt": "Have you seen {name}?",
   "therapistProfilePage.vouches.addHelp": "Help the next member decide",
-  "therapistProfilePage.vouches.addCta": "Add an anonymised vouch →",
+  "therapistProfilePage.vouches.addCta": "Add an anonymised vouch",
   "therapistProfilePage.beforeBook.title":
     "Before you book — <em>good to know</em>",
 
@@ -729,7 +729,7 @@ export const resources: Catalog = {
     "You're on the list. {name} will write when a slot opens — usually 6–10 weeks.",
   "therapistProfilePage.sidebar.holdingLabel": "Holding…",
   "therapistProfilePage.sidebar.joiningLabel": "Joining…",
-  "therapistProfilePage.sidebar.holdSlotCta": "Hold {slot} →",
+  "therapistProfilePage.sidebar.holdSlotCta": "Hold {slot}",
   "therapistProfilePage.sidebar.pickSlotCta": "Pick an open slot",
   "therapistProfilePage.sidebar.feesHeading": "Fees",
   "therapistProfilePage.sidebar.whereHeading": "Where",
@@ -813,7 +813,7 @@ export const resources: Catalog = {
   "transHub.resources.title": "Resources & <em>guides</em>",
   "transHub.resources.lead":
     "Maintained by trans and non-binary members. Practical, current, and free.",
-  "transHub.resources.openCta": "Open →",
+  "transHub.resources.openCta": "Open",
   "transHub.resources.cat.guide": "Guide",
   "transHub.resources.cat.checklist": "Checklist",
   "transHub.resources.cat.directory": "Directory",
@@ -888,12 +888,12 @@ export const resources: Catalog = {
   "transHealthcare.sidebar.communityTipBody":
     "ILGA Portugal offers free legal accompaniment for trans people navigating the SNS system. You do not have to do this alone — call them before your first appointment.",
   "transHealthcare.sidebar.relatedTitle": "Related on QueerPulse",
-  "transHealthcare.sidebar.solidarityCta": "Solidarity Pricing Registry →",
+  "transHealthcare.sidebar.solidarityCta": "Solidarity Pricing Registry",
   "transHealthcare.sidebar.solidarityRole":
     "Trans-affirming GPs, psychiatrists",
-  "transHealthcare.sidebar.legalCta": "Legal Resources →",
+  "transHealthcare.sidebar.legalCta": "Legal Resources",
   "transHealthcare.sidebar.legalRole": "Name change documents",
-  "transHealthcare.sidebar.mentalHealthCta": "Mental Health →",
+  "transHealthcare.sidebar.mentalHealthCta": "Mental Health",
   "transHealthcare.sidebar.mentalHealthRole": "Support through the process",
 
   "transHealthcare.outro.title": "You deserve <em>good care.</em>",
@@ -1012,7 +1012,7 @@ export const resources: Catalog = {
     "QueerPulse Sober community",
   "harmReduction.section.sober.item.qpCommunity.body":
     "The Sober page connects community members who are sober or sober-curious. You are not alone in wanting to be part of the night without the substances.",
-  "harmReduction.section.sober.linkCta": "Visit the Sober page →",
+  "harmReduction.section.sober.linkCta": "Visit the Sober page",
 
   "harmReduction.section.services.label": "Support & services",
   "harmReduction.section.services.title": "Where to go",
@@ -1090,7 +1090,7 @@ export const resources: Catalog = {
   "sober.venues.title": "Sober-friendly <em>spaces.</em>",
   "sober.venues.lead":
     "Places where you can have a genuinely good time without alcohol — and where the staff won't make it weird. All are also on the Safe Spaces verified list.",
-  "sober.venues.seeAllCta": "See all verified safe spaces →",
+  "sober.venues.seeAllCta": "See all verified safe spaces",
 
   "sober.voices.title": "In their <em>words.</em>",
   "sober.voices.lead":
@@ -1102,19 +1102,19 @@ export const resources: Catalog = {
   "sober.recovery.peerGroup.title": "Sober & Queer peer group",
   "sober.recovery.peerGroup.desc":
     "A private, moderated space within QueerPulse for people in recovery. Weekly online meeting, text channel, and occasional in-person gatherings. No particular programme — all approaches welcome.",
-  "sober.recovery.peerGroup.linkLabel": "Join the group →",
+  "sober.recovery.peerGroup.linkLabel": "Join the group",
   "sober.recovery.oneToOne.title": "One-to-one — talk to a peer",
   "sober.recovery.oneToOne.desc":
     "Request a conversation with a community member who has offered to talk to people navigating sobriety. No counsellors — just someone who's been through something similar.",
-  "sober.recovery.oneToOne.linkLabel": "Find a peer →",
+  "sober.recovery.oneToOne.linkLabel": "Find a peer",
   "sober.recovery.therapists.title": "Queer-affirming therapists",
   "sober.recovery.therapists.desc":
     "The wellbeing directory includes therapists who specialise in addiction and queer identity — because those two things aren't separate.",
-  "sober.recovery.therapists.linkLabel": "Find a therapist →",
+  "sober.recovery.therapists.linkLabel": "Find a therapist",
   "sober.recovery.external.title": "External resources",
   "sober.recovery.external.desc":
     "APDES (harm reduction), AAPT (AA Portugal), SMART Recovery Portugal — for when community support isn't enough on its own.",
-  "sober.recovery.external.linkLabel": "See resources →",
+  "sober.recovery.external.linkLabel": "See resources",
 
   "sober.outro.title": "You belong <em>here.</em>",
   "sober.outro.sub":
@@ -1180,7 +1180,7 @@ export const resources: Catalog = {
   "library.category.finance": "Finance",
   "library.category.trans": "Trans life",
   "library.empty": "No guides match that yet — try a different search.",
-  "library.readGuideCta": "Read the guide →",
+  "library.readGuideCta": "Read the guide",
   "library.loadingMore": "Loading more guides…",
   "library.loadMoreCta": "Load more guides",
   "library.popularLabel": "Most read:",
@@ -1359,7 +1359,7 @@ export const resources: Catalog = {
   "microGrants.rule.noPolitics.body":
     "We fund community projects, not election or party-political activity.",
   "microGrants.sidebar.panelTitle": "Review panel — Q2 2026",
-  "microGrants.sidebar.joinPanelCta": "Join the review panel →",
+  "microGrants.sidebar.joinPanelCta": "Join the review panel",
 
   "microGrants.contribute.title": "Add to the <em>pot.</em>",
   "microGrants.contribute.body":
@@ -1406,9 +1406,9 @@ export const resources: Catalog = {
   "microGrants.apply.modalTitle": "Apply — Q2 2026 round",
   "microGrants.apply.stepIndicator": "Step {step} of {total} — {stepLabel}",
   "microGrants.apply.cancelCta": "Cancel",
-  "microGrants.apply.backCta": "← Back",
-  "microGrants.apply.continueCta": "Continue →",
-  "microGrants.apply.submitCta": "Submit application →",
+  "microGrants.apply.backCta": "Back",
+  "microGrants.apply.continueCta": "Continue",
+  "microGrants.apply.submitCta": "Submit application",
   "microGrants.apply.success.title": "Application <em>submitted.</em>",
   "microGrants.apply.success.sub":
     "We'll confirm receipt by email within 24 hours. The review panel meets in mid-July. You'll hear back before 31 July regardless of outcome.",
@@ -2340,7 +2340,7 @@ export const resources: Catalog = {
   "intersectionality.race.info1.title": "When queer isn't enough",
   "intersectionality.race.info1.body":
     "Queer spaces in Lisbon, like most cities, can replicate the racial dynamics of the wider world. Fetishisation, exclusion, and micro-aggressions don't disappear because a space is queer. The community's guidelines explicitly address this — and the forum has threads for discussing specific situations.",
-  "intersectionality.race.info1.link": "Community guidelines →",
+  "intersectionality.race.info1.link": "Community guidelines",
   "intersectionality.race.info2.eyebrow": "Portugal's colonial history",
   "intersectionality.race.info2.title": "What to know arriving here",
   "intersectionality.race.info2.body":
@@ -2349,7 +2349,7 @@ export const resources: Catalog = {
   "intersectionality.race.info3.title": "Spaces for QTIPOC members",
   "intersectionality.race.info3.body":
     "QueerPulse has a closed community group for QTIPOC (queer, trans, and intersex people of colour) members — a space for the conversations that the broader community isn't always the right container for. Join via the Communities page.",
-  "intersectionality.race.info3.link": "QTIPOC community group →",
+  "intersectionality.race.info3.link": "QTIPOC community group",
 
   "intersectionality.faith.heading": "Faith & <em>religion</em>",
   "intersectionality.faith.intro":
@@ -2363,7 +2363,7 @@ export const resources: Catalog = {
     "Islam, Judaism, evangelical, and others",
   "intersectionality.faith.info2.body":
     "Lisbon has growing Muslim and Jewish communities, and a range of Protestant and evangelical churches. The relationship between each community and its LGBTQ+ members varies enormously. The forum has threads for navigating faith questions in each of these contexts.",
-  "intersectionality.faith.info2.link": "Forum: faith & queerness →",
+  "intersectionality.faith.info2.link": "Forum: faith & queerness",
   "intersectionality.faith.info3.eyebrow": "Not religious",
   "intersectionality.faith.info3.title": "Secularism is also valid",
   "intersectionality.faith.info3.body":
@@ -2383,12 +2383,12 @@ export const resources: Catalog = {
   "intersectionality.class.info2.title": "The cost of belonging",
   "intersectionality.class.info2.body":
     "Bar and club culture as the default queer social form excludes people who don't drink, can't afford cover charges, or find late-night environments difficult. QueerPulse deliberately runs social events that are free or low-cost, daytime or early evening, and alcohol-optional.",
-  "intersectionality.class.info2.link": "Sober community →",
+  "intersectionality.class.info2.link": "Sober community",
   "intersectionality.class.info3.eyebrow": "Economic support",
   "intersectionality.class.info3.title": "Community resources",
   "intersectionality.class.info3.body":
     "The Economy page has resources on emergency financial support, benefit navigation, and community mutual aid. The Skills Exchange is a non-monetary community tool. Both are available to all members.",
-  "intersectionality.class.info3.link": "Economy resources →",
+  "intersectionality.class.info3.link": "Economy resources",
 
   "intersectionality.community.heading":
     "Navigating <em>the community itself</em>",
@@ -2399,24 +2399,24 @@ export const resources: Catalog = {
     "If something happens in a community space",
   "intersectionality.community.info1.body":
     "QueerPulse has a report function for behaviour that violates the community guidelines — including racism, discrimination, and harassment. Reports are handled by the moderation team. If you're not sure whether something is reportable, the Contact page reaches the team directly.",
-  "intersectionality.community.info1.link": "Report something →",
+  "intersectionality.community.info1.link": "Report something",
   "intersectionality.community.info2.eyebrow": "Community groups",
   "intersectionality.community.info2.title": "Finding your specific community",
   "intersectionality.community.info2.body":
     "Beyond the main community, QueerPulse has closed groups for QTIPOC members, disabled and chronically ill members, queer parents, and sober members. These exist so that people can have the conversations that the broader space isn't always suited for.",
-  "intersectionality.community.info2.link": "Browse community groups →",
+  "intersectionality.community.info2.link": "Browse community groups",
   "intersectionality.community.info3.eyebrow": "The forum",
   "intersectionality.community.info3.title":
     "Where harder conversations happen",
   "intersectionality.community.info3.body":
     "The forum's Intersectionality thread is one of the more active on the platform. It's where members raise specific experiences, share resources, challenge each other, and support each other. It's moderated but not sanitised.",
-  "intersectionality.community.info3.link": "Forum: intersectionality →",
+  "intersectionality.community.info3.link": "Forum: intersectionality",
 
   "intersectionality.commit.heading": "What QueerPulse <em>commits to.</em>",
   "intersectionality.commit.sub":
     "These are specific things, not aspirations. We're accountable to them — if we're not doing them, say so.",
-  "intersectionality.commit.governanceCta": "How we're governed →",
-  "intersectionality.commit.accountableCta": "Hold us accountable →",
+  "intersectionality.commit.governanceCta": "How we're governed",
+  "intersectionality.commit.accountableCta": "Hold us accountable",
   "intersectionality.commitment1.title": "Active moderation",
   "intersectionality.commitment1.text":
     "The platform is actively moderated for racism, transphobia, classism, and ableism — not just homophobia. Reports are taken seriously and followed up.",
@@ -2436,25 +2436,25 @@ export const resources: Catalog = {
   "intersectionality.org1.focus": "QTIPOC",
   "intersectionality.org1.text":
     "Portuguese organisation working on LGBTQ+ rights with an explicit focus on the intersection of race, migration, and queerness in Portugal.",
-  "intersectionality.org1.link": "Discussion thread →",
+  "intersectionality.org1.link": "Discussion thread",
   "intersectionality.org2.focus": "Faith",
   "intersectionality.org2.text":
     "Queer-affirming Christian community based in Lisbon. Open to all denominations and traditions, focused on reconciling faith and queer identity.",
-  "intersectionality.org2.link": "Forum: faith thread →",
+  "intersectionality.org2.link": "Forum: faith thread",
   "intersectionality.org3.focus": "Race & migration",
   "intersectionality.org3.text":
     "Portugal's main LGBTQ+ rights organisation. Works explicitly on the intersection of LGBTQ+ rights and migration/race. Legal support and advocacy.",
-  "intersectionality.org3.link": "Legal resources →",
+  "intersectionality.org3.link": "Legal resources",
   "intersectionality.org4.focus": "Disability",
   "intersectionality.org4.text":
     "See the QueerPulse Accessibility page for disability-specific resources for queer and disabled members in Lisbon.",
-  "intersectionality.org4.link": "Accessibility page →",
+  "intersectionality.org4.link": "Accessibility page",
 
   "intersectionality.outro.title": "All of you <em>belongs here.</em>",
   "intersectionality.outro.sub":
     "Not the parts that are easiest to hold. All of it.",
   "intersectionality.outro.findCta": "Find your community group",
-  "intersectionality.outro.forumCta": "Forum →",
+  "intersectionality.outro.forumCta": "Forum",
 
   // ── Section J: live-mode honesty — no fabricated "verified" providers or
   //    fake submits leak when running against the real API (demo keeps mock) ──

@@ -1,4 +1,3 @@
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { OfflineBanner } from "./OfflineBanner";
@@ -9,7 +8,6 @@ import { EventToolbar } from "./EventToolbar";
 import { DayFilterChip } from "./DayFilterChip";
 import { EventAgenda } from "./EventAgenda";
 import { CalendarCard } from "./CalendarCard";
-import { ModalShell } from "./ModalShell";
 import { AcceptInviteConfirm } from "./AcceptInviteConfirm";
 import { RsvpDetailsModal } from "./RsvpDetailsModal";
 import { EventSettingsModal } from "./EventSettingsModal";
@@ -21,7 +19,6 @@ import { BulkBar } from "./BulkBar";
 
 /** The full dashboard layout (inside the provider so it can read state). */
 export function MyEventsBody() {
-  const { t } = useTranslation();
   const c = useMyEvents();
   const layoutCls = sx(
     `ev-layout view-${c.mobileView}${c.density === "compact" ? " compact" : ""}${c.selectMode ? " selecting" : ""}`,
@@ -46,45 +43,15 @@ export function MyEventsBody() {
         </div>
       </div>
 
-      {/* Overlays */}
+      {/* Overlays — each modal is self-contained (built on the shared Modal /
+          ConfirmDialog) and mounted only while open, so its a11y setup and
+          local state run per open. */}
       <AcceptInviteConfirm />
-      <ModalShell
-        open={c.details.open}
-        onClose={c.closeDetails}
-        label={t("myevents:modal.rsvpDetailsLabel")}
-      >
-        <RsvpDetailsModal key={c.details.eventId ?? "none"} />
-      </ModalShell>
-      <ModalShell
-        open={c.settingsOpen}
-        onClose={c.closeSettings}
-        label={t("myevents:modal.preferencesLabel")}
-      >
-        <EventSettingsModal key={c.settingsOpen ? "on" : "off"} />
-      </ModalShell>
-      <ModalShell
-        open={c.scope.open}
-        onClose={c.closeScope}
-        label={t("myevents:modal.cancelRsvpLabel")}
-        narrow
-      >
-        <SeriesScopeModal />
-      </ModalShell>
-      <ModalShell
-        open={c.report.open}
-        onClose={c.closeReport}
-        label={t("myevents:modal.reportLabel")}
-      >
-        <ReportEventModal key={c.report.eventId ?? "none"} />
-      </ModalShell>
-      <ModalShell
-        open={c.block.open}
-        onClose={c.closeBlock}
-        label={t("myevents:modal.blockLabel")}
-        narrow
-      >
-        <BlockHostConfirm key={c.block.eventId ?? "none"} />
-      </ModalShell>
+      {c.details.open && <RsvpDetailsModal key={c.details.eventId ?? "none"} />}
+      {c.settingsOpen && <EventSettingsModal />}
+      {c.scope.open && <SeriesScopeModal />}
+      {c.report.open && <ReportEventModal key={c.report.eventId ?? "none"} />}
+      <BlockHostConfirm />
       <MoreMenu />
       <BulkBar />
     </>

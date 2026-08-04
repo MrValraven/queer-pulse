@@ -1,11 +1,10 @@
-import { useMemo, useState, type FormEvent } from "react";
-import { Button } from "../../shared/components/ui";
+import { useMemo, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
-import { ReviewStarRating } from "./ReviewStarRating";
+import { ModalShell, SuccessPanel } from "./ModalKit";
+import { ReviewForm, type ReviewFormValues } from "./ReviewForm";
 import { useCreateReview } from "./api/useCompanyMutations";
 import type { EmployerCard } from "./api/companies.adapters";
 import shell from "./ApplicationModals.module.css";
@@ -16,7 +15,8 @@ import shell from "./ApplicationModals.module.css";
  * POST /companies/:slug/reviews via `useCreateReview` for the chosen company,
  * mapping the form to a `CreateReviewDto`; the mutation invalidates the reviews
  * query so a subsequent CompanyPage visit shows the new review. A repeat review
- * answers 409, surfaced as a clear "already reviewed" toast.
+ * answers 409, surfaced as a clear "already reviewed" toast. The shared body
+ * lives in <ReviewForm>; this wrapper owns the company picker + live mutation.
  */
 export function LiveWriteReviewModal({
   companies,
@@ -38,11 +38,6 @@ export function LiveWriteReviewModal({
   );
 
   const [slug, setSlug] = useState(initialSlug ?? reviewable[0]?.slug ?? "");
-  const [title, setTitle] = useState("");
-  const [rating, setRating] = useState(0);
-  const [role, setRole] = useState("");
-  const [pros, setPros] = useState("");
-  const [cons, setCons] = useState("");
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -50,16 +45,7 @@ export function LiveWriteReviewModal({
   const companyName =
     reviewable.find((company) => company.slug === slug)?.name ?? "";
 
-  const canSubmit =
-    slug.length > 0 &&
-    title.trim().length > 0 &&
-    rating > 0 &&
-    role.trim().length > 0 &&
-    (pros.trim().length > 0 || cons.trim().length > 0);
-
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (!canSubmit) return;
+  async function handleSubmit({ title, rating, role, pros, cons }: ReviewFormValues) {
     const body: string[] = [];
     if (pros.trim()) body.push(`The good: ${pros.trim()}`);
     if (cons.trim()) body.push(`The hard parts: ${cons.trim()}`);
@@ -98,108 +84,42 @@ export function LiveWriteReviewModal({
           />
         </SuccessPanel>
       ) : (
-        <form onSubmit={(event) => void handleSubmit(event)}>
-          <div className={shell.eyebrow}>
-            {t("economy:writeReviewModal.eyebrow")}
-          </div>
-          <h2 className={shell.title}>
-            <Translation
-              i18nKey="economy:companyReview.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={shell.sub}>{t("economy:companyReview.sub")}</p>
-
-          <div className={shell.field}>
-            <label htmlFor="lwr-company">
-              {t("economy:writeReviewModal.companyLabel")}
-            </label>
-            <select
-              id="lwr-company"
-              value={slug}
-              onChange={(event) => setSlug(event.target.value)}
-            >
-              {reviewable.map((company) => (
-                <option key={company.slug} value={company.slug ?? ""}>
-                  {company.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="lwr-title">
-              {t("economy:companyReview.headlineLabel")}
-            </label>
-            <input
-              id="lwr-title"
-              type="text"
-              placeholder={t("economy:companyReview.headlinePlaceholder")}
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
-          </div>
-
-          <div className={shell.field}>
-            <label>{t("economy:companyReview.overallRatingAriaLabel")}</label>
-            <ReviewStarRating value={rating} onChange={setRating} />
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="lwr-role">
-              {t("economy:companyReview.roleLabel")}
-            </label>
-            <input
-              id="lwr-role"
-              type="text"
-              placeholder={t("economy:companyReview.rolePlaceholder")}
-              value={role}
-              onChange={(event) => setRole(event.target.value)}
-            />
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="lwr-pros">
-              {t("economy:companyReview.prosLabel")}
-            </label>
-            <textarea
-              id="lwr-pros"
-              placeholder={t("economy:companyReview.prosPlaceholder")}
-              value={pros}
-              onChange={(event) => setPros(event.target.value)}
-            />
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="lwr-cons">
-              {t("economy:companyReview.consLabel")}
-            </label>
-            <textarea
-              id="lwr-cons"
-              placeholder={t("economy:companyReview.consPlaceholder")}
-              value={cons}
-              onChange={(event) => setCons(event.target.value)}
-            />
-          </div>
-
-          <div className={shell.foot}>
-            <button
-              type="button"
-              className={shell.back}
-              onClick={onClose}
-              disabled={sending}
-            >
-              {t("economy:companyReview.cancel")}
-            </button>
-            <Button size="lg" type="submit" disabled={sending || !canSubmit}>
-              {sending ? (
-                <Sending label={t("economy:companyReview.posting")} />
-              ) : (
-                t("economy:companyReview.submitCta")
-              )}
-            </Button>
-          </div>
-        </form>
+        <ReviewForm
+          idPrefix="lwr"
+          showTitle
+          sending={sending}
+          submitDisabled={slug.length === 0}
+          onSubmit={(values) => void handleSubmit(values)}
+          onClose={onClose}
+          copy={{
+            eyebrow: t("economy:writeReviewModal.eyebrow"),
+            sub: t("economy:companyReview.sub"),
+            roleLabel: t("economy:companyReview.roleLabel"),
+            rolePlaceholder: t("economy:companyReview.rolePlaceholder"),
+            prosPlaceholder: t("economy:companyReview.prosPlaceholder"),
+            consPlaceholder: t("economy:companyReview.consPlaceholder"),
+            headlineLabel: t("economy:companyReview.headlineLabel"),
+            headlinePlaceholder: t("economy:companyReview.headlinePlaceholder"),
+          }}
+          companySelect={
+            <div className={shell.field}>
+              <label htmlFor="lwr-company">
+                {t("economy:writeReviewModal.companyLabel")}
+              </label>
+              <select
+                id="lwr-company"
+                value={slug}
+                onChange={(event) => setSlug(event.target.value)}
+              >
+                {reviewable.map((company) => (
+                  <option key={company.slug} value={company.slug ?? ""}>
+                    {company.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          }
+        />
       )}
     </ModalShell>
   );

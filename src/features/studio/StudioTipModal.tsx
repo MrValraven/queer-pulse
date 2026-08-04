@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -148,9 +148,12 @@ export function StudioTipModal({
                   {t("studio:tipModal.sendingCta")}
                 </>
               ) : (
-                t("studio:tipModal.sendCta", {
-                  amount: fmt.currency(value || 0),
-                })
+                <>
+                  {t("studio:tipModal.sendCta", {
+                    amount: fmt.currency(value || 0),
+                  })}{" "}
+                  <FiArrowRight aria-hidden />
+                </>
               )}
             </Button>
 

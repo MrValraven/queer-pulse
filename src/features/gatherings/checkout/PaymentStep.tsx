@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiAlertCircle, FiLock } from "react-icons/fi";
+import { FiAlertCircle, FiArrowLeft, FiArrowRight, FiLock } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { routes } from "../../../app/routeMap";
 import { useCheckout } from "./checkoutContext";
@@ -88,9 +88,13 @@ export function PaymentStep({ pf }: { pf: PaymentForm }) {
         disabled={!pf.canPay || pf.processing}
         onClick={pf.submit}
       >
-        {pf.processing
-          ? t("gatherings:checkout.payment.processingLabel")
-          : payLabel}
+        {pf.processing ? (
+          t("gatherings:checkout.payment.processingLabel")
+        ) : (
+          <>
+            {payLabel} <FiArrowRight aria-hidden />
+          </>
+        )}
       </Button>
       <p className={s["co-terms"]}>
         <Translation
@@ -114,6 +118,7 @@ export function PaymentStep({ pf }: { pf: PaymentForm }) {
           type="button"
           onClick={() => goStep(1, "back")}
         >
+          <FiArrowLeft aria-hidden />{" "}
           {t("gatherings:checkout.payment.backToReviewCta")}
         </button>
       </div>

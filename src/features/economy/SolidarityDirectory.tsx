@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -40,9 +40,14 @@ function PractitionerContactButton({
         contact({ slug: practitioner.id, name: practitioner.name })
       }
     >
-      {connected
-        ? t("connect:contact.message")
-        : t("economy:solidarityDirectory.contactCta")}
+      {connected ? (
+        t("connect:contact.message")
+      ) : (
+        <>
+          {t("economy:solidarityDirectory.contactCta")}{" "}
+          <FiArrowRight aria-hidden />
+        </>
+      )}
     </button>
   );
 }

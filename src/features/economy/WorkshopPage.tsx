@@ -118,6 +118,7 @@ export function WorkshopPage() {
 
         <div style={{ marginTop: 24 }}>
           <Button to={routes.skills} variant="ghost">
+            <FiArrowLeft aria-hidden />{" "}
             {t("economy:workshopPage.footerBackCta")}
           </Button>
         </div>

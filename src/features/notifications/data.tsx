@@ -13,7 +13,6 @@ export const notificationTabs: {
   labelKey: string;
 }[] = [
   { value: "all", labelKey: "notifications:tabs.all" },
-  { value: "messages", labelKey: "notifications:tabs.messages" },
   { value: "events", labelKey: "notifications:tabs.events" },
   { value: "community", labelKey: "notifications:tabs.community" },
   { value: "platform", labelKey: "notifications:tabs.platform" },

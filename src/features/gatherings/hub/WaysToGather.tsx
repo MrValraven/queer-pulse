@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Reveal } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -25,7 +26,8 @@ export function WaysToGather() {
               <p className={styles.wayTitle}>{t(way.titleKey)}</p>
               <p className={styles.wayBody}>{t(way.bodyKey)}</p>
               <Link to={way.to} className={styles.wayLink}>
-                {t(way.ctaKey)} →
+                {t(way.ctaKey)}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             </div>
           </div>

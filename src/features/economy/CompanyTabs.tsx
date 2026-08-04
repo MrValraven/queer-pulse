@@ -1,7 +1,6 @@
-import type { ReactNode } from "react";
 import { FiBriefcase, FiEdit3, FiPlus, FiStar } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, Stars, Tabs, type Tab } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -11,24 +10,6 @@ import { deadlineText } from "./api/jobs.adapters";
 import styles from "./CompanyPage.module.css";
 
 type TabId = "about" | "jobs" | "reviews" | "work";
-
-function Stars({ n }: { n: number }) {
-  const { t } = useTranslation();
-  return (
-    <div
-      className={styles.revStars}
-      aria-label={t("economy:company.reviews.starsAriaLabel", { count: n })}
-    >
-      {Array.from({ length: 5 }).map((_, starIndex) => (
-        <FiStar
-          key={starIndex}
-          fill={starIndex < n ? "currentColor" : "none"}
-          aria-hidden
-        />
-      ))}
-    </div>
-  );
-}
 
 function AboutPane({ profile }: { profile: CompanyProfile }) {
   return (
@@ -161,7 +142,12 @@ function ReviewsPane({
             <div key={`${review.title}-${reviewIndex}`} className={styles.rev}>
               <div className={styles.revHead}>
                 <div className={styles.revTitle}>{review.title}</div>
-                <Stars n={review.stars} />
+                <Stars
+                  value={review.stars}
+                  label={t("economy:company.reviews.starsAriaLabel", {
+                    count: review.stars,
+                  })}
+                />
               </div>
               <div className={styles.revByline}>{review.byline}</div>
               <div className={styles.revBody}>
@@ -233,44 +219,30 @@ export function CompanyTabs({
   setTab: (t: TabId) => void;
 }) {
   const { t } = useTranslation();
-  const tabs: { id: TabId; label: string; badge?: ReactNode }[] = [
+  const tabs: Tab[] = [
     { id: "about", label: t("economy:company.tabs.about") },
     {
       id: "jobs",
       label: t("economy:company.tabs.jobs"),
-      badge: jobs.length > 0 && (
-        <span className={styles.tabCount}>{jobs.length}</span>
-      ),
+      count: jobs.length > 0 ? jobs.length : undefined,
     },
     {
       id: "reviews",
       label: t("economy:company.tabs.reviews"),
-      badge: <span className={styles.tabCountMuted}>{reviewCount}</span>,
+      count: reviewCount,
     },
     ...(profile.work
-      ? [{ id: "work" as const, label: t("economy:company.tabs.work") }]
+      ? [{ id: "work", label: t("economy:company.tabs.work") }]
       : []),
   ];
 
   return (
     <div>
-      <div className={styles.tabs} role="tablist">
-        {tabs.map((tabItem) => (
-          <button
-            key={tabItem.id}
-            type="button"
-            role="tab"
-            aria-selected={tab === tabItem.id}
-            className={[styles.tab, tab === tabItem.id && styles.tabActive]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setTab(tabItem.id)}
-          >
-            {tabItem.label}
-            {tabItem.badge}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        tabs={tabs}
+        active={tab}
+        onChange={(id) => setTab(id as TabId)}
+      />
 
       {tab === "about" && <AboutPane profile={profile} />}
       {tab === "jobs" && (

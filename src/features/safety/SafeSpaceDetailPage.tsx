@@ -1,4 +1,5 @@
 import { Link, Navigate, useParams } from "react-router-dom";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -29,7 +30,7 @@ function RemovedView({ s }: { s: RemovedSpace }) {
   return (
     <div className={styles.page}>
       <Link to={routes.safeSpaces} className={styles.back}>
-        {t("safety:spaces.detail.backLink")}
+        <FiArrowLeft aria-hidden /> {t("safety:spaces.detail.backLink")}
       </Link>
 
       <div className={styles.removedBanner}>
@@ -124,7 +125,8 @@ function RemovedView({ s }: { s: RemovedSpace }) {
               {t("safety:spaces.detail.hadExperienceBody")}
             </div>
             <Button variant="ghost" className={styles.sideFull} to={SAFETY}>
-              {t("safety:spaces.detail.fileReportCta")}
+              {t("safety:spaces.detail.fileReportCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
 
@@ -140,7 +142,8 @@ function RemovedView({ s }: { s: RemovedSpace }) {
               className={styles.sideFull}
               to={routes.safeSpaces}
             >
-              {t("safety:spaces.detail.seeVerifiedCta")}
+              {t("safety:spaces.detail.seeVerifiedCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </aside>

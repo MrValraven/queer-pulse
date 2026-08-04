@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Footer } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  AppealOverturnedPanel,
-  AppealPendingPanel,
-  AppealUpheldPanel,
-} from "./AppealPanels";
+import { useFormat } from "../../shared/i18n/format";
+import { AppealResultPanel } from "./AppealPanels";
+import { buildAppealResultConfigs, type AppealTone } from "./appealPanels.data";
 import s from "./flows.module.css";
 
-type State = "pending" | "overturned" | "upheld";
+type State = AppealTone;
 
 const STATES: { id: State; labelKey: string }[] = [
   { id: "pending", labelKey: "safety:appeal.state.pending" },
@@ -18,7 +16,9 @@ const STATES: { id: State; labelKey: string }[] = [
 
 export function AppealOutcomePage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [state, setState] = useState<State>("pending");
+  const configs = buildAppealResultConfigs(t, fmt);
 
   return (
     <>
@@ -38,9 +38,7 @@ export function AppealOutcomePage() {
           ))}
         </div>
 
-        {state === "pending" && <AppealPendingPanel />}
-        {state === "overturned" && <AppealOverturnedPanel />}
-        {state === "upheld" && <AppealUpheldPanel />}
+        <AppealResultPanel config={configs[state]} />
       </div>
       <Footer />
     </>

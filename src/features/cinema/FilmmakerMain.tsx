@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { FiArrowRight } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { PosterSlot } from "./CinemaAtoms";
 import { routes } from "../../app/routeMap";
 import type { Filmmaker } from "./cinemaFilmmaker.data";
 import styles from "./CinemaFilmmakerPage.module.css";
@@ -35,15 +37,7 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
           {filmmaker.filmography.map((film) => (
             <Link key={film.titlePre} to={film.href} className={styles.fgCard}>
               <div className={styles.fgPoster}>
-                <ImageSlot
-                  src={film.image}
-                  tint={film.tint}
-                  width="100%"
-                  height="100%"
-                  radius={12}
-                  placeholder={t("cinema:slot.poster")}
-                  style={{ position: "absolute", inset: 0 }}
-                />
+                <PosterSlot src={film.image} tint={film.tint} radius={12} />
                 <span
                   className={`${styles.fgBadge} ${BADGE_CLASS[film.badgeKind]}`}
                 >
@@ -101,7 +95,8 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
             />
           </h2>
           <Link to={routes.calendar} className={styles.sbAll}>
-            {t("cinema:live.fullCalendarCta")}
+            {t("cinema:live.fullCalendarCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={styles.eventList}>

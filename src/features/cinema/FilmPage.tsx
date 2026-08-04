@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { PageShell } from "../../shared/components/layout";
@@ -38,6 +39,7 @@ function DemoFilmPage() {
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>The light between rooms</span>
             <Link to={routes.cinema} className={styles.crumbBack}>
+              <FiArrowLeft aria-hidden />{" "}
               {t("cinema:film.crumb.backCta")}
             </Link>
           </div>

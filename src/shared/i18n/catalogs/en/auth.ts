@@ -305,7 +305,7 @@ export const auth: Catalog = {
     "Thanks, {name} — your request to join QueerPulse is in. Here's what happens from here.",
   "requestInvite.sent.sub_noName":
     "Thanks — your request to join QueerPulse is in. Here's what happens from here.",
-  "requestInvite.sent.backHome": "← Back to home",
+  "requestInvite.sent.backHome": "Back to home",
   // The 409 case: an open request already exists for this email. Nothing went
   // wrong, so this reads as a confirmation, never as a failure.
   "requestInvite.already.title": "We already <em>have it.</em>",
@@ -362,7 +362,7 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.body":
     "QueerPulse is a cared-for professional network rooted in Lisbon. You were invited because someone here knows your worth.",
   "onboarding.stepWelcome.cta": "Let's get started",
-  "onboarding.stepWelcome.back": "← Back",
+  "onboarding.stepWelcome.back": "Back",
 
   "onboarding.stepPhoto.heading": "Put a face to the <em>name</em>",
   "onboarding.stepPhoto.body":
@@ -377,7 +377,7 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.placeholder": "your photo",
   "onboarding.stepPhoto.continue": "Continue",
   "onboarding.stepPhoto.skip": "Skip for now — you can add this later",
-  "onboarding.stepPhoto.back": "← Back",
+  "onboarding.stepPhoto.back": "Back",
   "onboarding.stepPhoto.uploadError":
     "We couldn't add that photo. Please try again.",
   "onboarding.stepPhoto.saveError":
@@ -399,12 +399,12 @@ export const auth: Catalog = {
   "onboarding.stepNorms.agree":
     "I've read and agree to the <guidelines>Community Guidelines</guidelines>",
   "onboarding.stepNorms.continue": "I agree, continue",
-  "onboarding.stepNorms.back": "← Back",
+  "onboarding.stepNorms.back": "Back",
 
   "onboarding.stepIntents.heading": "What brings you <em>here?</em>",
   "onboarding.stepIntents.hint": "Pick at least one — choose as many as fit.",
   "onboarding.stepIntents.continue": "Continue",
-  "onboarding.stepIntents.back": "← Back",
+  "onboarding.stepIntents.back": "Back",
   "onboarding.stepIntents.saveError":
     "We couldn't save that just now. Please try again.",
   "onboarding.intent.community": "Community",
@@ -426,7 +426,7 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.requested": "Requested",
   "onboarding.stepCommunities.continue": "Continue",
   "onboarding.stepCommunities.skip": "Skip for now — explore and join later",
-  "onboarding.stepCommunities.back": "← Back",
+  "onboarding.stepCommunities.back": "Back",
   "onboarding.stepCommunities.empty":
     "No suggestions right now — you can explore and join communities anytime.",
 
@@ -442,11 +442,11 @@ export const auth: Catalog = {
   "onboarding.quickStart.magazine.desc": "Published the first of every month",
 
   // ── Welcome tour (the separate 6-step guided tour at /welcome-tour) ──
-  "tour.skipSetup": "Skip setup →",
+  "tour.skipSetup": "Skip setup",
   "tour.stepLabel": "Step {current} of {total}",
   "tour.allSet": "You're in!",
-  "tour.nav.back": "← Back",
-  "tour.nav.continue": "Continue →",
+  "tour.nav.back": "Back",
+  "tour.nav.continue": "Continue",
 
   "tour.welcome.eyebrow": "You're in",
   "tour.welcome.heading": "Welcome to <em>QueerPulse.</em>",
@@ -455,7 +455,7 @@ export const auth: Catalog = {
   "tour.welcome.q101Label": "Still finding the language?",
   "tour.welcome.q101Body":
     "If you're newly exploring your identity — not just new to Lisbon — <q101>Queer 101</q101> is a quiet place to start. No account needed to read it.",
-  "tour.welcome.cta": "Let's set you up →",
+  "tour.welcome.cta": "Let's set you up",
 
   "tour.profile.eyebrow": "Your profile",
   "tour.profile.heading": "Tell us a little about <em>yourself.</em>",
@@ -508,7 +508,7 @@ export const auth: Catalog = {
   "tour.explore.heading": "Welcome to the <em>community.</em>",
   "tour.explore.body":
     "You're officially in. Here's where to go first — there's no right answer, just what calls to you.",
-  "tour.explore.cta": "Go to QueerPulse →",
+  "tour.explore.cta": "Go to QueerPulse",
 
   "tour.exploreCard.members.name": "Members",
   "tour.exploreCard.members.desc":

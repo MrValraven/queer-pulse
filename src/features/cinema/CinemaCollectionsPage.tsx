@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
@@ -110,7 +111,8 @@ function DemoCinemaCollectionsPage() {
           size="lg"
           to={`${routes.cinemaCollections}/${collections[0]!.slug}`}
         >
-          {t("cinema:collectionsIndex.outro.cta")}
+          {t("cinema:collectionsIndex.outro.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </CinemaShell>

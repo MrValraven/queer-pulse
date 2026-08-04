@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FeatureHelp, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -85,7 +86,10 @@ export function AskStrip() {
             </svg>
             {t("cinema:ask.text")}
           </div>
-          <Button to={routes.cinemaBrowse}>{t("cinema:ask.cta")}</Button>
+          <Button to={routes.cinemaBrowse}>
+            {t("cinema:ask.cta")}{" "}
+            <FiArrowRight aria-hidden />
+          </Button>
         </div>
       </div>
     </div>

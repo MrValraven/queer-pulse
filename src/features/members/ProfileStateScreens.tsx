@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FiAlertTriangle, FiUserX } from "react-icons/fi";
+import { FiAlertTriangle, FiArrowLeft, FiUserX } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, Spinner } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -36,7 +36,11 @@ export function ProfileErrorState({ onRetry }: { onRetry: () => void }) {
             onClick: onRetry,
           }}
           secondaryAction={{
-            label: t("members:profile.goBack"),
+            label: (
+              <>
+                <FiArrowLeft aria-hidden /> {t("members:profile.goBack")}
+              </>
+            ),
             onClick: () => void navigate(-1),
           }}
         />
@@ -62,7 +66,11 @@ export function ProfileBlockedState() {
             to: routes.connections,
           }}
           secondaryAction={{
-            label: t("members:profile.goBack"),
+            label: (
+              <>
+                <FiArrowLeft aria-hidden /> {t("members:profile.goBack")}
+              </>
+            ),
             onClick: () => void navigate(-1),
           }}
         />
@@ -88,7 +96,11 @@ export function ProfileNotFoundState() {
             to: routes.members,
           }}
           secondaryAction={{
-            label: t("members:profile.goBack"),
+            label: (
+              <>
+                <FiArrowLeft aria-hidden /> {t("members:profile.goBack")}
+              </>
+            ),
             onClick: () => void navigate(-1),
           }}
         />

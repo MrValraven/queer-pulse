@@ -1,7 +1,8 @@
-import type { KeyboardEvent, SyntheticEvent } from "react";
+import type { SyntheticEvent } from "react";
 import { FiBookmark, FiHome } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useSaved } from "../../app/providers/useSaved";
+import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { routes } from "../../app/routeMap";
 import {
   Avatar,
@@ -52,10 +53,6 @@ function ListingSaveToggle({ listing }: { listing: Listing }) {
     );
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLSpanElement>) {
-    if (event.key === "Enter" || event.key === " ") handleSave(event);
-  }
-
   return (
     <span
       role="button"
@@ -71,7 +68,7 @@ function ListingSaveToggle({ listing }: { listing: Listing }) {
         .filter(Boolean)
         .join(" ")}
       onClick={handleSave}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(event) => activateOnKey(event, () => handleSave(event))}
     >
       <FiBookmark aria-hidden style={{ fill: saved ? "currentColor" : "none" }} />
     </span>

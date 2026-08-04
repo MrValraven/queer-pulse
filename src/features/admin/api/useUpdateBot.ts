@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type {
   SocialLinkDTO,
@@ -9,6 +9,7 @@ import {
   updateBotProfile,
   updateBotUsername,
 } from "./adminBots.api";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 /** Everything the editor collects for one save. */
 export interface BotEdits {
@@ -29,11 +30,13 @@ export interface BotEdits {
 export function useUpdateBot() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, BotEdits>({
+  return useDemoAwareMutation<void, Error, BotEdits>({
+    demoMode,
+    demoLatencyMs: 0,
     // AdminBotEditorDrawer toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async (edits) => {
-      if (demoMode) return;
+    demoResult: () => undefined,
+    live: async (edits) => {
       await updateBotProfile(edits.userId, edits.profile);
       if (edits.username !== edits.originalUsername) {
         await updateBotUsername(edits.userId, edits.username);

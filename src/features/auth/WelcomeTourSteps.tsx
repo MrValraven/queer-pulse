@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes, linkToPath } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -54,7 +54,9 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
       </div>
       <div className={styles.nav}>
         <span />
-        <Button onClick={onNext}>{t("auth:tour.welcome.cta")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:tour.welcome.cta")} <FiArrowRight aria-hidden />
+        </Button>
       </div>
     </>
   );
@@ -130,9 +132,11 @@ export function TourProfile({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:tour.nav.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:tour.nav.continue")} <FiArrowRight aria-hidden />
+        </Button>
       </div>
     </>
   );
@@ -181,9 +185,11 @@ export function TourInterests({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:tour.nav.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:tour.nav.continue")} <FiArrowRight aria-hidden />
+        </Button>
       </div>
     </>
   );
@@ -236,9 +242,11 @@ export function TourCommunities({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:tour.nav.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:tour.nav.continue")} <FiArrowRight aria-hidden />
+        </Button>
       </div>
     </>
   );
@@ -293,9 +301,11 @@ export function TourConnections({ onNext, onBack }: StepProps) {
       </div>
       <div className={styles.nav}>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:tour.nav.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:tour.nav.back")}
         </button>
-        <Button onClick={onNext}>{t("auth:tour.nav.continue")}</Button>
+        <Button onClick={onNext}>
+          {t("auth:tour.nav.continue")} <FiArrowRight aria-hidden />
+        </Button>
       </div>
     </>
   );
@@ -329,7 +339,7 @@ export function TourExplore() {
         ))}
       </div>
       <Button to={routes.homepage} className={styles.goBtn}>
-        {t("auth:tour.explore.cta")}
+        {t("auth:tour.explore.cta")} <FiArrowRight aria-hidden />
       </Button>
     </>
   );

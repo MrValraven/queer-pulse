@@ -2272,7 +2272,7 @@ export const admin: Catalog = {
   // ── Vista de estatísticas públicas (editor da reformulação — grupo
   // separado do editor dos 3 separadores, ver nota acima de roadmap.heroStats.*)
   "roadmap.heroStatsView.title": "Estatísticas <em>públicas</em> do topo",
-  "roadmap.heroStatsView.previewLinkCta": "Pré-visualizar página pública →",
+  "roadmap.heroStatsView.previewLinkCta": "Pré-visualizar página pública",
   "roadmap.heroStatsView.subtitle":
     "Estes quatro números ficam no topo do roteiro visto pelos membros. Mantém-nos honestos — se um número precisar de uma ressalva, escreve-a na nota e ela aparece como dica.",
   "roadmap.heroStatsView.captionPlaceholder": "Ressalva / como se conta",

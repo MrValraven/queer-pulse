@@ -1,13 +1,14 @@
 import { isValidElement, useMemo, useState, type ReactNode } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
 import {
   Button,
   FadeIn,
-  HubBackLink,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { ResourceHero } from "./ResourceHero";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -134,28 +135,31 @@ export function GlossaryPage() {
         ])}
       />
       <div className={styles.page}>
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <HubBackLink
-              to={routes.resources}
-              label={t("resources:glossary.backLink")}
-              tone="light"
+        <ResourceHero
+          tone="light"
+          backLink={{
+            to: routes.resources,
+            label: t("resources:glossary.backLink"),
+            tone: "light",
+          }}
+          eyebrowVariant="label"
+          eyebrowColor="var(--accent)"
+          eyebrow={copy.eyebrow}
+          titleWeight="light"
+          titleScale="display"
+          title={
+            <Translation
+              i18nKey="resources:glossary.hero.title"
+              components={{ em: <em /> }}
             />
-            <div className={styles.eyebrow}>{copy.eyebrow}</div>
-            <h1 className={styles.h1}>
-              <Translation
-                i18nKey="resources:glossary.hero.title"
-                components={{ em: <em /> }}
-              />
-            </h1>
-            <p className={styles.dek}>
-              <Translation
-                i18nKey="resources:glossary.hero.dek"
-                components={{ b: <b />, em: <em /> }}
-              />
-            </p>
-          </div>
-        </section>
+          }
+          lead={
+            <Translation
+              i18nKey="resources:glossary.hero.dek"
+              components={{ b: <b />, em: <em /> }}
+            />
+          }
+        />
 
         <div className={styles.searchRow}>
           <div className={styles.searchInner}>
@@ -255,7 +259,8 @@ export function GlossaryPage() {
               <h3>{copy.noResultsTitle}</h3>
               <p>{copy.noResultsBody}</p>
               <Button to={CONTACT} variant="primary">
-                {copy.suggestTerm}
+                {copy.suggestTerm}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             </div>
           )}

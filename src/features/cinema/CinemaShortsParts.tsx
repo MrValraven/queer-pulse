@@ -1,22 +1,11 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
-import { FadeIn, ImageSlot } from "../../shared/components/ui";
+import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { SplitTitle, PosterSlot } from "./CinemaAtoms";
 import { type ShortFilm, type ShortsShelf } from "./cinemaShorts.data";
 import styles from "./CinemaShortsPage.module.css";
-
-/** Renders a split title with the coral italic emphasis word. */
-export function ShortTitle({ film }: { film: ShortFilm }) {
-  return (
-    <>
-      {film.titlePre}
-      <em>{film.titleEm}</em>
-      {film.titlePost}
-    </>
-  );
-}
 
 /** A member film poster card, shared across every catalogue shelf. */
 export function ShortCard({
@@ -47,14 +36,7 @@ export function ShortCard({
   return (
     <Link to={routes.film} className={cls} data-film={film.id}>
       <div className={styles.scPoster}>
-        <ImageSlot
-          tint={film.tint}
-          width="100%"
-          height="100%"
-          radius={12}
-          placeholder={t("cinema:slot.poster")}
-          style={{ position: "absolute", inset: 0 }}
-        />
+        <PosterSlot tint={film.tint} radius={12} />
         <span className={styles.scFree}>{t("cinema:access.free")}</span>
         <span className={styles.scRuntime}>{film.runtime} min</span>
         <span className={styles.scCc}>
@@ -83,7 +65,7 @@ export function ShortCard({
         {film.kind} · {film.lang} · {film.year}
       </div>
       <div className={styles.scTitle}>
-        <ShortTitle film={film} />
+        <SplitTitle pre={film.titlePre} em={film.titleEm} post={film.titlePost} />
       </div>
       <div className={styles.scMaker}>
         {film.makerShort}
@@ -142,31 +124,6 @@ export function ShortGrid({
           <ShortCard film={f} shelf={shelf} />
         </FadeIn>
       ))}
-    </div>
-  );
-}
-
-/** Shared section header: title + optional sub + trailing link. */
-export function SecDiv({
-  title,
-  sub,
-  actionTo,
-  actionLabel,
-}: {
-  title: ReactNode;
-  sub?: string;
-  actionTo?: string;
-  actionLabel?: string;
-}) {
-  return (
-    <div className={styles.secDiv}>
-      <h2>{title}</h2>
-      {sub && <span className={styles.sub}>{sub}</span>}
-      {actionTo && actionLabel && (
-        <Link to={actionTo} className={styles.all}>
-          {actionLabel}
-        </Link>
-      )}
     </div>
   );
 }

@@ -111,7 +111,7 @@ export const safety: Catalog = {
   "report.modLog.stat.removed": "pessoas removidas",
   "report.modLog.stat.appeals": "recursos recebidos",
   "report.modLog.stat.reversed": "decisões revertidas em recurso",
-  "report.modLog.viewReportCta": "Ver relatório completo →",
+  "report.modLog.viewReportCta": "Ver relatório completo",
 
   "report.toast.chooseCategory": "Escolhe primeiro o que estás a denunciar.",
   "report.toast.received":
@@ -202,7 +202,7 @@ export const safety: Catalog = {
   "blockMute.muted.postsComments": "Publicações e comentários",
   "blockMute.muted.durationLabel": "Duração",
   "blockMute.muted.notifiedLabel": "{name} foi notificade?",
-  "blockMute.muted.manageLink": "Gerir pessoas silenciadas →",
+  "blockMute.muted.manageLink": "Gerir pessoas silenciadas",
   "blockMute.muted.undoCta": "Desfazer — dessilenciar {name}",
 
   "blockMute.blocked.title": "<em>Bloqueaste</em> {name}",
@@ -211,10 +211,10 @@ export const safety: Catalog = {
   "blockMute.blocked.visibleLabel": "Perfil visível para esta pessoa",
   "blockMute.blocked.messageLabel": "Pode enviar-te mensagem",
   "blockMute.blocked.notifiedLabel": "{name} foi notificade?",
-  "blockMute.blocked.manageLink": "Gerir pessoas bloqueadas →",
+  "blockMute.blocked.manageLink": "Gerir pessoas bloqueadas",
   "blockMute.blocked.undoCta": "Desfazer — desbloquear {name}",
   "blockMute.blocked.reportNote":
-    "Precisas de denunciar um comportamento prejudicial? <link>Fazer uma denúncia →</link>",
+    "Precisas de denunciar um comportamento prejudicial? <link>Fazer uma denúncia</link>",
 
   // ── ProfileSafetyMenu.tsx / BlockMemberModal.tsx (bloquear/silenciar a partir de um perfil) ──
   "profileMenu.ariaLabel": "Ações de segurança para {name}",
@@ -255,7 +255,7 @@ export const safety: Catalog = {
   "appeal.pending.expectedLabel": "Resposta esperada",
   "appeal.pending.info":
     "<strong>Enquanto o teu recurso está em análise:</strong> a decisão original mantém-se em vigor, mas nenhuma ação adicional será tomada. O resultado aparece aqui mesmo — volta a esta página, ou inicia sessão e abre os teus recursos para veres em que ponto está.",
-  "appeal.pending.govLink": "Como funciona a moderação →",
+  "appeal.pending.govLink": "Como funciona a moderação",
 
   "appeal.overturned.title": "O teu recurso foi <em>bem-sucedido</em>",
   "appeal.overturned.sub":
@@ -277,7 +277,7 @@ export const safety: Catalog = {
     "<strong>Daqui para a frente:</strong> o aviso na conta mantém-se no teu registo durante 90 dias e não vai afetar a tua capacidade de participar na maioria das atividades da comunidade. Violações repetidas podem resultar em nova análise.",
   "appeal.upheld.contactNote":
     "Se acreditares que isto é um erro, podes contactar diretamente a nossa equipa de Confiança.",
-  "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança →",
+  "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança",
 
   // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
   "appealSubmit.kicker": "Contestar uma decisão",
@@ -345,10 +345,10 @@ export const safety: Catalog = {
   "hateCrime.sidebar.ilgaEurope.org": "ILGA Europe",
   "hateCrime.sidebar.ilgaEurope.role": "Apoio jurídico ao nível da UE",
   "hateCrime.sidebar.onTitle": "Na QueerPulse",
-  "hateCrime.sidebar.legalResourcesCta": "Recursos Jurídicos →",
-  "hateCrime.sidebar.mentalHealthCta": "Saúde Mental →",
-  "hateCrime.sidebar.solidarityCta": "Preços Solidários →",
-  "hateCrime.sidebar.reportCta": "Denunciar à QueerPulse →",
+  "hateCrime.sidebar.legalResourcesCta": "Recursos Jurídicos",
+  "hateCrime.sidebar.mentalHealthCta": "Saúde Mental",
+  "hateCrime.sidebar.solidarityCta": "Preços Solidários",
+  "hateCrime.sidebar.reportCta": "Denunciar à QueerPulse",
 
   // ── hateCrime.data.tsx — tag chips ─────────────────────────────────────
   "hateCrime.tag.immediate": "Imediato",
@@ -444,7 +444,7 @@ export const safety: Catalog = {
   "hateCrime.support.step3.title": "Diretório de Saúde Mental da QueerPulse",
   "hateCrime.support.step3.desc":
     "Terapeutas com tarifas em escala progressiva e experiência em trauma e violência baseada em identidade. Não precisas de esperar para te sentires melhor — o apoio precoce faz uma diferença real.",
-  "hateCrime.support.directoryCta": "Ver o diretório →",
+  "hateCrime.support.directoryCta": "Ver o diretório",
   "hateCrime.support.longerTermHeading": "A <em>longo prazo</em>",
   "hateCrime.support.step4.title": "Grupos de apoio entre pares",
   "hateCrime.support.step4.desc":
@@ -452,7 +452,7 @@ export const safety: Catalog = {
   "hateCrime.support.step5.title": "Não precisas de processar isto sozinhe",
   "hateCrime.support.step5.desc":
     "O fórum da QueerPulse tem um espaço privado e moderado para pessoas que sofreram discriminação ou violência. Podes partilhar tanto ou tão pouco quanto quiseres.",
-  "hateCrime.support.forumCta": "Ir para o fórum →",
+  "hateCrime.support.forumCta": "Ir para o fórum",
 
   // ── hateCrime.data.tsx — "Portuguese law" tab ──────────────────────────
   "hateCrime.law.preamble":
@@ -562,7 +562,7 @@ export const safety: Catalog = {
   "spaces.removed.step4":
     "<span>Motivo público</span> — toda a remoção é registada abertamente, nunca em silêncio.",
   "spaces.removed.card.badge": "Removido",
-  "spaces.removed.card.whyLink": "Porque foi removido →",
+  "spaces.removed.card.whyLink": "Porque foi removido",
   "spaces.nominate.title": "Nomear um <em>espaço.</em>",
   "spaces.nominate.lead":
     "Encontraste um lugar que realmente parece seguro. Conta-nos sobre ele. Nós tratamos do resto.",
@@ -597,7 +597,7 @@ export const safety: Catalog = {
     "Ainda estamos a construir o processo de revisão por trás das nomeações de espaços. Ative a plataforma de demonstração para pré-visualizar o fluxo completo, ou volte em breve.",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
-  "spaces.detail.backLink": "← Espaços seguros",
+  "spaces.detail.backLink": "Espaços seguros",
   "spaces.detail.trust.title": "Espaço seguro verificado · Nível {tier}",
   "spaces.detail.trust.titleNoTier": "Espaço seguro verificado",
   "spaces.detail.trust.body":
@@ -609,16 +609,16 @@ export const safety: Catalog = {
   "spaces.detail.vouchedTitle_other": "Avalizado por <em>{count} pessoas</em>",
   "spaces.detail.vouchedSub":
     "Avaliações de segurança independentes de pessoas verificadas.",
-  "spaces.detail.addVouchCta": "Adicionar a tua →",
+  "spaces.detail.addVouchCta": "Adicionar a tua",
   "spaces.detail.incidentTitle": "Se algo acontecer <em>aqui</em>",
   "spaces.detail.dangerTitle": "Estás em perigo imediato",
   "spaces.detail.dangerBody":
     "Diz a qualquer pessoa da equipa que precisas de ajuda para sair — os espaços verificados acompanham-te até à saída, sem perguntas. Se conseguires, liga também para o <strong>112</strong>.",
-  "spaces.detail.emergencyGuideCta": "Guia de emergência →",
+  "spaces.detail.emergencyGuideCta": "Guia de emergência",
   "spaces.detail.offTitle": "Algo pareceu estranho (não urgente)",
   "spaces.detail.offBody":
     "Até as coisas pequenas importam — é assim que sabemos quando um espaço começa a falhar. Faz uma denúncia discreta; as pessoas moderadoras leem todas, e o espaço é informado sem o teu nome associado.",
-  "spaces.detail.quietReportCta": "Fazer uma denúncia discreta →",
+  "spaces.detail.quietReportCta": "Fazer uma denúncia discreta",
   "spaces.detail.whereTitle": "Onde",
   "spaces.detail.backAllCta": "Voltar a todos os espaços",
   "spaces.detail.glanceTitle": "Num relance",
@@ -641,11 +641,11 @@ export const safety: Catalog = {
   "spaces.detail.hadExperienceTitle": "Tiveste uma experiência aqui?",
   "spaces.detail.hadExperienceBody":
     "O registo mantém-se aberto. Se algo te aconteceu aqui, contar-nos continua a ajudar — informa qualquer futura reavaliação.",
-  "spaces.detail.fileReportCta": "Fazer uma denúncia →",
+  "spaces.detail.fileReportCta": "Fazer uma denúncia",
   "spaces.detail.lookingForTitle": "À procura de um lugar seguro?",
   "spaces.detail.lookingForBody":
     "Este espaço foi retirado da lista, mas há mais de {count} espaços verificados por toda a Lisboa que não foram. Encontra um perto de ti.",
-  "spaces.detail.seeVerifiedCta": "Ver espaços verificados →",
+  "spaces.detail.seeVerifiedCta": "Ver espaços verificados",
 
   // ── VouchModal.tsx ─────────────────────────────────────────────────────
   "vouchModal.ariaLabel": "Avalizar este espaço",

@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Avatar, Button, EmptyState, Modal } from "../../shared/components/ui";
+import {
+  Avatar,
+  ConfirmDialog,
+  EmptyState,
+  Eyebrow,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -51,28 +56,19 @@ export function ArchiveConfirmModal({
   };
 
   return (
-    <Modal
-      title={t("admin:modPanel.settings.archive.confirm.title")}
-      eyebrow={t("admin:modPanel.settings.irreversible")}
+    <ConfirmDialog
+      open
       onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" type="button" onClick={onClose}>
-            {t("admin:modPanel.settings.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={confirm}
-            disabled={archiveCommunity.isPending}
-          >
-            {t("admin:modPanel.settings.archive.confirm.cta")}
-          </Button>
-        </>
-      }
+      onConfirm={confirm}
+      title={t("admin:modPanel.settings.archive.confirm.title")}
+      tone="destructive"
+      loading={archiveCommunity.isPending}
+      confirmLabel={t("admin:modPanel.settings.archive.confirm.cta")}
+      cancelLabel={t("admin:modPanel.settings.cancel")}
     >
+      <Eyebrow>{t("admin:modPanel.settings.irreversible")}</Eyebrow>
       <p>{t("admin:modPanel.settings.archive.confirm.body")}</p>
-    </Modal>
+    </ConfirmDialog>
   );
 }
 
@@ -122,27 +118,18 @@ export function TransferOwnershipModal({
   };
 
   return (
-    <Modal
-      title={t("admin:modPanel.settings.transfer.modal.title")}
-      eyebrow={t("admin:modPanel.settings.irreversible")}
-      sub={t("admin:modPanel.settings.transfer.modal.body")}
+    <ConfirmDialog
+      open
       onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" type="button" onClick={onClose}>
-            {t("admin:modPanel.settings.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={confirm}
-            disabled={!selected || transferOwnership.isPending}
-          >
-            {t("admin:modPanel.settings.transfer.modal.cta")}
-          </Button>
-        </>
-      }
+      onConfirm={confirm}
+      title={t("admin:modPanel.settings.transfer.modal.title")}
+      description={t("admin:modPanel.settings.transfer.modal.body")}
+      tone="destructive"
+      loading={transferOwnership.isPending}
+      confirmLabel={t("admin:modPanel.settings.transfer.modal.cta")}
+      cancelLabel={t("admin:modPanel.settings.cancel")}
     >
+      <Eyebrow>{t("admin:modPanel.settings.irreversible")}</Eyebrow>
       {candidates.length === 0 ? (
         <EmptyState
           compact
@@ -150,7 +137,10 @@ export function TransferOwnershipModal({
           description={t("admin:modPanel.settings.transfer.modal.emptyDesc")}
         />
       ) : (
-        <div role="radiogroup" aria-label={t("admin:modPanel.settings.transfer.modal.pickLabel")}>
+        <div
+          role="radiogroup"
+          aria-label={t("admin:modPanel.settings.transfer.modal.pickLabel")}
+        >
           {candidates.map((member) => (
             <label className={styles.modRow} key={member.slug}>
               <input
@@ -177,6 +167,6 @@ export function TransferOwnershipModal({
           ))}
         </div>
       )}
-    </Modal>
+    </ConfirmDialog>
   );
 }

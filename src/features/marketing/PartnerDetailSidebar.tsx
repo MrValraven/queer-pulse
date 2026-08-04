@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import type { Partner } from "./partnerDetails";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -88,7 +89,8 @@ export function PartnerDetailSidebar({ p }: { p: Partner }) {
           className={s.becomeBtn}
           href="mailto:partners@queerpulse.pt"
         >
-          {t("marketing:partnerDetail.sidebar.becomeCta")}
+          {t("marketing:partnerDetail.sidebar.becomeCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </aside>

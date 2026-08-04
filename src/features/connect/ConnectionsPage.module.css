@@ -71,58 +71,10 @@
   font-weight: 700;
 }
 
-.tabs {
-  display: flex;
-  gap: 4px;
+/* Connections tab row — spacing wrapper for the shared `Tabs` primitive
+   (semantics, arrow-key nav and count badges now live in `Tabs`). */
+.tabsRow {
   margin-bottom: 24px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
-  flex-wrap: wrap;
-}
-.tab {
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-60);
-  padding: 12px 18px;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .tab:hover {
-    color: var(--text-strong);
-  }
-}
-.tabActive {
-  color: var(--text-strong);
-}
-.tabActive::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 18px;
-  right: 18px;
-  height: 2px;
-  background: var(--accent);
-}
-.tab .badge {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--ink-40);
-  background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 5px;
-  padding: 1px 7px;
-  margin-left: 5px;
-}
-.tabActive .badge {
-  color: var(--accent-ink);
-  background: rgba(var(--accent-rgb), 0.1);
-}
-.badgeAccent {
-  background: rgba(var(--accent-rgb), 0.16) !important;
-  color: var(--accent-ink) !important;
 }
 
 .filters {

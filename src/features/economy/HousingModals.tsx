@@ -1,10 +1,10 @@
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useId, useState } from "react";
 import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ModalShell } from "./ModalKit";
 import { useRecommendLandlord } from "./api/useRecommendLandlord";
 import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
 import styles from "./housingModals.module.css";
@@ -26,53 +26,6 @@ const Check = () => (
     <polyline points="20 6 9 17 4 12" />
   </svg>
 );
-
-function Shell({
-  children,
-  onClose,
-  ariaLabel,
-}: {
-  children: ReactNode;
-  onClose: () => void;
-  ariaLabel?: string;
-}) {
-  const { t } = useTranslation();
-  useScrollLock();
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) =>
-      event.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
-  return (
-    <div
-      className={styles.overlay}
-      // Backdrop click is a mouse-only shortcut; Esc and the close button
-      // already provide the keyboard path, so this div is not interactive.
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
-      >
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("economy:housingModal.close")}
-        >
-          ×
-        </button>
-        <div className={styles.scroll}>{children}</div>
-      </div>
-    </div>
-  );
-}
 
 /* ---- Message the lister ---- */
 export function MessageModal({
@@ -118,7 +71,7 @@ export function MessageModal({
   };
 
   return (
-    <Shell
+    <ModalShell
       onClose={onClose}
       ariaLabel={t("economy:housingModal.message.ariaLabel")}
     >
@@ -196,7 +149,7 @@ export function MessageModal({
           </div>
         </div>
       )}
-    </Shell>
+    </ModalShell>
   );
 }
 
@@ -242,7 +195,7 @@ export function RecommendModal({
   };
 
   return (
-    <Shell
+    <ModalShell
       onClose={onClose}
       ariaLabel={t("economy:housingModal.recommend.ariaLabel")}
     >
@@ -342,6 +295,6 @@ export function RecommendModal({
           </div>
         </div>
       )}
-    </Shell>
+    </ModalShell>
   );
 }

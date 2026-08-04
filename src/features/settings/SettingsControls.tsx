@@ -1,6 +1,6 @@
-import { type ReactNode, useEffect, useId, useState } from "react";
+import { type ReactNode, useId, useState } from "react";
 import { Link } from "react-router-dom";
-import { ComingSoon, Toggle } from "../../shared/components/ui";
+import { ComingSoon, ConfirmDialog, Toggle } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SettingsPage.module.css";
 
@@ -168,6 +168,13 @@ export function DataCard({
   );
 }
 
+/**
+ * First-step "are you sure?" confirm before the re-auth-gated deletion flow.
+ * Built on the shared `ConfirmDialog` (scroll-lock, Escape, click-out and
+ * focus-trap come from the underlying `Modal`); only mounted while open, so it
+ * passes `open` unconditionally. The heavier multi-step erasure UX stays in
+ * `DestructiveActionFlow`.
+ */
 export function DeleteAccountModal({
   onClose,
   onConfirm,
@@ -176,45 +183,16 @@ export function DeleteAccountModal({
   onConfirm: () => void;
 }) {
   const { t } = useTranslation();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="delete-account-modal-title"
-      >
-        <h3 id="delete-account-modal-title">
-          {t("settings:controls.deleteModal.title")}
-        </h3>
-        <p>{t("settings:controls.deleteModal.body")}</p>
-        <div className={styles.modalBtns}>
-          <button type="button" className={styles.dcBtn} onClick={onClose}>
-            {t("settings:controls.deleteModal.cancel")}
-          </button>
-          <button
-            type="button"
-            className={`${styles.dcBtn} ${styles.danger}`}
-            onClick={onConfirm}
-          >
-            {t("settings:controls.deleteModal.continue")}
-          </button>
-        </div>
-      </div>
-    </div>
+    <ConfirmDialog
+      open
+      onClose={onClose}
+      onConfirm={onConfirm}
+      tone="destructive"
+      title={t("settings:controls.deleteModal.title")}
+      description={t("settings:controls.deleteModal.body")}
+      cancelLabel={t("settings:controls.deleteModal.cancel")}
+      confirmLabel={t("settings:controls.deleteModal.continue")}
+    />
   );
 }

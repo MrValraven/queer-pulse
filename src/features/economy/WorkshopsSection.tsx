@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiArrowRight } from "react-icons/fi";
 import { Avatar, Button, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -61,7 +61,8 @@ function WorkshopCard({ workshop }: { workshop: Workshop }) {
           )}
         </span>
         <span className={styles.view}>
-          {t("economy:workshopsSection.viewCta")}
+          {t("economy:workshopsSection.viewCta")}{" "}
+          <FiArrowRight aria-hidden />
         </span>
       </div>
     </Link>

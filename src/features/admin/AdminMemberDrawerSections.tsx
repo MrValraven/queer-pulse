@@ -1,4 +1,4 @@
-import { FiLock } from "react-icons/fi";
+import { FiArrowRight, FiLock } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -69,7 +69,8 @@ export function MemberOverviewSections({
         <div className={styles.graphNoteRow}>
           <p className={styles.dHint}>{detail.graphNote}</p>
           <Button variant="ghost" size="md" onClick={onOpenNetwork}>
-            {t("admin:members.drawer.exploreCta")} →
+            {t("admin:members.drawer.exploreCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </section>
@@ -141,7 +142,8 @@ export function ModerationTimeline({
         ))}
       </ul>
       <Link className={styles.auditLink} to={routes.adminGovernance}>
-        {t("admin:members.timeline.auditLinkCta")} →
+        {t("admin:members.timeline.auditLinkCta")}{" "}
+        <FiArrowRight aria-hidden />
       </Link>
     </section>
   );

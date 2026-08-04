@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Avatar, Button } from "../../shared/components/ui";
@@ -80,7 +81,8 @@ export function HousingListingSidebar({
           {t("economy:housingListing.availableFrom", { date: listing.avail })}
         </div>
         <Button variant="ghost-dark" className={s.priceBtn} onClick={onMessage}>
-          {t("economy:housingListing.messageCtaArrow", { name: first })}
+          {t("economy:housingListing.messageCtaArrow", { name: first })}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
 

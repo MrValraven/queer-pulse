@@ -39,7 +39,7 @@ export const forum: Catalog = {
   "hero.title": "The <em>commons</em>",
   "hero.lead":
     "The one community everyone here belongs to — questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for a smaller room?",
-  "hero.findCommunitiesCta": "Find your communities →",
+  "hero.findCommunitiesCta": "Find your communities",
   newPostCta: "+ New post",
 
   // ── ForumSidebar ────────────────────────────────────────────────────────

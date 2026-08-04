@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FiUsers } from "react-icons/fi";
+import { FiArrowRight, FiUsers } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -201,7 +201,8 @@ export function CommunitiesPage() {
         sub={t("communities:discover.outro.sub")}
       >
         <Button to="/#board" size="lg">
-          {t("communities:discover.outro.cta")} →
+          {t("communities:discover.outro.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
 

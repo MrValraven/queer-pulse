@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from "react";
-import { FiCamera } from "react-icons/fi";
+import { FiArrowLeft, FiCamera } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
@@ -121,7 +121,7 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
         </Button>
         <SkipLink onSkip={onNext} />
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:onboarding.stepPhoto.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepPhoto.back")}
         </button>
       </div>
     </>

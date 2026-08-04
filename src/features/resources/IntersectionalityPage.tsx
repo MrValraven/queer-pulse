@@ -10,7 +10,8 @@ import {
   RACE_INFO,
   RACE_VOICES,
 } from "./intersectionality.data";
-import { FadeIn, HubBackLink, Reveal } from "../../shared/components/ui";
+import { FadeIn, Reveal } from "../../shared/components/ui";
+import { ResourceHero } from "./ResourceHero";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -51,25 +52,24 @@ export function IntersectionalityPage() {
           { name: pageTitle, path: "/resources/intersectionality" },
         ])}
       />
-      <div className={styles.hero}>
-        <div className="wrap">
-          <HubBackLink
-            to={routes.resources}
-            label={t("resources:intersectionality.hero.backLabel")}
-            tone="dark"
+      <ResourceHero
+        backLink={{
+          to: routes.resources,
+          label: t("resources:intersectionality.hero.backLabel"),
+          tone: "dark",
+        }}
+        eyebrowVariant="label"
+        eyebrowColor="var(--jade)"
+        eyebrow={t("resources:intersectionality.hero.cat")}
+        titleWeight="light"
+        title={
+          <Translation
+            i18nKey="resources:intersectionality.hero.title"
+            components={{ em: <em /> }}
           />
-          <div className={styles.cat}>
-            {t("resources:intersectionality.hero.cat")}
-          </div>
-          <h1>
-            <Translation
-              i18nKey="resources:intersectionality.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.heroSub}>
-            {t("resources:intersectionality.hero.sub")}
-          </p>
+        }
+        lead={t("resources:intersectionality.hero.sub")}
+        extras={
           <div className={styles.opening}>
             <div className={styles.openingBar} />
             <p className={styles.openingText}>
@@ -77,8 +77,8 @@ export function IntersectionalityPage() {
               {t("resources:intersectionality.opening.text")}
             </p>
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <div className={styles.ixNav}>
         <div className={styles.ixNavInner}>

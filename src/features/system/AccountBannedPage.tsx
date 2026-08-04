@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import {
+  Button,
+  StatusCard,
+  Stepper,
+  type StepperStep,
+} from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -20,29 +25,79 @@ export function AccountBannedPage() {
   const banned = !demoMode && user?.status === "suspended";
   const reasonNote = banned ? user?.suspension?.note?.trim() || null : null;
 
+  const whatNowSteps: StepperStep[] = [
+    {
+      key: "row1",
+      label: t("system:accountBanned.whatNow.row1.title"),
+      description: t("system:accountBanned.whatNow.row1.body"),
+    },
+    {
+      key: "row2",
+      label: t("system:accountBanned.whatNow.row2.title"),
+      description: (
+        <Translation
+          i18nKey="system:accountBanned.whatNow.row2.body"
+          components={{ a: <Link to={routes.privacy} /> }}
+        />
+      ),
+    },
+    {
+      key: "row3",
+      label: t("system:accountBanned.whatNow.row3.title"),
+      description: t("system:accountBanned.whatNow.row3.body"),
+    },
+    {
+      key: "row4",
+      label: t("system:accountBanned.whatNow.row4.title"),
+      description: (
+        <Translation
+          i18nKey="system:accountBanned.whatNow.row4.body"
+          components={{ wellbeingLink: <Link to={routes.wellbeing} /> }}
+        />
+      ),
+    },
+  ];
+
   return (
     <SystemStateShell orbTone="plum" mutedBrand>
-      <div className={styles.card}>
-        <div className={styles.icon}>
+      <StatusCard
+        tone="plum"
+        icon={
           <svg viewBox="0 0 24 24" aria-hidden>
             <circle cx="12" cy="12" r="10" />
             <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
           </svg>
-        </div>
-
-        <div className={styles.kicker}>{t("system:accountBanned.kicker")}</div>
-        <h1 className={styles.heading}>
+        }
+        kicker={t("system:accountBanned.kicker")}
+        heading={
           <Translation
             i18nKey="system:accountBanned.heading"
             components={{ em: <em /> }}
           />
-        </h1>
-        <p className={styles.lead}>
+        }
+        lead={
           <Translation
             i18nKey="system:accountBanned.lead1"
             components={{ em: <em /> }}
           />
-        </p>
+        }
+        actions={
+          <>
+            <Button to={routes.appealSubmit}>
+              {t("system:accountBanned.actions.appealCta")}
+            </Button>
+            <Button variant="ghost" to={routes.dataExport}>
+              {t("system:accountBanned.actions.eraseCta")}
+            </Button>
+          </>
+        }
+        foot={
+          <Translation
+            i18nKey="system:accountBanned.foot"
+            components={{ a: <Link to={routes.codeOfConduct} /> }}
+          />
+        }
+      >
         <p className={styles.lead}>
           <Translation
             i18nKey="system:accountBanned.lead2"
@@ -65,63 +120,16 @@ export function AccountBannedPage() {
         </div>
 
         <div className={styles.whatNow}>
-          <div className={styles.whatRow}>
-            <div className={styles.whatNum}>1</div>
-            <div className={styles.whatText}>
-              <b>{t("system:accountBanned.whatNow.row1.title")}</b>
-              <span>{t("system:accountBanned.whatNow.row1.body")}</span>
-            </div>
-          </div>
-          <div className={styles.whatRow}>
-            <div className={styles.whatNum}>2</div>
-            <div className={styles.whatText}>
-              <b>{t("system:accountBanned.whatNow.row2.title")}</b>
-              <span>
-                <Translation
-                  i18nKey="system:accountBanned.whatNow.row2.body"
-                  components={{ a: <Link to={routes.privacy} /> }}
-                />
-              </span>
-            </div>
-          </div>
-          <div className={styles.whatRow}>
-            <div className={styles.whatNum}>3</div>
-            <div className={styles.whatText}>
-              <b>{t("system:accountBanned.whatNow.row3.title")}</b>
-              <span>{t("system:accountBanned.whatNow.row3.body")}</span>
-            </div>
-          </div>
-          <div className={styles.whatRow}>
-            <div className={styles.whatNum}>4</div>
-            <div className={styles.whatText}>
-              <b>{t("system:accountBanned.whatNow.row4.title")}</b>
-              <span>
-                <Translation
-                  i18nKey="system:accountBanned.whatNow.row4.body"
-                  components={{
-                    wellbeingLink: <Link to={routes.wellbeing} />,
-                  }}
-                />
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.actions}>
-          <Button to={routes.appealSubmit}>
-            {t("system:accountBanned.actions.appealCta")}
-          </Button>
-          <Button variant="ghost" to={routes.dataExport}>
-            {t("system:accountBanned.actions.eraseCta")}
-          </Button>
-        </div>
-        <p className={styles.foot}>
-          <Translation
-            i18nKey="system:accountBanned.foot"
-            components={{ a: <Link to={routes.codeOfConduct} /> }}
+          <Stepper
+            steps={whatNowSteps}
+            current={0}
+            orientation="vertical"
+            marker="number"
+            showFill={false}
+            ariaLabel={t("system:accountBanned.kicker")}
           />
-        </p>
-      </div>
+        </div>
+      </StatusCard>
     </SystemStateShell>
   );
 }

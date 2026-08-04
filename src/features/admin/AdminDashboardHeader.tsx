@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FeatureHelp, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -93,7 +94,8 @@ export function AdminDashboardHeader({
       </div>
       <div className={styles.phActions}>
         <Button variant="primary" to={routes.adminModeration}>
-          {t("admin:dashboard.header.moderationCta")} →
+          {t("admin:dashboard.header.moderationCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

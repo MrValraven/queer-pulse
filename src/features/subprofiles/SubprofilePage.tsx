@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, Spinner } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
@@ -60,7 +61,11 @@ export function SubprofilePage() {
               to: NOT_FOUND.actionTo,
             }}
             secondaryAction={{
-              label: <>← {t(NOT_FOUND.backLabelKey)}</>,
+              label: (
+                <>
+                  <FiArrowLeft aria-hidden /> {t(NOT_FOUND.backLabelKey)}
+                </>
+              ),
               onClick: () => void navigate(-1),
             }}
           />

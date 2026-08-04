@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { ImageSlot, Tag, type ImageSlotTint } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -94,7 +95,8 @@ function CtaPill({ className }: { className: string }) {
   return (
     <span className={className} aria-hidden="true">
       {t("gatherings:hub.card.cta")}
-      {" →"}
+      {" "}
+      <FiArrowRight aria-hidden />
     </span>
   );
 }

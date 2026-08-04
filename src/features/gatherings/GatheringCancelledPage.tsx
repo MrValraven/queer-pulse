@@ -1,3 +1,4 @@
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
@@ -29,7 +30,7 @@ export function GatheringCancelledPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={CALENDAR} className={styles.back}>
-          {t("gatherings:cancelled.back")}
+          <FiArrowLeft aria-hidden /> {t("gatherings:cancelled.back")}
         </Link>
 
         <div className={styles.stamp}>
@@ -67,7 +68,7 @@ export function GatheringCancelledPage() {
                 month: "short",
               }),
             })}{" "}
-            →
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>

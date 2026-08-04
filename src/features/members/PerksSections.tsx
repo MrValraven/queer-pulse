@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -247,7 +247,8 @@ export function PerksSidebar() {
           />
         </div>
         <Link to={routes.badges} className={styles.sbLink}>
-          {t("members:perks.sidebar.seeAllBadgesCta")}
+          {t("members:perks.sidebar.seeAllBadgesCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
 

@@ -87,7 +87,7 @@ export const marketing: Catalog = {
   "accessibility.meta.title": "Espaços queer acessíveis em Lisboa, revistos",
   "accessibility.meta.description":
     "Informação real de acessibilidade sobre espaços queer em Lisboa, revista por pessoas com deficiência da comunidade e não adivinhada — e como pedir uma adaptação diretamente.",
-  "accessibility.backLabel": "← Ajuda",
+  "accessibility.backLabel": "Ajuda",
   "accessibility.category": "Acessibilidade",
   "accessibility.hero.title": "O acesso <em>não devia ser um talvez.</em>",
   "accessibility.hero.sub":
@@ -317,7 +317,7 @@ export const marketing: Catalog = {
   "activism.volunteer.title": "Vagas <em>abertas</em>",
   "activism.volunteer.p1":
     "Oportunidades de voluntariado atuais das nossas organizações parceiras, atualizadas regularmente.",
-  "activism.volunteer.expressInterestCta": "Mostrar interesse →",
+  "activism.volunteer.expressInterestCta": "Mostrar interesse",
   "activism.volunteer.seeAllCta": "Ver todas as vagas de voluntariado",
   "activism.outro.title": "Escolhe um degrau. <em>Começa hoje.</em>",
   "activism.outro.sub":
@@ -328,7 +328,7 @@ export const marketing: Catalog = {
   "coc.meta.title": "Código de Conduta da QueerPulse: o que é obrigatório",
   "coc.meta.description":
     "O Código de Conduta vinculativo da QueerPulse — seis compromissos que assumes ao aderir, o que conta como dano, como as denúncias são tratadas, e como recorrer.",
-  "coc.hero.backLabel": "← Governação",
+  "coc.hero.backLabel": "Governação",
   "coc.hero.eyebrow": "Código de Conduta · em vigor desde {date}",
   "coc.hero.title": "Como nos tratamos, <em>aqui dentro.</em>",
   "coc.hero.dek":
@@ -526,7 +526,7 @@ export const marketing: Catalog = {
   "cookies.toast.saved": "Preferências de cookies guardadas",
 
   // ── Pedido de dados (DSAR) ─────────────────────────────────────────────
-  "dsar.backToPrivacyLabel": "← Política de Privacidade",
+  "dsar.backToPrivacyLabel": "Política de Privacidade",
   "dsar.eyebrow": "Direitos sobre os dados",
   "dsar.h1": "Exerce os teus <em>direitos sobre os dados.</em>",
   "dsar.lead":
@@ -817,7 +817,7 @@ export const marketing: Catalog = {
   "partners.section.title": "Os nossos <em>parceiros</em>",
   "partners.section.sub":
     "Ainda não há filtro disponível — aqui está a lista completa.",
-  "partners.card.viewCta": "Ver perfil →",
+  "partners.card.viewCta": "Ver perfil",
   "partners.loadingMore": "A carregar mais parceiros…",
   "partners.loadMoreCta": "Carregar mais parceiros",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
@@ -1312,19 +1312,19 @@ export const marketing: Catalog = {
     "<b>Tens um rascunho guardado.</b> Continuar de onde ficaste?",
   "listBusiness.draftBanner.startFresh": "Começar de novo",
   "listBusiness.draftBanner.resume": "Retomar rascunho",
-  "listBusiness.paneActions.back": "← Voltar",
+  "listBusiness.paneActions.back": "Voltar",
   "listBusiness.paneActions.cancel": "Cancelar",
   "listBusiness.paneActions.neededLabel": "Faltam algumas coisas",
   "listBusiness.paneActions.jumpToAria": "Ir para {label}",
   "listBusiness.paneActions.blockedTitle":
     "Preenche os campos obrigatórios para continuar",
-  "listBusiness.next.basics": "A seguir: o básico →",
-  "listBusiness.next.story": "A seguir: a história →",
-  "listBusiness.next.practical": "A seguir: o prático →",
-  "listBusiness.next.photos": "A seguir: fotos e tu →",
-  "listBusiness.next.review": "Rever o teu anúncio →",
-  "listBusiness.next.send": "Enviar à equipa →",
-  "listBusiness.next.continue": "Continuar →",
+  "listBusiness.next.basics": "A seguir: o básico",
+  "listBusiness.next.story": "A seguir: a história",
+  "listBusiness.next.practical": "A seguir: o prático",
+  "listBusiness.next.photos": "A seguir: fotos e tu",
+  "listBusiness.next.review": "Rever o teu anúncio",
+  "listBusiness.next.send": "Enviar à equipa",
+  "listBusiness.next.continue": "Continuar",
   "listBusiness.sending": "A enviar o teu lugar à equipa…",
   "listBusiness.toast.submitted":
     "O teu anúncio está com a equipa da comunidade",
@@ -1708,7 +1708,7 @@ export const marketing: Catalog = {
   "listBusiness.success.keepIt": "Manter",
   "listBusiness.success.yesWithdraw": "Sim, retirar",
   "listBusiness.success.backToDirectory": "Voltar ao diretório",
-  "listBusiness.success.viewOnProfile": "Ver no teu perfil →",
+  "listBusiness.success.viewOnProfile": "Ver no teu perfil",
   "listBusiness.success.editSubmission": "Editar submissão",
   "listBusiness.success.listAnother": "Anunciar outro lugar",
   "listBusiness.success.withdraw": "Retirar",
@@ -1752,7 +1752,7 @@ export const marketing: Catalog = {
   "listBusiness.preview.hours": "Horário",
   "listBusiness.preview.roleShown": "Papel visível · nome privado",
   "listBusiness.preview.yourRole": "O teu papel",
-  "listBusiness.preview.fullCta": "Pré-visualizar a página completa →",
+  "listBusiness.preview.fullCta": "Pré-visualizar a página completa",
   "listBusiness.preview.fullDisabledTitle":
     "Indica primeiro um nome para pré-visualizares a página completa",
   "listBusiness.preview.foot":
@@ -1873,32 +1873,53 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Melhoria",
   "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
-  "changelog.tag.settings": "Definições de notificações →",
-  "changelog.tag.messages": "Abrir mensagens →",
-  "changelog.tag.communities": "Ver comunidades →",
-  "changelog.tag.subprofiles": "Ver subperfis →",
-  "changelog.tag.housing": "Ver habitação →",
-  "changelog.tag.directory": "Abrir o diretório →",
-  "changelog.tag.cinema": "Visitar o Cinema →",
-  "changelog.tag.forum": "Visitar o fórum →",
-  "changelog.tag.profile": "Abrir o seu perfil →",
-  "changelog.tag.gatherings": "Ver encontros →",
-  "changelog.tag.members": "Conhecer os membros →",
-  "changelog.tag.events": "Abrir o Events Hub →",
-  "changelog.tag.roadmap": "Abrir o roteiro →",
-  "changelog.tag.magazine": "Abrir a revista →",
-  "changelog.tag.safety": "Ver a nossa abordagem à segurança →",
-  "changelog.tag.editProfile": "Editar o teu perfil →",
-  "changelog.tag.employerReviews": "Ler avaliações de empregadores →",
-  "changelog.tag.studio": "Visitar o Studio →",
-  "changelog.tag.search": "Experimentar a pesquisa global →",
-  "changelog.tag.donate": "Ver para onde vai o dinheiro →",
-  "changelog.tag.volunteer": "Encontra o teu caminho →",
-  "changelog.tag.notifications": "Abrir as tuas notificações →",
-  "changelog.tag.connections": "Abrir as tuas ligações →",
-  "changelog.tag.trustNetwork": "Abrir a rede de confiança →",
-  "changelog.tag.invite": "Convidar alguém →",
-  "changelog.tag.imprint": "Ler o aviso legal →",
+  "changelog.tag.settings": "Definições de notificações",
+  "changelog.tag.messages": "Abrir mensagens",
+  "changelog.tag.communities": "Ver comunidades",
+  "changelog.tag.subprofiles": "Ver subperfis",
+  "changelog.tag.housing": "Ver habitação",
+  "changelog.tag.directory": "Abrir o diretório",
+  "changelog.tag.cinema": "Visitar o Cinema",
+  "changelog.tag.forum": "Visitar o fórum",
+  "changelog.tag.profile": "Abrir o seu perfil",
+  "changelog.tag.gatherings": "Ver encontros",
+  "changelog.tag.members": "Conhecer os membros",
+  "changelog.tag.events": "Abrir o Events Hub",
+  "changelog.tag.roadmap": "Abrir o roteiro",
+  "changelog.tag.magazine": "Abrir a revista",
+  "changelog.tag.safety": "Ver a nossa abordagem à segurança",
+  "changelog.tag.editProfile": "Editar o teu perfil",
+  "changelog.tag.employerReviews": "Ler avaliações de empregadores",
+  "changelog.tag.studio": "Visitar o Studio",
+  "changelog.tag.search": "Experimentar a pesquisa global",
+  "changelog.tag.donate": "Ver para onde vai o dinheiro",
+  "changelog.tag.volunteer": "Encontra o teu caminho",
+  "changelog.tag.notifications": "Abrir as tuas notificações",
+  "changelog.tag.connections": "Abrir as tuas ligações",
+  "changelog.tag.trustNetwork": "Abrir a rede de confiança",
+  "changelog.tag.invite": "Convidar alguém",
+  "changelog.tag.imprint": "Ler o aviso legal",
+  "changelog.tag.feed": "Abrir o teu feed",
+
+  "changelog.entries.icons-not-text-symbols.title":
+    "Ícones mais nítidos em vez de símbolos de texto",
+  "changelog.entries.icons-not-text-symbols.body":
+    "Em toda a plataforma, as pequenas marcas de direção e de estado — as setas de “seguinte” e “voltar” nos botões e nas ligações, os cursores dos menus, as pegas de arrastar, as marcas de relógio e de reprodução — passam a ser desenhadas com ícones próprios em vez de caracteres de texto. Aparecem nítidas e iguais em qualquer dispositivo e tipo de letra, alinham-se bem com o texto e são lidas corretamente pelos leitores de ecrã. É apenas um retoque visual e de acessibilidade; nada muda no que os botões fazem.",
+
+  "changelog.entries.message-alerts-out-of-notifications.title":
+    "Os avisos de novas mensagens saíram do centro de notificações",
+  "changelog.entries.message-alerts-out-of-notifications.body":
+    "O teu separador de Notificações deixa de encher-se com linhas de “Tens uma nova mensagem”. As novas mensagens diretas passam a aparecer só onde faz sentido — na contagem de não lidas do ícone de mensagens e, se tiveres ativado, numa notificação push. Nada muda nas mensagens em si; o centro de notificações fica apenas mais tranquilo e focado no que ainda não vês na tua caixa de entrada.",
+
+  "changelog.entries.shared-ui-consistency.title":
+    "Janelas e formulários mais suaves e consistentes",
+  "changelog.entries.shared-ui-consistency.body":
+    "Reconstruímos dezenas de janelas, confirmações, seletores e formulários sobre um único conjunto de blocos partilhados. Na prática, isto significa que cada janela passa a manter o foco do teclado, fecha com a tecla Escape pela ordem certa quando há várias abertas e devolve-te exatamente ao ponto onde estavas — por isso toda a plataforma fica mais organizada e funciona melhor com teclado ou leitor de ecrã. Nenhuma funcionalidade mudou de sítio; simplesmente passam a comportar-se da mesma forma em todo o lado.",
+
+  "changelog.entries.balanced-feed-grid.title":
+    "Um feed inicial mais equilibrado",
+  "changelog.entries.balanced-feed-grid.body":
+    "O teu feed inicial passa a dispor os cartões numa grelha organizada em vez de uma única pilha alta. Os cartões mais leves — novos membros, leituras guardadas, resumos de encontros — ficam dois ou mais por linha num ecrã largo, por isso vês mais pessoas de relance e o separador Pessoas lê-se como um verdadeiro diretório. Cartões mais ricos, como publicações, o pulso das comunidades e encontros, continuam a ocupar toda a largura onde o espaço extra ajuda. No telemóvel, tudo volta a uma única coluna.",
 
   "changelog.entries.moderation-outcome-notifications.title":
     "Passas a saber o resultado de uma decisão de moderação",
@@ -1975,6 +1996,11 @@ export const marketing: Catalog = {
   "changelog.entries.smoother-mobile-navigation.body":
     "Navegar na QueerPulse no telemóvel devia parecer fluido, não lento. A barra de separadores no fundo do ecrã fica agora sempre visível também no navegador, não só depois de instalares a aplicação, e as páginas surgem com uma transição suave em vez de um salto brusco. Cada separador lembra-se exatamente de onde ficaste e, se tocares no separador em que já estás, és levado de volta ao topo. Desliza o dedo a partir da margem esquerda do ecrã para voltar atrás, e puxa para baixo no teu feed, nos eventos, em membros, nas mensagens ou nas notificações para atualizar com um gesto rápido em vez de recarregares a página.",
 
+  "changelog.entries.no-sideways-scroll-on-mobile.title":
+    "As páginas voltam a deslizar de cima para baixo no telemóvel",
+  "changelog.entries.no-sideways-scroll-on-mobile.body":
+    "Nalguns telemóveis, uma página podia fugir para o lado e parecer presa — tudo parecia demasiado largo e apertado, e o ecrã inteiro deslizava para a esquerda e para a direita em vez de subir e descer. Isto está corrigido em toda a aplicação. Links, nomes de utilizador e palavras compridas passam agora para a linha seguinte em vez de esticar um cartão para além da borda do ecrã, e a página é mantida à largura do teu telemóvel, para que só deslize como deve ser: para baixo.",
+
   "changelog.entries.no-placeholder-people-in-live.title":
     "O modo ao vivo agora mostra apenas pessoas reais",
   "changelog.entries.no-placeholder-people-in-live.body":
@@ -1989,7 +2015,7 @@ export const marketing: Catalog = {
     "Reenvia um convite que expirou — e partilha-o com um código QR",
   "changelog.entries.invite-resend-and-qr.body":
     "Um convite que expirou antes de a tua amiga lá chegar já não obriga a começar do zero. Abre os teus convites enviados, toca em “Enviar de novo” no que expirou, e o mesmo link volta a funcionar por mais uma semana. Cada convite que geras passa também a incluir um código QR, para que alguém possa entrar bastando lê-lo diretamente do teu telemóvel — à mesa ou num evento, sem link para copiar. E se um convite foi endereçado a outro email, ou se quem te convidou já não está na QueerPulse, passas a receber uma explicação clara e gentil em vez de um erro confuso.",
-  "changelog.entries.invite-resend-and-qr.tag": "Convidar alguém →",
+  "changelog.entries.invite-resend-and-qr.tag": "Convidar alguém",
 
   "changelog.entries.smoother-onboarding-first-minutes.title":
     "Um acolhimento mais suave nos teus primeiros minutos",
@@ -2000,13 +2026,13 @@ export const marketing: Catalog = {
     "Eventos abre no topo",
   "changelog.entries.events-open-at-top.body":
     "Abrir Eventos (ou qualquer separador) começa agora sempre no topo da página. Antes deixava-te no ponto onde tinhas feito scroll da última vez, o que, na capa alta de Eventos, te deixava preso a meio da página. Carregar no botão Voltar do navegador continua a levar-te exatamente para onde estavas.",
-  "changelog.entries.events-open-at-top.tag": "Ver eventos →",
+  "changelog.entries.events-open-at-top.tag": "Ver eventos",
 
   "changelog.entries.chat-header-tap-to-profile.title":
     "Um cabeçalho de conversa mais tranquilo",
   "changelog.entries.chat-header-tap-to-profile.body":
     "O topo de uma conversa funciona agora como esperarias: toca no nome ou na foto da pessoa para abrir o perfil dela — sem precisares de um botão à parte. O arranjo também ficou mais limpo, com os controlos de informação e de mensagens marcadas reunidos num par arrumado no canto, em vez de ficarem soltos fora do sítio.",
-  "changelog.entries.chat-header-tap-to-profile.tag": "Abrir mensagens →",
+  "changelog.entries.chat-header-tap-to-profile.tag": "Abrir mensagens",
 
   "changelog.entries.sheet-close-scroll-jump-fix.title":
     "Sem mais saltos de volta ao topo",
@@ -2684,7 +2710,7 @@ export const marketing: Catalog = {
   "volunteer.guide.title": "Queres fazer <em>mais</em> do que um turno?",
   "volunteer.guide.body":
     "O nosso guia para organizar melhor leva-te de aparecer uma vez a trazer uma competência — sem experiência necessária.",
-  "volunteer.guide.cta": "Ler o guia de ativismo →",
+  "volunteer.guide.cta": "Ler o guia de ativismo",
   "volunteer.empty.noneTitle": "Ainda não há oportunidades publicadas",
   "volunteer.empty.noneDescription":
     "Ainda nenhuma organização publicou vagas aqui. Se a tua precisa de ajuda, sê a primeira a lançar o convite.",
@@ -2696,13 +2722,13 @@ export const marketing: Catalog = {
   "volunteer.empty.clearCta": "Limpar filtros",
   "volunteer.card.commitLow": "Compromisso baixo",
   "volunteer.card.commitMedium": "Compromisso médio",
-  "volunteer.card.expressInterest": "Mostrar interesse →",
+  "volunteer.card.expressInterest": "Mostrar interesse",
   "volunteer.loadingMore": "A carregar mais oportunidades…",
   "volunteer.loadMoreCta": "Carregar mais oportunidades",
   "volunteer.outro.title": "Queres ligar-te <em>mais a fundo?</em>",
   "volunteer.outro.sub":
     "Encontra quem já está a trabalhar nas causas que te importam.",
-  "volunteer.outro.cta": "Conhece quem faz a mudança →",
+  "volunteer.outro.cta": "Conhece quem faz a mudança",
   "volunteer.signups.title": "Quem já se inscreveu",
   "volunteer.signups.loading": "A carregar inscrições…",
   "volunteer.signups.empty":
@@ -2734,7 +2760,7 @@ export const marketing: Catalog = {
     "Não foi possível publicar a tua oportunidade — tenta outra vez.",
   "postOpportunity.success.title": "A tua oportunidade está",
   "postOpportunity.success.em": "publicada.",
-  "postOpportunity.success.closeLabel": "Ver o quadro de voluntariado →",
+  "postOpportunity.success.closeLabel": "Ver o quadro de voluntariado",
   "postOpportunity.success.step1": "Já está visível no quadro de voluntariado",
   "postOpportunity.success.step2":
     "As pessoas podem inscrever-se a partir da ficha",
@@ -2743,7 +2769,7 @@ export const marketing: Catalog = {
   "postOpportunity.success.body":
     "Obrigade por abrires espaço para alguém ajudar. Quem estiver interessade já pode encontrar a tua vaga e mostrar interesse.",
   "postOpportunity.actions.posting": "A publicar…",
-  "postOpportunity.actions.submit": "Publicar oportunidade →",
+  "postOpportunity.actions.submit": "Publicar oportunidade",
   "postOpportunity.actions.cancel": "Cancelar",
   "postOpportunity.tip1.title": "Sê honesto sobre o pedido",
   "postOpportunity.tip1.body":
@@ -2850,7 +2876,7 @@ export const marketing: Catalog = {
   //    demonstração, sinalizado no relatório da varredura como trabalho
   //    futuro. Todo o resto nesta página (títulos, botões, etiquetas fixas)
   //    é chrome e está traduzido abaixo.
-  "volunteerDetail.backCta": "← Todas as oportunidades de voluntariado",
+  "volunteerDetail.backCta": "Todas as oportunidades de voluntariado",
   "volunteerDetail.error.alreadySignedUp": "Já te inscreveste nesta função.",
   "volunteerDetail.error.full":
     "Esta oportunidade acabou de ficar completa — todas as vagas estão ocupadas.",
@@ -2872,16 +2898,16 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.spotsFilled": "Vagas ocupadas",
   "volunteerDetail.sidebar.roleFull": "Esta função está completa",
   "volunteerDetail.sidebar.sending": "A enviar a tua candidatura…",
-  "volunteerDetail.sidebar.applyCta": "Candidatar →",
+  "volunteerDetail.sidebar.applyCta": "Candidatar",
   "volunteerDetail.sidebar.askTeam": "Perguntar à equipa",
   "volunteerDetail.sidebar.footNote":
-    "Pessoas voluntárias antigas: <a>usa o perfil do ano passado →</a> · salta este ecrã.",
+    "Pessoas voluntárias antigas: <a>usa o perfil do ano passado</a> · salta este ecrã.",
   "volunteerDetail.sidebar.partnershipLabel": "Em parceria com",
-  "volunteerDetail.sidebar.partnershipLink": "Sobre a parceria →",
+  "volunteerDetail.sidebar.partnershipLink": "Sobre a parceria",
   "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
   "volunteerDetail.sidebar.fundInstead":
-    "→ Financiar este trabalho em vez disso",
+    "Financiar este trabalho em vez disso",
 
   // ── Detalhe do Parceiro — chrome da página. O conteúdo sobre/trabalho
   //    conjunto/linha do tempo/como trabalhamos, as estatísticas, e os
@@ -2890,7 +2916,7 @@ export const marketing: Catalog = {
   //    página de listagem de Parceiros.
   "partnerDetail.loadError":
     "Não conseguimos carregar este parceiro agora. Tenta outra vez.",
-  "partnerDetail.backCta": "← Todos os parceiros",
+  "partnerDetail.backCta": "Todos os parceiros",
   "partnerDetail.tab.about": "Sobre",
   "partnerDetail.tab.work": "Trabalho conjunto",
   "partnerDetail.tab.timeline": "Linha do tempo",
@@ -2900,7 +2926,7 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.becomeTitle": "Torna-te parceiro",
   "partnerDetail.sidebar.becomeBody":
     "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto — escreve-nos.",
-  "partnerDetail.sidebar.becomeCta": "Entra em contacto →",
+  "partnerDetail.sidebar.becomeCta": "Entra em contacto",
 
   // ── Donate — chrome da página. Tudo escrito pela própria plataforma (os
   //    valores/alocação/confiança são números fixos da QueerPulse, não
@@ -2918,8 +2944,8 @@ export const marketing: Catalog = {
   "donate.amounts.mostChosen": "mais escolhido",
   "donate.amounts.sustainsMember": "sustenta uma pessoa",
   "donate.amounts.fundsGathering": "financia um encontro",
-  "donate.giveCta.monthly": "Dar {amount} / mês →",
-  "donate.giveCta.oneOff": "Dar {amount} →",
+  "donate.giveCta.monthly": "Dar {amount} / mês",
+  "donate.giveCta.oneOff": "Dar {amount}",
   "donate.allocation.title": "Para onde <em>vai mesmo.</em>",
   "donate.allocation.lead":
     "Nada de despesas gerais e salários para pessoas que nunca vais conhecer. Aqui está a divisão real.",
@@ -3038,7 +3064,7 @@ export const marketing: Catalog = {
   "contact.form.messageLabel": "A tua mensagem",
   "contact.form.messagePlaceholder":
     "Escreve com naturalidade. Não há modelo nem limite de palavras.",
-  "contact.form.sendCta": "Enviar →",
+  "contact.form.sendCta": "Enviar",
   "contact.outro.title": "Construído em Lisboa, <em>com cuidado.</em>",
   "contact.outro.sub":
     "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
@@ -3084,7 +3110,7 @@ export const marketing: Catalog = {
   "forOrgs.proof.title": "Já a trabalhar <em>connosco</em>",
   "forOrgs.proof.sub":
     "Quatro parceiros representativos, cada um num nível diferente. A lista completa está em Parceiros.",
-  "forOrgs.proof.viewCta": "Ver parceiro →",
+  "forOrgs.proof.viewCta": "Ver parceiro",
   "forOrgs.tiers.title": "O que <em>oferecemos</em>",
   "forOrgs.tiers.sub":
     "Três níveis, cada um um tipo diferente de relação. Todos incluem o essencial: revisão prévia à publicação, divulgação transparente do financiamento, e a possibilidade de qualquer um dos lados discordar publicamente.",
@@ -3104,7 +3130,7 @@ export const marketing: Catalog = {
     "Para: organizações com mais de 20 pessoas a contratar ativamente talento queer. Escala progressiva para equipas com menos de 50 pessoas.",
   "forOrgs.tiers.employer.reviewCta": "Iniciar a avaliação",
   "forOrgs.tiers.employer.reviewToast": "A abrir o formulário de avaliação…",
-  "forOrgs.tiers.employer.exampleCta": "Ver um exemplo de perfil de empresa →",
+  "forOrgs.tiers.employer.exampleCta": "Ver um exemplo de perfil de empresa",
   "forOrgs.tiers.partner.name": "Parceiro <em>operacional</em>",
   "forOrgs.tiers.partner.price": "Por <em>acordo</em>",
   "forOrgs.tiers.partner.pricePeriod": "recíproco · normalmente não pago",
@@ -3215,7 +3241,7 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
-  "directory.card.viewDetails": "Ver detalhes →",
+  "directory.card.viewDetails": "Ver detalhes",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
   "directory.submitStrip.title":
     "Conheces um lugar que devia estar <em>aqui?</em>",
@@ -3241,7 +3267,7 @@ export const marketing: Catalog = {
   "directory.outro.sub":
     "Junta-te à rede e tem acesso ao diretório completo, recomendações da comunidade, e a uma comunidade que conhece a cidade.",
   "directory.outro.cta": "Pedir um convite",
-  "directory.detail.backCta": "← Diretório",
+  "directory.detail.backCta": "Diretório",
   "directory.detail.breadcrumbAria": "Trilho de navegação",
   "directory.detail.breadcrumbHome": "Diretório",
   "directory.detail.relatedTitle": "Mais {category} por perto",
@@ -3305,10 +3331,10 @@ export const marketing: Catalog = {
   "directory.detail.reviews.noStarReviews":
     "Ainda não há avaliações de {count} estrelas.",
   "directory.detail.reviews.ratingAria": "Classificado com {count} em 5 estrelas",
-  "directory.detail.visitWebsite": "Visitar o site →",
-  "directory.detail.getInTouch": "Entrar em contacto →",
+  "directory.detail.visitWebsite": "Visitar o site",
+  "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.backToDirectory": "Voltar ao diretório",
-  "directory.detail.claimCta": "És tu que geres este espaço? Reivindica-o →",
+  "directory.detail.claimCta": "És tu que geres este espaço? Reivindica-o",
   "directory.detail.notFound.title": "Não encontrámos este espaço",
   "directory.detail.notFound.body":
     "Este negócio pode ter sido removido, ou o link pode estar desatualizado. Todos os outros lugares abertos a nós continuam no diretório.",
@@ -3383,11 +3409,11 @@ export const marketing: Catalog = {
   "directory.detail.trust.lastVerifiedLabel": "Última verificação",
   "directory.detail.trust.howLine":
     "Este espaço cumpre os mesmos critérios que qualquer espaço verificado.",
-  "directory.detail.trust.howLink": "Como funciona a verificação →",
+  "directory.detail.trust.howLink": "Como funciona a verificação",
   "directory.detail.whoRunsIt": "Quem gere isto",
   "directory.detail.onQueerPulse": "Na QueerPulse",
   "directory.detail.communityVouched": "Avalizado pela comunidade",
-  "directory.detail.viewProfile": "Ver o perfil de {name} →",
+  "directory.detail.viewProfile": "Ver o perfil de {name}",
   "directory.detail.savedByMembers_one": "Guardado por {count} membro",
   "directory.detail.savedByMembers_other": "Guardado por {count} membros",
   "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
@@ -3457,17 +3483,17 @@ export const marketing: Catalog = {
   "arriving.firstStep.title": "Vem a algo <em>presencialmente.</em>",
   "arriving.firstStep.intro":
     "Tudo nesta página é útil. Mas a melhor coisa que podes fazer é aparecer num encontro. O próximo já aí vem:",
-  "arriving.firstStep.rsvpCta": "Vou estar lá →",
+  "arriving.firstStep.rsvpCta": "Vou estar lá",
   "arriving.commQuick.eyebrow": "Por onde começar",
   "arriving.commQuick.title":
     "Três comunidades para <em>quem chega agora.</em>",
   "arriving.commQuick.intro":
     "Não sabes por onde começar? Estas três comunidades são particularmente acolhedoras para quem é novo em Lisboa.",
-  "arriving.commQuick.browseCta": "Ver todas as comunidades →",
+  "arriving.commQuick.browseCta": "Ver todas as comunidades",
   "arriving.outro.title": "Vamos conhecer <em>a comunidade?</em>",
   "arriving.outro.sub":
     "Pede um convite para a QueerPulse e ganha acesso à rede completa — pessoas, encontros, o quadro, e tudo o resto nesta página.",
-  "arriving.outro.cta": "Pedir um convite →",
+  "arriving.outro.cta": "Pedir um convite",
 
   // ── Vistos & Residência — conteúdo jurídico/imigração. Traduzido com o
   //    cuidado extra do §6 do brief de i18n: termos oficiais portugueses
@@ -3495,23 +3521,23 @@ export const marketing: Catalog = {
   "visas.routePicker.euCitizen.name": "Cidadania da UE / EEE",
   "visas.routePicker.euCitizen.desc":
     "Aplica-se a livre circulação. O registo é simples, mas obrigatório.",
-  "visas.routePicker.euCitizen.cta": "Cidadania da UE →",
+  "visas.routePicker.euCitizen.cta": "Cidadania da UE",
   "visas.routePicker.remoteWorker.name": "Trabalho remoto / rendimento passivo",
   "visas.routePicker.remoteWorker.desc":
     "A viver de poupanças, rendimento de arrendamento, trabalho independente ou emprego remoto.",
-  "visas.routePicker.remoteWorker.cta": "Visto D7 →",
+  "visas.routePicker.remoteWorker.cta": "Visto D7",
   "visas.routePicker.digitalNomad.name": "Nómada digital",
   "visas.routePicker.digitalNomad.desc":
     "A trabalhar remotamente para uma entidade empregadora não portuguesa, com rendimento mais elevado.",
-  "visas.routePicker.digitalNomad.cta": "Nómada Digital (D8) →",
+  "visas.routePicker.digitalNomad.cta": "Nómada Digital (D8)",
   "visas.routePicker.jobOffer.name": "Proposta de emprego em Portugal",
   "visas.routePicker.jobOffer.desc":
     "Tens ou estás à procura de emprego junto de uma entidade portuguesa.",
-  "visas.routePicker.jobOffer.cta": "Vistos de Trabalho →",
+  "visas.routePicker.jobOffer.cta": "Vistos de Trabalho",
   "visas.routePicker.partner.name": "A juntar-te a uma pessoa parceira aqui",
   "visas.routePicker.partner.desc":
     "A tua pessoa parceira já está em Portugal ou muda-se contigo.",
-  "visas.routePicker.partner.cta": "Trazer uma Pessoa Parceira →",
+  "visas.routePicker.partner.cta": "Trazer uma Pessoa Parceira",
 
   "visas.tabs.eu.label": "Cidadania da UE",
   "visas.tabs.eu.headTitle": "Pessoas cidadãs da <em>UE e do EEE</em>",
@@ -3532,7 +3558,7 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card3.body":
     "Se és cidadã ou cidadão da UE e a tua pessoa parceira não é, ela pode juntar-se a ti em Portugal ao abrigo das regras de livre circulação da UE — incluindo cônjuges do mesmo sexo e uniões de facto registadas. O Tribunal de Justiça da União Europeia (acórdão Coman, 2018) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo para efeitos de livre circulação, mesmo que não tenham casamento entre pessoas do mesmo sexo a nível interno.",
   "visas.tabs.eu.card3.tag": "Direitos plenos de parceria",
-  "visas.tabs.eu.card3.link": "Detalhes do visto para pessoa parceira →",
+  "visas.tabs.eu.card3.link": "Detalhes do visto para pessoa parceira",
 
   "visas.tabs.d7.label": "D7 — Rendimento Passivo",
   "visas.tabs.d7.headTitle": "D7 — <em>Visto de Rendimento Passivo</em>",
@@ -3551,7 +3577,7 @@ export const marketing: Catalog = {
   "visas.tabs.d7.card3.title": "Regime fiscal do IFICI",
   "visas.tabs.d7.card3.body":
     "Portugal substituiu o regime do NHR no final de 2023 pelo regime do IFICI (informalmente chamado NHR 2.0). Está agora direcionado a profissões elegíveis (tecnologia, investigação, artes). Quem tem apenas o D7 deixou de qualificar automaticamente. O teu rendimento será tributado como o de qualquer pessoa residente comum. Procura aconselhamento fiscal antes de te mudares.",
-  "visas.tabs.d7.card3.link": "Contactos de aconselhamento fiscal →",
+  "visas.tabs.d7.card3.link": "Contactos de aconselhamento fiscal",
   "visas.tabs.d7.step1.title": "Pede no consulado português do teu país",
   "visas.tabs.d7.step1.text":
     "Submete comprovativo de rendimento, registo criminal limpo, seguro de saúde e comprovativo de alojamento em Portugal.",
@@ -3584,7 +3610,7 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card3.title": "Tratamento fiscal",
   "visas.tabs.d8.card3.body":
     "Quem tem D8 e trabalha em funções elegíveis de tecnologia ou investigação pode qualificar-se para o regime IFICI (taxa fixa de 20% de IRS durante até 10 anos). Não é automático — tens de te candidatar e a tua profissão tem de ser elegível. Confirma com uma pessoa especialista fiscal antes de assumir que vais beneficiar.",
-  "visas.tabs.d8.card3.link": "Aconselhamento fiscal →",
+  "visas.tabs.d8.card3.link": "Aconselhamento fiscal",
 
   "visas.tabs.work.label": "Vistos de Trabalho",
   "visas.tabs.work.headTitle": "Vistos de <em>trabalho</em>",
@@ -3625,7 +3651,7 @@ export const marketing: Catalog = {
     "O acórdão do Tribunal de Justiça da União Europeia de 2018 (Coman v. Roménia) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo de pessoas cidadãs da UE para efeitos de livre circulação — mesmo em países que não têm casamento entre pessoas do mesmo sexo. Isto significa que uma pessoa cidadã da UE pode trazer o seu cônjuge do mesmo sexo para Portugal, independentemente da posição do seu país de origem.",
   "visas.tabs.partner.card3.tag": "Proteção do tribunal da UE",
   "visas.tabs.partner.card3.link":
-    "Fala com um advogado ou advogada de imigração →",
+    "Fala com um advogado ou advogada de imigração",
   "visas.tabs.partner.card4.eyebrow": "Reunificação familiar",
   "visas.tabs.partner.card4.title": "O processo para pessoas parceiras",
   "visas.tabs.partner.card4.body":
@@ -3649,7 +3675,7 @@ export const marketing: Catalog = {
   "visas.tabs.citizenship.card3.title": "Requisito de A2",
   "visas.tabs.citizenship.card3.body":
     "O requisito de língua portuguesa para a cidadania é o nível A2 (básico) — conversacional, não fluente. Podes comprová-lo através de um teste CAPLE ou CIPLE aprovado, ou mostrando escolaridade em português. O fórum da comunidade tem recomendações de professoras e professores de português queer-friendly.",
-  "visas.tabs.citizenship.card3.link": "Recursos de aprendizagem da língua →",
+  "visas.tabs.citizenship.card3.link": "Recursos de aprendizagem da língua",
 
   "visas.ground.title": "No <em>terreno</em>",
   "visas.ground.sub":
@@ -3675,11 +3701,11 @@ export const marketing: Catalog = {
     "Advocacia de imigração <em>avaliada pela comunidade</em>",
   "visas.lawyers.emptyBody":
     "Estamos a construir um diretório de advogados de imigração LGBTQ+-friendly avaliado pela comunidade. Ainda não está pronto — até estar, as melhores recomendações vêm de membros que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
-  "visas.lawyers.forumCta": "Pergunta no tópico do fórum sobre vistos →",
+  "visas.lawyers.forumCta": "Pergunta no tópico do fórum sobre vistos",
 
   "visas.outro.title": "Estás a construir uma vida <em>aqui.</em>",
   "visas.outro.sub": "A papelada é temporária. A comunidade é permanente.",
-  "visas.outro.settlingCta": "Guia de instalação →",
+  "visas.outro.settlingCta": "Guia de instalação",
   "visas.outro.askCta": "Pergunta à comunidade",
 
   // ── Mapa (guia da cidade queer de Lisboa) — chrome de página/filtros/
@@ -3920,7 +3946,7 @@ export const marketing: Catalog = {
     "Nenhum recurso corresponde — tenta um filtro mais amplo.",
   "resourceLibrary.cost.free": "Gratuito",
   "resourceLibrary.cost.sliding": "Escala variável",
-  "resourceLibrary.card.openGuide": "Abrir guia →",
+  "resourceLibrary.card.openGuide": "Abrir guia",
   "resourceLibrary.card.visitSite": "Visitar site ↗",
   "resourceLibrary.outro.title": "Sabes de algo que <em>falta?</em>",
   "resourceLibrary.outro.sub":
@@ -3961,7 +3987,7 @@ export const marketing: Catalog = {
   "platforms.outro.title": "Falta alguma coisa? <em>Diz-nos.</em>",
   "platforms.outro.sub":
     "Conheces uma plataforma, recurso ou comunidade que devia estar aqui? Sugere-a e nós adicionamo-la ao diretório.",
-  "platforms.outro.cta": "Sugerir uma plataforma →",
+  "platforms.outro.cta": "Sugerir uma plataforma",
 
   // ── Candidatura a Parceiro — chrome do formulário "Candidata-te a
   //    parceria". Todo o texto é escrito pela plataforma (formulário/
@@ -3974,7 +4000,7 @@ export const marketing: Catalog = {
     "As parcerias da QueerPulse são operacionais, não promocionais. Conta-nos quem és e o que fazes — com honestidade — e vamos ler cada palavra.",
   "submitPartner.success.title": "Candidatura",
   "submitPartner.success.em": "recebida.",
-  "submitPartner.success.closeLabel": "Voltar a parceiros →",
+  "submitPartner.success.closeLabel": "Voltar a parceiros",
   "submitPartner.success.step1":
     "Está pendente de revisão pela equipa de parcerias",
   "submitPartner.success.step2":
@@ -3984,7 +4010,7 @@ export const marketing: Catalog = {
   "submitPartner.success.body":
     "Obrigade por nos contactares. A tua candidatura está feita — nada fica público até termos falado contigo sobre ela.",
   "submitPartner.actions.sending": "A enviar…",
-  "submitPartner.actions.submit": "Submeter candidatura →",
+  "submitPartner.actions.submit": "Submeter candidatura",
   "submitPartner.actions.cancel": "Cancelar",
   "submitPartner.error.toast":
     "Não foi possível enviar a tua candidatura — tenta novamente.",

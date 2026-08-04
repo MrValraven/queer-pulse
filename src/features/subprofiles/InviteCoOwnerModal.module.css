@@ -1,37 +1,6 @@
-/* InviteCoOwnerModal — rendered inside the shared <Modal>, so only the
-   search field + connection list need their own rules here. */
-
-.searchField {
-  margin-bottom: 12px;
-}
-
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 4px;
-  border-radius: 12px;
-}
-
-.rowName {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: 14.5px;
-  font-weight: 600;
-  color: var(--text-strong);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* InviteCoOwnerModal — rendered inside the shared <Modal>, and the member
+   picker itself is the shared <MemberSelectList>, so only the loading/empty
+   fallback needs its own rule here. */
 
 .empty {
   display: flex;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, Sending } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Therapist } from "../mentalHealth.data";
@@ -121,9 +121,12 @@ export function TherapistSidebar({
               />
             ) : accepting ? (
               slotLabel ? (
-                t("resources:therapistProfilePage.sidebar.holdSlotCta", {
-                  slot: slotLabel,
-                })
+                <>
+                  {t("resources:therapistProfilePage.sidebar.holdSlotCta", {
+                    slot: slotLabel,
+                  })}{" "}
+                  <FiArrowRight aria-hidden />
+                </>
               ) : (
                 t("resources:therapistProfilePage.sidebar.pickSlotCta")
               )

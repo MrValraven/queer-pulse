@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiExternalLink } from "react-icons/fi";
+import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
@@ -187,7 +187,7 @@ export function SkillsSection({ profile }: { profile: MemberProfile }) {
         ))}
       </div>
       <Link to={routes.barter} className={styles.barterLink}>
-        {t("members:content.skills.barterCta")}
+        {t("members:content.skills.barterCta")} <FiArrowRight aria-hidden />
       </Link>
     </Section>
   );

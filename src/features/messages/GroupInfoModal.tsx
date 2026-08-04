@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import { FiEdit2, FiUserPlus, FiX } from "react-icons/fi";
-import { Avatar, Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { useState } from "react";
+import { FiEdit2, FiUserPlus } from "react-icons/fi";
+import { Avatar, Button, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GroupAddMembersModal } from "./GroupAddMembersModal";
 import { GroupAvatarField } from "./GroupAvatarField";
@@ -47,7 +46,6 @@ export function GroupInfoModal({
   onChangeMemberRole,
   onUpdateInfo,
 }: GroupInfoModalProps) {
-  useScrollLock();
   const { t } = useTranslation();
   const members = active.members ?? [];
   const [renaming, setRenaming] = useState(false);
@@ -60,16 +58,6 @@ export function GroupInfoModal({
   // straight from the roster's Remove button.
   const [pendingRemove, setPendingRemove] =
     useState<GroupMemberView | null>(null);
-
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      // While the confirm is open it owns Escape (it closes itself); don't also
-      // tear down the group panel underneath.
-      if (event.key === "Escape" && !pendingRemove) onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose, pendingRemove]);
 
   const callerIsOwner = !!active.canManageRoles;
   const isSelf = (member: GroupMemberView) =>
@@ -84,33 +72,18 @@ export function GroupInfoModal({
   }
 
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.dialog}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="group-info-title"
+    <>
+      <Modal
+        title={t("messages:group.infoTitle")}
+        onClose={onClose}
+        footer={
+          !active.hasLeft ? (
+            <Button variant="ghost" onClick={onLeave} disabled={leaving}>
+              {leaving ? t("messages:group.leaving") : t("messages:group.leave")}
+            </Button>
+          ) : undefined
+        }
       >
-        <div className={styles.head}>
-          <h2 id="group-info-title" className={styles.title}>
-            {t("messages:group.infoTitle")}
-          </h2>
-          <button
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("messages:newMessage.close")}
-          >
-            <FiX />
-          </button>
-        </div>
-
         {renaming ? (
           <div className={styles.renamePanel}>
             <input
@@ -196,15 +169,7 @@ export function GroupInfoModal({
             />
           ))}
         </ul>
-
-        {!active.hasLeft && (
-          <div className={styles.leaveRow}>
-            <Button variant="ghost" onClick={onLeave} disabled={leaving}>
-              {leaving ? t("messages:group.leaving") : t("messages:group.leave")}
-            </Button>
-          </div>
-        )}
-      </div>
+      </Modal>
 
       {pendingRemove && (
         <GroupRemoveMemberConfirm
@@ -230,6 +195,6 @@ export function GroupInfoModal({
           }}
         />
       )}
-    </div>
+    </>
   );
 }

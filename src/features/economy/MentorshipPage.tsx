@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { LuSprout, LuTreeDeciduous } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
@@ -14,6 +15,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { routes } from "../../app/routeMap";
 import {
   MENTORS,
@@ -108,7 +110,8 @@ export function MentorshipPage() {
                 {t("economy:mentorship.choose.mentee.desc")}
               </p>
               <div className={styles.ccFor}>
-                {t("economy:mentorship.choose.mentee.for")}
+                {t("economy:mentorship.choose.mentee.for")}{" "}
+                <FiArrowRight aria-hidden />
               </div>
             </button>
             <button
@@ -126,7 +129,8 @@ export function MentorshipPage() {
                 {t("economy:mentorship.choose.mentor.desc")}
               </p>
               <div className={styles.ccFor}>
-                {t("economy:mentorship.choose.mentor.for")}
+                {t("economy:mentorship.choose.mentor.for")}{" "}
+                <FiArrowRight aria-hidden />
               </div>
             </button>
           </div>
@@ -194,13 +198,12 @@ export function MentorshipPage() {
                             event.stopPropagation();
                             setMode("mentee");
                           }}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter" || event.key === " ") {
-                              event.preventDefault();
+                          onKeyDown={(event) =>
+                            activateOnKey(event, () => {
                               event.stopPropagation();
                               setMode("mentee");
-                            }
-                          }}
+                            })
+                          }
                         >
                           {isWaitlisted(mentor)
                             ? t("economy:mentorship.cta.joinWaitlist")
@@ -230,7 +233,8 @@ export function MentorshipPage() {
         sub={t("economy:mentorship.outro.sub")}
       >
         <Button to={VOLUNTEER} variant="primary" size="lg">
-          {t("economy:mentorship.outro.cta")}
+          {t("economy:mentorship.outro.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
 

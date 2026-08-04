@@ -33,6 +33,8 @@ export interface Action {
   muted?: boolean;
   /** Primary action uses a solid (vs outlined) button — for the key decision. */
   solid?: boolean;
+  /** Appends a forward-arrow icon to the label (the leading/primary CTA). */
+  arrow?: boolean;
 }
 export interface Recruiter {
   name: string;

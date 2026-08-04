@@ -1,9 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TriageVerdict } from "./editorDashboard.data";
+import { cx } from "../../shared/lib/cx";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
 
 /** Fixed bottom bar for triaging selected pitches in bulk. */
 export function EditorBulkBar({

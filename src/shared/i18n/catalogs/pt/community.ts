@@ -143,12 +143,12 @@ export const community: Catalog = {
     "Pessoas diretamente ajudadas pelo trabalho delas",
   "changemakers.stat.activeCampaigns": "Campanhas ativas neste momento",
   "changemakers.featured.label": "Agente de mudança em destaque",
-  "changemakers.featured.readStoryCta": "Lê a história dela →",
+  "changemakers.featured.readStoryCta": "Lê a história dela",
   "changemakers.featured.connectCta": "Ligar",
   "changemakers.empty.title": "Ainda não há agentes de mudança retratados",
   "changemakers.empty.description":
     "É aqui que celebramos quem está, em silêncio, a tornar as coisas melhores. Conheces alguém a fazer esse trabalho? Nomeia essa pessoa abaixo e começamos a história.",
-  "changemakers.card.readMoreCta": "Ler mais →",
+  "changemakers.card.readMoreCta": "Ler mais",
 
   // Change Makers — nominate form
   "changemakers.nominate.eyebrow": "Nomeações da comunidade",
@@ -164,14 +164,14 @@ export const community: Catalog = {
     "Não foi possível enviar a tua nomeação — tenta novamente.",
 
   // ── Change Maker story page (ChangemakerStoryPage.tsx) ────────────────────
-  "changemakerStory.backCta": "← Agentes de Mudança",
+  "changemakerStory.backCta": "Agentes de Mudança",
   "changemakerStory.categoryLabel": "Agente de Mudança · {cause}",
   "changemakerStory.impactLabel": "Porque destacamos {name}",
   "changemakerStory.outro.title":
     "Queres apoiar o trabalho <em>de {name}?</em>",
   "changemakerStory.outro.sub":
     "As pessoas agentes de mudança fazem isto para além do trabalho do dia a dia. Uma mensagem, uma apresentação ou uma hora do teu tempo valem mais do que imaginas.",
-  "changemakerStory.outro.connectCta": "Contactar {name} →",
+  "changemakerStory.outro.connectCta": "Contactar {name}",
   "changemakerStory.outro.moreCta": "Conhecer mais agentes de mudança",
   "changemakerStory.moreLabel": "Mais agentes de mudança",
 
@@ -275,7 +275,7 @@ export const community: Catalog = {
   "comingOut.outro.title": "Não deves <em>um discurso perfeito.</em>",
   "comingOut.outro.sub":
     "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. Entra no espaço quando estiveres pronte — e sai no momento em que quiseres.",
-  "comingOut.outro.enterCta": "Entrar no espaço →",
+  "comingOut.outro.enterCta": "Entrar no espaço",
   "comingOut.outro.communitiesCta": "Ver todas as comunidades",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
@@ -400,13 +400,13 @@ export const community: Catalog = {
     "Sem reconhecimento legal para relações com vários parceiros. Existem soluções práticas (testamentos, procurações, acordos de coabitação) mas exigem planeamento legal deliberado.",
   "dating.recognition.nonMonogamous.status":
     "Sem reconhecimento automático — planeia com antecedência",
-  "dating.recognition.legalCta": "Aconselhamento jurídico para relações →",
+  "dating.recognition.legalCta": "Aconselhamento jurídico para relações",
 
   "dating.social.heading": "Conhece pessoas <em>presencialmente.</em>",
   "dating.social.lead":
     "As aplicações estão bem. Mas a comunidade QueerPulse tende mesmo é a encontrar-se em eventos — convívios, jantares, convívios pensados especificamente para criar ligação. Menos transacional do que uma aplicação de namoro; mais honesto sobre aquilo que procuras.",
   "dating.social.upcomingEventsCta": "Ver próximos eventos",
-  "dating.social.forumThreadCta": "Tópico social no fórum →",
+  "dating.social.forumThreadCta": "Tópico social no fórum",
   "dating.event.singlesDinner.name": "Jantar Queer para Solteires",
   "dating.event.singlesDinner.detail": "Mensal · Mouraria · 12–16 pessoas",
   "dating.event.singlesDinner.note":
@@ -424,7 +424,7 @@ export const community: Catalog = {
   "dating.outro.title": "A ligação verdadeira <em>existe aqui.</em>",
   "dating.outro.sub":
     "É preciso um pouco de tempo e aparecer algumas vezes. A comunidade torna isso mais fácil.",
-  "dating.outro.cta": "Ver o que está a acontecer →",
+  "dating.outro.cta": "Ver o que está a acontecer",
 
   // ── Family building hub (FamilyPage.tsx + sub-components) ─────────────────
   "family.hero.cat": "Construir Família · Portugal",
@@ -440,27 +440,27 @@ export const community: Catalog = {
   "family.situation.twoWomen.name": "Duas mulheres",
   "family.situation.twoWomen.desc":
     "FIV ou IIU com esperma de dador, parentalidade legal conjunta desde o nascimento.",
-  "family.situation.twoWomen.to": "Ver: FIV e Reprodução Assistida →",
+  "family.situation.twoWomen.to": "Ver: FIV e Reprodução Assistida",
   "family.situation.twoMen.name": "Dois homens",
   "family.situation.twoMen.desc":
     "Adoção conjunta, acordos de coparentalidade ou opções de gestação de substituição.",
-  "family.situation.twoMen.to": "Ver: Adoção e Coparentalidade →",
+  "family.situation.twoMen.to": "Ver: Adoção e Coparentalidade",
   "family.situation.singleWoman.name": "Mulher solteira",
   "family.situation.singleWoman.desc":
     "FIV ou IIU a solo disponível através do SNS e clínicas privadas.",
-  "family.situation.singleWoman.to": "Ver: FIV e Reprodução Assistida →",
+  "family.situation.singleWoman.to": "Ver: FIV e Reprodução Assistida",
   "family.situation.singleMan.name": "Homem solteiro",
   "family.situation.singleMan.desc":
     "Adoção a solo ou coparentalidade. Gestação de substituição legalmente complexa.",
-  "family.situation.singleMan.to": "Ver: Adoção →",
+  "family.situation.singleMan.to": "Ver: Adoção",
   "family.situation.transParent.name": "Pai ou mãe trans",
   "family.situation.transParent.desc":
     "Parentalidade legal, registo de nascimento e reprodução assistida para pessoas trans.",
-  "family.situation.transParent.to": "Ver: Parentalidade Legal →",
+  "family.situation.transParent.to": "Ver: Parentalidade Legal",
   "family.situation.lookingForCoparent.name": "À procura de um coparente",
   "family.situation.lookingForCoparent.desc":
     "Coparentalidade feita através da comunidade, enquadramentos legais, guarda partilhada.",
-  "family.situation.lookingForCoparent.to": "Ver: Coparentalidade →",
+  "family.situation.lookingForCoparent.to": "Ver: Coparentalidade",
   "family.browseFreely.cta": "Só estou a explorar — mostra-me tudo",
 
   "family.tab.adoption.label": "Adoção",
@@ -487,7 +487,7 @@ export const community: Catalog = {
   "family.tab.adoption.card.international.body":
     "A adoção internacional é significativamente mais complexa e a maioria dos países que a permitem não estende a elegibilidade a casais do mesmo sexo. Há algumas exceções. Procura aconselhamento jurídico especializado antes de iniciares este caminho.",
   "family.tab.adoption.card.international.linkLabel":
-    "Falar com um ou uma especialista jurídica →",
+    "Falar com um ou uma especialista jurídica",
   "family.tab.adoption.card.stepchild.eyebrow": "Adoção de enteado",
   "family.tab.adoption.card.stepchild.title":
     "Adotar o filho ou filha do teu par",
@@ -516,12 +516,12 @@ export const community: Catalog = {
     "Se ainda não fizeste cirurgia reprodutiva",
   "family.tab.ivf.card.transMen.body":
     "Homens trans que ainda não fizeram cirurgias reprodutivas podem aceder à criopreservação de óvulos ou a FIV. As clínicas portuguesas variam em experiência — pergunta especificamente. O reconhecimento legal de género não afeta o acesso a tratamentos de fertilidade. Pessoas da comunidade documentaram as suas experiências no fórum.",
-  "family.tab.ivf.card.transMen.linkLabel": "Recursos do Trans Hub →",
+  "family.tab.ivf.card.transMen.linkLabel": "Recursos do Trans Hub",
   "family.tab.ivf.card.surrogacy.eyebrow": "Gestação de substituição",
   "family.tab.ivf.card.surrogacy.title": "Um panorama complexo",
   "family.tab.ivf.card.surrogacy.body":
     "A gestação de substituição tem sido legalmente controversa em Portugal. Uma lei de 2016 permitiu-a em circunstâncias limitadas; partes foram depois declaradas inconstitucionais. A situação legal continua por resolver. Se for este o teu caminho, o aconselhamento jurídico especializado é essencial antes de avançares.",
-  "family.tab.ivf.card.surrogacy.linkLabel": "Obter aconselhamento jurídico →",
+  "family.tab.ivf.card.surrogacy.linkLabel": "Obter aconselhamento jurídico",
   "family.tab.ivf.noteLabel": "Da comunidade:",
   "family.tab.ivf.reviewHead": "<em>Clínicas</em> recomendadas pela comunidade",
 
@@ -540,7 +540,7 @@ export const community: Catalog = {
   "family.tab.coparenting.card.findingCoparent.body":
     "A QueerPulse tem um mural de Ligações para Coparentalidade para quem quer encontrar um coparente dentro da comunidade. Não é um algoritmo de compatibilidade — é um mural de anúncios. Publica as tuas intenções, conhece pessoas com o tempo, tem conversas honestas antes de decidires seja o que for.",
   "family.tab.coparenting.card.findingCoparent.linkLabel":
-    "Mural de Ligações para Coparentalidade →",
+    "Mural de Ligações para Coparentalidade",
   "family.tab.coparenting.card.legalFrameworks.eyebrow":
     "Enquadramentos legais",
   "family.tab.coparenting.card.legalFrameworks.title":
@@ -556,7 +556,7 @@ export const community: Catalog = {
   "family.tab.coparenting.card.international.body":
     "Se os coparentes vivem em países diferentes, a parentalidade legal pode complicar-se. O reconhecimento de parentalidade na UE está a melhorar mas ainda não é uniforme. Isto exige aconselhamento jurídico especializado em direito da família transfronteiriço.",
   "family.tab.coparenting.card.international.linkLabel":
-    "Apoio em direito da família internacional →",
+    "Apoio em direito da família internacional",
   "family.tab.coparenting.noteLabel": "Da comunidade:",
 
   "family.tab.donors.headTitle": "<em>Perguntas</em> sobre dadores",
@@ -580,7 +580,7 @@ export const community: Catalog = {
   "family.tab.donors.card.legalParenthood.body":
     "No caso de dadores usados através de clínicas licenciadas, o dador não tem direitos parentais. No caso de dadores conhecidos, isto depende inteiramente de acordos escritos prévios e de a doação ter sido feita através de uma clínica. Um ou uma especialista em direito da família deve rever a tua situação antes de avançares.",
   "family.tab.donors.card.legalParenthood.linkLabel":
-    "Obter aconselhamento jurídico →",
+    "Obter aconselhamento jurídico",
   "family.tab.donors.noteLabel": "Da comunidade:",
 
   "family.tab.legal.headTitle": "<em>Parentalidade</em> legal",
@@ -598,14 +598,14 @@ export const community: Catalog = {
   "family.tab.legal.card.unmarried.body":
     "Se não és casade nem estás em união de facto, o progenitor que não deu à luz não tem parentalidade legal automática. Vais precisar de adoção do segundo progenitor ou de um acordo legal estabelecido antes do nascimento. Isto também é relevante para coparentes e situações de dador conhecido.",
   "family.tab.legal.card.unmarried.linkLabel":
-    "Informação sobre casamento e união de facto →",
+    "Informação sobre casamento e união de facto",
   "family.tab.legal.card.transParents.eyebrow": "Progenitores trans",
   "family.tab.legal.card.transParents.title":
     "Reconhecimento de género e parentalidade",
   "family.tab.legal.card.transParents.body":
     "Um homem trans que dá à luz é legalmente o pai se o seu género legal já tiver sido alterado para masculino. Uma mulher trans cuja parceira leva a criança pode ser registada como mãe. A lei portuguesa já contempla estas situações, ainda que a prática administrativa varie — documenta tudo.",
   "family.tab.legal.card.transParents.linkLabel":
-    "Recursos jurídicos do Trans Hub →",
+    "Recursos jurídicos do Trans Hub",
   "family.tab.legal.card.secondParentAdoption.eyebrow":
     "Adoção do segundo progenitor",
   "family.tab.legal.card.secondParentAdoption.title":
@@ -643,13 +643,13 @@ export const community: Catalog = {
   "family.talk.body":
     "A Rede de Pais e Mães Queer liga quem está a construir família com pessoas da comunidade que já passaram por isto — os mesmos caminhos, situações semelhantes. Não são profissionais. São só pessoas que já o fizeram e querem ajudar.",
   "family.talk.findMentorCta": "Encontrar um mentor ou mentora",
-  "family.talk.networkCta": "Rede de Pais e Mães Queer →",
+  "family.talk.networkCta": "Rede de Pais e Mães Queer",
   "family.talk.forumCta.heading":
     "Perguntas que esta página <em>não responde?</em>",
   "family.talk.forumCta.body":
     "O tópico do fórum sobre Construir Família é onde a comunidade partilha experiências atuais, faz perguntas e se apoia mutuamente ao longo de um processo que nenhum guia consegue captar por completo.",
   "family.talk.forumCta.openForumCta": "Abrir o tópico do fórum",
-  "family.talk.forumCta.legalResourcesCta": "Recursos jurídicos →",
+  "family.talk.forumCta.legalResourcesCta": "Recursos jurídicos",
   "family.talk.liveEmpty.title": "Mentores parentais a chegar em breve",
   "family.talk.liveEmpty.description":
     "Ainda ninguém se ofereceu para partilhar a sua experiência. Já estás a criar uma família? Deixa o teu nome e ajuda quem está agora a começar.",

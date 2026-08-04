@@ -1,73 +1,5 @@
-.card {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 24px;
-  padding: 48px 44px 36px;
-  width: 100%;
-  max-width: 560px;
-  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
-  position: relative;
-  z-index: 1;
-}
-
-.ic {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-card);
-  background: rgba(var(--accent-rgb), 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 22px;
-}
-
-.ic svg {
-  width: 32px;
-  height: 32px;
-  stroke: var(--accent-ink);
-}
-
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 14px;
-}
-
-.h1 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 42px;
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 1.02;
-  margin-bottom: 14px;
-}
-
-.h1 em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-.lead {
-  font-size: 15.5px;
-  color: var(--ink-60);
-  line-height: 1.7;
-  margin-bottom: 20px;
-}
-
-.lead b {
-  color: var(--text-strong);
-  font-weight: 600;
-}
-
-.lead em {
-  font-style: italic;
-  color: var(--accent-ink);
-}
-
+/* Page-specific bits only. The card shell, icon, eyebrow (kicker), heading and
+   lead now come from the shared <StatusCard>. */
 .why {
   padding: 18px 20px;
   background: var(--cream);
@@ -229,14 +161,5 @@
 @media (hover: hover) {
   .detect a:hover {
     text-decoration: underline;
-  }
-}
-
-@media (max-width: 500px) {
-  .card {
-    padding: 36px 24px 28px;
-  }
-  .h1 {
-    font-size: 34px;
   }
 }

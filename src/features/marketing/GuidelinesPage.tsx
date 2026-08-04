@@ -1,4 +1,5 @@
 import { type ReactNode, useMemo } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -188,7 +189,7 @@ export function GuidelinesPage() {
               className={s.clauseNum}
               style={{ color: "rgba(74,140,111,.4)" }}
             >
-              →
+              <FiArrowRight aria-hidden />
             </div>
             <div>
               <h2>

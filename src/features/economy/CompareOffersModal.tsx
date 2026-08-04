@@ -1,4 +1,4 @@
-import { FiCheck } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -83,7 +83,8 @@ export function CompareOffersModal({
                     variant="primary"
                     onClick={() => onRespond(a.id)}
                   >
-                    {t("economy:compare.respondCta")}
+                    {t("economy:compare.respondCta")}{" "}
+                    <FiArrowRight aria-hidden />
                   </Button>
                 </td>
               ))}
@@ -94,6 +95,7 @@ export function CompareOffersModal({
 
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>
+          <FiArrowLeft aria-hidden />{" "}
           {t("economy:compare.close")}
         </button>
       </div>

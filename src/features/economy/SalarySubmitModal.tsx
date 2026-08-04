@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import { useScrollLock } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ModalShell } from "./ModalKit";
 import styles from "./EconomyPage.module.css";
 
 export function SalarySubmitModal({
@@ -13,42 +12,14 @@ export function SalarySubmitModal({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  useScrollLock();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
   return (
-    <div
-      className={styles.overlay}
-      // Backdrop click is a mouse-only shortcut; Esc and the close button
-      // already provide the keyboard path, so this div is not interactive.
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="salary-submit-title"
-      >
-        <div className={styles.modalHead}>
-          <div id="salary-submit-title" className={styles.modalTitle}>
-            {t("economy:salary.submitLong")}
-          </div>
-          <button
-            type="button"
-            className={styles.modalClose}
-            onClick={onClose}
-            aria-label={t("economy:modalKit.closeAriaLabel")}
-          >
-            ×
-          </button>
+    <ModalShell onClose={onClose} ariaLabel={t("economy:salary.submitLong")}>
+      <div className={styles.modalHead}>
+        <div id="salary-submit-title" className={styles.modalTitle}>
+          {t("economy:salary.submitLong")}
         </div>
-        {!demoMode ? (
+      </div>
+      {!demoMode ? (
           // No salary-board endpoint yet — stay honest instead of faking an
           // "submitted anonymously" success the backend can't record.
           <>
@@ -133,7 +104,6 @@ export function SalarySubmitModal({
         </button>
           </>
         )}
-      </div>
-    </div>
+    </ModalShell>
   );
 }

@@ -113,7 +113,7 @@ export const gatherings: Catalog = {
 
   // ── Event, RSVP, gathering detail, cancelled, cohost invite ───────────────
   // Shared/cross-page chrome
-  "common.backToGatherings": "← Convívios",
+  "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
 
   // EventPage — About / Details / Guidelines / hero / members-only / pills
@@ -252,7 +252,7 @@ export const gatherings: Catalog = {
   "rsvp.footer.privacyCta": "Política de privacidade",
 
   // CoHostInvitePage
-  "cohostInvite.back": "← Notificações",
+  "cohostInvite.back": "Notificações",
   "cohostInvite.eyebrow": "Convite para co-organizar",
   "cohostInvite.title": "{host} quer que <em>co-organizes</em> com ela.",
   "cohostInvite.readThroughHint":
@@ -289,7 +289,7 @@ export const gatherings: Catalog = {
   "cohostInvite.openMessagesCta": "Abrir mensagens",
 
   // GatheringCancelledPage
-  "cancelled.back": "← Voltar ao calendário",
+  "cancelled.back": "Voltar ao calendário",
   "cancelled.stampTitle": "Este evento foi cancelado.",
   "cancelled.stampBody":
     "Estavas na lista — aqui está tudo o que acontece a seguir.",
@@ -307,7 +307,7 @@ export const gatherings: Catalog = {
     "Podes garantir já o dia {date} — normalmente {host} abre isto mais tarde, mas adiantámos por causa disto. <a>Salta para lá ↓</a>",
   "cancelled.concernTitle": "Algo não parece bem?",
   "cancelled.concernBody":
-    "Se tens preocupações sobre o cancelamento ou queres assinalar um padrão, fala com a equipa →",
+    "Se tens preocupações sobre o cancelamento ou queres assinalar um padrão, fala com a equipa",
   "cancelled.noteEyebrow": "Uma nota breve · de {host}",
   "cancelled.noteSentVia":
     "enviada {time} através das ferramentas de organização",
@@ -952,7 +952,7 @@ export const gatherings: Catalog = {
   "manage.sidebar.copyCta": "Copiar",
   "manage.sidebar.viewListingCta": "Ver página pública",
   "manage.sidebar.supportText":
-    "Precisas de ajuda com o teu convívio? <a>Envia uma mensagem à equipa da QueerPulse →</a>",
+    "Precisas de ajuda com o teu convívio? <a>Envia uma mensagem à equipa da QueerPulse</a>",
 
   // ── Manage: tab bar ────────────────────────────────────────────────────────────
   "manage.tabs.overview": "Visão geral",
@@ -1121,8 +1121,8 @@ export const gatherings: Catalog = {
     "Vais aparecer na lista de pessoas confirmadas.",
 
   // Mobile bar
-  "checkout.mobileBar.continueCta": "Continuar →",
-  "checkout.mobileBar.payCta": "Pagar {amount} →",
+  "checkout.mobileBar.continueCta": "Continuar",
+  "checkout.mobileBar.payCta": "Pagar {amount}",
 
   // Payment step + tabs + express/alt-pay copy
   "checkout.payment.title": "Detalhes do <em>pagamento</em>",
@@ -1135,9 +1135,9 @@ export const gatherings: Catalog = {
   "checkout.payment.tabMbwaySub": "Aprova na tua app",
   "checkout.payment.tabMultibancoTitle": "Multibanco",
   "checkout.payment.tabMultibancoSub": "Referência / Multibanco",
-  "checkout.payment.payCtaCard": "Pagar {amount} →",
-  "checkout.payment.payCtaMbway": "Enviar pedido de {amount} →",
-  "checkout.payment.payCtaMultibanco": "Confirmar reserva · {amount} →",
+  "checkout.payment.payCtaCard": "Pagar {amount}",
+  "checkout.payment.payCtaMbway": "Enviar pedido de {amount}",
+  "checkout.payment.payCtaMultibanco": "Confirmar reserva · {amount}",
   "checkout.payment.processingLabel": "A processar…",
   "checkout.payment.trustLock": "Encriptação de 256 bits",
   "checkout.payment.viaStripe": "via <strong>Stripe</strong>",
@@ -1145,7 +1145,7 @@ export const gatherings: Catalog = {
     "Ao pagar, aceitas os nossos <terms>termos de serviço</terms> e a <privacy>política de privacidade</privacy>. Podes cancelar com reembolso total até 48h antes.",
   "checkout.payment.demoHint":
     "Demo: usa o cartão <strong>4000 0000 0000 0002</strong> para ver um pagamento recusado.",
-  "checkout.payment.backToReviewCta": "← Voltar à revisão",
+  "checkout.payment.backToReviewCta": "Voltar à revisão",
   "checkout.payment.mbwayPhoneLabel": "Número de telemóvel MB WAY",
   "checkout.payment.mbwayError": "Introduz o teu número MB WAY de 9 dígitos.",
   "checkout.payment.mbwayNote":

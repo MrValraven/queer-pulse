@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, SectionHead } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -10,7 +10,6 @@ import {
   voteOptions,
   watchParties,
 } from "./cinemaShorts.data";
-import { SecDiv } from "./CinemaShortsParts";
 import styles from "./CinemaShortsPage.module.css";
 
 /** Recurring watch-party calendar with RSVP. */
@@ -26,16 +25,17 @@ export function WatchParties({ notify }: { notify: (m: string) => void }) {
 
   return (
     <>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.watchParties.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.watchParties.sub")}
-        actionTo={routes.studioCalls}
-        actionLabel={t("cinema:shorts.watchParties.hostCta")}
+        subtitle={t("cinema:shorts.watchParties.sub")}
+        linkTo={routes.studioCalls}
+        linkLabel={t("cinema:shorts.watchParties.hostCta")}
       />
       <div className={styles.wpCal}>
         {watchParties.map((w, i) => {

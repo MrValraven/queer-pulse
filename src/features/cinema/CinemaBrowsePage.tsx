@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiFilm } from "react-icons/fi";
-import { EmptyState, FadeIn, ImageSlot } from "../../shared/components/ui";
+import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { SplitTitle, PosterSlot } from "./CinemaAtoms";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -71,15 +72,7 @@ function FilmCard({
   return (
     <Link to={routes.film} className={styles.fc}>
       <div className={styles.fcPoster}>
-        <ImageSlot
-          src={browsePoster(film)}
-          tint={film.tint}
-          width="100%"
-          height="100%"
-          radius={14}
-          placeholder={t("cinema:slot.poster")}
-          style={{ position: "absolute", inset: 0 }}
-        />
+        <PosterSlot src={browsePoster(film)} tint={film.tint} radius={14} />
         <span className={`${styles.fcBadge} ${accessClass[film.access]}`}>
           {accessLabel(film, t, fmt)}
         </span>
@@ -99,9 +92,7 @@ function FilmCard({
         {formatLabel(film.format, t)} · {film.meta.split("·").pop()?.trim()}
       </div>
       <div className={styles.fcTitle}>
-        {film.titlePre}
-        {film.titleEm && <em>{film.titleEm}</em>}
-        {film.titlePost}
+        <SplitTitle pre={film.titlePre} em={film.titleEm} post={film.titlePost} />
       </div>
       <div className={styles.fcMeta}>
         {film.meta.split("·")[0]!.trim()} · {film.country} · {film.year}

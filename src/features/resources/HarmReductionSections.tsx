@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button, HubBackLink, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -39,7 +40,8 @@ function SectionCard({ section }: { section: HrSection }) {
             variant="ghost"
             className={styles.sectionBtn}
           >
-            {t(section.link.labelKey)}
+            {t(section.link.labelKey)}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         )}
       </div>

@@ -337,7 +337,7 @@ export const economy: Catalog = {
   "jobs.card.unsaveAriaLabel": "Remover {title} das guardadas",
   "jobs.card.savedToast": "{title} guardada",
   "jobs.card.unsavedToast": "{title} removida das guardadas",
-  "jobs.card.applyCta": "Candidatar →",
+  "jobs.card.applyCta": "Candidatar",
   "jobs.card.applyAriaLabel": "Candidatar a {title}",
 
   "jobs.safetyBanner.text":
@@ -409,18 +409,18 @@ export const economy: Catalog = {
   "jobDetail.section.lookingFor": "O que procuramos",
   "jobDetail.section.offer": "O que oferecemos",
   "jobDetail.section.aboutCompany": "Sobre {company}",
-  "jobDetail.section.viewCompany": "Ver perfil da empresa →",
+  "jobDetail.section.viewCompany": "Ver perfil da empresa",
   "jobDetail.section.safety": "Segurança",
   "jobDetail.section.safetyBody":
     "Como {company} é avaliada pela comunidade nas coisas que importam a profissionais queer.",
-  "jobDetail.section.safetyReviews": "Ver avaliações de segurança →",
+  "jobDetail.section.safetyReviews": "Ver avaliações de segurança",
 
   "jobDetail.sidebar.salary": "Salário",
   "jobDetail.sidebar.type": "Tipo",
   "jobDetail.sidebar.location": "Localização",
   "jobDetail.sidebar.category": "Categoria",
   "jobDetail.sidebar.deadline": "Prazo",
-  "jobDetail.sidebar.applyCta": "Candidatar agora →",
+  "jobDetail.sidebar.applyCta": "Candidatar agora",
   "jobDetail.report.cta": "Denunciar esta vaga",
   "jobDetail.report.ariaLabel": "Denunciar {name}",
 
@@ -610,12 +610,12 @@ export const economy: Catalog = {
   "suggestLandlord.error": "Não foi possível enviar — importas-te de tentar outra vez?",
 
   // ── HousingListingPage (+ secções) ─────────────────────────────────────
-  "housingListing.back": "← Quadro de habitação",
+  "housingListing.back": "Quadro de habitação",
   "housingListing.section.about": "Sobre este espaço",
   "housingListing.section.features": "Características",
   "housingListing.section.facts": "Factos",
   "housingListing.section.idealFor": "Ideal para",
-  "housingListing.messageCtaArrow": "Enviar mensagem a {name} →",
+  "housingListing.messageCtaArrow": "Enviar mensagem a {name}",
   "housingListing.messageCta": "Enviar mensagem a {name}",
   "housingListing.listedBy": "Anunciado por",
   "housingListing.verifiedMember": "Pessoa membro verificada",
@@ -708,7 +708,7 @@ export const economy: Catalog = {
     "A tua recomendação é o que torna esta lista de confiança — e o que torna a mudança de outra pessoa muito mais segura. Demora dois minutos.",
   "landlordPage.sidebar.recommendCta": "Recomendar esta pessoa proprietária",
   "landlordPage.sidebar.howToRent": "Como arrendar com esta pessoa",
-  "landlordPage.sidebar.requestIntro": "Pedir uma apresentação →",
+  "landlordPage.sidebar.requestIntro": "Pedir uma apresentação",
   "landlordPage.toast.recommended_one":
     "Recomendação submetida — {count} estrela",
   "landlordPage.toast.recommended_other":
@@ -777,10 +777,10 @@ export const economy: Catalog = {
   "flatmates.outro.title": "Uma casa onde <em>pertences.</em>",
   "flatmates.outro.sub":
     "A pessoa certa para partilhar casa pode fazer uma cidade parecer um lar. Não tenhas pressa, confia no teu instinto, e usa a comunidade.",
-  "flatmates.outro.askForum": "Perguntar no fórum →",
+  "flatmates.outro.askForum": "Perguntar no fórum",
 
   "flatmates.card.memberSince": "Membro desde {date}",
-  "flatmates.card.sayHello": "Dizer olá →",
+  "flatmates.card.sayHello": "Dizer olá",
   "flatmates.card.helloSent": "Olá enviado",
   "flatmates.card.sayHelloError": "Não foi possível enviar o teu olá — tenta novamente daqui a pouco.",
   "flatmates.card.matchScore": "{score}% compatível",
@@ -826,7 +826,7 @@ export const economy: Catalog = {
   "postProfileForm.aboutPlaceholder":
     "Conta um pouco sobre ti — o teu ritmo, o teu trabalho, que tipo de casa te faz sentir bem. Não precisas de te vender; sê apenas honesta.",
   "postProfileForm.lifestyleTagsLabel": "Tags de estilo de vida",
-  "postProfileForm.submitCta": "Publicar perfil →",
+  "postProfileForm.submitCta": "Publicar perfil",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────
   "company.notFound.title": "Empresa não encontrada",
@@ -902,9 +902,9 @@ export const economy: Catalog = {
     "Pronomes respeitados, inclusão real, liderança que percebe do assunto…",
   "companyReview.consLabel": "O que foi difícil — o resto",
   "companyReview.consPlaceholder": "Onde o acompanhamento ficou aquém…",
-  "companyReview.cancel": "← Cancelar",
+  "companyReview.cancel": "Cancelar",
   "companyReview.posting": "A publicar…",
-  "companyReview.submitCta": "Publicar avaliação →",
+  "companyReview.submitCta": "Publicar avaliação",
   "companyReview.toast.alreadyReviewed": "Já avaliaste esta empresa.",
   "companyReview.toast.error":
     "Não conseguimos publicar a tua avaliação. Tenta novamente.",
@@ -936,8 +936,8 @@ export const economy: Catalog = {
   "employerReviews.recent.sub":
     "Escritas por pessoas membro · anónimas · atualizadas continuamente",
   "employerReviews.recent.browseCta":
-    "Ver vagas inclusivas para pessoas queer →",
-  "employerReviews.recent.writeCta": "Escrever uma avaliação →",
+    "Ver vagas inclusivas para pessoas queer",
+  "employerReviews.recent.writeCta": "Escrever uma avaliação",
   "employerReviews.emptyLive.title": "Ainda sem empregadores avaliados",
   "employerReviews.emptyLive.description":
     "Ainda não há avaliações publicadas. Sê a primeira pessoa a partilhar como é realmente trabalhar num sítio.",
@@ -1069,19 +1069,19 @@ export const economy: Catalog = {
   "grants.sidebar.microGrants.title": "As nossas <em>Micro Bolsas</em>",
   "grants.sidebar.microGrants.body":
     "A QueerPulse tem o seu próprio programa de micro bolsas (200 €–2 000 €) para projetos comunitários em Lisboa. Mais rápido e mais simples do que a maioria das bolsas externas.",
-  "grants.sidebar.microGrants.cta": "Candidata-te →",
+  "grants.sidebar.microGrants.cta": "Candidata-te",
   "grants.sidebar.skillsExchange.title": "Troca de competências",
   "grants.sidebar.skillsExchange.body":
     "Se precisas de apoio mas as bolsas te parecem formais demais, o quadro de trocas liga pessoas que trocam competências entre si — sem dinheiro pelo meio.",
-  "grants.sidebar.skillsExchange.cta": "Explorar as trocas →",
+  "grants.sidebar.skillsExchange.cta": "Explorar as trocas",
   "grants.sidebar.appHelp.title": "Ajuda com a <em>candidatura</em>",
   "grants.sidebar.appHelp.body":
     "Pessoas da comunidade com experiência em candidaturas dão workshops e apoio individual através da troca de competências.",
-  "grants.sidebar.appHelp.cta": "Encontrar mentoria →",
+  "grants.sidebar.appHelp.cta": "Encontrar mentoria",
 
   // ── JobApplyPage (+ cabeçalho / formulário / barra lateral) ────────────
-  "jobApply.backToJob": "← Voltar à vaga",
-  "jobApply.backToJobs": "← Voltar às vagas",
+  "jobApply.backToJob": "Voltar à vaga",
+  "jobApply.backToJobs": "Voltar às vagas",
   "jobApply.header.eyebrow": "Candidatura · {title}",
   "jobApply.header.title": "Conta à <em>{org}</em> quem és.",
   "jobApply.header.closes": "Fecha a {date}",
@@ -1102,7 +1102,7 @@ export const economy: Catalog = {
   "jobApply.cv": "CV ou currículo",
   "jobApply.cvDrop": "Larga aqui o PDF, ou clica para escolher",
   "jobApply.cvHint": "Máx. 5 MB · PDF / DOCX",
-  "jobApply.browse": "Procurar →",
+  "jobApply.browse": "Procurar",
   "jobApply.portfolio": "Ligações do portefólio",
   "jobApply.portfolioHelper":
     "O teu perfil QueerPulse é anexado automaticamente. Desmarca em Privacidade se preferires que não.",
@@ -1133,7 +1133,7 @@ export const economy: Catalog = {
   "jobApply.draftSavedJustNow": "Rascunho guardado · agora mesmo",
   "jobApply.saveDraft": "Guardar rascunho",
   "jobApply.sending": "A enviar…",
-  "jobApply.sendCta": "Enviar candidatura →",
+  "jobApply.sendCta": "Enviar candidatura",
 
   "jobApply.sidebar.closes": "Fecha a <b>{date}</b>",
   "jobApply.sidebar.tipsTitle": "Antes de enviares",
@@ -1211,7 +1211,7 @@ export const economy: Catalog = {
 
   "barter.card.offeringLabel": "A oferecer",
   "barter.card.wantLabel": "À procura de",
-  "barter.card.proposeCta": "Propor uma troca →",
+  "barter.card.proposeCta": "Propor uma troca",
   "barter.toast.messageSent": "Mensagem enviada a {name}",
   "barter.postedToday": "Hoje",
   "barter.postedDaysAgo_one": "há {count} dia",
@@ -1228,7 +1228,7 @@ export const economy: Catalog = {
   "barter.postStrip.success.title": "Está <em>em cima da mesa.</em>",
   "barter.postStrip.success.body":
     "A tua troca já está no topo do quadro. Avisamos-te quando alguém propuser uma troca.",
-  "barter.postStrip.success.postAnother": "Publicar outra →",
+  "barter.postStrip.success.postAnother": "Publicar outra",
   "barter.postStrip.title": "Põe algo <em>em cima da mesa.</em>",
   "barter.postStrip.body":
     "Cada troca começa com uma publicação. Diz à comunidade o que podes oferecer e o que esperas receber em troca.",
@@ -1236,7 +1236,7 @@ export const economy: Catalog = {
     "Posso oferecer — ex.: aulas de português, design de logótipo…",
   "barter.postStrip.wantPlaceholder":
     "Procuro — ex.: ajuda com impostos, ajuda numa mudança…",
-  "barter.postStrip.submitCta": "Publicar na troca →",
+  "barter.postStrip.submitCta": "Publicar na troca",
   "barter.postStrip.namePlaceholder": "Tu",
   "barter.postStrip.hoodPlaceholder": "A tua publicação",
   "barter.postStrip.detailPlaceholder":
@@ -1250,7 +1250,7 @@ export const economy: Catalog = {
   "barter.outro.cta": "Junta-te à rede",
 
   // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
-  "barterDetail.back": "← Troca de competências",
+  "barterDetail.back": "Troca de competências",
   "barterDetail.emptyLive.title": "Esta troca ainda não está ativa",
   "barterDetail.emptyLive.description":
     "A troca de competências começa vazia no lançamento e enche-se com as trocas que os membros realmente publicam. Ainda não há nada para mostrar neste link.",
@@ -1263,7 +1263,7 @@ export const economy: Catalog = {
   "barterDetail.locationWithHood": "{hood} · Lisboa",
   "barterDetail.locationLisbon": "Lisboa",
   "barterDetail.repliesFast": "Costuma responder rápido",
-  "barterDetail.messageCta": "Enviar mensagem a {firstName} →",
+  "barterDetail.messageCta": "Enviar mensagem a {firstName}",
   "barterDetail.section.offering": "O que <em>tem para oferecer</em>",
   "barterDetail.section.lookingFor": "O que <em>procura</em>",
   "barterDetail.section.howItWorks": "Como funciona <em>uma troca</em>",
@@ -1292,7 +1292,7 @@ export const economy: Catalog = {
   "barterDetail.propose.lead": "Sem dinheiro — <em>só troca.</em>",
   "barterDetail.propose.placeholder":
     "Diz a {firstName} o que oferecerias em troca, e porque é que esta troca funciona para ti.",
-  "barterDetail.propose.sendCta": "Enviar proposta →",
+  "barterDetail.propose.sendCta": "Enviar proposta",
   "barterDetail.propose.askFirst": "Perguntar antes",
   "barterDetail.propose.footNote":
     "Nada fica combinado até os dois dizerem que sim. As trocas são entre pessoas — a QueerPulse nunca fica com uma parte.",
@@ -1345,8 +1345,8 @@ export const economy: Catalog = {
   "postJob.topbar.back": "Vagas e competências",
   "postJob.topbar.savedJustNow": "Guardado agora mesmo",
   "postJob.topbar.autosaves": "O rascunho é guardado automaticamente",
-  "postJob.nav.back": "← Voltar",
-  "postJob.nav.continue": "Continuar →",
+  "postJob.nav.back": "Voltar",
+  "postJob.nav.continue": "Continuar",
   "postJob.nav.saveDraft": "Guardar rascunho",
   "postJob.nav.publish": "Publicar vaga",
   "postJob.nav.publishing": "A publicar…",
@@ -1525,7 +1525,7 @@ export const economy: Catalog = {
   "postJob.sidebar.hiring": "A contratar",
   "postJob.sidebar.titlePlaceholder": "O teu título vai aparecer aqui",
   "postJob.sidebar.descPlaceholder": "Adiciona uma descrição…",
-  "postJob.sidebar.viewFullCta": "Ver a vaga completa →",
+  "postJob.sidebar.viewFullCta": "Ver a vaga completa",
   "postJob.sidebar.howThisWorks": "Como funciona",
   "postJob.sidebar.point1":
     "As vagas são <strong>visíveis apenas para membros</strong>, nunca públicas.",
@@ -1586,12 +1586,12 @@ export const economy: Catalog = {
   "mentorship.choose.mentee.desc":
     "Estás a navegar algo — uma transição de carreira, um bloqueio criativo, sair do armário profissionalmente, um ambiente de trabalho difícil, uma cidade nova. Beneficiarias de falar com alguém que já passou por isso.",
   "mentorship.choose.mentee.for":
-    "Para: qualquer pessoa, em qualquer fase, que precise de orientação →",
+    "Para: qualquer pessoa, em qualquer fase, que precise de orientação",
   "mentorship.choose.mentor.title": "Posso ser mentor",
   "mentorship.choose.mentor.desc":
     "Já passaste por coisas suficientes para teres algo a oferecer. Não precisas de ser especialista — só precisas de ter navegado algo que outra pessoa está a navegar agora.",
   "mentorship.choose.mentor.for":
-    "Para: pessoas com experiência dispostas a partilhá-la →",
+    "Para: pessoas com experiência dispostas a partilhá-la",
 
   "mentorship.emptyLive.title": "Diretório de mentores em breve",
   "mentorship.emptyLive.description":
@@ -1603,7 +1603,7 @@ export const economy: Catalog = {
   "mentorship.outro.title": "Tens algo <em>para dar?</em>",
   "mentorship.outro.sub":
     "A mentoria é uma forma. Explora oportunidades de voluntariado para encontrar outras formas de contribuir para a comunidade à tua volta.",
-  "mentorship.outro.cta": "Ver funções de voluntariado →",
+  "mentorship.outro.cta": "Ver funções de voluntariado",
 
   "mentorship.matchArea.careerDirection": "Direção de carreira",
   "mentorship.matchArea.comingOutProfessionally":
@@ -1673,21 +1673,21 @@ export const economy: Catalog = {
   "mentorship.mentor.step2.emailPlaceholder": "O teu endereço de email",
   "mentorship.mentor.toastSubmitted": "Adicionade à bolsa de mentores",
 
-  "mentorship.nav.continue": "Continuar →",
-  "mentorship.nav.back": "← Voltar",
-  "mentorship.nav.submit": "Submeter →",
+  "mentorship.nav.continue": "Continuar",
+  "mentorship.nav.back": "Voltar",
+  "mentorship.nav.submit": "Submeter",
   "mentorship.cta.requestMatch": "Pedir um par",
   "mentorship.cta.joinWaitlist": "Entrar na lista de espera",
 
   // ── MentorDetailPage (+ header / sections / sidebar / cycle nav) ───────
-  "mentorDetail.backToAll": "← Todos os mentores",
+  "mentorDetail.backToAll": "Todos os mentores",
   "mentorDetail.emptyLive.title": "Este perfil de mentor está a chegar",
   "mentorDetail.emptyLive.description":
     "O diretório de mentores ainda não está ativo. Volta para explorar a mentoria quando abrir.",
   "mentorDetail.emptyLive.cta": "Voltar à mentoria",
   "mentorDetail.messageCta": "Enviar mensagem a {firstName}",
-  "mentorDetail.cyclePrevious": "← Anterior",
-  "mentorDetail.cycleNext": "Seguinte →",
+  "mentorDetail.cyclePrevious": "Anterior",
+  "mentorDetail.cycleNext": "Seguinte",
   "mentorDetail.cyclePosition": "{position} de {total}",
   "mentorDetail.section.howTheyMentor": "Como {firstName} <em>mentora</em>",
   "mentorDetail.section.fitFor": "Para quem <em>és a pessoa certa</em>",
@@ -1700,8 +1700,8 @@ export const economy: Catalog = {
   "mentorDetail.sidebar.noUpfrontCost":
     "Sem custo inicial. A mentoria aqui é entre pessoas — podes sempre fazer uma pergunta antes de te comprometeres.",
   "mentorDetail.sidebar.notSureYet": "Ainda não tens a certeza?",
-  "mentorDetail.sidebar.askQuestion": "→ Enviar uma pergunta a {firstName}",
-  "mentorDetail.sidebar.browseAll": "→ Explorar todos os mentores",
+  "mentorDetail.sidebar.askQuestion": "Enviar uma pergunta a {firstName}",
+  "mentorDetail.sidebar.browseAll": "Explorar todos os mentores",
 
   // ── ApplicationStatusPage (+ header/list/card, listing-manager modals) ──
   "applicationStatus.header.eyebrow": "As tuas vagas",
@@ -1778,7 +1778,7 @@ export const economy: Catalog = {
   "applicationStatus.company.statWeekPilot": "Piloto semanal",
   "applicationStatus.company.sector": "Setor",
   "applicationStatus.company.based": "Localização",
-  "applicationStatus.company.viewDirectory": "Ver no diretório →",
+  "applicationStatus.company.viewDirectory": "Ver no diretório",
   "applicationStatus.note.from": "Uma nota de {company}",
 
   "msg.message.title": "Enviar mensagem",
@@ -1801,19 +1801,19 @@ export const economy: Catalog = {
   "msg.yourReply": "A tua resposta",
   "msg.replyPlaceholder": "Escreve uma resposta…",
   "msg.sendingLabel": "A enviar…",
-  "msg.sendCta": "Enviar →",
+  "msg.sendCta": "Enviar",
   "msg.yourMessageLabel": "A tua mensagem",
   "msg.messagePlaceholder": "Escreve à vontade.",
-  "msg.cancel": "← Cancelar",
+  "msg.cancel": "Cancelar",
   "msg.success.title": "Mensagem",
   "msg.success.em": "enviada.",
   "msg.success.body":
     "A tua mensagem para {firstName} está a caminho. Vais receber a resposta diretamente na tua caixa de entrada.",
 
   "calendar.eyebrow": "Entrevista",
-  "calendar.close": "← Fechar",
+  "calendar.close": "Fechar",
   "calendar.icsLabel": "Ficheiro .ics",
-  "calendar.googleLabel": "Google Calendar →",
+  "calendar.googleLabel": "Google Calendar",
   "calendar.addingLabel": "A adicionar…",
   "calendar.success.title": "Guardado no teu",
   "calendar.success.em": "calendário.",
@@ -1833,7 +1833,7 @@ export const economy: Catalog = {
   "withdraw.reasonPlaceholder": "Escolhe um motivo, ou deixa em aberto",
   "withdraw.cantUndo":
     "Isto não pode ser desfeito — terias de te candidatar de novo.",
-  "withdraw.keepIt": "← Manter",
+  "withdraw.keepIt": "Manter",
   "withdraw.sendingLabel": "A retirar…",
   "withdraw.submitCta": "Retirar candidatura",
   "withdraw.success.title": "Candidatura",
@@ -1859,7 +1859,7 @@ export const economy: Catalog = {
   "negotiate.copyDraft": "Copiar rascunho",
   "negotiate.copiedToast": "Rascunho copiado",
   "negotiate.sendingLabel": "A enviar…",
-  "negotiate.sendCta": "Enviar resposta →",
+  "negotiate.sendCta": "Enviar resposta",
   "negotiate.success.title": "Contraproposta",
   "negotiate.success.em": "enviada.",
   "negotiate.success.body":
@@ -1902,7 +1902,7 @@ export const economy: Catalog = {
   "offer.start": "Início",
   "offer.declinePolitely": "Recusar com educação",
   "offer.decliningLabel": "A recusar…",
-  "offer.acceptCta": "Aceitar oferta →",
+  "offer.acceptCta": "Aceitar oferta",
   "offer.acceptingLabel": "A aceitar…",
   "offer.success.title": "Oferta",
   "offer.success.emAccepted": "aceite.",
@@ -1925,9 +1925,9 @@ export const economy: Catalog = {
     "Umas linhas sinceras sobre porquê esta vaga.",
   "resume.availabilityLabel": "Disponibilidade",
   "resume.availabilityPlaceholder": "ex.: aviso prévio de duas semanas",
-  "resume.saveClose": "← Guardar e fechar",
+  "resume.saveClose": "Guardar e fechar",
   "resume.submittingLabel": "A submeter…",
-  "resume.submitCta": "Submeter candidatura →",
+  "resume.submitCta": "Submeter candidatura",
   "resume.success.title": "Candidatura",
   "resume.success.em": "enviada.",
   "resume.success.body":
@@ -1938,8 +1938,8 @@ export const economy: Catalog = {
   "compare.sub":
     "Uma vista calma do que está em cima da mesa. Compara os números e responde quando quiseres.",
   "compare.whatsIncluded": "O que está incluído",
-  "compare.respondCta": "Responder →",
-  "compare.close": "← Fechar",
+  "compare.respondCta": "Responder",
+  "compare.close": "Fechar",
   "compareRow.salary": "Salário",
   "compareRow.holiday": "Férias",
   "compareRow.startDate": "Data de início",
@@ -1954,7 +1954,7 @@ export const economy: Catalog = {
   "workshopsSection.seatsLeft_one": "<b>{count}</b> lugar disponível",
   "workshopsSection.seatsLeft_other": "<b>{count}</b> lugares disponíveis",
   "workshopsSection.cohortFull": "Turma completa",
-  "workshopsSection.viewCta": "Ver workshop →",
+  "workshopsSection.viewCta": "Ver workshop",
   "workshopsSection.heading": "Workshops <em>avançados</em>",
   "workshopsSection.blurb":
     "Cursos estruturados de várias semanas, liderados por pessoas da comunidade que se aprofundam numa técnica. Turmas pequenas, preços em escala variável, e no final fazes algo real. Também dás um curso? Publica-o aqui.",
@@ -1965,7 +1965,7 @@ export const economy: Catalog = {
     "Este workshop pode ter terminado ou ter sido retirado. Explora o que está a decorrer agora em Competências e aprendizagem.",
   "workshopPage.notFound.backCta": "Voltar a Competências",
   "workshopPage.backToSkills": "Competências e aprendizagem",
-  "workshopPage.footerBackCta": "← Todos os workshops e competências",
+  "workshopPage.footerBackCta": "Todos os workshops e competências",
   "workshopPage.newBadge": "Novo",
 
   "workshopSections.about.title": "O que vais <em>mesmo fazer</em>",
@@ -1980,7 +1980,7 @@ export const economy: Catalog = {
   "workshopSidebar.startDate": "Data de início",
   "workshopSidebar.cancellation": "Cancelamento",
   "workshopSidebar.cohortFull": "Turma completa",
-  "workshopSidebar.reserveCta": "Reservar um lugar →",
+  "workshopSidebar.reserveCta": "Reservar um lugar",
   "workshopSidebar.askQuestion": "Fazer uma pergunta",
   "workshopSidebar.askQuestionToast":
     "Vamos passar a tua pergunta a {firstName}.",
@@ -2062,7 +2062,7 @@ export const economy: Catalog = {
   "addWorkshop.listed.title": "Workshop",
   "addWorkshop.listed.em": "publicado.",
   "addWorkshop.listed.closeLabel": "Concluído",
-  "addWorkshop.listed.viewCta": "Ver o teu workshop →",
+  "addWorkshop.listed.viewCta": "Ver o teu workshop",
   "addWorkshop.listed.body":
     "<strong>{title}</strong> já está publicado em Competências e aprendizagem. As pessoas podem explorá-lo, ler o plano, e reservar um lugar. Edita os detalhes ou adiciona sessões a qualquer momento a partir da página do teu workshop.",
 
@@ -2199,7 +2199,7 @@ export const economy: Catalog = {
   "skills.outro.cta": "Pedir um convite",
   "skills.card.teaching": "A ensinar",
   "skills.card.learning": "A aprender",
-  "skills.card.reachOut": "Contactar →",
+  "skills.card.reachOut": "Contactar",
 
   // ── SolidarityPage (+ directory) ────────────────────────────────────────
   "solidarity.hero.eyebrow": "Cuidado comunitário",
@@ -2239,7 +2239,7 @@ export const economy: Catalog = {
   "solidarityDirectory.badgeMember": "Comunidade",
   "solidarityDirectory.badgeVerified": "Perfil verificado",
   "solidarityDirectory.slidingScaleLabel": "Escala variável",
-  "solidarityDirectory.contactCta": "Contactar →",
+  "solidarityDirectory.contactCta": "Contactar",
   "solidarityDirectory.empty.title": "Sem resultados para essa procura",
   "solidarityDirectory.empty.description":
     "Ainda ninguém corresponde a essa pesquisa. Tenta outra profissão ou limpa a pesquisa para ver todas as pessoas que oferecem cuidado em escala variável.",
@@ -2693,12 +2693,12 @@ export const economy: Catalog = {
   "housingCoop.phases.sub":
     "Calendário realista: 14–28 meses. Cada fase tem modelos, exemplos reais de cooperativas já existentes, e uma pessoa mentora para recorreres quando precisares.",
   "housingCoop.grid.title": "Cooperativas a <em>formar-se agora</em>",
-  "housingCoop.grid.seeAll": "Ver as 8 →",
+  "housingCoop.grid.seeAll": "Ver as 8",
   "housingCoop.templates.title": "Modelos & <em>ferramentas</em>",
   "housingCoop.templates.sub":
     "Todos os documentos que gostávamos que nos tivessem dado. Preparados com a equipa jurídica da QueerPulse, traduzidos PT & EN, testados nos primeiros dois anos da Casa Sambizanga.",
-  "housingCoop.templates.download": "Descarregar →",
-  "housingCoop.templates.read": "Ler →",
+  "housingCoop.templates.download": "Descarregar",
+  "housingCoop.templates.read": "Ler",
   "housingCoop.startCta.eyebrow": "Começa uma cooperativa",
   "housingCoop.startCta.title": "Ainda não tens <em>o teu grupo</em>?",
   "housingCoop.startCta.body":
@@ -2844,10 +2844,10 @@ export const economy: Catalog = {
   // portraits/mentoring/sublet offers, poster names/roles/bios) are
   // member-authored marketplace posts — in live mode fetched from the board.
   // Left in English. Only the surrounding chrome below is translated.
-  "offerBoard.backLink": "← Pedidos & Ofertas",
+  "offerBoard.backLink": "Pedidos & Ofertas",
   "offerBoard.pill.looking": "Procura",
   "offerBoard.pill.offering": "Oferece",
-  "offerBoard.respondCta": "Responder a {name} →",
+  "offerBoard.respondCta": "Responder a {name}",
   "offerBoard.seeProfileCta": "Ver o perfil",
   "offerBoard.postedBy": "Publicado por",
   "offerBoard.sidebarNote":
@@ -2897,7 +2897,7 @@ export const economy: Catalog = {
   "affiliateCompanyModal.addCompany.aboutPlaceholder":
     "Uma breve descrição da empresa e de como funciona.",
   "affiliateCompanyModal.addCompany.pickExisting":
-    "← Escolher uma empresa existente",
+    "Escolher uma empresa existente",
   "affiliateCompanyModal.roleLabel": "O teu cargo lá",
   "affiliateCompanyModal.cancel": "Cancelar",
   "affiliateCompanyModal.creating": "A criar…",

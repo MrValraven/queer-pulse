@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { SkeletonLine } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -25,7 +26,7 @@ export function InvitePage() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <Link to={routes.accountProfile} className={styles.backLink}>
-            ← {t("auth:common.backToProfile")}
+            <FiArrowLeft aria-hidden /> {t("auth:common.backToProfile")}
           </Link>
           <div className={styles.eyebrow}>{t("auth:invite.eyebrow")}</div>
           <div className={styles.title}>

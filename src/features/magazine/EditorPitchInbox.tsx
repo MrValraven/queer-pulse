@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -7,10 +8,8 @@ import {
   type TriageVerdict,
 } from "./editorDashboard.data";
 import { leadingInitials } from "../../shared/lib/initials";
+import { cx } from "../../shared/lib/cx";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
 
 const TINT_CLASS = {
   coral: styles.tintCoral,
@@ -74,7 +73,8 @@ export function EditorPitchInbox({
             </div>
             <div className={styles.pitchFoot}>
               <button type="button" onClick={onShowMore}>
-                {t("magazine:editor.pitchInbox.showMore", { count: HIDDEN })}
+                {t("magazine:editor.pitchInbox.showMore", { count: HIDDEN })}{" "}
+                <FiArrowRight aria-hidden />
               </button>
             </div>
           </>

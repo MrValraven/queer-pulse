@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
@@ -175,7 +176,10 @@ function ConversationModal({
           {sending ? (
             <Sending label={t("economy:msg.sendingLabel")} />
           ) : (
-            t("economy:msg.sendCta")
+            <>
+              {t("economy:msg.sendCta")}{" "}
+              <FiArrowRight aria-hidden />
+            </>
           )}
         </Button>
       </div>
@@ -251,13 +255,17 @@ function ColdMessageModal({
               onClick={onClose}
               disabled={sending}
             >
+              <FiArrowLeft aria-hidden />{" "}
               {t("economy:msg.cancel")}
             </button>
             <Button size="lg" type="submit" disabled={sending || !msg.trim()}>
               {sending ? (
                 <Sending label={t("economy:msg.sendingLabel")} />
               ) : (
-                t("economy:msg.sendCta")
+                <>
+                  {t("economy:msg.sendCta")}{" "}
+                  <FiArrowRight aria-hidden />
+                </>
               )}
             </Button>
           </div>

@@ -5,6 +5,7 @@ import {
   type ReactNode,
 } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
@@ -13,6 +14,7 @@ import {
   Button,
   FadeIn,
   ImageSlot,
+  Outro,
   SkeletonLine,
   Tag,
 } from "../../shared/components/ui";
@@ -21,7 +23,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
-import { defaultArticleId, isPullQuote, relationReason } from "./data/articles";
+import { defaultArticleId, firstPlainText, relationReason } from "./data/articles";
+import { ArticleBody } from "./ArticleBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
 import { useArticle } from "./api/useArticle";
@@ -110,9 +113,7 @@ export function ArticlePage() {
   const related = data?.related ?? [];
 
   // First plain-text paragraph doubles as the saved-card blurb.
-  const blurb = article.body.find(
-    (block): block is string => typeof block === "string",
-  );
+  const blurb = firstPlainText(article.body);
 
   const plainTitle = nodeToText(article.title).replace(/\s+/g, " ").trim();
 
@@ -129,7 +130,7 @@ export function ArticlePage() {
       <div className={styles.header}>
         <div className="wrap">
           <Link to={routes.magazine} className={styles.back}>
-            {t("magazine:article.backToMagazine")}{" "}
+            <FiArrowLeft aria-hidden /> {t("magazine:article.backToMagazine")}{" "}
             <span style={{ opacity: 0.5 }}>·</span> {article.section}
           </Link>
           <div className={styles.kicker}>{article.kicker}</div>
@@ -187,15 +188,7 @@ export function ArticlePage() {
               } as CSSProperties
             }
           >
-            {article.body.map((block, index) =>
-              isPullQuote(block) ? (
-                <blockquote key={index} className={styles.pull}>
-                  {block.pull}
-                </blockquote>
-              ) : (
-                <p key={index}>{block}</p>
-              ),
-            )}
+            <ArticleBody blocks={article.body} />
           </div>
 
           <div className={styles.bio}>
@@ -248,6 +241,22 @@ export function ArticlePage() {
             </div>
           </div>
         </div>
+      )}
+
+      {article.outro && (
+        <Outro
+          title={
+            <Translation
+              i18nKey={article.outro.titleKey}
+              components={{ em: <em /> }}
+            />
+          }
+          sub={t(article.outro.subKey)}
+        >
+          <Button to={article.outro.ctaTo} variant="primary" size="lg">
+            {t(article.outro.ctaLabelKey)}
+          </Button>
+        </Outro>
       )}
     </PageShell>
   );

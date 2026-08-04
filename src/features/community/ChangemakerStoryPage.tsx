@@ -1,4 +1,5 @@
 import { Link, Navigate, useParams } from "react-router-dom";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/useConnect";
@@ -55,7 +56,7 @@ export function ChangemakerStoryPage() {
       <div className={styles.back}>
         <div className="wrap">
           <Link to={routes.changemakers} className={styles.backLink}>
-            {t("community:changemakerStory.backCta")}
+            <FiArrowLeft aria-hidden /> {t("community:changemakerStory.backCta")}
           </Link>
         </div>
       </div>
@@ -144,7 +145,8 @@ export function ChangemakerStoryPage() {
         <Button variant="primary" onClick={() => openConnect()}>
           {t("community:changemakerStory.outro.connectCta", {
             name: firstName,
-          })}
+          })}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <Button variant="ghost-dark" to={routes.changemakers}>
           {t("community:changemakerStory.outro.moreCta")}

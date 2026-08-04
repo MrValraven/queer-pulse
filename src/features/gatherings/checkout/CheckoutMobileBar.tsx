@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import type { TierId } from "./checkout.data";
 import { useCheckout } from "./checkoutContext";
@@ -42,7 +43,7 @@ export function CheckoutMobileBar({ pf }: { pf: PaymentForm }) {
         onClick={onClick}
         style={{ padding: "12px 22px" }}
       >
-        {label}
+        {label} <FiArrowRight aria-hidden />
       </Button>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiFileText } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useClipboard } from "../../shared/hooks";
 import { EmptyState } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
@@ -23,15 +24,43 @@ import styles from "./PressKitPage.module.css";
 
 const FACTS_AS_OF = new Date(2026, 4, 14);
 
+type BoilerItem = ReturnType<typeof buildBoiler>[number];
+
+/**
+ * One boilerplate paragraph with an inline copy-to-clipboard button that swaps
+ * its label to "Copied" for a moment. Each row owns its own `useClipboard`
+ * state so several rows can show the copied affordance independently — the
+ * shared hook replaces the hand-rolled `navigator.clipboard` + `setTimeout`
+ * this section used to inline.
+ */
+function BoilerCopyRow({ item }: { item: BoilerItem }) {
+  const { t } = useTranslation();
+  const { copy, copied } = useClipboard(1600);
+  return (
+    <div className={styles.boiler}>
+      <div className={styles.boilerH}>
+        {item.label}
+        <span className={styles.wc}>{item.wc}</span>
+      </div>
+      <button
+        type="button"
+        className={[styles.boilerCopy, copied && styles.copied]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={() => void copy(item.text)}
+      >
+        {copied
+          ? t("marketing:pressKit.boiler.copiedCta")
+          : t("marketing:pressKit.boiler.copyCta")}
+      </button>
+      <div className={styles.boilerText}>{item.text}</div>
+    </div>
+  );
+}
+
 export function BoilerplateSection() {
   const { t } = useTranslation();
   const boiler = useMemo(() => buildBoiler(t), [t]);
-  const [copied, setCopied] = useState<string | null>(null);
-  const copy = (id: string, text: string) => {
-    if (navigator.clipboard) void navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 1600);
-  };
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -50,24 +79,7 @@ export function BoilerplateSection() {
         />
       </p>
       {boiler.map((b) => (
-        <div className={styles.boiler} key={b.id}>
-          <div className={styles.boilerH}>
-            {b.label}
-            <span className={styles.wc}>{b.wc}</span>
-          </div>
-          <button
-            type="button"
-            className={[styles.boilerCopy, copied === b.id && styles.copied]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => copy(b.id, b.text)}
-          >
-            {copied === b.id
-              ? t("marketing:pressKit.boiler.copiedCta")
-              : t("marketing:pressKit.boiler.copyCta")}
-          </button>
-          <div className={styles.boilerText}>{b.text}</div>
-        </div>
+        <BoilerCopyRow item={b} key={b.id} />
       ))}
     </section>
   );

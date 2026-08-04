@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -95,7 +96,8 @@ export function ComingOutPage() {
         sub={t("community:comingOut.outro.sub")}
       >
         <Button to={routes.comingOut} variant="primary" size="lg">
-          {t("community:comingOut.outro.enterCta")}
+          {t("community:comingOut.outro.enterCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <Button to={routes.communities} variant="ghost-dark" size="lg">
           {t("community:comingOut.outro.communitiesCta")}

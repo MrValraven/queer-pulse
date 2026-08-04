@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
@@ -140,6 +141,7 @@ export function JobApplyPage() {
         <PageShell>
           <div className={styles.page}>
             <Link to={routes.jobs} className={styles.back}>
+              <FiArrowLeft aria-hidden />{" "}
               {t("economy:jobApply.backToJobs")}
             </Link>
             <SkeletonLine width="60%" height={32} style={{ marginTop: 24 }} />
@@ -200,6 +202,7 @@ export function JobApplyPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={jobPath} className={styles.back}>
+          <FiArrowLeft aria-hidden />{" "}
           {t("economy:jobApply.backToJob")}
         </Link>
 

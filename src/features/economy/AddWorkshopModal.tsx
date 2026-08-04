@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -47,7 +48,8 @@ function ListedPanel({
         newId && (
           <div className={styles.successBtn} style={{ marginTop: 10 }}>
             <Button variant="ghost-dark" to={`${routes.skills}/${newId}`}>
-              {t("economy:addWorkshop.listed.viewCta")}
+              {t("economy:addWorkshop.listed.viewCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         )

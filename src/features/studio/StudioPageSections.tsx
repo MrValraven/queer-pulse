@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
+import { FiHeart, FiPlus, FiCheck, FiArrowRight } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useSaved } from "../../app/providers/useSaved";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -295,7 +295,8 @@ function StudioSideCol() {
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          {t("studio:room.set.readPlanCta")} →
+          {t("studio:room.set.readPlanCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>
@@ -316,7 +317,8 @@ export function StudioTracksSection() {
         </h2>
         <div className={styles.sub}>{t("studio:room.tracks.subtitle")}</div>
         <Link to={routes.studioAlbum} className={styles.all}>
-          {t("studio:room.tracks.allCta")} →
+          {t("studio:room.tracks.allCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div className={styles.rowGrid}>

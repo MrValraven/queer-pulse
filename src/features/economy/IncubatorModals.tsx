@@ -1,11 +1,60 @@
-import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { useState, type ReactNode } from "react";
+import { Button, FormField } from "../../shared/components/ui";
 import { ComingSoonPanel, ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useSubmitFlow } from "./modalFlow";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
+
+/** One text/email input or textarea in an incubator contact form. */
+interface IncubatorField {
+  key: string;
+  label: string;
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: "text" | "email";
+  multiline?: boolean;
+}
+
+/**
+ * The name/email/textarea + char-counter skeleton shared by all three incubator
+ * modals below. Each modal supplies its own field list (they differ — the
+ * session request has no name/email) plus the trailing counter note. Uses the
+ * shared <FormField> for label + control wiring.
+ */
+function IncubatorContactFields({
+  fields,
+  note,
+}: {
+  fields: IncubatorField[];
+  note: ReactNode;
+}) {
+  return (
+    <>
+      {fields.map((field) => (
+        <FormField key={field.key} label={field.label}>
+          {field.multiline ? (
+            <textarea
+              value={field.value}
+              onChange={(e) => field.onChange(e.target.value)}
+              placeholder={field.placeholder}
+            />
+          ) : (
+            <input
+              type={field.type ?? "text"}
+              value={field.value}
+              onChange={(e) => field.onChange(e.target.value)}
+              placeholder={field.placeholder}
+            />
+          )}
+        </FormField>
+      ))}
+      <p className={styles.note}>{note}</p>
+    </>
+  );
+}
 
 /* ── Apply for cohort 3 ─────────────────────────────────────────────── */
 export function CohortApplyModal({ onClose }: { onClose: () => void }) {
@@ -59,46 +108,38 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
           </h2>
           <p className={styles.sub}>{t("economy:incubatorApply.sub")}</p>
 
-          <div className={styles.field}>
-            <label htmlFor="ca-name">
-              {t("economy:incubatorApply.nameLabel")}
-            </label>
-            <input
-              id="ca-name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t("economy:incubatorApply.namePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ca-email">
-              {t("economy:incubatorApply.emailLabel")}
-            </label>
-            <input
-              id="ca-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("economy:incubatorApply.emailPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ca-pitch">
-              {t("economy:incubatorApply.pitchLabel")}
-            </label>
-            <textarea
-              id="ca-pitch"
-              value={pitch}
-              onChange={(e) => setPitch(e.target.value)}
-              placeholder={t("economy:incubatorApply.pitchPlaceholder")}
-            />
-          </div>
-          <p className={styles.note}>
-            {charsLeft > 0
-              ? t("economy:incubatorApply.charsNeeded", { count: charsLeft })
-              : t("economy:incubatorApply.looksGood")}
-          </p>
+          <IncubatorContactFields
+            fields={[
+              {
+                key: "name",
+                label: t("economy:incubatorApply.nameLabel"),
+                placeholder: t("economy:incubatorApply.namePlaceholder"),
+                value: name,
+                onChange: setName,
+              },
+              {
+                key: "email",
+                label: t("economy:incubatorApply.emailLabel"),
+                placeholder: t("economy:incubatorApply.emailPlaceholder"),
+                value: email,
+                onChange: setEmail,
+                type: "email",
+              },
+              {
+                key: "pitch",
+                label: t("economy:incubatorApply.pitchLabel"),
+                placeholder: t("economy:incubatorApply.pitchPlaceholder"),
+                value: pitch,
+                onChange: setPitch,
+                multiline: true,
+              },
+            ]}
+            note={
+              charsLeft > 0
+                ? t("economy:incubatorApply.charsNeeded", { count: charsLeft })
+                : t("economy:incubatorApply.looksGood")
+            }
+          />
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
@@ -176,56 +217,45 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
           </h2>
           <p className={styles.sub}>{t("economy:mentorSignup.sub")}</p>
 
-          <div className={styles.field}>
-            <label htmlFor="ms-name">
-              {t("economy:mentorSignup.nameLabel")}
-            </label>
-            <input
-              id="ms-name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t("economy:mentorSignup.namePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ms-email">
-              {t("economy:mentorSignup.emailLabel")}
-            </label>
-            <input
-              id="ms-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("economy:mentorSignup.emailPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ms-exp">
-              {t("economy:mentorSignup.expertiseLabel")}
-            </label>
-            <input
-              id="ms-exp"
-              type="text"
-              value={expertise}
-              onChange={(e) => setExpertise(e.target.value)}
-              placeholder={t("economy:mentorSignup.expertisePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ms-why">{t("economy:mentorSignup.whyLabel")}</label>
-            <textarea
-              id="ms-why"
-              value={why}
-              onChange={(e) => setWhy(e.target.value)}
-              placeholder={t("economy:mentorSignup.whyPlaceholder")}
-            />
-          </div>
-          <p className={styles.note}>
-            {charsLeft > 0
-              ? t("economy:mentorSignup.charsNeeded", { count: charsLeft })
-              : t("economy:mentorSignup.looksGood")}
-          </p>
+          <IncubatorContactFields
+            fields={[
+              {
+                key: "name",
+                label: t("economy:mentorSignup.nameLabel"),
+                placeholder: t("economy:mentorSignup.namePlaceholder"),
+                value: name,
+                onChange: setName,
+              },
+              {
+                key: "email",
+                label: t("economy:mentorSignup.emailLabel"),
+                placeholder: t("economy:mentorSignup.emailPlaceholder"),
+                value: email,
+                onChange: setEmail,
+                type: "email",
+              },
+              {
+                key: "expertise",
+                label: t("economy:mentorSignup.expertiseLabel"),
+                placeholder: t("economy:mentorSignup.expertisePlaceholder"),
+                value: expertise,
+                onChange: setExpertise,
+              },
+              {
+                key: "why",
+                label: t("economy:mentorSignup.whyLabel"),
+                placeholder: t("economy:mentorSignup.whyPlaceholder"),
+                value: why,
+                onChange: setWhy,
+                multiline: true,
+              },
+            ]}
+            note={
+              charsLeft > 0
+                ? t("economy:mentorSignup.charsNeeded", { count: charsLeft })
+                : t("economy:mentorSignup.looksGood")
+            }
+          />
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>
@@ -309,34 +339,30 @@ export function RequestSessionModal({
             {t("economy:requestSession.sub", { firstName: mentorFirstName })}
           </p>
 
-          <div className={styles.field}>
-            <label htmlFor="rs-when">
-              {t("economy:requestSession.whenLabel")}
-            </label>
-            <input
-              id="rs-when"
-              type="text"
-              value={when}
-              onChange={(e) => setWhen(e.target.value)}
-              placeholder={t("economy:requestSession.whenPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="rs-msg">
-              {t("economy:requestSession.messageLabel")}
-            </label>
-            <textarea
-              id="rs-msg"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder={t("economy:requestSession.messagePlaceholder")}
-            />
-          </div>
-          <p className={styles.note}>
-            {charsLeft > 0
-              ? t("economy:contactRequest.charsNeeded", { count: charsLeft })
-              : t("economy:requestSession.looksGood")}
-          </p>
+          <IncubatorContactFields
+            fields={[
+              {
+                key: "when",
+                label: t("economy:requestSession.whenLabel"),
+                placeholder: t("economy:requestSession.whenPlaceholder"),
+                value: when,
+                onChange: setWhen,
+              },
+              {
+                key: "message",
+                label: t("economy:requestSession.messageLabel"),
+                placeholder: t("economy:requestSession.messagePlaceholder"),
+                value: message,
+                onChange: setMessage,
+                multiline: true,
+              },
+            ]}
+            note={
+              charsLeft > 0
+                ? t("economy:contactRequest.charsNeeded", { count: charsLeft })
+                : t("economy:requestSession.looksGood")
+            }
+          />
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
             <button type="button" className={styles.back} onClick={onClose}>

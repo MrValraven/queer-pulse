@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -83,7 +84,8 @@ export function CancelledEventCard() {
           · {t("gatherings:cancelled.hostSentLabel")}
         </div>
         <Link to={MESSAGES} className={styles.hostLink}>
-          {t("gatherings:cancelled.sendWellWishesCta")} →
+          {t("gatherings:cancelled.sendWellWishesCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

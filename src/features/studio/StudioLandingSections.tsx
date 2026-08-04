@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollReveal, useCountUp } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
@@ -76,7 +77,8 @@ export function StudioLandingCounter() {
             cycles: LEDGER_CYCLE_COUNT,
           })}
           <Link to={routes.governance}>
-            {t("studio:landing.counter.seeLedgerCta")} →
+            {t("studio:landing.counter.seeLedgerCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </p>
 
@@ -163,7 +165,8 @@ export function StudioLandingCta() {
           values={{ addOnPrice: fmt.currency(STUDIO_ADD_ON_PRICE) }}
         />{" "}
         <Link to={routes.signIn}>
-          {t("studio:landing.cta.secondaryLink")} →
+          {t("studio:landing.cta.secondaryLink")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </section>

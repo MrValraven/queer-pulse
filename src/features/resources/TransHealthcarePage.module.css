@@ -1,57 +1,5 @@
-.hero {
-  background: var(--plum);
-  padding: 128px 0 64px;
-  position: relative;
-  overflow: hidden;
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -10%;
-  right: -4%;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--jade-rgb), 0.14),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-.eye {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--jade);
-  margin-bottom: 18px;
-  position: relative;
-}
-.title {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(36px, 5.5vw, 68px);
-  color: rgba(var(--cream-rgb), 1);
-  letter-spacing: -0.025em;
-  line-height: 0.97;
-  margin-bottom: 16px;
-  position: relative;
-}
-.title em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-.sub {
-  font-size: 16px;
-  color: rgba(var(--cream-rgb), 0.6);
-  max-width: 54ch;
-  line-height: 1.65;
-  position: relative;
-}
+/* Hero migrated to the shared <ResourceHero /> (plum tone). */
 .disclaimer {
-  margin-top: 22px;
   font-size: 13px;
   color: rgba(var(--cream-rgb), 0.38);
   max-width: 58ch;

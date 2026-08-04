@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
@@ -8,13 +8,18 @@ const DeckPage = lazyNamed(() => import("./DeckPage"), "DeckPage");
 const AuthorPage = lazyNamed(() => import("./AuthorPage"), "AuthorPage");
 const IssuePage = lazyNamed(() => import("./IssuePage"), "IssuePage");
 const IssuesPage = lazyNamed(() => import("./IssuesPage"), "IssuesPage");
-const StoryPage = lazyNamed(() => import("./StoryPage"), "StoryPage");
-const StoryTomasPage = lazyNamed(() => import("./StoryTomasPage"), "StoryTomasPage");
-const StorySafetyPage = lazyNamed(() => import("./StorySafetyPage"), "StorySafetyPage");
 const SubmitStoryPage = lazyNamed(() => import("./SubmitStoryPage"), "SubmitStoryPage");
 const PitchTrackerPage = lazyNamed(() => import("./PitchTrackerPage"), "PitchTrackerPage");
 const EditorDashboardPage = lazyNamed(() => import("./EditorDashboardPage"), "EditorDashboardPage");
 const DeckEditorPage = lazyNamed(() => import("./DeckEditorPage"), "DeckEditorPage");
+
+// The three first-person stories are now regular data-driven articles in the
+// article registry; their legacy paths resolve to the generic ArticlePage.
+const STORY_ARTICLE_IDS: Record<string, string> = {
+  [routes.story]: "studio-principe-real",
+  [routes.storyTomas]: "supper-club-mouraria",
+  [routes.storySafety]: "invite-only-safety",
+};
 
 /** The magazine: articles, authors, issues, first-person stories, and the
  *  editorial pitch/dashboard tools. */
@@ -28,9 +33,24 @@ export function magazineRoutes() {
       <Route path={`${routes.author}/:slug`} element={<AuthorPage />} />
       <Route path={routes.issue} element={<IssuePage />} />
       <Route path={routes.issues} element={<IssuesPage />} />
-      <Route path={routes.story} element={<StoryPage />} />
-      <Route path={routes.storyTomas} element={<StoryTomasPage />} />
-      <Route path={routes.storySafety} element={<StorySafetyPage />} />
+      <Route
+        path={routes.story}
+        element={
+          <Navigate to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.story]}`} replace />
+        }
+      />
+      <Route
+        path={routes.storyTomas}
+        element={
+          <Navigate to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storyTomas]}`} replace />
+        }
+      />
+      <Route
+        path={routes.storySafety}
+        element={
+          <Navigate to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storySafety]}`} replace />
+        }
+      />
       <Route path={routes.submitStory} element={<SubmitStoryPage />} />
       <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
       <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />

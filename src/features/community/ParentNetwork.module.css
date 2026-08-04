@@ -196,7 +196,6 @@
     border-color: var(--line-strong);
   }
 }
-.resLink::after {
-  content: "→";
+.resLinkArrow {
   color: var(--accent);
 }

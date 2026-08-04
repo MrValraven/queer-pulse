@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
-import { FiFilm } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiFilm } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -56,6 +56,7 @@ function DemoCinemaFilmmakerPage() {
               {filmmaker.nameEm}
             </span>
             <Link to={routes.cinema} className={styles.crumbBack}>
+              <FiArrowLeft aria-hidden />{" "}
               {t("cinema:filmmaker.crumb.backCta")}
             </Link>
           </div>
@@ -89,7 +90,8 @@ function DemoCinemaFilmmakerPage() {
         sub={t("cinema:filmmaker.outro.sub")}
       >
         <Button size="lg" to={routes.studioUpload}>
-          {t("cinema:ledger.submitCta")}
+          {t("cinema:ledger.submitCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

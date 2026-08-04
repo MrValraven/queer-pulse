@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,14 +18,16 @@ export function GrantsSidebar() {
         </h4>
         <p>{t("economy:grants.sidebar.microGrants.body")}</p>
         <Link to={routes.grants}>
-          {t("economy:grants.sidebar.microGrants.cta")}
+          {t("economy:grants.sidebar.microGrants.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div className={styles.sideCard}>
         <h4>{t("economy:grants.sidebar.skillsExchange.title")}</h4>
         <p>{t("economy:grants.sidebar.skillsExchange.body")}</p>
         <Link to={routes.barter}>
-          {t("economy:grants.sidebar.skillsExchange.cta")}
+          {t("economy:grants.sidebar.skillsExchange.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div
@@ -42,7 +45,8 @@ export function GrantsSidebar() {
         </h4>
         <p>{t("economy:grants.sidebar.appHelp.body")}</p>
         <Link to={routes.skills}>
-          {t("economy:grants.sidebar.appHelp.cta")}
+          {t("economy:grants.sidebar.appHelp.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </aside>

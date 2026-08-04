@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { FiCheck, FiShield } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiShield } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, Button, EmptyState, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -130,7 +130,8 @@ export function VouchPage() {
                   />
                   <div className={styles.actions}>
                     <Button type="submit" variant="primary" size="lg">
-                      {t("members:vouch.page.submitCta")}
+                      {t("members:vouch.page.submitCta")}{" "}
+                      <FiArrowRight aria-hidden />
                     </Button>
                     <Button to={routes.members} variant="ghost" size="lg">
                       {t("members:vouch.page.skipCta")}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
@@ -75,7 +76,7 @@ export function GatheringDashboardPage() {
             <span className={styles.brandQ}>{BRAND_PULSE}</span>
           </Link>
           <Link to={MANAGE} className={styles.backLink}>
-            ← {t("gatherings:dashboard.backToManage")}
+            <FiArrowLeft aria-hidden /> {t("gatherings:dashboard.backToManage")}
           </Link>
           <span className={styles.clock}>{fmt.time(clock)}</span>
         </div>

@@ -103,7 +103,7 @@ export const communities: Catalog = {
   "common.loading": "Loading…",
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
-  "detail.breadcrumb": "← Comunidades e Coletivos",
+  "detail.breadcrumb": "Comunidades e Coletivos",
   "detail.join.invite": "Junta-te com convite",
   "detail.join.public": "Junta-te à comunidade",
   "detail.join.request": "Pedir para entrar",
@@ -164,6 +164,7 @@ export const communities: Catalog = {
   "detail.thread.editCancel": "Cancelar",
   "detail.thread.editSaving": "A guardar…",
   "detail.thread.editAria": "Edita a tua mensagem",
+  "detail.thread.upvoteAria": "Votar a favor deste tópico",
   "detail.thread.editSavedToast": "A tua edição está publicada.",
   "detail.thread.deletedToast": "Mensagem eliminada.",
   "detail.thread.restoredToast": "Mensagem restaurada.",
@@ -319,21 +320,21 @@ export const communities: Catalog = {
   "start.hero.title": "Começa uma <em>comunidade.</em>",
   "start.hero.lead":
     "Um lugar para a tua gente se juntar — social, de apoio, criativo, ou algo que só tu sabes nomear. <strong>Nada fica público até estares pronte.</strong>",
-  "start.next.begin": "Vamos começar →",
-  "start.next.people": "A seguir: as pessoas →",
-  "start.next.door": "A seguir: a porta →",
-  "start.next.who": "A seguir: quem gere →",
-  "start.next.tone": "A seguir: o tom →",
-  "start.next.feeling": "A seguir: o sentir →",
-  "start.next.first": "A seguir: os primeiros →",
-  "start.next.review": "Rever e abrir →",
-  "start.next.open": "Abrir as portas →",
-  "start.next.fallback": "Continuar →",
+  "start.next.begin": "Vamos começar",
+  "start.next.people": "A seguir: as pessoas",
+  "start.next.door": "A seguir: a porta",
+  "start.next.who": "A seguir: quem gere",
+  "start.next.tone": "A seguir: o tom",
+  "start.next.feeling": "A seguir: o sentir",
+  "start.next.first": "A seguir: os primeiros",
+  "start.next.review": "Rever e abrir",
+  "start.next.open": "Abrir as portas",
+  "start.next.fallback": "Continuar",
   "start.opening.status": "A abrir as portas…",
   "start.leaveConfirm":
     "Tens uma comunidade por terminar aqui. Queres sair sem a guardar?",
   "start.cancel": "Cancelar",
-  "start.back": "← Voltar",
+  "start.back": "Voltar",
   "start.actions.stillNeeded": "Ainda falta:",
   "start.actions.blockedTitle": "Falta preencher mais algumas coisas",
 
@@ -610,7 +611,7 @@ export const communities: Catalog = {
   // ── Painel de sucesso (StartCommunitySuccess) ─────────────────────────────
   "start.success.title": "As tuas portas estão",
   "start.success.em": "abertas.",
-  "start.success.closeLabel": "Entrar →",
+  "start.success.closeLabel": "Entrar",
   "start.success.liveYours":
     "<strong>{name}</strong> está no ar e é tua para cuidares.",
   "start.success.invitesOnWay_one": "{count} convite caloroso a caminho.",

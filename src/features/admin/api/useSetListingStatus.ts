@@ -1,6 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { logInfo } from "../../../shared/observability/logger";
 import type { ListingStatus } from "../../marketing/listBusiness/listBusiness.data";
 import { setListingStatus } from "../../marketing/listBusiness/api/listings.api";
 import {
@@ -20,9 +19,7 @@ import {
   snapshotAdminListingsQueries,
 } from "./useAdminListings";
 import { listingHistoryQueryKey } from "./useListingHistory";
-
-/** How long demo mode pretends the round-trip takes, to keep the UX honest. */
-const DEMO_LATENCY_MS = 400;
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface SetListingStatusVars {
   row: ListingQueueRow;
@@ -46,30 +43,24 @@ interface SetListingStatusContext {
  * (rolled back on `onError`) so the page reflects the new status immediately
  * with no local override map — in demo mode that patch is the new truth (the
  * fixture never mutates); in live mode it's reconciled by the
- * `invalidateQueries` below. Live mode PATCHes `/listings/:ref/status`.
+ * `invalidateQueries` in `onLiveSuccess`. Live mode PATCHes
+ * `/listings/:ref/status`.
  */
 export function useSetListingStatus() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
+  return useDemoAwareMutation<
     ListingQueueRow,
     Error,
     SetListingStatusVars,
     SetListingStatusContext
   >({
-    mutationFn: async ({ row, status, reason }) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.listing.setStatus (demo — no network)", {
-          ref: row.ref,
-          status,
-          reason,
-        });
-        return { ...row, status };
-      }
-      const updated = await setListingStatus(row.ref, status, reason);
-      return listingDtoToQueueRow(updated);
-    },
+    demoMode,
+    demoResult: ({ row, status }) => ({ ...row, status }),
+    live: async ({ row, status, reason }) =>
+      listingDtoToQueueRow(await setListingStatus(row.ref, status, reason)),
+    logLabel: "admin.listing.setStatus",
+    logContext: ({ row, status, reason }) => ({ ref: row.ref, status, reason }),
     onMutate: async ({ row, status }) => {
       await queryClient.cancelQueries({
         queryKey: [ADMIN_LISTINGS_KEY, demoMode],
@@ -99,11 +90,10 @@ export function useSetListingStatus() {
         restoreDemoListingMutation(row.ref, context?.previousDemoMutation);
       }
     },
-    onSuccess: (_data, { row }) => {
-      // Demo mode has no server-side history to go stale against — the
-      // fixture in `DEMO_LISTING_HISTORY` is static and doesn't model this
-      // move, so there's nothing here to invalidate/reconcile.
-      if (demoMode) return;
+    // Demo mode has no server-side history to go stale against — the fixture in
+    // `DEMO_LISTING_HISTORY` is static and doesn't model this move, so there's
+    // nothing to invalidate/reconcile (hence live-only).
+    onLiveSuccess: (_data, { row }) => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
       void queryClient.invalidateQueries({
         queryKey: listingHistoryQueryKey(row.ref, false),

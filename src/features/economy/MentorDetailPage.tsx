@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { LuTreeDeciduous } from "react-icons/lu";
 import { PageShell } from "../../shared/components/layout";
@@ -31,6 +32,7 @@ export function MentorDetailPage() {
       <PageShell>
         <div className={styles.page}>
           <Link to={routes.mentorship} className={styles.back}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("economy:mentorDetail.backToAll")}
           </Link>
           <EmptyState
@@ -60,7 +62,8 @@ export function MentorDetailPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={base} className={styles.back}>
-          {t("economy:mentorDetail.backToAll")}
+          <FiArrowLeft aria-hidden />{" "}
+            {t("economy:mentorDetail.backToAll")}
         </Link>
 
         <MentorCycleNav

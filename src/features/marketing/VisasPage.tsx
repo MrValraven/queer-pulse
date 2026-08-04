@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { PageShell } from "../../shared/components/layout";
+import { FiArrowRight } from "react-icons/fi";
+import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -55,26 +56,21 @@ export function VisasPage() {
           { name: pageTitle, path: routes.visas },
         ])}
       />
-      <div className={styles.hero}>
-        <div className="wrap">
-          <Reveal as="div" className={styles.cat}>
-            {t("marketing:visas.hero.eyebrow")}
-          </Reveal>
-          <Reveal as="h1" delay={60}>
-            <Translation
-              i18nKey="marketing:visas.hero.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.heroSub} delay={120}>
-            {t("marketing:visas.hero.sub")}
-          </Reveal>
-          <Reveal className={styles.heroNote} delay={160}>
-            <span className={styles.heroNoteDot} />
-            {t("marketing:visas.hero.note")}
-          </Reveal>
+      <PageHero
+        eyebrow={t("marketing:visas.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:visas.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("marketing:visas.hero.sub")}
+      >
+        <div className={styles.heroNote}>
+          <span className={styles.heroNoteDot} />
+          {t("marketing:visas.hero.note")}
         </div>
-      </div>
+      </PageHero>
 
       <section className={styles.routeSection}>
         <div className="wrap">
@@ -101,7 +97,9 @@ export function VisasPage() {
               >
                 <div className={styles.rcName}>{t(route.nameKey)}</div>
                 <div className={styles.rcDesc}>{t(route.descKey)}</div>
-                <div className={styles.rcTo}>{t(route.ctaKey)}</div>
+                <div className={styles.rcTo}>
+                  {t(route.ctaKey)} <FiArrowRight aria-hidden />
+                </div>
               </Reveal>
             ))}
           </div>
@@ -175,7 +173,8 @@ export function VisasPage() {
           <Reveal className={styles.lawyerEmpty} delay={60}>
             <p>{t("marketing:visas.lawyers.emptyBody")}</p>
             <Button to={FORUM} variant="ghost">
-              {t("marketing:visas.lawyers.forumCta")}
+              {t("marketing:visas.lawyers.forumCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </Reveal>
         </div>
@@ -191,7 +190,8 @@ export function VisasPage() {
         sub={t("marketing:visas.outro.sub")}
       >
         <Button to={ARRIVING} variant="primary" size="lg">
-          {t("marketing:visas.outro.settlingCta")}
+          {t("marketing:visas.outro.settlingCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <Button to={FORUM} variant="ghost-dark" size="lg">
           {t("marketing:visas.outro.askCta")}

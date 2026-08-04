@@ -1,0 +1,49 @@
+/* StatTile + StatGrid — labeled stat tiles in a grid. Tokens only. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+}
+[data-theme="dark"] .tile {
+  border-color: rgba(var(--line-rgb), 0.14);
+}
+.value {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+.label {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+/* Contrast — tiles on a plum/dark panel (e.g. the safety moderation log). */
+.gridContrast .tile {
+  background: rgba(var(--cream-rgb), 0.06);
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+.gridContrast .value {
+  color: rgba(var(--cream-rgb), 1);
+}
+.gridContrast .label,
+.gridContrast .hint {
+  color: rgba(var(--cream-rgb), 0.55);
+}

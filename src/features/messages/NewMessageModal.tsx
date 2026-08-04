@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiX } from "react-icons/fi";
-import { Avatar, SearchInput } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Avatar, MemberIdentity, Modal, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { ConnectionView } from "../connect/connections.data";
 import { type Conversation } from "./data";
@@ -79,17 +77,20 @@ function GroupPickRow({ group, onPick }: GroupPickRowProps) {
   );
 }
 
-/** Self-contained recipient picker — opens (or reuses) a thread for the chosen member. */
+/** Self-contained recipient picker — opens (or reuses) a thread for the chosen
+ *  member. Built on the shared `Modal` (scroll-lock / focus-trap / Escape); the
+ *  People rows reuse the shared `MemberIdentity` block. Keeps its own search box
+ *  (it filters the People AND Groups sections together) and single-tap pick. */
 export function NewMessageModal({
   onClose,
   onPick,
   mode = "new",
   groups = [],
 }: NewMessageModalProps) {
-  useScrollLock();
   const { t } = useTranslation();
   const isForward = mode === "forward";
   const { isBlocked } = useSocial();
+  const staffMap = useStaffMap();
   const [query, setQuery] = useState("");
 
   // The recipient pool is the member's accepted connections — demo resolves the
@@ -107,14 +108,6 @@ export function NewMessageModal({
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
 
   const candidates = useMemo(
     // Blocked members are unreachable — never offer them as a recipient.
@@ -143,106 +136,70 @@ export function NewMessageModal({
   }, [query, groups]);
 
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <Modal
+      title={isForward ? t("messages:forward.title") : t("messages:newMessage.title")}
+      sub={isForward ? t("messages:forward.sub") : t("messages:newMessage.sub")}
+      onClose={onClose}
     >
-      <div
-        className={styles.dialog}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="new-message-title"
-      >
-        <div className={styles.head}>
-          <h2 id="new-message-title" className={styles.title}>
-            {isForward
-              ? t("messages:forward.title")
-              : t("messages:newMessage.title")}
-          </h2>
-          <button
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("messages:newMessage.close")}
-          >
-            <FiX />
-          </button>
-        </div>
-        <p className={styles.sub}>
-          {isForward
-            ? t("messages:forward.sub")
-            : t("messages:newMessage.sub")}
-        </p>
-        <SearchInput
-          className={styles.searchField}
-          value={query}
-          onChange={setQuery}
-          placeholder={t("messages:newMessage.searchPlaceholder")}
-          ariaLabel={t("messages:newMessage.searchAria")}
-        />
-        <ul className={styles.list}>
-          {groupResults.length > 0 && people.length > 0 && (
-            <li className={styles.sectionLabel} aria-hidden="true">
-              {t("messages:forward.sectionPeople")}
-            </li>
-          )}
-          {people.map((person) => (
-            <li key={person.id}>
-              <button
-                type="button"
-                className={styles.row}
-                onClick={() => onPick(person)}
-              >
-                <Avatar
-                  initials={person.initials}
-                  tint={person.tint}
-                  src={person.avatarUrl}
-                  alt={person.name}
-                  size={40}
-                />
-                <div className={styles.rowBody}>
-                  <span className={styles.nameRow}>
-                    <span className={styles.rowName}>{person.name}</span>
-                    <MemberStaffBadge slug={person.slug} />
-                  </span>
-                  <span className={styles.rowMeta}>{person.pronouns}</span>
-                </div>
-              </button>
-            </li>
-          ))}
-          {groupResults.length > 0 && (
-            <li className={styles.sectionLabel} aria-hidden="true">
-              {t("messages:forward.sectionGroups")}
-            </li>
-          )}
-          {groupResults.map((group) => (
-            <GroupPickRow key={group.id} group={group} onPick={onPick} />
-          ))}
-          {loading && candidates.length === 0 && (
+      <SearchInput
+        className={styles.searchField}
+        value={query}
+        onChange={setQuery}
+        placeholder={t("messages:newMessage.searchPlaceholder")}
+        ariaLabel={t("messages:newMessage.searchAria")}
+      />
+      <ul className={styles.list}>
+        {groupResults.length > 0 && people.length > 0 && (
+          <li className={styles.sectionLabel} aria-hidden="true">
+            {t("messages:forward.sectionPeople")}
+          </li>
+        )}
+        {people.map((person) => (
+          <li key={person.id}>
+            <button
+              type="button"
+              className={styles.row}
+              onClick={() => onPick(person)}
+            >
+              <MemberIdentity
+                person={{
+                  slug: person.slug,
+                  name: person.name,
+                  avatarUrl: person.avatarUrl,
+                  staffRole: person.slug ? staffMap[person.slug] : undefined,
+                }}
+                secondary={person.pronouns}
+              />
+            </button>
+          </li>
+        ))}
+        {groupResults.length > 0 && (
+          <li className={styles.sectionLabel} aria-hidden="true">
+            {t("messages:forward.sectionGroups")}
+          </li>
+        )}
+        {groupResults.map((group) => (
+          <GroupPickRow key={group.id} group={group} onPick={onPick} />
+        ))}
+        {loading && candidates.length === 0 && (
+          <li className={styles.empty}>{t("messages:newMessage.loading")}</li>
+        )}
+        {/* The connections-empty notices are People-section copy, so suppress
+            them when the Groups section is carrying the list (forward mode with
+            groups but no matching people) — otherwise "you haven't connected
+            with anyone yet" reads oddly under a populated Groups list. */}
+        {!loading && candidates.length === 0 && groupResults.length === 0 && (
+          <li className={styles.empty}>{t("messages:newMessage.none")}</li>
+        )}
+        {!loading &&
+          candidates.length > 0 &&
+          people.length === 0 &&
+          groupResults.length === 0 && (
             <li className={styles.empty}>
-              {t("messages:newMessage.loading")}
+              {t("messages:newMessage.empty", { query })}
             </li>
           )}
-          {/* The connections-empty notices are People-section copy, so suppress
-              them when the Groups section is carrying the list (forward mode with
-              groups but no matching people) — otherwise "you haven't connected
-              with anyone yet" reads oddly under a populated Groups list. */}
-          {!loading && candidates.length === 0 && groupResults.length === 0 && (
-            <li className={styles.empty}>{t("messages:newMessage.none")}</li>
-          )}
-          {!loading &&
-            candidates.length > 0 &&
-            people.length === 0 &&
-            groupResults.length === 0 && (
-              <li className={styles.empty}>
-                {t("messages:newMessage.empty", { query })}
-              </li>
-            )}
-        </ul>
-      </div>
-    </div>
+      </ul>
+    </Modal>
   );
 }

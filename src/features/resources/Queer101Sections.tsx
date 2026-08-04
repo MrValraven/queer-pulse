@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, HubBackLink, Outro } from "../../shared/components/ui";
+import { FiArrowRight } from "react-icons/fi";
+import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { ResourceHero } from "./ResourceHero";
 import {
   FAQ,
   GLOSSARY,
@@ -18,21 +20,25 @@ import styles from "./Queer101Page.module.css";
 export function Queer101Hero() {
   const { t } = useTranslation();
   return (
-    <div className={styles.hero}>
-      <div className="wrap">
-        <HubBackLink
-          to={routes.resources}
-          label={t("resources:queer101.hero.backLink")}
-          tone="light"
+    <ResourceHero
+      tone="light"
+      backLink={{
+        to: routes.resources,
+        label: t("resources:queer101.hero.backLink"),
+        tone: "light",
+      }}
+      eyebrowVariant="label"
+      eyebrowColor="var(--accent)"
+      eyebrow={t("resources:queer101.hero.label")}
+      titleWeight="light"
+      title={
+        <Translation
+          i18nKey="resources:queer101.hero.title"
+          components={{ em: <em /> }}
         />
-        <div className={styles.label}>{t("resources:queer101.hero.label")}</div>
-        <h1>
-          <Translation
-            i18nKey="resources:queer101.hero.title"
-            components={{ em: <em /> }}
-          />
-        </h1>
-        <p className={styles.lead}>{t("resources:queer101.hero.lead")}</p>
+      }
+      lead={t("resources:queer101.hero.lead")}
+      extras={
         <div className={styles.reassure}>
           <div className={styles.reassureNote}>
             <span className={styles.dot} />
@@ -47,8 +53,8 @@ export function Queer101Hero() {
             {t("resources:queer101.hero.reassure.leaveReturn")}
           </div>
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 }
 
@@ -200,7 +206,8 @@ export function Queer101TalkOptions() {
                 <div className={styles.talkOptTitle}>{t(item.titleKey)}</div>
                 <div className={styles.talkOptDesc}>{t(item.descriptionKey)}</div>
                 <Link to={item.link.href} className={styles.talkOptLink}>
-                  {t(item.link.labelKey)}
+                  {t(item.link.labelKey)}{" "}
+                  <FiArrowRight aria-hidden />
                 </Link>
               </div>
             ))}

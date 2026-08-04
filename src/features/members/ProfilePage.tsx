@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -106,7 +107,7 @@ export function ProfilePage() {
     <PageShell>
       <div className={`${styles.backBar} wrap`}>
         <Link to={routes.members} className={styles.backLink}>
-          {t("members:profile.backToRoom")}
+          <FiArrowLeft aria-hidden /> {t("members:profile.backToRoom")}
         </Link>
       </div>
 

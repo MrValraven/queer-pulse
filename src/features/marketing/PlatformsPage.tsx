@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -375,7 +376,7 @@ export function PlatformsPage() {
         sub={t("marketing:platforms.outro.sub")}
       >
         <Button size="lg" to={routes.forum}>
-          {t("marketing:platforms.outro.cta")}
+          {t("marketing:platforms.outro.cta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

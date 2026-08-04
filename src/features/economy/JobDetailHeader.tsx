@@ -1,4 +1,5 @@
 import { FaRainbow } from "react-icons/fa6";
+import { SaveButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Job } from "./jobs.data";
 import { SalaryIcon, TypeIcon, PinIcon, ClockIcon } from "./JobDetailIcons";
@@ -21,18 +22,7 @@ export function JobDetailHeader({
     <div className={styles.header}>
       <div className={styles.headerTop}>
         <h1 className={styles.title}>{job.title}</h1>
-        <button
-          type="button"
-          className={`${styles.save} ${saved ? styles.saved : ""}`}
-          onClick={onToggleSave}
-          aria-pressed={saved}
-          aria-label={t("economy:jobDetail.saveTitle")}
-          title={t("economy:jobDetail.saveTitle")}
-        >
-          <svg viewBox="0 0 16 16">
-            <path d="M8 1.5l1.8 3.6 4 .58-2.9 2.82.68 3.98L8 10.4l-3.58 1.9.68-3.98L2.2 5.68l4-.58z" />
-          </svg>
-        </button>
+        <SaveButton saved={saved} onToggle={onToggleSave} />
       </div>
       <div className={styles.org}>
         {job.organization}

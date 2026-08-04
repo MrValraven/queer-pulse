@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -81,7 +82,8 @@ export function AdminHealthModal({
             onOfferSupport();
           }}
         >
-          {t("admin:communities.health.offerSupportCta")} →
+          {t("admin:communities.health.offerSupportCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       ) : (
         <Button variant="primary" size="md" onClick={onClose}>

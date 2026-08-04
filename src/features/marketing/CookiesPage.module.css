@@ -1,55 +1,5 @@
-.hero {
-  max-width: var(--maxw, 1200px);
-  margin: 0 auto;
-  padding: 56px 28px 48px;
-}
-.eyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--accent-ink);
-  margin-bottom: 18px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(40px, 5.5vw, 74px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.98;
-  max-width: 16ch;
-}
-.h1 em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-.sub {
-  font-size: 16px;
-  color: var(--ink-60);
-  max-width: 54ch;
-  margin-top: 22px;
-  line-height: 1.72;
-}
-
-.body {
-  max-width: var(--maxw, 1200px);
-  margin: 0 auto;
-  padding: 0 28px 100px;
-}
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 48px;
-  align-items: start;
-}
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* The page/wrap/two-column shell now comes from LegalDoc (`body` + `aside`
+   slots); this module keeps only the consent-widget styling below. */
 .group {
   display: flex;
   flex-direction: column;

@@ -67,7 +67,7 @@ export const members: Catalog = {
   "profile.blocked.description":
     "Bloqueaste esta pessoa, por isso o perfil dela está escondido. Podes desbloqueá-la a partir das tuas ligações a qualquer momento.",
   "profile.blocked.manageAction": "Gerir pessoas bloqueadas",
-  "profile.goBack": "← Voltar atrás",
+  "profile.goBack": "Voltar atrás",
   "profile.notFound.title": "Este perfil não está aqui",
   "profile.notFound.description":
     "Pode ter sido definido como privado, a pessoa pode ter saído, ou este link pode estar desatualizado. Não foi nada que tenhas feito.",
@@ -76,7 +76,7 @@ export const members: Catalog = {
   "profile.loadError.description":
     "Algo correu mal ao obter o teu perfil. Verifica a tua ligação e tenta novamente.",
   "profile.loadError.retryAction": "Tentar novamente",
-  "profile.backToRoom": "← Voltar à sala",
+  "profile.backToRoom": "Voltar à sala",
   "profile.previewBanner":
     "Estás a pré-visualizar o teu perfil como <strong>visitante</strong>.",
   "profile.exitPreview": "Sair da pré-visualização",
@@ -84,7 +84,7 @@ export const members: Catalog = {
   // ── Cabeçalho do perfil (ProfileSections) ──────────────────────────────────
   "profile.hero.verifiedBadge": "Pessoa verificada",
   "profile.hero.curatorLink":
-    "● Curadoria do Cinema — ver perfil de programação →",
+    "Curadoria do Cinema — ver perfil de programação",
   "profile.hero.memberSince": "Nesta comunidade desde {since}",
   "profile.hero.location": "{hood}, Lisboa",
   "profile.hero.editCta": "Editar perfil",
@@ -97,10 +97,10 @@ export const members: Catalog = {
   "profile.hero.levelLabel": "Nível {number}",
   "profile.hero.badgesChip": "{earned} / {total} emblemas",
   "profile.hero.badgesDesc": "{earned} conquistados · {discover} por descobrir",
-  "profile.hero.badgesArrow": "Ver emblemas e nível →",
+  "profile.hero.badgesArrow": "Ver emblemas e nível",
   "profile.hero.perksChip": "{count} vantagens",
   "profile.hero.perksTitle": "Vantagens",
-  "profile.hero.perksArrow": "Resgatar as tuas vantagens →",
+  "profile.hero.perksArrow": "Resgatar as tuas vantagens",
 
   // ── Linha de estatísticas + separadores de conteúdo (ProfileStatsRow, ProfileTabBar) ──
   "profile.stats.vouches": "Avais",
@@ -138,7 +138,7 @@ export const members: Catalog = {
   "content.skills.title": "Competências e ofertas",
   "content.skills.subtitle":
     "Aquilo em que {first} pode ajudar — e trocar no quadro de trocas",
-  "content.skills.barterCta": "Ver o quadro de trocas completo →",
+  "content.skills.barterCta": "Ver o quadro de trocas completo",
   "content.groups.title": "Grupos e círculos",
   "content.groups.subtitle": "Onde {first} aparece na comunidade",
   "content.shapings.title": "O que me formou",
@@ -322,7 +322,7 @@ export const members: Catalog = {
     "Publicações, respostas e mensagens diretas são <em>só para a comunidade.</em>",
   "publicProfile.locked.postsBody":
     "A QueerPulse mantém o dia a dia da comunidade atrás de um início de sessão, para proteger as pessoas. Junta-te e o feed de {first} desbloqueia-se de imediato — incluindo a possibilidade de enviares mensagem a {first}.",
-  "publicProfile.requestInviteArrow": "Pedir um convite →",
+  "publicProfile.requestInviteArrow": "Pedir um convite",
   "publicProfile.locked.connectionsHeading": "Ligações",
   "publicProfile.locked.connectionsTitle":
     "Quem {first} conhece, <em>em privado.</em>",
@@ -340,7 +340,7 @@ export const members: Catalog = {
     "Os perfis públicos ainda não estão abertos — esta pré-visualização só é visível para ti.",
   "publicProfile.pill.live": "Ativo",
   "publicProfile.pill.off": "Inativo",
-  "publicProfile.preview.backToProfile": "← Voltar ao teu perfil",
+  "publicProfile.preview.backToProfile": "Voltar ao teu perfil",
   "publicProfile.preview.guestLabel":
     "Não tens sessão iniciada · a ver a <b>versão pública</b> deste perfil",
   "publicProfile.head.eyebrow": "Perfil público · @{slug}",
@@ -665,7 +665,7 @@ export const members: Catalog = {
   "vouch.page.noteLabel": "Adiciona uma nota curta (opcional)",
   "vouch.page.notePlaceholder":
     "Como conheces {name}, e o que deve saber o conselho?",
-  "vouch.page.submitCta": "Enviar o meu aval →",
+  "vouch.page.submitCta": "Enviar o meu aval",
   "vouch.page.skipCta": "Agora não",
   "vouch.page.emptyLive.title": "Os convites para avalizar chegam por link",
   "vouch.page.emptyLive.description":
@@ -825,7 +825,7 @@ export const members: Catalog = {
   "collections.recentSaves.heading":
     "Guardado recentemente · ainda sem coleção",
   "collections.recentSaves.unfiledCount": "+ {count} por arquivar",
-  "collections.recentSaves.addCta": "+ Adicionar a uma coleção →",
+  "collections.recentSaves.addCta": "+ Adicionar a uma coleção",
   "collections.toast.created": "Coleção criada",
   "collections.newCollection.defaultMeta":
     "Acabada de criar — começa a adicionar guardados",
@@ -844,8 +844,8 @@ export const members: Catalog = {
   "collections.modal.newCollection.namePlaceholder":
     "ex.: Recomendações de Lisboa, Levar à terapia…",
   "collections.modal.newCollection.visibilityLabel": "Quem pode ver",
-  "collections.modal.newCollection.cancel": "← Cancelar",
-  "collections.modal.newCollection.submit": "Criar coleção →",
+  "collections.modal.newCollection.cancel": "Cancelar",
+  "collections.modal.newCollection.submit": "Criar coleção",
   "collections.modal.privacyOption.private": "Privada",
   "collections.modal.privacyOption.shared":
     "Partilhada com pessoas da comunidade",
@@ -857,7 +857,7 @@ export const members: Catalog = {
   "collections.modal.add.dialogLabel": "Adicionar a uma coleção",
   "collections.modal.add.eyebrow": "Adicionar a uma coleção",
   "collections.modal.add.title": "Onde deve ficar isto?",
-  "collections.modal.add.cancel": "← Cancelar",
+  "collections.modal.add.cancel": "Cancelar",
   "collections.modal.add.success.dialogLabel": "Adicionado à coleção",
   "collections.modal.add.success.title": "Adicionado à <em>tua coleção.</em>",
   "collections.modal.add.success.body":
@@ -917,7 +917,7 @@ export const members: Catalog = {
   "places.deleteCancel": "Manter",
   "places.deleteYes": "Eliminar anúncio",
   "places.deleted": "Anúncio eliminado.",
-  "places.viewListingCta": "Ver anúncio →",
+  "places.viewListingCta": "Ver anúncio",
   "places.awaitingReview": "Aguarda revisão",
   "places.empty.title": "Ainda sem espaços",
   "places.empty.description":
@@ -925,15 +925,15 @@ export const members: Catalog = {
   "places.empty.action": "Registar o meu espaço",
 
   // ── Chrome da página de emblemas (BadgesPage, BadgesSections) ──────────────
-  "badges.backToProfile": "← Voltar ao perfil",
+  "badges.backToProfile": "Voltar ao perfil",
   "badges.pageTitle": "Emblemas e <em>nível</em>",
-  "badges.howToEarnXp": "Como ganhar XP →",
+  "badges.howToEarnXp": "Como ganhar XP",
   "badges.earnedHeading": "Os teus <em>emblemas</em>",
   "badges.lockedHeading": "Emblemas <em>bloqueados</em>",
   "badges.lockedSub":
     "Ganha XP e participa em convívios para desbloquear estes.",
-  "badges.hideMore": "Esconder ▴",
-  "badges.showMore": "Mostrar mais {count} ▾",
+  "badges.hideMore": "Esconder",
+  "badges.showMore": "Mostrar mais {count}",
   "badges.perksUnlockHeading": "O que o teu nível <em>desbloqueia</em>",
   "badges.perksUnlockSub":
     "Cada nível dá acesso a novas vantagens da comunidade.",
@@ -948,7 +948,7 @@ export const members: Catalog = {
     "Aparece, organiza e participa — os teus primeiros emblemas surgem aqui à medida que avanças.",
 
   // ── Chrome da página de vantagens (PerksPage, PerksSections) ───────────────
-  "perks.page.backToBadges": "← Emblemas e nível",
+  "perks.page.backToBadges": "Emblemas e nível",
   "perks.page.title": "As tuas <em>vantagens</em>",
   "perks.page.availableToRedeem_one":
     "{count} vantagem disponível para resgatar",
@@ -966,7 +966,7 @@ export const members: Catalog = {
     "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",
   "perks.sidebar.nextUnlockNote":
     "As próximas vantagens desbloqueiam no <strong>Nível {nextLevel} · {nextName}</strong> — organizar sem aprovação e mais convites por mês.",
-  "perks.sidebar.seeAllBadgesCta": "Ver todos os emblemas e níveis →",
+  "perks.sidebar.seeAllBadgesCta": "Ver todos os emblemas e níveis",
   "perks.sidebar.explainedTitle": "Vantagens explicadas",
   "perks.sidebar.suggestTitle": "Sugerir uma vantagem",
   "perks.sidebar.suggestPlaceholder": "Partilha uma ideia…",

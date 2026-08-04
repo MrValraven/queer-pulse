@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -30,10 +31,12 @@ export function IntersectionalityFooter() {
               <p>{t("resources:intersectionality.commit.sub")}</p>
               <div className={styles.commitBtns}>
                 <Button to={GOVERNANCE} variant="ghost-dark">
-                  {t("resources:intersectionality.commit.governanceCta")}
+                  {t("resources:intersectionality.commit.governanceCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Button>
                 <Button to={CONTACT} variant="ghost-dark">
-                  {t("resources:intersectionality.commit.accountableCta")}
+                  {t("resources:intersectionality.commit.accountableCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Button>
               </div>
             </div>
@@ -79,7 +82,8 @@ export function IntersectionalityFooter() {
                   <div className={styles.orgName}>{org.name}</div>
                   <div className={styles.orgText}>{t(org.textKey)}</div>
                   <Link to={org.link.href} className={styles.orgLink}>
-                    {t(org.link.labelKey)}
+                    {t(org.link.labelKey)}{" "}
+                    <FiArrowRight aria-hidden />
                   </Link>
                 </div>
               </Reveal>
@@ -101,7 +105,8 @@ export function IntersectionalityFooter() {
           {t("resources:intersectionality.outro.findCta")}
         </Button>
         <Button to={FORUM} variant="ghost-dark" size="lg">
-          {t("resources:intersectionality.outro.forumCta")}
+          {t("resources:intersectionality.outro.forumCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </>

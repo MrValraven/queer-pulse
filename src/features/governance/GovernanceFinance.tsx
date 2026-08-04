@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiChevronDown } from "react-icons/fi";
 import type { FinLine } from "./governance.data";
 import styles from "./GovernancePage.module.css";
 
@@ -20,7 +21,9 @@ function FinanceRow({ line, color }: { line: FinLine; color: string }) {
           <span className={styles.finLineLabel}>{line.label}</span>
           <span className={styles.finLineRight}>
             <span className={styles.finLineAmount}>{line.amount}</span>
-            <span className={styles.finChevron}>▾</span>
+            <span className={styles.finChevron} aria-hidden>
+              <FiChevronDown />
+            </span>
           </span>
         </div>
         <div className={styles.finLineNote}>{line.note}</div>

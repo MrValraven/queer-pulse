@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { PageShell } from "../../shared/components/layout";
+import { FiArrowRight } from "react-icons/fi";
+import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -30,22 +31,17 @@ export function DonatePage() {
           { name: pageTitle, path: routes.donate },
         ])}
       />
-      <header className={styles.hero}>
-        <div className="wrap">
-          <Reveal className={styles.eyebrow}>
-            {t("marketing:donate.hero.eyebrow")}
-          </Reveal>
-          <Reveal as="h1" className={styles.title} delay={60}>
-            <Translation
-              i18nKey="marketing:donate.hero.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.lead} delay={120}>
-            {t("marketing:donate.hero.lead")}
-          </Reveal>
-
-          <Reveal className={styles.card} delay={160}>
+      <PageHero
+        eyebrow={t("marketing:donate.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:donate.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("marketing:donate.hero.lead")}
+      >
+        <Reveal className={styles.card} delay={160}>
             <div className={styles.toggle}>
               <button
                 type="button"
@@ -94,11 +90,11 @@ export function DonatePage() {
                   })
                 : t("marketing:donate.giveCta.oneOff", {
                     amount: fmt.currency(selectedAmount),
-                  })}
+                  })}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </Reveal>
-        </div>
-      </header>
+      </PageHero>
 
       <section className={styles.section}>
         <div className="wrap">

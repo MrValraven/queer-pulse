@@ -1,6 +1,8 @@
+import { FiArrowRight } from "react-icons/fi";
 import {
   Button,
   ComingSoon,
+  Modal,
   SegmentedControl,
   Toggle,
 } from "../../shared/components/ui";
@@ -35,93 +37,93 @@ export function EventSettingsModal() {
     VIS.find((option) => option.v === value)?.label ?? VIS[0]!.label;
 
   return (
-    <>
-      <div className={sx("modal-head")}>
-        <div className={sx("modal-eyebrow")}>
-          {t("myevents:settingsModal.eyebrow")}
-        </div>
-        <h2 className={sx("modal-title")}>
-          <Translation
-            i18nKey="myevents:settingsModal.title"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p className={sx("set-coming-note")}>
-          {t("myevents:settingsModal.pushLiveNote")}
-        </p>
+    <Modal
+      onClose={closeSettings}
+      eyebrow={t("myevents:settingsModal.eyebrow")}
+      title={
+        <Translation
+          i18nKey="myevents:settingsModal.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("myevents:settingsModal.pushLiveNote")}
+      footer={
+        <>
+          <div className={sx("modal-privacy")}>
+            {t("myevents:settingsModal.privacyNote")}
+          </div>
+          <Button variant="primary" onClick={closeSettings}>
+            {t("myevents:settingsModal.closeCta")}
+          </Button>
+        </>
+      }
+    >
+      {/* Genuinely wired: real per-member lead time + Web Push subscription. */}
+      <EventReminderLeadRow />
+      <div className={sx("field")}>
+        <label className={sx("field-label")}>
+          {t("myevents:settingsModal.howWeReachYou")}
+        </label>
+        <EventPushReminderRow />
       </div>
-      <div className={sx("modal-body")}>
-        {/* Genuinely wired: real per-member lead time + Web Push subscription. */}
-        <EventReminderLeadRow />
+
+      {/* No backend yet — an honest preview, inert (no fake save/toast). */}
+      <p className={sx("set-coming-note")}>
+        <ComingSoon /> {t("myevents:settingsModal.comingSoonNote")}
+      </p>
+      <div className={sx("set-preview")} inert>
         <div className={sx("field")}>
           <label className={sx("field-label")}>
-            {t("myevents:settingsModal.howWeReachYou")}
+            {t("myevents:settingsModal.byDefaultWhoSees")}
           </label>
-          <EventPushReminderRow />
+          <SegmentedControl
+            fullWidth
+            options={VIS_LABELS}
+            value={labelForVis(prefs.visibility)}
+            onChange={noop}
+          />
         </div>
-
-        {/* No backend yet — an honest preview, inert (no fake save/toast). */}
-        <p className={sx("set-coming-note")}>
-          <ComingSoon /> {t("myevents:settingsModal.comingSoonNote")}
-        </p>
-        <div className={sx("set-preview")} inert>
-          <div className={sx("field")}>
-            <label className={sx("field-label")}>
-              {t("myevents:settingsModal.byDefaultWhoSees")}
-            </label>
-            <SegmentedControl
-              fullWidth
-              options={VIS_LABELS}
-              value={labelForVis(prefs.visibility)}
+        <div className={sx("field")}>
+          <div className={sx("set-row")}>
+            <div className={sx("set-info")}>
+              <div className={sx("set-t")}>
+                {t("myevents:settingsModal.email")}
+              </div>
+              <div className={sx("set-d")}>
+                {t("myevents:settingsModal.emailDesc")}
+              </div>
+            </div>
+            <Toggle
+              checked={prefs.email}
               onChange={noop}
+              label={t("myevents:settingsModal.emailToggleLabel")}
             />
           </div>
-          <div className={sx("field")}>
-            <div className={sx("set-row")}>
-              <div className={sx("set-info")}>
-                <div className={sx("set-t")}>
-                  {t("myevents:settingsModal.email")}
-                </div>
-                <div className={sx("set-d")}>
-                  {t("myevents:settingsModal.emailDesc")}
-                </div>
-              </div>
-              <Toggle
-                checked={prefs.email}
-                onChange={noop}
-                label={t("myevents:settingsModal.emailToggleLabel")}
-              />
-            </div>
+        </div>
+        <div className={sx("field")}>
+          <label className={sx("field-label")}>
+            {t("myevents:settingsModal.syncTickets")}
+          </label>
+          <div className={sx("set-link-row")}>
+            <span className={sx("slr-t")}>
+              {t("myevents:settingsModal.connectCalendar")}
+              <span>{t("myevents:settingsModal.connectCalendarSub")}</span>
+            </span>
+            <span className={sx("slr-arrow")} aria-hidden>
+              <FiArrowRight />
+            </span>
           </div>
-          <div className={sx("field")}>
-            <label className={sx("field-label")}>
-              {t("myevents:settingsModal.syncTickets")}
-            </label>
-            <div className={sx("set-link-row")}>
-              <span className={sx("slr-t")}>
-                {t("myevents:settingsModal.connectCalendar")}
-                <span>{t("myevents:settingsModal.connectCalendarSub")}</span>
-              </span>
-              <span className={sx("slr-arrow")}>→</span>
-            </div>
-            <div className={sx("set-link-row")}>
-              <span className={sx("slr-t")}>
-                {t("myevents:settingsModal.ticketsReceipts")}
-                <span>{t("myevents:settingsModal.ticketsReceiptsSub")}</span>
-              </span>
-              <span className={sx("slr-arrow")}>→</span>
-            </div>
+          <div className={sx("set-link-row")}>
+            <span className={sx("slr-t")}>
+              {t("myevents:settingsModal.ticketsReceipts")}
+              <span>{t("myevents:settingsModal.ticketsReceiptsSub")}</span>
+            </span>
+            <span className={sx("slr-arrow")} aria-hidden>
+              <FiArrowRight />
+            </span>
           </div>
         </div>
       </div>
-      <div className={sx("modal-foot")}>
-        <div className={sx("modal-privacy")}>
-          {t("myevents:settingsModal.privacyNote")}
-        </div>
-        <Button variant="primary" onClick={closeSettings}>
-          {t("myevents:settingsModal.closeCta")}
-        </Button>
-      </div>
-    </>
+    </Modal>
   );
 }

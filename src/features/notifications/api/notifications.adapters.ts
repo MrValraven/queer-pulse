@@ -1,5 +1,5 @@
 import type { IconType } from "react-icons";
-import { FiBell, FiCalendar, FiMessageCircle, FiUsers } from "react-icons/fi";
+import { FiBell, FiCalendar, FiUsers } from "react-icons/fi";
 import {
   businessPath,
   communityPath,
@@ -15,7 +15,6 @@ import type { NotificationActorDTO, NotificationDTO } from "./notifications.api"
 
 /** Each notification kind → the icon its row renders with (no avatar from the API). */
 const KIND_ICONS: Record<NotifType, IconType> = {
-  messages: FiMessageCircle,
   events: FiCalendar,
   community: FiUsers,
   platform: FiBell,
@@ -23,7 +22,6 @@ const KIND_ICONS: Record<NotifType, IconType> = {
 
 /** Subtle tinted background behind each kind's icon, matching the mock palette. */
 const KIND_ICON_BACKGROUND: Record<NotifType, string> = {
-  messages: "rgba(74,140,111,.1)",
   events: "rgba(232,119,90,.1)",
   community: "rgba(45,27,61,.07)",
   platform: "rgba(45,27,61,.07)",

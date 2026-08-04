@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button } from "../../shared/components/ui";
@@ -82,6 +83,7 @@ function DemoCinemaCollectionPage() {
       <div className={styles.backRow}>
         <div className="wrap">
           <Link to={routes.cinema} className={styles.back}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("cinema:collection.backCta")}
           </Link>
         </div>

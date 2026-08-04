@@ -1,6 +1,7 @@
 import { FiInfo } from "react-icons/fi";
-import { Button, FadeIn, ImageSlot } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { SplitTitle, PosterSlot } from "./CinemaAtoms";
 import type { CollectionDetail, CollectionFilm } from "./cinemaCollection.data";
 import styles from "./CinemaCollectionPage.module.css";
 import { routes } from "../../app/routeMap";
@@ -18,15 +19,7 @@ function FilmEntry({ film }: { film: CollectionFilm }) {
         <em>{film.num}</em>
       </div>
       <div className={styles.poster}>
-        <ImageSlot
-          src={film.image}
-          tint={film.tint}
-          width="100%"
-          height="100%"
-          radius={12}
-          placeholder={t("cinema:slot.poster")}
-          style={{ position: "absolute", inset: 0 }}
-        />
+        <PosterSlot src={film.image} tint={film.tint} radius={12} />
       </div>
       <div className={styles.entryMain}>
         <div className={styles.kicker}>
@@ -35,9 +28,7 @@ function FilmEntry({ film }: { film: CollectionFilm }) {
           <span className={styles.kind}>{film.kind}</span>
         </div>
         <div className={styles.entryTitle}>
-          {film.titlePre}
-          {film.titleEm && <em>{film.titleEm}</em>}
-          {film.titlePost}
+          <SplitTitle pre={film.titlePre} em={film.titleEm} post={film.titlePost} />
         </div>
         <div className={styles.entryMeta}>{film.meta}</div>
         <blockquote className={styles.why}>

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -48,7 +48,7 @@ export function StudioCheckoutPage() {
           <p>{t("studio:checkout.doneBody", { amount: priceLabel })}</p>
           <div className={s.doneActions}>
             <Link to={routes.studio} className={ss.btP}>
-              {t("studio:checkout.startListeningCta")}
+              {t("studio:checkout.startListeningCta")} <FiArrowRight aria-hidden />
             </Link>
             <Link to={routes.studioLibrary} className={ss.bt}>
               {t("studio:checkout.goToLibraryCta")}
@@ -131,7 +131,8 @@ export function StudioCheckoutPage() {
             {t("studio:checkout.payCta", {
               amount: priceLabel,
               cadence: cadenceLabel,
-            })}
+            })}{" "}
+            <FiArrowRight aria-hidden />
           </button>
           <p className={s.sumNote}>{t("studio:checkout.prototypeNote")}</p>
         </form>

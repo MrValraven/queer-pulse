@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
-import { FiBriefcase, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiBriefcase,
+  FiBookmark,
+  FiCheck,
+  FiShield,
+} from "react-icons/fi";
 import { FaRainbow } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
@@ -14,6 +20,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { deadlineText } from "./api/jobs.adapters";
 import { useSaved } from "../../app/providers/useSaved";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -118,9 +125,7 @@ function JobCard({ job }: { job: Job }) {
             .filter(Boolean)
             .join(" ")}
           onClick={save}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") save(e);
-          }}
+          onKeyDown={(e) => activateOnKey(e, () => save(e))}
         >
           <FiBookmark fill={saved ? "currentColor" : "none"} />
           {t(saved ? "economy:jobs.card.saved" : "economy:jobs.card.save")}
@@ -133,11 +138,10 @@ function JobCard({ job }: { job: Job }) {
           })}
           className={styles.apply}
           onClick={apply}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") apply(e);
-          }}
+          onKeyDown={(e) => activateOnKey(e, () => apply(e))}
         >
-          {t("economy:jobs.card.applyCta")}
+          {t("economy:jobs.card.applyCta")}{" "}
+          <FiArrowRight aria-hidden />
         </span>
       </div>
     </Link>

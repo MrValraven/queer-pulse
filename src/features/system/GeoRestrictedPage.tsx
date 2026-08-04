@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { StatusCard } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -41,8 +43,8 @@ export function GeoRestrictedPage() {
 
   return (
     <SystemStateShell>
-      <div className={styles.card}>
-        <div className={styles.ic}>
+      <StatusCard
+        icon={
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -55,24 +57,21 @@ export function GeoRestrictedPage() {
             <line x1="3" y1="12" x2="21" y2="12" />
             <path d="M12 3a14 14 0 0 1 4 9 14 14 0 0 1-4 9 14 14 0 0 1-4-9 14 14 0 0 1 4-9z" />
           </svg>
-        </div>
-
-        <div className={styles.eyebrow}>
-          {t("system:geoRestricted.eyebrow")}
-        </div>
-        <h1 className={styles.h1}>
+        }
+        kicker={t("system:geoRestricted.eyebrow")}
+        heading={
           <Translation
             i18nKey="system:geoRestricted.h1"
             components={{ em: <em /> }}
           />
-        </h1>
-        <p className={styles.lead}>
+        }
+        lead={
           <Translation
             i18nKey="system:geoRestricted.lead"
             components={{ em: <em /> }}
           />
-        </p>
-
+        }
+      >
         <div className={styles.why}>
           <h4>{t("system:geoRestricted.why.title")}</h4>
           <p>
@@ -115,9 +114,12 @@ export function GeoRestrictedPage() {
               components={{ b: <b /> }}
             />
           </span>
-          <Link to={routes.homepage}>{t("system:geoRestricted.goHome")}</Link>
+          <Link to={routes.homepage}>
+            {t("system:geoRestricted.goHome")}{" "}
+            <FiArrowRight aria-hidden />
+          </Link>
         </div>
-      </div>
+      </StatusCard>
     </SystemStateShell>
   );
 }

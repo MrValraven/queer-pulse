@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../../shared/components/ui";
+import { Button, BulkActionBar } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { describeError } from "../../../shared/api/errorMessage";
@@ -26,11 +26,11 @@ const SUCCESS_TOAST_KEY: Record<RoadmapBulkAction, string> = {
 };
 
 /**
- * Floating bulk-action bar for the Board/Timeline multi-select
- * (`useRoadmapSelection()`), mounted only while a card is selected — the
- * page renders it unconditionally and this component returns `null` itself
- * once `count` hits 0, matching `ItemDrawer`/`RoadmapModalsHost`'s own
- * "always mounted, renders nothing when inactive" shape. Every action shares
+ * Bulk-action bar for the Board/Timeline multi-select
+ * (`useRoadmapSelection()`), built on the shared inline `BulkActionBar` — the
+ * page renders it unconditionally and the shared bar renders nothing once
+ * `count` hits 0, matching `ItemDrawer`/`RoadmapModalsHost`'s own "always
+ * mounted, renders nothing when inactive" shape. Every action shares
  * `useAdminRoadmapMutations().bulkItems`, the one endpoint the backend
  * exposes for all 5 actions (`RoadmapBulkItemsBody`).
  *
@@ -46,8 +46,6 @@ export function BulkBar() {
   const { selected, clear, count } = useRoadmapSelection();
   const { bulkItems, pending } = useAdminRoadmapMutations();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
-
-  if (count === 0) return null;
 
   const ids = Array.from(selected);
 
@@ -80,34 +78,35 @@ export function BulkBar() {
   }
 
   return (
-    <div
-      className={styles.bulkBar}
-      role="region"
-      aria-label={t("admin:roadmap.bulkBar.selectedLabel", { count })}
-    >
-      <span className={styles.bulkCount} role="status">
-        {t("admin:roadmap.bulkBar.selectedLabel", { count })}
-      </span>
-
-      <select
-        className={styles.select}
-        value=""
-        disabled={pending}
-        aria-label={t("admin:roadmap.bulkBar.moveToPlaceholder")}
-        onChange={(event) => {
-          const column = event.target.value as RoadmapColumn | "";
-          if (column) runBulk("move", column);
-        }}
+    <>
+      <BulkActionBar
+        variant="inline"
+        count={count}
+        label={t("admin:roadmap.bulkBar.selectedLabel", { count })}
+        ariaLabel={t("admin:roadmap.bulkBar.selectedLabel", { count })}
+        onClear={clear}
+        clearLabel={t("admin:roadmap.bulkBar.clear")}
       >
-        <option value="">{t("admin:roadmap.bulkBar.moveToPlaceholder")}</option>
-        {MOVE_TARGETS.map((column) => (
-          <option key={column} value={column}>
-            {t(`admin:roadmap.board.column.${column}`)}
+        <select
+          className={`${styles.select} ${styles.bulkSelect}`}
+          value=""
+          disabled={pending}
+          aria-label={t("admin:roadmap.bulkBar.moveToPlaceholder")}
+          onChange={(event) => {
+            const column = event.target.value as RoadmapColumn | "";
+            if (column) runBulk("move", column);
+          }}
+        >
+          <option value="">
+            {t("admin:roadmap.bulkBar.moveToPlaceholder")}
           </option>
-        ))}
-      </select>
+          {MOVE_TARGETS.map((column) => (
+            <option key={column} value={column}>
+              {t(`admin:roadmap.board.column.${column}`)}
+            </option>
+          ))}
+        </select>
 
-      <div className={styles.bulkActions}>
         <Button variant="jade" onClick={() => runBulk("show")} disabled={pending}>
           {t("admin:roadmap.bulkBar.showPublicly")}
         </Button>
@@ -132,10 +131,7 @@ export function BulkBar() {
         >
           {t("admin:roadmap.bulkBar.delete")}
         </Button>
-        <Button variant="ghost-dark" onClick={clear} disabled={pending}>
-          {t("admin:roadmap.bulkBar.clear")}
-        </Button>
-      </div>
+      </BulkActionBar>
 
       {confirmingDelete && (
         <AdminModal
@@ -166,6 +162,6 @@ export function BulkBar() {
           <p>{t("admin:roadmap.bulkBar.confirmDelete.body", { count })}</p>
         </AdminModal>
       )}
-    </div>
+    </>
   );
 }

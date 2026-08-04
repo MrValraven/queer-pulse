@@ -1,6 +1,8 @@
 import { useToast } from "../../shared/components/feedback/useToast";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, Outro, Stepper } from "../../shared/components/ui";
+import type { StepperStep } from "../../shared/components/ui";
 import { PageShell } from "../../shared/components/layout";
+import { useClipboard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import styles from "./SecurityPage.module.css";
@@ -36,27 +38,27 @@ const OUT_SCOPE = [
   "settings:security.scope.out.7",
 ];
 
-const STEPS = [
+const PROCESS_STEPS = [
   {
-    number: 1,
+    key: "acknowledge",
     titleKey: "settings:security.process.step1.title",
     textKey: "settings:security.process.step1.text",
     noteKey: "settings:security.process.step1.note",
   },
   {
-    number: 2,
+    key: "assess",
     titleKey: "settings:security.process.step2.title",
     textKey: "settings:security.process.step2.text",
     noteKey: "settings:security.process.step2.note",
   },
   {
-    number: 3,
+    key: "fix",
     titleKey: "settings:security.process.step3.title",
     textKey: "settings:security.process.step3.text",
     noteKey: "settings:security.process.step3.note",
   },
   {
-    number: 4,
+    key: "disclose",
     titleKey: "settings:security.process.step4.title",
     textKey: "settings:security.process.step4.text",
     noteKey: "settings:security.process.step4.note",
@@ -75,15 +77,28 @@ const HALL = [
 export function SecurityPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { copy } = useClipboard();
 
-  function copyPGP() {
-    navigator.clipboard
-      .writeText(PGP_KEY)
-      .then(() => showToast(t("settings:security.pgp.copied"), "success"))
-      .catch(() =>
-        showToast(t("settings:security.pgp.copyFailed"), "error"),
-      );
+  async function copyPGP() {
+    const didCopy = await copy(PGP_KEY);
+    showToast(
+      didCopy
+        ? t("settings:security.pgp.copied")
+        : t("settings:security.pgp.copyFailed"),
+      didCopy ? "success" : "error",
+    );
   }
+
+  const processSteps: StepperStep[] = PROCESS_STEPS.map((step) => ({
+    key: step.key,
+    label: t(step.titleKey),
+    description: (
+      <>
+        <span className={styles.stepText}>{t(step.textKey)}</span>
+        <span className={styles.stepNote}>{t(step.noteKey)}</span>
+      </>
+    ),
+  }));
 
   return (
     <PageShell>
@@ -167,18 +182,16 @@ export function SecurityPage() {
                     components={{ em: <em /> }}
                   />
                 </h2>
-                <div className={styles.timeline}>
-                  {STEPS.map((step) => (
-                    <div key={step.number} className={styles.tlStep}>
-                      <div className={styles.tlN}>{step.number}</div>
-                      <div>
-                        <div className={styles.tlTitle}>{t(step.titleKey)}</div>
-                        <div className={styles.tlText}>{t(step.textKey)}</div>
-                        <div className={styles.tlNote}>{t(step.noteKey)}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <Stepper
+                  steps={processSteps}
+                  current={0}
+                  marker="number"
+                  orientation="vertical"
+                  size="lg"
+                  showFill={false}
+                  ariaLabel={t("settings:security.process.aria")}
+                  className={styles.timeline}
+                />
               </div>
 
               <div className={styles.proseSection}>
@@ -226,7 +239,7 @@ export function SecurityPage() {
                 <pre className={styles.pgpBlock}>{PGP_KEY}</pre>
                 <Button
                   variant="ghost"
-                  onClick={copyPGP}
+                  onClick={() => void copyPGP()}
                   style={{ width: "100%", justifyContent: "center" }}
                 >
                   {t("settings:security.pgp.copyCta")}

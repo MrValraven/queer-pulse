@@ -1,6 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { FiBookOpen, FiBriefcase, FiCheck, FiImage, FiRadio } from "react-icons/fi";
-import { Avatar, Button, EmptyState } from "../../shared/components/ui";
+import { Avatar, Button, EmptyState, SectionHead } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -23,26 +23,6 @@ import {
 import { CommissionInterestModal } from "./CommissionInterestModal";
 import styles from "./CulturePage.module.css";
 
-function SectionHeader({
-  title,
-  sub,
-  action,
-}: {
-  title: ReactNode;
-  sub: string;
-  action: ReactNode;
-}) {
-  return (
-    <div className={styles.secHeader}>
-      <div>
-        <h2 className={styles.secHead}>{title}</h2>
-        <div className={styles.subLabel}>{sub}</div>
-      </div>
-      {action}
-    </div>
-  );
-}
-
 export function ClubSection() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -50,14 +30,14 @@ export function ClubSection() {
   const [picking, setPicking] = useState(false);
   return (
     <section>
-      <SectionHeader
+      <SectionHead
         title={
           <Translation
             i18nKey="culture:club.picksHeading"
             components={{ em: <em /> }}
           />
         }
-        sub={t("culture:club.picksSub")}
+        subtitle={t("culture:club.picksSub")}
         action={
           demoMode ? (
             <Button onClick={() => setPicking(true)}>
@@ -206,14 +186,14 @@ export function CommissionsSection() {
   const [posting, setPosting] = useState(false);
   return (
     <section>
-      <SectionHeader
+      <SectionHead
         title={
           <Translation
             i18nKey="culture:commissions.heading"
             components={{ em: <em /> }}
           />
         }
-        sub={t("culture:commissions.sub")}
+        subtitle={t("culture:commissions.sub")}
         action={
           demoMode ? (
             <Button onClick={() => setPosting(true)}>
@@ -246,14 +226,14 @@ export function ShowcaseSection() {
   const [submitting, setSubmitting] = useState(false);
   return (
     <section>
-      <SectionHeader
+      <SectionHead
         title={
           <Translation
             i18nKey="culture:showcase.heading"
             components={{ em: <em /> }}
           />
         }
-        sub={t("culture:showcase.sub")}
+        subtitle={t("culture:showcase.sub")}
         action={
           demoMode ? (
             <Button onClick={() => setSubmitting(true)}>
@@ -300,14 +280,14 @@ export function RadioIntro() {
   const [submitting, setSubmitting] = useState(false);
   return (
     <section>
-      <SectionHeader
+      <SectionHead
         title={
           <Translation
             i18nKey="culture:radio.heading"
             components={{ em: <em /> }}
           />
         }
-        sub={t("culture:radio.sub")}
+        subtitle={t("culture:radio.sub")}
         action={
           demoMode ? (
             <Button onClick={() => setSubmitting(true)}>

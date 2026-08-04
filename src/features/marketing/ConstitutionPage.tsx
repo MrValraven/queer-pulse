@@ -1,4 +1,4 @@
-import { PageShell } from "../../shared/components/layout";
+import { PageShell, PageHero } from "../../shared/components/layout";
 import { HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -23,21 +23,23 @@ export function ConstitutionPage() {
           { name: pageTitle, path: routes.constitution },
         ])}
       />
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
+      <PageHero
+        plum={false}
+        backLink={
           <HubBackLink
             to={routes.governance}
             label={t("marketing:hub.governanceLabel")}
           />
-          <div className={styles.eyebrow}>
-            {t("marketing:constitution.hero.eyebrow")}
-          </div>
-          <h1 className={styles.h1}>
-            <Translation
-              i18nKey="marketing:constitution.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
+        }
+        eyebrow={t("marketing:constitution.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:constitution.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+      >
+        <div className={styles.heroExtra}>
           <p className={styles.dek}>
             <Translation
               i18nKey="marketing:constitution.hero.dek1"
@@ -52,7 +54,7 @@ export function ConstitutionPage() {
             />
           </p>
         </div>
-      </section>
+      </PageHero>
 
       <nav className={styles.toc}>
         <div className={styles.tocInner}>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -60,7 +61,8 @@ export function StudioTrackLyrics() {
       <div className={trackStyles.lyrFoot}>
         <span>Translated by Helena P. · approved by the artist · Apr 2026</span>
         <Link to={routes.studioSheetStore}>
-          {t("studio:track.lyrics.leadSheetChordsCta")} →
+          {t("studio:track.lyrics.leadSheetChordsCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

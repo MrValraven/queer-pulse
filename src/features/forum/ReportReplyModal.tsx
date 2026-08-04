@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Button, ModalSheet, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
@@ -25,19 +24,12 @@ export function ReportReplyModal({
   subjectId,
   onClose,
 }: ReportReplyModalProps) {
-  useScrollLock();
   const { t } = useTranslation();
   const [reason, setReason] = useState<ReasonCode | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const createReport = useCreateReport();
 
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const firstName = authorName.split(" ")[0] ?? authorName;
 
   const submit = () => {
     if (!reason) return;
@@ -55,108 +47,88 @@ export function ReportReplyModal({
     );
   };
 
-  return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={
-          status === "done"
-            ? `${styles.dialog} ${styles.dialogConfirm}`
-            : styles.dialog
-        }
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="report-title"
+  if (status === "done") {
+    return (
+      <ModalSheet
+        onClose={onClose}
+        success
+        ariaLabel={t("forum:reportReply.title")}
       >
-        {status === "done" ? (
-          <div>
-            <span className={styles.confirmIcon} aria-hidden>
-              <FiCheck />
-            </span>
-            <h2 id="report-title" className={styles.confirmTitle}>
-              <Translation
-                i18nKey="forum:reportReply.confirmTitle"
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <p className={styles.confirmBody}>
-              {t("forum:reportReply.confirmBody", {
-                name: authorName.split(" ")[0] ?? authorName,
-              })}
-            </p>
-            <div className={styles.confirmActions}>
-              <Button variant="ghost-dark" onClick={onClose}>
-                {t("forum:reportReply.done")}
-              </Button>
-            </div>
+        <div className={styles.confirm}>
+          <span className={styles.confirmIcon} aria-hidden>
+            <FiCheck />
+          </span>
+          <h2 className={styles.confirmTitle}>
+            <Translation
+              i18nKey="forum:reportReply.confirmTitle"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          <p className={styles.confirmBody}>
+            {t("forum:reportReply.confirmBody", { name: firstName })}
+          </p>
+          <div className={styles.confirmActions}>
+            <Button variant="ghost-dark" onClick={onClose}>
+              {t("forum:reportReply.done")}
+            </Button>
           </div>
-        ) : (
-          <>
-            <h2 id="report-title" className={styles.title}>
-              {t("forum:reportReply.title")}
-            </h2>
-            <p className={styles.sub}>
-              {t("forum:reportReply.sub", {
-                name: authorName.split(" ")[0] ?? authorName,
-              })}
-            </p>
-            <div
-              className={styles.reasons}
-              role="radiogroup"
-              aria-label={t("forum:reportReply.reasonGroupAria")}
+        </div>
+      </ModalSheet>
+    );
+  }
+
+  return (
+    <ModalSheet onClose={onClose} ariaLabel={t("forum:reportReply.title")}>
+      <h2 className={styles.title}>{t("forum:reportReply.title")}</h2>
+      <p className={styles.sub}>
+        {t("forum:reportReply.sub", { name: firstName })}
+      </p>
+      <div
+        className={styles.reasons}
+        role="radiogroup"
+        aria-label={t("forum:reportReply.reasonGroupAria")}
+      >
+        {REASONS.map((r) => {
+          const on = reason === r.code;
+          return (
+            <button
+              key={r.code}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              className={[styles.reason, on && styles.reasonOn]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setReason(r.code)}
             >
-              {REASONS.map((r) => {
-                const on = reason === r.code;
-                return (
-                  <button
-                    key={r.code}
-                    type="button"
-                    role="radio"
-                    aria-checked={on}
-                    className={[styles.reason, on && styles.reasonOn]
-                      .filter(Boolean)
-                      .join(" ")}
-                    onClick={() => setReason(r.code)}
-                  >
-                    <span className={styles.radio} aria-hidden />
-                    {r.label}
-                  </button>
-                );
-              })}
-            </div>
-            <div className={styles.actions}>
-              <Button
-                variant="ghost"
-                type="button"
-                onClick={onClose}
-                disabled={status === "sending"}
-              >
-                {t("forum:reportReply.cancel")}
-              </Button>
-              <Button
-                variant="primary"
-                type="button"
-                onClick={submit}
-                disabled={!reason || status === "sending"}
-              >
-                {status === "sending" ? (
-                  <>
-                    <span className={styles.spinner} aria-hidden />
-                    {t("forum:reportReply.sending")}
-                  </>
-                ) : (
-                  t("forum:reportReply.sendCta")
-                )}
-              </Button>
-            </div>
-          </>
-        )}
+              <span className={styles.radio} aria-hidden />
+              {r.label}
+            </button>
+          );
+        })}
       </div>
-    </div>
+      <div className={styles.actions}>
+        <Button
+          variant="ghost"
+          type="button"
+          onClick={onClose}
+          disabled={status === "sending"}
+        >
+          {t("forum:reportReply.cancel")}
+        </Button>
+        <Button
+          variant="primary"
+          type="button"
+          onClick={submit}
+          disabled={!reason || status === "sending"}
+        >
+          {status === "sending" ? (
+            <Sending label={t("forum:reportReply.sending")} />
+          ) : (
+            t("forum:reportReply.sendCta")
+          )}
+        </Button>
+      </div>
+    </ModalSheet>
   );
 }

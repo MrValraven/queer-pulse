@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -84,7 +85,7 @@ export function VolunteerOpportunityPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={routes.volunteer} className={styles.back}>
-          {t("marketing:volunteerDetail.backCta")}
+          <FiArrowLeft aria-hidden /> {t("marketing:volunteerDetail.backCta")}
         </Link>
 
         <header className={styles.head}>

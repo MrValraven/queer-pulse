@@ -1,4 +1,5 @@
 import { FaRainbow } from "react-icons/fa6";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -81,7 +82,8 @@ export function JobDetailSidebar({
             to={`${routes.jobs}/${job.slug}/apply`}
             style={{ width: "100%", justifyContent: "center" }}
           >
-            {t("economy:jobDetail.sidebar.applyCta")}
+            {t("economy:jobDetail.sidebar.applyCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>

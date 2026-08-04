@@ -12,7 +12,10 @@ export type NotificationKind =
   | "connection_accepted"
   | "vouch_received"
   | "promoted_to_member"
-  | "new_message"
+  // `new_message` is intentionally NOT listed: a new-DM alert is surfaced only
+  // by the message-icon unread badge and push, never in the notifications
+  // centre. A `new_message` row from the API is treated as an unknown kind and
+  // dropped upstream (see `useNotifications`) so it never renders here.
   | "event_invite"
   | "event_reminder"
   | "waitlist_promoted"
@@ -55,7 +58,6 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   mention: "community",
   forum_reply: "community",
   promoted_to_member: "platform",
-  new_message: "messages",
   event_invite: "events",
   event_reminder: "events",
   waitlist_promoted: "events",

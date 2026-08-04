@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 
-export type NotifType = "messages" | "events" | "community" | "platform";
+// "messages" was retired: private-message alerts live only in the message-icon
+// unread badge and push notifications, never in the in-app notifications centre.
+export type NotifType = "events" | "community" | "platform";
 
 export interface NotifAction {
   label: string;

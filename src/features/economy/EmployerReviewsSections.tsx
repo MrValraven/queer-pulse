@@ -1,4 +1,4 @@
-import { FiShield } from "react-icons/fi";
+import { FiArrowRight, FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -51,7 +51,8 @@ export function EmployerWriteBox({ onWrite }: { onWrite: () => void }) {
           className={styles.writeBtn}
           onClick={onWrite}
         >
-          {t("economy:employerReviews.recent.writeCta")}
+          {t("economy:employerReviews.recent.writeCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
         <div className={styles.writeNote}>
           {t("economy:employerReviews.write.note")}

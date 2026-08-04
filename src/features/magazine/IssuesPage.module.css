@@ -212,32 +212,6 @@
   font-style: italic;
   color: var(--accent);
 }
-.viewToggle {
-  display: flex;
-  background: var(--paper);
-  border-radius: 10px;
-  padding: 4px;
-  gap: 2px;
-}
-.viewToggle button {
-  background: transparent;
-  border: none;
-  padding: 7px 14px;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-60);
-  cursor: pointer;
-  border-radius: 7px;
-  transition:
-    background-color 0.2s var(--ease),
-    color 0.2s var(--ease);
-}
-.viewActive {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1) !important;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

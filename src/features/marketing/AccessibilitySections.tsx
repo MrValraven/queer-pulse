@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import type { ToastContextValue } from "../../shared/components/feedback/toastContext";
 import { Translation } from "../../shared/i18n/Translation";
@@ -166,7 +167,7 @@ export function ResourcesSection({
                     )
                   }
                 >
-                  {t(r.linkKey)} →
+                  {t(r.linkKey)} <FiArrowRight aria-hidden />
                 </button>
               </div>
             </div>
@@ -196,7 +197,8 @@ export function ResourcesSection({
               {t("marketing:accessibility.peer.joinCta")}
             </Button>
             <Button to={routes.mentorship} variant="ghost-dark">
-              {t("marketing:accessibility.peer.mentorCta")} →
+              {t("marketing:accessibility.peer.mentorCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

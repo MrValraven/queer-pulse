@@ -543,7 +543,14 @@
   font-weight: 700;
 }
 .metaPulse::before {
-  content: "● ";
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-right: 0.4em;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: baseline;
 }
 .metaDeadline,
 .metaWarn {

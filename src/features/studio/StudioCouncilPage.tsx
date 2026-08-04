@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -153,7 +154,8 @@ export function StudioCouncilPage() {
                   <div className={s.curFoot}>
                     <div className={s.curStat}>{mem.stat}</div>
                     <Link to={routes.studioAlbum} className={s.bt}>
-                      {t("studio:council.theirSlateCta")} →
+                      {t("studio:council.theirSlateCta")}{" "}
+                      <FiArrowRight aria-hidden />
                     </Link>
                   </div>
                 </FadeIn>

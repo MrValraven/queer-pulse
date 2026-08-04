@@ -1,5 +1,5 @@
 import { Link, Navigate, useParams } from "react-router-dom";
-import { FiRepeat } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiRepeat } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -63,6 +63,7 @@ export function BarterDetailPage() {
       <PageShell>
         <div className={styles.page}>
           <Link to={routes.barter} className={styles.back}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("economy:barterDetail.back")}
           </Link>
           <EmptyState
@@ -94,7 +95,8 @@ export function BarterDetailPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={routes.barter} className={styles.back}>
-          {t("economy:barterDetail.back")}
+          <FiArrowLeft aria-hidden />{" "}
+            {t("economy:barterDetail.back")}
         </Link>
 
         {loading ? (
@@ -130,7 +132,8 @@ export function BarterDetailPage() {
                   {t("economy:barterDetail.repliesFast")}
                 </span>
                 <Link to={routes.messages} className={styles.provLink}>
-                  {t("economy:barterDetail.messageCta", { firstName })}
+                  {t("economy:barterDetail.messageCta", { firstName })}{" "}
+                  <FiArrowRight aria-hidden />
                 </Link>
               </div>
             </div>

@@ -1,76 +1,8 @@
-.hero {
-  background: var(--cream);
-  padding: 180px 0 96px;
-  position: relative;
-  overflow: hidden;
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -15%;
-  right: -8%;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--jade-rgb), 0.09),
-    transparent 60%
-  );
-  pointer-events: none;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  bottom: -20%;
-  left: -6%;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--accent-rgb), 0.07),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-.label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--jade);
-  margin-bottom: 20px;
-  position: relative;
-}
-.hero h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(42px, 6.5vw, 90px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.97;
-  max-width: 15ch;
-  position: relative;
-}
-.hero h1 em {
-  font-style: italic;
-  color: var(--jade);
-  font-weight: 400;
-}
-.lead {
-  font-size: 17.5px;
-  color: var(--ink-60);
-  max-width: 54ch;
-  margin-top: 26px;
-  line-height: 1.68;
-  position: relative;
-}
+/* Hero migrated to the shared <ResourceHero tone="light" />. */
 .reasons {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 32px;
   position: relative;
 }
 .reason {

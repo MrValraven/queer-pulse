@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiStar } from "react-icons/fi";
+import { FiArrowRight, FiStar } from "react-icons/fi";
 import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -7,6 +7,7 @@ import { routes } from "../../app/routeMap";
 import { usePartners } from "./api/usePartners";
 import { useOpportunities } from "./api/useOpportunities";
 import { START_STEPS, SKILLS_CARDS } from "./activism.data";
+import { MarketingSection } from "./MarketingSection";
 import s from "./ActivismPage.module.css";
 
 /** How many partners / opportunities the activism teasers surface before the
@@ -17,13 +18,16 @@ const TEASER_COUNT = 4;
 export function StartSection() {
   const { t } = useTranslation();
   return (
-    <section className={s.section} id="start">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="start"
+      title={
         <Translation
           i18nKey="marketing:activism.start.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         {t("marketing:activism.start.p1")}
       </Reveal>
@@ -31,28 +35,31 @@ export function StartSection() {
         {t("marketing:activism.start.p2")}
       </Reveal>
       <div className={s.actionGrid}>
-        {START_STEPS.map((c, i) => (
-          <Reveal key={c.number} className={s.actionCard} delay={i * 60}>
-            <div className={s.acNum}>{c.number}</div>
-            <div className={s.acTitle}>{t(c.titleKey)}</div>
-            <div className={s.acBody}>{t(c.bodyKey)}</div>
+        {START_STEPS.map((step, index) => (
+          <Reveal key={step.number} className={s.actionCard} delay={index * 60}>
+            <div className={s.acNum}>{step.number}</div>
+            <div className={s.acTitle}>{t(step.titleKey)}</div>
+            <div className={s.acBody}>{t(step.bodyKey)}</div>
           </Reveal>
         ))}
       </div>
-    </section>
+    </MarketingSection>
   );
 }
 
 export function LocalSection() {
   const { t } = useTranslation();
   return (
-    <section className={s.section} id="local">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="local"
+      title={
         <Translation
           i18nKey="marketing:activism.local.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         {t("marketing:activism.local.p1")}
       </Reveal>
@@ -71,47 +78,53 @@ export function LocalSection() {
           <p>{t("marketing:activism.local.banner.body")}</p>
         </div>
       </Reveal>
-    </section>
+    </MarketingSection>
   );
 }
 
 export function SkillsSection() {
   const { t } = useTranslation();
   return (
-    <section className={s.section} id="skills">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="skills"
+      title={
         <Translation
           i18nKey="marketing:activism.skills.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         {t("marketing:activism.skills.p1")}
       </Reveal>
       <div className={s.actionGrid}>
-        {SKILLS_CARDS.map((c, i) => (
-          <Reveal key={c.titleKey} className={s.actionCard} delay={i * 60}>
+        {SKILLS_CARDS.map((card, index) => (
+          <Reveal key={card.titleKey} className={s.actionCard} delay={index * 60}>
             <div className={s.acNum}>
               <FiStar />
             </div>
-            <div className={s.acTitle}>{t(c.titleKey)}</div>
-            <div className={s.acBody}>{t(c.bodyKey)}</div>
+            <div className={s.acTitle}>{t(card.titleKey)}</div>
+            <div className={s.acBody}>{t(card.bodyKey)}</div>
           </Reveal>
         ))}
       </div>
-    </section>
+    </MarketingSection>
   );
 }
 
 export function MobiliseSection() {
   return (
-    <section className={s.section} id="mobilise">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="mobilise"
+      title={
         <Translation
           i18nKey="marketing:activism.mobilise.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         <Translation
           i18nKey="marketing:activism.mobilise.p1"
@@ -130,20 +143,23 @@ export function MobiliseSection() {
           components={{ b: <b /> }}
         />
       </Reveal>
-    </section>
+    </MarketingSection>
   );
 }
 
 export function FeelSection() {
   const { t } = useTranslation();
   return (
-    <section className={s.section} id="feel">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="feel"
+      title={
         <Translation
           i18nKey="marketing:activism.feel.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         {t("marketing:activism.feel.p1")}
       </Reveal>
@@ -159,7 +175,7 @@ export function FeelSection() {
           <p>{t("marketing:activism.feel.banner.body")}</p>
         </div>
       </Reveal>
-    </section>
+    </MarketingSection>
   );
 }
 
@@ -171,13 +187,16 @@ export function OrgsSection() {
   const { items } = usePartners();
   const orgs = items.slice(0, TEASER_COUNT);
   return (
-    <section className={s.section} id="orgs">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="orgs"
+      title={
         <Translation
           i18nKey="marketing:activism.orgs.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         {t("marketing:activism.orgs.p1")}
       </Reveal>
@@ -206,7 +225,7 @@ export function OrgsSection() {
           ))}
         </div>
       )}
-    </section>
+    </MarketingSection>
   );
 }
 
@@ -217,13 +236,16 @@ export function VolunteerSection() {
   const { items } = useOpportunities();
   const roles = items.slice(0, TEASER_COUNT);
   return (
-    <section className={s.section} id="volunteer">
-      <Reveal as="h2">
+    <MarketingSection
+      flow
+      id="volunteer"
+      title={
         <Translation
           i18nKey="marketing:activism.volunteer.title"
           components={{ em: <em /> }}
         />
-      </Reveal>
+      }
+    >
       <Reveal as="p" delay={60}>
         {t("marketing:activism.volunteer.p1")}
       </Reveal>
@@ -246,7 +268,8 @@ export function VolunteerSection() {
                 {role.org} · {role.description}
               </div>
               <span className={s.acLink}>
-                {t("marketing:activism.volunteer.expressInterestCta")}
+                {t("marketing:activism.volunteer.expressInterestCta")}{" "}
+                <FiArrowRight aria-hidden />
               </span>
             </Reveal>
           ))}
@@ -257,6 +280,6 @@ export function VolunteerSection() {
           {t("marketing:activism.volunteer.seeAllCta")}
         </Button>
       </Reveal>
-    </section>
+    </MarketingSection>
   );
 }

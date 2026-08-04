@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { logInfo } from "../../../shared/observability/logger";
 import { ADMIN_SAFE_SPACE_CANDIDATES } from "../adminSafeSpaces.data";
 import { setSafeSpace, type SafeSpaceCandidate, type SetSafeSpaceInput } from "./adminSafeSpaces.api";
 import { ADMIN_SAFE_SPACE_CANDIDATES_KEY } from "./useAdminSafeSpaces";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 /** How long the demo mode pretends the round-trip takes, to keep the UX honest. */
 const DEMO_LATENCY_MS = 500;
@@ -40,16 +40,16 @@ function demoCandidate(ref: string): SafeSpaceCandidate {
 export function useSetSafeSpace() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<SafeSpaceCandidate, Error, SetSafeSpaceVars>({
-    mutationFn: async ({ ref, body }) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.safeSpace.set (demo — no network)", {
-          ref,
-          status: body.status,
-        });
-        return { ...demoCandidate(ref), safeSpaceStatus: body.status };
-      }
+  return useDemoAwareMutation<SafeSpaceCandidate, Error, SetSafeSpaceVars>({
+    demoMode,
+    demoLatencyMs: DEMO_LATENCY_MS,
+    logLabel: "admin.safeSpace.set",
+    logContext: ({ ref, body }) => ({ ref, status: body.status }),
+    demoResult: ({ ref, body }) => ({
+      ...demoCandidate(ref),
+      safeSpaceStatus: body.status,
+    }),
+    live: async ({ ref, body }) => {
       const updatedListing = await setSafeSpace(ref, body);
       return {
         ref: updatedListing.ref,
@@ -59,8 +59,7 @@ export function useSetSafeSpace() {
         safeSpaceStatus: body.status,
       };
     },
-    onSuccess: () => {
-      if (demoMode) return;
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: [ADMIN_SAFE_SPACE_CANDIDATES_KEY],
       });

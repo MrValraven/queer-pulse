@@ -1,21 +1,20 @@
-import { useState, type FormEvent } from "react";
-import { Button } from "../../shared/components/ui";
+import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
-import { ReviewStarRating } from "./ReviewStarRating";
+import { ModalShell, SuccessPanel } from "./ModalKit";
+import { ReviewForm, type ReviewFormValues } from "./ReviewForm";
 import { useCreateReview } from "./api/useCompanyMutations";
 import type { CompanyReview } from "./companies.data";
-import shell from "./ApplicationModals.module.css";
 
 /**
  * Write a review for a single company. Demo prepends the review to local state
  * (via `onCreated`) and shows the plum-panel success; live POSTs it to
  * /companies/:slug/reviews and lets the invalidated query refetch. A repeat
- * review answers 409 — surfaced as a clear "already reviewed" toast.
+ * review answers 409 — surfaced as a clear "already reviewed" toast. The shared
+ * body lives in <ReviewForm>; this wrapper owns the demo/live submit branch.
  */
 export function CompanyReviewModal({
   slug,
@@ -32,23 +31,10 @@ export function CompanyReviewModal({
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const create = useCreateReview(slug);
-  const [title, setTitle] = useState("");
-  const [rating, setRating] = useState(0);
-  const [role, setRole] = useState("");
-  const [pros, setPros] = useState("");
-  const [cons, setCons] = useState("");
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
 
-  const canSubmit =
-    title.trim().length > 0 &&
-    rating > 0 &&
-    role.trim().length > 0 &&
-    (pros.trim().length > 0 || cons.trim().length > 0);
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!canSubmit) return;
+  async function handleSubmit({ title, rating, role, pros, cons }: ReviewFormValues) {
     const body: string[] = [];
     if (pros.trim()) body.push(`The good: ${pros.trim()}`);
     if (cons.trim()) body.push(`The hard parts: ${cons.trim()}`);
@@ -107,91 +93,23 @@ export function CompanyReviewModal({
           />
         </SuccessPanel>
       ) : (
-        <form onSubmit={(event) => void handleSubmit(event)}>
-          <div className={shell.eyebrow}>
-            {t("economy:company.reviews.writeReview")}
-          </div>
-          <h2 className={shell.title}>
-            <Translation
-              i18nKey="economy:companyReview.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={shell.sub}>{t("economy:companyReview.sub")}</p>
-
-          <div className={shell.field}>
-            <label htmlFor="cr-title">
-              {t("economy:companyReview.headlineLabel")}
-            </label>
-            <input
-              id="cr-title"
-              type="text"
-              placeholder={t("economy:companyReview.headlinePlaceholder")}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-
-          <div className={shell.field}>
-            <label>{t("economy:companyReview.overallRatingAriaLabel")}</label>
-            <ReviewStarRating value={rating} onChange={setRating} />
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="cr-role">
-              {t("economy:companyReview.roleLabel")}
-            </label>
-            <input
-              id="cr-role"
-              type="text"
-              placeholder={t("economy:companyReview.rolePlaceholder")}
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            />
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="cr-pros">
-              {t("economy:companyReview.prosLabel")}
-            </label>
-            <textarea
-              id="cr-pros"
-              placeholder={t("economy:companyReview.prosPlaceholder")}
-              value={pros}
-              onChange={(e) => setPros(e.target.value)}
-            />
-          </div>
-
-          <div className={shell.field}>
-            <label htmlFor="cr-cons">
-              {t("economy:companyReview.consLabel")}
-            </label>
-            <textarea
-              id="cr-cons"
-              placeholder={t("economy:companyReview.consPlaceholder")}
-              value={cons}
-              onChange={(e) => setCons(e.target.value)}
-            />
-          </div>
-
-          <div className={shell.foot}>
-            <button
-              type="button"
-              className={shell.back}
-              onClick={onClose}
-              disabled={sending}
-            >
-              {t("economy:companyReview.cancel")}
-            </button>
-            <Button size="lg" type="submit" disabled={sending || !canSubmit}>
-              {sending ? (
-                <Sending label={t("economy:companyReview.posting")} />
-              ) : (
-                t("economy:companyReview.submitCta")
-              )}
-            </Button>
-          </div>
-        </form>
+        <ReviewForm
+          idPrefix="cr"
+          showTitle
+          sending={sending}
+          onSubmit={(values) => void handleSubmit(values)}
+          onClose={onClose}
+          copy={{
+            eyebrow: t("economy:company.reviews.writeReview"),
+            sub: t("economy:companyReview.sub"),
+            roleLabel: t("economy:companyReview.roleLabel"),
+            rolePlaceholder: t("economy:companyReview.rolePlaceholder"),
+            prosPlaceholder: t("economy:companyReview.prosPlaceholder"),
+            consPlaceholder: t("economy:companyReview.consPlaceholder"),
+            headlineLabel: t("economy:companyReview.headlineLabel"),
+            headlinePlaceholder: t("economy:companyReview.headlinePlaceholder"),
+          }}
+        />
       )}
     </ModalShell>
   );

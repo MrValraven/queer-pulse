@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FiUploadCloud } from "react-icons/fi";
+import { FiArrowRight, FiUploadCloud } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Job } from "./jobs.data";
@@ -114,7 +114,8 @@ function WorkSection({ fields, setField }: SectionProps) {
             </span>
           </span>
           <span className={styles.uploadCta}>
-            {t("economy:jobApply.browse")}
+            {t("economy:jobApply.browse")}{" "}
+            <FiArrowRight aria-hidden />
           </span>
         </label>
       </FormField>
@@ -282,9 +283,14 @@ export function JobApplyForm({
             {t("economy:jobApply.saveDraft")}
           </Button>
           <Button type="submit" variant="primary" disabled={submitting}>
-            {submitting
-              ? t("economy:jobApply.sending")
-              : t("economy:jobApply.sendCta")}
+            {submitting ? (
+              t("economy:jobApply.sending")
+            ) : (
+              <>
+                {t("economy:jobApply.sendCta")}{" "}
+                <FiArrowRight aria-hidden />
+              </>
+            )}
           </Button>
         </div>
       </div>

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiFlag, FiMessageCircle, FiSlash, FiVolumeX } from "react-icons/fi";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Button, MemberIdentity } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/useConnect";
 import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionActions } from "./api/useConnectionActions";
 import { reasonLabel } from "./connectModal.data";
 import {
@@ -159,33 +159,23 @@ export function CardHead({
   view: ConnectionView;
   more?: boolean;
 }) {
-  const { t } = useTranslation();
-  const to = profilePath(view.slug);
+  // Staff role is resolved from the shared roster map (same source the message
+  // picker uses); MemberIdentity renders the StaffBadge from it.
+  const staffMap = useStaffMap();
+  const secondary = [view.pron, view.role].filter(Boolean).join(" · ");
   return (
     <div className={styles.cardHead}>
-      <Link
-        to={to}
-        aria-label={t("connect:card.profileAria", { name: view.name })}
-        className={styles.avLink}
-      >
-        <Avatar
-          initials={view.initials}
-          tint={view.tint}
-          src={view.photo}
-          size={54}
-          alt={view.name}
-        />
-      </Link>
-      <div>
-        <div className={styles.name}>
-          <span className={styles.nameRow}>
-            <Link to={to}>{view.name}</Link>
-            <MemberStaffBadge slug={view.slug} />
-          </span>
-        </div>
-        {view.pron && <div className={styles.pron}>{view.pron}</div>}
-        <div className={styles.role}>{view.role}</div>
-      </div>
+      <MemberIdentity
+        person={{
+          slug: view.slug,
+          name: view.name,
+          avatarUrl: view.photo,
+          staffRole: staffMap[view.slug],
+        }}
+        secondary={secondary}
+        to={profilePath(view.slug)}
+        size={54}
+      />
       {more && (
         <ConnectionMoreMenu
           slug={view.slug}

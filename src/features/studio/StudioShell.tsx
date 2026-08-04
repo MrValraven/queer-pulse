@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -76,7 +77,8 @@ export function StudioShell({
             </div>
             <div className={styles.topRight}>
               <Link to={routes.studioDashboard} className={styles.creatorLink}>
-                {t("studio:shell.forArtistsCta")} →
+                {t("studio:shell.forArtistsCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
               <Link to={routes.cinemaMembership} className={styles.sustainPill}>
                 {t("studio:shell.sustainCta", {

@@ -1,8 +1,9 @@
-import { useState, type KeyboardEvent, type SyntheticEvent } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { Link } from "react-router-dom";
-import { FiBookmark, FiCheck, FiClock, FiFlag, FiMapPin } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiClock, FiFlag, FiMapPin } from "react-icons/fi";
 import { useSaved } from "../../app/providers/useSaved";
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, SaveButton } from "../../shared/components/ui";
+import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -10,13 +11,6 @@ import { useSayHello } from "./api/useSayHello";
 import { ReportListingModal } from "./ReportListingModal";
 import type { Profile } from "./flatmates.data";
 import styles from "./FlatmatesPage.module.css";
-
-/** Enter/Space activates a `span[role=button]` exactly like a native click. */
-function activateOnKey(handler: (event: SyntheticEvent) => void) {
-  return (event: KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") handler(event);
-  };
-}
 
 export function FlatmateCard({
   p,
@@ -47,9 +41,7 @@ export function FlatmateCard({
     onSayHello();
   };
 
-  const handleSave = (event: SyntheticEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleSave = () => {
     const now = toggleSave({
       id: savedId,
       kind: "flatmate",
@@ -134,27 +126,16 @@ export function FlatmateCard({
           </span>
         )}
         <div className={styles.footActions}>
-          <span
-            role="button"
-            tabIndex={0}
-            aria-pressed={saved}
-            aria-label={t(
+          <SaveButton
+            saved={saved}
+            onToggle={handleSave}
+            label={t(
               saved
-                ? "economy:flatmates.card.unsaveAriaLabel"
-                : "economy:flatmates.card.saveAriaLabel",
-              { name: p.name },
+                ? "economy:flatmates.card.saved"
+                : "economy:flatmates.card.save",
             )}
-            className={[styles.saveBtn, saved && styles.saveBtnOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={handleSave}
-            onKeyDown={activateOnKey(handleSave)}
-          >
-            <FiBookmark aria-hidden fill={saved ? "currentColor" : "none"} />
-            {t(
-              saved ? "economy:flatmates.card.saved" : "economy:flatmates.card.save",
-            )}
-          </span>
+            size="sm"
+          />
           <span
             role="button"
             tabIndex={0}
@@ -163,7 +144,7 @@ export function FlatmateCard({
             })}
             className={styles.reportBtn}
             onClick={handleReport}
-            onKeyDown={activateOnKey(handleReport)}
+            onKeyDown={(event) => activateOnKey(event, () => handleReport(event))}
           >
             <FiFlag aria-hidden />
           </span>
@@ -179,7 +160,10 @@ export function FlatmateCard({
                 <FiCheck /> {t("economy:flatmates.card.helloSent")}
               </>
             ) : (
-              t("economy:flatmates.card.sayHello")
+              <>
+                {t("economy:flatmates.card.sayHello")}{" "}
+                <FiArrowRight aria-hidden />
+              </>
             )}
           </button>
         </div>

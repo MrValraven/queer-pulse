@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { RefObject } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
@@ -82,7 +83,8 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
           />
         </div>
         <Link to={routes.governance} className={styles.acLink}>
-          {t("cinema:film.split.readDeedCta")}
+          {t("cinema:film.split.readDeedCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
 

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { Avatar, ImageSlot, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -37,7 +38,7 @@ export function IssueCover({
       <div className={styles.cover}>
         <div className={styles.coverInner}>
           <Link to={routes.magazine} className={styles.back}>
-            {t("magazine:issue.backToAllIssues")}
+            <FiArrowLeft aria-hidden /> {t("magazine:issue.backToAllIssues")}
           </Link>
           <div className={styles.spread}>
             <div>

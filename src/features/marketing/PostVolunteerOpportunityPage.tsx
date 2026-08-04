@@ -1,5 +1,6 @@
 import { type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn, SuccessPanel } from "../../shared/components/ui";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -66,7 +67,12 @@ export function PostVolunteerOpportunityPage() {
               <SuccessPanel
                 title={t("marketing:postOpportunity.success.title")}
                 em={t("marketing:postOpportunity.success.em")}
-                closeLabel={t("marketing:postOpportunity.success.closeLabel")}
+                closeLabel={
+                  <>
+                    {t("marketing:postOpportunity.success.closeLabel")}{" "}
+                    <FiArrowRight aria-hidden />
+                  </>
+                }
                 onClose={() => void navigate(routes.volunteer)}
                 steps={[
                   t("marketing:postOpportunity.success.step1"),
@@ -94,6 +100,7 @@ export function PostVolunteerOpportunityPage() {
                     {create.isPending
                       ? t("marketing:postOpportunity.actions.posting")
                       : t("marketing:postOpportunity.actions.submit")}
+                    {!create.isPending && <FiArrowRight aria-hidden />}
                   </Button>
                   <Button variant="ghost" to={routes.volunteer}>
                     {t("marketing:postOpportunity.actions.cancel")}

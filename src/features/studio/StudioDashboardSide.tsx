@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -35,7 +36,9 @@ export function StudioDashboardSide() {
                 {t("studio:dashboard.side.quickActions.upload.hint")}
               </small>
             </span>
-            <span className={s.quickArr}>→</span>
+            <span className={s.quickArr} aria-hidden>
+              <FiArrowRight />
+            </span>
           </Link>
           <Link to={routes.studio} className={s.quickItem}>
             <span className={s.quickIc}>
@@ -53,7 +56,9 @@ export function StudioDashboardSide() {
               {t("studio:dashboard.side.quickActions.goLive.label")}
               <small>Plan: Wed 10 Jun · premiere of Cidade dos santos</small>
             </span>
-            <span className={s.quickArr}>→</span>
+            <span className={s.quickArr} aria-hidden>
+              <FiArrowRight />
+            </span>
           </Link>
           <Link to={routes.studioPayouts} className={s.quickItem}>
             <span className={s.quickIc}>
@@ -70,7 +75,9 @@ export function StudioDashboardSide() {
               {t("studio:dashboard.side.quickActions.payouts.label")}
               <small>Next: €2,140 on 5 Jul · SEPA</small>
             </span>
-            <span className={s.quickArr}>→</span>
+            <span className={s.quickArr} aria-hidden>
+              <FiArrowRight />
+            </span>
           </Link>
         </div>
       </div>

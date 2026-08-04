@@ -1,4 +1,4 @@
-import { FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiHeart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Button, SuccessPanel } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
@@ -23,7 +23,11 @@ export function StartCommunitySuccess({
       icon={<FiHeart size={26} color="var(--jade)" aria-hidden />}
       title={t("communities:start.success.title")}
       em={t("communities:start.success.em")}
-      closeLabel={t("communities:start.success.closeLabel")}
+      closeLabel={
+        <>
+          {t("communities:start.success.closeLabel")} <FiArrowRight aria-hidden />
+        </>
+      }
       onClose={() => void navigate(`/community/${community.slug}`)}
       steps={[
         <Translation

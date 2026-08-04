@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, FormField } from "../../shared/components/ui";
+import { FiArrowRight } from "react-icons/fi";
+import { Button, FormField, StatGrid, StatTile } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -259,39 +260,19 @@ export function ModerationLogSection() {
             />
           </h3>
           <p>{t("safety:report.modLog.meta")}</p>
-          <div className={s.logStats}>
+          <StatGrid tone="contrast">
             {LOG.map((stat) => (
-              <div key={stat.labelKey} className={s.logStat}>
-                <div
-                  className="n"
-                  style={{
-                    fontFamily: "var(--serif)",
-                    fontWeight: 300,
-                    fontSize: 38,
-                    color: "var(--cream)",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1,
-                  }}
-                >
-                  {stat.number}
-                </div>
-                <div
-                  className="l"
-                  style={{
-                    fontSize: 12,
-                    color: "rgba(247,243,238,.55)",
-                    marginTop: 6,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {t(stat.labelKey)}
-                </div>
-              </div>
+              <StatTile
+                key={stat.labelKey}
+                value={stat.number}
+                label={t(stat.labelKey)}
+              />
             ))}
-          </div>
+          </StatGrid>
           <div className={s.modActions}>
             <Button variant="ghost-dark" to={routes.governance}>
-              {t("safety:report.modLog.viewReportCta")}
+              {t("safety:report.modLog.viewReportCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { FadeIn, Button } from "../../shared/components/ui";
 import { StudioShell } from "./StudioShell";
 import { routes } from "../../app/routeMap";
@@ -125,7 +126,7 @@ export function StudioAboutPage() {
               {about.cta.join}
             </Button>
             <Button variant="ghost-dark" size="lg" to={routes.governance}>
-              {about.cta.ledger}
+              {about.cta.ledger} <FiArrowRight aria-hidden />
             </Button>
           </div>
         </FadeIn>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiHome } from "react-icons/fi";
+import { FiArrowRight, FiHome } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -177,7 +177,8 @@ export function FlatmatesBoard() {
           {t("economy:flatmates.postProfileCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          {t("economy:flatmates.outro.askForum")}
+          {t("economy:flatmates.outro.askForum")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
 

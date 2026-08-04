@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -145,7 +145,8 @@ export function DirectorySpaceAside({
               className={s.ctaBtn}
               href={websiteHref(place.social.website)}
             >
-              {t("marketing:directory.detail.visitWebsite")}
+              {t("marketing:directory.detail.visitWebsite")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           ) : place.social.email ? (
             <Button
@@ -153,7 +154,8 @@ export function DirectorySpaceAside({
               className={s.ctaBtn}
               href={`mailto:${place.social.email}`}
             >
-              {t("marketing:directory.detail.getInTouch")}
+              {t("marketing:directory.detail.getInTouch")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           ) : null}
           {!preview && (
@@ -196,7 +198,8 @@ export function DirectorySpaceAside({
           >
             {t("marketing:directory.detail.viewProfile", {
               name: place.owner.first,
-            })}
+            })}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         )}
         {/* Non-owners who actually run this place get a way in: the list-a-
@@ -204,7 +207,8 @@ export function DirectorySpaceAside({
             already have "Edit this listing") and in the read-only preview. */}
         {!ownerRef && !preview && (
           <Link to={routes.listBusiness} className={s.claimLink}>
-            {t("marketing:directory.detail.claimCta")}
+            {t("marketing:directory.detail.claimCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         )}
       </div>

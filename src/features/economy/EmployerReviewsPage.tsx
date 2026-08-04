@@ -4,7 +4,7 @@ import { routes } from "../../app/routeMap";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { FiShield } from "react-icons/fi";
+import { FiArrowRight, FiShield } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { COMPANIES, HOW, type Company } from "./employerReviews.data";
@@ -113,10 +113,12 @@ export function EmployerReviewsPage() {
             </div>
             <div className={styles.secActions}>
               <Button to={routes.jobs} variant="ghost">
-                {t("economy:employerReviews.recent.browseCta")}
+                {t("economy:employerReviews.recent.browseCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
               <Button variant="ghost" onClick={() => setWriteFor("")}>
-                {t("economy:employerReviews.recent.writeCta")}
+                {t("economy:employerReviews.recent.writeCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             </div>
           </div>
@@ -144,7 +146,12 @@ export function EmployerReviewsPage() {
               title={t("economy:employerReviews.emptyLive.title")}
               description={t("economy:employerReviews.emptyLive.description")}
               action={{
-                label: t("economy:employerReviews.recent.writeCta"),
+                label: (
+                  <>
+                    {t("economy:employerReviews.recent.writeCta")}{" "}
+                    <FiArrowRight aria-hidden />
+                  </>
+                ),
                 onClick: () => setWriteFor(""),
               }}
             />

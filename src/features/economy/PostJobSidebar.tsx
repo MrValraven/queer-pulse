@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -86,7 +87,8 @@ export function PostJobSidebar({
             className={styles.viewFull}
             onClick={onOpenFull}
           >
-            {t("economy:postJob.sidebar.viewFullCta")}
+            {t("economy:postJob.sidebar.viewFullCta")}{" "}
+            <FiArrowRight aria-hidden />
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiPlus, FiCheck } from "react-icons/fi";
+import { FiPlus, FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -135,7 +135,7 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 )}
               </button>
               <Link to={routes.studioTrack} className={s.bt}>
-                {t("studio:liveNow.lyricsNotesCta")}
+                {t("studio:liveNow.lyricsNotesCta")} <FiArrowRight aria-hidden />
               </Link>
             </div>
           </div>

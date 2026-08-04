@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiChevronDown } from "react-icons/fi";
+import { FiArrowRight, FiChevronDown } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -142,7 +142,7 @@ export function VoiceRooms() {
                 <div className={styles.grMeta}>{room.meta}</div>
               </div>
               <span className={styles.grArrow} aria-hidden>
-                →
+                <FiArrowRight />
               </span>
             </Link>
           ))}

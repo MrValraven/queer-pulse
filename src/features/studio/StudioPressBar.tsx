@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { useShareLink } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -10,14 +11,15 @@ import styles from "./StudioPressPage.module.css";
 export function StudioPressBar() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { share } = useShareLink({
+    copied: t("studio:press.copiedToast"),
+    failed: t("studio:press.bar.copyLinkFailToast"),
+  });
 
   function copyLink() {
     const url =
       typeof window !== "undefined" ? window.location.href : routes.studioPress;
-    navigator.clipboard?.writeText(url).then(
-      () => showToast(t("studio:press.copiedToast"), "success"),
-      () => showToast(t("studio:press.bar.copyLinkFailToast"), "info"),
-    );
+    void share(url);
   }
 
   return (

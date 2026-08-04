@@ -258,7 +258,7 @@ export const HIV_INFO: InfoCard[] = [
     title: "Just tested positive?",
     body: "Take a breath. Modern HIV treatment is effective and straightforward. The CAD service or your GP can refer you immediately to an infectious disease specialist. Treatment usually begins within days of diagnosis.",
     link: {
-      label: "Linha SIDA: 800 210 008 (free) →",
+      label: "Linha SIDA: 800 210 008 (free)",
       href: "tel:800210008",
       external: true,
     },
@@ -272,13 +272,13 @@ export const HIV_INFO: InfoCard[] = [
     icon: FiUsers,
     title: "Community peer support",
     body: "The QueerPulse HIV+ peer support group is private, moderated, and limited to members who have opted in. A space to share experience without stigma or unsolicited advice.",
-    link: { label: "Find the group →", href: routes.communities },
+    link: { label: "Find the group", href: routes.communities },
   },
   {
     icon: LuScale,
     title: "Rights & non-disclosure",
     body: "Portuguese law on HIV criminalisation is nuanced. You are not legally obligated to disclose to every partner in every situation. The legal reality is complex — talk to GAT or a lawyer if you have concerns.",
-    link: { label: "Legal resources →", href: routes.legal },
+    link: { label: "Legal resources", href: routes.legal },
   },
 ];
 
@@ -302,18 +302,18 @@ export const GUIDES: InfoCard[] = [
     icon: FiMessageCircle,
     title: "Talking to partners about testing",
     body: "A practical guide to having the conversation — different scripts for different situations. Written by community members, not clinical guidelines.",
-    link: { label: "Read the guide →", href: "#" },
+    link: { label: "Read the guide", href: "#" },
   },
   {
     icon: LuLeaf,
     title: "Sexual health & substance use",
     body: "Practical harm reduction for people who use substances in sexual contexts — chemsex, MDMA, alcohol. No judgment, practical information about risk reduction.",
-    link: { label: "Read the guide →", href: routes.harmReduction },
+    link: { label: "Read the guide", href: routes.harmReduction },
   },
   {
     icon: LuDna,
     title: "Sexual health for trans & non-binary people",
     body: "Bodies vary, practices vary, and most sexual health guidance is written for cisgender people. A community-written guide to navigating the system and finding clinicians who understand.",
-    link: { label: "Trans Hub →", href: routes.transHub },
+    link: { label: "Trans Hub", href: routes.transHub },
   },
 ];

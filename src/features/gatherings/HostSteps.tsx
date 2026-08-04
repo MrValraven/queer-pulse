@@ -1,4 +1,4 @@
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -135,7 +135,8 @@ export function HostSteps() {
           <p>{t("gatherings:host.step5.body1")}</p>
           <p>{t("gatherings:host.step5.body2")}</p>
           <Button to={routes.contact}>
-            {t("gatherings:host.step5.cta")} →
+            {t("gatherings:host.step5.cta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
       </Reveal>

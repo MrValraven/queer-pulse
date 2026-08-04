@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -79,7 +80,8 @@ export function StudioArtistSidebar({ onTip }: { onTip: () => void }) {
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          {t("studio:detail.fullLedgerCta")} →
+          {t("studio:detail.fullLedgerCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
 

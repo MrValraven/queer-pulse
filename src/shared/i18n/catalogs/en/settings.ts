@@ -505,7 +505,7 @@ export const settings: Catalog = {
   // fallback for GET /account/sessions, live device/UA content) ────────────
   "sessions.ago.justNow": "just now",
   "sessions.ago.unknown": "unknown",
-  "sessions.backToSecurity": "← Security",
+  "sessions.backToSecurity": "Security",
   "sessions.eyebrow": "Security · Active sessions",
   "sessions.h1": "Where you're <em>signed in</em> right now.",
   "sessions.lead":
@@ -553,6 +553,7 @@ export const settings: Catalog = {
   "dataExport.outro.cta": "Contact us",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────
+  "dataExport.steps.aria": "Export progress",
   "dataExport.steps.step1.label": "Choose what to export",
   "dataExport.steps.step1.desc":
     "Select the data types you want included in your archive.",
@@ -877,7 +878,7 @@ export const settings: Catalog = {
   "themeStudio.badge.sustainer": "Sustainer (Rare)",
   "themeStudio.badge.regular": "Regular (Rare)",
   "themeStudio.badge.vouch": "Vouch (Rare)",
-  "themeStudio.backToProfile": "← My profile",
+  "themeStudio.backToProfile": "My profile",
   "themeStudio.saveTheme": "Save theme",
   "themeStudio.toast.saved": "Theme saved",
 
@@ -942,6 +943,7 @@ export const settings: Catalog = {
   "security.scope.out.7": "Missing security headers (report only)",
 
   "security.process.eyebrow": "Process",
+  "security.process.aria": "What happens after you report",
   "security.process.title": "What happens <em>after you report.</em>",
   "security.process.step1.title": "Acknowledgement",
   "security.process.step1.text":

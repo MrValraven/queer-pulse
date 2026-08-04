@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -162,7 +163,8 @@ export function LibraryPage() {
                   <div className={res.cardFoot}>
                     <span className={res.cardLoc}>{guide.meta}</span>
                     <Link to={guide.to} className={res.cardCta}>
-                      {t("resources:library.readGuideCta")}
+                      {t("resources:library.readGuideCta")}{" "}
+                      <FiArrowRight aria-hidden />
                     </Link>
                   </div>
                 </FadeIn>

@@ -1,8 +1,10 @@
 import type { SyntheticEvent } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import {
@@ -78,11 +80,10 @@ export function BarterCard({ barter: b }: Props) {
           tabIndex={0}
           className={styles.bcReach}
           onClick={propose}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") propose(e);
-          }}
+          onKeyDown={(e) => activateOnKey(e, () => propose(e))}
         >
-          {t("economy:barter.card.proposeCta")}
+          {t("economy:barter.card.proposeCta")}{" "}
+          <FiArrowRight aria-hidden />
         </span>
       </div>
     </Link>

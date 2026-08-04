@@ -1,4 +1,4 @@
-import { FiFeather } from "react-icons/fi";
+import { FiArrowRight, FiFeather } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -148,7 +148,8 @@ export function PublicProfileOwnPreview() {
             body={t("members:publicProfile.locked.postsBody", { first })}
             action={
               <Button variant="primary" to={routes.requestInvite}>
-                {t("members:publicProfile.requestInviteArrow")}
+                {t("members:publicProfile.requestInviteArrow")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             }
           />

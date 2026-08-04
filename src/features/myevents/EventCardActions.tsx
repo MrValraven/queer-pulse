@@ -1,4 +1,5 @@
 import type { MouseEvent, ReactNode } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -41,7 +42,8 @@ export function EventSide({ ev }: { ev: MyEvent }) {
               </Button>
             )}
             <Link className={sx("ev-link")} to={detailPath(ev)}>
-              {t("myevents:side.eventDetailsCta")}
+              {t("myevents:side.eventDetailsCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           </>
         ))}
@@ -52,14 +54,16 @@ export function EventSide({ ev }: { ev: MyEvent }) {
             {t("myevents:side.manageCta")}
           </Button>
           <Link className={sx("ev-link")} to={detailPath(ev)}>
-            {t("myevents:side.viewListingCta")}
+            {t("myevents:side.viewListingCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </>
       )}
 
       {ev.category === "waitlisted" && (
         <Link className={sx("ev-link")} to={detailPath(ev)}>
-          {t("myevents:side.eventDetailsCta")}
+          {t("myevents:side.eventDetailsCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       )}
 
@@ -67,7 +71,8 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         <>
           {ev.photos ? (
             <Link className={sx("ev-link")} to={PHOTOS}>
-              {t("myevents:side.seePhotosCta")}
+              {t("myevents:side.seePhotosCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           ) : (
             <button
@@ -75,12 +80,14 @@ export function EventSide({ ev }: { ev: MyEvent }) {
               className={sx("ev-link quiet")}
               onClick={() => toast(t("myevents:side.leaveNoteToast"))}
             >
-              {t("myevents:side.leaveNoteCta")}
+              {t("myevents:side.leaveNoteCta")}{" "}
+              <FiArrowRight aria-hidden />
             </button>
           )}
           {ev.receipt && (
             <Link className={sx("ev-link quiet")} to={RECEIPT}>
-              {t("myevents:side.receiptCta")}
+              {t("myevents:side.receiptCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           )}
         </>
@@ -109,7 +116,8 @@ export function EventSide({ ev }: { ev: MyEvent }) {
               softRemove(ev.id, t("myevents:side.removedFromSavedToast"))
             }
           >
-            {t("myevents:side.removeCta")}
+            {t("myevents:side.removeCta")}{" "}
+            <FiArrowRight aria-hidden />
           </button>
         </>
       )}
@@ -127,7 +135,8 @@ export function EventSide({ ev }: { ev: MyEvent }) {
 
       {ev.category === "sent" && (
         <Link className={sx("ev-link")} to={MANAGE}>
-          {t("myevents:side.manageInviteCta")}
+          {t("myevents:side.manageInviteCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       )}
     </div>

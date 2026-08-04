@@ -1,3 +1,4 @@
+import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -27,7 +28,9 @@ export function StudioFundFlows() {
       <div className={s.flow2}>
         <div className={s.flowCol}>
           <h3>
-            <span style={{ color: "var(--jade-light)" }}>▼</span>{" "}
+            <span style={{ color: "var(--jade-light)" }} aria-hidden>
+              <FiArrowDown />
+            </span>{" "}
             {t("studio:fund.flows.inHeading")}
           </h3>
           {IN.map((f, i) => (
@@ -49,7 +52,9 @@ export function StudioFundFlows() {
         </div>
         <div className={s.flowCol}>
           <h3>
-            <span style={{ color: "var(--accent)" }}>▲</span>{" "}
+            <span style={{ color: "var(--accent)" }} aria-hidden>
+              <FiArrowUp />
+            </span>{" "}
             {t("studio:fund.flows.outHeading")}
           </h3>
           {OUT.map((f, i) => (

@@ -8,10 +8,8 @@ import {
   type SortKey,
 } from "./editorDashboard.data";
 import type { FilterKey } from "./useEditorDashboard";
+import { cx } from "../../shared/lib/cx";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
 
 const STATUS_OPTS: [string, string][] = [
   ["all", "magazine:editor.toolbar.status.all"],

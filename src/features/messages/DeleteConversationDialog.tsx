@@ -1,5 +1,4 @@
-import { Button } from "../../shared/components/ui";
-import { Modal } from "../../shared/components/ui/Modal";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
 export interface DeleteConversationDialogProps {
@@ -13,7 +12,9 @@ export interface DeleteConversationDialogProps {
 
 /** Confirm dialog for deleting a conversation for the current user only. The
  *  other member keeps their copy; the thread returns with fresh history if they
- *  message again. Escape/scrim/cancel all dismiss. */
+ *  message again. Escape/scrim/cancel all dismiss. Built on the shared
+ *  {@link ConfirmDialog} (destructive tone); mounted only while it should show,
+ *  so `open` is always true here. */
 export function DeleteConversationDialog({
   name,
   onConfirm,
@@ -22,25 +23,20 @@ export function DeleteConversationDialog({
 }: DeleteConversationDialogProps) {
   const { t } = useTranslation();
   return (
-    <Modal
-      title={t("messages:deleteChat.confirmTitle")}
+    <ConfirmDialog
+      open
+      tone="destructive"
+      loading={pending}
       onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t("messages:deleteChat.cancelCta")}
-          </Button>
-          <Button variant="primary" onClick={onConfirm} disabled={pending}>
-            {t("messages:deleteChat.confirmCta")}
-          </Button>
-        </>
-      }
-    >
-      <p>
-        {name
+      onConfirm={onConfirm}
+      title={t("messages:deleteChat.confirmTitle")}
+      description={
+        name
           ? t("messages:deleteChat.confirmBody", { name })
-          : t("messages:deleteChat.confirmBodyGeneric")}
-      </p>
-    </Modal>
+          : t("messages:deleteChat.confirmBodyGeneric")
+      }
+      confirmLabel={t("messages:deleteChat.confirmCta")}
+      cancelLabel={t("messages:deleteChat.cancelCta")}
+    />
   );
 }

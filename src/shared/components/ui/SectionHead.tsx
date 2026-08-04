@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import styles from "./SectionHead.module.css";
 
 interface SectionHeadProps extends Omit<
@@ -42,7 +43,8 @@ export function SectionHead({
         <div className={styles.aside}>
           {linkLabel && (
             <Link to={linkTo ?? "#"} className={styles.link}>
-              {linkLabel}
+              {linkLabel}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           )}
           {action}

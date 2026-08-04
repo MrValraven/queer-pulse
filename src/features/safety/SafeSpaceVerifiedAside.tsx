@@ -1,4 +1,5 @@
 import { Button } from "../../shared/components/ui";
+import { useClipboard } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -37,10 +38,12 @@ export function SafeSpaceVerifiedAside({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { copy } = useClipboard();
   const share = () => {
-    if (navigator.clipboard)
-      void navigator.clipboard.writeText(window.location.href);
-    showToast(t("safety:spaces.detail.linkCopiedToast"), "success");
+    void copy(window.location.href).then((didCopy) => {
+      if (didCopy)
+        showToast(t("safety:spaces.detail.linkCopiedToast"), "success");
+    });
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FiCompass } from "react-icons/fi";
+import { FiArrowRight, FiCompass } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -89,7 +89,9 @@ export function FamilyPage() {
                 <div className={styles.sitDesc}>
                   {t(`community:${s.descriptionKey}`)}
                 </div>
-                <div className={styles.sitTo}>{t(`community:${s.toKey}`)}</div>
+                <div className={styles.sitTo}>
+                  {t(`community:${s.toKey}`)} <FiArrowRight aria-hidden />
+                </div>
               </button>
             ))}
           </div>

@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiBookOpen } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
   Button,
-  EmptyState,
   ImageSlot,
   Reveal,
   Tag,
 } from "../../shared/components/ui";
+import { MagazineComingSoon } from "./MagazineComingSoon";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -91,7 +91,9 @@ function SectionHead({
   return (
     <div className={styles.asHead} id={id}>
       <div className={styles.asTitle}>{title}</div>
-      <span className={styles.asSeeAll}>{t(allCtaKey)}</span>
+      <span className={styles.asSeeAll}>
+        {t(allCtaKey)} <FiArrowRight aria-hidden />
+      </span>
     </div>
   );
 }
@@ -121,7 +123,8 @@ function FeaturedEssay() {
           knew?
         </p>
         <Link className={styles.feRead} to={`${routes.article}?id=i-arrived`}>
-          {t("magazine:sections.readEssayCta")} <span>→</span>
+          {t("magazine:sections.readEssayCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div className={styles.fePull}>
@@ -158,7 +161,7 @@ function FeaturedDeck() {
           className={styles.feRead}
           to={`${routes.deck}?id=${FEATURED_DECK.id}`}
         >
-          {t("magazine:deck.start")} <span>→</span>
+          {t("magazine:deck.start")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </Reveal>
@@ -236,7 +239,6 @@ function SubmitBanner() {
 }
 
 export function MagazineSections() {
-  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
 
   // The whole magazine front is fabricated editorial content. Live mode has no
@@ -246,15 +248,7 @@ export function MagazineSections() {
     return (
       <div className={styles.body}>
         <div className="wrap">
-          <EmptyState
-            icon={<FiBookOpen />}
-            title={t("magazine:sections.emptyLive.title")}
-            description={t("magazine:sections.emptyLive.description")}
-            action={{
-              label: t("magazine:sections.submit.cta"),
-              to: routes.submitStory,
-            }}
-          />
+          <MagazineComingSoon />
         </div>
       </div>
     );

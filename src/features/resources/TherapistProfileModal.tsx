@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiCheck, FiX } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -102,7 +102,10 @@ export function TherapistProfileModal({
                   {t("resources:suggestEdit.sendingLabel")}
                 </span>
               ) : (
-                t("resources:mentalHealth.therapistModal.sayHelloCta")
+                <>
+                  {t("resources:mentalHealth.therapistModal.sayHelloCta")}{" "}
+                  <FiArrowRight aria-hidden />
+                </>
               )}
             </Button>
           </div>

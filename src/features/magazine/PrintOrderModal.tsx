@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -151,7 +152,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 onClick={onClose}
                 disabled={stage === "placing"}
               >
-                {t("magazine:printOrder.cancelCta")}
+                <FiArrowLeft aria-hidden /> {t("magazine:printOrder.cancelCta")}
               </button>
               <Button
                 size="lg"

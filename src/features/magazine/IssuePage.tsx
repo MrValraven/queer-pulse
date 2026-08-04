@@ -1,9 +1,6 @@
-import { FiBookOpen } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState } from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { routes } from "../../app/routeMap";
+import { MagazineComingSoon } from "./MagazineComingSoon";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { IssueCover } from "./IssueCover";
 import { IssueContents } from "./IssueContents";
@@ -16,7 +13,6 @@ import styles from "./IssuePage.module.css";
 const CURRENT_ISSUE_NUMBER = "09";
 
 export function IssuePage() {
-  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { data: liveIssue, isLoading, isError } = useIssue(CURRENT_ISSUE_NUMBER);
 
@@ -32,14 +28,9 @@ export function IssuePage() {
       {showEmpty ? (
         <div className="wrap">
           <div className={styles.liveEmpty}>
-            <EmptyState
-              icon={<FiBookOpen />}
-              title={t("magazine:issue.emptyLiveTitle")}
-              description={t("magazine:issue.emptyLiveBody")}
-              action={{
-                label: t("magazine:sections.submit.cta"),
-                to: routes.submitStory,
-              }}
+            <MagazineComingSoon
+              titleKey="magazine:issue.emptyLiveTitle"
+              descriptionKey="magazine:issue.emptyLiveBody"
             />
           </div>
         </div>

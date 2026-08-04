@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -124,7 +125,8 @@ export function SplitVisual() {
           </p>
           <p>{t("cinema:about.split.body3")}</p>
           <Link to={routes.governance} className={styles.svLink}>
-            {t("cinema:about.split.viewAccountsCta")}
+            {t("cinema:about.split.viewAccountsCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={styles.svVisual}>
@@ -239,7 +241,8 @@ export function Governance() {
           ))}
           <div className={styles.govAction}>
             <Button variant="ghost-dark" to={routes.governance}>
-              {t("cinema:about.gov.fullAccountsCta")}
+              {t("cinema:about.gov.fullAccountsCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>
@@ -258,7 +261,8 @@ export function Governance() {
           ))}
           <div className={styles.govAction}>
             <Button variant="ghost-dark" to={routes.cinemaMembership}>
-              {t("cinema:about.gov.rightsCta")}
+              {t("cinema:about.gov.rightsCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

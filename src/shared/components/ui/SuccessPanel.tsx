@@ -10,7 +10,7 @@ interface SuccessPanelProps {
   em?: string;
   children: ReactNode;
   onClose: () => void;
-  closeLabel?: string;
+  closeLabel?: ReactNode;
   /** Optional checklist of next steps, each rendered with a jade tick. */
   steps?: ReactNode[];
   /** Optional content below the primary action — e.g. an undo affordance. */

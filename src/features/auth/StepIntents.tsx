@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import {
   Button,
@@ -122,7 +123,7 @@ function StepIntentsForm({
           {t("auth:onboarding.stepIntents.continue")}
         </Button>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:onboarding.stepIntents.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepIntents.back")}
         </button>
       </div>
     </>

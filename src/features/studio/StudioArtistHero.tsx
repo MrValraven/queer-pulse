@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
+import { useShareLink } from "../../shared/hooks";
 import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,6 +9,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { heroImage, ARTIST_ID } from "./studioArtist.data";
 import { routes } from "../../app/routeMap";
+import { StudioDetailHero } from "./StudioDetailHero";
 import styles from "./studio.module.css";
 
 const ARTIST_NAME = "Mariana Sol";
@@ -18,20 +20,19 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
   const fmt = useFormat();
   const { isFollowing, toggleFollow } = useSocial();
   const { showToast } = useToast();
+  const { share } = useShareLink({
+    copied: t("studio:detail.linkCopiedToast"),
+    failed: t("studio:detail.copyFailedToast"),
+  });
   const following = isFollowing(ARTIST_ID);
 
-  function share() {
-    const url =
-      typeof window !== "undefined" ? window.location.href : "/studio/artist";
-    navigator.clipboard?.writeText(url).then(
-      () => showToast(t("studio:detail.linkCopiedToast"), "success"),
-      () => showToast(t("studio:detail.copyFailedToast"), "info"),
-    );
-  }
+  const shareUrl =
+    typeof window !== "undefined" ? window.location.href : "/studio/artist";
 
   return (
-    <section className={styles.detailHero}>
-      <div className={styles.detailArt} style={{ borderRadius: "50%" }}>
+    <StudioDetailHero
+      artStyle={{ borderRadius: "50%" }}
+      art={
         <ImageSlot
           src={heroImage}
           tint="coral"
@@ -45,16 +46,21 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
           loading="eager"
           fetchPriority="high"
         />
-      </div>
-      <div>
-        <div className={styles.kind}>Artist · Sintra</div>
-        <h1>
+      }
+      kind="Artist · Sintra"
+      title={
+        <>
           Mariana <em>Sol</em>
-        </h1>
-        <div className={styles.by}>
-          8 releases · 15 sheet-music sets · <strong>4,200 sustainers</strong>
-        </div>
-        <div className={styles.heroActions}>
+        </>
+      }
+      by={
+        <>
+          8 releases · 15 sheet-music sets ·{" "}
+          <strong>4,200 sustainers</strong>
+        </>
+      }
+      actions={
+        <>
           <Link
             to={routes.studioAlbum}
             className={styles.playBig}
@@ -94,34 +100,35 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
             <FiHeart />{" "}
             {t("studio:detail.tipArtistCta", { artist: ARTIST_NAME })}
           </button>
-          <button type="button" onClick={share}>
+          <button type="button" onClick={() => void share(shareUrl)}>
             {t("studio:detail.shareCta")}
           </button>
-        </div>
-        <div className={styles.payPill}>
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
-          <span>
-            <Translation
-              i18nKey="studio:artist.hero.subscribeNote"
-              components={{ em: <em /> }}
-              values={{
-                amount: fmt.currency(SUBSCRIBE_AMOUNT),
-                artist: ARTIST_NAME,
-              }}
-            />{" "}
-            <span className={styles.small}>
-              {t("studio:artist.hero.tipOnTopNote")}
-            </span>
+        </>
+      }
+    >
+      <div className={styles.payPill}>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+        <span>
+          <Translation
+            i18nKey="studio:artist.hero.subscribeNote"
+            components={{ em: <em /> }}
+            values={{
+              amount: fmt.currency(SUBSCRIBE_AMOUNT),
+              artist: ARTIST_NAME,
+            }}
+          />{" "}
+          <span className={styles.small}>
+            {t("studio:artist.hero.tipOnTopNote")}
           </span>
-        </div>
+        </span>
       </div>
-    </section>
+    </StudioDetailHero>
   );
 }

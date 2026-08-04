@@ -203,7 +203,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Regional" },
       { label: "Partner tier", value: "Founding", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       phoneNote: "helpline",
@@ -356,7 +356,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Local" },
       { label: "Partner tier", value: "Health", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -504,7 +504,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Nationwide" },
       { label: "Partner tier", value: "Youth", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -650,7 +650,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Regional" },
       { label: "Partner tier", value: "Advocacy", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -834,7 +834,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Greater Lisbon" },
       { label: "Partner tier", value: "Operational", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       phoneNote: "reception",
@@ -1014,7 +1014,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Regional" },
       { label: "Partner tier", value: "Funder", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -1158,7 +1158,7 @@ export const PARTNERS: Partner[] = [
       { label: "Members", value: "~1,000" },
       { label: "Reach", value: "Partner-city metro" },
       { label: "Partner tier", value: "Sister", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -1306,7 +1306,7 @@ export const PARTNERS: Partner[] = [
       { label: "Focus", value: "Culture & exchange" },
       { label: "Reach", value: "Partner city" },
       { label: "Partner tier", value: "Exchange", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -1451,7 +1451,7 @@ export const PARTNERS: Partner[] = [
       { label: "Focus", value: "Diaspora arts" },
       { label: "Reach", value: "Global" },
       { label: "Partner tier", value: "Solidarity", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",
@@ -1596,7 +1596,7 @@ export const PARTNERS: Partner[] = [
       { label: "HQ", value: "Lisbon" },
       { label: "Reach", value: "Regional" },
       { label: "Partner tier", value: "Support", accent: "coral" },
-      { label: "Status", value: "● Active", accent: "jade" },
+      { label: "Status", value: "Active", accent: "jade" },
     ],
     contact: {
       email: "hello@example.org",

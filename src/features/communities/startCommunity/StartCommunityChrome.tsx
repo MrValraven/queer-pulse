@@ -1,5 +1,5 @@
-import { Fragment } from "react";
-import { FiAlertCircle } from "react-icons/fi";
+import { Fragment, type ReactNode } from "react";
+import { FiAlertCircle, FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Button, Stepper, type StepperStep } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -62,7 +62,7 @@ export function PanelActions({
   flush,
 }: {
   onBack: () => void;
-  backLabel?: string;
+  backLabel?: ReactNode;
   onNext: () => void;
   nextLabel: string;
   missing: string[];
@@ -91,7 +91,11 @@ export function PanelActions({
       )}
       <div className={styles.paneActions}>
         <Button variant="ghost" onClick={onBack}>
-          {backLabel ?? t("communities:start.back")}
+          {backLabel ?? (
+            <>
+              <FiArrowLeft aria-hidden /> {t("communities:start.back")}
+            </>
+          )}
         </Button>
         <Button
           variant="primary"
@@ -101,7 +105,8 @@ export function PanelActions({
             blocked ? t("communities:start.actions.blockedTitle") : undefined
           }
         >
-          {nextLabel}
+          {nextLabel}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

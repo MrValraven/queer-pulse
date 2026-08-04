@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -219,12 +220,18 @@ export function CinemaSubmitPage() {
                             : back
                         }
                       >
-                        {step === 0
-                          ? t("cinema:submit.nav.saveDraft")
-                          : t("cinema:submit.nav.back")}
+                        {step === 0 ? (
+                          t("cinema:submit.nav.saveDraft")
+                        ) : (
+                          <>
+                            <FiArrowLeft aria-hidden />{" "}
+                            {t("cinema:submit.nav.back")}
+                          </>
+                        )}
                       </Button>
                       <Button onClick={next}>
-                        {t(NEXT_LABEL_KEYS[step]!)}
+                        {t(NEXT_LABEL_KEYS[step]!)}{" "}
+                        <FiArrowRight aria-hidden />
                       </Button>
                     </div>
                   </div>

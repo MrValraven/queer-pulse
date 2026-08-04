@@ -1,3 +1,4 @@
+import { MdDragIndicator } from "react-icons/md";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -83,7 +84,9 @@ export function StudioProgramSlate({
           {singles.map((single, singleIndex) => (
             <div key={single.id} className={s.trackSlot}>
               <span className={s.grip} aria-hidden>
-                <span className={s.gripDots}>≡</span>
+                <span className={s.gripDots}>
+                  <MdDragIndicator />
+                </span>
                 <span className={s.gripNo}>
                   {String(singleIndex + 1).padStart(2, "0")}
                 </span>

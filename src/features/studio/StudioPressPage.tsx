@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
+import { useShareLink } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -25,13 +27,10 @@ import styles from "./StudioPressPage.module.css";
 export function StudioPressPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-
-  const copy = (text: string) => {
-    navigator.clipboard?.writeText(text).then(
-      () => showToast(t("studio:press.copiedToast"), "success"),
-      () => showToast(t("studio:press.copyFailToast"), "info"),
-    );
-  };
+  const { share: copy } = useShareLink({
+    copied: t("studio:press.copiedToast"),
+    failed: t("studio:press.copyFailToast"),
+  });
 
   return (
     <div className={styles.page}>
@@ -39,7 +38,7 @@ export function StudioPressPage() {
       <div className={styles.wrap}>
         <Hero />
         <PreviewSection />
-        <BioSection onCopyBoth={() => copy(`${BIO_SHORT}\n\n${BIO_LONG}`)} />
+        <BioSection onCopyBoth={() => void copy(`${BIO_SHORT}\n\n${BIO_LONG}`)} />
         <PhotosSection
           onDownloadAll={() =>
             showToast(t("studio:press.downloadingPhotosToast"), "success")
@@ -50,7 +49,7 @@ export function StudioPressPage() {
         />
         <ReleaseSection />
         <QuotesSection />
-        <BoilerplateSection onCopy={copy} />
+        <BoilerplateSection onCopy={(text) => void copy(text)} />
         <ContactSection
           onRequest={() =>
             showToast(t("studio:press.accessRequestedToast"), "success")
@@ -130,7 +129,7 @@ function PreviewSection() {
               showToast(t("studio:press.fullPromoRequestedToast"), "success")
             }
           >
-            {t("studio:press.requestFullPromoCta")}
+            {t("studio:press.requestFullPromoCta")} <FiArrowRight aria-hidden />
           </button>
         }
       >
@@ -194,7 +193,7 @@ function BioSection({ onCopyBoth }: { onCopyBoth: () => void }) {
       <SectionHead
         action={
           <button type="button" className={styles.dl} onClick={onCopyBoth}>
-            {t("studio:press.copyBothCta")}
+            {t("studio:press.copyBothCta")} <FiArrowRight aria-hidden />
           </button>
         }
       >
@@ -230,7 +229,7 @@ function PhotosSection({
       <SectionHead
         action={
           <button type="button" className={styles.dl} onClick={onDownloadAll}>
-            {t("studio:press.downloadAllCta")}
+            {t("studio:press.downloadAllCta")} <FiArrowRight aria-hidden />
           </button>
         }
       >
@@ -257,7 +256,7 @@ function PhotosSection({
               style={{ position: "absolute", inset: 0 }}
             />
             <span className={styles.photoHint}>
-              {t("studio:press.downloadOneHint")}
+              {t("studio:press.downloadOneHint")} <FiArrowRight aria-hidden />
             </span>
           </button>
         ))}
@@ -372,7 +371,7 @@ function ContactSection({ onRequest }: { onRequest: () => void }) {
           </p>
         </div>
         <Button variant="ghost-dark" size="lg" to={routes.studioArtist}>
-          {t("studio:press.viewArtistCta")}
+          {t("studio:press.viewArtistCta")} <FiArrowRight aria-hidden />
         </Button>
         <Button variant="primary" size="lg" onClick={onRequest}>
           {t("studio:press.requestAccessCta")}

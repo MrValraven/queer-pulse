@@ -1,4 +1,4 @@
-import { FiMapPin, FiCheck } from "react-icons/fi";
+import { FiMapPin, FiCheck, FiClock } from "react-icons/fi";
 import { FaWheelchair } from "react-icons/fa6";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -91,7 +91,9 @@ export function MapVenueCard({
               <span>{v.address}</span>
             </div>
             <div className={s.vcRow}>
-              <span className={s.vcRowIcon}>◷</span>
+              <span className={s.vcRowIcon}>
+                <FiClock />
+              </span>
               <span>{v.hours}</span>
             </div>
             <div className={s.vcNote}>{v.note}</div>

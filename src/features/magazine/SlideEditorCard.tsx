@@ -1,5 +1,6 @@
 import { useId } from "react";
 import type { AvatarTint } from "../../shared/components/ui";
+import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Slide } from "./data/decks";
 import { ImageUrlField } from "./ImageUrlField";
@@ -25,23 +26,16 @@ interface FieldsProps<T extends Slide> {
 
 /** Shared tint `<select>` over the `AvatarTint` vocabulary. */
 function TintSelect({
-  id,
   value,
   onChange,
 }: {
-  id: string;
   value: AvatarTint;
   onChange: (tint: AvatarTint) => void;
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={id}>
-        {t("magazine:deck.editor.field.tint")}
-      </label>
+    <FormField label={t("magazine:deck.editor.field.tint")}>
       <select
-        id={id}
-        className={styles.select}
         value={value}
         onChange={(event) => onChange(event.target.value as AvatarTint)}
       >
@@ -51,7 +45,7 @@ function TintSelect({
           </option>
         ))}
       </select>
-    </div>
+    </FormField>
   );
 }
 
@@ -59,63 +53,37 @@ type TextSlide = Extract<Slide, { layout: "text" }>;
 
 function TextFields({ slide, onChange }: FieldsProps<TextSlide>) {
   const { t } = useTranslation();
-  const id = useId();
   return (
     <>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-eyebrow`}>
-          {t("magazine:deck.editor.field.eyebrow")}
-        </label>
+      <FormField label={t("magazine:deck.editor.field.eyebrow")}>
         <input
-          id={`${id}-eyebrow`}
-          className={styles.input}
           type="text"
           value={asText(slide.eyebrow)}
           onChange={(event) => onChange({ ...slide, eyebrow: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-heading`}>
-          {t("magazine:deck.editor.field.heading")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.heading")}>
         <input
-          id={`${id}-heading`}
-          className={styles.input}
           type="text"
           value={asText(slide.heading)}
           onChange={(event) => onChange({ ...slide, heading: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-body`}>
-          {t("magazine:deck.editor.field.body")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.body")}>
         <textarea
-          id={`${id}-body`}
-          className={styles.textarea}
           value={asText(slide.body)}
           onChange={(event) => onChange({ ...slide, body: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-pull`}>
-          {t("magazine:deck.editor.field.pull")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.pull")}>
         <input
-          id={`${id}-pull`}
-          className={styles.input}
           type="text"
           value={slide.pull ?? ""}
           onChange={(event) => onChange({ ...slide, pull: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-align`}>
-          {t("magazine:deck.editor.field.align")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.align")}>
         <select
-          id={`${id}-align`}
-          className={styles.select}
           value={slide.align ?? ""}
           onChange={(event) =>
             onChange({
@@ -131,7 +99,7 @@ function TextFields({ slide, onChange }: FieldsProps<TextSlide>) {
           <option value="left">{t("magazine:deck.editor.field.alignLeft")}</option>
           <option value="center">{t("magazine:deck.editor.field.alignCenter")}</option>
         </select>
-      </div>
+      </FormField>
     </>
   );
 }
@@ -151,32 +119,21 @@ function ImageFields({ slide, onChange }: FieldsProps<ImageSlideMember>) {
         alt={slide.alt}
         tint={slide.tint}
       />
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-alt`}>
-          {t("magazine:deck.editor.field.alt")}
-        </label>
+      <FormField label={t("magazine:deck.editor.field.alt")}>
         <input
-          id={`${id}-alt`}
-          className={styles.input}
           type="text"
           value={slide.alt}
           onChange={(event) => onChange({ ...slide, alt: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-caption`}>
-          {t("magazine:deck.editor.field.caption")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.caption")}>
         <input
-          id={`${id}-caption`}
-          className={styles.input}
           type="text"
           value={slide.caption ?? ""}
           onChange={(event) => onChange({ ...slide, caption: event.target.value })}
         />
-      </div>
+      </FormField>
       <TintSelect
-        id={`${id}-tint`}
         value={slide.tint}
         onChange={(tint) => onChange({ ...slide, tint })}
       />
@@ -188,61 +145,39 @@ type StatSlideMember = Extract<Slide, { layout: "stat" }>;
 
 function StatFields({ slide, onChange }: FieldsProps<StatSlideMember>) {
   const { t } = useTranslation();
-  const id = useId();
   return (
     <>
       <div className={styles.row}>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor={`${id}-value`}>
-            {t("magazine:deck.editor.field.value")}
-          </label>
+        <FormField label={t("magazine:deck.editor.field.value")}>
           <input
-            id={`${id}-value`}
-            className={styles.input}
             type="text"
             value={slide.value}
             onChange={(event) => onChange({ ...slide, value: event.target.value })}
           />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor={`${id}-unit`}>
-            {t("magazine:deck.editor.field.unit")}
-          </label>
+        </FormField>
+        <FormField label={t("magazine:deck.editor.field.unit")}>
           <input
-            id={`${id}-unit`}
-            className={styles.input}
             type="text"
             value={slide.unit ?? ""}
             onChange={(event) => onChange({ ...slide, unit: event.target.value })}
           />
-        </div>
+        </FormField>
       </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-label`}>
-          {t("magazine:deck.editor.field.label")}
-        </label>
+      <FormField label={t("magazine:deck.editor.field.label")}>
         <input
-          id={`${id}-label`}
-          className={styles.input}
           type="text"
           value={asText(slide.label)}
           onChange={(event) => onChange({ ...slide, label: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-source`}>
-          {t("magazine:deck.editor.field.source")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.source")}>
         <input
-          id={`${id}-source`}
-          className={styles.input}
           type="text"
           value={slide.source ?? ""}
           onChange={(event) => onChange({ ...slide, source: event.target.value })}
         />
-      </div>
+      </FormField>
       <TintSelect
-        id={`${id}-tint`}
         value={slide.tint}
         onChange={(tint) => onChange({ ...slide, tint })}
       />
@@ -282,30 +217,20 @@ function BeforeAfterSideFields({
         onChange={(src) => update({ src })}
         alt={value.alt}
       />
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-alt`}>
-          {t("magazine:deck.editor.field.alt")}
-        </label>
+      <FormField label={t("magazine:deck.editor.field.alt")}>
         <input
-          id={`${id}-alt`}
-          className={styles.input}
           type="text"
           value={value.alt}
           onChange={(event) => update({ alt: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-label`}>
-          {t("magazine:deck.editor.field.label")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.label")}>
         <input
-          id={`${id}-label`}
-          className={styles.input}
           type="text"
           value={value.label}
           onChange={(event) => update({ label: event.target.value })}
         />
-      </div>
+      </FormField>
     </div>
   );
 }
@@ -323,33 +248,21 @@ type RevealSlideMember = Extract<Slide, { layout: "interactive"; kind: "reveal" 
 
 function RevealFields({ slide, onChange }: FieldsProps<RevealSlideMember>) {
   const { t } = useTranslation();
-  const id = useId();
   return (
     <>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-prompt`}>
-          {t("magazine:deck.editor.field.prompt")}
-        </label>
+      <FormField label={t("magazine:deck.editor.field.prompt")}>
         <textarea
-          id={`${id}-prompt`}
-          className={styles.textarea}
           value={asText(slide.prompt)}
           onChange={(event) => onChange({ ...slide, prompt: event.target.value })}
         />
-      </div>
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor={`${id}-hidden`}>
-          {t("magazine:deck.editor.field.hidden")}
-        </label>
+      </FormField>
+      <FormField label={t("magazine:deck.editor.field.hidden")}>
         <textarea
-          id={`${id}-hidden`}
-          className={styles.textarea}
           value={asText(slide.hidden)}
           onChange={(event) => onChange({ ...slide, hidden: event.target.value })}
         />
-      </div>
+      </FormField>
       <TintSelect
-        id={`${id}-tint`}
         value={slide.tint ?? "default"}
         onChange={(tint) => onChange({ ...slide, tint })}
       />

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -35,7 +35,8 @@ export function CinemaSubmitAside() {
           {t("cinema:submit.aside.accessBody")}
         </div>
         <Link to={routes.accessibility} className={styles.saLink}>
-          {t("cinema:submit.aside.accessCta")}
+          {t("cinema:submit.aside.accessCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
 
@@ -54,7 +55,8 @@ export function CinemaSubmitAside() {
           to={routes.cinemaBrowse}
           style={{ width: "100%" }}
         >
-          {t("cinema:submit.aside.applyCta")}
+          {t("cinema:submit.aside.applyCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </aside>

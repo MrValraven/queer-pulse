@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { PageShell } from "../../shared/components/layout";
+import { FiArrowRight } from "react-icons/fi";
+import { PageHero, PageShell } from "../../shared/components/layout";
 import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -24,35 +25,33 @@ export function ForOrganisationsPage() {
           { name: pageTitle, path: routes.forOrganisations },
         ])}
       />
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
-          <Reveal as="div" className={styles.eyebrow}>
-            {t("marketing:forOrgs.hero.eyebrow")}
-          </Reveal>
-          <Reveal as="h1" className={styles.h1} delay={60}>
-            <Translation
-              i18nKey="marketing:forOrgs.hero.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.dek} delay={120}>
-            <Translation
-              i18nKey="marketing:forOrgs.hero.dek"
-              components={{ b: <b />, em: <em /> }}
-            />
-          </Reveal>
-          <Reveal className={styles.notRow} delay={180}>
-            <h4>{t("marketing:forOrgs.hero.notDoTitle")}</h4>
-            <ul>
-              {NOT_DO_KEYS.map((notDoKey) => (
-                <li key={notDoKey}>
-                  <Translation i18nKey={notDoKey} components={{ b: <b /> }} />
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
+      <PageHero
+        plum={false}
+        eyebrow={t("marketing:forOrgs.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:forOrgs.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={
+          <Translation
+            i18nKey="marketing:forOrgs.hero.dek"
+            components={{ b: <b />, em: <em /> }}
+          />
+        }
+      >
+        <Reveal className={styles.notRow} delay={180}>
+          <h4>{t("marketing:forOrgs.hero.notDoTitle")}</h4>
+          <ul>
+            {NOT_DO_KEYS.map((notDoKey) => (
+              <li key={notDoKey}>
+                <Translation i18nKey={notDoKey} components={{ b: <b /> }} />
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </PageHero>
 
       <TiersSection />
 
@@ -112,7 +111,8 @@ export function ForOrganisationsPage() {
                   <div className={styles.partnerSince}>{partner.since}</div>
                   <p>{partner.description}</p>
                   <span className={styles.arrow}>
-                    {t("marketing:forOrgs.proof.viewCta")}
+                    {t("marketing:forOrgs.proof.viewCta")}{" "}
+                    <FiArrowRight aria-hidden />
                   </span>
                 </Reveal>
               ))}

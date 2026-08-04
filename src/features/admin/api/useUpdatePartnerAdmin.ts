@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   type PartnerApplicationDTO,
@@ -6,6 +6,7 @@ import {
   updatePartnerAdmin,
 } from "../../marketing/api/partners.api";
 import { ADMIN_PARTNERS_KEY } from "./useAdminPartners";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface UpdatePartnerAdminVars {
   id: string;
@@ -18,21 +19,20 @@ export interface UpdatePartnerAdminVars {
 export function useUpdatePartnerAdmin() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
+  return useDemoAwareMutation<
     PartnerApplicationDTO | undefined,
     Error,
     UpdatePartnerAdminVars
   >({
-    mutationFn: async ({ id, dto }) => {
-      if (demoMode) return undefined;
-      return updatePartnerAdmin(id, dto);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminApprovedPartners + AdminPartnerTestimonialModal toast locally
+    demoResult: () => undefined,
+    live: ({ id, dto }) => updatePartnerAdmin(id, dto),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_PARTNERS_KEY] });
       void queryClient.invalidateQueries({ queryKey: ["partners"] });
       void queryClient.invalidateQueries({ queryKey: ["featured-partners"] });
     },
-    meta: { silentError: true }, // AdminApprovedPartners + AdminPartnerTestimonialModal toast locally
   });
 }

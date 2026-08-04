@@ -305,7 +305,7 @@ export const auth: Catalog = {
     "Obrigade, {name} — o teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
   "requestInvite.sent.sub_noName":
     "Obrigade — o teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
-  "requestInvite.sent.backHome": "← Voltar ao início",
+  "requestInvite.sent.backHome": "Voltar ao início",
   // O caso 409: já existe um pedido em aberto para este email. Não correu nada
   // mal, por isso isto lê-se como confirmação e nunca como falha.
   "requestInvite.already.title": "Já <em>o temos.</em>",
@@ -359,7 +359,7 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.body":
     "O QueerPulse é uma rede profissional cuidada, enraizada em Lisboa. Foste convidade porque alguém aqui reconhece o teu valor.",
   "onboarding.stepWelcome.cta": "Vamos a isto",
-  "onboarding.stepWelcome.back": "← Voltar",
+  "onboarding.stepWelcome.back": "Voltar",
 
   "onboarding.stepPhoto.heading": "Põe um rosto ao <em>nome</em>",
   "onboarding.stepPhoto.body":
@@ -374,7 +374,7 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.placeholder": "a tua foto",
   "onboarding.stepPhoto.continue": "Continuar",
   "onboarding.stepPhoto.skip": "Saltar por agora — podes adicionar isto depois",
-  "onboarding.stepPhoto.back": "← Voltar",
+  "onboarding.stepPhoto.back": "Voltar",
   "onboarding.stepPhoto.uploadError":
     "Não conseguimos adicionar essa foto. Tenta novamente.",
   "onboarding.stepPhoto.saveError":
@@ -398,13 +398,13 @@ export const auth: Catalog = {
   "onboarding.stepNorms.agree":
     "Li e concordo com as <guidelines>Diretrizes da Comunidade</guidelines>",
   "onboarding.stepNorms.continue": "Concordo, continuar",
-  "onboarding.stepNorms.back": "← Voltar",
+  "onboarding.stepNorms.back": "Voltar",
 
   "onboarding.stepIntents.heading": "O que te traz <em>aqui?</em>",
   "onboarding.stepIntents.hint":
     "Escolhe pelo menos uma — escolhe quantas fizerem sentido.",
   "onboarding.stepIntents.continue": "Continuar",
-  "onboarding.stepIntents.back": "← Voltar",
+  "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.intent.community": "Comunidade",
@@ -427,7 +427,7 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.continue": "Continuar",
   "onboarding.stepCommunities.skip":
     "Saltar por agora — explora e junta-te depois",
-  "onboarding.stepCommunities.back": "← Voltar",
+  "onboarding.stepCommunities.back": "Voltar",
   "onboarding.stepCommunities.empty":
     "Sem sugestões de momento — podes explorar e juntar-te a comunidades quando quiseres.",
 
@@ -444,11 +444,11 @@ export const auth: Catalog = {
     "Publicada no primeiro dia de cada mês",
 
   // ── Tour de boas-vindas (fluxo separado de 6 passos, em /welcome-tour) ──
-  "tour.skipSetup": "Saltar configuração →",
+  "tour.skipSetup": "Saltar configuração",
   "tour.stepLabel": "Passo {current} de {total}",
   "tour.allSet": "Já estás dentro!",
-  "tour.nav.back": "← Voltar",
-  "tour.nav.continue": "Continuar →",
+  "tour.nav.back": "Voltar",
+  "tour.nav.continue": "Continuar",
 
   "tour.welcome.eyebrow": "Já estás dentro",
   "tour.welcome.heading": "Bem-vinde ao <em>QueerPulse.</em>",
@@ -457,7 +457,7 @@ export const auth: Catalog = {
   "tour.welcome.q101Label": "Ainda a encontrar as palavras?",
   "tour.welcome.q101Body":
     "Se estás a explorar de novo a tua identidade — não só a chegar a Lisboa — o <q101>Queer 101</q101> é um lugar tranquilo para começar. Não precisas de conta para o ler.",
-  "tour.welcome.cta": "Vamos preparar-te →",
+  "tour.welcome.cta": "Vamos preparar-te",
 
   "tour.profile.eyebrow": "O teu perfil",
   "tour.profile.heading": "Conta-nos um pouco sobre <em>ti.</em>",
@@ -511,7 +511,7 @@ export const auth: Catalog = {
   "tour.explore.heading": "Bem-vinde à <em>comunidade.</em>",
   "tour.explore.body":
     "Já fazes parte, oficialmente. Aqui está por onde começar — não há resposta certa, só o que te chama mais atenção.",
-  "tour.explore.cta": "Ir para o QueerPulse →",
+  "tour.explore.cta": "Ir para o QueerPulse",
 
   "tour.exploreCard.members.name": "Pessoas",
   "tour.exploreCard.members.desc": "Explora e diz olá a pessoas na rede",

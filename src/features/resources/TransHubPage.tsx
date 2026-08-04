@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -145,7 +146,8 @@ export function TransHubPage() {
                 <div className={styles.resTitle}>{t(res.titleKey)}</div>
                 <div className={styles.resDesc}>{t(res.descriptionKey)}</div>
                 <Link to={routes.library} className={styles.rightLink}>
-                  {t("resources:transHub.resources.openCta")}
+                  {t("resources:transHub.resources.openCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Link>
               </Reveal>
             ))}

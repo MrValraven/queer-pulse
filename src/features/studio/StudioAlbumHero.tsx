@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
+import { useShareLink } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/useSaved";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { StudioDetailHero } from "./StudioDetailHero";
 import styles from "./studio.module.css";
 import { ALBUM_COVER, ALBUM } from "./studioAlbum.data";
 
@@ -14,20 +16,18 @@ export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
   const { t } = useTranslation();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
+  const { share } = useShareLink({
+    copied: t("studio:detail.linkCopiedToast"),
+    failed: t("studio:detail.copyFailedToast"),
+  });
   const saved = isSaved(ALBUM.id);
 
-  function share() {
-    const url =
-      typeof window !== "undefined" ? window.location.href : routes.studioAlbum;
-    navigator.clipboard?.writeText(url).then(
-      () => showToast(t("studio:detail.linkCopiedToast"), "success"),
-      () => showToast(t("studio:detail.copyFailedToast"), "info"),
-    );
-  }
+  const shareUrl =
+    typeof window !== "undefined" ? window.location.href : routes.studioAlbum;
 
   return (
-    <section className={styles.detailHero}>
-      <div className={styles.detailArt}>
+    <StudioDetailHero
+      art={
         <ImageSlot
           src={ALBUM_COVER}
           tint="coral"
@@ -39,16 +39,20 @@ export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
           loading="eager"
           fetchPriority="high"
         />
-      </div>
-      <div>
-        <div className={styles.kind}>Album · 11 tracks · 42 min</div>
-        <h1>
+      }
+      kind="Album · 11 tracks · 42 min"
+      title={
+        <>
           Cidade dos <em>santos</em>
-        </h1>
-        <div className={styles.by}>
+        </>
+      }
+      by={
+        <>
           by <strong>{ARTIST_NAME}</strong> · 2026 · Sintra
-        </div>
-        <div className={styles.heroActions}>
+        </>
+      }
+      actions={
+        <>
           <Link
             to={routes.studio}
             className={styles.playBig}
@@ -84,11 +88,11 @@ export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
             <FiHeart />{" "}
             {t("studio:detail.tipArtistCta", { artist: ARTIST_NAME })}
           </button>
-          <button type="button" onClick={share}>
+          <button type="button" onClick={() => void share(shareUrl)}>
             {t("studio:detail.shareCta")}
           </button>
-        </div>
-      </div>
-    </section>
+        </>
+      }
+    />
   );
 }

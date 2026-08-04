@@ -1,9 +1,10 @@
-import { useEffect } from "react";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import styles from "./forumModals.module.css";
 
+/** Delete confirmation for a forum/community post, built on the shared
+ *  `ConfirmDialog` (destructive tone). Kept as a named wrapper so its three
+ *  call sites (forum thread, forum page, community thread) mount it the same
+ *  way — conditionally, with `busy` while the delete is in flight. */
 export function ConfirmDeleteModal({
   busy,
   onConfirm,
@@ -13,51 +14,23 @@ export function ConfirmDeleteModal({
   onConfirm: () => void;
   onClose: () => void;
 }) {
-  useScrollLock();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.dialog}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="forum-delete-title"
-      >
-        <h2 id="forum-delete-title" className={styles.title}>
-          {t("forum:deleteConfirm.title")}
-        </h2>
-        <p className={styles.sub}>{t("forum:deleteConfirm.body")}</p>
-        <div className={styles.actions}>
-          <Button variant="ghost" type="button" onClick={onClose} disabled={busy}>
-            {t("forum:deleteConfirm.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={onConfirm}
-            disabled={busy}
-          >
-            {busy
-              ? t("forum:deleteConfirm.deleting")
-              : t("forum:deleteConfirm.confirm")}
-          </Button>
-        </div>
-      </div>
-    </div>
+    <ConfirmDialog
+      open
+      tone="destructive"
+      loading={busy}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      title={t("forum:deleteConfirm.title")}
+      description={t("forum:deleteConfirm.body")}
+      cancelLabel={t("forum:deleteConfirm.cancel")}
+      confirmLabel={
+        busy
+          ? t("forum:deleteConfirm.deleting")
+          : t("forum:deleteConfirm.confirm")
+      }
+    />
   );
 }

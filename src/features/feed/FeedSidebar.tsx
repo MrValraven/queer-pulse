@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
   AvatarStack,
@@ -151,7 +152,7 @@ export function FeedSidebar({
           ))
         )}
         <Link to={routes.calendar} className={styles.sbLink}>
-          {t("feed:sidebar.seeCalendar")}
+          {t("feed:sidebar.seeCalendar")} <FiArrowRight aria-hidden />
         </Link>
       </div>
 
@@ -188,7 +189,7 @@ export function FeedSidebar({
           ))
         )}
         <Link to={routes.members} className={styles.sbLink}>
-          {t("feed:sidebar.browseMembers")}
+          {t("feed:sidebar.browseMembers")} <FiArrowRight aria-hidden />
         </Link>
       </div>
 
@@ -225,7 +226,7 @@ export function FeedSidebar({
                   fontWeight: 600,
                 }}
               >
-                {t("feed:sidebar.manage")}
+                {t("feed:sidebar.manage")} <FiArrowRight aria-hidden />
               </Link>
             </div>
           </div>

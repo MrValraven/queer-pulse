@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   actOnReport,
@@ -7,6 +7,7 @@ import {
   type ModActionInput,
   type ModBulkInput,
 } from "./moderation.api";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface ModActionVars {
   id: string;
@@ -28,16 +29,17 @@ export interface ModActionVars {
 export function useModAction() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, ModActionVars>({
+  return useDemoAwareMutation<void, Error, ModActionVars>({
+    demoMode,
+    demoLatencyMs: 0,
     // useModerationQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id, action, reasonCode, note, duration }) => {
-      if (demoMode) return;
+    demoResult: () => undefined,
+    live: async ({ id, action, reasonCode, note, duration }) => {
       await actOnReport(id, { action, reasonCode, note, duration });
     },
-    onSettled: () => {
-      if (!demoMode)
-        void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
     },
   });
 }
@@ -53,16 +55,17 @@ export interface ModBulkVars {
 export function useModBulkAction() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, ModBulkVars>({
+  return useDemoAwareMutation<void, Error, ModBulkVars>({
+    demoMode,
+    demoLatencyMs: 0,
     // useModerationQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ ids, action, reasonCode, note }) => {
-      if (demoMode) return;
+    demoResult: () => undefined,
+    live: async ({ ids, action, reasonCode, note }) => {
       await bulkActOnReports({ ids, action, reasonCode, note });
     },
-    onSettled: () => {
-      if (!demoMode)
-        void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
     },
   });
 }

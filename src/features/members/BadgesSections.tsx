@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -55,7 +56,7 @@ export function LevelCard() {
         ))}
       </div>
       <a href="#how-xp" className={styles.howLink}>
-        {t("members:badges.howToEarnXp")}
+        {t("members:badges.howToEarnXp")} <FiArrowRight aria-hidden />
       </a>
     </div>
   );
@@ -123,9 +124,16 @@ export function LockedBadges() {
           className={styles.expandLink}
           onClick={() => setOpen((v) => !v)}
         >
-          {open
-            ? t("members:badges.hideMore")
-            : t("members:badges.showMore", { count: badges.discoverCount })}
+          {open ? (
+            <>
+              {t("members:badges.hideMore")} <FiChevronUp aria-hidden />
+            </>
+          ) : (
+            <>
+              {t("members:badges.showMore", { count: badges.discoverCount })}{" "}
+              <FiChevronDown aria-hidden />
+            </>
+          )}
         </button>
       </div>
       <div className={styles.sectionSub}>{t("members:badges.lockedSub")}</div>
@@ -246,7 +254,8 @@ export function PerksLadder() {
       </div>
       <div className={styles.redeemWrap}>
         <Button to={routes.perks}>
-          {t("members:profile.hero.perksArrow")}
+          {t("members:profile.hero.perksArrow")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </section>

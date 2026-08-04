@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiInfo } from "react-icons/fi";
+import { FiArrowRight, FiInfo } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -73,7 +73,8 @@ export function AdminDashboardFeed({
             components={{ strong: <b /> }}
           />{" "}
           <Link to={routes.adminGovernance} className={styles.transpLink}>
-            {t("admin:dashboard.feed.auditLinkCta")} →
+            {t("admin:dashboard.feed.auditLinkCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </span>
       </div>

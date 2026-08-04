@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiChevronLeft } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -167,13 +167,15 @@ export function PostJobComposer({
           <div className={styles.stepNav}>
             {step > 0 && (
               <Button variant="ghost" onClick={prev}>
+                <FiArrowLeft aria-hidden />{" "}
                 {t("economy:postJob.nav.back")}
               </Button>
             )}
             <span className={styles.spacerFlex} />
             {step < LAST ? (
               <Button variant="primary" onClick={next}>
-                {t("economy:postJob.nav.continue")}
+                {t("economy:postJob.nav.continue")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             ) : (
               <>

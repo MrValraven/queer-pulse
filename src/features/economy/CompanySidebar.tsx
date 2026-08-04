@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -52,7 +53,8 @@ export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
         </div>
         <p className={styles.teamMore}>
           <Link to={`${routes.members}?co=${profile.slug}`}>
-            {profile.membersLabel}
+            {profile.membersLabel}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </p>
       </div>

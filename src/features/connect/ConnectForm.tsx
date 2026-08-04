@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
   Button,
@@ -137,13 +138,15 @@ export function ConnectForm({
           onClick={onClose}
           disabled={sending}
         >
-          ← {t("connect:form.cancel")}
+          <FiArrowLeft aria-hidden /> {t("connect:form.cancel")}
         </button>
         <Button size="lg" type="submit" disabled={!canSend || sending}>
           {sending ? (
             <Sending label={t("connect:form.sendingLabel")} />
           ) : (
-            <>{t("connect:form.send")} →</>
+            <>
+              {t("connect:form.send")} <FiArrowRight aria-hidden />
+            </>
           )}
         </Button>
       </div>

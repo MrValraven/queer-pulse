@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -123,7 +124,8 @@ export function CuratorMain({ curator }: { curator: CuratorProfile }) {
               <div className={styles.nbFoot}>
                 <span>{n.foot}</span>
                 <span className={styles.nbRead}>
-                  {t("cinema:programme.notebook.readMoreCta")}
+                  {t("cinema:programme.notebook.readMoreCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </span>
               </div>
             </Link>

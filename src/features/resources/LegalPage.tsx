@@ -1,14 +1,12 @@
 import type { ReactNode } from "react";
-import { FiBriefcase } from "react-icons/fi";
+import { FiArrowRight, FiBriefcase } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
   EmptyState,
-  FadeIn,
   Outro,
   Reveal,
-  SkeletonLine,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -22,6 +20,7 @@ import {
   buildBreadcrumbSchema,
 } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
+import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
 import styles from "./resources.module.css";
 
 interface Right {
@@ -150,25 +149,6 @@ const badgeClass = {
   practical: styles.badgeKnow,
 };
 
-function LawyerSkeleton() {
-  // Mirrors the lawyer card: name, spec, two tags, footer row (loc + cta).
-  return (
-    <div className={styles.card}>
-      <SkeletonLine width="55%" height={19} />
-      <SkeletonLine width="100%" height={13} style={{ marginTop: 8 }} />
-      <SkeletonLine width="85%" height={13} style={{ marginTop: 6 }} />
-      <div className={styles.tags}>
-        <SkeletonLine width={70} height={20} />
-        <SkeletonLine width={54} height={20} />
-      </div>
-      <div className={styles.cardFoot}>
-        <SkeletonLine width="30%" height={13} />
-        <SkeletonLine width="40%" height={13} />
-      </div>
-    </div>
-  );
-}
-
 function RightsSection({
   id,
   title,
@@ -211,7 +191,8 @@ function RightsSection({
               <div className={styles.rightTitle}>{t(right.titleKey)}</div>
               <div className={styles.rightBody}>{t(right.bodyKey)}</div>
               <Link to={right.to} className={styles.rightLink}>
-                {t(right.linkKey)}
+                {t(right.linkKey)}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             </Reveal>
           ))}
@@ -327,48 +308,26 @@ export function LegalPage() {
               }}
             />
           ) : (
-          <div className={styles.grid} aria-busy={loading}>
+          <CardGrid busy={loading}>
             {loading
-              ? Array.from({ length: LAWYERS.length }).map((_, i) => (
-                  <LawyerSkeleton key={i} />
+              ? Array.from({ length: LAWYERS.length }).map((_, index) => (
+                  <ResourceCardSkeleton key={index} />
                 ))
               : LAWYERS.map((lawyer, index) => (
-                  <FadeIn
+                  <ResourceCard
                     key={lawyer.name}
-                    className={styles.card}
+                    name={lawyer.name}
+                    spec={lawyer.spec}
+                    tags={lawyer.tags}
+                    loc={lawyer.loc}
+                    nameSize={19}
+                    ctaLabel={t("resources:legal.lawyers.requestConsultationCta")}
+                    onCta={() => openConnect()}
+                    animation="fade"
                     delay={Math.min(index, 8) * 60}
-                  >
-                    <div className={styles.cardName} style={{ fontSize: 19 }}>
-                      {lawyer.name}
-                    </div>
-                    <div className={styles.cardSpec}>{lawyer.spec}</div>
-                    <div className={styles.tags}>
-                      {lawyer.tags.map((tag) => (
-                        <span key={tag} className={styles.tag}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className={styles.cardFoot}>
-                      <span className={styles.cardLoc}>{lawyer.loc}</span>
-                      <span
-                        role="button"
-                        tabIndex={0}
-                        className={styles.cardCta}
-                        onClick={() => openConnect()}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            openConnect();
-                          }
-                        }}
-                      >
-                        {t("resources:legal.lawyers.requestConsultationCta")}
-                      </span>
-                    </div>
-                  </FadeIn>
+                  />
                 ))}
-          </div>
+          </CardGrid>
           )}
         </div>
       </section>

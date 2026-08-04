@@ -15,6 +15,21 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Contain horizontal overflow at the document ROOT, not just on <body>.
+     `overflow-x: hidden` on <body> alone doesn't hold: a child wider than the
+     viewport (a pasted URL, a long handle, a rigid card) still balloons the
+     layout viewport — `innerWidth` grows past the device width, the page zooms
+     out and pans sideways while vertical scroll fights it. That is the "can
+     only scroll on the side / everything's too wide" bug, and it needs the clip
+     one level up, on <html>.
+
+     `clip` — not `hidden` — on purpose: `overflow: hidden` would make <html> a
+     scroll container and (per the CSS overflow rules) promote the untouched
+     y-axis to `auto`, spawning a second scroll context that breaks momentum
+     scrolling and position:sticky on iOS Safari. `overflow-x: clip` clips the
+     x-axis WITHOUT establishing a scroll container and WITHOUT touching the
+     y-axis, so the viewport keeps its single, native vertical scroll. */
+  overflow-x: clip;
 }
 
 body {
@@ -22,7 +37,16 @@ body {
   background: var(--cream);
   color: var(--ink);
   line-height: var(--lh-body);
-  overflow-x: hidden;
+  /* Belt-and-braces horizontal clip (same `clip`-not-`hidden` reasoning as
+     <html> above — `hidden` here would make <body> the scroll container and
+     promote overflow-y to auto, the classic iOS body-scroller trap). */
+  overflow-x: clip;
+  /* Let long unbreakable tokens — pasted links, long handles, no-space strings
+     in a name/bio/role/post — break so they wrap instead of forcing an element
+     wider than the screen. `anywhere` (not `break-word`) because only `anywhere`
+     also shrinks the element's min-content size, which is what lets flex/grid
+     items actually give up the width. Inherited, so it covers every page. */
+  overflow-wrap: anywhere;
 }
 
 ::selection {

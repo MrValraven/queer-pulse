@@ -1,6 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { logInfo } from "../../../shared/observability/logger";
 import { deleteListingAsModerator } from "../../marketing/listBusiness/api/listings.api";
 import {
   getDemoListingMutation,
@@ -16,9 +15,7 @@ import {
   snapshotAdminListingsQueries,
 } from "./useAdminListings";
 import { listingHistoryQueryKey } from "./useListingHistory";
-
-/** How long demo mode pretends the round-trip takes, to keep the UX honest. */
-const DEMO_LATENCY_MS = 400;
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface RemoveListingVars {
   row: ListingQueueRow;
@@ -39,24 +36,23 @@ interface RemoveListingContext {
  * Optimistically drops the row from the cached queue on `onMutate` (rolled
  * back on `onError`) so the row disappears immediately with no local
  * removed-refs set — in demo mode that patch is the new truth (the fixture
- * never mutates); in live mode it's reconciled by the `invalidateQueries`
- * below. Live mode DELETEs `/listings/admin/:ref`.
+ * never mutates); in live mode it's reconciled by the `invalidateQueries` in
+ * `onLiveSuccess`. Live mode DELETEs `/listings/admin/:ref`.
  */
 export function useRemoveListing() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, RemoveListingVars, RemoveListingContext>({
-    mutationFn: async ({ row, reason }) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.listing.remove (demo — no network)", {
-          ref: row.ref,
-          reason,
-        });
-        return;
-      }
-      await deleteListingAsModerator(row.ref, reason);
-    },
+  return useDemoAwareMutation<
+    void,
+    Error,
+    RemoveListingVars,
+    RemoveListingContext
+  >({
+    demoMode,
+    demoResult: () => undefined,
+    live: ({ row, reason }) => deleteListingAsModerator(row.ref, reason),
+    logLabel: "admin.listing.remove",
+    logContext: ({ row, reason }) => ({ ref: row.ref, reason }),
     onMutate: async ({ row }) => {
       await queryClient.cancelQueries({
         queryKey: [ADMIN_LISTINGS_KEY, demoMode],
@@ -82,11 +78,10 @@ export function useRemoveListing() {
         restoreDemoListingMutation(row.ref, context?.previousDemoMutation);
       }
     },
-    onSuccess: (_data, { row }) => {
-      // Demo mode has no server-side history to go stale against — the
-      // fixture in `DEMO_LISTING_HISTORY` is static and doesn't model this
-      // removal, so there's nothing here to invalidate/reconcile.
-      if (demoMode) return;
+    // Demo mode has no server-side history to go stale against — the fixture in
+    // `DEMO_LISTING_HISTORY` is static and doesn't model this removal, so
+    // there's nothing to invalidate/reconcile (hence live-only).
+    onLiveSuccess: (_data, { row }) => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_LISTINGS_KEY] });
       void queryClient.invalidateQueries({
         queryKey: listingHistoryQueryKey(row.ref, false),

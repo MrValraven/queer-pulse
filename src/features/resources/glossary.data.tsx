@@ -27,7 +27,7 @@ export const GLOSSARY_COPY = {
     searchPlaceholder: "Search terms · 142 entries",
     noResultsTitle: "No terms match",
     noResultsBody: "Try a different search, or browse alphabetically above.",
-    suggestTerm: "Suggest a term →",
+    suggestTerm: "Suggest a term",
     suggestEdit: "Suggest an edit",
     footTitle: (
       <>
@@ -41,7 +41,7 @@ export const GLOSSARY_COPY = {
     noResultsTitle: "Nenhum termo corresponde",
     noResultsBody:
       "Tenta uma pesquisa diferente, ou navega alfabeticamente acima.",
-    suggestTerm: "Sugerir um termo →",
+    suggestTerm: "Sugerir um termo",
     suggestEdit: "Sugerir uma alteração",
     footTitle: (
       <>

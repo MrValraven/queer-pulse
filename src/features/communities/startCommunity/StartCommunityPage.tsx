@@ -194,9 +194,14 @@ export function StartCommunityPage() {
                     <PanelActions
                       onBack={back}
                       backLabel={
-                        step === 0
-                          ? t("communities:start.cancel")
-                          : t("communities:start.back")
+                        step === 0 ? (
+                          t("communities:start.cancel")
+                        ) : (
+                          <>
+                            <FiArrowLeft aria-hidden />{" "}
+                            {t("communities:start.back")}
+                          </>
+                        )
                       }
                       onNext={next}
                       nextLabel={t(

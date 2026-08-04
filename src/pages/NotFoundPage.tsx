@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  FiArrowLeft,
   FiBookOpen,
   FiCalendar,
   FiBook,
@@ -87,6 +88,7 @@ export function NotFoundPage() {
           <div className={styles.actions}>
             <Button to="/">{t("system:notFound.homeCta")}</Button>
             <Button variant="ghost" onClick={() => void navigate(-1)}>
+              <FiArrowLeft aria-hidden />{" "}
               {t("system:notFound.backCta")}
             </Button>
           </div>

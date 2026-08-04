@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { StudioShell } from "./StudioShell";
 import { StudioFundBalance } from "./StudioFundBalance";
 import { StudioFundFlows } from "./StudioFundFlows";
@@ -68,7 +69,7 @@ export function StudioSolidarityFundPage() {
               {t("studio:fund.apply.requestCta")}
             </button>
             <Link to={routes.studioCalls} className={`${s.bt} ${s.btLg}`}>
-              {t("studio:fund.apply.seeGrantsCta")}
+              {t("studio:fund.apply.seeGrantsCta")} <FiArrowRight aria-hidden />
             </Link>
           </div>
         </div>

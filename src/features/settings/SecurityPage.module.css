@@ -171,58 +171,19 @@
   color: currentColor;
 }
 
-/* Timeline */
+/* Timeline — shared vertical Stepper; local classes only style the per-step
+   description body (supporting text + the target/SLA note under each title). */
 .timeline {
-  display: flex;
-  flex-direction: column;
-  position: relative;
   margin: 20px 0;
 }
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 17px;
-  top: 0;
-  bottom: 0;
-  width: 1.5px;
-  background: rgba(var(--plum-rgb), 0.1);
-}
-.tlStep {
-  display: flex;
-  gap: 20px;
-  padding-bottom: 28px;
-  position: relative;
-}
-.tlStep:last-child {
-  padding-bottom: 0;
-}
-.tlN {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: var(--cream);
-  border: 2px solid rgba(var(--line-rgb), 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  z-index: 1;
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--text-strong);
-}
-.tlTitle {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--text-strong);
-  margin-bottom: 4px;
-}
-.tlText {
+.stepText {
+  display: block;
   font-size: 14px;
   color: var(--ink-60);
   line-height: 1.6;
 }
-.tlNote {
+.stepNote {
+  display: block;
   font-size: 12px;
   color: var(--accent-ink);
   font-weight: 600;

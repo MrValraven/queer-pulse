@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import {
+  FiArrowRight,
   FiAward,
   FiCheck,
   FiClock,
@@ -148,7 +149,8 @@ export function TherapistProfileBody({
           to={`${routes.therapists}/${therapist.id}`}
           onClick={onClose}
         >
-          {t("resources:mentalHealth.therapistProfile.seeFullProfileCta")}
+          {t("resources:mentalHealth.therapistProfile.seeFullProfileCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </>

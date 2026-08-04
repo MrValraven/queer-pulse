@@ -58,98 +58,10 @@
   padding: 80px 0 120px;
 }
 
-/* Steps */
-.stepsRow {
-  display: flex;
-  gap: 0;
+/* Steps — shared vertical Stepper; wrapper only supplies the block spacing. */
+.stepsBlock {
   margin-bottom: 64px;
-  position: relative;
-}
-
-.stepsRow::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  height: 1.5px;
-  background: rgba(var(--plum-rgb), 0.1);
-  z-index: 0;
-}
-
-.stepItem {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-right: 32px;
-  position: relative;
-  z-index: 1;
-}
-
-.stepItem:last-child {
-  padding-right: 0;
-}
-
-.stepNum {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--cream);
-  border: 2px solid rgba(var(--line-rgb), 0.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text-strong);
-  margin-bottom: 14px;
-  flex: none;
-}
-
-.stepItemActive .stepNum {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-color: var(--line-strong);
-}
-
-.stepItemDone .stepNum {
-  background: var(--jade);
-  border-color: var(--jade);
-  color: rgba(var(--cream-rgb), 1);
-}
-
-.stepLabel {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
-
-.stepDesc {
-  font-size: 13px;
-  color: var(--ink-40);
-  line-height: 1.5;
-}
-
-@media (max-width: 680px) {
-  .stepsRow {
-    flex-direction: column;
-    gap: 24px;
-  }
-  .stepsRow::before {
-    display: none;
-  }
-  .stepItem {
-    flex-direction: row;
-    gap: 16px;
-    padding-right: 0;
-    align-items: flex-start;
-  }
-  .stepNum {
-    flex: none;
-    margin-bottom: 0;
-  }
+  max-width: 520px;
 }
 
 /* Card */

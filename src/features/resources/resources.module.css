@@ -52,7 +52,7 @@
 }
 .title em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--hero-em, var(--accent));
 }
 .lead {
   font-size: clamp(16px, 1.6vw, 19px);
@@ -61,6 +61,14 @@
   margin-top: 28px;
   line-height: 1.65;
   position: relative;
+}
+.lead b {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+.lead em {
+  font-style: italic;
+  color: var(--accent-ink);
 }
 .heroNav {
   display: flex;
@@ -85,6 +93,66 @@
     color: rgba(var(--cream-rgb), 1);
     border-color: rgba(var(--cream-rgb), 0.5);
   }
+}
+
+/* ---- Light (cream) hero tone — dark text on cream, never cream-on-cream ---- */
+.heroLight {
+  background: var(--cream);
+  color: var(--text-strong);
+}
+.heroLight::before {
+  display: none;
+}
+.heroLight .title {
+  color: var(--text-strong);
+}
+.heroLight .lead {
+  color: var(--ink-60);
+}
+.heroLight .eyebrow {
+  color: var(--ink-60);
+}
+.heroLight .heroAnchor {
+  color: var(--ink-60);
+  border-color: rgba(var(--line-rgb), 0.2);
+}
+@media (hover: hover) {
+  .heroLight .heroAnchor:hover {
+    color: var(--text-strong);
+    border-color: rgba(var(--line-rgb), 0.5);
+  }
+}
+
+/* In-hero tabs / flush extras sit at the hero's bottom edge. */
+.heroFlush {
+  padding-bottom: 0;
+}
+
+/* Plain bold label eyebrow (no dot) — colour set inline per page. */
+.eyebrowLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Title weight / scale modifiers. */
+.titleLight {
+  font-weight: 300;
+}
+.titleDisplay {
+  font-size: clamp(54px, 8.5vw, 118px);
+  line-height: 0.92;
+  max-width: 12ch;
+}
+
+/* Bespoke content under the lead (chips, callouts, disclaimers, tabs). */
+.heroExtras {
+  margin-top: 32px;
+  position: relative;
 }
 
 .section {

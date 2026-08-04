@@ -1942,93 +1942,11 @@ button.cal-cell.has {
   font-weight: 700;
 }
 
-/* ---------- Bulk action bar ---------- */
-.bulkbar {
-  position: fixed;
-  bottom: calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset));
-  left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  z-index: 160;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-radius: 999px;
-  padding: 11px 12px 11px 22px;
-  box-shadow: 0 18px 44px -14px rgba(36, 20, 48, 0.6);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity 0.26s var(--ease),
-    transform 0.26s var(--ease);
-}
-.bulkbar.show {
-  opacity: 1;
-  transform: translateX(-50%);
-  pointer-events: auto;
-}
-.bulk-count {
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.bulk-actions {
-  display: flex;
-  gap: 8px;
-}
-.bulk-act {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.16);
-  border: none;
-  border-radius: 999px;
-  padding: 7px 15px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-@media (hover: hover) {
-  .bulk-act:hover {
-    background: rgba(var(--cream-rgb), 0.3);
-  }
-}
-.bulk-close {
-  background: none;
-  border: none;
-  color: rgba(var(--cream-rgb), 0.7);
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  padding: 0 6px;
-}
-@media (hover: hover) {
-  .bulk-close:hover {
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
+/* The bulk-selection bar now lives in the shared `BulkActionBar` primitive
+   (shared/components/ui); myevents/BulkBar.tsx wraps it (floating variant). */
 
-/* ---------- Offline banner ---------- */
-.offline-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 300;
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 9px 16px;
-  padding-block-start: max(9px, env(safe-area-inset-top));
-  transform: translateY(-100%);
-  transition: transform 0.3s var(--ease);
-}
-.offline-banner.show {
-  transform: none;
-}
+/* The offline banner now lives in the shared `OfflineBanner` primitive
+   (shared/components/ui); myevents/OfflineBanner.tsx wraps it. */
 
 /* ---------- Skeleton ---------- */
 .sk-wrap {
@@ -2783,7 +2701,6 @@ button.cal-cell.has {
 .mm-item:focus-visible,
 .cw-day:focus-visible,
 .cy-m:focus-visible,
-.bulk-act:focus-visible,
 .set-link-row:focus-visible,
 .ev-friends:focus-visible,
 .ev-check:focus-visible,
@@ -2792,8 +2709,7 @@ button.cal-cell.has {
   outline-offset: 2px;
   border-radius: 10px;
 }
-.undo-btn:focus-visible,
-.bulk-act:focus-visible {
+.undo-btn:focus-visible {
   outline-color: rgba(var(--cream-rgb), 1);
 }
 
@@ -2812,8 +2728,6 @@ button.cal-cell.has {
   .cal-peek,
   .dayof.show,
   .more-menu,
-  .bulkbar,
-  .offline-banner,
   .qp-skeleton {
     animation: none;
     transition: none;

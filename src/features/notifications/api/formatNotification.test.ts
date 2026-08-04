@@ -46,13 +46,14 @@ function makeT(language: Language): TFunction {
 
 const t = makeT("en");
 
-/** Every kind the backend's `notifications_type_enum` can serve. */
+/** Every kind the notifications centre knows how to render. `new_message` is
+ * deliberately absent — DM alerts were retired from the centre (see the
+ * "deprecated new_message" test below). */
 const KINDS: NotificationKind[] = [
   "connection_request",
   "connection_accepted",
   "vouch_received",
   "promoted_to_member",
-  "new_message",
   "event_invite",
   "event_reminder",
   "waitlist_promoted",
@@ -84,7 +85,6 @@ describe("formatNotification", () => {
   });
 
   it("maps kinds onto the right tab category", () => {
-    expect(formatNotification("new_message", {}, t).category).toBe("messages");
     expect(formatNotification("event_invite", {}, t).category).toBe("events");
     expect(formatNotification("event_cancelled", {}, t).category).toBe(
       "events",
@@ -98,6 +98,16 @@ describe("formatNotification", () => {
     expect(formatNotification("promoted_to_member", {}, t).category).toBe(
       "platform",
     );
+  });
+
+  it("treats the retired `new_message` kind as unknown, not a known kind", () => {
+    // DM alerts no longer render in the notifications centre. `new_message` is
+    // no longer a known kind, so it resolves to the generic fallback (and is
+    // dropped from the live feed upstream in `useNotifications`).
+    const result = formatNotification("new_message", {}, t);
+    expect(result.kind).toBeNull();
+    expect(result.text).toBe("You have a new notification.");
+    expect(result.category).toBe("platform");
   });
 
   it("formats a mention as a community-category known kind", () => {
@@ -159,7 +169,7 @@ describe("formatNotification", () => {
     const spy: TFunction = (key, options) =>
       `${key}|${JSON.stringify(options)}`;
     const out = formatNotification(
-      "new_message",
+      "event_reminder",
       { senderId: "abc", count: 2, nested: { deep: true } },
       spy,
     );

@@ -49,7 +49,39 @@ export {
   type StepperStep,
   type StepperSize,
   type StepperMarker,
+  type StepperOrientation,
 } from "./Stepper";
+export {
+  ConfirmDialog,
+  type ConfirmDialogProps,
+  type ConfirmDialogReason,
+} from "./ConfirmDialog";
+export { StatusCard, type StatusCardProps } from "./StatusCard";
+export { SaveButton, type SaveButtonProps } from "./SaveButton";
+export { Stars, type StarsProps } from "./Stars";
+export { DetailRows, type DetailRow, type DetailRowsProps } from "./DetailRows";
+export {
+  StatTile,
+  StatGrid,
+  type StatTileProps,
+  type StatGridProps,
+} from "./StatTile";
+export {
+  MemberIdentity,
+  type MemberIdentityProps,
+  type MemberIdentityPerson,
+} from "./MemberIdentity";
+export {
+  MemberSelectList,
+  type MemberSelectListProps,
+  type MemberSelectPerson,
+} from "./MemberSelectList";
+export { OfflineBanner, type OfflineBannerProps } from "./OfflineBanner";
+export {
+  BulkActionBar,
+  type BulkActionBarProps,
+  type BulkActionBarVariant,
+} from "./BulkActionBar";
 export { PullToRefresh } from "./PullToRefresh";
 export {
   usePullToRefresh,

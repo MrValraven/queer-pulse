@@ -14,10 +14,9 @@ import {
   type Stage,
 } from "./editorDashboard.data";
 import { wordsText } from "./magazineFormat";
+import { cx } from "../../shared/lib/cx";
+import { editorDot } from "./editorStatus";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
 
 const STAGE_CLASS: Record<Stage, string | undefined> = {
   Commissioned: styles.neutral,
@@ -43,10 +42,6 @@ const BLK_CLASS = {
   writer: styles.writer,
   note: undefined,
 } as const;
-
-function editorDot(ed: Editor): string | undefined {
-  return ed === "Marta" ? styles.edMarta : styles.edSara;
-}
 
 /** Render a title, converting <em>…</em> markers into coral <em> nodes. */
 function renderEm(title: string): ReactNode {

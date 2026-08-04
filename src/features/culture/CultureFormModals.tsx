@@ -1,8 +1,9 @@
-import { Button } from "../../shared/components/ui";
+import { type ReactNode } from "react";
+import { Button, ChipSelect, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { ModalShell, SuccessPanel, Sending, ChipSelect } from "./CultureModalKit";
+import { ModalShell, SuccessPanel } from "./CultureModalKit";
 import { useChipSet, useSubmitFlow } from "./cultureModalKit.hooks";
 import {
   PICK_KINDS,
@@ -15,11 +16,10 @@ import {
   PLAYLIST_VIBE_LABEL_KEY,
   replyByDate,
 } from "./cultureModals.data";
-import type { TFunction } from "../../shared/i18n/types";
 import styles from "./CultureModals.module.css";
 
 /** Shared submit button that swaps to a spinner while sending. */
-function SubmitBtn({
+export function SubmitBtn({
   sending,
   label,
   onClick,
@@ -36,14 +36,85 @@ function SubmitBtn({
   );
 }
 
+/**
+ * The one skeleton every culture form modal shares: a plum-panel success state
+ * once `done`, otherwise the eyebrow + serif title + sub, the caller's fields,
+ * and a Cancel / Submit footer. Callers pass the ready-made `success` node so
+ * each flow keeps its own copy and next-steps.
+ */
+export function CultureFormModal({
+  onClose,
+  sending,
+  done,
+  eyebrow,
+  title,
+  sub,
+  submitLabel,
+  onSubmit,
+  success,
+  children,
+}: {
+  onClose: () => void;
+  sending: boolean;
+  done: boolean;
+  eyebrow: ReactNode;
+  title: ReactNode;
+  sub: ReactNode;
+  submitLabel: string;
+  onSubmit: () => void;
+  /** The plum-panel confirmation shown once the flow completes. */
+  success: ReactNode;
+  /** The form fields between the header and the footer. */
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  return (
+    <ModalShell onClose={onClose} success={done}>
+      {done ? (
+        success
+      ) : (
+        <>
+          <div className={styles.eyebrow}>{eyebrow}</div>
+          <h2 className={styles.title}>{title}</h2>
+          <p className={styles.sub}>{sub}</p>
+          {children}
+          <div className={styles.foot}>
+            <Button variant="ghost" onClick={onClose}>
+              {t("culture:common.cancel")}
+            </Button>
+            <SubmitBtn
+              sending={sending}
+              label={submitLabel}
+              onClick={onSubmit}
+            />
+          </div>
+        </>
+      )}
+    </ModalShell>
+  );
+}
+
 /* ── Suggest a pick ──────────────────────────────────────────────────── */
 export function SuggestPickModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
   return (
-    <ModalShell onClose={onClose} success={done}>
-      {done ? (
+    <CultureFormModal
+      onClose={onClose}
+      sending={sending}
+      done={done}
+      eyebrow={t("culture:tabs.club")}
+      title={
+        <Translation
+          i18nKey="culture:suggestPick.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("culture:suggestPick.sub")}
+      submitLabel={t("culture:suggestPick.nominateCta")}
+      onSubmit={() => submit()}
+      success={
         <SuccessPanel
           title={t("culture:suggestPick.success.title")}
           em={t("culture:suggestPick.success.em")}
@@ -65,68 +136,44 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
         >
           {t("culture:suggestPick.success.body")}
         </SuccessPanel>
-      ) : (
-        <>
-          <div className={styles.eyebrow}>{t("culture:tabs.club")}</div>
-          <h2 className={styles.title}>
-            <Translation
-              i18nKey="culture:suggestPick.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.sub}>{t("culture:suggestPick.sub")}</p>
-          <div className={styles.field}>
-            <label htmlFor="pk-kind">
-              {t("culture:suggestPick.formatLabel")}
-            </label>
-            <select id="pk-kind" defaultValue={PICK_KINDS[0]}>
-              {PICK_KINDS.map((k) => (
-                <option key={k} value={k}>
-                  {t(PICK_KIND_OPTION_LABEL_KEY[k])}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="pk-title">
-              {t("culture:suggestPick.titleLabel")}
-            </label>
-            <input
-              id="pk-title"
-              type="text"
-              placeholder={t("culture:suggestPick.titlePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="pk-author">
-              {t("culture:suggestPick.authorLabel")}
-            </label>
-            <input
-              id="pk-author"
-              type="text"
-              placeholder={t("culture:suggestPick.authorPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="pk-why">{t("culture:suggestPick.whyLabel")}</label>
-            <textarea
-              id="pk-why"
-              placeholder={t("culture:suggestPick.whyPlaceholder")}
-            />
-          </div>
-          <div className={styles.foot}>
-            <Button variant="ghost" onClick={onClose}>
-              {t("culture:common.cancel")}
-            </Button>
-            <SubmitBtn
-              sending={sending}
-              label={t("culture:suggestPick.nominateCta")}
-              onClick={() => submit()}
-            />
-          </div>
-        </>
-      )}
-    </ModalShell>
+      }
+    >
+      <div className={styles.field}>
+        <label htmlFor="pk-kind">{t("culture:suggestPick.formatLabel")}</label>
+        <select id="pk-kind" defaultValue={PICK_KINDS[0]}>
+          {PICK_KINDS.map((k) => (
+            <option key={k} value={k}>
+              {t(PICK_KIND_OPTION_LABEL_KEY[k])}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="pk-title">{t("culture:suggestPick.titleLabel")}</label>
+        <input
+          id="pk-title"
+          type="text"
+          placeholder={t("culture:suggestPick.titlePlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="pk-author">
+          {t("culture:suggestPick.authorLabel")}
+        </label>
+        <input
+          id="pk-author"
+          type="text"
+          placeholder={t("culture:suggestPick.authorPlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="pk-why">{t("culture:suggestPick.whyLabel")}</label>
+        <textarea
+          id="pk-why"
+          placeholder={t("culture:suggestPick.whyPlaceholder")}
+        />
+      </div>
+    </CultureFormModal>
   );
 }
 
@@ -135,10 +182,26 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { sending, done, submit } = useSubmitFlow();
   const { selected, toggle } = useChipSet();
-  const lookingForLabel = makeOptionLabel(t, PROJECT_LOOKING_FOR_LABEL_KEY);
+  const lookingForOptions = PROJECT_LOOKING_FOR.map((value) => ({
+    value,
+    label: t(PROJECT_LOOKING_FOR_LABEL_KEY[value] ?? value),
+  }));
   return (
-    <ModalShell onClose={onClose} success={done}>
-      {done ? (
+    <CultureFormModal
+      onClose={onClose}
+      sending={sending}
+      done={done}
+      eyebrow={t("culture:tabs.commission")}
+      title={
+        <Translation
+          i18nKey="culture:postProject.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("culture:postProject.sub")}
+      submitLabel={t("culture:postProject.postCta")}
+      onSubmit={() => submit()}
+      success={
         <SuccessPanel
           title={t("culture:postProject.success.title")}
           em={t("culture:postProject.success.em")}
@@ -150,60 +213,35 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
         >
           {t("culture:postProject.success.body")}
         </SuccessPanel>
-      ) : (
-        <>
-          <div className={styles.eyebrow}>{t("culture:tabs.commission")}</div>
-          <h2 className={styles.title}>
-            <Translation
-              i18nKey="culture:postProject.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.sub}>{t("culture:postProject.sub")}</p>
-          <div className={styles.field}>
-            <label htmlFor="pp-title">
-              {t("culture:postProject.titleLabel")}
-            </label>
-            <input
-              id="pp-title"
-              type="text"
-              placeholder={t("culture:postProject.titlePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="pp-desc">
-              {t("culture:postProject.descLabel")}
-            </label>
-            <textarea
-              id="pp-desc"
-              placeholder={t("culture:postProject.descPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label id="pp-looking-for-label">
-              {t("culture:postProject.lookingForLabel")}
-            </label>
-            <ChipSelect
-              labelledBy="pp-looking-for-label"
-              options={PROJECT_LOOKING_FOR}
-              selected={selected}
-              onToggle={toggle}
-              optionLabel={lookingForLabel}
-            />
-          </div>
-          <div className={styles.foot}>
-            <Button variant="ghost" onClick={onClose}>
-              {t("culture:common.cancel")}
-            </Button>
-            <SubmitBtn
-              sending={sending}
-              label={t("culture:postProject.postCta")}
-              onClick={() => submit()}
-            />
-          </div>
-        </>
-      )}
-    </ModalShell>
+      }
+    >
+      <div className={styles.field}>
+        <label htmlFor="pp-title">{t("culture:postProject.titleLabel")}</label>
+        <input
+          id="pp-title"
+          type="text"
+          placeholder={t("culture:postProject.titlePlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="pp-desc">{t("culture:postProject.descLabel")}</label>
+        <textarea
+          id="pp-desc"
+          placeholder={t("culture:postProject.descPlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label id="pp-looking-for-label">
+          {t("culture:postProject.lookingForLabel")}
+        </label>
+        <ChipSelect
+          labelledBy="pp-looking-for-label"
+          options={lookingForOptions}
+          selected={selected}
+          onToggle={toggle}
+        />
+      </div>
+    </CultureFormModal>
   );
 }
 
@@ -213,8 +251,21 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
   const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
   return (
-    <ModalShell onClose={onClose} success={done}>
-      {done ? (
+    <CultureFormModal
+      onClose={onClose}
+      sending={sending}
+      done={done}
+      eyebrow={t("culture:tabs.showcase")}
+      title={
+        <Translation
+          i18nKey="culture:submitWork.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("culture:submitWork.sub")}
+      submitLabel={t("culture:submitWork.submitCta")}
+      onSubmit={() => submit()}
+      success={
         <SuccessPanel
           title={t("culture:submitWork.success.title")}
           em={t("culture:submitWork.success.em")}
@@ -236,71 +287,45 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
         >
           {t("culture:submitWork.success.body")}
         </SuccessPanel>
-      ) : (
-        <>
-          <div className={styles.eyebrow}>{t("culture:tabs.showcase")}</div>
-          <h2 className={styles.title}>
-            <Translation
-              i18nKey="culture:submitWork.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.sub}>{t("culture:submitWork.sub")}</p>
-          <div className={styles.field}>
-            <label htmlFor="sw-title">
-              {t("culture:submitWork.titleLabel")}
-            </label>
-            <input
-              id="sw-title"
-              type="text"
-              placeholder={t("culture:submitWork.titlePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="sw-medium">
-              {t("culture:submitWork.mediumLabel")}
-            </label>
-            <select id="sw-medium" defaultValue="">
-              <option value="" disabled>
-                {t("culture:submitWork.mediumPlaceholder")}
-              </option>
-              {SHOWCASE_MEDIUMS.map((m) => (
-                <option key={m} value={m}>
-                  {t(SHOWCASE_MEDIUM_LABEL_KEY[m])}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="sw-link">{t("culture:submitWork.linkLabel")}</label>
-            <input
-              id="sw-link"
-              type="url"
-              placeholder={t("culture:submitWork.linkPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="sw-about">
-              {t("culture:submitWork.aboutLabel")}
-            </label>
-            <textarea
-              id="sw-about"
-              placeholder={t("culture:submitWork.aboutPlaceholder")}
-            />
-          </div>
-          <div className={styles.foot}>
-            <Button variant="ghost" onClick={onClose}>
-              {t("culture:common.cancel")}
-            </Button>
-            <SubmitBtn
-              sending={sending}
-              label={t("culture:submitWork.submitCta")}
-              onClick={() => submit()}
-            />
-          </div>
-        </>
-      )}
-    </ModalShell>
+      }
+    >
+      <div className={styles.field}>
+        <label htmlFor="sw-title">{t("culture:submitWork.titleLabel")}</label>
+        <input
+          id="sw-title"
+          type="text"
+          placeholder={t("culture:submitWork.titlePlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="sw-medium">{t("culture:submitWork.mediumLabel")}</label>
+        <select id="sw-medium" defaultValue="">
+          <option value="" disabled>
+            {t("culture:submitWork.mediumPlaceholder")}
+          </option>
+          {SHOWCASE_MEDIUMS.map((m) => (
+            <option key={m} value={m}>
+              {t(SHOWCASE_MEDIUM_LABEL_KEY[m])}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="sw-link">{t("culture:submitWork.linkLabel")}</label>
+        <input
+          id="sw-link"
+          type="url"
+          placeholder={t("culture:submitWork.linkPlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="sw-about">{t("culture:submitWork.aboutLabel")}</label>
+        <textarea
+          id="sw-about"
+          placeholder={t("culture:submitWork.aboutPlaceholder")}
+        />
+      </div>
+    </CultureFormModal>
   );
 }
 
@@ -310,10 +335,26 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
   const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
   const { selected, toggle } = useChipSet();
-  const vibeLabel = makeOptionLabel(t, PLAYLIST_VIBE_LABEL_KEY);
+  const vibeOptions = PLAYLIST_VIBES.map((value) => ({
+    value,
+    label: t(PLAYLIST_VIBE_LABEL_KEY[value] ?? value),
+  }));
   return (
-    <ModalShell onClose={onClose} success={done}>
-      {done ? (
+    <CultureFormModal
+      onClose={onClose}
+      sending={sending}
+      done={done}
+      eyebrow={t("culture:submitPlaylist.eyebrow")}
+      title={
+        <Translation
+          i18nKey="culture:submitPlaylist.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("culture:submitPlaylist.sub")}
+      submitLabel={t("culture:submitPlaylist.submitCta")}
+      onSubmit={() => submit()}
+      success={
         <SuccessPanel
           title={t("culture:submitPlaylist.success.title")}
           em={t("culture:submitPlaylist.success.em")}
@@ -335,79 +376,42 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
         >
           {t("culture:submitPlaylist.success.body")}
         </SuccessPanel>
-      ) : (
-        <>
-          <div className={styles.eyebrow}>
-            {t("culture:submitPlaylist.eyebrow")}
-          </div>
-          <h2 className={styles.title}>
-            <Translation
-              i18nKey="culture:submitPlaylist.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.sub}>{t("culture:submitPlaylist.sub")}</p>
-          <div className={styles.field}>
-            <label htmlFor="pl-name">
-              {t("culture:submitPlaylist.nameLabel")}
-            </label>
-            <input
-              id="pl-name"
-              type="text"
-              placeholder={t("culture:submitPlaylist.namePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="pl-link">
-              {t("culture:submitPlaylist.linkLabel")}
-            </label>
-            <input
-              id="pl-link"
-              type="url"
-              placeholder={t("culture:submitPlaylist.linkPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label id="pl-vibe-label">
-              {t("culture:submitPlaylist.vibeLabel")}
-            </label>
-            <ChipSelect
-              labelledBy="pl-vibe-label"
-              options={PLAYLIST_VIBES}
-              selected={selected}
-              onToggle={toggle}
-              optionLabel={vibeLabel}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="pl-note">
-              {t("culture:submitPlaylist.noteLabel")}
-            </label>
-            <textarea
-              id="pl-note"
-              placeholder={t("culture:submitPlaylist.notePlaceholder")}
-            />
-          </div>
-          <div className={styles.foot}>
-            <Button variant="ghost" onClick={onClose}>
-              {t("culture:common.cancel")}
-            </Button>
-            <SubmitBtn
-              sending={sending}
-              label={t("culture:submitPlaylist.submitCta")}
-              onClick={() => submit()}
-            />
-          </div>
-        </>
-      )}
-    </ModalShell>
+      }
+    >
+      <div className={styles.field}>
+        <label htmlFor="pl-name">{t("culture:submitPlaylist.nameLabel")}</label>
+        <input
+          id="pl-name"
+          type="text"
+          placeholder={t("culture:submitPlaylist.namePlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="pl-link">{t("culture:submitPlaylist.linkLabel")}</label>
+        <input
+          id="pl-link"
+          type="url"
+          placeholder={t("culture:submitPlaylist.linkPlaceholder")}
+        />
+      </div>
+      <div className={styles.field}>
+        <label id="pl-vibe-label">
+          {t("culture:submitPlaylist.vibeLabel")}
+        </label>
+        <ChipSelect
+          labelledBy="pl-vibe-label"
+          options={vibeOptions}
+          selected={selected}
+          onToggle={toggle}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="pl-note">{t("culture:submitPlaylist.noteLabel")}</label>
+        <textarea
+          id="pl-note"
+          placeholder={t("culture:submitPlaylist.notePlaceholder")}
+        />
+      </div>
+    </CultureFormModal>
   );
-}
-
-/** Build a `ChipSelect` `optionLabel` resolver from a canonical-id → key map. */
-function makeOptionLabel(
-  t: TFunction,
-  labelKeys: Record<string, string>,
-): (option: string) => string {
-  return (option) => t(labelKeys[option] ?? option);
 }

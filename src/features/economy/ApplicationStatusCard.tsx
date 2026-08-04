@@ -1,4 +1,4 @@
-import { FiClock } from "react-icons/fi";
+import { FiArrowRight, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -119,6 +119,12 @@ export function AppCard({
               onClick={() => onAction(act.kind)}
             >
               {act.label}
+              {act.arrow && (
+                <>
+                  {" "}
+                  <FiArrowRight aria-hidden />
+                </>
+              )}
             </button>
           ) : (
             <Button
@@ -128,6 +134,12 @@ export function AppCard({
               onClick={() => onAction(act.kind)}
             >
               {act.label}
+              {act.arrow && (
+                <>
+                  {" "}
+                  <FiArrowRight aria-hidden />
+                </>
+              )}
             </Button>
           ),
         )}

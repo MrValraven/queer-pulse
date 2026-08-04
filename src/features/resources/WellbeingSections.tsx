@@ -1,4 +1,4 @@
-import { FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiHeart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, EmptyState, Reveal } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/useConnect";
@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useTherapists } from "./api/useTherapists";
+import { CardGrid, ResourceCard } from "./ResourceCard";
 import { THERAPISTS, CRISIS, HARM } from "./wellbeing.data";
 import styles from "./resources.module.css";
 
@@ -47,40 +48,18 @@ export function TherapistsSection() {
             }}
           />
         ) : (
-        <div className={styles.grid}>
+        <CardGrid>
           {THERAPISTS.map((therapist, index) => (
-            <Reveal
+            <ResourceCard
               key={therapist.name}
-              className={styles.card}
+              name={therapist.name}
+              spec={therapist.spec}
+              tags={therapist.tags}
+              loc={therapist.loc}
+              ctaLabel={t("resources:wellbeing.therapists.requestIntroCta")}
+              onCta={() => openConnect()}
               delay={index * 55}
-            >
-              <div className={styles.cardName}>{therapist.name}</div>
-              <div className={styles.cardSpec}>{therapist.spec}</div>
-              <div className={styles.tags}>
-                {therapist.tags.map((tag) => (
-                  <span key={tag} className={styles.tag}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div className={styles.cardFoot}>
-                <span className={styles.cardLoc}>{therapist.loc}</span>
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className={styles.cardCta}
-                  onClick={() => openConnect()}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      openConnect();
-                    }
-                  }}
-                >
-                  {t("resources:wellbeing.therapists.requestIntroCta")}
-                </span>
-              </div>
-            </Reveal>
+            />
           ))}
           <Reveal
             className={`${styles.card} ${styles.cardDashed}`}
@@ -93,11 +72,12 @@ export function TherapistsSection() {
                 to={routes.contact}
                 style={{ color: "var(--plum)", fontWeight: 600 }}
               >
-                {t("resources:wellbeing.therapists.applyCta")}
+                {t("resources:wellbeing.therapists.applyCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             </div>
           </Reveal>
-        </div>
+        </CardGrid>
         )}
       </div>
     </section>

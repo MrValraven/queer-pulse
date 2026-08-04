@@ -326,7 +326,7 @@ export const economy: Catalog = {
   "jobs.card.unsaveAriaLabel": "Remove {title} from saved",
   "jobs.card.savedToast": "Saved {title}",
   "jobs.card.unsavedToast": "Removed {title} from saved",
-  "jobs.card.applyCta": "Apply →",
+  "jobs.card.applyCta": "Apply",
   "jobs.card.applyAriaLabel": "Apply for {title}",
 
   "jobs.safetyBanner.text":
@@ -398,18 +398,18 @@ export const economy: Catalog = {
   "jobDetail.section.lookingFor": "What we're looking for",
   "jobDetail.section.offer": "What we offer",
   "jobDetail.section.aboutCompany": "About {company}",
-  "jobDetail.section.viewCompany": "View company profile →",
+  "jobDetail.section.viewCompany": "View company profile",
   "jobDetail.section.safety": "Safety",
   "jobDetail.section.safetyBody":
     "How {company} is rated by the community on the things that matter to queer professionals.",
-  "jobDetail.section.safetyReviews": "See safety reviews →",
+  "jobDetail.section.safetyReviews": "See safety reviews",
 
   "jobDetail.sidebar.salary": "Salary",
   "jobDetail.sidebar.type": "Type",
   "jobDetail.sidebar.location": "Location",
   "jobDetail.sidebar.category": "Category",
   "jobDetail.sidebar.deadline": "Deadline",
-  "jobDetail.sidebar.applyCta": "Apply now →",
+  "jobDetail.sidebar.applyCta": "Apply now",
   "jobDetail.report.cta": "Report this job",
   "jobDetail.report.ariaLabel": "Report {name}",
 
@@ -593,12 +593,12 @@ export const economy: Catalog = {
   "suggestLandlord.error": "Couldn't send that — mind trying again?",
 
   // ── HousingListingPage (+ sections) ────────────────────────────────────
-  "housingListing.back": "← Housing board",
+  "housingListing.back": "Housing board",
   "housingListing.section.about": "About this place",
   "housingListing.section.features": "Features",
   "housingListing.section.facts": "The facts",
   "housingListing.section.idealFor": "Ideal for",
-  "housingListing.messageCtaArrow": "Message {name} →",
+  "housingListing.messageCtaArrow": "Message {name}",
   "housingListing.messageCta": "Message {name}",
   "housingListing.listedBy": "Listed by",
   "housingListing.verifiedMember": "Verified member",
@@ -689,7 +689,7 @@ export const economy: Catalog = {
     "Your recommendation is what makes this list trustworthy — and what makes someone else's move so much safer. It takes two minutes.",
   "landlordPage.sidebar.recommendCta": "Recommend this landlord",
   "landlordPage.sidebar.howToRent": "How to rent from them",
-  "landlordPage.sidebar.requestIntro": "Request an introduction →",
+  "landlordPage.sidebar.requestIntro": "Request an introduction",
   "landlordPage.toast.recommended_one":
     "Recommendation submitted — {count} star",
   "landlordPage.toast.recommended_other":
@@ -757,10 +757,10 @@ export const economy: Catalog = {
   "flatmates.outro.title": "A home where <em>you belong.</em>",
   "flatmates.outro.sub":
     "The right flatmate can make a city feel like home. Take your time, trust your gut, and use the community.",
-  "flatmates.outro.askForum": "Ask the forum →",
+  "flatmates.outro.askForum": "Ask the forum",
 
   "flatmates.card.memberSince": "Member since {date}",
-  "flatmates.card.sayHello": "Say hello →",
+  "flatmates.card.sayHello": "Say hello",
   "flatmates.card.helloSent": "Hello sent",
   "flatmates.card.sayHelloError": "Couldn't send your hello — try again in a moment.",
   "flatmates.card.matchScore": "{score}% match",
@@ -804,7 +804,7 @@ export const economy: Catalog = {
   "postProfileForm.aboutPlaceholder":
     "Tell people a bit about yourself — your rhythm, your work, what kind of home makes you feel good. No need to sell yourself; just be honest.",
   "postProfileForm.lifestyleTagsLabel": "Lifestyle tags",
-  "postProfileForm.submitCta": "Post profile →",
+  "postProfileForm.submitCta": "Post profile",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────
   "company.notFound.title": "Company not found",
@@ -879,9 +879,9 @@ export const economy: Catalog = {
     "Pronouns respected, real inclusion, leadership that gets it…",
   "companyReview.consLabel": "What was hard — the rest",
   "companyReview.consPlaceholder": "Where the follow-through fell short…",
-  "companyReview.cancel": "← Cancel",
+  "companyReview.cancel": "Cancel",
   "companyReview.posting": "Posting…",
-  "companyReview.submitCta": "Post review →",
+  "companyReview.submitCta": "Post review",
   "companyReview.toast.alreadyReviewed":
     "You've already reviewed this company.",
   "companyReview.toast.error":
@@ -912,8 +912,8 @@ export const economy: Catalog = {
   "employerReviews.recent.title": "Recent <em>reviews</em>",
   "employerReviews.recent.sub":
     "Member-written · anonymous · updated continuously",
-  "employerReviews.recent.browseCta": "Browse queer-inclusive jobs →",
-  "employerReviews.recent.writeCta": "Write a review →",
+  "employerReviews.recent.browseCta": "Browse queer-inclusive jobs",
+  "employerReviews.recent.writeCta": "Write a review",
   "employerReviews.emptyLive.title": "No employers reviewed yet",
   "employerReviews.emptyLive.description":
     "No reviews have been published yet. Be the first to share what it's really like to work somewhere.",
@@ -1043,19 +1043,19 @@ export const economy: Catalog = {
   "grants.sidebar.microGrants.title": "Our <em>Micro Grants</em>",
   "grants.sidebar.microGrants.body":
     "QueerPulse runs its own micro grant programme (€200–€2,000) for community projects in Lisbon. Faster and simpler than most external grants.",
-  "grants.sidebar.microGrants.cta": "Apply now →",
+  "grants.sidebar.microGrants.cta": "Apply now",
   "grants.sidebar.skillsExchange.title": "Skills Exchange",
   "grants.sidebar.skillsExchange.body":
     "If you need support but grants feel too formal, the barter board connects members who can swap skills — no money involved.",
-  "grants.sidebar.skillsExchange.cta": "Explore the exchange →",
+  "grants.sidebar.skillsExchange.cta": "Explore the exchange",
   "grants.sidebar.appHelp.title": "Get <em>application help</em>",
   "grants.sidebar.appHelp.body":
     "Members with grant-writing experience offer workshops and one-to-one support via the skills exchange.",
-  "grants.sidebar.appHelp.cta": "Find a mentor →",
+  "grants.sidebar.appHelp.cta": "Find a mentor",
 
   // ── JobApplyPage (+ header / form / sidebar) ───────────────────────────
-  "jobApply.backToJob": "← Back to job",
-  "jobApply.backToJobs": "← Back to jobs",
+  "jobApply.backToJob": "Back to job",
+  "jobApply.backToJobs": "Back to jobs",
   "jobApply.header.eyebrow": "Apply · {title}",
   "jobApply.header.title": "Tell <em>{org}</em> about you.",
   "jobApply.header.closes": "Closes {date}",
@@ -1076,7 +1076,7 @@ export const economy: Catalog = {
   "jobApply.cv": "CV or résumé",
   "jobApply.cvDrop": "Drop PDF here, or click to choose",
   "jobApply.cvHint": "Max 5 MB · PDF / DOCX",
-  "jobApply.browse": "Browse →",
+  "jobApply.browse": "Browse",
   "jobApply.portfolio": "Portfolio links",
   "jobApply.portfolioHelper":
     "Your QueerPulse profile is auto-attached. Untick in Privacy if you'd rather not.",
@@ -1107,7 +1107,7 @@ export const economy: Catalog = {
   "jobApply.draftSavedJustNow": "Draft saved · just now",
   "jobApply.saveDraft": "Save draft",
   "jobApply.sending": "Sending…",
-  "jobApply.sendCta": "Send application →",
+  "jobApply.sendCta": "Send application",
 
   "jobApply.sidebar.closes": "Closes <b>{date}</b>",
   "jobApply.sidebar.tipsTitle": "Before you send",
@@ -1187,7 +1187,7 @@ export const economy: Catalog = {
 
   "barter.card.offeringLabel": "Offering",
   "barter.card.wantLabel": "Looking for",
-  "barter.card.proposeCta": "Propose a swap →",
+  "barter.card.proposeCta": "Propose a swap",
   "barter.toast.messageSent": "Message sent to {name}",
   "barter.postedToday": "Today",
   "barter.postedDaysAgo_one": "{count} day ago",
@@ -1204,7 +1204,7 @@ export const economy: Catalog = {
   "barter.postStrip.success.title": "It's <em>on the table.</em>",
   "barter.postStrip.success.body":
     "Your swap is live at the top of the board. We'll let you know when someone proposes an exchange.",
-  "barter.postStrip.success.postAnother": "Post another →",
+  "barter.postStrip.success.postAnother": "Post another",
   "barter.postStrip.title": "Put something <em>on the table.</em>",
   "barter.postStrip.body":
     "Every exchange starts with a post. Tell the community what you can offer and what you're hoping for in return.",
@@ -1212,7 +1212,7 @@ export const economy: Catalog = {
     "I can offer — e.g. Portuguese lessons, logo design…",
   "barter.postStrip.wantPlaceholder":
     "I'm looking for — e.g. tax advice, moving help…",
-  "barter.postStrip.submitCta": "Post to the exchange →",
+  "barter.postStrip.submitCta": "Post to the exchange",
   "barter.postStrip.namePlaceholder": "You",
   "barter.postStrip.hoodPlaceholder": "Your post",
   "barter.postStrip.detailPlaceholder":
@@ -1226,7 +1226,7 @@ export const economy: Catalog = {
   "barter.outro.cta": "Join the network",
 
   // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
-  "barterDetail.back": "← Skill exchange",
+  "barterDetail.back": "Skill exchange",
   "barterDetail.emptyLive.title": "This swap isn't live yet",
   "barterDetail.emptyLive.description":
     "The skill exchange starts empty at launch and fills with swaps members actually post. There's nothing to show at this link yet.",
@@ -1240,7 +1240,7 @@ export const economy: Catalog = {
   "barterDetail.locationWithHood": "{hood} · Lisbon",
   "barterDetail.locationLisbon": "Lisbon",
   "barterDetail.repliesFast": "Usually replies fast",
-  "barterDetail.messageCta": "Message {firstName} →",
+  "barterDetail.messageCta": "Message {firstName}",
   "barterDetail.section.offering": "What they're <em>offering</em>",
   "barterDetail.section.lookingFor": "What they're <em>looking for</em>",
   "barterDetail.section.howItWorks": "How a <em>swap works</em>",
@@ -1269,7 +1269,7 @@ export const economy: Catalog = {
   "barterDetail.propose.lead": "No money — <em>just a trade.</em>",
   "barterDetail.propose.placeholder":
     "Tell {firstName} what you'd offer in return, and why this swap works for you.",
-  "barterDetail.propose.sendCta": "Send proposal →",
+  "barterDetail.propose.sendCta": "Send proposal",
   "barterDetail.propose.askFirst": "Ask a question first",
   "barterDetail.propose.footNote":
     "Nothing is agreed until you both say yes. Swaps are between members — QueerPulse never takes a cut.",
@@ -1327,8 +1327,8 @@ export const economy: Catalog = {
   "postJob.topbar.back": "Jobs & skills",
   "postJob.topbar.savedJustNow": "Saved just now",
   "postJob.topbar.autosaves": "Draft autosaves as you type",
-  "postJob.nav.back": "← Back",
-  "postJob.nav.continue": "Continue →",
+  "postJob.nav.back": "Back",
+  "postJob.nav.continue": "Continue",
   "postJob.nav.saveDraft": "Save draft",
   "postJob.nav.publish": "Publish listing",
   "postJob.nav.publishing": "Publishing…",
@@ -1506,7 +1506,7 @@ export const economy: Catalog = {
   "postJob.sidebar.hiring": "Hiring",
   "postJob.sidebar.titlePlaceholder": "Your title will appear here",
   "postJob.sidebar.descPlaceholder": "Add a description…",
-  "postJob.sidebar.viewFullCta": "See full listing →",
+  "postJob.sidebar.viewFullCta": "See full listing",
   "postJob.sidebar.howThisWorks": "How this works",
   "postJob.sidebar.point1":
     "Listings are <strong>visible to members</strong>, never public.",
@@ -1573,12 +1573,12 @@ export const economy: Catalog = {
   "mentorship.choose.mentee.desc":
     "You're navigating something — a career transition, a creative block, coming out professionally, a difficult workplace, a new city. You'd benefit from talking to someone who's been through it.",
   "mentorship.choose.mentee.for":
-    "For: anyone at any stage who could use some guidance →",
+    "For: anyone at any stage who could use some guidance",
   "mentorship.choose.mentor.title": "I can be a mentor",
   "mentorship.choose.mentor.desc":
     "You've been through enough to have something to offer. You don't need to be an expert — you just need to have navigated something that someone else is currently navigating.",
   "mentorship.choose.mentor.for":
-    "For: members with experience they're willing to share →",
+    "For: members with experience they're willing to share",
 
   "mentorship.emptyLive.title": "Mentor directory coming soon",
   "mentorship.emptyLive.description":
@@ -1590,7 +1590,7 @@ export const economy: Catalog = {
   "mentorship.outro.title": "Have something <em>to give?</em>",
   "mentorship.outro.sub":
     "Mentorship is one way. Browse volunteer opportunities to find other ways to contribute to the community around you.",
-  "mentorship.outro.cta": "See volunteer roles →",
+  "mentorship.outro.cta": "See volunteer roles",
 
   "mentorship.matchArea.careerDirection": "Career direction",
   "mentorship.matchArea.comingOutProfessionally": "Coming out professionally",
@@ -1657,21 +1657,21 @@ export const economy: Catalog = {
   "mentorship.mentor.step2.emailPlaceholder": "Your email address",
   "mentorship.mentor.toastSubmitted": "Added to the mentor pool",
 
-  "mentorship.nav.continue": "Continue →",
-  "mentorship.nav.back": "← Back",
-  "mentorship.nav.submit": "Submit →",
+  "mentorship.nav.continue": "Continue",
+  "mentorship.nav.back": "Back",
+  "mentorship.nav.submit": "Submit",
   "mentorship.cta.requestMatch": "Request a match",
   "mentorship.cta.joinWaitlist": "Join waitlist",
 
   // ── MentorDetailPage (+ header / sections / sidebar / cycle nav) ───────
-  "mentorDetail.backToAll": "← All mentors",
+  "mentorDetail.backToAll": "All mentors",
   "mentorDetail.emptyLive.title": "This mentor profile is coming soon",
   "mentorDetail.emptyLive.description":
     "The mentor directory isn't live yet. Head back to explore mentorship when it opens.",
   "mentorDetail.emptyLive.cta": "Back to mentorship",
   "mentorDetail.messageCta": "Message {firstName}",
-  "mentorDetail.cyclePrevious": "← Previous",
-  "mentorDetail.cycleNext": "Next →",
+  "mentorDetail.cyclePrevious": "Previous",
+  "mentorDetail.cycleNext": "Next",
   "mentorDetail.cyclePosition": "{position} of {total}",
   "mentorDetail.section.howTheyMentor": "How {firstName} <em>mentors</em>",
   "mentorDetail.section.fitFor": "Who you'd <em>be a fit for</em>",
@@ -1684,8 +1684,8 @@ export const economy: Catalog = {
   "mentorDetail.sidebar.noUpfrontCost":
     "No upfront cost. Mentorship here is member-to-member — you can always ask a question before committing.",
   "mentorDetail.sidebar.notSureYet": "Not sure yet?",
-  "mentorDetail.sidebar.askQuestion": "→ Message {firstName} a question",
-  "mentorDetail.sidebar.browseAll": "→ Browse all mentors",
+  "mentorDetail.sidebar.askQuestion": "Message {firstName} a question",
+  "mentorDetail.sidebar.browseAll": "Browse all mentors",
 
   // ── ApplicationStatusPage (+ header/list/card, listing-manager modals) ──
   // Scope note: application content in applicationStatus.data.tsx /
@@ -1770,7 +1770,7 @@ export const economy: Catalog = {
   "applicationStatus.company.statWeekPilot": "Week pilot",
   "applicationStatus.company.sector": "Sector",
   "applicationStatus.company.based": "Based",
-  "applicationStatus.company.viewDirectory": "View in directory →",
+  "applicationStatus.company.viewDirectory": "View in directory",
   "applicationStatus.note.from": "A note from {company}",
 
   "msg.message.title": "Message the",
@@ -1793,19 +1793,19 @@ export const economy: Catalog = {
   "msg.yourReply": "Your reply",
   "msg.replyPlaceholder": "Write a reply…",
   "msg.sendingLabel": "Sending…",
-  "msg.sendCta": "Send →",
+  "msg.sendCta": "Send",
   "msg.yourMessageLabel": "Your message",
   "msg.messagePlaceholder": "Write naturally.",
-  "msg.cancel": "← Cancel",
+  "msg.cancel": "Cancel",
   "msg.success.title": "Message",
   "msg.success.em": "sent.",
   "msg.success.body":
     "Your message to {firstName} is on its way. They'll reply straight to your inbox.",
 
   "calendar.eyebrow": "Interview",
-  "calendar.close": "← Close",
+  "calendar.close": "Close",
   "calendar.icsLabel": ".ics file",
-  "calendar.googleLabel": "Google Calendar →",
+  "calendar.googleLabel": "Google Calendar",
   "calendar.addingLabel": "Adding…",
   "calendar.success.title": "Saved to your",
   "calendar.success.em": "calendar.",
@@ -1824,7 +1824,7 @@ export const economy: Catalog = {
   "withdraw.reasonLabel": "Reason (only you see this)",
   "withdraw.reasonPlaceholder": "Pick a reason, or leave it open",
   "withdraw.cantUndo": "This can't be undone — you'd need to re-apply.",
-  "withdraw.keepIt": "← Keep it",
+  "withdraw.keepIt": "Keep it",
   "withdraw.sendingLabel": "Withdrawing…",
   "withdraw.submitCta": "Withdraw application",
   "withdraw.success.title": "Application",
@@ -1849,7 +1849,7 @@ export const economy: Catalog = {
   "negotiate.copyDraft": "Copy draft",
   "negotiate.copiedToast": "Draft copied to clipboard",
   "negotiate.sendingLabel": "Sending…",
-  "negotiate.sendCta": "Send reply →",
+  "negotiate.sendCta": "Send reply",
   "negotiate.success.title": "Counter",
   "negotiate.success.em": "sent.",
   "negotiate.success.body":
@@ -1890,7 +1890,7 @@ export const economy: Catalog = {
   "offer.start": "Start",
   "offer.declinePolitely": "Decline politely",
   "offer.decliningLabel": "Declining…",
-  "offer.acceptCta": "Accept offer →",
+  "offer.acceptCta": "Accept offer",
   "offer.acceptingLabel": "Accepting…",
   "offer.success.title": "Offer",
   "offer.success.emAccepted": "accepted.",
@@ -1911,9 +1911,9 @@ export const economy: Catalog = {
   "resume.coverLetterPlaceholder": "A few honest lines on why this role.",
   "resume.availabilityLabel": "Availability",
   "resume.availabilityPlaceholder": "e.g. Two weeks' notice",
-  "resume.saveClose": "← Save & close",
+  "resume.saveClose": "Save & close",
   "resume.submittingLabel": "Submitting…",
-  "resume.submitCta": "Submit application →",
+  "resume.submitCta": "Submit application",
   "resume.success.title": "Application",
   "resume.success.em": "sent.",
   "resume.success.body":
@@ -1924,8 +1924,8 @@ export const economy: Catalog = {
   "compare.sub":
     "A calm view of what's on the table. Compare the numbers, then respond when you're ready.",
   "compare.whatsIncluded": "What's included",
-  "compare.respondCta": "Respond →",
-  "compare.close": "← Close",
+  "compare.respondCta": "Respond",
+  "compare.close": "Close",
   "compareRow.salary": "Salary",
   "compareRow.holiday": "Holiday",
   "compareRow.startDate": "Start date",
@@ -1950,7 +1950,7 @@ export const economy: Catalog = {
   "workshopsSection.seatsLeft_one": "<b>{count}</b> seat left",
   "workshopsSection.seatsLeft_other": "<b>{count}</b> seats left",
   "workshopsSection.cohortFull": "Cohort full",
-  "workshopsSection.viewCta": "View workshop →",
+  "workshopsSection.viewCta": "View workshop",
   "workshopsSection.heading": "Advanced <em>workshops</em>",
   "workshopsSection.blurb":
     "Structured, multi-week courses led by members who go deep on one craft. Small cohorts, sliding-scale pricing, and you make something real by the end. Running a course yourself? List it here.",
@@ -1961,7 +1961,7 @@ export const economy: Catalog = {
     "This workshop may have wrapped up or been taken down. Browse what's running now over on Skills & learning.",
   "workshopPage.notFound.backCta": "Back to Skills",
   "workshopPage.backToSkills": "Skills & learning",
-  "workshopPage.footerBackCta": "← All workshops & skills",
+  "workshopPage.footerBackCta": "All workshops & skills",
   "workshopPage.newBadge": "New",
 
   "workshopSections.about.title": "What you'll <em>actually do</em>",
@@ -1976,7 +1976,7 @@ export const economy: Catalog = {
   "workshopSidebar.startDate": "Start date",
   "workshopSidebar.cancellation": "Cancellation",
   "workshopSidebar.cohortFull": "Cohort is full",
-  "workshopSidebar.reserveCta": "Reserve a spot →",
+  "workshopSidebar.reserveCta": "Reserve a spot",
   "workshopSidebar.askQuestion": "Ask a question",
   "workshopSidebar.askQuestionToast":
     "We'll pass your question to {firstName}.",
@@ -2064,7 +2064,7 @@ export const economy: Catalog = {
   "addWorkshop.listed.title": "Workshop",
   "addWorkshop.listed.em": "listed.",
   "addWorkshop.listed.closeLabel": "Done",
-  "addWorkshop.listed.viewCta": "View your workshop →",
+  "addWorkshop.listed.viewCta": "View your workshop",
   "addWorkshop.listed.body":
     "<strong>{title}</strong> is live on Skills & learning. Members can browse it, read the plan, and reserve a seat. Edit the details or add sessions any time from your workshop page.",
 
@@ -2203,7 +2203,7 @@ export const economy: Catalog = {
   "skills.outro.cta": "Request an invite",
   "skills.card.teaching": "Teaching",
   "skills.card.learning": "Learning",
-  "skills.card.reachOut": "Reach out →",
+  "skills.card.reachOut": "Reach out",
 
   // ── SolidarityPage (+ directory) ────────────────────────────────────────
   // Scope note: solidarity.data.ts practitioner listings (bio, pricing notes,
@@ -2245,7 +2245,7 @@ export const economy: Catalog = {
   "solidarityDirectory.badgeMember": "Member",
   "solidarityDirectory.badgeVerified": "Verified",
   "solidarityDirectory.slidingScaleLabel": "Sliding scale",
-  "solidarityDirectory.contactCta": "Contact →",
+  "solidarityDirectory.contactCta": "Contact",
   "solidarityDirectory.empty.title": "No practitioners match",
   "solidarityDirectory.empty.description":
     "No one fits that search just yet. Try a different profession or clear your search to see everyone offering sliding-scale care.",
@@ -2688,12 +2688,12 @@ export const economy: Catalog = {
   "housingCoop.phases.sub":
     "Realistic timeline: 14–28 months. Each phase has templates, real examples from existing co-ops, and a mentor you can reach when stuck.",
   "housingCoop.grid.title": "Co-ops <em>forming now</em>",
-  "housingCoop.grid.seeAll": "All 8 →",
+  "housingCoop.grid.seeAll": "All 8",
   "housingCoop.templates.title": "Templates & <em>tools</em>",
   "housingCoop.templates.sub":
     "Every document we wish someone had given us. Drafted with QueerPulse legal, translated PT & EN, stress-tested by Casa Sambizanga's first two years.",
-  "housingCoop.templates.download": "Download →",
-  "housingCoop.templates.read": "Read →",
+  "housingCoop.templates.download": "Download",
+  "housingCoop.templates.read": "Read",
   "housingCoop.startCta.eyebrow": "Start a co-op",
   "housingCoop.startCta.title": "Don't have <em>your people yet</em>?",
   "housingCoop.startCta.body":
@@ -2833,10 +2833,10 @@ export const economy: Catalog = {
   // portraits/mentoring/sublet offers, poster names/roles/bios) are
   // member-authored marketplace posts — in live mode fetched from the board.
   // Left in English. Only the surrounding chrome below is translated.
-  "offerBoard.backLink": "← Asks & Offers",
+  "offerBoard.backLink": "Asks & Offers",
   "offerBoard.pill.looking": "Looking for",
   "offerBoard.pill.offering": "Offering",
-  "offerBoard.respondCta": "Respond to {name} →",
+  "offerBoard.respondCta": "Respond to {name}",
   "offerBoard.seeProfileCta": "See their profile",
   "offerBoard.postedBy": "Posted by",
   "offerBoard.sidebarNote":
@@ -2884,7 +2884,7 @@ export const economy: Catalog = {
   "affiliateCompanyModal.addCompany.aboutLabel": "About",
   "affiliateCompanyModal.addCompany.aboutPlaceholder":
     "A short description of the company and how it works.",
-  "affiliateCompanyModal.addCompany.pickExisting": "← Pick an existing company",
+  "affiliateCompanyModal.addCompany.pickExisting": "Pick an existing company",
   "affiliateCompanyModal.roleLabel": "Your role there",
   "affiliateCompanyModal.cancel": "Cancel",
   "affiliateCompanyModal.creating": "Creating…",

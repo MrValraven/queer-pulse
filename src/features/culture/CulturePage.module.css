@@ -102,31 +102,7 @@
   padding: 80px 0 100px;
 }
 
-/* Shared section header */
-.secHeader {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-.secHead {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
-  color: var(--text-strong);
-  letter-spacing: -0.02em;
-}
-.secHead em {
-  font-style: italic;
-  color: var(--accent);
-}
-.subLabel {
-  font-size: 14px;
-  color: var(--ink-60);
-  margin-top: 6px;
-}
+/* Section headers now use the shared <SectionHead> primitive. */
 
 /* Picks grid */
 .picksGrid {

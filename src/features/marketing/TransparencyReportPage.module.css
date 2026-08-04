@@ -1,54 +1,8 @@
-.hero {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  padding: 140px 0 70px;
-  position: relative;
-  overflow: hidden;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  bottom: -30%;
-  right: -10%;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--accent-rgb), 0.16),
-    transparent 60%
-  );
-  pointer-events: none;
-}
-.heroInner {
-  max-width: var(--maxw-page);
-  margin: 0 auto;
-  padding: 0 28px;
-  position: relative;
-  z-index: 1;
-}
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(56px, 9vw, 128px);
-  color: rgba(var(--cream-rgb), 1);
-  letter-spacing: -0.025em;
-  line-height: 0.92;
-  max-width: 14ch;
-  margin-bottom: 22px;
-}
-.h1 em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent);
+/* Below-title hero extras rendered as PageHero children (plum hero); PageHero
+   owns the plum background, glow, eyebrow and title, so this only restores the
+   gap the title's bottom margin used to provide. */
+.heroExtra {
+  margin-top: 20px;
 }
 .dek {
   font-size: 17px;

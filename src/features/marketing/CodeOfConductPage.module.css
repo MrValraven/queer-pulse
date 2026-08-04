@@ -1,33 +1,7 @@
-.hero {
-  padding: 140px 0 56px;
-}
-.heroInner {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(52px, 8vw, 108px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.95;
-  margin-bottom: 24px;
-  max-width: 14ch;
-}
-.h1 em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent);
+/* Below-title dek rendered as a PageHero child; restores the gap the title's
+   bottom margin used to provide (PageHero now owns eyebrow + title). */
+.heroExtra {
+  margin-top: 20px;
 }
 .dek {
   font-size: 17px;

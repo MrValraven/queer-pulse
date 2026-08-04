@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { useSaved } from "../../app/providers/useSaved";
@@ -46,6 +47,7 @@ export function LandlordPage() {
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("economy:housingListing.back")}
           </Link>
           <LandlordSkeleton />
@@ -86,7 +88,8 @@ export function LandlordPage() {
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>
-          {t("economy:housingListing.back")}
+          <FiArrowLeft aria-hidden />{" "}
+            {t("economy:housingListing.back")}
         </Link>
 
         <FadeIn>

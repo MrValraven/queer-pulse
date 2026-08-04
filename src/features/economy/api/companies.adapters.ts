@@ -152,7 +152,7 @@ export function companyDetailToProfile(dto: CompanyDetailDTO): CompanyProfile {
     teamCount: dto.teamCount,
     membersLabel: `View all ${dto.teamCount} ${
       dto.teamCount === 1 ? "member" : "members"
-    } →`,
+    }`,
     hiringContact: dto.hiringContact ?? {
       name: "The team",
       role: "Applications are read by the team here.",

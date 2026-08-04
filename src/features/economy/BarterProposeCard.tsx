@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -56,7 +57,8 @@ export function BarterProposeCard({
             onClick={send}
             style={{ width: "100%", justifyContent: "center" }}
           >
-            {t("economy:barterDetail.propose.sendCta")}
+            {t("economy:barterDetail.propose.sendCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
           <Button
             variant="ghost"

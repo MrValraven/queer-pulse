@@ -34,8 +34,8 @@ export const notifications: Catalog = {
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
   "type.promoted_to_member.meta": "Membership",
 
-  "type.new_message.text": "You have a new message.",
-  "type.new_message.meta": "Private message",
+  // `new_message` (in-app "You have a new message" row) was retired: DM alerts
+  // live only in the message-icon unread badge and push, never here.
 
   "type.introduction_made.text": "An introduction you made went through.",
   "type.introduction_made.textNamed":
@@ -185,14 +185,12 @@ export const notifications: Catalog = {
 
   // Filter tabs (data.tsx's notificationTabs + the link-style Mentions tab)
   "tabs.all": "All",
-  "tabs.messages": "Messages",
   "tabs.events": "Events",
   "tabs.community": "Community",
   "tabs.platform": "Platform",
   "tabs.mentions": "Mentions",
 
   // Shared action-button labels across the demo notification list
-  "actions.reply": "Reply",
   "actions.viewThread": "View thread",
   "actions.viewEvent": "View event",
   "actions.accept": "Accept",
@@ -200,7 +198,6 @@ export const notifications: Catalog = {
   "actions.readNow": "Read now",
   "actions.seeDetails": "See details",
   "actions.seeBarterBoard": "See barter board",
-  "actions.readMessage": "Read message",
   "actions.viewReplies": "View replies",
   "actions.readReport": "Read report",
 
@@ -208,9 +205,6 @@ export const notifications: Catalog = {
   // what `formatNotification` produces for the analogous live `type`, but with
   // richer flavour text. Proper nouns (event/community/feature names, quoted
   // post titles) stay as `{token}` values, never translated.
-  "list.1.text":
-    "<strong>{name}</strong> replied to your message about the Sunday table gathering.",
-  "list.1.meta": "Private message",
   "list.2.text":
     "Your RSVP for <strong>{title}</strong> has been confirmed. The event is on {date} at {venue}.",
   "list.2.meta": "Event · Gathering",
@@ -238,9 +232,6 @@ export const notifications: Catalog = {
   "list.9.text":
     "The <strong>{event}</strong> you attended has a follow-up discussion scheduled for {date}.",
   "list.9.meta": "Event · Follow-up",
-  "list.10.text":
-    "<strong>{name}</strong> sent you a message regarding the {event} on {day}.",
-  "list.10.meta": "Private message",
   "list.11.text_one":
     'Your post in the Forum ("{postTitle}") received {count} reply.',
   "list.11.text_other":
@@ -294,7 +285,7 @@ export const notifications: Catalog = {
   "mentions.context.communityReply": "in a {community} reply",
 
   // Notification deep-link preview (NotificationDeepLinkPage.tsx / Cards.tsx)
-  "deepLink.back": "← Notifications",
+  "deepLink.back": "Notifications",
   "deepLink.types.connection": "Connection",
   "deepLink.types.gathering": "Gathering",
   "deepLink.types.reply": "Reply",
@@ -313,8 +304,8 @@ export const notifications: Catalog = {
   "deepLink.connection.viewConnections": "View your connections",
   "deepLink.connection.wantsToConnect": "{name} wants to <em>connect</em>",
   "deepLink.connection.noteIntro": "They sent you a note with their request:",
-  "deepLink.connection.mutualConnections_one": "{count} mutual connection →",
-  "deepLink.connection.mutualConnections_other": "{count} mutual connections →",
+  "deepLink.connection.mutualConnections_one": "{count} mutual connection",
+  "deepLink.connection.mutualConnections_other": "{count} mutual connections",
   "deepLink.connection.accept": "Accept",
   "deepLink.connection.decline": "Decline",
   "deepLink.connection.notNow": "Not now — decide later",

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Avatar, Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -222,7 +223,7 @@ function HitsView({
         />
       </span>
       <span className={styles.jumpArrow} aria-hidden>
-        →
+        <FiArrowRight />
       </span>
     </Link>
   ) : null;

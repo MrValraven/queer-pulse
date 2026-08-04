@@ -480,34 +480,10 @@ a.featuredStripLink:focus-visible {
   }
 }
 
-.rowAvatar {
-  flex: none;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-tint) 30%, var(--paper));
-}
-
-.rowMain {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-}
-
-.rowName {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.2;
-  color: var(--ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.rowKind {
-  font-size: 0.76rem;
-  color: var(--ink-60);
-}
+/* The row's avatar + name + kind line now come from the shared
+   `MemberIdentity` block (SubprofileSwitchRow); its identity CSS lives in
+   `MemberIdentity.module.css`, so the former `.rowAvatar/.rowMain/.rowName/
+   .rowKind` classes were removed here. */
 
 /* Self-view per-row status/visibility (SubprofileOwnerBadges, compact). */
 .rowBadges {
@@ -654,42 +630,10 @@ a.featuredStripLink:focus-visible {
   }
 }
 
-.mobileSummaryAvatar {
-  flex: none;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-tint) 30%, var(--paper));
-}
-
-.mobileSummaryMain {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.mobileSummaryName {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.2;
-  color: var(--ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mobileSummaryMeta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.mobileSummaryKind {
-  font-size: 0.76rem;
-  color: var(--ink-60);
-}
+/* The summary's avatar + name + kind line now come from the shared
+   `MemberIdentity` block (SubprofileMobileRow); its identity CSS lives in
+   `MemberIdentity.module.css`, so the former `.mobileSummaryAvatar/Main/Name/
+   Kind/Meta` classes were removed here. */
 
 /* Self-view status/visibility, shown compact right in the collapsed summary
    (SubprofileOwnerBadges) — same pattern as `.rowBadges` on desktop. */

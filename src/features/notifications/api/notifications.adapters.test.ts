@@ -15,8 +15,8 @@ function dto(overrides: Partial<NotificationDTO> = {}): NotificationDTO {
   return {
     id: "3f1c8a52-9b0e-4d6a-8f21-7c5e2b9a1d04",
     userId: "9a2b1c3d-4e5f-6071-8293-a4b5c6d7e8f9",
-    type: "new_message",
-    payload: { conversationId: "c1", messageId: "m1", senderId: "s1" },
+    type: "event_reminder",
+    payload: { eventId: "e1" },
     read: false,
     createdAt: "2026-07-16T10:30:00.000Z",
     ...overrides,
@@ -56,9 +56,6 @@ describe("notificationDtoToView", () => {
 
   it("derives the tab category from the backend type", () => {
     expect(
-      notificationDtoToView(dto({ type: "new_message" }), t, fmt).type,
-    ).toBe("messages");
-    expect(
       notificationDtoToView(dto({ type: "event_invite" }), t, fmt).type,
     ).toBe("events");
     expect(
@@ -68,8 +65,8 @@ describe("notificationDtoToView", () => {
 
   it("renders text + meta through i18n keys, never blank", () => {
     const view = notificationDtoToView(dto(), t, fmt);
-    expect(view.text).toBe("notifications:type.new_message.text");
-    expect(view.meta).toBe("notifications:type.new_message.meta");
+    expect(view.text).toBe("notifications:type.event_reminder.text");
+    expect(view.meta).toBe("notifications:type.event_reminder.meta");
   });
 
   it("falls back safely for an unknown type", () => {

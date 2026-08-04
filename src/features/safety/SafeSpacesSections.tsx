@@ -1,6 +1,6 @@
 import { useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, ComingSoon } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -147,7 +147,8 @@ export function RemovedSection({ removed }: { removed: RemovedSpace[] }) {
               <div className={styles.rcFoot}>
                 <span>{r.removedDate}</span>
                 <span className={styles.rcLink}>
-                  {t("safety:spaces.removed.card.whyLink")}
+                  {t("safety:spaces.removed.card.whyLink")}{" "}
+                  <FiArrowRight aria-hidden />
                 </span>
               </div>
             </Link>

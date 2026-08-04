@@ -1,6 +1,5 @@
 // src/features/messages/DeleteMessageDialog.tsx
-import { Button } from "../../shared/components/ui";
-import { Modal } from "../../shared/components/ui/Modal";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
 export interface DeleteMessageDialogProps {
@@ -11,7 +10,9 @@ export interface DeleteMessageDialogProps {
 }
 
 /** Confirm dialog for deleting a message. Soft-delete: the message becomes a
- *  tombstone for everyone in the thread. Escape/scrim/cancel all dismiss. */
+ *  tombstone for everyone in the thread. Escape/scrim/cancel all dismiss. Built
+ *  on the shared {@link ConfirmDialog} (destructive tone); mounted only while it
+ *  should show, so `open` is always true here. */
 export function DeleteMessageDialog({
   onConfirm,
   onClose,
@@ -19,21 +20,16 @@ export function DeleteMessageDialog({
 }: DeleteMessageDialogProps) {
   const { t } = useTranslation();
   return (
-    <Modal
-      title={t("messages:delete.confirmTitle")}
+    <ConfirmDialog
+      open
+      tone="destructive"
+      loading={pending}
       onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t("messages:delete.cancelCta")}
-          </Button>
-          <Button variant="primary" onClick={onConfirm} disabled={pending}>
-            {t("messages:delete.confirmCta")}
-          </Button>
-        </>
-      }
-    >
-      <p>{t("messages:delete.confirmBody")}</p>
-    </Modal>
+      onConfirm={onConfirm}
+      title={t("messages:delete.confirmTitle")}
+      description={t("messages:delete.confirmBody")}
+      confirmLabel={t("messages:delete.confirmCta")}
+      cancelLabel={t("messages:delete.cancelCta")}
+    />
   );
 }

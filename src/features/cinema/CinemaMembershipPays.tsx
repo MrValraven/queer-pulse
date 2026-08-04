@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -245,7 +246,8 @@ export function CinemaMembershipLedger() {
         </div>
         <div className={styles.ledgerFoot}>
           <Link to={routes.governance}>
-            {t("cinema:membership.ledger.fullAccountsCta")}
+            {t("cinema:membership.ledger.fullAccountsCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

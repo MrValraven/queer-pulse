@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiFileText } from "react-icons/fi";
-import { PageShell } from "../../shared/components/layout";
+import { PageShell, PageHero } from "../../shared/components/layout";
 import { EmptyState, HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -36,56 +36,55 @@ export function TransparencyReportPage() {
           { name: pageTitle, path: routes.transparencyReport },
         ])}
       />
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
+      <PageHero
+        backLink={
           <HubBackLink
             to={routes.governance}
             label={t("marketing:hub.governanceLabel")}
             tone="dark"
           />
-          <div className={styles.eyebrow}>
-            {t("marketing:transparency.hero.eyebrow")}
+        }
+        eyebrow={t("marketing:transparency.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:transparency.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+      >
+        <p className={`${styles.dek} ${styles.heroExtra}`}>
+          <Translation
+            i18nKey="marketing:transparency.hero.dek"
+            components={{ em: <em /> }}
+          />
+        </p>
+        {demoMode && (
+          <div className={styles.metaRow}>
+            <span>
+              <b>
+                €<em>278</em>k
+              </b>
+              {t("marketing:transparency.hero.meta.raised")}
+            </span>
+            <span>
+              <b>
+                <em>96</em>%
+              </b>
+              {t("marketing:transparency.hero.meta.toPrograms")}
+            </span>
+            <span>
+              <b>1,847</b>
+              {t("marketing:transparency.hero.meta.activeMembers")}
+            </span>
+            <span>
+              <b>
+                <em>3</em>
+              </b>
+              {t("marketing:transparency.hero.meta.mistakesNamed")}
+            </span>
           </div>
-          <h1 className={styles.h1}>
-            <Translation
-              i18nKey="marketing:transparency.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.dek}>
-            <Translation
-              i18nKey="marketing:transparency.hero.dek"
-              components={{ em: <em /> }}
-            />
-          </p>
-          {demoMode && (
-            <div className={styles.metaRow}>
-              <span>
-                <b>
-                  €<em>278</em>k
-                </b>
-                {t("marketing:transparency.hero.meta.raised")}
-              </span>
-              <span>
-                <b>
-                  <em>96</em>%
-                </b>
-                {t("marketing:transparency.hero.meta.toPrograms")}
-              </span>
-              <span>
-                <b>1,847</b>
-                {t("marketing:transparency.hero.meta.activeMembers")}
-              </span>
-              <span>
-                <b>
-                  <em>3</em>
-                </b>
-                {t("marketing:transparency.hero.meta.mistakesNamed")}
-              </span>
-            </div>
-          )}
-        </div>
-      </section>
+        )}
+      </PageHero>
 
       {demoMode ? (
         <>

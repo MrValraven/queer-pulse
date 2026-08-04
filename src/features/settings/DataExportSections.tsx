@@ -1,5 +1,6 @@
-import { FiCheck, FiDownload, FiLoader } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiCheck, FiChevronDown, FiDownload, FiLoader } from "react-icons/fi";
+import { Button, Stepper } from "../../shared/components/ui";
+import type { StepperStep } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -14,66 +15,36 @@ export type ExportPhase = "form" | "building" | "ready";
 
 export function DataExportSteps({ phase }: { phase: ExportPhase }) {
   const { t } = useTranslation();
-  const state = (n: number): "" | "active" | "done" => {
-    if (phase === "form") return n === 1 ? "active" : "";
-    if (phase === "building") {
-      if (n === 1) return "done";
-      if (n === 2) return "active";
-      return "";
-    }
-    // ready
-    if (n === 3) return "active";
-    return "done";
-  };
-  const cls = (n: number) =>
-    [
-      styles.stepItem,
-      state(n) === "active" && styles.stepItemActive,
-      state(n) === "done" && styles.stepItemDone,
-    ]
-      .filter(Boolean)
-      .join(" ");
+  // form → identity → download-ready maps to the active step index; the shared
+  // Stepper marks every earlier index as done and later ones as pending.
+  const current = phase === "form" ? 0 : phase === "building" ? 1 : 2;
+  const steps: StepperStep[] = [
+    {
+      key: "choose",
+      label: t("settings:dataExport.steps.step1.label"),
+      description: t("settings:dataExport.steps.step1.desc"),
+    },
+    {
+      key: "confirm",
+      label: t("settings:dataExport.steps.step2.label"),
+      description: t("settings:dataExport.steps.step2.desc"),
+    },
+    {
+      key: "download",
+      label: t("settings:dataExport.steps.step3.label"),
+      description: t("settings:dataExport.steps.step3.desc"),
+    },
+  ];
 
   return (
-    <div className={styles.stepsRow}>
-      <div className={cls(1)}>
-        <div className={styles.stepNum}>
-          {state(1) === "done" ? <FiCheck /> : "1"}
-        </div>
-        <div>
-          <div className={styles.stepLabel}>
-            {t("settings:dataExport.steps.step1.label")}
-          </div>
-          <div className={styles.stepDesc}>
-            {t("settings:dataExport.steps.step1.desc")}
-          </div>
-        </div>
-      </div>
-      <div className={cls(2)}>
-        <div className={styles.stepNum}>
-          {state(2) === "done" ? <FiCheck /> : "2"}
-        </div>
-        <div>
-          <div className={styles.stepLabel}>
-            {t("settings:dataExport.steps.step2.label")}
-          </div>
-          <div className={styles.stepDesc}>
-            {t("settings:dataExport.steps.step2.desc")}
-          </div>
-        </div>
-      </div>
-      <div className={cls(3)}>
-        <div className={styles.stepNum}>3</div>
-        <div>
-          <div className={styles.stepLabel}>
-            {t("settings:dataExport.steps.step3.label")}
-          </div>
-          <div className={styles.stepDesc}>
-            {t("settings:dataExport.steps.step3.desc")}
-          </div>
-        </div>
-      </div>
-    </div>
+    <Stepper
+      steps={steps}
+      current={current}
+      marker="number"
+      orientation="vertical"
+      ariaLabel={t("settings:dataExport.steps.aria")}
+      className={styles.stepsBlock}
+    />
   );
 }
 
@@ -312,8 +283,9 @@ export function DataExportIncluded({
               className={[styles.accArrow, openAcc === i && styles.accArrowOpen]
                 .filter(Boolean)
                 .join(" ")}
+              aria-hidden
             >
-              ▼
+              <FiChevronDown />
             </span>
           </div>
           {openAcc === i && (

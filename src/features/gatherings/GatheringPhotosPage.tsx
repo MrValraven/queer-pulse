@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { FiPlay } from "react-icons/fi";
+import { FiArrowLeft, FiPlay } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -70,7 +70,7 @@ function GatheringPhotosHero() {
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <Link to={RECAP} className={styles.back}>
-          ← {t("gatherings:photos.backToRecap")}
+          <FiArrowLeft aria-hidden /> {t("gatherings:photos.backToRecap")}
         </Link>
         <div className={styles.eyebrow}>
           <span>
@@ -216,7 +216,7 @@ function GatheringPhotosFooter() {
 
         <div className={styles.footActions}>
           <Button variant="primary" to={RECAP}>
-            ← {t("gatherings:photos.readRecapCta")}
+            <FiArrowLeft aria-hidden /> {t("gatherings:photos.readRecapCta")}
           </Button>
           <Button variant="ghost" to={CALENDAR}>
             {t("gatherings:photos.nextClinicCta", {
@@ -267,7 +267,7 @@ export function GatheringPhotosPage() {
                 to={gatheringPath(gathering.slug)}
                 className={styles.back}
               >
-                ← {gathering.title}
+                <FiArrowLeft aria-hidden /> {gathering.title}
               </Link>
             )}
             <h1 className={styles.h1}>{gathering?.title ?? ""}</h1>

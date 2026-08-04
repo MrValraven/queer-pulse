@@ -65,7 +65,7 @@ export const members: Catalog = {
   "profile.blocked.description":
     "You've blocked this member, so their profile is hidden. You can unblock them from your connections at any time.",
   "profile.blocked.manageAction": "Manage blocked members",
-  "profile.goBack": "← Go back",
+  "profile.goBack": "Go back",
   "profile.notFound.title": "This profile isn't here",
   "profile.notFound.description":
     "It may have been set to private, the member might have left, or this link could be out of date. Nothing's wrong on your end.",
@@ -74,14 +74,14 @@ export const members: Catalog = {
   "profile.loadError.description":
     "Something went wrong fetching your profile. Check your connection and try again.",
   "profile.loadError.retryAction": "Try again",
-  "profile.backToRoom": "← Back to the room",
+  "profile.backToRoom": "Back to the room",
   "profile.previewBanner":
     "You're previewing your profile as a <strong>visitor</strong>.",
   "profile.exitPreview": "Exit preview",
 
   // ── Profile hero (ProfileSections) ─────────────────────────────────────────
   "profile.hero.verifiedBadge": "Verified member",
-  "profile.hero.curatorLink": "● Cinema curator — view programming profile →",
+  "profile.hero.curatorLink": "Cinema curator — view programming profile",
   "profile.hero.memberSince": "Member since {since}",
   "profile.hero.location": "{hood}, Lisbon",
   "profile.hero.editCta": "Edit profile",
@@ -94,10 +94,10 @@ export const members: Catalog = {
   "profile.hero.levelLabel": "Level {number}",
   "profile.hero.badgesChip": "{earned} / {total} badges",
   "profile.hero.badgesDesc": "{earned} earned · {discover} to discover",
-  "profile.hero.badgesArrow": "See badges & level →",
+  "profile.hero.badgesArrow": "See badges & level",
   "profile.hero.perksChip": "{count} perks",
   "profile.hero.perksTitle": "Member perks",
-  "profile.hero.perksArrow": "Redeem your perks →",
+  "profile.hero.perksArrow": "Redeem your perks",
 
   // ── Profile stat row + content tabs (ProfileStatsRow, ProfileTabBar) ───────
   "profile.stats.vouches": "Vouches",
@@ -135,7 +135,7 @@ export const members: Catalog = {
   "content.skills.title": "Skills & offerings",
   "content.skills.subtitle":
     "What {first} can help with — and swap on the barter board",
-  "content.skills.barterCta": "See the full barter board →",
+  "content.skills.barterCta": "See the full barter board",
   "content.groups.title": "Groups & circles",
   "content.groups.subtitle": "Where {first} shows up in the community",
   "content.shapings.title": "What shaped me",
@@ -318,7 +318,7 @@ export const members: Catalog = {
     "Posts, replies, and DMs are <em>members-only.</em>",
   "publicProfile.locked.postsBody":
     "QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and {first}'s feed unlocks immediately — including the ability to message {first}.",
-  "publicProfile.requestInviteArrow": "Request an invite →",
+  "publicProfile.requestInviteArrow": "Request an invite",
   "publicProfile.locked.connectionsHeading": "Connections",
   "publicProfile.locked.connectionsTitle":
     "Who {first} knows, <em>privately.</em>",
@@ -336,7 +336,7 @@ export const members: Catalog = {
     "Public profiles aren't open yet — this preview is only visible to you.",
   "publicProfile.pill.live": "On",
   "publicProfile.pill.off": "Off",
-  "publicProfile.preview.backToProfile": "← Back to your profile",
+  "publicProfile.preview.backToProfile": "Back to your profile",
   "publicProfile.preview.guestLabel":
     "You're not signed in · viewing the <b>public version</b> of this profile",
   "publicProfile.head.eyebrow": "Public profile · @{slug}",
@@ -653,7 +653,7 @@ export const members: Catalog = {
   "vouch.page.noteLabel": "Add a short note (optional)",
   "vouch.page.notePlaceholder":
     "How do you know {name}, and what should the council know?",
-  "vouch.page.submitCta": "Send my vouch →",
+  "vouch.page.submitCta": "Send my vouch",
   "vouch.page.skipCta": "Not right now",
   "vouch.page.emptyLive.title": "Vouch invitations arrive by link",
   "vouch.page.emptyLive.description":
@@ -814,7 +814,7 @@ export const members: Catalog = {
   "collections.newCard.subtitle": "Group saves by why they matter",
   "collections.recentSaves.heading": "Recently saved · not yet in a collection",
   "collections.recentSaves.unfiledCount": "+ {count} unfiled",
-  "collections.recentSaves.addCta": "+ Add to collection →",
+  "collections.recentSaves.addCta": "+ Add to collection",
   "collections.toast.created": "Collection created",
   "collections.newCollection.defaultMeta": "Just created — start adding saves",
   "collections.updatedJustNow": "Updated just now",
@@ -832,8 +832,8 @@ export const members: Catalog = {
   "collections.modal.newCollection.namePlaceholder":
     "e.g. Lisbon recs, Bring to therapy…",
   "collections.modal.newCollection.visibilityLabel": "Who can see it",
-  "collections.modal.newCollection.cancel": "← Cancel",
-  "collections.modal.newCollection.submit": "Create collection →",
+  "collections.modal.newCollection.cancel": "Cancel",
+  "collections.modal.newCollection.submit": "Create collection",
   "collections.modal.privacyOption.private": "Private",
   "collections.modal.privacyOption.shared": "Shared with members",
   "collections.modal.privacyOption.public": "Public",
@@ -844,7 +844,7 @@ export const members: Catalog = {
   "collections.modal.add.dialogLabel": "Add to collection",
   "collections.modal.add.eyebrow": "Add to collection",
   "collections.modal.add.title": "Where should this live?",
-  "collections.modal.add.cancel": "← Cancel",
+  "collections.modal.add.cancel": "Cancel",
   "collections.modal.add.success.dialogLabel": "Added to collection",
   "collections.modal.add.success.title": "Added to <em>your collection.</em>",
   "collections.modal.add.success.body":
@@ -904,7 +904,7 @@ export const members: Catalog = {
   "places.deleteCancel": "Keep it",
   "places.deleteYes": "Delete listing",
   "places.deleted": "Listing deleted.",
-  "places.viewListingCta": "View listing →",
+  "places.viewListingCta": "View listing",
   "places.awaitingReview": "Awaiting review",
   "places.empty.title": "No places yet",
   "places.empty.description":
@@ -915,14 +915,14 @@ export const members: Catalog = {
   // Badge names, categories, rarity and level names are recognition-domain
   // content (fetched wholesale via useRecognition() in live mode) — only the
   // surrounding chrome below is translated. See the header comment.
-  "badges.backToProfile": "← Back to profile",
+  "badges.backToProfile": "Back to profile",
   "badges.pageTitle": "Badges & <em>level</em>",
-  "badges.howToEarnXp": "How to earn XP →",
+  "badges.howToEarnXp": "How to earn XP",
   "badges.earnedHeading": "Your <em>badges</em>",
   "badges.lockedHeading": "<em>Locked</em> badges",
   "badges.lockedSub": "Earn XP and attend gatherings to unlock these.",
-  "badges.hideMore": "Hide ▴",
-  "badges.showMore": "Show {count} more ▾",
+  "badges.hideMore": "Hide",
+  "badges.showMore": "Show {count} more",
   "badges.perksUnlockHeading": "What your level <em>unlocks</em>",
   "badges.perksUnlockSub": "Each level grants new access and member benefits.",
   "badges.xpToNextLevel": "{xp} / {xpMax} XP to Level {nextLevel} · {nextName}",
@@ -935,7 +935,7 @@ export const members: Catalog = {
     "Show up, host, and take part — your first badges land here as you go.",
 
   // ── Perks page chrome (PerksPage, PerksSections) ────────────────────────────
-  "perks.page.backToBadges": "← Badges & level",
+  "perks.page.backToBadges": "Badges & level",
   "perks.page.title": "Your <em>bonuses</em>",
   "perks.page.availableToRedeem_one": "{count} perk available to redeem",
   "perks.page.availableToRedeem_other": "{count} perks available to redeem",
@@ -951,7 +951,7 @@ export const members: Catalog = {
     "{xp} / {xpMax} XP · {xpToNext} to Level {nextLevel}",
   "perks.sidebar.nextUnlockNote":
     "Next perks unlock at <strong>Level {nextLevel} · {nextName}</strong> — host without approval & an increased invite quota.",
-  "perks.sidebar.seeAllBadgesCta": "See all badges & levels →",
+  "perks.sidebar.seeAllBadgesCta": "See all badges & levels",
   "perks.sidebar.explainedTitle": "Perks explained",
   "perks.sidebar.suggestTitle": "Suggest a perk",
   "perks.sidebar.suggestPlaceholder": "Share an idea…",

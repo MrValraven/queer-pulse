@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Button, Avatar } from "../../shared/components/ui";
+import { Avatar } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateCommissionInterest } from "./api/useCreateCommissionInterest";
-import { ModalShell, SuccessPanel, Sending } from "./CultureModalKit";
+import { CultureFormModal } from "./CultureFormModals";
+import { SuccessPanel } from "./CultureModalKit";
 import { COMMISSION_CAT_LABEL_KEY, type Commission } from "./culture.data";
 import styles from "./CultureModals.module.css";
 
@@ -31,8 +32,6 @@ export function CommissionInterestModal({
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const mutation = useCreateCommissionInterest();
-  const sending = mutation.isPending;
-  const done = mutation.isSuccess;
 
   function submit() {
     mutation.mutate(
@@ -50,8 +49,22 @@ export function CommissionInterestModal({
   }
 
   return (
-    <ModalShell onClose={onClose} success={done}>
-      {done ? (
+    <CultureFormModal
+      onClose={onClose}
+      sending={mutation.isPending}
+      done={mutation.isSuccess}
+      eyebrow={t("culture:commissionInterest.eyebrow")}
+      title={
+        <Translation
+          i18nKey="culture:commissionInterest.title"
+          values={{ name: commission.who.name.split(" ")[0] }}
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("culture:commissionInterest.sub")}
+      submitLabel={t("culture:commissionInterest.sendCta")}
+      onSubmit={submit}
+      success={
         <SuccessPanel
           title={t("culture:commissionInterest.success.title")}
           em={t("culture:commissionInterest.success.em")}
@@ -73,64 +86,33 @@ export function CommissionInterestModal({
             name: commission.who.name,
           })}
         </SuccessPanel>
-      ) : (
-        <>
-          <div className={styles.eyebrow}>
-            {t("culture:commissionInterest.eyebrow")}
+      }
+    >
+      <div className={styles.panel}>
+        <Avatar
+          initials={commission.who.initials}
+          tint={commission.who.tint}
+          size={40}
+        />
+        <div>
+          <div className={styles.panelCat}>
+            {t(COMMISSION_CAT_LABEL_KEY[commission.category])}
           </div>
-          <h2 className={styles.title}>
-            <Translation
-              i18nKey="culture:commissionInterest.title"
-              values={{ name: commission.who.name.split(" ")[0] }}
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.sub}>{t("culture:commissionInterest.sub")}</p>
+          <div className={styles.panelTitle}>{commission.title}</div>
+        </div>
+      </div>
 
-          <div className={styles.panel}>
-            <Avatar
-              initials={commission.who.initials}
-              tint={commission.who.tint}
-              size={40}
-            />
-            <div>
-              <div className={styles.panelCat}>
-                {t(COMMISSION_CAT_LABEL_KEY[commission.category])}
-              </div>
-              <div className={styles.panelTitle}>{commission.title}</div>
-            </div>
-          </div>
-
-          <div className={styles.field}>
-            <label htmlFor="ci-msg">
-              {t("culture:commissionInterest.messageLabel")}
-            </label>
-            <textarea
-              id="ci-msg"
-              placeholder={t("culture:commissionInterest.messagePlaceholder")}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.foot}>
-            <Button variant="ghost" onClick={onClose}>
-              {t("culture:common.cancel")}
-            </Button>
-            <Button
-              variant="primary"
-              disabled={sending}
-              onClick={() => submit()}
-            >
-              {sending ? (
-                <Sending label={t("culture:common.sending")} />
-              ) : (
-                t("culture:commissionInterest.sendCta")
-              )}
-            </Button>
-          </div>
-        </>
-      )}
-    </ModalShell>
+      <div className={styles.field}>
+        <label htmlFor="ci-msg">
+          {t("culture:commissionInterest.messageLabel")}
+        </label>
+        <textarea
+          id="ci-msg"
+          placeholder={t("culture:commissionInterest.messagePlaceholder")}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </div>
+    </CultureFormModal>
   );
 }

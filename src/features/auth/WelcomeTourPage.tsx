@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TOUR_STEP_FILLS } from "./welcomeTour.data";
@@ -41,7 +42,7 @@ export function WelcomeTourPage() {
           <em>{"Pulse"}</em>
         </Link>
         <Link to={routes.homepage} className={styles.skip}>
-          {t("auth:tour.skipSetup")}
+          {t("auth:tour.skipSetup")} <FiArrowRight aria-hidden />
         </Link>
       </nav>
 

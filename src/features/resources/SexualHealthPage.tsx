@@ -12,6 +12,7 @@ import {
 } from "../../shared/seo";
 import { TABS, type TabId } from "./sexualHealth.data";
 import { GuidesTab, HivTab, PrepTab, TestingTab } from "./SexualHealthTabs";
+import { ResourceHero } from "./ResourceHero";
 import styles from "./SexualHealthPage.module.css";
 
 export function SexualHealthPage() {
@@ -41,18 +42,20 @@ export function SexualHealthPage() {
           { name: pageTitle, path: "/resources/sexual-health" },
         ])}
       />
-      <div className={styles.hero}>
-        <div className="wrap">
-          <div className={styles.cat}>
-            {t("resources:sexualHealth.hero.cat")}
-          </div>
-          <h1>
-            <Translation
-              i18nKey="resources:sexualHealth.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.lead}>{t("resources:sexualHealth.hero.lead")}</p>
+      <ResourceHero
+        flushBottom
+        eyebrowVariant="label"
+        eyebrowColor="var(--accent)"
+        eyebrow={t("resources:sexualHealth.hero.cat")}
+        titleWeight="light"
+        title={
+          <Translation
+            i18nKey="resources:sexualHealth.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        lead={t("resources:sexualHealth.hero.lead")}
+        extras={
           <Tabs
             variant="underline"
             tint="dark"
@@ -60,8 +63,8 @@ export function SexualHealthPage() {
             active={tab}
             onChange={(id) => setTab(id as TabId)}
           />
-        </div>
-      </div>
+        }
+      />
 
       <div className={styles.body}>
         <div className="wrap">

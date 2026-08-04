@@ -99,14 +99,14 @@ export const feed: Catalog = {
 
   // ── Etiquetas de ação partilhadas ────────────────────────────────────────
   "action.connect": "Ligar",
-  "action.viewProfile": "Ver perfil →",
+  "action.viewProfile": "Ver perfil",
   "action.cancel": "Cancelar",
   "action.reply": "Responder",
   "action.save": "Guardar",
   "action.saved": "Guardado",
   "action.done": "Concluído",
-  "action.continueReading": "Continuar a ler →",
-  "action.readRecap": "Ler o resumo →",
+  "action.continueReading": "Continuar a ler",
+  "action.readRecap": "Ler o resumo",
 
   // ── Composer de resposta ────────────────────────────────────────────────
   "composer.srLabel": "Escrever uma resposta",
@@ -160,13 +160,13 @@ export const feed: Catalog = {
   // ── FeedSidebar ─────────────────────────────────────────────────────────
   "sidebar.upcomingHeading": "Em breve",
   "sidebar.upcomingEmpty": "Ainda não tens convívios marcados.",
-  "sidebar.seeCalendar": "Ver calendário completo →",
+  "sidebar.seeCalendar": "Ver calendário completo",
   "sidebar.newThisWeekHeading": "Novidades esta semana",
   "sidebar.newMembersEmpty": "Ainda não há pessoas novas para mostrar.",
-  "sidebar.browseMembers": "Ver todas as pessoas →",
+  "sidebar.browseMembers": "Ver todas as pessoas",
   "sidebar.connectionsHeading": "As tuas ligações",
   "sidebar.connectionsEmpty": "Ainda não te ligaste a ninguém.",
   "sidebar.connectionsCount_one": "{count} ligação",
   "sidebar.connectionsCount_other": "{count} ligações",
-  "sidebar.manage": "Gerir →",
+  "sidebar.manage": "Gerir",
 };

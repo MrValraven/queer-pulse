@@ -11,10 +11,8 @@ import {
   type Piece,
   type Editor,
 } from "./editorDashboard.data";
+import { cx } from "../../shared/lib/cx";
 import styles from "./EditorDashboardPage.module.css";
-
-const cx = (...c: (string | false | undefined)[]) =>
-  c.filter(Boolean).join(" ");
 
 /** The urgent "Needs you now" strip — late pieces + things in your court. */
 export function EditorNeedsStrip({

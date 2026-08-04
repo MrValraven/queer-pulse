@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { FiCalendar } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, FeatureHelp, SkeletonLine, Tag } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -33,7 +33,7 @@ function GatheringUnavailable({ loading }: { loading: boolean }) {
         <div className="wrap">
           <div className={styles.back}>
             <Link to={routes.calendar} className={styles.backLink}>
-              {t("gatherings:common.backToGatherings")}
+              <FiArrowLeft aria-hidden /> {t("gatherings:common.backToGatherings")}
             </Link>
           </div>
           {loading ? (
@@ -48,7 +48,12 @@ function GatheringUnavailable({ loading }: { loading: boolean }) {
               title={t("gatherings:gathering.notFoundTitle")}
               description={t("gatherings:gathering.notFoundDescription")}
               action={{
-                label: t("gatherings:common.backToGatherings"),
+                label: (
+                  <>
+                    <FiArrowLeft aria-hidden />{" "}
+                    {t("gatherings:common.backToGatherings")}
+                  </>
+                ),
                 to: routes.calendar,
               }}
             />
@@ -93,7 +98,7 @@ export function GatheringPage() {
         <div className="wrap">
           <div className={styles.back}>
             <Link to={routes.calendar} className={styles.backLink}>
-              {t("gatherings:common.backToGatherings")}
+              <FiArrowLeft aria-hidden /> {t("gatherings:common.backToGatherings")}
             </Link>
           </div>
 
@@ -148,7 +153,7 @@ export function GatheringPage() {
                   {connected
                     ? t("connect:contact.message")
                     : t(gathering.ctaKey)}{" "}
-                  →
+                  <FiArrowRight aria-hidden />
                 </Button>
                 <Button size="lg" variant="ghost" to={routes.calendar}>
                   {t("gatherings:gathering.seeAllCta")}

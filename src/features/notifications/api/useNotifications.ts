@@ -30,7 +30,13 @@ export function useNotifications(unreadOnly = false) {
         return unreadOnly ? list.filter((n) => n.unread) : list;
       }
       const res = await getNotifications(unreadOnly);
-      return res.map((dto) => notificationDtoToView(dto, t, fmt));
+      // New-DM alerts are deliberately excluded from the notifications centre —
+      // they surface only via the message-icon unread badge and push. The live
+      // backend already never writes a `new_message` row, so this is a
+      // belt-and-braces guard against a future regression re-introducing one.
+      return res
+        .filter((dto) => dto.type !== "new_message")
+        .map((dto) => notificationDtoToView(dto, t, fmt));
     },
   });
 }

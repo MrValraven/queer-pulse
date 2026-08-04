@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -32,7 +33,7 @@ export function StudioProgramInbox({
           />
         </h2>
         <Link to={routes.studioTriage} className={s.triageLink}>
-          {t("studio:program.inbox.triageCta")}
+          {t("studio:program.inbox.triageCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
       <p className={s.inboxTip}>

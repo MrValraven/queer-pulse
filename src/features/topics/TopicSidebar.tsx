@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, topicPath } from "../../app/routeMap";
@@ -15,7 +16,7 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
           <h5>{t("topics:stats.verifiedResources")}</h5>
           <p>{topic.resources.body}</p>
           <Link to={linkToPath(topic.resources.href)}>
-            {topic.resources.ctaLabel}
+            {topic.resources.ctaLabel} <FiArrowRight aria-hidden />
           </Link>
         </div>
       )}

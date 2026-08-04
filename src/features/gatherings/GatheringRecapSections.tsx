@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
   FadeIn,
@@ -95,7 +96,8 @@ export function GatheringRecapMain({
               cursor: "pointer",
             }}
           >
-            {t("gatherings:recap.submitYoursCta")} →
+            {t("gatherings:recap.submitYoursCta")}{" "}
+            <FiArrowRight aria-hidden />
           </button>
         </div>
       </div>

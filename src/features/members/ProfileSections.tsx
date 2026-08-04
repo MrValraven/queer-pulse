@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import {
   Eyebrow,
   ImageSlot,
@@ -152,7 +153,8 @@ export function ProfileHero({
                 className={styles.curatorLink}
                 to={`${routes.cinemaCurator}/${curatorSlug}`}
               >
-                {t("members:profile.hero.curatorLink")}
+                {t("members:profile.hero.curatorLink")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             )}
             <div className={styles.where}>

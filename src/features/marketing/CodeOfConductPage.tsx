@@ -1,4 +1,4 @@
-import { PageShell } from "../../shared/components/layout";
+import { PageShell, PageHero } from "../../shared/components/layout";
 import { HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -61,29 +61,29 @@ export function CodeOfConductPage() {
           { name: pageTitle, path: routes.codeOfConduct },
         ])}
       />
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
+      <PageHero
+        plum={false}
+        backLink={
           <HubBackLink
             to={routes.governance}
             label={t("marketing:coc.hero.backLabel")}
           />
-          <div className={styles.eyebrow}>
-            {t("marketing:coc.hero.eyebrow", { date: versionDate })}
-          </div>
-          <h1 className={styles.h1}>
-            <Translation
-              i18nKey="marketing:coc.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.dek}>
-            <Translation
-              i18nKey="marketing:coc.hero.dek"
-              components={{ b: <b />, em: <em /> }}
-            />
-          </p>
-        </div>
-      </section>
+        }
+        eyebrow={t("marketing:coc.hero.eyebrow", { date: versionDate })}
+        title={
+          <Translation
+            i18nKey="marketing:coc.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+      >
+        <p className={`${styles.dek} ${styles.heroExtra}`}>
+          <Translation
+            i18nKey="marketing:coc.hero.dek"
+            components={{ b: <b />, em: <em /> }}
+          />
+        </p>
+      </PageHero>
 
       <div className={styles.distinction}>
         <div className={styles.distCol}>

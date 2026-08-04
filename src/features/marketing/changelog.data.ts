@@ -93,6 +93,44 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "icons-not-text-symbols",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("icons-not-text-symbols"),
+      },
+      {
+        id: "message-alerts-out-of-notifications",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("message-alerts-out-of-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "shared-ui-consistency",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("shared-ui-consistency"),
+      },
+      {
+        id: "balanced-feed-grid",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("balanced-feed-grid"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "no-sideways-scroll-on-mobile",
+        category: "fix",
+        date: "4 Aug 2026",
+        ...entryKeys("no-sideways-scroll-on-mobile"),
+      },
+      {
         id: "no-placeholder-people-in-live",
         category: "fix",
         date: "4 Aug 2026",

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
 import type { SignupRow } from "./api/volunteering.adapters";
@@ -121,6 +122,7 @@ export function VolunteerOpportunitySidebar({
                 : submitting
                   ? t("marketing:volunteerDetail.sidebar.sending")
                   : t("marketing:volunteerDetail.sidebar.applyCta")}
+              {!isFull && !submitting && <FiArrowRight aria-hidden />}
             </Button>
             <Button variant="ghost" className={styles.ctaBtn} to={MESSAGES}>
               {t("marketing:volunteerDetail.sidebar.askTeam")}
@@ -158,7 +160,8 @@ export function VolunteerOpportunitySidebar({
           <span className={styles.partnerPill}>{opp.partner.name}</span>
           <p className={styles.partnerText}>{opp.partner.text}</p>
           <Link to={partnerTo} className={styles.partnerLink}>
-            {t("marketing:volunteerDetail.sidebar.partnershipLink")}
+            {t("marketing:volunteerDetail.sidebar.partnershipLink")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
       )}
@@ -173,10 +176,11 @@ export function VolunteerOpportunitySidebar({
         <div className={styles.altList}>
           {alternatives.map((a) => (
             <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
-              → {a.role} · {a.org}
+              <FiArrowRight aria-hidden /> {a.role} · {a.org}
             </Link>
           ))}
           <Link to={DONATE}>
+            <FiArrowRight aria-hidden />{" "}
             {t("marketing:volunteerDetail.sidebar.fundInstead")}
           </Link>
         </div>

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -45,7 +46,7 @@ export function SafeSpaceVouchesList({ vouches, onAddVouch }: Props) {
           className={styles.vouchTrigger}
           onClick={onAddVouch}
         >
-          {t("safety:spaces.detail.addVouchCta")}
+          {t("safety:spaces.detail.addVouchCta")} <FiArrowRight aria-hidden />
         </Button>
       </p>
       <div className={styles.vouchRow}>

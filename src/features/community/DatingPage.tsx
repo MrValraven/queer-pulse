@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -123,7 +124,8 @@ export function DatingPage() {
           </div>
           <div className={styles.recCta}>
             <Button to={legal} variant="ghost">
-              {t("community:dating.recognition.legalCta")}
+              {t("community:dating.recognition.legalCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>
@@ -145,7 +147,8 @@ export function DatingPage() {
                   {t("community:dating.social.upcomingEventsCta")}
                 </Button>
                 <Button to={forum} variant="ghost-dark">
-                  {t("community:dating.social.forumThreadCta")}
+                  {t("community:dating.social.forumThreadCta")}{" "}
+                  <FiArrowRight aria-hidden />
                 </Button>
               </div>
             </div>
@@ -172,7 +175,8 @@ export function DatingPage() {
         sub={t("community:dating.outro.sub")}
       >
         <Button to={calendar} variant="primary" size="lg">
-          {t("community:dating.outro.cta")}
+          {t("community:dating.outro.cta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

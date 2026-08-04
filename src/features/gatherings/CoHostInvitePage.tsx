@@ -7,7 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { FiStar } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiStar } from "react-icons/fi";
 import { useRespondInvite } from "./api/useEventMutations";
 import { DEMO_GATHERING_SLUGS, manageGatheringPath } from "./data";
 import { CoHostInviteDetails } from "./CoHostInviteDetails";
@@ -85,7 +85,7 @@ export function CoHostInvitePage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={NOTIFICATIONS} className={styles.back}>
-          {t("gatherings:cohostInvite.back")}
+          <FiArrowLeft aria-hidden /> {t("gatherings:cohostInvite.back")}
         </Link>
 
         <div className={styles.hero}>
@@ -202,7 +202,8 @@ export function CoHostInvitePage() {
             components={{ b: <b /> }}
           />{" "}
           <Link to={MESSAGES} style={{ color: "var(--plum)", fontWeight: 600 }}>
-            {t("gatherings:cohostInvite.openMessagesCta")} →
+            {t("gatherings:cohostInvite.openMessagesCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </p>
       </div>

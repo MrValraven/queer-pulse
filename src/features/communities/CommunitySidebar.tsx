@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -105,7 +106,8 @@ export function CommunitySidebar({
             className={styles.sbFull}
             style={{ marginTop: 14 }}
           >
-            {t("communities:detail.sidebar.rsvpCta")} →
+            {t("communities:detail.sidebar.rsvpCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         )}
       </div>

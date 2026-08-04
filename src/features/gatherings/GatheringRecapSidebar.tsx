@@ -1,4 +1,4 @@
-import { FiCheck, FiClock } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiClock } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -86,7 +86,8 @@ export function GatheringRecapSidebar({
             padding: "9px 16px",
           }}
         >
-          {t("gatherings:cta.rsvp")} →
+          {t("gatherings:cta.rsvp")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
 

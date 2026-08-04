@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiShare2 } from "react-icons/fi";
+import { FiArrowRight, FiShare2 } from "react-icons/fi";
 import { Avatar, Button, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -137,7 +137,8 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
             Sustainers funded this film through the spring pool — and they fund
             the €2.5k open grant.{" "}
             <Link to={routes.cinemaMembership}>
-              {t("cinema:shorts.spotlight.becomeSustainerCta")}
+              {t("cinema:shorts.spotlight.becomeSustainerCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
           </span>
         </div>

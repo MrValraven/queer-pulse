@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiFilm, FiSearch, FiX, FiZap } from "react-icons/fi";
-import { Button, FadeIn } from "../../shared/components/ui";
+import { Button, FadeIn, SectionHead } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -15,7 +15,7 @@ import {
   type CatalogState,
   type ShortsShelf,
 } from "./cinemaShorts.data";
-import { SecDiv, ShortCard } from "./CinemaShortsParts";
+import { ShortCard } from "./CinemaShortsParts";
 import styles from "./CinemaShortsPage.module.css";
 
 const madeHere = `${routes.cinemaBrowse}?f=made-here`;
@@ -71,16 +71,17 @@ export function CinemaShortsCatalog({ shelf }: { shelf: ShortsShelf }) {
 
   return (
     <>
-      <SecDiv
+      <SectionHead
+        className={styles.shortsSectionHead}
         title={
           <Translation
             i18nKey="cinema:shorts.catalog.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("cinema:shorts.catalog.sub")}
-        actionTo={madeHere}
-        actionLabel={t("cinema:shorts.catalog.cta")}
+        subtitle={t("cinema:shorts.catalog.sub")}
+        linkTo={madeHere}
+        linkLabel={t("cinema:shorts.catalog.cta")}
       />
 
       <div className={styles.browseTop}>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { PageShell } from "../../shared/components/layout";
+import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -36,37 +36,35 @@ export function PressKitPage() {
           { name: pageTitle, path: routes.pressKit },
         ])}
       />
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
-          <div className={styles.eyebrow}>
-            {t("marketing:pressKit.hero.eyebrow")}
-          </div>
-          <h1 className={styles.h1}>
-            <Translation
-              i18nKey="marketing:pressKit.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.dek}>
-            <Translation
-              i18nKey="marketing:pressKit.hero.dek"
-              components={{ b: <b /> }}
-            />
-          </p>
-          <div className={styles.actions}>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => setShowDownload(true)}
-            >
-              {t("marketing:pressKit.hero.downloadKitCta")}
-            </Button>
-            <Button href="mailto:press@queerpulse.pt" variant="ghost">
-              {t("marketing:pressKit.hero.askPersonCta")}
-            </Button>
-          </div>
+      <PageHero
+        plum={false}
+        eyebrow={t("marketing:pressKit.hero.eyebrow")}
+        title={
+          <Translation
+            i18nKey="marketing:pressKit.hero.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={
+          <Translation
+            i18nKey="marketing:pressKit.hero.dek"
+            components={{ b: <b /> }}
+          />
+        }
+      >
+        <div className={styles.actions}>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => setShowDownload(true)}
+          >
+            {t("marketing:pressKit.hero.downloadKitCta")}
+          </Button>
+          <Button href="mailto:press@queerpulse.pt" variant="ghost">
+            {t("marketing:pressKit.hero.askPersonCta")}
+          </Button>
         </div>
-      </section>
+      </PageHero>
 
       <div className={styles.contactStrip}>
         <div className={styles.contactInner}>

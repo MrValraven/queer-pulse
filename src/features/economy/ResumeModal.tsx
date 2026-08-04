@@ -1,3 +1,4 @@
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -87,13 +88,17 @@ export function ResumeModal({
               onClick={onClose}
               disabled={sending}
             >
+              <FiArrowLeft aria-hidden />{" "}
               {t("economy:resume.saveClose")}
             </button>
             <Button size="lg" type="submit" disabled={sending}>
               {sending ? (
                 <Sending label={t("economy:resume.submittingLabel")} />
               ) : (
-                t("economy:resume.submitCta")
+                <>
+                  {t("economy:resume.submitCta")}{" "}
+                  <FiArrowRight aria-hidden />
+                </>
               )}
             </Button>
           </div>

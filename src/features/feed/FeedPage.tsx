@@ -127,9 +127,14 @@ function FeedListBody({
   livePosts: FeedPost[];
   liveMembers: FeedItem[];
   pulse: HubPost[];
-  staticItems: { key: string; Card: () => React.ReactElement }[];
+  staticItems: { key: string; Card: () => React.ReactElement; wide?: boolean }[];
   revealDelay: (index: number) => string;
 }) {
+  // Rich cards (posts, community pulse, gatherings) hold enough content to earn
+  // a full-width row; light cards (new members, saved links) share a grid row.
+  const revealClass = (wide?: boolean) =>
+    [styles.cardReveal, wide && styles.spanFull].filter(Boolean).join(" ");
+
   if (loading) {
     return (
       <>
@@ -141,14 +146,14 @@ function FeedListBody({
   }
 
   if (!demoMode) {
-    if (isError) return <>{errorPanel}</>;
-    if (empty) return <>{emptyPanel}</>;
+    if (isError) return <div className={styles.spanFull}>{errorPanel}</div>;
+    if (empty) return <div className={styles.spanFull}>{emptyPanel}</div>;
     return (
       <>
         {livePosts.map((post, index) => (
           <div
             key={post.id}
-            className={styles.cardReveal}
+            className={revealClass(true)}
             style={{ animationDelay: revealDelay(index) }}
           >
             <PostCard post={post} />
@@ -157,7 +162,7 @@ function FeedListBody({
         {liveMembers.map((item, index) => (
           <div
             key={item.id}
-            className={styles.cardReveal}
+            className={revealClass()}
             style={{ animationDelay: revealDelay(index + livePosts.length) }}
           >
             <NewMemberCard item={item} />
@@ -167,22 +172,22 @@ function FeedListBody({
     );
   }
 
-  if (empty) return <>{emptyPanel}</>;
+  if (empty) return <div className={styles.spanFull}>{emptyPanel}</div>;
   return (
     <>
       {pulse.map((item, index) => (
         <div
           key={item.post.id}
-          className={styles.cardReveal}
+          className={revealClass(true)}
           style={{ animationDelay: revealDelay(index) }}
         >
           <HubPulseCard item={item} />
         </div>
       ))}
-      {staticItems.map(({ key, Card }, index) => (
+      {staticItems.map(({ key, Card, wide }, index) => (
         <div
           key={key}
-          className={styles.cardReveal}
+          className={revealClass(wide)}
           style={{ animationDelay: revealDelay(index + pulse.length) }}
         >
           <Card />
@@ -296,32 +301,38 @@ export function FeedPage() {
                       queryClient.invalidateQueries({ queryKey: ["feed"] })
                     }
                   >
-                    <FeedListBody
-                      loading={loading}
-                      demoMode={demoMode}
-                      isError={isError}
-                      empty={empty}
-                      emptyPanel={emptyPanel}
-                      errorPanel={errorPanel}
-                      livePosts={livePosts}
-                      liveMembers={liveMembers}
-                      pulse={pulse}
-                      staticItems={staticItems}
-                      revealDelay={revealDelay}
-                    />
-                    {/* Live-only infinite-scroll pager. Self-guards on
-                        `hasNextPage` (false in demo mode, where the feed hook is
-                        disabled), so it renders nothing until there's a real
-                        next cursor page to fetch. */}
-                    {!demoMode && !loading && !isError && !empty && (
-                      <FeedLoadMore
-                        hasNextPage={hasNextPage}
-                        fetchNextPage={() => {
-                          void fetchNextPage();
-                        }}
-                        isFetchingNextPage={isFetchingNextPage}
+                    {/* Responsive card grid: light cards pack two-up, wide cards
+                        (.spanFull) claim a full row. See FeedListBody. */}
+                    <div className={styles.grid}>
+                      <FeedListBody
+                        loading={loading}
+                        demoMode={demoMode}
+                        isError={isError}
+                        empty={empty}
+                        emptyPanel={emptyPanel}
+                        errorPanel={errorPanel}
+                        livePosts={livePosts}
+                        liveMembers={liveMembers}
+                        pulse={pulse}
+                        staticItems={staticItems}
+                        revealDelay={revealDelay}
                       />
-                    )}
+                      {/* Live-only infinite-scroll pager. Self-guards on
+                          `hasNextPage` (false in demo mode, where the feed hook is
+                          disabled), so it renders nothing until there's a real
+                          next cursor page to fetch. */}
+                      {!demoMode && !loading && !isError && !empty && (
+                        <div className={styles.spanFull}>
+                          <FeedLoadMore
+                            hasNextPage={hasNextPage}
+                            fetchNextPage={() => {
+                              void fetchNextPage();
+                            }}
+                            isFetchingNextPage={isFetchingNextPage}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </PullToRefresh>
                 </div>
               </div>

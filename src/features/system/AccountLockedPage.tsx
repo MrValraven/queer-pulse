@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { StatusCard } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,23 +16,22 @@ export function AccountLockedPage() {
 
   return (
     <SystemStateShell>
-      <div className={styles.card}>
-        <div className={styles.icon}>
+      <StatusCard
+        icon={
           <svg viewBox="0 0 24 24" aria-hidden>
             <rect x="4" y="11" width="16" height="10" rx="2" />
             <path d="M8 11V8a4 4 0 0 1 8 0v3" />
           </svg>
-        </div>
-
-        <div className={styles.kicker}>{t("system:accountLocked.kicker")}</div>
-        <h1 className={styles.heading}>
+        }
+        kicker={t("system:accountLocked.kicker")}
+        heading={
           <Translation
             i18nKey="system:accountLocked.heading"
             components={{ em: <em /> }}
           />
-        </h1>
-        <p className={styles.lead}>{t("system:accountLocked.lead")}</p>
-
+        }
+        lead={t("system:accountLocked.lead")}
+      >
         <div className={styles.reasonList}>
           <div className={styles.reasonRow}>
             <div className={styles.reasonIcon}>
@@ -87,7 +88,7 @@ export function AccountLockedPage() {
               </div>
             </div>
             <span className={styles.wnArrow} aria-hidden>
-              →
+              <FiArrowRight />
             </span>
           </Link>
         </div>
@@ -108,7 +109,7 @@ export function AccountLockedPage() {
             </Link>
           </span>
         </div>
-      </div>
+      </StatusCard>
     </SystemStateShell>
   );
 }

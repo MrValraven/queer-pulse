@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck, FiClock, FiMessageSquare } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiClock, FiMessageSquare } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -140,7 +140,8 @@ export function ListBusinessSuccess({
             </Button>
             {listing.linkToProfile && (
               <Button variant="ghost-dark" to={routes.accountProfile}>
-                {t("marketing:listBusiness.success.viewOnProfile")}
+                {t("marketing:listBusiness.success.viewOnProfile")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             )}
             <Button variant="ghost-dark" onClick={onEdit}>

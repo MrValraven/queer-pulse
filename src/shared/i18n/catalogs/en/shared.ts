@@ -197,6 +197,20 @@ export const shared: Catalog = {
   // SuccessPanel
   "successPanel.done": "Done",
 
+  // ConfirmDialog — default footer actions (callers usually pass their own)
+  "confirmDialog.cancel": "Cancel",
+  "confirmDialog.confirm": "Confirm",
+
+  // SaveButton — visible/aria label for the bookmark toggle
+  "saveButton.save": "Save",
+  "saveButton.saved": "Saved",
+
+  // Stars — read-only rating accessible label
+  "stars.ariaLabel": "{value} out of {max} stars",
+
+  // MemberSelectList — empty search result
+  "memberSelect.noResults": "No matches",
+
   // VisibilityBadge
   "visibilityBadge.open": "Open to connect",
   "visibilityBadge.network": "Network only",

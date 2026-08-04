@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiClock, FiMapPin } from "react-icons/fi";
+import { FiArrowRight, FiClock, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -122,7 +122,8 @@ function PlacesCard({
                 to={`${routes.directory}/${place.slug}`}
                 className={styles.viewLink}
               >
-                {t("members:places.viewListingCta")}
+                {t("members:places.viewListingCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             ) : (
               <span className={styles.pending}>

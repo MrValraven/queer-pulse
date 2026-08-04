@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -202,7 +203,8 @@ export function ListBusinessPreview({
               : undefined
           }
         >
-          {t("marketing:listBusiness.preview.fullCta")}
+          {t("marketing:listBusiness.preview.fullCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
 

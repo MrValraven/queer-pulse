@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -25,7 +26,8 @@ export function StudioAlbumMore() {
           />
         </h2>
         <Link to={routes.studioArtist} className={styles.all}>
-          {t("studio:album.more.artistPageCta")} →
+          {t("studio:album.more.artistPageCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       {loading ? (

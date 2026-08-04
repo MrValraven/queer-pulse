@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import type { InfoCard, Voice } from "./intersectionality.data";
 import {
   FadeIn,
@@ -83,7 +84,10 @@ export function InfoCards({ cards, loading, animate }: InfoCardsProps) {
                 <div className={styles.icBody}>{t(card.bodyKey)}</div>
                 {card.link && (
                   <div className={styles.icLink}>
-                    <Link to={card.link.href}>{t(card.link.labelKey)}</Link>
+                    <Link to={card.link.href}>
+                      {t(card.link.labelKey)}{" "}
+                      <FiArrowRight aria-hidden />
+                    </Link>
                   </div>
                 )}
               </div>

@@ -1,5 +1,5 @@
-import { FiBookmark, FiFlag } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiFlag } from "react-icons/fi";
+import { Button, SaveButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./LandlordPage.module.css";
 
@@ -25,23 +25,13 @@ export function LandlordActions({
 
   return (
     <div className={s.heroSecondary}>
-      <Button
-        variant="ghost"
-        onClick={onToggleSave}
-        aria-pressed={saved}
-        aria-label={t(
-          saved
-            ? "economy:landlordPage.unsaveAriaLabel"
-            : "economy:landlordPage.saveAriaLabel",
-          { name: landlordName },
+      <SaveButton
+        saved={saved}
+        onToggle={onToggleSave}
+        label={t(
+          saved ? "economy:landlordPage.saved" : "economy:landlordPage.save",
         )}
-      >
-        <FiBookmark
-          aria-hidden
-          style={{ fill: saved ? "currentColor" : "none" }}
-        />
-        {t(saved ? "economy:landlordPage.saved" : "economy:landlordPage.save")}
-      </Button>
+      />
       <Button
         variant="ghost"
         onClick={onReport}

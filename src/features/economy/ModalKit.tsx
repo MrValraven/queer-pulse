@@ -1,12 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  type PointerEvent as ReactPointerEvent,
-  type ReactNode,
-} from "react";
+import { type ReactNode } from "react";
 import { FiCheck, FiClock, FiFile } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Button, ModalSheet } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
 
@@ -15,21 +9,27 @@ import styles from "./ApplicationModals.module.css";
 // (`useSubmitFlow`) lives in `./modalFlow`.
 export { Sending } from "../../shared/components/ui";
 
-// Focusable-descendant selector for the Tab focus-trap (mirrors Modal.tsx).
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 /** Small file glyph used in attachment rows. */
 export function FileIcon() {
   return <FiFile className={styles.attachIcon} size={16} aria-hidden />;
 }
 
-/** Shared bottom-sheet modal frame: backdrop, close button, scroll lock. */
+/**
+ * Thin wrapper over the shared <ModalSheet> so economy submit/detail modals all
+ * share one bottom-sheet chrome: grabber + drag-to-dismiss, scroll-lock, focus
+ * trap, Escape, and — unlike the old hand-rolled shell — the shared modal-stack
+ * (so a dialog opened from inside another only closes the topmost on Escape).
+ * ModalSheet renders its own close button (aria-label "shared:modal.close"), so
+ * this wrapper adds none. Kept as a named export with the original prop API
+ * (now additively including `className`) so existing consumers import it
+ * unchanged.
+ */
 export function ModalShell({
   onClose,
   success,
   wide,
   ariaLabel,
+  className,
   children,
 }: {
   onClose: () => void;
@@ -37,150 +37,20 @@ export function ModalShell({
   wide?: boolean;
   /** Accessible name for the dialog (the visible title lives in children). */
   ariaLabel?: string;
+  /** Extra class merged onto the sheet element — e.g. NoteModal's plum surface. */
+  className?: string;
   children: ReactNode;
 }) {
-  const { t } = useTranslation();
-  const dialogRef = useRef<HTMLDivElement>(null);
-  // Latest-callback ref so the focus-setup effect can run once on mount (deps
-  // `[]`) without an inline `onClose` re-running the initial focus + trap on
-  // every parent render, which would yank focus back mid-interaction.
-  const onCloseRef = useRef(onClose);
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  });
-  useScrollLock();
-
-  // Escape-to-close, an initial focus into the dialog, a Tab focus-trap so
-  // keyboard/screen-reader users can't tab out to the inert page behind, and
-  // focus restore to the opener on close. (Mirrors Modal.tsx's useDismiss.)
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-
-    const focusables = (): HTMLElement[] =>
-      dialog
-        ? Array.from(
-            dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-          ).filter((element) => element.offsetParent !== null)
-        : [];
-
-    const firstFocusable = focusables()[0];
-    if (firstFocusable) firstFocusable.focus();
-    else dialog?.focus();
-
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onCloseRef.current();
-        return;
-      }
-      if (event.key !== "Tab" || !dialog) return;
-      const items = focusables();
-      const firstItem = items[0];
-      const lastItem = items[items.length - 1];
-      if (!firstItem || !lastItem) {
-        event.preventDefault();
-        dialog.focus();
-        return;
-      }
-      const activeElement = document.activeElement;
-      if (event.shiftKey && (activeElement === firstItem || activeElement === dialog)) {
-        event.preventDefault();
-        lastItem.focus();
-      } else if (!event.shiftKey && activeElement === lastItem) {
-        event.preventDefault();
-        firstItem.focus();
-      }
-    };
-
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      previouslyFocused?.focus?.();
-    };
-  }, []);
-
-  // Drag-to-dismiss for the mobile sheet (mirrors the shared <ModalSheet>).
-  // Touch-only — mouse is ignored so the desktop centered dialog is untouched.
-  // A downward drag past the threshold closes; anything shorter springs back.
-  // The transform is written straight to the sheet element to stay off the React
-  // render path during the drag.
-  const dragStartYRef = useRef<number | null>(null);
-  const handleGrabberPointerDown = (event: ReactPointerEvent) => {
-    if (event.pointerType === "mouse") return;
-    dragStartYRef.current = event.clientY;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-  const handleGrabberPointerMove = (event: ReactPointerEvent) => {
-    const sheet = dialogRef.current;
-    if (dragStartYRef.current === null || !sheet) return;
-    const dragDistance = Math.max(0, event.clientY - dragStartYRef.current);
-    sheet.style.transition = "none";
-    sheet.style.transform = `translateY(${dragDistance}px)`;
-  };
-  const handleGrabberPointerEnd = (event: ReactPointerEvent) => {
-    const sheet = dialogRef.current;
-    if (dragStartYRef.current === null || !sheet) return;
-    const dragDistance = event.clientY - dragStartYRef.current;
-    dragStartYRef.current = null;
-    if (dragDistance > 120) {
-      onClose();
-      return;
-    }
-    sheet.style.transition = "transform var(--dur-base, 0.24s) var(--ease)";
-    sheet.style.transform = "translateY(0)";
-    const clearInlineDragStyles = () => {
-      sheet.style.transition = "";
-      sheet.style.transform = "";
-      sheet.removeEventListener("transitionend", clearInlineDragStyles);
-    };
-    sheet.addEventListener("transitionend", clearInlineDragStyles);
-  };
-
   return (
-    <div
-      className={styles.overlay}
-      // Backdrop click is a mouse-only shortcut; Esc and the close button
-      // already provide the keyboard path, so this div is not interactive.
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <ModalSheet
+      onClose={onClose}
+      success={success}
+      wide={wide}
+      ariaLabel={ariaLabel}
+      className={className}
     >
-      <div
-        ref={dialogRef}
-        tabIndex={-1}
-        className={[
-          styles.modal,
-          wide && styles.modalWide,
-          success && styles.modalSuccess,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
-      >
-        {!success && (
-          <div
-            className={styles.grabber}
-            aria-hidden
-            onPointerDown={handleGrabberPointerDown}
-            onPointerMove={handleGrabberPointerMove}
-            onPointerUp={handleGrabberPointerEnd}
-            onPointerCancel={handleGrabberPointerEnd}
-          />
-        )}
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("economy:modalKit.closeAriaLabel")}
-        >
-          ×
-        </button>
-        {children}
-      </div>
-    </div>
+      {children}
+    </ModalSheet>
   );
 }
 

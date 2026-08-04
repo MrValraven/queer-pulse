@@ -2256,7 +2256,7 @@ export const admin: Catalog = {
   // ── Hero stats view (redesign's editor — see note above roadmap.heroStats.*
   // for why this is a separate group from the current 3-tab editor) ───────
   "roadmap.heroStatsView.title": "Public <em>hero stats</em>",
-  "roadmap.heroStatsView.previewLinkCta": "Preview public page →",
+  "roadmap.heroStatsView.previewLinkCta": "Preview public page",
   "roadmap.heroStatsView.subtitle":
     "These four numbers sit at the top of the member-facing roadmap. Keep them honest — if a number needs a caveat, write it in the note and it shows as a tooltip.",
   "roadmap.heroStatsView.captionPlaceholder": "Caveat / how it is counted",

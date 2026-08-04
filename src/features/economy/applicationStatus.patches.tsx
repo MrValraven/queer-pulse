@@ -95,7 +95,7 @@ export function followedUpPatch(): Partial<Application> {
       </>
     ),
     actions: [
-      { label: "Message recruiter →", kind: "message" },
+      { label: "Message recruiter", kind: "message", arrow: true },
       { label: "Withdraw", kind: "withdraw", muted: true },
     ],
   };
@@ -119,7 +119,7 @@ export function submittedDraftPatch(): Partial<Application> {
       </>
     ),
     actions: [
-      { label: "Message recruiter →", kind: "message" },
+      { label: "Message recruiter", kind: "message", arrow: true },
       { label: "View submission", kind: "submission", muted: true },
     ],
   };

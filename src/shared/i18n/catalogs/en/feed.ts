@@ -93,14 +93,14 @@ export const feed: Catalog = {
 
   // ── Shared action labels ────────────────────────────────────────────────
   "action.connect": "Connect",
-  "action.viewProfile": "View profile →",
+  "action.viewProfile": "View profile",
   "action.cancel": "Cancel",
   "action.reply": "Reply",
   "action.save": "Save",
   "action.saved": "Saved",
   "action.done": "Done",
-  "action.continueReading": "Continue reading →",
-  "action.readRecap": "Read the recap →",
+  "action.continueReading": "Continue reading",
+  "action.readRecap": "Read the recap",
 
   // ── Reply composer ──────────────────────────────────────────────────────
   "composer.srLabel": "Write a reply",
@@ -153,13 +153,13 @@ export const feed: Catalog = {
   // ── FeedSidebar ─────────────────────────────────────────────────────────
   "sidebar.upcomingHeading": "Upcoming",
   "sidebar.upcomingEmpty": "No gatherings on your calendar yet.",
-  "sidebar.seeCalendar": "See full calendar →",
+  "sidebar.seeCalendar": "See full calendar",
   "sidebar.newThisWeekHeading": "New this week",
   "sidebar.newMembersEmpty": "No new members to show yet.",
-  "sidebar.browseMembers": "Browse all members →",
+  "sidebar.browseMembers": "Browse all members",
   "sidebar.connectionsHeading": "Your connections",
   "sidebar.connectionsEmpty": "You haven't connected with anyone yet.",
   "sidebar.connectionsCount_one": "{count} connection",
   "sidebar.connectionsCount_other": "{count} connections",
-  "sidebar.manage": "Manage →",
+  "sidebar.manage": "Manage",
 };

@@ -2,6 +2,11 @@ import type { ReactNode } from "react";
 import styles from "./PageHero.module.css";
 
 interface PageHeroProps {
+  /**
+   * Optional element rendered above the eyebrow, inside the wrap — typically a
+   * `<HubBackLink>` breadcrumb. Brings its own spacing; omit for the common case.
+   */
+  backLink?: ReactNode;
   /** Small uppercase kicker above the title. */
   eyebrow?: ReactNode;
   /** Display headline. Use an `<em>` for the coral emphasis. */
@@ -25,6 +30,7 @@ interface PageHeroProps {
  * (filters, stats, a status note) as children.
  */
 export function PageHero({
+  backLink,
   eyebrow,
   title,
   sub,
@@ -39,6 +45,7 @@ export function PageHero({
         .join(" ")}
     >
       <div className="wrap">
+        {backLink}
         {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
         <h1 className={styles.title}>{title}</h1>
         {sub && <p className={styles.sub}>{sub}</p>}

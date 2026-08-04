@@ -30,20 +30,24 @@ import { useFeed } from "./api/useFeed";
 import { useSequencedTabSwap } from "./useSequencedTabSwap";
 
 /** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
- *  an identifiable author carry `authorSlug` so blocked/muted authors filter out. */
+ *  an identifiable author carry `authorSlug` so blocked/muted authors filter out.
+ *  `wide` cards (posts, gatherings) hold enough content to earn a full-width row;
+ *  the rest are light and pack into the feed grid two-or-more to a row. */
 const FEED_ITEMS: {
   key: string;
   tab: FeedTab;
   Card: () => React.ReactElement;
   authorSlug?: string;
+  wide?: boolean;
 }[] = [
-  { key: "gathering", tab: "Gatherings", Card: GatheringCard },
+  { key: "gathering", tab: "Gatherings", Card: GatheringCard, wide: true },
   { key: "new-member", tab: "People", Card: NewMemberCard, authorSlug: "kai" },
   {
     key: "post",
     tab: "Posts",
     Card: () => <PostCard />,
     authorSlug: FEED_POST.slug,
+    wide: true,
   },
   { key: "saved-article", tab: "Posts", Card: SavedArticleCard },
   { key: "recap", tab: "Gatherings", Card: RecapCard },

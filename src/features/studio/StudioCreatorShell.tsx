@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -37,7 +38,7 @@ export function StudioCreatorShell({ children }: { children: ReactNode }) {
         </nav>
         <div className={s.topRight}>
           <Link to={routes.studioArtist} className={s.back}>
-            {t("studio:creator.viewPublicPageCta")}
+            {t("studio:creator.viewPublicPageCta")} <FiArrowRight aria-hidden />
           </Link>
           {/* Mock signed-in artist's avatar initials — content, not chrome. */}
           <div className={s.avatar}>MS</div>

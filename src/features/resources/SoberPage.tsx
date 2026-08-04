@@ -6,10 +6,10 @@ import styles from "./SoberPage.module.css";
 import {
   Button,
   FadeIn,
-  HubBackLink,
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { ResourceHero } from "./ResourceHero";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -90,23 +90,26 @@ export function SoberPage() {
           { name: pageTitle, path: "/resources/sober" },
         ])}
       />
-      <div className={styles.hero}>
-        <div className="wrap">
-          <HubBackLink
-            to={routes.wellbeing}
-            label={t("resources:sober.hero.backLink")}
-            tone="light"
+      <ResourceHero
+        tone="light"
+        backLink={{
+          to: routes.wellbeing,
+          label: t("resources:sober.hero.backLink"),
+          tone: "light",
+        }}
+        eyebrowVariant="label"
+        eyebrowColor="var(--jade)"
+        eyebrow={t("resources:sober.hero.eyebrow")}
+        titleWeight="light"
+        titleEmColor="var(--jade)"
+        title={
+          <Translation
+            i18nKey="resources:sober.hero.title"
+            components={{ em: <em /> }}
           />
-          <div className={styles.label}>
-            {t("resources:sober.hero.eyebrow")}
-          </div>
-          <h1>
-            <Translation
-              i18nKey="resources:sober.hero.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.lead}>{t("resources:sober.hero.lead")}</p>
+        }
+        lead={t("resources:sober.hero.lead")}
+        extras={
           <div className={styles.reasons}>
             {REASON_KEYS.map((reasonKey) => (
               <span key={reasonKey} className={styles.reason}>
@@ -114,8 +117,8 @@ export function SoberPage() {
               </span>
             ))}
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <SoberHonestSection />
 

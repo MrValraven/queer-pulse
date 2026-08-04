@@ -2,6 +2,7 @@ import { localPoint } from "@visx/event";
 import { LinePath, AreaClosed } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import {
+  BarPlot,
   ChartFrame,
   ChartLegend,
   ResponsiveChart,
@@ -11,6 +12,7 @@ import {
   bandScale,
   CHART_INK,
   type LegendItem,
+  type BarPlotBar,
 } from "../../shared/components/charts";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -97,100 +99,66 @@ export function ReportsByTypeChart({
               plotRight,
               0.48,
             );
-            const barWidth = columnScale.bandwidth();
-            const ticks = valueScale.ticks(3);
 
             return (
-              <svg
-                viewBox={`0 0 ${width} ${height}`}
-                width="100%"
-                role="group"
-                aria-label={t(
-                  "admin:dashboard.charts.reportsByType.ariaLabel",
+              <BarPlot<WeekBar, ReportTip>
+                width={width}
+                height={height}
+                valueScale={valueScale}
+                columnScale={columnScale}
+                ticks={valueScale.ticks(3)}
+                gridLeft={padLeft}
+                gridRight={width - 6}
+                labelY={height - 10}
+                data={weeks}
+                tip={tip}
+                ariaLabel={t("admin:dashboard.charts.reportsByType.ariaLabel")}
+                axisLabel={(value, axisY) => (
+                  <text
+                    x={padLeft - 8}
+                    y={axisY + 4}
+                    textAnchor="end"
+                    className={styles.chAxisSerif}
+                  >
+                    {value}
+                  </text>
                 )}
-              >
-                {ticks.map((value) => {
-                  const y = valueScale(value);
-                  return (
-                    <g key={value}>
-                      <line
-                        x1={padLeft}
-                        y1={y}
-                        x2={width - 6}
-                        y2={y}
-                        stroke={CHART_INK.grid}
-                        strokeWidth={1}
-                      />
-                      <text
-                        x={padLeft - 8}
-                        y={y + 4}
-                        textAnchor="end"
-                        className={styles.chAxisSerif}
-                      >
-                        {value}
-                      </text>
-                    </g>
-                  );
-                })}
-                {weeks.map((week, weekIndex) => {
-                  const x = columnScale(weekIndex) ?? 0;
+                column={(week, weekIndex) => {
                   const recent = weekIndex >= weeks.length - 2;
                   let stackTop = plotBottom;
-                  return (
-                    <g key={week.week}>
-                      {week.values.map((value, seriesIndex) => {
-                        if (value === 0) return null;
-                        const segmentHeight =
-                          plotBottom - valueScale(value);
-                        stackTop -= segmentHeight;
-                        const y = stackTop;
-                        const datum: ReportTip = {
-                          weekLabel: weekLabel(week.week),
-                          seriesLabel: t(series[seriesIndex]!.labelKey),
-                          value,
-                        };
-                        return (
-                          <rect
-                            key={seriesIndex}
-                            className={`${styles.barSeg} ${chartStyles.mark}`}
-                            x={x}
-                            y={y}
-                            width={barWidth}
-                            height={segmentHeight}
-                            fill={series[seriesIndex]?.color}
-                            style={{
-                              animationDelay: `${weekIndex * 55 + seriesIndex * 20}ms`,
-                            }}
-                            onMouseMove={(event) => {
-                              const point = localPoint(event);
-                              tip.showTooltip({
-                                tooltipLeft: point?.x,
-                                tooltipTop: point?.y,
-                                tooltipData: datum,
-                              });
-                            }}
-                            onMouseLeave={tip.hideTooltip}
-                            {...markFocusProps(tip, {
-                              label: `${datum.weekLabel} · ${datum.seriesLabel}: ${value}`,
-                              x: x + barWidth / 2,
-                              y: y + segmentHeight / 2,
-                              datum,
-                            })}
-                          />
-                        );
-                      })}
-                      <text
-                        x={x + barWidth / 2}
-                        y={height - 10}
-                        textAnchor="middle"
-                        className={recent ? styles.chLabelStrong : styles.chLabel}
-                      >
-                        {weekLabel(week.week)}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
+                  const bars: BarPlotBar<ReportTip>[] = [];
+                  week.values.forEach((value, seriesIndex) => {
+                    if (value === 0) return;
+                    const segmentHeight = plotBottom - valueScale(value);
+                    stackTop -= segmentHeight;
+                    const datum: ReportTip = {
+                      weekLabel: weekLabel(week.week),
+                      seriesLabel: t(series[seriesIndex]!.labelKey),
+                      value,
+                    };
+                    bars.push({
+                      key: seriesIndex,
+                      y: stackTop,
+                      height: segmentHeight,
+                      fill: series[seriesIndex]?.color,
+                      className: `${styles.barSeg} ${chartStyles.mark}`,
+                      style: {
+                        animationDelay: `${weekIndex * 55 + seriesIndex * 20}ms`,
+                      },
+                      datum,
+                      ariaLabel: `${datum.weekLabel} · ${datum.seriesLabel}: ${value}`,
+                    });
+                  });
+                  return {
+                    key: week.week,
+                    label: weekLabel(week.week),
+                    labelClassName: recent
+                      ? styles.chLabelStrong
+                      : styles.chLabel,
+                    bars,
+                  };
+                }}
+              />
             );
           }}
         </ResponsiveChart>
@@ -449,38 +417,31 @@ export function ResponseTimeChart({
               width - padRight,
               0.4,
             );
-            const barWidth = columnScale.bandwidth();
-            const ticks = valueScale.ticks(2);
             const slaIndex = buckets.findIndex((bucket) => bucket.overSla);
 
             return (
-              <svg
-                viewBox={`0 0 ${width} ${height}`}
-                width="100%"
-                role="group"
-                aria-label={t("admin:dashboard.charts.responseTime.ariaLabel")}
-              >
-                {ticks.map((value) => (
-                  <g key={value}>
-                    <line
-                      x1={padLeft}
-                      y1={valueScale(value)}
-                      x2={width - padRight}
-                      y2={valueScale(value)}
-                      stroke={CHART_INK.grid}
-                      strokeWidth={1}
-                    />
-                    <text
-                      x={padLeft}
-                      y={valueScale(value) - 4}
-                      className={styles.chAxisSerif}
-                    >
-                      {value}
-                    </text>
-                  </g>
-                ))}
-                {buckets.map((bucket, index) => {
-                  const x = columnScale(index) ?? 0;
+              <BarPlot<DistBucket, ResponseTip>
+                width={width}
+                height={height}
+                valueScale={valueScale}
+                columnScale={columnScale}
+                ticks={valueScale.ticks(2)}
+                gridLeft={padLeft}
+                gridRight={width - padRight}
+                labelY={height - 12}
+                data={buckets}
+                tip={tip}
+                ariaLabel={t("admin:dashboard.charts.responseTime.ariaLabel")}
+                axisLabel={(value, axisY) => (
+                  <text
+                    x={padLeft}
+                    y={axisY - 4}
+                    className={styles.chAxisSerif}
+                  >
+                    {value}
+                  </text>
+                )}
+                column={(bucket, index) => {
                   const y = valueScale(bucket.value);
                   const datum: ResponseTip = {
                     label: bucket.label,
@@ -490,45 +451,27 @@ export function ResponseTimeChart({
                   const slaLabel = bucket.overSla
                     ? t("admin:dashboard.charts.legend.overSla", { hours: "6h" })
                     : t("admin:dashboard.charts.legend.withinSla");
-                  return (
-                    <g key={bucket.label}>
-                      <rect
-                        className={`${styles.barSeg} ${chartStyles.mark}`}
-                        x={x}
-                        y={y}
-                        width={barWidth}
-                        height={plotBottom - y}
-                        rx={6}
-                        fill={bucket.overSla ? "var(--amber)" : "var(--jade)"}
-                        opacity={bucket.overSla ? 0.92 : 1}
-                        style={{ animationDelay: `${index * 55}ms` }}
-                        onMouseMove={(event) => {
-                          const local = localPoint(event);
-                          tip.showTooltip({
-                            tooltipLeft: local?.x,
-                            tooltipTop: local?.y,
-                            tooltipData: datum,
-                          });
-                        }}
-                        onMouseLeave={tip.hideTooltip}
-                        {...markFocusProps(tip, {
-                          label: `${bucket.label}: ${bucket.value} · ${slaLabel}`,
-                          x: x + barWidth / 2,
-                          y: y + (plotBottom - y) / 2,
-                          datum,
-                        })}
-                      />
-                      <text
-                        x={x + barWidth / 2}
-                        y={height - 12}
-                        textAnchor="middle"
-                        className={styles.chLabel}
-                      >
-                        {bucket.label}
-                      </text>
-                    </g>
-                  );
-                })}
+                  return {
+                    key: bucket.label,
+                    label: bucket.label,
+                    labelClassName: styles.chLabel,
+                    bars: [
+                      {
+                        key: bucket.label,
+                        y,
+                        height: plotBottom - y,
+                        rx: 6,
+                        fill: bucket.overSla ? "var(--amber)" : "var(--jade)",
+                        opacity: bucket.overSla ? 0.92 : 1,
+                        className: `${styles.barSeg} ${chartStyles.mark}`,
+                        style: { animationDelay: `${index * 55}ms` },
+                        datum,
+                        ariaLabel: `${bucket.label}: ${bucket.value} · ${slaLabel}`,
+                      },
+                    ],
+                  };
+                }}
+              >
                 {slaIndex >= 0 && (
                   <>
                     <line
@@ -552,7 +495,7 @@ export function ResponseTimeChart({
                     </text>
                   </>
                 )}
-              </svg>
+              </BarPlot>
             );
           }}
         </ResponsiveChart>

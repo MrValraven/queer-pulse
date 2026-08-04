@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -116,7 +117,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           {t("auth:onboarding.stepNorms.continue")}
         </Button>
         <button type="button" className={styles.back} onClick={onBack}>
-          {t("auth:onboarding.stepNorms.back")}
+          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepNorms.back")}
         </button>
       </div>
     </>
@@ -147,7 +148,9 @@ export function StepDone({ stepLabel }: { stepLabel: string }) {
                 {t(qs.descriptionKey, qs.descriptionValues)}
               </div>
             </div>
-            <span className={styles.qsArrow}>→</span>
+            <span className={styles.qsArrow} aria-hidden>
+              <FiArrowRight />
+            </span>
           </Link>
         ))}
       </div>

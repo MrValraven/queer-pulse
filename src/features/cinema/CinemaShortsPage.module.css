@@ -470,41 +470,28 @@
 }
 
 /* ── Shared section divider ── */
-.secDiv {
-  display: flex;
+/* Shorts section divider — the local per-shelf overrides layered onto the
+   shared <SectionHead>: the 2px rule, the tighter 24px title, and the muted
+   ink-40 link that matches the light "Made Here" surface. */
+.shortsSectionHead {
   align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
   margin: 40px 0 24px;
   padding-bottom: 14px;
   border-bottom: 2px solid var(--line-strong);
-  flex-wrap: wrap;
 }
-.secDiv h2 {
-  font-family: var(--serif);
-  font-weight: 400;
+.shortsSectionHead h2 {
   font-size: 24px;
-  color: var(--text-strong);
-  letter-spacing: -0.012em;
 }
-.secDiv h2 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.secDiv .sub {
+.shortsSectionHead p {
   font-size: 13.5px;
   color: var(--ink-40);
-  max-width: 38ch;
-  margin-right: auto;
 }
-.secDiv .all {
+.shortsSectionHead a {
   font-size: 13px;
-  font-weight: 600;
   color: var(--ink-40);
-  white-space: nowrap;
 }
 @media (hover: hover) {
-  .secDiv .all:hover {
+  .shortsSectionHead a:hover {
     color: var(--text-strong);
   }
 }

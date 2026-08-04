@@ -28,8 +28,9 @@ export const notifications: Catalog = {
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
   "type.promoted_to_member.meta": "Adesão",
 
-  "type.new_message.text": "Tens uma nova mensagem.",
-  "type.new_message.meta": "Mensagem privada",
+  // `new_message` (linha "Tens uma nova mensagem" no centro de notificações) foi
+  // descontinuado: os avisos de MD só aparecem no distintivo do ícone de
+  // mensagens e nas notificações push, nunca aqui.
 
   "type.introduction_made.text":
     "Uma apresentação que fizeste foi concretizada.",
@@ -183,14 +184,12 @@ export const notifications: Catalog = {
 
   // Separadores de filtro (notificationTabs em data.tsx + o separador Menções)
   "tabs.all": "Todas",
-  "tabs.messages": "Mensagens",
   "tabs.events": "Encontros",
   "tabs.community": "Comunidade",
   "tabs.platform": "Plataforma",
   "tabs.mentions": "Menções",
 
   // Rótulos de ação partilhados pela lista de notificações de demonstração
-  "actions.reply": "Responder",
   "actions.viewThread": "Ver conversa",
   "actions.viewEvent": "Ver encontro",
   "actions.accept": "Aceitar",
@@ -198,14 +197,10 @@ export const notifications: Catalog = {
   "actions.readNow": "Ler agora",
   "actions.seeDetails": "Ver detalhes",
   "actions.seeBarterBoard": "Ver quadro de trocas",
-  "actions.readMessage": "Ler mensagem",
   "actions.viewReplies": "Ver respostas",
   "actions.readReport": "Ler relatório",
 
   // Lista de notificações de demonstração (notificationsList.data.tsx)
-  "list.1.text":
-    "<strong>{name}</strong> respondeu à tua mensagem sobre o encontro de domingo à mesa.",
-  "list.1.meta": "Mensagem privada",
   "list.2.text":
     "A tua inscrição em <strong>{title}</strong> foi confirmada. O encontro é no dia {date}, em {venue}.",
   "list.2.meta": "Encontro · Convívio",
@@ -233,9 +228,6 @@ export const notifications: Catalog = {
   "list.9.text":
     "O <strong>{event}</strong> a que foste tem uma conversa de continuação marcada para {date}.",
   "list.9.meta": "Encontro · Continuação",
-  "list.10.text":
-    "<strong>{name}</strong> enviou-te uma mensagem sobre o {event} de {day}.",
-  "list.10.meta": "Mensagem privada",
   "list.11.text_one":
     "O teu post no Fórum (“{postTitle}”) recebeu {count} resposta.",
   "list.11.text_other":
@@ -289,7 +281,7 @@ export const notifications: Catalog = {
   "mentions.context.communityReply": "numa resposta na comunidade {community}",
 
   // Pré-visualização de notificação (NotificationDeepLinkPage.tsx / Cards.tsx)
-  "deepLink.back": "← Notificações",
+  "deepLink.back": "Notificações",
   "deepLink.types.connection": "Ligação",
   "deepLink.types.gathering": "Encontro",
   "deepLink.types.reply": "Resposta",
@@ -309,8 +301,8 @@ export const notifications: Catalog = {
   "deepLink.connection.viewConnections": "Ver as tuas ligações",
   "deepLink.connection.wantsToConnect": "{name} quer <em>ligar-se</em>",
   "deepLink.connection.noteIntro": "Enviou-te uma nota com o pedido:",
-  "deepLink.connection.mutualConnections_one": "{count} ligação em comum →",
-  "deepLink.connection.mutualConnections_other": "{count} ligações em comum →",
+  "deepLink.connection.mutualConnections_one": "{count} ligação em comum",
+  "deepLink.connection.mutualConnections_other": "{count} ligações em comum",
   "deepLink.connection.accept": "Aceitar",
   "deepLink.connection.decline": "Recusar",
   "deepLink.connection.notNow": "Agora não — decidir depois",

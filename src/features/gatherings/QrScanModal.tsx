@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiX, FiCheck } from "react-icons/fi";
 import { MdQrCodeScanner } from "react-icons/md";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Button, Modal, ModalSheet } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Guest } from "./gatheringDashboard.data";
@@ -20,14 +19,6 @@ export function QrScanModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  useScrollLock();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState<Guest | null>(null);
   // Hold the simulated-scan timer so it can't check a guest in after the modal
@@ -37,7 +28,7 @@ export function QrScanModal({
   );
   useEffect(() => () => clearTimeout(scanTimerRef.current), []);
 
-  const pending = guests.filter((g) => g.status === "pending");
+  const pending = guests.filter((guest) => guest.status === "pending");
 
   const simulateScan = () => {
     if (pending.length === 0 || scanning) return;
@@ -52,19 +43,12 @@ export function QrScanModal({
 
   if (scanned) {
     return (
-      <div
-        className={styles.overlay}
-        role="presentation"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose();
-        }}
+      <ModalSheet
+        success
+        onClose={onClose}
+        ariaLabel={t("gatherings:qr.success.ariaLabel")}
       >
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={t("gatherings:qr.success.ariaLabel")}
-          className={styles.success}
-        >
+        <div className={styles.success}>
           <button
             type="button"
             className={styles.successClose}
@@ -111,68 +95,47 @@ export function QrScanModal({
             </Button>
           </div>
         </div>
-      </div>
+      </ModalSheet>
     );
   }
 
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <Modal
+      eyebrow={t("gatherings:qr.eyebrow")}
+      title={t("gatherings:qr.title")}
+      onClose={onClose}
     >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={t("gatherings:qr.title")}
-        className={styles.modal}
-      >
-        <span className={styles.grabber} aria-hidden />
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("gatherings:qr.closeAria")}
-        >
-          <FiX />
-        </button>
-        <div className={styles.eye}>{t("gatherings:qr.eyebrow")}</div>
-        <div className={styles.title}>{t("gatherings:qr.title")}</div>
-
-        <div className={styles.viewfinder}>
-          <span className={`${styles.corner} ${styles.tl}`} />
-          <span className={`${styles.corner} ${styles.tr}`} />
-          <span className={`${styles.corner} ${styles.bl}`} />
-          <span className={`${styles.corner} ${styles.br}`} />
-          {scanning && <span className={styles.scanLine} />}
-          <div className={styles.vfStack}>
-            <span className={styles.vfIcon}>
-              <MdQrCodeScanner />
-            </span>
-            <span className={styles.vfHint}>
-              {scanning
-                ? t("gatherings:qr.readingHint")
-                : t("gatherings:qr.pointHint")}
-            </span>
-          </div>
+      <div className={styles.viewfinder}>
+        <span className={`${styles.corner} ${styles.tl}`} />
+        <span className={`${styles.corner} ${styles.tr}`} />
+        <span className={`${styles.corner} ${styles.bl}`} />
+        <span className={`${styles.corner} ${styles.br}`} />
+        {scanning && <span className={styles.scanLine} />}
+        <div className={styles.vfStack}>
+          <span className={styles.vfIcon}>
+            <MdQrCodeScanner />
+          </span>
+          <span className={styles.vfHint}>
+            {scanning
+              ? t("gatherings:qr.readingHint")
+              : t("gatherings:qr.pointHint")}
+          </span>
         </div>
-
-        <Button
-          variant="primary"
-          className={styles.full}
-          onClick={simulateScan}
-          disabled={scanning || pending.length === 0}
-        >
-          {scanning
-            ? t("gatherings:qr.scanningCta")
-            : pending.length === 0
-              ? t("gatherings:qr.allCheckedInCta")
-              : t("gatherings:qr.simulateCta")}
-        </Button>
-        <div className={styles.note}>{t("gatherings:qr.demoNote")}</div>
       </div>
-    </div>
+
+      <Button
+        variant="primary"
+        className={styles.full}
+        onClick={simulateScan}
+        disabled={scanning || pending.length === 0}
+      >
+        {scanning
+          ? t("gatherings:qr.scanningCta")
+          : pending.length === 0
+            ? t("gatherings:qr.allCheckedInCta")
+            : t("gatherings:qr.simulateCta")}
+      </Button>
+      <div className={styles.note}>{t("gatherings:qr.demoNote")}</div>
+    </Modal>
   );
 }

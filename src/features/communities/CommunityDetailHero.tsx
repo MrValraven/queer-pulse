@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import { FiBookmark, FiCheck, FiClock, FiShare2 } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiBookmark,
+  FiCheck,
+  FiClock,
+  FiShare2,
+} from "react-icons/fi";
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -47,7 +53,7 @@ export function CommunityDetailHero({
     <div className={styles.hero}>
       <div className={`wrap ${styles.heroInner}`}>
         <Link to={routes.communities} className={styles.breadcrumb}>
-          {t("communities:detail.breadcrumb")}
+          <FiArrowLeft aria-hidden /> {t("communities:detail.breadcrumb")}
         </Link>
         <div className={styles.typeBadge}>
           <span className={styles.dot} />

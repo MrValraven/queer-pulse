@@ -292,7 +292,7 @@ const healthcare: Topic = {
   ],
   resources: {
     body: "This topic is curated. 18 names, clinics, and guides have been vetted by community moderators in the last 90 days.",
-    ctaLabel: "Browse vetted resources →",
+    ctaLabel: "Browse vetted resources",
     href: routes.transHub,
   },
 };
@@ -438,7 +438,7 @@ const trans: Topic = {
   ],
   resources: {
     body: "31 guides, legal templates, and vetted providers, re-checked by trans-led moderators every quarter.",
-    ctaLabel: "Open the Trans Hub →",
+    ctaLabel: "Open the Trans Hub",
     href: routes.transHub,
   },
 };
@@ -582,7 +582,7 @@ const mentalhealth: Topic = {
   ],
   resources: {
     body: "24 vetted therapists, helplines, and peer rooms — checked for queer-affirming practice by Wellbeing moderators.",
-    ctaLabel: "Browse Wellbeing →",
+    ctaLabel: "Browse Wellbeing",
     href: routes.wellbeing,
   },
 };

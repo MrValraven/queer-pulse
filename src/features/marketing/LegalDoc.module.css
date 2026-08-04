@@ -1,8 +1,30 @@
 .page {
   padding: 120px 0 100px;
 }
+/* When a custom hero is supplied it owns the nav clearance, so the doc body
+   drops its top padding and sits directly beneath the hero. */
+.hasHero {
+  padding-top: 0;
+}
 .wrap {
   max-width: 720px;
+}
+.docMain {
+  min-width: 0;
+}
+/* Interactive docs (cookie consent) pass an `aside`, turning the single narrow
+   column into a two-column layout with a sticky companion panel. */
+.withAside {
+  max-width: var(--maxw);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 48px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .withAside {
+    grid-template-columns: 1fr;
+  }
 }
 .header {
   margin-bottom: 52px;

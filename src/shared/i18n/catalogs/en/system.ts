@@ -22,7 +22,7 @@ export const system: Catalog = {
   "notFound.sub":
     "The page you're looking for doesn't exist, has moved, or requires you to be logged in. It happens. Here are some places to go instead.",
   "notFound.homeCta": "Go to homepage",
-  "notFound.backCta": "← Go back",
+  "notFound.backCta": "Go back",
   "notFound.linksTitle": "Or try one of these",
   "notFound.links.magazine.label": "Magazine",
   "notFound.links.magazine.sub": "June 2026 issue",
@@ -75,7 +75,7 @@ export const system: Catalog = {
   "accountBanned.actions.appealCta": "File the appeal",
   "accountBanned.actions.eraseCta": "Request full data erasure",
   "accountBanned.foot":
-    "If you believe this was the result of coordinated false reports, please include the names you suspect in the appeal — we investigate this carefully. <a>Re-read the Code of Conduct →</a>",
+    "If you believe this was the result of coordinated false reports, please include the names you suspect in the appeal — we investigate this carefully. <a>Re-read the Code of Conduct</a>",
 
   // ── AccountLockedPage.tsx ─────────────────────────────────────────────────
   "accountLocked.kicker": "Account locked · temporary",
@@ -124,7 +124,7 @@ export const system: Catalog = {
   "accountSuspended.actions.ladderCta": "Read the ladder",
   "accountSuspended.actions.messageModCta": "Message the mod team",
   "accountSuspended.foot":
-    "{percent}% of appeals are overturned. We publish the number annually. <a>See 2025 moderation stats →</a>",
+    "{percent}% of appeals are overturned. We publish the number annually. <a>See 2025 moderation stats</a>",
 
   // ── GeoRestrictedPage.tsx ─────────────────────────────────────────────────
   "geoRestricted.eyebrow": "Region restricted",
@@ -138,16 +138,16 @@ export const system: Catalog = {
   "geoRestricted.can.readArticles.label":
     "Read all public articles & the magazine",
   "geoRestricted.can.readArticles.detail":
-    "The full editorial archive is open · <a>browse →</a>",
+    "The full editorial archive is open · <a>browse</a>",
   "geoRestricted.can.resources.label": "Browse vetted international resources",
   "geoRestricted.can.resources.detail":
-    "Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <a>resource library →</a>",
+    "Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <a>resource library</a>",
   "geoRestricted.can.askUs.label": "Ask us to open access here",
   "geoRestricted.can.askUs.detail":
-    "Tell us where you are (no need for your name) and what would help · <a>write to the team →</a>",
+    "Tell us where you are (no need for your name) and what would help · <a>write to the team</a>",
   "geoRestricted.detect":
     "Detected: <b>Portugal · Lisbon</b> · this is a demo of the region-restricted view.",
-  "geoRestricted.goHome": "Go home →",
+  "geoRestricted.goHome": "Go home",
 
   // ── InterestsEditorModal.tsx + interestsEditor.data.ts ───────────────────
   "interestsEditor.closeAria": "Close",
@@ -265,7 +265,7 @@ export const system: Catalog = {
   "maintenance.affected.web": "Web platform · everything except…",
   "maintenance.affected.mobile": "Mobile app · same deployment",
   "maintenance.affected.email": "Email notifications · queued, sent after",
-  "maintenance.actions.statusCta": "Live status →",
+  "maintenance.actions.statusCta": "Live status",
   "maintenance.meta.line1":
     "Follow along on <a>status.queerpulse.app</a> · we post a public retrospective every time.",
   "maintenance.meta.line2":
@@ -309,7 +309,7 @@ export const system: Catalog = {
     "Invitation sent · activates within 14 days",
   "pendingReview.timeline.step4.desc":
     "You'll get a single-use link to activate your account",
-  "pendingReview.actions.magazineCta": "Read the magazine →",
+  "pendingReview.actions.magazineCta": "Read the magazine",
   "pendingReview.actions.vouchCta": "Ask a member to vouch",
   "pendingReview.actions.updateInterestsCta": "Update my interests",
   "pendingReview.foot.knowMember":

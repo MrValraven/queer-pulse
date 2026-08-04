@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiPlus, FiCheck } from "react-icons/fi";
+import { FiPlus, FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -114,7 +114,8 @@ export function StudioCollectionPage() {
             />
           </h2>
           <Link to={routes.studioSearch} className={ss.all}>
-            {t("studio:collection.page.findMoreCta")} →
+            {t("studio:collection.page.findMoreCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         {loading ? (

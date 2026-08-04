@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 
 /** Tab id → catalog labelKey, resolved via t() at render. */
@@ -446,7 +447,9 @@ export const GOV_STATS: Bignum[] = [
     p: (
       <>
         All meetings minuted, posted within 7 days ·{" "}
-        <Link to={routes.governance}>browse →</Link>
+        <Link to={routes.governance}>
+          browse <FiArrowRight aria-hidden />
+        </Link>
       </>
     ),
   },

@@ -1,34 +1,4 @@
-.hero {
-  padding: 148px 0 64px;
-}
-.cat {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-.hero h1 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(40px, 6vw, 80px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 1;
-  max-width: 16ch;
-}
-.hero h1 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.intro {
-  font-size: 18px;
-  color: var(--ink-60);
-  line-height: 1.65;
-  max-width: 54ch;
-  margin-top: 24px;
-}
+/* Hero migrated to the shared <ResourceHero tone="light" />. */
 
 .content {
   max-width: 760px;

@@ -1,5 +1,6 @@
 import { LANG_OPTIONS, type ContractCtx, type Lang } from "./contract.data";
 import { ContractClauses } from "./ContractClauses";
+import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ContractGeneratorPage.module.css";
 
@@ -59,30 +60,20 @@ export function ContractForm({
           {t("economy:contractTool.providerLegend")}
         </legend>
         <div className={styles.rcRow}>
-          <div>
-            <label className={styles.rcLabel} htmlFor="c-provider-name">
-              {t("economy:contractTool.nameLabel")}
-            </label>
+          <FormField label={t("economy:contractTool.nameLabel")}>
             <input
-              id="c-provider-name"
-              className={styles.rcInput}
               value={ctx.providerName}
               placeholder={t("economy:contractTool.providerNamePlaceholder")}
               onChange={(e) => onChange({ providerName: e.target.value })}
             />
-          </div>
-          <div>
-            <label className={styles.rcLabel} htmlFor="c-provider-nif">
-              {t("economy:contractTool.nifLabel")}
-            </label>
+          </FormField>
+          <FormField label={t("economy:contractTool.nifLabel")}>
             <input
-              id="c-provider-nif"
-              className={styles.rcInput}
               value={ctx.providerNif}
               placeholder={t("economy:contractTool.providerNifPlaceholder")}
               onChange={(e) => onChange({ providerNif: e.target.value })}
             />
-          </div>
+          </FormField>
         </div>
       </fieldset>
 
@@ -91,112 +82,72 @@ export function ContractForm({
           {t("economy:contractTool.clientLegend")}
         </legend>
         <div className={styles.rcRow}>
-          <div>
-            <label className={styles.rcLabel} htmlFor="c-client-name">
-              {t("economy:contractTool.nameLabel")}
-            </label>
+          <FormField label={t("economy:contractTool.nameLabel")}>
             <input
-              id="c-client-name"
-              className={styles.rcInput}
               value={ctx.clientName}
               placeholder={t("economy:contractTool.clientNamePlaceholder")}
               onChange={(e) => onChange({ clientName: e.target.value })}
             />
-          </div>
-          <div>
-            <label className={styles.rcLabel} htmlFor="c-client-nif">
-              {t("economy:contractTool.nifLabel")}
-            </label>
+          </FormField>
+          <FormField label={t("economy:contractTool.nifLabel")}>
             <input
-              id="c-client-nif"
-              className={styles.rcInput}
               value={ctx.clientNif}
               placeholder={t("economy:contractTool.clientNifPlaceholder")}
               onChange={(e) => onChange({ clientNif: e.target.value })}
             />
-          </div>
+          </FormField>
         </div>
       </fieldset>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="c-project">
-          {t("economy:contractTool.projectTitleLabel")}
-        </label>
+      <FormField label={t("economy:contractTool.projectTitleLabel")}>
         <input
-          id="c-project"
-          className={styles.rcInput}
           value={ctx.project}
           placeholder={t("economy:contractTool.projectTitlePlaceholder")}
           onChange={(e) => onChange({ project: e.target.value })}
         />
-      </div>
+      </FormField>
 
-      <div className={styles.field}>
-        <label className={styles.rcLabel} htmlFor="c-scope">
-          {t("economy:contractTool.scopeLabel")}
-        </label>
+      <FormField label={t("economy:contractTool.scopeLabel")}>
         <textarea
-          id="c-scope"
-          className={styles.rcTextarea}
           value={ctx.scope}
           rows={4}
           placeholder={t("economy:contractTool.scopePlaceholder")}
           onChange={(e) => onChange({ scope: e.target.value })}
         />
-      </div>
+      </FormField>
 
       <div className={styles.rcRow}>
-        <div>
-          <label className={styles.rcLabel} htmlFor="c-fee">
-            {t("economy:contractTool.feeLabel")}
-          </label>
+        <FormField label={t("economy:contractTool.feeLabel")}>
           <input
-            id="c-fee"
-            className={styles.rcInput}
             value={ctx.fee}
             placeholder={t("economy:contractTool.feePlaceholder")}
             onChange={(e) => onChange({ fee: e.target.value })}
           />
-        </div>
-        <div>
-          <label className={styles.rcLabel} htmlFor="c-timeline">
-            {t("economy:contractTool.timelineLabel")}
-          </label>
+        </FormField>
+        <FormField label={t("economy:contractTool.timelineLabel")}>
           <input
-            id="c-timeline"
-            className={styles.rcInput}
             value={ctx.timeline}
             placeholder={t("economy:contractTool.timelinePlaceholder")}
             onChange={(e) => onChange({ timeline: e.target.value })}
           />
-        </div>
+        </FormField>
       </div>
 
       <div className={styles.rcRow}>
-        <div>
-          <label className={styles.rcLabel} htmlFor="c-terms">
-            {t("economy:contractTool.paymentTermsLabel")}
-          </label>
+        <FormField label={t("economy:contractTool.paymentTermsLabel")}>
           <input
-            id="c-terms"
-            className={styles.rcInput}
             value={ctx.paymentTerms}
             placeholder={t("economy:contractTool.paymentTermsPlaceholder")}
             onChange={(e) => onChange({ paymentTerms: e.target.value })}
           />
-        </div>
-        <div>
-          <label className={styles.rcLabel} htmlFor="c-law">
-            {t("economy:contractTool.governingLawLabel")}
-          </label>
+        </FormField>
+        <FormField label={t("economy:contractTool.governingLawLabel")}>
           <input
-            id="c-law"
-            className={styles.rcInput}
             value={ctx.governingLaw}
             placeholder={t("economy:contractTool.governingLawPlaceholder")}
             onChange={(e) => onChange({ governingLaw: e.target.value })}
           />
-        </div>
+        </FormField>
       </div>
 
       <ContractClauses

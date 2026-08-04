@@ -490,31 +490,24 @@
 }
 
 /* ── Read note (plum reading panel) ──────────────────────────────────── */
-.readModal {
+/* NoteModal now renders inside the shared <ModalSheet> (via ModalShell) and
+   passes this class through to the sheet element. The doubled selector lifts
+   specificity over Modal.module.css's single-class `.sheet` so the plum surface
+   wins regardless of stylesheet order. The direct-child rules recolor
+   ModalSheet's own grabber (first child div) and close button so they read as
+   cream-on-plum instead of the default ink-on-cream chrome. */
+.readModal.readModal {
   background: var(--plum);
 }
-/* The read-note panel isn't a ModalShell, so it keeps a visual-only grabber via
-   a pseudo (it has no drag wiring; its close button dismisses). */
-.readModal::before {
-  content: "";
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 5px;
-  border-radius: 999px;
+.readModal > div:first-child {
   background: rgba(var(--cream-rgb), 0.28);
-  pointer-events: none;
 }
-@media (min-width: 720px) {
-  .readModal::before {
-    display: none;
-  }
-}
-.readModal .close {
+.readModal > button {
   background: rgba(var(--cream-rgb), 0.12);
   color: rgba(var(--cream-rgb), 1);
+}
+.readModal > button:hover {
+  background: rgba(var(--cream-rgb), 0.22);
 }
 .readEyebrow {
   font-size: 11px;

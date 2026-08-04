@@ -135,12 +135,12 @@ export const community: Catalog = {
   "changemakers.stat.peopleHelped": "People directly helped by their work",
   "changemakers.stat.activeCampaigns": "Active campaigns running right now",
   "changemakers.featured.label": "Featured change maker",
-  "changemakers.featured.readStoryCta": "Read her story →",
+  "changemakers.featured.readStoryCta": "Read her story",
   "changemakers.featured.connectCta": "Connect",
   "changemakers.empty.title": "No change makers profiled yet",
   "changemakers.empty.description":
     "This is where we celebrate the people quietly making things better. Know someone doing that work? Nominate them below and we'll start the story.",
-  "changemakers.card.readMoreCta": "Read more →",
+  "changemakers.card.readMoreCta": "Read more",
 
   // Change Makers — nominate form
   "changemakers.nominate.eyebrow": "Community nominations",
@@ -155,13 +155,13 @@ export const community: Catalog = {
     "Couldn't send your nomination — please try again.",
 
   // ── Change Maker story page (ChangemakerStoryPage.tsx) ────────────────────
-  "changemakerStory.backCta": "← Change Makers",
+  "changemakerStory.backCta": "Change Makers",
   "changemakerStory.categoryLabel": "Change Maker · {cause}",
   "changemakerStory.impactLabel": "Why we highlight {name}",
   "changemakerStory.outro.title": "Want to support <em>{name}'s</em> work?",
   "changemakerStory.outro.sub":
     "Change makers do this alongside their day jobs. A message, an introduction, or an hour of your time goes further than you'd think.",
-  "changemakerStory.outro.connectCta": "Connect with {name} →",
+  "changemakerStory.outro.connectCta": "Connect with {name}",
   "changemakerStory.outro.moreCta": "Meet more change makers",
   "changemakerStory.moreLabel": "More change makers",
 
@@ -258,7 +258,7 @@ export const community: Catalog = {
   "comingOut.outro.title": "You don't owe a <em>perfect speech.</em>",
   "comingOut.outro.sub":
     "Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready — and leave the moment you are.",
-  "comingOut.outro.enterCta": "Enter the space →",
+  "comingOut.outro.enterCta": "Enter the space",
   "comingOut.outro.communitiesCta": "See all communities",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
@@ -379,13 +379,13 @@ export const community: Catalog = {
     "No legal recognition for multiple-partner relationships. Practical solutions exist (wills, powers of attorney, cohabitation agreements) but require deliberate legal planning.",
   "dating.recognition.nonMonogamous.status":
     "No automatic recognition — plan ahead",
-  "dating.recognition.legalCta": "Legal advice for relationships →",
+  "dating.recognition.legalCta": "Legal advice for relationships",
 
   "dating.social.heading": "Meet people <em>in person.</em>",
   "dating.social.lead":
     "Apps are fine. But the QueerPulse community tends to actually meet at events — socials, dinners, gatherings specifically for connection. Less transactional than a dating app; more honest about what you're there for.",
   "dating.social.upcomingEventsCta": "See upcoming events",
-  "dating.social.forumThreadCta": "Social forum thread →",
+  "dating.social.forumThreadCta": "Social forum thread",
   "dating.event.singlesDinner.name": "Queer Singles Dinner",
   "dating.event.singlesDinner.detail": "Monthly · Mouraria · 12–16 people",
   "dating.event.singlesDinner.note":
@@ -402,7 +402,7 @@ export const community: Catalog = {
   "dating.outro.title": "Real connection <em>exists here.</em>",
   "dating.outro.sub":
     "It takes a little time and a little showing up. The community makes it easier.",
-  "dating.outro.cta": "See what's on →",
+  "dating.outro.cta": "See what's on",
 
   // ── Family building hub (FamilyPage.tsx + sub-components) ─────────────────
   "family.hero.cat": "Family Building · Portugal",
@@ -418,27 +418,27 @@ export const community: Catalog = {
   "family.situation.twoWomen.name": "Two women",
   "family.situation.twoWomen.desc":
     "IVF or IUI with donor sperm, joint legal parenthood from birth.",
-  "family.situation.twoWomen.to": "See: IVF & Assisted Reproduction →",
+  "family.situation.twoWomen.to": "See: IVF & Assisted Reproduction",
   "family.situation.twoMen.name": "Two men",
   "family.situation.twoMen.desc":
     "Joint adoption, co-parenting arrangements, or surrogacy options.",
-  "family.situation.twoMen.to": "See: Adoption & Co-parenting →",
+  "family.situation.twoMen.to": "See: Adoption & Co-parenting",
   "family.situation.singleWoman.name": "Single woman",
   "family.situation.singleWoman.desc":
     "Solo IVF or IUI available through SNS and private clinics.",
-  "family.situation.singleWoman.to": "See: IVF & Assisted Reproduction →",
+  "family.situation.singleWoman.to": "See: IVF & Assisted Reproduction",
   "family.situation.singleMan.name": "Single man",
   "family.situation.singleMan.desc":
     "Solo adoption or co-parenting. Surrogacy legally complex.",
-  "family.situation.singleMan.to": "See: Adoption →",
+  "family.situation.singleMan.to": "See: Adoption",
   "family.situation.transParent.name": "Trans parent",
   "family.situation.transParent.desc":
     "Legal parenthood, birth registration, and assisted reproduction for trans people.",
-  "family.situation.transParent.to": "See: Legal Parenthood →",
+  "family.situation.transParent.to": "See: Legal Parenthood",
   "family.situation.lookingForCoparent.name": "Looking for a co-parent",
   "family.situation.lookingForCoparent.desc":
     "Community-matched co-parenting, legal frameworks, shared custody.",
-  "family.situation.lookingForCoparent.to": "See: Co-parenting →",
+  "family.situation.lookingForCoparent.to": "See: Co-parenting",
   "family.browseFreely.cta": "I'm just exploring — show me everything",
 
   "family.tab.adoption.label": "Adoption",
@@ -464,7 +464,7 @@ export const community: Catalog = {
   "family.tab.adoption.card.international.body":
     "International adoption is significantly more complex and most countries that permit it do not extend eligibility to same-sex couples. A handful of exceptions exist. Get specialist legal advice before starting this route.",
   "family.tab.adoption.card.international.linkLabel":
-    "Speak to a legal specialist →",
+    "Speak to a legal specialist",
   "family.tab.adoption.card.stepchild.eyebrow": "Stepchild adoption",
   "family.tab.adoption.card.stepchild.title": "Adopting your partner's child",
   "family.tab.adoption.card.stepchild.body":
@@ -491,12 +491,12 @@ export const community: Catalog = {
     "If you haven't had reproductive surgery",
   "family.tab.ivf.card.transMen.body":
     "Trans men who haven't had reproductive surgeries can access egg freezing or IVF. Portuguese clinics vary in experience — ask specifically. Legal gender recognition does not affect access to fertility treatment. Community members have documented their experiences in the forum.",
-  "family.tab.ivf.card.transMen.linkLabel": "Trans Hub resources →",
+  "family.tab.ivf.card.transMen.linkLabel": "Trans Hub resources",
   "family.tab.ivf.card.surrogacy.eyebrow": "Surrogacy",
   "family.tab.ivf.card.surrogacy.title": "A complex landscape",
   "family.tab.ivf.card.surrogacy.body":
     "Surrogacy has been legally contentious in Portugal. A 2016 law permitted it in limited circumstances; parts were later struck down. The legal situation remains unsettled. If this is your route, specialist legal advice is essential before you proceed.",
-  "family.tab.ivf.card.surrogacy.linkLabel": "Get legal advice →",
+  "family.tab.ivf.card.surrogacy.linkLabel": "Get legal advice",
   "family.tab.ivf.noteLabel": "From the community:",
   "family.tab.ivf.reviewHead": "Community-recommended <em>clinics</em>",
 
@@ -513,7 +513,7 @@ export const community: Catalog = {
   "family.tab.coparenting.card.findingCoparent.body":
     "QueerPulse runs a Co-parent Connections board for members who want to find a co-parent within the community. It's not a matching algorithm — it's a notice board. Post your intentions, meet people over time, have honest conversations before anything is decided.",
   "family.tab.coparenting.card.findingCoparent.linkLabel":
-    "Co-parent Connections board →",
+    "Co-parent Connections board",
   "family.tab.coparenting.card.legalFrameworks.eyebrow": "Legal frameworks",
   "family.tab.coparenting.card.legalFrameworks.title":
     "Protecting everyone involved",
@@ -527,7 +527,7 @@ export const community: Catalog = {
   "family.tab.coparenting.card.international.body":
     "If co-parents live in different countries, legal parenthood can become complicated. EU recognition of parenthood is improving but not yet uniform. This requires specialist cross-border family law advice.",
   "family.tab.coparenting.card.international.linkLabel":
-    "International family law help →",
+    "International family law help",
   "family.tab.coparenting.noteLabel": "From the community:",
 
   "family.tab.donors.headTitle": "Donor <em>questions</em>",
@@ -550,7 +550,7 @@ export const community: Catalog = {
   "family.tab.donors.card.legalParenthood.title": "Who is the legal parent?",
   "family.tab.donors.card.legalParenthood.body":
     "For donors used through licensed clinics, the donor has no parental rights. For known donors, this depends entirely on prior written agreements and whether the donation was through a clinic. A family law specialist should review your situation before you proceed.",
-  "family.tab.donors.card.legalParenthood.linkLabel": "Get legal advice →",
+  "family.tab.donors.card.legalParenthood.linkLabel": "Get legal advice",
   "family.tab.donors.noteLabel": "From the community:",
 
   "family.tab.legal.headTitle": "Legal <em>parenthood</em>",
@@ -568,13 +568,13 @@ export const community: Catalog = {
   "family.tab.legal.card.unmarried.body":
     "If you're not married or in a civil partnership, the non-birth parent does not automatically have legal parenthood. You will need second-parent adoption or a legal agreement established before birth. This is also relevant for co-parents and known donor situations.",
   "family.tab.legal.card.unmarried.linkLabel":
-    "Marriage & civil partnership info →",
+    "Marriage & civil partnership info",
   "family.tab.legal.card.transParents.eyebrow": "Trans parents",
   "family.tab.legal.card.transParents.title":
     "Gender recognition and parenthood",
   "family.tab.legal.card.transParents.body":
     "A trans man who gives birth is legally the father if his legal gender has been changed to male. A trans woman whose partner carries the child can be registered as the mother. Portuguese law has accommodated these situations, though administrative practice varies — document everything.",
-  "family.tab.legal.card.transParents.linkLabel": "Trans Hub legal resources →",
+  "family.tab.legal.card.transParents.linkLabel": "Trans Hub legal resources",
   "family.tab.legal.card.secondParentAdoption.eyebrow":
     "Second-parent adoption",
   "family.tab.legal.card.secondParentAdoption.title": "Still a valid route",
@@ -610,12 +610,12 @@ export const community: Catalog = {
   "family.talk.body":
     "The Queer Parent Network connects people who are building families with members who've already been through it — same routes, similar situations. Not professionals. Just people who've done it and want to help.",
   "family.talk.findMentorCta": "Find a peer mentor",
-  "family.talk.networkCta": "Queer Parent Network →",
+  "family.talk.networkCta": "Queer Parent Network",
   "family.talk.forumCta.heading": "Questions the page <em>doesn't answer?</em>",
   "family.talk.forumCta.body":
     "The Family Building forum thread is where members share current experience, ask questions, and support each other through a process that no guide can fully capture.",
   "family.talk.forumCta.openForumCta": "Open the forum thread",
-  "family.talk.forumCta.legalResourcesCta": "Legal resources →",
+  "family.talk.forumCta.legalResourcesCta": "Legal resources",
   "family.talk.liveEmpty.title": "Parent mentors coming soon",
   "family.talk.liveEmpty.description":
     "No peer mentors have offered to share their experience yet. Already raising a family? Put your name forward and help someone just starting out.",

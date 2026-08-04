@@ -162,6 +162,62 @@
   --stepper-num: 13.5px;
   --stepper-label: 12.5px;
 }
+/* ── Vertical timeline ───────────────────────────────────────────────────
+   Numbered top-to-bottom rail with done/current/pending dots and an optional
+   per-step description. Reuses every dot/state style above; only geometry and
+   the label column change. */
+.vertical .track::before,
+.vertical .fill {
+  inset-inline: auto;
+  inset-block: calc(100% / var(--stepper-count) / 2);
+  left: calc(var(--stepper-dot) / 2 - 1px);
+  top: auto;
+  width: 2px;
+  height: auto;
+}
+.vertical .fill {
+  transform-origin: top;
+}
+.vertical .list {
+  flex-direction: column;
+  align-items: stretch;
+}
+.vertical .item {
+  flex: none;
+  width: 100%;
+}
+.vertical .node {
+  flex: 1;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 14px;
+  text-align: left;
+  padding-bottom: 22px;
+}
+.vertical .item:last-child .node {
+  padding-bottom: 0;
+}
+.vertical .dot {
+  flex: none;
+}
+.vertical .labelBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+  padding-top: 3px;
+  min-width: 0;
+}
+.vertical .label {
+  max-width: none;
+  text-align: left;
+}
+.vertical .desc {
+  font-size: calc(var(--stepper-label) - 0.5px);
+  color: var(--ink-60);
+  line-height: 1.45;
+}
+
 /* motion — one-shot, reduced-motion safe */
 @media (prefers-reduced-motion: no-preference) {
   .node.done .check {

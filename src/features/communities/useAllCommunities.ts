@@ -20,7 +20,7 @@ export function createdToCommunity(c: CreatedCommunity): Community {
     name: c.name,
     description: c.purpose,
     count: "1 member",
-    joinLabel: "Join →",
+    joinLabel: "Join",
     privateBadge: c.accessTier === "private",
   };
 }

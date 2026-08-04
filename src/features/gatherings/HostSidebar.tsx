@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -20,7 +21,8 @@ export function HostSidebar() {
         <h3>{t("gatherings:host.sidebar.readyTitle")}</h3>
         <p>{t("gatherings:host.sidebar.readyBody")}</p>
         <Button className={styles.fullBtn} to={routes.createGathering}>
-          {t("gatherings:host.createGatheringCta")} →
+          {t("gatherings:host.createGatheringCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
       {(isLoading || hasSpaces) && (

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiHeart, FiNavigation, FiPhone, FiShare2 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { useShareLink } from "../../shared/hooks";
 import { useAuth } from "../../app/providers/authContext";
 import { useSaved } from "../../app/providers/useSaved";
 import { businessPath, routes } from "../../app/routeMap";
@@ -43,7 +43,10 @@ function directionsHref(place: DirectoryPlace): string {
  */
 export function DirectoryActionBar({ place, preview = false }: Props) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const shareLink = useShareLink({
+    copied: t("marketing:directory.detail.action.linkCopied"),
+    failed: t("marketing:directory.detail.action.shareError"),
+  });
   const { user } = useAuth();
   const { isSaved, toggleSave } = useSaved();
   const [sharing, setSharing] = useState(false);
@@ -56,28 +59,23 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
   async function handleShare() {
     if (typeof navigator === "undefined") return;
     const url = window.location.href;
-    try {
-      if (navigator.share) {
+    // Prefer the OS share sheet where available; fall back to the shared
+    // copy-link + toast helper (which owns the clipboard write and success/
+    // failure toasts) everywhere else.
+    if (navigator.share) {
+      try {
         setSharing(true);
         await navigator.share({ title: place.name, url });
         return;
+      } catch (error) {
+        // User-cancelled share sheets throw AbortError — not a failure, stay
+        // silent. Any other native-share failure falls through to copy.
+        if (error instanceof Error && error.name === "AbortError") return;
+      } finally {
+        setSharing(false);
       }
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-        showToast(
-          t("marketing:directory.detail.action.linkCopied"),
-          "success",
-        );
-      }
-    } catch (error) {
-      // User-cancelled share sheets throw AbortError — not a failure, stay
-      // silent. Anything else (clipboard rejected, insecure context, no
-      // permission) gets a toast so the user isn't left guessing.
-      if (error instanceof Error && error.name === "AbortError") return;
-      showToast(t("marketing:directory.detail.action.shareError"), "info");
-    } finally {
-      setSharing(false);
     }
+    await shareLink.share(url);
   }
 
   function handleSave() {

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { FiArrowRight } from "react-icons/fi";
+import { Button, DetailRows } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -206,29 +207,26 @@ export function BlockMuteMuted({
       </div>
       <div className={s.sub}>{t("safety:blockMute.muted.sub")}</div>
       <div className={s.summary}>
-        <div className={s.csRow}>
-          <span className={s.csLabel}>
-            {t("safety:blockMute.muted.summaryLabel")}
-          </span>
-          <span className={s.csVal}>
-            {t("safety:blockMute.muted.postsComments")}
-          </span>
-        </div>
-        <div className={s.csRow}>
-          <span className={s.csLabel}>
-            {t("safety:blockMute.muted.durationLabel")}
-          </span>
-          <span className={s.csVal}>{durationLabel(t, muteDur)}</span>
-        </div>
-        <div className={s.csRow}>
-          <span className={s.csLabel}>
-            {t("safety:blockMute.muted.notifiedLabel", { name })}
-          </span>
-          <span className={s.csVal}>{t("safety:common.no")}</span>
-        </div>
+        <DetailRows
+          dense
+          rows={[
+            {
+              label: t("safety:blockMute.muted.summaryLabel"),
+              value: t("safety:blockMute.muted.postsComments"),
+            },
+            {
+              label: t("safety:blockMute.muted.durationLabel"),
+              value: durationLabel(t, muteDur),
+            },
+            {
+              label: t("safety:blockMute.muted.notifiedLabel", { name }),
+              value: t("safety:common.no"),
+            },
+          ]}
+        />
       </div>
       <Link to={routes.settings} className={s.manageLink}>
-        {t("safety:blockMute.muted.manageLink")}
+        {t("safety:blockMute.muted.manageLink")} <FiArrowRight aria-hidden />
       </Link>
       <button type="button" className={s.undoLink} onClick={onUndo}>
         {t("safety:blockMute.muted.undoCta", { name })}
@@ -269,27 +267,26 @@ export function BlockMuteBlocked({
       </div>
       <div className={s.sub}>{t("safety:blockMute.blocked.sub", { name })}</div>
       <div className={s.summary}>
-        <div className={s.csRow}>
-          <span className={s.csLabel}>
-            {t("safety:blockMute.blocked.visibleLabel")}
-          </span>
-          <span className={s.csVal}>{t("safety:common.no")}</span>
-        </div>
-        <div className={s.csRow}>
-          <span className={s.csLabel}>
-            {t("safety:blockMute.blocked.messageLabel")}
-          </span>
-          <span className={s.csVal}>{t("safety:common.no")}</span>
-        </div>
-        <div className={s.csRow}>
-          <span className={s.csLabel}>
-            {t("safety:blockMute.blocked.notifiedLabel", { name })}
-          </span>
-          <span className={s.csVal}>{t("safety:common.no")}</span>
-        </div>
+        <DetailRows
+          dense
+          rows={[
+            {
+              label: t("safety:blockMute.blocked.visibleLabel"),
+              value: t("safety:common.no"),
+            },
+            {
+              label: t("safety:blockMute.blocked.messageLabel"),
+              value: t("safety:common.no"),
+            },
+            {
+              label: t("safety:blockMute.blocked.notifiedLabel", { name }),
+              value: t("safety:common.no"),
+            },
+          ]}
+        />
       </div>
       <Link to={routes.settings} className={s.manageLink}>
-        {t("safety:blockMute.blocked.manageLink")}
+        {t("safety:blockMute.blocked.manageLink")} <FiArrowRight aria-hidden />
       </Link>
       <button type="button" className={s.undoLink} onClick={onUndo}>
         {t("safety:blockMute.blocked.undoCta", { name })}

@@ -4,11 +4,14 @@ import styles from "./Stepper.module.css";
 
 export type StepperSize = "sm" | "md" | "lg";
 export type StepperMarker = "check" | "number";
+export type StepperOrientation = "horizontal" | "vertical";
 
 export interface StepperStep {
   key: string;
-  /** Text under the dot. Omit on every step to render no labels row. */
+  /** Text beside/under the dot. Omit on every step to render no labels. */
   label?: ReactNode;
+  /** Secondary line under the label — only shown in the vertical timeline. */
+  description?: ReactNode;
   /** Accessible name when the visible label is absent or icon-only. */
   ariaLabel?: string;
 }
@@ -19,6 +22,12 @@ export interface StepperProps {
   current: number;
   size?: StepperSize;
   marker?: StepperMarker;
+  /**
+   * `horizontal` (default) is the connected-dot progress rail; `vertical` is a
+   * numbered top-to-bottom timeline with done/current/pending dots and an
+   * optional per-step description.
+   */
+  orientation?: StepperOrientation;
   /** Render the coral progress fill line. Default true. */
   showFill?: boolean;
   /** Provide to make completed steps jump-back buttons. */
@@ -41,12 +50,14 @@ export function Stepper({
   current,
   size = "md",
   marker = "check",
+  orientation = "horizontal",
   showFill = true,
   onStepClick,
   isStepClickable,
   ariaLabel,
   className,
 }: StepperProps) {
+  const isVertical = orientation === "vertical";
   const count = steps.length;
   const clampedCurrent = Math.min(Math.max(current, 0), Math.max(count - 1, 0));
   const fillFraction = count > 1 ? clampedCurrent / (count - 1) : 0;
@@ -62,6 +73,7 @@ export function Stepper({
         styles.stepper,
         sizeClass[size],
         marker === "number" ? styles.markerNumber : null,
+        isVertical ? styles.vertical : null,
         className,
       ]
         .filter(Boolean)
@@ -72,7 +84,11 @@ export function Stepper({
         {showFill && (
           <span
             className={styles.fill}
-            style={{ transform: `scaleX(${fillFraction})` }}
+            style={{
+              transform: isVertical
+                ? `scaleY(${fillFraction})`
+                : `scaleX(${fillFraction})`,
+            }}
             aria-hidden
           />
         )}
@@ -102,6 +118,21 @@ export function Stepper({
               step.label != null ? (
                 <span className={styles.label}>{step.label}</span>
               ) : null;
+            const descElement =
+              isVertical && step.description != null ? (
+                <span className={styles.desc}>{step.description}</span>
+              ) : null;
+            // Vertical rows lay the dot beside a stacked label+description
+            // text column; horizontal keeps the bare label under the dot
+            // (unchanged DOM).
+            const textBlock = isVertical
+              ? (labelElement || descElement) && (
+                  <span className={styles.labelBlock}>
+                    {labelElement}
+                    {descElement}
+                  </span>
+                )
+              : labelElement;
             const nodeClass = [styles.node, stateClass]
               .filter(Boolean)
               .join(" ");
@@ -117,7 +148,7 @@ export function Stepper({
                     aria-label={step.ariaLabel}
                   >
                     {dot}
-                    {labelElement}
+                    {textBlock}
                   </button>
                 ) : (
                   <span
@@ -128,7 +159,7 @@ export function Stepper({
                     }
                   >
                     {dot}
-                    {labelElement}
+                    {textBlock}
                   </span>
                 )}
               </li>

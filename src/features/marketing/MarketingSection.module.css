@@ -1,0 +1,88 @@
+/* MarketingSection — shared section scaffold (eyebrow → title → lead → content)
+   for marketing / content pages. Section backgrounds are cream or plum, never
+   white (a full-bleed white band violates the design system). */
+
+/* Full-bleed variant (Arriving / About). */
+.section {
+  padding: 80px 0;
+}
+.cream {
+  background: var(--cream);
+}
+.plum {
+  background: var(--plum);
+}
+.flush {
+  padding-top: 0;
+}
+
+/* Doc-flow variant (Activism): lives inside a two-column page with a sticky
+   side-nav, so it carries its own rhythm + scroll anchor but no full-bleed
+   background or centred `.wrap`. */
+.flow {
+  margin-bottom: 56px;
+  scroll-margin-top: 96px;
+}
+
+/* Header */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 3.9vw, 48px);
+  letter-spacing: -0.022em;
+  line-height: 1.05;
+  color: var(--text-strong);
+  margin: 0 0 20px;
+}
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.lead {
+  font-size: 15.5px;
+  line-height: 1.7;
+  max-width: 60ch;
+  color: var(--ink-60);
+  margin: 0 0 28px;
+}
+
+/* Plum treatment: cream text with jade accents (the platform's dark-section
+   pattern). */
+.dark .eyebrow {
+  color: var(--jade);
+}
+.dark .title {
+  color: rgba(var(--cream-rgb), 1);
+}
+.dark .title em {
+  color: var(--jade);
+}
+.dark .lead {
+  color: rgba(var(--cream-rgb), 0.68);
+}
+
+/* Doc-flow header + body: preserves the Activism page's original type scale and
+   bare-paragraph styling now that the wrapper class name has changed. */
+.flow .title {
+  font-size: clamp(26px, 3.4vw, 40px);
+  margin-bottom: 18px;
+}
+.flow p {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.75;
+  margin-bottom: 14px;
+  max-width: 64ch;
+}
+.flow p b {
+  color: var(--text-strong);
+}

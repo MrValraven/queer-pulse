@@ -96,7 +96,7 @@ export const communities: Catalog = {
   "common.loading": "Loading…",
 
   // ── Community detail page (hero + sidebar) ────────────────────────────────
-  "detail.breadcrumb": "← Communities & Collectives",
+  "detail.breadcrumb": "Communities & Collectives",
   "detail.join.invite": "Join with invite",
   "detail.join.public": "Join community",
   "detail.join.request": "Request to join",
@@ -157,6 +157,7 @@ export const communities: Catalog = {
   "detail.thread.editCancel": "Cancel",
   "detail.thread.editSaving": "Saving…",
   "detail.thread.editAria": "Edit your message",
+  "detail.thread.upvoteAria": "Upvote this thread",
   "detail.thread.editSavedToast": "Your edit is live.",
   "detail.thread.deletedToast": "Message deleted.",
   "detail.thread.restoredToast": "Message restored.",
@@ -309,21 +310,21 @@ export const communities: Catalog = {
   "start.hero.title": "Start a <em>community.</em>",
   "start.hero.lead":
     "A place for your people to gather — social, support, creative, or something only you can name. <strong>Nothing goes live until you're ready.</strong>",
-  "start.next.begin": "Let's begin →",
-  "start.next.people": "Next: the people →",
-  "start.next.door": "Next: the door →",
-  "start.next.who": "Next: who runs it →",
-  "start.next.tone": "Next: the tone →",
-  "start.next.feeling": "Next: the feeling →",
-  "start.next.first": "Next: the first few →",
-  "start.next.review": "Review & open →",
-  "start.next.open": "Open the doors →",
-  "start.next.fallback": "Continue →",
+  "start.next.begin": "Let's begin",
+  "start.next.people": "Next: the people",
+  "start.next.door": "Next: the door",
+  "start.next.who": "Next: who runs it",
+  "start.next.tone": "Next: the tone",
+  "start.next.feeling": "Next: the feeling",
+  "start.next.first": "Next: the first few",
+  "start.next.review": "Review & open",
+  "start.next.open": "Open the doors",
+  "start.next.fallback": "Continue",
   "start.opening.status": "Opening the doors…",
   "start.leaveConfirm":
     "You have an unfinished community here. Leave without saving it?",
   "start.cancel": "Cancel",
-  "start.back": "← Back",
+  "start.back": "Back",
   "start.actions.stillNeeded": "Still needed:",
   "start.actions.blockedTitle": "A few things left to fill in",
 
@@ -597,7 +598,7 @@ export const communities: Catalog = {
   // ── Success panel (StartCommunitySuccess) ─────────────────────────────────
   "start.success.title": "Your doors are",
   "start.success.em": "open.",
-  "start.success.closeLabel": "Step inside →",
+  "start.success.closeLabel": "Step inside",
   "start.success.liveYours":
     "<strong>{name}</strong> is live and yours to steward.",
   "start.success.invitesOnWay_one": "{count} warm invite is on the way.",

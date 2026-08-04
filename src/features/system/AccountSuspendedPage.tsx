@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, StatusCard } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
@@ -57,27 +57,24 @@ export function AccountSuspendedPage() {
 
   return (
     <SystemStateShell>
-      <div className={styles.card}>
-        <div className={styles.icon}>
+      <StatusCard
+        icon={
           <svg viewBox="0 0 24 24" aria-hidden>
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
-        </div>
-
-        <div className={styles.kicker}>
-          {t("system:accountSuspended.kicker")}
-        </div>
-        <h1 className={styles.heading}>
+        }
+        kicker={t("system:accountSuspended.kicker")}
+        heading={
           <Translation
             i18nKey="system:accountSuspended.heading"
             values={{ days }}
             components={{ em: <em /> }}
           />
-        </h1>
-        <p className={styles.lead}>
-          {moderated ? (
+        }
+        lead={
+          moderated ? (
             t("system:accountSuspended.leadLive")
           ) : (
             <Translation
@@ -85,9 +82,33 @@ export function AccountSuspendedPage() {
               values={{ channel: CHANNEL }}
               components={{ b: <b />, em: <em /> }}
             />
-          )}
-        </p>
-
+          )
+        }
+        actions={
+          <>
+            <Button to={routes.appealSubmit}>
+              {t("system:accountSuspended.actions.appealCta")}
+            </Button>
+            <Button variant="ghost" to={routes.codeOfConduct}>
+              {t("system:accountSuspended.actions.ladderCta")}
+            </Button>
+            {!moderated && (
+              <Button variant="ghost" to={routes.messages}>
+                {t("system:accountSuspended.actions.messageModCta")}
+              </Button>
+            )}
+          </>
+        }
+        foot={
+          !moderated ? (
+            <Translation
+              i18nKey="system:accountSuspended.foot"
+              values={{ percent: OVERTURNED_PERCENT }}
+              components={{ a: <Link to={routes.transparencyReport} /> }}
+            />
+          ) : undefined
+        }
+      >
         {moderated && reasonNote && (
           <div className={styles.whatStays}>
             <h4>{t("system:accountSuspended.reason.title")}</h4>
@@ -145,30 +166,7 @@ export function AccountSuspendedPage() {
             <li>{t("system:accountSuspended.whatStays.item4")}</li>
           </ul>
         </div>
-
-        <div className={styles.actions}>
-          <Button to={routes.appealSubmit}>
-            {t("system:accountSuspended.actions.appealCta")}
-          </Button>
-          <Button variant="ghost" to={routes.codeOfConduct}>
-            {t("system:accountSuspended.actions.ladderCta")}
-          </Button>
-          {!moderated && (
-            <Button variant="ghost" to={routes.messages}>
-              {t("system:accountSuspended.actions.messageModCta")}
-            </Button>
-          )}
-        </div>
-        {!moderated && (
-          <p className={styles.foot}>
-            <Translation
-              i18nKey="system:accountSuspended.foot"
-              values={{ percent: OVERTURNED_PERCENT }}
-              components={{ a: <Link to={routes.transparencyReport} /> }}
-            />
-          </p>
-        )}
-      </div>
+      </StatusCard>
     </SystemStateShell>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -49,7 +50,9 @@ export function StudioTrackPage() {
             }}
           />
         </span>
-        <Link to={routes.studioLive}>{t("studio:track.inSet.joinCta")} →</Link>
+        <Link to={routes.studioLive}>
+          {t("studio:track.inSet.joinCta")} <FiArrowRight aria-hidden />
+        </Link>
       </div>
 
       <div className={trackStyles.body}>
@@ -67,7 +70,8 @@ export function StudioTrackPage() {
             />
           </h2>
           <Link to={routes.studioAlbum} className={ss.all}>
-            {t("studio:track.more.fullAlbumCta")} →
+            {t("studio:track.more.fullAlbumCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={ss.rowGrid}>

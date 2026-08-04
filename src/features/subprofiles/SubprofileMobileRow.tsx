@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { Avatar } from "../../shared/components/ui";
-import { initialsFromName } from "../../shared/lib/initials";
+import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
@@ -56,28 +55,24 @@ export function SubprofileMobileRow({
           ["--accent-on" as string]: on,
         }}
       >
-        <Avatar
-          initials={initialsFromName(persona.displayName, "?")}
-          src={persona.avatarUrl ?? undefined}
+        {/* Avatar + display name + kind line reuse the shared identity block
+            (fixed persona plum tint). No `to` — this row lives inside a
+            `<button>`, so a nested link is disallowed; the kind label is the
+            single-line secondary. Availability and the owner badges stay
+            row-local siblings around it. */}
+        <MemberIdentity
+          person={{ name: persona.displayName, avatarUrl: persona.avatarUrl ?? undefined }}
           tint="plum"
           size={40}
-          className={styles.mobileSummaryAvatar}
+          secondary={t(KIND_LABEL_KEYS[persona.kind])}
         />
-        <span className={styles.mobileSummaryMain}>
-          <span className={styles.mobileSummaryName}>{persona.displayName}</span>
-          <span className={styles.mobileSummaryMeta}>
-            <span className={styles.mobileSummaryKind}>
-              {t(KIND_LABEL_KEYS[persona.kind])}
-            </span>
-            <SubprofileAvailability value={persona.availability} accent={accent} />
-          </span>
-          <SubprofileOwnerBadges
-            status={status}
-            visibility={visibility}
-            compact
-            className={styles.mobileSummaryBadges}
-          />
-        </span>
+        <SubprofileAvailability value={persona.availability} accent={accent} />
+        <SubprofileOwnerBadges
+          status={status}
+          visibility={visibility}
+          compact
+          className={styles.mobileSummaryBadges}
+        />
       </button>
 
       {/* The id itself stays mounted at all times so `aria-controls` above

@@ -112,7 +112,7 @@ export const gatherings: Catalog = {
 
   // ── Event, RSVP, gathering detail, cancelled, cohost invite ───────────────
   // Shared/cross-page chrome
-  "common.backToGatherings": "← Gatherings",
+  "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
 
   // EventPage — About / Details / Guidelines / hero / members-only / pills
@@ -249,7 +249,7 @@ export const gatherings: Catalog = {
   "rsvp.footer.privacyCta": "Privacy policy",
 
   // CoHostInvitePage
-  "cohostInvite.back": "← Notifications",
+  "cohostInvite.back": "Notifications",
   "cohostInvite.eyebrow": "Co-host invitation",
   "cohostInvite.title": "{host} wants you to <em>co-host</em> with her.",
   "cohostInvite.readThroughHint":
@@ -285,7 +285,7 @@ export const gatherings: Catalog = {
   "cohostInvite.openMessagesCta": "Open messages",
 
   // GatheringCancelledPage
-  "cancelled.back": "← Back to calendar",
+  "cancelled.back": "Back to calendar",
   "cancelled.stampTitle": "This event has been cancelled.",
   "cancelled.stampBody":
     "You were on the list — here's everything that happens next.",
@@ -302,7 +302,7 @@ export const gatherings: Catalog = {
     "You can lock in {date} right now — {host} usually opens it later, but we're early because of this. <a>Skip to it ↓</a>",
   "cancelled.concernTitle": "Something feels off?",
   "cancelled.concernBody":
-    "If you have concerns about the cancellation or want to flag a pattern, talk to the team →",
+    "If you have concerns about the cancellation or want to flag a pattern, talk to the team",
   "cancelled.noteEyebrow": "A short note · from {host}",
   "cancelled.noteSentVia": "sent {time} via the host tools",
   "cancelled.altHeading": "Next visit, or — something else this weekend",
@@ -919,7 +919,7 @@ export const gatherings: Catalog = {
   "manage.sidebar.copyCta": "Copy",
   "manage.sidebar.viewListingCta": "View public listing",
   "manage.sidebar.supportText":
-    "Need help with your gathering? <a>Message the QueerPulse team →</a>",
+    "Need help with your gathering? <a>Message the QueerPulse team</a>",
 
   // ── Manage: tab bar ────────────────────────────────────────────────────────────
   "manage.tabs.overview": "Overview",
@@ -1084,8 +1084,8 @@ export const gatherings: Catalog = {
   "checkout.summary.visibilityPublicToast": "You'll appear on the guest list.",
 
   // Mobile bar
-  "checkout.mobileBar.continueCta": "Continue →",
-  "checkout.mobileBar.payCta": "Pay {amount} →",
+  "checkout.mobileBar.continueCta": "Continue",
+  "checkout.mobileBar.payCta": "Pay {amount}",
 
   // Payment step + tabs + express/alt-pay copy
   "checkout.payment.title": "Payment <em>details</em>",
@@ -1098,9 +1098,9 @@ export const gatherings: Catalog = {
   "checkout.payment.tabMbwaySub": "Approve in your app",
   "checkout.payment.tabMultibancoTitle": "Multibanco",
   "checkout.payment.tabMultibancoSub": "Reference / ATM",
-  "checkout.payment.payCtaCard": "Pay {amount} →",
-  "checkout.payment.payCtaMbway": "Send request for {amount} →",
-  "checkout.payment.payCtaMultibanco": "Confirm booking · {amount} →",
+  "checkout.payment.payCtaCard": "Pay {amount}",
+  "checkout.payment.payCtaMbway": "Send request for {amount}",
+  "checkout.payment.payCtaMultibanco": "Confirm booking · {amount}",
   "checkout.payment.processingLabel": "Processing…",
   "checkout.payment.trustLock": "256-bit encrypted",
   "checkout.payment.viaStripe": "via <strong>Stripe</strong>",
@@ -1108,7 +1108,7 @@ export const gatherings: Catalog = {
     "By paying you agree to our <terms>terms of service</terms> and <privacy>privacy policy</privacy>. You can cancel for a full refund up to 48h before.",
   "checkout.payment.demoHint":
     "Demo: use card <strong>4000 0000 0000 0002</strong> to see a declined-payment flow.",
-  "checkout.payment.backToReviewCta": "← Back to review",
+  "checkout.payment.backToReviewCta": "Back to review",
   "checkout.payment.mbwayPhoneLabel": "MB WAY phone number",
   "checkout.payment.mbwayError": "Enter your 9-digit MB WAY number.",
   "checkout.payment.mbwayNote":

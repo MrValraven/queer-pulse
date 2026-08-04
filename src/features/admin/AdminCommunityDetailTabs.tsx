@@ -1,4 +1,4 @@
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -77,7 +77,8 @@ function ReportRow({ item }: { item: QueueItem }) {
         <div className={styles.reportMeta}>{item.meta}</div>
       </div>
       <Button variant="primary" to={routes.adminModeration}>
-        {t("admin:communities.queue.reviewCta")} →
+        {t("admin:communities.queue.reviewCta")}{" "}
+        <FiArrowRight aria-hidden />
       </Button>
     </div>
   );
@@ -122,7 +123,7 @@ export function MembersPane({ community }: { community: Community }) {
         {t("admin:communities.members.seeAllCta", {
           total: community.members,
         })}{" "}
-        →
+        <FiArrowRight aria-hidden />
       </Button>
     </div>
   );

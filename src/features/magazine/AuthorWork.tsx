@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -81,7 +82,8 @@ export function AuthorWork({ author }: { author: Author }) {
         <Link to={routes.magazine}>
           {t("magazine:author.work.allArticlesCta", {
             count: author.articles.length,
-          })}
+          })}{" "}
+          <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div className={styles.articles}>
@@ -112,7 +114,8 @@ export function AuthorWork({ author }: { author: Author }) {
           <h3>{author.readingTitle}</h3>
           <p>{author.readingBlurb}</p>
           <Button to={routes.library} style={{ marginTop: 8 }}>
-            {t("magazine:author.work.seeAllPicksCta")}
+            {t("magazine:author.work.seeAllPicksCta")}{" "}
+            <FiArrowRight aria-hidden />
           </Button>
         </div>
         <ol>

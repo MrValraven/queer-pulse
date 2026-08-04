@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiHeart } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -122,7 +122,8 @@ export function ChangemakersPage() {
                 </div>
                 <div className={styles.featFoot}>
                   <Button to={`/changemaker/${featured.slug}`}>
-                    {t("community:changemakers.featured.readStoryCta")}
+                    {t("community:changemakers.featured.readStoryCta")}{" "}
+                    <FiArrowRight aria-hidden />
                   </Button>
                   <Button variant="ghost" onClick={() => openConnect()}>
                     {t("community:changemakers.featured.connectCta")}
@@ -179,7 +180,8 @@ export function ChangemakersPage() {
                       </div>
                       <div className={styles.cardFoot}>
                         <span className={styles.read}>
-                          {t("community:changemakers.card.readMoreCta")}
+                          {t("community:changemakers.card.readMoreCta")}{" "}
+                          <FiArrowRight aria-hidden />
                         </span>
                       </div>
                     </FadeIn>

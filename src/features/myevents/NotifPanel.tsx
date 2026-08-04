@@ -1,29 +1,27 @@
+import { Button, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 
-/** The notifications dropdown list. */
+/** The notifications panel, opened from the header bell. Built on the shared
+ *  `Modal` so it gets scroll-lock, focus-trap, Escape and scrim-dismiss for
+ *  free (mounted only while open by the header). */
 export function NotifPanel() {
   const { t } = useTranslation();
-  const { notifs, unreadCount, markAllRead, notifGo } = useMyEvents();
+  const { notifs, unreadCount, markAllRead, notifGo, setNotifOpen } =
+    useMyEvents();
   return (
-    <div
-      className={sx("notif-panel")}
-      role="dialog"
-      aria-label={t("myevents:notif.panelAria")}
-    >
-      <div className={sx("notif-head")}>
-        <span className={sx("notif-h-title")}>{t("myevents:notif.title")}</span>
-        {unreadCount > 0 && (
-          <button
-            type="button"
-            className={sx("notif-clear")}
-            onClick={markAllRead}
-          >
+    <Modal
+      title={t("myevents:notif.title")}
+      onClose={() => setNotifOpen(false)}
+      footer={
+        unreadCount > 0 ? (
+          <Button variant="ghost" onClick={markAllRead}>
             {t("myevents:notif.markAllRead")}
-          </button>
-        )}
-      </div>
+          </Button>
+        ) : undefined
+      }
+    >
       <div className={sx("notif-list")}>
         {notifs.length === 0 ? (
           <div className={sx("notif-empty")}>{t("myevents:notif.empty")}</div>
@@ -48,6 +46,6 @@ export function NotifPanel() {
           ))
         )}
       </div>
-    </div>
+    </Modal>
   );
 }

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button, ImageSlot, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { SplitTitle } from "./CinemaAtoms";
 import { routes } from "../../app/routeMap";
 import {
   collectionsHeader,
@@ -73,9 +74,7 @@ export function FeaturedCollection({ c }: { c: Collection }) {
           {c.tag}
         </div>
         <div className={styles.featTitle}>
-          {c.titlePre}
-          <em>{c.titleEm}</em>
-          {c.titlePost}
+          <SplitTitle pre={c.titlePre} em={c.titleEm} post={c.titlePost} />
         </div>
         <div className={styles.featBody}>{c.desc}</div>
         <div className={styles.curatorRow}>
@@ -106,9 +105,7 @@ export function CollectionCard({ c }: { c: Collection }) {
       <div className={styles.cardBody}>
         <div className={styles.cardTag}>{c.tag}</div>
         <div className={styles.cardTitle}>
-          {c.titlePre}
-          <em>{c.titleEm}</em>
-          {c.titlePost}
+          <SplitTitle pre={c.titlePre} em={c.titleEm} post={c.titlePost} />
         </div>
         <div className={styles.cardDesc}>{c.desc}</div>
         <div className={styles.cardCurator}>

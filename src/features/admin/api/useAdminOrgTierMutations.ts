@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   type OrgTierAdminDTO,
@@ -8,6 +8,7 @@ import {
   updateOrgTier,
 } from "../../marketing/api/adminOrgTiers.api";
 import { ADMIN_ORG_TIERS_KEY } from "./useAdminOrgTiers";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 /** Public tiers key (`marketing/api/useOrgTiers.ts`) — invalidated so the
  *  For Organisations page reflects admin edits without a manual refresh. */
@@ -16,17 +17,16 @@ const ORG_TIERS_KEY = "org-tiers";
 export function useCreateOrgTier() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<OrgTierAdminDTO | undefined, Error, OrgTierWriteBody>({
-    mutationFn: async (body) => {
-      if (demoMode) return undefined;
-      return createOrgTier(body);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<OrgTierAdminDTO | undefined, Error, OrgTierWriteBody>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminOrgTierForm toasts locally
+    demoResult: () => undefined,
+    live: (body) => createOrgTier(body),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
     },
-    meta: { silentError: true }, // AdminOrgTierForm toasts locally
   });
 }
 
@@ -38,33 +38,31 @@ export interface UpdateOrgTierVars {
 export function useUpdateOrgTier() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<OrgTierAdminDTO | undefined, Error, UpdateOrgTierVars>({
-    mutationFn: async ({ id, body }) => {
-      if (demoMode) return undefined;
-      return updateOrgTier(id, body);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<OrgTierAdminDTO | undefined, Error, UpdateOrgTierVars>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminOrgTierForm + AdminOrgTiersPage toast locally
+    demoResult: () => undefined,
+    live: ({ id, body }) => updateOrgTier(id, body),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
     },
-    meta: { silentError: true }, // AdminOrgTierForm + AdminOrgTiersPage toast locally
   });
 }
 
 export function useDeleteOrgTier() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
-    mutationFn: async (id) => {
-      if (demoMode) return undefined;
-      return deleteOrgTier(id);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<void, Error, string>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminOrgTiersPage toasts locally
+    demoResult: () => undefined,
+    live: (id) => deleteOrgTier(id),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_ORG_TIERS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [ORG_TIERS_KEY] });
     },
-    meta: { silentError: true }, // AdminOrgTiersPage toasts locally
   });
 }

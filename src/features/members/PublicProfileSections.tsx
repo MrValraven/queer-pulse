@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -82,6 +83,7 @@ export function PublicPreviewBar({
         </span>
         <div className={styles.guestActions}>
           <Button variant="ghost-dark" to={routes.accountProfile}>
+            <FiArrowLeft aria-hidden />{" "}
             {t("members:publicProfile.preview.backToProfile")}
           </Button>
         </div>
@@ -157,7 +159,8 @@ export function PublicProfileHead({
             className={styles.curatorLink}
             to={`${routes.cinemaCurator}/${curatorSlug}`}
           >
-            {t("members:profile.hero.curatorLink")}
+            {t("members:profile.hero.curatorLink")}{" "}
+            <FiArrowRight aria-hidden />
           </Link>
         )}
         <p className={styles.bio}>{profile.bio}</p>

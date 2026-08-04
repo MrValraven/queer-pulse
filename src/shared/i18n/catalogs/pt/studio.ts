@@ -395,7 +395,7 @@ export const studio: Catalog = {
   "about.cta.body":
     "Ouve um set grátis, sem conta. Se for para ti, sustenta-a pelo preço de dois cafés.",
   "about.cta.join": "Junta-te à sala",
-  "about.cta.ledger": "Ler o livro-razão público →",
+  "about.cta.ledger": "Ler o livro-razão público",
 
   // ── Acessibilidade (StudioAccessibilityPage) ──────────────────────────────
   "accessibility.hero.eyebrow": "Acessibilidade · a lista em construção",
@@ -544,7 +544,7 @@ export const studio: Catalog = {
   "help.contact.access.title": "Reportar uma <em>barreira de acesso</em>",
   "help.contact.access.body":
     "Relatórios de tecnologia de apoio <em>passam à frente na fila</em>",
-  "help.contact.access.action": "Acessibilidade →",
+  "help.contact.access.action": "Acessibilidade",
 
   // ── Kit de imprensa do artista (StudioPressPage + StudioPressBar) ─────────
   // Só chrome — a biografia, as citações e a ficha técnica são material de
@@ -564,19 +564,19 @@ export const studio: Catalog = {
   "press.fact.forFansOf": "Para quem gosta de",
   "press.section.preview": "Pré-visualização <em>reproduzível</em>",
   "press.fullPromoRequestedToast": "Promo completo pedido",
-  "press.requestFullPromoCta": "Pedir o promo completo →",
+  "press.requestFullPromoCta": "Pedir o promo completo",
   "press.playAria": "Reproduzir pré-visualização",
   "press.pauseAria": "Pausar pré-visualização",
   "press.watermarkedBadge": "Com marca de água",
   "press.previewNote":
     "Esta pré-visualização tem uma <em>marca de água inaudível</em> e uma identificação falada da QueerPulse no final. Para um master limpo para transmissão, pede o promo completo — verificamos a tua imprensa uma vez, e depois ficas autorizado para tudo.",
   "press.section.bio": "<em>Biografia</em>",
-  "press.copyBothCta": "Copiar as duas →",
+  "press.copyBothCta": "Copiar as duas",
   "press.bio.shortLabel": "Curta · 40 palavras",
   "press.bio.longLabel": "Longa · 120 palavras",
   "press.section.photos": "Fotos de <em>imprensa</em>",
-  "press.downloadAllCta": "Transferir tudo · alta resolução →",
-  "press.downloadOneHint": "Transferir em alta resolução →",
+  "press.downloadAllCta": "Transferir tudo · alta resolução",
+  "press.downloadOneHint": "Transferir em alta resolução",
   "press.section.release": "Último <em>lançamento</em>",
   "press.outNowBadge": "Já disponível",
   "press.section.press": "Imprensa <em>selecionada</em>",
@@ -588,7 +588,7 @@ export const studio: Catalog = {
   "press.boilerplate.booking": "Contactos",
   "press.boilerplate.pronounce": "Pronúncia",
   "press.section.contactHeading": "Imprensa e <em>contactos</em>",
-  "press.viewArtistCta": "Ver página do artista →",
+  "press.viewArtistCta": "Ver página do artista",
   "press.requestAccessCta": "Pedir acesso de imprensa",
   "press.generatedFooter":
     "Gerado pela QueerPulse Studio · atualizado pela última vez a 10 jun. 2026 · esta página atualiza-se sozinha quando {name} lança algo novo",
@@ -714,7 +714,7 @@ export const studio: Catalog = {
     "Vai deixar de estar disponível dentro de 14 dias. Os links existentes vão passar a mostrar uma pequena página «este trabalho foi retirado pelo artista». <em>Podes republicá-lo quando quiseres</em> — os teus masters nunca saem das tuas mãos.",
   "rights.modal.keepEarned":
     "<em>Ficas com tudo o que já ganhaste.</em> Este lançamento continua pago por cada reprodução até à remoção, no ciclo seguinte.",
-  "rights.modal.confirmCta": "Remover →",
+  "rights.modal.confirmCta": "Remover",
   "rights.modal.cancelCta": "Manter disponível",
 
   // ── Faixa "mais deste artista" no álbum (StudioAlbumMore) ─────────────────
@@ -1010,7 +1010,7 @@ export const studio: Catalog = {
     "As gorjetas passam sem retenções — cada cêntimo chega a {recipient}.",
   "tipModal.customPlaceholder": "Outro valor",
   "tipModal.sendingCta": "A enviar…",
-  "tipModal.sendCta": "Dar {amount} →",
+  "tipModal.sendCta": "Dar {amount}",
   "tipModal.note":
     "Paga a {recipient} para além da reprodução · <em>nada é retido</em>",
   "tipModal.success.title":
@@ -1024,7 +1024,7 @@ export const studio: Catalog = {
   "creator.nav.newRelease": "Novo lançamento",
   "creator.nav.payouts": "Pagamentos",
   "creator.product": "Criação",
-  "creator.viewPublicPageCta": "Ver página pública →",
+  "creator.viewPublicPageCta": "Ver página pública",
 
   // ── A tua biblioteca (StudioLibraryPage) ──────────────────────────────────
   // Só chrome — os títulos de álbuns/sets/faixas/coleções e nomes de artistas
@@ -1140,8 +1140,8 @@ export const studio: Catalog = {
   "upload.files.loudWarning.title": "A faixa {trackNumber} está alta.",
   "upload.files.loudWarning.body":
     "O master vem a {measuredLoudness} — o nosso limiar por defeito é {targetLoudness}. <em>Isto não é fatal:</em> podemos normalizar em tempo real por ouvinte. Se pretendias este pico, deixa como está.",
-  "upload.files.loudToggle.show": "O que fazemos com masters altos →",
-  "upload.files.loudToggle.hide": "O que fazemos com masters altos ↑",
+  "upload.files.loudToggle.show": "O que fazemos com masters altos",
+  "upload.files.loudToggle.hide": "O que fazemos com masters altos",
   "upload.files.loudExplainer":
     "Guardamos o teu master <em>exatamente como foi entregue</em> e sem alterações. Na reprodução, aplicamos normalização de volume por ouvinte a cerca de −14 LUFS, para que a tua faixa fique num nível confortável ao lado de tudo o resto num set — <em>sem recodificar nem cortar o teu ficheiro</em>. Quem desliga a normalização nas definições ouve o teu pico original. Nada fica fixo; podes mudar o alvo ou desativar por lançamento a qualquer momento.",
 
@@ -1199,16 +1199,16 @@ export const studio: Catalog = {
   "upload.metadata.genre.electronic": "Eletrónica",
   "upload.metadata.genre.folk": "Folk",
   "upload.metadata.genre.experimental": "Experimental",
-  "upload.metadata.backCta": "← Voltar aos ficheiros",
-  "upload.metadata.submitCta": "Submeter para revisão →",
+  "upload.metadata.backCta": "Voltar aos ficheiros",
+  "upload.metadata.submitCta": "Submeter para revisão",
 
   "upload.submitted.title": "Submetido para <em>revisão.</em>",
   "upload.submitted.body":
     "O teu lançamento está na fila do conselho. Uma pessoa curadora vai verificar os ficheiros, divisões e créditos — normalmente dentro de um ou dois dias — e vais receber um aviso assim que estiver disponível. Nada é publicado sem a tua confirmação final.",
-  "upload.submitted.viewPayoutsCta": "Ver os teus pagamentos →",
+  "upload.submitted.viewPayoutsCta": "Ver os teus pagamentos",
   "upload.submitted.toast": "Lançamento submetido para revisão",
 
-  "upload.continueToMetadataCta": "Continuar para metadados →",
+  "upload.continueToMetadataCta": "Continuar para metadados",
 
   // ── Pagamentos (StudioPayoutsPage + Sections + Skeletons) ─────────────────
   // Só chrome — os valores reais de pagamento deste artista, os dados de
@@ -1229,7 +1229,7 @@ export const studio: Catalog = {
   "payouts.summary.toYourIban": "→ para o teu IBAN",
 
   "payouts.list.heading": "Pagamentos <em>recentes</em>",
-  "payouts.list.exportCsv": "Exportar CSV →",
+  "payouts.list.exportCsv": "Exportar CSV",
   "payouts.list.status.pending": "Pendente",
   "payouts.list.status.paid": "Pago",
 
@@ -1303,7 +1303,7 @@ export const studio: Catalog = {
     "Seleção publicada — a página inicial roda ao meio-dia",
 
   "program.inbox.heading": "Submissões · <em>{count} novas</em>",
-  "program.inbox.triageCta": "Triagem →",
+  "program.inbox.triageCta": "Triagem",
   "program.inbox.tip":
     "Arrasta qualquer submissão para a esquerda, para um espaço. <em>O fluxo de recusa com motivo está na triagem.</em>",
   "program.inbox.listenCta": "Ouvir",
@@ -1434,7 +1434,7 @@ export const studio: Catalog = {
   "liveNow.savedCta": "Guardada",
   "liveNow.savedToast": "Faixa guardada na tua biblioteca",
   "liveNow.removedToast": "Removida da tua biblioteca",
-  "liveNow.lyricsNotesCta": "Letra e notas →",
+  "liveNow.lyricsNotesCta": "Letra e notas",
   "liveNow.listenersLabel":
     "na sala contigo · {sustainers} sustentadores, {casual} ocasionais",
   "liveNow.tippedLabel": "em gorjetas durante este set · 100% para os artistas",
@@ -1535,7 +1535,7 @@ export const studio: Catalog = {
     "taxa mais baixa, liquidação em 1–2 dias",
   "sheet.checkout.paidLabel": "Pago",
   "sheet.checkout.downloadingLabel": "a descarregar o PDF…",
-  "sheet.checkout.payCta": "Pagar {amount} & descarregar →",
+  "sheet.checkout.payCta": "Pagar {amount} & descarregar",
   "sheet.checkout.note":
     "Download instantâneo · descarrega outra vez quando quiseres a partir da tua biblioteca · <em>quem fez isto é pago esta noite</em>.",
   "sheet.checkout.downloadedToast":
@@ -1590,14 +1590,14 @@ export const studio: Catalog = {
   "receipt.toast.emailCopy":
     "Uma cópia está a caminho da tua caixa de entrada.",
   "receipt.privacyNote":
-    "Por predefinição, as gorjetas são <em>públicas, com o teu nome</em>. Podes tornar esta anónima, ou definir todas as gorjetas futuras como anónimas, nas definições. <em>Não partilhamos dados de gorjetas com ninguém.</em> <a>Compromissos de privacidade →</a>",
+    "Por predefinição, as gorjetas são <em>públicas, com o teu nome</em>. Podes tornar esta anónima, ou definir todas as gorjetas futuras como anónimas, nas definições. <em>Não partilhamos dados de gorjetas com ninguém.</em> <a>Compromissos de privacidade</a>",
 
   // ── Checkout da contribuição (StudioCheckoutPage) ──────────────────────────
   "checkout.doneToast": "Já estás a contribuir para o studio — bem-vinde.",
   "checkout.doneTitle": "Já estás a <em>contribuir</em> para isto.",
   "checkout.doneBody":
     "Bem-vinde. Cada faixa que ouvires aqui paga a quem a fez. O teu primeiro pagamento de {amount} está feito — o resto é só ouvir.",
-  "checkout.startListeningCta": "Começar a ouvir →",
+  "checkout.startListeningCta": "Começar a ouvir",
   "checkout.goToLibraryCta": "Ir para a tua biblioteca",
   "checkout.eyebrow": "Checkout",
   "checkout.title": "Contribui para o <em>studio.</em>",
@@ -1610,7 +1610,7 @@ export const studio: Catalog = {
   "checkout.expiryLabel": "Validade",
   "checkout.expiryPlaceholder": "MM / AA",
   "checkout.cvcLabel": "CVC",
-  "checkout.payCta": "Pagar {amount}{cadence} →",
+  "checkout.payCta": "Pagar {amount}{cadence}",
   "checkout.cadenceMonthly": "/ mês",
   "checkout.prototypeNote":
     "Isto é um protótipo — nenhum cartão é cobrado e nada é guardado.",
@@ -1694,7 +1694,7 @@ export const studio: Catalog = {
   "fund.apply.requestCta": "Pedir apoio de emergência",
   "fund.apply.requestToast":
     "O formulário de apoio de emergência abre num fluxo privado",
-  "fund.apply.seeGrantsCta": "Ver bolsas & chamadas abertas →",
+  "fund.apply.seeGrantsCta": "Ver bolsas & chamadas abertas",
 
   // ── Chamadas abertas & comissões (StudioOpenCallsPage + Card + Skeleton) ──
   "calls.hero.eyebrow": "Da parte do conselho",
@@ -1711,7 +1711,7 @@ export const studio: Catalog = {
     "<em>{count}</em> abertas · já te candidataste a {applied}",
 
   "calls.card.saveCta": "Guardar",
-  "calls.card.applyCta": "Candidatar →",
+  "calls.card.applyCta": "Candidatar",
   "calls.card.saveToast": "Proposta guardada no teu painel",
   "calls.card.attachLabel": "Anexa uma faixa do teu catálogo",
   "calls.card.submitCta": "Submeter candidatura",
@@ -1773,7 +1773,7 @@ export const studio: Catalog = {
   "setSubmission.sidebar.payoutPool": "Bolsa de pagamento do set",
   "setSubmission.sidebar.holdNote":
     "As faixas não correspondidas <em>retêm a sua parte</em> até o comparador do conselho as confirmar. O set fica disponível já; o dinheiro retido é libertado assim que a fonte for confirmada.",
-  "setSubmission.sidebar.submitCta": "Submeter set →",
+  "setSubmission.sidebar.submitCta": "Submeter set",
   "setSubmission.sidebar.submittedToast":
     "Set submetido — disponível já, partes retidas pendentes de confirmação",
 

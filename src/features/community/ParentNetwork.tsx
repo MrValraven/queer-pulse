@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiCalendar } from "react-icons/fi";
+import { FiArrowRight, FiCalendar } from "react-icons/fi";
 import { EmptyState, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -119,6 +119,7 @@ export function ParentNetwork() {
                 className={styles.resLink}
               >
                 {t(`community:${resource.titleKey}`)}
+                <FiArrowRight className={styles.resLinkArrow} aria-hidden />
               </Link>
             ))}
           </Reveal>

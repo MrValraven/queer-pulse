@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -182,7 +182,8 @@ export function MicroGrantsPage() {
                 className={styles.sbcBtn}
                 onClick={() => setPanelOpen(true)}
               >
-                {t("resources:microGrants.sidebar.joinPanelCta")}
+                {t("resources:microGrants.sidebar.joinPanelCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Button>
             </aside>
           </div>

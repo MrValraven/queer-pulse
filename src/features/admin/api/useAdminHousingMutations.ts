@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { HousingCoopDTO } from "../../economy/api/housingCoop.api";
 import {
@@ -13,6 +13,7 @@ import {
   ADMIN_HOUSING_COOPS_KEY,
   ADMIN_HOUSING_JOIN_REQUESTS_KEY,
 } from "./useAdminHousingCoops";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 /** Public housing key (`economy/api/useHousingCoops.ts`) — invalidated too so
  *  the member-facing directory reflects admin edits without a manual refresh. */
@@ -26,17 +27,16 @@ const HOUSING_COOPS_KEY = "housing-coops";
 export function useCreateCoop() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<HousingCoopDTO | undefined, Error, CoopWriteBody>({
-    mutationFn: async (body) => {
-      if (demoMode) return undefined;
-      return createAdminCoop(body);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<HousingCoopDTO | undefined, Error, CoopWriteBody>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminHousingCoopForm toasts locally
+    demoResult: () => undefined,
+    live: (body) => createAdminCoop(body),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
-    meta: { silentError: true }, // AdminHousingCoopForm toasts locally
   });
 }
 
@@ -49,17 +49,16 @@ export interface UpdateCoopVars {
 export function useUpdateCoop() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<HousingCoopDTO | undefined, Error, UpdateCoopVars>({
-    mutationFn: async ({ id, body }) => {
-      if (demoMode) return undefined;
-      return updateAdminCoop(id, body);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<HousingCoopDTO | undefined, Error, UpdateCoopVars>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminHousingCoopForm + AdminHousingCoopsPage toast locally
+    demoResult: () => undefined,
+    live: ({ id, body }) => updateAdminCoop(id, body),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
-    meta: { silentError: true }, // AdminHousingCoopForm + AdminHousingCoopsPage toast locally
   });
 }
 
@@ -67,20 +66,19 @@ export function useUpdateCoop() {
 export function useDeleteCoop() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
-    mutationFn: async (id) => {
-      if (demoMode) return undefined;
-      return deleteAdminCoop(id);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+  return useDemoAwareMutation<void, Error, string>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminHousingCoopsPage toasts locally
+    demoResult: () => undefined,
+    live: (id) => deleteAdminCoop(id),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
       void queryClient.invalidateQueries({
         queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY],
       });
     },
-    meta: { silentError: true }, // AdminHousingCoopsPage toasts locally
   });
 }
 
@@ -98,23 +96,22 @@ export interface TriageJoinRequestVars {
 export function useTriageJoinRequest() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
+  return useDemoAwareMutation<
     AdminJoinRequestDTO | undefined,
     Error,
     TriageJoinRequestVars
   >({
-    mutationFn: async ({ id, action }) => {
-      if (demoMode) return undefined;
-      return triageAdminJoinRequest(id, action);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
+    demoMode,
+    demoLatencyMs: 0,
+    meta: { silentError: true }, // AdminHousingJoinRequests toasts locally
+    demoResult: () => undefined,
+    live: ({ id, action }) => triageAdminJoinRequest(id, action),
+    onLiveSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY],
       });
       void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
-    meta: { silentError: true }, // AdminHousingJoinRequests toasts locally
   });
 }
